@@ -1,5 +1,2 @@
 // Default monitoring options for production jobs
-BrunelMoni.DetectorList  = { "VELO", "IT", "Tr","TRIGGER", "RICH" };
-
-// Produce only the summary table
-L1TrackMonitor.Histograms = false;
+BrunelMoni.DetectorList  = { "IT", "Tr", "RICH" };

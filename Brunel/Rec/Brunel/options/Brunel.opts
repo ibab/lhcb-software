@@ -6,131 +6,78 @@
 // You only need to modify it if you want to add or remove algorithms
 // !! Do not modify position or order of included files !!
 //==============================================================
-#include "$STDOPTIONS"
 
+// Allow units to be used in jobOptions
+#units "$GAUDICONFROOT/options/units.opts"
+
+// Framework
 ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
+
+// ROOT Persistency
+ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
+// Activate the conversion service 
+ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
+// Declare the persistency type for the conversion service 
+RootEvtCnvSvc.DbType = "ROOT" ;
+// Declare the conversion service to the Persistency Service 
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "BrunelSicbInit",
-                           "BrunelInitialisation",
-                           "ProcessPhase/BrunelDigi",
-                           "ProcessPhase/BrunelTrigger",
-                           "ProcessPhase/BrunelReco",
-                           "BrunelFinalisation" };
+ApplicationMgr.TopAlg += { "BrunelInitialisation",
+                           "ProcessPhase/BrunelReco" };
 ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" }; 
 #include "$BRUNELOPTS/BrunelMoni.opts"
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
-BrunelDigi.DetectorList  = { "SpillOver" };
-BrunelDigi.DetectorList += { "Bkg" };
-BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
-BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
 BrunelReco.DetectorList += { "Timing" };
 
 //--------------------------------------------------------------
-// Geometry and magnetic field
+// Geometry, magnetic field, particle properties
 //--------------------------------------------------------------
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.DLLs += { "RichDet" };
+ApplicationMgr.DLLs += { "RiSicbGeom" }; // for pixel tool
 ApplicationMgr.DLLs += { "MuonDet" };
+ApplicationMgr.DLLs += { "ITDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
+DeVelo.Design = 1;  // 45 degree Velo sectors
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-
-//--------------------------------------------------------------
-// Sicb converters
-//--------------------------------------------------------------
-ApplicationMgr.DLLs += { "CaloSicbCnv" };
-ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
-ApplicationMgr.DLLs += { "MuonSicbCnv" };
-ApplicationMgr.DLLs += { "VSicbCnv" };
-
-// LHC background
-ApplicationMgr.DLLs += { "DigiAlg" };
-BrunelDigiBkgSeq.Members += { "MergeEventAlg/LHCbkgAlg" };
-#include "$DIGIALGROOT/options/LHCBackground.opts"
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------
-// L0 trigger
-#include "$L0CALOROOT/options/Brunel.opts"
-#include "$L0MUONROOT/options/Brunel.opts"
-#include "$PUVETOROOT/options/Brunel.opts"
-#include "$L0DUROOT/options/Brunel.opts"
-#include "$MUONTOOLSROOT/options/MuonTools.opts"
 
-// L1 trigger
-ApplicationMgr.DLLs += { "L1VeloTrack" };
-BrunelTriggerTRIGGERSeq.Members += { "ITDigitToL1", "OTDigitToL1" };
-ApplicationMgr.DLLs += { "L1Decision" };
-BrunelTriggerTRIGGERSeq.Members += { "Level1" };
-Level1.minimizeL1ExeTime = false;
-
-// Trigger truth relation tables (used by monitoring and for DST)
-BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
-BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
-L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
-L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
-
-BrunelTriggerTRIGGERSeq.Members += { "L1Track2dTruth" };
-BrunelTriggerTRIGGERSeq.Members += { "L1Track3dTruth" };
-
-// Calorimeter digitisation and reconstruction
+// Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco"      , 
                          "CaloPIDs"     ,
-                         "CaloDigit"     ,
                          "CaloEvent"     };
-#include "$CALODIGITROOT/options/Brunel.opts"
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
 #include "$CALOPIDSOPTS/Brunel.opts"
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
-// Rich Fortran digitisation and OO digits creator 
-BrunelDigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
-BrunelDigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
-BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
-
-// Muon digitisation
-ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
-BrunelDigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
-#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
-BrunelDigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
-#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
-BrunelDigiMUONSeq.Members += { "MuonDigitization" };
-#include "$MUONALGSROOT/options/MuonDigitization.opts"
-
-// Inner tracker digitisation and reconstruction (clustering)
-#include "$ITALGORITHMSROOT/options/Brunel.opts"
+// Inner tracker reconstruction (clustering)
+ApplicationMgr.DLLs   += { "ITAlgorithms" };
+BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
+#include "$ITALGORITHMSROOT/options/itRec.opts"
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
 
-// Outer tracker digitisation and reconstruction (clustering)
+// Outer tracker reconstruction (clustering)
 ApplicationMgr.DLLs   += { "OTAlgorithms" };
-#include "$OTALGORITHMSROOT/options/otDigi.opts"
-BrunelDigiOTSeq.Members += { "MCOTDepositCreator",
-                             "MCOTDigitCreator",
-                             "OTDigitCreator" };
 #include "$OTALGORITHMSROOT/options/otRec.opts"
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
-
-// Velo digitisation and clustering (also for PuVeto and trigger)
-ApplicationMgr.DLLs += { "VeloAlgorithms" };
-BrunelDigiVELOSeq.Members += { "VeloSim" };
-BrunelDigiVELOSeq.Members += { "VeloDataProcessor" };
-BrunelDigiVELOSeq.Members += { "VeloClusterMaker" };
-BrunelDigiVELOSeq.Members += { "VeloFEToL1" };
-// 45 degree sectors
-DeVelo.Design = 1;
 
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
@@ -185,7 +132,7 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
 #include "$RICHRECSYSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
-ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
+ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 

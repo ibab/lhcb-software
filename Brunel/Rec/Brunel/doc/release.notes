@@ -3,6 +3,27 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v20r0>2003-07-17 Brunel v20r0</A></H1><PRE>
+ *** First version without digitisation. To be used on output of Boole v1r0 ***
+
+- Removed functionality:
+   . The digitisation and trigger phases have been removed (moved to Boole). 
+     This includes addition of spillover and background, now done in Boole
+   . The SICB initialization is removed. A reduced ZEBRA common block is still
+     present for HBOOK.
+
+- New tuning
+   . Modify IT, OT, Velo Associators to work with Digit2MCHit relations stored
+     on oodigi tape. Identical behaviour as previously except for tiny 
+     additional association inefficiency for IT (few 10^-4) and TT (10^-3)
+
+- DST changes
+   . Rich and Calo Digits have been removed (it is possible to navigate to them
+     on the oodigi tape if required for special studies) (GaudiConf v7r0)
+
+- Bug fixes
+   . Correct a bug with rotation of TT stereo layers (ITDet v1r5) 
+
 </PRE><H1><A NAME=v19r1>2003-07-08 Brunel v19r1</A></H1><PRE>
 - New tuning:
    . Update of Rich reconstruction software. Includes repackaging of algorithms.
@@ -19,7 +40,7 @@ Purpose: LHCb reconstruction program
    . Add support for valgrind 1.9.6 with gcc32 
      (new file Brunel.supp.gcc32, invoked by valgrind.job)
 
-- Removed funtionality:
+- Removed functionality:
    . Remove V0 reconstruction ("upstream " KsReco package)
      replaced by new DaVinci algorithm 
 

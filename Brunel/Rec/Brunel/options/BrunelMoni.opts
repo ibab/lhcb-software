@@ -11,30 +11,20 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "VELO","IT","OT","Tr","RICH","CALO","TRIGGER" };
+BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
-
-// Trigger
 ApplicationMgr.DLLs += { "Associators" };
-BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
-BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
-//BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
-#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
-
-// Velo
-BrunelMoniVELOSeq.Members += { "VeloMonitor" };
-#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
-
-// IT digitisation and clustering
-#include "$ITCHECKERSROOT/options/Brunel.opts"
 #include "$ASSOCIATORSROOT/options/Brunel.opts"
 
-// OT digitisation
-BrunelMoniOTSeq.Members += { "MCOTDepositMonitor" };
-BrunelMoniOTSeq.Members += { "OTDigitMonitor" };
+// IT clustering and efficiency
+ApplicationMgr.DLLs += {"ITCheckers","ITAssociators"};
+BrunelMoniITSeq.Members += { "ITClusterChecker" };
+BrunelMoniITSeq.Members += { "ITEffMonitor" };
+//ITEffMonitor.fullDetail = true;
+//ITEffMonitor.OutputLevel = 2;
 
 // OT reconstruction
 ApplicationMgr.DLLs += { "OTAssociators" };
@@ -51,11 +41,6 @@ BrunelMoniTrSeq.Members += { "TrAnalyse" };
 ApplicationMgr.DLLs += { "RichRecQC" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 
-// Rich digitisation
-BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" }; // SICB digit Cnv checks
-ApplicationMgr.DLLs += { "RichDigiQC" };
-#include "$RICHDIGIQCOPTS/DigiQC_Brunel.opts"
-
 // detailed RICH reconstruction monitors
 //#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
 //#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
@@ -63,14 +48,37 @@ ApplicationMgr.DLLs += { "RichDigiQC" };
 //#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"
 
 // Calorimeters
-#include "$CALOMONITOROPTS/Brunel.opts"
+//#include "$CALOMONITOROPTS/Brunel.opts" - remove digitization monitoring
+ApplicationMgr.DLLs += {"CaloMonitor"};
+BrunelMoniCALOSeq.Members +=
+{
+   // monitoring of clusters
+  "CaloClusterMonitor/ClusterMoni"              ,
+  "CaloClusterMonitor/SplitClusterMoni"         ,
+  // monitoring of hypos
+  "CaloHypoMonitor/ElectronMoni"                ,
+  "CaloHypoMonitor/PhotonMoni"                  ,
+  "CaloHypoMonitor/SplitPhotonMoni"             ,
+  "CaloHypoMonitor/MergedPi0Moni"               ,
+  // monitoring of matching
+  "CaloClusterMatchMonitor/PhotonMatchMoni"     ,
+  "CaloHypoMatchMonitor/ElectronMatchMoni"      ,
+  "CaloHypoMatchMonitor/BremMatchMoni"          ,
+  // monitoring of 2-gamma distributions
+  "CaloPi0Monitor/Pi0Moni"                      ,
+  "CaloMCPi0Monitor/MCPi0Moni"                  ,
+  // MC truth monitoring
+  "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
+};
+#include "$CALOMONITOROPTS/Moni.opts"
 
-// Framework monitoring
-EventSelector_1.doHistos = true;
+// Framework monitoring (only SICBEventSelector - to be put elsewhere...)
+// EventSelector_1.doHistos = true;
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
+ApplicationMgr.DLLs += { "GaudiAud" };
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = true;

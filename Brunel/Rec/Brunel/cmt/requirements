@@ -1,5 +1,5 @@
 package Brunel
-version v19r1
+version v20r0
 
 branches doc cmt job options
 
@@ -20,53 +20,34 @@ use ROOT 		v2r30504p0
 use GaudiKernel		v13r4p1
 use GaudiSvc 		v10r2
 use GaudiAlg 		v6r4
-use GaudiTools 		v6r1
 use GaudiAud 		v6r2
 use GaudiNagC 		v7r3
 use GaudiDb 		v8r4
 use GaudiRootDb 	v9r2
 use GaudiIntrospection 	v4r6
 use GaudiObjDesc 	v5r0
-use HbookCnv 		v13r3
+use HbookCnv 		v13r4
 
 #-- Database
-use XmlDDDB		v16r1	Det
+use XmlDDDB		v17r0	Det
 
-#-- LHCb libraries (from LHCB_v12r1)
-use LHCb	v12r1
+#-- LHCb libraries (from LHCB_v13r0)
+use LHCb	v13r0
 
-#-> SICB basic libraries (from LHCB_v12r1)
-use SICBSys	v1r5	SICB
-
-#-- BrunelSys v19r0 packages
+#-- BrunelSys v20r0 packages
 
 # Phys utilities
 use MCTools		v1r1p1	Phys
 
 # Brunel utilities
-use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r1	Rec
-
-# LHC background
-use DigiAlg		v1r0p1	Digi
-
-# L0 trigger
-use L0Calo              v7r0p1	L0
-use L0Muon              v6r5p1	L0
-use PuVeto              v5r4    L0
-use L0DU                v6r5    L0
-
-# L1 trigger
-use L1VeloTrack         v5r2	L1
-use L1Decision		v2r1	L1
+use BrunelAlgs          v2r2	Rec
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
-use CaloUtils           v4r4  	Calo
+use CaloUtils           v4r5  	Calo
 use CaloMonitor         v1r4  	Calo
 use CaloReco            v1r6 	Calo
 use CaloPIDs		v1r0	Calo
-use CaloDigit           v1r2p1	Calo
 
 # Velo
 use VeloAlgorithms      v2r7  	Velo
@@ -76,7 +57,7 @@ use ITAlgorithms        v12r10	IT
 use ITCheckers          v1r3  	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r0 	OT
+use OTAlgorithms        v13r1 	OT
 
 # Tracking
 use VeloTrack           v5r0  	Velo
@@ -84,7 +65,7 @@ use TrCheck             v1r4  	Tr
 use LongTrack           v1r7  	Tr
 use TrFitter            v3r5  	Tr
 use TrExtrapolator      v2r6  	Tr
-use TrTools             v2r4p1 	Tr
+use TrTools             v2r4p2 	Tr
 use Seeding             v2r5  	Tr 
 use TrMatching          v2r6  	Tr
 use TrCleanEx           v2r6p1	Tr
@@ -94,7 +75,6 @@ use VeloTT              v1r5  	Tr
 
 # Muon
 use MuonAlgs            v4r1    Muon
-use MuonBackground	v1r2	Muon
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r3    Muon
 use MuonID              v3r6    Muon
@@ -102,33 +82,28 @@ use MuonID              v3r6    Muon
 # Rich
 use RichUtils		v3r2  	Rich
 use RichDetTools	v2r2	Rich
-use RichRecSys		v1r0	Rich
+use RichRecSys		v1r0p1	Rich
 use RichRecQC		v1r0  	Rich
-use RichDigiQC		v1r0  	Rich
-
-# SICBDST packages
-use recevt              v3r5  	SICB
-use recrich             v7r4  	SICB
+use RiSicbGeom          v3r3    SICB
 
 #
 #===== build Brunel =========================
-application Brunel ../src/BrunelMain.cpp \
-                   $(BRUNELSICBROOT)/src/Objs/*.F
+application Brunel ../src/BrunelMain.cpp
 # ========================= set macros ============================
 
 macro Brunel_linkopts    "$(application_linkopts)"
 
-macro_append Brunel_linkopts " "\
-                Linux        " -g -Wl,--start-group "\
-                Linuxdbx     " -g -Wl,--start-group "
+#macro_append Brunel_linkopts " "\
+#                Linux        " -g -Wl,--start-group "\
+#                Linuxdbx     " -g -Wl,--start-group "
 
+# Version to be fixed, currently set in SICB code!
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=190100 " \
-           VisualC  " /DBrunelVersion=190100 "
+macro_append fflags " -DBrunelVersion=200000 " \
+           VisualC  " /DBrunelVersion=200000 "
 
 apply_pattern application_path
 
-# Set the default paths for Brunel options and SICBDST data cards.
+# Set the default paths for Brunel options.
 set BRUNELOPTS ${BRUNELROOT}/options
-set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 
