@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.233 2005-01-31 16:10:48 pkoppenb Exp $
+# $Id: requirements,v 1.234 2005-02-02 17:51:44 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -88,7 +88,7 @@ use  Utilities          	v1r13    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r4     Phys
+use  DaVinciFilter      	v1r5     Phys
 use  DaVinciKernel      	v3r1     Phys
 use  DaVinciTools       	v11r4    Phys
 use  FlavourTagging     	v5r4     Phys
@@ -96,13 +96,13 @@ use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r2     Phys
 use  PhysSelections		v6r11    Phys
 use  DaVinciTransporter 	v2r0     Phys
-use  VertexFit			v1r3     Phys
+use  VertexFit			v1r4     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
-use  DaVinciAssociators 	v5r2p2   Phys
+use  DaVinciAssociators 	v5r3     Phys
 use  DaVinciEff         	v3r2     Phys
-use  DaVinciMCTools     	v5r8     Phys
+use  DaVinciMCTools     	v5r8p1   Phys
 use  DaVinciTest        	v5r5     Phys
 use  DaVinciUser        	v5r2     Phys
 
