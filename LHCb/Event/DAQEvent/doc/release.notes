@@ -3,7 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
-!================ DAQEvent v4r6 2005-02-03 ============================
+!================ DAQEvent v4r6 2005-02-24 ============================
+! 2005-02-24 - Daniela Lunesu
+ - Add L0Muon bank type
+
 ! 2005-02-03 - Marco Cattaneo
  - Fixes for serialization with GaudiObjDesc v7. Not backwards compatible
  - Reorganize xml files to be built independently for each class
