@@ -3,7 +3,7 @@
 DigiWriter.OptItemList =
 {
   "/Event/Prev#1"
-  "/Event/Prev/Header#1"
+, "/Event/Prev/Header#1"
 , "/Event/PrevPrev#1"
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
