@@ -72,7 +72,7 @@ application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # ========================= set macros ========================================
 apply_pattern application_path 
-macro Gauss_linkopts  "$(application_linkopts)"
+macro Gauss_linkopts  "$(application_linkopts) -Wl,-Map,Linux.map"
 
 # =============== just make executable "visible" ==============================
 path_remove    PATH  "/Gauss/"

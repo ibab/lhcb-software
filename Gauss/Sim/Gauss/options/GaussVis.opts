@@ -1,8 +1,11 @@
-// $Id: GaussVis.opts,v 1.1 2003-02-17 15:19:12 witoldp Exp $ 
+// $Id: GaussVis.opts,v 1.2 2003-03-14 17:32:02 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/02/17 15:19:12  witoldp
+// new release
+// 
 // ============================================================================
 
 /** @file 
@@ -43,7 +46,7 @@ GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands =
   { "/vis/scene/create"                   , 
     "/vis/sceneHandler/create DAWNFILE"   ,
     "/vis/viewer/create"                  ,
-    "/vis/viewer/viewpointThetaPhi -90 -90",
+    "/vis/viewer/set/viewpointThetaPhi -90 -90",
     "/vis/scene/add/volume"               , 
     "/vis/scene/add/trajectories"         ,
     "/vis/scene/notifyHandlers   "        } ;

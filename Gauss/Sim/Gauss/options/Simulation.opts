@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.28 2003-02-17 15:19:13 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.29 2003-03-14 17:32:03 ranjard Exp $ 
 
 ////////////////////////////////////////////////////////
 // Services:
@@ -17,7 +17,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0G.xml";
 ApplicationMgr.ExtSvc +=  
 { "MagneticFieldSvc"  };  
 MagneticFieldSvc.FieldMapFile = 
-"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
+"$LHCb_release_area/DBASE/SICB/dbase/v254r1/cdf/field043.cdf";
 
 ///////////////////////////////////////////////////////
 
@@ -110,7 +110,7 @@ GiGa.TrackSeq.SimpleTrack.OwnEnergyThreshold = 10.0 * MeV   ;
 // GiGa.TrackSeq.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
 GiGa.TrackSeq.SimpleTrack.StoreByOwnType       = true; 
 GiGa.TrackSeq.SimpleTrack.StoredOwnTypes       = { "pi+" , "pi-" };
-// GiGa.TrackSeq.SimpleTrack.StoreByChildType     = true; 
+
 // GiGa.TrackSeq.SimpleTrack.StoredChildTypes     = { "e+"};
 
 // Stepping action to be used and its configuration  
@@ -128,12 +128,8 @@ GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
   "/run/verbose 1 "               ,
-  "/vis/verbose -10 "               ,
   "/tracking/verbose 0"            ,
   "/tracking/storeTrajectory  1"    } ;
-
-// List of user interface sessions (with priorities)
-// GiGa.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw" , "terminal" } ;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
 GiGaGeo.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
