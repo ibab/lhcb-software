@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.7 2004-11-03 12:14:57 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.8 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/11/03 12:14:57  jonrob
+ *  Add method to locate the MCRichDigit associated to a given RichSmartID
+ *
  *  Revision 1.6  2004/10/13 09:19:23  jonrob
  *  New MCTruth methods
  *
@@ -106,7 +109,7 @@ public:
 
   /** Finds the MCRichDigit association for a given RichDigit
    *
-   *  @param mcPart Pointer to a RichDigit
+   *  @param digit Pointer to a RichDigit
    *
    *  @return Pointer to an MCRichDigit
    *  @retval NULL  No Monte Carlo association was possible

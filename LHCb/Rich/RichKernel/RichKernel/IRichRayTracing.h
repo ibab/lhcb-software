@@ -4,8 +4,11 @@
  *  Header file for tool interface : IRichRayTracing
  *
  *  CVS Log :-
- *  $Id: IRichRayTracing.h,v 1.13 2004-10-21 12:53:08 papanest Exp $
+ *  $Id: IRichRayTracing.h,v 1.14 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/10/21 12:53:08  papanest
+ *  new method traceBackFromDetector
+ *
  *  Revision 1.12  2004/07/29 09:30:32  jonrob
  *  Fix various typos + minor updates
  *
@@ -108,8 +111,10 @@ public:
    *  returning the mirror intersection point and the direction a track would have
    *  in order to hit that point in the detector panel.
    *
-   *  @param startPoint The start point to use for the ray tracing
-   *  @param startDir   The direction to ray trace from the start point
+   *  @param[in]  startPoint The start point to use for the ray tracing
+   *  @param[in]  startDir   The direction to ray trace from the start point
+   *  @param[out] endPoint   The required mirror intersection point
+   *  @param[out] endDir     The required track direction
    *
    *  @return Status of the ray tracing
    *  @retval StatusCode::SUCCESS Ray tracing was successful

@@ -5,8 +5,11 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.1 2005-01-07 12:42:03 jonrob Exp $
+ *  $Id: IRichRawDataFormatTool.h,v 1.2 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:42:03  jonrob
+ *  Add new interfaces
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -91,7 +94,6 @@ public:
 
   /** Decode all RICH RawBanks into RichSmartID identifiers
    *
-   *  @param bank     Pointer to RawBank to decode
    *  @param smartIDs Vector of RichSmartIDs to fill
    */
   virtual void decodeToSmartIDs( RichSmartID::Collection & smartIDs ) const = 0;

@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.8 2005-01-13 12:16:02 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.9 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2005/01/13 12:16:02  jonrob
+ *  Add method to access the average position of an HPD
+ *
  *  Revision 1.7  2005/01/07 12:42:32  jonrob
  *  Change to interface
  *
@@ -104,8 +107,6 @@ public:
                                RichSmartID& smartid ) const = 0;
 
   /** Supplies a vector of all currently active and valid channels in the RICH detectors
-   *
-   *  @param readoutChannelList  Vector of RichSmartIDs to fill with the valid channels
    *
    *  @return Vector of RichSmartIDs to fill with the valid channels
    *  @retval Vector size > 0 : Request was successful, RichSmartID vector is valid

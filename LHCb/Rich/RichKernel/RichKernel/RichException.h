@@ -3,8 +3,11 @@
  *  Header file for utility class : RichException
  *
  *  CVS Log :-
- *  $Id: RichException.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: RichException.h,v 1.6 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *  Revision 1.4  2004/07/15 15:36:53  jonrob
  *  Doxygen improvements
  *
@@ -47,7 +50,7 @@ public:
   /** Constructor from another GaudiException
    *
    *  @param ex          exception message
-   *  @param Exception   previous exception
+   *  @param Ex          previous exception
    *  @param sc          status code associated with the exception
    */
   RichException( const std::string    & ex                        ,

@@ -3,8 +3,11 @@
  *  Header file for utility class : RichTraceMode
  *
  *  CVS History :-
- *  $Id: RichTraceMode.h,v 1.4 2004-07-22 14:45:21 jonrob Exp $
+ *  $Id: RichTraceMode.h,v 1.5 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/22 14:45:21  jonrob
+ *  test CVS log in file
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -63,7 +66,7 @@ class RichTraceMode {
 
 public:
 
-  /** @enum Enumeration for the RichTraceMode to flag the precision mode to use
+  /** Enumeration for the RichTraceMode to flag the precision mode to use
    *  when calculating the acceptance on the HPD panels
    *
    *  @author Antonis Papanestis a.papanestis@rl.ac.uk
@@ -75,7 +78,7 @@ public:
       window        ///< Use the full detector description for the HPDs (slower)
     };
 
-  /** @enum Enumeration for the RichTraceMode to flag how to treat the HPD
+  /** Enumeration for the RichTraceMode to flag how to treat the HPD
    *  panel boundaries
    *
    *  @author Antonis Papanestis a.papanestis@rl.ac.uk

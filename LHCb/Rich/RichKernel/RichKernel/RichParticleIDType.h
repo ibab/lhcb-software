@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.16 2004-08-19 13:55:58 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.17 2005-01-18 10:49:40 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/08/19 13:55:58  jonrob
+ *  Add new method to MC truth tool + various other things after CVS server switch
+ *
  *  Revision 1.15  2004/08/16 13:43:59  jonrob
  *  Update doxygen comments
  *
@@ -31,13 +34,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
+//  General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich {
 
   /// Number of RICH particle types
