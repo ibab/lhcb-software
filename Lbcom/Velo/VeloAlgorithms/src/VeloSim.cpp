@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.4 2002-06-19 12:09:50 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.5 2002-06-23 13:39:24 ocallot Exp $
 // Include files
 // STL
 #include <string>
@@ -606,6 +606,10 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
   if (create){
     VeloChannelID stripKey = m_velo->neighbour((*FEIt)->key(),-1,valid);
     if(valid){
+      //== Protect if key already exists ==
+      prevStrip = m_fes_coupling->object(stripKey);
+      if ( 0 != prevStrip ) return prevStrip;
+
       log << MSG::VERBOSE << " create strip" << stripKey.strip() << " " 
           << stripKey.sensor() << endreq;
       prevStrip = new MCVeloFE(stripKey);
@@ -650,6 +654,10 @@ MCVeloFE* VeloSim::findOrInsertNextStrip(MCVeloFEs::iterator FEIt,
   if (create){
     VeloChannelID stripKey = m_velo->neighbour((*FEIt)->key(),+1,valid);
     if(valid){
+      //== Protect if key already exists ==
+      nextStrip = m_fes_coupling->object(stripKey);
+      if ( 0 != nextStrip ) return nextStrip;
+
       log << MSG::VERBOSE << " create strip" << stripKey.strip() << " " 
           << stripKey.sensor() << endreq;
       nextStrip = new MCVeloFE(stripKey);

@@ -1,6 +1,9 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-06-21 - Olivier Callot
+ - Protect against insertion in m_fes_coupling container.
+
 ! 2002-06-19 - Marco Cattaneo
  - VeloSim.cpp: missing spillover hits container is not an error
 
