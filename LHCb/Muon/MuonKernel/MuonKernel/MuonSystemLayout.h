@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.8 2002-05-07 06:59:23 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.9 2003-04-29 09:22:34 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -145,6 +145,10 @@ public:
   /// check if the given MuonTileID is valid for this layout
   virtual bool isValidID(const MuonTileID& mt) const ;
   
+protected:
+  /// set MuonStationLayout for a given station
+  void setStationLayout(int sta, const MuonStationLayout& msl) 
+           {m_station_layouts[sta] = msl;}  
 
 private:  
   MuonStationLayout m_station_layouts[5];
