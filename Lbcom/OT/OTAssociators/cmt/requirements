@@ -1,5 +1,5 @@
 package           OTAssociators
-version           v2r5
+version           v2r6
         
 # =============== structure =================================================== 
 branches          OTAssociators src cmt doc options 

@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.18 2003-07-15 11:31:06 jvantilb Exp $
+! $Id: release.notes,v 1.19 2003-07-16 06:24:13 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
 
+!====================== OTAssociators v2r6 2003-07-15 ======================
 ! 2003-07-15 - Jeroen van Tilburg
  - OTDigit2MCxxx associators use a weighted associator, where the weight is 
    an integer which refers to a tdc-time in the vector of tdc-times in 
