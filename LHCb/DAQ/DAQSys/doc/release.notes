@@ -6,7 +6,8 @@
 
 !========================= DAQSys v1r1p1 2005-03-07 ==========================
 ! 2005-03-07 - Marco Cattaneo
- - Modified packages: MuonDAQ v1r2p1,OTDAQ v3r2p1,RichDAQ v2r1p1,VeloDAQ v2r3p1
+ - Modified packages: MuonDAQ v1r2p1,OTDAQ v3r2p1,RichDAQ v2r1p1,VeloDAQ v2r3p1,
+                      CaloDAQ v1r1p2
 
 !========================== DAQSys v1r1 2005-02-11 ===========================
 ! 2005-02-11 - Marco Cattaneo
