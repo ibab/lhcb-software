@@ -4,27 +4,27 @@
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
-package           DaVinciFilter
+package           VertexFit
 version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options src
+branches          cmt doc src
 
 # Exported header files
 #============================================================================
-include_dirs     $(DAVINCIFILTERROOT)
+include_dirs     $(VERTEXFITROOT)
 
 # Used packages. 
 #============================================================================
-use  VertexFit   v* Phys
+use  DaVinciTransporter  v*  Phys
 
 # Component library building rule
 #============================================================================
-library          DaVinciFilter    ../src/*.cpp -import=AIDA
+library          VertexFit    ../src/*.cpp
 
 # standard patterns (order is essential!)
 #============================================================================
-apply_pattern component_library library=DaVinciFilter
+apply_pattern component_library library=VertexFit
 	     
 
