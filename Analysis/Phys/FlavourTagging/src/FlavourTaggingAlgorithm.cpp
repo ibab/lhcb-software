@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.2 2002-09-03 08:22:07 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.3 2002-09-03 16:06:01 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,13 @@ StatusCode FlavourTaggingAlgorithm::initialize() {
     return sc;
   }
 
+  // Ensure the HypothesisLocations ends with "Particles"
+  std::vector<std::string>::iterator hi;
+  for( hi=m_hypothesis_locations.begin();
+       hi!=m_hypothesis_locations.end(); hi++ )
+    if( hi->rfind("/Particles") == string::npos )
+      hi->append("/Particles");
+
   m_n_B_events = 0;
   m_n_B = 0;
   m_n_b_tags = 0;
@@ -135,6 +142,11 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   ParticleVector::const_iterator hi;
   for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )
   {
+    if( !(*hi)->particleID().hasBottom() )
+    {
+      log << MSG::DEBUG << "Skipping a " << (*hi)->particleID().pid() << endreq;
+      continue;
+    }
     m_n_B++;
     log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;
