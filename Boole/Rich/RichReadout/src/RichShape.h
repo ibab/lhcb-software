@@ -4,6 +4,7 @@
 
 #include <math.h>
 
+
 //! The signal shape function after the amplifier/shaper
 class RichShape {
 
