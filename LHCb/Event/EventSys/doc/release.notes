@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v17r7 2004-04-20 ========================
+! 2004-04-20 - Marco Cattaneo
+ - use RichEvent v7r3
+
 !======================== EventSys v17r6 2004-04-07 ========================
 ! 2004-04-07 - Marco Cattaneo
  - use GenEvent v3r2
