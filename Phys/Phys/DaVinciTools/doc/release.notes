@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.75 2004-03-31 06:54:48 pkoppenb Exp $
+! $Id: release.notes,v 1.76 2004-03-31 14:30:01 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+!========================== DaVinciTools v9r2 2004-03-31 ==================
 ! 2004-03-31 - P. Koppenburg for Sandra Amato and Angelo Carbone
  - src/ParticleStuffer.*
    . Go back to previous version. Found bugs in the new Sutuffer.
