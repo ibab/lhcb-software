@@ -1,9 +1,9 @@
 package DetSys
-version v2r2
+version v3r0
 
 branches cmt doc
 
-use DetDesc	   	v12r0	Det
+use DetDesc	   	v13r0	Det
 use DetDescCnv		v2r0	Det
 use XmlTools		v2r0	Tools
 use VeloDet        	v8r5 	Det     
@@ -12,6 +12,6 @@ use OTDet          	v4r0	Det
 use CaloDet	   	v6r5	Det
 use CaloDetXmlCnv  	v2r3	Det
 use MuonDet        	v4r4	Det
-use Magnet        	v2r1	Det
+use Magnet        	v2r2	Det
 use MuonTools	   	v3r6	Muon
-use RichDet	   	v5r0	Det
+use RichDet	   	v6r0	Det
