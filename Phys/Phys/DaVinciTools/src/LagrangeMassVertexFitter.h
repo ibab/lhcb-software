@@ -18,14 +18,11 @@
 // Include files from DaVinciTools
 #include "DaVinciTools/IMassVertexFitter.h"
 #include "DaVinciTools/IVertexFitter.h"
-#include "DaVinciTools/IParticleTransporter.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 
 // Forward declarations
 class IParticlePropertySvc;
-
-// Forward declarations
 class IVertexFitter;
 class IParticleTransporter;
 
@@ -45,46 +42,74 @@ class IParticleTransporter;
 */
 
 class LagrangeMassVertexFitter : public AlgTool,
-				 virtual public IMassVertexFitter {
+                                 virtual public IMassVertexFitter {
 
 public:
 
   /// Standard Constructor
-  LagrangeMassVertexFitter( const std::string& type, const std::string& name, 
-const IInterface* parent);
+  LagrangeMassVertexFitter( const std::string& type, 
+                            const std::string& name, 
+                            const IInterface* parent);
 
   /// Standard Destructor
   virtual ~LagrangeMassVertexFitter() { }
 
-  /// Actual operator function
-  StatusCode
-    lagrangeFitter(const std::string& motherName, 
-                   const ParticleVector&  pList, Vertex& constrVtx,
-                   Particle& motherParticle);   
+  /// Retrieve the Transporter, the Unconstrained Vertex Fitter 
+  /// and the ParticlePropertyService.
+  StatusCode initialize();    
 
- private:
+  /// Actual operator function. 
+  /// Takes the name of the particle to constrain the mass to
+  /// and a vector of Particles as input.
+  StatusCode fitWithMass(const std::string& motherName, 
+                         const ParticleVector&  pList, Vertex& constrVtx,
+                         Particle& motherParticle);   
 
-  // number of tracks ( = ntracks ) must be 2 or 3.
-  int ntracks;
+  /// Actual operator function.
+  /// Takes the name of the particle to constrain the mass to
+  /// and two Particles as input.
+  StatusCode fitWithMass(const std::string& motherName, 
+                         Particle& particle1, Particle& particle2, 
+                         Vertex& constrVtx, Particle& motherParticle);   
 
-  // private methods used in lagrangeFitter.
+  /// Actual operator function.
+  /// Takes the name of the particle to constrain the mass to
+  /// and three Particles as input.
+  StatusCode fitWithMass(const std::string& motherName, 
+                         Particle& particle1, Particle& particle2, 
+                         Particle& particle3, Vertex& constrVtx, 
+                         Particle& motherParticle);
+private:
+
+  /// Private methods used in lagrangeFitter.
+
+  /// Performs one iteration of the constraint fit for 2 or 3 particles.
+  /// It returns the parameters vector (e) and the covariance matrix (Ce) 
+  /// after one iteration of the contraint fit.
   StatusCode itera(HepVector &e, HepSymMatrix &Ce, HepVector &mass,
                    double massConstr, int dimCe, bool final );
+
+  /// Computes the parameters and the covariance matrix of the
+  /// new formed particle. 
   StatusCode nwcov(HepVector &e, HepSymMatrix &Ce, double zcer,
                    HepVector &tpf, HepSymMatrix &Cx, int dimCe );
+
+  /// Evaluates how well the constraint equations are satisfied
+  /// at a given iteration. 
+  /// It returns the invariant mass at this step ( = massConstrCalc ) and 
+  /// the difference in the estimated z-vertex ( = diffZver ).
   StatusCode evalu(HepVector &e, HepVector &mass,
 		   double& massConstrCalc,double diffZver);
+
+  /// Computes the Chisquare of the contrained fit.
   StatusCode chisq(HepVector &e0,HepVector &e, HepSymMatrix &Ce,
                    double &chis);
   
+  int m_ntracks;                        ///< Number of tracks to fit
  
-  // The Particle Property Service is set internally at creation. 
-  IParticlePropertySvc* m_ppSvc;
-
-  // The tool service
-  IToolSvc* m_pToolSvc;
-  IVertexFitter* m_pVertexUnconst; 
-  IParticleTransporter* m_pTransporter;
+  IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
+  IVertexFitter* m_pVertexUnconst;      ///< Reference to VertexFitter
+  IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
 };
 
 #endif // LAGRANGEMASSVERTEXFITTER_H
