@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlParserSvc.h,v 1.3 2001-06-28 09:14:03 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlParserSvc.h,v 1.4 2001-07-03 10:03:09 sponce Exp $
 
 #ifndef DETDESC_IXMLPARSERSVC_H
 #define DETDESC_IXMLPARSERSVC_H
@@ -9,7 +9,7 @@
 #include <dom/DOM_Document.hpp>
 
 /// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IXmlParserSvc(4846, 1 , 0);
+static const InterfaceID IID_IXmlParserSvc(131, 1 , 0);
 
 
 /** @class IXmlParserSvc IXmlParserSvc.h DetDesc/IXmlParserSvc.h
