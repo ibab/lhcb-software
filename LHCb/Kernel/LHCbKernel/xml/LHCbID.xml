@@ -22,13 +22,24 @@
           value = "veloType=1, stType, otType, richType, caloType, muonType"
        />
 
+      <enum
+        name = 'SpecificMask'
+        value = 'veloMask= 0x1FFFFFL,otMask=0x3FFFFFFL'
+        desc = 'enumeration of the specific mask'
+        access = 'PROTECTED' />
+
+      <enum
+        name = 'SpecificBits'
+        value = 'veloBits=21,otBits=26'
+        desc = 'enumeration of the specific bits'
+        access = 'PROTECTED' />
+
        <attribute
           desc = "the internal representation" name="lhcbID"
           type = "bitfield"
           setMeth = "FALSE" >
+            <bitfield desc='the detector channelID bits' length='28' name='channelID' setMeth='TRUE' getMeth='FALSE' />
             <bitfield desc='the LHCb detector type bits' length='4' name='detectorType' />
-            <bitfield desc='the detector channelID bits' length='24' name='channelID' setMeth='FALSE' getMeth='FALSE' />
-            <bitfield desc='the spare bits' length='4' name='spareBits' setMeth='FALSE' getMeth='FALSE' />
        </attribute>
 
        <method
@@ -199,54 +210,65 @@
          </code>
        </method>
 
-       <method
-         type  = 'unsigned int'
-         name  = 'spareBits'
-         const = 'TRUE'
-         desc  = 'retrieve the spare bits'>
-         <code>
-  if ( !( isVelo() || isOT() ) ) return 0;
-  return (unsigned int)((m_lhcbID &amp; spareBitsMask) &gt;&gt; spareBitsBits);
-         </code>
-       </method>
+      <method
+        type  = "unsigned int"
+        name  = "channelID"
+        const = 'TRUE'
+        desc  = "return the internal channel ID">
+        <code>
+  unsigned mask = channelIDMask;
+  unsigned bits  = channelIDBits;
+  if (isVelo()) mask = veloMask;
+  if (isOT()) mask = otMask;
+  unsigned int id = (m_lhcbID &amp; mask) &gt;&gt; bits;
+  return id;
+        </code>
+      </method>
 
-       <method
-         name    = 'setSpareBits'
-         argList = 'unsigned int value'
-         desc    = 'set the spare bits'>
-         <code>
+
+      <method
+        name    = 'setSpareBits'
+        argList = 'unsigned int value'
+        desc    = 'set the spare bits'>
+        <code>
   if ( !( isVelo() || isOT() ) ) return;
-  unsigned int val = (unsigned int)value;
-  m_lhcbID &amp;= ~spareBitsMask;
-  m_lhcbID |= ((((unsigned int)val) &lt;&lt; spareBitsBits) &amp; spareBitsMask);
-         </code>
-       </method>
-
-       <method
-         type  = 'unsigned int'
-         name  = 'channelID'
-         const = 'TRUE'
-         desc  = 'retrieve the channelID'>
-  <code>
-  unsigned int mask = channelIDMask | spareBitsMask;
-  if ( isVelo() || isOT() ) mask = channelIDMask;
-  return (unsigned int)((m_lhcbID &amp; mask) &gt;&gt; channelIDBits);
-         </code>
-       </method>
-
-       <method
-         name    = 'setChannelID'
-         argList = 'unsigned int value'
-         desc    = 'set the channelID'>
-         <code>
-  unsigned int mask = channelIDMask | spareBitsMask;
-  if ( isVelo() || isOT() ) mask = channelIDMask;
-  unsigned int val = (unsigned int)value;
+  unsigned int mask = channelIDMask;
+  unsigned int bits = channelIDBits;
+  if (isVelo()) {
+    mask &amp;= (~veloMask);
+    bits = veloBits;
+  } else if (isOT()) {
+    mask &amp;= (~otMask);
+    bits = otBits;
+  }
   m_lhcbID &amp;= ~mask;
-  m_lhcbID |= ((((unsigned int)val) &lt;&lt; channelIDBits) &amp; mask);
+  m_lhcbID |= ((((unsigned int)value) &lt;&lt; bits) &amp; mask);
+        </code>
+      </method>
+
+      <method
+        type  = 'unsigned int'
+        name  = 'spareBits'
+        const = 'TRUE'
+        desc  = 'retrieve the spare bits'>
+        <code>
+  if ( !( isVelo() || isOT() ) ) return 0;
+  unsigned int mask = channelIDMask;
+  unsigned int bits = channelIDBits;
+  if (isVelo()) {
+     mask &amp;= (~veloMask);	  
+     bits = veloBits;
+  } else if (isOT()) {
+     mask &amp;= (~otMask);	  
+     bits = otBits;
+  }
+  unsigned int val = ((m_lhcbID &amp; mask) &gt;&gt; bits);
+  return val;
          </code>
        </method>
 
+
+    
     </class>
   </package>
 </gdd>

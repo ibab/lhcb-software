@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-02-04 - Jose Hernando
+ - LHCbID class revisited:
+   - using 28 bits for OT and 21 Velo for channelID
+   - leaving space for spare bits for Velo (size of cluster) a
+	and OT (left/right ambiguity)
+   - waiting for IT to be revisited.
+
 !====================== LHCbKernel v5r8 2005-03-04 ========================
 ! 2005-02-22 - Chris Jones
  - Update RichSmartID with reordered bit field, but this time with the 
