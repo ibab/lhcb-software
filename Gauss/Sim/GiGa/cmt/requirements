@@ -1,50 +1,47 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.18 2001-04-27 12:12:41 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
 
-package  GiGa 
-version  v4
+package  GiGa
+version  v5
 
-################ own options #############################################
+# ============== own options ==================================================
 set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
 
-################ structure ############################################### 
-branches cmt src doc GiGa 
+# ============== structure ====================================================
+branches         cmt src doc GiGa
 
-################ GaudiKernel #############################################
-use GaudiKernel   v9*
+# ============== used packaged ================================================
+use GaudiKernel  v10*
+use GEANT4       v3r2*  Sim
 
-################ Geant4 wrapper package ################################## 
-use G4Wrapper     v1 Sim 
-
-################ own includes ############################################
+# ============== own includes =================================================
 include_dirs                     $(GIGAROOT)
 
-################ linker library ##########################################
-#library        GiGaLib   Lib/*.cpp 	        
+# ============== linker library ===============================================
+# for this concrete release it is static library!
+# library        GiGaLib  -no_share   Lib/*.cpp
+library          GiGaLib              Lib/*.cpp
 
-################ component library #######################################
-library         GiGa      component/*.cpp Lib/*.cpp   	        
+# ============== component library ============================================
+# for this concrete release it is static library!
+# library        GiGa  -no_share    component/*.cpp
+library          GiGa               component/*.cpp
 
-apply_pattern package_Clinkopts
-apply_pattern packageShr
 
-macro GiGaLinkOpts    "$(GiGaDir)/libGiGa.a " \ 
-	WIN32         "$(GiGaDir)/GiGa.arc "  
+# ============== patterns =====================================================
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts
+apply_pattern    linker_path
 
-################ private stuff ###########################################
+#macro componentshr_linkopts " -fPIC -Wl,-s,-shared,-Bsymbolic -ldl "
+
+# ============== private stuff ================================================
 private
-
 apply_pattern package_Cshlibflags
-#macro_append  GiGaLib_shlibflags  "$(GaudiKernel_linkopts) $(G4Wrapper_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
-
-################ to reduce number of warnings ###########################
-macro_remove cppflags "-Wall "
-
-################ to reduce number of warnings from G4 
-macro_append GiGa_cppflags   " " \ 
-          Linux           "-Wno-unused " 
-
-################ end #####################################################
-
-
-
-
+apply_pattern package_Lshlibflags
+macro_append  GiGaLib_shlibflags " $(GaudiKernel_linkopts) "
+macro_append  GiGaLib_shlibflags " $(GEANT4_linkopts) "
+macro_append  GiGaLib_shlibflags " $(CLHEP_linkopts) "
