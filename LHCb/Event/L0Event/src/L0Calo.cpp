@@ -1,4 +1,4 @@
-// $Id: L0Calo.cpp,v 1.2 2002-04-15 08:24:24 ocallot Exp $
+// $Id: L0Calo.cpp,v 1.3 2002-04-15 11:13:50 ocallot Exp $
 // Include files 
 
 #include "Event/L0CaloCandidate.h"
@@ -58,11 +58,11 @@ MsgStream& L0CaloCandidate::fillStream( MsgStream& log ) const {
 //=========================================================================
 //  Operators for printing on Gaudi Stream
 //=========================================================================
-inline MsgStream& operator<<( MsgStream& ms, const L0CaloCandidate& cand) {
+MsgStream& operator<<( MsgStream& ms, const L0CaloCandidate& cand) {
   return cand.fillStream( ms );
 }
 
-inline MsgStream& operator<<( MsgStream&  ms, const L0CaloCandidate* cand) {
+MsgStream& operator<<( MsgStream&  ms, const L0CaloCandidate* cand) {
   if ( 0 != cand ) {
     ms << *cand;
   } else {
