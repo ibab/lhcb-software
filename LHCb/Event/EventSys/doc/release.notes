@@ -1,6 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2002-09-24 - Marco Cattaneo
+ - Use TrEvent v11r2
+
 !======================== EventSys v12r3 2002-09-12 ========================
 ! 2002-09-12 - Marco Cattaneo
  - Use L0Event v12r2
