@@ -4,11 +4,21 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r6 2004-04-05 =======================
-! 2004-04-05 - Marco Cattaneo
+!======================= LHCbSys v15r6 2004-04-07 =======================
+! 2004-04-07 - Marco Cattaneo
   Built against Gaudi v14r4
 
  - Removed packages:  GaudiTools (was added temporarily in v15r4)
+
+ - Modified packages: EventSys v17r6, GenEvent v3r2
+
+ - In GenEvent v3r2:
+   . Introduce xml for new classes:
+     GenMCLink.xml - holds info to connect signal MCParticle to corresponding
+                     GenParticle in HepMC (pointer to HepMC event and barcode)
+     HardInfo.xml  - holds info relative to hard process for each pp-collision
+     GenCollision.xml - extend class Collision to add refernce to HardInfo
+
 
 !======================= LHCbSys v15r5 2004-04-01 =======================
 ! 2004-04-01 - Marco Cattaneo

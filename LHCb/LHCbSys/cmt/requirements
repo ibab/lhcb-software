@@ -6,7 +6,7 @@ branches doc cmt
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r5
+use LHCb		v15r6
 
 use GaudiConf		v7r6
 
@@ -39,7 +39,7 @@ use RichDet		v7r0	Det
 use STDet          	v1r1	Det
 
 # Event data model
-use EventSys		v17r5	Event
+use EventSys		v17r6	Event
 use Event        	v4r2	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
@@ -53,7 +53,7 @@ use L1Event      	v12r0	Event
 use PhysEvent    	v8r2	Event
 use HltEvent		v5r0	Event
 use DAQEvent		v4r1	Event
-use GenEvent    	v3r1	Event
+use GenEvent    	v3r2	Event
 use EventAssoc          v1r0    Event
 use LinkerEvent         v1r2    Event
 use TrgEvent            v2r1    Event
