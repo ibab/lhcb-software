@@ -1,5 +1,11 @@
-// Default monitoring options for production jobs
-Moni.DetectorList  = { "VELO", "IT", "L0", "L1", "RICH" };
+// Switches off histograms that are too numerous for production jobs
 
 // Produce only the summary table
 L1TrackMonitor.Histograms = false;
+
+// Remove detailed Rich histos
+MoniRICHSeq.Members = {};
+#include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
+
+// Remove 2D histos (MCOTDepositMonitor)
+MoniOTSeq.Members = { "OTDigitMonitor" };

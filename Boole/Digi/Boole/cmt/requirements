@@ -1,7 +1,14 @@
 package Boole
-version v1r0
+version v2r0
 
 branches doc cmt job options
+
+# Set the default path for Boole options.
+set BOOLEOPTS  $(BOOLEROOT)/options
+
+#== Set the Boole version environment variable, read by BooleInit ==
+pattern BooleVersion path_append BOOLEVERS <version>
+apply_pattern BooleVersion
 
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r11p2
@@ -11,40 +18,45 @@ use ExternalLibs	v4r0p1
 use AIDA		v3r22p2
 use CLHEP		v2r1800p0
 use HTL			v2r1321p0
+# NAGC still used by L1Decision
 use NAGC		v2r50p0		
 use XERCES		v2r220p0
 use CERNLIB 		v2r2002p0
 use ROOT 		v2r30504p0
+use GSL			v2r13p0
 
 #-- Gaudi libraries (from GAUDI_v12r0)
 use GaudiKernel		v13r4p1
 use GaudiSvc 		v10r2
 use GaudiAlg 		v6r4
 use GaudiAud 		v6r2
+# NAGC still used by L1Decision
 use GaudiNagC 		v7r3
 use GaudiDb 		v8r4
 use GaudiRootDb 	v9r2
 use GaudiIntrospection 	v4r6
-use GaudiObjDesc 	v5r0
 use HbookCnv 		v13r4
 
-#-- Database
-use XmlDDDB	v17r0	Det
+#-- Databases
+use XmlDDDB	v18r0	Det
+use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
+use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v13r0)
-use LHCb	v13r0
+#-- LHCb libraries (from LHCB_v14r0)
+use LHCb	v14r0
 
 #-> SICB basic libraries (from SICBOO_v1r0)
-use SICBSys	v1r6	SICB
+#use SICBSys	v1r6	SICB
+use RiSicbGeom	v3r4	SICB
 
-#-- BooleSys v1r0 packages (based on BrunelSys v19r1)
+#-- BooleSys v2r0 packages
 
 # Brunel utilities
-use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r2	Rec
+#use BrunelSicb          v4r1    Rec
+#use BrunelAlgs          v2r2	Rec
 
 # LHC background
-use DigiAlg		v1r1	Digi
+use DigiAlg		v2r0	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -67,29 +79,30 @@ use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r10	IT
-use ITCheckers          v1r3  	IT
+use ITCheckers          v1r3p1	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r0 	OT
+use OTAlgorithms        v13r2 	OT
 
 # Muon
-use MuonAlgs            v4r1    Muon
-use MuonBackground	v1r2	Muon
+use MuonAlgs            v5r0    Muon
+use MuonBackground	v1r3	Muon
 use MuonUtils		v1r0	Muon
 
 # Rich
-use RichDigiQC	        v1r0  	Rich
-use RichUtils		v3r2  	Rich
-use RichDetTools	v2r2  	Rich
+use RichDigiQC	        v1r1  	Rich
+use RichUtils		v3r3  	Rich
+use RichDetTools	v3r0  	Rich
+use RichReadout		v1r0	Rich
 
 # SICBDST packages
-use recevt              v3r5  	SICB
-use recrich             v7r4  	SICB
+#use recevt              v3r5  	SICB
+#use recrich             v7r4  	SICB
 
 #
 #===== build Boole =========================
-application Boole ../src/BooleMain.cpp \
-                   $(BRUNELSICBROOT)/src/Objs/*.F
+application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
+#                   $(BRUNELSICBROOT)/src/Objs/*.F
 # ========================= set macros ============================
 
 macro Boole_linkopts    "$(application_linkopts)"
@@ -98,13 +111,7 @@ macro_append Boole_linkopts " "\
                 Linux        " -g -Wl,--start-group "\
                 Linuxdbx     " -g -Wl,--start-group "
 
-#== Set the Boole version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=10000 " \
-           VisualC  " /DBrunelVersion=10000 "
-
 apply_pattern application_path
 
-# Set the default paths for Boole options and SICBDST data cards.
-set BOOLEOPTS  $(BOOLEROOT)/options
-set SICBCARDS  ${BOOLEOPTS}/Boole.cards
+#set SICBCARDS  ${BOOLEOPTS}/Boole.cards
 

@@ -3,6 +3,57 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+To do:
+ - Fix Gauss for Muon GapID, ChamberID
+ - Fix Boole.job for no lhcbdbase
+ - Add options for Gauss data and SICB MaPMT option
+ - Check options for v254r1 data
+ - Commit changes to L1Decision to remove NAGC dependency
+
+- New features
+  . Reads data (including spillover) in oosim format
+  . Use MergeEventAlg for spillover, allows any number of spillover events; 
+    default is three (/Prev, /Next, /NextNext) (DigiAlg v2r0)
+  . Deploy Rich C++ digitization. Supports both MaPMT (baseline) and HPD options 
+    (RichKernelv3r2, RichUtils v3r3, RichDet v6r0, RichDetTools v3r0, 
+     RichEvent v5r1, RiSicbGeom v3r4, RichReadout v1r0, RichDigiQC v6r2)
+  . All parameterisations taken from ParamFiles directory (includes versioning
+    needed by production tools). LHCBDBASE environment variable no longer needed.
+  . Create L1Buffer and HLTBuffer for data in DAQ format. Currently these are 
+    empty, sub-detector code is needed to populate this according to front end
+    specifications. (DAQEvent v1r1, DigiAlg v2r0)
+  . CreateL1Event algorithm at start of L1 sequence, gives access to L1Buffer in
+    L1 algorithms. Should be included in L1 timing measurements.
+    (DAQEvent v1r1, DigiAlg v2r0)
+
+- Removed features
+  . Removed SICB common block. Can no longer read Zebra data directly, must be
+    first converted to oosim by SicbToOORawh program (v3r0 or greater). 
+	  Boole.cards no longer needed
+  . Removed access to LHCBDBASE. cdf files still in use have been moved to
+    ParamFiles package (v2r1 or greater)
+
+- oodigi output changes (GaudiConf v7r1)
+  . Add DAQ/L1Buffer and DAQ/HLTBuffer
+    (N.B. these are placeholders, currently empty. Will eventaully contain
+     the complete digitized event, to simulate data format from DAQ)
+  . Add MC/Rich/Digits to preserve relation to MC truth (forgotten in v1r0)
+
+- New tuning
+  . Switch on 10kHz noise in OT digitization (OTAlgorithms v13r2)
+  . New parameterisation of muon background, following fix to "TOF bug"
+    (MuonBackground v1r3)
+
+- Bug fixes
+  . Fix to BooleMoni.opts to switch on OT monitoring
+  . Fix to BooleMoniProd.opts to switch on CALO monitoring
+
+- New packaging
+  . Include RiSicbGeom package in BOOLE project to remove dependency on SICBOO
+    project
+  . Removed dependency on NAGC dependencies.
+
+
 </PRE><H1><A NAME=v1r0>2003-07-17 Boole v1r0</A></H1><PRE>
 
 First version of the LHCb digitization program.

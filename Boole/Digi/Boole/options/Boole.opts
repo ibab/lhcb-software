@@ -6,20 +6,30 @@
 // You only need to modify it if you want to add or remove algorithms
 // !! Do not modify position or order of included files !!
 //==============================================================
-#include "$STDOPTIONS"
+#units "$STDOPTS/units.opts"
 
-ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
+ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg" };
+
+// ROOT Persistency
+ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
+// Activate the conversion service
+ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
+// Declare the persistency type for the conversion service
+RootEvtCnvSvc.DbType = "ROOT" ;
+// Declare the conversion service to the Persistency Service
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
+
 
 //--------------------------------------------------------------
 // Phases to be executed
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "BrunelSicbInit",
-                           "BrunelInitialisation",
+ApplicationMgr.TopAlg += {
+                           "BooleInit",
                            "ProcessPhase/Digi",
-                           "ProcessPhase/Trigger",
-                           "BrunelFinalisation" };
+                           "ProcessPhase/Trigger" };
 ApplicationMgr.TopAlg += { "ProcessPhase/Moni" }; 
 #include "$BOOLEOPTS/BooleMoni.opts"
 //--------------------------------------------------------------
@@ -44,18 +54,14 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 //--------------------------------------------------------------
 // Sicb converters
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "CaloSicbCnv" };
-ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
-ApplicationMgr.DLLs += { "MuonSicbCnv" };
-ApplicationMgr.DLLs += { "VSicbCnv" };
+ApplicationMgr.DLLs += { "RiSicbGeom" };
+//, "RiSicbCnv" };
 
 //--------------------------------------------------------------
-// SpillOver and LHC background
+// Spillover and LHC background (from DigiAlg DLL)
 //--------------------------------------------------------------
-DigiSpillOverSeq.Members = { "SpillOverAlg" };
-#include "$SICBCNVROOT/options/Brunel.opts" // To be modified
-
-ApplicationMgr.DLLs += { "DigiAlg" };
+DigiSpilloverSeq.Members = { "MergeEventAlg/SpilloverAlg" };
+#include "$DIGIALGROOT/options/Spillover.opts"
 DigiBkgSeq.Members += { "MergeEventAlg/LHCbkgAlg" };
 #include "$DIGIALGROOT/options/LHCBackground.opts"
 
@@ -74,6 +80,7 @@ TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 
 // L1 trigger
+TriggerL1Seq.Members = { "CreateL1Event" };
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 TriggerL1Seq.Members += { "ITDigitToL1", "OTDigitToL1" };
 ApplicationMgr.DLLs += { "L1Decision" };
@@ -107,10 +114,8 @@ DigiCALOSeq.Members = {
 };
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
-// Rich Fortran digitisation and OO digits creator 
-DigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
-DigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
-DigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
+// Rich digitisation depends on dbase type, see dbase specific options
+ApplicationMgr.DLLs += { "RichDetTools", "RichReadout" };
 
 // Muon digitisation
 ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
