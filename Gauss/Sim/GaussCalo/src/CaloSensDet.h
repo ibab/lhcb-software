@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.7 2003-07-08 11:12:40 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.8 2003-07-08 19:40:57 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/07/08 11:12:40  ibelyaev
+//  few fixes in base class CaloSensDet
+//
 // Revision 1.6  2003/07/07 16:27:46  ibelyaev
 //  substitupe G4Material with G4MaterialCutsCouple
 //
@@ -337,6 +340,24 @@ private:
   
   // the additive correction for the evaluation of t0 
   double   m_dT0    ;
+
+private:
+  
+  // statistical counters 
+  bool   m_stat      ;
+  long   m_events    ;
+  double m_hits      ;
+  double m_hits2     ;
+  double m_hitsMin   ;
+  double m_hitsMax   ;  
+  double m_shits     ;
+  double m_shits2    ;
+  double m_shitsMin  ;
+  double m_shitsMax  ;  
+  double m_energy    ;
+  double m_energy2   ;
+  double m_energyMin ;
+  double m_energyMax ;
   
 };
 // ============================================================================

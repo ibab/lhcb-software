@@ -1,17 +1,8 @@
-// $Id: CaloSensDet.cpp,v 1.9 2003-07-08 11:12:39 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.10 2003-07-08 19:40:57 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2003/07/07 16:27:46  ibelyaev
-//  substitupe G4Material with G4MaterialCutsCouple
-//
-// Revision 1.7  2003/07/07 09:52:16  ibelyaev
-//  remove buf from birkCorrection - 3
-//
-// Revision 1.6  2003/07/07 08:21:06  ibelyaev
-//  split the general CaloSensDet class
-//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -26,6 +17,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/Stat.h"
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
@@ -105,6 +97,21 @@ CaloSensDet::CaloSensDet
   , m_birk_c1correction  ( 0.57142857                   ) 
   /// correction to t0
   , m_dT0                ( 0.5 * ns                     )
+  /// counters 
+  , m_stat               ( true                         ) 
+  , m_events             (     0      ) 
+  , m_hits               (     0      ) 
+  , m_hits2              (     0      )
+  , m_hitsMin            (     1.e+10 ) 
+  , m_hitsMax            (    -1.e+10 ) 
+  , m_shits              (     0      ) 
+  , m_shits2             (     0      ) 
+  , m_shitsMin           (     1.e+10 ) 
+  , m_shitsMax           (    -1.e+10 ) 
+  , m_energy             (     0      )
+  , m_energy2            (     0      )
+  , m_energyMin          (  1000 * TeV ) 
+  , m_energyMax          (    -1 * TeV ) 
 {
   setProperty     ( "DetectorDataProvider" ,  "DetectorDataSvc"   ) ;
   
@@ -122,6 +129,8 @@ CaloSensDet::CaloSensDet
   declareProperty ( "dT0"                  ,  m_dT0               ) ;
   // input histograms(parametrization)
   declareProperty ( "Histograms"           ,  m_histoNames        ) ;
+  // perform statistical analysis?
+  declareProperty ( "EvaluateStatistics"   ,  m_stat              ) ;
 };
 // ============================================================================
 
@@ -186,6 +195,29 @@ StatusCode CaloSensDet::initialize   ()
 // ============================================================================
 StatusCode CaloSensDet::finalize    ()
 {
+  if( m_stat ) 
+    { /// statistical printout 
+      MsgStream log( msgSvc() , name() ) ;
+      log << MSG::ALWAYS << 
+        format ( " <#Hits>/Min/Max=(%3d+-%3d)/%d/%4d "                  , 
+                 (long) m_hits                                          , 
+                 (long) sqrt ( fabs( m_hits2 - m_hits * m_hits ) )      ,
+                 (long) m_hitsMin                                       ,
+                 (long) m_hitsMax                                       ) ;
+      log << 
+        format ( " <#SubHits>/Min/Max=(%3d+-%3d)/%d/%4d "               , 
+                 (long) m_shits                                         , 
+                 (long) sqrt ( fabs( m_shits2 - m_shits * m_shits ) )   ,
+                 (long) m_shitsMin                                      ,
+                 (long) m_shitsMax                                      ) ;
+      log <<
+        format ( " <E>/Min/Max[GeV]=(%.3g+-%.3g)/%g/%.3g"         , 
+                 m_energy                                         / GeV , 
+                 sqrt ( fabs( m_energy2 - m_energy * m_energy ) ) / GeV ,
+                 m_energyMin                                      / GeV ,
+                 m_energyMax                                      / GeV ) <<  
+        endreq ;
+    }
   // reset the detector element 
   m_calo         = 0 ;
   // clear the translation table 
@@ -274,7 +306,67 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
  *  @param HCE pointer to hit collection of current event 
  */
 // ============================================================================
-void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE ) { m_hitmap.clear() ; };
+void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE ) 
+{
+  /// clear the map 
+  m_hitmap.clear();
+  
+  // perform the simple stat analysis ? 
+  if( !m_stat ) { return ; }                                // RETURN !!
+  
+  /// increase the counter of processed events
+  ++m_events ;
+  const double f1 = 1.0 / ( (double) ( m_events     ) ) ;
+  const double f2 =  f1 * ( (double) ( m_events - 1 ) ) ;
+  
+  if ( 0 == m_collection ) 
+    { Warning ( " EndOfEvent(): HitCollection points to NULL " ) ; return ; } 
+  typedef std::vector<CaloHit*> Hits ;
+  const Hits* hits = m_collection ->GetVector() ;
+  if ( 0 == hits ) 
+    { Error   (" EndOfEvent(): HitVector* points to NULL "     ) ; return ; } 
+  
+  // initialize counters 
+  size_t nshits = 0 ;
+  size_t nthits = 0 ;
+  double energy = 0 ;
+  
+  // the loop over all hits 
+  for( Hits::const_iterator ihit = hits->begin() ; 
+       hits->end() != ihit ; ++ihit ) 
+    {
+      const CaloHit* hit = *ihit ;
+      if( 0 == hit ) { continue ; }                           // CONTINUE 
+      nshits += hit -> size      () ;
+      nthits += hit -> totalSize () ;
+      energy += hit -> energy    () ;    
+   }
+
+  
+  // number of hits 
+  const size_t nhits = hits->size()  ;
+  m_hits    = m_hits    * f2   +   nhits           * f1 ;
+  m_hits2   = m_hits2   * f2   +   nhits  * nhits  * f1 ;
+  
+  m_shits   = m_shits   * f2   +   nshits          * f1 ;
+  m_shits2  = m_shits2  * f2   +   nshits * nshits * f1 ;
+
+  m_energy  = m_energy  * f2   +   energy          * f1 ;
+  m_energy2 = m_energy2 * f2   +   energy * energy * f1 ;
+
+  if ( nhits  > m_hitsMax   ) { m_hitsMax   = nhits  ; }
+  if ( nhits  < m_hitsMin   ) { m_hitsMin   = nhits  ; }
+  if ( nshits > m_shitsMax  ) { m_shitsMax  = nshits ; }
+  if ( nshits < m_shitsMin  ) { m_shitsMin  = nshits ; }
+  if ( energy > m_energyMax ) { m_energyMax = energy ; }
+  if ( energy < m_energyMin ) { m_energyMin = energy ; }
+  
+  MsgStream log ( msgSvc() , name() ) ;
+  log << MSG::DEBUG <<
+    format 
+    ( " #CaloHits=%4d #CaloSubHits=%4d #TimeSlots=%4d Energy=%.3g GeV",
+      nhits , nshits , nthits , energy/GeV ) << endreq ;
+};
 // ============================================================================
 
 // ============================================================================

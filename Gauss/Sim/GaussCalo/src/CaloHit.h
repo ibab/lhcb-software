@@ -1,8 +1,11 @@
-// $Id: CaloHit.h,v 1.2 2002-12-13 16:52:57 ibelyaev Exp $
+// $Id: CaloHit.h,v 1.3 2003-07-08 19:40:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 16:52:57  ibelyaev
+//  put updated versions of the packages
+//
 // Revision 1.2  2002/12/07 21:19:14  ibelyaev
 //  few optimization updates
 //
@@ -93,6 +96,7 @@ public:
   
   /// number of entries/map size 
   size_t   size      () const { return m_map.size  () ; }
+  size_t   entries   () const { return       size  () ; }
   
   /// total number of (sub)entries 
   size_t   totalSize () const 
@@ -102,6 +106,18 @@ public:
       { if( 0 != hit->second ) { size += hit->second->size() ; } }
     return size ;
   };
+  /// the total energy (integrated over teh time and all particles)
+  CaloSubHit::Energy energy () const 
+  {
+    CaloSubHit::Energy e ;
+    for( iterator entry = begin() ; end() != entry ; ++entry ) 
+      {
+        const CaloSubHit* hit = entry -> second  ;
+        if( 0 == hit ) { continue ; }
+        e += hit->energy() ;
+      }
+    return e ;
+  }
   
 private:
   

@@ -1,8 +1,11 @@
-// $Id: GaussCalo_load.cpp,v 1.3 2003-07-07 16:09:39 ibelyaev Exp $ 
+// $Id: GaussCalo_load.cpp,v 1.4 2003-07-08 19:40:57 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/07 16:09:39  ibelyaev
+//  add Calorimeter Sensitive Palne hits and the converter
+// 
 // ============================================================================
 #define GAUSSCALO_GAUSSCALO_LOAD_CPP 1 
 // ============================================================================
@@ -24,6 +27,7 @@ void GaussCalo_load()
   DECLARE_GiGaFactory     ( EcalSensDet          ) ;
   DECLARE_GiGaFactory     ( HcalSensDet          ) ;
   DECLARE_GiGaFactory     ( SpdPrsSensDet        ) ;
+  DECLARE_GiGaFactory     ( GaussSensPlaneDet    ) ;
   
   /// Converters 
   DECLARE_CONVERTER       ( GiGaCaloHitCnv       ) ;  

@@ -8,6 +8,28 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-07-08 - Vanya BELYAEV
+ - src/CaloHit.h  
+   1)CaloHit::entries()     : new method (alias to CaloHit::size() ) 
+   2)CaloHit::energy ()     : new method for evaluation of total energy of the hit 
+ - src/CaloSubHit.h 
+   1)CaloSubHit::entries()  : new method (alias to CaloSubHit::size() ) 
+   2)CaloSubHit::energy ()  : new method for evaluation of total energy of the hit 
+ - src/CalosensDet.h,.cpp
+   the class is instrumented with some simple printout of number of hits, 
+   subhits, timeslots and total energy.
+   The printout is under the control of new property 'EvaluateStatistics' 
+   (the default value is 'true')
+
+! 2003-07-08 - Vanya BELYAEV
+ - src/GaussSensPlaneDet.h,.cpp 
+   the implementation of sensitive detector for Calorimeter Sensitive Plane
+ - options/CaloSP.opts 
+   the configuration file for calorimeter sensitive plane detector   
+ - src/GaussCalo_load.cpp 
+   add new sensitive detector to the list of known detectors 
+
+
+! 2003-07-08 - Vanya BELYAEV
  - src/CaloSensDet.h  
      1) move histoSvc() accessor from 'private' to 'protected' part 
          - according  to requests from Grigory and Carlos  

@@ -1,11 +1,8 @@
-// $Id: Calo.opts,v 1.6 2003-07-07 08:44:23 ibelyaev Exp $ 
+// $Id: Calo.opts,v 1.7 2003-07-08 19:40:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2003/07/07 08:21:02  ibelyaev
-//  split the general CaloSensDet class
-//
 // ============================================================================
 
 // ============================================================================
@@ -30,6 +27,8 @@ HistogramDataSvc.Input +=
 /// configuration of Hcal sensitive detector 
 #include "$GAUSSCALOOPTS/Hcal.opts"
 
+/// configuration Sensitive plane detector 
+#include "$GAUSSCALOOPTS/CaloSP.opts"
 
 // ============================================================================
 // The END 

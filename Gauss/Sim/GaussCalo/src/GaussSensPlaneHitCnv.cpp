@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHitCnv.cpp,v 1.1 2003-07-07 16:09:39 ibelyaev Exp $
+// $Id: GaussSensPlaneHitCnv.cpp,v 1.2 2003-07-08 19:40:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 16:09:39  ibelyaev
+//  add Calorimeter Sensitive Palne hits and the converter
+//
 // ============================================================================
 // STD and STL
 #include <iostream> 
@@ -61,7 +64,7 @@ GaussSensPlaneHitCnv::GaussSensPlaneHitCnv( ISvcLocator* svc )
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
   setConverterName              ( "GaussSensPlaneHitCnv"          ) ;
   ///
-  GiGaLeaf::Pars pars ( 1 , "CaloSensPlane/SensPlaneHits" ) ;
+  GiGaLeaf::Pars pars ( 1 , "CaloSP/CaloSPHits" ) ;
   declareObject( GiGaLeaf( MCCaloSensPlaneHitLocation::Default , 
                            objType() , pars  ) );  
   ///

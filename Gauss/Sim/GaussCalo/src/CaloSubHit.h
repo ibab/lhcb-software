@@ -1,8 +1,11 @@
-// $Id: CaloSubHit.h,v 1.2 2002-12-13 16:52:57 ibelyaev Exp $
+// $Id: CaloSubHit.h,v 1.3 2003-07-08 19:40:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 16:52:57  ibelyaev
+//  put updated versions of the packages
+//
 // Revision 1.2  2002/12/07 21:19:14  ibelyaev
 //  few optimization updates
 //
@@ -115,13 +118,23 @@ public:
   };
   
   /// access for map iterator "begin" (const)
-  iterator begin  () const { return m_map.begin () ; }
+  iterator begin   () const { return m_map.begin () ; }
   /// access for map iterator "end"   (const)
-  iterator end    () const { return m_map.end   () ; }
+  iterator end     () const { return m_map.end   () ; }
   
   /// number of entries/map size 
-  size_t   size   () const { return m_map.size  () ; }
-
+  size_t   size    () const { return m_map.size  () ; }
+  size_t   entries () const { return       size  () ; }
+  
+  /// overall subhit evergy  (integrated over the time )
+  Energy   energy  () const 
+  {
+    Energy e = 0 ;
+    for( iterator entry = begin() ; end() != entry ; ++entry ) 
+      { e += entry->second ; } 
+    return e ;
+  };
+  
 private:
   
   CaloCellID  m_cellID ;
