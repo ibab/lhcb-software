@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.cpp,v 1.4 2003-07-16 18:51:24 ibelyaev Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.5 2003-07-17 11:56:32 rybkine Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/09 17:01:44  ibelyaev
+//  Spd/Prs implemenattion by Grigory Rybkine
+//
 // Revision 1.1  2003/07/07 08:21:12  ibelyaev
 //  split the general CaloSensDet class
 //
@@ -179,8 +182,8 @@ StatusCode    SpdPrsSensDet::fillHitInfo
     G4EnergyLossTables::GetDEDX ( particle ,
                                   track->GetKineticEnergy(),
                                   material ) ;
-  edep *= birksCorrection( particle -> GetPDGCharge(), dEdX,
-                              material->GetMaterial()->GetDensity() );
+  edep *= birksCorrection( particle->GetPDGCharge(), dEdX,
+                           material->GetMaterial()->GetDensity() );
 
   // add the current energy deposition to the sub-hit
   // smearing the energy deposition over a number of bunch crossings (timing)
@@ -189,15 +192,14 @@ StatusCode    SpdPrsSensDet::fillHitInfo
   frac.reserve( m_numBXs ) ;
 
   StatusCode sc = timing( globalTime, cellID, slot, frac );
-  if( sc.isFailure() ){ 
+  if( sc.isFailure() )
     return Error("Could not smear Edep!", sc);
-  }
   else
     Print("Smeared Edep", StatusCode::SUCCESS, MSG::VERBOSE);
 
-  for( unsigned int i = 0; i < frac.size(); i++ )
-    if( frac[i] > m_fracMin ) hit->add( slot + i , edep*frac[i] ) ;
-
+  for( unsigned int i = 0; i < frac.size(); i++, slot += 1 )
+    if( frac[i] > m_fracMin ) hit->add( slot, edep*frac[i] ) ;
+  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
