@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.47 2005-02-15 07:31:28 pkoppenb Exp $
+! $Id: release.notes,v 1.48 2005-03-20 23:20:39 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-03-21 - Luis Fernandez
+ - src/TrueMCFilterCriterion.{h,cpp}
+   . Reviewed to find association of particles made from charged (online and 
+     offline) tracks or offline gammas in the same way. Works for online gammas, 
+     but requires offline calo clusters. To be fixed
 
 !========================== DaVinciMCTools v5r8p1 2005-02-15 ===================
 ! 2005-02-10 - P. Koppenburg
