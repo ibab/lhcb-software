@@ -1,5 +1,17 @@
-// $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.3 2004-07-12 14:25:02 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichTrSegMakerFromTrStoredTracks.cpp
+ *
+ * Implementation file for class : RichTrSegMakerFromTrStoredTracks
+ *
+ * CVS Log :-
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -14,12 +26,6 @@
 // CLHEP
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTrSegMakerFromTrStoredTracks
-//
-// 14/01/2002 : Artur Barczyk
-//-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichTrSegMakerFromTrStoredTracks>          Factory ;

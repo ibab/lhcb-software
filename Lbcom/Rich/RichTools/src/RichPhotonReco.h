@@ -1,4 +1,16 @@
-// $Id: RichPhotonReco.h,v 1.3 2004-07-15 15:44:40 jonrob Exp $
+
+/** @file RichPhotonReco.h
+ *
+ *  Header file for tool : RichPhotonReco
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonReco.h,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-11-14
+ */
+
 #ifndef RICHDETTOOLS_RICHPHOTONRECO_H
 #define RICHDETTOOLS_RICHPHOTONRECO_H 1
 

@@ -1,6 +1,18 @@
-// $Id: RichToolRegistry.h,v 1.3 2004-07-21 08:05:35 cattanem Exp $
-#ifndef RICHUTILS_RICHTOOLREGISTRY_H
-#define RICHUTILS_RICHTOOLREGISTRY_H 1
+
+/** @file RichToolRegistry.h
+ *
+ *  Header file for tool : RichToolRegistry
+ *
+ *  CVS Log :-
+ *  $Id: RichToolRegistry.h,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
+#ifndef RICHTOOLS_RICHTOOLREGISTRY_H
+#define RICHTOOLS_RICHTOOLREGISTRY_H 1
 
 #include <map>
 #include <string>
@@ -11,7 +23,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-
 
 /** @class RichToolRegistry RichToolRegistry.h
  *
@@ -40,7 +51,7 @@ public: // for Gaudi framework
   // Finalization of the tool before deletion
   StatusCode finalize();
 
-public: // methods inherited from interface
+public: // methods (and doxygen comments) inherited from interface
 
   // Converts a tool nickname into a particular class name
   const std::string & toolType( const std::string & nickname ) const;
@@ -75,4 +86,4 @@ inline void RichToolRegistry::addEntry( const std::string & nickname,
   m_myTools[nickname] = type;
 }
 
-#endif // RICHUTILS_RICHTOOLREGISTRY_H
+#endif // RICHTOOLS_RICHTOOLREGISTRY_H

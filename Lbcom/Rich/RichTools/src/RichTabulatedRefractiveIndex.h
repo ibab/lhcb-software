@@ -1,6 +1,18 @@
-// $Id: RichTabulatedRefractiveIndex.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
-#ifndef RICHDETTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
-#define RICHDETTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
+
+/** @file RichTabulatedRefractiveIndex.h
+ *
+ *  Header file for tool : RichTabulatedRefractiveIndex
+ *
+ *  CVS Log :-
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
+#ifndef RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
+#define RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -86,4 +98,4 @@ private:  // Private data
 
 };
 
-#endif // RICHDETTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
+#endif // RICHTOOLS_RICHTABULATEDREFRACTIVEINDEX_H

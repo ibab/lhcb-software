@@ -1,13 +1,20 @@
-// $Id: RichMCTruthTool.cpp,v 1.5 2004-06-18 09:42:21 jonesc Exp $
+// 
+//-----------------------------------------------------------------------------
+/** @file RichMCTruthTool.cpp
+ *
+ * Implementation file for class : RichMCTruthTool
+ *
+ * CVS Log :-
+ * $Id: RichMCTruthTool.cpp,v 1.6 2004-07-26 17:56:09 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichMCTruthTool.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichMCTruthTool
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichMCTruthTool>          s_factory ;

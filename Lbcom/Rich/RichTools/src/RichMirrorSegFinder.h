@@ -1,4 +1,16 @@
-// $Id: RichMirrorSegFinder.h,v 1.3 2004-07-15 15:44:40 jonrob Exp $
+
+/** @file RichMirrorSegFinder.h
+ *
+ *  Header file for tool : RichMirrorSegFinder
+ *
+ *  CVS Log :-
+ *  $Id: RichMirrorSegFinder.h,v 1.4 2004-07-26 18:03:04 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-11-04
+ */
+
 #ifndef RICHTOOLS_RICHMIRRORSEGFINDER_H
 #define RICHTOOLS_RICHMIRRORSEGFINDER_H 1
 
@@ -51,7 +63,7 @@ public: // Methods for Gaudi Framework
   // Finalization of the tool before deletion
   virtual StatusCode finalize  ();
 
-public: // methods (and doxygen comments) inherited from interface
+public: // methods (and doxygen comments) inherited from public interface
 
   // Locates the spherical mirror Segment given a reflection point,
   // RICH identifier and panel

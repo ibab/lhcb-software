@@ -1,8 +1,19 @@
-// $Id: RichSmartIDTool.h,v 1.3 2004-07-15 16:47:02 jonrob Exp $
-#ifndef RICHDETTOOLS_RICHSMARTIDTOOL_H
-#define RICHDETTOOLS_RICHSMARTIDTOOL_H 1
 
-// Include files
+/** @file RichSmartIDTool.h
+ *
+ *  Header file for tool : RichSmartIDTool
+ *
+ *  CVS Log :-
+ *  $Id: RichSmartIDTool.h,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-10-28
+ */
+
+#ifndef RICHTOOLS_RICHSMARTIDTOOL_H
+#define RICHTOOLS_RICHSMARTIDTOOL_H 1
+
 // from STL
 #include <string>
 
@@ -19,7 +30,6 @@
 
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
-
 
 /** @class RichSmartIDTool RichSmartIDTool.h
  *

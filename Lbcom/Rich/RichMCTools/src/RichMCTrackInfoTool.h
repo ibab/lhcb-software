@@ -1,4 +1,16 @@
-// $Id: RichMCTrackInfoTool.h,v 1.5 2004-07-15 15:37:23 jonrob Exp $
+
+/** @file RichMCTrackInfoTool.h
+ *
+ *  Header file for tool : RichMCTrackInfoTool
+ *
+ *  CVS Log :-
+ *  $Id: RichMCTrackInfoTool.h,v 1.6 2004-07-26 17:56:09 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
 

@@ -1,13 +1,20 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.6 2004-07-12 14:25:02 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichMirrorSegFinder.cpp
+ *
+ * Implementation file for class : RichMirrorSegFinder
+ *
+ * CVS Log :-
+ * $Id: RichMirrorSegFinder.cpp,v 1.7 2004-07-26 18:03:04 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @date   2003-11-05 
+ * @author Antonis Papanestis
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichMirrorSegFinder.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichMirrorSegFinder
-//
-// 2003-11-05 : Antonis Papanestis
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichMirrorSegFinder>          s_factory ;

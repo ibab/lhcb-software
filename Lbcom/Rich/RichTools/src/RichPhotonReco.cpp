@@ -1,13 +1,20 @@
-// $Id: RichPhotonReco.cpp,v 1.4 2004-07-12 14:25:02 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichPhotonReco.cpp
+ *
+ * Implementation file for class : RichPhotonReco
+ *
+ * CVS Log :-
+ * $Id: RichPhotonReco.cpp,v 1.5 2004-07-26 18:03:04 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Antonis Papanestis
+ * @date 2003-11-14
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPhotonReco.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonReco
-//
-// 2003-11-14 Antonis Papanestis
-//-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichPhotonReco>          Factory ;

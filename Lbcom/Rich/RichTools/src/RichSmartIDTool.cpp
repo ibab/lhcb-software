@@ -1,14 +1,20 @@
-// $Id: RichSmartIDTool.cpp,v 1.3 2004-07-15 16:46:55 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichSmartIDTool.cpp
+ *
+ * Implementation file for class : RichSmartIDTool
+ *
+ * CVS Log :-
+ * $Id: RichSmartIDTool.cpp,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Antonis Papanestis
+ * @date 2003-10-28
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichSmartIDTool.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichSmartIDTool
-//
-// 2003-10-28 : Antonis Papanestis
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichSmartIDTool>          s_factory ;
@@ -21,11 +27,11 @@ const        IToolFactory& RichSmartIDToolFactory = s_factory ;
 RichSmartIDTool::RichSmartIDTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase( type, name , parent ) {
-
+  : RichToolBase( type, name , parent ) 
+{
   declareInterface<IRichSmartIDTool>(this);
-
 }
+
 //=============================================================================
 ///Destructor
 RichSmartIDTool::~RichSmartIDTool(){}

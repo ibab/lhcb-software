@@ -1,5 +1,17 @@
-// $Id: RichRayTracing.cpp,v 1.9 2004-07-15 17:16:33 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichRayTracing.cpp
+ *
+ * Implementation file for class : RichRayTracing
+ *
+ * CVS Log :-
+ * $Id: RichRayTracing.cpp,v 1.10 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Antonis Papanestis
+ * @date 2003-11-14 
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/IToolSvc.h"
@@ -16,12 +28,6 @@
 
 // local
 #include "RichRayTracing.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRayTracing
-//
-// 2003-11-14 : Antonis Papanestis
-//-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichRayTracing>          Factory ;

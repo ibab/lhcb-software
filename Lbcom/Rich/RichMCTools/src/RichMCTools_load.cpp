@@ -1,9 +1,22 @@
-// $Id: RichMCTools_load.cpp,v 1.4 2004-06-17 12:01:43 cattanem Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichMCTools_load.cpp
+ *
+ * Declaration of entries in the RichMCTools component library
+ *
+ * CVS Log :-
+ * $Id: RichMCTools_load.cpp,v 1.5 2004-07-26 17:56:09 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES(RichMCTools) {
+DECLARE_FACTORY_ENTRIES(RichMCTools)
+{
 
   // MC tracking information for the RICH
   DECLARE_TOOL( RichMCTrackInfoTool );
@@ -17,5 +30,6 @@ DECLARE_FACTORY_ENTRIES(RichMCTools) {
   // builds the association table for MCRichHits to MCRichOpticalPhotons
   DECLARE_ALGORITHM( MCRichHitToMCRichOpPhotAlg );
 
-  DECLARE_TOOL( RichTrSegMakerFromMCRichTracks ); 
+  DECLARE_TOOL( RichTrSegMakerFromMCRichTracks );
+
 }

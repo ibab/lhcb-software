@@ -1,13 +1,20 @@
-// $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.3 2004-07-12 14:49:59 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichTrSegMakerFromMCRichTracks.cpp
+ *
+ * Implementation file for class : RichTrSegMakerFromMCRichTracks
+ *
+ * CVS Log :-
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.4 2004-07-26 17:56:09 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichTrSegMakerFromMCRichTracks.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTrSegMakerFromMCRichTracks
-//
-// 14/01/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  ToolFactory<RichTrSegMakerFromMCRichTracks>          Factory ;
@@ -20,7 +27,7 @@ RichTrSegMakerFromMCRichTracks::
 RichTrSegMakerFromMCRichTracks( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
-  : RichToolBase ( type, name, parent ) 
+  : RichToolBase ( type, name, parent )
 {
   declareInterface<IRichTrSegMaker>(this);
 }
@@ -33,8 +40,8 @@ RichTrSegMakerFromMCRichTracks::~RichTrSegMakerFromMCRichTracks() { }
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichTrSegMakerFromMCRichTracks::initialize() {
-
+StatusCode RichTrSegMakerFromMCRichTracks::initialize()
+{
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -54,7 +61,7 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichTrSegMakerFromMCRichTracks::finalize() 
+StatusCode RichTrSegMakerFromMCRichTracks::finalize()
 {
   // Execute base class method
   return RichToolBase::finalize();
@@ -64,8 +71,9 @@ StatusCode RichTrSegMakerFromMCRichTracks::finalize()
 //=============================================================================
 // Constructs the track segments for a given input object
 //=============================================================================
-int RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
-                                                       std::vector<RichTrackSegment>& segments )
+int
+RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
+                                                   std::vector<RichTrackSegment>& segments )
   const {
 
   // get MCRichTrack

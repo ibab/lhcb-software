@@ -1,4 +1,16 @@
-// $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.2 2004-06-17 12:01:43 cattanem Exp $
+
+/** @file MCRichHitToMCRichOpPhotAlg.h
+ *
+ *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
+ *
+ *  CVS Log :-
+ *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.3 2004-07-26 17:56:09 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2004-02-11
+ */
+
 #ifndef RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H
 #define RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H  1
 
@@ -26,7 +38,7 @@
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
-*/
+ */
 
 class MCRichHitToMCRichOpPhotAlg : public RichAlgBase {
 
@@ -37,9 +49,14 @@ public:
 
   virtual ~MCRichHitToMCRichOpPhotAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  // Algorithm initialization
+  virtual StatusCode initialize();
+
+  // Algorithm execution
+  virtual StatusCode execute   ();
+
+  // Algorithm finalization
+  virtual StatusCode finalize  ();
 
 private: // definitions
 

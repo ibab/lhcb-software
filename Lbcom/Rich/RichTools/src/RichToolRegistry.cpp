@@ -1,16 +1,23 @@
-// $Id: RichToolRegistry.cpp,v 1.4 2004-07-15 15:51:47 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichToolRegistry.cpp
+ *
+ * Implementation file for class : RichToolRegistry
+ *
+ * CVS Log :-
+ * $Id: RichToolRegistry.cpp,v 1.5 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 // Suppress "debug information truncated" warnings on Windows
 #include "GaudiKernel/Kernel.h"
 
 // local
 #include "RichToolRegistry.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichToolRegistry
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichToolRegistry>          s_factory ;

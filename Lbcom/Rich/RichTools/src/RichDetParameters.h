@@ -1,6 +1,18 @@
-// $Id: RichDetParameters.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
-#ifndef RICHDETPARAMETERS_H 
-#define RICHDETPARAMETERS_H 1
+
+/** @file RichDetParameters.h
+ *
+ *  Header file for tool : RichDetParameters
+ *
+ *  CVS Log :-
+ *  $Id: RichDetParameters.h,v 1.3 2004-07-26 18:03:04 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
+#ifndef RICHTOOLS_RICHDETPARAMETERS_H 
+#define RICHTOOLS_RICHDETPARAMETERS_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -19,7 +31,7 @@
  *  
  *  Tool to provide access to useful detector parameters
  * 
- *  @author Chris Jones
+ *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
 
@@ -60,4 +72,4 @@ private:
   std::vector<double> m_meanPhotEn; ///< The mean photon energies
 
 };
-#endif // RICHDETPARAMETERS_H
+#endif // RICHTOOLS_RICHDETPARAMETERS_H

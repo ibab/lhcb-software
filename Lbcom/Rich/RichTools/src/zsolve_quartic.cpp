@@ -1,4 +1,15 @@
 
+/**  @file zsolve_quartic.cpp
+ *
+ *  Implementation file for zsolve_quartic.h
+ *
+ *  CVS Log :-
+ *  $Id: zsolve_quartic.cpp,v 1.2 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @todo switch to GSL version when available
+ */
+
 #include "zsolve_quartic.h"
 
 #define SWAP(a,b) do { gsl_complex tmp = b ; b = a ; a = tmp ; } while(0)

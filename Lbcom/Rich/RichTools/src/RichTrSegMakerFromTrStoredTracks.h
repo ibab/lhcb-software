@@ -1,6 +1,19 @@
-// $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
-#ifndef RICHDETTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
-#define RICHDETTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
+
+/** @file RichTrSegMakerFromTrStoredTracks.h
+ *
+ *  Header file for tool : RichTrSegMakerFromTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @date   14/01/2002
+ */
+
+#ifndef RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
+#define RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -134,4 +147,4 @@ private: // data
 };
 
 
-#endif // RICHDETTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
+#endif // RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H

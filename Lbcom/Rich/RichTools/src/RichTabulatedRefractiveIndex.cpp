@@ -1,13 +1,20 @@
-// $Id: RichTabulatedRefractiveIndex.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichTabulatedRefractiveIndex.cpp
+ *
+ * Implementation file for class : RichTabulatedRefractiveIndex
+ *
+ * CVS Log :-
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 15/03/2002
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichTabulatedRefractiveIndex.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedRefractiveIndex
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichTabulatedRefractiveIndex>          s_factory ;

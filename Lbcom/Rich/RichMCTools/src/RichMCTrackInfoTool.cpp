@@ -1,13 +1,20 @@
-// $Id: RichMCTrackInfoTool.cpp,v 1.5 2004-07-12 14:49:59 jonrob Exp $
+//
+//-----------------------------------------------------------------------------
+/** @file RichMCTrackInfoTool.cpp
+ *
+ * Implementation file for class : RichMCTrackInfoTool
+ *
+ * CVS Log :-
+ * $Id: RichMCTrackInfoTool.cpp,v 1.6 2004-07-26 17:56:09 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 15/03/2002
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichMCTrackInfoTool.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichMCTrackInfoTool
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichMCTrackInfoTool>          s_factory ;

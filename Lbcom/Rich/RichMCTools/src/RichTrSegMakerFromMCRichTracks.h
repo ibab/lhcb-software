@@ -1,4 +1,16 @@
-// $Id: RichTrSegMakerFromMCRichTracks.h,v 1.3 2004-07-15 15:37:23 jonrob Exp $
+
+/** @file RichTrSegMakerFromMCRichTracks.h
+ *
+ *  Header file for tool : RichTrSegMakerFromMCRichTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.4 2004-07-26 17:56:09 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   14/01/2002
+ */
+
 #ifndef RICHMCTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H
 #define RICHMCTOOLS_RICHTRSEGMAKERFROMMCRICHTRACKS_H 1
 

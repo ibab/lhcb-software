@@ -1,4 +1,16 @@
-// $Id: MCPartToMCRichTrackAlg.h,v 1.2 2004-06-17 12:01:43 cattanem Exp $
+
+/** @file MCPartToMCRichTrackAlg.h
+ *
+ *  Header file for algorithm : MCPartToMCRichTrackAlg
+ *
+ *  CVS Log :-
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.3 2004-07-26 17:56:09 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2004-02-11
+ */
+
 #ifndef RICHMCTOOLS_MCPARTTOMCRICHTRACKALG_H 
 #define RICHMCTOOLS_MCPARTTOMCRICHTRACKALG_H 1
 
@@ -34,12 +46,13 @@ public:
 
   /// Standard constructor
   MCPartToMCRichTrackAlg( const std::string& name, ISvcLocator* pSvcLocator );
+ 
+  /// Destructor
+  virtual ~MCPartToMCRichTrackAlg( );
 
-  virtual ~MCPartToMCRichTrackAlg( ); ///< Destructor
-
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // definitions
 

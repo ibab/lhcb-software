@@ -1,5 +1,17 @@
-// $Id: RichDetParameters.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichDetParameters.cpp
+ *
+ * Implementation file for class : RichDetParameters
+ *
+ * CVS Log :-
+ * $Id: RichDetParameters.cpp,v 1.3 2004-07-26 18:03:04 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,12 +19,6 @@
 
 // local
 #include "RichDetParameters.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichDetParameters
-//
-// 2004-03-29 : Chris Jones
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichDetParameters>          s_factory ;

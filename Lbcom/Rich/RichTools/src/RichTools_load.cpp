@@ -1,12 +1,22 @@
-// $Id: RichTools_load.cpp,v 1.2 2004-06-17 14:52:09 jonesc Exp $
-// Include files 
+
+//-----------------------------------------------------------------------------
+/** @file RichTools_load.cpp
+ *
+ * Implementation file for classes in the RichTools Component Library
+ *
+ * CVS Log :-
+ * $Id: RichTools_load.cpp,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date 14/01/2002
+ */
+//-----------------------------------------------------------------------------
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES( RichTools ) {
-
-  // Declare Tools
-  //===============
+DECLARE_FACTORY_ENTRIES( RichTools ) 
+{
 
   // The tool registry
   DECLARE_TOOL( RichToolRegistry );
@@ -31,5 +41,5 @@ DECLARE_FACTORY_ENTRIES( RichTools ) {
 
   // detector parameters
   DECLARE_TOOL( RichDetParameters );
-  
+
 }
