@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v7r3 2004-02-05 =========================
 ! 2004-02-05 - Olivier Callot
  - Replace the old Associator/Relations by the new Linker representation of the
    relation between L0CaloCandidates and MCParticles.
