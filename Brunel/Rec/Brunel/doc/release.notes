@@ -3,6 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v14r1p1>2002-10-23 Brunel v14r1p1</A></H1><PRE>
+ - Bug fix:
+   . Fix crash when deleting a track after a fit failure (TrFitter v3r3)
+
+ - New feature:
+   . When running in batch, Brunel.job picks up executable from user's newmycmt
+     rather than from $LHCBSOFT
+
 </PRE><H1><A NAME=v14r1>2002-10-22 Brunel v14r1</A></H1><PRE>
  - New tuning:
    . Add 1% inefficiency in IT, due to dead strips (ITAlgorithms v12r2)
