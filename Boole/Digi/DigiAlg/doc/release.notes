@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v1r0 2003-06-24 =========================
 ! 2003-06-23 - Gloria CORTI
  - First import of package
  - src/MergeEventAlg.h,cpp
