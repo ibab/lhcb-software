@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.38 2002-05-13 17:24:45 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.39 2002-06-17 15:47:03 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -399,7 +399,8 @@ template <class T> void parseArgList(DOM_Node node,
 
 //-----------------------------------------------------------------------------
 void parseMethod(DOM_Node node,
-                 DaDiMethod* gddMethod)
+                 DaDiMethod* gddMethod,
+				 DaDiClass* gddClass)
 //-----------------------------------------------------------------------------
 {
 
@@ -440,6 +441,11 @@ void parseMethod(DOM_Node node,
   gddMethod->setVirtual_(node.getAttributes().
       getNamedItem(DOMString::transcode("virtual")).
       getNodeValue());
+
+  if (gddMethod->virtual_().equals("PURE") && gddClass != 0)
+  {
+	  gddClass->setAbstract(true);
+  }
             
   if (node.getAttributes().
       getNamedItem(DOMString::transcode("static")).
@@ -1212,7 +1218,7 @@ void parseClass(DOM_Node node,
         {
           DaDiMethod* gddMethod = new DaDiMethod();
           gddClass->pushDaDiMethod(gddMethod);
-          parseMethod(node, gddMethod);
+          parseMethod(node, gddMethod, gddClass);
         }
 
 //
@@ -1366,7 +1372,7 @@ void parseNamespace(DOM_Node node,
         {
           DaDiMethod* gddMethod = new DaDiMethod();
           gddNamespace->pushDaDiMethod(gddMethod);
-          parseMethod(node, gddMethod);
+          parseMethod(node, gddMethod, 0);
         }
 
 //

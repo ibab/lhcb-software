@@ -3,6 +3,14 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r4<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+!20020617 - Stefan
+- handling of offsets to abstract-interface-classes
+- use friend-classes for investigation of offsets instead of defines
+- no dictionary-information for private, pure virtual and friend-functions
+- changes to dictionary-fragments to produce the class with the friend-class
+
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r3<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 !20020514 - Stefan

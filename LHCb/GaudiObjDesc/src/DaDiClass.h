@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.24 2002-04-17 16:55:44 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.25 2002-06-17 15:47:02 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -27,7 +27,7 @@
 class DaDiClass {
 public:
 	/// Standard constructor
-	DaDiClass(bool innerClass = false) 
+	DaDiClass(bool innerClass = false) : m_abstract(false) 
   {
     m_innerClass = innerClass;
   }; 
@@ -71,6 +71,9 @@ public:
 
 	bool keyedContTypeDef();
 	void setKeyedContTypeDef(bool value);
+
+	bool abstract();
+	void setAbstract(bool value);
 
 	std::string popImpSoftList();
   std::list<std::string> impSoftList();
@@ -151,7 +154,8 @@ private:
                               m_innerClass,
                               m_serializers,
                               m_stdVectorTypeDef,
-                              m_keyedContTypeDef;
+                              m_keyedContTypeDef,
+							  m_abstract;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList,
@@ -291,6 +295,16 @@ inline bool DaDiClass::keyedContTypeDef()
 inline void DaDiClass::setKeyedContTypeDef(bool value)
 {
 	m_keyedContTypeDef = value;
+}
+
+inline bool DaDiClass::abstract()
+{
+	return m_abstract;
+}
+
+inline void DaDiClass::setAbstract(bool value)
+{
+	m_abstract = value;
 }
 
 inline std::string DaDiClass::popImpSoftList()

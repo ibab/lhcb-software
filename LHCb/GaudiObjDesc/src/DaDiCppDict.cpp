@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.30 2002-05-13 17:05:12 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.31 2002-06-17 15:47:02 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -364,23 +364,41 @@ void printCppDictionary(DaDiPackage* gddPackage,
   metaOut << "//Include files" << std::endl 
     << "#include \"GaudiKernel/Kernel.h\"" << std::endl 
     << "#include \"GaudiKernel/SmartRef.h\"" << std::endl 
-    << "#include \"GaudiKernel/SmartRefVector.h\"" << std::endl 
-    << std::endl 
+    << "#include \"GaudiKernel/SmartRefVector.h\"" << std::endl;
+  metaOut << std::endl 
     << "#include <string>" << std::endl 
-    << std::endl 
-    << "#define private public" << std::endl
-    << "#define protected public" << std::endl;
+    << std::endl; 
+//    << "#define private public" << std::endl
+//    << "#define protected public" << std::endl;
   
-    std::string impName = gddClassName;
+//    std::string impName = gddClassName;
 
-  metaOut << "#include \"" << dothDir << "/" << impName << ".h\"" << std::endl;
+//  metaOut << "#include \"" << dothDir << "/" << impName << ".h\"" << std::endl;
+  metaOut << "#include \"" << gddClassName << "_dict.h\"" << std::endl;
 
-  metaOut << "#undef protected" << std::endl
-    << "#undef private" << std::endl 
+  metaOut //<< "#undef protected" << std::endl
+    //<< "#undef private" << std::endl 
     << std::endl 
     << "#include \"GaudiIntrospection/Introspection.h\"" << std::endl 
     << std::endl 
     << std::endl;
+
+
+  if (gddClass->sizeDaDiTypeDef())
+  {
+    metaOut << "// Typedef-declarations " << std::endl;
+    for (i=0; i<gddClass->sizeDaDiTypeDef(); ++i)
+    {
+      DaDiTypeDef* gddTypeDef      = gddClass->popDaDiTypeDef();
+      std::string gddTypeDefType   = gddTypeDef->type().transcode(),
+                  gddTypeDefDef    = gddTypeDef->def().transcode();
+
+      metaOut << "typedef " << gddTypeDefType << " " << gddTypeDefDef << ";" << std::endl;
+    }
+    metaOut << std::endl 
+      << std::endl;
+  }
+
 
 //
 // class_dict with constructor
@@ -401,13 +419,19 @@ void printCppDictionary(DaDiPackage* gddPackage,
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
     std::string gddMethName = gddMethod->name().transcode(),
-                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
+                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode(),
+				gddMethVirtual = gddMethod->virtual_().transcode();
     bool toReturn = (gddMethRetType == "void") ? false : true,
          gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true,
-         gddMethIsConst = gddMethod->const_();
+         gddMethIsConst = gddMethod->const_(),
+		 gddMethIsFriend = gddMethod->friend_(),
+		 gddMethIsPureVirtual = (gddMethVirtual == "PURE") ? true : false,
+     gddMethIsAccessible = (gddMethod->access().equals("PROTECTED") ||
+                            gddMethod->access().equals("PRIVATE")) ? false : true;
 
     if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
-        && !gddMethIsTemplated)
+        && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
+        && gddMethIsAccessible)
     {
       metaOut << remLine << std::endl
         << "static void";
@@ -683,21 +707,47 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
   if (gddClass->sizeDaDiBaseClass())
   {
-    metaOut << "  " << gddClassName << "* cl = new " << gddClassName << "();"
-        << std::endl;
+	  if (gddClass->abstract())
+	  {
+      for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+      {
+        std::string gddBaseClassName = gddClass->popDaDiBaseClass()->name().transcode();
+  
+        //
+        // This is a hack (problems when abstract interface is derived from another-one)
+        //
+        metaOut << "metaC->addSuperClass(\"" << gddBaseClassName << "\",0);"
+          << "// this will not work !!!! " << std::endl;
 
-    for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
-    {
-      std::string gddBaseClass=gddClass->popDaDiBaseClass()->name().transcode();
-
-      metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\"," 
+        /*
+        metaOut << "  " << gddBaseClassName << "* bc = new " << gddBaseClassName << "();"
           << std::endl
-        << indent << "(((int)cl)-((int)((" << gddBaseClass << "*)cl))));" 
-          << std::endl;
-    }
+          << "  " << gddClassName << "* cl = (" << gddClassName << "*)bc;" << std::endl
+          << "  metaC->addSuperClass(\"" << gddBaseClassName << "\"," << std::endl
+          << indent << "(int)cl-(int)bc);" << std::endl
+          << "  delete bc;" << std::endl
+          << "  delete cl;" << std::endl;
+          */
+      }
+	  }
+	  else
+	  {
+	    metaOut << "  " << gddClassName << "* cl = new " << gddClassName << "();"
+		    << std::endl;
 
-    metaOut << "  delete cl;" << std::endl
-      << std::endl;
+	    for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+	    {
+	      std::string gddBaseClass=gddClass->popDaDiBaseClass()->name().transcode();
+
+	      metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\"," 
+		      << std::endl
+		    << indent << "(((int)cl)-((int)((" << gddBaseClass << "*)cl))));" 
+		      << std::endl;
+	    }
+
+	    metaOut << "  delete cl;" << std::endl
+	      << std::endl;
+	  }
   }
 
 //
@@ -757,12 +807,18 @@ void printCppDictionary(DaDiPackage* gddPackage,
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
     std::string gddMethName = gddMethod->name().transcode(),
                 gddMethDesc = gddMethod->desc().transcode(),
-                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
+                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode(),
+				gddMethVirtual = gddMethod->virtual_().transcode();
     bool gddMethIsConst = gddMethod->const_(),
-      gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true;
+      gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true,
+	  gddMethIsFriend = gddMethod->friend_(),
+	  gddMethIsPureVirtual = (gddMethVirtual == "PURE") ? true : false,
+    gddMethIsAccessible = (gddMethod->access().equals("PROTECTED") ||
+                           gddMethod->access().equals("PRIVATE")) ? false : true;
     
     if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
-        && !gddMethIsTemplated)
+        && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
+        && gddMethIsAccessible)
     {
       metaOut << constructTypes(gddMethRetType);
 

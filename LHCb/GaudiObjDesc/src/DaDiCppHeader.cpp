@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.63 2002-05-14 08:27:48 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.64 2002-06-17 15:47:02 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1163,7 +1163,8 @@ void printMembers(std::ofstream& xmlOut,
 void printClass(std::ofstream& xmlOut,
                 DaDiClass* gddClass,
                 DaDiPackage* gddPackage,
-                std::map<std::string,std::string>& dbExportClass)
+                std::map<std::string,std::string>& dbExportClass,
+                bool dictionaryHeader)
 //-----------------------------------------------------------------------------
 {
   time_t ltime;
@@ -1376,6 +1377,12 @@ void printClass(std::ofstream& xmlOut,
   //
   xmlOut << "public: " << std::endl
     << std::endl;
+
+  if (dictionaryHeader)
+  {
+    xmlOut << "  friend class " << gddClassName << "_dict;" << std::endl
+      << std::endl;
+  }
 
   //
   //  print public typedefs and enums
@@ -2382,7 +2389,7 @@ void printNamespace(std::ofstream& xmlOut,
   {
     xmlOut << std::endl;
     DaDiClass* gddClass = gddNamespace->popDaDiClass();
-    printClass(xmlOut,gddClass,gddPackage,dbExportClass);
+    printClass(xmlOut,gddClass,gddPackage,dbExportClass,false);
   }
 
   xmlOut << "};" << std::endl
@@ -2400,7 +2407,8 @@ void printNamespace(std::ofstream& xmlOut,
 void printCppHeader(DaDiPackage* gddPackage, 
                     char* envXmlDB, 
                     const char* envOut, 
-                    bool additionalImports)
+                    bool additionalImports,
+                    bool dictionaryHeader)
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0, k=0;
@@ -2743,7 +2751,14 @@ void printCppHeader(DaDiPackage* gddPackage,
     char* fileName = new char[256];
     strcpy(fileName, envOut);
     strcat(fileName, gddClass->name().transcode());
-    strcat(fileName, ".h");
+    if (dictionaryHeader)
+    {
+      strcat(fileName, "_dict.h");
+    }
+    else
+    {
+      strcat(fileName, ".h");
+    }
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
 
@@ -2847,7 +2862,7 @@ void printCppHeader(DaDiPackage* gddPackage,
     xmlOut << std::endl 
       << std::endl;
 
-    printClass(xmlOut, gddClass, gddPackage, dbExportClass);
+    printClass(xmlOut, gddClass, gddPackage, dbExportClass, dictionaryHeader);
 
 
     //
@@ -2882,7 +2897,7 @@ int main(int argC,
   const char* envOut = "";
   char* envXmlDB;
   std::string nextArg;
-  bool additionalImports = false;
+  bool additionalImports = false, dictionaryHeader = false;
 
   argV0 = std::string(argV[0]);
   argV0.erase(0,argV0.find_last_of("\\")+1);
@@ -2908,7 +2923,7 @@ int main(int argC,
   {
     for (int i=1; i<argC; ++i)
     {
-        if (strcmp(argV[i],"-o") == 0)
+      if (strcmp(argV[i],"-o") == 0)
       {
         nextArg = std::string(argV[i+1]);
         if (((argC-1) == i) || (strcmp(argV[i+1],"-x") == 0) ||
@@ -2954,6 +2969,10 @@ int main(int argC,
           ++i;
         }
       }
+      else if (strcmp(argV[i], "-d") == 0)
+      {
+        dictionaryHeader = true;
+      }
       else if (strcmp(argV[i], "-i") == 0)
       {
         additionalImports = true;
@@ -2978,7 +2997,7 @@ int main(int argC,
   {
     DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
 
-    printCppHeader(gddPackage,envXmlDB,envOut,additionalImports);
+    printCppHeader(gddPackage,envXmlDB,envOut,additionalImports,dictionaryHeader);
   }
   return 0;
 }

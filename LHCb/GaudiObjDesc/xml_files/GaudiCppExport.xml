@@ -2,6 +2,38 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd version="1.0">
 
+  <package name=".">
+    <class name="DOMString" author="__UNKNOWN__" desc="DOMString" filename="DOMString"/>
+  </package>
+
+  <package name="../Tools">
+    <class name="DaDiCppDict" author="Stefan Roiser" desc="creates dictionary information"/>
+    <class name="DaDiCppHeader" author="Stefan Roiser" desc="creates cplusplus header files"/>
+    <class name="DaDiFrontEnd" author="Stefan Roiser" desc="front end parser for xml-files"/>
+    <class name="DaDiTools" author="Stefan Roiser" desc="several tools for GOD"/>
+    <class name="GODCppHeader" author="Stefan Roiser" desc="creates cplusplus header files"/>
+    <class name="GODParser" author="Stefan Roiser" desc="parser for fragments to create output"/>
+  </package>
+
+  <package name=".">
+    <class name="DaDiAttribute" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiBaseClass" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiBitfield" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiClass" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiConstructor" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiDestructor" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiEnum" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiImport" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiLocation" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiMethArgument" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiMethod" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiMethReturn" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiNamespace" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiPackage" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiRelation" author="Stefan Roiser" desc="GOD class"/>
+    <class name="DaDiTypeDef" author="Stefan Roiser" desc="GOD class"/>
+  </package>
+
 	<package name="CLHEP/Evaluator">
 		<class name="Evaluator" author="Evgeni Chernyaev" desc="__NODESC__"/>
 	</package>

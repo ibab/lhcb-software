@@ -1,5 +1,6 @@
 
-parsetool     = GODWriteCppDict.exe
+dicttool      = GODWriteCppDict.exe
+headertool    = GODWriteCppHeader.exe
 dest          = ../dict/
 dtdfile       = ../$(xmlsrc)/gdd.dtd 
 
