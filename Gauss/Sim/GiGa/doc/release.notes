@@ -1,7 +1,26 @@
-! $Id: release.notes,v 1.92 2004-02-17 18:26:51 ibelyaev Exp $
+! $Id: release.notes,v 1.93 2004-02-20 18:13:34 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-02-20 - Vanya BELYAEV
+ - GiGa/GiGaTrajectory.h, src/Lib/GiGaTrajectory.cpp
+	   1) now has member creator() , which points to 
+	      G4VProcess - "crreator" of the initial G4Track
+     2) the method procname is updated in accordance with (1)
+     3) remove GiGaException for cane of Nan/Infinite tome-of-fligh
+     4) add extensive printout for NaN/Infinite time of flight case 
+     5) redesign the AppendStep mehtod: 
+ - GiGa/GiGaBase.h src/Lib/GiGaBase.cpp
+     make usage of GaudiTool base 
+- src/Lib/DumpG4Track.h, src/Lib/DumpG4Track.cpp 
+     new function for extensive G4Track dump
+- src/Lib/DumpG4Stack.h, src/Lib/DumpG4Stack.cpp 
+     new function for extensive G4Track dump
+- cmt/requirements 
+     1) add "use GaudiTools v*"
+     2) increase teh version to GiGa v16r0   
+
 
 ! 2004-02-17 - Vanya BELYAEV
  - GiGa/GiGaExternalPhysicsConstructor.h   - 

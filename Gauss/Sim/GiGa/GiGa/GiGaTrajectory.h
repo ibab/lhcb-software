@@ -1,14 +1,8 @@
-// $Id: GiGaTrajectory.h,v 1.19 2004-02-14 08:25:26 robbep Exp $ 
+// $Id: GiGaTrajectory.h,v 1.20 2004-02-20 18:13:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.18  2003/10/09 08:57:28  witoldp
-// added vertex types
-//
-// Revision 1.17  2003/03/11 09:34:55  ibelyaev
-//  remove invalid inline directives
-//
 // ============================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
@@ -21,9 +15,10 @@
 #include "GiGa/GiGaTrajectoryPoint.h"
 ///
 class G4ParticleDefinition;
-class G4Track;
-class G4Step;
-class G4SteppingManager;
+class G4Track    ;
+class G4Step     ;
+class G4VProcess ;
+
 ///
 
 /** @class GiGaTrajectory GiGaTrajectory.h GiGa/GiGaTrajectory.h
@@ -114,28 +109,40 @@ public:
   virtual G4double      GetCharge          () const ;
   virtual G4int         GetPDGEncoding     () const ;
   virtual G4ThreeVector GetInitialMomentum () const ;
-
-  inline void setProcessName(std::string procname)
-  {
-    m_processname=procname;
-  };
-
-  inline void setHasOscillated( bool flag ) 
-  {  m_hasOscillated = flag ;  }   
-
-  std::string processName() const;
   
+  /// get the pointer to creator process 
+  inline  const G4VProcess* creator() const { return m_creator ; }
+  
+  /// set the creator process 
+  inline  void           setCreator( const G4VProcess* value ) 
+  { m_creator = value ; }
+  
+  inline void setHasOscillated( bool flag ) 
+  {  m_hasOscillated = flag ;  }
+  
+  // get the name of the creator process 
+  const std::string& processname() const ;
+  
+  void setProcessName ( const std::string& ) {}
 
+protected:
+  
+  /** 'almost' unconditionally append the step 
+   *  @param step  step to be appended 
+   *  @return flag
+   */
+  bool appendStep   ( const G4Step* step ) ; 
+  
 private:
   /// assignement operator id private 
   GiGaTrajectory& operator=( const GiGaTrajectory& );
 private: 
   ///
-  int                          m_trackID  ;
-  int                          m_parentID ;
-  const G4ParticleDefinition*  m_partDef  ; 
-  HepLorentzVector             m_4vect    ;   
-  std::string m_processname ;
+  int                          m_trackID       ;
+  int                          m_parentID      ;
+  const G4ParticleDefinition*  m_partDef       ; 
+  HepLorentzVector             m_4vect         ;   
+  const G4VProcess*            m_creator       ;
   bool                         m_hasOscillated ;
   /// 
 };

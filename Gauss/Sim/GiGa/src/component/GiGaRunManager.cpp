@@ -1,20 +1,8 @@
-// $Id: GiGaRunManager.cpp,v 1.13 2003-10-30 16:33:33 witoldp Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.14 2004-02-20 18:13:35 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2003/10/17 13:47:49  ranjard
-// v14r6 - fix the code for geant4.5.2.ref04
-//
-// Revision 1.11  2003/04/06 18:49:48  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// Revision 1.10  2002/12/16 16:23:16  ibelyaev
-//  update for newer version of Geant4 (release 5.0)
-//
-// Revision 1.9  2002/12/15 17:13:21  ibelyaev
-//  bug fixes and improved control over G4 verbosity
-//
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================

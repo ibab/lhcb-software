@@ -1,11 +1,8 @@
-// $Id: GiGaTrajectory.cpp,v 1.15 2004-02-14 08:25:31 robbep Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.16 2004-02-20 18:13:35 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2004/01/29 14:21:42  ibelyaev
-//  fix a bug
-//
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
@@ -26,6 +23,10 @@
 #include "G4Track.hh"
 #include "G4SteppingManager.hh"
 #include "G4ParticleDefinition.hh"
+
+// local 
+#include "DumpG4Track.h"
+#include "DumpG4Step.h"
 
 // ============================================================================
 /** @file 
@@ -87,6 +88,7 @@ GiGaTrajectory::GiGaTrajectory (   )
   , m_parentID                        ( 0 )
   , m_partDef                         ( 0 ) 
   , m_4vect                           (   )
+  , m_creator                         ( 0 ) 
   , m_hasOscillated                   ( false )
 {
 #ifdef GIGA_DEBUG
@@ -103,17 +105,25 @@ GiGaTrajectory::GiGaTrajectory (   )
 GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
   : G4VTrajectory(                                              ) 
     , std::vector<GiGaTrajectoryPoint*>   (                       )
-    , m_trackID    ( aTrack->GetTrackID        ()                 ) 
-    , m_parentID   ( aTrack->GetParentID       ()                 )
-    , m_partDef    ( aTrack->GetDefinition     ()                 ) 
-    , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
-    , m_processname("undefined")
-    , m_hasOscillated( false ) 
+    , m_trackID       ( aTrack->GetTrackID        ()                 ) 
+    , m_parentID      ( aTrack->GetParentID       ()                 )
+    , m_partDef       ( aTrack->GetDefinition     ()                 ) 
+    , m_4vect         ( aTrack->GetDynamicParticle()->Get4Momentum() )
+    , m_creator       ( aTrack->GetCreatorProcess ()                 ) 
+    , m_hasOscillated ( false                                        ) 
 {
   ///
-  const double time = aTrack->GetGlobalTime() ;
+  double time = aTrack->GetGlobalTime() ;
   if( !lfin( time ) ) 
-  { throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
+  {
+    std::cerr << " GiGaTrajectory  ERROR " 
+              << std::string( 65 , '*' )     << std::endl ;
+    GiGaUtil::DumpG4Track( std::cout , aTrack ) ;
+    std::cerr << " GiGaTrajectory  ERROR "
+              << " action : time = 1000 ns " << std::endl ;
+    time = 1000 * ns ;
+    // throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
+  }
   ///
   GiGaTrajectoryPoint* firstPoint =
     new GiGaTrajectoryPoint( aTrack->GetPosition() , time );
@@ -137,7 +147,7 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_parentID                        ( right.parentID      ()       )
   , m_partDef                         ( right.partDef       ()       )
   , m_4vect                           ( right.fourMomentum  ()       )
-  , m_processname                     ( right.processName   ()       )
+  , m_creator                         ( right.creator       ()       )
   , m_hasOscillated                   ( right.hasOscillated ()       )
 {
   clear();
@@ -189,7 +199,9 @@ void  GiGaTrajectory::operator delete(void* traj )
 { GiGaTrajectoryLocal::s_Allocator.FreeSingle( (GiGaTrajectory*) traj ); };
 // ============================================================================
 
-///
+// ============================================================================
+/// Draw the trajectory (G4)
+// ============================================================================
 void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const 
 {
   ///
@@ -229,54 +241,72 @@ void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const
         } 
     }
 };
-///
+// ============================================================================
+
+
+// ============================================================================
+/** 'almost' unconditionally append the step 
+ *  @param step  step to be appended 
+ *  @return flag
+ */
+// ============================================================================
+bool GiGaTrajectory::appendStep ( const G4Step* step ) 
+{
+  if( 0 == step ) { return false ; }
+  
+  const G4StepPoint* point = step  -> GetPostStepPoint () ;
+  double             time  = point -> GetGlobalTime    () ;
+  
+  if( !lfin( time ) ) 
+  {
+    std::cerr << " GiGaTrajectory  ERROR " 
+              << std::string( 65 , '*' )     << std::endl ;
+    GiGaUtil::DumpG4Step( std::cout , step ) ;
+    std::cerr << " GiGaTrajectory  ERROR "
+              << " action : skip the step "  << std::endl ;
+    return false ;                                             // RETURN
+    // throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
+  }
+  
+  if ( empty() || 
+       point -> GetGlobalTime () != back() -> GetTime     () ||
+       point -> GetPosition   () != back() -> GetPosition ()  ) 
+  {
+    GiGaTrajectoryPoint* p = 
+      new GiGaTrajectoryPoint ( point -> GetPosition   () ,
+                                point -> GetGlobalTime () ) ; 
+    push_back( p );
+  }
+  else  { return false ; }                                     // RETURN 
+  
+  ///
+  return true ;
+};
+// ============================================================================
+
+// ============================================================================
+/// Append the step (G4VTrajectory)
+// ============================================================================
 void GiGaTrajectory::AppendStep      ( const G4Step*  step )       
 {
-  ///
-  bool append = false;
-  /// 
-  if     ( empty()                                       )  
-    { append = true ; } 
-  // if some information is not available
-  // follow ordinary routine and just add the step
-  // else if( 0 == step->GetTrack()                      || 
-  //          0 == stepMgr()                             || 
-  //         step != stepMgr()->GetStep()               || 
-  //         step->GetTrack() != stepMgr()->GetTrack    () ) 
-  //  { append = true ; }   
-  /// if  it is the last step, the step must be appended 
-  else if ( fAlive != step->GetTrack()->GetTrackStatus() ) 
-    { append = true ; }
-  //   if  there are some secondaries, the step must be appended  
-  //   else if ( 0 != stepMgr()->GetSecondary()            && 
-  //  	    0 != stepMgr()->GetSecondary()->size   () ) { append = true ; }
+  bool append = false; 
+  // the first point
+  if      ( empty()                                      ) { append = true ; } 
+  // if last point  
+  else if ( fAlive != step->GetTrack()->GetTrackStatus() ) { append = true ; }
   // for optical photons also the reflection/refraction step must be appended  
-  else if ( step->GetPostStepPoint()->GetStepStatus() == 
-            fGeomBoundary &&
+  else if ( fGeomBoundary == step->GetPostStepPoint()->GetStepStatus()  &&
             step->GetTrack()->GetDefinition        () == 
             G4OpticalPhoton::OpticalPhoton         ()    ) { append = true ; }
   ///
-  if( append && 
-      ( empty()                                                              || 
-        step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
-        step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
-  {
-    { ///
-      const double time = step->GetPostStepPoint()->GetGlobalTime() ;
-      if( !lfin( time ) ) 
-      { throw GiGaException ( "GiGaTrajectory::append: Time is not finite ") ; }
-    }
-    GiGaTrajectoryPoint* p = 
-      new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
-                               step->GetPostStepPoint()->GetGlobalTime () ) ; 
-    push_back( p );
-    ///
-  };
-  ///
+  if ( append ) { appendStep ( step ) ; }
 };
-///
+
+// ============================================================================
 void GiGaTrajectory::ShowTrajectory  () const {};
-///
+// ============================================================================
+
+// ============================================================================
 void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )       
 {
   if( 0 == st                    ) { return ; } 
@@ -292,18 +322,24 @@ void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )
   gt->erase( it , gt->end() );
   ///
 };
-//
+// ============================================================================
 
+
+// ============================================================================
 /// get particle name 
+// ============================================================================
 G4String      GiGaTrajectory::GetParticleName () const 
 {
   if( 0 == partDef() ) 
     { throw GiGaException(" GiGaTrajectory: G4ParticleDefinition is NULL"); }
   return partDef()->GetParticleName();
 };
+// ============================================================================
 
 
+// ============================================================================
 /// get particle charge 
+// ============================================================================
 G4double      GiGaTrajectory::GetCharge       () const 
 {
   if( 0 == partDef() ) 
@@ -311,23 +347,32 @@ G4double      GiGaTrajectory::GetCharge       () const
   return partDef()->GetPDGCharge();
 };
 
+// ============================================================================
 /// get particle encoding
+// ============================================================================
 G4int         GiGaTrajectory::GetPDGEncoding  () const 
 {
   if( 0 == partDef() ) 
     { throw GiGaException(" GiGaTrajectory: G4ParticleDefinition is NULL"); }
   return partDef()->GetPDGEncoding();
 };
+// ============================================================================
 
+// ============================================================================
 G4ThreeVector GiGaTrajectory::GetInitialMomentum () const 
 { return momentum(); };
+// ============================================================================
 
-std::string GiGaTrajectory::processName() const
+// ============================================================================
+/// get the name of the creator process 
+// ============================================================================
+const std::string& GiGaTrajectory::processname() const 
 {
-  return m_processname;
-};
-
-
+  static const std::string s_unknown = "Unknown";
+  if( 0 == m_creator ) { return s_unknown ; }
+  return m_creator->GetProcessName() ;
+}
+// ============================================================================
 
 // ============================================================================
 // The END 

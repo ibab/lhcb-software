@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.60 2004-02-17 18:29:12 ibelyaev Exp $ 
+# $Id: requirements,v 1.61 2004-02-20 18:13:34 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 package          GiGa
-version          v15r3
+version          v16r0
 
 # ============== package structure ============================================ 
 branches         cmt src doc GiGa
 
 # ============== explicit dependencies ========================================
-use              GaudiKernel  v* 
+use              GaudiTools   v* 
 use              G4readout    v* Geant4
 
 # ============== standard includes ============================================

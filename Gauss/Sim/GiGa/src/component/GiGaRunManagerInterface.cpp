@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.7 2003-10-17 13:47:49 ranjard Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.8 2004-02-20 18:13:35 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/10/17 13:47:49  ranjard
+// v14r6 - fix the code for geant4.5.2.ref04
+//
 // Revision 1.6  2003/09/22 13:57:11  ibelyaev
 //  polishing of addRef/release/releaseTools/finalize
 //
@@ -46,17 +49,17 @@ StatusCode GiGaRunManager::initialize ()
   /// initialise the base class GiGaBase
   StatusCode sc = GiGaBase::initialize();
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class " , sc ) ; }
+  { return Error("Could not initialize the base class " , sc ) ; }
   ///
   G4RunManager::SetVerboseLevel( m_verbosity );
   ///
   for( Names::const_iterator iname = 
          m_runToolsList.begin() ; m_runToolsList.end() != iname ; ++iname )
-    {
-      IGiGaTool* runTool = tool( *iname , runTool , this );
-      if( 0 == runTool ) { return StatusCode::FAILURE ; }
-      m_runTools.push_back( runTool );
-    }
+  {
+    IGiGaTool* runTool = tool<IGiGaTool>( *iname , this );
+    if( 0 == runTool ) { return StatusCode::FAILURE ; }
+    m_runTools.push_back( runTool );
+  }
   ///
   return Print("GiGaRunManager initialized successfully" , 
                StatusCode::SUCCESS                       , MSG::VERBOSE );
@@ -73,17 +76,10 @@ StatusCode GiGaRunManager::finalize   ()
   Print("GiGaRunManager Finalization");
   StatusCode sc = finalizeRunManager();
   if( sc.isFailure() ) 
-    { return Error("could not finalize RunManager base ",sc);}
+  { Error ( "could not finalize RunManager base " , sc ) ; }
   // release  "geometry source"
   if( 0 != m_geoSrc ) { m_geoSrc -> release() ; m_geoSrc = 0 ; }
-  // release run tools 
-  for( Tools::const_iterator itool = 
-         m_runTools.begin() ; m_runTools.end() != itool ; ++itool )
-    {
-      IGiGaTool* runTool = *itool ;
-      if( 0 != runTool && 0 != toolSvc() ) 
-        { toolSvc() -> releaseTool( runTool ) ; }
-    }  
+  // clear run tools 
   m_runTools.clear();
   // 
   return GiGaBase::finalize();
