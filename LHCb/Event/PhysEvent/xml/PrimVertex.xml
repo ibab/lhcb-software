@@ -7,6 +7,7 @@
       desc="Physics analysis Primary Vertex. Inherits from Vertex plus TrTracks information"
       name="PrimVertex"
       id="804"
+      keyedContTypeDef="TRUE"
      >
        <base name="Vertex"/>
        &KeyedObject;

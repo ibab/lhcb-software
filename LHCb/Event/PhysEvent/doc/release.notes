@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.55 2004-12-10 15:16:11 cattanem Exp $
+! $Id: release.notes,v 1.56 2005-01-26 07:25:52 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================== PhysEvent v8r8 2005-01-19 ========================
+! 2005-01-19 - Marco Cattaneo
+ - Add attribute to produce KeyedContainers typedefs in PrimVertex.xml, needed
+   by GaudiObjDesc v7r*
+ - Add hack in Particle.cpp to bypass CLHEP 1.9 problem with 
+   undefined reference to `CLHEP::HepSymMatrix::sub(int, int)'
 
 !======================== PhysEvent v8r7 2004-12-06 ========================
 ! 2004-12-06 - Marco Cattaneo
