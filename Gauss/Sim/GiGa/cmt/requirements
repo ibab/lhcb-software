@@ -30,8 +30,9 @@ include_dirs                     ${GIGAROOT}
 # component library
 library        GiGa  ../src/*.cpp 	        
 
-# link GiGa statically on NT
 apply_pattern package_Clinkopts
+
+# link GiGa statically on NT
 macro_append  GiGa_linkopts ""\
               WIN32         '$(GiGaDir)/libGiGa.lib /include:"_GiGa_loadRef"'
 
@@ -39,7 +40,7 @@ apply_pattern packageShr
 #=====================================================================
 private
 apply_pattern package_Cshlibflags
-macro_append GiGa_shlibflags " $(DetDescDir)/libDetDesc.so"
+
 macro_remove cppflags "W"
 
 
