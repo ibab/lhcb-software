@@ -4,6 +4,11 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v1r7 2004-09-10 ========================
+! 2004-09-10 - Marco Cattaneo
+ - Remove obsolete CaloDigitToMCParticle associator. Removes dependency on
+   Relations package
+
 !======================= CaloDigit v1r6p1 2004-09-08 =======================
 ! 2004-09-08 - Marco Cattaneo
  - Use explicitly Relations in requirements
