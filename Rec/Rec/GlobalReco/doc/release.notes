@@ -1,0 +1,12 @@
+!-----------------------------------------------------------------------------
+! Package     : Rec/GlobalReco
+! Responsible : Gloria Corti
+! Purpose     : Holds final reconstruciton code
+!-----------------------------------------------------------------------------
+
+! 2002-07-11 - Gloria Corti
+ - Introduce first version of algorithm to make ChargeProtoParticles
+   (only rich and muonpid at the moment)
+ - Introduce algorithm and tool for primary vertex reconstruction
+
+   
