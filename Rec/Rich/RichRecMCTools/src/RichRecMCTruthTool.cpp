@@ -4,8 +4,12 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.11 2004-11-03 12:53:53 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.12 2004-11-20 12:32:17 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/11/03 12:53:53  jonrob
+ *  Update method to locate MCRichDigit so it works when
+ *  RichRecPixels are created directly from the RawBuffer
+ *
  *  Revision 1.10  2004/10/13 09:37:27  jonrob
  *  Add new pixel creator tool.
  *  Add ability to make pixels for particular radiators.
@@ -15,7 +19,6 @@
  *
  *  Revision 1.8  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -130,10 +133,17 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
     // All OK, so find and return MCParticle for this RichDigit
     mcDigit = m_truth->mcRichDigit( digit );
 
+  } else if ( Rich::PixelParent::NoParent == richPixel->parentType() ) {
+
+    // Pixel has no parent, so MC association cannot be done
+    Warning( "Parentless RichRecPixel -> MC association impossible",StatusCode::SUCCESS );
+    return NULL;
+
   } else {
 
     // unknown Pixel type
-    Warning( "Unknown RichRecPixel parent type "+Rich::text(richPixel->parentType()) );
+    Warning( "Do not know how to access MC for RichRecPixel type " + 
+             Rich::text(richPixel->parentType()) );
 
   }
 
