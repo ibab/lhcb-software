@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.6 2002-09-11 16:42:30 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.7 2002-10-21 17:54:10 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
 StatusCode PhysDesktop::initialize() {
   
   MsgStream log( msgSvc(), name() );
-
+  
   // Register to the Incident service to be notified at the end of one event
   IIncidentSvc* incsvc=0;
   StatusCode sc = StatusCode::FAILURE;
@@ -82,26 +82,26 @@ StatusCode PhysDesktop::initialize() {
   // Retrieve the data service
   sc = StatusCode::FAILURE;
   sc = service("EventDataSvc", m_EDS, true);  
-
+  
   if( sc.isFailure() ) {
     log << MSG::FATAL << " Unable to locate Event Data Service" << endreq;
     return sc; 
   }
   
   if ( m_pMakerType == "" ){
-    log << MSG::WARNING << " No ParticleMaker requested in job options" 
+    log << MSG::INFO << " No ParticleMaker requested in job options" 
         << endreq;
-    log << MSG::WARNING << " Only previously produced particles will be loaded"
+    log << MSG::INFO << " Only previously produced particles will be loaded"
         << endreq;
   }
   else{
     
     // Retrieve the ParticleMaker tool:
-    log << MSG::INFO << " Using " << m_pMakerType << "to make particles"
+    log << MSG::INFO << " Using " << m_pMakerType << " to make particles"
         << endreq;
     sc = StatusCode::FAILURE;
     sc = toolSvc()->retrieveTool(m_pMakerType, m_pMaker,this); 
-   
+    
     if(sc.isFailure()) {
       log << MSG::FATAL << " Unable to retrieve " << m_pMakerType << endreq;
       return sc;
@@ -117,13 +117,13 @@ StatusCode PhysDesktop::initialize() {
     log << MSG::INFO << "Particles and Vertices will be loaded from "
         << std::endl;
     for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
-       iloc != m_inputLocn.end(); iloc++ ) {
-    
+         iloc != m_inputLocn.end(); iloc++ ) {
+      
       log << MSG::INFO << "   ==>" << *iloc << std::endl;
     }
     log << MSG::INFO << endreq;
   }
-
+  
   return StatusCode::SUCCESS;
   
 }
@@ -175,7 +175,7 @@ StatusCode PhysDesktop::cleanDesktop()
   // others do not and need to be deleted by the PhysDesktop
   log << MSG::VERBOSE << "Number of particles before cleaning = "
       << m_parts.size() << endreq;
-
+  
   int iTEScount = 0;
   while ( m_parts.size() > 0 ) {
     Particle* ipart = m_parts.back();
@@ -346,9 +346,9 @@ StatusCode PhysDesktop::saveDesktop() {
   MsgStream          log( msgSvc(), name() );
   log << MSG::DEBUG << " Save all new particles and vertices in desktop " 
       << endreq;
-
+  
   return saveDesktop( m_parts, m_verts );  
-
+  
 }
 
 //=============================================================================
@@ -433,7 +433,7 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
 StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
   
   MsgStream          log( msgSvc(), name() );
-
+  
   log << MSG::DEBUG << " PhysDesktop SaveTrees(ParticleVector)" << endreq;
   
   // Find all particles that will need to be saved and put them in
@@ -445,7 +445,7 @@ StatusCode PhysDesktop::saveTrees(ParticleVector& pToSave) {
     // Find all descendendant from this particle
     findAllTree( *icand, allpToSave, allvToSave);
   }
-
+  
   return saveDesktop( allpToSave, allvToSave );
   
 }
@@ -543,7 +543,7 @@ StatusCode PhysDesktop::getInput(){
   log << MSG::DEBUG << ">>> Hello from getInput " << endreq;
   log << MSG::DEBUG << "Initial size of local containers (P,V) = " 
       << m_parts.size() << ", " << m_verts.size() << endreq;
-
+  
   //cleanDesktop();
   
   if ( 0 != m_pMaker  ) {   
@@ -564,7 +564,7 @@ StatusCode PhysDesktop::getInput(){
     
     log << MSG::DEBUG << "Number of Particles from " << m_pMakerType
         << " are " << m_parts.size() << endreq;
-
+    
     // Flag these particles to be in PhysDesktop
     for( ParticleVector::iterator ip = m_parts.begin(); 
          ip != m_parts.end(); ip++ ) {
@@ -613,11 +613,12 @@ StatusCode PhysDesktop::getInput(){
   log << MSG::DEBUG << "Number of Vertices from " << m_primVtxLocn
       << " are " << m_verts.size() << endreq;
   
-  // Retrieve Particles & their Vertices from all previous processing
+  // Retrieve Particles & Vertices from all previous processing
   // as specified in jobOptions
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
        iloc != m_inputLocn.end(); iloc++ ) {
     
+    // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
     
     SmartDataPtr<Particles> parts( eventSvc(), location );
@@ -639,20 +640,40 @@ StatusCode PhysDesktop::getInput(){
       for( icand = parts->begin(); icand != parts->end(); icand++ ) {
         (*icand)->setDesktop(1);
         m_parts.push_back(*icand);
-        Vertex* vtx = (*icand)->endVertex();
-        if( 0 != vtx ) {
-          // get the vertex and all of its tree, unless already in
-          // Desktop use findAllTree( vtx, allParts, allVtxs ), then
-          // check that particle&vertices not already in desktop
-          // For the moment only load decay of a particle, it means
-          // other particles will need to be loaded
-          m_verts.push_back( vtx );
-          vtx->setDesktop(1);
-        }
       }
     }
     log << MSG::DEBUG << "Number of Particles after adding " 
         << location << " = " << m_parts.size() << endreq;
+    
+    // Retrieve the vertices:
+    location = (*iloc)+"/Vertices";
+    
+    SmartDataPtr<Vertices> verts ( eventSvc(), location );    
+    
+    if ( !verts ) { 
+      log << MSG::INFO << "Unable to retrieve vertices from " 
+          << location << endreq;
+    }
+    else if( 0 == parts->size() ) {
+      log << MSG::INFO << "No vertices retrieved from " 
+          << location << endreq;
+    }      
+    else {
+      
+      // Log number of vertices retrieved
+      log << MSG::INFO << "    Number of vertices retrieved from "
+          << location << " = " << verts->size() << endreq;
+      
+      Vertices::iterator ivert = 0;
+      for( ivert = verts->begin(); ivert != verts->end(); ++ivert ) {
+        (*ivert)->setDesktop(1);
+        m_verts.push_back(*ivert);
+      }
+    }
+    log << MSG::DEBUG << "Number of vertices after adding " 
+        << location << " = " << m_verts.size() << endreq;
+    
+    
   }
   log << MSG::DEBUG << "    Total number of particles " << m_parts.size()
       << endreq;
@@ -663,7 +684,4 @@ StatusCode PhysDesktop::getInput(){
   
 }
 
-//=============================================================================
-
-  
-
+//============================================================================
