@@ -1,4 +1,15 @@
-// $Id: RichTraceMode.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file RichTraceMode.h
+ *
+ *  Header file for utility class : RichTraceMode
+ *
+ *  CVS History :-
+ *  $Id: RichTraceMode.h,v 1.4 2004-07-22 14:45:21 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #ifndef RICHKERNEL_RICHTRACEMODE_H
 #define RICHKERNEL_RICHTRACEMODE_H 1
 
