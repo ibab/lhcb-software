@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.9 2002-07-09 18:11:19 cattanem Exp $
+! $Id: release.notes,v 1.10 2002-07-15 18:11:26 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloInterfaces  
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-07-15 - Ivan Belyaev	
+ - CaloInterfaces/ICaloHypoLikelyhood.h     - new interface 
+ - CaloInterfaces/IIDICaloHypoLikelyhood.h  - unique ID for new interface 
 
 !=================== CaloInterfaces v2r1 2002-07-09 ==========================
 ! 2002-05-23 - Vanya Belyaev
