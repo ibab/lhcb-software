@@ -31,12 +31,22 @@ NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //--------------------------------------------------------------
 // DaVinci Algorithms
 //--------------------------------------------------------------
+// Redo L0 trigger decision (for data produced with Brunel v13r1) 
 #include "$DAVINCIROOT/options/L0.opts"
-//ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
-ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
-//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+// Recalibration for gammas (for data produced with Brunel v13r1)
+//  #include "$DAVINCIROOT/options/CaloReCalibration.opts";
+
+// Perfect ParticleID (switch off ChargedProtoPAlg when switching this on)
+//  ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
+
+// Charged ProtoParticles
+ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
+
+// Neutral ProtoParticles
+//  ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+
+// Primary Vertices
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
-ApplicationMgr.TopAlg += { "PrimVertAnalysis" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
@@ -47,80 +57,42 @@ ApplicationMgr.TopAlg += { "PrimVertAnalysis" };
 // EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
 //
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
-//ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
-//ApplicationMgr.TopAlg += { "SelectKs2pipi" };
-//ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
-//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+//  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
+//                             "SelectKs2pipi",
+//                             "SelectBd2JpsiKs" };
+//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
+//  #include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
+//  #include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+// Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/411300.opts"
 
-// Bs->Ds(KKpi)K
-//ApplicationMgr.TopAlg += { "SelectDs2KKpi" };
-//ApplicationMgr.TopAlg += { "SelectBs2DsK" };
-//#include "$PHYSSELECTIONSROOT/options/SelectDs2KKpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2Ds2KKpi_K.opts"
-
-// Bd -> phi(K+K-) Ks(pi+pi-) 
-//ApplicationMgr.TopAlg += { "Selectphi2KKForBd2phiKs" };
-//ApplicationMgr.TopAlg += { "SelectKs2pipiForBd2phiKs" };
-//ApplicationMgr.TopAlg += { "SelectBd2phiKs" };
-//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBd2phiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2phiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2phi2KK_Ks2pipi.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
-//ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectJpsi2mumu" };
-//ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectPhi2KK" };
-//ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectBs2Jpsiphi" };
-//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
-//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBs2Jpsiphi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2Jpsi2mumu_phi2KK.opts"
-
-// Bd -> D0bar(K+pi-) K*(K+pi-) 
-//ApplicationMgr.TopAlg += { "SelectD0andKstar2Kpi" };
-//ApplicationMgr.TopAlg += { "SelectBd2KstarD0" };
-//#include "$PHYSSELECTIONSROOT/options/SelectD0andKstar2Kpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Kstar2Kpi_D02Kpi.opts"
-
-// Bd -> J/Psi(mumu) K*(K+pi-)
-//ApplicationMgr.TopAlg += { "SelectJpsi2mumu" };
-//ApplicationMgr.TopAlg += { "SelectKstar2Kpi" };
-//ApplicationMgr.TopAlg += { "SelectBd2JpsiKstar" };
-//#include "$PHYSSELECTIONSROOT/options/SelectJPsi2mumuForBd2JpsiKstar.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKstar2Kpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
-
-// Bs->mu+mu-
-//ApplicationMgr.TopAlg += { "SelectBs2mumu" };
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2mumu.opts"
-
-// B -> D+(K- Pi+ Pi+) D-(K+ Pi- Pi-)
-//ApplicationMgr.TopAlg += { "SelectD2Kpipi/SelectDPlus"  };
-//ApplicationMgr.TopAlg += { "SelectD2Kpipi/SelectDMinus" };
-//ApplicationMgr.TopAlg += { "SelectBd2DD" };
-//#include "$PHYSSELECTIONSROOT/options/SelectDPlus2Kpipi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectDMinus2Kpipi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2D2Kpipi_D2Kpipi.opts"
+ApplicationMgr.TopAlg += { 
+  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
+  "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+  "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
+};
+//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSROOT/options/SelectBs2Jpsi2mumu_phi2KK.opts"
+// Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/611300.opts"
 
 // Uncomment the following line to run the example UserAlgorithm
-//ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
+//  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
+
+// Private algorithm options can be listed here or included from
+// here.
+
+// Switch on to produce a miniDST file
+//  #include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
 
 //-----------------------------------------------------------------
 // Options for algorithms and tools in DaVinciTools library
 // can be added here to overwrite any of the default options
 // Examples are in the options subdirectory of the packages
 //-----------------------------------------------------------------
-// Private algorithms options
-// Private algorithm options can be listed here or included from
-// here.
-// If a relative path is used you need to copy them to the batch
-// area when running.
-//-----------------------------------------------------------------
-
-//--------------------------------------------------------------
-// Uncomment the following line if you want static version
-//--------------------------------------------------------------
-//ApplicationMgr.DLL = {"NONE"};
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -144,11 +116,5 @@ ApplicationMgr.EvtMax = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq = 1;
    
-//---------------------------------------------------------------
-// Input data
-//---------------------------------------------------------------
-//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/background/vol3/bruneltmp/B2JPsi/b2jpsi_dst_v248r2.root' TYP='ROOT' OPT='READ'" };
-//---------------------------------------------------------------
-//-- End of Data cards 
 //################################################################
 
