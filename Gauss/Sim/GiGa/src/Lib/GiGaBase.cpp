@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.15 2003-04-06 18:49:47 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.16 2003-05-30 14:26:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2003/04/06 18:49:47  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.14  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -286,16 +289,17 @@ StatusCode GiGaBase::finalize()
 /** Print the error    message and return status code 
  *  @param mgs message to be printed 
  *  @param sc  status code 
+ *  @param mx maximal number of prints 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaBase::Error
 ( const std::string& Message , 
-  const StatusCode & Status  ) const 
+  const StatusCode & Status  ,  
+  const size_t       mx      ) const 
 {
-  Stat stat( chronoSvc() , name()+":Error" ); 
   /// increase the counter of errors  
-  m_errors[ Message ] += 1 ;
+  if( ++m_errors[ Message ] > mx ) { return Status ; }
   return Print( Message , Status , MSG::ERROR ); 
 };  
 // ============================================================================
@@ -304,16 +308,17 @@ StatusCode GiGaBase::Error
 /** Print the warning  message and return status code 
  *  @param mgs message to be printed 
  *  @param sc  status code 
+ *  @param mx maximal number of prints 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaBase::Warning
 ( const std::string& Message , 
-  const StatusCode & Status  ) const 
+  const StatusCode & Status  ,
+  const size_t       mx      ) const 
 {
-  Stat stat( chronoSvc() , name()+":Warning" ); 
   /// increase the counter of warnings  
-  m_warnings[ Message ] += 1 ;
+  if( ++m_warnings[ Message ] > mx ) { return Status ; }
   return  Print( Message , Status , MSG::WARNING );
 };
 // ============================================================================
@@ -333,7 +338,6 @@ StatusCode GiGaBase::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 {
-  Stat stat( chronoSvc() , exc.tag() );
   Print( "GaudiException: catch and re-throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;
@@ -357,7 +361,6 @@ StatusCode GiGaBase::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 {
-  Stat stat( chronoSvc() , "std::exception" );
   Print( "std::exception: catch and re-throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;
@@ -380,7 +383,6 @@ StatusCode GiGaBase::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 {
-  Stat stat( chronoSvc() , "GiGaException" );
   Print( "GiGaException throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;

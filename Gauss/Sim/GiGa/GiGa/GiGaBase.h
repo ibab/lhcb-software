@@ -1,8 +1,11 @@
-// $Id: GiGaBase.h,v 1.18 2003-04-06 18:49:45 ibelyaev Exp $
+// $Id: GiGaBase.h,v 1.19 2003-05-30 14:26:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2003/04/06 18:49:45  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.17  2002/12/07 14:27:50  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -307,20 +310,24 @@ protected:
   /** Print the error    message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
+   *  @param mx maximal number of prints 
    *  @return status code 
    */
   StatusCode Error   
-  ( const std::string& msg , 
-    const StatusCode & sc  = StatusCode::FAILURE ) const ;  
+  ( const std::string& msg                       , 
+    const StatusCode & sc  = StatusCode::FAILURE , 
+    const size_t       mx  = 20                  ) const ;  
   
   /** Print the warning  message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
+   *  @param mx maximal number of prints 
    *  @return status code 
    */
   StatusCode Warning 
-  ( const std::string& msg , 
-    const StatusCode & sc  = StatusCode::FAILURE ) const ;
+  ( const std::string& msg                       , 
+    const StatusCode & sc  = StatusCode::FAILURE ,
+    const size_t       mx  = 20                  ) const ;  
   
   /** Print the message and return status code 
    *  @param mgs message to be printed 
