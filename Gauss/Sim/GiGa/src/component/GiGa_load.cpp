@@ -1,8 +1,11 @@
-// $Id: GiGa_load.cpp,v 1.11 2002-04-25 13:02:05 ibelyaev Exp $
+// $Id: GiGa_load.cpp,v 1.12 2002-05-04 20:20:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/04/25 13:02:05  ibelyaev
+//  small update
+//
 // ============================================================================
 #define GIGA_GIGA_LOAD_CPP 1 
 // ============================================================================
@@ -33,6 +36,7 @@ void GiGa_load()
   DECLARE_GiGaPhysList    (    GiGaPhysListFull        );
   /// Sensitive Detector 
   DECLARE_GiGaSensDet     (    GiGaSensDetPrint        );
+  DECLARE_GiGaSensDet     (    GiGaSensDetBudget       );
   /// Magnetic Field  
   DECLARE_GiGaMagField    (    GiGaMagFieldGlobal      );
   DECLARE_GiGaMagField    (    GiGaMagFieldUniform     );

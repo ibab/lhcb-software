@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 15:42:53  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/27 17:56:07  ibelyaev
 /// add new component GiGaSensDetPrint
 /// 
@@ -32,35 +35,42 @@ class GiGaSensDetPrint: virtual public GiGaSensDetBase
 protected:
   
   /** standard consrtructor 
+   *  @see GiGaSensDetBase
+   *  @see GiGaBase
    *  @param Name name of sensitive detector 
    *  @param Loc  pointer to service Locator 
    */ 
-  GiGaSensDetPrint( const std::string&  Name , 
-                    ISvcLocator*        Loc  );
-  /// destructor 
+  GiGaSensDetPrint
+  ( const std::string&  Name , 
+    ISvcLocator*        Loc  );
+  
+  /// destructor (virtual and protected)
   virtual ~GiGaSensDetPrint();
-
+  
 public: 
 
   /** initialize the sensitive detector 
+   *  @see GiGaSensDetBase 
+   *  @see GiGaBase 
    *  @return status code 
    */
   virtual StatusCode initialize () ; 
   
   /** finalize the sensitive detector 
+   *  @see GiGaSensDetBase 
+   *  @see GiGaBase 
    *  @return status code 
    */
   virtual StatusCode finalize   () ;
-  
-protected:
   
   /** process the hit
    *  @param step     pointer to current Geant4 step 
    *  @param history  pointert to touchable history 
    */
-  virtual bool ProcessHits( G4Step* step                , 
-                            G4TouchableHistory* history ) ; 
-  ///
+  virtual bool ProcessHits
+  ( G4Step* step                , 
+    G4TouchableHistory* history ) ;
+  
 private:
   ///
   GiGaSensDetPrint(); ///< no default constructor
@@ -71,6 +81,8 @@ private:
   ///
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///< GIGA_GiGaSensDetPRINT_H
 // ============================================================================

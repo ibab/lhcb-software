@@ -1,10 +1,25 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.45 2002-05-01 18:23:37 ibelyaev Exp $
+! $Id: release.notes,v 1.46 2002-05-04 20:20:11 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev 
+
+! ============================================================================
+! 4 May 2002 - Vanya Belyaev
+! - src/component/GiGaSensDetBudget.h,.cpp 
+!   new class for evaluation of material budget.
+!   It is a special type of "sensitive detector", which 
+!   accumulates the  radiation lengths, passed by the particles
+!   per logical and/or physical volume and/or per material. The 
+!   configuration of the class has 3 boolean properties "Logical", 
+!   "Physical" and "Material". IN "finalize" method the sorted 
+!   material budget  tables are printed  
+! - GiGa/GiGaMap.h,GiGa/GiGaHashMap.h and GiGa/GiGaHash.h
+!   files imported from LHCb Calo Software to "hide" std::map and
+!   std::hash_map for MicroSoft C++ compiler 
+! ============================================================================
 
 !=============================================================================
 ! 1 May 2002 - v8r0 Vanya Belyaev
