@@ -1,9 +1,9 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.4 2004-04-13 14:43:08 jonesc Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.5 2004-06-17 14:49:14 jonesc Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -19,7 +19,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
+#include "Kernel/RichDetectorType.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

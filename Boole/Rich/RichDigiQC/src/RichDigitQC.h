@@ -1,9 +1,9 @@
-// $Id: RichDigitQC.h,v 1.3 2003-11-25 15:02:32 jonrob Exp $
+// $Id: RichDigitQC.h,v 1.4 2004-06-17 14:49:14 jonesc Exp $
 #ifndef RICHMONITOR_RICHDIGITQC_H
 #define RICHMONITOR_RICHDIGITQC_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/IHistogramSvc.h"
@@ -14,7 +14,7 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
+#include "Kernel/RichDetectorType.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

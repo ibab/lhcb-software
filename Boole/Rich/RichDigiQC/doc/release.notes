@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2004-06-17 - Chris Jones
+ - Update includes for new package structure
+
 !======================== RichDigiQC v1r6 2004-03-20 ========================
 ! 2004-04-13 - Chris Jones
  - Add spillover hits to those printed out by RichDigiDataObjVerifier
