@@ -18,6 +18,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/GaudiException.h"
 /// GiGa 
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGaCnv/IGiGaHitsCnvSvc.h"

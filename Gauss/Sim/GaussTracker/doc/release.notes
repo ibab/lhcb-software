@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v2r4 2003-07-07 ===================
+! 2003-07-07 - Florence RANJARD
+ - fix for gcc3.2 (S.Ponce)
+
 !========================== GaussTracker v2r3 2003-06-18 =======================
 ! 2003-05-29 - VanyaBELYAEV
  - src/GiGaMuonHitCnv.cpp  
