@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.22 2002-11-25 18:01:32 andreav Exp $
+# $Id: release.notes,v 1.23 2002-11-26 17:34:34 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
@@ -6,7 +6,9 @@ Package manager : Andrea Valassi
 !20021125 - Andrea Valassi
 Upgrade to CondDBOracle v4r16, Gaudi v11r2 and DetDesc v11r2.
 Upgrade to RedHat73 on lxplus7.
-- no change to DetCond code
+- no major change to DetCond code
+  > disable WIN32 compilation warning 4786 in ConditionsDBGate.cpp 
+  > print out ORA_NLS33 and NLS_LANG to keep track of their values
 - dependency on Det/CondDBOracle changed from v4r15 to v4r16 (RH7,WIN)
 - dependency on Gaudi changed to v13r* (tested with v13r2)
 - dependency on GaudiSvc changed to v10r* (tested with v10r1)

@@ -1,5 +1,9 @@
-//$Id: ConditionsDBGate.cpp,v 1.12 2002-07-23 17:42:03 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.13 2002-11-26 17:34:35 andreav Exp $
 #include <string>
+
+#ifdef WIN32
+#pragma warning ( disable : 4786 )
+#endif
 
 #ifdef __CondDBObjy__
 #  include "ConditionsDB/CondDBObjyDBMgrFactory.h"
@@ -12,6 +16,7 @@
 #else
 #  ifdef __CondDBOracle__
 #    include "ConditionsDB/CondDBOracleDBMgrFactory.h"
+#    include <stdlib.h> /* For getenv */
 #  else
 #    error Either __CondDBObjy__ or __CondDBOracle__ must be defined
 #  endif
@@ -495,6 +500,20 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   if ( m_showCondDBPswd ) {
     log << MSG::INFO << "CondDB Oracle init string is " 
 	<< condDBInfo << endreq;
+  }
+
+  // Print out NLS_LANG and ORA_NLS33 to help debug ORA-12705
+  log << MSG::VERBOSE << "Environment variable NLS_LANG is ";
+  if ( 0 == getenv( "NLS_LANG" ) ) {
+    log << "(undefined)" << endreq;
+  } else {
+    log << getenv("NLS_LANG") << endreq;
+  }
+  log << MSG::VERBOSE << "Environment variable ORA_NLS33 is ";
+  if ( 0 == getenv( "ORA_NLS33" ) ) {
+    log << "(undefined)" << endreq;
+  } else {
+    log << getenv("ORA_NLS33") << endreq;
   }
 
   return StatusCode::SUCCESS;
