@@ -26,14 +26,8 @@ BrunelMoniTRIGGERSeq.Members += { "L1Track2dTruth" };
 BrunelMoniTRIGGERSeq.Members += { "L1Track3dTruth" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
 
-// IT digitisation
-BrunelMoniITSeq.Members += { "MCITDepositChecker" };
-BrunelMoniITSeq.Members += { "MCITDigitChecker" };
-BrunelMoniITSeq.Members += { "ITDigitChecker" };
-
-// IT reconstruction
-ApplicationMgr.DLLs += { "ITAssociators" };
-BrunelMoniITSeq.Members += { "ITClusterChecker" };
+// IT digitisation and clustering
+#include "$ITCHECKERSROOT/options/Brunel.opts"
 
 // OT digitisation
 BrunelMoniOTSeq.Members += { "MCOTDepositMonitor" };

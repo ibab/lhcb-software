@@ -4,8 +4,19 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2002-10-15 - Marco Cattaneo
+ - New tuning:
+   . Add 1% inefficiency in IT, due to dead strips (ITAlgorithms v12r2)
+
  - New features:
    . Add support for getting OT digitization parameters from Xml (XmlDDDB v13r1)
+   . Possibility to add Xtalk and Random noise to IT. Switched off by default
+     (ITAlgorithms v12r2)
+
+ - Bug fixes:
+   . Fix usage of uninitialised variables (L1VeloTrack v3r1)
+
+ - Packaging changes:
+   . IT monitoring moved to a new package (ITCheckers v1r0, BrunelMoni.opts)
 
 </PRE><H1><A NAME=v14r0>2002-10-14 Brunel v14r0</A></H1><PRE>
  - New tuning:
