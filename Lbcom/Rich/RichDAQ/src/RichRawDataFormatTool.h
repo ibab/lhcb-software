@@ -5,13 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.3 2005-01-18 09:07:18 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 13:11:57  jonrob
- *  Add version 2 of data format
- *
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichRawDataFormatTool.h,v 1.4 2005-03-06 13:16:56 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
