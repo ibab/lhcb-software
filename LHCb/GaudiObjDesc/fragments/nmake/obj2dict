@@ -2,5 +2,5 @@ $(dest)${NAME}.obj2dict :  ${FULLNAME}
 	@echo Producing Dictionary from ${FULLNAME}
 	@if not exist $(dest) mkdir $(dest)
 	@cd $(dest)
-	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ..\${FULLNAME}
+	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ${FULLNAME}
 	@echo "" > ${NAME}.obj2dict
