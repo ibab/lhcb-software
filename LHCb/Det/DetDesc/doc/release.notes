@@ -2,6 +2,11 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010605 - Sebastien Ponce
+ - Implementation of the general trapezoid (tag trap) in the xml converters.
+ - The converter was tested but the general trapezoid themselves seems not to be tested since I had to correct a big bug in it.
+
+!===========================================================================
 ! 20010518 - Sebastien Ponce
  - made everything work under windows
 

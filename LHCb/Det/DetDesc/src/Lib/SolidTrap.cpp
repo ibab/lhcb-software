@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidTrap.cpp,v 1.5 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidTrap.cpp,v 1.6 2001-06-05 16:17:59 sponce Exp $
 
 // GaudiKernel 
 #include "GaudiKernel/IInspector.h"
@@ -107,6 +107,7 @@ void SolidTrap::makeAll()
     m_trap_vertices.push_back( p4 ) ; 
     m_trap_vertices.push_back( p5 ) ; 
     m_trap_vertices.push_back( p6 ) ; 
+    m_trap_vertices.push_back( p7 ) ; 
     ///
   }
   if( 8 != m_trap_vertices.size() ) 

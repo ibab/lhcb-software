@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.3 2001-05-14 15:13:42 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.4 2001-06-05 16:18:00 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -139,6 +139,13 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   StatusCode dealWithTrd (DOM_Element childElement);
 
   /**
+   * deals with the xml tag <trap>
+   * @param childElement the DOM element representing the tag
+   * @return status depending on the completion of the call
+   */
+  StatusCode dealWithTrap (DOM_Element childElement);
+
+  /**
    * deals with the xml tag <cons>
    * @param childElement the DOM element representing the tag
    * @return status depending on the completion of the call
@@ -210,7 +217,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   void dealWithPosRotChildren      (DOM_Element element);
 
   /**
-   * deals with the xml tags <box>, <cons>, <sphere>, <tubs>, <trd>
+   * deals with the xml tags <box>, <cons>, <sphere>, <tubs>, <trd>, <trap>
    * @param childElement the DOM element representing the tag
    * @return status depending on the completion of the call
    */

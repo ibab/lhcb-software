@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.8 2001-05-17 16:34:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.9 2001-06-05 16:17:59 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -120,6 +120,8 @@ StatusCode XmlLVolumeCnv::i_fillObj (DOM_Element childElement,
     sc = dealWithBox(childElement);
   } else if ("trd" == tagName) {
     sc = dealWithTrd(childElement);
+  } else if ("trap" == tagName) {
+    sc = dealWithTrap(childElement);
   } else if ("cons" == tagName) {
     sc = dealWithCons(childElement);
   } else if ("tubs" == tagName) {
@@ -327,6 +329,69 @@ StatusCode XmlLVolumeCnv::dealWithTrd (DOM_Element childElement) {
   // returns
   return StatusCode::SUCCESS;
 } // end dealWithTrd
+
+
+// -----------------------------------------------------------------------
+// Deal with trap
+// -----------------------------------------------------------------------
+StatusCode XmlLVolumeCnv::dealWithTrap (DOM_Element childElement) {
+  std::string sizeZAttribute =
+    dom2Std (childElement.getAttribute ("sizeZ"));
+  std::string thetaAttribute =
+    dom2Std (childElement.getAttribute ("theta"));
+  std::string phiAttribute =
+    dom2Std (childElement.getAttribute ("phi"));
+  std::string sizeY1Attribute =
+    dom2Std (childElement.getAttribute ("sizeY1"));
+  std::string sizeX1Attribute = 
+    dom2Std (childElement.getAttribute ("sizeX1"));
+  std::string sizeX2Attribute =
+    dom2Std (childElement.getAttribute ("sizeX2"));
+  std::string alp1Attribute =
+    dom2Std (childElement.getAttribute ("alp1"));
+  std::string sizeY2Attribute =
+    dom2Std (childElement.getAttribute ("sizeY2"));
+  std::string sizeX3Attribute = 
+    dom2Std (childElement.getAttribute ("sizeX3"));
+  std::string sizeX4Attribute =
+    dom2Std (childElement.getAttribute ("sizeX4"));
+  std::string alp2Attribute =
+    dom2Std (childElement.getAttribute ("alp2"));
+  if (sizeZAttribute.empty()) { sizeZAttribute = "0.0"; }
+  if (thetaAttribute.empty()) { thetaAttribute = "0.0"; }
+  if (phiAttribute.empty()) { phiAttribute = "0.0"; }
+  if (sizeY1Attribute.empty()) { sizeY1Attribute = "0.0"; }
+  if (sizeX1Attribute.empty()) { sizeX1Attribute = "0.0"; }
+  if (sizeX2Attribute.empty()) { sizeX2Attribute = "0.0"; }
+  if (alp1Attribute.empty()) { alp1Attribute = "0.0"; }
+  if (sizeY2Attribute.empty()) { sizeY2Attribute = "0.0"; }
+  if (sizeX3Attribute.empty()) { sizeX3Attribute = "0.0"; }
+  if (sizeX4Attribute.empty()) { sizeX4Attribute = "0.0"; }
+  if (alp2Attribute.empty()) { alp2Attribute = "0.0"; }
+  std::string trapName = dom2Std (childElement.getAttribute ("name"));
+  m_solid = new SolidTrap
+    (trapName,
+     xmlSvc()->eval(sizeZAttribute) / 2.0,
+     xmlSvc()->eval(thetaAttribute),
+     xmlSvc()->eval(phiAttribute),
+     xmlSvc()->eval(sizeY1Attribute) / 2.0,
+     xmlSvc()->eval(sizeX1Attribute) / 2.0,
+     xmlSvc()->eval(sizeX2Attribute) / 2.0,
+     xmlSvc()->eval(alp1Attribute),
+     xmlSvc()->eval(sizeY2Attribute) / 2.0,
+     xmlSvc()->eval(sizeX3Attribute) / 2.0,
+     xmlSvc()->eval(sizeX4Attribute) / 2.0,
+     xmlSvc()->eval(alp2Attribute));
+  setTransContext(trapName);
+  dealWithPosRotChildren(childElement);
+  if (m_insideBoolean == true) {
+    sFound.m_solid = m_solid;
+    m_bstore.push_back (sFound);
+  }
+  setTransContext("");
+  // returns
+  return StatusCode::SUCCESS;
+} // end dealWithTrap
 
 
 // -----------------------------------------------------------------------
@@ -890,6 +955,8 @@ void XmlLVolumeCnv::dealWithSimpleSolidChildren (DOM_Element element) {
         dealWithTubs(childElement);
       } else if ("trd" == tagName) {
         dealWithTrd(childElement);
+      } else if ("trap" == tagName) {
+        dealWithTrap(childElement);
       } else {
         log << MSG::WARNING
             << "This tag makes no sense : " << tagName << endreq;
