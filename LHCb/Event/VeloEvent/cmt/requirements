@@ -1,56 +1,27 @@
+# $Id: requirements,v 1.12 2002-04-15 13:33:08 cattanem Exp $
 package VeloEvent
 version v10r0
 
-branches Event src cmt xml dict
+branches Event src xml cmt doc dict
 
-use GaudiKernel v11*
-use GaudiObjDesc v4r0
-use CLHEP v17r*
-use LHCbEvent v* Event
-use EventKernel v* Event
-use VeloAlgs v1* Velo
-use LHCbKernel v*
+use Event v1r* Event
 
-include_dirs $(VELOEVENTROOT)
+include_dirs	 $(VELOEVENTROOT)
 
-# Produce Header-Files & dictionary from XML description
-#============================================================================
+#---- Produce Header-Files from XML description
 document obj2doth VeloEventObj2Doth ../xml/VeloEvent.xml
+document obj2dict VeloEventObj2Dict ../xml/VeloEvent.xml
 
-# Generation of data dictionary for Gaudi Introspection Service
+# default library
+library VeloEvent ../src/*.cpp \
+                  ../dict/*.cpp
+
+apply_pattern package_linkopts
+apply_pattern linker_path
+apply_pattern package_stamps
+
 #============================================================================
-document obj2dict VeloEventObj2Dict -group=dict ../xml/VeloEvent.xml
-library VeloEventDict -group=dict ../dict/*.cpp
-macro VeloEventDict_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+private
 
-#component library
-#============================================================================
-library VeloEvent          ../src/*.cpp
-
-apply_pattern package_Clinkopts
-apply_pattern packageShr
-
-# ========================================================================
-private 
-
-apply_pattern package_Cshlibflags 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+macro_remove use_linkopts $(VeloEvent_linkopts)
+macro VeloEvent_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"

@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="VeloEvent">
-
+    <import name="Kernel/CLHEPStreams"/>
     <class name="MCVeloHit" 
            id="4001"
            author="Chris Parkes" 
