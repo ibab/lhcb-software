@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.9 2004-03-16 13:51:42 jonesc Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.10 2004-04-19 22:57:05 jonesc Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -45,7 +45,7 @@ StatusCode RichDigiAlgMoni::initialize() {
   if ( !bookHistograms() ) return StatusCode::FAILURE;
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = get<IParticlePropertySvc>( "ParticlePropertySvc" );
+  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
   // Setup the PDG code mappings
   m_localID[ 0 ] = Rich::Unknown;
@@ -314,7 +314,7 @@ StatusCode RichDigiAlgMoni::execute() {
 
     HepPoint3D point;
     if ( !m_smartIDTool->globalPosition( id, point ) ) {
-      warning() << "Position conversion error : ID = " << id << endreq;
+      Warning("Position conversion error");
     }
 
     // increment digit count

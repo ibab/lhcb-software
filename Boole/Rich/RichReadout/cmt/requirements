@@ -1,5 +1,5 @@
 package RichReadout
-version v1r7
+version v1r8
 
 # ================ structure =================================================
 branches cmt doc src
