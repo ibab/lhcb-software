@@ -1,6 +1,6 @@
-$Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiConf/options/RootHist.opts,v 1.1 2001-03-19 14:54:23 cattaneb Exp $
-/-------------------------------------------------------------
-/ Standard options for ROOT histogram and N-tuple persistency
-/-------------------------------------------------------------
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiConf/options/RootHist.opts,v 1.2 2001-03-19 16:04:52 cattaneb Exp $
+//-------------------------------------------------------------
+// Standard options for ROOT histogram and N-tuple persistency
+//-------------------------------------------------------------
 ApplicationMgr.DLLs += { "RootHistCnv" };
 ApplicationMgr.HistogramPersistency = "ROOT";
