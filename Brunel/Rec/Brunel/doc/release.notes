@@ -36,6 +36,8 @@ Purpose: LHCb reconstruction program
    . Use TDR L0 threshold settings (L0DU v6r5)
    . New Muon ID tuning (MuonID v3r6)
    . Final L1 calibration for TDR (L1Decision v2r1)
+   . TimingAlg normalisation loop increased by x 1.3 in case of gcc 3.2, to 
+     compensate effect of -o2 compiler flag (BrunelAlgs v2r0p1)
 
 - Bug fixes:
    . Release application manager in BrunelMain.cpp, to please valgrind
