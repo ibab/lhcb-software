@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 2003-04-30 - Marco Cattaneo
+ - Make L1/TTClusters, L1/ITClusters, L1/OTClusters optional in DstContent.opts
+   This is because DSTs can exist both with (evtype 61) and without (other 
+   evtypes) these containers
+
 !========================== GaudiConf v6r7 2003-04-16 ======================
 ! 2003-04-16 - Marco Cattaneo, Gloria Corti
  - Add RawhContent.opts defining content of OORAWH files converted from ZEBRA
