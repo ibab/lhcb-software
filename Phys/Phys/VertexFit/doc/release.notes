@@ -2,9 +2,14 @@
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+! 2004-08-24 - P. Koppenburg
+ - Made a mistake while importing DaVinciFilter, overwriting VertexFit. 
+   Had to remove all filters from VertexFit.
+
 ! 2004-08-23 - P. Koppenburg
- - New package Vertex extracted from DaVinciTools,
+ - New package VertexFit extracted from DaVinciTools,
    containing all vertex fitters and assocaited tools.
+
 !========================== DaVinciTools v10r3 2004-08-23 ===================
 ! 2004-08-23 - Florence RANJARD
  - replace GaudiTools/ with GaudiAlg
