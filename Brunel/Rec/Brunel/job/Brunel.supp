@@ -16,3 +16,12 @@
 # }
 
 # All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp
+
+# SEAL_1_4_0 - reported to Pere. Seen in Brunel event 400
+{
+  SEAL leak
+  Memcheck:Leak
+  fun:__builtin_new
+  fun:_Znwj
+  fun:_ZN4seal7reflect12ClassBuilder8addFieldEPKcS3_S3_ii
+}
