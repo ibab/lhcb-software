@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.43 2003-10-31 13:15:21 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.44 2003-10-31 16:52:04 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -102,10 +102,10 @@ GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
-{ "/run/verbose 0 "               ,
-  "/tracking/verbose 0"            ,
+{ "/run/verbose 0 ",
+  "/tracking/verbose 0",
   "/geometry/navigator/verbose 0",
-  "/tracking/storeTrajectory  1"    } ;
+  "/tracking/storeTrajectory  1"} ;
 
 // mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
@@ -134,7 +134,7 @@ GiGa.TrackSeq.PostTrack.StorePrimaries = true;
 GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
 GiGa.TrackSeq.PostTrack.StoreDecays = true;
 //GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
-//GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 2.2 * GeV   ;        
+//GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 2.2 * GeV;        
 //GiGa.TrackSeq.PostTrack.StoreByChildProcess = true; 
 //GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"Decay"}; 
 
@@ -144,13 +144,13 @@ GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
 // "Global Field Manager" 
 GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
-GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4" ; 
-GiGaGeo.FieldMgr.Global        = true            ;
+GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4"; 
+GiGaGeo.FieldMgr.Global        = true;
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
-GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc" ;
+GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 
 // setting simulation attributes
-GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" } ;
+GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
 
 // sensdet paths (to be moved away at some stage...)
 GiGaGeo.ITSDet.DetectorPath    = "/Tracker/IT";

@@ -22,14 +22,11 @@ EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
-
 EventSelector.Input = {"DATAFILE='Gauss.oosim' TYP='ROOT' OPT='READ'"}; 
-
 
 //--------------------------------------------------------------
 // Private Application Configuration options
 //--------------------------------------------------------------
-
 
 //ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
 ApplicationMgr.TopAlg  = {"PrintEventAlg/PrintEvt"};
@@ -38,67 +35,10 @@ ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 
 ApplicationMgr.EvtSel      ="'Gauss.oosim'";
 
-HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
-#include "$STDOPTS/Hbook.opts"
-#include "$STDOPTS/DetDesc.opts"
-/////////////////////////////////////////////////////////////////
-// Velo 
-
-ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;
-ApplicationMgr.TopAlg += {"VeloSim"};
-
-// // JP Palacios Options file for VeloSim algorithm
-VeloSim.NoiseSim = true;
-VeloSim.coupling = true;
-VeloSim.SpillOver = false;
-VeloSim.InhomogeneousCharge = true;
-VeloSim.TestSimulation =  false;
-VeloSim.PileUp= true;
-VeloSim.OutputLevel=2;
-
-// // JP Palacios Options file for VeloMonitor algorithm
-ApplicationMgr.DLLs += { "VeloAssociators" };
-ApplicationMgr.TopAlg += { "VeloMonitor"};
-
-VeloMonitor.TestMCVeloHit       = true;
-VeloMonitor.TestMCVeloFE        = true;
-VeloMonitor.TestVeloFullDigit = false;
-VeloMonitor.TestVeloCluster   = false;
-VeloMonitor.Resolution          = false;
-VeloMonitor.Printout            = 5;
-VeloMonitor.OutputLevel = 6;
-VeloMonitor.DetailedMonitor = true;
-
-//////////////////////////////////////////////////////////////////
-// IT
-
-//ApplicationMgr.DLLs   += { "ITDet","ITCheckers" ,"ITAlgorithms" };
-
-//ApplicationMgr.TopAlg += { "MCITDepositCreator",
-//                          "MCITDigitCreator",
-//                          "ITDigitCreator"
-//};
-//#include "$ITALGORITHMSROOT/options/itDigi.opts"
-
-// Not really digitization, but just to check... 
-//ApplicationMgr.TopAlg += { "ITClusterCreator","ITSummaryCreator"};
-//#include "$ITALGORITHMSROOT/options/itRec.opts"
-
-//ApplicationMgr.DLLs += { "ITAssociators" };
-//ApplicationMgr.TopAlg += { "MCITDepositChecker",
-//                          "ITDigitChecker",
-//                          "ITClusterChecker"
-//};
-
-
-//--------------------------------------------------------------
-// Event related parameters
-//--------------------------------------------------------------
-
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 1;
 
-//EventSelector.FirstEvent = 418;
+EventSelector.FirstEvent = 1;
 
 EventDataSvc.ForceLeaves = 1;
 
