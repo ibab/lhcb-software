@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v13r2>2002-10-07 Brunel v13r2</A></H1><PRE>
+</PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
 Bug fix release for reprocessing of summer production
 Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
 
@@ -44,6 +44,8 @@ Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
      CaloDet v5r1, CaloUtils v4r2, CaloTools v4r4)
    . Fixes to digitisation of IT stereo layers (ITDet v1r1, ITAlgorithms v12r1)
    . Add protection against invalid argument to ACOS (recrich v7r2)
+   . Do not consider events where tracking is skipped (> 200 Velo tracks) 
+     for tracking efficiency statistics (FwTrack v4r2)
 
  - Geometry changes (XmlDDDB v12r5):
    . Fix overlap between Velo and Rich1
