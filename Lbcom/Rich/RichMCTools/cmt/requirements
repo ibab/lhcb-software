@@ -24,6 +24,7 @@ include_path none
 use RichEvent   v7r*    Event
 use RichDet     v8r*    Det
 use LinkerEvent v1r*    Event
+use Relations	v1r*	Kernel
 
 #============================================================================
 # Component library building rule

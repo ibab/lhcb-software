@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
+// $Id: RichToolRegistry.h,v 1.3 2004-07-21 08:05:35 cattanem Exp $
 #ifndef RICHUTILS_RICHTOOLREGISTRY_H
 #define RICHUTILS_RICHTOOLREGISTRY_H 1
 
@@ -6,7 +6,7 @@
 #include <string>
 
 // base class and interface
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "RichKernel/IRichToolRegistry.h"
 
 // from Gaudi

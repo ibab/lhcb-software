@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v2r0 2004-07-19 ======================
 ! 2004-07-15 - Chris Jones
  - Improvements to doxygen comments
 
@@ -11,7 +12,6 @@
  - Update to RichDet v8r0
  - Update to new IRichRayTracing interface
 
-!========================== RichMCTools v2r0 2004-06-16 ======================
 ! 2004-06-18 - Chris Jones
  - Add includes removed from interfaces.
 

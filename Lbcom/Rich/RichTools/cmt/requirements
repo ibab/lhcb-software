@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2004-07-15 14:47:06 papanest Exp $
+# $Id: requirements,v 1.6 2004-07-21 08:05:34 cattanem Exp $
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 
@@ -9,8 +9,6 @@ version v1r0
 branches src cmt doc
 
 # ================ dependencies =============================================    
-use AIDA        v*   
-
 use RichEvent   v7r*  Event
 use RichDet     v8r*  Det
 
@@ -18,7 +16,7 @@ use RichDet     v8r*  Det
 include_path none
 
 # ================ component library=========================================
-library RichTools ../src/*.cpp
+library RichTools ../src/*.cpp -import=AIDA
 
 # define component library link options
 #============================================================================
