@@ -2,6 +2,11 @@
 ! Responsible : Chris Parkes
 
 !========================  VeloAssociators v1r2 2002-10-10 =====================
+! 2002-10-04 - Chris Parkes
+  - Windows compiler friendly fix of the Velo
+ Associators : SmartRef cannot be a key of a map on windows 
+ (but can on gcc), replaced with a pointer
+
 ! 2002-09-24 - Chris Parkes
  - rewrite to allow multiple particles to be linked a cluster.
    makes use of modified event model.
