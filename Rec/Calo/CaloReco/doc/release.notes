@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.56 2004-10-24 10:50:11 ibelyaev Exp $
+! $Id: release.notes,v 1.57 2004-10-24 12:17:17 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,14 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-24 - Vanya BELYAEV
+ -  src/CaloTrackMathcPhotonAlg.cpp
+    src/CaloTrackMathcPhotonAlg.h
+    src/CaloReco_load.cpp
+       remove obsolete algorithm
+ -  src/CaloTrack*.cpp 
+       improve a little bit the error-reporting printout
 
 ! 2004-10-22 - Vanya BELYAEV
 

@@ -1,24 +1,36 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.4 2004-03-08 13:45:25 cattanem Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.5 2004-10-24 12:17:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 // Include files
+// ============================================================================
+// CLHEP 
+// ============================================================================
 #include "CLHEP/Matrix/Matrix.h"
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GaudiException.h"
-
+// ============================================================================
 // Calo related
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "CaloKernel/CaloPrint.h"
-
+// ============================================================================
 // track related
+// ============================================================================
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStateP.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloTrackMatchBremm.h"
+// ============================================================================
+
 
 // ============================================================================
 /** @file CaloTrackMatchBremm.cpp
@@ -55,15 +67,15 @@ CaloTrackMatchBremm::CaloTrackMatchBremm
   , m_counts ( 0  )
   , m_prints ( 20 )
 {
-  declareProperty( "BremZ"       , m_bremZ  ) ;
-  declareProperty( "MaxPrints"   , m_prints ) ;
+  declareProperty ( "BremZ"       , m_bremZ  ) ;
+  declareProperty ( "MaxPrints"   , m_prints ) ;
   
-  setProperty( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
-  setProperty( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
-  setProperty( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
-  setProperty( "PID"          ,  "22"                   ) ; // photon 
-  setProperty( "Tolerance"    ,  "50.0"                 ) ; // 50 * mm  
-
+  setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
+  setProperty ( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
+  setProperty ( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
+  setProperty ( "PID"          ,  "22"                   ) ; // photon 
+  setProperty ( "Tolerance"    ,  "50.0"                 ) ; // 50 * mm  
+  
 };
 // ============================================================================
 
@@ -91,51 +103,36 @@ StatusCode CaloTrackMatchBremm::match
   // set 'bad' value 
   chi2_result = m_bad ;
   
-    // check calo 
-  if( 0 == caloObj   ) { return Error("CaloPosition* points to NULL"); }
+  // check calo 
+  if ( 0 == caloObj   ) { return Error("CaloPosition* points to NULL"); }
   
   // find/extrapolate  the correct state 
   StatusCode sc = findState( trObj , m_bremZ , caloObj->z() ); 
-  if( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
+  if ( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
   
-  if( 0 == m_state   ) { return Error("TrState* points to NULL!"); }
+  if ( 0 == m_state   ) { return Error("TrState* points to NULL!"); }
   
   /// the resulting function can throw an exception in case of failure
   try
-    { 
-      chi2_result = chi2( prepareCluster( caloObj ) ,
-                          prepareTrack  ( m_state ) );
-    }
-  catch( const GaudiException &exc )
-    { 
-      if( m_counts++ <= m_prints ) 
-        {    
-          MsgStream log( msgSvc() , name() );
-          log << MSG::ERROR << " Matrix Problems: " ;
-          CaloPrint print;
-          std::string msg( "bits: ") ;
-          msg +=  "E:" + print( (int) trObj -> errorFlag () ) ;
-          msg += "/U:" + print( (int) trObj -> unique    () ) ;
-          msg += "/H:" + print( (int) trObj -> history   () ) ;
-          msg += "/f:" + print( (int) trObj -> forward   () ) ;
-          msg += "/m:" + print( (int) trObj -> match     () ) ;
-          msg += "/v:" + print( (int) trObj -> velo      () ) ;
-          msg += "/t:" + print( (int) trObj -> veloTT    () ) ;
-          msg += "/b:" + print( (int) trObj -> veloBack  () ) ;
-          msg += "/s:" + print( (int) trObj -> seed      () ) ;
-          msg += "/d:" + print( (int) trObj -> isDownstream  () ) ;
-          log << msg 
-              << "/k:" << (int) trObj -> key () 
-              << endreq ;
-          MatchType mt1( prepareCluster ( caloObj ) );
-          MatchType mt2( prepareTrack   ( m_state ) );
-          log << " Matrix1 " << mt1.cov    << endreq ;
-          log << " Vector1 " << mt1.params << endreq ;
-          log << " Matrix2 " << mt2.cov    << endreq ;
-          log << " Vector2 " << mt2.params << endreq ;
-        } 
-      return Error( exc.message() ,  exc.code() ); 
-    }
+  { 
+    chi2_result = chi2 ( prepareCluster( caloObj ) ,
+                         prepareTrack  ( m_state ) );
+  }
+  catch ( const GaudiException &exc )
+  { 
+    if ( msgLevel( MSG::DEBUG ) ) 
+    {
+      debug() << "  Exception " << exc.message() 
+              << "\nMatrix problems, track " << bits ( trObj ) << endreq ;
+      MatchType1 mt1( prepareCluster ( caloObj ) ) ;
+      MatchType1 mt2( prepareTrack   ( m_state ) ) ;
+      debug() << " Err1/Matrix1 " << mt1.error << "/" << mt1.cov    << endreq ;
+      debug() << " Vector1 "      << mt1.params                     << endreq ;
+      debug() << " Err2/Matrix2 " << mt2.error << "/" << mt2.cov    << endreq ;
+      debug() << " Vector2 "      << mt2.params                     << endreq ;
+    } 
+    return Error ( exc.message() ,  exc.code() ) ; 
+  }
   
   return StatusCode::SUCCESS;
 };

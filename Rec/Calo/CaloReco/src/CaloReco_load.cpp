@@ -1,12 +1,15 @@
-// $Id: CaloReco_load.cpp,v 1.13 2004-10-22 16:33:52 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.14 2004-10-24 12:17:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
+// ============================================================================
 
 /** @file
  *  mandatory file for dynamic loading of CaloReco shared library.
@@ -34,7 +37,6 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_ALGORITHM   ( CaloMergedPi0Alg                    ) ;
   DECLARE_ALGORITHM   ( CaloElectronAlg                     ) ;
   
-  DECLARE_ALGORITHM   ( CaloTrackMatchPhotonAlg             ) ;
   DECLARE_ALGORITHM   ( CaloCluster2TrackAlg                ) ;
   DECLARE_ALGORITHM   ( CaloHypo2TrackAlg                   ) ;
   

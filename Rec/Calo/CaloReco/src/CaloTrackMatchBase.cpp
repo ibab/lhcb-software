@@ -1,20 +1,30 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.5 2004-10-22 19:08:03 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.6 2004-10-24 12:17:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // Include files
+// ============================================================================
 #include <functional>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
+// ============================================================================
 // Track
+// ============================================================================
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStateP.h"
 #include "TrKernel/ITrExtrapolator.h"
+// ============================================================================
 // Calo 
+// ============================================================================
 #include "Kernel/CaloPrint.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloTrackMatchBase.h"
+// ============================================================================
 
 // ============================================================================
 /** @file CaloTrackMatchBase.cpp
@@ -174,47 +184,34 @@ StatusCode CaloTrackMatchBase::findState
       
       // check the state
       if( st->z() < m_zmin || st->z() > m_zmax ) 
-        { 
-          MsgStream log( msgSvc() , name() );
-          log << MSG::DEBUG 
-              << " Problems: "
-              << " Allowed : "  << m_zmin << "/" << m_zmax 
-              << " Closest : "  << Z 
-              << " Found : "    << st->z() 
-              << " Track " ;
-          CaloPrint print;
-          std::string msg( "bits: ") ;
-          msg +=  "E:" + print( (int) trObj -> errorFlag () ) ;
-          msg += "/U:" + print( (int) trObj -> unique    () ) ;
-          msg += "/H:" + print( (int) trObj -> history   () ) ;
-          msg += "/f:" + print( (int) trObj -> forward   () ) ;
-          msg += "/m:" + print( (int) trObj -> match     () ) ;
-          msg += "/v:" + print( (int) trObj -> velo      () ) ;
-          msg += "/t:" + print( (int) trObj -> veloTT    () ) ;
-          msg += "/b:" + print( (int) trObj -> veloBack  () ) ;
-          msg += "/s:" + print( (int) trObj -> seed      () ) ;
-          msg += "/d:" + print( (int) trObj -> isDownstream  () ) ;
-          log << msg 
-              << "/k:" << (int) trObj -> key () 
-              << endreq ;
-          return Error("Closest z is outside of allowed region [" + 
-                       print( m_zmin ) + "," + print( m_zmax ) + "] " + msg );
-        }    
+      { 
+        if ( msgLevel( MSG::DEBUG ) ) 
+        {
+          debug() << " Problems: "
+                  << " Allowed : "  << m_zmin << "/" << m_zmax 
+                  << " Closest : "  << Z 
+                  << " Found : "    << st->z() 
+                  << " Track " 
+                  << bits ( trObj ) 
+                  << endreq ;
+        }
+        return Error ("Closest z is outside of allowed region " ) ;
+      }    
       // clone the state!
       m_state = st -> clone() ;
     }
   
   if( fabs( Zext -  m_state->z() ) > m_tolerance ) 
-    {
-      // extrapolate the state  
-      StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
-      if( sc.isFailure() ) 
-        { return Error("Error from extrapolator!", sc ); }
-    }
+  {
+    // extrapolate the state  
+    StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
+    if( sc.isFailure() ) 
+    { return Error ( "Error from extrapolator!" , sc ) ; }
+  }
   
   // set new value for prev track 
   m_prevTrack = trObj ;
-   
+  
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -249,6 +246,46 @@ ICaloTrackMatch::MatchingPair CaloTrackMatchBase::operator()
   double chi2;
   StatusCode sc = match( caloObj, trObj, chi2 );
   return MatchingPair( sc, chi2 );
+};
+// ============================================================================
+
+// ============================================================================
+/** return the decoded track bits pattern
+ *  @param trObj track objects 
+ *  @return track bits pattern 
+ */
+// ============================================================================
+std::string CaloTrackMatchBase::bits 
+( const TrStoredTrack* trObj ) const 
+{ 
+  if ( 0 == trObj ) { return std::string("<invalid>") ; }
+  
+  CaloPrint print;  
+  std::string msg( "bits: ") ;
+  msg +=  "E:" + print ( (int) trObj -> errorFlag     () ) ;
+  msg += "/U:" + print ( (int) trObj -> unique        () ) ;
+  msg += "/H:" + print ( (int) trObj -> history       () ) ;
+  //
+  msg += "/L:" + print ( (int) trObj -> isLong        () ) ;
+  msg += "/U:" + print ( (int) trObj -> isUpstream    () ) ;
+  msg += "/D:" + print ( (int) trObj -> isDownstream  () ) ;
+  msg += "/V:" + print ( (int) trObj -> isVelotrack   () ) ;
+  msg += "/B:" + print ( (int) trObj -> isBackward    () ) ;
+  msg += "/T:" + print ( (int) trObj -> isTtrack      () ) ;
+  //
+  msg += "/f:" + print ( (int) trObj -> forward       () ) ;
+  msg += "/m:" + print ( (int) trObj -> match         () ) ;
+  msg += "/f:" + print ( (int) trObj -> follow        () ) ;
+  msg += "/s:" + print ( (int) trObj -> seed          () ) ;
+  msg += "/v:" + print ( (int) trObj -> velo          () ) ;
+  msg += "/v:" + print ( (int) trObj -> veloTT        () ) ;
+  msg += "/b:" + print ( (int) trObj -> veloBack      () ) ;
+  msg += "/k:" + print ( (int) trObj -> ksTrack       () ) ;
+  //
+  msg += "/K:" + print ( (int) trObj -> key           () ) ;
+  
+  return msg ;
+  
 };
 // ============================================================================
 

@@ -1,39 +1,32 @@
-// $Id: CaloTrackMatchPhoton.cpp,v 1.2 2004-02-17 12:08:11 ibelyaev Exp $
+// $Id: CaloTrackMatchPhoton.cpp,v 1.3 2004-10-24 12:17:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
-// Revision 1.7  2002/07/08 15:40:08  ibelyaev
-//  update dealing with track flags
-//
-// Revision 1.6  2002/07/05 09:06:31  ibelyaev
-//  optimization and tuning for different track types
-//
-// Revision 1.5  2002/07/04 10:24:51  kbeloous
-// TrStateP used only for Electron matching, 
-// for all the rest matchings any state is sufficient
-//
 // ============================================================================
 // Include files
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GaudiException.h"
-
+// ============================================================================
 // Calo related
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "CaloKernel/CaloPrint.h"
-
+// ============================================================================
 // track related
+// ============================================================================
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStateP.h"
 #include "TrKernel/ITrExtrapolator.h"
-
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloTrackMatchPhoton.h"
+// ============================================================================
 
 // ============================================================================
 /** @file CaloTrackMatchPhoton.cpp
@@ -97,26 +90,28 @@ StatusCode CaloTrackMatchPhoton::match
   chi2_result = m_bad ;
   
   // check calo 
-  if( 0 == caloObj   ) { return Error("CaloPosition* points to NULL"); }
+  if ( 0 == caloObj   ) { return Error ( "CaloPosition* points to NULL"  ) ; }
   
   // find the closest state and extrapolate it 
-  StatusCode sc = findState( trObj, caloObj->z(), caloObj->z() );
-  if( sc.isFailure() ) { return Error("No valid state is found!",sc);}
+  StatusCode sc = findState ( trObj, caloObj->z(), caloObj->z() );
+  if ( sc.isFailure() ) { return Error ( "No valid state is found!" , sc ) ; }
   
-  if( 0 == m_state   ) { return Error("TrState* points to NULL"); }
+  if ( 0 == m_state   ) { return Error ( "TrState* points to NULL"       ) ; }
   
-  /// the resulting function can throw an exception in case of failure,
-  /// catch it.
+  // the resulting function can throw an exception in case of failure,
+  // catch it.
   try
-    {
-      chi2_result = chi2( prepareCluster( caloObj ) , 
-                          prepareTrack  ( m_state ) ) ;
-    }
-  catch( const GaudiException& exc )
-    { return Error( exc.message(), exc.code() ); }
+  {
+    chi2_result = chi2 ( prepareCluster ( caloObj ) , 
+                         prepareTrack   ( m_state ) ) ;
+  }
+  catch ( const GaudiException& exc )
+  { return Error ( exc.message(), exc.code() ); }
   
   return StatusCode::SUCCESS;
-}
+};
+// ============================================================================
+
 // ============================================================================
 // The End
 // ============================================================================

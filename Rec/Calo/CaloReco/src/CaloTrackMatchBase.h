@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBase.h,v 1.4 2004-10-22 19:08:03 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.5 2004-10-24 12:17:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -6,30 +6,41 @@
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 
 #define CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 1
+// ============================================================================
 // Include files
+// ============================================================================
+// ============================================================================
 #include <functional>
+// ============================================================================
 // CLHEP 
+// ============================================================================
 #include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
+// ============================================================================
 // GaudiKernel 
+// ============================================================================
 #include "GaudiKernel/IIncidentListener.h"
+// ============================================================================
 // CaloInterfaces 
+// ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
+// ============================================================================
 // CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloTool.h"
-
+// ============================================================================
 template <class TOOL>
 class ToolFactory     ; ///< from GaudiKernel
 class IIncidentSvc    ; ///< from GaudiKernel  
 class ITrExtrapolator ; ///< from TrKernel
-
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/DiagMatrix.h"
-
+// ============================================================================
 class CaloPosition  ;
 class TrStoredTrack ;
 class TrStateP      ;
 class TrgTrack      ;
+// ============================================================================
  
 /** @class CaloTrackMatchBase CaloTrackMatchBase.h
  *  
@@ -324,6 +335,14 @@ protected:
     cov.invert ( ifail ) ;
     return ifail ; 
   };
+
+protected:
+  
+  /** return the decoded track bits pattern
+   *  @param track track objects 
+   *  @return track bits pattern 
+   */
+  std::string bits ( const TrStoredTrack* track ) const ;
   
 protected:
   
