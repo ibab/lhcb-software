@@ -1,12 +1,16 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.34 2001-07-25 18:13:38 ibelyaev Exp $
+! $Id: release.notes,v 1.35 2001-07-26 13:26:02 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!===========================================================================
+! 20010726    Vanya Belyaev
+     add new abstract interface IGiGaRunAction 
+ 
 !===========================================================================
 ! 20010724    Vanya Belyaev 
      src/component/GiGaEventActionCommand.h/.cpp 
