@@ -4,7 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
-!==================== FlavourTagging v4r6p1 2003-07-29 =================
+!==================== FlavourTagging v4r6p1 2003-08-06 =================
 ! 2003-07-24 - Gloria CORTI
  - src/FTCombinedParticleMaker.cpp
    . remove initialization of iterator = 0 to please gcc32
