@@ -4,6 +4,29 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-07-03 - Olivier Dormond
+ - Tabification cleanup.
+ - src/CategoryTaggingTool.cpp
+   . Print out the number of reconstructed vertex instead of collisions.
+   . Print out the category the event fall in.
+   . Fixed the category key computation.
+   . Fixed tag computation for e + Kss category.
+ - src/CategoryTaggingTool.h
+   . Fixed the computation of the error on epsillon effective.
+ - src/CheatedReco.cpp
+   . Correct the pid and mass of the Particle used to create the B in
+     order to have the right B mass.
+ - src/FlavourTaggingAlgorithm.cpp
+   . Fixed the computation of the error on epsillon effective.
+ - src/KaonSameSideTaggingTool.cpp
+   . Updated the default cuts.
+   . Fixed the vertex used for the IP cut.
+ - src/VertexChargeTaggingTool.cpp
+   . Fixed the cuts values.
+   . Fixed the handling of the Kshort decay products.
+ - doc/release.notes
+   . This update.
+
 !==================== FlavourTagging v4r5 2003-06-18 ===================
 ! 2003-06-16 - Olivier Dormond
  - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
