@@ -132,7 +132,6 @@ void EvtSSDCP::decay( EvtParticle *p){
   p->initializePhaseSpace(2, daugs);
   d= p->getDaug(1);
   EvtVector4R momv = d->getP4();
-  EvtVector4R moms = p->getDaug(1)->getP4();
   
   EvtComplex amp;
 

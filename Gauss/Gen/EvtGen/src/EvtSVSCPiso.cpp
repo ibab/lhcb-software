@@ -113,7 +113,7 @@ void EvtSVSCPiso::decay( EvtParticle *p){
 
   double t;
   EvtId other_b;
-  int charged;
+  int charged = 0;
 
   int first_time=0;
   int flip=0;

@@ -34,9 +34,9 @@ EvtHQETFF::EvtHQETFF(double hqetrho2, double hqetr1, double hqetr2) {
   return;
 }
 
-void EvtHQETFF::getvectorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *a1f,
-			     double *a2f, double *vf, double *a0f ){
+void EvtHQETFF::getvectorff(EvtId parent,EvtId /*daught*/,
+                            double t, double mass, double *a1f,
+                            double *a2f, double *vf, double *a0f ){
 
 
   double mb=EvtPDL::getNominalMass(parent);

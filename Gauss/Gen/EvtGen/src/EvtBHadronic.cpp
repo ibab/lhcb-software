@@ -100,7 +100,7 @@ void EvtBHadronic::decay( EvtParticle *p){
   }
 
   int bcurrent,wcurrent;
-  int nbcurrent,nwcurrent;
+  int nbcurrent = 0,nwcurrent = 0;
 
   bcurrent=(int)getArg(0);
   wcurrent=(int)getArg(1);

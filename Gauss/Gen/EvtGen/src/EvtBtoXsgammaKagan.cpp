@@ -51,8 +51,6 @@
 #include "EvtGen/EvtItgAbsIntegrator.hh"
 #include "EvtGen/EvtBtoXsgammaFermiUtil.hh"
 
-#include <fstream.h>
-
 bool EvtBtoXsgammaKagan::bbprod = false;
 double EvtBtoXsgammaKagan::intervalMH = 0;
 
@@ -97,7 +95,7 @@ void EvtBtoXsgammaKagan::getDefaultHadronicMass(){
   intervalMH=80;
 }
 
-void EvtBtoXsgammaKagan::computeHadronicMass(int nArg, double* args){
+void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
 
   //Input parameters
   int fermiFunction = (int)args[1];
@@ -116,7 +114,7 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int nArg, double* args){
   intervalMH=_nIntervalmH;
 
   //Going to have to add a new entry into the data file - takes ages...
-  report(WARNING,"EvtGen") << "EvtBtoXsgammaKagan: calculating new hadronic mass spectra. This takes a while..." << endl;
+  report(WARNING,"EvtGen") << "EvtBtoXsgammaKagan: calculating new hadronic mass spectra. This takes a while..." << std::endl;
   
   //Now need to compute the mHVect vector for
   //the current parameters
@@ -336,7 +334,6 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int nArg, double* args){
     double s78Result = mys78FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s22Result = mys22FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s27Result = mys27FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
-    double s28Result = mys28FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     
     double py = (pow(_CKMrat,2.)*(6./_fz)*(_alpha/EvtConst::pi)*(deltaResult*_cDeltatot  + (_alphasmu/EvtConst::pi)*(s77Result*pow(_c70mu,2.) + s27Result*_c2mu*(_c70mu  - _c80mu/3.) + s78Result*_c70mu*_c80mu + s22Result*_c2mu*_c2mu  + s88Result*_c80mu*_c80mu )  ) );
     
@@ -368,7 +365,7 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int nArg, double* args){
   
 }
 
-double EvtBtoXsgammaKagan::GetMass( int Xscode ){
+double EvtBtoXsgammaKagan::GetMass( int /*Xscode*/ ){
  
 //  Get hadronic mass for the event according to the hadronic mass spectra computed in computeHadronicMass
   double mass=0.0;
@@ -681,7 +678,7 @@ double EvtBtoXsgammaKagan::GetArrayVal(double xp, double nInterval, double xMin,
 
   if (xp == x1) return array[bin1];
 
-  int bin2;
+  int bin2 = 0;
 
   if (xp > x1) {
     bin2 = bin1 + 1;

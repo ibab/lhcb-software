@@ -101,7 +101,6 @@ void EvtSVVHelAmp::SVVHel(EvtParticle *parent,EvtAmp& amp,EvtId n_v1,EvtId n_v2,
   v2 = parent->getDaug(1);
 
   EvtVector4R momv1 = v1->getP4();
-  EvtVector4R momv2 = v2->getP4();
 
   EvtVector3R v1dir(momv1.get(1),momv1.get(2),momv1.get(3));
   v1dir=v1dir/v1dir.d3mag();

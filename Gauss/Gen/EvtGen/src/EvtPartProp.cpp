@@ -19,7 +19,6 @@
 //------------------------------------------------------------------------
 //
 #include <iostream>
-#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "EvtGen/EvtPartProp.hh"

@@ -175,9 +175,8 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
   double c7eff = -0.311;
   double c10   = -4.546;
 
-  double prob, prob_max;
+  double prob;
   double f1sp, f2sp, f3sp;
-  double u_ext;
 
   double sh = s / (mb*mb);
   EvtComplex c9eff = coeff9(mb, sh);

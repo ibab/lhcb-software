@@ -33,8 +33,8 @@ extern "C" {
 //----------------
 EvtItgPtrFunction::EvtItgPtrFunction( double (*theFunction)(double, const HepVector &), double lowerRange, double upperRange, const HepVector &coeffs1):
   EvtItgAbsFunction(lowerRange, upperRange),
-  _coeffs1(coeffs1),
-  _myFunction(theFunction)
+  _myFunction(theFunction),
+  _coeffs1(coeffs1)
 {}
 
 

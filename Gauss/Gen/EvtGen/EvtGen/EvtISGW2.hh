@@ -26,7 +26,6 @@
 #ifndef EVTISGW2_HH
 #define EVTISGW2_HH
 
-#include <fstream.h>
 #include <stdio.h>
 #include "EvtGen/EvtGenKine.hh"
 #include "EvtGen/EvtParticle.hh"

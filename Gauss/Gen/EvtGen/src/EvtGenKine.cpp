@@ -90,9 +90,11 @@ double EvtGenKine::PhaseSpace( int ndaug, double mass[10], EvtVector4R p4[10],
 
   if ( ndaug != 2 ) {
 
-     double pm[5][30],to[4],pmin,pmax,psum,wtmax,rnd[30];
+     double pm[5][30],to[4],pmin,pmax,psum,rnd[30];
+     double wtmax = 0.0;
      double ran,wt,pa,costh,sinth,phi,p[4][30],be[4],bep,temp;
-     int i,il,ilr,i1,il1u,il1,il2,il2r,ilu;
+     int i,il,ilr,i1,il1u,il1,il2r,ilu;
+     int il2 = 0;
 
      for(i=0;i<ndaug;i++){
        pm[4][i]=0.0;

@@ -62,8 +62,6 @@ void EvtSVVNONCPEIGEN::init(){
   checkNArg(27,15);
   checkNDaug(2);
 
-  EvtSpinType::spintype parenttype = EvtPDL::getSpinType(getParentId());
-
   if ( getParentId() != EvtPDL::getId("B0") ) {
     report(ERROR,"EvtGen") << "EvtSVVNONCPEIGEN decay "
                            << EvtPDL::name(getParentId())

@@ -20,15 +20,9 @@
 // 
 #include <iostream>
 #include <math.h>
-#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#ifdef WIN32
-#include <strstrea.h>
-#else
-#include <strstream.h>
-#endif
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtParticleNum.hh"
 #include "EvtGen/EvtRandom.hh"

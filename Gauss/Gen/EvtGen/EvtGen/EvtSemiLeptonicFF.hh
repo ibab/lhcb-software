@@ -23,7 +23,7 @@
 #define EVTSEMILEPTONICFF_HH
 
 #include <iostream>
-#include <fstream.h>
+//#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <assert.h>
@@ -35,15 +35,15 @@ class EvtSemiLeptonicFF{
 
  public:
 
-  virtual void getscalarff( EvtId parent, EvtId daught,
-                       double t, double mass, double *fpf,
-		       double *fmf ) {return;}
-  virtual void getvectorff( EvtId parent, EvtId daught,
-                       double t, double mass, double *a1f,
-                       double *a2f, double *vf, double *a0f ) {return;}
-  virtual void gettensorff( EvtId parent, EvtId daught,
-                       double t, double mass, double *a1f,
-                       double *a2f, double *vf, double *a0f ) {return;}
+  virtual void getscalarff( EvtId /*parent*/, EvtId /*daught*/,
+                            double /*t*/, double /*mass*/, double* /*fpf*/,
+                            double* /*fmf*/ ) {return;}
+  virtual void getvectorff( EvtId /*parent*/, EvtId /*daught*/,
+                            double /*t*/, double /*mass*/, double* /*a1f*/,
+                            double* /*a2f*/, double* /*vf*/, double* /*a0f*/ ) {return;}
+  virtual void gettensorff( EvtId /*parent*/, EvtId /*daught*/,
+                            double /*t*/, double /*mass*/, double* /*a1f*/,
+                            double* /*a2f*/, double* /*vf*/, double* /*a0f*/ ) {return;}
 
 };
 

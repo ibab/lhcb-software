@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include "EvtGen/EvtScalarParticle.hh"
 #include "EvtGen/EvtVector4R.hh"
@@ -57,9 +57,9 @@ EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis() const{
 }
 
 
-EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis(double alpha,
-						       double beta,
-						       double gamma) const{
+EvtSpinDensity EvtScalarParticle::rotateToHelicityBasis(double /*alpha*/,
+                                                        double /*beta*/,
+                                                        double /*gamma*/) const{
 
   EvtSpinDensity R;
   R.SetDim(1);

@@ -21,7 +21,6 @@
 #ifndef EVTMELIKHOV_HH
 #define EVTMELIKHOV_HH
 
-#include <fstream.h>
 #include <stdio.h>
 #include "EvtGen/EvtGenKine.hh"
 #include "EvtGen/EvtParticle.hh"

@@ -94,7 +94,6 @@ void EvtTensorParticle::init(EvtId part_n,double e,double px,double py,double pz
 EvtTensor4C EvtTensorParticle::epsTensorParent(int i) const {
 
   EvtTensor4C temp;
-  EvtVector4R p4_temp;
 
   switch (i){
   case 0:

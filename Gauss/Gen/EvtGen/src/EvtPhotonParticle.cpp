@@ -96,8 +96,7 @@ EvtVector4C EvtPhotonParticle::epsParentPhoton(int i){
   return temp;
 }
 
-EvtVector4C EvtPhotonParticle::epsPhoton(int i){
-
+EvtVector4C EvtPhotonParticle::epsPhoton(int /*i*/){
   report(ERROR,"EvtGen") << "EvtPhotonParticle.cc: Can not get "
 			 << "state in photons restframe."<<std::endl;;
   ::abort();

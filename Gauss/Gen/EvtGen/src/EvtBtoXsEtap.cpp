@@ -85,12 +85,12 @@ void EvtBtoXsEtap::decay( EvtParticle *p ){
 
   mass[1] = EvtPDL::getMass(getDaug(1));
 
-  double xbox, ybox, alifit, min, max,hichfit;
+  double xbox, ybox, min, max,hichfit;
+  // double alifit
   min=0.493;
   max=4.3;
   const double TwoPi = EvtConst::twoPi;
   int Xscode = EvtPDL::getStdHep(getDaug(0));
-  int Etapcode = EvtPDL::getStdHep(getDaug(1));
 
   // A five parameters fit, the shape is taken from Atwood & Soni
 

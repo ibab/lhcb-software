@@ -27,11 +27,11 @@ extern "C" {
 
 EvtItgFourCoeffFcn::EvtItgFourCoeffFcn( double (*theFunction)(double, const HepVector &, const HepVector &, const HepVector &, const HepVector &), double lowerRange, double upperRange, const HepVector &coeffs1, const HepVector &coeffs2, const HepVector &coeffs3, const HepVector &coeffs4):
   EvtItgAbsFunction(lowerRange, upperRange),
+  _myFunction(theFunction),
   _coeffs1(coeffs1),
   _coeffs2(coeffs2), 
   _coeffs3(coeffs3),
-  _coeffs4(coeffs4),
-  _myFunction(theFunction)
+  _coeffs4(coeffs4)
 {}
 
 EvtItgFourCoeffFcn::~EvtItgFourCoeffFcn( )

@@ -21,7 +21,6 @@
 //
 //
 #include <stdio.h>
-#include <fstream.h>
 #include <math.h>
 #include <time.h>
 #include <string.h>
@@ -30,8 +29,7 @@
 #include "EvtGen/EvtCGCoefSingle.hh"
 #include "EvtGen/EvtdFunction.hh"
 
-int main(int argc, char* argv[]){
-
+int main(int /*argc*/, char* /*argv*/[]){
 
   std::cout << "First test the Vector..." << std::endl;
   EvtVectorT<double> tempT;

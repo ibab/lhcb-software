@@ -95,8 +95,6 @@ void EvtSVVCPLH::decay( EvtParticle *p){
 
   static double ctauL=EvtPDL::getctau(EvtPDL::getId("B_s0L"));
   static double ctauH=EvtPDL::getctau(EvtPDL::getId("B_s0H"));
-  static double ctau=ctauL<ctauH?ctauH:ctauL;
-
 
   //I'm not sure if the fabs() is right when t can be
   //negative as in the case of Bs produced coherently.

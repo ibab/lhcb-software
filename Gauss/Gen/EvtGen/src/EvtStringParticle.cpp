@@ -104,9 +104,9 @@ EvtSpinDensity EvtStringParticle::rotateToHelicityBasis() const{
 
 }
 
-EvtSpinDensity EvtStringParticle::rotateToHelicityBasis(double alpha,
-							  double beta,
-							  double gamma) const{
+EvtSpinDensity EvtStringParticle::rotateToHelicityBasis(double /*alpha*/,
+                                                        double /*beta*/,
+                                                        double /*gamma*/) const{
 
   report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for string particle."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 

@@ -57,7 +57,6 @@ void EvtBtoXsll::init(){
 
   // Check that the two leptons are the same type
 
-  EvtId mesontype   = getDaug(0);
   EvtId lepton1type = getDaug(1);
   EvtId lepton2type = getDaug(2);
 
@@ -179,8 +178,6 @@ void EvtBtoXsll::decay( EvtParticle *p ){
   EvtParticle* xhadron = p->getDaug(0);
   EvtParticle* leptonp = p->getDaug(1);
   EvtParticle* leptonn = p->getDaug(2);
-
-  EvtVector4R p4[3];
 
   double mass[3];
  

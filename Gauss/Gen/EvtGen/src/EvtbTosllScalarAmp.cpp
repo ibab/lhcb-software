@@ -56,7 +56,6 @@ void EvtbTosllScalarAmp::CalcAmp( EvtParticle *parent,
 
   EvtVector4R p4b;
   p4b.set(parent->mass(),0.0,0.0,0.0);
-  EvtVector4R p4meson = parent->getDaug(0)->getP4();
  
   EvtVector4C l11,l12;
   EvtVector4C l21,l22;

@@ -582,12 +582,12 @@ void EvtISGW2FF::getscalarff(EvtId parent,EvtId daught,
 void EvtISGW2FF::EvtISGW2FF1S0 (EvtId parent,EvtId daugt,
 			  double t, double mass, double *fpf, double *fmf ) {
 
-  double mtb, mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf = 0.0, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx = 0.0;
   double zji,cji,w,gammaji,chiji,betaji_fppfm;
   double rfppfm,rfpmfm,f3fppfm,f3fpmfm,fppfm,fpmfm,al,ai,rcji,f3; 
-  double mqm,msb,bb2,mup,mum,bbx2,tm,wt,r2,betaji_fpmfm;
+  double mqm, msb = 0.0, bb2 = 0.0, mup, mum, bbx2, tm, wt, r2, betaji_fpmfm;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -1072,12 +1072,12 @@ void  EvtISGW2FF::EvtISGW2FF3S1(EvtId parent,EvtId daugt,double t,double mass,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double cf,mtb,wt,msd,mup,f3f,msq,bb2,mum,mtx,bbx2,f3g;
-  double cji,bx2,f3appam,msb,tm,mbb,mbx;
+  double cf = 0.0, mtb, wt, msd = 0.0, mup, f3f, msq = 0.0, bb2 = 0.0, mum, mtx, bbx2, f3g;
+  double cji, bx2 = 0.0, f3appam, msb = 0.0, tm, mbb = 0.0, mbx = 0.0;
   double f3apmam,appam,apmam,mb,mx,f3;
   double r_f,r_g,r_appam,r_apmam, betaji_f,betaji_g;
   double betaji_appam, betaji_apmam;
-  double w,mqm,r2,chiji,zji,ai,al,rcji,nf,nfp,gammaji;
+  double w, mqm, r2, chiji, zji, ai, al, rcji, nf = 0.0, nfp = 0.0, gammaji;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -1441,12 +1441,12 @@ void EvtISGW2FF::EvtISGW2FF21S0 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx;
   double f3fppfm,f3fpmfm,fppfm,fpmfm,f3;
-  double mqm,msb;
-  double mum,mup,r2,wt,tm,bb2,bbx2;
+  double mqm, msb = 0.0;
+  double mum, mup, r2, wt, tm, bb2 = 0.0, bbx2;
   double tau,udef,vdef;
 
   EvtId prnt=parent;
@@ -1698,12 +1698,12 @@ void EvtISGW2FF::EvtISGW2FF23S1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb,  mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx;
+  double mtb,  mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx;
   double f3appam,f3apmam,f3,appam,apmam,f3fp,f3gp;
-  double udef,tau,mum,mup,bb2,bbx2,tm,wt,mqm,r2,msb;
-  double cfp;
+  double udef, tau, mum, mup, bb2 = 0.0, bbx2, tm, wt, mqm, r2, msb = 0.0;
+  double cfp = 0.0;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -1970,12 +1970,12 @@ void EvtISGW2FF::EvtISGW2FF1P1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx,f5;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx, f5;
   double f5sppsm,f5spmsm;
   double f5v,f5r,mup,mum,vv,rr,spmsm,sppsm;
-  double mqm,msb,bb2,bbx2,tm,wt,r2;
+  double mqm, msb = 0.0, bb2 = 0.0, bbx2, tm, wt, r2;
   EvtId prnt=parent;
   EvtId dgt=daugt;
   if (prnt==B0||prnt==B0B||prnt==BP||prnt==BM) {
@@ -2282,11 +2282,11 @@ void EvtISGW2FF::EvtISGW2FF3P1 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb,  mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx;
   double f5cppcm,f5cpmcm,f5,ql,ll,cppcm,cpmcm,f5q,f5l;
-  double mqm,msb,bb2,mup,mum,bbx2,tm,wt,r2;
+  double mqm, msb = 0.0, bb2 = 0.0, mup, mum, bbx2, tm, wt, r2;
   EvtId prnt=parent;
   EvtId dgt=daugt;
 
@@ -2596,11 +2596,11 @@ void EvtISGW2FF::EvtISGW2FF3P0 (EvtId parent,EvtId daugt,
   static EvtId BSB=EvtPDL::getId("anti-B_s0");
   static EvtId BS0=EvtPDL::getId("B_s0");
 
-  double mtb, mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx;
   double f5uppum,f5upmum,uppum,upmum,f5;
-  double mqm,mum,mup,wt,r2,bb2,bbx2,msb,tm;
+  double mqm, mum, mup, wt, r2, bb2 = 0.0, bbx2, msb = 0.0, tm;
 
   EvtId prnt=parent;
   EvtId dgt=daugt;
@@ -2886,12 +2886,12 @@ void EvtISGW2FF::EvtISGW2FF3P2 (EvtId parent,EvtId daugt,
   static EvtId BS0=EvtPDL::getId("B_s0");
 
 
-  double mtb, mbb;
-  double msd, mx,mb,nf,nfp; 
-  double msq,bx2,mbx,mtx,f5;
+  double mtb, mbb = 0.0;
+  double msd = 0.0, mx, mb, nf, nfp = 0.0; 
+  double msq = 0.0, bx2 = 0.0, mbx = 0.0, mtx, f5;
   double f5h,f5k,f5bppbm,f5bpmbm,bppbm,bpmbm;
-  double mqm,mum,mup,tm,wt,r2,bb2,bbx2;
-  double msb;
+  double mqm, mum, mup, tm, wt, r2, bb2 = 0.0, bbx2;
+  double msb = 0.0;
   EvtId prnt=parent;
   EvtId dgt=daugt;
 

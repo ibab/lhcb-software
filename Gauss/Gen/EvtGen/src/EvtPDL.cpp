@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 // 
 #include <iostream>
-#include <fstream.h>
+#include <fstream>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -105,7 +105,7 @@ void EvtPDL::reSetWidth(EvtId i, double width)
 void EvtPDL::readPDT(const EvtString fname){
 
 
-  ifstream indec;
+  std::ifstream indec;
   
   indec.open(fname.value());
 
@@ -124,7 +124,7 @@ void EvtPDL::readPDT(const EvtString fname){
   EvtId i;
 
   if (!indec) {
-    report(ERROR,"EvtGen") << "Could not open:"<<fname<<"EvtPDL"<<endl;
+    report(ERROR,"EvtGen") << "Could not open:"<<fname<<"EvtPDL"<<std::endl;
     return;
   }
 
@@ -207,9 +207,9 @@ void EvtPDL::readPDT(const EvtString fname){
 	  //report(INFO,"EvtGen") << "particle,chg3:"<<i<<","<<chg3<<endl;
 
 	  //certain lund ids - treat specially...
-	  double mpi=0.139570;
-	  double mk=0.49368;
-	  double mrho=0.770;
+	  //double mpi=0.139570;
+	  //double mk=0.49368;
+	  //double mrho=0.770;
 	  switch (stdhepid) {
 	    //back out this change for now..
 	    //case 113: {_partlist[i.getId()].initLineShape(mass,pwidth,pmaxwidth,mpi,mpi,1); break;}
@@ -227,7 +227,7 @@ void EvtPDL::readPDT(const EvtString fname){
 
 	}
 	else{
-	  report(ERROR,"EvtGen") << pname << " is not stored!!!"<<endl;
+	  report(ERROR,"EvtGen") << pname << " is not stored!!!"<<std::endl;
 	}
 
       }
@@ -257,7 +257,7 @@ void EvtPDL::aliasChgConj(EvtId a,EvtId abar){
 		 EvtId(abar.getId(),abar.getId())) {
 
     report(ERROR,"EvtGen")<<"Can't charge conjugate the two aliases:"
-			  <<EvtPDL::name(a)<<" and "<<EvtPDL::name(abar)<<endl;
+			  <<EvtPDL::name(a)<<" and "<<EvtPDL::name(abar)<<std::endl;
       
     ::abort();
 
@@ -285,7 +285,7 @@ EvtId EvtPDL::chargeConj(EvtId id){
   if (id.getAlias()!=id.getId()) {
 
     report(ERROR,"EvtGen")<<"Trying to charge conjugate alias particle:"
-			  <<name(id)<<" without defining the alias!"<<endl;
+			  <<name(id)<<" without defining the alias!"<<std::endl;
       
     ::abort();
 
@@ -326,7 +326,7 @@ void EvtPDL::alias(EvtId num,const EvtString& newname){
   
   for(i=MAX_PART-1;i>=_lastAlias;i--){
     if (newname==_partlist[i].getName()){
-      report(WARNING,"EvtGen")<<"Redefining alias:"<<newname<<" will be ignored!"<<endl;
+      report(WARNING,"EvtGen")<<"Redefining alias:"<<newname<<" will be ignored!"<<std::endl;
       return;
     }
    }
@@ -338,10 +338,10 @@ void EvtPDL::alias(EvtId num,const EvtString& newname){
 
   if (_lastAlias<=_nentries) {
       report(WARNING,"EvtGen")<<"You have hit the limit for how many"
-			      <<" aliases can be created"<<endl
+			      <<" aliases can be created"<<std::endl
 			      <<"This space is currently not dynamically "
-			      <<" allocated."<<endl
-			      <<"Will terminate execution."<<endl;
+			      <<" allocated."<<std::endl
+			      <<"Will terminate execution."<<std::endl;
       ::abort();
   }
 
@@ -353,8 +353,6 @@ void EvtPDL::alias(EvtId num,const EvtString& newname){
 }
 
 EvtId EvtPDL::getId(const EvtString& name ){
-
-  int i;
 
   EvtPartProp* partprop=_particleNameHash->get(name);
 

@@ -19,7 +19,6 @@
 //------------------------------------------------------------------------
 //
 #include <iostream>
-#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "EvtGen/EvtGen.hh"
@@ -45,14 +44,14 @@ void EvtDecayBase::checkQ() {
 
     if ( q != qpar ) {
       report(ERROR,"EvtGen") <<_modelname<< " generator expected "
-			     << " charge to be conserved, found:"<<endl;
-      report(ERROR,"EvtGen") << "Parent charge of "<<(qpar/3)<<endl;
-      report(ERROR,"EvtGen") << "Sum of daughter charge of "<<(q/3)<<endl;
-      report(ERROR,"EvtGen") << "The parent is "<< EvtPDL::name(_parent)<<endl;
+                             << " charge to be conserved, found:"<<std::endl;
+      report(ERROR,"EvtGen") << "Parent charge of "<<(qpar/3)<<std::endl;
+      report(ERROR,"EvtGen") << "Sum of daughter charge of "<<(q/3)<<std::endl;
+      report(ERROR,"EvtGen") << "The parent is "<< EvtPDL::name(_parent)<<std::endl;
       for(i=0; i<_ndaug; i++ ) {
-      report(ERROR,"EvtGen") << "Daughter "<< EvtPDL::name(_daug[i])<<endl;
+      report(ERROR,"EvtGen") << "Daughter "<< EvtPDL::name(_daug[i])<<std::endl;
       }
-      report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+      report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
       
       ::abort();
     }
@@ -87,7 +86,7 @@ double EvtDecayBase::getProbMax( double prob ) {
     for(i=0;i<_ndaug;i++){
        report(INFO,"") << EvtPDL::name(_daug[i]) << " ";
     }
-    report(INFO,"") << endl;
+    report(INFO,"") << std::endl;
 
     if (defaultprobmax) probmax = prob;
 
@@ -110,7 +109,7 @@ double EvtDecayBase::resetProbMax(double prob) {
   for( int i=0;i<_ndaug;i++){
     report(INFO,"") << EvtPDL::getStdHep(_daug[i]) << " ";
   }
-  report(INFO,"") << endl;
+  report(INFO,"") << std::endl;
   
   probmax = 0.0;
   defaultprobmax = 0;
@@ -124,8 +123,8 @@ double EvtDecayBase::resetProbMax(double prob) {
 EvtString EvtDecayBase::commandName(){
   return EvtString("");
 }
-void EvtDecayBase::command(EvtString cmd){
-  report(ERROR,"EvtGen") << "Should never call EvtDecayBase::command"<<endl;
+void EvtDecayBase::command(EvtString /*cmd*/){
+  report(ERROR,"EvtGen") << "Should never call EvtDecayBase::command"<<std::endl;
   ::abort();
 }
 
@@ -212,11 +211,11 @@ void EvtDecayBase::saveDecayInfo(EvtId ipar, int ndaug, EvtId *daug,
     for(i=0;i<_ndaug;i++){
       report(INFO,"") << EvtPDL::name(_daug[i]) << " ";
     }
-    report(INFO,"") << endl;
-    report(INFO,"") << "This is fine for development, but must be provided for production."<<endl;
+    report(INFO,"") << std::endl;
+    report(INFO,"") << "This is fine for development, but must be provided for production."<<std::endl;
     report(INFO,"EvtGen") << "Never fear though - the decay will use the \n";
     report(INFO,"EvtGen") << "500 iterations to build up a good probmax \n";
-    report(INFO,"EvtGen") << "before accepting a decay. "<<endl;
+    report(INFO,"EvtGen") << "before accepting a decay. "<<std::endl;
   }
 
 }
@@ -265,7 +264,7 @@ void EvtDecayBase::printSummary() {
     for(i=0;i<_ndaug;i++){
       report(INFO,"") << EvtPDL::name(_daug[i]) << " ";
     }
-    report(INFO,"") << " ("<<_modelname<<"):"<< endl;
+    report(INFO,"") << " ("<<_modelname<<"):"<< std::endl;
 	
 
   }
@@ -342,15 +341,15 @@ void EvtDecayBase::findMasses(EvtParticle *p, int ndaugs,
      
       if(count==10000) {
         report(ERROR,"EvtGen") <<"Decaying particle:"<<
-	  EvtPDL::name(p->getId())<<" (m="<<p->mass()<<")"<<endl;
-        report(ERROR,"EvtGen") <<"To the following daugthers"<<endl;
+	  EvtPDL::name(p->getId())<<" (m="<<p->mass()<<")"<<std::endl;
+        report(ERROR,"EvtGen") <<"To the following daugthers"<<std::endl;
         for (i = 0; i < ndaugs; i++ ) {
           report(ERROR,"EvtGen") <<  
-	    EvtPDL::name(daugs[i]) << endl;
+	    EvtPDL::name(daugs[i]) << std::endl;
         } 
 	report(ERROR,"EvtGen") << "Has been rejected "<<count
 			       << " times, will now take minimal masses "
-			       << " of daugthers"<<endl;
+			       << " of daugthers"<<std::endl;
         
 	mass_sum=0.;
 	for (i = 0; i < ndaugs; i++ ) {
@@ -359,8 +358,8 @@ void EvtDecayBase::findMasses(EvtParticle *p, int ndaugs,
 	} 
 	if (mass_sum > p->mass()){
 	  report(ERROR,"EvtGen") << "Parent mass="<<p->mass()
-				 << "to light for daugthers."<<endl
-				 << "Will throw the event away."<<endl;
+				 << "to light for daugthers."<<std::endl
+				 << "Will throw the event away."<<std::endl;
 	  //dont terminate - start over on the event.
 	  EvtGen::setRejectFlag();
 	  mass_sum=0.;
@@ -382,8 +381,8 @@ void EvtDecayBase::checkNArg(int a1, int a2) {
     if ( a2>-1) {
       report(ERROR,"EvtGen") << " or " << a2; 
     }
-    report(ERROR,"EvtGen") << " arguments but found:"<< _narg << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+    report(ERROR,"EvtGen") << " arguments but found:"<< _narg << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
 
   } 
@@ -397,8 +396,8 @@ void EvtDecayBase::checkNDaug(int d1, int d2){
     if ( d2>-1) {
       report(ERROR,"EvtGen") << " or " << d2; 
     }
-    report(ERROR,"EvtGen") << " daughters but found:"<< _ndaug << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+    report(ERROR,"EvtGen") << " daughters but found:"<< _ndaug << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   } 
 
@@ -410,7 +409,7 @@ void EvtDecayBase::checkSpinParent(EvtSpinType::spintype sp) {
   if ( parenttype != sp ) {
     report(ERROR,"EvtGen") << _modelname 
 			   << " did not get the correct parent spin\n";
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   } 
 
@@ -422,8 +421,8 @@ void EvtDecayBase::checkSpinDaughter(int d1, EvtSpinType::spintype sp) {
   if ( parenttype != sp ) {
     report(ERROR,"EvtGen") << _modelname 
 			   << " did not get the correct daughter spin d=" 
-			   << d1 << endl;
-    report(ERROR,"EvtGen") << "Will terminate execution!"<<endl;
+			   << d1 << std::endl;
+    report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   } 
 

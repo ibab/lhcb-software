@@ -87,7 +87,7 @@ void EvtVSSMix::decay( EvtParticle *p ){
 
   dm=getArg(0)/EvtConst::c;
 
-  double mix_amp;
+  double mix_amp = 0.0;
 
   EvtId d1,d2;
 

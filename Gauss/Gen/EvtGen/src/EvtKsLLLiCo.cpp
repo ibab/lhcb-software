@@ -36,7 +36,6 @@
 //------------------------------------------------------------------------
 //
 #include <stdlib.h>
-#include <fstream.h>
 #include <stdio.h>
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtGenKine.hh"
@@ -321,7 +320,7 @@ void EvtKsLLLC::decay( EvtParticle *pb){
 // the four quark operator O1 - O6. In particular in some approxmiation 
 // g describes the loop of charm quarks.
     EvtComplex EvtKsLLLC::oneLoopFourQ2(double mqr,double sr) {
-    double reG, imG;
+    double reG = 0.0, imG = 0.0;
     double x2 = mqr*mqr;
     double x2s = x2 / sr;
     if(sr < 4.0*x2) {

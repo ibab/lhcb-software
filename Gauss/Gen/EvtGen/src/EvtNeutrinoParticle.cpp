@@ -131,9 +131,9 @@ EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis() const{
   
 }
 
-EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis(double alpha,
-							  double beta,
-							  double gamma) const{
+EvtSpinDensity EvtNeutrinoParticle::rotateToHelicityBasis(double /*alpha*/,
+                                                          double /*beta*/,
+                                                          double /*gamma*/) const{
 
   report(ERROR,"EvtGen") << "rotateToHelicityBasis(alpha,beta,gamma) not implemented for neutrino."; 
   report(ERROR,"EvtGen") << "Will terminate execution."; 

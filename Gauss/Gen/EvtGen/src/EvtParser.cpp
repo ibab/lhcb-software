@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
-#include <fstream.h>
+#include <fstream>
 #ifdef WIN32
 #include <strstrea.h>
 #else
@@ -65,7 +65,7 @@ int EvtParser::getLineofToken(int i){
 }
 
 void EvtParser::Read(const EvtString filename){
-  ifstream fin;
+  std::ifstream fin;
   
   fin.open(filename.value());
   if (!fin) {

@@ -19,15 +19,9 @@
 //------------------------------------------------------------------------
 // 
 #include <iostream>
-#include <fstream.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#ifdef WIN32
-#include <strstrea.h>
-#else
-#include <strstream.h>
-#endif
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtParticleNum.hh"
 #include "EvtGen/EvtPDL.hh"
@@ -83,11 +77,10 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtSpinType::spintype spinType)
     return new EvtHighSpinParticle;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<std::endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
-			<<" with spin type:"<<spinType<<endl;
-  report(ERROR,"EvtGen")<<"Will terminate execution"<<endl;
-
+			<<" with spin type:"<<spinType<<std::endl;
+  report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
 
   ::abort();
 
@@ -189,11 +182,11 @@ EvtParticle* EvtParticleFactory::particleFactory(EvtId id,
     return myPart;
   }
 
-  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<endl;
+  report(ERROR,"EvtGen")<<"Error in EvtParticleFactory::particleFactory"<<std::endl;
   report(ERROR,"EvtGen")<<"Tried to create non-existing particle"
 			<<" with spin type:"<<thisSpin
-			<<"  and name:"<<EvtPDL::name(id)<<endl;
-  report(ERROR,"EvtGen")<<"Will terminate execution"<<endl;
+			<<"  and name:"<<EvtPDL::name(id)<<std::endl;
+  report(ERROR,"EvtGen")<<"Will terminate execution"<<std::endl;
 
 
 

@@ -64,10 +64,7 @@ void EvtWSB::init(){
   //We expect the parent to be a scalar 
   //and the daughters to be X lepton neutrino
 
-  EvtSpinType::spintype parenttype = EvtPDL::getSpinType(getParentId());
   EvtSpinType::spintype mesontype=EvtPDL::getSpinType(getDaug(0));
-  EvtSpinType::spintype leptontype=EvtPDL::getSpinType(getDaug(1));
-  EvtSpinType::spintype neutrinotype=EvtPDL::getSpinType(getDaug(2));
 
   checkSpinParent(EvtSpinType::SCALAR);
   checkSpinDaughter(1,EvtSpinType::DIRAC);

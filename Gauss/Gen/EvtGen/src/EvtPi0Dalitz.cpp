@@ -19,7 +19,6 @@
 //------------------------------------------------------------------------
 //
 #include <stdlib.h>
-#include <fstream.h>
 #include <stdio.h>
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtGenKine.hh"

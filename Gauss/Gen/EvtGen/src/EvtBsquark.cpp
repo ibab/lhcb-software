@@ -91,8 +91,6 @@ void EvtBsquark::decay(EvtParticle *p){
     
   EvtVector4R p4c = p->getDaug(0)->getP4();
 
-  EvtVector4R p4l = p->getDaug(1)->getP4();
-
   EvtVector4R p4sn = p->getDaug(2)->getP4();
 
   EvtVector4R p4b(p->mass(),0.0,0.0,0.0);
@@ -143,7 +141,7 @@ void EvtBsquark::decay(EvtParticle *p){
   double stheta=sin(theta);
 
 
-  double FL=0.5;
+  //double FL=0.5;
   double vcsb=0.08;
   double mchi1=mchargino;  
   double mchi2=mchargino;

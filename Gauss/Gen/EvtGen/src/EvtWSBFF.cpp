@@ -28,8 +28,8 @@ void EvtWSBFF::getscalarff( EvtId parent, EvtId daught,
 			    double *f0f ) {
 
   double mx,mb;
-  double m0m2,m1m2,m0p2,m1p2;
-  double h0,h1;
+  double m0m2 = 0.0, m1m2 = 0.0, m0p2, m1p2;
+  double h0 = 0.0, h1 = 0.0;
 
   //added by Lange Jan4,2000
   static EvtId B0=EvtPDL::getId("B0");
@@ -106,8 +106,8 @@ void EvtWSBFF::getscalarff( EvtId parent, EvtId daught,
   static EvtId RHOM=EvtPDL::getId("rho-");
   static EvtId OMEG=EvtPDL::getId("omega");
 
-  double m0m2,m1m2,m0p2,m1p2;
-  double hv,ha1,ha2,ha0;
+  double m0m2 = 0.0, m1m2 = 0.0, m0p2, m1p2 = 0.0;
+  double hv = 0.0,ha1 = 0.0, ha2 =0.0, ha0 = 0.0;
   double mb,mx;
 
   if (parent==B0||parent==B0B||parent==BP||parent==BM) {

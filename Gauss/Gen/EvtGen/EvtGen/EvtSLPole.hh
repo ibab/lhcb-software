@@ -21,7 +21,6 @@
 #ifndef EVTSLPOLE_HH
 #define EVTSLPOLE_HH
 
-#include <fstream.h>
 #include <stdio.h>
 #include "EvtGen/EvtGenKine.hh"
 #include "EvtGen/EvtParticle.hh"

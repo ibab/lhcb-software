@@ -19,8 +19,7 @@
 //------------------------------------------------------------------------
 // 
 #include <iostream>
-#include <iomanip.h>
-#include <fstream.h>
+#include <iomanip>
 #include <ctype.h>
 #include <stdlib.h>
 #include <assert.h>

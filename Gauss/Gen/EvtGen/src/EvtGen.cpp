@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 // 
 #include <stdio.h>
-#include <fstream.h>
+#include <fstream>
 #include <math.h>
 #include "EvtGen/EvtComplex.hh"
 #include <stdlib.h>
@@ -87,7 +87,7 @@ EvtGen::EvtGen(const char* const decayName,
   _pdl.readPDT(pdtTableName);
 
 
-  ifstream indec;
+  std::ifstream indec;
 
   EvtDecayTable::readDecayFile(decayName);
 
@@ -109,7 +109,7 @@ EvtGen::EvtGen(const char* const decayName,
 
 void EvtGen::readUDecay(const char* const uDecayName){
 
-  ifstream indec;
+  std::ifstream indec;
 
   if ( uDecayName[0] == 0) {
     report(INFO,"EvtGen") << "Is not reading a user decay file!"<<std::endl;
@@ -149,8 +149,6 @@ void EvtGen::generateDecay(int stdhepid,
     p=EvtParticleFactory::particleFactory(EvtPDL::evtIdFromStdHep(stdhepid),
 					  P,*spinDensity);
   }
-
-  int times=0;
 
   generateDecay(p);
   //  p->Decay();

@@ -26,8 +26,8 @@ EvtbTosllBallFF::EvtbTosllBallFF(){}
 
 
 void EvtbTosllBallFF::getScalarFF(EvtId parent, EvtId daught,
-				  double t, double mass, 
-				  double& fp,double& f0,double& ft){
+                                  double t, double /*mass*/, 
+                                  double& fp,double& f0,double& ft){
 
   int model = 1;
   
@@ -62,9 +62,9 @@ void EvtbTosllBallFF::getScalarFF(EvtId parent, EvtId daught,
 
 
 void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
-				  double t, double mass, 
-				  double& a1,double& a2,double& a0, double& v,
-				  double& t1, double& t2, double& t3 ){
+                                  double t, double /*mass*/, 
+                                  double& a1,double& a2,double& a0, double& v,
+                                  double& t1, double& t2, double& t3 ){
 
   int model = 1;
   

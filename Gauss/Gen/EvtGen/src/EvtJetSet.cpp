@@ -30,7 +30,6 @@
 #include "EvtGen/EvtId.hh"
 #include <iostream>
 #include <iomanip>
-#include <fstream>
 #include <string.h>
 #include <stdlib.h>
 #ifndef WIN32
@@ -502,9 +501,9 @@ void EvtJetSet::WriteJetSetEntryHeader(std::ofstream &outdec, int lundkc,
 
   outdec << std::setw(10) << lundkc << "  ";
   outdec.width(namelength+2);
-  outdec << std::setiosflags(ios::left) << sname << std::resetiosflags(ios::left);
+  outdec << std::setiosflags(std::ios::left) << sname << std::resetiosflags(std::ios::left);
   outdec.width(namelength);
-  outdec << std::setiosflags(ios::left) << sname << std::resetiosflags(ios::left);
+  outdec << std::setiosflags(std::ios::left) << sname << std::resetiosflags(std::ios::left);
   outdec << std::setw(3) << chg;
   outdec << std::setw(3) << cchg;
   outdec.width(3);
@@ -519,30 +518,30 @@ void EvtJetSet::WriteJetSetEntryHeader(std::ofstream &outdec, int lundkc,
   else{
     outdec << 0;
   }
-  outdec.setf(ios::fixed);
+  outdec.setf(std::ios::fixed);
   outdec.precision(5);
   outdec << std::setw(12) << mass;
-  outdec.setf(ios::fixed);
+  outdec.setf(std::ios::fixed);
   outdec.precision(5);
   outdec << std::setw(12) << width;
   outdec.width(12);
   if (fabs(width)<0.0000000001) {
-    outdec.setf(ios::fixed);
+    outdec.setf(std::ios::fixed);
     outdec.precision(5);
     outdec << 0.0 ;
   }
   else{
-    outdec.setf(ios::fixed);
+    outdec.setf(std::ios::fixed);
     outdec.precision(5);
     outdec << maxwidth;
   }
-  outdec.unsetf(ios::fixed);
-  outdec.setf(ios::scientific | ios::uppercase);
+  outdec.unsetf(std::ios::fixed);
+  outdec.setf(std::ios::scientific | std::ios::uppercase);
   outdec.precision(5);
   outdec.width(13);
   outdec << ctau;
-  outdec.unsetf(ios::scientific);
-  outdec.unsetf(ios::uppercase);
+  outdec.unsetf(std::ios::scientific);
+  outdec.unsetf(std::ios::uppercase);
   outdec.width(3);
   if (evtnum.getId()>=0) {
     if (ctau>1.0 || rawbrfrsum<0.000001) {  
@@ -552,7 +551,7 @@ void EvtJetSet::WriteJetSetEntryHeader(std::ofstream &outdec, int lundkc,
   outdec << stable;
   outdec.width(3);
   outdec << 0;
-  outdec << endl;
+  outdec << std::endl;
   outdec.width(0);
 
 }
@@ -662,7 +661,7 @@ void EvtJetSet::WriteJetSetParticle(std::ofstream &outdec,EvtId ipar,
 	  unknown=1;
 	  report(ERROR,"EvtGen") << "JetSet (pycomp) does not "
                            << "know the particle:"<<
-      EvtPDL::name(ipar)<<endl;
+      EvtPDL::name(ipar)<<std::endl;
 	}
 
 
@@ -697,7 +696,7 @@ void EvtJetSet::WriteJetSetParticle(std::ofstream &outdec,EvtId ipar,
 	  outdec <<dflag;
 	  outdec.width(5);
 	  outdec <<(int)jetsetdecays[ijetset]->getArgs()[0];
-          outdec.setf(ios::fixed);
+          outdec.setf(std::ios::fixed);
 	  outdec.width(12);
           outdec.precision(6);
 	  if (fabs(br)<0.000000001) {
@@ -716,7 +715,7 @@ void EvtJetSet::WriteJetSetParticle(std::ofstream &outdec,EvtId ipar,
 	  outdec <<daugs[3];
 	  outdec.width(10);
 	  outdec <<daugs[4];
-	  outdec<<endl;
+	  outdec<<std::endl;
 	  outdec.width(0);
 	}
       }
@@ -831,8 +830,6 @@ void EvtJetSet::jetSetInit(){
 
     char fname[200];
 
-    char hostBuffer[100];
-    
 // NBrook - update masses, width etc in PYTHIA commom
     int iipar;
     for(iipar=0;iipar<EvtPDL::entries();iipar++){

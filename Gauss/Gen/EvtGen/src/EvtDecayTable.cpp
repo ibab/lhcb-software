@@ -20,8 +20,8 @@
 // 
 
 #include <iostream>
-#include <iomanip.h>
-#include <fstream.h>
+#include <iomanip>
+#include <fstream>
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,14 +73,12 @@ EvtDecayBase* EvtDecayTable::GetDecayFunc(EvtParticle *p){
 void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
   int i;
-  int j;
-
   int noPhotos=0;
   int yesPhotos=0;
 
   report(INFO,"EvtGen") << "In readDecayFile, reading:"<<dec_name<<std::endl;
   
-  ifstream fin;
+  std::ifstream fin;
   
   fin.open(dec_name.value());
   if (!fin) {
@@ -203,7 +201,6 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
 
     } else if (token=="CDecay"){
 
-      int k;
       EvtString name;
 
       name=parser.getToken(itoken++);
@@ -266,18 +263,9 @@ void EvtDecayTable::readDecayFile(const EvtString dec_name){
     } else if (token=="Decay") {
 
       EvtString temp_fcn_new_model;
-      int temp_fcn_new_ndaug;
       EvtVectorT<double> temp_fcn_new_args(500);
-      int temp_fcn_new_narg;
-      EvtId temp_fcn_new_daug[MAX_DAUG];
       EvtDecayBase* temp_fcn_new;
-      double temp_sbrfr;
-      double temp_massmin;
-      int temp_nmode;
-      
       double brfrsum=0.0;
-
-  
 
       parent=parser.getToken(itoken++);
       ipar=EvtPDL::getId(parent);

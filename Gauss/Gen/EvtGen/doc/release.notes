@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
+!==================== EvtGen v3r3 ========================================
+! 2003-07-07 - Florence RANJARD
+ - fix for gcc3.2 (S.Ponce)
+
 !==================== EvtGen v3r2 ==========================================
 ! 2003-02-26 - Florence Ranjard
    following corrections are mandatory on Win32

@@ -32,13 +32,13 @@ EvtMelikhovFF::EvtMelikhovFF(double arg1) {
   return;
 }
 
-void EvtMelikhovFF::getvectorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *a1f,
-			     double *a2f, double *vf, double *a0f ){
+void EvtMelikhovFF::getvectorff(EvtId parent,EvtId /*daught*/,
+                                double t, double mass, double *a1f,
+                                double *a2f, double *vf, double *a0f ){
 
-  double ma1,ra1,na1;
-  double ma2,ra2,na2;
-  double mv,rv,nv;
+  double ma1 = 0.0, ra1 = 0.0, na1 = 0.0;
+  double ma2 = 0.0, ra2 = 0.0, na2 = 0.0;
+  double mv = 0.0, rv = 0.0, nv = 0.0;
 
   if ( whichfit==1) {
      ma1 = 7.07;

@@ -75,7 +75,7 @@ std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
 
   int w=s.width();
   int p=s.precision();
-  long f=s.flags();
+  std::_Ios_Fmtflags f=s.flags();
 
 
   s <<std::endl;

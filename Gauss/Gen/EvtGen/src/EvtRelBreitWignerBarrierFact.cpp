@@ -19,7 +19,6 @@
 //------------------------------------------------------------------------
 //
 #include <iostream>
-#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
@@ -58,7 +57,8 @@ EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(double mass, double w
 
 }
 
-EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(const EvtRelBreitWignerBarrierFact& x) {
+EvtRelBreitWignerBarrierFact::EvtRelBreitWignerBarrierFact(const EvtRelBreitWignerBarrierFact& x)
+  : EvtAbsLineShape() {
   _mass=x._mass;
   _width=x._width;
   _massMax=x._massMax;
@@ -107,14 +107,14 @@ double EvtRelBreitWignerBarrierFact::getBlattWeisskof(double p, double pAB) {
   if ( _l == 2 ) {
     return (9.0+3.0*radP+radP*radP)/(1.0+radPAB+radPAB*radPAB);
   }
-  cout << "in getBlattWeisskof - you gave an l that was unknown\n";
+  std::cout << "in getBlattWeisskof - you gave an l that was unknown\n";
   assert(0);
   return 0;
 }
 
 double EvtRelBreitWignerBarrierFact::rollMass() {
 
-  double ymin, ymax;
+  //double ymin, ymax;
   double temp;
 
   if ( _width < 0.0001 ) {

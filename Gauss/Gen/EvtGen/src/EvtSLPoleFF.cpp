@@ -33,9 +33,9 @@ EvtSLPoleFF::EvtSLPoleFF(int numarg, double *arglist) {
 }
 
 
-void EvtSLPoleFF::getscalarff(EvtId parent,EvtId daught,
-                       double t, double mass, double *fpf,
-			    double *f0f ) {
+void EvtSLPoleFF::getscalarff(EvtId parent, EvtId /*daught*/,
+                              double t, double /*mass*/, double *fpf,
+                              double *f0f ) {
 
 // Form factors have a general form, with parameters passed in
 // from the arguements.
@@ -66,9 +66,9 @@ void EvtSLPoleFF::getscalarff(EvtId parent,EvtId daught,
   return;
 }
 
- void EvtSLPoleFF::getvectorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *a1f,
-			     double *a2f, double *vf, double *a0f ){
+void EvtSLPoleFF::getvectorff(EvtId parent, EvtId /*daught*/,
+                              double t, double /*mass*/, double *a1f,
+                              double *a2f, double *vf, double *a0f ){
 
   if ( numSLPoleargs !=16 ) {
      report(ERROR,"EvtGen") << "Problem in EvtSLPoleFF::getvectorff\n";
@@ -112,9 +112,9 @@ void EvtSLPoleFF::getscalarff(EvtId parent,EvtId daught,
 
 
 
- void EvtSLPoleFF::gettensorff(EvtId parent,EvtId daught,
-                       double t, double mass, double *hf,
-			     double *kf, double *bpf, double *bmf ){
+void EvtSLPoleFF::gettensorff(EvtId parent, EvtId /*daught*/,
+                              double t, double /*mass*/, double *hf,
+                              double *kf, double *bpf, double *bmf ){
 
   if ( numSLPoleargs !=16 ) {
      report(ERROR,"EvtGen") << "Problem in EvtSLPoleFF::gettensorff\n";

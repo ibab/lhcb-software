@@ -19,7 +19,6 @@
 //------------------------------------------------------------------------
 //
 #include <iostream>
-#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "EvtGen/EvtParticleDecayList.hh"
@@ -88,7 +87,7 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
   }
   
   if (p->getChannel() >(-1)) {
-    report(ERROR,"EvtGen") << "Internal error!!!"<<endl;
+    report(ERROR,"EvtGen") << "Internal error!!!"<<std::endl;
     ::abort();
   }
 
@@ -138,9 +137,9 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
   report(ERROR,"EvtGen") << "Could not decay:"
 			 <<EvtPDL::name(p->getId())
 			 <<" with mass:"<<p->mass()
-			 <<" will throw event away! "<<endl;
+			 <<" will throw event away! "<<std::endl;
   
-  //  report(ERROR,"EvtGen") << "Will terminate execution."<<endl;
+  //  report(ERROR,"EvtGen") << "Will terminate execution."<<std::endl;
 
   //  ::abort();  
   EvtGen::setRejectFlag();
@@ -152,9 +151,8 @@ EvtDecayBase* EvtParticleDecayList::getDecayModel(EvtParticle *p){
 void EvtParticleDecayList::setNMode(int nmode){
 
   EvtParticleDecayPtr* _decaylist_new= new EvtParticleDecayPtr[nmode];
-  int i;
   if (_nmode!=0){
-    report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<endl;
+    report(ERROR,"EvtGen") << "Error _nmode not equal to zero!!!"<<std::endl;
     ::abort();
     delete [] _decaylist;
   }
@@ -168,7 +166,7 @@ EvtParticleDecay& EvtParticleDecayList::getDecay(int nchannel) {
   if (nchannel>=_nmode) {
     report(ERROR,"EvtGen") <<"Error getting channel:"
 			   <<nchannel<<" with only "<<_nmode
-			   <<" stored!"<<endl;
+			   <<" stored!"<<std::endl;
   }
   return *(_decaylist[nchannel]);
 }
@@ -228,8 +226,8 @@ void EvtParticleDecayList::finalize(){
     if (fabs(_rawbrfrsum-1.0)>0.0001) {
       report(INFO,"EvtGen") <<"Warning, sum of branching fractions for "
 			    <<EvtPDL::name(_decaylist[0]->getDecayModel()->getParentId())
-			    <<" is "<<_rawbrfrsum<<endl;
-      report(INFO,"EvtGen") << "rescaled to one! "<<endl;
+			    <<" is "<<_rawbrfrsum<<std::endl;
+      report(INFO,"EvtGen") << "rescaled to one! "<<std::endl;
       
     }
 

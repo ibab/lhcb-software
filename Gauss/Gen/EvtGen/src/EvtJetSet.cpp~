@@ -29,8 +29,8 @@
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtId.hh"
 #include <iostream>
-#include <iomanip.h>
-#include <fstream.h>
+#include <iomanip>
+#include <fstream>
 #include <string.h>
 #include <stdlib.h>
 #ifndef WIN32
@@ -440,7 +440,7 @@ void EvtJetSet::store(EvtDecayBase* jsdecay){
 }
 
 
-void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
+void EvtJetSet::WriteJetSetEntryHeader(std::ofstream &outdec, int lundkc,
 			       EvtId evtnum,EvtString name,
 			       int chg, int cchg, int spin2,double mass,
 			       double width, double maxwidth,double ctau,
@@ -500,13 +500,13 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
 
   }
 
-  outdec << setw(10) << lundkc << "  ";
+  outdec << std::setw(10) << lundkc << "  ";
   outdec.width(namelength+2);
-  outdec << setiosflags(ios::left) << sname << resetiosflags(ios::left);
+  outdec << std::setiosflags(ios::left) << sname << std::resetiosflags(ios::left);
   outdec.width(namelength);
-  outdec << setiosflags(ios::left) << sname << resetiosflags(ios::left);
-  outdec << setw(3) << chg;
-  outdec << setw(3) << cchg;
+  outdec << std::setiosflags(ios::left) << sname << std::resetiosflags(ios::left);
+  outdec << std::setw(3) << chg;
+  outdec << std::setw(3) << cchg;
   outdec.width(3);
   if (evtnum.getId()>=0) {
     if (EvtPDL::chargeConj(evtnum)==evtnum) {
@@ -521,10 +521,10 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
   }
   outdec.setf(ios::fixed);
   outdec.precision(5);
-  outdec << setw(12) << mass;
+  outdec << std::setw(12) << mass;
   outdec.setf(ios::fixed);
   outdec.precision(5);
-  outdec << setw(12) << width;
+  outdec << std::setw(12) << width;
   outdec.width(12);
   if (fabs(width)<0.0000000001) {
     outdec.setf(ios::fixed);
@@ -557,7 +557,7 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
 
 }
 
-void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
+void EvtJetSet::WriteJetSetParticle(std::ofstream &outdec,EvtId ipar,
 				    EvtId iparname,int &first){
 
   int ijetset;
@@ -732,7 +732,7 @@ void EvtJetSet::MakeJetSetFile(char* fname){
   
   //int part_list[MAX_PART];
   
-  ofstream outdec;
+  std::ofstream outdec;
  
   outdec.open(fname);
   
@@ -873,7 +873,7 @@ void EvtJetSet::jetSetInit(){
     for(i=0;i<ncommand;i++){
 
 #ifdef WIN32
-      pyGIVE(commands[i].value(),strlen(commands[i].value()));
+      PYGIVE(commands[i].value(),strlen(commands[i].value()));
 #else
       pygive_(commands[i].value(),strlen(commands[i].value()));
 #endif

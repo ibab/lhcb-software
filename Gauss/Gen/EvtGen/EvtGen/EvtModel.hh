@@ -25,7 +25,6 @@
 #include "EvtGen/EvtId.hh"
 #include "EvtGen/EvtDecayTable.hh"
 #include "EvtGen/EvtStringHash.hh"
-#include <fstream.h>
 
 class EvtString;
 

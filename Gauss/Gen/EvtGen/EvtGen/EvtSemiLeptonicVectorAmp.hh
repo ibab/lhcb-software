@@ -22,7 +22,6 @@
 #define EVTSEMILEPTONICVECTORAMP_HH
 
 #include <iostream>
-#include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <assert.h>

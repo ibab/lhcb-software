@@ -29,9 +29,9 @@ extern "C" {
 
 EvtItgTwoCoeffFcn::EvtItgTwoCoeffFcn( double (*theFunction)(double, const HepVector &, const HepVector &), double lowerRange, double upperRange, const HepVector &coeffs1, const HepVector &coeffs2):
   EvtItgAbsFunction(lowerRange, upperRange),
+  _myFunction(theFunction),
   _coeffs1(coeffs1),
-  _coeffs2(coeffs2),
-  _myFunction(theFunction)
+  _coeffs2(coeffs2)
 {}
 
 EvtItgTwoCoeffFcn::~EvtItgTwoCoeffFcn( )

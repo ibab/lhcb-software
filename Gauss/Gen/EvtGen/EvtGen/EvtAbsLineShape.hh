@@ -29,7 +29,7 @@ public:
 
   EvtAbsLineShape(); 
   EvtAbsLineShape(double mass, double width=0., double maxRange=0.); 
-  ~EvtAbsLineShape();
+  virtual ~EvtAbsLineShape();
   EvtAbsLineShape& operator=(const EvtAbsLineShape& x);
   EvtAbsLineShape(const EvtAbsLineShape& x); 
 

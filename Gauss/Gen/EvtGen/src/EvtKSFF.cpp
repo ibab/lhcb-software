@@ -47,7 +47,7 @@ void EvtKSFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId ETAPR=EvtPDL::getId("eta'");
 
   double mx,mb;
-  double mff2;
+  double mff2 = 0.0;
 
   if (parent==B0||parent==B0B||parent==BP||parent==BM) {
     if (daught==PIP||daught==PI0||daught==PIM||daught==ETA||daught==ETAPR) {
@@ -97,7 +97,7 @@ void EvtKSFF::getscalarff(EvtId parent,EvtId daught,
   static EvtId OMEG=EvtPDL::getId("omega");
 
 
- double mff2;
+  double mff2 = 0.0;
   double mb,mx;
 
   if (parent==B0||parent==B0B||parent==BP||parent==BM) {

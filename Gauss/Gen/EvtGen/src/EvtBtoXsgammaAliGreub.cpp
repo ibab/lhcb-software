@@ -44,7 +44,7 @@
 
 EvtBtoXsgammaAliGreub::~EvtBtoXsgammaAliGreub(){}
 
-void EvtBtoXsgammaAliGreub::init(int nArg, double* args){
+void EvtBtoXsgammaAliGreub::init(int nArg, double* /*args*/){
  
   if ((nArg - 1) != 0) {
     
