@@ -1,4 +1,4 @@
-rem $Id: RunMixedTest.bat,v 1.1 2002-12-04 14:41:21 andreav Exp $
+rem $Id: RunMixedTest.bat,v 1.2 2003-01-31 21:15:34 andreav Exp $
 echo off
 if "%DETCONDEXAMPLEROOT%." == "." (
   echo ERROR! You must '..\cmt\setup' first"
@@ -26,7 +26,7 @@ rem # YOU MUST SET YOUR DETCONDEXAMPLEROOT WITH DOUBLE BACKSLASHES HERE!
 mkdir ..\job\NEWlog.%CMTCONFIG%.%CONDDB_implementation%.dbLINUX
 del ..\job\NEWlog.%CMTCONFIG%.%CONDDB_implementation%.dbLINUX\log.*
 cd %DETCONDEXAMPLEROOT%\options
-run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r2\\\\|DETCONDEXAMPLEROOT/|" > ..\job\NEWlog.%CMTCONFIG%.%CONDDB_implementation%.dbLINUX\log.testCondDB
+run DetCondExample testCondDB.opts | sed "s|I:\\\\newmycmt11\\\\Ex\\\\DetCondExample\\\\v4r3\\\\|DETCONDEXAMPLEROOT/|" > ..\job\NEWlog.%CMTCONFIG%.%CONDDB_implementation%.dbLINUX\log.testCondDB
 @echo off
 cd %DETCONDEXAMPLEROOT%\job
 

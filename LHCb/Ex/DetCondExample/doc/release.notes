@@ -1,4 +1,4 @@
-#$Id: release.notes,v 1.26 2003-01-31 20:46:36 andreav Exp $
+#$Id: release.notes,v 1.27 2003-01-31 21:18:40 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
 
@@ -8,6 +8,7 @@ Upgrade to DetDesc v11r8.
 Only change is in recommended CMTPATH.
 - DetDesc is included in LHCB_v11r5 for all of rh61dbx, rh73dbx and Windows
 - This makes it easier to distribute as DetDesc does not need to be recompiled
+- REMEMBER TO CHANGE VERSION NUMBER IN RUNTESTS.BAT!
 Requirements v4r3, private tag h20030131
 
 ==============================================================================
