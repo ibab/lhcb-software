@@ -1,11 +1,14 @@
 
-/** @file RichCherenkovAngle.h
+/** @file RichCherenkovAngle.cpp
  *
- *  Header file for tool : RichCherenkovAngle
+ *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.10 2004-07-27 20:15:29 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.11 2004-07-28 11:02:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/07/27 20:15:29  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
