@@ -1,17 +1,16 @@
 
+//---------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRawBuffer.h
  *
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.2 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2004/10/30 19:38:44  jonrob
- *  Add RichRecPixel creator that uses the RawBuffer directly
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.3 2005-01-26 11:33:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
  */
+//---------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H 1
@@ -32,9 +31,6 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
-
-// Event
-#include "Event/RawEvent.h"
 
 /** @class RichPixelCreatorFromRawBuffer RichPixelCreatorFromRawBuffer.h
  *

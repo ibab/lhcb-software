@@ -1,25 +1,21 @@
 
+//---------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRawBuffer.cpp
  *
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.3 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2004/11/03 09:34:04  jonrob
- *  Updated RichSmartID typedef
- *
- *  Revision 1.1  2004/10/30 19:38:44  jonrob
- *  Add RichRecPixel creator that uses the RawBuffer directly
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.4 2005-01-26 11:33:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
  */
+//---------------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromRawBuffer.h"
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichPixelCreatorFromRawBuffer>          s_factory ;
