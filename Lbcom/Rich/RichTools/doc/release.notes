@@ -4,6 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-01-13 - Chris Jones
+ - RichSmartID tool
+  + Update the way the active readout list is created and accessed
+  + Add method to access the average position of an HPD from its RichSmartID
+
 !=========================== RichTools v1r2 2004-11-19 =======================
 ! 2004-10-21 - Antonis Papanestis
  - Added method traceBackFromDetector to RichRayTracing
