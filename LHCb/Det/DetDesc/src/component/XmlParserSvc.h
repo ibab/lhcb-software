@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.1 2001-05-18 16:48:47 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.2 2001-06-28 09:14:07 sponce Exp $
 #ifndef DETDESC_XMLPARSERSVC_H
 #define DETDESC_XMLPARSERSVC_H
 
@@ -60,7 +60,12 @@ public:
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
-  virtual DOM_Document parse( const char* fileName );
+  virtual DOM_Document parse (const char* fileName);
+
+  /**
+   * This clears the cache of previously parsed xml files.
+   */
+  virtual void clearCache();
 
   //////////////////////////////////////////////////////
   // implementation of the SAX ErrorHandler interface //

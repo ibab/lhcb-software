@@ -2,6 +2,11 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010628 - Sebastien Ponce
+  - added interface for caching inthe XmlParserSvc and XmlSvc. This consist
+  at this time in a single method : clearCache
+
+!===========================================================================
 ! 20010625 - Sebastien Ponce
   - added check on the type for userParameters and userParameterVectors.
   You can no more retrieve the value of these as double if their type is

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.5 2001-05-21 15:25:19 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.6 2001-06-28 09:14:06 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -146,9 +146,20 @@ DOM_Document XmlCnvSvc::parse (const char* fileName) {
     return m_parserSvc->parse(fileName);
   }
   DOM_Document null_result;
-  MsgStream log( msgSvc(), "XmlCnvSvc" );
+  MsgStream log (msgSvc(), "XmlCnvSvc");
   log << MSG::DEBUG << "null result returned in parse" << endreq;
   return null_result;
+}
+
+
+// -----------------------------------------------------------------------
+// clears the cache of previously parsed xml files
+// -----------------------------------------------------------------------
+void XmlCnvSvc::clearCache() {
+  if (0 != m_parserSvc) {
+    m_parserSvc->clearCache();
+    return;
+  }
 }
 
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.2 2001-05-18 16:48:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.3 2001-06-28 09:14:07 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -63,6 +63,11 @@ public:
    * @return the document issued from the parsing
    */
   virtual DOM_Document parse (const char* fileName);
+
+  /**
+   * This clears the cache of previously parsed xml files.
+   */
+  virtual void clearCache();
 
   /////////////////////////////////////////////
   // implementation of the IXmlSvc interface //

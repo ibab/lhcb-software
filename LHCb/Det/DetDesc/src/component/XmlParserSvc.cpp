@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.2 2001-06-14 13:27:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.3 2001-06-28 09:14:07 sponce Exp $
 
 // Include Files
 #include "GaudiKernel/SvcFactory.h"
@@ -62,7 +62,7 @@ XmlParserSvc::~XmlParserSvc() {
 
 
 // -----------------------------------------------------------------------
-//  Parse()
+//  Parse
 // -----------------------------------------------------------------------
 DOM_Document XmlParserSvc::parse (const char* fileName) {
   // if a parser exists
@@ -76,6 +76,14 @@ DOM_Document XmlParserSvc::parse (const char* fileName) {
   }
   DOM_Document null_result;
   return null_result;
+}
+
+
+// -----------------------------------------------------------------------
+//  Parse
+// -----------------------------------------------------------------------
+void XmlParserSvc::clearCache() {
+  // since the cache is not yet implemented, nothing to be done
 }
 
 
