@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSimple.h,v 1.1 2002-09-26 18:10:55 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSimple.h,v 1.2 2002-10-30 14:00:37 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:10:55  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // Revision 1.7  2002/05/07 12:21:37  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -147,7 +150,6 @@ private:
   bool            m_storeByChildType      ; 
   ///  all tracks which are explicitely marked to be stored are stored 
   bool            m_storeMarkedTracks     ; 
-  /// 
   /// threshold for own kinetic energy 
   double          m_ownEnergyThreshold    ;
   /// threshold for child kinetic energy 

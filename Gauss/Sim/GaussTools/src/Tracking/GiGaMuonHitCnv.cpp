@@ -182,7 +182,6 @@ StatusCode GiGaMuonHitCnv::updateObj
           
           if(collectionID==-1 || 0==myCollection) 
             {
-              //return Error("No MuonHitsCollection* object found");
               return StatusCode::SUCCESS;
             }
           int numberofhits=myCollection->entries();
@@ -281,7 +280,6 @@ StatusCode GiGaMuonHitCnv::updateObjRefs
     (MuonHitsCollection*)(hitscollections->GetHC(collectionID));
   if(0==myCollection || collectionID==-1) 
     {
-      //      return Error("No MuonHitsCollection* object found");
       return StatusCode::SUCCESS;
     }
 
@@ -302,20 +300,15 @@ StatusCode GiGaMuonHitCnv::updateObjRefs
       if(table[traid].particle())
         {
           (*iter)->setMcParticle(table[traid].particle());
-          
-          std::cout << "TrackID: " << traid << " entry of MCParticle: " 
-                    << (*iter)->entry() << " pdg: " 
-                    << (table[traid].particle()) -> particleID()  << std::endl; 
         }
       else
         {
           MsgStream log(   msgSvc(), name());
-          log << MSG::INFO 
+          log << MSG::WARNING 
               << "No pointer to MCParticle 
                   for MCMuonHit associated to trackID:" 
               << traid << endreq;
         }
-      
       itr++;
     }
 

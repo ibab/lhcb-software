@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2002-10-11 09:10:52 ranjard Exp $
+# $Id: requirements,v 1.6 2002-10-30 14:00:36 witoldp Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -17,6 +17,9 @@ use VeloEvent    v12r*     Event
 use MuonEvent    v2r*      Event
 use RichEvent    v3r*      Event
 
+# ============== linker library ===============================================
+library          GaussToolsLib           Lib/*.cpp
+
 # ============== component library ============================================
 library          GaussTools   *.cpp                  \
                               Components/*.cpp       \
@@ -27,10 +30,13 @@ library          GaussTools   *.cpp                  \
                               RICH/PhysProcess/*.cc  \
                               RICH/Misc/*.cpp        \ 
                               PhysConstructors/*.cpp 
-        
-# ============== standart patterns ===========================================
-apply_pattern    component_library library=GaussTools
 
+# ============== standard includes ============================================
+include_dirs     $(GAUSSTOOLSROOT)
+        
+# ============== standard patterns ===========================================
+apply_pattern    component_library library=GaussTools
+apply_pattern    linker_library    library=GaussToolsLib
 # ============================================================================
 # The END 
 # ============================================================================

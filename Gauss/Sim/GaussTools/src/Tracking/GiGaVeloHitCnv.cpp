@@ -178,7 +178,6 @@ StatusCode GiGaVeloHitCnv::updateObj
           
           if(0==myCollection || collectionID==-1) 
             {
-              //return Error("No VeloHitsCollection* object found");
               return StatusCode::SUCCESS;
             }
           int numberofhits=myCollection->entries();
@@ -276,7 +275,6 @@ StatusCode GiGaVeloHitCnv::updateObjRefs
     (VeloHitsCollection*)(hitscollections->GetHC(collectionID));
   if(0==myCollection || collectionID==-1) 
     {
-      //      return Error("No VeloHitsCollection* object found");
       return StatusCode::SUCCESS;
     }
 
@@ -293,24 +291,18 @@ StatusCode GiGaVeloHitCnv::updateObjRefs
   for (MCVeloHits::const_iterator iter=hits->begin();hits->end()!=iter; ++iter)
     { 
       int traid=(*myCollection)[itr]->GetTrackID();
-
       if(table[traid].particle())
         {
           (*iter)->setMCParticle(table[traid].particle());
-          
-          std::cout << "TrackID: " << traid << " entry of MCParticle: " 
-                    << (*iter)->entry() << " pdg: " 
-                    << (table[traid].particle()) -> particleID()  << std::endl; 
         }
       else
         {
           MsgStream log(   msgSvc(), name());
-          log << MSG::INFO 
+          log << MSG::WARNING 
               << "No pointer to MCParticle 
                   for MCVeloHit associated to trackID:" 
               << traid << endreq;
-        }
-      
+        }      
       itr++;
     }
 

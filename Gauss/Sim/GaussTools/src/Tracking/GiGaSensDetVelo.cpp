@@ -7,6 +7,7 @@
 #include "GiGa/GiGaMACROs.h"
 /// Geant4 
 #include "G4Step.hh"
+#include "G4Track.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
@@ -56,9 +57,10 @@ void GiGaSensDetVelo::Initialize(G4HCofThisEvent*HCE)
 bool GiGaSensDetVelo::ProcessHits( G4Step* step , 
                                     G4TouchableHistory* /* history */ ) 
 {
-  if( 0 == step ) { return false ; } 
-  
-  G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
+  if( 0 == step ) { return false ; }
+ 
+  G4Track* track=step->GetTrack();
+  G4double charge = track->GetDefinition()->GetPDGCharge();
 
   if(charge!=0.0)
     {
@@ -156,6 +158,11 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
       newHit->SetTrackID( trid );
       newHit->SetSensor(numsens);
       ///
+      G4VUserTrackInformation* ui = track->GetUserInformation(); 
+      GiGaTrackInformation*    gi = 
+        ( 0 == ui )  ? 0 : dynamic_cast<GiGaTrackInformation*> ( ui );
+      gi->setCreatedHit(true);
+      gi->addHit(newHit);
 
       //  newHit->Print();
       veloCol->insert( newHit );

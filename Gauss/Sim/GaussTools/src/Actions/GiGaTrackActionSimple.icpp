@@ -20,9 +20,9 @@ inline bool      GiGaTrackActionSimple::storeByOwnType       () const
 inline bool      GiGaTrackActionSimple::storeByChildEnergy   () const  
 { return m_storeByChildEnergy ; }  
 /// Should tracks which produce at least one child of some predefined types be stored ?
-inline bool      GiGaTrackActionSimple::storeByChildType     () const  
-/// Should track which marked explicitely be stored ? 
+inline bool      GiGaTrackActionSimple::storeByChildType     () const
 { return m_storeByChildType ; }  
+/// Should track which marked explicitely be stored ? 
 inline bool      GiGaTrackActionSimple::storeMarkedTracks    () const  
 { return m_storeMarkedTracks ; }  
 /// Threshold for own   kinetic energy 

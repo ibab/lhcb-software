@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSimple.cpp,v 1.1 2002-09-26 18:10:55 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSimple.cpp,v 1.2 2002-10-30 14:00:36 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:10:55  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // Revision 1.10  2002/05/07 12:21:37  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -23,7 +26,7 @@
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaTrajectory.h"
-#include "GiGa/GiGaTrackInformation.h"
+#include "GaussTools/GiGaTrackInformation.h"
 /// local
 #include "GiGaTrackActionSimple.h"
 ///
@@ -243,6 +246,8 @@ void GiGaTrackActionSimple::PreUserTrackingAction  ( const G4Track* track )
 // ============================================================================
 void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track ) 
 {
+  GiGaTrajectory*    gi = dynamic_cast<GiGaTrajectory*> 
+    ( trackMgr()->GimmeTrajectory());
   // Is the track valid? Is tracking manager valid?
   if( 0 == track || 0 == trackMgr()           )  { return ; } /// RETURN !!!
   // store trajectory?
@@ -311,13 +316,15 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   // ........
   // add your own storing criteria BEFORE This line
   
-  // if track not to be stored , update history for its childrens
+  // check if track is to be stored 
   if (      trackMgr()->GetStoreTrajectory () )         { return ; } /// RETURN 
-  // if track is not to be stored stored, propagate it's parent (stored) to 
+  // if track is not to be stored, propagate it's parent ID (stored) to its
+  // secondaries
   if( 0 != trackMgr()->GimmeSecondaries() ) 
     {
       if( 0 == track->GetParentID() ) 
         { Error("Dangerouse:Primary Particle is not requested to be stored");}
+ 
       G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ;
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
         {
@@ -327,10 +334,16 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
           if     ( tr->GetParentID() != track->GetTrackID() ) 
             { Error("Could not reconstruct properly the parent!") ; } 
           //
-          tr->SetParentID( track->GetParentID()  );
+          tr->SetParentID( track->GetParentID() );
           //
-        }
+        }      
     }
+  // also update the trackID in the hits
+  G4VUserTrackInformation* uinf = track->GetUserInformation(); 
+  GiGaTrackInformation*    ginf = 
+    ( 0 == uinf )  ? 0 : dynamic_cast<GiGaTrackInformation*> ( uinf );
+  ginf->updateHitsTrackID( track->GetParentID() );
+
   // delete the trajectory by hand 
   if ( !trackMgr()->GetStoreTrajectory() )
     {

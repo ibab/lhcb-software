@@ -7,6 +7,7 @@
 #include "GiGa/GiGaMACROs.h"
 /// Geant4 
 #include "G4Step.hh"
+#include "G4Track.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
@@ -58,7 +59,8 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
 {
   if( 0 == step ) { return false ; } 
   
-  G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
+  G4Track* track=step->GetTrack();
+  G4double charge = track->GetDefinition()->GetPDGCharge();
 
   if(charge!=0.0)
     {
@@ -105,6 +107,11 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
       newHit->SetTimeOfFlight( timeof );  
       newHit->SetTrackID( trid );
       ///
+      G4VUserTrackInformation* ui = track->GetUserInformation(); 
+      GiGaTrackInformation*    gi = 
+        ( 0 == ui )  ? 0 : dynamic_cast<GiGaTrackInformation*> ( ui );
+      gi->setCreatedHit(true);
+      gi->addHit(newHit);
 
       //  newHit->Print();
       trackerCol->insert( newHit );

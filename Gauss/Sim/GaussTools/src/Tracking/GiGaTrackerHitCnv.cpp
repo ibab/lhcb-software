@@ -176,7 +176,6 @@ StatusCode GiGaTrackerHitCnv::updateObj
           
           if(0==myCollection || collectionID==-1) 
             {
-              //return Error("No TrackerHitsCollection* object found");
               return StatusCode::SUCCESS;
             }
           int numberofhits=myCollection->entries();
@@ -272,7 +271,6 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
     (TrackerHitsCollection*)(hitscollections->GetHC(collectionID));
   if(0==myCollection || collectionID==-1) 
     {
-      //      return Error("No TrackerHitsCollection* object found");
       return StatusCode::SUCCESS;
     }
 
@@ -296,15 +294,11 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
       else
         {
           MsgStream log(   msgSvc(), name());
-          log << MSG::INFO 
+          log << MSG::WARNING 
               << "No pointer to MCParticle for MCHit associated to trackID: " 
               << traid << endreq;
           
-        }
-      
-      std::cout << "TrackID: " << traid << " entry of MCParticle: " 
-           << (*iter)->entry()  << std::endl;    
-      
+        }      
       itr++;
     }
 

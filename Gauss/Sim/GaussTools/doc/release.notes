@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2002-10-30 - Witek Pokorski
+ - GiGaTrackInformation class moved from GiGa to GaussTools
+   added a vector of pointers to hits created by a track 
+ - sensitive detectors - modified in order to save pointers to hits in 
+   GiGaTrackInformation
+ - GiGaTrackActionSimple - added automatic updating of pointers from hits
+   to tracks, in order a given track is not saved as trajectory
+
 !============================ GaussTools v2r0 2002-10-15 =====================
 ! 2002-10-15 - Florence Ranjard
  - doc/release.notes - reformat the release notes
