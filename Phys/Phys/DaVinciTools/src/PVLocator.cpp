@@ -1,4 +1,4 @@
-// $Id: PVLocator.cpp,v 1.1 2004-10-27 13:49:59 pkoppenb Exp $
+// $Id: PVLocator.cpp,v 1.2 2005-01-18 10:35:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -51,6 +51,6 @@ std::string PVLocator::getPVLocation(void) const {
 //=============================================================================
 StatusCode PVLocator::setPVLocation(std::string & PV){
   m_PVLocation = PV ;
-  info() << "Set new PV location " << PV << endreq ;
+  debug() << "Set new PV location " << PV << endreq ;
   return StatusCode::SUCCESS ;
 };

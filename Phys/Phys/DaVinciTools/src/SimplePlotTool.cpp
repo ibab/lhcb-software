@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.7 2005-01-14 15:03:56 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.8 2005-01-18 10:35:58 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -176,27 +176,62 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
 
   debug() << "Filling plot for " << var << " of " << name << endmsg;
 
-  if ( var == "M" ) {
+  // -----------------------------------------
+  // MASS 
+  // -----------------------------------------
+  if (( var == "M" ) || ( var == "WM" )){ // mass or wide mass
     if ( P->endVertex()){
-      if ( hmin < 0 ){
-        double mn = pp->mass() - gsl_max(pp->mass()/25.,pp->maxWidth()); // at least 4%
-        double mx = pp->mass() + gsl_max(pp->mass()/25.,pp->maxWidth());
+      double factor = 0.04; // 4%
+      if ( var == "WM" ){
+        name += " (wide)" ;
+        factor = 0.15; // 15%
+      }
+      if ( hmax < 0 ){
+        double mn = pp->mass() - gsl_max(factor*pp->mass(),pp->maxWidth()); // at least 4%
+        double mx = pp->mass() + gsl_max(factor*pp->mass(),pp->maxWidth());
         plot(P->mass(),"Mass of "+name,mn,mx );
       } else {
-        plot(P->mass(),"Mass of "+name,hmin,hmax );
+        plot(P->mass(),"Mass of "+name,pp->mass()-fabs(hmin),pp->mass()+hmax );
       }
     }
-  } else if ( var == "WM" ){
-    if ( (P->endVertex()) && ( pp->mass() > 5*GeV ) 
-         && ( pp->maxWidth()<1*keV )){ // that's a B -> wide mass window
-      plot(P->mass(),"Mass of "+name+" (wide)", hmin, hmax );
+  // -----------------------------------------
+  // MASS Difference 
+  // -----------------------------------------
+  } else if ( var == "DM" ){
+    if (P->endVertex()){
+      const SmartRefVector<Particle>& pv = P->endVertex()->products();
+      double maxmass = 0. ;
+      int dpid = 0 ;
+      for (SmartRefVector<Particle>::const_iterator i=pv.begin();i!=pv.end();++i) {
+        if ( (*i)->endVertex() ){ // care only about daughters with an endVertex
+          double dm = (*i)->mass(); 
+          if (dm>maxmass) {
+            maxmass = dm ; // compare with heaviest daughter
+            dpid = (*i)->particleID().pid();
+          }
+        }
+      }
+      if ( dpid!=0 ) {
+        ParticleProperty *dp = m_ppSvc->findByPythiaID(abs(dpid));
+        double dmn = pp->mass() - dp->mass() ;
+        plot(P->mass()-maxmass,"Mass difference of "+name, dmn-fabs(hmin),dmn+hmax );
+        debug() << "Mass of " << P->particleID().pid() << " is " << P->mass() 
+                 << ", mass of daughter (" << dpid << ") is " << maxmass
+                 << " -> difference = " << P->mass()-maxmass << endmsg;
+      } 
     }
+  // -----------------------------------------
+  // Momenta
+  // -----------------------------------------
   } else if ( var == "P" ){
     plot(P->p(),"Momentum of "+name,hmin,hmax);
   } else if ( var == "Pt" ){
     plot(P->pt(),"Pt of "+name,hmin,hmax);
   } else if ( var == "Chi2" ){
     if (P->endVertex()) plot(P->endVertex()->chi2(),"Chi2 of "+name,hmin,hmax);
+  // -----------------------------------------
+  // IP or flight significances
+  // -----------------------------------------
   } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
     std::string PVContainer = m_pvLocator->getPVLocation() ;
     verbose() << "Getting PV from " << PVContainer << endreq ;
@@ -206,7 +241,6 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
             << PVContainer << endreq;
       return false ;
     }
-// IP or IPs
     double bestf = -1. , bestfe = -1., minip = 9999999.;
     for (VertexVector::const_iterator iv=PV->begin();iv!=PV->end();++iv) {
       double ip = -1 ,ipe = -1.;
@@ -230,6 +264,9 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
         if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
       }
     }
+  // -----------------------------------------
+  // Vertex
+  // -----------------------------------------
   } else if ( var == "Vz" ){
     if (P->endVertex()) plot(P->endVertex()->position().z(),"Vz of "+name,hmin,hmax);
   } else if ( var == "Vx" ){
@@ -253,8 +290,11 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
     m_min = -1 ;
     m_max = -1 ;
   } else if ( var == "WM" ){
-    m_min = 4.7*GeV ;
-    m_max = 5.7*GeV ;
+    m_min = -1. ;
+    m_max = -1. ;
+  } else if ( var == "DM" ){
+    m_min = 5.*MeV ;
+    m_max = 5.*MeV ;
   } else if ( var == "P" ){
     m_min = 0. ;
     m_max = 50.*GeV ;
