@@ -36,12 +36,18 @@ ApplicationMgr.EvtMax = 100;
 // For event data, choose either POOL or GaudiDb following these rules:
 // - If the input files is POOL:
 //   . The output file must be POOL
-//   . The POOL input file should be described in PoolDbCacheSvc.InputCatalog
+//   . The POOL input file should be described in PoolDbCacheSvc.Catalog
 //     (If not, it will not be possible to follow links to it from the DST)
 // - If the input files is GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
 HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
+
+// POOL file catalogs. First one is read-write, others are read only
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:Pool411300_catalog.xml",
+  "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+};
 
 //---------------------------------------------------------------------------
 // Event input
@@ -49,7 +55,6 @@ HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 
 // POOL
 EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field043.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 411300
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // GaudiDb
 //EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300-Field043.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300

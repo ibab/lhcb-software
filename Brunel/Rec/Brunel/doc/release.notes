@@ -3,13 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r5>2004-04-07 Brunel v23r5</A></H1><PRE>
+</PRE><H1><A NAME=v23r5>2004-04-15 Brunel v23r5</A></H1><PRE>
 
  Requires data produced by Boole v5r4 or later
- Tuned for XmlDDDB v22r0
+ Tuned for XmlDDDB v22r1
 
 - New features
   . Location of XmlDDDB file is printed at start of job (GaudiSvc v11r6)
+
+- Changed features
+  . PoolDbCacheSvc.InputCatalog and .OutputCatalog no longer supported:
+    use PoolDbCacheSvc.Catalog instead, with support for search list;
+    first catalog in list is read/write, others are read only. 
+    (POOL v1r162p0, GaudiPoolDb v1r6)
 
 - Persistency changes
   . Using POOL_1_6_2. Fixes problem with Rich PIDs
@@ -18,6 +24,7 @@ Purpose: LHCb reconstruction program
 - Bug fixes
   . All tools correctly released at end of job (GaudiSvc v11r6)
   . Fix a typo in TimingTool::finalize (LHCbTools v1r1)
+  . Fix 1.5 cm shift of a TT ladders near the edge (XmlDDDB v22r1)
 
 </PRE><H1><A NAME=v23r4>2004-04-01 Brunel v23r4</A></H1><PRE>
 

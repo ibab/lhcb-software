@@ -40,7 +40,7 @@ use RootHistCnv         v9r1
 #-- Database
 use XmlDDDB		v22r1	Det
 use FieldMap		v4r5
-use ParamFiles          v3r4    -no_auto_imports
+use ParamFiles          v3r5    -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v15r6)
 use LHCb	v15r6
@@ -90,7 +90,7 @@ use TrKShort		v1r3	Tr
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r4	Muon
 use MuonID              v3r7p1	Muon
-use MuonDAQ             v1r0    Muon
+use MuonDAQ             v1r1    Muon
 
 # Rich
 use RichUtils		v3r8  	Rich
