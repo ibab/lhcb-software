@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.7 2004-07-27 14:08:58 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.8 2004-07-28 16:21:46 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/07/27 14:08:58  ibelyaev
+//  modification/simplification of classes CaloMap&CaloHashMap
+//
 // Revision 1.6  2004/07/27 14:01:37  ibelyaev
 //  modification/simplification of classes CaloMap&CaloHashMap
 //
@@ -42,10 +45,12 @@ public:
   
   /// the  map itself
   typedef typename __gnu_cxx::hash_map
-  < Key           ,                // Key type 
-    Value         ,                // Value type  
-    CaloHash<Key> >                // Hash function
-  MAP ;
+  < Key                             // Key type
+    ,Value                          // Value type
+#ifndef WIN32 
+    ,CaloHash<Key>                  // Hash function
+#endif 
+  > MAP ;
   
   /// the type of iterator 
   typedef  typename MAP::iterator               iterator               ;
