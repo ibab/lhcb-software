@@ -4,7 +4,7 @@
                 <arg const="TRUE" inout="INOUT" name="id" type="RichSmartID"/>
             </constructor>
             <constructor desc="Constructor from internal type" initList="m_key( key )">
-                <arg const="TRUE" name="key" type="RichSmartID::KeyType"/>
+                <arg const="TRUE" name="key" type="unsigned long"/>
             </constructor>
             <constructor desc="Constructor from data fields including sub-pixel information" initList="m_key( 0 )">
                 <arg const="TRUE" name="rich" type="int"/>
