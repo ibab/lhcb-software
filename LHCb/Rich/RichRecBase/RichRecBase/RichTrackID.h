@@ -1,4 +1,4 @@
-// $Id: RichTrackID.h,v 1.1 2003-10-13 16:10:54 jonrob Exp $
+// $Id: RichTrackID.h,v 1.2 2003-11-06 11:36:22 jonrob Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
@@ -129,15 +129,15 @@ private: // data
 
 inline void RichTrackID::initTrStoredTrack( const TrStoredTrack * track )
 {
-  setParentType( Rich::TrackParent::TrStoredTrack );
-  setTrackType( Rich::Track::type(track) );
-  setHistory( track->history() );
-  setUnique( track->unique() );
+  setParentType ( Rich::TrackParent::TrStoredTrack );
+  setTrackType  ( Rich::Track::type(track)         );
+  setHistory    ( track->history()                 );
+  setUnique     ( 0 != track->unique()             );
 }
 
 inline void RichTrackID::initMCParticle( const MCParticle * )
 {
-  setParentType( Rich::TrackParent::MCParticle );
+  setParentType ( Rich::TrackParent::MCParticle );
 }
 
 /// Implement textual ostream << method for Rich::Track::Type enumeration
@@ -187,7 +187,7 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
   s >> iTemp; id.setTrackType( (Rich::Track::Type)iTemp );
   s >> iTemp; id.setParentType( ( Rich::TrackParent::Type)iTemp );
   unsigned long history; s >> history; id.setHistory( history );
-  s >> iTemp; id.setUnique( iTemp );
+  s >> iTemp; id.setUnique( 0 != iTemp );
   return s;
 }
 
