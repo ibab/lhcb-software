@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r 2003-07-22 ========================
+! 2003-07-22 - Grigori Rybkine
+ - options/units.opts  add basic time units (ns, s, ms, microsecond, picosecond)
+                       used only names from SystemOfUnits.h of CLHEP/1.8.0.0
+
 !======================== GaudiConf v7r0 2003-07-16 ========================
 ! 2003-07-16 - Marco Cattaneo
  - Add DigiContent.opts to define output of Boole
