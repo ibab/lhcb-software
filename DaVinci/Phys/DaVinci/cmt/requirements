@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2002-02-28 14:40:58 gcorti Exp $
+# $Id: requirements,v 1.14 2002-03-27 20:48:07 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -16,10 +16,12 @@ branches          cmt doc src job options
 
 
 # In order to use packages build with cmt v1r6
+#============================================================================
 ignore_pattern package_stamps
 
 # Next line to get around SICB/detdes version clashes. 
 # Makes order of package use important
+#============================================================================
 version_strategy first_choice
 
 
@@ -40,14 +42,16 @@ use HTL            v13r10
 use XERCES         v15r2
 use CERNLIB        v2001
 
-#--- Gaudi libraries - Gaudi v9r1 + bug fixes
+#--- Gaudi libraries - Gaudi v9r2 + bug fixes
 use GaudiKernel        v11r1
-use GaudiSvc           v7r2
+use GaudiSvc           v7r3
 use GaudiAud           v5r0
-use GaudiAlg           v5r0
+use GaudiAlg           v5r1
 use GaudiTools         v5r0
 use GaudiNagC          v6r0
 use GaudiDb            v5r0
+use GaudiIntrospection v3r0
+use GaudiObjDesc       v3r2   
 
 #--- Histogram persistency ( choose the one you prefer )
 use HbookCnv           v11r0
@@ -128,8 +132,8 @@ macro_append DaVinci_linkopts " "\
 
 # set the DaVinci version = v * 100000 + r * 100 + p * 100
 #============================================================================
-macro_append fflags   " -DDaVinciVersion=200000 " \
-             VisualC  " /DDaVinciVersion=200000 "
+macro_append fflags   " -DDaVinciVersion=300000 " \
+             VisualC  " /DDaVinciVersion=300000 "
 
-macro_append cppflags " -DDaVinciVersion=200000 " \
-             VisualC  " /DDaVinciVersion=200000 "
+macro_append cppflags " -DDaVinciVersion=300000 " \
+             VisualC  " /DDaVinciVersion=300000 "
