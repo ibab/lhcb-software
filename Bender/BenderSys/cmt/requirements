@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2003-12-12 13:44:07 ibelyaev Exp $ 
+# $Id: requirements,v 1.4 2004-01-22 22:52:11 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,31 +6,24 @@
 #     Interactive PHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v1r0
+version       v2r0
 author        Vanya BELYAEV
 
-use           BOOST          v2r1300p1
-use           GaudiPython    v5r0p1
 
 # =========== Bender Application ==============================================
-use           Bender         v1r0 Tools 
-# =========== Bender Linraries ================================================
-use           BenderLibs     v1r0 Tools 
-# =========== Python image of some important classes from LHCb Event Model ====
-use           PyEvent        v1r0 Tools 
-# =========== Python image of some important classes from CLHEP library =======
-use           PyClhep        v1r0 Tools 
+use           Bender         v2r0 Phys 
+# =========== Bender Libraries ================================================
+use           BenderLibs     v2r0 Tools 
+# =========== BenderDictionaries ==============================================
+use           BenderDict     v2r0 Tools 
 # =========== usage of Bender "in practice" ===================================
-use           BenderExample  v1r0 Ex  
+use           BenderExample  v2r0 Ex  
 # =========== Test suit for Bender ============================================
-use           BenderTest     v1r0 Tests  
+use           BenderTest     v2r0 Tests  
 # =============================================================================
 
 # =============================================================================
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.2  2003/12/07 09:39:52  ibelyaev
-#  add examples
-#
 # =============================================================================
