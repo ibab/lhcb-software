@@ -34,3 +34,4 @@ HLTSingleMuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
                                        ,"Phys/SelectBd2JpsiKs"
                                        ,"Phys/SelectB2MuMu"
 				       ,"Phys/SelectBd2MuMuKstar"};
+

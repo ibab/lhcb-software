@@ -7,6 +7,6 @@ CorrDimuons.Algorithms = { "HLTMuons"
                           , "HLTHotJpsis"
                           , "HLTFilterBs2JpsiPhi"
                           , "HLTFilterBd2MuMuKstar"
-                          , "HLTFilterBs2MuMu"
+                          , "HLTFilterB2MuMu"
 			   } ;
 

@@ -25,7 +25,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -37,7 +37,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
 
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -77,3 +77,4 @@ HLTPreselKaons.OutputLevel = 2;
 //#include "$HLTGENERICROOT/options/HltGeneric.opts"
 // K-ID
 TrgParticleMaker.KaonDLLCut = 15 ; // default
+

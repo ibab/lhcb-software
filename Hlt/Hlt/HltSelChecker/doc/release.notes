@@ -7,6 +7,8 @@
 ! 2005-01-13 - P. Koppenburg
   - options/Plots.opts
     . New variable "WM": wide mass window for B
+  - options/Plots.opts
+    . MakePlots = true ;
     
 ! 2005-01-12 - P. Koppenburg
   - options/CorrB2HH.opts
