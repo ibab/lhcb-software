@@ -1,8 +1,12 @@
 !------------------------------------------------------------------------------
-! Package     : Rich/RichRecTools
+! Package     : Rich/RichRecMCTools
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
+
+!====================== RichRecMCTools v1r6 2004-07-22 =====================
+! 2004-07-22 - Marco Cattaneo
+ - Add use Relations to requirements
 
 ! 2004-07-12 - Chris Jones
  - Minor changes to debug printout (now done from base class)

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.9 2004-06-18 09:59:41 jonesc Exp $
+# $Id: requirements,v 1.10 2004-07-22 16:19:42 cattanem Exp $
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #
 
 package RichRecMCTools
-version v1r5
+version v1r6
 
 # ================ structure ================================================
 branches src cmt doc
@@ -12,6 +12,7 @@ include_path none
 
 # ================ dependencies =============================================
 use RichRecBase        v1r*   Rich
+use Relations          v*     Kernel
 
 # ================ component library=========================================
 library          RichRecMCTools  ../src/*.cpp
