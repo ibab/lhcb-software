@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.8 2004-02-02 14:25:53 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.9 2004-03-16 13:43:34 jonesc Exp $
 // Include files
 
 // local
@@ -32,13 +32,12 @@ RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
 //  Initialize
 StatusCode RichGlobalPIDDigitSel::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  msg << MSG::DEBUG << "Initialize" << endreq
-      << " Max Pixels                   = " << m_maxUsedPixels << endreq;
+  debug() << "Initialize" << endreq
+          << " Max Pixels                   = " << m_maxUsedPixels << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -46,62 +45,37 @@ StatusCode RichGlobalPIDDigitSel::initialize() {
 // Initialise pixels
 StatusCode RichGlobalPIDDigitSel::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Check if track processing was aborted.
-  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
-  if ( !procStat ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to locate ProcStatus at "
-        << m_procStatLocation << endreq;
-    return StatusCode::FAILURE;
-  } else if ( procStat->aborted() ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::INFO
-        << "Processing aborted -> RICH Global PID aborted" << endreq;
+  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
+  if ( procStat->aborted() ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
-    return StatusCode::SUCCESS;
+    return Print("Processing aborted -> RICH Global PID aborted");
   }
 
   // Create all RichRecPixels
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
+  debug() << "Selected " << richPixels()->size() << " RichDigits" << endreq;
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG 
-        << "Selected " << richPixels()->size() << " RichDigits" << endreq;
-  }
-
+  // How many pixels ?
   if ( m_maxUsedPixels < richPixels()->size() ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::INFO << "Found " << richPixels()->size()
-        << " RichDigits -> RICH Global PID aborted" << endreq;
-    SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
-    if ( !procStat ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::WARNING << "Failed to locate ProcStatus at " 
-          << m_procStatLocation << endreq;
-      return StatusCode::FAILURE;
-    }
     procStat->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
     richStatus()->setEventOK( false );
+    return Print("Max. number of pixels exceeded -> RICH Global PID aborted");
   }
 
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichGlobalPIDDigitSel::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+StatusCode RichGlobalPIDDigitSel::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecAlgBase::finalize();

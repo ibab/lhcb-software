@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.5 2004-02-02 14:26:57 jonesc Exp $
+// $Id: RichExpectedTrackSignal.cpp,v 1.6 2004-03-16 13:45:02 jonesc Exp $
 
 // local
 #include "RichExpectedTrackSignal.h"
@@ -30,11 +30,11 @@ RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,
 
 StatusCode RichExpectedTrackSignal::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichGeomEff",            m_geomEff      );
@@ -43,23 +43,12 @@ StatusCode RichExpectedTrackSignal::initialize() {
   acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichRayleighScatter",    m_rayScat      );
 
-  // Informational Printout
-  //msg << MSG::DEBUG
-
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichExpectedTrackSignal::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_geomEff );
-  releaseTool( m_sellmeir );
-  releaseTool( m_sigDetEff );
-  releaseTool( m_richPartProp );
-  releaseTool( m_rayScat );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();

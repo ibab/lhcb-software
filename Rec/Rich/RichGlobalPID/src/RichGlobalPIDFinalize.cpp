@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.7 2004-02-02 14:25:54 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.8 2004-03-16 13:43:34 jonesc Exp $
 // Include files
 
 // local
@@ -31,20 +31,17 @@ RichGlobalPIDFinalize::~RichGlobalPIDFinalize() {}
 StatusCode RichGlobalPIDFinalize::initialize() {
 
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichGlobalPIDFinalize::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -59,10 +56,9 @@ StatusCode RichGlobalPIDFinalize::execute() {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
     if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << "PID'ed Track "
-          << (*track)->key() << " (" << (*track)->trQuality()
-          << "), as " << rRTrack->currentHypothesis() << endreq;
+      verbose() << "PID'ed Track "
+                << (*track)->key() << " (" << (*track)->trQuality()
+                << "), as " << rRTrack->currentHypothesis() << endreq;
     }
 
     RichGlobalPID * pid = (*track)->globalPID();
@@ -79,9 +75,8 @@ StatusCode RichGlobalPIDFinalize::execute() {
     // Finalise delta LL and probability values
     std::vector<float> & deltaLLs = pid->particleLLValues();
     if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::WARNING << "PID " << pid->key() << " best ID " << pid->bestParticleID()
-          << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
+      warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
+                << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       if ( deltaLLs[iHypo] < 0 ) { deltaLLs[iHypo] = 0; }
@@ -92,23 +87,16 @@ StatusCode RichGlobalPIDFinalize::execute() {
   }
 
   // All OK - Update ProcStatus with number of PIDs
-  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
-  if ( !procStat ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to locate ProcStatus at "
-        << m_procStatLocation << endreq;
-    return StatusCode::FAILURE;
-  }
+  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
   procStat->addAlgorithmStatus( m_richGPIDName, m_GPIDs->size() );
 
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichGlobalPIDFinalize::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
+StatusCode RichGlobalPIDFinalize::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecAlgBase::finalize();

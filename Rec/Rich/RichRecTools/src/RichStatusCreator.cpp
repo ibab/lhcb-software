@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.cpp,v 1.3 2004-02-02 14:27:05 jonesc Exp $
+// $Id: RichStatusCreator.cpp,v 1.4 2004-03-16 13:45:06 jonesc Exp $
 
 // local
 #include "RichStatusCreator.h"
@@ -17,7 +17,9 @@ const        IToolFactory& RichStatusCreatorFactory = s_factory ;
 RichStatusCreator::RichStatusCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_status ( 0 )
+{
 
   declareInterface<IRichStatusCreator>(this);
 
@@ -28,58 +30,46 @@ RichStatusCreator::RichStatusCreator( const std::string& type,
 
 StatusCode RichStatusCreator::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
-  IIncidentSvc * incSvc;
-  if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
-    msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
-    incSvc->release();
-  }
+  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+
+  // Make sure we are ready for a new event
+  InitNewEvent();
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichStatusCreator::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichStatusCreator::handle ( const Incident& incident ) {
-
-  if ( "BeginEvent" == incident.type() ) {
-
-    SmartDataPtr<RichRecStatus> status( eventSvc(), m_richStatusLocation );
-    if ( !status ) {
-
-      m_status = new RichRecStatus();
-      if ( !eventSvc()->registerObject(m_richStatusLocation, m_status) ) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register RichRecStatus at "
-            << m_richStatusLocation << endreq;
-      }
-
-    } else {
-      m_status = status;
-    }
-
-  } // end begin event if
-
+void RichStatusCreator::handle ( const Incident& incident )
+{
+  if ( "BeginEvent" == incident.type() ) InitNewEvent();
 }
 
 RichRecStatus * RichStatusCreator::richStatus() const
 {
+  if ( !m_status ) {
+    SmartDataPtr<RichRecStatus> status( evtSvc(), m_richStatusLocation );
+    if ( !status ) {
+      m_status = new RichRecStatus();
+      put( m_status, m_richStatusLocation );
+    } else {
+      m_status = status;
+    }
+  }
   return m_status;
 }

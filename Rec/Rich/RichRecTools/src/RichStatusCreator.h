@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.h,v 1.3 2004-02-02 14:27:05 jonesc Exp $
+// $Id: RichStatusCreator.h,v 1.4 2004-03-16 13:45:06 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHSTATUSCREATOR_H
 #define RICHRECTOOLS_RICHSTATUSCREATOR_H 1
 
@@ -51,14 +51,24 @@ public:
   /// Returns a pointer to the RichRecStatus
   RichRecStatus * richStatus() const;
 
-private:
+private: // methods
+
+  /// Initialise for a new event
+  void InitNewEvent();
+
+private: // data
 
   /// Pointer to RichRecStatus
-  RichRecStatus * m_status;
+  mutable RichRecStatus * m_status;
 
   /// Location of RichRecStatus in TES
   std::string m_richStatusLocation;
 
 };
+
+inline void RichStatusCreator::InitNewEvent()
+{
+  m_status = 0;
+}
 
 #endif // RICHRECTOOLS_RICHSTATUSCREATOR_H

@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.h,v 1.5 2004-02-02 14:27:00 jonesc Exp $
+// $Id: RichParticleProperties.h,v 1.6 2004-03-16 13:45:04 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -68,9 +68,6 @@ public:
                             const Rich::RadiatorType rad ) const;
   
 private:  // Private data
-
-  /// Pointers to tool instances
-  IRichRefractiveIndex * m_refIndex;
 
   /// Array containing particle masses
   boost::array<double,Rich::NParticleTypes> m_particleMass;

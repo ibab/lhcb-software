@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.2 2004-02-02 14:24:40 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.3 2004-03-16 13:41:44 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
 
@@ -71,10 +71,13 @@ private: // methods
   RichRecPixel * newPixelFromHit( const RichDigit * digit,
                                   const MCRichHit * hit ) const;
 
+  /// Initialise for a new event
+  void InitNewEvent();
+
 private: // data
 
   /// Pointer to RichRecPixels
-  RichRecPixels * m_pixels;
+  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
@@ -96,5 +99,14 @@ private: // data
   mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
 };
+
+inline void RichPixelCreatorFromCheatedRichDigits::InitNewEvent()
+{
+  // Initialise data for new event
+  m_allDone = false;
+  m_pixelExists.clear();
+  m_pixelDone.clear();
+  m_pixels = 0;
+}
 
 #endif // RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H

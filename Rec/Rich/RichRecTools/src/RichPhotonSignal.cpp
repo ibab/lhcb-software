@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.9 2004-02-02 14:27:01 jonesc Exp $
+// $Id: RichPhotonSignal.cpp,v 1.10 2004-03-16 13:45:05 jonesc Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -25,11 +25,11 @@ RichPhotonSignal::RichPhotonSignal( const std::string& type,
 
 StatusCode RichPhotonSignal::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal  );
@@ -37,8 +37,8 @@ StatusCode RichPhotonSignal::initialize() {
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
-  SmartDataPtr<DeRich1> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
-  SmartDataPtr<DeRich2> Rich2DE( detSvc(), "/dd/Structure/LHCb/Rich2" );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
+  DeRich2 * Rich2DE = getDet<DeRich2>( DeRich2Location::Default );
 
   // Mirror radii of curvature in mm
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
@@ -52,23 +52,16 @@ StatusCode RichPhotonSignal::initialize() {
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Mirror radii of curvature    = "
-      << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
-      << " Pixel area                   = " << m_pixelArea << endreq;
+  debug() << " Mirror radii of curvature    = "
+          << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
+          << " Pixel area                   = " << m_pixelArea << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichPhotonSignal::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_signal  );
-  releaseTool( m_ckAngle );
-  releaseTool( m_ckRes   );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();

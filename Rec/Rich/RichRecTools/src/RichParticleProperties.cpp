@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.5 2004-02-02 14:27:00 jonesc Exp $
+// $Id: RichParticleProperties.cpp,v 1.6 2004-03-16 13:45:03 jonesc Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -25,21 +25,18 @@ RichParticleProperties::RichParticleProperties ( const std::string& type,
 
 StatusCode RichParticleProperties::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRefractiveIndex", m_refIndex );
+  IRichRefractiveIndex * refIndex;
+  acquireTool( "RichRefractiveIndex", refIndex );
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = 0;
-  if ( !serviceLocator()->service( "ParticlePropertySvc", ppSvc ) ) {
-    msg << MSG::ERROR << "ParticlePropertySvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
+  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" );
 
   // Retrieve particle masses
   m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/MeV;
@@ -56,34 +53,32 @@ StatusCode RichParticleProperties::initialize() {
   m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton] );
 
   // release service
-  ppSvc->release();
+  release(ppSvc);
   
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
+  debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
 
   // Setup momentum thresholds
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
-    msg << MSG::DEBUG << " Particle thresholds (MeV/c^2) = Rad " << rad << " : ";
+    debug() << " Particle thresholds (MeV/c^2) = Rad " << rad << " : ";
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      const double refIndex = m_refIndex->refractiveIndex(rad);
-      m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(refIndex*refIndex - 1.0);
-      msg << m_momThres[iRad][iHypo] << " ";
+      const double index = refIndex->refractiveIndex(rad);
+      m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(index*index - 1.0);
+      debug() << m_momThres[iRad][iHypo] << " ";
     }
-    msg << endreq;
+    debug() << endreq;
   }
+
+  // release tool
+  releaseTool(refIndex);
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichParticleProperties::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_refIndex );
+StatusCode RichParticleProperties::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();

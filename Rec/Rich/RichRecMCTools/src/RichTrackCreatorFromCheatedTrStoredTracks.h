@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.3 2004-02-02 14:24:41 jonesc Exp $
+// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.4 2004-03-16 13:41:45 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H 1
 
@@ -14,17 +14,15 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichDetTools/IRichRayTracing.h"
 #include "RichDetTools/IRichSmartIDTool.h"
 #include "RichDetTools/IRichTrSegMaker.h"
 
-// Relations
-#include "Relations/IAssociatorWeighted.h"
-#include "Relations/IRelationWeighted.h"
-
 // Event
 #include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
+#include "Event/MCRichTrack.h"
 #include "Event/RichRecTrack.h"
 
 /** @class RichTrackCreatorFromCheatedTrStoredTracks RichTrackCreatorFromCheatedTrStoredTracks.h
@@ -80,16 +78,16 @@ private: // methods
   /// Load the TrStoredTracks
   const bool loadTrStoredTracks() const;
 
-private: // data
+  /// Initialise for a new event
+  void InitNewEvent();
 
-  // tracking MC truth
-  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
+private: // data
 
   /// Pointer to TrStoredTracks
   mutable TrStoredTracks * m_trTracks;
 
   /// Pointer to RichRecTracks
-  RichRecTracks * m_tracks;
+  mutable RichRecTracks * m_tracks;
 
   /// Pointer to the detector ray tracing tool
   IRichRayTracing * m_rayTrace;
@@ -103,10 +101,8 @@ private: // data
   /// Pointer to RichExpectedTrackSignal interface
   IRichExpectedTrackSignal * m_signal;
 
-  /// MC Tracking truth
-  std::string m_trAsctName;
-  std::string m_trAsctType;
-  TrackAsct* m_trackToMCP;
+  /// MC Truth tool
+  IRichRecMCTruthTool * m_mcTruth;
 
   /// Input location of TrStoredTracks in TES
   std::string m_trTracksLocation;
@@ -123,6 +119,25 @@ private: // data
   // Working object to keep track of formed objects
   mutable std::map<unsigned long, bool> m_trackDone;
 
+  // Momentum cut values for each track type
+  std::vector<double> m_tkPcut;
+
+
+  // Initialise track count
+  typedef std::vector<unsigned> TrackTypeCount;
+  mutable TrackTypeCount m_nTracks;
+
 };
+
+inline void RichTrackCreatorFromCheatedTrStoredTracks::InitNewEvent()
+{
+  // Initialise navigation data
+  m_trackDone.clear();
+  m_allDone  = false;
+  m_trTracks = 0;
+  m_tracks   = 0;
+  for ( TrackTypeCount::iterator i = m_nTracks.begin(); 
+        i != m_nTracks.end(); ++i ) { *i = 0; }
+}
 
 #endif // RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H

@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.h,v 1.5 2004-02-02 14:27:03 jonesc Exp $
+// $Id: RichSegmentCreator.h,v 1.6 2004-03-16 13:45:06 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -61,6 +61,11 @@ public:
   /// Return a pointer to RichRecSegments
   RichRecSegments * richSegments() const;
 
+private: // methods
+
+  /// Initialise for a new event
+  void InitNewEvent();
+
 private:  // Private data
 
   /// Pointer to RichRecTracks
@@ -75,5 +80,10 @@ private:  // Private data
   std::vector<double> m_minPhotEn;
 
 };
+
+inline void RichSegmentCreator::InitNewEvent()
+{
+  m_segments = 0;
+}
 
 #endif // RICHRECTOOLS_RICHRECSEGMENTTOOL_H

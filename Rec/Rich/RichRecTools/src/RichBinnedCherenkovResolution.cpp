@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.7 2004-02-02 14:26:57 jonesc Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.8 2004-03-16 13:45:02 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -25,7 +25,9 @@ const        IToolFactory& RichBinnedCherenkovResolutionFactory = s_factory ;
 RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string& type,
                                                                const std::string& name,
                                                                const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_ckAngle ( 0 )
+{
 
   declareInterface<IRichCherenkovResolution>(this);
 
@@ -42,10 +44,14 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
   (m_theerr[Rich::Aerogel][Rich::Track::Match]).push_back( 0.00262 );
   (m_theerr[Rich::Aerogel][Rich::Track::Match]).push_back( 0.00221 );
   declareProperty( "AerogelMatchRes", m_theerr[Rich::Aerogel][Rich::Track::Match] );
-  (m_theerr[Rich::Aerogel][Rich::Track::UpStream]).push_back( 0.00300 );
-  (m_theerr[Rich::Aerogel][Rich::Track::UpStream]).push_back( 0.00272 );
-  (m_theerr[Rich::Aerogel][Rich::Track::UpStream]).push_back( 0.00230 );
-  declareProperty( "AerogelUpStreamRes", m_theerr[Rich::Aerogel][Rich::Track::UpStream] );
+  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00300 );
+  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00272 );
+  (m_theerr[Rich::Aerogel][Rich::Track::Follow]).push_back( 0.00230 );
+  declareProperty( "AerogelFollowRes", m_theerr[Rich::Aerogel][Rich::Track::Follow] );
+  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00300 );
+  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00272 );
+  (m_theerr[Rich::Aerogel][Rich::Track::KsTrack]).push_back( 0.00230 );
+  declareProperty( "AerogelKsTrackRes", m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
   (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
   (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
   (m_theerr[Rich::Aerogel][Rich::Track::Seed]).push_back( 999 );
@@ -69,10 +75,14 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
   (m_theerr[Rich::C4F10][Rich::Track::Match]).push_back( 0.00231 );
   (m_theerr[Rich::C4F10][Rich::Track::Match]).push_back( 0.00180 );
   declareProperty( "C4F10MatchRes", m_theerr[Rich::C4F10][Rich::Track::Match] );
-  (m_theerr[Rich::C4F10][Rich::Track::UpStream]).push_back( 0.00393 );
-  (m_theerr[Rich::C4F10][Rich::Track::UpStream]).push_back( 0.00242 );
-  (m_theerr[Rich::C4F10][Rich::Track::UpStream]).push_back( 0.00242 );
-  declareProperty( "C4F10UpStreamRes", m_theerr[Rich::C4F10][Rich::Track::UpStream] );
+  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00393 );
+  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00242 );
+  (m_theerr[Rich::C4F10][Rich::Track::Follow]).push_back( 0.00242 );
+  declareProperty( "C4F10FollowRes", m_theerr[Rich::C4F10][Rich::Track::Follow] );
+  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00393 );
+  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00242 );
+  (m_theerr[Rich::C4F10][Rich::Track::KsTrack]).push_back( 0.00242 );
+  declareProperty( "C4F10KsTrackRes", m_theerr[Rich::C4F10][Rich::Track::KsTrack] );
   (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
   (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
   (m_theerr[Rich::C4F10][Rich::Track::Seed]).push_back( 999 );
@@ -96,10 +106,14 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
   (m_theerr[Rich::CF4][Rich::Track::Match]).push_back( 0.00132 );
   (m_theerr[Rich::CF4][Rich::Track::Match]).push_back( 0.00091 );
   declareProperty( "CF4MatchRes", m_theerr[Rich::CF4][Rich::Track::Match] );
-  (m_theerr[Rich::CF4][Rich::Track::UpStream]).push_back( 0.00133 );
-  (m_theerr[Rich::CF4][Rich::Track::UpStream]).push_back( 0.00131 );
-  (m_theerr[Rich::CF4][Rich::Track::UpStream]).push_back( 0.00109 );
-  declareProperty( "CF4UpStreamRes", m_theerr[Rich::CF4][Rich::Track::UpStream] );
+  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00133 );
+  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00131 );
+  (m_theerr[Rich::CF4][Rich::Track::Follow]).push_back( 0.00109 );
+  declareProperty( "CF4FollowRes", m_theerr[Rich::CF4][Rich::Track::Follow] );
+  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00133 );
+  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00131 );
+  (m_theerr[Rich::CF4][Rich::Track::KsTrack]).push_back( 0.00109 );
+  declareProperty( "CF4KsTrackRes", m_theerr[Rich::CF4][Rich::Track::KsTrack] );
   (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00138 );
   (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00117 );
   (m_theerr[Rich::CF4][Rich::Track::Seed]).push_back( 0.00099 );
@@ -116,23 +130,22 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
 
 StatusCode RichBinnedCherenkovResolution::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using binned track resolutions" << endreq;
+  debug() << " Using binned track resolutions" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    msg << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
+    debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
     for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
-      msg << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
-          << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
+      debug() << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
+              << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
     }
   }
 
@@ -141,11 +154,7 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
 
 StatusCode RichBinnedCherenkovResolution::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_ckAngle );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();

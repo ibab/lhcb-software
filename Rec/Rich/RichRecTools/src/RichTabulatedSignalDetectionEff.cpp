@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.2 2004-02-02 14:27:06 jonesc Exp $
+// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.3 2004-03-16 13:45:06 jonesc Exp $
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
@@ -26,16 +26,16 @@ RichTabulatedSignalDetectionEff::RichTabulatedSignalDetectionEff ( const std::st
   // Define job option parameters
 
   // Spherical mirrors
-  m_sphMirReflLoc[Rich::Rich1] = 
+  m_sphMirReflLoc[Rich::Rich1] =
     "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
-  m_sphMirReflLoc[Rich::Rich2] = 
+  m_sphMirReflLoc[Rich::Rich2] =
     "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
   declareProperty( "RichSphMirrorLocations", m_sphMirReflLoc );
 
   // flat mirrors
-  m_flatMirReflLoc[Rich::Rich1] = 
+  m_flatMirReflLoc[Rich::Rich1] =
     "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
-  m_flatMirReflLoc[Rich::Rich2] = 
+  m_flatMirReflLoc[Rich::Rich2] =
     "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
   declareProperty( "RichFlatMirrorLocations", m_flatMirReflLoc );
 
@@ -47,46 +47,26 @@ RichTabulatedSignalDetectionEff::RichTabulatedSignalDetectionEff ( const std::st
 
 StatusCode RichTabulatedSignalDetectionEff::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire QE Curve from XML
   SmartDataPtr<TabulatedProperty> tabQE( detSvc(), m_qeTableLoc );
-  if ( tabQE ) {
-    m_QE = new Rich1DTabProperty( tabQE );
-  } else {
-    msg << MSG::ERROR << "Cannot retrieve QE from " + m_qeTableLoc  << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tabQE ) return Error( "Cannot retrieve QE from " + m_qeTableLoc );
+  m_QE = new Rich1DTabProperty( tabQE );
 
   // Load tabulated reflectivities from XML
   SmartDataPtr<TabulatedProperty> tabF1( detSvc(), m_flatMirReflLoc[Rich::Rich1] );
-  if ( !tabF1 ) {
-    msg << MSG::ERROR << "Failed to load reflectivity from "
-        << m_flatMirReflLoc[Rich::Rich1] << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tabF1 ) return Error( "Failed to load "+m_flatMirReflLoc[Rich::Rich1] );
   SmartDataPtr<TabulatedProperty> tabF2( detSvc(), m_flatMirReflLoc[Rich::Rich2] );
-  if ( !tabF2 ) {
-    msg << MSG::ERROR << "Failed to load reflectivity from "
-        << m_flatMirReflLoc[Rich::Rich2] << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tabF2 ) return Error( "Failed to load "+m_flatMirReflLoc[Rich::Rich2] );
   SmartDataPtr<TabulatedProperty> tabS1( detSvc(), m_sphMirReflLoc[Rich::Rich1] );
-  if ( !tabF1 ) {
-    msg << MSG::ERROR << "Failed to load reflectivity from "
-        << m_sphMirReflLoc[Rich::Rich1] << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tabF1 ) return Error( "Failed to load "+m_sphMirReflLoc[Rich::Rich1] );
   SmartDataPtr<TabulatedProperty> tabS2( detSvc(), m_sphMirReflLoc[Rich::Rich2] );
-  if ( !tabF2 ) {
-    msg << MSG::ERROR << "Failed to load reflectivity from "
-        << m_sphMirReflLoc[Rich::Rich2] << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tabF2 ) return Error( "Failed to load "+m_sphMirReflLoc[Rich::Rich2] );
 
   // Create tabulated property objects from XML information
   m_flatMirRefl[Rich::Rich1] = new Rich1DTabProperty( tabF1 );
@@ -95,7 +75,7 @@ StatusCode RichTabulatedSignalDetectionEff::initialize() {
   m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( tabS2 );
 
   // Get Rich1 Detector element
-  SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
 
   // Quartz window eff
   m_quartzWinEff = Rich1DE->userParameterAsDouble( "HPDQuartzWindowEff" );
@@ -104,23 +84,21 @@ StatusCode RichTabulatedSignalDetectionEff::initialize() {
   m_pedLoss = Rich1DE->userParameterAsDouble( "HPDPedestalDigiEff" );
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using XML tabulated implementation for HPD" << endreq
-      << " Rich1 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich1] << endreq
-      << " Rich2 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich2] << endreq
-      << " Rich1 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich1] << endreq
-      << " Rich2 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich2] << endreq
-      << " Quantum Efficiency           = " << m_qeTableLoc << endreq
-      << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
-      << " Digitisation pedestal eff.   = " << m_pedLoss << endreq;
+  debug() << " Using XML tabulated implementation for HPD" << endreq
+          << " Rich1 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich1] << endreq
+          << " Rich2 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich2] << endreq
+          << " Rich1 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich1] << endreq
+          << " Rich2 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich2] << endreq
+          << " Quantum Efficiency           = " << m_qeTableLoc << endreq
+          << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
+          << " Digitisation pedestal eff.   = " << m_pedLoss << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichTabulatedSignalDetectionEff::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // Tidy up
   for ( MirrorReflectivities::iterator iF = m_flatMirRefl.begin();

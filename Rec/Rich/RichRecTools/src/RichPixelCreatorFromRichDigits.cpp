@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.6 2004-02-02 14:27:01 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.7 2004-03-16 13:45:05 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -19,8 +19,9 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
                                                                 const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
-    m_smartIDTool ( 0 )
- {
+    m_smartIDTool ( 0 ),
+    m_allDone     ( false )
+{
 
   declareInterface<IRichPixelCreator>(this);
 
@@ -34,97 +35,50 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 
 StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Setup incident services
-  IIncidentSvc * incSvc;
-  if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
-    msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
-    incSvc->release();
-  }
+  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+
+  // Make sure we are ready for a new event
+  InitNewEvent();
 
   // Informational printout
-  msg << MSG::DEBUG
-      << " Using OO RichDigits" << endreq;
+  debug() << " Using RichDigits" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichPixelCreatorFromRichDigits::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release services and tools
-  releaseTool( m_smartIDTool );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
-
-  if ( "BeginEvent" == incident.type() ) {
-
-    m_allDone = false;
-
-    // Initialise navigation data
-    m_pixelExists.clear();
-    m_pixelDone.clear();
-
-    SmartDataPtr<RichRecPixels> tdsPixels( eventSvc(),
-                                           m_richRecPixelLocation );
-    if ( !tdsPixels ) {
-
-      // Reinitialise the Pixel Container
-      m_pixels = new RichRecPixels();
-
-      // Register new RichRecPhoton container to Gaudi data store
-      if ( !eventSvc()->registerObject(m_richRecPixelLocation, m_pixels) ) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register RichRecPixels at "
-            << m_richRecPixelLocation << endreq;
-      }
-
-    } else {
-
-      // Set smartref to TES pixel container
-      m_pixels = tdsPixels;
-
-      // Remake local pixel reference map
-      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
-            iPixel != tdsPixels->end();
-            ++iPixel ) {
-        m_pixelExists[(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(*iPixel)->smartID()] = true;
-      }
-
-    }
-
-  } // end begin event if
-
+void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
+{
+  if ( "BeginEvent" == incident.type() ) InitNewEvent();
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * 
+RichRecPixel *
 RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
 
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Parent not of type RichDigit" << endreq;
+    warning() << "Parent not of type RichDigit" << endreq;
     return NULL;
   }
 
@@ -142,12 +96,12 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
 
       // Make a new RichRecPixel
       newPixel = new RichRecPixel();
-      m_pixels->insert( newPixel );
+      richPixels()->insert( newPixel );
 
       // Positions
       HepPoint3D & gPosition = newPixel->globalPosition();
       m_smartIDTool->globalPosition( id, gPosition );
-      newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition); 
+      newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition);
 
       // Set smartID
       newPixel->setSmartID( id );
@@ -172,34 +126,22 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<RichDigits> digits( eventSvc(), m_recoDigitsLocation );
-  if ( !digits ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to locate digits at "
-        << m_recoDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  }
+  RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
 
   // Loop over RichDigits and create working pixels
   for ( RichDigits::iterator digit = digits->begin();
-        digit != digits->end(); ++digit ) {
-    newPixel( *digit );
-  }
+        digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
   if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG
-        << "Located " << digits->size() << " RichDigits at "
-        << m_recoDigitsLocation << endreq
-        << "Created " << m_pixels->size() << " RichRecPixels at "
-        << m_richRecPixelLocation << endreq;
+    debug() << "Located " << digits->size() << " RichDigits at "
+            << m_recoDigitsLocation << endreq
+            << "Created " << richPixels()->size() << " RichRecPixels at "
+            << m_richRecPixelLocation << endreq;
   }
 
-  if ( digits->size() != m_pixels->size() ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING
-        << "Created " << m_pixels->size() << " RichRecPixels from "
-        << digits->size() << " RichDigits !!" << endreq;
+  if ( digits->size() != richPixels()->size() ) {
+    warning() << "Created " << richPixels()->size() << " RichRecPixels from "
+              << digits->size() << " RichDigits !!" << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -207,5 +149,32 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
 
 RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
 {
+  if ( !m_pixels ) {
+
+    SmartDataPtr<RichRecPixels> tdsPixels( evtSvc(),
+                                           m_richRecPixelLocation );
+    if ( !tdsPixels ) {
+
+      // Reinitialise the Pixel Container
+      m_pixels = new RichRecPixels();
+
+      // Register new RichRecPhoton container to Gaudi data store
+      put( m_pixels, m_richRecPixelLocation );
+
+    } else {
+
+      // Set smartref to TES pixel container
+      m_pixels = tdsPixels;
+
+      // Remake local pixel reference map
+      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
+            iPixel != tdsPixels->end(); ++iPixel ) {
+        m_pixelExists [ (*iPixel)->smartID() ] = *iPixel;
+        m_pixelDone   [ (*iPixel)->smartID() ] = true;
+      }
+
+    }
+  }
+
   return m_pixels;
 }

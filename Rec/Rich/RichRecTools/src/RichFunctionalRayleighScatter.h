@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.h,v 1.3 2004-02-02 14:26:58 jonesc Exp $
+// $Id: RichFunctionalRayleighScatter.h,v 1.4 2004-03-16 13:45:02 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H 1
 
@@ -12,8 +12,8 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// Detector Description
-#include "DetDesc/DetectorElement.h"
+// RichDet
+#include "RichDet/DeRich1.h"
 
 // Event model
 #include "Event/RichRecSegment.h"

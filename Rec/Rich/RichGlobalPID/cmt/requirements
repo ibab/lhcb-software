@@ -2,7 +2,7 @@
 # Maintainer : Christopher Rob Jones
 
 package RichGlobalPID
-version v1r4
+version v1r5
 
 #============================================================================
 # Structure

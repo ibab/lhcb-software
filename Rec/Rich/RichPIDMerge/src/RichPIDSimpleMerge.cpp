@@ -1,5 +1,8 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.3 2003-11-25 13:56:16 jonesc Exp $
+// $Id: RichPIDSimpleMerge.cpp,v 1.4 2004-03-16 13:43:57 jonesc Exp $
 // Include files
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPIDSimpleMerge.h"
@@ -41,13 +44,12 @@ RichPIDSimpleMerge::~RichPIDSimpleMerge() {};
 // Initialisation.
 StatusCode RichPIDSimpleMerge::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
   // initialise base classclean
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  msg << MSG::DEBUG << "Initialize" << endreq
-      << " Output RichPIDs location     = " << m_richPIDLocation << endreq;
+  debug() << "Initialize" << endreq
+          << " Output RichPIDs location     = " << m_richPIDLocation << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -60,42 +62,37 @@ StatusCode RichPIDSimpleMerge::execute() {
   // In the future need some kind of proper merging of results
   //
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // Obtain Global PID results
   SmartDataPtr<RichGlobalPIDs> gPIDs( eventSvc(), m_richGlobalPIDLocation );
   if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
     if ( !gPIDs ) {
-      msg << MSG::VERBOSE << "Cannot locate RichGlobalPIDs at "
-          << m_richGlobalPIDLocation << endreq;
+      verbose() << "Cannot locate RichGlobalPIDs at "
+                << m_richGlobalPIDLocation << endreq;
     } else {
-      msg << MSG::VERBOSE << "Successfully located " << gPIDs->size()
-          << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
+      verbose() << "Successfully located " << gPIDs->size()
+                << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
     }
   }
 
   // Obtain Local PID results
   SmartDataPtr<RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
   if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
     if ( !lPIDs ) {
-      msg << MSG::VERBOSE << "Cannot locate RichLocalPIDs at "
-          << m_richLocalPIDLocation << endreq;
+      verbose() << "Cannot locate RichLocalPIDs at "
+                << m_richLocalPIDLocation << endreq;
     } else {
-      msg << MSG::VERBOSE << "Successfully located " << lPIDs->size()
-          << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
+      verbose()  << "Successfully located " << lPIDs->size()
+                 << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
     }
   }
 
   // See if PIDs already exist at requested output location
   RichPIDs * newPIDs = NULL;
   bool pidsExist = false;
-  int originalSize = 0;
-  SmartDataPtr<RichPIDs> outPIDs( eventSvc(),m_richPIDLocation );
+  unsigned int originalSize = 0;
+  SmartDataPtr<RichPIDs> outPIDs( eventSvc(), m_richPIDLocation );
   if ( outPIDs ) {
     pidsExist = true;
     newPIDs = outPIDs;
@@ -104,38 +101,25 @@ StatusCode RichPIDSimpleMerge::execute() {
   } else {
     // Form new container for output PIDs
     newPIDs = new RichPIDs();
+    put( newPIDs, m_richPIDLocation );
   }
 
   // Locate the processing status object
-  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
-  if ( !procStat ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::WARNING
-        << "Failed to locate ProcStatus at " << m_procStatLocation << endreq;
-    return StatusCode::FAILURE;
-  }
+  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
 
-  int nUsedglobalPIDs = 0;
-  int nUsedlocalPIDs = 0;
+  unsigned int nUsedglobalPIDs = 0;
+  unsigned int nUsedlocalPIDs  = 0;
   if ( !procStat->aborted() ) {
 
     // iterate over Global PID results and form output persistent objects
     if ( gPIDs ) {
       for ( RichGlobalPIDs::const_iterator gPID = gPIDs->begin();
-            gPID != gPIDs->end();
-            ++gPID ) {
+            gPID != gPIDs->end(); ++gPID ) {
 
-        // Form new PID object
-        RichPID * outPID = new RichPID();
+        // Form new PID object, using existing RichPID as template
+        RichPID * outPID = new RichPID( *gPID );
         newPIDs->insert( outPID, (*gPID)->key() );
         ++nUsedglobalPIDs;
-
-        // data members
-        outPID->setBestParticleID( (*gPID)->bestParticleID() );
-        outPID->setParticleLLValues( (*gPID)->particleLLValues() );
-        outPID->setParticleRawProbValues( (*gPID)->particleRawProbValues() );
-        outPID->setRecTrack( (*gPID)->recTrack() );
-        outPID->setPidResultCode( (*gPID)->pidResultCode() );
 
       }
     }
@@ -150,17 +134,10 @@ StatusCode RichPIDSimpleMerge::execute() {
         // if pid with this key exists, skip
         if ( newPIDs->object( (*lPID)->key() ) ) continue;
 
-        // Form new PID object
-        RichPID * outPID = new RichPID();
+        // Form new PID object, using existing RichPID as template
+        RichPID * outPID = new RichPID( *lPID );
         newPIDs->insert( outPID, (*lPID)->key() );
         ++nUsedlocalPIDs;
-
-        // data members
-        outPID->setBestParticleID( (*lPID)->bestParticleID() );
-        outPID->setParticleLLValues( (*lPID)->particleLLValues() );
-        outPID->setParticleRawProbValues( (*lPID)->particleRawProbValues() );
-        outPID->setRecTrack( (*lPID)->recTrack() );
-        outPID->setPidResultCode( (*lPID)->pidResultCode() );
 
       }
     }
@@ -171,44 +148,29 @@ StatusCode RichPIDSimpleMerge::execute() {
   procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs", nUsedglobalPIDs );
   procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",  nUsedlocalPIDs  );
 
-  // register to Gaudi
+  // Final debug information
   if ( !pidsExist ) {
-    if ( !eventSvc()->registerObject(m_richPIDLocation, newPIDs) ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::WARNING << "Unable to register RichPIDs at "
-          << m_richPIDLocation << endreq;
-      return StatusCode::FAILURE;
-    } else {
-      if ( msgLevel(MSG::DEBUG) ) {
-        MsgStream  msg( msgSvc(), name() );
-        msg << MSG::DEBUG << "Successfully registered " << newPIDs->size()
-            << " RichPIDs at " << m_richPIDLocation 
+    debug() << "Successfully registered " << newPIDs->size()
+            << " RichPIDs at " << m_richPIDLocation
             << " : Global=" << nUsedglobalPIDs
             << " Local=" << nUsedlocalPIDs
             << endreq;
-      }
-    }
   } else {
-    if ( msgLevel(MSG::DEBUG) ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::DEBUG
-          << "Replaced " << originalSize << " pre-existing RichPIDs at "
-          << m_richPIDLocation << " with " << newPIDs->size()
-          << " new RichPIDs" 
-          << " : Global=" << nUsedglobalPIDs
-          << " Local=" << nUsedlocalPIDs
-          << endreq;
-    }
+    debug() << "Replaced " << originalSize << " pre-existing RichPIDs at "
+            << m_richPIDLocation << " with " << newPIDs->size()
+            << " new RichPIDs"
+            << " : Global=" << nUsedglobalPIDs
+            << " Local=" << nUsedlocalPIDs
+            << endreq;
   }
 
   return StatusCode::SUCCESS;
 };
 
 //  Finalize
-StatusCode RichPIDSimpleMerge::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
+StatusCode RichPIDSimpleMerge::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // base class finalise
   return RichAlgBase::finalize();

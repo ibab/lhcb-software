@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.h,v 1.3 2004-02-02 14:27:06 jonesc Exp $
+// $Id: RichTabulatedSignalDetectionEff.h,v 1.4 2004-03-16 13:45:06 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
 
@@ -20,8 +20,8 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-// Detector Description
-#include "DetDesc/DetectorElement.h"
+// RichDet
+#include "RichDet/DeRich1.h"
 
 // Rich Kernel
 #include "RichKernel/RichDetectorType.h"

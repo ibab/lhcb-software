@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRayleighScatter.cpp,v 1.2 2004-02-02 14:27:05 jonesc Exp $
+// $Id: RichTabulatedRayleighScatter.cpp,v 1.3 2004-03-16 13:45:06 jonesc Exp $
 
 // local
 #include "RichTabulatedRayleighScatter.h"
@@ -22,39 +22,35 @@ RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& 
 
   declareInterface<IRichRayleighScatter>(this);
 
-  declareProperty( "RayScatLengthLocation", 
+  declareProperty( "RayScatLengthLocation",
                    m_rayScatLoc = "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT" );
 
 }
 
 StatusCode RichTabulatedRayleighScatter::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   SmartDataPtr<TabulatedProperty> tab( detSvc(), m_rayScatLoc );
   if ( !tab ) {
-    msg << MSG::ERROR << "Failed to load Rayleigh scattering length from "
-        << m_rayScatLoc << endreq;
-    return StatusCode::FAILURE;
+    return Error( "Failed to load Rayleigh scattering length from "+m_rayScatLoc );
   }
   m_rayScatL = new Rich1DTabProperty( tab );
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using XML tabulated implementation" << endreq
-      << " Ray. Scat. length location   = " << m_rayScatLoc << endreq;
+  debug() << " Using XML tabulated implementation" << endreq
+          << " Ray. Scat. length location   = " << m_rayScatLoc << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedRayleighScatter::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+StatusCode RichTabulatedRayleighScatter::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // clean up
   if ( m_rayScatL ) {  delete m_rayScatL; m_rayScatL = 0; }
@@ -63,7 +59,7 @@ StatusCode RichTabulatedRayleighScatter::finalize() {
   return RichRecToolBase::finalize();
 }
 
-double 
+double
 RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
                                                    const double energy ) const {
 

@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.11 2004-02-02 14:27:00 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.12 2004-03-16 13:45:04 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -21,7 +21,8 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
     m_photonPredictor ( 0 ),
     m_photonSignal    ( 0 ),
     m_photonReco      ( 0 ),
-    m_photons         ( 0 ) {
+    m_photons         ( 0 )
+{
 
   declareInterface<IRichPhotonCreator>(this);
 
@@ -47,11 +48,11 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
 
 StatusCode RichPhotonCreator::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichDetPhotonReco",     m_photonReco      );
@@ -59,76 +60,32 @@ StatusCode RichPhotonCreator::initialize() {
   acquireTool( "RichPhotonPredictor",   m_photonPredictor );
 
   // Setup incident services
-  IIncidentSvc * incSvc;
-  if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
-    msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
-    incSvc->release();
-  }
+  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+
+  // Make sure we are ready for a new event
+  InitNewEvent();
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Min Cherenkov Theta          = " << m_minCKtheta << endreq
-      << " Max Cherenkov Theta          = " << m_maxCKtheta << endreq
-      << " Min Photon Probability       = " << m_minPhotonProb << endreq;
+  debug() << " Min Cherenkov Theta          = " << m_minCKtheta << endreq
+          << " Max Cherenkov Theta          = " << m_maxCKtheta << endreq
+          << " Min Photon Probability       = " << m_minPhotonProb << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichPhotonCreator::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release services and tools
-  releaseTool( m_photonReco      );
-  releaseTool( m_photonSignal    );
-  releaseTool( m_photonPredictor );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPhotonCreator::handle ( const Incident& incident ) {
-
-  if ( "BeginEvent" == incident.type() ) {
-
-    // Initialise navigation data
-    m_photonDone.clear();
-
-    SmartDataPtr<RichRecPhotons> tdsPhotons( eventSvc(),
-                                             m_richRecPhotonLocation );
-    if ( !tdsPhotons ) {
-
-      // Reinitialise the Photon Container
-      m_photons = new RichRecPhotons();
-
-      // Register new RichRecPhoton container to Gaudi data store
-      if ( !eventSvc()->registerObject(m_richRecPhotonLocation, m_photons) ) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register RichRecPhotons at "
-            << m_richRecPhotonLocation << endreq;
-      }
-
-    } else {
-
-      // Set smartref to TES photon container
-      m_photons = tdsPhotons;
-
-      // Remake local photon reference map
-      for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
-            iPhoton != tdsPhotons->end();
-            ++iPhoton ) {
-        m_photonDone[(int)(*iPhoton)->key()] = true;
-      }
-
-    }
-
-  }
-
+void RichPhotonCreator::handle ( const Incident& incident )
+{
+  if ( "BeginEvent" == incident.type() ) InitNewEvent();
 }
 
 RichRecPhoton*
@@ -145,7 +102,7 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
 
   // See if this photon already exists
   if ( m_photonDone[static_cast<int>(photonKey)] ) {
-    return (RichRecPhoton*)(m_photons->object(photonKey));
+    return (RichRecPhoton*)(richPhotons()->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
   }
@@ -182,13 +139,13 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
       bool keepPhoton = false;
       for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
         if ( m_photonSignal->predictedPixelSignal(newPhoton,
-                                                  (Rich::ParticleIDType)iHypo)
+                                                  static_cast<Rich::ParticleIDType>(iHypo) )
              > m_minPhotonProb[rad] ) { keepPhoton = true; break; }
       }
 
       if ( keepPhoton ) {
 
-        m_photons->insert( newPhoton, key );
+        richPhotons()->insert( newPhoton, key );
 
         // Build cross-references between objects
         segment->addToRichRecPixels( pixel );
@@ -224,7 +181,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
 void RichPhotonCreator::reconstructPhotons() const {
 
-  bool noPhots = m_photons->empty();
+  bool noPhots = richPhotons()->empty();
 
   // Iterate over all tracks
   for ( RichRecTracks::const_iterator iTrack =
@@ -349,6 +306,32 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
   return photons;
 }
 
-RichRecPhotons * RichPhotonCreator::richPhotons() const {
+RichRecPhotons * RichPhotonCreator::richPhotons() const
+{
+  if ( !m_photons ) {
+    SmartDataPtr<RichRecPhotons> tdsPhotons( evtSvc(),
+                                             m_richRecPhotonLocation );
+    if ( !tdsPhotons ) {
+
+      // Reinitialise the Photon Container
+      m_photons = new RichRecPhotons();
+
+      // Register new RichRecPhoton container to Gaudi data store
+      put( m_photons, m_richRecPhotonLocation );
+
+    } else {
+
+      // Set smartref to TES photon container
+      m_photons = tdsPhotons;
+
+      // Remake local photon reference map
+      for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
+            iPhoton != tdsPhotons->end();
+            ++iPhoton ) {
+        m_photonDone[static_cast<int>((*iPhoton)->key())] = true;
+      }
+
+    }
+  }
   return m_photons;
 }

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.3 2004-02-02 14:24:40 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.4 2004-03-16 13:41:44 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -19,7 +19,8 @@ RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::strin
                                                                 const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
-    m_smartIDTool ( 0 )
+    m_smartIDTool ( 0 ),
+    m_allDone     ( false )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -34,96 +35,50 @@ RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::strin
 
 StatusCode RichPixelCreatorFromMCRichHits::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Setup incident services
-  IIncidentSvc * incSvc;
-  if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
-    msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
-    incSvc->release();
-  }
+  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
+  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+
+  // Make sure we are ready for a new event
+  InitNewEvent();
 
   // Informational printout
-  msg << MSG::DEBUG
-      << " Using MCRichHits" << endreq;
+  debug() << " Using MCRichHits" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromMCRichHits::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release services and tools
-  releaseTool( m_smartIDTool );
+StatusCode RichPixelCreatorFromMCRichHits::finalize()
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromMCRichHits::handle ( const Incident& incident ) {
-
-  if ( "BeginEvent" == incident.type() ) {
-
-    // Initialise navigation data
-    m_pixelExists.clear();
-    m_pixelDone.clear();
-    m_allDone = false;
-
-    SmartDataPtr<RichRecPixels> tdsPixels( eventSvc(),
-                                           m_richRecPixelLocation );
-    if ( !tdsPixels ) {
-
-      // Reinitialise the Pixel Container
-      m_pixels = new RichRecPixels();
-
-      // Register new RichRecPhoton container to Gaudi data store
-      if ( !eventSvc()->registerObject(m_richRecPixelLocation, m_pixels) ) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register RichRecPixels at "
-            << m_richRecPixelLocation << endreq;
-      }
-
-    } else {
-
-      // Set smartref to TES pixel container
-      m_pixels = tdsPixels;
-
-      // Remake local pixel reference map
-      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
-            iPixel != tdsPixels->end();
-            ++iPixel ) {
-        m_pixelExists[(long int)(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(long int)(*iPixel)->smartID()] = true;
-      }
-
-    }
-
-  } // end begin event if
-
+void RichPixelCreatorFromMCRichHits::handle ( const Incident& incident )
+{
+  if ( "BeginEvent" == incident.type() ) InitNewEvent();
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * 
+RichRecPixel *
 RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
   // Try to cast to MCRichHit
   const MCRichHit * hit = dynamic_cast<const MCRichHit*>(obj);
   if ( !hit ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Parent not of type MCRichHit" << endreq;
+    warning() << "Parent not of type MCRichHit" << endreq;
     return NULL;
   }
 
@@ -144,7 +99,7 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
         // Make a new RichRecPixel
         newPixel = new RichRecPixel();
-        m_pixels->insert( newPixel );
+        richPixels()->insert( newPixel );
 
         // Positions
         newPixel->setGlobalPosition( hit->entry() );
@@ -176,18 +131,12 @@ StatusCode RichPixelCreatorFromMCRichHits::newPixels() const {
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<MCRichHits> hits( eventSvc(), m_mcHitsLocation );
+  SmartDataPtr<MCRichHits> hits( evtSvc(), m_mcHitsLocation );
   if ( !hits ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to locate MCRichHits at "
-        << m_mcHitsLocation << endreq;
-    return StatusCode::FAILURE;
+    return Error( "Failed to locate MCRichHits at " + m_mcHitsLocation );
   } else {
-    if ( msgLevel(MSG::DEBUG) ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::DEBUG << "located " << hits->size() << " MCRichHits at "
-          << m_mcHitsLocation << endreq;
-    }
+    debug() << "located " << hits->size() << " MCRichHits at "
+            << m_mcHitsLocation << endreq;
   }
 
   for ( MCRichHits::iterator hit = hits->begin();
@@ -199,5 +148,31 @@ StatusCode RichPixelCreatorFromMCRichHits::newPixels() const {
 
 RichRecPixels * RichPixelCreatorFromMCRichHits::richPixels() const
 {
+  if ( !m_pixels ) {
+    SmartDataPtr<RichRecPixels> tdsPixels( evtSvc(),
+                                           m_richRecPixelLocation );
+    if ( !tdsPixels ) {
+
+      // Reinitialise the Pixel Container
+      m_pixels = new RichRecPixels();
+
+      // Register new RichRecPhoton container to Gaudi data store
+      put( m_pixels, m_richRecPixelLocation );
+
+    } else {
+
+      // Set smartref to TES pixel container
+      m_pixels = tdsPixels;
+
+      // Remake local pixel reference map
+      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
+            iPixel != tdsPixels->end();
+            ++iPixel ) {
+        m_pixelExists[(long int)(*iPixel)->smartID()] = *iPixel;
+        m_pixelDone[(long int)(*iPixel)->smartID()] = true;
+      }
+
+    }
+  }
   return m_pixels;
 }

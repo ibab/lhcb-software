@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDMonitor.cpp,v 1.1.1.1 2003-06-30 16:10:55 jonesc Exp $
+// $Id: RichGlobalPIDMonitor.cpp,v 1.2 2004-03-16 13:43:35 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -29,12 +29,11 @@ RichGlobalPIDMonitor::~RichGlobalPIDMonitor() {}
 //  Initialize
 StatusCode RichGlobalPIDMonitor::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -42,8 +41,7 @@ StatusCode RichGlobalPIDMonitor::initialize() {
 // Main execution
 StatusCode RichGlobalPIDMonitor::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -51,8 +49,7 @@ StatusCode RichGlobalPIDMonitor::execute() {
 //  Finalize
 StatusCode RichGlobalPIDMonitor::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecAlgBase::finalize();

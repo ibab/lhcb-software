@@ -3,6 +3,7 @@
 
 // Cheat tracks
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromCheatedTrStoredTracks/RichTrackCreator" };
+ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMakerFromMCRichTracks/RichDetTrSegMaker" };
 
 // Cheat pixels
 //ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreator" };

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlgBase.cpp,v 1.3 2004-02-04 19:17:06 jonesc Exp $
+// $Id: RichGlobalPIDAlgBase.cpp,v 1.4 2004-03-16 13:43:34 jonesc Exp $
 // Include files
 
 // local
@@ -37,44 +37,5 @@ RichGlobalPIDAlgBase::RichGlobalPIDAlgBase( const std::string& name,
 // Destructor
 RichGlobalPIDAlgBase::~RichGlobalPIDAlgBase() { }
 
-StatusCode RichGlobalPIDAlgBase::gpidTracks()
-{
-  SmartDataPtr<RichGlobalPIDTracks> GPIDtracks ( eventSvc(), m_richGPIDTrackLocation );
-  if ( !GPIDtracks ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to locate RichGlobalPIDTracks" << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_GPIDtracks = GPIDtracks;
 
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichGlobalPIDAlgBase::gpidPIDs()
-{
-  SmartDataPtr<RichGlobalPIDs> GPIDs ( eventSvc(), m_richGPIDLocation );
-  if ( !GPIDs ) {
-    MsgStream msg ( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to locate RichGlobalPIDs at "
-        << m_richGPIDLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_GPIDs = GPIDs;
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichGlobalPIDAlgBase::gpidSummary()
-{
-  SmartDataPtr<RichGlobalPIDSummary> summary ( eventSvc(), m_richGPIDSummaryLocation );
-  if ( !summary ) {
-    MsgStream msg ( msgSvc(), name() );
-    msg << MSG::WARNING << "Failed to locate RichGlobalSummary at "
-        << m_richGPIDSummaryLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_GPIDSummary = summary;
-
-  return StatusCode::SUCCESS;
-}
 

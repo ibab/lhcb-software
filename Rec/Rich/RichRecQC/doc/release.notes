@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-02-20 - Chris Jones
+ - Adapt to new GaudiAlgorithm base class
+ - Add options files for DaVinci running
+
 !======================== RichRecQC v1r5 2004-02-09 ========================
 ! 2004-01-29 - Chris Jones
  - Minor re-organisation of job option files + updates to PID monitor

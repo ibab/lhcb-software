@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.cpp,v 1.3 2004-02-02 14:26:59 jonesc Exp $
+// $Id: RichGeomEffPhotonTracing.cpp,v 1.4 2004-03-16 13:45:03 jonesc Exp $
 
 // local
 #include "RichGeomEffPhotonTracing.h"
@@ -34,24 +34,21 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
 
 StatusCode RichGeomEffPhotonTracing::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",     m_rayTrace );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
 
   // randomn number service
-  IRndmGenSvc * randSvc;
-  if ( serviceLocator()->service( "RndmGenSvc", randSvc, true ) ) {
-    if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) {
-      msg << MSG::ERROR << "Unable to initialise randomn numbers" << endreq;
-      return StatusCode::FAILURE;
-    }
-  } else { return StatusCode::FAILURE; }
+  IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
+  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) {
+    return Error( "Unable to initialise randomn numbers" );
+  }
 
   // Set up cached parameters for geometrical efficiency calculation
   m_pdInc = 1.0 / ( static_cast<double>(m_nGeomEff) );
@@ -65,22 +62,18 @@ StatusCode RichGeomEffPhotonTracing::initialize() {
   }
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using full photon ray tracing" << endreq
-      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
+  debug() << " Using full photon ray tracing" << endreq
+          << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichGeomEffPhotonTracing::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
-  // Release tools and services
+  // Release things
   m_uniDist.finalize();
-  releaseTool( m_rayTrace   );
-  releaseTool( m_ckAngle    );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -132,7 +125,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                emissionPt,
                                                photDir,
                                                photon,
-                                               DeRichPDPanel::circle ) ) {
+                                               DeRichHPDPanel::circle ) ) {
 
           ++nDetect;
           segment->addToGeomEfficiencyPerPD( id,

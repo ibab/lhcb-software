@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-03-14 - Chris Jones
+ - Adapt to new Gaudi base classes
+ - Improvements to creator tools for increased robustness to when 
+   during running the tool is created
+
 !====================== RichRecTools v2r7 2004-02-09 ======================
 ! 2004-01-26 - Chris Jones
  - Minor changes related to changes in base packages

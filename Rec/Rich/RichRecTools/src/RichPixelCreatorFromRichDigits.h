@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.4 2004-02-02 14:27:01 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.h,v 1.5 2004-03-16 13:45:05 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
@@ -21,7 +21,7 @@
 /** @class RichPixelCreatorFromRichDigits RichPixelCreatorFromRichDigits.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the OO digitisation as the parent objects.
+ *  Uses RichDigits from the digitisation as the parent objects.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,22 +50,27 @@ public:
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
-  
+
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
-  
+
   /// Form all possible RichRecPixels from input RichDigits.
   /// The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
-  
+
   /// Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
 
-private:
+private: // methods
+
+  /// Initialise for a new event
+  void InitNewEvent();
+
+private: // data
 
   /// Pointer to RichRecPixels
-  RichRecPixels * m_pixels;
+  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
@@ -84,5 +89,15 @@ private:
   mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
 };
+
+inline void RichPixelCreatorFromRichDigits::InitNewEvent()
+{
+  // Initialise navigation data
+  m_allDone = false;
+  m_pixelExists.clear();
+  m_pixelDone.clear();
+  m_pixels = 0;
+}
+
 
 #endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H

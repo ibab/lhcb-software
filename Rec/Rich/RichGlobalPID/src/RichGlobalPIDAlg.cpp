@@ -1,5 +1,6 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.16 2004-02-04 19:11:29 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.17 2004-03-16 13:43:33 jonesc Exp $
 // Include files
+
 
 // local
 #include "RichGlobalPIDAlg.h"
@@ -60,12 +61,12 @@ RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
 RichGlobalPIDAlg::~RichGlobalPIDAlg() {}
 
 //  Initialize
-StatusCode RichGlobalPIDAlg::initialize() {
-
-  MsgStream msg(msgSvc(), name());
+StatusCode RichGlobalPIDAlg::initialize()
+{
 
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
   acquireTool( "RichPhotonSignal",        m_photonSig );
@@ -74,25 +75,20 @@ StatusCode RichGlobalPIDAlg::initialize() {
   // Initialise parameters
   m_logMinSig = log(m_minSig);
 
-  msg << MSG::DEBUG << "Initialize" << endreq
-      << " Max Track Iterations         = " << m_maxTrackIterations << endreq
-      << " Forced change parameters     = " << m_cP << endreq
-      << " Track Freeze parameters      = " << m_fP << endreq
-      << " Min deltaLL for update       = " << m_epsilon << endreq
-      << " DeltaLL signal speed params  = " << m_apxSig << " " << m_minSig << endreq;
+  debug() << "Initialize" << endreq
+          << " Max Track Iterations         = " << m_maxTrackIterations << endreq
+          << " Forced change parameters     = " << m_cP << endreq
+          << " Track Freeze parameters      = " << m_fP << endreq
+          << " Min deltaLL for update       = " << m_epsilon << endreq
+          << " DeltaLL signal speed params  = " << m_apxSig << " " << m_minSig << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichGlobalPIDAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_photonSig );
-  releaseTool( m_tkSignal );
+StatusCode RichGlobalPIDAlg::finalize()
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecAlgBase::finalize();
@@ -101,10 +97,7 @@ StatusCode RichGlobalPIDAlg::finalize() {
 // Main execution
 StatusCode RichGlobalPIDAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // Update RichRecEvent pointers
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -119,11 +112,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   if ( !richPhotons() ) return StatusCode::FAILURE;
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
-    if ( msgLevel(MSG::DEBUG) ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::DEBUG << "Reconstructed " << richPhotons()->size()
-          << " photon candidates" << endreq;
-    }
+    debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
   }
 
   // Compute complete likelihood for event with starting hypotheses
@@ -134,11 +123,8 @@ StatusCode RichGlobalPIDAlg::execute() {
   if ( !initMinLogLikelihood() ) return StatusCode::FAILURE;
 
   const double finalLL = logLikelihood();
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "LogLL before/after initial minimisation = "
-        << m_currentBestLL << "/" << finalLL << endreq;
-  }
+  debug() << "LogLL before/after initial minimisation = "
+          << m_currentBestLL << "/" << finalLL << endreq;
   m_currentBestLL = finalLL;
 
   // iterate to minimum solution
@@ -148,9 +134,8 @@ StatusCode RichGlobalPIDAlg::execute() {
   bool tryAgain = true;
   while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) {
     if ( m_trackIteration > m_maxTrackIterations ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::WARNING << "Taken more than " << m_maxTrackIterations
-          << " iterations, quitting." << endreq;
+      warning() << "Taken more than " << m_maxTrackIterations
+                << " iterations, quitting." << endreq;
       break;
     }
 
@@ -163,17 +148,15 @@ StatusCode RichGlobalPIDAlg::execute() {
       minTrList::iterator iTrack;
       for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack ) {
         if ( Rich::Unknown == iTrack->second ) {
-          MsgStream  msg( msgSvc(), name() );
-          msg << MSG::ERROR << "Track " << (iTrack->first)->key()
-              << " has been Id'ed as Unknown !!" << endreq;
+          err() << "Track " << (iTrack->first)->key()
+                << " has been Id'ed as Unknown !!" << endreq;
         } else {
           if ( msgLevel(MSG::VERBOSE) ) {
-            MsgStream  msg( msgSvc(), name() );
-            msg << MSG::VERBOSE << "Changing Track " << (iTrack->first)->key()
-                << " hypothesis to from "
-                << (iTrack->first)->richRecTrack()->currentHypothesis()
-                << " to " << iTrack->second << ". LogL = " << m_currentBestLL
-                << endreq;
+            verbose() << "Changing Track " << (iTrack->first)->key()
+                      << " hypothesis to from "
+                      << (iTrack->first)->richRecTrack()->currentHypothesis()
+                      << " to " << iTrack->second << ". LogL = " << m_currentBestLL
+                      << endreq;
           }
           // Update hypothesis to best
           (iTrack->first)->richRecTrack()->setCurrentHypothesis( iTrack->second );
@@ -190,12 +173,9 @@ StatusCode RichGlobalPIDAlg::execute() {
     ++m_trackIteration;
   }
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Performed " << m_trackIteration
-        << " track minimisation iteration(s). Final LogL = "
-        << m_currentBestLL << endreq;
-  }
+  debug() << "Performed " << m_trackIteration
+          << " track minimisation iteration(s). Final LogL = "
+          << m_currentBestLL << endreq;
 
   // update event LL vector after processing
   m_GPIDSummary->addToEventLL( m_currentBestLL );
@@ -222,7 +202,7 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
 
     // Loop over all particle codes
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      Rich::ParticleIDType hypo = (Rich::ParticleIDType)iHypo;
+      Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Skip analysing starting hypothesis
       if ( hypo == rRTrack->currentHypothesis() ) continue;
@@ -243,13 +223,14 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
       bool threshold = true;
       for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo ) {
         if ( m_tkSignal->nDetectablePhotons( rRTrack,
-                                             (Rich::ParticleIDType)ihypo ) > 0 ) {
+                                             static_cast<Rich::ParticleIDType>(ihypo) ) > 0 ) {
           threshold = false; break;
         }
       }
       if ( threshold ) {
         for ( int ihypo = iHypo; ihypo < Rich::NParticleTypes; ++ihypo ) {
-          (*track)->globalPID()->setParticleDeltaLL((Rich::ParticleIDType)ihypo,deltaLogL);
+          (*track)->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(ihypo),
+                                                     deltaLogL );
         }
         break;
       }
@@ -275,12 +256,11 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
         track != minTrack.end();
         ++track ) {
     if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << "initMinLogLikelihood : Track "
-          << format("%4i",(*track)->key())
-          << " prefers hypothesis " <<  *hypo << " to "
-          << (*track)->richRecTrack()->currentHypothesis()
-          << ". DLL = " << *dll << endreq ;
+      verbose() << "initMinLogLikelihood : Track "
+                << format("%4i",(*track)->key())
+                << " prefers hypothesis " <<  *hypo << " to "
+                << (*track)->richRecTrack()->currentHypothesis()
+                << ". DLL = " << *dll << endreq ;
     }
     // set best hypothesis
     (*track)->richRecTrack()->setCurrentHypothesis( *hypo );
@@ -343,7 +323,7 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
     bool minFound = false;
     double minTrackDll = 999999;
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      Rich::ParticleIDType hypothesis = (Rich::ParticleIDType)iHypo;
+      Rich::ParticleIDType hypothesis = static_cast<Rich::ParticleIDType>(iHypo);
 
       // Skip analysing starting hpyothesis
       if ( hypothesis == rRTrack->currentHypothesis() ) continue;
@@ -357,11 +337,10 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
       // Set new minimums if lower logLikelihood
       if ( deltaLogL < m_epsilon && deltaLogL < minEventDll ) {
         if ( msgLevel(MSG::VERBOSE) ) {
-          MsgStream msg( msgSvc(), name() );
-          msg << MSG::VERBOSE << "findMinLogLikelihood : Track "
-              << format("%4i",gTrack->key()) << " prefers hypothesis "
-              << hypothesis << " to " << rRTrack->currentHypothesis()
-              << ". DLL = " << deltaLogL << endreq ;
+          verbose() << "findMinLogLikelihood : Track "
+                    << format("%4i",gTrack->key()) << " prefers hypothesis "
+                    << hypothesis << " to " << rRTrack->currentHypothesis()
+                    << ". DLL = " << deltaLogL << endreq ;
         }
         minFound = true;
         minTrack = gTrack;
@@ -377,13 +356,13 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
       bool threshold = true;
       for ( int hypo = iHypo; hypo < Rich::NParticleTypes; ++hypo ) {
         if ( m_tkSignal->nDetectablePhotons( gTrack->richRecTrack(),
-                                             (Rich::ParticleIDType)hypo ) > 0 ) {
+                                             static_cast<Rich::ParticleIDType>(hypo) ) > 0 ) {
           threshold = false; break;
         }
       }
       if ( threshold ) {
         for ( int hypo = iHypo; hypo < Rich::NParticleTypes; ++hypo ) {
-          gTrack->globalPID()->setParticleDeltaLL( (Rich::ParticleIDType)hypo,
+          gTrack->globalPID()->setParticleDeltaLL( static_cast<Rich::ParticleIDType>(hypo),
                                                    deltaLogL );
         }
         break;
@@ -435,7 +414,7 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
       double newSig = oldSig;
 
       // cache end point since container size will not change in proceeding loop
-      const RichRecPixel::Photons::iterator iPhotonEnd = photons.end(); 
+      const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
       for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
             iPhoton != iPhotonEnd; ++iPhoton ) {
         RichRecPhoton * photon = *iPhoton;
@@ -504,12 +483,14 @@ double RichGlobalPIDAlg::logLikelihood() {
 
   }
 
-  return trackLL+pixelLL;
+  return (trackLL+pixelLL);
 }
+
+// Please don't look at these following methods ....
 
 void RichGlobalPIDAlg::updateDllThres() {
 
-  double m, c, A, B;
+  double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_cP[2] ) {
     A = m_cP[4];
   } else if ( m_GPIDtracks->size() > m_cP[3] ) {
@@ -542,7 +523,7 @@ void RichGlobalPIDAlg::updateDllThres() {
 
 void RichGlobalPIDAlg::updateFreezeOutValue() {
 
-  double m, c, A, B;
+  double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_fP[2] ) {
     A = m_fP[4];
   } else if ( m_GPIDtracks->size() > m_fP[3] ) {

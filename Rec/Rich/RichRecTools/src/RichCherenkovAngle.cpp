@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.5 2004-02-02 14:26:57 jonesc Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.6 2004-03-16 13:45:02 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -33,11 +33,11 @@ RichCherenkovAngle::RichCherenkovAngle ( const std::string& type,
 
 StatusCode RichCherenkovAngle::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichExpectedTrackSignal", m_signal       );
@@ -49,13 +49,7 @@ StatusCode RichCherenkovAngle::initialize() {
 
 StatusCode RichCherenkovAngle::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_signal );
-  releaseTool( m_refIndex );
-  releaseTool( m_richPartProp );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -96,7 +90,7 @@ double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
   return segment->averageCKTheta( id );
 }
 
-double  RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment ) const
+double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment ) const
 {
   return avgCherenkovTheta( segment, segment->richRecTrack()->currentHypothesis() );
 }

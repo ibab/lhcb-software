@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.10 2004-02-02 14:27:00 jonesc Exp $
+// $Id: RichPhotonCreator.h,v 1.11 2004-03-16 13:45:04 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -79,6 +79,9 @@ private: // private methods
                                RichRecPixel * pixel,
                                RichRecPhotonKey & key ) const;
 
+  /// Initialise for a new event
+  void InitNewEvent();
+
 private: // private data
 
   // Pointers to tool instances
@@ -87,7 +90,7 @@ private: // private data
   IRichPhotonReconstruction * m_photonReco; ///< Pointer to photon reconstruction tool
 
   /// Pointer to RichRecPhotons
-  RichRecPhotons * m_photons;
+  mutable RichRecPhotons * m_photons;
 
   /// Location of RichRecPhotons in TES
   std::string m_richRecPhotonLocation;
@@ -105,5 +108,13 @@ private: // private data
   std::vector<double> m_minPhotonProb;
 
 };
+
+inline void RichPhotonCreator::InitNewEvent()
+{
+  // Initialise navigation data
+  m_photonDone.clear();
+  m_photons = 0;
+}
+
 
 #endif // RICHRECTOOLS_RICHPHOTONCREATOR_H

@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.cpp,v 1.3 2004-02-02 14:27:00 jonesc Exp $
+// $Id: RichPhotonPredictor.cpp,v 1.4 2004-03-16 13:45:04 jonesc Exp $
 
 // local
 #include "RichPhotonPredictor.h"
@@ -35,11 +35,11 @@ RichPhotonPredictor::RichPhotonPredictor( const std::string& type,
 
 StatusCode RichPhotonPredictor::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Initialise some variables
   m_minROI2.push_back( m_minROI[0]*m_minROI[0] );
@@ -50,17 +50,15 @@ StatusCode RichPhotonPredictor::initialize() {
   m_maxROI2.push_back( m_maxROI[2]*m_maxROI[2] );
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Min Region of Interest       = " << m_minROI << endreq
-      << " Max Region of Interest       = " << m_maxROI << endreq;
+  debug() << " Min Region of Interest       = " << m_minROI << endreq
+          << " Max Region of Interest       = " << m_maxROI << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichPhotonPredictor::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();

@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2003-07-01
-# Maintainer : Chris Jones
+# Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
 package           RichRecSys
-version           v1r7p1
+version           v1r8
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -14,23 +14,23 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ         v1r2   Rich
+use RichDAQ         v1r3   Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r9p1 Rich
-use RichRecTools    v2r7   Rich
-use RichRecCommon   v1r4   Rich
+use RichRecBase     v1r10  Rich
+use RichRecTools    v2r8   Rich
+use RichRecCommon   v1r5   Rich
 
 # PID packages
-use RichGlobalPID   v1r4   Rich
-use RichLocalPID    v1r5   Rich
-use RichRingRefit   v1r5   Rich
+use RichGlobalPID   v1r5   Rich
+use RichLocalPID    v1r6   Rich
+use RichRingRefit   v1r6   Rich
 
 # Result merging algorithms
-use RichPIDMerge    v1r2   Rich
+use RichPIDMerge    v1r3   Rich
 
 # MC packages
-use RichRecMCTools  v1r2   Rich
+use RichRecMCTools  v1r3   Rich
 
 # =================================
 # Developmental algorithms..

@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.cpp,v 1.5 2004-02-02 14:26:59 jonesc Exp $
+// $Id: RichInterpCherenkovResolution.cpp,v 1.6 2004-03-16 13:45:03 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -25,7 +25,9 @@ const        IToolFactory& RichInterpCherenkovResolutionFactory = s_factory ;
 RichInterpCherenkovResolution::RichInterpCherenkovResolution ( const std::string& type,
                                                                const std::string& name,
                                                                const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_ckAngle ( 0 )
+{
 
   declareInterface<IRichCherenkovResolution>(this);
 
@@ -34,21 +36,24 @@ RichInterpCherenkovResolution::RichInterpCherenkovResolution ( const std::string
   declareProperty( "NAerogelResBins",    m_thebin[Rich::Aerogel] );
   declareProperty( "AerogelForwardRes",  m_theerr[Rich::Aerogel][Rich::Track::Forward] );
   declareProperty( "AerogelMatchRes",    m_theerr[Rich::Aerogel][Rich::Track::Match] );
-  declareProperty( "AerogelUpStreamRes", m_theerr[Rich::Aerogel][Rich::Track::UpStream] );
+  declareProperty( "AerogelFollowRes", m_theerr[Rich::Aerogel][Rich::Track::Follow] );
+  declareProperty( "AerogelKsTrackRes", m_theerr[Rich::Aerogel][Rich::Track::KsTrack] );
   declareProperty( "AerogelSeedRes",     m_theerr[Rich::Aerogel][Rich::Track::Seed] );
   declareProperty( "AerogelVTTRes",      m_theerr[Rich::Aerogel][Rich::Track::VeloTT] );
 
   declareProperty( "NC4F10ResBins",    m_thebin[Rich::C4F10] );
   declareProperty( "C4F10ForwardRes",  m_theerr[Rich::C4F10][Rich::Track::Forward] );
   declareProperty( "C4F10MatchRes",    m_theerr[Rich::C4F10][Rich::Track::Match] );
-  declareProperty( "C4F10UpStreamRes", m_theerr[Rich::C4F10][Rich::Track::UpStream] );
+  declareProperty( "C4F10FollowRes", m_theerr[Rich::C4F10][Rich::Track::Follow] );
+  declareProperty( "C4F10KsTrackRes", m_theerr[Rich::C4F10][Rich::Track::KsTrack] );
   declareProperty( "C4F10SeedRes",     m_theerr[Rich::C4F10][Rich::Track::Seed] );
   declareProperty( "C4F10VTTRes",      m_theerr[Rich::C4F10][Rich::Track::VeloTT] );
 
   declareProperty( "NCF4ResBins",    m_thebin[Rich::CF4] );
   declareProperty( "CF4ForwardRes",  m_theerr[Rich::CF4][Rich::Track::Forward] );
   declareProperty( "CF4MatchRes",    m_theerr[Rich::CF4][Rich::Track::Match] );
-  declareProperty( "CF4UpStreamRes", m_theerr[Rich::CF4][Rich::Track::UpStream] );
+  declareProperty( "CF4FollowRes", m_theerr[Rich::CF4][Rich::Track::Follow] );
+  declareProperty( "CF4KsTrackRes", m_theerr[Rich::CF4][Rich::Track::KsTrack] );
   declareProperty( "CF4SeedRes",     m_theerr[Rich::CF4][Rich::Track::Seed] );
   declareProperty( "CF4VTTRes",      m_theerr[Rich::CF4][Rich::Track::VeloTT] );
 
@@ -56,11 +61,11 @@ RichInterpCherenkovResolution::RichInterpCherenkovResolution ( const std::string
 
 StatusCode RichInterpCherenkovResolution::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
@@ -70,29 +75,22 @@ StatusCode RichInterpCherenkovResolution::initialize() {
     for ( int iT = 0; iT < 5; ++iT ) {
       m_ckRes[iR][iT] = new Rich1DTabFunc( m_thebin[iR], m_theerr[iR][iT] );
       if ( !(m_ckRes[iR][iT])->valid() ) {
-        msg << MSG::ERROR << "Failed to initialise interpolator for "
-            << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT << endreq;
+        err() << "Failed to initialise interpolator for "
+              << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT << endreq;
         return StatusCode::FAILURE;
       }
     }
   }
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using interpolated track resolutions" << endreq;
+  debug() << " Using interpolated track resolutions" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichInterpCherenkovResolution::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Finalize" << endreq;
-  }
-
-  // release tools
-  releaseTool( m_ckAngle );
+  debug() << "Finalize" << endreq;
 
   // clean up interpolators
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {

@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.6 2004-02-02 14:27:03 jonesc Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.7 2004-03-16 13:45:06 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -36,11 +36,11 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
 
 StatusCode RichSellmeirFunc::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   IRichParticleProperties * partProp;
@@ -112,10 +112,17 @@ StatusCode RichSellmeirFunc::initialize() {
   }
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using XML version" << endreq;
+  debug() << " Using XML version" << endreq;
 
   return StatusCode::SUCCESS;
+}
+
+StatusCode RichSellmeirFunc::finalize() 
+{
+  debug() << "Finalize" << endreq;
+
+  // Execute base class method
+  return RichRecToolBase::finalize();
 }
 
 double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
@@ -145,13 +152,4 @@ double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad,
   const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );
 
   return m_X[rad] * (X-Y);
-}
-
-StatusCode RichSellmeirFunc::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // Execute base class method
-  return RichRecToolBase::finalize();
 }

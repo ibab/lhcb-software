@@ -5,3 +5,8 @@ BrunelMoniRICHSeq.Members += { "RichRecoQC" };
 // PID Monitors for all tracks combined
 #include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"
 #include "$RICHRECQCOPTS/pid/AllTracks_Para.opts"
+
+// Suppress errors from Linker
+MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
+                         "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
+

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlgBase.h,v 1.2 2003-10-13 16:13:34 jonrob Exp $
+// $Id: RichGlobalPIDAlgBase.h,v 1.3 2004-03-16 13:43:34 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALGBASE_H
 #define RICHRECALGS_RICHGLOBALPIDALGBASE_H 1
 
@@ -67,5 +67,23 @@ protected:
   std::string m_richGPIDName;
 
 };
+
+inline StatusCode RichGlobalPIDAlgBase::gpidTracks()
+{
+  m_GPIDtracks = get<RichGlobalPIDTracks>( m_richGPIDTrackLocation );
+  return StatusCode::SUCCESS;
+}
+
+inline StatusCode RichGlobalPIDAlgBase::gpidPIDs()
+{
+  m_GPIDs = get<RichGlobalPIDs>( m_richGPIDLocation );
+  return StatusCode::SUCCESS;
+}
+
+inline StatusCode RichGlobalPIDAlgBase::gpidSummary()
+{
+  m_GPIDSummary = get<RichGlobalPIDSummary>( m_richGPIDSummaryLocation );
+  return StatusCode::SUCCESS;
+}
 
 #endif // RICHRECALGS_RICHGLOBALPIDALGBASE_H

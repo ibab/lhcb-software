@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.h,v 1.2 2004-02-02 14:24:40 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.h,v 1.3 2004-03-16 13:41:44 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H 1
 
@@ -62,10 +62,15 @@ public:
   /// Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
 
-private:
+private: // methods
+
+  /// Initialise for a new event
+  void InitNewEvent();
+
+private: // data
 
   /// Pointer to RichRecPixels
-  RichRecPixels * m_pixels;
+  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
@@ -84,5 +89,14 @@ private:
   mutable std::map< long int, bool > m_pixelDone;
 
 };
+
+inline void RichPixelCreatorFromMCRichHits::InitNewEvent()
+{
+  // Initialise navigation data
+  m_allDone = false;
+  m_pixelExists.clear();
+  m_pixelDone.clear();
+  m_pixels = 0;
+}
 
 #endif // RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H

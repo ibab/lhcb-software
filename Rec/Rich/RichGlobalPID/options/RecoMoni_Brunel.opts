@@ -4,6 +4,16 @@
 //RichGloAlgMoni.MCHistoPath = "RICH/GLOBAL/ALG/MC/";
 //RichGloAlgMoni.HistoPath = "RICH/GLOBAL/ALG/";
 
+// timing monitor
+BrunelMoniRICHSeq.Members += { "RichRecTimeMonitor/RichGloTime" };
+RichGloTime.MCHistoPath = "RICH/GLOBAL/TIME/MC/";
+RichGloTime.HistoPath   = "RICH/GLOBAL/TIME/";
+RichGloTime.TimingName = "RichGloPID";
+RichGloTime.Algorithms = { "RichGloPIDInit", "RichGloPIDTrSel",
+                           "RichGloPIDDigSel", "RichGloPIDFin",
+                           "RichGloPIDIt1", "RichGloPIDIt2" };
+RichGloTime.RichPIDLocation = "Rec/Rich/GlobalPID/PIDs";
+
 // Monitor for Global PIDs : 2-100 GeV/c
 BrunelMoniRICHSeq.Members += { "RichPIDQC/RiGloPIDMoni2To100" };
 RiGloPIDMoni2To100.InputPIDs = "Rec/Rich/GlobalPID/PIDs";

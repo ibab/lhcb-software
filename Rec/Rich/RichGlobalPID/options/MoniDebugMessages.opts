@@ -3,5 +3,11 @@
 // alg monitor
 RichGloAlgMoni.OutputLevel = 2;
 
+// Time monitor
+RichGloTime.OutputLevel = 2;
+
 // global results
 RiGloPIDMoni2To100.OutputLevel = 2;
+RiGloPIDMoni2To10.OutputLevel = 2;
+RiGloPIDMoni10To70.OutputLevel = 2;
+RiGloPIDMoni70To100.OutputLevel = 2;

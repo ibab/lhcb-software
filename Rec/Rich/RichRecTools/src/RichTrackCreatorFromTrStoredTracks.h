@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.6 2004-02-02 14:27:07 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.7 2004-03-16 13:45:07 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -77,10 +77,13 @@ private: // methods
   /// Load the TrStoredTracks
   const bool loadTrStoredTracks() const;
 
+  /// Initialise for a new event
+  void InitNewEvent();
+
 private: // data
 
   /// Pointer to RichRecTracks
-  RichRecTracks * m_tracks;
+  mutable RichRecTracks * m_tracks;
 
   /// Pointer to TrStoredTracks
   mutable TrStoredTracks * m_trTracks;
@@ -115,6 +118,20 @@ private: // data
   // Momentum cut values for each track type
   std::vector<double> m_tkPcut;
 
+  // Initialise track count
+  typedef std::vector<unsigned> TrackTypeCount;
+  mutable TrackTypeCount m_nTracks;
+
 };
+
+inline void RichTrackCreatorFromTrStoredTracks::InitNewEvent()
+{
+  m_trackDone.clear();
+  m_allDone  = false;
+  m_trTracks = 0;
+  m_tracks   = 0;
+  for ( TrackTypeCount::iterator i = m_nTracks.begin(); 
+        i != m_nTracks.end(); ++i ) { *i = 0; }
+}
 
 #endif // RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H

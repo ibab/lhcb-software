@@ -1,4 +1,4 @@
-// $Id: RichGeomEffFixedValue.cpp,v 1.4 2004-02-02 14:26:59 jonesc Exp $
+// $Id: RichGeomEffFixedValue.cpp,v 1.5 2004-03-16 13:45:03 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -34,29 +34,24 @@ RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
 
 StatusCode RichGeomEffFixedValue::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle    );
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using fixed value calculation" << endreq;
+  debug() << " Using fixed value calculation" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichGeomEffFixedValue::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // Release tools and services
-  releaseTool( m_ckAngle    );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -68,8 +63,8 @@ double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
   if ( !segment->geomEfficiency().dataIsValid(id) ) {
 
     // compute efficiency
-    const double eff = ( m_ckAngle->avgCherenkovTheta( segment, id ) <= 0 ? 0 :
-                         m_fixedValue[segment->trackSegment().radiator()] );
+    const double eff = ( m_ckAngle->avgCherenkovTheta( segment, id ) > 0 ?
+                         m_fixedValue[segment->trackSegment().radiator()] : 0 );
 
     // Set the geom eff
     segment->setGeomEfficiency( id, eff );
@@ -92,7 +87,7 @@ double RichGeomEffFixedValue::geomEfficiencyScat ( RichRecSegment * segment,
 
     double eff = 0;
     if ( segment->trackSegment().radiator() == Rich::Aerogel ) {
-      eff = ( m_ckAngle->avgCherenkovTheta(segment,id) <= 0 ? 0 : m_fixedScatValue );
+      eff = ( m_ckAngle->avgCherenkovTheta(segment,id) > 0 ? m_fixedScatValue : 0 );
     }
 
     // Assign this efficiency to all hypotheses

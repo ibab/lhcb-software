@@ -1,5 +1,8 @@
-// $Id: RichPIDQC.cpp,v 1.17 2004-02-02 14:24:02 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.18 2004-03-16 13:41:10 jonesc Exp $
 // Include files
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPIDQC.h"
@@ -45,38 +48,29 @@ RichPIDQC::~RichPIDQC() {};
 // Initialisation
 StatusCode RichPIDQC::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Initialize base class
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Check momentum cuts make sense
   if ( m_pMinCut >= m_pMaxCut ) {
-    msg << MSG::ERROR
-        << "Invalid Min/Max momentum cuts "
-        << m_pMinCut << "/" << m_pMaxCut << endreq;
+    err() << "Invalid Min/Max momentum cuts "
+          << m_pMinCut << "/" << m_pMaxCut << endreq;
     return StatusCode::FAILURE;
   }
 
   if ( m_truth ) {
 
     // Retrieve tracking association tool
-    if ( !toolSvc()->retrieveTool( m_tkMCTruthType, m_tkMCTruthName,
-                                   m_trackToMCP ) ) {
-      msg << MSG::DEBUG << " Tracking MCTruth not available" << endreq;
-      m_truth = false;
-    } else {
-      msg << MSG::DEBUG << " Successfully retrieved " << m_tkMCTruthType
-          << " as " << m_tkMCTruthName << endreq;
-    }
+    m_trackToMCP = tool<TrackFitAsct>( m_tkMCTruthType, m_tkMCTruthName );
+    debug() << " Successfully retrieved " << m_tkMCTruthType
+            << " as " << m_tkMCTruthName << endreq;
 
     // Retrieve particle property service
-    IParticlePropertySvc* ppSvc;
-    if ( !service( "ParticlePropertySvc", ppSvc, true ) ) {
-      msg << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
-      return StatusCode::FAILURE;
-    }
+    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+
     // Setup the PDG code mappings
     m_localID[ 0 ] = Rich::Unknown;
     m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
@@ -84,7 +78,9 @@ StatusCode RichPIDQC::initialize() {
     m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
     m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
     m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
-    ppSvc->release();
+
+    // release service
+    release( ppSvc );
 
   }
 
@@ -100,16 +96,17 @@ StatusCode RichPIDQC::initialize() {
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
+  {for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk )
+  { m_trackCount[0][iTk] = 0; m_trackCount[1][iTk] = 0; }}
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
-  msg << MSG::DEBUG
-      << " Track types selected   = " << m_trSelector.selectedTrackTypes() << endreq
-      << " RichPIDs location      = " << m_pidTDS << endreq
-      << " Histogram location     = " << m_hstPth << endreq;
+  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes() << endreq
+          << " RichPIDs location      = " << m_pidTDS << endreq
+          << " Histogram location     = " << m_hstPth << endreq;
   if ( m_truth ) {
-    msg << " MC Histogram location  = " << m_mcHstPth << endreq;
+    debug() << " MC Histogram location  = " << m_mcHstPth << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -196,8 +193,7 @@ StatusCode RichPIDQC::bookMCHistograms() {
 // Main execution
 StatusCode RichPIDQC::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   // Load data
   if ( !loadPIDData()   ) return StatusCode::SUCCESS;
@@ -231,8 +227,7 @@ StatusCode RichPIDQC::execute() {
       // Get TrStoredTrack SmartRef and perform track selection
       TrStoredTrack * trTrack = iPID->recTrack();
       if ( !trTrack ) {
-        msg << MSG::WARNING
-            << "Null TrStoredTrack reference for PID " << iPID->key() << endreq;
+        warning() << "Null TrStoredTrack reference for PID " << iPID->key() << endreq;
         continue;
       }
 
@@ -244,16 +239,20 @@ StatusCode RichPIDQC::execute() {
       const double tkPtot = ( pState ? pState->p()/GeV : 0 );
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
-      // Count PIDS
+      // Track type
+      Rich::Track::Type tkType = Rich::Track::type(trTrack);
+
+      // Count PIDS and tracks
+      ++m_trackCount[0][tkType];
       ++pidCount;
 
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
       if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
-      msg << MSG::DEBUG << "PID " << iPID->key() << " ("
-          << iPID->pidType() << "), Track " << trTrack->key()
-          << " (" << trTrack->history()<< ") " << tkPtot << " GeV/c, "
-          << "Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
+      debug() << "PID " << iPID->key() << " ("
+              << iPID->pidType() << "), Track " << trTrack->key()
+              << " (" << tkType << ") " << tkPtot << " GeV/c, "
+              << "Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
 
       // Fill histos for deltaLLS and probabilities
       m_ids->fill( pid+1 );
@@ -276,7 +275,8 @@ StatusCode RichPIDQC::execute() {
           mcpid = m_localID[abs(mcPart->particleID().pid())];
           if ( !iPID->isAboveThreshold( mcpid ) ) mcpid = Rich::BelowThreshold;
         }
-        msg << ", MCID '" << mcpid << "'" << endreq;
+        debug() << ", MCID '" << mcpid << "'" << endreq;
+        if ( Rich::Unknown != mcpid ) ++m_trackCount[1][tkType];
 
         // Fill performance tables
         m_perfTable->fill( mcpid+1, pid+1 );
@@ -318,7 +318,7 @@ StatusCode RichPIDQC::execute() {
         } // extra histos
 
       } else {
-        msg << endreq;
+        debug() << endreq;
       }
 
     } // end PID loop
@@ -341,16 +341,12 @@ StatusCode RichPIDQC::execute() {
 //  Finalize
 StatusCode RichPIDQC::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   if ( m_truth && m_finalPrintOut ) {
 
     // index variables
     int iRec, iTrue;
-
-    // Set printout level for following messages
-    msg << MSG::INFO;
 
     // compute efficiencies and purities
     double sumTot = 0;
@@ -424,45 +420,52 @@ StatusCode RichPIDQC::finalize() {
     trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
     trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-    msg << "-----------+-----------------------------------------------+-----------"
-        << endreq << "  Tracks   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : "
-        << m_trSelector.selectedTrackTypes() << endreq
-        << "-----------+-----------------------------------------------+-----------"
-        << endreq
-        << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"
-        << endreq
-        << "-----------+-----------------------------------------------+-----------"
-        << endreq
-        << "           |                                               |" << endreq;
+    info() << "-----------+-----------------------------------------------+-----------"
+           << endreq << "  Tk Sel   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
+    info() << " #Tks(+MC) |";
+    unsigned tkCount = 0;
+    for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "           |"; }
+      if ( m_trSelector.typeSelected((Rich::Track::Type)iTk) ) {
+        info() << " " << (Rich::Track::Type)iTk << " " << m_trackCount[0][iTk]
+               << "(" << m_trackCount[1][iTk] << ")";
+        ++tkCount;
+      }
+    }
+    info() << endreq
+           << "-----------+-----------------------------------------------+-----------"
+           << endreq
+           << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"
+           << endreq
+           << "-----------+-----------------------------------------------+-----------"
+           << endreq
+           << "           |                                               |" << endreq;
     std::string type[6] = { " Electron  |", " Muon      |", " Pion      |",
                             " Kaon      |", " Proton    |", " X         |" };
     for ( iRec = 0; iRec < 6; ++iRec ) {
-      msg << type[iRec] << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f     |%7.2f",
-                                   m_sumTab[0][iRec], m_sumTab[1][iRec],
-                                   m_sumTab[2][iRec], m_sumTab[3][iRec],
-                                   m_sumTab[4][iRec], m_sumTab[5][iRec],
-                                   purity[iRec] ) << endreq;
+      info() << type[iRec] << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f     |%7.2f",
+                                      m_sumTab[0][iRec], m_sumTab[1][iRec],
+                                      m_sumTab[2][iRec], m_sumTab[3][iRec],
+                                      m_sumTab[4][iRec], m_sumTab[5][iRec],
+                                      purity[iRec] ) << endreq;
     }
-    msg << "  (reco)   |                                               |" << endreq
-        << "-----------+-----------------------------------------------+-----------"
-        << endreq
-        << " %Eff.     |" << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f",
-                                     eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
-        << "     |" << endreq
-        << "-----------+-----------------------------------------------+-----------" << endreq;
-    msg << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
-                   kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    msg << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
-                   kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    msg << " PID rate  |    events " << evPIDRate[0] << " +- " << evPIDRate[1]
-        << "%,  tracks " << trPIDRate[0] << " +- " << trPIDRate[1] << "%" << endreq
-        << "-----------+-----------------------------------------------+-----------"
-        << endreq;
+    info() << "  (reco)   |                                               |" << endreq
+           << "-----------+-----------------------------------------------+-----------"
+           << endreq
+           << " %Eff.     |" << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f",
+                                        eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
+           << "     |" << endreq
+           << "-----------+-----------------------------------------------+-----------" << endreq;
+    info() << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
+                      kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
+    info() << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
+                      kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
+    info() << " PID rate  |    events " << evPIDRate[0] << " +- " << evPIDRate[1]
+           << "%,  tracks " << trPIDRate[0] << " +- " << trPIDRate[1] << "%" << endreq
+           << "-----------+-----------------------------------------------+-----------"
+           << endreq;
 
   } // final printout
-
-  // release tools
-  releaseTool( m_trackToMCP );
 
   // finalize base class
   return RichAlgBase::finalize();
@@ -482,21 +485,14 @@ StatusCode RichPIDQC::loadPIDData() {
   }
 
   // If we get here, things went wrong
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::WARNING << "Failed to located RichPIDs at " << m_pidTDS << endreq;
-  return StatusCode::FAILURE;
+  return Warning( "Failed to located RichPIDs at " + m_pidTDS );
 }
 
 StatusCode RichPIDQC::loadTrackData() {
 
   // Locate tracks
   SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trackTDS );
-  if ( !tracks ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Cannot locate TrStoredTracks at "
-        << m_trackTDS << endreq;
-    return StatusCode::FAILURE;
-  }
+  if ( !tracks ) { return Warning( "Cannot locate TrStoredTracks at " + m_trackTDS ); }
   m_tracks = tracks;
 
   return StatusCode::SUCCESS;

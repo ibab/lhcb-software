@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.8 2004-02-02 14:24:02 jonesc Exp $
+// $Id: RichRecoQC.cpp,v 1.9 2004-03-16 13:41:11 jonesc Exp $
 
 // local
 #include "RichRecoQC.h"
@@ -32,10 +32,9 @@ RichRecoQC::~RichRecoQC() {};
 // Initialisation
 StatusCode RichRecoQC::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
   acquireTool( "RichParticleProperties", m_richPartProp );
@@ -45,9 +44,9 @@ StatusCode RichRecoQC::initialize() {
   // Book histograms
   if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
 
-  msg << MSG::DEBUG << "Initialize" << endreq
-      << " Histogram location     = " << m_histPth << endreq;
-  msg << " MC Histogram location  = " << m_mcHistPth << endreq;
+  debug() << "Initialize :-" << endreq
+          << " Histogram location     = " << m_histPth << endreq
+          << " MC Histogram location  = " << m_mcHistPth << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -86,8 +85,7 @@ StatusCode RichRecoQC::bookMCHistograms() {
 // Main execution
 StatusCode RichRecoQC::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -140,13 +138,7 @@ StatusCode RichRecoQC::execute() {
 //  Finalize
 StatusCode RichRecoQC::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_richRecMCTruth );
-  releaseTool( m_richPartProp );
-  releaseTool( m_ckAngle );
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecAlgBase::finalize();

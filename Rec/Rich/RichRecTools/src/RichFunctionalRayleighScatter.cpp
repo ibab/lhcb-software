@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.4 2004-02-02 14:26:58 jonesc Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.5 2004-03-16 13:45:02 jonesc Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -27,38 +27,36 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 
 StatusCode RichFunctionalRayleighScatter::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  // Get Rich Detector elements
-  SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
+  // Get Rich1 Detector element
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
 
   // Rayleigh scattering parameters
   m_eVToMicron  = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
   m_AeroClarity = Rich1DE->userParameterAsDouble( "AerogelClarity" )/cm;
 
   // Informational Printout
-  msg << MSG::DEBUG
-      << " Using analytic implementation" << endreq
-      << " eV to mm conversion factor   = " << m_eVToMicron << endreq
-      << " Aerogel clarity              = " << m_AeroClarity << endreq;
+  debug() << " Using analytic implementation" << endreq
+          << " eV to mm conversion factor   = " << m_eVToMicron << endreq
+          << " Aerogel clarity              = " << m_AeroClarity << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichFunctionalRayleighScatter::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double 
+double
 RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
                                                     const double energy ) const {
 

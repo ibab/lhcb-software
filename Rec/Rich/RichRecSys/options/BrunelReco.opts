@@ -1,7 +1,5 @@
-//========================= Rich Reconstruction ===========================
 //
-// This option file is for running the Rich reconstruction in Brunel
-// MaPMT specific version
+//=================== Brunel Rich Offline Reconstruction =====================
 //
 
 // Run the Local PID first
@@ -48,8 +46,8 @@ BrunelRecoRICHSeq.Members += {
 /*
 // Markov chain ring finder : RICH2
 BrunelRecoRICHSeq.Members += {
-  "Rich2MarkovRingFinderAlg/Rich2P0RingFinder",
-  "Rich2MarkovRingFinderAlg/Rich2P1RingFinder"
+  "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
+  "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"
 };
 */
 

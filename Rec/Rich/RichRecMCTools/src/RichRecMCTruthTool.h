@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.2 2004-02-02 14:24:41 jonesc Exp $
+// $Id: RichRecMCTruthTool.h,v 1.3 2004-03-16 13:41:45 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -30,6 +30,9 @@
 #include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichSegment.h"
 #include "Event/MCRichTrack.h"
+
+// Linkers
+#include "Linker/LinkedTo.h"
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
@@ -68,6 +71,9 @@ public:
 
   /// Find best MCParticle association for a given RichRecTrack
   const MCParticle * mcParticle( const RichRecTrack * richTrack ) const;
+
+  /// Find best MCParticle association for a given TrStoredTrack
+  const MCParticle * mcParticle( const TrStoredTrack * track ) const;
 
   /// Find best MCParticle association for a given RichRecSegment
   const MCParticle * mcParticle( const RichRecSegment * richSegment ) const;
@@ -137,8 +143,14 @@ public:
   /// Returns the MCRichTrack associated to a given RichRecTrack
   const MCRichTrack * mcRichTrack( const RichRecTrack * track );
 
+  /// Returns the MCRichTrack associated to a given TrStoredTrack
+  const MCRichTrack * mcRichTrack( const TrStoredTrack * track );
+
   /// Returns the MCRichTrack associated to a given RichRecSegment
   const MCRichTrack * mcRichTrack( const RichRecSegment * segment );
+
+  /// Returns the MCRichTrack associated to a given MCParticle
+  const MCRichTrack * mcRichTrack( const MCParticle * mcPart );
 
   /// Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
   const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track );
@@ -148,10 +160,15 @@ public:
 
 private: // private methods
 
+  void  cleanUpLinkers();
   const MCRichDigits *         mcRichDigits();
-  const MCRichOpticalPhotons * mcRichOpticalPhotons();
-  const MCRichTracks *         mcRichTracks();
   const MCRichSegments *       mcRichSegments();
+
+  typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
+  MCPartToRichTracks * mcTrackLinks() const;
+
+  typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
+  MCRichHitToPhoton * mcPhotonLinks() const;
 
 private: // private data
 
@@ -159,33 +176,18 @@ private: // private data
   typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
 
   bool m_mcRichDigitsDone;
-  bool m_mcRichOptPhotsDone;
-  bool m_mcRichSegmentsDone;
-  bool m_mcRichTracksDone;
 
   /// Pointer to MCRichDigits
   MCRichDigits * m_mcRichDigits;
 
-  /// Pointer to MCRichOpticalPhotons
-  MCRichOpticalPhotons * m_mcRichOpticalPhotons;
+  /// Linker for MCRichTracks
+  mutable MCPartToRichTracks * m_mcTrackLinks;
 
-  /// Pointer to MCRichSegments
-  MCRichSegments * m_mcRichSegments;
-
-  /// Pointer to MCRichTracks
-  MCRichTracks * m_mcRichTracks;
+  /// Linker for MCRichOpticalPhotons
+  mutable MCRichHitToPhoton * m_mcPhotonLinks;
 
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
-
-  /// Location of MCRichOpticalPhotons in EDS
-  std::string m_mcRichPhotonsLocation;
-
-  /// Location of MCRichTracks in EDS
-  std::string m_mcRichTracksLocation;
-
-  /// Location of MCRichSegments in EDS
-  std::string m_mcRichSegmentsLocation;
 
   /// PID information
   std::map<int,Rich::ParticleIDType> m_localID;
@@ -199,5 +201,11 @@ private: // private data
   SmartRefVector<MCRichHit> m_emptyContainer;
 
 };
+
+void RichRecMCTruthTool::cleanUpLinkers()
+{
+  if ( m_mcTrackLinks  ) { delete m_mcTrackLinks;  m_mcTrackLinks  = 0; }
+  if ( m_mcPhotonLinks ) { delete m_mcPhotonLinks; m_mcPhotonLinks = 0; }
+}
 
 #endif // RICHRECTOOLS_RICHRECMCTRUTHTOOL_H

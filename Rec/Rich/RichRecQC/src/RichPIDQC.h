@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.h,v 1.6 2003-12-11 16:33:32 cattanem Exp $
+// $Id: RichPIDQC.h,v 1.7 2004-03-16 13:41:10 jonesc Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -40,9 +40,6 @@
  *  @date   2002-06-13
  */
 
-// tracking MC truth
-typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackFitAsct ;
-
 class RichPIDQC : public RichAlgBase {
 
 public:
@@ -55,6 +52,11 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+private: // definitions
+
+  // tracking MC truth
+  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackFitAsct;
 
 private: // methods
 
@@ -76,7 +78,7 @@ private: // methods
 
 private: // data
 
-  // Pointer to base contianer
+  // Vector of pointers to RichPIDs
   std::vector<ContainedObject*> m_richPIDs;
 
   /// Pointer to container of TrStoredTracks
@@ -106,6 +108,8 @@ private: // data
   double m_sumTab[6][6];
   int m_nEvents[2];
   int m_nTracks[2];
+
+  unsigned m_trackCount[2][Rich::Track::NTrTypes];
 
   // Histograms
 
