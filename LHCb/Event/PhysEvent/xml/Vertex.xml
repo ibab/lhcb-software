@@ -63,12 +63,6 @@
         type="int"
         init="-1"
        />
-       <!--attribute
-        name="type"
-        desc="How the vertex was made"
-        type="VertexType"
-        init="Vertex::Unknown"
-       /-->
        <attribute
         name="type"
         desc="How the vertex was made"
