@@ -124,8 +124,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << " Deposit " << (*iDep)->key()
-//                    << " from '" << objectLocation( (*iDep)->parentHit()->parent() ) << "'"
-                    << endreq
+                    << " from '" << objectLocation( (*iDep)->parentHit()->parent() ) << "'" << endreq
                     << "  -> TOF     = " << (*iDep)->time() << endreq
                     << "  -> Energy  = " << (*iDep)->energy() << endreq;
         }
