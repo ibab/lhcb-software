@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.88 2004-02-20 15:58:50 pkoppenb Exp $
+# $Id: requirements,v 1.89 2004-03-11 17:38:20 pkoppenb Exp $
 # Created    : 07/02/2002
-# Maintainer : Gloria Corti
+# Maintainer : P. Koppenburg
 #
 
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r2
+version           v11r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,7 +23,7 @@ apply_pattern DaVinciVersion
 #--- CMT and GaudiPolicy
 use  GaudiPolicy 	v5r14
  
-#--- External libraries (as defined in GAUDI_v14r1)
+#--- External libraries (as defined in GAUDI_v14r3)
 use  ExternalLibs	v4r4
 use  AIDA		v3r300		-no_auto_imports
 use  BOOST		v2r1302p0	-no_auto_imports
@@ -38,41 +38,41 @@ use  UUID		v1r32
 use  SEAL		v1r133p1
 use  POOL		v1r150p1
 
-#--- Gaudi libraries (from GAUDI_v14r1)
-use  GaudiKernel	v15r1
-use  GaudiSvc 		v11r2
-use  GaudiAlg 		v6r5
+#--- Gaudi libraries (from GAUDI_v14r3)
+use  GaudiKernel	v15r2
+use  GaudiSvc 		v11r4
 use  GaudiAud 		v6r4
-use  GaudiDb 		v9r1
+use  GaudiAlg 		v7r1
+use  GaudiGSL           v5r1
+use  GaudiDb 		v9r2
 use  GaudiRootDb 	v9r4
-use  GaudiPoolDb	v1r4p1
+use  GaudiPoolDb	v1r5
 use  GaudiObjDesc       v6r2p1
-use  GaudiGSL           v5r0
-use  GaudiPython        v6r1
+use  GaudiPython        v6r3
 
 #--- Histogram persistency
 use  HbookCnv           v14r1
 use  RootHistCnv    	v9r1
 
 #--- Geometry Database
-use  XmlDDDB		v21r0	 Det
-use  ParamFiles		v3r1	 $(LHCb_release_area)/PARAM -no_auto_imports
+use  XmlDDDB		v22r0	 Det
+use  ParamFiles		v3r3	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
 #--- LHCb libraries (from LHCB_v15r2)
-use  LHCb               v15r2
+use  LHCb               v15r3
 
 #--- DaVinciSys v11r0 packages 
 
 #    Enable neutral ProtoParticles production and CaloPIDs
-use  CaloReco           v1r8     Calo
-use  CaloPIDs           v1r2     Calo 
+use  CaloPIDs           v2r0     Calo 
+use  CaloReco           v2r0     Calo
 
 #    Muon PID
-use  MuonID             v3r7     Muon
+use  MuonID             v3r7p1   Muon
 
 #    Final Reconstruction
-use  GlobalReco         v4r3     Rec
+use  GlobalReco         v4r4     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools
@@ -83,17 +83,19 @@ use  RecoTools          v1r1     Rec
 use  Utilities          v1r2     Tools
 
 #    Physics packages
-use  DaVinciTools       v8r5     Phys
-use  DaVinciAssociators v4r3     Phys
-use  DaVinciMCTools     v5r1     Phys
-use  DaVinciTest        v4r2     Phys
-use  Ks2PiPiSel         v1r0     Phys
 use  CommonParticles    v1r0     Phys
-use  PhysSelections	v6r1     Phys
-use  FlavourTagging     v4r7     Phys
-use  DaVinciEff         v2r8p1   Phys
+use  DaVinciAssociators v4r4     Phys
+use  DaVinciChecks      v2r1     Phys
+use  DaVinciEff         v2r9     Phys
+use  DaVinciMCTools     v5r2     Phys
+use  DaVinciTest        v4r2     Phys
+use  DaVinciTools       v9r0     Phys
 use  DaVinciUser        v4r2     Phys
-use  PhysSelSys		v6r2     PhysSel
+use  FlavourTagging     v4r8     Phys
+use  Ks2PiPiSel         v1r1     Phys
+use  PhysSelections	v6r2     Phys
+
+use  PhysSelSys		v6r3     PhysSel
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

@@ -57,5 +57,6 @@ PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 
 // Default value for which type of tracks to use
 //  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseLongTracks     = true;
-//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseUpstreamTracks = false;
+// This replaces UseUpstreamTracks:
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseDownstreamTracks = false;
 //  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseVTTTracks      = false;

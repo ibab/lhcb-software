@@ -26,7 +26,7 @@ ApplicationMgr.DLLs   += { "VeloDet", "OTDet", "STDet", "MuonDet" };
 ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 
 // Particle Properties
-ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
+// ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 
 // Pool Persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
@@ -72,7 +72,7 @@ ApplicationMgr.DLLs += { "FlavourTagging" };
 ApplicationMgr.DLLs += { "RecoTools" };
 
 // Generic Utility package
-ApplicationMgr.DLLs      += { "Utilities" };
+ApplicationMgr.DLLs += { "Utilities" };
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
@@ -95,4 +95,15 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 // Print Frequency
 EventSelector.PrintFreq  = 1;
 
-//**************************************************************
+
+//--------------------------------------------------------------
+// Histogram persistency 
+// Root DLL for histogram persistency is needed for CALOPID. Hbook 
+// might be needed for users. 
+ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.DLLs += { "HbookCnv" };
+
+//--------------------------------------------------------------
+// Pre DaVinci algorithm. MUST BE FIRST.
+ApplicationMgr.TopAlg += { "PreDV" };
+

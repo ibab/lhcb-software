@@ -3,6 +3,27 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r2>2004-03-11 DaVinci v11r3 - Development Version</A></H1><PRE>
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v11r0 and v10r0.
+
+ - Modification in DVAlgorithm by Hugo require modifications of all
+   user selection routines. Please conform to his guidelines.
+ 
+ - Modifications of track naming imply many changes in phys packages.
+ 
+ - Use LoKi v2r0
+ 
+ - The three changes above cause that some user slections du not compile
+   anymore. They are put in quarantine for the moment. ALL selections have at least
+   to adapt their option files.
+
+ - Version based on LHCb v15r3, refer to release notes of
+   LHCb for details regarding those packages.
+
+ - Use XmlDDDB v22r0. 
+    
 </PRE><H1><A NAME=v11r2>2004-02-20 DaVinci v11r2 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
