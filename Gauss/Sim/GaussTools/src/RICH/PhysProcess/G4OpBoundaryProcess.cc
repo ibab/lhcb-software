@@ -56,7 +56,6 @@
 
 #include "G4ios.hh"
 #include "G4OpBoundaryProcess.hh"
-
 /////////////////////////
 // Class Implementation
 /////////////////////////
@@ -540,22 +539,41 @@ void G4OpBoundaryProcess::DielectricDielectric()
 
 	      // G4cout<<"Material1 material2 names "<<Material1->GetName()
               //     <<"  "<<Material2->GetName()<<endl;
+
               G4String Rich1QuartzMatName="/dd/Materials/RichMaterials/GasWindowQuartz" ;
               G4String RichHpdQWMatName="/dd/Materials/RichMaterials/HpdWindowQuartz" ;
               G4String RichHpdPhCathMatName="/dd/Materials/RichMaterials/HpdS20PhCathode" ;
               G4String RichAirMatName="/dd/Materials/RichMaterials/RichAir";
               G4String Rich1NitrogenMatName="/dd/Materials/RichMaterials/Rich1Nitrogen";
+              G4String Rich1C4F10MatName="/dd/Materials/RichMaterials/C4F10";
 
-	      if(Material1->GetName() == Rich1QuartzMatName   ||
-	         Material2->GetName() == Rich1QuartzMatName   )TransCoeff=1.0;
+              G4String RichHpdVacName="/dd/Materials/RichMaterials/RichHpdVacuum";
+
+	      //	      if(Material1->GetName() == Rich1QuartzMatName   ||
+	      //   Material2->GetName() == Rich1QuartzMatName   )TransCoeff=1.0;
+	      //  if(Material1->GetName() == Rich1QuartzMatName   ||
+	      //   Material2->GetName() == Rich1QuartzMatName   ){
+	      //		G4cout<<"TransCoef from "<<Material1->GetName()<<" to  "
+              //        << Material2->GetName() <<" is   "<<TransCoeff<<endl;
+	      // }
+
+	      //              
               if(Material1->GetName() == RichHpdQWMatName   ||
                  Material2->GetName() == RichHpdQWMatName   )TransCoeff=1.0;
               if(Material1->GetName() == RichHpdPhCathMatName   ||
                  Material2->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
               if(Material1->GetName() == RichAirMatName   ||
                  Material2->GetName() == RichAirMatName   )TransCoeff=1.0;
-              if(Material1->GetName() == Rich1NitrogenMatName   ||
-                 Material2->GetName() == Rich1NitrogenMatName )TransCoeff=1.0;
+
+	      if(Material1->GetName() == Rich1NitrogenMatName   &&
+		 Material2->GetName() == RichHpdVacName   )TransCoeff=1.0; 
+	      if(Material2->GetName() == Rich1NitrogenMatName   &&          
+		 Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;  
+
+              if((Material1->GetName() == Rich1NitrogenMatName && 
+                  Material2->GetName() == Rich1C4F10MatName)  ||
+                 (Material1->GetName() ==  Rich1C4F10MatName &&
+                 Material2->GetName() == Rich1NitrogenMatName) )TransCoeff=1.0;
 
 	      //  End of test by SE  
 
