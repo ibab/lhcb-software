@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/24 09:48:15  ibelyaev
+/// new component GiGaEventActionSequence
+///
 /// Revision 1.3  2001/07/15 20:54:37  ibelyaev
 /// package restructurisation
 ///
@@ -79,6 +82,7 @@ void GiGa_load()
   DLL_DECL_EVENTFACTORY (    GiGaEventActionEmpty    );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionDraw     );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionSequence );
+  DLL_DECL_EVENTFACTORY (    GiGaEventActionCommand  );
   ///
 }; 
 

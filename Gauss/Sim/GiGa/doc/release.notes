@@ -1,11 +1,19 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.33 2001-07-25 17:18:09 ibelyaev Exp $
+! $Id: release.notes,v 1.34 2001-07-25 18:13:38 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
+
+!===========================================================================
+! 20010724    Vanya Belyaev 
+     src/component/GiGaEventActionCommand.h/.cpp 
+      - new "component" Event actions.
+      - it is simple, it ij just call user interface to execute
+        Geant4 commands at the begin of each event and at the 
+        end of each event  
 
 !===========================================================================
 ! 20010724    Vanya Belyaev 
