@@ -28,7 +28,7 @@
 #ifndef EVTGEN_HH
 #define EVTGEN_HH
 
-#include "EvtGen/EvtPDL.hh"
+#include "EvtGenBase/EvtPDL.hh"
 
 class EvtParticle;
 class EvtRandomEngine;
@@ -36,13 +36,14 @@ class HepLorentzVector;
 class EvtVector4R;
 class EvtStdHep;
 class EvtSpinDensity;
+class EvtAbsRadCorr;
 
 class EvtGen{
 
 public:
 
   EvtGen(const char* const decayName,const char* const pdtTableName,
-	 EvtRandomEngine* randomEngine=0);
+	 EvtRandomEngine* randomEngine=0, EvtAbsRadCorr *isrEngine=0);
   ~EvtGen();
 
   void readUDecay(const char* const udecay_name);
@@ -56,10 +57,6 @@ public:
   void generateEvent(int stdhepid, HepLorentzVector P, HepLorentzVector D);
   void generateEvent(EvtParticle *p,HepLorentzVector D);
 
-  static void setRejectFlag() {int *temp=rejectFlag();  *temp=1; return;}
-  static void initRejectFlag() {int *temp=rejectFlag();  *temp=0; return;}
-  static int* rejectFlag() {static int rejectEvent=0; return &rejectEvent;}
-  static int getRejectFlag() {int *temp=rejectFlag(); return *temp;}
   
 private:
 
