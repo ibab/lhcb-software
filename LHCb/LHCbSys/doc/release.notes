@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
-! Package     : LHCB_v10r98/LHCbSys
+! Package     : LHCbSys
 ! Responsible : Florence Ranjard
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
+
+!======================== LHCbSys v11r0 ==================================
+! 2002-10-10 - Florence Ranjard
+ - requirements - v11r0 uses Gaudi v11r0
 
 !======================== LHCbSys v10r98===================================
 ! 2002-09-25 - Florence Ranjard
