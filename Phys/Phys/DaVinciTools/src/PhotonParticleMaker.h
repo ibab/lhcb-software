@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.h,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhotonParticleMaker.h,v 1.4 2004-04-21 02:29:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // Revision 1.2  2003/04/08 17:22:28  ibelyaev
 //  CnvPhotonParticleMaker: new creator of converted photons
 //
@@ -92,59 +95,61 @@ protected:
    *  <li>  <c> CaloTrMatch     </c> 
    *  <li>  <c> CaloDepositID   </c>
    *  <li>  <c> ShowerShape     </c>
-   *  <li>  <c> ClusterMass     </c> 
+   *  <li>  <c> ClusterMass     </c>
+   *  <li>  <c> PhotonID        </c>
    *
    */
   double confLevel        ( const ProtoParticle* pp ) const ;
-  
-  /// change a flag for converted photons 
+
+  /// change a flag for converted photons
   void   setConverted     ( const bool value ) { m_converted = value  ; }
-  /// change a flag for converted photons 
+  /// change a flag for converted photons
   void   setUseAllPhotons ( const bool value ) { m_useAll    = value  ; }
-  
+
 private:
-  
+
   typedef std::vector<double>        Params             ;
-  
-  // input data (ProtoParticles)  
+
+  // input data (ProtoParticles)
   std::string                        m_input            ;
-  
-  // evaluator of photon parameters at some nominal vertex 
+
+  // evaluator of photon parameters at some nominal vertex
   std::string                        m_photParsName     ;
   IPhotonParams*                     m_photPars         ;
-  
-  // nominal production vertex 
+
+  // nominal production vertex
   Params                             m_pointVector      ;
-  HepPoint3D                         m_point            ;  
-  
-  // covarinace matrix for nominal production vertex 
+  HepPoint3D                         m_point            ;
+
+  // covarinace matrix for nominal production vertex
   HepSymMatrix                       m_pointErr         ;
-  
-  
+
+
   // square roots from diagonal elements   (3 values)
   Params                             m_diagonal         ;
-  
+
   // off-diagonal correlation coefficients (3 values)
   Params                             m_offDiagonal      ;
-  
-  // techniques for CL evaluation 
+
+  // techniques for CL evaluation
   bool                               m_useCaloTrMatch   ;
   bool                               m_useCaloDepositID ;
   bool                               m_useShowerShape   ;
   bool                               m_useClusterMass   ;
+  bool                               m_usePhotonID      ;
 
-  // cut on confidence level 
+  // cut on confidence level
   double                             m_cut              ;
-  
-  // flag for converted photons 
+
+  // flag for converted photons
   bool                               m_converted        ;
-  // flag for ALL photons 
+  // flag for ALL photons
   bool                               m_useAll           ;
-  
+
 };
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif // PHOTONPARTICLEMAKER_H
 // ============================================================================

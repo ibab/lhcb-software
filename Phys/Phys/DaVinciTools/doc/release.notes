@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.76 2004-03-31 14:30:01 pkoppenb Exp $
+! $Id: release.notes,v 1.77 2004-04-21 02:29:29 ibelyaev Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-04-21 - Vanya Belyaev
+  - src/PhotonParticleMaker.h,(.cpp)
+    updated version of PhotonParticleMaker from Frederic Machefert 
+    which make use of his new "PhotonID" tool (the combined likelihood
+    for single gammas). For default configuration the "CL" for
+    photons is a result of this estimator, other estimators are not used 
+    in evaluation of CL, but available for analysis.
+     (for future: one need to think how to include other 
+      information into CL and to provide CL normalization, 
+      "similar to charged") 
 
 !========================== DaVinciTools v9r2 2004-03-31 ==================
 ! 2004-03-31 - P. Koppenburg for Sandra Amato and Angelo Carbone

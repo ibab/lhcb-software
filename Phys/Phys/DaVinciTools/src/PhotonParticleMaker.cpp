@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.cpp,v 1.5 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhotonParticleMaker.cpp,v 1.6 2004-04-21 02:29:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -147,15 +150,16 @@ PhotonParticleMaker::PhotonParticleMaker
   , m_diagonal         ()         // square roots from diagonal elements 
   , m_offDiagonal      ( 3 , 0 )  // correlation coefficients 
   ///
-  , m_useCaloTrMatch   ( true  ) 
+  , m_useCaloTrMatch   ( false )
   , m_useCaloDepositID ( false )
   , m_useShowerShape   ( false )
   , m_useClusterMass   ( false )
-  // cut 
-  , m_cut              ( -1.0  ) // no cut at all 
-  // converted 
-  , m_converted        ( false ) 
-  , m_useAll           ( true  ) 
+  , m_usePhotonID      ( true  )
+  // cut
+  , m_cut              ( -1.0  ) // no cut at all
+  // converted
+  , m_converted        ( false )
+  , m_useAll           ( true  )
 {
   declareProperty ( "Input"                      , m_input            ) ;
   declareProperty ( "PhotonParametersEvaluator"  , m_photParsName     ) ;
@@ -165,139 +169,143 @@ PhotonParticleMaker::PhotonParticleMaker
   m_diagonal.push_back(  1 * millimeter ) ;
   declareProperty ( "DiagonalUncertanties"       , m_diagonal         ) ;
   declareProperty ( "OffDiagonalCorrelations"    , m_offDiagonal      ) ;
-  
+
   declareProperty ( "UseCaloTrMatch"             , m_useCaloTrMatch   ) ;
   declareProperty ( "UseCaloDepositID"           , m_useCaloDepositID ) ;
   declareProperty ( "UseShowerShape"             , m_useShowerShape   ) ;
   declareProperty ( "UseClusterMass"             , m_useClusterMass   ) ;
+  declareProperty ( "UsePhotonID"                , m_usePhotonID      ) ;
 
   declareProperty ( "ConfLevelCut"               , m_cut              ) ;
 
   declareProperty ( "UseAllPhotons"              , m_useAll           ) ;
-  
-  // declare new interface 
+
+  // declare new interface
   declareInterface<IParticleMaker> (this);
 };
 // ============================================================================
 
 
 // ============================================================================
-/// destructor 
+/// destructor
 // ============================================================================
 PhotonParticleMaker::~PhotonParticleMaker() {};
 // ============================================================================
 
 // ============================================================================
-/** standard initialization of tool 
+/** standard initialization of tool
  *  @see CaloTool
  *  @see  AlgTool
  *  @see IAlgTool
- *  @return status code 
+ *  @return status code
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::initialize    () 
+StatusCode PhotonParticleMaker::initialize    ()
 {
   // initialize the base class
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) { return Error(" Unable to initialize CaloTool",sc);}
-  
-  // locate photon parameters evaluator 
+
+  // locate photon parameters evaluator
   m_photPars = tool<IPhotonParams>( m_photParsName , this );
   if( 0 == photPars() ) { return StatusCode::FAILURE ; }           // RETURN
-  
-  if( 3 != m_pointVector.size() ) 
+
+  if( 3 != m_pointVector.size() )
     { return Error(" Invalid dimention of point (must be 3)");}
-  
+
   m_point.setX( m_pointVector[0] ) ;
   m_point.setY( m_pointVector[1] ) ;
   m_point.setZ( m_pointVector[2] ) ;
-  
+
   if( 3 != m_diagonal.size()    )
     { return Error(" Invalid dimention of Diagonal (must be 3)");}
 
   m_pointErr ( 1 , 1 ) = m_diagonal[0] * m_diagonal[0] ;
   m_pointErr ( 2 , 2 ) = m_diagonal[1] * m_diagonal[1] ;
   m_pointErr ( 3 , 3 ) = m_diagonal[2] * m_diagonal[2] ;
-  
-  if( 3 != m_offDiagonal.size() ) 
+
+  if( 3 != m_offDiagonal.size() )
     { return Error(" Invalid dimention of OffDiagonal (must be 3)");}
-  
+
   {
-    const double mx = *std::max_element( m_offDiagonal.begin () , 
+    const double mx = *std::max_element( m_offDiagonal.begin () ,
                                          m_offDiagonal.end   () ) ;
-    const double mn = *std::min_element( m_offDiagonal.begin () , 
-                                         m_offDiagonal.end   () ) ; 
-    if( fabs( mx ) > 1 || fabs( mn ) > 1 ) 
+    const double mn = *std::min_element( m_offDiagonal.begin () ,
+                                         m_offDiagonal.end   () ) ;
+    if( fabs( mx ) > 1 || fabs( mn ) > 1 )
       { return Error("Wrong value for correlation coefficient!" ) ; }
   }
-  
-  m_pointErr ( 2 , 1 ) = m_diagonal[0] * 
+
+  m_pointErr ( 2 , 1 ) = m_diagonal[0] *
     sqrt( m_pointErr ( 2 , 2 ) * m_pointErr ( 1 , 1 ) ) ;
-  
-  m_pointErr ( 3 , 1 ) = m_diagonal[1] * 
+
+  m_pointErr ( 3 , 1 ) = m_diagonal[1] *
     sqrt( m_pointErr ( 3 , 3 ) * m_pointErr ( 1 , 1 ) ) ;
-  
-  m_pointErr ( 3 , 2 ) = m_diagonal[2] * 
+
+  m_pointErr ( 3 , 2 ) = m_diagonal[2] *
     sqrt( m_pointErr ( 3 , 3 ) * m_pointErr ( 2 , 2 ) ) ;
 
   MsgStream log( msgSvc() , name() ) ;
-  log << MSG::INFO 
-      << " Nominal Photon production vertex and its covariance matrix: " 
+  log << MSG::INFO
+      << " Nominal Photon production vertex and its covariance matrix: "
       << endreq ;
   log << " Point             : " << m_point     << endreq ;
   log << " Covariance Matrix : " << m_pointErr  << endreq ;
-  
-  log << MSG::INFO 
+
+  log << MSG::INFO
       << " Following techniques will be used for CL evaluation : " << endreq;
-  if( m_useCaloTrMatch    ) 
+  if( m_useCaloTrMatch    )
     { log << "  CaloTrMatch : matching with reconsttucted tracks " << endreq ; }
-  if( m_useCaloDepositID  ) 
+  if( m_useCaloDepositID  )
     { log << " CaloDepositID: Spd/Prs combined analysis          " << endreq ; }
-  if( m_useShowerShape  ) 
+  if( m_useShowerShape  )
     { log << " ShowerShape  : Ecal Cluster shape/size            " << endreq ; }
-  if( m_useClusterMass  ) 
+  if( m_useClusterMass  )
     { log << " ClusterMass  : Ecal Cluster pi0 mass              " << endreq ; }
-  
-  if( !m_useCaloTrMatch   && 
-      !m_useCaloDepositID && 
-      !m_useShowerShape   && 
-      !m_useClusterMass     ) 
+  if( m_usePhotonID     )
+    { log << " PhotonID     : Tracking/CALO combined Photon id   " << endreq ; }
+
+  if( !m_useCaloTrMatch   &&
+      !m_useCaloDepositID &&
+      !m_useShowerShape   &&
+      !m_useClusterMass   &&
+      !m_usePhotonID     )
     { Warning(" No PID techniques are selected for CL evaluation" ) ; }
 
-  if( m_useCaloTrMatch    ) 
+  if( m_useCaloTrMatch    )
     { Warning( "  For CaloTrMatch assume Gauss distribution (wrong?)"); }
   if( m_useCaloDepositID  )
     { Warning( "      CaloDepositID is not implemented yet " ) ; }
-  if( m_useShowerShape    ) 
+  if( m_useShowerShape    )
     { Warning( "      ShowerShape   is not implemented yet " ) ; }
-  if( m_useClusterMass    ) 
+  if( m_useClusterMass    )
     { Warning( "  For ClusterMass assume exponential distribution (wrong?)"); }
-  
-  if      ( m_useAll    ) 
+
+  if      ( m_useAll    )
     { Warning( "\t         *ALL*     'ordinary' photons are to be created" ) ; }
-  else if ( m_converted ) 
+  else if ( m_converted )
     { Warning( "\tOnly     converted 'ordinary' photons are to be created" ) ; }
-  else 
+  else
     { Warning( "\tOnly non-converted 'ordinary' photons are to be created" ) ; }
-  
-  return StatusCode::SUCCESS ;  
+
+  return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
 // ============================================================================
-/** standard finalization of tool 
+/** standard finalization of tool
  *  @see CaloTool
  *  @see  AlgTool
  *  @see IAlgTool
- *  @return status code 
+ *  @return status code
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::finalize      () 
+StatusCode PhotonParticleMaker::finalize      ()
 {
-  // release services and tools 
+  // release services and tools
   m_photPars = 0 ;
-  
-  // finalize the base class 
+
+  // finalize the base class
   return CaloTool::finalize ();
 };
 // ============================================================================
@@ -308,11 +316,11 @@ namespace PhotonParticleMakerLocal
   // ==========================================================================
   class IsHypo : public std::unary_function<const CaloHypo*,bool>
   {
-  public: 
-    /// constructor 
+  public:
+    /// constructor
     IsHypo( CaloHypotheses::Hypothesis hypo ): m_hypo ( hypo ) {};
-    /// functor interface 
-    bool operator() ( const CaloHypo* hypo ) const 
+    /// functor interface
+    bool operator() ( const CaloHypo* hypo ) const
     { return 0 != hypo && m_hypo == hypo->hypothesis() ? true : false ; }
   private:
     IsHypo();
@@ -325,211 +333,228 @@ namespace PhotonParticleMakerLocal
   class IsPID : public std::unary_function<ProtoParticle::PIDDetPair,bool>
   {
   public:
-    /// constructor 
+    /// constructor
     IsPID( const ProtoParticle::detectorPID pid ) : m_pid ( pid ) {};
-    // functor interafce 
-    bool operator() ( const ProtoParticle::PIDDetPair& p ) const 
+    // functor interafce
+    bool operator() ( const ProtoParticle::PIDDetPair& p ) const
     {  return p.first == m_pid ? true : false ; }
   private:
     ProtoParticle::detectorPID m_pid ;
   };
   // ==========================================================================
-  
+
 };
 // ============================================================================
 
 // ============================================================================
-/** Make the particles 
- *  @see IParticleMaker 
- *  @param particles  vector of particles  
+/** Make the particles
+ *  @see IParticleMaker
+ *  @param particles  vector of particles
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles ) 
+StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
 {
   // avoid some long names
   using   namespace PhotonParticleMakerLocal               ;
   using   namespace CaloHypotheses                         ;
   typedef const SmartRefVector<CaloHypo>             Hypos ;
-  
-  if( !particles.empty() ) 
+
+  if( !particles.empty() )
     { Warning( "makeParticles(): extend non-empty vector of Particles" ) ; }
-  
-  // locate input data 
+
+  // locate input data
   const ProtoParticles* pps = get< ProtoParticles > (inputData());
   if( 0 == pps ) { return StatusCode::FAILURE ; }
 
   unsigned long nAccepted = 0 ;
-  
-  // evaluator of converted photons 
-  PhotonParticleMakerLocal::PhotonCnv phCnv; 
 
-  for( ProtoParticles::const_iterator ipp = pps->begin() ; 
-       pps->end() != ipp ; ++ipp ) 
+  // evaluator of converted photons
+  PhotonParticleMakerLocal::PhotonCnv phCnv;
+
+  for( ProtoParticles::const_iterator ipp = pps->begin() ;
+       pps->end() != ipp ; ++ipp )
     {
       ProtoParticle* pp = *ipp ;
-      // skip invalid and charged 
+      // skip invalid and charged
       if ( 0 == pp || 0 != pp->track() )   { continue ; }        // CONTINUE
-      
+
       // evaluate the Confidence Level
       const double CL = confLevel( pp );
-      
-      // find the first photon hypothesis 
+
+      // find the first photon hypothesis
       const Hypos& hypos = pp -> calo () ;
-      Hypos::const_iterator ihypo = 
+      Hypos::const_iterator ihypo =
         std::find_if( hypos.begin() , hypos.end() , IsHypo( Photon ) ) ;
       if ( hypos.end() == ihypo        )   { continue ; }       // CONTINUE
 
       const CaloHypo* hypo = *ihypo ;
       if ( 0           ==  hypo        )   { continue ; }       // CONTINUE
-      
+
       bool cnv = false ;
       StatusCode sc = phCnv.converted( hypo , cnv ) ;
       if( sc.isFailure() ){ Error("Error from PhotonCnv" , sc ) ; continue ; }
-      
-      // skip extra 
+
+      // skip extra
       if( !m_useAll && m_converted  != cnv ) { continue ; }
-      
-      // confidence level 
-      if ( CL < m_cut                      ) { continue ; }    // CONTINUE 
-      
-      // counter 
+
+      // confidence level
+      if ( CL < m_cut                      ) { continue ; }    // CONTINUE
+
+      // counter
       ++nAccepted ;
-      
-      // create new particle and start to fill it 
+
+      // create new particle and start to fill it
       Particle* particle = new Particle();
-      
-      // it is a photon! 
-      particle -> setParticleID  ( 22    ) ; // photon 
+
+      // it is a photon!
+      particle -> setParticleID  ( 22    ) ; // photon
       particle -> setIsResonance ( false ) ;
-      
+
       // origin is the protoparticle!
       particle -> setOrigin      ( pp    ) ;
-      
-      // mass and mass uncertainties 
-      particle -> setMass        ( 0.0   ) ; // photon is mass-less 
+
+      // mass and mass uncertainties
+      particle -> setMass        ( 0.0   ) ; // photon is mass-less
       particle -> setMassErr     ( 0.0   ) ; // the mass is EXACT zero!
 
-      // confidence level 
-      particle  -> setConfLevel  ( CL    ) ; 
+      // confidence level
+      particle  -> setConfLevel  ( CL    ) ;
 
       // fill photon parameters :
-      //   the 4-momentum, production vertex and their correlations 
-      sc = photPars()->process( particle   , 
-                                m_point    , 
+      //   the 4-momentum, production vertex and their correlations
+      sc = photPars()->process( particle   ,
+                                m_point    ,
                                 m_pointErr ) ;
-      if( sc.isFailure() ) 
+      if( sc.isFailure() )
         {
           Error("Unable to fill photon parameters, skip particle " , sc ) ;
           delete particle ;
           continue ;                                               // CONTINUE
         }
-      
-      // add the particle to the container 
+
+      // add the particle to the container
       particles.push_back( particle );
-      
+
     }
-  
+
   MsgStream log( msgSvc() , name() ) ;
-  log << MSG::INFO 
-      << " Create " << nAccepted   << 
+  log << MSG::INFO
+      << " Create " << nAccepted   <<
     ( m_converted ? " Converted Photons " : "           Photons " )
       << " from   " << pps->size() << " ProtoParticles " << endreq ;
-  
+
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
 
 // ============================================================================
-/**  evaluate Photon's "confidence level" from following quantities 
- * 
- *  <li>  <c> CaloTrMatch     </c> 
+/**  evaluate Photon's "confidence level" from following quantities
+ *
+ *  <li>  <c> CaloTrMatch     </c>
  *  <li>  <c> CaloDepositID   </c>
  *  <li>  <c> CaloShowerShape </c>
- *  <li>  <c> ClusterMass     </c> 
+ *  <li>  <c> ClusterMass     </c>
  *
  */
 // ============================================================================
-double PhotonParticleMaker::confLevel( const ProtoParticle* pp ) const 
-{ 
-  // avoid long typing 
+double PhotonParticleMaker::confLevel( const ProtoParticle* pp ) const
+{
+  // avoid long typing
   using   namespace PhotonParticleMakerLocal               ;
   typedef const std::vector<std::pair<int,double> >  PIDs  ;
-  
-  if( 0 == pp ) 
+
+  if( 0 == pp )
     { Error("confLevel(): ProtoParticle* points to NULL!"); return -1 ; };
-  
-  // get all 
+
+  // get all
   const PIDs& pids = pp -> pIDDetectors() ;
-  
+
   double CL = 1.0 ;
-  
-  // track matching 
-  if( m_useCaloTrMatch  ) 
-    { 
-      PIDs::const_iterator ipid = 
-        std::find_if( pids.begin () , 
-                      pids.end   () , 
+
+  // track matching
+  if( m_useCaloTrMatch  )
+    {
+      PIDs::const_iterator ipid =
+        std::find_if( pids.begin () ,
+                      pids.end   () ,
                       IsPID( ProtoParticle::CaloTrMatch   ) );
-      if( pids.end() != ipid ) 
-        { 
+      if( pids.end() != ipid )
+        {
           // assume gaussian distribution (it is wrong!)
           CL *= ( 1.0 - exp( -0.5 * ipid->second )  ) ; // Update CL
-        } 
-      else 
+        }
+      else
         { Warning("confLevel(): CaloTrMatch is not available" ) ; }
     }
-  
-  // CaloDepositID 
-  if( m_useCaloDepositID ) 
-    { 
-      PIDs::const_iterator ipid = 
-        std::find_if( pids.begin () , 
-                      pids.end   () , 
+
+  // CaloDepositID
+  if( m_useCaloDepositID )
+    {
+      PIDs::const_iterator ipid =
+        std::find_if( pids.begin () ,
+                      pids.end   () ,
                       IsPID( ProtoParticle::CaloDepositID   ) );
-      if( pids.end() != ipid ) 
-        { 
-          Warning("confLevel(): usage of CaloDepositID is not implemented"); 
+      if( pids.end() != ipid )
+        {
+          Warning("confLevel(): usage of CaloDepositID is not implemented");
         }   // Update CL
-      else 
+      else
         { Warning("confLevel(): CaloDepositID is not available" ) ; }
     }
-  
-  // ShowerShape  
-  if( m_useShowerShape ) 
+
+  // ShowerShape
+  if( m_useShowerShape )
     {
-      PIDs::const_iterator ipid = 
-        std::find_if( pids.begin () , 
-                      pids.end   () , 
+      PIDs::const_iterator ipid =
+        std::find_if( pids.begin () ,
+                      pids.end   () ,
                       IsPID( ProtoParticle::ShowerShape ) );
       if( pids.end() != ipid )
-        { 
+        {
           Warning("confLevel(): usage of CaloShowerShape is not implemented");
         }   // Update CL
-      else 
+      else
         { Warning("confLevel(): CaloShowerShape is not available" ) ; }
     }
-  
-  if( m_useClusterMass ) 
-    { 
-      PIDs::const_iterator ipid = 
-        std::find_if( pids.begin () , 
-                      pids.end   () , 
+
+  // Cluster Mass
+  if( m_useClusterMass )
+    {
+      PIDs::const_iterator ipid =
+        std::find_if( pids.begin () ,
+                      pids.end   () ,
                       IsPID( ProtoParticle::ClusterMass     ) );
-      if( pids.end() != ipid ) 
+      if( pids.end() != ipid )
         {
           // assume exponential distribution (it is wrong!)
-          CL *= exp( -0.5 * ipid->second / ( 25 * MeV ) ) ; 
+          CL *= exp( -0.5 * ipid->second / ( 25 * MeV ) ) ;
         }  // Update CL
-      else 
+      else
         { Warning("confLevel(): ClusterMass is not available" ) ; }
     }
-  
+
+  // PhotonID estimator
+  if( m_usePhotonID )
+    {
+      PIDs::const_iterator ipid =
+        std::find_if( pids.begin () ,
+                      pids.end   () ,
+                      IsPID( ProtoParticle::PhotonID     ) );
+      if( pids.end() != ipid )
+        {
+          // assume exponential distribution (it is wrong!)
+          CL *= ( ipid->second ) ;
+        }  // Update CL
+      else
+        { Warning("confLevel(): PhotonID is not available" ) ; }
+    }
+
   return CL ;
 };
 // ============================================================================
 
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
