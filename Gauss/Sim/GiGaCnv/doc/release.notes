@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.83 2004-04-30 09:46:47 robbep Exp $ 
+! $Id: release.notes,v 1.84 2004-04-30 12:19:28 ranjard Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!====================== GiGaCnv v15r4 2004-04-30 ============================
 ! 2004-04-30 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp
     convert also photons to G4PrimaryParticle
