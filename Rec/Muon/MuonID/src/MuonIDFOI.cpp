@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.4 2002-08-05 13:00:24 dhcroft Exp $
+// $Id: MuonIDFOI.cpp,v 1.5 2002-10-09 12:31:40 dhcroft Exp $
 // Include files
 #include <cstdio>
 
@@ -180,7 +180,7 @@ StatusCode MuonIDFOI::initialize() {
   
   log << MSG::DEBUG << " FOI at 10 GeV/c is ";
   for(station = 0; station < m_NStation; station++){
-    for(region = 0; region < m_NStation; region++){
+    for(region = 0; region < m_NRegion; region++){
       log << "M" << station+1 << "R" << region+1;
       log << " x=" << this->foiX(station,region,10000.0);
       log << " y=" << this->foiY(station,region,10000.0);
