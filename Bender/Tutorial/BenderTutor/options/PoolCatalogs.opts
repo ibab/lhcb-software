@@ -1,4 +1,4 @@
-// $Id: PoolCatalogs.opts,v 1.1.1.1 2004-10-13 17:45:21 ibelyaev Exp $ 
+// $Id: PoolCatalogs.opts,v 1.2 2004-10-13 18:11:28 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -22,7 +22,8 @@
 PoolDbCacheSvc.Catalog = 
   { 
     "xmlcatalog_file:$BENDERTUTOROPTS/LocalMutableCatalog.xml" ,           
-    "xmlcatalog_file:$BENDERTUTOROPTS/13144000_Bs_Jpsiphi_mm_DC04_CERN.xml"   
+    "xmlcatalog_file:$BENDERTUTOROPTS/13144000_Bs_Jpsiphi_mm_DC04_CERN.xml"
+  };   
 // ============================================================================
 
 // ============================================================================
