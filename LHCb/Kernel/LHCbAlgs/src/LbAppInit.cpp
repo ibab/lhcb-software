@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.2 2004-07-14 16:17:33 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.3 2004-07-30 14:41:43 pkoppenb Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -108,6 +108,10 @@ StatusCode LbAppInit::initialize() {
 //-----------------------------------------------------------------------------
 StatusCode LbAppInit::execute() {
 //-----------------------------------------------------------------------------
+
+  // Debug mode: print memory at each event
+  debug() << "At event " << m_eventCounter+1 << ", memory usage is " 
+          << System::virtualMemory() << endreq;  
 
   // Fill the memory usage histograms before the next event is loaded
   if( m_doHistos ) {

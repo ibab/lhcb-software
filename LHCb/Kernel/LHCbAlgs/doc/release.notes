@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-07-30 - P. Koppenburg
+  - LbAppInit
+    . Print memory usage at each event in debug() OutputLevel
+    
 !======================== LHCbAlgs v1r0 2004-07-21 ========================
 ! 2004-07-21 - Marco Cattaneo
  - First version:
