@@ -32,6 +32,7 @@ BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON" };
 //BrunelReco.DetectorList += { "OORICH" };
+BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -103,7 +104,7 @@ DeVelo.Design = 1;
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
-// VeloTrackAlg.AbortNumTrack = 1000;
+VeloTrackAlg.AbortNumTrack = 300;
 
 // Forward tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
@@ -160,6 +161,11 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
+
+// V0s and Kshort
+ApplicationMgr.DLLs += { "KsReco" };
+BrunelRecoV0Seq.Members += { "UpstreamProtoPAlg", "SelectKs2pipi", "V0Reco" };
+#include "$KSRECOROOT/options/Brunel.opts"
 
 // Algorithm timing
 ApplicationMgr.DLLs += { "BrunelAlgs" };

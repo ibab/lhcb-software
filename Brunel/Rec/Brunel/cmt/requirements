@@ -70,6 +70,7 @@ use VSicbCnv     v8r0   SICB
 use BrunelKernel v5r2   Rec
 use BrunelSicb   v4r0   Rec
 use BrunelAlgs   v1r6   Rec
+use KsReco       v1r2   Rec
 
 # L0 trigger
 use L0Calo              v6r3    L0

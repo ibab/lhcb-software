@@ -15,14 +15,17 @@ Purpose: LHCb reconstruction program
    . Changes to Calorimeter corrections (CaloReco v1r1)
    . Many fixes to OO-Rich (Rich/* packages)
    . New parameterisation and tuning of ST charge sharing (ITAlgorithms v12r5) 
+   . Cut on max number of Velo tracks increased to 300 (from 200) (Brunel.opts)
 
  - New features:
    . Add support for dbase v252r0 (Brunelv252r0.opts)
    . New tools for PID with HCAL (CaloReco v1r1) 
    . Add OO-Rich LocalPID algorithm (RichRecAlgs v1r2)
+   . Add Ks reconstruction (KsReco v1r2, PhysEvent v7r2)
 
  - DST changes:
    . OO-Rich switched off for default production
+   . Add V0s
 
  - Bug fixes:
    . Fix edge problem in Velo detector element (VeloDet v8r1)
