@@ -2,6 +2,11 @@ package LHCbSys
 version v15r4
 
 branches doc cmt
+
+#===============================================================
+# Temporary bug fixes from Gaudi. Remove when released in Gaudi
+#===============================================================
+use GaudiTools	v8r1
  
 #===============================================================
 # LHCb packages used by all applications
@@ -15,8 +20,8 @@ use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r3	Kernel
-use LHCbKernel  	v4r3	Kernel
+use KernelSys   	v3r4	Kernel
+use LHCbKernel  	v4r4	Kernel
 use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr

@@ -4,12 +4,20 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r4 2004-03-15 =======================
-! 2004-03-15 - Marco Cattaneo
+!======================= LHCbSys v15r4 2004-03-18 =======================
+! 2004-03-18 - Marco Cattaneo
 
- - Modified packages: EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1,
+ - New packages: GaudiTools v8r1 (added temporarily to pick up latest fixes)
+
+ - Modified packages: KernelSys v3r4, LHCbKernel v4r4,
+                      EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1,
                       DetSys v5r2, Magnet v2r5,
                       AssociatorsSys v1r12, ITAssociators v2r8
+
+ - In LHCbKernel v4r4:
+   . Associator tools now inherit from GaudiTools
+   . Relations do not return failure in case of unresolved SmartRefs when
+     rebuilt from persistency. 
 
  - In DAQEvent v4r1:
    . Add L0PU to RawBuffer::BankType enum
