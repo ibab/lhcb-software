@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.3 2002-01-22 16:27:32 ocallot Exp $
+// $Id: DeVelo.h,v 1.4 2002-01-23 13:20:41 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -154,6 +154,25 @@ public:
     }
   }
   
+
+  /**
+   * Set accessor to member m_zVertex, used to compute phi by extrapolating
+   * between R and Phi wafers.
+   * @param zVertex the new value for m_zVertex
+   */
+  void setZVertex (double zVertex) {
+    m_zVertex = zVertex;
+  }
+
+  /**
+   * Get accessor to member m_zVertex, used to compute Phi by extraposlating 
+   * between R and Phi wafers.
+   * @return the current value of m_zVertex
+   */
+  double zVertex () {
+    return m_zVertex;
+  }
+
 protected: 
 
 private:
@@ -190,6 +209,7 @@ private:
   double m_phiInnerTilt;
   double m_phiOuterTilt;
 
+  double m_zVertex;
   // Local storage for geometry computation
   std::vector<VeloWafer*> m_wafer;
   std::vector<VeloWafer*> m_puWafer;

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.4 2002-01-22 16:27:32 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.5 2002-01-23 13:20:41 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -135,7 +135,7 @@ StatusCode DeVelo::initialize() {
   }
   ///
 
-  loging << MSG::INFO << "Velo : Radius from " << m_innerRadius/mm 
+  loging << MSG::DEBUG << "Velo : Radius from " << m_innerRadius/mm 
          << " to " << m_outerRadius/mm << endreq;
  
   // Auxilliary variables for R strip computation
@@ -159,7 +159,7 @@ StatusCode DeVelo::initialize() {
   m_phiPitchOuter   = 2.* m_halfAngle / (2048. - m_nbPhiInner);
 
   double phi = m_phiOuterTilt + asin( m_outerTiltRadius / m_outerRadius );
-  loging << MSG::INFO
+  loging << MSG::DEBUG
       << "Phi inner "    << - m_phiOrigin
       << " at boundary " << m_phiAtBoundary 
       << " and outside " << phi
@@ -191,7 +191,7 @@ StatusCode DeVelo::initialize() {
         inVeto = false;
         index  = 0;
       }      
-      loging << MSG::INFO << "Wafer " << index;
+      loging << MSG::DEBUG << "Wafer " << index;
 
       for ( int j=0 ; 2 > j ; j++ ) {
         if ( !inVeto) {
@@ -238,6 +238,9 @@ int DeVelo::waferNumber( const HepPoint3D& point ) {
       return (*it)->number();
     }
   }
+
+  m_zVertex = 0;   // default value.
+  
   return -1;
 };
 
@@ -405,17 +408,22 @@ double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
   // non-official strips are coded as 2048 plus the strip number of the 
   // wafer which covers this region in th enext half station.
 
+  double stripLocal = strip;
+  if ( 2048. <= strip ) {
+    stripLocal -= 2048.;
+  }
+  
   double phiLocal;
-  if ( strip < m_nbPhiInner ) {
-    phiLocal = (strip * m_phiPitchInner) + 
+  if ( stripLocal < m_nbPhiInner ) {
+    phiLocal = (stripLocal * m_phiPitchInner) + 
                m_phiInnerTilt - asin( m_innerTiltRadius / radius );
-    if ( 2047 < strip ) {  
+    if ( 2048. <= strip ) {  
       phiLocal = phiLocal-2*m_halfAngle; 
     }
   } else {
-    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + 
+    phiLocal = ((stripLocal-m_nbPhiInner) * m_phiPitchOuter) + 
                m_phiOuterTilt - asin( m_outerTiltRadius / radius );
-    if ( 2047 < strip ) {  
+    if ( 2048. <= strip ) {  
       phiLocal = phiLocal-2*m_halfAngle; 
     }
   }
@@ -470,11 +478,9 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   double localR = rOfStrip( RStripNumber, phiZone );
   
   // check some matching in the detector region.
-  double zRef = 0.;  // Should be a 'nominal' vertex.
-  
-  double rAtPhi = localR * ( zPhi - zRef ) / ( zR -zRef );
+  double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
   double myPhiStrip = PhiStripNumber;
-  if ( 2047 < myPhiStrip ) myPhiStrip -= 2048;
+  if ( 2048. <= myPhiStrip ) myPhiStrip -= 2048.;
  
   // Coherence in the Phi detector region, with some tolerance of 1 strip
 
@@ -488,7 +494,7 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
     }
   }
 
-  double phiLocal = phiOfStrip( myPhiStrip, rAtPhi, PhiWaferNumber );
+  double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiWaferNumber );
   
   // phi is in the -pi/2, pi/2 range. Test for R compatibility
 
