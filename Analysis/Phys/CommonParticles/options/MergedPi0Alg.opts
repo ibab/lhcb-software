@@ -1,0 +1,32 @@
+/** @file 
+ *  Default options files for MergedPi0 
+ *
+ *  @author O.Deschamps
+ *  @date 2003-04-10
+ */
+
+// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+
+// Configure PhysDesktop Tool with necessary values
+MergedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonFromMergedParticleMaker";
+//MergedPi0Alg.PhysDesktop.OutputLocation="/Event/Phys/MergedPi0";
+MergedPi0Alg.PhysDesktop.PhotonFromMergedParticleMaker.OutputLevel = 4;
+
+////////////////////////////////////////
+MergedPi0Alg.Pi0MassWindow = 60.;    // MeV
+MergedPi0Alg.GammaPtCut    = 0.;     // MeV 
+MergedPi0Alg.Pi0PtCut    =     0.;     // MeV 
+MergedPi0Alg.GammaGammaDistCut= 1.8 ;  // Ecal CellSize Unit
+MergedPi0Alg.ParMas={ 1.00 , 0.00 , 0.00 }; 
+////////////////////////////////////////
+
+MergedPi0Alg.OutputLevel = 4;
+MergedPi0Alg.HistogramFlag = true;
+
+// List of Criteria to use in Filter
+MergedPi0Alg.ParticleFilter.CriteriaNames = {"PIDFilterCriterion"};
+MergedPi0Alg.ParticleFilter.PIDFilterCriterion.ParticleNames = { "gamma"};
+MergedPi0Alg.ParticleFilter.PIDFilterCriterion.ConfidenceLevels = { 0.4 };
+MergedPi0Alg.ParticleFilter.PIDFilterCriterion.OutputLevel = 4;
+
+MergedPi0Alg.DecayDescriptor = "pi0 -> gamma gamma";

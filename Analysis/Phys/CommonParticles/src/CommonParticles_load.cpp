@@ -13,5 +13,7 @@
 DECLARE_FACTORY_ENTRIES(CommonParticles) {
 
   DECLARE_ALGORITHM( ProducePairPhotons );
+  DECLARE_ALGORITHM( MergedPi0Alg );
+  DECLARE_ALGORITHM( ResolvedPi0Alg );
 
 }

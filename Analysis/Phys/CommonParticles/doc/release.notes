@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!==================== CommonParticle v1r2 2004-04-20 ========================
+! 2004-04-22 - P.Koppenburg
+ - Added ResolvedPi0Alg and MergedPi0Alg
+
 !==================== CommonParticle v1r1 2004-04-20 ========================
 ! 2004-04-16 - Richard Beneyton
  - update ProducePairPhotons for combinedparticlemaker (check id)
