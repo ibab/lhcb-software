@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.13 2003-11-25 14:01:29 witoldp Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.14 2004-02-14 08:36:08 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/11/25 14:01:29  witoldp
+// added predefined decay time
+//
 // Revision 1.12  2003/10/31 12:40:05  witoldp
 // fixed units in GiGaHepMCCnv
 //
@@ -42,6 +45,7 @@
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/GiGaException.h" 
 #include "GiGa/GiGaUtil.h"
+#include "GiGaCnv/GiGaPrimaryParticleInformation.h"
 /// HepMC
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenVertex.h"
@@ -275,10 +279,30 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
       Particle -> 
         SetProperTime((theLorentzV.boost(-theBoost)).t()/c_light);
       
-      //       std::cout << "assigning time " 
-      //                 << (particle->end_vertex()->position().t())/c_light
-      //                 << " to " <<  particle->pdg_id() << std::endl;
-      
+      //      std::cout << "assigning time " 
+      //                << (theLorentzV.boost(-theBoost)).t()/c_light
+      //                << " to " <<  particle->pdg_id() << std::endl;
+ 
+      if ( ( particle -> end_vertex() ) -> particles_out_size( ) == 1 ) 
+        {
+          HepMC::GenVertex::particles_out_const_iterator dPart =
+            ( particle->end_vertex() )->particles_out_const_begin() ;
+          if ( abs ( (*dPart) -> pdg_id() ) == 
+               abs ( particle -> pdg_id() ) ) 
+            {
+              if ( (*dPart) -> pdg_id() == - particle -> pdg_id () ) 
+                {
+                  // particle has oscillated
+                  GiGaPrimaryParticleInformation * gInfo =
+                    new GiGaPrimaryParticleInformation( true ) ;
+                  Particle -> SetUserInformation( gInfo ) ;
+                }
+              // skip this daughter particle.
+              // Since the particle has oscillated it has a end_vertex()
+              // and end_vertex() for the daughter is not NULL !
+              particle = ( *dPart ) ;
+            }
+        }              
                         
       // if particle has daughters, carry on with the conversion
       for (HepMC::GenVertex::particles_out_const_iterator outPart = 

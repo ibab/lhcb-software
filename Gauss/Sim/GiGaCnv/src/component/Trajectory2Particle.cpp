@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.5 2002-12-04 16:25:19 ibelyaev Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.6 2004-02-14 08:36:08 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/12/04 16:25:19  ibelyaev
+//  remove extra calls for 'addRef'
+//
 // Revision 1.4  2002/05/20 13:36:17  ibelyaev
 //  add conversion of primary vertices
 //
@@ -92,6 +95,7 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
   MCParticle* particle = new MCParticle();
   particle->setMomentum     ( trajectory->fourMomentum()           ) ;
   particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
+  particle->setHasOscillated( trajectory->hasOscillated()          ) ;
   ///
   return particle;
   ///
