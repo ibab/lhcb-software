@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.5 2004-04-13 13:56:45 asatta Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.6 2004-04-14 14:11:01 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -108,8 +108,8 @@ StatusCode MuonRawBuffer2Digit::initialize() {
             unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
             MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
             unsigned int itype=readoutType(station*4+region, lay);
-            if(itype!=0&itype!=1)msg<<MSG::WARNING<<
-                                    "error in readout type "<<endreq;
+            if( (0!=itype) && (1!=itype) )
+              msg << MSG::WARNING << "Invalid readout type " << itype << endmsg;
             MuonTileID muontile(station,0,itype,lay,region,
                                 quadrant,digitX,digitY);
             //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;

@@ -4,10 +4,11 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-!========================== MuonDAQ v1r0 2004-04-13 =======================
+!========================== MuonDAQ v1r1 2004-04-13 =======================
 ! 2004-04-13 - Alessia Satta
- - Fix warining for usinged intinitialization to a negative value
+ - Fix warining for unsigned intinitialization to a negative value
 
+!========================== MuonDAQ v1r0 2004-02-10 =======================
 ! 2004-02-10 - Alessia Satta
  - Fix bug in readout type info and timeStamp storage 
 
