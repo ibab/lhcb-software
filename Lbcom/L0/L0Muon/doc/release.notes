@@ -1,7 +1,8 @@
-!  $Id: release.notes,v 1.17 2002-09-24 15:50:31 cattanem Exp $
+!  $Id: release.notes,v 1.18 2002-10-04 11:37:37 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+!========================= L0Muon v6r1 2002-10-04 =========================
 ! 2002-09-24 - Marco Cattaneo
  - Use MuonTools v3r*
 
