@@ -4,6 +4,23 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v9r3 2004-01-14 =============================
+! 2004-01-14 - Gloria CORTI
+ - modified packages respect to v9r2 are
+   . DaVinciTools        v8r4
+   . DaVinciAssociators  v4r3
+   . DaVinciMCTools      v5r1
+   . PhysSelections      v6r1
+   . FlavourTagging      v4r7
+   . GlobalReco          v4r2
+   . PhysSelSys          v6r1
+   . LoKi                v1r9
+   . B2DD                v1r7
+   . Bd2DstarPi          v1r5
+   . Bd2KPiPiPi          v1r2
+   . Bd2PhiKs            v3r1p1
+   . DecayPresel         v2r3
+
 !====================  DaVinciSys v9r2 2003-12-15 =============================
 ! 2003-12-15 - Gloria CORTI
  - use all DaVinci packages, respect to DaVinciSys v9r1 and p1-5 patches
