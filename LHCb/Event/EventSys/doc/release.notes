@@ -1,6 +1,11 @@
 package EventSys
 package manager: Marco Cattaneo
 
+
+! >>>>>>>>>>>>>>>>>>>>>>>>> EventSys v10r1 <<<<<<<<<<<<<<<<<<<<<
+! 2002-05-22 - Marco Cattaneo
+ - use Event/Event v1r1
+
 ! >>>>>>>>>>>>>>>>>>>>>>>>> EventSys v10r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020515 - MC
   Fix DoxyFile.cfg for documentation
