@@ -1,17 +1,16 @@
-// $ID
-#ifndef DADIDESTRUCTOR_H 
+// $Id: DaDiDestructor.h,v 1.3 2003-04-30 12:04:17 mato Exp $
+#ifndef DADIDESTRUCTOR_H
 #define DADIDESTRUCTOR_H 1
 
 // Include files
 #include "DaDiMethReturn.h"
 #include "DaDiMethArgument.h"
-
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <list>
 
 /** @class DaDiMethod DaDiMethod.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -19,76 +18,99 @@
 class DaDiDestructor {
 public:
   /// Standard constructor
-  DaDiDestructor() {}; 
+  DaDiDestructor() :
+    m_desc(0),
+    m_code(0),
+    m_daDiMethArgument(std::list<DaDiMethArgument*>()) {};
 
-  virtual ~DaDiDestructor() {}; ///< Standard destructor
+  virtual ~DaDiDestructor();
 
-  DOMString desc();
-  void setDesc(DOMString value);
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
 
-  DOMString argList();
-  void setArgList(DOMString value);
+  //  const XMLCh* argList();
+  //  void setArgList(const XMLCh* value);
 
-  DOMString argInOut();
-  void setArgInOut(DOMString value);
+  //  const XMLCh* argInOut();
+  //  void setArgInOut(const XMLCh* value);
 
-  DOMString code();
-  void setCode(DOMString value);
+  const XMLCh* code();
+  void setCode(const XMLCh* value);
 
   DaDiMethArgument* popDaDiMethArgument();
   void pushDaDiMethArgument(DaDiMethArgument* value);
   int sizeDaDiMethArgument();
-  
+
 protected:
 
 private:
 
-  DOMString                    m_desc, 
-                               m_argList,
-                               m_argInOut,
-                               m_code;
-  std::list<DaDiMethArgument*> m_daDiMethArgument;
+  XMLCh                        *m_desc;
+  //XMLCh                        *m_argList;
+  //XMLCh                        *m_argInOut;
+  XMLCh                        *m_code;
+  std::list<DaDiMethArgument*>  m_daDiMethArgument;
 
 };
 
-inline DOMString DaDiDestructor::desc()
+inline DaDiDestructor::~DaDiDestructor()
+{
+  xercesc::XMLString::release(&m_desc);
+  //  xercesc::XMLString::release(&m_argList);
+  //  xercesc::XMLString::release(&m_argInOut);
+  xercesc::XMLString::release(&m_code);
+  std::list<DaDiMethArgument*>::iterator aIter;
+  for (aIter = m_daDiMethArgument.begin();
+       aIter != m_daDiMethArgument.end();
+       ++aIter)
+  { delete *aIter; }
+
+}
+
+inline const XMLCh* DaDiDestructor::desc()
 {
   return m_desc;
 }
 
-inline void DaDiDestructor::setDesc(DOMString value)
+inline void DaDiDestructor::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiDestructor::argList()
-{
+/*
+  inline const XMLCh* DaDiDestructor::argList()
+  {
   return m_argList;
-}
+  }
 
-inline void DaDiDestructor::setArgList(DOMString value)
-{
-  m_argList = value;
-}
+  inline void DaDiDestructor::setArgList(const XMLCh* value)
+  {
+  m_argList = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_argList, value);
+  }
 
-inline DOMString DaDiDestructor::argInOut()
-{
+  inline const XMLCh* DaDiDestructor::argInOut()
+  {
   return m_argInOut;
-}
+  }
 
-inline void DaDiDestructor::setArgInOut(DOMString value)
-{
-  m_argInOut = value;
-}
+  inline void DaDiDestructor::setArgInOut(const XMLCh* value)
+  {
+  m_argInOut = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_argInOut, value);
+  }
+*/
 
-inline DOMString DaDiDestructor::code()
+inline const XMLCh* DaDiDestructor::code()
 {
   return m_code;
 }
 
-inline void DaDiDestructor::setCode(DOMString value)
+inline void DaDiDestructor::setCode(const XMLCh* value)
 {
-  m_code = value;
+  m_code = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_code, value);
 }
 
 inline DaDiMethArgument* DaDiDestructor::popDaDiMethArgument()

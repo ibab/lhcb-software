@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v4r7
+version v5r0
 
 branches doc cmt src
 

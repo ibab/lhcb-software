@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTypeDef.h,v 1.1 2002-02-04 10:07:00 mato Exp $
-#ifndef DADITYPEDEF_H 
+// $Id: DaDiTypeDef.h,v 1.2 2003-04-30 12:04:19 mato Exp $
+#ifndef DADITYPEDEF_H
 #define DADITYPEDEF_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 /** @class DaDiAttribute DaDiAttribute.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -15,72 +15,87 @@
 class DaDiTypeDef {
 public:
   /// Standard constructor
-  DaDiTypeDef() {}; 
+  DaDiTypeDef() :
+    m_desc(0),
+    m_type(0),
+    m_def(0),
+    m_access(0) {};
 
-  virtual ~DaDiTypeDef() {}; ///< Standard destructor
+  virtual ~DaDiTypeDef();
 
-  DOMString desc();
-  void setDesc(DOMString value);
-    
-  DOMString type();
-  void setType(DOMString value);
-  
-  DOMString def();
-  void setDef(DOMString value);
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
 
-  DOMString access();
-  void setAccess(DOMString value);
-  
+  const XMLCh* type();
+  void setType(const XMLCh* value);
+
+  const XMLCh* def();
+  void setDef(const XMLCh* value);
+
+  const XMLCh* access();
+  void setAccess(const XMLCh* value);
+
 protected:
 
 private:
 
-  DOMString m_desc, 
-            m_type, 
-            m_def, 
-            m_access;
+  XMLCh *m_desc;
+  XMLCh *m_type;
+  XMLCh *m_def;
+  XMLCh *m_access;
 
 };
 
+inline DaDiTypeDef::~DaDiTypeDef()
+{
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_type);
+  xercesc::XMLString::release(&m_def);
+  xercesc::XMLString::release(&m_access);
+}
 
-inline DOMString DaDiTypeDef::desc()
+inline const XMLCh* DaDiTypeDef::desc()
 {
   return m_desc;
 }
 
-inline void DaDiTypeDef::setDesc(DOMString value)
+inline void DaDiTypeDef::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiTypeDef::type()
+inline const XMLCh* DaDiTypeDef::type()
 {
   return m_type;
 }
 
-inline void DaDiTypeDef::setType(DOMString value)
+inline void DaDiTypeDef::setType(const XMLCh* value)
 {
-  m_type = value;
+  m_type = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_type, value);
 }
 
-inline DOMString DaDiTypeDef::def()
+inline const XMLCh* DaDiTypeDef::def()
 {
   return m_def;
 }
 
-inline void DaDiTypeDef::setDef(DOMString value)
+inline void DaDiTypeDef::setDef(const XMLCh* value)
 {
-  m_def = value;
+  m_def = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_def, value);
 }
 
-inline DOMString DaDiTypeDef::access()
+inline const XMLCh* DaDiTypeDef::access()
 {
   return m_access;
 }
 
-inline void DaDiTypeDef::setAccess(DOMString value)
+inline void DaDiTypeDef::setAccess(const XMLCh* value)
 {
-  m_access = value;
+  m_access = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_access, value);
 }
 
 #endif // DADITYPEDEF_H

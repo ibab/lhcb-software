@@ -1,15 +1,17 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.10 2002-04-30 16:50:25 mato Exp $
-#ifndef DADITOOLS_H 
+// $Id: DaDiTools.h,v 1.11 2003-04-30 12:04:19 mato Exp $
+#ifndef DADITOOLS_H
 #define DADITOOLS_H 1
 
 // Some pragmas to avoid warnings in VisualC
 #ifdef WIN32
-  // Disable warning C4786: identifier was truncated to '255' characters in the debug information
-  #pragma warning ( disable : 4786 )
-  // Disable warning C4291: no matching operator delete found; memory will not be freed if initialization throws an exception
-  #pragma warning ( disable : 4291 )
-  // Disable warning C4250: inheritance via dominance
-  #pragma warning ( disable : 4250 )
+// Disable warning C4786: identifier was truncated to '255' characters in the 
+// debug information
+#pragma warning ( disable : 4786 )
+// Disable warning C4291: no matching operator delete found; memory will not 
+// be freed if initialization throws an exception
+#pragma warning ( disable : 4291 )
+// Disable warning C4250: inheritance via dominance
+#pragma warning ( disable : 4250 )
 #endif
 
 // Include files
@@ -19,30 +21,31 @@
 #include <string>
 #include <vector>
 
-#include "sax/SAXParseException.hpp"
-#include "sax/ErrorHandler.hpp"
-#include "dom/DOMString.hpp"
-#include "util/XercesDefs.hpp"
+#include "xercesc/sax/SAXParseException.hpp"
+#include "xercesc/sax/ErrorHandler.hpp"
+
+#include "xercesc/util/XMLString.hpp"
+#include "xercesc/util/XercesDefs.hpp"
 
 
 /** @class DaDiTools DaDiTools.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   13/06/2001
  */
 
 
-class DaDiTools : public ErrorHandler
+class DaDiTools : public xercesc::ErrorHandler
 {
 
 public:
   DaDiTools() {}
-  ~DaDiTools() {} 
+  ~DaDiTools() {}
 
-  void warning(const SAXParseException& toCatch);
-  void error(const SAXParseException& toCatch);
-  void fatalError(const SAXParseException& toCatch);
+  void warning(const xercesc::SAXParseException& toCatch);
+  void error(const xercesc::SAXParseException& toCatch);
+  void fatalError(const xercesc::SAXParseException& toCatch);
   void resetErrors();
 
   static void remSpaces(std::string& word);

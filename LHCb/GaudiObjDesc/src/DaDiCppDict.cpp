@@ -1,15 +1,15 @@
-// $Id: DaDiCppDict.cpp,v 1.35 2003-01-15 17:04:05 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.36 2003-04-30 12:04:16 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
 #include "DaDiPackage.h"
 
-#include "parsers/DOMParser.hpp"
-#include "dom/DOM_DOMException.hpp"
-#include "dom/DOM_NodeList.hpp"
-#include "dom/DOM_Element.hpp"
-#include "dom/DOM_NamedNodeMap.hpp"
-#include "dom/DOMString.hpp"
+#include "xercesc/parsers/XercesDOMParser.hpp"
+#include "xercesc/dom/DOMException.hpp"
+#include "xercesc/dom/DOMNodeList.hpp"
+#include "xercesc/dom/DOMElement.hpp"
+#include "xercesc/dom/DOMNamedNodeMap.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <ctime>
 #include <iostream>
@@ -23,8 +23,10 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader
 //
-// 12/06/2001 : 
+// 12/06/2001 :
 //----------------------------------------------------------------------------
+
+using namespace xercesc;
 
 std::string argV0,
   indent(16, ' '),
@@ -36,22 +38,44 @@ std::vector<std::string> classTypes;
 void usage(std::string argV0)
 //-----------------------------------------------------------------------------
 {
-  std::cout << std::endl << std::endl
-    << "Usage: " << argV0 << " [-h] [-v] [-o [path]] [-x [path]] xml-file(s)"             << std::endl 
-    << "Produce .cpp-files for the Gaudi Dictionary"                         << std::endl << std::endl 
-    << "   -h            display this help and exit"                                      << std::endl
-    << "   -v            display version information and exit"                            << std::endl
-    << "   -i            add additional file-package-information from './AddImports.txt'" << std::endl
-    << "   -o [path]     define possible outputdestination with following precedence"     << std::endl
-    << "                    -o path     use 'path'"                                       << std::endl
-    << "                    -o          use environment-variable 'GODDICTOUT'"            << std::endl
-    << "                     default    use local directory"                              << std::endl
-    << "   -x [path]     define location of 'GaudiCppExport.xml' which holds information" << std::endl
-    << "                 about include-file<->package dependencies, with this precedence" << std::endl
-    << "                    -x path     use 'path'"                                       << std::endl
-    << "                    -x          use environment-variable 'GODXMLDB'"              << std::endl
-    << "                     default    use '$(GAUDIOBJDESCROOT)/xml_files'"              << std::endl
-    << "   xml-file(s)   xml-file(s) to be parsed (must have extension '.xml')"           << std::endl
+  std::cout
+    << std::endl << std::endl
+    << "Usage: " << argV0 << " [-h] [-v] [-o [path]] [-x [path]] xml-file(s)"
+    << std::endl
+    << "Produce .cpp-files for the Gaudi Dictionary"
+    << std::endl << std::endl
+    << "   -h            "
+    << "display this help and exit"
+    << std::endl
+    << "   -v            "
+    << "display version information and exit"
+    << std::endl
+    << "   -i            "
+    << "add additional file-package-information from './AddImports.txt'"
+    << std::endl
+    << "   -o [path]     "
+    << "define possible outputdestination with following precedence"
+    << std::endl
+    << "                    -o path     use 'path'"
+    << std::endl
+    << "                    -o          use environment-variable 'GODDICTOUT'"
+    << std::endl
+    << "                     default    use local directory"
+    << std::endl
+    << "   -x [path]     "
+    << "define location of 'GaudiCppExport.xml' which holds information"
+    << std::endl
+    << "                 "
+    << "about include-file<->package dependencies, with this precedence"
+    << std::endl
+    << "                    -x path     use 'path'"
+    << std::endl
+    << "                    -x          use environment-variable 'GODXMLDB'"
+    << std::endl
+    << "                     default    use '$(GAUDIOBJDESCROOT)/xml_files'"
+    << std::endl
+    << "   xml-file(s)   xml-file(s) to be parsed (must have extension '.xml')"
+    << std::endl
     << std::endl << std::endl;
   exit(0);
 }
@@ -62,8 +86,8 @@ void version(std::string argV0)
 //-----------------------------------------------------------------------------
 {
   std::cout << std::endl << std::endl
-    << argV0 << " version 1.0" << std::endl
-    << "written by Stefan Roiser" << std::endl << std::endl;
+            << argV0 << " version 1.0" << std::endl
+            << "written by Stefan Roiser" << std::endl << std::endl;
   exit(0);
 }
 
@@ -72,7 +96,7 @@ void version(std::string argV0)
 std::string checkType(std::string type, std::string prefix)
 //-----------------------------------------------------------------------------
 {
-  std::vector<std::string>::iterator iter = 
+  std::vector<std::string>::iterator iter =
     std::find(classTypes.begin(), classTypes.end(), type);
   if (iter != classTypes.end())
   {
@@ -85,14 +109,14 @@ std::string checkType(std::string type, std::string prefix)
 }
 
 /*/-----------------------------------------------------------------------------
-std::string stripString(std::string value)
-//-----------------------------------------------------------------------------
-{
+  std::string stripString(std::string value)
+  //----------------------------------------------------------------------------
+  {
   std::string::iterator iter =
-    std::remove(value.begin(), value.end(), " ");
+  std::remove(value.begin(), value.end(), " ");
   return value.erase(iter, value.end());
-}*/
-  
+  }*/
+
 //-----------------------------------------------------------------------------
 std::string printAccessor(std::string access)
 //-----------------------------------------------------------------------------
@@ -135,7 +159,7 @@ std::string constructTypes(std::string type)
     pos1 = type.find_last_of("[");
     pos2 = type.find_last_of("]");
     std::string arrSize = type.substr(pos1,pos2),
-                rType = type.substr(0,pos1);
+      rType = type.substr(0,pos1);
 
     constrType = "  MetaClass::condCreateClass(\"" + type + "\",\n"
       + indent + "\"array of " + arrSize + " " + rType + "s\",\n"
@@ -146,7 +170,7 @@ std::string constructTypes(std::string type)
   else if (DaDiTools::isStdContainer(type))
   {
     std::string contType = DaDiTools::containerType(type);
-    constrType = "  MetaClass::condCreateClass(\"" + type + "\",\n" 
+    constrType = "  MetaClass::condCreateClass(\"" + type + "\",\n"
       + indent + "\"standard container of " + contType + "\",\n"
       + indent + "sizeof(" + type + "),\n"
       + indent + "0xC1,\n"
@@ -165,55 +189,62 @@ void printCppDictionary(DaDiPackage* gddPackage,
                         char* envXmlDB,
                         const char* envOut,
                         bool additionalImports)
-                        //std::string dothDir)
+//std::string dothDir)
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0 ,k=0;
   std::map<std::string,std::string> dbExportClass;
   unsigned int methodCounter = 0;
 
-//
-// Parser initialization
-//
-  DOMParser *dbParser = new DOMParser;
-  dbParser->setValidationScheme(DOMParser::Val_Auto);
+  //
+  // Parser initialization
+  //
+  XercesDOMParser *dbParser = new XercesDOMParser;
+  dbParser->setValidationScheme(XercesDOMParser::Val_Auto);
   dbParser->setDoNamespaces(false);
-  ErrorHandler *dbErrReporter = new DaDiTools();
-  dbParser->setErrorHandler(dbErrReporter);
+  dbParser->setDoSchema(false);
   dbParser->setCreateEntityReferenceNodes(false);
-  dbParser->setToCreateXMLDeclTypeNode(true);
-  
+  dbParser->setValidationSchemaFullChecking(false);
+  //  dbParser->setToCreateXMLDeclTypeNode(true);
+
+  //  ErrorHandler* errReporter = new DaDiTools();
+  DaDiTools* daditools = new DaDiTools();
+  ErrorHandler* errReporter = dynamic_cast<ErrorHandler*>(daditools);
+  delete daditools;
+  dbParser->setErrorHandler(errReporter);
+
   bool dbErrorsOccured = false;
-  
-//
-// Parse the 'Headerdatabase'
-//
-  char* xmlDbFileName = strcat(envXmlDB,"GaudiCppExport.xml");
+
+  //
+  // Parse the 'Headerdatabase'
+  //
   try
   {
-    dbParser->parse(xmlDbFileName);
+    dbParser->parse(envXmlDB);
   }
-  
+
   catch(const XMLException& e)
   {
     std::cerr << "An error occured during parsing \n Message: "
-      << e.getMessage() << std::endl;
-      dbErrorsOccured = true;
-  }
-  
-  catch(const DOM_DOMException& e)
-  {
-    std::cerr << "An error occured during parsing \n Message: "
-            << e.msg.transcode() << std::endl;
+              << e.getMessage() << std::endl;
     dbErrorsOccured = true;
   }
-  
+
+  catch(const DOMException& e)
+  {
+    char *msg = XMLString::transcode(e.msg);
+    std::cerr << "An error occured during parsing \n Message: "
+              << msg << std::endl;
+    delete msg;
+    dbErrorsOccured = true;
+  }
+
   catch(...)
   {
     std::cerr << "An error occured during parsing " << std::endl;
     dbErrorsOccured = true;
   }
-  
+
 
   if (dbErrorsOccured)
   {
@@ -227,60 +258,78 @@ void printCppDictionary(DaDiPackage* gddPackage,
     }
   }
 
-//
-// Produce map of classes and files (for later use in #include-statements)
-//
+  //
+  // Produce map of classes and files (for later use in #include-statements)
+  //
   else
   {
-    DOM_Node dbDoc = dbParser->getDocument();
-    DOM_Node dbTop = dbDoc.getFirstChild();
-      
-    while(dbTop.getNodeName().equals("gdd"))
+    DOMNode* dbDoc = dbParser->getDocument();
+    DOMNode* dbTop = dbDoc->getFirstChild();
+
+    XMLCh* cmpStr = XMLString::transcode("gdd");
+    while(XMLString::compareString(dbTop->getNodeName(), cmpStr) != 0)
     {
-      dbTop = dbTop.getNextSibling();
+      dbTop = dbTop->getNextSibling();
     }
-      
-    DOM_Node dbPackNode = dbTop.getNextSibling().getFirstChild();
-      
-    while (!dbPackNode.isNull())
+    XMLString::release(&cmpStr);
+
+    DOMNode* dbPackNode = dbTop->getNextSibling()->getFirstChild();
+
+    while (dbPackNode != 0)
     {
-      if (dbPackNode.getNodeName().equals("package"))
+      cmpStr = XMLString::transcode("package");
+      if (XMLString::compareString(dbPackNode->getNodeName(), cmpStr) == 0)
       {
-        DOM_Node dbClassNode = dbPackNode.getFirstChild();
-        std::string dbPackName;
-        dbPackName = dbPackNode.getAttributes().
-                  getNamedItem(DOMString::transcode("name")).
-                getNodeValue().transcode();
-        while(!dbClassNode.isNull())
+        DOMNode* dbClassNode = dbPackNode->getFirstChild();
+        XMLCh* itemStr = XMLString::transcode("name");
+        char *cDbPackName = XMLString::transcode(dbPackNode->getAttributes()->
+                                                 getNamedItem(itemStr)->
+                                                 getNodeValue());
+        std::string dbPackName = cDbPackName;
+        XMLString::release(&cDbPackName);
+        XMLString::release(&itemStr);
+        while(dbClassNode != 0)
         {
-          if (dbClassNode.getNodeName().equals("class"))
+          XMLCh* cmpStr2 = XMLString::transcode("class");
+          if (XMLString::compareString(dbClassNode->getNodeName(),cmpStr2) == 0)
           {
             std::string dbClassName, dbFileName;
-            dbClassName = dbClassNode.getAttributes().
-              getNamedItem(DOMString::transcode("name")).
-                      getNodeValue().transcode();
-            if (dbClassNode.getAttributes().
-                    getNamedItem(DOMString::transcode("filename")) != 0)
+            itemStr = XMLString::transcode("name");
+            char* cDbClassName = XMLString::transcode(dbClassNode->
+                                                      getAttributes()->
+                                                      getNamedItem(itemStr)->
+                                                      getNodeValue());
+            dbClassName = std::string(cDbClassName);
+            XMLString::release(&cDbClassName);
+            XMLString::release(&itemStr);
+            XMLCh* itemStr = XMLString::transcode("filename");
+            if (dbClassNode->getAttributes()->getNamedItem(itemStr) != 0)
             {
-              dbFileName = dbClassNode.getAttributes().
-                getNamedItem(DOMString::transcode("filename")).
-                getNodeValue().transcode();
+              char* cDbFileName = XMLString::transcode(dbClassNode->
+                                                       getAttributes()->
+                                                       getNamedItem(itemStr)->
+                                                       getNodeValue());
+              dbFileName = std::string(cDbFileName);
+              XMLString::release(&cDbFileName);
               dbExportClass[dbClassName] = dbPackName+"/"+dbFileName;
             }
             else
             {
               dbExportClass[dbClassName] = dbPackName+"/"+dbClassName;
             }
+            XMLString::release(&itemStr);
           }
-          dbClassNode = dbClassNode.getNextSibling();
+          XMLString::release(&cmpStr2);
+          dbClassNode = dbClassNode->getNextSibling();
         }
       }
-      dbPackNode = dbPackNode.getNextSibling();
+      XMLString::release(&cmpStr);
+      dbPackNode = dbPackNode->getNextSibling();
     }
   }
-  
+
   delete dbParser;
-  delete dbErrReporter;
+  //XMLString::release(&dbErrReporter);
 
   if (additionalImports)
   {
@@ -288,12 +337,12 @@ void printCppDictionary(DaDiPackage* gddPackage,
     std::ifstream addXml(addImportsFile);
     std::string aline, first, second;
 
-    if (!addXml) 
-    { 
-      std::cerr << "Cannot open " << addImportsFile << std::endl; 
+    if (!addXml)
+    {
+      std::cerr << "Cannot open " << addImportsFile << std::endl;
     }
     else
-    {  
+    {
       while(!addXml.eof())
       {
         addXml >> first;
@@ -309,810 +358,968 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
   for(k=0; k<gddPackage->sizeDaDiClass(); ++k)
   {
-  
-  DaDiClass* gddClass = gddPackage->popDaDiClass();
-  methodCounter = 0;
 
-  std::string gddClassName = gddClass->name().transcode(),
-              gddClassDesc = gddClass->desc().transcode(),
-              gddClassAuthor = gddClass->author().transcode(),
-              gddClassID = gddClass->ID().transcode();
+    DaDiClass* gddClass = gddPackage->popDaDiClass();
+    methodCounter = 0;
 
-
-  dbExportClass[std::string(gddClass->name().transcode())] =
-    std::string(gddPackage->packageName().transcode()) + "/" 
-    + std::string(gddClass->name().transcode());
-
-  for (i=0; i<gddClass->sizeDaDiEnum(); ++i)
-  {
-    classTypes.push_back(gddClass->popDaDiEnum()->name().transcode());
-  }    
-
-// ------------------------------------------------------------------------
-// Start of writing the .cpp-file for filling the MetaModel
+    char *gddClassName = XMLString::transcode(gddClass->name()),
+      *gddClassDesc = XMLString::transcode(gddClass->desc()),
+      *gddClassAuthor = XMLString::transcode(gddClass->author()),
+      *gddClassID = XMLString::transcode(gddClass->ID()),
+      *gddPackageName = XMLString::transcode(gddPackage->packageName());
 
 
-  char* cppFileName = new char[256];
-  strcpy(cppFileName,envOut);
-  strcat(cppFileName, gddClass->name().transcode());
-  strcat(cppFileName, "_dict.cpp");
-  std::cout << "Writing " << cppFileName;
-  std::ofstream metaOut(cppFileName);
+    dbExportClass[std::string(gddClassName)] =
+      std::string(gddPackageName) + "/"  + std::string(gddClassName);
 
-//
-// CVS-tag and 'donotedit'-message
-//
-
-  metaOut << std::endl << std::endl
-    << "//   **************************************************************************" << std::endl
-    << "//   *                                                                        *" << std::endl
-    << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
-    << "//   *                                                                        *" << std::endl
-    << "//   *  This file was created automatically by GaudiObjDesc, please do not    *" << std::endl
-    << "//   *  delete it or edit it by hand.                                         *" << std::endl
-    << "//   *                                                                        *" << std::endl
-    << "//   *  If you want to change this file, first change the corresponding       *" << std::endl
-    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *" << std::endl
-    << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
-    << "//   *                                                                        *" << std::endl
-    << "//   **************************************************************************" << std::endl
-    << std::endl << std::endl << std::endl;
-
-//
-// Include files
-//
-  metaOut << "//Include files" << std::endl 
-    << "#include \"GaudiKernel/Kernel.h\"" << std::endl 
-    << "#include \"GaudiKernel/SmartRef.h\"" << std::endl 
-    << "#include \"GaudiKernel/SmartRefVector.h\"" << std::endl;
-  metaOut << std::endl 
-    << "#include <string>" << std::endl 
-    << std::endl; 
-//    << "#define private public" << std::endl
-//    << "#define protected public" << std::endl;
-  
-//    std::string impName = gddClassName;
-
-//  metaOut << "#include \"" << dothDir << "/" << impName << ".h\"" << std::endl;
-  metaOut << "#include \"" << gddClassName << "_dict.h\"" << std::endl;
-
-  metaOut //<< "#undef protected" << std::endl
-    //<< "#undef private" << std::endl 
-    << std::endl 
-    << "#include \"GaudiIntrospection/Introspection.h\"" << std::endl 
-    << std::endl 
-    << std::endl;
-
-
-  if (gddClass->sizeDaDiTypeDef())
-  {
-    metaOut << "// Typedef-declarations " << std::endl;
-    for (i=0; i<gddClass->sizeDaDiTypeDef(); ++i)
+    for (i=0; i<gddClass->sizeDaDiEnum(); ++i)
     {
-      DaDiTypeDef* gddTypeDef      = gddClass->popDaDiTypeDef();
-      std::string gddTypeDefType   = gddTypeDef->type().transcode(),
-                  gddTypeDefDef    = gddTypeDef->def().transcode();
-
-      metaOut << "typedef " << gddTypeDefType << " " << gddTypeDefDef << ";" << std::endl;
+      char *gddEnum = XMLString::transcode(gddClass->popDaDiEnum()->name());
+      classTypes.push_back(gddEnum);
+      XMLString::release(&gddEnum);
     }
-    metaOut << std::endl 
+
+    // ------------------------------------------------------------------------
+    // Start of writing the .cpp-file for filling the MetaModel
+
+
+    char* cppFileName = new char[256];
+    strcpy(cppFileName,envOut);
+    strcat(cppFileName, gddClassName);
+    strcat(cppFileName, "_dict.cpp");
+    std::cout << "Writing " << cppFileName;
+    std::ofstream metaOut(cppFileName);
+
+    //
+    // CVS-tag and 'donotedit'-message
+    //
+
+    metaOut
+      << std::endl << std::endl
+      << "//   ****************************************************************"
+      << "**********" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *                      ! ! ! A T T E N T I O N ! ! !            "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *  This file was created automatically by GaudiObjDesc, please d"
+      << "o not    *" << std::endl
+      << "//   *  delete it or edit it by hand.                                "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *  If you want to change this file, first change the correspondi"
+      << "ng       *" << std::endl
+      << "//   *  xml-file and rerun the tools from GaudiObjDesc (or run make i"
+      << "f you    *" << std::endl
+      << "//   *  are using it from inside a Gaudi-package).                   "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   ****************************************************************"
+      << "**********" << std::endl
+      << std::endl << std::endl << std::endl;
+
+    //
+    // Include files
+    //
+    metaOut << "//Include files" << std::endl
+            << "#include \"GaudiKernel/Kernel.h\"" << std::endl
+            << "#include \"GaudiKernel/SmartRef.h\"" << std::endl
+            << "#include \"GaudiKernel/SmartRefVector.h\"" << std::endl;
+    metaOut << std::endl
+            << "#include <string>" << std::endl
+            << std::endl;
+    //    << "#define private public" << std::endl
+    //    << "#define protected public" << std::endl;
+
+    //    std::string impName = gddClassName;
+
+    //  metaOut << "#include \"" << dothDir << "/" << impName << ".h\"
+    //            << std::endl;
+    metaOut << "#include \"" << gddClassName << "_dict.h\"" << std::endl;
+
+    metaOut //<< "#undef protected" << std::endl
+      //<< "#undef private" << std::endl
+      << std::endl
+      << "#include \"GaudiIntrospection/Introspection.h\"" << std::endl
+      << std::endl
       << std::endl;
-  }
 
 
-//
-// class_dict with constructor
-//
-  metaOut << remLine << std::endl
-    << "class " << gddClassName << "_dict" << std::endl 
-    << remLine << std::endl
-    << "{" << std::endl 
-    << "public:" << std::endl 
-    << "  " << gddClassName << "_dict();" << std::endl 
-    << "};" << std::endl 
-    << std::endl;
-
-bool classIsAbstract = false;
-  
-// 
-// static methods for invocation
-//
-  for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
-  {
-    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    std::string gddMethName = gddMethod->name().transcode(),
-                gddMethRetType = gddMethod->daDiMethReturn()->type().transcode(),
-				        gddMethVirtual = gddMethod->virtual_().transcode();
-    bool toReturn = (gddMethRetType == "void") ? false : true,
-         gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true,
-         gddMethIsConst = gddMethod->const_(),
-		 gddMethIsFriend = gddMethod->friend_(),
-		 gddMethIsPureVirtual = (gddMethVirtual == "PURE") ? true : false,
-     gddMethIsAccessible = (gddMethod->access().equals("PROTECTED") ||
-                            gddMethod->access().equals("PRIVATE")) ? false : true;
-
-    if (gddMethIsPureVirtual) { classIsAbstract = true; }
-
-    if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
-        && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
-        && gddMethIsAccessible)
+    if (gddClass->sizeDaDiTypeDef())
     {
-      metaOut << remLine << std::endl
-        << "static void";
-      if (toReturn)
+      metaOut << "// Typedef-declarations " << std::endl;
+      for (i=0; i<gddClass->sizeDaDiTypeDef(); ++i)
       {
-        metaOut << "*";
+        DaDiTypeDef* gddTypeDef= gddClass->popDaDiTypeDef();
+        char *gddTypeDefType   = XMLString::transcode(gddTypeDef->type()),
+          *gddTypeDefDef    = XMLString::transcode(gddTypeDef->def());
+
+        metaOut << "typedef " << gddTypeDefType << " " << gddTypeDefDef << ";"
+                << std::endl;
+        XMLString::release(&gddTypeDefType);
+        XMLString::release(&gddTypeDefDef);
       }
-      metaOut << " " << gddClassName << "_" << checkSymb(gddMethName)
-        << "_" << methodCounter++;
-      if (gddMethIsConst)
+      metaOut << std::endl
+              << std::endl;
+    }
+
+
+    //
+    // class_dict with constructor
+    //
+    metaOut << remLine << std::endl
+            << "class " << gddClassName << "_dict" << std::endl
+            << remLine << std::endl
+            << "{" << std::endl
+            << "public:" << std::endl
+            << "  " << gddClassName << "_dict();" << std::endl
+            << "};" << std::endl
+            << std::endl;
+
+    bool classIsAbstract = false;
+
+    //
+    // static methods for invocation
+    //
+    for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
+    {
+      DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+      char *gddMethName = XMLString::transcode(gddMethod->name()),
+        *gddMethRetType = XMLString::transcode(gddMethod->daDiMethReturn()->
+                                               type()),
+        *gddMethVirtual = XMLString::transcode(gddMethod->virtual_());
+      XMLCh *privateStr = XMLString::transcode("PRIVATE"),
+        *protectedStr = XMLString::transcode("PROTECTED");
+      bool toReturn = (strcmp(gddMethRetType,"void")==0) ? false : true,
+        gddMethIsTemplated = (XMLString::stringLen
+                              (gddMethod->template_()) == 0) ? false : true,
+        gddMethIsConst = gddMethod->const_(),
+        gddMethIsFriend = gddMethod->friend_(),
+        gddMethIsPureVirtual = (strcmp
+                                (gddMethVirtual,"PURE") == 0) ? true : false,
+        gddMethIsAccessible =
+        ((XMLString::compareString(gddMethod->access(), protectedStr) == 0) ||
+         (XMLString::compareString
+          (gddMethod->access(), privateStr) == 0)) ? false : true;
+      XMLString::release(&privateStr);
+      XMLString::release(&protectedStr);
+
+      if (gddMethIsPureVirtual) { classIsAbstract = true; }
+
+      if (strcmp(gddMethName,"serialize") != 0 &&
+          !DaDiTools::isEmpty(gddMethRetType)
+          && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
+          && gddMethIsAccessible)
       {
-        metaOut << "const";
-      }
-      if (gddMethod->sizeDaDiMethArgument())
-      {
-        metaOut << "(void* v, std::vector<void*> argList)" << std::endl;
-      }
-      else
-      {
-        metaOut << "(void* v)" << std::endl;
-      }
-      metaOut << remLine << std::endl
-        << "{" << std::endl;
-      if (toReturn && !DaDiTools::isRef(gddMethRetType) 
-                   && !DaDiTools::isPointer(gddMethRetType))
-      {
-        metaOut << "  static ";
-        if (gddMethod->daDiMethReturn()->const_())
+        metaOut << remLine << std::endl
+                << "static void";
+        if (toReturn)
         {
-          metaOut << "const ";
+          metaOut << "*";
         }
-        metaOut << checkType(gddMethRetType,gddClassName) << " ret;" << std::endl;
-      }
-      metaOut << "  ";
-      if (toReturn)
-      {
-        if (DaDiTools::isRef(gddMethRetType))
+        metaOut << " " << gddClassName << "_" << checkSymb(gddMethName)
+                << "_" << methodCounter++;
+        if (gddMethIsConst)
         {
-          metaOut << "return &(" << gddMethRetType << ") ";
+          metaOut << "const";
         }
-        else if (DaDiTools::isPointer(gddMethRetType))
+        if (gddMethod->sizeDaDiMethArgument())
         {
-          metaOut << "return (" << gddMethRetType << ") ";
+          metaOut << "(void* v, std::vector<void*> argList)" << std::endl;
         }
         else
         {
-          metaOut << "ret = ";
+          metaOut << "(void* v)" << std::endl;
         }
-      }
-      metaOut << "((" << gddClassName << "*)v)->" << gddMethName << "(";
-
-      for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
-      {
-        DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-        std::string gddMethArgType = gddMethArgument->type().transcode();
-
-        if (j!=0) 
-        {   
-          metaOut << "," << std::endl 
-            << "          "; 
-        }
-        metaOut << "*(" << checkType(gddMethArgType,gddClassName);
-        if (gddMethArgument->isPointer())
+        metaOut << remLine << std::endl
+                << "{" << std::endl;
+        if (toReturn && !DaDiTools::isRef(gddMethRetType)
+            && !DaDiTools::isPointer(gddMethRetType))
         {
-          metaOut << "*";
+          metaOut << "  static ";
+          if (gddMethod->daDiMethReturn()->const_())
+          {
+            metaOut << "const ";
+          }
+          metaOut << checkType(gddMethRetType,gddClassName) << " ret;"
+                  << std::endl;
         }
-        metaOut << "*)argList[" << j << "]";
-      }
-
-      metaOut << ");" << std::endl;
-      if (toReturn && !DaDiTools::isRef(gddMethRetType)
-                   && !DaDiTools::isPointer(gddMethRetType))
-      {
-        metaOut << "  return &ret;" << std::endl;
-      }
-      metaOut << "}" << std::endl
-        << std::endl;
-    }
-  }
-
-//
-// static get- and set-methods for attributes
-//
-  for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
-  {
-    DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-    std::string gddAttName = gddAttribute->name().transcode(),
-                gddAttType = gddAttribute->type().transcode();
-    bool setMeth = (gddAttribute->setMeth().equals("FALSE")) ? false : true,
-         getMeth = (gddAttribute->getMeth().equals("FALSE")) ? false : true;
-
-    if (getMeth)
-    {
-      metaOut << remLine << std::endl
-        << "static void* " << gddClassName << "_" << gddAttName 
-        << "_" << methodCounter++ << "(void* v)" << std::endl
-        << remLine << std::endl
-        << "{" << std::endl;
-      if ( DaDiTools::isSimple(gddAttType) )
-      {
-        metaOut << "  static ";
-      }
-      else if (!DaDiTools::isFundamental(gddAttType) || DaDiTools::isPointer(gddAttType))
-      {
-        metaOut << "  const ";
-      }
-      metaOut << gddAttType;
-      if (!DaDiTools::isSimple(gddAttType))
-      {
-        metaOut << "& ret =";
-      }
-      else
-      {
-        metaOut << " ret;" << std::endl << "  ret = ";
-      }
-      metaOut << " ((" << gddClassName << "*)v)->"
-        << DaDiTools::retGetName(gddAttName) << "();" << std::endl
-        << "  return (void*)&ret;" << std::endl
-        << "}" << std::endl
-        << std::endl;
-    }
-
-    if (setMeth)
-    {
-      metaOut << remLine << std::endl
-        << "static void " << gddClassName << "_set" 
-          << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++ 
-          << "(void* v, std::vector<void*> argList)" << std::endl
-        << remLine << std::endl
-        << "{" << std::endl
-        << "  ((" << gddClassName << "*)v)->set"
-          << DaDiTools::firstUp(gddAttName) << "(*(" 
-          << checkType(gddAttType,gddClassName) << "*)argList[0]);" << std::endl
-        << "}" << std::endl
-        << std::endl;
-    }
-  }
-
-//
-// static get-, set-, addTo-, removeFrom-, clear-methods for relations
-//
-  for (i=0; i<gddClass->sizeDaDiRelation(); ++i)
-  {
-    DaDiRelation* gddRelation = gddClass->popDaDiRelation();
-    bool setMeth = (gddRelation->setMeth().equals("FALSE")) ? false : true,
-         getMeth = (gddRelation->getMeth().equals("FALSE")) ? false : true,
-         addMeth = (gddRelation->addMeth().equals("FALSE")) ? false : true,
-         remMeth = (gddRelation->remMeth().equals("FALSE")) ? false : true,
-         clrMeth = (gddRelation->clrMeth().equals("FALSE")) ? false : true,
-         multRel = (gddRelation->ratio().equals("1")) ? false : true;
-    std::string gddRelName = gddRelation->name().transcode(),
-                gddRelType = gddRelation->type().transcode(),
-                gddRealRelType = (multRel) ? 
-                                 "SmartRefVector<" + gddRelType + ">" : 
-                                 gddRelType + "*";
-
-    if (getMeth)
-    {
-      metaOut << remLine << std::endl
-        << "static void* " << gddClassName << "_" << gddRelName
-        << "_" << methodCounter++ << "(void* v)" << std::endl
-        << remLine << std::endl 
-        << "{" << std::endl
-        << (multRel ? "  const " : "  ") << gddRealRelType << (multRel ? "&" : "")
-        << " ret = ((" << gddClassName << "*)v)->"
-        << DaDiTools::retGetName(gddRelName) << "();" << std::endl
-        << "  return " <<(multRel ? "(void*)&ret" : " (void*)ret") << ";" << std::endl
-        << "}" << std::endl
-        << std::endl;
-    }
-
-    if (setMeth)
-    {
-      metaOut << remLine << std::endl
-        << "static void " << gddClassName << "_set"
-          << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-          << "(void* v, std::vector<void*> argList)" << std::endl
-        << remLine << std::endl
-        << "{" << std::endl
-        << "  ((" << gddClassName << "*)v)->set"
-        << DaDiTools::firstUp(gddRelName) << (multRel ? "(*(" : "((") << gddRealRelType
-        << (multRel ? "*" : "" ) << ")argList[0]);" << std::endl
-        << "}" << std::endl
-        << std::endl;
-    }
-
-    if (multRel)
-    {
-      if (clrMeth)
-      {
-        metaOut << remLine << std::endl
-          << "static void " << gddClassName << "_clear"
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-            << "(void* v)" << std::endl
-          << remLine << std::endl
-          << "{" << std::endl
-          << "  ((" << gddClassName << "*)v)->clear"
-            << DaDiTools::firstUp(gddRelName) << "();" << std::endl
-          << "}" << std::endl
-          << std::endl;
-      }
-
-      if (addMeth)
-      {
-        metaOut << remLine << std::endl
-          << "static void " << gddClassName << "_addTo"
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-            << "(void* v, std::vector<void*> argList)" << std::endl
-          << remLine << std::endl
-          << "{" << std::endl
-          << "  ((" << gddClassName << "*)v)->addTo"
-          << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
-            << "*)argList[0]);" << std::endl
-          << "}" << std::endl
-          << std::endl;
-      }
-
-      if (remMeth)
-      {
-        metaOut << remLine << std::endl
-          << "static void " << gddClassName << "_removeFrom"
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-            << "(void* v, std::vector<void*> argList)" << std::endl
-          << remLine << std::endl
-          << "{" << std::endl
-          << "  ((" << gddClassName << "*)v)->removeFrom"
-          << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
-            << "*)argList[0]);" << std::endl
-          << "}" << std::endl
-          << std::endl;
-      }
-    }
-  }
-
-//
-// static methods for constructor
-//
-  bool constWithZeroArgs = false;
-  if (!classIsAbstract)
-  {      
-    for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
-    {
-      DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
-
-      metaOut << remLine << std::endl
-        << "static void* " << gddClassName << "_constructor_" << i << "(";
-    
-      if (gddConstructor->sizeDaDiMethArgument())
-      {
-        metaOut << "std::vector<void*> argList";
-      }
-      else
-      {
-        constWithZeroArgs = true;
-      }
-    
-      metaOut << ")" << std::endl
-        << remLine << std::endl
-        << "{" << std::endl
-        << "  static " << gddClassName << "* ret = new " << gddClassName << "(";
-    
-      for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
-      {
-        DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
-        std::string gddMethArgType = gddMethArgument->type().transcode();
-
-        if (j!=0) 
-        {     
-          metaOut << "," << std::endl 
-            << "          "; 
-        }
-        metaOut << "*(" << checkType(gddMethArgType,gddClassName);
-        if (gddMethArgument->isPointer())
+        metaOut << "  ";
+        if (toReturn)
         {
-          metaOut << "*";
+          if (DaDiTools::isRef(gddMethRetType))
+          {
+            metaOut << "return &(" << gddMethRetType << ") ";
+          }
+          else if (DaDiTools::isPointer(gddMethRetType))
+          {
+            metaOut << "return (" << gddMethRetType << ") ";
+          }
+          else
+          {
+            metaOut << "ret = ";
+          }
         }
-        metaOut << "*)argList[" << j << "]";
+        metaOut << "((" << gddClassName << "*)v)->" << gddMethName << "(";
+
+        for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
+        {
+          DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
+          char* gddMethArgType = XMLString::transcode(gddMethArgument->type());
+
+          if (j!=0)
+          {
+            metaOut << "," << std::endl
+                    << "          ";
+          }
+          metaOut << "*(" << checkType(gddMethArgType,gddClassName);
+          if (gddMethArgument->isPointer())
+          {
+            metaOut << "*";
+          }
+          metaOut << "*)argList[" << j << "]";
+          XMLString::release(&gddMethArgType);
+        }
+
+        metaOut << ");" << std::endl;
+        if (toReturn && !DaDiTools::isRef(gddMethRetType)
+            && !DaDiTools::isPointer(gddMethRetType))
+        {
+          metaOut << "  return &ret;" << std::endl;
+        }
+        metaOut << "}" << std::endl
+                << std::endl;
       }
-    
-      metaOut << ");" << std::endl
-        << "  return ret;" << std::endl
-        << "}" << std::endl
-        << std::endl;
+      XMLString::release(&gddMethName);
+      XMLString::release(&gddMethRetType);
+      XMLString::release(&gddMethVirtual);
     }
 
-    if (!constWithZeroArgs)
+
+    //
+    // static get- and set-methods for attributes
+    //
+    for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
-      metaOut << remLine << std::endl
-        << "static void* " << gddClassName << "_constructor_" << ++i << "()" << std::endl
-        << remLine << std::endl
-        << "{" << std::endl
-        << "  static " << gddClassName << "* ret = new " << gddClassName << "();" << std::endl
-        << "  return ret;" << std::endl
-        << "}" << std::endl
-        << std::endl;
-    }
-  }
-  
+      DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      char *gddAttName = XMLString::transcode(gddAttribute->name()),
+        *gddAttType = XMLString::transcode(gddAttribute->type());
+      XMLCh *falseStr = XMLString::transcode("FALSE");
+      bool setMeth = (XMLString::compareString
+                      (gddAttribute->setMeth(), falseStr) == 0) ? false : true,
+        getMeth = (XMLString::compareString
+                   (gddAttribute->getMeth(), falseStr) == 0) ? false : true;
+      XMLString::release(&falseStr);
 
-
-  methodCounter = 0;
-
-//
-// Instance of class
-//
-  metaOut << remLine << std::endl
-    << "static " << gddClassName << "_dict instance;" << std::endl 
-    << remLine << std::endl
-    << std::endl;
-
-//
-// Start of constructor
-//
-  metaOut << remLine << std::endl
-    << gddClassName << "_dict::" << gddClassName << "_dict()" << std::endl 
-    << remLine << std::endl
-    << "{" << std::endl;
-
-  if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() || 
-      gddClass->sizeDaDiRelation())
-  {
-    metaOut << "  std::vector<std::string> argTypes = std::vector<std::string>();"
-        << std::endl;
-  }
-
-//
-// Creation of Metaclass
-//
-  metaOut << "  MetaClass* metaC = new MetaClass(\"" << gddClassName << "\"," 
-      << std::endl
-    << indent << "\"" << gddClassDesc << "\"," << std::endl
-    << indent << "0);" << std::endl 
-    << std::endl;
-
-//
-// Creation of Superclasses
-//
-
-  if (gddClass->sizeDaDiBaseClass())
-  {
-	  if (gddClass->abstract())
-	  {
-      for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+      if (getMeth)
       {
-        std::string gddBaseClassName = gddClass->popDaDiBaseClass()->name().transcode();
-  
-        //
-        // This is a hack (problems when abstract interface is derived from another-one)
-        //
-        metaOut << "metaC->addSuperClass(\"" << gddBaseClassName << "\",0);"
-          << "// this will not work !!!! " << std::endl;
-
-        /*
-        metaOut << "  " << gddBaseClassName << "* bc = new " << gddBaseClassName << "();"
-          << std::endl
-          << "  " << gddClassName << "* cl = (" << gddClassName << "*)bc;" << std::endl
-          << "  metaC->addSuperClass(\"" << gddBaseClassName << "\"," << std::endl
-          << indent << "(int)cl-(int)bc);" << std::endl
-          << "  delete bc;" << std::endl
-          << "  delete cl;" << std::endl;
-          */
+        metaOut << remLine << std::endl
+                << "static void* " << gddClassName << "_" << gddAttName
+                << "_" << methodCounter++ << "(void* v)" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl;
+        if ( DaDiTools::isSimple(gddAttType) )
+        {
+          metaOut << "  static ";
+        }
+        else if (!DaDiTools::isFundamental(gddAttType) ||
+                 DaDiTools::isPointer(gddAttType))
+        {
+          metaOut << "  const ";
+        }
+        metaOut << gddAttType;
+        if (!DaDiTools::isSimple(gddAttType))
+        {
+          metaOut << "& ret =";
+        }
+        else
+        {
+          metaOut << " ret;" << std::endl << "  ret = ";
+        }
+        metaOut << " ((" << gddClassName << "*)v)->"
+                << DaDiTools::retGetName(gddAttName) << "();" << std::endl
+                << "  return (void*)&ret;" << std::endl
+                << "}" << std::endl
+                << std::endl;
       }
-	  }
-	  else
-	  {
-	    metaOut << "  " << gddClassName << "* cl = new " << gddClassName << "();"
-		    << std::endl;
 
-	    for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
-	    {
-	      std::string gddBaseClass=gddClass->popDaDiBaseClass()->name().transcode();
-
-	      metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\"," 
-		      << std::endl
-		    << indent << "(((int)cl)-((int)((" << gddBaseClass << "*)cl))));" 
-		      << std::endl;
-	    }
-
-	    metaOut << "  delete cl;" << std::endl
-	      << std::endl;
-	  }
-  }
-
-//
-// Creation of constructors
-//
-  if (!classIsAbstract)
-  {    
-    for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
-    {
-      DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
-      std::string gddConstDesc = gddConstructor->desc().transcode();
-
-      if (gddConstructor->sizeDaDiMethArgument())
+      if (setMeth)
       {
-        metaOut << "  argTypes.clear();" << std::endl;
+        metaOut << remLine << std::endl
+                << "static void " << gddClassName << "_set"
+                << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++
+                << "(void* v, std::vector<void*> argList)" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl
+                << "  ((" << gddClassName << "*)v)->set"
+                << DaDiTools::firstUp(gddAttName) << "(*("
+                << checkType(gddAttType,gddClassName) << "*)argList[0]);"
+                << std::endl
+                << "}" << std::endl
+                << std::endl;
+      }
+      XMLString::release(&gddAttName);
+      XMLString::release(&gddAttType);
+    }
+
+
+    //
+    // static get-, set-, addTo-, removeFrom-, clear-methods for relations
+    //
+    for (i=0; i<gddClass->sizeDaDiRelation(); ++i)
+    {
+      DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+      char *gddRelName = XMLString::transcode(gddRelation->name()),
+        *gddRelType = XMLString::transcode(gddRelation->type());
+      XMLCh *falseStr = XMLString::transcode("FALSE"),
+        *oneStr = XMLString::transcode("1");
+      bool setMeth = (XMLString::compareString
+                      (gddRelation->setMeth(), falseStr) == 0) ? false : true,
+        getMeth = (XMLString::compareString
+                   (gddRelation->getMeth(), falseStr) == 0) ? false : true,
+        addMeth = (XMLString::compareString
+                   (gddRelation->addMeth(), falseStr) == 0) ? false : true,
+        remMeth = (XMLString::compareString
+                   (gddRelation->remMeth(), falseStr) == 0) ? false : true,
+        clrMeth = (XMLString::compareString
+                   (gddRelation->clrMeth(), falseStr) == 0) ? false : true,
+        multRel = (XMLString::compareString
+                   (gddRelation->ratio(), oneStr) == 0) ? false : true;
+      std::string gddRealRelType = (multRel) ?
+        "SmartRefVector<" + std::string(gddRelType) + ">" :
+        std::string(gddRelType) + "*";
+      XMLString::release(&falseStr);
+      XMLString::release(&oneStr);
+
+      if (getMeth)
+      {
+        metaOut << remLine << std::endl
+                << "static void* " << gddClassName << "_" << gddRelName
+                << "_" << methodCounter++ << "(void* v)" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl
+                << (multRel ? "  const " : "  ") << gddRealRelType
+                << (multRel ? "&" : "") << " ret = ((" << gddClassName
+                << "*)v)->" << DaDiTools::retGetName(gddRelName) << "();"
+                << std::endl
+                << "  return " <<(multRel ? "(void*)&ret" : " (void*)ret")
+                << ";" << std::endl
+                << "}" << std::endl
+                << std::endl;
+      }
+
+      if (setMeth)
+      {
+        metaOut << remLine << std::endl
+                << "static void " << gddClassName << "_set"
+                << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                << "(void* v, std::vector<void*> argList)" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl
+                << "  ((" << gddClassName << "*)v)->set"
+                << DaDiTools::firstUp(gddRelName) << (multRel ? "(*(" : "((")
+                << gddRealRelType << (multRel ? "*" : "" ) << ")argList[0]);"
+                << std::endl
+                << "}" << std::endl
+                << std::endl;
+      }
+
+      if (multRel)
+      {
+        if (clrMeth)
+        {
+          metaOut << remLine << std::endl
+                  << "static void " << gddClassName << "_clear"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << "(void* v)" << std::endl
+                  << remLine << std::endl
+                  << "{" << std::endl
+                  << "  ((" << gddClassName << "*)v)->clear"
+                  << DaDiTools::firstUp(gddRelName) << "();" << std::endl
+                  << "}" << std::endl
+                  << std::endl;
+        }
+
+        if (addMeth)
+        {
+          metaOut << remLine << std::endl
+                  << "static void " << gddClassName << "_addTo"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << "(void* v, std::vector<void*> argList)" << std::endl
+                  << remLine << std::endl
+                  << "{" << std::endl
+                  << "  ((" << gddClassName << "*)v)->addTo"
+                  << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
+                  << "*)argList[0]);" << std::endl
+                  << "}" << std::endl
+                  << std::endl;
+        }
+
+        if (remMeth)
+        {
+          metaOut << remLine << std::endl
+                  << "static void " << gddClassName << "_removeFrom"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << "(void* v, std::vector<void*> argList)" << std::endl
+                  << remLine << std::endl
+                  << "{" << std::endl
+                  << "  ((" << gddClassName << "*)v)->removeFrom"
+                  << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
+                  << "*)argList[0]);" << std::endl
+                  << "}" << std::endl
+                  << std::endl;
+        }
+      }
+      XMLString::release(&gddRelName);
+      XMLString::release(&gddRelType);
+    }
+
+
+    //
+    // static methods for constructor
+    //
+    bool constWithZeroArgs = false;
+    if (!classIsAbstract)
+    {
+      for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
+      {
+        DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+
+        metaOut << remLine << std::endl
+                << "static void* " << gddClassName << "_constructor_" << i
+                << "(";
+
+        if (gddConstructor->sizeDaDiMethArgument())
+        {
+          metaOut << "std::vector<void*> argList";
+        }
+        else
+        {
+          constWithZeroArgs = true;
+        }
+
+        metaOut << ")" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl
+                << "  static " << gddClassName << "* ret = new " << gddClassName
+                << "(";
 
         for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
         {
-          DaDiMethArgument* gddConstArgument = gddConstructor->popDaDiMethArgument();
-          std::string gddConstArgType = gddConstArgument->type().transcode();
+          DaDiMethArgument* gddMethArgument =
+            gddConstructor->popDaDiMethArgument();
+          char *gddMethArgType = XMLString::transcode(gddMethArgument->type());
 
-          metaOut << constructTypes(gddConstArgType);
-          metaOut << "  argTypes.push_back(\"" << gddConstArgType << "\");" << std::endl;
+          if (j!=0)
+          {
+            metaOut << "," << std::endl
+                    << "          ";
+          }
+          metaOut << "*(" << checkType(gddMethArgType,gddClassName);
+          if (gddMethArgument->isPointer())
+          {
+            metaOut << "*";
+          }
+          metaOut << "*)argList[" << j << "]";
+          XMLString::release(&gddMethArgType);
+        }
+
+        metaOut << ");" << std::endl
+                << "  return ret;" << std::endl
+                << "}" << std::endl
+                << std::endl;
+      }
+
+      if (!constWithZeroArgs)
+      {
+        metaOut << remLine << std::endl
+                << "static void* " << gddClassName << "_constructor_" << ++i
+                << "()" << std::endl
+                << remLine << std::endl
+                << "{" << std::endl
+                << "  static " << gddClassName << "* ret = new " << gddClassName
+                << "();" << std::endl
+                << "  return ret;" << std::endl
+                << "}" << std::endl
+                << std::endl;
+      }
+    }
+
+
+
+    methodCounter = 0;
+
+    //
+    // Instance of class
+    //
+    metaOut << remLine << std::endl
+            << "static " << gddClassName << "_dict instance;" << std::endl
+            << remLine << std::endl
+            << std::endl;
+
+
+    //
+    // Start of constructor
+    //
+    metaOut << remLine << std::endl
+            << gddClassName << "_dict::" << gddClassName << "_dict()"
+            << std::endl
+            << remLine << std::endl
+            << "{" << std::endl;
+
+    if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() ||
+        gddClass->sizeDaDiRelation())
+    {
+      metaOut
+        << "  std::vector<std::string> argTypes = std::vector<std::string>();"
+        << std::endl;
+    }
+
+
+    //
+    // Creation of Metaclass
+    //
+    metaOut << "  MetaClass* metaC = new MetaClass(\"" << gddClassName << "\","
+            << std::endl
+            << indent << "\"" << gddClassDesc << "\"," << std::endl
+            << indent << "0);" << std::endl
+            << std::endl;
+
+
+    //
+    // Creation of Superclasses
+    //
+
+    if (gddClass->sizeDaDiBaseClass())
+    {
+      if (gddClass->abstract())
+      {
+        for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+        {
+          char *gddBaseClassName =
+            XMLString::transcode(gddClass->popDaDiBaseClass()->name());
+
+          //
+          // This is a hack (problems when abstract interface is derived
+          // from another-one)
+          //
+          metaOut << "metaC->addSuperClass(\"" << gddBaseClassName << "\",0);"
+                  << "// this will not work !!!! " << std::endl;
+
+          //
+          //  metaOut << "  " << gddBaseClassName << "* bc = new "
+          //  << gddBaseClassName << "();" << std::endl
+          //  << "  " << gddClassName << "* cl = (" << gddClassName << "*)bc;"
+          //  << std::endl
+          //  << "  metaC->addSuperClass(\"" << gddBaseClassName << "\","
+          //  << std::endl
+          //  << indent << "(int)cl-(int)bc);" << std::endl
+          //  << "  delete bc;" << std::endl
+          //  << "  delete cl;" << std::endl;
+          //
+          XMLString::release(&gddBaseClassName);
         }
       }
-
-      metaOut << "  metaC->addConstructor(\"" << gddConstDesc << "\"," << std::endl;
-    
-      if (gddConstructor->sizeDaDiMethArgument())
+      else
       {
-        metaOut << indent << "argTypes," << std::endl;
+        metaOut << "  " << gddClassName << "* cl = new " << gddClassName
+                << "();" << std::endl;
+
+        for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+        {
+          char *gddBaseClass =
+            XMLString::transcode(gddClass->popDaDiBaseClass()->name());
+
+          metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\","
+                  << std::endl
+                  << indent << "(((int)cl)-((int)((" << gddBaseClass
+                  << "*)cl))));" << std::endl;
+          XMLString::release(&gddBaseClass);
+        }
+
+        metaOut << "  delete cl;" << std::endl
+                << std::endl;
+      }
+    }
+
+
+    //
+    // Creation of constructors
+    //
+    if (!classIsAbstract)
+    {
+      for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
+      {
+        DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+        char *gddConstDesc = XMLString::transcode(gddConstructor->desc());
+
+        if (gddConstructor->sizeDaDiMethArgument())
+        {
+          metaOut << "  argTypes.clear();" << std::endl;
+
+          for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
+          {
+            DaDiMethArgument* gddConstArgument =
+              gddConstructor->popDaDiMethArgument();
+            char *gddConstArgType =
+              XMLString::transcode(gddConstArgument->type());
+
+            metaOut << constructTypes(gddConstArgType);
+            metaOut << "  argTypes.push_back(\"" << gddConstArgType << "\");"
+                    << std::endl;
+
+            XMLString::release(&gddConstArgType);
+          }
+        }
+
+        metaOut << "  metaC->addConstructor(\"" << gddConstDesc << "\","
+                << std::endl;
+
+        if (gddConstructor->sizeDaDiMethArgument())
+        {
+          metaOut << indent << "argTypes," << std::endl;
+        }
+
+        metaOut << indent << gddClassName << "_constructor_" << i << ");"
+                << std::endl << std::endl;
+        XMLString::release(&gddConstDesc);
       }
 
-      metaOut << indent << gddClassName << "_constructor_" << i << ");" << std::endl
-        << std::endl;
+      if (!constWithZeroArgs)
+      {
+        metaOut << "  metaC->addConstructor(\"default constructor\","
+                << std::endl
+                << indent << gddClassName << "_constructor_" << ++i << ");"
+                << std::endl << std::endl;
+      }
     }
 
-    if (!constWithZeroArgs)
+
+    //
+    // Creation of fields for attributes and relations
+    //
+    for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
-      metaOut << "  metaC->addConstructor(\"default constructor\"," << std::endl
-        << indent << gddClassName << "_constructor_" << ++i << ");" << std::endl
-        << std::endl;
-    }
-  }
-  
+      DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
 
+      char *gddAttName = XMLString::transcode(gddAttribute->name()),
+        *gddAttType = XMLString::transcode(gddAttribute->type()),
+        *gddAttDesc = XMLString::transcode(gddAttribute->desc()),
+        *gddAttAccess = XMLString::transcode(gddAttribute->access());
 
-//
-// Creation of fields for attributes and relations
-//
-  for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
-  {
-    DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
- 
-    std::string gddAttName = gddAttribute->name().transcode(),
-                gddAttType = gddAttribute->type().transcode(),
-                gddAttDesc = gddAttribute->desc().transcode(),
-                gddAttAccess = gddAttribute->access().transcode();
+      metaOut << constructTypes(gddAttType);
 
-    metaOut << constructTypes(gddAttType);
-
-    metaOut << "  metaC->addField(\"" << gddAttName << "\"," << std::endl
-      << indent << "\"" << gddAttType << "\"," << std::endl
-      << indent << "\"" << gddAttDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName << "," 
-        << std::endl
-      << indent << printAccessor(gddAttAccess) << ");" << std::endl
-      << std::endl;
-  }
-
-  for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
-  {
-    DaDiRelation* gddRelation = gddClass->popDaDiRelation();
-    std::string gddRelType = gddRelation->type().transcode(),
-                gddRelName = gddRelation->name().transcode(),
-                gddRelDesc = gddRelation->desc().transcode(),
-                gddRelAccess = gddRelation->access().transcode();
-
-    if (gddRelation->ratio().equals("1"))
-    {
-        gddRelType = "SmartRef<" + gddRelType + ">";
-    }
-    else // if (gddRelation->ratio().equals("*"))
-    {
-      gddRelType = "SmartRefVector<" + gddRelType + ">";
+      metaOut << "  metaC->addField(\"" << gddAttName << "\"," << std::endl
+              << indent << "\"" << gddAttType << "\"," << std::endl
+              << indent << "\"" << gddAttDesc << "\"," << std::endl
+              << indent << "OffsetOf(" << gddClassName << ", m_"
+              << gddAttName << ")," << std::endl
+        //       << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName
+        //       << "," << std::endl
+              << indent << printAccessor(gddAttAccess) << ");" << std::endl
+              << std::endl;
+      XMLString::release(&gddAttName);
+      XMLString::release(&gddAttType);
+      XMLString::release(&gddAttDesc);
+      XMLString::release(&gddAttAccess);
     }
 
-    metaOut << "  metaC->addField(\"" << gddRelName << "\"," << std::endl
-      << indent << "\"" << gddRelType << "\"," << std::endl
-      << indent << "\"" << gddRelDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddRelName << "," 
-        << std::endl
-      << indent << printAccessor(gddRelAccess) << ");" << std::endl 
-      << std::endl;
-  }
-
-  //
-  // Creation of selfdefined methods
-  //
-  for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
-  {
-    DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    std::string gddMethName = gddMethod->name().transcode(),
-                gddMethDesc = gddMethod->desc().transcode(),
-                gddMethRetType = gddMethod->daDiMethReturn()->type().transcode(),
-				        gddMethVirtual = gddMethod->virtual_().transcode();
-    bool gddMethIsConst = gddMethod->const_(),
-         gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true,
-	       gddMethIsFriend = gddMethod->friend_(),
-	       gddMethIsPureVirtual = (gddMethVirtual == "PURE") ? true : false,
-         gddMethIsAccessible = (gddMethod->access().equals("PROTECTED") ||
-                                gddMethod->access().equals("PRIVATE")) ? false : true;
-    
-    if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
-        && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
-        && gddMethIsAccessible)
+    for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
     {
-      metaOut << constructTypes(gddMethRetType);
+      DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+      char *gddPureRelType = XMLString::transcode(gddRelation->type()),
+        *gddRelName = XMLString::transcode(gddRelation->name()),
+        *gddRelDesc = XMLString::transcode(gddRelation->desc()),
+        *gddRelAccess = XMLString::transcode(gddRelation->access()),
+        *gddRelType = new char[256];
+      XMLCh *oneStr = XMLString::transcode("1");
 
-      metaOut << "  argTypes.clear();" << std::endl;
-    
-      for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
-      { 
-        DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
-        std::string gddMethArgType = gddMethArgument->type().transcode();
 
-        metaOut << constructTypes(gddMethArgType);
-        metaOut << "  argTypes.push_back(\"" << gddMethArgType << "\");" 
+      if (XMLString::compareString(gddRelation->ratio(), oneStr)  == 0)
+      {
+        strcpy(gddRelType,"SmartRef<");
+        strcat(gddRelType,gddPureRelType);
+        strcat(gddRelType,">");
+      }
+      else
+        // if (XMLString::compareString(gddRelation->ratio(),
+        //                              XMLString::transcode("*"))  == 0)
+      {
+        strcpy(gddRelType,"SmartRefVector<");
+        strcat(gddRelType,gddPureRelType);
+        strcat(gddRelType,">");
+      }
+
+      metaOut << "  metaC->addField(\"" << gddRelName << "\"," << std::endl
+              << indent << "\"" << gddRelType << "\"," << std::endl
+              << indent << "\"" << gddRelDesc << "\"," << std::endl
+              << indent << "OffsetOf(" << gddClassName << ", m_" << gddRelName
+              << ")," << std::endl
+        //           << indent << "&((" << gddClassName << "*)0)->m_"
+        //           << gddRelName << "," << std::endl
+              << indent << printAccessor(gddRelAccess) << ");" << std::endl
+              << std::endl;
+      delete [] gddRelType;
+      XMLString::release(&gddPureRelType);
+      XMLString::release(&gddRelName);
+      XMLString::release(&gddRelDesc);
+      XMLString::release(&gddRelAccess);
+      XMLString::release(&oneStr);
+    }
+
+
+    //
+    // Creation of selfdefined methods
+    //
+    for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
+    {
+      DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+      char *gddMethName = XMLString::transcode(gddMethod->name()),
+        *gddMethDesc = XMLString::transcode(gddMethod->desc()),
+        *gddMethRetType = XMLString::transcode(gddMethod->daDiMethReturn()->
+                                               type()),
+        *gddMethVirtual = XMLString::transcode(gddMethod->virtual_());
+      XMLCh *protectedStr = XMLString::transcode("PROTECTED"),
+        *privateStr = XMLString::transcode("PRIVATE");
+      bool gddMethIsConst = gddMethod->const_(),
+        gddMethIsTemplated = (XMLString::stringLen
+                              (gddMethod->template_()) == 0) ? false : true,
+        gddMethIsFriend = gddMethod->friend_(),
+        gddMethIsPureVirtual = (strcmp
+                                (gddMethVirtual,"PURE")==0) ? true : false,
+        gddMethIsAccessible =
+        ((XMLString::compareString(gddMethod->access(), protectedStr) == 0) ||
+         (XMLString::compareString(gddMethod->access(),
+                                   privateStr) == 0)) ? false : true;
+      XMLString::release(&protectedStr);
+      XMLString::release(&privateStr);
+
+      if (strcmp(gddMethName,"serialize") != 0
+          && !DaDiTools::isEmpty(gddMethRetType)
+          && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
+          && gddMethIsAccessible)
+      {
+        metaOut << constructTypes(gddMethRetType);
+
+        metaOut << "  argTypes.clear();" << std::endl;
+
+        for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
+        {
+          DaDiMethArgument* gddMethArgument = gddMethod->popDaDiMethArgument();
+          char *gddMethArgType = XMLString::transcode(gddMethArgument->type());
+
+          metaOut << constructTypes(gddMethArgType);
+          metaOut << "  argTypes.push_back(\"" << gddMethArgType << "\");"
+                  << std::endl;
+          XMLString::release(&gddMethArgType);
+        }
+
+        metaOut << "  metaC->addMethod(\"" << gddMethName << "\"," << std::endl
+                << indent << "\"" << gddMethDesc << "\"," << std::endl;
+        if (strcmp(gddMethRetType,"void") != 0)
+        {
+          metaOut << indent << "\"" << gddMethRetType << "\"," << std::endl;
+        }
+        if (gddMethod->sizeDaDiMethArgument())
+        {
+          metaOut << indent << "argTypes," << std::endl;
+        }
+        metaOut << indent << gddClassName << "_" << checkSymb(gddMethName)
+                << "_" << methodCounter++ ;
+        if (gddMethIsConst)
+        {
+          metaOut << "const";
+        }
+        metaOut << ");" << std::endl
+                << std::endl;
+      }
+      XMLString::release(&gddMethName);
+      XMLString::release(&gddMethDesc);
+      XMLString::release(&gddMethRetType);
+      XMLString::release(&gddMethVirtual);
+    }
+
+
+    //
+    // Creation of setters and getters for attributes
+    //
+    for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
+    {
+      DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      char *gddAttName = XMLString::transcode(gddAttribute->name()),
+        *gddAttType = XMLString::transcode(gddAttribute->type()),
+        *gddAttDesc = XMLString::transcode(gddAttribute->desc());
+      XMLCh *falseStr = XMLString::transcode("FALSE");
+      bool getMeth = (XMLString::compareString
+                      (gddAttribute->getMeth(), falseStr) == 0) ? false : true,
+        setMeth = (XMLString::compareString
+                   (gddAttribute->setMeth(), falseStr) == 0) ? false : true;
+      XMLString::release(&falseStr);
+
+      if (getMeth)
+      {
+        metaOut << constructTypes(gddAttType)
+                << "  metaC->addMethod(\"" << gddAttName << "\"," << std::endl
+                << indent << "\"" << gddAttDesc << "\"," << std::endl
+                << indent << "\"" << gddAttType << "\"," << std::endl
+                << indent << gddClassName << "_" << gddAttName <<  "_"
+                << methodCounter++ << ");" << std::endl
+                << std::endl;
+      }
+
+      if (setMeth)
+      {
+        metaOut << "  argTypes.clear();" << std::endl
+                << "  argTypes.push_back(\"" << gddAttType << "\");"
+                << std::endl
+                << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName)
+                << "\"," << std::endl
+                << indent << "\"" << gddAttDesc << "\"," << std::endl
+                << indent << "argTypes," << std::endl
+                << indent << gddClassName << "_set"
+                << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++
+                << ");" << std::endl
+                << std::endl;
+      }
+      XMLString::release(&gddAttName);
+      XMLString::release(&gddAttType);
+      XMLString::release(&gddAttDesc);
+    }
+
+
+    //
+    // Creation of setters, getters, etc. for relations
+    //
+    for (i=0; i<gddClass->sizeDaDiRelation(); ++i)
+    {
+      DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+      char *gddRelName = XMLString::transcode(gddRelation->name()),
+        *gddRelType = XMLString::transcode(gddRelation->type()),
+        *gddRelDesc = XMLString::transcode(gddRelation->desc());
+      XMLCh *falseStr = XMLString::transcode("FALSE"),
+        *oneStr = XMLString::transcode("1");
+      bool getMeth = (XMLString::compareString
+                      (gddRelation->getMeth(), falseStr) == 0) ? false : true,
+        setMeth = (XMLString::compareString
+                   (gddRelation->setMeth(), falseStr) == 0) ? false : true,
+        clrMeth = (XMLString::compareString
+                   (gddRelation->clrMeth(), falseStr) == 0) ? false : true,
+        addMeth = (XMLString::compareString
+                   (gddRelation->addMeth(), falseStr) == 0) ? false : true,
+        remMeth = (XMLString::compareString
+                   (gddRelation->remMeth(), falseStr) == 0) ? false : true,
+        multRel = (XMLString::compareString
+                   (gddRelation->ratio(), oneStr) == 0) ? false : true;
+      std::string gddRealRelType = (multRel) ?
+        "SmartRefVector<" + std::string(gddRelType) + ">" :
+        std::string(gddRelType);
+      XMLString::release(&falseStr);
+      XMLString::release(&oneStr);
+
+      if (getMeth)
+      {
+        metaOut << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
+                << indent << "\"" << gddRelDesc << "\"," << std::endl
+                << indent << "\"" << gddRealRelType << "\"," << std::endl
+                << indent << gddClassName << "_" << gddRelName  << "_"
+                << methodCounter++ << ");" << std::endl
+                << std::endl;
+      }
+
+      if (setMeth)
+      {
+        metaOut << "  argTypes.clear();" << std::endl
+                << "  argTypes.push_back(\"" << gddRelType << "\");"
+                << std::endl
+                << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName)
+                << "\"," << std::endl
+                << indent << "\"" << gddRelDesc << "\"," << std::endl
+                << indent << "argTypes," << std::endl
+                << indent << gddClassName << "_set"
+                << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                << ");" << std::endl
+                << std::endl;
+      }
+
+      if (multRel)
+      {
+        if (clrMeth)
+        {
+          metaOut << "  metaC->addMethod(\"clear"
+                  << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+                  << indent << "\"" << gddRelDesc << "\"," << std::endl
+                  << indent << gddClassName << "_clear"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << ");" << std::endl
+                  << std::endl;
+        }
+
+        if (addMeth)
+        {
+          metaOut << "  argTypes.clear();" << std::endl
+                  << "  argTypes.push_back(\"" << gddRelType << "\");"
+                  << std::endl
+                  << "  metaC->addMethod(\"addTo"
+                  << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+                  << indent << "\"" << gddRelDesc << "\"," << std::endl
+                  << indent << "argTypes," << std::endl
+                  << indent << gddClassName << "_addTo"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << ");" << std::endl
+                  << std::endl;
+        }
+
+        if (remMeth)
+        {
+          metaOut << "  argTypes.clear();" << std::endl
+                  << "  argTypes.push_back(\"" << gddRelType << "\");"
+                  << std::endl
+                  << "  metaC->addMethod(\"removeFrom"
+                  << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+                  << indent << "\"" << gddRelDesc << "\"," << std::endl
+                  << indent << "argTypes," << std::endl
+                  << indent << gddClassName << "_removeFrom"
+                  << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+                  << ");" << std::endl
+                  << std::endl;
+        }
+      }
+      XMLString::release(&gddRelName);
+      XMLString::release(&gddRelType);
+      XMLString::release(&gddRelDesc);
+    }
+
+
+    //
+    // Properties
+    //
+    metaOut << "  MetaPropertyList* pl = new MetaPropertyList();" << std::endl
+            << "  pl->setProperty(\"Author\", " << "\"" << gddClassAuthor
+            << "\");" << std::endl
+            << "  pl->setProperty(\"ClassID\", " << "\"" << gddClassID << "\");"
             << std::endl;
-      }
 
-      metaOut << "  metaC->addMethod(\"" << gddMethName << "\"," << std::endl
-              << indent << "\"" << gddMethDesc << "\"," << std::endl;
-      if (gddMethRetType != "void")
-      {
-        metaOut << indent << "\"" << gddMethRetType << "\"," << std::endl;
-      }
-      if (gddMethod->sizeDaDiMethArgument())
-      {
-        metaOut << indent << "argTypes," << std::endl;
-      }
-      metaOut << indent << gddClassName << "_" << checkSymb(gddMethName)
-              << "_" << methodCounter++ ;
-      if (gddMethIsConst)
-      {
-        metaOut << "const";
-      }
-      metaOut << ");" << std::endl
-        << std::endl;
-    }
-  }
-
-  //
-  // Creation of setters and getters for attributes
-  //
-  for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
-  {
-    DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-    std::string gddAttName = gddAttribute->name().transcode(),
-                gddAttType = gddAttribute->type().transcode(),
-                gddAttDesc = gddAttribute->desc().transcode();
-    bool getMeth = (gddAttribute->getMeth().equals("FALSE")) ? false : true,
-         setMeth = (gddAttribute->setMeth().equals("FALSE")) ? false : true;
-
-    if (getMeth)
-    {
-      metaOut << constructTypes(gddAttType)
-        << "  metaC->addMethod(\"" << gddAttName << "\"," << std::endl
-        << indent << "\"" << gddAttDesc << "\"," << std::endl
-        << indent << "\"" << gddAttType << "\"," << std::endl
-        << indent << gddClassName << "_" << gddAttName <<  "_" << methodCounter++ 
-        << ");" << std::endl
-        << std::endl;
-    }
-
-    if (setMeth)
-    {
-      metaOut << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(\"" << gddAttType << "\");" << std::endl
-        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName) << "\","
-          << std::endl
-        << indent << "\"" << gddAttDesc << "\"," << std::endl
-        << indent << "argTypes," << std::endl
-        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddAttName) 
-          << "_" << methodCounter++ << ");" << std::endl
-        << std::endl;
-    }
-  }
-
-  //
-  // Creation of setters, getters, etc. for relations
-  //
-  for (i=0; i<gddClass->sizeDaDiRelation(); ++i)
-  {
-    DaDiRelation* gddRelation = gddClass->popDaDiRelation();
-    std::string gddRelName = gddRelation->name().transcode(),
-                gddRelType = gddRelation->type().transcode(),
-                gddRelDesc = gddRelation->desc().transcode();
-    bool getMeth = (gddRelation->getMeth().equals("FALSE")) ? false : true,
-         setMeth = (gddRelation->setMeth().equals("FALSE")) ? false : true,
-         clrMeth = (gddRelation->clrMeth().equals("FALSE")) ? false : true,
-         addMeth = (gddRelation->addMeth().equals("FALSE")) ? false : true,
-         remMeth = (gddRelation->remMeth().equals("FALSE")) ? false : true,
-         multRel = (gddRelation->ratio().equals("1")) ? false : true;
-    std::string gddRealRelType = (multRel) ? 
-                                 "SmartRefVector<" + gddRelType + ">" : 
-                                 gddRelType;
-
-    if (getMeth)
-    {
-      metaOut << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
-        << indent << "\"" << gddRelDesc << "\"," << std::endl
-        << indent << "\"" << gddRealRelType << "\"," << std::endl
-        << indent << gddClassName << "_" << gddRelName  << "_" << methodCounter++
-        << ");" << std::endl
-        << std::endl;
-    }
-
-    if (setMeth)
-    {
-      metaOut << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
-        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName) << "\","
-          << std::endl
-        << indent << "\"" << gddRelDesc << "\"," << std::endl
-        << indent << "argTypes," << std::endl
-        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddRelName) 
-          << "_" << methodCounter++ << ");" << std::endl
-        << std::endl;
-    }
-
-    if (multRel)
-    {
-      if (clrMeth)
-      {
-        metaOut << "  metaC->addMethod(\"clear" << DaDiTools::firstUp(gddRelName)
-            << "\"," << std::endl
-          << indent << "\"" << gddRelDesc << "\"," << std::endl
-          << indent << gddClassName << "_clear" 
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-            << ");" << std::endl
-          << std::endl;
-      } 
-
-      if (addMeth)
-      {
-        metaOut << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
-          << "  metaC->addMethod(\"addTo" << DaDiTools::firstUp(gddRelName) 
-            << "\"," << std::endl
-          << indent << "\"" << gddRelDesc << "\"," << std::endl
-          << indent << "argTypes," << std::endl
-          << indent << gddClassName << "_addTo" 
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
-            << ");" << std::endl
-          << std::endl;
-      }
-
-      if (remMeth)
-      {
-        metaOut << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
-          << "  metaC->addMethod(\"removeFrom" << DaDiTools::firstUp(gddRelName)
-            << "\"," << std::endl
-          << indent << "\"" << gddRelDesc << "\"," << std::endl
-          << indent << "argTypes," << std::endl
-          << indent << gddClassName << "_removeFrom" 
-            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++ 
-            << ");" << std::endl
-          << std::endl;
-      }
-    }
-  }
+    metaOut << "  metaC->setPropertyList(pl);" << std::endl;
 
 
-//
-// Properties
-//
-  metaOut << "  MetaPropertyList* pl = new MetaPropertyList();" << std::endl 
-    << "  pl->setProperty(\"Author\", " << "\"" << gddClassAuthor << "\");" 
-      << std::endl
-    << "  pl->setProperty(\"ClassID\", " << "\"" << gddClassID << "\");" 
-      << std::endl;
+    //
+    // End of constructor
+    //
+    metaOut << "}" << std::endl << std::endl << std::endl;
 
-  metaOut << "  metaC->setPropertyList(pl);" << std::endl;
+    metaOut.close();
+    delete [] cppFileName;
+    std::cout << " - OK" << std::endl;
 
-
-//
-// End of constructor
-//
-  metaOut << "}" << std::endl << std::endl << std::endl;
-
-  metaOut.close();
-  delete [] cppFileName;
-  std::cout << " - OK" << std::endl;
-
+    XMLString::release(&gddClassName);
+    XMLString::release(&gddClassDesc);
+    XMLString::release(&gddClassAuthor);
+    XMLString::release(&gddClassID);
+    XMLString::release(&gddPackageName);
   }
 }
 
@@ -1121,33 +1328,35 @@ int main(int argC, char* argV[])
 //-----------------------------------------------------------------------------
 {
 
-  #ifdef WIN32
-    const char* sep = "\\";
-  #else
-    const char* sep = "/";
-  #endif
+#ifdef WIN32
+  const char* sep = "\\";
+#else
+  const char* sep = "/";
+#endif
 
   std::vector<char*> files;
-  const char *envOut = "";
-  char *envXmlDB;
+  char *envOut = new char[256];
+  char *envXmlDB = new char[256];
   std::string nextArg;
   bool additionalImports = false;
   std::string dothDir = "Event";
 
+  strcpy(envOut, "");
+
   argV0 = std::string(argV[0]);
   argV0.erase(0,argV0.find_last_of("\\")+1);
   argV0.erase(0,argV0.find_last_of("/")+1);
-  
+
   if (getenv("GAUDIOBJDESCROOT") == NULL)
   {
-//    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'" 
-//      << std::endl;
-//    exit(1);
-    envXmlDB = "";
+    //    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'"
+    //      << std::endl;
+    //    exit(1);
+    strcpy(envXmlDB, "");
   }
   else
   {
-    envXmlDB = getenv("GAUDIOBJDESCROOT");
+    strcpy(envXmlDB,getenv("GAUDIOBJDESCROOT"));
     strcat(envXmlDB, sep);
     strcat(envXmlDB, "xml_files");
     strcat(envXmlDB, sep);
@@ -1164,26 +1373,26 @@ int main(int argC, char* argV[])
         {
           dothDir = getenv("GODDOTHOUT");
           int pos1 = dothDir.find(sep),
-              pos2 = dothDir.rfind(sep);
+            pos2 = dothDir.rfind(sep);
           dothDir = dothDir.substr(pos1+1,pos2-pos1-1);
         }
         nextArg = std::string(argV[i+1]);
         if (((argC-1) == i) || (strcmp(argV[i+1],"-x") == 0) ||
-          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+            (nextArg.find_last_of(sep) != (nextArg.length()-1)))
         {
           if (getenv("GODDICTOUT") != NULL)
           {
-            envOut = getenv("GODDICTOUT");
+            strcpy(envOut, getenv("GODDICTOUT"));
           }
           else
           {
             std::cerr << "Environment variable 'GODDICTOUT' not set, "
-              << "using local directory" << std::endl;
+                      << "using local directory" << std::endl;
           }
         }
         else
         {
-          envOut = argV[i+1];
+          strcpy(envOut,argV[i+1]);
           ++i;
         }
       }
@@ -1191,31 +1400,32 @@ int main(int argC, char* argV[])
       {
         nextArg = std::string(argV[i+1]);
         if (((argC-1) == i) || (strcmp(argV[i+1], "-o") == 0) ||
-          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+            (nextArg.find_last_of(sep) != (nextArg.length()-1)))
         {
           if (getenv("GODXMLDB") != NULL)
           {
-            envXmlDB = getenv("GODXMLDB");
+            strcpy(envXmlDB,getenv("GODXMLDB"));
           }
           else
           {
-            std::cerr << "Environment variable 'GODXMLDB' not set, " 
-              << "using '$(GAUDIOBJDESCROOT)/xml_files'" << std::endl;
+            std::cerr << "Environment variable 'GODXMLDB' not set, "
+                      << "using '$(GAUDIOBJDESCROOT)/xml_files'" << std::endl;
           }
         }
         else
         {
-          envXmlDB = argV[i+1];
+          strcpy(envXmlDB,argV[i+1]);
           ++i;
         }
       }
       else if (strcmp(argV[i], "-l") == 0)
       {
         nextArg = std::string(argV[i+1]);
-        if (((argC-1) == i) || (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+        if (((argC-1) == i) ||
+            (nextArg.find_last_of(sep) != (nextArg.length()-1)))
         {
-          std::cerr << "No path given for argument '-l' or not ended with (back)slash"
-            << std::endl;
+          std::cerr << "No path given for argument '-l' or not ended with "
+                    << "(back)slash" << std::endl;
           exit(1);
         }
         else
@@ -1244,17 +1454,26 @@ int main(int argC, char* argV[])
     }
   }
 
-  for (std::vector<char*>::iterator iter = files.begin(); 
+  strcat(envXmlDB,"GaudiCppExport.xml");
+
+  for (std::vector<char*>::iterator iter = files.begin();
        iter != files.end(); ++iter)
   {
-    DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
+    DaDiPackage* gddPackage = new DaDiPackage();
+
+    DDFE::DaDiFrontEnd(gddPackage, *iter);
 
     printCppDictionary(gddPackage,
                        envXmlDB,
                        envOut,
                        additionalImports);
     //                       dothDir);
+
+    delete gddPackage;
   }
+
+  delete [] envXmlDB;
+  delete [] envOut;
 
   return 0;
 }

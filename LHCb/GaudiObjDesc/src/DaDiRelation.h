@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiRelation.h,v 1.4 2002-04-30 16:50:25 mato Exp $
-#ifndef DADIRELATION_H 
+// $Id: DaDiRelation.h,v 1.5 2003-04-30 12:04:19 mato Exp $
+#ifndef DADIRELATION_H
 #define DADIRELATION_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 /** @class DaDiRelation DaDiRelation.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -14,39 +14,50 @@
 class DaDiRelation {
 public:
   /// Standard constructor
-  DaDiRelation() {}; 
+  DaDiRelation() :
+    m_name(0),
+    m_type(0),
+    m_desc(0),
+    m_access(0),
+    m_ratio(0),
+    m_setMeth(0),
+    m_getMeth(0),
+    m_addMeth(0),
+    m_remMeth(0),
+    m_clrMeth(0),
+    m_serialize(false) {};
 
-  virtual ~DaDiRelation() {}; ///< Standard destructor
+  virtual ~DaDiRelation();
 
-  DOMString name();
-  void setName(DOMString value);
-  
-  DOMString type();
-  void setType(DOMString value);
-  
-  DOMString desc();
-  void setDesc(DOMString value);
-  
-  DOMString access();
-  void setAccess(DOMString value);
-  
-  DOMString ratio();
-  void setRatio(DOMString value);
-  
-  DOMString setMeth();
-  void setSetMeth(DOMString value);
-  
-  DOMString getMeth();
-  void setGetMeth(DOMString value);
-  
-  DOMString addMeth();
-  void setAddMeth(DOMString value);
-  
-  DOMString remMeth();
-  void setRemMeth(DOMString value);
-  
-  DOMString clrMeth();
-  void setClrMeth(DOMString value);
+  const XMLCh* name();
+  void setName(const XMLCh* value);
+
+  const XMLCh* type();
+  void setType(const XMLCh* value);
+
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
+
+  const XMLCh* access();
+  void setAccess(const XMLCh* value);
+
+  const XMLCh* ratio();
+  void setRatio(const XMLCh* value);
+
+  const XMLCh* setMeth();
+  void setSetMeth(const XMLCh* value);
+
+  const XMLCh* getMeth();
+  void setGetMeth(const XMLCh* value);
+
+  const XMLCh* addMeth();
+  void setAddMeth(const XMLCh* value);
+
+  const XMLCh* remMeth();
+  void setRemMeth(const XMLCh* value);
+
+  const XMLCh* clrMeth();
+  void setClrMeth(const XMLCh* value);
 
   bool serialize();
   void setSerialize(bool value);
@@ -55,119 +66,142 @@ protected:
 
 private:
 
-  DOMString m_name, 
-            m_type, 
-            m_desc, 
-            m_access, 
-            m_ratio, 
-            m_setMeth, 
-            m_getMeth, 
-            m_addMeth, 
-            m_remMeth, 
-            m_clrMeth;
-  bool      m_serialize;
+  XMLCh *m_name;
+  XMLCh *m_type;
+  XMLCh *m_desc;
+  XMLCh *m_access;
+  XMLCh *m_ratio;
+  XMLCh *m_setMeth;
+  XMLCh *m_getMeth;
+  XMLCh *m_addMeth;
+  XMLCh *m_remMeth;
+  XMLCh *m_clrMeth;
+  bool   m_serialize;
 
 };
 
+inline DaDiRelation::~DaDiRelation()
+{
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_type);
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_access);
+  xercesc::XMLString::release(&m_ratio);
+  xercesc::XMLString::release(&m_setMeth);
+  xercesc::XMLString::release(&m_getMeth);
+  xercesc::XMLString::release(&m_addMeth);
+  xercesc::XMLString::release(&m_remMeth);
+  xercesc::XMLString::release(&m_clrMeth);
+}
 
-inline DOMString DaDiRelation::name()
+inline const XMLCh* DaDiRelation::name()
 {
   return m_name;
 }
 
-inline void DaDiRelation::setName(DOMString value)
+inline void DaDiRelation::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiRelation::type()
+inline const XMLCh* DaDiRelation::type()
 {
   return m_type;
 }
 
-inline void DaDiRelation::setType(DOMString value)
+inline void DaDiRelation::setType(const XMLCh* value)
 {
-  m_type = value;
+  m_type = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_type, value);
 }
 
-inline DOMString DaDiRelation::desc()
+inline const XMLCh* DaDiRelation::desc()
 {
   return m_desc;
 }
 
-inline void DaDiRelation::setDesc(DOMString value)
+inline void DaDiRelation::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiRelation::access()
+inline const XMLCh* DaDiRelation::access()
 {
   return m_access;
 }
 
-inline void DaDiRelation::setAccess(DOMString value)
+inline void DaDiRelation::setAccess(const XMLCh* value)
 {
-  m_access = value;
+  m_access = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_access, value);
 }
 
-inline DOMString DaDiRelation::ratio()
+inline const XMLCh* DaDiRelation::ratio()
 {
   return m_ratio;
 }
 
-inline void DaDiRelation::setRatio(DOMString value)
+inline void DaDiRelation::setRatio(const XMLCh* value)
 {
-  m_ratio = value;
+  m_ratio = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_ratio, value);
 }
 
-inline DOMString DaDiRelation::setMeth()
+inline const XMLCh* DaDiRelation::setMeth()
 {
   return m_setMeth;
 }
 
-inline void DaDiRelation::setSetMeth(DOMString value)
+inline void DaDiRelation::setSetMeth(const XMLCh* value)
 {
-  m_setMeth = value;
+  m_setMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_setMeth, value);
 }
 
-inline DOMString DaDiRelation::getMeth()
+inline const XMLCh* DaDiRelation::getMeth()
 {
   return m_getMeth;
 }
 
-inline void DaDiRelation::setGetMeth(DOMString value)
+inline void DaDiRelation::setGetMeth(const XMLCh* value)
 {
-  m_getMeth = value;
+  m_getMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_getMeth, value);
 }
 
-inline DOMString DaDiRelation::addMeth()
+inline const XMLCh* DaDiRelation::addMeth()
 {
   return m_addMeth;
 }
 
-inline void DaDiRelation::setAddMeth(DOMString value)
+inline void DaDiRelation::setAddMeth(const XMLCh* value)
 {
-  m_addMeth = value;
+  m_addMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_addMeth, value);
 }
 
-inline DOMString DaDiRelation::remMeth()
+inline const XMLCh* DaDiRelation::remMeth()
 {
   return m_remMeth;
 }
 
-inline void DaDiRelation::setRemMeth(DOMString value)
+inline void DaDiRelation::setRemMeth(const XMLCh* value)
 {
-  m_remMeth = value;
+  m_remMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_remMeth, value);
 }
 
-inline DOMString DaDiRelation::clrMeth()
+inline const XMLCh* DaDiRelation::clrMeth()
 {
   return m_clrMeth;
 }
 
-inline void DaDiRelation::setClrMeth(DOMString value)
+inline void DaDiRelation::setClrMeth(const XMLCh* value)
 {
-  m_clrMeth = value;
+  m_clrMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_clrMeth, value);
 }
 
 inline bool DaDiRelation::serialize()

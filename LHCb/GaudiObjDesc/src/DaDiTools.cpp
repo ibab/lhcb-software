@@ -1,10 +1,10 @@
-// $Id: DaDiTools.cpp,v 1.16 2002-04-30 17:04:45 mato Exp $
+// $Id: DaDiTools.cpp,v 1.17 2003-04-30 12:04:19 mato Exp $
 
 
 // Include files
 #include "DaDiTools.h"
 
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -13,12 +13,14 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : DadiTools
 //
-// 13/06/2001 : 
+// 13/06/2001 :
 //-----------------------------------------------------------------------------
 
 // Global streaming operator for DOMString is defined in DOMPrint.cpp
 //extern std::ostream& operator<<(std::ostream& target, const DOMString& s);
 
+
+using namespace xercesc;
 
 std::vector<std::string> DaDiTools::additionalImports;
 
@@ -36,10 +38,10 @@ void DaDiTools::remSpaces(std::string& word)
     word = word.substr(0, word.length()-1);
   }
 }
-  
+
 
 //-----------------------------------------------------------------------------
-std::vector<std::string> DaDiTools::findWords(std::string value, 
+std::vector<std::string> DaDiTools::findWords(std::string value,
                                               std::string delim)
 //-----------------------------------------------------------------------------
 {
@@ -77,8 +79,8 @@ bool DaDiTools::isSimple(const std::string& value)
 //-----------------------------------------------------------------------------
 {
   if (isPointer(value) || isFundamental(value))
-  { 
-    return true; 
+  {
+    return true;
   }
   else
   {
@@ -95,10 +97,10 @@ bool DaDiTools::isFundamental(std::string value)
   for (std::vector<std::string>::iterator iter = types.begin();
        iter != types.end(); ++iter)
   {
-        
+
     if ((*iter == "bool")  || (*iter == "short")    ||
-        (*iter == "long")  || (*iter == "int")      || 
-        (*iter == "float") || (*iter == "double")   || 
+        (*iter == "long")  || (*iter == "int")      ||
+        (*iter == "float") || (*iter == "double")   ||
         (*iter == "char")  || (*iter == "unsigned") ||
         (*iter == "signed")|| (*iter == "longlong"))
     {
@@ -216,31 +218,35 @@ void DaDiTools::warning(const SAXParseException&)
 void DaDiTools::error(const SAXParseException& toCatch)
 //-----------------------------------------------------------------------------
 {
-  std::cerr << "Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
-   << "\", line " << toCatch.getLineNumber()
-   << ", column " << toCatch.getColumnNumber()
-     << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
-  throw SAXParseException(toCatch);  // Copy the 'toCatch' object before 
-                     // throwing - otherwise we would be 
-                     // throwing a reference to a local object
-                     // that gets destroyed before the catch.
+  std::cerr << "Error at file \"" << XMLString::transcode(toCatch.getSystemId())
+            << "\", line " << toCatch.getLineNumber()
+            << ", column " << toCatch.getColumnNumber()
+            << "\n   Message: " << XMLString::transcode(toCatch.getMessage())
+            << std::endl;
+  throw SAXParseException(toCatch);
+  // Copy the 'toCatch' object before
+  // throwing - otherwise we would be
+  // throwing a reference to a local object
+  // that gets destroyed before the catch.
 }
 
 //-----------------------------------------------------------------------------
 void DaDiTools::fatalError(const SAXParseException& toCatch)
 //-----------------------------------------------------------------------------
 {
-  std::cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
-   << "\", line " << toCatch.getLineNumber()
-   << ", column " << toCatch.getColumnNumber()
-     << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
+  std::cerr << "Fatal Error at file \"" 
+            << XMLString::transcode(toCatch.getSystemId())
+            << "\", line " << toCatch.getLineNumber()
+            << ", column " << toCatch.getColumnNumber()
+            << "\n   Message: " << XMLString::transcode(toCatch.getMessage()) 
+            << std::endl;
   throw SAXParseException(toCatch);
 }
 
 //-----------------------------------------------------------------------------
 std::string DaDiTools::firstUp(const std::string& s)
 //-----------------------------------------------------------------------------
-{ 
+{
   std::string r;
   r = toupper(s[0]);
   r += s.substr(1,std::string::npos);
@@ -255,7 +261,7 @@ std::string DaDiTools::retGetName(const std::string& s)
   std::string retStr;
 
   if (islower(s[0]))
-  { 
+  {
     return s;
   }
   else

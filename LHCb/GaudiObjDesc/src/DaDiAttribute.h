@@ -1,14 +1,14 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.8 2002-05-13 17:24:44 mato Exp $
-#ifndef DADIATTRIBUTE_H 
+// $Id: DaDiAttribute.h,v 1.9 2003-04-30 12:04:15 mato Exp $
+#ifndef DADIATTRIBUTE_H
 #define DADIATTRIBUTE_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include "DaDiBitfield.h"
 
 /** @class DaDiAttribute DaDiAttribute.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -16,33 +16,46 @@
 class DaDiAttribute {
 public:
   /// Standard constructor
-  DaDiAttribute() {}; 
+  DaDiAttribute() :
+    m_name(0),
+    m_type(0),
+    m_desc(0),
+    m_array(0),
+    m_access(0),
+    m_init(0),
+    m_setMeth(0),
+    m_getMeth(0),
+    m_static(false),
+    m_compression(false),
+    m_serialize(false),
+    m_bitset(false),
+    m_daDiBitfield(std::list<DaDiBitfield*>()) {};
 
-  virtual ~DaDiAttribute() {}; ///< Standard destructor
+  virtual ~DaDiAttribute();
 
-  DOMString name();
-  void setName(DOMString value);
-  
-  DOMString type();
-  void setType(DOMString value);
-  
-  DOMString desc();
-  void setDesc(DOMString value);
+  const XMLCh* name();
+  void setName(const XMLCh* value);
 
-  DOMString array();
-  void setArray(DOMString value);
-  
-  DOMString access();
-  void setAccess(DOMString value);
-  
-  DOMString init();
-  void setInit(DOMString value);
+  const XMLCh* type();
+  void setType(const XMLCh* value);
 
-  DOMString setMeth();
-  void setSetMeth(DOMString value);
-  
-  DOMString getMeth();
-  void setGetMeth(DOMString value);
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
+
+  const XMLCh* array();
+  void setArray(const XMLCh* value);
+
+  const XMLCh* access();
+  void setAccess(const XMLCh* value);
+
+  const XMLCh* init();
+  void setInit(const XMLCh* value);
+
+  const XMLCh* setMeth();
+  void setSetMeth(const XMLCh* value);
+
+  const XMLCh* getMeth();
+  void setGetMeth(const XMLCh* value);
 
   bool static_();
   void setStatic_(bool value);
@@ -56,109 +69,131 @@ public:
   bool bitset();
   void setBitset(bool value);
 
-	DaDiBitfield* popDaDiBitfield();
-	void pushDaDiBitfield(DaDiBitfield* value);
-	int sizeDaDiBitfield();
+  DaDiBitfield* popDaDiBitfield();
+  void pushDaDiBitfield(DaDiBitfield* value);
+  int sizeDaDiBitfield();
 
 protected:
 
 private:
 
-  DOMString                m_name, 
-                           m_type, 
-                           m_desc, 
-                           m_array,
-                           m_access,
-                           m_init,
-                           m_setMeth, 
-                           m_getMeth;
-  bool                     m_static,
-                           m_compression,
-                           m_serialize,
-                           m_bitset;
-  std::list<DaDiBitfield*> m_daDiBitfield;
+  XMLCh                    *m_name;
+  XMLCh                    *m_type;
+  XMLCh                    *m_desc;
+  XMLCh                    *m_array;
+  XMLCh                    *m_access;
+  XMLCh                    *m_init;
+  XMLCh                    *m_setMeth;
+  XMLCh                    *m_getMeth;
+  bool                      m_static;
+  bool                      m_compression;
+  bool                      m_serialize;
+  bool                      m_bitset;
+  std::list<DaDiBitfield*>  m_daDiBitfield;
 
 };
 
+inline DaDiAttribute::~DaDiAttribute()
+{
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_type);
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_array);
+  xercesc::XMLString::release(&m_access);
+  xercesc::XMLString::release(&m_init);
+  xercesc::XMLString::release(&m_setMeth);
+  xercesc::XMLString::release(&m_getMeth);
+  std::list<DaDiBitfield*>::iterator bIter;
+  for (bIter = m_daDiBitfield.begin(); bIter != m_daDiBitfield.end(); ++bIter)
+  { delete *bIter; }
+}
 
-inline DOMString DaDiAttribute::name()
+inline const XMLCh* DaDiAttribute::name()
 {
   return m_name;
 }
 
-inline void DaDiAttribute::setName(DOMString value)
+inline void DaDiAttribute::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiAttribute::type()
+inline const XMLCh* DaDiAttribute::type()
 {
   return m_type;
 }
 
-inline void DaDiAttribute::setType(DOMString value)
+inline void DaDiAttribute::setType(const XMLCh* value)
 {
-  m_type = value;
+  m_type = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_type, value);
 }
 
-inline DOMString DaDiAttribute::desc()
+inline const XMLCh* DaDiAttribute::desc()
 {
   return m_desc;
 }
 
-inline void DaDiAttribute::setDesc(DOMString value)
+inline void DaDiAttribute::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiAttribute::array()
+inline const XMLCh* DaDiAttribute::array()
 {
   return m_array;
 }
 
-inline void DaDiAttribute::setArray(DOMString value)
+inline void DaDiAttribute::setArray(const XMLCh* value)
 {
-  m_array = value;
+  m_array = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_array, value);
 }
 
-inline DOMString DaDiAttribute::access()
+inline const XMLCh* DaDiAttribute::access()
 {
   return m_access;
 }
 
-inline void DaDiAttribute::setAccess(DOMString value)
+inline void DaDiAttribute::setAccess(const XMLCh* value)
 {
-  m_access = value;
+  m_access = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_access, value);
 }
 
-inline DOMString DaDiAttribute::init()
+inline const XMLCh* DaDiAttribute::init()
 {
   return m_init;
 }
 
-inline void DaDiAttribute::setInit(DOMString value)
+inline void DaDiAttribute::setInit(const XMLCh* value)
 {
-  m_init = value;
+  m_init = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_init, value);
 }
 
-inline DOMString DaDiAttribute::setMeth()
+inline const XMLCh* DaDiAttribute::setMeth()
 {
   return m_setMeth;
 }
 
-inline void DaDiAttribute::setSetMeth(DOMString value)
+inline void DaDiAttribute::setSetMeth(const XMLCh* value)
 {
-  m_setMeth = value;
+  m_setMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_setMeth, value);
 }
 
-inline DOMString DaDiAttribute::getMeth()
+inline const XMLCh* DaDiAttribute::getMeth()
 {
   return m_getMeth;
 }
 
-inline void DaDiAttribute::setGetMeth(DOMString value)
+inline void DaDiAttribute::setGetMeth(const XMLCh* value)
 {
-  m_getMeth = value;
+  m_getMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_getMeth, value);
 }
 
 inline bool DaDiAttribute::static_()
@@ -203,20 +238,20 @@ inline void DaDiAttribute::setBitset(bool value)
 
 inline DaDiBitfield* DaDiAttribute::popDaDiBitfield()
 {
-	DaDiBitfield* pt = m_daDiBitfield.front();
-	m_daDiBitfield.push_back(pt);
-	m_daDiBitfield.pop_front();
-	return pt;
+  DaDiBitfield* pt = m_daDiBitfield.front();
+  m_daDiBitfield.push_back(pt);
+  m_daDiBitfield.pop_front();
+  return pt;
 }
 
 inline void DaDiAttribute::pushDaDiBitfield(DaDiBitfield* value)
 {
-	m_daDiBitfield.push_back(value);
+  m_daDiBitfield.push_back(value);
 }
 
 inline int DaDiAttribute::sizeDaDiBitfield()
 {
-	return m_daDiBitfield.size();
+  return m_daDiBitfield.size();
 }
 
 #endif // DADIATTRIBUTE_H

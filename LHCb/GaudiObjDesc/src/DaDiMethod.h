@@ -1,17 +1,17 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.7 2002-04-30 16:50:25 mato Exp $
-#ifndef DADIMETHOD_H 
+// $Id: DaDiMethod.h,v 1.8 2003-04-30 12:04:19 mato Exp $
+#ifndef DADIMETHOD_H
 #define DADIMETHOD_H 1
 
 // Include files
 #include "DaDiMethReturn.h"
 #include "DaDiMethArgument.h"
 
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <list>
 
 /** @class DaDiMethod DaDiMethod.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -19,33 +19,45 @@
 class DaDiMethod {
 public:
   /// Standard constructor
-  DaDiMethod() {}; 
+  DaDiMethod() :
+    m_name(0),
+    m_desc(0),
+    m_template(0),
+    m_access(0),
+    m_virtual(0),
+    m_code(0),
+    m_const(false),
+    m_static(false),
+    m_inline(false),
+    m_friend(false),
+    m_daDiMethReturn(0),
+    m_daDiMethArgument(std::list<DaDiMethArgument*>()) {};
 
-  virtual ~DaDiMethod() {}; ///< Standard destructor
+  virtual ~DaDiMethod();
 
-  DOMString name();
-  void setName(DOMString value);
+  const XMLCh* name();
+  void setName(const XMLCh* value);
 
-  DOMString desc();
-  void setDesc(DOMString value);
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
 
-  DOMString template_();
-  void setTemplate(DOMString value);
+  const XMLCh* template_();
+  void setTemplate(const XMLCh* value);
 
-  DOMString access();
-  void setAccess(DOMString value);
+  const XMLCh* access();
+  void setAccess(const XMLCh* value);
 
-  DOMString argList();
-  void setArgList(DOMString value);
+  //  const XMLCh* argList();
+  //  void setArgList(const XMLCh* value);
 
-  DOMString argInOut();
-  void setArgInOut(DOMString value);
+  //  const XMLCh* argInOut();
+  //  void setArgInOut(const XMLCh* value);
 
-  DOMString virtual_();
-  void setVirtual_(DOMString value);
+  const XMLCh* virtual_();
+  void setVirtual_(const XMLCh* value);
 
-  DOMString code();
-  void setCode(DOMString value);
+  const XMLCh* code();
+  void setCode(const XMLCh* value);
 
   bool const_();
   void setConst_(bool value);
@@ -61,110 +73,137 @@ public:
 
   DaDiMethReturn* daDiMethReturn();
   void setDaDiMethReturn(DaDiMethReturn* value);
-  
+
   DaDiMethArgument* popDaDiMethArgument();
   void pushDaDiMethArgument(DaDiMethArgument* value);
   int sizeDaDiMethArgument();
-  
+
 protected:
 
 private:
 
-  DOMString                    m_name, 
-                               m_desc,
-                               m_template,
-                               m_access, 
-                               m_argList,
-                               m_argInOut,
-                               m_virtual, 
-                               m_code;
-  bool                         m_const, 
-                               m_static, 
-							                 m_inline,
-                               m_friend;
-  DaDiMethReturn*              m_daDiMethReturn;
-  std::list<DaDiMethArgument*> m_daDiMethArgument;
+  XMLCh                        *m_name;
+  XMLCh                        *m_desc;
+  XMLCh                        *m_template;
+  XMLCh                        *m_access;
+  //XMLCh                        *m_argList;
+  //XMLCh                        *m_argInOut;
+  XMLCh                        *m_virtual;
+  XMLCh                        *m_code;
+  bool                          m_const;
+  bool                          m_static;
+  bool                          m_inline;
+  bool                          m_friend;
+  DaDiMethReturn*               m_daDiMethReturn;
+  std::list<DaDiMethArgument*>  m_daDiMethArgument;
 
 };
 
-inline DOMString DaDiMethod::name()
+inline DaDiMethod::~DaDiMethod()
+{
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_template);
+  xercesc::XMLString::release(&m_access);
+  //  xercesc::XMLString::release(&m_argList);
+  //  xercesc::XMLString::release(&m_argInOut);
+  xercesc::XMLString::release(&m_virtual);
+  xercesc::XMLString::release(&m_code);
+  delete m_daDiMethReturn;
+  std::list<DaDiMethArgument*>::iterator aIter;
+  for (aIter = m_daDiMethArgument.begin(); 
+       aIter != m_daDiMethArgument.end(); ++aIter)
+  { delete *aIter; }
+}
+
+inline const XMLCh* DaDiMethod::name()
 {
   return m_name;
 }
 
-inline void DaDiMethod::setName(DOMString value)
+inline void DaDiMethod::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiMethod::desc()
+inline const XMLCh* DaDiMethod::desc()
 {
   return m_desc;
 }
 
-inline void DaDiMethod::setDesc(DOMString value)
+inline void DaDiMethod::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiMethod::template_()
+inline const XMLCh* DaDiMethod::template_()
 {
   return m_template;
 }
 
-inline void DaDiMethod::setTemplate(DOMString value)
+inline void DaDiMethod::setTemplate(const XMLCh* value)
 {
-  m_template = value;
+  m_template = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_template, value);
 }
 
-inline DOMString DaDiMethod::access()
+inline const XMLCh* DaDiMethod::access()
 {
   return m_access;
 }
 
-inline void DaDiMethod::setAccess(DOMString value)
+inline void DaDiMethod::setAccess(const XMLCh* value)
 {
-  m_access = value;
+  m_access = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_access, value);
 }
 
-inline DOMString DaDiMethod::argList()
-{
+/*
+  inline const XMLCh* DaDiMethod::argList()
+  {
   return m_argList;
-}
+  }
 
-inline void DaDiMethod::setArgList(DOMString value)
-{
-  m_argList = value;
-}
+  inline void DaDiMethod::setArgList(const XMLCh* value)
+  {
+  m_argList = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_argList, value);
+  }
 
-inline DOMString DaDiMethod::argInOut()
-{
+  inline const XMLCh* DaDiMethod::argInOut()
+  {
   return m_argInOut;
-}
+  }
 
-inline void DaDiMethod::setArgInOut(DOMString value)
-{
-  m_argInOut = value;
-}
+  inline void DaDiMethod::setArgInOut(const XMLCh* value)
+  {
+  m_argInOut = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_argInOut, value);
+  }
+*/
 
-inline DOMString DaDiMethod::virtual_()
+inline const XMLCh* DaDiMethod::virtual_()
 {
   return m_virtual;
 }
 
-inline void DaDiMethod::setVirtual_(DOMString value)
+inline void DaDiMethod::setVirtual_(const XMLCh* value)
 {
-  m_virtual = value;
+  m_virtual = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_virtual, value);
 }
 
-inline DOMString DaDiMethod::code()
+inline const XMLCh* DaDiMethod::code()
 {
   return m_code;
 }
 
-inline void DaDiMethod::setCode(DOMString value)
+inline void DaDiMethod::setCode(const XMLCh* value)
 {
-  m_code = value;
+  m_code = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_code, value);
 }
 
 inline bool DaDiMethod::const_()
@@ -216,7 +255,7 @@ inline void DaDiMethod::setDaDiMethReturn(DaDiMethReturn* value)
 {
   m_daDiMethReturn = value;
 }
-  
+
 inline DaDiMethArgument* DaDiMethod::popDaDiMethArgument()
 {
   DaDiMethArgument* pt = m_daDiMethArgument.front();

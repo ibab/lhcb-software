@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.4 2001-11-09 08:37:11 mato Exp $
-#ifndef DADIMETHARGUMENT_H 
+// $Id: DaDiMethArgument.h,v 1.5 2003-04-30 12:04:19 mato Exp $
+#ifndef DADIMETHARGUMENT_H
 #define DADIMETHARGUMENT_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 /** @class DaDiMethArgument DaDiMethArgument.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -14,18 +14,23 @@
 class DaDiMethArgument {
 public:
   /// Standard constructor
-  DaDiMethArgument() {}; 
+  DaDiMethArgument() :
+    m_type(0),
+    m_name(0),
+    m_inout(0),
+    m_constant(false),
+    m_isPointer(false) {};
 
-  virtual ~DaDiMethArgument() {}; ///< Standard destructor
+  virtual ~DaDiMethArgument();
 
-  DOMString type();
-  void setType(DOMString value);
-  
-  DOMString name();
-  void setName(DOMString value);
-    
-  DOMString inout();
-  void setInout(DOMString value);
+  const XMLCh* type();
+  void setType(const XMLCh* value);
+
+  const XMLCh* name();
+  void setName(const XMLCh* value);
+
+  const XMLCh* inout();
+  void setInout(const XMLCh* value);
 
   bool const_();
   void setConst_(bool value);
@@ -37,42 +42,52 @@ protected:
 
 private:
 
-  DOMString m_type, 
-            m_name,
-            m_inout;
-  bool      m_constant, 
-            m_isPointer;
-  
+  XMLCh *m_type;
+  XMLCh *m_name;
+  XMLCh *m_inout;
+  bool   m_constant;
+  bool   m_isPointer;
+
 };
 
-inline DOMString DaDiMethArgument::type()
+inline DaDiMethArgument::~DaDiMethArgument()
+{
+  xercesc::XMLString::release(&m_type);
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_inout);
+}
+
+inline const XMLCh* DaDiMethArgument::type()
 {
   return m_type;
 }
 
-inline void DaDiMethArgument::setType(DOMString value)
+inline void DaDiMethArgument::setType(const XMLCh* value)
 {
-  m_type = value;
+  m_type = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_type, value);
 }
 
-inline DOMString DaDiMethArgument::name()
+inline const XMLCh* DaDiMethArgument::name()
 {
   return m_name;
 }
 
-inline void DaDiMethArgument::setName(DOMString value)
+inline void DaDiMethArgument::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiMethArgument::inout()
+inline const XMLCh* DaDiMethArgument::inout()
 {
   return m_inout;
 }
 
-inline void DaDiMethArgument::setInout(DOMString value)
+inline void DaDiMethArgument::setInout(const XMLCh* value)
 {
-  m_inout = value;
+  m_inout = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_inout, value);
 }
 
 inline bool DaDiMethArgument::const_()

@@ -1,17 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.9 2002-04-17 16:55:45 mato Exp $
-#ifndef DADIPACKAGE_H 
+// $Id: DaDiPackage.h,v 1.10 2003-04-30 12:04:19 mato Exp $
+#ifndef DADIPACKAGE_H
 #define DADIPACKAGE_H 1
 
 // Include files
 #include "DaDiNamespace.h"
 #include "DaDiClass.h"
-
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <list>
 
 /** @class DaDiPackage DaDiPackage.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -19,35 +18,42 @@
 class DaDiPackage {
 public:
   /// Standard constructor
-  DaDiPackage() {}; 
+  DaDiPackage() :
+    m_packageName(0),
+    m_impSoftList(std::list<std::string>()),
+    m_impStdList(std::list<std::string>()),
+    m_importList(std::list<std::string>()),
+    m_noImports(std::list<std::string>()),
+    m_daDiClass(std::list<DaDiClass*>()),
+    m_daDiNamespace(std::list<DaDiNamespace*>()) {};
 
-  virtual ~DaDiPackage() {}; ///< Standard destructor
+  virtual ~DaDiPackage();
 
-  DOMString packageName();
-  void setPackageName(DOMString value);
+  const XMLCh* packageName();
+  void setPackageName(const XMLCh* value);
 
   std::string popImpSoftList();
   std::list<std::string> impSoftList();
   void pushImpSoftList(std::string value);
   int sizeImpSoftList();
   void remDblImpSoftList();
-  
+
   std::string popImpStdList();
   std::list<std::string> impStdList();
   void pushImpStdList(std::string value);
   int sizeImpStdList();
   void remDblImpStdList();
-  
+
   std::string popImportList();
   std::list<std::string> importList();
   void pushImportList(std::string value);
   int sizeImportList();
   void remDblImportList();
-  
-	std::string popNoImports();
+
+  std::string popNoImports();
   std::list<std::string> noImports();
-	void pushNoImports(std::string value);
-	int sizeNoImports();
+  void pushNoImports(std::string value);
+  int sizeNoImports();
 
   DaDiClass* popDaDiClass();
   void pushDaDiClass(DaDiClass* value);
@@ -61,24 +67,41 @@ protected:
 
 private:
 
-  DOMString                 m_packageName;
-  std::list<std::string>    m_impSoftList,
-                            m_impStdList,
-                            m_importList,
-                            m_noImports;
-  std::list<DaDiClass*>     m_daDiClass;
-  std::list<DaDiNamespace*> m_daDiNamespace;
+  XMLCh                     *m_packageName;
+  std::list<std::string>     m_impSoftList;
+  std::list<std::string>     m_impStdList;
+  std::list<std::string>     m_importList;
+  std::list<std::string>     m_noImports;
+  std::list<DaDiClass*>      m_daDiClass;
+  std::list<DaDiNamespace*>  m_daDiNamespace;
 
 };
 
-inline DOMString DaDiPackage::packageName()
+inline DaDiPackage::~DaDiPackage()
+{
+  xercesc::XMLString::release(&m_packageName);
+  std::list<DaDiClass*>::iterator cIter;
+  for (cIter = m_daDiClass.begin(); cIter != m_daDiClass.end(); ++cIter)
+  {
+    delete *cIter;
+  }
+  std::list<DaDiNamespace*>::iterator nIter;
+  for (nIter = m_daDiNamespace.begin(); nIter != m_daDiNamespace.end(); ++nIter)
+  {
+    delete *nIter;
+  }
+};
+
+
+inline const XMLCh* DaDiPackage::packageName()
 {
   return m_packageName;
 }
 
-inline void DaDiPackage::setPackageName(DOMString value)
+inline void DaDiPackage::setPackageName(const XMLCh* value)
 {
-  m_packageName = value;
+  m_packageName = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_packageName, value);
 }
 
 inline std::string DaDiPackage::popImpSoftList()
@@ -106,7 +129,7 @@ inline void DaDiPackage::pushImpSoftList(std::string value)
   }
   if (doImport)
   {
-	  m_impSoftList.push_back(value);
+    m_impSoftList.push_back(value);
   }
 }
 
@@ -117,8 +140,8 @@ inline int DaDiPackage::sizeImpSoftList()
 
 inline void DaDiPackage::remDblImpSoftList()
 {
-	m_impSoftList.sort();
-	m_impSoftList.unique();
+  m_impSoftList.sort();
+  m_impSoftList.unique();
 }
 
 inline std::string DaDiPackage::popImpStdList()
@@ -146,8 +169,8 @@ inline int DaDiPackage::sizeImpStdList()
 
 inline void DaDiPackage::remDblImpStdList()
 {
-	m_impStdList.sort();
-	m_impStdList.unique();
+  m_impStdList.sort();
+  m_impStdList.unique();
 }
 
 inline std::string DaDiPackage::popImportList()
@@ -166,43 +189,43 @@ inline std::list<std::string> DaDiPackage::importList()
 inline void DaDiPackage::pushImportList(std::string value)
 {
   int lastspace;
-	std::string import, lastword;
+  std::string import, lastword;
 
-	while (value != "")
-	{
-		int i = value.find_first_of(":,<>");
+  while (value != "")
+  {
+    int i = value.find_first_of(":,<>");
 
-		if (i == -1)
-		{
-			import = value;
-			value = "";
-		}
-		else
-		{
-			import = value.substr(0,i);
-			value = value.substr(i+1,std::string::npos);
-		}
+    if (i == -1)
+    {
+      import = value;
+      value = "";
+    }
+    else
+    {
+      import = value.substr(0,i);
+      value = value.substr(i+1,std::string::npos);
+    }
 
     lastspace = import.find_last_of(" ");
     lastword = import.substr(lastspace+1, import.size()-lastspace);
     if ((lastword != "bool")   && (lastword != "short")    &&
-        (lastword != "long")   && (lastword != "int")      && 
+        (lastword != "long")   && (lastword != "int")      &&
         (lastword != "float")  && (lastword != "double")   &&
         (lastword != "char")   && (lastword != "unsigned") &&
         (lastword != "signed") && (lastword != "")         &&
         (lastword != "string") && (lastword != "std")      &&
         (lastword != "longlong"))
-		{
-			if ((import == "vector") || (import == "list")   ||
-				(import == "deque")  || (import == "queue")    ||
-				(import == "stack")  || (import == "map")      ||
-				(import == "set")    || (import == "bitset")   ||
-        (import == "pair"))
-			{
-				m_impStdList.push_back(import);
-			}
-			else
-			{
+    {
+      if ((import == "vector") || (import == "list")   ||
+          (import == "deque")  || (import == "queue")    ||
+          (import == "stack")  || (import == "map")      ||
+          (import == "set")    || (import == "bitset")   ||
+          (import == "pair"))
+      {
+        m_impStdList.push_back(import);
+      }
+      else
+      {
         for (int i=0; i<sizeImpSoftList(); ++i)
         {
           if (import == m_impSoftList.front())
@@ -210,10 +233,10 @@ inline void DaDiPackage::pushImportList(std::string value)
             m_impSoftList.pop_front();
           }
         }
-				m_importList.push_back(import);
-			}
-		}
-	}
+        m_importList.push_back(import);
+      }
+    }
+  }
 }
 
 inline int DaDiPackage::sizeImportList()
@@ -223,16 +246,16 @@ inline int DaDiPackage::sizeImportList()
 
 inline void DaDiPackage::remDblImportList()
 {
-	m_importList.sort();
-	m_importList.unique();
+  m_importList.sort();
+  m_importList.unique();
 }
 
 inline std::string DaDiPackage::popNoImports()
 {
-	std::string pt = m_noImports.front();
-	m_noImports.push_back(pt);
-	m_noImports.pop_front();
-	return pt;
+  std::string pt = m_noImports.front();
+  m_noImports.push_back(pt);
+  m_noImports.pop_front();
+  return pt;
 }
 
 inline std::list<std::string> DaDiPackage::noImports()
@@ -247,7 +270,7 @@ inline void DaDiPackage::pushNoImports(std::string value)
 
 inline int DaDiPackage::sizeNoImports()
 {
-	return m_noImports.size();
+  return m_noImports.size();
 }
 
 inline DaDiClass* DaDiPackage::popDaDiClass()

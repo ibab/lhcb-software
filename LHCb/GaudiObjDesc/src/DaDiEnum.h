@@ -1,9 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiEnum.h,v 1.2 2002-03-13 18:35:47 mato Exp $
+// $Id: DaDiEnum.h,v 1.3 2003-04-30 12:04:17 mato Exp $
 #ifndef DADIENUM_H 
 #define DADIENUM_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 /** @class DaDiAttribute DaDiAttribute.h
  *  
@@ -14,70 +14,86 @@
 class DaDiEnum {
 public:
   /// Standard constructor
-  DaDiEnum() {}; 
+  DaDiEnum() :
+  m_name(0),
+  m_desc(0),
+  m_value(0),
+  m_access(0) {}; 
 
-  virtual ~DaDiEnum() {}; ///< Standard destructor
+  virtual ~DaDiEnum();
 
-  DOMString name();
-  void setName(DOMString value);
+  const XMLCh* name();
+  void setName(const XMLCh* value);
     
-  DOMString desc();
-  void setDesc(DOMString value);
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
   
-  DOMString value();
-  void setValue(DOMString value);
+  const XMLCh* value();
+  void setValue(const XMLCh* value);
 
-  DOMString access();
-  void setAccess(DOMString value);
+  const XMLCh* access();
+  void setAccess(const XMLCh* value);
 
 protected:
 
 private:
 
-  DOMString m_name, 
-            m_desc, 
-            m_value, 
-            m_access;
+  XMLCh *m_name; 
+  XMLCh *m_desc; 
+  XMLCh *m_value; 
+  XMLCh *m_access;
 };
 
-inline DOMString DaDiEnum::name()
+inline DaDiEnum::~DaDiEnum()
+{
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_value);
+  xercesc::XMLString::release(&m_access);
+}
+
+inline const XMLCh* DaDiEnum::name()
 {
   return m_name;
 }
 
-inline void DaDiEnum::setName(DOMString value)
+inline void DaDiEnum::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiEnum::desc()
+inline const XMLCh* DaDiEnum::desc()
 {
   return m_desc;
 }
 
-inline void DaDiEnum::setDesc(DOMString value)
+inline void DaDiEnum::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
-inline DOMString DaDiEnum::value()
+inline const XMLCh* DaDiEnum::value()
 {
   return m_value;
 }
 
-inline void DaDiEnum::setValue(DOMString value)
+inline void DaDiEnum::setValue(const XMLCh* value)
 {
-  m_value = value;
+  m_value = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_value, value);
 }
 
-inline DOMString DaDiEnum::access()
+inline const XMLCh* DaDiEnum::access()
 {
   return m_access;
 }
 
-inline void DaDiEnum::setAccess(DOMString value)
+inline void DaDiEnum::setAccess(const XMLCh* value)
 {
-  m_access = value;
+  m_access = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_access, value);
 }
 
 #endif // DADIENUM_H

@@ -1,9 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiBitfield.h,v 1.1 2002-04-30 16:52:49 mato Exp $
-#ifndef DADIBITFIELD_H 
+// $Id: DaDiBitfield.h,v 1.2 2003-04-30 12:04:16 mato Exp $
+#ifndef DADIBITFIELD_H
 #define DADIBITFIELD_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@
 #include "DaDiTools.h"
 
 /** @class DaDiBitfield DaDiBitfield.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -20,24 +20,31 @@
 class DaDiBitfield {
 public:
   /// Standard constructor
-  DaDiBitfield() {}; 
+  DaDiBitfield() :
+    m_name(0),
+    m_desc(0),
+    m_setMeth(0),
+    m_getMeth(0),
+    m_length(0),
+    m_startAtOne(false),
+    m_mask(std::vector<std::string>()) {};
 
-  virtual ~DaDiBitfield() {}; ///< Standard destructor
+  virtual ~DaDiBitfield();
 
-  DOMString name();
-  void setName(DOMString value);
-  
-  DOMString desc();
-  void setDesc(DOMString value);
-  
+  const XMLCh* name();
+  void setName(const XMLCh* value);
+
+  const XMLCh* desc();
+  void setDesc(const XMLCh* value);
+
   int length();
-  void setLength(DOMString value);
-  
-  DOMString setMeth();
-  void setSetMeth(DOMString value);
-  
-  DOMString getMeth();
-  void setGetMeth(DOMString value);
+  void setLength(const XMLCh* value);
+
+  const XMLCh* setMeth();
+  void setSetMeth(const XMLCh* value);
+
+  const XMLCh* getMeth();
+  void setGetMeth(const XMLCh* value);
 
   bool startAtOne();
   void setStartAtOne(bool value);
@@ -50,35 +57,45 @@ protected:
 
 private:
 
-  DOMString                m_name,
-                           m_desc,
-                           m_setMeth, 
-                           m_getMeth;
-  int                      m_length;
-  bool                     m_startAtOne;
-  std::vector<std::string> m_mask;
+  XMLCh                    *m_name;
+  XMLCh                    *m_desc;
+  XMLCh                    *m_setMeth;
+  XMLCh                    *m_getMeth;
+  int                       m_length;
+  bool                      m_startAtOne;
+  std::vector<std::string>  m_mask;
 
 };
 
 
-inline DOMString DaDiBitfield::name()
+inline DaDiBitfield::~DaDiBitfield()
+{
+  xercesc::XMLString::release(&m_name);
+  xercesc::XMLString::release(&m_desc);
+  xercesc::XMLString::release(&m_setMeth);
+  xercesc::XMLString::release(&m_getMeth);
+}
+
+inline const XMLCh* DaDiBitfield::name()
 {
   return m_name;
 }
 
-inline void DaDiBitfield::setName(DOMString value)
+inline void DaDiBitfield::setName(const XMLCh* value)
 {
-  m_name = value;
+  m_name = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_name, value);
 }
 
-inline DOMString DaDiBitfield::desc()
+inline const XMLCh* DaDiBitfield::desc()
 {
   return m_desc;
 }
 
-inline void DaDiBitfield::setDesc(DOMString value)
+inline void DaDiBitfield::setDesc(const XMLCh* value)
 {
-  m_desc = value;
+  m_desc = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_desc, value);
 }
 
 inline int DaDiBitfield::length()
@@ -86,33 +103,40 @@ inline int DaDiBitfield::length()
   return m_length;
 }
 
-inline void DaDiBitfield::setLength(DOMString value)
+inline void DaDiBitfield::setLength(const XMLCh* value)
 {
-  m_length = atoi(value.transcode());
-  if (m_length == 0)
+  try
   {
-    setMask(DaDiTools::findWords(value.transcode(), ","));
+    m_length = xercesc::XMLString::parseInt(value);
+  }
+  catch(...)
+    //  if (m_length == 0)
+  {
+    m_length = 0;
+    setMask(DaDiTools::findWords(xercesc::XMLString::transcode(value), ","));
   }
 }
 
-inline DOMString DaDiBitfield::setMeth()
+inline const XMLCh* DaDiBitfield::setMeth()
 {
   return m_setMeth;
 }
 
-inline void DaDiBitfield::setSetMeth(DOMString value)
+inline void DaDiBitfield::setSetMeth(const XMLCh* value)
 {
-  m_setMeth = value;
+  m_setMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_setMeth, value);
 }
 
-inline DOMString DaDiBitfield::getMeth()
+inline const XMLCh* DaDiBitfield::getMeth()
 {
   return m_getMeth;
 }
 
-inline void DaDiBitfield::setGetMeth(DOMString value)
+inline void DaDiBitfield::setGetMeth(const XMLCh* value)
 {
-  m_getMeth = value;
+  m_getMeth = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_getMeth, value);
 }
 
 inline bool DaDiBitfield::startAtOne()

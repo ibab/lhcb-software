@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethReturn.h,v 1.2 2001-11-09 08:37:11 mato Exp $
-#ifndef DADIMETHRETURN_H 
+// $Id: DaDiMethReturn.h,v 1.3 2003-04-30 12:04:19 mato Exp $
+#ifndef DADIMETHRETURN_H
 #define DADIMETHRETURN_H 1
 
 // Include files
-#include "dom/DOMString.hpp"
+#include "xercesc/util/XMLString.hpp"
 
 /** @class DaDiMethReturn DaDiMethReturn.h
- *  
+ *
  *
  *  @author Stefan Roiser
  *  @date   14/06/2001
@@ -14,33 +14,41 @@
 class DaDiMethReturn {
 public:
   /// Standard constructor
-  DaDiMethReturn() {}; 
+  DaDiMethReturn() :
+    m_type(0),
+    m_constant(false) {};
 
-  virtual ~DaDiMethReturn() {}; ///< Standard destructor
+  virtual ~DaDiMethReturn();
 
-  DOMString type();
-  void setType(DOMString value);
+  const XMLCh* type();
+  void setType(const XMLCh* value);
 
   bool const_();
   void setConst_(bool value);
-  
+
 protected:
 
 private:
 
-  DOMString m_type; 
-  bool      m_constant;
-  
+  XMLCh *m_type;
+  bool   m_constant;
+
 };
 
-inline DOMString DaDiMethReturn::type() 
+inline DaDiMethReturn::~DaDiMethReturn()
+{
+  xercesc::XMLString::release(&m_type);
+}
+
+inline const XMLCh* DaDiMethReturn::type()
 {
   return m_type;
 }
 
-inline void DaDiMethReturn::setType(DOMString value)
+inline void DaDiMethReturn::setType(const XMLCh* value)
 {
-  m_type = value;
+  m_type = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_type, value);
 }
 
 inline bool DaDiMethReturn::const_()
