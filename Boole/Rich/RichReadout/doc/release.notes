@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r6 2004-03-15 =======================
 ! 2004-03-04 - Christopher Rob Jones
  - Remove fix for energy deposit (Now in GaussRICH since Gauss v14r3)
 
