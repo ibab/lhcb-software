@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2004-06-28 07:10:00 mneedham Exp $
+# $Id: requirements,v 1.9 2004-06-28 16:12:38 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package           DetDescChecks
-version           v2r0
+version           v2r1
 
 # =============== structure ===================================================
 branches          cmt doc src options 
