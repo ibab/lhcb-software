@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.53 2004-11-16 17:16:30 cattanem Exp $
+! $Id: release.notes,v 1.54 2004-11-19 10:27:18 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================== PhysEvent v8r6 2004-11-19 ========================
+! 2004-11-19 - Marco Cattaneo
+ - Put back forward declaration of RichPID in ProtoParticle.xml
 
 !======================== PhysEvent v8r5 2004-11-16 ========================
 ! 2004-11-16 - Marco Cattaneo
