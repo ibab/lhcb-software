@@ -1,22 +1,22 @@
 package LHCbSys
-version v15r8
+version v15r9
 
 branches doc cmt
 
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r8
+use LHCb		v15r9
 
-use GaudiConf		v7r7
+use GaudiConf		v7r8
 
 # External packages used by GenEvent
 use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r5	Kernel
-use LHCbKernel  	v4r5	Kernel
+use KernelSys   	v3r6	Kernel
+use LHCbKernel  	v4r6	Kernel
 use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
@@ -39,7 +39,7 @@ use RichDet		v7r1	Det
 use STDet          	v1r1	Det
 
 # Event data model
-use EventSys		v17r8	Event
+use EventSys		v17r9	Event
 use Event        	v4r2	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
@@ -50,11 +50,11 @@ use CaloEvent    	v13r2	Event
 use MuonEvent    	v3r1	Event
 use L0Event      	v14r1	Event
 use L1Event      	v12r0	Event
-use PhysEvent    	v8r2	Event
+use PhysEvent    	v8r3	Event
 use HltEvent		v5r0	Event
 use DAQEvent		v4r2	Event
 use GenEvent    	v3r2	Event
-use EventAssoc          v1r0    Event
+use EventAssoc          v1r1    Event
 use LinkerEvent         v1r2    Event
 use TrgEvent            v2r1    Event
 
