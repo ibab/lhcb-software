@@ -45,7 +45,7 @@ use L0MuonKernel	v2r1p1	L0
 use L0MuonTrigger	v2r1	L0
 
 # Calorimeter
-use CaloMonitor         v2r2	Calo
+use CaloMonitor         v2r2p1	Calo
 use CaloDigit           v1r6	Calo
 
 # Velo
