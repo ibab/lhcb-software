@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.cpp,v 1.3 2002-06-04 16:08:37 dhcroft Exp $
+// $Id: MuonReadoutCond.cpp,v 1.4 2002-08-05 18:14:08 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/04 16:08:37  dhcroft
+// Added time jitter pdfs to the readouts
+//
 // Revision 1.2  2002/01/31 10:00:10  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -12,6 +15,7 @@
 // Include files
 #include "MuonDet/MuonReadoutCond.h"
 #include <cmath>
+#include <iostream>
 
 /** @file MuonReadoutCond.cpp
  *
@@ -209,6 +213,8 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
 
   std::vector<double> *cumProb;
   std::vector<_clus> *cluster;
+	std::vector<_clus> local_cluster;
+	std::vector<double> local_cumProb;
   double *padEdgeSize;
   double *padEdgeSigma;
   if(0 == xy){
@@ -216,33 +222,41 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
     cluster = &(m_RList[i].ClusterX);
     padEdgeSize = &(m_RList[i].PadEdgeSizeX);
     padEdgeSigma = &(m_RList[i].PadEdgeSigmaX);
+		for(int size=0;size<(int)m_RList[i].CumProbX.size();size++){
+		  local_cluster.push_back(m_RList[i].ClusterX[size]);
+		  local_cumProb.push_back(m_RList[i].CumProbX[size]);
+		}
   }else{
     cumProb = &(m_RList[i].CumProbY);
     cluster = &(m_RList[i].ClusterY);
     padEdgeSize = &(m_RList[i].PadEdgeSizeY);
     padEdgeSigma = &(m_RList[i].PadEdgeSigmaY);
+		for(int size=0;size<(int)m_RList[i].CumProbX.size();size++){
+		  local_cluster.push_back(m_RList[i].ClusterY[size]);
+		  local_cumProb.push_back(m_RList[i].CumProbY[size]);
+		}		
   }
 
   // now should have a cumlative sum in *cumProb
   int icsize;
-  if( (*cumProb).size() >= 3  &&  randomNumber > (*cumProb)[1] ){
+   if( (*cumProb).size() >= 3  &&  randomNumber > (*cumProb)[1] ){
     // do _not_ do the correction for the pad edge effect
-    // (cluster size at least 3 anyway)
+    // (cluster size at least 3 anyway
     icsize=1;
     while( (*cumProb)[icsize] < randomNumber ){
       ++icsize;
     }
   }else{
     // must correct for pad edge effect
-    if( (*padEdgeSigma) > 0.  &&  (*padEdgeSize) > 0.){
+     if( (*padEdgeSigma) > 0.  &&  (*padEdgeSize) < 0.){
       // tested that there _is_ an effect
-      double edgeEffect = (*padEdgeSize) *
+       double edgeEffect = (*padEdgeSize) *
         exp( -0.5 * ( xpos*xpos) / ( (*padEdgeSigma)*(*padEdgeSigma) ));
-      (*cumProb)[0] -= edgeEffect;
-      (*cumProb)[1] += edgeEffect;
-    }
+      local_cumProb[0] += edgeEffect;
+      local_cumProb[1] -= edgeEffect;
+     }
     icsize=0;
-    while( (*cumProb)[icsize] < randomNumber ){
+    while( (local_cumProb)[icsize] < randomNumber ){
       ++icsize;
     }
   }

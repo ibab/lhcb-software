@@ -1,8 +1,11 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.3 2002-06-04 16:08:37 dhcroft Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.4 2002-08-05 18:14:09 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/04 16:08:37  dhcroft
+// Added time jitter pdfs to the readouts
+//
 // Revision 1.2  2002/01/31 10:00:10  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //

@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.3 2002-06-04 16:08:33 dhcroft Exp $
+// $Id: MuonReadoutCond.h,v 1.4 2002-08-05 18:14:07 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/04 16:08:33  dhcroft
+// Added time jitter pdfs to the readouts
+//
 // Revision 1.2  2002/01/31 10:00:09  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -154,7 +157,7 @@ public:
   }
   /// get width (sigma) of pad edge effect in X (cm)
   void setPadEdgeSigmaX(const double psigma, const int &i){
-    m_RList[i].PadEdgeSizeX=psigma;
+    m_RList[i].PadEdgeSigmaX=psigma;
   }
   /// get size of double hit rate at pad edge in Y
   void setPadEdgeSizeY(const double pedge, const int &i){
@@ -162,7 +165,7 @@ public:
   }
   /// get width (sigma) of pad edge effect in Y (cm)
   void setPadEdgeSigmaY(const double psigma, const int &i){
-    m_RList[i].PadEdgeSizeY=psigma;
+    m_RList[i].PadEdgeSigmaY=psigma;
   }
 
   /// function to add a cluster size with a corresponding probablilty in X

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.14 2002-06-04 16:51:45 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-08-05 18:14:08 asatta Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+! 2002-08-05 Alessia Satta
+  - Few bug fixes in MuonReadoutCond.h and MuonReadoutCond.cpp , those
+    bugs disabled the pad edge effect in the cross talk calculation
+  
 !===================== MuonDet v3r1 update 2002-06-04 ======================
 ! 2002-06-04 David Hutchcroft
   - Added the code to MuonReadoutCond to store the time jitter information
