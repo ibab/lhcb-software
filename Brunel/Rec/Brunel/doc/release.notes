@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v15r3>2002-12-03 Brunel v15r3</A></H1><PRE>
+</PRE><H1><A NAME=v15r3>2002-11-28 Brunel v15r3</A></H1><PRE>
  - New tuning:
    . Tighten cut on signal/noise of TT clusters (>4) to reduce ghost rate
      (VeloTT v1r3)
@@ -13,8 +13,15 @@ Purpose: LHCb reconstruction program
  - DST changes:
    . Add ProcStatus to all events (BrunelKernel v5r2, BrunelDst.opts)
 
+ - Bug fixes:
+   . Fix typo (wrong array size used, found by valgrind) (MuonDet v4r2)
+   . Fix usage of uninitialised variable, found by valgrind (L1Decision v1r2)
+   . Protect against missing L1 Vertex - causing very frequent core dumps
+     (L1Decision v1r2)
+
  - Code cleanup:
    . Remove obsolete component library (CaloSicbCnv v7r3)
+   . Release all tools at finalize (L1Decision v1r2)
 
 </PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
  N.B.: to take advantage of new Rich tuning, new dbase versions are needed:
@@ -51,9 +58,6 @@ Purpose: LHCb reconstruction program
  - DST changes:
    . Add /Event/Trig/L1/Decision
    . Non-unique Velo, Seed tracks are removed by clone-killer (TrCleanEx v2r3)
-
- - Bug fixes:
-   . Fix typo (wrong array size used, found by valgrind) (MuonDet v4r2)
  
  - Code cleanup:
    . Minimize printout of job options (*.opts)
