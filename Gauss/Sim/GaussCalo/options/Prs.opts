@@ -1,4 +1,4 @@
-// $Id: Prs.opts,v 1.1 2003-07-07 08:21:04 ibelyaev Exp $ 
+// $Id: Prs.opts,v 1.2 2003-07-09 17:01:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -29,6 +29,14 @@ GiGaGeo.Prs.zMax           =  15000. * mm ;
 
 GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo"             ;
 
+GiGaGeo.Prs.IntegrationDelays = { 15. , 15. , 15. } ;
+
+GiGaGeo.Prs.Histograms = 
+  { 
+    "GaussCalo/PRSTIME/1" , 
+    "GaussCalo/PRSTIME/2" , 
+    "GaussCalo/PRSTIME/3" 
+  };
 
 // ============================================================================
 // The END 

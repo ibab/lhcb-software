@@ -1,8 +1,11 @@
-// $Id: Spd.opts,v 1.1 2003-07-07 08:21:05 ibelyaev Exp $ 
+// $Id: Spd.opts,v 1.2 2003-07-09 17:01:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 08:21:05  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 
 // ============================================================================
@@ -29,6 +32,14 @@ GiGaGeo.Spd.zMax           =  15000. * mm ;
 
 GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"             ;
 
+GiGaGeo.Spd.IntegrationDelays = { 15. , 15. , 15. } ;
+
+GiGaGeo.Spd.Histograms = 
+  { 	
+    "GaussCalo/SPDTIME/1", 
+    "GaussCalo/SPDTIME/2",
+    "GaussCalo/SPDTIME/3" 
+  };
 
 // ============================================================================
 // The END 

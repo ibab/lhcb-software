@@ -25,11 +25,17 @@
 * m_ecalTimeHisto[0][22] = 0.01 ;
 * m_ecalTimeHisto[0][23] = 0. ;
 * m_ecalTimeHisto[0][24] = 0. ;
+   if $VEXIST(v1) .EQ. 1 THEN
+     ve/de v1
+   endif
    ve/cr v1(25)
    ve/in v1 _
      1.00 1.000 0.99 0.985 0.98 0.96 0.935 0.90 0.86 0.81 _ 
      0.75 0.680 0.59 0.510 0.42 0.35 0.280 0.20 0.14 0.09 _
      0.06 0.025 0.01 0.000 0.00
+   if $HEXIST(1) .EQ. 1 THEN
+     hi/de 1 
+   endif 
    1d 1 ' Ecal/Hcal, 1st time slot data from J.Lefrancois ; ns ; fractions ' 25 0 25 
    h/p/c 1 v1 
    
@@ -57,13 +63,18 @@
 * m_ecalTimeHisto[1][21] = 0.96 ;
 * m_ecalTimeHisto[1][22] = 0.985 ;
 * m_ecalTimeHisto[1][23] = 0.99 ;
-* m_ecalTimeHisto[1][24] = 1. ;
-   
+* m_ecalTimeHisto[1][24] = 1. ;   
+   if $VEXIST(v2) .EQ. 1 THEN
+     ve/de v2
+   endif
    ve/cr v2(25)
    ve/in v2 _
      0.000 0.000 0.000 0.005 0.035 0.065 0.090 0.13 0.18 0.24 _
      0.310 0.360 0.440 0.510 0.590 0.670 0.740 0.80 0.85 0.91 _
      0.940 0.960 0.985 0.990 1.000 
+   if $HEXIST(2) .EQ. 1 THEN
+     hi/de 2 
+   endif 
    1d 2 ' Ecal/Hcal, 2nd time slot, data from J.Lefrancois ; ns ; fractions ' 25 0 25 
    h/p/c 2 v2 
    
@@ -78,9 +89,6 @@
    hrout 1 
    hrout 2 
    hrout 3   
-   hrout 11 
-   hrout 22 
-   hrout 33
    
    cd //lun55 
    mdir hcaltime 
@@ -88,11 +96,7 @@
    hrout 1 
    hrout 2 
    hrout 3   
-   hrout 11 
-   hrout 22 
-   hrout 33
    close 55 
-   
    
  return
  

@@ -1,4 +1,4 @@
-// $Id: SpdPrsSensDet.h,v 1.2 2003-07-07 16:27:46 ibelyaev Exp $ 
+// $Id: SpdPrsSensDet.h,v 1.3 2003-07-09 17:01:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -25,13 +25,13 @@
 /// forward declarations 
 template <class SD> class GiGaSensDetFactory;
 
-class DeCalorimeter ;
+class DeCalorimeter ;  // CaloDet 
 
 /** @class SpdPrsSensDet SpdPrsSensDet.h
  *
  *
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @author  Patrick Robbe robbe@lal.in2p3.fr 
+ *  @author  Grigori Rybkine Grigori.Rybkine@cern.ch 
  *
  *  @date    23/01/2001
  */
@@ -40,6 +40,26 @@ class SpdPrsSensDet: public CaloSensDet
 {
   /// friend factory 
   friend class GiGaFactory<SpdPrsSensDet>;
+  
+public :
+
+  /** standard initialization (Gaudi) 
+   *  @see GiGaSensDetBase
+   *  @see GiGaBase 
+   *  @see   AlgTool 
+   *  @see  IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode initialize   ();
+  
+  /** standard finalization (Gaudi) 
+   *  @see GiGaSensDetBase
+   *  @see GiGaBase 
+   *  @see   AlgTool 
+   *  @see  IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode finalize    ();
   
 protected:
   
@@ -52,12 +72,12 @@ protected:
    *  @param globalTime the global time of prestep point 
    *  @param deposit    raw energy deposition for the step 
    *  @param track      the actual G4Track pbject (decoded from G4Step)
-   *  @param pdef       the actual particle type  (decoded from G4Step/G4Track)  
+   *  @param pdef       the actual particle type  (decoded from G4Step/G4Track)
    *  @param material   the actual material       (decoded from G4Step) 
    *  @param step       the step itself, the most important 
    *                    information from the step 
    *                    is already decoded into prePoint,globalTime,track,
-   *                    particle definition,material etc for efficiency reasons. 
+   *                    particle definition,material etc for efficiency reasons.
    *
    */  
   virtual StatusCode    fillHitInfo 
@@ -74,15 +94,28 @@ protected:
    *  for the given calorimeter cell
    *  @param time global time of energy deposition
    *  @param cell cellID of the cell 
-   *  @param bin (out) the first time bin 
-   *  @param fracs the vector of fractions for subsequent time-bins;
-   *  @return StatuscCode 
+   *  @param slot (out) the first time slot 
+   *  @param fracs the vector of fractions for subsequent time-slots;
+   *  @return StatusCode 
    */
   virtual StatusCode timing  
   ( const double            time      , 
     const CaloCellID&       cell      ,
     CaloSubHit::Time&       slot      ,
     CaloSensDet::Fractions& fractions ) const ;
+
+protected:
+  /** evaluate the correction for Birks' law 
+   *  @param charge   the charge of the particle 
+   *  @param dEdX     the nominal dEdX in the material
+   *  @param density 
+   *  @return the correction coefficient 
+   *  (Adapted from GEANT3 SUBROUTINE GBIRK(EDEP))
+   */
+  double birksCorrection 
+  ( const double      charge   ,
+    const double      dEdX     , 
+    const double      density  ) const ;
 
 protected:
   
@@ -112,8 +145,16 @@ private:
   // no assignement  
   SpdPrsSensDet& operator=( const SpdPrsSensDet& ) ;
   
-protected:
+private:
+  double                                      m_BX                ;
+  unsigned int                                m_numBXs                ;
+  std::vector<double>                         m_sDelays ;
+  double                                      m_fracMin                ;
   
+// flag controlling the correction C1'= 7.2/12.6 * C1
+// for multiply charged particles: == true  correction is applied
+//                                 == false  correction is not applied
+  bool                                      m_multiChargedBirks ;
 };
 // ============================================================================
 

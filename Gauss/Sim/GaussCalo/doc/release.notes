@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-09 - Vanya BELYAEV
+ - src/SpdPrsSensDet.h,.cpp    - new Spd/Prs implementation by Grigory Rybkine  
+ - options/Sps.opts,Prs.opts   - the new configuration options 
+
+
 ! 2003-07-08 - Vanya BELYAEV
  - src/CaloHit.h  
    1)CaloHit::entries()     : new method (alias to CaloHit::size() ) 
