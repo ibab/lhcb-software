@@ -33,13 +33,15 @@ Requires data produced with XmlDDDB v21r0 or greater.
   - Replace Relations/L0CaloCandidates and Relations/L0CaloFullCandidates old
     style relations with new style Link/Trig/L0/Calo, FullCalo (L0Calo v7r3)
   - Remove all (old) L1 objects from Digi output. To be replaced by new Trg
+  - Remove Muon/Digits (can be rebuilt form RawBuffer)
 
 - Dropped functionality
   - Dropped support for pre-2004 geometries (removed v200311.opts, RiSicbGeom)
   - Dropped old L1 trigger algorithms (removed L1VeloTrack, L1Decision)
 
 - Known problems
-  - Spillover does not work for POOL input. To be fixed in Gaudi
+  - Cannot use POOL input file for Spillover or LHC background events. Use a 
+    GaudiRootDb file even if main events are read from POOL. To be fixed in Gaudi
   - Usage of LHC background in Rich and ST is switched off in job options
     until LHC background events can be generated in Gauss with latest geometry
   - OTDigits are still on Digi output, due to bug in Gaudi that breaks 
