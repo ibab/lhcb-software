@@ -121,7 +121,7 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 //--------------------------------------------------------------
 // Start DaVinci sequence
 //
-ApplicationMgr.TopAlg = { "GaudiSequencer/DaVinciMainSeq" } ;
+ApplicationMgr.TopAlg += { "GaudiSequencer/DaVinciMainSeq" } ;
 DaVinciMainSeq.IgnoreFilterPassed = true ; // because of DaVinciElectrons
 DaVinciMainSeq.MeasureTime = true ;
 //--------------------------------------------------------------
