@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-11-11 - Gloria Corti
+ - Use state at first measured point for forward tracks in 
+   PrimaryVertexFinderAlg as well as average Pt=400MeV for velo tracks.
+ - Set value of parameterization error in PrimaryVertexFitterTool following
+   tuning for L1 by F.Teubert.
+ - Introduce possibility to have veloTT tracks used to make ProtoP in 
+   ChargedProtoPAlg. This options is controlled by the property
+   VeloTTTracks( default = false )
+
 !====================== GlobalReco v2r0 2002-10-30 ===========================
 ! 2002-10-18 - Gloria Corti
  - Remove use of clone in TrState and change interface in
