@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.cpp,v 1.2 2002-02-01 15:08:17 ocallot Exp $
+// $Id: L0CaloDigit.cpp,v 1.3 2002-02-06 08:38:15 cattanem Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -73,7 +73,7 @@ StatusCode L0CaloDigit::initialize() {
 
   // Retrieve the ECAL detector element
 
-  SmartDataPtr<DeCalorimeter> detEcal( detDataService() ,
+  SmartDataPtr<DeCalorimeter> detEcal( detSvc() ,
                                        m_nameOfGeometryRoot + "Ecal" ) ;
   if( 0 == detEcal ) {
     log << MSG::ERROR << "Unable to retrieve Detector Element = "
@@ -84,7 +84,7 @@ StatusCode L0CaloDigit::initialize() {
 
   // Retrieve the HCAL detector element
 
-  SmartDataPtr<DeCalorimeter> detHcal( detDataService() ,
+  SmartDataPtr<DeCalorimeter> detHcal( detSvc() ,
                                        m_nameOfGeometryRoot + "Hcal" ) ;
   if( 0 == detHcal ) {
     log << MSG::ERROR << "Unable to retrieve Detector Element = "
@@ -118,7 +118,7 @@ StatusCode L0CaloDigit::execute() {
 
   // Get the ECAL input container
 
-  SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventDataService(),
+  SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventSvc(),
                                           m_nameOfEcalDataContainer );
   if( 0 == ecalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Ecal data container="
@@ -127,8 +127,7 @@ StatusCode L0CaloDigit::execute() {
   }
 
   L0CaloAdcs* ecalRaw = new L0CaloAdcs();
-  StatusCode sc = eventDataService()->registerObject( m_nameOfEcalOutput, 
-                                                      ecalRaw ) ;
+  StatusCode sc = eventSvc()->registerObject( m_nameOfEcalOutput, ecalRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != ecalRaw ) { delete ecalRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
@@ -137,8 +136,8 @@ StatusCode L0CaloDigit::execute() {
     return sc ;
   }
 
-  for( ObjectVector<CaloDigit>::const_iterator digit = ecalDigit->begin() ;
-       ecalDigit->end() != digit ; ++digit ) {
+  ObjectVector<CaloDigit>::const_iterator digit;  
+  for( digit = ecalDigit->begin() ; ecalDigit->end() != digit ; ++digit ) {
     CaloCellID ID  = (*digit)->cellID();
     double  energy = (*digit)->e() * m_gainCorrEcal[ID.area()];
     double  eT     = energy * m_ecal->cellSine(ID) ;
@@ -156,7 +155,7 @@ StatusCode L0CaloDigit::execute() {
 
   // Get the HCAL input container
 
-  SmartDataPtr<ObjectVector<CaloDigit> > hcalDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > hcalDigit ( eventSvc() ,
                                          m_nameOfHcalDataContainer );
   if( 0 == hcalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Hcal data container="
@@ -166,8 +165,7 @@ StatusCode L0CaloDigit::execute() {
 
   L0CaloAdcs* hcalRaw = new L0CaloAdcs();
 
-  sc = eventDataService()->registerObject( m_nameOfHcalOutput,
-                                           hcalRaw ) ;
+  sc = eventSvc()->registerObject( m_nameOfHcalOutput, hcalRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != hcalRaw ) { delete hcalRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
@@ -176,8 +174,7 @@ StatusCode L0CaloDigit::execute() {
     return sc ;
   }
 
-  for( ObjectVector<CaloDigit>::const_iterator digit = hcalDigit->begin() ;
-       hcalDigit->end() != digit ; ++digit ) {
+  for( digit = hcalDigit->begin() ; hcalDigit->end() != digit ; ++digit ) {
     CaloCellID ID = (*digit)->cellID();
     double energy = (*digit)->e() * m_gainCorrHcal[ID.area()];
     double eT     = energy * m_hcal->cellSine(ID) ;
@@ -207,7 +204,7 @@ StatusCode L0CaloDigit::execute() {
 
   // PrsShower
 
-  SmartDataPtr<ObjectVector<CaloDigit> > prsDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > prsDigit ( eventSvc() ,
                                                     m_nameOfPrsDataContainer );
   if( 0 == prsDigit ) {
     log << MSG::ERROR << "Unable to retrieve Prs data container="
@@ -217,8 +214,7 @@ StatusCode L0CaloDigit::execute() {
 
   L0PrsSpdHitVector* prsRaw = new L0PrsSpdHitVector();
 
-  sc = eventDataService()->registerObject( m_nameOfPrsOutput,
-                                           prsRaw ) ;
+  sc = eventSvc()->registerObject( m_nameOfPrsOutput, prsRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != prsRaw ) { delete prsRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
@@ -227,8 +223,7 @@ StatusCode L0CaloDigit::execute() {
     return sc ;
   }
 
-  for( ObjectVector<CaloDigit>::const_iterator digit = prsDigit->begin() ;
-       prsDigit->end() != digit ; ++digit ) {
+  for( digit = prsDigit->begin() ; prsDigit->end() != digit ; ++digit ) {
     CaloCellID ID     = (*digit)->cellID();
     double     energy = (*digit)->e();
 
@@ -243,7 +238,7 @@ StatusCode L0CaloDigit::execute() {
 
   // SPD
 
-  SmartDataPtr<ObjectVector<CaloDigit> > spdDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > spdDigit ( eventSvc() ,
                                                     m_nameOfSpdDataContainer );
   if( 0 == spdDigit ) {
     log << MSG::ERROR << "Unable to retrieve Spd data container="
@@ -253,8 +248,7 @@ StatusCode L0CaloDigit::execute() {
 
   L0PrsSpdHitVector* spdRaw = new L0PrsSpdHitVector();
 
-  sc = eventDataService()->registerObject( m_nameOfSpdOutput,
-                                           spdRaw ) ;
+  sc = eventSvc()->registerObject( m_nameOfSpdOutput, spdRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != spdRaw ) { delete spdRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
@@ -263,8 +257,7 @@ StatusCode L0CaloDigit::execute() {
     return sc ;
   }
 
-  for( ObjectVector<CaloDigit>::const_iterator digit = spdDigit->begin() ;
-       spdDigit->end() != digit ; ++digit ) {
+  for( digit = spdDigit->begin() ; spdDigit->end() != digit ; ++digit ) {
     CaloCellID ID     = (*digit)->cellID();
     double     energy = (*digit)->e();
 
