@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.44 2004-06-28 14:21:52 pkoppenb Exp $
+! $Id: release.notes,v 1.45 2004-07-22 16:06:58 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2004-07-22 - P. Koppenburg
+  - options/TestAssociators.opts
+    . Include DaVinciElectrons.opts
 
 !========================== DaVinciAssociators v5r0 2004-06-28 ===================
 ! 2004-06-17 - Ph.Charpentier
