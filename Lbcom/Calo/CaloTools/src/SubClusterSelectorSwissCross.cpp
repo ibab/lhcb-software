@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorSwissCross.cpp,v 1.1 2001-11-08 10:58:35 ibelyaev Exp $
+// $Id: SubClusterSelectorSwissCross.cpp,v 1.2 2001-11-08 20:07:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 10:58:35  ibelyaev
+//  new tools are added for selection of subclusters within the cluster
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -84,21 +87,21 @@ StatusCode
 SubClusterSelectorSwissCross::operator() ( CaloCluster* cluster ) const 
 {
   /// check the arguments 
-  if( 0 == cluster   ) { return StatusCode::FAILURE ; }   ///< RETURN
+  if( 0 == cluster   ) { return StatusCode ( 225 )  ; }   ///< RETURN
   /// get digits from the cluster 
   CaloCluster::Digits& digits = cluster->digits();
   /// empty container? 
-  if( digits.empty() ) { return StatusCode::FAILURE ; }   ///< RETURN 
+  if( digits.empty() ) { return StatusCode ( 226 )  ; }   ///< RETURN 
   /// find seed digit 
   CaloCluster::Digits::iterator iSeed = 
     CaloDataFunctor::clusterLocateDigit( digits.begin ()       , 
                                          digits.end   ()       ,
                                          DigitStatus::SeedCell );
   /// the seed is not found !
-  if( digits.end() == iSeed ) { return StatusCode::FAILURE ; }
+  if( digits.end() == iSeed ) { return StatusCode ( 227 )  ; }
   /// seed is valid? 
   const CaloDigit*     seed = iSeed->first ;
-  if( 0 == seed             ) { return StatusCode::FAILURE ; }
+  if( 0 == seed             ) { return StatusCode ( 228 ) ; }
   /// loop over all digits and select SwissCross submatrix 
   for( CaloCluster::Digits::iterator iDigit = digits.begin() ;
        digits.end() != iDigit ; ++iDigit )

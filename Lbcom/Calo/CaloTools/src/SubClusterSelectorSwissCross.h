@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorSwissCross.h,v 1.1 2001-11-08 10:58:35 ibelyaev Exp $
+// $Id: SubClusterSelectorSwissCross.h,v 1.2 2001-11-08 20:07:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 10:58:35  ibelyaev
+//  new tools are added for selection of subclusters within the cluster
+// 
 // ============================================================================
 #ifndef CALOTOOLS_SUBCLUSTERSELECTORSwissCross_H 
 #define CALOTOOLS_SUBCLUSTERSELECTORSwissCross_H 1
@@ -37,6 +40,13 @@ public:
   
   
   /** The main processing method (functor interface) 
+   *
+   *  Error codes:  
+   *    - 225   cluster points to NULL
+   *    - 226   empty cell/digit container for given cluster 
+   *    - 227   SeedCell is not found 
+   *    - 228   Seed points to NULL
+   *
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  

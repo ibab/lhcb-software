@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.3 2001-11-08 10:58:34 ibelyaev Exp $
+! $Id: release.notes,v 1.4 2001-11-08 20:07:04 ibelyaev Exp $
 ! =============================================================================
 ! CVS atg $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
 
 
 ! =============================================================================
@@ -15,10 +16,14 @@
                                and their covarinace matrix
   SubClusterSelectorAll  
   SubClusterSelector3x3  
+  SubClusterSelectorMax2x2  
   SubClusterSelectorSwissCross - three concrete tools for selection 
                                  of sub-clusters with different topologies 
                                  around of seed cell.
-   
+    
+  Ca loClusterResetFractions    - the tool which performs "inverse"
+                                 operation for Cell Shareing algorithm - 
+                                 it resets all "fractions" to 1 
 ! =============================================================================
 
 ! =============================================================================

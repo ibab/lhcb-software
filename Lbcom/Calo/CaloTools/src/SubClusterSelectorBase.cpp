@@ -1,14 +1,21 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.1 2001-11-08 10:58:35 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.2 2001-11-08 20:07:05 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 10:58:35  ibelyaev
+//  new tools are added for selection of subclusters within the cluster
+// 
 // ============================================================================
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+// CaloDet 
+#include "CaloDet/DeCalorimeter.h"
 // CaloEvent 
 #include "CaloEvent/CaloCluster.h"
 // local
@@ -65,6 +72,18 @@ StatusCode SubClusterSelectorBase::initialize ()
     { return Error("Could not initialize the base class!",sc);}
   /// check for detector
   if( 0 == det()     )
+    {
+      if( 0 == detSvc() ) 
+        { return Error("Detector Data Service is ivnalid!"); }
+      /// 
+      SmartDataPtr<DeCalorimeter> calo( detSvc() , detName() );
+      if( !calo )
+        { return Error("Could not locate detector='"+detName()+"'"); }
+      /// set detector
+      setDet( calo );
+    }
+  ///  
+  if( 0 == det()     )
     { return Error("Detector '"+detName()+"' is not located!");}
   ///
   return StatusCode::SUCCESS;
@@ -93,13 +112,17 @@ StatusCode SubClusterSelectorBase::process
   const CaloHypotheses::Hypothesis& /* hypo */ ) const 
 {
   ///
-  Warning("The hypothesis selector is not implemented yet!");
+  Warning("The hypotheses selector is not implemented yet!");
   ///
   return process( cluster );
 };
 
 // ============================================================================
 /** untag/unselect the all digits in the clusters
+ * 
+ *  Error codes 
+ *    -  225  - cluster points to NULL
+ *
  *  @param cluster pointer to cluster 
  *  @return status code 
  */
@@ -108,7 +131,7 @@ StatusCode
 SubClusterSelectorBase::untag( CaloCluster* cluster ) const
 {
   /// check the arguments
-  if( 0 == cluster ) { return StatusCode::FAILURE; }
+  if( 0 == cluster ) { return StatusCode( 225 ) ; }
   /// loop over all digits 
   for( CaloCluster::Digits::iterator iDigit = cluster->digits().begin() ;
        cluster->digits().end() != iDigit ; ++iDigit ) 
@@ -119,7 +142,7 @@ SubClusterSelectorBase::untag( CaloCluster* cluster ) const
       status.removeStatus ( DigitStatus::UseForCovariance ) ;
     }
   ///
-  return StatusCode::FAILURE ;  
+  return StatusCode::SUCCESS ;  
 };
 
 // ============================================================================

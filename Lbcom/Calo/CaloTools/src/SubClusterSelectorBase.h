@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.1 2001-11-08 10:58:35 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.h,v 1.2 2001-11-08 20:07:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 10:58:35  ibelyaev
+//  new tools are added for selection of subclusters within the cluster
+// 
 // ============================================================================
 #ifndef CALOTOOLS_SUBCLUSTERSELECTORBASE_H 
 #define CALOTOOLS_SUBCLUSTERSELECTORBASE_H 1
@@ -59,6 +62,10 @@ public:
 protected: 
   
   /** untag/unselect the all digits/subclusters in the clusters
+   * 
+   *  Error codes 
+   *    -  225  - cluster points to NULL
+   *
    *  @param cluster pointer to cluster 
    *  @return status code 
    */
