@@ -29,6 +29,10 @@ Purpose: LHCb Digitization program
    - Small fixes to Rich (RiSicbGeom v3r6)
    - Speed improvements to Relations (LHCbKernel v2r9)
 
+- New packaging
+   - Moved Spillover and LHC background to new "Init" phase, "Data" sequence
+   - Moved BooleInit to new "Init" phase, "Boole" sequence
+
 - Removed features
    - Removed support for SICBMC optimization TDR geometry (v254r1)
 
