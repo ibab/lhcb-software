@@ -4,9 +4,10 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v5r7 2004-04-23 ========================
-! 2004-04-23 - Marco Cattaneo
- - Packages modified: TrgTools v3r1, TrgVeloTT v3r1, L1Reco v3r1
+!======================== BooleSys v5r7 2004-04-26 ========================
+! 2004-04-26 - Marco Cattaneo
+ - Packages modified: TrgTools v3r1, TrgVeloTT v3r1, L1Reco v3r1,
+                      MuonBackground v1r7
 
 !======================== BooleSys v5r6 2004-04-23 ========================
 ! 2004-04-23 - Marco Cattaneo

@@ -88,7 +88,7 @@ use OTDAQ               v2r0    OT
 
 # Muon
 use MuonAlgs            v5r5	Muon
-use MuonBackground	v1r6	Muon
+use MuonBackground	v1r7	Muon
 use MuonDAQ             v1r1    Muon
 
 # Rich
