@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.6 2005-01-31 15:41:43 cattanem Exp $
+// $Id: LinksByKey.cpp,v 1.7 2005-01-31 15:45:29 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -77,7 +77,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
     if ( srcLinkID  == m_linkReference[prevIndex].srcLinkID() &&
          destLinkID == m_linkReference[prevIndex].linkID()    &&
          destKey    == m_linkReference[prevIndex].objectKey()    ) {
-      m_linkReference[prevIndex].setWeight( weight );
+      m_linkReference[prevIndex].setWeight( float(weight) );
       return;
     }
     prevIndex = m_linkReference[prevIndex].nextIndex();
