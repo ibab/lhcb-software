@@ -1,14 +1,13 @@
-// $Id: L0mTower.h,v 1.5 2001-10-04 16:23:33 atsareg Exp $
+// $Id: L0mTower.h,v 1.6 2002-05-07 07:17:04 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
 
 #include <map>
 #include <utility>
-#include "GaudiKernel/ContainedObject.h" 
-#include "GaudiKernel/SmartRef.h" 
 #include "L0Muon/L0mPad.h"
-#include "L0Muon/CLIDL0mTower.h"
+#include "MuonKernel/MuonTileID.h"
+#include "MuonTools/IMuonTileXYZTool.h"   
 
 class L0MuonCandidate;
 class MsgStream;
@@ -27,33 +26,35 @@ class L0mProcUnit;
 
 // Const to denote invalid tower index	
 
-class L0mTower : virtual public ContainedObject {
+class L0mTower {
 
 public:
 
     /// Default constructor
     L0mTower();    
     /// Constructor from the seed pad in M3
-    L0mTower(L0mPad* pad);
+    L0mTower(MuonTileID pad);
 	      
     ~L0mTower();	       
 
     /// Crude Tower display
     void draw(MsgStream& log);
     /// add a bit to a station pad bit pattern
-    void addBit(int ix, int iy, int st, L0mPad* pp); 
+    void addBit(int ix, int iy, int st, MuonTileID pp); 
     /// set pointer to containing Processing Unit
     void setProcUnit(L0mProcUnit* plpu) { m_procUnit = plpu; }   
+    /// set pointer to Muon system geometry tool
+    void setMuonTool(IMuonTileXYZTool* pmto) { m_iTileXYZTool = pmto; } 
     /// check if the Tower has bits in all the stations
     bool isFull();
     /// check if a track was found
     bool trackFound();
     /// accessor to the resulting pad in M3
-    L0mPad* padM3() { return m_pad3; }
+    MuonTileID padM3() { return m_pad3; }
     /// accessor to the resulting pads
-    L0mPad* pad(int station);
+    MuonTileID pad(int station);
     /// find track given the Fields of interest
-    L0mPad* findTrack();
+    MuonTileID findTrack();
     /// Full processing with creating L0MuonCandidate
     L0MuonCandidate* createCandidate();
     /// Pt of the found candidate
@@ -71,17 +72,13 @@ public:
     /// Do the "limited" Y smearing of pads falling out of the PU
     void limitedY();
     
-    /// Retrieve pointer to class defininition structure
-    virtual const CLID& clID() const { return L0mTower::classID(); }
-    static const CLID& classID()     { return CLID_L0mTower; }          
-    
     typedef std::pair<int,int> HitIndex;
-    typedef std::map< HitIndex, SmartRef<L0mPad> > StationMap;	
+    typedef std::map< HitIndex, MuonTileID > StationMap;	
        
 private:
     
     // Reference to seed pad in M3
-    SmartRef<L0mPad> m_pad3;
+    MuonTileID m_pad3;
     
     // Container of a bitmap image of fired pads
     
@@ -104,9 +101,10 @@ private:
     double m_theta;
     double m_phi;
     
-    // Containing Processing Unit
-    
+    // Containing Processing Unit    
     L0mProcUnit* m_procUnit;
+    // Muon geometry tool
+    IMuonTileXYZTool *m_iTileXYZTool;
         
     // Internal utility functions
     

@@ -1,12 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.4 2001-10-04 16:22:52 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.5 2002-05-07 07:17:04 atsareg Exp $
 
 #ifndef L0MUON_L0MPROCUNIT_H     
 #define L0MUON_L0MPROCUNIT_H     1 
 
 #include <vector>
-#include "L0Muon/MuonTile.h"
+#include "MuonKernel/MuonTile.h"
 #include "L0Muon/L0mTower.h"
-#include "L0Muon/L0MuonCandidate.h"
+#include "Event/L0MuonCandidate.h"
+#include "Event/L0Muon.h"
 
 class MsgStream;
 
@@ -30,7 +31,7 @@ public:
 		const std::vector<int>& extM1,
 		double precision,
 		int bits,
-                const MuonTile& mt); 
+                const MuonTileID& mid); 
 		   
     /// Default destructor	      
     ~L0mProcUnit();
@@ -49,8 +50,6 @@ public:
     void printParameters( MsgStream& log);
     // class L0mTower is our friend to get algorithm parameters
     friend class L0mTower;
-    // Degrading Pt calculation precision
-    void precisionPt(L0MuonCandidate*);
     
 private:
     
