@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.13 2002-11-28 14:04:23 cattanem Exp $
+# $Id: requirements,v 1.14 2002-12-05 15:58:24 ranjard Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 
 package           PuVeto
-version           v5r1
+version           v5r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -11,8 +11,8 @@ branches          cmt doc src options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use	L0Event		v12r*	Event
-use	VeloEvent	v11r*	Event
+use	L0Event		v13r*	Event
+use	VeloEvent	v12r*	Event
 use     VeloDet         v8r*    Det
 
 # Component library building rule

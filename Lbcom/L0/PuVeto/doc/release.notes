@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.13 2002-11-28 14:04:24 cattanem Exp $
+! $Id: release.notes,v 1.14 2002-12-05 15:58:24 ranjard Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
+
+!======================== PuVeto v5r2 2002-12-05 ======================
+! 2002-12-05 - Florence Ranjard
+ - requirements - use LHCB v11r4
 
 !========================= PuVeto v5r1 2002-11-28 =======================
 ! 2002-11-28 - Marko Zupan
