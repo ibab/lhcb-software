@@ -1,13 +1,13 @@
-// $Id: RichDetParams.h,v 1.3 2003-10-13 16:10:54 jonrob Exp $
+// $Id: RichDetParams.h,v 1.4 2003-11-25 13:20:56 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 
 #define RADIATOR_NAMES      const std::string radiator[] = { "aerogel", "C4F10", "CF4" }
 #define RICH_NAMES          const std::string rich[] =     { "Rich1", "Rich2" }
 #define HYPOTHESIS_NAMES    const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr", "X" }
-#define RICH_HISTO_OFFSET   const int richOffset = 10000
-#define RAD_HISTO_OFFSET    const int radOffset  = 1000
-#define HYPO_HISTO_OFFSET   const int hypoOffset = 100
+#define RICH_HISTO_OFFSET   const int richOffset = 100000
+#define RAD_HISTO_OFFSET    const int radOffset  = 10000
+#define HYPO_HISTO_OFFSET   const int hypoOffset = 1000
 #define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.255, 0.055, 0.032 }
 #define MIN_CKTHETA_RAD     const double minCkTheta[] = { 0.05,  0.0,   0.0 }
 
@@ -22,8 +22,8 @@ const double xRadExitGlo[] = {  420.0,  1500.0,  4000.0 }
 const double yRadEntGlo[]  = {  320.0,  1500.0,  3500.0 };\
 const double yRadExitGlo[] = {  320.0,  1500.0,  4000.0 }
 #define RADIATOR_GLOBAL_POSITIONS_Z \
-const double zRadEntGlo[]  = { 1100.0,   900.0,  9500.0 };\
-const double zRadExitGlo[] = { 1200.0,  2100.0, 12000.0 }
+const double zRadEntGlo[]  = { 1100.0,   900.0,  9200.0 };\
+const double zRadExitGlo[] = { 1180.0,  2100.0, 12000.0 }
 #define RADIATOR_GLOBAL_LENGTHS \
 const double zRadLenMin[]  = {    0.0,     0.0,     0.0 };\
 const double zRadLenMax[]  = {   60.0,  2000.0,  2500.0 }

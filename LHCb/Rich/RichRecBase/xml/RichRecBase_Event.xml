@@ -120,7 +120,7 @@
             <import ignore="TRUE" name="ParentType"/>
             <import ignore="TRUE" name="DetectorType"/>
             <import name="GaudiKernel/ContainedObject"/>
-            <import name="RichKernel/RichSmartID"/>
+            <import name="Kernel/RichSmartID"/>
             <constructor desc="Constructor with arguments" initList="m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
                 <arg name="smartID" type="RichSmartID"/>
                 <arg name="gPos" type="HepPoint3D"/>
@@ -164,9 +164,10 @@
             <import name="RichRecBase/RichMap"/>
             <import name="RichRecBase/RichPhotonSpectra"/>
             <import name="RichKernel/RichHypoData"/>
-            <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;int,double&gt;"/>
+            <import name="Kernel/RichSmartID"/>
+            <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, RichMap&lt;int,double&gt;() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk)">
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk)">
                 <arg name="segment" type="RichTrackSegment"/>
                 <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg inout="BYVALUE" name="enBins" type="unsigned int"/>
@@ -211,7 +212,7 @@
             </method>
             <method desc="Method to create the geometrical efficiencies per PD" name="addToGeomEfficiencyPerPD">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" inout="BYVALUE" name="pd" type="int"/>
+                <arg const="TRUE" inout="BYVALUE" name="pd" type="RichSmartID::KeyType"/>
                 <arg const="TRUE" inout="BYVALUE" name="signal" type="double"/>
                 <code>(m_geomEfficiencyPerPD[type])[pd] += signal;</code>
             </method>
@@ -247,7 +248,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_averageCKTheta[type];</code>
             </method>
-            <method desc="Returns the geometrical efficiency per PD for given hypothesis" name="geomEfficiencyPerPD" type="RichMap&lt;int,double&gt;&amp;">
+            <method desc="Returns the geometrical efficiency per PD for given hypothesis" name="geomEfficiencyPerPD" type="RichRecSegment::PDGeomEffs&amp;">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_geomEfficiencyPerPD[type];</code>
             </method>
@@ -259,7 +260,7 @@
             <attribute desc="Photon energy spectra for emitted photons" name="emittedPhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for detectable photons" name="detectablePhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for signal photons" name="signalPhotonSpectra" type="RichPhotonSpectra"/>
-            <attribute desc="The geometrical efficiency for a given hypothesis, binned per PD" init="Rich::NParticleTypes,RichMap&lt;int,double&gt;() " name="geomEfficiencyPerPD" type="PDGeomEffsVector"/>
+            <attribute desc="The geometrical efficiency for a given hypothesis, binned per PD" init="Rich::NParticleTypes,PDGeomEffs() " name="geomEfficiencyPerPD" type="PDGeomEffsVector"/>
             <attribute desc="Geometrical efficiencies for the each particle hypothesis" name="geomEfficiency" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" type="RichHypoData&lt;double&gt;"/>

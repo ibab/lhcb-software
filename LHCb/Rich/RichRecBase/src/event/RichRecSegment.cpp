@@ -1,4 +1,4 @@
-// $Id: RichRecSegment.cpp,v 1.3 2003-10-13 16:10:55 jonrob Exp $
+// $Id: RichRecSegment.cpp,v 1.4 2003-11-25 13:20:56 jonrob Exp $
 // Include files 
 
 // local
@@ -23,7 +23,7 @@ void RichRecSegment::reset() {
   m_averageCKTheta.resetData();
   m_geomEfficiencyScat.resetData();
 
-  std::vector< RichMap<int,double> > resetVector3( Rich::NParticleTypes );
+  PDGeomEffsVector resetVector3( Rich::NParticleTypes );
   setGeomEfficiencyPerPD( resetVector3 );
 
   m_emittedPhotonSpectra.reset();

@@ -1,4 +1,4 @@
-// $Id: IRichTrackCreator.h,v 1.2 2003-10-13 16:10:54 jonrob Exp $
+// $Id: IRichTrackCreator.h,v 1.3 2003-11-25 13:20:56 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHTRACKCREATOR_H
 #define RICHRECTOOLS_IRICHTRACKCREATOR_H 1
 
@@ -34,6 +34,9 @@ public:
 
   /// Returns a pointer to the container of RichRecTracks.
   virtual RichRecTracks *& richTracks() = 0;
+
+  /// Returns the number of tracks in the input container. Type depends on concrete implementation
+  virtual long nInputTracks() = 0;
 
 };
 
