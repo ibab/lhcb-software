@@ -88,4 +88,6 @@ createAlias(std::string name, std::string alias) {
   }
 }
 
-
+void L0Muon::RegisterFactory::dump() {
+  std::cout << "RegisterFactory: " << m_registers.size() << " registers" << std::endl;
+}

@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.1.1.1 2005-02-02 21:56:38 atsareg Exp $
+// $Id: RegisterFactory.h,v 1.2 2005-04-04 08:05:04 atsareg Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -63,6 +63,8 @@ public:
   /// True if the register is found
   bool found(){ return m_found;}
   
+  /// Dump the factory state
+  void dump();  
     
 
 private:
