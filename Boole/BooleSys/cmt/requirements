@@ -14,11 +14,8 @@ use Boole		v1r0	Digi
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r2	Rec
 
-# Phys utilities
-use MCTools		v1r1p1	Phys
-
 # LHC background
-use DigiAlg		v1r0p1	Digi
+use DigiAlg		v1r1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
