@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.5 2004-12-10 08:09:13 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.6 2005-01-12 08:31:06 jnardull Exp $
 // Include files
 
 // local
@@ -45,12 +45,13 @@ StatusCode OTFillRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  DeOTDetector* Otracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  DeOTDetector* Otracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default); 
   m_otTracker = Otracker;
 
   //Fixed Numbers of Banks and of Gols
   numberOfBanks = 24;
   numberOfGols = 18;
+  emptyBank = 0;
 
   // create a container for the vectors of MCOTimes
   dataContainer = new mBank(); // bank type
@@ -81,17 +82,22 @@ StatusCode OTFillRawBuffer::execute()
   for(mBank::iterator iBank = dataContainer->begin();
       iBank != dataContainer->end();
       iBank++){
+
     dataBank* aBank = new dataBank();
     vmcOTime* amcTime = (*iBank).second;
 
     // Empty Bank -- Still sending all the Headers
     if(amcTime->size() == 0){
       this->convertToRAWEmptyBank(aBank);
+      emptyBank = 1;
     }
     
     // feed vMCOTime vectors to converter routine
-    this->convertToRAWDataBank(amcTime, aBank);
-   
+    if (emptyBank == 0){
+      this->convertToRAWDataBank(amcTime, aBank);
+    }
+    emptyBank = 0;
+    
     // put converted vMCOTime into final buffer container
     finalBuf->push_back(aBank);
 
@@ -134,6 +140,7 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoBanks()
     mBank::value_type numBank(i, currentMCOTTime);
     dataContainer->insert( dataContainer->end(), numBank );
   }
+
   // Now the bank-containers are created. Sort the MCOTTimes into these banks
   mBank::iterator iBank = dataContainer->begin();
   vmcOTime* currentMCOTTime;
@@ -160,6 +167,7 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoGol(vmcOTime* BankmcOTime,
     mGol::value_type numGol(k, currentMCTime);
     goldatacontainer->insert( goldatacontainer->end(), numGol );
   }
+
   // Now the gol-containers are created. Sort the mcottimes into these Gols
   mGol::iterator iGol = goldatacontainer->begin();
   vmcOTime* currentMCTime;
@@ -194,7 +202,7 @@ StatusCode OTFillRawBuffer::convertToRAWEmptyBank(dataBank* aBank)
     GolHeader golHeader(0, 0, 0, 0, 0, 0, 0);
     aBank->push_back(golHeader);
   }
- 
+  
   return StatusCode::SUCCESS;
 }
 //-----------------------------------------------------------------
@@ -275,6 +283,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
     } 
     // GolHeader
     GolHeader golHeader(0, nStation, nLayer, nQuarter, nModule, 0 , size);
+
     // pushing the Gol Header
     aBank->push_back(golHeader);  
     
@@ -337,7 +346,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
       DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
                          0, nextOtisID, nextStrawID, nextTdcTime);
       aBank->push_back(dataWord);
-      
+
       if(iTimeNext != iHitGolEnd) iTimeCurrent++;     
     } //while loop over MCOTTimes
     

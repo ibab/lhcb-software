@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTFillRawBuffer.h,v 1.3 2005-01-12 08:31:06 jnardull Exp $
 #ifndef OTSIMULATION_OTFILLRAWBUFFER_H 
 #define OTSIMULATION_OTFILLRAWBUFFER_H 1
 
@@ -78,6 +78,7 @@ private:
 
   int numberOfBanks;
   int numberOfGols;
+  int emptyBank;
   
   // converts channel ID number into bank number for sorting
   int chID2int(OTChannelID otChannel); // int is bank ID
