@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/12 15:42:45  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.8  2001/07/23 13:11:44  ibelyaev
 /// the package restructurisation(II)
 /// 
@@ -14,7 +17,7 @@
 #include "globals.hh"
 #include "G4Allocator.hh"
 /// GiGa 
-#include "GiGa/GiGaTrackInformation.h"
+//#include "GiGa/GiGaTrackInformation.h"
 
 /** implementation of inline methods from class GiGaTrackInformation 
  *  
@@ -30,7 +33,7 @@ extern G4Allocator<GiGaTrackInformation> s_GiGaTrackInformationAllocator;
 /// constructor 
 // ============================================================================
 inline GiGaTrackInformation::GiGaTrackInformation()
-  : m_toBeStored( false )
+  : m_toBeStored( false ), m_createdHit( false )
 {}; 
 
 // ============================================================================
@@ -70,6 +73,19 @@ inline const bool GiGaTrackInformation::toBeStored   () const
 inline GiGaTrackInformation&  
 GiGaTrackInformation::setToBeStored ( const bool Flag )       
 { m_toBeStored = Flag ; return *this; }; 
+
+// ============================================================================
+///
+// ============================================================================
+inline GiGaTrackInformation&  
+GiGaTrackInformation::setCreatedHit ( const bool Flag )       
+{ m_createdHit = Flag ; return *this; }; 
+
+// ============================================================================
+/// 
+// ============================================================================
+inline const bool GiGaTrackInformation::createdHit   () const 
+{ return m_createdHit; };
 
 // ============================================================================
 #endif  //  GIGA_GIGATRACKINFORMATION_ICPP
