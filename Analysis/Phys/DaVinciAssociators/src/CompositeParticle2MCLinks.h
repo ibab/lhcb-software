@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.9 2004-06-17 11:21:06 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.10 2004-08-03 15:32:59 phicharp Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -34,34 +34,36 @@ public:
   
 
 private:
-  Object2MCLink*      m_p2MCLink;
-  IParticlePropertySvc* m_ppSvc;
-  bool m_allowExtraMCPhotons;
-  bool m_inclusiveMode;
-  bool m_skipResonances;
-  double m_maxResonanceLifeTime;
-  int  m_gamma;
-  Particle2MCAsct::Table*   m_table;
+  // Properties
+  bool                      m_allowExtraMCPhotons;
+  bool                      m_inclusiveMode;
+  bool                      m_skipResonances;
+  double                    m_maxResonanceLifeTime;
+  std::string               m_asctMethod;
+  // Local variables
+  IParticlePropertySvc*     m_ppSvc;
+  Object2MCLink*            m_p2MCLink;
+  Object2MCLink*            m_p2MCComp;
+  int                       m_gamma;
   Particle2MCLink::Linker*  m_linkerTable;
-  int m_nrel;
-  std::string         m_asctMethod;
+  Particle2MCAsct::Table*   m_table;
+  int                       m_nrel;
+  int                       m_nass;
+  // Private methods
+  bool associateTree(const Particle *p, const MCParticle* m) ;
 
-  bool associate1(const Particle *p, const MCParticle* m) ;
-  // This can be removed when the Relations package is updated...
-  MCParticle* myAssociatedFrom(const Particle* p) const;
   bool addDaughters( const Particle* m,
                      std::vector<const Particle*>& daughters) const;
   bool addMCDaughters( const MCParticle* m,
-                       std::vector<const MCParticle*>& daughters) const;
-  
-
+                       std::vector<const MCParticle*>& daughters) const;  
+  /*
   class associator : public std::unary_function<MCParticle*,bool> {
   public:
     associator(CompositeParticle2MCLinks* t,Particle* p,
                Particle2MCAsct::Table* table) 
       : m_t(t), m_p(p), m_table(table) {};
     bool operator()(const MCParticle* m) const {
-      return m_t->associate1( m_p, m);
+      return m_t->associateTree( m_p, m);
     }
            
   private: 
@@ -70,6 +72,6 @@ private:
     Particle2MCAsct::Table *m_table;
   };
   friend class associator;
-  
+  */
 };
 #endif // Particle2MCLinks_H

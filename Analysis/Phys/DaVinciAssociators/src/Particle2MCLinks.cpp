@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.14 2004-07-29 07:58:48 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.15 2004-08-03 15:32:59 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -112,7 +112,7 @@ StatusCode Particle2MCLinks::execute() {
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
          parts->end() != pIt; pIt++) {
-      ifMsg(MSG::VERBOSE) << "    Particle " << (*pIt)->key();
+      ifMsg(MSG::VERBOSE) << "    Particle " << objectName(*pIt);
       ProtoParticle* protoPart = 
         dynamic_cast<ProtoParticle*>( (*pIt)->origin() ) ;
       if( NULL != protoPart ) {

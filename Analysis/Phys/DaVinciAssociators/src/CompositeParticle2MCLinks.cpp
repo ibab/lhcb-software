@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.10 2004-07-29 07:58:48 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.11 2004-08-03 15:32:59 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -15,6 +15,7 @@
 
 // local
 #include "CompositeParticle2MCLinks.h"
+//#define DEEPDEBUG
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CompositeParticle2MCLinks
@@ -34,18 +35,21 @@ const        IAlgFactory& CompositeParticle2MCLinksFactory = s_factory ;
 CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
+  , m_ppSvc( NULL )
   , m_p2MCLink(NULL)
-  , m_ppSvc( 0 )
+  , m_p2MCComp(NULL)
   , m_gamma( 22 )
+  , m_linkerTable(NULL)
   , m_table(NULL)
+  , m_nrel(0)
+  , m_nass(0)
 {
   m_outputTable = "Phys/Relations/CompPart2MCfromLinks" ;
-  declareProperty( "AllowExtraMCPhotons", m_allowExtraMCPhotons = false );
-  declareProperty( "inclusiveMode", m_inclusiveMode = false );
-  declareProperty( "skipResonances", m_skipResonances = false );
-  declareProperty( "maxResonanceLifeTime", 
-                   m_maxResonanceLifeTime = 1.e-18*s );
-  declareProperty( "AssociationMethod", m_asctMethod = "Links");
+  declareProperty( "AllowExtraMCPhotons",  m_allowExtraMCPhotons = false );
+  declareProperty( "inclusiveMode",        m_inclusiveMode = false );
+  declareProperty( "skipResonances",       m_skipResonances = false );
+  declareProperty( "maxResonanceLifeTime", m_maxResonanceLifeTime = 1.e-18*s );
+  declareProperty( "AssociationMethod",    m_asctMethod = "Links");
 
 }
 
@@ -75,8 +79,13 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   }
   msg << MSG::INFO << "Composite association uses "
       << Particle2MCMethod::extension[method] << " as input" << endreq;
-  
+  // This is a link helper for the underlying associator (default : Links)
   m_p2MCLink = new Object2MCLink( this, method, m_inputData ) ;
+  // This is a linker to itself, to check if Particles have already been associated
+  m_p2MCComp = new Object2MCLink( this, "",
+                   Particle2MCMethod::extension[Particle2MCMethod::Composite], 
+                                  m_inputData);
+  
   m_ppSvc  = svc<IParticlePropertySvc>("ParticlePropertySvc");
   return StatusCode::SUCCESS;
 };
@@ -89,7 +98,9 @@ StatusCode CompositeParticle2MCLinks::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endmsg;
   if( NULL != m_p2MCLink ) delete m_p2MCLink;
+  if( NULL != m_p2MCComp ) delete m_p2MCComp;
   m_p2MCLink = NULL;
+  m_p2MCComp = NULL;
   return GaudiAlgorithm::finalize();
 }
 
@@ -102,7 +113,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
   msg << MSG::DEBUG << "==> Execute" << endmsg;
 
   // create an association table and register it in the TES
-  Particle2MCAsct::Table* m_table = 
+  m_table = 
     "" == outputTable() ? NULL : new Particle2MCAsct::Table();
   // get MCParticles
   MCParticles* mcParts = get<MCParticles>( MCParticleLocation::Default );
@@ -118,8 +129,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
     const std::string linkerContainer = 
       *inp + Particle2MCMethod::extension[Particle2MCMethod::Composite];
     // The actual constructor will be called in the linkerTable() method
-    Object2MCLink::To test( eventSvc(), NULL, linkerContainer);
-    m_linkerTable = m_p2MCLink->linkerTable( linkerContainer, test);
+    m_linkerTable = m_p2MCLink->linkerTable( linkerContainer);
 
     // If there is no need to fill in any table for that container
     //    just go to the next
@@ -129,6 +139,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
     if( 0 == parts ) continue;
     int npp = parts->size();
     m_nrel = 0;
+    m_nass = 0;
 
     ifMsg(MSG::DEBUG) << npp << " Particles retrieved from " << *inp << endmsg;
     
@@ -136,26 +147,52 @@ StatusCode CompositeParticle2MCLinks::execute() {
     for( Particles::const_iterator pIt=parts->begin() ;
          parts->end() != pIt; pIt++) {
       // If the particle is apready in the table, don't look for it
-      if( NULL != test.first( *pIt )) continue;
+      if( NULL != m_p2MCComp->first( *pIt )) continue;
       
       // Check for direct association
-      MCParticle *mcp =  m_p2MCLink->first( *pIt );
-      if ( 0 != mcp) { // copy from underlying associator
-        ifMsg(MSG::VERBOSE) << "Direct association found between " 
-                            <<  (*pIt)->key()
-                            << " (" << (*pIt)->particleID().pid() << ") "
-                            << " and MC Particle " << mcp->key() << " (" 
-                            << mcp->particleID().pid() << ") " << endreq;
-        if( NULL != m_table ) m_table->relate( *pIt, mcp);
-        if( NULL != m_linkerTable ) m_linkerTable->link( *pIt, mcp);
-        m_nrel++;
-      } else {                                             
-        for (MCParticles::iterator i = mcParts->begin();
-             i!=mcParts->end(); ++i) {
-          associate1(*pIt,*i);
+      const MCParticle *mcp =  m_p2MCLink->first( *pIt );
+      if ( NULL != mcp) { // copy from underlying associator
+        const ParticleID& idP = (*pIt)->particleID();
+        bool counted = false;
+        ifMsg(MSG::VERBOSE) << "Direct association for " 
+                            << objectName(*pIt) 
+                            << " (" << idP.pid() << ") "
+                            << " -> MCParts";
+        while( NULL != mcp ) {          
+          const ParticleID& idM = mcp->particleID();
+          if ( idP.pid() == idM.pid() || 
+               ( (*pIt)->charge()==0 && idP.abspid() == idM.abspid()) ) {
+            if( !counted ) {
+              ++m_nass;
+              counted = true;
+            }
+            ifMsg(MSG::VERBOSE) << " - " << mcp->key()
+                                << " (" << idM.pid() << ")" ;
+            if( NULL != m_table ) m_table->relate( *pIt, mcp);
+            if( NULL != m_linkerTable ) m_linkerTable->link( *pIt, mcp);
+            ++m_nrel;
+          } else {
+            ifMsg(MSG::VERBOSE) << " - " << mcp->key()
+                                << " Bad PID (" << idM.pid() << ")" ;
+          }
+          mcp = m_p2MCLink->next();
         }
+        ifMsg(MSG::VERBOSE) << endreq;
+      } else if( NULL != (*pIt)->endVertex()) {
+        // If the particle has no daughters, useless to check matching daughters
+        for (MCParticles::iterator m = mcParts->begin(); mcParts->end() != m; ++m) {
+          if( associateTree(*pIt,*m)) break;
+        }
+      } else {
+        ifMsg( MSG::VERBOSE ) << "Particle " << objectName(*pIt)
+                              << " not considered: no direct asct and no endVertex"
+                              << endreq;
       }
     }
+    ifMsg( MSG::DEBUG )
+      << "Out of " << npp << " Particles in " << *inp << ", "
+      << m_nass << " are associated, "
+      << m_nrel << " relations found" << endreq;
   }
   
   // Register the table on the TES
@@ -169,33 +206,43 @@ StatusCode CompositeParticle2MCLinks::execute() {
 };
 
 //=============================================================================
-//  associate1 auxiliary method
+//  associateTree auxiliary method
 //=============================================================================
 bool 
-CompositeParticle2MCLinks::associate1(const Particle *p, 
+CompositeParticle2MCLinks::associateTree(const Particle *p, 
                                       const MCParticle *m) {
   MsgStream  msg( msgSvc(), name() );
   bool s = false;
+  std::string asctType;
   const ParticleID& idP = p->particleID();
   const ParticleID& idM = m->particleID();
-#ifdef DEEPDEBUG
-  ifMsg(MSG::VERBOSE) << " Checking particle " <<  p->key() 
-      << " (" << idP.pid() << ") "
-      << " and MC Particle " << m->key() << " (" <<idM.pid() << ") ";
-#endif
   if ( idP.pid() == idM.pid() || 
        ( p->charge()==0 && idP.abspid() == idM.abspid()) ) {
 #ifdef DEEPDEBUG
-    ifMsg(MSG::VERBOSE) << " potential match " ;
+    ifMsg(MSG::VERBOSE) << " Checking particle " <<  objectName(p) 
+                        << " (" << idP.pid() << ") "
+                        << " and MCPart " 
+                        << m->key() << " (" <<idM.pid()
+                        << ") potential match " << endreq;
 #endif
+    // Check if these particles have already been associated
+    if( m_p2MCComp->checkAssociation( p, m) ) {
+      ifMsg(MSG::VERBOSE) 
+        << "     Association already registered between Particle "
+        << objectName(p) << " and MCPart "
+        << m->key() << endreq;
+      return true;
+    }
     const Vertex *v = p->endVertex();
     if (v==0) {
 #ifdef DEEPDEBUG
       ifMsg(MSG::VERBOSE) <<  
-        " no daughter, check underlying particle associator" ;
+        "     No daughter, check underlying particle associator" << endreq;
 #endif
       s = m_p2MCLink->checkAssociation(p, m); 
+      asctType = "Direct";
     } else {
+      asctType = "Composite";
       std::vector<const Particle*> dau;
       addDaughters ( p , dau );
 
@@ -209,7 +256,7 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
         for (i = dau.begin();i != dau.end();++i) {
           // Loop on MCParticles daughters and check if they are associated
           std::vector<const MCParticle*>::iterator j = mcdau.begin();
-          while (j != mcdau.end() && !associate1(*i,*j)) ++j;
+          while (j != mcdau.end() && !associateTree(*i,*j)) ++j;
           //doesn't match any MCParticle -- give up
           if (mcdau.end() == j) break; 
           // Match found, remove it from the MC daughters
@@ -229,18 +276,17 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
     }
   }
   if (s) {
+    ifMsg(MSG::VERBOSE) <<  asctType << " association found: " 
+                        << objectName(p) 
+                        << " (" << idP.pid() << ") "
+                        << " -> MCPart - " 
+                        << m->key()
+                        << " (" <<idM.pid() << ")"
+                         << endreq;
     if( NULL != m_table ) m_table->relate( p, m);
     if( NULL != m_linkerTable ) m_linkerTable->link( p, m);
-    m_nrel++;
-    ifMsg(MSG::VERBOSE) << endreq 
-                        << "Comp. association found between " <<  p->key()
-      << " (" << idP.pid() << ") "
-      << " and MC Particle " << m->key() << " (" <<idM.pid() << ") "
-      << endreq;
-#ifdef DEEPDEBUG
-  } else {
-    ifMsg(MSG::VERBOSE)  << " NO match " << endmsg;
-#endif
+    ++m_nrel;
+    ++m_nass;  
   }
   return s;
 }

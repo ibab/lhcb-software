@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.9 2004-07-29 07:58:48 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.10 2004-08-03 15:32:59 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -102,7 +102,7 @@ StatusCode Particle2MCChi2::execute() {
 
     for( Particles::const_iterator pIt=parts->begin();
          parts->end() != pIt; pIt++) {
-      ifMsg(MSG::VERBOSE) << "    Particle " << (*pIt)->key();
+      ifMsg(MSG::VERBOSE) << "    Particle " << objectName(*pIt);
       MCParticle* mcPart = m_p2MCLink->first( *pIt);
       bool found = false;
       double minChi2 = 0;

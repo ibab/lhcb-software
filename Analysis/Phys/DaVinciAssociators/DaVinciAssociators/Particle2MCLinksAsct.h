@@ -1,10 +1,11 @@
-// $Id: Particle2MCLinksAsct.h,v 1.6 2004-07-27 17:42:16 phicharp Exp $
+// $Id: Particle2MCLinksAsct.h,v 1.7 2004-08-03 15:32:57 phicharp Exp $
 #ifndef Particle2MCLinksASCT_H 
 #define Particle2MCLinksASCT_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "boost/lexical_cast.hpp"
 
 // Forward declaration
 class Particle;
@@ -96,6 +97,15 @@ private:
 
   // Private methods
   void insertRange( const From& part ) const;
+  inline std::string 
+  objectName( const KeyedObject<int>* obj) const
+  {
+    if( !obj->hasKey() || NULL == obj->parent() || 
+        NULL == obj->parent()->registry()) return "noKey";
+    return 
+      obj->parent()->registry()->identifier()+
+      "/"+boost::lexical_cast<std::string>(obj->key());
+  }
 };
 
 typedef Particle2MCLinksAsct::FromRange      ParticlesToMCLinks;

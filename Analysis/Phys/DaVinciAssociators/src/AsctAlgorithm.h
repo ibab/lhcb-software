@@ -1,13 +1,16 @@
-// $Id: AsctAlgorithm.h,v 1.3 2004-06-11 15:26:15 phicharp Exp $
+// $Id: AsctAlgorithm.h,v 1.4 2004-08-03 15:32:59 phicharp Exp $
 #ifndef ASCTALGORITHM_H 
 #define ASCTALGORITHM_H 1
 
 // Include files
 // from STL
 #include <string>
+#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/KeyedObject.h"
 
 /** @class AsctAlgorithm AsctAlgorithm.h
  *  
@@ -30,6 +33,15 @@ protected:
 
   std::vector<std::string> m_inputData;  ///< location of input data in the TES
   std::string m_outputTable; ///< location of relations table
+  inline std::string 
+  objectName( const KeyedObject<int>* obj) const
+  {
+    if( !obj->hasKey() || NULL == obj->parent() || 
+        NULL == obj->parent()->registry()) return "noKey";
+    return 
+      obj->parent()->registry()->identifier()+
+      "/"+boost::lexical_cast<std::string>(obj->key());
+  }
 };
 
 //=============================================================================

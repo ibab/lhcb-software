@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.8 2004-07-29 07:58:48 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.9 2004-08-03 15:32:59 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -149,8 +149,7 @@ Particle2MCLinksAsct::insertRange( const From& part ) const
     // Local implementation...
     msg << MSG::VERBOSE << "    " 
         << (part->charge() ? "Charged" : "Neutral")
-        << " particle " 
-        << (part->hasKey() ? part->key() : -1);
+        << " particle " << objectName(part);
     const ProtoParticle* protoPart = 
       dynamic_cast<const  ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
@@ -169,7 +168,7 @@ Particle2MCLinksAsct::insertRange( const From& part ) const
     }
   } else {
     msg << MSG::VERBOSE << "    Range already defined for Particle "
-        << (part->hasKey() ? part->key() : -1) << endreq;
+        << objectName(part) << endreq;
   }
 }
 

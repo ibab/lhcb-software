@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.51 2004-07-29 07:58:48 phicharp Exp $
+! $Id: release.notes,v 1.52 2004-08-03 15:32:58 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-08-03 - Ph. Charpentier
+ - src/CompositeParticle2MCLinks.cpp
+    . Fix a problem due to the fact that particles used to compose another may not 
+      be in the same container, and may be in a container that is not declared (new
+      PhysSel convention for containers)
+    . Fix a bug in the code that prevented the composite particles associations to be 
+      recorded in the Relations table (duplicate variable)
+ - src/AsctAlgorithm.*
+    . Added method to print the <path>/<key> of an object and use it in the algorithms
+         std::string objectName(KeyedObject obj)
+ - src/NeutralPP2MC.cpp
+    . Problem noticed there as charged tracks like the B are associated to photons
+      Being checked and fix put in the next release
 ! 2004-07-28 - Ph. Charpentier
  - src/Particle2MCLinksAsct.cpp & .h
     . Fix a bug for overwriting the incident handler in order to clear the

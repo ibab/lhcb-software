@@ -43,16 +43,12 @@ TestLinker.SetInputData = false;
 // Set DEBUG options to show what is going on
 TestPhysDesktop.OutputLevel = 4;
 PrimaryVertexFinderAlg.OutputLevel = 4;
-TestLinker.OutputLevel = 2;
 // Association creation algorithms
-TestLinker.Particle2MCLinks.OutputLevel = 2;
+TestLinker.OutputLevel = 1;
+TestLinker.Particle2MCLinks.OutputLevel = 1;
+TestLinker.CompositeParticle2MCLinks.OutputLevel = 1;
 TestLinker.Particle2MCLinks.ChargedPP2MC.OutputLevel = 2;
 TestLinker.Particle2MCLinks.NeutralPP2MC.OutputLevel = 2;
-TestLinker.CompositeParticle2MCLinks.OutputLevel = 2;
-ChargedPP2MC.OutputLevel = 2;
-NeutralPP2MC.OutputLevel = 2;
-ChargedPP2MC.OutputLevel = 2;
-NeutralPP2MC.OutputLevel = 2;
 TestLinker.Particle2MCChi2.OutputLevel = 2;
 TestLinker.Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
 

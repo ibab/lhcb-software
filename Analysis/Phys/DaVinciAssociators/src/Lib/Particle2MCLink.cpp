@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.cpp,v 1.2 2004-06-17 08:58:09 phicharp Exp $
+// $Id: Particle2MCLink.cpp,v 1.3 2004-08-03 15:32:59 phicharp Exp $
 // Include files 
 
 
@@ -306,8 +306,9 @@ Object2MCLink::linkerTable( const std::string& name, To& test)
     m_linkerTable = Object2MCLink::Linker( m_myAlg->evtSvc(), 
                                            m_myAlg->msgSvc(), 
                                            name);
-  if( NULL != m_myGaudiAlg)
-    m_myGaudiAlg->debug() << "Linker table " << name << " created" <<endreq;
+    if( NULL != m_myGaudiAlg) {
+      m_myGaudiAlg->debug() << "Linker table " << name << " created" <<endreq;
+    }
     test = To( m_myAlg->evtSvc(), NULL, name);
     return &m_linkerTable;
   } else {
