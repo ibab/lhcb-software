@@ -1,6 +1,10 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-07-10 - Chris Parkes
+ - tuning of diffusion calculation
+ - keep -ve signals above fabs(threshold) as well as +ve
+
 ! 2002-07-09 - Chris Parkes
  - remove bug in diffusion calculation
  - add very simple charge simulation for testing
