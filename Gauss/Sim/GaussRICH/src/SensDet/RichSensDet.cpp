@@ -91,6 +91,18 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if( 0 == aStep ) { return false ; } 
   
   double     CurEdep = aStep->GetTotalEnergyDeposit();
+
+  // Create a hit only when there is
+  //non-zero energy deposit.  SE June 2003.
+  
+  // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
+  
+  if(  CurEdep <= 0.1 ) { return false; 
+  }
+  
+
+  // end of Modif in June 2003 by SE.
+  
   G4StepPoint* prePosPoint =aStep->GetPreStepPoint();
   
   //  HepPoint3D CurGlobalPos  = prePosPoint->GetPosition(); 
@@ -183,13 +195,13 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
 
   G4int CurOptPhotMotherChTrackID=-1;
-  G4int CurOptPhotMotherChTrackPDG;
+  G4int CurOptPhotMotherChTrackPDG=0;
   G4int CurRadiatorNumber=-1;
   G4ThreeVector CurEmissPt;
-  G4double CurPhotEnergyAtProd;
-  G4double CurThetaCkvAtProd;
-  G4double CurPhiCkvAtProd;
-  G4double CurChTrackTotMom;
+  G4double CurPhotEnergyAtProd=0;;
+  G4double CurThetaCkvAtProd=0;
+  G4double CurPhiCkvAtProd=0;
+  G4double CurChTrackTotMom=0;
   G4ThreeVector CurChTrackMomVect;
   G4double CurChTrackPDGMass=0;
 
@@ -268,7 +280,18 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> SetRichChTrackMass ( CurChTrackPDGMass);
 
   // now for the trackID from the Gausshit base class.
-  newHit ->setTrackID(CurOptPhotMotherChTrackID);
+  // if the mother of the corresponding optical photon exits it is set
+  // as the trackid. Otherwise the track creating the
+  // hit is set as the track id/
+  if(CurOptPhotMotherChTrackID >=0 ) {
+    
+    newHit ->setTrackID(CurOptPhotMotherChTrackID);
+  } else {
+    
+    newHit ->setTrackID(CurPETrackID);
+    
+  }
+  
   
   
 
@@ -302,7 +325,7 @@ void RichSensDet::Initialize(G4HCofThisEvent* HCE ) {
 
   MsgStream log( msgSvc() , name() );
 
-  log << MSG::INFO << "Richsensdet: Initialize. SensDetName, colName: "
+  log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
       <<SensitiveDetectorName<<"  "<<collectionName[0] 
       <<"  "<<collectionName[1]<<"  "
       <<collectionName[2]<<"  "<<collectionName[3]<<endreq;

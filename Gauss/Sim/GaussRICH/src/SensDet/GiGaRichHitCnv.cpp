@@ -18,6 +18,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/GaudiException.h"
 // GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGaCnv/IGiGaHitsCnvSvc.h"
@@ -34,7 +35,7 @@
 #include "GiGaCnv/GiGaKineRefTable.h"
 
 // LHCbEvent
-#include "Event/MCHit.h"
+#include "Event/MCRichHit.h"
 // Geant4 includes
 #include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
@@ -60,7 +61,7 @@ GiGaRichHitCnv::GiGaRichHitCnv( ISvcLocator* Locator )
 
   GiGaLeaf::Pars pars1;
   pars1.push_back("");
-  declareObject(GiGaLeaf( MCHitLocation::RiHits, objType(), pars1));
+  declareObject(GiGaLeaf( MCRichHitLocation::Default, objType(), pars1));
 
   m_RichG4HitCollectionName = new RichG4HitCollName();
 
@@ -76,7 +77,7 @@ GiGaRichHitCnv::~GiGaRichHitCnv(){
 
 // ======================================================================
 
-const CLID& GiGaRichHitCnv::classID() { return MCHit::classID(); }
+const CLID& GiGaRichHitCnv::classID() { return MCRichHit::classID(); }
 
 // ======================================================================
 
@@ -108,7 +109,7 @@ StatusCode GiGaRichHitCnv::createObj( IOpaqueAddress*  address ,
   object = 0;
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
 
-  object = new MCHits();
+  object = new MCRichHits();
   StatusCode sc = updateObj(address,object);
   
   if ( sc.isFailure() ) {
@@ -133,12 +134,12 @@ StatusCode GiGaRichHitCnv::fillObjRefs
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     );}   
 
-  MCHits* hits = dynamic_cast<MCHits*> ( object );
+  MCRichHits* hits = dynamic_cast<MCRichHits*> ( object );
 
   if ( 0 == hits    ) {
     return Error( " GiGaRichHitCnv: DataObject*(of type '" + 
                    GiGaUtil::ObjTypeName(object) +
-                  "*') is not 'MCHits*'! "   );
+                  "*') is not 'MCRichHits*'! "   );
   }
 
   return updateObjRefs( address , object );
@@ -152,10 +153,10 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
 
   if ( 0 == address ) { return Error(" IOpaqueAddress* points to NULL"); }
   if ( 0 == object  ) { return Error(" DataObject* points to NULL"    ); }
-  MCHits* hits = dynamic_cast<MCHits*> ( object );
+  MCRichHits* hits = dynamic_cast<MCRichHits*> ( object );
   if ( 0 == hits    ) {
     return Error( " DataObject*(of type '" + GiGaUtil::ObjTypeName(object) +
-                  "*') is not 'MCHits*'! "   );
+                  "*') is not 'MCRichHits*'! "   );
   }
 
   // Initialise
@@ -219,12 +220,23 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           double edep=(*myCollection)[ihit]->GetEdep();
           double toffl=(*myCollection)[ihit]-> RichHitGlobalTime();
 
-          MCHit * mchit = new MCHit();
+          MCRichHit * mchit = new MCRichHit();
           mchit->setEntry(pentry);
           mchit->setEnergy(edep);
           mchit->setTimeOfFlight(toffl);
+          // Now for the Rich Specific word. SE July 2003.
+          // first reset the value.
+          mchit->setHistoryCode(0);
+          mchit->setRich((g4hit->GetCurRichDetNum() ) < 0 ? 2 :
+                   ((unsigned long int ) g4hit->GetCurRichDetNum()) );
+          mchit->setPhotoDetector((unsigned long int )g4hit->  GetCurHpdNum());
+          mchit->setRadiator((g4hit-> GetRadiatorNumber() )< 0 ? 3 :
+                          ((unsigned long int ) g4hit-> GetRadiatorNumber()) );
+          
+          mchit->setChargedTrack( (g4hit->GetChTrackID() ) < 0 ? 1 : 0);
+          
 
-
+          //end of filling the Rich Specific word.
           int traid=(*myCollection)[ihit]->GetTrackID();
 
           if(table[traid].particle())
@@ -234,7 +246,7 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
              MsgStream log(   msgSvc(), name());
                               log << MSG::INFO 
                                << "No pointer to MCParticle for " 
-                               <<" MCHit associated to trackID: " 
+                               <<" MCRichHit associated to trackID: " 
                       <<iii<<"  "<<ihit<< "   "<< traid << endreq;
             }
 
@@ -250,7 +262,7 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
     
     
           msg << MSG::INFO << "Built " << hits->size()
-          << " MCHits at " << MCHitLocation::RiHits << endreq;
+          << " MCRichHits at " << MCRichHitLocation::Default << endreq;
 
     } else {
       msg << MSG::INFO << "No RichG4Hits to be converted since no Collections" 

@@ -59,32 +59,6 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
-  title="Total number of Rich1 Hits in Aerogel per event ";
-
-  m_hNumTotHitAgelRich1= CurHistoSvc->book(m_RichG4HistoPathSet1+"125",
-                              title,100,0.0,200.0);
-  if(! m_hNumTotHitAgelRich1) {
-  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
-
-  }
-  title="Total number of Rich1 Hits in C4F10 per event ";
-
-
-  m_hNumTotHitC4F10Rich1= CurHistoSvc->book(m_RichG4HistoPathSet1+"155",
-                          title,100,0.0,200.0);
-  if(! m_hNumTotHitC4F10Rich1) {
-  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
-
-  }
-  title="Total number of Rich2 Hits in CF4 per event ";
-
-
-  m_hNumTotHitCF4Rich1= CurHistoSvc->book(m_RichG4HistoPathSet1+"175",
-                     title,100,0.0,200.0);
-  if(! m_hNumTotHitCF4Rich1) {
-  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
-
-  }
 
   //  title="GlobalPhotoelectron Origin Y vs X for Rich1 ";
   //

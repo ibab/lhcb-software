@@ -7,9 +7,10 @@
 #include <vector>
 #include "GiGa/GiGaEventActionBase.h"
 #include "../RichAnalysis/RichG4HistoFillSet1.h"
+#include "../RichAnalysis/RichG4HistoFillSet2.h"
+#include "../RichAnalysis/RichG4HistoFillSet3.h"
 #include "../RichAnalysis/RichG4HistoFillTimer.h"
-
-
+#include "../RichAnalysis/RichG4EventHitCount.h"
 // forward declaration
 template <class TYPE> class GiGaFactory;
 
@@ -52,6 +53,14 @@ public:
   {
     return m_RichG4HistoFillSet1;
   }
+  RichG4HistoFillSet2* GetRichG4HistoFillSet2() 
+  {
+    return m_RichG4HistoFillSet2;
+  }
+  RichG4HistoFillSet3* GetRichG4HistoFillSet3() 
+  {
+    return m_RichG4HistoFillSet3;
+  }
 
   RichG4HistoFillTimer* GetRichG4HistoFillTimer() 
   {
@@ -63,14 +72,27 @@ public:
     return  m_RichEventActionVerboseLevel;
   }
 
-
+  RichG4EventHitCount* RichG4EventHitCounter() 
+  {
+    
+    return m_RichG4EventHitCounter;
+  }
+  
   void   PrintRichG4HitCounters();
+  
   
   bool RichEventActionHistoFillActivateSet1()
   {
     return  m_RichEventActionHistoFillActivateSet1;
   }
-
+  bool RichEventActionHistoFillActivateSet2()
+  {
+    return  m_RichEventActionHistoFillActivateSet2;
+  }
+  bool RichEventActionHistoFillActivateSet3()
+  {
+    return  m_RichEventActionHistoFillActivateSet3;
+  }
   bool RichEventActionHistoFillActivateTimer()
   {
     return  m_RichEventActionHistoFillActivateTimer;
@@ -87,11 +109,16 @@ private:
   int m_NumRichColl;
   RichG4HitCollName* m_RichHitCName;
   RichG4HistoFillSet1* m_RichG4HistoFillSet1;
+  RichG4HistoFillSet2* m_RichG4HistoFillSet2;
+  RichG4HistoFillSet3* m_RichG4HistoFillSet3;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
-
+  RichG4EventHitCount* m_RichG4EventHitCounter;
+  
   
   int m_RichEventActionVerboseLevel;
   bool m_RichEventActionHistoFillActivateSet1;
+  bool m_RichEventActionHistoFillActivateSet2;
+  bool m_RichEventActionHistoFillActivateSet3;
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
   

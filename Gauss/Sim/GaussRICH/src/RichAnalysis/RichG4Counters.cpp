@@ -1,4 +1,4 @@
-// $Id: RichG4Counters.cpp,v 1.1 2003-06-19 08:17:52 seaso Exp $
+// $Id: RichG4Counters.cpp,v 1.2 2003-07-16 13:24:06 seaso Exp $
 // Include files 
 
 
@@ -56,11 +56,21 @@ void RichG4Counters::InitRichEventCounters()
 
    m_NumHitTotRich1Gas =0;   
    m_NumHitTotRich1Agel =0;   
-   m_NumHitSaturatedRich1Gas =0;   
-   m_NumHitSaturatedRich1Agel =0;
-   m_NumHitPartGunPrimaryPartRich1Gas=0;
+   m_NumHitTotRich2Gas =0;   
+
+   m_NumHitPerTrackRich1Gas.clear();   
+   m_NumHitPerTrackRich1Agel.clear();
+   m_NumHitPerTrackRich2Gas.clear();   
+
+   m_NumHitSaturatedPerTrackRich1Gas.clear();
+   m_NumHitSaturatedPerTrackRich1Agel.clear();
+   m_NumHitSaturatedPerTrackRich2Gas.clear();
+
+    m_NumHitPartGunPrimaryPartRich1Gas=0;
    m_NumHitPartGunPrimaryPartRich1Agel=0;
+    m_NumHitPartGunPrimaryPartRich2Gas=0;
    m_NumHitTotRich1All =0;
+   m_NumHitTotRich2All =0;
    
  
    

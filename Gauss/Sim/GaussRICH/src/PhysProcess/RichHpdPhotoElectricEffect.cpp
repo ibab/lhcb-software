@@ -7,8 +7,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "RichPhotoElectron.h"
 #include "RichPEInfoAttach.h"
-// #include "RichG4AnalysisPhotElec.h"
-
+#include "RichG4AnalysisPhotElec.h"
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect
 ( const GiGaBase* gigabase, 
   const G4String& processName): 
@@ -110,7 +109,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
   G4int currentHpdNumber= pPreStepPoint->GetPhysicalVolume() 
     -> GetMother() -> GetMother() -> GetCopyNo();
-  G4int currentRichDetNumber;
+  G4int currentRichDetNumber=0;
   
   //Current Rich Det is found by checking the global Z coordinate
   // of the hit.
@@ -171,12 +170,12 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
-
   // Now for histogram Analysis stuff
 
-  //  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber, 
-  //                         currentHpdNumber, PhotonEnergy);
+  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber, 
+                           currentHpdNumber, PhotonEnergy);
 
+  // End of histogram Analysis stuff  
   double CurPhCathodeQE = getCurrentHpdQE(currentHpdNumber, currentRichDetNumber,  
                                           PhotonEnergy);
   G4double randomnum = G4UniformRand();
@@ -184,12 +183,13 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   if( randomnum* m_MaxAnyHpdQEff <  CurPhCathodeQE )
     {
 
-     //Now for histogram Analysis stuff.
+      //Now for histogram Analysis stuff.
 
-      //       RichG4AnalysisPhotElecB (aStep, currentRichDetNumber, 
-      //                     currentHpdNumber, PhotonEnergy);
+       RichG4AnalysisPhotElecB (aStep, currentRichDetNumber, 
+                           currentHpdNumber, PhotonEnergy);
 
-      G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
+      // End of histogram Analysis stuff.
+        G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
 
       G4ThreeVector GlobalElectronOrigin= pPostStepPoint->GetPosition();
       G4Navigator* theNavigator =
@@ -236,10 +236,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
       // temporay fix for not having the shielding of hpds in Gauss. SE 14-3-2003.
      
-      // G4double ElecKineEnergy= m_HpdPhElectronKE;
+      //      G4double ElecKineEnergy= m_HpdPhElectronKE;
   
       //create the photoelectron
-            G4double ElecKineEnergy= 1000000*m_HpdPhElectronKE;
+            G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
              G4DynamicParticle* aElectron= 
                      new G4DynamicParticle (G4Electron::Electron(),
                            GlobalElectronDirection, ElecKineEnergy) ;
@@ -333,7 +333,7 @@ void  RichHpdPhotoElectricEffect::setNumRichDet(int numrichDetect ) {
 
 }
 int RichHpdPhotoElectricEffect::numTotHpdInCurrentRichDet(int richdetnum) {
-  int curHpdTot;
+  int curHpdTot=0;
   if(richdetnum >=0 &&   richdetnum < (int) m_numTotHpd.size()  ) {
     curHpdTot = m_numTotHpd[richdetnum];
   }

@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.1 2003-04-29 17:08:06 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.2 2003-07-16 13:24:08 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -127,19 +127,43 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 	G4double CosTheta = pow(rand, 1./3.);
 	G4double SinTheta = sqrt(1.-CosTheta*CosTheta);
-
+        
         if(G4UniformRand() < 0.5)CosTheta = -CosTheta;
 	// Addtions made by SE to save cpu time.
-        // Kill the photon when it is scattering backwards.
-        if(CosTheta < 0 ) {
+        // Kill the photon when its wavelength too low
+        // (energy too high) 
+        // and its step length too low
+        // and it is scattering backwards. Also
+        // done for stepnumber very large just to avoid any photon
+        // going through an in infinite loop through the aerogel.
+ 
+          G4double totEn = aParticle->GetTotalEnergy();
+          const G4double CurStepLen=  aStep.GetStepLength();
+          const G4int CurStepNum=  aTrack.GetCurrentStepNumber() ;
 
-	  //    G4cout<<" Optical Photon killed in Rayleigh"<<G4endl;
+          //          if((CurStepLen < 1.0 *mm)  ||( CurStepNum > 2000 ) ) {
+            
+          //            if( ( totEn > (4.0/eV)) || ( CurStepNum > 5000 )  ) {
+            if(CurStepNum > 5000   ) {
+              
+              if(CosTheta < 0.0 ) {
+
+            G4cout<<" Optical Photon killed in Rayleigh after 5000 steps" 
+                  <<G4endl;
           aParticleChange.SetStatusChange(fStopAndKill);
           return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);       
 
           
-        }
-
+              }
+              
+            }
+            
+            
+            //     }
+          
+          
+          
+          
 
         // end of adddtions by SE
 	// find azimuthal angle w.r.t old polarization vector 

@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillTimer.cpp,v 1.1 2003-04-29 17:08:05 seaso Exp $
+// $Id: RichG4HistoFillTimer.cpp,v 1.2 2003-07-16 13:24:07 seaso Exp $
 // Include files 
 
 
@@ -53,13 +53,23 @@ void RichG4HistoFillTimer::RichG4EndEventTimer()
   // Now to find and fill the histogram
    SmartDataPtr<IHistogram1D>htimeWholeRichEvent
                  (m_currentHistoSvc,"RICHG4HISTOTIMER/1");
+   
    SmartDataPtr<IHistogram1D>htimeWholeRichMBEvent
                 (m_currentHistoSvc,"RICHG4HISTOTIMER/10");
+   SmartDataPtr<IHistogram1D>htimeWholeRichMBSmallEvent
+                (m_currentHistoSvc,"RICHG4HISTOTIMER/20");
    if(htimeWholeRichEvent)htimeWholeRichEvent->
                  fill( TimeforThisRichEvent);
+   // file only when the time is more than 1 second.
+
+   if( TimeforThisRichEvent > 1.0 ) {
+     
    if(htimeWholeRichMBEvent)htimeWholeRichMBEvent->
                  fill(TimeforThisRichEvent);
+   if(htimeWholeRichMBSmallEvent)htimeWholeRichMBSmallEvent->
+                 fill(TimeforThisRichEvent);
    
+   }
    
 }
 

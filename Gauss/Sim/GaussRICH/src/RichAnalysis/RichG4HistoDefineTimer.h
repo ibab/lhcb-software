@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineTimer.h,v 1.1 2003-04-29 17:08:05 seaso Exp $
+// $Id: RichG4HistoDefineTimer.h,v 1.2 2003-07-16 13:24:07 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4HISTODEFINETIMER_H 
 #define RICHANALYSIS_RICHG4HISTODEFINETIMER_H 1
 
@@ -35,6 +35,7 @@ protected:
 private:
   IHistogram1D*         m_timeWholeRichEvent;
   IHistogram1D*         m_timeWholeRichMBEvent;
+  IHistogram1D*         m_timeWholeRichSmallMBEvent;
   std::string m_RichG4HistoPathTimer; ///< Histo path
   ISvcLocator* m_svcLocTimer;
   

@@ -90,15 +90,42 @@ inline int NumPhotAgelAtAgelDownstrZ()
   {
     return  m_NumHitTotRich1Agel;
   }
-  inline int NumHitSaturatedRich1Gas() 
+
+  inline int NumHitTotRich2Gas() 
   {
-    return  m_NumHitSaturatedRich1Gas;
-  }
-  inline int NumHitSaturatedRich1Agel()
-  {
-    return m_NumHitSaturatedRich1Agel;
+    return   m_NumHitTotRich2Gas;
+    
   }
   
+  inline std::vector<int> NumHitPerTrackRich1Gas() 
+  {
+    return  m_NumHitPerTrackRich1Gas;
+  }
+
+  inline std::vector<int> NumHitPerTrackRich1Agel()
+  {
+    return m_NumHitPerTrackRich1Agel;
+  }
+
+   inline std::vector<int> NumHitPerTrackRich2Gas() 
+  {
+    return  m_NumHitPerTrackRich2Gas;
+  }
+
+
+  inline std::vector<int> NumHitSaturatedPerTrackRich1Gas() 
+  {
+    return  m_NumHitSaturatedPerTrackRich1Gas;
+  }
+  inline std::vector<int> NumHitSaturatedPerTrackRich1Agel()
+  {
+    return m_NumHitSaturatedPerTrackRich1Agel;
+  }
+
+  inline std::vector<int> NumHitSaturatedPerTrackRich2Gas() 
+  {
+    return  m_NumHitSaturatedPerTrackRich2Gas;
+  }
   
   inline int NumHitPartGunPrimaryPartRich1Gas()
   {
@@ -109,9 +136,19 @@ inline int NumPhotAgelAtAgelDownstrZ()
   {
     return m_NumHitPartGunPrimaryPartRich1Agel;
   }
+
+  inline int NumHitPartGunPrimaryPartRich2Gas()
+  {
+    return  m_NumHitPartGunPrimaryPartRich2Gas;
+  }
+
   inline int NumHitTotRich1All()
   {
     return m_NumHitTotRich1All;
+  }
+  inline int NumHitTotRich2All()
+  {
+    return m_NumHitTotRich2All;
   }
 
   inline void bumpNumPhotProdRich1Gas()
@@ -196,15 +233,79 @@ inline int NumPhotAgelAtAgelDownstrZ()
   {
     m_NumHitTotRich1Agel++;
   }
-  inline void bumpNumHitSaturatedRich1Gas()
+
+  inline void bumpNumHitTotRich2Gas() 
   {
-    m_NumHitSaturatedRich1Gas++;
+    m_NumHitTotRich2Gas++;
   }
-  inline void bumpNumHitSaturatedRich1Agel()
+
+  inline void bumpNumHitPerTrackRich1Gas(int ait)
   {
-    m_NumHitSaturatedRich1Agel++;
+    m_NumHitPerTrackRich1Gas[ait]++;
   }
+
+inline void setNumHitPerTrackRich1Gas(std::vector<int> aGasHit ) 
+{
+  m_NumHitPerTrackRich1Gas=aGasHit;
   
+}
+
+
+
+  inline void bumpNumHitPerTrackRich1Agel(int aita)
+  {
+    m_NumHitPerTrackRich1Agel[aita]++;
+  }
+
+  inline void bumpNumHitPerTrackRich2Gas(int ait2)
+  {
+    m_NumHitPerTrackRich2Gas[ait2]++;
+  }
+
+inline void setNumHitPerTrackRich2Gas(std::vector<int> aGasHit2 ) 
+{
+  m_NumHitPerTrackRich2Gas=aGasHit2;
+  
+}
+ 
+inline void setNumHitPerTrackRich1Agel(std::vector<int> aAgelHit )
+{
+  m_NumHitPerTrackRich1Agel= aAgelHit;
+  
+}
+
+
+  inline void bumpNumHitSaturatedPerTrackRich1Gas(int it)
+  {
+    m_NumHitSaturatedPerTrackRich1Gas[it]++;
+  }
+
+inline void setNumHitSaturatedPerTrackRich1Gas(std::vector<int> aGasSatHit) 
+{
+  m_NumHitSaturatedPerTrackRich1Gas=aGasSatHit;
+  
+}
+
+  inline void bumpNumHitSaturatedPerTrackRich1Agel(int ita)
+  {
+    m_NumHitSaturatedPerTrackRich1Agel[ita]++;
+  }
+inline void setNumHitSaturatedPerTrackRich1Agel( std::vector<int> aAgelSatHit )
+{
+  m_NumHitSaturatedPerTrackRich1Agel=aAgelSatHit;
+  
+}
+
+  inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
+  {
+    m_NumHitSaturatedPerTrackRich2Gas[it2]++;
+  }
+
+  inline void setNumHitSaturatedPerTrackRich2Gas(std::vector<int> aGasSatHit2) 
+  {
+  m_NumHitSaturatedPerTrackRich2Gas=aGasSatHit2;
+  
+  }
 
   inline void bumpNumHitPartGunPrimaryPartRich1Gas()
   {
@@ -214,7 +315,15 @@ inline int NumPhotAgelAtAgelDownstrZ()
   {
     m_NumHitPartGunPrimaryPartRich1Agel++;
   }
+  inline void bumpNumHitPartGunPrimaryPartRich2Gas()
+  {
+    m_NumHitPartGunPrimaryPartRich2Gas++;
+  }
    inline void bumpNumHitTotRich1All()
   {
     m_NumHitTotRich1All++;
+  }
+   inline void bumpNumHitTotRich2All()
+  {
+    m_NumHitTotRich2All++;
   }

@@ -42,7 +42,15 @@ static const G4String LogVolHpdQWindowNameAnalysis =
                      "/dd/Geometry/Rich1/lvRichHPDQuartzWindow";
 static const G4String LogVolSiDetNameAnalysis =
                      "/dd/Geometry/Rich1/lvRichHPDSiDet";
+static const G4String Rich1FilterGenericMatName=
+                             "/dd/Materials/RichMaterials/Rich1FilterGenericMaterial" ;
+static const G4String Rich1FilterD263MatName=
+                             "/dd/Materials/RichMaterials/Rich1FilterD263Material" ;
+static const G4String Rich1AerogelMatName=
+                             "/dd/Materials/RichMaterials/Aerogel" ;
 static const G4String Rich1QuartzMatName=
+                             "/dd/Materials/RichMaterials/GasWindowQuartz" ;
+static const G4String Rich2QuartzMatName=
                              "/dd/Materials/RichMaterials/GasWindowQuartz" ;
 static const G4String RichHpdQWMatName=
                             "/dd/Materials/RichMaterials/HpdWindowQuartz" ;
@@ -52,15 +60,19 @@ static const G4String RichAirMatName=
                              "/dd/Materials/RichMaterials/RichAir";
 static const G4String Rich1NitrogenMatName=
                           "/dd/Materials/RichMaterials/Rich1Nitrogen";
+static const G4String Rich2NitrogenMatName=
+                          "/dd/Materials/RichMaterials/Rich2Nitrogen";
 static const G4String Rich1C4F10MatName=
                           "/dd/Materials/RichMaterials/C4F10";
 static const G4String RichHpdVacName=
                        "/dd/Materials/RichMaterials/RichHpdVacuum";
+static const G4String Rich2CF4MatName=
+                          "/dd/Materials/RichMaterials/CF4";
 
 
 static const G4double PhotMomCnv=1243.125;
 static const G4double MeVtoeV=1000000;
-static const G4double CF4ZBeginAnalysis=9400.0*mm;
-static const G4double CF4ZEndAnalysis=11900.0*mm;
+static const G4double CF4ZBeginAnalysis=9450.0*mm;
+static const G4double CF4ZEndAnalysis=11884.0*mm;
 static const G4double ZUpsRich2Analysis= CF4ZBeginAnalysis;
 static const G4double ZDnsRich2Analysis=CF4ZEndAnalysis;

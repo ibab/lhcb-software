@@ -30,9 +30,6 @@ private:
 
   // Histograms ( used if m_produceHistogramSet1 = 1 (true) )
   IHistogram1D*         m_hNumTotHitRich1;
-  IHistogram1D*         m_hNumTotHitAgelRich1;
-  IHistogram1D*         m_hNumTotHitC4F10Rich1;
-  IHistogram1D*         m_hNumTotHitCF4Rich1;
   IHistogram2D*         m_hGlobalPEOriginXY;
   IHistogram2D*         m_hGlobalHitXY;
   IHistogram2D*         m_hRefIndC4F10Rich1;

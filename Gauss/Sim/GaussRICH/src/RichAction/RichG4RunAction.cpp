@@ -7,6 +7,8 @@
 /// Local 
 #include "RichG4RunAction.h"
 #include "RichG4HistoDefineSet1.h"
+#include "RichG4HistoDefineSet2.h"
+#include "RichG4HistoDefineSet3.h"
 #include "RichG4HistoDefineTimer.h"
 #include "RichG4Counters.h"
 
@@ -38,13 +40,17 @@ RichG4RunAction::RichG4RunAction
   , m_beginCmds ()   //  empty default list! 
   , m_endCmds   ()   //  empty default list! 
   , m_defineRichG4HistoSet1(false)
+  , m_defineRichG4HistoSet2(false)
     , m_defineRichG4HistoTimer(false)
     , m_aRichG4HistoSet1(0)
-     ,  m_aRichG4HistoTimer(0)
+    , m_aRichG4HistoSet2(0)
+    ,  m_aRichG4HistoTimer(0)
 {  
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
   declareProperty("DefineRichG4HistoSet1", m_defineRichG4HistoSet1);
+  declareProperty("DefineRichG4HistoSet2", m_defineRichG4HistoSet2);
+  declareProperty("DefineRichG4HistoSet3", m_defineRichG4HistoSet3);
   declareProperty("DefineRichG4HistoTimer",  m_defineRichG4HistoTimer);
   
 
@@ -89,18 +95,27 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
     
     m_aRichG4HistoSet1 = new RichG4HistoDefineSet1();
   }
+  if(m_defineRichG4HistoSet2) {
+    
+    m_aRichG4HistoSet2 = new RichG4HistoDefineSet2();
+  }
+
+  if(m_defineRichG4HistoSet3) {
+    
+    m_aRichG4HistoSet3 = new RichG4HistoDefineSet3();
+  }
+
 
   if(m_defineRichG4HistoTimer) {
     
     m_aRichG4HistoTimer = new  RichG4HistoDefineTimer();
     
   }
- 
- 
+
   // Now to create the RichCounters.
  
   RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
-
+  
 };
 // ============================================================================
 

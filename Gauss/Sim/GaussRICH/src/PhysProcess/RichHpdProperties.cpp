@@ -108,7 +108,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   SmartDataPtr<TabulatedProperty>tabQE(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdQuantumEff");
   std::vector<double>QeSingle;
   std::vector<double>EphotSingle;
-  int numQEbin;
+  int numQEbin = 0;
   if(!tabQE) {
            
     RichHpdlog << MSG::ERROR 
@@ -139,7 +139,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   //Now get the PSF values.
   SmartDataPtr<TabulatedProperty>tabPSF(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction");
-  double HpdPsfSingle;
+  double HpdPsfSingle = 0.0;
   if(!tabPSF) {
     RichHpdlog << MSG::ERROR 
                <<"RichHpdProperties: "
@@ -210,7 +210,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   //Now get the HPD High Voltage
   SmartDataPtr<TabulatedProperty>tabHV(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdHighVoltage");
-  double HpdHVSingle;
+  double HpdHVSingle = 0.0;
 
   if(!tabHV) {
     RichHpdlog << MSG::ERROR 
@@ -230,7 +230,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   m_RichHpdHighVoltage=HpdHVSingle;    
     
   //Now get the PhCathode to Si Surface max Distance
-  double hpdQwtoSiDist;
+  double hpdQwtoSiDist = 0.0;
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR 
                << "Can't retrieve /dd/Structure/LHCb/Rich1 forHpdQw toSiDist " 
@@ -252,7 +252,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
 
   // Now get the MaxZHit coordinate in Rich1.
-  double MaxZHitInRich1;
+  double MaxZHitInRich1 = 0.0;
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR 
                << "Can't retrieve /dd/Structure/LHCb/Rich1 for MaxZhit in Rich1 " 
@@ -276,7 +276,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // Now get the quartz window name and the photocathode name.
   std::string hpdQWlvname;
   std::string hpdPhCathlvname; 
-  double phcathRinn;
+  double phcathRinn = 0.0;
   SmartDataPtr<IDetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
   if(!RichHpdQWDE) {
     RichHpdlog << MSG::ERROR  
@@ -333,7 +333,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 RichHpdProperties::~RichHpdProperties() { ; }
 
 RichHpdQE* RichHpdProperties::getRichHpdQE(int  hpdnum, int richdetnum ) {
-  RichHpdQE* curRQE;
+  RichHpdQE* curRQE = 0;
 
   if(richdetnum > 1 || richdetnum < 0) {
     G4cout <<"Rich Hpd Properties: Unknown rich detector number for QE=  "
@@ -351,7 +351,7 @@ RichHpdQE* RichHpdProperties::getRichHpdQE(int  hpdnum, int richdetnum ) {
 }
 
 RichHpdPSF* RichHpdProperties::getRichHpdPSF(int hpdnum, int richdetnum ){
-  RichHpdPSF* curRPS;
+  RichHpdPSF* curRPS = 0;
 
   if(richdetnum > 1 || richdetnum < 0) {
          G4cout <<"Rich Hpd Properties: Unknown rich detector number for PSF =  "
@@ -369,7 +369,7 @@ RichHpdPSF* RichHpdProperties::getRichHpdPSF(int hpdnum, int richdetnum ){
   return curRPS;
 }
 RichHpdDeMag* RichHpdProperties::getRichHpdDeMag(int hpdnum, int richdetnum){
-  RichHpdDeMag* curDem;
+  RichHpdDeMag* curDem = 0;
 
   if(richdetnum > 1 || richdetnum < 0) {
     G4cout <<"Rich Hpd Properties: Unknown rich detector number for Demag =  "

@@ -29,6 +29,13 @@
 void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv, 
      G4double SinThCkv, G4double PhotProdCkvKE , G4ThreeVector PhotProdPosition, 
  G4double RefInd, G4double BetaInvChPart ) {
+
+  G4double BetaInvCut=1.01;
+  G4double energycut=30.0;
+  G4double energyAgelcut=3.0;
+  
+  G4double  chtken=  aStep.GetTrack()->GetTotalEnergy();
+  
   G4StepPoint* aPreStepPoint = aStep.GetPreStepPoint();
   // G4StepPoint* aPostStepPoint = aStep.GetPostStepPoint();
   const G4ThreeVector prePos=aPreStepPoint->GetPosition();
@@ -45,12 +52,12 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
      // aPostStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
      IHistogramSvc* CurrentHistoSvc=RichG4SvcLocator::RichG4HistoSvc();
      G4double ChrAngl=acos(CosThCkv);
-     G4String pPreVolNameAgel =string(pPreVolName,0,33);
-     G4String pPreVolNameC4F10=string(pPreVolName,0,35);
-     G4String pPreVolNameCF4=string(pPreVolName,0,29);
-     G4String pPreVolMatNameAgel=string( prePosMaterialName,0,35);
-     G4String pPreVolMatNameC4F10=string( prePosMaterialName,0,33);
-     G4String pPreVolMatNameCF4=string( prePosMaterialName,0,31);
+     G4String pPreVolNameAgel =std::string(pPreVolName,0,33);
+     G4String pPreVolNameC4F10=std::string(pPreVolName,0,35);
+     G4String pPreVolNameCF4=std::string(pPreVolName,0,29);
+     G4String pPreVolMatNameAgel=std::string( prePosMaterialName,0,35);
+     G4String pPreVolMatNameC4F10=std::string( prePosMaterialName,0,33);
+     G4String pPreVolMatNameCF4=std::string( prePosMaterialName,0,31);
      
      SmartDataPtr<IHistogram1D>hCkvZEmissionPtRich1(CurrentHistoSvc,"RICHG4HISTOSET1/25");
      if(hCkvZEmissionPtRich1) hCkvZEmissionPtRich1->
@@ -62,7 +69,14 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
                    pPreVolMatNameAgel == AgelMaterialName &&
          prePos.z()>= AgelZBeginAnalysis &&  prePos.z() <= AgelZEndAnalysis ) {
           SmartDataPtr<IHistogram1D>hCkvAgelRich1(CurrentHistoSvc,"RICHG4HISTOSET1/10");
-          if(hCkvAgelRich1) hCkvAgelRich1->fill( ChrAngl ,1.0);
+          if(BetaInvChPart < BetaInvCut ) {
+            if(( chtken/GeV)  >  energyAgelcut) {
+              
+              if(hCkvAgelRich1) hCkvAgelRich1->fill( ChrAngl ,1.0);
+            }
+            
+          }
+          
 	  //          SmartDataPtr<IHistogram2D>hRefIndAgelRich1(CurrentHistoSvc,
     //                                    "RICHG4HISTOSET1/12");
 	  //  if(hRefIndAgelRich1)hRefIndAgelRich1->fill(Photwavelen,(RefInd-1.0),1.0);
@@ -74,7 +88,14 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
           prePos.z() >= C4F10ZBeginAnalysis &&  
                         prePos.z() <=  C4F10ZEndAnalysis ) {
          SmartDataPtr<IHistogram1D>hCkvC4F10Rich1(CurrentHistoSvc,"RICHG4HISTOSET1/20");
-          if(hCkvC4F10Rich1)hCkvC4F10Rich1->fill( ChrAngl,1.0);
+          if(BetaInvChPart < BetaInvCut ) {
+            if(( chtken/GeV)  >  energycut) {
+      
+              if(hCkvC4F10Rich1)hCkvC4F10Rich1->fill( ChrAngl,1.0);
+            }
+            
+          }
+          
 	  //   SmartDataPtr<IHistogram2D>hRefIndC4F10Rich1(CurrentHistoSvc,
     //                              "RICHG4HISTOSET1/22");
 	  // if(hRefIndC4F10Rich1)hRefIndC4F10Rich1->fill(Photwavelen,(RefInd-1.0),1.0);
@@ -84,7 +105,14 @@ void RichG4CherenkovAnalysis1(const G4Step& aStep, G4double CosThCkv,
           pPreVolMatNameCF4 == CF4MaterialName &&         
           prePos.z() >= CF4ZBeginAnalysis &&  prePos.z() <=  CF4ZEndAnalysis ) {
           SmartDataPtr<IHistogram1D>hCkvCF4Rich2(CurrentHistoSvc,"RICHG4HISTOSET1/70");
-          if(hCkvCF4Rich2)hCkvCF4Rich2->fill( ChrAngl,1.0);
+           if(BetaInvChPart < BetaInvCut ) {
+            if(( chtken/GeV)  >  energycut) {
+ 
+              if(hCkvCF4Rich2)hCkvCF4Rich2->fill( ChrAngl,1.0);
+            }
+            
+           }
+           
           SmartDataPtr<IHistogram2D>hRefIndCF4Rich2(CurrentHistoSvc,
                                                     "RICHG4HISTOSET1/72");
           if(hRefIndCF4Rich2)hRefIndCF4Rich2->fill(Photwavelen,
@@ -123,7 +151,7 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
 	     const G4ThreeVector PhotCurDir=
                   cTrack->GetMomentumDirection();
  
-             G4String cPostLogVolName1=string(cPostVolName,0,33);
+             G4String cPostLogVolName1=std::string(cPostVolName,0,33);
 
              IHistogramSvc* CurrentHistoSvc=RichG4SvcLocator::RichG4HistoSvc();
 
@@ -150,7 +178,7 @@ void RichG4CherenkovAnalysis2(const G4Step& cStep) {
 
 	     // Now for the case just before incident on Quartz Window.
              
-             G4String cPreLogVolName1=string(cPreVolName,0,31);
+             G4String cPreLogVolName1=std::string(cPreVolName,0,31);
 
              if(cPreLogVolName1 == LogVolRich1MagShNameAnalysis && 
                 cPostVolName == LogColRich1GasQWNameAnalysis ){

@@ -153,7 +153,7 @@ void GiGaPhysConstructorOp::ConstructOp() {
   RichG4OpRayleigh*   theRayleighScatteringProcess = new RichG4OpRayleigh();
   RichG4OpBoundaryProcess* theBoundaryProcess = new RichG4OpBoundaryProcess();
 
-  G4cout<<"Now creating Photoelectric  processes"<<endl;
+  G4cout<<"Now creating Photoelectric  processes"<<G4endl;
   RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 
     new RichHpdPhotoElectricEffect(this,"RichHpdPhotoelectricProcess");
 

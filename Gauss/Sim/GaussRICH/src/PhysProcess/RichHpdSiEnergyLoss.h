@@ -34,6 +34,9 @@ public:  RichHpdSiEnergyLoss(const G4String& processName);
  //
  G4VParticleChange* PostStepDoIt(const G4Track& aTrack,
                                             const G4Step& aStep);
+  G4double RichHpdSiEnergyDeposit(G4double ElossInput);
+  G4double RichHpdSiBackScatter(G4double EnergyInput);
+  
  private:
  // hide assignment and copy operators.
      RichHpdSiEnergyLoss ( RichHpdSiEnergyLoss &); 
@@ -48,7 +51,9 @@ public:  RichHpdSiEnergyLoss(const G4String& processName);
  G4double MipEnergyHpdSiEloss;
  G4double finalRangeforSiDetStep;
  G4double PhElectronMaxEnergy;
- 
+  G4double SiHitDetGlobalEff;
+  G4double PeBackScaProb;
+  
 };
 
 #endif

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.1 2003-06-19 08:17:53 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.2 2003-07-16 13:24:07 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -147,12 +147,12 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
              
             if(aPostStepPoint->GetStepStatus() == fGeomBoundary) {
 
-              //             G4cout<<" Prevol Postvol  "<<aPreVolName<<"   "
-              //      <<aPostVolName<<G4endl;
+              //                           G4cout<<" RichStepAnalysis Prevol Postvol  RadiatorNum"<<aPreVolName<<"   "
+              //                   <<aPostVolName<<"   "<<aRadiatorNum<<G4endl;
 
               // Now for the Aerogel photons entering the C4F10 volume.
 
-             G4String  aPreVolNameA =string(aPostVolName,0,33);
+             G4String  aPreVolNameA =std::string(aPostVolName,0,33);
 
              if(aRadiatorNum == 0 ) {
                
@@ -165,8 +165,8 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                            (AgelZEndAnalysis-m_RichG4AgelPlanePosTolerence) ){
 
                     aRichCounter->bumpNumPhotAgelAtAgelDownstrZ();
-                    cout<<"Current numcross at AgeldownstrZ=  "
-                        <<aRichCounter->   NumPhotAgelAtAgelDownstrZ()<<endl;
+                    //                    cout<<"Current numcross at AgeldownstrZ=  "
+                    //    <<aRichCounter->   NumPhotAgelAtAgelDownstrZ()<<endl;
                     
   
                   }
@@ -182,7 +182,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
               
             // Now for photon hitting the mirror.
 
-             G4String  aPostVolNameM =string(aPostVolName,0,33);
+             G4String  aPostVolNameM =std::string(aPostVolName,0,33);
 
 
               if(aPreVolName == LogVolC4F10NameAnalysis && 
@@ -235,7 +235,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
 
 
-             G4String aPreLogVolName1=string(aPreVolName,0,31);
+             G4String aPreLogVolName1=std::string(aPreVolName,0,31);
               if(aPreLogVolName1 == LogVolRich1MagShNameAnalysis && 
                 aPostVolName == LogColRich1GasQWNameAnalysis ){
 

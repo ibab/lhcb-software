@@ -7,6 +7,8 @@
 // forward declarations
 template <class TYPE> class GiGaFactory;
 class RichG4HistoDefineSet1;
+class RichG4HistoDefineSet2;
+class RichG4HistoDefineSet3;
 class RichG4HistoDefineTimer;
 
 // SE 21-8-2002
@@ -52,17 +54,35 @@ protected:
   RichG4HistoDefineSet1* aRichG4HistoDefineSet1() 
    {return  m_aRichG4HistoSet1; }
 
+  RichG4HistoDefineSet2* aRichG4HistoDefineSet2() 
+   {return  m_aRichG4HistoSet2; }
+
+  RichG4HistoDefineSet3* aRichG4HistoDefineSet3() 
+   {return  m_aRichG4HistoSet3; }
+
+
   bool defineRichG4HistoSet1() 
   {
     return  m_defineRichG4HistoSet1;
     
   }
-
   void setdefineRichG4HistoSet1(bool aboolValue) 
   {
     m_defineRichG4HistoSet1= aboolValue;
   }
-
+  bool defineRichG4HistoSet2() 
+  {
+    return  m_defineRichG4HistoSet2;
+    
+  }
+  void setdefineRichG4HistoSet2(bool aboolValue2) 
+  {
+    m_defineRichG4HistoSet2= aboolValue2;
+  }
+  void setdefineRichG4HistoSet3(bool aboolValue3) 
+  {
+    m_defineRichG4HistoSet3= aboolValue3;
+  }
   
 private:
   
@@ -78,10 +98,14 @@ private:
   COMMANDS  m_beginCmds;
   COMMANDS  m_endCmds;
   bool m_defineRichG4HistoSet1;
+  bool m_defineRichG4HistoSet2;
+  bool m_defineRichG4HistoSet3;
   bool m_defineRichG4HistoTimer;
   
   
   RichG4HistoDefineSet1* m_aRichG4HistoSet1;
+  RichG4HistoDefineSet2* m_aRichG4HistoSet2;
+  RichG4HistoDefineSet3* m_aRichG4HistoSet3;
   RichG4HistoDefineTimer* m_aRichG4HistoTimer;
   
 };

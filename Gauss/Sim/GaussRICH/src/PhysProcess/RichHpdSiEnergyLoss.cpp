@@ -8,12 +8,15 @@
 RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName)
   :G4VEnergyLoss(processName),  MinKineticEnergy(1.*keV),
    MipEnergyHpdSiEloss(1.0*GeV),finalRangeforSiDetStep(0.15*mm),
-   PhElectronMaxEnergy(25.0*keV) {
+   PhElectronMaxEnergy(25.0*keV),  SiHitDetGlobalEff(0.9), 
+   PeBackScaProb(0.18)  {
 
 
   G4String materialName="/dd/Materials/RichMaterials/RichHpdSilicon";
   G4String EnvelopeMaterialName="/dd/Materials/RichMaterials/Kovar";
 
+  //  SiHitDetGlobalEff=0.9;
+  
   static const G4MaterialTable* theMaterialTable = 
     G4Material::GetMaterialTable();
   HpdSiElossMaterialName= materialName;
@@ -102,6 +105,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
                                                       const G4Step& aStep) {
 
   aParticleChange.Initialize(aTrack);
+  
   G4int aMaterialIndex = aTrack.GetMaterial()->GetIndex();
   if(fMatIndexHpdSiEloss !=  (G4int) aTrack.GetMaterial()->GetIndex() && 
      fMatIndexHpdEnvelopeKovar != (G4int) aTrack.GetMaterial() -> GetIndex() ) {
@@ -110,7 +114,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
   G4double aKinEnergyInit = aParticle->GetKineticEnergy();
-  //  G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
+  //   G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
   //       << "in HpdEnergyloss KE= "<<aKinEnergyInit <<G4endl;
   // if the Photoelectron hits the kovar of the Hpd envelope
   // endcap or barrel,  then the kill the photoelectron. 
@@ -142,19 +146,49 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
       // be 20 GeV just to avoid the problem of field in richhpdphotoelectric effect.
       // once the shielding is implemented, this will be put back to 20 keV.
 
-     
+
+  // The following factor is  a temporary fix to distringuish
+  // between the energy depostied by other proceseses and this
+  // process. The other processes typicaly deposit about 60 KeV
+  // So this process deposits 20*10 = 200 keV.  
+  G4double EnegydepositMultFactor=1.0;
+  
      if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-          if(aKinEnergyInit > 15000 ) aKinEnergyInit= aKinEnergyInit/1000000;
+          if(aKinEnergyInit > 1500 ) {
+            aKinEnergyInit= aKinEnergyInit/100000;
+            EnegydepositMultFactor=10.0;
+            
+          }
+          
     }
       //end of temporary fix.
 
   if(aKinEnergyInit < MinKineticEnergy ) {  Eloss=0.0 ; }
   else if( aKinEnergyInit <= PhElectronMaxEnergy ) {Eloss= aKinEnergyInit ;}
-  else { Eloss = min(aKinEnergyInit,MipEnergyHpdSiEloss); }
+  else { Eloss = std::min(aKinEnergyInit,MipEnergyHpdSiEloss); }
  
   aKinEnergyFinal=aKinEnergyInit-Eloss;
 
-  aParticleChange.SetLocalEnergyDeposit(Eloss);  
+  // Now for the hit detection effecidency and backscattering etc.
+
+  //    aParticleChange.SetLocalEnergyDeposit(Eloss);  
+
+   const G4double aEnergyAlreadyDeposit =  
+               aStep.GetTotalEnergyDeposit();
+   //   cout<<"Hpd sidet Energy already deposited  "
+   //             <<aEnergyAlreadyDeposit<<endl;
+
+  G4double EnergyTransfer=  
+       EnegydepositMultFactor* RichHpdSiEnergyDeposit(Eloss);
+  //  cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<endl;
+
+  
+  if(   EnergyTransfer > 0.0 ) {
+    
+    aParticleChange.SetLocalEnergyDeposit(EnergyTransfer);  
+  }
+
+  
   if (aKinEnergyFinal <= MinKineticEnergy ) {
     aParticleChange.SetStatusChange(fStopAndKill);
   
@@ -165,7 +199,36 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   return &aParticleChange;
 
 }
+G4double RichHpdSiEnergyLoss::RichHpdSiEnergyDeposit(G4double   ElossInput) 
+{
+  G4double NetEnergyTransfer =    ElossInput;
+   
+    G4double Effrandom =  G4UniformRand();
+    //  cout<<"SiEnergy dep  EFFR GloablEFF  "
+    //    << Effrandom << "  "<< SiHitDetGlobalEff<<endl;
+    
+    if( Effrandom >  SiHitDetGlobalEff ) {
+       
+      NetEnergyTransfer= 0.0;
+      
+    }
+    
+    
+    //  G4double EnergyFromPe =  ElossInput;
+  
+    // G4double EnergyTransfer = RichHpdSiBackScatter(  EnergyFromPe)  
+    //  NetEnergyTransfer =  EnergyTransfer;
+  
+    
+    return NetEnergyTransfer;
+  
+}
 
+G4double RichHpdSiEnergyLoss::RichHpdSiBackScatter (G4double EnergyInput) 
+{
+  return EnergyInput;
+  
+}
 
 
 

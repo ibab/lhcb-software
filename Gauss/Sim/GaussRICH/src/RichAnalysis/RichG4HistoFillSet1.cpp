@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet1.cpp,v 1.1 2003-04-29 17:08:05 seaso Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.2 2003-07-16 13:24:07 seaso Exp $
 // Include files 
 
 
@@ -52,9 +52,12 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
 
   // StatusCode sc = svcLoc()->service( "HistogramSvc", CurrentHistoSvc, true );
 
-  SmartDataPtr<IHistogram1D>hNumTotHitRich1(CurrentHistoSvc,"RICHG4HISTOSET1/1");
-  SmartDataPtr<IHistogram2D>hGlobalPEOriginXY(CurrentHistoSvc,"RICHG4HISTOSET1/2");
-  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,"RICHG4HISTOSET1/3");
+  SmartDataPtr<IHistogram1D>hNumTotHitRich1(CurrentHistoSvc,
+                               "RICHG4HISTOSET1/1");
+  SmartDataPtr<IHistogram2D>hGlobalPEOriginXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/2");
+  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/3");
   
   G4HCofThisEvent * HCE;
   G4int nHitTotRich1=0;

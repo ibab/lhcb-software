@@ -489,13 +489,15 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	      else {
           //Modifcation by SE to kill the total internal reflections
 
-          //  	      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
+          //	      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
           //   << Material2->GetName() <<" is  with ref index "<<Rindex1
-          //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1 <<endl;
+          //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1 
+          //                  << "   Sint2=  "<< sint2 <<endl;
           if( (Material1->GetName() ==  AgelMaterialName) ||
                (Material1->GetName() ==  FilterGenericMaterialName) ||
-               (Material1->GetName() ==  FilterD263MaterialName) ||
-              (Material1->GetName() == RichHpdQWMatName ) ) {
+              (Material1->GetName() ==  FilterD263MaterialName) ) {
+            
+              //              || (Material1->GetName() == RichHpdQWMatName ) ) {
             
             DoAbsorption();
             //end of modification by SE            
@@ -604,6 +606,30 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
             (Material1->GetName() ==  Rich1C4F10MatName &&
              Material2->GetName() == Rich1NitrogenMatName) )TransCoeff=1.0;
 
+	      if(Material1->GetName() == Rich2NitrogenMatName   &&
+      		 Material2->GetName() == RichHpdVacName   )TransCoeff=1.0; 
+	      if(Material2->GetName() == Rich2NitrogenMatName   &&          
+		       Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;
+
+        // Now for the modif to comapare with SICBMC for aerogel.
+
+        if(( Material1->GetName() ==    Rich1FilterD263MatName ) ||
+           ( Material2->GetName() ==     Rich1FilterD263MatName)){
+          TransCoeff=1.0;
+        }
+        
+        if(( Material1->GetName() ==    Rich1FilterGenericMatName ) ||
+           ( Material2->GetName() ==     Rich1FilterGenericMatName)){
+          TransCoeff=1.0;
+        }
+        if(( Material1->GetName() ==  Rich1AerogelMatName ) && 
+           (  Material2->GetName() == Rich1C4F10MatName) ){
+           TransCoeff=1.0;
+        }
+         
+        
+        // end of modif for aerogel for SICBMC
+
 
 	      //  End of modification by SE  
 
@@ -641,10 +667,19 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
           // set to reflect are killed by doing abosorption.There is 
           // around 4 percent of photons in this category on each of the
           // two surfaces.
+          // This is done for rich2 at the quartz window.
           if(((Material1->GetName() ==   Rich1NitrogenMatName) &&
               (Material2->GetName() ==  Rich1QuartzMatName)) ||
              ((Material2->GetName() ==  Rich1NitrogenMatName ) &&
-              (Material1->GetName() ==  Rich1QuartzMatName))  ) 
+              (Material1->GetName() ==  Rich1QuartzMatName))   ||
+             ((Material1->GetName() ==   Rich2NitrogenMatName) &&
+              (Material2->GetName() ==  Rich2QuartzMatName)) ||
+             ((Material2->GetName() ==  Rich2NitrogenMatName ) &&
+              (Material1->GetName() ==  Rich2QuartzMatName))   ||
+             ((Material1->GetName() ==  Rich2CF4MatName )      &&
+              (Material2->GetName() ==  Rich2QuartzMatName))  ||
+             ((Material2->GetName() ==  Rich2CF4MatName )      &&
+              (Material1->GetName() ==  Rich2QuartzMatName)) ) 
           {
 
             DoAbsorption();

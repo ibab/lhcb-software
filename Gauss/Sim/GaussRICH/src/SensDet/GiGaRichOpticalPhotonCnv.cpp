@@ -18,6 +18,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/GaudiException.h"
 // GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGaCnv/IGiGaHitsCnvSvc.h"
@@ -166,14 +167,14 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
     if ( 0 != hitscollections ) {
 
-      // Get MCHits eventSvc()
-      SmartDataPtr<MCHits> mcHits( evtSvc(), MCHitLocation::RiHits );
+      // Get MCRichHits eventSvc()
+      SmartDataPtr<MCRichHits> mcHits( evtSvc(), MCRichHitLocation::Default );
       if ( !mcHits ) {
-      return Warning( "Could not locate Rich MCHits from GiGaRichOpticalPhoton" );
+      return Warning( "Could not locate  MCRichHits from GiGaRichOpticalPhoton" );
       }
       
       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at " 
-          << MCHitLocation::RiHits << endreq;
+          << MCRichHitLocation::Default << endreq;
 
       // note this key is need for consistency with MCRichOpticalPhoton converter
       int globalKey = 0;
@@ -206,9 +207,25 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Copy required info from RichG4Hit to RichMCOpticalPhoton
           // More info may be copied in the future.
+          //
+
+          mcPhoton-> setPdIncidencePoint( HepPoint3D(
+                                   g4hit->GetGlobalPEOriginPos().x(),  
+                                   g4hit->GetGlobalPEOriginPos().y(),
+                                   g4hit->GetGlobalPEOriginPos().z() ) );
+          mcPhoton->setEnergyAtProduction( (float) g4hit-> PhotEnergyAtProd());
+          
+          mcPhoton->setEmissionPoint
+             ( HepPoint3D(g4hit->GetPhotEmisPt().x(),
+                                g4hit->GetPhotEmisPt().y(),
+                                g4hit->GetPhotEmisPt().z())  );
+          mcPhoton->setParentMomentum
+             (HepPoint3D( g4hit->ChTrackMomVect().x(),
+                                g4hit->ChTrackMomVect().y(),
+                                g4hit->ChTrackMomVect().z() ));
+          
           mcPhoton->setCherenkovTheta( g4hit->ThetaCkvAtProd() );
           mcPhoton->setCherenkovPhi( g4hit->PhiCkvAtProd() );
-          mcPhoton->setEnergy( g4hit->PhotEnergyAtProd() );
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );
 
           photons->insert( mcPhoton, globalKey );
@@ -223,10 +240,10 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
           << "Built " << photons->size() << " MCRichOpticalPhotons at "
           << MCRichOpticalPhotonLocation::Default << endreq;
 
-      // Should have one opticalphoton for each and every MCHit
+      // Should have one opticalphoton for each and every MCRichHit
       if ( photons->size() != mcHits->size() ) {
         msg << MSG::ERROR << "Created " << photons->size() << " photons and"
-            << mcHits->size() << " MCHits !!" << endreq;
+            << mcHits->size() << " MCRichHits !!" << endreq;
       }
       
     } else {

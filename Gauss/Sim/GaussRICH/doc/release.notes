@@ -4,12 +4,26 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+!========================== GaussRICH v4r0 2003-06-16 ======================
+
+! 2003-07-16 - Sajan Easo
+ - convertor for the MCRichHit structure at the output.
+ - Optimizations for reducing cpu time in Rayliegh.
+ - Boundary process optimizations for rich2.
+
+! 2003-07-07 - Florence RANJARD
+ - fix for gcc3.2
+
 ! 2003-6-18 - Sajan Easo
      Added more info into RichG4Hit. Cleanup of how the
      hpd energy loss processes was activated.
      Checks for existence of Gausstracking info in
        RichG4CherenkovPhotProdTag and  RichPEInfoAttach 
        (By Witold).
+
+!========================== GaussRICH v3r0 2003-06-18 ========================
+
 ! 2003-06-02 - Sajan Easo
    For cpu optimization, the killing of photons which were going to be
   killed in the HPDs, is implemented  in the preuser track action of  

@@ -1,4 +1,4 @@
-// $Id: RichG4HistoDefineTimer.cpp,v 1.1 2003-04-29 17:08:05 seaso Exp $
+// $Id: RichG4HistoDefineTimer.cpp,v 1.2 2003-07-16 13:24:06 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -55,6 +55,12 @@ void RichG4HistoDefineTimer::bookRichG4TimerHistograms()
 
    m_timeWholeRichMBEvent= CurHistoSvc->book( m_RichG4HistoPathTimer+"10",
                              title,100,0.0,500.0);
+
+   title="Total Real CPU Time per event for RICH  Events";
+
+   m_timeWholeRichMBEvent= CurHistoSvc->book( m_RichG4HistoPathTimer+"20",
+                             title,150,0.0,150.0);
+
 
 }
 

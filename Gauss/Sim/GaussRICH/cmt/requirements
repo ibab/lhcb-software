@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussRICH
-version v3r0
+version v4r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -10,8 +10,6 @@ use GaussTools    v*     Sim
 use AIDA          v*
 # =============== Event =======================================================
 use RichEvent     v4r*      Event
-#geometry source 
-#use XmlDDDB       v15r3   Det 
 
 
 # ============== component library ============================================

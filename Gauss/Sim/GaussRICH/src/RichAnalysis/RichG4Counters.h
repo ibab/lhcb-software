@@ -1,9 +1,9 @@
-// $Id: RichG4Counters.h,v 1.1 2003-06-19 08:17:52 seaso Exp $
+// $Id: RichG4Counters.h,v 1.2 2003-07-16 13:24:06 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4COUNTERS_H 
 #define RICHANALYSIS_RICHG4COUNTERS_H 1
 
 // Include files
-
+#include <vector>
 /** @class RichG4Counters RichG4Counters.h RichAnalysis/RichG4Counters.h
  *  
  *
@@ -47,14 +47,23 @@ private:
   
   int m_NumHitTotRich1Gas;
   int m_NumHitTotRich1Agel;
-  int m_NumHitSaturatedRich1Gas;
-  int m_NumHitSaturatedRich1Agel;
+  int m_NumHitTotRich2Gas;
+
+  std::vector<int> m_NumHitPerTrackRich1Gas;
+  std::vector<int> m_NumHitPerTrackRich1Agel;
+  std::vector<int> m_NumHitPerTrackRich2Gas;
+
+  std::vector<int> m_NumHitSaturatedPerTrackRich1Gas;
+  std::vector<int> m_NumHitSaturatedPerTrackRich1Agel;
+  std::vector<int> m_NumHitSaturatedPerTrackRich2Gas;
   
   int m_NumHitPartGunPrimaryPartRich1Gas;
   int m_NumHitPartGunPrimaryPartRich1Agel;
+  int m_NumHitPartGunPrimaryPartRich2Gas;
   
 
   int m_NumHitTotRich1All;
+  int m_NumHitTotRich2All;
   
 public:
 #include "RichG4Counters.icpp"
