@@ -4,6 +4,15 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-04-10 - Olivier Dormond
+ - Added a combined particle maker until one is available globally.
+ - The FlavourTaggingAlgorithm now reports the statistical errors at the end
+   of the job.
+ - Added a tool to implement the same-side kaon tagging.
+ - Added a simple algorithm to summarise all the generated tags for a B in
+   one line.
+ - Cleanup the options files.
+
 !==================== FlavourTagging v4r2 2003-01-06 =====================
 ! 2003-01-06 - Florence Ranjard
  - requirements - use LHCb v11r5
