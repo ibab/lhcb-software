@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r7>2004-04-30 Boole v5r8</A></H1><PRE>
+
+- Bug fixes
+  . Fix a major bug in filling L1Buffer for L0Calo (L0Calo v7r5)
+
 </PRE><H1><A NAME=v5r7>2004-04-28 Boole v5r7</A></H1><PRE>
 
 - Bug fixes
