@@ -138,7 +138,8 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
   
   EvtParticle *other;
   
-  if (parent==0) {
+  // PR   if (parent==0) {
+
     //report(ERROR,"EvtGen") << 
     //  "Warning CP violation with B having no parent!"<<std::endl;
     p->setLifetime();
@@ -147,17 +148,17 @@ void EvtCPUtil::OtherB( EvtParticle *p,double &t, EvtId &otherb, double probB0){
     if (p->getId()==B0B) otherb=B0;
     entryCount--;
     return;
-  }
-  else{
-    if (parent->getDaug(0)!=p){
-      other=parent->getDaug(0);
-      idaug=0;
-    }
-    else{
-      other=parent->getDaug(1);
-      idaug=1;
-    }
-  }
+    // PR   }
+    // PR  else{
+    // PR   if (parent->getDaug(0)!=p){
+    // PR     other=parent->getDaug(0);
+    // PR     idaug=0;
+    // PR   }
+    // PR   else{
+    // PR     other=parent->getDaug(1);
+    // PR     idaug=1;
+    // PR   }
+    // PR }
   
   if (parent != 0 ) {
 

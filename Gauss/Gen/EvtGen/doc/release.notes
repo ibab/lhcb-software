@@ -6,6 +6,8 @@ Package manager : Patrick Robbe and Witek Pokorski
  - EvtPythia : add diquark definitions
  - EvtParticle : add the possibility to oscillate with alias B0 and B0s
    particles
+ - EvtCPUtil : temporary fix to prevent modifying a B* decay tree because
+   it thinks it is an Upsilon(4S) tree
 
 !===================== EvtGen v4r0 ======================================
 ! 2003-10-10 - Patrick Robbe
