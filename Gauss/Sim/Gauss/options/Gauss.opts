@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.56 2004-12-14 15:57:59 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.57 2005-02-02 15:12:17 gcorti Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -36,7 +36,8 @@ MessageSvc.OutputLevel    = 3;
 //MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
-#include "$DECFILESROOT/options/13296200.opts"  // Bd_JpsiKS,mm
+//#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
+#include "$DECFILESROOT/options/13296200.opts"  // Bs
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b events
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 

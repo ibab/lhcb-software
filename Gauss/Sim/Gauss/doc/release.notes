@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-02-02 - Gloria Corti
+ - use latest version of detector database (lhcb-200412.xml)
+ - modify GaussRead.opts to print hits multiplicty
+
 !========================== Gauss v19r0 ==================================
 ! 2005-02-02 - Florence RANJARD
  - use GaussTracker v3r2 to fix Muon hits out of chambers
