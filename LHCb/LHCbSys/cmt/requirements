@@ -6,8 +6,9 @@ branches doc cmt
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
+use LHCb		v11r4
 
-use GaudiConf		v6r4
+use GaudiConf		v6r5
 
 use BookKeeping 	v1r1	Tools
 
@@ -18,59 +19,59 @@ use GenEvent     	v2r3    	Event
 
 # Kernel packages
 use KernelSys   	v1r0    Kernel
-use LHCbKernel    v2r5p1    Kernel
-use CaloKernel    v2r1p1    Calo
-use MuonKernel    v2r1p1    Muon
-use TrKernel      v11r1p1   Tr
-use RichKernel    v2r0p1    Rich
-use VeloKernel    v1r2p1    Velo
+use LHCbKernel    v2r6      Kernel
+use CaloKernel    v2r2      Calo
+use MuonKernel    v2r2      Muon
+use TrKernel      v11r2     Tr
+use RichKernel    v2r2      Rich
+use VeloKernel    v1r3      Velo
 
 # Detector description
 use DetSys		v1r0	Det
-use DetDesc        v11r6        Det
-use VeloDet        v8r0p1       Det     
-use ITDet          v1r2p1       Det     
-use OTDet          v3r2p1       Det
-use CaloDet        v6r2         Det
-use CaloDetXmlCnv  v2r1p1       Det
-use MuonDet        v4r2p1       Det
-use Magnet         v2r0p1       Det
-use MuonTools      v3r1p1       Muon
-use RichDet        v3r1p1       Det
+use DetDesc        v11r6       Det
+use VeloDet        v8r2        Det     
+use ITDet          v1r3	       Det     
+use OTDet          v3r3	       Det
+use CaloDet        v6r2        Det
+use CaloDetXmlCnv  v2r2	       Det
+use MuonDet        v4r3	       Det
+use Magnet         v2r1	       Det
+use MuonTools      v3r2	       Muon
+use RichDet        v3r2        Det
 
 # Event data model
 use EventSys		v13r0	Event
-use EventKernel  v2r1p1  Event
+use EventKernel  v2r2	  Event
 use Event        v3r2    Event
 use VeloEvent    v12r0   Event
 use ITEvent      v12r0   Event
 use OTEvent      v12r0   Event
 use TrEvent      v12r0   Event
-use RichEvent    v4r0p1  Event
-use CaloEvent    v11r3p1 Event
-use MuonEvent    v2r1p1  Event
+use RichEvent    v4r2    Event
+use CaloEvent    v11r4	 Event
+use MuonEvent    v2r2    Event
 use L0Event      v13r0   Event
-use L1Event      v11r2p1 Event
-use PhysEvent    v7r1p1  Event
+use L1Event      v11r3	 Event
+use PhysEvent    v7r3    Event
 use DbCnv        v7r0    Event
 
 # Associators
 use AssociatorsSys	v1r0	Associators
-use  ITAssociators      v2r1p1    IT
-use  OTAssociators      v2r2p1    OT
-use  VeloAssociators    v1r3p1    Velo
-use  CaloAssociators    v3r1p1    Calo
-use  MuonAssociators    v1r0      Muon
-use  TrAssociators      v3r3      Tr
-use  TrFitEvent         v3r4p1    Tr
+use  ITAssociators      v2r2    IT
+use  OTAssociators      v2r3    OT
+use  VeloAssociators    v1r4    Velo
+use  CaloAssociators    v3r2    Calo
+use  MuonAssociators    v1r0    Muon
+use  TrAssociators      v3r3    Tr
+use  TrFitEvent         v3r5    Tr
 
 use SICBSys             v1r0    SICB
-use SicbCnv      v17r3p1 SICB
+use SicbCnv      v17r4   SICB
 use RiSicbGeom   v3r0    SICB
 use CaloSicbCnv  v7r3    SICB
 use MuonSicbCnv  v6r6    SICB
-use RiSicbCnv    v5r1p1  SICB
-use VSicbCnv     v8r0p1  SICB
+use RiSicbCnv    v5r3    SICB
+use VSicbCnv     v8r1    SICB
 use Futio        v13r0   SICB
 use Finclude     v14r0   SICB
 use GDUMMY       v2r0    SICB
