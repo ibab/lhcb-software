@@ -3,7 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v6r0>2004-05-26 Boole v6r0</A></H1><PRE>
+Development version
+
+- New tuning
+  . Initialize MuonGeometry tool completely at intialisation, not during first
+    ~10 events (MuonTools v3r7)
+
+- New packaging
+  . Use new GaudiAlg and GaudiTools base classes
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithmsv14r3,
+     ITCheckers v2r3)
+
 </PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
+Version used for DC04
 
 - Bug fixes
   . Protect size of L1 output bank to not exceed 126 words, so as not to 
@@ -11,6 +24,7 @@ Purpose: LHCb Digitization program
   . Release DOM tree after use, in L0MXmlReader (L0mConf v2r2p1)
 
 </PRE><H1><A NAME=v5r8>2004-04-29 Boole v5r8</A></H1><PRE>
+Version used at start of DC04
 
 - New tuning
   . 12% correction to HCAL calibration coefficient  (XmlDDDB v22r2)

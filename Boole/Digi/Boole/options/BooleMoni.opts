@@ -30,6 +30,7 @@ ApplicationMgr.DLLs += {"ITCheckers"};
 MoniITSeq.Members += { "MCITDepositChecker" };
 MoniITSeq.Members += { "MCITDigitChecker" };
 MoniITSeq.Members += { "ITDigitChecker" };
+#include "$ITCHECKERSROOT/options/Boole.opts"
 
 // OT digitisation
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
