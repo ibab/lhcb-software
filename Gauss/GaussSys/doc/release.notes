@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 !====================== GaussSys v18r2 2004-11-22 =======================
+            is built with LHCb v17r0 and Geant4 v62r0p2
 ! 2004-11-22 - Florence RANJARD
  - requirements - update /HepEvt/ common block length to fit Pythia 6_226.2
                   from GENSER
