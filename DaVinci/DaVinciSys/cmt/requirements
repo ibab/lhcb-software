@@ -17,7 +17,7 @@ use  L0Calo             v7r6     L0
 use  L0Checker          v2r1     L0
 use  L0MuonKernel 	v2r1p1   L0
 use  L0MuonTrigger 	v2r1     L0
-use  L0mConf 		v2r2p2a  L0
+use  L0mConf 		v2r2d2  L0
 
 use  L1Decision         v2r0     Trg
 use  L1Reco             v4r0     Trg
