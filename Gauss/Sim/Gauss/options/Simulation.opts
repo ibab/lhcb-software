@@ -1,54 +1,21 @@
-// $Id: sing.opts,v 1.2 2002-03-13 12:56:11 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.1 2002-03-13 12:56:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $ 
 // ============================================================================
-//  jobOptions to run SingleParticleGun and then feed the output into G4
-// ===========================================================================
-
-#include "$STDOPTIONS"
-
-// remove SicbCnv 
-ApplicationMgr.ExtSvc            = 
-{ "ParticlePropertySvc" ,
-  "EventSelector"       };
-EventPersistencySvc.CnvServices  = {};  
-
-#include "$STDOPTS/DetDesc.opts"
-
-EventDataSvc.ForceLeaves = true ;
-
+//  jobOptions to run Gauss program in 3 steps 
 // ============================================================================
-// load additional dynamic libraries needed to run GiGa  
-// ============================================================================
-
-ApplicationMgr.DLLs += { "GeneratorModules" } ;
-ApplicationMgr.DLLs += { "GaudiDb"          } ;
-ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 ApplicationMgr.DLLs += { "GiGa" , "GiGaCnv" } ;
-
-// ============================================================================
-//  apply "event generator" options 
-// ============================================================================
-#include "$EVGENOPTS/EvGen.opts"
 
 // ============================================================================
 // declare external services needed for GiGa 
 // ============================================================================
 ApplicationMgr.ExtSvc += 
-{ "ParticlePropertySvc" , 
-  "MagneticFieldSvc"    ,   
-  "GiGaSvc"             ,          
+{ "GiGaSvc"             ,          
   "GiGaKineCnvSvc"      ,  
   "GiGaGeomCnvSvc"      ,   
   "GiGaHitsCnvSvc"      } ;
-
-// ============================================================================
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-// ============================================================================
-MessageSvc.OutputLevel     = 3 ;
-XmlPartserSvc.OutputLevel  = 5 ;
 
 // ============================================================================
 // Use GiGa Conversion services as event persistency conversion services 
@@ -56,29 +23,6 @@ XmlPartserSvc.OutputLevel  = 5 ;
 EventPersistencySvc.CnvServices += 
 { "GiGaKineCnvSvc" ,  
   "GiGaHitsCnvSvc" } ;
-
-ApplicationMgr.EvtSel    = "NONE" ;
-
-// ============================================================================
-// List of top algorithms : 3 separated phases:
-// ============================================================================
-//      Generator 
-//      Simulation 
-//      Digitisation
-// ============================================================================
-ApplicationMgr.TopAlg          =  
-{ "Sequencer/Generator"    , 
-  "Sequencer/Simulation"   
-  //, 
-  // "Sequencer/Digitisation" 
-} ;
-
-// ============================================================================
-// Event generator phase 
-// ============================================================================
-Generator.Members += 
-{ "SingleParticleGun" ,
-  "DumpMC"            };
 
 // ============================================================================
 // Detector Simulation (tracking os particles through apparatus) phase 
@@ -100,18 +44,19 @@ GiGaStore.ConversionServices   =
 // ============================================================================
 // configuration of kinematics event data stream 
 // ============================================================================
-Kine.ConversionSvcName         = "GiGaKineCnvSvc"                 ; 
-Kine.DataProviderSvcName       = "EventDataSvc"                   ; 
+Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
+Kine.DataProviderSvcName       = "EventDataSvc"   ; 
 Kine.StreamItems               = 
 { "/Event/McEventCollection" } ;
 
 // ============================================================================
 // configuration of geometry data stream 
 // ============================================================================
-Geo.ExecuteOnce                = true                           ;  
-Geo.ConversionSvcName          = "GiGaGeomCnvSvc"               ; 
-Geo.DataProviderSvcName        = "DetectorDataSvc"              ; 
-Geo.StreamItems               +=  { "/dd/Structure/LHCb/Pipe" } ; 
+Geo.ExecuteOnce          = true ;  
+Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
+Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 
 // ============================================================================
 // Physics List  to be used and its configuration  
@@ -193,14 +138,14 @@ RunCommand.OutputLevel            = 2                                     ;
 RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
   "/run/verbose 0 "                 ,
+  "/vis/verbose 0"                 ,
   "/tracking/storeTrajectory  1"    } ;
 
 // ============================================================================
-// List of user interface sessions 
+// List of user interface sessions (with priorities)
 // ============================================================================
-GiGaSvc.UIsessions           =  { "tcsh" };
-// , "Xm" , "Wo" , "GAG", 
-//                                   "Xaw"  , "terminal" } ;
+GiGaSvc.UIsessions =  { "tcsh" };
+// , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
 
 // ============================================================================
 // Global(world) magnetic field 
@@ -213,41 +158,7 @@ GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 // ============================================================================
 GiGaSvc.UseVisManager          = true;
 
-
-//--------------------------------------------------------------
-// Event related parameters
-//--------------------------------------------------------------
-
-// Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 3;
-ParticlePropertySvc.ParticlePropertiesFile = "particle.cdf";
-
-//--------------------------------------------------------------
-// Algorithms Private Options
-//--------------------------------------------------------------
-
-SingleParticleGun.Pt = 50.0;
-SingleParticleGun.Phi = 1.;
-SingleParticleGun.Eta =3.;
-
-SingleParticleGun.ModePt = 1;
-SingleParticleGun.ModeEta =1; 
-SingleParticleGun.ModePhi =1;
-//SingleParticleGun.PdgCode=2212;
-SingleParticleGun.PdgCode=211;
-
-//==============================================================
-//
-// End of job options file
-//
-//##############################################################
-
-
-
-
-
-
-
-
-
+// ============================================================================
+// The end of Simulation's job-options file 
+// ============================================================================
 

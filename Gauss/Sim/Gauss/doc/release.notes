@@ -1,11 +1,32 @@
+! $Id: release.notes,v 1.3 2002-03-13 12:56:11 ibelyaev Exp $ 
+! =============================================================================
+! CVS tag $Name: not supported by cvs2svn $ 
+! =============================================================================
 Package : Gauss
 Package manager : Witek Pokorski
 
+! =============================================================================
+! 13/03/2002  Vanya Belyaev 
+! - reorganization of options file 
+! - minor changes in requirement-file
+! - definition of GAUSSOPTS variable 
+! - make "gauss" alias for executable 
+! - make $BINDIR "visible" for execution 
+! =============================================================================
+
+! =============================================================================
 ! 20020304 - Witek Pokorski
   - addaptation for GiGaCnv v4r0 (to use HepMC to G4 converter)
-    ParticlesPropertiesSvc needs to use the local particle.cdf file (located in /options)
+    ParticlesPropertiesSvc needs to use the local particle.cdf file 
+    (located in /options)
+! =============================================================================
 
-
+! =============================================================================
 ! 20020131 - Witek Pokorski
   - New package
+! =============================================================================
+
+! =============================================================================
+! The End 
+! =============================================================================
 

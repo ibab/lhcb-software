@@ -1,8 +1,22 @@
+# $Id: requirements,v 1.5 2002-03-13 12:56:11 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+
 package Gauss
 version v1r0
 
+# =============================================================================
+# structure 
+# =============================================================================
 branches doc options cmt job
 
+# =============================================================================
+# dependencies 
+# =============================================================================
+# generator
 use GeneratorModules v1r0 Gen
 
 # Main program and standard job options
@@ -28,7 +42,12 @@ use EvGen         v2r*   Sim
 #geometry source 
 use XmlDDDB       v8r*   Det 
 
-# =============== visualization  ===========================================
+# =============================================================================
+# Essential environment variables 
+# =============================================================================
+set  GAUSSOPTS "${GAUSSROOT}/options"
+
+# =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
 set  G4DAWNFILE_PS_VIEWER      "gv"
 set  G4DAWN_MULTI_WINDOW       "1"
@@ -39,10 +58,16 @@ set  G4VRMLFILE_VIEWER         vrweb \
 set  G4VRML_PV_PICKABLE        "1"
 
 
-#==> Main Program
+# == Main Program =============================================================
 application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-# ========================= set macros ============================
-
+# ========================= set macros ========================================
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
+
+# =============== just make executable "visible" ==============================
+path_remove    PATH  "/Gauss/"
+path_append    PATH  "${GAUSSROOT}/${BINDIR}"
+
+# =============== alias =======================================================
+alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
