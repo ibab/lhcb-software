@@ -46,6 +46,9 @@ namespace std
 	{ return (a<b) ? a : b ;};
 
 };
+
+inline double asinh ( double x ) 
+ { return log( x + sqrt( x * x + 1. ) ) ; } 
 #endif
 
 
