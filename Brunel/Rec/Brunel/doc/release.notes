@@ -3,7 +3,7 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010830 Brunel v6 (MC)
+! 20010831 Brunel v6 (MC)
   This version is to be used for data produced with SICBMC v247/dbase v240
   ("LHCB-classic", tracker cross-geometry)
 
@@ -49,6 +49,10 @@ Purupose: LHCb reconstruction program
 
   use TrAlgorithms v6     Tr
     Changes for cross geometry, clean-up of code
+
+  use L0DU v2r1 L0
+  - Modify L0DUReport to be a DataObject (only one in the output)
+  - Store the L0DUReport in the Transient store, this wasn't done !
 
 ! =================================================================
 ! 20010824 Brunel v5r1 (MC)

@@ -58,7 +58,7 @@ use VSicbCnv     v5	SICB
 # L0 trigger
 use L0Calo       v2     L0
 use L0Muon       v3r1   L0
-use L0DU         v2     L0
+use L0DU         v2r1   L0
 
 # Calorimeter digitisation
 use CaloAlgs     v3     Calo
