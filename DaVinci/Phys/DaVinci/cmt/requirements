@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2002-03-27 20:48:07 gcorti Exp $
+# $Id: requirements,v 1.15 2002-04-03 17:25:43 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -73,7 +73,7 @@ use CaloDet        v3r*   Det
 use VeloDet        v3r*   Det
 
 #--- Event Model ( add any other Event package you need )
-use EventKernel    v1r*   Event
+use EventKernel    v1r0   Event
 use LHCbEvent      v12r*  Event
 use CaloEvent      v7r*   Event
 use VeloEvent      v6r*   Event
