@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020319 - Stefan Roiser
+ - bugfix when using stdVectorTypeDef to create type std::vector<classname*>
+
 ================v3r2=====================================
 ! 20020319 - Stefan Roiser
  - introduced new <class>-attribute 'stdVectorTypeDef' for typedef of a std::vector of class-pointer

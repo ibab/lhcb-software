@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.54 2002-03-19 13:53:18 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.55 2002-03-19 20:50:39 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1959,7 +1959,7 @@ void printClass(std::ofstream& xmlOut,
   if (gddClassStdVectorTypeDef)
   {
     xmlOut << "// typedef for std::vector of " << gddClassName << std::endl
-      << "typedef std::vector<" << gddClassName << "> " << gddClassName
+      << "typedef std::vector<" << gddClassName << "*> " << gddClassName
         << "Vector;" << std::endl;
   }
   
