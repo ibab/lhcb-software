@@ -1,3 +1,4 @@
+
 $(dest)${NAME}.obj2doth : ${FULLNAME} 
 	@echo Producing Header files from ${FULLNAME}
 	@cd $(dest)

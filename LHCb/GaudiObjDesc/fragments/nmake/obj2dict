@@ -1,3 +1,4 @@
+
 $(dest)${NAME}.obj2dict :  ${FULLNAME}
 	@echo Producing Dictionary from ${FULLNAME}
 	@if not exist $(dest) mkdir $(dest)
