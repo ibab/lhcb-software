@@ -49,7 +49,7 @@ GiGaPhysConstructorOp::~GiGaPhysConstructorOp(){};
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructParticle()
 {
-   RichPhotoElectron::PhotoElectronDefinition(); 
+  //   RichPhotoElectron::PhotoElectronDefinition(); 
 };
 
 // ============================================================================
