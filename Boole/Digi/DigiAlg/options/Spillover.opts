@@ -2,7 +2,9 @@
 // events and merge them with the main event
 
 SpilloverAlg.ItemList = {
- "/Event/Gen#*",
+ "Gen#1",
+ "Gen/Header#1",
+ "Gen/Collisions#1",
  "MC#1",
  "MC/Particles#1",
  "MC/Vertices#1",
@@ -12,8 +14,7 @@ SpilloverAlg.ItemList = {
  "MC/Rich/Hits#1",
  "MC/Spd#*",
  "MC/Prs#*",
- "MC/Ecal#1",
- "MC/Ecal/Hits#1",
+ "MC/Ecal#*",
  "MC/Hcal#*",
  "MC/Velo#*",
  "MC/Muon#*"

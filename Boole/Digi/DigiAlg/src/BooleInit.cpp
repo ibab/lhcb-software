@@ -1,15 +1,16 @@
-// $Id: BooleInit.cpp,v 1.1 2003-10-06 16:16:39 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.2 2003-10-10 13:38:54 cattanem Exp $
 
 // Include files
 #include "BooleInit.h"
+#include "GaudiKernel/Memory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/Property.h"
 #include "GaudiKernel/DataObject.h"
+#include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/L1Buffer.h"
 #include "Event/HLTBuffer.h"
@@ -26,10 +27,14 @@ const IAlgFactory& BooleInitFactory = s_factory;
 BooleInit::BooleInit( const std::string& name, 
                                             ISvcLocator* pSvcLocator )
                      : Algorithm( name, pSvcLocator ) { 
-  m_firstEvent = true;
+  m_eventCounter = 0;
   m_engine = 0;
+  m_hMemMapped = 0;
+  m_hMemVirtual = 0;
+  
   declareProperty( "initRndmOnce",    m_initRndm = false );
   declareProperty( "rndmNumberSeed",  m_theSeed  = -1 );
+  declareProperty( "doHistos",        m_doHistos = true );
 }
 //-----------------------------------------------------------------------------
 
@@ -58,9 +63,29 @@ StatusCode BooleInit::initialize() {
     msg << MSG::ERROR << "Random number engine not found!" << endmsg;
     return StatusCode::FAILURE;
   } 
-  else {
-    return StatusCode::SUCCESS;
+
+  // Book the monitoring histograms
+  if( m_doHistos ) {
+    IProperty* appMgrP;
+    StatusCode sc = service("ApplicationMgr", appMgrP );
+    if ( !sc.isSuccess() )    {
+      msg << MSG::ERROR
+          << "Unable to retrieve IProperty interface of ApplicationMgr"
+          << endmsg;
+      return sc;
+    }
+    IntegerProperty numBins;
+    numBins.assign( appMgrP->getProperty( "EvtMax" ) );
+    appMgrP->release();
+
+    if( -1 == numBins ) numBins = 100;
+    m_hMemMapped  = histoSvc()->book( "Boole", 1, "Mapped memory (kB)",
+                                      numBins, 0.5, numBins+0.5 );
+    m_hMemVirtual = histoSvc()->book( "Boole", 2, "Virtual memory (kB)",
+                                      numBins, 0.5, numBins+0.5 );
   }
+
+  return StatusCode::SUCCESS;
 }
 
 //-----------------------------------------------------------------------------
@@ -68,6 +93,14 @@ StatusCode BooleInit::execute() {
 //-----------------------------------------------------------------------------
 
   MsgStream msg( msgSvc(), name() );
+  
+  // Fill the memory usage histograms before the next event is loaded
+  if( m_doHistos ) {
+    long mem = System::mappedMemory();
+    m_hMemMapped->fill( m_eventCounter+1, (double)mem );
+    mem = System::virtualMemory();
+    m_hMemVirtual->fill( m_eventCounter+1, (double)mem );
+  }
 
   SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
   if (0 == evt){
@@ -75,15 +108,16 @@ StatusCode BooleInit::execute() {
     return StatusCode::FAILURE;
   }
   else {
-    msg << MSG::INFO << "Processing event " << evt->evtNum() 
-        << ",     Run "        << evt->runNum() << "  ";
-    
+    ++m_eventCounter;
+    msg << MSG::INFO << "Evt " << evt->evtNum() 
+        << ",  Run " << evt->runNum() 
+        << ",  Nr. in job = " << m_eventCounter;
   }
   
   // Set the random number seed either once per event or once per job
   std::vector<long> seeds;
-  if( !m_initRndm || m_firstEvent ) {
-    if( !m_firstEvent || -1 == m_theSeed ){
+  if( !m_initRndm || ( 1 == m_eventCounter ) ) {
+    if( (1 != m_eventCounter) || (-1 == m_theSeed) ){
       // Get random number seed by hashing string containing event & run nos.
       char seedTxt[32];
       sprintf( seedTxt, "Boole_evt_%.8lx_run_%.8lx",
@@ -102,15 +136,14 @@ StatusCode BooleInit::execute() {
     seeds.push_back( m_theSeed );
     m_engine->setSeeds( seeds );
     if( m_initRndm ) {
-      msg << MSG::INFO << "Random number sequence initialised with seed "
+      msg << MSG::INFO << " Random number sequence initialised with seed "
           << m_theSeed;
     }
     else {
-      msg << MSG::INFO << "with random seed " << m_theSeed;
+      msg << MSG::INFO << ",  random seed = " << m_theSeed;
     }
   }
   msg << MSG::INFO << endmsg;
-  m_firstEvent = false;
 
   StatusCode sc = this->createL1Buffer();
   if( sc.isFailure() ) return sc;
@@ -122,8 +155,20 @@ StatusCode BooleInit::execute() {
 }
 
 //-----------------------------------------------------------------------------
-StatusCode BooleInit::finalize() { return StatusCode::SUCCESS; }
+StatusCode BooleInit::finalize() { 
 //-----------------------------------------------------------------------------
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::INFO
+      << "===================================================================="
+      << endmsg;
+  msg << MSG::INFO
+      << "                 " << m_eventCounter << " events processed" << endmsg;
+  msg << MSG::INFO
+      << "===================================================================="
+      << endmsg;
+
+  return StatusCode::SUCCESS;
+}
 
 //-----------------------------------------------------------------------------
 StatusCode BooleInit::createL1Buffer() {

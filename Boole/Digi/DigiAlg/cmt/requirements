@@ -8,6 +8,7 @@ version         v2r0
 branches        cmt doc src options
 include_dirs    "$(DIGIALGROOT)"
 
+use AIDA        v*
 use Event       v*      Event
 use DAQEvent    v1r*    Event
 use ParamFiles	v*	$(LHCb_release_area)/PARAM -no_auto_imports

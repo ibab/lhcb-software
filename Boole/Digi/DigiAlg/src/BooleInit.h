@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.1 2003-10-06 16:16:39 cattanem Exp $
+// $Id: BooleInit.h,v 1.2 2003-10-10 13:38:54 cattanem Exp $
 #ifndef DIGIALG_BOOLEINIT_H
 #define DIGIALG_BOOLEINIT_H 1
 
@@ -7,6 +7,7 @@
 
 // Forward declarations
 class IRndmEngine;
+class IHistogram1D;
 
 /** @class BooleInit BooleInit.h
  * Generic Boole initialisation, independent of phase
@@ -31,10 +32,18 @@ public:
   StatusCode BooleInit::createHLTBuffer(); ///< Creates an empty HLT buffer
 
 private:
-  IRndmEngine* m_engine; ///< Interface to random number engine
+  // Job options
   bool m_initRndm;       ///< If true, initialise random engine with m_theSeed
-  long m_theSeed;        ///< Random number seed. Default is run number
-  bool m_firstEvent;     ///< For initialisations using the run number
+                         ///< Default is false, use run+event number hash
+  long m_theSeed;        ///< Random number seed if m_initRndm is true
+  bool m_doHistos;       ///< If true, fill monitoring histograms
+
+  // Member data
+  IRndmEngine*  m_engine;       ///< Pointer to random number engine
+  unsigned int  m_eventCounter; ///< Number of events processed
+  IHistogram1D* m_hMemMapped;   ///< Pointer to mapped memory usage histogram
+  IHistogram1D* m_hMemVirtual;  ///< Pointer to virtual memory usage histogram
+  
 };
 
 #endif    // DIGIALG_BOOLEINIT_H

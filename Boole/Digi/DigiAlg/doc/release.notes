@@ -5,13 +5,18 @@
 !-----------------------------------------------------------------------------
 
 !========================== DigiAlg v2r0 2003-10-06 =========================
-! 2003-09-29 - Marco Cattaneo
+! 2003-10-06 - Marco Cattaneo
  - New algorithm CreateL1Event to create the L1Event from the L1Buffer at the
    start of the L1 trigger sequence. This algorithm should be included in any
    L1 trigger timing measurement, as long as  L1Buffer is already in memory
  - MergeEventAlg
    . Implement "SpillOver" event type. Any number of spillover events can be
      read in, in locations defined by SpillOverAlg.PathList job option
+ - New algorithm BooleInit (c.f. BrunelInit) to initialise the event:
+   . Prints run and event number
+   . Initialises random number
+   . Histograms memory usage before event is read in
+   . Creates empty L1Buffer and HLTBuffer
  - options/SpillOver.opts
    . Options for configuring SpillOver instance of MergeEventAlg
 
