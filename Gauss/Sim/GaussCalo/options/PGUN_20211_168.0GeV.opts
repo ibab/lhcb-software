@@ -1,0 +1,35 @@
+// $Id: PGUN_20211_168.0GeV.opts,v 1.1 2003-12-03 10:49:21 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file
+ *  Particle Gun configuration file for special Calo production
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2003-12-02
+ */
+// ============================================================================
+
+ApplicationMgr.DLLs += { "GeneratorModules" } ;
+
+// to use particle gun, uncomment the line below and comment out the other generators
+Generator.Members  = {"ParticleGun"} ;
+
+// Particle Gun's options
+
+ParticleGun.MomentumMax = 168.0   ;
+ParticleGun.MomentumMin = 168.0   ;
+ParticleGun.ThetMin     =   0.037 ;
+ParticleGun.ThetMax     =   0.071 ;
+
+ParticleGun.PdgCode     =  -211   ;
+ParticleGun.EventType   = 20211   ;  
+
+ParticleGun.GunMode     =    1    ;
+ParticleGun.Mode        =    0    ;
+
+// ============================================================================
+// The END 
+// ============================================================================

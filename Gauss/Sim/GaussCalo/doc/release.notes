@@ -7,6 +7,12 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-12-03   Vanya Belyaev 
+  - add generator configuration options file to run ParticleGun 
+    generator for special Calo productions
+- options/PGUN*
+
+
 !=========================== GaussCalo v4r3 ==============================
 ! 2003-11-05 - Grigory Rybkine 
  - options/Sps.opts,Prs.opts   - modified IntegrationDelays values, 
