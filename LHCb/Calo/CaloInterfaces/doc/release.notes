@@ -1,0 +1,23 @@
+! $Id: release.notes,v 1.1.1.1 2001-11-01 13:17:37 ibelyaev Exp $
+! =============================================================================
+! =============================================================================
+! Package     : CaloInterfaces  
+! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+! =============================================================================
+
+  
+! =============================================================================
+! 30/10/2001   v1 Vanya Belyaev 
+  the first version of the package.
+  (1)   
+  Definition of generic interfaces for processing of calorimeter 
+  event objects (digits, clusters, hypotheses, particles) 
+    ICaloClusterTool.h 
+    ICaloDigitTool.h
+    ICaloHypoTool.h
+    IcaloParticleTool.h
+  (2) 
+   Definition of abstract interface for Calorimeter/Tracking matching  
+   ICaloTrackMatch.h  
+! =============================================================================
+
