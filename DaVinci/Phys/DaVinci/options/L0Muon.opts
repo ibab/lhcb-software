@@ -13,8 +13,8 @@ L0mTriggerAlgorithm.InputFromMuonCoords = true;
 // configuration files
 L0mTriggerAlgorithm.ConfigFile = {"$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q1.xml",
                                   "$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q2.xml",
-                                  "$PARAMFILESROOT/l0mConf-v3r0dev7-Q3.xml",
-                                  "$PARAMFILESROOT/l0mConf-v3r0dev7-Q4.xml"};
+                                  "$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q3.xml",
+                                  "$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q4.xml"};
 
 // Max integer to contain Pt
 L0mTriggerAlgorithm.PtMaxBins = 128;
