@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-//  Job options for Brunel for data produced with Boole v5r4 or greater and   //
+//  Job options for Brunel for data produced with Boole v5r7 or greater and   //
 // XmlDDDB v22r0, geometry lhcb-200402-ITv2 (TT layout 4-2-1-1-2-4 in centre) //
 //                and with default magnetic field (Field045)                  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 
 // POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r6/TT-alt.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r7/TT-alt.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
 
 // Format for GaudiRootDb input (no Boole v5r6 files available for TT-alt geometry)
 //EventSelector.Input = { "DATAFILE='TT-alt.oodigi' TYP='ROOT' OPT='READ'" };
