@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
-! Responsible : Richard Beneyton
+! Responsible : Richard Beneyton, Olivier Deschamps
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+! 2004-05-11 - P. Koppenburg for O. Deschamps
+ - MergedPi0Alg.opts
+    . MergedPi0Alg.ParMas={ 1.0000 , 0.0653E-03 , 0.1267E-04 };
+      because of new calo calibration
 
 !==================== CommonParticle v1r4 2004-05-05 ========================
 ! 2004-04-28 - R.Beneyton
