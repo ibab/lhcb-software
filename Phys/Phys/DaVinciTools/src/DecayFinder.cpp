@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.3 2002-07-12 09:32:41 odie Exp $
+// $Id: DecayFinder.cpp,v 1.4 2002-07-25 12:25:29 gcorti Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -172,51 +172,6 @@ DecayFinder::Descriptor::~Descriptor()
     delete alternate;
 }
 
-template<class iter>
-bool DecayFinder::Descriptor::test( const iter first, const iter last,
-                                    const Particle *&previous_result )
-{
-  iter start;
-  if( previous_result &&
-      ((start=std::find(first,last,previous_result)) == last) )
-  {
-    previous_result = NULL;
-    return false; // Bad previous_result
-  }
-  if( previous_result )
-    start++;
-
-  if( mother == NULL ) // No mother == pp collision
-  {
-    std::list<const Particle*> prims;
-    ParticleVector::const_iterator i;
-    for( i=(previous_result ? start : first); i != last; i++ )
-    {
-      // Particle have no origin so let's say it comes from the pp collision.
-      prims.push_back(*i);
-    }
-    if( skipResonnance )
-      filterResonnances( prims );
-    if( testDaughters(prims) )
-    {
-      previous_result = (const Particle *)1;
-      return true;
-    }
-    return false;
-  }
-
-  iter part_i;
-  part_i = (previous_result ? start : first);
-  while( (part_i != last) && (test(*part_i) == false) )
-    part_i++;
-
-  if( part_i != last )
-  {
-    previous_result = *part_i;
-    return true;
-  }
-  return false;
-}
 
 bool DecayFinder::Descriptor::test( const Particle *part )
 {

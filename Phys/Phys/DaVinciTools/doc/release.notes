@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.17 2002-07-24 18:21:35 gcorti Exp $
+! $Id: release.notes,v 1.18 2002-07-25 12:25:52 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-25 - Gloria Corti
+ - Introduce std namespace in reclexer.lpp and icpp to allow compilation
+   on Window, comment use of <unistd.h> not existing on windows and not
+   necessary.
+ - Make enum public and move template implementation in body of class
+   in DecayFinder. 
 
 ! 2002-07-24 - Gloria Corti
  - Change interface of IParticleTransporter to use ParticleVector iterator
