@@ -2,7 +2,7 @@
 #define Event_RichSmartID_H 1
 
 // Include files
-#include "Kernel/CLHEPStreams.h"
+#include "GaudiKernel/StreamBuffer.h"
 #include "RichKernel/RichSmartCode.h"
 
 /** @class RichSmartID RichSmartID.h
