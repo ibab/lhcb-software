@@ -189,7 +189,8 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
                            currentHpdNumber, PhotonEnergy);
 
       // End of histogram Analysis stuff.
-        G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
+      //  G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
+       G4double aPhotonTime= aTrack.GetGlobalTime();
 
       G4ThreeVector GlobalElectronOrigin= pPostStepPoint->GetPosition();
       G4Navigator* theNavigator =
