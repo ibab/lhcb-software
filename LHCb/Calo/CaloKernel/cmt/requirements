@@ -1,11 +1,4 @@
-# $Id: requirements,v 1.15 2002-12-01 14:17:37 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.14  2002/11/28 11:38:44  ibelyaev
-#  Cleanup of cmt/requirements file
-#
+# $Id: requirements,v 1.16 2002-12-04 18:15:52 ranjard Exp $
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -21,9 +14,9 @@ branches          src cmt doc CaloKernel
 include_dirs      $(CALOKERNELROOT)
 
 # =============== used packages ===============================================
-use LHCbKernel    v1r*  Kernel
-use GaudiKernel   v12r*
-use CLHEP         v17r* 
+use LHCbKernel    v2r*  Kernel
+use GaudiKernel   v13r*
+use CLHEP         v* 
         
 # =============== linker library ==============================================
 library           CaloKernel            *.cpp 
