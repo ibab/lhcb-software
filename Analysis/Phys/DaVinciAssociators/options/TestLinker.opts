@@ -62,11 +62,11 @@ TestLinker.Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
 NeutralProtoPAlg.OutputLevel = 2;
 ChargedProtoPAlg.OutputLevel = 2;
 PreLoadParticles.OutputLevel = 4;
+   
+// Data to use for the test
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
 // Number of events to process, skip and printing frequency
 ApplicationMgr.EvtMax = 5;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq = 100;
-   
-// Data to use for the test
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
