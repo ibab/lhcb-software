@@ -5,10 +5,12 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!======================= MuonBackground v1r6 2004-04-26 =======================
+!======================= MuonBackground v1r7 2004-04-26 =======================
 ! 2004-04-26 - Alessia satta
- - Add protection for uncorrect random number extraction
+ - Add protection for uncorrect random number extraction. Fixes crash in
+   production 478.183
 
+!======================= MuonBackground v1r6 2004-04-14 =======================
 ! 2004-04-14 - Marco Cattaneo
  - Change some floats to double, to fix data truncation warnings on Windows
  - Remove VC6 hacks
