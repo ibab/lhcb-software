@@ -1,8 +1,12 @@
-/// ===========================================================================
-/// CVS Tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: SolidPolyHedronHelper.h,v 1.5 2002-05-11 18:25:46 ibelyaev Exp $ 
+// ===========================================================================
+// CVS Tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/09 16:47:59  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef     DETDESC_SOLIDPOLYHEDRONHELPER_H
 #define     DETDESC_SOLIDPOLYHEDRONHELPER_H 1
 /// STD & STL 
@@ -17,7 +21,6 @@
 
 
 /** @class SolidPolyHedronHelper SolidPolyHedronHelper.h 
- *                                   "DetDesc/DolidPolyHedronHelper.h"
  *
  *  Small helper class to simplify the construction 
  *                        of concrete "polihedron-like" classes
@@ -33,6 +36,7 @@ public:
   
   /// useful type for vector of planes 
   typedef std::vector<HepPlane3D>   PLANES   ;
+  typedef std::vector<HepPoint3D>   VERTICES ;
   
 public: 
   
@@ -65,9 +69,10 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int  
-  intersectionTicks ( const HepPoint3D & Point  ,        
-                      const HepVector3D& Vector ,        
-                      ISolid::Ticks    & ticks  ) const ;
+  intersectionTicks 
+  ( const HepPoint3D & Point  ,        
+    const HepVector3D& Vector ,        
+    ISolid::Ticks    & ticks  ) const ;
   
 protected:
   
@@ -87,9 +92,10 @@ protected:
    *  @param Point3  the third  3D-point of the plane 
    *  @return "false" if 3 points belongs to one line 
    */
-  bool addFace( const HepPoint3D& Point1 , 
-                const HepPoint3D& Point2 , 
-                const HepPoint3D& Point3 );
+  bool addFace
+  ( const HepPoint3D& Point1 , 
+    const HepPoint3D& Point2 , 
+    const HepPoint3D& Point3 );
   
   /**  add a face/plane given with 4 points
    *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
@@ -101,10 +107,11 @@ protected:
    *  @exception SolidException  if 4 pointd do not define the place
    *  @return "false" if 3 points belongs to one line 
    */
-  bool addFace( const HepPoint3D& Point1 , 
-                const HepPoint3D& Point2 , 
-                const HepPoint3D& Point3 , 
-                const HepPoint3D& Point4 );  
+  bool addFace
+  ( const HepPoint3D& Point1 , 
+    const HepPoint3D& Point2 , 
+    const HepPoint3D& Point3 , 
+    const HepPoint3D& Point4 );  
   
   /**  return vector of faces/planes 
    *  @return vector of faces/planes 
@@ -115,18 +122,27 @@ protected:
    *  Assume that normal direction is EXTERNAL!!!
    *  @return "true" if point is "inside" 
    */
-  inline bool inside (  const HepPoint3D& Point , 
-                        const HepPlane3D& Plane ) const 
+  inline bool inside 
+  (  const HepPoint3D& Point , 
+     const HepPlane3D& Plane ) const 
   { return 0 >= Plane.distance( Point ) ; };
 
- protected: 
-
+  /** set bounding parameters 
+   *  @return status code 
+   */
+  StatusCode setBP();
+  
+protected: 
+  
   /// vector of faces/planes 
   PLANES   m_ph_planes   ;
-
+  VERTICES m_ph_vertices ;
+  
 };
 
-/// ===========================================================================
+// ===========================================================================
+// The END 
+// ===========================================================================
 #endif  ///<  DETDESC_SOLIDPOLYHEDRONHELPER_H 
 /// ===========================================================================
 

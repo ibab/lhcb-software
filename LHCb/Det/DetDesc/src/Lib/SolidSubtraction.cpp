@@ -1,28 +1,19 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/09 18:13:38  ibelyaev
-/// modification for solid factories
-///
-/// Revision 1.4  2001/08/09 16:48:03  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-///@{
+// $Id: SolidSubtraction.cpp,v 1.7 2002-05-11 18:25:48 ibelyaev Exp $
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
 /** STD & STL */
 #include <iostream> 
 #include <string>
-///@} 
-///@{
 /** DetDesc */
 #include "DetDesc/SolidSubtraction.h"
 #include "DetDesc/SolidException.h"
 #include "DetDesc/Solid.h"
-///@} 
 
 // ============================================================================
-/** @file SolidSubtraction 
+/** @file 
  *
  *  implementation of class SolidSubtraction 
  * 
@@ -40,10 +31,12 @@
 SolidSubtraction::SolidSubtraction( const std::string& name  , 
                                     ISolid*            First )
   : SolidBoolean( name , First )
+  , SolidBase   ( name         )
 {
   if( 0 == First ) 
     { throw SolidException(" SolidSubtraction:: ISolid* points to NULL! "); }
 };
+// ============================================================================
 
 // ============================================================================
 /** constructor 
@@ -51,8 +44,10 @@ SolidSubtraction::SolidSubtraction( const std::string& name  ,
  */
 // ============================================================================
 SolidSubtraction::SolidSubtraction( const std::string& Name)
-  : SolidBoolean (Name)
+  : SolidBoolean ( Name )
+  , SolidBase    ( Name )
 {};
+// ============================================================================
 
 // ============================================================================
 /// destructor 
@@ -71,6 +66,8 @@ SolidSubtraction::~SolidSubtraction(){ reset(); }
 // ============================================================================
 bool SolidSubtraction::isInside     ( const HepPoint3D   & point ) const 
 { 
+  /// check bounding box 
+  if ( isOutBBox( point )          ) { return false ; }
   ///  is point inside the "main" volume?  
   if ( !first()->isInside( point ) ) { return false; }
   /// find the first daughter in which the given point is placed   

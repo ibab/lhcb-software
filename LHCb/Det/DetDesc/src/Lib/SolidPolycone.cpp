@@ -1,7 +1,10 @@
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/10/25 14:04:05  ibelyaev
+// New shape: SolidPolycone is added
+// 
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -61,20 +64,102 @@ SolidPolycone::SolidPolycone( const std::string&             Name          ,
   ///
   for( unsigned int i = 0 ; i < number() ; ++i )
     {
-      if( rMin( i ) < 0 ) 
+      if( RMin( i ) < 0 ) 
         { throw SolidException("SolidPolycone ::rMin < 0 !");}
-      if( !( rMin(i) < rMax( i ) ) )        
+      if( !( RMin(i) < RMax( i ) ) )        
         { throw SolidException("SolidPolycone :: !(rMin < rMax) !");}      
     }
+  // set bounding parameters 
+  setBP();
 };
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidPolycone::~SolidPolycone()
+SolidPolycone::~SolidPolycone() { reset(); };
+
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidPolycone::setBP()
 {
-  reset();
+  setZMin   ( m_triplets.front().first                  ) ;
+  setZMax   ( m_triplets.front().first                  ) ;
+  setRhoMax ( m_triplets.front().second.second          ) ;
+  setRMax   ( sqrt( rMax() * rMax() + zMax() * zMax() ) ) ;
+  
+  for( Triplets::const_iterator triplet = m_triplets.begin() ;
+       m_triplets.end() != triplet ; ++triplet )
+    {
+      const double z      = triplet->first                   ;
+      const double rhomax = triplet->second.second           ;
+      const double rmax   = sqrt( rhomax * rhomax + z * z )  ;
+      setZMin   ( z      < zMin   () ? z      : zMin   () )  ;
+      setZMax   ( z      > zMax   () ? z      : zMax   () )  ;
+      setRMax   ( rmax   > rMax   () ? rmax   : rMax   () )  ;
+      setRhoMax ( rhomax > rhoMax () ? rhomax : rhoMax () )  ;
+    }
+  
+  // evaluate xmax
+  if(      startPhiAngle()                      <=    0.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=    0.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  360.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  360.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmax = ( x1 > x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMax ( xmax     ) ;
+    }
+  // evaluate xmin  
+  if(      startPhiAngle()                      <=  180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <= -180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >= -180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmin = ( x1 < x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMin ( xmin     ) ;
+    }
+  // evaluate y min 
+  if(      startPhiAngle()                      <=  -90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  -90.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  270.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  270.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymin = ( y1 < y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMin ( ymin     ) ;
+    }
+  // evaluate y max 
+  if(      startPhiAngle()                      <=   90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=   90.0 * degree )  
+    { setYMax (  rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymax = ( y1 > y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMax ( ymax     ) ;
+    }
+  ///
+  return checkBP();
 };
+// ============================================================================
+
 
 // ============================================================================
 /** default protected  coinstructor 
@@ -105,14 +190,18 @@ bool SolidPolycone::isInside (  const HepPoint3D& point ) const
                   std::bind2nd( CmpZ() , point.z() ) ) ;
   /// outside!
   if( begin() == it || end() == it        ) { return false; }
-  /// check for phi 
-  if( 360 * degree != deltaPhiAngle() ) 
+  /// check for phi
+  bool   phiok = false ;
+  double phi = point.phi(); ///  [-180, 180]
+  if( startPhiAngle ()                    <= phi && 
+      startPhiAngle () + deltaPhiAngle () >= phi     ) { phiok = true ;}
+  else 
     {
-      double phi = point.phi() ;
-      if( phi < 0                         ) { phi += 360 * degree  ; }
-      if( phi < startPhiAngle()                   ) { return false ; } 
-      if( phi > startPhiAngle() + deltaPhiAngle() ) { return false ; }
+      phi += 360 * degree ;
+      if( startPhiAngle ()                    <= phi && 
+          startPhiAngle () + deltaPhiAngle () >= phi ) { phiok = true ; }
     }
+  if( !phiok ) { return false ; }
   /// check for radius
   const double       rho  = point.perp();
   const unsigned int i2   = it - begin();
@@ -120,14 +209,14 @@ bool SolidPolycone::isInside (  const HepPoint3D& point ) const
   ///
   const double       dzi  = 1.0 / ( z( i2 ) - z ( i1 ) ) ;
   /// check for outer radius 
-  if(  rho > rMax( i1 )  +  
-       ( point.z() - z( i1 ) ) * ( rMax( i2 ) - rMax( i1 ) ) * dzi ) 
+  if(  rho > RMax( i1 )  +  
+       ( point.z() - z( i1 ) ) * ( RMax( i2 ) - RMax( i1 ) ) * dzi ) 
     { return false; }
   /// check for inner radius  
-  if( 0 < rMin( i1 )  &&  0 < rMin( i2 ) )
+  if( 0 < RMin( i1 )  &&  0 < RMin( i2 ) )
     {
-      if(  rho < rMin( i1 )  +  
-           ( point.z() - z( i1 ) ) * ( rMin( i2 ) - rMin( i1 ) ) * dzi ) 
+      if(  rho < RMin( i1 )  +  
+           ( point.z() - z( i1 ) ) * ( RMin( i2 ) - RMin( i1 ) ) * dzi ) 
         { return false; }
     }
   ///
@@ -147,7 +236,7 @@ StreamBuffer& SolidPolycone::serialize( StreamBuffer& sb ) const
   /// serialze the triplets 
   sb << number() ;
   for( unsigned int  i = 0 ; i < number()  ; ++i ) 
-    { sb << z( i ) << rMax( i ) << rMin( i ) ; }
+    { sb << z( i ) << RMax( i ) << RMin( i ) ; }
   ///
   return sb << startPhiAngle() << deltaPhiAngle() ;
 };
@@ -191,12 +280,15 @@ StreamBuffer& SolidPolycone::serialize( StreamBuffer& sb )
   ///
   for( unsigned int i = 0 ; i < number() ; ++i )
     {
-      if( rMin( i ) < 0 ) 
+      if( RMin( i ) < 0 ) 
         { throw SolidException("SolidPolycone ::rMin < 0 !");}
-      if( !( rMin(i) < rMax( i ) ) )        
+      if( !( RMin(i) < RMax( i ) ) )        
         { throw SolidException("SolidPolycone :: !(rMin < rMax) !");}      
     }
   ///
+  // set bounding parameters 
+  setBP();
+  //
   return sb;
 };
 
@@ -217,14 +309,14 @@ const ISolid* SolidPolycone::cover () const
     { cov = new SolidPolycone( "Cover for " + name () , triplets() ); }  
   else
     {
-      double rmxmx = rMin( 0 ) ;
-      double rmnmn = rMax( 0 ) ;
+      double rmxmx = RMin( 0 ) ;
+      double rmnmn = RMax( 0 ) ;
       double zmxmx = 0         ;
       ///
       for( unsigned int i = 0 ; i < number() ; ++i )
         {
-          if( rMax  ( i )   > rmxmx ) { rmxmx = rMax   ( i )   ; }
-          if( rMin  ( i )   < rmnmn ) { rmnmn = rMin   ( i )   ; }
+          if( RMax  ( i )   > rmxmx ) { rmxmx = RMax   ( i )   ; }
+          if( RMin  ( i )   < rmnmn ) { rmnmn = RMin   ( i )   ; }
           if( abs( z( i ) ) > zmxmx ) { zmxmx = abs( z ( i ) ) ; }
         }
       cov = new SolidTubs( "Cover for " + name () , zmxmx , rmxmx , rmnmn ) ;
@@ -257,8 +349,8 @@ std::ostream&  SolidPolycone::printOut ( std::ostream& os ) const
   for( unsigned int i = 0 ; i < number() ; ++i ) 
     {
       os << "(Z[mm]="    << z    ( i ) / millimeter 
-         << ",Rmax[mm]=" << rMax ( i ) / millimeter 
-         << ",Rmin[mm]=" << rMax ( i ) / millimeter 
+         << ",Rmax[mm]=" << RMax ( i ) / millimeter 
+         << ",Rmin[mm]=" << RMax ( i ) / millimeter 
          << ")";
     }
   ///
@@ -289,8 +381,8 @@ MsgStream&  SolidPolycone::printOut ( MsgStream& os ) const
   for( unsigned int i = 0 ; i < number() ; ++i ) 
     {
       os << "(Z[mm]="    << z    ( i ) / millimeter 
-         << ",Rmax[mm]=" << rMax ( i ) / millimeter 
-         << ",Rmin[mm]=" << rMax ( i ) / millimeter 
+         << ",Rmax[mm]=" << RMax ( i ) / millimeter 
+         << ",Rmin[mm]=" << RMax ( i ) / millimeter 
          << ")";
     }
   ///
@@ -356,18 +448,18 @@ SolidPolycone::intersectionTicks ( const HepPoint3D & Point  ,
       /// intersect with outer conical surface 
       SolidTicks::LineIntersectsTheCone( Point                       , 
                                          Vector                      , 
-                                         rMax ( i - 1 )              , 
-                                         rMax ( i     )              , 
+                                         RMax ( i - 1 )              , 
+                                         RMax ( i     )              , 
                                          z    ( i - 1 )              , 
                                          z    ( i     )              , 
                                          std::back_inserter( ticks ) );   
       /// intersect with inner conical surface 
-      if( ( 0 < rMin( i - 1 ) ) || ( 0 < rMin ( i ) ) ) 
+      if( ( 0 < RMin( i - 1 ) ) || ( 0 < RMin ( i ) ) ) 
         {
           SolidTicks::LineIntersectsTheCone( Point                       , 
                                              Vector                      , 
-                                             rMin ( i - 1 )              , 
-                                             rMin ( i     )              , 
+                                             RMin ( i - 1 )              , 
+                                             RMin ( i     )              , 
                                              z    ( i - 1 )              , 
                                              z    ( i     )              , 
                                              std::back_inserter( ticks ) );   

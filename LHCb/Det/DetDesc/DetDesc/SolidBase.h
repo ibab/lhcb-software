@@ -1,18 +1,14 @@
-// $Id: SolidBase.h,v 1.3 2002-04-24 10:52:20 ibelyaev Exp $
+// $Id: SolidBase.h,v 1.4 2002-05-11 18:25:46 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.1  2001/08/09 16:47:58  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
-/// DetDesc 
+// CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+// DetDesc 
 #include "DetDesc/ISolid.h"
 
 /** @class SolidBase SolidBase.h DetDesc/SolidBase.h
@@ -186,7 +182,178 @@ public:
    *  @return FALSE if teh object doesn't accept the Inspector.
    */
   virtual bool acceptInspector( IInspector* pI ) const ;
+
+public : 
   
+  /// accessor to "minimal x" value of the solid   ("bounding box")
+  inline double  xMin      () const                { return m_xmin    ; }
+  /// accessor to "maximal x" value of the solid   ("bounding box")
+  inline double  xMax      () const                { return m_xmax    ; }
+  
+  /// accessor to "minimal y" value of the solid   ("bounding box")
+  inline double  yMin      () const                { return m_ymin    ; }
+  /// accessor to "maximal y" value of the solid   ("bounding box")
+  inline double  yMax      () const                { return m_ymax    ; }
+  
+  /// accessor to "minimal z" value of the solid   ("bounding box")
+  inline double  zMin      () const                { return m_zmin    ; }
+  /// accessor to "maximal z" value of the solid   ("bounding box")
+  inline double  zMax      () const                { return m_zmax    ; }
+  
+  /// accessor to "maximal r" value of the solid   ("bounding sphere")
+  inline double  rMax      () const                { return m_rmax    ; }
+  
+  /// accessor to "maximal rho" value of the solid ("bounding sphere")
+  inline double  rhoMax    () const                { return m_rhomax  ; }
+
+protected:
+  
+  /** Fast check if the point is outside the bounding box of the solid
+   *  @param point point to be checked 
+   *  @return true of point is outside the bounding box 
+   */
+  inline bool isOutBBox      
+  ( const HepPoint3D& point ) const 
+  {
+    return 
+      point.z () < zMin () ? true :
+      point.z () > zMax () ? true :
+      point.x () < xMin () ? true :
+      point.x () > xMax () ? true :
+      point.y () < yMin () ? true :
+      point.y () > yMax () ? true : false ;
+  };
+  
+  /** Fast check if the point is outside the bounding sphere of the solid
+   *  @param point point to be checked 
+   *  @return true of point is outside the bounding sphere 
+   */
+  inline bool isOutBSphere   
+  ( const HepPoint3D& point ) const 
+  {
+    return point.mag2 () > rMax () * rMax () ? true : false ;
+  };
+  
+  /** Fast check if the point is outside the bounding cylinder 
+   *  of the solid
+   *  @param point point to be checked 
+   *  @return true of point is outside the bounding cylinder 
+   */
+  inline bool isOutBCylinder 
+  ( const HepPoint3D& point ) const 
+  {
+    return 
+      point.z     () < zMin   ()             ? true :
+      point.z     () > zMax   ()             ? true :
+      point.perp2 () > rhoMax () * rhoMax () ? true : false ;
+  };
+  
+  /** Fast check if the segment of the line between two points 
+   *  is outside the bounding box 
+   *  @param p1  first  point of the segment 
+   *  @param p2  second point of the segment 
+   *  @return true if the whole segment is "outside" of the bounding box 
+   */
+  inline bool isOutBBox      
+  ( const HepPoint3D& p1 , 
+    const HepPoint3D& p2 ) const 
+  { 
+    if( p1.z() < zMin() && p2.z() < zMin() ) { return true ; }
+    if( p1.z() > zMax() && p2.z() > zMax() ) { return true ; }
+    if( p1.x() < xMin() && p2.x() < xMin() ) { return true ; }
+    if( p1.x() > xMax() && p2.x() > xMax() ) { return true ; }
+    if( p1.y() < yMin() && p2.y() < yMin() ) { return true ; }
+    if( p1.y() > yMax() && p2.y() > yMax() ) { return true ; }
+    //
+    return  false ;
+  };
+
+  /** Fast check if the segment of the line between two points 
+   *  is outside the bounding box 
+   *  @param p     first  point of the segment 
+   *  @param v     vector along the line
+   *  @param tmin "minimal value of tick"
+   *  @param tmax "maximal value of tick"
+   *  @return true if the whole segment is "outside" of the bounding box 
+   */
+  inline bool isOutBBox      
+  ( const HepPoint3D&   p    , 
+    const HepVector3D&  v    , 
+    const ISolid::Tick& tmin ,
+    const ISolid::Tick& tmax ) const 
+  {
+    return isOutBBox( p + tmin * v , p + tmax * v );
+  };  
+  
+  /** Fast check if the line cross the bounding sphere  
+   *  @param p     first  point on the line  
+   *  @param v     vector along the line
+   *  @return true if line do not cross the bounding sphere  
+   */
+  inline bool crossBSphere      
+  ( const HepPoint3D&   p    , 
+    const HepVector3D&  v    ) const 
+  {
+    
+    const double pp = p.mag2 ()           ;
+    const double vv = v.mag2 ()           ;
+    const double pv = p.dot  ( v )        ;
+    const double dd = rMax   () * rMax () ;
+    if( 0 == vv && pp > dd     ) { return false ; }
+    if( pp - pv * pv / vv > dd ) { return false ; }
+    //
+    return true ;
+  };
+  
+  /** Fast check if the line cross the surface of bounding cylinder 
+   *  @param p     first  point on the line  
+   *  @param v     vector along the line
+   *  @return true if line do not cross the surface of bounding cylinder  
+   */
+  inline bool crossBCylinder      
+  ( const HepPoint3D&   p    , 
+    const HepVector3D&  v    ) const 
+  {
+    const double pp = p.perp2 ()                  ;
+    const double vv = v.perp2 ()                  ;
+    const double pv = p.dot ( v ) - p.z() * v.z() ;
+    const double dd = rhoMax   () * rhoMax ()     ;
+    if( 0 == vv && pp > dd     ) { return false ; }
+    if( pp - pv * pv / vv > dd ) { return false ; }
+    //
+    return true ;
+  };
+
+protected:
+
+  /// set "minimal x" for the solid 
+  inline void    setXMin   ( const double value )  { m_xmin   = value ; }
+  /// set "maximal x" for the solid 
+  inline void    setXMax   ( const double value )  { m_xmax   = value ; }
+
+  /// set "minimal y" for the solid 
+  inline void    setYMin   ( const double value )  { m_ymin   = value ; }
+  /// set "maximal y" for the solid 
+  inline void    setYMax   ( const double value )  { m_ymax   = value ; }
+
+  /// set "minimal z" for the solid 
+  inline void    setZMin   ( const double value )  { m_zmin   = value ; }
+  /// set "maximal z" for the solid 
+  inline void    setZMax   ( const double value )  { m_zmax   = value ; }
+
+  /// set "maximal r" for the solid 
+  inline void    setRMax   ( const double value )  { m_rmax   = value ; }
+  /// set "maximal r" for the solid 
+  inline void    setRhoMax ( const double value )  { m_rhomax = value ; }
+
+  /** check bounding parameters 
+   *  @exception SolidException 
+   *  for wrong set of bounding parameters
+   *  @return status code
+   */
+  StatusCode checkBP() const ;
+  
+    
 protected:
   
   /** standard constructor 
@@ -202,11 +369,22 @@ protected:
   std::string     m_name  ; ///< name of the solid
   unsigned long   m_count ; ///< reference counter 
   mutable ISolid* m_cover ; ///< pointer to cover 
-
+  
+  double m_xmin   ;
+  double m_ymin   ;
+  double m_zmin   ;
+  
+  double m_xmax   ;
+  double m_ymax   ;
+  double m_zmax   ;
+  
+  double m_rmax   ;
+  double m_rhomax ;
+  
 };
 
-/// ===========================================================================
-/// The End 
-/// ===========================================================================
-#endif ///< DETDESC_SOLIDBASE_H
-/// ===========================================================================
+// ===========================================================================
+// The End 
+// ===========================================================================
+#endif //< DETDESC_SOLIDBASE_H
+// ===========================================================================

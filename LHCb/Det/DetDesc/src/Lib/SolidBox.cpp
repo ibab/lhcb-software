@@ -1,12 +1,16 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-/// GaudiKernel
+// $Id: SolidBox.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.7  2001/08/09 18:13:37  ibelyaev
+// modification for solid factories
+//
+// Revision 1.6  2001/08/09 16:48:02  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
+// GaudiKernel
 #include "GaudiKernel/IInspector.h"
 // FDetDesc 
 #include "DetDesc/SolidBox.h" 
@@ -32,10 +36,11 @@
  *  @exception  SolidException wrong parameters range 
  */
 // ============================================================================
-SolidBox::SolidBox( const std::string& Name  ,
-                    const double       xHalf , 
-                    const double       yHalf , 
-                    const double       zHalf )
+SolidBox::SolidBox
+( const std::string& Name  ,
+  const double       xHalf , 
+  const double       yHalf , 
+  const double       zHalf )
   : SolidBase        ( Name  ) 
   , m_box_xHalfLength( xHalf )
   , m_box_yHalfLength( yHalf )
@@ -47,7 +52,31 @@ SolidBox::SolidBox( const std::string& Name  ,
     { throw SolidException("SolidBox(): YHalfLength is non positive! "); }
   if( 0 >= zHalfLength() )
     { throw SolidException("SolidBox(): ZHalfLength is non positive! "); }
+  /// set bounding paramters od SolidBase class
+  setBP () ;
 };
+// ============================================================================
+
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidBox::setBP() 
+{
+  /// set bounding paramters od SolidBase class
+  setXMin   ( -xHalfLength() );
+  setXMax   (  xHalfLength() );
+  setYMin   ( -yHalfLength() );
+  setYMax   (  yHalfLength() );
+  setZMin   ( -zHalfLength() );
+  setZMax   (  zHalfLength() );
+  setRMax   ( sqrt( xMax() * xMax() + yMax() * yMax() + zMax() * zMax() ) );
+  setRhoMax ( sqrt( xMax() * xMax() + yMax() * yMax()                   ) );
+  //
+  return checkBP () ;
+};
+// ============================================================================
 
 // ============================================================================
 /** default (protected) constructor 
@@ -59,12 +88,12 @@ SolidBox::SolidBox()
   , m_box_yHalfLength( 100000.0 ) 
   , m_box_zHalfLength( 100000.0 ) 
 {};
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 SolidBox::~SolidBox(){ reset(); };
-
 // ============================================================================
 /** - serialization for reading
  *  - implementation of ISerialize abstract interface 
@@ -81,9 +110,9 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s )
 {
   /// 
   reset();
-  /// serialize the base class 
+  // serialize the base class 
   SolidBase::serialize( s ) ;  
-  /// serialize own data 
+  // serialize own data 
   s >> m_box_xHalfLength 
     >> m_box_yHalfLength 
     >> m_box_zHalfLength ;
@@ -94,9 +123,12 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s )
     { throw SolidException("SolidBox: YHalfLength is non positive!"); }
   if( 0 >= zHalfLength() )
     { throw SolidException("SolidBox: ZHalfLength is non positive!"); }
-  ///
+  // set bounding paramters od SolidBase class
+  setBP () ;
+  //
   return s ;
 };
+// ============================================================================
 
 // ============================================================================
 /** - serialization for writing
@@ -117,7 +149,8 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
   return s << xHalfLength() 
            << yHalfLength() 
            << zHalfLength() ; 
-}; 
+};
+// ============================================================================
 
 // ============================================================================
 /** calculate the intersection points("ticks") with a given line. 
@@ -130,30 +163,76 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
  */
 // ============================================================================
 inline unsigned int 
-SolidBox::intersectionTicks( const HepPoint3D & point  ,
-                             const HepVector3D& vect   ,
-                             ISolid::Ticks    & ticks  ) const
+SolidBox::intersectionTicks
+( const HepPoint3D & point  ,
+  const HepVector3D& vect   ,
+  ISolid::Ticks    & ticks  ) const
 {  ///
   ticks.clear(); 
-  /// find intersection ticks with x-planes
+  ///
+  // find intersection ticks with x-planes
   SolidTicks::LineIntersectsTheX( point , vect ,        xHalfLength() , 
                                   std::back_inserter( ticks ) ); 
   SolidTicks::LineIntersectsTheX( point , vect , -1.0 * xHalfLength() , 
                                   std::back_inserter( ticks ) ); 
-  /// find intersection ticks with y-planes
+  // find intersection ticks with y-planes
   SolidTicks::LineIntersectsTheY( point , vect ,        yHalfLength() , 
                                   std::back_inserter( ticks ) ); 
   SolidTicks::LineIntersectsTheY( point , vect , -1.0 * yHalfLength() , 
                                   std::back_inserter( ticks ) ); 
-  /// find intersection ticks with z-planes
+  // find intersection ticks with z-planes
   SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , 
                                   std::back_inserter( ticks ) ); 
   SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , 
                                   std::back_inserter( ticks ) ); 
-  /// sort and remove adjancent and some EXTRA ticks and return 
+  // sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
-  ///  
 };
+// ============================================================================
+
+
+// ============================================================================
+ /** calculate the intersection points("ticks") of the solid objects 
+   *  with given line. 
+   *  - Line is parametrized with parameter \a t : 
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  Only intersection ticks within the range 
+   *   \a tickMin and \a tickMax are taken into account.
+   *  @see ISolid::intersectionTicks()
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param tickMin minimum value of Tick 
+   *  @param tickMax maximu value of Tick 
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+// ============================================================================
+unsigned int
+SolidBox::intersectionTicks 
+( const HepPoint3D & Point   ,
+  const HepVector3D& Vector  ,
+  const Tick       & tickMin ,
+  const Tick       & tickMax ,
+  Ticks            & ticks   ) const  
+{
+  if( isOutBBox( Point , Vector  , tickMin , tickMax  ) ) { return 0 ; }
+  if( !crossBSphere( Point , Vector )                   ) { return 0 ; }
+  
+  //
+  return SolidBase::intersectionTicks ( Point   , 
+                                        Vector  ,
+                                        tickMin , 
+                                        tickMax ,
+                                        ticks   );
+};
+// ============================================================================
 
 // ============================================================================
 /** printout to STD/STL stream    
@@ -171,6 +250,7 @@ std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
        << " ysize[mm]=" << std::setw(12) << ysize() / millimeter 
        << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
 };
+// ============================================================================
 
 // ============================================================================
 /** printout to Gaudi  stream    
@@ -188,6 +268,7 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
        << " ysize[mm]=" << std::setw(12) << ysize() / millimeter 
        << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
 };
+// ============================================================================
 
 // ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"
@@ -212,4 +293,6 @@ const ISolid* SolidBox::cover() const { return this; };
 const ISolid* SolidBox::coverTop () const { return this; };
 
 
+// ============================================================================
+// The END 
 // ============================================================================

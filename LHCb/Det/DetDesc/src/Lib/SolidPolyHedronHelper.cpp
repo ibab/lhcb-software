@@ -1,19 +1,13 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.3 2002-04-24 10:52:56 ibelyaev Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.4 2002-05-11 18:25:47 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/12/18 11:17:29  sponce
-// Bug fix in the code for general trapezoids.
-//
-// Revision 1.1  2001/08/09 16:48:02  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
 // ============================================================================
-/** @file SolidPolyHedronHelper.cpp 
+/** @file
  *
  *  Implementation file for class : SolidPolyHedronHelper
  *
@@ -29,7 +23,8 @@
 // ============================================================================
 SolidPolyHedronHelper::SolidPolyHedronHelper ( const std::string& Name )
   : SolidBase ( Name ) 
-  , m_ph_planes() 
+  , m_ph_planes  () 
+  , m_ph_vertices() 
 {};
 
 // ============================================================================
@@ -39,7 +34,46 @@ SolidPolyHedronHelper::~SolidPolyHedronHelper()
 { 
   reset() ;
   m_ph_planes.clear(); 
+  m_ph_vertices.clear(); 
 };
+
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidPolyHedronHelper::setBP() 
+{
+  if( m_ph_vertices.empty() )
+    { throw SolidException("SolidPHH::setBP(): no vertices are available!");}
+  
+  /// loop over all points
+  const HepPoint3D& point  = m_ph_vertices.front();
+  setXMin   ( point.x    () ) ;
+  setXMax   ( point.x    () ) ;
+  setYMin   ( point.y    () ) ;
+  setYMax   ( point.y    () ) ;
+  setZMin   ( point.z    () ) ;
+  setZMax   ( point.z    () ) ;
+  setRMax   ( point.r    () ) ;
+  setRhoMax ( point.perp () ) ;
+  
+  for( VERTICES::const_iterator vertex = m_ph_vertices.begin() ;
+       m_ph_vertices.end() != vertex ; ++vertex )
+    {
+      setXMin   ( vertex->x    () < xMin   () ? vertex->x    () : xMin   () );
+      setYMin   ( vertex->y    () < yMin   () ? vertex->y    () : yMin   () );
+      setZMin   ( vertex->z    () < zMin   () ? vertex->z    () : zMin   () );
+      setXMax   ( vertex->x    () > xMax   () ? vertex->x    () : xMax   () );
+      setYMax   ( vertex->y    () > yMax   () ? vertex->y    () : yMax   () );
+      setZMax   ( vertex->z    () > zMax   () ? vertex->z    () : zMax   () );
+      setRMax   ( vertex->r    () > rMax   () ? vertex->r    () : rMax   () );
+      setRhoMax ( vertex->perp () > rhoMax () ? vertex->perp () : rhoMax () ); 
+    }
+  ///
+  return checkBP();
+};
+// ============================================================================
 
 // ============================================================================
 /** - check for the given 3D-point. 
@@ -53,8 +87,10 @@ SolidPolyHedronHelper::~SolidPolyHedronHelper()
 // ============================================================================
 bool SolidPolyHedronHelper::isInside ( const HepPoint3D& point ) const 
 {
-  if( planes().empty() ) { return false; } 
-  ///
+  if( planes().empty()   ) { return false ; } 
+  /// ckeck for bounding box 
+  if( isOutBBox( point ) ) { return false ; }
+  /// loop over faces 
   for( PLANES::const_iterator Plane = planes().begin(); 
        planes().end() != Plane ; ++Plane ) 
     { if( !inside( point , *Plane ) ) { return false; } } 
@@ -87,11 +123,13 @@ SolidPolyHedronHelper::intersectionTicks
   const HepVector3D& Vector ,       
   ISolid::Ticks   &   ticks  ) const
 {
-  /// clear the output container 
+  // clear the output container 
   ticks.clear(); 
-  /// check for valid arguments 
-  if( 0 == Vector.mag2() ) { return 0; } 
-  /// loop over all faces 
+  // check for valid arguments 
+  if( 0 == Vector.mag2()              ) { return 0; } 
+  // line touches the bounding sphere? 
+  if( !crossBSphere( Point , Vector ) ) { return 0 ; }
+  // loop over all faces 
   for( PLANES::const_iterator iPlane = planes().begin();  
        planes().end() != iPlane ; ++iPlane )
     {
@@ -107,6 +145,7 @@ SolidPolyHedronHelper::intersectionTicks
                                            Vector , 
                                            *this  );
 };
+// ============================================================================
 
 // ============================================================================
 /**  add a face/plane given with 3 points
@@ -141,6 +180,7 @@ bool SolidPolyHedronHelper::addFace
   return true;
   ///
 };
+// ============================================================================
 
 // ============================================================================
 /**  add a face/plane given with 4 points
@@ -150,7 +190,7 @@ bool SolidPolyHedronHelper::addFace
  *  @param Point2  the second 3D-point of the plane 
  *  @param Point3  the third  3D-point of the plane 
  *  @param Point4  the fourth 3D-point of the plane 
- *  @exception SolidException  if 4 pointd do not define the place
+ *  @exception SolidException  if 4 points do not define the place
  *  @return "false" if 3 points belongs to one line 
  */
 // ============================================================================
@@ -168,13 +208,13 @@ bool SolidPolyHedronHelper::addFace
   const HepVector3D v3( Point3 - cPoint ) ; 
   const HepVector3D v4( Point4 - cPoint ) ;
   ///
-  if  ( 0.0001 < v1.cross( v2 ).dot( v3 ) ) 
+  if     ( 0.0001 < fabs( v1.cross( v2 ).dot( v3 ) ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < v2.cross( v3 ).dot( v4 ) ) 
+  else if( 0.0001 < fabs( v2.cross( v3 ).dot( v4 ) ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < v3.cross( v4 ).dot( v1 ) ) 
+  else if( 0.0001 < fabs( v3.cross( v4 ).dot( v1 ) ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < v4.cross( v1 ).dot( v2 ) ) 
+  else if( 0.0001 < fabs( v4.cross( v1 ).dot( v2 ) ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
   ///
   if     ( addFace( Point1 , Point2 , Point3 ) ) { ;}
@@ -187,7 +227,10 @@ bool SolidPolyHedronHelper::addFace
   return true;
   ///
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

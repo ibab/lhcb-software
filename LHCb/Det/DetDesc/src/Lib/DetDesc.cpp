@@ -1,28 +1,63 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// ===========================================================================
-/// STD & STL 
+// $Id: DetDesc.cpp,v 1.2 2002-05-11 18:25:47 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
+// STD & STL 
 #include <string> 
-///@{ 
-/** GaudiKernel includes */
+#include <stdio.h>
+// GaudiKernel includes 
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/Bootstrap.h" 
 #include "GaudiKernel/GaudiException.h" 
-///@} 
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/DetDesc.h"
 
 // ============================================================================
-/** @file DetDesc.cpp
+/** @file 
  *
- * Implementationof methods fromnamespace DetDesc 
+ * Implementationof methods from namespace DetDesc 
  *
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @date 10/08/2001 
  */
+// ============================================================================
+
+// ============================================================================
+/** print double value using format
+ *  @param value   value to be printed 
+ *  @param format  desirable format
+ *  @returnstring representation of the "value"
+ */
+// ============================================================================
+const std::string DetDesc::print
+( const double value  , 
+  const char*  format )
+{
+  static const unsigned int buflen = 128;
+  static char  buffer[buflen];
+  return std::string( buffer , buffer + sprintf( buffer , format , value ) );
+};
+// ============================================================================
+
+// ============================================================================
+/** print double value using format
+ *  @param value   value to be printed 
+ *  @param format  desirable format
+ *  @returnstring representation of the "value"
+ */
+// ============================================================================
+const std::string DetDesc::print
+( const long   value  , 
+  const char*  format )
+{
+  static const unsigned int buflen = 128;
+  static char  buffer[buflen];
+  return std::string( buffer , buffer + sprintf( buffer , format , value ) );
+};
 // ============================================================================
 
 // ============================================================================
@@ -61,6 +96,49 @@ IDataProviderSvc* DetDesc::detSvc()
   ///
   return s_detSvc ;
 };
+// ============================================================================
+
 
 // ============================================================================
+/** the accessor to Mesage Service 
+ *  @exception GaudiException the service could not be located 
+ *  @return pointer to message service
+ */
+// ============================================================================
+IMessageSvc*       DetDesc::msgSvc()
+{
+  static IMessageSvc* s_msgSvc = 0 ;
+  //  locate the service 
+  if( 0 == s_msgSvc ) 
+    {
+      ISvcLocator* svcLoc = Gaudi::svcLocator();
+      if( 0 == svcLoc ) 
+        { throw GaudiException("DetDesc::ISvcLocator* points to NULL!",
+                               "*DetDescException*" , 
+                               StatusCode::FAILURE  ); }
+      StatusCode sc = 
+        svcLoc->service( DetDesc::s_MessageSvcName , s_msgSvc );
+      if( sc.isFailure() ) 
+        { throw GaudiException("DetDesc::Could not locate IMessageSvc='" 
+                               + DetDesc::s_MessageSvcName + "'",
+                               "*DetDescException*" , 
+                               StatusCode::FAILURE); }
+      if( 0 == s_msgSvc ) 
+        { throw GaudiException("DetDesc::IMessageSvc*(" 
+                               + DetDesc::s_MessageSvcName + 
+                               "') points to NULL!" ,
+                               "*DetDescException*" , 
+                               StatusCode::FAILURE  ); }
+      s_msgSvc->addRef();
+    }
+  ///
+  return s_msgSvc ;
+};
+// ============================================================================
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
 

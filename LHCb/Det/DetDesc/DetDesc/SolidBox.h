@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/08/09 16:47:58  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -125,10 +128,40 @@ public:
    *  @return the number of intersection points
    */
   virtual inline  unsigned int 
-  intersectionTicks ( const HepPoint3D&  Point  ,
-                      const HepVector3D& Vector ,
-                      ISolid::Ticks   &  ticks  ) const ; 
-  
+  intersectionTicks 
+  ( const HepPoint3D&  Point  ,
+    const HepVector3D& Vector ,
+    ISolid::Ticks   &  ticks  ) const ; 
+
+  /** calculate the intersection points("ticks") of the solid objects 
+   *  with given line. 
+   *  - Line is parametrized with parameter \a t : 
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  Only intersection ticks within the range 
+   *   \a tickMin and \a tickMax are taken into account.
+   *  @see ISolid::intersectionTicks()
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param tickMin minimum value of Tick 
+   *  @param tickMax maximu value of Tick 
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int
+  intersectionTicks 
+  ( const HepPoint3D & Point   ,
+    const HepVector3D& Vector  ,
+    const Tick       & tickMin ,
+    const Tick       & tickMax ,
+    Ticks            & ticks   ) const ;
+
   /** - serialization for reading
    *  - implementation of ISerialize abstract interface 
    *  - reimplementation of SolidBase::serialize 
@@ -193,6 +226,11 @@ protected:
   /** default (protected) constructor 
    */
   SolidBox(); 
+  
+  /** set parameters for bounding solids (box, sphere and cylinder)
+   *  @return status code 
+   */
+  StatusCode setBP() ;
   
 private:
   

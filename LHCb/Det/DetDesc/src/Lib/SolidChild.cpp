@@ -1,18 +1,9 @@
-// $Id: SolidChild.cpp,v 1.9 2002-04-24 10:52:54 ibelyaev Exp $ 
-// ============================================================================
+// $Id: SolidChild.cpp,v 1.10 2002-05-11 18:25:47 ibelyaev Exp $ 
+// ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
+// ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.7  2001/08/09 18:13:37  ibelyaev
-// modification for solid factories
-//
-// Revision 1.6  2001/08/09 16:48:02  ibelyaev
-// update in interfaces and redesign of solids
-// 
-// ============================================================================
+// ===========================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Transform3D.h" 
 #include "CLHEP/Geometry/Point3D.h" 
@@ -24,21 +15,21 @@
 #include "DetDesc/ClhepToStream.h" 
 #include "DetDesc/Solid.h"
 
-// =============================================================================
-/** @file SolidChild.cpp 
+// ============================================================================
+/** @file 
  *  
  *  implementation of class SolidChild
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date xx/xx/xxxx
  */
-// =============================================================================
+// ============================================================================
 
-// =============================================================================
+// ============================================================================
 /** constructor
  *  @param Name name of this solid 
  */
-// =============================================================================
+// ============================================================================
 SolidChild::SolidChild( const std::string& Name )
   : SolidBase      ( Name  )
   , m_sc_solid     (  0    )
@@ -46,13 +37,13 @@ SolidChild::SolidChild( const std::string& Name )
   , m_sc_simple    ( true  )
 {};
 
-// =============================================================================
+// ============================================================================
 /** constructor    
  *  @param solid pointer to ISolid object
  *  @param mtrx  pointer to transformation 
  *  @param Name name of this solid 
  */ 
-// =============================================================================
+// ============================================================================
 SolidChild::SolidChild( ISolid*               solid , 
                         const HepTransform3D* mtrx  ,
                         const std::string&    Name  )
@@ -69,20 +60,77 @@ SolidChild::SolidChild( ISolid*               solid ,
     if( 0 != m_sc_matrix) { m_sc_simple = false ; } }
   else
     { m_sc_simple = true  ; }
+  /// set bounding parameters 
+  setBP();  
+  ///
 };
+// ============================================================================
 
-// =============================================================================
+
+// ============================================================================
+/// set bounding parameters 
+// ============================================================================
+StatusCode SolidChild::setBP() 
+{  
+  const SolidBase* base = dynamic_cast<SolidBase*> (m_sc_solid);
+  if( 0 == base ) 
+    { throw SolidException("SolidChild::setBP(): ISolid is not SolidBase!");}
+  if( m_sc_simple )
+    {
+      setXMin   ( base->xMin   () );
+      setYMin   ( base->yMin   () );
+      setZMin   ( base->zMin   () );
+      setXMax   ( base->xMax   () );
+      setYMax   ( base->yMax   () );
+      setZMax   ( base->zMax   () );
+      setRMax   ( base->rMax   () );
+      setRhoMax ( base->rhoMax () );
+    }
+  else
+    {
+      /// position of center of solid child in the mother reference frame 
+      const HepPoint3D center = (*m_sc_matrix).inverse() * HepPoint3D();
+      if( ! m_sc_matrix->getRotation().isIdentity() )
+        { // rotation 
+          setRMax  ( center.r    () + base->rMax   () ) ;
+          setRhoMax( center.perp () + base->rMax   () ) ;
+          setZMax  ( center.z    () + base->rMax   () ) ;
+          setZMin  ( center.z    () - base->rMax   () ) ;
+          setXMax  ( center.x    () + base->rMax   () ) ;
+          setXMin  ( center.x    () - base->rMax   () ) ;
+          setYMax  ( center.y    () + base->rMax   () ) ;
+          setYMin  ( center.y    () - base->rMax   () ) ;
+        }
+      else 
+        { // no rotation 
+          setRMax  ( center.r    () + base->rMax   () ) ;
+          setRhoMax( center.perp () + base->rhoMax () ) ;          
+          setZMax  ( center.z    () + base->zMax   () ) ;
+          setZMin  ( center.z    () + base->zMin   () ) ;
+          setXMax  ( center.x    () + base->xMax   () ) ;
+          setXMin  ( center.x    () + base->xMin   () ) ;
+          setYMax  ( center.y    () + base->yMax   () ) ;
+          setYMin  ( center.y    () + base->yMin   () ) ;
+        }
+    }
+  //
+  return checkBP();
+};
+// ============================================================================
+
+// ============================================================================
 /** constructor 
  *  @param solid pointer ot ISolid object
  *  @param pos   position
  *  @param rot   rotation
  *  @param Name name of this solid 
  */
-// =============================================================================
-SolidChild::SolidChild( ISolid*               solid ,
-                        const HepPoint3D&     pos   , 
-                        const HepRotation&    rot   ,
-                        const std::string&    Name  ) 
+// ============================================================================
+SolidChild::SolidChild
+( ISolid*               solid ,
+  const HepPoint3D&     pos   , 
+  const HepRotation&    rot   ,
+  const std::string&    Name  ) 
   : SolidBase      ( Name  ) 
   , m_sc_solid     ( solid )
   , m_sc_matrix    (   0   ) 
@@ -102,11 +150,14 @@ SolidChild::SolidChild( ISolid*               solid ,
         new HepTransform3D( HepRotate3D( rot ) * HepTranslate3D( -1.0 * pos ) );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
+  /// set bounding parameters 
+  setBP();  
+  ///
 };
 
-// =============================================================================
+// ============================================================================
 /// destructor 
-// =============================================================================
+// ============================================================================
 SolidChild::~SolidChild()
 { 
   reset(); 
@@ -114,12 +165,12 @@ SolidChild::~SolidChild()
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
 };
 
-// =============================================================================
+// ============================================================================
 /** serialization for reading
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-// =============================================================================
+// ============================================================================
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) 
 {
   ///
@@ -139,15 +190,18 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb )
   if( !m_sc_simple ) 
     { m_sc_matrix = new HepTransform3D() ; sb >> (*m_sc_matrix); }
   ///
+  /// set bounding parameters 
+  setBP();  
+  ///
   return sb;
 };
 
-// =============================================================================
+// ============================================================================
 /** serialization for writing
  *  @param sb reference to stream buffer
  *  @return reference to stream buffer
  */
-// =============================================================================
+// ============================================================================
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
 {  
   /// serialise the base class 
@@ -162,31 +216,31 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
   return sb;
 };
 
-// =============================================================================
+// ============================================================================
 /** printout to STD/STL stream
  *  @param os STD/STL stream
  *  @return reference to the stream
  */
-// =============================================================================
+// ============================================================================
 std::ostream& SolidChild::printOut     ( std::ostream& os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
 };
 
-// =============================================================================
+// ============================================================================
 /** printout to Gaudi  stream
  *  @param os Gaudi stream
  *  @return reference to the stream
  */
-// =============================================================================
+// ============================================================================
 MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
 {
   SolidBase::printOut( os );
   return os << solid(); 
 };
 
-// =============================================================================
+// ============================================================================
 /** - calculate the intersection points("ticks") of the solid objects 
  *    with given line. 
  *  -# Line is parametrized with parameter \a t :
@@ -205,7 +259,7 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points
  */
-// =============================================================================
+// ============================================================================
 unsigned int 
 SolidChild::intersectionTicks 
 ( const HepPoint3D&  Point  ,
@@ -218,10 +272,10 @@ SolidChild::intersectionTicks
                         ticks                                 ) ;
 };
 
-// =============================================================================
+// ============================================================================
 /** reset to the initial ("after constructor") state
  */
-// =============================================================================
+// ============================================================================
 ISolid*  SolidChild::reset()
 {
   SolidBase::reset();
@@ -229,7 +283,7 @@ ISolid*  SolidChild::reset()
   return this ; 
 };
 
-// =============================================================================
+// ============================================================================
 /** - check for the given 3D-point. 
  *    Point coordinated are in the local reference 
  *    frame of the solid.   
@@ -238,12 +292,17 @@ ISolid*  SolidChild::reset()
  *  @param point point (in local reference system of the solid)
  *  @return true if the point is inside the solid
  */
-// =============================================================================
+// ============================================================================
 bool SolidChild::isInside ( const HepPoint3D& point) const 
 { 
+  if( isOutBBox( point ) ) { return false ; }
   return  
-    ( simple() ? solid()->isInside(point) : 
-      solid()->isInside( matrix() * point ) ) ; 
+    isOutBBox( point ) ? false : 
+    simple() ? 
+    solid()->isInside(point)   : solid()->isInside( matrix() * point ) ;
 }; 
+// ============================================================================
 
-// =============================================================================
+// ============================================================================
+// The END 
+// ============================================================================

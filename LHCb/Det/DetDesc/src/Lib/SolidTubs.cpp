@@ -1,10 +1,8 @@
+// $Id: SolidTubs.cpp,v 1.7 2002-05-11 18:25:48 ibelyaev Exp $ 
 // ============================================================================
-/// CVStag $Name: not supported by cvs2svn $ 
+// CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/09 16:48:03  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -51,6 +49,7 @@ SolidTubs::SolidTubs( const std::string& name          ,
   , m_tubs_startPhiAngle  ( StartPhiAngle )
   , m_tubs_deltaPhiAngle  ( DeltaPhiAngle )
   , m_tubs_coverModel     ( CoverModel    )
+  , m_noPhiGap            ( true          )     
 {
   if( 0 >= ZHalfLength )
     { throw SolidException("SolidTubs::ZHalfLength is not positive!"); } 
@@ -66,10 +65,93 @@ SolidTubs::SolidTubs( const std::string& name          ,
     { throw SolidException("SolidTubs::StartPhiAngle is >  360 degree! "); } 
   if(    0.0 * degree > DeltaPhiAngle ) 
     { throw SolidException("SolidTubs::DeltaPhiAngle is <    0 degree! "); } 
+  if(  360.0 * degree < DeltaPhiAngle ) 
+    { throw SolidException("SolidTubs::DeltaPhiAngle is >  360 degree! "); } 
   if(  360.0 * degree < StartPhiAngle + DeltaPhiAngle ) 
     { throw SolidException("SolidTubs::StartPhiAngle+DeltaPhiAngle >2pi"); } 
   //
+  m_noPhiGap = true ;
+  if(   0 * degree != startPhiAngle() ) { m_noPhiGap = false ; }
+  if( 360 * degree != deltaPhiAngle() ) { m_noPhiGap = false ; }
+  // set bounding parameters 
+  setBP();
+  //
 };
+// ============================================================================
+
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidTubs::setBP() 
+{
+  // set bounding paramters of SolidBase class
+  setZMin   ( -zHalfLength() );
+  setZMax   (  zHalfLength() );
+  setRhoMax (  outerRadius() );
+  setRMax   ( sqrt( zMax() * zMax() + rhoMax() * rhoMax () ) );
+  
+  // evaluate xmax
+  if(      startPhiAngle()                      <=    0.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=    0.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  360.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  360.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmax = ( x1 > x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMax ( xmax     ) ;
+    }
+  
+  // evaluate xmin  
+  if(      startPhiAngle()                      <=  180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <= -180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >= -180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmin = ( x1 < x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMin ( xmin     ) ;
+    }
+  
+  // evaluate y min 
+  if(      startPhiAngle()                      <=  -90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  -90.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  270.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  270.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymin = ( y1 < y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMin ( ymin     ) ;
+    }
+  
+  // evaluate y max 
+  if(      startPhiAngle()                      <=   90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=   90.0 * degree )  
+    { setYMax (  rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymax = ( y1 > y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMax ( ymax     ) ;
+    }
+  //
+  return checkBP();
+};
+// ============================================================================
 
 // ============================================================================
 /** constructor 
@@ -84,6 +166,7 @@ SolidTubs::SolidTubs( const std::string& name )
   , m_tubs_startPhiAngle  ( 0             )                         
   , m_tubs_deltaPhiAngle  ( 360*degree    )                         
   , m_tubs_coverModel     (        0      )
+  , m_noPhiGap            ( true          )
 {};
 
 // ============================================================================
@@ -103,19 +186,14 @@ SolidTubs::~SolidTubs() { reset(); };
 // ============================================================================
 bool  SolidTubs::isInside( const HepPoint3D & point ) const
 {
-  /// check Z 
-  if( abs(point.z()) > zHalfLength() ) { return false; }
-  /// check R 
-  const double rho = point.perp();
-  if( rho > outerRadius() ) { return false; }
-  if( rho < innerRadius() ) { return false; }
-  // check phi 
-  double phi = point.phi();
-  if( phi < 0 ) { phi += 360.0*degree; } 
-  if( phi < startPhiAngle()                 ) { return false; }
-  if( phi > startPhiAngle()+deltaPhiAngle() ) { return false; }
+  // check Z 
+  if( isOutBBox  ( point )  ) { return false ; }
+  // check for rho Rho  
+  if( !insideRho ( point )  ) { return false ; }
+  //  check for phi 
+  if( !insidePhi ( point )  ) { return false ; }
   //
-  return true; 
+  return true ;
 };
 
 // ============================================================================
@@ -161,6 +239,13 @@ StreamBuffer& SolidTubs::serialize( StreamBuffer& s )
   if(  360.0 * degree < startPhiAngle() + deltaPhiAngle() ) 
     { throw SolidException("SolidTubs::StartPhiAngle+DeltaPhiAngle>2pi"); } 
   ///
+  m_noPhiGap = true ;
+  if(   0 * degree != startPhiAngle() ) { m_noPhiGap = false ; }
+  if( 360 * degree != deltaPhiAngle() ) { m_noPhiGap = false ; }
+  
+  // set bounding parameters 
+  setBP();
+  //
   return s;
 };
 
@@ -284,14 +369,19 @@ const ISolid* SolidTubs::cover () const
  */
 // ============================================================================
 unsigned int 
-SolidTubs::intersectionTicks ( const HepPoint3D&  point  ,        
-                               const HepVector3D& vect   ,       
-                               ISolid::Ticks   &  ticks  ) const 
+SolidTubs::intersectionTicks 
+( const HepPoint3D &  point  ,        
+  const HepVector3D&  vect   ,       
+  ISolid::Ticks    &  ticks  ) const 
 {
   /// clear the container 
   ticks.clear(); 
   /// line with null direction vector is not able to intersect any solid. 
-  if( vect.mag2() == 0 )                  { return 0 ; } ///< RETURN! 
+  if( vect.mag2() == 0  )                 { return 0 ; } ///< RETURN!
+  
+  if( !crossBCylinder( point , vect ) )   { return 0 ; }
+  if( !crossBSphere  ( point , vect ) )   { return 0 ; }
+  
   // find intersection points ("ticks") with cylinder (outer radius) 
   SolidTicks::LineIntersectsTheCylinder( point                       , 
                                          vect                        ,
@@ -389,4 +479,47 @@ MsgStream&     SolidTubs::printOut      ( MsgStream&     os ) const
 };
 
 // ============================================================================
+/** calculate the intersection points("ticks") of the solid objects 
+ *  with given line. 
+ *  - Line is parametrized with parameter \a t : 
+ *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+ *      - \f$ \vec{p} \f$ is a point on the line 
+ *      - \f$ \vec{v} \f$ is a vector along the line  
+ *  - \a tick is just a value of parameter \a t, at which the
+ *    intersection of the solid and the line occurs
+ *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+ *    (\f$\vec{v}\f$) are defined in local reference system 
+ *   of the solid 
+ *  Only intersection ticks within the range 
+ *   \a tickMin and \a tickMax are taken into account.
+ *  @see ISolid::intersectionTicks()
+ *  @param Point initial point for the line
+ *  @param Vector vector along the line
+ *  @param tickMin minimum value of Tick 
+ *  @param tickMax maximu value of Tick 
+ *  @param ticks output container of "Ticks"
+ *  @return the number of intersection points
+ */
+// ============================================================================
+unsigned int
+SolidTubs::intersectionTicks 
+( const HepPoint3D & Point   ,
+  const HepVector3D& Vector  ,
+  const Tick       & tickMin ,
+  const Tick       & tickMax ,
+  Ticks            & ticks   ) const  
+{
+  
+  if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }
+  
+  return SolidBase::intersectionTicks ( Point   , 
+                                        Vector  ,
+                                        tickMin , 
+                                        tickMax ,
+                                        ticks   );
+};
+// ============================================================================
 
+// ============================================================================
+// The END 
+// ============================================================================

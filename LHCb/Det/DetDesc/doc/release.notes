@@ -1,11 +1,62 @@
+! $Id: release.notes,v 1.86 2002-05-11 18:25:47 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
-! =============================================================================
-! $Id: release.notes,v 1.85 2002-05-04 13:09:13 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
+!=============================================================================
+! 11/05/2002 - Vanya Belyaev
+modified files:
+  DetDesc/DetDesc.h
+  DetDesc/SolidBase.h
+  DetDesc/SolidBoolean.h
+  DetDesc/SolidBox.h
+  DetDesc/SolidChild.h
+  DetDesc/SolidCons.h
+  DetDesc/SolidPolyHedronHelper.h
+  DetDesc/SolidPolycone.h
+  DetDesc/SolidSphere.h
+  DetDesc/SolidTicks.h
+  DetDesc/SolidTrap.h
+  DetDesc/SolidTubs.h
+  DetDesc/SolidUnion.h
+  DetDesc/VolumeIntersectionIntervals.h
+  src/Lib/DetDesc.cpp
+  src/Lib/DetectorElement.cpp
+  src/Lib/LVolume.cpp
+  src/Lib/SolidBase.cpp
+  src/Lib/SolidBoolean.cpp
+  src/Lib/SolidBox.cpp
+  src/Lib/SolidChild.cpp
+  src/Lib/SolidCons.cpp
+  src/Lib/SolidIntersection.cpp
+  src/Lib/SolidPolyHedronHelper.cpp
+  src/Lib/SolidPolycone.cpp
+  src/Lib/SolidSphere.cpp
+  src/Lib/SolidSubtraction.cpp
+  src/Lib/SolidTrap.cpp
+  src/Lib/SolidTrd.cpp
+  src/Lib/SolidTubs.cpp
+  src/Lib/SolidUnion.cpp
+  src/component/MaterialBudgetAlg.cpp
+      Significant upgrade of functionality of SolidBase class. 
+      Now SolidBase  contains parameters of "bounding box", 
+      "bounding sphere" and "bounding cylinder". Several 
+      optimization methods are implemented for navigation and 
+      for finding the "intersection ticks". 
+      Also bug with SolidTrd is fixed.
+
+new file:
+  DetDesc/SolidMath.h  
+      mathematical utilities for fast and effective 
+      calculationof interection ticks with primitives - 
+      planes , spheres, cylinders and cones  
+
+! =============================================================================
+
+! =============================================================================
+! 11 May 2002  Vanya Belyaev
 ! =============================================================================
 ! 4 May 2002  Vanya Belyaev
   - src/Lib/LVolume.cpp  

@@ -1,11 +1,9 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidIntersection.cpp,v 1.6 2002-05-11 18:25:47 ibelyaev Exp $
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
 #include <iostream> 
 #include <string> 
 #include "DetDesc/SolidIntersection.h"
@@ -13,7 +11,7 @@
 #include "DetDesc/Solid.h"
 
 // ============================================================================
-/** @file SolidIntersection.cpp 
+/** @file
  *
  *  implementation of class SolidIntersection
  * 
@@ -31,7 +29,9 @@
 SolidIntersection::SolidIntersection( const std::string& name  , 
                                       ISolid*            first )
   : SolidBoolean( name , first )
+  , SolidBase   ( name         )
 {};
+// ============================================================================
 
 // ============================================================================
 /** constructor 
@@ -40,7 +40,9 @@ SolidIntersection::SolidIntersection( const std::string& name  ,
 // ============================================================================
 SolidIntersection::SolidIntersection( const std::string& name )
   : SolidBoolean( name )
+  , SolidBase   ( name )
 {};
+// ============================================================================
 
 // ============================================================================
 /// destructor 
@@ -80,9 +82,10 @@ StatusCode  SolidIntersection::intersect( ISolid*               solid     ,
  *  @return status code
  */
 // ============================================================================
-StatusCode  SolidIntersection::intersect ( ISolid*               solid    , 
-                                           const HepPoint3D&     position , 
-                                           const HepRotation&    rotation )
+StatusCode  SolidIntersection::intersect 
+( ISolid*               solid    , 
+  const HepPoint3D&     position , 
+  const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
 // ============================================================================

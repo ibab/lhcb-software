@@ -1,11 +1,9 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/08/09 16:47:58  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidCons.h,v 1.9 2002-05-11 18:25:46 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
 /// STD and STL 
@@ -138,6 +136,35 @@ public:
                       const HepVector3D& Vector ,  
                       ISolid::Ticks    & ticks  ) const ;
   
+  /** calculate the intersection points("ticks") of the solid objects 
+   *  with given line. 
+   *  - Line is parametrized with parameter \a t : 
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  Only intersection ticks within the range 
+   *   \a tickMin and \a tickMax are taken into account.
+   *  @see ISolid::intersectionTicks()
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param tickMin minimum value of Tick 
+   *  @param tickMax maximu value of Tick 
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  unsigned int
+  intersectionTicks 
+  ( const HepPoint3D & Point   ,
+    const HepVector3D& Vector  ,
+    const Tick       & tickMin ,
+    const Tick       & tickMax ,
+    Ticks            & ticks   ) const;
+
   /** - serialization for reading
    *  - implementation of ISerialize abstract interface 
    *  - reimplementation of SolidBase::serialize 
@@ -245,39 +272,36 @@ protected:
    *  @param z z position 
    *  @return inner ragius at given z 
    */
-  inline double iR_z( double z ) const
-  {  
-    ///
-    const double a = 
-      ( innerRadiusAtPlusZ () - innerRadiusAtMinusZ () ) / zHalfLength ();
-    const double b = 
-      ( innerRadiusAtPlusZ () + innerRadiusAtMinusZ () )  ; 
-    ///
-    return 0.5 * ( a * z  + b );
-  };
+  inline double iR_z( const double z ) const ;
   
   /** outer radius at given z  
    *  @param z z position 
    *  @return outer ragius at given z 
    */
-  inline double oR_z( double z ) const
-  {
-    ///  
-    const double a = 
-      ( outerRadiusAtPlusZ () - outerRadiusAtMinusZ () ) / zHalfLength ();
-    const double b = 
-      ( outerRadiusAtPlusZ () + outerRadiusAtMinusZ () )  ; 
-    //
-    return 0.5*(a*z+b);
-  };
+  inline double oR_z( const double z ) const ;
 
+
+  /// gap in phi ?
+  const bool noPhiGap() const { return m_noPhiGap ; }
+  
+  /** check for phi 
+   *  @param point to be checked 
+   *  @return true if point is "inside phi" 
+   */
+  inline const bool insidePhi ( const HepPoint3D& point ) const ;
+    
 protected:
   
   /** default protected  coinstructor 
    *  @param name name of conical tube segment  
    */
   SolidCons( const std::string& Name = "Anonymous CONS") ;
-  
+
+  /** set bounding parameters 
+   *  @return status code 
+   */
+  StatusCode setBP();
+
 private:
 
   SolidCons           ( const SolidCons & );  ///< no copy-constructor 
@@ -293,12 +317,69 @@ private:
   double                  m_cons_startPhiAngle     ;
   double                  m_cons_deltaPhiAngle     ;
   ///
-  int                     m_cons_coverModel;
+  int                     m_cons_coverModel        ;
+  bool                    m_noPhiGap               ;
+  
 };
+// ===========================================================================
 
-/// ===========================================================================
+// ===========================================================================
+/** inner radius at given z  
+ *  @param z z position 
+ *  @return inner ragius at given z 
+ */
+// ===========================================================================
+inline double SolidCons::iR_z( const double z ) const
+{  
+  const double a = 
+    ( innerRadiusAtPlusZ () - innerRadiusAtMinusZ () ) / zHalfLength ();
+  const double b = 
+    ( innerRadiusAtPlusZ () + innerRadiusAtMinusZ () )  ; 
+  return 0.5 * ( a * z  + b );
+};
+// ===========================================================================
+
+// ===========================================================================
+/** outer radius at given z  
+ *  @param z z position 
+ *  @return outer ragius at given z 
+ */
+// ===========================================================================
+inline double SolidCons::oR_z( const double z ) const
+{
+  const double a = 
+    ( outerRadiusAtPlusZ () - outerRadiusAtMinusZ () ) / zHalfLength ();
+  const double b = 
+    ( outerRadiusAtPlusZ () + outerRadiusAtMinusZ () )  ; 
+  return 0.5*(a*z+b);
+};
+// ===========================================================================
+
+// ===========================================================================
+/** check for phi 
+ *  @param point to be checked 
+ *  @return true if point is "inside phi" 
+ */
+// ===========================================================================
+inline const bool SolidCons::insidePhi ( const HepPoint3D& point ) const 
+{
+  if( noPhiGap()                                    ) { return true ; }
+  double phi = point.phi() ;   // [-180,180] 
+  if( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
+  phi += 360 * degree ;
+  if( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
+  // 
+  return false ;
+};
+// ===========================================================================
+
+// ===========================================================================
+// The END 
+// ===========================================================================
 #endif ///<  DETDESC_SOLIDCONS_H
-/// ===========================================================================
+// ===========================================================================
 
 
 

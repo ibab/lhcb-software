@@ -1,20 +1,18 @@
-// $Id: SolidBase.cpp,v 1.3 2002-04-24 10:52:47 ibelyaev Exp $
+// $Id: SolidBase.cpp,v 1.4 2002-05-11 18:25:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.1  2001/08/09 16:48:01  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ============================================================================
-/// GaudiKernel
+// CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
+// GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 
+#include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidTicks.h"
+#include "DetDesc/SolidException.h"
 
 // ============================================================================
 /** @file SolidBase.cpp  
@@ -32,9 +30,17 @@
  */
 // ============================================================================
 SolidBase::SolidBase( const std::string& Name )
-  : m_name  ( Name ) 
-  , m_count ( 0    ) 
-  , m_cover ( 0    ) 
+  : m_name   ( Name     ) 
+  , m_count  ( 0        ) 
+  , m_cover  ( 0        ) 
+  , m_xmin   (  10 * km )
+  , m_ymin   (  10 * km ) 
+  , m_zmin   (  10 * km )
+  , m_xmax   ( -10 * km ) 
+  , m_ymax   ( -10 * km ) 
+  , m_zmax   ( -10 * km )
+  , m_rmax   ( -10 * km ) 
+  , m_rhomax ( -10 * km )
 {
   addRef(); ///< add the reference 
 };
@@ -123,8 +129,19 @@ const ISolid* SolidBase::coverTop () const
 std::ostream& SolidBase::printOut ( std::ostream& st ) const 
 {
   return 
-    st << " SolidType='" << typeName () << "'\tname='"<< name () << "'" ;
+    st << " SolidType='"     << typeName () << "'" 
+       << " \tname='"        << name     () << "'" 
+       << " \tBPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+       << DetDesc::print(   xMin () / mm )  << "/" 
+       << DetDesc::print(   xMax () / mm )  << "," 
+       << DetDesc::print(   yMin () / mm )  << "/" 
+       << DetDesc::print(   yMax () / mm )  << "," 
+       << DetDesc::print(   zMin () / mm )  << "/" 
+       << DetDesc::print(   zMax () / mm )  << "," 
+       << DetDesc::print(   rMax () / mm )  << "," 
+       << DetDesc::print( rhoMax () / mm )  << ") " << std::endl ;
 };
+// ============================================================================
 
 // ============================================================================
 /** printout to Gaudi  stream
@@ -134,8 +151,20 @@ std::ostream& SolidBase::printOut ( std::ostream& st ) const
 // ============================================================================
 MsgStream&    SolidBase::printOut ( MsgStream&    st ) const 
 {
-  return st << " SolidType='" << typeName () << "'\tname='" << name() << "'" ;
+  return 
+    st << " SolidType='"     << typeName () << "'" 
+       << " \tname='"        << name     () << "'" 
+       << " \tBPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+       << DetDesc::print(   xMin () / mm )  << "/" 
+       << DetDesc::print(   xMax () / mm )  << "," 
+       << DetDesc::print(   yMin () / mm )  << "/" 
+       << DetDesc::print(   yMax () / mm )  << "," 
+       << DetDesc::print(   zMin () / mm )  << "/" 
+       << DetDesc::print(   zMax () / mm )  << "," 
+       << DetDesc::print(   rMax () / mm )  << "," 
+       << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
 };
+// ============================================================================
 
 // ============================================================================
 /** serialization for reading
@@ -217,9 +246,11 @@ SolidBase::intersectionTicks
   const ISolid::Tick& tickMax ,         
   ISolid::Ticks     & ticks   ) const 
 {
-  ///
+  // check for bounding box 
+  if( isOutBBox( Point , Vector , tickMin , tickMax ) ) { return 0; }
+  //
   intersectionTicks( Point , Vector , ticks ); 
-  /// sort and remove adjancent and some EXTRA ticks and return 
+  // sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks   , 
                                            Point   , 
                                            Vector  , 
@@ -262,6 +293,124 @@ SolidBase::intersectionTicks
   return ticks.size();
 };
 // ============================================================================
+
+// ============================================================================
+/** check bounding parameters 
+ *  @return status code
+ */
+// ============================================================================
+StatusCode SolidBase::checkBP() const
+{
+  const std::string msg("SolidBase("+typeName()+"/"+name()+")::checkBP(): ");
+  if     ( xMax()   <= xMin() ) 
+    { 
+      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      log << MSG::FATAL
+          << " SolidBase::checkPB "
+          << typeName() << "/" << name() 
+          << " Wrong Bounding Parameters "            << endreq ;
+      log << MSG::ERROR 
+          << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+          << DetDesc::print(   xMin () / mm )  << "/" 
+          << DetDesc::print(   xMax () / mm )  << "," 
+          << DetDesc::print(   yMin () / mm )  << "/" 
+          << DetDesc::print(   yMax () / mm )  << "," 
+          << DetDesc::print(   zMin () / mm )  << "/" 
+          << DetDesc::print(   zMax () / mm )  << "," 
+          << DetDesc::print(   rMax () / mm )  << "," 
+          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+      throw SolidException( msg + "   xMax() <= xMin() " 
+                            + DetDesc::print( xMax  () ) + "/"  
+                            + DetDesc::print( xMin  () ) ); 
+    }
+  else if( yMax()   <= yMin() ) 
+    { 
+      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      log << MSG::FATAL
+          << " SolidBase::checkPB "
+          << typeName() << "/" << name() 
+          << " Wrong Bounding Parameters "            << endreq ;
+      log << MSG::ERROR 
+          << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+          << DetDesc::print(   xMin () / mm )  << "/" 
+          << DetDesc::print(   xMax () / mm )  << "," 
+          << DetDesc::print(   yMin () / mm )  << "/" 
+          << DetDesc::print(   yMax () / mm )  << "," 
+          << DetDesc::print(   zMin () / mm )  << "/" 
+          << DetDesc::print(   zMax () / mm )  << "," 
+          << DetDesc::print(   rMax () / mm )  << "," 
+          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+      throw SolidException( msg + "   yMax() <= yMin() " 
+                            + DetDesc::print( yMax  () ) + "/"  
+                            + DetDesc::print( yMin  () ) ) ; 
+    }
+  else if( zMax()   <= zMin() ) 
+    {  
+      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      log << MSG::FATAL
+          << " SolidBase::checkPB "
+          << typeName() << "/" << name() 
+          << " Wrong Bounding Parameters "            << endreq ;
+      log << MSG::ERROR 
+          << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+          << DetDesc::print(   xMin () / mm )  << "/" 
+          << DetDesc::print(   xMax () / mm )  << "," 
+          << DetDesc::print(   yMin () / mm )  << "/" 
+          << DetDesc::print(   yMax () / mm )  << "," 
+          << DetDesc::print(   zMin () / mm )  << "/" 
+          << DetDesc::print(   zMax () / mm )  << "," 
+          << DetDesc::print(   rMax () / mm )  << "," 
+          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+      throw SolidException( msg + "   zMax() <= zMin() " 
+                            + DetDesc::print( zMax  () ) + "/"  
+                            + DetDesc::print( zMin  () ) ); 
+    }
+  else if( rMax()   <= 0      ) 
+    {
+      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      log << MSG::FATAL
+          << " SolidBase::checkPB "
+          << typeName() << "/" << name() 
+          << " Wrong Bounding Parameters "            << endreq ;
+      log << MSG::ERROR 
+          << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+          << DetDesc::print(   xMin () / mm )  << "/" 
+          << DetDesc::print(   xMax () / mm )  << "," 
+          << DetDesc::print(   yMin () / mm )  << "/" 
+          << DetDesc::print(   yMax () / mm )  << "," 
+          << DetDesc::print(   zMin () / mm )  << "/" 
+          << DetDesc::print(   zMax () / mm )  << "," 
+          << DetDesc::print(   rMax () / mm )  << "," 
+          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+      throw SolidException( msg + "   rMax() <=  0     " 
+                            + DetDesc::print( rMax  () ) ); 
+    }
+  else if( rhoMax() <= 0      ) 
+    {  
+      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      log << MSG::FATAL
+          << " SolidBase::checkPB "
+          << typeName() << "/" << name() 
+          << " Wrong Bounding Parameters "            << endreq ;
+      log << MSG::ERROR 
+          << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+          << DetDesc::print(   xMin () / mm )  << "/" 
+          << DetDesc::print(   xMax () / mm )  << "," 
+          << DetDesc::print(   yMin () / mm )  << "/" 
+          << DetDesc::print(   yMax () / mm )  << "," 
+          << DetDesc::print(   zMin () / mm )  << "/" 
+          << DetDesc::print(   zMax () / mm )  << "," 
+          << DetDesc::print(   rMax () / mm )  << "," 
+          << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
+      throw SolidException( msg + " rhoMax() <=  0     " 
+                            + DetDesc::print( rhoMax() ) ); 
+    }
+  //
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
+  
+    
 
 // ============================================================================
 // The End 

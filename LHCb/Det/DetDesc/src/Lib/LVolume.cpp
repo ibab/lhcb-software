@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.17 2002-05-04 13:13:24 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.18 2002-05-11 18:25:47 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2002/05/04 13:13:24  ibelyaev
+//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
+//
 // ===========================================================================
 /// STD & STL includes 
 #include <iostream> 
@@ -372,9 +375,8 @@ unsigned int LVolume::intersectBody
   /// assertion for material and solid 
   if( 0 == material() || 0 == m_solid ) 
     { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
-  /// get cover solid (special dealing with SolidUnion)
-  const ISolid* pSolid = 
-    ( "SolidUnion" == m_solid->typeName() ) ? m_solid : m_solid->coverTop() ; 
+  /// get cover solid 
+  const ISolid* pSolid = m_solid->coverTop()  ; 
   ///
   ISolid::Ticks           ticks               ;   
   Intervals               intervals           ; 
@@ -484,8 +486,7 @@ unsigned int LVolume::intersectBody
   if( 0 == material() || 0 == m_solid ) 
     { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
   // define "top"
-  const ISolid* pSolid = 
-    ( "SolidUnion"  == m_solid->typeName() ) ? m_solid : m_solid->coverTop() ; 
+  const ISolid* pSolid = m_solid->coverTop() ; 
   //  contribution of this volume is estimated in 3 steps:
   bool useThisVolume      = true  ; 
   /**  (1) estimate the maximal possible constribution 
@@ -705,16 +706,18 @@ unsigned int LVolume::intersectLine
   // check the region TickMin tickMax 
   { // the following lines are based on O.Callot's code  
     // Check that the intersections are not all on the same side of the segment
-    const ISolid* pSolid =
-      ( "SolidUnion"  == m_solid->typeName() ) ? m_solid : m_solid->coverTop() ;
+    const ISolid* pSolid = m_solid->coverTop() ;
     ISolid::Ticks ticks;
     pSolid->intersectionTicks( Point , Vector , TickMin , TickMax , ticks ) ;
+    // pSolid->intersectionTicks( Point , Vector , ticks ) ;
     if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
     // redefine TickMin and TicMax
     // NB: container of "ticks" is always sorted!
+    if( TickMax < ticks.front () ) { return 0 ; }
+    if( TickMin > ticks.back  () ) { return 0 ; }
     TickMin = ticks.front () ;
     TickMax = ticks.back  () ;
-    if( TickMin >= TickMax        ) { return 0 ; }  // RETURN !!!
+    if( TickMin >= TickMax       ) { return 0 ; }  // RETURN !!!
   }
   // own intersections
   ILVolume::Intersections own;

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/08/09 18:13:38  ibelyaev
+/// modification for solid factories
+///
 /// Revision 1.7  2001/08/09 16:48:03  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -73,7 +76,6 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
   , m_trap_dxAtPlusZMinusY  ( DxAtPlusZMinusY  ) 
   , m_trap_dxAtPlusZPlusY   ( DxAtPlusZPlusY   ) 
   , m_trap_alphaAtPlusZ     ( AlphaAtPlusZ     ) 
-  , m_trap_vertices         (                  )
 {
   if( 0 >= ZHalfLength      ) 
     { throw SolidException("SolidTrap::ZHalfLength is not positive!"   ); } 
@@ -91,6 +93,9 @@ SolidTrap::SolidTrap( const std::string&  Name             ,
      { throw SolidException("SolidTrap::dxAtMinusZPlusY is not positive!"); } 
    ///  
    makeAll();
+   /// set bounding parameters
+   setBP();
+   
 }; 
 
 // ============================================================================
@@ -112,7 +117,6 @@ SolidTrap::SolidTrap( const std::string& Name )
   , m_trap_dxAtPlusZMinusY  ( 100  ) 
   , m_trap_dxAtPlusZPlusY   ( 100  ) 
   , m_trap_alphaAtPlusZ     ( 0    ) 
-  , m_trap_vertices         (      )
 {};
 
 // ============================================================================
@@ -128,7 +132,8 @@ SolidTrap::~SolidTrap() { reset(); }
 void SolidTrap::makeAll()
 {   
   /// clear vertices 
-  m_trap_vertices.clear() ; 
+  m_ph_vertices.clear();
+  m_ph_planes.clear();
   SolidPolyHedronHelper::reset() ; 
   {
     /** construct points (vertoces)
@@ -163,17 +168,17 @@ void SolidTrap::makeAll()
     HepPoint3D p7( +fDz * fTthetaCphi + fDy2 * fTalpha2 + fDx4 , 
                    +fDz * fTthetaSphi + fDy2 , +fDz ) ;
     ///
-    m_trap_vertices.push_back( p0 ) ; 
-    m_trap_vertices.push_back( p1 ) ; 
-    m_trap_vertices.push_back( p2 ) ; 
-    m_trap_vertices.push_back( p3 ) ; 
-    m_trap_vertices.push_back( p4 ) ; 
-    m_trap_vertices.push_back( p5 ) ; 
-    m_trap_vertices.push_back( p6 ) ; 
-    m_trap_vertices.push_back( p7 ) ; 
+    m_ph_vertices.push_back( p0 ) ; 
+    m_ph_vertices.push_back( p1 ) ; 
+    m_ph_vertices.push_back( p2 ) ; 
+    m_ph_vertices.push_back( p3 ) ; 
+    m_ph_vertices.push_back( p4 ) ; 
+    m_ph_vertices.push_back( p5 ) ; 
+    m_ph_vertices.push_back( p6 ) ; 
+    m_ph_vertices.push_back( p7 ) ; 
     ///
   }
-  if( 8 != m_trap_vertices.size() ) 
+  if( 8 != m_ph_vertices.size() ) 
     { throw SolidException("SolidTrap:: wrong vertex #!"); } 
   /// make faces
   addFace( point(0) , point(4) , point(5) , point(1) ) ;
@@ -205,7 +210,6 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
   /// 
   reset();
   m_ph_planes.clear();
-  m_trap_vertices.clear();
   /// serialize the base class 
   SolidBase::serialize( s ) ;
   /// serialize memebrs 
@@ -237,7 +241,8 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
     { throw SolidException("SolidTrap::dxAtMinusZPlusY is not positive!");} 
   ///
   makeAll();
-  ///
+  /// set bounding parameters
+  setBP();
   return s;
   ///
 };

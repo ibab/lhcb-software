@@ -1,17 +1,8 @@
-// $Id: SolidSphere.cpp,v 1.7 2002-04-24 10:52:59 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.8 2002-05-11 18:25:48 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/10/25 20:14:59  ibelyaev
-// bug fix in SolidSphere constructor
-//
-// Revision 1.5  2001/08/09 18:13:38  ibelyaev
-// modification for solid factories
-//
-// Revision 1.4  2001/08/09 16:48:03  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 // CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
@@ -20,6 +11,7 @@
 /// GaudiKernel
 #include "GaudiKernel/IInspector.h" 
 /// DetDesc 
+#include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidSphere.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
@@ -91,12 +83,105 @@ SolidSphere::SolidSphere
     { throw SolidException("SolidSphere::DeltaThetaAngle <    0 degree !"); }
   if(  180.0 * degree < StartThetaAngle+DeltaThetaAngle )
     { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
+  /// 
+  m_noPhiGap   = true ;
+  if(   0 * degree != startPhiAngle   () ) { m_noPhiGap   = false ; }
+  if( 360 * degree != deltaPhiAngle   () ) { m_noPhiGap   = false ; }
+  m_noThetaGap = true ;
+  if(   0 * degree != startThetaAngle () ) { m_noThetaGap = false ; }
+  if( 180 * degree != deltaThetaAngle () ) { m_noThetaGap = false ; }  
+  /// set bounding parameters 
+  setBP();
+  
 };  
 
 // ===========================================================================
 /// destructor 
 // ===========================================================================
 SolidSphere::~SolidSphere() { reset(); };
+
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidSphere::setBP() 
+{
+  // set bounding parameters of SolidBase class
+  setRMax ( outerRadius() );
+  setZMax ( outerRadius() * cos( startThetaAngle()                     ) );
+  setZMin ( outerRadius() * cos( startThetaAngle() + deltaThetaAngle() ) );
+  
+  // evaluate rho max 
+  if(      startThetaAngle()                        <=   90.0 * degree 
+           && startThetaAngle() + deltaThetaAngle() >=   90.0 * degree  )
+    { setRhoMax ( rMax () ) ; }
+  else 
+    {
+      const double r1     = sin( startThetaAngle()                     );
+      const double r2     = sin( startThetaAngle() + deltaThetaAngle() );
+      const double rhomax = ( r1 > r2 ? r1 : r2 ) * rMax() ;
+      setRhoMax ( rhomax  ) ;
+    }
+  
+  // evaluate xmax 
+  if(      startPhiAngle()                          <=    0.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=    0.0 * degree )
+    { setXMax (  rhoMax () ) ; }
+  else if( startPhiAngle()                          <=  360.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=  360.0 * degree )
+    { setXMax (  rhoMax () ) ; }
+  else
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmax = ( x1 > x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMax ( xmax       ) ;
+    }
+  // evaluate xmin 
+  if(      startPhiAngle()                          <=  180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=  180.0 * degree )
+    { setXMin ( -rhoMax()  ) ; }
+  else if( startPhiAngle()                          <= -180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >= -180.0 * degree )
+    { setXMin ( -rhoMax()  ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmin = ( x1 < x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMin ( xmin       ) ;
+    }
+  // evaluate ymax 
+  if(      startPhiAngle()                          <=   90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=   90.0 * degree )
+    { setYMax (  rhoMax () ) ; }
+  else
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymax = ( y1 > y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMax ( ymax       ) ;
+    }
+  // evaluate ymin 
+  if(      startPhiAngle()                          <=  -90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=  -90.0 * degree )
+    { setYMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                          <=  270.0 * degree 
+           && startPhiAngle() + deltaPhiAngle()     >=  270.0 * degree )
+    { setYMin ( -rhoMax () ) ; }
+  else
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymin = ( y1 < y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMin ( ymin       ) ;
+    }
+  ///
+  return checkBP();
+};
+// ===========================================================================
+
 
 // ===========================================================================
 /** protected constructor 
@@ -111,7 +196,9 @@ SolidSphere::SolidSphere( const std::string& name )
   , m_sphere_deltaPhiAngle   ( 360.0 * degree   ) 
   , m_sphere_startThetaAngle ( 0.0              ) 
   , m_sphere_deltaThetaAngle ( 180.0 * degree   )
-  , m_sphere_coverModel      (       0          )  
+  , m_sphere_coverModel      (       0          ) 
+  , m_noPhiGap               ( true )
+  , m_noThetaGap             ( true )
 {};
 
 // ===========================================================================
@@ -126,21 +213,16 @@ SolidSphere::SolidSphere( const std::string& name )
 // ===========================================================================
 bool  SolidSphere::isInside( const HepPoint3D & point) const
 {
-  /// check for radius 
-  const double r2 = point.mag2();
-  if ( r2 > outerR2           () ) { return false; }
-  if ( r2 < insideR2          () ) { return false; }
-  /// check for phi 
-  double phi = point.phi();
-  if( phi < 0 ){ phi+=360.0*degree; }
-  if( phi < startPhiAngle     () ) { return false; } 
-  if( phi > endPhiAngle       () ) { return false; }
-  /// check for theta 
-  const double theta = point.theta();
-  if( theta < startThetaAngle () ) { return false; } 
-  if( theta > endThetaAngle   () ) { return false; } 
-  ///
-  return true; 
+  // check bounding box 
+  if(  isOutBBox    ( point )  ) { return false ; }
+  // check for radius 
+  if( !insideR      ( point )  ) { return false ; }
+  // check for theta
+  if( !insideTheta  ( point )  ) { return false ; }
+  // check for phi  
+  if( !insidePhi    ( point )  ) { return false ; }
+  //
+  return true ;
 };
 
 // ===========================================================================
@@ -191,8 +273,16 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s )
   if(  180.0 * degree < startThetaAngle()+deltaThetaAngle() )
     { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
   ///
-  return s;
+  m_noPhiGap   = true ;
+  if(   0 * degree != startPhiAngle   () ) { m_noPhiGap   = false ; }
+  if( 360 * degree != deltaPhiAngle   () ) { m_noPhiGap   = false ; }
+  m_noThetaGap = true ;
+  if(   0 * degree != startThetaAngle () ) { m_noThetaGap = false ; }
+  if( 180 * degree != deltaThetaAngle () ) { m_noThetaGap = false ; }  
+  /// set bounding parameters 
+  setBP();
   ///
+  return s;
 };
 
 // ===========================================================================
@@ -438,23 +528,27 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class
   SolidBase::printOut( os ) ;
-  os << "outerRadius[mm]"      <<  outerRadius     () / millimeter ;
+  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / mm );
   if( 0 != insideR2() ) 
-    { os << "innerRadius[mm]"      <<  insideRadius    () / millimeter ; }
+    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / mm ) ; }
   if( 0   * degree != startThetaAngle ()  || 
       180 * degree != deltaThetaAngle ()    )
     {  
-      os << "startThetaAngle[deg]" <<  startThetaAngle () / degree     ;
-      os << "deltaThetaAngle[deg]" <<  deltaThetaAngle () / degree     ;
+      os << "startThetaAngle[deg]" 
+         <<  DetDesc::print( startThetaAngle () / degree ) ;
+      os << "deltaThetaAngle[deg]" 
+         <<  DetDesc::print( deltaThetaAngle () / degree ) ;
     }
   if( 0   * degree != startPhiAngle () || 
       360 * degree != deltaPhiAngle () ) 
     {
-      os << "startPhiAngle[deg]"   <<  startPhiAngle   () / degree     ;
-      os << "deltaPhiAngle[deg]"   <<  deltaPhiAngle   () / degree     ;
+      os << "startPhiAngle[deg]"   
+         <<  DetDesc::print( startPhiAngle   () / degree ) ;
+      os << "deltaPhiAngle[deg]"   
+         <<  DetDesc::print( deltaPhiAngle   () / degree ) ;
     }
   ///
-  return os ;
+  return os << std::endl ;
 };
 
 // ============================================================================
@@ -471,25 +565,32 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class
   SolidBase::printOut( os ) ;
-  os << "outerRadius[mm]"      <<  outerRadius     () / millimeter ;
+  os << "outerRadius[mm]"          << DetDesc::print( outerRadius  () / mm );
   if( 0 != insideR2() ) 
-    { os << "innerRadius[mm]"      <<  insideRadius    () / millimeter ; }
+    { os << "innerRadius[mm]"      << DetDesc::print( insideRadius () / mm ) ; }
   if( 0   * degree != startThetaAngle ()  || 
       180 * degree != deltaThetaAngle ()    )
     {  
-      os << "startThetaAngle[deg]" <<  startThetaAngle () / degree     ;
-      os << "deltaThetaAngle[deg]" <<  deltaThetaAngle () / degree     ;
+      os << "startThetaAngle[deg]" 
+         <<  DetDesc::print( startThetaAngle () / degree ) ;
+      os << "deltaThetaAngle[deg]" 
+         <<  DetDesc::print( deltaThetaAngle () / degree ) ;
     }
   if( 0   * degree != startPhiAngle () || 
       360 * degree != deltaPhiAngle () ) 
     {
-      os << "startPhiAngle[deg]"   <<  startPhiAngle   () / degree     ;
-      os << "deltaPhiAngle[deg]"   <<  deltaPhiAngle   () / degree     ;
+      os << "startPhiAngle[deg]"   
+         <<  DetDesc::print( startPhiAngle   () / degree ) ;
+      os << "deltaPhiAngle[deg]"   
+         <<  DetDesc::print( deltaPhiAngle   () / degree ) ;
     }
   ///
-  return os ;
+  return os << endreq ;
 };
+// ============================================================================ 
 
+// ============================================================================ 
+// The END  
 // ============================================================================ 
 
 

@@ -1,13 +1,8 @@
+// $Id: SolidCons.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/08/09 18:13:37  ibelyaev
-// modification for solid factories
-//
-// Revision 1.5  2001/08/09 16:48:02  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -88,17 +83,95 @@ SolidCons::SolidCons( const std::string & name  ,
     { throw SolidException("SolidCons ::DeltaPhiAngle < 0 degree!"    );}
   if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
     { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle>2pi");}
-  ///
+  // 
+  m_noPhiGap = true ;
+  if(   0 * degree != startPhiAngle () ) { m_noPhiGap = false ; }
+  if( 360 * degree != deltaPhiAngle () ) { m_noPhiGap = false ; }
+  
+  // set bounding parameters
+  setBP();
+  //
 };
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-SolidCons::~SolidCons()
-{
-  reset();
-};
+SolidCons::~SolidCons() { reset(); };
 
+// ============================================================================
+/** set parameters for bounding solids (box, sphere and cylinder)
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode SolidCons::setBP() 
+{
+  // set bounding paramters of SolidBase class
+  setZMin   ( -zHalfLength() );
+  setZMax   (  zHalfLength() );
+  setRhoMax (  outerRadiusAtMinusZ() > outerRadiusAtPlusZ() ? 
+               outerRadiusAtMinusZ() : outerRadiusAtPlusZ() );
+  setRMax   ( sqrt( zMax() * zMax() + rhoMax() * rhoMax () ) );
+  
+  // evaluate xmax
+  if(      startPhiAngle()                      <=    0.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=    0.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  360.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  360.0 * degree ) 
+    { setXMax (  rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmax = ( x1 > x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMax ( xmax     ) ;
+    }
+  
+  // evaluate xmin  
+  if(      startPhiAngle()                      <=  180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <= -180.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >= -180.0 * degree )  
+    { setXMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double x1   = cos( startPhiAngle()                   );
+      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
+      const double xmin = ( x1 < x2 ? x1 : x2 ) * rhoMax ()  ;
+      setXMin ( xmin     ) ;
+    }
+  
+  // evaluate y min 
+  if(      startPhiAngle()                      <=  -90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  -90.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else if( startPhiAngle()                      <=  270.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=  270.0 * degree )  
+    { setYMin ( -rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymin = ( y1 < y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMin ( ymin     ) ;
+    }
+  
+  // evaluate y max 
+  if(      startPhiAngle()                      <=   90.0 * degree 
+           && startPhiAngle() + deltaPhiAngle() >=   90.0 * degree )  
+    { setYMax (  rhoMax () ) ; }
+  else 
+    {
+      const double y1   = sin( startPhiAngle()                   );
+      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
+      const double ymax = ( y1 > y2 ? y1 : y2 ) * rhoMax ()  ;
+      setYMax ( ymax     ) ;
+    }
+  // check bounding parameters 
+  return checkBP() ;
+};
+// ============================================================================
 
 // ============================================================================
 /** default protected  coinstructor 
@@ -116,7 +189,9 @@ SolidCons::SolidCons( const std::string& Name )
   , m_cons_startPhiAngle     ( 0                   )
   , m_cons_deltaPhiAngle     ( 360 * degree        )
   , m_cons_coverModel        ( 0                   )
+  , m_noPhiGap               ( true                )
 {};
+// ============================================================================
 
 // ============================================================================
 /** check for the given point (local frame)
@@ -126,20 +201,19 @@ SolidCons::SolidCons( const std::string& Name )
 // ============================================================================
 bool SolidCons::isInside (  const HepPoint3D& point ) const
 {  
-  /// check z-planes 
-  if( abs( point.z() ) > zHalfLength() ) { return false; }
-  /// check for radius 
-  const double rho = point.perp(); 
-  if( rho < iR_z( point.z() ) ) { return false; }
-  if( rho > oR_z( point.z() ) ) { return false; }
-  /// check for phi 
-  double phi = point.phi();
-  if( phi < 0 ) { phi  += 360.0 * degree ; };
-  if( phi < startPhiAngle()                   ) { return false; } 
-  if( phi > startPhiAngle() + deltaPhiAngle() ) { return false; }
-  ///
-  return true;
+  if( !isOutBBox ( point )  ) { return false ; }
+  // check for phi 
+  if( !insidePhi ( point )  ) { return false ; }
+  // check for radius 
+  const double rho2 = point.perp2();
+  const double oR   = oR_z( point.z() ) ;
+  if( rho2 > oR * oR        ) { return false ; }
+  const double iR   = iR_z( point.z() ) ;
+  if( rho2 <  iR * iR       ) { return false ; }
+  //
+  return true ;
 };
+// ============================================================================
 
 // ============================================================================
 /** serialization for reading
@@ -185,7 +259,13 @@ StreamBuffer& SolidCons::serialize( StreamBuffer& sb )
     { throw SolidException("SolidCons ::DeltaPhiAngle <0 "   );}
   if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
     { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle>2pi");}
-  ///
+  //
+  m_noPhiGap = true ;
+  if(   0 * degree != startPhiAngle () ) { m_noPhiGap = false ; }
+  if( 360 * degree != deltaPhiAngle () ) { m_noPhiGap = false ; }
+  // set bounding parameters
+  setBP();
+  //
   return sb; 
 };
 
@@ -316,13 +396,18 @@ const ISolid* SolidCons::cover () const
  */
 // ============================================================================
 unsigned int 
-SolidCons::intersectionTicks ( const HepPoint3D & point  ,      
-                               const HepVector3D& vect   ,      
-                               ISolid::Ticks    & ticks  ) const
+SolidCons::intersectionTicks 
+( const HepPoint3D & point  ,      
+  const HepVector3D& vect   ,      
+  ISolid::Ticks    & ticks  ) const
 {
-  /// line with numm direction vector is not able to intersect any solid 
+  // line with null direction vector is not able to intersect any solid 
   if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
-  /// intersect with z-planes 
+  
+  // cross bounding cylinder ?
+  if( !crossBCylinder( point , vect ) ) { return 0 ; }
+  
+  // intersect with z-planes 
   SolidTicks::LineIntersectsTheZ( point                       , 
                                   vect                        , 
                                   -1.0 * zHalfLength()        , 
@@ -331,7 +416,7 @@ SolidCons::intersectionTicks ( const HepPoint3D & point  ,
                                   vect                        ,     
                                   zHalfLength()               , 
                                   std::back_inserter( ticks ) );   
-  /// intersect with phi 
+  // intersect with phi 
   if( ( 0 != startPhiAngle() ) || ( 360 * degree != deltaPhiAngle() ) )
     {
       SolidTicks::LineIntersectsThePhi( point                             , 
@@ -424,7 +509,63 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
 
 // ============================================================================
 
+/** calculate the intersection points("ticks") of the solid objects 
+ *  with given line. 
+ *  - Line is parametrized with parameter \a t : 
+ *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+ *      - \f$ \vec{p} \f$ is a point on the line 
+ *      - \f$ \vec{v} \f$ is a vector along the line  
+ *  - \a tick is just a value of parameter \a t, at which the
+ *    intersection of the solid and the line occurs
+ *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+ *    (\f$\vec{v}\f$) are defined in local reference system 
+ *   of the solid 
+ *  Only intersection ticks within the range 
+ *   \a tickMin and \a tickMax are taken into account.
+ *  @see ISolid::intersectionTicks()
+ *  @param Point initial point for the line
+ *  @param Vector vector along the line
+ *  @param tickMin minimum value of Tick 
+ *  @param tickMax maximu value of Tick 
+ *  @param ticks output container of "Ticks"
+ *  @return the number of intersection points
+ */
+// ============================================================================
+unsigned int
+SolidCons::intersectionTicks 
+( const HepPoint3D & Point   ,
+  const HepVector3D& Vector  ,
+  const Tick       & tickMin ,
+  const Tick       & tickMax ,
+  Ticks            & ticks   ) const  
+{
+  const HepPoint3D p1 ( Point + tickMin * Vector );
+  const HepPoint3D p2 ( Point + tickMax * Vector );
+  
+  if( p1.z() < -zHalfLength() && p2.z() < -zHalfLength() ) { return  0; }
+  if( p1.z() >  zHalfLength() && p2.z() >  zHalfLength() ) { return  0; }
+  
+  const double rmax =  
+    outerRadiusAtMinusZ ()  < outerRadiusAtPlusZ  () ? 
+    outerRadiusAtPlusZ  ()  : outerRadiusAtMinusZ () ;
+  
+  if( p1.x() < -rmax  && p2.x() < -rmax ) { return  0; }
+  if( p1.y() < -rmax  && p2.y() < -rmax ) { return  0; }
+  if( p1.x() >  rmax  && p2.x() >  rmax ) { return  0; }
+  if( p1.y() >  rmax  && p2.y() >  rmax ) { return  0; }
+  
+  const double dist = rmax * rmax ; 
+  const double vv = Vector.x() * Vector.x() + Vector.y() * Vector.y() ;
+  const double pp =  Point.x() *  Point.x() +  Point.y() *  Point.y() ;
+  if( 0 == vv && pp     > dist ) { return 0 ; }
+  const double pv =  Point.x() * Vector.x() +  Point.y() * Vector.y() ;
+  if( pp - pv * pv / vv > dist ) { return 0 ; }
+  
+  return SolidBase::intersectionTicks ( Point   , 
+                                        Vector  ,
+                                        tickMin , 
+                                        tickMax ,
+                                        ticks   );
+};
 
-
-
-
+// ============================================================================

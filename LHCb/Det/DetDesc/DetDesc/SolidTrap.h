@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/09 16:47:59  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDTRAP_H
 #define     DETDESC_SOLIDTRAP_H 1 
@@ -194,7 +197,7 @@ protected:
    *  @return  vertex 
    */
   inline const HepPoint3D& point( const VERTICES::size_type& indx ) const 
-  { return m_trap_vertices[indx]; } 
+  { return m_ph_vertices[indx]; } 
   
 private: 
   
@@ -219,8 +222,6 @@ private:
   double               m_trap_sinAlphaAtPlusZ   ; 
   double               m_trap_cosAlphaAtPlusZ   ; 
   ///@}
-  /// vertices 
-  VERTICES             m_trap_vertices; 
 };
 
 /// ===========================================================================

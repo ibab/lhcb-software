@@ -1,14 +1,8 @@
-// $Id: SolidBoolean.cpp,v 1.7 2002-04-24 10:52:52 ibelyaev Exp $
+// $Id: SolidBoolean.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.5  2001/08/09 16:48:02  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 // STD & STL 
 #include <functional>
@@ -53,6 +47,8 @@ SolidBoolean::SolidBoolean( const std::string& name  ,
 {
   if( 0 == solid ) 
     { throw SolidException("SolidBoolean:: ISolid* points to NULL!"); }
+  /// set bounding parameters 
+  setBP();
 };
 
 // ============================================================================
@@ -83,6 +79,28 @@ SolidBoolean::~SolidBoolean()
 };
 
 // ============================================================================
+/// set bounding parameters 
+// ============================================================================
+StatusCode SolidBoolean::setBP()
+{
+  const SolidBase* base = dynamic_cast<SolidBase*> (m_sb_first);
+  if( 0 == base ) 
+    { throw SolidException("SolidChild::setBP(): ISolid is not SolidBase!");}
+  
+  setXMin   ( base->xMin   () );
+  setYMin   ( base->yMin   () );
+  setZMin   ( base->zMin   () );
+  setXMax   ( base->xMax   () );
+  setYMax   ( base->yMax   () );
+  setZMax   ( base->zMax   () );
+  setRMax   ( base->rMax   () );
+  setRhoMax ( base->rhoMax () );
+  
+  return checkBP();
+};
+// ============================================================================
+
+// ============================================================================
 /** reset to the initial ("after constructor") state
  */
 // ============================================================================
@@ -106,7 +124,8 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
                                    const HepTransform3D*    mtrx  ) 
 {
   if( 0 == child  ) { return StatusCode::FAILURE; } 
-  SolidChild* pChild = new  SolidChild( child , mtrx ); 
+  SolidChild* pChild = 
+    new  SolidChild( child , mtrx , "Child For " + name () ); 
   if( 0 == pChild ) { return StatusCode::FAILURE; }
   m_sb_childrens.push_back(pChild); 
   return StatusCode::SUCCESS; 
@@ -124,7 +143,8 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
                                       const HepRotation&    rotation )
 { 
   if( 0 == child  ) { return StatusCode::FAILURE; } 
-  SolidChild* pChild = new  SolidChild( child , position , rotation ); 
+  SolidChild* pChild =
+    new  SolidChild( child , position , rotation , "Child For " + name () ); 
   if( 0 == pChild ) { return StatusCode::FAILURE; }
   m_sb_childrens.push_back(pChild); 
   return StatusCode::SUCCESS; 
@@ -166,6 +186,9 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s )
       m_sb_childrens.push_back( child );
     }
   ///
+  /// set bounding parameters 
+  setBP();
+  //
   return s;
 };
 

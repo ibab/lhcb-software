@@ -1,8 +1,12 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: SolidUnion.h,v 1.7 2002-05-11 18:25:47 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/09 16:48:00  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef       DETDESC_SOLIDUNION_H
 #define       DETDESC_SOLIDUNION_H 1 
 ///@{ 
@@ -38,7 +42,7 @@ class SolidFactory;
  *  @date xx/xx/xxx
  */
 
-class SolidUnion: public SolidBoolean
+class SolidUnion: public virtual SolidBoolean
 {
   /// frined factory for instantiation 
   friend class SolidFactory<SolidUnion>;
@@ -73,6 +77,13 @@ public:
    */
   bool isInside ( const HepPoint3D   & point ) const ;
 
+  /** retrieve the pointer to "the most simplified cover", 
+   *  ideally to something like "the bounding box"
+   *  @see ISolid::cover()
+   *  @return pointer to the most simplified cover
+   */
+  virtual const ISolid* coverTop () const ;
+
   /** add child solid to the solid union
    *  @param solid pointer to child solid 
    *  @param mtrx  pointer to transformation 
@@ -96,16 +107,25 @@ public:
    *  @param name name of the solid union 
    */
   SolidUnion( const std::string& Name = "Anonymous Union");
+
+  /** update bounding parameters
+   *  @return StatusCode 
+   */
+  StatusCode updateBP();
   
  private:
   
   SolidUnion           ( const SolidUnion& ) ; ///< no copy 
   SolidUnion& operator=( const SolidUnion& ) ; ///< no =
+
+private:
+  
+  mutable ISolid* m_coverTop ;
   
 };
 
-/// ===========================================================================
+// ===========================================================================
 #endif  ///<  DETDESC_SOLIDUNION_H
-/// ===========================================================================
+// ===========================================================================
 
 

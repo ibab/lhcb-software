@@ -1,11 +1,9 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.9  2001/08/09 16:47:58  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// $Id: SolidBoolean.h,v 1.11 2002-05-11 18:25:46 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
 /// STL & STD 
@@ -31,12 +29,12 @@ class MsgStream;
  *  A simple helper class (common base) for implementation of 
  *  complex "boolean" solids. 
  *  represents 1 "main"("first") solid and a container of 
- *  "childrens"  placed inside of "main" 
+ *  "children"  placed inside of "main" 
  *  
  *  @author Vanya Belyaev 
  */
 
-class SolidBoolean: public SolidBase
+class SolidBoolean: public virtual SolidBase
 {  
  public:
   //
@@ -194,6 +192,13 @@ protected:
   SolidChildrens::iterator 
   childEnd   () { return m_sb_childrens.end  (); };
   
+protected:
+  
+  /** set bounding parameters 
+   *  @return status code 
+   */
+  StatusCode setBP();
+
 private:
   ///
   std::string                    m_sb_name     ;    

@@ -1,31 +1,31 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.5 2002-04-24 10:52:30 ibelyaev Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.6 2002-05-11 18:25:47 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
 #define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
-
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/StatusCode.h"
-
-#include "DetDesc/ISolid.h"
-#include "DetDesc/ILVolume.h"
-#include "DetDesc/IPVolume.h"
-
+// STD & STL  
 #include <algorithm>
 #include <functional>
 #include <numeric>
-
-class Material;
-
+// GaudiKernel
+#include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/StatusCode.h"
+// DetDesc 
+#include "DetDesc/ISolid.h"
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
 
-/** @file VolumeIntersectionIntervals.h : 
+
+/** @file 
  * 
  *  a collection of useful technical methods 
- *  for manipulation of Intersection Intervals 
+ *  for manipulation of 'Intersection' and 'Intervals' 
+ *  @see ILVolume
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 23 Apr 2002 
  */
@@ -87,7 +87,7 @@ namespace  VolumeIntersectionIntervals
    *  helpful method to decode the ticks sequence 
    *  into sequence of intervals 
    *  return the number of intervals 
-   *  (normally it is just a number of ticks - 1 )
+   *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @param ticks input container of Ticks 
    *  @param out   output iterator for container of "Intervals"
@@ -98,23 +98,23 @@ namespace  VolumeIntersectionIntervals
     OUTPUTTYPE            out   ) 
   {
     // interval can be constructed from at least 2 ticks!
-      if( ticks.size() < 2 ) { return 0 ; } // RETURN!
-      
-      unsigned int res = 0 ; 
-      ISolid::Ticks::const_iterator it = ticks.begin(); 
-      ISolid::Tick  tickPrevious = *it; 
-      while( ticks.end() != it ) 
-        {
-          ISolid::Tick tickCurrent = *it++; 
-          if( tickCurrent > tickPrevious ) 
-            { ++res; *out++ = 
-                       ILVolume::Interval( tickPrevious , tickCurrent ) ; } 
-          tickPrevious = tickCurrent; 
-        }
-      ///
-      return res; 
-    }
-  
+    if( ticks.size() < 2 ) { return 0 ; } // RETURN!
+    
+    unsigned int res = 0 ; 
+    ISolid::Ticks::const_iterator it = ticks.begin(); 
+    ISolid::Tick  tickPrevious = *it; 
+    while( ticks.end() != it ) 
+      {
+        ISolid::Tick tickCurrent = *it++; 
+        if( tickCurrent > tickPrevious ) 
+          { ++res; *out++ = 
+                     ILVolume::Interval( tickPrevious , tickCurrent ) ; } 
+        if( ticks.end() != it ) { ++it ; }
+        tickPrevious = tickCurrent; 
+      }
+    ///
+    return res; 
+  };
   
   /** @class AccumulateIntervals 
    *  accumulation utility to accumulate the total length of intervals 
@@ -174,7 +174,6 @@ namespace  VolumeIntersectionIntervals
       {
         const Interval& intervalTop = iterTop->first  ;
         const Material* matTop      = iterTop->second ;
-        ///
         // temporary container of indexes of related intervals 
         IndexCont tmpIndex; 
         for( Iter iter = child.begin();  child.end() != iter ; ++iter )
@@ -198,10 +197,10 @@ namespace  VolumeIntersectionIntervals
                */
               return StatusCode(15) ;
             }
-            // RETURN !!!
+             // ? RETURN !!!
           }  // end of loop over the child container 
         /// 
-        /// try to merge intervals 
+        // try to merge intervals 
         Tick leftTick       = intervalTop.first  ; 
         Tick mostRightTick  = intervalTop.second ;
         for( IndexCont::const_iterator it = tmpIndex.begin(); 
@@ -226,11 +225,11 @@ namespace  VolumeIntersectionIntervals
                       ILVolume::Intersection( Interval( leftTick , 
                                                         intervalLocal.second), 
                                               matLocal ) ; }
-                else                              // geometry error!!!
+                else                               // geometry error!!!
                   { return StatusCode(16) ; }      // RETURN !!!
                 leftTick = intervalLocal.second;
               }
-            else                                 // geometry error!!!
+            else                                  // geometry error!!!
               { return StatusCode(17) ; }         // RETURN !!!
           }  // end of loop over temporary index container 
         if( leftTick != mostRightTick ) 

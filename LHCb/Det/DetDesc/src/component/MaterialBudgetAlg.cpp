@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.2 2002-05-04 13:13:25 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.3 2002-05-11 18:25:48 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/05/04 13:13:25  ibelyaev
+//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
+//
 // ============================================================================
 // Include files
 // STL & STD 
@@ -112,9 +115,9 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_vrtx          ( 3 , 0.0        )
   , m_vertex        (                )
   , m_shoots        ( 1000           )
-  , m_z             (  1   * meter   )
-  , m_xsize         (  0.5 * meter   )
-  , m_ysize         (  0.5 * meter   )
+  , m_z             ( 12 * meter     )
+  , m_xsize         (  4 * meter     )
+  , m_ysize         (  3 * meter     )
   , m_budget        (  0             )
   , m_normalization (  0             )
 {  
@@ -124,7 +127,7 @@ MaterialBudgetAlg::MaterialBudgetAlg
   declareProperty( "Shoots"           , m_shoots      ) ;
   declareProperty( "zPlane"           , m_z           ) ;
   declareProperty( "xSize"            , m_xsize       ) ;
-  declareProperty( "zSize"            , m_ysize       ) ;  
+  declareProperty( "ySize"            , m_ysize       ) ;  
 };
 // ============================================================================
 
@@ -145,6 +148,30 @@ StatusCode MaterialBudgetAlg::initialize()
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Initialise" << endreq;
   
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  }
+
   // locate transport service 
   StatusCode sc = service ( m_trSvcName , m_trSvc   , true ) ;
   if( sc.isFailure()   ) 
@@ -263,16 +290,15 @@ StatusCode MaterialBudgetAlg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( -1. , 1. ) );
-  
-  int n = m_shoots ;
-  while( n-- > 0 )
+
+  for( int shoot = 0 ; shoot < m_shoots ; ++shoot ) 
     {
       
       const HepPoint3D point( m_xsize * flat.shoot() , 
                               m_ysize * flat.shoot() , m_z );
       
       const double dist = m_trSvc -> distanceInRadUnits( m_vertex , point );
-      
+
       m_budget        -> fill( point.x() , point.y() , dist ) ;
       m_normalization -> fill( point.x() , point.y()        ) ; 
     }

@@ -1,4 +1,4 @@
-// $Id: SolidTrd.cpp,v 1.8 2002-04-24 10:53:00 ibelyaev Exp $ 
+// $Id: SolidTrd.cpp,v 1.9 2002-05-11 18:25:48 ibelyaev Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -63,6 +63,8 @@ SolidTrd::SolidTrd( const std::string& name              ,
     { throw SolidException("SolidTrd::YSUM is not positive "); } 
   ///
   makeAll();
+  /// set bounding parameters
+  setBP();
   ///
 };
 
@@ -131,6 +133,8 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s )
     { throw SolidException("SolidTrd::YSUM is not positive "); } 
   ///
   makeAll();
+  /// set bounding parameters
+  setBP();
   ///
   return s;
   ///
@@ -211,37 +215,55 @@ void SolidTrd::makeAll()
 {   
   reset() ;
   m_ph_planes.clear();
-  std::vector<HepPoint3D> points;
+  m_ph_vertices.clear();
   {
     /// construct points (vertices)
     HepPoint3D p0( - xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ;
     HepPoint3D p1( - xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ; 
     HepPoint3D p2(   xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ;
     HepPoint3D p3(   xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ; 
-    HepPoint3D p4( - xHalfLength1() , - yHalfLength1() ,  zHalfLength() ) ; 
-    HepPoint3D p5( - xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ; 
-    HepPoint3D p6(   xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ;
-    HepPoint3D p7(   xHalfLength1() , - yHalfLength1() ,  zHalfLength() ) ;
+    HepPoint3D p4( - xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ; 
+    HepPoint3D p5( - xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ; 
+    HepPoint3D p6(   xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ;
+    HepPoint3D p7(   xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ;
     ///
-    points.push_back( p0 ) ; 
-    points.push_back( p1 ) ; 
-    points.push_back( p2 ) ; 
-    points.push_back( p3 ) ; 
-    points.push_back( p4 ) ; 
-    points.push_back( p5 ) ; 
-    points.push_back( p6 ) ; 
-    points.push_back( p7 ) ; 
+    m_ph_vertices.push_back( p0 ) ; 
+    m_ph_vertices.push_back( p1 ) ; 
+    m_ph_vertices.push_back( p2 ) ; 
+    m_ph_vertices.push_back( p3 ) ; 
+    m_ph_vertices.push_back( p4 ) ; 
+    m_ph_vertices.push_back( p5 ) ; 
+    m_ph_vertices.push_back( p6 ) ; 
+    m_ph_vertices.push_back( p7 ) ; 
     ///
   }
-  if( 8 != points.size() ) 
+  if( 8 != m_ph_vertices.size() ) 
     { throw SolidException("SolidTrd::makeAll: wrong # vertices!"); } 
   /// make faces
-  addFace( points[0] , points[4] , points[5] , points[1] ) ;
-  addFace( points[2] , points[3] , points[7] , points[6] ) ;
-  addFace( points[1] , points[2] , points[6] , points[5] ) ;
-  addFace( points[0] , points[3] , points[7] , points[4] ) ;
-  addFace( points[0] , points[1] , points[3] , points[2] ) ; /// bottom face
-  addFace( points[5] , points[4] , points[6] , points[7] ) ; /// top    face
+  addFace( m_ph_vertices[0] , 
+           m_ph_vertices[4] , 
+           m_ph_vertices[5] , 
+           m_ph_vertices[1] ) ;
+  addFace( m_ph_vertices[2] , 
+           m_ph_vertices[3] , 
+           m_ph_vertices[7] , 
+           m_ph_vertices[6] ) ;
+  addFace( m_ph_vertices[1] , 
+           m_ph_vertices[2] , 
+           m_ph_vertices[6] , 
+           m_ph_vertices[5] ) ;
+  addFace( m_ph_vertices[0] , 
+           m_ph_vertices[3] , 
+           m_ph_vertices[7] , 
+           m_ph_vertices[4] ) ;
+  addFace( m_ph_vertices[0] , 
+           m_ph_vertices[1] , 
+           m_ph_vertices[3] , 
+           m_ph_vertices[2] ) ; /// bottom face
+  addFace( m_ph_vertices[5] , 
+           m_ph_vertices[4] , 
+           m_ph_vertices[6] , 
+           m_ph_vertices[7] ) ; /// top    face
   ///
   if( 6 != planes().size() ) 
     { throw SolidException("SolidTrd::makeALL: wrong # faces"); } 

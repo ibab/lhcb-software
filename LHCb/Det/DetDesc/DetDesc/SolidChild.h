@@ -1,17 +1,8 @@
-// $Id: SolidChild.h,v 1.10 2002-04-24 10:52:24 ibelyaev Exp $ 
+// $Id: SolidChild.h,v 1.11 2002-05-11 18:25:46 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2001/08/15 14:34:25  ibelyaev
-// remove misplacded 'protected' attribute
-//
-// Revision 1.8  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.7  2001/08/09 16:47:58  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef       DETDESC_SOLIDCHILD_H 
 #define       DETDESC_SOLIDCHILD_H 1
@@ -44,7 +35,7 @@ class SolidFactory;     ///< DetDesc
  *  @date xx/xx/xxxx
  */
 
-class SolidChild : public SolidBase
+class SolidChild : public virtual SolidBase
 {
   ///
   friend class SolidBoolean;
@@ -174,7 +165,14 @@ public:
     if( 0 == m_sc_matrix ) { m_sc_matrix = new  HepTransform3D; }
     return *m_sc_matrix;
   };
+
+protected:
   
+  /** set boundary parameters 
+   *  @return status code 
+   */
+  StatusCode setBP();
+
 private:
   
   /** copy constructor 

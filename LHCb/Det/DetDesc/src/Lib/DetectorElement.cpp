@@ -1,44 +1,8 @@
-// $Id: DetectorElement.cpp,v 1.15 2002-01-21 14:46:46 sponce Exp $ 
+// $Id: DetectorElement.cpp,v 1.16 2002-05-11 18:25:47 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2002/01/18 18:23:09  ibelyaev
-//  bug fixes(materials), warning reduced, printout improved
-//
-// Revision 1.13  2001/12/13 19:14:01  andreav
-// *** empty log message ***
-//
-// Revision 1.12  2001/12/11 10:02:28  sponce
-// Implementation of usage of the condition database. 
-// This includes new objects and associated converters
-// (like condition and XmlConditionCnv).
-// The condition object is extensible, as was DetectorElement. 
-// Thus, there is a templated XmlUserConditionCnv that 
-// could be extended by users as it was the case for detector elements.
-//
-// Revision 1.11  2001/11/20 15:22:23  sponce
-// Lots of changes here :
-//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-//    is the removal of the class XmlAddress
-//    - centralization of address creations in conversion services, as suggested
-//    by the new architecture
-//    - add a parseString method on the XMLParserSvc. This allows to parse XML
-//    directly from a string
-//    - use of the new Assembly objects in the XML converters
-//    - update of the converters to handle the definition of detelem inside
-//    detelems, without using detelemrefs
-//    - take care of a possible indexing of detelems and parametrized detelems.
-//    The numbering is given by adding :<digits> to the name of the element.
-//    - add support for polycones in the converters
-//    - add code convention compliance to many files
-//
-// Revision 1.10  2001/08/10 16:41:29  ibelyaev
-// modifitcations in IDetectorElement and related classes
-//
-// Revision 1.9  2001/08/10 14:59:02  ibelyaev
-// modifications in IGeometryInfo and related classes
-// 
 // ===========================================================================
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -129,30 +93,9 @@ DetectorElement::~DetectorElement()
   release();  
 };
 ///
-IDataProviderSvc*  DetectorElement::dataSvc () 
-{ return DetDesc::detSvc(); }
+IDataProviderSvc*  DetectorElement::dataSvc () { return DetDesc::detSvc() ; }
 ///
-IMessageSvc*  DetectorElement::msgSvc () 
-{
-  /// static pointer to message service 
-  static IMessageSvc* s_msgSvc = 0 ;
-  if( 0 == s_msgSvc ) 
-    {
-      ISvcLocator* svcLoc = Gaudi::svcLocator();
-      if( 0 == svcLoc ) 
-        { throw DetectorElementException("ISvcLocator* points to NULL!"); }
-      StatusCode sc = 
-        svcLoc->service( "MessageSvc" , s_msgSvc );
-      if( sc.isFailure() ) 
-        { throw DetectorElementException("Could not locate 'MessageSvc'!");}
-      if( 0 == s_msgSvc ) 
-        { throw DetectorElementException("IMessageSvc* points to NULL!");}
-      /// add the reference 
-      s_msgSvc->addRef();
-    }
-  ///
-  return s_msgSvc; 
-};
+IMessageSvc*       DetectorElement::msgSvc  () { return DetDesc::msgSvc() ; } 
 
 IDetectorElement*  DetectorElement::parentIDetectorElement() const {
   IDataProviderSvc* dsvc = dataSvc();

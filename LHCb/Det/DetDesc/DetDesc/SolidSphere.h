@@ -1,8 +1,9 @@
-/// ===========================================================================
-/// CVS $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: SolidSphere.h,v 1.8 2002-05-11 18:25:46 ibelyaev Exp $ 
+// ===========================================================================
+// CVS $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
 /// DetDesc 
@@ -229,12 +230,43 @@ public:
    */
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
+  
+protected:
+  
+  /// gap in phi   ?
+  const bool noPhiGap   () const { return m_noPhiGap   ; }
+  /// gap in theta ?
+  const bool noThetaGap () const { return m_noThetaGap ; }
+  
+  /** check for R 
+   *  @param point to be checked 
+   *  @return true if point is "inside rho" 
+   */
+  inline const bool insideR     ( const HepPoint3D& point ) const ;
+  
+  /** check for phi 
+   *  @param point to be checked 
+   *  @return true if point is "inside phi" 
+   */
+  inline const bool insidePhi   ( const HepPoint3D& point ) const ;
+  
+  /** check for theta
+   *  @param point to be checked 
+   *  @return true if point is "inside theta" 
+   */
+  inline const bool insideTheta ( const HepPoint3D& point ) const ;
+  
 protected:
 
   /** protected constructor 
    *  @param name name of the sphere segment \
    */
   SolidSphere( const std::string& name = "Anonymous Sphere" );
+
+  /** set bounding parameters 
+   *  @return status code 
+   */
+  StatusCode setBP();
   
 private:
   //
@@ -242,20 +274,83 @@ private:
   SolidSphere& operator=( const SolidSphere& );  // no assignment 
   //
 private:
-  ///@{ 
-  /** sphere segment parameters */ 
+
+  /// sphere segment parameters 
   double                m_sphere_outerR2         ;  
   double                m_sphere_insideR2        ; 
   double                m_sphere_startPhiAngle   ;
   double                m_sphere_deltaPhiAngle   ; 
   double                m_sphere_startThetaAngle ; 
   double                m_sphere_deltaThetaAngle ;
-  ///@}
   /// cover model 
   int                   m_sphere_coverModel      ;
+  // 
+  bool                  m_noPhiGap               ;
+  bool                  m_noThetaGap             ;
+  //
 };
+// ===========================================================================
 
-/// ===========================================================================
+
+// ===========================================================================
+/** check for R 
+ *  @param point to be checked 
+ *  @return true if point is "inside rho" 
+ */
+// ===========================================================================
+inline const bool SolidSphere::insideR 
+( const HepPoint3D& point ) const 
+{
+  const double r2 = point.mag2();
+  if(  r2 >  outerR2 () ) { return false ; }
+  if(  r2 < insideR2 () ) { return false ; }
+  // inside! 
+  return true ;
+};
+// ===========================================================================
+
+// ===========================================================================
+/** check for phi 
+ *  @param point to be checked 
+ *  @return true if point is "inside phi" 
+ */
+// ===========================================================================
+inline const bool SolidSphere::insidePhi 
+( const HepPoint3D& point ) const 
+{
+  if( noPhiGap()                                    ) { return true ; }
+  double phi = point.phi() ;   // [-180,180] 
+  if( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
+  phi += 360 * degree ;
+  if( startPhiAngle ()                   <= phi &&
+      startPhiAngle () + deltaPhiAngle() >= phi     ) { return true ; }
+  // 
+  return false ;
+};
+// ===========================================================================
+
+// ===========================================================================
+/** check for theta
+ *  @param point to be checked 
+ *  @return true if point is "inside theta" 
+ */
+// ===========================================================================
+inline const bool SolidSphere::insideTheta 
+( const HepPoint3D& point ) const 
+{
+  if( noThetaGap()                                        ) { return true ; }
+  const double theta = point.theta() ;  
+  if( startThetaAngle ()                     <= theta &&
+      startThetaAngle () + deltaThetaAngle() >= theta     ) { return true ; }
+  // 
+  return false ;
+};
+// ===========================================================================
+
+// ===========================================================================
+// The END 
+// ===========================================================================
 #endif ///<  DETDESC_SOLIDSPHERE_H
-/// ===========================================================================
+// ===========================================================================
 
