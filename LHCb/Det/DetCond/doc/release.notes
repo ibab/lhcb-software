@@ -1,11 +1,11 @@
-# $Id: release.notes,v 1.24 2002-12-03 17:00:28 andreav Exp $
+# $Id: release.notes,v 1.25 2002-12-03 17:15:12 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
 ==============================================================================
 !20021203 - Andrea Valassi
-Include the MySQL implementation on Linux
-- DetCond on RH73 and WIN32 now depends on both implementations!
+Include the MySQL implementation for both RH73 and WIN32
+- DetCond on RH73/WIN32 now depends on both Oracle and MySQL implementations
   > multiple "use..." in the requirements
   > if the "use..." statement is removed, some code is #ifndef'd away
     (as the base packages propagate to DetCond the relevant cppflags)
