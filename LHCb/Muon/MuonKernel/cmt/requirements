@@ -1,24 +1,19 @@
 package MuonKernel
 
-version v2r3
+version v2r4
 
 branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
-use GaudiKernel v13r* 
+use GaudiKernel v14r* 
 
 #----------------------------------------------
 library MuonKernelLib ../src/*.cpp
 
-apply_pattern package_Llinkopts  
-apply_pattern linker_path   
-
-#----------------------------------------------
+apply_pattern linker_library library=MuonKernelLib
 
 private
-
-apply_pattern package_Lshlibflags
 
 #####################################################################
 #  For the "standalone" MuonKernel library version remove dependancy

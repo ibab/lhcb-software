@@ -1,6 +1,11 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!======================= MuonKernel v2r4 2003-12-08 =======================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use GaudiKernel v14r* in requirements)
+ - Fix some doxygen warnings
+
 !======================= MuonKernel v2r3 2003-06-17 =======================
 ! 2003-06-16 - Sebastien Ponce
  - use more recent GaudiKernel

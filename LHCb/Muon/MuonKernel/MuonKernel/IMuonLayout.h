@@ -1,9 +1,9 @@
-// $Id: IMuonLayout.h,v 1.6 2002-05-07 07:01:05 atsareg Exp $
+// $Id: IMuonLayout.h,v 1.7 2003-12-09 10:09:28 cattanem Exp $
 
 #ifndef MUONKERNEL_IMUONLAYOUT_H
 #define MUONKERNEL_IMUONLAYOUT_H     1
 
-/** @class IMuonLayout IMuonLayout MuonKernel/IMuonLayout.h
+/** @class IMuonLayout IMuonLayout.h MuonKernel/IMuonLayout.h
 
    Common interface for Muon System layout description classes
    

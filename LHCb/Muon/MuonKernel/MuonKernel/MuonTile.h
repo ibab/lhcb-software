@@ -1,9 +1,9 @@
-// $Id: MuonTile.h,v 1.3 2002-05-07 07:01:59 atsareg Exp $
+// $Id: MuonTile.h,v 1.4 2003-12-09 10:09:28 cattanem Exp $
 
 #ifndef MUONKERNEL_MUONTILE_H
 #define MUONKERNEL_MUONTILE_H     1
 
-/** @class IMuonTile IMuonTile MuonKernel/IMuonTile.h
+/** @class MuonTile MuonTile.h MuonKernel/MuonTile.h
 
    Basic implementation of the IMuonTile interface for Muon System 
    entities which are identifiable with a MuonTileID.
