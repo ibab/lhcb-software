@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackPrsEval.cpp,v 1.2 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/11/17 17:09:27  ibelyaev
 //  new set of options and tools
 //
@@ -71,8 +74,6 @@ CaloTrackPrsEval::CaloTrackPrsEval
   // minimal track error
   , m_safe             ( 0.5 * mm   ) // effective "reasonable" error 
   // technical 
-  , m_incSvc           ( 0          )
-  , m_eventSvc         ( 0          )
   , m_digits           ( 0          )
   // technical
   , m_tr               ( false      ) 
@@ -111,35 +112,27 @@ StatusCode    CaloTrackPrsEval::initialize ()
     { return Error("Coudl not initialize the base class CaloTool",sc); }
   
   // set the detector 
-  const DeCalorimeter* detector = get( detSvc () , detName () , detector );
+  const DeCalorimeter* detector = getDet<DeCalorimeter>( detName () );
   if( 0 == detector ) { return StatusCode::FAILURE ; }
   setDet( detector );
 
   // calculate the z position of calorimeter  
   m_z = det()->geometry()->toGlobal( HepPoint3D( 0 , 0 , 0 ) ).z() ;
   
-  // locate event service 
-  sc = serviceLocator() -> service ( "EventDataSvc" , m_eventSvc , true );
-  if( sc.isFailure()  ) { return Error("Could not locate 'EventDataSvc'", sc );}
-  if( 0 == m_eventSvc ) { return Error("Could not locate 'EventDataSvc'"     );}
-  
   // subscribe the incident 
-  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
-  if( sc.isFailure() ) { return Error("Could not locate 'IncidentSvc'", sc );}
-  if( 0 == m_incSvc  ) { return Error("Could not locate 'IncidentSvc'"     );}
-  m_incSvc -> addListener( this , "EndEvent"   , 10 );
+  incSvc() -> addListener( this , IncidentType::EndEvent   , 10 );
   
   // locate the extrapoaltor
-  m_extrapolator = tool  ( m_extrapolatorType , 
-                           m_extrapolatorName , 
-                           m_extrapolator     ) ;
-  if( 0 == m_extrapolator ) { return StatusCode::FAILURE ; }
+  m_extrapolator = 
+    tool<ITrExtrapolator>  ( m_extrapolatorType , m_extrapolatorName  ) ;
   
   // set pid 
   m_pid = ParticleID( m_pidPDG );
   
   if( 0 >= m_tol    ) { Warning("NonPositive  Tolerance  parameter"  ) ; }
   if( 0 >= m_shower ) { Warning("NonPositive  ShowerSize parameter" ) ; }
+  
+  m_digits = 0 ;
   
   return StatusCode::SUCCESS ;
 };
@@ -178,13 +171,6 @@ namespace Local
 // ============================================================================
 StatusCode CaloTrackPrsEval::finalize   ()
 {
-  // release the used tools and services  
-  if( 0 != m_extrapolator ) 
-    { m_extrapolator -> release () ; m_extrapolator = 0 ; }
-  if( 0 != m_incSvc       ) 
-    { m_incSvc       -> release () ; m_incSvc       = 0 ; }
-  if( 0 != m_eventSvc     ) 
-    { m_eventSvc     -> release () ; m_eventSvc     = 0 ; }
   // reset detector 
   setDet( (const DeCalorimeter*) 0 );
   // finalize the base class 
@@ -248,9 +234,9 @@ StatusCode CaloTrackPrsEval::process
   if( 0 == track    ) { return Error("Track points to NULL!"      , 100 ) ; }
   
   // get the container of digits 
-  if( 0 == m_digits ) { m_digits = get( m_eventSvc , m_input , m_digits ) ; }
-  if( 0 == m_digits ) { return StatusCode::FAILURE                        ; }
-
+  if( 0 == m_digits ) { m_digits = get<CaloDigits>( m_input ) ; }
+  if( 0 == m_digits ) { return StatusCode::FAILURE            ; }
+  
   StatusCode sc = findTrackProjection( track , m_z ) ;
   if( sc.isFailure() ) 
     { return Error("Track is not extrapolated to '"+detName()+"'" , sc ) ; }

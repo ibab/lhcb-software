@@ -1,11 +1,8 @@
-// $Id: EcalPIDmu.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// $Id: EcalPIDmu.opts,v 1.2 2004-02-17 12:06:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/11/17 17:09:26  ibelyaev
-//  new set of options and tools
-//
 // ============================================================================
 
 /** @file 
@@ -38,20 +35,16 @@ EcalPIDmu.UseVeloBack    = false ;
 EcalPIDmu.UseSeed        = true  ; 
 EcalPIDmu.UseUpstream    = true  ;
 
-EcalPIDmu.ValueBins      =  51        ;
-EcalPIDmu.MomentumBins   =  51        ;
 EcalPIDmu.ValueNorm      =   5. * GeV ; // "cut" for tanh 
 EcalPIDmu.MomentumNorm   =  25. * GeV ; // "cut" for tanh 
 
+/// define teh names in HBOOK-style 
 
-#pragma print OFF 
-
-// 2D signal     pseudo-histogram 
-#include "$CALOPIDSOPTS/EcalPIDmu_Signal.opts" 
-// 2D background pseudo-histogram 
-#include "$CALOPIDSOPTS/EcalPIDmu_Background.opts" 
-
-#pragma print ON
+//EcalPIDmu.HistoForSignal         = "CaloPIDs/CALO/ECALPIDM/U/1" ;
+//EcalPIDmu.HistoForBackground     = "CaloPIDs/CALO/ECALPIDM/U/2" ;
+//EcalPIDmu.HistoForSignalNorm     = "CaloPIDs/CALO/ECALPIDM/U/3" ;
+//EcalPIDmu.HistoForBackgroundNorm = "CaloPIDs/CALO/ECALPIDM/U/4" ;
+EcalPIDmu.HistoForDeltaLL          = "CaloPIDs/CALO/ECALPIDM/U/5" ;
 
 
 // ============================================================================

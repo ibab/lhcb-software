@@ -1,8 +1,11 @@
-// $Id: CaloTrackHcalEval.h,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackHcalEval.h,v 1.2 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/11/17 17:09:27  ibelyaev
 //  new set of options and tools
 //
@@ -69,13 +72,6 @@ public:
    */
   virtual StatusCode    initialize ();
 
-  /** standard finalization method 
-   *  @see CaloTool 
-   *  @see  AlgTool 
-   *  @see IAlgTool
-   *  @return status code 
-   */
-  virtual StatusCode    finalize   ();
   
   /** handle the incident 
    *  (reset the local cached values at the end of the event) 
@@ -118,12 +114,6 @@ private:
   
   // address of container of input digits
   std::string         m_input    ;  
-
-  // event service 
-  IDataProviderSvc*   m_eventSvc ;
-
-  // incident  service 
-  IIncidentSvc*       m_incSvc   ;
   
   // pointer to digits of current event 
   mutable CaloDigits* m_digits   ;

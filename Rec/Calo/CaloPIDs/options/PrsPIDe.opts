@@ -1,11 +1,8 @@
-// $Id: PrsPIDe.opts,v 1.2 2003-07-17 14:45:35 ibelyaev Exp $
+// $Id: PrsPIDe.opts,v 1.3 2004-02-17 12:06:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
-// The first import of new package 
-//
 // ============================================================================
 
 /** @file 
@@ -39,20 +36,14 @@ PrsPIDe.UseVeloBack    = false ;
 PrsPIDe.UseSeed        = true  ; 
 PrsPIDe.UseUpstream    = true  ;
 
-PrsPIDe.ValueBins      =  51        ;
-PrsPIDe.MomentumBins   =  51        ;
 PrsPIDe.ValueNorm      = 100. * MeV ; // tanh "cut" 
 PrsPIDe.MomentumNorm   =  50. * GeV ; // tanh "cut"
 
-#pragma print OFF 
-
-// 2D signal     pseudo-histogram 
-#include "$CALOPIDSOPTS/PrsPIDe_Signal.opts" 
-// 2D background pseudo-histogram 
-#include "$CALOPIDSOPTS/PrsPIDe_Background.opts" 
-
-#pragma print ON
-
+//PrsPIDe.HistoForSignal         = "CaloPIDs/CALO/PRSPIDE/1" ;
+//PrsPIDe.HistoForBackground     = "CaloPIDs/CALO/PRSPIDE/2" ;
+//PrsPIDe.HistoForSignalNorm     = "CaloPIDs/CALO/PRSPIDE/3" ;
+//PrsPIDe.HistoForBackgroundNorm = "CaloPIDs/CALO/PRSPIDE/4" ;
+PrsPIDe.HistoForDeltaLL        = "CaloPIDs/CALO/PRSPIDE/5" ;
 
 
 // ============================================================================

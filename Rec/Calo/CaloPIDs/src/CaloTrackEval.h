@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.h,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackEval.h,v 1.2 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/12/01 14:22:57  ibelyaev
 //  Hcal stuff and updated S-coprrections
 //
@@ -76,14 +79,6 @@ public:
    */
   virtual StatusCode    initialize ();
 
-  /** standard finalization method 
-   *  @see CaloTool 
-   *  @see  AlgTool 
-   *  @see IAlgTool
-   *  @return status code 
-   */
-  virtual StatusCode    finalize   ();
-
   /** handle the incident 
    *  (reset the cached values  at the end of the event)
    *  @see Incident 
@@ -149,11 +144,6 @@ private:
   // minimal track error 
   double                           m_safe             ;
 
-  // incident service
-  IIncidentSvc*                    m_incSvc           ;
-  // event service 
-  IDataProviderSvc*                m_eventSvc         ;
-  
   // z of calorimeter 
   double                           m_z                ;
   double                           m_st               ;

@@ -1,8 +1,11 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.2 2003-07-17 12:45:16 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.3 2004-02-17 12:06:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/17 12:45:16  ibelyaev
+//  minor fix to speed-up the execution
+//
 // Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
 // The first import of new package 
 //
@@ -117,7 +120,7 @@ StatusCode CaloTrack2EstimatorAlg::initialize()
   if( sc.isFailure() ) 
     { return Error("Base class could not be initialized",sc);}
   
-  m_eval = tool( m_evalType , m_evalName , m_eval );
+  m_eval = tool<ICaloTrackIdEval>( m_evalType , m_evalName );
   if( 0 == m_eval ) { return Error("Evaluator is not located");}
   
   return StatusCode::SUCCESS;
@@ -133,15 +136,9 @@ StatusCode CaloTrack2EstimatorAlg::initialize()
  */
 // ============================================================================
 StatusCode CaloTrack2EstimatorAlg::finalize() 
-{
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG  << "==> Finalize" << endreq;
-  
+{  
   if( 0 != m_skip ) 
-    { msg << MSG::ALWAYS << " Number of 'skips' is " << m_skip << endreq ; }
-  
-  // release evaluator
-  if( 0 != m_eval ) { m_eval->release()  ; m_eval = 0 ; }
+  { always () << " Number of 'skips' is " << m_skip << endreq ; } 
   
   return CaloAlgorithm::finalize() ;
 };
@@ -164,9 +161,9 @@ StatusCode CaloTrack2EstimatorAlg::execute()
   typedef Relation1D<TrStoredTrack,float>  Table   ;
   
   // get the tracks from the store 
-  const Tracks* tracks = get( eventSvc() , inputData() , tracks );
+  const Tracks* tracks = get<Tracks>( inputData() );
   if( 0 == tracks      ) { return StatusCode::FAILURE ; }           // RETURN
-
+  
   // create and register new relation object 
   Table*     table = new Table( tracks->size() );
   StatusCode sc    = put( table , outputData() );
@@ -175,54 +172,52 @@ StatusCode CaloTrack2EstimatorAlg::execute()
   // loop over all tracks 
   for( Tracks::const_iterator itrack = tracks->begin() ; 
        tracks->end() != itrack ; ++itrack ) 
-    {
-      const Track* track = *itrack ;
-      
-      // skip NULLs 
-      if( 0 == track                              ) { continue ; }
-      
-      // use only unique  tracks ? 
-      if(  m_unique   && 1 != track->unique    () ) { continue ; }
-      
-      // use 'error'   tracks ?
-      if( !m_error    && 0 != track->errorFlag () ) { continue ; }
-      
-      // use 'forward'   tracks ?
-      if( !m_forward  && 1 == track->forward   () ) { continue ; }
-      
-      // use 'match'     tracks ?
-      if( !m_matched  && 1 == track->match     () ) { continue ; }
-      
-      // use 'seed'      tracks ?
-      if( !m_seed     && 1 == track->seed      () ) { continue ; }
-      
-      // use 'velo'      tracks ?
-      if( !m_velo     && 1 == track->velo      () ) { continue ; }      
-
-      // use 'veloTT'    tracks ?
-      if( !m_veloTT   && 1 == track->veloTT    () ) { continue ; }      
-
-      // use 'veloBack'    tracks ?
-      if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
-      
-      // use 'upstream'  tracks ?
-      if( !m_upstream && 1 == track->upstream  () ) { continue ; }
-      
-      // perform the actual evaluation 
-      const double value = (*m_eval)( track );
-      
-      // skip 
-      if( value < m_low || value > m_high ) { ++m_skip ; continue ; }
-      
-      // fill the relation table 
-      table->relate( track , value );
-      
-    };
+  {
+    const Track* track = *itrack ;
+    
+    // skip NULLs 
+    if( 0 == track                              ) { continue ; }
+    
+    // use only unique  tracks ? 
+    if(  m_unique   && 1 != track->unique    () ) { continue ; }
+    
+    // use 'error'   tracks ?
+    if( !m_error    && 0 != track->errorFlag () ) { continue ; }
+    
+    // use 'forward'   tracks ?
+    if( !m_forward  && 1 == track->forward   () ) { continue ; }
+    
+    // use 'match'     tracks ?
+    if( !m_matched  && 1 == track->match     () ) { continue ; }
+    
+    // use 'seed'      tracks ?
+    if( !m_seed     && 1 == track->seed      () ) { continue ; }
+    
+    // use 'velo'      tracks ?
+    if( !m_velo     && 1 == track->velo      () ) { continue ; }      
+    
+    // use 'veloTT'    tracks ?
+    if( !m_veloTT   && 1 == track->veloTT    () ) { continue ; }      
+    
+    // use 'veloBack'    tracks ?
+    if( !m_veloBack && 1 == track->veloBack  () ) { continue ; }      
+    
+    // use 'upstream'  tracks ?
+    if( !m_upstream && 1 == track->upstream  () ) { continue ; }
+    
+    // perform the actual evaluation 
+    const double value = (*m_eval)( track );
+    
+    // skip 
+    if( value < m_low || value > m_high ) { ++m_skip ; continue ; }
+    
+    // fill the relation table 
+    table->relate( track , value );
+    
+  };
   
-  MsgStream msg( msgSvc() , name() );
-  msg << MSG::DEBUG 
-      << " The total number of booked relations " 
-      << table->relations().size() << endreq;
+  debug() << " The total number of booked relations " 
+          << table->relations().size() << endreq;
   
   return StatusCode::SUCCESS;
 };

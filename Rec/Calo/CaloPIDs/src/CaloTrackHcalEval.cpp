@@ -1,8 +1,11 @@
-// $Id: CaloTrackHcalEval.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackHcalEval.cpp,v 1.2 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/11/17 17:09:27  ibelyaev
 //  new set of options and tools
 //
@@ -57,8 +60,6 @@ CaloTrackHcalEval::CaloTrackHcalEval
   : CaloTool   ( type, name , parent     )
   , m_bad      ( -100 * GeV              )
   , m_input    ( CaloDigitLocation::Hcal )
-  , m_eventSvc ( 0 ) 
-  , m_incSvc   ( 0 ) 
   , m_digits   ( 0 ) 
 {
   // declare interfaces 
@@ -87,40 +88,19 @@ StatusCode    CaloTrackHcalEval::initialize ()
     { return Error("Could not initialize the base class CaloTool",sc); }
   
   // set the detector 
-  const DeCalorimeter* detector = get( detSvc () , detName () , detector );
+  const DeCalorimeter* detector = get<DeCalorimeter>( detName () );
   if( 0 == detector ) { return StatusCode::FAILURE ; }
   setDet( detector );
   
-  // subscribe the incident 
-  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
-  if( sc.isFailure() ) { return Error("Could not locate IIncidentSvc!", sc );}
-  if( 0 == m_incSvc  ) { return Error("Could not locate IIncidentSvc!"     );}
-  m_incSvc -> addListener( this , "EndEvent"   , 10 );
+  incSvc() -> addListener( this , IncidentType::EndEvent  , 10 );
   
-  sc = serviceLocator() -> service( "EventDataSvc" , m_eventSvc , true );
-  if( sc.isFailure()   ) { return Error("Could not locate EventDataSvs", sc );}
-  if( 0 == m_eventSvc  ) { return Error("Could not locate EventDataSvc"     );}
+  m_digits = 0 ;
   
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
-// ============================================================================
-/** standard finalization method 
- *  @see CaloTool 
- *  @see  AlgTool 
- *  @see IAlgTool
- *  @return status code 
- */
-// ============================================================================
-StatusCode    CaloTrackHcalEval::finalize ()
-{
-  // release services 
-  if( 0 != m_eventSvc ) { m_eventSvc -> release() ; m_eventSvc = 0 ; }
-  if( 0 != m_incSvc   ) { m_incSvc   -> release() ; m_incSvc   = 0 ; }
-  //
-  return CaloTool::finalize();
-};
+
 // ============================================================================
 /** handle the incident 
  *  @see Incident 
@@ -169,8 +149,8 @@ StatusCode CaloTrackHcalEval::process
   if( 0 == track    ) 
     { return Error("Track points to NULL!"); }
   
-  if( 0 == m_digits ) { m_digits = get( m_eventSvc , m_input , m_digits ) ; }
-  if( 0 == m_digits )                        { return StatusCode::FAILURE ; }
+  if( 0 == m_digits ) { m_digits = get<CaloDigits>( m_input ) ; }
+  if( 0 == m_digits ) { return StatusCode::FAILURE ; }
   
   ///
   /// put here a real code 

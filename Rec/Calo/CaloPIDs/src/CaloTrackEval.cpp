@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.cpp,v 1.2 2003-07-17 14:45:35 ibelyaev Exp $
+// $Id: CaloTrackEval.cpp,v 1.3 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/17 14:45:35  ibelyaev
+//  fix for HcalE estimator and new options
+//
 // Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
 // The first import of new package 
 //
@@ -79,8 +82,6 @@ CaloTrackEval::CaloTrackEval
   // minimal track error
   , m_safe             ( 1 * mm     ) // effective "reasonable" error 
   // technical 
-  , m_incSvc           ( 0          )
-  , m_eventSvc         ( 0          )
   , m_z                ( -1 * km    ) 
   , m_st               ( 100 * mm   )  // step size 
   , m_numst            ( 8          )  // number of "steps"  
@@ -127,29 +128,18 @@ StatusCode    CaloTrackEval::initialize ()
     { return Error("Coudl not initialize the base class CaloTool",sc); }
   
   // set the detector 
-  const DeCalorimeter* detector = get( detSvc () , detName () , detector );
+  const DeCalorimeter* detector = getDet<DeCalorimeter>( detName () );
   if( 0 == detector ) { return StatusCode::FAILURE ; }
   setDet( detector );
   
   // calculate the z position of calorimeter's center   
   m_z = det()->geometry()->toGlobal( HepPoint3D( 0 , 0 , 0 ) ).z() ;
   
-  // locate event service 
-  sc = serviceLocator() -> service ( "EventDataSvc" , m_eventSvc , true );
-  if( sc.isFailure()  ) { return Error("Could not locate 'EventDataSvc'", sc );}
-  if( 0 == m_eventSvc ) { return Error("Could not locate 'EventDataSvc'"     );}
-  
-  // subscribe the incident 
-  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
-  if( sc.isFailure() ) { return Error("Could not locate 'IncidentSvc'", sc );}
-  if( 0 == m_incSvc  ) { return Error("Could not locate 'IncidentSvc'"     );}
-  m_incSvc -> addListener( this , "EndEvent"   , 10 );
+  incSvc() -> addListener( this , IncidentType::EndEvent   , 10 );
   
   // locate the extrapoaltor
-  m_extrapolator = tool  ( m_extrapolatorType , 
-                           m_extrapolatorName , 
-                           m_extrapolator     ) ;
-  if( 0 == m_extrapolator ) { return StatusCode::FAILURE ; }
+  m_extrapolator = 
+    tool<ITrExtrapolator>  ( m_extrapolatorType , m_extrapolatorName ) ;
   
   // set pid 
   m_pid = ParticleID( m_pidPDG );
@@ -157,35 +147,12 @@ StatusCode    CaloTrackEval::initialize ()
   if( 0 >= m_tol    ) { Warning( "NonPositive  Tolerance  parameter"  ) ; }
   if( 0 >= m_shower ) { Warning( "NonPositive  ShowerSize parameter" ) ; }
   
+  if( 0 != m_state ) { delete m_state ; m_state = 0 ; }
   
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
-
-// ============================================================================
-/** standard finalization method 
- *  @see CaloTool 
- *  @see  AlgTool 
- *  @see IAlgTool
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloTrackEval::finalize   ()
-{
-  // release the used tools and services  
-  if( 0 != m_extrapolator ) 
-    { m_extrapolator -> release () ; m_extrapolator = 0 ; }
-  if( 0 != m_incSvc       ) 
-    { m_incSvc       -> release () ; m_incSvc       = 0 ; }
-  if( 0 != m_eventSvc     ) 
-    { m_eventSvc     -> release () ; m_eventSvc     = 0 ; }
-  // reset detector 
-  setDet( (const DeCalorimeter*) 0 );
-  // finalize the base class 
-  return CaloTool::finalize();
-};
-// ============================================================================
 
 // ============================================================================
 /** handle the incident 
@@ -241,7 +208,7 @@ StatusCode CaloTrackEval::process
   // avoid long names 
   typedef std::vector<const CaloDigit*> Digits ;
   typedef std::vector<const CaloDigit*> DigVec ;
-
+  
   m_tr = false ;
   if( 0 != m_state  ) { delete m_state ; m_state = 0 ; }
   
@@ -251,9 +218,9 @@ StatusCode CaloTrackEval::process
   if( 0 == track    ) { return Error("Track points to NULL!"      , 100 ) ; }
   
   // get the container of digits 
-  if( 0 == m_digits ) { m_digits = get( m_eventSvc , m_input , m_digits ) ; }
-  if( 0 == m_digits ) { return StatusCode::FAILURE                        ; }
-
+  if( 0 == m_digits ) { m_digits = get<CaloDigits> ( m_input ) ; }
+  if( 0 == m_digits ) { return StatusCode::FAILURE             ; }
+  
   if( 0 == track    ) { return Error("findTrackPosition: Invalid Track" ) ; }
   
   const TrState* state0 = track->closestState( m_z - m_numst * m_st ) ;
@@ -263,60 +230,60 @@ StatusCode CaloTrackEval::process
   DigVec digused;
   
   for (int itr = -m_numst; itr <= m_numst; ++itr)
+  {
+    
+    StatusCode sc = findTrackProjection( m_z + itr*m_st ) ;
+    if( sc.isFailure() ) 
+    { return Error("Track is not extrapolated to '"+detName()+"'" , sc ) ; }
+    
+    // find "central" cell 
+    const HepPoint3D trackPoint ( m_trX , m_trY , m_z  + itr*m_st ) ;
+    const CaloCellID trackCell  ( det()->Cell( trackPoint ) ) ;
+    
+    /// track does not touch the detector 
+    if( CaloCellID() == trackCell ) 
     {
-      
-      StatusCode sc = findTrackProjection( m_z + itr*m_st ) ;
-      if( sc.isFailure() ) 
-        { return Error("Track is not extrapolated to '"+detName()+"'" , sc ) ; }
-      
-      // find "central" cell 
-      const HepPoint3D trackPoint ( m_trX , m_trY , m_z  + itr*m_st ) ;
-      const CaloCellID trackCell  ( det()->Cell( trackPoint ) ) ;
-      
-      /// track does not touch the detector 
-      if( CaloCellID() == trackCell ) 
-        {
-          continue;
-        }
-      else 
-        {
-          const CaloDigit* digit = m_digits->object( trackCell );
-          if( 0 != digit ) digused.push_back( digit );
-          
-          // get all neighbor cells  
-          const CaloNeighbors& cells = det()->neighborCells( trackCell ) ;
-          for( CaloNeighbors::const_iterator in = cells.begin() ; 
-               cells.end() != in ; ++in )
-            {
-              // get the cell position and size 
-              const HepPoint3D cell(det()->cellCenter( *in )) ;
-              const double    size( 0.5 * det()->cellSize ( *in ) ) ;
-              if( fabs( cell.x() - m_trX ) <= 
-                  size + m_tol * m_trXe + m_shower &&
-                  fabs( cell.y() - m_trY ) <= 
-                  size + m_tol * m_trYe + m_shower ) 
-                {
-                  const CaloDigit* digit = m_digits->object( *in );
-                  if( 0 != digit ) 
-                    { 
-                      digused.push_back( digit );
-                    } 
-                }
-            }
-        }
+      continue;
     }
-
+    else 
+    {
+      const CaloDigit* digit = m_digits->object( trackCell );
+      if( 0 != digit ) digused.push_back( digit );
+      
+      // get all neighbor cells  
+      const CaloNeighbors& cells = det()->neighborCells( trackCell ) ;
+      for( CaloNeighbors::const_iterator in = cells.begin() ; 
+           cells.end() != in ; ++in )
+      {
+        // get the cell position and size 
+        const HepPoint3D cell(det()->cellCenter( *in )) ;
+        const double    size( 0.5 * det()->cellSize ( *in ) ) ;
+        if( fabs( cell.x() - m_trX ) <= 
+            size + m_tol * m_trXe + m_shower &&
+            fabs( cell.y() - m_trY ) <= 
+            size + m_tol * m_trYe + m_shower ) 
+        {
+          const CaloDigit* digit = m_digits->object( *in );
+          if( 0 != digit ) 
+          { 
+            digused.push_back( digit );
+          } 
+        }
+      }
+    }
+  }
+  
   // reset initial value 
   value = 0 ;
   if( 0 == digused.size () )  return StatusCode::SUCCESS ;  
   
   if( !digused.empty() )
-    {
-      // eliminate duplicates 
-      std::stable_sort( digused.begin() , digused.end() );  
-      DigVec::iterator it = std::unique( digused.begin() , digused.end() );
-      digused.erase( it , digused.end() );     
-    }  
+  {
+    // eliminate duplicates 
+    std::stable_sort( digused.begin() , digused.end() );  
+    DigVec::iterator it = std::unique( digused.begin() , digused.end() );
+    digused.erase( it , digused.end() );     
+  }  
   
   // reset initial value 
   value = 0 ;
@@ -343,37 +310,37 @@ StatusCode CaloTrackEval::findTrackProjection
   m_tr = false ;
   StatusCode sc  = m_state->extrapolate( m_extrapolator , z , m_pid );
   if( sc.isFailure() ) 
-    {
-      return Error("Error from Extrapolator",sc);                  
-    }
+  {
+    return Error("Error from Extrapolator",sc);                  
+  }
   
   // find position "P" 
   const TrStateP* stateP = dynamic_cast<TrStateP*> ( m_state ) ;
   if( 0 != stateP ) 
-    {
-      m_trX  =       stateP ->  x  () ;
-      m_trY  =       stateP ->  y  () ;
-      m_trXe = sqrt( stateP -> eX2 () ) ;
-      m_trYe = sqrt( stateP -> eY2 () ) ;
-      m_tr   = true             ;                          // ATTENTION !!!
+  {
+    m_trX  =       stateP ->  x  () ;
+    m_trY  =       stateP ->  y  () ;
+    m_trXe = sqrt( stateP -> eX2 () ) ;
+    m_trYe = sqrt( stateP -> eY2 () ) ;
+    m_tr   = true             ;                          // ATTENTION !!!
       /// 
+    m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
+    m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
+  }
+  else
+  { // find position "L"
+    const TrStateL* stateL = dynamic_cast<TrStateL*> ( m_state ) ;
+    if( 0 != stateL ) 
+    {
+      m_trX  =       stateL ->  x  () ;
+      m_trY  =       stateL ->  y  () ;
+      m_trXe = sqrt( stateL -> eX2 () ) ;
+      m_trYe = sqrt( stateL -> eY2 () ) ;
+      m_tr   = true             ;                      // ATTENTION !!!
       m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
       m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
     }
-  else
-    { // find position "L"
-      const TrStateL* stateL = dynamic_cast<TrStateL*> ( m_state ) ;
-      if( 0 != stateL ) 
-        {
-          m_trX  =       stateL ->  x  () ;
-          m_trY  =       stateL ->  y  () ;
-          m_trXe = sqrt( stateL -> eX2 () ) ;
-          m_trYe = sqrt( stateL -> eY2 () ) ;
-          m_tr   = true             ;                      // ATTENTION !!!
-          m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
-          m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
-        }
-    }
+  }
   
   if( !m_tr ) { return Error("findTrackPosition: Absolutely invalid state!"); }
   

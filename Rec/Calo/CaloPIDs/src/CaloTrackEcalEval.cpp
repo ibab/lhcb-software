@@ -1,8 +1,11 @@
-// $Id: CaloTrackEcalEval.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackEcalEval.cpp,v 1.2 2004-02-17 12:06:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.1  2002/11/17 17:09:27  ibelyaev
 //  new set of options and tools
 //
@@ -57,7 +60,6 @@ CaloTrackEcalEval::CaloTrackEcalEval
   , m_associatorName ( "ElectronMatch"                                    )
   , m_associator     ( 0 )
   , m_table          ( 0 )
-  , m_incSvc         ( 0 )
 {
   // declare interfaces 
   declareInterface<ICaloTrackIdEval>  ( this ) ;
@@ -84,35 +86,15 @@ StatusCode    CaloTrackEcalEval::initialize ()
   if( sc.isFailure() ) 
     { return Error("Coudl not initialize the base class CaloTool",sc); }
   
-  // subscribe the incident 
-  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc , true );
-  if( sc.isFailure() ) { return Error("Could not locate IIncidentSvc!", sc );}
-  if( 0 == m_incSvc  ) { return Error("Could not locate IIncidentSvc!"     );}
-  m_incSvc -> addListener( this , "EndEvent"   , 10 );
+  incSvc() -> addListener( this , "EndEvent"   , 10 );
   
   // locate the associator 
-  m_associator = tool( m_associatorType , m_associatorName , m_associator );
+  m_associator = tool<IAsct>( m_associatorType , m_associatorName );
   if( 0 == m_associator ) { return StatusCode::FAILURE ; }
   
+  m_table = 0 ;
+  
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization method 
- *  @see CaloTool 
- *  @see  AlgTool 
- *  @see IAlgTool
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloTrackEcalEval::finalize   ()
-{
-  // release the associator 
-  if( 0 != m_associator ) { m_associator->release () ; m_associator = 0 ; }
-  if( 0 != m_incSvc     ) { m_incSvc    ->release () ; m_incSvc     = 0 ; }
-  // finalize the base class 
-  return CaloTool::finalize();
 };
 // ============================================================================
 
@@ -141,7 +123,7 @@ double CaloTrackEcalEval::operator()
   double value  = m_bad ;
   StatusCode sc = process( track , value );
   if( sc.isFailure() ) 
-    { Error(" operator(): error from process()",sc) ; return m_bad ; }
+  { Error(" operator(): error from process()",sc) ; return m_bad ; }
   // 
   return value ;
 };
@@ -161,11 +143,11 @@ StatusCode CaloTrackEcalEval::process
   double&              value ) const 
 {
   if( 0 == track   ) 
-    { return Error("Track points to NULL!"); }
+  { return Error("Track points to NULL!"); }
   
   if( 0 == m_table ) { m_table = m_associator->inverse() ; }
   Assert( 0 != m_table , "The Associatioh table points to NULL!");
-
+  
   // get range of related hypos with chi2 weights  
   const Range range = m_table -> relations( track );
   

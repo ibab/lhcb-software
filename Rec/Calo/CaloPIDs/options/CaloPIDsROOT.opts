@@ -1,0 +1,53 @@
+// $Id: CaloPIDsROOT.opts,v 1.1 2004-02-17 12:06:08 ibelyaev Exp $ 
+// ============================================================================
+// $CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file
+ * 
+ *  Configuration of *ALL* Calo PIDs algorithms and tools 
+ *
+ *  @code 
+ *  
+ *  ApplicationMgr.DLLs += { "CaloPIDs" };
+ *  #include "$CALOPIDSOPTS/CaloPIDsROOT.opts"
+ *  
+ *  @endcode 
+ * 
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2003-03-13
+ */
+
+/// basic ID algorithms 
+#include "$CALOPIDSOPTS/HcalE.opts"
+#include "$CALOPIDSOPTS/PrsE.opts"
+#include "$CALOPIDSOPTS/EcalE.opts"
+
+#include "$CALOPIDSOPTS/PrsPIDe.opts"
+#include "$CALOPIDSOPTS/HcalPIDe.opts"
+#include "$CALOPIDSOPTS/EcalPIDe.opts"
+#include "$CALOPIDSOPTS/BremPIDe.opts"
+
+#include "$CALOPIDSOPTS/EcalPIDmu.opts"
+#include "$CALOPIDSOPTS/HcalPIDmu.opts"
+
+#include "$CALOPIDSOPTS/EcalChi2.opts"
+#include "$CALOPIDSOPTS/BremChi2.opts"
+
+/// Delta Log Likelihood  input histograms 
+HistogramDataSvc.Input += 
+  { "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs.root' TYP='ROOT'" } ;
+
+PrsPIDe.HistoForDeltaLL        = "CaloPIDs/Calo/PrsPIDe/5"    ;
+HcalPIDe.HistoForDeltaLL       = "CaloPIDs/Calo/HcalPIDe/5"   ;
+EcalPIDe.HistoForDeltaLL       = "CaloPIDs/Calo/EcalPIDe/5"   ;
+BremPIDe.HistoForDeltaLL       = "CaloPIDs/Calo/BremPIDe/5"   ;
+
+EcalPIDmu.HistoForDeltaLL      = "CaloPIDs/Calo/EcalPIDm/u/5" ;
+HcalPIDmu.HistoForDeltaLL      = "CaloPIDs/Calo/HcalPIDm/u/5" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

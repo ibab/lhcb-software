@@ -1,4 +1,4 @@
-// $Id: BremPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// $Id: BremPIDe.opts,v 1.2 2004-02-17 12:06:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -6,7 +6,9 @@
 // ============================================================================
 
 /** @file 
- *  Configuration option for CaloTrack2IdAlg "EcalPIDe" algorithm
+ *
+ *  Configuration option for CaloTrack2IdAlg/"BremPIDe" algorithm
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 2002-10-31
  */
@@ -35,20 +37,16 @@ BremPIDe.UseVeloBack    = false ;
 BremPIDe.UseSeed        = false ; 
 BremPIDe.UseUpstream    = false ;
 
-BremPIDe.ValueBins      =  51        ;
-BremPIDe.MomentumBins   =  51        ;
 BremPIDe.ValueNorm      =  200       ; // "cut" for tanh 
 BremPIDe.MomentumNorm   =  50. * GeV ; // "cut" for tanh 
 
-#pragma print OFF 
+/// define names in HBOOK-style 
 
-// 2D signal     pseudo-histogram 
-#include "$CALOPIDSOPTS/BremPIDe_Signal.opts" 
-// 2D background pseudo-histogram 
-#include "$CALOPIDSOPTS/BremPIDe_Background.opts" 
-
-#pragma print ON
-
+//BremPIDe.HistoForSignal         = "CaloPIDs/CALO/BREMPIDE/1" ;
+//BremPIDe.HistoForBackground     = "CaloPIDs/CALO/BREMPIDE/2" ;
+//BremPIDe.HistoForSignalNorm     = "CaloPIDs/CALO/BREMPIDE/3" ;
+//BremPIDe.HistoForBackgroundNorm = "CaloPIDs/CALO/BREMPIDE/4" ;
+BremPIDe.HistoForDeltaLL          = "CaloPIDs/CALO/BREMPIDE/5" ;
 
 // ============================================================================
 // The END 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2003-12-11 16:33:39 cattanem Exp $ 
+! $Id: release.notes,v 1.8 2004-02-17 12:06:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,18 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2004-02-17 - Vanya BELYAEV
+
+   -  update for reading the input histograms from 
+
+      $PARAMFILEROOT/data/CaloPIDs.root  
+        or 
+      $PARAMFILEROOT/data/CaloPIDs.root 
+
+  -   remove 'text' histograms from options directory 
+
+  -   cmt/requirements increment teh MAJOR version 
 
 !======================== CaloPIDs v1r2 2003-12-11 ======================
 ! 2003-12-11 - Marco Cattaneo
