@@ -13,30 +13,30 @@ apply_pattern BooleVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r15
 
-#-- External libraries (as defined in GAUDI_v14r4)
+#-- External libraries (as defined in GAUDI_v14r5)
 use ExternalLibs	v4r5
 use AIDA		v3r300		-no_auto_imports
 use BOOST		v2r1302p0	-no_auto_imports
 use CLHEP		v2r1810p0	-no_auto_imports
 use XERCES		v2r230p0	-no_auto_imports
-use CERNLIB 		v2r2002p0	-no_auto_imports
+use CERNLIB 		v2r2002p1	-no_auto_imports
 use ROOT 		v2r31002p0	-no_auto_imports
 use GSL 		v2r14p0	        -no_auto_imports
 use PI  		v1r112p1        -no_auto_imports
 use PCRE		v1r44	        -no_auto_imports
 use UUID		v1r32	        -no_auto_imports
 use SEAL		v1r134p0	-no_auto_imports
-use POOL		v1r162p0	-no_auto_imports
+use POOL		v1r163p0	-no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v14r4)
-use GaudiKernel		v15r2
-use GaudiSvc 		v11r6
+#-- Gaudi libraries (from GAUDI_v14r5)
+use GaudiKernel		v15r3
+use GaudiSvc 		v11r6p1
 use GaudiAlg 		v7r2
 use GaudiTools		v8r1
 use GaudiAud 		v6r4
 use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
-use GaudiPoolDb		v1r6
+use GaudiPoolDb		v1r6p1
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
