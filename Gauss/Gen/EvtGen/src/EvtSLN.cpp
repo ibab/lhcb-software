@@ -77,7 +77,8 @@ void EvtSLN::initProbMax(){
   static EvtId BM=EvtPDL::getId("B-");
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");
-
+  static EvtId BCP = EvtPDL::getId( "B_c+" ) ;
+  static EvtId BCM = EvtPDL::getId( "B_c-" ) ;
 
 
   if (getParentId()==DP||getParentId()==DM){
@@ -94,8 +95,9 @@ void EvtSLN::initProbMax(){
     if (getDaug(0)==MUM||getDaug(0)==MUP) setProbMax(3.0);    
     if (getDaug(0)==EM||getDaug(0)==EP) setProbMax(0.00006);
   }
-
-
+  if ( getParentId() == BCM || getParentId() == BCP ) {
+    if ( getDaug(0)==TAUP || getDaug(0) == TAUM ) setProbMax(1500.) ;
+  }
 }
 
 

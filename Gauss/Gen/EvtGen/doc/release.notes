@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-03-09 - Patrick Robbe
+ - EvtSLN : give a probmax for decays B_c -> tau nu_tau to avoid 
+   warnings at EvtGEn initialization. 
+ - cmt/requirements : increase version to v5r2
+
 !===================== EvtGen v5r1 ===================================
 ! 2004-03-08 - Patrick Robbe
  - EvtIncoherentMixing : put PDG 2004 mixing parameters as default values
