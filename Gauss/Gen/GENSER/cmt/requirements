@@ -1,0 +1,15 @@
+package GENSER
+version v1r012p0
+
+branches doc cmt
+
+use LCG_Settings v*
+
+include_path none
+
+macro GENSER_native_version "GENSER_0_1_2"
+macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/rh73_gcc32"
+
+path_remove LD_LIBRARY_PATH "/GENSER/"
+path_append LD_LIBRARY_PATH "$(GENSER_home)/lib"
+
