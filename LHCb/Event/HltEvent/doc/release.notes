@@ -4,7 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
-!======================== HltEvent v2r0 2003-05-13 ===========================
+!======================== HltEvent v2r0 2003-06-03 ===========================
+! 2003-06-03 - Marco Cattaneo
+ - Add HltEvent_loadRef external function, for Windows linking
+
 ! 2003-05-13 - Olivier Callot
  - Add a position and slopes after the field, to allow Muon matching
 
