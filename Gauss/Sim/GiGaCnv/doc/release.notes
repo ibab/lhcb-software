@@ -1,0 +1,13 @@
+$Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/doc/release.notes,v 1.1.1.1 2001-04-23 08:34:14 ibelyaev Exp $
+
+Package: GiGaExample
+Package Manager: N.N.
+
+
+!======================================================================================= 
+!20010423
+    New package:
+    It gets all conversion services from GiGa package
+    and general(subdetector-independent, but LHCb-specific) converters
+
+!======================================================================================= 
