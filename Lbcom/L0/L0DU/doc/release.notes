@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.25 2003-05-29 09:13:41 ocallot Exp $
+$Id: release.notes,v 1.26 2003-06-03 16:10:10 gcorti Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
+!========================== L0DU v6r5 2003-06-03 ==========================
 ! 2003-05-29 - Eduardo Rodrigues
  - Adjust thresholds for the TDR analysis
  - Add a veto on SPD multiplicity and on PUVeto multiplicity.
