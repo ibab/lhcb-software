@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecTools v2r7 2004-02-09 ======================
 ! 2004-01-26 - Chris Jones
  - Minor changes related to changes in base packages
  - Removal of SICB specific tools
