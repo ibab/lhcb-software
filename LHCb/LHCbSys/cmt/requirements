@@ -70,7 +70,7 @@ use ITAssociators      	v2r8	IT
 use OTAssociators      	v2r7	OT
 use VeloAssociators    	v1r9	Velo
 use TrAssociators      	v4r0	Tr
-use CaloAssociators    	v4r0	Calo
+use CaloAssociators    	v4r1	Calo
 use MuonAssociators    	v1r2	Muon
 
 # Other stuff

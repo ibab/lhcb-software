@@ -11,8 +11,8 @@
 
  - Modified packages: KernelSys v3r4, LHCbKernel v4r4,
                       EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1,
-                      DetSys v5r2, Magnet v2r5,
-                      AssociatorsSys v1r12, ITAssociators v2r8
+                      DetSys v5r2, Magnet v2r5, AssociatorsSys v1r12, 
+                      ITAssociators v2r8, CaloAssociators v4r1
 
  - In LHCbKernel v4r4:
    . Associator tools now inherit from GaudiTools
@@ -31,8 +31,10 @@
      explicitly in application requirements
 
  - In ITAssociators v2r8:
-   . Add option ITDigit2MCHitAlg.selectRawBuffer to associate only digits
-     selected for the RawBuffer
+   . Add tool to associate only digits selected for the RawBuffer
+
+ - In CaloAssociators v4r1:
+   . Add a warning if relations are empty
 
 !======================= LHCbSys v15r3 2004-03-08 =======================
 ! 2004-03-08 - Marco Cattaneo
