@@ -3,9 +3,29 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v26r1>2005-03-08 Brunel v26r1</A></H1><PRE>
+This version uses Gaudi v16r2, LHCb v18r1 (also CLHEP 1.9, ROOT 4.0)
+Requires input data from Boole v8r1 or greater. Cannot process DC04 Boole output.
+Output data incompatible with DC04 versions
+
+- Packages modified: RichRecSys v1r16, RichLocalPID v1r10, RichGlobalPID v1r9
+
+- Persistency changes:
+  . Backwards incompatible changes to RawBuffer (bank header now has 2 words)
+    and to L1Buffer bank types for L0Calo, L0DU, L0Muon (DAQEvent v5r0)
+  . DAQ bank in RawBuffer replaces "Header" bank        (DAQEvent v5r0)
+  . Backwards incompatible changes to RichSmartID       (LHCbKernel v5r8)
+
+- Modified functionality:
+  . Improve handling of events with no pixels (RichGlobalPID v1r9)
+
+- Bug fixes:
+  . Small fix to isInside method (VeloDet v9r3)
+  . Fix options for new associators (CaloReco v2r7p1)
+
 </PRE><H1><A NAME=v26r0>2005-02-14 Brunel v26r0</A></H1><PRE>
 This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0)
-Requires input data from Boole v8r* - Cannot process DC04 Boole output.
+Requires input data from Boole v8r0 - Cannot process DC04 Boole output.
 Output data incompatible with DC04 versions
 
 - Packages removed: AsctToLinker (now in LHCbSys)
