@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r4>2004-03-31 Brunel v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2004-04-01 Brunel v23r4</A></H1><PRE>
 
  Requires data produced by Boole v5r4 or later
  Tuned for XmlDDDB v22r0
@@ -17,6 +17,7 @@ Purpose: LHCb reconstruction program
 - Persistency changes
   . New version of RawBuffer for OT: new bank structure, multiple hit
     capability, new straw numbering (OTDAQ v2r0)
+  . HepMC now correctly persistent also for POOL (GenEvent v3r1). 
 
 - New tuning
   . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
