@@ -1,0 +1,40 @@
+// Extra DLL for HLT
+ApplicationMgr.DLLs   += { "TrgPrimVertex" ,"TrgForward" };
+
+// Sequencer for HLT processing and checking
+ApplicationMgr.TopAlg += { "GaudiSequencer/HltWithTrg" };
+
+
+HltWithTrg.Members = { //"TrgL0Filter","TrgL1Filter",
+                       "TrgInitEvent/InitHltEvent"
+                       ,"GaudiSequencer/HLTProcessing"
+                       ,"GaudiSequencer/HLTChecking"
+                      };
+
+HLTProcessing.Members =  { "DecodeRawVelo"
+                           ,"VeloRTracking/VeloRTrackingHlt"
+                           ,"VeloSpaceTracking/VeloSpaceTrackingHlt"
+                           ,"TrgVeloTT/TrgVeloTTHlt"
+                           ,"TrgPrimVertexFinder"
+                           ,"FwdHitFromRawBuffer"
+                           ,"TrgForwardAlg"
+                         };
+
+#include "$TRGFORWARDROOT/options/Field045.opts"
+TrgVeloTTHlt.InputFromRawBuffer = true;
+ 
+HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
+                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
+                        ,"TrgParticleMaker"
+                        ,"TrgChecker/HltTrgChecker"
+                        ,"TrgVertexMonit/HltVertexMonit"
+                       };
+HltTrgTrackToContainer.prefix = "Hlt/";
+HltTrgTrack2MCParticle.prefix = "Hlt/";
+HltTrgChecker.prefix = "Hlt/";
+
+//HltWithTrg.measureTime = true;
+HltProcessing.measureTime = true;
+//HltChecking.measureTime = true;
+
+TrgParticleMaker.InputTracks = "Hlt/Rec/Trg/LongTracks";
