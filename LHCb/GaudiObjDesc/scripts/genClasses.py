@@ -434,16 +434,11 @@ class genClasses(genSrcUtils.genSrcUtils):
   def genTemplateContainerTypedefs(self, godClass):
     s = ''
     godAtt = godClass['attrs']
-    if godAtt['templateVector'] == 'TRUE':
-      self.addInclude('ObjectVector')
-      s += '// Definition of vector container type for %s\n' % godAtt['name']
-      s += 'template <class TYPE> class ObjectVector;\n'
-      s += 'typedef ObjectVector<%s> %sVector;\n\n' % (godAtt['name'], godAtt['name'])
-    if godAtt['templateList'] == 'TRUE':
-      self.addInclude('ObjectList')
-      s += '// Definition of all list container types for %s\n' % godAtt['name']
-      s += 'template <class TYPE> class ObjectList;\n'
-      s += 'typedef ObjectList<%s> %sList;\n\n' % (godAtt['name'], godAtt['name'])
+    if godAtt['stdVectorTypeDef'] == 'TRUE':
+      className = godClass['attrs']['name']
+      self.addInclude('std::vector')
+      s += '// typedef for std::vector of %s\n' % className
+      s += 'typedef std::vector<%s*> %sVector;\n' % ( className, className )
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
