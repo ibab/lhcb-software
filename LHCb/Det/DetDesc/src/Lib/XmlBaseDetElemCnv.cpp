@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.12 2001-12-11 10:02:28 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.13 2001-12-13 19:17:39 andreav Exp $
 
 // include files
 #include <cstdlib>
@@ -196,14 +196,36 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       StatusCode st( CORRUPTED_DATA );
       throw XmlCnvException( " Corrupted XML data", st );            
     }
-  } else if (("slowcontrolinfo" == tagName) || ("fastcontrolinfo" == tagName) ||
-             ("calibrationinfo" == tagName) || ("alignmentinfo" == tagName)) {
+  } else if ("alignmentinfo" == tagName) {
     // Everything is in the attributes
     std::string condition = dom2Std (childElement.getAttribute ("condition"));
-    log << MSG::DEBUG << "condition : " << condition  << endreq;
-    //dataObj->createGeometryInfo(condition);
-    log << MSG::INFO << tagName << " tag found. No supported yet"
-        << endreq;
+    log << MSG::DEBUG 
+	<< "Create AlignmentInfo with condition : " << condition  << endreq;
+    dataObj->createAlignment(condition);
+  } else if ("calibrationinfo" == tagName) {
+    // Everything is in the attributes
+    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    log << MSG::DEBUG 
+	<< "Create CalibrationInfo with condition : " << condition  << endreq;
+    dataObj->createCalibration(condition);
+  } else if ("readoutinfo" == tagName) {
+    // Everything is in the attributes
+    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    log << MSG::DEBUG 
+	<< "Create ReadOutInfo with condition : " << condition  << endreq;
+    dataObj->createReadOut(condition);
+  } else if ("slowcontrolinfo" == tagName) {
+    // Everything is in the attributes
+    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    log << MSG::DEBUG 
+	<< "Create SlowControlInfo with condition : " << condition  << endreq;
+    dataObj->createSlowControl(condition);
+  } else if ("fastcontrolinfo" == tagName) {
+    // Everything is in the attributes
+    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    log << MSG::DEBUG 
+	<< "Create FastControlInfo with condition : " << condition  << endreq;
+    dataObj->createFastControl(condition);
   } else if (tagName == "specific") {
     // this is the place where the user will put new elements he wants
     // to add to the default detector element

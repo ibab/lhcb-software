@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.9 2001-12-11 10:02:28 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.10 2001-12-13 19:21:29 andreav Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -164,13 +164,9 @@ StatusCode XmlCnvSvc::createAddress(unsigned char svc_type,
   } else {
     isString = ipar[0];
     if( isString == 0 ) {
-      log << MSG::VERBOSE 
-	  << "XML source is interpreted as an XML file name " 
-	  << "(input: ipar[0] = 0)" << endreq;
+      log << MSG::VERBOSE << "XML source is an XML file name" << endreq;
     } else if( isString == 1 ) { 
-      log << MSG::VERBOSE 
-	  << "XML source is interpreted as an XML string " 
-	  << "(input: ipar[0] = 1)" << endreq;
+      log << MSG::VERBOSE << "XML source is an XML string" << endreq;
     } else {
       log << MSG::ERROR 
 	  << "Cannot create address: invalid ipar[0] value = "

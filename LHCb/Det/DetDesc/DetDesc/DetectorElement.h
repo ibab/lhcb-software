@@ -2,6 +2,10 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.18  2001/12/11 10:02:20  sponce
+/// Implementation of usage of the condition database. This includes new objects and associated converters (like condition and XmlConditionCnv).
+/// The condition object is extensible, as was detectorElement. Thus, there is a templated XmlUserConditionCnv that could be extended by users as it was the case for detector elements.
+///
 /// Revision 1.17  2001/12/03 15:18:29  mato
 /// Small changes to compile without warnings in Windows
 ///
@@ -288,13 +292,15 @@ public:
           const std::string& support,
           const std::string& namePath);
 
-  const ISlowControl* createSlowControl (const std::string& condition);
-
-  const IFastControl* createFastControl (const std::string& condition);
+  const IAlignment* createAlignment (const std::string& condition);
 
   const ICalibration* createCalibration (const std::string& condition);
 
-  const IAlignment* createAlignment (const std::string& condition);
+  const IReadOut* createReadOut (const std::string& condition);
+
+  const ISlowControl* createSlowControl (const std::string& condition);
+
+  const IFastControl* createFastControl (const std::string& condition);
 
   /**
    * This method initializes the detector element. It should be overridden

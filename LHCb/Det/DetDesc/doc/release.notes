@@ -1,10 +1,24 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.60 2001-12-13 08:45:37 sponce Exp $ 
+! $Id: release.notes,v 1.61 2001-12-13 19:22:37 andreav Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! =============================================================================
+! 20011213 - Andrea Valassi
+   Various changes concerning condition data.
+   - add IConditionInfo interface and ConditionInfo class and specific ones
+     for alignment, calibration, readout, slowcontrol and fastcontrol
+   - implement createXxxInfo methods in DetectorElement
+   - decode xxxinfo tags in XmlBaseDetElemCnv
+   - add createReadOut in DetectorElement
+   - add methods to print parameters in IUserParameterSet and Condition
+     remove printOut method and operator<< from ValidDataObject
+   - bug fix for Windows: void method cannot return another void method
+   - bug fix in XmlBaseConditionCnv: missing 3rd argument in i_fillObj
+     (overloaded from XmlGenericCnv)
 
 ! =============================================================================
 ! 20011213 - Sebastien Ponce

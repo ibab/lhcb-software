@@ -2,6 +2,10 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.12  2001/12/11 10:02:28  sponce
+/// Implementation of usage of the condition database. This includes new objects and associated converters (like condition and XmlConditionCnv).
+/// The condition object is extensible, as was detectorElement. Thus, there is a templated XmlUserConditionCnv that could be extended by users as it was the case for detector elements.
+///
 /// Revision 1.11  2001/11/20 15:22:23  sponce
 /// Lots of changes here :
 ///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
@@ -40,6 +44,11 @@
 #include "DetDesc/DetDesc.h"
 /// local !!!
 #include "GeoInfo.h"
+#include "AlignmentInfo.h"
+#include "CalibrationInfo.h"
+#include "ReadOutInfo.h"
+#include "SlowControlInfo.h"
+#include "FastControlInfo.h"
 
 /** @file DetectorElement.cpp
  *  
@@ -55,7 +64,6 @@ DetectorElement::DetectorElement( const std::string&   name        ,
                                   const ITime&         validTill   )
   : DataObject           (         )
   , m_de_iGeometry       (    0    ) 
-  // 
   , m_de_iAlignment      (    0    ) 
   , m_de_iCalibration    (    0    )   
   , m_de_iReadOut        (    0    ) 
@@ -78,7 +86,6 @@ DetectorElement::DetectorElement( const std::string&   name        ,
 DetectorElement::DetectorElement( const std::string&   name   )
   : DataObject           (         )
   , m_de_iGeometry       (    0    ) 
-  // 
   , m_de_iAlignment      (    0    ) 
   , m_de_iCalibration    (    0    )   
   , m_de_iReadOut        (    0    ) 
@@ -276,24 +283,49 @@ DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
   return geometry();
 };
 
-const ISlowControl*
-DetectorElement::createSlowControl (const std::string& condition) {
-  return 0;
-}
-
-const IFastControl*
-DetectorElement::createFastControl (const std::string& condition) {
-  return 0;
+const IAlignment*
+DetectorElement::createAlignment (const std::string& condition) {
+  Assert( 0 == alignment() ,
+          "Could not create AlignmentInfo: it already exists!" );
+  if( 0 == m_de_iAlignment )
+    m_de_iAlignment = new AlignmentInfo( this, condition );
+  return alignment();
 }
 
 const ICalibration*
 DetectorElement::createCalibration (const std::string& condition) {
-  return 0;
+  Assert( 0 == calibration() ,
+          "Could not create CalibrationInfo: it already exists!" );
+  if( 0 == m_de_iCalibration )
+    m_de_iCalibration = new CalibrationInfo( this, condition );
+  return calibration();
 }
 
-const IAlignment*
-DetectorElement::createAlignment (const std::string& condition) {
-  return 0;
+const IReadOut*
+DetectorElement::createReadOut (const std::string& condition) {
+  Assert( 0 == readOut() ,
+          "Could not create ReadOutCalibrationInfo: it already exists!" );
+  if( 0 == m_de_iReadOut )
+    m_de_iReadOut = new ReadOutInfo( this, condition );
+  return readOut();
+}
+
+const ISlowControl*
+DetectorElement::createSlowControl (const std::string& condition) {
+  Assert( 0 == slowControl() ,
+          "Could not create SlowControlInfo: it already exists!" );
+  if( 0 == m_de_iSlowControl )
+    m_de_iSlowControl = new SlowControlInfo( this, condition );
+  return slowControl();
+}
+
+const IFastControl*
+DetectorElement::createFastControl (const std::string& condition) {
+  Assert( 0 == fastControl() ,
+          "Could not create FastControlInfo: it already exists!" );
+  if( 0 == m_de_iFastControl )
+    m_de_iFastControl = new FastControlInfo( this, condition );
+  return fastControl();
 }
 
 /// functions from IValidity /
