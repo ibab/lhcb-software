@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.113 2004-05-19 15:16:36 pkoppenb Exp $
+# $Id: requirements,v 1.114 2004-05-28 16:49:58 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -65,7 +65,7 @@ use  L0Calo             v7r5     L0
 
 use  L1Decision         v1r1p1   Trg
 use  L1Reco             v3r1     Trg
-# use  TrgChecker         v3r1     Trg
+use  TrgChecker         v3r1     Trg
 use  TrgForward         v1r2     Trg
 use  TrgMonitor         v1r0     Trg
 use  TrgPrimVertex      v1r1     Trg
@@ -89,7 +89,7 @@ use  GlobalReco         v4r7     Rec
 use  PrimVtx            v2r1     Rec
 
 # Utility tools
-use  TrExtrapolator     v2r11    Tr
+use  TrExtrapolator     v2r12    Tr
 
 # Reconstruction tools 
 use  RecoTools          v1r1     Rec
@@ -101,7 +101,7 @@ use  LoKi               v2r5     Tools
 use  CommonParticles    v1r5     Phys
 use  DaVinciAssociators v4r5p2   Phys
 use  DaVinciChecks      v2r3p2   Phys
-use  DaVinciEff         v2r10    Phys
+use  DaVinciEff         v3r0     Phys
 use  DaVinciMCTools     v5r4     Phys
 use  DaVinciTest        v4r4     Phys
 use  DaVinciTools       v9r5     Phys
@@ -111,6 +111,12 @@ use  Ks2PiPiSel         v1r3     Phys
 use  PhysSelections	v6r6     Phys
 
 use  PhysSelSys		v7r2     PhysSel
+
+# tmp
+use  MCEffEvent         v1r0     Event
+use  MCEffReconstructed v1r0     Phys
+use  MCTools            v1r6     Phys
+use  EffCheckEvent      v1r0     Event
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

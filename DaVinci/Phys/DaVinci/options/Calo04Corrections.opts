@@ -1,4 +1,4 @@
-// $Id: Calo04Corrections.opts,v 1.2 2004-05-19 15:16:37 pkoppenb Exp $
+// $Id: Calo04Corrections.opts,v 1.3 2004-05-28 16:51:01 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,8 +16,9 @@ Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
 // For Single Photons
 Neutrals.Members += { "CaloHypoAlg/PhotonCalibration" };
 
-// Configuration 
-#include "$CALORECOOPTS/PhotonCalibration04.opts"
+// already included in $CALORECOROOT/options/Reco.opts
+// included from DaVinciCommon.opts
+//#include "$CALORECOOPTS/PhotonCalibration04.opts"
 
 // ============================================================================
 // The END 

@@ -49,5 +49,5 @@ EventSelector.Input   = {
 // overwrite a few things
 EventSelector.PrintFreq  = 100;
 MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 2000;
+ApplicationMgr.EvtMax    = 10000;
 
