@@ -9,11 +9,13 @@
 #include "G4TrackingManager.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
+#include "G4PrimaryParticle.hh"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
+#include "GiGaCnv/GiGaPrimaryParticleInformation.h"
 // GaussTools
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
@@ -270,7 +272,26 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
           traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
         }
-      return ; 
+
+       if ( track->GetDynamicParticle() ) {
+         if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+           if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                ->GetUserInformation() ) {
+             GiGaPrimaryParticleInformation * uInf =
+               ( GiGaPrimaryParticleInformation *)
+               track->GetDynamicParticle()->GetPrimaryParticle()
+               ->GetUserInformation() ;
+             if ( uInf -> hasOscillated() ) 
+               {
+                 GaussTrajectory* traj=
+                   (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                 traj->setHasOscillated( true ); 
+               }        
+           }  
+         }
+       }       
+
+       return ; 
     } /// RETURN !!!  
 
   // (3.5) store forced-decay products 
@@ -313,6 +334,25 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
               traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
             }
+
+          if ( track->GetDynamicParticle() ) {
+            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+              if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                   ->GetUserInformation() ) {
+                GiGaPrimaryParticleInformation * uInf =
+                  ( GiGaPrimaryParticleInformation *)
+                  track->GetDynamicParticle()->GetPrimaryParticle()
+                  ->GetUserInformation() ;
+                if ( uInf -> hasOscillated() ) 
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setHasOscillated( true ); 
+                  }        
+              }  
+            }
+          }  
+          
           return ; 
         }
     }
@@ -327,6 +367,25 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
         }
 
       trackMgr()->SetStoreTrajectory( true );     
+      
+      if ( track->GetDynamicParticle() ) {
+        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+          if ( track->GetDynamicParticle()->GetPrimaryParticle()
+               ->GetUserInformation() ) {
+            GiGaPrimaryParticleInformation * uInf =
+              ( GiGaPrimaryParticleInformation *)
+              track->GetDynamicParticle()->GetPrimaryParticle()
+              ->GetUserInformation() ;
+            if ( uInf -> hasOscillated() ) 
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setHasOscillated( true ); 
+              }        
+          }  
+        }
+      }  
+      
       return; 
     } /// RETURN !!!  
   // (5) store particles with kinetic energy over the threshold value. 
@@ -340,6 +399,24 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
           traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
         }
+      if ( track->GetDynamicParticle() ) {
+        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+          if ( track->GetDynamicParticle()->GetPrimaryParticle()
+               ->GetUserInformation() ) {
+            GiGaPrimaryParticleInformation * uInf =
+              ( GiGaPrimaryParticleInformation *)
+              track->GetDynamicParticle()->GetPrimaryParticle()
+              ->GetUserInformation() ;
+            if ( uInf -> hasOscillated() ) 
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setHasOscillated( true ); 
+              }        
+          }  
+        }
+      }  
+      
       trackMgr()->SetStoreTrajectory( true ) ;     
       return ; } /// RETURN !!! 
   // (6) store all predefined particle types: 
@@ -354,6 +431,24 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
           traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
         }
+
+      if ( track->GetDynamicParticle() ) {
+        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+          if ( track->GetDynamicParticle()->GetPrimaryParticle()
+               ->GetUserInformation() ) {
+            GiGaPrimaryParticleInformation * uInf =
+              ( GiGaPrimaryParticleInformation *)
+              track->GetDynamicParticle()->GetPrimaryParticle()
+              ->GetUserInformation() ;
+            if ( uInf -> hasOscillated() ) 
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setHasOscillated( true ); 
+              }        
+          }  
+        }
+      }  
       
       trackMgr()->SetStoreTrajectory( true );     
       return; } /// RETURN !!!
@@ -379,6 +474,24 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
         }
 
+      if ( track->GetDynamicParticle() ) {
+        if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+          if ( track->GetDynamicParticle()->GetPrimaryParticle()
+               ->GetUserInformation() ) {
+            GiGaPrimaryParticleInformation * uInf =
+              ( GiGaPrimaryParticleInformation *)
+              track->GetDynamicParticle()->GetPrimaryParticle()
+              ->GetUserInformation() ;
+            if ( uInf -> hasOscillated() ) 
+              {
+                GaussTrajectory* traj=
+                  (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                traj->setHasOscillated( true ); 
+              }        
+          }  
+        }
+      }  
+      
       trackMgr()->SetStoreTrajectory( true );   
       return; } /// RETURN 
           //
@@ -393,11 +506,29 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
                   traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
                 }
+
+              if ( track->GetDynamicParticle() ) {
+                if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+                  if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                       ->GetUserInformation() ) {
+                    GiGaPrimaryParticleInformation * uInf =
+                      ( GiGaPrimaryParticleInformation *)
+                      track->GetDynamicParticle()->GetPrimaryParticle()
+                      ->GetUserInformation() ;
+                    if ( uInf -> hasOscillated() ) 
+                      {
+                        GaussTrajectory* traj=
+                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                        traj->setHasOscillated( true ); 
+                      }        
+                  }  
+                }
+              }  
               
               trackMgr()->SetStoreTrajectory( true );   
               return; } /// RETURN
-          ///
-        }
+              ///
+              }
     }
 
   // (7.5) store tracks according to creator process of its daughters
@@ -419,6 +550,24 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                   traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
                 }
               
+              if ( track->GetDynamicParticle() ) {
+                if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+                  if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                       ->GetUserInformation() ) {
+                    GiGaPrimaryParticleInformation * uInf =
+                      ( GiGaPrimaryParticleInformation *)
+                      track->GetDynamicParticle()->GetPrimaryParticle()
+                      ->GetUserInformation() ;
+                    if ( uInf -> hasOscillated() ) 
+                      {
+                        GaussTrajectory* traj=
+                          (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                        traj->setHasOscillated( true ); 
+                      }        
+                  }  
+                }
+              }  
+              
               trackMgr()->SetStoreTrajectory( true );   
               return; /// RETURN
             } 
@@ -438,6 +587,24 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               GaussTrajectory* traj=(GaussTrajectory*)(trackMgr()->GimmeTrajectory());
               traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
             }
+
+          if ( track->GetDynamicParticle() ) {
+            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+              if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                   ->GetUserInformation() ) {
+                GiGaPrimaryParticleInformation * uInf =
+                  ( GiGaPrimaryParticleInformation *)
+                  track->GetDynamicParticle()->GetPrimaryParticle()
+                  ->GetUserInformation() ;
+                if ( uInf -> hasOscillated() ) 
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setHasOscillated( true ); 
+                  }        
+              }  
+            }
+          }  
           
           trackMgr()->SetStoreTrajectory( true );   
           return; /// RETURN
@@ -458,6 +625,25 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               
               traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
             }
+
+          if ( track->GetDynamicParticle() ) {
+            if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
+              if ( track->GetDynamicParticle()->GetPrimaryParticle()
+                   ->GetUserInformation() ) {
+                GiGaPrimaryParticleInformation * uInf =
+                  ( GiGaPrimaryParticleInformation *)
+                  track->GetDynamicParticle()->GetPrimaryParticle()
+                  ->GetUserInformation() ;
+                if ( uInf -> hasOscillated() ) 
+                  {
+                    GaussTrajectory* traj=
+                      (GaussTrajectory*)(trackMgr()->GimmeTrajectory());
+                    traj->setHasOscillated( true ); 
+                  }        
+              }  
+            }
+          }  
+          
           trackMgr()->SetStoreTrajectory( true );   
           return; }  /// RETURN 
     }
