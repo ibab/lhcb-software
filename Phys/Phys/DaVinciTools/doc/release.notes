@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.74 2004-03-30 07:53:33 pkoppenb Exp $
+! $Id: release.notes,v 1.75 2004-03-31 06:54:48 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-03-31 - P. Koppenburg for Sandra Amato and Angelo Carbone
+ - src/ParticleStuffer.*
+   . Go back to previous version. Found bugs in the new Sutuffer.
+ - src/TrTransporter.*
+   . Handle neutral particles correctly. 
+   . Update energy after transport to avoid negative masses.
+  
 ! 2004-03-30 - P. Koppenburg
  - src/GeomDispCalculator.cpp
   Bug fix by Miriam Gandelman

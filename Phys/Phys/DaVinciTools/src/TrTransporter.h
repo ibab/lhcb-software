@@ -1,4 +1,4 @@
-// $Id: TrTransporter.h,v 1.1 2002-10-21 21:33:43 gcorti Exp $
+// $Id: TrTransporter.h,v 1.2 2004-03-31 06:54:48 pkoppenb Exp $
 #ifndef TRTRANSPORTER_H 
 #define TRTRANSPORTER_H 1
 
@@ -13,7 +13,6 @@
 #include "DaVinciTools/IParticleTransporter.h"
 
 class ITrExtrapolator ; ///< from Tr/TrKernel package
-
 /** @class TrTransporter TrTransporter.h
  *  
  *
@@ -62,7 +61,6 @@ private:
 
   std::string      m_extrapolatorName ;
   ITrExtrapolator*  m_extrapolator;
-
-
+  IParticleTransporter*  m_LinearTransporter;
 };
 #endif // TRTRANSPORTER_H
