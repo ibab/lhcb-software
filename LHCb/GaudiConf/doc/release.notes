@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!======================== GaudiConf v6r10 2003-07-08 =======================
+! 2003-07-08 - Marco Cattaneo
+ - DstContent.opts: remove Rec/V0, Rec/V0/States, Rec/V0/Vertices, Rec/V0/V0s
+
 !======================== GaudiConf v6r9 2003-07-01 ========================
 ! 2003-07-01 - Marco Cattaneo
  - DstContent.opts: remove optional Rec/Rich/OOPIDs, 
