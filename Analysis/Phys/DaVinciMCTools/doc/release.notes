@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.8 2002-07-26 19:45:24 gcorti Exp $
+! $Id: release.notes,v 1.9 2002-07-29 09:14:51 cattanem Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
 
+!========================== DaVinciMCTools v2r0 2002-07-29 =================
 ! 2002-07-26 - Gloria Corti
  - Bug fix for muonpid filling in MCPIDProtoPAlg
  - add detectorID information for electrons when making ProtoParticles 
