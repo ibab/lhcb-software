@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMaker.cpp,v 1.2 2002-07-27 20:24:03 gcorti Exp $
+// $Id: ChargedParticleMaker.cpp,v 1.3 2002-10-15 17:55:11 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -264,10 +264,10 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   // Set position of first measured point on track:
   HepPoint3D position( trackState->x(), trackState->y(), trackState->z() ) ;
   particle->setPointOnTrack( position );
-  //log << MSG::DEBUG << "track (x,y,z) = "
-  //    << trackState->x() << ", " << trackState->y() << ", " 
-  //    << trackState->z() << endreq;
-  //log << MSG::DEBUG << "position = " << position << endreq;
+//    log << MSG::DEBUG << "track (x,y,z) = "
+//        << trackState->x() << ", " << trackState->y() << ", " 
+//        << trackState->z() << endreq;
+//    log << MSG::DEBUG << "position = " << position << endreq;
 
   // Calculate and set four momentum: do this in ProtoParticle... 
   double momentum = trackState->p();
@@ -280,16 +280,16 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   quadriMomentum.setPz( pZ );
   quadriMomentum.setE( sqrt( mass*mass + momentum*momentum) );
   particle->setMomentum( quadriMomentum );
-  //log << MSG::DEBUG << "track (sx,sy,p) = "
-  //    << trackState->tx() << ", " << trackState->ty() << ", " 
-  //    << trackState->p() << endreq;
-  //log << MSG::DEBUG << "momentum = " << quadriMomentum << endreq;
+//    log << MSG::DEBUG << "track (sx,sy,p) = "
+//        << trackState->tx() << ", " << trackState->ty() << ", " 
+//        << trackState->p() << endreq;
+//    log << MSG::DEBUG << "momentum = " << quadriMomentum << endreq;
 
   // Retrieve track state covariance matrix and set particle error matrices:
   const HepSymMatrix& trkCov = trackState->pCovMatrix();
     
   // Set pointOnTrackErr: (Error on x and y. No error on z!)
-  HepSymMatrix pointOnTrackErr(3, 0.0);
+  HepSymMatrix pointOnTrackErr(3, 0);
   pointOnTrackErr = trkCov.sub(1,3);
   pointOnTrackErr(3,1) = 0.0;
   pointOnTrackErr(3,2) = 0.0;
@@ -297,14 +297,14 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   particle->setPointOnTrackErr(pointOnTrackErr);
   
   // Set slope+Momentum error:
-  HepSymMatrix slpMomErr(3, 0.0);
+  HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);
   particle->setSlopesMomErr(slpMomErr);
 
   // Set position-slopes correlation matrix. 
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
-  HepMatrix posSlopesCorr(3, 3, 0.0);
+  HepMatrix posSlopesCorr(3, 3, 0);
   int i, j;
   for( i = 1; i <= 3; i++ ) {
     for ( j = 1; j <= 2; j++ ) {
@@ -315,17 +315,23 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   particle->setPosSlopesCorr(posSlopesCorr);
     
   // Print out informations 
-  //log << MSG::DEBUG << "ProtoParticle error matrix" 
-  //    << trkCov << endreq;
+//    log << MSG::DEBUG << "ProtoParticle error matrix" 
+//        << trkCov << endreq;
   
-  //log << MSG::DEBUG << "pointOnTrackErr" << particle->pointOnTrackErr() 
-  //    << endreq;
+//    log << MSG::DEBUG << "pointOnTrackErr" << particle->pointOnTrackErr() 
+//        << endreq;
   
-  //log << MSG::DEBUG << "slopesMomErr" << particle->slopesMomErr() 
-  //    << endreq;
+//    log << MSG::DEBUG << "slopesMomErr" << particle->slopesMomErr() 
+//        << endreq;
   
-  //log << MSG::DEBUG << "correlation" << particle->posSlopesCorr() 
-  //    << endreq;
+//    log << MSG::DEBUG << "correlation" << particle->posSlopesCorr() 
+//        << endreq;
+
+//    log << MSG::DEBUG << "momentumErr" << particle->momentumErr()
+//        << endreq;
+  
+//    log << MSG::DEBUG << "correlation" << particle->posMomCorr()
+//        << endreq;
   
   particle->setOrigin(protoCand);
   return StatusCode::SUCCESS;
