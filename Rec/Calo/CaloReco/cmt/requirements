@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.13 2003-06-23 13:51:00 cattanem Exp $
+# $Id: requirements,v 1.14 2003-11-27 07:24:25 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloReco
-version            v1r6
+version            v1r6p1
 
 # ================ structure ==================================================
 branches           cmt doc src options 

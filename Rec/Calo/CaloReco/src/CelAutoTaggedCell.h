@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/05/23 11:09:14  ibelyaev
 //  see $CALOALGSROOT/doc/release.notes
 //
@@ -81,7 +84,7 @@ public:
   bool isWithSeed ( const CaloCellID& seed ) {
     std::vector<CaloCellID>::iterator itSeed = m_seeds.begin();
     while ( itSeed != m_seeds.end() &&
-            (*itSeed) != seed ) itSeed++;
+            !((*itSeed) == seed) ) itSeed++;
     return( itSeed != m_seeds.end() );
   }
 

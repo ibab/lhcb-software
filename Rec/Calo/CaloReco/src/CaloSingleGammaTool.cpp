@@ -262,7 +262,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
       logbk<<MSG::DEBUG<<cellPrs<<endreq;  
       
       
-      if( CaloCellID() != cellSpd )  // valid cell! 
+      if( !(CaloCellID() == cellSpd) )  // valid cell! 
 	{          
 	  for (SmartRefVector<CaloDigit>::const_iterator
 		 digit=hypo->digits().begin() ;
@@ -274,7 +274,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	  }
 	}
       
-      if( CaloCellID() != cellPrs )  // valid cell! 
+      if( !(CaloCellID() == cellPrs) )  // valid cell! 
 	{    
 	  for (SmartRefVector<CaloDigit>::const_iterator 
 		 digit=hypo->digits().begin() ;
@@ -321,7 +321,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 
   //	logbk<<MSG::DEBUG<<cellPrs<<endreq;  
 
-	if( CaloCellID() != cellSpd )  // valid cell! 
+	if( !(CaloCellID() == cellSpd) )  // valid cell! 
 	  {          
 	    for (SmartRefVector<CaloDigit>::const_iterator 
 		   digit=hypo->digits().begin() ;
@@ -333,7 +333,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 	    }
 	  }
 	
-	if( CaloCellID() != cellPrs )  // valid cell! 
+	if( !(CaloCellID() == cellPrs) )  // valid cell! 
 	  {    
 	    for (SmartRefVector<CaloDigit>::const_iterator 
 		   digit=hypo->digits().begin() ;

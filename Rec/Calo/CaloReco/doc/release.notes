@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.32 2003-06-23 13:59:09 cattanem Exp $
+! $Id: release.notes,v 1.33 2003-11-27 07:24:25 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,10 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+!======================= CaloReco v1r6p1 2003-06-23 =======================
+! 2003-11-27 - Marco Cattaneo
+ - Add workarounds for missing != operator in new CaloCellID from Xml
 
 !======================== CaloReco v1r6 2003-06-23 ========================
 ! 2003-06-23 - Ivan Belyaev

@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.3 2003-01-22 19:06:10 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.4 2003-11-27 07:24:25 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/01/22 19:06:10  ibelyaev
+//  tiny fix
+//
 // Revision 1.2  2002/12/01 14:22:57  ibelyaev
 //  Hcal stuff and updated S-coprrections
 //
@@ -266,14 +269,14 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   
   const CaloCellID cell = det()->Cell( newPoint );
   
-  if( CaloCellID() != cell )  // valid cell! 
+  if( !(CaloCellID() == cell) )  // valid cell! 
     {    
       CaloDigit* digit = m_digits->object( cell );
       if( 0 != digit ) { hypo->addToDigits( digit ); }
     }
   
   // loop over neighbour cells 
-  if( (  0 < m_xTol || 0 < m_yTol ) && CaloCellID() != cell )
+  if( (  0 < m_xTol || 0 < m_yTol ) && !(CaloCellID() == cell) )
     {
       const CaloNeighbors& neighbors = det()->neighborCells( cell );
       for( CaloNeighbors::const_iterator nei = neighbors.begin() ; 
