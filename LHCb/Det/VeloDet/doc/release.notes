@@ -1,6 +1,36 @@
-! $Id: release.notes,v 1.27 2002-10-14 16:25:55 cattanem Exp $
+! $Id: release.notes,v 1.28 2002-11-08 09:51:28 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-11-08 - Olivier Callot
+ - Change the matchingZones method to allow also phi neighbors.
+ - Fix a bad handling of strip 682 (boundary of the two Phi sensor zones) in
+   getSpacePoint.
+ - Put the hardcoded geometry parameters in the .cpp to ease final release.
+ - New methods for Panoramix, returning the strip geometry parameters:
+   stripLimitsR( double strip, int sensor, 
+                 double& Z, double& radius, double& phiMin, double& phiMax )
+   stripLimitsPhi( double strip, int sensor, 
+                   HepPoint3D& begin, HepPoint3D& end )
+
+ - new method phiMatchingStrips( int sensor, double radius, int rSensor, 
+                                 int zone, double angularTol,
+                                 double& stripMin, double& stripMax, 
+                                 double& pitch, double& offset )
+   returns the phi strip range on sensor 'sensor' at radius 'radius' matching
+   a R strip in R sensor 'rSensor' in zone 'zone', as returned by rOfStrip(), 
+   with a phi tolerance for boundary extrapolation of 'angularTol'.
+   It gives also the strip-to-phi parameters, namely
+     phi = strip * pitch + offset;
+   This is intended to replace getSpacePoint as this is faster...
+ - Phi strip number are in the range 0 to 2048 while R are in the range -0.5 to
+   2047.5 and this is difficult to change !
+ - Phi offset of phi sensors are close to 0 in Xml, shifted by -pi/2 in the
+   initialization, to avoid this subtraction in many methods.
+
+! 2002-10-18 - Chris Parkes
+ - Hardcoded designs for the 45 degree R sensors. Added a jobOption to select
+   which design to use. This is intended to be temporary !
 
 !========================= VeloDet v7r1 2002-10-14 =========================
 ! 2002-10-14 - Olivier Callot

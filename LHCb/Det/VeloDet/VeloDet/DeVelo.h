@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.11 2002-07-11 18:07:40 ocallot Exp $
+// $Id: DeVelo.h,v 1.12 2002-11-08 09:51:27 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -172,12 +172,35 @@ public:
 
   /// returns the R pitch at the given radius
   double rPitch( double radius ) {
+
+  switch (m_design){
+
+  case 0:  // std TDR R design
     if ( m_fixPitchRadius > radius ) {
       return m_innerPitch;
     } else {
       return m_innerPitch + m_pitchSlope * ( radius -  m_fixPitchRadius);
     }
+    break;
+
+  case 1:  // Only one variable zone.
+    return m_innerPitch +  m_pitchSlope * ( radius -  m_fixPitchRadius);
+    break;
+
+  case 2:  // two fixed pitch zones.
+  case 3:
+    if ( m_fixPitchRadius > radius ) {
+      return m_innerPitch;
+    } else{
+      return m_outerPitch;
+    }
+    break;
+
+  default:
+    return 0;
   }
+
+}
 
   /// returns the Phi pitch (in mm) at the given radius
   double phiPitch( double radius ) {
@@ -262,7 +285,23 @@ public:
                           double& pitch,
                           bool& valid);
 
-
+  /// Access to a strip's geometry, for Panoramix
+  /// from strip number and R sensor number, returns Z, R and a phi range.
+  void stripLimitsR( int sensor, double strip,
+                     double& z, double& radius, 
+                     double& phiMin, double& phiMax );
+  
+  /// from strip number and phi sensor number, returns the two end points
+  void stripLimitsPhi( int sensor, double strip,
+                       HepPoint3D& begin, HepPoint3D& end );
+  
+  /// Returns the strip range and the conversion factors for matching to a 
+  /// given radius and zone in a specified Phi sensor.
+  void phiMatchingStrips( int sensor, double radius, int rSensor, int zone,
+                          double angularTol,
+                          double& stripMin, double& stripMax, 
+                          double& pitch, double& offset );
+  
 protected: 
 
   /// return the (floating) strip number for the point in a sensor of this type
@@ -277,8 +316,12 @@ protected:
       return m_phiOuterTilt - asin( m_outerTiltRadius / radius ) ;
     }
   }
-  
+
 private:
+
+  // which R design to use
+  long m_design;
+  
   
   double m_innerRadius;
   double m_outerRadius;
@@ -316,6 +359,8 @@ private:
   std::vector<VeloSensor*> m_sensor;
   std::vector<VeloSensor*> m_puSensor;
   std::vector<double>      m_rStrip;           ///< list of strip radii
+  std::vector<double>      m_phiMin;   ///< minimal Phi (in sensor) of zone 
+  std::vector<double>      m_phiMax;   ///< maximal Phi (in sensor) of zone 
 };
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.23 2002-10-14 16:23:01 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.24 2002-11-08 09:51:28 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -36,7 +36,10 @@
 
 DeVelo::DeVelo( const std::string& name )
   :  DetectorElement     ( name       )
-{ };
+  , m_design             (0)
+{
+
+} ;
 
 //
 // Standard Destructor
@@ -58,14 +61,21 @@ StatusCode DeVelo::initialize() {
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel = -1;
   pmgr->declareProperty( "OutputLevel", outputLevel );
+  pmgr->declareProperty( "Design", m_design );
+
+  // which R sensor design - 0=TDR, 1,2,3 are alternative 45 deg. sector 
+  // designs
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
   StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc );
   jobSvc->setMyProperties( "DeVelo", pmgr );
   if ( -1 != outputLevel ) msgSvc()->setOutputLevel( "DeVelo", outputLevel );
+  delete pmgr;
   //====================================================================
 
   MsgStream loging( msgSvc(), "DeVelo" );
+  loging << MSG::INFO << "Using VELO R Detector design " << m_design << endreq;
+
 
   sc = DetectorElement::initialize();
   ///
@@ -120,6 +130,31 @@ StatusCode DeVelo::initialize() {
     pars.erase( it );
   }
 
+  //======== HARDCODED GEOMETRY for testing new designs =====================
+    // new 45 deg designs, see http://lhcb-vd.web.cern.ch/lhcb-vd/html/
+    //                     Optimization/Alternative_Strip_Designs/default.htm
+  switch (m_design){
+  case 1:
+    m_fixPitchRadius = m_innerRadius;
+    m_outerPitch     = .1028*mm;
+    m_nbRInner       = 512;
+    break;
+  case 2:
+    m_fixPitchRadius = 13.12*mm;
+    m_outerPitch     = 0.0752*mm;
+    m_nbRInner       = 512;
+    break;
+  case 3:
+    m_fixPitchRadius = 18.24*mm;
+    m_outerPitch     = 0.0928*mm;
+    m_nbRInner       = 512;
+    break;
+  case 0:
+  default:
+    // std TDR design - no change
+    break;
+  }
+     
   // Phi Detector Parameters
 
   it = std::find( pars.begin() , pars.end () , std::string("PhiBoundRad") );
@@ -172,8 +207,24 @@ StatusCode DeVelo::initialize() {
                  (m_outerRadius - m_fixPitchRadius);
   m_halfAngle     = 91.0 * degree;
   m_quarterAngle  = .5 * m_halfAngle;
+
+  // Angular limits of R zones
+  m_phiMin.push_back( -m_halfAngle );
+  m_phiMin.push_back( -m_quarterAngle );
+  m_phiMin.push_back( -m_halfAngle );
+  m_phiMin.push_back( 0. );
+  m_phiMin.push_back( m_quarterAngle );
+  m_phiMin.push_back( 0. );
+  
+  m_phiMax.push_back( -m_quarterAngle );
+  m_phiMax.push_back( 0. );
+  m_phiMax.push_back( 0. );
+  m_phiMax.push_back( m_quarterAngle );
+  m_phiMax.push_back( m_halfAngle );
+  m_phiMax.push_back( m_halfAngle );
   
   // For phi computation  
+  m_phiOrigin       = m_phiOrigin - halfpi; //== Xml is not rotated !
 
   m_innerTiltRadius = m_innerRadius * sin( m_innerTilt );
   m_outerTiltRadius = m_phiBoundRadius * sin( m_outerTilt );
@@ -404,7 +455,8 @@ double DeVelo::stripNumberByType( int type,
           }
           pitch = m_rStrip[ilst]- m_rStrip[ifst];
           strip = ifst + ( radius - m_rStrip[ifst] ) / pitch;
-          
+ 
+         
           if ( m_nbRInner < strip ) {
             strip += m_nbRInner;            // get space for second inner part
           } else {
@@ -412,8 +464,13 @@ double DeVelo::stripNumberByType( int type,
               strip += m_nbRInner;          // second half of inner strips
             }
           }
-          if ( 1 < zone ) {
-            strip += 1024.;           // second half of the sensor
+          //== Protect for out-of-nominal values
+          if ( 1023.5 < strip ) {
+            strip = -1;
+          } else {
+            if ( 1 < zone ) {
+              strip += 1024.;           // second half of the sensor
+            }
           }
         }
       }
@@ -424,8 +481,6 @@ double DeVelo::stripNumberByType( int type,
 
   if ( 3 < type ) { phi = - phi; }
   
-  phi += halfpi;   // phi is now in a range close to 0-180 degree
-
   if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
     phi = phi - phiOffset( radius );
     if ( m_phiBoundRadius > radius ) {
@@ -433,7 +488,7 @@ double DeVelo::stripNumberByType( int type,
       pitch = m_phiPitchInner * radius;
       if ( 0 > strip) {
         strip = -2.; 
-      } else if (m_nbPhiInner < strip) {
+      } else if (m_nbPhiInner <= strip) {
         strip = -2.; 
       }
     } else {
@@ -455,7 +510,7 @@ double DeVelo::stripNumberByType( int type,
 double DeVelo::rOfStrip( double strip, int& rZone ) {
   double localStrip = strip;
   rZone = 0;
-  if ( 1024. <= localStrip ) {
+  if ( 1023.5 <= localStrip ) {
     localStrip -= 1024.;
     rZone = 3;
   }
@@ -476,21 +531,22 @@ double DeVelo::rOfStrip( double strip, int& rZone ) {
 //=========================================================================
 //  Return true if the two rZones are matching. This depends on the
 //  R sensor geometry
+//-- More tolerant geometry, neighbors in phi also...
 //=========================================================================
 bool DeVelo::matchingZones ( int zone1, int zone2 ) {
   switch ( zone1 ){
   case 0 : 
-    return ( (0 == zone2) || (2 == zone2) );
+    return 3 > zone2 ; // ( (0 == zone2) || (2 == zone2) );
   case 1 : 
-    return ( (1 == zone2) || (2 == zone2) );
+    return 4 != zone2; // ( (1 == zone2) || (2 == zone2) );
   case 2 : 
-    return (3 >  zone2) ;
+    return 4 != zone2; // ( 3 >  zone2) ;
   case 3 : 
-    return ( (3 == zone2) || (5 == zone2) );
+    return 0 != zone2; // ( (3 == zone2) || (5 == zone2) );
   case 4 : 
-    return ( (4 == zone2) || (5 == zone2) );
+    return 2 < zone2 ; // ( (4 == zone2) || (5 == zone2) );
   case 5 : 
-    return ( 2 < zone2) ;
+    return 0 != zone2; // ( 2 < zone2) ;
   }
   return false;
 }
@@ -506,7 +562,6 @@ double DeVelo::phiOfStrip ( double strip, double radius, int sensorNb ) {
   } else {
     phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + phiOffset( radius );
   }
-  phiLocal -= halfpi;
 
   if ( 3 < ( m_sensor[sensorNb]->type() ) ) {
     phiLocal = -phiLocal;
@@ -546,16 +601,21 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
 
   double zR   = m_sensor[RSensorNumber]->z();
   double zPhi = m_sensor[PhiSensorNumber]->z();
-
   bool status = true;
   
-  // Compute R from strip. 
+  // Compute R from strip.
   int    rZone;
   double localR = rOfStrip( RStripNumber, rZone );
   
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
   double tolPhiBoundary = 5. * m_innerPitch;
+
+  // If the local computed slope is too big, keep R constant...
+  //if ( 0.4 < localR / fabs( zR - m_zVertex ) ) { 
+  //  rAtPhi = localR; 
+  //  tolPhiBoundary = .5 * fabs( zPhi-zR );  // Don't know the angle -> 45 deg
+  //}
 
   if ( m_innerRadius - tolPhiBoundary > rAtPhi ) { return false; }
   if ( m_outerRadius + tolPhiBoundary < rAtPhi ) { return false; }
@@ -567,7 +627,7 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
       return false;
     }
   } else if ( m_phiBoundRadius - tolPhiBoundary > rAtPhi ) {
-    if ( PhiStripNumber > m_nbPhiInner ) {
+    if ( m_nbPhiInner <= PhiStripNumber ) {
       return false;
     }
   }
@@ -615,14 +675,15 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
       return false;
     }
   }
-
+  
   //=== put back in the proper space location 
   if ( 0 == phiType%2 ) { phiLocal += pi;  }
 
-  point.set( localR * cos(phiLocal), localR * sin(phiLocal), zR );
+  point.set( localR * cos(phiLocal),  localR * sin(phiLocal), zR );
 
   // Here we should convert a local point to a global point, using the 
   // toGlobal method of the R sensor detector element... Not now !
+
 
   // Compute the pitches. 
 
@@ -645,7 +706,7 @@ double DeVelo::originToPhiDistance ( double strip, int sensorNb ) {
   }
 
   int phiType =  m_sensor[sensorNb]->type();
-  if ( 4 > phiType    ) {  distance = -distance; }
+  if ( 4 > phiType    ) { distance = -distance; }
   return distance;
 }
 
@@ -660,8 +721,6 @@ double DeVelo::phiDirectionOfStrip ( double strip, int sensorNb ) {
   } else {
     phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + m_phiOuterTilt;
   }
-  phiLocal -= halfpi;
-
   int phiType =  m_sensor[sensorNb]->type();
 
   if ( 3 <  phiType   ) { phiLocal = -phiLocal; }
@@ -690,7 +749,7 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
       } else if ( (m_nbRInner+1024 >  strip) && 
                   (m_nbRInner+1024 <= newStrip) ) {
         newStrip += (int)m_nbRInner;
-      } else if ( 2048 <= newStrip ) {
+      } else if ( nbStrips() <= newStrip ) {
         valid = false;
       }
     } else {
@@ -820,4 +879,151 @@ VeloChannelID DeVelo::channelID (const HepPoint3D& point,
     return VeloChannelID( 0, 0 );
   }  
 }
+
+//=========================================================================
+//  Returns the geometrical description of the specified R strip
+//=========================================================================
+void DeVelo::stripLimitsR ( int sensor, double strip,
+                            double& z, double& radius, 
+                            double& phiMin, double& phiMax) {
+  z = -1000.;
+  radius = 0.;
+  phiMin = 0.;
+  phiMax = 0.;
+  if ( 0 > sensor ) return;
+  if ( m_sensor.size() <= (unsigned int)sensor ) return;
+  if ( 1 < m_sensor[sensor]->type() ) return;
+
+  z = zSensor( sensor );
+  int rZone;
+  radius = rOfStrip( strip, rZone );
+
+  //== Phi Limits of the R strip.
+  phiMin = m_phiMin[rZone];
+  phiMax = m_phiMax[rZone];
+
+  //== Right or Left sensor ?
+  if ( 1 == m_sensor[sensor]->type() ) {
+    phiMin += pi;
+    phiMax += pi;
+  }
+}
+
+//=========================================================================
+//   Returns the geometrical description of the specified Phi strip
+//=========================================================================
+void DeVelo::stripLimitsPhi( int sensor, double strip,
+                             HepPoint3D& begin, HepPoint3D& end) {
+  begin.set( 0., 0., 0. );
+  end.set( 0., 0., 0. );
+  
+  if ( 0 > sensor || m_sensor.size() <= (unsigned int)sensor ) return;
+  int sensorType =  m_sensor[sensor]->type();
+  if ( 2 > sensorType ) return;
+  
+  double rBeg = m_innerRadius;
+  double rEnd = m_phiBoundRadius;
+  if ( m_nbPhiInner <= strip ) {
+    rBeg = m_phiBoundRadius;
+    rEnd = m_outerRadius;
+  }
+  double phiBeg = phiOfStrip( strip, rBeg, sensor );
+  double phiEnd = phiOfStrip( strip, rEnd, sensor );
+  if ( 0 == sensorType%2 ) {
+    phiBeg += pi;
+    phiEnd += pi;
+  }
+  double z = zSensor( sensor );
+  begin.set( rBeg * cos(phiBeg), rBeg * sin(phiBeg), z );
+  end.set( rEnd * cos(phiEnd), rEnd * sin(phiEnd), z );
+}
+
+//=========================================================================
+//  Returns a range of strip matching the point, and the conversion factors
+//=========================================================================
+void DeVelo:: phiMatchingStrips( int sensor, double radius, 
+                                 int rSensor, int zone, double angularTol,
+                                 double& stripMin, double& stripMax, 
+                                 double& pitch, double& offset ) {
+  stripMin = -1.;
+  stripMax = -1.;
+  pitch    = 0.;
+  offset   = 0.;
+  
+  if ( 0 > sensor || m_sensor.size() <= (unsigned int) sensor ) return;
+  int phiType = m_sensor[sensor]->type();
+  if ( 2 > phiType ) return;    // R sensor
+  int rType   = m_sensor[rSensor]->type();
+
+  //== tolerance in phi angle to match R and Phi...
+  double deltaPhi =  angularTol * 
+    fabs(m_sensor[sensor]->z() - m_sensor[rSensor]->z()) / radius;
+
+  if ( m_innerRadius > radius ) return;
+  if ( m_outerRadius < radius ) return;
+  bool isInner = m_phiBoundRadius > radius;
+  
+  offset = phiOffset( radius );
+  if ( isInner ) {
+    pitch  = m_phiPitchInner;
+  } else {
+    pitch  = m_phiPitchOuter;
+  }
+  if ( 3 < phiType ) {
+    pitch  = -pitch;
+    offset = -offset;
+  }
+  // For unusual pairing, rotate Phi ranges to match the R zone...
+  double phiMin = m_phiMin[zone]-deltaPhi - offset;
+  double phiMax = m_phiMax[zone]+deltaPhi - offset;
+  
+  if ( ( phiType + rType )%2 != 0 ) {
+    if ( phiMin < 0 ) {
+      phiMin += pi;
+      phiMax += pi;
+    } else {
+      phiMin -= pi;
+      phiMax -= pi;
+    }
+  }
+
+  stripMin = phiMin / pitch;
+  stripMax = phiMax / pitch;
+  if ( stripMax < stripMin ) {
+    double temp = stripMin;
+    stripMin = stripMax;
+    stripMax = temp;
+  }
+  //== Phi strips are defined from 0 to nbStrips(). Strip center is at +.5
+  if ( isInner ) {
+    if ( 0. > stripMax ) {
+      stripMin = -1.;
+      stripMax = -1.;
+    } else if ( 0. > stripMin ) {
+      stripMin = 0.;
+    } else if ( m_nbPhiInner <= stripMin ) {
+      stripMin = -1.;
+      stripMax = -1.;
+    } else if ( m_nbPhiInner <= stripMax ) {
+      stripMax = m_nbPhiInner;
+    }
+  } else {
+    stripMin += m_nbPhiInner;
+    stripMax += m_nbPhiInner;
+    offset   -= m_nbPhiInner * pitch;
+    if ( m_nbPhiInner > stripMax ) {
+      stripMin = -1.;
+      stripMax = -1.;
+    } else if ( m_nbPhiInner > stripMin ) {
+      stripMin = m_nbPhiInner;
+    } else if ( nbStrips() <= stripMin ) {
+      stripMin = -1.;
+      stripMax = -1.;
+    } else if ( nbStrips() <= stripMax ) {
+      stripMax = nbStrips();
+    }
+  }
+  if ( 0 == phiType%2 ) offset += pi;
+}
+
 //=========================================================================
