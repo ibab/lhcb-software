@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.39 2004-11-24 14:08:54 pkoppenb Exp $
+! $Id: release.notes,v 1.40 2004-12-01 07:45:40 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciMCTools v5r7 2004-12-01 ===================
 ! 2004-11-24 - P. Koppenburg
  - src/DebugTool.cpp
    . Use MeV, mm as default units, not GeV, cm
