@@ -1,8 +1,11 @@
-// $Id: CaloMap.h,v 1.5 2004-07-27 14:01:37 ibelyaev Exp $
+// $Id: CaloMap.h,v 1.6 2004-07-27 14:07:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/07/27 14:01:37  ibelyaev
+//  modification/simplification of classes CaloMap&CaloHashMap
+//
 // ============================================================================
 #ifndef KERNEL_CALOMAP_H 
 #define KERNEL_CALOMAP_H 1
@@ -10,6 +13,7 @@
 // Include files
 // ============================================================================
 #include <map>                   
+#include <functional>                   
 // ============================================================================
 
 /** @class CaloMap CaloMap.h Kernel/CaloMap.h
@@ -20,7 +24,7 @@
  *  @date   20/03/2002
  */
 template<class KEY, class VALUE>
-class CaloMap 
+class CaloMap : public std::unary_function<KEY,VALUE>
 {  
 public:
   
