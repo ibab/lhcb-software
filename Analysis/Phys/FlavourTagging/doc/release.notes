@@ -4,12 +4,16 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-09-13 - Gloria Corti
+ - Remove use of PhysEvent, update version of use used packages to be
+   consistent with DaVinci v6r0 and set version to v3r0
+
 ! 2002-09-10 - Olivier Dormond
-- Monitor: Divided the statistics based on how well the B has been 
-           reconstructed.
-- Tagging: Added a consistency check.
-- SPTT:    Added the event and run number to the ntuple.
-- All:     Small code layout changes.
+ - Monitor: Divided the statistics based on how well the B has been 
+            reconstructed.
+ - Tagging: Added a consistency check.
+ - SPTT:    Added the event and run number to the ntuple.
+ - All:     Small code layout changes.
 
 ! 2002-09-06 - Olivier Dormond
  - Made a cleanup of the abort messages.
