@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.14 2002-10-22 21:36:13 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.15 2002-11-14 12:35:34 graven Exp $
 // Include files 
 
 
@@ -26,6 +26,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( GeomDispCalculator );
   DECLARE_TOOL( PIDFilterCriterion );
   DECLARE_TOOL( KinFilterCriterion );
+  DECLARE_TOOL( MassDifferenceFilterCriterion );
   DECLARE_TOOL( ParticleFilter );
   DECLARE_TOOL( ParticleStuffer );
   DECLARE_TOOL( CombinedTransporter );
