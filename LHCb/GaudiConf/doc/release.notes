@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r0 2005-01-19 ========================
+! 2005-01-19 - Marco Cattaneo
+ - Remove path append to ROOT_native_version, for move to Gaudi v16 
+
 ! 2004-12-17 - Marco Cattaneo
  - Gaudi.supp updated for LHCb v17r2
 
