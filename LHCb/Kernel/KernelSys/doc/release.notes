@@ -4,9 +4,10 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== KernelSys v4r9 2005-03-11 ========================
-! 2005-03-11 - Marco Cattaneo
- - Use Relations v2r4
+!======================== KernelSys v4r9 2005-04-05 ========================
+! 2005-04-05 - Marco Cattaneo
+ - Add ProcessorKernel v1r0
+ - Use Relations v2r4, MuonKernel v2r7, L0MuonKernel v3r0
 
 !======================== KernelSys v4r8 2005-03-08 ========================
 ! 2005-03-08 - Marco Cattaneo

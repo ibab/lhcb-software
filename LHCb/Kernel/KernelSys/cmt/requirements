@@ -3,12 +3,13 @@ version v4r9
 
 branches doc cmt
 
-use LHCbKernel  v5r8	Kernel
-use Relations   v2r4    Kernel
-use CaloKernel  v3r2	Calo
-use MuonKernel  v2r6	Muon
-use TrKernel    v11r4	Tr
-use RichKernel  v5r4	Rich
-use VeloKernel	v1r5p1	Velo	-no_auto_imports
-use L0mConf      v2r2p3 L0
-use L0MuonKernel v2r3   L0
+use LHCbKernel       v5r8   Kernel
+use Relations        v2r4   Kernel
+use CaloKernel       v3r2   Calo
+use MuonKernel       v2r7   Muon
+use TrKernel         v11r4  Tr
+use RichKernel       v5r4   Rich
+use VeloKernel	     v1r5p1 Velo   -no_auto_imports
+use L0mConf          v2r2p3 L0
+use L0MuonKernel     v3r0   L0
+use ProcessorKernel  v1r0   L0
