@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.2 2001-11-26 07:00:56 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.3 2002-01-10 15:57:41 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -171,44 +171,58 @@ StatusCode DeVelo::initialize() {
   HepPoint3D pointGlobal( 0, 0, 0);
   int number;
   int index = 0;
+  double minZ = -200.*mm;
+  bool inVeto = true;
   
   IDetectorElement* stations = *childBegin();
 
   for( IDetectorElement::IDEContainer::iterator child = stations->childBegin();
        stations->childEnd() != child ; ++child ) {
     number = child - stations->childBegin();
-    loging << MSG::INFO << "wafer " << number ;
     
     IGeometryInfo* geoData = (*child)->geometry();
     if ( 0 != geoData ) {
       pointGlobal = geoData->toGlobal( pointLocal );
-      loging << " at Z = " << pointGlobal.z() << endreq;
       // *** Create the wafers, 4 per 'station'
       double z =  pointGlobal.z();
-      
+      if ( inVeto && ( minZ < z ) ) {
+        inVeto = false;
+        index  = 0;
+      }      
+      loging << MSG::INFO << "Wafer " << index;
+
       for ( int j=0 ; 2 > j ; j++ ) {
-        VeloWafer* phiWafer = new VeloWafer();
-        phiWafer->setNumber( index++ );
-        if ( 0 == number%2 ) {
-          phiWafer->setType( 2*j+1 );    // Negative X
-        } else {
-          phiWafer->setType( 2*j+2 );    // Positive X
+        if ( !inVeto) {
+          VeloWafer* phiWafer = new VeloWafer();
+          phiWafer->setNumber( index++ );
+          if ( 0 == number%2 ) {
+            phiWafer->setType( 2*j+1 );    // Negative X
+          } else {
+            phiWafer->setType( 2*j+2 );    // Positive X
+          }
+          phiWafer->setZ( z - 0.65 );      // R-Phi separation = 1.3 mm
+          m_wafer.push_back( phiWafer );
+          loging << " Phi" << phiWafer->type() << " z=" << phiWafer->z();
         }
-        phiWafer->setZ( z - 0.65 );      // R-Phi separation = 1.3 mm
-        m_wafer.push_back( phiWafer );
         
         VeloWafer* radWafer = new VeloWafer();
         radWafer->setNumber( index++ );
         radWafer->setType( 0 );
-        radWafer->setZ( z + 0.65 );
-        m_wafer.push_back( radWafer );
+        if ( inVeto ) {
+          radWafer->setZ( z );
+          m_puWafer.push_back( radWafer );
+        } else {
+          radWafer->setZ( z + 0.65 );
+          m_wafer.push_back( radWafer );
+        }
+        loging << " R z=" << radWafer->z();
         z = z + 15.0;                    // Right-Left separation 15 mm
       }
+      loging << endreq;
     } else {
       loging << " no geometry !" << endreq;
     }
   }
-  
   return sc;
 };
 
@@ -216,8 +230,21 @@ StatusCode DeVelo::initialize() {
 // Get the wafer a point is in.
 // ============================================================================
 int DeVelo::waferNumber( HepPoint3D& point ) {
-  for ( std::vector<VeloWafer*>::const_iterator it = m_wafer.begin() ;
-        m_wafer.end() != it; it++ ) {
+  std::vector<VeloWafer*>::const_iterator it ;
+  for ( it = m_wafer.begin() ; m_wafer.end() != it; it++ ) {
+    if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
+      return (*it)->number();
+    }
+  }
+  return -1;
+};
+
+// ============================================================================
+// Get the wafer a point is in.
+// ============================================================================
+int DeVelo::puWaferNumber( HepPoint3D& point ) {
+  std::vector<VeloWafer*>::const_iterator it ;
+  for ( it = m_puWafer.begin() ; m_puWafer.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
       return (*it)->number();
     }
@@ -231,15 +258,42 @@ int DeVelo::waferNumber( HepPoint3D& point ) {
 double DeVelo::stripNumber( unsigned int waferNumber, 
                             HepPoint3D& point, 
                             double& pitch ) {
+  int type;
+  if ( m_wafer.size() <= waferNumber ) {
+    return -1;
+  }
+  type = m_wafer[waferNumber]->type();
+  return stripNumberByType( type, point, pitch ) ;
+}
+
+   
+//=============================================================================
+// Returns the strip number for the specified wafer
+//=============================================================================
+double DeVelo::puStripNumber( unsigned int waferNumber, 
+                            HepPoint3D& point, 
+                            double& pitch ) {
+  int type;
+  if ( m_puWafer.size() <= waferNumber ) {
+    return -1;
+  }
+  type = m_puWafer[waferNumber]->type();
+  return stripNumberByType( type, point, pitch ) ;
+  
+}
+//=============================================================================
+// Returns the strip number for the specified wafer
+//=============================================================================
+double DeVelo::stripNumberByType( int type,
+                                  HepPoint3D& point, 
+                                  double& pitch ) {
   double strip = -1.;
   pitch  = -1.;
-  if ( m_wafer.size() <= waferNumber ) {
-    return strip;
-  }
+
   double radius = point.perp();
   double phi    = point.phi();
   
-  if ( 0 == m_wafer[waferNumber]->type() ) {
+  if ( 0 == type ) {
 
     // ** This is an R wafer.    
 
@@ -273,14 +327,14 @@ double DeVelo::stripNumber( unsigned int waferNumber,
     return strip;
   }
   // ** This is a phi wafer. Can be rotated or symmetrized
-  if ( 2 >= m_wafer[waferNumber]->type()  ) {
+  if ( 2 >= type ) {
     if ( 0 < phi ) {
       phi = phi - pi;
     } else {
       phi = phi + pi;
     }
   }
-  if ( 0 == m_wafer[waferNumber]->type() % 2 ) {
+  if ( 0 == type % 2 ) {
     phi = - phi;
   }
   

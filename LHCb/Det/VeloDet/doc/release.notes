@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.4 2001-11-26 07:00:56 ocallot Exp $
+! $Id: release.notes,v 1.5 2002-01-10 15:57:41 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+!=============================================================================
+! 10/01/2002 - Olivier Callot
+  - Added the PU Veto wafer, with new methods to get their number and position.
+    This is not fully tested for the PU Veto, but doesn't affect the Velo
 
 !=============================================================================
 ! 26/11/2001 - Olivier Callot

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.1 2001-10-25 06:13:26 ocallot Exp $
+// $Id: DeVelo.h,v 1.2 2002-01-10 15:57:41 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -79,13 +79,29 @@ public:
   /// return the wafer number for a point
   int waferNumber( HepPoint3D& point );
 
+  /// return the PU wafer number for a point
+  int puWaferNumber( HepPoint3D& point );
+
   /// return the number of wafers
-  int nbWafer()  const { return m_wafer.size(); };
+  int nbWafer()  const { return m_wafer.size() ; };
+  
+  /// return the number of wafers
+  int nbPuWafer()  const { return m_puWafer.size(); };
   
   /// return the (floating) strip number for this wafer;
   double stripNumber( unsigned int waferNumber, 
                       HepPoint3D& point, 
                       double& pitch );
+
+  /// return the (floating) strip number for this wafer;
+  double puStripNumber( unsigned int waferNumber, 
+                        HepPoint3D& point, 
+                        double& pitch );
+
+  /// return the (floating) strip number for this wafer;
+  double stripNumberByType( int type,
+                            HepPoint3D& point, 
+                            double& pitch );
 
   /// return the space point and sigma for a given pair of strips.
 
@@ -96,6 +112,18 @@ public:
                       HepPoint3D& point, 
                       double&  rPitch,
                       double&  phiPitch );
+
+  double zWafer( unsigned int num ) { 
+    if ( m_wafer.size() > num ) {
+      return m_wafer[num]->z(); 
+    } else if ( (100 <= num ) && (m_puWafer.size() > num-100) ) {
+      return m_puWafer[num-100]->z();
+    } else{
+      return -9999.;
+    }
+  }
+  
+  
     
 protected: 
 
@@ -135,7 +163,7 @@ private:
 
   // Local storage for geometry computation
   std::vector<VeloWafer*> m_wafer;
-
+  std::vector<VeloWafer*> m_puWafer;
 };
 
 // ============================================================================
