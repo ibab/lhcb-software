@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2003-06-23 13:11:54 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2003-06-23 13:59:09 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,12 +7,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloReco v1r6 2003-06-23 ========================
 ! 2003-06-23 - Ivan Belyaev
  - Few fixes for new compiler 
- - cmt/requirements   increase the version 
 
-
-!======================== CaloReco v1r6 2003-06-05 ========================
 ! 2003-05-15 - Vanya BELYAEV
  - src/CaloSinglePhotonAlg.cpp 
  - src/CaloElectronAlg.cpp         
