@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.h,v 1.2 2004-07-08 13:27:48 pkoppenb Exp $
+// $Id: BTaggingMonitor.h,v 1.3 2005-01-06 10:51:47 pkoppenb Exp $
 #ifndef BTaggingMonitor_H 
 #define BTaggingMonitor_H 1
 
@@ -23,7 +23,7 @@
 #include "DaVinciMCTools/IDebugTool.h"
 
 // from DaVinci
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
 
 /** @class BTaggingMonitor BTaggingMonitor.h

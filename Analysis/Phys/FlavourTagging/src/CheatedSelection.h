@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.4 2004-07-08 13:27:48 pkoppenb Exp $
+// $Id: CheatedSelection.h,v 1.5 2005-01-06 10:51:47 pkoppenb Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -18,7 +18,7 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 // from Event 
 #include "Event/EventHeader.h"
 #include "Event/GenMCLink.h"

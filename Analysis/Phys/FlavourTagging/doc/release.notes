@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2005-01-04 - P. Koppenburg
+  - src/*.h
+    . Change location of interfaces
 ! 2004-12-06 - P. Koppenburg
   - options/DVBTagging_example.opts
     . Correct location of L1.opts. 

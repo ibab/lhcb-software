@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.6 2004-09-13 12:13:58 pkoppenb Exp $
+// $Id: BTagging.h,v 1.7 2005-01-06 10:51:47 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -20,7 +20,7 @@
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 // from Event 
 #include "Event/EventHeader.h"
 #include "Event/Vertex.h"
