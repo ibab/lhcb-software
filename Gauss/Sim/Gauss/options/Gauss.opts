@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.34 2003-12-05 14:39:06 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.35 2003-12-05 17:08:03 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg          =
 // write an output file
 #include "$GAUSSOPTS/GaussRootIO.opts"
 #include "$GAUSSOPTS/GaussTape.opts"
-GaussTape.Output = "DATAFILE='Gauss1.oosim' TYP='ROOT' OPT='RECREATE'";
+GaussTape.Output = "DATAFILE='Gauss.oosim' TYP='ROOT' OPT='RECREATE'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3; 
