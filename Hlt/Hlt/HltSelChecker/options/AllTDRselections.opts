@@ -20,4 +20,3 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
 #include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
 #include "$HLTSELCHECKERROOT/options/PrintTDR.opts"
-
