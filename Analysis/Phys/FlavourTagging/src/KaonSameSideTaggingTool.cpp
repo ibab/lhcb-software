@@ -213,6 +213,8 @@ void KaonSameSideTaggingTool::tagFromList( const Particle &theB,
   ParticleVector candidates(0);
   log << MSG::DEBUG << "Filtering the candidates" << endreq;
   m_Filter->filter(theParts, candidates);
+  log << MSG::DEBUG << "Kept " << candidates.size() << " out of "
+      << theParts.size() << endreq;
 
   // All the primary vertices in the event.
   std::vector<const Vertex *> vtxs(0);
@@ -248,6 +250,9 @@ void KaonSameSideTaggingTool::tagFromList( const Particle &theB,
       if( ((m_ISMin > 0) && (impact/error < m_ISMin)) ||
           ((m_ISMax > 0) && (impact/error > m_ISMax)) ) {
         bad = true;
+        log << MSG::DEBUG << "Rejecting: ip/err = "
+            << impact << '/' << error << '=' << impact/error
+            << " not in [" << m_ISMin << ',' << m_ISMax << ']' << endreq;
         break;
       }
     }
@@ -255,9 +260,19 @@ void KaonSameSideTaggingTool::tagFromList( const Particle &theB,
                        - (*c)->momentum().pseudoRapidity());
     double dphi = fabs(theB.momentum().phi() - (*c)->momentum().phi());
     double dQ   = (theB.momentum()+(*c)->momentum()).m() - theB.mass();
-    if( (deta >= m_dEtaCut) || (dphi >= m_dPhiCut) || (dQ >= m_dQCut) )
+    if( deta >= m_dEtaCut ) {
       bad = true;
-
+      log << MSG::DEBUG << "Rejecting: deta = " << deta << ">=" << m_dEtaCut
+          << endreq;
+    } else if( dphi >= m_dPhiCut ) {
+      bad = true;
+      log << MSG::DEBUG << "Rejecting: dphi = " << dphi << ">=" << m_dPhiCut
+          << endreq;
+    } else if( dQ >= m_dQCut ) {
+      bad = true;
+      log << MSG::DEBUG << "Rejecting: deta = " << dQ << ">=" << m_dQCut
+          << endreq;
+    }
     if( !bad && ((*c)->pt() > max_pt) ) {
       theTag.setTagger(*c);
       max_pt = (*c)->pt();
