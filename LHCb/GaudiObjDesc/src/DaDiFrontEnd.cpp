@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.2 2001-10-09 17:01:04 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.3 2001-10-09 17:10:59 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -32,105 +32,105 @@ extern std::string argV0;
 DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
 {
 
-	DaDiPackage* gddPackage = new DaDiPackage();
+  DaDiPackage* gddPackage = new DaDiPackage();
 
-	static char* gXmlFile = 0;
+  static char* gXmlFile = 0;
 
 // 
 // Initialization of XML-Parser
 //
-	try 
-	{
-		XMLPlatformUtils::Initialize();
-	}
+  try 
+  {
+    XMLPlatformUtils::Initialize();
+  }
 
-	catch(const XMLException& toCatch)
+  catch(const XMLException& toCatch)
     {
-		std::cerr << "Error during Xerces-c Initialization.\n"
-			<< " Exception message: "
+    std::cerr << "Error during Xerces-c Initialization.\n"
+      << " Exception message: "
             << toCatch.getMessage() << std::endl;
     }
 
-	gXmlFile = filename;
+  gXmlFile = filename;
 
-	DOMParser *parser = new DOMParser;
-	parser->setValidationScheme(DOMParser::Val_Auto);
-	parser->setDoNamespaces(false);
-	ErrorHandler* errReporter = new DaDiTools();
-	//  ErrorHandler *errReporter = new DaDiTools();
-	parser->setErrorHandler(errReporter);
-	parser->setCreateEntityReferenceNodes(false);
-	parser->setToCreateXMLDeclTypeNode(true);
+  DOMParser *parser = new DOMParser;
+  parser->setValidationScheme(DOMParser::Val_Auto);
+  parser->setDoNamespaces(false);
+  ErrorHandler* errReporter = new DaDiTools();
+  //  ErrorHandler *errReporter = new DaDiTools();
+  parser->setErrorHandler(errReporter);
+  parser->setCreateEntityReferenceNodes(false);
+  parser->setToCreateXMLDeclTypeNode(true);
 
-	bool errorsOccured = false;
+  bool errorsOccured = false;
 
 //
 // parse file, catch errors
 //
 
-	try
-	{
-		parser->parse(gXmlFile);
-	}
+  try
+  {
+    parser->parse(gXmlFile);
+  }
 
-	catch(const XMLException& e)
+  catch(const XMLException& e)
     {
-		std::cerr << "An error occured during parsing \n Message: "
-			<< e.getMessage() << std::endl;
-		errorsOccured = true;
+    std::cerr << "An error occured during parsing \n Message: "
+      << e.getMessage() << std::endl;
+    errorsOccured = true;
     }
 
-	catch(const DOM_DOMException& e)
+  catch(const DOM_DOMException& e)
     {
-		std::cerr << "An error occured during parsing \n Message: "
-			<< e.msg.transcode() << std::endl;
-	    errorsOccured = true;
+    std::cerr << "An error occured during parsing \n Message: "
+      << e.msg.transcode() << std::endl;
+      errorsOccured = true;
     }
 
-	catch(...)
+  catch(...)
     {
-		std::cerr << "An error occured during parsing \n " << std::endl;
-		errorsOccured=true;
+    std::cerr << "An error occured during parsing \n " << std::endl;
+    errorsOccured=true;
     }
 
 //
 // If no errors occured start walking DOMtree
 //
-	if (!errorsOccured)
+  if (!errorsOccured)
     {
-		DOM_Node doc = parser->getDocument();
-		DOM_Node top = doc.getFirstChild();
+    DOM_Node doc = parser->getDocument();
+    DOM_Node top = doc.getFirstChild();
 
-		while (strcmp(top.getNodeName().transcode(), "gdd") != 0)
+    while (strcmp(top.getNodeName().transcode(), "gdd") != 0)
         {
-			top = top.getNextSibling();
+      top = top.getNextSibling();
         }
       
-		DOM_Node gdd_node = top.getNextSibling().getFirstChild();
+    DOM_Node gdd_node = top.getNextSibling().getFirstChild();
  
-		while (!gdd_node.isNull())
-		{
-			if (strcmp(gdd_node.getNodeName().transcode(), "import")==0)
-			{
-				DDFE::parseImport(gdd_node,gddPackage);
-			}
+    while (!gdd_node.isNull())
+    {
+      if (strcmp(gdd_node.getNodeName().transcode(), "import")==0)
+      {
+        DDFE::parseImport(gdd_node,gddPackage);
+      }
 
-			if (strcmp(gdd_node.getNodeName().transcode(), "package")==0)
-			{
-				DDFE::parsePackage(gdd_node,gddPackage);
-			} 
+      if (strcmp(gdd_node.getNodeName().transcode(), "package")==0)
+      {
+        DDFE::parsePackage(gdd_node,gddPackage);
+      } 
 
-			if (strcmp(gdd_node.getNodeName().transcode(), "class")==0)
-			{
-				gddPackage->setPackageName(DOMString::transcode("__NO_PACKAGE__"));
-				DaDiClass* gddClass = new DaDiClass();
-				gddPackage->pushDaDiClass(gddClass);
-				DDFE::parseClass(gdd_node,gddClass);
-			}
-			gdd_node = gdd_node.getNextSibling();
-		}
-	}
-	return gddPackage;
+      if (strcmp(gdd_node.getNodeName().transcode(), "class")==0)
+      {
+        gddPackage->setPackageName(DOMString::transcode("__NO_PACKAGE__"));
+        DaDiClass* gddClass = new DaDiClass();
+        gddPackage->pushDaDiClass(gddClass);
+        DDFE::parseClass(gdd_node,gddClass);
+      }
+      gdd_node = gdd_node.getNextSibling();
+    }
+  }
+  return gddPackage;
 }
 
 //
@@ -138,26 +138,26 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
 //
 void DDFE::parseImport(DOM_Node node, DaDiPackage* gddPackage)
 {  
-	std::string import_name, import_soft, import_std;
+  std::string import_name, import_soft, import_std;
   
-	import_name = node.getAttributes().
-		getNamedItem(DOMString::transcode("name")).getNodeValue().transcode();
-	import_soft = node.getAttributes().
-		getNamedItem(DOMString::transcode("soft")).getNodeValue().transcode();
-	import_std = node.getAttributes().
-		getNamedItem(DOMString::transcode("std")).getNodeValue().transcode();
+  import_name = node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).getNodeValue().transcode();
+  import_soft = node.getAttributes().
+    getNamedItem(DOMString::transcode("soft")).getNodeValue().transcode();
+  import_std = node.getAttributes().
+    getNamedItem(DOMString::transcode("std")).getNodeValue().transcode();
 
-	if (import_soft == "TRUE")
+  if (import_soft == "TRUE")
     {
-		gddPackage->pushImpSoftList(import_name);
+    gddPackage->pushImpSoftList(import_name);
     }
-	else if (import_std == "TRUE")
+  else if (import_std == "TRUE")
     {
-		gddPackage->pushImpStdList(import_name);
+    gddPackage->pushImpStdList(import_name);
     }
-	else
+  else
     {
-		gddPackage->pushImportList(import_name);
+    gddPackage->pushImportList(import_name);
     }
 }
 
@@ -166,26 +166,26 @@ void DDFE::parseImport(DOM_Node node, DaDiPackage* gddPackage)
 //
 void DDFE::parseImport(DOM_Node node, DaDiClass* gddClass)
 {  
-	std::string import_name, import_soft, import_std;
+  std::string import_name, import_soft, import_std;
   
-	import_name = node.getAttributes().
-		getNamedItem(DOMString::transcode("name")).getNodeValue().transcode();
-	import_soft = node.getAttributes().
-		getNamedItem(DOMString::transcode("soft")).getNodeValue().transcode();
-	import_std = node.getAttributes().
-		getNamedItem(DOMString::transcode("std")).getNodeValue().transcode();
+  import_name = node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).getNodeValue().transcode();
+  import_soft = node.getAttributes().
+    getNamedItem(DOMString::transcode("soft")).getNodeValue().transcode();
+  import_std = node.getAttributes().
+    getNamedItem(DOMString::transcode("std")).getNodeValue().transcode();
   
-	if (import_soft == "TRUE")
+  if (import_soft == "TRUE")
     {
-		gddClass->pushImpSoftList(import_name);
+    gddClass->pushImpSoftList(import_name);
     }
-	else if (import_std == "TRUE")
+  else if (import_std == "TRUE")
     {
-		gddClass->pushImpStdList(import_name);
+    gddClass->pushImpStdList(import_name);
     }
-	else
+  else
     {
-		gddClass->pushImportList(import_name);
+    gddClass->pushImportList(import_name);
     }
 }
 
@@ -195,37 +195,37 @@ void DDFE::parseImport(DOM_Node node, DaDiClass* gddClass)
 //
 void DDFE::parsePackage(DOM_Node node, DaDiPackage* gddPackage)
 {
-	gddPackage->setPackageName(node.getAttributes().    
-		getNamedItem(DOMString::transcode("name")).
+  gddPackage->setPackageName(node.getAttributes().    
+    getNamedItem(DOMString::transcode("name")).
         getNodeValue());
   
-	node = node.getFirstChild();
+  node = node.getFirstChild();
   
-	while(!node.isNull())
+  while(!node.isNull())
     {
-		switch(node.getNodeType())
+    switch(node.getNodeType())
         {
-		case DOM_Node::ELEMENT_NODE:
-			{
-				if (strcmp(node.getNodeName().transcode(), "import") == 0)
-	            {
-					DDFE::parseImport(node,gddPackage);
-				}
-				else if (strcmp(node.getNodeName().transcode(), "class") == 0)
-				{
-					DaDiClass* gddClass = new DaDiClass();
-					gddPackage->pushDaDiClass(gddClass);
-					DDFE::parseClass(node,gddClass);
-				}
-				else 
-				{
-					node = node.getNextSibling();
-				}
-		default:
-				{
-					node = node.getNextSibling();
-				}
-			}
+    case DOM_Node::ELEMENT_NODE:
+      {
+        if (strcmp(node.getNodeName().transcode(), "import") == 0)
+              {
+          DDFE::parseImport(node,gddPackage);
+        }
+        else if (strcmp(node.getNodeName().transcode(), "class") == 0)
+        {
+          DaDiClass* gddClass = new DaDiClass();
+          gddPackage->pushDaDiClass(gddClass);
+          DDFE::parseClass(node,gddClass);
+        }
+        else 
+        {
+          node = node.getNextSibling();
+        }
+    default:
+        {
+          node = node.getNextSibling();
+        }
+      }
         }
     }
 }
@@ -236,280 +236,280 @@ void DDFE::parsePackage(DOM_Node node, DaDiPackage* gddPackage)
 //
 void DDFE::parseClass(DOM_Node node, DaDiClass* gddClass)
 {
-	gddClass->setClassName(node.getAttributes().
-		getNamedItem(DOMString::transcode("name")).
+  gddClass->setClassName(node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).
         getNodeValue());
   
-	gddClass->setClassDesc(node.getAttributes().
-		getNamedItem(DOMString::transcode("desc")).
+  gddClass->setClassDesc(node.getAttributes().
+    getNamedItem(DOMString::transcode("desc")).
         getNodeValue());
   
-	gddClass->setClassAuthor(node.getAttributes().
-		getNamedItem(DOMString::transcode("author")).
-		getNodeValue());
+  gddClass->setClassAuthor(node.getAttributes().
+    getNamedItem(DOMString::transcode("author")).
+    getNodeValue());
 
-	gddClass->setClassTemplateVector(node.getAttributes().
-		getNamedItem(DOMString::transcode("templateVector")).
-		getNodeValue());
-	if (strcmp(gddClass->classTemplateVector().transcode(), "TRUE") == 0)
-	{
-		gddClass->pushImportList("ObjectVector");
-	}
+  gddClass->setClassTemplateVector(node.getAttributes().
+    getNamedItem(DOMString::transcode("templateVector")).
+    getNodeValue());
+  if (strcmp(gddClass->classTemplateVector().transcode(), "TRUE") == 0)
+  {
+    gddClass->pushImportList("ObjectVector");
+  }
   
-	gddClass->setClassTemplateList(node.getAttributes().
-		getNamedItem(DOMString::transcode("templateList")).
-		getNodeValue());
-	if (strcmp(gddClass->classTemplateList().transcode(), "TRUE") == 0)
-	{
-		gddClass->pushImportList("ObjectList");
-	}
+  gddClass->setClassTemplateList(node.getAttributes().
+    getNamedItem(DOMString::transcode("templateList")).
+    getNodeValue());
+  if (strcmp(gddClass->classTemplateList().transcode(), "TRUE") == 0)
+  {
+    gddClass->pushImportList("ObjectList");
+  }
   
-	if(!node.getAttributes().getNamedItem(DOMString::transcode("id")).isNull())
-	{
-		gddClass->setClassID(node.getAttributes().
-			getNamedItem(DOMString::transcode("id")).
-			getNodeValue());
-	}
-	else
-	{
-		gddClass->setClassID(NULL);
-	}
+  if(!node.getAttributes().getNamedItem(DOMString::transcode("id")).isNull())
+  {
+    gddClass->setClassID(node.getAttributes().
+      getNamedItem(DOMString::transcode("id")).
+      getNodeValue());
+  }
+  else
+  {
+    gddClass->setClassID(NULL);
+  }
 
-	node = node.getFirstChild();
+  node = node.getFirstChild();
 
-	while(!node.isNull())
-	{
-		switch(node.getNodeType())
-   		{    
-		case DOM_Node::ELEMENT_NODE:
-			{
+  while(!node.isNull())
+  {
+    switch(node.getNodeType())
+       {    
+    case DOM_Node::ELEMENT_NODE:
+      {
 //
 // ParseImport
 //
-				if(strcmp(node.getNodeName().transcode(), "import") == 0)
-				{
-					DDFE::parseImport(node,gddClass);
-		        }
+        if(strcmp(node.getNodeName().transcode(), "import") == 0)
+        {
+          DDFE::parseImport(node,gddClass);
+            }
 //
 // Parse baseclasses
 //
-				else if(strcmp(node.getNodeName().transcode(), "base") == 0)
-				{
-					DaDiBaseClass* gddBaseClass = new DaDiBaseClass();
+        else if(strcmp(node.getNodeName().transcode(), "base") == 0)
+        {
+          DaDiBaseClass* gddBaseClass = new DaDiBaseClass();
 
-					gddClass->pushDaDiBaseClass(gddBaseClass);
+          gddClass->pushDaDiBaseClass(gddBaseClass);
 
-					gddBaseClass->setName(node.getAttributes().getNamedItem(DOMString::transcode("name")).getNodeValue().transcode());
+          gddBaseClass->setName(node.getAttributes().getNamedItem(DOMString::transcode("name")).getNodeValue().transcode());
 
-					gddClass->pushImportList(node.getAttributes().getNamedItem(DOMString::transcode("name")).getNodeValue().transcode());
+          gddClass->pushImportList(node.getAttributes().getNamedItem(DOMString::transcode("name")).getNodeValue().transcode());
 
-					gddBaseClass->setVirtual_(node.getAttributes().getNamedItem(DOMString::transcode("virtual")).getNodeValue().transcode());
+          gddBaseClass->setVirtual_(node.getAttributes().getNamedItem(DOMString::transcode("virtual")).getNodeValue().transcode());
 
-					gddBaseClass->setAccess(node.getAttributes().getNamedItem(DOMString::transcode("access")).getNodeValue().transcode());
-				}
+          gddBaseClass->setAccess(node.getAttributes().getNamedItem(DOMString::transcode("access")).getNodeValue().transcode());
+        }
 ///
 /// Parse friends
 ///
-				
+        
 
 
 
 //
 // Parse methods
 //
-				else if(strcmp(node.getNodeName().transcode(), "method") == 0)
-				{
-					DaDiMethod* gddMethod = new DaDiMethod();
+        else if(strcmp(node.getNodeName().transcode(), "method") == 0)
+        {
+          DaDiMethod* gddMethod = new DaDiMethod();
 
-					gddClass->pushDaDiMethod(gddMethod);
+          gddClass->pushDaDiMethod(gddMethod);
 
-					gddMethod->setName(node.getAttributes().
-						getNamedItem(DOMString::transcode("name")).
+          gddMethod->setName(node.getAttributes().
+            getNamedItem(DOMString::transcode("name")).
                         getNodeValue().transcode());
             
-					gddMethod->setDesc(node.getAttributes().
-						getNamedItem(DOMString::transcode("desc")).
+          gddMethod->setDesc(node.getAttributes().
+            getNamedItem(DOMString::transcode("desc")).
                         getNodeValue().transcode());
             
-		            gddMethod->setAccess(node.getAttributes().
-						getNamedItem(DOMString::transcode("access")).
+                gddMethod->setAccess(node.getAttributes().
+            getNamedItem(DOMString::transcode("access")).
                         getNodeValue().transcode());
             
-		            gddMethod->setConst_(node.getAttributes().
-						getNamedItem(DOMString::transcode("const")).
+                gddMethod->setConst_(node.getAttributes().
+            getNamedItem(DOMString::transcode("const")).
                         getNodeValue().transcode());
             
-		            gddMethod->setVirtual_(node.getAttributes().
-						getNamedItem(DOMString::transcode("virtual")).
+                gddMethod->setVirtual_(node.getAttributes().
+            getNamedItem(DOMString::transcode("virtual")).
                         getNodeValue().transcode());
             
-		            gddMethod->setStatic_(node.getAttributes().
-						getNamedItem(DOMString::transcode("static")).
+                gddMethod->setStatic_(node.getAttributes().
+            getNamedItem(DOMString::transcode("static")).
                         getNodeValue().transcode());            
 
-		            gddMethod->setInline_(node.getAttributes().
-						getNamedItem(DOMString::transcode("inline")).
+                gddMethod->setInline_(node.getAttributes().
+            getNamedItem(DOMString::transcode("inline")).
                         getNodeValue().transcode());            
 
-		            DOM_Node met_child;
-				    met_child = node.getFirstChild();
+                DOM_Node met_child;
+            met_child = node.getFirstChild();
             
-					while(!met_child.isNull())
-					{                
-						switch(met_child.getNodeType())    
-						{			
-						case DOM_Node::ELEMENT_NODE:
-							{
-							if(strcmp(met_child.getNodeName().transcode(), "return") == 0)
-							{
-								DaDiMethReturn* gddMethReturn = new DaDiMethReturn();
-							
-								gddMethod->setDaDiMethReturn(gddMethReturn);
+          while(!met_child.isNull())
+          {                
+            switch(met_child.getNodeType())    
+            {      
+            case DOM_Node::ELEMENT_NODE:
+              {
+              if(strcmp(met_child.getNodeName().transcode(), "return") == 0)
+              {
+                DaDiMethReturn* gddMethReturn = new DaDiMethReturn();
+              
+                gddMethod->setDaDiMethReturn(gddMethReturn);
 
-								gddMethReturn->setType(met_child.getAttributes().
-									getNamedItem(DOMString::transcode("type")).
-									getNodeValue().transcode());
-								gddMethReturn->setConst_(met_child.getAttributes().
-									getNamedItem(DOMString::transcode("const")).
-									getNodeValue().transcode());
+                gddMethReturn->setType(met_child.getAttributes().
+                  getNamedItem(DOMString::transcode("type")).
+                  getNodeValue().transcode());
+                gddMethReturn->setConst_(met_child.getAttributes().
+                  getNamedItem(DOMString::transcode("const")).
+                  getNodeValue().transcode());
                           
-							}
-							if(strcmp(met_child.getNodeName().transcode(), "code") == 0)
-							{
-								gddMethod->setCode(met_child.getFirstChild().
-									getNodeValue().transcode());
-							}
-							if(strcmp(met_child.getNodeName().transcode(), "arg") == 0)
-							{
-								DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
-								gddMethod->pushDaDiMethArgument(gddMethArgument);
-								gddMethArgument->setType(met_child.getAttributes().
-									getNamedItem(DOMString::transcode("type")).
-									getNodeValue().transcode());
-								gddMethArgument->setConst_(met_child.getAttributes().
-									getNamedItem(DOMString::transcode("const")).
-									getNodeValue().transcode());
-								gddMethArgument->setInout(met_child.getAttributes().
-									getNamedItem(DOMString::transcode("inout")).
-									getNodeValue().transcode());
-							}
-							}
-						default:
-							{
-								met_child = met_child.getNextSibling();
-							}
-						}
-					}
-				}
+              }
+              if(strcmp(met_child.getNodeName().transcode(), "code") == 0)
+              {
+                gddMethod->setCode(met_child.getFirstChild().
+                  getNodeValue().transcode());
+              }
+              if(strcmp(met_child.getNodeName().transcode(), "arg") == 0)
+              {
+                DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
+                gddMethod->pushDaDiMethArgument(gddMethArgument);
+                gddMethArgument->setType(met_child.getAttributes().
+                  getNamedItem(DOMString::transcode("type")).
+                  getNodeValue().transcode());
+                gddMethArgument->setConst_(met_child.getAttributes().
+                  getNamedItem(DOMString::transcode("const")).
+                  getNodeValue().transcode());
+                gddMethArgument->setInout(met_child.getAttributes().
+                  getNamedItem(DOMString::transcode("inout")).
+                  getNodeValue().transcode());
+              }
+              }
+            default:
+              {
+                met_child = met_child.getNextSibling();
+              }
+            }
+          }
+        }
 //
 // Parse attributes
 //
-				else if(strcmp(node.getNodeName().transcode(), "attribute") == 0)
-				{
-					DaDiAttribute* gddAttribute = new DaDiAttribute();
-					gddClass->pushDaDiAttribute(gddAttribute);
-					gddAttribute->setName(node.getAttributes().
-						getNamedItem(DOMString::transcode("name")).
-						getNodeValue().transcode());
+        else if(strcmp(node.getNodeName().transcode(), "attribute") == 0)
+        {
+          DaDiAttribute* gddAttribute = new DaDiAttribute();
+          gddClass->pushDaDiAttribute(gddAttribute);
+          gddAttribute->setName(node.getAttributes().
+            getNamedItem(DOMString::transcode("name")).
+            getNodeValue().transcode());
             
-					gddAttribute->setType(node.getAttributes().
-						getNamedItem(DOMString::transcode("type")).
-						getNodeValue().transcode());
-					gddClass->pushImportList(node.getAttributes().
-					    getNamedItem(DOMString::transcode("type")).
-						getNodeValue().transcode());
+          gddAttribute->setType(node.getAttributes().
+            getNamedItem(DOMString::transcode("type")).
+            getNodeValue().transcode());
+          gddClass->pushImportList(node.getAttributes().
+              getNamedItem(DOMString::transcode("type")).
+            getNodeValue().transcode());
 ///////////////
-					gddAttribute->setDesc(node.getAttributes().
-						getNamedItem(DOMString::transcode("desc")).
-						getNodeValue().transcode());
+          gddAttribute->setDesc(node.getAttributes().
+            getNamedItem(DOMString::transcode("desc")).
+            getNodeValue().transcode());
             
-					gddAttribute->setAccess(node.getAttributes().
-						getNamedItem(DOMString::transcode("access")).
-						getNodeValue().transcode());
+          gddAttribute->setAccess(node.getAttributes().
+            getNamedItem(DOMString::transcode("access")).
+            getNodeValue().transcode());
             
-					gddAttribute->setSetMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("set_meth")).
-		                getNodeValue().transcode());
+          gddAttribute->setSetMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("set_meth")).
+                    getNodeValue().transcode());
             
-					gddAttribute->setGetMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("get_meth")).
-					    getNodeValue().transcode());
+          gddAttribute->setGetMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("get_meth")).
+              getNodeValue().transcode());
             
-				}
+        }
 //
 // Parse relations
 //
-				else if(strcmp(node.getNodeName().transcode(), "relation") == 0)
-				{
+        else if(strcmp(node.getNodeName().transcode(), "relation") == 0)
+        {
 
-					char* gddRelationRatio;
+          char* gddRelationRatio;
             
-					DaDiRelation* gddRelation = new DaDiRelation();
-					gddClass->pushDaDiRelation(gddRelation);
-					gddRelation->setName(node.getAttributes().
-						getNamedItem(DOMString::transcode("name")).
-						getNodeValue().transcode());
+          DaDiRelation* gddRelation = new DaDiRelation();
+          gddClass->pushDaDiRelation(gddRelation);
+          gddRelation->setName(node.getAttributes().
+            getNamedItem(DOMString::transcode("name")).
+            getNodeValue().transcode());
             
-					gddRelation->setType(node.getAttributes().
-						getNamedItem(DOMString::transcode("type")).
-						getNodeValue().transcode());
+          gddRelation->setType(node.getAttributes().
+            getNamedItem(DOMString::transcode("type")).
+            getNodeValue().transcode());
             
-					gddRelation->setDesc(node.getAttributes().
-						getNamedItem(DOMString::transcode("desc")).
-						getNodeValue().transcode());
+          gddRelation->setDesc(node.getAttributes().
+            getNamedItem(DOMString::transcode("desc")).
+            getNodeValue().transcode());
             
-					gddRelation->setAccess(node.getAttributes().
-						getNamedItem(DOMString::transcode("access")).
-						getNodeValue().transcode());
+          gddRelation->setAccess(node.getAttributes().
+            getNamedItem(DOMString::transcode("access")).
+            getNodeValue().transcode());
             
-					gddRelationRatio = node.getAttributes().
-						getNamedItem(DOMString::transcode("ratio")).
-						getNodeValue().transcode();
-					gddRelation->setRatio(node.getAttributes().
-						getNamedItem(DOMString::transcode("ratio")).
-						getNodeValue().transcode());
+          gddRelationRatio = node.getAttributes().
+            getNamedItem(DOMString::transcode("ratio")).
+            getNodeValue().transcode();
+          gddRelation->setRatio(node.getAttributes().
+            getNamedItem(DOMString::transcode("ratio")).
+            getNodeValue().transcode());
             
-					gddRelation->setSetMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("set_meth")).
-						getNodeValue().transcode());
+          gddRelation->setSetMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("set_meth")).
+            getNodeValue().transcode());
             
-					gddRelation->setGetMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("get_meth")).
-						getNodeValue().transcode());
+          gddRelation->setGetMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("get_meth")).
+            getNodeValue().transcode());
             
-					gddRelation->setAddMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("add_meth")).
-						getNodeValue().transcode());
+          gddRelation->setAddMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("add_meth")).
+            getNodeValue().transcode());
             
-					gddRelation->setRemMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("rem_meth")).
-						getNodeValue().transcode());
+          gddRelation->setRemMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("rem_meth")).
+            getNodeValue().transcode());
             
-					gddRelation->setClrMeth(node.getAttributes().
-						getNamedItem(DOMString::transcode("clr_meth")).
-						getNodeValue().transcode());
+          gddRelation->setClrMeth(node.getAttributes().
+            getNamedItem(DOMString::transcode("clr_meth")).
+            getNodeValue().transcode());
             
-					if (strcmp(gddRelationRatio, "1-1") == 0)
-					{
-						gddClass->pushImportList("SmartRef");
-					}
-					else if ((strcmp(gddRelationRatio, "1-M") == 0) ||
-						(strcmp(gddRelationRatio, "M-N") == 0))
-					{
-						gddClass->pushImportList("SmartRef");
-						gddClass->pushImportList("SmartRefVector");
-					}
+          if (strcmp(gddRelationRatio, "1-1") == 0)
+          {
+            gddClass->pushImportList("SmartRef");
+          }
+          else if ((strcmp(gddRelationRatio, "1-M") == 0) ||
+            (strcmp(gddRelationRatio, "M-N") == 0))
+          {
+            gddClass->pushImportList("SmartRef");
+            gddClass->pushImportList("SmartRefVector");
+          }
 
-				}
-				else
-				{    
-					node = node.getNextSibling();
-				} 
-			}
-			default:
-			{
-				node = node.getNextSibling();
-			}
-		}
-	}
+        }
+        else
+        {    
+          node = node.getNextSibling();
+        } 
+      }
+      default:
+      {
+        node = node.getNextSibling();
+      }
+    }
+  }
 }

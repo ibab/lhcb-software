@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Id: DaDiTools.cpp,v 1.2 2001-10-09 17:11:05 mato Exp $
 
 
 // Include files
@@ -20,45 +20,45 @@
 
 char* DaDiTools::chooseAccess(const DOMString& s)
 {
-	std::string str = s.transcode();
-	if (str == "PUBLIC") {return "public";}
-	else if (str == "PROTECTED") {return "protected";}
-	else if (str == "PRIVATE") {return "private";}
-	else {return "";}
+  std::string str = s.transcode();
+  if (str == "PUBLIC") {return "public";}
+  else if (str == "PROTECTED") {return "protected";}
+  else if (str == "PRIVATE") {return "private";}
+  else {return "";}
 }
 
 
 void DaDiTools::warning(const SAXParseException&)
 {
-    //
-    // Ignore all warnings.
-    //
+  //
+  // Ignore all warnings.
+  //
 }
 
 void DaDiTools::error(const SAXParseException& toCatch)
 {
-    std::cerr << "Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
-		 << "\", line " << toCatch.getLineNumber()
-		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
-    throw SAXParseException(toCatch);  // Copy the 'toCatch' object before 
-                                       // throwing - otherwise we would be 
-                                       // throwing a reference to a local object
-                                       // that gets destroyed before the catch.
+  std::cerr << "Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
+   << "\", line " << toCatch.getLineNumber()
+   << ", column " << toCatch.getColumnNumber()
+     << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
+  throw SAXParseException(toCatch);  // Copy the 'toCatch' object before 
+                     // throwing - otherwise we would be 
+                     // throwing a reference to a local object
+                     // that gets destroyed before the catch.
 }
 
 void DaDiTools::fatalError(const SAXParseException& toCatch)
 {
-    std::cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
-		 << "\", line " << toCatch.getLineNumber()
-		 << ", column " << toCatch.getColumnNumber()
-         << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
-    throw SAXParseException(toCatch);
+  std::cerr << "Fatal Error at file \"" << DOMString(toCatch.getSystemId()).transcode()
+   << "\", line " << toCatch.getLineNumber()
+   << ", column " << toCatch.getColumnNumber()
+     << "\n   Message: " << DOMString(toCatch.getMessage()).transcode() << std::endl;
+  throw SAXParseException(toCatch);
 }
 
 void DaDiTools::resetErrors()
 {
-    // No-op in this case
+  // No-op in this case
 }
 
 
