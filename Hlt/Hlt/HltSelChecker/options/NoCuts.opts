@@ -45,30 +45,6 @@ HLTLooseD02PiPi.MotherFilter.Selections = {};
 HLTSharedKstar.MotherFilter.Selections = {} ;
 HLTSharedPhi.MotherFilter.Selections = {};
 
-// mass windows
-HLTFilterDs2KKPi.Window = 14*TeV ;// hlt tuned: 45 MeV, hlt presel: 100 MeV, offline is 15 MeV
-HLTSeedingKPiMother.Window = 14*TeV ; // up to 6 GeV
-HLTSeedingKKMother.Window = 14*TeV ; // up to 6 GeV
-HLTDimuons.LowerWindow = 14*TeV ; // go down to zero
-HLTDimuons.UpperWindow = 14.*TeV ; // up to infinity
-HLTSeedingVertices.Window = 14*TeV ; // up to 5.5 GeV
-HLTFilterB2HH.Window = 14*TeV;// to take into account the K and Bs mass. Largely enough.
-HLTFilterBd2D0Kstar.Window = 14*TeV; // hlt tuned: 500 MeV, hlt presel: 500 MeV, offline tight is 50 MeV, loose is 500 MeV
-HLTDstarForBd2DstarPi.Window = 14*TeV; // hlt tuned: 40 MeV, hlt presel: 200 MeV, offline is 150 MeV for D*
-HLTFilterBd2DstarPi.Window = 14*TeV; // hlt tuned: 500 MeV, hlt presel: 500 MeV, offline tight is 50 MeV, loose is 200 MeV
-HLTFilterBd2MuMuKstar.Window = 14*TeV;
-HLTFilterBs2DsH.Window = 14*TeV; // later corrected to 500 MeV downwards
-HLTFilterBs2JpsiPhi.Window = 14*TeV ;
-HLTFilterBs2PhiGamma.Window = 14*TeV; // hlt tuned: xxx MeV, hlt presel: 1000 MeV, offline tight is 200 MeV, loose 1 < GeV
-HLTFilterBs2PhiPhi.Window = 14*TeV ;
-HLTFilterDstar.UpperWindow = 14*TeV ; // to be revised
-HLTFilterDstar.LowerWindow = 14*TeV ; // to be revised
-HLTSharedD02KH.Window = 14*TeV ; //
-HLTLooseD02PiPi.UpperWindow = 14*TeV ; // to be revised
-HLTLooseD02PiPi.LowerWindow = 14*TeV ; // to be revised
-HLTSharedKstar.Window = 14*TeV ; //
-HLTSharedPhi.Window = 14*TeV ; //
-
 // MinPt
 HLTFilterDs2KKPi.MinPt = 0.; // hlt tuned: 2500 MeV, hlt presel: 0 MeV, no offline cut
 HLTFilterB2HH.MinPt = 0.; // hlt tuned: 1000 MeV, hlt presel: 0 MeV, offline is 1000-1600 MeV
