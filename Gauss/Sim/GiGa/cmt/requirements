@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.17 2001-04-27 09:16:46 ibelyaev Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.18 2001-04-27 12:12:41 ibelyaev Exp $ 
 
 package  GiGa 
 version  v4
@@ -27,7 +27,7 @@ library         GiGa      component/*.cpp Lib/*.cpp
 apply_pattern package_Clinkopts
 apply_pattern packageShr
 
-macro GiGaLinkOpts    "-L$(GiGaDir) -lGiGa " \ 
+macro GiGaLinkOpts    "$(GiGaDir)/libGiGa.a " \ 
 	WIN32         "$(GiGaDir)/GiGa.arc "  
 
 ################ private stuff ###########################################

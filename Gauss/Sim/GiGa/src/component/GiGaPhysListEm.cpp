@@ -1,11 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaPhysListEm.cpp,v 1.2 2001-04-26 21:01:16 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaPhysListEm.cpp,v 1.3 2001-04-27 12:12:41 ibelyaev Exp $
 
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
 #include "GiGa/GiGaPhysListFactory.h"
+// G4Wrapper
+#include "G4Wrapper/Particle.h"
 // G4 
-#include "G4ParticleTypes.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
 // local
@@ -59,66 +60,28 @@ void GiGaPhysListEm::SetCuts()
 
 void GiGaPhysListEm::ConstructBosons()
 {
-  // pseudo-particles
-  G4Geantino::GeantinoDefinition();
-  G4ChargedGeantino::ChargedGeantinoDefinition();
-
-  // gamma
-  G4Gamma::GammaDefinition();
+  G4Wrapper::constructBosons();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void GiGaPhysListEm::ConstructLeptons()
 {
-  // leptons
-  //  e+/-
-  G4Electron::ElectronDefinition();
-  G4Positron::PositronDefinition();
-  // mu+/-
-  G4MuonPlus::MuonPlusDefinition();
-  G4MuonMinus::MuonMinusDefinition();
-  // nu_e
-  G4NeutrinoE::NeutrinoEDefinition();
-  G4AntiNeutrinoE::AntiNeutrinoEDefinition();
-  // nu_mu
-  G4NeutrinoMu::NeutrinoMuDefinition();
-  G4AntiNeutrinoMu::AntiNeutrinoMuDefinition();
+  G4Wrapper::constructLeptons();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void GiGaPhysListEm::ConstructMesons()
 {
-  //  mesons
-  //    light mesons
-  G4PionPlus::PionPlusDefinition();
-  G4PionMinus::PionMinusDefinition();
-  G4PionZero::PionZeroDefinition();
-  G4Eta::EtaDefinition();
-  G4EtaPrime::EtaPrimeDefinition();
-  G4KaonPlus::KaonPlusDefinition();
-  G4KaonMinus::KaonMinusDefinition();
-  G4KaonZero::KaonZeroDefinition();
-  G4AntiKaonZero::AntiKaonZeroDefinition();
-  G4KaonZeroLong::KaonZeroLongDefinition();
-  G4KaonZeroShort::KaonZeroShortDefinition();
+  G4Wrapper::constructMesons();
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
 void GiGaPhysListEm::ConstructBaryons()
 {
-  //  barions
-  G4Proton::ProtonDefinition();
-  G4AntiProton::AntiProtonDefinition();
-
-  G4Neutron::NeutronDefinition();
-  G4AntiNeutron::AntiNeutronDefinition();
+  G4Wrapper::constructBaryons();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
