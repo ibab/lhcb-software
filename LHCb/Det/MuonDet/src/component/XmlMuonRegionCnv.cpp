@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.2 2002-01-31 10:00:10 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.3 2002-02-01 18:02:14 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/31 10:00:10  dhcroft
+// Moved CLIDs to seperate files for Visual C linker
+//
 // ============================================================================
 
 // Include files
@@ -367,7 +370,7 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
     cChamber->createGeometryInfo (logVolName,support,repPath);
 	  	
     // Name this chamber
-    char Cham000[7];
+    char Cham000[8];
     sprintf(Cham000,"Cham%03i",i);
     
     // get current path
@@ -440,7 +443,7 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
     // add the geometry information
     cGap->createGeometryInfo (gasGapLogvol,gapSupport,
                               ggRepPath);
-    char Gap0[4];
+    char Gap0[5];
     sprintf(Gap0,"Gap%1i",j+1);
     std::string gapName = Gap0;
 
