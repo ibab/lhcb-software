@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.11 2005-01-06 11:51:36 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.12 2005-01-18 12:08:20 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -703,8 +703,8 @@ StatusCode PhysDesktop::getPrimaryVertices(){
   debug() << "Getting PV from " << primVtxLocn << endreq;
 
   if ( !exist<Vertices>( primVtxLocn )){
-    error() << "Primary vertex location `" << primVtxLocn << "' does not exist" << endreq;
-    if ( m_primVtxLocn == "" ) error() << "This location is obtained from PVLocator tool" << endreq;
+    Warning("Primary vertex location `"+primVtxLocn+"' does not exist") ;
+    if ( m_primVtxLocn == "" ) Warning("This location is obtained from PVLocator tool");
     return StatusCode::SUCCESS; // no PV
   }
        

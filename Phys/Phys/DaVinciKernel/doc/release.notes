@@ -1,8 +1,12 @@
-// $Id: release.notes,v 1.32 2005-01-18 08:30:40 pkoppenb Exp $
+! $Id: release.notes,v 1.33 2005-01-18 12:08:20 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 !========================== DaVinciKernel v3r0 2005-01-18 ===================
+! 2005-01-18 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . No PV is a Warning("..."), not an error().
+
 ! 2005-01-18 - P. Koppenburg
   - DaVinciTools/IBestParticles.h
   - DaVinciTools/IGeomVertexFitter.h
