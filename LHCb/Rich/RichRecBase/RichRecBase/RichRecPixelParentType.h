@@ -5,16 +5,18 @@
  * Header file for RichRecPixel enumerations
  *
  * CVS Log :-
- * $Id: RichRecPixelParentType.h,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ * $Id: RichRecPixelParentType.h,v 1.6 2004-10-30 19:23:21 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/07/26 18:00:58  jonrob
+ * Various improvements to the doxygen comments
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2002-07-12
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
-#define RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 1
+#ifndef RICHRECBASE_RICHRECPIXELPARENTTYPE_H
+#define RICHRECBASE_RICHRECPIXELPARENTTYPE_H 1
 
 // Include files
 #include <string>
@@ -53,7 +55,8 @@ namespace Rich {
       {
         Unknown = -1, ///< Parent type is unknown
         Digit,        ///< Pixel derives from a reconstructed RichDigit
-        MCHit         ///< Pixel derives from Monte Carlo MCRichHit information
+        MCHit,        ///< Pixel derives from Monte Carlo MCRichHit information
+        RawBuffer     ///< Pixel was derived directly from the RawBuffer
       };
 
   }
@@ -93,4 +96,4 @@ inline MsgStream& operator << ( MsgStream& s,
   return s;
 }
 
-#endif // RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
+#endif // RICHRECBASE_RICHRECPIXELPARENTTYPE_H
