@@ -1,0 +1,13 @@
+// $Id: CaloDigitsOnDemand.opts,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $ 
+// ============================================================================
+// Data on demand options for CaloDigits
+// ============================================================================
+ApplicationMgr.DLLs   += { "CaloDAQ"       } ;
+
+DataOnDemandSvc.Algorithms += { 
+    "DATA='/Event/Raw/Spd/Digits'  TYPE='CaloDigitsFromRaw/SpdFromRaw'"  ,
+    "DATA='/Event/Raw/Prs/Digits'  TYPE='CaloDigitsFromRaw/PrsFromRaw'"  ,
+    "DATA='/Event/Raw/Ecal/Digits' TYPE='CaloDigitsFromRaw/EcalFromRaw'" ,
+    "DATA='/Event/Raw/Hcal/Digits' TYPE='CaloDigitsFromRaw/HcalFromRaw'"
+  };
+

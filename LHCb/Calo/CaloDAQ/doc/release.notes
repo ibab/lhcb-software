@@ -1,0 +1,25 @@
+!-----------------------------------------------------------------------------
+! Package     : Calo/CaloDAQ
+! Responsible : Olivier Callot
+! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
+!-----------------------------------------------------------------------------
+
+! 2005-01-10 - Olivier Callot
+ - Tools to decode the Raw buffer: One interface for the trigger and one for
+   the energies:
+     interface ICaloTriggerFromRaw: 
+        CaloPrsBitFromRaw
+        CaloSpdBitFromRaw
+        CaloTriggerFromRaw
+     interface ICaloEnergyFromRaw
+        CaloEnergyFromRaw
+ - Algorithm CaloDigitsFromRaw (was in CaloEvent) to decode the Raw buffer and
+   re-create the CaloDigits
+ - Algorithm CompareCaloDigits (was in CaloEvent) to test two codings of the 
+   CaloDigits. 
+
+! 2004-12-17 - Olivier Callot
+ - Creation of CaloFillRawBuffer from CaloZSup in CaloDigit package, to code 
+   Ecal and Hcal data and trigger banks, from CaloDigits and L0CaloAdcs.
+ - Creation of CaloFillPrsSpdRawBuffer to code the Prs data and the Prs+Spd
+   trigger banks, from CaloDigits (Prs) and L0PrsSpdHits (Prs and Spd).
