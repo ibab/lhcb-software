@@ -30,8 +30,8 @@ use CERNLIB        	v2001
 use ROOT		v2r302p0
 
 #---Gaudi libraries - Gaudi v10r1
-use GaudiKernel        v12r2
-use GaudiSvc           v8r1
+use GaudiKernel        v12r3
+use GaudiSvc           v8r2
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0

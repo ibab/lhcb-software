@@ -3,6 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-02 - Marco Cattaneo
+ - Add TimingAlg in new Timing sequence at end of Reco phase
+ - use latest Gaudi bug fix release
+   (GaudiKernel v12r3, GaudiSvc v8r2, GaudiRootDb v8r1)
+ - Use latest version of TrAssociators, produces Tr2MCP relation
+
+   DST is now complete, except for:
+   . "upstream" tracks (from upstream track following algorithm) 
+   . filtering of tracking clusters not used by tracks
+
 ! 2002-07-01 - Marco Cattaneo
  - Add L1 monitoring and Truth information
  - Add L0 Truth information
@@ -10,11 +20,6 @@ Purpose: LHCb reconstruction program
  - Output Tr/Best tracks in "flag" mode (contains a copy of all track types,
    with clones flagged, not killed) and  suppress creation of Tr/Seed, Tr/Velo,
    Tr/Match containers
-
-   DST is now complete, except for:
-   . "upstream" tracks (from upstream track following algorithm) 
-   . filtering of tracking clusters not used by tracks
-   . truth relations for "Best" tracks
 
 ! 2002-06-28 - Marco Cattaneo
  - Add "new" seeding algorithm

@@ -48,10 +48,10 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 ApplicationMgr.DLLs += { "VeloAssociators" };
 BrunelMoniTRACKSeq.Members += { "FwtAnalyse" };
-BrunelMoniTRACKSeq.Members += { "FwtAnalyse/MatchAnalyse" };
-MatchAnalyse.FitTrackContainer  = "Rec/FitTrack/Match" ;
-MatchAnalyse.FitTrackAssociator = "MatchTrackToMCP" ;
-MatchAnalyse.VeloTrackAssociator = "VeloMatchTrackToMCP" ;
+//BrunelMoniTRACKSeq.Members += { "FwtAnalyse/MatchAnalyse" };
+//MatchAnalyse.FitTrackContainer  = "Rec/FitTrack/Match" ;
+//MatchAnalyse.FitTrackAssociator = "MatchTrackToMCP" ;
+//MatchAnalyse.VeloTrackAssociator = "VeloMatchTrackToMCP" ;
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };

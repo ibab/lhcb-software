@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 //--------------------------------------------------------------
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON"};
+BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON","Timing"};
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -140,6 +140,11 @@ ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
+// Algorithm timing
+ApplicationMgr.DLLs += { "BrunelAlgs" };
+BrunelRecoTimingSeq.Members += { "TimingAlg" };
+#include "$BRUNELALGSROOT/options/Timing.opts"
+
 // For now, use forward tracks as input to PID algorithms
 TrStoredTrackToSicbCnv.TrStoredTracksInput = "Rec/Tr/Forward";
 RichPidCnvVerifier.InputStoredTracks       = "Rec/Tr/Forward";
@@ -149,9 +154,9 @@ BremMatch.Tracks                           = "Rec/Tr/Forward";
 MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
 
 // For now, fill only forward track relations
-ToolSvc.TrackToMCP.Location = "Rec/Relations/TrForward2MCP";
-Tr2MCP.OutputTable          = "Rec/Relations/TrForward2MCP";
-Tr2MCP.InputTracks          = "Rec/Tr/Forward";
+//ToolSvc.TrackToMCP.Location = "Rec/Relations/TrForward2MCP";
+//Tr2MCP.OutputTable          = "Rec/Relations/TrForward2MCP";
+//Tr2MCP.InputTracks          = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"

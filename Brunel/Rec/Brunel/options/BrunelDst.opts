@@ -24,16 +24,20 @@ BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare" };
 ApplicationMgr.DLLs += { "MuonAssociators" };
 BrunelOutputFiltersSeq.Members += { "MuonCoord2MCParticleAlg" };
 
-// Filter the MCParticles/MCVertices  after everything else
-ApplicationMgr.DLLs += { "BrunelAlgs" };
+// Filter the MCParticles/MCVertices after everything else
 //BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
+//MCParticleFilter.OutputLevel = 2;
 
 // Define DST content
 ApplicationMgr.OutStream += { "BrunelDstWriter" };
+//BrunelDstWriter.OutputLevel = 2;
 BrunelDstWriter.OptItemList =
 {
-  "/Event/Prev/Header#1"
+  "/Event/Prev#1"
+, "/Event/Prev/Header#1"
+, "/Event/PrevPrev#1"
 , "/Event/PrevPrev/Header#1"
+, "/Event/Next#1"
 , "/Event/Next/Header#1"
 }; 
 BrunelDstWriter.ItemList = 
@@ -47,6 +51,7 @@ BrunelDstWriter.ItemList =
 , "/Event/MC/Particles#1"  // To be filtered
 , "/Event/MC/Vertices#1"   // To be filtered
 , "/Event/Trig#1"
+, "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Calo#1"
 , "/Event/Trig/L0/Muon#1"
@@ -76,9 +81,6 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/Forward#1"   // To be suppressed 
-  //, "/Event/Rec/Tr/Match#1"
-  //, "/Event/Rec/Tr/Seed#1"
-  //, "/Event/Rec/Tr/Velo#1"
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
@@ -114,8 +116,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/CaloClusters2MCParticles#1"
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
-  //, "/Event/Rec/Relations/TrBest2MCP#1"
-, "/Event/Rec/Relations/TrForward2MCP#1"
+, "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
 , "/Event/Rec/Relations/L1Track3d2MCP#1"
 };
