@@ -1,4 +1,4 @@
-// $Id: PhysSel.h,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
+// $Id: PhysSel.h,v 1.2 2001-07-16 15:05:06 gcorti Exp $
 #ifndef PHYSEVENT_PHYSSEL_H
 #define PHYSEVENT_PHYSSEL_H 1
 
@@ -57,6 +57,10 @@ public:
   /// Remove single PhysSelDecay entry from vector
   void removePhysSelDecay( std::string name );
   void removePhysSelDecay( PhysSelDecay* );
+
+  /// Retrieve list of names for which a PhysSelDecay has been
+  /// stored
+  void whichPhysSelDecays( std::vector<std::string>& nameList );
 
   /// Retrieve the PhysSelDecay results for a decay channel 
   /// specifying its' "name" as a string

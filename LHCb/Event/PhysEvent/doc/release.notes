@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
+! $Id: release.notes,v 1.2 2001-07-16 15:05:29 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
 ! ======================================================================
+
+! 16072001 - PhysEvent (GCorti)
+  Introduced new method in PhysSel (whichPhysSelDecays) that returns the
+  list of name of SelDecay which selectionhas been executed
 
 ! 09072001 - PhysEvent v1 (GCorti)
   First release of the package.

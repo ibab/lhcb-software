@@ -190,4 +190,15 @@ void PhysSel::retrievePhysSelDecay( std::string name, PhysSelDecay*& value) {
 
 }
 
+//======================================================================
+// Retrieve list of decay names stored
+//======================================================================
+void PhysSel::whichPhysSelDecays( std::vector<std::string>& nameList) {
 
+  nameList.clear();  
+  for( SelTable::iterator isel=m_table.begin(); isel!=m_table.end(); isel++ ) {
+    std::string tmpName = (*isel).first;
+    nameList.push_back(tmpName);
+  }
+  
+}
