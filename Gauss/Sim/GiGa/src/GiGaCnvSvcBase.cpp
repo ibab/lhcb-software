@@ -14,11 +14,13 @@
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IGiGaSvc.h"
 #include "GaudiKernel/IGiGaSetUpSvc.h"
 ///
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/DataObject.h"
 ///
 #include "GaudiKernel/GaudiException.h"
@@ -181,7 +183,7 @@ GiGaCnvSvcBase::~GiGaCnvSvcBase(){};
       if( 0 == objMgr()      ) { return Error("Initialize::Could not locate IIncidentSvc="+m_inName         );}
       incSvc()->addRef(); 
       Print( " Located Incident Service  "+m_inName, MSG::VERBOSE ); 
-      incSvc()->addListener( this , "BeginOfEvent" );
+      incSvc()->addListener( this , "BeginEvent" );
     } 
   else { return Error(" Incident Service is not requested to be located!") ;} 
   ///
@@ -239,8 +241,9 @@ StatusCode GiGaCnvSvcBase::declareObject( const IGiGaCnvSvc::Leaf& leaf )
 void       GiGaCnvSvcBase::handle         ( const Incident& inc )
 {
   ///
-  if( inc.type() != "BeginOfEvent" ) 
-    { Warning("Unknown Incident is handled="+inc.type() ); return ; }
+  if( inc.type() != "BeginEvent" ) { Warning("Unknown Incident is handled="+inc.type() ); return ; }
+  ///
+  if ( m_leaves.empty() )  { return; }  
   ///
   DataObject* root = 0 ;  
   StatusCode sc = dpSvc()->findObject( "/Event" , root) ;
@@ -264,14 +267,26 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
   ///
   for( Leaves::iterator it = m_leaves.begin() ; m_leaves.end() != it ; ++it ) 
     {
-      std::string::size_type pos = it->path().find("/Event/G4/");
-      if( std::string::npos == pos ) { Error("Wrong address ="+it->path() ); return ; }
-      std::string name( it->path() , pos , pos + 10  );
+      Print("handle incident! 8 "+it->path() );
+      std::string name( it->path() );
+      name.replace( name.find("/Event/G4/"),9,"");
       IOpaqueAddress* Address = 0 ; 
+
+      std::cout << " create address with clid = " << it->clid() << std::endl; 
+
       sc = createAddress( repSvcType() , it->clid() , it->addr1() , it->addr2() , -1 , Address );   
       if( sc.isFailure() || 0 == Address ) 
 	{ Error("Could not create IOpaqueAddress for "+it->path()+" name="+name ); return ; }
-      gtop->add( name , Address );
+      GenericAddress* GA = dynamic_cast<GenericAddress*> ( Address );
+      GA->setObjectName( name );
+      std::cout << " name given is " << name << std::endl; 
+      long st = gtop->add( name , Address );
+      if( st != StatusCode::SUCCESS ) 
+	{ Error("Could not add IOpaqueAddress for "+it->path()+" name="+name ); return ; }
+      RegistryEntry* dd = gtop->findLeaf( name ) ; 
+      if( 0 == dd ) 
+	{ Error("Could not extarct RegistryEntry by name="+name ); return ; }
+      std::cout << " name extracted is =" << dd->name() << " CLID=" << Address->clID() << std::endl ;   
     }
   ///  
 };
@@ -325,13 +340,6 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
   return  Status;
 };  
 ///////////////////////////////////////////////////////////////////////////////////
- 
-
-
-
-
-
-
 
 
 

@@ -24,7 +24,7 @@ GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaLVolumeCnv" ); 
+  setConverterName              ( "GiGaLVCnv"      ); 
 }; 
 /// destructor 
 GiGaLVolumeCnv::~GiGaLVolumeCnv(){}; 

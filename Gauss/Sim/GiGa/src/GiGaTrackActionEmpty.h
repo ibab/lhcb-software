@@ -1,11 +1,10 @@
 #ifndef       GIGA_GiGaTrackActionEmpty_H
 #define       GIGA_GiGaTrackActionEmpty_H 1 
-
-
-
+/// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
-
-template <class TA> class GiGaTrackActionFactory;
+///
+template <class TA> 
+class GiGaTrackActionFactory;
 
 /** @class GiGaTrackActionEmpty GiGaTrackActionEmpty.h GiGaTrackActionEmpty.h
     
@@ -32,8 +31,8 @@ class GiGaTrackActionEmpty: virtual public GiGaTrackActionBase
   ///
   virtual StatusCode initialize () ; 
   virtual StatusCode finalize   () ;
-  /// 
- private:
+  ///    
+private:
   ///
   GiGaTrackActionEmpty()                                         ; // no default constructor
   GiGaTrackActionEmpty( const GiGaTrackActionEmpty& )            ; // no copy constructor 

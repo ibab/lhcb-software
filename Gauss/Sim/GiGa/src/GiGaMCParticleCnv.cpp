@@ -26,8 +26,14 @@
 #include "G4ParticleTable.hh"
 // local 
 #include "GiGaCnvFunctors.h"
+#include "ObjTypeName.h"
 #include "GiGaMCParticleCnv.h" 
+///
 
+template <class TYPE>
+inline const std::string objName( TYPE obj )
+{
+};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 static const  CnvFactory<GiGaMCParticleCnv>                               s_GiGaMCParticleCnvFactory ;
 const        ICnvFactory&                      GiGaMCParticleCnvFactory = s_GiGaMCParticleCnvFactory ;
@@ -36,8 +42,8 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   ///
-  setNameOfGiGaConversionService( "GiGaKineCnvSvc"    ); 
-  setConverterName              ( "GiGaMCParticleCnv" );
+  setNameOfGiGaConversionService( "GiGaKineCnvSvc" ); 
+  setConverterName              ( "GiGaMCPCnv"     );
   ///
   declareObject( "/Event/G4/MCParticles", objType() );
   ///
@@ -55,7 +61,7 @@ StatusCode GiGaMCParticleCnv::createObj( IOpaqueAddress*  Address , DataObject*&
   Object = 0 ;
   if( 0 ==  Address  ) { return Error("IOpaqueAddress* points to NULL!"                         ) ; }
   GiGaKineAddress* address = dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) { return Error("IOpaqueAddress* could nto be cast into GiGaKineAddress!" ) ; }
+  if( 0 ==  address  ) { return Error("IOpaqueAddress*(of type '"+ObjTypeName(Address)+"') could not be cast into GiGaKineAddress!" ) ; }
   ///
   Object        = new ObjectVector<MCParticle>();
   /// 
@@ -75,9 +81,9 @@ StatusCode GiGaMCParticleCnv::fillObjRefs( IOpaqueAddress*  Address , DataObject
   if( 0 ==  Address  ) { return Error("IOpaqueAddress* points to NULL!"                              ) ; }
   if( 0 ==  Object   ) { return Error("DataObject* points to NULL!"                                  ) ; }   
   GiGaKineAddress* address = dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) { return Error("IOpaqueAddress* could not be cast into GiGaKineAddress!"      ) ; }  
+  if( 0 ==  address  ) { return Error("IOpaqueAddress*(of type '"+ObjTypeName(Address)+"*') could not be cast into GiGaKineAddress!" ) ; }
   ObjectVector<MCParticle>* object = dynamic_cast<ObjectVector<MCParticle>*> ( Object ); 
-  if( 0 ==  object   ) { return Error("DataObject* could nto be cast into ObjectVector<MCParticle>*" ) ; }  
+  if( 0 ==  object   ) { return Error("DataObject*(of type '"+ObjTypeName(Object)+"*') could not be cast into ObjectVector<MCParticle>*" ) ; }  
   ///
   return updateObjRefs( Address , Object );
   ///
@@ -89,9 +95,9 @@ StatusCode GiGaMCParticleCnv::updateObj( IOpaqueAddress*  Address , DataObject* 
   if( 0 ==  Address  ) { return Error("IOpaqueAddress* points to NULL!"                              ) ; }
   if( 0 ==  Object   ) { return Error("DataObject* points to NULL!"                                  ) ; }   
   GiGaKineAddress* address = dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) { return Error("IOpaqueAddress* could nto be cast into GiGaTrajAddress!"      ) ; }  
+  if( 0 ==  address  ) { return Error("IOpaqueAddress*(of type '"+ObjTypeName(Address)+"*') could not be cast into GiGaKineAddress!" ) ; }
   ObjectVector<MCParticle>* object = dynamic_cast<ObjectVector<MCParticle>*> ( Object ); 
-  if( 0 ==  object   ) { return Error("DataObject* could nto be cast into ObjectVector<MCParticle>*" ) ; }  
+  if( 0 ==  object   ) { return Error("DataObject*(of type '"+ObjTypeName(Object)+"*') could not be cast into ObjectVector<MCParticle>*" ) ; }  
   ///
   object->erase( object->begin() , object->end() ); 
   ///
@@ -110,7 +116,7 @@ StatusCode GiGaMCParticleCnv::updateObj( IOpaqueAddress*  Address , DataObject* 
       G4VTrajectory* tr = (*tc)[i];
       if( 0 == tr ) { Error("G4VTrajectory* points to NULL"                        ) ; break ; } 
       GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
-      if( 0 == gt ) { Error("G4VTrajectory* could not be cast to GiGaTrajectory*"  ) ; break ; }
+      if( 0 == gt ) { Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; break ; }
       MCParticle* mp = mcParticle( gt );
       if( 0 == mp ) { Error("GiGaTrajectory could not be converted to MCParticle!" ) ; break ; } 
       object->push_back( mp ) ; 
@@ -130,9 +136,9 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
   if( 0 ==  Address  ) { return Error("IOpaqueAddress* points to NULL!"                              ) ; }
   if( 0 ==  Object   ) { return Error("DataObject* points to NULL!"                                  ) ; }   
   GiGaKineAddress* address = dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) { return Error("IOpaqueAddress* could nto be cast into GiGaKineAddress!"      ) ; }  
+  if( 0 ==  address  ) { return Error("IOpaqueAddress*(of type '"+ObjTypeName(Address)+"*') could not be cast into GiGaKineAddress!" ) ; }
   ObjectVector<MCParticle>* object = dynamic_cast<ObjectVector<MCParticle>*> ( Object ); 
-  if( 0 ==  object   ) { return Error("DataObject* could nto be cast into ObjectVector<MCParticle>*" ) ; }  
+  if( 0 ==  object   ) { return Error("DataObject*(of type '"+ObjTypeName(Object)+"*') could not be cast into ObjectVector<MCParticle>*" ) ; }  
   /// get trajectories 
   G4TrajectoryContainer* tc = 0 ; 
   try{ *gigaSvc() >> tc ; }
@@ -142,7 +148,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
   if( 0 == tc      ) { return Error("No G4TrajectoryContainer* object is found!"); } 
   if( tc->entries() != object->size() ) { return Error("MCParticles and G4Tajectory has different sizes!"); } 
   /// get MCVertices:
-  const std::string VerticesPath( Address->directory()->parent()->fullpath() + "/G4MCVertices" );
+  const std::string VerticesPath( Address->directory()->parent()->fullpath() + "/MCVertices" );
   SmartDataPtr< ObjectVector<MCVertex> > vertices( evtSvc() , VerticesPath );
   if( !vertices ) { return Error("Could not locate Vertices at="+VerticesPath ); }
   long refID = object->addLink( VerticesPath ,  vertices );
@@ -158,21 +164,30 @@ StatusCode GiGaMCParticleCnv::updateObjRefs( IOpaqueAddress*  Address , DataObje
   }
   ///
   ObjectVector<MCVertex>::iterator iv = vertices->begin();
+  MCVertex mV; /// misc 
+  GiGaCnvFunctors::MCVerticesLess  Less; 
+  GiGaCnvFunctors::MCVerticesEqual Equal;
   for( unsigned int it = 0 ; it < tc->entries() ; ++it )
     {
       G4VTrajectory* tr = (*tc)[it];
       if( 0 == tr ) { return Error("G4VTrajectory* points to NULL"                        ) ; } 
       GiGaTrajectory*  gt = dynamic_cast<GiGaTrajectory*> ( tr ) ; 
-      if( 0 == gt ) { return Error("G4VTrajectory* could not be cast to GiGaTrajectory*"  ) ; }
+      if( 0 == gt ) { Error("G4VTrajectory*(of type '"+ObjTypeName(tr)+"*') could not be cast to GiGaTrajectory*"  ) ; break ; }
       MCParticle* mp = *(object->begin()+it);
       if( 0 == mp ) { return Error("MCParticle* points to NULL!"                          ) ; } 
       for( GiGaTrajectory::const_iterator ip = gt->begin() ; gt->end() != ip ; ++ip )
 	{
-	  GiGaTrajectoryPoint* gp = *ip ; 
-	  if( 0 == gp             ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; } 
-	  iv = std::find_if( gt->begin() == ip ? vertices->begin() : iv     ,
-			     vertices->end() , GiGaCnvFunctors::MCVertexToPointCompare( gp ) );
-	  if      ( vertices->end() == iv ) {  return Error("MCVertex is not found!") ; }   
+	  if( 0 == *ip ) { return Error("GiGaTrajectoryPoint* points to null!" ) ; } 
+	  /// auxillary vertex 
+	  mV.setPosition    ( (*ip)->GetPosition() );
+          mV.setTimeOfFlight( (*ip)->GetTime    () );
+	  /// look for vertex 
+	  if( gt->begin() != ip ) 
+	    { iv = std::find_if   ( iv , vertices->end() , std::bind2nd( Equal , &mV ) ) ; } 
+	  else                    
+	    { iv = std::lower_bound( vertices->begin() , vertices->end() , &mV , Less  ) ; }
+          if      ( vertices->end() == iv || !Equal( &mV , *iv ) ) 
+	    {  return Error(" appropriate MCVertex is not found!") ; }   
 	  else if ( gt->begin  () != ip )           ///  it is not first vertex of the trajectory
 	    {  mp->addDecayMCVertex ( SmartRef<MCVertex> ( mp , refID , iv - vertices->begin() , *iv ) ) ; } 
 	  else if ( !mp->originMCVertex() )         /// first vertex and origin is not yet set   

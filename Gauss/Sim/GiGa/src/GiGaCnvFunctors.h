@@ -8,47 +8,61 @@
 
 namespace GiGaCnvFunctors
 { 
-  ///
-  class MCVerticesCompare: 
-    public std::binary_function<bool,const MCVertex*, const MCVertex*>
+  /// ordering criteria                     
+  class MCVerticesLess   :  
+    public std::binary_function<const MCVertex*, const MCVertex*,bool>
   {
   public:
     ///
     inline bool operator() ( const MCVertex* v1 , const MCVertex* v2 ) const 
     {
       return 
-	( v1 == v2                                 ) ? true  :
-	( 0  == v1                                 ) ? false :
-	( 0  == v2                                 ) ? false : 
-	( v1->timeOfFlight() != v2->timeOfFlight() ) ? false : 
-	( v1->position()     != v2->position    () ) ? false : true ; 
+	( 0  == v1                                 ) ? true  :
+	( 0  == v2                                 ) ? false :
+	( v1 == v2                                 ) ? false :
+	( v1->timeOfFlight() <  v2->timeOfFlight() ) ? true  : 
+	( v1->timeOfFlight() >  v2->timeOfFlight() ) ? false : 
+	( v1->position().z() <  v2->position().z() ) ? true  : 
+	( v1->position().z() >  v2->position().z() ) ? false : 
+	( v1->position().x() <  v2->position().x() ) ? true  : 
+	( v1->position().x() >  v2->position().x() ) ? false : 
+	( v1->position().y() <  v2->position().y() ) ? true  : false ; 
     }  
     ///
   };
   ///
-  class MCVertexToPointCompare: 
-    public std::unary_function<bool,const MCVertex*>
+  class MCVerticesEqual  : 
+    public std::binary_function<const MCVertex*, const MCVertex*,bool>
   {
+  public:
     ///
-    const GiGaTrajectoryPoint* m_p;
-    ///
-  public: 
-    explicit MCVertexToPointCompare( const GiGaTrajectoryPoint* point ) 
-      : m_p( point ){};
-    ///
-    inline bool operator() ( const MCVertex* v ) const 
+    inline bool operator() ( const MCVertex* v1 , const MCVertex* v2 ) const 
     {
       return 
-	( (void*) v  == (void*) m_p                ) ? true  :
-	( 0  == v                                  ) ? false :
-	( 0  == m_p                                ) ? false : 
-	( v->timeOfFlight()  != m_p->time()        ) ? false : 
-        ( v->position()      != m_p->GetPosition() ) ? false : true ; 
+	( 0  == v1 || 0 == v2                      ) ? false :
+	( v1 == v2                                 ) ? true  :
+	( v1->timeOfFlight() != v2->timeOfFlight() ) ? false : 
+	( v1->position    () != v2->position    () ) ? false : true ; 
     }  
+    ///
   };
   ///
 };
 
 
 #endif  //   GIGA_GIGACNVFUNCTORS_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

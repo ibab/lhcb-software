@@ -2,6 +2,25 @@ Package:          GiGa
 Package manager : Vanya Belyaev 
 
 !===========================================================================
+! 20010226 - Vanya Belyaev
+     New functionality:
+     (1) GiGaKineCnvSvc is extended for conversion of  
+         GiGaTrajectories into MCParticles/MCVertices
+         (a) Essential feature - container of converted MCVertices 
+             is SORTED using src/GiGaCnvFunctors.h. It is VERY
+             important for conversion of references.   
+         (b) updated files:
+             - src/GiGaMCParticleCnv.h
+             - src/GiGaMCParticleCnv.cpp
+             - src/GiGaMCVertexCnv.h
+             - src/GiGaMCVertexCnv.cpp
+     (2) To allow conversion, the stored trajectories MUST be of type
+         GiGaTrajectory. 
+         New example class GiGaTrackActionSimple takes case about 
+         creation of correct GiGaTrajectories. It also takes case 
+         that G4Track* object has valid G4VUserTrackInformation* 
+         pointer to GiGaTrackInformation structure. 
+!===========================================================================
 ! 20010224 - Vanya Belyaev
      (1) A lot of modifications and renaming in  /GiGa subdirectory   
         (a) GiGaCnv          --> GiGaCnvBase 
@@ -24,7 +43,6 @@ Package manager : Vanya Belyaev
             - GiGa/GiGaTrackInformation.h
             - GiGa/GiGaTrackInformation.icpp
             - src/GiGaTrackInformationAllocator.cpp
-
 !===========================================================================
 ! 20010222 - Vanya Belyaev
      New classes: 

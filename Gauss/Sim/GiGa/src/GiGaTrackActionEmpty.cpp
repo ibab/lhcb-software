@@ -12,8 +12,6 @@
 #include "GiGaTrackActionEmpty.h"
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 static const GiGaTrackActionFactory<GiGaTrackActionEmpty>                      s_GiGaTrackActionEmptyFactory;
 const       IGiGaTrackActionFactory&             GiGaTrackActionEmptyFactory = s_GiGaTrackActionEmptyFactory;
@@ -30,3 +28,5 @@ StatusCode GiGaTrackActionEmpty::initialize () { return GiGaTrackActionBase::ini
 /////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaTrackActionEmpty::finalize   () { return GiGaTrackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
+
+

@@ -72,6 +72,7 @@ void GiGa_load()
   DLL_DECL_STACKFACTORY (    GiGaStackActionEmpty    );
   /// tracking action 
   DLL_DECL_TRACKFACTORY (    GiGaTrackActionEmpty    );
+  DLL_DECL_TRACKFACTORY (    GiGaTrackActionSimple   );
   /// stepping  action 
   DLL_DECL_STEPFACTORY  (    GiGaStepActionEmpty     );
   ///

@@ -33,7 +33,7 @@ GiGaDetectorElementCnv::GiGaDetectorElementCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaDetectorElementCnv" ); 
+  setConverterName              ( "GiGaDECnv"      ); 
 }; 
 /// destructor 
 GiGaDetectorElementCnv::~GiGaDetectorElementCnv(){}; 

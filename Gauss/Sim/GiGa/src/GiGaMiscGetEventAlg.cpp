@@ -1,11 +1,18 @@
-///
+/// STL
 #include <string>
 #include <vector>
 #include <list>
-///
+/// GaudiKernel 
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IGiGaSvc.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DataObject.h"
+/// from LHCbEvent 
+#include "LHCbEvent/MCParticle.h"
+#include "LHCbEvent/MCVertex.h"
 /// from Geant4 
 #include "G4Event.hh"
 /// local 
@@ -41,9 +48,23 @@ StatusCode GiGaMiscGetEventAlg::initialize()
 StatusCode GiGaMiscGetEventAlg::execute() 
 {
   ///
-  G4Event* evt = 0 ;
+  {
+    SmartDataPtr<MCParticleVector> obj( eventSvc() , "/Event/G4/MCParticles" ) ;
+    if( obj ) 
+      { 
+	std::cout <<  *obj << std::endl;  
+      } 
+    else 
+      { std::cout << " particles == 0 " << std::endl ; } 
+  }
   ///
-  *gigaSvc() >> evt ; 
+  {
+    SmartDataPtr<MCVertexVector> obj( eventSvc() , "/Event/G4/MCVertices" ) ;
+    if( obj ) 
+      { std::cout <<  *obj  << std::endl ; } 
+    else 
+      { std::cout << " vertices == 0 " << std::endl ; } 
+  }
   ///
   return StatusCode::SUCCESS;
 };
@@ -51,6 +72,7 @@ StatusCode GiGaMiscGetEventAlg::execute()
 StatusCode GiGaMiscGetEventAlg::finalize() 
 { return StatusCode::SUCCESS; }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
