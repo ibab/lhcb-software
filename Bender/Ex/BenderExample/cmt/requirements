@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2004-11-14 16:56:49 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2004-11-23 17:18:36 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v4r2
+version          v4r4
 
 # ============== structure ===================================================
 branches         cmt doc src python options jobs 
