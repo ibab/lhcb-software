@@ -4,6 +4,10 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussMonitor v1r2 2004-08-02 ========================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
 ! 2004-05-14 - Patrick Robbe
  - src/GeneratorFullMonitor.cpp
    . store in ntuple all particles which are converted from HepMC to

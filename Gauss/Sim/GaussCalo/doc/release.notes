@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!====================== GaussCalo v7r1 ===================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
 !====================== GaussCalo v7r0 ===================================
 ! 2004-02-20 - Ivan BELYAEV
  - options/PGUN* remove all obsolete files 
