@@ -1,6 +1,11 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v19r2 2004-12-10 ========================
+! 2004-12-10 - Marco Cattaneo
+ - Use TrgEvent v5r2, VeloEvent v13r2, CaloEvent v13r7, MuonEvent v3r2,
+       Event v4r6, RichEvent v8r1, PhysEvent v8r7, L0Event v14r1p2
+
 !======================== EventSys v19r1 2004-11-25 ========================
 ! 2004-11-25 - Marco Cattaneo
  - Use RichEvent v8r0, TrgEvent v5r1, PhysEvent v8r6, LinkerEvent v1r5
