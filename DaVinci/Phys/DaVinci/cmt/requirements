@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.125 2004-06-22 10:48:31 pkoppenb Exp $
+# $Id: requirements,v 1.126 2004-06-25 17:10:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -116,6 +116,9 @@ use  DaVinciTest        v4r5     Phys
 
 # Physics selections
 use  PhysSelSys		v7r3     PhysSel
+
+# Stripping
+use  Stripping          v1r0     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
