@@ -7,6 +7,22 @@
    containing the DVAlgorithm baseclass, the PhysDesktop and
    all interfaces.
    
+! 2004-08-23 - P. Koppenburg
+ - Split DaVinciTools package into 
+   . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces
+   . Phys/ParticleMaker : All particle makers and the ParticleStuffer
+   . Phys/DaVinciFilter : All Filter
+   . Phys/VertexFit : All vertex fitters and the GeomDispCalculator.cpp
+   . Phys/DaVinciTransporter : All transporters
+   . Phys/DaVinciTools : Basically all high-level tools that are none
+        of the abvove, f.i. DecayFinder, PreDV, CheckOverlap...    
+   This split became necessary since DaVinciTools was become a huge monster
+   containing unrelated stuff (what do the TrackTypeFilterCriterion and the 
+   CombinedParticleMaker have in common?). Also DaVinciTools was evolving
+   with all versions of DaVinci. In the short term, I hope that most 
+   developments will affect DaVinciFilter, while the other packages will
+   be rather stable except for bug fixes.
+   
 !========================== DaVinciTools v10r3 2004-08-23 ===================
 ! 2004-08-23 - Florence RANJARD
  - replace GaudiTools/ with GaudiAlg

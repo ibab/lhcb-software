@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.129 2004-08-24 07:33:24 pkoppenb Exp $
+! $Id: release.notes,v 1.130 2004-08-24 07:59:35 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
 ! 2004-08-23 - P. Koppenburg
- - Split package into 
+ - Split DaVinciTools package into 
    . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces
    . Phys/ParticleMaker : All particle makers and the ParticleStuffer
    . Phys/DaVinciFilter : All Filter
