@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.6 2001-07-12 20:30:18 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.7 2001-07-17 18:08:57 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -158,12 +158,10 @@ L0mTower::HitIndex L0mTower::searchStation(bool& found,
 }
 
 L0mPad* L0mTower::findTrack() {
- 
-// These are provisional extrapolation constants, should go to properties
-// of the processing unit
 
   L0mPad* lpd = 0;
   bool foundHit;
+  bool searchFailed = false;
 
   // confirm the candidate in M4 & M5
   
@@ -172,15 +170,21 @@ L0mPad* L0mTower::findTrack() {
 			      0,
 			      m_procUnit->m_foiY[4]);
 			      
-  if(!foundHit) return 0;
-  m_indices[4] = hd;
+  if(!foundHit) {
+    searchFailed = true;
+  } else {  
+    m_indices[4] = hd;
+  }  
   hd = searchStation(foundHit,3,
                      m_procUnit->m_foiX[3],
 		     0,
 		     m_procUnit->m_foiY[3]);
 		     		     
-  if(!foundHit) return 0;
-  m_indices[3] = hd;
+  if(!foundHit) {
+    searchFailed = true;
+  } else {  
+    m_indices[3] = hd;
+  }
     
   // find the nearest hit in M2
   
@@ -203,8 +207,13 @@ L0mPad* L0mTower::findTrack() {
   
   m_indices[0] = searchStation(foundHit,0,m_procUnit->m_foiX[0],indext);
   if(!foundHit) return 0;
-  m_found = true;     
-  return m_bitmap[0].find(m_indices[0])->second;
+  
+  if(searchFailed) {
+    return 0; 
+  } else {
+    m_found = true;     
+    return m_bitmap[0].find(m_indices[0])->second;
+  }  
 }
 
 bool L0mTower::isFull() {
@@ -388,5 +397,10 @@ void L0mTower::limitedY() {
 //==============================================================
 /// accessor to the resulting pad in M2
 L0mPad* L0mTower::pad(int station) { 
-  return m_bitmap[station].find(m_indices[station])->second; 
+  StationMap::iterator ism = m_bitmap[station].find(m_indices[station]);
+  if(ism != m_bitmap[station].end()) {
+    return m_bitmap[station].find(m_indices[station])->second; 
+  } else {
+    return 0;
+  }  
 }
