@@ -7,8 +7,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!====================== GaussCalo v7r0 ===================================
 ! 2004-02-20 - Ivan BELYAEV
- - options/PGUN* remoe all obsolete files 
+ - options/PGUN* remove all obsolete files 
  - src/CaloSensDet.cpp
         fix compilation warnings 
  - src/HcalSensDet.cpp
