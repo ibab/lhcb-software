@@ -1,9 +1,11 @@
-// $Id: VeloSim.cpp,v 1.7 2002-06-24 11:43:43 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.8 2002-06-24 11:47:34 cattanem Exp $
 // Include files
 // STL
 #include <string>
 #include <stdio.h>
 #include <vector>
+#include <math>
+
 // clhep
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -380,7 +382,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // not truly correct
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
-    int ipt=int(std::round(m_uniformDist()*(Npoints-1)));
+    int ipt=int(round(m_uniformDist()*(Npoints-1)));
     log << MSG::VERBOSE << " delta ray charge added to point " << ipt 
         << "/" << Npoints << endreq;
     Spoints[ipt]+=charge;
@@ -416,9 +418,8 @@ void VeloSim::diffusion( MCVeloHit* hit,int Npoints,
     //      log << MSG::DEBUG << "chan " << entryChan.strip() << " fraction " 
     //          << fraction << " pitch " << pitch << " valid " << valid 
     //          << endreq;
-    int neighbs=1; // only consider =/- this many neighbours
-    int chFracSize=2*neighbs+1;
-    double chargeFraction[chFracSize];
+    const int neighbs=1; // only consider =/- this many neighbours
+    double chargeFraction[2*neighbs+1];
     double totalFraction=0.;
     // loop over neighbours per point
     int iNg;
