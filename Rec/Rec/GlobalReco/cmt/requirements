@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GlobalReco
-version           v4r8
+version           v4r8p1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -26,6 +26,7 @@ use  CaloKernel      v3r*  Calo
 use  CaloUtils       v4r*  Calo
 use  CaloInterfaces  v*    Calo
 use  MuonID          v3r*  Muon
+use  Relations       v*    Kernel
 
 #============================================================================
 # Component library building rule

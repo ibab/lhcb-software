@@ -4,13 +4,16 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2004-09-13 -P. Koppenburg
+  - cmt/requirements
+    . Depend on Kernel/Relations
 !========================== GlobalReco v4r8 2004-07-22 ===================
 ! 2004-07-15 - Gloria CORTI
- - src/ChargedProtoPAlg.{h,cpp}
-   . introduce protection against problem spotted when reading back from
-     permanent storage of TrStoredTracks without any TrState: algorithm 
-     will fail and error reported also at finalization. Print only error
-		 counters different from zero.
+  - src/ChargedProtoPAlg.{h,cpp}
+    . introduce protection against problem spotted when reading back from
+      permanent storage of TrStoredTracks without any TrState: algorithm 
+      will fail and error reported also at finalization. Print only error
+      counters different from zero.
 
 !===================== GlobalReco v4r7 2004-06-02 ===========================
 ! 2004-04-11 - Yuehong Xie
