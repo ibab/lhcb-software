@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.48 2003-04-08 17:22:27 ibelyaev Exp $
+! $Id: release.notes,v 1.49 2003-04-25 18:17:33 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
-! 2003-04-08 - Vanya BELYAEV
+! 2003-04-25 - Gloria Corti
+ - Add code for merged pi0 from Olivier Deschamps
+   . New PhotonFromMergedParticleMaker.h/cpp to be used when
+     making merged pi0 ( see MergedPi0Alg in Bd2PiPiPi0 )
+   . New PhotonFromMergedParamaters.h/cpp and Interface is necessary
+     because the fact that there are 2 CaloHypothesis 
+     ("PhotonFromMergedPi0) for each ProtoParticle does not allow
+     to use the existing PhotonParamaters tool for split photons.
+ - Increase version number to v8r0
+ - src/PhotonParticleMaker.cpp set default value for "UseAllPhotons"
+   property to "true" to have backwards compatible behaviour of the 
+   tool
 
+! 2003-04-08 - Vanya BELYAEV
  - src/PhotonParticleMaker.h,.cpp   
       The Particle maker is updated to be able to produce 
       separately converted and non-converted photons
@@ -11,13 +23,11 @@
       the tool produces *all* (both converted and non-converted 
       photons). Otherwise only non-converted photons are produces.
       The default value of this options is "false". 
-
  - src/CnvPhotonParticleMaker.h,.cpp   
       new particle maker for converted photons (indeed it is just a   
       special consfiguration of PhotonParticleMaker).
       It always produces only converted photons, and this behaviour
       cannot be redefined through job-options.
-
  - src/DaVinciTools_load.cpp      
       Declare CnvPhotonParticleMaker factory.  
 

@@ -1,136 +1,44 @@
-// $Id: PhotonParticleMaker.cpp,v 1.4 2003-04-25 18:17:34 gcorti Exp $
+// $Id: PhotonFromMergedParticleMaker.cpp,v 1.1 2003-04-25 18:17:34 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2003/04/08 17:22:28  ibelyaev
-//  CnvPhotonParticleMaker: new creator of converted photons
-//
-// Revision 1.2  2003/02/12 19:33:31  gcorti
-// remove std in front of endreq - win compilation
-//
-// Revision 1.1  2003/01/22 16:43:24  ibelyaev
-//  new tools for Photons
 // 
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h" 
 // LHCbKErnel 
 #include "Kernel/CLHEPStreams.h"
 // Event 
 #include "Event/Particle.h" 
+#include "Event/PrimVertex.h"
+#include "Event/Vertex.h"
 #include "Event/ProtoParticle.h" 
-#include "Event/CaloHypo.h" 
-// Det
-#include "CaloDet/DeCalorimeter.h"
 // DaVinciTools 
-#include "DaVinciTools/IPhotonParams.h"
+#include "DaVinciTools/IPhotonFromMergedParams.h"
 // local
-#include "PhotonParticleMaker.h"
+#include "PhotonFromMergedParticleMaker.h"
 
 /** @file 
  *  
- *  Implementation file for class : PhotonParticleMaker
+ *  Implementation file for class : PhotonFromMergedParticleMaker
  * 
- *  @date 2003-01-19 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2003-03-11
+ *  @author Olivier Deschamps from Vanya's PhotonParticleMaker
  */
 
 // ============================================================================
-namespace PhotonParticleMakerLocal 
-{
-  // ==========================================================================
-  /** @class DigitFromCalo 
-   *  simple utility to count digits from certain calorimeter 
-   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date 31/03/2002 
-   */
-  // ==========================================================================
-  class DigitFromCalo 
-    : public std::unary_function<const CaloDigit*,bool>
-  { 
-  public:   
-    /** constructor
-     *  @parameter calo  calorimeter name 
-     */
-    explicit DigitFromCalo( const std::string& calo )
-      : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
-    /** constructor
-     *  @parameter calo  calorimeter index 
-     */
-    explicit DigitFromCalo( const int  calo )
-      : m_calo(                                calo   ) {} ;
-    /** the only essential method
-     *  @param digit pointer to CaloDigit object 
-     *  @return true if digit belongs to the predefined calorimeter 
-     */
-    inline bool operator() ( const CaloDigit* digit ) const 
-    {
-      if( 0 == digit ) { return false ; }
-      return (int) digit->cellID().calo() == m_calo ;
-    };
-  private:
-    /// default constructor is private 
-    DigitFromCalo();
-  private:
-    int m_calo ;
-  };  
-  // ==========================================================================
-  /** @class PhotonCnv 
-   *  simple evaluator if the photon is converted or not 
-   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-   *  @date 2003-04-08
-   */
-  // ==========================================================================
-  class PhotonCnv
-  {
-  public:
-    /** constructor 
-     *  @param det detectro name 
-     */
-    PhotonCnv( const std::string& det = DeCalorimeterLocation::Spd )
-      : m_det ( det ) {}
-    /** the only one essential method 
-     *  @return status code 
-     */
-    inline StatusCode converted 
-    ( const CaloHypo* photon , 
-      bool&           cnv    ) const 
-    {
-      if ( 0 == photon ) 
-        { return StatusCode ( 300 ) ; }                        // RETURN 
-      if ( CaloHypotheses::Photon != photon->hypothesis() )   
-        { return StatusCode ( 301 ) ; }                        // RETURN  }
-      
-      // loop over all digits 
-      typedef CaloHypo::Digits Digits;
-      const Digits& digits = photon->digits();
-      for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d )
-        {
-          if( m_det( *d ) ) { cnv = true ; return StatusCode::SUCCESS ; } 
-        }
-      // no digits from spd 
-      cnv = false ;
-      return StatusCode::SUCCESS ;
-    };
-  private: 
-    DigitFromCalo m_det ;
-  };
-  // ==========================================================================
-}; // end of namespace PhotonParticleMaker
-// ============================================================================
-
-// ============================================================================
-/** @var PhotonParticleMakerFactory
+/** @var PhotonFromMergedParticleMakerFactory
  *  Declaration of mandatory  Tool Factory
  */
 // ============================================================================
-static const  ToolFactory<PhotonParticleMaker>         s_Factory ;
-const        IToolFactory&PhotonParticleMakerFactory = s_Factory ; 
+static const  ToolFactory<PhotonFromMergedParticleMaker>         s_Factory ;
+const        IToolFactory&PhotonFromMergedParticleMakerFactory = s_Factory ; 
 // ============================================================================
+
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type
@@ -138,7 +46,7 @@ const        IToolFactory&PhotonParticleMakerFactory = s_Factory ;
  *  @param parent tool parent
  */
 // ============================================================================
-PhotonParticleMaker::PhotonParticleMaker
+PhotonFromMergedParticleMaker::PhotonFromMergedParticleMaker
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
@@ -148,7 +56,7 @@ PhotonParticleMaker::PhotonParticleMaker
   //
   , m_evtSvc           ( 0     ) 
   //
-  , m_photParsName     ( "PhotonParameters/PhotPars" )
+  , m_photParsName     ( "PhotonFromMergedParameters/PhotPars" )
   , m_photPars         ( 0     ) 
   // 
   , m_pointVector      ( 3 , 0 ) 
@@ -158,15 +66,12 @@ PhotonParticleMaker::PhotonParticleMaker
   , m_diagonal         ()         // square roots from diagonal elements 
   , m_offDiagonal      ( 3 , 0 )  // correlation coefficients 
   ///
-  , m_useCaloTrMatch   ( true  ) 
+  , m_useCaloTrMatch   ( true ) 
   , m_useCaloDepositID ( false )
   , m_useShowerShape   ( false )
   , m_useClusterMass   ( false )
   // cut 
-  , m_cut              ( -1.0  ) // no cut at all 
-  // converted 
-  , m_converted        ( false ) 
-  , m_useAll           ( true  ) 
+  , m_cut            ( -1.0  ) // no cut at all 
 {
   declareProperty ( "Input"                      , m_input            ) ;
   declareProperty ( "PhotonParametersEvaluator"  , m_photParsName     ) ;
@@ -182,9 +87,7 @@ PhotonParticleMaker::PhotonParticleMaker
   declareProperty ( "UseShowerShape"             , m_useShowerShape   ) ;
   declareProperty ( "UseClusterMass"             , m_useClusterMass   ) ;
 
-  declareProperty ( "ConfLevelCut"               , m_cut              ) ;
-
-  declareProperty ( "UseAllPhotons"              , m_useAll           ) ;
+  declareProperty ( "ConfLEvelCut"               , m_cut              ) ;
   
   // declare new interface 
   declareInterface<IParticleMaker> (this);
@@ -195,7 +98,7 @@ PhotonParticleMaker::PhotonParticleMaker
 // ============================================================================
 /// destructor 
 // ============================================================================
-PhotonParticleMaker::~PhotonParticleMaker() {};
+PhotonFromMergedParticleMaker::~PhotonFromMergedParticleMaker() {};
 // ============================================================================
 
 // ============================================================================
@@ -206,7 +109,7 @@ PhotonParticleMaker::~PhotonParticleMaker() {};
  *  @return status code 
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::initialize    () 
+StatusCode PhotonFromMergedParticleMaker::initialize    () 
 {
   // initialize the base class
   StatusCode sc = CaloTool::initialize();
@@ -291,13 +194,6 @@ StatusCode PhotonParticleMaker::initialize    ()
   if( m_useClusterMass    ) 
     { Warning( "  For ClusterMass assume exponential distribution (wrong?)"); }
   
-  if      ( m_useAll    ) 
-    { Warning( "\t         *ALL*     'ordinary' photons are to be created" ) ; }
-  else if ( m_converted ) 
-    { Warning( "\tOnly     converted 'ordinary' photons are to be created" ) ; }
-  else 
-    { Warning( "\tOnly non-converted 'ordinary' photons are to be created" ) ; }
-  
   return StatusCode::SUCCESS ;  
 };
 // ============================================================================
@@ -310,7 +206,7 @@ StatusCode PhotonParticleMaker::initialize    ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::finalize      () 
+StatusCode PhotonFromMergedParticleMaker::finalize      () 
 {
   // release services and tools 
   if( 0 != m_evtSvc   ) { m_evtSvc   -> release () ; m_evtSvc   = 0 ; }
@@ -322,7 +218,7 @@ StatusCode PhotonParticleMaker::finalize      ()
 // ============================================================================
 
 // ============================================================================
-namespace PhotonParticleMakerLocal
+namespace PhotonFromMergedParticleMakerLocal
 {
   // ==========================================================================
   class IsHypo : public std::unary_function<const CaloHypo*,bool>
@@ -363,10 +259,12 @@ namespace PhotonParticleMakerLocal
  *  @param particles  vector of particles  
  */
 // ============================================================================
-StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles ) 
+StatusCode PhotonFromMergedParticleMaker::makeParticles 
+           ( ParticleVector & particles ) 
 {
+  MsgStream log( msgSvc() , name() ) ;
   // avoid some long names
-  using   namespace PhotonParticleMakerLocal               ;
+  using   namespace PhotonFromMergedParticleMakerLocal               ;
   using   namespace CaloHypotheses                         ;
   typedef const SmartRefVector<CaloHypo>             Hypos ;
   
@@ -379,79 +277,92 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
 
   unsigned long nAccepted = 0 ;
   
-  // evaluator of converted photons 
-  PhotonParticleMakerLocal::PhotonCnv phCnv; 
-
   for( ProtoParticles::const_iterator ipp = pps->begin() ; 
        pps->end() != ipp ; ++ipp ) 
     {
       ProtoParticle* pp = *ipp ;
       // skip invalid and charged 
-      if ( 0 == pp || 0 != pp->track() )   { continue ; }        // CONTINUE
+      if( 0 == pp || 0 != pp->track() )   { continue ; }        // CONTINUE
       
       // evaluate the Confidence Level
       const double CL = confLevel( pp );
       
-      // find the first photon hypothesis 
+      // Loop over hypo and find the TWO photon_from_merged_pi0 (OD)
       const Hypos& hypos = pp -> calo () ;
-      Hypos::const_iterator ihypo = 
-        std::find_if( hypos.begin() , hypos.end() , IsHypo( Photon ) ) ;
-      if ( hypos.end() == ihypo        )   { continue ; }       // CONTINUE
 
-      const CaloHypo* hypo = *ihypo ;
-      if ( 0           ==  hypo        )   { continue ; }       // CONTINUE
-      
-      bool cnv = false ;
-      StatusCode sc = phCnv.converted( hypo , cnv ) ;
-      if( sc.isFailure() ){ Error("Error from PhotonCnv" , sc ) ; continue ; }
-      
-      // skip extra 
-      if( !m_useAll && m_converted  != cnv ) { continue ; }
-      
-      // confidence level 
-      if ( CL < m_cut                      ) { continue ; }    // CONTINUE 
-      
-      // counter 
-      ++nAccepted ;
-      
-      // create new particle and start to fill it 
-      Particle* particle = new Particle();
-      
-      // it is a photon! 
-      particle -> setParticleID  ( 22    ) ; // photon 
-      particle -> setIsResonance ( false ) ;
-      
-      // origin is the protoparticle!
-      particle -> setOrigin      ( pp    ) ;
-      
-      // mass and mass uncertainties 
-      particle -> setMass        ( 0.0   ) ; // photon is mass-less 
-      particle -> setMassErr     ( 0.0   ) ; // the mass is EXACT zero!
 
-      // confidence level 
-      particle  -> setConfLevel  ( CL    ) ; 
-
-      // fill photon parameters :
-      //   the 4-momentum, production vertex and their correlations 
-      sc = photPars()->process( particle   , 
-                                m_point    , 
-                                m_pointErr ) ;
-      if( sc.isFailure() ) 
+      //Hypos::const_iterator ihypo=
+      //std::find_if(hypos.begin(),hypos.end(),IsHypo(PhotonFromMergedPi0));
+      //if( hypos.end() == ihypo        )   {continue ; }       // CONTINUE
+      //
+      // Need to LOOP OVER HYPOS (2 SplitPhotons per ProtoParticle !!)
+      for(Hypos::const_iterator ihypo =hypos.begin();hypos.end()!=ihypo;++ihypo)
         {
-          Error("Unable to fill photon parameters, skip particle " , sc ) ;
+          if((*ihypo)->hypothesis() != 
+             CaloHypotheses::PhotonFromMergedPi0){continue;}
+
+          const CaloPosition* pos = (*ihypo)->position() ;
+          log << MSG::DEBUG << " Ipp PhotonFromMergedPi0 "<< pos->e()<< " " 
+              << CL << endreq;
+          // confidence level 
+          if( CL < m_cut                  )   { continue ; }     // CONTINUE 
+          // counter 
+          ++nAccepted ;
+          // create new particle and start to fill it 
+          Particle* particle = new Particle();
+          // it is a photon! 
+          particle -> setParticleID  ( 22    ) ; // photon 
+          particle -> setIsResonance ( false ) ;
+          // origin is the protoparticle!
+          particle -> setOrigin      ( pp    ) ;
+          // mass and mass uncertainties 
+          particle -> setMass        ( 0.0   ) ; // photon is mass-less 
+          particle -> setMassErr     ( 0.0   ) ; // the mass is EXACT zero!
+          // confidence level 
+          particle  -> setConfLevel  ( CL    ) ; 
+          // fill photon parameters :
+          //   the 4-momentum, production vertex and their correlations 
+
+          //Default: Apply 1s found t primary vertex for production point
+          double isfill = m_pointVector[0]*m_pointVector[1]*m_pointVector[2];
+          SmartDataPtr<Vertices> primvtx( evtSvc(), VertexLocation::Primary);
+          if ( 0 != primvtx->size() && 0 == isfill ){
+            Vertices::iterator ivtx = primvtx->begin() ;
+            const Vertex*  pv     = *ivtx ;
+            log << MSG::DEBUG << "Nvertex " << primvtx->size() << endreq;
+            log << MSG::DEBUG 
+                <<  pv->position().x()  << " "
+                <<  pv->position().y()  << " "
+                <<  pv->position().z()  << " "
+                << endreq;
+            m_point    = pv->position();
+            m_pointErr = pv->positionErr();
+          }
+          log << MSG::DEBUG << "m_point" <<
+            m_point[0]<< " "<<
+            m_point[1]<< " "<<
+            m_point[2]<< endreq;
+
+          const CaloHypo* thehypo=*ihypo;
+          StatusCode sc = photPars()->process( particle   , 
+                                               thehypo    ,
+                                               m_point    , 
+                                               m_pointErr ) ;
+          if( sc.isFailure() ) 
+        {
+          Error("Unable to fill photon_from_merged parameters, skip particle " 
+                , sc ) ;
           delete particle ;
           continue ;                                               // CONTINUE
         }
       
-      // add the particle to the container 
-      particles.push_back( particle );
-      
+          // add the particle to the container 
+          particles.push_back( particle );
+        }// End of loop over hypo (OD)
     }
-  
-  MsgStream log( msgSvc() , name() ) ;
-  log << MSG::INFO 
-      << " Create " << nAccepted   << 
-    ( m_converted ? " Converted Photons " : "           Photons " )
+
+  log << MSG::DEBUG
+      << " Create " << nAccepted   << " PhotonsFromMerged "  
       << " from   " << pps->size() << " ProtoParticles " << endreq ;
   
   return StatusCode::SUCCESS ;
@@ -469,10 +380,10 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
  *
  */
 // ============================================================================
-double PhotonParticleMaker::confLevel( const ProtoParticle* pp ) const 
+double PhotonFromMergedParticleMaker::confLevel( const ProtoParticle* pp ) const
 { 
   // avoid long typing 
-  using   namespace PhotonParticleMakerLocal               ;
+  using   namespace PhotonFromMergedParticleMakerLocal               ;
   typedef const std::vector<std::pair<int,double> >  PIDs  ;
   
   if( 0 == pp ) 
@@ -538,7 +449,8 @@ double PhotonParticleMaker::confLevel( const ProtoParticle* pp ) const
       if( pids.end() != ipid ) 
         {
           // assume exponential distribution (it is wrong!)
-          CL *= exp( -0.5 * ipid->second / ( 25 * MeV ) ) ; 
+          // 1 - CL(single photon) for Merged !!!
+          CL *= 1.-exp( -0.5 * ipid->second / ( 25 * MeV ) ) ; 
         }  // Update CL
       else 
         { Warning("confLevel(): ClusterMass is not available" ) ; }

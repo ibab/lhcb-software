@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.17 2003-04-08 17:22:28 ibelyaev Exp $
+// $Id: DaVinciTools_load.cpp,v 1.18 2003-04-25 18:17:33 gcorti Exp $
 // Include files 
 
 
@@ -40,6 +40,8 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( PhotonParameters       ) ;  
   DECLARE_TOOL( PhotonParticleMaker    ) ;  
   DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
+  DECLARE_TOOL( PhotonFromMergedParameters );
+  DECLARE_TOOL( PhotonFromMergedParticleMaker );
 
   DECLARE_ALGORITHM( PreLoadParticles );
   
