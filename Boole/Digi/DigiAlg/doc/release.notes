@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v1r1 2003-07-16 =========================
+! 2003-07-16 - Marco Cattaneo
+ - Fix options to work with new MCRichHit (RichEvent v5r0)
+
 !========================= DigiAlg v1r0p1 2003-06-30 ========================
 ! 2003-06-30 - Marco Cattaneo
  - Release service at finalize
