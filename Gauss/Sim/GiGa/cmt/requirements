@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.29 2002-06-18 15:36:55 ranjard Exp $ 
+# $Id: requirements,v 1.30 2002-07-15 15:36:32 ranjard Exp $ 
 # =============================================================================
 
 package  GiGa
-version  v8r1
+version  v9r0
 
 branches         cmt src doc GiGa
 
 use GaudiKernel  v12r* 
-use GEANT4       v4r0p* Sim 
+use GEANT4       v2r4100p0 Sim 
 
 
 include_dirs     $(GIGAROOT)

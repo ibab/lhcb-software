@@ -1,12 +1,16 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+
+! ========================== GiGa v9r0 ===================================
+! 2002-07-03 - Florence Ranjard
+  requirements - use GEANT4 v2r4100p*  (ExternalLibs v4r*)
+
 !========================== GiGa v8r1 ===================================
 ! 2002-06-18 - W.Pokorski
  - added TrackerHit.h and cpp
 
 ! ========================= GiGa v8r0 ====================================
-
 ! 20020507 - GiGa v8r0 - Vanya
   MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
   ALL objects, except GiGaSvc, converison services and converters are now 
