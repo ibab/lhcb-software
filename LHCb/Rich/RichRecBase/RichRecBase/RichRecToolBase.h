@@ -1,10 +1,11 @@
-// $Id: RichRecToolBase.h,v 1.6 2003-08-06 09:55:31 jonrob Exp $
+// $Id: RichRecToolBase.h,v 1.7 2003-08-12 13:36:31 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 
 // Interfaces
 #include "RichRecBase/IRichToolRegistry.h"
@@ -44,6 +45,9 @@ protected:   // Protected methods
   /// Return message level setting
   int msgLevel();
 
+  // Acquire a pointer to the Detector Service
+  IDataProviderSvc * detSvc();
+
   /// Acquires a tool of the correct type from the RichToolRegistry for a given name
   template <typename TOOL> inline
   TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
@@ -68,6 +72,9 @@ private:   // Private data
 
   /// Pointer to tool registry
   IRichToolRegistry * m_toolReg;
+
+  /// Detector Description service
+  IDataProviderSvc * m_DDS;
 
   /// Message service printout level
   int m_msgLevel;

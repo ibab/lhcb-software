@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.5 2003-07-03 14:46:40 jonesc Exp $
+// $Id: RichRecToolBase.cpp,v 1.6 2003-08-12 13:36:31 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -20,9 +20,10 @@ RichRecToolBase::RichRecToolBase( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : AlgTool ( type, name, parent ),
-    m_toolReg(0),
-    m_msgLevel(0) {
-  
+    m_toolReg  ( 0 ),
+    m_DDS      ( 0 ),
+    m_msgLevel ( 0 ) {
+
   declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
 
 }
@@ -43,14 +44,27 @@ StatusCode RichRecToolBase::initialize() {
     msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
     return StatusCode::FAILURE;
   }
-  
+
   return StatusCode::SUCCESS;
+}
+
+IDataProviderSvc * RichRecToolBase::detSvc() {
+
+  if ( !m_DDS ) {
+    StatusCode sc = service( "DetectorDataSvc", m_DDS, true );
+    if ( sc.isFailure() ) {
+      throw GaudiException("Service [DetectorDataSvc] not found", name(), sc);
+    }
+  }
+
+  return m_DDS;
 }
 
 StatusCode RichRecToolBase::finalize() {
 
-  // Release all tools
+  // Release all tools and services
   releaseTool( m_toolReg );
-  
+  if ( m_DDS ) { m_DDS->release(); m_DDS = 0; }
+
   return StatusCode::SUCCESS;
 }
