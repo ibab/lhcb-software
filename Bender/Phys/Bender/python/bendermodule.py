@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.21 2005-02-08 11:29:30 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.22 2005-02-10 18:37:01 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2005/02/08 11:29:30  ibelyaev
+#  add startup file
+#
 # =============================================================================
 """ This is a major Python Module for Bender application """
 # =============================================================================
@@ -71,8 +74,10 @@ for lib in _libs_ :
 
 import benderstr
 import bendersmartrefs
-import benderconfig
 import bendermath
+import bendermatrix
+import benderconfig
+import benderrels 
 
 # =============================================================================
 # The END 
