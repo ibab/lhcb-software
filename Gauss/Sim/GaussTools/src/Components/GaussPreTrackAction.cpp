@@ -77,7 +77,7 @@ StatusCode GaussPreTrackAction::initialize ()
   StatusCode status = GiGaTrackActionBase::initialize() ; 
   if( status.isFailure() ) 
     { return Error("Could not intialize base class GiGaTrackActionBase!", 
-                   status ) ; } 
+                   status ) ; }
   
   return Print("Initialized successfully" , 
                StatusCode::SUCCESS        , MSG::VERBOSE);

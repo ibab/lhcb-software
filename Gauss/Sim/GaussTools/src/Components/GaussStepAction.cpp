@@ -43,15 +43,9 @@ GaussStepAction::GaussStepAction
   const std::string& name   ,
   const IInterface*  parent ) 
   : GiGaStepActionBase ( type , name , parent )
-  // points where a secondary was produced to be store
-  , m_storePointsOfSecondaries ( false )
-  // points where a secondary was produced but not a delta-electron
-  , m_storeNotDeltaE ( false )
   // points where hits where generated to be stored
   , m_storeHitPoints ( false )
 {
-  declareProperty ("StorePointsOfSecondaries", m_storePointsOfSecondaries);
-  declareProperty ("StoreNotDeltaE", m_storeNotDeltaE);
   declareProperty ("StoreHitPoints", m_storeHitPoints);  
 };
 // ============================================================================
@@ -72,9 +66,8 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
 {
   G4Track* track = step->GetTrack();
   G4VUserTrackInformation* uinf = track->GetUserInformation(); 
-  GaussTrackInformation*    ginf = 
-    ( 0 == uinf )  ? 0 : static_cast<GaussTrackInformation*> ( uinf );
-
+  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
+  
   G4ParticleDefinition* partdef=track->GetDefinition();
 
   /// if a hit created, append step
@@ -93,15 +86,7 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
       ginf->setAppendStep(true); 
       return;
     }
-
-  //   if  there are some secondaries, the step must be appended  
-  //  else if ( m_storePointsOfSecondaries && 
-  //          0 != stepMgr()->GetSecondary() && 
-  //         0 != stepMgr()->GetSecondary()->size   () ) 
-  //  { 
-  //    ginf->setAppendStep(true); 
-  //    return;
-  //  }
+  
 };
 // ============================================================================
 

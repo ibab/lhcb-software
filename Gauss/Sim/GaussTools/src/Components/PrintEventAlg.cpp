@@ -57,10 +57,10 @@ PrintEventAlg::PrintEventAlg(const std::string& name,
   , m_vertices    ( MCVertexLocation::Default   )
   , m_hits        ( MCHitLocation::OTHits   )
 { 
-  declareProperty( "Particles" , m_particles  ); 
-  declareProperty( "Vertices"  , m_vertices   ); 
-  declareProperty( "Hits"      , m_hits   ); 
-  declareProperty("DecayDepth" , m_depth = 99);
+  declareProperty( "Particles" , m_particles); 
+  declareProperty( "Vertices"  , m_vertices); 
+  declareProperty( "Hits"      , m_hits); 
+  declareProperty( "DecayDepth" , m_depth = 99);
 };
 
 // ============================================================================
@@ -175,7 +175,7 @@ StatusCode PrintEventAlg::execute()
               << m_vertices << "'  \t" 
               << obj->size() 
               << endreq ;
-          Stat stat( chronoSvc() , "#vertices" , obj->size() ) ; 
+          Stat stat( chronoSvc() , "#vertices" , obj->size() ) ;
         } 
       else 
         { 
@@ -212,9 +212,9 @@ void PrintEventAlg::printDecayTree
   
   if(!p) 
     {
-      log << MSG::INFO << " Particle not found " << mother->particleID().pid() 
-          << endreq;
-    name="XXXX";
+      log << MSG::INFO << " Particle not recognized " 
+          << mother->particleID().pid() << endreq;
+      name="XXXX";
     }
   else
     {

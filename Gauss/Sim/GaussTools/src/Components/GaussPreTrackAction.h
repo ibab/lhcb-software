@@ -7,6 +7,7 @@
 #include <vector>
 // GiGa
 #include "GiGa/GiGaTrackActionBase.h"
+
 // forward declarations 
 template <class TYPE> class GiGaFactory;
 class G4Track;
@@ -28,12 +29,10 @@ class GaussPreTrackAction: virtual public GiGaTrackActionBase
 {
   /// friend factory for instantiation 
   friend class GiGaFactory<GaussPreTrackAction>;
-
-public: 
   
   ///
 protected:
-
+  
   /** standard constructor 
    *  @see GiGaTrackActionBase 
    *  @see GiGaBase 
@@ -87,7 +86,7 @@ private:
   GaussPreTrackAction() ; ///< no default constructor
   GaussPreTrackAction( const GaussPreTrackAction& ) ; ///< no copy 
   GaussPreTrackAction& operator=( const GaussPreTrackAction& ) ;
-
+  
 };
 
 // ============================================================================

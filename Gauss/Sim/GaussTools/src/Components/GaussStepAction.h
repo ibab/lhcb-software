@@ -51,8 +51,6 @@ private:
   GaussStepAction( const GaussStepAction& ); ///< no copy  
   GaussStepAction& operator=( const GaussStepAction& ) ; ///< no = 
 
-  bool m_storePointsOfSecondaries;
-  bool m_storeNotDeltaE;
   bool m_storeHitPoints;
 };
 // ============================================================================
