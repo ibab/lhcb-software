@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.cpp,v 1.3 2002-07-25 15:54:36 ibelyaev Exp $
+// $Id: NeutralPPCreator.cpp,v 1.4 2002-09-06 14:47:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/25 15:54:36  ibelyaev
+//  remove numerical constants
+//
 // Revision 1.2  2002/07/18 17:57:42  gcorti
 // do no set charge
 //
@@ -147,6 +150,9 @@ StatusCode NeutralPPCreator::process
   // shower shape 
   if( 0 != position ) 
     {
+      
+      std::cout << " shower shape is filled ! " << std::endl ;
+      
       const double showerShape = 
         position->spread()( 1 , 1 )+ position->spread()( 2 , 2 ) ;
       particle-> pIDDetectors().
@@ -155,6 +161,9 @@ StatusCode NeutralPPCreator::process
   
   if( CaloHypotheses::Pi0Merged == hypo->hypothesis() ) 
     {
+      
+      std::cout << " shower mass is filled ! " << std::endl ;
+
       const CaloMomentum* momentum = hypo->momentum ();
       // shower mass
       const double showerMass  = momentum->momentum().m() ;

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GlobalReco
-version           v1r0
+version           v1r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -14,6 +14,9 @@ version           v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src 
+
+
+set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 
 #============================================================================
 # Used packages.

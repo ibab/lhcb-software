@@ -4,15 +4,19 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-09-06 - Ivan Belyaev
+ - add options file for NeutralPP creator algorithm 
+ - put a minor change into algoriothm itself  
+
 !====================== GlobalReco v1r0 2002-07-29 ===========================
 ! 2002-07-26 - Gloria Corti
- - dd detectorID information for electrons when making ProtoParticles 
+ - dd detectorID information for electrons when making ProtoParticles
    in ChargedProtoPAlg, this implies introducing options files
  - put as options to use upstream tracks or not in making ProtoParticles
    (by default not taken) in ChargedProtoPAlg
  - fix bug for assuming TrState() at z=0 and in iteration loop, use also
    velo unique tracks to make Primary Vertices (K.Ciba)
- - use VeloDet v7r* 
+ - use VeloDet v7r*
 
 ! 2002-07-25 - Ivan Belyaev
  - src/NeutralPPCreator.cpp  remove artificial numerical temporary constants.
@@ -28,8 +32,8 @@
  - src/NeutralPPcrator.h,.cpp - new files
    new algoroithm for creationof neutral protoparticles.
    It is temporary preliminary version
-   Need to fix a.s.a.p. : 
-   hardcoded values for ID techniques from 100 to 103 beed to be  
+   Need to fix a.s.a.p. :
+   hardcoded values for ID techniques from 100 to 103 beed to be
    replaced with enums from ProtoParticle class (as soon as they defined)
 
 
@@ -38,4 +42,4 @@
    (only rich and muonpid at the moment)
  - Introduce algorithm and tool for primary vertex reconstruction
 
-   
+
