@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.36 2002-10-30 13:19:47 gcorti Exp $
+! $Id: release.notes,v 1.37 2002-11-06 08:33:01 odie Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-11-05 - Olivier Dormond
+ - Added two new methods to the DecayFinder:
+    - std::string decay( void ) : Which tells you what the current decay is.
+    - StatusCode setDecay( std::string ) : To change the decay to a new one.
+   When changing a decay, if it fails to compile the new one, the old one will
+   be retained.
+ - It's now possible to set the decay to an empty string in the job option
+   file. In such a case, looking for the decay will fails until setDecay has
+   been successfully called and warning will appear in the log for the
+   initialization as well as each call to hasDecay/findDecay.
 
 !=========================== DaVinciTools v6r0 2002-10-30 ===================
 ! 2002-10-29 - Gloria Corti
