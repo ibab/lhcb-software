@@ -3,7 +3,7 @@ GiGa.StepSeq.Members             += { "RichG4StepAnalysis3/RichStep" } ;
 
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
-GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
+//GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
 
 
 GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
