@@ -5,7 +5,9 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!======================== MuonBackground v1r0 2003-03-24 =====================
+! 2003-04-04 - Marco Cattaneo
+ - Brunel.opts: Take histograms from standard place ($LHCBHOME/Sim)
+
 ! 2003-03-24 - Alessia Satta
   - First release of the package
 

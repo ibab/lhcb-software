@@ -2,7 +2,7 @@ package MuonBackground
 version v1r0
 
 # ================ structure ===========================================
-branches src cmt MuonBackground options doc
+branches src cmt options doc
 
 # ================ own includes ========================================== 
 include_dirs      $(MUONBACKGROUNDROOT)     
