@@ -13,7 +13,7 @@
 
 <!ENTITY SelResult.xml        SYSTEM "SelResult.xml"      >
 
-<!ENTITY EffCheckEvent.xml        SYSTEM "EffCheckEvent.xml"      >
+<!ENTITY EffCheckResult.xml        SYSTEM "EffCheckResult.xml"      >
 
 ]>
 
@@ -39,7 +39,7 @@
     &ProtoParticle.xml;
 
     <!-- Efficiency Monitor -->
-    &EffCheckEvent.xml;
+    &EffCheckResult.xml;
 
   </package>
 

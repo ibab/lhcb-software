@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.50 2004-06-18 09:08:36 cattanem Exp $
+! $Id: release.notes,v 1.51 2004-06-25 17:42:33 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+! 2004-06-25 - P. Koppenburg for P. Igo-Kemenes
+ - xml/EffCheckEvent.xml -> xml/EffCheckResult.xml
+   . Renamed and some additions.
+   
 !======================== PhysEvent v8r4 2004-06-18 ========================
 ! 2004-06-18 - P. Koppenburg for P. Igo-Kemenes and C. Jacoby
  - xml/EffCheckEvent.xml
