@@ -21,13 +21,9 @@ include_dirs $(HLTEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use 	LHCbKernel	v2r*    Kernel
-use     EventKernel     v2r*    Event
 use     VeloEvent       v12r*   Event
 use     ITEvent         v12r*   Event
 use     OTEvent         v12r*   Event
-
-use     CLHEP           v*
 
 use 	GaudiObjDesc	v5r*    -no_auto_imports
 
@@ -36,8 +32,8 @@ use 	GaudiObjDesc	v5r*    -no_auto_imports
 #============================================================================
 #---- Produce Header-Files and from XML description
 private
-document obj2doth L0EventObj2Doth ../xml/*.xml
-document obj2dict L0EventObj2Dict ../xml/*.xml    
+document obj2doth HltEventObj2Doth ../xml/*.xml
+document obj2dict HltEventObj2Dict ../xml/*.xml    
 
 public
 library          HltEvent    ../src/*.cpp

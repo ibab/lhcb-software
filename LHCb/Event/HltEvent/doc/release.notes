@@ -4,7 +4,7 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
-!======================== HltEvent v4r0 2003-09-xx ========================
+!======================== HltEvent v4r0 2003-09-25 ========================
 ! 2003-09-08 - Olivier Callot
  - New object HltVertex to store the PV found with HLT tracks. They have a list
    of HltTrack*.
