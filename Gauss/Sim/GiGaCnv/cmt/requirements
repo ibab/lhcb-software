@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2002-07-03 08:02:04 ranjard Exp $ 
+# $Id: requirements,v 1.24 2002-07-09 16:35:05 witoldp Exp $ 
 # =============================================================================
 
 package  GiGaCnv 
@@ -9,7 +9,7 @@ branches cmt src doc GiGaCnv
 include_dirs     $(GIGACNVROOT)
         
 use HepMC         v1r2*  Sim
-use GenEvent      v1r*   Event
+use GenEvent      v2r*   Event
 
 use GiGa          v8r*  Sim 
 use Event         v2r*	Event

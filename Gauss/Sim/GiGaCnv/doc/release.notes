@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.23 2002-07-03 08:02:04 ranjard Exp $
+! $Id: release.notes,v 1.24 2002-07-09 16:35:05 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 !========================= GiGaCnv v6r0 =================================
+
+! 2002-07-09 - W.Pokorski
+  GiGaHepMCCnv - moved to the new Event/GenEvent v2r0
+
 ! 2002-07-03 - W.Pokorski
   GiGaMiscGetEvent - commented lines for retrieving hits
  
