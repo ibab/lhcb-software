@@ -1,10 +1,9 @@
 package Gauss
 version v1r0
 
-branches doc src job options cmt
+branches doc options cmt
 
-use GeneratorModules v0r1 Gen
-
+use GeneratorModules v1r0 Gen
 
 # Main program and standard job options
 use GaudiConf     v6*     
@@ -17,18 +16,19 @@ use GaudiRootDb   v5*
 
 # Histogram persistency
 use HbookCnv      v11r*
-use dbase         v240 SICB
 
+# SICB stuff
+use dbase         v240 SICB
 use SicbCnv       v15r* SICB
 
 #GiGa staff...
-
 use GiGaCnv       v4r*  Sim
 use EvGen         v2r*   Sim
+
 #geometry source 
 use XmlDDDB       v8r*   Det 
 
-# =============== visualization  ========================================================
+# =============== visualization  ===========================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
 set  G4DAWNFILE_PS_VIEWER      "gv"
 set  G4DAWN_MULTI_WINDOW       "1"

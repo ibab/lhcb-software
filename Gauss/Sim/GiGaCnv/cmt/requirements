@@ -1,34 +1,15 @@
-# $Id: requirements,v 1.14 2002-03-04 11:24:48 witoldp Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.13  2002/01/22 18:24:42  ibelyaev
-#  Vanya: update for newer versions of Geant4 and Gaudi
-#
-# Revision 1.12  2001/11/19 18:26:59  ibelyaev
-#  bux fix and the new converter for catalogs
-#
-# Revision 1.11  2001/08/15 14:48:05  ibelyaev
-# update from DetDesc v7 to DetDesc v8
-#
-# Revision 1.10  2001/07/27 11:24:57  ibelyaev
-# bug fix in MCParticles<->MCVertices relations
-#
-# Revision 1.9  2001/07/24 11:13:54  ibelyaev
-# package restructurization(III) and update for newer GiGa
-# 
+# $Id: requirements,v 1.15 2002-03-05 09:14:20 ranjard Exp $ 
 # =============================================================================
 
 package  GiGaCnv 
 version  v4r0
 
-branches cmt src doc options GiGaCnv 
+branches cmt src doc GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
 
 use HepMC         v1r2  Sim
-use GeneratorObjects v0r1 Gen
+use GeneratorObjects v1r0 Gen
 
 use GiGa          v7r*  Sim 
 use LHCbEvent     v12r*	Event
