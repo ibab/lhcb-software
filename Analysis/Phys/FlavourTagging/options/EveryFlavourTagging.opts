@@ -1,0 +1,13 @@
+#include "$FLAVOURTAGGINGOPTS/MuonFlavourTagging.opts"
+#include "$FLAVOURTAGGINGOPTS/ElectronFlavourTagging.opts"
+#include "$FLAVOURTAGGINGOPTS/KaonFlavourTagging.opts"
+
+MuonTagging.OutputLevel     = 4;
+ElectronTagging.OutputLevel = 4;
+KaonTagging.OutputLevel     = 4;
+
+ApplicationMgr.TopAlg += { "FlavourTaggingSummary" };
+FlavourTaggingSummary.TagsLocations = { "/Event/Phys/User/Tags/Muon",
+                                        "/Event/Phys/User/Tags/Electron",
+                                        "/Event/Phys/User/Tags/Kaon" };
+
