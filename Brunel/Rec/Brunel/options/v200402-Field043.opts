@@ -47,18 +47,18 @@ HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 
 // POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 412400
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field043.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 411300
 PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // GaudiDb
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
+//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300-Field043.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
 
 // POOL
-DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Pool411300-Field043.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 // GaudiDb
 //DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";

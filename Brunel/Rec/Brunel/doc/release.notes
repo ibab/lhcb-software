@@ -14,6 +14,10 @@ Purpose: LHCb reconstruction program
   . Added example job options (Copy.opts) for copying one or more files. Can be
     used to merge several DSTs, or to produce reduced (or extended...) DSTs
 
+- Persistency changes
+  . New version of RawBuffer for OT: new bank structure, multiple hit
+    capability, new straw numbering (OTDAQ v2r0)
+
 - New tuning
   . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
   . Tuning of tracking for Field045 (LongTrack v1r11, TrKShort v1r3)
