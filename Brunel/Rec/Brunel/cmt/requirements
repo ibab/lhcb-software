@@ -58,7 +58,7 @@ use Magnet        v1r1  Det
 use EventSys     v12r6  Event
 
 # SicB event data persistency
-use SicbCnv      v17r2  SICB
+use SicbCnv      v17r3  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r4   SICB
@@ -87,7 +87,7 @@ use CaloTools      	v4r4 	Calo
 use CaloAlgs       	v7r1 	Calo
 use CaloMonitor         v1r1    Calo
 use CaloAssociators	v3r0	Calo
-use CaloRec		v2r3	Calo
+use CaloRec		v2r4	Calo
 use CaloTrackTools	v1r4	Calo
 
 # Velo
@@ -119,6 +119,7 @@ use TrMatching          v2r1    Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
 use UpstreamPR		v2r3	Tr
+use VeloTT		v1r0	Tr
 
 # Muon
 use MuonKernel          v2r1    Muon

@@ -139,6 +139,14 @@ ApplicationMgr.DLLs += { "UpstreamPR" };
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };
 BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
+
+// VeloTT tracking
+ApplicationMgr.DLLs += { "VeloTT" };
+BrunelRecoTrSeq.Members += { "VeloTTFind" };
+#pragma print off
+#include "$VELOTTROOT/options/Brunel.opts"
+#pragma print on
+
 BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #pragma print off
 #include "$TRCLEANEXROOT/options/Brunel.opts"
