@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v1r8 2004-11-18 =======================
 ! 2004-10-13 - Chris Jones
  - Update for new RichPID object
 
