@@ -1,8 +1,11 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.7 2002-05-15 14:25:25 ibelyaev Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.8 2002-06-03 09:52:36 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/15 14:25:25  ibelyaev
+//  bug fix
+//
 // Revision 1.6  2002/05/11 18:25:47  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -168,78 +171,93 @@ namespace  VolumeIntersectionIntervals
     typedef ILVolume::Intersections::const_iterator         Iter      ; 
     typedef ISolid::Tick                                    Tick      ;
     typedef ILVolume::Interval                              Interval  ; 
+    const double tol = 1.e-6;  // Needed to test equalities...
     ///
     ///
-    for( Iter iterTop = own.begin(); own.end() != iterTop ; ++iterTop ) 
-      {
-        const Interval& intervalTop = iterTop->first  ;
-        const Material* matTop      = iterTop->second ;
-        // temporary container of indexes of related intervals 
-        IndexCont tmpIndex; 
-        for( Iter iter = child.begin();  child.end() != iter ; ++iter )
-          {
-            const Interval& intervalLoc = iter->first;
-            
-            if( intervalLoc.second <= intervalTop.first  ) {
-              ; // the second interval is lower  then the first one! it's OK
-            } 
-            else if( intervalTop.first  <= intervalLoc.first && 
-                     intervalLoc.second <= intervalTop.second ) {
-              // the second interval is inside      the first one! it's OK
-              tmpIndex.push_back( iter - child.begin() );
-            }
-            else if( intervalTop.second <= intervalLoc.first  ) {
-              ; // the second interval in higher then the first one! it's OK 
-            } 
-            else {
-              /** this situation means that something wrong
-               *  with geometry description!!!
-               */
-              return StatusCode(15) ;
-            }
-             // ? RETURN !!!
-          }  // end of loop over the child container 
+    for( Iter iterTop = own.begin(); own.end() != iterTop ; ++iterTop ) {
+      const Interval& intervalTop = iterTop->first  ;
+      const Material* matTop      = iterTop->second ;
+      // temporary container of indexes of related intervals 
+      IndexCont tmpIndex; 
+      for( Iter iter = child.begin();  child.end() != iter ; ++iter ) {
+        const Interval& intervalLoc = iter->first;
+        
+        if( intervalLoc.second <= (intervalTop.first+tol)  ) {
+          ; // the second interval is lower  then the first one! it's OK
+        } else if( intervalTop.first  <= (intervalLoc.first+tol) && 
+                   intervalLoc.second <= (intervalTop.second+tol) ) {
+          // the second interval is inside      the first one! it's OK
+          tmpIndex.push_back( iter - child.begin() );
+        } else if( intervalTop.second <= (intervalLoc.first+tol)  ) {
+          ; // the second interval in higher then the first one! it's OK 
+        } else {
+          /** this situation means that something wrong
+           *  with geometry description!!!
+           */
+          std::cout << " error code 15 : interval " 
+                    << intervalLoc.first << " "
+                    << intervalLoc.second << " master "
+                    << intervalTop.first << " " 
+                    << intervalTop.second << std::endl;
+          return StatusCode(15) ;
+        }
+        // ? RETURN !!!
+      }  // end of loop over the child container 
+      /// 
+      // try to merge intervals 
+      Tick leftTick       = intervalTop.first  ; 
+      Tick mostRightTick  = intervalTop.second ;
+      const  Material*  prevMatLocal = 0;
+      for( IndexCont::const_iterator it = tmpIndex.begin(); 
+           tmpIndex.end() != it ; ++it ) { 
+        Iter              iterLocal     = child.begin() + (*it) ; 
+        const  Interval&  intervalLocal = iterLocal->first  ;
+        const  Material*  matLocal      = iterLocal->second ;
         /// 
-        // try to merge intervals 
-        Tick leftTick       = intervalTop.first  ; 
-        Tick mostRightTick  = intervalTop.second ;
-        for( IndexCont::const_iterator it = tmpIndex.begin(); 
-             tmpIndex.end() != it ; ++it ) 
-          { 
-            Iter              iterLocal     = child.begin() + (*it) ; 
-            const  Interval&  intervalLocal = iterLocal->first  ;
-            const  Material*  matLocal      = iterLocal->second ;
-            /// 
-            if( leftTick <= intervalLocal.first && 
-                intervalLocal.first < mostRightTick )
-              {
-                if( intervalLocal.first != leftTick ) 
-                  { *out++ =  
-                      ILVolume::Intersection( Interval( leftTick , 
+        if( leftTick <= (intervalLocal.first + tol) && 
+            intervalLocal.first < mostRightTick ) {
+          if( leftTick <= (intervalLocal.first - tol) ) { 
+            *out++ =  ILVolume::Intersection( Interval( leftTick , 
                                                         intervalLocal.first ), 
-                                              matTop  ) ; }
-                leftTick = intervalLocal.first;
+                                              matTop  ) ; 
+          }
+          leftTick = intervalLocal.first;
                 
-                if( intervalLocal.second <= mostRightTick ) 
-                  { *out++ =  
-                      ILVolume::Intersection( Interval( leftTick , 
-                                                        intervalLocal.second), 
-                                              matLocal ) ; }
-                else                               // geometry error!!!
-                  { return StatusCode(16) ; }      // RETURN !!!
-                leftTick = intervalLocal.second;
-              }
-            else                                  // geometry error!!!
-              {
-                return StatusCode(17) ; 
-              }         // RETURN !!!
-          }  // end of loop over temporary index container 
-        if( leftTick != mostRightTick ) 
-          { *out++ = 
-              ILVolume::Intersection( Interval( leftTick , mostRightTick ) ,
-                                      matTop  ) ; } 
-        leftTick = mostRightTick;    
-      }  // end of loop over own intervals
+          if( intervalLocal.second <= (mostRightTick+tol) ) { 
+            *out++ = ILVolume::Intersection( Interval( leftTick , 
+                                                       intervalLocal.second), 
+                                             matLocal ) ; 
+          } else { // geometry error!!!
+            return StatusCode(16) ; 
+          }      // RETURN !!!
+
+          //=== This is a hack, to accept overlaping volumes with same
+          //=== material without complaining...
+        } else if ( (matLocal == prevMatLocal) && 
+                    (intervalLocal.second <= (mostRightTick+tol) ) ) {
+          if ( intervalLocal.second > leftTick  ) {
+            *out++ = ILVolume::Intersection( Interval( leftTick , 
+                                                       intervalLocal.second), 
+                                             matLocal ) ; 
+          }
+        } else {                                 // geometry error!!!
+          std::cout << " error code 17 : interval " 
+                    << intervalLocal.first << " "
+                    << intervalLocal.second << " master "
+                    << leftTick << " " 
+                    << mostRightTick << std::endl;
+          return StatusCode(17) ; 
+        }         // RETURN !!!
+        leftTick     = intervalLocal.second;
+        prevMatLocal = matLocal;
+      }  // end of loop over temporary index container 
+
+      if( leftTick <= (mostRightTick - tol) ) { 
+        *out++ = ILVolume::Intersection( Interval( leftTick , mostRightTick ) ,
+                                         matTop  ) ; 
+      } 
+      leftTick = mostRightTick;    
+    }  // end of loop over own intervals
     
     /// return status 
     return StatusCode::SUCCESS;
