@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.h,v 1.3 2004-03-16 13:37:37 jonesc Exp $
+// $Id: MCRichDigitsToRawBufferAlg.h,v 1.4 2004-06-17 12:00:04 cattanem Exp $
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
 
@@ -8,8 +8,8 @@
 // gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 
-// base clase
-#include "RichUtils/RichAlgBase.h"
+// base class
+#include "RichKernel/RichAlgBase.h"
 
 // Event Model
 #include "Event/DAQTypes.h"

@@ -1,9 +1,9 @@
-// $Id: BuildMCRichDigitLinks.h,v 1.1 2003-11-10 14:59:58 jonrob Exp $
+// $Id: BuildMCRichDigitLinks.h,v 1.2 2004-06-17 12:00:04 cattanem Exp $
 #ifndef RICHDAQ_BUILDMCRICHDIGITLINKS_H 
 #define RICHDAQ_BUILDMCRICHDIGITLINKS_H 1
 
-// base clase
-#include "RichUtils/RichAlgBase.h"
+// base class
+#include "RichKernel/RichAlgBase.h"
 
 // Gaudi framework
 #include "GaudiKernel/SmartDataPtr.h"

@@ -1,12 +1,12 @@
-// $Id: RawBufferToRichDigitsAlg.h,v 1.3 2004-03-16 13:37:37 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.h,v 1.4 2004-06-17 12:00:04 cattanem Exp $
 #ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 
 #define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
 
 // gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 
-// base clase
-#include "RichUtils/RichAlgBase.h"
+// base class
+#include "RichKernel/RichAlgBase.h"
 
 // RichDAQ utility classes
 #include "RichDAQDefinitions.h"
