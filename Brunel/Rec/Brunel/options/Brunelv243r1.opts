@@ -14,7 +14,8 @@ EventSelector.Input = {"JOBID='86160'"}; // Signal, evtype 412100
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelTrLight.opts" // Standard tracking
+#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
+#include "$BRUNELOPTS/BrunelTrSiTT12.opts"  // dbase v243r1 tracking layout
 #include "$FWTRACKROOT/options/BrunelLight.opts" // Forward tracking
 
 //--------------------------------------------------------------

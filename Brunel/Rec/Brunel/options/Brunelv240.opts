@@ -14,7 +14,8 @@ EventSelector.Input = {"JOBID='81091'"}; // Signal, evtype 412100
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelOldTT1.opts"  // Pre dbase v242 TT1 geometry
+ToolSvc.ITGeometryTool.newCDF    = false;  // old CDF format until dbase v242
+ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242r1
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

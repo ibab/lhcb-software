@@ -19,16 +19,13 @@ BrunelMoni.DetectorList = { "IT", "OT", "Tr", "TRACK", "CALO", "TRIGGER" };
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
+BrunelMoniITSeq.Members   = { "ITMCHitsMonitor", 
+                              "ITDigitMonitor" };
 BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off
 
-//--------------------------------------------------------------
-// No IT monitoring by default (produces ntuple). Uncomment to switch on
-//--------------------------------------------------------------
-// ApplicationMgr.ExtSvc += { "NTupleSvc" };
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
-// BrunelMoniITSeq.Members = { "ITDigiMonitor" };
+// No "ITHitsMonitor" by default, NTuple cannot be switched off
 
 //--------------------------------------------------------------
 // No Fwtrack monitoring by default (produces ntuple). Uncomment to switch on

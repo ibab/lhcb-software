@@ -4,12 +4,12 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9r0>20020212 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>20020215 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
    Added L0 pileup veto. Removed Fortran L0 code.
    Added TT1 to IT reconstruction
-   --> Use this version to reconstruct data produced with dbase v240 to v243r*
+   --> Use this version to reconstruct data produced with dbase v240 to v243r1
 
    Functionality changes
    ---------------------
@@ -33,7 +33,8 @@ Purpose: LHCb reconstruction program
                   Remove L0SicbCnv
    - Brunel<dbver>.opts (dbver=v240, v240r1, v241, v242, v242r1, v243r1): 
        Main options file for supported databases
-   - BrunelTrLight.opts, BrunelTrMinus.opts, BrunelOldTT1.opts:
+   - BrunelTrLight.opts, BrunelTrMinus.opts, 
+     BrunelTrCrossTT1.opts, BrunelTrTT1.opts, BrunelTrTT12.opts:
        Database specific options for tracking
    - BrunelInputs.opts, BrunelUser.opts, BrunelStatic.opts
        Obsolete files, removed.

@@ -1,0 +1,9 @@
+// Tracking stations layout for database v243r1
+// (three seeding stations, all Silicon split TT1)
+OTDigitize.numOTStations = 5;
+OTDigitize.firstOTStation = 3;
+trCreat.firstOTStation = 3;
+trCreat.firstStation = 1;
+trCreat.lastStation = 5;
+OTDigitChecker.numStations = 3;
+OTDigitChecker.firstOTStation = 3;

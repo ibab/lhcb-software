@@ -1,3 +1,0 @@
-// Brunel options to use old (pre dbase v242) TT1 geometry
-ToolSvc.ITGeometryTool.newCDF = false;
-ToolSvc.ITGeometryTool.newLayout = false;

@@ -14,7 +14,10 @@ EventSelector.Input = {"JOBID='85475'"}; // Signal, evtype 61
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelTrLight.opts" // Standard tracking
+#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
+#include "$BRUNELOPTS/BrunelTrCrossTT1.opts"  // Pre dbase v242r1 tracking layout
+ToolSvc.ITGeometryTool.newCDF = true;     // new CDF format from dbase v242
+
 #include "$FWTRACKROOT/options/BrunelLight.opts" // Forward tracking
 
 //--------------------------------------------------------------
