@@ -58,10 +58,8 @@ if ($?LS_SUBCWD) then
 # == in batch copy the executable and options files to $WORKDIR
   cp $MYJOBROOT/$CMTDEB/Boole.exe tmpjob_$Dver.exe
   cp $MYJOBROOT/options/*.opts .
-  cp $MYJOBROOT/options/Boole.cards tmpjob.cards
   cp $MYJOBROOT/job/$SuppFile $SuppFile
   setenv BOOLEOPTS .
-  setenv SICBCARDS tmpjob.cards
 else
 # == in interactive create a link to the executable
   ln -fs $MYJOBROOT/$CMTDEB/Boole.exe tmpjob_$Dver.exe
@@ -73,7 +71,6 @@ valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --supp
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
 if ($?LS_SUBCWD) then
-  rm -f tmpjob.cards
   rm -f *.opts
 # if in batch copy output files to user directories
   ls *.* >! RETURN

@@ -3,12 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v2r1>2003-10-15 Boole v2r1</A></H1><PRE>
+</PRE><H1><A NAME=v2r1>2003-10-16 Boole v2r1</A></H1><PRE>
 
 - Bug fixes
    - MuonBackground was not finding new SpilloverAlg (MuonBackground v1r4)
    - Spilloveralg was filling NextNext event instead of PrevPrev (DigiAlg v2r0p1)
    - Fix bugs 1653, 1654 (BooleMoni.opts, BooleMoniProd.opts)
+   - Remove some obsolete sicb related commands from Boole.job and valgrind.job
 
 - Packaging changes
    - Remove unneccessary MuonUtils package

@@ -83,7 +83,6 @@ endif
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
 if ($?LS_SUBCWD) then
-  rm -f tmpjob.cards
   rm -f *.opts
 # if in batch copy output files to user directories
   ls *.* >! RETURN
