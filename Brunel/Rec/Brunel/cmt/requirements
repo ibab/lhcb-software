@@ -81,7 +81,7 @@ use TrSicbCnv    v6r1   SICB
 # Brunel utilities
 use BrunelKernel v5r0   Rec
 use BrunelSicb   v4r0   Rec
-#use BrunelAlgs   v1r0   Rec
+use BrunelAlgs   v1r0   Rec
 
 # L0 trigger
 use L0Calo              v6r0    L0
@@ -129,9 +129,10 @@ use TrMatching          v1r0    Tr
 use TrCleanEx           v1r0    Tr
 
 # Muon
-use MuonAlgs	v2r1	Muon
-use MuonRec     v2r0	Muon
-use MuonID      v2r0	Muon
+use MuonAlgs		v2r1	Muon
+use MuonRec     	v2r0	Muon
+use MuonID      	v2r0	Muon
+use MuonAssociators	v1r0	Muon
 
 # Rich
 use RichMonitor v1r0    Rich

@@ -11,10 +11,8 @@ EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 
 // Instantiate Brunel phase to filter containers and create relations
 ApplicationMgr.TopAlg += { "BrunelPhase/BrunelOutput" };
-BrunelOutput.DetectorList = { "Relations", "Filters" };
+BrunelOutput.DetectorList = { "Filters" };
 
-// Relations phase is a place holder for creating any relations not already
-// created in the monitoring
 
 // Filter algorithms
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/PrsFilter" };
@@ -22,9 +20,14 @@ BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/SpdFilter" };
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/EcalFilter" };
 BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare" };
 
-//ApplicationMgr.DLLs += { "BrunelAlgs" };
-//BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
-//MCParticleFilter.OutputLevel = 2;
+// Recreate the Muon table after coordinate filtering
+ApplicationMgr.DLLs += { "MuonAssociators" };
+BrunelOutputFiltersSeq.Members += { "MuonCoord2MCParticleAlg" };
+
+// Filter the MCParticles/MCVertices  after everything else
+ApplicationMgr.DLLs += { "BrunelAlgs" };
+BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
+MCParticleFilter.OutputLevel = 2;
 
 // Define DST content
 ApplicationMgr.OutStream += { "BrunelDstWriter" };
@@ -112,7 +115,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/OTClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/CaloClusters2MCParticles#1"
-  // MuonCoords2MCParticles (needed by L0 study)
+, "/Event/Rec/Relations/MuonCoords2MCParticles#1"
   //, "/Event/Rec/Relations/TrBest2MCP#1"
   , "/Event/Rec/Relations/TrForward2MCP#1"
   //, "/Event/Rec/Relations/TrMatch2MCP#1"
