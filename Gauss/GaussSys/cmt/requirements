@@ -1,5 +1,5 @@
 package GaussSys
-version v18r0
+version v18r1
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v18r0	  Sim
+use Gauss		v18r1	  Sim
 
 # Generator stuff ...
 use GENSER		v1r020p0  Gen

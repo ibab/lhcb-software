@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!======================= GaussSys v18r1 2004-10-29 =============
+! 2004-10-29 - Florence RANJARD
+ - requirements - uses LHCb v16r3 and geant4 6.2.p02
+
 !======================= GaussSys v18r0 2004-09-13 ==============
 ! 2004-09-13 - Florence RANJARD
  - requirements - uses PYTHIA, pdflib and Photos from GENSER_0_2_0
