@@ -1,9 +1,9 @@
 package DetSys
-version v1r4
+version v1r5
 
 branches cmt doc
 
-use DetDesc	   v11r8	Det
+use DetDesc	   v11r9	Det
 use VeloDet        v8r4 	Det     
 use ITDet          v1r3		Det     
 use OTDet          v3r3		Det
