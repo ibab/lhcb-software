@@ -6,6 +6,8 @@ version v3r1
 # =============================================================================
 branches doc options cmt job data
 
+# version_strategy first_choice
+
 # =============================================================================
 # dependencies 
 # =============================================================================
@@ -16,7 +18,7 @@ use GeneratorModules v2r* Gen
 use GaudiConf     v6*     
 
 # GAUDI framework
-use GaudiSys      v10r*
+use GaudiSys      v10r3
 
 # ROOT event persistency
 use GaudiRootDb   v8r*
@@ -26,18 +28,18 @@ use DbCnv         v7r* Event
 use HbookCnv      v12r*
 
 # Access to magnetic field service
-use dbase         v245r0 SICB
+use dbase         v247r0 SICB
 use Magnet        v1r*  Det
 
 #GiGa staff...
-use GiGaCnv       v5r*  Sim
+use GiGaCnv       v6r*  Sim
 use GaussImports  v1r*  Sim 
 
 # optional generator: 
 #use EvGen         v3r*  Sim 
 
 #geometry source 
-use XmlDDDB       v12r*   Det 
+use XmlDDDB       v12r1   Det 
 
 # =============================================================================
 # Essential environment variables 

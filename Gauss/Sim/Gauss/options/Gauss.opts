@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.11 2002-05-24 10:07:39 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.12 2002-07-03 08:08:56 ranjard Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -36,9 +36,9 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
-#include "$GAUSSOPTS/GaussRootIO.opts"
-#include "$GAUSSOPTS/GaussTape.opts"
-GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+//#include "$GAUSSOPTS/GaussRootIO.opts"
+//#include "$GAUSSOPTS/GaussTape.opts"
+//GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3 ;
@@ -52,7 +52,7 @@ MessageSvc.OutputLevel    = 3 ;
 //MCParticleGun.OutputLevel = 1;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 1 ;
+ApplicationMgr.EvtMax     = 2 ;
 
 
 

@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.11 2002-05-24 10:07:39 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.12 2002-07-03 08:08:56 ranjard Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -43,8 +43,14 @@ Kine.StreamItems              +=
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
+
+Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 
 // Physics List  to be used and its configuration  
@@ -116,7 +122,7 @@ GiGaSvc.RunCommand.BeginOfRunCommands     =
 GiGaSvc.UseVisManager          = true;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
-GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
 GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 //   "Uniform Magnetifc field" 
 // GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";

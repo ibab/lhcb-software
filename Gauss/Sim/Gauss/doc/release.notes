@@ -1,16 +1,20 @@
-! $Id: release.notes,v 1.7 2002-05-23 12:48:44 ranjard Exp $ 
+! $Id: release.notes,v 1.8 2002-07-03 08:08:56 ranjard Exp $ 
 ! =============================================================================
 Package : Gauss
 Package manager : Witek Pokorski
 
-! >>>>>>>>>>>>>>>>>>>>>>>>> Gauss v3r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!========================== Gauss v3r1 ====================================
+! 2002-07-03 - Witek Pokorski
+  requirements - use Event v2r*, GiGaCnv v6r*
+
+! ========================= Gauss v3r0 ====================================
 
 ! 2002-05-23 - Witek Pokorski
  - requirements - remove use of SicbCnv
                   add use of Magnet
  - options      - modify Simulation.opts and Gauss.opts accordingly
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>> Gauss v2r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ========================== Gauss v2r2 =====================================
 
 ! 20020510 - Flr
   release.notes - new format
@@ -143,7 +147,7 @@ Package manager : Witek Pokorski
 ! 20020405 - GenEvent v1r0 - Witek Pokorski
     - New Package 
 
-! >>>>>>>>>>>>>>>>>>>>>>>>> Gauss v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ========================= Gauss v1r0 ===================================
 
 ! 20020304 - Witek Pokorski
   - addaptation for GiGaCnv v4r0 (to use HepMC to G4 converter)
