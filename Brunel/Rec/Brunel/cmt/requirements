@@ -38,7 +38,7 @@ use GaudiObjDesc 	v6r2p1
 use RootHistCnv         v9r1
 
 #-- Database
-use XmlDDDB		v22r0	Det
+use XmlDDDB		v22r1	Det
 use FieldMap		v4r5
 use ParamFiles          v3r4    -no_auto_imports
 
