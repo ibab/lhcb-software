@@ -36,7 +36,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
 {
   //declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
-  declareProperty("TimeGate" , m_gate=20.0) ;
+  declareProperty("TimeGate" , m_gate=25.0) ;
   declareProperty("TimeBits" , m_TimeBits=4) ;
   declareProperty("VerboseDebug" , m_verboseDebug=false) ;
   declareProperty("ApplyTimeJitter" , m_applyTimeJitter=true) ;
@@ -620,7 +620,7 @@ MuonDigitization::createInput(
 																				
                   inputPointer->getHitTraceBack()
                     ->setHitArrivalTime((*iter)->timeOfFlight()
-                                     +spillTime-tofOfLight);
+                                     +spillTime-tofOfLight+0.5);
                   inputPointer->getHitTraceBack()
                     ->setCordinate(distanceFromBoundary);
                   if(ispill>0){
