@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlGenericCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlGenericCnv.cpp,v 1.2 2001-03-13 18:05:18 sponce Exp $
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -529,6 +529,7 @@ StatusCode XmlGenericCnv::initParser() {
   if( 0 != m_xmlParser ) {
     m_xmlParser->setDocumentHandler( this );
     m_xmlParser->setErrorHandler( this );
+		m_xmlParser->setValidationScheme(SAXParser::Val_Auto);
     return StatusCode::SUCCESS;
   }
   return StatusCode::FAILURE;
