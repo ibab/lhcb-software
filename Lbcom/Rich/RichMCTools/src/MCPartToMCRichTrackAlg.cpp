@@ -1,4 +1,4 @@
-// $Id: MCPartToMCRichTrackAlg.cpp,v 1.1 2004-03-16 13:39:14 jonesc Exp $
+// $Id: MCPartToMCRichTrackAlg.cpp,v 1.2 2004-07-12 14:49:59 jonrob Exp $
 // Include files 
 
 // local
@@ -43,8 +43,6 @@ MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
 //=============================================================================
 StatusCode MCPartToMCRichTrackAlg::initialize() 
 {
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   return RichAlgBase::initialize();
 };
@@ -99,7 +97,6 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( MCPartToRichTracks & links,
 //=============================================================================
 StatusCode MCPartToMCRichTrackAlg::finalize() 
 {
-  debug() << "Finalize" << endreq;
   return RichAlgBase::finalize();
 }
 

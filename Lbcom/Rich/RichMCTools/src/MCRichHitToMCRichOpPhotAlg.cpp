@@ -1,4 +1,4 @@
-// $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.2 2004-06-10 14:12:00 jonesc Exp $
+// $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.3 2004-07-12 14:49:59 jonrob Exp $
 // Include files
 
 // local
@@ -44,8 +44,6 @@ MCRichHitToMCRichOpPhotAlg::~MCRichHitToMCRichOpPhotAlg() {};
 //=============================================================================
 StatusCode MCRichHitToMCRichOpPhotAlg::initialize()
 {
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   return RichAlgBase::initialize();
 };
@@ -101,7 +99,6 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( MCRichHitsToPhotons & links,
 //=============================================================================
 StatusCode MCRichHitToMCRichOpPhotAlg::finalize()
 {
-  debug() << "Finalize" << endreq;
   return RichAlgBase::finalize();
 }
 

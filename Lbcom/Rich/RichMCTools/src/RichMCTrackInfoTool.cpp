@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.cpp,v 1.4 2004-07-02 14:14:30 jonrob Exp $
+// $Id: RichMCTrackInfoTool.cpp,v 1.5 2004-07-12 14:49:59 jonrob Exp $
 
 // local
 #include "RichMCTrackInfoTool.h"
@@ -24,10 +24,8 @@ RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
   declareInterface<IRichMCTrackInfoTool>(this);
 }
 
-StatusCode RichMCTrackInfoTool::initialize() {
-
-  debug() << "Initialize" << endreq;
-
+StatusCode RichMCTrackInfoTool::initialize() 
+{
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -48,8 +46,6 @@ StatusCode RichMCTrackInfoTool::initialize() {
 
 StatusCode RichMCTrackInfoTool::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichToolBase::finalize();
 }

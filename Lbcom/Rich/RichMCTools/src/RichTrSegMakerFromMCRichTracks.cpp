@@ -1,4 +1,4 @@
-// $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.2 2004-06-18 09:42:22 jonesc Exp $
+// $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.3 2004-07-12 14:49:59 jonrob Exp $
 
 // local
 #include "RichTrSegMakerFromMCRichTracks.h"
@@ -56,8 +56,6 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize() {
 //=============================================================================
 StatusCode RichTrSegMakerFromMCRichTracks::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichToolBase::finalize();
 }
