@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.5 2002-06-23 13:39:24 ocallot Exp $
+// $Id: VeloSim.cpp,v 1.6 2002-06-24 11:04:36 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -240,7 +240,7 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
     if (NPoints>0){
       // calculate charge to assign to each point
       // taking account of delta ray inhomogeneities
-      vector<double> sPoints(NPoints);
+      std::vector<double> sPoints(NPoints);
       chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
 
       // diffuse charge from points to strips
@@ -308,7 +308,7 @@ long VeloSim::simPoints(MCVeloHit* hit){
 // allocate charge to points
 //=========================================================================
 void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints, 
-                             vector<double>& Spoints, bool spillOver){
+                             std::vector<double>& Spoints, bool spillOver){
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "calculating charge per simulation point" << endreq;
 
@@ -365,7 +365,7 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
 // allocate remaining charge from delta ray distribution
 //=========================================================================
 void VeloSim::deltaRayCharge(double charge, double tol, 
-                             int Npoints, vector<double>& Spoints){
+                             int Npoints, std::vector<double>& Spoints){
   MsgStream log(msgSvc(), name());
   double Tmax= charge;// upper limit on charge of delta ray
   double Tmin= VeloSimParams::deltaRayMinEnergy/VeloSimParams::eVPerElectron; 
@@ -393,7 +393,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
 //=========================================================================
 // allocate the charge to the collection strips
 //=========================================================================
-void VeloSim::diffusion(MCVeloHit* hit,int Npoints, vector<double>& Spoints){
+void VeloSim::diffusion(MCVeloHit* hit,int Npoints, std::vector<double>& Spoints){
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "diffusion of charge from simulation points" 
       << endreq;
@@ -506,7 +506,7 @@ StatusCode VeloSim::coupling(){
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG <<  "--- strip coupling ------" << endreq;
   // sort FEs into order of ascending sensor + strip
-  stable_sort(m_fes->begin(),m_fes->end(),
+  std::stable_sort(m_fes->begin(),m_fes->end(),
               VeloEventFunctor::Less_by_key<const MCVeloFE*>());
 
   // make new container for any added strips
@@ -872,7 +872,7 @@ StatusCode VeloSim::storeOutputData(){
 
 
 // sort FEs into order of ascending sensor + strip
-  stable_sort(m_fes->begin(),m_fes->end(),
+  std::stable_sort(m_fes->begin(),m_fes->end(),
               VeloEventFunctor::Less_by_key<const MCVeloFE*>());
 
   StatusCode sc = eventSvc()->registerObject(m_outputContainer,m_fes);
@@ -965,6 +965,7 @@ double VeloSim::ran_gaussian_tail(const double a, const double sigma) {
       return x * sigma;
     }
 }
+
 
 
 

@@ -101,7 +101,7 @@ StatusCode VeloDataProcessor::execute() {
    }
 
 // sort VeloFullDigits into order of ascending sensor + strip
-  stable_sort(mydigitvector->begin(),mydigitvector->end(),VeloEventFunctor::Less_by_key<const VeloFullDigit*>());
+  std::stable_sort(mydigitvector->begin(),mydigitvector->end(),VeloEventFunctor::Less_by_key<const VeloFullDigit*>());
 
   StatusCode sc = eventSvc()->registerObject(m_outputContainer,mydigitvector);
 

@@ -165,10 +165,10 @@ void VeloClusterMaker::makeClusters(){
         << "/" << NDet << " size " << range.second - range.first << endreq;
 
     // sort by increasing ADC value          
-    sort(range.first, range.second, 
+    std::sort(range.first, range.second, 
          VeloEventFunctor::Less_by_adcValue<const VeloFullDigit*>());
     // swap to decreasing ADC
-    reverse(range.first, range.second);
+    std::reverse(range.first, range.second);
 
     // iterate over hits
     
@@ -427,12 +427,12 @@ void VeloClusterMaker::addDigit(VeloCluster* currentCluster,
                                 VeloFullDigit* nearbyDigit,
                                 signed int offset) {
   // add ADC Value to end of cluster
-  vector<pair<long,double> > signals = currentCluster->stripSignals();
-  pair<long,double> newpair(nearbyDigit->strip(),nearbyDigit->adcValue()); 
+  std::vector<std::pair<long,double> > signals = currentCluster->stripSignals();
+  std::pair<long,double> newpair(nearbyDigit->strip(),nearbyDigit->adcValue()); 
   if (offset>0) signals.push_back(newpair);
   else{
     // add ADC value and this becomes first hit in cluster
-    vector<pair<long,double> >::iterator sigFirst = signals.begin(); 
+    std::vector<std::pair<long,double> >::iterator sigFirst = signals.begin(); 
     signals.insert(sigFirst,newpair); 
      // update S/N
      currentClusterSTN += nearbyDigit->signalToNoise();
@@ -458,8 +458,8 @@ bool VeloClusterMaker::checkCluster( VeloCluster* currentCluster,
 void VeloClusterMaker::unmarkCluster(VeloCluster* currentCluster) {
   // This cluster has been rejected.
   // unmark its strips that were tagged as being used.
-  vector<pair<long,double> > signals = currentCluster->stripSignals();
-  vector<pair<long,double> >::iterator stripIt;
+  std::vector<std::pair<long,double> > signals = currentCluster->stripSignals();
+  std::vector<std::pair<long,double> >::iterator stripIt;
   for ( stripIt= signals.begin() ;  signals.end() != stripIt ; stripIt++ ) {
     long stripIndex=stripIt->first;
     m_channelUsed[stripIndex] = false;
@@ -479,7 +479,7 @@ StatusCode VeloClusterMaker::storeClusters(){
  MsgStream  log( msgSvc(), name() );
 
 // sort VeloClusters into order of ascending sensor + strip
-  stable_sort(m_clusters->begin(),m_clusters->end(),
+  std::stable_sort(m_clusters->begin(),m_clusters->end(),
               VeloEventFunctor::Less_by_key<const VeloCluster*>());
 
   StatusCode sc = eventSvc()->registerObject(m_outputContainer,m_clusters);
@@ -536,3 +536,7 @@ std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator>
    return range;
 
 }
+
+
+
+

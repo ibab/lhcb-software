@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.2 2002-06-18 06:50:01 ocallot Exp $
+#// $Id: VeloSim.h,v 1.3 2002-06-24 11:04:36 parkesb Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -48,12 +48,12 @@ private:
   long simPoints(MCVeloHit* hit);
   void chargePerPoint(MCVeloHit* hit,
                       int Npoints,
-                      vector<double>& Spoints,
+                      std::vector<double>& Spoints,
                       bool SpillOver);
   void deltaRayCharge(double charge,
                       double tol,
                       int Npoints,
-                      vector<double>& Spoints);
+                      std::vector<double>& Spoints);
   void diffusion(MCVeloHit* hit, int Npoints, vector<double>& Spoints);
   void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
   void fillFE(MCVeloFE* myFE, double charge);

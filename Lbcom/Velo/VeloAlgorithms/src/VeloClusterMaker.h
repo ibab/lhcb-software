@@ -87,7 +87,7 @@ private:
   std::string m_inputContainer;       ///< Name of input container
   std::string m_outputContainer;      ///< Name of output container
   VeloFullDigits* m_digits; ///< store digits for event considered
-  vector<bool> m_channelUsed; ///< store channels used on current detector
+  std::vector<bool> m_channelUsed; ///< store channels used on current detector
   int m_sensor; // current sensor
   VeloClusters* m_clusters; ///< vector to store clusters
   /// S/N cut to apply to all detectors from job opts
