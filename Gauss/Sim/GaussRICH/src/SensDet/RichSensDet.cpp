@@ -97,10 +97,10 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
   
-  //  if(  CurEdep <= 0.1 ) { return false; 
-  // }
-  if(  CurEdep <= 0.005 ) { return false; 
-  }
+    if(  CurEdep <= 0.1 ) { return false; 
+   }
+    // if(  CurEdep <= 0.005 ) { return false; 
+    // }
   
 
   // end of Modif in June 2003 by SE.
