@@ -1,5 +1,5 @@
-#ifndef DETDESC_XMLCNVSVC_XMLMIXTURECNV_H
-#define DETDESC_XMLCNVSVC_XMLMIXTURECNV_H
+#ifndef DETDESC_XMLMIXTURECNV_H
+#define DETDESC_XMLMIXTURECNV_H
 
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
@@ -107,13 +107,14 @@ protected:
   virtual ~XmlMixtureCnv()
   {
   }
-  
+  enum MixMode { MM_undefined, MM_byFractionMass, MM_byNAtoms };
 private:
   
   // Item object and its address we need for loading
   DataObject*            m_itemObj;
   double                 m_itemFraction;
   bool                   m_byFraction;
+  MixMode                m_mixMode;
 };
 
 

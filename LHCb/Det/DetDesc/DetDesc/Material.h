@@ -1,13 +1,12 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.h,v 1.1.1.1 2000-11-23 13:44:42 ranjard Exp $
-#ifndef DETDESC_MATERIAL_MATERIAL_H
-#define DETDESC_MATERIAL_MATERIAL_H
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.h,v 1.2 2001-01-25 12:12:29 mato Exp $
+#ifndef DETDESC_MATERIAL_H
+#define DETDESC_MATERIAL_H
 
 /// Include files
 #include <string>
 #include <vector>
 
 #include "CLHEP/Units/PhysicalConstants.h"
-
 #include "GaudiKernel/DataObject.h"
 
 // Material states, by default is stateUndefined
@@ -18,76 +17,74 @@ typedef enum {
   stateGas
 } eState;
 
-//
-// Class: Material
-//
-// Description: Material class is a base class for all brands of material
-//              component classes: Isotope, Element, Mixture.
-//              Defines a common interface to access the info about a material.
-//              The end user should always deal with materials via a pointer to
-//              the Material class.
-//
-// Author: Radovan Chytracek
-//
+/** @class Material Material.h DetDesc/Material.h
 
+    Material class is a base class for all brands of material
+    component classes: Isotope, Element, Mixture.
+    Defines a common interface to access the info about a material.
+    The end user should always deal with materials via a pointer to
+    the Material class.
+
+    @author Radovan Chytracek
+*/
 class Material : public DataObject
 {
   
 public:
   
-  // Equality operators, NOTE! These operator work with pointers
+  /// Equality operators, NOTE! These operator work with pointers
   bool operator==( const Material* right ) const;
   bool operator!=( const Material* right ) const;
   
-  // Material name accessors
+  /// Material name accessors
   virtual const std::string& name() const;
   virtual void setName( std::string& value );
   virtual void setName( const std::string& value );
   virtual void setName( char* value );
   virtual void setName( const char* value );
   
-  // Material density accessors [g/cm3]
+  /// Material density accessors [g/cm3]
   virtual const double density() const;
   virtual void setDensity( double value );
   
-  // Material temperature, by default is STP [K]
+  /// Material temperature, by default is STP [K]
   virtual const double temperature() const;
   virtual void setTemperature( double value );
   
-  // Material pressure, by default is STP [atm]
+  /// Material pressure, by default is STP [atm]
   virtual const double pressure() const;
   virtual void setPressure( double value );
   
-  // Material state, by default is stateUndefined
+  /// Material state, by default is stateUndefined
   virtual const eState state() const;
   virtual void setState( eState value );
   
-  // Material radiation length [cm]
+  /// Material radiation length [cm]
   virtual const double radiationLength() const;
   virtual void setRadiationLength( double value );
   
-  // Material absorption length [cm]
+  /// Material absorption length [cm]
   virtual const double absorptionLength() const;
   virtual void setAbsorptionLength( double value );
   
-  // Atomic mass [g/mole]
+  /// Atomic mass [g/mole]
   virtual const double A() const = 0;
   virtual void setA ( double value ) = 0;
   
-  // Atomic number
+  /// Atomic number
   virtual const double Z() const = 0;
   virtual void setZ( double value ) = 0;
   
-  // Number of nucleons
+  /// Number of nucleons
   virtual const double N() const = 0;
   virtual void setN( double value ) = 0;
 
 protected:
   
-  // Default Constructor
+  /// Default Constructor
   Material( std::string name );
   
-  // Constructors of a simple material
+  /// Constructors of a simple material
   Material( std::string name, double dens, double rl, double al,
     double temp  = STP_Temperature,
     double press = STP_Pressure,
@@ -100,7 +97,7 @@ protected:
     eState s     = stateUndefined
     );
   
-  // Destructor
+  /// Destructor
   virtual ~Material();
   
 private:

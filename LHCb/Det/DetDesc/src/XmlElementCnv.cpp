@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlElementCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $
 #include "DetDesc/XmlElementCnv.h"
 #include "DetDesc/XmlCnvException.h"
 
@@ -28,8 +29,6 @@
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
 
-#include "DetDesc/XmlExprParser.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
@@ -45,23 +44,36 @@ typedef std::map< std::string, eState, std::less<std::string> > Str2StateMap;
 
 static Str2StateMap         s_sMap;
 
-// Create the transient representation of an object.
-StatusCode XmlElementCnv::createObj( IOpaqueAddress* pAddress,
-                                     DataObject*& refpObject)
+// -----------------------------------------------------------------------
+// Constructor
+// -----------------------------------------------------------------------
+XmlElementCnv::XmlElementCnv( ISvcLocator* svc )
+: XmlGenericCnv( svc, CLID_Element ),
+  m_itemObj( 0 ), m_itemFraction( 0.0 )
 {
-  MsgStream log(msgSvc(), "XmlElementCnv" );
-  
-  StatusCode sc = StatusCode::SUCCESS;
+  // Register myself as the recevier of ASCII XML SAX events
+  set8BitDocHandler( *this );
 
-  GenericAddress* addr;
-  
+  // Initialize State map
   if( 0 == s_sMap.size() )                                                  {
     s_sMap.insert( Str2StateMap::value_type( std::string("undefined"), stateUndefined ) );
     s_sMap.insert( Str2StateMap::value_type( std::string("solid"), stateSolid ) );
     s_sMap.insert( Str2StateMap::value_type( std::string("liquid"), stateLiquid ) );
     s_sMap.insert( Str2StateMap::value_type( std::string("gas"), stateGas ) );
   }
+}
 
+
+// -----------------------------------------------------------------------
+// Create the transient representation of an object.
+// -----------------------------------------------------------------------
+StatusCode XmlElementCnv::createObj( IOpaqueAddress* pAddress,
+                                     DataObject*& refpObject)
+{
+  MsgStream log(msgSvc(), "XmlElementCnv" );
+  StatusCode sc = StatusCode::SUCCESS;
+  GenericAddress* addr;
+  
   // Test and store hint
   if( 0 != pAddress )    {
     try{
@@ -83,6 +95,9 @@ StatusCode XmlElementCnv::createObj( IOpaqueAddress* pAddress,
     return sc;
   }
   
+  // This is the moment the whole file is parse. The callbacks startElement(), endElement()
+  // will be called. It is not currently very efficient since the file is parse many
+  // times.
   sc = parse( addr->dbName().c_str() );
   
   if( sc.isFailure() )
@@ -104,49 +119,37 @@ StatusCode XmlElementCnv::createObj( IOpaqueAddress* pAddress,
   return sc;
 }
 
+// -----------------------------------------------------------------------
 // Update the transient object from the other representation.
-StatusCode XmlElementCnv::updateObj(
-                                    IOpaqueAddress* //pAddress
-                                   ,DataObject*     //pObject
-                                   )
-{
+// -----------------------------------------------------------------------
+StatusCode XmlElementCnv::updateObj( IOpaqueAddress* /*pAddress*/,
+                                     DataObject*     /*pObject*/ ) {
   return StatusCode::SUCCESS;
 }
 
+// -----------------------------------------------------------------------
 // Convert the transient object to the requested representation
-StatusCode XmlElementCnv::createRep(
-                                    DataObject*      //pObject
-                                   ,IOpaqueAddress*& //refpAddress
-                                   )
-{
+// -----------------------------------------------------------------------
+StatusCode XmlElementCnv::createRep( DataObject*     /*pObject*/,
+                                     IOpaqueAddress*& /*refpAddress*/ ){ 
   return StatusCode::SUCCESS;
 }
 
+// -----------------------------------------------------------------------
 // Update the converted representation of a transient object.
-StatusCode XmlElementCnv::updateRep(
-                                    IOpaqueAddress* //pAddress
-                                   ,DataObject*     //pObject
-                                   )
-{
+// -----------------------------------------------------------------------
+StatusCode XmlElementCnv::updateRep( IOpaqueAddress* /*pAddress*/,
+                                     DataObject*     /*pObject*/ ) {
   return StatusCode::SUCCESS;
 }
 
-// Constructor
-XmlElementCnv::XmlElementCnv( ISvcLocator* svc )
-: XmlGenericCnv( svc, CLID_Element ),
-  m_itemObj( 0 ), m_itemFraction( 0.0 )
-{
-  // Register myself as the recevier of ASCII XML SAX events
-  set8BitDocHandler( *this );
-}
-
-static std::string s_collector;
-
+// -----------------------------------------------------------------------
+// XML start element
+// -----------------------------------------------------------------------
 void XmlElementCnv::startElement( const char* const name,
                                   XmlCnvAttributeList& attributes)         {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   std::string tagName( name );
-  s_collector = "";
   
   log << MSG::DEBUG << "<" << tagName << " ";
   
@@ -165,34 +168,33 @@ void XmlElementCnv::startElement( const char* const name,
       // We're converter for this concrete XML tag
       // We need to create our transient representation
       // according the required class ID
-      m_dataObj = new Element( baseName );
-
-      XmlExprParser xep( msgSvc() );
+      Element* el = new Element( baseName );
+      m_dataObj = el;
 
       // Now we have to process more material attributes if any      
       std::string tAtt = attributes.getValue( "temperature" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setTemperature( xep.eval(tAtt) );
+        el->setTemperature( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "pressure" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setPressure( xep.eval(tAtt) );
+        el->setPressure( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "state" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setState( s_sMap[ tAtt ] );
+        el->setState( s_sMap[ tAtt ] );
       }
       tAtt = attributes.getValue( "density" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setDensity( xep.eval(tAtt) );
+        el->setDensity( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "radlen" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setRadiationLength( xep.eval(tAtt) );
+        el->setRadiationLength( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "lambda" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setAbsorptionLength( xep.eval(tAtt) );
+        el->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }
     }
     else                                                                   {
@@ -202,19 +204,18 @@ void XmlElementCnv::startElement( const char* const name,
     }
   }
   else if( "atom" == tagName )                                            {
-      XmlExprParser xep( msgSvc() );
-
-      // Now we have to process atom attributes
-      std::string tAtt = attributes.getValue( "A" );
-      if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setA( xep.eval(tAtt) );
-      }
-      tAtt = attributes.getValue( "Zeff" );
-      if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setZ( xep.eval(tAtt,false) );
-      }
+    // Now we have to process atom attributes
+    Element* el = dynamic_cast<Element*>(m_dataObj);
+    std::string tAtt = attributes.getValue( "A" );
+    if( !tAtt.empty() )                                                  {
+      el->setA( xmlSvc()->eval(tAtt) );
+    }
+    tAtt = attributes.getValue( "Zeff" );
+    if( !tAtt.empty() )                                                  {
+      el->setZ( xmlSvc()->eval(tAtt,false) );
+    }
   }
-  else if( "materialref" == tagName )                                      {
+  else if( "isotoperef" == tagName )                                      {
     // Unlike XmlCatalogCnv we don't create XmlAdress hooks for children
     // we try to load the referred elements and mixtures instead
     unsigned int sPos    = attributes.getValue( "href" ).find_last_of('#');
@@ -227,18 +228,17 @@ void XmlElementCnv::startElement( const char* const name,
       msg +=__FILE__;
       throw XmlCnvException( msg.c_str(), stcod );
     }
-  }
-  else if( "fractionmass" == tagName )                                         {
-    XmlExprParser xep( msgSvc() );
-    
-    // Now we have to process atom attributes
-    std::string tAtt = attributes.getValue( "value" );
-    if( !tAtt.empty() )                                                  {
-      m_itemFraction = xep.eval(tAtt,false);
+
+    // Get now the fraction mass from the attributes
+    // The default in the DTD is "-1" for both, so it can be used to detect which is the one
+    // that is provided.
+    std::string fract = attributes.getValue( "fractionmass" );
+    if( !fract.empty() )                                                  {
+      m_itemFraction = xmlSvc()->eval(fract,false);
     }
+
     // At this point we should have loaded referred material so we need
-    // to find out its form either element or mixture and add it
-    
+    // to find out its form either element or mixture and add it    
     if( CLID_Isotope == m_itemObj->clID() )                               {
       Element* el = dynamic_cast<Element*>(m_dataObj);
       Isotope* is = dynamic_cast<Isotope*>(m_itemObj);
@@ -251,24 +251,11 @@ void XmlElementCnv::startElement( const char* const name,
       throw XmlCnvException(msg.c_str(),stcod);      
     }
   }
-  else if( "natoms" == tagName )                                            {
-    // We got now the number of atoms for the last "materialref" tag
-
-    // Check if the XML data materialrefs are consistent and do not mix
-    // element composites by atoms and by fraction
-    std::string msg = "Material references for element ";
-    msg += m_objRcpt->objectName();
-    msg += " are not consistent, please correct XML data in file ";
-    msg += m_objRcpt->dbName();
-    StatusCode sc; sc.setCode( CORRUPTED_DATA );
-    throw XmlCnvException(msg.c_str(),sc);
-  }
-  else                                                                     {
-    // Something goes wrong, does it?
-    ;
-  }
 }
 
+// -----------------------------------------------------------------------
+// XML characters
+// -----------------------------------------------------------------------
 void XmlElementCnv::characters(
                                 const char* const  chars
                                ,const unsigned int length
@@ -276,26 +263,26 @@ void XmlElementCnv::characters(
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;
-  if( length > 0 )
-    s_collector += chars;
 }
 
+// -----------------------------------------------------------------------
+// XML ignorableWhitespaces
+// -----------------------------------------------------------------------
 void XmlElementCnv::ignorableWhitespace(
                                          const char* const chars
                                         ,const unsigned int length )
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;
-  if( length > 0 )
-    s_collector += chars;
 }
 
+// -----------------------------------------------------------------------
+// XML end element
+// -----------------------------------------------------------------------
 void XmlElementCnv::endElement( const char* const name ) {
   
   MsgStream log(msgSvc(), "XmlElementCnv" );
 
-  XmlExprParser xep( msgSvc() );
-  
   log << MSG::DEBUG << "</" << name << ">" << endreq;
   
   std::string tagName = name;

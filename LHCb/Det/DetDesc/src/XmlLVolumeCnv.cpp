@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.3 2001-01-22 10:55:36 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $
 
 #include "DetDesc/XmlLVolumeCnv.h"
 #include "DetDesc/XmlCnvException.h"
@@ -27,7 +27,6 @@
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
-#include "DetDesc/XmlExprParser.h"
 
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
@@ -40,7 +39,7 @@
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.3 2001-01-22 10:55:36 mato Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -161,8 +160,6 @@ void XmlLVolumeCnv::startElement( const char* const name,
   MsgStream log(msgSvc(), "XmlLVolumeCnv" );
 
   // Make an instance of the numerical expression parser
-  XmlExprParser xep( msgSvc() );
-
   std::string tagName( name );
   
   /// Solid textified dimensions got from the solids' tag attributes
@@ -255,7 +252,7 @@ void XmlLVolumeCnv::startElement( const char* const name,
   else if( "paramphysvol" == tagName )                                     {
     // Remember the number of copies
     ///
-    int nn = (int) xep.eval( attributes.getValue("number"), false );
+    int nn = (int) xmlSvc()->eval( attributes.getValue("number"), false );
     if( nn <= 0 ) 
       {
       ///
@@ -286,9 +283,9 @@ void XmlLVolumeCnv::startElement( const char* const name,
     if( sizeZ.empty() ) { sizeZ = "0.0"; }
     
     m_solid = new SolidBox( attributes.getValue( "name" ),
-                            xep.eval( sizeX.c_str() )/2.,
-                            xep.eval( sizeY.c_str() )/2.,
-                            xep.eval( sizeZ.c_str() )/2.
+                            xmlSvc()->eval( sizeX.c_str() )/2.,
+                            xmlSvc()->eval( sizeY.c_str() )/2.,
+                            xmlSvc()->eval( sizeZ.c_str() )/2.
                           );
 
     //doBoolean( sFound, attributes );
@@ -308,11 +305,11 @@ void XmlLVolumeCnv::startElement( const char* const name,
     if( sizeZ.empty()  ) { sizeZ  = "0.0"; }
 
     m_solid = new SolidTrd( attributes.getValue( "name" ),
-                            xep.eval( sizeZ.c_str()  )/2.,
-                            xep.eval( sizeX1.c_str() )/2.,
-                            xep.eval( sizeY1.c_str() )/2.,
-                            xep.eval( sizeX2.c_str() )/2.,
-                            xep.eval( sizeY2.c_str() )/2.
+                            xmlSvc()->eval( sizeZ.c_str()  )/2.,
+                            xmlSvc()->eval( sizeX1.c_str() )/2.,
+                            xmlSvc()->eval( sizeY1.c_str() )/2.,
+                            xmlSvc()->eval( sizeX2.c_str() )/2.,
+                            xmlSvc()->eval( sizeY2.c_str() )/2.
                           );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
@@ -349,13 +346,13 @@ void XmlLVolumeCnv::startElement( const char* const name,
       } 
     
     m_solid = new SolidCons( attributes.getValue( "name" ),
-                             xep.eval( sizeZ.c_str()    )/2.,
-                             xep.eval( oRadMz.c_str()   ),
-                             xep.eval( oRadPz.c_str()   ),
-                             iRadMz.empty()   ?   0.0          : xep.eval( iRadMz   ),   
-                             iRadPz.empty()   ?   0.0          : xep.eval( iRadPz   ),   
-                             startPhi.empty() ?   0.0          : xep.eval( startPhi ),
-                             deltaPhi.empty() ? 360.0 * degree : xep.eval( deltaPhi )  
+                             xmlSvc()->eval( sizeZ.c_str()    )/2.,
+                             xmlSvc()->eval( oRadMz.c_str()   ),
+                             xmlSvc()->eval( oRadPz.c_str()   ),
+                             iRadMz.empty()   ?   0.0          : xmlSvc()->eval( iRadMz   ),   
+                             iRadPz.empty()   ?   0.0          : xmlSvc()->eval( iRadPz   ),   
+                             startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
+                             deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
 			     );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
@@ -367,8 +364,8 @@ void XmlLVolumeCnv::startElement( const char* const name,
     startPhi = attributes.getValue( "startPhiAngle" );
     deltaPhi = attributes.getValue( "deltaPhiAngle" );
 
-    // log << MSG::INFO << "startPhi " << xep.eval(startPhi)/degree << endreq;
-    // log << MSG::INFO << "deltaPhi " << xep.eval(deltaPhi)/degree << endreq;
+    // log << MSG::INFO << "startPhi " << xmlSvc()->eval(startPhi)/degree << endreq;
+    // log << MSG::INFO << "deltaPhi " << xmlSvc()->eval(deltaPhi)/degree << endreq;
     
     if( oRad.empty()     ) { oRad     = "0.0"; }
     if( sizeZ.empty()    ) { sizeZ    = "0.0"; }
@@ -391,11 +388,11 @@ void XmlLVolumeCnv::startElement( const char* const name,
     } 
 
     m_solid = new SolidTubs( attributes.getValue( "name" ),
-                             xep.eval( sizeZ.c_str()    )/2.,
-                             xep.eval( oRad.c_str()     ),
-                             iRad.empty()     ?   0.0          : xep.eval( iRad     ),
-                             startPhi.empty() ?   0.0          : xep.eval( startPhi ),
-                             deltaPhi.empty() ? 360.0 * degree : xep.eval( deltaPhi )  
+                             xmlSvc()->eval( sizeZ.c_str()    )/2.,
+                             xmlSvc()->eval( oRad.c_str()     ),
+                             iRad.empty()     ?   0.0          : xmlSvc()->eval( iRad     ),
+                             startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
+                             deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
 			     );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
@@ -444,12 +441,12 @@ void XmlLVolumeCnv::startElement( const char* const name,
     } 
 
     m_solid = new SolidSphere( attributes.getValue( "name" ),
-                               xep.eval( oRad.c_str()       ),
-                               iRad.empty()       ?   0.0          : xep.eval( iRad       ),
-			       startPhi.empty()   ?   0.0          : xep.eval( startPhi   ),
-			       deltaPhi.empty()   ? 360.0 * degree : xep.eval( deltaPhi   ),  
-			       startTheta.empty() ?   0.0          : xep.eval( startTheta ),
-			       deltaTheta.empty() ? 180.0 * degree : xep.eval( deltaTheta )  
+                               xmlSvc()->eval( oRad.c_str()       ),
+                               iRad.empty()       ?   0.0          : xmlSvc()->eval( iRad       ),
+			       startPhi.empty()   ?   0.0          : xmlSvc()->eval( startPhi   ),
+			       deltaPhi.empty()   ? 360.0 * degree : xmlSvc()->eval( deltaPhi   ),  
+			       startTheta.empty() ?   0.0          : xmlSvc()->eval( startTheta ),
+			       deltaTheta.empty() ? 180.0 * degree : xmlSvc()->eval( deltaTheta )  
 			       );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
@@ -855,8 +852,6 @@ HepPoint3D XmlLVolumeCnv::doRPhiZTranslation( std::string r,
   
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doRPhiZTranslation" );
 
-  XmlExprParser xep( msgSvc() );
-
   HepPoint3D ret;
   
   if( !r.empty() && !phi.empty() && !z.empty() )                            {
@@ -865,8 +860,8 @@ HepPoint3D XmlLVolumeCnv::doRPhiZTranslation( std::string r,
     HepPoint3D tmp(1,1,1);
     ret = tmp;
 
-    if( 0 <= xep.eval( r ) )                         {
-      ret.setPerp( xep.eval( r ) );
+    if( 0 <= xmlSvc()->eval( r ) )                         {
+      ret.setPerp( xmlSvc()->eval( r ) );
     }
     else                                               {
       StatusCode stcod;
@@ -874,8 +869,8 @@ HepPoint3D XmlLVolumeCnv::doRPhiZTranslation( std::string r,
       throw XmlCnvException( " doRPhiZTranslation: r must be non-negative value!", stcod );
     }
     
-    ret.setPhi(  xep.eval( phi ) );
-    ret.setZ( xep.eval( z ) );
+    ret.setPhi(  xmlSvc()->eval( phi ) );
+    ret.setZ( xmlSvc()->eval( z ) );
 
   }
 
@@ -887,9 +882,6 @@ HepPoint3D XmlLVolumeCnv::doRThPhiTranslation( std::string r,
                                                 std::string phi )          {
   
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doRThPhiTranslation" );
-
-  XmlExprParser xep( msgSvc() );
-
   HepPoint3D ret;
 
   if( !r.empty() && !theta.empty() && !phi.empty() )                       {
@@ -898,8 +890,8 @@ HepPoint3D XmlLVolumeCnv::doRThPhiTranslation( std::string r,
     HepPoint3D tmp(1,1,1);
     ret = tmp;
 
-    if( 0 <= xep.eval( r ) )                         {
-      ret.setMag( xep.eval( r ) );
+    if( 0 <= xmlSvc()->eval( r ) )                         {
+      ret.setMag( xmlSvc()->eval( r ) );
     }
     else                                               {
       StatusCode stcod;
@@ -907,8 +899,8 @@ HepPoint3D XmlLVolumeCnv::doRThPhiTranslation( std::string r,
       throw XmlCnvException( " doRThPhiTranslation: r must be non-negative value!", stcod );
     }
 
-    ret.setTheta(  xep.eval( theta ) );
-    ret.setPhi(    xep.eval( phi ) );
+    ret.setTheta(  xmlSvc()->eval( theta ) );
+    ret.setPhi(    xmlSvc()->eval( phi ) );
 
   }
 
@@ -924,24 +916,22 @@ HepPoint3D XmlLVolumeCnv::doTranslation( std::string x,
   
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doTranslation" );
 
-  XmlExprParser xep( msgSvc() );
-
   HepPoint3D ret;
   
   if( !x.empty() && !y.empty() && !z.empty() )                              {
 
-    double l_x = xep.eval( x ); 
-    double l_y = xep.eval( y ); 
-    double l_z = xep.eval( z ); 
+    double l_x = xmlSvc()->eval( x ); 
+    double l_y = xmlSvc()->eval( y ); 
+    double l_z = xmlSvc()->eval( z ); 
 
     ret.setX( l_x );
     ret.setY( l_y );
     ret.setZ( l_z );
 
     /* This suddenly doesn't work, different calling convention???
-    ret.setX( xep.eval( x ) );
-    ret.setY( xep.eval( y ) );
-    ret.setZ( xep.eval( z ) );
+    ret.setX( xmlSvc()->eval( x ) );
+    ret.setY( xmlSvc()->eval( y ) );
+    ret.setZ( xmlSvc()->eval( z ) );
     */
   }
 
@@ -957,14 +947,12 @@ HepRotation XmlLVolumeCnv::doRotation( std::string rx,
 
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doRotation" );
 
-  XmlExprParser xep( msgSvc() );
-  
   HepRotation rot;
 
   if( !rx.empty() && !ry.empty() && !rz.empty() )                          {
-    rot =       HepRotateX3D( xep.eval( rx ) ).getRotation();
-    rot = rot * HepRotateY3D( xep.eval( ry ) ).getRotation();
-    rot = rot * HepRotateZ3D( xep.eval( rz ) ).getRotation();
+    rot =       HepRotateX3D( xmlSvc()->eval( rx ) ).getRotation();
+    rot = rot * HepRotateY3D( xmlSvc()->eval( ry ) ).getRotation();
+    rot = rot * HepRotateZ3D( xmlSvc()->eval( rz ) ).getRotation();
     rot = rot.inverse();
   }
 
@@ -977,14 +965,12 @@ HepRotation XmlLVolumeCnv::doAxisRotation( std::string axtheta,
   
   MsgStream log(msgSvc(), "XmlLVolumeCnv::doAxisRotation" );
   
-  XmlExprParser xep( msgSvc() );
-  
   HepRotation rot;
   
   if( !axtheta.empty() && !axphi.empty() && !angle.empty() )               {
-    double axt  = xep.eval( axtheta );
-    double axp  = xep.eval( axphi   );
-    double angl = xep.eval( angle   );
+    double axt  = xmlSvc()->eval( axtheta );
+    double axp  = xmlSvc()->eval( axphi   );
+    double angl = xmlSvc()->eval( angle   );
     
     if( axt < 0 || axt > 180 * degree ) 
       { 

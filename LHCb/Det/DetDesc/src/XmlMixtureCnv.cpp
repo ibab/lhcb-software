@@ -28,8 +28,6 @@
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
 
-#include "DetDesc/XmlExprParser.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
@@ -44,7 +42,27 @@ typedef std::map< std::string, eState, std::less<std::string> > Str2StateMap;
 
 static Str2StateMap         s_sMap;
 
+// -----------------------------------------------------------------------
+// Constructor
+// -----------------------------------------------------------------------
+XmlMixtureCnv::XmlMixtureCnv( ISvcLocator* svc )
+: XmlGenericCnv( svc, CLID_Mixture ),
+  m_itemObj( 0 ), m_itemFraction( 0.0 ) {
+  // Register myself as the recevier of ASCII XML SAX events
+  set8BitDocHandler( *this );
+
+  // Initizalie the state map
+  if( 0 == s_sMap.size() )                                                  {
+    s_sMap.insert( Str2StateMap::value_type( std::string("undefined"), stateUndefined ) );
+    s_sMap.insert( Str2StateMap::value_type( std::string("solid"), stateSolid ) );
+    s_sMap.insert( Str2StateMap::value_type( std::string("liquid"), stateLiquid ) );
+    s_sMap.insert( Str2StateMap::value_type( std::string("gas"), stateGas ) );
+  }
+}
+
+// -----------------------------------------------------------------------
 // Create the transient representation of an object.
+// -----------------------------------------------------------------------
 StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
                                      DataObject*& refpObject)
 {
@@ -53,14 +71,6 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
   StatusCode sc = StatusCode::SUCCESS;
 
   GenericAddress* addr;
-  
-  if( 0 == s_sMap.size() )                                                  {
-    s_sMap.insert( Str2StateMap::value_type( std::string("undefined"), stateUndefined ) );
-    s_sMap.insert( Str2StateMap::value_type( std::string("solid"), stateSolid ) );
-    s_sMap.insert( Str2StateMap::value_type( std::string("liquid"), stateLiquid ) );
-    s_sMap.insert( Str2StateMap::value_type( std::string("gas"), stateGas ) );
-  }
-
   // Test and store hint
   if( 0 != pAddress )    {
     try{
@@ -76,13 +86,11 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
   SAXParser*      parser  = m_xmlParser;
   unsigned long   level   = m_level;
   bool            found   = m_doFound;
-  bool            frac    = m_byFraction;
   bool            send    = m_send;
   std::string     tag     = m_tag;
 
   m_itemObj = 0;
   m_itemFraction = 0.0;
-  m_byFraction = true;
   m_objRcpt = addr;
   m_dataObj = 0;
   m_level = 0;
@@ -94,9 +102,9 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
   try   {
     sc = initParser();
     if( sc.isSuccess() )  {
-      m_dataObj=new Mixture( "", 0.0, 0 );
-      // We assume that most of the mixtures have composites by fraction of mass
-      m_byFraction = true;
+      m_dataObj = new Mixture( "", 0.0, 0 );
+      // We do not assume that most of the mixtures have composites by fraction of mass
+      m_mixMode = MM_undefined;
       sc = parse( addr->dbName().c_str() );
       if ( sc.isSuccess() )   {
         refpObject = m_dataObj;  
@@ -115,7 +123,6 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
   m_tag = tag;
   m_itemObj = 0;
   m_itemFraction = 0.0;
-  m_byFraction = frac;
   m_objRcpt = xmlAdd;
   m_dataObj = dataObj;
   m_level = level;
@@ -125,7 +132,9 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
   return sc;
 }
 
+// -----------------------------------------------------------------------
 // Resolve the references of the created transient object.
+// -----------------------------------------------------------------------
 StatusCode XmlMixtureCnv::fillObjRefs(
 				      IOpaqueAddress* /* pAddress */ , 
 				      DataObject*     /* pObject  */ 
@@ -161,17 +170,10 @@ StatusCode XmlMixtureCnv::updateRep(
   return StatusCode::SUCCESS;
 }
 
-// Constructor
-XmlMixtureCnv::XmlMixtureCnv( ISvcLocator* svc )
-: XmlGenericCnv( svc, CLID_Mixture ),
-  m_itemObj( 0 ), m_itemFraction( 0.0 ),
-  m_byFraction( true )                                      {
-  // Register myself as the recevier of ASCII XML SAX events
-  set8BitDocHandler( *this );
-}
 
-static std::string s_collector;
-
+// -----------------------------------------------------------------------
+// Start XML Element 
+// -----------------------------------------------------------------------
 void XmlMixtureCnv::startElement( const char* const name,
                                   XmlCnvAttributeList& attributes)         {
 
@@ -179,8 +181,6 @@ void XmlMixtureCnv::startElement( const char* const name,
   
   std::string tagName( name );
 
-  s_collector = "";
-  
   log << MSG::DEBUG << "<" << tagName << " ";
   
   for( unsigned int i = 0; i < attributes.getLength(); i++ )               {
@@ -202,42 +202,41 @@ void XmlMixtureCnv::startElement( const char* const name,
       // We need to create our transient representation
       // Since we do not have all the needed information yet, we create
       // an empty mixture and hope we get all we need to build it properly
-      ((Material *)m_dataObj)->setName(baseName);
-
-      XmlExprParser xep( msgSvc() );
+      Material* material = dynamic_cast< Material* >(m_dataObj); 
+      material->setName(baseName);
 
       // Now we have to process more material attributes if any      
       std::string tAtt = attributes.getValue( "temperature" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setTemperature( xep.eval(tAtt) );
+        material->setTemperature( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "pressure" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setPressure( xep.eval(tAtt) );
+        material->setPressure( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "state" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setState( s_sMap[ tAtt ] );
+        material->setState( s_sMap[ tAtt ] );
       }
       tAtt = attributes.getValue( "Aeff" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setA( xep.eval(tAtt) );
+        material->setA( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "Zeff" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setZ( xep.eval(tAtt,false) );
+        material->setZ( xmlSvc()->eval(tAtt,false) );
       }
       tAtt = attributes.getValue( "density" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setDensity( xep.eval(tAtt) );
+        material->setDensity( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "radlen" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setRadiationLength( xep.eval(tAtt) );
+        material->setRadiationLength( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "lambda" );
       if( !tAtt.empty() )                                                  {
-        ((Material *)m_dataObj)->setAbsorptionLength( xep.eval(tAtt) );
+        material->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }
     }
     else                                                                   {
@@ -246,7 +245,8 @@ void XmlMixtureCnv::startElement( const char* const name,
           << attributes.getValue( "name" ) << endreq;
     }
   }
-  else if( "materialref" == tagName )                                      {
+
+  else if( "materialref" == tagName || "elementref" == tagName  ) {
     StatusCode        stcod;
     
     // Let's decode URI of the object location
@@ -285,52 +285,58 @@ void XmlMixtureCnv::startElement( const char* const name,
     }
     log << MSG::VERBOSE << "Converter for " << m_objRcpt->objectName()
                      << " retrieved successfully " << ((Material *)m_itemObj)->name() << endreq;
-  }
-  else if( "natoms" == tagName )                                            {
-    // We got now the number of atoms for the last "materialref" tag
-    // Since this moment we assume that mixture is being composed by atoms
-    m_byFraction = false;
-    m_itemFraction = atof( attributes.getValue("value").c_str() );
-  }
-  else if( "fractionmass" == tagName )                                             {
-    // We got now the fraction of the mass for the last "materialref" tag
 
-    // Check if the XML data materialrefs are consistent and do not mix
-    // mixture composites by atoms and by fraction
-    if( false == m_byFraction )                                            {
+    // Get now the natoms or fraction mass from the attributes
+    // The default in the DTD is "-1" for both, so it can be used to detect which is the one
+    // that is provided.
+    std::string natom = attributes.getValue( "natoms" );
+    std::string fract = attributes.getValue( "fractionmass" );
+  
+    if( m_mixMode == MM_undefined ) {
+      if( tagName == "materialref") m_mixMode = MM_byFractionMass;
+      else if ( natom != "-1" )     m_mixMode = MM_byNAtoms;
+      else                          m_mixMode = MM_byFractionMass;
+    }
+    
+    if( m_mixMode == MM_byFractionMass && !fract.empty() && fract != "-1" ) {
+      m_itemFraction = xmlSvc()->eval(fract, false);
+    }
+    else if ( m_mixMode == MM_byNAtoms && !natom.empty() && natom != "-1" ) {
+      m_itemFraction = xmlSvc()->eval(natom, false);
+    }
+    else {
       // XML materialrefs are not consistent, ERROR
-      std::string msg = "Material references for mixture ";
+      std::string msg = "Material references for material ";
       msg += m_objRcpt->objectName();
-      msg += " are not consistent, please correct XML data in file ";
-      msg += m_objRcpt->dbName();
+      msg += " are not consistent.";
       StatusCode st = CORRUPTED_DATA;
       throw XmlCnvException(msg.c_str(),st);
     }
-    m_itemFraction = atof( attributes.getValue("value").c_str() );
   }
-  else                                                                     {
+  else {
     // Something goes wrong, does it?
-    ;
   }
 }
 
-void XmlMixtureCnv::characters( const char* const  /* chars */   , 
-				const unsigned int /* length */  )
-{
-}
+// -----------------------------------------------------------------------
+// XML characters
+// -----------------------------------------------------------------------
+void XmlMixtureCnv::characters( const char* const  /* chars */, 
+                                const unsigned int /* length */  ) { }
 
+// -----------------------------------------------------------------------
+// XML ignorableWhitespace
+// -----------------------------------------------------------------------
 void XmlMixtureCnv::ignorableWhitespace( const char* const  /* chars  */ ,
-                                         const unsigned int /* length */  )
-{
-}
+                                         const unsigned int /* length */  ) { }
 
-
+// -----------------------------------------------------------------------
+// End XML Element 
+// -----------------------------------------------------------------------
 void XmlMixtureCnv::endElement( const char* const name ) {
   
   MsgStream log(msgSvc(), "XmlMixtureCnv" );
 
-  XmlExprParser xep( msgSvc() );
-  
   log << MSG::DEBUG << "</" << name << ">" << endreq;
   
   std::string tagName = name;
@@ -343,24 +349,24 @@ void XmlMixtureCnv::endElement( const char* const name ) {
     if( CLID_Mixture == m_objRcpt->clID() ) {
       Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
       if( 0 != m->nOfItems() ) {
-        if( true == m_byFraction ) {
+        if( m_mixMode == MM_byFractionMass ) {
           m->computeByFraction();
         } else {
           m->computeByAtoms();
         }
       }
-    } else { // What to do ?
+      m_mixMode = MM_undefined;
+    } 
+    else { // What to do ?
     }
-    // Just to be sure...
-    m_byFraction = true;
-  } else if( "materialref" == tagName ) {
+  } else if( "materialref" == tagName || "elementref" == tagName ) {
     // At this point we should have loaded referred material so we need
     // to find out its form either element or mixture and add it
 
     if( CLID_Element == m_itemObj->clID() ) {
       Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
       Element* e = dynamic_cast<Element*>(m_itemObj);
-      if( false == m_byFraction ) {
+      if( m_mixMode == MM_byNAtoms ) {
         int atoms = (int)m_itemFraction;
         m->addElement( e, atoms, false );
       } else {

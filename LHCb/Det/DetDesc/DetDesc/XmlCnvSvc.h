@@ -1,30 +1,28 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCnvSvc.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCnvSvc.h,v 1.3 2001-01-25 12:12:29 mato Exp $
 #ifndef DETDESC_XMLCNVSVC_H
-#define DETDESC_XMLCNVSVC_H 1
+#define DETDESC_XMLCNVSVC_H
 
 /// Include files
-#include "GaudiKernel/IXmlSvc.h"
+#include "DetDesc/IXmlSvc.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ConversionSvc.h"
-
 #include "GaudiKernel/ICnvManager.h"
-
 #include "GaudiKernel/System.h"
+#include "CLHEP/Evaluator/Evaluator.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
-class XmlExprParser;
 
-//
-// ClassName:    XmlCnvSvc
-// 
-// Description:  A conversion service for XML based data
-//
-// Author:       Radovan Chytracek
-//
+/** @class XmlCnvSvc XmlCnvSvc.h DetDesc/XmlCnvSvc.h
+
+   A conversion service for XML based data. It is based in the generic conversion 
+   service and implements in addition the IXmlSvc interface.
+
+   @author Radovan Chytracek
+   @author Pere Mato
+*/
 class XmlCnvSvc : public ConversionSvc, virtual public IXmlSvc
 {
-  
   friend class SvcFactory<XmlCnvSvc>;
   
 public:
@@ -39,24 +37,25 @@ public:
 
   /// Obligatory implementation of the IXmlSvc interface
   /// Evaluate a numerical expresion
-  virtual double eval( char* expr, bool check = true );
-  virtual double eval( const char* expr, bool check = true );
-  virtual double eval( std::string& expr, bool check = true );
-  virtual double eval( const std::string& expr, bool check = true );
+  virtual double eval( const char* expr, bool check = true ) const;
+  virtual double eval( const std::string& expr, bool check = true ) const;
+  virtual bool addParameter( const std::string& name, const std::string& value );
+  virtual bool addParameter( const char* name, const char* value );
+  virtual bool addParameter( const char* name, double value );
+  virtual bool removeParameter( const std::string& name );
+  virtual bool removeParameter( const char* name );
 
 public:
 
-  bool allowGenericCnv()
-  {
-    return m_genericConversion;
-  }
+  bool allowGenericCnv() { return m_genericConversion; }
 
 protected:
   
-  /// Standard Constructor
-  /// name   String with service name
-  /// svc    Pointer to service locator interface
-  /// return Reference to CdfPersCnvSvc
+  /** Standard Constructor
+      @param name   String with service name
+      @param svc    Pointer to service locator interface
+      @return Reference to CdfPersCnvSvc
+  */
   XmlCnvSvc( const std::string& name, ISvcLocator* svc );
   
   /// Destructor
@@ -65,13 +64,13 @@ protected:
 private:
 
   /// Numerical expressions parser
-  XmlExprParser*    m_xp;
+  HepTool::Evaluator  m_xp;
 
-  /// Property triggering generic conversion of user defined detector
-  /// elements in case the corresponding user defined converter is not
-  /// available
-  bool              m_genericConversion;
-  
+  /** Property triggering generic conversion of user defined detector
+      elements in case the corresponding user defined converter is not
+      available
+  */
+  bool  m_genericConversion;
 };
 
 #endif    // DETDESC_XMLCNVSVC_H

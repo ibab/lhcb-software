@@ -27,8 +27,6 @@
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
 
-#include "DetDesc/XmlExprParser.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
@@ -172,16 +170,15 @@ void XmlIsotopeCnv::startElement( const char* const name,
       m_dataObj = new Isotope( baseName );
 
       // Now we have to process more material attributes if any
-      XmlExprParser xep( msgSvc() );
 
       std::string tAtt = attributes.getValue( "temperature" );
       
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setTemperature( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setTemperature( xmlSvc()->eval(tAtt) );
       }
       tAtt = attributes.getValue( "pressure" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setPressure( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setPressure( xmlSvc()->eval(tAtt) );
       }      
       tAtt = attributes.getValue( "state" );
       if( !tAtt.empty() ) {
@@ -189,27 +186,27 @@ void XmlIsotopeCnv::startElement( const char* const name,
       }
       tAtt = attributes.getValue( "A" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setA( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setA( xmlSvc()->eval(tAtt) );
       }      
       tAtt = attributes.getValue( "Z" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setZ( xep.eval(tAtt,false) );
+        ((Material *)m_dataObj)->setZ( xmlSvc()->eval(tAtt,false) );
       }      
       tAtt = attributes.getValue( "N" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setN( xep.eval(tAtt,false) );
+        ((Material *)m_dataObj)->setN( xmlSvc()->eval(tAtt,false) );
       }      
       tAtt = attributes.getValue( "density" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setDensity( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setDensity( xmlSvc()->eval(tAtt) );
       }      
       tAtt = attributes.getValue( "radlen" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setRadiationLength( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setRadiationLength( xmlSvc()->eval(tAtt) );
       }      
       tAtt = attributes.getValue( "lambda" );
       if( !tAtt.empty() ) {
-        ((Material *)m_dataObj)->setAbsorptionLength( xep.eval(tAtt) );
+        ((Material *)m_dataObj)->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }      
     } else {
       // This should never happen!

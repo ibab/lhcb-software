@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.4 2001-01-25 12:12:29 mato Exp $
 
 /// Include files
 #include "DetDesc/XmlCatalogCnv.h"
@@ -13,6 +13,7 @@
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/System.h"
 
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -31,7 +32,7 @@
 #include "DetDesc/Mixture.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.3 2001-01-22 10:55:35 mato Exp $";
+///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.4 2001-01-25 12:12:29 mato Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service

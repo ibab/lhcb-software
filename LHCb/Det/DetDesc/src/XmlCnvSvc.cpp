@@ -1,6 +1,6 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
-#define  DETDESC_CDFCNVSVC_CPP 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $
 
+// Include Files
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
 
@@ -10,42 +10,38 @@
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-
 #include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/XmlCnvSvc.h"
 
-#include "DetDesc/XmlExprParser.h"
-
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCnvSvc.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
-
-/// Forward and external declarations
-
-extern unsigned const char XML_StorageType;
+// Forward and external declarations
 extern const IAddrFactory& XmlAddressFactory;
-
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
 static SvcFactory<XmlCnvSvc>          xmlcnvsvc_factory;
 const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
 
-/// Standard Constructor
+// -----------------------------------------------------------------------
+// Standard Constructor
+// -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc(const std::string& name, ISvcLocator* svc)
-: ConversionSvc(name, svc, XML_StorageType),
-  m_xp( 0 )
+: ConversionSvc(name, svc, XML_StorageType)
 {
   setAddressFactory(&XmlAddressFactory);
   declareProperty( "AllowGenericConversion", m_genericConversion = false );
 }
 
-/// Standard Destructor
+// -----------------------------------------------------------------------
+// Standard Destructor
+// -----------------------------------------------------------------------
 XmlCnvSvc::~XmlCnvSvc()
 {
 }
 
-/// Initialize the service.
+// -----------------------------------------------------------------------
+// Initialize the service.
+// -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::initialize()
 {
 
@@ -91,26 +87,28 @@ StatusCode XmlCnvSvc::initialize()
 
   setProperties();
 
-  // Initialize numerical expressions parser
-  m_xp = new XmlExprParser( msgSvc() );
+  // Initialize numerical expressions parser with the standard math functions and the
+  // system of units used by Gaudi (Geant4)
+  m_xp.setStdMath();
+  m_xp.setSystemOfUnits(1.e+3, 1./1.60217733e-25, 1.e+9, 1./1.60217733e-10,1.0, 1.0, 1.0);
 
   return status;
 }
 
-/// Stop the service.
+// -----------------------------------------------------------------------
+// Stop the service.
+// -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::finalize()
 {
-  if( m_xp != 0 )  {
-    delete m_xp;
-  }
-
   return ConversionSvc::finalize();
 }
 
-/// Query interface
+// -----------------------------------------------------------------------
+// Query interface
+// -----------------------------------------------------------------------
 StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface)
 {
-  if ( IID_IXmlSvc == riid )  {
+  if ( IID_IXmlSvc.versionMatch(riid) )  {
     *ppvInterface = (IXmlSvc*)this;
   }
   else  {
@@ -121,29 +119,91 @@ StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface)
   return StatusCode::SUCCESS;
 }
 
-/// Evaluate a numerical expresion
-double XmlCnvSvc::eval( char* expr, bool check )
-{
-  return m_xp->eval( expr, check );
+// -----------------------------------------------------------------------
+// Evaluate a numerical expresion
+// -----------------------------------------------------------------------
+double XmlCnvSvc::eval( const std::string& expr, bool check ) const {
+  return eval( expr.c_str(), check );
 }
 
-/// Evaluate a numerical expresion
-double XmlCnvSvc::eval( const char* expr, bool check )
-{
-  return m_xp->eval( expr, check );
+// -----------------------------------------------------------------------
+// Evaluate a numerical expresion
+// -----------------------------------------------------------------------
+double XmlCnvSvc::eval( const char* expr, bool check ) const {
+  MsgStream log( msgSvc(), name() );
+
+  // Check if it is needed to be a dimention number
+  if( check ) {
+    // find the last '*' and check that there is a unit name after it
+    std::string e(expr);
+    unsigned int pos = e.find_last_of('*');
+    // set the unit to what come after the '*' or the complete expresion
+    std::string unit = (pos == -1) ? e : e.substr(pos + 1);
+    // remove leading blanks
+    pos = unit.find_first_not_of(' ');
+    unit = unit.substr(pos);
+    // check if what is left is not empty and alphabetic character
+    if( unit.size() == 0 || !isalpha(unit[0]) ) {
+      log << MSG::WARNING << "Expression requires units [" << expr << "]" << endreq;
+    }
+  }
+  // Call the CLHEP Evaluator
+  double value = m_xp.evaluate( expr );
+  std::string errtxt;
+  switch( m_xp.status() ) {
+    case HepTool::Evaluator::OK: return value;
+    case HepTool::Evaluator::ERROR_NOT_A_NAME: errtxt = "NOT_A_NAME"; break;
+    case HepTool::Evaluator::ERROR_SYNTAX_ERROR: errtxt = "SYNTAX_ERROR"; break;
+    case HepTool::Evaluator::ERROR_UNPAIRED_PARENTHESIS:  errtxt = "UNPAIRED_PARENTHESIS"; break;
+    case HepTool::Evaluator::ERROR_UNEXPECTED_SYMBOL:  errtxt = "UNEXPECTED_SYMBOL"; break;
+    case HepTool::Evaluator::ERROR_UNKNOWN_VARIABLE:  errtxt = "UNKNOWN_VARIABLE"; break;
+    case HepTool::Evaluator::ERROR_UNKNOWN_FUNCTION:  errtxt = "UNKNOWN_FUNCTION"; break;
+    case HepTool::Evaluator::ERROR_EMPTY_PARAMETER:  errtxt = "EMPTY_PARAMETER"; break;
+    case HepTool::Evaluator::ERROR_CALCULATION_ERROR:  errtxt = "CALCULATION_ERROR"; break;
+    default: errtxt = "UNKNOWN_ERROR"; break;
+  }
+  log << MSG::ERROR << "Expresion evaluation error: " << errtxt << endreq;
+  log << MSG::ERROR << "[" << expr << "]" << endreq;
+  log << MSG::ERROR << " ";
+  for( int i = 0; i < m_xp.error_position(); i++ ) log << " "; log << "^" << endreq;
+  return 0;
 }
 
-/// Evaluate a numerical expresion
-double XmlCnvSvc::eval( std::string& expr, bool check )
-{
-  return m_xp->eval( expr.c_str(), check );
+// -----------------------------------------------------------------------
+// addParameter into expresion parser
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::addParameter( const std::string& name, const std::string& value ) {
+  return addParameter( name.c_str(), value.c_str() );
+}
+// -----------------------------------------------------------------------
+// addParameter into expresion parser
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::addParameter( const char* name, const char* expr ) {
+  m_xp.setVariable( name, expr );
+  if( m_xp.status() == HepTool::Evaluator::OK ) return true;
+  else return false;
+}
+// -----------------------------------------------------------------------
+// addParameter into expresion parser
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::addParameter( const char* name, double value ) {
+  m_xp.setVariable( name, value );
+  if( m_xp.status() == HepTool::Evaluator::OK ) return true;
+  else return false;
 }
 
-/// Evaluate a numerical expresion
-double XmlCnvSvc::eval( const std::string& expr, bool check )
-{
-  return m_xp->eval( expr.c_str(), check );
+// -----------------------------------------------------------------------
+// removeParameter from expresion parser
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::removeParameter( const std::string& name ) {
+  return removeParameter(name.c_str());
 }
 
-
-
+// -----------------------------------------------------------------------
+// removeParameter from expresion parser
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::removeParameter( const char* name ) {
+  m_xp.removeVariable( name );
+  if( m_xp.status() == HepTool::Evaluator::OK ) return true;
+  else return false;
+}

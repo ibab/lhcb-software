@@ -1,5 +1,13 @@
 package DetDesc
-package manager : R Chytracek
+package manager : Vanya Belyaev
+
+! 20010125 - Pere Mato
+  - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
+  - Fixed some bugs in the calculation of radiation and absorption lenght.
+  - Modified to use the CLHEP expression evaluator function
+  - New functionality: use of <parameter \> tag for defining XML parameters instead
+    of using XML entyties. The XML files in XMLDDDB package have been changed to 
+    exploit that new functionality.
 
 ! 20010122 - DetDesc 
  Vanya Belyaev 

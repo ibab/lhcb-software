@@ -1,10 +1,8 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlExprParser.cpp,v 1.1.1.1 2000-11-23 13:44:47 ranjard Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlExprParser.cpp,v 1.2 2001-01-25 12:12:30 mato Exp $
 
 // Include files
 #include "DetDesc/XmlExprParser.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "DetDesc/XmlCnvException.h"
 
 #include <cctype>

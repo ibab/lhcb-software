@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Mixture.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Mixture.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $
 #include "DetDesc/Mixture.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: Mixture.cpp,v 1.2 2001-01-22 10:55:36 mato Exp $";
+///static const char* rcsid = "$Id: Mixture.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $";
 
 
 // Class Mixture 
@@ -165,7 +165,7 @@ void Mixture::computeByAtoms()  {
     division += noOfAtomsPerVolume[i]*m_elements[i]->tsaiFactor();
 
     // Compute absorption length sum
-    lambda = fraction / m_elements[i]->absorptionLength();
+    if(m_elements[i]->absorptionLength() > 0.0 ) lambda += fraction / m_elements[i]->absorptionLength();
   }
   
   // Finish radiation length
@@ -212,7 +212,7 @@ void Mixture::computeByFraction()  {
     division   += Atomsi*m_elements[i]->tsaiFactor();
 
     // Compute absorption length sum
-    lambda = fraction / m_elements[i]->absorptionLength();
+    if(m_elements[i]->absorptionLength() > 0.0 ) lambda += fraction / m_elements[i]->absorptionLength();
   }
   
   // Finish radiation length

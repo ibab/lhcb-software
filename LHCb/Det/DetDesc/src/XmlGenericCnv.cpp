@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlGenericCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlGenericCnv.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $
 
 /// Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -14,42 +14,33 @@
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
-
 #include "GaudiKernel/IDataProviderSvc.h"
-
 #include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/ISax8BitDocHandler.h"
+#include "DetDesc/IXmlSvc.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
 
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlGenericCnv.cpp,v 1.2 2001-01-22 09:55:40 ibelyaev Exp $";
+static std::string s_notFound = "";
 
-/// Forward and external declarations
-
-// extern       CLID const  CLID_Catalog;
-
-extern const CLID&   CLID_DetectorElement;
-extern const CLID&   CLID_LogicalVolume;
-extern const CLID&   CLID_Isotope;
-extern const CLID&   CLID_Element;
-extern const CLID&   CLID_Mixture;
-
-
-/// Standard constructor
+// -----------------------------------------------------------------------
+// Standard Constructor
+// ------------------------------------------------------------------------
 XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid)
 : Converter(XML_StorageType, clid, svc),
-  m_objRcpt( 0 ), m_dataObj( 0 ), m_level( 0 ), m_doFound( false ), m_xmlParser( 0 )
-{
-}
+  m_objRcpt( 0 ), 
+  m_dataObj( 0 ), 
+  m_level( 0 ), 
+  m_doFound( false ), 
+  m_xmlParser( 0 ),
+  m_xmlSvc( 0 )
+{ }
 
-const unsigned char& XmlGenericCnv::storageType()
-{
-  return XML_StorageType;
-}
 
-/// Initialize the converter
+// -----------------------------------------------------------------------
+// Initialize the converter
+// -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::initialize()      {
   
   // Initialize the grand father
@@ -58,16 +49,24 @@ StatusCode XmlGenericCnv::initialize()      {
   m_xmlParser = 0;
   m_doFound   = false;
 
+  // Locate the Detector Data Service 
   IDataProviderSvc* dp;
   serviceLocator()->getService( "DetectorDataSvc",
                                  IID_IDataProviderSvc,
                                  (IInterface*&)dp );
   setDataProvider( dp );
+  
+  // Locate the Xml Conversion Service
+  serviceLocator()->getService( "XmlCnvSvc",
+                                 IID_IXmlSvc,
+                                 (IInterface*&)m_xmlSvc );
   return status;
 }
 
 
-/// Finalize the converter
+// -----------------------------------------------------------------------
+// Finalize the converter
+// -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::finalize()      {
   
   MsgStream log(msgSvc(), "XmlGenericCnv" );
@@ -85,40 +84,42 @@ StatusCode XmlGenericCnv::finalize()      {
   return Converter::finalize();
 }
 
-/// Create the transient representation of an object.
-StatusCode XmlGenericCnv::createObj(
-                                    IOpaqueAddress* //pAddress
-                                   ,DataObject*&    //refpObject
-                                   )  {
+// -----------------------------------------------------------------------
+// Create the transient representation of an object.
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::createObj( IOpaqueAddress* /*pAddress*/,
+                                     DataObject*&    /*refpObject*/ )  {
   return StatusCode::SUCCESS;
 }
 
-/// Update the transient object from the other representation.
-StatusCode XmlGenericCnv::updateObj(
-                                    IOpaqueAddress* //pAddress
-                                   ,DataObject*     //refpObject
-                                   )  {
+// -----------------------------------------------------------------------
+// Update the transient object from the other representation.
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::updateObj( IOpaqueAddress* /*pAddress*/,
+                                     DataObject*     /*refpObject*/)  {
   return StatusCode::SUCCESS;
 }
 
-/// Convert the transient object to the requested representation.
-StatusCode XmlGenericCnv::createRep(
-                                    DataObject*      //pObject
-                                   ,IOpaqueAddress*& //refpAddress
-                                   )  {
+// -----------------------------------------------------------------------
+// Convert the transient object to the requested representation.
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::createRep( DataObject*      /*pObject*/,
+                                     IOpaqueAddress*& /*refpAddress*/ )  {
   return StatusCode::SUCCESS;
 }
 
-/// Update the converted representation of a transient object.
-StatusCode XmlGenericCnv::updateRep(
-                                    IOpaqueAddress* //pAddress
-                                   ,DataObject*     //pObject
-                                   )  {
+// -----------------------------------------------------------------------
+// Update the converted representation of a transient object.
+// -----------------------------------------------------------------------
+StatusCode XmlGenericCnv::updateRep( IOpaqueAddress* /*pAddress*/,
+                                     DataObject*     /*pObject*/ )  {
   return StatusCode::SUCCESS;
 }
 
-static std::string s_notFound = "";
 
+// -----------------------------------------------------------------------
+// startDocument SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::startDocument()   {
 
   MsgStream log(messageService(), "XmlGenericCnv" );
@@ -136,6 +137,9 @@ void XmlGenericCnv::startDocument()   {
   }
 }
 
+// -----------------------------------------------------------------------
+// endDocument SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::endDocument(){
 
   MsgStream log(messageService(), "XmlGenericCnv" );
@@ -163,6 +167,9 @@ void XmlGenericCnv::endDocument(){
   }
 }
 
+// -----------------------------------------------------------------------
+// processingInstruction SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::processingInstruction( const XMLCh* const target, const XMLCh* const data ){
   //Convert Unicode to ASCII
   char* asciiTarget = XMLString::transcode( target );
@@ -176,6 +183,9 @@ void XmlGenericCnv::processingInstruction( const XMLCh* const target, const XMLC
   delete [] asciiData;
 }
 
+// -----------------------------------------------------------------------
+// startElement SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::startElement( const XMLCh* const name, AttributeList& attributes ){
   
   MsgStream log(msgSvc(), "XmlGenericCnv" );
@@ -216,6 +226,14 @@ void XmlGenericCnv::startElement( const XMLCh* const name, AttributeList& attrib
         m_send = false;
         m_tag  = "empty_xml_tag";
         return;
+      }
+      else if ( "parameter" == aname ) {
+        // This guy is used to learn about this parameter
+        char* name  = XMLString::transcode( attributes.getValue("name") );
+        char* value = XMLString::transcode( attributes.getValue("value") );
+        xmlSvc()->addParameter(name, value);
+        delete [] name;
+        delete [] value;
       }
     }
 
@@ -295,6 +313,9 @@ void XmlGenericCnv::startElement( const XMLCh* const name, AttributeList& attrib
   }
 }
 
+// -----------------------------------------------------------------------
+// endElement SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::endElement( const XMLCh* const name ){
 
   MsgStream log(msgSvc(), "XmlGenericCnv" );
@@ -360,6 +381,9 @@ void XmlGenericCnv::endElement( const XMLCh* const name ){
 
 }
 
+// -----------------------------------------------------------------------
+// characters SAX function
+// -----------------------------------------------------------------------
 void XmlGenericCnv::characters( const XMLCh* const chars, const unsigned int length ){
   // Convert Unicode to ASCII
   char* asciiChars = XMLString::transcode( chars );
@@ -424,6 +448,9 @@ void XmlGenericCnv::warning( const SAXParseException& exception ){
   throw;
 }
 
+// -----------------------------------------------------------------------
+//  Implementations of the SAX ErrorHandler interface
+// -----------------------------------------------------------------------
 void XmlGenericCnv::error( const SAXParseException& exception ){
   
   MsgStream log(msgSvc(), "XmlGenericCnv" );
@@ -443,6 +470,9 @@ void XmlGenericCnv::error( const SAXParseException& exception ){
   throw;
 }
 
+// -----------------------------------------------------------------------
+//  Implementations of the SAX ErrorHandler interface
+// -----------------------------------------------------------------------
 void XmlGenericCnv::fatalError( const SAXParseException& exception ){
   MsgStream log(msgSvc(), "XmlGenericCnv" );
   
@@ -474,7 +504,7 @@ void XmlGenericCnv::notationDecl
  const   XMLCh* const    //name
  , const XMLCh* const    //publicId
  , const XMLCh* const    //systemId
- )
+)
 {
 }
 
@@ -488,6 +518,9 @@ void XmlGenericCnv::unparsedEntityDecl
 {
 }
 
+// -----------------------------------------------------------------------
+//  initParser()
+// -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::initParser() {
   m_xmlParser = new SAXParser();
   // I am the chief of XmlCnvSvc orchestra so I handle SAX Unicode events
@@ -499,6 +532,9 @@ StatusCode XmlGenericCnv::initParser() {
   return StatusCode::FAILURE;
 }
 
+// -----------------------------------------------------------------------
+//  finiParser()
+// -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::finiParser() {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -516,7 +552,9 @@ StatusCode XmlGenericCnv::finiParser() {
   return sc;
 }
 
-// Calling this method must done inside try{...}catch(...){...} block
+// -----------------------------------------------------------------------
+//  parse()
+// -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::parse( const char* fileName ){
 
   StatusCode sc = StatusCode::SUCCESS;

@@ -1,6 +1,6 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.2 2001-01-22 10:55:35 mato Exp $
-#ifndef DETDESC_MATERIAL_ELEMENT_H
-#define DETDESC_MATERIAL_ELEMENT_H
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.3 2001-01-25 12:12:29 mato Exp $
+#ifndef DETDESC_ELEMENT_H
+#define DETDESC_ELEMENT_H
 
 /// Include files
 #include <vector>
@@ -13,16 +13,14 @@ class Isotope;
 
 static const CLID CLID_Element = 1202;
 
-//
-// Class: Element
-//
-// Description: Element class defines the Element material component.
-//              An Element material component can defined by composition of Isotopes.
-//              The composition is done only by fraction of the mass.
-//
-// Author: Radovan Chytracek
-//
+/** @class Element Element.h DetDesc/Element.h
 
+    Element class defines the Element material component.
+    An Element material component can defined by composition of Isotopes.
+    The composition is done only by fraction of the mass.
+
+    @author Radovan Chytracek
+*/
 class Element : public Material
 {
   
@@ -47,28 +45,30 @@ public:
   // Destructor
   ~Element();
   
-  // Number of isotopes in the material
+  /// Number of isotopes in the material
   const int nOfIsotopes() const;
   
-  // Return an isotope by index
+  /// Return an isotope by index
   const Isotope* isotope( unsigned int i ) const;
   Isotope*       isotope( unsigned int i );
 
-  // Return a fraction of an isotope by index
+  /// Return a fraction of an isotope by index
   double isotopeFraction( unsigned int i ) const;
     
-  // Add an isotope into this material
-  // After addition of the last isotope user can call this method
-  // with "comp" argument set to"true" and compute() method will
-  // do its job automatically, otherwise the user must call compute()
-  // method explicitly
+  /** Add an isotope into this material
+      After addition of the last isotope user can call this method
+      with "comp" argument set to"true" and compute() method will
+      do its job automatically, otherwise the user must call compute()
+      method explicitly
+  */
   void addIsotope( Isotope* iPtr, double fract, bool comp = false );
   
-  // Remove an isotope from the vector of isotopes
-  // compute() method invocation is done as described above
+  /** Remove an isotope from the vector of isotopes
+      compute() method invocation is done as described above
+  */
   void removeIsotope( Isotope* iPtr, bool comp = false );
   
-  // Compute quantities after addition of all isotopes
+  /// Compute quantities after addition of all isotopes
   void compute();
   
   double coulombFactor();
@@ -78,51 +78,50 @@ public:
   const CLID& clID() const;
   static const CLID& classID();
 
-  // Implementation of the Material class interface
-
-  //	Atomic mass [g/mole]
+  ///	Atomic mass [g/mole]
   const double A() const;
   void setA ( double value );
   
-  //	Atomic number
+  ///	Atomic number
   const double Z() const;
   void setZ( double value );
   
-  //	Number of nucleons
+  ///	Number of nucleons
   const double N() const;
   void setN( double value );
 
-  // Compute Coulomb factor
+  /// Compute Coulomb factor
   void ComputeCoulombFactor();
 
-  // Comput Tsai factor
+  /// Comput Tsai factor
   void ComputeLradTsaiFactor();
 
 private:
 
-  // Effective atomic mass
+  /// Effective atomic mass
   double                m_Aeff;
 
-  // Effective atomic number
+  /// Effective atomic number
   double                m_Zeff;
 
-  // Effective number of nucleons
+  /// Effective number of nucleons
   double                m_Neff;
   
-  // Number of isotopes in the material
+  /// Number of isotopes in the material
   int                   m_nOfIsotopes;
   
-  // Vector of isotopes this material is composed of
+  /// Vector of isotopes this material is composed of
   std::vector<Isotope*> m_isotopes;
   
-  // Vector of fractions corresponding to IsotopeVector items 
-  // defining the abundance of the given isotope in the material
+  /** Vector of fractions corresponding to IsotopeVector items 
+      defining the abundance of the given isotope in the material
+  */
   std::vector<double>   m_fractions;
 
-  // Coulomb factor
+  /// Coulomb factor
   double                m_coulomb;
 
-  // Tsai's factor
+  /// Tsai's factor
   double                m_tsai;
   
 };

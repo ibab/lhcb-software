@@ -1,23 +1,21 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.2 2001-01-22 10:55:35 mato Exp $
-#ifndef DETDESC_MATERIAL_ISOTOPE_H
-#define DETDESC_MATERIAL_ISOTOPE_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.3 2001-01-25 12:12:29 mato Exp $
+#ifndef DETDESC_ISOTOPE_H
+#define DETDESC_ISOTOPE_H
 
-/// Include files
+// Include files
 #include "DetDesc/Material.h"
 
-/// Forward and extern declarations
+// Forward and extern declarations
 static const CLID CLID_Isotope = 1201;
 
-//
-// Class: Isotope
-//
-// Description: Isotope class defines the Isotope material component.
-//              An Element material component can defined by composition of Isotopes.
-//              See the Element class for details.
-//
-// Author: Radovan Chytracek
-//
+/** @class Isotope Isotope.h DetDesc/Isotope.h
 
+    Isotope class defines the Isotope material component.
+    An Element material component can defined by composition of Isotopes.
+    See the Element class for details.
+
+   @author Radovan Chytracek
+*/
 class Isotope : public Material
 {
   
@@ -95,4 +93,4 @@ inline void Isotope::setN( double value ) {
   m_N = value;
 }
 
-#endif // DETDESC_MATERIAL_ISOTOPE_H
+#endif // DETDESC_ISOTOPE_H
