@@ -8,6 +8,7 @@
 /// Author Vanya Belyaev 
 ///
 
+#include "GaudiKernel/TimePoint.h"
 
 ///
 ///

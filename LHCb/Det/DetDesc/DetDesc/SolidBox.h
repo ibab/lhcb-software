@@ -5,12 +5,15 @@
 #include <iostream> 
 
 #include "GaudiKernel/ISolid.h" 
+#include "GaudiKernel/StreamBuffer.h" 
 
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
 #include "CLHEP/Units/SystemOfUnits.h"
+
+class ISolidFromStream;
 
 ///
 ///
@@ -22,7 +25,9 @@
 
 class SolidBox: public ISolid
 {
-  //
+  ///
+  friend class ISolidFromStream;
+  ///
  public:
   //
   // constructor & destructor 
@@ -33,8 +38,7 @@ class SolidBox: public ISolid
             const double       YHalfLength ,  // half-size in y-direction of this box 
             const double       ZHalfLength ); // half-size in z-direction of this box 
   //
-  virtual ~SolidBox(){};
-  
+  virtual ~SolidBox(){};  
   //
   //
   // functions from ISolid:
@@ -85,8 +89,17 @@ class SolidBox: public ISolid
   // return the half z-size of the box 
   inline         double  zHalfLength()  const { return m_box_zHalfLength   ; };
 
+  ///
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& s )       ; 
+  /// serialization for writing 
+  StreamBuffer& serialize( StreamBuffer& s ) const ; 
   
-  //
+  ///
+ protected:
+  ///
+  SolidBox();
+  ///
  private:
   //
   SolidBox           ( const SolidBox & );  // no copy-constructor 

@@ -13,11 +13,13 @@
 #include "GaudiKernel/ICnvFactory.h"
 #include "GaudiKernel/ISvcFactory.h"
 #include "GaudiKernel/IAlgFactory.h"
+#include "GaudiKernel/IObjectFactory.h"
 
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
 
+#define DLL_DECL_SERVICE(x)       extern const ISvcFactory&        x##Factory; x##Factory.addRef();
+#define DLL_DECL_CONVERTER(x)     extern const ICnvFactory&        x##Factory; x##Factory.addRef();
+#define DLL_DECL_ALGORITHM(x)     extern const IAlgFactory&        x##Factory; x##Factory.addRef();
+#define DLL_DECL_OBJECTFACTORY(x) extern const IFactory& x##Factory; x##Factory.addRef();
 
 void DetDesc_load() {
 
@@ -33,9 +35,17 @@ void DetDesc_load() {
   DLL_DECL_CONVERTER( XmlIsotopeCnv );
   DLL_DECL_CONVERTER( XmlElementCnv );
   DLL_DECL_CONVERTER( XmlMixtureCnv );
+  
+  // DataObject Factories
+  
+  DLL_DECL_OBJECTFACTORY( LVolume         );
+  //  DLL_DECL_OBJECTFACTORY( DetectorElement );
+  
 }
 
-extern "C" void DetDesc_loadRef() {
-  DetDesc_load();
-}
+///
+///
+///
+
+extern "C" void DetDesc_loadRef() { DetDesc_load(); }
 

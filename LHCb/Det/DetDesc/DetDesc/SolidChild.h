@@ -17,6 +17,7 @@ class HepTransform3D;
 
 class ISolid; 
 class SolidBoolean; 
+class StreamBuffer; 
 
 ///
 /// 
@@ -33,6 +34,9 @@ class SolidChild : public ISolid
   friend class SolidBoolean;
   
  protected: 
+
+  // constructor
+  SolidChild();
   
   // constructor                  ( protected ! )  
   SolidChild( ISolid*               Solid      , 
@@ -100,6 +104,14 @@ class SolidChild : public ISolid
   inline const HepTransform3D&     matrix       () const ; 
   //
 
+ protected:
+  
+  /// serialization for reading
+  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
+  
+  /// serialization for writing 
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;  
+  /// 
  private:
 
   mutable ISolid*                m_sc_solid   ; 

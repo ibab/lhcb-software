@@ -50,6 +50,12 @@ class PVolume: public IPVolume
                       IDataProviderSvc*          dataService    = 0               , 
                       IMessageSvc*               msgSvc         = 0               );
  ///
+  PVolume           ( const     std::string&     PhysVol_name                     ,
+		      const     std::string&     LogVol_name                      ,
+                      const     HepTransform3D&  Transform                        , // position in Mother Reference Frame!
+                      IDataProviderSvc*          dataService    = 0               , 
+                      IMessageSvc*               msgSvc         = 0               );
+ ///
   virtual ~PVolume();
   
  public:

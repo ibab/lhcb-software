@@ -16,6 +16,10 @@ SolidUnion::SolidUnion( const std::string& name  ,
   if( 0 == First ) { throw SolidException(" SolidUnion constructor with ISolid=NULL! "); }
 };
 
+SolidUnion::SolidUnion()
+  : SolidBoolean( "unnamed Union" , 0 )
+{
+};
 
 
 //

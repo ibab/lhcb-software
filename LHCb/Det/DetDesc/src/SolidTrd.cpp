@@ -14,14 +14,15 @@ SolidTrd::SolidTrd( const std::string& name              ,
 		    const double       YHalfLength1      , 
 		    const double       XHalfLength2      , 
 		    const double       YHalfLength2      ) 
-  : m_trd_name         ( name         )
-  , m_trd_zHalfLength  ( ZHalfLength  )
-  , m_trd_xHalfLength1 ( XHalfLength1 )
-  , m_trd_xHalfLength2 ( XHalfLength2 )
-  , m_trd_yHalfLength1 ( YHalfLength1 )
-  , m_trd_yHalfLength2 ( YHalfLength2 )
+  : SolidPolyHedronHelper (              ) 
+  , m_trd_name            ( name         )
+  , m_trd_zHalfLength     ( ZHalfLength  )
+  , m_trd_xHalfLength1    ( XHalfLength1 )
+  , m_trd_xHalfLength2    ( XHalfLength2 )
+  , m_trd_yHalfLength1    ( YHalfLength1 )
+  , m_trd_yHalfLength2    ( YHalfLength2 )
   //
-  , m_trd_cover        (      0       )
+  , m_trd_cover           (      0       )
   //
 {
   //
@@ -39,17 +40,92 @@ SolidTrd::SolidTrd( const std::string& name              ,
     { throw SolidException("SolidTrd constructor::XSUM is not positive "); } 
   if( 0 >=  YHalfLength1 + YHalfLength2 )
     { throw SolidException("SolidTrd constructor::YSUM is not positive "); } 
-  //
+  ///
+  makeAll();
+  ///
 };
 
 //
 //
 //
+///
+/// fictive default construcor 
+///
+SolidTrd::SolidTrd()
+  : SolidPolyHedronHelper (               )
+  , m_trd_name            ( "unnamed Trd" )
+  , m_trd_zHalfLength     ( 10000000      )
+  , m_trd_xHalfLength1    ( 10000         )
+  , m_trd_xHalfLength2    ( 10000         )
+  , m_trd_yHalfLength1    ( 10000         )
+  , m_trd_yHalfLength2    ( 10000         )
+  //
+  , m_trd_cover           (      0       )
+  //
+{
+  ///
+  makeAll();
+  ///
+};
 
 SolidTrd::~SolidTrd()
 {
+  SolidPolyHedronHelper::reset();
   if( this == m_trd_cover ){                   m_trd_cover = 0 ; } 
   if(    0 != m_trd_cover ){ delete m_trd_cover; m_trd_cover = 0 ; }
+};
+
+
+///
+/// serialization for reading 
+///
+StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) 
+{
+  ///
+  SolidPolyHedronHelper::reset();
+  ///
+  if( 0 != m_trd_cover ) { delete m_trd_cover ; m_trd_cover = 0 ; } 
+  ///
+  s >> m_trd_name 
+    >> m_trd_zHalfLength  
+    >> m_trd_xHalfLength1 
+    >> m_trd_xHalfLength2 
+    >> m_trd_yHalfLength1 
+    >> m_trd_yHalfLength2 ;  
+  ///
+  if( 0 >= zHalfLength () )
+    { throw SolidException("SolidTrd constructor::ZHalfLength is not positive!"); } 
+  if( 0 >  xHalfLength1() )
+    { throw SolidException("SolidTrd constructor::XHalfLength1 is negative!"); } 
+  if( 0 >  xHalfLength2() )
+    { throw SolidException("SolidTrd constructor::XHalfLength2 is negative!"); } 
+  if( 0 >  yHalfLength1() )
+    { throw SolidException("SolidTrd constructor::YHalfLength1 is negative!"); } 
+  if( 0 >  yHalfLength2() )
+    { throw SolidException("SolidTrd constructor::YHalfLengt2 is negative!"); } 
+  if( 0 >=  xHalfLength1() + xHalfLength2() )
+    { throw SolidException("SolidTrd constructor::XSUM is not positive "); } 
+  if( 0 >=  yHalfLength1() + yHalfLength2() )
+    { throw SolidException("SolidTrd constructor::YSUM is not positive "); } 
+  ///
+  makeAll();
+  ///
+  return s;
+  ///
+};
+
+
+StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
+{
+  ///
+  return s << typeName() 
+	   << m_trd_name 
+	   << m_trd_zHalfLength  
+	   << m_trd_xHalfLength1 
+	   << m_trd_xHalfLength2 
+	   << m_trd_yHalfLength1 
+	   << m_trd_yHalfLength2 ;  
+  ///
 };
 
 //
@@ -80,135 +156,50 @@ const ISolid*           SolidTrd::cover         () const
 };
 
 
-
-/// calculate the intersection points("ticks") with a given line. 
-/// Input - line, paramterised by (Point + Vector * Tick) 
-/// "Tick" is just a value of parameter, at which the intercestion occurs 
-/// Return the number of intersection points (=size of Ticks container)   
-inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D & point  ,          // initial point for teh line 
-						   const HepVector3D& vect   ,          // vector along the line 
-						   ISolid::Ticks    & ticks  ) const    // output container of "Ticks"
-{
-  // clear container 
-  ticks.clear();
-  
-  // line with null direction vection is not able to intersect any solid!
-  if(  vect.mag2() <= 0 ) { return 0; }                     // RETURN!!!
-  
-  // try to intersect with z-planes
-  SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , std::back_inserter( ticks ) ) ;
-  SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , std::back_inserter( ticks ) ) ;
-  
-  // try to intersect the line  with other planes
-  
+void SolidTrd::makeAll()
+{   
+  ///
+  SolidPolyHedronHelper::reset() ; 
+  ///
+  std::vector<HepPoint3D> points;
+  ///
   {
-    double dx   = xHalfLength2()-xHalfLength1();
-    double dxdz = 0.5 * dx / zHalfLength() ; 
-    {  
-      // x-z plane 
-      // 1) line x=x1+(z-z1)*(x2-x1)/(z2-z1) = x1 + (z-z1)*dxdz =dxdz*z + x1-z1*dxdz = a*z+b
-      //         z=z 
-      //    line x = px + vx * t 
-      //         z = pz + vz * t 
-      // ------------------------------------
-      //    a*z + b = px + vx * t 
-      //      z     = pz + vz * t 
-      // -----------------------------------
-      //    t*vx - a*z = b - px 
-      //    t*vz -   z =   - pz
-      double a = dxdz;
-      double b = xHalfLength1()+zHalfLength()*dxdz;
-      double d = -1.0 * vect.x() + a * vect.z() ;
-      if( 0 != d ) { ticks.push_back( (ISolid::Tick) ( -1.0*(b-point.x())-point.z()*a ) / d ); }
-    }
-    {
-      // 2) line x=-x1-(z-z1)*(x2-x1)/(z2-z1) =-x1-(z-z1)*dxdz =-dxdz*z -x1+z1*dxdz = a*z+b
-      //         z=z 
-      //    line x = px + vx * t 
-      //         z = pz + vz * t 
-      // ------------------------------------
-      //    a*z + b = px + vx * t 
-      //      z     = pz + vz * t 
-      // -----------------------------------
-      //    t*vx - a*z = b - px 
-      //    t*vz -   z =   - pz
-      double a = -dxdz;
-      double b = -xHalfLength1()-zHalfLength()*dxdz;
-      double d = -1.0 * vect.x() + a * vect.z() ;
-      if( 0 != d ) { ticks.push_back( (ISolid::Tick) ( -1.0*(b-point.x())-point.z()*a ) / d ); }
-    }
+    ///
+    /// construct points (vertoces)
+    /// codes are copied from G4 
+    ///
+    HepPoint3D p0( - xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ;
+    HepPoint3D p1( - xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ; 
+    HepPoint3D p2(   xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ;
+    HepPoint3D p3(   xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ; 
+    HepPoint3D p4( - xHalfLength1() , - yHalfLength1() ,  zHalfLength() ) ; 
+    HepPoint3D p5( - xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ; 
+    HepPoint3D p6(   xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ; 
+    HepPoint3D p7(   xHalfLength1() , - yHalfLength1() ,  zHalfLength() ) ;
+
+    ///
+    points.push_back( p0 ) ; 
+    points.push_back( p1 ) ; 
+    points.push_back( p2 ) ; 
+    points.push_back( p3 ) ; 
+    points.push_back( p4 ) ; 
+    points.push_back( p5 ) ; 
+    points.push_back( p6 ) ; 
+    ///
   }
-  {
-    double dy   = yHalfLength2()-yHalfLength1();
-    double dydz = 0.5 * dy / zHalfLength() ; 
-    {
-      // y-z plane 
-      // 1) line y=y1+(z-z1)*(y2-y1)/(z2-z1) = y1 + (z-z1)*dydz =dydz*z + y1-z1*dydz = a*z+b
-      //         z=z 
-      //    line y = py + vy * t 
-      //         z = pz + vz * t 
-      // ------------------------------------
-      //    a*z + b = py + vy * t 
-      //      z     = pz + vz * t 
-      // -----------------------------------
-      //    t*vy - a*z = b - py 
-      //    t*vz -   z =   - pz
-      double a = dydz;
-      double b = yHalfLength1()+zHalfLength()*dydz;
-      double d = -1.0 * vect.y() + a * vect.z() ;
-      if( 0 != d ) { ticks.push_back( (ISolid::Tick) ( -1.0*(b-point.y())-point.z()*a ) / d ); }
-    }
-    {
-      // 2) line y=-y1-(z-z1)*(y2-y1)/(z2-z1) =-y1-(z-z1)*dydz =-dydz*z -y1+z1*dydz = a*z+b
-      //         z=z 
-      //    line y = py + vy * t 
-      //         z = pz + vz * t 
-      // ------------------------------------
-      //    a*z + b = py + vy * t 
-      //      z     = pz + vz * t 
-      // -----------------------------------
-      //    t*vy - a*z = b - py 
-      //    t*vz -   z =   - pz
-      double a = -dydz;
-      double b = -yHalfLength1()-zHalfLength()*dydz;
-      double d = -1.0 * vect.y() + a * vect.z() ;
-      if( 0 != d ) { ticks.push_back( (ISolid::Tick) ( -1.0*(b-point.y())-point.z()*a ) / d ); }
-    }
-  }
+  if( 8 != points.size() ) 
+    { throw SolidException("SolidTrd constructor:: wrong dimension of array of vertices!"); } 
   
   ///
+  /// make faces
   ///
-  /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
-  
-
-};
-
-///
-///
-///
-
-/// calculate the intersection points("ticks") with a given line. 
-/// Input - line, paramterised by (Point + Vector * Tick) 
-/// "Tick" is just a value of parameter, at which the intercestion occurs 
-/// Return the number of intersection points (=size of Ticks container)   
-inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D  & point   ,          // initial point for teh line 
-						   const HepVector3D & vect    ,          // vector along the line 
-                                                   const ISolid::Tick& tickMin ,          // minimal value for the Tick 
-                                                   const ISolid::Tick& tickMax ,          // maximal value for the tick 
-						   ISolid::Ticks     & ticks   ) const    // output container of "Ticks"
-{
+  addFace( points[0] , points[4] , points[5] , points[1] ) ;
+  addFace( points[2] , points[3] , points[7] , points[6] ) ;
+  addFace( points[0] , points[2] , points[6] , points[4] ) ;
+  addFace( points[1] , points[5] , points[7] , points[3] ) ;
+  addFace( points[0] , points[1] , points[3] , points[2] ) ; /// bottom face
+  addFace( points[5] , points[4] , points[6] , points[7] ) ; /// top    face
   ///
-  intersectionTicks( point , vect , ticks ) ; 
-  ///
-  /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin, tickMax , *this );  
+  if( 6 != planes().size() ) { throw SolidException("SolidTrd constructor::wrong number of constructed faces"); } 
   ///
 };
-///
-///
-///
-
-
-
-

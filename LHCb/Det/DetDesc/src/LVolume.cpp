@@ -20,6 +20,7 @@
 #include "GaudiKernel/IPVolume.h"
 
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/StreamBuffer.h" 
 
 #include "DetDesc/LVolume.h"
 #include "DetDesc/PVolume.h"
@@ -28,22 +29,33 @@
 #include "DetDesc/SolidTicks.h"
 #include "DetDesc/Material.h"
 
+#include "DetDesc/ISolidFromStream.h"
+#include "DetDesc/ClhepToStream.h"
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-
 #include "CLHEP/Geometry/Transform3D.h"
 
+#include "GaudiKernel/ObjectFactory.h" 
+
+///
+///
 
 const CLID& CLID_LogicalVolume = 1100;
 
+///
+///
+///
+
+static        DataObjectFactory<LVolume>          s_LVolumeFactory ;            
+extern const IDataObjectFactory& LVolumeFactory = s_LVolumeFactory ;
 
 
 ///
 ///  not-inlined methods of implemenattion of LVolume class  
 ///
 ///  Author: Vanya Belyaev 
-
+///
 
 
 ///
@@ -141,10 +153,14 @@ LVolume::LVolume( const std::string& name        ,
 
 LVolume::~LVolume()
 {
+  ///
   ILVolume::PVolumes::iterator pvi = pvBegin(); 
   while( pvEnd() != pvi ) { if( 0 != *pvi ) { delete *pvi++; } }  // NB!!!! DELETE!!!! 
   m_lv_pvolumes.clear();
-  if( 0 != m_lv_solid ) { delete m_lv_solid; m_lv_solid = 0 ; } 
+  if( 0 != m_lv_solid      ) { delete m_lv_solid      ; m_lv_solid      = 0 ; } 
+  if( 0 != m_lv_validSince ) { delete m_lv_validSince ; m_lv_validSince = 0 ; }
+  if( 0 != m_lv_validTill  ) { delete m_lv_validTill  ; m_lv_validTill  = 0 ; }
+  ///
 };
 
 
@@ -200,9 +216,9 @@ IDataProviderSvc* LVolume::dataSvc()
 
 
 ///
-///
 /// printout to MsgStream 
 ///
+
 MsgStream&    LVolume::printOut( MsgStream&    os ) const
 {
   os << " LVolume:: name=" << fullpath    () 
@@ -224,18 +240,69 @@ MsgStream&    LVolume::printOut( MsgStream&    os ) const
   //
   return os; 
 };
+
 ///
+/// Serialization methods 
 ///
+
+/// Serialize the object for reading 
+StreamBuffer& LVolume::serialize( StreamBuffer& s )
+{
+  ///
+  /// prepare for reading (reset)
+  for( ILVolume::PVolumes::iterator pvi = pvBegin() ; pvEnd() != pvi ; ++pvi ) { delete *pvi; } ; 
+  m_lv_pvolumes.clear();
+  if( 0 != m_lv_solid ) { delete m_lv_solid ; m_lv_solid = 0 ; } 
+  ///
+  DataObject::serialize( s ); 
+  ///
+  ISolidFromStream    cnstr ; 
+  m_lv_solid        = cnstr( s ) ; // make solid from the stream 
+  /// 
+  Assert( 0 != m_lv_solid , " Could not read/create ISolid* from StreamBuffer " );   
+  ///
+  s >> m_lv_materialName ; 
+  /// 
+  unsigned long nPV;
+  s >> nPV ;  // number of physical volumes 
+  ///
+  for( unsigned long PV = 0 ; PV < nPV ; ++PV )  
+    {
+      ///
+      std::string      PVname , LVname ;
+      HepTransform3D   Mtrx            ;   
+      ///
+      s >> PVname >> LVname  >> Mtrx   ; 
+      ///
+      createPVolume( PVname , LVname , Mtrx ) ; 
+      ///
+    }
+  ///
+  return s; 
+};
+
+/// Serialize the object for writing
+StreamBuffer& LVolume::serialize( StreamBuffer& s )  const
+{
+  ///
+  DataObject::serialize( s );
+  ///
+  s << *solid        ()   << materialName () << noPVolumes   (); 
+  ///
+  for( ILVolume::PVolumes::const_iterator pvi = pvBegin() ; pvEnd() != pvi ; ++pvi )
+    { s <<  (*pvi)->name()  <<  (*pvi)->lvolumeName()  << (*pvi)->matrix() ; }  
+  ///
+  return s ;
+}
 ///
 
 
-///
-///
-///
-#include "DetDesc/LVolume.createPVolume.h" 
-#include "DetDesc/LVolume.createMultiPVolume.h" 
-#include "DetDesc/LVolume.intersectLine.h" 
 #include "DetDesc/LVolume.validity.h" 
+#include "DetDesc/LVolume.intersectLine.h" 
+
+
+
+
 
 
 

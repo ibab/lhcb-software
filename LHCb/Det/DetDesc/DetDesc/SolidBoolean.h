@@ -15,6 +15,8 @@ class HepVector3D;
 class HepTransform3D; 
 class HepRotation;
 
+class StreamBuffer;
+
 ///
 ///
 ///
@@ -81,7 +83,13 @@ class SolidBoolean: public ISolid
   inline         unsigned int  noChildrens ()                    const { return m_sb_childrens.size(); } ;
   // access to the childrens by index 
   inline  const  ISolid*       operator[]  (unsigned int       ) const ;
-  
+
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& )       ; 
+  /// serialization for writing 
+  StreamBuffer& serialize( StreamBuffer& ) const ; 
+
+  ///  
  protected:
   
   // add child to daughter container 
@@ -99,9 +107,9 @@ class SolidBoolean: public ISolid
   inline SolidChildrens::const_iterator  childEnd   () const { return m_sb_childrens.end  (); }; 
   inline SolidChildrens::iterator        childEnd   ()       { return m_sb_childrens.end  (); }; 
 
+  ///
  private:
-
-  //
+  ///
   std::string                    m_sb_name     ;    
   mutable     ISolid*            m_sb_first    ;  
   mutable     SolidChildrens     m_sb_childrens; 

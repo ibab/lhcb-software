@@ -21,10 +21,13 @@ class StatusCode;
 class HepTransform3D;
 class HepRotation;
 class HepPoint3D; 
+class ISolidFromStream;
 
 class SolidUnion: public SolidBoolean
 {
-  
+  ///
+  friend class ISolidFromStream;
+  ///  
  public:
   //
   SolidUnion( const std::string& name , ISolid* first ); 
@@ -43,7 +46,16 @@ class SolidUnion: public SolidBoolean
   inline         StatusCode    unite   ( ISolid*               child                    , 
 					 const HepPoint3D&     position                 , 
 					 const HepRotation&    rotation = HepRotation() );
-  
+  ///
+ protected:
+  ///
+  SolidUnion();
+  ///
+ private:
+  ///
+  SolidUnion           ( const SolidUnion& ) ;
+  SolidUnion& operator=( const SolidUnion& ) ;
+  //
 };
 
 //

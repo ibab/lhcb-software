@@ -19,10 +19,15 @@ class HepTransform3D;
 class HepRotation;
 class HepPoint3D; 
 
+class ISolidFromStream;
+class StreamBuffer;
+
 
 class SolidIntersection: public SolidBoolean
 {
-  
+  ///
+  friend class ISolidFromStream;
+  ///  
  public:
   //
   SolidIntersection( const std::string& name , ISolid* first ); 
@@ -42,12 +47,20 @@ class SolidIntersection: public SolidBoolean
   inline         StatusCode    intersect( ISolid*               child                    , 
 					  const HepPoint3D&     position                 , 
 					  const HepRotation&    rotation = HepRotation() );
-  
+ protected:
+  ///
+  SolidIntersection();
+  ///
+ private:
+  ///
+  SolidIntersection           ( const SolidIntersection& );
+  SolidIntersection& operator=( const SolidIntersection& );
+  ///
 };
 
-//
-//
-//
+///
+///
+///
 
 inline bool SolidIntersection::isInside     ( const HepPoint3D   & point ) const 
 { 

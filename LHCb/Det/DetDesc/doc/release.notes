@@ -3,6 +3,14 @@ package manager : R Chytracek
 
 ! 20010116 - DetDesc 
  Vanya Belyaev 
+  new functionality: 
+   (1) now LVolume could be read/write to database (implementation of serialize methods) 
+         (head revision of GaudiKernel v9 is required)
+   (2) A helper class SolidPolyHedronHelper is introduced to simplifyt SolidTrap and SolidTrd shapes 
+!===========================================================================
+
+! 20010116 - DetDesc 
+ Vanya Belyaev 
   DetDesc/LVolume.h 
   DetDesc/LVolume.create.... 
   Add new functionality - a possibility of 2 and even 3 loops in creation on parametrized volumes.

@@ -12,6 +12,10 @@
 #include "CLHEP/Geometry/Vector3D.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
 
+#include "DetDesc/SolidPolyHedronHelper.h" 
+
+class StreamBuffer;
+class ISolidFromStream;
 
 ///
 ///  class SolidTrd : a simple implementation of Trapezoid
@@ -19,8 +23,11 @@
 ///  Author: Vanya Belyaev 
 ///
 
-class SolidTrd: public ISolid
+class SolidTrd: public  virtual ISolid , 
+                private virtual SolidPolyHedronHelper 
 {
+  //
+  friend class ISolidFromStream;
   //
  public:
   //
@@ -41,7 +48,7 @@ class SolidTrd: public ISolid
   // type of this solid 
   inline         std::string       typeName     ()                      const { return "SolidTrd"; };
   // the notorious "isInside" method 
-  inline         bool              isInside     ( const HepPoint3D&   ) const;
+  inline         bool              isInside     ( const HepPoint3D& p ) const { return SolidPolyHedronHelper::isInside( p ) ; }  
   // covering solid 
   inline const   ISolid*           cover        ()                      const;
   // the top covering solid 
@@ -92,10 +99,19 @@ class SolidTrd: public ISolid
   // full size in z  
   inline       double                zLength     () const { return m_trd_zHalfLength  * 2 ; };
   //
+
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& )       ; 
+  /// serialization for writing
+  StreamBuffer& serialize( StreamBuffer& ) const ; 
+  ///
+ protected:
+  ///
+  SolidTrd();
+  ///
  private:
   //
-  inline       double x_z( double z ) const; 
-  inline       double y_z( double z ) const; 
+  void makeAll() ; 
   //
  private:
   //
@@ -115,41 +131,6 @@ class SolidTrd: public ISolid
   //
 };
 
-
-//
-//
-//
-
-inline   bool  SolidTrd::isInside( const HepPoint3D& point) const
-{
-  if( abs(point.z()) > zHalfLength()    || 
-      abs(point.x()) > x_z(point.z())   || 
-      abs(point.y()) > y_z(point.z())    ) { return false; } 
-  //
-  return true; 
-}
-
-//
-//
-//
-
-inline       double SolidTrd::x_z( double z ) const 
-{
-  double a =  (xHalfLength2()-xHalfLength1())/zHalfLength(); 
-  double b =   xHalfLength2()+xHalfLength1()             ; 
-  return 0.5*(a*z+b);
-}
-
-//
-//
-//
-
-inline       double SolidTrd::y_z( double z ) const
-{
-  double a =  (yHalfLength2()-yHalfLength1())/zHalfLength(); 
-  double b =   yHalfLength2()+yHalfLength1()             ; 
-  return 0.5*(a*z+b);
-}
 
 //
 //
@@ -180,6 +161,31 @@ inline std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
 //
 //
 //
+
+
+///
+///
+///
+inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
+						   const HepVector3D& Vector ,          // vector along the line 
+						   ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
+
+/// calculate the intersection points("ticks") with a given line. 
+/// Input - line, parametrized by (Point + Vector * Tick) 
+/// "Tick" is just a value of parameter, at which the intercestion occurs 
+/// Return the number of intersection points (=size of Ticks container)   
+inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
+						   const HepVector3D&  Vector  ,          // vector along the line 
+						   const ISolid::Tick& tickMin ,          // minimal value for the tick 
+						   const ISolid::Tick& tickMax ,          // maximal value for tick 
+						   ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
+///
+///
+///
+///
+
 
 ///
 ///

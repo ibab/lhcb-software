@@ -42,10 +42,11 @@ class HepTransform3D;
 class HepRotate;
 class HepPoint3D; 
 
-
 class SolidSubtraction: public SolidBoolean
 {
-  
+  //
+  friend class ISolidFromStream;
+  //
  public:
   //
   SolidSubtraction( const std::string& name , ISolid* first ); 
@@ -67,7 +68,15 @@ class SolidSubtraction: public SolidBoolean
 					  const HepPoint3D&     position                 , 
 					  const HepRotation&    rotation = HepRotation() );
   
- 
+ protected:
+  ///
+  SolidSubtraction();
+  ///
+ private:
+  ///
+  SolidSubtraction           ( const SolidSubtraction& ) ; 
+  SolidSubtraction& operator=( const SolidSubtraction& ) ; 
+  ///
 };
 
 //

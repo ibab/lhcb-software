@@ -11,9 +11,15 @@
 
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
+#include "CLHEP/Geometry/Plane3D.h"
+ 
 #include "CLHEP/Units/PhysicalConstants.h" 
 
 #include "DetDesc/SolidException.h" 
+#include "DetDesc/SolidPolyHedronHelper.h" 
+
+class ISolidFromStream;
+class StreamBuffer; 
 
 ///
 ///  class SolidTrap : a simple implementation of General Trapezoid
@@ -22,12 +28,13 @@
 ///  date  : 20 sept 2000 
 ///
 
-class SolidTrap: public ISolid
+class SolidTrap: public  virtual ISolid                ,
+                 private virtual SolidPolyHedronHelper
 {
   ///
-  typedef std::vector<HepVector3D>  FACE;   
-  typedef std::vector<FACE>         FACES; 
-  typedef std::vector<HepPoint3D>   VERTS;
+  friend class ISolidFromStream;
+  ///
+  typedef std::vector<HepPoint3D> VERTICES; 
   ///
  public: 
   ///
@@ -98,21 +105,24 @@ class SolidTrap: public ISolid
   inline const double&                dxAtPlusZPlusY   () const { return m_trap_dxAtPlusZPlusY   ; };
   inline const double&                alphaAtPlusZ     () const { return m_trap_alphaAtPlusZ     ; }; 
   ///
+
+  /// serialization for reading
+  StreamBuffer& serialize( StreamBuffer& )       ; 
+  /// serialization for writing
+  StreamBuffer& serialize( StreamBuffer& ) const ; 
+  ///
+ protected:
+  ///
+  SolidTrap();
+  ///
  private: 
   ///
   SolidTrap           ( const SolidTrap & );  // no copy-constructor 
   SolidTrap& operator=( const SolidTrap & );  // no assignment 
   ///
-  inline const HepPoint3D&            point    ( const VERTS::size_type& i ) const { return m_trap_vertices[i]; };
-  ///  
-  inline bool                         inside   ( const HepPoint3D& p , const FACE& face ) const;  
+  void        makeAll();
   ///
-  inline double                       distance ( const HepPoint3D& p , const FACE& face ) const;  
-  ///
-  void addFace(  const HepPoint3D& p1 , 
-		 const HepPoint3D& p2 , 
-		 const HepPoint3D& p3 , 
-		 const HepPoint3D& p4 ) const;  
+  inline      const HepPoint3D& point( const VERTICES::size_type& indx ) const { return m_trap_vertices[indx]; }  
   ///
  private:
   ///
@@ -137,9 +147,7 @@ class SolidTrap: public ISolid
   ///
   mutable ISolid*      m_trap_cover;
   ///
-  mutable FACES        m_trap_faces;    
-  ///
-  VERTS                m_trap_vertices;
+  VERTICES             m_trap_vertices; 
   ///
 };
 
@@ -189,55 +197,32 @@ inline const   ISolid* SolidTrap::reset() const
 ///
 ///
 
-inline   bool  SolidTrap::isInside( const HepPoint3D& point) const
-{
-  ///
-  if( abs( point.z() ) > zHalfLength() ) { return false ; }  
-  ///
-  /// loop over all faces 
-  for( FACES::const_iterator pface = m_trap_faces.begin() ; m_trap_faces.end() != pface ; ++pface ) 
-    { 
-      ///
-      if( !inside( point , *pface ) ) { return false; } 
-      ///
-    } 
-  ///
-  return true;
-  ///
-};
+inline   bool  SolidTrap::isInside( const HepPoint3D& Point) const { return SolidPolyHedronHelper::isInside( Point ) ; } 
 
 ///
 ///
 ///
 
-inline bool SolidTrap::inside( const HepPoint3D& p , const SolidTrap::FACE& face ) const
-{
-  ///
-  double alpha = distance( p , face ) ; 
-  ///
-  return alpha > 0 ? true : false ; 
-  ///
-}; 
+inline  unsigned int SolidTrap::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
+						    const HepVector3D& Vector ,          // vector along the line 
+						    ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
 
+/// calculate the intersection points("ticks") with a given line. 
+/// Input - line, parametrized by (Point + Vector * Tick) 
+/// "Tick" is just a value of parameter, at which the intercestion occurs 
+/// Return the number of intersection points (=size of Ticks container)   
+inline  unsigned int SolidTrap::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
+						    const HepVector3D&  Vector  ,          // vector along the line 
+						    const ISolid::Tick& tickMin ,          // minimal value for the tick 
+						    const ISolid::Tick& tickMax ,          // maximal value for tick 
+						    ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
 ///
-/// "distance" along the normal to the face
+///
+///
 ///
 
-inline double  SolidTrap::distance( const HepPoint3D& p , const SolidTrap::FACE& face ) const
-{
-  ///
-  if( 4 != face.size() ) { throw SolidException("SolidTrap::inside wrond dimension of FACE!") ; }
-  ///
-  const HepVector3D& p0 = face[1] ;  // point on the face
-  const HepVector3D& n  = face[3] ;  // (unit) normal to the face 
-  ///
-  return p0*n - p*n ; 
-  ///
-}; 
-
-///
-///
-///
 
 
 #endif //     __DETDESC_SOLID_SOLIDTRAP_H__

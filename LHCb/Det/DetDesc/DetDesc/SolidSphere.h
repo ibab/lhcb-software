@@ -12,6 +12,9 @@
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
 
+class ISolidFromStream;
+class StreamBuffer;
+
 ///
 ///  class SolidSphere : just a simple implementation of ISolid interphase for primitive sphere  
 ///
@@ -20,7 +23,9 @@
 
 class SolidSphere: public ISolid
 {
-  //
+  ///
+  friend class ISolidFromStream;
+  ///
  public:
   //
   // constructor, all size - in mm, all angles in radians 
@@ -93,6 +98,19 @@ class SolidSphere: public ISolid
   // return the end of theta angle of sphere segment (in radians)
   inline       double  endThetaAngle  () const { return m_sphere_deltaThetaAngle + m_sphere_deltaThetaAngle ; };
 
+
+
+  ///
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& s ) ; 
+  /// serialization for writing 
+  StreamBuffer& serialize( StreamBuffer& s ) const ; 
+  ///
+
+ protected:
+  ///
+  SolidSphere();
+  ///
  private:
   //
   SolidSphere           ( const SolidSphere& );  // no copy-constructor 

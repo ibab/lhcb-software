@@ -53,7 +53,24 @@ PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
   //  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(translation ) ;
   m_pv_matrix = HepTranslate3D(translation)*HepRotate3D(Rotation);
   //
-  Assert( 0 != dataService , "PVolume Fatal Error in constructor!" );
+  Assert( 0 != dataService , "PVolume Fatal Error in constructor(1)!" );
+  //
+};
+
+PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
+			     const     std::string&     LogVol_name        ,
+			     const     HepTransform3D&  Transform          , // position in Mother Reference Frame!
+                             IDataProviderSvc*          dataService        ,
+                             IMessageSvc*               msgSvc )
+  : m_pv_name      ( PhysVol_name   ) 
+  , m_pv_lvname    ( LogVol_name    ) 
+  , m_pv_matrix    ( Transform      )
+  , m_pv_lvolume   ( 0              )
+  , m_pv_dataSvc   ( dataService    )
+  , m_pv_messageSvc( msgSvc         )
+{
+  //
+  Assert( 0 != dataService , "PVolume Fatal Error in constructor(2) !" );
   //
 };
 

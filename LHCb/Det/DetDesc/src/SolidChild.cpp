@@ -1,6 +1,10 @@
 
 #include "GaudiKernel/ISolid.h" 
+#include "GaudiKernel/StreamBuffer.h"
+
 #include "DetDesc/SolidChild.h" 
+#include "DetDesc/ClhepToStream.h" 
+#include "DetDesc/ISolidFromStream.h" 
 
 #include "CLHEP/Geometry/Transform3D.h" 
 #include "CLHEP/Geometry/Point3D.h" 
@@ -8,6 +12,14 @@
 
 //
 // constructor
+//
+SolidChild::SolidChild()
+  : m_sc_solid     (  0    )
+  , m_sc_simple    ( true  )
+  , m_sc_matrix    (   0   )
+{}; 
+
+
 SolidChild::SolidChild( ISolid*                solid , 
                         const HepTransform3D*  mtrx  )
   : m_sc_solid     ( solid )
@@ -56,5 +68,43 @@ SolidChild::~SolidChild()
   if( 0 != m_sc_solid  ){ delete m_sc_solid ; m_sc_solid  = 0; } 
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
 };
+
+
+
+///
+///
+///
+
+StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) 
+{
+  ///
+  if( 0 !=  m_sc_matrix ) { delete m_sc_matrix ; m_sc_matrix = 0 ; } 
+  ///
+  HepTransform3D Mtrx;  
+  sb >>  Mtrx;
+  m_sc_simple = false ;  
+  ISolidFromStream cnstr;
+  m_sc_solid  = cnstr( sb ) ;
+  ///
+  return sb;
+} 
+
+///
+///
+///
+
+StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
+{
+  return sb << matrix() << *solid() ; 
+} 
+
+
+
+
+
+
+
+
+
 
 

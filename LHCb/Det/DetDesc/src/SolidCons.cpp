@@ -6,6 +6,7 @@
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h"
 
+#include "GaudiKernel/StreamBuffer.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
@@ -36,29 +37,19 @@ SolidCons::SolidCons( const std::string & name  ,
   , m_cons_cover             (         0          )
   //
 {
-  if( 0 >= ZHalfLength       ) 
-    { throw SolidException("SolidCons constructor::ZHalfLength       is not positive!");}
-  if( 0 >= OuterRadiusMinusZ )
-    { throw SolidException("SolidCons constructor::OuterRadiusMinusZ is not positive!");}
-  if( 0 >= OuterRadiusPlusZ  )
-    { throw SolidException("SolidCons constructor::OuterRadiusPlusZ  is not positive!");}
-  if( 0 >  InnerRadiusMinusZ )
-    { throw SolidException("SolidCons constructor::InnerRadiusMinusZ is negative !   ");}
-  if( InnerRadiusMinusZ >= OuterRadiusMinusZ ) 
-    { throw SolidException("SolidCons constructor::InnerRadiusMinusZ>=OuterRadiusMinusZ!");}
-  if( 0 >  InnerRadiusPlusZ  ) 
-    { throw SolidException("SolidCons constructor::InnerRadiusPlusZ  is negative !   ");}
-  if( InnerRadiusPlusZ >= OuterRadiusPlusZ ) 
-    { throw SolidException("SolidCons constructor::InnerRadiusPlusZ>=OuterRadiusPlusZ!");}
-  if( -180.0 * degree > StartPhiAngle ) 
-    { throw SolidException("SolidCons constructor::StartPhiAngle  is less than -180  degree!");}
-  if(  360.0 * degree < StartPhiAngle ) 
-    { throw SolidException("SolidCons constructor::StartPhiAngle  is larger than 360 degree!");}
-  if(    0.0 * degree > DeltaPhiAngle ) 
-    { throw SolidException("SolidCons constructor::DeltaPhiAngle  is less than 0 degree!");}
-  if(  360.0 * degree < StartPhiAngle+DeltaPhiAngle ) 
-    { throw SolidException("SolidCons constructor::StartPhiAngle+DeltaPhiAngle > 360 degree!");}
-  //
+  ///
+  if( 0 >= zHalfLength()                                ) { throw SolidException("SolidCons ::ZHalfLength       is not positive!"       );}
+  if( 0 >= outerRadiusAtMinusZ()                        ) { throw SolidException("SolidCons ::OuterRadiusMinusZ is not positive!"       );}
+  if( 0 >= outerRadiusAtPlusZ()                         ) { throw SolidException("SolidCons ::OuterRadiusPlusZ  is not positive!"       );}
+  if( 0 >  innerRadiusAtMinusZ()                        ) { throw SolidException("SolidCons ::InnerRadiusMinusZ is negative !   "       );}
+  if( innerRadiusAtMinusZ() >= outerRadiusAtMinusZ()    ) { throw SolidException("SolidCons ::InnerRadiusMinusZ>=OuterRadiusMinusZ!"    );}
+  if( 0 >  innerRadiusAtPlusZ()                         ) { throw SolidException("SolidCons ::InnerRadiusPlusZ  is negative !   "       );}
+  if( innerRadiusAtPlusZ() >= outerRadiusAtPlusZ()      ) { throw SolidException("SolidCons ::InnerRadiusPlusZ>=OuterRadiusPlusZ!"      );}
+  if( -180.0 * degree > startPhiAngle()                 ) { throw SolidException("SolidCons ::StartPhiAngle  is less than -180  degree!");}
+  if(  360.0 * degree < startPhiAngle()                 ) { throw SolidException("SolidCons ::StartPhiAngle  is larger than 360 degree!");}
+  if(    0.0 * degree > deltaPhiAngle()                 ) { throw SolidException("SolidCons ::DeltaPhiAngle  is less than 0 degree!"    );}
+  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle > 360 degree!");}
+  ///
 };
 
 //
@@ -72,9 +63,82 @@ SolidCons::~SolidCons()
 };
 
 
-//
-//
-//
+///
+/// "fictive" default constructor 
+///
+SolidCons::SolidCons()
+  ///
+  : m_cons_name              ( "unnamed SolidCons" )
+  , m_cons_zHalfLength       ( 1000000             )
+  , m_cons_outerRadiusMinusZ ( 1000000             )
+  , m_cons_outerRadiusPlusZ  ( 1000000             )
+  , m_cons_innerRadiusMinusZ ( 0                   )
+  , m_cons_innerRadiusPlusZ  ( 0                   )
+  , m_cons_startPhiAngle     ( 0                   )
+  , m_cons_deltaPhiAngle     ( 360 * degree        )
+  //
+  , m_cons_coverModel        ( 0                   )        
+  , m_cons_cover             ( 0                   )
+  //
+{};
+
+///
+/// serialization 
+///
+  /// 
+  /// serialization for reading 
+  /// serialization for writing 
+  ///   
+
+
+StreamBuffer& SolidCons::serialize( StreamBuffer& s ) 
+{
+  ///
+  if( 0 != m_cons_cover ) { delete m_cons_cover ; m_cons_cover = 0 ; } 
+  ///
+  s >>  m_cons_name              
+    >>  m_cons_zHalfLength       
+    >>  m_cons_outerRadiusMinusZ 
+    >>  m_cons_outerRadiusPlusZ  
+    >>  m_cons_innerRadiusMinusZ 
+    >>  m_cons_innerRadiusPlusZ  
+    >>  m_cons_startPhiAngle    
+    >>  m_cons_deltaPhiAngle    
+    >>  m_cons_coverModel ;   
+  ///
+  if( 0 >= zHalfLength()                                ) { throw SolidException("SolidCons ::ZHalfLength       is not positive!"       );}
+  if( 0 >= outerRadiusAtMinusZ()                        ) { throw SolidException("SolidCons ::OuterRadiusMinusZ is not positive!"       );}
+  if( 0 >= outerRadiusAtPlusZ()                         ) { throw SolidException("SolidCons ::OuterRadiusPlusZ  is not positive!"       );}
+  if( 0 >  innerRadiusAtMinusZ()                        ) { throw SolidException("SolidCons ::InnerRadiusMinusZ is negative !   "       );}
+  if( innerRadiusAtMinusZ() >= outerRadiusAtMinusZ()    ) { throw SolidException("SolidCons ::InnerRadiusMinusZ>=OuterRadiusMinusZ!"    );}
+  if( 0 >  innerRadiusAtPlusZ()                         ) { throw SolidException("SolidCons ::InnerRadiusPlusZ  is negative !   "       );}
+  if( innerRadiusAtPlusZ() >= outerRadiusAtPlusZ()      ) { throw SolidException("SolidCons ::InnerRadiusPlusZ>=OuterRadiusPlusZ!"      );}
+  if( -180.0 * degree > startPhiAngle()                 ) { throw SolidException("SolidCons ::StartPhiAngle  is less than -180  degree!");}
+  if(  360.0 * degree < startPhiAngle()                 ) { throw SolidException("SolidCons ::StartPhiAngle  is larger than 360 degree!");}
+  if(    0.0 * degree > deltaPhiAngle()                 ) { throw SolidException("SolidCons ::DeltaPhiAngle  is less than 0 degree!"    );}
+  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle > 360 degree!");}
+  ///
+  return s; 
+};
+///
+/// serialization 
+///
+
+StreamBuffer& SolidCons::serialize( StreamBuffer& s ) const 
+{
+  ///
+  return s <<  typeName() 
+	   <<  m_cons_name              
+	   <<  m_cons_zHalfLength       
+	   <<  m_cons_outerRadiusMinusZ 
+	   <<  m_cons_outerRadiusPlusZ  
+	   <<  m_cons_innerRadiusMinusZ 
+	   <<  m_cons_innerRadiusPlusZ  
+	   <<  m_cons_startPhiAngle    
+	   <<  m_cons_deltaPhiAngle    
+	   <<  m_cons_coverModel ;   
+  ///
+};
 
 // construction of covering solid:
 //  Model == 0 :

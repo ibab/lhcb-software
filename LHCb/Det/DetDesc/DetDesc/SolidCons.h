@@ -11,6 +11,8 @@
 
 #include "CLHEP/Units/PhysicalConstants.h"
 
+class StreamBuffer;
+
 
 ///
 ///
@@ -21,7 +23,9 @@
 
 class SolidCons: public ISolid
 {
-  //
+  ///
+  friend class ISolidFromStream;
+  ///
  public:
   //
   // constructorm, all sizes in mm, all angles in radians 
@@ -123,7 +127,16 @@ class SolidCons: public ISolid
       //
       return 0.5*(a*z+b);
     } 
-  //
+  /// 
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& s )       ; 
+  /// serialization for writing 
+  StreamBuffer& serialize( StreamBuffer& s ) const ; 
+  ///   
+ protected:
+  ///
+  SolidCons();
+  ///
  private:
   //
   SolidCons           ( const SolidCons & );  // no copy-constructor 

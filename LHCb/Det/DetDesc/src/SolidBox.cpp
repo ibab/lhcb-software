@@ -22,11 +22,46 @@ SolidBox::SolidBox( const std::string& name        ,
   if( 0 >= zHalfLength() ){ throw SolidException("ZHalfLength is non positive!", this); }
 };
 
-//
-//
-//
 
+///
+/// "fictive" default constructor 
+///
+SolidBox::SolidBox()
+  ///
+  : m_box_name("unnamed box")
+  , m_box_xHalfLength( 100000.0 ) 
+  , m_box_yHalfLength( 100000.0 ) 
+  , m_box_zHalfLength( 100000.0 ) 
+  ///
+{}; 
+///
 
+///
+/// serialization for reading 
+///
+StreamBuffer& SolidBox::serialize( StreamBuffer& s )       
+{
+  s >> m_box_name  
+    >> m_box_xHalfLength 
+    >> m_box_yHalfLength 
+    >> m_box_zHalfLength ;
+  ///
+  if( 0 >= xHalfLength() ){ throw SolidException("XHalfLength is non positive!", this); }
+  if( 0 >= yHalfLength() ){ throw SolidException("YHalfLength is non positive!", this); }
+  if( 0 >= zHalfLength() ){ throw SolidException("ZHalfLength is non positive!", this); }
+  ///
+  return s ;
+};
+
+/// serialization for writing 
+StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const 
+{
+  return s << typeName() 
+	   << name() 
+	   << xHalfLength() 
+	   << yHalfLength() 
+	   << zHalfLength() ; 
+}; 
 
 
 ///

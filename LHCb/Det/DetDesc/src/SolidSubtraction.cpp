@@ -16,7 +16,10 @@ SolidSubtraction::SolidSubtraction( const std::string& name  ,
   if( 0 == First ) { throw SolidException(" SolidSubtraction constructor with ISolid=NULL! "); }
 };
 
-
+SolidSubtraction::SolidSubtraction()
+  : SolidBoolean( "unnamed Subtraction" , 0 )
+{
+};
 
 //
 //

@@ -4,6 +4,10 @@
 #include   "DetDesc/SolidException.h" 
 
 #include   "DetDesc/SolidTicks.h" 
+#include   "DetDesc/ISolidFromStream.h"
+#include   "DetDesc/ClhepToStream.h"
+
+#include   "GaudiKernel/StreamBuffer.h" 
 
 //
 //
@@ -14,9 +18,9 @@ SolidBoolean::SolidBoolean( const std::string& name  ,
   , m_sb_first    ( solid )
   , m_sb_childrens(       )
 {
-  //
-  if( 0 == solid ) { throw SolidException("SolidBoolean::constructor:: ISolid* point to NULL ", this); }
-  //
+  ///
+  /// if( 0 == solid ) { throw SolidException("SolidBoolean::constructor:: ISolid* point to NULL ", this); }
+  ///
 };
 	
 
@@ -68,6 +72,59 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
 //
 
 
+
+
+///
+/// serialization for reading 
+///
+
+StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) 
+{
+  ///
+  s >> m_sb_name ; 
+  ///
+  ISolidFromStream constructor;  
+  m_sb_first = constructor( s ) ; 
+  ///
+  unsigned long nC; 
+  s >> nC; 
+  ///
+  while( nC-- > 0 )
+    {
+      ///
+      HepTransform3D Mtrx;  
+      ISolid*        sd = new SolidChild();
+      ///
+      s >> Mtrx >> *sd ;  
+      ///      
+      addChild( sd , &Mtrx ) ;
+      ///
+    } 
+  ///
+  return s;
+  ///
+};
+
+///
+/// serialization for writing 
+///
+
+StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const 
+{
+  ///
+  if( 0 == first() ) { throw SolidException("SolidBoolean:: first() points to NULL!") ;} 
+  ///
+  s << typeName   () << name       ()  << *first      () << noChildrens () ; 
+  ///
+  for( SolidBoolean::SolidChildrens::const_iterator ci = childBegin(); childEnd() != ci ; ++ci )
+    {
+      const ISolid* sc = *ci ;  
+      s << *sc ; 
+    } 
+  
+  ///
+  return s; 
+};
 
 ///
 /// calculate the intersection points("ticks") with a given line. 

@@ -12,6 +12,9 @@
  
 #include "CLHEP/Units/PhysicalConstants.h" 
 
+class ISolidFromStream;
+class StreamBuffer;
+
 ///
 ///
 ///  class SolidTubs: a simpole implemenattion of segment of the tube 
@@ -21,6 +24,8 @@
 
 class SolidTubs: public ISolid
 {
+  //
+  friend class ISolidFromStream;
   //
  public:
   //
@@ -87,7 +92,16 @@ class SolidTubs: public ISolid
   // return end phi angle of teh tube segment (in radians)  
   inline       double              endPhiAngle     () const { return m_tubs_startPhiAngle + m_tubs_deltaPhiAngle ; }; 
 
-  //
+  /// serialization for reading 
+  StreamBuffer& serialize( StreamBuffer& s )       ; 
+  /// serialization for writing
+  StreamBuffer& serialize( StreamBuffer& s ) const ; 
+
+  ///
+ protected:
+  ///
+  SolidTubs();
+  ///
  private:
   //
   SolidTubs           ( const SolidTubs & );  // no copy-constructor 

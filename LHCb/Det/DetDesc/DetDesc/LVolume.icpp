@@ -1,5 +1,5 @@
-#ifndef    __DETDESC_VOLUMES_LVOLUMEINLINES_H__ 
-#define    __DETDESC_VOLUMES_LVOLUMEINLINES_H__  1 
+#ifndef    __DETDESC_LVOLUME_ICPP__ 
+#define    __DETDESC_LVOLUME_ICPP__  1 
 
 
 
@@ -247,4 +247,4 @@ inline IMessageSvc*      LVolume::msgSvc() const { return m_lv_messSvc; }
 ///
 ///
 
-#endif  // __DETDESC_VOLUMES_LVOLUMEINLINES_H__ 
+#endif  // __DETDESC_LVOLUME_ICPP__ 

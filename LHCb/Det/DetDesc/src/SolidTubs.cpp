@@ -62,6 +62,79 @@ SolidTubs::~SolidTubs()
 };
 
 
+///
+/// fictive default constructor 
+/// 
+SolidTubs::SolidTubs()
+  : m_tubs_name           ( "nnnamed Tubs")
+  , m_tubs_zHalfLength    ( 10000000      )
+  , m_tubs_outerRadius    ( 10000000      )
+  , m_tubs_innerRadius    ( 0             )
+  , m_tubs_startPhiAngle  ( 0             )                         
+  , m_tubs_deltaPhiAngle  ( 360*degree    )                         
+  //
+  , m_tubs_coverModel     (        0      )
+  , m_tubs_cover          (        0      ) 
+  //
+{};
+
+///
+/// serialization for reading
+///
+StreamBuffer& SolidTubs::serialize( StreamBuffer& s ) 
+{
+  ///
+  if( 0 != m_tubs_cover ) { delete m_tubs_cover ; m_tubs_cover = 0 ; } 
+  ///
+  s >> m_tubs_name           
+    >> m_tubs_zHalfLength    
+    >> m_tubs_outerRadius    
+    >> m_tubs_innerRadius    
+    >> m_tubs_startPhiAngle  
+    >> m_tubs_deltaPhiAngle  
+    >> m_tubs_coverModel    ;
+  ///
+  if( 0 >= zHalfLength() )
+    { throw SolidException("SolidTubs::ZHalfLength is not positive!"); } 
+  if( 0 >= outerRadius() )
+    { throw SolidException("SolidTubs::OuterRadius is not positive!"); } 
+  if( 0 >  innerRadius() ) 
+    { throw SolidException("SolidTubs::InnerRadius is negative    !"); } 
+  if( innerRadius() >= outerRadius() ) 
+    { throw SolidException("SolidTubs::InnerRadius >= OuterRadius !"); } 
+  if( -180.0 * degree > startPhiAngle() ) 
+    { throw SolidException("SolidTubs::StartPhiAngle is < -180 degree! "); } 
+  if(  360.0 * degree < startPhiAngle() ) 
+    { throw SolidException("SolidTubs::StartPhiAngle is >  360 degree! "); } 
+  if(    0.0 * degree > deltaPhiAngle() ) 
+    { throw SolidException("SolidTubs::DeltaPhiAngle is <    0 degree! "); } 
+  if(  360.0 * degree < startPhiAngle() + deltaPhiAngle() ) 
+    { throw SolidException("SolidTubs::StartPhiAngle+DeltaPhiAngle > 360 degree!"); } 
+  ///
+  return s;
+  ///
+};
+
+
+///
+/// serialization for writing
+///
+StreamBuffer& SolidTubs::serialize( StreamBuffer& s ) const
+{
+  return s << typeName() 
+	   << m_tubs_name           
+	   << m_tubs_zHalfLength    
+	   << m_tubs_outerRadius    
+	   << m_tubs_innerRadius    
+	   << m_tubs_startPhiAngle  
+	   << m_tubs_deltaPhiAngle  
+	   << m_tubs_coverModel    ;
+  ///
+};
+
+
+
+
 //
 //  Construction of the covering solid 
 //  Model == 0 :

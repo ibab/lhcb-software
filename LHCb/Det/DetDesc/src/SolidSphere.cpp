@@ -66,6 +66,89 @@ SolidSphere::~SolidSphere()
 };
 
 
+///
+/// fictive default constructor 
+///
+SolidSphere::SolidSphere()
+  : m_sphere_name            ( "unnamed Sphere" ) 
+  , m_sphere_outerRadius     ( 1000000.0        )  
+  , m_sphere_insideRadius    ( 0.0              ) 
+  , m_sphere_startPhiAngle   ( 0.0              ) 
+  , m_sphere_deltaPhiAngle   ( 360.0 * degree   ) 
+  , m_sphere_startThetaAngle ( 0.0              ) 
+  , m_sphere_deltaThetaAngle ( 180.0 * degree   )
+  //
+  , m_sphere_cover           (       0          )
+  , m_sphere_coverModel      (       0          )  
+  //
+{};
+
+
+///
+/// serialization for reading 
+///
+
+StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) 
+{
+  ///
+  if( 0 != m_sphere_cover ) { delete m_sphere_cover ; m_sphere_cover = 0 ; }  
+  ///
+  s >>  m_sphere_name           
+    >>  m_sphere_outerRadius    
+    >>  m_sphere_insideRadius    
+    >>  m_sphere_startPhiAngle  
+    >>  m_sphere_deltaPhiAngle   
+    >>  m_sphere_startThetaAngle 
+    >>  m_sphere_deltaThetaAngle 
+    >>  m_sphere_coverModel  ;    
+  ///
+  if( 0 >= outerRadius() ) 
+    { throw SolidException("SolidSphere constructor::OuterRadius  is not positive!"); } 
+  if( 0 >  insideRadius() ) 
+    { throw SolidException("SolidSphere constructor::InsideRadius is negative!    "); }
+  if( insideRadius() >= outerRadius() ) 
+    { throw SolidException("SolidSphere constructor::InsideRadius>=OuterRadius    "); }
+  if( -180.0 * degree > startPhiAngle() )
+    { throw SolidException("SolidSphere constructor::StartPhiAngle < -180 degree !"); }
+  if(  360.0 * degree < startPhiAngle() )
+    { throw SolidException("SolidSphere constructor::StartPhiAngle >  360 degree !"); }
+  if(    0.0 * degree > deltaPhiAngle() )
+    { throw SolidException("SolidSphere constructor::DeltaPhiAngle <    0 degree !"); }
+  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() )
+    { throw SolidException("SolidSphere constructor::StartPhiAngle+DeltaPhiAngle > 360 degree !"); }
+  if(    0.0 * degree > startThetaAngle() )
+    { throw SolidException("SolidSphere constructor::StartThetaAngle < 0 degree !"); }
+  if(  180.0 * degree < startThetaAngle() )
+    { throw SolidException("SolidSphere constructor::StartThetaAngle >  180 degree !"); }
+  if(    0.0 * degree > deltaThetaAngle() )
+    { throw SolidException("SolidSphere constructor::DeltaThetaAngle <    0 degree !"); }
+  if(  180.0 * degree < startThetaAngle()+deltaThetaAngle() )
+    { throw SolidException("SolidSphere constructor::StartThetaAngle+DeltaThetaAngle > 180 degree !"); }  
+
+  ///
+  return s;
+  ///
+};
+
+///
+/// serialization for writing 
+///
+
+StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
+{
+  ///
+  return s <<  typeName() 
+	   <<  m_sphere_name           
+	   <<  m_sphere_outerRadius    
+	   <<  m_sphere_insideRadius    
+	   <<  m_sphere_startPhiAngle  
+	   <<  m_sphere_deltaPhiAngle   
+	   <<  m_sphere_startThetaAngle 
+	   <<  m_sphere_deltaThetaAngle 
+	   <<  m_sphere_coverModel    ;   
+  ///
+};
+
 
 // construction of covering solid:
 //  Model == 0 : 

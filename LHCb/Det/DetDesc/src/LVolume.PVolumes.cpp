@@ -1,7 +1,86 @@
-#ifndef     __DETDESC_VOLUMES_LVOLUME_CREATEMULTIPVOLUME_H__
-#define     __DETDESC_VOLUMES_LVOLUME_CREATEMULTIPVOLUME_H__ 1 
 
-#include <strstream> 
+
+#include <strstream>
+
+#include "DetDesc/LVolume.h"
+#include "DetDesc/PVolume.h"
+#include "GaudiKernel/MsgStream.h" 
+
+///
+///  inmplementation of LVolume::createPVolume  methods 
+///
+/// Author :: Vanya Belyaev 
+///
+
+///
+/// specific for this implementation 
+///  creation of Physical Volume 
+
+IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
+				  const std::string&    LVnameForPV    )
+{
+  HepPoint3D  Position;
+  HepRotation Rotation;
+  return createPVolume( PVname , LVnameForPV , Position , Rotation );
+};
+
+///
+/// creation of Physical Volume 
+///
+
+IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
+				  const std::string&    LVnameForPV    ,
+				  const HepPoint3D&     Position       )
+{
+  HepRotation Rotation;
+  return createPVolume( PVname , LVnameForPV , Position , Rotation );
+};
+
+
+///
+/// creation of Physical Volume 
+///
+
+IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
+				  const std::string&    LVnameForPV    ,
+				  const HepPoint3D&     Position       ,
+                                  const HepRotation&    Rotation       ) 
+{
+  //
+  PVolume* pv = 0; 
+  try{ pv = new  PVolume( PVname , LVnameForPV , Position , Rotation , dataSvc() , msgSvc() ); }
+  catch( const GaudiException& Exception ) 
+    { Assert( false , "LVolume::createPVolume() (3) , exception caught! " , Exception ); } 
+  catch(...)                        
+    { Assert( false , "LVolume::createPVolume() (3) , unknown exception caught! "     ); } 
+  ///
+  Assert( 0 != pv , "LVolume::createPVolume, could not create volume "+PVname+"(lv="+LVnameForPV+")" );
+  /// 
+  m_lv_pvolumes.push_back( pv ); 
+  ///  
+  return pv; 
+};
+
+
+
+IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
+				  const std::string&    LVnameForPV    ,
+				  const HepTransform3D& Transform      )
+{
+  //
+  PVolume* pv = 0; 
+  try{ pv = new  PVolume( PVname , LVnameForPV , Transform, dataSvc() , msgSvc() ); }
+  catch( const GaudiException& Exception ) 
+    { Assert( false , "LVolume::createPVolume() (4) , exception caught! " , Exception ); } 
+  catch(...)                        
+    { Assert( false , "LVolume::createPVolume() (4) , unknown exception caught! "     ); } 
+  ///
+  Assert( 0 != pv , "LVolume::createPVolume, could not create volume "+PVname+"(lv="+LVnameForPV+")" );
+  /// 
+  m_lv_pvolumes.push_back( pv ); 
+  ///  
+  return pv; 
+};
 
 
 ///
@@ -216,14 +295,6 @@ IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      ,
 ///
 ///
 ///
-
-
-#endif  //  __DETDESC_VOLUMES_LVOLUME_CREATEMULTIPVOLUME_H__
-
-
-
-
-
 
 
 

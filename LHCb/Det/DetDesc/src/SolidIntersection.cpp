@@ -1,12 +1,9 @@
 #include <iostream> 
 #include <string> 
 
-
 #include "DetDesc/SolidIntersection.h"
 #include "DetDesc/SolidException.h"
 
-
-//
 //
 // constructor
 SolidIntersection::SolidIntersection( const std::string& name  , 
@@ -17,7 +14,6 @@ SolidIntersection::SolidIntersection( const std::string& name  ,
 };
 
 
-
 //
 //
 // destructor 
@@ -26,4 +22,26 @@ SolidIntersection::~SolidIntersection(){}
 //
 //
 //
+
+
+///
+/// fictive default constructor 
+///
+
+SolidIntersection::SolidIntersection()
+  : SolidBoolean( "unnamed Intersection" , 0 )
+{};
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -9,6 +9,7 @@
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Plane3D.h"
 
 //
 // SolidTicks - a collection of technical methods for manipulation of  
@@ -173,8 +174,7 @@ namespace SolidTicks
 						const double c   ,
                                                 OUTPUTTYPE   out ) 
     {
-      // it is a linear equation:  b*x + c = 0 
-      if( 0 == a )
+      if( 0 == a )                       /// it is a linear equation:  b*x + c = 0 
 	{
 	  // no solution!
           if( b == 0 ) { return 0 ; }   // RETURN !!! 
@@ -183,20 +183,15 @@ namespace SolidTicks
           *out++ = -1.0 * c / b ;       // double the solutions 
 	  return 1;                     // RETURN !!!   
 	}
-      
       double d = b * b - 4.0 * a * c ; 
-      
-      // no solutions 
+      /// no solutions 
       if(  d < 0  )   { return 0; }     // RETURN !!!
-      
       // 1 or 2 solution
       d = sqrt( d )                  ;   
       *out++ = 0.5 * ( -b - d ) / a  ; 
       *out++ = 0.5 * ( -b + d ) / a  ; 
-      if( 0 == d ) { return 1; }        // RETURN !!!
-      
       // return number of solutions;
-      return 2;                         // RETURN !!! 
+      return 0 == d ? 1 : 2;            // RETURN !!! 
     };
   
   
@@ -213,14 +208,11 @@ namespace SolidTicks
       ///
       /// sphere with non-positive radius is not able to intersect the line! 
       if( radius <= 0 ) { return 0 ; } 
-      
       /// line with null direction vector is not to intersect the sphere! 
       double v2 = vect.mag2(); 
       if( v2 <= 0     ) { return 0 ; }
-      
       double p2 = point.mag2()    ; 
       double pv = point.dot(vect) ; 
-      
       /// It is equivalent to the equation
       /// ( Point + Vector * Tick )^2 = R^2
       /// it is quadratic equation!  a*x^2+b*x+c=0
@@ -318,8 +310,7 @@ namespace SolidTicks
       *out++ = ( Z - point.z() ) / vect.z() ; 
       return 1;      
     }
-  
-  
+
   ///
   ///
   /// find intersection ticks for the line parametrized as Point + Vector * Tick 
@@ -332,7 +323,7 @@ namespace SolidTicks
     
     {
       double sinphi = sin( Phi ) ; 
-      double cosphi = sin( Phi ) ; 
+      double cosphi = cos( Phi ) ; 
       double d      = vect.x() * sinphi - vect.y() * cosphi ; 
       if( 0 == d ) { return 0; } 
       *out++ = ( point.y() * cosphi - point.x() * sinphi ) / d ; 
@@ -355,27 +346,15 @@ namespace SolidTicks
       ///  cos^2(x^2+y^2)=sin^2*z^2
       
       double sinthe = sin( Theta )    ; 
-      double costhe = sin( Theta )    ;
+      double costhe = cos( Theta )    ;
       
       double c2     = costhe * costhe ; 
       double s2     = sinthe * sinthe ; 
       
-      double a =  
-	c2 * vect.z()*vect.x() +
-	c2 * vect.z()*vect.y() - 
-	s2 * vect.z()*vect.z() ; 
-      
-      double b =
-	c2 * vect.x() * point.x() +
-	c2 * vect.y() * point.y() -
-	s2 * vect.z() * point.z() ;
-      
+      double a = c2 *  vect.z() *  vect.x() + c2 *  vect.z() *  vect.y() - s2 *  vect.z() *  vect.z() ; 
+      double b = c2 *  vect.x() * point.x() + c2 *  vect.y() * point.y() - s2 *  vect.z() * point.z() ;
+      double c = c2 * point.x() * point.x() + c2 * point.y() * point.y() - s2 * point.z() * point.z() ;
       b *= 2.0; 
-      
-      double c = 
-	c2 * point.x() * point.x() +
-	c2 * point.y() * point.y() -
-	s2 * point.z() * point.z() ;
       
       // return result
       return SolidTicks::SolveQuadraticEquation( a , b, c, out );
@@ -418,9 +397,7 @@ namespace SolidTicks
       // return result
       return SolidTicks::SolveQuadraticEquation( a , b, c, out );
     }
-  
-  
-  
+
 }; // end of namespace SolidTicks
 
 ///
@@ -428,3 +405,9 @@ namespace SolidTicks
 ///
 
 #endif   //   __DETDESC_SOLID_SOLIDTICKS_H__
+
+
+
+
+
+

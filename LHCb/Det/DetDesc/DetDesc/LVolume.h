@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm> 
 
+template <class TYPE> class DataObjectFactory; 
 
 class HepPoint3D; 
 class HepVector3D; 
@@ -26,13 +27,13 @@ class MsgStream;
 #include "GaudiKernel/IPVolume.h"
 #include "GaudiKernel/ISolid.h" 
 #include "GaudiKernel/ITime.h" 
+#include "GaudiKernel/MsgStream.h" 
 
 #include "DetDesc/IPVolume_predicates.h" 
 
 class GaudiException; 
 
 extern const CLID& CLID_LogicalVolume;
-
 
 
 ///
@@ -46,15 +47,18 @@ class LVolume: public DataObject,
                public ILVolume, 
 	             IValidity
 {
+  ///
+  friend class DataObjectFactory<LVolume>;
+  ///
  private:
-
-  // default constructor is private!!!!!
+  ///
+  /// default constructor is private!!!!!
   LVolume();       
-  
+  ///
  public: 
   
   //
-  // constructor, pointer to ISolid* mst be valid!, overvise constructor throws LVolumeException!  
+  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name            , 
 	   ISolid*            Solid           ,
            const std::string& material        ,
@@ -64,7 +68,7 @@ class LVolume: public DataObject,
            IMessageSvc*       messService = 0 );
   
   //
-  // constructor, pointer to ISolid* mst be valid!, overvise constructor throws LVolumeException!  
+  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name            , 
 	   ISolid*            Solid           ,
            const std::string& material        ,
@@ -76,10 +80,16 @@ class LVolume: public DataObject,
   
  public:
 
-  // from DataObject
+  /// from DataObject
   inline const CLID& clID   () const { return classID(); } 
-
+  ///
   static const CLID& classID()       { return CLID_LogicalVolume; };
+  ///
+  /// Serialize the object for writing
+  virtual StreamBuffer& serialize(StreamBuffer& s );
+  /// Serialize the object for writing
+  virtual StreamBuffer& serialize(StreamBuffer& s )  const;
+  ///
 
   //
   // functions from ILVolume - see ILVolume.h for description
@@ -210,6 +220,9 @@ class LVolume: public DataObject,
 			   const std::string&    LVnameForPV    ,
                            const HepPoint3D&     position       ,      /// position of PVolume inside LVolume
                            const HepRotation&    rotation       );     /// rotation to be applied 
+  IPVolume* createPVolume( const std::string&    PVname         , 
+			   const std::string&    LVnameForPV    ,
+                           const HepTransform3D& Transform      );
   ///
   /// create group of physical volumes  
   /// 
@@ -330,25 +343,15 @@ class LVolume: public DataObject,
 ///
 ///
 
-inline MsgStream& operator<<( MsgStream& os , const LVolume& lv ) { return lv.printOut( os ); };
+inline MsgStream& operator<<( MsgStream& os , const LVolume&  lv ) { return lv.printOut( os ); };
+inline MsgStream& operator<<( MsgStream& os , const LVolume* plv ) { return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL") : ( os << *plv) ) ; };
 
 ///
 ///
 ///
-
-inline MsgStream& operator<<( MsgStream& os , const LVolume*  plv )
-{ return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL") : ( os << *plv) ) ; };
-
-///
-///
-///
-
-
 
 #include "DetDesc/LVolume.LVolumeException.h" 
-#include "DetDesc/LVolume.inlines.h" 
-
-
+#include "DetDesc/LVolume.icpp" 
 ///
 ///
 ///
