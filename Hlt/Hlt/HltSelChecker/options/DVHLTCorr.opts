@@ -11,7 +11,8 @@ HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
 SetOfflinePV.ResetToOffline = true ;
 
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
-/*#include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+/*
+#include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
 #include "$B2HHROOT/options/DoTDRselB2HH.opts" 
 #include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
 #include "$BD2D0KSTARROOT/options/DoTDRselBd2D02KpiKstar.opts"
@@ -41,7 +42,7 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 
 //------------------------------------------------------------------------------
 // PK's stripping of MB passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"

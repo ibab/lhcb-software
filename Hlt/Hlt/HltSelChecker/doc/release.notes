@@ -1,9 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSelChecker
 ! Responsible : P. Koppenburg
-! Purpose     : High-Level Trigger Exclusive Selections 
+! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+
+!========================== HltSelChecker v1r2 2005-01-06 ===========================
 ! 2004-12-11 - Luis Fernandez
  - src/DecayChainNTuple{h,cpp}
    . Add global Rich PIDs
