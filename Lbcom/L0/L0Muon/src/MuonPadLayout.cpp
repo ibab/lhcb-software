@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonPadLayout.cpp,v 1.2 2001-05-03 09:12:29 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonPadLayout.cpp,v 1.3 2001-05-03 12:06:31 atsareg Exp $
 
 #define MUONPADLAYOUT_CPP
 
@@ -10,7 +10,7 @@
 #include "DetDesc/DetectorElement.h"
 
 #include "MuonPadLayout.h"
-#include "MuonLayout.h"
+#include "L0Muon/MuonLayout.h"
 #include "L0Muon/L0mPad.h"
 
 //------------------------------------------------------------------------------

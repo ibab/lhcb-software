@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonTile.cpp,v 1.2 2001-05-03 09:12:30 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonTile.cpp,v 1.3 2001-05-03 12:06:32 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 #include <algorithm>
 
-#include "MuonTile.h"
+#include "L0Muon/MuonTile.h"
 
 MuonTile::MuonTile() :  m_quarter(0), m_region(0),
                    m_indexX(0), m_indexY(0) {
