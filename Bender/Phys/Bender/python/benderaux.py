@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.8 2004-11-23 17:13:23 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.9 2004-12-03 12:53:58 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -130,10 +130,13 @@ ppFromParticle         = gbl.Bender.Extract.ppFromParticle
 trFromParticle         = gbl.Bender.Extract.trFromParticle
 muFromParticle         = gbl.Bender.Extract.muFromParticle
 richFromParticle       = gbl.Bender.Extract.richFromParticle
-
+trgFromParticle        = gbl.Bender.Extract.trgFromParticle
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2004/11/23 17:13:23  ibelyaev
+#  v4r4
+#
 # =============================================================================
 # The END 
 # =============================================================================
