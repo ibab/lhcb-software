@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.h,v 1.3 2003-07-08 10:22:50 robbep Exp $ 
+// $Id: EcalSensDet.h,v 1.4 2003-12-05 08:59:58 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/08 10:22:50  robbep
+// Adaptation to the new GaussCalo interface
+//
 // Revision 1.2  2003/07/07 16:27:46  ibelyaev
 //  substitupe G4Material with G4MaterialCutsCouple
 //
@@ -116,6 +119,14 @@ private :
   double                                      m_a_local_inner_ecal  ;
   double                                      m_a_local_middle_ecal ;
   double                                      m_a_local_outer_ecal  ;
+  // Amplitudes of the global non uniformity correction
+  // depending on the region of the Ecal
+  double                                      m_a_global_inner_ecal  ;
+  double                                      m_a_global_middle_ecal ;
+  double                                      m_a_global_outer_ecal  ;
+  // Correction for light reflection at the edges
+  double                                      m_a_reflection_height ;
+  double                                      m_a_reflection_width  ;
 };
 // ============================================================================
 

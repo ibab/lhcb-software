@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.cpp,v 1.3 2003-07-08 10:22:50 robbep Exp $ 
+// $Id: EcalSensDet.cpp,v 1.4 2003-12-05 08:59:58 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/08 10:22:50  robbep
+// Adaptation to the new GaussCalo interface
+//
 // Revision 1.2  2003/07/07 16:27:46  ibelyaev
 //  substitupe G4Material with G4MaterialCutsCouple
 //
@@ -77,18 +80,36 @@ EcalSensDet::EcalSensDet
   const std::string& name   ,
   const IInterface*  parent ) 
   : EHCalSensDet        ( type , name , parent ) 
-  , G4VSensitiveDetector( name  )
+    , G4VSensitiveDetector( name  )
   //
-  , m_a_local_inner_ecal ( 0.004 ) // local non uniformity amplitude inner ecal
-  , m_a_local_middle_ecal ( 0.004 ) // local non uniformity amplitude
+  //  , m_a_local_inner_ecal  ( 0.008 ) // local non uniformity amplitude 
+  // inner ecal
+  //  , m_a_local_middle_ecal  ( 0.008 ) // local non uniformity amplitude
   //  middle ecal
-  , m_a_local_outer_ecal ( 0.012 ) // local non uniformity amplitude 
+  //  , m_a_local_outer_ecal   ( 0.03  ) // local non uniformity amplitude 
+  // outer ecal  
+  // For the moment put 0 for the local N.U.
+    , m_a_local_inner_ecal ( 0. ) 
+    , m_a_local_middle_ecal ( 0. )
+    , m_a_local_outer_ecal ( 0. )
+    , m_a_global_inner_ecal  ( 0.0004  ) // global non uniformity amplitude 
+  //inner ecal
+    , m_a_global_middle_ecal ( 0.002  ) // global non uniformity amplitude
+  //  middle ecal
+    , m_a_global_outer_ecal  ( 0.03  ) // global non uniformity amplitude 
   // outer ecal
+    , m_a_reflection_height ( 0.07 ) // reflection on the edges - height
+    , m_a_reflection_width  ( 6. * mm ) // reflection on the edges - width
 {
   ///
   declareProperty ( "a_local_inner_ecal"   ,  m_a_local_inner_ecal ) ;
   declareProperty ( "a_local_middle_ecal"  ,  m_a_local_middle_ecal ) ;
   declareProperty ( "a_local_outer_ecal"   ,  m_a_local_outer_ecal ) ;
+  declareProperty ( "a_global_inner_ecal"   ,  m_a_global_inner_ecal ) ;
+  declareProperty ( "a_global_middle_ecal"  ,  m_a_global_middle_ecal ) ;
+  declareProperty ( "a_global_outer_ecal"   ,  m_a_global_outer_ecal ) ;
+  declareProperty ( "a_reflection_height"  , m_a_reflection_height ) ;
+  declareProperty ( "a_reflection_width"   , m_a_reflection_width  ) ;
   //
 };
 // ============================================================================
@@ -128,7 +149,7 @@ StatusCode    EcalSensDet::fillHitInfo
   
   // get the cell 
   const CaloCellID& cellID = hit->cellID() ;
-  
+
   // Birk's Law Correction
   double ecorrected = deposit *
     birkCorrection( particle ,
@@ -195,27 +216,51 @@ double EcalSensDet::localNonUniformity( const HepPoint3D& prePoint ,
   // and correction amplitude
   double d        = 10.1 * mm ;
   double A_local  = m_a_local_inner_ecal ; // in inner Ecal
+  double A_global = m_a_global_inner_ecal ;
+
+  // Cell size
+  double cellSize = calo()->cellSize( cell ) ;
 
   // Assign amplitude of non uniformity as a function of the
   // Ecal region
   
   if ( cell.area() == 0 ) { // outer Ecal
-    A_local = m_a_local_outer_ecal ;
-    d       = 15.25 * mm ;
+    A_local  = m_a_local_outer_ecal ;
+    A_global = m_a_global_outer_ecal ;
+    d        = 15.25 * mm ;
   }
   else if ( cell.area() == 1 ) { // middle Ecal
-    A_local = m_a_local_middle_ecal ;
-  }
-
+    A_local  = m_a_local_middle_ecal ;
+    A_global = m_a_global_middle_ecal ;
+  }  
     
   // Local uniformity is product of x and y sine-like functions
   // The Amplitude of the sin-like function is a function of x and 
   // y
-  correction =
-    1. + 
-    A_local * 
+  correction += 
+    A_local / 2. * 
     ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
     ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
+
+  // Global non uniformity
+
+  correction += 
+    A_global * ( x0 + cellSize / 2. - x ) * ( x - x0 + cellSize / 2. )
+    / ( cellSize * cellSize / 4. )
+    * ( y0 + cellSize / 2. - y ) * ( y - y0 + cellSize / 2. ) 
+    / ( cellSize * cellSize / 4. ) ;
+
+
+  // Light Reflexion on the edges
+  correction += 
+    m_a_reflection_height * 
+    exp( - fabs ( x - x0 + cellSize / 2. ) / m_a_reflection_width ) 
+    + m_a_reflection_height * 
+    exp( - fabs ( x - x0 - cellSize / 2. ) / m_a_reflection_width ) 
+    + m_a_reflection_height * 
+    exp( - fabs ( y - y0 + cellSize / 2. ) / m_a_reflection_width ) 
+    + m_a_reflection_height * 
+    exp( - fabs ( y - y0 - cellSize / 2. ) / m_a_reflection_width ) ;
   
   return correction ;
 };

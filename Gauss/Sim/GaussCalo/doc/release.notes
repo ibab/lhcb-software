@@ -7,13 +7,17 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!=========================== GaussCalo v4r3 ==============================
+! 2003-12-05 - Patrick Robbe
+  - put fonctions and constants for the non-uniformity. The local
+    non-uniformity amplitude (for the sin-like term) is put equal
+    to 0 for the time being.
+
 ! 2003-12-03   Vanya Belyaev 
   - add generator configuration options file to run ParticleGun 
     generator for special Calo productions
-- options/PGUN*
+  - options/PGUN*
 
-
-!=========================== GaussCalo v4r3 ==============================
 ! 2003-11-05 - Grigory Rybkine 
  - options/Sps.opts,Prs.opts   - modified IntegrationDelays values, 
                                  added time units to them 
