@@ -4,6 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-04-03 - Marco Cattaneo
+ - Use RichKernel v3r0
+
 !============================= KernelSys v1r0 2002-10-01 =============
 ! 2002-10-01 - Florence Ranjard
  - 1st import
