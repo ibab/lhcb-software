@@ -1,5 +1,5 @@
 package BrunelSys
-version v17r1
+version v17r2
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v17r1   Rec
+use Brunel              v17r2   Rec
 
 # Brunel utilities
 use BrunelKernel        v5r3     Rec
@@ -23,15 +23,15 @@ use PuVeto              v5r3    L0
 use L0DU                v6r2    L0
 
 # L1 trigger
-use L1VeloTrack         v3r5    L1
-use L1Decision		v1r5	L1
+use L1VeloTrack         v4r0    L1
+use L1Decision		v1r7	L1
 
 # Calorimeter
-use CaloInterfaces      v2r4  Calo
-use CaloUtils           v4r4  Calo
-use CaloMonitor         v1r3  Calo
-use CaloReco            v1r2  Calo
-use CaloDigit           v1r1  Calo
+use CaloInterfaces      v2r4  	Calo
+use CaloUtils           v4r4  	Calo
+use CaloMonitor         v1r3  	Calo
+use CaloReco            v1r2p1  Calo
+use CaloDigit           v1r1  	Calo
 
 # Velo
 use VeloAlgorithms      v2r6  Velo
@@ -44,7 +44,7 @@ use ITCheckers          v1r2  IT
 use OTAlgorithms        v12r3 OT
 
 # Tracking
-use VeloTrack           v4r4  Velo
+use VeloTrack           v4r5  Velo
 use TrCheck             v1r3  Tr
 use LongTrack           v1r5  Tr
 use TrFitter            v3r5  Tr
@@ -52,13 +52,13 @@ use TrExtrapolator      v2r5  Tr
 use TrTools             v2r4  Tr
 use Seeding             v2r4  Tr 
 use TrMatching          v2r6  Tr
-use TrCleanEx           v2r5  Tr
-use TrIntraPR           v2r3  Tr
-use UpstreamPR          v2r6  Tr
-use VeloTT              v1r4  Tr
+use TrCleanEx           v2r6  Tr
+use TrIntraPR           v2r4  Tr
+use UpstreamPR          v2r7  Tr
+use VeloTT              v1r5  Tr
 
 # Muon
-use MuonAlgs            v3r2    Muon
+use MuonAlgs            v3r3    Muon
 use MuonRec             v2r3    Muon
 use MuonID              v3r5    Muon
 
@@ -68,7 +68,7 @@ use RichRecAlgs		v1r4  Rich
 use RichRecTools	v1r4  Rich
 use RichRecKernel	v1r1  Rich
 use RichUtils		v2r1  Rich
-use RichDetTools	v1r2  Rich
+use RichDetTools	v1r3  Rich
 use RichRecEvent        v1r3  Rich
 use RichRecInterfaces	v2r0  Rich
 

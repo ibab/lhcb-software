@@ -48,6 +48,7 @@ BrunelReco.DetectorList += { "Timing" };
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 ApplicationMgr.DLLs += { "L1Decision" };
+BrunelRecoL1Seq.Members += { "ITDigitToL1", "OTClusterToL1" };
 BrunelRecoL1Seq.Members += { "Level1" };
 
 // Trigger truth relation tables (used by monitoring and for DST)
@@ -162,6 +163,11 @@ TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
 // Rich OO Reconstruction
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
 #include "$RICHRECALGSOPTS/BrunelReco.opts"
+// retuning for XmlDDDB v15r0
+ToolSvc.RichRecPhotonTool.MinTrackROI         = { 130.0,  0.0,   0.0 };
+ToolSvc.RichRecPhotonTool.MaxTrackROI         = { 350.0, 90.0, 200.0 };
+ToolSvc.RichRecPhotonTool.MinCherenkovTheta   = { 0.0, 0.0,  0.0  };
+ToolSvc.RichRecPhotonTool.MaxCherenkovTheta   = { 0.3, 0.08, 0.05 };
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };

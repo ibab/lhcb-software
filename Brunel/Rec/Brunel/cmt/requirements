@@ -38,7 +38,7 @@ use LHCb	v11r8
 #-> SICB basic libraries (from LHCB_v11r8)
 use SICBSys	v1r2	SICB
 
-#-- BrunelSys v16r4 packages
+#-- BrunelSys v17r2 packages
 
 # Brunel utilities
 use BrunelKernel        v5r3	Rec
@@ -53,7 +53,7 @@ use PuVeto              v5r3    L0
 use L0DU                v6r2    L0
 
 # L1 trigger
-use L1VeloTrack         v3r5    L1
+use L1VeloTrack         v4r0    L1
 use L1Decision		v1r6	L1
 
 # Calorimeter
@@ -83,9 +83,9 @@ use TrTools             v2r4  	Tr
 use Seeding             v2r4  	Tr 
 use TrMatching          v2r6  	Tr
 use TrCleanEx           v2r6  	Tr
-use TrIntraPR           v2r3  	Tr
-use UpstreamPR          v2r6  	Tr
-use VeloTT              v1r4  	Tr
+use TrIntraPR           v2r4  	Tr
+use UpstreamPR          v2r7  	Tr
+use VeloTT              v1r5  	Tr
 
 # Muon
 use MuonAlgs            v3r3    Muon

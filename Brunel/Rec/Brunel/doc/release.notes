@@ -3,18 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v17r2>2003-01-?? Brunel v17r2</A></H1><PRE>
+</PRE><H1><A NAME=v17r2>2003-01-23 Brunel v17r2</A></H1><PRE>
  - New tuning:
    . Raise IT clustering S/N cut to 3.2 sigma (from 3.0) (Brunel.opts)
    . Tuning for new TT strip pitch and magnetic field, plus minor improvements
      (L1Decision v1r6)
+   . Tuning of VTT tracking for field043 (VeloTT v1r5)
+   . Tuning of Upstream tracking for field043 (TrIntraPR v2r4, UpstreamPR v2r7)
    . Improved agreement between Xml and CDF geometry for OO-Rich
-     (XmlDDDB v15r0, RichDet v4r0, RichDetTools v1r3)
+     (XmlDDDB v15r0, RichDet v4r0, RichDetTools v1r3, Brunel.opts)
 
  - New features:
    . Add support for dbase v254r1
     (XmlDDDB v15r0, Brunelv254r1.opts - to be used also for dbase v254r0 and 
      v253r1 test data)
+   . New algorithms to produce ST and OT trigger clusters
+     (L1VeloTrack v4r0, L1Event v11r5)
+   . Possibility to cut on IT S/N in Upstream tracking (TrIntraPR v2r4)
 
  - DST changes:
    . TrStateL of Velo and Veloback tracks is now given at Z of first measured

@@ -15,6 +15,7 @@
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 ToolSvc.TrPtKick.parabolicCorrection = { -0.0086, 0.0, -0.107};
+prepareSeeds.TrPtKick.constantCorrection = 130.;
 Level1.L1Velo2TT.slopeFactor = 2.38; 
 Level1Check.L1Velo2TT.slopeFactor = 2.38;
 
