@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.14 2002-07-17 11:35:21 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.15 2002-07-19 10:30:14 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -41,7 +41,7 @@ Kine.StreamItems              +=
 
 // configuration of geometry "Geo" data stream
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
  
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
@@ -49,12 +49,12 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
 //Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"  } ; 
 
 // Physics List  to be used and its configuration  
@@ -126,8 +126,8 @@ GiGaSvc.RunCommand.BeginOfRunCommands     =
 GiGaSvc.UseVisManager          = true;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
-GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+//GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 //   "Uniform Magnetifc field" 
 // GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
 // GiGaGeomCnvSvc.UniformField.Bx          = 0.     ; 
