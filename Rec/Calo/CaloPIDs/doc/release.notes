@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2003-07-17 14:45:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2003-07-17 14:49:45 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,18 +7,16 @@
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloPIDs v1r1 2003-07-17 ======================
 ! 2003-07-17 - Ivan BELYAEV
  - src/CaloTrackEval.cpp 
    fix an error (return m_bad valeu for zero energy deposition) 
  - cmt/requirements  increase the version 
 
-
-
 ! 2003-07-17 - Ivan BELYAEV
  - minor change if algorithms to speed-up a code a little bit 
  - options introduce a low/high limits for estimators to skip 
    'bad' records 
-
 
 !======================== CaloPIDs v1r0 2003-04-17 ======================
 ! 2003-04-17 - Marco Cattaneo
