@@ -4,6 +4,12 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!============================ GaussSys v8r0 2002-12-18 ==================
+                         new version using just released Geant4 5.0
+                         and new structure of packages
+! 2002-12-18 - Florence Ranjard
+ - requirements - uses LHCb v11r5, GEANT4 v2r5000p0
+
 !=========================== GaussSys v7r1 2002-12-16 ===================
 ! 2002-12-16 - Florence Ranjard
  - requirements - uses LHCb v11r5
