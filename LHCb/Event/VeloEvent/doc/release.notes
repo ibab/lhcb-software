@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.15 2002-05-08 17:32:09 cattanem Exp $
+! $Id: release.notes,v 1.16 2002-05-13 11:02:46 parkesb Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
 ! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
+! 09/05/2002 Chris Parkes
+  - VeloEvent.xml VeloCluster 
+    added additional access methods for obtaining adc and strip numbers 
+    of strips in cluster
+    added method to get ChannelID (i.e. key) for strips in cluster
+
 ! 20020508 Marco Cattaneo
   - Fix factories: remove VeloEventInstantiation.cpp, add VeloEvent_load.cpp
 

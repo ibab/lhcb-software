@@ -97,7 +97,7 @@ information"
            <attribute name="rawNoise" type="double" desc="noise value WITHOUT common mode subtracted"/>
            <attribute name="noise" type="double" desc="noise value WITH common mode subtracted"/>
            <method name="signalToNoise" type="double" desc="signal to noise after common mode subtracted" const="TRUE">
-                 <code>return adcValue()/noise();</code>
+                 <code>return (noise()>0.) ? adcValue()/noise() : adcValue();</code>
            </method>
     </class>
 
@@ -108,12 +108,23 @@ information"
 without applying any additional processing. It contains no simulation info."
 	   location="Raw/Velo/Clusters">
            <import name="Kernel/SerializeStl"/>
+           <import name="Kernel/VeloChannelID"/>
            <base name="KeyedObject&lt;int&gt;"/>
            <attribute name="sensor" type="long" desc="Sensor Number"/>
            <attribute name="stripSignals" type="std::vector&lt;std::pair&lt;long,double&gt; &gt;" desc="strip numbers and their signals"/>
            <method name="size" type="long" desc="number of strips in cluster" const="TRUE">
                  <code>return stripSignals().size();</code>
            </method>
+           <method name="adcValue" type="double" argList="long num" desc="adc value of strips in cluster" const="TRUE">
+                 <code>return stripSignals()[num].second;</code>
+           </method>
+           <method name="strip" type="long" argList="long num" desc="strip number of strip in cluster" const="TRUE">
+                 <code>return stripSignals()[num].first;</code>
+           </method>
+           <method name="channelID" type="VeloChannelID" argList="long num" desc="combined sensor and strip number ID (key) of strip in cluster" const="TRUE">
+                   <code>return  VeloChannelID(sensor(),strip(num));</code>
+           </method>
+
     </class>
 
   </package>
