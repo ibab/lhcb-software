@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.4 2003-07-11 18:03:28 jonrob Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.5 2003-07-23 12:26:25 jonrob Exp $
 // Include files
 
 // local
@@ -73,7 +73,7 @@ StatusCode RichGlobalPIDDigitSel::execute() {
       return StatusCode::FAILURE;
     }
     procStat->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
-    //richStatus()->setEventOK( false );
+    richStatus()->setEventOK( false );
   }
 
   return StatusCode::SUCCESS;

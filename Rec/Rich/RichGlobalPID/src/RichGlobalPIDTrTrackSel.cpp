@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.5 2003-07-11 18:03:28 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.6 2003-07-23 12:26:25 jonrob Exp $
 // Include files
 
 // local
@@ -256,7 +256,7 @@ RichGlobalPIDTrTrackSel::trackStatus( TrStoredTrack * trTrack ) {
 void RichGlobalPIDTrTrackSel::deleteEvent() {
 
   // set event status false
-  //richStatus()->setEventOK( false );
+  richStatus()->setEventOK( false );
 
   // Tidy up incase of event abort
   if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
