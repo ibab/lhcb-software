@@ -169,13 +169,18 @@ void L0Muon::CrateUnit::fillOffset(std::pair<L0MuonCandidate*,
 
 void L0Muon::CrateUnit::sortCandidates(MsgStream & log)
 {
+
+
+   std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());  
+   std::sort(m_offsets.begin(),m_offsets.end(),ComparePt());
+
    std::vector<L0MuonCandidate*>::iterator ilmc ;
    std::vector< std::pair<L0MuonCandidate*, std::vector<int> > >::iterator ioff; 
  
  
    // Sort Candidates if the status is OK
    
-   if( m_status == L0Muon::OK) {
+   if( m_status == L0MuonStatus::OK) {
      log << MSG::DEBUG << "candidates into Crate:"<< endreq ;
       
       for (ilmc = m_candidates.begin();ilmc != m_candidates.end(); ilmc++){
@@ -208,17 +213,18 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream & log)
        }
 
      } else if ( m_candidates.size() == 1) { 
-       m_candidates.push_back(new L0MuonCandidate(L0Muon::PU_EMPTY));
+       m_candidates.push_back(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));
 
      } else if ( m_candidates.size() == 0){
-       m_candidates.push_back(new L0MuonCandidate(PU_EMPTY));
-       m_candidates.push_back(new L0MuonCandidate(PU_EMPTY));
+       m_candidates.push_back(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));
+       m_candidates.push_back(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));
      }
 
 
      
-
-   }
+     
+   
+   
    
    
 
@@ -240,7 +246,7 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream & log)
      }
       
      std::pair<L0MuonCandidate* , std::vector<int> > empty = 
-       std::make_pair(new L0MuonCandidate(L0Muon::PU_EMPTY), tmp);
+       std::make_pair(new L0MuonCandidate(L0MuonStatus::PU_EMPTY), tmp);
      m_offsets.push_back(empty);
  
    } else if(m_offsets.size() == 0){
@@ -251,15 +257,15 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream & log)
      }
           
      std::pair<L0MuonCandidate* , std::vector<int> > empty = 
-       std::make_pair(new L0MuonCandidate(L0Muon::PU_EMPTY), tmp);
+       std::make_pair(new L0MuonCandidate(L0MuonStatus::PU_EMPTY), tmp);
      m_offsets.push_back(empty);
      m_offsets.push_back(empty);
    }
  
     
-   std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());  
-   std::sort(m_offsets.begin(),m_offsets.end(),ComparePt());
-
+   
+   }
+   
 
    // Printout for debug   
 
@@ -276,6 +282,17 @@ void L0Muon::CrateUnit::sortCandidates(MsgStream & log)
      log << MSG::DEBUG << "Pt of the candidate = " << (*ioff).first->pt() 
          << endreq;   
      log << MSG::DEBUG << "Offsets = " << tmp[0] << endreq;
+     /*std::cout << "Offsets = " << tmp[0] << std::endl;
+     std::cout << "Offsets = " << tmp[1] << std::endl;
+     std::cout << "Offsets = " << tmp[2] << std::endl;
+     std::cout << "Offsets = " << tmp[3] << std::endl;
+     std::cout << "Offsets = " << tmp[4] << std::endl;
+     std::cout << "Offsets = " << tmp[5] << std::endl;
+     std::cout << "Offsets = " << tmp[6] << std::endl;
+     std::cout << "Offsets = " << tmp[7] << std::endl;
+     std::cout << "Offsets = " << tmp[8] << std::endl;
+     std::cout << "Offsets = " << tmp[9] << std::endl;*/
+
      
    }
    

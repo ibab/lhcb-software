@@ -4,7 +4,7 @@
 /* class BoardUnit L0MuonKernel/BoardUnit.h
 
    Class representing a board 
-   of the L0Muon Trigger for hardware simulations
+   of the level-o muon trigger processor 
    
    author  Luisanna Tocco
    date  24 September 2003
@@ -16,7 +16,6 @@
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/L0mProcUnit.h"
 #include "L0MuonKernel/Unit.h"
-//#include "L0MuonKernel/BestCandidateSelectionUnit.h"
 #include "MuonTools/IMuonTileXYZTool.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -26,8 +25,12 @@ namespace L0Muon {
      
   public:
 
+     /// Constructor 
      BoardUnit();
-    ~BoardUnit();
+ 
+     /// Destructor
+     ~BoardUnit();
+
 
      void initialize();
      void initialize(MsgStream & log);

@@ -1,15 +1,14 @@
-// $Id: RegisterFactory.h,v 1.3 2004-11-17 08:35:00 cattanem Exp $
+// $Id: RegisterFactory.h,v 1.4 2004-12-21 14:33:03 ltocco Exp $
 
 #ifndef L0MUONKERNEL_REGISTERFACTORY_H
 #define L0MUONKERNEL_REGISTERFACTORY_H     1
 
 /** @class RegisterFactory RegisterFactory.h L0MuonKernel/RegisterFactory.h
 
-   Class representing factory for creating Registers
-   of the L0Muon Trigger for hardware simulations
+   Class representing a factory for creating and 
+   owning registers
    
-   @author  Andrei Tsaregorodtsev
-   @date  12 January 2002
+   
 */ 
 
 #include <string>
@@ -23,18 +22,46 @@ namespace L0Muon {
 class RegisterFactory {
 
 protected:
+
+  /// Constructor
   RegisterFactory();
 public:
+
+  /// Destructor
   virtual ~RegisterFactory();
   
+  /// single instance for the factory
   static RegisterFactory* instance();
   
+  /**
+     Create a register.
+     If the register was already created, it 
+     return the existing one.
+     
+     @param name : name of the register
+     @param size : number of bits
+   */
   Register* createRegister(std::string name, int size);
+
+  /**
+     Create a tileregister.
+     If the register was alredy created, it return the 
+     existing one
+     
+     @param name : name of the register
+     @param size : number of bits
+   */
   TileRegister* createTileRegister(std::string name, int size);
   TileRegister* searchTileRegister(std::string name);
- int createAlias(std::string name, std::string alias);
+ 
+  /// Crate an alias for the name of the register
+  int createAlias(std::string name, std::string alias);
+
+  /// Delete the registers named name 
   void deleteRegister(std::string name);
   std::map<std::string,Register*> getRegisters() { return m_registers ; }   
+
+  /// True if the register is found
   bool found(){ return m_found;}
   
     

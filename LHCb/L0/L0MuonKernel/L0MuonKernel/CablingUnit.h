@@ -1,25 +1,26 @@
-// $Id: CablingUnit.h,v 1.4 2004-11-03 13:31:48 ltocco Exp $
+// $Id: CablingUnit.h,v 1.5 2004-12-21 14:33:02 ltocco Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
-/* class CablingUnit CablingUnit L0MuonKernel/CablingUnit.h
+/* @class CablingUnit CablingUnit.h  L0MuonKernel/CablingUnit.h
 
-   Class representing a Cabling Unit of data processing logic 
-   of the L0Muon Trigger for hardware simulations
+   Class representing the kernel of the processing.
+   It transforms strips into logical pads.
+   It construct the tower.
+   It execute algorithms for searching candidates
    
-   author  Andrei Tsaregorodtsev
-   date  12 June 2003
+   
 */ 
 
 // STL includes
 #include <vector>
 #include "GaudiKernel/MsgStream.h"
 #include "Event/L0MuonCandidate.h"
-#include "Event/L0Muon.h"
+//#include "Event/L0Muon.h"
+#include "L0MuonKernel/L0MuonStatus.h"
 #include "L0MuonKernel/Unit.h"
 #include "L0MuonKernel/Tower.h"
 #include "L0MuonKernel/TileRegister.h"
-//#include "L0MuonKernel/RegisterFactory.h"
 #include "L0mConf/L0MPuNodeBase.h"
 
 namespace L0Muon {
@@ -27,29 +28,42 @@ namespace L0Muon {
 class CablingUnit : public L0Muon::Unit {
 
 public:
+
+  /// Constructor
   CablingUnit();
+
+  /// Destructor
   ~CablingUnit();
 
-
+  /// Set the MuonTileID of the PU 
   void setPU( MuonTileID pu ) { m_pu = pu; }
 
+  /// Return the MuonTileID of the PU
   MuonTileID getPU() { return m_pu ; }
     
-
+  /// Construct logical pads 
   void makePads(MsgStream & log);
+
+  /** Construct the tower (optical links + neighbours) 
+      in the granularity of M3
+  */
   void makeTower(MsgStream & log);
 
+  /// Draw the Tower
   void drawTower(MsgStream & log) {m_tower.draw(log);}
-  //boost::dynamic_bitset<> getStatus(); 
-  //boost::dynamic_bitset<> getCand1(); 
-  //boost::dynamic_bitset<> getCand2();
-
 
   // Overloads from Unit
-  void execute();
-  void execute(MsgStream & log);
   void initialize();
   void initialize(MsgStream & log);
+
+  void execute();
+
+  /** process the tower and select two candidates
+
+      @param log   : MSG::DEBUG 
+  */
+  void execute(MsgStream & log);
+
   void finalize();
 
 private:

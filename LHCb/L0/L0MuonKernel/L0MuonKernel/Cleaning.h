@@ -1,12 +1,14 @@
 #ifndef CLEANING_H
 #define CLEANING_H
 
-/*  class Cleaning Cleaning L0MuonKernel/Cleaning.h 
+/**  @class Cleaning Cleaning.h L0MuonKernel/Cleaning.h 
     
-    Class to eliminate seeds located in adjacent pads of M3
+    Class for cleaning adjacents pads in M3. 
+    If two pads are adjacent, only the closest to the beam 
+    pipe is kept
 
-    author  Luisanna Tocco
-    date  4 July 2003
+    @author  Luisanna Tocco
+    @date  4 July 2003
 
 */
 
@@ -19,7 +21,11 @@ namespace L0Muon {
 class Cleaning {
 
  public:
+  
+  /// Constructor 
   Cleaning();
+
+  /// Destructor
   ~Cleaning();
     
   typedef std::pair<int,int> HitIndex;
@@ -27,6 +33,8 @@ class Cleaning {
   typedef std::vector< boost::dynamic_bitset<> > SeedsMap ; 
 
   vec cleanSeed(vec&);
+
+  /// Clean the seed map
   std::vector<boost::dynamic_bitset<> > cleanSeed(SeedsMap & map);
   
 

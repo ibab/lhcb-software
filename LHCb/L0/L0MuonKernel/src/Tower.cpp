@@ -266,7 +266,7 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
          
 
         
-         // Con la stazione M1
+         // with M1
         for (int ista =4 ; ista >= minsta; ista--){
              // m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
 
@@ -287,20 +287,12 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
                                       m_maxYFoI[ista], offset);
           }
            
-
-          //m_ctower.drawBits(ista, log);
-
          
           drawStation(ista, log);
 
-           ///boost::dynamic_bitset<> bits = m_ctower.getBit(ista);
           boost::dynamic_bitset<> bits = m_ctower.getBit();
 
           pCs->searchInSta(ista, bits); 
-
-             //m_ctower.setPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
-             //              offset, pCs->getHitPos(ista));
-          
 
           m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
                                       offset, pCs->getHitPos(ista));
@@ -351,7 +343,7 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
 
            //boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
           L0MuonCandidate * mycand =createCandidate(m_pt, m_theta ,m_phi, 
-                                                    L0Muon::OK);
+                                                    L0MuonStatus::OK);
 
 
           m_puCandidates.push_back(mycand);
@@ -360,11 +352,6 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
           //added to set addresses for L0Buffer
           pCs->setCandidateAddrs(sd);
           boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
-          for (boost::dynamic_bitset<>::size_type myi = 0;
-               myi < bitsset.size(); myi++){
-            bool val = bitsset[myi];
-            
-          }
           
           if (ncand<2) {
             m_addr[ncand]=bitsset;
@@ -585,7 +572,7 @@ L0MuonCandidate* L0Muon::Tower::createCandidate(double p, double th,
        
        ind[j] =  m_ctower.getPadIndex(j);
        
-       std::pair<int, int> tmpind = std::make_pair(ind[j].first+1,ind[j].second);
+       //std::pair<int, int> tmpind = std::make_pair(ind[j].first+1,ind[j].second);
        m_mtid.push_back(getPadIdMap(j,ind[j]));
      
      }
@@ -769,6 +756,11 @@ double L0Muon::Tower::ptcalc() {
   //*log << MSG::DEBUG <<"Momentum" <<  " " <<  m_pt << endreq;
   //*log << MSG::DEBUG << "Theta" << " " << m_theta << endreq;
   //*log << MSG::DEBUG << " Phi" << " " << m_phi << endreq;
+
+
+  //m_pts.push_back(m_pt);
+  //m_th.push_back(m_theta);
+  //m_ph.push_back(m_phi);
 
   return m_pt;
 

@@ -1,10 +1,9 @@
 #ifndef CANDIDATETOWER_H     
 #define CANDIDATETOWER_H  
 
-/* class CandidateTower CandidateTower L0MuonKernel/CandidateTower.h
+/** @class CandidateTower CandidateTower.h L0MuonKernel/CandidateTower.h
 
-   Class representing a L0Muon Trigger representation
-   of data for a given seed in M3 
+   Class containing methods for searching candidates
 
    author  Luisanna Tocco
    date  4 July 2003
@@ -22,30 +21,52 @@ class CandidateTower {
  
  public:
 
+  /// Default constructor
   CandidateTower(); 
-  CandidateTower(std::pair<int, int> seedindex); 
+
+  /// Construct a candidate tower for a given seed
+  CandidateTower(std::pair<int, int> seedindex);
+
+  /// Destructor 
   ~CandidateTower();
 
+  /// Set the seed in M3
   void setSeed(std::pair<int, int> &seedindex);
+
+  /// Get the seed 
   std::pair<int, int> getSeed() { return m_seed ;}
   
+  /// Set the Foi for searching candidates
   void setFoi(int sta, int xfoi, int yfoi);
+
+  /// Get the Foi for searching candidates
   std::pair<int, int> getFoi(int sta); 
   
-  //void setBit(int sta, int xFoi, int yFoi);
+  /** Extract bits in foi for searching candidates
+      For M2 and M1 bits are ordered
+      following the hadware order for searching.
+      For M4 and M5  bits are not ordered.
+
+  */
   void setBit(int sta, std::vector<boost::dynamic_bitset<> > table,
               int maxXFoi, int maxYFoi,
               int offset);  
-
+  
+  /** Extract bits in foi for searching candidates.
+      Bits are ordered in all the stations
+  */
   void setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> > table,
               int maxXFoi, int maxYFoi,
               int offset);  
 
 
-  //boost::dynamic_bitset<> getBit(int sta);
+  /// Return extracted bits
   boost::dynamic_bitset<> getBit();
-  //void reset(int sta);
-  void reset();
+ 
+  /// Reset bits
+  void reset(); 
+
+  /// Draw bits
   void drawBits(int sta, MsgStream & log);
 
   
@@ -53,13 +74,24 @@ class CandidateTower {
   typedef boost::dynamic_bitset<> nbits;
   typedef std::pair<int, int> seedind ; 
 
+  /**
+     set a index (x,y) corresponding the position 
+     of the pad in the tower
+   */
   void setPadIndex(int sta, int maxXfoi, int maxYFoi, int offset, int ind);
+
+  /**
+     set a index (x,y) corresponding the position 
+     of the pad (in the ordered bit set ) 
+     in the tower
+   */
   void setOrderedPadIndex(int sta, 
                           int maxXfoi, int maxYFoi, int offset, int ind);
+
+  /// Return the pad position in the tower
   seedind getPadIndex(int sta) { return m_xyindex[sta];}
   
-  
-    
+      
 
  private:
 

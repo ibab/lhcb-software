@@ -109,7 +109,9 @@ void L0Muon::FormattingUnit::execute(){
 }
 
 void L0Muon::FormattingUnit::execute(MsgStream & log){
-
+ 
+  log << MSG::DEBUG << "Execute Formatting" << endreq;
+  
   
 }
 

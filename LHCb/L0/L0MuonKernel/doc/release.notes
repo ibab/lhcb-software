@@ -4,6 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= L0MuonKernel v2r4 2004-12-21 ========================
+! 2004-12-21 - Luisanna Tocco
+ - Comments for doxygen documentation
+ - Cleaning for compilation warnings (remaining warnings concerns L0mConf)
+ - Some obsolete methods eliminated in CablingUnit
+ - Dependency from Event/L0Muon.h eliminated 
+
 !======================= L0MuonKernel v2r3 2004-12-01 ========================
 ! 2004-12-01 - Luisanna Tocco
  - In CandidateTower, setOrderedBit corrected to include y Foi=0

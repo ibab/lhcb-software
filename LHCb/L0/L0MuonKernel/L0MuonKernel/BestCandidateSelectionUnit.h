@@ -3,6 +3,10 @@
 
 /* class BestCandidateSelectionUnit L0MuonKernel/BestCandidateSelectionUnit
  
+   Class representing a BCSU of the hardware processor.
+   It receive two candidates from each PU in the board 
+   and choose the two ones with the highest pT
+
    author  Luisanna Tocco 
    date    24 September 2003
 */
@@ -23,15 +27,40 @@ namespace L0Muon {
 
   public:
 
+    /** Constructor 
+        
+        @param writeL0Buffer : flag for writing L0Buffer on file
+
+    */
     BestCandidateSelectionUnit(bool & writeL0buffer);
+
+    /// Destructor
     ~BestCandidateSelectionUnit();
 
-
+    /// Get candidates from PUs
     void loadCandidates(L0MuonCandidate * cand);
+  
+    /// Get status from PU
     void loadStatus(int st){ m_status = st; }                    
   
+    /// Debug : print pT of the candidates 
     void dumpCandidates(MsgStream & log);
+
+    /// Debug : print addresses of candidates 
     void dumpAddresses(MsgStream & log);
+
+
+    /// Open the output file
+    void setOutputFile(MuonTileID puid); 
+
+    /// Write the output file
+    void dump(FILE *l0bufferFile);  
+
+
+    void sortCandidatesbcsu();
+    void loadOffsets(std::pair<L0MuonCandidate*, std::vector<int> >);
+
+   
 
     void initialize();
     void execute();
@@ -40,15 +69,6 @@ namespace L0Muon {
 
     void finalize();
     
-
-    void dump(FILE *l0bufferFile);  // write the output files
-    void setOutputFile(MuonTileID puid); // open the output files 
-    
-    // aggiungo:
-    //========
-    void sortCandidatesbcsu();
-    void loadOffsets(std::pair<L0MuonCandidate*, std::vector<int> >);
-    //===========
 
 
   private:
@@ -81,13 +101,10 @@ namespace L0Muon {
     
     std::vector<boost::dynamic_bitset<> > m_addresses ;
     std::vector<boost::dynamic_bitset<> > m_Bcsu ;
-    //std::vector<boost::dynamic_bitset<> > m_Pts ;
-    
 
 
     FILE *m_bcsul0bufferFile;
-    
-    // aggiungo
+
     std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offsets;
 
     bool m_writeL0buffer;
@@ -95,26 +112,6 @@ namespace L0Muon {
 
   };
 
-    class CalculateBestPt {
-  public:
-
-    int operator() (L0MuonCandidate* lmc1,
-                    L0MuonCandidate* lmc2) {
-      return fabs(lmc1->pt()) > fabs(lmc2->pt());
-    }
-
-    int operator() (std::pair<L0MuonCandidate*,boost::dynamic_bitset<> >  p1,
-                    std::pair<L0MuonCandidate*,boost::dynamic_bitset<> >  p2) {
-      return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
-    }
-    //aggiungo
-    int operator() (std::pair<L0MuonCandidate*,std::vector<int> >  p1,
-                    std::pair<L0MuonCandidate*,std::vector<int> >  p2) {
-      return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
-    }
-     
-    //fine aggiunta
-  };
 
 };  // namespace L0Muon
 

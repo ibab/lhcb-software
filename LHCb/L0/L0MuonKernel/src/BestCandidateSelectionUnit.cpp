@@ -1,6 +1,7 @@
+#include "L0MuonKernel/L0MuonStatus.h"
 #include "L0MuonKernel/BestCandidateSelectionUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
-#include "Event/L0Muon.h"
+//#include "Event/L0Muon.h"
 #include <stdio.h>
 #include <cmath>
 
@@ -54,7 +55,9 @@ void L0Muon::BestCandidateSelectionUnit::initialize()
 }
 void L0Muon::BestCandidateSelectionUnit::initialize(MsgStream & log)
 {
-
+  log << MSG::DEBUG << "Initialize BCSU" << endreq;
+  m_offsets.clear();
+  m_candidates.clear();
 }
 
 void L0Muon::BestCandidateSelectionUnit::execute()
@@ -64,44 +67,40 @@ void L0Muon::BestCandidateSelectionUnit::execute()
 void L0Muon::BestCandidateSelectionUnit::execute(MsgStream & log)
 {
 
+  log << MSG::DEBUG << "Execute BestCandidateSelectionUnit" << endreq;
+
   //dumpCandidates(log);
   //dumpAddresses(log);
 
-  // Aggiungo ==================================
-  /*
-  std::sort(m_offsets.begin(),m_offsets.end(), CalculateBestPt());
+  // Sort ordered candidates and offsets
+  sortCandidatesbcsu();  
 
-  //Chiamo CrateUnite
-  //Unit * myBoard = m_parent->parent();
-  //BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
-  //Unit * myCrate = myBoard->parent();
   Unit * myCrate = m_parent->parent();
+
   CrateUnit * cr = dynamic_cast<CrateUnit*>(myCrate);
 
+
+  // Load ordered candidates and offsets in Crate 
   for (std::vector<std::pair<L0MuonCandidate*, std::vector<int> > >::
          iterator ioff =
          m_offsets.begin(); ioff < m_offsets.begin()+2; ioff++){
-    
-    cr->fillOffsetBcsu(*ioff);
+
+    cr->fillOffset(*ioff);
+
     std::vector<int> tmp = (*ioff).second;
-    //std::cout << "TEST BCSU: m_offsets to Crate " <<std::endl;
-    //for (int i=0; i<tmp.size();i++){
-      //std::cout << " " << tmp[i] ;
-    //}
-    
-    //log << MSG::INFO << "\nOffsets of candidates" <<" " << (*ioff).second;
+
     
   }
 
-  sortCandidatesbcsu();
+
   for (std::vector<L0MuonCandidate* >::iterator icand = m_candidates.begin();
        icand < m_candidates.begin()+2; icand++){
     
-    cr->fillCandidatesBcsu(*icand);
+    cr->fillCandidates(*icand);
   }
-  */  
+  
 
-  //===============
+  // Write L0Buffer
 
   if (m_writeL0buffer){
     fillAddresses();
@@ -121,8 +120,8 @@ void L0Muon::BestCandidateSelectionUnit::execute(MsgStream & log)
 
 void L0Muon::BestCandidateSelectionUnit::finalize()
 {
-  m_offsets.clear();
-  m_candidates.clear();
+  //m_offsets.clear();
+  //m_candidates.clear();
   releaseRegisters();
   
 }
@@ -210,12 +209,19 @@ void L0Muon::BestCandidateSelectionUnit::fillAddresses()
   }
 }
 
-// Aggiungo per inviare i candidati gia ordinati a Crate
-/*void L0Muon::BestCandidateSelectionUnit::sortCandidatesbcsu()
+
+void L0Muon::BestCandidateSelectionUnit::sortCandidatesbcsu()
 {
+  //std::sort(m_candidates.begin(),m_candidates.end(), 
+  //        CalculateBestPt());
+
   std::sort(m_candidates.begin(),m_candidates.end(), 
-            CalculateBestPt());
-}*/
+            ComparePt());
+
+  //std::sort(m_offsets.begin(),m_offsets.end(), CalculateBestPt());
+  std::sort(m_offsets.begin(),m_offsets.end(), ComparePt());
+
+}
 
 
 /*
@@ -236,8 +242,8 @@ void L0Muon::BestCandidateSelectionUnit::fillInp()
     m_inp.push_back(tmp);
     
   }
-  std::sort(m_inp.begin(),m_inp.end(), CalculateBestPt());
-  //std::sort(m_inp.begin(),m_inp.end(), L0Muon::ComparePt());
+  //std::sort(m_inp.begin(),m_inp.end(), CalculateBestPt());
+  std::sort(m_inp.begin(),m_inp.end(), L0Muon::ComparePt());
 } 
 
 
@@ -253,7 +259,8 @@ void L0Muon::BestCandidateSelectionUnit::setIdBCSU()
   
   // Bits 0-11 L0Event number
   boost::dynamic_bitset<> evn(12, m_bcsueventnumber);
-  for (int i=0; i < evn.size(); i++){
+  int evnsize = evn.size();
+  for (int i=0; i < evnsize ; i++){
     bool val = evn[i];
     m_BcsuId.push_back(val);
   }
@@ -314,7 +321,7 @@ void L0Muon::BestCandidateSelectionUnit::setOutBCSU()
   unsigned long icounter =0;
   for (std::vector<L0MuonCandidate*>::iterator icand =
          m_candidates.begin(); icand != m_candidates.end();icand++){
-    if ( (*icand)->status() != L0Muon::PU_EMPTY){
+    if ( (*icand)->status() != L0MuonStatus::PU_EMPTY){
       icounter++;
     }
   }  
@@ -424,9 +431,10 @@ void L0Muon::BestCandidateSelectionUnit::dump(FILE *bcsul0bufferFile)
     for (boost::dynamic_bitset<>::size_type i =0; i <bcsu[iset].size();++i){ 
       int iwd=0;
       for (int ind=0;ind<16;ind++) {
-	int val=bcsu[iset][i] ;
-	iwd+= val*pow(2,ind);
-	++i;
+        int val=bcsu[iset][i] ;
+  
+        iwd+= int(val*pow(2,ind));
+        ++i;
       }
       fprintf(bcsul0bufferFile,"%04x\n",iwd);
       --i;
@@ -456,10 +464,10 @@ boost::dynamic_bitset<> L0Muon::BestCandidateSelectionUnit::codedPt(double pt){
   return ptbits;
 }
 
-//========= Aggiungo:
+
 void L0Muon::BestCandidateSelectionUnit::loadOffsets(std::pair<L0MuonCandidate*,std::vector<int> > off)
 {   
   m_offsets.push_back(off);
 }
 
-//===== fine aggiunte===========
+

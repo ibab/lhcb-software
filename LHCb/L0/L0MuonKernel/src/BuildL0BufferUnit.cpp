@@ -206,6 +206,9 @@ void L0Muon::BuildL0BufferUnit::initialize(){
 
 void L0Muon::BuildL0BufferUnit::initialize(MsgStream & log){
 
+  log << MSG::DEBUG << "Initialize BuildL0Buffer" << endreq;
+  
+
 }
 
 void L0Muon::BuildL0BufferUnit::execute(){
@@ -213,6 +216,7 @@ void L0Muon::BuildL0BufferUnit::execute(){
 
 void L0Muon::BuildL0BufferUnit::execute(MsgStream & log){
   
+  log << MSG::DEBUG << "Write L0Buffer" << endreq;
   
   setIdField();
   setInputField();
@@ -250,7 +254,7 @@ void L0Muon::BuildL0BufferUnit::dump(FILE *l0bufferFile){
 
       int val=bits[i] ;
       if (val>0) {
-        iword+= pow(2,ib);
+        iword+= int(pow(2,ib));
 
       }
 

@@ -44,10 +44,14 @@ void L0Muon::CandidateTower::setSeed(std::pair<int, int> &seedindex){
 void  L0Muon::CandidateTower::
 setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi, 
        int maxYFoi, int offset){
-  unsigned int x, y;
 
-  unsigned int xfoi = maxXFoi;
-  unsigned int yfoi = maxYFoi;
+  //unsigned 
+  int x, y;
+
+  //unsigned 
+  int xfoi = maxXFoi;
+  //unsigned 
+  int yfoi = maxYFoi;
   
   x = m_seed.first + xfoi +offset;
   y = m_seed.second + yfoi;
@@ -59,18 +63,17 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
  
   boost::dynamic_bitset<> bits(size);
  
-  //for (boost::dynamic_bitset<>::size_type k =0; k<bits.size();k++){
-  //bits[k]=0;
-    
-  //}
+
   m_bits = bits;
   if (m_yFoi[sta] == 0){
         bits[0]= table[y][x];
         if (bits.size()>1) {
           bits[1]=table[y][x+1];
           bits[2]=table[y][x-1];
-          for (boost::dynamic_bitset<>::size_type i =1; 
-               i<= (bits.size()-2)/2; i++){     
+          //for (boost::dynamic_bitset<>::size_type i =1; 
+          for (int i =1; 
+               //i<= (bits.size()-2)/2; i++){
+               i<= (size-2)/2; i++){
             if ( (x+i+1)< 24+2*xfoi ) {
               bits[2*i+1]=table[y][x+i+1];
             
@@ -97,8 +100,10 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
    
      } else  if (m_yFoi[sta] > 0){
 
-       unsigned int maxxfoi = m_xFoi[sta];
-       for (boost::dynamic_bitset<>::size_type i=0; i<(2*maxxfoi+1); i++){
+       //unsigned 
+       int maxxfoi = m_xFoi[sta];
+       //for (boost::dynamic_bitset<>::size_type i=0; i<(2*maxxfoi+1); i++){
+       for (int i=0; i<(2*maxxfoi+1); i++){
        //for (boost::dynamic_bitset<>::size_type i=0; i<(2*m_xFoi[sta]+1); i++){
          if ( y< 4+2*m_yFoi[sta] ) {
            //bits[i] = table[y][x- maxxfoi+i];
@@ -108,12 +113,14 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
        }
        //for (boost::dynamic_bitset<>::size_type i=(2*maxxfoi+1);
        //     i< 2*(2*maxxfoi+1); i++){
-       for (boost::dynamic_bitset<>::size_type i=(2*m_xFoi[sta]+1);
+       //for (boost::dynamic_bitset<>::size_type i=(2*m_xFoi[sta]+1);
+       for (int i=(2*m_xFoi[sta]+1);
             i< 2*(2*m_xFoi[sta]+1); i++){
          bits[i] = table[y-1][x - m_xFoi[sta]+i-(2*m_xFoi[sta]+1)];
 
        }
-       for (boost::dynamic_bitset<>::size_type i=2*(2*m_xFoi[sta]+1); 
+       //for (boost::dynamic_bitset<>::size_type i=2*(2*m_xFoi[sta]+1); 
+       for (int  i=2*(2*m_xFoi[sta]+1); 
             i< 3*(2*m_xFoi[sta]+1); i++){
          bits[i] = table[y+1][x - m_xFoi[sta]+i-2*(2*m_xFoi[sta]+1)];
 
@@ -242,10 +249,15 @@ setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table,
 void  L0Muon::CandidateTower::
 setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table, 
               int maxXFoi, int maxYFoi, int offset){
-  unsigned int x, y;
+  //unsigned 
+  int x, y;
 
-  unsigned int xfoi = maxXFoi;
-  unsigned int yfoi = maxYFoi;
+  //unsigned int xfoi = maxXFoi;
+  //unsigned int yfoi = maxYFoi;
+
+  int xfoi = maxXFoi;
+  int yfoi = maxYFoi;
+
   
   x = m_seed.first + xfoi +offset;
   y = m_seed.second + yfoi;  

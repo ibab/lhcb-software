@@ -1,11 +1,15 @@
 #ifndef L0MUONKERNEL_FORMATTINGUNIT_H
 #define L0MUONKERNEL_FORMATTINGUNIT_H     1
 
-/* class FormattingUnit L0MuonKernel/FormattingUnit.h
+/* @class FormattingUnit L0MuonKernel/FormattingUnit.h
 
-   
-   author  Luisanna Tocco
-   date  24 September 2003
+   class for preparing data for exchanges 
+   between the processing units
+   input data: optical links
+   output data: data for others PUs
+
+   @author  Luisanna Tocco
+   @date  24 September 2003
 */ 
 
 
@@ -22,14 +26,31 @@ namespace L0Muon {
      
    public:
      
+     /// Constructor
      FormattingUnit();
+
+     /// Destructor
      ~FormattingUnit();
 
+
+     
      void initialize();
+    
+     /** 
+         Call the method makePads
+
+         @param log   : MSG::DEBUG 
+     */
      void initialize(MsgStream & log);
+  
      void execute();
      void execute(MsgStream & log);
+   
      void finalize();
+
+     /**
+        Intersect tiles of input and output data 
+      */
      void makePads(MsgStream & log);
 
    private:

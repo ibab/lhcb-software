@@ -212,7 +212,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
           log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
           //*m_log << MSG::DEBUG << "tiles in input neigh reg" <<" " <<  endreq;
          
-          std::vector<MuonTileID>::iterator imtl;
+          //std::vector<MuonTileID>::iterator imtl;
           // for (imtl =listoftiles.begin(); imtl < listoftiles.end(); imtl++){
           //*m_log<< MSG::DEBUG << " "  << (*imtl).quarter() << " "
           // << (*imtl).region()  << " " 
@@ -284,7 +284,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
 
           log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
           //*m_log << MSG::DEBUG << "tiles in output neigh reg" <<" " <<  endreq;
-          std::vector<MuonTileID>::iterator imtlout;
+          //std::vector<MuonTileID>::iterator imtlout;
           //for (imtlout =listoftilesout.begin(); 
           // imtlout < listoftilesout.end(); imtlout++){
           //*m_log<< MSG::DEBUG << " "  << (*imtlout).quarter() << " "
