@@ -150,7 +150,9 @@ StatusCode CaloSCorrectionDoubleTanh::calculateprime(double min,
                                                      double x,
                                                      double y,
                                                      double& result) {
-  result = 0.;
+  double bary = (max-min)/(min+middle+max);
+  result = 0.5*(m_Coeff[0]/(cosh(m_Coeff[1]*bary)*cosh(m_Coeff[1]*bary))
+    +(1.-m_Coeff[0])/(cosh(m_Coeff[2]*bary)*cosh(m_Coeff[2]*bary)));
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "calculateprime() has been called"
       << " arg:" << " min:" << min 

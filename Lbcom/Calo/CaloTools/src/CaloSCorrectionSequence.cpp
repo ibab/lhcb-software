@@ -316,6 +316,7 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   logmsg << MSG::VERBOSE << "energy: " << energy << endreq;
 
   double x=0.,y=0.;
+  double xprime=0.,yprime=0.;
   if (border==false) {
     logmsg << MSG::VERBOSE << "calling X-tool[" << areaseed << "]..." << endreq;
     logmsg << MSG::VERBOSE << "eleft:" << eleft 
@@ -323,10 +324,16 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
     sc = m_ISCorrectionX[areaseed]->
       calculate(eleft,evert,eright,energy,xseed,yseed,x);
     if (sc!=StatusCode::SUCCESS) {return sc;}
+    sc = m_ISCorrectionX[areaseed]->
+      calculateprime(eleft,evert,eright,energy,xseed,yseed,xprime);
+    if (sc!=StatusCode::SUCCESS) {return sc;}
     logmsg << MSG::VERBOSE << "x:" << x << endreq;
     logmsg << MSG::VERBOSE << "calling Y-tool[" << areaseed << "]..." << endreq;
     sc = m_ISCorrectionY[areaseed]->
       calculate(ebottom,ehori,etop,energy,xseed,yseed,y);
+    if (sc!=StatusCode::SUCCESS) {return sc;}
+    sc = m_ISCorrectionY[areaseed]->
+      calculateprime(ebottom,ehori,etop,energy,xseed,yseed,yprime);
     if (sc!=StatusCode::SUCCESS) {return sc;}
     logmsg << MSG::VERBOSE << "y:" << y << endreq;
   } else {
@@ -335,10 +342,16 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
       sc = m_ISCorrectionBorder->
         calculate(eleft,evert,eright,energy,xseed,yseed,x);
       if (sc!=StatusCode::SUCCESS) {return sc;}
+      sc = m_ISCorrectionBorder->
+        calculateprime(eleft,evert,eright,energy,xseed,yseed,xprime);
+      if (sc!=StatusCode::SUCCESS) {return sc;}
       logmsg << MSG::VERBOSE << "x:" << x << endreq;
       logmsg << MSG::VERBOSE << "calling Y-tool on border..." << endreq;
       sc = m_ISCorrectionBorder->
         calculate(ebottom,ehori,etop,energy,xseed,yseed,y);
+      if (sc!=StatusCode::SUCCESS) {return sc;}
+      sc = m_ISCorrectionBorder->
+        calculateprime(ebottom,ehori,etop,energy,xseed,yseed,yprime);
       if (sc!=StatusCode::SUCCESS) {return sc;}
       logmsg << MSG::VERBOSE << "y:" << y << endreq;
     }
@@ -355,6 +368,20 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   localposition[1]=y;
   localposition[2]=energy;
   position->setParameters(localposition);
+
+  (position->covariance())(CaloPosition::E,CaloPosition::E)=
+  ((hypo->position())->covariance())(CaloPosition::E,CaloPosition::E);
+  (position->covariance())(CaloPosition::E,CaloPosition::X)=xprime
+    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::X);
+  (position->covariance())(CaloPosition::E,CaloPosition::Y)=yprime
+    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::Y);
+  (position->covariance())(CaloPosition::X,CaloPosition::X)=xprime*xprime
+    *((hypo->position())->covariance())(CaloPosition::X,CaloPosition::X);
+  (position->covariance())(CaloPosition::X,CaloPosition::Y)=xprime*yprime
+    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
+  (position->covariance())(CaloPosition::Y,CaloPosition::Y)=yprime*yprime
+    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
+
   logmsg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
   hypo->setPosition(position);  
   logmsg << MSG::VERBOSE << "CaloHypo processed..." << endreq;
