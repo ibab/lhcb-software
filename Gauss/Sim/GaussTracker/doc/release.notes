@@ -5,12 +5,12 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v3r2 ================================
 ! 2005-02-11 - Gloria Corti
  - src/GiGaSensDetMuon.cpp
    . introduce check on depth level in history tree, to put a protection for
      crashes in Boole.
 
-!=========================== GaussTracker v3r2 ================================
 ! 2005-02-07 - Florence Ranjard
  - src/GiGaSensDetMuon.cpp : rejetc hits which are in "Universe"
 
