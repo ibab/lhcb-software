@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.h,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.h,v 1.2 2003-07-02 09:02:59 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDDIGITSEL_H
 #define RICHRECALGS_RICHGLOBALPIDDIGITSEL_H 1
 
@@ -45,6 +45,9 @@ private: // private data
 
   /// Maximum number of usable pixels
   int m_maxUsedPixels;
+
+  /// Location of processing status object in TES
+  std::string m_procStatLocation;
   
 };
 

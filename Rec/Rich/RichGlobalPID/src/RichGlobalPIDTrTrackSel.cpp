@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.1.1.1 2003-06-30 16:10:55 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.2 2003-07-02 09:02:59 jonrob Exp $
 // Include files
 
 // local
@@ -25,6 +25,10 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 150 );
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  declareProperty( "ProcStatusLocation",
+                   m_procStatLocation = ProcStatusLocation::Default );
+  declareProperty( "TrStoredTracksLocation",
+                   m_trTracksLocation = TrStoredTrackLocation::Default );
 
 }
 
@@ -45,7 +49,7 @@ StatusCode RichGlobalPIDTrTrackSel::initialize() {
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
-  
+
   msg << MSG::DEBUG << "Initialize" << endreq
       << " Track types selected         = " << m_trSelector.selectedTrackTypes() << endreq
       << " Max Tracks                   = " << m_maxUsedTracks << endreq
@@ -63,16 +67,22 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   msg << MSG::DEBUG << "Execute" << endreq;
 
   // Event Status
-  if ( !richStatus()->eventOK()      ) return StatusCode::SUCCESS;
+  if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // update pointers to global PID working objects
-  if ( !gpidTracks() || !gpidPIDs() )  return StatusCode::FAILURE;
+  if ( !gpidTracks() || !gpidPIDs() ) return StatusCode::FAILURE;
 
   // Check if track processing was aborted.
-  if ( procStatus()->aborted() ) {
+  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
+  if ( !procStat ) {
+    msg << MSG::WARNING << "Failed to locate ProcStatus at "
+        << m_procStatLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  if ( procStat->aborted() ) {
     msg << MSG::INFO
         << "Processing aborted -> RICH Global PID aborted" << endreq;
-    procStatus()->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
     deleteEvent();
     return StatusCode::SUCCESS;
@@ -108,9 +118,14 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   m_nVeloTTTk[1] = 0;
 
   // Iterate over all TrStoredTracks and choose those to use
-  if ( !RichRecAlgBase::trTracks() ) return StatusCode::FAILURE;
-  for ( TrStoredTracks::const_iterator iTrack = trTracks()->begin();
-        iTrack != trTracks()->end();
+  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
+  if ( !tracks ) {
+    msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
+        << m_trTracksLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  for ( TrStoredTracks::const_iterator iTrack = tracks->begin();
+        iTrack != tracks->end();
         ++iTrack) {
     TrStoredTrack * trTrack = *iTrack;
     if ( !trTrack ) continue;
@@ -180,7 +195,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) {
     msg << MSG::DEBUG << "Selected " << m_GPIDtracks->size() << "/"
-        << trTracks()->size() << " TrStoredTracks :"
+        << tracks->size() << " TrStoredTracks :"
         << " Velo " << m_nVeloTk[0] << "/" << m_nVeloTk[1]
         << ", VeloBck " << m_nVeloBackTk[0] << "/" << m_nVeloBackTk[1]
         << ", VTT " << m_nVeloTTTk[0] << "/" << m_nVeloTTTk[1]
@@ -194,14 +209,14 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
 
   if ( m_GPIDtracks->empty() ) {
     msg << MSG::INFO << "No tracks selected -> RICH Global PID aborted" << endreq;
-    procStatus()->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     richStatus()->setEventOK( false );
     deleteEvent();
   } else if ( m_maxUsedTracks < m_GPIDtracks->size() ) {
     msg << MSG::WARNING
         << "Found " << m_GPIDtracks->size() << ">" << m_maxUsedTracks
         << " max usable tracks -> RICH Global PID aborted" << endreq;
-    procStatus()->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrackLimit );
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrackLimit );
     richStatus()->setEventOK( false );
     deleteEvent();
   }
@@ -242,7 +257,7 @@ RichGlobalPIDTrTrackSel::trackStatus( TrStoredTrack * trTrack ) {
 }
 
 void RichGlobalPIDTrTrackSel::deleteEvent() {
-  
+
   // Tidy up incase of event abort
   if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
   if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();

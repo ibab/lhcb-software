@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.1.1.1 2003-06-30 16:10:55 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.2 2003-07-02 09:03:00 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -61,9 +61,14 @@ private:
   // Private data members
 private: 
 
-  // tool pointers
-  IRichTrackCreator * m_trackCr;
-  IRichTrackProperties * m_trackProp;
+  /// Location of processing status object in TES
+  std::string m_procStatLocation;
+
+  /// Location of TrStoredTracks in TES
+  std::string m_trTracksLocation;
+
+  IRichTrackCreator * m_trackCr;      ///< Pointer to RichTrackCreator
+  IRichTrackProperties * m_trackProp; ///< Pointer to RichTrackProperties
   
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.h,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.h,v 1.2 2003-07-02 09:02:59 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDFINALIZE_H
 #define RICHRECALGS_RICHGLOBALPIDFINALIZE_H 1
 
@@ -34,6 +34,11 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+private:
+  
+  /// Location of processing status object in TES
+  std::string m_procStatLocation;
+  
 };
 
 #endif // RICHRECALGS_RICHGLOBALPIDFINALIZE_H

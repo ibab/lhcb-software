@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.2 2003-07-02 09:02:59 jonrob Exp $
 // Include files
 
 // local
@@ -24,7 +24,12 @@ extern "C" float FREQ( const float& );
 // Standard constructor, initializes variables
 RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) { }
+  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
+  
+  declareProperty( "ProcStatusLocation",
+                   m_procStatLocation = ProcStatusLocation::Default );
+  
+}
 
 // Destructor
 RichGlobalPIDFinalize::~RichGlobalPIDFinalize() {}
@@ -94,7 +99,13 @@ StatusCode RichGlobalPIDFinalize::execute() {
   }
 
   // All OK - Update ProcStatus with number of PIDs
-  procStatus()->addAlgorithmStatus( m_richGPIDName, m_GPIDs->size() );
+  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
+  if ( !procStat ) {
+    msg << MSG::WARNING << "Failed to locate ProcStatus at " 
+        << m_procStatLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  procStat->addAlgorithmStatus( m_richGPIDName, m_GPIDs->size() );
 
   return StatusCode::SUCCESS;
 }

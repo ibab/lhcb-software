@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.2 2003-07-02 09:02:59 jonrob Exp $
 // Include files
 
 // local
@@ -19,8 +19,10 @@ RichGlobalPIDDigitSel::RichGlobalPIDDigitSel( const std::string& name,
                                               ISvcLocator* pSvcLocator )
   : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
 
-  // Maximum number of pixels
+  // Job options
   declareProperty( "MaxUsedPixels", m_maxUsedPixels = 8000 );
+  declareProperty( "ProcStatusLocation",
+                   m_procStatLocation = ProcStatusLocation::Default );
 
 }
 
@@ -64,8 +66,13 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   if ( m_maxUsedPixels < richPixels()->size() ) {
     msg << MSG::WARNING << "Found " << richPixels()->size()
         << " RichDigits -> RICH Global PID aborted" << endreq;
-    if ( !procStatus() ) return StatusCode::FAILURE;
-    procStatus()->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
+    SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
+    if ( !procStat ) {
+      msg << MSG::WARNING << "Failed to locate ProcStatus at " 
+          << m_procStatLocation << endreq;
+      return StatusCode::FAILURE;
+    }
+    procStat->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
     richStatus()->setEventOK( false );
   }
 
