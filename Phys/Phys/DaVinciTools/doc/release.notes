@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.112 2004-07-19 12:44:08 pkoppenb Exp $
+! $Id: release.notes,v 1.113 2004-07-20 14:50:31 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-07-20 - P. Koppenburg
+ - src/LagrangeMassVertexFitter.cpp
+   . Bug affecting only Windows
+      -> put definitions
+         Particle* part3 = pList[2];
+         Particle* part4 = pList[3];
+     in the sections where one knows that there are more than 2 particles.
 
 ! 2004-07-19 - P. Koppenburg for Yuehong Xie
  - src/NsctVeloTransporter.cpp

@@ -610,8 +610,6 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   
   Particle* part1 = pList[0];
   Particle* part2 = pList[1];
-  Particle* part3 = pList[2];
-  Particle* part4 = pList[3];
   
   StatusCode sc;
   
@@ -741,6 +739,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   
   if(ntracks == 3){
     
+    Particle* part3 = pList[2];
     const ParticleID& part3ID = part3->particleID().pid();
     int part3StdHepID = part3ID.pid();
     
@@ -853,6 +852,8 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   
   if(ntracks == 4){
     
+    Particle* part3 = pList[2];
+    Particle* part4 = pList[3];
     const ParticleID& part3ID = part3->particleID().pid();
     int part3StdHepID = part3ID.pid();
     
