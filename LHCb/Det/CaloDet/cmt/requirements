@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.30 2003-06-16 13:39:04 sponce Exp $ 
+# $Id: requirements,v 1.31 2003-06-16 15:18:30 cattanem Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 package  CaloDet 
-version  v6r4
+version  v6r5
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
