@@ -1,20 +1,30 @@
-// $Id: OTLayer.h,v 1.3 2002-06-06 08:53:38 jvantilb Exp $
-#ifndef _OTLayer_H
-#define _OTLayer_H 1
+// $Id: OTLayer.h,v 1.4 2002-08-07 15:38:26 jvantilb Exp $
+#ifndef OTDET_OTLAYER_H
+#define OTDET_OTLAYER_H 1
 
-// This File contains the declaration of the OTLayer-class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Witek
-//   Created: 11-11-2000
-//   Original class name: OTDetectionLayer
-
-
-#include <list>
+// Kernel
 #include "Kernel/OTChannelID.h"
+
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 
+/** @class OTLayer OTLayer.h "OTDet/OTLayer.h"
+ *
+ *  This class contains the geometry parameters of a Outer Tracker 
+ *  (double) layer. 
+ *  Each OT station consists of 4 of these layers. This class has 
+ *  the calculateHits-method which calculates the closest wires 
+ *  (=channels) and the distances from an entry- and exit-point. 
+ *  Another method, distanceAlongWire, calculates the distance 
+ *  between the hit and the read-out. These and some other functions 
+ *  are used by the OT digitization as well as the track reconstruction.
+ *  Original class name: OTDetectionLayer
+ *
+ *  @author M. Witek
+ *  @author Adapted to the Event Model by J. van Tilburg 
+ *          jtilburg@nbikhef.nl (06-06-2002)
+ *  @date   11-11-2000  
+ */
 
 class OTLayer {
 
@@ -106,50 +116,35 @@ private:
              double& x, double& y) const;
 
   /// calculates of zc,uc of the center and radius 
-  ///rc of the circle (special assumptions)
-
+  ///  rc of the circle (special assumptions)
   void sCircle(const double z1, const double u1, const double z2, 
                const double u2, const double dz,
                double& zc, double& uc, double& rc);
 
+  /// Calculate which module and straws are hit
   void hitModuleAndStraw( double u, double v,
                           int& hitMod, int& hitStrA, int& hitStrB) const;
 
 
-  int     m_layerID;         // index of layer in this station
-
-  int     m_stationID;       // index of station the layer belongs to;
-
-  double  m_zOfLayer;        // z of the center of layer
-
-  int     m_halfNumModule;   // half a number of modules 
-                            // ( = nr of top modules = nr of bottom modules) 
-
-  int*    m_halfNumStraw;    // array of nr of straws in one monolayer
-
-  double* m_xFirstStrawA ;   // array of x-positions of first straw in module
-                            // relative to the center of module
-
-  double* m_xModuleCenter;   // array of x-coordinates of module centers
-
-  double* m_yModuleCenter;   // array of y-coordinates of module centers
-
-  double* m_xModuleSize;     // array of x-sizes of module centers
-
-  double* m_yModuleSize;     // array of y-sizes of module centers
-
-  double  m_pitchStraw;      // distance between straws
-
-  double  m_cellRadius;      // straw radius
-
-  double  m_stereoAngle;     // stereo angle
-
-  double  m_sinAngle;        // sin of the stereo angle
-
-  double  m_cosAngle;        // cos of the stereo angle
-
+  int     m_layerID;         ///< index of layer in this station
+  int     m_stationID;       ///< index of station the layer belongs to;
+  double  m_zOfLayer;        ///< z of the center of layer
+  int     m_halfNumModule;   ///< half a number of modules 
+                             ///< ( = nr of top modules = nr of bottom modules)
+  int*    m_halfNumStraw;    ///< array of nr of straws in one monolayer
+  double* m_xFirstStrawA ;   ///< array of x-positions of first straw in module
+                             ///< relative to the center of module
+  double* m_xModuleCenter;   ///< array of x-coordinates of module centers
+  double* m_yModuleCenter;   ///< array of y-coordinates of module centers
+  double* m_xModuleSize;     ///< array of x-sizes of module centers
+  double* m_yModuleSize;     ///< array of y-sizes of module centers
+  double  m_pitchStraw;      ///< distance between straws
+  double  m_cellRadius;      ///< straw radius
+  double  m_stereoAngle;     ///< stereo angle
+  double  m_sinAngle;        ///< sin of the stereo angle
+  double  m_cosAngle;        ///< cos of the stereo angle
 
 };
 
-#endif // _OTLayer_H
+#endif // OTDET_OTLAYER_H
 

@@ -1,12 +1,18 @@
-// $Id: DeOTDetector.cpp,v 1.5 2002-07-25 13:25:53 mneedham Exp $
+// $Id: DeOTDetector.cpp,v 1.6 2002-08-07 15:38:26 jvantilb Exp $
 
-// from Det/OTDet
-#include "OTDet/DeOTDetector.h"
+// CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Units/SystemOfUnits.h"
+
+// DetDesc
 #include "DetDesc/IGeometryInfo.h"
 //#include "DetDesc/ILVolume.h"
 //#include "DetDesc/ISolid.h"
 //#include "DetDesc/SolidBox.h"
 //#include "DetDesc/SolidSubtraction.h"
+
+// OTDet
+#include "OTDet/DeOTDetector.h"
 
 /** @file DeOTDetector.cpp
  *
@@ -124,8 +130,8 @@ StatusCode DeOTDetector::initialize()
 }
 
 
-OTLayer* DeOTDetector::layer(const double z) const {
-
+OTLayer* DeOTDetector::layer(const double z) const 
+{
    // find closest layer corresponding to z position
  
   OTLayer* closestLayer = 0;
@@ -148,8 +154,8 @@ OTLayer* DeOTDetector::layer(const double z) const {
 }
 
 
-OTLayer* DeOTDetector::layer(OTChannelID aChannel) const {
-
+OTLayer* DeOTDetector::layer(OTChannelID aChannel) const 
+{
   const unsigned int iStation = aChannel.station();
   const unsigned int iLayer   = aChannel.layer();
   if ((iStation < m_firstOTStation) || (iStation > m_numStations)) {
@@ -168,8 +174,8 @@ OTLayer* DeOTDetector::layer(OTChannelID aChannel) const {
 
 
 double DeOTDetector::distanceAlongWire(OTChannelID channelID,
-                                       double xHit, double yHit) const {
-
+                                       double xHit, double yHit) const 
+{
   // distance along wire
   OTLayer* hitLayer = this->layer(channelID);
   if ( 0 == hitLayer ) {
@@ -186,8 +192,8 @@ double DeOTDetector::distanceAlongWire(OTChannelID channelID,
 }
 
 
-OTChannelID DeOTDetector::nextChannelRight(OTChannelID aChannel) const{
-
+OTChannelID DeOTDetector::nextChannelRight(OTChannelID aChannel) const
+{
   const int iModule  = aChannel.module();
   const int iLayer   = aChannel.layer();
   const int iStation = aChannel.station();
@@ -212,8 +218,8 @@ OTChannelID DeOTDetector::nextChannelRight(OTChannelID aChannel) const{
 } 
 
 
-OTChannelID DeOTDetector::nextChannelLeft(OTChannelID aChannel) const{
-
+OTChannelID DeOTDetector::nextChannelLeft(OTChannelID aChannel) const
+{
   const int iModule  = aChannel.module();
   const int iLayer   = aChannel.layer();
   const int iStation = aChannel.station();

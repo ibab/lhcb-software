@@ -1,25 +1,19 @@
-// $Id: OTLayer.cpp,v 1.3 2002-06-06 08:53:38 jvantilb Exp $
-//
-// This File contains the definition of the OTLayer-class
-//
-// C++ code for 'LHCb Tracking package(s)'
-//
-//   Author: M. Witek
-//   Created: 11-11-2000
-//   Original class name: OTDetectionLayer
-
-#include <algorithm> 
+// $Id: OTLayer.cpp,v 1.4 2002-08-07 15:38:26 jvantilb Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Geometry/Point3D.h"
 
-// LHCbKernel
-#include "Kernel/OTChannelID.h"
-
-// OTSicbGeom
+// OTDet
 #include "OTDet/OTLayer.h"
 
+/** @file OTLayer.cpp
+ *
+ *  Implementation of OTLayer class
+ *   Original class name: OTDetectionLayer
+ *
+ *  @author M. Witek
+ *  @date   11-11-2000
+ */
 
 OTLayer::OTLayer(int iLayer, int iStation, double zLayer, 
                  double xCen,  double yCen, 
@@ -713,8 +707,8 @@ bool OTLayer::monoLayerB(const int iModule, const int iStraw) const
 
 double OTLayer::distanceAlongWire(const int iModule,
                                   const double xHit, 
-                                  const double yHit) const{ 
-  
+                                  const double yHit) const
+{ 
   // distance from x,y to end of wire
   // add check if xHit,yHit indeed inside iModule?
 
@@ -751,7 +745,8 @@ void OTLayer::sCircle(const double z1, const double u1, const double z2,
 }
 
 
-double OTLayer::wireHalfLength(const int iModule) const{
+double OTLayer::wireHalfLength(const int iModule) const
+{
   // half length of wire
   return (m_yModuleSize[iModule]/2.);
 }
@@ -759,8 +754,8 @@ double OTLayer::wireHalfLength(const int iModule) const{
 
 void OTLayer::hitModuleAndStraw( double u, double v,
                                  int& hitMod, int& hitStrA, 
-                                 int& hitStrB) const {
-
+                                 int& hitStrB) const 
+{
   hitMod=-1;
   hitStrA=-9999;
   hitStrB=-9999;

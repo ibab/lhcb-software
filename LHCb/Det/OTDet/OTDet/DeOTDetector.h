@@ -1,20 +1,26 @@
-// $Id: DeOTDetector.h,v 1.7 2002-07-25 13:25:53 mneedham Exp $
+// $Id: DeOTDetector.h,v 1.8 2002-08-07 15:38:25 jvantilb Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
-/// from Det/DetDesc
+// DetDesc
 #include "DetDesc/DetectorElement.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+
+// OTDet
 #include "OTDet/OTLayer.h"
+
+// Kernel
 #include "Kernel/OTChannelID.h"
 
 
-/** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h" 
+/** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
- *  OT detector element class.
+ *  This is the detector element class for the Outer Tracker. It 
+ *  is able to get the geometry from the XML. The geometry parameters are
+ *  stored inside OTLayers. This detector element is used by the OT 
+ *  digitization and the track reconstruction.
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
+ *  @date   26-05-2002
  */
 
 static const CLID& CLID_DeOTDetector = 10100;
@@ -54,18 +60,20 @@ public:
   /// return the channel left from a given channel
   OTChannelID nextChannelLeft(OTChannelID aChannel) const;
 
+  /// get the number of tracker stations
   unsigned int numStations()  { return m_numStations; }
 
+  /// get the first station with OT technology
   unsigned int firstOTStation()  { return m_firstOTStation; }
 
+  /// get the vector of all OT layers
   std::vector<OTLayer*> allLayers() const { return m_layers; }
 
 private:
 
-  /// data members
-  unsigned int m_numStations;
-  unsigned int m_firstOTStation;
-  std::vector<OTLayer*> m_layers;
+  unsigned int m_numStations;     ///< number of stations
+  unsigned int m_firstOTStation;  ///< first OT station
+  std::vector<OTLayer*> m_layers; ///< vector of layers containing geometry
 };
 
 #endif  // OTDET_DEOTDETECTOR_H
