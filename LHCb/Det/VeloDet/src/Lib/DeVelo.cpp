@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.18 2002-06-20 18:43:52 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.19 2002-06-24 08:17:56 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -10,7 +10,11 @@
 // from CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 // from Gaudi
+#include "GaudiKernel/Bootstrap.h"
+
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
@@ -47,9 +51,21 @@ const CLID& DeVelo::clID () const { return DeVelo::classID() ; }
 // intialization method
 // ============================================================================
 StatusCode DeVelo::initialize() {
+
+  //========== Trick from Pere to set the output level =================
+  PropertyMgr* pmgr = new PropertyMgr();
+  int outputLevel = -1;
+  pmgr->declareProperty( "OutputLevel", outputLevel );
+  IJobOptionsSvc* jobSvc;
+  ISvcLocator* svcLoc = Gaudi::svcLocator();
+  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc );
+  jobSvc->setMyProperties( "DeVelo", pmgr );
+  if ( -1 != outputLevel ) msgSvc()->setOutputLevel( "DeVelo", outputLevel );
+  //====================================================================
+
   MsgStream loging( msgSvc(), "DeVelo" );
-  
-  StatusCode sc = DetectorElement::initialize();
+
+  sc = DetectorElement::initialize();
   ///
   if( sc.isFailure() ) { 
     loging << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
@@ -142,7 +158,7 @@ StatusCode DeVelo::initialize() {
   }
   ///
 
-  loging << MSG::INFO    //==== Shoudl be changed for production !!!
+  loging << MSG::DEBUG    //==== Shoudl be changed for production !!!
          << "Velo : Radius from " << m_innerRadius/mm 
          << " to " << m_outerRadius/mm 
          << " thick " << m_siliconThickness / micrometer << " microns"

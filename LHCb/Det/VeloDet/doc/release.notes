@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.20 2002-06-20 18:43:52 ocallot Exp $
+! $Id: release.notes,v 1.21 2002-06-24 08:17:56 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-06-24 - Olivier Callot
+ - Trick to set the OutputLevel in the detector element, to control the print
+   level. Default is no print, DEBUG gives the list of the sensor's properties.
 
 ! 2002-06-20 - Olivier Callot
  - Adapt to the new Velo structure with 42 half-stations, in place of 21 
