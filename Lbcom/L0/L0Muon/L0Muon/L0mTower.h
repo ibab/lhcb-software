@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTower.h,v 1.1 2001-06-07 16:46:16 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTower.h,v 1.2 2001-07-09 19:39:55 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -11,6 +11,7 @@
 
 class L0MuonCandidate;
 class MsgStream;
+class L0mProcUnit;
 
 extern const CLID& CLID_L0mTower;    
 
@@ -41,6 +42,8 @@ public:
     void draw(MsgStream& log);
     /// add a bit to a station pad bit pattern
     void addBit(int ix, int iy, int st, L0mPad* pp); 
+    /// set pointer to containing Processing Unit
+    void setProcUnit(L0mProcUnit* plpu) { m_procUnit = plpu; }   
     /// check if the Tower has bits in all the stations
     bool isFull();
     /// check if a track was found
@@ -50,11 +53,9 @@ public:
     /// accessor to the resulting pads
     L0mPad* pad(int station);
     /// find track given the Fields of interest
-    L0mPad* findTrack(std::vector<int> foiX, std::vector<int> foiY);
+    L0mPad* findTrack();
     /// Full processing with creating L0MuonCandidate
-    L0MuonCandidate* createCandidate(const std::vector<double>& ptpara,
-                        	     const std::vector<int>& foiX, 
-				     const std::vector<int>& foiY);
+    L0MuonCandidate* createCandidate();
     /// Pt of the found candidate
     double pt() { return m_pt; }
     /// Theta at IP
@@ -63,13 +64,15 @@ public:
     double phi() { return m_phi; }
     /// Nearest pad
     int nearest(int sta, int foiX, int yindex);
+    /// Do the "limited" Y smearing of pads falling out of the PU
+    void limitedY();
     
     /// Retrieve pointer to class defininition structure
     virtual const CLID& clID() const { return L0mTower::classID(); }
     static const CLID& classID()     { return CLID_L0mTower; }          
     
     typedef std::pair<int,int> HitIndex;
-    typedef std::map< HitIndex, SmartRef<L0mPad> > StationMap;	       
+    typedef std::map< HitIndex, SmartRef<L0mPad> > StationMap;	
        
 private:
     
@@ -78,23 +81,28 @@ private:
     
     // Container of a bitmap image of fired pads
     
-    std::vector<StationMap> m_bitmap;
+    //std::vector<StationMap> m_bitmap;
+    StationMap m_bitmap[5];
     
     // Indices of the pads chosen while track finding
-    std::vector<HitIndex> m_indices;
-//     HitIndex m_ind1;
-//     HitIndex m_ind2;
-//     HitIndex m_ind4;
-//     HitIndex m_ind5;
+    //std::vector<HitIndex> m_indices;
+    HitIndex m_indices[5];
+    
     // Extrapolation to M1
     int m_extra1;
     // Track found flag
     bool m_found;
+    // LimitedY was applied
+    bool m_limited;
     
     // Calculated track parameters
     double m_pt;
     double m_theta;
     double m_phi;
+    
+    // Containing Processing Unit
+    
+    L0mProcUnit* m_procUnit;
         
     // Internal utility functions
     
@@ -104,7 +112,7 @@ private:
     HitIndex searchStation(bool& found, int st, int foiX, 
                            int cindex = 0, int yindex = 0 );
      /// Pt calculation of the found candidate
-    double ptcalc(const std::vector<double>& ptpara);   
+    double ptcalc();   
 };
 
 #endif
