@@ -1,4 +1,4 @@
-// $Id: MuBgDistribution.cpp,v 1.3 2003-10-01 14:50:52 cattanem Exp $
+// $Id: MuBgDistribution.cpp,v 1.4 2005-02-07 14:55:19 cattanem Exp $
 // Include files 
 #include <iostream>  
 
@@ -47,9 +47,8 @@ float MuBgDistribution::giveRND()
 {
 
   if(m_pointerToFlags[0]){
-  float nd,nc;
-    nd=(*(m_pointerToDistributions[0]))();
-    nc=nd*(m_xmax-m_xmin)+m_xmin;
+    double nd = (*(m_pointerToDistributions[0]))();
+    float  nc = float(nd*(m_xmax-m_xmin)+m_xmin);
     return nc;    
   }
   else return 0;
@@ -59,18 +58,11 @@ float MuBgDistribution::giveRND(float x)
 {
   float lenght = (m_xmax-m_xmin)/m_nbinx;
   unsigned int index =(int) ((x-m_xmin)/lenght);
-  float nd,nc;
   if(index<m_pointerToFlags.size()){
     
     if(m_pointerToFlags[index]){    
-      nd=(*(m_pointerToDistributions[index]))(); 
-      
-    //    cout<<"m_xmin "<<m_xmin<<" "<<m_xmax<<" "<<m_nbinx<<endl;
-    //cout<<"m_ymin "<<m_ymin<<" "<<m_ymax<<" "<<endl;
-      
-      nc=nd*(m_ymax-m_ymin)+m_ymin;
-      //cout<<"x "<<x<<" "<<nd<<" "<<index<<" "<<nc<<endl;
-      
+      double nd = (*(m_pointerToDistributions[index]))(); 
+      float  nc = float(nd*(m_ymax-m_ymin)+m_ymin);
       return nc;
     }
     

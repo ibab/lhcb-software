@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.20 2004-04-26 10:37:25 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.21 2005-02-07 14:55:19 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -93,6 +93,24 @@ StatusCode MuonBackground::initialize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Initialise" << endreq;
+
+  // Get the application manager. Used to find the histogram persistency type
+  // and to get number of spillovers from SpillOverAlg
+  IAlgManager* algmgr;
+  StatusCode sc = service( "ApplicationMgr", algmgr );
+  if( !sc.isSuccess() ) {
+    msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr"<< endmsg;
+    return sc;
+  }
+  IProperty* algmgrProp;
+  algmgr->queryInterface( IID_IProperty, (void**)&algmgrProp );
+
+  StringProperty persType;
+  persType.assign( algmgrProp->getProperty("HistogramPersistency") );
+  m_persType = persType.value();
+  msg << MSG::DEBUG << "Histogram persistency type is " << m_persType << endmsg;
+    
+
   // initialize geometry based quantities as station number, 
   //gaps per station and their z position 
   m_numberOfEventsNeed=5;
@@ -106,7 +124,7 @@ StatusCode MuonBackground::initialize() {
     i++;    
   }
  
-  StatusCode sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ); 
+  sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ); 
   if(sc.isFailure())return StatusCode::FAILURE;
   sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
   if(sc.isFailure())return StatusCode::FAILURE;
@@ -161,12 +179,6 @@ StatusCode MuonBackground::initialize() {
     }
     
     // Get the number of spillover events from the SpilloverAlg
-    IAlgManager* algmgr;
-    sc = service( "ApplicationMgr", algmgr );
-    if( !sc.isSuccess() ) {
-      msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr"<< endmsg;
-      return sc;
-    }
     IAlgorithm*  spillAlg;
     sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
     if( !sc.isSuccess() ) {
@@ -179,10 +191,9 @@ StatusCode MuonBackground::initialize() {
       StringArrayProperty evtPaths;
       evtPaths.assign( spillProp->getProperty("PathList") );
       m_readSpilloverEvents = evtPaths.value().size();
-      // Release the interfaces no longer needed
+      // Release the interface, no longer needed
       spillAlg->release();
     }
-    algmgr->release();
 
     msg << MSG::DEBUG << "number of spillover events read from aux stream "
         << m_readSpilloverEvents << endmsg;  
@@ -191,7 +202,10 @@ StatusCode MuonBackground::initialize() {
     m_luminosityFactor=m_luminosity/2.0;   
     //    m_readSpilloverEvents=m_numberOfFlatSpill;    
   }
-  
+
+  // Release interface, no longer needed  
+  algmgr->release();
+
   return StatusCode::SUCCESS;
 };
 
@@ -234,17 +248,16 @@ StatusCode MuonBackground::execute() {
             
             // extract number of hits to be added
             int hitToAdd=0;
-            double floatHit = 0;          
+            float floatHit = 0;          
             if(numsta[station]=="M1"){
-              floatHit=(startingHits*(m_safetyFactor[station]));   
+              floatHit=float(startingHits*(m_safetyFactor[station]));   
               hitToAdd=howManyHit( floatHit);            
             } else{
 	msg<<MSG::DEBUG<<"adding "<<	index <<" "<<startingHits<<endreq;          
               int yy=(int)(m_correlation[index])->
-                         giveRND(startingHits+0.5);
+                         giveRND(startingHits+0.5F);
               
-              floatHit=(m_safetyFactor[station]*
-                        (yy));
+              floatHit=float(m_safetyFactor[station]*(yy));
               hitToAdd=howManyHit( floatHit);
               //msg<<MSG::DEBUG<<"station safe start end hits "<<
               //  station<< " "<<m_safetyFactor[station]<< " "<<
@@ -274,8 +287,8 @@ StatusCode MuonBackground::execute() {
       for(int station=0;station<m_stationNumber;station++){        
         for (int multi=0;multi<m_gaps;multi++){
           int index=station*m_gaps+multi;
-          double floatHit = m_flatSpilloverHit[index]*m_luminosityFactor
-            *m_safetyFactor[station];         
+          float floatHit = float(m_flatSpilloverHit[index]*m_luminosityFactor
+            *m_safetyFactor[station]);         
           for (int fspill=0;fspill<=m_numberOfFlatSpill;fspill++){
             int hitToAdd=0;
             hitToAdd=howManyHit( floatHit);          
@@ -427,7 +440,16 @@ StatusCode MuonBackground::initializeParametrization()
   int numCode=m_histogramsMapNumber.size();
   int code=0;
   int gap;  
-  std::string name;  
+  std::string name;
+  // Add an "h" to histogram identifiers translated by h2root
+  std::string sep;
+  if( m_persType == "ROOT" ) {
+    sep = "/h";
+  }
+  else {
+    sep = "/";
+  }
+  
   if(numName!=numCode)return StatusCode::FAILURE;
   // the first station is without background!!!!!
   for(int station=0;station<m_stationNumber;station++){
@@ -447,7 +469,7 @@ StatusCode MuonBackground::initializeParametrization()
             sprintf(codePath,"%6i", tt);
           }
           
-          std::string path=m_histoFile+"/"+codePath;
+          std::string path=m_histoFile+sep+codePath;
           if(numsta[station]=="M1"&&m_histoName[i]=="correlation"){
             // skip the input of the correlation plot for M1 it does not exist
           }else if(m_histogramsDimension[i]==1){
@@ -459,8 +481,10 @@ StatusCode MuonBackground::initializeParametrization()
               initializeRNDDistribution1D(histo1d,
                                           distributions ,pointerToFlags,xmin, 
                                           xmax);
-              MuBgDistribution* mubg=new   
-                MuBgDistribution(distributions,pointerToFlags,xmin, xmax ); 
+              MuBgDistribution* mubg = new MuBgDistribution( distributions,
+                                                             pointerToFlags,
+                                                             float(xmin),
+                                                             float(xmax)    ); 
               if(m_histoName[i]=="correlation"){                
                 m_correlation[index]=mubg;
               }else if(m_histoName[i]=="r"){
@@ -495,9 +519,10 @@ StatusCode MuonBackground::initializeParametrization()
               initializeRNDDistribution2D(histo2d,
                                          distributions ,pointerToFlags,xmin, 
                                           xmax, nbinx ,ymin, ymax);
-              MuBgDistribution* mubg=new   
+              MuBgDistribution* mubg=new
                 MuBgDistribution(distributions,pointerToFlags,
-                                 xmin, xmax,nbinx,ymin,ymax); 
+                                 float(xmin), float(xmax), nbinx,
+                                 float(ymin), float(ymax)        ); 
               if(m_histoName[i]=="correlation"){
                 m_correlation[index]=mubg;
               }else if(m_histoName[i]=="r"){
@@ -827,8 +852,8 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       //3) test whether the r,phi is inside the sensitive chamber volume 
       // getVectorOfGapPosition(int station);
       //  transform r and phi in x,y
-      xpos=r*cos(globalPhi)*cm;
-      ypos=r*sin(globalPhi)*cm;
+      xpos=float(r*cos(globalPhi)*cm);
+      ypos=float(r*sin(globalPhi)*cm);
       if(multi==3) 
         msg<<MSG::DEBUG<<r<<" "<<globalPhi<<" "<<cos(globalPhi)<<" "<<
         sin(globalPhi)<<endreq;
@@ -921,8 +946,8 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       
       //define the more confortable slope in x-y direction 
       if(cos(thetaLoc)!=0){        
-        xSlope=sin(thetaLoc)*cos(phiLoc)/cos(thetaLoc);
-        ySlope=sin(thetaLoc)*sin(phiLoc)/cos(thetaLoc);    
+        xSlope=float(sin(thetaLoc)*cos(phiLoc)/cos(thetaLoc));
+        ySlope=float(sin(thetaLoc)*sin(phiLoc)/cos(thetaLoc));    
       }      
       else{
         xSlope = 1.0F;

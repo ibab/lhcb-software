@@ -1,5 +1,5 @@
 package MuonBackground 
-version v1r8
+version v1r9
 
 # ================ structure ===========================================
 branches src cmt options doc
@@ -7,7 +7,6 @@ include_path none
 
 # ================ used packages ========================================= 
 use AIDA        v*	LCG_Interfaces -no_auto_imports
-use ParamFiles  v*      $(LHCb_release_area)/PARAM -no_auto_imports
 use MuonTools	v3r*	Muon
 use MuonEvent	v3r*	Event
 

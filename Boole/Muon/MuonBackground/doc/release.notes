@@ -5,6 +5,15 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!======================= MuonBackground v1r9 2005-02-07 =======================
+! 2005-02-07 - Marco Cattaneo
+ - Change default options to read .root version of parameterisation histograms. Needs
+   ParamFiles v3r10 or greater
+ - Adapt MuonBackground.cpp to read either .hbook or .root histograms: .root ones have an
+   extrach "h" character in their identifier...
+ - Remove dependency on ParamFiles from requirements
+ - Fix some windows compiler warnings
+
 !======================= MuonBackground v1r8 2004-07-22 =======================
 ! 2004-07-22 - Marco Cattaneo
  - Fix requirements for Gaudi v15

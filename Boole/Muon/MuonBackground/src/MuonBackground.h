@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.5 2004-04-14 13:49:50 cattanem Exp $
+// $Id: MuonBackground.h,v 1.6 2005-02-07 14:55:19 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -149,6 +149,7 @@ private:
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
   Rndm::Numbers* m_flatDistribution;
+  std::string m_persType;
 };
 
 
