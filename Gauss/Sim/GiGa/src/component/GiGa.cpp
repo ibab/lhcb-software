@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.4 2003-04-06 18:49:48 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.5 2003-07-07 16:48:09 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/04/06 18:49:48  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.3  2002/12/13 13:36:31  ibelyaev
 //  add RndmGenSvc, and delete the last G4Event
 //
@@ -201,16 +204,23 @@ GiGa::initialize()
         << System::typeinfoName( typeid( *this ) ) << "/" 
         << name ()           << "   #properties = " 
         << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
     const int   buffer_size  = 256 ;
     char buffer[buffer_size]       ;
+#endif
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
          properties.rend() != property ; ++property )  
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         std::fill( buffer , buffer + buffer_size , 0 );
         std::ostrstream ost ( buffer , buffer_size );
         (*property)->nameAndValueAsStream( ost );
         ost.freeze();
+#else
+        std::ostringstream ost;
+        (*property)->nameAndValueAsStream( ost );
+#endif
         log << MSG::DEBUG
             << "Property ['Name': Value] = " 
             << ost.str() << endreq ;

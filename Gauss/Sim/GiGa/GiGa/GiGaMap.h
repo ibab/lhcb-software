@@ -1,8 +1,11 @@
-// $Id: GiGaMap.h,v 1.2 2002-12-03 21:46:59 ibelyaev Exp $
+// $Id: GiGaMap.h,v 1.3 2003-07-07 16:48:09 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/03 21:46:59  ibelyaev
+//  small upgrade to improve CaloSim code
+//
 // Revision 1.1  2002/05/04 20:20:11  ibelyaev
 //  see $GIGAROOT/doc/release.notes (4 May 2002)
 //
@@ -49,18 +52,18 @@ public:
   /** the  map itself
    *  @warning the actual type is platform-dependent!
    */
-  typedef  std::map<Key,Value>   Map      ;
+  typedef typename std::map<Key,Value> Map;
 #endif
   
   /** the type of iterator 
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::iterator         iterator       ;
+  typedef typename Map::iterator iterator;
   
   /** the type of const_iterator 
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::const_iterator   const_iterator ;
+  typedef typename Map::const_iterator const_iterator;
   
 public:
   
@@ -131,7 +134,7 @@ public:
     for( Keys::const_iterator key = m_keys.begin() ; 
          m_keys.end() != key ; ++key ) { m_map.remove( *key  ) ; }
     m_keys.clear();
-#endif;
+#endif
   };
   
   /** erase the sequence from the map
@@ -145,7 +148,7 @@ public:
     m_map.erase  ( it        ); 
 #else 
     m_map.remove ( it->first );
-#endif;
+#endif
   };
   
   /** remove/erase element from the map (by key) 
@@ -168,27 +171,27 @@ public:
   /** get the size ( == number of elements )
    *  @return number of elements 
    */
-  unsigned int  size() const { return m_map.size() ; }
+  unsigned int  size() const { return m_map.size(); }
   
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (non-const version) 
    */
-  Map::iterator       begin ()       { return m_map.begin () ; }
+  typename Map::iterator begin() { return m_map.begin(); }
 
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (const version) 
    */
-  Map::const_iterator begin () const { return m_map.begin () ; }
+  typename Map::const_iterator begin () const { return m_map.begin(); }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (non-const version) 
    */
-  Map::iterator       end   ()       { return m_map.end   () ; }
+  typename Map::iterator end() { return m_map.end(); }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (const version) 
    */
-  Map::const_iterator end   () const { return m_map.end   () ; }
+  typename Map::const_iterator end() const { return m_map.end(); }
 
 private:
   

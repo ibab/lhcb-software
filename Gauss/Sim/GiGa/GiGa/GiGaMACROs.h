@@ -1,8 +1,11 @@
-// $Id: GiGaMACROs.h,v 1.2 2002-05-07 12:21:29 ibelyaev Exp $
+// $Id: GiGaMACROs.h,v 1.3 2003-07-07 16:48:09 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/05/07 12:21:29  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // Revision 1.1  2002/04/25 13:02:04  ibelyaev
 //  small update
 //
@@ -33,8 +36,8 @@
  *  @date   25/04/2002
  */
 #define IMPLEMENT_GiGaFactory( x ) \
- static const  GiGaFactory<##x##>         s_##x##Factory ;\
- const            IFactory&##x##Factory = s_##x##Factory ;
+ static const  GiGaFactory<x> s_##x##Factory ;\
+ const            IFactory& x##Factory = s_##x##Factory ;
 
 /** @def DECLARE_GiGaFactory
  *  useful macro to declare the factory for GiGa Objects

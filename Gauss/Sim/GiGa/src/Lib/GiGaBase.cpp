@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.16 2003-05-30 14:26:59 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.17 2003-07-07 16:48:09 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2003/05/30 14:26:59  ibelyaev
+//  minor update in GiGaBase printout
+//
 // Revision 1.15  2003/04/06 18:49:47  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -141,16 +144,23 @@ StatusCode GiGaBase::initialize()
         << System::typeinfoName( typeid( *this ) ) << "/" 
         << name ()           << "   #properties = " 
         << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
     const int   buffer_size  = 256 ;
     char buffer[buffer_size]       ;
+#endif
     for( Properties::const_reverse_iterator property 
            = properties.rbegin() ;
          properties.rend() != property ; ++property )  
       {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
         std::fill( buffer , buffer + buffer_size , 0 );
         std::ostrstream ost ( buffer , buffer_size );
         (*property)->nameAndValueAsStream( ost );
         ost.freeze();
+#else
+        std::ostringstream ost;
+        (*property)->nameAndValueAsStream( ost );
+#endif
         log << MSG::DEBUG
             << "Property ['Name': Value] = " 
             << ost.str() << endreq ;

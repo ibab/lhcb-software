@@ -1,8 +1,11 @@
-// $Id: GiGaHash.h,v 1.1 2002-05-04 20:20:11 ibelyaev Exp $
+// $Id: GiGaHash.h,v 1.2 2003-07-07 16:48:09 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/05/04 20:20:11  ibelyaev
+//  see $GIGAROOT/doc/release.notes (4 May 2002)
+//
 // ============================================================================
 #ifndef GIGA_GIGAHASH_H 
 #define GIGA_GIGAHASH_H 1
@@ -49,9 +52,11 @@ struct GiGaHash<std::string>
 };
 
 #ifndef WIN32
-template<>
-struct std::hash<std::string>
-  : public GiGaHash<std::string>{};
+namespace __gnu_cxx {
+  template<>
+  struct hash<std::string>
+    : public GiGaHash<std::string>{};
+}
 #endif 
 
 // ============================================================================

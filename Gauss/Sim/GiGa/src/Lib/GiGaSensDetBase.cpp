@@ -1,8 +1,11 @@
-// $Id: GiGaSensDetBase.cpp,v 1.6 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaSensDetBase.cpp,v 1.7 2003-07-07 16:48:09 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.5  2002/08/26 12:27:58  witoldp
 // small changed to GiGaSensDetBase
 //
@@ -117,7 +120,7 @@ StatusCode GiGaSensDetBase::initialize()
         G4VSensitiveDetector::thePathName           = tmp              ;
         G4VSensitiveDetector::thePathName.remove(pos+1,tmp.length()-1) ;
         if( '/' != G4VSensitiveDetector::thePathName[(unsigned int)(0)] ) 
-          { G4VSensitiveDetector::thePathName.insert(0,'/'); } 
+          { G4VSensitiveDetector::thePathName.insert(0,"/"); } 
       } 
     ///
     G4VSensitiveDetector::fullPathName =

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/12 15:42:43  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.4  2001/07/23 13:11:42  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -45,7 +48,7 @@ public:
                   const StatusCode    &  sc        = StatusCode::FAILURE ) ;  
 
   /// (virtual) destructor                                               
-  virtual ~GiGaException();
+  virtual ~GiGaException() throw();
   
   /// clone method (virtual constructor)  
   virtual GaudiException* clone() const;

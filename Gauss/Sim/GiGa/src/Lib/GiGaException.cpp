@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/08/12 15:42:49  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.2  2001/07/23 13:12:11  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -32,7 +35,7 @@ GiGaException::GiGaException( const std::string   & message   ,
 // ============================================================================
 /// destructor  
 // ============================================================================
-GiGaException::~GiGaException(){};                       
+GiGaException::~GiGaException() throw(){};                       
 
 // ============================================================================
 /// clone (virtual constructor)
