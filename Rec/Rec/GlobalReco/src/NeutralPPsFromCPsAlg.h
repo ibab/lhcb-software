@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.h,v 1.1 2002-11-20 20:00:24 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.h,v 1.2 2003-01-19 11:41:20 ibelyaev Exp $
 // ============================================================================
 // CVS ta $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/20 20:00:24  ibelyaev
+//  new algorithm for creation of Neutral ProtoParticles
+// 
 // ============================================================================
 #ifndef NEUTRALPPSFROMCPSALG_H 
 #define NEUTRALPPSFROMCPSALG_H 1
@@ -20,6 +23,23 @@
  *  
  *  Creator of the neutral ProtoParticles from CaloParticles
  *
+ *  The current version fill following estimators for ProtoParticle
+ *  
+ *  <li>  <c>CaloTrMatch</c>     as <b>minimal</b> of this estimator for all 
+ *        linked <c>CaloHypo</c> objects. The value is extracted from 
+ *        the relation table/associator as a relation weigth between 
+ *        <c>CaloCluster</c> and <c>TrStoredTrack</c> objects </li>
+ *  <li>  <c>CaloDepositID</c>   as <b>maximal</b> of this estimator for all 
+ *        linked <c>CaloHypo</c> objects using Spd/Prs estimator tool 
+ *        written by Frederic Machefert </li>
+ *  <li>  <c>CaloShowerShape</c> as <b>maximal</b> of the estimator for 
+ *        all linked <c>CaloHypo</c> objects. Estimator is equal to the 
+ *        sum of diagonal elements of cluster spread matrix (2nd order 
+ *        moments of the cluster) </li>
+ *  <li>  <c>ClusterMass</c>     as <b>maximal</b> of the estimator of 
+ *        cluster mass using smart algorithm by Olivier Deschamp </li>
+ * 
+ *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   2002-11-20
  */

@@ -1,13 +1,18 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.1 2002-11-20 20:00:24 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.2 2003-01-19 11:41:20 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/11/20 20:00:24  ibelyaev
+//  new algorithm for creation of Neutral ProtoParticles
+// 
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
+// Kernel 
+#include "Kernel/CaloHypoPrint.h"
 // Event 
 #include "Event/CaloParticle.h"
 // Event 
@@ -73,9 +78,9 @@ NeutralPPsFromCPsAlg::NeutralPPsFromCPsAlg( const std::string& name ,
   declareProperty( "SpdPrsIDName" , m_spdprsName ) ;
   
   // set the appropriate default for input data
-  setOutputData( CaloParticleLocation::  Default  ) ;
+  setInputData  ( CaloParticleLocation::  Default  ) ;
   // set the appropriate default for output data
-  setOutputData( ProtoParticleLocation:: Neutrals ) ;
+  setOutputData ( ProtoParticleLocation:: Neutrals ) ;
   // set appropriate defaut for detector data 
   setDetData    ( DeCalorimeterLocation:: Ecal    ) ;
 };
@@ -109,7 +114,7 @@ StatusCode NeutralPPsFromCPsAlg::initialize()
         { return Error("Unknown calorimeter hypothesis!"); }
       CaloHypotheses::Hypothesis hypo =  (CaloHypotheses::Hypothesis) *value ;
       m_hypos.push_back( hypo );
-      msg << MSG::DEBUG << " Hyposesis accepted: " ;
+      msg << MSG::INFO << " Hyposesis accepted: " ;
       CaloHypoPrint( msg , hypo ) ;
       msg << endreq ;
     };
@@ -206,21 +211,25 @@ StatusCode NeutralPPsFromCPsAlg::execute()
           
           { // process with Chi2Match estimators
             const double chi2           = caloTrMatch( hypo , table );
+            // select MINIMAL chi2 matching estimator  
             if( chi2 < caloTrMatch_   ) { caloTrMatch_ = chi2 ; }
           } // end of Chi2Match estimators
           
           { // process with spdPrsID estimator 
             const double dep            = caloDepositID( hypo ) ;
+            // select MAXIMAL Spd/Prs estimator 
             if( caloDepositID_ < dep  ) { caloDepositID_ = dep ; }
           } // end of spdPrsID processing 
           
           { // process with ShowerShape estimator 
             const double shape          = showerShape( hypo );
+            // select MAXIMAL shower shape estimator 
             if(  showerShape_ < shape ) { showerShape_ = shape ; }            
           } // end of ShowerShape  processing 
           
           { // process with ClusterMass estimator 
             const double mass           = clusterMass( hypo );
+            // select MAXIMAL cluster mass estimator 
             if( clusterMass_  < mass  ) { clusterMass_ = mass ; }
           } // end of ClusterMass processing
           
@@ -318,7 +327,7 @@ double NeutralPPsFromCPsAlg::clusterMass ( const CaloHypo*  hypo  )  const
     {
       const CaloMomentum* momentum = hypo->momentum ();
       if( 0 == momentum ) 
-        { Error("CaloMomentum* points to NULL for 'Pi0Merged'"); }
+        { Error("clusterMass():CaloMomentum* points to NULL for 'Pi0Merged'"); }
       else 
         { mass = momentum->momentum().m(); }
     }  
@@ -352,7 +361,7 @@ double NeutralPPsFromCPsAlg::showerShape ( const CaloHypo*  hypo  )  const
   const CaloPosition* position = hypo->position();
   if( 0 == position ) 
     {
-      Error("showerShape(): CaloPosition* points to NULL!");
+      Warning("showerShape(): CaloPosition* points to NULL!");
       return shape;                                              // RETURN !!
     }
   

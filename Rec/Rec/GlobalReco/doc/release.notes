@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-01-19 - Ivan Belyaev
+
+ - src/NeutralPPsFromCPsAlg.cpp        - (1) bug fix with incorrect default 
+                                             location of input/output data  
+                                         (2) improve error printout 
+ - src/NeutralPPsFromCPsAlg.h          -     improve documentation strings 
+  
+ - cmt/requirements                    -  increase the version 
+
 !===================== GlobalReco v2r3 2003-01-06 ===========================
 ! 2003-01-06 - Florence Ranjard
  - requirements - use LHCb v11r5
