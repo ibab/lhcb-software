@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.5 2003-04-03 10:56:36 ibelyaev Exp $
+// $Id: SolidPolycone.cpp,v 1.6 2003-04-04 15:54:08 ibelyaev Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -84,16 +84,30 @@ StatusCode SolidPolycone::setBP()
   setRhoMax ( m_triplets.front().second.second          ) ;
   setRMax   ( sqrt( rMax() * rMax() + zMax() * zMax() ) ) ;
   
+  double rhoMin =  1.e+23 ;
+  
   for( Triplets::const_iterator triplet = m_triplets.begin() ;
        m_triplets.end() != triplet ; ++triplet )
     {
       const double z      = triplet->first                   ;
-      const double rhomax = triplet->second.second           ;
-      const double rmax   = sqrt( rhomax * rhomax + z * z )  ;
-      setZMin   ( z      < zMin   () ? z      : zMin   () )  ;
-      setZMax   ( z      > zMax   () ? z      : zMax   () )  ;
+      setZMin   (  z < zMin () ? z : zMin () )  ;
+      setZMax   (  z > zMax () ? z : zMax () )  ;
+      
+      if( rhoMin > triplet->second.first  ) 
+        { rhoMin = triplet->second.first  ; }
+      
+      if( rhoMin > triplet->second.second ) 
+        { rhoMin = triplet->second.second ; }
+      
+      if( rhoMax() < triplet->second.first   ) 
+        { setRhoMax( triplet->second.first  ) ; }
+      
+      if( rhoMax() < triplet->second.second  ) 
+        { setRhoMax( triplet->second.second ) ; }
+      
+      const double rmax   = sqrt( rhoMax() * rhoMax() + z * z )  ;
       setRMax   ( rmax   > rMax   () ? rmax   : rMax   () )  ;
-      setRhoMax ( rhomax > rhoMax () ? rhomax : rhoMax () )  ;
+      
     }
   
   typedef std::vector<double> Values ;
@@ -101,49 +115,76 @@ StatusCode SolidPolycone::setBP()
   const double phi1   = startPhiAngle   ()                      ;
   const double phi2   = startPhiAngle   () + deltaPhiAngle   () ;
   
+  
   { // evaluate xmin & xmax
     Values values ;
     
     // regular cases 
     values.push_back( rhoMax () * cos ( phi1 ) );
     values.push_back( rhoMax () * cos ( phi2 ) );
+    values.push_back( rhoMin    * cos ( phi1 ) );
+    values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
     if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ;
+        values.push_back (   rhoMin    )  ;
+      }
     if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setXMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setXMin ( *std::min_element ( values.begin () , values.end () ) ) ;
     
   }
-  
+
   { // evaluate ymin & ymax
     Values values ;
     
     // regular cases 
-    values.push_back( rhoMax () * sin (  phi1 ) );
+    values.push_back( rhoMax () * sin ( phi1 ) );
     values.push_back( rhoMax () * sin ( phi2 ) );
+    values.push_back( rhoMin    * sin ( phi1 ) );
+    values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
     if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setYMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setYMin ( *std::min_element ( values.begin () , values.end () ) ) ;
+    
   }
 
   ///

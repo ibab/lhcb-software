@@ -1,8 +1,11 @@
-// $Id: SolidTubs.cpp,v 1.9 2003-04-03 10:56:37 ibelyaev Exp $ 
+// $Id: SolidTubs.cpp,v 1.10 2003-04-04 15:54:08 ibelyaev Exp $ 
 // ============================================================================
 // CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/04/03 10:56:37  ibelyaev
+//  fix the problems with  evaluation of xmin/xmax/ymin/ymax
+//
 // Revision 1.8  2002/05/13 18:29:54  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 13 May 2002
 //
@@ -99,9 +102,12 @@ StatusCode SolidTubs::setBP()
   setRMax   ( sqrt( zMax() * zMax() + rhoMax() * rhoMax () ) );
   
   typedef std::vector<double> Values ;
+
   
   const double phi1   = startPhiAngle   ()                      ;
   const double phi2   = startPhiAngle   () + deltaPhiAngle   () ;
+
+  const double rhoMin = innerRadius     () ;
   
   { // evaluate xmin & xmax
     Values values ;
@@ -109,46 +115,71 @@ StatusCode SolidTubs::setBP()
     // regular cases 
     values.push_back( rhoMax () * cos ( phi1 ) );
     values.push_back( rhoMax () * cos ( phi2 ) );
+    values.push_back( rhoMin    * cos ( phi1 ) );
+    values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
     if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ;
+        values.push_back (   rhoMin    )  ;
+      }
     if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setXMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setXMin ( *std::min_element ( values.begin () , values.end () ) ) ;
     
   }
-  
+
   { // evaluate ymin & ymax
     Values values ;
     
     // regular cases 
-    values.push_back( rhoMax () * sin (  phi1 ) );
+    values.push_back( rhoMax () * sin ( phi1 ) );
     values.push_back( rhoMax () * sin ( phi2 ) );
+    values.push_back( rhoMin    * sin ( phi1 ) );
+    values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
     if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setYMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setYMin ( *std::min_element ( values.begin () , values.end () ) ) ;
     
   }
-  
+
   //
   return checkBP();
 };

@@ -1,8 +1,11 @@
-// $Id: SolidSphere.cpp,v 1.11 2003-04-03 10:56:36 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.12 2003-04-04 15:54:08 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/04/03 10:56:36  ibelyaev
+//  fix the problems with  evaluation of xmin/xmax/ymin/ymax
+//
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
@@ -133,18 +136,25 @@ StatusCode SolidSphere::setBP()
     setZMin ( *std::min_element ( values.begin () , values.end () ) ) ;    
   };
   
+  
+  double rhoMin = 0.0 ;
   { // evaluate rho max 
     Values values ;
     
     // regular case
-    values.push_back( rMax () * sin ( theta1 ) ) ;
-    values.push_back( rMax () * sin ( theta2 ) ) ;      
+    values.push_back( rMax         () * sin ( theta1 ) ) ;
+    values.push_back( rMax         () * sin ( theta2 ) ) ;      
+    
+    // needed for evaluation of RhoMin
+    values.push_back( insideRadius () * sin ( theta1 ) ) ;
+    values.push_back( insideRadius () * sin ( theta2 ) ) ;      
     
     // special cases 
     if ( theta1 <= 90 * degree && 90 * degree <= theta2 ) 
       { values.push_back( rMax () ) ; }
     
     setRhoMax ( *std::max_element ( values.begin() , values.end() ) ) ;
+    rhoMin =  ( *std::min_element ( values.begin() , values.end() ) ) ;
   };
   
   
@@ -154,18 +164,32 @@ StatusCode SolidSphere::setBP()
     // regular cases 
     values.push_back( rhoMax () * cos ( phi1 ) );
     values.push_back( rhoMax () * cos ( phi2 ) );
+    values.push_back( rhoMin    * cos ( phi1 ) );
+    values.push_back( rhoMin    * cos ( phi2 ) );
     
     // special cases 
     if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ;
+        values.push_back (   rhoMin    )  ;
+      }
     if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setXMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setXMin ( *std::min_element ( values.begin () , values.end () ) ) ;
@@ -176,18 +200,29 @@ StatusCode SolidSphere::setBP()
     Values values ;
     
     // regular cases 
-    values.push_back( rhoMax () * sin (  phi1 ) );
+    values.push_back( rhoMax () * sin ( phi1 ) );
     values.push_back( rhoMax () * sin ( phi2 ) );
+    values.push_back( rhoMin    * sin ( phi1 ) );
+    values.push_back( rhoMin    * sin ( phi2 ) );
     
     // special cases 
     if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
-      { values.push_back (   rhoMax () ) ; }
+      { 
+        values.push_back (   rhoMax () ) ; 
+        values.push_back (   rhoMin    ) ; 
+      }
     
     // special cases 
     if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
-      { values.push_back ( - rhoMax () ) ; }
+      { 
+        values.push_back ( - rhoMax () ) ; 
+        values.push_back ( - rhoMin    ) ; 
+      }
     
     setYMax ( *std::max_element ( values.begin () , values.end () ) ) ;
     setYMin ( *std::min_element ( values.begin () , values.end () ) ) ;

@@ -1,18 +1,24 @@
 ! =============================================================================
-! $Id: release.notes,v 1.132 2003-04-03 10:56:35 ibelyaev Exp $ 
+! $Id: release.notes,v 1.133 2003-04-04 15:54:05 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+! 2003-04-04 - Ivan BELYAEV
+ - src/SolidSphere.cpp        the next iteration of bug removal from setBP method   
+ - src/SolidCons.cpp          the next iteration of bug removal from setBP method   
+ - src/SolidTubs.cpp          the next iteration of bug removal from setBP method   
+ - src/SolidSolidPolycone.cpp the next iteration of bug removal from setBP method   
+
 ! 2003-04-03 - Vanya BELYAEV
- - src/SolidSphere.cpp     reimplement the SolidSphere::setBP to take into account 
+ - src/SolidSphere.cpp     reimplement the SolidSphere::setBP   to take into account 
                            *ALL* exceptional cases. 
- - src/SolidCons.cpp       reimplement the SolidSphere::setBP to take into account 
+ - src/SolidCons.cpp       reimplement the SolidCons::setBP     to take into account 
                            *ALL* exceptional cases. 
- - src/SolidTubs.cpp       reimplement the SolidSphere::setBP to take into account 
+ - src/SolidTubs.cpp       reimplement the SolidTubs::setBP     to take into account 
                            *ALL* exceptional cases. 
- - src/SolidPolycone.cpp   reimplement the SolidSphere::setBP to take into account 
+ - src/SolidPolycone.cpp   reimplement the SolidPolycone::setBP to take into account 
                            *ALL* exceptional cases. 
 
       I guess that some day I need to reimplement "setBP" 
