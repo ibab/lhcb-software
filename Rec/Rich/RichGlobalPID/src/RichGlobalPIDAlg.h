@@ -4,8 +4,11 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.7 2004-07-27 10:56:36 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.8 2005-01-13 13:15:21 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/07/27 10:56:36  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -23,6 +26,9 @@
 
 // Event
 #include "Event/RichRecStatus.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
@@ -54,7 +60,7 @@ public:
 private: // Private methods
 
   // private typedefs
-  typedef std::map<RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
+  typedef RichMap<RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
   typedef std::pair<double,RichGlobalPIDTrack*> TrackPair;
   typedef std::vector<TrackPair> TrackList;
 
