@@ -39,19 +39,21 @@ HistogramPersistencySvc.OutputFile = "TT-alt.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:NewCatalog.xml",
-  "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+  "xmlcatalog_file:NewCatalog.xml"
+ ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+ ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
 
 //---------------------------------------------------------------------------
 // Event input
 //---------------------------------------------------------------------------
 
+// POOL
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r6/TT-alt.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
+
 // Format for GaudiRootDb input (no Boole v5r6 files available for TT-alt geometry)
 //EventSelector.Input = { "DATAFILE='TT-alt.oodigi' TYP='ROOT' OPT='READ'" };
 
-// Format for POOL input (no Boole v5r6 files available for TT-alt geometry)
-//EventSelector.Input = { "DATAFILE='PFN:TT-alt.digi' TYP='POOL_ROOT' OPT='READ'" };
 
 //---------------------------------------------------------------------------
 // Event output
