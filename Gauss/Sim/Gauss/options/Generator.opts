@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.32 2004-01-26 16:44:46 ranjard Exp $ 
+// $Id: Generator.opts,v 1.33 2004-04-07 16:29:02 gcorti Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -15,7 +15,7 @@ SetDecayAlg.OutputLevel = 4;
 //Generator.Members += {"DumpMC"};
 
 // any Pythia commands (flags) should be specified in the following form:
-// PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
+// PythiaAlg.PythiaUserCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
 // Particle Gun's options
 ParticleGun.xVertexMin = 0.0;

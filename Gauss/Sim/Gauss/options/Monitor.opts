@@ -1,0 +1,9 @@
+// $Id: Monitor.opts,v 1.1 2004-04-07 16:29:02 gcorti Exp $ 
+
+ApplicationMgr.DLLs += { "GaussMonitor" } ;
+
+Monitor.Members     = { "GeneratorFullMonitor" };
+Monitor.Members    += { "MCTruthFullMonitor" };
+
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};

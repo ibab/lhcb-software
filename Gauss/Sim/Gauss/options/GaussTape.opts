@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.14 2004-03-17 14:59:38 ranjard Exp $ 
+// $Id: GaussTape.opts,v 1.15 2004-04-07 16:29:02 gcorti Exp $ 
 
 
 /// create and add the output stream 
@@ -13,7 +13,9 @@ GaussTape.ItemList =
         // Gen Header
     ,"/Event/Gen#1"
     ,"/Event/Gen/Header#1"
-       // Generated event
+        // Generator hard process information
+    ,"/Event/Gen/HardProcesses#1" 
+        // Generated event
     ,"/Event/Gen/HepMCEvents#1"
   };
 
@@ -90,6 +92,8 @@ GaussTape.OptItemList =
     ,"/Event/MC/Muon/M5/R2/Hits#1"
     ,"/Event/MC/Muon/M5/R3/Hits#1"
     ,"/Event/MC/Muon/M5/R4/Hits#1"
+     // Link between signal B in MCParticles and HepMC
+    ,"/Event/MC/Signal#1"
   };
 
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
