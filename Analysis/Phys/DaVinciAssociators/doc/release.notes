@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.26 2003-05-26 11:38:37 phicharp Exp $
+! $Id: release.notes,v 1.27 2003-06-03 16:56:15 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+!================= DaVinciAssociators v4r1 2003-06-03 ======================
 ! 2003-05-16 - Philippe Charpentier
  - Particle2MCLinks:
       - Use NeutralPP2MC associator for neutral particles
