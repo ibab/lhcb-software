@@ -23,22 +23,24 @@
 
 #include "$BRUNELOPTS/BrunelCommon.opts"
 
-// Uncomment next line if you want to run Brunel in static mode.
-// #include "$BRUNELOPTS/BrunelStatic.opts"
-
 // >>>>>>>>>>>>>> CALORIMETERS <<<<<<<<<<<<<
 // Uncomment next line to suppress Fortran digitisation
-BrunelDigiCALOSeq.Members = { };
-// Uncomment next line to enable C++ digitisation
+// BrunelDigiCALOSeq.Members = { };
+// Uncomment next two lines to enable C++ digitisation
 #include "$CALOALGSROOT/options/Brunel.opts"
-// Uncomment next line to convert C++ digits back to SICB bank
+#include "$CALOSICBCNVROOT/options/CaloSicbCnv.opts"
+// Uncomment next 5 lines to convert C++ digits back to SICB bank
 BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
+CaloDigitToSicbConverter.EcalData = "/Event/Raw/Ecal/Digit";
+CaloDigitToSicbConverter.HcalData = "/Event/Raw/Hcal/Digit";
+CaloDigitToSicbConverter.PrsData  = "/Event/Raw/Prs/Digit";
+CaloDigitToSicbConverter.SpdData  = "/Event/Raw/Spd/Digit";
 
 //--------------------------------------------------------------
 // Define the main event input data: SICBMC v241 (new CALO RAWH format)
 //--------------------------------------------------------------
 EventSelector.Input = {"FILE='$SITEROOT/lhcb/group/calo/ecal/vol1/SICBMC_v241/events_v241.20'"};
-EventSelector.EvtMax = 10;
+ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 
 //--------------------------------------------------------------
@@ -60,4 +62,8 @@ MemoryAuditor.Enable = true;
 //--------------------------------------------------------------
 // Output some histograms
 //--------------------------------------------------------------
+// #include "$STDOPTS/Hbook.opts"
 // HistogramPersistencySvc.OutputFile  = "histo.hbook";
+
+// Uncomment next line if you want to run Brunel in static mode.
+// #include "$BRUNELOPTS/BrunelStatic.opts"

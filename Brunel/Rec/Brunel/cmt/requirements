@@ -31,6 +31,7 @@ use CaloAlgs    v1* Calo
 use CaloSicbCnv v2* SICB
 
 # Detector description database
+use DetDesc     v6* Det
 use XmlDDDB     v5* Det
 
 # tracking

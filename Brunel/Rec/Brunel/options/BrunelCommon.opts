@@ -2,6 +2,7 @@
 // Options common to all Brunel execution modes.
 //==============================================================
 #include "$STDOPTIONS"
+#include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 
 //--------------------------------------------------------------
