@@ -2,8 +2,10 @@ package GaudiConf
 package manager: F.Ranjard
 
 ! 20010319 - GaudiConf v4 (MC)
-  options/Dlls.opts - Remove HbookCnv from standard DLLs. This is because 
-                      user should choose between Hbook and Root
+  options/Dlls.opts     - Remove HbookCnv from standard DLLs. This is because 
+                          user should choose between Hbook and Root
+          Hbook.opts    - new: Standard options for HBOOK persistency
+          RootHist.opts - new: Standard options for ROOT histogram persistency
 
 ! 20010306 - GaudiConf v4 (MC)
   options/ - All files renamed with extension .opts
