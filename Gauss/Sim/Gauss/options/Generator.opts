@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.18 2003-06-18 11:39:07 witoldp Exp $ 
+// $Id: Generator.opts,v 1.19 2003-07-15 08:55:32 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -7,12 +7,12 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 Generator.Members += {"PythiaAlg"};
 Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
 Generator.Members += {"SmearVertexAlg"};
-//Generator.Members += {"DumpMC"};
+Generator.Members += {"DumpMC"};
 
-// Generator's options
-ParticleGun.xVertex = 6.15949;	
-ParticleGun.yVertex = 37.4604;	
-ParticleGun.zVertex = 228.484;	
+// Particle Gun's options
+//ParticleGun.xVertex = 6.15949;	
+//ParticleGun.yVertex = 37.4604;	
+//ParticleGun.zVertex = 228.484;	
 ParticleGun.ThetaMin = 0.16;
 ParticleGun.ThetaMax = 0.16;
 ParticleGun.PhiMin = 0.0;
@@ -30,10 +30,8 @@ ParticleGun.Mode=0;
 PythiaAlg.MDCYFile="$GAUSSROOT/data/PythiaStablePart.cdf";
 //PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
-// uncomment lines below to generate specific channels
-//PythiaAlg.ForceFragmentation = true;
-//PythiaAlg.BhadronID = 511;
-//EvtDecayAlg.UserDecayFile = "$GAUSSROOT/data/411300.dec";
+// in order to generate specific decays put below the following line:
+// #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
+// appropriete int
 
-// uncomment line below if you to run with out pile-up
-//PythiaAlg.Mode=0;
+//#include "$DECFILESROOT/options/411300.opts"
