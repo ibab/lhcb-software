@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!========================  VeloAssociators v1r3 2002-11-12 =====================
+! 2002-11-12 - Marco Cattaneo
+ - Use VeloDet v8r*
+
 !========================  VeloAssociators v1r2 2002-10-10 =====================
 ! 2002-10-04 - Chris Parkes
   - Windows compiler friendly fix of the Velo
