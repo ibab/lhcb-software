@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2002-07-18 18:17:30 gcorti Exp $
+# $Id: requirements,v 1.14 2002-07-26 12:58:24 odie Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -29,12 +29,12 @@ use  DetDesc       v10r*  Det
 #macro yaccpp            "yacc $(yaccppflags)
 #make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
 #document yacc_to_icpp RecParser recparser.ypp
+#macro recparser_ypp_yaccpp_prefix "DecayFinder::"
 
 #macro lexppflags        " -L "
 #macro lexpp             "lex ${lexppflags}
 #make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
 #document lex_to_icpp RecLexer reclexer.lpp
-#macro recparser_ypp_yaccpp_prefix "DecayFinder::"
 #macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
 # Component library building rule
