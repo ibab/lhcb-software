@@ -1,20 +1,8 @@
-
 /** @file IRichRayTracing.h
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  CVS Log :-
- *  $Id: IRichRayTracing.h,v 1.14 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.13  2004/10/21 12:53:08  papanest
- *  new method traceBackFromDetector
- *
- *  Revision 1.12  2004/07/29 09:30:32  jonrob
- *  Fix various typos + minor updates
- *
- *  Revision 1.11  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichRayTracing.h,v 1.15 2005-01-25 14:11:46 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -33,13 +21,14 @@
 //local
 #include "RichKernel/RichTraceMode.h"
 
-// CLHEP
-class HepPoint3D;
-class HepVector3D;
-class HepPlane3D;
+// from CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Plane3D.h"
 
 // RichEvent
 class RichGeomPhoton;
+
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );

@@ -2,23 +2,7 @@
  *
  *  Header file for tool interface : IRichSmartIDTool
  *
- *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.9 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.8  2005/01/13 12:16:02  jonrob
- *  Add method to access the average position of an HPD
- *
- *  Revision 1.7  2005/01/07 12:42:32  jonrob
- *  Change to interface
- *
- *  Revision 1.6  2004/10/27 14:29:31  jonrob
- *  Update global position from RichSmartID method interface
- *
- *  Revision 1.5  2004/07/29 09:30:32  jonrob
- *  Fix various typos + minor updates
- *
- *  Revision 1.4  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: IRichSmartIDTool.h,v 1.10 2005-01-25 14:11:46 cattanem Exp $
  * 
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -34,12 +18,12 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
 
-// CLHEP
-class HepPoint3D;
-class HepVector3D;
-
 // Kernel
 #include "Kernel/RichSmartID.h"
+
+// from CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );

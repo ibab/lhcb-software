@@ -3,12 +3,7 @@
  *
  *  Header file for tool interface : IRichTrSegMaker
  *
- *  CVS Log :-
- *  $Id: IRichTrSegMaker.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichTrSegMaker.h,v 1.6 2005-01-25 14:11:46 cattanem Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -21,15 +16,16 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// CLHEP
-class HepPoint3D;
-class HepVector3D;
+// CLHEP (explicit include needed for CLHEP 1.9.*)
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
 
 // Event model
 class ContainedObject;
 
 // Rich Kernel
 class RichTrackSegment;
+
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichTrSegMaker( "IRichTrSegMaker", 1, 0 );

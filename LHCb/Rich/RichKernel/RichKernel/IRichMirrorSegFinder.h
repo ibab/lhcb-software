@@ -1,14 +1,8 @@
-
 /** @file IRichMirrorSegFinder.h
  *
  *  Header file for tool interface : IRichMirrorSegFinder
  *
- *  CVS Log :-
- *  $Id: IRichMirrorSegFinder.h,v 1.6 2004-07-29 09:30:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/26 17:53:16  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichMirrorSegFinder.h,v 1.7 2005-01-25 14:11:46 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -24,13 +18,13 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
 
+// from CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+
 // RichDet
 class DeRichSphMirror;
 class DeRichFlatMirror;
 
-// CLHEP
-class HepPoint3D;
-class HepVector3D;
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMirrorSegFinder( "IRichMirrorSegFinder", 1, 0 );

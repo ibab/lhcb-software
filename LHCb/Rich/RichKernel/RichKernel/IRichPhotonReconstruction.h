@@ -2,9 +2,7 @@
  *
  *  Header file for tool interface : IRichPhotonReconstruction
  *
- *  CVS Log :-
- *  $Id: IRichPhotonReconstruction.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichPhotonReconstruction.h,v 1.5 2005-01-25 14:11:46 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -16,9 +14,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// CLHEP
-class HepPoint3D;
-class HepVector3D;
+// from CLHEP
+#include "CLHEP/Geometry/Point3D.h"
 
 // Rich Kernel
 class RichSmartID;
@@ -26,6 +23,7 @@ class RichSmartID;
 // Rich Utils
 class RichGeomPhoton;
 class RichTrackSegment;
+
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPhotonReconstruction ( "IRichPhotonReconstruction", 1, 0 );

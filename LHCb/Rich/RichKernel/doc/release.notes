@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.62 2005-01-18 10:49:40 cattanem Exp $
+! $Id: release.notes,v 1.63 2005-01-25 14:11:46 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
-!======================= RichKernel v5r2 2005-01-18 =======================
+!======================= RichKernel v5r2 2005-01-25 =======================
+! 2005-01-25 - Marco Cattaneo
+ - Backwards compatible fixes for CLHEP 1.9
+
 ! 2005-01-13 - Chris Jones
  - Add base classes for monitoring tools and algorithms
 

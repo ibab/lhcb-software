@@ -1,19 +1,9 @@
-
 #============================================================================
 # Created    : 2003-11-06
-# Maintainer : Chris Jones
-#============================================================================
-# $Id: requirements,v 1.30 2005-01-13 13:21:46 jonrob Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.29  2004/10/20 16:18:24  jonrob
-# Handle a null TabulatedProperty pointer
-#
-# Revision 1.28  2004/07/30 11:07:52  jonrob
-# Add CVS log to requirements file
-#
-#============================================================================
-
 # Maintainer : Christopher Rob Jones
+#============================================================================
+# $Id: requirements,v 1.31 2005-01-25 14:11:46 cattanem Exp $
+#============================================================================
 
 package RichKernel
 version v5r2
