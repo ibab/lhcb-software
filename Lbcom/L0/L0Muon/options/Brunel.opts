@@ -3,23 +3,28 @@ ApplicationMgr.DLLs             += {"L0Muon" };
 BrunelTriggerTRIGGERSeq.Members += { "L0mTrigger/L0Muon" };  
 
 L0mPadBuilder.XMLdata = false;
-L0mPadBuilder.ZStations  = {1210.5,  1520.0,   1640.0,  1760.0, 1880.0 };  	    
-L0mPadBuilder.BasicCellX = {   1.0,  0.62784, 0.67741, 2.90789, 3.10615};
-L0mPadBuilder.BasicCellY = {   2.5,  3.13920, 3.38703, 3.63486, 3.88269};
+L0mPadBuilder.ZStations  = {1210.5,  1520.0,   1640.0,  1760.0, 1880.0 };
 L0mPadBuilder.Regions1 = {24, 8};
 L0mPadBuilder.Regions2 = {48, 8};
 L0mPadBuilder.Regions3 = {48, 8};
 L0mPadBuilder.Regions4 = {12, 8};
 L0mPadBuilder.Regions5 = {12, 8};		
 
+// Fields of interest in X
 // FOI units are basic pad size in M3	
-// L0mTriggerProc.FoiXSize = {6,5,0,3,5};
-// L0mTriggerProc.FoiYSize = {0,0,0,0,0};
-
 L0mTriggerProc.FoiXSize = {6,5,0,3,5};
+// Fields of interest in Y
 L0mTriggerProc.FoiYSize = {0,0,0,1,1};
+// "Apply Limited Y" flag
+L0mTriggerProc.LimitedY = true;
 
+// Pt calculation parameters
 L0mTriggerProc.PtParameters = {545.,665.5,309.5,1.21};
+
+// Parameters for extrapolation to M1
+L0mTriggerProc.M1Extrapolation = {0,4,7,11,14,18,21,25};
+
+// Bin width for storing the Pt value
 L0mTriggerProc.PtPrecision = 40.;
-// Max integer to encode abs of Pt value
+// Max number of bins to encode abs of Pt value
 L0mTriggerProc.PtMaxBits = 128;
