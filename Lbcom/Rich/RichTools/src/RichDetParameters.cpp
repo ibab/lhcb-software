@@ -5,8 +5,7 @@
  * Implementation file for class : RichDetParameters
  *
  * CVS Log :-
- * $Id: RichDetParameters.cpp,v 1.3 2004-07-26 18:03:04 jonrob Exp $
- * $Log: not supported by cvs2svn $
+ * $Id: RichDetParameters.cpp,v 1.4 2005-02-02 10:11:17 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -62,7 +61,14 @@ StatusCode RichDetParameters::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  return StatusCode::SUCCESS;
+  // Initialise the data. Eventually, some of this should code from XML/D-Base
+  
+  // Out radiator limits for a single HPD panel (unsigned)
+  m_radOutLimLoc[Rich::Aerogel] = RadLimits ( 0,   625,  0,   600 );
+  m_radOutLimLoc[Rich::C4F10]   = RadLimits ( 0,   625,  180, 600 );
+  m_radOutLimLoc[Rich::CF4]     = RadLimits ( 0,   690,  0,   696 );
+
+  return sc;
 }
 
 StatusCode RichDetParameters::finalize()
@@ -84,4 +90,10 @@ double RichDetParameters::minPhotonEnergy( const Rich::RadiatorType rad ) const
 double RichDetParameters::meanPhotonEnergy( const Rich::RadiatorType rad ) const
 {
   return m_meanPhotEn[rad];
+}
+
+const IRichDetParameters::RadLimits & 
+RichDetParameters::AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const
+{
+  return m_radOutLimLoc[rad];
 }
