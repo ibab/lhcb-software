@@ -60,10 +60,11 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
             if ( (x+i+1)< 24+2*xfoi ) {
               bits[2*i+1]=table[y][x+i+1];
             }
-              if ( (x-i-1)>=0 && (x-i-1)< 999999){
-                bits[2*i+2]=table[y][x-i-1];
+            // if ( (x-i-1)>=0 && (x-i-1)< 999999){
+            if ( (x-i-1)< 999999){
+            bits[2*i+2]=table[y][x-i-1];
               
-              } else {
+            } else {
             
                 // else if  ( (x-i-1)<0 && (x-i-1)> 999999) {
                 bits[2*i+2]=0;
