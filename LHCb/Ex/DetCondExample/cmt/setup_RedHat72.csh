@@ -1,5 +1,5 @@
 #!/usr/local/bin/tcsh
-# $Id: setup_RedHat72.csh,v 1.2 2002-03-28 16:39:57 andreav Exp $
+# $Id: setup_RedHat72.csh,v 1.3 2002-03-28 16:43:16 andreav Exp $
 
 # Do you need to run this script? Are you on RedHat7.2?
 if ( `fs sysname` != "Current sysname is 'i386_linux24'" ) then
@@ -50,8 +50,8 @@ setenv CMTPATH ${HOME}/newmycmt
 # Reconfigure the LHCXX external libraries
 # The default setup in $GAUDISOFT/ExternalLibs/v3r3 does not foresee rh72
 echo " -------------------------------------------------------------------- "
-echo Redefine LHCXX_DIR as ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2-from72
-setenv LHCXX_DIR ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2-from72
+echo Redefine LHCXX_DIR as ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2
+setenv LHCXX_DIR ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2
 
 # Closing banner
 echo " -------------------------------------------------------------------- "
