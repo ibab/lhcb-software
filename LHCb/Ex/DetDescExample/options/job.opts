@@ -1,4 +1,4 @@
-// $Id: job.opts,v 1.4 2003-07-01 07:37:54 cattanem Exp $
+// $Id: job.opts,v 1.5 2004-07-21 08:09:38 cattanem Exp $
 // Do not use standard options, as we do not need event input
 
 // Define the other standard DLLs and services
@@ -12,6 +12,8 @@ AuditorSvc.Auditors   = { "ChronoAuditor" };
 // Private Application Configuration options
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg =  { "SimpleAlgorithm/Simple" };
+ApplicationMgr.EvtSel = "NONE";
+ApplicationMgr.EvtMax = 0;
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel = 3;
