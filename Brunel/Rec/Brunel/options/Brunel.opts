@@ -85,6 +85,6 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #include "$TRSICBCNVROOT/options/Brunel.opts"
 
 // Velo digitisation and tracking
-//ApplicationMgr.DLLs += { "VeloDet", "VeloDigit", "VeloTrack" };
-//BrunelDigiVELOSeq.Members += { "VeloDigitAlg", "PuVetoDigitAlg" };
-//BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+ApplicationMgr.DLLs += { "VeloDet", "VeloDigit", "VeloTrack" };
+BrunelDigiVELOSeq.Members += { "VeloDigitAlg", "PuVetoDigitAlg" };
+BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };

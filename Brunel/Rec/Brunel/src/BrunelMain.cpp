@@ -1,4 +1,4 @@
-// $Id: BrunelMain.cpp,v 1.1 2002-01-31 12:42:39 cattanem Exp $
+// $Id: BrunelMain.cpp,v 1.2 2002-01-31 13:08:11 cattanem Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : Brunel
@@ -35,9 +35,13 @@ int main ( int argc, char** argv ) {
     dbase = std::string(getenv( "LHCBDBASE" ));
     posDbVers = dbase.find_last_of("/");
     if( 0 > posDbVers ) {
-      std::cout << "Fatal error: LHCBDBASE path " << dbase
-                << " does not contain any / separator" << std::endl;
-      return 1;
+      // Could be the other way round (Windows)
+      posDbVers = dbase.find_last_of("\\");
+      if( 0 > posDbVers ) {
+        std::cout << "Fatal error: LHCBDBASE path " << dbase
+                  << " does not contain any / separator" << std::endl;
+        return 1;
+      }
     }
   }
   else {
