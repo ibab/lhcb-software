@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.40 2003-01-23 10:09:01 witoldp Exp $
+! $Id: release.notes,v 1.41 2003-01-30 11:10:36 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2003-01-30 - Witek Pokorski
+ - GiGaHepMCCnv - changes to work around the fact that HepMC uses sets
+   which are sorted with respect to the pointers. Temporary container
+   introduced to endure that particles are passed to G4 always in the at
+   same order
 
 ! 2003-01-23 - Witek Pokorski
   - changes to GiGaMCParticleCnv and GiGaMCVertexCnv enabling handling

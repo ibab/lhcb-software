@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.8 2002-12-07 14:36:26 ibelyaev Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.9 2003-01-30 11:10:36 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.8  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+// 
 // ============================================================================
 #define GIGACNV_GIGAHEPMCCNV_CPP 1 
 // ============================================================================
@@ -38,6 +41,15 @@
 #include "G4PrimaryVertex.hh"
 /// Local
 #include "GiGaHepMCCnv.h" 
+
+class comp_bar
+{
+public:
+  bool operator() (HepMC::GenParticle* parta, HepMC::GenParticle* partb)
+  {
+    return parta->barcode() < partb->barcode();
+  }
+};
 
 /** @file 
  *  Converter from HepMC to G4
@@ -155,49 +167,63 @@ StatusCode GiGaHepMCCnv::updateRep
 
   HepMCEvents* hepVect = dynamic_cast<HepMCEvents*>( object ) ;
   if( 0 ==  hepVect ) { return Error("DataObject*(of type '"           + 
-                                      GiGaUtil::ObjTypeName( object )   + 
-                                      "*') is not 'HepMCEvents*'!") ; }
-
+                                     GiGaUtil::ObjTypeName( object )   + 
+                                     "*') is not 'HepMCEvents*'!") ; }
+  
   /// loop over all events 
   HepMCEvents::iterator it;
+  
+  std::vector<HepMC::GenParticle*> outpart;
 
   for(it=hepVect->begin(); it!=hepVect->end(); it++) {
-
-  /// loop over all vertices in GenEvent 
-
-   for (HepMC::GenEvent::vertex_const_iterator 
-          pVertex= (*it)->pGenEvt()->vertices_begin();
-        pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++){
-      
-      // loop over outgoing particles
-
-      for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
-           (*pVertex)->particles_out_const_begin();
-           (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
-        {
-          // skip particles with status diffrent from 1 or from 888
-          if(((*pParticle)->status()==1)||((*pParticle)->status()==888)){
-            
-            G4PrimaryParticle* Particle=GenPartG4Part(*pParticle);
-
-            G4PrimaryVertex* OrigVertex = 
-              new G4PrimaryVertex((*pParticle)->production_vertex()->position().x(),
-                                  (*pParticle)->production_vertex()->position().y(),
-                                  (*pParticle)->production_vertex()->position().z(),
-                                  (*pParticle)->production_vertex()->position().t());
-
-
-            OrigVertex->SetPrimary ( Particle );
-
-            *gigaSvc() << OrigVertex ;            
+    
+    /// loop over all vertices in GenEvent
+    for (HepMC::GenEvent::vertex_const_iterator 
+           pVertex= (*it)->pGenEvt()->vertices_begin();
+         pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++)
+      {
+        outpart.clear();
+        
+        // loop over outgoing particles, check for the ones with 
+        // status 1 of 888 and store them in the temporary vector
+        
+        for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
+               (*pVertex)->particles_out_const_begin();
+             (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
+          {
+            // skip particles with status diffrent from 1 or from 888
+            if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
+              {
+                outpart.push_back(*pParticle);
+              }
           }
-        }      
-
-      { MsgStream log( msgSvc(),  name() ) ;
-      log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
-   }   
-  }
-
+        
+        // sort the vector, so we always put them in the same order into G4
+        sort(outpart.begin(), outpart.end(), comp_bar());
+        
+        for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
+            outpart.end()!=ioutpart;ioutpart++)
+          {
+            G4PrimaryParticle* Particle=GenPartG4Part(*ioutpart);
+            
+            G4PrimaryVertex* OrigVertex = 
+              new G4PrimaryVertex((*ioutpart)->production_vertex()->position().x(),
+                                  (*ioutpart)->production_vertex()->position().y(),
+                                  (*ioutpart)->production_vertex()->position().z(),
+                                  (*ioutpart)->production_vertex()->position().t());
+            
+            OrigVertex->SetPrimary ( Particle );
+            
+            *gigaSvc() << OrigVertex ;
+          }
+        { 
+          MsgStream log( msgSvc(),  name() ) ;
+          log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; 
+        }
+      }   
+  }  
+  outpart.clear();
+  
   return StatusCode::SUCCESS;
 }; 
 
@@ -211,24 +237,34 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
 
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
 
+  std::vector<HepMC::GenParticle*> outp;
+
   G4PrimaryParticle* Particle = 
     new G4PrimaryParticle( particle->pdg_id() , 
                            particle->momentum().px()*GeV ,
                            particle->momentum().py()*GeV ,
                            particle->momentum().pz()*GeV );
+  
+  // if particle has daughters, carry on with the conversion
+  if (particle->end_vertex()) 
+    {
+      for (HepMC::GenVertex::particles_out_const_iterator outPart = 
+             (particle->end_vertex())->particles_out_const_begin();
+           (particle->end_vertex())->particles_out_const_end() != outPart ; 
+           ++outPart )
+        {
+                outp.push_back(*outPart);
+        }
 
-            if (particle->end_vertex()) 
-              {
-
-                for (HepMC::GenVertex::particles_out_const_iterator 
-                       outPart=(particle->end_vertex())->particles_out_const_begin();
-                     outPart!=(particle->end_vertex())->particles_out_const_end();
-                     ++outPart)
-                  {
-                    Particle->SetDaughter(GenPartG4Part(*outPart));
-                  }
-              
-              }
+        // sort the vector, so we always put them in the same order into G4
+        sort(outp.begin(), outp.end(), comp_bar());
+        
+        for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outp.begin();
+            outp.end()!=ioutpart;ioutpart++)
+          { 
+            Particle->SetDaughter(GenPartG4Part(*ioutpart));
+          }
+    }
   
   return Particle;  
 };
