@@ -2,7 +2,7 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.30 2005-01-19 08:33:49 cattanem Exp $
+# $Id: requirements,v 1.31 2005-01-26 11:35:10 jonrob Exp $
 #============================================================================
 
 package RichRecTools
@@ -15,7 +15,6 @@ include_path none
 # ================ dependencies =============================================
 use RichRecBase    v1r*   Rich
 use RichDet        v8r*   Det
-use DAQEvent       v4r*   Event    
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp
