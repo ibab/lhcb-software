@@ -1,21 +1,19 @@
-# $Id: requirements,v 1.7 2002-11-08 11:05:06 witoldp Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# $Id: requirements,v 1.8 2002-11-20 10:48:07 ranjard Exp $
 # =============================================================================
 package GaussTools
-version v3r0
+version v3r2
 
 # ============== package structure ============================================
 branches         cmt src doc
 
 # ============== explicit dependencies ========================================  
-use AIDA         v3r*
+use AIDA         v*
 use GiGaCnv      v9r*      Sim
 
 # ============== Event ========================================================
 use VeloEvent    v12r*     Event
 use MuonEvent    v2r*      Event
-use RichEvent    v3r*      Event
+use RichEvent    v4r*      Event
 
 # ============== linker library ===============================================
 library          GaussToolsLib           Lib/*.cpp

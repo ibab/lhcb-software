@@ -4,10 +4,13 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc
 !-----------------------------------------------------------------------------
 
-!============================ GaussTools v3r1 2002-11-18 =====================
+!============================ GaussTools v3r2 2002-11-20 =====================
+! 2002-11-20 - Florence Ranjard
+ - requirements - use new RichEvent version v4r0
+
+!============================ GaussTools v3r1 2002-11-18 ======================
 ! 2002-11-18 - Witek Pokorski
  - added new physics list: QGSP (taken from H-P. Wellisch page)
-
 
 !============================ GaussTools v3r0 2002-11-08 =====================
 ! 2002-11-07 - Witek Pokorski
