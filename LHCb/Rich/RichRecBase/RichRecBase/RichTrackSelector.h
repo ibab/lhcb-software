@@ -5,11 +5,13 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.7 2004-10-13 09:29:43 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.8 2004-11-05 21:03:26 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.7  2004/10/13 09:29:43  jonrob
+ * Improvements to RichTrackID and RichTrackSelector
+ *
  * Revision 1.6  2004/07/26 18:00:58  jonrob
  * Various improvements to the doxygen comments
- *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -73,33 +75,72 @@ public:
    */
   const double maxMomentum( const Rich::Track::Type type ) const;
 
-  /// Test it the given TrStoredTrack is selected
+  /** Test if the given TrStoredTrack is selected under the current criteria
+   *
+   *  @param track Pointer to a TrStoredTrack
+   *
+   *  @return Boolean indicating if the track is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
   bool trackSelected( const TrStoredTrack * track ) const;
 
-  /// Test it the given TrgTrack is selected
+  /** Test it the given TrgTrack is selected
+   *
+   *  @param track Pointer to a TrgTrack
+   *
+   *  @return Boolean indicating if the track is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
   bool trackSelected( const TrgTrack * track ) const;
 
-  /// Test it the given RichRecTrack is selected
+  /** Test it the given RichRecTrack is selected
+   *
+   *  @param track Pointer to a RichRecTrack
+   *
+   *  @return Boolean indicating if the track is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
   bool trackSelected( const RichRecTrack * track ) const;
 
-  /// Returns vector of selected track types (non-const)
+  /** Access to selected track type name (non-const)
+   *
+   *  @return Reference to vector of track type names
+   */
   std::vector<std::string> & selectedTrackTypes();
 
-  /// Returns vector of selected track types (const)
+  /** Access to selected track type name (const)
+   *
+   *  @return Const reference to vector of track type names
+   */
   const std::vector<std::string> & selectedTrackTypes() const;
 
-  /// Is a given track type configured to be selected
+  /** Is a given track type configured to be selected
+   *
+   *  @param track Track type enueration
+   *
+   *  @return Boolean indicating if the track type is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
   bool typeSelected( const Rich::Track::Type track ) const;
 
   /// Returns selected track types as a single string
   const std::string selectedTracksAsString() const;
 
-  /// Configure the track selection
+  /** Configure the track selection
+   *
+   *  @return Boolean indicating status of the selection configuration
+   *  @retval true  Selection is configured successfully
+   *  @retval false Selection configuration failed
+   */
   bool configureTrackTypes();
 
 private: // methods
 
-  /// Finds the TrStateP for a given track and z position 
+  /// Finds the TrStateP for a given track and z position
   const TrStateP * trStateP( const TrStoredTrack * track,
                              const double zPos = -999999 ) const;
 
