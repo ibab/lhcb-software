@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2004-08-21 12:50:09 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2004-08-21 13:07:26 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -20,13 +20,13 @@ use           DetDescChecks  v2r1 Det
 use           BenderDict     v3r7 Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v3r7 Doc 
-use           LoKiDoc        v3r0 Doc 
+use           LoKiDoc        v3r3 Doc 
 # =========== Test suit for Bender ============================================
 use           BenderTest     v3r7 Tests 
-use           LoKiTest       v3r0 Tests 
+use           LoKiTest       v3r3 Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v3r7 Ex  
-use           LoKiExample    v3r0 Ex 
+use           LoKiExample    v3r3 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v2r0 Vis 
 # =========== empty 'user' package ============================================
