@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.48 2002-12-19 21:11:17 gcorti Exp $
+# $Id: requirements,v 1.49 2002-12-20 16:41:10 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -48,8 +48,6 @@ use  LHCbKernel     	v1r5   Kernel
 #--- Subdetector Kernels ( add any other Kernel you need )
 use  VeloKernel   	v1r2   Velo
 use  RichKernel   	v1r3   Rich
-#use  RichKernel   	v2r0   Rich
-#use  RichRecKernel      v1r1   Rich
 use  TrKernel     	v11r1  Tr
 use  CaloKernel   	v2r1   Calo
 use  MuonKernel   	v2r1   Muon
@@ -72,8 +70,7 @@ use  VeloEvent    	v11r1   Event
 use  ITEvent      	v11r0   Event
 use  OTEvent      	v11r0   Event
 use  TrEvent      	v11r4   Event
-#use  RichEvent    	v4r1    Event
-use RichEvent           v3r2    Event
+use  RichEvent          v3r2    Event
 use  CaloEvent    	v11r3   Event
 use  MuonEvent    	v2r1    Event
 use  L0Event      	v12r2   Event
@@ -109,18 +106,16 @@ use  KsReco             v1r2   Rec
 use  TrExtrapolator     v2r3   Tr
 
 #--- DaVinci packages
-#use  DaVinciTools       v7r1   Phys
+use  DaVinciTools       v7r1   Phys
 use  DaVinciTools       v7r0   Phys
 use  DaVinciAssociators v3r0   Phys
 use  DaVinciMCTools     v4r1   Phys
 use  DaVinciTest        v4r0   Phys
 use  PhysSelections     v4r1   Phys
-#use  FlavourTagging     v4r1   Phys
+use  FlavourTagging     v4r1   Phys
 use  FlavourTagging     v4r0   Phys
-#use  DaVinciEff         v2r1   Phys
-use  DaVinciEff         v2r0   Phys
+use  DaVinciEff         v2r1   Phys
 use  DaVinciUser        v4r0   Phys
-use  DaVinciChecks      v2r0   Phys
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
