@@ -58,7 +58,6 @@ DeVelo.Design = 1;
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DigiAlg", "DAQEvent" };
 #include "$DIGIALGROOT/options/Spillover.opts"
-#include "$DIGIALGROOT/options/LHCBackground.opts"
 InitBooleSeq.Members += { "LbAppInit/Boole" };
 InitBooleSeq.Members += { "CreateL1Buffer" };
 InitBooleSeq.Members += { "CreateRawBuffer" };
