@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.cpp,v 1.1 2002-07-15 19:27:08 ibelyaev Exp $
+// $Id: NeutralPPCreator.cpp,v 1.2 2002-07-18 17:57:42 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/07/15 19:27:08  ibelyaev
+//  add new algorithm for creation on Neutral ProtoParticles
+// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -114,8 +117,6 @@ StatusCode NeutralPPCreator::process
   // add the current  hypo to ProtoParticle 
   particle->addToCalo( hypo );
   
-  // it is a neutral protoparticle!
-  particle->setCharge( 0 );
   
   { // get track matching chi2
     // get Ecal cluster 
