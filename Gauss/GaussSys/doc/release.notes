@@ -4,9 +4,13 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v15r5 2004-04-22 =================
+! 2004-04-22 - Florence RANJARD
+ - Gauss v15r5 is built with LHCb v15r7, Gaudi v14r5, Geant4 v61r0
+
 !============================ GaussSys v15r4 2004-04-07 ==============
 ! 2004-04-07 - Florence RANJARD
- - Gauss v15r4 is built with LHCb v15r6, Gauss v14r4, Geant4 v61r0
+ - Gauss v15r4 is built with LHCb v15r6, Gaudi v14r4, Geant4 v61r0
 
 !=========================== GaussSys v15r3 2004-03-29 =================
 ! 2004-03-29 - Florence RANJARD
