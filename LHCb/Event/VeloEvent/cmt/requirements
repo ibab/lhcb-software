@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.16 2002-04-30 08:39:57 cattanem Exp $
+# $Id: requirements,v 1.17 2002-06-10 16:15:20 cattanem Exp $
 package VeloEvent
-version v10r0
+version v11r0
 
 branches Event src xml cmt doc dict
 
-use Event        v1r* Event
-use GaudiObjDesc v4r* -no_auto_imports
+use Event        v2r* Event
+use GaudiObjDesc v4r3 -no_auto_imports
 
 include_dirs	 $(VELOEVENTROOT)
 

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.16 2002-05-13 11:02:46 parkesb Exp $
+! $Id: release.notes,v 1.17 2002-06-10 16:15:20 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
-! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
-! 09/05/2002 Chris Parkes
+! 2002-06-10 - Marco Cattaneo
+ - Increase version to v11r0, to use Event v2r*
+
+!========================= VeloEvent v10r0 2002-05-09 ===================
+! 2002-05-09 Chris Parkes
   - VeloEvent.xml VeloCluster 
     added additional access methods for obtaining adc and strip numbers 
     of strips in cluster
