@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.9 2002-06-18 06:55:01 ocallot Exp $
+// $Id: DeVelo.h,v 1.10 2002-07-09 20:45:09 parkesb Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -166,7 +166,7 @@ public:
   double rOfStrip( int strip ) {
     int localStrip = strip %1024;   // Two halves in R are equal.
     if ( m_nbRInner <= localStrip ) { localStrip -= (int)m_nbRInner; }
-    return .5 * (m_rStrip[localStrip] + m_rStrip[localStrip+1]);
+    return m_rStrip[localStrip];
   }
   
   /// return true if the two rZones can match
