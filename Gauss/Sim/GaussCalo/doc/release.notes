@@ -6,6 +6,13 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!=========================== GaussCalo v2r2 2003-05-14 ========================
+! 2003-05-14 - Patrick Robbe
+ - CaloSensDet : first implementation of specific calo corrections :
+         - Birk's law
+         - timing
+         - local non uniformity
+
 !=========================== GaussCalo v2r1 2003-04-29 ========================
 ! 2003-04-29 - Witek Pokorski
  - requirements - put v* to avoid changing version numbers
