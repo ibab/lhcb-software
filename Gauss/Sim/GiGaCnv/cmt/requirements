@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.13 2002-01-22 18:24:42 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2002-03-04 11:24:48 witoldp Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2002/01/22 18:24:42  ibelyaev
+#  Vanya: update for newer versions of Geant4 and Gaudi
+#
 # Revision 1.12  2001/11/19 18:26:59  ibelyaev
 #  bux fix and the new converter for catalogs
 #
@@ -18,11 +21,14 @@
 # =============================================================================
 
 package  GiGaCnv 
-version  v3r0
+version  v4r0
 
 branches cmt src doc options GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
+
+use HepMC         v1r2  Sim
+use GeneratorObjects v0r1 Gen
 
 use GiGa          v7r*  Sim 
 use LHCbEvent     v12r*	Event
