@@ -22,6 +22,11 @@
   fun:pthread_error
   fun:__pthread_mutex_destroy
 }
+{
+  pthread_error/__pthread_mutex_unlock
+  PThread
+  fun:__pthread_mutex_unlock
+}
 
 # Following CLHEP error reported to Tcherniaev, fixed in CVS head
 {

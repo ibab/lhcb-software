@@ -7,13 +7,17 @@ Purpose: LHCb reconstruction program
  - New tuning:
    . Add material to central OT modules (XmlDDDB v14r3, v252r0 geometry)
    . New velo clustering for L1. Includes common mode noise simulation and
-     corection (L1VeloTrack v3r4)
+     correction (L1VeloTrack v3r4)
+   . Changes to Calorimeter corrections (CaloReco v1r1)
+   . Many changes to OO-Rich (Rich/* packages)
 
  - New features:
    . Add support for dbase v252r0 (Brunelv252r0.opts)
+   . Remove support for dbase v251r*
 
  - Bug fixes:
    . Fix loop index range (found by valgrind) (PuVeto v5r1)
+   . Fix some mismatched new[]/delete to please valgrind (L1Decision v1r3)
 
 </PRE><H1><A NAME=v15r3>2002-11-28 Brunel v15r3</A></H1><PRE>
  - New tuning:
@@ -22,12 +26,16 @@ Purpose: LHCb reconstruction program
    . Exclude backward Velo tracks as identified by VeloTrack, rather than by
      private selection method (VeloTT v1r3)
 
+ - New features:
+   . More units supported in job options (GaudiConf v6r5)
+
  - DST changes:
    . Add ProcStatus to all events (BrunelKernel v5r2, BrunelDst.opts)
 
  - Bug fixes:
    . Fix typo (wrong array size used, found by valgrind) (MuonDet v4r2)
-   . Fix usage of uninitialised variable, found by valgrind (L1Decision v1r2)
+   . Fix usage of uninitialised variable, found by valgrind 
+     (L1Decision v1r2, L1VeloTrack v3r4)
    . Protect against missing L1 Vertex - causing very frequent core dumps
      (L1Decision v1r2)
    . Fix position of wakefield cone (XmlDDDB v14r2)

@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 ///  Job options for Brunel when using $LHCBDBASE versions v250r1, v251r1  ///
 ///      - "LHCb light detector for winter production, without M1" -       ///
+///  Only for data produced with SICBMC v256 & v257. Not for v258 data!!!  ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover

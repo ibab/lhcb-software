@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 ///  Job options for Brunel when using $LHCBDBASE versions v250r0, v251r0  ///
 ///      --- "LHCb light detector for winter production, with M1" --       ///
+///  Only for data produced with SICBMC v256 & v257. Not for v258 data!!!  ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
@@ -33,6 +34,5 @@ SpillOverSelector.Input = {
 //SpillOverSelector.FirstEvent = 8; // Skip corresponding spillover events
 BrunelDstWriter.Output = "DATAFILE='v251r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v251r0.hbook";  // Monitoring histos
-//ApplicationMgr.EvtMax = 10;
-ApplicationMgr.EvtMax = 3;
+ApplicationMgr.EvtMax = 10;
 //////////////////////////////////////////////////////////////////////////////
