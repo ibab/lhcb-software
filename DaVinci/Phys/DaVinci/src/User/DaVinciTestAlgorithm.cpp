@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.4 2002-03-12 19:37:24 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.5 2002-03-27 20:52:11 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -166,7 +166,7 @@ StatusCode DaVinciTestAlgorithm::execute() {
   }
 
   // Retrive VtxCandidate
-  SmartDataPtr<Vertices> vertices (evt, "/Phys/PrimaryVertices");
+  SmartDataPtr<Vertices> vertices (eventSvc(), VertexLocation::Primary);
   if( ! vertices ) {
     log << MSG::INFO << "    unable to retrieve vertices " << endreq;
   }
