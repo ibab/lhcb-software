@@ -4,13 +4,14 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // The offline selections
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+// #include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+// #include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
 
 //==============================================================================
 // MC truth
 //==============================================================================
 // Include this to overwrite input to take *only* MC truth particles into account
-//#include "$HLTSELCHECKERROOT/options/Truth.opts"
+// #include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
 //#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
 
@@ -25,7 +26,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
-//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -35,9 +36,9 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // in these options
 // Hence: re-initalize event selector
 //EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 2000 ;
 EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -59,7 +60,7 @@ PrintTrueD.OutputLevel = 4;
 PrintBTracks.OutputLevel = 4;
 PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
-PrintTDR.OutputLevel = 3;
+PrintTDR.OutputLevel = 4;
 
 #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
@@ -73,8 +74,8 @@ HLTKaons.OutputLevel = 2;
 HLTPreselPions.OutputLevel = 2;
 HLTPreselKaons.OutputLevel = 2;
 */
-// HLT generic
-//#include "$HLTGENERICROOT/options/HltGeneric.opts"
 // K-ID
 TrgParticleMaker.KaonDLLCut = 15 ; // default
 
+#include "$HLTGENERICROOT/options/HltGeneric.opts"
+HltGenericDecision.Filter = true; // false is default
