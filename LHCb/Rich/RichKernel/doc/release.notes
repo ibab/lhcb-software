@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.52 2004-08-17 11:04:04 jonrob Exp $
+! $Id: release.notes,v 1.53 2004-08-19 13:55:58 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 ! 2004-08-17 - Chris Jones
- - Update enumeration documentation
+ - Add new method to RichMCTruthTool interface
 
 ! 2004-07-27 - Chris Jones
  - Fix typo in class name + minor updates

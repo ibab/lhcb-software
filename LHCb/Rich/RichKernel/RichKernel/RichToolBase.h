@@ -1,10 +1,14 @@
+
 /** @file RichToolBase.h
  *
  *  Header file for Tool base class : RichToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.5 2004-08-16 13:43:59 jonrob Exp $
+ *  $Id: RichToolBase.h,v 1.6 2004-08-19 13:55:58 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/08/16 13:43:59  jonrob
+ *  Update doxygen comments
+ *
  *  Revision 1.4  2004/07/26 17:53:17  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -61,10 +65,9 @@ public:
 
 private:   // private methods
 
-  /** Returns pointer to RICH tool registry tool.
-   *
+  /** Returns pointer to RICH tool registry tool
    *  Used internally by base class to convert tool nicknames
-   *  in the appropriate class name.
+   *  in the appropriate class name
    *
    *  @return Pointer to the IRichToolRegistry interface
    */
@@ -76,10 +79,9 @@ private:   // private methods
 
 protected:   // Protected methods
 
-  /** Returns a pointer to the tool associated to a given nickname.
-   *
+  /** Returns a pointer to the tool associated to a given nickname
    *  Uses the RichToolRegistry tool to convert tool nicknames
-   *  in the appropriate class name.
+   *  in the appropriate class name
    *
    *  @param tName   The nickname of the requested tool
    *  @param pTool   Returned pointer to the requested tool
@@ -99,8 +101,7 @@ protected:   // Protected methods
     return pTool = tool<TOOL>( toolRegistry()->toolType(tName),tName,parent );
   }
 
-  /** Forced release of a particular tool.
-   *
+  /** Forced release of a particular tool
    *  Tools are automatically released during finalisation, so this method
    *  only need be used to release a tool early, before finalisation.
    *

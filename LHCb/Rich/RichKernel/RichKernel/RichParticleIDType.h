@@ -4,14 +4,16 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.15 2004-08-17 11:04:04 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.16 2004-08-19 13:55:58 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/08/16 13:43:59  jonrob
+ *  Update doxygen comments
+ *
  *  Revision 1.14  2004/07/29 09:30:33  jonrob
  *  Fix various typos + minor updates
  *
  *  Revision 1.13  2004/07/26 17:53:17  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -44,8 +46,7 @@ namespace Rich {
   /// Number of RICH particle types, kept for backward compatibility
   static const int NRichParticleTypes = 5;
 
-  /** @enum Rich::ParticleIDType
-   *
+  /** @enum ParticleIDType
    *  Enumeration for the RICH particle ID mass hypotheses.
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch

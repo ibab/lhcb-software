@@ -3,8 +3,10 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.5 2004-08-19 13:55:58 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:53:16  jonrob
+ *  Various improvements to the doxygen comments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -57,11 +59,20 @@ public:
   virtual const MCParticle * 
   mcParticle ( const TrStoredTrack * track ) const = 0;
 
-  /** Determines the particle mass hpyothesis for a given MCParticle
+  /** Determines the particle mass hypothesis for a given TrtStoredTrack
+   *
+   *  @param track Pointer to a TrStoredTrack
+   *
+   *  @return The true particle type of the TrStoredTrack
+   */
+  virtual Rich::ParticleIDType 
+  mcParticleType ( const TrStoredTrack * track ) const = 0;
+  
+  /** Determines the particle mass hypothesis for a given MCParticle
    *
    *  @param mcPart Pointer to an MCParticle
    *
-   *  @return The particle type of the MCParticle
+   *  @return The true particle type of the MCParticle
    */
   virtual Rich::ParticleIDType 
   mcParticleType ( const MCParticle * mcPart ) const = 0;
