@@ -1,4 +1,4 @@
-// $Id: OrderedTaggingTool.cpp,v 1.1.1.1 2002-05-23 23:25:51 gcorti Exp $
+// $Id: OrderedTaggingTool.cpp,v 1.2 2002-05-24 21:14:49 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -80,7 +80,7 @@ void OrderedTaggingTool::tagThisB( const Particle &theB,
 {
   MsgStream log(msgSvc(), name());
 
-  std::vector<string>::iterator tni;
+  std::vector<std::string>::iterator tni;
   std::vector<IFlavourTaggingTool*>::iterator ti;
   for( ti=m_taggingTools.begin(), tni=m_taggingTools_names.begin();
        ti!=m_taggingTools.end() && (theTag.decision()==FlavourTag::none);
@@ -101,7 +101,7 @@ void OrderedTaggingTool::tagFromList( const Particle &theB,
 {
   MsgStream log(msgSvc(), name());
 
-  std::vector<string>::iterator tni;
+  std::vector<std::string>::iterator tni;
   std::vector<IFlavourTaggingTool*>::iterator ti;
   for( ti=m_taggingTools.begin(), tni=m_taggingTools_names.begin();
        ti!=m_taggingTools.end() && (theTag.decision()==FlavourTag::none);
@@ -120,7 +120,7 @@ void OrderedTaggingTool::tagExcludingFromList(const Particle &theB,
 {
   MsgStream log(msgSvc(), name());
 
-  std::vector<string>::iterator tni;
+  std::vector<std::string>::iterator tni;
   std::vector<IFlavourTaggingTool*>::iterator ti;
   for( ti=m_taggingTools.begin(), tni=m_taggingTools_names.begin();
        ti!=m_taggingTools.end() && (theTag.decision()==FlavourTag::none);
