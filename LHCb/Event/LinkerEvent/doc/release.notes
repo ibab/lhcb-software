@@ -4,6 +4,33 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2004-11-24 - Olivier Callot
+ - Define types 'LRange' and 'LRangeIt' for the std::vector<TARGET*> and 
+   corresponding const_iterator type in LinkedTo, std::vector<SOURCE*> and
+   corresponding const_iterator in LinkedFrom.
+
+ - Added methods 'LRangeIt beginRange()' and 'LRangeIt endRange()' to both
+   LinkedTo and LinkedFrom, retrieving the begin and ned of the range. The
+   range method should have been created first.
+
+! 2004-11-23 - Olivier Callot
+ - New methods of LinkedTo to access the relations with STL flavour :
+   std::vector<TARGET*>& range( const SOURCE* source)
+   It returns a vector of pointers to target, on which iteration can be used.
+   Similarly, new method with the same name and an "int key " argument.
+
+ - Similar method 'std::vector<SOURCE*> range( const TARGET* target )' in 
+   LinkedFrom.
+
+ - New method 'std::vector<int>& intRange( const TARGET* target)' in 
+   LinkedFrom to return the list of keys a target is linked to. Returns only 
+   pure keys, i.e. not created with an object but with an 'int' in 
+   LinkerWithKey.
+
+ - Add a 'void reset()' method to LinksByKey, to force the reseting of a 
+   possibly existing link table when creating one. The default is to update
+   it, i.e. add new links to existing ones.
+
 !====================== LinkerEvent v1r4 2004-07-19 ==========================
 ! 2004-07-19 - Marco Cattaneo
  - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)

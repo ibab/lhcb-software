@@ -182,6 +182,13 @@ m_increasing = false;
         <arg type = "int" name = "index" inout = "BOTH" />
       </method>
 
+      <method
+        type   = "void"
+        name   = "reset"
+        desc   = "Reset the content of the objects">
+        <code> m_keyIndex.clear(); m_linkReference.clear();</code>
+      </method>
+
     </class>
 
   </package>

@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.4 2004-02-05 08:46:29 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.5 2004-11-24 15:52:52 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -43,6 +43,8 @@ public:
   }; 
 
   virtual ~LinkerWithKey( ) {}; ///< Destructor
+
+  void reset() { m_links->reset(); } 
 
   void link( const SOURCE* source,
              const TARGET* dest, 

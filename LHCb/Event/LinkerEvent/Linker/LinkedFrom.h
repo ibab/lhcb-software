@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.5 2004-05-18 14:25:11 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.6 2004-11-24 15:52:52 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -16,8 +16,13 @@
  */
 template <class SOURCE, 
           class TARGET=KeyedObject<int> ,
-          class SOURCECONTAINER=KeyedContainer<SOURCE> > class LinkedFrom {
+          class SOURCECONTAINER=KeyedContainer<SOURCE> > 
+class LinkedFrom {
 public: 
+  //== Typedefs to please Matt
+  typedef typename std::vector<SOURCE*>                  LRange;
+  typedef typename std::vector<SOURCE*>::const_iterator  LRangeIt;
+
   /// Standard constructor
   LinkedFrom(  IDataProviderSvc* eventSvc,
                    IMessageSvc* msgSvc,
@@ -70,6 +75,42 @@ public:
 
   double weight()   { return m_curReference.weight(); }
 
+  /** returns a vector of targets, onto which STL functions can be used.
+   */
+  LRange& range( const TARGET* target ) {
+    m_vect.clear();
+    SOURCE* tmp = first( target );
+    while ( NULL != tmp ) {
+      m_vect.push_back( tmp );
+      tmp = next();
+    }
+    return m_vect;
+  }
+
+  /** returns a vector of keys, for int linked to TARGET. */
+  std::vector<int>& intRange( const TARGET* target ) {
+    m_int.clear();
+    if ( NULL == m_links ) return m_int;
+    m_curReference.setLinkID( -1 );
+    m_wantedKey = target->key();
+    //== check that the target's container is known.
+    const DataObject* container = target->parent();
+    LinkManager::Link* link = m_links->linkMgr()->link( container );
+    if ( 0 == link ) return m_int;
+    //== Define the target's linkID and key
+    m_curReference.setLinkID( link->ID() );
+    m_curReference.setObjectKey( target->key() );
+    int key = m_links->firstSource( m_curReference, m_srcIterator );
+    while ( m_wantedKey == m_curReference.objectKey() ) {
+      if ( 0 > m_curReference.srcLinkID() ) m_int.push_back( key );
+      key = m_links->nextSource( m_curReference, m_srcIterator );
+    }
+    return m_int;
+  };
+
+  LRangeIt beginRange()   { return m_vect.begin(); }
+  LRangeIt endRange()     { return m_vect.end(); }
+
 protected:
   SOURCE* currentSource( int key ) {
     if ( NULL == m_links ) return NULL;
@@ -87,5 +128,7 @@ private:
   LinkReference                      m_curReference;
   std::vector<std::pair<int,int> >::const_iterator m_srcIterator;
   int                                m_wantedKey;
+  LRange                             m_vect;
+  std::vector<int>                   m_int;
 };
 #endif // LINKER_LINKEDFROM_H

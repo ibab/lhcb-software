@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.3 2004-02-05 08:46:29 ocallot Exp $
+// $Id: LinkedTo.h,v 1.4 2004-11-24 15:52:52 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -15,10 +15,16 @@
  *  @date   2004-01-06
  */
 
-template <class TARGET, 
-          class SOURCE=KeyedObject<int>,
-          class TARGETCONTAINER=KeyedContainer<TARGET> > class LinkedTo {
+
+template < class TARGET, 
+           class SOURCE=KeyedObject<int>,
+           class TARGETCONTAINER=KeyedContainer<TARGET> > 
+class LinkedTo {
 public: 
+  //== Typedefs to please Matt
+  typedef typename std::vector<TARGET*>                  LRange;
+  typedef typename std::vector<TARGET*>::const_iterator  LRangeIt;
+
   /// Standard constructor
   LinkedTo( IDataProviderSvc* eventSvc,
             IMessageSvc* msgSvc,
@@ -46,6 +52,8 @@ public:
   
   bool notFound() const { return (0 == m_links); }
 
+   /** returns the first target related to the specified source.
+   */
   TARGET* first( const SOURCE* source ) {
     if ( NULL == m_links ) return NULL;
     bool status = m_links->firstReference( source->key(), 
@@ -58,6 +66,8 @@ public:
     return currentTarget();
   }
   
+   /** returns the first target related to the source specified as a key.
+   */
   TARGET* first( int key ) {
     if ( NULL == m_links ) return NULL;
     bool status = m_links->firstReference( key, NULL, m_curReference );
@@ -68,7 +78,10 @@ public:
     return currentTarget();
   }
   
-  TARGET* next( ) {
+  /** returns the next target. The source of the relation was specified by a 
+      previous call to 'first'
+   */
+   TARGET* next( ) {
     if ( NULL == m_links ) return NULL;
     bool status = m_links->nextReference( m_curReference );
     if ( !status ) {
@@ -77,8 +90,35 @@ public:
     }
     return currentTarget();
   }
-  
+  /** returns the weight of the previously defined relation */
   double weight()   { return m_curReference.weight(); }
+
+  /** returns a vector of targets, onto which STL functions can be used.
+   */
+  LRange& range( const SOURCE* source ) {
+    m_vect.clear();
+    TARGET* tmp = first( source );
+    while ( NULL != tmp ) {
+      m_vect.push_back( tmp );
+      tmp = next();
+    }
+    return m_vect;
+  }
+
+  /** returns a vector of targets, onto which STL functions can be used.
+   */
+  LRange& range( int key ) {
+    m_vect.clear();
+    TARGET* tmp = first( key );
+    while ( NULL != tmp ) {
+      m_vect.push_back( tmp );
+      tmp = next();
+    }
+    return m_vect;
+  }
+
+  LRangeIt beginRange()   { return m_vect.begin(); }
+  LRangeIt endRange()     { return m_vect.end(); }
 
 protected:
 
@@ -97,5 +137,6 @@ protected:
 private:
   LinksByKey*      m_links;
   LinkReference    m_curReference;
+  LRange           m_vect;          
 };
 #endif // LINKER_LINKEDTO_H
