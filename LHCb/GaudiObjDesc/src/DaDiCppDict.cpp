@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.18 2002-03-13 18:35:46 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.19 2002-03-15 15:24:03 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -19,6 +19,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader
@@ -27,8 +28,10 @@
 //----------------------------------------------------------------------------
 
 std::string argV0,
-            indent(16, ' '),
-            remLine = "//" + std::string(78, '-');
+  indent(16, ' '),
+  remLine = "//" + std::string(78, '-');
+
+std::vector<std::string> classTypes;
 
 //-----------------------------------------------------------------------------
 void usage(std::string argV0)
@@ -66,6 +69,31 @@ void version(std::string argV0)
 }
 
 
+//-----------------------------------------------------------------------------
+std::string checkType(std::string type, std::string prefix)
+//-----------------------------------------------------------------------------
+{
+  std::vector<std::string>::iterator iter = 
+    std::find(classTypes.begin(), classTypes.end(), type);
+  if (iter != classTypes.end())
+    {
+      return prefix + "::" + type;
+    }
+  else
+    {
+      return type;
+    }
+}
+
+/*/-----------------------------------------------------------------------------
+std::string stripString(std::string value)
+//-----------------------------------------------------------------------------
+{
+  std::string::iterator iter =
+    std::remove(value.begin(), value.end(), " ");
+  return value.erase(iter, value.end());
+}*/
+  
 //-----------------------------------------------------------------------------
 std::string printAccessor(std::string access)
 //-----------------------------------------------------------------------------
@@ -249,7 +277,11 @@ int main(int argC, char* argV[])
   {
     DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
 
-    DDBEdict::printCppDictionary(gddPackage,envXmlDB,envOut,additionalImports,dothDir);
+    DDBEdict::printCppDictionary(gddPackage,
+                                 envXmlDB,
+                                 envOut,
+                                 additionalImports,
+                                 dothDir);
   }
 
   return 0;
@@ -418,6 +450,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     std::string(gddPackage->packageName().transcode()) + "/" 
     + std::string(gddClass->name().transcode());
 
+  for (i=0; i<gddClass->sizeDaDiEnum(); ++i)
+  {
+    classTypes.push_back(gddClass->popDaDiEnum()->name().transcode());
+  }    
 
 // ------------------------------------------------------------------------
 // Start of writing the .cpp-file for filling the MetaModel
@@ -485,7 +521,6 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     << "};" << std::endl 
     << std::endl;
 
-
 // 
 // static methods for invocation
 //
@@ -493,8 +528,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
     std::string gddMethName = gddMethod->name().transcode(),
-                gddMethRetType = gddMethod->daDiMethReturn()->type().transcode();
-    bool toReturn = (gddMethRetType == "void") ? false : true;
+                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
+    bool toReturn = (gddMethRetType == "void") ? false : true,
+         gddMethIsConst = gddMethod->const_();
+
     if (gddMethName != "serialize")
     {
       metaOut << remLine << std::endl
@@ -503,12 +540,29 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << "*";
       }
-      metaOut << " " << gddClassName << "_" << checkSymb(gddMethName) << "(void* v, std::vector<void*> argList)" << std::endl
-        << remLine << std::endl
+      metaOut << " " << gddClassName << "_" << checkSymb(gddMethName);
+      if (gddMethIsConst)
+      {
+        metaOut << "const";
+      }
+      if (gddMethod->sizeDaDiMethArgument())
+      {
+        metaOut << "(void* v, std::vector<void*> argList)" << std::endl;
+      }
+      else
+      {
+        metaOut << "(void* v)" << std::endl;
+      }
+      metaOut << remLine << std::endl
         << "{" << std::endl;
       if (toReturn && !DaDiTools::isRef(gddMethRetType))
       {
-        metaOut << "  static " << gddMethRetType << " ret;" << std::endl;
+        metaOut << "  static ";
+        if (gddMethod->daDiMethReturn()->const_())
+        {
+          metaOut << "const ";
+        }
+        metaOut << checkType(gddMethRetType,gddClassName) << " ret;" << std::endl;
       }
       metaOut << "  ";
       if (toReturn)
@@ -534,7 +588,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "," << std::endl 
             << "          "; 
         }
-        metaOut << "*(" << gddMethArgType;
+        metaOut << "*(" << checkType(gddMethArgType,gddClassName);
         if (gddMethArgument->isPointer())
         {
           metaOut << "*";
@@ -567,7 +621,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddAttName 
-          << "(void* v, std::vector<void*> argList)" << std::endl
+          << "(void* v)" << std::endl
         << remLine << std::endl
         << "{" << std::endl
         << "  static " << gddAttType << " ret;" << std::endl
@@ -586,9 +640,9 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
           << "(void* v, std::vector<void*> argList)" << std::endl
         << remLine << std::endl
         << "{" << std::endl
-        << "  ((" << gddClassName << "*)v)->set" 
-          << DaDiTools::firstUp(gddAttName) << "(*(" << gddAttType 
-          << "*)argList[0]);" << std::endl
+        << "  ((" << gddClassName << "*)v)->set"
+          << DaDiTools::firstUp(gddAttName) << "(*(" 
+          << checkType(gddAttType,gddClassName) << "*)argList[0]);" << std::endl
         << "}" << std::endl
         << std::endl;
     }
@@ -616,7 +670,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddRelName
-          << "(void* v, std::vector<void*> argList)" << std::endl
+          << "(void* v)" << std::endl
         << remLine << std::endl 
         << "{" << std::endl
         << "  static " << gddRealRelType << " ret;" << std::endl
@@ -649,7 +703,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         metaOut << remLine << std::endl
           << "static void " << gddClassName << "_clear"
             << DaDiTools::firstUp(gddRelName)
-            << "(void* v, std::vector<void*> argList)" << std::endl
+            << "(void* v)" << std::endl
           << remLine << std::endl
           << "{" << std::endl
           << "  ((" << gddClassName << "*)v)->clear"
@@ -707,16 +761,19 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     << remLine << std::endl
     << "{" << std::endl;
 
-  if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() || gddClass->sizeDaDiRelation())
+  if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() || 
+      gddClass->sizeDaDiRelation())
   {
-    metaOut << "  std::vector<MetaClass*> argTypes = std::vector<MetaClass*>();" << std::endl
+    metaOut << "  std::vector<MetaClass*> argTypes = std::vector<MetaClass*>();"
+        << std::endl
       << "  MetaClass* retType;" << std::endl;
   }
 
 //
 // Creation of Metaclass
 //
-  metaOut << "  MetaClass* metaC = new MetaClass(\"" << gddClassName << "\"," << std::endl
+  metaOut << "  MetaClass* metaC = new MetaClass(\"" << gddClassName << "\"," 
+      << std::endl
     << indent << "\"" << gddClassDesc << "\"," << std::endl
     << indent << "0);" << std::endl 
     << std::endl;
@@ -727,14 +784,17 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 
   if (gddClass->sizeDaDiBaseClass())
   {
-    metaOut << "  " << gddClassName << "* cl = new " << gddClassName << "();" << std::endl;
+    metaOut << "  " << gddClassName << "* cl = new " << gddClassName << "();"
+        << std::endl;
 
     for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
     {
-      std::string gddBaseClass = gddClass->popDaDiBaseClass()->name().transcode();
+      std::string gddBaseClass=gddClass->popDaDiBaseClass()->name().transcode();
 
-      metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\"," << std::endl
-        << indent << "(((int)cl)-((int)((" << gddBaseClass << "*)cl))));" << std::endl;
+      metaOut << "  metaC->addSuperClass(\"" << gddBaseClass << "\"," 
+          << std::endl
+        << indent << "(((int)cl)-((int)((" << gddBaseClass << "*)cl))));" 
+          << std::endl;
     }
 
     metaOut << "  delete cl;" << std::endl
@@ -758,7 +818,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     metaOut << "  new MetaField(\"" << gddAttName << "\"," << std::endl
       << indent << "\"" << gddAttType << "\"," << std::endl
       << indent << "\"" << gddAttDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName << "," << std::endl
+      << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName << "," 
+        << std::endl
       << indent << "metaC," << std::endl
       << indent << printAccessor(gddAttAccess) << ");" << std::endl
       << std::endl;
@@ -784,25 +845,30 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     metaOut << "  new MetaField(\"" << gddRelName << "\"," << std::endl
       << indent << "\"" << gddRelType << "\"," << std::endl
       << indent << "\"" << gddRelDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddRelName << "," << std::endl
+      << indent << "&((" << gddClassName << "*)0)->m_" << gddRelName << "," 
+        << std::endl
       << indent << "metaC," << std::endl
       << indent << printAccessor(gddRelAccess) << ");" << std::endl 
       << std::endl;
   }
 
-
+  //
+  // Creation of selfdefined methods
+  //
   for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
     std::string gddMethName = gddMethod->name().transcode(),
                 gddMethDesc = gddMethod->desc().transcode(),
-                gddMethRetType = gddMethod->daDiMethReturn()->type().transcode();
-
+                gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
+    bool gddMethIsConst = gddMethod->const_();
+    
     if (gddMethName != "serialize")
     {
       metaOut << constructTypes(gddMethRetType);
 
-      metaOut << "  retType = MetaClass::forName(\"" << gddMethRetType << "\");" << std::endl
+      metaOut << "  retType = MetaClass::forName(\"" << gddMethRetType << "\");"
+          << std::endl
         << "  argTypes.clear();" << std::endl;
     
       for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
@@ -811,18 +877,27 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         std::string gddMethArgType = gddMethArgument->type().transcode();
 
         metaOut << constructTypes(gddMethArgType);
-        metaOut << "  argTypes.push_back(MetaClass::forName(\"" << gddMethArgType << "\"));" << std::endl;
+        metaOut << "  argTypes.push_back(MetaClass::forName(\"" 
+                  << gddMethArgType << "\"));" << std::endl;
       }
 
       metaOut << "  metaC->addMethod(\"" << gddMethName << "\"," << std::endl
         << indent << "\"" << gddMethDesc << "\"," << std::endl
         << indent << "retType," << std::endl
         << indent << "argTypes," << std::endl
-        << indent << gddClassName << "_" << checkSymb(gddMethName) << ");" << std::endl
+        << indent << gddClassName << "_" << checkSymb(gddMethName);
+      if (gddMethIsConst)
+      {
+        metaOut << "const";
+      }
+      metaOut << ");" << std::endl
         << std::endl;
     }
   }
 
+  //
+  // Creation of setters and getters for attributes
+  //
   for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
@@ -835,7 +910,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     if (getMeth)
     {
       metaOut << constructTypes(gddAttType)
-        << "  retType = MetaClass::forName(\"" << gddAttType << "\");" << std::endl
+        << "  retType = MetaClass::forName(\"" << gddAttType << "\");" 
+          << std::endl
         << "  argTypes.clear();" << std::endl
         << "  metaC->addMethod(\"" << gddAttName << "\"," << std::endl
         << indent << "\"" << gddAttDesc << "\"," << std::endl
@@ -849,16 +925,22 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
         << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(MetaClass::forName(\"" << gddAttType << "\"));" << std::endl
-        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName) << "\"," << std::endl
+        << "  argTypes.push_back(MetaClass::forName(\"" << gddAttType << "\"));"
+          << std::endl
+        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName) << "\","
+          << std::endl
         << indent << "\"" << gddAttDesc << "\"," << std::endl
         << indent << "retType," << std::endl
         << indent << "argTypes," << std::endl
-        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddAttName) << ");" << std::endl
+        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddAttName) 
+          << ");" << std::endl
         << std::endl;
     }
   }
 
+  //
+  // Creation of setters, getters, etc. for relations
+  //
   for (i=0; i<gddClass->sizeDaDiRelation(); ++i)
   {
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
@@ -874,7 +956,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 
     if (getMeth)
     {
-      metaOut << "  retType = MetaClass::forName(\"" << gddRelType << "\");" << std::endl
+      metaOut << "  retType = MetaClass::forName(\"" << gddRelType << "\");" 
+          << std::endl
         << "  argTypes.clear();" << std::endl
         << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
         << indent << "\"" << gddRelDesc << "\"," << std::endl
@@ -888,12 +971,15 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
         << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType << "\"));" << std::endl
-        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+        << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType << "\"));"
+          << std::endl
+        << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName) << "\","
+          << std::endl
         << indent << "\"" << gddRelDesc << "\"," << std::endl
         << indent << "retType," << std::endl
         << indent << "argTypes," << std::endl
-        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+        << indent << gddClassName << "_set" << DaDiTools::firstUp(gddRelName) 
+          << ");" << std::endl
         << std::endl;
     }
 
@@ -903,11 +989,13 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
           << "  argTypes.clear();" << std::endl
-          << "  metaC->addMethod(\"clear" << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+          << "  metaC->addMethod(\"clear" << DaDiTools::firstUp(gddRelName)
+            << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
           << indent << "retType," << std::endl
           << indent << "argTypes," << std::endl
-          << indent << gddClassName << "_clear" << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+          << indent << gddClassName << "_clear" 
+            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
           << std::endl;
       } 
 
@@ -915,12 +1003,15 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
           << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType << "\"));" << std::endl
-          << "  metaC->addMethod(\"addTo" << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+          << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType 
+            << "\"));" << std::endl
+          << "  metaC->addMethod(\"addTo" << DaDiTools::firstUp(gddRelName) 
+            << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
           << indent << "retType," << std::endl
           << indent << "argTypes," << std::endl
-          << indent << gddClassName << "_addTo" << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+          << indent << gddClassName << "_addTo" 
+            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
           << std::endl;
       }
 
@@ -928,12 +1019,15 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
           << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType << "\"));" << std::endl
-          << "  metaC->addMethod(\"removeFrom" << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
+          << "  argTypes.push_back(MetaClass::forName(\"" 
+            << gddRelType << "\"));" << std::endl
+          << "  metaC->addMethod(\"removeFrom" << DaDiTools::firstUp(gddRelName)
+            << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
           << indent << "retType," << std::endl
           << indent << "argTypes," << std::endl
-          << indent << gddClassName << "_removeFrom" << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+          << indent << gddClassName << "_removeFrom" 
+            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
           << std::endl;
       }
     }
@@ -944,8 +1038,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 // Properties
 //
   metaOut << "  MetaPropertyList* pl = new MetaPropertyList();" << std::endl 
-    << "  pl->setProperty(\"Author\", " << "\"" << gddClassAuthor << "\");" << std::endl
-    << "  pl->setProperty(\"ClassID\", " << "\"" << gddClassID << "\");" << std::endl;
+    << "  pl->setProperty(\"Author\", " << "\"" << gddClassAuthor << "\");" 
+      << std::endl
+    << "  pl->setProperty(\"ClassID\", " << "\"" << gddClassID << "\");" 
+      << std::endl;
 
   metaOut << "  metaC->setPropertyList(pl);" << std::endl;
 

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.52 2002-03-14 14:16:51 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.53 2002-03-15 15:24:03 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -729,6 +729,7 @@ template<class T> void printEnums(std::ofstream& xmlOut,
           << gddEnumDesc << std::endl;
     }
   }
+  xmlOut << std::endl;
 }
 
 
@@ -1092,7 +1093,7 @@ void printClass(std::ofstream& xmlOut,
   //
   printTypeDefs(xmlOut, gddClass, "PUBLIC");
   printEnums(xmlOut, gddClass, "PUBLIC");
-
+  
 //
 // (Standard) constructor & destructor
 //
