@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.15 2001-11-09 08:37:10 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.16 2001-11-09 09:40:30 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -375,6 +375,10 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
   {  
 
   DaDiClass* gddClass = gddPackage->popDaDiClass();
+
+  dbExportClass[std::string(gddClass->className().transcode())] =
+    std::string(gddPackage->packageName().transcode()) + "/" 
+    + std::string(gddClass->className().transcode());
 
   // ------------------------------------------------------------------------
   // Here starts the writing of the .h-file
