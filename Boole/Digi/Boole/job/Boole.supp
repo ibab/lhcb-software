@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v3r2, gcc 3.2, valgrind 1.9.6
+# Error suppression file Boole v4r0, gcc 3.2, valgrind 1.9.6
 
 # Format of this file is:
 # {
@@ -15,13 +15,73 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
+# GaudiKernel v14r2 problem (Savannah bug 2066)
 {
-  strlen/ld-2.2.5.so
+  Gaudi/2066
   Memcheck:Cond
   fun:strlen
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
+  fun:_IO_str_init_static_internal
+  fun:_IO_vsscanf
+}
+
+
+# HbookCnv v14r0 (Reported to Grigori/Pere)
+{
+  Gaudi/HbookCnv
+  Memcheck:Cond
+  fun:iucomp_
+  fun:hfinop_
+  fun:hstati_
+}
+
+# Root 3.10.01 errors (Common with Brunel)
+{
+  Root/memvar
+  Memcheck:Cond
+  fun:G__getexpr
+  fun:G__getexpr
+  fun:G__memvar_setup
+}
+
+{
+  Root/stdio
+  Memcheck:Cond
+  fun:G__getexpr
+  fun:G__getexpr
+  fun:G__set_stdio
+}
+
+# Root 3.10.01 errors (already in earlier versions, known to Fons...)
+{
+  Root/longest_match
+  Memcheck:Cond
+  fun:R__longest_match
+  fun:R__Deflate_fast
+  fun:R__Deflate
+}
+
+{
+  Root/cd_tally
+  Memcheck:Value4
+  fun:R__ct_tally
+  fun:R__Deflate_fast
+  fun:R__Deflate
+}
+
+{
+  Root/deflate
+  Memcheck:Value4
+  fun:R__Deflate_fast
+  fun:R__Deflate
+  fun:R__zip
+}
+
+{
+  Root/compress
+  Memcheck:Value4
+  fun:R__compress_block
+  fun:R__flush_block
+  fun:R__Deflate_fast
 }
 
 # Known DNS system library problems (Linux rh6.1 - rh7.3)
@@ -64,74 +124,4 @@
   socketcall.send(msg)
   obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
-}
-
-
-# Gaudi problems (Gaudi v11r4, v12r0)
-{
-  GaudiKernel/v13r2/Timing.cpp
-  Memcheck:Param
-  times(buf)
-  obj:/lib/i686/libc-2.2.5.so
-  fun:_ZN6System8userTimeENS_8TimeTypeENS_8InfoTypeEl
-}
-
-
-# CLHEP 1.8.0.0 errors (reported, fixed in CVS head?)
-{
-  HepTool::Evaluator/__builtin_vec_new
-  Memcheck:Free 
-  fun:__builtin_delete
-  fun:*
-  fun:_ZN7HepTool9Evaluator8evaluateEPKc
-}
-
-# Xerces 2.2.0 errors
-{
-  DOMDocument
-  Memcheck:Free
-  fun:__builtin_delete
-  fun:*
-  fun:_ZN11xercesc_2_215DOMDocumentImpl10deleteHeapEv
-}
-
-# New Root 3.05.04 / GaudiDb v8r4 error in Boole v3r0p1
-{
-  Root/uninitilized
-  MemCheck:Param
-  write(buf)
-  fun:_ZN5TFile8SysWriteEiPKvi
-}
-#  obj:/lib/i686/libc-2.2.5.so
-
-# Root 3.05.04 errors (reported, known to Fons...)
-{
-  Root/longest_match
-  Memcheck:Cond
-  fun:R__longest_match
-  fun:R__Deflate
-  fun:R__zip
-}
-
-{
-  Root/deflate
-  Memcheck:Value4
-  fun:R__Deflate
-  fun:R__zip
-}
-
-{
-  Root/ct_tally
-  Memcheck:Value4
-  fun:R__ct_tally
-  fun:R__Deflate
-  fun:R__zip
-}
-
-{
-  Root/compress_block
-  Memcheck:Value4
-  fun:R__compress_block
-  fun:R__flush_block
-  fun:R__Deflate
 }
