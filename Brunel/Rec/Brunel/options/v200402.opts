@@ -43,7 +43,7 @@ HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 
 // POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field045.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 411300
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field045.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
 PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // GaudiDb
