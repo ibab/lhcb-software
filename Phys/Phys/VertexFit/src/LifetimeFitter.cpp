@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.2 2004-11-08 14:37:18 xieyu Exp $
+// $Id: LifetimeFitter.cpp,v 1.3 2005-01-06 10:41:58 pkoppenb Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -20,7 +20,7 @@
 
 // local file
 #include "LifetimeFitter.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 //--------------------------------------------------------------------
 //

@@ -16,9 +16,9 @@
 #include "CLHEP/Matrix/DiagMatrix.h"
 
 // Include files from DaVinciTools
-#include "DaVinciTools/IMassVertexFitter.h"
-#include "DaVinciTools/IVertexFitter.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IMassVertexFitter.h"
+#include "Kernel/IVertexFitter.h"
+#include "Kernel/IParticleTransporter.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 

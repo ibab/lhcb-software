@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParameters.h,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: PhotonFromMergedParameters.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/08/24 06:47:48  pkoppenb
+// ParticleMaker extracted from DaVinciTools
+//
 // Revision 1.4  2004/07/28 14:15:24  pkoppenb
 // untag
 //
@@ -27,7 +30,7 @@
 // from CaloKernel
 #include "CaloKernel/CaloTool.h"
 // from DaVinciTool 
-#include "DaVinciTools/IPhotonFromMergedParams.h"
+#include "Kernel/IPhotonFromMergedParams.h"
 // forward declarations 
 class CaloHypo          ;
 class Particle          ;

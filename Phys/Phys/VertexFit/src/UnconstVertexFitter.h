@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.h,v 1.2 2004-12-14 18:46:31 pkoppenb Exp $
+// $Id: UnconstVertexFitter.h,v 1.3 2005-01-06 10:41:58 pkoppenb Exp $
 #ifndef UNCONSTVERTEXFITTER_H
 #define UNCONSTVERTEXFITTER_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IVertexFitter.h"
+#include "Kernel/IVertexFitter.h"
 
 // Forward declarations
 class IParticleTransporter;

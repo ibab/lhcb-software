@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/GaudiException.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 // from Event
 #include "Event/Particle.h"

@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.h,v 1.2 2004-12-14 08:45:29 pkoppenb Exp $
+// $Id: CombinedParticleMaker.h,v 1.3 2005-01-06 10:46:54 pkoppenb Exp $
 #ifndef COMBINEDPARTICLEMAKER_H 
 #define COMBINEDPARTICLEMAKER_H 1
 
@@ -16,7 +16,7 @@
 #include "Event/ProtoParticle.h"
 
 // from DaVinci
-#include "DaVinciTools/IParticleMaker.h"
+#include "Kernel/IParticleMaker.h"
 
 // locals
 #include "PMakerSelection.h"

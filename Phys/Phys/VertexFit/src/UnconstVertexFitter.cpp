@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.3 2004-12-15 15:29:03 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.4 2005-01-06 10:41:58 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -16,8 +16,8 @@
 #include "CLHEP/Vector/ThreeVector.h" 
 // local
 #include "UnconstVertexFitter.h"
-#include "DaVinciTools/IParticleTransporter.h"
-#include "DaVinciTools/IPhotonParams.h"
+#include "Kernel/IParticleTransporter.h"
+#include "Kernel/IPhotonParams.h"
 
 #include "Event/ProtoParticle.h"
 #include "Event/TrgTrack.h"

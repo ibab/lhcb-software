@@ -2,6 +2,10 @@
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+! 2005-01-06 - P. Koppenburg
+ - src/*.{cpp,h}
+   . Moved Interfaces from DaVinciTools to Kernel
+
 ! 2004-12-14 - P. Koppenburg
  - src/CombinedParticleMaker.{cpp,h}
    . Make it a GaudiTool

@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.h,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: PreLoadParticles.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
 #ifndef PRELOADPARTICLES_H 
 #define PRELOADPARTICLES_H 1
 
@@ -7,8 +7,8 @@
 #include <string>
 
 // from DaVinci
-#include "DaVinciTools/IPhysDesktop.h"
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/IPhysDesktop.h"
+#include "Kernel/DVAlgorithm.h"
 
 
 /** @class PreLoadParticles PreLoadParticles.h

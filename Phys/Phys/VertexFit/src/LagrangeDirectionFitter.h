@@ -19,7 +19,7 @@
 #include "CLHEP/Matrix/DiagMatrix.h"
 
 // Include files from DaVinciTools
-#include "DaVinciTools/IDirectionFitter.h"
+#include "Kernel/IDirectionFitter.h"
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 

@@ -25,7 +25,7 @@
 
 // local file
 #include "KFFitTool.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 //--------------------------------------------------------------------
 //

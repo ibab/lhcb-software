@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -12,7 +12,7 @@
 #include "CLHEP/Vector/LorentzVector.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IGeomDispCalculator.h"
+#include "Kernel/IGeomDispCalculator.h"
 
 // Forward declarations
 class IParticleTransporter;

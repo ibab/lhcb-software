@@ -11,7 +11,7 @@
 
 // Include files from DaVinciTools
 #include "Kernel/IKFFitTool.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 // Forward declarations
 

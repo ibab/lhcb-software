@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: ParticleStuffer.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -10,8 +10,8 @@
 #include "GaudiKernel/AlgTool.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IParticleStuffer.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleStuffer.h"
+#include "Kernel/IParticleTransporter.h"
 
 // Forward declarations
 class IParticlePropertySvc;

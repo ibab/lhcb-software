@@ -19,7 +19,7 @@
 
 // local file
 #include "LagrangeMassVertexFitter.h"
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 //--------------------------------------------------------------------
 //

@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.h,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $Id: LifetimeFitter.h,v 1.2 2005-01-06 10:41:58 pkoppenb Exp $
 #ifndef LIFETIMEFITTER_H
 #define LIFETIMEFITTER_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiKernel/AlgTool.h"
 
 // Include files from DaVinciTools
-#include "DaVinciTools/ILifetimeFitter.h"
+#include "Kernel/ILifetimeFitter.h"
 
 // Forward declarations
 

@@ -2,9 +2,9 @@
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 
-! 2005-01-05 - P. Koppenburg
-  - src/KFFitTool.h
-    . Moved interface to $DAVINCIKERNELROOT/Kernel/
+! 2005-01-06 - P. Koppenburg
+  - src/*.h
+    . Moved all interface to $DAVINCIKERNELROOT/Kernel/
     
 ! 2004-12-15 - P. Koppenburg
   - src/UnconstVertexFitter.cpp
