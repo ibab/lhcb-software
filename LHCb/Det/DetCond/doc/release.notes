@@ -1,6 +1,11 @@
-# $Id: release.notes,v 1.14 2002-03-01 11:39:20 andreav Exp $
+# $Id: release.notes,v 1.15 2002-03-08 15:25:15 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020308 - Andrea Valassi
+Change dependency on CondDBOracle package to version v2r10 (0.2.1.0).
+Requirements v2r1, private tag h20020308.
 
 ==============================================================================
 !20020301 - Andrea Valassi
