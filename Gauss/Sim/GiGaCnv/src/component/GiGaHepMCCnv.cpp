@@ -190,11 +190,8 @@ StatusCode GiGaHepMCCnv::updateRep
                                       GiGaUtil::ObjTypeName( object )   + 
                                       "*') is not 'HepMCEventVector*'!") ; }  
 
-  //create a particle converter
 
-  GenPart2GenPart Cnv( ppSvc() );
-
-  /// loop over all events in McEventCollection
+  /// loop over all events 
   HepMCEventVector::iterator it;
 
 
@@ -203,13 +200,6 @@ StatusCode GiGaHepMCCnv::updateRep
 
 
   for(it=hepVect->begin(); it!=hepVect->end(); it++) {
-    
-
-  // create a primary vertex at (0,0,0,0)
-
-    G4PrimaryVertex* OrigVertex = 
-      new G4PrimaryVertex(0,0,0,0);
-    G4PrimaryVertex* Vertex;    
 
   /// loop over all vertices in GenEvent 
 
@@ -225,19 +215,27 @@ StatusCode GiGaHepMCCnv::updateRep
            (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
         {
           // skip particles with end vertices
-          //          if (!((*pParticle)->end_vertex())) {          
           if((*pParticle)->status()==1){
             
             nPart++;
             
-          /// if a particle is without end vertex then perform the conversion
-            
-            //            G4PrimaryParticle* Particle = Cnv( *pParticle );
             G4PrimaryParticle* Particle=GenPartG4Part(*pParticle);
-            
+
+            G4PrimaryVertex* OrigVertex = 
+              new G4PrimaryVertex((*pParticle)->production_vertex()->position().x(),
+                                  (*pParticle)->production_vertex()->position().y(),
+                                  (*pParticle)->production_vertex()->position().z(),
+                                  (*pParticle)->production_vertex()->position().t());
+
 
             OrigVertex->SetPrimary ( Particle );
 
+            *gigaSvc() << OrigVertex ;
+
+            MsgStream log( msgSvc(),  name() ) ;
+            log << MSG::INFO << 
+              "New G4PrimaryVertex created"<< endreq;
+            
             
             
           }
@@ -247,14 +245,14 @@ StatusCode GiGaHepMCCnv::updateRep
       log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
    }
    
-   *gigaSvc() << OrigVertex ;
+   //   *gigaSvc() << OrigVertex ;
    
   }
   { MsgStream log( msgSvc(),  name() ) ;
        log << MSG::INFO << 
-         " Number of vertices examined "<< nVertex << endreq;
+         "Number of vertices examined "<< nVertex << endreq;
        log << MSG::INFO << 
-         " Number of Pythia particles converted "<< nPart << endreq;
+         "Number of Pythia particles converted "<< nPart << endreq;
   }
   
 
