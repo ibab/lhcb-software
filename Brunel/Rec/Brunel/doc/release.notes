@@ -20,6 +20,7 @@ Purpose: LHCb reconstruction program
    . Calorimeter algorithms and tools do not print the same message after a
      maximum number of times. Default is 10 (CaloKernel v2r1)
    . Take into account time information in Calo digitization (CaloDigit v1r0)
+   . Add e+/e- ID with PRS (CaloReco v1r0)
    . Add TT occupancy histos (ITCheckers v1r1)
    . New options file to define monitoring for production jobs (included by 
      default) (BrunelMoniProd.opts)

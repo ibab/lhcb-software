@@ -175,7 +175,7 @@ BrunelRecoRICHSeq.Members += { "RichDSTPrepare" };
 TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
 
 // Rich OO Reconstruction
-ApplicationMgr.DLLs += { "RichDetTools","RichRecAlgs" };
+ApplicationMgr.DLLs += { "RichDetTools" };
 #include "$RICHRECALGSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning

@@ -33,6 +33,5 @@ SpillOverSelector.Input = {
 //SpillOverSelector.FirstEvent = 6; // Skip corresponding spillover events
 BrunelDstWriter.Output = "DATAFILE='v249r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v249r0.hbook";  // Monitoring histos
-//ApplicationMgr.EvtMax = 10;
-ApplicationMgr.EvtMax = 3;
+ApplicationMgr.EvtMax = 10;
 //////////////////////////////////////////////////////////////////////////////
