@@ -27,6 +27,7 @@ use GaussRICH		v1r0	Sim
 use GaussTracker	v1r0	Sim
 use GaussCalo		v1r0	Sim
 use GaussPhysics	v1r0	Sim
+use GaussImports        v4r0    Sim
 
 # Detector stuff...
 use VeloAlgorithms 	v2r5	Velo
