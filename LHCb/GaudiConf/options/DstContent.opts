@@ -38,6 +38,7 @@ DstWriter.ItemList =
 , "/Event/Trig/L1/Decision#1" 
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
+, "/Event/DAQ/RawBuffer#1"
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1"

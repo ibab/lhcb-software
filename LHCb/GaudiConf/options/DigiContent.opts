@@ -3,18 +3,10 @@
 
 DigiWriter.OptItemList =
 {
-  "/Event/Prev#1"
-, "/Event/Prev/Header#1"
-, "/Event/Prev/MC#*"
-, "/Event/PrevPrev#1"
-, "/Event/PrevPrev/Header#1"
-, "/Event/PrevPrev/MC#*"
-, "/Event/Next#1"
-, "/Event/Next/Header#1"
-, "/Event/Next/MC#*"
-, "/Event/LHCBackground#1"
-, "/Event/LHCBackground/Header#1"
-, "/Event/LHCBackground/MC#*"
+  "/Event/Prev#*"
+, "/Event/PrevPrev#*"
+, "/Event/Next#*"
+, "/Event/LHCBackground#*"
 }; 
 DigiWriter.ItemList = 
 {
@@ -22,7 +14,7 @@ DigiWriter.ItemList =
 , "/Event/Header#1"
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
-, "/Event/DAQ/HltBuffer#1"
+, "/Event/DAQ/RawBuffer#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
@@ -74,14 +66,6 @@ DigiWriter.ItemList =
 , "/Event/Raw/Velo/Clusters#1"
 , "/Event/Raw/Rich#1"
 , "/Event/Raw/Rich/Digits#1"
-, "/Event/Raw/Spd#1"
-, "/Event/Raw/Spd/Digits#1"
-, "/Event/Raw/Prs#1"
-, "/Event/Raw/Prs/Digits#1"
-, "/Event/Raw/Ecal#1"
-, "/Event/Raw/Ecal/Digits#1"
-, "/Event/Raw/Hcal#1"
-, "/Event/Raw/Hcal/Digits#1"
 , "/Event/Raw/IT#1"
 , "/Event/Raw/IT/Digits#1"
 , "/Event/Raw/OT#1"

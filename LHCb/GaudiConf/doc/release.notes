@@ -1,6 +1,13 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r3 2003-11-25 ========================
+! 2003-11-25 - Marco Cattaneo
+ - DigiContent.opts: rename HltBuffer to RawBuffer
+                     save full spillover event trees, as defined by spilloverAlg
+                     remove Calo Digits (can be recreated from RawBuffer)
+ - DstContent.opts:  add RawBuffer
+
 !======================== GaudiConf v7r2 2003-11-03 ========================
 ! 2003-11-03 - Marco Cattaneo
  - DigiContent.opts: rename HLTBuffer to HltBuffer
