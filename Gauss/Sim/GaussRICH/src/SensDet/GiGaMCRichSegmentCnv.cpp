@@ -4,8 +4,11 @@
  *  Implementation file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.6 2005-02-17 13:32:16 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.7 2005-03-02 14:44:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2005/02/17 13:32:16  jonrob
+ *  Remove temporary class - Now included from RichKernel
+ *
  *  Revision 1.5  2005/01/19 10:38:52  jonrob
  *  add simple printout to GiGa converters
  *
@@ -33,15 +36,6 @@ const        ICnvFactory&GiGaRichSegmentCnvFactory = s_Factory ;
 
 // Containers and sorting functions
 namespace GiGaRich {
-
-  struct HepPoint3DSortByZ
-  {
-    bool operator() ( const HepPoint3D & p1, const HepPoint3D & p2 ) const
-    {
-      return ( p1.z() < p2.z() );
-    }
-  };
-  typedef std::set<HepPoint3D,GiGaRich::HepPoint3DSortByZ> TrajPoints;
 
   typedef std::pair<HepVector3D,HepPoint3D> MomentumAtZ;
   struct SortMomentumAtZ
@@ -283,7 +277,6 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
         else if ( Rich::Rich2 == mcSeg->rich() ) ++m_hitTally[Rich::Rich2];
 
         // loop over hits
-        GiGaRich::TrajPoints trajPoints;
         GiGaRich::MomentaAtZ momenta;
         for ( G4HitList::const_iterator iHit = g4hitList.begin();
               iHit != g4hitList.end(); ++iHit ) {
@@ -293,10 +286,6 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
               << "     : Pre-step  " << (HepPoint3D)(*iHit).first->ChTrackCkvPreStepPos() << endreq
               << "     : post-step " << (HepPoint3D)(*iHit).first->ChTrackCkvPostStepPos() << endreq
               << "     : tk Mon.   " << (HepVector3D)(*iHit).first->ChTrackMomVect() << endreq;
-
-          // Add step points to collection of trajectory points
-          trajPoints.insert( (*iHit).first->ChTrackCkvPreStepPos()  );
-          trajPoints.insert( (*iHit).first->ChTrackCkvPostStepPos() );
 
           // Add momentum to list of momenta
           momenta.insert( GiGaRich::MomentumAtZ( (*iHit).first->ChTrackMomVect(),
@@ -311,24 +300,11 @@ StatusCode GiGaRichSegmentCnv::updateObj ( IOpaqueAddress*  address ,
 
         // Finally, loop over sorted trajectory points and add to segment in order
         msg << MSG::DEBUG 
-            << " Found " << trajPoints.size() << " trajectory points" << endreq;
-        //double lastZ = 999999;
-        for ( GiGaRich::TrajPoints::const_iterator iPoint = trajPoints.begin();
-              iPoint != trajPoints.end(); ++iPoint ) {
-          //if ( fabs(lastZ-(*iPoint).z()) > 1e-2 ) {
-            mcSeg->trajectoryPoints().push_back( (*iPoint) );
-            msg << MSG::DEBUG << "  Added trajectory point    " << *iPoint << endreq;
-            // lastZ = (*iPoint).z();
-            //} else { 
-            //msg << MSG::DEBUG << "  Rejected trajectory point " << *iPoint << endreq;
-            //}
-        }
-        msg << MSG::DEBUG 
-            << " Found " << momenta.size() << " momentum points" << endreq;
+            << " Found " << momenta.size() << " trajectory points" << endreq;
         for ( GiGaRich::MomentaAtZ::const_iterator iMom = momenta.begin();
               iMom != momenta.end(); ++iMom ) {
           mcSeg->trajectoryMomenta().push_back( (*iMom).first );
-          mcSeg->trajectoryMomentaPoints().push_back( (*iMom).second );
+          mcSeg->trajectoryPoints().push_back( (*iMom).second );
           msg << MSG::DEBUG
               << "  Added trajectory momentum " << (*iMom).first 
               << " at " << (*iMom).second << endreq;
