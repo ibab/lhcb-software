@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.45 2004-04-07 16:29:02 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.46 2004-04-20 04:28:21 ibelyaev Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -44,16 +44,17 @@ MessageSvc.OutputLevel    = 3;
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
 #include "$GAUSSOPTS/Monitor.opts"
-#include "$GAUSSOPTS/GaussTape.opts"
+
+//#include "$GAUSSOPTS/GaussTape.opts"
 
 // write an output file in ROOT format
-#include "$GAUSSOPTS/GaussRootIO.opts"
+//#include "$GAUSSOPTS/GaussRootIO.opts"
 //GaussTape.Output = "DATAFILE='GaussRoot_v15r4.oosim' TYP='ROOT' OPT='RECREATE'";
 
 // write an output file in POOL format
-#include "$GAUSSOPTS/GaussPoolIO.opts"
-GaussTape.Output = "DATAFILE='PFN:GaussPool_v15r4.sim' TYP='POOL_ROOTTREE' OPT='REC'";
-PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:GaussPool_v15r4_catalog.xml";
+//#include "$GAUSSOPTS/GaussPoolIO.opts"
+//GaussTape.Output = "DATAFILE='PFN:GaussPool_v15r4.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+//PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:GaussPool_v15r4_catalog.xml";
 //PoolDbCacheSvc.OutputLevel = 0; // full debug of PoolIO
 
 
@@ -63,10 +64,14 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 ApplicationMgr.EvtSel     = "NONE" ;
 
 // number of events to be processed, first event number and run number
-ApplicationMgr.EvtMax      = 5;
+ApplicationMgr.EvtMax      = 2;
 GaussInit.FirstEventNumber = 1;
 GaussInit.RunNumber = 1;
 
 
 // Modify Message Format to print algorithm name with 40 characters
 // MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+//#include "$DECFILESROOT/options/20013_033.8GeV.opts"
+//#include "$DECFILESROOT/options/10111_100.0GeV.opts"
+//ToolSvc.OutputLevel = 2 ;
