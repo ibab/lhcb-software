@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.6 2002-04-05 17:05:44 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.7 2002-04-05 17:52:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/05 17:05:44  ibelyaev
+//  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
+//
 // Revision 1.5  2002/04/04 20:27:19  ibelyaev
 //  minor improvement in 'get()' and 'put()' methods
 //
@@ -122,6 +125,9 @@ protected:
   };
   
   /** the useful method for location of tools 
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
    *  @exception CaloException for invalid tool 
@@ -146,6 +152,8 @@ protected:
             "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    // add the reference 
+    tool -> addRef();                               
     // debug printout 
     Print( " The Tool of type '" + tool->type() + 
            "'/'"                 + tool->name() + 
@@ -155,6 +163,9 @@ protected:
   };
   
   /** the useful method for location of tools 
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
    *  @exception CaloException for invalid tool 
@@ -177,7 +188,8 @@ protected:
             "Could not retrieve Tool'" + type + "'" , sc ) ;
     Assert( 0 != tool      , 
             "Could not retrieve Tool'" + type + "'"     ) ;
-    ///
+    // add the reference 
+    tool -> addRef(); 
     // debug printout 
     Print( " The Tool of type '" + tool->type() + 
            "'/'"                 + tool->name() + 
