@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.92 2005-01-17 18:14:40 robbep Exp $ 
+! $Id: release.notes,v 1.93 2005-01-25 15:52:45 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!====================== GiGaCnv v15r10 2005-01-25 ===========================
+! 2005-01-25 - Gloria CORTI
+ - cmt/requirements
+   . increase version number
+ - src/component/GiGaCnvFunctors.h
+	 . replace Hep3Vector with HepPoint3D for use with CLHEP 1.9 (no longer
+	   convertion, hence compilation problem, and MCVertex gives HepPoint3D)
+ - src/component/GiGaInstall.h
+   . replace forward declaration with include of HepTransform3D to compile
+     with CLHEP 1.9 
 
 ! 2005-01-17 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp

@@ -1,18 +1,24 @@
-// $Id: GiGaInstall.h,v 1.1 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaInstall.h,v 1.2 2005-01-25 15:52:25 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 #ifndef GIGACNV_GIGAINSTALL_H
 #define GIGACNV_GIGAINSTALL_H 1
 // Include files
 #include <string>
+// CLHEP
+#include "CLHEP/Geometry/Transform3D.h"
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
+
+
 // forward declaration
 class G4LogicalVolume      ; ///< Geant4 
-class HepTransform3D       ; ///< CLHEP 
 class GiGaAssembly         ; ///< GiGaCnv 
 class GiGaVolume           ; ///< GiGaCnv
 class MsgStream            ; ///< GaudiKernel

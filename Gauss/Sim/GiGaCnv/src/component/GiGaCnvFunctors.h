@@ -1,8 +1,11 @@
-// $Id: GiGaCnvFunctors.h,v 1.7 2002-05-20 13:36:16 ibelyaev Exp $
+// $Id: GiGaCnvFunctors.h,v 1.8 2005-01-25 15:52:10 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/20 13:36:16  ibelyaev
+//  add conversion of primary vertices
+//
 // ============================================================================
 #ifndef      GIGACNV_GIGACNVFUNCTORS_H
 #define      GIGACNV_GIGACNVFUNCTORS_H 1 
@@ -15,7 +18,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/SmartIF.h"
-// Event 
+// Event
 #include "Event/MCVertex.h"
 #include "Event/MCParticle.h"
 // GiGa 
@@ -48,8 +51,8 @@ namespace GiGaCnvFunctors
    *  @return true if first vector is "less" than the second vector 
    */
   inline bool operator< 
-  ( const Hep3Vector& vec1 ,
-    const Hep3Vector& vec2 )
+  ( const HepPoint3D& vec1 ,
+    const HepPoint3D& vec2 )
   {
     if( &vec1 == &vec2 ) { return false ; } ///< the same object
     ///
