@@ -1,0 +1,29 @@
+#============================================================================
+# Created    : 2004-06-14
+# Maintainer : Marco Cattaneo
+#============================================================================
+package LHCbAlgs
+version v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches        cmt doc src
+include_path    none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use GaudiAlg    v7r*
+use GenEvent    v3r*    Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library         LHCbAlgs    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern   component_library library=LHCbAlgs

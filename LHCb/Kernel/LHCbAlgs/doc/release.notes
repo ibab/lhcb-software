@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/LHCbAlgs
+! Responsible : Marco Cattaneo
+! Purpose     : General purpose algorithms for LHCb
+!-----------------------------------------------------------------------------
+
+!======================== LHCbAlgs v1r0 2004-06-14 ========================
+! 2004-06-14 - Marco Cattaneo
+ - First version:
+ . ProcessPhase: phase for data processing application (previously in LHCbKernel)
+ . TESFilter:    removes selected data from TES (previously in BrunelAlgs)
