@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.45 2005-02-08 17:12:38 pkoppenb Exp $
+! $Id: release.notes,v 1.46 2005-02-10 08:13:10 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+! 2005-02-10 - P. Koppenburg
+  - src/MCParticleMaker.{cpp,h}
+    . Adapt to CLHEP 1.9
+    . Modernize
 ! 2005-02-08 - P. Koppenburg
   - src/TrueMCFilterCriterion.cpp
     . Modernize a litlle bit

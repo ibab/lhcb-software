@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: MCParticleMaker.h,v 1.3 2005-02-10 08:13:11 pkoppenb Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -10,8 +10,8 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "CLHEP/Matrix/SymMatrix.h"
 
 // from DaVinciTools
 #include "Kernel/IParticleMaker.h"
@@ -22,7 +22,6 @@ class IRndmGenSvc;
 class IMCDecayFinder;
 
 class ProtoParticle;
-class HepSymMatrix;
 
 /** @class MCParticleMaker MCParticleMaker.h
  *  This tool fills the particle class with information from
@@ -51,9 +50,6 @@ public:
 ///  StatusCode finalize();
  
 protected:
-  /// The standard event data service. Method not in IParticleMaker.h.
-  IDataProviderSvc* eventSvc() const;
-
   /// The Particle property service.
   IParticlePropertySvc* ppSvc() const;
  
@@ -73,7 +69,6 @@ private:
   double  m_momError;
 
   IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
-  IDataProviderSvc* m_EDS;        ///<  Reference to Event Data Service
   IMCDecayFinder* m_pMCDecFinder;
   Rndm::Numbers m_ranGauss;
 

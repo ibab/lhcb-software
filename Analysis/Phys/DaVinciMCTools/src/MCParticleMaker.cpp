@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.5 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.6 2005-02-10 08:13:11 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -21,7 +21,6 @@
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/SymMatrix.h"
 #include "CLHEP/Matrix/Vector.h"
 
 // local
@@ -48,7 +47,6 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ), 
     m_ppSvc(0), 
-    m_EDS(0),
     m_pMCDecFinder(0)
   {
   // Declaring implemented interfaces
@@ -82,43 +80,31 @@ StatusCode MCParticleMaker::initialize() {
   
   debug() << "==> MCParticleMaker:Initialising" << endreq;
   
-  StatusCode sc;
-  
-  // Retrieve the data service
-  sc = service("EventDataSvc", m_EDS, true);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to locate Event Data Service"
-        << endreq;
-    return sc;
-  }
-  
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
-  debug() << "    Looking for Particle Property Service." << endreq;
+  debug() << "Looking for Particle Property Service." << endreq;
   
-  sc = service("ParticlePropertySvc", m_ppSvc, true);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to locate Particle Property Service"
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true);
+  if( !m_ppSvc ) {
+    fatal() << "Unable to locate Particle Property Service"
         << endreq;
-    return sc;
+    return StatusCode::FAILURE ;
   }  
 
-  IRndmGenSvc* r;
-  sc = service("RndmGenSvc", r, true);
-  if( sc.isFailure() || m_ranGauss.initialize(r,Rndm::Gauss(0,1)).isFailure()){
-    fatal() << "    Unable to locate RndmGenSvc "
-        << endreq;
-    return sc;
+  IRndmGenSvc* r = svc<IRndmGenSvc>("RndmGenSvc",true);
+  if( !r || m_ranGauss.initialize(r,Rndm::Gauss(0,1)).isFailure()){
+    fatal() << "Unable to locate RndmGenSvc " << endreq;
+    return StatusCode::FAILURE;
   }  
 
-  sc = toolSvc()->retrieveTool("MCDecayFinder", m_pMCDecFinder, this);
-  if(sc.isFailure()){
-    fatal() << " Unable to retrieve MCDecayFinder tool" << endreq;
-    return sc;
+  m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
+  if(!m_pMCDecFinder){
+    fatal() << "Unable to retrieve MCDecayFinder tool" << endreq;
+    return StatusCode::FAILURE;
   }
 
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {
-    fatal() << " instructed to use covariance matrix of"
+    fatal() << "Instructed to use covariance matrix of"
         << " reconstructed protoParticle"
         << " but told to also make particles wich are not reconstructed "
         << " please fix you configuration " << endmsg;
@@ -151,14 +137,6 @@ StatusCode MCParticleMaker::initialize() {
 
 
 //=============================================================================
-// Pointer to the Event Data service
-//=============================================================================
-IDataProviderSvc* MCParticleMaker::eventSvc() const
-{
-  return m_EDS;
-}
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
@@ -167,7 +145,7 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
       << "==> MCParticleMaker::makeParticles() is running." 
       << endreq;
   
-  SmartDataPtr<MCParticles> candidates ( eventSvc(),m_input);
+  MCParticles* candidates = get<MCParticles>( m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
     debug() << "    No MCParticles retrieved from"  
         << m_input << endreq;
@@ -181,7 +159,7 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
   std::vector<const MCParticle*> list;
   if( m_onlyDecayProducts) {
     const MCParticle* imc = 0;
-    while( m_pMCDecFinder -> findDecay (candidates, imc) ) list.push_back(imc);
+    while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
   } else {
     MCParticles::const_iterator icand;
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
@@ -287,7 +265,7 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
 bool 
 MCParticleMaker::reconstructable(const MCParticle& icand) const
 {
-  // FIXME: use Olivier Callot's associator...
+  /// @todo Use Olivier Callot's associator in reconstructable method
   return true;
 }
 
@@ -297,7 +275,7 @@ MCParticleMaker::reconstructable(const MCParticle& icand) const
 const Particle *
 MCParticleMaker::reconstructed(const MCParticle& icand) const
 {
-  // FIXME: use associator...
+  // @todo Use Olivier Callot's associator in reconstructed method
   return 0;
 }
 
