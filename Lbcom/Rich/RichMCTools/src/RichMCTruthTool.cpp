@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.cpp,v 1.2 2004-06-02 22:04:11 jonesc Exp $
+// $Id: RichMCTruthTool.cpp,v 1.3 2004-06-04 19:56:30 jonesc Exp $
 
 // local
 #include "RichMCTruthTool.h"
@@ -17,7 +17,7 @@ const        IToolFactory& RichMCTruthToolFactory = s_factory ;
 RichMCTruthTool::RichMCTruthTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase( type, name, parent ),
+  : RichToolBase       ( type, name, parent ),
     m_mcRichDigitsDone ( false ),
     m_mcRichDigits     ( 0     ),
     m_mcTrackLinks     ( 0     ),
@@ -28,7 +28,6 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
 
   declareProperty( "MCRichDigitsLocation",
                    m_mcRichDigitsLocation = MCRichDigitLocation::Default );
-
   declareProperty( "TrackAsctName", m_trAsctName = "TrackToMCP" );
   declareProperty( "TrackAsctType",
                    m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
@@ -64,6 +63,9 @@ StatusCode RichMCTruthTool::initialize()
   incSvc->addListener( this, IncidentType::BeginEvent );
   release(incSvc);
 
+  // Make sure we are ready for a new event
+  InitNewEvent();
+
   return StatusCode::SUCCESS;
 }
 
@@ -79,14 +81,7 @@ StatusCode RichMCTruthTool::finalize()
 // Method that handles various Gaudi "software events"
 void RichMCTruthTool::handle ( const Incident& incident ) 
 {
-  if ( IncidentType::BeginEvent == incident.type() ) 
-    {
-      // New event
-      m_mcRichDigitsDone   = false;
-      
-      // Get new linkers for this event
-      cleanUpLinkers();
-    }
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
 const MCRichDigits * RichMCTruthTool::mcRichDigits() const
@@ -128,7 +123,6 @@ RichMCTruthTool::mcRichHits( const MCRichDigit * mcDigit ) const
 
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) const
 {
-
   // Try fast method
   MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 

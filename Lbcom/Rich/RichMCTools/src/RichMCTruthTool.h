@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.h,v 1.2 2004-06-02 22:04:11 jonesc Exp $
+// $Id: RichMCTruthTool.h,v 1.3 2004-06-04 19:56:30 jonesc Exp $
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
@@ -98,10 +98,15 @@ private: // private methods
   const MCRichDigits * mcRichDigits() const;
 
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
+  /// Returns the linker object for MCParticles to MCRichTracks
   MCPartToRichTracks * mcTrackLinks() const;
 
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
+  /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
   MCRichHitToPhoton * mcPhotonLinks() const;
+
+  /// Initialise for a new event
+  void InitNewEvent();
 
 private: // private data
 
@@ -159,6 +164,12 @@ inline void RichMCTruthTool::cleanUpLinkers()
 {
   if ( m_mcTrackLinks  ) { delete m_mcTrackLinks;  m_mcTrackLinks  = 0; }
   if ( m_mcPhotonLinks ) { delete m_mcPhotonLinks; m_mcPhotonLinks = 0; }
+}
+
+inline void RichMCTruthTool::InitNewEvent()
+{
+  m_mcRichDigitsDone = false;
+  cleanUpLinkers();
 }
 
 #endif // RICHMCTOOLS_RICHMCTRUTHTOOL_H

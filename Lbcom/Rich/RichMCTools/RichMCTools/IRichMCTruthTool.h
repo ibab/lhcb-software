@@ -1,6 +1,9 @@
-// $Id: IRichMCTruthTool.h,v 1.1 2004-06-02 21:37:20 jonesc Exp $
+// $Id: IRichMCTruthTool.h,v 1.2 2004-06-04 19:56:29 jonesc Exp $
 #ifndef RICHMCTOOLS_IRICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_IRICHMCTRUTHTOOL_H 1
+
+// RichKernel
+#include "RichKernel/RichParticleIDType.h"
 
 // Event Model
 class MCRichOpticalPhoton;
