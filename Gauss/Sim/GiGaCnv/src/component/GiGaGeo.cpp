@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.7 2003-04-06 18:55:32 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.8 2003-09-04 14:06:41 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/04/06 18:55:32  ibelyaev
+//  remove unnesessary dependencies and adapt for newer GiGa
+//
 // ===========================================================================
 #define GIGACNV_GiGaGeo_CPP 1 
 // ============================================================================
@@ -430,10 +433,32 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
         { Error("g4BoolSolid, could not convert solid for Boolean solid=" + 
                 Sd->name())  ; return 0; }
       if      ( 0 != sSub    ) 
-        { g4total = 
+        {          
+          double temp[3][3];
+          
+          for(int i=0;i<3;i++)
+            for(int j=0;j<3;j++)
+              if(abs((child->matrix())[i][j])<0.00000000001)
+                {
+                  temp[i][j]=0.0;
+                }        
+              else 
+                temp[i][j]=(child->matrix())[i][j];
+          
+          HepRep3x3 trep(temp[0][0],temp[0][1],temp[0][2],
+                         temp[1][0],temp[1][1],temp[1][2],
+                         temp[2][0],temp[2][1],temp[2][2]);
+          
+          HepRotation newrot;
+          newrot.set(trep);
+          HepTransform3D newtransf(newrot, Hep3Vector(temp[0][3],temp[1][3],temp[2][3]));
+          
+          g4total = 
             new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , 
                                       g4total , g4child ,
-                                      child->matrix().inverse() ) ; }
+                                      newtransf.inverse() ) ;
+          
+        }
       else if ( 0 != sInt    )
         { g4total = 
             new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , 
