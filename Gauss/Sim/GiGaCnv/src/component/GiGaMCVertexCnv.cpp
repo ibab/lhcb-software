@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.22 2003-03-05 15:19:20 ranjard Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.23 2003-07-11 17:42:59 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2003/03/05 15:19:20  ranjard
+// v11r2 - fixes for Win32
+//
 // Revision 1.21  2003/02/24 10:22:48  witoldp
 // cout commented out
 //
@@ -382,7 +385,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     GiGaKineRefTable& table = kineSvc()->table();
     TrajectoryVector* tv = trajectories->GetVector();
     ITV iVertex     = vertices     -> begin() ;
-
+    
     for(ITT iTrajectory = tv->begin(); tv->end() != iTrajectory; ++iTrajectory )
       {
         const G4VTrajectory* vt = *iTrajectory ;
@@ -451,7 +454,41 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               }
             // corrupted data! 
             else 
-              { return Error("'MotherParticle' is already set!") ; }
+              { 
+                MsgStream log( msgSvc(),  name() ) ; 
+                log << MSG::INFO << "While looking at trajectory point "
+                    << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory:"
+                    << endreq;
+                
+                for( ITG iP = trajectory->begin(); 
+                     trajectory->end() != iP; ++iP)
+                  log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                      << endreq;
+                
+                log << MSG::INFO << "with momentum of mother of the vertex being " 
+                    << vertex->mother()->momentum() << endreq;
+
+                log << MSG::INFO << "and the complete collection of trajectories being"
+                    << endreq;
+
+                for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
+                  {
+                    log << MSG::INFO << "trajectoryID " 
+                        << (*iT)->GetTrackID() << 
+                      "  pdgID " << (*iT)->GetPDGEncoding() 
+                        << " initial momentum " << 
+                      (HepPoint3D)((*iT)->GetInitialMomentum()) << endreq;
+                    
+                    for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
+                         ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
+                      {
+                        log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                            << endreq;
+                      }
+                  }
+                
+                return Error("'MotherParticle' is already set!"); 
+              }
 	    
           } // end loop over points 
       } // end loop over trajectories

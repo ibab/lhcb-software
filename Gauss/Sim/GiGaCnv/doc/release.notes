@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.51 2003-07-07 16:45:30 ranjard Exp $
+! $Id: release.notes,v 1.52 2003-07-11 17:42:59 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2003-07-11 - Witek Pokorski
+ - added converter for Collision (GiGaCollisionCnv)
+ - GiGaHepMCCnv restructured and improved
+ - GiGaMCVertexCnv error message extended
 
 !======================= GiGaCnv v12r3 ================================
 ! 2003-07-07 - Florence RANJARD

@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.10 2003-03-05 15:19:19 ranjard Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.11 2003-07-11 17:42:59 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/03/05 15:19:19  ranjard
+// v11r2 - fixes for Win32
+//
 // Revision 1.9  2003/01/30 11:10:36  witoldp
 // fixes to GiGaHepMCCnv
 //
@@ -177,55 +180,58 @@ StatusCode GiGaHepMCCnv::updateRep
   HepMCEvents::iterator it;
   
   std::vector<HepMC::GenParticle*> outpart;
-
-  for(it=hepVect->begin(); it!=hepVect->end(); it++) {
-    
-    /// loop over all vertices in GenEvent
-    for (HepMC::GenEvent::vertex_const_iterator 
-           pVertex= (*it)->pGenEvt()->vertices_begin();
-         pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++)
-      {
-        outpart.clear();
-        
-        // loop over outgoing particles, check for the ones with 
-        // status 1 of 888 and store them in the temporary vector
-        
-        for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
-               (*pVertex)->particles_out_const_begin();
-             (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
-          {
-            // skip particles with status diffrent from 1 or from 888
-            if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
-              {
-                outpart.push_back(*pParticle);
-              }
-          }
-        
-        // sort the vector, so we always put them in the same order into G4
-        std::sort(outpart.begin(), outpart.end(), comp_bar());
-        
-        for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
-            outpart.end()!=ioutpart;ioutpart++)
-          {
-            G4PrimaryParticle* Particle=GenPartG4Part(*ioutpart);
-            
-            G4PrimaryVertex* OrigVertex = 
-              new G4PrimaryVertex((*ioutpart)->production_vertex()->position().x(),
-                                  (*ioutpart)->production_vertex()->position().y(),
-                                  (*ioutpart)->production_vertex()->position().z(),
-                                  (*ioutpart)->production_vertex()->position().t());
-            
-            OrigVertex->SetPrimary ( Particle );
-            
-            *gigaSvc() << OrigVertex ;
-          }
-        { 
-          MsgStream log( msgSvc(),  name() ) ;
-          log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; 
-        }
-      }   
-  }  
   outpart.clear();
+  
+  for(it=hepVect->begin(); it!=hepVect->end(); it++) 
+    {
+      /// loop over all vertices in GenEvent
+      for (HepMC::GenEvent::vertex_const_iterator 
+             pVertex= (*it)->pGenEvt()->vertices_begin();
+           pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++)
+        {
+          // loop over outgoing particles, check for the ones with 
+          // status 1 of 888 and store them in the temporary vector
+          
+          for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
+                 (*pVertex)->particles_out_const_begin();
+               (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle)
+            {              
+              // skip particles with status diffrent from 1 or from 888
+
+              if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
+                {
+                  outpart.push_back(*pParticle);
+                }
+            }
+        }
+      
+      // sort the vector, so we always put them in the same order into G4
+      std::sort(outpart.begin(), outpart.end(), comp_bar());
+      
+      // here I am assuming that all the particles with status 1 and 888, i.e. 
+      // all particles produced by Pythia are coming from the same physical vertex
+      // if that was not the case, one would need to implement a more sophisticated 
+      // machinery to assign particles to different vertices on a case by case basis      
+      
+      G4PrimaryVertex* OrigVertex = 
+        new G4PrimaryVertex
+        ((*(outpart.begin()))->production_vertex()->position().x(),
+         (*(outpart.begin()))->production_vertex()->position().y(),
+         (*(outpart.begin()))->production_vertex()->position().z(),
+         (*(outpart.begin()))->production_vertex()->position().t());
+      
+      for(std::vector<HepMC::GenParticle*>::iterator ioutpart=outpart.begin();
+          outpart.end()!=ioutpart;ioutpart++)
+        {
+          G4PrimaryParticle* Particle=GenPartG4Part(*ioutpart);
+          
+          OrigVertex->SetPrimary ( Particle );
+        }
+      
+      *gigaSvc() << OrigVertex ;
+      
+      outpart.clear();
+    }  
   
   return StatusCode::SUCCESS;
 }; 
