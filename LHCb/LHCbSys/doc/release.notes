@@ -45,6 +45,9 @@
  - In PhysEvent v8r2:
    . Add PhotonID to detectorPID enum for later use by Calorimeter group.
    . Add firstMeasured method, for Ks reconstruction usage.
+   . Added category and setCategory to FlavourTag
+   . New class SelResult to store result of selection.
+   . Removed obsolete PhysSel and PhySelDecay classes
 
  - In MCTools v1r4:
    . Fix infinite loop in BuildMCTrackInfo
