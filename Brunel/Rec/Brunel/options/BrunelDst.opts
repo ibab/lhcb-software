@@ -73,14 +73,16 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/OT#1"
 , "/Event/Rec/OT/Clusters#1"  // To be filtered
 , "/Event/Rec/Tr#1"
-, "/Event/Rec/Tr/Best#1" // Currently the forward tracks, from StoreTrack
-  //, "/Event/Rec/Tr/Forward#1"
-  //, "/Event/Rec/Tr/Seed#1"
-  //, "/Event/Rec/Tr/Match#1"
+, "/Event/Rec/Tr/Best#1"
+, "/Event/Rec/Tr/Forward#1"
+, "/Event/Rec/Tr/Match#1"
+, "/Event/Rec/Tr/Seed#1"
+, "/Event/Rec/Tr/Velo#1"
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
 , "/Event/Rec/Tr/StatesP#1"
+, "/Event/Rec/Tr/StatesL#1"
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/PIDs#1"
 , "/Event/Rec/Calo#1"
@@ -111,11 +113,11 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/CaloClusters2MCParticles#1"
   // MuonCoords2MCParticles (needed by L0 study)
-, "/Event/Rec/Relations/TrStoredTracks#1" // add 2MCP to name!
-  //, "/Event/Rec/Relations/FwTrack2MCP#1"
-  //, "/Event/Rec/Relations/SeedTrack2MCP#1"
-  //, "/Event/Rec/Relations/VeloFw2MCP#1"
-  //, "/Event/Rec/Relations/VeloTr2MCP#1"
+  //, "/Event/Rec/Relations/TrBest2MCP#1"
+  , "/Event/Rec/Relations/TrForward2MCP#1"
+  //, "/Event/Rec/Relations/TrMatch2MCP#1"
+  //, "/Event/Rec/Relations/TrSeed2MCP#1"
+  //, "/Event/Rec/Relations/TrVelo2MCP#1"
   // L0 truth
   // L1 truth
 };

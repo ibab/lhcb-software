@@ -117,16 +117,16 @@ use OTAlgorithms  v11r0  OT
 use OTAssociators  v2r0  OT
 
 # Tracking
-use TrFitEvent     v2r0  Tr
-
-use VeloTrack      v3r0  Velo
-use TrAssociators  v2r0  Tr
-use FwTrack        v3r0  Tr
-use TrFitter       v2r0  Tr
-use TrExtrapolator v2r0  Tr
-use TrTools        v1r0  Tr
-use Seeding	   v1r0  Tr
-use TrMatching     v1r0  Tr
+use TrFitEvent          v2r0    Tr
+use VeloTrack           v3r0    Velo
+use TrAssociators       v2r0    Tr
+use FwTrack             v3r0    Tr
+use TrFitter            v2r0    Tr
+use TrExtrapolator      v2r0    Tr
+use TrTools             v1r0    Tr
+use Seeding	        v1r0    Tr
+use TrMatching          v1r0    Tr
+use TrCleanEx           v1r0    Tr
 
 # Muon
 use MuonAlgs	v2r1	Muon

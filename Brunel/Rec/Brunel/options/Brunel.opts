@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 //--------------------------------------------------------------
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
+BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON"};
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -77,7 +77,7 @@ BrunelDigiOTSeq.Members += { "OTInitialization",
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 
-// Velo digitisation and tracking
+// Velo digitisation
 ApplicationMgr.DLLs += { "VSicbCnv", "VeloAlgorithms", "VeloDet" };
 BrunelDigiVELOSeq.Members += { "VeloSim", "VeloDataProcessor", "VeloClusterMaker" };
 
@@ -95,25 +95,31 @@ BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
 // Forward tracking
 ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
-BrunelRecoTRACKSeq.Members  = { "FwtFind" };
-BrunelRecoTRACKSeq.Members += { "TrEventTracksFitter/FitFw" };
-BrunelRecoTRACKSeq.Members += { "StoreTracks" };
+BrunelRecoTrSeq.Members += { "FwtFind" };
+BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
+//BrunelRecoTRACKSeq.Members += { "StoreTracks" };
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 
 BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
                              "TrEventTracksFitter/fitSeed" };
 #include "$SEEDINGROOT/options/Brunel.opts"
-// Seeds must be stored on DST (instance of StoreTracks?) 
 
 // Velo Matching
 ApplicationMgr.DLLs += { "TrMatching" }; 
 BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
 reFit.TrackContainer = "Rec/FitTrack/Match";
-// Velo Matches must be stored on DST (instance of StoreTracks?) 
 
-// Track selection for other detectors and for DST (clone killer)
+// Clone killer and converter to TrStoredTrack
+ApplicationMgr.DLLs += { "TrCleanEx" };
+BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
+BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreVelo", 
+                             "TrFit2StoredTrackCnv/StoreSeed", 
+                             "TrFit2StoredTrackCnv/StoreMatch", 
+                             "TrFit2StoredTrackCnv/StoreForward", 
+                             "TrFit2StoredTrackCnv/StoreBest" };
+#include "$TRCLEANEXROOT/options/Brunel.opts"
 
 // Back conversion of tracks for RICH reconstruction
 BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
@@ -123,13 +129,28 @@ BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
 
-// Muon Fortran digitisation, coordinate reconstruction, MuonID, cleaning
+// Muon digitisation
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet" };
-ApplicationMgr.DLLs += { "MuonAlgs",  "MuonRec", "MuonID" };
+ApplicationMgr.DLLs += { "MuonAlgs" };
 BrunelDigiMUONSeq.Members = { "MuonDigitization" };
-#include "$MUONALGSROOT/options/MuonDigitization.opts"
+
+// Muon coordinate reconstruction, MuonID, cleaning
+ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
+
+// For now, use forward tracks as input to PID algorithms
+TrStoredTrackToSicbCnv.TrStoredTracksInput = "Rec/Tr/Forward";
+RichPidCnvVerifier.InputStoredTracks       = "Rec/Tr/Forward";
+ElectronMatch.Tracks                       = "Rec/Tr/Forward";
+PhotonMatch.Tracks                         = "Rec/Tr/Forward";
+BremMatch.Tracks                           = "Rec/Tr/Forward";
+MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
+
+// For now, fill only forward track relations
+ToolSvc.TrackToMCP.Location = "Rec/Relations/TrForward2MCP";
+Tr2MCP.OutputTable          = "Rec/Relations/TrForward2MCP";
+Tr2MCP.InputTracks          = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
