@@ -574,16 +574,16 @@ void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
 
   double dx = 1.0;
   double dy = 2.5;
-  double l1 = m_ptparam[0]+m_ptparam[1];
-  double l2 = l1 + m_ptparam[2];
-  double l3 = l2 + 120.;
+  double l1 = 1210.;
+  double l2 = 1527.;
+  double l3 = 1647.;
     
   int ns = pad.station();
   int nq = pad.quarter();
   int nr = pad.region();
   int nx = pad.nX();
   int ny = pad.nY();
-  
+    
   double nreg = 1.;
   if ( nr == 1) {
     nreg = 2.;
@@ -593,11 +593,12 @@ void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
     nreg = 8.;
   }
   
-  double factor = 1.;
-  if ( ns == 1 ) factor = 0.5;
+  double factorX, factorY;
+  factorX = 24./double(pad.layout().xGrid());
+  factorY = 8./double(pad.layout().yGrid());
   
-  x = dx*(nx+0.5)*nreg*factor;
-  y = dy*(ny+0.5)*nreg;
+  x = dx*(nx+0.5)*nreg*factorX;
+  y = dy*(ny+0.5)*nreg*factorY;
   if ( ns == 1 ) {
     x *= l2/l1;
     y *= l2/l1;
@@ -636,6 +637,9 @@ double L0Muon::Tower::ptcalc() {
   
   xyFromPad(p1,x1,y1);
   xyFromPad(p2,x2,y2);
+  
+  //std::cout << "xyFromPad _1: " << p1.toString() << std::endl;
+  //std::cout << "xyFromPad _2: " << p2.toString() << std::endl;
    
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
@@ -646,6 +650,11 @@ double L0Muon::Tower::ptcalc() {
   } else {
     sq = 1./((d1+d2)*x2-(d1+d2+d3)*x1);
   }
+
+//   std::cout << "*******Calculation pt " << std::endl;
+//   std::cout << "x1: " << x1 << std::endl;
+//   std::cout << "y1: " << y1 << std::endl;
+//   std::cout << "x2: " << x2 << std::endl;
 
   double sr = sqrt(((d2+d3)*x1 - d2*x2)*((d2+d3)*x1 - d2*x2) +
                    (d1*d3*y1/(d1+d2))*(d1*d3*y1/(d1+d2))   );
@@ -659,7 +668,7 @@ double L0Muon::Tower::ptcalc() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
-  // Hep3Vector v(x0,y0,d1);
+//   Hep3Vector v(x0,y0,d1);
 //   m_theta = v.theta();
 //   m_phi = v.phi();
   
