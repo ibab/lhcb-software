@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r5 2004-02-05 =======================
 ! 2004-01-26 - Chris Jones
  - Remove SICB specialisations and dependencies (SICB/RiSicbGeom)
  - Add reading of LHC background stream (disabled in job options until
