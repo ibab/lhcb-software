@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.8 2003-04-11 18:13:28 jonrob Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.9 2003-04-16 14:52:50 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -268,7 +268,7 @@ StatusCode RichRecSegmentTool::initialize() {
 
   // Use formulae 37-39 in CERN-EP/89-150  (Ypsilantis)
   // This calculation should perhaps live in Det package ?
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+  {for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
     Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
 
     m_WParaT[iRad].clear();
@@ -329,17 +329,20 @@ StatusCode RichRecSegmentTool::initialize() {
 
     } // end energy loop
   } // end radiator loop
+  } // Fix VC6 scoping problem
+  
 
   // Setup momentum thresholds
   m_AvRefIndex.push_back( refractiveIndex(Rich::Aerogel) );
   m_AvRefIndex.push_back( refractiveIndex(Rich::C4F10) );
   m_AvRefIndex.push_back( refractiveIndex(Rich::CF4) );
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+  {for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       m_momThres[iRad][iHypo] = m_particleMass[iHypo]/
         sqrt( m_AvRefIndex[iRad]*m_AvRefIndex[iRad] - 1.0);
     }
   }
+  } // Fix VC6 scoping problem
 
   // Informational Printout
   msg << MSG::DEBUG << "Tool Parameters :-" << endreq
