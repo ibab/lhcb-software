@@ -3,7 +3,8 @@ clean :: ${CONSTITUENT}clean
 	@cd .
 
 ${CONSTITUENT}clean ::
-	$(cleanup_echo) Deleting dictionaries
+	$(cleanup_echo) dictionaries and .obj2dict files
+	-$(cleanup_silent) del $(dest)*.obj2dict
 	-$(cleanup_silent) del $(dest)*.cpp
 
  

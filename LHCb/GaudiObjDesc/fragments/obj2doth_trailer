@@ -3,7 +3,7 @@ clean :: ${CONSTITUENT}clean
 	@cd .
 
 ${CONSTITUENT}clean ::
-	$(cleanup_echo) Deleting .obj2doth files
-	-$(cleanup_silent) del $(dest)*.obj2doth
+	$(cleanup_echo) .obj2doth files
+	-$(cleanup_silent) rm $(dest)*.obj2doth
 
  
