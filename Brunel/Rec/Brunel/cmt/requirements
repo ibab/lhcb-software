@@ -8,7 +8,7 @@ pattern BrunelVersion path APPVERSION <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r17
+use GaudiPolicy v5r18
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
