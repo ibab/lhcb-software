@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.13 2005-02-20 18:45:13 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.14 2005-02-23 12:34:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -137,7 +137,9 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
 {
   if ( track ) {
-    return trackAsct()->associatedFrom(track);
+    const MCParticle * mcP = trackAsct()->associatedFrom(track);
+    if ( !mcP ) Warning( "::mcParticle : Failed to load MCParticle for TrStoredTrack" );
+    return mcP;
   } else {
     Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
     return NULL;
@@ -148,7 +150,9 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrgTrack * track ) const
 {
   if ( track ) {
-    return trgTrackToMCPLinks()->first(track);
+    const MCParticle * mcP = trgTrackToMCPLinks()->first(track);
+    if ( !mcP ) Warning( "::mcParticle : Failed to load MCParticle for TrgTrack" );
+    return mcP;
   } else {
     Warning ( "::mcParticle : NULL TrgTrack pointer" );
     return NULL;
@@ -173,7 +177,9 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
 
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
 {
-  return ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
+  const MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
+  if ( !mcDigit ) Warning( "Failed to location MCRichDigit from RichSmartID" );
+  return mcDigit;
 }
 
 Rich::ParticleIDType
