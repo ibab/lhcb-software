@@ -1,17 +1,19 @@
-// $Id: Particle2MCLinksAsct.h,v 1.4 2003-07-29 17:48:11 gcorti Exp $
+// $Id: Particle2MCLinksAsct.h,v 1.5 2004-06-11 15:26:13 phicharp Exp $
 #ifndef Particle2MCLinksASCT_H 
 #define Particle2MCLinksASCT_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-// Event
-#include "Event/MCParticle.h"
-#include "Event/Particle.h"
+
+// Forward declaration
+class Particle;
+class MCParticle;
+
 // Associators
 #include "Relations/AssociatorWeighted.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
-
+#include "DaVinciAssociators/Particle2MCLink.h"
 
 static const std::string& 
 Particle2MCLinksAsctLocation = "Phys/Relations/Particle2MCLinks";
@@ -38,15 +40,14 @@ public:
                   const std::string& name,
                   const IInterface* parent )
     : Asct( type, name, parent)
-    , m_pChargedAsct(0)
-    , m_pNeutralAsct(0)
+    , m_chargedLink(NULL)
+    , m_neutralLink(NULL)
     , m_table(0)
   {
 
     setProperty( "Location", Particle2MCLinksAsctLocation );
     setProperty( "AlgorithmType", "Particle2MCLinks" );
     setProperty( "AlgorithmName", "Particle2MCLinks" );
-//     setDecreasing( true ) ;
   }; 
 
   virtual ~Particle2MCLinksAsct( ){}; ///< Destructor
@@ -89,9 +90,12 @@ protected:
 
 private:
   bool m_hasTable;  //<< Flag set if the associator doesn't use a table
-  ProtoParticle2MCAsct::IAsct* m_pChargedAsct;
-  ProtoParticle2MCAsct::IAsct* m_pNeutralAsct;
+  Object2MCLink*   m_chargedLink;
+  Object2MCLink*   m_neutralLink;
   Table* m_table;     //<< Table to hold temporary relations
+
+  // Private methods
+  void insertRange( const From& part ) const;
 };
 
 typedef Particle2MCLinksAsct::FromRange      ParticlesToMCLinks;

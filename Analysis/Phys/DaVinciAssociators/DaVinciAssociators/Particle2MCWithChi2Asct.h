@@ -1,13 +1,10 @@
-// $Id: Particle2MCWithChi2Asct.h,v 1.5 2003-07-29 17:48:11 gcorti Exp $
+// $Id: Particle2MCWithChi2Asct.h,v 1.6 2004-06-11 15:26:14 phicharp Exp $
 #ifndef Particle2MCWithChi2ASCT_H 
 #define Particle2MCWithChi2ASCT_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-// Event
-#include "Event/MCParticle.h"
-#include "Event/Particle.h"
 // Associators
 #include "Relations/AssociatorWeighted.h"
 
@@ -20,6 +17,10 @@ Particle2MCWithChi2AsctLocation = "Phys/Relations/Particle2MCWithChi2";
  *  @author Philippe Charpentier
  *  @date   17/05/2002
  */
+
+class MCParticle;
+class Particle;
+
 class Particle2MCWithChi2Asct : 
   public AssociatorWeighted<Particle,MCParticle,double>
 {

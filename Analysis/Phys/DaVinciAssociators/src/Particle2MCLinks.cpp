@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.11 2003-06-05 17:42:22 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.12 2004-06-11 15:26:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -7,11 +7,13 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// local
-#include "Particle2MCLinks.h"
-
 // from event model
 #include "Event/ProtoParticle.h"
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
+
+// local
+#include "Particle2MCLinks.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle2MCLinks
@@ -23,6 +25,7 @@
 static const  AlgFactory<Particle2MCLinks>          s_factory ;
 const        IAlgFactory& Particle2MCLinksFactory = s_factory ; 
 
+#define ifMsg(sev) msg << sev; if( msg.level() <= (sev) ) msg
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -30,9 +33,15 @@ const        IAlgFactory& Particle2MCLinksFactory = s_factory ;
 Particle2MCLinks::Particle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
+  , m_chargedLink(NULL)
+  , m_neutralLink(NULL)
 {
+  m_chargedPPLocation.push_back( ProtoParticleLocation::Charged );
+  m_chargedPPLocation.push_back( ProtoParticleLocation::Upstream );
+  m_neutralPPLocation.push_back( ProtoParticleLocation::Neutrals );
   m_outputTable = "Phys/Relations/Part2MCfromLinks" ;
-  m_inputData.push_back( ParticleLocation::Production );
+  declareProperty( "ChargedPPLocation", m_chargedPPLocation);
+  declareProperty( "NeutralPPLocation", m_neutralPPLocation);
 }
 
 //=============================================================================
@@ -48,12 +57,14 @@ StatusCode Particle2MCLinks::initialize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Initialise" << endreq;
 
-  StatusCode sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MCAsct",
-                                           m_pAsctCharged) ;
-  if( sc.isSuccess() ) {
-    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MCAsct",
-                                  m_pAsctNeutral) ;
-  }
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( !sc.isSuccess() ) return sc;
+
+  // Create a helper class for each type of Protoparticles
+  m_chargedLink = new Object2MCLink( this, Particle2MCMethod::ChargedPP,
+                                       m_chargedPPLocation);
+  m_neutralLink = new Object2MCLink( this, Particle2MCMethod::NeutralPP,
+                                       m_neutralPPLocation);
   return sc;
 };
 
@@ -66,7 +77,9 @@ StatusCode Particle2MCLinks::execute() {
   msg << MSG::DEBUG << "==> Execute" << endreq;
 
   // create an association table and register it in the TES
-  Particle2MCLinksAsct::Table* table = new Particle2MCLinksAsct::Table();
+  Particle2MCLinksAsct::Table* table = 
+    outputTable() == "" ? NULL : new Particle2MCLinksAsct::Table();
+
   
   //////////////////////////////////
   // Loop on Particles containers //
@@ -74,79 +87,71 @@ StatusCode Particle2MCLinks::execute() {
 
   for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
+    // create a Linker table for this Particle container
+    const std::string linkContainer = 
+      *inp + Particle2MCMethod::extension[Particle2MCMethod::Links];
+    // Just a fake helper class
+    Object2MCLink p2MCLink(this);
+    Object2MCLink::Linker* linkerTable = 
+      p2MCLink.linkerTable( linkContainer );
+    if( NULL == table && NULL == linkerTable ) continue;
+
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if( 0 != parts ) {
-      msg << MSG::VERBOSE << "    Particles retrieved from " << *inp 
-        << endreq;
-    }
-    else {
-      msg << MSG::INFO << "    *** Could not retrieve Particles from " << *inp
-        << endreq;
-      continue;
-    }
+    if( 0 == parts ) continue;
+    int npp = parts->size();
+    int nrel = 0;
+    int nass = 0;
+    ifMsg(MSG::DEBUG) << "    " << npp 
+                      << " Particles retrieved from " << *inp << endreq;
     
     // loop on Parts and MCParts to match them
-    if( m_pAsctCharged->tableExists() || m_pAsctNeutral->tableExists() ) {
-      for( Particles::const_iterator pIt=parts->begin() ;
-           parts->end() != pIt; pIt++) {
-        msg << MSG::VERBOSE << "    Particle " << (*pIt)->key();
-        ProtoParticle* protoPart = dynamic_cast<ProtoParticle*>
-          ( (*pIt)->origin() ) ;
-        if( protoPart ) {
-          if( msg.level() <= MSG::VERBOSE ) {
-            std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
-            msg << " from " << strCharged << " ProtoParticle " << protoPart->key();
-          }
-          ProtoParticle2MCAsct::IAsct* pAsct =
-            (*pIt)->charge() ? m_pAsctCharged : m_pAsctNeutral;
-          MCsFromProtoParticle mcPartRange = 
-            pAsct->rangeFrom( protoPart );
-          if( !mcPartRange.empty() ) {
-            msg << " associated to " << mcPartRange.end()-mcPartRange.begin()
-                << " MCParts: ";
-            MCsFromProtoParticleIterator mcPartIt;
-            for( mcPartIt = mcPartRange.begin();
-                 mcPartRange.end() != mcPartIt; mcPartIt++ ) {
-              MCParticle* mcPart = mcPartIt->to();
-              double weight = mcPartIt->weight();
-              if( mcPart ) {
-                msg  << mcPart->key() << " - ";
-                table->relate( *pIt, mcPart, weight);
-              }
-            }
-          } else {
-            msg << " not associated to any MCPart";
-          }
-        } else {
-            msg << " not from a ProtoParticle";
+    for( Particles::const_iterator pIt=parts->begin() ;
+         parts->end() != pIt; pIt++) {
+      ifMsg(MSG::VERBOSE) << "    Particle " << (*pIt)->key();
+      ProtoParticle* protoPart = 
+        dynamic_cast<ProtoParticle*>( (*pIt)->origin() ) ;
+      if( NULL != protoPart ) {
+        if( msg.level() <= MSG::VERBOSE ) {
+          std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
+          msg << " from " << strCharged << " ProtoParticle " 
+              << protoPart->key();
         }
-        msg << endreq;
+        Object2MCLink* link = 
+          (*pIt)->charge() ? m_chargedLink : m_neutralLink;
+        // Use the Linker 
+        MCParticle* mcPart = link->first( protoPart );
+        if( NULL == mcPart ) {
+          ifMsg(MSG::VERBOSE) << " not associated to any MCPart";
+        } 
+        else {
+          nass++;
+          ifMsg(MSG::VERBOSE) << " associated to MCParts";
+          do {
+            ifMsg(MSG::VERBOSE) << " - " << mcPart->key();
+            if( NULL != table )table->relate( *pIt, mcPart, link->weight());
+            if( NULL != linkerTable) 
+              linkerTable->link( *pIt, mcPart, link->weight());
+            nrel++;
+            mcPart = link->next();
+          } while( NULL != mcPart);
+        }
+      } else {
+        ifMsg(MSG::VERBOSE) << " not from a ProtoParticle";
       }
-    } else {
-      delete table;
-      table = 0;
+      ifMsg(MSG::VERBOSE) << endreq;
     }
+    ifMsg( MSG::DEBUG )
+      << "Out of " << npp << " Particles in " << *inp << ", "
+      << nass << " are associated, "
+      << nrel << " relations found" << endreq;
   }
-  if (table!=0) {
-    // Register the table on the TES
-    StatusCode sc = eventSvc()->registerObject( outputTable(), table);
-    if( sc.isFailure() ) {
-      msg << MSG::FATAL << "     *** Could not register table " 
-          << outputTable()
-          << endreq;
-      delete table;
-      return sc;
-    } else {
-      msg << MSG::VERBOSE << "     Registered table " 
-          << outputTable() << endreq;
-    }
-  } else {
-    msg << MSG::FATAL << "     *** Could not create table " 
-        << outputTable()
-        << endreq;
+  // Now register the table on the TES
+  if( NULL != table ) {
+    put( table, outputTable() );
+    ifMsg(MSG::DEBUG)  << "     Registered table " 
+                       << outputTable() << endreq;    
   }
-    
   return StatusCode::SUCCESS ;
 };
 
@@ -155,10 +160,12 @@ StatusCode Particle2MCLinks::execute() {
 //=============================================================================
 StatusCode Particle2MCLinks::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "==> Finalize" << endreq;
 
-  return StatusCode::SUCCESS;
+  if( NULL != m_chargedLink ) delete m_chargedLink;
+  if( NULL != m_neutralLink ) delete m_neutralLink;
+  return GaudiAlgorithm::finalize();
 }
 
 //=============================================================================

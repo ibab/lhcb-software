@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2004-05-18 06:34:45 pkoppenb Exp $
+# $Id: requirements,v 1.20 2004-06-11 15:26:14 phicharp Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v4r5p2
+version           v5r0
 
 # This template is an example for a standard Algorithm package
 #
@@ -24,6 +24,8 @@ use AIDA            v*
 use PhysEvent       v*     Event
 use TrAssociators   v4r*   Tr 
 use CaloAssociators v4r*   Calo  
+use LinkerEvent     v*     Event
+use MCTools         v1r*   Phys
 
 # Component library building rule
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.7 2004-01-22 10:47:50 jvantilb Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.8 2004-06-11 15:26:16 phicharp Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -7,12 +7,11 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
-#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/Particle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
 #include "AsctAlgorithm.h"
 
 /** @class CompositeParticle2MCLinks CompositeParticle2MCLinks.h
@@ -32,19 +31,21 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-
+  
 
 private:
-  Particle2MCLinksAsct::IAsct* m_pAsct;
+  Object2MCLink*      m_p2MCLink;
   IParticlePropertySvc* m_ppSvc;
   bool m_allowExtraMCPhotons;
   bool m_inclusiveMode;
   bool m_skipResonances;
   double m_maxResonanceLifeTime;
   int  m_gamma;
+  Particle2MCAsct::Table*   m_table;
+  Particle2MCLink::Linker*  m_linkerTable;
+  int m_nrel;
 
-  bool associate1(const Particle *p, const MCParticle *m, 
-                  Particle2MCAsct::Table* table) const;
+  bool associate1(const Particle *p, const MCParticle* m) ;
   // This can be removed when the Relations package is updated...
   MCParticle* myAssociatedFrom(const Particle* p) const;
   bool isAssociatedFrom( const Particle* p, const MCParticle* m) const;
@@ -58,9 +59,9 @@ private:
   public:
     associator(CompositeParticle2MCLinks* t,Particle* p,
                Particle2MCAsct::Table* table) 
-      : m_t(t),m_p(p),m_table(table) {};
+      : m_t(t), m_p(p), m_table(table) {};
     bool operator()(const MCParticle* m) const {
-      return m_t->associate1(m_p,m,m_table);
+      return m_t->associate1( m_p, m);
     }
            
   private: 

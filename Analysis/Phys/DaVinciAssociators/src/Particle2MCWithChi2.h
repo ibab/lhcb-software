@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.h,v 1.3 2003-07-29 17:48:12 gcorti Exp $
+// $Id: Particle2MCWithChi2.h,v 1.4 2004-06-11 15:26:18 phicharp Exp $
 #ifndef Particle2MCWithChi2_H 
 #define Particle2MCWithChi2_H 1
 
@@ -17,10 +17,12 @@
 #include "CLHEP/Matrix/Matrix.h"
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // local
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
+#include "AsctAlgorithm.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"
 /** @class Particle2MCWithChi2 Particle2MCWithChi2.h
@@ -29,7 +31,7 @@
  *  @author Philippe Charpentier
  *  @date   11/04/2002
  */
-class Particle2MCWithChi2 : public Algorithm {
+class Particle2MCWithChi2 : public AsctAlgorithm {
   friend class AlgFactory<Particle2MCWithChi2>;
   
 public:
@@ -60,14 +62,11 @@ protected:
                    const double axz);
 
 private:
-  std::vector<std::string> m_inputData;  ///< location of Particles to associate
-  std::string m_outputTable; ///< location of relations table 
   bool m_histos;            ///< Flag to fill histograms
 
   /// Histograms                    
   IHistogram1D* m_hisChi2;           ///< Chi2 histogram
   IHistogram2D* m_hisChi2vsDiffP;    ///< Chi2 vs Dp/p histo
   IHistogram2D* m_hisMinChi2vsDiffP; ///< Min Chi2 vs Dp/p histo
-
 };
 #endif // Particle2MCWithChi2_H

@@ -9,7 +9,7 @@
 //
 // ... and for the corresponding algorithm
 //
-//Particle2MCChi2.InputData  = { "Phys/Prod/Particles" };
+Particle2MCChi2.InputData  = { "Phys/PreLoadParticles/Particles" };
 // OutputTable is automatically set by default to Location of the Asct
 //Particle2MCChi2.OutputTable  = "Phys/Relations/Particle2MC";
 Particle2MCChi2.Chi2Cut = 100.;

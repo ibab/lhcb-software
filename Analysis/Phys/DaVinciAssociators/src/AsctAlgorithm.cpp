@@ -1,4 +1,4 @@
-// $Id: AsctAlgorithm.cpp,v 1.2 2003-05-26 11:38:37 phicharp Exp $
+// $Id: AsctAlgorithm.cpp,v 1.3 2004-06-11 15:26:15 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -19,10 +19,10 @@
 //=============================================================================
 AsctAlgorithm::AsctAlgorithm( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) {
+  : GaudiAlgorithm ( name , pSvcLocator ) {
 
   declareProperty( "InputData", m_inputData );
-  declareProperty( "OutputTable", m_outputTable );
+  declareProperty( "OutputTable", m_outputTable = "" );
 }
 
 //=============================================================================

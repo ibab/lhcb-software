@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.h,v 1.5 2004-03-11 10:30:26 pkoppenb Exp $
+// $Id: NeutralPP2MC.h,v 1.6 2004-06-11 15:26:17 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/03/11 10:30:26  pkoppenb
+// upstream -> downstream
+//
 // Revision 1.4  2003/07/29 17:48:12  gcorti
 // little changes for gcc32
 //
@@ -36,9 +39,11 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "CaloKernel/CaloAlgorithm.h"
+
 // from DaVinci Associators
+#include "AsctAlgorithm.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
 
 /** @class NeutralPP2MC NeutralPP2MC.h
  *  
@@ -58,7 +63,7 @@
  *  @date   08/04/2002
  */
 class NeutralPP2MC
-  : public Algorithm
+  : public AsctAlgorithm
 {
   // friend factory for instantiation 
   friend class AlgFactory<NeutralPP2MC>;
@@ -101,8 +106,7 @@ protected:
   
   /// destructor (virtual and protected)
   virtual ~NeutralPP2MC();
-  /// get outpu table name
-  std::string outputTable() { return m_outputTable; }
+  /// get output table name
   
 private:
   
@@ -125,9 +129,6 @@ private:
   std::string m_asctName ;
   /// MC associator itself  
   MCAsct*     m_asct     ;
-  /// Output table name
-  std::string m_outputTable;
-  std::vector<std::string> m_inputData;
 };
 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.h,v 1.2 2003-07-29 17:48:11 gcorti Exp $
+// $Id: ChargedPP2MC.h,v 1.3 2004-06-11 15:26:16 phicharp Exp $
 #ifndef ChargedPP2MC_H 
 #define ChargedPP2MC_H 1
 
@@ -7,15 +7,8 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "AsctAlgorithm.h"
 
-// from Relations
-#include "Relations/IAssociatorWeighted.h"
-
-// from Event
-#include "Event/TrStoredTrack.h"
-
-// local
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
 
 /** @class ChargedPP2MC ChargedPP2MC.h
@@ -24,7 +17,11 @@
  *  @author Philippe Charpentier
  *  @date   10/07/2002
  */
-class ChargedPP2MC : public Algorithm {
+
+// Forward declaration
+class Object2MCLink;
+
+class ChargedPP2MC : public AsctAlgorithm {
 
   friend class AlgFactory<ChargedPP2MC>;
   
@@ -38,15 +35,11 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  /// Location of table in TES
-  std::string outputTable() { return m_outputTable; }
-  
 protected:
 
 private:
-  std::vector<std::string> m_inputData;  ///< location of Particles to associate
-  std::string m_outputTable; ///< location of relations table 
-  Tr2MCPartAsct* m_track2MCParticleAsct;
+  Tr2MCPartAsct* m_track2MCAsct;
+  Object2MCLink* m_track2MCLink;
   std::string m_trackAsctName;
 };
 #endif // ChargedPP2MC_H

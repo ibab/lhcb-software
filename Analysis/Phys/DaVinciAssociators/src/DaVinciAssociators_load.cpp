@@ -1,9 +1,13 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.9 2003-04-17 09:58:25 phicharp Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.10 2004-06-11 15:26:16 phicharp Exp $
 // Include files 
 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ObjectFactory.h"
+
+// Event
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
 
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
@@ -56,5 +60,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciAssociators ) {
   DECLARE_ALGORITHM( NeutralPP2MC ) ;
 
   DECLARE_ALGORITHM( TestAssociators ) ;
+  DECLARE_ALGORITHM( TestLinker ) ;
   
 }

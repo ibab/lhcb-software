@@ -1,13 +1,10 @@
-// $Id: Particle2MCAsct.h,v 1.4 2003-07-29 17:48:11 gcorti Exp $
+// $Id: Particle2MCAsct.h,v 1.5 2004-06-11 15:26:12 phicharp Exp $
 #ifndef ASSOCIATORS_Particle2MCASCT_H 
 #define ASSOCIATORS_Particle2MCASCT_H 1
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
-// Event
-#include "Event/MCParticle.h"
-#include "Event/Particle.h"
 // Associators
 #include "Relations/Associator.h"
 
@@ -20,6 +17,9 @@ Particle2MCAsctLocation = "Phys/Relations/Particle2MC";
  *  @author Philippe Charpentier
  *  @date   05/04/2002
  */
+
+class MCParticle;
+class Particle;
 
 class Particle2MCAsct : public Associator<Particle,MCParticle>
 {

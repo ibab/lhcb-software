@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.7 2003-07-29 17:48:12 gcorti Exp $
+// $Id: Particle2MCLinks.h,v 1.8 2004-06-11 15:26:17 phicharp Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -6,13 +6,10 @@
 // from STL
 #include <string>
 
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-
 
 // local
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
-#include "DaVinciAssociators/ProtoParticle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
 #include "AsctAlgorithm.h"
 
 /** @class Particle2MCLinks Particle2MCLinks.h
@@ -37,8 +34,9 @@ public:
 protected:
 
 private:
-  ProtoParticle2MCAsct::IAsct* m_pAsctCharged;
-  ProtoParticle2MCAsct::IAsct* m_pAsctNeutral;
-
+  Object2MCLink*   m_chargedLink;
+  Object2MCLink*   m_neutralLink;
+  std::vector<std::string>  m_chargedPPLocation;
+  std::vector<std::string>  m_neutralPPLocation;
 };
 #endif // Particle2MCLinks_H

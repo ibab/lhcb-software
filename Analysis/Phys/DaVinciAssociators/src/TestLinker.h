@@ -1,18 +1,16 @@
-// $Id: TestAssociators.h,v 1.4 2004-06-11 15:26:18 phicharp Exp $
-#ifndef TestAssociators_H
-#define TestAssociators_H 1
+// $Id: TestLinker.h,v 1.1 2004-06-11 15:26:18 phicharp Exp $
+#ifndef TestLinker_H
+#define TestLinker_H 1
 
 // Include files
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "Relations/IAssociatorWeighted.h"
 
 // from Associators
-#include "DaVinciAssociators/Particle2MCAsct.h"
-#include "DaVinciAssociators/Particle2MCLinksAsct.h"
-#include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
-#include "DaVinciAssociators/ProtoParticle2MCAsct.h"
-#include "TrAssociators/ITrReconstructible.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
+#include "AsctAlgorithm.h"
 
-/** @class TestAssociators TestAssociators.h
+/** @class TestLinker TestLinker.h
  *  
  *  Example of use of various DaVinci features
  *
@@ -20,13 +18,18 @@
  *  @date   26/04/2002
  */
 
-class TestAssociators : public GaudiAlgorithm {
+class TrStoredTrack;
+
+#define TR_EFFICIENCY
+
+class TestLinker : public AsctAlgorithm {
 
 public:
+  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> Tr2MCPartAsct;
   /// Standard constructor 
-  TestAssociators(const std::string& name, ISvcLocator* pSvcLocator); 
+  TestLinker(const std::string& name, ISvcLocator* pSvcLocator); 
 
-  virtual ~TestAssociators( ); ///< Standard destructor
+  virtual ~TestLinker( ); ///< Standard destructor
   
   StatusCode initialize();    ///< Algorithm initialization
   StatusCode execute   ();    ///< Algorithm execution
@@ -40,19 +43,22 @@ private:
 
   // Define the name of the associator to be used, and define a pointer
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
-  Particle2MCAsct::IAsct* m_pAsctChi2;  ///< Pointer to associator using Chi2
-  Particle2MCLinksAsct::IAsct* 
-    m_pAsctLinks; ///< Pointer to associator using links
-  Particle2MCAsct::IAsct* 
-    m_pAsctComp; ///< Pointer to composite particle associator using links
-  Particle2MCWithChi2Asct::IAsct* 
-    m_pAsctWithChi2; ///< Pointer to associator with chi2 as weight
-  ProtoParticle2MCAsct::IAsct* 
-    m_pAsctProto;  ///< Pointer to associator of ProtoParticles
+  Particle2MCLink* m_linkChi2;  ///< Pointer to associator using Chi2
+  Particle2MCLink* 
+    m_linkLinks; ///< Pointer to associator using links
+  Particle2MCLink* 
+    m_linkComp; ///< Pointer to composite particle associator using links
+  Particle2MCLink* 
+    m_linkWithChi2; ///< Pointer to associator with chi2 as weight
+  Particle2MCLink* 
+    m_linkCharged;  ///< Pointer to associator of ProtoParticles
+  Particle2MCLink* 
+    m_linkNeutral;  ///< Pointer to associator of ProtoParticles
+  ProtoParticle2MCLink*
+    m_linkChargedPP;
+  ProtoParticle2MCLink*
+    m_linkNeutralPP;
   Tr2MCPartAsct* m_pAsctTrack;
-  ITrReconstructible* 
-    m_pTrRecons; ///< Pointer to the tool to check if an MC is reconstructible
-  std::vector<std::string> m_inputData; ///< List of input set
 
   int m_matchLinks;
   int m_matchChi2;
@@ -74,7 +80,8 @@ private:
   int m_mcPartCount;
   int m_skippedEvts;
   int m_nbEvts;
+  bool m_setInputData;
 };
 
 
-#endif    // TestAssociators_H
+#endif    // TestLinker_H

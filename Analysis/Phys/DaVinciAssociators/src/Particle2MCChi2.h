@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.4 2003-05-26 11:38:38 phicharp Exp $
+// $Id: Particle2MCChi2.h,v 1.5 2004-06-11 15:26:17 phicharp Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -7,13 +7,13 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IToolSvc.h"
 
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
+#include "DaVinciAssociators/Particle2MCLink.h"
 #include "AsctAlgorithm.h"
 
 /** @class Particle2MCChi2 Particle2MCChi2.h
@@ -39,9 +39,7 @@ public:
 protected:
 
 private:
-  double m_chi2;            ///< Chi2 maximum
-
-  Particle2MCWithChi2Asct::IAsct* 
-    m_pAsctChi2;  ///< Pointer to the Chi2 weighted associator
+  double                m_chi2;         ///< Chi2 maximum
+  Object2MCLink*        m_p2MCLink;     ///< Pointer to a P2MCPLink object
 };
 #endif // Particle2MCChi2_H

@@ -1,8 +1,11 @@
-// $Id: NeutralPP2MC.cpp,v 1.4 2004-03-11 10:30:26 pkoppenb Exp $
+// $Id: NeutralPP2MC.cpp,v 1.5 2004-06-11 15:26:17 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/03/11 10:30:26  pkoppenb
+// upstream -> downstream
+//
 // Revision 1.3  2003/04/17 09:58:26  phicharp
 // Allow Links associator to use Particles not in the TES
 //
@@ -53,7 +56,7 @@
 static const  AlgFactory<NeutralPP2MC>         s_factory ;
 const        IAlgFactory&NeutralPP2MCFactory = s_factory ; 
 
-#define ifLog(sev) log << sev; if( log.level() <= (sev) ) log
+#define ifMsg(sev) msg << sev; if( msg.level() <= (sev) ) msg
 
 // ============================================================================
 
@@ -66,16 +69,14 @@ const        IAlgFactory&NeutralPP2MCFactory = s_factory ;
 NeutralPP2MC::NeutralPP2MC
 ( const std::string& name ,
   ISvcLocator*       svc  )
-  : Algorithm ( name , svc )
+  : AsctAlgorithm ( name , svc )
   , m_asctType ( "AssociatorWeighted<CaloCluster,MCParticle,float>" )
   , m_asctName ( "CCs2MCPs" )
   , m_asct     ( 0 ) 
-  , m_outputTable( NeutralPP2MCAsctLocation )
 { 
   m_inputData.push_back( ProtoParticleLocation::Neutrals );
 
-  declareProperty( "InputData", m_inputData );
-  declareProperty( "OutputTable", m_outputTable );
+  m_outputTable = NeutralPP2MCAsctLocation;
   declareProperty( "MCAssociatorType" , m_asctType  ) ;
   declareProperty( "MCAssociatorName" , m_asctName  ) ;
 };
@@ -97,12 +98,13 @@ NeutralPP2MC::~NeutralPP2MC() {};
 // ============================================================================
 StatusCode NeutralPP2MC::initialize()
 {  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> Initialise" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( !sc.isSuccess() ) return sc;
   
   /// locate the associator 
-  StatusCode sc = toolSvc()->retrieveTool( m_asctType , m_asctName , m_asct );
-  if( !sc.isSuccess() ) return sc;
+  m_asct = tool<MCAsct>( m_asctType , m_asctName );
   
   return StatusCode::SUCCESS;
 };
@@ -118,10 +120,10 @@ StatusCode NeutralPP2MC::initialize()
 // ============================================================================
 StatusCode NeutralPP2MC::finalize() 
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> Finalize" << endreq;
 
-  return StatusCode::SUCCESS ;
+  return GaudiAlgorithm::finalize() ;
 };
 
 // ============================================================================
@@ -144,41 +146,59 @@ StatusCode NeutralPP2MC::execute()
   typedef       MCTable::iterator                            relation ;
   
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "==> Execute" << endreq;
   
   // create relation table  
-  ProtoParticle2MCAsct::Table* table = new ProtoParticle2MCAsct::Table();
+  ProtoParticle2MCAsct::Table* table = 
+    "" == outputTable() ? NULL : new ProtoParticle2MCAsct::Table();
 
-  // get input protoparticles 
+  ///////////////////////////////////////
+  // Loop on ProtoParticles containers //
+  ///////////////////////////////////////
+
   for( std::vector<std::string>::const_iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // get MC association table for CaloHypos
     const MCTable* mctable = m_asct->direct();  
     if( 0 == mctable ) { 
-      log << MSG::INFO << "Unable to retrieve the CaloHypo2MC association table"
+      msg << MSG::INFO << "Unable to retrieve the CaloHypo2MC association table"
           <<endreq;
-      break;
+      continue;
     }
     // Get ProtoParticles
     SmartDataPtr<ProtoParticles> protos ( eventSvc(), *inp ) ;
-    if( 0 != protos ) {
-      log << MSG::VERBOSE << "    " << protos->size()
-          << " ProtoParticles retrieved from " 
-          << *inp << endreq;
+    if( 0 == protos ) continue;
+    // Create a linker table
+    const std::string linkContainer = 
+      *inp + Particle2MCMethod::extension[Particle2MCMethod::NeutralPP];
+    // Just a fake helper class
+    Object2MCLink p2MCLink(this);
+    Object2MCLink::Linker*
+      linkerTable = p2MCLink.linkerTable( linkContainer );
+    if( NULL != linkerTable ) {
+      ifMsg(MSG::VERBOSE) << "    Created Linker table for container "
+                          << linkContainer << endreq;
+    } else {
+      ifMsg(MSG::VERBOSE) << "    Linker table for container "
+                          << linkContainer << " already exists"
+                          << endreq;
     }
-    else {
-      log << MSG::INFO << "    *** Could not retrieve ProtoParticles from "
-          << *inp << endreq;
-      continue;
-    }
+    if( NULL == table && NULL == linkerTable ) continue;
+
+    int npp = protos->size();
+    ifMsg(MSG::VERBOSE) << "    " << npp
+        << " ProtoParticles retrieved from " 
+        << *inp << endreq;
   
-    // loop over all protoparticles 
     int nrel = 0;
+    int nass = 0;
     for( ProtoParticles::const_iterator pp = protos->begin() ; 
          protos->end() != pp ; ++pp ) {
       // skip nulls 
       if( 0 == *pp ) { continue ; }
+      ifMsg(MSG::VERBOSE) << "    ProtoParticle " << (*pp)->key() ;
+      bool matched = false;
       // get all calo hypos 
       const Hypos& hypos = (*pp)->calo() ;
       // loop over all hypotheses 
@@ -194,33 +214,43 @@ StatusCode NeutralPP2MC::execute()
           // skip nulls 
           if( *cluster == 0 ) { continue ; }                  // CONTINUE 
           const Range range = mctable->relations( *cluster );
-          for( relation rel = range.begin() ; range.end() != rel ; ++rel ) {
-            const MCParticle* particle = rel->to();
-            // skip nulls 
-            if( 0 == particle ) { continue ; }              // CONTINUE 
-            // propagate the relation to protoparticle 
-            nrel++;
-            table->relate( *pp                             , 
-                           particle                        , 
-                           rel->weight() / (*cluster)->e() );  
+          if( !range.empty() ) {
+            if( !matched) {
+              ifMsg(MSG::VERBOSE) << " associated to MCParts";
+              matched = true;
+              nass++;
+            }
+            for( relation rel = range.begin() ; range.end() != rel ; ++rel ) {
+              const MCParticle* mcPart = rel->to();
+              // skip nulls 
+              if( NULL == mcPart ) { continue ; }              // CONTINUE 
+              // propagate the relation to protoparticle 
+              ifMsg(MSG::VERBOSE) << " - " << mcPart->key();
+              double weight = rel->weight() / (*cluster)->e() ;
+              if( NULL != table )
+                table->relate( *pp, mcPart, weight ); 
+              if( NULL != linkerTable ) 
+                linkerTable->link( *pp, mcPart, weight);
+              nrel++;
+            }
           }
         }
       }
+      if( !matched) {
+        ifMsg(MSG::VERBOSE) << " not associated to an MCPart";
+      }
+      ifMsg(MSG::VERBOSE) << endreq;
     }
-    ifLog( MSG::VERBOSE )
-        << protos->end() - protos->begin() << " ProtoParts associated: "
-        << nrel << " relations found" << endreq;
+    ifMsg( MSG::DEBUG )
+      << "Out of " << npp << " Neutral ProtoParts in " << *inp << ", "
+      << nass << " are associated, "
+      << nrel << " relations found" << endreq;
   }
   
   // Register the table on the TES
-  StatusCode sc = eventSvc()->registerObject( outputTable(), table);
-  if( sc.isFailure() ) {
-    ifLog( MSG::FATAL )
-      << "     *** Could not register table " << outputTable() << endreq;
-    delete table;
-    return sc;
-  } else {
-    ifLog( MSG::VERBOSE )
+  if( NULL != table ) {
+    put( table, outputTable() );
+    ifMsg( MSG::DEBUG )
       << "     Registered table " << outputTable() << endreq;
   }
   return StatusCode::SUCCESS;

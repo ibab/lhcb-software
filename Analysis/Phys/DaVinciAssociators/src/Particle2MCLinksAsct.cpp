@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.4 2004-05-03 13:34:17 pkoppenb Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.5 2004-06-11 15:26:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -7,11 +7,15 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgTool.h"
-// local
-#include "DaVinciAssociators/Particle2MCLinksAsct.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // from event model
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
+
+// local
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle2MCLinksAsct
@@ -30,13 +34,23 @@ StatusCode Particle2MCLinksAsct::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
   if( location() == "" ) {
     m_hasTable = false;
-    msg << MSG::VERBOSE << "    This associator is direct, without Relations table" << endreq;
+    msg << MSG::VERBOSE 
+        << "    This associator is direct, without Relations table" 
+        << endreq;
     // Create the temporary table
     m_table = new Table;
-    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MCAsct", m_pChargedAsct) ;
-    if( sc.isSuccess() ) {
-      sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MCAsct", m_pNeutralAsct) ;
-    }
+    const Algorithm* myAlg = 
+      dynamic_cast<const Algorithm*>( this->parent());
+    std::vector<std::string> chargedPPLocation;
+    std::vector<std::string> neutralPPLocation;
+    chargedPPLocation.push_back( ProtoParticleLocation::Charged );
+    chargedPPLocation.push_back( ProtoParticleLocation::Upstream );
+    neutralPPLocation.push_back( ProtoParticleLocation::Neutrals );
+    // Create a helper class for each type of Protoparticles
+    m_chargedLink = new Object2MCLink( myAlg, Particle2MCMethod::ChargedPP,
+                                         chargedPPLocation);
+    m_neutralLink = new Object2MCLink( myAlg, Particle2MCMethod::NeutralPP,
+                                         neutralPPLocation);
   } else {
     m_hasTable = true;
     m_table = 0;
@@ -46,8 +60,8 @@ StatusCode Particle2MCLinksAsct::initialize() {
 
 StatusCode Particle2MCLinksAsct::finalize() {
   if( m_table) delete m_table;
-  //  if( m_pChargedAsct ) m_pChargedAsct->release();
-  //  if( m_pNeutralAsct ) m_pNeutralAsct->release();
+  if( NULL != m_chargedLink ) delete m_chargedLink;
+  if( NULL != m_neutralLink ) delete m_neutralLink;
   return StatusCode::SUCCESS;
 }
 
@@ -59,117 +73,97 @@ StatusCode Particle2MCLinksAsct::handle(){
 // Interface implementation
 //=============================================================================
 bool Particle2MCLinksAsct::tableExists() const{
-  return (!m_hasTable && (NULL != m_table) &&
-          m_pChargedAsct->tableExists() &&
-          m_pNeutralAsct->tableExists() )
-  || Asct::tableExists();
+  return m_hasTable ? Asct::tableExists() : NULL != m_table;
+  
 };
 
 MCsFromParticleLinks Particle2MCLinksAsct::rangeFrom(const From& part) const
 {
-  MsgStream msg(msgSvc(), name());
   if( m_hasTable ) return Asct::rangeFrom( part );
-  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
-  // Local implementation...
-  if( protoAsct->tableExists() ) {
-    msg << MSG::VERBOSE << "    Particle " << part->key();
-    const ProtoParticle* protoPart = dynamic_cast<const  ProtoParticle*>( part->origin() ) ;
-    if( protoPart ) {
-      msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range = protoAsct->rangeFrom( protoPart );
-      for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
-        m_table->relate( part, it->to(), it->weight());
-      }
-      return m_table->relations( part );
-    } else {
-      msg << " not from a ProtoParticle" << endreq;
-    }
-  }
-  return MCsFromParticleLinks();
+
+  insertRange( part );
+  return m_table->relations(part);
 }
 
-MCsFromParticleLinks Particle2MCLinksAsct::rangeWithLowCutFrom(const From& part, double cut) const
+MCsFromParticleLinks 
+Particle2MCLinksAsct::rangeWithLowCutFrom(const From& part, 
+                                          double cut) const
 {
   if( m_hasTable ) return Asct::rangeWithLowCutFrom( part, cut );
-  MsgStream  msg( msgSvc(), name() );
-  // Local implementation...
-  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
-  if( protoAsct->tableExists() ) {
-    msg << MSG::VERBOSE << "    Particle " << part->key();
-    const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
-    if( protoPart ) {
-      msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range =  protoAsct->rangeWithLowCutFrom( protoPart, cut );
-      for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
-        m_table->relate( part, it->to(), it->weight());
-      }
-      return m_table->relations( part );
-    } else {
-      msg << " not from a ProtoParticle" << endreq;
-    }
-  }
-  return MCsFromParticleLinks();
+
+  insertRange( part );
+  return m_table->relations(part, cut, true);
 }
 
-MCsFromParticleLinks Particle2MCLinksAsct::rangeWithHighCutFrom(const From& part, double cut) const
+MCsFromParticleLinks 
+Particle2MCLinksAsct::rangeWithHighCutFrom(const From& part, 
+                                           double cut) const
 {
   if( m_hasTable ) return Asct::rangeWithHighCutFrom( part, cut );
-  MsgStream  msg( msgSvc(), name() );
-  // Local implementation...
-  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
-  if( protoAsct->tableExists() ) {
-    msg << MSG::VERBOSE << "    Particle " << part->key();
-    const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
-    if( protoPart ) {
-      msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range =  protoAsct->rangeWithHighCutFrom( protoPart, cut );
-      for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
-        m_table->relate( part, it->to(), it->weight());
-      }
-      return m_table->relations( part );
-    } else {
-      msg << " not from a ProtoParticle" << endreq;
-    }
-  }
-  return MCsFromParticleLinks();
+
+  insertRange( part );
+  return m_table->relations(part, cut, false);
 }
 
-Particle2MCLinksAsct::To Particle2MCLinksAsct::associatedFrom(const From& part) const
+Particle2MCLinksAsct::To 
+Particle2MCLinksAsct::associatedFrom(const From& part) const
 {
   if( m_hasTable ) return Asct::associatedFrom( part );
-  MsgStream  msg( msgSvc(), name() );
-  // Local implementation...
-  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
-  if( protoAsct->tableExists() ) {
-    msg << MSG::VERBOSE << "    Particle " << part->key();
-    const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
-    if( protoPart ) {
-      msg << " from ProtoParticle " << protoPart->key() << endreq;
-      return protoAsct->associatedFrom( protoPart );
-    } else {
-      msg << " not from a ProtoParticle" << endreq;
-    }
+
+  insertRange( part );
+  MCsFromParticleLinks r = m_table->relations(part);
+  if( r.empty() ) {
+    return To();
   }
-  return To();
+  return r.begin()->to();
 }
 
-Particle2MCLinksAsct::To Particle2MCLinksAsct::associatedFrom(const From& part, double& weight) const
+Particle2MCLinksAsct::To 
+Particle2MCLinksAsct::associatedFrom(const From& part, 
+                                     double& weight) const
 {
   if( m_hasTable ) return Asct::associatedFrom( part, weight );
-  MsgStream  msg( msgSvc(), name() );
-  // Local implementation...
-  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
-  if( protoAsct->tableExists() ) {
-    msg << MSG::VERBOSE << "    Particle " << part->key();
-    const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
+
+  insertRange( part );
+  MCsFromParticleLinks r = m_table->relations(part);
+  if( r.empty() ) {
+    weight = 0.;
+    return To();
+  }
+  weight = r.begin()->weight();
+  return r.begin()->to();
+}
+
+void
+Particle2MCLinksAsct::insertRange( const From& part ) const
+{
+  MCsFromParticleLinks r = m_table->relations(part);
+  if( r.empty()) {
+    MsgStream  msg( msgSvc(), name() );
+    Object2MCLink* link = 
+      part->charge() ? m_chargedLink : m_neutralLink;
+    // Local implementation...
+    msg << MSG::VERBOSE << "    " 
+        << (part->charge() ? "Charged" : "Neutral")
+        << " particle " 
+        << (part->hasKey() ? part->key() : -1);
+    const ProtoParticle* protoPart = 
+      dynamic_cast<const  ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
-      msg << " from ProtoParticle " << protoPart->key() << endreq;
-      return protoAsct->associatedFrom( protoPart, weight );
+      MCParticle* mcPart = link->first(protoPart);
+      msg << " from ProtoParticle " << protoPart->key()
+          << (NULL == mcPart ? " not " : " ")
+          << "associated with MCparticles" ;
+      while( mcPart ) {
+        msg << " - " << mcPart->key();
+        m_table->relate( part, mcPart, link->weight());
+        mcPart = link->next();
+      }
+      msg << endreq;
     } else {
       msg << " not from a ProtoParticle" << endreq;
     }
   }
-  return To();
 }
 
 //=============================================================================

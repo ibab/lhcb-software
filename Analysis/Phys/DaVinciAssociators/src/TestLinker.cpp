@@ -1,5 +1,5 @@
-// $Id: TestAssociators.cpp,v 1.8 2004-06-11 15:26:18 phicharp Exp $
-#define TestAssociators_CPP 
+// $Id: TestLinker.cpp,v 1.1 2004-06-11 15:26:18 phicharp Exp $
+#define TestLinker_CPP 
 
 // Include files
 // from STL
@@ -19,17 +19,18 @@
 // from Event 
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
+#include "Event/ProtoParticle.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "MCTools/MCTrackInfo.h"
+#include "Event/TrStoredTrack.h"
 
 // local
-#include "TestAssociators.h"
+#include "TestLinker.h"
 
-#define TR_EFFICIENCY
 #define ifMsg(sev) msg << sev; if( msg.level() <= (sev) ) msg
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TestAssociators
+// Implementation file for class : TestLinker
 // 
 // Example of how to access various info from DaVinci
 // 
@@ -37,19 +38,19 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<TestAssociators>    Factory;
-const IAlgFactory& TestAssociatorsFactory = Factory;
+static const AlgFactory<TestLinker>    Factory;
+const IAlgFactory& TestLinkerFactory = Factory;
 
 //=============================================================================
 // Standard creator, initializes variables
 //=============================================================================
-TestAssociators::TestAssociators(const std::string& name,
+TestLinker::TestLinker(const std::string& name,
                                            ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm(name, pSvcLocator)
-  , m_pAsctChi2(0)
-  , m_pAsctLinks(0)
-  , m_pAsctComp(0)
-  , m_pAsctWithChi2(0)
+  AsctAlgorithm(name, pSvcLocator)
+  , m_linkChi2(0)
+  , m_linkLinks(0)
+  , m_linkComp(0)
+  , m_linkWithChi2(0)
   , m_matchLinks(0)
   , m_matchChi2(0)
   , m_matchFull(0)
@@ -70,20 +71,20 @@ TestAssociators::TestAssociators(const std::string& name,
   , m_mcPartCount(0)
   , m_skippedEvts(0)
   , m_nbEvts(0)
+  , m_setInputData(true)
 { 
-  m_inputData.push_back( ParticleLocation::Production ) ;
-  declareProperty( "InputData", m_inputData) ;
+  declareProperty( "SetInputData", m_setInputData);
 }
 
 //=============================================================================
 // Standard destructor
 //=============================================================================
-TestAssociators::~TestAssociators() { };
+TestLinker::~TestLinker() { };
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode TestAssociators::initialize() {
+StatusCode TestLinker::initialize() {
 
   // Use the message service
   MsgStream msg(msgSvc(), name());
@@ -91,33 +92,36 @@ StatusCode TestAssociators::initialize() {
   
   // Retrieve the StoredTracks2MC associator
   
-  m_pAsctTrack = tool<Tr2MCPartAsct>( 
+  m_pAsctTrack =tool<Tr2MCPartAsct>( 
      "AssociatorWeighted<TrStoredTrack,MCParticle,double>",
      "Track2MCAsct" );
 
-  // Retrieve the tools used by this algorithm
-  // This is the Particle2MCWithChi2 tool
-  m_pAsctWithChi2 = tool<Particle2MCWithChi2Asct::IAsct>(
-    "Particle2MCWithChi2Asct",
-    this);
+  std::vector<std::string> inp = 
+    m_setInputData ? m_inputData : std::vector<std::string>();
+  
+  // Retrieve the link objects used by this algorithm
+  m_linkWithChi2 = new Particle2MCLink( this, Particle2MCMethod::WithChi2,
+                                        inp);
+  
+  m_linkChi2 = new Particle2MCLink( this, Particle2MCMethod::Chi2,
+                                        inp);
+  
+  m_linkComp = new Particle2MCLink( this, Particle2MCMethod::Composite,
+                                        inp);
+  
+  m_linkLinks = new Particle2MCLink( this, Particle2MCMethod::Links,
+                                        inp);
 
-  // This is the standard Particle2MC tool
-  m_pAsctChi2 = tool<Particle2MCAsct::IAsct>( "Particle2MCAsct", this);
-
-  // This is the composite Particle2MC tool
-  m_pAsctComp = tool<Particle2MCAsct::IAsct>( "Particle2MCAsct", 
-                                              "CompAsct", this);
-
-  m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>( "Particle2MCLinksAsct", 
-      "LinkAsct", this);
-
-  // This is the standard ChargedPP2MC tool
-  m_pAsctProto = tool<ProtoParticle2MCAsct::IAsct>( "ProtoParticle2MCAsct", 
-                                                    this);
-
-  // Tool to check reconstructibility of MCParticles
-  m_pTrRecons = tool<ITrReconstructible>( "TrReconstructible", "TrRecons", 
-                                          this);
+  m_linkChargedPP = 
+    new ProtoParticle2MCLink( this, 
+                              Particle2MCMethod::ChargedPP,
+                              ProtoParticleLocation::Charged);
+  
+  m_linkNeutralPP = 
+    new ProtoParticle2MCLink( this, 
+                              Particle2MCMethod::NeutralPP,
+                              ProtoParticleLocation::Neutrals);
+  
   
   // Initialization terminated
   return GaudiAlgorithm::initialize();
@@ -126,7 +130,7 @@ StatusCode TestAssociators::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TestAssociators::execute() {
+StatusCode TestLinker::execute() {
 
   MsgStream          msg( msgSvc(), name() );
   int matchLinks=0, matchChi2=0, matchFull=0, nbParts=0;
@@ -155,21 +159,6 @@ StatusCode TestAssociators::execute() {
     // Example of use of the Associator tool
     //========================================
     
-    if( false == m_pAsctChi2->tableExists() ) {
-      ifMsg( MSG::DEBUG ) 
-          <<"         ** Warning ** The relations table from "
-          <<"Chi2 doesn't exist" << endreq;
-      // One may return at this stage, but one can also go on and receive
-      //   empty ranges in the next loops...
-      //    return StatusCode::SUCCESS;
-    }
-    
-    if( false == m_pAsctLinks->tableExists() ) {
-      ifMsg( MSG::DEBUG ) 
-          <<"         ** Warning ** The relations table from "
-          <<"links  doesn't exist" << endreq;
-    }
-    
     // Using the direct association
     for(Particles::const_iterator cand = parts->begin(); 
         parts->end() != cand; cand++, nbParts++) {
@@ -183,29 +172,23 @@ StatusCode TestAssociators::execute() {
                             << part->slopeY() 
                             << endreq;
       
-      // Get the range of MCParts corresponding to a given Part from Chi2
-      MCsFromParticle mcPartsChi2 = m_pAsctChi2->rangeFrom( part );
-      
-      if( m_pAsctLinks->tableExists() ) {
-        // There is a table from the Proto links associator...
-        MCParticle* mcPartLinks = 0;
-        MCParticle* mcPartChi2 = 0;
-        MCParticle* mcPartComp = 0;
-        double chi2 = 0.;
-        MCsFromParticleLinks mcPartLinksRange = 
-          m_pAsctLinks->rangeFrom( part );
-        MCsFromParticleLinksIterator mcPartLinksIt;
+      MCParticle* mcPartLinks = 0;
+      MCParticle* mcPartChi2 = 0;
+      MCParticle* mcPartComp = 0;
+      double chi2 = 0.;
+      int nbChi2 = m_linkChi2->associatedMCP(part);
         
-        if( !mcPartLinksRange.empty() ) {
-          // An association was obtained from links
-          ifMsg( MSG::VERBOSE ) << "   Associated to "
-              << mcPartLinksRange.end()-mcPartLinksRange.begin()+1
-              << " MCParts: " << endreq;
-          if( part->charge() ) matchLinks++;        
-          for( mcPartLinksIt = mcPartLinksRange.begin();
-               mcPartLinksRange.end() != mcPartLinksIt; mcPartLinksIt++ ) {
-            mcPartLinks = mcPartLinksIt->to();
-            double weight = mcPartLinksIt->weight();
+      mcPartLinks = m_linkLinks->first(part);
+      if( NULL != mcPartLinks ) {
+        // An association was obtained from links
+        ifMsg( MSG::VERBOSE ) << "   Associated to "
+                              << m_linkLinks->associatedMCP(part)
+                              << " MCParts: " << endreq;
+        if( part->charge() ) matchLinks++;    
+        int nass = 0;
+        do {
+          nass++;
+          double weight = m_linkLinks->weight();
           const HepLorentzVector mc4Mom = mcPartLinks->momentum();
           ifMsg( MSG::VERBOSE ) 
             << "   MCPart " << mcPartLinks->key() 
@@ -214,73 +197,75 @@ StatusCode TestAssociators::execute() {
             << mc4Mom.v().mag() << " "
             << mc4Mom.px()/mc4Mom.pz() << " "
             << mc4Mom.py()/mc4Mom.pz() << endreq;
-          }
+          mcPartLinks = m_linkLinks->next();
+        } while( NULL != mcPartLinks );
+        
           // Reset the link to the first one to test the "decreasing" feature
-          mcPartLinks = m_pAsctLinks->associatedFrom( part );
-          mcPartComp = m_pAsctComp->associatedFrom( part );
-          if( part->charge() ){
-            if( 0 != mcPartComp ) {
-              matchComp++;
-              if( mcPartLinks != mcPartComp ) {
-                ifMsg( MSG::VERBOSE ) << "   MCPart from Composite != Links"
-                                      << endreq;
-                if( 0 != mcPartLinks ) matchLinksDiffComp++;
-              }
-            } else {
-              matchMissedComp++;
+        mcPartLinks = m_linkLinks->first( part );
+        mcPartComp = m_linkComp->first( part );
+        if( part->charge() ){
+          if( 0 != mcPartComp ) {
+            matchComp++;
+            if( mcPartLinks != mcPartComp ) {
+              ifMsg( MSG::VERBOSE ) << "   MCPart from Composite != Links"
+                                    << endreq;
+              if( 0 != mcPartLinks ) matchLinksDiffComp++;
             }
+          } else {
+            matchMissedComp++;
           }
-        } else {
-          ifMsg( MSG::VERBOSE ) << "   No MCPart found from links" << endreq;
         }
-        if( 0 == part->charge() ) continue;
-        mcPartChi2 = m_pAsctWithChi2->associatedFrom( part, chi2);
-        if( mcPartsChi2.empty() ) {
-          // No particles found above threshold with CHi2
+      } else {
+        ifMsg( MSG::VERBOSE ) << "   No MCPart found from links" << endreq;
+      }
+      if( 0 == part->charge() ) continue;
+      mcPartChi2 = m_linkWithChi2->first( part, chi2);
+      if( 0 == nbChi2 ) {
+        // No particles found above threshold with CHi2
+        ifMsg( MSG::VERBOSE ) 
+          << "       MCPart not found from Chi2 below threshold";
+        if( mcPartLinks && (mcPartChi2 == mcPartLinks) ) {
           ifMsg( MSG::VERBOSE ) 
-              << "       MCPart not found from Chi2 below threshold";
-          if( mcPartLinks && (mcPartChi2 == mcPartLinks) ) {
-            ifMsg( MSG::VERBOSE ) 
-              << " (Chi2 was " << chi2 << ")";
-            matchLinksHighChi2++;
-          }
-          ifMsg( MSG::VERBOSE ) << endreq;
-          if( mcPartLinks ) matchLinksNotChi2++;
-        } else {
-          if( mcPartChi2 == mcPartLinks ) {
-            ifMsg( MSG::VERBOSE )
-                << "       MCPart found from Chi2 as well (Chi2 = " << chi2
-                << ")" << endreq;
-            matchFull++;
-          }
-          if( !mcPartLinks ) matchChi2NotLinks++;
+            << " (Chi2 was " << chi2 << ")";
+          matchLinksHighChi2++;
         }
-        if( mcPartChi2 && (mcPartChi2 != mcPartLinks) ) {
-          if( mcPartLinks ) {
-            matchDifferent++;
-            ifMsg( MSG::VERBOSE ) 
-                << "       MCPart found from Chi2 is different" << endreq;
-          }
-          const HepLorentzVector mc4Mom = mcPartChi2->momentum();
+        ifMsg( MSG::VERBOSE ) << endreq;
+        if( mcPartLinks ) matchLinksNotChi2++;
+      } else {
+        if( mcPartChi2 == mcPartLinks ) {
+          ifMsg( MSG::VERBOSE )
+            << "       MCPart found from Chi2 as well (Chi2 = " << chi2
+            << ")" << endreq;
+          matchFull++;
+        }
+        if( !mcPartLinks ) matchChi2NotLinks++;
+      }
+      if( mcPartChi2 && (mcPartChi2 != mcPartLinks) ) {
+        if( mcPartLinks ) {
+          matchDifferent++;
           ifMsg( MSG::VERBOSE ) 
-              << "       MCPart from Chi2  : momentum, slope "
-              << mc4Mom.v().mag() << " "
-              << mc4Mom.px()/mc4Mom.pz() << " "
-              << mc4Mom.py()/mc4Mom.pz() << endreq;
-          ifMsg( MSG::VERBOSE ) << "       Chi2 was " << chi2 << endreq;
-          Particle* partLinks = m_pAsctLinks->associatedTo( mcPartChi2 );
-          if( partLinks ) {
-            ifMsg( MSG::VERBOSE ) << "       It is linked to Particle " 
-                << partLinks->key() << endreq;
-          }
+            << "       MCPart found from Chi2 is different" << endreq;
+        }
+        const HepLorentzVector mc4Mom = mcPartChi2->momentum();
+        ifMsg( MSG::VERBOSE ) 
+          << "       MCPart from Chi2  : momentum, slope "
+          << mc4Mom.v().mag() << " "
+          << mc4Mom.px()/mc4Mom.pz() << " "
+          << mc4Mom.py()/mc4Mom.pz() << endreq;
+        ifMsg( MSG::VERBOSE ) << "       Chi2 was " << chi2 << endreq;
+        Particle* partLinks = m_linkLinks->firstP( mcPartChi2 );
+        if( partLinks ) {
+          ifMsg( MSG::VERBOSE ) << "       It is linked to Particle " 
+                                << partLinks->key() << endreq;
         }
       }
-    
-      if( !mcPartsChi2.empty() ) {
+      if( nbChi2 ) {
         matchChi2++;
       }
     }
   }
+
+  if( 0 == nbParts ) return StatusCode::SUCCESS;
   
   int width = (int)log10((double)nbParts)+1;
 
@@ -334,18 +319,22 @@ StatusCode TestAssociators::execute() {
   int mcPartRecons = 0;
   std::vector<int> trackFound(6, 0);
   m_nbEvts++;
-  // Get the track info if present
-  SmartDataPtr<MCProperty> test( eventSvc(), MCTrackInfoLocation::Default );
-  MCTrackInfo* trackInfo = NULL;
-  if( 0 != test ) {
-    MCTrackInfo myTrackInfo( eventSvc(), msgSvc() );
-    trackInfo = &myTrackInfo;
-    msg << MSG::DEBUG << "MCTrackInfo found, will use it" <<endreq;
-  }
   
   if( skippedEvt ) {
     m_skippedEvts++;
   } else {
+    LinkedFrom<TrStoredTrack> trLink( eventSvc(), 
+                                      NULL, 
+                                      TrStoredTrackLocation::Default);
+    
+    // Get the track info if present
+    SmartDataPtr<MCProperty> test( eventSvc(), MCTrackInfoLocation::Default );
+    MCTrackInfo* trackInfo = NULL;
+    if( 0 != test ) {
+      MCTrackInfo myTrackInfo( eventSvc(), msgSvc() );
+      trackInfo = &myTrackInfo;
+      msg << MSG::DEBUG << "MCTrackInfo found, will use it" <<endreq;
+    }
     for( MCParticles::const_iterator mcIt=mcParts->begin();
          mcParts->end() != mcIt; mcIt++) {
       MCParticle* mcPart = *mcIt;
@@ -358,19 +347,18 @@ StatusCode TestAssociators::execute() {
       //        fromK0 = 1;
       //      }
       // Check if it was reconstructible
-      if( (NULL != trackInfo) ? trackInfo->hasVeloAndT( mcPart ) :
-          m_pTrRecons->hasVeloAndSeed( mcPart ) ) {
+      if( trackInfo->hasVeloAndT( mcPart ) ) {
+        verbose() << "    MCParticle " << mcPart->key() << endreq
+                  << "      Is reconstructable as Long track" << endreq;
         mcPartRecons++;
-        // Look if it was associated to a ProtoPart and to a Track
-        ProtoParticlesToMC protoRange = m_pAsctProto->rangeTo( mcPart );
-        ProtoParticlesToMCIterator protoIt;
-        Tr2MCPartAsct::FromRange trRange = m_pAsctTrack->rangeTo( mcPart );
-        Tr2MCPartAsct::FromIterator trIt;
         bool countTr = true;
         bool countProto = true;
-        for( trIt = trRange.begin(); trRange.end() != trIt; trIt++) {
-          TrStoredTrack* tr = trIt->to();
-          if( 0 != tr && tr->unique() ) {
+        for( TrStoredTrack* tr = trLink.first(mcPart); 
+             NULL != tr; 
+             tr = trLink.next()) {
+          verbose() << "      Is associated to track " << tr->key();
+          if( tr->unique() ) {
+            verbose() << " that is unique" << endreq;
             // Look at the type of track
             int type = trType( tr );
             if( 0 == type ) continue;
@@ -379,20 +367,28 @@ StatusCode TestAssociators::execute() {
             countTr = false;
             trackFound[type] = 1;
             // Check the protoPart comes from that track
-            for( protoIt = protoRange.begin(); 
-                 protoRange.end() != protoIt; protoIt++) {
-              ProtoParticle* proto = protoIt->to();
+            ProtoParticle2MCLink* protoLink = 
+              mcPart->particleID().threeCharge() ? 
+              m_linkChargedPP : m_linkNeutralPP;
+            
+            for( ProtoParticle* proto = protoLink->firstP(mcPart);
+                 NULL != proto;
+                 proto = protoLink->nextP() ) {
+              verbose() << "      and gave ProtoParticle "
+                        << proto->key() << endreq;
               if( 0 != proto && proto->track() == tr ) {
                 if( countProto ) mcPart2Proto[0]++;
                 mcPart2Proto[type]++;
                 countProto = false;
               }
             }
+          } else {
+            verbose() << " that is NOT unique" << endreq;
           }
         }
         // Now look at association to Particles with all associators
-        Particle* partLinks = m_pAsctLinks->associatedTo( mcPart ) ;
-        ProtoParticle* proto;
+        Particle* partLinks = m_linkLinks->firstP( mcPart ) ;
+        ProtoParticle* proto = NULL;
         int partTrType = 0;
         if( 0 != partLinks ) {
           mcPart2PartLink[0]++;
@@ -402,7 +398,7 @@ StatusCode TestAssociators::execute() {
             if( partTrType ) mcPart2PartLink[partTrType]++;
           }
         }
-        Particle* partChi2 = m_pAsctChi2->associatedTo( mcPart ) ;
+        Particle* partChi2 = m_linkChi2->firstP( mcPart ) ;
         if( 0 != partChi2 ) {
           mcPart2PartChi2[0]++;
           proto = dynamic_cast<ProtoParticle*>(partChi2->origin());
@@ -464,7 +460,7 @@ StatusCode TestAssociators::execute() {
   // End of execution for each event
   return StatusCode::SUCCESS;
 }
-void TestAssociators::prTable( MsgStream& msg, MSG::Level level,  
+void TestLinker::prTable( MsgStream& msg, MSG::Level level,  
                                const std::string title, 
                                const std::vector<int>& table, const int width)
 {
@@ -477,7 +473,7 @@ void TestAssociators::prTable( MsgStream& msg, MSG::Level level,
   }
 }
 
-int TestAssociators::trType( TrStoredTrack* tr ){
+int TestLinker::trType( TrStoredTrack* tr ){
   //
   // This mixes track types and how they have been found.
   // -> modify according to what this function is needed for
@@ -496,7 +492,7 @@ int TestAssociators::trType( TrStoredTrack* tr ){
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode TestAssociators::finalize() {
+StatusCode TestLinker::finalize() {
 
   MsgStream msg(msgSvc(), name());
   ifMsg( MSG::DEBUG ) << ">>> Finalize" << endreq;

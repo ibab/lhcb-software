@@ -1,6 +1,60 @@
-! $Id: release.notes,v 1.40 2004-06-02 11:19:39 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2004-06-11 15:26:15 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2004-05-18 - Ph.Charpentier
+ - New files DaVinciAssociators/Particle2MCLink.h src/Particle2MCLink.cpp
+   Contains two classes: 
+      Object2MCLink for direct links to MCParticles of any KeyedObject
+      Object2FromMCLink<T> that includes reverse links, 
+          hence must specifiy the real KeyedObject type as template
+   ... and typedef shortcuts
+   typedef Object2FromMCLink<Particle>      Particle2MCLink;
+   typedef Object2FromMCLink<ProtoParticle> ProtoParticle2MCLink;
+   These helper classes wrap the LinkedTo/From objects and call the creation 
+     algorithm whenever necessary:
+
+   #include "DaVinciAssociators/Particle2MCLink.h"
+   in initialize():
+   m_link = new <xxx>2MCLink( this, Particle2MCMethod::<method>, 
+                                 containerList)
+      <xxx> can be Object, Particle, ProtoParticle
+      <method> is any of Composite / Links / Chi2 / WithChi2
+      containerList is a vector of strings giving the Particles containers to
+        be linked to MCParticles. There is also a constructor from a string
+        for a single container.
+      If your algorithm is a GaudiAlgorithm, Particle2MCLink is instrumented
+        for printing messages
+   in execute()
+   Particle* part = ...
+   MCParticle* mcPart = m_link->firstMCP( part );
+   while( NULL != mcPart ) {
+          .....
+     weight = m_link->weightMCP()
+          .....
+     mcPart = m_link->nextMCP();
+   }
+   in finalize()
+   if( NULL != m_link ) delete m_link;
+
+   Convention for the name of the table:
+      /Event/Link/<ParticleContainerName>/<method>
+   Convention for the name of the algorithm run to create Link tables
+      <parentAlg>.<creationAlgorithm>
+      where <creationAlgorithm> is usually "Particle2MC<method>"
+   There are many other methods available, please refer to Doxigen.
+     In particular there is a constructor that takes an algType and container
+     name extension as arguments, allowing a very general use of this class
+     <xxx>2MCLink( this, algType, extension, containerList)
+   Note that if a particle is NOT in a container, it cannot be associated using
+     this method. Use the former Particle2MCLinksAsct tool instead
+   If a particle is in a container that is not in the initial list, this list
+     is updated and the InputData property of the algorithm updated 
+     accordingly. Hence in principle you could start from an empty list...
+ - All algorithms Particle2MCLinks, Particle2MCChi2, CompositeParticle2MCLinks
+     adapted for using the Linkers and producing linker tables
+ - AsctAlgorithm inherits from GaudiAlgorithm in order to benefit from it.
+   Only added value is m_inputData and m_outputTable properties, i.e. not much
 
 !================ DaVinciAssociators v4r5p2 2004-06-02 =====================
 ! 2004-05-18 - P. Koppenburg
