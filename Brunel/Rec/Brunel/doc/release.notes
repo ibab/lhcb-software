@@ -4,6 +4,47 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v9r1>20020320 Brunel v9r1</A></H1><PRE>
+   Adds support for dbase v243r2 (for comparative study of TT1 options). 
+   Includes several bug fixes (see below)
+ 
+   In options
+   - Brunelv243r2.opts, BrunelTrItOtTT1.opts: new files to support dbase v243r2
+   - BrunelTr*.opts all touched to make them consistent with new files above
+   - Brunel.opts: enable Calorimeter OO reconstruction (without persistency)
+   - BrunelMoni.opts: disable ITDigitMonitor (crashes for dbase v243r2)
+
+   In requirements
+   - use LHCbEvent    v12r2 Event
+     AxPartCandidate.h - initialisation-value for m_fitCovariance set to (6,0).
+                         (needed by serializers)
+
+   - use ITEvent      v7r2  Event
+      Bug fixes in ITDetectionLayer and ITChannelID, should solve problem 
+      of missing hits reported by O. Callot
+   - use ITAlgorithms v8r1  IT
+      Bug fixes in ITDigitCreator, Add ITDigitEffMonitor class
+
+   - use CaloEvent    v7r1  Event
+   - use CaloUtils    v1r1  Calo
+   - use CaloAlgs     v4r2  Calo
+      fix problems with std::maps on Win2K 
+
+   - use Velodet      v3r1  Det
+    . Change the 'type' of the wafers, to handle properly the separation between
+      left and right detectors, this was not done for R and was incorrect for 
+      Phi. The result was an inefficiency in the overlap region (vertical).
+    . Fixes a few minor problems of boundary, by increasing tolerances to see
+      if a hit is compatible with a region of the other detector.
+    . When matching R-Phi, if the slope from the nominal vertex is too big,
+      one use an extrapolation parallel to the Z axis and an increased tolerance.
+
+   - use simmubg      v5r3  SICB
+      murwhits.F - Bug fix : The original (before muon background addition) 
+                   number of ATMC objects in the last partition (pile-up event) 
+                   is now correctly counted.
+      
+! =================================================================
 </PRE><H1><A NAME=v9r0>2002025 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking

@@ -1,5 +1,4 @@
-// Brunel options for standard tracking, LHCb-minus setup
-OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
+// Brunel options for material in standard tracking, LHCb-minus setup
 trFit_trackFitter_extrapolator1.matDBASE = 2401;
 trFit_trackFitter_extrapolator1.energyLoss = 50.0;
 trFit_trackFitter_extrapolator1.fms2 = 1.6;

@@ -73,10 +73,8 @@ ApplicationMgr.DLLs += { "MuonSicbCnv" };
 // Calorimeter digitisation
 //   and back conversion of digits to SICB bank
 #include "$CALOTOOLSOPTS/Brunel.opts"
-//#include "$CALOCAOPTS/Brunel.opts"
-//#include "$CALOALGSOPTS/Brunel.opts"
-#include "$CALOALGSOPTS/CaloAlgs.opts"
-#include "$CALOALGSOPTS/BrunelDigi.opts"
+#include "$CALOCAOPTS/Brunel.opts"
+#include "$CALOALGSOPTS/Brunel.opts"
 #include "$CALOSICBCNVOPTS/Brunel.opts"
 
 // Tracking and back conversion of tracks to AXTK

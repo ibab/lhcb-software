@@ -1,6 +1,7 @@
 // Tracking stations layout for databases v240r1 to v242
 // (three seeding stations, cross-geometry TT1)
 ITDigitize_digitCreator.tofVector = {7.1, 25.8, 28., 30.4};
+OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
 OTDigitize.numOTStations = 4;
 OTDigitize.firstOTStation = 1;
 trCreat.firstOTStation = 1;

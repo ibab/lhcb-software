@@ -1,5 +1,5 @@
 package Brunel
-version v9r0
+version v9r1
 
 branches doc cmt job options
 
@@ -42,7 +42,7 @@ use GaudiConf    v6r2
 #use GaudiObjDesc v3r0 -- Not needed, linked through LHCbEvent dependency 
 use BookKeeping  v1r1   Tools
 use EventKernel  v1r0   Event
-use LHCbEvent    v12r1  Event
+use LHCbEvent    v12r2  Event
 use Finclude     v12r2  SICB
 use Futio        v11    SICB
 
@@ -54,16 +54,16 @@ use CaloKernel   v1r0   Calo
 use DetDesc      v9r2   Det
 use XmlDDDB      v8r1   Det
 use CaloDet      v3r0   Det
-use VeloDet      v3r0   Det
+use VeloDet      v3r1   Det
 
 # Event Model
 use L0Event     v10r0   Event
 use VeloEvent    v6r0   Event
 use L1Event      v6r0   Event
-use ITEvent      v7r1   Event
+use ITEvent      v7r2   Event
 use OTEvent      v7r0   Event
 use TrEvent      v7r1   Event
-use CaloEvent    v7r0   Event
+use CaloEvent    v7r1   Event
 
 # SicB event data persistency
 use SicbCnv      v15r1  SICB
@@ -84,13 +84,13 @@ use L0DU         v4r0   L0
 
 # Calorimeter
 use CaloInterfaces v1r0 Calo
-use CaloUtils      v1r0 Calo
+use CaloUtils      v1r1 Calo
 use CaloTools      v1r1 Calo
-use CaloAlgs       v4r1 Calo
+use CaloAlgs       v4r2 Calo
 use CaloCA         v3r1 Calo
 
 # Tracking
-use ITAlgorithms v8r0   IT
+use ITAlgorithms v8r1   IT
 use OTAlgorithms v7r0	OT
 use TrAlgorithms v7r1   Tr
 
@@ -107,7 +107,7 @@ use recevt       v3r4   SICB
 use digmuon      v4     SICB
 use digvdet      v2r3   SICB
 
-use simmubg      v5r2   SICB
+use simmubg      v5r3   SICB
 
 use rececal      v7     SICB
 use rechcal      v6r1   SICB
@@ -137,7 +137,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=90000 " \
-           VisualC  " /DBrunelVersion=90000 "
+macro_append fflags " -DBrunelVersion=90100 " \
+           VisualC  " /DBrunelVersion=90100 "
 
 apply_pattern application_path
