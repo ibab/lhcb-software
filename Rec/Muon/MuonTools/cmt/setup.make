@@ -5,7 +5,7 @@
 
 
 CMTROOT = /afs/cern.ch/sw/contrib/CMT/v1r9
-MUONDETROOT = /afs/cern.ch/user/d/dhcroft/newmycmt/Det/MuonDet/v1r1
+MUONDETROOT = /afs/cern.ch/lhcb/software/NEW/Det/MuonDet/v2r0
 DETDESCROOT = /afs/cern.ch/lhcb/software/NEW/Det/DetDesc/v9r2
 MUONKERNELROOT = /afs/cern.ch/user/d/dhcroft/newmycmt/Muon/MuonKernel/v1r0
 LHCBEVENTROOT = /afs/cern.ch/lhcb/software/NEW/Event/LHCbEvent/v12r2
