@@ -1,4 +1,4 @@
-// $Id: TrTransporter.h,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: TrTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 #ifndef TRTRANSPORTER_H 
 #define TRTRANSPORTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IParticleTransporter.h"
@@ -19,7 +19,7 @@ class ITrExtrapolator ; ///< from Tr/TrKernel package
  *  @author Edgar C. de Oliveira
  *  @date   2002-06-14
  */
-class TrTransporter : public AlgTool,
+class TrTransporter : public GaudiTool,
                       virtual public IParticleTransporter {
 
 public:
@@ -34,27 +34,21 @@ public:
 
   /// Transport according to 'tr' extrapolation in "void". 
   StatusCode transport(ParticleVector::const_iterator &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
   /// Transport according to 'tr' extrapolation in "void". 
   StatusCode transport(const Particle &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
-  
-  /// Transport according to 'tr' extrapolation in "void". 
-  StatusCode transport(Particle &, 
-                       double znew,
-                       Particle &transParticle);  
-
 
 protected:
 
 private:
   /// Internal method to transport common to all public methods
-  StatusCode trTransport(Particle *, 
-                          double znew,
-                          Particle &transParticle);
+  StatusCode trTransport(const Particle *, 
+                         const double znew,
+                         Particle &transParticle);
 
   /// Tolerance for z estimation
   double m_tolerance;

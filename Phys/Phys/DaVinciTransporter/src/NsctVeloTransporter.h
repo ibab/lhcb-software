@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.h,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: NsctVeloTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 #ifndef NSCTVELOTRANSPORTER_H 
 #define NSCTVELOTRANSPORTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Gaudi interfaces
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -24,7 +24,7 @@
  *  @date   22/02/2002
  */
 
-class NsctVeloTransporter : public AlgTool, 
+class NsctVeloTransporter : public GaudiTool, 
                             virtual public IParticleTransporter {
 public:
   /// Standard constructor
@@ -40,20 +40,15 @@ public:
   /// Transport in VELO region according to linear extrapolation
   /// accounting for Multiple Scattering in material.
   StatusCode transport(ParticleVector::const_iterator &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
   /// Transport in VELO region according to linear extrapolation
   /// accounting for Multiple Scattering in material.
   StatusCode transport(const Particle &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
-  /// Transport in VELO region according to linear extrapolation
-  /// accounting for Multiple Scattering in material.
-  StatusCode transport(Particle &, 
-                       double znew,
-                       Particle &transParticle);
   
   /// Finalize.
   StatusCode finalize();
@@ -62,20 +57,16 @@ protected:
   
 private:
 
-  /// Accessor to standard detector data service. 
-  IDataProviderSvc*   detSvc() const ;
-
   /// Method to extrapolate in VELO region for common part of public
   /// methods.   
-  StatusCode veloTransport(Particle *&, 
-                           double znew,
+  StatusCode veloTransport(const Particle *&, 
+                           const double znew,
                            Particle &transParticle,
                            int ipz);
 
   double m_tolerance;                ///< Tolerance for z estimation
   double m_k;                        ///< 
   std::vector<double> m_zVelo;       ///< Vector with Velo stations position
-  IDataProviderSvc* m_DDS;           ///< Reference to Detector Data Service  
   
 };
 #endif // NSCTVELOTRANSPORTER_H

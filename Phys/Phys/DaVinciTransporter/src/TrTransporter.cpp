@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ const        IToolFactory& TrTransporterFactory = s_factory ;
 TrTransporter::TrTransporter( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : AlgTool ( type, name , parent )
+  : GaudiTool ( type, name , parent )
   , m_tolerance( 1.e-5 )
   , m_extrapolatorName ( "TrFirstCleverExtrapolator" )
   , m_extrapolator(0) {
@@ -55,23 +55,21 @@ TrTransporter::TrTransporter( const std::string& type,
 // ============================================================================
 StatusCode TrTransporter::initialize(){
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "TrTransporter initialization" << endreq;
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+  debug() << "TrTransporter initialization" << endreq;
 
-  StatusCode sc = toolSvc()->retrieveTool( m_extrapolatorName, 
-                                           m_extrapolator, this );  
-  if (sc.isFailure()){
-    log<< MSG::FATAL<<"Unable to retrieve Extrapolator Tool "<<endreq;
-    return sc;
+  m_extrapolator = tool<ITrExtrapolator>( m_extrapolatorName,this );  
+  if (!m_extrapolator){
+    fatal() <<"Unable to retrieve Extrapolator Tool "<<endreq;
+    return StatusCode::FAILURE;
   }
 
-  sc = toolSvc()->retrieveTool( "LinearTransporter", 
-				m_LinearTransporter, this );  
-  if (sc.isFailure()){
-    log<< MSG::FATAL<<"Unable to retrieve Linear Extrapolator Tool "<<endreq;
-    return sc;
+  m_LinearTransporter = tool<IParticleTransporter>( "LinearTransporter",this );  
+  if (!m_LinearTransporter){
+    fatal() <<"Unable to retrieve Linear Extrapolator Tool "<<endreq;
+    return StatusCode::FAILURE;
   }
-
 
   return StatusCode::SUCCESS;
 }
@@ -80,48 +78,20 @@ StatusCode TrTransporter::initialize(){
 //  Transport with TrExtrapolator (particle iterator)
 //=============================================================================
 StatusCode TrTransporter::transport(ParticleVector::const_iterator &icand, 
-                                        double znew,
+                                        const double znew,
                                         Particle & transParticle){
-  MsgStream log(msgSvc(), name());
   
-  Particle *workParticle = (*icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  sc = this->trTransport(workParticle, znew, transParticle);
-  return sc;    
+  const Particle workParticle = *(*icand);  
+  return transport(workParticle,znew,transParticle);    
 }
 //=============================================================================
 //  Transport with TrExtrapolator (const particle)
 //=============================================================================
 StatusCode TrTransporter::transport(const Particle & icand, 
-                                        double znew,
-                                        Particle & transParticle){
-  MsgStream log(msgSvc(), name());
+                                    const double znew,
+                                    Particle & transParticle){
 
-  Particle *workParticle = const_cast<Particle *> (&icand);
+  const Particle *workParticle = (&icand);
   
   // check z-range
   
@@ -140,48 +110,11 @@ StatusCode TrTransporter::transport(const Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    debug() << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
   
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  sc = this->trTransport(workParticle, znew, transParticle);
-  return sc;    
-}
-//=============================================================================
-//  Transport with TrExtrapolator (particle)
-//=============================================================================
-StatusCode TrTransporter::transport(Particle & icand, 
-                                        double znew,
-                                        Particle & transParticle){
-  MsgStream log(msgSvc(), name());
-
-  Particle *workParticle = (&icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }  
   
   StatusCode sc = StatusCode::SUCCESS;
   
@@ -191,21 +124,19 @@ StatusCode TrTransporter::transport(Particle & icand,
 //=============================================================================
 //  Transport with TrExtrapolator common calculation
 //=============================================================================
-StatusCode TrTransporter::trTransport(Particle *workParticle, 
-                                      double znew, 
+StatusCode TrTransporter::trTransport(const Particle *workParticle, 
+                                      const double znew, 
                                       Particle &transParticle){
   
-  // initialize msg service
-  
-  MsgStream log(msgSvc(), name());
   
   // check for particle
   if ( !workParticle ) {
-    log << MSG::WARNING
-        << "TrTransporter::transport should be called with a"
-        << "pointer to a particle as argument!" << endreq;
+    fatal() << "TrTransporter::transport should be called with a"
+            << "pointer to a particle as argument!" << endreq;
     return StatusCode::FAILURE;
   }
+
+
   if (workParticle->charge()!=0.0) {  
     // initialization of transported Particle  
     transParticle = *workParticle;
@@ -254,7 +185,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     
     if (fabs(dz) < m_tolerance){
       // already at required z position
-      log << MSG::DEBUG << " already at required position " << endreq;
+      debug() << " already at required position " << endreq;
       return StatusCode::SUCCESS;
     }
     // x and y coordinates at point on track
@@ -317,7 +248,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     ParticleID pID( workParticle->particleID() );
     StatusCode sc = workTrStateP->extrapolate(m_extrapolator, znew, pID);  
     if ( sc.isFailure() ) {
-      log << MSG::ERROR << " Unable to extrapolate TrStateP " << endreq;
+      err()  << " Unable to extrapolate TrStateP " << endreq;
     }
     
     newPOT[0] = workTrStateP->x();
@@ -370,7 +301,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
 						  znew,
 						  transParticle);
     if ( sc.isFailure() ) {
-      log << MSG::ERROR << " Unable to extrapolate Neutral Particle" << endreq;
+      err()  << " Unable to extrapolate Neutral Particle" << endreq;
     }
   }
   return StatusCode::SUCCESS;  

@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.h,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: LinearTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 #ifndef LINEARTRANSPORTER_H 
 #define LINEARTRANSPORTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Gaudi interfaces
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -23,7 +23,7 @@
  *  @date   22/02/2002
  */
 
-class LinearTransporter : public AlgTool, 
+class LinearTransporter : public GaudiTool, 
                           virtual public IParticleTransporter {
 
 public:
@@ -40,28 +40,31 @@ public:
   
   /// Transport according to linear extrapolation in "void". 
   StatusCode transport(ParticleVector::const_iterator &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
   /// Transport according to linear extrapolation in "void". 
   StatusCode transport(const Particle &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
-  /// Transport according to linear extrapolation in "void". 
-  StatusCode transport(Particle &, 
-                       double znew,
-                       Particle &transParticle);  
 protected:
   
 private:
   /// Internal method to transport common to all public methods
-  StatusCode linTransport(Particle *&, 
-                          double znew,
+  StatusCode linTransport(const Particle *&, 
+                          const double znew,
                           Particle &transParticle);
+
+  /// In z range?
+  bool inZRange(const Particle *&, const double& );
 
   /// Tolerance for z estimation
   double m_tolerance;                
+
+  /// z boundaries
+  double m_minz;                
+  double m_maxz;                
  
 };
 #endif // LINEARTRANSPORTER_H

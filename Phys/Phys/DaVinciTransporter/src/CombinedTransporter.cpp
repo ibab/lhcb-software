@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.cpp,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: CombinedTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -31,7 +31,7 @@ const        IToolFactory& CombinedTransporterFactory = s_factory ;
 CombinedTransporter::CombinedTransporter( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : AlgTool( type, name , parent ), 
+  : GaudiTool( type, name , parent ), 
   m_pVeloTransporter(0),
   m_pMFTransporter(0) {
 
@@ -49,105 +49,45 @@ CombinedTransporter::CombinedTransporter( const std::string& type,
 // Initialize
 //=============================================================================
 StatusCode CombinedTransporter::initialize(){
-  MsgStream log(msgSvc(), name());
   
-  log << MSG::INFO << "CombinedTransporter Initialization starting..."
-      << endreq;
-  
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
 
+  info() << "CombinedTransporter Initialization starting..." << endreq;
+  
   // This tool needs to use internally the ToolSvc to retrieve the
   // transporter tool   
-  sc = toolSvc()->retrieveTool(pVeloTransporterName,
-                               m_pVeloTransporter, this);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "Unable to retrieve VeloTransporter  tool"
-        << endreq;
+  m_pVeloTransporter = tool<IParticleTransporter>(pVeloTransporterName,this);
+
+  if (!m_pVeloTransporter) {
+    fatal()  << "Unable to retrieve VeloTransporter  tool" << endreq;
+    return  StatusCode::FAILURE;
+  }
+
+  m_pMFTransporter = tool<IParticleTransporter>(pMFTransporterName,this);
+  if(!m_pMFTransporter) {
+    fatal()  << "Unable to retrieve MFTransporter  tool" << endreq;
     return sc;
   }
-  
-  sc = toolSvc()->retrieveTool(pMFTransporterName,
-                                m_pMFTransporter, this);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "Unable to retrieve MFTransporter  tool"
-        << endreq;
-    return sc;
-  }
-  return sc;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 //  Transport linear in Velo region, parabolic in field region
 //=============================================================================
 StatusCode CombinedTransporter::transport(ParticleVector::const_iterator& iterP, 
-                                          double znew,
+                                          const double znew,
                                           Particle& transParticle){
-  MsgStream log(msgSvc(), name());
   
-  //Particle *workParticle = (*icand);
+  const Particle workParticle = *(*iterP);
+  return transport(workParticle,znew,transParticle) ;
   
-  // check z-range and decide which transport will be done
-  // Linear + multiple scattering in Velo region
-  // Parabolic approximation out of Velo region
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = (*iterP)->pointOnTrack();
-  double zold = oldPOT.z();
-  
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew; 
-    zl = zold;  
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-  
-  // ipz = 1 upstream tracks; ipz = -1 downstream tracks
-  
-  StatusCode sctrans = StatusCode::SUCCESS;
-  
-  // check if the track is already in the region of Velo
-  if ( zr <=  950.0 ){
-    sctrans = m_pVeloTransporter->transport(iterP, znew, 
-                                            transParticle);
-  }
-  else if ( zl >= 950.0 ){
-    // the track is in the magnetic field region
-    sctrans = m_pMFTransporter->transport(iterP, znew, 
-                                          transParticle);  
-  }
-  else {
-    // the track cross both regions
-    // the transport in magnetic field will stop at the 950*mm limit
-    if ( ipz == 1) {
-      sctrans = m_pMFTransporter->transport(iterP, 950.0, 
-                                            transParticle);
-      sctrans = m_pVeloTransporter->transport(transParticle, znew, 
-                                              transParticle);
-    }
-    else{
-      sctrans = m_pVeloTransporter->transport(iterP, 950.0, 
-                                              transParticle);
-      sctrans = m_pMFTransporter->transport(transParticle, znew, 
-                                            transParticle);
-    }
-  }
-  return sctrans;
 }
 //=============================================================================
 //  Transport linear in Velo region, parabolic in field region
 //=============================================================================
 StatusCode CombinedTransporter::transport(const Particle& iterP, 
-                                          double znew,
+                                          const double znew,
                                           Particle& transParticle){
-  MsgStream log(msgSvc(), name());
   
   //Particle *workParticle = const_cast<Particle *> (&icand);
   
@@ -169,7 +109,7 @@ StatusCode CombinedTransporter::transport(const Particle& iterP,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    debug() << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -206,81 +146,4 @@ StatusCode CombinedTransporter::transport(const Particle& iterP,
     }
   }
   return sctrans; 
-}
-//=============================================================================
-//  Transport linear in Velo region, parabolic in field region
-//=============================================================================
-StatusCode CombinedTransporter::transport(Particle& iterP, 
-                                          double znew,
-                                          Particle & transParticle){
-  MsgStream log(msgSvc(), name());
-  
-  // Particle *workParticle = (&icand);
-  
-  
-  // check z-range and decide which transport will be done
-  // Linear + multiple scattering in Velo region
-  // Parabolic approximation out of Velo region
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = iterP.pointOnTrack();
-  double zold = oldPOT.z();
-  
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew; 
-    zl = zold;  
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-  
-  // ipz = 1 upstream tracks; ipz = -1 downstream tracks
-  
-  StatusCode sctrans = StatusCode::SUCCESS;
-  
-  // check if the track is already in the region of Velo
-  if ( zr <=  950.0 ){
-    sctrans = m_pVeloTransporter->transport(iterP, znew, 
-                                            transParticle);
-  }
-  else if ( zl >= 950.0 ){
-    // the track is in the magnetic field region
-    sctrans = m_pMFTransporter->transport(iterP, znew, 
-                                          transParticle);  
-  }
-  else {
-    // the track cross both regions
-    // the transport in magnetic field will stop at the 950*mm limit
-    if ( ipz == 1) {
-      sctrans = m_pMFTransporter->transport(iterP, 950.0, 
-                                            transParticle);
-      sctrans = m_pVeloTransporter->transport(transParticle, znew, 
-                                              transParticle);
-    }
-    else{
-      sctrans = m_pVeloTransporter->transport(iterP, 950.0, 
-                                              transParticle);
-      sctrans = m_pMFTransporter->transport(transParticle, znew, 
-                                            transParticle);
-    }
-  }
-  return sctrans;    
-}
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode CombinedTransporter::finalize() {
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> CombinedTransporter::finalize" << endreq;
-  
-  return StatusCode::SUCCESS;
 }

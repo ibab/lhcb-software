@@ -1,10 +1,9 @@
-// $Id: LinearTransporter.cpp,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: LinearTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 
 // Gaudi interfaces
 #include "GaudiKernel/ISvcLocator.h"
@@ -31,8 +30,11 @@ const        IToolFactory& LinearTransporterFactory = s_factory ;
 LinearTransporter::LinearTransporter( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : AlgTool( type, name , parent )
-  , m_tolerance( 1.e-5 ) {
+  : GaudiTool( type, name , parent )
+    , m_tolerance( 1.e-5 ) 
+    , m_minz(-0.5*m) 
+    , m_maxz(21*m) 
+{
 
   // declare additional Interface
   declareInterface<IParticleTransporter>(this);
@@ -42,10 +44,11 @@ LinearTransporter::LinearTransporter( const std::string& type,
 // Initialize
 //=============================================================================
 StatusCode LinearTransporter::initialize(){
-  MsgStream log(msgSvc(), name());
   
-  log << MSG::INFO << "LinearTransporter Initialization starting..." 
-      << endreq;
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc ;
+
+  info() << "LinearTransporter Initialization starting..." << endreq;
   
   return StatusCode::SUCCESS;
   
@@ -55,138 +58,41 @@ StatusCode LinearTransporter::initialize(){
 //  Transport with linear extrapolation (particle iterator)
 //=============================================================================
 StatusCode LinearTransporter::transport(ParticleVector::const_iterator &icand, 
-                                        double znew,
+                                        const double znew,
                                         Particle & transParticle){
-  MsgStream log(msgSvc(), name());
+  const Particle *workParticle = (*icand);  
   
-  Particle *workParticle = (*icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-    sc = this->linTransport(workParticle, znew, transParticle);
+  StatusCode sc = linTransport(workParticle, znew, transParticle);
   return sc;    
 }
 //=============================================================================
 //  Transport with linear extrapolation (const particle)
 //=============================================================================
 StatusCode LinearTransporter::transport(const Particle & icand, 
-                                        double znew,
+                                        const double znew,
                                         Particle & transParticle){
-  MsgStream log(msgSvc(), name());
 
-  Particle *workParticle = const_cast<Particle *> (&icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-  
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  sc = this->linTransport(workParticle, znew, transParticle);
-  return sc;    
-}
-//=============================================================================
-//  Transport with linear extrapolation (particle)
-//=============================================================================
-StatusCode LinearTransporter::transport(Particle & icand, 
-                                        double znew,
-                                        Particle & transParticle){
-  MsgStream log(msgSvc(), name());
-
-  Particle *workParticle = (&icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-  
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  sc = this->linTransport(workParticle, znew, transParticle);
+  const Particle * workParticle = &icand;
+  StatusCode sc = linTransport(workParticle, znew, transParticle);
   return sc;    
 }
 //=============================================================================
 //  Transport with linear extrapolator common calculation
 //=============================================================================
-StatusCode LinearTransporter::linTransport(Particle *&workParticle, 
-                                           double znew, 
+StatusCode LinearTransporter::linTransport(const Particle *&workParticle, 
+                                           const double znew, 
                                            Particle &transParticle){
-  
-  // initialize msg service
-  
-  MsgStream log(msgSvc(), name());
   
   // check for particle
   if ( !workParticle ) {
-    log << MSG::WARNING
-        << "LinearTransporter::transport should be called with a"
-        << "pointer to a particle as argument!" << endreq;
+    err() << "LinearTransporter::transport should be called with a"
+          << "pointer to a particle as argument!" << endreq;
     return StatusCode::FAILURE;
   }
 
+  // check z-range
+  if (!inZRange(workParticle,znew)) return StatusCode::FAILURE;
+  
   // initialization of transported Particle  
   transParticle = *workParticle;
   
@@ -216,7 +122,7 @@ StatusCode LinearTransporter::linTransport(Particle *&workParticle,
   double dz = znew - zold;
   if (fabs(dz) < m_tolerance){
     // already at required z position
-    log << MSG::DEBUG << " already at required a position " << endreq;
+    debug() << " already at required a position " << endreq;
     return StatusCode::SUCCESS;
   }
   // x and y coordinates at point on track
@@ -271,4 +177,32 @@ StatusCode LinearTransporter::linTransport(Particle *&workParticle,
   transParticle.setPosSlopesCorr(newPosSlopesCorr);
 
   return StatusCode::SUCCESS;  
+}
+//=============================================================================
+//  check z-range
+//=============================================================================
+bool LinearTransporter::inZRange(const Particle *& workParticle, 
+                                 const double& znew){
+
+  HepPoint3D oldPOT(999., 999., 999.);
+  oldPOT = workParticle->pointOnTrack();
+  double zold = oldPOT.z();
+
+  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
+
+  int ipz = 1;
+  double zr = zold;
+  double zl = znew;
+  if ( znew > zold ) {
+    ipz = -1;
+    zr = znew;
+    zl = zold;
+  }
+  
+  if ( zl < m_minz || zr > m_maxz ){
+    debug() << " z = " << zl << " is out of range " 
+        << m_minz << " to " << m_maxz << endreq;    
+    return false;
+  }
+  return true;
 }

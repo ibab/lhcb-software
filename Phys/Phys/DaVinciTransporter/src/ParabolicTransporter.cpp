@@ -35,7 +35,7 @@ const        IToolFactory& ParabolicTransporterFactory = s_factory ;
 ParabolicTransporter::ParabolicTransporter( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : AlgTool ( type, name , parent )
+  : GaudiTool ( type, name , parent )
   , m_pIMF(0)
   , m_tolerance(1.e-5) {
   // declare additional Interface
@@ -46,21 +46,17 @@ ParabolicTransporter::ParabolicTransporter( const std::string& type,
 // Initialize
 //=============================================================================
 StatusCode ParabolicTransporter::initialize(){
-  MsgStream log(msgSvc(), name());
   
-  log << MSG::INFO << "ParabolicTransporter Initialization starting..." 
-      << endreq;
+  info() << "ParabolicTransporter Initialization starting..." << endreq;
   
-  StatusCode sc = service("MagneticFieldSvc", m_pIMF, true);
+  m_pIMF = svc<IMagneticFieldSvc>("MagneticFieldSvc", true);
   
-  if( sc.isSuccess() ) {
-    log << MSG::DEBUG <<"Magnetic field service found "
-        << "m_pIMF = " << m_pIMF << endreq;
+  if( m_pIMF ) {
+    debug() <<"Magnetic field service found " << "m_pIMF = " 
+            << m_pIMF << endreq;
     return StatusCode::SUCCESS;
-  }
-  else {
-    log << MSG::ERROR << "failed to get magnetic field service !!"
-        << endreq;
+  } else {
+    err()  << "failed to get magnetic field service !!" << endreq;
     return StatusCode::FAILURE;
   }
 }
@@ -69,48 +65,20 @@ StatusCode ParabolicTransporter::initialize(){
 //=============================================================================
 StatusCode 
 ParabolicTransporter::transport(ParticleVector::const_iterator & icand, 
-                                double znew,
+                                const double znew,
                                 Particle & transParticle){
-  MsgStream log(msgSvc(), name());
   
-  Particle *workParticle = (*icand);
-  
-  // check z-range
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  sc = this->magfTransport(workParticle, znew, transParticle);  
-  return sc;    
+  const Particle workParticle = *(*icand);
+  return transport(workParticle,znew,transParticle);    
 }
 //=============================================================================
 //  Transport in a magnetic field (parabolic approximation)
 //=============================================================================
 StatusCode ParabolicTransporter::transport(const Particle & icand, 
-                                           double znew,
+                                           const double znew,
                                            Particle & transParticle){
-  MsgStream log(msgSvc(), name());
 
-  Particle *workParticle = const_cast<Particle *> (&icand);
+  const Particle *workParticle = &icand;
 
   // check z-range and decide which transport will be done
   // with or without magnetic field or none.
@@ -130,50 +98,12 @@ StatusCode ParabolicTransporter::transport(const Particle & icand,
   }
 
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    debug() << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  StatusCode sc = StatusCode::SUCCESS;
-  sc = this->magfTransport(workParticle, znew, transParticle);  
-  return sc;    
-}
-//=============================================================================
-//  Transport in a magnetic field (parabolic approximation)
-//=============================================================================
-StatusCode ParabolicTransporter::transport(Particle & icand, 
-                                           double znew,
-                                           Particle & transParticle){
-  MsgStream log(msgSvc(), name());
-
-  Particle *workParticle = (&icand);
-
-  // check z-range and decide which transport will be done
-  // with or without magnetic field or none.
-  // any other option ?
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks  
   StatusCode sc = StatusCode::SUCCESS;
   sc = this->magfTransport(workParticle, znew, transParticle);  
   return sc;    
@@ -181,16 +111,15 @@ StatusCode ParabolicTransporter::transport(Particle & icand,
 //=============================================================================
 // Magnetic field Transporter
 //=============================================================================
-StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle, 
-                                               double znew, 
+StatusCode ParabolicTransporter::magfTransport(const Particle *& workParticle, 
+                                               const double znew, 
                                                Particle &transParticle){
 
   // initialize msg service
-  MsgStream log(msgSvc(), name());
 
   // check for particle
   if ( !workParticle ) {
-    log << MSG::WARNING
+    warning() 
         << "ParabolicTransporter::transport should be called with a"
         << "pointer to a particle as argument!" << endreq;
     return StatusCode::FAILURE;
@@ -248,7 +177,7 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
 
   if (fabs(dz) < m_tolerance){
     // already at required z position
-    log << MSG::DEBUG << " already at required a position " << endreq;
+    debug() << " already at required a position " << endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -375,12 +304,3 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Finalize
-//=============================================================================
-StatusCode ParabolicTransporter::finalize() {
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> ParabolicTransporter::finalize" << endreq;
-  return StatusCode::SUCCESS;
-}

@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -37,49 +37,39 @@ const        IToolFactory& NsctVeloTransporterFactory = s_factory ;
 NsctVeloTransporter::NsctVeloTransporter( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : AlgTool( type, name , parent ) 
+  : GaudiTool( type, name , parent ) 
   , m_tolerance(1.e-5)
-  , m_k(0.01)
-  , m_DDS(0) {
+  , m_k(0.01){
+  
 
   // declare additional Interface
   declareInterface<IParticleTransporter>(this);
   
-  // Retrieve the detector data service
-  StatusCode sc = StatusCode::FAILURE;
-  sc = serviceLocator()->service("DetectorDataSvc", m_DDS, true);
-  if( sc.isFailure () ) {
-    throw GaudiException("DetectorDataSvc Not Found", 
-                         "ParticleTransporterException", 
-                         StatusCode::FAILURE );
-  }
-}
-
-//=============================================================================
-// Accessor to Detector Data Service
-//=============================================================================
-IDataProviderSvc*  NsctVeloTransporter::detSvc() const {
-  return m_DDS;
+  return ;
 }
 
 //=============================================================================
 // Initialize
 //=============================================================================
 StatusCode NsctVeloTransporter::initialize(){
-  MsgStream log(msgSvc(), name());
   
-  log << MSG::DEBUG << "NsctVeloTransporter Initialization starting..."
-      << endreq;
-  log << MSG::DEBUG << "Retrieving now detector elements" << endreq;
+  StatusCode sc = GaudiTool::initialize() ;
+  if (!sc) return sc;
+  debug() << "NsctVeloTransporter Initialization starting..." << endreq;
   
-  SmartDataPtr<IDetectorElement> vertex( detSvc(), "/dd/Structure/LHCb/Velo" );
+  debug() << "Retrieving now detector elements" << endreq;
+  IDetectorElement* vertex = get<IDetectorElement>( detSvc(),
+                                                    "/dd/Structure/LHCb/Velo" );
   if( !vertex ) {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Velo" << endreq;
+    err()  << "Can't retrieve /dd/Structure/LHCb/Velo" << endreq;
     return StatusCode::FAILURE;
   }
   
   const ILVolume* ivol = vertex->geometry()->lvolume();
-  
+  if (!ivol){
+    err() << "No volume vertex->geometry()->lvolume()" << endreq;
+    return StatusCode::FAILURE;    
+  }
   unsigned long noppv = ivol->noPVolumes();
   
   // starting noppv 2 = vStation00
@@ -101,50 +91,21 @@ StatusCode NsctVeloTransporter::initialize(){
 //  Transport linear + multiple scattering (particle iterator)
 //=============================================================================
 StatusCode NsctVeloTransporter::transport(ParticleVector::const_iterator &icand, 
-                                          double znew,
+                                          const double znew,
                                           Particle & transParticle){
-  MsgStream log(msgSvc(), name());
   
-  Particle *workParticle = (*icand);
+  const Particle workParticle = *(*icand);  
   
-  // check z-range
-
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-
-
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-    sc = this->veloTransport(workParticle, znew, transParticle, ipz);
-  return sc;    
+  return transport(workParticle,znew,transParticle);    
 }
 //=============================================================================
 //  Transport linear + multiple scattering (const particle)
 //=============================================================================
 StatusCode NsctVeloTransporter::transport(const Particle & icand, 
-                                          double znew,
+                                          const double znew,
                                           Particle & transParticle){
-  MsgStream log(msgSvc(), name());
 
-  Particle *workParticle = const_cast<Particle *> (&icand);
+  const Particle *workParticle = &icand;
   
   // check z-range
   
@@ -162,45 +123,7 @@ StatusCode NsctVeloTransporter::transport(const Particle & icand,
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-        << endreq;    
-    return StatusCode::FAILURE;
-  }
-  
-  // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
-  
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  sc = this->veloTransport(workParticle, znew, transParticle, ipz);
-  return sc;    
-}
-//=============================================================================
-//  Transport linear + multiple scattering (particle)
-//=============================================================================
-StatusCode NsctVeloTransporter::transport(Particle & icand, 
-                                          double znew,
-                                          Particle & transParticle){
-  MsgStream log(msgSvc(), name());
-
-  Particle *workParticle = (&icand);
-  
-  // check z-range
-  
-  HepPoint3D oldPOT(999., 999., 999.);
-  oldPOT = workParticle->pointOnTrack();
-  double zold = oldPOT.z();
-
-  int ipz = 1;
-  double zr = zold;
-  double zl = znew;
-  if ( znew > zold ) {
-    ipz = -1;
-    zr = znew;
-    zl = zold;
-  }
-  
-  if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    debug() << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
     return StatusCode::FAILURE;
   }
@@ -215,23 +138,14 @@ StatusCode NsctVeloTransporter::transport(Particle & icand,
 //=============================================================================
 //  Transport linear + multiple scattering ( common calculation )
 //=============================================================================
-StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle, 
-                                             double znew, 
+StatusCode NsctVeloTransporter::veloTransport(const Particle *&workParticle, 
+                                             const double znew, 
                                              Particle &transParticle,
                                              int ipz){
   
-  // initialize msg service
-  
-  MsgStream log(msgSvc(), name());
-  
-  if ( 0 == m_DDS ) {
-    log << MSG::INFO << ">>> Transporter Failed to find Detector Data Svc " 
-        << endreq;
-  }
-  
   // check for particle
   if ( !workParticle ) {
-    log << MSG::WARNING
+    warning() 
         << "NsctVeloTransporter::transport should be called with a"
         << "pointer to a particle as argument!" << endreq;
     return StatusCode::FAILURE;
@@ -283,7 +197,7 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
   double dz = znew - zold;
   if (fabs(dz) < m_tolerance){
     // already at required z position
-    log << MSG::DEBUG << " already at required a position " << endreq;
+    debug() << " already at required a position " << endreq;
     return StatusCode::SUCCESS;
   }
   // x and y coordinates at point on track
@@ -375,10 +289,9 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
 //=============================================================================
 StatusCode NsctVeloTransporter::finalize() {
   
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> NsctVeloTransporter::finalize" << endreq;
+  debug() << "==> NsctVeloTransporter::finalize" << endreq;
   m_zVelo.clear();
   
-  return StatusCode::SUCCESS;
+  return GaudiTool::finalize();
 }
 

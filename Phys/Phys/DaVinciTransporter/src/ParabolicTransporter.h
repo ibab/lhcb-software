@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.h,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: ParabolicTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 #ifndef PARABOLICTRANSPORTER_H 
 #define PARABOLICTRANSPORTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Gaudi interfaces
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -27,7 +27,7 @@
 
 class ImagneticFieldSvc;
 
-class ParabolicTransporter : public AlgTool, 
+class ParabolicTransporter : public GaudiTool, 
                              virtual public IParticleTransporter {
 public:
   /// Standard constructor
@@ -42,29 +42,22 @@ public:
   
   /// Transport according to parabolic extrapolation.
   StatusCode transport(ParticleVector::const_iterator &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
   /// Transport according to parabolic extrapolation.
   StatusCode transport(const Particle &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
-  /// Transport according to parabolic extrapolation.
-  StatusCode transport(Particle &, 
-                       double znew,
-                       Particle &transParticle);
-  
-  /// Finalize
-  StatusCode finalize();
   
 protected:
   
 private:
 
   /// Transport according to parabolic extrapolation, common calculations.
-  StatusCode magfTransport(Particle *&, 
-                           double znew,
+  StatusCode magfTransport(const Particle *&, 
+                           const double znew,
                            Particle &transParticle);
 
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service

@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.h,v 1.1.1.1 2004-08-24 06:19:11 pkoppenb Exp $
+// $Id: CombinedTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
 #ifndef COMBINEDTRANSPORTER_H 
 #define COMBINEDTRANSPORTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IParticleTransporter.h"
@@ -24,7 +24,7 @@
  *  @date   22/02/2002
  */
 
-class CombinedTransporter : public AlgTool, 
+class CombinedTransporter : public GaudiTool, 
                             virtual public IParticleTransporter {
 public:
   /// Standard constructor
@@ -40,24 +40,16 @@ public:
   /// Transport with linear or parabolic extrapolations depending
   /// on regions of the detector.  
   StatusCode transport(ParticleVector::const_iterator &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
   /// Transport with linear or parabolic extrapolations depending
   /// on regions of the detector.  
   StatusCode transport(const Particle &, 
-                       double znew,
+                       const double znew,
                        Particle &transParticle);
   
-  /// Transport with linear or parabolic extrapolations depending
-  /// on regions of the detector.  
-  StatusCode transport(Particle &, 
-                       double znew,
-                       Particle &transParticle);
-  
-  /// Finalize
-  StatusCode finalize();
-  
+ 
 protected:
   
 private:
