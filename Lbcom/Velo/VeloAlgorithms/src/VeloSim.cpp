@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.26 2003-04-14 07:34:26 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.27 2003-10-08 15:48:18 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -12,11 +12,8 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
-//nag
-#include <nag.h>
-#include <nag_stdlib.h>
-#include <stdio.h>
-#include <nagg01.h>
+//GSL
+#include "gsl/gsl_sf_erf.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -610,10 +607,8 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
             << " zdiff " << ZDiffuse << endmsg;
       }
 
-      double prob1= g01eac(Nag_UpperTail,diffuseDist1/diffuseSigma ,
-                           NAGERR_DEFAULT);
-      double prob2= g01eac(Nag_UpperTail,diffuseDist2/diffuseSigma ,
-                           NAGERR_DEFAULT);
+      double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
+      double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
       if( verbose ) {
         log << MSG::VERBOSE << " prob1+2 " <<  prob1 << " " << prob2 << endmsg;
       }
@@ -968,10 +963,9 @@ StatusCode VeloSim::noiseSim(){
     // number of hits to add noise to (i.e. fraction above threshold)
     // add both large +ve and -ve noise.
     int maxStrips= m_velo->nbStrips();
-    int hitNoiseTotal= int(VeloRound::round(2.*
-                g01eac(Nag_UpperTail,
-                       VeloSimParams::threshold/noiseSig ,
-                       NAGERR_DEFAULT)*float(maxStrips)));
+    int hitNoiseTotal= 
+      int(VeloRound::round(2.*gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
+                           *float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
     //    log <<  MSG::INFO << " poisson" << poisson() << endmsg;
     hitNoiseTotal = int(poisson());
@@ -984,8 +978,7 @@ StatusCode VeloSim::noiseSim(){
           <<  " sigma of noise " << noiseSig
           << " threshold " << VeloSimParams::threshold
           << " tail probability "
-          << g01eac(Nag_UpperTail, VeloSimParams::threshold/noiseSig ,
-                    NAGERR_DEFAULT)
+          << gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
           << endmsg;
     }
     for (int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
