@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.3 2002-03-21 17:48:16 dhcroft Exp $
+! $Id: release.notes,v 1.4 2002-03-27 10:50:17 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! =========v1r0==============================================================
+! 27/3/2002 David Hutchcroft
+  Code is now ready for release, MuonKernel was released as v1r0 again 
+  Changed requirements file to point at MuonDet v2r* to pick up the methods
+  to determine the shape of physical and logical pads
 
 ! =============================================================================
 ! 21/3/2002  David Hutchcroft
