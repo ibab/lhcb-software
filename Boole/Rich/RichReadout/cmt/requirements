@@ -2,12 +2,15 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.19 2004-07-30 11:10:41 jonrob Exp $
+# $Id: requirements,v 1.20 2004-10-27 14:32:58 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2004/07/30 11:10:41  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package RichReadout
-version v1r9
+version v1r10
 
 # ================ structure =================================================
 branches cmt doc src
@@ -17,7 +20,7 @@ include_path none
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use RichEvent        v7r*    Event
+use RichEvent        v8r*    Event
 
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA

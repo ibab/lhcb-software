@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2004-10-27 - Chris Jones
+ - Use RichEvent v8r*
+
 ! 2004-07-30 - Chris Jones
  - Update doxygen comments
 
