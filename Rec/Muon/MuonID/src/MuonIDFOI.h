@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.h,v 1.1.1.1 2002-05-10 12:06:58 dhcroft Exp $
+// $Id: MuonIDFOI.h,v 1.2 2002-05-10 15:25:54 dhcroft Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
@@ -46,8 +46,14 @@ private:
   /// check the track is in the p and angle acceptance
   StatusCode preSelection(MuonID * pMuid, bool &passed);
 
-  /// Get the Muon coordinated from the TES
-  StatusCode getCoords(MuonID *pMuid);
+  /// Fill the local vector of coord positions
+  StatusCode fillCoordVectors();
+
+  /// Empty the coord vectors
+  void clearCoordVectors();
+
+  /// Set the MuonCoords used in this ID
+  StatusCode setCoords(MuonID *pMuid);
 
   /// Extract the momentum and extrapolate the track to each station
   StatusCode trackExtrapolate(TrStoredTrack *pTrack);
@@ -109,6 +115,23 @@ private:
   // MuonTileID to ZYX tool
   IMuonTileXYZTool *m_iTileTool;
   IMuonGeometryTool *m_iGeomTool;
+
+  // OK nasty optimisation here, store x,dx,y,dy of each coord to test against
+  // track extrapolation
+  class coordExtent_{
+  public:
+    coordExtent_(double x, double dx, double y, double dy, MuonCoord *pCoord) :
+      m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_pCoord(pCoord)  {};
+    double m_x;
+    double m_dx;
+    double m_y;
+    double m_dy;
+    MuonCoord *m_pCoord;
+  };
+
+  /// vector of positions of coords [station][region]
+  std::vector<coordExtent_> m_coordPos[5][4]; 
+
 
 };
 #endif // MUONIDFOI_H

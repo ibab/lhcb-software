@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.1.1.1 2002-05-10 12:06:58 dhcroft Exp $
+// $Id: MuonIDFOI.cpp,v 1.2 2002-05-10 15:25:54 dhcroft Exp $
 // Include files
 #include <cstdio>
 
@@ -142,6 +142,8 @@ StatusCode MuonIDFOI::initialize() {
   }
   log << endreq;
 
+  clearCoordVectors(); // should not do anything really
+
   return StatusCode::SUCCESS;
 };
 
@@ -153,6 +155,10 @@ StatusCode MuonIDFOI::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
+  StatusCode sc = fillCoordVectors();
+  if(sc.isFailure()){
+    return sc;
+  }
 
   SmartDataPtr<TrStoredTracks> trTracks(eventSvc(),m_TrStoredTracksPath);
   if(!trTracks){
@@ -160,6 +166,7 @@ StatusCode MuonIDFOI::execute() {
         <<  m_TrStoredTracksPath << endreq;
     return StatusCode::FAILURE;
   }
+  log << MSG::DEBUG << "Number of input tracks " << trTracks->size() << endreq;
 
   MuonIDs * pMuids = new MuonIDs;
 
@@ -180,18 +187,19 @@ StatusCode MuonIDFOI::execute() {
   }
 
   // Debug : muon identification event summary
-  log << MSG::DEBUG << "Number of input tracks " << trTracks->size() << endreq;
   log << MSG::DEBUG << "Number of MuonID objects created " << pMuids->size()
       << endreq;
 
   // Register the MuonID container to the TES
 
-  StatusCode sc = eventSvc()->registerObject(m_MuonIDsPath,pMuids);
+  sc = eventSvc()->registerObject(m_MuonIDsPath,pMuids);
   if(sc.isFailure()){
     log << MSG::ERROR << "TES rejected the muonIDs into location "
         << m_MuonIDsPath << endreq;
     return sc;
   }
+
+  clearCoordVectors();
 
   return StatusCode::SUCCESS;
 }
@@ -208,6 +216,55 @@ StatusCode MuonIDFOI::finalize() {
 }
 
 //=============================================================================
+// fill vectors of x,y,z positions for the MuonCoords
+StatusCode MuonIDFOI::fillCoordVectors(){
+
+  int station;
+  for(station = 0 ; station < 5 ; station++){
+    // get the MuonCoords for each station in turn
+    std::string stationPattern = MuonCoordLocation::MuonCoords;
+    char stationPath[100];
+    sprintf(stationPath,stationPattern.c_str(),station+1);
+    std::string TESPath = stationPath;
+    SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
+    if(!coords){
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Failed to read TES path "
+          << TESPath << " looking for MuonCoords" << endreq;
+    }
+
+    // loop over the coords
+    MuonCoords::const_iterator iCoord;
+    for( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
+      int region = (*iCoord)->key().region();
+      double x,dx,y,dy,z,dz;
+      StatusCode sc = 
+        m_iTileTool->calcTilePos((*iCoord)->key(),x,dx,y,dy,z,dz);
+      if(sc.isFailure()){
+        MsgStream log(msgSvc(), name());
+        log << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key()
+            << endreq;
+        return sc;
+      }
+      
+      m_coordPos[station][region].push_back(coordExtent_(x,dx,y,dy,*iCoord));
+    }
+  }
+
+  return StatusCode::SUCCESS; 
+}
+
+// Clear the coord vector
+void MuonIDFOI::clearCoordVectors(){
+  int station;
+  for(station = 0 ; station < 5 ; station++){
+    int region;
+    for(region = 0 ; region < 4 ; region++){
+      
+      m_coordPos[station][region].clear();
+    }
+  }
+}
 
 // Do the identification
 StatusCode MuonIDFOI::doID(MuonID *pMuid){
@@ -228,7 +285,7 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
   }
 
   // find the coordinates in the fields of interest
-  sc = getCoords(pMuid);
+  sc = setCoords(pMuid);
   if(sc.isFailure()){
     return sc;
   }
@@ -263,20 +320,27 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
 
     // formular to make this a probability is 
     // dSlopeX < 0.005 = 1.0
-    // 0.005 < dSlopeX < 0.85 = 1. - ( (dSlopeX-0.05) / 0.08 )
-    // 0.85 < dSlopeX = 0.
+    // 0.005 < dSlopeX < 0.085 = 1. - ( (dSlopeX-0.005) / 0.08 )
+    // 0.085 < dSlopeX = 0.
     if( dSlopeX < 0.005 ) {
       pMuid->setMuProb(1.0);
-    }else if( dSlopeX > 0.85 ){
+    }else if( dSlopeX > 0.085 ){
       pMuid->setMuProb(0.0);
     } else {
-      pMuid->setMuProb(1.0 - ( (dSlopeX-0.05) / 0.08 ) );
+      pMuid->setMuProb(1.0 - ( (dSlopeX-0.005) / 0.08 ) );
     }
   }else{
     // not passed selection as a muon so probability is zero
     pMuid->setMuProb(0.0);
   }
 
+  log << MSG::DEBUG << "ID Prob = " << pMuid->MuProb() 
+      << " p = " << m_Momentum << "  "
+      << " coord in FOI ("
+      << m_occupancy[0] << ","  << m_occupancy[1] << "," 
+      << m_occupancy[2] << ","  << m_occupancy[3] << "," 
+      << m_occupancy[4] << ")" << endreq;
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -308,66 +372,56 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
   return StatusCode::SUCCESS;
 }
 
-StatusCode MuonIDFOI::getCoords(MuonID *pMuid){
-  MsgStream log(msgSvc(), name());
+StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
 
   int station;
   for(station = 0 ; station < 5 ; station++){
-    // get the MuonCoords for each station in turn
-    std::string stationPattern = MuonCoordLocation::MuonCoords;
-    char stationPath[100];
-    sprintf(stationPath,stationPattern.c_str(),station+1);
-    std::string TESPath = stationPath;
-    SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
-    if(!coords){
-      log << MSG::ERROR << "Failed to read TES path "
-          << TESPath << " looking for MuonCoords" << endreq;
-    }
+    int region;
+    for(region = 0 ; region < 4 ; region++){
 
-    // loop over the coords
-    MuonCoords::const_iterator iCoord;
-    for( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-      int region = (*iCoord)->key().region();
-      double x,dx,y,dy,z,dz;
-      StatusCode sc = 
-        m_iTileTool->calcTilePos((*iCoord)->key(),x,dx,y,dy,z,dz);
-      if(sc.isFailure()){
-        log << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key()
-            << endreq;
-        return sc;
-      }
+      if( 0 < m_coordPos[station][region].size()){
+        double foiXDim = foiX( station, region, m_Momentum);
+        double foiYDim = foiY( station, region, m_Momentum);      
+        
+        std::vector<coordExtent_>::const_iterator itPos;
+        for(itPos = m_coordPos[station][region].begin();
+            itPos != m_coordPos[station][region].end();
+            itPos++){
 
-      double foiXDim = foiX( station, region, m_Momentum);
-      double foiYDim = foiY( station, region, m_Momentum);
-      // check if the hit is in the window
-      if( ( (fabs( x - m_trackX[station] ) - dx) < foiXDim ) &&
-          ( (fabs( y - m_trackY[station] ) - dy) < foiYDim ) ) {
-        // it is in the window
-        // add the hit to the MuonID
-        pMuid->addToCoords((*iCoord));
-        m_occupancy[station]++;
+          double x = itPos->m_x;
+          double dx = itPos->m_dx;
+          double y = itPos->m_y;
+          double dy = itPos->m_dy;
 
-        // also need track angle in X in M2-M3 for angle matching
-        if(1 == m_occupancy[station]) {
-          // this is the first coord found
-          m_CoordX[station] = x;
-        }else{
-          // get best match X
-          if( fabs(x - m_trackX[station]) <
-              fabs(m_CoordX[station] - m_trackX[station]) ){
-            // this Coord is a better match
-            m_CoordX[station] = x;
+          // check if the hit is in the window
+          if( ( (fabs( x - m_trackX[station] ) - dx) < foiXDim ) &&
+              ( (fabs( y - m_trackY[station] ) - dy) < foiYDim ) ) {
+            // it is in the window
+            // add the hit to the MuonID
+            pMuid->addToCoords(itPos->m_pCoord);
+            m_occupancy[station]++;
+
+            // also need track angle in X in M2-M3 for angle matching
+            if(1 == m_occupancy[station]) {
+              // this is the first coord found
+              m_CoordX[station] = x;
+            }else{
+              // get best match X
+              if( fabs(x - m_trackX[station]) <
+                  fabs(m_CoordX[station] - m_trackX[station]) ){
+                // this Coord is a better match
+                m_CoordX[station] = x;
+              }
+            }
           }
-        }
+        }// itPos 
       }
-    }
-  }
-
+    } //region
+  } //station
   return StatusCode::SUCCESS;
 }
 
 StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
-  MsgStream log(msgSvc(), name());
 
   // get state closest to M1
   //  TrStateP *stateP =
@@ -381,11 +435,13 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
       iState++){
     const TrState *state = *iState;
     if(!state){
+      MsgStream log(msgSvc(), name());
       log << MSG::ERROR << " Failed to get state from track " << endreq;
       return StatusCode::FAILURE;
     }
     const TrStateP *currentStateP = dynamic_cast<const TrStateP*>(state);
     if(!currentStateP){
+      MsgStream log(msgSvc(), name());
       log << MSG::ERROR << " Failed to get stateP from track " << endreq;
       return StatusCode::FAILURE;
     }
