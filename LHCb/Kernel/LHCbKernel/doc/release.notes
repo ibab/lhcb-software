@@ -2,10 +2,14 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
-!========================= LHCbKernel v1r4 2002-07-29 ===================
+!========================= LHCbKernel v2r1 2002-07-29 ===================
 ! 2002-07-25 - Ivan Belyaev
  - Relations/*.h fix bug in destructors. 
 
+!========================= LHCbKernel v2r0 2002-07-16 ===================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+ 
 !========================= LHCbKernel v1r3 2002-07-18 ===================
 ! 2002-07-18 - Marco Cattaneo
  - Add Kernel/InstanceCounter.h: static class for instrumenting constructors
