@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.3 2003-10-06 16:16:40 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.4 2003-11-26 13:17:31 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -31,7 +31,7 @@
 // This algorithm (based on SpillOverAlg) reads additional
 // events into the Event Data store and puts them in other paths in the
 // TES. It uses an "other Event Selector".
-// for the moment it only allows merging of LHC background as a flat merging
+// Current known merging types are LHC background and Spillover
 //
 // 2003-06-23 : Gloria CORTI
 //

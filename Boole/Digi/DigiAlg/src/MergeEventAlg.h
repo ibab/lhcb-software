@@ -15,7 +15,7 @@ class EventSelector;
 class DataStoreItem;
 class ILumiTool;
 
-/** @class MergeEvent MergeEvent.h
+/** @class MergeEventAlg MergeEventAlg.h
  *
  *  Merge events from different OO files and put them in different
  *  TES locations. Initializes an EventSelector per additional file 

@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v2r2 2003-11-25 =========================
+! 2003-11-25 - Marco Cattaneo
+ - BooleInit: adapt to new name of RawBuffer
+
 !========================= DigiAlg v2r1p1 2003-11-10 ========================
 ! 2003-11-10 - Marco Cattaneo
  - Patch to force recompilation with DAQEvent v2r1
