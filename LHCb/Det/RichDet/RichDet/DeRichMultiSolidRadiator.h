@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.3 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.4 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -103,12 +106,13 @@ private:
   typedef std::vector<const ISolid*> Solids;
   /// vector of physical volumes
   typedef std::vector<const IPVolume*> PVolumes;
-  /// vector of refractive indices
-  typedef std::vector<const TabulatedProperty*> RIndices;
+  /// vector of tabulated properties
+  typedef std::vector<const TabulatedProperty*> TabProps;
 
   Solids m_solids;        ///< The solids that make up this radiator
   PVolumes m_pVolumes;    ///< The physical volumes
-  RIndices m_refIndices;  ///< refractive indices (for each solid)
+  TabProps m_refIndices;  ///< refractive indices (for each solid)
+  TabProps m_rayleighVector; ///< Rayleigh scattering properties
 };
 
 #endif    // RICHDET_DERICHMULTISOLIDRADIATOR_H

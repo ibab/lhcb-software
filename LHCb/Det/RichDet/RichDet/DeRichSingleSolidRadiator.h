@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.3 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.4 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -100,8 +103,6 @@ private:
 
   const ISolid* m_solid;  ///< topmost solid of the radiator
 
-  /// pointer to the refractive index of the material
-  const TabulatedProperty* m_refIndex;
 };
 
 #endif    // RICHDET_DERICHSINGLESOLIDRADIATOR_H

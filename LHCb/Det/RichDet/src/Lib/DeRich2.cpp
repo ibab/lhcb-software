@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.cpp,v 1.9 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.10 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -20,6 +23,10 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "Kernel/CLHEPStreams.h"
+
+// DetDesc
+#include "DetDesc/Material.h"
+#include "DetDesc/IGeometryInfo.h"
 
 //-----------------------------------------------------------------------------
 
@@ -39,13 +46,14 @@ const CLID& DeRich2::classID() {
 //===========================================================================
 
 StatusCode DeRich2::initialize() {
+
+  MsgStream log(msgSvc(), "DeRich2" );
+  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;  
+
   StatusCode sc = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
 
   if ( !DeRich::initialize() ) return fail;
-
-  MsgStream log(msgSvc(), "DeRich2" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;
 
   std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
   m_nominalCentreOfCurvature =
@@ -74,6 +82,30 @@ StatusCode DeRich2::initialize() {
 
   log << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
       << HepVector3D( m_nominalNormalRight ) << endmsg;
+
+  const IPVolume* pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow:0");
+  // compatibilty will DC04 xml
+  if ( !pvGasWindow )
+    pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow1");
+
+  if ( pvGasWindow ) {
+    const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
+      material()->tabulatedProperties();
+    Material::Tables::const_iterator matIter;
+    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
+      if( (*matIter) ){
+        if ( (*matIter)->type() == "RINDEX" ) {
+          m_gasWinRefIndex = (*matIter);
+        }
+        if ( (*matIter)->type() == "ABSLENGTH" ) {
+          m_gasWinAbsLength = (*matIter);
+        }
+      }
+    }
+  } else {
+    log << MSG::ERROR << "Could not find gas window properties" << endreq;
+    return fail;
+  }  
 
   log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endreq;
   return sc;

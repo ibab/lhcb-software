@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.3 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.4 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -45,11 +48,11 @@ const CLID& DeRichMultiSolidRadiator::classID() {
 
 StatusCode DeRichMultiSolidRadiator::initialize() {
 
-  StatusCode fail = StatusCode::FAILURE ;
-
   MsgStream log(msgSvc(), "DeRichMultiSolidRadiator" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator"
-      << endreq;
+  log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator "
+      << name() << endreq;
+
+  StatusCode fail = StatusCode::FAILURE ;
 
   if ( DeRichRadiator::initialize().isFailure() ) return fail;
 
@@ -71,13 +74,30 @@ StatusCode DeRichMultiSolidRadiator::initialize() {
             log << MSG::DEBUG << " with property " << (*tabIter)->name()
                 << endreq;
             m_refIndices.push_back( (*tabIter) );
-            break;
+          }
+          if ( (*tabIter)->type() == "RAYLEIGH" ) {
+            log << MSG::DEBUG << " and with property " << (*tabIter)->name()
+                << endreq;
+            m_rayleighVector.push_back( (*tabIter) );
           }
         }
       }
-
     }
   }
+
+  if (0 == m_refIndices.size() ) {
+    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
+        << endmsg;
+    return fail;
+  }
+  // for the time being use the refIndex of the first volume for the whole 
+  // radiator
+  m_refIndex = m_refIndices[0];
+
+  if ( m_rayleighVector.size() != 0 )
+    m_rayleigh = m_rayleighVector[0];
+  
+  log << MSG::DEBUG <<"Finished initialisation of " << name() << endreq;
 
   return StatusCode::SUCCESS;
 }

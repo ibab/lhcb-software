@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.9 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.10 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,6 +91,23 @@ public:
   }
 
   /**
+   * Retrieves the refractive index of the radiator
+   * @return A pointer to the refractive index of the radiator
+   */
+  inline virtual const TabulatedProperty* refIndex() {
+    return m_refIndex;
+  }
+
+  /**
+   * Retrieves the Rayleigh properties of the radiator
+   * @return A pointer to the Rayleigh tab property
+   * @retval NULL No Rayleigh tab property
+   */
+  inline virtual const TabulatedProperty* rayleigh() {
+    return m_rayleigh;
+  }
+
+  /**
    * Finds the next intersection point with radiator.
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
@@ -119,9 +139,14 @@ public:
 
 
 protected:
-
+  
   Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
   Rich::DetectorType m_rich;        ///< The Rich detector of this radiator
+
+  /// pointer to the refractive index of the material
+  const TabulatedProperty* m_refIndex;  
+  /// pointer to the Rayleigh scattering properties
+  const TabulatedProperty* m_rayleigh;  
 };
 
 #endif    // RICHDET_DERICHRADIATOR_H

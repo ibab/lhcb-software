@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.cpp,v 1.2 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.3 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -46,6 +49,10 @@ StatusCode DeRich::initialize ( ) {
   MsgStream log(msgSvc(), "DeRich" );
   log << MSG::DEBUG << "Starting initialisation for DeRich" << endmsg;
 
+  m_gasWinRefIndex = 0;
+  m_gasWinAbsLength = 0;  
+  m_HPDQuantumEff = 0;  
+
   m_vectorNames = paramVectors();
   m_paramNames  = params();
   
@@ -58,6 +65,7 @@ StatusCode DeRich::initialize ( ) {
     m_positionInfo = true;
   }  
 
+  
   log << MSG::DEBUG << "Finished initialisation for DeRich" << endmsg;
   return StatusCode::SUCCESS;
 }

@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.cpp,v 1.9 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.10 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -122,8 +125,11 @@ StatusCode DeRichSphMirror::initialize() {
 
   HepPoint3D middleRightSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
                              0.0,
-                             flatToCentre);
-  
+                             flatToCentre);  
+  HepPoint3D middleLeftSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
+                             0.0,
+                             -flatToCentre);
+
   //  m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
   //  m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
   //  m_radius = userParameterAsDouble("Radius");
@@ -184,8 +190,13 @@ StatusCode DeRichSphMirror::initialize() {
   log << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " Radius:" << m_radius 
       << " Centre of curvature " << m_centreOfCurvature << endreq;
   log << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endreq;
-  log << MSG::VERBOSE << "Right middle " 
-      << geometry()->toGlobal(middleRightSide) << endreq;
+
+  if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) ) 
+    log << MSG::VERBOSE << "Right middle " 
+        << geometry()->toGlobal(middleRightSide) << endreq;
+  else
+    log << MSG::VERBOSE << "Left middle " 
+        << geometry()->toGlobal(middleLeftSide) << endreq;
 
   log << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endreq;
   return StatusCode::SUCCESS;

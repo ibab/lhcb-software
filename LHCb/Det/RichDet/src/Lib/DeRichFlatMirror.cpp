@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichFlatMirror
  *
  *  CVS Log :-
- *  $Id: DeRichFlatMirror.cpp,v 1.5 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichFlatMirror.cpp,v 1.6 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -104,10 +107,11 @@ StatusCode DeRichFlatMirror::initialize() {
     log << MSG::FATAL <<"A mirror without a number!"<< endreq;
     sc = StatusCode::FAILURE;
   }
-
-  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber
-      <<" Centre (on reflective surface) " << m_mirrorCentre  << endreq;
-  log << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endreq;
+  
+  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber 
+      <<" Centre (on reflective surface) " << m_mirrorCentre  << endmsg;
+  log << MSG::DEBUG <<"Normal vector " << m_normalVector << endmsg;
+  log << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endmsg;
 
   return sc;
 }

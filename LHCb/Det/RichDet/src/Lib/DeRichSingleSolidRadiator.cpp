@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.3 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.4 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -45,12 +48,12 @@ const CLID& DeRichSingleSolidRadiator::classID() {
 
 StatusCode DeRichSingleSolidRadiator::initialize() {
 
+  MsgStream log(msgSvc(), "DeRichSingleSolidRadiator" );
+  log << MSG::DEBUG <<"Starting initialisation for DeRichSingleSolidRadiator "
+      << name() << endreq;
+
   StatusCode sc = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
-
-  MsgStream log(msgSvc(), "DeRichSingleSolidRadiator" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRichSingleSolidRadiator"
-      << endreq;
 
   if ( DeRichRadiator::initialize().isFailure() ) return fail;
   
@@ -63,18 +66,27 @@ StatusCode DeRichSingleSolidRadiator::initialize() {
     if( (*matIter) ){
       if ( (*matIter)->type() == "RINDEX" ) {
         m_refIndex = (*matIter);
-        break;
+      }
+      if ( (*matIter)->type() == "RAYLEIGH" ) {
+        m_rayleigh = (*matIter);
       }
     }
   }
 
+  if (!m_refIndex) {
+    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
+        << endmsg;
+    return fail;
+  }
 
   HepPoint3D zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG << "Radiator " << name() << " with TabProp " 
-      << m_refIndex->name() << " type " << m_refIndex->type() <<" Centre:"
-      << geometry()->toGlobal(zero) << endreq;
-  log << MSG::DEBUG <<"Finished initialisation for DeRichSingleSolidRadiator"
-      << endreq;
+  log << MSG::DEBUG << "Found  TabProp " << m_refIndex->name() << " type " 
+      << m_refIndex->type() << endmsg;
+  if ( m_rayleigh ) 
+    log << MSG::DEBUG << "Found  TabProp " << m_rayleigh->name() << " type " 
+        << m_rayleigh->type() << endmsg;
+  log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
+  log << MSG::DEBUG <<"Finished initialisation for "  << name() << endreq;
 
   return sc;
 }

@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.cpp,v 1.6 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.7 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -61,6 +64,9 @@ StatusCode DeRichRadiator::initialize() {
       }
     }
   }
+
+  m_refIndex = 0;
+  m_rayleigh = 0;
 
   msg << MSG::DEBUG <<"Finished initialisation for DeRichRadiator"<< endreq;
 

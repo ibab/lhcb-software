@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.cpp,v 1.8 2004-07-27 08:55:23 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.9 2004-09-01 15:20:19 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/27 08:55:23  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -20,11 +23,12 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "Kernel/CLHEPStreams.h"
-//------------------------------------------------------------------------------
-//
-// Implementation of class :  DeRich1
-//
-//------------------------------------------------------------------------------
+
+// DetDesc
+#include "DetDesc/Material.h"
+#include "DetDesc/IGeometryInfo.h"
+
+//-----------------------------------------------------------------------------
 
 const CLID& CLID_DERich1 = 12001;  // User defined
 
@@ -42,13 +46,13 @@ const CLID& DeRich1::classID() {
 //===========================================================================
 
 StatusCode DeRich1::initialize() {
+  MsgStream log(msgSvc(), "DeRich1" );
+  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endreq;
+
   StatusCode sc = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
 
   if ( !DeRich::initialize() ) return fail;
-
-  MsgStream log(msgSvc(), "DeRich1" );
-  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endreq;
 
   double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
   double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
@@ -86,6 +90,43 @@ StatusCode DeRich1::initialize() {
 
   log << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
       << HepVector3D( m_nominalNormalBottom ) << endmsg;
+
+  const IPVolume* pvGasWindow = geometry()->lvolume()->
+    pvolume("pvRich1SubMaster")->lvolume()->pvolume("pvRich1MagShH0:0")->
+    lvolume()->pvolume("pvRich1GQuartzWH0:0");
+
+  if ( pvGasWindow ) {
+    const Material::Tables& quartzWinTabProps = pvGasWindow->lvolume()->
+      material()->tabulatedProperties();
+    Material::Tables::const_iterator matIter;
+    for (matIter=quartzWinTabProps.begin(); matIter!=quartzWinTabProps.end(); ++matIter) {
+      if( (*matIter) ){
+        if ( (*matIter)->type() == "RINDEX" ) {
+          m_gasWinRefIndex = (*matIter);
+        }
+        if ( (*matIter)->type() == "ABSLENGTH" ) {
+          m_gasWinAbsLength = (*matIter);
+        }
+      }
+    }
+  } else {
+    log << MSG::ERROR << "Could not find gas window properties" << endreq;
+    return fail;
+  }
+  
+  std::string HPD_QETabPropLoc;
+  
+  if ( hasParam( "RichHpdQETableName" ) )
+    HPD_QETabPropLoc = paramAsString( "RichHpdQETableName" );
+  else
+    HPD_QETabPropLoc = "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
+  
+  SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
+  if ( !tabQE )
+    log << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
+  else
+    m_HPDQuantumEff = tabQE;
+
   log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
   return sc;
 }
