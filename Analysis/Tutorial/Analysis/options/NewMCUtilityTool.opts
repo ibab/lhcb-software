@@ -1,0 +1,20 @@
+// Add Algorithm that uses the tool to list of top level algorithms
+ApplicationMgr.TopAlg     += { "AnalysisAlgorithm/UseMCUtility" };
+// Setup of decay particle
+UseMCUtility.DecayParticle    = "J/psi(1S)";
+// Setup of decay product
+UseMCUtility.DecayProducts    = { "mu+", "mu-" };
+
+// Specify the tool to use (its class)
+UseMCUtility.ToolToUse         = "NewMCUtilityTool";
+UseMCUtility.MyToolToUse       = "MCUtilityTool";
+
+//------------------------------------------------------------------ 
+// Property of the private tool to use, change printing depth
+UseMCUtility.MCUtilityTool.PrintDepth = 0;
+
+//------------------------------------------------------------------
+// Extend lenght of print related to code identification
+//------------------------------------------------------------------
+MessageSvc.Format = "% F%18W%S%7W%R%T %0W%M";
+

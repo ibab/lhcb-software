@@ -1,0 +1,22 @@
+package Analysis
+version v3
+
+branches src cmt doc
+
+use GaudiSys    v8*
+use LHCbEvent   v11* Event
+
+# interface include files
+include_dirs ${ANALYSISROOT}
+
+# build the component library
+library Analysis ../src/*.cpp
+
+# define component library link options
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+#===============================================================
+private
+
+apply_pattern package_Cshlibflags

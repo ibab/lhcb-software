@@ -1,0 +1,46 @@
+Package Tutorial/Analysis
+
+! 20011019 - GCorti
+  - New package
+
+
+The executable Main.exe in Tutorial/Main/v3 should be available 
+Remember to set corresponding options in jobOptions.txt
+
+Necessary commands to run through the tutorial:
+
+cd ~/tutorial
+getpack Tutorial/Analysis v3
+
+cd ~tutorial/Tutorial/Analysis/v3/cmt
+cmt config
+cd ../Analysis
+cp ../Analysis.solution/*.* .
+cd ../src
+cp ../src.mctool/*.* .
+cd ../cmt
+gmake tag=Linuxdbx
+
+cd ~tutorial/Tutorial/Main/v3/cmt
+source setup.csh
+~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
+
+cd ~tutorial/Tutorial/Analysis/v3/cmt
+cd ../src
+cp ../src.mymctool/*.* .
+cd ../cmt
+gmake tag=Linuxdbx
+cd ~tutorial/Tutorial/Main/v3/cmt
+~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
+
+cd ~tutorial/Tutorial/Analysis/v3/cmt
+cd ../src
+cp ../src.solution/*.* .
+cd ../cmt
+gmake tag=Linuxdbx
+cd ~tutorial/Tutorial/Main/v3/cmt
+~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
+
+
+
+
