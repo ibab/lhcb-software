@@ -1,0 +1,58 @@
+<!-- ****************************************************************
+     *  EffCheckResult                                                   *
+     ****************************************************************-->
+
+    <import name="Kernel/LHCbStreams" />
+    <import name="Event/MCEffTree" />
+    <import name="Event/MCEffParticle" />
+    <import name="Event/SelResult" />
+
+   <class
+     author="P.Igo-Kemenes, G.Corti"
+     desc="Store a summary result of the efficiency as produced by the EffSelCheck algorithm for a specific decay"
+     name="EffCheckResult"
+     id="870"
+    >
+      <base name="KeyedObject&lt;int&gt;"/>
+      <location
+       name="Default"
+       place="/Event/Phys/Efficiencies"
+      />
+      <attribute
+       name="decayTruth"
+       desc="Description of MC truth decay, with same syntax as used by MCDecayFinder"
+       type="std::string"
+      />
+      <attribute
+       name="decaySel"
+       desc="Description of decay searched for in selection, with same syntax as used by DecayFinder"
+       type="std::string"
+      />
+      <relation
+       name="truthInfo"
+       desc="Reference to true decay tree information"
+       type="MCEffTree"
+      />
+
+      <relation
+       name="selInfo"
+       desc="Reference to selection summary information"
+       type="SelResult"
+      />
+
+      <relation
+       name="selTree"
+       desc="Reference to Selected Particle, i.e. head of Decay Of Interest"
+       type="Particle"
+      />
+      <attribute
+      name="asctByCL"
+      desc="Result of the association using the composite link associator" 
+      type="bool"
+      />        
+      <attribute
+      name="asctByChi2"
+      desc="Result of the association using the Chi2 associator" 
+      type="bool"
+      />        
+    </class>

@@ -13,12 +13,13 @@
 
 <!ENTITY SelResult.xml        SYSTEM "SelResult.xml"      >
 
+<!ENTITY EffCheckEvent.xml        SYSTEM "EffCheckEvent.xml"      >
+
 ]>
 
 <gdd>
 
   <package name="PhysEvent">
-
 
     <!-- next line needed until GOD knows not to look in LHCbEvent /-->
     <import name="Kernel/CLHEPStreams"/>
@@ -36,6 +37,9 @@
     <!-- Input class from DST -->
     &V0.xml;
     &ProtoParticle.xml;
+
+    <!-- Efficiency Monitor -->
+    &EffCheckEvent.xml;
 
   </package>
 

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.48 2004-05-03 15:39:44 cattanem Exp $
+! $Id: release.notes,v 1.49 2004-06-18 08:29:02 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+! 2004-06-18 - P. Koppenburg for P. Igo-Kemenes and C. Jacoby
+ - xml/EffCheckEvent.xml
+   Access to MC particle information for efficiency algorithms
+   
 !======================== PhysEvent v8r3 2004-05-03 ========================
 ! 2004-05-03 - Marco Cattaneo
  - Fixes for POOL dictionaries in ProtoParticle.xml and SelResult.xml

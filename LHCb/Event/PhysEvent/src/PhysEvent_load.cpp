@@ -1,4 +1,4 @@
-// $Id: PhysEvent_load.cpp,v 1.11 2004-03-05 14:41:14 cattanem Exp $
+// $Id: PhysEvent_load.cpp,v 1.12 2004-06-18 08:29:02 pkoppenb Exp $
 
 // Include files
 #include "GaudiKernel/ContainerFactoryDefs.h"
@@ -44,6 +44,11 @@ _ImplementDataObjectFactory( ProtoParticles )
 _ImplementContainedObjectFactory( V0 )
 _ImplementDataObjectFactory( V0s )
 
+/// ===================================================================
+#include "Event/EffCheckResult.h"
+_ImplementContainedObjectFactory(EffCheckResult)
+_ImplementDataObjectFactory(EffCheckResults)
+/// ===================================================================
 // ====================================================================
 void PhysEvent_load()  {
 
@@ -68,6 +73,11 @@ void PhysEvent_load()  {
 
   DLL_DECL_OBJECTFACTORY( V0 );
   DLL_DECL_OBJECTFACTORY( V0s );
+
+  // Declaration of contained object factories
+  DLL_DECL_OBJECTFACTORY( EffCheckResult );
+  DLL_DECL_OBJECTFACTORY( EffCheckResults );
+
 }
 
 extern "C" void PhysEvent_loadRef()  {
