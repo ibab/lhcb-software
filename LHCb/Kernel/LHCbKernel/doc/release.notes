@@ -4,8 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 !====================== LHCbKernel v4r0 2004-01-15 ========================
 ! 2004-01-15 - Marco Cattaneo
- - Move implementation of virtual destructor from RelationBase.cpp to
-   IRelationBase.h, and make it public (need to build dict on Windows)
+ - Move implementation of virtual destructor from RelationBase.h and 
+   IRelationBases.cpp to IRelationBase.h, and make it public 
+   (need to build dict on Windows)
 
 ! 2004-01-14 - Vanya BELYAEV
  - Relations/IRelationBase.h
