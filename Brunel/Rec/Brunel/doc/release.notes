@@ -3,25 +3,31 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r2>2004-02-06 Brunel v23r2</A></H1><PRE>
-
->>> XmlDDDB change
->>> LHCb changes
->>> ITAlgorithms/ITCheckers
+</PRE><H1><A NAME=v23r2>2004-02-10 Brunel v23r2</A></H1><PRE>
 
 - New functionality
+  . Support for new TT layouts (4-3-3-4: v200402.opts, 4-2-1-1-2-4: TT-alt.opts)
+    (XmlDDDB v21r0, STDet v1r0, ITAlgorithms v14r0, ITCheckers v2r0)
   . Support for new Rich features (switched off by default)
     (RichRecSys v1r7, RichDetTools v3r6, RichUtils v3r7)
   . OT digits are rebuilt from RawBuffer (OTDAQ v1r0)
-  . Muon digits are rebuilt from RawBuffer (MuonDAQ v1r0)
+  . Muon digits can be rebuilt from RawBuffer (MuonDAQ v1r0) but have incorrect
+    MuonTileID. Disabled in default options pending investigation
 
 - DST changes
   . Replace old style "relations" with new style "links" for MC truth of 
-    ITClusters, OTClusters, VeloClusters, MuonCoords. Relations can be
+    ITClusters, OTClusters, VeloClusters, MuonCoords, L0Calo. Relations can be
     rebuilt from links when reading the DST. (AsctToLinker v1r0)
+  . Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
+  . Add one significant bit to time field of MuonDigit
+    (MuonEvent v3r1, MuonAlgs v5r1)
+  . Remove all (old) L1 objects from Dst. To be replaced by new Trg
+    (L1Decision not available, waiting for new code working in Trg framework)
   . Removed filtering of MCParticles/MCVertices (should be done in Gauss)
 
 - New tuning
+  . Updated TT detector geometry (beam pipe hole, guard ring size etc.)
+    (XmlDDDB v21r0)
   . Adapt to changes in ST geometry 
     (ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10, Seeding v2r8,
      TrCheck v2r3, TrCleanEx v2r3, TrKShort v1r1, TrMatching v2r9, VeloTT v1r7)
