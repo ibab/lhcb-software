@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.4 2002-07-26 12:57:03 odie Exp $
+// $Id: MCDecayFinder.cpp,v 1.5 2002-09-18 08:58:20 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -72,7 +72,7 @@ StatusCode MCDecayFinder::initialize()
   log << MSG::DEBUG << "==> Initializing" << endreq;
   if( compile(m_source) )
   {
-    log << MSG::DEBUG << "The compilation of the decay successfull" << endreq;
+    log << MSG::DEBUG << "The compilation of the decay was successfull" << endreq;
     return StatusCode::SUCCESS;
   }
   log << MSG::DEBUG << "Could not compile the decay description" << endreq;

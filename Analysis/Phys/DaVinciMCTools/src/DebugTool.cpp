@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.3 2002-06-26 14:28:05 odie Exp $
+// $Id: DebugTool.cpp,v 1.4 2002-09-18 08:58:19 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -536,12 +536,13 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
         {
         case Name:
           {
-            p = m_ppSvc->findByStdHepID( part->particleID().pid() );
+            p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
             std::string p_name = p ? p->particle() : "N/A";
             int p_len = p_name.length();
-            if( p_len > m_fWidth )
-              p_len = m_fWidth;
-            log << p_name << std::string( m_fWidth - p_len,' ' );
+            if( p_len > m_fWidth-1 )
+              p_len = m_fWidth-2;
+            log << ' ' << p_name
+                << std::string(m_fWidth-1-p_len, ' ');
           }
           break;
         case E:
