@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r0>2003-06-19 Brunel v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2003-06-24 Brunel v19r0</A></H1><PRE>
 - Development version for:
    . Port to Gaudi v12
    . Port to gcc 3.2
@@ -25,10 +25,13 @@ Purpose: LHCb reconstruction program
      installation of the file $LHCBHOME/sim/data/flat-spillo-2.hbook
      (MuonSicbCnv v7r1, MuonBackground v1r2)
    . Added L0 veto on SPD and PuVeto multiplicity (L0DU v6r5)
+   . Redesign of L1 algorithm and packaging (L1Decision v2r1)
+   . L1TTClusters used instead of offline clusters for L1 (L1Decision v2r1)
 
 - New tuning:
    . Use TDR L0 threshold settings (L0DU v6r5)
    . New Muon ID tuning (MuonID v3r6)
+   . Final L1 calibration for TDR (L1Decision v2r1)
 
 - Bug fixes:
    . Release application manager in BrunelMain.cpp, to please valgrind
