@@ -20,5 +20,5 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags   
 
-macro_append  RichDetLib_shlibflags " $(GaudiKernel_linkopts)  $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"
+macro_append RichDetLib_shlibflags " $(use_linkopts)"
 
