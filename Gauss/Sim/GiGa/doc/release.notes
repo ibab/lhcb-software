@@ -2,6 +2,11 @@ Package:          GiGa
 Package manager : Vanya Belyaev 
 
 ===========================================================================
+! 20010219 - Marco Cattaneo
+  requirements - use GEANT4 v3r0* (add * to allow use of DEV area)
+                 replace {} with () to please nmake
+
+===========================================================================
 ! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
    Some changes required to compile on NT
   Modified files: GiGaDetectorElementCnv.cpp, GiGaGeomCnvSvc.cpp, GiGaSensDet.cpp
