@@ -33,7 +33,7 @@ else
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
-setenv PATH ${PATH}:/afs/cern.ch/user/l/lat/dev/utils/bin
+setenv PATH ${PATH}:/afs/cern.ch/user/c/cattanem/public/bin
 
 set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
@@ -71,7 +71,7 @@ else
 endif
 
 # == run the excutable ================================
-valgrind --error-limit=no --leak-check=yes --suppressions=./Brunel.supp tmpjob_$1.exe >& t.log
+valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=8 --suppressions=./Brunel.supp tmpjob_$1.exe >& mem_errors.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$1.exe

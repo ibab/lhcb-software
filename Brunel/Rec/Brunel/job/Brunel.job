@@ -76,6 +76,15 @@ else
   time tmpjob_$1.exe $BRUNELOPTS/Brunel$1.opts
 endif
 
+#  Is there a core dump
+if (-e core) then
+   gdb tmpjob_$1.exe core << EOF
+where
+quit
+EOF
+endif
+
+
 # == job is finished: remove temporary files ==========
 rm tmpjob_$1.exe
 if ($?LS_SUBCWD) then

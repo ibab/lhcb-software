@@ -23,21 +23,13 @@
   fun:__pthread_mutex_destroy
 }
 
-# CLHEP errors. 
+# Following CLHEP error reported to Tcherniaev, fixed in CVS head
 {
   HepTool::Evaluator/__builtin_vec_new
   Free 
   fun:__builtin_delete
-  obj:*libCLHEP*.so
+  fun:evaluate__Q27HepTool9EvaluatorPCc
 }
-
-# Following CLHEP error reported to Tcherniaev, fixed in CVS head
-#{
-#  HepTool::Evaluator/__builtin_vec_new
-#  Free 
-#  fun:__builtin_delete
-#  fun:HepTool::Evaluator::evaluate
-#}
 
 # Xerces errors
 {
@@ -45,4 +37,38 @@
   Free
   fun:__builtin_delete
   obj:*libxerces*.so
+}
+
+# GaudiDb errors
+{
+  DbObject
+  Free
+  fun:__builtin_delete
+  fun:delete
+  fun:~DbObject
+}
+
+# SicbRefTracker error fixed in SicbCnv v17r2, requires recompilations of:
+# RiSicbCnv, VSicbCnv, CaloSicbCnv, MuonSicbCnv
+{
+  SicbCnv/SicbRefTracker
+  Free
+  fun:track__14SicbRefTrackerRCt6vector2Z10SicbRefHopZt9allocator1Z10SicbRefHopRt6vector2ZQ211SicbTracker4StubZt9allocator1ZQ211SicbTracker4StubT2
+}
+
+# L1VeloTrack use of uninitialised variable - reported to OC
+{
+  L1VeloTrack/dataStructures.h:80
+  Value8
+  fun:__4._52RC4._52
+}
+
+# Mismatched delete in DbObject.cpp line 80. - reported to Markus
+{
+  DbObject/delete
+  Free
+  fun:__builtin_delete
+  fun:__dl__8DbObjectPv
+  fun:_._8DbObject
+  fun:release__8DbObject
 }
