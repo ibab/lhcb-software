@@ -1,13 +1,6 @@
-// $Id: CaloDet_load.cpp,v 1.4 2002-03-28 13:47:14 ibelyaev Exp $ 
+// $Id: CaloDet_load.cpp,v 1.5 2003-11-24 14:01:12 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2001/12/15 18:28:17  ibelyaev
-//  update for new policy of versions and new test algorithm
-//
-// Revision 1.2  2001/06/29 10:26:18  ibelyaev
-// update to use new features of DetDesc v7 package
 // ============================================================================
 // includes 
 #include "GaudiKernel/ICnvFactory.h"
@@ -19,7 +12,7 @@
 #include "GaudiKernel/ObjectList.h"
 
 // ============================================================================
-/** @file  Calo_load.cpp
+/** @file  CaloDet_load.cpp
  *
  * Implementation of <Package>_load routine. This routine 
  * is needed for forcing the linker to load all the components of the library

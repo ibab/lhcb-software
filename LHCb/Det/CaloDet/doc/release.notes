@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.37 2003-11-18 16:21:55 cattanem Exp $ 
+! $Id: release.notes,v 1.38 2003-11-24 14:01:12 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================== CaloDet v6r6p1 2003-11-24 ========================
+! 2003-11-24 - Marco Cattaneo
+ - Fix a doxygen comment in CaloDet_load.cpp
 
 !======================== CaloDet v6r6p1 2003-11-18 ========================
 ! 2003-11-18 - Guy Barrand
