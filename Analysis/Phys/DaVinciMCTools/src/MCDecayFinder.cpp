@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.3 2002-07-12 09:30:24 odie Exp $
+// $Id: MCDecayFinder.cpp,v 1.4 2002-07-26 12:57:03 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -174,55 +174,6 @@ MCDecayFinder::Descriptor::~Descriptor()
     delete alternate;
 }
 
-template<class iter>
-bool MCDecayFinder::Descriptor::test( const iter first, const iter last,
-                                      const MCParticle *&previous_result )
-{
-  iter start;
-  if( previous_result &&
-      ((start=std::find(first,last,previous_result))
-       == last) )
-  {
-    previous_result = NULL;
-    return false; // Bad previous_result
-  }
-  if( previous_result )
-    start++;
-
-  if( mother == NULL ) // No mother == pp collision
-  {
-    std::list<const MCParticle*> prims;
-    iter i;
-    for( i=(previous_result ? start : first); i != last; i++ )
-    {
-      MCVertex *origin = (*i)->originVertex();
-      if( origin && origin->mother() )
-        continue;
-      prims.push_back(*i);
-    }
-    if( skipResonnance )
-      filterResonnances( prims );
-    if( testDaughters(prims) )
-    {
-      previous_result = (const MCParticle *)1;
-      return true;
-    }
-    return false;
-  }
-
-  iter part_i;
-  part_i = (previous_result ? start : first);
-  while( (part_i != last) && (test(*part_i) == false) )
-    part_i++;
-
-  if( part_i != last )
-  {
-    previous_result = *part_i;
-    return true;
-  }
-  return false;
-}
-
 bool MCDecayFinder::Descriptor::test( const MCParticle *part )
 {
   bool result = false;
@@ -353,18 +304,19 @@ void MCDecayFinder::Descriptor::conjugate( void )
 }
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher( IParticlePropertySvc *ppSvc )
-  : type(notest), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(notest), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {}
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
-  : type(notest), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(0)
+  : type(notest), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(0)
 {
   type = copy.type;
   qmark = copy.qmark;
   conjugate = copy.conjugate;
-  oscilate = copy.oscilate;
+  oscillate = copy.oscillate;
+  noscillate = copy.noscillate;
   inverse = copy.inverse;
   stable = copy.stable;
   m_ppSvc = copy.m_ppSvc;
@@ -391,8 +343,8 @@ MCDecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
                                                  IParticlePropertySvc *ppSvc )
-  : type(id), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(id), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   ParticleProperty *pp = m_ppSvc->find(*name);
   if( pp )
@@ -403,8 +355,8 @@ MCDecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher(Quarks q1, Quarks q2, Quarks q3,
                                                 IParticlePropertySvc *ppSvc )
-  : type(quark), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quark), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   parms.quarks.q1 = q1;
   parms.quarks.q2 = q2;
@@ -413,8 +365,8 @@ MCDecayFinder::ParticleMatcher::ParticleMatcher(Quarks q1, Quarks q2, Quarks q3,
 
 MCDecayFinder::ParticleMatcher::ParticleMatcher(Quantums q,Relations r,double d,
                                                 IParticlePropertySvc *ppSvc )
-  : type(quantum), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quantum), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   parms.relation.q = q;
   parms.relation.r = r;
@@ -530,8 +482,10 @@ bool MCDecayFinder::ParticleMatcher::test( const MCParticle *part )
         int cc_id = conjugatedID(parms.stdHepID);
         result = result || (cc_id == part->particleID().pid());
       }
-      if( oscilate )
+      if( oscillate )
         result = result && part->hasOscillated();
+      if( noscillate )
+        result = result && (!part->hasOscillated());
       if( inverse )
         result = !result;
       if( stable )

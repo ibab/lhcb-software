@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.3 2002-07-12 09:30:24 odie Exp $
+// $Id: MCDecayFinder.h,v 1.4 2002-07-26 12:57:03 odie Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -96,7 +96,6 @@ public:
   bool findDecay( const MCParticles &event,
                   const MCParticle *&previous_result );
 
-private:
   /// Enumaration types used internally.
   enum Quarks { empty, up, down, charm, strange, top, bottom, antiup,
                 antidown, anticharm, antistrange, antitop, antibottom };
@@ -106,6 +105,7 @@ private:
   enum Relations { eq_rel=1, lesseq_rel, greatereq_rel, less_rel, greater_rel,
                    noteq_rel };
 
+private:
   /// The opaque representation of a particle matcher
   class ParticleMatcher
   {
@@ -122,8 +122,10 @@ private:
     bool getQmark( void ) { return qmark; }
     void setConjugate( void ) { conjugate = true; }
     bool getConjugate( void ) { return conjugate; }
-    void setOscilate( void ) { oscilate = true; }
-    bool getOscilate( void ) { return oscilate; }
+    void setOscillate( void ) { oscillate = true; }
+    void setNotOscillate( void ) { noscillate = true; }
+    bool getOscillate( void ) { return oscillate; }
+    bool getNotOscillate( void ) { return noscillate; }
     void setInverse( void ) { inverse = true; }
     bool getInverse( void ) { return inverse; }
     void setStable( void ) { stable = true; }
@@ -141,7 +143,8 @@ private:
     } parms;
     bool qmark;
     bool conjugate;
-    bool oscilate;
+    bool oscillate;
+    bool noscillate;
     bool inverse;
     bool stable;
     IParticlePropertySvc *m_ppSvc;
@@ -159,8 +162,53 @@ private:
     ~Descriptor();
 
     template<class iter> bool test( const iter first, const iter last,
-               const MCParticle *&result );
-
+                                    const MCParticle *&previous_result )
+    {
+      iter start;
+      if( previous_result &&
+          ((start=std::find(first,last,previous_result))
+           == last) )
+      {
+        previous_result = NULL;
+        return false; // Bad previous_result
+      }
+      if( previous_result )
+        start++;
+      
+      if( mother == NULL ) // No mother == pp collision
+      {
+        std::list<const MCParticle*> prims;
+        iter i;
+        for( i=(previous_result ? start : first); i != last; i++ )
+        {
+          MCVertex *origin = (*i)->originVertex();
+          if( origin && origin->mother() )
+            continue;
+          prims.push_back(*i);
+        }
+        if( skipResonnance )
+          filterResonnances( prims );
+        if( testDaughters(prims) )
+        {
+          previous_result = (const MCParticle *)1;
+          return true;
+        }
+        return false;
+      }
+      
+      iter part_i;
+      part_i = (previous_result ? start : first);
+      while( (part_i != last) && (test(*part_i) == false) )
+        part_i++;
+      
+      if( part_i != last )
+      {
+        previous_result = *part_i;
+        return true;
+      }
+      return false;
+    }
+    
     void setAlternate( Descriptor *a ) { alternate = a; }
     Descriptor *getAlternate( void ) { return alternate; }
 

@@ -64,13 +64,14 @@ PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 "<"		BEGIN(PARTICLE_WC); return LANGLE;
 "["		return LBRACK;
 "]os"		return OSCIL;
+"]nos"		return NOSCIL;
 "]cc"		return CCONJ;
 ","		return COMMA;
 "!"		return EXCLAM;
 "..."		return ELIPSIS;
 "pp"		return PP;
 "?"		return QMARK;
-{PARTICLE}	{ yylval.text = new string(yytext,yyleng); return NAME; }
+{PARTICLE}	{ yylval.text = new std::string(yytext,yyleng); return NAME; }
 [[:blank:]\n]	/* eat the blanks! */
 .		throw YYCLASSDescriptorError(std::string("Unexpected char '")+(yytext[0])+"'");
 
