@@ -14,8 +14,6 @@
 /// from LHCbEvent 
 #include "LHCbEvent/MCParticle.h"
 #include "LHCbEvent/MCVertex.h"
-/// from Geant4 
-#include "G4Event.hh"
 /// local 
 #include "GiGaMiscGetEventAlg.h"
 
@@ -65,7 +63,7 @@ StatusCode GiGaMiscGetEventAlg::execute()
     SmartDataPtr<MCVertexVector> obj( eventSvc() , "/Event/G4/MCVertices" ) ;
     if( obj ) 
       { 
-	std::cout <<  *obj  << std::endl ; 
+        std::cout <<  *obj << std::endl;  
 	Stat stat( chronoSvc() , "#vertices" , obj->size() ) ;
       } 
     else 

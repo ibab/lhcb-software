@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaGeomCnvSvc.cpp,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaGeomCnvSvc.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $
 #include <string>
 #include <algorithm>
 // from Gaudi 
@@ -13,26 +13,15 @@
 // from DetDesc 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/Solids.h"
+// G4Wrapper
+#include "G4Wrapper/Material.h"
+#include "G4Wrapper/PhysicalVolume.h"
+#include "G4Wrapper/LogicalVolume.h"
+#include "G4Wrapper/Transportation.h"
+#include "G4Wrapper/Solids.h"
 // Include G4 Stuff
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4PVPlacement.hh"
-#include "G4Material.hh"
-//
-#include "G4Box.hh"
-#include "G4Cons.hh"
-#include "G4Sphere.hh"
-#include "G4Trd.hh"
-#include "G4Trap.hh"
-#include "G4Tubs.hh"
-#include "G4IntersectionSolid.hh"
-#include "G4SubtractionSolid.hh"
-#include "G4UnionSolid.hh"
-//
+#include "G4VSolid.hh"
 #include "G4VisAttributes.hh"
-#include "G4FieldManager.hh"
-#include "G4TransportationManager.hh"
 // from GiGa 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaSensDetFactory.h"
@@ -95,9 +84,9 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
 ///
 G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
 {
-  /// first look throught G4MaterialTable
+  /// first look throught MaterialTable
   {
-    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    G4Material* mat = G4Wrapper::getG4Material( Name ) ;
     if( 0 != mat ) { return mat ; } 
   }
   /// retrieve material by name and convert it to G4 representation  
@@ -111,7 +100,7 @@ G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
   }
   /// look throught G4MaterialTable
   {
-    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    G4Material* mat = G4Wrapper::getG4Material( Name ) ;
     if( 0 != mat ) { return mat ; } 
   }
   ///
@@ -124,9 +113,8 @@ G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
 {
   /// first look through G4LogicalVolumeStore
   {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
+    G4LogicalVolume* lv = G4Wrapper::getG4LogicalVolume( Name ) ; 
+    if( 0 != lv ) { return lv ; }                                       ///< RETURN !!!
   }
   /// locate the object in the transient store and convert it! 
   {
@@ -140,9 +128,8 @@ G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
   } 
   /// again look through G4LogicalVolumeStore
   {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
+    G4LogicalVolume* lv = G4Wrapper::getG4LogicalVolume( Name ) ; 
+    if( 0 != lv ) { return lv ; }                                       ///< RETURN !!!
   }
   ///
   Error("Failed to find G4LogicalVolume with name="+Name);
@@ -161,74 +148,74 @@ G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
   {
     const SolidBox* sBox = dynamic_cast<const SolidBox*>(Sd);
     if( solidType == "SolidBox" && 0 != sBox ) 
-      { return new G4Box( sBox->name(),
-                          sBox->xHalfLength(),
-                          sBox->yHalfLength(),
-                          sBox->zHalfLength()); } 
+      { return G4Wrapper::createG4Box( sBox->name(),
+				       sBox->xHalfLength(),
+				       sBox->yHalfLength(),
+				       sBox->zHalfLength()); } 
   }
   /// cons?
   {
     const SolidCons* sCons = dynamic_cast<const SolidCons*>(Sd);
     if( solidType == "SolidCons" && 0 != sCons ) 
-      { return new G4Cons( sCons->name(),
-                           sCons->innerRadiusAtMinusZ(),
-                           sCons->outerRadiusAtMinusZ(),
-                           sCons->innerRadiusAtPlusZ(),
-                           sCons->outerRadiusAtPlusZ(),
-                           sCons->zHalfLength(),
-                           sCons->startPhiAngle(),
-                           sCons->deltaPhiAngle() ); }
+      { return G4Wrapper::createG4Cons( sCons->name(),
+					sCons->innerRadiusAtMinusZ(),
+					sCons->outerRadiusAtMinusZ(),
+					sCons->innerRadiusAtPlusZ(),
+					sCons->outerRadiusAtPlusZ(),
+					sCons->zHalfLength(),
+					sCons->startPhiAngle(),
+					sCons->deltaPhiAngle() ); }
   }
   /// sphere?
   {
     const SolidSphere* sSphere = dynamic_cast<const SolidSphere*>(Sd);
     if ( solidType == "SolidSphere" && 0 != sSphere ) 
-      { return new G4Sphere( sSphere->name            (),
-                             sSphere->insideRadius    (),
-                             sSphere->outerRadius     (), 
-                             sSphere->startPhiAngle   (),
-                             sSphere->deltaPhiAngle   (),
-                             sSphere->startThetaAngle (),
-                             sSphere->deltaThetaAngle () ); }
+      { return G4Wrapper::createG4Sphere( sSphere->name            (),
+					  sSphere->insideRadius    (),
+					  sSphere->outerRadius     (), 
+					  sSphere->startPhiAngle   (),
+					  sSphere->deltaPhiAngle   (),
+					  sSphere->startThetaAngle (),
+					  sSphere->deltaThetaAngle () ); }
   }
   /// trd? 
   {
     const SolidTrd* sTrd = dynamic_cast<const SolidTrd*>(Sd);
     if (solidType == "SolidTrd" && 0 != sTrd ) 
-      { return new G4Trd( sTrd->name(),
-                          sTrd->xHalfLength1(),
-                          sTrd->xHalfLength2(),
-                          sTrd->yHalfLength1(),
-                          sTrd->yHalfLength2(),
-                          sTrd->zHalfLength()); }
+      { return G4Wrapper::createG4Trd( sTrd->name(),
+				       sTrd->xHalfLength1(),
+				       sTrd->xHalfLength2(),
+				       sTrd->yHalfLength1(),
+				       sTrd->yHalfLength2(),
+				       sTrd->zHalfLength()); }
   }
   /// tubs ?   
   { 
     const SolidTubs* sTubs = dynamic_cast<const SolidTubs*>(Sd);
     if (solidType == "SolidTubs" && 0 != sTubs ) 
-      { return new G4Tubs( sTubs->name(),
-                           sTubs->innerRadius(),
-                           sTubs->outerRadius(),
-                           sTubs->zHalfLength(),
-                           sTubs->startPhiAngle(),
-                           sTubs->deltaPhiAngle()); }
+      { return G4Wrapper::createG4Tubs( sTubs->name(),
+					sTubs->innerRadius(),
+					sTubs->outerRadius(),
+					sTubs->zHalfLength(),
+					sTubs->startPhiAngle(),
+					sTubs->deltaPhiAngle()); }
   }
   /// trap ?   
   {  
     const SolidTrap* sTrap = dynamic_cast<const SolidTrap*>(Sd);
     if (solidType == "SolidTrap" && 0 != sTrap ) 
-      { return new G4Trap( sTrap->name            (),
-                           sTrap->zHalfLength     (),
-                           sTrap->theta           (),
-                           sTrap->phi             (),
-                           sTrap->dyAtMinusZ      (),
-                           sTrap->dxAtMinusZMinusY(),
-                           sTrap->dxAtMinusZPlusY (),
-                           sTrap->alphaAtMinusZ   (),
-                           sTrap->dyAtPlusZ       (),
-                           sTrap->dxAtPlusZMinusY (),
-                           sTrap->dxAtPlusZPlusY  (),
-                           sTrap->alphaAtPlusZ    () ); }
+      { return G4Wrapper::createG4Trap( sTrap->name            (),
+					sTrap->zHalfLength     (),
+					sTrap->theta           (),
+					sTrap->phi             (),
+					sTrap->dyAtMinusZ      (),
+					sTrap->dxAtMinusZMinusY(),
+					sTrap->dxAtMinusZPlusY (),
+					sTrap->alphaAtMinusZ   (),
+					sTrap->dyAtPlusZ       (),
+					sTrap->dxAtPlusZMinusY (),
+					sTrap->dxAtPlusZPlusY  (),
+					sTrap->alphaAtPlusZ    () ); }
   }
   /// boolean ? 
   {
@@ -267,11 +254,11 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
       if( 0 == g4child ) 
         { Error("g4BoolSolid, could not convert CHILD solid for Boolean solid="+Sd->name())  ; return 0; }
       if      ( 0 != sSub    ) 
-        { g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = G4Wrapper::createG4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sInt    )
-        { g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = G4Wrapper::createG4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sUni    )
-        { g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
+        { g4total = G4Wrapper::createG4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else
         { Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }
     } 
@@ -306,13 +293,14 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
   G4Material* MAT = g4Material ( m_worldMaterial );   
   if( 0 == MAT ) { Error("G4WorldPV:: could not locate/convert material="+m_worldMaterial) ; return 0 ; }
   ///
-  G4VSolid*        SD = new G4Box("WorldBox", m_worldX , m_worldY , m_worldZ ) ; 
+  G4VSolid*        SD = G4Wrapper::createG4Box("WorldBox", m_worldX , m_worldY , m_worldZ ) ; 
   ///
-  G4LogicalVolume* LV = new G4LogicalVolume( SD , MAT , m_worldNameLV , 0 , 0 , 0 ); 
+  G4LogicalVolume* LV = G4Wrapper::createG4LogicalVolume( SD , MAT , m_worldNameLV ); 
   /// make it invisible 
   LV -> SetVisAttributes ( G4VisAttributes::Invisible );
   ///
-  m_worldPV           = new G4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
+  m_worldPV           = G4Wrapper::createG4PVPlacement( HepTransform3D() , LV , m_worldNamePV , 0 , false , 0 );
+  //  m_worldPV           = G4Wrapper::createG4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
   ///
   /// create the magnetic field for world volume
   if( !m_worldMagField.empty() )
@@ -323,14 +311,10 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
       if( sc.isFailure() ) { Error("G4WorldPV:: could not construct Global Magnetic Field="+m_worldMagField, sc ) ; return 0 ; }  
       if( 0 == mf        ) { Error("G4WorldPV:: could not construct Global Magnetic Field="+m_worldMagField, sc ) ; return 0 ; }  
       ///
-      {
-        G4TransportationManager* trnspMgr = G4TransportationManager::GetTransportationManager() ;  /// ATTENTION !!!
-        if( 0 == trnspMgr  ) { Error("G4WorldPV:: could not locate G4TranspostationManager* object ") ; return 0 ; }         
-        G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager();                           /// ATTENTION !!!
-        if( 0 == fieldMgr  ) { Error("G4WorldPV:: could not locate G4FieldManager* object "         ) ; return 0 ; }         
-        fieldMgr->SetDetectorField  ( mf );                                                        /// ATTENTION !!! 
-        fieldMgr->CreateChordFinder ( mf );                                                        /// ATTENTION !!!    
-      }
+      bool res1 = G4Wrapper::setDetectorField ( mf ) ;
+      if( !res1 ) { Error("G4WorldPV:: could not set detector field! ") ; return 0 ; } 
+      bool res2 = G4Wrapper::createChordFinder( mf ) ;
+      if( !res2 ) { Error("G4WorldPV:: could not create chord finder!") ; return 0 ; } 
       ///
       Print("G4WorlPV:: World Magnetic Field is set to be = "+ System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );
     }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaSurfaceCnv.cpp,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaSurfaceCnv.cpp,v 1.2 2001-04-26 21:01:42 ibelyaev Exp $ 
 // GaudiKernel
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
@@ -8,16 +8,15 @@
 // DetDesc 
 #include "DetDesc/Surface.h"
 // GiGa 
-#include "GiGa/GiGaException.h" 
+#include "GiGa/GiGaException.h"
+// G4Wrapper 
+#include "G4Wrapper/OpticalSurface.h" 
+#include "G4Wrapper/LogicalSurface.h" 
+#include "G4Wrapper/LogicalVolume.h" 
+#include "G4Wrapper/PhysicalVolume.h" 
 // Geant4
-#include  "G4LogicalVolume.hh"
-#include  "G4LogicalVolumeStore.hh"
-#include  "G4VPhysicalVolume.hh"
-#include  "G4PhysicalVolumeStore.hh"
 #include  "G4OpticalSurface.hh"
 #include  "G4LogicalSurface.hh"
-#include  "G4LogicalSkinSurface.hh"
-#include  "G4LogicalBorderSurface.hh"
 // local 
 #include "AddTabulatedProperties.h"
 #include "GiGaSurfaceCnv.h" 
@@ -90,11 +89,11 @@ StatusCode GiGaSurfaceCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
     { return Error("Could not create G4LogicalSurface!", status ) ;} 
   /// create optical surface 
   G4OpticalSurface* optSurf = 
-    new G4OpticalSurface( surface->fullpath () ,
-                          ( G4OpticalSurfaceModel  ) surface->model   () ,
-                          ( G4OpticalSurfaceFinish ) surface->finish  () ,
-                          ( G4OpticalSurfaceType   ) surface->type    () ,
-                          surface->value    ()                           );
+    G4Wrapper::createG4OpticalSurface( surface->fullpath () ,
+				       surface->model   () ,
+				       surface->finish  () ,
+				       surface->type    () ,
+				       surface->value    ()                           );
   ///
   {
     if( 0 == optSurf->GetMaterialPropertiesTable() ) 
@@ -128,19 +127,14 @@ StatusCode GiGaSurfaceCnv::createSkinSurface( const Surface    *  surface ,
   logsurf = 0 ; 
   if( 0 == surface ) { return Error("CreateSkinSurface: Surface* points to NULL") ; }
   /// first look through G4LogicalVolumeStore
-  G4LogicalVolume* lv = 0; 
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( surface->firstVol() == store[indx]->GetName() ) { lv = store[indx] ; break ; }  }    
-  }
+  G4LogicalVolume* lv = G4Wrapper::getG4LogicalVolume( surface->firstVol() );
   if( 0 == lv ) { return Error("Could Not locate G4LogicalVolume by name '"+surface->firstVol()+"'" ); }
   /// look through existing LogicalSkinSurfaces
-  G4LogicalSkinSurface* surf = G4LogicalSkinSurface::GetSurface( lv ); 
+  G4LogicalSurface* surf = G4Wrapper::getG4LogicalSkinSurface( lv ); 
   if( 0 != surf &&  ( surf->GetName() != surface->fullpath() )  )
     { return Error("UpdateRep: surface with this log volume already exists!") ; }
   /// create new surface 
-  if( 0 == surf ) { logsurf = new G4LogicalSkinSurface( surface->fullpath() , lv , 0 ); }
+  if( 0 == surf ) { logsurf = G4Wrapper::createG4LogicalSkinSurface( surface->fullpath() , lv ); }
   else            { logsurf = surf ; }  
   ///
   return StatusCode::SUCCESS;
@@ -152,23 +146,15 @@ StatusCode GiGaSurfaceCnv::createBorderSurface( const Surface    *  surface ,
   ///
   logsurf = 0 ;
   /// locate PhysVolumes
-  G4VPhysicalVolume* pv1 = 0; 
-  G4VPhysicalVolume* pv2 = 0; 
-  {
-    G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { 
-        if     ( surface->firstVol ()  == store[indx]->GetName() ) { pv1 = store[indx] ; }
-        else if( surface->secondVol()  == store[indx]->GetName() ) { pv2 = store[indx] ; }
-      }
-    if( 0 == pv1 || 0 == pv2 ) 
-      { return Error("Could not locatePhysical Volumes '"+surface->firstVol()+"' and '"+surface->secondVol()+"'");}
-  }
+  G4VPhysicalVolume* pv1 = G4Wrapper::getG4VPhysicalVolume( surface->firstVol  () ) ; 
+  G4VPhysicalVolume* pv2 = G4Wrapper::getG4VPhysicalVolume( surface->secondVol () ) ; 
+  if( 0 == pv1 || 0 == pv2 ) 
+    { return Error("Could not locatePhysical Volumes '"+surface->firstVol()+"' and '"+surface->secondVol()+"'");}
   /// locate Logical Border Surface 
-  G4LogicalBorderSurface* surf = G4LogicalBorderSurface::GetSurface( pv1 , pv2 );
+  G4LogicalSurface* surf = G4Wrapper::getG4LogicalBorderSurface( pv1 , pv2 );
   if( 0 != surf && ( surf->GetName() != surface->fullpath() ) )
     { return Error("UpdateRep: surface with this pv1/pv2 volumes already exists!") ; }
-  if( 0 == surf ) { logsurf = new G4LogicalBorderSurface( surface->fullpath() , pv1 , pv2  , 0 ); }
+  if( 0 == surf ) { logsurf = G4Wrapper::createG4LogicalBorderSurface( surface->fullpath() , pv1 , pv2 ); }
   else            { logsurf = surf ; }  
   ///  
   return StatusCode::SUCCESS;

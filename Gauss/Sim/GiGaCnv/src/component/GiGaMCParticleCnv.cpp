@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCParticleCnv.cpp,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCParticleCnv.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $ 
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 /// STL 
 #include <string>
@@ -27,7 +27,6 @@
 /// Geant4 includes
 #include "G4TrajectoryContainer.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
 // local 
 #include "GiGaCnvFunctors.h"
 #include "GiGaMCParticleCnv.h" 

@@ -1,18 +1,15 @@
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaSensDetPrint.cpp,v 1.2 2001-04-26 21:01:42 ibelyaev Exp $ 
+#define  GIGACNV_GIGASENSDETPRINT_CPP 1 
+//
 #include "CLHEP/Geometry/Point3D.h"
-
+//
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-
 //
 #include "GaudiKernel/MsgStream.h"
-
 // GiGa 
 #include "GiGa/GiGaSensDetFactory.h"
-
-
 /// local
 #include "GiGaSensDetPrint.h"
 
@@ -41,23 +38,32 @@ bool       GiGaSensDetPrint::ProcessHits( G4Step* step , G4TouchableHistory* /* 
 {
   if( 0 == step ) { return false ; } 
   
-  double     edep = step->GetTotalEnergyDeposit();
-  HepPoint3D pos  = step->GetPostStepPoint()->GetPosition(); 
+  double            edep = step->GetTotalEnergyDeposit();
+  const HepPoint3D& pos  = step->GetPostStepPoint()->GetPosition(); 
   
   /// 
   G4TouchableHistory* TT =  (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
   G4VPhysicalVolume*  PV =   TT->GetVolume();
-  G4LogicalVolume*    LV =   PV->GetLogicalVolume();
   
   MsgStream log( msgSvc() , name() );
   log << MSG::INFO << "ProcessStep() " 
       << " Pos=("  << pos.x() << "," << pos.y() << "," << pos.z() << ")" 
       << " PV="    << PV->GetName() 
-      << " LV="    << LV->GetName() 
       << " edep="  << edep << endreq; 
   
   return false; 
 
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 

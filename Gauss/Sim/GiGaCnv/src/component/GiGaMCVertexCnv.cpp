@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCVertexCnv.cpp,v 1.1.1.1 2001-04-23 08:34:15 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMCVertexCnv.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $ 
 #define   GIGACNV_GIGAMCVERTEXCNV_CPP 1 
 /// STL 
 #include <string>
@@ -26,12 +26,13 @@
 #include "GiGaCnv/GiGaKineAddress.h"
 /// LHCbEvent 
 #include "LHCbEvent/MCVertex.h" 
-#include "LHCbEvent/MCParticle.h" 
+#include "LHCbEvent/MCParticle.h"
+/// G4Wrapper
+#include "G4Wrapper/Particle.h" 
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
 #include "G4TrajectoryContainer.hh"
 // Local
 #include "GiGaCnvFunctors.h"
@@ -403,11 +404,9 @@ G4ParticleDefinition* GiGaMCVertexCnv::ParticleDefinition( const MCParticle* par
     }
   ///
   int JetSetID = PP->jetsetID(); 
-  G4ParticleTable* table = 0 ;
-  table = G4ParticleTable::GetParticleTable(); 
-  G4ParticleDefinition * PD = 0 ; 
-  PD = table->FindParticle( JetSetID );                            /// locate by JetSetID 
-  PD = ( 0 == PD ) ? table->FindParticle( PP->particle()  ) : PD ; /// locate by name 
+  G4ParticleDefinition * PD = 0 ;
+  PD =                 G4Wrapper::getG4ParticleDefinition( JetSetID )       ;   ///< locate by JetSetID 
+  if( 0 == PD ) { PD = G4Wrapper::getG4ParticleDefinition( PP->particle() ) ; } ///< locate by name!
   if( 0 == PD ) 
     { throw GiGaException( name()+":G4ParticleDefinition is unavailable for Particle=\t"+PP->particle()); }  
   ///

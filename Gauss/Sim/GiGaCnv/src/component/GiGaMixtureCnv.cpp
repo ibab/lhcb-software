@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaMixtureCnv.cpp,v 1.2 2001-04-26 21:01:42 ibelyaev Exp $ 
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
@@ -8,9 +9,8 @@
 #include "DetDesc/Mixture.h"
 /// GiGa 
 #include "GiGa/GiGaException.h" 
-/// Geant4 
-#include "G4Element.hh"
-#include "G4Material.hh"
+/// G4Wrapper
+#include "G4Wrapper/Material.h"
 /// local 
 #include "AddTabulatedProperties.h"
 #include "GiGaMixtureCnv.h" 
@@ -71,7 +71,7 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   if( 0 == mixture       ) { return Error("UpdateRep::Ban cast to Mixture*"); }
   if( 0 == cnvSvc()      ) { return Error("UpdateRep::Conversion Service is unavailable"); }
   /// check if the mixture is already converted
-  if( 0 !=  G4Material::GetMaterial( mixture->fullpath()  ) ){ return StatusCode::SUCCESS; } 
+  if( 0 !=  G4Wrapper::getG4Material( mixture->fullpath()  ) ){ return StatusCode::SUCCESS; } 
   /// convert all items:
   {
     IDataSelector dataSelector; 
@@ -88,41 +88,40 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   G4Material* NewMaterial = 0 ; 
   if( 0 == mixture->nOfItems() )
     {
-      NewMaterial = new G4Material( mixture->fullpath        () , 
-                                    mixture->Z               () , 
-                                    mixture->A               () , 
-                                    mixture->density         () , 
-                                    (G4State) mixture->state () ,  
-                                    mixture->temperature     () , 
-                                    mixture->pressure        () ); 
+      NewMaterial = G4Wrapper::createG4Material( mixture->fullpath        () , 
+						 mixture->Z               () , 
+						 mixture->A               () , 
+						 mixture->density         () , 
+						 mixture->state           () ,  
+						 mixture->temperature     () , 
+						 mixture->pressure        () ); 
     }  
   else
     {
       /// 
-      NewMaterial = new G4Material( mixture->fullpath        () , 
-                                    mixture->density         () , 
-                                    mixture->nOfItems        () ,
-                                    (G4State) mixture->state () ,  
-                                    mixture->temperature     () , 
-                                    mixture->pressure        () ); 
+      NewMaterial = G4Wrapper::createG4Material( mixture->fullpath        () , 
+						 mixture->density         () , 
+						 mixture->nOfItems        () ,
+						 mixture->state           () ,  
+						 mixture->temperature     () , 
+						 mixture->pressure        () ); 
       
       for( unsigned int index = 0 ; index < (unsigned int) mixture->nOfItems() ; ++index ) 
         {
-          G4Material* mat = G4Material::GetMaterial( mixture->element( index )->fullpath() ); 
+          G4Material* mat = G4Wrapper::getG4Material( mixture->element( index )->fullpath() ); 
           if( 0 == mat ) 
             { return Error("UpdateRep::could not extract material="+mixture->element( index )->fullpath() ); }
-          NewMaterial->AddMaterial( mat , mixture->elementFraction( index ) ); // 
+	  G4Wrapper::addG4Material( NewMaterial , mat , mixture->elementFraction( index ) ); // 
         }
     }
   /// add tabulated properties
   if( !mixture->tabulatedProperties().empty() )
     {
-      if( 0 == NewMaterial->GetMaterialPropertiesTable() )
-        { NewMaterial->SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ); }
-      StatusCode sc = AddTabulatedProperties ( mixture->tabulatedProperties() ,
-                                               NewMaterial->GetMaterialPropertiesTable() ) ;
+      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ; 
+      StatusCode sc = AddTabulatedProperties ( mixture->tabulatedProperties() , table ) ;
       if( sc.isFailure() )
         { return Error("UpdateRep::could not add TabulatedProperties for "+mixture->fullpath() , sc  ); } 
+      G4Wrapper::addG4MaterialPropertiesTable( NewMaterial , table );
     }
   /// 
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::end for"+Object->fullpath() << endreq; } 

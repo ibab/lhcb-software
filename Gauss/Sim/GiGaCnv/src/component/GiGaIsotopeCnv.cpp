@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaIsotopeCnv.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $ 
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
@@ -7,10 +8,9 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/Isotope.h"
 /// GiGa 
-#include "GiGa/GiGaException.h" 
-/// Geant4
-#include "G4Isotope.hh"
-#include "G4Material.hh"
+#include "GiGa/GiGaException.h"
+/// G4Wraper
+#include "G4Wrapper/Material.h" 
 /// local 
 #include "AddTabulatedProperties.h"
 #include "GiGaIsotopeCnv.h" 
@@ -69,34 +69,33 @@ StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   if( 0 == isotope                ) { return Error("UpdateRep::Bad cast to Isotope*"); }
   if( 0 == cnvSvc()               ) { return Error("UpdateRep::Conversion Service is unavailable"); } 
   /// if isotop is already converted? 
-  if( 0 != G4Isotope::GetIsotope( isotope->fullpath() ) ) { return StatusCode::SUCCESS; } 
+  if( 0 != G4Wrapper::getG4Isotope( isotope->fullpath() ) ) { return StatusCode::SUCCESS; } 
   /// Here we should create the Isotop
   G4Isotope* NewIsotope = 0 ; 
-  NewIsotope = new G4Isotope( isotope->fullpath () , 
-                              (int) isotope->Z  () , 
-                              (int) isotope->N  () , 
-                              isotope->A        () *g/mole);
+  NewIsotope = G4Wrapper::createG4Isotope( isotope->fullpath () , 
+					   (int) isotope->Z  () , 
+					   (int) isotope->N  () , 
+					   isotope->A        () *g/mole);
   ///
-  if( 0 != G4Material::GetMaterial( isotope->fullpath() ) ) { return StatusCode::SUCCESS; } 
+  if( 0 != G4Wrapper::getG4Material( isotope->fullpath() ) ) { return StatusCode::SUCCESS; } 
   /// per each Isotope we could create the "simple material" with the same name
   G4Material* NewMaterial = 0 ; 
-  NewMaterial = new G4Material( isotope->fullpath        () , 
-                                isotope->Z               () , 
-                                isotope->A               () * g/mole , 
-                                isotope->density         () , 
-                                (G4State) isotope->state () ,  
-                                isotope->temperature     () , 
-                                isotope->pressure        () ); 
+  NewMaterial = G4Wrapper::createG4Material( isotope->fullpath        () , 
+					     isotope->Z               () , 
+					     isotope->A               () * g/mole , 
+					     isotope->density         () , 
+					     isotope->state           () ,  
+					     isotope->temperature     () , 
+					     isotope->pressure        () ); 
   ///
   /// add tabulated properties
   if( !isotope->tabulatedProperties().empty() )
     {
-      if( 0 == NewMaterial->GetMaterialPropertiesTable() )
-        { NewMaterial->SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ); }
-      StatusCode sc = AddTabulatedProperties ( isotope->tabulatedProperties() ,
-                                               NewMaterial->GetMaterialPropertiesTable() ) ;
+      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ; 
+      StatusCode sc = AddTabulatedProperties ( isotope->tabulatedProperties() , table ) ;
       if( sc.isFailure() )
         { return Error("UpdateRep::could not add TabulatedProperties for "+isotope->fullpath() , sc  ); } 
+      G4Wrapper::addG4MaterialPropertiesTable( NewMaterial , table );
     }
   ///
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::end" << endreq; } 

@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaLVolumeCnv.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $ 
 /// GaudiKernel
 #include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/IDataSelector.h"
@@ -8,10 +9,9 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/CLIDLVolume.h"
 #include "DetDesc/LVolume.h"
-/// Geant4
-#include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4PVPlacement.hh"
+/// G4Wrapper
+#include "G4Wrapper/LogicalVolume.h"
+#include "G4Wrapper/PhysicalVolume.h"
 /// GiGa 
 #include "GiGa/IGiGaCnvSvc.h"
 #include "GiGa/IGiGaGeomCnvSvc.h"
@@ -48,10 +48,8 @@ StatusCode GiGaLVolumeCnv::createRep( DataObject*     Object  , IOpaqueAddress*&
   if( 0 == geoSvc()      ) { return Error("CreateRep::Conversion Service is unavailable"); }   
   /// look at the store 
   {
-    G4LogicalVolume* LV = 0; 
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
+    G4LogicalVolume* LV = G4Wrapper::getG4LogicalVolume( lv->name() ); 
+    if( 0 != LV ) { return StatusCode::SUCCESS ; }                         /// RETURN !!!
   }
   /// create IOpaqueAddress
   IAddressCreator* addrCreator = 0 ; 
@@ -79,17 +77,13 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   if( 0 == lv                     ) { return Error("CreateRep::Bad cast to ILVolume*"); }
   if( 0 == cnvSvc()               ) { return Error("UpdateRep::Conversion Service is unavailable"); } 
   /// look at the G4 static store 
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
-  }
+  if( 0 != G4Wrapper::getG4LogicalVolume( lv->name() ) ) { return StatusCode::SUCCESS ; } ///< RETURN!!!
   ///
   G4VSolid*   solid    = geoSvc()->g4Solid   ( lv->solid       () );
   if( 0 == solid    ) { return Error("CreateRep::Could not create Solid!")                        ; } 
   G4Material* material = geoSvc()->g4Material( lv->materialName() );
   if( 0 == material ) { return Error("CreateRep::Could not locate Material="+lv->materialName() ) ; } 
-  G4LogicalVolume* G4LV = new G4LogicalVolume( solid , material , lv->name() , 0 , 0 , 0 );
+  G4LogicalVolume* G4LV = G4Wrapper::createG4LogicalVolume( solid , material , lv->name() );
   /// convert daugthers (if any) 
   for( ILVolume::PVolumes::const_iterator iPV = lv->pvBegin() ;  lv->pvEnd() != iPV ; ++iPV )
     {
@@ -98,8 +92,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
       G4LogicalVolume*    LV = geoSvc()->g4LVolume( pv->lvolumeName() ); 
       if( 0 == LV ) { return Error("updateRep:: Could not convert daughter LVolume for "+lv->name() );}
       G4VPhysicalVolume*  PV = 
-	///       new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
-        new G4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
+        G4Wrapper::createG4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
     }
   /// convert surfaces (if any) 
   { 
@@ -112,11 +105,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
     if( sc.isFailure() ) { return Error("Could not convert surfaces!"); }
   }
   /// look again at the G4 static store
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( lv->name() == store[indx]->GetName() ) { return StatusCode::SUCCESS ; } }    /// RETURN !!!
-  }
+  if( 0 != G4Wrapper::getG4LogicalVolume( lv->name() ) ) { return StatusCode::SUCCESS; } 
   ///
   return Error("UpdateRep:: failure in convertion of "+lv->name() );
   ///

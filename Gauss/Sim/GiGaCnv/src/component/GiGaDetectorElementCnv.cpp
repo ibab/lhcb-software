@@ -1,6 +1,8 @@
 /// STL
 #include <string>
 #include <vector>
+/// CLEHP 
+#include "CLHEP/Geometry/Transform3D.h"
 /// Gaudi 
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/DataObject.h" 
@@ -12,11 +14,10 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/CLIDDetectorElement.h" 
-/// Geant4
-#include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4PVPlacement.hh"
-#include "G4PhysicalVolumeStore.hh"
+/// G4Wrapper
+#include "G4Wrapper/PhysicalVolume.h"
+/// Geant4 
+#include "G4VPhysicalVolume.hh"
 /// GiGa
 #include "GiGa/IGiGaCnvSvc.h"
 #include "GiGa/IGiGaGeomCnvSvc.h"
@@ -75,7 +76,7 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , IOpaqueA
       StatusCode sc = geoSvc()->createReps( &dS );
       if( sc.isFailure() ) { return Error("createRep:: could not convert daughter elements") ; }
       ///
-      return StatusCode::SUCCESS;
+      return StatusCode::SUCCESS;              ///<  RETURN!!!
       ///
     }  
   /// here it is an ordinary detector element 
@@ -115,18 +116,15 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
     std::string path ( de->name() );
     do
       {
-        G4VPhysicalVolume* pv = 0; 
-        G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-        for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-          { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
+        G4VPhysicalVolume* pv = G4Wrapper::getG4VPhysicalVolume( path );
         /// it was converted EXPLICITELY or IMPLICITELY !!!
         if( 0 != pv ) 
           {
             MsgStream log( msgSvc() , name() ) ; 
             log << MSG::INFO << "DE=" << de->name() 
                 << " was already EXPLICITELY/IMPLICITELY converted for PV=" << pv->GetName() << endreq; 
-            return StatusCode::SUCCESS; 
-          }                          /// RETURN !!!
+            return StatusCode::SUCCESS;                        ///< RETURN !!!
+          }                          ///< RETURN !!!
         ///
         path.erase( path.find_last_of('/') ); 
       } 
@@ -139,16 +137,10 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
   if( 0 == PV ) { return Error("updateRep:: G4WorldPV is not available!" ) ; }
   /// create the placement of Detector Element
   G4VPhysicalVolume*   pv = 
-    new G4PVPlacement( gi->matrix().inverse() , LV , de->name() , PV->GetLogicalVolume() , false , 0 ) ;
+    G4Wrapper::createG4PVPlacement( gi->matrix().inverse() , LV , de->name() , PV->GetLogicalVolume() , false , 0 ) ;
   pv = pv ; /// just to please the compiler 
   /// look again in the store 
-  {
-    G4VPhysicalVolume* PV = 0; 
-    G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.entries() ; ++indx )
-      { if( de->name() == store[indx]->GetName() ) { PV = store[indx] ; break; } }
-    if( 0 != PV ) { return StatusCode::SUCCESS; }                             /// RETURN !!!
-  } 
+  if( 0 != G4Wrapper::getG4VPhysicalVolume( de->name() ) ) { return StatusCode::SUCCESS; } ///< RETURN !!!
   ///
   return Error("updateRep:: could not convert GetectorElement="+de->name()) ;
   ///

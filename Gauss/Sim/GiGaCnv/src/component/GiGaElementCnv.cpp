@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/component/GiGaElementCnv.cpp,v 1.2 2001-04-26 21:01:41 ibelyaev Exp $ 
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
 #include "GaudiKernel/IOpaqueAddress.h" 
@@ -9,9 +10,8 @@
 #include "DetDesc/Isotope.h"
 // GiGa 
 #include "GiGa/GiGaException.h" 
-/// Geant4 includes
-#include "G4Element.hh" 
-#include "G4Material.hh" 
+// G4Wrapper 
+#include "G4Wrapper/Material.h"
 // Local
 #include "AddTabulatedProperties.h" 
 #include "GiGaElementCnv.h" 
@@ -70,7 +70,7 @@ StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   catch(...) { element =                                    0 ; } 
   if( 0 == element ) { return Error("UpdateRep::Bad cast to Element*");} 
   /// Check if Element is already known to Geant4 
-  if( 0 != G4Element::GetElement( element->fullpath() ) ) { return StatusCode::SUCCESS; } 
+  if( 0 != G4Wrapper::getG4Element( element->fullpath() ) ) { return StatusCode::SUCCESS; } 
   /// create isotopes first
   {
     IDataSelector ds;
@@ -82,62 +82,61 @@ StatusCode GiGaElementCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
   /// Here we should create the element 
   G4Element*  NewElement = 0 ; 
   if( 0 == element->nOfIsotopes() )                                 /// simple element 
-    { NewElement = new G4Element( element->fullpath () , 
-                                  element->name     () , 
-                                  element->Z        () , 
-                                  element->A        () ); } 
+    { NewElement = G4Wrapper::createG4Element( element->fullpath () , 
+					       element->name     () , 
+					       element->Z        () , 
+					       element->A        () ); } 
   else                                                              /// compound element (from isotopes)
     {                                                               
       /// 
-      NewElement = new G4Element( element->fullpath() , element->name() , element->nOfIsotopes() ) ;
+      NewElement = G4Wrapper::createG4Element( element->fullpath() , element->name() , element->nOfIsotopes() ) ;
       for( Iterator it = element->isotopes().begin() ; element->isotopes().end() != it ; ++it )
         {
-          G4Isotope* isotope = G4Isotope::GetIsotope( it->second->fullpath() ); 
+          G4Isotope* isotope = G4Wrapper::getG4Isotope( it->second->fullpath() ); 
           if( 0 == isotope ) 
             { return Error("UpdateRep::could not extract isotope="+it->second->fullpath() ); }
-          NewElement->AddIsotope( isotope , it->first ); // 
+          G4Wrapper::addG4Isotope( NewElement , isotope , it->first ); // 
         } 
     }
   /// Check if Material is already known to Geant4
-  if( 0 != G4Material::GetMaterial( element->fullpath() ) ) { return StatusCode::SUCCESS; } 
+  if( 0 != G4Wrapper::getG4Material( element->fullpath() ) ) { return StatusCode::SUCCESS; } 
   /// Here we could define simple materials 
   G4Material*  NewMaterial = 0 ; 
   if( 0 == element->nOfIsotopes() ) 
     { 
-      NewMaterial = new G4Material( element->fullpath        () , 
-                                    element->Z               () , 
-                                    element->A               () , 
-                                    element->density         () , 
-                                    (G4State) element->state () ,  
-                                    element->temperature     () , 
-                                    element->pressure        () ); 
+      NewMaterial = G4Wrapper::createG4Material( element->fullpath        () , 
+						 element->Z               () , 
+						 element->A               () , 
+						 element->density         () , 
+						 element->state           () ,  
+						 element->temperature     () , 
+						 element->pressure        () ); 
     } 
   else
     { 
       /// 
-      NewMaterial = new G4Material( element->fullpath        () , 
-                                    element->density         () , 
-                                    element->nOfIsotopes     () ,
-                                    (G4State) element->state () ,  
-                                    element->temperature     () , 
-                                    element->pressure        () ); 
+      NewMaterial = G4Wrapper::createG4Material( element->fullpath        () , 
+						 element->density         () , 
+						 element->nOfIsotopes     () ,
+						 element->state           () ,  
+						 element->temperature     () , 
+						 element->pressure        () ); 
       for( Iterator it = element->isotopes().begin() ; element->isotopes().end() != it ; ++it )
         {
-          G4Element* el = G4Element::GetElement( it->second->fullpath() ); 
+          G4Element* el = G4Wrapper::getG4Element( it->second->fullpath() ); 
           if( 0 == el ) 
             { return Error("UpdateRep::could not extract element="+it->second->fullpath() ); }
-          NewMaterial->AddElement( el , it->first ); // 
+          G4Wrapper::addG4Element( NewMaterial , el , it->first ); // 
         } 
     }  
   /// add tabulated properties
   if( !element->tabulatedProperties().empty() )
     {
-      if( 0 == NewMaterial->GetMaterialPropertiesTable() )
-        { NewMaterial->SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ); }
-      StatusCode sc = AddTabulatedProperties ( element->tabulatedProperties()  ,
-                                               NewMaterial->GetMaterialPropertiesTable() ) ;
+      G4MaterialPropertiesTable* table = new G4MaterialPropertiesTable() ; 
+      StatusCode sc = AddTabulatedProperties ( element->tabulatedProperties() , table ) ;
       if( sc.isFailure() )
         { return Error("UpdateRep::could not add TabulatedProperties for "+element->fullpath() , sc  ); } 
+      G4Wrapper::addG4MaterialPropertiesTable( NewMaterial , table );
     }
   ///
   { MsgStream log( msgSvc() , name() ); log << MSG::VERBOSE << "UpdateRep::end" << endreq; } 
