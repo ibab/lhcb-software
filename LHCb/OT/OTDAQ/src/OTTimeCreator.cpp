@@ -1,8 +1,9 @@
-// $Id: OTTimeCreator.cpp,v 1.2 2004-09-10 13:14:59 cattanem Exp $
+// $Id: OTTimeCreator.cpp,v 1.3 2004-10-28 14:34:24 cattanem Exp $
 // Include files
 
 // local
 #include "OTTimeCreator.h"
+#include "Event/OTBankVersion.h"
 
 // Tool interface
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -112,6 +113,13 @@ StatusCode OTTimeCreator::execute() {
   // Loop over vector of banks (The Buffer)
   std::vector<RawBank>::const_iterator ibank;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
+    // Check the bank version
+    if( (*ibank).version() != OTBankVersion::v1 ) {
+      msg << MSG::ERROR << "Cannot decode OT raw buffer bank version "
+          << (*ibank).version() << " with this version of OTDAQ" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
     //Getting the values of the number of bank and of the Bank size 
     long bankSize = (*ibank).dataSize();
 
