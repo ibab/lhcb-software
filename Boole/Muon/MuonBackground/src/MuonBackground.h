@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.3 2003-10-01 14:20:34 asatta Exp $
+// $Id: MuonBackground.h,v 1.4 2003-10-03 12:52:41 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -113,7 +113,7 @@ private:
   int m_regionNumber;
   int m_partition;  
   int m_numberOfEventsNeed;
-  
+  bool m_histos; ///< Job option to switch on debug histos
 
   float m_luminosity;
   std::vector<double> m_flatSpilloverHit;

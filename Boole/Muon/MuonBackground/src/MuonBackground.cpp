@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.13 2003-10-01 14:50:52 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.14 2003-10-03 12:52:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -76,6 +76,7 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("AverageFlatHits" , m_flatSpilloverHit ) ;
   declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
   declareProperty("BackgroundType" , m_typeOfBackground ) ;
+  declareProperty("DebugHistos" , m_histos=false ) ;
 }
 
 //=============================================================================
@@ -137,30 +138,29 @@ StatusCode MuonBackground::initialize() {
     m_type=FlatSpillover;        
   }
   msg << MSG::DEBUG <<" type "<< m_type<<endreq;
-  if(m_type==LowEnergy){    
+  if( m_type==LowEnergy ){    
 
-         for (int y=0;y<5;y++){
-       for (int kk=0;kk<4;kk++){
-         int hh;
-         hh=y*4+kk;
-         char label[10]; 
-         if(hh<9)sprintf(label,"%1i",hh+1);
-
-        if(hh>=9)sprintf(label,"%2i",hh+1);
+    if( m_histos ) {
+      for (int y=0;y<5;y++){
+        for (int kk=0;kk<4;kk++){
+          int hh;
+          hh=y*4+kk;
+          char label[10]; 
+          if(hh<9)sprintf(label,"%1i",hh+1);
+          if(hh>=9)sprintf(label,"%2i",hh+1);
  
-        //msg<<MSG::INFO<<label<<endreq; 
-        std::string ap="STAT/";
+          std::string ap="STAT/";
+          std::string label2=ap+label;
 
-        std::string label2=ap+label;
-
-        m_pointer1D[hh]=
-          histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );
-        m_pointer2D[hh]=
-          histoSvc()->book( label2, "ADD bk vs HT multiplicity",
-                           50, 0., 50., 50 ,0., 50. );
-       }
-     }
-
+          m_pointer1D[hh]=
+            histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );
+          m_pointer2D[hh]=
+            histoSvc()->book( label2, "ADD bk vs HT multiplicity",
+                              50, 0., 50., 50 ,0., 50. );
+        }
+      }
+    }
+    
     IAlgManager* algmgr;
     sc = service( "ApplicationMgr", algmgr );
     if( !sc.isSuccess() ) {
@@ -264,10 +264,11 @@ StatusCode MuonBackground::execute() {
             for(int hitID=0;hitID< hitToAdd;hitID++){            
             createHit(hitsContainer, station,multi,ispill);            
             }
-             m_pointer1D[index]->fill(startingHits+0.00001,1.0);
-            m_pointer2D[index]->
-              fill(startingHits+0.00001,hitToAdd+0.00001,1.0);
-            
+            if( m_histos ) {
+              m_pointer1D[index]->fill(startingHits+0.00001,1.0);
+              m_pointer2D[index]->
+                fill(startingHits+0.00001,hitToAdd+0.00001,1.0);
+            }
           }
           
         }        
@@ -342,6 +343,7 @@ StatusCode MuonBackground::finalize() {
     if(pointDelete)delete pointDelete;
   }
   if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );    
+  if( m_pGetInfo )     toolSvc()->releaseTool( m_pGetInfo );    
   return StatusCode::SUCCESS;
 }
 
