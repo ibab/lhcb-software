@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.43 2003-06-16 13:41:23 sponce Exp $
+! $Id: release.notes,v 1.44 2003-06-16 15:10:31 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
 ! 2003-06-16 - Sebastien Ponce
- - use new package DetDescCnv
+ - use new package DetDescCnv and new version v12r* of DetDesc
 
 ! 2003-03-20 - Olivier Callot
  - fix a bug in stripLimitsR, used only for Panoramix, returning the limits
