@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.31 2003-08-05 17:36:54 gcorti Exp $
+! $Id: release.notes,v 1.32 2004-01-14 18:31:33 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+!================= DaVinciAssociators v4r3 2004-01-14 ======================
+! 2004-01-14 - Gloria CORTI
+ - use PhysEvent v* to have same package for LHCb v12r1 and LHCb >= v14r0
 
 !================= DaVinciAssociators v4r2p1 2003-08-05 ====================
 ! 2003-07-24 - Gloria CORTI
