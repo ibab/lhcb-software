@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.4 2002-07-25 12:25:29 gcorti Exp $
+// $Id: DecayFinder.h,v 1.5 2002-07-26 12:59:58 odie Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -121,8 +121,10 @@ private:
     bool getQmark( void ) { return qmark; }
     void setConjugate( void ) { conjugate = true; }
     bool getConjugate( void ) { return conjugate; }
-    void setOscilate( void ) { oscilate = true; }
-    bool getOscilate( void ) { return oscilate; }
+    void setOscillate( void ) { oscillate = true; }
+    void setNotOscillate( void ) { noscillate = true; }
+    bool getOscillate( void ) { return oscillate; }
+    bool getNotOscillate( void ) { return noscillate; }
     void setInverse( void ) { inverse = true; }
     bool getInverse( void ) { return inverse; }
     void setStable( void ) { stable = true; }
@@ -140,7 +142,8 @@ private:
     } parms;
     bool qmark;
     bool conjugate;
-    bool oscilate;
+    bool oscillate;
+    bool noscillate;
     bool inverse;
     bool stable;
     IParticlePropertySvc *m_ppSvc;
@@ -158,49 +161,49 @@ private:
     ~Descriptor();
 
     template<class iter> bool test( const iter first, const iter last,
-               const Particle *&previous_result ) {
-  iter start;
-  if( previous_result &&
-      ((start=std::find(first,last,previous_result)) == last) )
-  {
-    previous_result = NULL;
-    return false; // Bad previous_result
-  }
-  if( previous_result )
-    start++;
-
-  if( mother == NULL ) // No mother == pp collision
-  {
-    std::list<const Particle*> prims;
-    ParticleVector::const_iterator i;
-    for( i=(previous_result ? start : first); i != last; i++ )
+               const Particle *&previous_result )
     {
-      // Particle have no origin so let's say it comes from the pp collision.
-      prims.push_back(*i);
+      iter start;
+      if( previous_result &&
+          ((start=std::find(first,last,previous_result)) == last) )
+      {
+        previous_result = NULL;
+        return false; // Bad previous_result
+      }
+      if( previous_result )
+        start++;
+      
+      if( mother == NULL ) // No mother == pp collision
+      {
+        std::list<const Particle*> prims;
+        ParticleVector::const_iterator i;
+        for( i=(previous_result ? start : first); i != last; i++ )
+        {
+          // Particle have no origin, let's say it comes from the pp collision.
+          prims.push_back(*i);
+        }
+        if( skipResonnance )
+          filterResonnances( prims );
+        if( testDaughters(prims) )
+        {
+          previous_result = (const Particle *)1;
+          return true;
+        }
+        return false;
+      }
+      
+      iter part_i;
+      part_i = (previous_result ? start : first);
+      while( (part_i != last) && (test(*part_i) == false) )
+        part_i++;
+      
+      if( part_i != last )
+      {
+        previous_result = *part_i;
+        return true;
+      }
+      return false;
     }
-    if( skipResonnance )
-      filterResonnances( prims );
-    if( testDaughters(prims) )
-    {
-      previous_result = (const Particle *)1;
-      return true;
-    }
-    return false;
-  }
-
-  iter part_i;
-  part_i = (previous_result ? start : first);
-  while( (part_i != last) && (test(*part_i) == false) )
-    part_i++;
-
-  if( part_i != last )
-  {
-    previous_result = *part_i;
-    return true;
-  }
-  return false;
-}
-
 
     void setAlternate( Descriptor *a ) { alternate = a; }
     Descriptor *getAlternate( void ) { return alternate; }

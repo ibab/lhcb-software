@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.4 2002-07-25 12:25:29 gcorti Exp $
+// $Id: DecayFinder.cpp,v 1.5 2002-07-26 12:59:58 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -300,18 +300,19 @@ void DecayFinder::Descriptor::conjugate( void )
 }
 
 DecayFinder::ParticleMatcher::ParticleMatcher( IParticlePropertySvc *ppSvc )
-  : type(notest), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(notest), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {}
 
 DecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
-  : type(notest), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(0)
+  : type(notest), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(0)
 {
   type = copy.type;
   qmark = copy.qmark;
   conjugate = copy.conjugate;
-  oscilate = copy.oscilate;
+  oscillate = copy.oscillate;
+  noscillate = copy.noscillate;
   inverse = copy.inverse;
   stable = copy.stable;
   m_ppSvc = copy.m_ppSvc;
@@ -338,8 +339,8 @@ DecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
 
 DecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
                                                IParticlePropertySvc *ppSvc )
-  : type(id), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(id), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   ParticleProperty *pp = m_ppSvc->find(*name);
   if( pp )
@@ -350,8 +351,8 @@ DecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
 
 DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
                                                IParticlePropertySvc *ppSvc )
-  : type(quark), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quark), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   parms.quarks.q1 = q1;
   parms.quarks.q2 = q2;
@@ -360,8 +361,8 @@ DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
 
 DecayFinder::ParticleMatcher::ParticleMatcher( Quantums q,Relations r,double d,
                                                IParticlePropertySvc *ppSvc )
-  : type(quantum), qmark(false), conjugate(false), oscilate(false),
-    inverse(false), stable(false), m_ppSvc(ppSvc)
+  : type(quantum), qmark(false), conjugate(false), oscillate(false),
+    noscillate(false), inverse(false), stable(false), m_ppSvc(ppSvc)
 {
   parms.relation.q = q;
   parms.relation.r = r;
@@ -476,7 +477,9 @@ bool DecayFinder::ParticleMatcher::test( const Particle *part )
         int cc_id = conjugatedID( parms.stdHepID );
         result = result || (cc_id == part->particleID().pid());
       }
-      if( oscilate )
+      if( oscillate )
+        result = false; // Not available on reconstructed particles.
+      if( noscillate )
         result = false; // Not available on reconstructed particles.
       if( inverse )
         result = !result;

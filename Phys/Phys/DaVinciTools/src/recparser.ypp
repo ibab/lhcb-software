@@ -15,7 +15,7 @@
   std::vector<ParticleMatcher *> *mvect;
 }
 
-%token LPAREN RPAREN LBRACK OSCIL CCONJ LBRACE RBRACE LANGLE RANGLE
+%token LPAREN RPAREN LBRACK OSCIL NOSCIL CCONJ LBRACE RBRACE LANGLE RANGLE
 %token ARROW RARROW COMMA EXCLAM ELIPSIS PP QMARK METAX
 %token EQEQUAL LESSEQUAL GREATEREQUAL NOTEQUAL
 %token UP_QUARK DOWN_QUARK CHARM_QUARK STRANGE_QUARK TOP_QUARK BOTTOM_QUARK
@@ -29,7 +29,7 @@
 
 %type <quarkval>  quark
 %type <quantumval> quantum
-%type <desc>  decay daughters_el daughters daughter daughter_list
+%type <desc>  decay decay_list daughters_el daughters daughters_list daughter daughter_list
 %type <match> particle particle_cc particle_wc quarks quantum_test
 %type <mvect> mother particle_list
 
@@ -82,6 +82,15 @@ start: LPAREN   decay RPAREN    { m_decay = $2; }
                                  a = a->getAlternate();
                                }
                             }}
+       | LBRACE decay_list RBRACE { m_decay = $2; }
+;
+
+decay_list: decay_list COMMA decay {{ $$ = $1; Descriptor *a = $1;
+                                      while( a->getAlternate() )
+                                        a = a->getAlternate();
+                                      a->setAlternate($3);
+                                   }}
+          | decay                  { $$ = $1; }
 ;
 
 decay: mother ARROW daughters_el {{ Descriptor *a = $3, *last = NULL; $$ = NULL;
@@ -149,6 +158,10 @@ mother: LPAREN   particle_cc   RPAREN { $$ = new std::vector<ParticleMatcher *>(
                                          for( p=$$->begin(); p!=$$->end(); p++ )
                                            (*p)->setConjugate();
                                       }}
+        | LBRACK particle OSCIL       { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $2->setOscillate(); $$->push_back($2); }
+        | LBRACK particle NOSCIL      { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $2->setNotOscillate(); $$->push_back($2); }
 	| LANGLE particle_wc   RANGLE { $$ = new std::vector<ParticleMatcher *>(0);
                                         $$->push_back($2); }
 	| particle		      { $$ = new std::vector<ParticleMatcher *>(0);
@@ -161,7 +174,8 @@ particle_list: particle_list COMMA particle_cc { $$ = $1; $$->push_back($3); }
 ;
 
 particle_cc: LBRACK   particle    CCONJ  { $$ = $2; $$->setConjugate(); }
-	     | LBRACK particle    OSCIL  { $$ = $2; $$->setOscilate(); }
+	     | LBRACK particle    OSCIL  { $$ = $2; $$->setOscillate(); }
+	     | LBRACK particle    NOSCIL { $$ = $2; $$->setNotOscillate(); }
 	     | LANGLE particle_wc RANGLE { $$ = $2; }
 	     | particle                  { $$ = $1; }
 ;
@@ -224,6 +238,15 @@ daughters: daughters daughter {{ Descriptor *a = $1, *b = $2, *last = NULL; $$ =
                                    a = next;
                                  }
                               }}
+           | LBRACE daughters_list RBRACE { $$ = $2; }
+;
+
+daughters_list: daughters_list COMMA daughters {{ $$ = $1; Descriptor *a = $1;
+                                                  while( a->getAlternate() )
+                                                    a = a->getAlternate();
+                                                  a->setAlternate($3);
+                                               }}
+              | daughters                      { $$ = $1; }
 ;
 
 daughter: LPAREN decay RPAREN           { $$ = $2; }
