@@ -4,6 +4,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-11-25 - Marco Cattaneo
+ - Modified packages: GaudiConf v7r3,
+     KernelSys v1r8, LHCbKernel v2r9, RichKernel v4r1,
+     EventSys v15r2, TrEvent v12r2, RichEvent v6r1, CaloEvent v12r1, 
+                     DAQEvent v3r0, DbCnv v7r2p1,
+     DetSys v3r2, CaloDet v6r6p1, CaloDetXmlCnv v2r3p1, DetDescCnv v2r1p1,
+                  MuonDet v4r4p1, XmlTools v2r0p1, DetDesc v13r0p1, RichDet v6r2
+
 !======================= LHCbSys v13r3p1 2003-11-10 =======================
 ! 2003-11-10 - Marco Cattaneo
  - Modified packages: EventSys v15r1, DAQEvent v2r1
