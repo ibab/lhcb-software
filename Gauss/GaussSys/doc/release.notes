@@ -4,9 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
-!============================ GaussSys v6r1 2002-12-04 ==================
-! 2002-12-04 - Florence Ranjard
- - new version using LHCb v11r4
+!=========================== GaussSys v7r0 2002-12-13 ===================
+! 2002-12-13 - Florence Ranjard
+ - new Gauss version uses LHCb v11r4
+   GaussTools is splitted in several Gauss<det> packages
 
 !============================ GaussSys v6r0 2002-11-11 ===================
 ! 2002-11-11 - Florence Ranjard
