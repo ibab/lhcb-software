@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.11 2002-05-02 12:05:50 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.12 2002-05-28 16:06:30 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -36,6 +36,9 @@ XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
 
   // gets the DtdLocation property value
   declareProperty ("DtdLocation", m_dtdLocation = "");
+
+  // Whether to check parameters for units or not
+  declareProperty ("CheckUnits", m_checkUnits = true);
 }
 
 
@@ -270,24 +273,17 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
   MsgStream log (msgSvc(), name());
 
   // Check if it is needed to be a dimention number
-  if (check) {
-    // find the last '*' and check that there is a unit name after it
-    std::string e(expr);
-    unsigned int pos = e.find_last_of('*');
-    // set the unit to what come after the '*' or the complete expresion
-    // std::string unit = (pos == -1 ) ? e : e.substr(pos + 1);
-    std::string unit = ( pos == std::string::npos ) ? e : e.substr(pos + 1);
-    // remove leading blanks
-    pos = unit.find_first_not_of(' ');
-    // remove leading '-' if one
-    if (unit[pos] == '-') pos += 1;
-    unit = unit.substr(pos);
-    // check if what is left is not empty and alphabetic character
-    if (unit.size() == 0 || !isalpha(unit[0])) {
-      log << MSG::WARNING << "Expression requires units ["
-          << expr << "]" << endreq;
+  if (m_checkUnits) {
+    if (check) {
+      std::string e(expr);
+      // remove leading blanks
+      if (!sumHasUnit(e, e.find_first_not_of(' '), e.length())) {
+        log << MSG::WARNING << "Expression requires correct units ["
+            << e << "]" << endreq;
+      }
     }
   }
+  
   // Call the CLHEP Evaluator
   double value = m_xp.evaluate( expr );
   std::string errtxt;
@@ -381,5 +377,216 @@ bool XmlCnvSvc::removeParameter (const char* name) {
     return true;
   } else {
     return false;
+  }
+}
+
+
+// -----------------------------------------------------------------------
+// skipSum
+// -----------------------------------------------------------------------
+unsigned int XmlCnvSvc::skipSum (std::string s,
+                                 unsigned int start,
+                                 unsigned int end) {
+  unsigned int result = start;
+  while (result < end) {
+    result = skipProduct (s, result, end);
+    if (result == end) return end;
+    result = s.find_first_not_of(' ', result);
+    if (result == s.npos) return end;
+    if (s[result] == ')') {
+      return result;
+    } else {
+      // skip the + or - and loop
+      result = s.find_first_not_of(' ', result + 1);
+      if (result == s.npos) return end;
+    }
+  }
+  return result;
+}
+
+
+// -----------------------------------------------------------------------
+// skipProduct
+// -----------------------------------------------------------------------
+unsigned int XmlCnvSvc::skipProduct (std::string s,
+                                     unsigned int start,
+                                     unsigned int end) {
+  unsigned int result = start;
+  while (result < end) {
+    result = skipExpr (s, result, end);
+    if (result == end) return end;
+    result = s.find_first_not_of(' ', result);
+    if (result == s.npos) return end;
+    if ((s[result] == '+') || (s[result] == '-') || (s[result] == ')')) {
+      return result;
+    } else {
+      // skip the * or / and loop
+      result = s.find_first_not_of(' ', result + 1);
+      if (result == s.npos) return end;
+    }
+  }
+  return result;
+}
+
+// -----------------------------------------------------------------------
+// skipExpr
+// -----------------------------------------------------------------------
+unsigned int XmlCnvSvc::skipExpr (std::string s,
+                                  unsigned int start,
+                                  unsigned int end) {
+  MsgStream log (msgSvc(), "DetDescUnit");
+  // deal with the unary minus
+  unsigned int realStart = s.find_first_not_of(' ', start);
+  if (realStart != s.npos) {
+    if (s[realStart] == '-') {
+      realStart = s.find_first_not_of(' ', realStart + 1);
+    }
+  }
+  if (realStart == s.npos) {
+    // the expression is empty !
+    log << MSG::ERROR
+        << "Invalid expression (It's empty !) : \""
+        << s.substr (realStart, end - realStart) << "\""
+        << endreq;
+    return end;
+  }
+  unsigned int index = s.find_first_of("+-/*()", realStart);
+  // if we the expression starts with an opening parenthesis or a
+  // function call
+  if ((index != s.npos) && (s[index] == '(')) {
+    // skip the sum inside the parenthesis
+    unsigned int endIndex = skipSum (s, index+1, end);
+    if (endIndex != end) {
+      endIndex = s.find_first_not_of(' ', endIndex);
+      if (endIndex == s.npos) endIndex = end;
+    }
+    // if no end
+    if (endIndex == end) {
+      log << MSG::ERROR
+          << "Invalid expression (no ')' at end of string) : \""
+          << s.substr (realStart, end - realStart) << "\""
+          << endreq;
+      return end;
+    }
+    // else test the closing parenthesis
+    if (s[endIndex] != ')') {
+      log << MSG::ERROR 
+          << "Invalid expression (missing ')' at column "
+          << endIndex - realStart << ") : \""
+          << s.substr (realStart, end - realStart) << "\""
+          << endreq;
+      return end;
+    }
+    // else everything is ok
+    endIndex = s.find_first_not_of(' ', endIndex + 1);
+    if (endIndex == s.npos) endIndex = end;
+    if (endIndex < end) return endIndex; else return end;
+  } else {
+    // if the expression does not start with a parenthesis nor a
+    // function call, it should be an alphanumeric character
+    if (isalnum(s[realStart])) {
+      if (index != s.npos) {
+        return index;
+      } else {
+        return end;
+      }
+    } else {
+      // in case there is no alphanumeric character
+      log << MSG::ERROR
+          << "Invalid expression (Alphanumeric character expected) : \""
+          << s.substr (realStart, end - realStart) << "\""
+          << endreq;
+      return end;
+    }
+  }
+  // We should never reach this point
+  log << MSG::ERROR
+      << "This should never appear, please report" << endreq;
+  return end;
+}
+
+
+// -----------------------------------------------------------------------
+// sumHasUnit
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::sumHasUnit (std::string s,
+                 unsigned int baseIndex,
+                 unsigned int lastIndex) {
+  bool result = true;
+  unsigned int index = baseIndex;
+  unsigned int oldIndex = index;
+  while (oldIndex < lastIndex) {
+    // get next product subexpression
+    index = skipProduct (s, oldIndex, lastIndex);
+    // see whether it has a unit
+    result = result && productHasUnit(s, oldIndex, index);
+    // skip the + or - sign
+    oldIndex = s.find_first_not_of(' ', index + 1);
+    if (oldIndex == s.npos) oldIndex = lastIndex;
+  }
+  return result;
+}
+
+
+// -----------------------------------------------------------------------
+// productHasUnit
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::productHasUnit (std::string s,
+                     unsigned int baseIndex,
+                     unsigned int lastIndex) {
+  bool result = false;
+  unsigned int index = baseIndex;
+  unsigned int oldIndex = index;
+  while (oldIndex < lastIndex) {
+    // get next subexpression
+    index = skipExpr (s, oldIndex, lastIndex);
+    // see whether it has a unit
+    result = result || exprHasUnit(s, oldIndex, index);
+    // skip the * or / sign
+    oldIndex = s.find_first_not_of(' ', index + 1);
+    if (oldIndex == s.npos) oldIndex = lastIndex;
+  }
+  return result;
+}
+
+
+// -----------------------------------------------------------------------
+// exprHasUnit
+// -----------------------------------------------------------------------
+bool XmlCnvSvc::exprHasUnit (std::string s,
+                             unsigned int baseIndex,
+                             unsigned int lastIndex) {
+  // deal with the unary minus
+  unsigned int realBaseIndex =  s.find_first_not_of(' ', baseIndex);
+  if (realBaseIndex == s.npos) {
+    realBaseIndex = lastIndex;
+  } else if (s[realBaseIndex] == '-') {
+    realBaseIndex = s.find_first_not_of(' ', realBaseIndex + 1);
+    if (realBaseIndex == s.npos) realBaseIndex = lastIndex;
+  }
+  if (realBaseIndex == lastIndex) {
+    // empty expression, return false
+    return false;
+  }
+  unsigned int index = s.find_first_of("+-/*()", realBaseIndex);
+  if ((index != s.npos) && (s[index] == '(')) {
+    if (index == realBaseIndex) {
+      // if we the expression starts with an opening parenthesis
+      // deal with the sum which is its content
+      return sumHasUnit (s, realBaseIndex + 1, lastIndex - 1);
+    } else {
+      // else we are calling a function, the result has no unit except
+      // if the function abs is called.
+      int findex = s.find_last_not_of(' ', index-1);
+      if (s.substr(realBaseIndex, findex+1-realBaseIndex) == "abs") {
+        return sumHasUnit(s, index+1, s.find_last_of(')', lastIndex));
+      } else {
+        return false;
+      }
+    }
+  } else {
+    // else we consider that having an alphabetic character at the first
+    // place means there is a unit
+    return isalpha(s[realBaseIndex]);
   }
 }

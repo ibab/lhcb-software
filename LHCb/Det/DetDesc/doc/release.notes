@@ -1,9 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.95 2002-05-26 13:04:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.96 2002-05-28 16:06:26 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-05-28 - Sebastien Ponce
+ - implements a more clever test for checking units. Basically everything is
+   tested correctly except :
+    o when a product/division of units does not have any unit, it thinks it
+      has one
+    o every parameter in an expression is considered as having a unit
+    o functions are considered returning unitless values, except for abs
+ - adds a new JobOption (CheckUnits) that tells whether the unit checking
+   should be done or not. Default value is true, which means check them.
 
 ! 2002-05-26 - Vanya Belyaev
  - doc/DoxyFile.cfg                : new file 

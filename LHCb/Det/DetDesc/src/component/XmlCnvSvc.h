@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.6 2001-12-11 10:02:28 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.7 2002-05-28 16:06:31 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -185,6 +185,67 @@ protected:
 
 private:
 
+// -----------------------------------------------------------------------
+// Useful functions to check units in parameters
+// -----------------------------------------------------------------------
+//
+// The aim of all this is to say whether a given expression has a unit
+// or not. The language we deal with is the following :
+//    sum :=   product '+' sum
+//           | product '-' sum
+//    product :=   expr '*' product
+//               | expr '/' product
+//    expr :=   '-'? alphanumeric token
+//            | '-'? function_name? '(' sum ')'
+// Where ? means that it is optionnal and | means or.
+//
+// The way it is implemented is the following :
+//    - every function receives the string to be parsed and the
+//  currently interesting part of it (between start or baseIndex
+//  included and end or lastIndex exculded).
+//    - the skip* functions return the index of the first character
+//  following the sum/product/expr. This value is less or equal to end
+//    - the *HasUnit functions tell whether a given sum/product/expr
+//  has a unit
+//
+// The assumptions made are the following :
+//    - a sum has a unit if and only if each sub product has one
+//    - a product has a unit if any sub expr has one (which may be wrong
+//  if you divide a unit by itself for example)
+//    - an expression has a unit in only 3 cases :
+//         o it is of the form -? '(' sum ')' and the sum has one
+//         o it is of the form '-'? alphanumeric token and the token
+//  starts with a letter. This statement makes the assumption that this
+//  token is either describing a unit or is a variable that has a unit
+//  itself, which may be wrong
+//         o it is of the form '-'? abs '(' sum ')' (which is a call to
+//  the function "abs") and sum has a unit
+//    - note that the result of a function is supposed to have no unit
+//  in general
+
+  unsigned int skipSum (std::string s,
+                        unsigned int start,
+                        unsigned int end);
+  unsigned int skipProduct (std::string s,
+                            unsigned int start,
+                            unsigned int end);
+  unsigned int skipExpr (std::string s,
+                         unsigned int start,
+                         unsigned int end);
+  
+  bool sumHasUnit (std::string s,
+                   unsigned int baseIndex,
+                   unsigned int lastIndex);
+  bool productHasUnit (std::string s,
+                       unsigned int baseIndex,
+                       unsigned int lastIndex);
+  bool exprHasUnit (std::string s,
+                    unsigned int baseIndex,
+                    unsigned int lastIndex);
+  
+
+private:
+
   /// XmlParserSvc used to parse xmlfiles
   IXmlParserSvc* m_parserSvc;
 
@@ -204,6 +265,10 @@ private:
    */
   std::string m_dtdLocation;
 
+  /**
+   * tells whether to check parameters for units or not.
+   */
+  bool m_checkUnits;
 };
 
 #endif    // DETDESC_XMLCNVSVC_H
