@@ -8,12 +8,13 @@
 
 #include "LHCbEvent/MCParticle.h" 
 #include "LHCbEvent/MuonDigit.h"    
-#include "L0Muon/MuonTile.h"
+#include "MuonTile.h"
 
 // Externals
 extern const CLID& CLID_L0mPad;           
 
 class MsgStream;
+class MuonLayout;
 
 /** @class L0mPad L0mPad L0Muon/L0mPad.h
 
@@ -32,7 +33,7 @@ public:
     /// Default constructor
     L0mPad();
     /// Constructor setting the L0mPad data members
-    L0mPad(int st, int iq, int ir, int nx, int ny);
+    L0mPad(int st, int iq, int ir, int nx, int ny, MuonLayout ml);
 	      
     ~L0mPad();	       
     /// accessor to the station number
