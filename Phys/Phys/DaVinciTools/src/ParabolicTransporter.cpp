@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.3 2002-07-24 18:21:10 gcorti Exp $
+// $Id: ParabolicTransporter.cpp,v 1.4 2002-10-21 21:33:00 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -13,6 +13,7 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
+#include "CLHEP/Geometry/Point3D.h"
 
 // local
 #include "ParabolicTransporter.h"
@@ -66,9 +67,10 @@ StatusCode ParabolicTransporter::initialize(){
 //=============================================================================
 //  Transport in a magnetic field (parabolic approximation)
 //=============================================================================
-StatusCode ParabolicTransporter::transport(ParticleVector::const_iterator & icand, 
-                                           double znew,
-                                           Particle & transParticle){
+StatusCode 
+ParabolicTransporter::transport(ParticleVector::const_iterator & icand, 
+                                double znew,
+                                Particle & transParticle){
   MsgStream log(msgSvc(), name());
   
   Particle *workParticle = (*icand);
@@ -79,19 +81,19 @@ StatusCode ParabolicTransporter::transport(ParticleVector::const_iterator & ican
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
 
-  if ( ipz == -1 ){ zr = znew; zl = zold;  }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
@@ -119,17 +121,18 @@ StatusCode ParabolicTransporter::transport(const Particle & icand,
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
 
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0"
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
@@ -156,17 +159,18 @@ StatusCode ParabolicTransporter::transport(Particle & icand,
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
 
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0"
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks  
@@ -201,7 +205,9 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   HepPoint3D newPOT = oldPOT;
   
   //initialize and crate Momentum vector
-  HepLorentzVector newMomentum = workParticle->momentum();
+  HepLorentzVector newMomentum;
+  HepLorentzVector oldMomentum = workParticle->momentum();
+  newMomentum = oldMomentum;
   
   // initialize and create PointOnTrack matrix error
   HepSymMatrix oldPOTErr(3, 0.);
@@ -267,6 +273,8 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   double ynew = yold + sy*dz + 0.5*qDivP*eplus*c_light*fAy*dz2;
   double newSx = sx + qDivP*eplus*c_light*fAx*dz;
   double newSy = sy + qDivP*eplus*c_light*fAy*dz;
+  double newR = sqrt( 1. + newSx*newSx + newSy*newSy);
+  
 
   // M is the transport matrix (d/dX0)(X), X={x,y,x',y',p}
   // TM is the transposed of M
@@ -333,16 +341,16 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   newSlopesMomErr(3,3) = VX0(5,5);
 
   // a new "particle" is made with transported values
+
   newPOT.set(xnew, ynew, znew);
-  newMomentum(1) = newSx*p/R;
-  newMomentum(2) = newSy*p/R;
-  newMomentum(3) = p/R;
+  newMomentum(0) = newSx*p/newR;
+  newMomentum(1) = newSy*p/newR;
+  newMomentum(2) = p/newR;
   transParticle.setPointOnTrack(newPOT);
   transParticle.setMomentum(newMomentum);
   transParticle.setPointOnTrackErr(newPOTErr);
   transParticle.setSlopesMomErr(newSlopesMomErr);
   transParticle.setPosSlopesCorr(newPosSlopesCorr);
-
   return StatusCode::SUCCESS;
 }
 
