@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker.cpp,v 1.1 2002-10-21 19:11:37 gcorti Exp $
+// $Id: ElectronParticleMaker.cpp,v 1.2 2002-10-21 21:34:21 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -107,9 +107,9 @@ IDataProviderSvc* ElectronParticleMaker::eventSvc() const
 //=============================================================================
 StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
   
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  logbk( msgSvc(), name() );
   
-  log << MSG::DEBUG << "==> ElectronParticleMaker::makeParticles() is running"
+  logbk << MSG::DEBUG << "==> ElectronParticleMaker::makeParticles() is running"
       << endreq;
 
   // make electron particles:
@@ -117,18 +117,18 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
 
   SmartDataPtr<ProtoParticles> chargedcandidates ( eventSvc(),m_chargedinput);
   if ( !chargedcandidates ) { 
-    log << MSG::INFO << " No Charged ProtoParticles retrieved from "  
+    logbk << MSG::INFO << " No Charged ProtoParticles retrieved from "  
         << m_chargedinput << endreq;
     return StatusCode::SUCCESS;
   }
   if ( 0 == chargedcandidates->size() ) { 
-    log << MSG::INFO << " No Charged ProtoParticles retrieved from "  
+    logbk << MSG::INFO << " No Charged ProtoParticles retrieved from "  
         << m_chargedinput << endreq;
     return StatusCode::SUCCESS;
   }
 
-  // Log number of ProtoPartCandidates retrieved
-  log << MSG::INFO << " Number of Charged ProtoParticles retrieved   = "
+  // Logbk number of ProtoPartCandidates retrieved
+  logbk << MSG::INFO << " Number of Charged ProtoParticles retrieved   = "
       << chargedcandidates->size() << endreq;
   
   // Loop over all Protoparticles and fill Particle if
@@ -148,14 +148,14 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
       /// retrieve calohypo for photons
       SmartDataPtr<CaloHypos> photons ( eventSvc(), "Rec/Calo/Photons" );
       if( !photons || 0 == photons->size() ) {
-        log << MSG::INFO 
+        logbk << MSG::INFO 
             << "Failed to locate CaloHypos at Rec/Calo/Photons " 
             << endreq;
       }
       /// retrieve track from which comes this protoparticle
       const TrStateP* trackState = (*icand)->trStateP();
       if( !trackState ){
-        log << MSG::WARNING 
+        logbk << MSG::WARNING 
             << " There is no TrStateP corresponding to this ProtoParticle "
             << endreq;
         return StatusCode::SUCCESS;
@@ -482,15 +482,15 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
             *(1.-exp(-ce1/12.87)) / 34.93;
           ebkg = 41.91*exp(-ce1/6581.)*(1.-exp(-ce1/175.8)) / 33.07;
         }
-        re = re + std::log(elik);  // Update log-likehood for e
-        rbkg = std::log(ebkg);     // and for background (non-e)
+        re = re + log(elik);  // Update log-likehood for e
+        rbkg = log(ebkg);     // and for background (non-e)
         
         // Add information from BremMatch variable (if available)
         if (ce3 > -0.5) {
           elik = exp(7.621-0.09495*ce3) + exp(5.777-0.01221*ce3) + 26.77;
           ebkg = exp(5.328-0.002751*ce3) + 194.4;
-          re = re + std::log(elik/75.14);
-          rbkg = rbkg + std::log(ebkg/265.65);
+          re = re + log(elik/75.14);
+          rbkg = rbkg + log(ebkg/265.65);
         }
         rmu = rmu + rbkg;  // Update background hypotheses
         rpi = rpi + rbkg;
@@ -525,11 +525,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
           mulik = exp(-3.576+9.36*mmu)+exp(0.7447+4.173*mmu);
           mubkg = exp(1.593+1.883*mmu);
         }
-        rmu = rmu + std::log(mulik / 105.56);  // Update muon log-likelihood
-        re  = re  + std::log(mubkg / 21.80);   // and background hypotheses
-        rpi = rpi + std::log(mubkg / 21.80);
-        rk  = rk  + std::log(mubkg / 21.80);
-        rp  = rp  + std::log(mubkg / 21.80);
+        rmu = rmu + log(mulik / 105.56);  // Update muon log-likelihood
+        re  = re  + log(mubkg / 21.80);   // and background hypotheses
+        rpi = rpi + log(mubkg / 21.80);
+        rk  = rk  + log(mubkg / 21.80);
+        rp  = rp  + log(mubkg / 21.80);
       }
       
       // For each particle type, calculate estimator as difference between
@@ -572,10 +572,10 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
 
   } /// FOR ( ICAND )
   
-  log << MSG::INFO << "Number of electrons/positons created : " 
+  logbk << MSG::INFO << "Number of electrons/positons created : " 
       << nElectronParticles
       << endreq;
-  log << MSG::DEBUG << "==> ElectronParticleMaker::makeParticles() is finish"
+  logbk << MSG::DEBUG << "==> ElectronParticleMaker::makeParticles() is finish"
       << endreq;
   
   return StatusCode::SUCCESS;
