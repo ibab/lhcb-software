@@ -44,7 +44,7 @@ class VeloClusterMaker : public Algorithm {
   // get cluster S/N cut in a detector
   void   setClusterSignalToNoiseCut(int detID, float newSN);
 
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Private member functions
  private:
   /// make Clusters from VeloFullDigits
@@ -53,21 +53,31 @@ class VeloClusterMaker : public Algorithm {
   StatusCode VeloClusterMaker::storeClusters();
 
   /// Try to make a cluster using currentDigit as the central hit
-  VeloCluster* makeClusterFromDigit(VeloFullDigit* currentDigit, float& currentClusterSTN);
+  VeloCluster* makeClusterFromDigit(VeloFullDigit* currentDigit, 
+                                    float& currentClusterSTN);
   /// Try to add a neighbouring channel to the cluster
-  bool TryToAddChannel(VeloCluster* currentCluster, float& currentClusterSTN, VeloFullDigit* currentDigit, int offset);
-  bool TryToAddCentralChannel(VeloCluster* currentCluster, float& currentClusterSTN, VeloFullDigit* currentDigit);
+  bool TryToAddChannel(VeloCluster* currentCluster, 
+                       float& currentClusterSTN, 
+                       VeloFullDigit* currentDigit, 
+                       int offset);
+  bool TryToAddCentralChannel(VeloCluster* currentCluster, 
+                              float& currentClusterSTN, 
+                              VeloFullDigit* currentDigit);
 
 
   /// increase the size of a cluster by adding an extra digit
-  void addDigit(VeloCluster* currentCluster, float& currentClusterSTN, VeloFullDigit* nearbyDigit, signed int offset);
+  void addDigit(VeloCluster* currentCluster, 
+                float& currentClusterSTN, 
+                VeloFullDigit* nearbyDigit, 
+                signed int offset);
   /// perform final check that cluster is OK (S/N cut)
   bool checkCluster(VeloCluster* currentCluster, float& currentClusterSTN);
   /// rejected a cluster allowing the hits in it to be used in other clusters
   void unmarkCluster(VeloCluster* currentCluster);
   /// 
   void getVeloFullDigits();
-  std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> getVeloFullDigitsOfSensor(int detId);
+  std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
+          getVeloFullDigitsOfSensor(int detId);
 
 private:
 
@@ -80,10 +90,18 @@ private:
   vector<bool> m_channelUsed; ///< store channels used on current detector
   int m_sensor; // current sensor
   VeloClusters* m_clusters; ///< vector to store clusters
-  float  m_defaultSignalToNoiseCut; ///< S/N cut to apply to all detectors from job opts
-  float  m_defaultClusterSignalToNoiseCut; ///< S/N cut for clusters to apply to all detectors from job opts
-  float  m_signalToNoiseCut[maxVeloSensors]; ///< S/N cut for individual strips for each detector
-  float  m_clusterSignalToNoiseCut[maxVeloSensors]; ///< S/N cut for clusters for each detector
+  /// S/N cut to apply to all detectors from job opts
+  float  m_defaultSignalToNoiseCut; 
+
+  /// S/N cut for clusters to apply to all detectors from job opts
+  float  m_defaultClusterSignalToNoiseCut; 
+
+  /// S/N cut for individual strips for each detector
+  float  m_signalToNoiseCut[maxVeloSensors]; 
+
+  /// S/N cut for clusters for each detector
+  float  m_clusterSignalToNoiseCut[maxVeloSensors];
+
   DeVelo* m_velo; ///< Detector Element
 
   int m_maxClusters; ///< maximum number of clusters to make per event

@@ -1,5 +1,5 @@
-#// $Id: VeloSim.h,v 1.1.1.1 2002-06-09 21:41:24 parkesb Exp $
-#ifndef VELOSIM_H 
+#// $Id: VeloSim.h,v 1.2 2002-06-18 06:50:01 ocallot Exp $
+#ifndef VELOSIM_H
 #define VELOSIM_H 1
 
 // Include files
@@ -45,28 +45,41 @@ private:
 
   StatusCode getInputData();
   StatusCode chargeSim(bool spillOver);
-    long simPoints(MCVeloHit* hit);
-    void chargePerPoint(MCVeloHit* hit, int Npoints, vector<double>& Spoints, bool SpillOver);
-      void deltaRayCharge(double charge, double tol, int Npoints, vector<double>& Spoints);
-    void diffusion(MCVeloHit* hit, int Npoints, vector<double>& Spoints);
-    void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
-    void fillFE(MCVeloFE* myFE, double charge);
+  long simPoints(MCVeloHit* hit);
+  void chargePerPoint(MCVeloHit* hit,
+                      int Npoints,
+                      vector<double>& Spoints,
+                      bool SpillOver);
+  void deltaRayCharge(double charge,
+                      double tol,
+                      int Npoints,
+                      vector<double>& Spoints);
+  void diffusion(MCVeloHit* hit, int Npoints, vector<double>& Spoints);
+  void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
+  void fillFE(MCVeloFE* myFE, double charge);
   StatusCode coupling();
-      MCVeloFE* findOrInsertPrevStrip(MCVeloFEs::iterator FEIt, bool& valid, bool& create);
-      MCVeloFE* findOrInsertNextStrip(MCVeloFEs::iterator FEIt, bool& valid, bool& create);
+  MCVeloFE* findOrInsertPrevStrip(MCVeloFEs::iterator FEIt, 
+                                  bool& valid, 
+                                  bool& create);
+  MCVeloFE* findOrInsertNextStrip(MCVeloFEs::iterator FEIt, 
+                                  bool& valid, 
+                                  bool& create);
   StatusCode pedestalSim();
   StatusCode noiseSim();
-    double noiseValue(double stripCapacitance);
-    double noiseValueTail(double stripCapacitance);
+  double noiseValue(double stripCapacitance);
+  double noiseValueTail(double stripCapacitance);
   StatusCode CMSim();
   StatusCode storeOutputData();
   MCVeloFE* findOrInsertFE(VeloChannelID& stripKey);
- 
+
   // data members
   std::string m_inputContainer;       ///< Name of input container
-  std::string m_spillOverInputContainer;  ///< Name of spill Over event input container
+
+  /// Name of spill Over event input container
+  std::string m_spillOverInputContainer;  
+
   std::string m_outputContainer;      ///< Name of output container
-  
+
   DeVelo* m_velo; ///< Detector Element
   MCVeloHits* m_hits; // vector of input hits
   MCVeloHits* m_spillOverHits; // vector of input hits from spill over event
@@ -92,9 +105,6 @@ private:
   double ran_inv_E2(double Emin, double Emax);
 
 };
-
-
-
 #endif // VELOSIM_H
 
 

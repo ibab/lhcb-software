@@ -1,6 +1,12 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-06-17 - Olivier Callot
+ - Commissioned with VeloDet v6r0. Fixed a problem when merging coupling and
+   normal strips. 
+ - Created an Option file for Brunel.
+ - Fix the conformance to coding standards, mainly the 80 columns limit.
+
 !=============================================================================
 ! 09/06/2002 - Chris Parkes  ** v1r0 **
   First release of a test version.
