@@ -1,8 +1,11 @@
-// $Id: IRelationWeightedBase.h,v 1.1 2004-01-14 15:13:02 ibelyaev Exp $
+// $Id: IRelationWeightedBase.h,v 1.2 2004-01-22 12:35:32 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/01/14 15:13:02  ibelyaev
+//  few tricks to make POOL/ROOT happy
+// 
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWEIGHTEDBASE_H 
 #define RELATIONS_IRELATIONWEIGHTEDBASE_H 1
@@ -39,7 +42,7 @@ public:
 protected:
 
   /// virtual destructor 
-  virtual ~IRelationWeightedBase();
+  virtual ~IRelationWeightedBase() {};
   
 };
 
