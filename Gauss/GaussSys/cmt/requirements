@@ -10,7 +10,7 @@ branches cmt doc
 use Gauss		v10r0	Sim
 
 # GEANT4 libraries
-use GEANT4	        v5r1    Sim
+use GEANT4	        v5r1p1  Sim
 use G4VisUI             v1r3    Sim
 
 # Generator stuff ...
