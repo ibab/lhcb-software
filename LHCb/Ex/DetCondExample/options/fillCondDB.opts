@@ -1,9 +1,10 @@
-//$Id: fillCondDB.opts,v 1.3 2002-03-01 15:57:31 andreav Exp $
+//$Id: fillCondDB.opts,v 1.4 2005-02-09 13:37:43 marcocle Exp $
 //==============================================================
 // Job options to populate the CondDB in DetCondExample
 //==============================================================
 
-#include "../options/condDB.opts"
+// #include "../options/condDB.opts"
+#include "../options/cool.opts"
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
@@ -27,6 +28,13 @@ ApplicationMgr.EvtMax = 1;
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+
+// needed to drop the database before creating the new one
+CondDBAccessSvc.RecreateDB = true;
 
 //==============================================================
 // End of job options to populate the CondDB in DetCondExample

@@ -1,9 +1,16 @@
-//$Id: daqCondDB.opts,v 1.1 2002-07-25 15:39:21 andreav Exp $
+//$Id: daqCondDB.opts,v 1.2 2005-02-09 13:37:43 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample DAQ test of CondDB
 //==============================================================
 
-#include "../options/condDB.opts"
+#include "../options/common.opts"
+#include "../options/cool.opts"
+
+// Add other external services to the list of known services
+ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
+
+// Detector Persistency service setup: 
+DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
@@ -42,6 +49,13 @@ DAQCondDBAlgorithm.daqShowProgress = 1;
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 3;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+
+// be sure that the db is not dropped
+CondDBAccessSvc.RecreateDB = true;
 
 //==============================================================
 // End of job options for DetCondExample test of CondDB

@@ -1,0 +1,52 @@
+//==============================================================
+// Common job options to use a COOL in DetCondExample
+//==============================================================
+
+//--------------------------------------------------------------
+// Extra services needed in the application
+//--------------------------------------------------------------
+
+// Dynamically load component library for DetCond services and converters
+ApplicationMgr.DLLs += { "DetCond" };
+
+// Add other external services to the list of known services
+ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
+
+//--------------------------------------------------------------
+// Access to the ConditionsDB
+//--------------------------------------------------------------
+
+// name of the database server
+//CondDBAccessSvc.HostName = "pclhcb91.cern.ch";
+CondDBAccessSvc.HostName = "devdb9";
+
+// name of the user needed to connect
+//CondDBAccessSvc.User     = "conddb";
+CondDBAccessSvc.User     = "conddb_test";
+
+// password needed to connect to the DB server
+//CondDBAccessSvc.Password = "8l1wgxMC";
+CondDBAccessSvc.Password = "lcg";
+
+// hide password in log output (default = true)
+CondDBAccessSvc.HidePassword = true;
+
+// name of the database to use
+//CondDBAccessSvc.Database = "MARCOCLE2";
+CondDBAccessSvc.Database = "MARCOCLE3";
+
+// schema to use
+//CondDBAccessSvc.Schema   = "COOLDB";
+CondDBAccessSvc.Schema   = "conddb_test";
+
+// which tag to use if none is specified
+CondDBAccessSvc.DefaultTAG = "";
+
+// which db technology to use (oracle|mysql|sqlite) 
+//CondDBAccessSvc.BackEnd    = "mysql";
+CondDBAccessSvc.BackEnd    = "oracle";
+
+// Drop and recreate the database during initialization.
+//CondDBAccessSvc.RecreateDB = true;
+
+//CondDBAccessSvc.RunTest = true;

@@ -1,9 +1,16 @@
-//$Id: testCondDB.opts,v 1.4 2002-03-01 15:57:31 andreav Exp $
+//$Id: testCondDB.opts,v 1.5 2005-02-09 13:37:43 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
 
-#include "../options/condDB.opts"
+#include "../options/common.opts"
+#include "../options/cool.opts"
+
+// Add other external services to the list of known services
+ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
+
+// Detector Persistency service setup: 
+DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
@@ -48,6 +55,13 @@ ConditionsDBCnvSvc.condDBGlobalTag = "PRODUCTION";
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
 MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+
+// be sure that the db is not dropped
+CondDBAccessSvc.RecreateDB = false;
 
 //==============================================================
 // End of job options for DetCondExample test of CondDB

@@ -1,9 +1,10 @@
-//$Id: testXml.opts,v 1.3 2002-03-01 15:57:31 andreav Exp $
+//$Id: testXml.opts,v 1.4 2005-02-09 13:37:43 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
 
 #include "../options/common.opts"
+#include "../options/cool.opts"
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
