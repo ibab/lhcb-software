@@ -1,5 +1,11 @@
 package GaudiConf
-package manager: F.Ranjard
+package manager: M.Cattaneo
+
+!======================== GaudiConf v6r11 2003-07-11 =======================
+! 2003-07-11 - Marco Cattaneo
+ - Add DigiContent.opts to define output of Boole
+ - DstContent.opts: remove Rich and Calorimeter digits, as it's now possible
+                    to navigate to the oodigi tape if necessary
 
 !======================== GaudiConf v6r10 2003-07-08 =======================
 ! 2003-07-08 - Marco Cattaneo
