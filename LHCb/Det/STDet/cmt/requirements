@@ -1,17 +1,16 @@
 package STDet
-version v1r1
+version v1r2
 
-branches cmt doc src
+branches cmt doc src STDet
 
 include_dirs $(STDETROOT)
 
 use DetDescCnv	v2r*	Det
 use LHCbKernel	v4r*	Kernel
-use GSL                 v*
-
+use GSL		v*	-no_auto_imports
 
 #---- link library
-library STDetLib ../src/Lib/*.cpp 
+library STDetLib ../src/Lib/*.cpp -import=GSL
 
 #---- component library
 library STDet ../src/Component/*.cpp

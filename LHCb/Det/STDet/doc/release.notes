@@ -1,6 +1,10 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+!========================= STDet v1r2 2004-05-26 ========================
+! 2004-05-26 - Marco Cattaneo
+ - Make GSL dependency no_auto_imports (only needed for gsl macros)
+
 ! 2004-05-19 - M.needham
  - Add members to layer to convert u,v to x,y and vice versa
  - Add (another) member to wafer for checking if hit is inside 
