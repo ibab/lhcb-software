@@ -1,9 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.14 2003-04-08 09:39:36 ooleroy Exp $
-
-#ifdef WIN32
-// Disable warning C4786 identifier truncated to 255 characters in debug info.
-#pragma warning ( disable : 4786 )
-#endif // WIN32
+// $Id: L0mProcUnit.cpp,v 1.15 2003-12-10 17:16:53 cattanem Exp $
 
 #include <algorithm>
 #include <math.h>
@@ -164,7 +159,7 @@ void L0mProcUnit::cleanAdjacentSeeds() {
       int nx2 = m_towers[j]->padM3().nX();
       int ny2 = m_towers[j]->padM3().nY();
       //      if(fabs(nx1-nx2)<2 && fabs(ny1-ny2)<2) {
-      if(fabs(nx1-nx2)<2 &&  ny1==ny2 ) {
+      if(abs(nx1-nx2)<2 &&  ny1==ny2 ) {
         remove = true;
         if(nx1<nx2) {
           flag[j] = false;
