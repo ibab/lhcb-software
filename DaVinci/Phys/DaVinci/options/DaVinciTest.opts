@@ -42,29 +42,22 @@ MemoryAuditor.Enable = false;
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 50;
+ApplicationMgr.EvtMax = 100;
 EventSelector.FirstEvent = 1;
    
 //---------------------------------------------------------------
 // Input data for test
 //---------------------------------------------------------------
-//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
-//EventSelector.Input = {"DATAFILE='rfio:/shift/lhcb003d/data01/z5/stage/D278590.757105' TYP='ROOT' OPT='READ'" };
-//---------------------------------------------------------------
-//-- GAUDI data cards generated on 15-JUL-2002
+//-- GAUDI data cards generated on 20-AUG-2002
 //-- For Event Type = 411300 / Data type = ALL 
-//--     DST Program = Brunel v11r0
-//--     Database version = v248r2
+//--     DST Program = Brunel v13r1
+//--     Database version = ALL 
 //--     
-//-- 5 dataset(s) found - NbEvents = 2500
+//-- Datasets located at CERN
+//-- 29 dataset(s) - NbEvents = 14500
 //-- 
 EventSelector.Input   = {
-//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278581' TYP='ROOT' OPT='READ'",  // JobID = 100122
-//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278587' TYP='ROOT' OPT='READ'",  // JobID = 100135
-//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278583' TYP='ROOT' OPT='READ'",  // JobID = 100136
-//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278585' TYP='ROOT' OPT='READ'",  // JobID = 100153
-"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
-};
+"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D286401' TYP='ROOT' OPT='READ'" };  // JobID = 106502
 //-- End of Data cards 
 
 //################################################################
