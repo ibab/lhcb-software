@@ -1,4 +1,4 @@
-// $Id: VertexChargeTaggingTool.cpp,v 1.1 2003-06-16 07:10:39 odie Exp $
+// $Id: VertexChargeTaggingTool.cpp,v 1.2 2003-06-16 12:30:38 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -53,7 +53,7 @@ VertexChargeTaggingTool::VertexChargeTaggingTool( const std::string &type,
   declareProperty( "InverseCharge", m_InverseCharge = true );
   declareProperty( "PrimaryVertices", m_PrimVerticesLocations );
   declareProperty( "MinPCut", m_minP = 2.0*GeV );
-  declareProperty( "MinThetaCut", m_minTheta = 0.012 );
+  declareProperty( "MinThetaCut", m_minTheta = 0.0 );
   declareProperty( "MinSignificantIPPreCut", m_minSIPPreCut = 3.0 );
   declareProperty( "MaxSeedIPErrorCut", m_maxSeedIPErr = 1.0 );
   declareProperty( "MinSeedSignificantIPCut", m_minSeedSIP = 2.0 );
@@ -290,6 +290,8 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
   log << MSG::DEBUG << "Number of particles after prefiltering: "
       << candidates.size() << endreq;
 
+  ParticleVector KshortsProds;
+
   double maxlikelyhood = 0.0;
   Particle *seed1 = NULL, *seed2 = NULL;
   ParticleVector::const_iterator c1, c2;
@@ -321,8 +323,11 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
           ((*c2)->particleID().abspid() == 211) &&
           ((*c1)->particleID().pid() != (*c2)->particleID().pid()) &&
           (((*c1)->momentum() + (*c2)->momentum()).m() > m_minKS0Mass ) &&
-          (((*c1)->momentum() + (*c2)->momentum()).m() < m_maxKS0Mass ) )
+          (((*c1)->momentum() + (*c2)->momentum()).m() < m_maxKS0Mass ) ) {
+        KshortsProds.push_back(*c1);
+        KshortsProds.push_back(*c2);
         continue;
+      }
       double probip1 = ipprob(impact1/error1);
       double probip2 = ipprob(impact2/error2);
       double probpt1 = ptprob((*c1)->pt()/GeV);
@@ -371,6 +376,10 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
     double probb = (1-probip)*(1-probpt);
     double likelyhood = probs/(probs+probb);
     if( likelyhood < m_minLikelyhood ) continue;
+    // Check it's not the decay products of a Kshort.
+    if( std::find(KshortsProds.begin(), KshortsProds.end(), *c) !=
+        KshortsProds.end() )
+      continue;
     vtxProds.push_back(*c);
     Vertex vtx;
     sc = m_vtxFitter->fitVertex(vtxProds, vtx);
