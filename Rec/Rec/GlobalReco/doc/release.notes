@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-04-27 - Gloria Corti
+ - cmt/requirements
+   . remove unnecessary use of VeloDet
+   . increase version number to v3r1
+
 ! 2003-04-08 - Vanya BELYAEV Ivan.Belyaev@itep.ru
  - src/NeutralPPsFromCPsAlg.cpp   - 1) add PhotonFromMergedPi0 to the list of 
                                        default accepted hypothesis

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GlobalReco
-version           v3r0
+version           v3r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -25,7 +25,6 @@ use  PhysEvent       v7r*  Event
 use  CaloKernel      v2r*  Calo
 use  CaloUtils       v4r*  Calo
 use  CaloInterfaces  v2r*  Calo
-use  VeloDet         v8r*  Det
 
 #============================================================================
 # Component library building rule
