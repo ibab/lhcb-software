@@ -2,27 +2,11 @@
 # Created    : 2004-01-28
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.13 2005-01-14 22:20:24 jonrob Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.12  2005/01/13 13:27:19  jonrob
-# update version
-#
-# Revision 1.11  2004/11/23 14:23:11  cattanem
-# v2r3
-#
-# Revision 1.10  2004/10/27 14:30:18  jonrob
-# Update version number
-#
-# Revision 1.9  2004/10/21 09:05:22  jonrob
-# Version update + minor changes for RichDet
-#
-# Revision 1.8  2004/07/30 11:09:39  jonrob
-# Add CVS log to requirements file
-#
+# $Id: requirements,v 1.14 2005-03-03 10:50:41 jonrob Exp $
 #============================================================================
 
 package           RichMCTools
-version           v2r4
+version           v2r5
 
 #============================================================================
 # Structure
