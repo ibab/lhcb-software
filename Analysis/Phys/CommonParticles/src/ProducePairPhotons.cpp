@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.cpp,v 1.1.1.1 2003-12-11 11:10:25 gcorti Exp $
+// $Id: ProducePairPhotons.cpp,v 1.2 2004-04-16 15:14:59 beneyton Exp $
 // Include files
 #include <string>
 
@@ -44,10 +44,14 @@ ProducePairPhotons::ProducePairPhotons( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
   , m_veloChargeName( "TrVeloCharge" )
   , m_veloCharge(0)
+  , m_ChangePID(false)
+  , m_UsePID(true)
   , m_MinimalProbabilityCut(1.5)
 {
 	// Declare properties
 	declareProperty( "TrVeloChargeName", m_veloChargeName);
+	declareProperty( "ChangePID", m_ChangePID);
+	declareProperty( "UsePID", m_UsePID);
 	declareProperty( "MinimalProbabilityCut", m_MinimalProbabilityCut);
 }
 
@@ -134,6 +138,10 @@ StatusCode ProducePairPhotons::execute() {
 	Particles::const_iterator icandidate;
 	for ( icandidate = tmpparts.begin() ; icandidate != tmpparts.end() ;icandidate++ ) {
 		Particle* candidate = *icandidate;
+		if ( m_UsePID ) {
+			if ( ( candidate->particleID().pid() != m_electronID ) 
+				&& ( candidate->particleID().pid() != m_positronID ) ) continue;
+		}
 		PartVelo partVelo;
 		partVelo.first = candidate;
 		const ProtoParticle* proto = dynamic_cast< ProtoParticle* > (candidate->origin());
@@ -251,13 +259,47 @@ StatusCode ProducePairPhotons::execute() {
 			if ( ( particle->charge() == +1 ) && ( chi2 > minimalChi2Positron ) ) {(*icandparticle).second = false;}
 		}
 
-		//rechack number of tracks selected...
+		//recheck number of tracks selected...
 		int nSelected = 0;
 		for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
 			if ( (*icandparticle).second ) {nSelected++;}
 		}
 		msg << MSG::DEBUG << " nSelected:" << nSelected << endreq;
-		if ( nSelected != 2 ) {continue;}
+		if ( nSelected != 2 ) {
+			// select only particle with good pid (same track and chi2 but different pid)
+			int nElectron = 0;
+			int nPositron = 0;
+			for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
+				Particle* particle = (*icandparticle).first;
+				if ( particle->charge() == -1 ) {nElectron++;}
+				if ( particle->charge() == +1 ) {nPositron++;}
+			}
+			if ( nElectron >1 ) {
+				for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
+					Particle* particle = (*icandparticle).first;
+					if ( particle->charge() == -1 ) {
+						if ( particle->particleID().pid() != m_electronID ) { 
+							(*icandparticle).second = false;
+						}
+					}
+				}
+			}
+			if ( nPositron >1 ) {
+				for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
+					Particle* particle = (*icandparticle).first;
+					if ( particle->charge() == +1 ) {
+						if ( particle->particleID().pid() != m_positronID ) { 
+							(*icandparticle).second = false;
+						}
+					}
+				}
+			}
+			int modifiednSelected = 0;
+			for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
+				if ( (*icandparticle).second ) {modifiednSelected++;}
+			}
+			if ( modifiednSelected !=2 ) {continue;}
+		}
 
 		double charge = m_veloCharge->calculate(iveloCand->first);
 		if ( charge <= m_MinimalProbabilityCut ) {
@@ -268,8 +310,8 @@ StatusCode ProducePairPhotons::execute() {
 			// creating gamma tree
 
 			// create "symbolink link" to electrons
-			Particle* electron;
-			Particle* positron;
+			Particle* electron = 0;
+			Particle* positron = 0;
 			std::vector<CandidateParticle>::const_iterator icandparticle;
 			for ( icandparticle = iveloCand->second.begin() ; icandparticle != iveloCand->second.end() ; icandparticle++ ) {
 				if ( (*icandparticle).second ) {
@@ -280,50 +322,51 @@ StatusCode ProducePairPhotons::execute() {
 			}
 
 			// we can force ID, and update mass in momentum
-			const ProtoParticle* pelectron = dynamic_cast< ProtoParticle* > (electron->origin());
-			if ( pelectron == 0 ) {continue;}
-			const TrStateP* tselectron = pelectron->trStateP();
-			if( !tselectron ) {continue;}
-			const double electronmass = m_electronMass;
-			HepLorentzVector electronquadriMomentum;
-			double electronmomentum = tselectron->p();
-			double electronslopeX   = tselectron->tx();
-			double electronslopeY   = tselectron->ty();
-			double electronpZ = electronmomentum/sqrt( 1.0 + electronslopeX*electronslopeX + electronslopeY*electronslopeY );
-			electronquadriMomentum.setPx( electronpZ*electronslopeX );
-			electronquadriMomentum.setPy( electronpZ*electronslopeY );
-			electronquadriMomentum.setPz( electronpZ );
-			electronquadriMomentum.setE( sqrt( electronmass*electronmass + electronmomentum*electronmomentum ) );
-			// covariance is still the same
-			electron->setParticleID(m_electronParticleID);
-			electron->setConfLevel(1.);
-			electron->setIsResonance(false);
-			electron->setMass(electronmass);
-			electron->setMassErr(0.);
-			electron->setMomentum( electronquadriMomentum );
+			if ( m_ChangePID ) {
+				const ProtoParticle* pelectron = dynamic_cast< ProtoParticle* > (electron->origin());
+				if ( pelectron == 0 ) {continue;}
+				const TrStateP* tselectron = pelectron->trStateP();
+				if( !tselectron ) {continue;}
+				const double electronmass = m_electronMass;
+				HepLorentzVector electronquadriMomentum;
+				double electronmomentum = tselectron->p();
+				double electronslopeX   = tselectron->tx();
+				double electronslopeY   = tselectron->ty();
+				double electronpZ = electronmomentum/sqrt( 1.0 + electronslopeX*electronslopeX + electronslopeY*electronslopeY );
+				electronquadriMomentum.setPx( electronpZ*electronslopeX );
+				electronquadriMomentum.setPy( electronpZ*electronslopeY );
+				electronquadriMomentum.setPz( electronpZ );
+				electronquadriMomentum.setE( sqrt( electronmass*electronmass + electronmomentum*electronmomentum ) );
+				// covariance is still the same
+				electron->setParticleID(m_electronParticleID);
+				electron->setConfLevel(1.);
+				electron->setIsResonance(false);
+				electron->setMass(electronmass);
+				electron->setMassErr(0.);
+				electron->setMomentum( electronquadriMomentum );
 
-			const ProtoParticle* ppositron = dynamic_cast< ProtoParticle* > (positron->origin());
-			if ( ppositron == 0 ) {continue;}
-			const TrStateP* tspositron = ppositron->trStateP();
-			if( !tspositron ) {continue;}
-			const double positronmass = m_electronMass;
-			HepLorentzVector positronquadriMomentum;
-			double positronmomentum = tspositron->p();
-			double positronslopeX   = tspositron->tx();
-			double positronslopeY   = tspositron->ty();
-			double positronpZ = positronmomentum/sqrt( 1.0 + positronslopeX*positronslopeX + positronslopeY*positronslopeY );
-			positronquadriMomentum.setPx( positronpZ*positronslopeX );
-			positronquadriMomentum.setPy( positronpZ*positronslopeY );
-			positronquadriMomentum.setPz( positronpZ );
-			positronquadriMomentum.setE( sqrt( positronmass*positronmass + positronmomentum*positronmomentum ) );
-			// covariance is still the same
-			positron->setParticleID(m_positronParticleID);
-			positron->setConfLevel(1.);
-			positron->setIsResonance(false);
-			positron->setMass(positronmass);
-			positron->setMassErr(0.);
-			positron->setMomentum( positronquadriMomentum );
-
+				const ProtoParticle* ppositron = dynamic_cast< ProtoParticle* > (positron->origin());
+				if ( ppositron == 0 ) {continue;}
+				const TrStateP* tspositron = ppositron->trStateP();
+				if( !tspositron ) {continue;}
+				const double positronmass = m_electronMass;
+				HepLorentzVector positronquadriMomentum;
+				double positronmomentum = tspositron->p();
+				double positronslopeX   = tspositron->tx();
+				double positronslopeY   = tspositron->ty();
+				double positronpZ = positronmomentum/sqrt( 1.0 + positronslopeX*positronslopeX + positronslopeY*positronslopeY );
+				positronquadriMomentum.setPx( positronpZ*positronslopeX );
+				positronquadriMomentum.setPy( positronpZ*positronslopeY );
+				positronquadriMomentum.setPz( positronpZ );
+				positronquadriMomentum.setE( sqrt( positronmass*positronmass + positronmomentum*positronmomentum ) );
+				// covariance is still the same
+				positron->setParticleID(m_positronParticleID);
+				positron->setConfLevel(1.);
+				positron->setIsResonance(false);
+				positron->setMass(positronmass);
+				positron->setMassErr(0.);
+				positron->setMomentum( positronquadriMomentum );
+			}
 
 			// now do our gamma
 			Vertex gammaVtx;

@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.h,v 1.1.1.1 2003-12-11 11:10:25 gcorti Exp $
+// $Id: ProducePairPhotons.h,v 1.2 2004-04-16 15:14:59 beneyton Exp $
 #ifndef PRODUCEPAIRPHOTONS_H
 #define PRODUCEPAIRPHOTONS_H 1
 
@@ -40,6 +40,12 @@ private:
 
 	std::string m_veloChargeName; ///<  Name of TrVeloCharge Tool
 	ITrVeloCharge* m_veloCharge; ///<  TrVeloCharge Tool
+
+	// force pid
+	bool m_ChangePID;
+
+	// only use electrons
+	bool m_UsePID;
 
 	int m_electronID; ///< electron particleID
 	ParticleID m_electronParticleID;
