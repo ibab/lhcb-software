@@ -1,5 +1,6 @@
 
-parsetool     = godII.py
+pythonexe     = $(Python_home)/bin/python
+parsetool     = $(GAUDIOBJDESCROOT)/scripts/godII.py
 dest          = ../Event/
 dtdfile       = ../$(xmlsrc)/gdd.dtd 
 

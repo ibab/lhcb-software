@@ -1,6 +1,9 @@
 
-parsetool = godII.py
-dtdfile   = ../$(xmlsrc)/gdd.dtd
+pythonexe     = $(Python_home)/bin/python
+parsetool     = $(GAUDIOBJDESCROOT)/scripts/godII.py
+dtdfile       = ../$(xmlsrc)/gdd.dtd
+srcDest       = "../Event"
+dctDest       = "../dict"
 
 ${CONSTITUENT}_output = 
 

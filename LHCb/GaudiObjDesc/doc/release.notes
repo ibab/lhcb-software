@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
  
 ===============================GaudiObjDesc v7r0============================
+!20041208 - Stefan
+- changes to fragments: no source setup needed to pick up the correct python version (set by LCG_Interfaces/Python)
+
 !20041206 - Stefan
 - new attribute 'checkMeth' (TRUE|FALSE) of <bitfield> which will generate
   a method to check whether a certain bit of the bitfield is set 
