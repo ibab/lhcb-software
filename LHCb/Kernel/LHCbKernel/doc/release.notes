@@ -4,6 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020418 M.Cattaneo
+  - Make separate library for dictionaries
+
 ! 20020417 M.Cattaneo
   - Package moved to Kernel/LHCbKernel
   - use Gaudi v10

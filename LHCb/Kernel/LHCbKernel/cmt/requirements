@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2002-04-19 11:16:44 cattanem Exp $
+# $Id: requirements,v 1.15 2002-04-22 07:29:56 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -25,21 +25,20 @@ macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
       WIN32                       " -l Kernel\ "
 document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 
+# Build libraries (including dictionary)
+#============================================================================
 public
-library LHCbKernel *.cpp \
-                   ../dict/*.cpp
+library LHCbKernel     *.cpp
+library LHCbKernelDict ../dict/*.cpp
 
+# Define link options
+#============================================================================
 apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern linker_path
 
-# =============================================================================
-# Private stuff 
-# =============================================================================
-private
-macro_remove use_linkopts $(LHCbKernel_linkopts)
-macro LHCbKernel_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+apply_pattern package_shlibflags
 
-# =============================================================================
-# The End 
-# =============================================================================
+#============================================================================
+private
+macro LHCbKernelDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
