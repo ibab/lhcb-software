@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.28 2002-11-14 15:33:39 cattanem Exp $ 
+! $Id: release.notes,v 1.29 2002-12-01 14:19:02 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-11-29 - Ivan Belyaev
+ - cmt/requirements           version update 
 
 !========================== CaloDet v5r2 2002-11-14 ==========================
 ! 2002-11-14 - Marco Cattaneo
