@@ -2,7 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!======================= LHCbKernel v2r7 2003-05-19 =======================
+!======================= LHCbKernel v2r7 2003-05-30 =======================
+! 2003-05-30 - Marco Cattaneo
+ - Move BrunelPhase to this package from Rec/BrunelKernel, renamed ProcessPhase
+
 ! 2003-05-15 - Vanya BELYAEV
  -  Relations/RelationTypeTraits.h 
     Relations/RelationWeightedTypeTraits.h 
