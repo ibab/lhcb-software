@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.h,v 1.3 2003-06-23 11:43:04 ocallot Exp $ 
+// $Id: CaloDigitAlg.h,v 1.4 2003-11-26 13:17:02 cattanem Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
@@ -12,7 +12,7 @@
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloAlgorithm.h"
 
-/** @class CaloDititisationAlg   CaloDititisationAlg.h   
+/** @class CaloDigitAlg CaloDigitAlg.h   
  *
  *  a (sub)Algorithm responsible 
  *  for digitisation of MC-information 

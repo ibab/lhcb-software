@@ -21,7 +21,6 @@ branches         cmt doc src options
 #============================================================================
 use CaloEvent    v12r* Event
 use CaloDet      v6r*  Det
-use DAQEvent    v*      Event
 
 #============================================================================
 # Component library building rule

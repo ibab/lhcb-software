@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.2 2003-11-18 10:20:24 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.3 2003-11-26 13:17:02 cattanem Exp $
 // STL
 #include <string>
 #include <algorithm>
@@ -28,18 +28,17 @@
 #include "CaloSignalAlg.h"
 
 // ============================================================================
-/** @file CaloSignalAlgs.cpp
+/** @file CaloSignalAlg.cpp
  *
  *  Calorimeter Signal processing: Get MCCaloSignal and produce the deposits
  *  for this beam crossing, which will later be digitized.
- *  Handles (or will in the future...) the spill-over
+ *  Handles the spill-over
  *
  *  @author: Olivier Callot
  *  @date:   21 February 2001
  */
 // ============================================================================
 
-/// MANDATORY!!!
 static const AlgFactory<CaloSignalAlg>          Factory ;
 const       IAlgFactory& CaloSignalAlgFactory = Factory ;
 

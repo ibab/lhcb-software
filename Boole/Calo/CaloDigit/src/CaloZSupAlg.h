@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.3 2003-11-18 10:20:24 ocallot Exp $ 
+// $Id: CaloZSupAlg.h,v 1.4 2003-11-26 13:17:02 cattanem Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 // ============================================================================
@@ -12,7 +12,7 @@
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloAlgorithm.h"
 
-/** @class CaloDititisationAlg   CaloDititisationAlg.h   
+/** @class CaloZSupAlg CaloZSupAlg.h   
  *
  *  a (sub)Algorithm responsible 
  *  for digitisation of MC-information 
@@ -79,13 +79,13 @@ private:
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
-  int         m_bankType          ; ///< BankType for HltBuffer
-  double      m_energyScale       ; ///< To convert energy to HltBuffer
+  int         m_bankType          ; ///< BankType for RawBuffer
+  double      m_energyScale       ; ///< To convert energy to RawBuffer
   int         m_numberOfBanks     ; ///< Number of TELL1 boards = output banks
   std::string m_spdInputData      ; ///< SPD signals, for Prs trigger.
   double      m_triggerEtScale    ; ///< Transverse energy scale E/Hcal trigger
   double      m_triggerThreshold  ; ///< Preshower trigger Threshold 
-  int         m_triggerBankType   ; ///< Trigger BankType for HltBuffer
+  int         m_triggerBankType   ; ///< Trigger BankType for RawBuffer
   std::vector<double> m_corrArea  ; ///< Correction factor, area dependence
 
   DeCalorimeter*         m_calo;           ///< Detector element pointer

@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.5 2003-11-18 13:22:58 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.6 2003-11-26 13:17:02 cattanem Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -25,8 +25,8 @@
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
 
-// HltEvent
-#include "Event/HltBuffer.h"
+// RawEvent
+#include "Event/RawBuffer.h"
 
 // local
 #include "CaloZSupAlg.h"
@@ -86,8 +86,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_inputMCData      = MCCaloDigitLocation::Prs;
     m_zsupThreshold    = 15;
     m_energyScale      = 0.1 * MeV;
-    m_bankType         = HltBuffer::PrsE;
-    m_triggerBankType  = HltBuffer::PrsTrig;
+    m_bankType         = RawBuffer::PrsE;
+    m_triggerBankType  = RawBuffer::PrsTrig;
     m_numberOfBanks    = 8;
     m_spdInputData     = CaloDigitLocation::FullSpd ;
     m_triggerEtScale   = 0.;
@@ -101,8 +101,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
     m_energyScale      = 1.0 * MeV;
-    m_bankType         = HltBuffer::EcalE;
-    m_triggerBankType  = HltBuffer::EcalTrig;
+    m_bankType         = RawBuffer::EcalE;
+    m_triggerBankType  = RawBuffer::EcalTrig;
     m_numberOfBanks    = 10;
     m_triggerThreshold = 0.;
     m_detNum           = CaloCellID( 2, 0, 0, 0).all();
@@ -118,8 +118,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_inputMCData      = MCCaloDigitLocation::Hcal;
     m_zsupThreshold    = 4;
     m_energyScale      = 1.0 * MeV;
-    m_bankType         = HltBuffer::HcalE;
-    m_triggerBankType  = HltBuffer::HcalTrig;
+    m_bankType         = RawBuffer::HcalE;
+    m_triggerBankType  = RawBuffer::HcalTrig;
     m_numberOfBanks    = 4;
     m_triggerThreshold = 0.;
     m_detNum           = CaloCellID(3, 0, 0, 0).all();
@@ -232,13 +232,13 @@ StatusCode CaloZSupAlg::execute() {
   sc = put( digits, outputData() );
   if( sc.isFailure() ) { return sc ; } 
 
-  //== Get the HltBuffer
-  HltBuffer* hltBuffer = get( eventSvc(), HltBufferLocation::Default, 
-                              hltBuffer );
-  std::vector< std::vector<hlt_int> > banks;
-  std::vector< std::vector<hlt_int> > trigBanks;
+  //== Get the RawBuffer
+  RawBuffer* rawBuffer = get( eventSvc(), RawBufferLocation::Default, 
+                              rawBuffer );
+  std::vector< std::vector<raw_int> > banks;
+  std::vector< std::vector<raw_int> > trigBanks;
   if ( 0 < m_numberOfBanks ) {
-    std::vector<hlt_int> a;
+    std::vector<raw_int> a;
     a.reserve(500);
     for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
       banks.push_back( a );
@@ -453,11 +453,11 @@ StatusCode CaloZSupAlg::execute() {
     int totDataSize = 0;
     int totTrigSize = 0;
 
-    hlt_int board = 0;
+    raw_int board = 0;
     for ( unsigned int kk = 0; banks.size() > kk; kk++ ) {
-      hltBuffer->addBank( board, m_bankType, banks[kk] );
+      rawBuffer->addBank( board, m_bankType, banks[kk] );
       totDataSize += banks[kk].size();
-      hltBuffer->addBank( board, m_triggerBankType, trigBanks[kk] );
+      rawBuffer->addBank( board, m_triggerBankType, trigBanks[kk] );
       totTrigSize += trigBanks[kk].size();
       board++;
     }
@@ -482,7 +482,7 @@ StatusCode CaloZSupAlg::execute() {
       for ( unsigned int kk = 0; banks.size() > kk; kk++ ) {
         msg << MSG::VERBOSE << "DATA bank : " << board << endreq;
         int kl = 0;
-        std::vector<hlt_int>::const_iterator itW;
+        std::vector<raw_int>::const_iterator itW;
         
         for ( itW = banks[kk].begin(); banks[kk].end() != itW; itW++ ){
           msg << MSG::VERBOSE << format ( " %8x %8d   ", (*itW), (*itW) );
