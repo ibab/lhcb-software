@@ -23,4 +23,4 @@ MessageSvc.OutputLevel = 3;
 ApplicationMgr.OutputLevel = 4;
 RootEventCnvSvc.OutputLevel = 4;
 
-FwtAnalyse.PrintEveryEvent = false;
+TrAnalyse.PrintEveryEvent = false;

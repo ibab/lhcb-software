@@ -43,8 +43,8 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 #pragma print on
 ApplicationMgr.DLLs += { "VeloAssociators" };
-ApplicationMgr.DLLs += { "FwTrack" };
-BrunelMoniTRACKSeq.Members += { "FwtAnalyse" };
+ApplicationMgr.DLLs += { "TrCheck" };
+BrunelMoniTRACKSeq.Members += { "TrAnalyse" };
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };

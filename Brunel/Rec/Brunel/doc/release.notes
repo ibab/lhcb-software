@@ -3,6 +3,33 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
+ - New tuning:
+   . Add dummy Velo state to Match track fit to fix bad chi2 (TrMatch v2r2)
+   . Speed up extrapolation using TrHerabExtrapolator instead of
+     TrFirstCleverExtrapolator (TrMatch v2r2)
+   . Tune forward tracking to find more high momentum tracks (LongTrack v1r2)
+   . Modify TrReconstructible definitions (TrAssociators v3r2)
+   . Reduce state z position tolerance from 100cm to 50mm (RiSicbCnv v4r6)
+
+ - New features
+   . Add TT hits to Match tracks (TrMatch v2r2)
+   . Add VeloTT tracks to TrAssociator (TrAssociators v3r2)
+   . Improved track monitoring (TrAnalyse replaces FwtAnalyse) (TrCheck v1r0)
+
+ - DST changes:
+   . Add L1 Summary to DST (BrunelDst.opts)
+   . Add L1VeloTrackAlg to algorithms being timed (BrunelAlgs v1r4)
+
+ - Bug fixes:
+   . Fix in SolidSphere (DetDesc v10r5)
+   . Fix in calculation of intersection of a line with a cone (DetDesc v10r5)
+   . Add missing factories (L1Event v11r1, EventSys v12r7)
+
+ - Code cleanup:
+   . Fix a mismatched new[]/delete reported by valgrind (VeloTT v1r1)
+   . Remove creation and deletion of an obsolete unused state (TrFitter v3r4)
+
 </PRE><H1><A NAME=v14r1p2>2002-10-25 Brunel v14r1p2</A></H1><PRE>
  - Bug fix:
    . Fix bug in TrFirTrack, causing poor efficiency for unique tracks

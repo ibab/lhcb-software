@@ -1,5 +1,5 @@
 package Brunel
-version v14r1p2
+version v14r2
 
 branches doc cmt job options
 
@@ -44,7 +44,7 @@ use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
 
 # Detector description
-use DetDesc      v10r4  Det
+use DetDesc      v10r5  Det
 use XmlDDDB      v13r1  Det
 use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
@@ -55,20 +55,20 @@ use VeloDet       v7r1  Det
 use Magnet        v1r1  Det
 
 # Event Model
-use EventSys     v12r6  Event
+use EventSys     v12r7  Event
 
 # SicB event data persistency
 use SicbCnv      v17r3  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r4   SICB
-use RiSicbCnv    v4r5   SICB
+use RiSicbCnv    v4r6   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
 use BrunelKernel v5r1   Rec
 use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r3   Rec
+use BrunelAlgs   v1r4   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
@@ -108,18 +108,18 @@ use OTAssociators  	v2r2  	OT
 use TrKernel            v11r0   Tr
 use TrFitEvent          v3r2    Tr
 use VeloTrack           v4r1    Velo
-use TrAssociators       v3r1    Tr
-use FwTrack             v4r2    Tr
-use LongTrack           v1r1    Tr
-use TrFitter            v3r3    Tr
+use TrAssociators       v3r2    Tr
+use LongTrack           v1r2    Tr
+use TrFitter            v3r4    Tr
 use TrExtrapolator      v2r2    Tr
 use TrTools             v2r1    Tr
 use Seeding	        v2r1    Tr
-use TrMatching          v2r1    Tr
+use TrMatching          v2r2    Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
 use UpstreamPR		v2r3	Tr
-use VeloTT		v1r0	Tr
+use VeloTT		v1r1	Tr
+use TrCheck             v1r0    Tr
 
 # Muon
 use MuonKernel          v2r1    Muon
@@ -152,7 +152,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=140102 " \
-           VisualC  " /DBrunelVersion=140102 "
+macro_append fflags " -DBrunelVersion=140200 " \
+           VisualC  " /DBrunelVersion=140200 "
 
 apply_pattern application_path
