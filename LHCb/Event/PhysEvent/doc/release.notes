@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.6 2002-02-28 13:40:32 gcorti Exp $
+! $Id: release.notes,v 1.7 2002-04-03 15:54:45 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 20020402 - PhysEvent v3r0 (G.Corti)
+	New event model for Physics Event part.
+  Still depend of LHCbEvent v12r2 and SicbCnv v15r1 (uses old ParticleID)
+  Introduce separate xml files for various classes.
+  Vertex class uses enum for VertexType. 
+  Particle class has variuos short cut methods as well as setter of
+  error matrices that are kept consistent (to be updated later for
+  persistency). Temporary implementation of charge method valid for 
+  basic particles only.
+  Producing the dictionary is switched off at the moment.
+
 
 ! 20020228 - PhysEvent v3r0 (G.Corti)
   First changes for v3r0:
