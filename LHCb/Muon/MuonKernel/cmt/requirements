@@ -2,7 +2,7 @@ package MuonKernel
 
 version v2r0
 
-branches cmt src MuonKernel doc Test
+branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
