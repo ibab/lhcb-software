@@ -1,8 +1,8 @@
-$Id: release.notes,v 1.35 2005-03-14 16:46:17 erodrigu Exp $
+$Id: release.notes,v 1.36 2005-03-15 07:11:29 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
-
+!========================== L0DU v6r9 2005-03-14 ==========================
 ! 2005-03-14 - Eduardo Rodrigues
  - Thresholds retuned for analysis of the DC'04 data
 
