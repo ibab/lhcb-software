@@ -11,7 +11,7 @@
      EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1,
      DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4,
      AssociatorsSys v2r4, ITAssociators v2r11, OTAssociators v3r2, 
-                          VeloAssociators v1r14, TrAssociators v5r1p1
+     VeloAssociators v1r14, TrAssociators v5r1p1, MCTools v1r12p1
 
  - In Relations v2r4
    . Optimisation of constructors
