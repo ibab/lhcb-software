@@ -37,7 +37,10 @@ class RichSignal : public RichAlgBase {
 
 public:
 
+  /// Constructor
   RichSignal ( const std::string& name, ISvcLocator* pSvcLocator );
+
+  /// Desctructor
   virtual ~RichSignal();
 
   virtual StatusCode initialize();
@@ -46,6 +49,7 @@ public:
 
 private: // methods
 
+  /// Process the event at the given location, with the corresponding TOF offset
   StatusCode ProcessEvent( const std::string & hitLoc, 
                            const double tofOffset ) const;
 
@@ -54,7 +58,6 @@ private: // data
   MCRichSummedDeposits* mcSummedDeposits;
   MCRichDeposits* mcDeposits;
 
-  /// String containing MCRichDeposits location in TDS
   std::string m_RichHitLocation;
   std::string m_RichPrevLocation;
   std::string m_RichPrevPrevLocation;

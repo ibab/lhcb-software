@@ -48,7 +48,11 @@ class RichSimpleFrontEndResponse : public RichAlgBase {
 
 public:
 
-  RichSimpleFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
+  /// Constructor
+  RichSimpleFrontEndResponse( const std::string& name, 
+                              ISvcLocator* pSvcLocator );
+
+  /// Destructor
   virtual ~RichSimpleFrontEndResponse();
 
   virtual StatusCode initialize();
@@ -57,6 +61,7 @@ public:
 
 private: // methods
 
+  /// Run the Simple treatment
   StatusCode Simple();
 
 private: // data

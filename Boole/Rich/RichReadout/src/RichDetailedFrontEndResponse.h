@@ -48,9 +48,11 @@ class RichDetailedFrontEndResponse : public RichAlgBase {
 
 public:
 
+  /// Constructor
   RichDetailedFrontEndResponse( const std::string& name, 
                                 ISvcLocator* pSvcLocator );
 
+  /// Destructor
   virtual ~RichDetailedFrontEndResponse();
 
   virtual StatusCode initialize();
@@ -61,8 +63,8 @@ public:
 
 private: // methods
 
-  StatusCode Analog();
-  StatusCode Digital();
+  StatusCode Analog();  ///< Run the analogue simulation
+  StatusCode Digital(); ///< Run the digital simulation
 
 private: // data
 

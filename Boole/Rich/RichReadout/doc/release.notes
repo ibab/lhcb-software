@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2004-07-30 - Chris Jones
+ - Update doxygen comments
+
 ! 2004-07-27 - Chris Jones
  - Minor change to RichSignal algorithm
 
