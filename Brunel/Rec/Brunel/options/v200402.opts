@@ -41,12 +41,12 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r3/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
-}; // DC04 geometry: Boole v7r3,Gauss v15r4,XmlDDDB v23r1, evttype 11144100 (Bd_JpsiKS,mm)
+ "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole200402.digi' TYP='POOL_ROOT' OPT='READ'"
+};
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:BrunelTest.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Brunel200402.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

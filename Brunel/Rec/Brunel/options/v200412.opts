@@ -21,7 +21,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 7;  // To skip some events 
 
 //---------------------------------------------------------------------------
@@ -40,11 +40,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r3/BooleTest200412.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // Test data (5 events type 11144100) produced by Gloria with Gauss v18r3.
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole200412.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // Test data
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:BrunelTest.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Brunel200412.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

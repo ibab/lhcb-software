@@ -1,5 +1,5 @@
 package BrunelSys
-version v25r3
+version v26r0
 
 branches cmt doc
  
@@ -8,30 +8,21 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v25r3	Rec
-
-# Brunel utilities
-use AsctToLinker        v1r3    Rec
+use Brunel              v26r0	Rec
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
-use CaloReco            v2r7	Calo
-use CaloPIDs		v2r4	Calo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
-use ITCheckers          v2r4	IT
-
-# Outer Tracker
-use OTMonitor           v1r1	OT
+use ITCheckers          v2r4p1	IT
 
 # Tracking
 use TrFitEvent		v4r8	Tr
 use TrFitAssociators	v1r3	Tr
 use TrCheck             v2r7p1	Tr
-use LongTrack           v1r13	Tr
+use LongTrack           v1r14	Tr
 use TrFitter            v4r0	Tr
-use TrExtrapolator      v2r14	Tr
 use TrTools             v2r6	Tr
 use Seeding             v2r10	Tr 
 use TrMatching          v2r10p1	Tr
@@ -51,12 +42,7 @@ use MuonID              v3r7p1	Muon
 
 # Rich
 use RichRecSys		v1r14	Rich
-use RichRecBase		v1r14p1	Rich
-use RichRecTools	v2r13	Rich
-use RichRecCommon	v1r10	Rich
 use RichRingRefit	v1r9	Rich
 use RichLocalPID	v1r9p1	Rich
 use RichGlobalPID	v1r8	Rich
 use RichPIDMerge	v1r5	Rich
-use RichRecQC		v1r10	Rich
-use RichRecMCTools	v1r7	Rich

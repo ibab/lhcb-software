@@ -3,6 +3,22 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v26r0>2005-02-03 Brunel v26r0</A></H1><PRE>
+This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0)
+Requires input data from Boole v8r* - Cannot process DC04 Boole output.
+Output data incompatible with DC04 versions
+
+- Packages removed: AsctToLinker (now in LHCbSys)
+                    OTMonitor, TrExtrapolator, CaloReco, CaloPIDs, RichRecCommon,
+                    RichRecTools, RichRecMCTools, RichRecQC (now in LbcomSys)
+- Packages modified: LongTrack v1r14, ITCheckers v2r4p1
+
+- Bug fixes:
+  . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
+
+- Packaging changes:
+  . Backward incompatible modifications for CLHEP 1.9 (LongTrack)
+
 </PRE><H1><A NAME=v25r3>2005-01-25 Brunel v25r3</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r3.
 Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data

@@ -1,5 +1,5 @@
 package Brunel
-version v25r3
+version v26r0
 
 branches doc cmt job options
 
@@ -8,18 +8,18 @@ pattern BrunelVersion path APPVERSION <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r19
+use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r3)
-use GaudiKernel		v17r0
-use GaudiSvc 		v12r6
-use GaudiAlg 		v8r2
-use GaudiGSL		v6r1
-use GaudiPoolDb		v1r10p1
-use GaudiObjDesc 	v7r0
-use RootHistCnv         v9r3
+#-- Gaudi libraries (from GAUDI_v16r0)
+use GaudiKernel		v18r1
+use GaudiSvc 		v13r0
+use GaudiAlg 		v8r4
+use GaudiGSL		v6r2
+use GaudiPoolDb		v1r12
+use GaudiObjDesc 	v7r2
+use RootHistCnv         v9r4
 
 #-- Database
 use XmlDDDB		v23r1	Det
@@ -27,33 +27,27 @@ use FieldMap		v4r5
 use ParamFiles          v3r9    -no_auto_imports
 use BrunelDQ		v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v17r3)
-use LHCb	v17r3
+#-- LHCb libraries (from LHCB_v18r0)
+use LHCb	v18r0
 
-#-- BrunelSys v25r3 packages
+#-- Lbcom packages (from LBCOM_v1r0)
+use LbcomSys    v1r0
 
-# Tools
-use AsctToLinker        v1r3    Rec
+#-- BrunelSys v26r0 packages
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
-use CaloReco            v2r7	Calo
-use CaloPIDs		v2r4	Calo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
-use ITCheckers          v2r4	IT
-
-# Outer Tracker
-use OTMonitor        	v1r1	OT
+use ITCheckers          v2r4p1	IT
 
 # Tracking
 use TrFitEvent          v4r8    Tr
 use TrFitAssociators    v1r3    Tr    
 use TrCheck             v2r7p1	Tr
-use LongTrack           v1r13	Tr
+use LongTrack           v1r14	Tr
 use TrFitter            v4r0	Tr
-use TrExtrapolator      v2r14	Tr
 use TrTools             v2r6 	Tr
 use Seeding             v2r10	Tr 
 use TrMatching          v2r10p1	Tr
@@ -73,7 +67,6 @@ use MuonID              v3r7p1	Muon
 
 # Rich
 use RichRecSys		v1r14	Rich
-use RichRecQC		v1r10	Rich
 
 #
 #===== build Brunel =========================
