@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.17 2002-12-05 15:32:42 ranjard Exp $
+# $Id: requirements,v 1.18 2003-07-16 11:46:26 cattanem Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package             CaloUtils
-version             v4r4
+version             v4r5
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -13,7 +13,7 @@ branches            cmt doc src CaloUtils
 include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
-use CaloEvent       v11r*   Event
+use CaloEvent       v12r*   Event
 use CaloDet         v6r*    Det 
 
 # ================= constituens: linker library ===============================

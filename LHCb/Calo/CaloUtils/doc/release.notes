@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.24 2002-12-05 15:32:42 ranjard Exp $
+! $Id: release.notes,v 1.25 2003-07-16 11:46:26 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!========================= CaloUtils v4r5 2003-07-16 =====================
+! 2003-07-16 - Marco Cattaneo
+ - requirements: use CaloEvent v12r*
 
 !========================= CaloUtils v4r4 2002-12-06 =====================
 ! 2002-11-22 - Florence Ranjard
@@ -113,6 +117,3 @@
   20011102    v1  Vanya Belyaev 
    first release of new package 
 ! =============================================================================
-
-
-
