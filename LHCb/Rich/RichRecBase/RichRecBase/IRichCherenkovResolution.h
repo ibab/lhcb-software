@@ -1,4 +1,4 @@
-// $Id: IRichCherenkovResolution.h,v 1.2 2004-02-02 14:23:01 jonesc Exp $
+// $Id: IRichCherenkovResolution.h,v 1.3 2004-04-17 09:28:01 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H 1
 
@@ -7,7 +7,7 @@ class RichRecSegment;
 
 /** @class IRichCherenkovResolution IRichCherenkovResolution.h
  *
- *  Interface for tool providing Cherenkova angle calulcations
+ *  Interface for tool providing Cherenkova angle resolution calculations
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002

@@ -1,4 +1,4 @@
-// $Id: IRichRayleighScatter.h,v 1.2 2004-02-02 14:23:03 jonesc Exp $
+// $Id: IRichRayleighScatter.h,v 1.3 2004-04-17 09:28:03 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H 1
 
@@ -22,7 +22,7 @@ public:
   /// Static interface identification
   static const InterfaceID& interfaceID() {return IID_IRichRayleighScatter;}
 
-  /// Rayleigh scattering probability for given pathlength (segment) and photyon energy
+  /// Rayleigh scattering probability for given pathlength (segment) and photon energy
   virtual double photonScatteredProb( const RichRecSegment * segment,
                                       const double energy ) const = 0;
 
