@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='PhysEvent'> 
+    <class name='VtxCandidate' author='Gloria Corti' desc='Transient Class for Vertices Candidates to be used in Physics Analysis.' id='850'>
+      <base name='ContainedObject'/>
+      <attribute name='position' type='HepPoint3D' init='0.0, 0.0, 0.0' desc='Position'/>
+      <attribute name='chiSquare' type='double' desc='ChiSquare of vertex fit'/>
+      <attribute name='covariance' type='HepSymMatrix'  init='3,0' desc='Covariance matrix'/>
+      <attribute name='creatorID' type='long' desc='Creator ID/type'/>
+      <relation name='daughters' type='AxPartCandidate'  ratio='1-M' desc='Vector of pointers to daughter particles'/>
+    </class>
+    <class name='PhysSelDecay' author='Gloria Corti' desc='This class contains the results of the selection for a specific decay channel set as standard algorithm'>
+      <method name='results' argList='bool&amp; lMCFlag, bool&amp; lTKRFlag, bool&amp; IPQUALFlag, bool&amp; lSELFlag, bool&amp; lAGRFlag, bool&amp; lTAGFlag' desc='Retrieve all results'/>
+      <method name='setResults' argList='bool lMCFlag, bool lTKRFlag, bool IPQUALFlag, bool lSELFlag, bool lAGRFlag, bool lTAGFlag' desc='Set all results'/>
+      <method type='bool' name='decayIsInMCTree' desc='Retrieve if the decay channel is present in the Monte Carlo truth'>
+        <code>return (m_results &amp; 1); </code>
+      </method>
+      <method name='setDecayIsInMCTree' desc='Set to true if the decay channel is present in the MC trutth'>
+        <code>m_results |= 1; </code>
+      </method>
+      <method name='decayHasTrkRecon' type='bool' desc='Retrieve if the decay channel has all end particles reconstructed'>
+        <code>return (m_results &amp; 2); </code>
+      </method>
+      <method name='setDecayHasTrkRecon'  desc='Set if the decay channel has all end particles reconstructed'>
+        <code>m_results |= 2; </code>
+      </method>
+      <method name='decayHasTrkPQual' type='bool' desc='Retrieve if the decay channel has all end particles reconstructed and the charged ones are of physics quality'>
+        <code>return (m_results &amp; 4); </code>
+      </method>
+      <method name='setDecayHasTrkPQual'  desc='Set if the decay channel has all end particles reconstructed and the charged ones are of physics quality'>
+        <code>m_results |= 4; </code>
+      </method>
+      <method type='bool' name='decayIsSelected' desc='Retrieve if the event satisfy the selection for the decay channel'>
+        <code>return (m_results &amp; 16); </code>
+      </method>
+      <method name='setDecayIsSelected'  desc='Set if the event satisfy the selection for the decay channel'>
+        <code>m_results |= 16; </code>
+      </method>
+      <method type='bool' name='decaySelectedIsMC'  desc='Retrieve if the vent satisfy the selection for the decay channel andat least one combination is the MC truth'>
+        <code>return (m_results &amp; 32); </code>
+      </method>
+      <method name='setDecaySelectedIsMC'  desc='Set if the event satisfy the selection for the decay channel and at least one combination is the MC truth'>
+        <code>m_results |= 32; </code>
+      </method>
+      <method type='bool' name='decayIsFlavourTagged' desc='Retrieve if at least one selected combination for the decay channel is also flavour tagged'>
+        <code>return (m_results &amp; 64); </code>
+      </method>
+      <method name='setDecayIsFlavourTagged'  desc='Set if at least one selected combinationfor the deay channl is also flavour tagged'>
+        <code>m_results |= 64; </code>
+      </method>
+      <attribute type='unsigned long' name='decayID' init='0' desc='decayCode as used in book-keeping'/>
+      <attribute type='unsigned long' name='results' init='0' desc='bitset with results of selction analysis'/>
+    </class>
+    <class name='PhysSel' author='Gloria Corti' desc='Stores the reults of the decay selection package' id='860'>
+      <base name='DataObject' virtual='FALSE'/>
+      <constructor desc='Constructor' argList='const char* name="PhysSel"'>
+        <code>  setVersion(1);
+  DataObject::DataObject(name);</code>
+      </constructor>
+      <destructor desc='Destructor'/>
+      <method name='removePhysSelDecays' desc='Remove all PhysSelDecays'/>
+      <method name='addPhysSelDecay' argList='std::string name, PhysSelDecay* value' desc='Add single PhysSelDecay entry from vector'/>
+      <method name='removePhysSelDecay' argList='std::string name' desc='Remove single PhysSelDecay entry from vector'/>
+      <method name='removePhysSelDecay' argList='PhysSelDecay* value' desc='Remove single PhysSelDecay entry from vector'/>
+      <method name='whichPhysSelDecays' argList='std::vector&lt;std::string&gt;&amp; nameList' desc='Retrieve list of names for which a PhysSelDecay has been stored'/>
+      <method name='retrievePhysSelDecay' argList='std::string name, PhysSelDecay*&amp; value' desc='Retrieve the PhysSelDecay results for a decay channel specifying its name as a string'/>
+      <method name='results' argList='std::string name, bool&amp; mc, bool&amp; tkr, bool&amp; pqual, bool&amp; sel, bool&amp; agr, bool&amp; tag' desc='Retrieve results as a set of true/false for a specific decay channel specifyint its name as a string'/>
+      <method type='bool' name='decayIsInMCTree' argList='std::string name' desc='Retrieve MC true result for a specific decay channel'/>
+      <method type='bool' name='decayHasTrkRecon' argList='std::string name' desc='Retrieve acceptance result for a specific decay channel'/>
+      <method type='bool' name='decayHasTrkPQual' argList='std::string name' desc='Retrieve physics quality result for a specific decay channel'/>
+      <method type='bool' name='decayIsSelected' argList='std::string name' desc='Retrieve selection result for a specific decay channel'/>
+      <method type='bool' name='decaySelectedIsMC' argList='std::string name' desc='Retrieve agreement results for a specific decay channel'/>
+      <method type='bool' name='decayIsFlavourTagged' argList='std::string name' desc='Retrieve flavour tag results for a specific decay channel'/>
+      <attribute type='std::map&lt;std::string,PhysSelDecay*&gt;' name='table' getMeth='FALSE' setMeth='FALSE' desc='Map with decay channels selection results'/>
+    </class>
+    <class name='PhysEvent' author='Gloria Corti' desc='Stores information of the physics event' id='801'>
+      <base name='DataObject' virtual='FALSE'/>
+      <constructor argList='const char* name="PhysEvent"'>
+        <code>  DataObject::DataObject(name);</code>
+      </constructor>
+      <attribute type='Classification' name='classification' desc='Event classification'/>
+    </class>
+  </package>
+</gdd>

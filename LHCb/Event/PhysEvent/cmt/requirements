@@ -7,18 +7,26 @@ use LHCbEvent v11* Event
 
 include_dirs $(PHYSEVENTROOT)
 
+#---- Produce Header-Files from XML description
+#document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
+
 # static library
 library PhysEventLib -no_share ../src/PhysSelDecay.cpp \
                                ../src/PhysSel.cpp
-
 # component library
 library PhysEvent  ../src/PhysEvent_dll.cpp \
                    ../src/PhysEvent_load.cpp
 
-apply_pattern package_Llinkopts
-macro         PhysEvent_stamps "$(PhysEventDir)/PhysEventLib.stamp"
+#--- Produce Dictionaries
+macro GODflags " -i "
+document obj2dict PhysEventObj2Dict -group=dict ../xml/PhysEvent.xml
+library PhysEventDict -group=dict ../src/dictionary/*.cpp
+macro PhysEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
 
-apply_pattern packageShr
+
+apply_pattern package_Llinkopts
+apply_pattern linker_path
+apply_pattern package_stamps
 
 #============================================================================
 private

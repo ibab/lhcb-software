@@ -1,0 +1,4 @@
+PhysSelDecay	PhysEvent
+VtxCandidate	PhysEvent
+PhysSel		PhysEvent
+PhysEvent	PhysEvent
