@@ -4,6 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020426 Vanya Belyaev
+  - "Relations" - reduce number of warnings for MicroSoft compiler
+
 ! 20020425 Vanya Belyaev
   - fix one more problem for Relations at Win2K 
 

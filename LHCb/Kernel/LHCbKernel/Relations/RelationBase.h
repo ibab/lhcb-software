@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.3 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.4 2002-04-26 09:22:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/25 08:44:04  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.2  2002/04/03 15:35:18  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 // 
@@ -69,9 +72,9 @@ namespace Relations
     
     /// comparison criteria for sorting 
     typedef TypeTraits::Less                       Less        ;
-    /// comparion criteria ( "less" by "From" field )
+    /// comparison criteria ( "less" by "From" field )
     typedef TypeTraits::LessByFrom                 Less1       ;
-    /// equality criteria  ( "equal" by "To" field ) 
+    /// equality criteria   ( "equal" by "To" field ) 
     typedef TypeTraits::EqualByTo                  Equal       ;
     
   public:
@@ -99,7 +102,7 @@ namespace Relations
     { return std::equal_range( m_entries.begin() , 
                                m_entries.end  () , 
                                Entry ( object  ) , 
-                               Less1          () ) ;};
+                               m_less1           ) ;};
     
     /** make the relation between 2 objects
      * 
@@ -125,11 +128,10 @@ namespace Relations
     {
       // look for existing relations 
       const Entry ent ( object1 , object2 ) ;
-      Less  cmp ;
-      iterator it = 
-        std::lower_bound( m_entries.begin () , m_entries.end () , ent , cmp ) ;
+      iterator it = std::lower_bound( m_entries.begin () , 
+                                      m_entries.end   () , ent , m_less ) ;
       // the relation does exist ! 
-      if( m_entries.end () != it && !cmp( ent , *it ) ) 
+      if( m_entries.end () != it && !m_less( ent , *it ) ) 
         { return StatusCode::FAILURE; }
       // insert new relation !
       m_entries.insert( it , ent ) ;
@@ -161,11 +163,10 @@ namespace Relations
     {
       // look for existing relations 
       const Entry ent ( object1 , object2 );
-      Less  cmp ;
-      iterator it  = 
-        std::lower_bound( m_entries.begin() , m_entries.end() , ent , cmp ) ;
+      iterator it  = std::lower_bound( m_entries.begin() , 
+                                       m_entries.end  () , ent , m_less ) ;
       // the relation does not exist ! 
-      if( m_entries.end() == it || cmp( ent , *it ) ) 
+      if( m_entries.end() == it || m_less( ent , *it ) ) 
         { return StatusCode::FAILURE ; }
       // remove existing relation     
       m_entries.erase( it );
@@ -221,7 +222,7 @@ namespace Relations
       iterator it = 
         std::remove_if( m_entries.begin () , 
                         m_entries.end   () , 
-                        std::bind2nd( Equal() , Entry( From() , object ) ) ) ;
+                        std::bind2nd( m_equal , Entry( From() , object ) ) ) ;
       // no relations are found!
       if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
       // erase the relations 
@@ -240,7 +241,10 @@ namespace Relations
     
     /// standard/default constructor 
     RelationBase( const size_type reserve = 0 ) 
-      : m_entries() 
+      : m_entries () 
+      , m_less    ()
+      , m_less1   ()
+      , m_equal   ()
     { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } ; };
     
     /// destructor (virtual)
@@ -249,28 +253,46 @@ namespace Relations
     /** copy constructor
      *  @param copy object to be copied  
      */
-    RelationBase( const OwnType& copy ) : m_entries( copy.m_entries ) {} ;
+    RelationBase( const OwnType& copy ) 
+      : m_entries ( copy.m_entries ) 
+      , m_less    ()
+      , m_less1   ()
+      , m_equal   ()
+    {} ;
     
     /** constructor from the inverse type! 
-     *  @attention it is indeed the effective way to get the inverse relations!
-     *  @param inv object to be inversed!
-     *  @param flag artificial agument to make teh difference 
-     *  for Win#2 platform
+     *  @attention it is indeed the most effective way to 
+     *             get the inverse relations!
+     *  @param inv object to be inverted
+     *  @param flag artificial agument to make the difference 
+     *         for stupid MicroSoft compiler
      */
-    RelationBase(  const InvType& inv , int /* flag */ ) : m_entries()
+    RelationBase(  const InvType& inv , int /* flag */ ) 
+      : m_entries ()
+      , m_less    ()
+      , m_less1   ()
+      , m_equal   ()
     {
-      /// get all relations from "inv"
+      // get all relations from "inv"
       InvType::IP ip = inv.i_relations() ;
       // reserve the space for relations
       m_entries.reserve( ip.second - ip.first  );
-      /// invert the relations    
+      // invert all relations    
       for( InvType::CIT it = ip.first ; ip.second != it ; ++it ) 
         { i_relate( it->to() , it->from() ) ;  }
     };
     
   private:
     
-    mutable Entries m_entries ;
+    // the actual storage of references 
+    mutable Entries m_entries ; ///< the actual storage of references 
+    
+    // comparison criteria for sorting 
+    Less            m_less  ; ///< comparison criteria for sorting 
+    // comparison criteria ( "less" by "From" field )
+    Less1           m_less1 ; ///< comparison criteria ( "less" by "From" )
+    // equality criteria   ( "equal" by "To" field ) 
+    Equal           m_equal ; ///< equality criteria   ( "equal" by "To"  )
     
   };
   
