@@ -21,24 +21,24 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.7 2004-12-13 15:18:05 gcorti Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.8 2005-04-06 12:14:52 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
-//
+// 
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Rayleigh Scattering Class Implementation
 ////////////////////////////////////////////////////////////////////////
 //
-// File:        RichG4OpRayleigh.cc
-// Description: Discrete Process -- Rayleigh scattering of optical
-//  photons
+// File:        RichG4OpRayleigh.cc 
+// Description: Discrete Process -- Rayleigh scattering of optical 
+//		photons  
 // Version:     1.0
-// Created:     1996-05-31
+// Created:     1996-05-31  
 // Author:      Juliet Armstrong
 // Updated:     2001-10-18 by Peter Gumplinger
 //              eliminate unused variable warning on Linux (gcc-2.95.2)
 // Updated:     2001-09-18 by mma
-//  >numOfMaterials=G4Material::GetNumberOfMaterials() in BuildPhy
+//		>numOfMaterials=G4Material::GetNumberOfMaterials() in BuildPhy
 // Updated:     2001-01-30 by Peter Gumplinger
 //              > allow for positiv and negative CosTheta and force the
 //              > new momentum direction to be in the same plane as the
@@ -48,7 +48,7 @@
 //              1997-04-09 by Peter Gumplinger
 //              > new physics/tracking scheme
 // mail:        gum@triumf.ca
-//
+// Modified for LHCb and renamed to RichG4OpRayleigh    SE 1-4-2005.
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
@@ -62,79 +62,83 @@
 // Class Implementation
 /////////////////////////
 
-//////////////
-// Operators
-//////////////
+        //////////////
+        // Operators
+        //////////////
 
 // RichG4OpRayleigh::operator=(const RichG4OpRayleigh &right)
 // {
 // }
 
-/////////////////
-// Constructors
-/////////////////
+        /////////////////
+        // Constructors
+        /////////////////
 
 RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName,
-         G4ProcessType aType)
-  : G4VDiscreteProcess(processName, aType ),
-    fRichVerboseInfoTag(false)
+            G4ProcessType aType)
+  : G4VDiscreteProcess(processName,aType),
+   fRichVerboseInfoTag(false)
 {
 
-  thePhysicsTable = 0;
+        thePhysicsTable = 0;
 
-  if (verboseLevel>0) {
-    G4cout << GetProcessName() << " is created " << G4endl;
-  }
+        DefaultWater = false;
 
-  BuildThePhysicsTable();
+        if (verboseLevel>0) {
+           G4cout << GetProcessName() << " is created " << G4endl;
+        }
+
+        BuildThePhysicsTable();
 }
 
 // RichG4OpRayleigh::RichG4OpRayleigh(const RichG4OpRayleigh &right)
 // {
 // }
 
-////////////////
-// Destructors
-////////////////
+        ////////////////
+        // Destructors
+        ////////////////
 
 RichG4OpRayleigh::~RichG4OpRayleigh()
 {
-  if (thePhysicsTable!= 0) {
-    thePhysicsTable->clearAndDestroy();
-    delete thePhysicsTable;
-  }
+        if (thePhysicsTable!= 0) {
+           thePhysicsTable->clearAndDestroy();
+           delete thePhysicsTable;
+        }
 }
 
-////////////
-// Methods
-////////////
+        ////////////
+        // Methods
+        ////////////
 
 // PostStepDoIt
 // -------------
 //
-G4VParticleChange*
+G4VParticleChange* 
 RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
-  aParticleChange.Initialize(aTrack);
+        aParticleChange.Initialize(aTrack);
 
-  const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
+        const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
 
-  if (verboseLevel>0) {
-    G4cout << "Scattering Photon!" << G4endl;
-    G4cout << "Old Momentum Direction: "
-           << aParticle->GetMomentumDirection() << G4endl;
-    G4cout << "Old Polarization: "
-           << aParticle->GetPolarization() << G4endl;
-  }
+        if (verboseLevel>0) {
+		G4cout << "Scattering Photon!" << G4endl;
+		G4cout << "Old Momentum Direction: "
+	     	     << aParticle->GetMomentumDirection() << G4endl;
+		G4cout << "Old Polarization: "
+		     << aParticle->GetPolarization() << G4endl;
+	}
 
-  // find polar angle w.r.t. old polarization vector
+	// find polar angle w.r.t. old polarization vector
 
-  G4double rand = G4UniformRand();
+	G4double rand = G4UniformRand();
 
-  G4double CosTheta = pow(rand, 1./3.);
-  const G4double SinTheta = sqrt(1.-CosTheta*CosTheta);
+	G4double CosTheta = std::pow(rand, 1./3.);
+	G4double SinTheta = std::sqrt(1.-CosTheta*CosTheta);
 
-  if(G4UniformRand() < 0.5)CosTheta = -CosTheta;
+        if(G4UniformRand() < 0.5)CosTheta = -CosTheta;
+
+
   // Addtions made by SE to tag the photon as
   // rayleighscattered photon  Oct 2003.
   // This is put under a switch which is
@@ -172,64 +176,66 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
       //      G4cout<<" Optical Photon killed in Rayleigh after    " 
       //      <<CurStepNum <<"   steps" <<G4endl;
       aParticleChange.ProposeTrackStatus(fStopAndKill);
+      aStep.GetTrack()->SetTrackStatus(fStopAndKill);
+
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
 
   }
-
 
   //     }
 
   // end of adddtions by SE
 
 
-  // find azimuthal angle w.r.t old polarization vector
+	// find azimuthal angle w.r.t old polarization vector 
 
-  rand = G4UniformRand();
+	rand = G4UniformRand();
 
-  const G4double Phi = twopi*rand;
-  const G4double SinPhi = sin(Phi);
-  const G4double CosPhi = cos(Phi);
+	G4double Phi = twopi*rand;
+	G4double SinPhi = std::sin(Phi); 
+	G4double CosPhi = std::cos(Phi); 
+	
+	G4double unit_x = SinTheta * CosPhi; 
+	G4double unit_y = SinTheta * SinPhi;  
+	G4double unit_z = CosTheta; 
+	
+        G4ThreeVector NewPolarization (unit_x,unit_y,unit_z);
 
-  const G4double unit_x = SinTheta * CosPhi;
-  const G4double unit_y = SinTheta * SinPhi;
-  const G4double unit_z = CosTheta;
+        // Rotate new polarization direction into global reference system 
 
-  G4ThreeVector NewPolarization (unit_x,unit_y,unit_z);
+	G4ThreeVector OldPolarization = aParticle->GetPolarization();
+        OldPolarization = OldPolarization.unit();
 
-  // Rotate new polarization direction into global reference system
+	NewPolarization.rotateUz(OldPolarization);
+        NewPolarization = NewPolarization.unit();
+	
+        // -- new momentum direction is normal to the new
+        // polarization vector and in the same plane as the
+        // old and new polarization vectors --
 
-  const G4ThreeVector OldPolarization = aParticle->GetPolarization().unit();
+        G4ThreeVector NewMomentumDirection = 
+                              OldPolarization - NewPolarization * CosTheta;
 
-  NewPolarization.rotateUz(OldPolarization);
-  NewPolarization = NewPolarization.unit();
+        if(G4UniformRand() < 0.5)NewMomentumDirection = -NewMomentumDirection;
+        NewMomentumDirection = NewMomentumDirection.unit();
 
-  // -- new momentum direction is normal to the new
-  // polarization vector and in the same plane as the
-  // old and new polarization vectors --
+	aParticleChange.ProposePolarization(NewPolarization);
 
-  G4ThreeVector NewMomentumDirection =
-    OldPolarization - NewPolarization * CosTheta;
+	aParticleChange.ProposeMomentumDirection(NewMomentumDirection);
 
-  if(G4UniformRand() < 0.5)NewMomentumDirection = -NewMomentumDirection;
-  NewMomentumDirection = NewMomentumDirection.unit();
+        if (verboseLevel>0) {
+		G4cout << "New Polarization: " 
+		     << NewPolarization << G4endl;
+		G4cout << "Polarization Change: "
+		     << *(aParticleChange.GetPolarization()) << G4endl;  
+		G4cout << "New Momentum Direction: " 
+		     << NewMomentumDirection << G4endl;
+		G4cout << "Momentum Change: "
+		     << *(aParticleChange.GetMomentumDirection()) << G4endl; 
+	}
 
-  aParticleChange.ProposePolarization(NewPolarization);
-
-  aParticleChange.ProposeMomentumDirection(NewMomentumDirection);
-
-  if (verboseLevel>0) {
-    G4cout << "New Polarization: "
-           << NewPolarization << G4endl;
-    G4cout << "Polarization Change: "
-           << *(aParticleChange.GetPolarization()) << G4endl;
-    G4cout << "New Momentum Direction: "
-           << NewMomentumDirection << G4endl;
-    G4cout << "Momentum Change: "
-           << *(aParticleChange.GetMomentumDirection()) << G4endl;
-  }
-
-  return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+        return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }
 
 // BuildThePhysicsTable for the Rayleigh Scattering process
@@ -237,146 +243,165 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 //
 void RichG4OpRayleigh::BuildThePhysicsTable()
 {
-  //      Builds a table of scattering lengths for each material
+//      Builds a table of scattering lengths for each material
 
-  if (thePhysicsTable) return;
+        if (thePhysicsTable) return;
 
-  const G4MaterialTable* theMaterialTable = G4Material::GetMaterialTable();
-  const G4int numOfMaterials = G4Material::GetNumberOfMaterials();
+        const G4MaterialTable* theMaterialTable=
+                               G4Material::GetMaterialTable();
+        G4int numOfMaterials = G4Material::GetNumberOfMaterials();
 
-  // create a new physics table
+        // create a new physics table
 
-  thePhysicsTable = new G4PhysicsTable(numOfMaterials);
+        thePhysicsTable = new G4PhysicsTable(numOfMaterials);
 
-  // loop for materials
+        // loop for materials
 
-  for (G4int i=0 ; i < numOfMaterials; ++i)
-    {
-      G4PhysicsOrderedFreeVector* ScatteringLengths =
-        new G4PhysicsOrderedFreeVector();
-
-      if ((*theMaterialTable)[i]->GetName() == "Water")
+        for (G4int i=0 ; i < numOfMaterials; i++)
         {
-          G4MaterialPropertiesTable *MaterialPT =
-            (*theMaterialTable)[i]->GetMaterialPropertiesTable();
-          // Call utility routine to Generate
-          // Rayleigh Scattering Lengths
-          ScatteringLengths =
-            RayleighAttenuationLengthGenerator(MaterialPT);
-        }
+            G4PhysicsOrderedFreeVector* ScatteringLengths =
+                                new G4PhysicsOrderedFreeVector();
 
-      thePhysicsTable->insertAt(i,ScatteringLengths);
-    }
+            G4MaterialPropertiesTable *aMaterialPropertiesTable =
+                         (*theMaterialTable)[i]->GetMaterialPropertiesTable();
+                                                                                
+            if(aMaterialPropertiesTable){
+
+              G4MaterialPropertyVector* AttenuationLengthVector =
+                            aMaterialPropertiesTable->GetProperty("RAYLEIGH");
+
+              if(!AttenuationLengthVector){
+
+                if ((*theMaterialTable)[i]->GetName() == "Water")
+                {
+		   // Call utility routine to Generate
+		   // Rayleigh Scattering Lengths
+
+                   DefaultWater = true;
+
+		   ScatteringLengths =
+		   RayleighAttenuationLengthGenerator(aMaterialPropertiesTable);
+                }
+              }
+	    }
+
+	    thePhysicsTable->insertAt(i,ScatteringLengths);
+        } 
 }
 
 // GetMeanFreePath()
 // -----------------
 //
 G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
-                                           G4double ,
-                                           G4ForceCondition* )
+                                     G4double ,
+                                     G4ForceCondition* )
 {
-  const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-  const G4Material* aMaterial = aTrack.GetMaterial();
+        const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
+        const G4Material* aMaterial = aTrack.GetMaterial();
 
-  const G4double thePhotonMomentum = aParticle->GetTotalMomentum();
+        G4double thePhotonMomentum = aParticle->GetTotalMomentum();
 
-  G4double AttenuationLength = DBL_MAX;
+        G4double AttenuationLength = DBL_MAX;
 
-  if (aMaterial->GetName() == "Water") {
+        if (aMaterial->GetName() == "Water" && DefaultWater){
 
-    G4bool isOutRange;
+           G4bool isOutRange;
 
-    AttenuationLength =
-      (*thePhysicsTable)(aMaterial->GetIndex())->
-      GetValue(thePhotonMomentum, isOutRange);
-  }
-  else {
+           AttenuationLength =
+                (*thePhysicsTable)(aMaterial->GetIndex())->
+                           GetValue(thePhotonMomentum, isOutRange);
+        }
+        else {
 
-    G4MaterialPropertiesTable* aMaterialPropertyTable =
-      aMaterial->GetMaterialPropertiesTable();
+           G4MaterialPropertiesTable* aMaterialPropertyTable =
+                           aMaterial->GetMaterialPropertiesTable();
 
-    if(aMaterialPropertyTable){
-      G4MaterialPropertyVector* AttenuationLengthVector =
-        aMaterialPropertyTable->GetProperty("RAYLEIGH");
-      if(AttenuationLengthVector){
-        AttenuationLength = AttenuationLengthVector ->
-          GetProperty(thePhotonMomentum);
-      }
-      else{
-        //               G4cout << "No Rayleigh scattering length specified" << G4endl;
-      }
-    }
-    else{
-      //             G4cout << "No Rayleigh scattering length specified" << G4endl;
-    }
-  }
+           if(aMaterialPropertyTable){
+             G4MaterialPropertyVector* AttenuationLengthVector =
+                   aMaterialPropertyTable->GetProperty("RAYLEIGH");
+             if(AttenuationLengthVector){
+               AttenuationLength = AttenuationLengthVector ->
+                                    GetProperty(thePhotonMomentum);
+             }
+             else{
+//               G4cout << "No Rayleigh scattering length specified" << G4endl;
+             }
+           }
+           else{
+//             G4cout << "No Rayleigh scattering length specified" << G4endl; 
+           }
+        }
 
-  return AttenuationLength;
+        return AttenuationLength;
 }
 
 // RayleighAttenuationLengthGenerator()
 // ------------------------------------
 // Private method to compute Rayleigh Scattering Lengths (for water)
 //
-G4PhysicsOrderedFreeVector*
-RichG4OpRayleigh::RayleighAttenuationLengthGenerator
-(G4MaterialPropertiesTable *aMPT)
+G4PhysicsOrderedFreeVector* 
+RichG4OpRayleigh::RayleighAttenuationLengthGenerator(G4MaterialPropertiesTable *aMPT) 
 {
-  // Physical Constants
+        // Physical Constants
 
-  // isothermal compressibility of water
-  const G4double betat = 7.658e-23*m3/MeV;
+        // isothermal compressibility of water
+        G4double betat = 7.658e-23*m3/MeV;
 
-  // K Boltzman
-  const G4double kboltz = 8.61739e-11*MeV/kelvin;
+        // K Boltzman
+        G4double kboltz = 8.61739e-11*MeV/kelvin;
 
-  // Temperature of water is 10 degrees celsius
-  // conversion to kelvin:
-  // TCelsius = TKelvin - 273.15 => 273.15 + 10 = 283.15
-  const G4double temp = 283.15*kelvin;
+        // Temperature of water is 10 degrees celsius
+        // conversion to kelvin:
+        // TCelsius = TKelvin - 273.15 => 273.15 + 10 = 283.15
+        G4double temp = 283.15*kelvin;
 
-  // Retrieve vectors for refraction index
-  // and photon momentum from the material properties table
+        // Retrieve vectors for refraction index
+        // and photon momentum from the material properties table
 
-  G4MaterialPropertyVector* Rindex = aMPT->GetProperty("RINDEX");
+        G4MaterialPropertyVector* Rindex = aMPT->GetProperty("RINDEX");
 
-  //G4double e;
-  //G4double xlambda;
-  //G4double c1, c2, c3, c4;
-  //G4double Dist;
-  //G4double refraction_index;
+        G4double refsq;
+        G4double e;
+        G4double xlambda;
+        G4double c1, c2, c3, c4;
+        G4double Dist;
+        G4double refraction_index;
 
-  G4PhysicsOrderedFreeVector *RayleighScatteringLengths = new G4PhysicsOrderedFreeVector();
-  Rindex->ResetIterator();
+        G4PhysicsOrderedFreeVector *RayleighScatteringLengths = 
+				new G4PhysicsOrderedFreeVector();
 
-  while (++(*Rindex)) {
+        if (Rindex ) {
 
-    const G4double e = (Rindex->GetPhotonMomentum());
+           Rindex->ResetIterator();
 
-    const G4double refraction_index = Rindex->GetProperty();
-    const G4double refsq = refraction_index*refraction_index;
-    const G4double xlambda = h_Planck*c_light/e;
+           while (++(*Rindex)) {
 
-    if (verboseLevel>0) {
-      G4cout << Rindex->GetPhotonMomentum() << " MeV\t";
-      G4cout << xlambda << " mm\t";
-    }
+                e = (Rindex->GetPhotonMomentum());
 
-    const G4double c1 = 1 / (6.0 * pi);
-    const G4double c2temp = (2.0 * pi / xlambda);
-    const G4double c2 = c2temp * c2temp * c2temp * c2temp;
-    const G4double c3 = ( (refsq - 1.0) * (refsq + 2.0) / 3.0 );
-    const G4double c4 = betat * temp * kboltz;
+                refraction_index = Rindex->GetProperty();
+                refsq = refraction_index*refraction_index;
+                xlambda = h_Planck*c_light/e;
 
-    const G4double Dist = 1.0 / (c1*c2*c3*c3*c4);
+	        if (verboseLevel>0) {
+        	        G4cout << Rindex->GetPhotonMomentum() << " MeV\t";
+                	G4cout << xlambda << " mm\t";
+		}
 
-    if (verboseLevel>0) {
-      G4cout << Dist << " mm" << G4endl;
-    }
-    RayleighScatteringLengths->
-      InsertValues(Rindex->GetPhotonMomentum(), Dist);
-  }
+                c1 = 1 / (6.0 * pi);
+                c2 = std::pow((2.0 * pi / xlambda), 4);
+                c3 = std::pow( ( (refsq - 1.0) * (refsq + 2.0) / 3.0 ), 2);
+                c4 = betat * temp * kboltz;
 
-  return RayleighScatteringLengths;
+                Dist = 1.0 / (c1*c2*c3*c4);
+
+	        if (verboseLevel>0) {
+	                G4cout << Dist << " mm" << G4endl;
+		}
+                RayleighScatteringLengths->
+			InsertValues(Rindex->GetPhotonMomentum(), Dist);
+           }
+
+        }
+
+	return RayleighScatteringLengths;
 }

@@ -21,16 +21,15 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.hh,v 1.3 2004-06-03 12:44:44 seaso Exp $
+// $Id: RichG4Cerenkov.hh,v 1.4 2005-04-06 12:14:52 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
 ////////////////////////////////////////////////////////////////////////
 // Cerenkov Radiation Class Definition 
 ////////////////////////////////////////////////////////////////////////
-//        RichG4Cerenkov.hh  SE 28-04-2003
 //
-// File:        G4Cerenkov.hh  
+// File:        RichG4Cerenkov.hh  
 // Description:	Continuous Process -- Generation of Cerenkov Photons
 // Version:     2.0
 // Created:     1996-02-21
@@ -39,7 +38,7 @@
 //              1997-04-09 by Peter Gumplinger
 //              > G4MaterialPropertiesTable; new physics/tracking scheme
 // mail:        gum@triumf.ca
-//
+// Modifed for LHCb and renamed RichG4Cerenkov   SE 1-4-2005.
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef RichG4Cerenkov_h
@@ -63,6 +62,7 @@
 #include "G4MaterialPropertiesTable.hh"
 #include "G4PhysicsOrderedFreeVector.hh"
 #include <vector>
+
 // Class Description:
 // Continuous Process -- Generation of Cerenkov Photons.
 // Class inherits publicly from G4VContinuousProcess.
@@ -90,7 +90,7 @@ public: // Without description
 	////////////////////////////////
 
 	RichG4Cerenkov(const G4String& processName = "RichG4Cerenkov",
-                       G4ProcessType aType = fOptical);
+                     G4ProcessType aType = fOptical);
 
 	// RichG4Cerenkov(const RichG4Cerenkov &right);
 
@@ -151,7 +151,6 @@ public: // With description
       (const std::vector<G4int> aRadiatorMaterialIndex) 
       {fRadiatorMaterialIndex = aRadiatorMaterialIndex;}
 
-    
 private:
 
         void BuildThePhysicsTable();
@@ -179,10 +178,10 @@ private:
 
 	G4bool fTrackSecondariesFirst;
 	G4int  fMaxPhotons;
-  G4bool fRichVerboseInfoTag;
-  G4bool fMaxPhotonPerRadiatorFlag;
-  std::vector<G4int> fMaxPhotPerStepInRadiator;
-  std::vector<G4int> fRadiatorMaterialIndex;
+        G4bool fRichVerboseInfoTag;
+        G4bool fMaxPhotonPerRadiatorFlag;
+        std::vector<G4int> fMaxPhotPerStepInRadiator;
+        std::vector<G4int> fRadiatorMaterialIndex;
 };
 
 ////////////////////
@@ -206,7 +205,6 @@ void RichG4Cerenkov::SetMaxNumPhotonsPerStep(const G4int NumPhotons)
 { 
 	fMaxPhotons = NumPhotons;
 }
-
 
 inline
 void RichG4Cerenkov::DumpPhysicsTable() const

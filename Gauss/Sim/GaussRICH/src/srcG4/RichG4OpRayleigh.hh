@@ -21,15 +21,15 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.hh,v 1.4 2004-06-29 16:17:24 seaso Exp $
+// $Id: RichG4OpRayleigh.hh,v 1.5 2005-04-06 12:14:52 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Rayleigh Scattering Class Definition
 ////////////////////////////////////////////////////////////////////////
-//  RichG4OpRayleigh    SE 28-04-2003
-// File:        G4OpRayleigh.hh
+//
+// File:        RichG4OpRayleigh.hh
 // Description: Discrete Process -- Rayleigh scattering of optical photons 
 // Version:     1.0
 // Created:     1996-05-31
@@ -38,7 +38,7 @@
 //              1997-04-09 by Peter Gumplinger
 //              > new physics/tracking scheme
 // mail:        gum@triumf.ca
-//
+// modifed for LHCb and renamed to RichG4OpRayleigh  SE 1-4-2005
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef RichG4OpRayleigh_h
@@ -88,7 +88,7 @@ public: // Without description
         ////////////////////////////////
  
         RichG4OpRayleigh(const G4String& processName = "RichG4OpRayleigh",
-           G4ProcessType aType =   fOptical);
+                    G4ProcessType aType =   fOptical);
 
         // RichG4OpRayleigh(const RichG4OpRayleigh &right);
 
@@ -118,7 +118,6 @@ public: // With description
 
         void DumpPhysicsTable() const;
         // Prints the physics table.
-
        G4bool GetRichVerboseRayleighInfoTag(){ return fRichVerboseInfoTag;}
        void SetRichVerboseRayleighInfoTag( G4bool aBVal)
              {fRichVerboseInfoTag = aBVal;}
@@ -129,7 +128,7 @@ public: // With description
        {    return fRichMaxStepNumLimitInRayleigh;}
        void SetRichMaxStepNumLimitInRayleigh(G4int aStepNumLimit) 
        {fRichMaxStepNumLimitInRayleigh = aStepNumLimit;}
-    
+
 private:
 
         void BuildThePhysicsTable();
@@ -144,17 +143,19 @@ private:
         ///////////////////////
         // Class Data Members
         ///////////////////////
+      G4bool fRichVerboseInfoTag;
+      G4int fRichMaxStepNumLimitInRayleigh;
 
-       G4bool fRichVerboseInfoTag;
-        G4int fRichMaxStepNumLimitInRayleigh;
-
-   
 protected:
 
         G4PhysicsTable* thePhysicsTable;
         //  A Physics Table can be either a cross-sections table or
         //  an energy table (or can be used for other specific
         //  purposes).
+
+private:
+
+        G4bool DefaultWater;
 
 };
 

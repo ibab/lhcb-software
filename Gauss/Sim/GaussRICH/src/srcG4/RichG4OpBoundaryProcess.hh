@@ -21,15 +21,15 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.3 2004-12-13 15:18:05 gcorti Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.4 2005-04-06 12:14:52 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Boundary Process Class Definition
 ////////////////////////////////////////////////////////////////////////
-// RichG4BoundaryProcess.hh   SE 28-4-2003
-// File:        G4OpBoundaryProcess.hh
+//
+// File:        RichG4OpBoundaryProcess.hh
 // Description: Discrete Process -- reflection/refraction at
 //                                  optical interfaces
 // Version:     1.1
@@ -44,7 +44,7 @@
 // Author:      Peter Gumplinger
 //              adopted from work by Werner Keil - April 2/96
 // mail:        gum@triumf.ca
-//
+// modified for LHCb and renamed RichG4OpBoundaryprocess  SE 1-4-2005.
 // CVS version tag: 
 ////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +83,8 @@ enum RichG4OpBoundaryProcessStatus {  Undefined,
                                   TotalInternalReflection,
                                   LambertianReflection, LobeReflection,
                                   SpikeReflection, BackScattering,
-                                  Absorption, Detection };
+                                  Absorption, Detection, NotAtBoundary,
+                                  SameMaterial, StepTooSmall, NoRINDEX };
 
 class RichG4OpBoundaryProcess : public G4VDiscreteProcess 
 {
@@ -105,7 +106,7 @@ public: // Without description
         ////////////////////////////////
 
         RichG4OpBoundaryProcess(const G4String& processName = "RichG4OpBoundary",
-                                G4ProcessType aType = fOptical );
+                    G4ProcessType aType = fOptical);
 
 	~RichG4OpBoundaryProcess();
 
@@ -307,10 +308,11 @@ G4ThreeVector RichG4OpBoundaryProcess::
 
   G4ThreeVector vec2 = vec1.cross(normal);
 
-  G4double cost = 2.*G4UniformRand() - 1.0;
-  G4double sint = sqrt(1.0 - cost * cost);
+  G4double phi = twopi*G4UniformRand();
+  G4double cosphi = std::cos(phi);
+  G4double sinphi = std::sin(phi);
 
-  return cost * vec1 + sint * vec2;
+  return cosphi * vec1 + sinphi * vec2;
 }
 
 inline
@@ -365,6 +367,7 @@ void RichG4OpBoundaryProcess::DoAbsorption()
               theStatus = Absorption;
 
               if ( G4BooleanRand(theEfficiency) ) {
+		
                  // EnergyDeposited =/= 0 means: photon has been detected
                  theStatus = Detection;
                  aParticleChange.ProposeLocalEnergyDeposit(thePhotonMomentum);
@@ -376,7 +379,7 @@ void RichG4OpBoundaryProcess::DoAbsorption()
               NewMomentum = OldMomentum;
               NewPolarization = OldPolarization;
 
-//              aParticleChange.SetEnergyChange(0.0);
+//              aParticleChange.ProposeEnergy(0.0);
               aParticleChange.ProposeTrackStatus(fStopAndKill);
 }
 

@@ -6,6 +6,14 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussRICH v4r12 ==================================
+!2005-04-06  - Sajan Easo
+  -Upgrade of the Gauss Monitoring histograms: The set2 and set histograms have 
+    modified title and range and the set2  also include plots of 
+    Cherenkov production theta vs track momentum.
+  - Modification of all the files under srcG4 area so that they 
+    are similar to the corresponding files in the 
+    recent versions (v4.7.*) of GEANT4. 
+    These are only cosmetic changes like using std::sin(x) instead of sin(x).
 ! 2005-03-07 - Chris Jones
  - Remove redundant information from MCRichSegment
 
