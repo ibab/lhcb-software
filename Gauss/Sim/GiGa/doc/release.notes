@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.75 2003-05-30 14:26:58 ibelyaev Exp $
+! $Id: release.notes,v 1.76 2003-06-05 10:49:11 witoldp Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2003-06-05 - Witek Pokorski
+ - src/GiGaFieldMgrBase.cpp - change allowing field managers with null pointer
+                              to G4MagneticField 
 
 ! 2003-05-30 - Vanya BELYAEV
  - GiGa/GiGaBase.h  - add a control handle for maximal number of printouts 

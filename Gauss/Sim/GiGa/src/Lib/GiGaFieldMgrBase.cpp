@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.2 2003-06-05 08:20:54 witoldp Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.3 2003-06-05 10:49:11 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/05 08:20:54  witoldp
+// mistake corrected
+//
 // Revision 1.1  2003/04/06 18:49:47  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 // 
@@ -151,6 +154,8 @@ G4MagIntegratorStepper* GiGaFieldMgrBase::stepper  () const
 // ============================================================================
 StatusCode GiGaFieldMgrBase::createStepper () const 
 {
+  MsgStream log ( msgSvc() , name() ) ;
+  
   // clear existoing stepper 
   m_stepper = 0 ;
   
@@ -177,7 +182,6 @@ StatusCode GiGaFieldMgrBase::createStepper () const
   types.push_back( "HelixSimpleRunge"    ) ;
   types.push_back( "HelixHeum"           ) ;
   
-  MsgStream log ( msgSvc() , name() ) ;
   log << MSG::INFO 
       << " \t The available steppers are: " << endreq ;
   for( Types::const_iterator step = types.begin() ;
@@ -241,6 +245,8 @@ G4FieldManager* GiGaFieldMgrBase::fieldMgr () const
 // ============================================================================
 StatusCode GiGaFieldMgrBase::createFieldMgr () const 
 {
+  MsgStream log ( msgSvc() , name() ) ;
+
   // clear existing pointer 
   m_manager = 0 ;
   
@@ -259,10 +265,15 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
     { return Error ( "createFieldMgr(): invalid manager!" ) ; }
   
   G4MagneticField* mag = field() ;
-  if( 0 == mag )
-    { Error ( "createFieldMgr(): MULL G4MagneticField "   ) ; }
-  
+
   m_manager -> SetDetectorField( mag ) ;
+
+  if( 0 == mag ) 
+    {
+      log << MSG::INFO << "createFieldMgr(): null magnetic field"
+          << endreq;
+      return StatusCode::SUCCESS; ///// return
+    }  
   
   G4MagIntegratorStepper* step = stepper () ;
   if( 0 == step ) 
