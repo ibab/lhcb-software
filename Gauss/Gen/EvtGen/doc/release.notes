@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!==================== EvtGen v8r1 =================================
 ! 2005-01-25 - Patrick Robbe
  - changes for CLHEP 1.9 (add namespaces in forward declarations)
 
