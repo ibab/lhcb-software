@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.43 2003-12-17 17:31:19 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.44 2003-12-18 14:05:34 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -969,8 +969,12 @@ void parseAssociation(DOMNode* node,
 {
   DOMNamedNodeMap* nodeMap = node->getAttributes();
 
-  XMLCh* itemStr = XMLString::transcode("to");
-  gddAssociation->setDestination(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLCh* itemStr = XMLString::transcode("from");
+  gddAssociation->setFrom(nodeMap->getNamedItem(itemStr)->getNodeValue());
+  XMLString::release(&itemStr);
+
+  itemStr = XMLString::transcode("to");
+  gddAssociation->setTo(nodeMap->getNamedItem(itemStr)->getNodeValue());
   XMLString::release(&itemStr);
 
   itemStr = XMLString::transcode("type");
@@ -1517,7 +1521,6 @@ void parseClass(DOMNode* node,
     *destructorStr = XMLString::transcode("destructor"),
     *attributeStr = XMLString::transcode("attribute"),
     *relationStr = XMLString::transcode("relation"),
-    *associationStr = XMLString::transcode("assoc"),
     *templateStr = XMLString::transcode("template");
 
   bool longDescSet = false;
@@ -1659,16 +1662,6 @@ void parseClass(DOMNode* node,
         }
 
         //
-        // Parse associations
-        //
-        if(XMLString::compareString(node->getNodeName(), associationStr) == 0)
-        {
-          DaDiAssociation* gddAssociation = new DaDiAssociation();
-          gddClass->pushDaDiAssociation(gddAssociation);
-          parseAssociation(node, gddAssociation);
-        }
-
-        //
         // Parse templates
         //
         if(XMLString::compareString(node->getNodeName(), templateStr) == 0)
@@ -1703,7 +1696,6 @@ void parseClass(DOMNode* node,
   XMLString::release(&destructorStr);
   XMLString::release(&attributeStr);
   XMLString::release(&relationStr);
-  XMLString::release(&associationStr);
   XMLString::release(&templateStr);
 
   if (!classHasDesc)
@@ -1877,6 +1869,7 @@ void parsePackage(DOMNode* node,
 
   XMLCh *importStr = XMLString::transcode("import"),
     *classStr = XMLString::transcode("class"),
+    *associationStr = XMLString::transcode("assoc"),
     *namespaceStr = XMLString::transcode("namespace");
   while(node != 0)
   {
@@ -1894,6 +1887,16 @@ void parsePackage(DOMNode* node,
           gddClass = new DaDiClass();
           gddPackage->pushDaDiClass(gddClass);
           parseClass(node,gddClass);
+        }
+
+        //
+        // Parse associations
+        //
+        if(XMLString::compareString(node->getNodeName(), associationStr) == 0)
+        {
+          DaDiAssociation* gddAssociation = new DaDiAssociation();
+          gddPackage->pushDaDiAssociation(gddAssociation);
+          parseAssociation(node, gddAssociation);
         }
 
         if (XMLString::compareString(node->getNodeName(), namespaceStr) == 0)
@@ -1915,6 +1918,7 @@ void parsePackage(DOMNode* node,
   }
   XMLString::release(&importStr);
   XMLString::release(&classStr);
+  XMLString::release(&associationStr);
   XMLString::release(&namespaceStr);
 }
 

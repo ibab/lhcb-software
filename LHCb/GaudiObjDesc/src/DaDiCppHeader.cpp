@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.71 2003-12-17 17:31:18 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.72 2003-12-18 14:05:33 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2596,7 +2596,7 @@ void printClass(std::ofstream& xmlOut,
   //
   if (classTemplate)
   {
-    xmlOut << "//Defintion of keyed container for " << gddClassName << std::endl
+    xmlOut << "//Definition of keyed container for " << gddClassName << std::endl
       //      << "namespace Containers { class HashMap; };" << std::endl
       //      << "template <class TYPE, class MAPPING> class KeyedContainer;"
       //      << std::endl
@@ -2619,7 +2619,7 @@ void printClass(std::ofstream& xmlOut,
   //
   if (classTemplateVector)
   {
-    xmlOut << "// Defintion of vector container type for " << gddClassName
+    xmlOut << "// Definition of vector container type for " << gddClassName
            << std::endl
            << "template <class TYPE> class ObjectVector;" << std::endl
            << "typedef ObjectVector<" << gddClassName << "> " << gddClassName
@@ -2628,7 +2628,7 @@ void printClass(std::ofstream& xmlOut,
 
   if (classTemplateList)
   {
-    xmlOut << "// Defintion of all list container types for " << gddClassName
+    xmlOut << "// Definition of all list container types for " << gddClassName
            << std::endl
            << "template <class TYPE> class ObjectList;" << std::endl
            << "typedef ObjectList<" << gddClassName << "> " << gddClassName

@@ -762,7 +762,7 @@
     <class name="HepMCEvent" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="ITEvent">
+  <package name="Event">
     <class name="CLIDITDigitLayer" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CLIDITLayer" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="ITChannelID" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -780,12 +780,12 @@
     <class name="MCITSingleDigit" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="L0Event">
+  <package name="Event">
     <class name="CLID_Level0PileUpVeto" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="Level0PileUpVeto" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="L1Event">
+  <package name="Event">
     <class name="L1Buffer" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="L1CLIDs" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="Level12dTrack" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -814,7 +814,7 @@
     <class name="MCVeloHit" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="OTEvent">
+  <package name="Event">
     <class name="CLIDMCOTDigit" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CLIDOTDigit" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CLIDOTLayer" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -856,7 +856,7 @@
     <class name="MCRichPhotodetectorHit" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="TrEvent">
+  <package name="Event">
     <class name="CLIDTrMCTrack" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CLIDTrSimpleTrack" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="CLIDTrTrueTrack" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -873,7 +873,7 @@
     <class name="VeloRHitOnTrack" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="VeloEvent">
+  <package name="Event">
     <class name="MCVeloCluster" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloDigit" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="MCVeloPhiCluster" author="__UNKNOWN__" desc="__NODESC__"/>
@@ -997,16 +997,16 @@
     <class name="TypeStorable" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="L0Calo">
+  <package name="Event">
     <class name="CLIDL0CaloCandidate" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="L0CaloCandidate" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="L0DU">
+  <package name="Event">
     <class name="L0DUReport" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>
 
-  <package name="L0Muon">
+  <package name="Event">
     <class name="L0mCrate" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="L0mPad" author="__UNKNOWN__" desc="__NODESC__"/>
     <class name="L0mProcUnit" author="__UNKNOWN__" desc="__NODESC__"/>

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.38 2003-12-17 17:31:17 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.39 2003-12-18 14:05:33 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -423,6 +423,185 @@ void printCppDictionary(DaDiPackage* gddPackage,
   }
 
 
+
+  //
+  // write Associations
+  //
+  if(gddPackage->sizeDaDiAssociation())
+  {
+
+    // ------------------------------------------------------------------------
+    // Start of writing the .cpp-file for filling the MetaModel
+
+    char* gddPackageName = XMLString::transcode(gddPackage->packageName());
+
+    char* cppFileName = new char[256];
+    strcpy(cppFileName,envOut);
+    strcat(cppFileName, gddPackageName);
+    strcat(cppFileName, "_Associations_dict.cpp");
+    std::cout << "Writing " << cppFileName;
+    std::ofstream metaOut(cppFileName);
+
+    //
+    // CVS-tag and 'donotedit'-message
+    //
+
+    metaOut
+      << std::endl << std::endl
+      << "//   ****************************************************************"
+      << "**********" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *                      ! ! ! A T T E N T I O N ! ! !            "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *  This file was created automatically by GaudiObjDesc, please d"
+      << "o not    *" << std::endl
+      << "//   *  delete it or edit it by hand.                                "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   *  If you want to change this file, first change the correspondi"
+      << "ng       *" << std::endl
+      << "//   *  xml-file and rerun the tools from GaudiObjDesc (or run make i"
+      << "f you    *" << std::endl
+      << "//   *  are using it from inside a Gaudi-package).                   "
+      << "         *" << std::endl
+      << "//   *                                                               "
+      << "         *" << std::endl
+      << "//   ****************************************************************"
+      << "**********" << std::endl
+      << std::endl << std::endl << std::endl;
+
+    //
+    // Include files
+    //
+    metaOut << "//Include files" << std::endl
+            << "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
+
+    metaOut << "using namespace seal::reflect;" << std::endl
+      << std::endl;
+
+
+    std::vector<std::string> impvec;
+    for (i=0; i<gddPackage->sizeDaDiAssociation(); ++i)
+    {
+      char* impcToName = XMLString::transcode(gddPackage->popDaDiAssociation()->to());
+      std::string impToName = impcToName;
+      XMLString::release(&impcToName);
+
+      if (impToName != "float" && impToName != "int" && impToName != "char")
+      {
+        if (dbExportClass[impToName] != "") 
+        {
+          impvec.push_back(dbExportClass[impToName]);
+        }
+      }
+
+      char* impcFromName = XMLString::transcode(gddPackage->popDaDiAssociation()->from());
+      std::string impFromName = impcFromName;
+      XMLString::release(&impcFromName);
+
+      if (impFromName != "float" && impFromName != "int" && impFromName != "char")
+      {
+        if (dbExportClass[impFromName] != "") 
+        {
+          impvec.push_back(dbExportClass[impFromName]);
+        }
+      }
+    }
+    
+    std::sort(impvec.begin(),impvec.end());
+    impvec.erase(std::unique(impvec.begin(), impvec.end()), impvec.end());
+
+    if (impvec.size())
+    {
+      for (std::vector<std::string>::const_iterator impIter = impvec.begin();
+           impIter != impvec.end(); ++impIter)
+      {
+        metaOut << "#include \"" << *impIter << ".h\"" << std::endl;
+      }
+    }
+
+    metaOut << std::endl << std::endl;
+     
+    std::vector<std::string> tmplvec;
+
+    for (i=0; i<gddPackage->sizeDaDiAssociation(); ++i)
+    {
+      std::string tmpl = "GaudiDict::Relation";
+      DaDiAssociation* gddAssociation = gddPackage->popDaDiAssociation();
+      char* gddAssocWeight = XMLString::transcode(gddAssociation->weight());
+      char* gddAssocFrom = XMLString::transcode(gddAssociation->from());
+      char* gddAssocTo = XMLString::transcode(gddAssociation->to());
+      bool isWeighted = strcmp("NONE",gddAssocWeight) ? true : false;
+      if (isWeighted)
+      {
+        tmpl += "Weighted";
+      }
+      XMLCh* oned = XMLString::transcode("1D");
+      XMLCh* twod = XMLString::transcode("2D");
+      if (XMLString::equals(gddAssociation->type(), oned))
+      {
+        tmpl += "1D";
+      }
+      else if (XMLString::equals(gddAssociation->type(), twod))
+      {
+        tmpl += "2D";
+      }
+      XMLString::release(&oned);
+      XMLString::release(&twod);
+      tmpl += "Dict<";
+      tmpl += gddAssocFrom;
+      tmpl += ", ";
+      tmpl += gddAssocTo;
+      if (isWeighted)
+      {
+        tmpl += ", ";
+        tmpl += gddAssocWeight;
+      }
+      tmpl += ">";
+      
+      tmplvec.push_back(tmpl);
+
+      XMLString::release(&gddAssocFrom);
+      XMLString::release(&gddAssocTo);
+    }
+    
+    metaOut << "namespace" << std::endl
+            << "{" << std::endl
+            << "  struct _InitDict" << std::endl
+            << "  {" << std::endl
+            << "    _InitDict()" << std::endl
+            << "    {" << std::endl;
+    std::vector<std::string>::const_iterator strIter;
+    for (strIter = tmplvec.begin(); strIter != tmplvec.end(); ++strIter)
+    {
+      metaOut << "      " << *strIter << "();" << std::endl;
+    }
+    metaOut << "    }" << std::endl
+            << "  };" << std::endl
+            << std::endl
+            << "  static _InitDict __init;" << std::endl
+            << "}" << std::endl
+            << std::endl
+            << "void* __init_InitDict_" << gddPackageName << "Assoc()" << std::endl
+            << "{" << std::endl
+            << "  return &__init;" << std::endl
+            << "}" << std::endl
+            << std::endl << std::endl;
+    tmplvec.clear();
+    
+    metaOut.close();
+    delete [] cppFileName;
+    std::cout << " - OK" << std::endl;
+
+    XMLString::release(&gddPackageName);
+
+  }
+
+
   for(k=0; k<gddPackage->sizeDaDiClass(); ++k)
   {
     std::vector<char*> enumTypes;
@@ -516,30 +695,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
       //<< "#undef private" << std::endl
       << std::endl;
 
-    for (i=0; i<gddClass->sizeDaDiAssociation(); ++i)
-    {
-      char* impcName = XMLString::transcode(gddClass->popDaDiAssociation()->destination());
-      std::string impName = impcName;
-      XMLString::release(&impcName);
-
-      if (impName != "float" && impName != "int" && impName != "char")
-      {
-        if (dbExportClass[impName] != "") 
-        {
-          impName = dbExportClass[impName];
-        }
-        else
-        {
-          std::cerr << std::endl
-                    << argV0 << ": No information found for type: " << impName
-                    << std::endl
-                    << argV0 << ": Line written: #include \"" << impName << ".h\""
-                    << std::endl;
-        }
-        metaOut << "#include \"" << impName << ".h\"" << std::endl;
-      }
-    }
-      
     metaOut << "using namespace seal::reflect;" << std::endl
       << std::endl;
 
@@ -1539,46 +1694,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
       XMLString::release(&gddTemplName);
     }
 
-    for (i=0; i<gddClass->sizeDaDiAssociation(); ++i)
-    {
-      std::string tmpl = "GaudiDict::Relation";
-      DaDiAssociation* gddAssociation = gddClass->popDaDiAssociation();
-      char* gddAssocWeight = XMLString::transcode(gddAssociation->weight());
-      char* gddAssocDestination = XMLString::transcode(gddAssociation->destination());
-      bool isWeighted = strcmp("NONE",gddAssocWeight) ? true : false;
-      if (isWeighted)
-      {
-        tmpl += "Weighted";
-      }
-      XMLCh* oned = XMLString::transcode("1D");
-      XMLCh* twod = XMLString::transcode("2D");
-      if (XMLString::equals(gddAssociation->type(), oned))
-      {
-        tmpl += "1D";
-      }
-      else if (XMLString::equals(gddAssociation->type(), twod))
-      {
-        tmpl += "2D";
-      }
-      XMLString::release(&oned);
-      XMLString::release(&twod);
-      tmpl += "Dict<";
-      tmpl += gddClassName;
-      tmpl += ", ";
-      tmpl += gddAssocDestination;
-      if (isWeighted)
-      {
-        tmpl += ", ";
-        tmpl += gddAssocWeight;
-      }
-      tmpl += ">";
-      
-      tmplvec.push_back(tmpl);
-
-      XMLString::release(&gddAssocDestination);
-    }
-    
-
     /*    
     std::string inhStr = "";
     XMLCh* contStr = XMLString::transcode("ContainedObject");
@@ -1611,7 +1726,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
     XMLString::release(&keydStr);
     */
 
-    if (gddClass->sizeDaDiTemplate() || gddClass->sizeDaDiAssociation())
+    if (gddClass->sizeDaDiTemplate())
     {
       metaOut << "namespace" << std::endl
               << "{" << std::endl

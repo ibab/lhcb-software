@@ -2,6 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20031217 - Stefan
+- <assoc> is now a sub-element of <package> 
+- new attribute "from" for element <assoc>
+- a new file <packagename>_Associations_dict.cpp will be created containing 
+  the initialisations for associations dictionaries for each package
+
 ===============================GaudiObjDesc v6r0==============================
 !200312 - Stefan
 - new element <assoc> to specify associations between event objects

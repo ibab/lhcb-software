@@ -1,10 +1,11 @@
-// $Id: DaDiPackage.h,v 1.11 2003-12-11 15:03:10 mato Exp $
+// $Id: DaDiPackage.h,v 1.12 2003-12-18 14:05:35 mato Exp $
 #ifndef DADIPACKAGE_H
 #define DADIPACKAGE_H 1
 
 // Include files
 #include "DaDiNamespace.h"
 #include "DaDiClass.h"
+#include "DaDiAssociation.h"
 #include "xercesc/util/XMLString.hpp"
 
 #include <list>
@@ -25,7 +26,9 @@ public:
     m_importList(std::list<std::string>()),
     m_noImports(std::list<std::string>()),
     m_daDiClass(std::list<DaDiClass*>()),
-    m_daDiNamespace(std::list<DaDiNamespace*>()) {};
+    m_daDiNamespace(std::list<DaDiNamespace*>()),
+    m_daDiAssociation(std::list<DaDiAssociation*>())
+  {};
 
   virtual ~DaDiPackage();
 
@@ -63,17 +66,22 @@ public:
   void pushDaDiNamespace(DaDiNamespace* value);
   int sizeDaDiNamespace();
 
+  DaDiAssociation* popDaDiAssociation();
+  void pushDaDiAssociation(DaDiAssociation* value);
+  int sizeDaDiAssociation();
+
 protected:
 
 private:
 
-  XMLCh                     *m_packageName;
-  std::list<std::string>     m_impSoftList;
-  std::list<std::string>     m_impStdList;
-  std::list<std::string>     m_importList;
-  std::list<std::string>     m_noImports;
-  std::list<DaDiClass*>      m_daDiClass;
-  std::list<DaDiNamespace*>  m_daDiNamespace;
+  XMLCh                       *m_packageName;
+  std::list<std::string>       m_impSoftList;
+  std::list<std::string>       m_impStdList;
+  std::list<std::string>       m_importList;
+  std::list<std::string>       m_noImports;
+  std::list<DaDiClass*>        m_daDiClass;
+  std::list<DaDiNamespace*>    m_daDiNamespace;
+  std::list<DaDiAssociation*>  m_daDiAssociation;
 
 };
 
@@ -89,6 +97,11 @@ inline DaDiPackage::~DaDiPackage()
   for (nIter = m_daDiNamespace.begin(); nIter != m_daDiNamespace.end(); ++nIter)
   {
     delete *nIter;
+  }
+  std::list<DaDiAssociation*>::iterator asIter;
+  for (asIter = m_daDiAssociation.begin(); asIter != m_daDiAssociation.end(); ++asIter)
+  { 
+    delete *asIter; 
   }
 };
 
@@ -307,6 +320,24 @@ inline void DaDiPackage::pushDaDiNamespace(DaDiNamespace* value)
 inline int DaDiPackage::sizeDaDiNamespace()
 {
   return m_daDiNamespace.size();
+}
+
+inline DaDiAssociation* DaDiPackage::popDaDiAssociation()
+{
+  DaDiAssociation* pt = m_daDiAssociation.front();
+  m_daDiAssociation.push_back(pt);
+  m_daDiAssociation.pop_front();
+  return pt;
+}
+
+inline void DaDiPackage::pushDaDiAssociation(DaDiAssociation* value)
+{
+  m_daDiAssociation.push_back(value);
+}
+
+inline int DaDiPackage::sizeDaDiAssociation()
+{
+  return m_daDiAssociation.size();
 }
 
 #endif // DADIPACKAGE_H

@@ -11,12 +11,12 @@
 	soft (TRUE | FALSE) "FALSE"
 	ignore (TRUE | FALSE) "FALSE"
 >
-<!ELEMENT package ((import*, class*, namespace*)*)>
+<!ELEMENT package ((import*, class*, namespace*, assoc*)*)>
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
 <!-- ELEMENT class ((class?, .... -->
-<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?, assoc?)*)>
+<!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -161,6 +161,7 @@
 <!ATTLIST assoc
         type (1D | 2D) "1D"
         weight CDATA "NONE"
+        from CDATA #REQUIRED
         to CDATA #REQUIRED
 >
 

@@ -1,4 +1,4 @@
-// $Id: DaDiClass.h,v 1.28 2003-12-17 17:31:17 mato Exp $
+// $Id: DaDiClass.h,v 1.29 2003-12-18 14:05:33 mato Exp $
 #ifndef DADICLASS_H
 #define DADICLASS_H 1
 
@@ -12,7 +12,6 @@
 #include "DaDiEnum.h"
 #include "DaDiLocation.h"
 #include "DaDiTemplate.h"
-#include "DaDiAssociation.h"
 #include "DaDiTypeDef.h"
 #include "xercesc/util/XMLString.hpp"
 
@@ -54,8 +53,7 @@ public:
     m_daDiEnum(std::list<DaDiEnum*>()),
     m_daDiLocation(std::list<DaDiLocation*>()),
     m_daDiTemplate(std::list<DaDiTemplate*>()),
-    m_daDiTypeDef(std::list<DaDiTypeDef*>()),
-    m_daDiAssociation(std::list<DaDiAssociation*>())
+    m_daDiTypeDef(std::list<DaDiTypeDef*>())
   {
     //m_innerClass = innerClass;
   };
@@ -166,10 +164,6 @@ public:
   void pushDaDiTypeDef(DaDiTypeDef* value);
   int sizeDaDiTypeDef();
 
-  DaDiAssociation* popDaDiAssociation();
-  void pushDaDiAssociation(DaDiAssociation* value);
-  int sizeDaDiAssociation();
-
   /*
     DaDiClass* popDaDiInnerClass();
     void pushDaDiInnerClass(DaDiClass* value);
@@ -208,7 +202,6 @@ private:
   std::list<DaDiLocation*>     m_daDiLocation;
   std::list<DaDiTemplate*>     m_daDiTemplate;
   std::list<DaDiTypeDef*>      m_daDiTypeDef;
-  std::list<DaDiAssociation*>  m_daDiAssociation;
   //std::list<DaDiClass*>        m_daDiInnerClass;
 };
 
@@ -253,9 +246,6 @@ inline DaDiClass::~DaDiClass()
   std::list<DaDiTypeDef*>::iterator tIter;
   for (tIter = m_daDiTypeDef.begin(); tIter != m_daDiTypeDef.end(); ++tIter)
   { delete *tIter; }
-  std::list<DaDiAssociation*>::iterator asIter;
-  for (asIter = m_daDiAssociation.begin(); asIter != m_daDiAssociation.end(); ++asIter)
-  { delete *asIter; }
   //  std::list<DaDiClass*>::iterator clIter;
   //  for (clIter = m_daDiInnerClass.begin(); clIter != m_daDiInnerClass.end();
   //         ++clIter)
@@ -803,24 +793,6 @@ inline void DaDiClass::pushDaDiTypeDef(DaDiTypeDef* value)
 inline int DaDiClass::sizeDaDiTypeDef()
 {
   return m_daDiTypeDef.size();
-}
-
-inline DaDiAssociation* DaDiClass::popDaDiAssociation()
-{
-  DaDiAssociation* pt = m_daDiAssociation.front();
-  m_daDiAssociation.push_back(pt);
-  m_daDiAssociation.pop_front();
-  return pt;
-}
-
-inline void DaDiClass::pushDaDiAssociation(DaDiAssociation* value)
-{
-  m_daDiAssociation.push_back(value);
-}
-
-inline int DaDiClass::sizeDaDiAssociation()
-{
-  return m_daDiAssociation.size();
 }
 
 /*

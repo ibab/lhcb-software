@@ -1,4 +1,4 @@
-// $Id: DaDiAssociation.h,v 1.1 2003-12-17 17:31:17 mato Exp $
+// $Id: DaDiAssociation.h,v 1.2 2003-12-18 14:05:32 mato Exp $
 #ifndef DADIASSOCIATION_H 
 #define DADIASSOCIATION_H 1
 
@@ -15,14 +15,18 @@ class DaDiAssociation {
 public:
   /// Standard constructor
   DaDiAssociation() :
-  m_destination(0),
+  m_from(0),
+  m_to(0),
   m_type(0),
   m_weight(0) {}; 
 
   virtual ~DaDiAssociation();
 
-  const XMLCh* destination();
-  void setDestination(const XMLCh* value);
+  const XMLCh* from();
+  void setFrom(const XMLCh* value);
+
+  const XMLCh* to();
+  void setTo(const XMLCh* value);
     
   const XMLCh* type();
   void setType(const XMLCh* value);
@@ -34,27 +38,40 @@ protected:
 
 private:
 
-  XMLCh *m_destination; 
+  XMLCh *m_from;
+  XMLCh *m_to; 
   XMLCh *m_type; 
   XMLCh *m_weight; 
 };
 
 inline DaDiAssociation::~DaDiAssociation()
 {
-  delete [] m_destination;
+  delete [] m_from;
+  delete [] m_to;
   delete [] m_type;
   delete [] m_weight;
 }
 
-inline const XMLCh* DaDiAssociation::destination()
+inline const XMLCh* DaDiAssociation::from()
 {
-  return m_destination;
+  return m_from;
 }
 
-inline void DaDiAssociation::setDestination(const XMLCh* value)
+inline void DaDiAssociation::setFrom(const XMLCh* value)
 {
-  m_destination = new XMLCh[xercesc::XMLString::stringLen(value)+1];
-  xercesc::XMLString::copyString(m_destination, value);
+  m_from = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_from, value);
+}
+
+inline const XMLCh* DaDiAssociation::to()
+{
+  return m_to;
+}
+
+inline void DaDiAssociation::setTo(const XMLCh* value)
+{
+  m_to = new XMLCh[xercesc::XMLString::stringLen(value)+1];
+  xercesc::XMLString::copyString(m_to, value);
 }
 
 inline const XMLCh* DaDiAssociation::type()
