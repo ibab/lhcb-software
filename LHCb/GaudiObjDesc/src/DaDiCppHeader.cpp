@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.74 2004-07-16 16:13:39 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.75 2004-11-18 08:16:56 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1622,9 +1622,7 @@ void printClass(std::ofstream& xmlOut,
 
       if (strcmp(gddConsCode,"") == 0)
       {
-        XMLString::release(&gddConsCode);
-        gddConsCode = new char[2];
-        strcpy(gddConsCode," ");
+		XMLString::copyString(gddConsCode," ");
       }
 
     }
