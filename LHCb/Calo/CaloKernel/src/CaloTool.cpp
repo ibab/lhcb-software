@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.10 2002-04-30 18:18:35 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.11 2002-05-02 08:38:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/04/30 18:18:35  ibelyaev
+//  reduce the final printout verbosity
+//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -31,8 +34,31 @@
  */
 // ============================================================================
 
-static const std::string s_detSvcName( "DetectorDataSvc" );
-static const std::string s_evtSvcName( "EventDataSvc"    );
+// ============================================================================
+/** @var  s_detSvcName 
+ *  name of Detector Data Service 
+ */
+// ============================================================================
+static const std::string s_detSvcName    ( "DetectorDataSvc" );
+// ============================================================================
+/** @var  s_evtSvcName 
+ *  name of Event Data  Service 
+ */
+// ============================================================================
+static const std::string s_evtSvcName    ( "EventDataSvc"    );
+// ============================================================================
+/** @var  s_chronoSvcName 
+ *  name of Chrono & Stat Service 
+ */
+// ============================================================================
+static const std::string s_chronoSvcName ( "ChronoStatSvc"   );
+// ============================================================================
+/** @var  s_toolSvcName 
+ *  name of Tool Service 
+ */
+// ============================================================================
+static const std::string s_toolSvcName   ( "ToolSvc"         );
+// ============================================================================
 
 // ============================================================================
 /** Standard constructor
@@ -45,21 +71,22 @@ CaloTool::CaloTool
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : AlgTool     ( type , name , parent )
-  , m_chronoSvc ( 0  ) 
-  , m_toolSvc   ( 0  )
-  , m_svcLoc    ( 0  ) 
-  , m_detSvc    ( 0  ) 
-  , m_det       ( 0  ) 
-  , m_detName   ( "" )
-  , m_errors    (    )
-  , m_warnings  (    )
+  : AlgTool      ( type , name , parent )
+  , m_chronoSvc  ( 0  ) 
+  , m_toolSvc    ( 0  )
+  , m_svcLoc     ( 0  ) 
+  , m_detSvc     ( 0  ) 
+  , m_det        ( 0  ) 
+  , m_detName    ( "" )
+  , m_errors     (    )
+  , m_warnings   (    )
+  , m_exceptions (    )
 {
-  /// check for servce locator 
+  // check for service locator 
   if   ( 0 != serviceLocator() ) { m_svcLoc = serviceLocator    () ; }
   else                           { m_svcLoc = Gaudi::svcLocator () ; }
   if( 0 != svcLoc() )            { svcLoc()->addRef()              ; }
-  ///
+  //
   StringProperty detectorName( "Detector" , m_detName );
   if( 0 != parent ) 
     {    
@@ -73,6 +100,7 @@ CaloTool::CaloTool
   ///
   declareProperty( "Detector" , m_detName );
 };
+// ============================================================================
 
 // ============================================================================
 /** standard initialization method 
@@ -97,18 +125,20 @@ StatusCode    CaloTool::initialize ()
   { // reset Chrono & Stat service 
     if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; }
     StatusCode sc = 
-      svcLoc()->service("ChronoStatSvc" , m_chronoSvc , true );
+      svcLoc()->service( s_chronoSvcName , m_chronoSvc , true );
     if( sc.isFailure() )
-      { return Error("Could not locate ChronoStatSvc!", sc ); };
+      { return Error("Could not locate IChronoStatSvc = '" + 
+                     s_chronoSvcName+"'", sc ); };
     if( 0 != chronoSvc() ) { chronoSvc()->addRef() ; }
   }
   ///
   { // reset Tool  service 
     if( 0 != toolSvc()   ) { toolSvc()->release() ; m_toolSvc = 0 ; }
     StatusCode sc = 
-      svcLoc()->service("ToolSvc"       , m_toolSvc   , true );
+      svcLoc()->service( s_toolSvcName       , m_toolSvc   , true );
     if( sc.isFailure() )
-      { return Error("Could not locate ToolSvc!", sc ); };
+      { return Error("Could not locate IToolSvc = '" + 
+                     s_toolSvcName + "'", sc ); };
     if( 0 != toolSvc()   ) { toolSvc()->addRef() ; }
   }
   ///
@@ -117,7 +147,8 @@ StatusCode    CaloTool::initialize ()
     StatusCode sc = 
       svcLoc()->service( s_detSvcName   , m_detSvc    , true );
     if( sc.isFailure() )
-      { return Error("Could not locate DetSvc='"+s_detSvcName+"'", sc ); };
+      { return Error("Could not locate IDataProviderSvc = '" +
+                     s_detSvcName + "' ", sc ); };
     if( 0 != detSvc()   ) { detSvc()->addRef() ; }    
   }
   ///
@@ -154,6 +185,7 @@ StatusCode    CaloTool::initialize ()
   //
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard finalization method 
@@ -169,15 +201,26 @@ StatusCode    CaloTool::finalize   ()
   ///
   if( 0 != det        () ) { m_det = 0 ; }
   ///
-  if( 0 != m_errors.size() || 0 != m_warnings.size() ) 
+  if( 0 != m_errors     .size () || 
+      0 != m_warnings   .size () || 
+      0 != m_exceptions .size () ) 
     {      
       MsgStream log( msgSvc() , name() );
       // format printout 
       CaloPrint print;
       log << MSG::ALWAYS 
-          << " Errors/Warnings statistics:  " 
-          << m_errors   .size () << "/"
-          << m_warnings .size () << endreq ; 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp != m_exceptions.end() ; ++excp )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS   = " << print( excp ->second ) 
+              << " Message='"    <<        excp ->first    << "'" << endreq ; 
+        }  
       // print errors counter 
       for( Counter::const_iterator error = m_errors.begin() ;
            error != m_errors.end() ; ++error )
@@ -195,17 +238,20 @@ StatusCode    CaloTool::finalize   ()
               << " Message='"    <<        warning->first  << "'" << endreq ; 
         }  
     }
-  m_errors    .clear();
-  m_warnings  .clear();
+  m_errors     .clear();
+  m_warnings   .clear();
+  m_exceptions .clear();
   // finalize the base class 
   return AlgTool::finalize() ;
 };
+// ============================================================================
 
 // ============================================================================
 /** destructor 
  */
 // ============================================================================
 CaloTool::~CaloTool(){};
+// ============================================================================
 
 // ============================================================================
 /** query interface method  
@@ -231,6 +277,7 @@ StatusCode CaloTool::queryInterface ( const InterfaceID& id ,
   ///
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 
 // ============================================================================
@@ -250,6 +297,7 @@ StatusCode CaloTool::Error
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
 };
+// ============================================================================
 
 // ============================================================================
 /** Print the warning  message and return status code 
@@ -268,6 +316,7 @@ StatusCode CaloTool::Warning
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
 };
+// ============================================================================
 
 // ============================================================================
 /** Print the message and return status code 
@@ -292,6 +341,7 @@ StatusCode CaloTool::Print
   log << endreq ; 
   return  st;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and (re)-throw the exception  
@@ -307,11 +357,16 @@ StatusCode CaloTool::Exception
   const GaudiException & exc ,
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
-{ 
-  Error( msg , lvl );
+{
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception (re)throw: " + msg , sc , lvl  ); 
   throw CaloException( name() + ":: " + msg , exc, sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and (re)-throw the exception  
@@ -328,10 +383,15 @@ StatusCode CaloTool::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
 { 
-  Error( msg , lvl );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception  (re)throw: " + msg , sc , lvl  ); 
   throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and throw the exception  
@@ -346,10 +406,15 @@ StatusCode CaloTool::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 { 
-  Error( msg , lvl );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception  throw: " + msg , sc , lvl  ); 
   throw CaloException( name() + ":: " + msg , sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 // The End

@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.13 2002-04-30 18:18:35 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.14 2002-05-02 08:38:47 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2002/04/30 18:18:35  ibelyaev
+//  reduce the final printout verbosity
+//
 // ============================================================================
 #define  CALOKERNEL_CALOALGORITHM_CPP 1 
 // ============================================================================
@@ -56,6 +59,7 @@ CaloAlgorithm::CaloAlgorithm
   , m_detData    ( "" ) ///< no default value
   , m_errors     () 
   , m_warnings   () 
+  , m_exceptions () 
 {
   ///
   declareProperty  ("Input"        , m_inputData  );
@@ -87,6 +91,7 @@ StatusCode CaloAlgorithm::Error
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
 };
+// ============================================================================
 
 // ============================================================================
 /** Print the warning  message and return status code 
@@ -105,6 +110,7 @@ StatusCode CaloAlgorithm::Warning
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
 };
+// ============================================================================
 
 // ============================================================================
 /**  Print the message and return status code 
@@ -129,6 +135,7 @@ StatusCode CaloAlgorithm::Print
   log << endreq ; 
   return  st;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and (re)-throw the exception  
@@ -145,10 +152,15 @@ StatusCode CaloAlgorithm::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
 { 
-  Error( msg , lvl );
-  throw CaloException( name() + ":: " + msg , exc, sc );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception (re)throw: " + msg , sc , lvl ); 
+  throw   CaloException( name() + ":: " + msg , exc, sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and (re)-throw the exception  
@@ -165,10 +177,15 @@ StatusCode CaloAlgorithm::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const   
 { 
-  Error( msg , lvl );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception (re)throw: " + msg , sc , lvl  ); 
   throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 /** Create and throw the exception  
@@ -183,10 +200,15 @@ StatusCode CaloAlgorithm::Exception
   const MSG::Level     & lvl ,
   const StatusCode     & sc  ) const 
 { 
-  Error( msg , lvl );
+  // increase local counter of exceptions  
+  m_exceptions[ msg ] += 1 ;
+  // increase global exceptions counter 
+  Stat stat( chronoSvc() , name()+":Exception" ); 
+  Print( "Exception  throw: " + msg , sc , lvl  ); 
   throw CaloException( name() + ":: " + msg , sc );
   return  sc ;
 };
+// ============================================================================
 
 // ============================================================================
 /** @brief put results into Gaudi Event Transient Store 
@@ -222,13 +244,12 @@ StatusCode CaloAlgorithm::put
           " put(): could not register '"
           + Type    + "' at address '"
           + Address + "'"  , sc );
-  //
-  Print( ":: The object of type '" + Type +
-         "' is registered in TS at address '" 
-         + Address + "'" , sc , MSG::DEBUG );
-  //
-  return sc ;
+  // print and return
+  return Print( ":: The object of type '" + Type +
+                "' is registered in TS at address '" 
+                + Address + "'" , sc , MSG::DEBUG );
 };
+// ============================================================================
 
 // ============================================================================
 /** standard initialization method
@@ -267,6 +288,7 @@ StatusCode CaloAlgorithm::initialize()
   //
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard finalization method
@@ -279,7 +301,9 @@ StatusCode CaloAlgorithm::finalize()
   log << MSG::DEBUG 
       << " ==> Finalize the base class CaloAlgorithm " << endreq;
   // format printout 
-  if( 0 != m_errors.size() || 0 != m_warnings.size() ) 
+  if( 0 != m_errors      .size () || 
+      0 != m_warnings    .size () ||
+      0 != m_exceptions  .size ()  ) 
     {      
       MsgStream log( msgSvc() , name() );
       // format printout 
@@ -288,28 +312,38 @@ StatusCode CaloAlgorithm::finalize()
           << " Errors/Warnings statistics:  " 
           << m_errors   .size () << "/"
           << m_warnings .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp  != m_exceptions.end() ; ++excp  )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << print( excp ->second ) 
+              << " Message='"     <<        excp ->first    << "'" << endreq ; 
+        }  
       // print errors counter 
       for( Counter::const_iterator error = m_errors.begin() ;
            error != m_errors.end() ; ++error )
         {
           log << MSG::ALWAYS 
-              << " #ERRORS   = " << print( error->second ) 
-              << " Message='"    <<        error->first    << "'" << endreq ; 
+              << " #ERRORS    = " << print( error->second ) 
+              << " Message='"     <<        error->first    << "'" << endreq ; 
         }  
       // print warnings
       for( Counter::const_iterator warning = m_warnings.begin() ;
            warning != m_warnings.end() ; ++warning )
         {
           log << MSG::ALWAYS 
-              << " #WARNINGS = " << print( warning->second ) 
-              << " Message='"    <<        warning->first  << "'" << endreq ; 
+              << " #WARNINGS  = " << print( warning->second ) 
+              << " Message='"     <<        warning->first  << "'" << endreq ; 
         }  
     }
-  m_errors    .clear();
-  m_warnings  .clear();
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
   // finalize the base class 
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard execution method
@@ -317,14 +351,8 @@ StatusCode CaloAlgorithm::finalize()
  */
 // ============================================================================
 StatusCode CaloAlgorithm::execute() 
-{
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::ERROR 
-      << "==> One should NEVER see this message !!" << endreq;
-  ///
-  return StatusCode::FAILURE ;
-  ///
-};
+{ return Error("==> One should NEVER see this message!"); };
+// ============================================================================
 
 // ============================================================================
 // The End 
