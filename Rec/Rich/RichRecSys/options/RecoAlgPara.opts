@@ -43,6 +43,20 @@ RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
 
 // Ring Refit
+//RichRingRefit.TrackSelection              = { "unique", "forward", "match" };
+RichRingRefit.TrackSelection = { "unique","seed","match","forward","KsTrack" };
+// add tracks (previously ?) named upstream (like Ks starting in rich 1 volume)
+//                                             Aero   C4F10   CF4
+RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3 };
+RichRingRefit.MinRefitPhotons             = {  999,    999,      7   }; 
+RichRingRefit.MaxBackgroundProb           = {  999,    999,    999   };
+RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10  };
+RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.005  }; 
+RichRingRefit.nDist     = 2.00;
+RichRingRefit.NSigmaCut = 3;
+
+/*
+// Ring Refit - Old settings
 RichRingRefit.TrackSelection              = { "unique", "forward", "match" };
 //                                             Aero   C4F10   CF4
 RichRingRefit.NSigmaCut = 3;
@@ -51,14 +65,16 @@ RichRingRefit.MinRefitPhotons             = {  999,    999,      7   };
 RichRingRefit.MaxBackgroundProb           = {  999,    999,    999   };
 RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10  };
 RichRingRefit.MinFitProbability           =  { 0.5,     0.5,   0.05  };
+*/
 
-// Global Algorithm parameters - phase 3
-// not used yet.
+// Global Algorithm parameters - phase 3 : not used yet.
+/*
 RichGloPIDIt3.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
 RichGloPIDIt3.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
 RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
 RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
+*/
 
 // ===================================================================
 // Ring finder : Under development

@@ -4,6 +4,13 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-04-18 - Chris Jones
+ - Updated pacakges : RichDAQ, RichRecBase, RichRecCommon, RichGlobalPID,
+   RichLocalPID, RichRingRefit, RichRecMCTools, RichRecQC and RichRecTools
+
+! 2004-04-06 - Chris Jones
+ - Updated track resolution parameters in job options
+
 !======================= RichRecSys v1r8 2004-03-18 ======================
 ! 2004-03-14 - Chris Jones
  - New versions of most packages due to adoption of new GaudiTool and 

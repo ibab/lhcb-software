@@ -1,5 +1,6 @@
-// RICH Reconstruction Tool parameters
-// Optimised for Gauss
+
+// Rich Reconstruction tools
+//===================================================================================================
 
 // Track creator
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
@@ -8,9 +9,7 @@ ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,  
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-//                                             Areogel  C4F10   CF4
-ToolSvc.RichSegmentCreator.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
-ToolSvc.RichSegmentCreator.MaxPhotonEnergy = { 3.8,     7.00,   7.00 };
+//                                             Aerogel  C4F10   CF4
 ToolSvc.RichSegmentCreator.EnergyBins      = { 10,      10,     10   };
 
 // Status Creator
@@ -47,12 +46,19 @@ ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
 // Sellmeir function
 ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
 ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
+//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.9368;
 
-// Cherenkov resolution - fixed binned implementation
-#include "$RICHRECSYSOPTS/tools/BinnedCherenkovRes.opts"
+// Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
+#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
 
-// Interpolated cherenkov resolution function
-//#include "$RICHRECSYSOPTS/tools/InterpCherenkovRes.opts"
+// Interpolated cherenkov resolution function of the cherenkov angle
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
+
+// Interpolated cherenkov resolution function of momentum
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVmomentum.opts"
+
+// analytical cherenkov resolution as a function of momentum
+//#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
 
 // Photon detection efficiency using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
@@ -77,8 +83,18 @@ ToolSvc.RichSignalDetectionEff.QETableLocation =
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+//ToolSvc.RichRefractiveIndex.RefIndexLocations = {
+//  "/dd/Materials/RichMaterialTabProperties/AerogelRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
+//};
+//ToolSvc.RichRefractiveIndex.RefIndexLocations = {
+//  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
+//};
 ToolSvc.RichRefractiveIndex.RefIndexLocations = {
-  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/AerogelIdealCkvRIndexFilterPT",
   "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
 };
@@ -99,10 +115,40 @@ ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
 
-// Detector tools
+// Gas Quartz window transmission
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
+ToolSvc.RichGasQuartzWindow.GasQuartzWindowLocation =
+  "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzIdealAbsLengthPT";
+//ToolSvc.RichGasQuartzWindow.GasQuartzWindowLocation =
+//  "/dd/Materials/RichMaterialTabProperties/GasWindowQuartzAbsLengthPT";
+
+// Rich Detector tools
+//=================================================================================
+
+// Detector Paramters
+ToolSvc.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };
+//                                            Aerogel  C4F10   CF4
+ToolSvc.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
+ToolSvc.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
+
+// SmartIDs
 ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
+
+// Ray tracing
 ToolSvc.RichToolRegistry.Tools += { "CdfRayTracing/RichRayTracing" };
 //ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
-ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
+
+// Rich segment maker. Uses implicit linear extrapolation
+//ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
+// Rich segment maker. Uses track extrapolation tools
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
+ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
+//ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrParabolicExtrapolator";
+ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+//ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrLinearExtrapolator";
+
+// photon reconstruction
 ToolSvc.RichToolRegistry.Tools += { "CdfPhotonReco/RichDetPhotonReco" };
 //ToolSvc.RichToolRegistry.Tools += { "RichPhotonReco/RichDetPhotonReco" };
+
+
