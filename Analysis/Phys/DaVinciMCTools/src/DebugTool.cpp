@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.1.1.1 2002-05-21 07:32:02 gcorti Exp $
+// $Id: DebugTool.cpp,v 1.2 2002-05-24 20:56:14 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -146,20 +146,20 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
   int right2 =  width2-title2->length()-2 - left2;
 
   if( left1 >= 0 )
-    log << '<' << string(left1,'-');
+    log << '<' << std::string(left1,'-');
   log << *title1;
   if( right1 >= 0 )
-    log<< string(right1,'-') << '>';
+    log<< std::string(right1,'-') << '>';
 
   if( associated )
   {
     if( left2 >= 0 )
-      log << '<' << string(left2,'-');
+      log << '<' << std::string(left2,'-');
     log << *title2;
     if( right2 >= 0 )
-      log<< string(right2,'-') << '>';
+      log<< std::string(right2,'-') << '>';
   }
-  log << endl;
+  log << std::endl;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i )
@@ -198,7 +198,7 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
       case phi:     log << std::setw(m_fWidth) << "phi";       break;
       case eta:     log << std::setw(m_fWidth) << "eta";       break;
       }
-  log << endl;
+  log << std::endl;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
     switch( *i )
@@ -237,7 +237,7 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
       case phi:     log << std::setw(m_fWidth) << "mrad";      break;
       case eta:     log << std::setw(m_fWidth) << "prap";      break;
       }
-  log << endl;
+  log << std::endl;
 }
 
 //=============================================================================
@@ -429,7 +429,7 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
     else 
       log << "  No associated particle";
   }
-  log << endl;
+  log << std::endl;
 }
 
 //=============================================================================
@@ -621,7 +621,7 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
     else
       log << "  No associated particle";
   }
-  log << endl;  
+  log << std::endl;  
 }
 
 //=============================================================================
@@ -650,10 +650,10 @@ void DebugTool::printTree( const MCParticle *mother,
     return;
   }
 
-  log << MSG::INFO << endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, true, assoc != NULL );
 
-  log.setf(ios::fixed,ios::floatfield);
+  log.setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, log );
   log << endreq;
 }
@@ -674,10 +674,10 @@ void DebugTool::printEventAsTree( const std::vector<MCParticle*> &event,
 {
   MsgStream log(msgSvc(), name());
 
-  log << MSG::INFO << endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, true, assoc != NULL );
 
-  log.setf(ios::fixed,ios::floatfield);
+  log.setf(std::ios::fixed,std::ios::floatfield);
   std::vector<MCParticle*>::const_iterator i;
   for( i=event.begin(); i!=event.end(); i++ )
   {
@@ -744,10 +744,10 @@ void DebugTool::printTree( const Particle *mother,
     return;
   }
 
-  log << MSG::INFO << endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, false, assoc != NULL );
 
-  log.setf(ios::fixed,ios::floatfield);
+  log.setf(std::ios::fixed,std::ios::floatfield);
   printDecayTree( mother, assoc, "", maxDepth, log );
   log << endreq;
 }
@@ -790,7 +790,7 @@ void DebugTool::printAncestor( const MCParticle *child )
   while( origin && (child = origin->mother()) )
   {
     p = m_ppSvc->findByStdHepID(child->particleID().pid());
-    decay = (p ? p->particle() : string("N/A")) + " -> "+ decay;
+    decay = (p ? p->particle() : std::string("N/A")) + " -> "+ decay;
     origin = child->originVertex();
   }
   log << MSG::INFO << decay << endreq;
@@ -811,7 +811,7 @@ void DebugTool::printEventAsList( const ParticleVector &event,
                                   Particle2MCAsct::IAsct *assoc )
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, false, assoc != NULL );
 
   ParticleVector::const_iterator i;
@@ -835,7 +835,7 @@ void DebugTool::printEventAsList( const std::vector<MCParticle*> &event,
                                   Particle2MCAsct::IAsct *assoc )
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, true, assoc != NULL );
   
   int c = 0;

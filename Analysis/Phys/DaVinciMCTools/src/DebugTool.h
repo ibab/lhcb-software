@@ -1,4 +1,4 @@
-// $Id: DebugTool.h,v 1.1.1.1 2002-05-21 07:32:02 gcorti Exp $
+// $Id: DebugTool.h,v 1.2 2002-05-24 20:55:58 gcorti Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
@@ -37,20 +37,20 @@ public:
   /// In the following function a maxDepth is provided with a default value
   /// of -1. That way the tool "PrintDepth" property is used.
   /// Print decay tree for a given MC particle
-  void printTree( const MCParticle* mother, int maxDepth = -1 );
+  void printTree( const MCParticle* mother, int maxDepth );
 
   /// Print decay tree for a given particle
-  void printTree( const Particle* mother, int maxDepth = -1 );
+  void printTree( const Particle* mother, int maxDepth );
 
   /// Print side by side decay tree for a given MC particle and it's
   /// reconstructed items
   void printTree(const MCParticle* mother, 
-                 Particle2MCAsct::IAsct *assoc, int maxDepth=-1);
+                 Particle2MCAsct::IAsct *assoc, int maxDepth );
 
   /// Print side by side decay tree for a given particle and it's
   /// associated MC particle.
   void printTree( const Particle* mother, 
-                  Particle2MCAsct::IAsct *assoc, int maxDepth=-1 );
+                  Particle2MCAsct::IAsct *assoc, int maxDepth );
 
   /// Print all the MC particles leading to this one.
   void printAncestor( const MCParticle *child );
