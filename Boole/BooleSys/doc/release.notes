@@ -1,0 +1,83 @@
+!-----------------------------------------------------------------------------
+! Package     : BrunelSys
+! Responsible : Marco Cattaneo
+! Purpose     : List of packages in Brunel project
+!-----------------------------------------------------------------------------
+
+! 2003-07-16 - Marco Cattaneo
+ - Modified requirements for Brunel v20r0
+   Packages modified: BrunelAlgs v2r2, L0Calo v7r1, CaloUtils v4r5, 
+     CaloDigit v1r3, OTAlgorithms v13r1, TrTools v2r4p2, RichRecSys v1r0p1,
+     RichLocalPID v1r0p1
+
+!======================= BrunelSys v19r1 2003-07-08 =======================
+! 2003-07-08 - Marco Cattaneo
+ - Modified requirements for Brunel v19r1
+   Packages removed:  RichRecAlgs, RichMonitor, KsReco
+   Packages added:    RichRecSys, RichRecCommon, RichRingRefit, RichLocalPID,
+     RichGlobalPID, RichPIDMerge, RichDigiQC, RichRecQC
+   Packages modified: RichUtils v3r2, RichRecBase v1r2, RichRecTools v2r1,
+     RichDetTools v2r2, BrunelAlgs v2r1
+
+!======================= BrunelSys v19r0 2003-07-03 =======================
+! 2003-07-03 - Marco Cattaneo
+ - Modified requirements for Brunel v19r0
+   Packages removed:  MuonTools (now taken from LHCB_v12r0)
+   Packages modified: KsReco v1r5, PuVeto v5r4, L0DU v6r4, L1VeloTrack v5r1,
+   L1Decision v2r1, OTAlgorithms v13r0, TrCheck v1r4, LongTrack v1r7,
+   TrExtrapolator v2r6, Seeding v2r5, TrIntraPR v2r5, TrTools v2r4p1,
+   MuonID v3r6, MuonBackground v1r2, RichRecBase v1r1, RichUtils v3r1,
+   RichDetTools v2r1, TrCleanEx v2r6p1, MCTools v1r1p1, CaloDigit v1r2p1,
+   L0Calo v7r0p1, L0Muon v6r5p1, RichMonitor v3r0p1, RichRecAlgs v2r0p2, 
+   RichRecTools v2r0p1, DigiAlg v1r0p1, L1VeloTrack v5r2, BrunelAlgs v2r0p1
+
+!======================= BrunelSys v18r1 2003-06-24 =======================
+! 2003-06-24 - Marco Cattaneo
+ - Modified requirements for Brunel v18r1
+   Packages removed:  BrunelKernel
+   Packages added:    DigiAlg v1r0
+   Packages modified: BrunelAlgs v2r0, CaloReco v1r6, ITCheckers v1r3,
+   ITAlgorithms v12r9p1, LongTrack v1r6, MuonBackground v1r1, RichRecAlgs v2r0p1,
+   MuonAlgs v4r1
+
+   Package included in this version only: MuonTools v3r5 (to over-ride v3r4 in
+                                          LHCB_v1r12)
+
+!======================= BrunelSys v18r0 2003-04-15 =======================
+! 2003-04-15 - Marco Cattaneo
+ - Modified requirements for Brunel v18r0.
+   Packages added:    CaloPIDs v1r0, MuonUtils v1r0, MuonBackground v1r0,
+						          MCTools v1r1, RichRecBase v1r0
+   Packages removed:  RichRecKernel, RichRecEvent, RichRecInterfaces
+   Packages modified: BrunelAlgs v1r9, BrunelSicb v4r1, CaloDigit v1r2,
+     CaloMonitor v1r4, CaloReco v1r4, ITAlgorithms v12r9, L0Calo v7r0,
+     L0Muon v6r5, L1VeloTrack v5r0, MuonAlgs v4r0, OTAlgorithms v12r4,
+     recrich v7r4, RichMonitor v3r0, RichRecTools v2r0, RichRecAlgs v2r0,
+     RichUtils v3r0, VeloAlgorithms v2r7
+
+!======================= BrunelSys v17r4 2003-02-05 =======================
+! 2003-02-05 - Marco Cattaneo
+ - Modified packages for Brunel v17r4:
+   CaloReco v1r3, L0DU v6r4, L1Decision v1r7
+
+!======================= BrunelSys v17r3 2003-01-31 =======================
+! 2003-01-30 - Marco Cattaneo
+ - Modified packages for Brunel v17r3:
+	 L0DU v6r3, L0Muon v6r4, L1VeloTrack v4r1
+
+!===================== BrunelSys v17r2 2003-01-23 ============================
+! 2003-01-23 - Marco Cattaneo
+ - Modified packages for Brunel v17r2:
+   CaloReco v1r2p1, L1Decision v1r6, L1VeloTrack v4r0, MuonAlgs v3r3,
+   RichDetTools v1r3, TrCleanEx v2r6, TrIntraPR v2r4, UpstreamPR v2r7, 
+   VeloTT v1r5, VeloTrack v4r5
+
+!===================== BrunelSys v17r1 2003-01-17 ============================
+! 2003-01-17 - Marco Cattaneo
+ - Modified packages for Brunel v17r1:
+   ITAlgorithms v12r8, L0Calo v6r6, L1Decision v1r5, TrCleanEx v2r5, 
+   TrExtrapolator v2r5, TrMatching v2r6, TrTools v2r4, VeloAlgorithms v2r6
+
+!===================== BrunelSys v17r0 2003-01-09 ============================
+! 2003-01-09 - Marco Cattaneo
+ - Packages for Brunel v17r0
