@@ -1,7 +1,7 @@
-// $Id: SimGeometry.opts,v 1.2 2004-11-22 16:24:49 ranjard Exp $
+// $Id: SimGeometry.opts,v 1.3 2005-02-07 09:12:17 ranjard Exp $
 
-/** @file 
- * 
+/** @file
+ *
  *  File containing the standard geometry configuration for
  *  a Gauss job. All the detector is included as well as the
  *  magnetic field.
@@ -10,35 +10,35 @@
  *  @date 2004-11-18
  */
 
-// Configuration of algorithm "GiGaInputStream/Geo" for 
+// Configuration of algorithm "GiGaInputStream/Geo" for
 // defining the geometry to be loaded
-// Note that default property for GiGaInputStream are for 
+// Note that default property for GiGaInputStream are for
 // Kine so most of them have to be overwritten here.
 // In initialize retrieve the GiGaGeo (GiGaCnvSvcBase) to which
 // it will delegate the work.
 // Execute only for the first event
-Geo.ExecuteOnce          = true ; 
-Geo.ConversionSvcName    = "GiGaGeo"  ; 
-Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
-// Geometry to be converted in execute method, 
-// This items will be loaded by the DetectorDataSvc and then 
+Geo.ExecuteOnce          = true ;
+Geo.ConversionSvcName    = "GiGaGeo"  ;
+Geo.DataProviderSvcName  = "DetectorDataSvc" ;
+// Geometry to be converted in execute method,
+// This items will be loaded by the DetectorDataSvc and then
 // the convertion service will be asked to make a Geant4 representation
 // that will triggers the corresponding converter for each one
 ApplicationMgr.DLLs += { "GaussTracker" };
 ApplicationMgr.DLLs += { "GaussRICH"    };
 ApplicationMgr.DLLs += { "GaussCalo", "CaloEvent", "CaloDetXmlCnv"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"}; 
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Velo2Rich1"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"};
 Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
 Geo.StreamItems         += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/OT"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/OT"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/IT"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"};
 Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};  
+Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Converter"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
@@ -50,14 +50,14 @@ GiGaGeo.VeloSDet.DetectorPath  = "/Velo";
 GiGaGeo.OTSDet.DetectorPath    = "/Tracker/OT";
 
 // Magnetic field simulation
-// "Global Field Manager" 
+// "Global Field Manager"
 GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
-GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4"; 
+GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
 GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 
-// declare external services needed MAGNETIC FIELD 
+// declare external services needed MAGNETIC FIELD
 ApplicationMgr.DLLs   += { "Magnet" };
-ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };  
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";

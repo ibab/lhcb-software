@@ -4,11 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v19r0 ==================================
+! 2005-02-07 - Florence RANJARD
+ - requirements - use GeneratorModules v14r1 which does not use PYTHIA 
+                  interface but GENSER
+ - options - try to reduce lengthy printout 
+           - remove >M character in some option files
+
 ! 2005-02-02 - Gloria Corti
  - use latest version of detector database (lhcb-200412.xml)
  - modify GaussRead.opts to print hits multiplicty
 
-!========================== Gauss v19r0 ==================================
 ! 2005-02-02 - Florence RANJARD
  - use GaussTracker v3r2 to fix Muon hits out of chambers
 

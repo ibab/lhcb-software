@@ -22,7 +22,7 @@ use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
 #generator
-use GeneratorModules    v14r0   Gen
+use GeneratorModules    v14r2   Gen
 
 #GiGa staff...
 use GiGaCnv             v15r10   Sim

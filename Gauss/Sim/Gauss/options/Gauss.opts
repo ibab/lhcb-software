@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.57 2005-02-02 15:12:17 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.58 2005-02-07 09:12:17 ranjard Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -23,17 +23,17 @@ ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 
 // write an output file
 ApplicationMgr.OutStream +=  { "GaussTape" };
-GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 // initialize run, event, max event, output level
-ApplicationMgr.EvtMax     = 10;
+ApplicationMgr.EvtMax     = 1;
 Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
 MessageSvc.OutputLevel    = 3;
 
 // Lenght of message to have longer Algorihtm/Tool identifier in printout
-//MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
 //#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
