@@ -1,12 +1,12 @@
 //--------------------------------------------------------------
-// Job options for Brunel when using $LHCBDBASE version v248r2
-//  (should also be used for data produced with dbase version v248r0) 
+// Job options for Brunel when using $LHCBDBASE version v248r3
+//  (should also be used for data produced with dbase versions v248r0, v248r2) 
 // ------ "LHCb light detector for Summer 2002 production ------
 
 // --- Define input data. Spillover first (if required), then signal ---
-#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+#include "$SICBCNVROOT/options/Brunel.opts"  // Comment to switch off spillover
 SpillOverSelector.Input = {
-  "FILE='/castor/cern.ch/lhcb/mc/L278303'",  // JobId = 99378
+  "FILE='/castor/cern.ch/lhcb/mc/L278303'",  // JobID = 99378
   "FILE='/castor/cern.ch/lhcb/mc/L278302'"   // JobID = 99377
  }; // evtype 61 RAWH2
 EventSelector.Input = {
@@ -17,9 +17,9 @@ EventSelector.Input = {
 //--------------------------------------------------------------
 
 // Define outputs
-HistogramPersistencySvc.OutputFile = "brunel_v248r2.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel_v248r3.hbook";  // Monitoring histos
 #include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
-BrunelDstWriter.Output = "DATAFILE='dst_v248r2.root' TYP='ROOT' OPT='NEW'";
+BrunelDstWriter.Output = "DATAFILE='dst_v248r3.root' TYP='ROOT' OPT='NEW'";
 
 //--------------------------------------------------------------
 // Database specific options

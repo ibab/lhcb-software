@@ -3,6 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-22 - Marco Cattaneo
+ - New version v13r0.
+
+ - Needs to use dbase v248r3 (Brunelv248r3.opts added, *v248r2.opts removed)
+
+ - Add Spillover support to Rich 
+   (EventSys v12r0, SicbCnv v17r1, RiSicbCnv v4r2, recrich v7r0, Brunel.opts)
+ - Use all tracks except Velo-only for Rich PID 
+   (RiSicbCnv v4r2, recrich v7r0)
+ - Add histogram for virtual memory usage (SicbCnv v17r1)
+
+ - Fix pi0 mass (CaloTools v4r2, CaloRec v2r2)
+ - Fix Rich2 position (XmlDDDB v12r3)
+ - Latest Gaudi bug fixes (GaudiSvc v8r3) 
+ - Fixes to run on Windows
+   (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2)
+
 </PRE><H1><A NAME=v12r0>2002-07-19 Brunel v12r0</A></H1><PRE>
 Second release of Brunel for summer 2002 pre-production.
 

@@ -34,19 +34,20 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON","Timing"};
 //--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------
-#pragma print off
 // L0 trigger
+#pragma print off
 #include "$L0CALOROOT/options/Brunel.opts"
 #include "$L0MUONROOT/options/Brunel.opts"
 #include "$PUVETOROOT/options/Brunel.opts"
 #include "$L0DUROOT/options/Brunel.opts"
 #include "$MUONTOOLSROOT/options/MuonTools.opts"
+#pragma print on
 
 // L1 trigger
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 
-// Calorimeter digitisation and reconstruction (clustering)
+// Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #pragma print off
 #include "$CALOTOOLSOPTS/Brunel.opts"
@@ -65,6 +66,7 @@ ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 // Rich Fortran digitisation and OO digits creator 
 ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
 BrunelDigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+BrunelDigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Muon digitisation
@@ -73,7 +75,6 @@ ApplicationMgr.DLLs += { "MuonAlgs" };
 BrunelDigiMUONSeq.Members = { "MuonDigitization" };
 
 // Inner tracker digitisation and reconstruction (clustering)
-//ApplicationMgr.DLLs += { "ITSicbGeom" };
 #pragma print off
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 #pragma print on
@@ -158,14 +159,6 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 #pragma print off
 #include "$BRUNELALGSROOT/options/Timing.opts"
 #pragma print on
-
-// For now, use forward tracks as input to PID algorithms
-//TrToRichTrackAlg.StoredTracksLocation = "Rec/Tr/Forward";
-//RichPidCnvVerifier.InputStoredTracks  = "Rec/Tr/Forward";
-//ElectronMatch.Tracks                  = "Rec/Tr/Forward";
-//PhotonMatch.Tracks                    = "Rec/Tr/Forward";
-//BremMatch.Tracks                      = "Rec/Tr/Forward";
-//MuonIDFOI.TrackLocation           = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
