@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2002-04-24 13:00:18 ocallot Exp $
+# $Id: requirements,v 1.8 2002-06-10 16:18:41 cattanem Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           PuVeto
-version           v2r0
+version           v3r0
 
 # This template is an example for a standard Algorithm package
 #
@@ -17,8 +17,8 @@ branches          cmt doc src options
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use	L0Event		v11r*	Event
-use	VeloEvent	v10r*	Event
+use	L0Event		v12r*	Event
+use	VeloEvent	v11r*	Event
 use     VeloDet         v5r*    Det
 
 # Component library building rule

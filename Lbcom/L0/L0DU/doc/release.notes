@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.10 2002-04-17 07:59:02 ocallot Exp $
+$Id: release.notes,v 1.11 2002-06-10 16:18:06 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
-!=============================================================================
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v6r0 to use EventKernel v2r*
+
+!============================ L0DU v5r0 2002-04-17 ===========================
 ! 17/04/2002 - Olivier Callot  ** v5r0 **
   - FIx the scale of the Muon threshold ! was *1000, no longer needed !
 

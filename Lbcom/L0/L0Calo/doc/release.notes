@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.17 2002-04-22 08:13:29 cattanem Exp $
+! $Id: release.notes,v 1.18 2002-06-10 16:17:40 cattanem Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
-! >>>>>>>>>>>>>>>>>>>>>> L0Calo v5r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v6r0 to use EventKernel v2r*
+
+!======================== L0Calo v5r0 2002-04-19 =========================
 ! 20020419 (M.Cattaneo)
   - Use AIDA v2r* (for Gaudi v10)
 

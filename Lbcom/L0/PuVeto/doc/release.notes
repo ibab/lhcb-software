@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.5 2002-04-24 13:00:19 ocallot Exp $
+! $Id: release.notes,v 1.6 2002-06-10 16:18:42 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
-!=============================================================================
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v3r0 to use EventKernel v2r*
+
+!========================== PuVeto v2r0 2002-04-24 ===========================
 ! 24/04/2002 - Olivier Callot  ** v2r0 **
   - Adapted to the new Velo event model. One starts from MCVeloFE strips
   - Added a threshold per strip, and the grouping by 4 in the algorithm.
