@@ -4,6 +4,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+!20020515 - Marco Cattaneo
+  - Remove CaloCellCode.h in DoxyFile.cfg (causes doxygen crash)
+
 !20020515 - Philippe Charpentier
   - rename associator methods (changes in [I]Associator[Weighted].h) :
         range[xxx]()      ->  range[xxx]From()
