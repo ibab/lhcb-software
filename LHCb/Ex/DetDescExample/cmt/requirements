@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2003-04-23 14:23:18 sponce Exp $
+# $Id: requirements,v 1.21 2003-04-24 09:19:34 sponce Exp $
 package DetDescExample
 version v6r0
 
@@ -12,7 +12,7 @@ use GaudiSys      v*
 
 # Detector Description package and database
 use DetDesc       v12r* Det
-use DetDescCnv    v1r*  Det
+use DetDescCnv    v2r*  Det
 use XmlDDDB       v* Det
 
 #==> DetDesc example

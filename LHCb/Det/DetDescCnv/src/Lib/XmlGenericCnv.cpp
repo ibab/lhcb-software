@@ -1,11 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/Lib/XmlGenericCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/Lib/XmlGenericCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
 #include "DetDescCnv/XmlCnvException.h"
 
-#include <util/XMLUni.hpp>
-#include <util/XMLString.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/util/XMLUni.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -17,13 +18,23 @@
 
 #include "XmlTools/IXmlSvc.h"
 
-
 // -----------------------------------------------------------------------
 // Standard Constructor
 // ------------------------------------------------------------------------
 XmlGenericCnv::XmlGenericCnv( ISvcLocator* svc, const CLID& clid) :
   Converter (XML_StorageType, clid, svc),
   m_xmlSvc (0) {
+  DDDBString = xercesc::XMLString::transcode("DDDB");
+  materialsString = xercesc::XMLString::transcode("materials");
+  versionString = xercesc::XMLString::transcode("version");
+  DTD_VersionString = xercesc::XMLString::transcode("DTD_Version");
+  macroString = xercesc::XMLString::transcode("macro");
+  nameString = xercesc::XMLString::transcode("name");
+  valueString = xercesc::XMLString::transcode("value");
+  parameterString = xercesc::XMLString::transcode("parameter");
+  detelemString = xercesc::XMLString::transcode("detelem");
+  conditionString = xercesc::XMLString::transcode("condition");
+  classIDString = xercesc::XMLString::transcode("classID");
 }
 
 
@@ -74,7 +85,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
        << ", isString = " << addr->ipar()[0] << endreq;
 
    // parses the xml file or the xml string and retrieves a DOM document
-   DOM_Document document;
+   xercesc::DOMDocument* document = 0;
    if ( 0 == addr->ipar()[0] ) {
      document = xmlSvc()->parse(addr->par()[0].c_str());
    } else if ( 1 == addr->ipar()[0] ) {
@@ -85,7 +96,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
          << addr->ipar()[0] << "!" << endreq;
      return StatusCode::FAILURE;
    }
-   if (document.isNull()) {
+   if (0 == document) {
      log << MSG::FATAL
          << "XmlParser failed, can't convert "
          << addr->par()[1] << "!" << endreq;
@@ -94,26 +105,28 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 
    // checks version of the file
    // first find the "DDDB" or "materials" element
-   DOM_NodeList list = document.getChildNodes();
-   DOM_Element mainNode;
+   xercesc::DOMNodeList* list = document->getChildNodes();
+   xercesc::DOMElement* mainNode = 0;
    unsigned int index;
    for (index = 0;
-        index < list.getLength() && mainNode.isNull();
+        index < list->getLength() && 0 == mainNode;
         index++) {
-     if (list.item(index).getNodeType() == DOM_Node::ELEMENT_NODE) {
-       DOM_Node childNode = list.item(index);
-       DOM_Element childElement = (DOM_Element &) childNode;
+     if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+       xercesc::DOMNode* childNode = list->item(index);
+       xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
        log << MSG::VERBOSE << "found element "
-           << dom2Std (childElement.getNodeName())
+           << dom2Std (childElement->getNodeName())
            << " at top level of xml file." << endreq;
-       if (childElement.getNodeName().equals("DDDB") ||
-           childElement.getNodeName().equals("materials")) {
+       if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),
+                                         DDDBString) ||
+           0 == xercesc::XMLString::compareString(childElement->getNodeName(),
+                                         materialsString)) {
          mainNode = childElement;
        }
      }
    }
    // check it exists
-   if (mainNode.isNull()) {
+   if (0 == mainNode) {
      log << MSG::FATAL << addr->par()[1]
          << " has no DDDB element at the beginning of the file."
          << endreq;
@@ -123,12 +136,13 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
      std::string versionAttribute;
      std::string defaultMajorVersion;
      std::string defaultMinorVersion;
-     if (mainNode.getNodeName().equals("DDDB")) {
-       versionAttribute = dom2Std (mainNode.getAttribute ("version"));
+     if (0 == xercesc::XMLString::compareString
+         (mainNode->getNodeName(), DDDBString)) {
+       versionAttribute = dom2Std (mainNode->getAttribute (versionString));
        defaultMajorVersion = "3";
        defaultMinorVersion = "3";
      } else {
-       versionAttribute = dom2Std (mainNode.getAttribute ("DTD_Version"));
+       versionAttribute = dom2Std (mainNode->getAttribute (DTD_VersionString));
        defaultMajorVersion = "v5";
        defaultMinorVersion = "0";
      }
@@ -137,7 +151,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
          << versionAttribute << endreq;
      std::string::size_type dotPos = versionAttribute.find ('.');
      std::string majorVersion;
-     std::string minorVersion = "0";       
+     std::string minorVersion = "0";
      if (dotPos == std::string::npos) {
        majorVersion = versionAttribute;
      } else {
@@ -164,28 +178,28 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
    }
    // deals with macro definitions
    // get the parameters
-   DOMString macroTag ("macro");
-   DOM_NodeList macroList = mainNode.getElementsByTagName(macroTag);
+   xercesc::DOMNodeList* macroList =
+     mainNode->getElementsByTagName(macroString);
    unsigned int k;
-   for (k = 0; k < macroList.getLength(); k++) {
-     DOM_Node macroNode = macroList.item(k);
-     DOM_Element macro = (DOM_Element &) macroNode;
-     std::string name = dom2Std (macro.getAttribute ("name"));
-     std::string value = dom2Std (macro.getAttribute ("value"));
+   for (k = 0; k < macroList->getLength(); k++) {
+     xercesc::DOMNode* macroNode = macroList->item(k);
+     xercesc::DOMElement* macro = (xercesc::DOMElement*) macroNode;
+     std::string name = dom2Std (macro->getAttribute (nameString));
+     std::string value = dom2Std (macro->getAttribute (valueString));
      xmlSvc()->addParameter(name, value);
      log << MSG::DEBUG
          << "Added DDDB Macro " << name << " = " << value << endreq;
    }
    // deals with old parameter definitions
    // get the parameters
-   DOMString parameterTag ("parameter");
-   DOM_NodeList parameterList = mainNode.getElementsByTagName(parameterTag);
+   xercesc::DOMNodeList* parameterList =
+     mainNode->getElementsByTagName(parameterString);
    unsigned int kk;
-   for (kk = 0; kk < parameterList.getLength(); kk++) {
-     DOM_Node parameterNode = parameterList.item(kk);
-     DOM_Element parameter = (DOM_Element &) parameterNode;
-     std::string name = dom2Std (parameter.getAttribute ("name"));
-     std::string value = dom2Std (parameter.getAttribute ("value"));
+   for (kk = 0; kk < parameterList->getLength(); kk++) {
+     xercesc::DOMNode* parameterNode = parameterList->item(kk);
+     xercesc::DOMElement* parameter = (xercesc::DOMElement*) parameterNode;
+     std::string name = dom2Std (parameter->getAttribute (nameString));
+     std::string value = dom2Std (parameter->getAttribute (valueString));
      xmlSvc()->addParameter(name, value);
      log << MSG::DEBUG
          << "Added DDDB Parameter " << name << " = " << value << endreq;
@@ -200,9 +214,10 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
    }
   
    // finds the corresponding node in the DOM tree
-   DOMString domObjectName(objectName.c_str());
-   DOM_Element element = document.getElementById(domObjectName);
-   if (element.isNull()){
+   xercesc::DOMElement* element =
+     document->getElementById
+     (xercesc::XMLString::transcode(objectName.c_str()));
+   if (0 == element){
      log << MSG::FATAL
          << objectName << " : "
          << "No such object in file " << addr->par()[0]
@@ -226,7 +241,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
 // -----------------------------------------------------------------------
 // create the object from a DOM Element
 // -----------------------------------------------------------------------
-StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
+StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
                                              DataObject*& refpObject,
                                              IOpaqueAddress* address) {
   // creates a msg stream for debug purposes
@@ -236,11 +251,11 @@ StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
   // or condition to be short), the clid of the element needs to be checked
   // here and the proper converter loaded if we are not in the right one
   XmlGenericCnv* converter = this;
-  std::string tagName = dom2Std (element.getNodeName());
-  if (("detelem" == tagName) || ("condition" == tagName)) {
-    char *clidAttribute = element.getAttribute("classID").transcode();
-    const CLID clsID = (CLID) atol(clidAttribute);
-    delete [] clidAttribute;
+  const XMLCh* tagName = element->getNodeName();
+  if (0 == xercesc::XMLString::compareString(detelemString, tagName) ||
+      0 == xercesc::XMLString::compareString(conditionString, tagName)) {
+    const XMLCh *clidAttribute = element->getAttribute(classIDString);
+    const CLID clsID = xercesc::XMLString::parseInt(clidAttribute);
     if (clsID != this->objType()) {
       IConverter* conv = this->conversionSvc()->converter(clsID);
       if (0 == conv) {
@@ -250,7 +265,7 @@ StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
           log << MSG::ERROR;
         }
         log << "No proper converter found for classID " << clsID
-            << ", the default converter for " << tagName
+            << ", the default converter for " << dom2Std(tagName)
             << " will be used. This message may be ignored in case you are "
             << "fine with the default converter (ie you don't use the "
             << "content of the specific part)." << endreq;
@@ -276,34 +291,35 @@ StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
 
   // fills the object with its children
   // gets the children
-  DOM_NodeList childList = element.getChildNodes();
+  xercesc::DOMNodeList* childList = element->getChildNodes();
   // scans them
   unsigned int i;
-  for (i = 0; i < childList.getLength(); i++) {
-    if (childList.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+  for (i = 0; i < childList->getLength(); i++) {
+    if (childList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
       // gets the current child
-      DOM_Node childNode = childList.item(i);
-      DOM_Element childElement = (DOM_Element &) childNode;
+      xercesc::DOMNode* childNode = childList->item(i);
+      xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(childElement, refpObject, address);
       if (sc2.isFailure()) {
         log << MSG::ERROR << "unable to fill "
-            << dom2Std (element.getNodeName())
+            << dom2Std (element->getNodeName())
             << " with its child "
-            << dom2Std (childElement.getNodeName())
+            << dom2Std (childElement->getNodeName())
             << endreq;
       }
-    } else if (childList.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
+    } else if (childList->item(i)->getNodeType() ==
+               xercesc::DOMNode::TEXT_NODE) {
       // gets the current child
-      DOM_Node childNode = childList.item(i);
-      DOM_Text textNode = (DOM_Text &) childNode;
+      xercesc::DOMNode* childNode = childList->item(i);
+      xercesc::DOMText* textNode = (xercesc::DOMText*) childNode;
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(textNode, refpObject, address);
       if (sc2.isFailure()) {
         log << MSG::ERROR << "unable to fill "
-            << dom2Std(element.getNodeName())
+            << dom2Std(element->getNodeName())
             << " with text node containing : \""
-            << dom2Std (textNode.getData())
+            << dom2Std (textNode->getData())
             << endreq;
       }     
     }
@@ -344,7 +360,7 @@ StatusCode XmlGenericCnv::updateRep (IOpaqueAddress* /*pAddress*/,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlGenericCnv::i_createObj (DOM_Element /*childElement*/,
+StatusCode XmlGenericCnv::i_createObj (xercesc::DOMElement* /*childElement*/,
                                        DataObject*& /*refpObject*/) {
   return StatusCode::FAILURE;
 }
@@ -353,7 +369,7 @@ StatusCode XmlGenericCnv::i_createObj (DOM_Element /*childElement*/,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlGenericCnv::i_fillObj (DOM_Element /*childElement*/,
+StatusCode XmlGenericCnv::i_fillObj (xercesc::DOMElement* /*childElement*/,
                                      DataObject* /*refpObject*/,
                                      IOpaqueAddress* /*address*/) {
   return StatusCode::SUCCESS;
@@ -363,7 +379,7 @@ StatusCode XmlGenericCnv::i_fillObj (DOM_Element /*childElement*/,
 // -----------------------------------------------------------------------
 // Fill an object with a new text child
 // -----------------------------------------------------------------------
-StatusCode XmlGenericCnv::i_fillObj (DOM_Text /*childText*/,
+StatusCode XmlGenericCnv::i_fillObj (xercesc::DOMText* /*childText*/,
                                      DataObject* /*refpObject*/,
                                      IOpaqueAddress* /*address*/) {
   return StatusCode::SUCCESS;
@@ -487,8 +503,8 @@ IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
 // -----------------------------------------------------------------------
 // build a standard string from a DOMString
 // -----------------------------------------------------------------------
-const std::string XmlGenericCnv::dom2Std (DOMString domString) {
-  char *cString = domString.transcode();
+const std::string XmlGenericCnv::dom2Std (const XMLCh* domString) {
+  char *cString = xercesc::XMLString::transcode(domString);
   std::string stdString;
   if (cString) {
     stdString = cString;

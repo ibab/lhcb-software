@@ -1,10 +1,10 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include <dom/DOM_NodeList.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
 
 #include "DetDesc/Condition.h"
 #include "DetDescCnv/XmlBaseConditionCnv.h"
@@ -26,6 +26,12 @@ class ISvcLocator;
 XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc) :
   XmlGenericCnv (svc, XmlBaseConditionCnv::classID()) {
   m_doGenericCnv = false;
+  specificString = xercesc::XMLString::transcode("specific");
+  paramString = xercesc::XMLString::transcode("param");
+  paramVectorString = xercesc::XMLString::transcode("paramVector");
+  typeString = xercesc::XMLString::transcode("type");
+  nameString = xercesc::XMLString::transcode("name");
+  commentString = xercesc::XMLString::transcode("comment");
 }
 
 
@@ -36,6 +42,25 @@ XmlBaseConditionCnv::XmlBaseConditionCnv (ISvcLocator* svc,
                                           const CLID& clsID ) :
   XmlGenericCnv (svc, clsID) {
   m_doGenericCnv = false;
+  specificString = xercesc::XMLString::transcode("specific");
+  paramString = xercesc::XMLString::transcode("param");
+  paramVectorString = xercesc::XMLString::transcode("paramVector");
+  typeString = xercesc::XMLString::transcode("type");
+  nameString = xercesc::XMLString::transcode("name");
+  commentString = xercesc::XMLString::transcode("comment");
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlBaseConditionCnv::~XmlBaseConditionCnv () {
+  delete specificString;
+  delete paramString;
+  delete paramVectorString;
+  delete typeString;
+  delete nameString;
+  delete commentString;
 }
 
 
@@ -74,13 +99,13 @@ StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* /*childElement*/,
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element /*element*/,
+StatusCode XmlBaseConditionCnv::i_createObj (xercesc::DOMElement* /*element*/,
                                              DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
   
   // creates an object for the node found
   log << MSG::DEBUG << "Normal generic condition conversion" << endreq;
-  // std::string elementName = dom2Std (element.getAttribute("name"));
+  // const XMLCh* elementName = element->getAttribute(nameString);
   // Since the name is never used afterwars, we just don't pass it to
   // the condition object
   refpObject = new Condition (/*elementName*/);
@@ -93,7 +118,7 @@ StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element /*element*/,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
+StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
                                            DataObject* refpObject,
                                            IOpaqueAddress* address) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
@@ -101,44 +126,47 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
   // gets the object
   Condition* dataObj = dynamic_cast<Condition*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
-  if (tagName == "specific") {
+  if (0 == xercesc::XMLString::compareString(tagName, specificString)) {
     // this is the place where the user will put new elements he wants
     // to add to the default condition
     // So we just go through the children of this element and call
     // i_fillSpecificObj on them
-    DOM_NodeList specificChildren = childElement.getChildNodes();
+    xercesc::DOMNodeList* specificChildren = childElement->getChildNodes();
     unsigned int i;
-    for (i = 0; i < specificChildren.getLength(); i++) {
-      if (specificChildren.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+    for (i = 0; i < specificChildren->getLength(); i++) {
+      if (specificChildren->item(i)->getNodeType() ==
+          xercesc::DOMNode::ELEMENT_NODE) {
         // gets the current child
-        DOM_Node childNode = specificChildren.item(i);
-        StatusCode sc = i_fillSpecificObj ((DOM_Element &) childNode,
+        xercesc::DOMNode* childNode = specificChildren->item(i);
+        StatusCode sc = i_fillSpecificObj ((xercesc::DOMElement*) childNode,
                                            dataObj,
                                            address);
         if (sc.isFailure()) {
-          std::string childNodeName =
-            dom2Std (((DOM_Element &) childNode).getNodeName());
+          const XMLCh* childNodeName =
+            ((xercesc::DOMElement*) childNode)->getNodeName();
           log << MSG::WARNING << "parsing of specific child "
-              << childNodeName << " raised errors."
-              << endreq;
+              << xercesc::XMLString::transcode(childNodeName)
+              << " raised errors." << endreq;
         }
       }
     }
-  } else if ("param" == tagName || "paramVector" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(paramString, tagName) ||
+             0 == xercesc::XMLString::compareString(paramVectorString,
+                                                    tagName)) {
     // get the attributes
-    std::string type = dom2Std (childElement.getAttribute ("type"));
-    std::string name = dom2Std (childElement.getAttribute ("name"));
-    std::string comment = dom2Std (childElement.getAttribute ("comment"));
+    std::string type = dom2Std (childElement->getAttribute (typeString));
+    std::string name = dom2Std (childElement->getAttribute (nameString));
+    std::string comment = dom2Std (childElement->getAttribute (commentString));
     
     // gets the value
     std::string value;
-    DOM_NodeList nodeChildren = childElement.getChildNodes();
+    xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
-    for (i = 0; i < nodeChildren.getLength(); i++) {
-      if (nodeChildren.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
-        std::string newVal = dom2Std (nodeChildren.item(i).getNodeValue());
+    for (i = 0; i < nodeChildren->getLength(); i++) {
+      if (nodeChildren->item(i)->getNodeType() == xercesc::DOMNode::TEXT_NODE) {
+        std::string newVal = dom2Std (nodeChildren->item(i)->getNodeValue());
         unsigned int begin = 0;
         while (begin < newVal.length() && isspace(newVal[begin])) {
           begin++;
@@ -154,7 +182,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
       }
     }
 
-    if ("param" == tagName) {
+    if (0 == xercesc::XMLString::compareString(paramString, tagName)) {
       // adds the new parameter to the detectorElement
       log << MSG::DEBUG << "Adding user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
@@ -179,7 +207,8 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
                                    comment,
                                    value);
       }
-    } else if ("paramVector" == tagName) {
+    } else if (0 == xercesc::XMLString::compareString
+               (paramVectorString, tagName)) {
       // parses the value
       std::vector<std::string> vect;
 #if defined (__GNUC__) && ( __GNUC__ <= 2 )
@@ -232,9 +261,8 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
-
   // returns
   return StatusCode::SUCCESS;
 } // end i_fillObj

@@ -40,7 +40,7 @@ protected:
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+  virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         DetectorElement* refpObject,
                                         IOpaqueAddress* address);
 

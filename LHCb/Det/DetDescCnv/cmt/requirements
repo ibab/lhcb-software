@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.1.1.1 2003-04-23 13:59:45 sponce Exp $ 
+# $Id: requirements,v 1.2 2003-04-24 09:15:33 sponce Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v1r0
+version       v2r0
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src
@@ -13,8 +13,8 @@ include_dirs  $(DETDESCCNVROOT)
 use           GaudiKernel       v13r*
 use           DetDesc           v12r*      Det
 use           XmlTools          v1r0       Tools
-#use           CLHEP             v2r1800*
-use           XERCES            v2r160*
+use           CLHEP             v2r1800*
+use           XERCES            v2r220*
 
 # =========== constituents =====================================================
 library       DetDescCnvLib        Lib/*.cpp

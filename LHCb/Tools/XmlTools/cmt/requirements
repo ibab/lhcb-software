@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.1.1.1 2003-04-23 13:38:46 sponce Exp $ 
+# $Id: requirements,v 1.2 2003-04-24 09:12:11 sponce Exp $ 
 # =============================================================================
 package       XmlTools
-version       v1r0
+version       v2r0
 
 # =========== structure =======================================================
 branches      XmlTools doc cmt src
@@ -12,7 +12,7 @@ include_dirs  $(XMLTOOLSROOT)
 # =========== dependencies ====================================================
 use           GaudiKernel       v13r*
 use           CLHEP             v2r1800*
-use           XERCES            v2r160*
+use           XERCES            v2r220*
 
 # =========== constituents =====================================================
 library       XmlTools           component/*.cpp

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.h,v 1.2 2003-04-24 09:15:35 sponce Exp $
 
 #ifndef     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H
 #define     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H 1 
@@ -43,25 +43,25 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
   /**
    * Default destructor
    */
-  virtual ~XmlTabulatedPropertyCnv() {};
+  virtual ~XmlTabulatedPropertyCnv();
 
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
 
   /** This fills the current object for its child childElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element that addr represents and from which we
+   * @param element the DOMElement that addr represents and from which we
    * will get the informations to creates new addresses
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
@@ -72,7 +72,7 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Text childText,
+  virtual StatusCode i_fillObj (xercesc::DOMText* childText,
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
@@ -91,6 +91,19 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
 
   /// user defined unit for the y axe
   double m_yunit;
+
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* nameString;
+  const XMLCh* typeString;
+  const XMLCh* xaxisString;
+  const XMLCh* yaxisString;
+  const XMLCh* xunitString;
+  const XMLCh* yunitString;
+  const XMLCh* entryString;
+  const XMLCh* xString;
+  const XMLCh* yString;
 
 };
 

@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlParserSvc.h,v 1.1.1.1 2003-04-23 13:38:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlParserSvc.h,v 1.2 2003-04-24 09:12:12 sponce Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
 // Include files
 #include <map>
 
-#include <sax/ErrorHandler.hpp>
-#include <sax/SAXParseException.hpp>
+#include <xercesc/sax/ErrorHandler.hpp>
+#include <xercesc/sax/SAXParseException.hpp>
 
 #include <GaudiKernel/Service.h> 
 
@@ -25,7 +25,7 @@ template <class TYPE> class SvcFactory;
  */
 class XmlParserSvc : public Service,
                      virtual public IXmlParserSvc,
-                     virtual public ErrorHandler {
+                     virtual public xercesc::ErrorHandler {
   
   /// Friend needed
   friend class SvcFactory<XmlParserSvc>;
@@ -62,7 +62,7 @@ public:
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
-  virtual DOM_Document parse (const char* fileName);
+  virtual xercesc::DOMDocument* parse (const char* fileName);
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
@@ -70,7 +70,7 @@ public:
    * @param source the string to parse
    * @return the document issued from the parsing
    */
-  virtual DOM_Document parseString (std::string source);
+  virtual xercesc::DOMDocument* parseString (std::string source);
 
   /**
    * This clears the cache of previously parsed xml files.
@@ -89,7 +89,7 @@ public:
    * @param exception the warning information encapsulated in a SAX parse
    * exception.
    */
-  virtual void warning( const SAXParseException& exception );
+  virtual void warning( const xercesc::SAXParseException& exception );
 
   /**
    * Receives notification of a recoverable error. 
@@ -100,7 +100,7 @@ public:
    * @param exception the error information encapsulated in a SAX parse
    * exception.
    */
-  virtual void error( const SAXParseException& exception );
+  virtual void error( const xercesc::SAXParseException& exception );
 
   /**
    * Receives notification of a non-recoverable error. 
@@ -111,7 +111,7 @@ public:
    * @param exception the error information encapsulated in a SAX parse
    * exception. 
    */
-  virtual void fatalError( const SAXParseException& exception );
+  virtual void fatalError( const xercesc::SAXParseException& exception );
 
   /**
    * Resets the Error handler object on its reuse. 
@@ -131,7 +131,7 @@ private:
    * @param fileName the name of the file that was just parsed
    * @param document the document that is the result of the parsing
    */
-  void cacheItem (std::string fileName, DOM_Document document);
+  void cacheItem (std::string fileName, xercesc::DOMDocument* document);
 
   /**
    * this only increases the age of the cache.
@@ -144,7 +144,7 @@ private:
 private:
 
   /// the actual DOM parser
-  DOMParser* m_parser;
+  xercesc::XercesDOMParser* m_parser;
 
   /**
    * this is a parameter that defines the cache behavior.
@@ -164,7 +164,7 @@ private:
    * and if it has the smallest birthDate+cacheBehavior*utility score.
    */
   typedef struct _cachedItem {
-    DOM_Document document;
+    xercesc::DOMDocument* document;
     unsigned int birthDate, utility;
   } cachedItem;
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 // include files
 #include <stdlib.h>
@@ -20,11 +20,11 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 
-#include <dom/DOMString.hpp>
-#include <dom/DOM_Node.hpp>
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_NodeList.hpp>
-#include <dom/DOM_NamedNodeMap.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/dom/DOMNode.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
 
 #include "DetDesc/CLIDCondition.h"
 #include "DetDesc/CLIDDetectorElement.h"
@@ -54,13 +54,66 @@ const ICnvFactory& XmlCatalogCnvFactory = s_factory;
 // ------------------------------------------------------------------------
 XmlCatalogCnv::XmlCatalogCnv (ISvcLocator* svc) :
   XmlGenericCnv (svc, CLID_Catalog) {
+  isotopeString = xercesc::XMLString::transcode("isotope");
+  materialString = xercesc::XMLString::transcode("material");
+  catalogString = xercesc::XMLString::transcode("catalog");
+  tabpropertyString = xercesc::XMLString::transcode("tabproperty");
+  surfaceString = xercesc::XMLString::transcode("surface");
+  logvolString = xercesc::XMLString::transcode("logvol");
+  detelemString = xercesc::XMLString::transcode("detelem");
+  elementString = xercesc::XMLString::transcode("element");
+  conditionString = xercesc::XMLString::transcode("condition");
+
+  isotoperefString = xercesc::XMLString::transcode("isotoperef");
+  materialrefString = xercesc::XMLString::transcode("materialref");
+  catalogrefString = xercesc::XMLString::transcode("catalogref");
+  tabpropertyrefString = xercesc::XMLString::transcode("tabpropertyref");
+  surfacerefString = xercesc::XMLString::transcode("surfaceref");
+  logvolrefString = xercesc::XMLString::transcode("logvolref");
+  detelemrefString = xercesc::XMLString::transcode("detelemref");
+  elementrefString = xercesc::XMLString::transcode("elementref");
+  conditionrefString = xercesc::XMLString::transcode("conditionref");
+
+  refString = xercesc::XMLString::transcode("ref");
+  hrefString = xercesc::XMLString::transcode("href");
+  nameString = xercesc::XMLString::transcode("name");
+}
+
+
+// -----------------------------------------------------------------------
+// Constructor
+// ------------------------------------------------------------------------
+XmlCatalogCnv::~XmlCatalogCnv () {
+  delete isotopeString;
+  delete materialString;
+  delete catalogString;
+  delete tabpropertyString;
+  delete surfaceString;
+  delete logvolString;
+  delete detelemString;
+  delete elementString;
+  delete conditionString;
+
+  delete isotoperefString;
+  delete materialrefString;
+  delete catalogrefString;
+  delete tabpropertyrefString;
+  delete surfacerefString;
+  delete logvolrefString;
+  delete detelemrefString;
+  delete elementrefString;
+  delete conditionrefString;
+
+  delete refString;
+  delete hrefString;
+  delete nameString;
 }
 
 
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlCatalogCnv::i_createObj (DOM_Element /*element*/,
+StatusCode XmlCatalogCnv::i_createObj (xercesc::DOMElement* /*element*/,
                                        DataObject*& refpObject) {
   // creates an object for the node found
   refpObject = new DataObject();
@@ -73,29 +126,56 @@ StatusCode XmlCatalogCnv::i_createObj (DOM_Element /*element*/,
 // -----------------------------------------------------------------------
 // get the CLID of a given element
 // -----------------------------------------------------------------------
-CLID XmlCatalogCnv::getCLID (DOM_Element element) {
+CLID XmlCatalogCnv::getCLID (xercesc::DOMElement* element) {
   // gets the element name
-  std::string tagName (dom2Std (element.getNodeName()));
+  const XMLCh* tagName = element->getNodeName();
   // compare the tagName to a set of known tags
-  if (("isotope" == tagName) || ("isotoperef" == tagName)) {
+  if ((0 == xercesc::XMLString::compareString(isotopeString, tagName)) ||
+      (0 == xercesc::XMLString::compareString(isotoperefString, tagName))) {
     return CLID_Isotope;
-  } else if (("element" == tagName) || ("elementref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (elementString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (elementrefString, tagName))) {
     return CLID_Element;
-  } else if (("material" == tagName) || ("materialref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (materialString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (materialrefString, tagName))) {
     return CLID_Mixture;
-  } else if (("catalog" == tagName) || ("catalogref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (catalogString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (catalogrefString, tagName))) {
     return CLID_Catalog;
-  } else if (("tabproperty" == tagName) || ("tabpropertyref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (tabpropertyString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (tabpropertyrefString, tagName))) {
     return CLID_TabulatedProperty;
-  } else if (("surface" == tagName) || ("surfaceref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (surfaceString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (surfacerefString, tagName))) {
     return CLID_Surface;
-  } else if (("logvol" == tagName) || ("logvolref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (logvolString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (logvolrefString, tagName))) {
     return CLID_LVolume;
-  } else if (("detelem" == tagName) || ("detelemref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (detelemString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (detelemrefString, tagName))) {
     return CLID_DetectorElement;
-  } else if (("condition" == tagName) || ("conditionref" == tagName)) {
+  } else if ((0 == xercesc::XMLString::compareString
+              (conditionString, tagName)) ||
+             (0 == xercesc::XMLString::compareString
+              (conditionrefString, tagName))) {
     return CLID_Condition;
   } else {
+
+
     // the tag is unknown : return -1
     return CLID (-1);
   }
@@ -104,43 +184,53 @@ CLID XmlCatalogCnv::getCLID (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlCatalogCnv::i_fillObj (DOM_Element childElement,
+StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
                                      DataObject* /*refpObject*/,
                                      IOpaqueAddress* address) {
   MsgStream log( msgSvc(), "XmlCatalogCnv" );
   // the registry entry corresponding to the current object
   IRegistry* searchedDir = address->registry();
   // gets the element name
-  std::string tagName (dom2Std (childElement.getNodeName()));
+  const XMLCh* tagName = childElement->getNodeName();
   // first get the CLID and checks a converter exists for this type
   CLID clsID = getCLID (childElement);
   if (CLID (-1) == clsID) {
     // bad CLID
     MsgStream log (msgSvc(), "XmlCatalogCnv");
-    log << MSG::ERROR << tagName << " : unable to find a CLID for this tag."
+    log << MSG::ERROR << xercesc::XMLString::transcode(tagName)
+        << " : unable to find a CLID for this tag."
         << " This tag may be forbiden as child of catalog."
         << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::VERBOSE << "tag is " << tagName << ", clsID is "
-      << clsID << endreq;
+  log << MSG::VERBOSE << "tag is " << xercesc::XMLString::transcode(tagName)
+      << ", clsID is " << clsID << endreq;
   checkConverterExistence(clsID);
   StatusCode sc;
   std::string entryName;
   // We will create an address for this element
   IOpaqueAddress* xmlAddr = 0;
   // take care whether it is a reference or not
-  if ("ref" == tagName.substr(tagName.length()-3,3)) {
+  XMLCh* tagNameEnd = new XMLCh[4];
+  xercesc::XMLString::subString
+    (tagNameEnd,
+     tagName,
+     xercesc::XMLString::stringLen(tagName) - 3,
+     xercesc::XMLString::stringLen(tagName));
+  if (0 == xercesc::XMLString::compareString(refString, tagNameEnd)) {
     // gets the reference value and the position of the '#' in it
-    std::string referenceValue = dom2Std (childElement.getAttribute ("href"));
+    std::string referenceValue =
+      dom2Std (childElement->getAttribute (hrefString));
     // creates the address
     xmlAddr = createAddressForHref (referenceValue, clsID, address);
   } else {
     // builds an entryName
-    entryName = std::string("/") + dom2Std (childElement.getAttribute ("name"));
+    entryName =
+      std::string("/") + dom2Std (childElement->getAttribute (nameString));
     // Then builds an XmlAdress
     xmlAddr = createXmlAddress (address->par()[0], entryName, clsID);
   }
+  delete tagNameEnd;
   if (sc.isSuccess()) {
     // Now we have a new entry name and a corresponding xml address,
     // just add the new entry to the current registry entry

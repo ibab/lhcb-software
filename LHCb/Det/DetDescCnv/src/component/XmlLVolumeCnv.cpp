@@ -1,8 +1,11 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/ICnvManager.h"
+// Revision 1.24  2003/01/17 14:03:40  sponce
+// support for gcc 3.2
+//
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -34,6 +37,8 @@
 #include <float.h>
 #include <map>
 
+#include <xercesc/dom/DOMNodeList.hpp>
+
 #include "XmlLVolumeCnv.h"
 
 
@@ -49,16 +54,148 @@ const ICnvFactory& XmlLVolumeCnvFactory = s_factoryLVolume;
 // Constructor
 // ------------------------------------------------------------------------
 XmlLVolumeCnv::XmlLVolumeCnv (ISvcLocator* svc) :
-  XmlGenericCnv (svc, CLID_LVolume) {}
+  XmlGenericCnv (svc, CLID_LVolume) {
+  unionString = xercesc::XMLString::transcode("union");
+  subtractionString = xercesc::XMLString::transcode("subtraction");
+  intersectionString = xercesc::XMLString::transcode("intersection");
+  boxString = xercesc::XMLString::transcode("box");
+  trdString = xercesc::XMLString::transcode("trd");
+  trapString = xercesc::XMLString::transcode("trap");
+  consString = xercesc::XMLString::transcode("cons");
+  polyconeString = xercesc::XMLString::transcode("polycone");
+  tubsString = xercesc::XMLString::transcode("tubs");
+  sphereString = xercesc::XMLString::transcode("sphere");
+  transformationString = xercesc::XMLString::transcode("transformation");
+  posXYZString = xercesc::XMLString::transcode("posXYZ");
+  posRPhiZString = xercesc::XMLString::transcode("posRPhiZ");
+  posRThPhiString = xercesc::XMLString::transcode("posRThPhi");
+  rotXYZString = xercesc::XMLString::transcode("rotXYZ");
+  rotAxisString = xercesc::XMLString::transcode("rotAxis");
+  paramphysvolString = xercesc::XMLString::transcode("paramphysvol");
+  paramphysvol2DString = xercesc::XMLString::transcode("paramphysvol2D");
+  paramphysvol3DString = xercesc::XMLString::transcode("paramphysvol3D");
+  materialString = xercesc::XMLString::transcode("material");
+  magfieldString = xercesc::XMLString::transcode("magfield");
+  sensdetString = xercesc::XMLString::transcode("sensdet");
+  nameString = xercesc::XMLString::transcode("name");
+  physvolString = xercesc::XMLString::transcode("physvol");
+  surfString = xercesc::XMLString::transcode("surf");
+  logvolString = xercesc::XMLString::transcode("logvol");
+  numberString = xercesc::XMLString::transcode("number");
+  addressString = xercesc::XMLString::transcode("address");
+  outerRadiusMZString = xercesc::XMLString::transcode("outerRadiusMZ");
+  outerRadiusPZString = xercesc::XMLString::transcode("outerRadiusPZ");
+  innerRadiusMZString = xercesc::XMLString::transcode("innerRadiusMZ");
+  innerRadiusPZString = xercesc::XMLString::transcode("innerRadiusPZ");
+  outerRadiusString = xercesc::XMLString::transcode("outerRadius");
+  innerRadiusString = xercesc::XMLString::transcode("innerRadius");
+  sizeXString = xercesc::XMLString::transcode("sizeX");
+  sizeX1String = xercesc::XMLString::transcode("sizeX1");
+  sizeX2String = xercesc::XMLString::transcode("sizeX2");
+  sizeX3String = xercesc::XMLString::transcode("sizeX3");
+  sizeX4String = xercesc::XMLString::transcode("sizeX4");
+  sizeYString = xercesc::XMLString::transcode("sizeY");
+  sizeY1String = xercesc::XMLString::transcode("sizeY1");
+  sizeY2String = xercesc::XMLString::transcode("sizeY2");
+  sizeZString = xercesc::XMLString::transcode("sizeZ");
+  thetaString = xercesc::XMLString::transcode("theta");
+  phiString = xercesc::XMLString::transcode("phi");
+  alp1String = xercesc::XMLString::transcode("alp1");
+  alp2String = xercesc::XMLString::transcode("alp2");
+  xString = xercesc::XMLString::transcode("x");
+  yString = xercesc::XMLString::transcode("y");
+  zString = xercesc::XMLString::transcode("z");
+  rString = xercesc::XMLString::transcode("r");
+  axThetaString = xercesc::XMLString::transcode("axTheta");
+  axPhiString = xercesc::XMLString::transcode("axPhi");
+  angleString = xercesc::XMLString::transcode("angle");
+  zplaneString = xercesc::XMLString::transcode("zplane");
+  startThetaAngleString = xercesc::XMLString::transcode("startThetaAngle");
+  deltaThetaAngleString = xercesc::XMLString::transcode("deltaThetaAngle");
+  startPhiAngleString = xercesc::XMLString::transcode("startPhiAngle");
+  deltaPhiAngleString = xercesc::XMLString::transcode("deltaPhiAngle");
+  rotXString = xercesc::XMLString::transcode("rotX");
+  rotYString = xercesc::XMLString::transcode("rotY");
+  rotZString = xercesc::XMLString::transcode("rotZ");
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlLVolumeCnv::~XmlLVolumeCnv () {
+  delete unionString;
+  delete subtractionString;
+  delete intersectionString;
+  delete boxString;
+  delete trdString;
+  delete trapString;
+  delete consString;
+  delete polyconeString;
+  delete tubsString;
+  delete sphereString;
+  delete transformationString;
+  delete posXYZString;
+  delete posRPhiZString;
+  delete posRThPhiString;
+  delete rotXYZString;
+  delete rotAxisString;
+  delete paramphysvolString;
+  delete paramphysvol2DString;
+  delete paramphysvol3DString;
+  delete materialString;
+  delete magfieldString;
+  delete sensdetString;
+  delete nameString;
+  delete physvolString;
+  delete surfString;
+  delete logvolString;
+  delete numberString;
+  delete addressString;
+  delete outerRadiusMZString;
+  delete outerRadiusPZString;
+  delete innerRadiusMZString;
+  delete innerRadiusPZString;
+  delete outerRadiusString;
+  delete innerRadiusString;
+  delete sizeXString;
+  delete sizeX1String;
+  delete sizeX2String;
+  delete sizeX3String;
+  delete sizeX4String;
+  delete sizeYString;
+  delete sizeY1String;
+  delete sizeY2String;
+  delete sizeZString;
+  delete thetaString;
+  delete phiString;
+  delete alp1String;
+  delete alp2String;
+  delete xString;
+  delete yString;
+  delete zString;
+  delete rString;
+  delete axThetaString;
+  delete axPhiString;
+  delete angleString;
+  delete zplaneString;
+  delete startThetaAngleString;
+  delete deltaThetaAngleString;
+  delete startPhiAngleString;
+  delete deltaPhiAngleString;
+  delete rotXString;
+  delete rotYString;
+  delete rotZString;
+}
 
 
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a boolean solid
 // -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isBooleanSolid (std::string tag) {
-  if ("union" == tag ||
-      "subtraction" == tag ||
-      "intersection" == tag) {
+bool XmlLVolumeCnv::isBooleanSolid (const XMLCh* tag) {
+  if (0 == xercesc::XMLString::compareString(unionString, tag) ||
+      0 == xercesc::XMLString::compareString(subtractionString, tag) ||
+      0 == xercesc::XMLString::compareString(intersectionString, tag)) {
     return true;
   }
   return false;
@@ -68,14 +205,14 @@ bool XmlLVolumeCnv::isBooleanSolid (std::string tag) {
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a simple solid
 // -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isSimpleSolid (std::string tag) {
-  if ("box" == tag ||
-      "trd" == tag ||
-      "trap" == tag ||
-      "cons" == tag ||
-      "polycone" == tag ||
-      "tubs" == tag ||
-      "sphere" == tag) {
+bool XmlLVolumeCnv::isSimpleSolid (const XMLCh* tag) {
+  if (0 == xercesc::XMLString::compareString(boxString, tag) ||
+      0 == xercesc::XMLString::compareString(trdString, tag) ||
+      0 == xercesc::XMLString::compareString(trapString, tag) ||
+      0 == xercesc::XMLString::compareString(consString, tag) ||
+      0 == xercesc::XMLString::compareString(polyconeString, tag) ||
+      0 == xercesc::XMLString::compareString(tubsString, tag) ||
+      0 == xercesc::XMLString::compareString(sphereString, tag)) {
     return true;
   }
   return false;
@@ -85,7 +222,7 @@ bool XmlLVolumeCnv::isSimpleSolid (std::string tag) {
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a solid
 // -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isSolid (std::string tag) {
+bool XmlLVolumeCnv::isSolid (const XMLCh* tag) {
   if (isSimpleSolid(tag) ||
       isBooleanSolid(tag)) {
     return true;
@@ -97,13 +234,13 @@ bool XmlLVolumeCnv::isSolid (std::string tag) {
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a transformation
 // -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isTransformation (std::string tag) {
-  if ("transformation" == tag ||
-      "posXYZ" == tag ||
-      "posRPhiZ" == tag ||
-      "posRThPhi" == tag ||
-      "rotXYZ" == tag ||
-      "rotAxis" == tag) {
+bool XmlLVolumeCnv::isTransformation (const XMLCh* tag) {
+  if (0 == xercesc::XMLString::compareString(transformationString, tag) ||
+      0 == xercesc::XMLString::compareString(posXYZString, tag) ||
+      0 == xercesc::XMLString::compareString(posRPhiZString, tag) ||
+      0 == xercesc::XMLString::compareString(posRThPhiString, tag) ||
+      0 == xercesc::XMLString::compareString(rotXYZString, tag) ||
+      0 == xercesc::XMLString::compareString(rotAxisString, tag)) {
     return true;
   }
   return false;
@@ -113,10 +250,10 @@ bool XmlLVolumeCnv::isTransformation (std::string tag) {
 // -----------------------------------------------------------------------
 // Tests whether the tag denotes a parametrized physical volume
 // -----------------------------------------------------------------------
-bool XmlLVolumeCnv::isParamphysvol (std::string tag) {
-  if ("paramphysvol" == tag ||
-      "paramphysvol2D" == tag ||
-      "paramphysvol3D" == tag) {
+bool XmlLVolumeCnv::isParamphysvol (const XMLCh* tag) {
+  if (0 == xercesc::XMLString::compareString(paramphysvolString, tag) ||
+      0 == xercesc::XMLString::compareString(paramphysvol2DString, tag) ||
+      0 == xercesc::XMLString::compareString(paramphysvol3DString, tag)) {
     return true;
   }
   return false;
@@ -126,20 +263,20 @@ bool XmlLVolumeCnv::isParamphysvol (std::string tag) {
 // -----------------------------------------------------------------------
 // returns a string locating the element
 // -----------------------------------------------------------------------
-std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
+std::string XmlLVolumeCnv::locateElement (xercesc::DOMElement* element) {
   // tries to find a parent element with a name
-  DOM_Node parentNode = element;
-  DOM_Element parentElement;
+  xercesc::DOMNode* parentNode = element;
+  xercesc::DOMElement* parentElement;
   std::string parentName;
   bool hasName = false;
   while (!hasName) {
-    parentNode = parentNode.getParentNode();
-    if (parentNode == 0) {
+    parentNode = parentNode->getParentNode();
+    if (0 == parentNode) {
       break;
     }
-    if (parentNode.getNodeType() == DOM_Node::ELEMENT_NODE) {
-      parentElement = (DOM_Element&) parentNode;
-      parentName = dom2Std (parentElement.getAttribute("name"));
+    if (parentNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+      parentElement = (xercesc::DOMElement*) parentNode;
+      parentName = dom2Std (parentElement->getAttribute(nameString));
       if (parentName != "") {
         hasName = true;
       }
@@ -150,12 +287,12 @@ std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
   if (hasName) {
     char buffer[32];
     parentNode = element;
-    DOM_Node grandParent = element.getParentNode();
+    xercesc::DOMNode* grandParent = element->getParentNode();
     while (parentNode != parentElement) {
-      DOM_NodeList list = grandParent.getChildNodes();
+      xercesc::DOMNodeList* list = grandParent->getChildNodes();
       unsigned int i = 0;
-      for (i = 0; i < list.getLength(); i++) {
-        if (parentNode == list.item(i)) {
+      for (i = 0; i < list->getLength(); i++) {
+        if (parentNode == list->item(i)) {
           break;
         }
       }
@@ -163,20 +300,20 @@ std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
       result = "child number ";
       result += _itoa(i+1, buffer, 10);
       result += " (";
-      result += dom2Std (parentNode.getNodeName());
+      result += dom2Std (parentNode->getNodeName());
       result += ") of ";
       parentNode = grandParent;
-      grandParent = parentNode.getParentNode();
+      grandParent = parentNode->getParentNode();
     }
-    result += dom2Std (parentElement.getNodeName());
+    result += dom2Std (parentElement->getNodeName());
     result += " ";
     result += parentName;
   } else {
     // else just give the name of the parent
-    parentNode = element.getParentNode();
+    parentNode = element->getParentNode();
     if (parentNode != 0) {
       result += "tag ";
-      result += dom2Std (parentNode.getNodeName());
+      result += dom2Std (parentNode->getNodeName());
     } else {
       result += "top node";
     }
@@ -219,36 +356,36 @@ std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
+StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
                                              DataObject*&       refpObject ,
                                              IOpaqueAddress* /* address */ ) 
 {
   // gets the attributes
-  std::string materialName = dom2Std (element.getAttribute ("material"));
-  std::string magFieldName = dom2Std (element.getAttribute ("magfield"));
-  std::string sensDetName = dom2Std (element.getAttribute ("sensdet"));
-  std::string volName = dom2Std (element.getAttribute ("name"));
+  std::string materialName = dom2Std (element->getAttribute (materialString));
+  std::string magFieldName = dom2Std (element->getAttribute (magfieldString));
+  std::string sensDetName = dom2Std (element->getAttribute (sensdetString));
+  std::string volName = dom2Std (element->getAttribute (nameString));
 
   // processes the children. The dtd says we should find
   // ((%solid;, %transformation;?)?, (physvol | paramphysvol | surf)*)
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
   // get the first one, it should be a solid, a physical volume, a
   // parametrized physical volume, a surface or nothing
   unsigned int i = 0;
-  while (i < childNodes.getLength() && 
-         childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+  while (i < childNodes->getLength() && 
+         childNodes->item(i)->getNodeType() != xercesc::DOMNode::ELEMENT_NODE) {
     i += 1;
   }
 
   // if no child, return
-  if (i >= childNodes.getLength()) {
+  if (i >= childNodes->getLength()) {
     return StatusCode::SUCCESS;
   }
 
   // if there is a child, gets it as an element and gets its name
-  DOM_Node childNode = childNodes.item(i);
-  DOM_Element childElement = (DOM_Element &) childNode;
-  std::string tagName = dom2Std (childElement.getNodeName());
+  xercesc::DOMNode* childNode = childNodes->item(i);
+  xercesc::DOMElement* childElement = (xercesc::DOMElement *) childNode;
+  const XMLCh* tagName = childElement->getNodeName();
 
   // try to see if it is a solid and deal with it and a possible
   // transformation if yes
@@ -258,15 +395,16 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
     solid = dealWithSolid (childElement);
     // finds the next child
     i += 1;
-    while (i < childNodes.getLength() && 
-           childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+    while (i < childNodes->getLength() && 
+           childNodes->item(i)->getNodeType() !=
+           xercesc::DOMNode::ELEMENT_NODE) {
       i += 1;
     }
     // if there is more children, try to see if it is a transformation
-    if (i < childNodes.getLength()) {
-      childNode = childNodes.item(i);
-      childElement = (DOM_Element &) childNode;
-      std::string  childTagName = dom2Std (childElement.getNodeName());
+    if (i < childNodes->getLength()) {
+      childNode = childNodes->item(i);
+      childElement = (xercesc::DOMElement*) childNode;
+      const XMLCh* childTagName = childElement->getNodeName();
       if (isTransformation(childTagName)) {
         // deal with the transformation itself
         HepTransform3D* transformation = dealWithTransformation (element, &i);
@@ -275,15 +413,17 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
         MsgStream log(msgSvc(), "XmlLVolumeCnv" );
         log << MSG::WARNING
             << "In logvol " << volName << ", a transformation ("
-            << childTagName << ") is applied to the first solid (" << tagName
+            << childTagName << ") is applied to the first solid ("
+            << xercesc::XMLString::transcode(tagName)
             << "). This functionnality is not implemented yet. The "
             << " transformation will be ignored." << endreq;
         // frees the memory
         delete (transformation);
         transformation = 0;
         // finds the next child
-        while (i < childNodes.getLength() && 
-               childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+        while (i < childNodes->getLength() && 
+               childNodes->item(i)->getNodeType() !=
+               xercesc::DOMNode::ELEMENT_NODE) {
           i += 1;
         }
       }
@@ -320,12 +460,12 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
   // Whatever we found up to now, the next child to process is at index i.
   // The dtd says that we will find (physvol | paramphysvol | surf)* now
   // So let's deal with it.
-  while (i < childNodes.getLength()) {
-    childNode = childNodes.item(i);
-    childElement = (DOM_Element &) childNode;
-    tagName = dom2Std (childElement.getNodeName());
+  while (i < childNodes->getLength()) {
+    childNode = childNodes->item(i);
+    childElement = (xercesc::DOMElement*) childNode;
+    tagName = childElement->getNodeName();
     // dispatches according to the tagname
-    if ("physvol" == tagName) {
+    if (0 == xercesc::XMLString::compareString(physvolString, tagName)) {
       // deals with a physical volume, adds it to the logical volume
       // and frees the memory
       PVolumeItem* volume = dealWithPhysvol(childElement);
@@ -373,7 +513,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
       }
       delete (volumes);
       volumes = 0;
-    } else if ("surf" == tagName) {
+    } else if (0 == xercesc::XMLString::compareString(surfString, tagName)) {
       // deals with a surface and adds it to the logical volume
       std::string address = dealWithSurf(childElement);
       long linkID = dataObj->linkMgr()->addLink(address, 0);
@@ -384,15 +524,16 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       log << MSG::WARNING
           << "This tag makes no sense to LVolume " << volName
-          << " : " << tagName
+          << " : " << xercesc::XMLString::transcode(tagName)
           << ". It will be ignored" << endreq;
       return StatusCode::FAILURE;
     }
 
     //XmlLVolumeCnv:: gets the next child
     i += 1;
-    while (i < childNodes.getLength() && 
-           childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+    while (i < childNodes->getLength() && 
+           childNodes->item(i)->getNodeType() !=
+           xercesc::DOMNode::ELEMENT_NODE) {
       i += 1;
     }
   }
@@ -405,13 +546,13 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element        element    ,
 // Deal with Physical volume
 // -----------------------------------------------------------------------
 XmlLVolumeCnv::PVolumeItem*
-XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
+XmlLVolumeCnv::dealWithPhysvol (xercesc::DOMElement* element) {
   // gets attributes
-  std::string nameAttribute = dom2Std (element.getAttribute ("name"));
-  std::string logvolAttribute = dom2Std (element.getAttribute ("logvol"));
+  std::string nameAttribute = dom2Std (element->getAttribute (nameString));
+  std::string logvolAttribute = dom2Std (element->getAttribute (logvolString));
 
   // gets the children
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
 
   // deal with a possible transformation inside element
   HepTransform3D* transformation = 0;
@@ -420,23 +561,24 @@ XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
   unsigned int i = 0;
   while ((transformation == 0 ||
           *transformation == HepTransform3D::Identity)
-         && i < childNodes.getLength()) {    
-    while (i < childNodes.getLength() && 
-           childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+         && i < childNodes->getLength()) {    
+    while (i < childNodes->getLength() && 
+           childNodes->item(i)->getNodeType() !=
+           xercesc::DOMNode::ELEMENT_NODE) {
       i += 1;
     }
     // is there is one, deal with the transformation
-    if (i < childNodes.getLength()) {
+    if (i < childNodes->getLength()) {
       transformation = dealWithTransformation (element, &i);
     }
   }
   // if there are still children after the transformation,
   // raise an error message
-  while (i < childNodes.getLength() && 
-         childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+  while (i < childNodes->getLength() && 
+         childNodes->item(i)->getNodeType() != xercesc::DOMNode::ELEMENT_NODE) {
     i += 1;
   }
-  if (i < childNodes.getLength()) {
+  if (i < childNodes->getLength()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING
         << "There are too many children in physical volume "
@@ -474,21 +616,23 @@ XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
 // Deal with parametrized physical volume
 // -----------------------------------------------------------------------
 XmlLVolumeCnv::PVolumes*
-XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element) {
+XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element) {
   // gets the element's name
-  std::string tagName = dom2Std (element.getNodeName());
+  const XMLCh* tagName = element->getNodeName();
   // dispatches, based on the name
-  if ("paramphysvol" == tagName) {
+  if (0 == xercesc::XMLString::compareString(paramphysvolString, tagName)) {
     return dealWithParamphysvol (element, 1);
-  } else if ("paramphysvol2D" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (paramphysvol2DString, tagName)) {
     return dealWithParamphysvol (element, 2);
-  } else if ("paramphysvol3D" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (paramphysvol3DString, tagName)) {
     return dealWithParamphysvol (element, 3);
   } else {
     // unknown tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
-        << " : the tag " << tagName
+        << " : the tag " << xercesc::XMLString::transcode(tagName)
         << " does no denote a parametrized physical volume. "
         << "It will be ignored" << endreq;
   }
@@ -500,7 +644,8 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element) {
 // Deal with parametrized physical volume
 // -----------------------------------------------------------------------
 XmlLVolumeCnv::PVolumes*
-XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
+XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
+                                     unsigned int nD) {
   // nD should be positive
   if (0 == nD) {
     return 0;
@@ -509,7 +654,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
   // gets attributes
   std::vector<std::string> numberAttributes(nD);
   if (1 == nD) {
-    numberAttributes[0] = dom2Std (element.getAttribute ("number"));
+    numberAttributes[0] = dom2Std (element->getAttribute (numberString));
   } else {
     unsigned int i = 0;
     for (i = 0; i < nD; i++) {
@@ -523,7 +668,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
       char *resstr = new char[len+1];
       strncpy(resstr,ost.str(),len);
       resstr[len] = 0;
-      DOMString attrName = DOMString::transcode (resstr); 
+      const XMLCh* attrName = xercesc::XMLString::transcode (resstr); 
       delete [] resstr;
 #else
       std::ostringstream ost;
@@ -532,10 +677,10 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
       char *resstr = new char[len+1];
       strncpy(resstr,ost.str().c_str(),len);
       resstr[len] = 0;
-      DOMString attrName = DOMString::transcode (resstr); 
+      const XMLCh* attrName = xercesc::XMLString::transcode (resstr); 
       delete [] resstr;
 #endif
-      numberAttributes[i] = dom2Std (element.getAttribute (attrName));
+      numberAttributes[i] = dom2Std (element->getAttribute (attrName));
     }
   }
 
@@ -566,21 +711,22 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
 
   // deals with the children of the tag. The dtd says it should be
   // (physvol | paramphysvol), %transformation;*nD
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
   // finds the first child that is an element
   unsigned int i = 0;
-  while (i < childNodes.getLength() && 
-         childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+  while (i < childNodes->getLength() && 
+         childNodes->item(i)->getNodeType() != xercesc::DOMNode::ELEMENT_NODE) {
     i += 1;
   }
 
   // is there is one, it should be a physvol or a paramphysvol
-  if (i < childNodes.getLength()) {
-    DOM_Node firstChildNode = childNodes.item(i);
-    DOM_Element firstChildElement = (DOM_Element &) firstChildNode;
+  if (i < childNodes->getLength()) {
+    xercesc::DOMNode* firstChildNode = childNodes->item(i);
+    xercesc::DOMElement* firstChildElement =
+      (xercesc::DOMElement*) firstChildNode;
     // get the name of the first child
-    std::string tagName = dom2Std (firstChildElement.getNodeName());
-    if ("physvol" == tagName) {
+    const XMLCh* tagName = firstChildElement->getNodeName();
+    if (0 == xercesc::XMLString::compareString(physvolString, tagName)) {
       // gets the physical volume and add it to the result as the first
       // volume of the vector
       PVolumeItem* volume = dealWithPhysvol (firstChildElement);
@@ -593,7 +739,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
       // unknown tag -> display an error, return 0
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       log << MSG::WARNING << "In " << locateElement (element)
-          << " : the tag " << tagName
+          << " : the tag " << xercesc::XMLString::transcode(tagName)
           << " is not a valid tag as first child of <paramphysvol";
       if (0 != nD) {
         log << nD << "D";
@@ -612,13 +758,14 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
     unsigned int j = i + 1;
     unsigned int nbOfTransfoFound = 0;
     while (nbOfTransfoFound < nD
-           && j < childNodes.getLength()) {
-      while (j < childNodes.getLength() && 
-             childNodes.item(j).getNodeType() != DOM_Node::ELEMENT_NODE) {
+           && j < childNodes->getLength()) {
+      while (j < childNodes->getLength() && 
+             childNodes->item(j)->getNodeType() !=
+             xercesc::DOMNode::ELEMENT_NODE) {
         j += 1;
       }
       // is there is one child, deal with the transformation
-      if (j < childNodes.getLength()) {
+      if (j < childNodes->getLength()) {
         transformations[nbOfTransfoFound] =
           dealWithTransformation (element, &j);
         nbOfTransfoFound++;
@@ -627,11 +774,12 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
   
     // if there are still children after the transformation,
     // raise an error message
-    while (j < childNodes.getLength() && 
-           childNodes.item(j).getNodeType() != DOM_Node::ELEMENT_NODE) {
+    while (j < childNodes->getLength() && 
+           childNodes->item(j)->getNodeType()
+           != xercesc::DOMNode::ELEMENT_NODE) {
       j += 1;
     }
-    if (j < childNodes.getLength()) {
+    if (j < childNodes->getLength()) {
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       log << MSG::WARNING << "In " << locateElement (element)
           << " : there are too many children in this parametrized physical "
@@ -777,17 +925,17 @@ XmlLVolumeCnv::expandParamPhysVol
 // -----------------------------------------------------------------------
 // Deal with Surface
 // -----------------------------------------------------------------------
-std::string XmlLVolumeCnv::dealWithSurf (DOM_Element element) {
-  return dom2Std (element.getAttribute ("address"));
+std::string XmlLVolumeCnv::dealWithSurf (xercesc::DOMElement* element) {
+  return dom2Std (element->getAttribute (addressString));
 } // end dealWithSurf
 
 
 // -----------------------------------------------------------------------
 // Deal with solid
 // -----------------------------------------------------------------------
-ISolid* XmlLVolumeCnv::dealWithSolid (DOM_Element element) {
+ISolid* XmlLVolumeCnv::dealWithSolid (xercesc::DOMElement* element) {
   // gets the element's name
-  std::string tagName = dom2Std (element.getNodeName());
+  const XMLCh* tagName = element->getNodeName();
   // dispatches, based on the name
   if (isSimpleSolid (tagName)) {
     return dealWithSimpleSolid (element);
@@ -797,7 +945,8 @@ ISolid* XmlLVolumeCnv::dealWithSolid (DOM_Element element) {
     // unknown tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
-        << " : this should be a Solid but is a : " << tagName
+        << " : this should be a Solid but is a : "
+        << xercesc::XMLString::transcode(tagName)
         << ". It will be ignored" << endreq;
   }
   return 0;
@@ -807,17 +956,18 @@ ISolid* XmlLVolumeCnv::dealWithSolid (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with boolean
 // -----------------------------------------------------------------------
-SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
+SolidBoolean* XmlLVolumeCnv::dealWithBoolean (xercesc::DOMElement* element) {
   // gets the element's name
-  std::string nameAttribute = dom2Std (element.getAttribute ("name"));
-  std::string tagName = dom2Std (element.getNodeName());
+  std::string nameAttribute = dom2Std (element->getAttribute (nameString));
+  const XMLCh* tagName = element->getNodeName();
 
   // Checks it's a boolean solid
   if (!isBooleanSolid (tagName)) {
     // unknow tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
-        << " : this sould be a boolean solid but is a : " << tagName
+        << " : this sould be a boolean solid but is a : "
+        << xercesc::XMLString::transcode(tagName)
         << ". It will be ignored" << endreq;
     return 0;
   }
@@ -850,7 +1000,7 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
   SolidBoolean* result = 0;
   PlacedSolid placedSolid = solids->front();
   solids->pop_front();
-  if ("union" == tagName) {
+  if (0 == xercesc::XMLString::compareString(unionString, tagName)) {
     SolidUnion* unionResult = new SolidUnion (nameAttribute, placedSolid.solid);
     result = unionResult;
     // TO BE IMPLEMENTED -- TODO
@@ -876,7 +1026,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
         placedSolid.transformation = 0;
       }
     }
-  } else if ("subtraction" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (subtractionString, tagName)) {
     SolidSubtraction* subtractionResult =
       new SolidSubtraction (nameAttribute, placedSolid.solid);
     result = subtractionResult;
@@ -903,7 +1054,8 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
         placedSolid.transformation = 0;
       }
     }
-  } else if ("intersection" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (intersectionString, tagName)) {
     SolidIntersection* intersectionResult =
       new SolidIntersection (nameAttribute, placedSolid.solid);
     result = intersectionResult;
@@ -945,21 +1097,21 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
 // Deal with boolean children
 // -----------------------------------------------------------------------
 XmlLVolumeCnv::PlacedSolidList*
-XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
+XmlLVolumeCnv::dealWithBooleanChildren (xercesc::DOMElement* element) {
   // builds an empty list
   PlacedSolidList* result = new PlacedSolidList();
   
   // the dtd says ((%solid; %transformation;?), (%solid; %transformation;?)+)
   // but we do here (%solid; %transformation;?)*
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
   unsigned int i = 0;
-  while (i < childNodes.getLength()) {
-    if (childNodes.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+  while (i < childNodes->getLength()) {
+    if (childNodes->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
       // gets the current child
-      DOM_Node childNode = childNodes.item(i);
-      DOM_Element childElement = (DOM_Element &) childNode;
+      xercesc::DOMNode* childNode = childNodes->item(i);
+      xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
       // gets its name
-      std::string tagName = dom2Std (childElement.getNodeName());
+      const XMLCh* tagName = childElement->getNodeName();
       // checks it's a solid
       if (isSolid (tagName)) {
         // get the C++ object from it
@@ -967,14 +1119,15 @@ XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
         // see if there is a transformation afterwards
         HepTransform3D* transformation = 0;
         i += 1;
-        while (i < childNodes.getLength() && 
-               childNodes.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
+        while (i < childNodes->getLength() && 
+               childNodes->item(i)->getNodeType() !=
+               xercesc::DOMNode::ELEMENT_NODE) {
           i += 1;
         }
-        if (i < childNodes.getLength()) {
-          childNode = childNodes.item(i);
-          childElement = (DOM_Element &) childNode;
-          tagName = dom2Std (childElement.getNodeName());
+        if (i < childNodes->getLength()) {
+          childNode = childNodes->item(i);
+          childElement = (xercesc::DOMElement*) childNode;
+          tagName = childElement->getNodeName();
           if (isTransformation (tagName)) {
             transformation = dealWithTransformation (element, &i);
             *transformation = transformation->inverse();
@@ -986,7 +1139,7 @@ XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
         // we should have a solid here
         MsgStream log(msgSvc(), "XmlLVolumeCnv" );
         log << MSG::WARNING << "In " << locateElement (childElement)
-            << " : this " << tagName
+            << " : this " << xercesc::XMLString::transcode(tagName)
             << " makes no sense to a boolean solid. "
             << "A solid is needed here. It will be ignored" << endreq;
         i += 1;
@@ -1003,30 +1156,31 @@ XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with simple solid
 // -----------------------------------------------------------------------
-ISolid* XmlLVolumeCnv::dealWithSimpleSolid (DOM_Element element) {
+ISolid* XmlLVolumeCnv::dealWithSimpleSolid (xercesc::DOMElement* element) {
   // gets the element's name
-  std::string tagName = dom2Std (element.getNodeName());
+  const XMLCh* tagName = element->getNodeName();
 
   // dispatches, based on the name
-  if ("box" == tagName) {
+  if (0 == xercesc::XMLString::compareString(boxString, tagName)) {
     return dealWithBox (element);
-  } else if ("trd" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(trdString, tagName)) {
     return dealWithTrd (element);
-  } else if ("trap" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(trapString, tagName)) {
     return dealWithTrap (element);
-  } else if ("cons" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(consString, tagName)) {
     return dealWithCons (element);
-  } else if ("polycone" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(polyconeString, tagName)) {
     return dealWithPolycone (element);
-  } else if ("tubs" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(tubsString, tagName)) {
     return dealWithTubs (element);
-  } else if ("sphere" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(sphereString, tagName)) {
     return dealWithSphere (element);
   } else {
     // unknow tag
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
-        << " : this should be a SimpleSolid but is a : " << tagName
+        << " : this should be a SimpleSolid but is a : "
+        << xercesc::XMLString::transcode(tagName)
         << ". It will be ignored" << endreq;
   }
   return 0;
@@ -1036,12 +1190,12 @@ ISolid* XmlLVolumeCnv::dealWithSimpleSolid (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with box
 // -----------------------------------------------------------------------
-SolidBox* XmlLVolumeCnv::dealWithBox (DOM_Element element) {
+SolidBox* XmlLVolumeCnv::dealWithBox (xercesc::DOMElement* element) {
   // gets attributes
-  std::string sizeXAttribute = dom2Std (element.getAttribute ("sizeX"));
-  std::string sizeYAttribute = dom2Std (element.getAttribute ("sizeY"));
-  std::string sizeZAttribute = dom2Std (element.getAttribute ("sizeZ"));
-  std::string solidName = dom2Std (element.getAttribute ("name"));
+  std::string sizeXAttribute = dom2Std (element->getAttribute (sizeXString));
+  std::string sizeYAttribute = dom2Std (element->getAttribute (sizeYString));
+  std::string sizeZAttribute = dom2Std (element->getAttribute (sizeZString));
+  std::string solidName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double sizeX = 0.0;
@@ -1062,7 +1216,7 @@ SolidBox* XmlLVolumeCnv::dealWithBox (DOM_Element element) {
     (solidName, sizeX / 2.0, sizeY / 2.0, sizeZ / 2.0);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << " : a box should not have any child. They will be ignored" << endreq;
@@ -1076,19 +1230,19 @@ SolidBox* XmlLVolumeCnv::dealWithBox (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with trd
 // -----------------------------------------------------------------------
-SolidTrd* XmlLVolumeCnv::dealWithTrd (DOM_Element element) {
+SolidTrd* XmlLVolumeCnv::dealWithTrd (xercesc::DOMElement* element) {
   // gets attributes
   std::string sizeX1Attribute = 
-    dom2Std (element.getAttribute ("sizeX1"));
+    dom2Std (element->getAttribute (sizeX1String));
   std::string sizeX2Attribute =
-    dom2Std (element.getAttribute ("sizeX2"));
+    dom2Std (element->getAttribute (sizeX2String));
   std::string sizeY1Attribute =
-    dom2Std (element.getAttribute ("sizeY1"));
+    dom2Std (element->getAttribute (sizeY1String));
   std::string sizeY2Attribute =
-    dom2Std (element.getAttribute ("sizeY2"));
+    dom2Std (element->getAttribute (sizeY2String));
   std::string sizeZAttribute =
-    dom2Std (element.getAttribute ("sizeZ"));
-  std::string trdName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (sizeZString));
+  std::string trdName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double sizeX1 = 0.0;
@@ -1118,7 +1272,7 @@ SolidTrd* XmlLVolumeCnv::dealWithTrd (DOM_Element element) {
      sizeY2 / 2.0);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << " : trd should not have any child. They will be ignored" << endreq;
@@ -1132,31 +1286,31 @@ SolidTrd* XmlLVolumeCnv::dealWithTrd (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with trap
 // -----------------------------------------------------------------------
-SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
+SolidTrap* XmlLVolumeCnv::dealWithTrap (xercesc::DOMElement* element) {
   // gets attributes
   std::string sizeZAttribute =
-    dom2Std (element.getAttribute ("sizeZ"));
+    dom2Std (element->getAttribute (sizeZString));
   std::string thetaAttribute =
-    dom2Std (element.getAttribute ("theta"));
+    dom2Std (element->getAttribute (thetaString));
   std::string phiAttribute =
-    dom2Std (element.getAttribute ("phi"));
+    dom2Std (element->getAttribute (phiString));
   std::string sizeY1Attribute =
-    dom2Std (element.getAttribute ("sizeY1"));
+    dom2Std (element->getAttribute (sizeY1String));
   std::string sizeX1Attribute = 
-    dom2Std (element.getAttribute ("sizeX1"));
+    dom2Std (element->getAttribute (sizeX1String));
   std::string sizeX2Attribute =
-    dom2Std (element.getAttribute ("sizeX2"));
+    dom2Std (element->getAttribute (sizeX2String));
   std::string alp1Attribute =
-    dom2Std (element.getAttribute ("alp1"));
+    dom2Std (element->getAttribute (alp1String));
   std::string sizeY2Attribute =
-    dom2Std (element.getAttribute ("sizeY2"));
+    dom2Std (element->getAttribute (sizeY2String));
   std::string sizeX3Attribute = 
-    dom2Std (element.getAttribute ("sizeX3"));
+    dom2Std (element->getAttribute (sizeX3String));
   std::string sizeX4Attribute =
-    dom2Std (element.getAttribute ("sizeX4"));
+    dom2Std (element->getAttribute (sizeX4String));
   std::string alp2Attribute =
-    dom2Std (element.getAttribute ("alp2"));
-  std::string trapName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (alp2String));
+  std::string trapName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double sizeZ = 0.0;
@@ -1211,7 +1365,7 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
      alp2);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << "A trap should not have any child. They will be ignored" << endreq;
@@ -1225,23 +1379,23 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with cons
 // -----------------------------------------------------------------------
-SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
+SolidCons* XmlLVolumeCnv::dealWithCons (xercesc::DOMElement* element) {
   // gets attributes
   std::string sizeZAttribute =
-    dom2Std (element.getAttribute ("sizeZ"));
+    dom2Std (element->getAttribute (sizeZString));
   std::string outerRadiusPZAttribute =
-    dom2Std (element.getAttribute ("outerRadiusPZ"));
+    dom2Std (element->getAttribute (outerRadiusPZString));
   std::string outerRadiusMZAttribute =
-    dom2Std (element.getAttribute ("outerRadiusMZ"));
+    dom2Std (element->getAttribute (outerRadiusMZString));
   std::string innerRadiusPZAttribute =
-    dom2Std (element.getAttribute ("innerRadiusPZ"));
+    dom2Std (element->getAttribute (innerRadiusPZString));
   std::string innerRadiusMZAttribute =
-    dom2Std (element.getAttribute ("innerRadiusMZ"));
+    dom2Std (element->getAttribute (innerRadiusMZString));
   std::string startPhiAngleAttribute =
-    dom2Std (element.getAttribute ("startPhiAngle"));
+    dom2Std (element->getAttribute (startPhiAngleString));
   std::string deltaPhiAngleAttribute =
-    dom2Std (element.getAttribute ("deltaPhiAngle"));
-  std::string consName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (deltaPhiAngleString));
+  std::string consName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double sizeZ = 0.0;
@@ -1279,7 +1433,7 @@ SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
      innerRadiusPZ, startPhiAngle, deltaPhiAngle);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << "A cons should not have any child. They will be ignored" << endreq;
@@ -1293,14 +1447,14 @@ SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with polycone
 // -----------------------------------------------------------------------
-SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
+SolidPolycone* XmlLVolumeCnv::dealWithPolycone (xercesc::DOMElement* element) {
   MsgStream log(msgSvc(), "XmlLVolumeCnv" );
   // gets attributes
   std::string startPhiAngleAttribute =
-    dom2Std (element.getAttribute ("startPhiAngle"));
+    dom2Std (element->getAttribute (startPhiAngleString));
   std::string deltaPhiAngleAttribute =
-    dom2Std (element.getAttribute ("deltaPhiAngle"));
-  std::string polyconeName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (deltaPhiAngleString));
+  std::string polyconeName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double startPhiAngle = 0.0;
@@ -1316,18 +1470,18 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
   SolidPolycone::Triplets zplanes;
 
   // deals with the children
-  DOM_NodeList children = element.getElementsByTagName ("zplane");
-  for (unsigned int i = 0; i < children.getLength(); i++) {
-    DOM_Node childNode = children.item(i);
-    DOM_Element child = (DOM_Element&) childNode;
+  xercesc::DOMNodeList* children = element->getElementsByTagName (zplaneString);
+  for (unsigned int i = 0; i < children->getLength(); i++) {
+    xercesc::DOMNode* childNode = children->item(i);
+    xercesc::DOMElement* child = (xercesc::DOMElement*) childNode;
 
     // gets attributes
     std::string zAttribute =
-      dom2Std (child.getAttribute ("z"));
+      dom2Std (child->getAttribute (zString));
     std::string outerRadiusAttribute =
-      dom2Std (child.getAttribute ("outerRadius"));
+      dom2Std (child->getAttribute (outerRadiusString));
     std::string innerRadiusAttribute =
-      dom2Std (child.getAttribute ("innerRadius"));
+      dom2Std (child->getAttribute (innerRadiusString));
     
     // computes the values
     double z = 0.0;
@@ -1348,7 +1502,7 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
                        (z, SolidPolycone::Pair (outerRadius, innerRadius)));
     
     // checks there are no children
-    if (child.hasChildNodes()) {
+    if (child->hasChildNodes()) {
       MsgStream log(msgSvc(), "XmlLVolumeCnv" );
       log << MSG::WARNING << "In " << locateElement (child)
           << "A zplane should not have any child. They will be ignored"
@@ -1378,19 +1532,19 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with tubs
 // -----------------------------------------------------------------------
-SolidTubs* XmlLVolumeCnv::dealWithTubs (DOM_Element element) {
+SolidTubs* XmlLVolumeCnv::dealWithTubs (xercesc::DOMElement* element) {
   // gets attributes
   std::string sizeZAttribute =
-    dom2Std (element.getAttribute ("sizeZ"));
+    dom2Std (element->getAttribute (sizeZString));
   std::string outerRadiusAttribute =
-    dom2Std (element.getAttribute ("outerRadius"));
+    dom2Std (element->getAttribute (outerRadiusString));
   std::string innerRadiusAttribute =
-    dom2Std (element.getAttribute ("innerRadius"));
+    dom2Std (element->getAttribute (innerRadiusString));
   std::string startPhiAngleAttribute =
-    dom2Std (element.getAttribute ("startPhiAngle"));
+    dom2Std (element->getAttribute (startPhiAngleString));
   std::string deltaPhiAngleAttribute =
-    dom2Std (element.getAttribute ("deltaPhiAngle"));
-  std::string tubsName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (deltaPhiAngleString));
+  std::string tubsName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double sizeZ = 0.0;
@@ -1420,7 +1574,7 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (DOM_Element element) {
      startPhiAngle, deltaPhiAngle);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << "A tubs should not have any child. They will be ignored" << endreq;
@@ -1434,21 +1588,21 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with sphere
 // -----------------------------------------------------------------------
-SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
+SolidSphere* XmlLVolumeCnv::dealWithSphere (xercesc::DOMElement* element) {
   // gets attributes
   std::string outerRadiusAttribute =
-    dom2Std (element.getAttribute ("outerRadius"));
+    dom2Std (element->getAttribute (outerRadiusString));
   std::string innerRadiusAttribute =
-    dom2Std (element.getAttribute ("innerRadius"));
+    dom2Std (element->getAttribute (innerRadiusString));
   std::string startPhiAngleAttribute =
-    dom2Std (element.getAttribute ("startPhiAngle"));
+    dom2Std (element->getAttribute (startPhiAngleString));
   std::string deltaPhiAngleAttribute =
-    dom2Std (element.getAttribute ("deltaPhiAngle"));
+    dom2Std (element->getAttribute (deltaPhiAngleString));
   std::string startThetaAngleAttribute =
-    dom2Std (element.getAttribute ("startThetaAngle"));
+    dom2Std (element->getAttribute (startThetaAngleString));
   std::string deltaThetaAngleAttribute =
-    dom2Std (element.getAttribute ("deltaThetaAngle"));
-  std::string sphereName = dom2Std (element.getAttribute ("name"));
+    dom2Std (element->getAttribute (deltaThetaAngleString));
+  std::string sphereName = dom2Std (element->getAttribute (nameString));
 
   // computes the values
   double outerRadius = 0.0;
@@ -1490,7 +1644,7 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
      deltaPhiAngle, startThetaAngle, deltaThetaAngle);
 
   // checks there are no children
-  if (element.hasChildNodes()) {
+  if (element->hasChildNodes()) {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (element)
         << "A sphere should not have any child. They will be ignored" << endreq;
@@ -1504,19 +1658,21 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with transformation
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
-                                                      unsigned int* index) {
+HepTransform3D*
+XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
+                                      unsigned int* index) {
   // gets children of element
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
 
   // gets the first node of the transformation
-  DOM_Node childNode = childNodes.item (*index);
-  DOM_Element childElement = (DOM_Element&) childNode;
+  xercesc::DOMNode* childNode = childNodes->item (*index);
+  xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
 
   // put index on the next node
   *index += 1;
-  while (*index < childNodes.getLength() && 
-         childNodes.item(*index).getNodeType() != DOM_Node::ELEMENT_NODE) {
+  while (*index < childNodes->getLength() && 
+         childNodes->item(*index)->getNodeType() !=
+         xercesc::DOMNode::ELEMENT_NODE) {
     *index += 1;
   }
 
@@ -1524,51 +1680,52 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
   HepTransform3D* result = 0;
 
   // gets the tag name for childElement
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // gets the transformation corresponding to the first child
-  if ("posXYZ" == tagName) {
+  if (0 == xercesc::XMLString::compareString(posXYZString, tagName)) {
     result = dealWithPosXYZ(childElement);
-  } else if ("posRPhiZ" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(posRPhiZString, tagName)) {
     // catches an exception in case the r attribute is negative
     try {
       result = dealWithPosRPhiZ(childElement);
     } catch (XmlCnvException e) {
       result = new HepTransform3D();
     }
-  } else if ("posRThPhi" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(posRThPhiString, tagName)) {
     // catches an exception in case the r attribute is negative
     try {
       result = dealWithPosRThPhi(childElement);
     } catch (XmlCnvException e) {
       result = new HepTransform3D();
     }
-  } else if ("transformation" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (transformationString, tagName)) {
     return dealWithTransformation (childElement);
   } else {
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
     log << MSG::WARNING << "In " << locateElement (childElement)
         << " : this should be a rotation or a translation but is a : "
-        << tagName
+        << xercesc::XMLString::transcode(tagName)
         << ". It will be ignored." << endreq;
     return new HepTransform3D();
   }
 
   // We are here because we found a translation. Try now to see if
   // it is followed by a rotation
-  if (*index < childNodes.getLength()) {
-    childNode = childNodes.item (*index);
-    childElement = (DOM_Element&) childNode;
+  if (*index < childNodes->getLength()) {
+    childNode = childNodes->item (*index);
+    childElement = (xercesc::DOMElement*) childNode;
     bool foundRotation = false;
     
     // gets the tag name for the new childElement
-    tagName = dom2Std (childElement.getNodeName());
-    if ("rotXYZ" == tagName) {
+    tagName = childElement->getNodeName();
+    if (0 == xercesc::XMLString::compareString(rotXYZString, tagName)) {
       HepTransform3D* rotation = dealWithRotXYZ(childElement);
       *result = *result * *rotation;
       delete (rotation);
       rotation = 0;
       foundRotation = true;
-    } else if ("rotAxis" == tagName) {
+    } else if (0 == xercesc::XMLString::compareString(rotAxisString, tagName)) {
       // catches an exception in case the theta or phi value is out of range
       try {
         HepTransform3D* rotation = dealWithRotAxis(childElement);
@@ -1583,8 +1740,9 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
     // if needed, put index on the next node
     if (foundRotation) {
       *index += 1;
-      while (*index < childNodes.getLength() && 
-             childNodes.item(*index).getNodeType() != DOM_Node::ELEMENT_NODE) {
+      while (*index < childNodes->getLength() && 
+             childNodes->item(*index)->getNodeType() !=
+             xercesc::DOMNode::ELEMENT_NODE) {
         *index += 1;
       }
     }
@@ -1598,9 +1756,10 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element,
 // -----------------------------------------------------------------------
 // Deal with transformation
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element) {
+HepTransform3D*
+XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
   // gets the children
-  DOM_NodeList childNodes = element.getChildNodes();
+  xercesc::DOMNodeList* childNodes = element->getChildNodes();
 
   // position of the current child processed
   unsigned int i = 0;
@@ -1609,7 +1768,7 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element) {
   std::deque<HepTransform3D*> tList;
 
   // scans the children and builds the transformations
-  while (i < childNodes.getLength()) {
+  while (i < childNodes->getLength()) {
     HepTransform3D* transformation = dealWithTransformation (element, &i);
     if (transformation != 0) {
       tList.push_back (transformation);
@@ -1646,11 +1805,11 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with posXYZ
 // -----------------------------------------------------------------------
-HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (DOM_Element element) {
+HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (xercesc::DOMElement* element) {
   // gets attributes
-  std::string xAttribute = dom2Std (element.getAttribute ("x"));
-  std::string yAttribute = dom2Std (element.getAttribute ("y"));
-  std::string zAttribute = dom2Std (element.getAttribute ("z"));
+  std::string xAttribute = dom2Std (element->getAttribute (xString));
+  std::string yAttribute = dom2Std (element->getAttribute (yString));
+  std::string zAttribute = dom2Std (element->getAttribute (zString));
 
   // computes the values
   double x = 0.0;
@@ -1674,11 +1833,11 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with posRPhiZ
 // -----------------------------------------------------------------------
-HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (DOM_Element element) {
+HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* element) {
   // gets attributes
-  std::string rAttribute = dom2Std (element.getAttribute ("r"));
-  std::string phiAttribute = dom2Std (element.getAttribute ("phi"));
-  std::string zAttribute = dom2Std (element.getAttribute ("z"));
+  std::string rAttribute = dom2Std (element->getAttribute (rString));
+  std::string phiAttribute = dom2Std (element->getAttribute (phiString));
+  std::string zAttribute = dom2Std (element->getAttribute (zString));
 
   // computes the values
   double r = 0.0;
@@ -1711,11 +1870,12 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with posRThPhi
 // -----------------------------------------------------------------------
-HepTranslate3D* XmlLVolumeCnv::dealWithPosRThPhi (DOM_Element element) {
+HepTranslate3D*
+XmlLVolumeCnv::dealWithPosRThPhi (xercesc::DOMElement* element) {
   // gets attributes
-  std::string rAttribute = dom2Std (element.getAttribute ("r"));
-  std::string thetaAttribute = dom2Std (element.getAttribute ("theta"));
-  std::string phiAttribute = dom2Std (element.getAttribute ("phi"));
+  std::string rAttribute = dom2Std (element->getAttribute (rString));
+  std::string thetaAttribute = dom2Std (element->getAttribute (thetaString));
+  std::string phiAttribute = dom2Std (element->getAttribute (phiString));
 
   // computes the values
   double r = 0.0;
@@ -1748,11 +1908,11 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRThPhi (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with rotXYZ
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (DOM_Element element) {
+HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element) {
   // get attributes
-  std::string rotXAttribute = dom2Std (element.getAttribute ("rotX"));
-  std::string rotYAttribute = dom2Std (element.getAttribute ("rotY"));
-  std::string rotZAttribute = dom2Std (element.getAttribute ("rotZ"));
+  std::string rotXAttribute = dom2Std (element->getAttribute (rotXString));
+  std::string rotYAttribute = dom2Std (element->getAttribute (rotYString));
+  std::string rotZAttribute = dom2Std (element->getAttribute (rotZString));
 
   // computes the values
   double rx = 0.0;
@@ -1779,14 +1939,14 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (DOM_Element element) {
 // -----------------------------------------------------------------------
 // Deal with rotAxis
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (DOM_Element element) {
+HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element) {
   // get attributes
   std::string axThetaAttribute =
-    dom2Std (element.getAttribute ("axTheta"));
+    dom2Std (element->getAttribute (axThetaString));
   std::string axPhiAttribute =
-    dom2Std (element.getAttribute ("axPhi"));
+    dom2Std (element->getAttribute (axPhiString));
   std::string angleAttribute =
-    dom2Std (element.getAttribute ("angle"));
+    dom2Std (element->getAttribute (angleString));
 
   // computes the values
   double axTheta = 0.0;

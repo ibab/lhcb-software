@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlSurfaceCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlSurfaceCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -37,23 +37,48 @@ const ICnvFactory& XmlSurfaceCnvFactory = s_FactoryXmlSurfaceCnv;
 // ------------------------------------------------------------------------
 XmlSurfaceCnv::XmlSurfaceCnv (ISvcLocator* svc) :
   XmlGenericCnv (svc, classID()) {
+  nameString = xercesc::XMLString::transcode("name");
+  modelString = xercesc::XMLString::transcode("model");
+  finishString = xercesc::XMLString::transcode("finish");
+  typeString = xercesc::XMLString::transcode("type");
+  valueString = xercesc::XMLString::transcode("value");
+  volfirstString = xercesc::XMLString::transcode("volfirst");
+  volsecondString = xercesc::XMLString::transcode("volsecond");
+  tabpropsString = xercesc::XMLString::transcode("tabprops");
+  addressString = xercesc::XMLString::transcode("address");
 };
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlSurfaceCnv::~XmlSurfaceCnv () {
+  delete nameString;
+  delete modelString;
+  delete finishString;
+  delete typeString;
+  delete valueString;
+  delete volfirstString;
+  delete volsecondString;
+  delete tabpropsString;
+  delete addressString;
+}
 
 
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
+StatusCode XmlSurfaceCnv::i_createObj (xercesc::DOMElement* element,
                                        DataObject*& refpObject) {
   MsgStream log (msgSvc(), "XmlSurfaceCnv");
   
-  std::string elementName = dom2Std (element.getAttribute ("name"));
+  std::string elementName = dom2Std (element->getAttribute (nameString));
   Surface* dataObj= new Surface (elementName);
   refpObject = dataObj;
   
   // model 
   {
-    const std::string value = dom2Std (element.getAttribute ("model"));
+    const std::string value = dom2Std (element->getAttribute (modelString));
     const double v_value = xmlSvc()->eval(value, false);
     const unsigned int i_value = (unsigned int) v_value; 
     if (i_value != v_value) { 
@@ -68,7 +93,7 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
   }
   // finish
   {
-    const std::string value = dom2Std (element.getAttribute ("finish"));
+    const std::string value = dom2Std (element->getAttribute (finishString));
     const double v_value = xmlSvc()->eval(value, false);
     const unsigned int i_value = (unsigned int) v_value; 
     if (i_value != v_value) { 
@@ -83,7 +108,7 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
   }
   // type 
   {
-    const std::string value = dom2Std (element.getAttribute ("type"));
+    const std::string value = dom2Std (element->getAttribute (typeString));
     const double v_value = xmlSvc()->eval(value, false);
     const unsigned int i_value = (unsigned int) v_value; 
     if (i_value != v_value) {
@@ -98,18 +123,18 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
   }
   // value 
   {
-    const std::string value = dom2Std (element.getAttribute ("value"));
+    const std::string value = dom2Std (element->getAttribute (valueString));
     const double v_value = xmlSvc()->eval(value, false);
     dataObj->setValue (v_value);
   }
   // first volume  
   {
-    const std::string value = dom2Std (element.getAttribute ("volfirst"));
+    const std::string value = dom2Std (element->getAttribute (volfirstString));
     dataObj->setFirstVol (value);
   }
   // second volume  
   { 
-    const std::string value = dom2Std (element.getAttribute ("volsecond"));
+    const std::string value = dom2Std (element->getAttribute (volsecondString));
     dataObj->setSecondVol (value); 
   }
   return StatusCode::SUCCESS;
@@ -119,7 +144,7 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlSurfaceCnv::i_fillObj (DOM_Element childElement,
+StatusCode XmlSurfaceCnv::i_fillObj (xercesc::DOMElement* childElement,
                                      DataObject* refpObject,
                                      IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "XmlSurfaceCnv" );
@@ -127,20 +152,20 @@ StatusCode XmlSurfaceCnv::i_fillObj (DOM_Element childElement,
   // gets the object
   Surface* dataObj = dynamic_cast<Surface*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
-  if( "tabprops" == tagName) {
+  if( 0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
     log << MSG::VERBOSE << "looking at tabprops" << endreq;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
-      dom2Std (childElement.getAttribute ("address"));
+      dom2Std (childElement->getAttribute (addressString));
     long linkID = dataObj->linkMgr()->addLink(address, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to surface : "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
   return StatusCode::SUCCESS;
 } // end i_fillObj

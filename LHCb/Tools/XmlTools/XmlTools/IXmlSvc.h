@@ -1,11 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/XmlTools/IXmlSvc.h,v 1.1.1.1 2003-04-23 13:38:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/XmlTools/IXmlSvc.h,v 1.2 2003-04-24 09:12:11 sponce Exp $
 
 #ifndef DETDESCCNV_IXMLSVC_H
 #define DETDESCCNV_IXMLSVC_H
 
 // Include files
 #include "GaudiKernel/IInterface.h"
-#include "dom/DOM_Document.hpp"
+#include "xercesc/dom/DOMDocument.hpp"
 #include "XmlTools/IXmlParserSvc.h"
 
 /// Declaration of the interface ID (interface id, major version, minor version)
@@ -36,7 +36,7 @@ public:
    * @param fileName the name of the file to be parsed
    * @return the corresponding DOMTree or 0 if the parsing was not successfull
    */
-  virtual DOM_Document parse (const char* fileName) = 0;
+  virtual xercesc::DOMDocument* parse (const char* fileName) = 0;
 
   /**
    * Tells whether generic conversion of user defined detector elements should

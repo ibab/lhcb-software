@@ -1,8 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlCnvSvc.cpp,v 1.1.1.1 2003-04-23 13:38:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlCnvSvc.cpp,v 1.2 2003-04-24 09:12:11 sponce Exp $
 
 // Include Files
-#include <util/PlatformUtils.hpp>
-#include <util/XMLString.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -65,9 +65,9 @@ StatusCode XmlCnvSvc::initialize() {
 
   // Initialize the xerces system
   try  {
-    XMLPlatformUtils::Initialize();
-  } catch (const XMLException& toCatch) {
-    char *message = XMLString::transcode (toCatch.getMessage());
+    xercesc::XMLPlatformUtils::Initialize();
+  } catch (const xercesc::XMLException& toCatch) {
+    char *message = xercesc::XMLString::transcode (toCatch.getMessage());
     log << MSG::FATAL << "Error during initialization! :\n"
         << message << endreq;
     status = StatusCode::FAILURE;
@@ -200,21 +200,20 @@ StatusCode XmlCnvSvc::createAddress(unsigned char svc_type,
 // -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
-DOM_Document XmlCnvSvc::parse (const char* fileName) {
+xercesc::DOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
-  DOM_Document null_result;
   MsgStream log (msgSvc(), "XmlCnvSvc");
   log << MSG::DEBUG << "null result returned in parse" << endreq;
-  return null_result;
+  return 0;
 }
 
 
 // -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
-DOM_Document XmlCnvSvc::parseString (std::string source) {
+xercesc::DOMDocument* XmlCnvSvc::parseString (std::string source) {
   MsgStream log (msgSvc(), "XmlCnvSvc");
 
   // First prepend the proper DTD path where appropriate
@@ -249,9 +248,8 @@ DOM_Document XmlCnvSvc::parseString (std::string source) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parseString (source);
   }
-  DOM_Document null_result;
   log << MSG::DEBUG << "null result returned in parseString" << endreq;
-  return null_result;
+  return 0;
 
 }
 

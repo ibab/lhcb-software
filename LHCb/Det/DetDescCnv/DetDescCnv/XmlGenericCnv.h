@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlGenericCnv.h,v 1.1.1.1 2003-04-23 13:59:45 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlGenericCnv.h,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -7,8 +7,8 @@
 #include "GaudiKernel/Converter.h"
 #include <string>
 
-#include <dom/DOM_Element.hpp>
-#include <dom/DOM_Text.hpp>
+#include <xercesc/dom/DOMElement.hpp>
+#include <xercesc/dom/DOMText.hpp>
 
 
 // Forward and external declarations
@@ -112,28 +112,28 @@ protected:
   ~XmlGenericCnv() { }
   
   /** This creates the transient representation of an object from the
-   *  DOM_Element representing it, then fills it and process it.
+   *  DOMElement representing it, then fills it and process it.
    *  This implementation actually only calls the i_* methods to do the job.
    *  Most of the converters don't need to override it but only to
    *  override/implement some of the i_* methods.
-   *  @param element the DOM_Element to be used to builds the object
+   *  @param element the DOMElement to be used to builds the object
    *  @param refpObject the object to be built
    *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode internalCreateObj (DOM_Element element,
+  virtual StatusCode internalCreateObj (xercesc::DOMElement* element,
                                         DataObject*& refpObject,
                                         IOpaqueAddress* address);
   
   /** This creates the transient representation of an object from the
-   *  DOM_Element representing it. This actually does the "new" operation
+   *  DOMElement representing it. This actually does the "new" operation
    *  and deals with the attributes of the node. This should not deal with
    *  children of the node.
-   *  @param element the DOM_Element to be used to builds the object
+   *  @param element the DOMElement to be used to builds the object
    *  @param refpObject the object to be built
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
 
   /** This fills the current object for its child element childElement.
@@ -143,7 +143,7 @@ protected:
    *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
                                 DataObject* pObject,
                                 IOpaqueAddress* address);
 
@@ -154,7 +154,7 @@ protected:
    *  @param address the address for this object
    *  @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Text childText,
+  virtual StatusCode i_fillObj (xercesc::DOMText* childText,
                                 DataObject* pObject,
                                 IOpaqueAddress* address);
 
@@ -206,15 +206,30 @@ protected:
                                        CLID clid) const;
 
   /**
-   * builds a standard string from a DOMString
-   * @param domString the DOMString
+   * builds a standard string from a XMLCh*
+   * @param domString the XMLCh*
    * @return a standard string with the same characters
    */
-  static const std::string dom2Std (DOMString domString);
+  static const std::string dom2Std (const XMLCh* domString);
 
   /// the IXmlSvc interface of this object
   IXmlSvc* m_xmlSvc;
 
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* DDDBString;
+  const XMLCh* materialsString;
+  const XMLCh* versionString;
+  const XMLCh* DTD_VersionString;
+  const XMLCh* macroString;
+  const XMLCh* nameString;
+  const XMLCh* valueString;
+  const XMLCh* parameterString;
+  const XMLCh* detelemString;
+  const XMLCh* conditionString;
+  const XMLCh* classIDString;
+  
 };
 
 #endif // DETDESCCNV_XMLGENERICCNV_H

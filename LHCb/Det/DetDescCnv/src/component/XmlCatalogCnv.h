@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlCatalogCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $
 
 #ifndef DETDESCCNV_XMLCATALOGCNV_H
 #define DETDESCCNV_XMLCATALOGCNV_H
@@ -6,8 +6,7 @@
 // Include files
 #include "GaudiKernel/ClassID.h"
 
-#include <dom/DOM_Node.hpp>
-#include <dom/DOMString.hpp>
+#include <xercesc/dom/DOMNode.hpp>
 
 #include "DetDescCnv/XmlGenericCnv.h"
 
@@ -49,15 +48,15 @@ protected:
   /**
    * Default destructor
    */
-  virtual ~XmlCatalogCnv() {}
+  virtual ~XmlCatalogCnv();
 
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
 
   /** Fills the current object for its child element childElement.
@@ -67,7 +66,7 @@ protected:
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
@@ -84,10 +83,37 @@ private:
    * This gets the CLID of a given element depending on its tag name or
    * its classID attribute in case of detelems. In case the element is
    * not known as a possible child of the tag catalog, it returns -1
-   * @param element the DOM_Element of the node concerned
+   * @param element the DOMElement of the node concerned
    * @return the CLID for this element
    */
-  CLID getCLID (DOM_Element element);
+  CLID getCLID (xercesc::DOMElement* element);
+
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* isotopeString;
+  const XMLCh* materialString;
+  const XMLCh* catalogString;
+  const XMLCh* tabpropertyString;
+  const XMLCh* surfaceString;
+  const XMLCh* logvolString;
+  const XMLCh* detelemString;
+  const XMLCh* elementString;
+  const XMLCh* conditionString;
+
+  const XMLCh* isotoperefString;
+  const XMLCh* materialrefString;
+  const XMLCh* catalogrefString;
+  const XMLCh* tabpropertyrefString;
+  const XMLCh* surfacerefString;
+  const XMLCh* logvolrefString;
+  const XMLCh* detelemrefString;
+  const XMLCh* elementrefString;
+  const XMLCh* conditionrefString;
+
+  const XMLCh* refString;
+  const XMLCh* hrefString;
+  const XMLCh* nameString;
 
 };
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlLVolumeCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlLVolumeCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -53,17 +53,17 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   /**
    * Default destructor
    */
-  virtual ~XmlLVolumeCnv() {}
+  virtual ~XmlLVolumeCnv();
   
   /** This creates the transient representation of an object from the
-   * DOM_Element representing it, then fills it and process it.
+   * DOMElement representing it, then fills it and process it.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode internalCreateObj (DOM_Element element,
+  virtual StatusCode internalCreateObj (xercesc::DOMElement* element,
                                         DataObject*& refpObject,
                                         IOpaqueAddress* address);
 
@@ -126,35 +126,35 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param tag the tag to be tested
    * @result true if this denotes a simple solid
    */
-  bool isSimpleSolid (std::string tag);
+  bool isSimpleSolid (const XMLCh* tag);
 
   /**
    * says whether the given tag is denoting a boolean solid
    * @param tag the tag to be tested
    * @result true if this denotes a boolean solid
    */
-  bool isBooleanSolid (std::string tag);
+  bool isBooleanSolid (const XMLCh* tag);
 
   /**
    * says whether the given tag is denoting a solid
    * @param tag the tag to be tested
    * @result true if this denotes a solid
    */
-  bool isSolid (std::string tag);
+  bool isSolid (const XMLCh* tag);
 
   /**
    * says whether the given tag is denoting a transformation
    * @param tag the tag to be tested
    * @result true if this denotes a transformation
    */
-  bool isTransformation (std::string tag);
+  bool isTransformation (const XMLCh* tag);
 
   /**
    * says whether the given tag is denoting a parametrized physical volume
    * @param tag the tag to be tested
    * @result true if this denotes a parametrized physical volume
    */
-  bool isParamphysvol (std::string tag);
+  bool isParamphysvol (const XMLCh* tag);
 
   /**
    * builds a string locating the element. When possible, this strings
@@ -163,7 +163,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the element to locate
    * @result a locating string
    */
-  std::string locateElement (DOM_Element element);
+  std::string locateElement (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <physvol>. Creates the corresponding C++ Object.
@@ -172,7 +172,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ Object
    */
-  PVolumeItem* dealWithPhysvol (DOM_Element element);
+  PVolumeItem* dealWithPhysvol (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tags <paramphysvol>, <paramphysvol2D>, <paramphysvol3D>.
@@ -185,7 +185,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return a vector of physical volumes
    */
-  PVolumes* dealWithParamphysvol (DOM_Element element);
+  PVolumes* dealWithParamphysvol (xercesc::DOMElement* element);
 
   /**
    * deals with parametrized physical volumes of any dimension. The dimension
@@ -199,7 +199,8 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return a vector of physical volumes
    */
-  PVolumes* dealWithParamphysvol (DOM_Element element, unsigned int nD);
+  PVolumes* dealWithParamphysvol (xercesc::DOMElement* element,
+                                  unsigned int nD);
 
   /**
    * expands a given list of physical volumes. The expansion is done in 
@@ -232,7 +233,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the address of the surface
    */
-  std::string dealWithSurf (DOM_Element element);
+  std::string dealWithSurf (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tags <box>, <trd>, <trap>, <cons>, <tubs>, <sphere>,
@@ -243,7 +244,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  ISolid* dealWithSolid (DOM_Element element);
+  ISolid* dealWithSolid (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tags <union>, <subtraction> and <intersection>.
@@ -254,7 +255,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidBoolean* dealWithBoolean (DOM_Element element);
+  SolidBoolean* dealWithBoolean (xercesc::DOMElement* element);
 
   /**
    * deals with the children of a boolean operation. Builds a PlacedSolidList
@@ -263,7 +264,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the boolean solid node
    * @return the list of children, as a PlacedSolidList*
    */
-  PlacedSolidList* dealWithBooleanChildren (DOM_Element element);
+  PlacedSolidList* dealWithBooleanChildren (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tags <box>, <cons>, <sphere>, <tubs>, <trd> and <trap>.
@@ -274,7 +275,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  ISolid* dealWithSimpleSolid (DOM_Element element);
+  ISolid* dealWithSimpleSolid (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <box>. Creates the corresponding C++ Object.
@@ -283,7 +284,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidBox* dealWithBox (DOM_Element element);
+  SolidBox* dealWithBox (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <trd>. Creates the corresponding C++ Object.
@@ -292,7 +293,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidTrd* dealWithTrd (DOM_Element element);
+  SolidTrd* dealWithTrd (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <trap>. Creates the corresponding C++ Object.
@@ -301,7 +302,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidTrap* dealWithTrap (DOM_Element element);
+  SolidTrap* dealWithTrap (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <cons>. Creates the corresponding C++ Object.
@@ -311,7 +312,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @return the C++ object or 0 if an error occured
    * @return status depending on the completion of the call
    */
-  SolidCons* dealWithCons (DOM_Element element);
+  SolidCons* dealWithCons (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <polycone>. Creates the corresponding C++ Object.
@@ -321,7 +322,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @return the C++ object or 0 if an error occured
    * @return status depending on the completion of the call
    */
-  SolidPolycone* dealWithPolycone (DOM_Element element);
+  SolidPolycone* dealWithPolycone (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <tubs>. Creates the corresponding C++ Object.
@@ -330,7 +331,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidTubs* dealWithTubs (DOM_Element element);
+  SolidTubs* dealWithTubs (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <sphere>. Creates the corresponding C++ Object.
@@ -339,7 +340,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the C++ object
    */
-  SolidSphere* dealWithSphere (DOM_Element element);
+  SolidSphere* dealWithSphere (xercesc::DOMElement* element);
 
   /**
    * deals with a transformation beginning at child number *index of the element
@@ -353,7 +354,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param the index of the first element of the transformation in the parent
    * @return the Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithTransformation (DOM_Element element,
+  HepTransform3D* dealWithTransformation (xercesc::DOMElement* element,
                                           unsigned int* index);
 
   /**
@@ -363,7 +364,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the parent element of the transformation
    * @return the Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithTransformation (DOM_Element element);
+  HepTransform3D* dealWithTransformation (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <posXYZ>. Creates the corresponding HepTranslate3D
@@ -372,7 +373,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosXYZ (DOM_Element element);
+  HepTranslate3D* dealWithPosXYZ (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <posRPhiZ>. Creates the corresponding HepTranslate3D
@@ -383,7 +384,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosRPhiZ (DOM_Element element);
+  HepTranslate3D* dealWithPosRPhiZ (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <posRThPhi>. Creates the corresponding
@@ -394,7 +395,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosRThPhi (DOM_Element element);
+  HepTranslate3D* dealWithPosRThPhi (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <rotXYZ>. Creates the corresponding HepRotation
@@ -403,7 +404,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithRotXYZ (DOM_Element element);
+  HepTransform3D* dealWithRotXYZ (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag <rotAxis>. Creates the corresponding HepRotation
@@ -415,7 +416,73 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithRotAxis (DOM_Element element);
+  HepTransform3D* dealWithRotAxis (xercesc::DOMElement* element);
+
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* unionString;
+  const XMLCh* subtractionString;
+  const XMLCh* intersectionString;
+  const XMLCh* boxString;
+  const XMLCh* trdString;
+  const XMLCh* trapString;
+  const XMLCh* consString;
+  const XMLCh* polyconeString;
+  const XMLCh* tubsString;
+  const XMLCh* sphereString;
+  const XMLCh* transformationString;
+  const XMLCh* posXYZString;
+  const XMLCh* posRPhiZString;
+  const XMLCh* posRThPhiString;
+  const XMLCh* rotXYZString;
+  const XMLCh* rotAxisString;
+  const XMLCh* paramphysvolString;
+  const XMLCh* paramphysvol2DString;
+  const XMLCh* paramphysvol3DString;
+  const XMLCh* materialString;
+  const XMLCh* magfieldString;
+  const XMLCh* sensdetString;
+  const XMLCh* nameString;
+  const XMLCh* physvolString;
+  const XMLCh* surfString;
+  const XMLCh* logvolString;
+  const XMLCh* numberString;
+  const XMLCh* addressString;
+  const XMLCh* outerRadiusMZString;
+  const XMLCh* outerRadiusPZString;
+  const XMLCh* innerRadiusMZString;
+  const XMLCh* innerRadiusPZString;
+  const XMLCh* outerRadiusString;
+  const XMLCh* innerRadiusString;
+  const XMLCh* sizeXString;
+  const XMLCh* sizeX1String;
+  const XMLCh* sizeX2String;
+  const XMLCh* sizeX3String;
+  const XMLCh* sizeX4String;
+  const XMLCh* sizeYString;
+  const XMLCh* sizeY1String;
+  const XMLCh* sizeY2String;
+  const XMLCh* sizeZString;
+  const XMLCh* thetaString;
+  const XMLCh* phiString;
+  const XMLCh* alp1String;
+  const XMLCh* alp2String;
+  const XMLCh* xString;
+  const XMLCh* yString;
+  const XMLCh* zString;
+  const XMLCh* rString;
+  const XMLCh* axThetaString;
+  const XMLCh* axPhiString;
+  const XMLCh* angleString;
+  const XMLCh* zplaneString;
+  const XMLCh* startThetaAngleString;
+  const XMLCh* deltaThetaAngleString;
+  const XMLCh* startPhiAngleString;
+  const XMLCh* deltaPhiAngleString;
+  const XMLCh* rotXString;
+  const XMLCh* rotYString;
+  const XMLCh* rotZString;
 
 };
 

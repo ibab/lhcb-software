@@ -27,7 +27,7 @@ XmlConditionCnv::XmlConditionCnv (ISvcLocator* svc) :
 // Fill an object with a new specific child
 // -----------------------------------------------------------------------
 StatusCode
-XmlConditionCnv::i_fillSpecificObj (DOM_Element /*childElement*/,
+XmlConditionCnv::i_fillSpecificObj (xercesc::DOMElement* /*childElement*/,
                                     Condition* /*refpObject*/,
                                     IOpaqueAddress* /*address*/) {
   // default implementation : ignore child

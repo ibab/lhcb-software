@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Id: XmlIsotopeCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $
 #ifndef DETDESCCNV_XMLCNVSVC_XMLISOTOPECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLISOTOPECNV_H
 
@@ -43,17 +43,16 @@ protected:
   /**
    * Default destructor
    */
-  virtual ~XmlIsotopeCnv() {}
+  virtual ~XmlIsotopeCnv();
   
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj 
-  ( DOM_Element  element    ,
-    DataObject*& refpObject );
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
+                                  DataObject*& refpObject);
   
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
@@ -61,11 +60,26 @@ protected:
    * @param refpObject the object to be filled
    * @return status depending on the completion of the call
    */
-    virtual StatusCode i_fillObj 
-  ( DOM_Element     childElement ,
-    DataObject*     refpObject   ,
-    IOpaqueAddress* address      );
+    virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
+                                  DataObject* refpObject,
+                                  IOpaqueAddress* address);
   
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* nameString;
+  const XMLCh* temperatureString;
+  const XMLCh* pressureString;
+  const XMLCh* stateString;
+  const XMLCh* AString;
+  const XMLCh* ZString;
+  const XMLCh* NString;
+  const XMLCh* densityString;
+  const XMLCh* radlenString;
+  const XMLCh* lambdaString;
+  const XMLCh* tabpropsString;
+  const XMLCh* addressString;
+
 };
 
 // ============================================================================

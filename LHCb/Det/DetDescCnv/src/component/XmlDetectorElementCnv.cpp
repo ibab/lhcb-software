@@ -27,7 +27,7 @@ XmlDetectorElementCnv::XmlDetectorElementCnv (ISvcLocator* svc) :
 // Fill an object with a new specific child
 // -----------------------------------------------------------------------
 StatusCode
-XmlDetectorElementCnv::i_fillSpecificObj (DOM_Element /*childElement*/,
+XmlDetectorElementCnv::i_fillSpecificObj (xercesc::DOMElement* /*childElement*/,
                                           DetectorElement* /*refpObject*/,
                                           IOpaqueAddress* /*address*/) {
   // default implementation : ignore child

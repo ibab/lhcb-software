@@ -1,4 +1,4 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlBaseDetElemCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/DetDescCnv/XmlBaseDetElemCnv.h,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 #ifndef DETDESCCNV_XMLDETELEMCNV_H
 #define DETDESCCNV_XMLDETELEMCNV_H
@@ -58,20 +58,20 @@ protected:
   /**
    * Default destructor
    */
-  virtual ~XmlBaseDetElemCnv() {}
+  virtual ~XmlBaseDetElemCnv();
 
   /**
    * Resolves the references of the created transient object.
    */
   virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
 
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
 
   /** Fills the current object for its child element childElement.
@@ -81,7 +81,7 @@ protected:
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
 
@@ -95,7 +95,7 @@ protected:
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+  virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
                                         DetectorElement* refpObject,
                                         IOpaqueAddress* address) = 0;
 
@@ -104,6 +104,38 @@ private:
   
   /// Whether to use the generic converter in case a specific one does not exist
   bool m_doGenericCnv;
+
+private:
+  // a silly method to init strings
+  void initStrings();
+
+  // Constant strings for element names
+  const XMLCh* specificString;
+  const XMLCh* detelemString;
+  const XMLCh* detelemrefString;
+  const XMLCh* versionString;
+  const XMLCh* authorString;
+  const XMLCh* geometryinfoString;
+  const XMLCh* alignmentinfoString;
+  const XMLCh* calibrationinfoString;
+  const XMLCh* readoutinfoString;
+  const XMLCh* slowcontrolinfoString;
+  const XMLCh* fastcontrolinfoString;
+  const XMLCh* paramString;
+  const XMLCh* paramVectorString;
+  const XMLCh* userParameterString;
+  const XMLCh* userParameterVectorString;
+
+  // Constant Strings for parameter names
+  const XMLCh* typeString;
+  const XMLCh* nameString;
+  const XMLCh* commentString;
+  const XMLCh* hrefString;
+  const XMLCh* lvnameString;
+  const XMLCh* supportString;
+  const XMLCh* rpathString;
+  const XMLCh* npathString;
+  const XMLCh* conditionString;
   
 };
 

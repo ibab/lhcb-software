@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.2 2003-04-24 09:15:33 sponce Exp $
 
 // include files
 
@@ -6,6 +6,8 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/MsgStream.h"
+
+#include <xercesc/dom/DOMNodeList.hpp>
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDescCnv/XmlCnvException.h"
@@ -31,6 +33,40 @@ class ISvcLocator;
 XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc) :
   XmlGenericCnv (svc, XmlBaseDetElemCnv::classID()) {
   m_doGenericCnv = false;
+  initStrings();
+}
+
+
+// -----------------------------------------------------------------------
+// initStrings
+// ------------------------------------------------------------------------
+void XmlBaseDetElemCnv::initStrings() {
+  specificString = xercesc::XMLString::transcode("specific");
+  paramString = xercesc::XMLString::transcode("param");
+  paramVectorString = xercesc::XMLString::transcode("paramVector");
+  detelemString = xercesc::XMLString::transcode("detelem");
+  detelemrefString = xercesc::XMLString::transcode("detelemref");
+  versionString = xercesc::XMLString::transcode("version");
+  authorString = xercesc::XMLString::transcode("author");
+  geometryinfoString = xercesc::XMLString::transcode("geometryinfo");
+  alignmentinfoString = xercesc::XMLString::transcode("alignmentinfo");
+  calibrationinfoString = xercesc::XMLString::transcode("calibrationinfo");
+  readoutinfoString = xercesc::XMLString::transcode("readoutinfo");
+  slowcontrolinfoString = xercesc::XMLString::transcode("slowcontrolinfo");
+  fastcontrolinfoString = xercesc::XMLString::transcode("fastcontrolinfo");
+  userParameterString = xercesc::XMLString::transcode("userParameter");
+  userParameterVectorString =
+    xercesc::XMLString::transcode("userParameterVector");
+
+  typeString = xercesc::XMLString::transcode("type");
+  nameString = xercesc::XMLString::transcode("name");
+  commentString = xercesc::XMLString::transcode("comment");
+  hrefString = xercesc::XMLString::transcode("href");
+  lvnameString = xercesc::XMLString::transcode("lvname");
+  supportString = xercesc::XMLString::transcode("support");
+  rpathString = xercesc::XMLString::transcode("rpath");
+  npathString = xercesc::XMLString::transcode("npath");
+  conditionString = xercesc::XMLString::transcode("condition");
 }
 
 
@@ -41,6 +77,39 @@ XmlBaseDetElemCnv::XmlBaseDetElemCnv (ISvcLocator* svc,
                                       const CLID& clsID ) :
   XmlGenericCnv (svc, clsID) {
   m_doGenericCnv = false;
+  initStrings();
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
+  delete specificString;
+  delete detelemString;
+  delete detelemrefString;
+  delete versionString;
+  delete authorString;
+  delete geometryinfoString;
+  delete alignmentinfoString;
+  delete calibrationinfoString;
+  delete readoutinfoString;
+  delete slowcontrolinfoString;
+  delete fastcontrolinfoString;
+  delete paramString;
+  delete paramVectorString;
+  delete userParameterString;
+  delete userParameterVectorString;
+
+  delete typeString;
+  delete nameString;
+  delete commentString;
+  delete hrefString;
+  delete lvnameString;
+  delete supportString;
+  delete rpathString;
+  delete npathString;
+  delete conditionString;
 }
 
 
@@ -88,13 +157,13 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::i_createObj (DOM_Element element,
+StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
                                            DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
   
   // creates an object for the node found
   log << MSG::DEBUG << "Normal generic detector element conversion" << endreq;
-  std::string elementName = dom2Std (element.getAttribute("name"));
+  std::string elementName = dom2Std (element->getAttribute(nameString));
   refpObject = new DetectorElement (elementName);
   
   // returns
@@ -105,7 +174,7 @@ StatusCode XmlBaseDetElemCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
+StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
                                          DataObject* refpObject,
                                          IOpaqueAddress* address) {
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
@@ -113,18 +182,21 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
   // gets the object
   DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
-  if (("detelemref" == tagName) || ("detelem" == tagName)) {
+  if ((0 == xercesc::XMLString::compareString(detelemrefString, tagName)) ||
+      (0 == xercesc::XMLString::compareString(detelemString, tagName))) {
     IOpaqueAddress* addr;
-    if ("detelemref" == tagName) {
+    if (0 == xercesc::XMLString::compareString(detelemrefString, tagName)) {
       // gets the reference value and the position of the '#' in it
-      std::string referenceValue = dom2Std (childElement.getAttribute("href"));
+      std::string referenceValue =
+        dom2Std (childElement->getAttribute(hrefString));
       // creates the address
       addr = createAddressForHref
         (referenceValue, CLID_DetectorElement, address);
-    } else { // here "detelem" == tagName
-      std::string entryName = "/" + dom2Std (childElement.getAttribute("name"));
+    } else { // here detelemString == tagName
+      std::string entryName =
+        "/" + dom2Std (childElement->getAttribute(nameString));
       std::string location = address->par()[0];
       addr = createXmlAddress (location, entryName, CLID_DetectorElement);
     }
@@ -141,14 +213,20 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
                             "XmlBaseDetElemCnv",
                             sc);
     }
-  } else if ("version" == tagName || "author" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(versionString, tagName) ||
+             0 == xercesc::XMLString::compareString(authorString, tagName)) {
     // currently ignored
-  } else if ("geometryinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (geometryinfoString, tagName)) {
     // Everything is in the attributes
-    std::string logVolName = dom2Std (childElement.getAttribute ("lvname"));
-    std::string support = dom2Std (childElement.getAttribute ("support"));
-    std::string replicaPath = dom2Std (childElement.getAttribute ("rpath"));
-    std::string namePath = dom2Std (childElement.getAttribute ("npath"));
+    std::string logVolName =
+      dom2Std (childElement->getAttribute (lvnameString));
+    std::string support =
+      dom2Std (childElement->getAttribute (supportString));
+    std::string replicaPath =
+      dom2Std (childElement->getAttribute (rpathString));
+    std::string namePath =
+      dom2Std (childElement->getAttribute (npathString));
     log << MSG::DEBUG << "GI volume : " << logVolName  << endreq;
     log << MSG::DEBUG << "GI support: " << support     << endreq;
     log << MSG::DEBUG << "GI rpath  : " << replicaPath << endreq;
@@ -194,7 +272,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       dataObj->createGeometryInfo (logVolName,support,repPath);
     } else {
       log << MSG::ERROR << "File " << address->par()[0] << ": "
-          << tagName
+          << xercesc::XMLString::transcode(tagName)
           << " Missing \"rpath\" or \"npath\" element, "
           << "please correct XML data\n"
           << " Either remove support element or provide proper rpath or npath"
@@ -202,77 +280,94 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       StatusCode st( CORRUPTED_DATA );
       throw XmlCnvException( " Corrupted XML data", st );            
     }
-  } else if ("alignmentinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (alignmentinfoString, tagName)) {
     // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    std::string condition =
+      dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-	<< "Create AlignmentInfo with condition : " << condition  << endreq;
+        << "Create AlignmentInfo with condition : " << condition  << endreq;
     dataObj->createAlignment(condition);
-  } else if ("calibrationinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (calibrationinfoString, tagName)) {
     // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    std::string condition =
+      dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-	<< "Create CalibrationInfo with condition : " << condition  << endreq;
+        << "Create CalibrationInfo with condition : " << condition  << endreq;
     dataObj->createCalibration(condition);
-  } else if ("readoutinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (readoutinfoString, tagName)) {
     // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    std::string condition =
+      dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-	<< "Create ReadOutInfo with condition : " << condition  << endreq;
+        << "Create ReadOutInfo with condition : " << condition  << endreq;
     dataObj->createReadOut(condition);
-  } else if ("slowcontrolinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (slowcontrolinfoString, tagName)) {
     // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    std::string condition =
+      dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-	<< "Create SlowControlInfo with condition : " << condition  << endreq;
+        << "Create SlowControlInfo with condition : " << condition  << endreq;
     dataObj->createSlowControl(condition);
-  } else if ("fastcontrolinfo" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (fastcontrolinfoString, tagName)) {
     // Everything is in the attributes
-    std::string condition = dom2Std (childElement.getAttribute ("condition"));
+    std::string condition =
+      dom2Std (childElement->getAttribute (conditionString));
     log << MSG::DEBUG 
-	<< "Create FastControlInfo with condition : " << condition  << endreq;
+        << "Create FastControlInfo with condition : " << condition  << endreq;
     dataObj->createFastControl(condition);
-  } else if (tagName == "specific") {
+  } else if (0 == xercesc::XMLString::compareString(tagName, specificString)) {
     // this is the place where the user will put new elements he wants
     // to add to the default detector element
     // So we just go through the children of this element and call
     // i_fillSpecificObj on them
-    DOM_NodeList specificChildren = childElement.getChildNodes();
+    xercesc::DOMNodeList* specificChildren = childElement->getChildNodes();
     unsigned int i;
-    for (i = 0; i < specificChildren.getLength(); i++) {
-      if (specificChildren.item(i).getNodeType() == DOM_Node::ELEMENT_NODE) {
+    for (i = 0; i < specificChildren->getLength(); i++) {
+      if (specificChildren->item(i)->getNodeType() ==
+          xercesc::DOMNode::ELEMENT_NODE) {
         // gets the current child
-        DOM_Node childNode = specificChildren.item(i);
-        StatusCode sc = i_fillSpecificObj ((DOM_Element &) childNode,
+        xercesc::DOMNode* childNode = specificChildren->item(i);
+        StatusCode sc = i_fillSpecificObj ((xercesc::DOMElement *) childNode,
                                            dataObj,
                                            address);
         if (sc.isFailure()) {
           std::string childNodeName =
-            dom2Std (((DOM_Element &) childNode).getNodeName());
+            dom2Std (((xercesc::DOMElement *) childNode)->getNodeName());
           log << MSG::WARNING << "parsing of specific child "
               << childNodeName << " raised errors."
               << endreq;
         }
       }
     }
-  } else if ("param" == tagName || "paramVector" == tagName ||
-             "userParameter" == tagName || "userParameterVector" == tagName) {
+  } else if
+    (0 == xercesc::XMLString::compareString(paramString, tagName) ||
+     0 == xercesc::XMLString::compareString(paramVectorString, tagName) ||
+     0 == xercesc::XMLString::compareString(userParameterString, tagName) ||
+     0 == xercesc::XMLString::compareString
+     (userParameterVectorString, tagName)) {
     
-    bool isSingleParam = ("userParameter" == tagName || "param" == tagName);
+    bool isSingleParam =
+      (0 == xercesc::XMLString::compareString(userParameterString, tagName) ||
+       0 == xercesc::XMLString::compareString(paramString, tagName));
 
     // get the attributes
-    std::string type = dom2Std (childElement.getAttribute ("type"));
-    std::string name = dom2Std (childElement.getAttribute ("name"));
-    std::string comment = dom2Std (childElement.getAttribute ("comment"));
+    std::string type = dom2Std (childElement->getAttribute (typeString));
+    std::string name = dom2Std (childElement->getAttribute (nameString));
+    std::string comment = dom2Std (childElement->getAttribute (commentString));
     
     // gets the value
     std::string value;
-    DOM_NodeList nodeChildren = childElement.getChildNodes();
+    xercesc::DOMNodeList* nodeChildren = childElement->getChildNodes();
     unsigned int i;
     bool firstWord = true;
-    for (i = 0; i < nodeChildren.getLength(); i++) {
-      if (nodeChildren.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
-        std::string newVal = dom2Std (nodeChildren.item(i).getNodeValue());
+    for (i = 0; i < nodeChildren->getLength(); i++) {
+      if (nodeChildren->item(i)->getNodeType() == xercesc::DOMNode::TEXT_NODE) {
+        std::string newVal = dom2Std (nodeChildren->item(i)->getNodeValue());
         unsigned int begin = 0;
         while (begin < newVal.length() && isspace(newVal[begin])) {
           begin++;
@@ -376,7 +471,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
 
   // returns

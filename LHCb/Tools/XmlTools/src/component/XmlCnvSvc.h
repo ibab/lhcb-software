@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlCnvSvc.h,v 1.1.1.1 2003-04-23 13:38:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Tools/XmlTools/src/component/XmlCnvSvc.h,v 1.2 2003-04-24 09:12:11 sponce Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -85,7 +85,7 @@ public:
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
-  virtual DOM_Document parse (const char* fileName);
+  virtual xercesc::DOMDocument* parse (const char* fileName);
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
@@ -93,7 +93,7 @@ public:
    * @param source the string to parse
    * @return the document issued from the parsing
    */
-  virtual DOM_Document parseString (std::string source);
+  virtual xercesc::DOMDocument* parseString (std::string source);
 
   /**
    * This clears the cache of previously parsed xml files.

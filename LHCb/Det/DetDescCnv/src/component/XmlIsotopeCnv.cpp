@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -60,54 +60,88 @@ XmlIsotopeCnv::XmlIsotopeCnv (ISvcLocator* svc) :
     ssMap.insert (Str2StateMap::value_type
                   (std::string("gas"), stateGas));
   }
+
+  nameString = xercesc::XMLString::transcode("name");
+  temperatureString = xercesc::XMLString::transcode("temperature");
+  pressureString = xercesc::XMLString::transcode("pressure");
+  stateString = xercesc::XMLString::transcode("state");
+  AString = xercesc::XMLString::transcode("A");
+  ZString = xercesc::XMLString::transcode("Z");
+  NString = xercesc::XMLString::transcode("N");
+  densityString = xercesc::XMLString::transcode("density");
+  radlenString = xercesc::XMLString::transcode("radlen");
+  lambdaString = xercesc::XMLString::transcode("lambda");
+  tabpropsString = xercesc::XMLString::transcode("tabprops");
+  addressString = xercesc::XMLString::transcode("address");
+}
+
+
+// -----------------------------------------------------------------------
+// Desctructor
+// ------------------------------------------------------------------------
+XmlIsotopeCnv::~XmlIsotopeCnv () {
+  delete nameString;
+  delete temperatureString;
+  delete pressureString;
+  delete stateString;
+  delete AString;
+  delete ZString;
+  delete NString;
+  delete densityString;
+  delete radlenString;
+  delete lambdaString;
+  delete tabpropsString;
+  delete addressString;  
 }
 
 
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlIsotopeCnv::i_createObj (DOM_Element element,
+StatusCode XmlIsotopeCnv::i_createObj (xercesc::DOMElement* element,
                                        DataObject*& refpObject) {
   // creates an object for the node found
-  std::string elementName = dom2Std (element.getAttribute ("name"));
+  std::string elementName = dom2Std (element->getAttribute (nameString));
   Isotope* dataObj = new Isotope (elementName);
   refpObject = dataObj;
   
   // Now we have to process more material attributes if any
   std::string temperatureAttribute =
-    dom2Std (element.getAttribute ("temperature"));
+    dom2Std (element->getAttribute (temperatureString));
   if (!temperatureAttribute.empty()) {
     dataObj->setTemperature (xmlSvc()->eval(temperatureAttribute));
   }
-  std::string pressureAttribute = dom2Std (element.getAttribute ("pressure"));
+  std::string pressureAttribute =
+    dom2Std (element->getAttribute (pressureString));
   if (!pressureAttribute.empty()) {
     dataObj->setPressure (xmlSvc()->eval(pressureAttribute));
   }
-  std::string stateAttribute = dom2Std (element.getAttribute ("state"));
+  std::string stateAttribute = dom2Std (element->getAttribute (stateString));
   if (!stateAttribute.empty()) {
     dataObj->setState (ssMap[stateAttribute]);
   }
-  std::string aAttribute = dom2Std (element.getAttribute ( "A" ));
+  std::string aAttribute = dom2Std (element->getAttribute ( AString ));
   if (!aAttribute.empty()) {
     dataObj->setA (xmlSvc()->eval(aAttribute));
   }
-  std::string zAttribute = dom2Std (element.getAttribute ( "Z" ));
+  std::string zAttribute = dom2Std (element->getAttribute ( ZString ));
   if (!zAttribute.empty()) {
     dataObj->setZ (xmlSvc()->eval(zAttribute, false));
   }
-  std::string nAttribute = dom2Std (element.getAttribute ( "N" ));
+  std::string nAttribute = dom2Std (element->getAttribute ( NString ));
   if (!nAttribute.empty()) {
     dataObj->setN (xmlSvc()->eval(nAttribute, false));
   }
-  std::string densityAttribute = dom2Std (element.getAttribute ("density"));
+  std::string densityAttribute =
+    dom2Std (element->getAttribute (densityString));
   if (!densityAttribute.empty()) {
     dataObj->setDensity (xmlSvc()->eval(densityAttribute));
   }
-  std::string radlenAttribute = dom2Std (element.getAttribute ("radlen"));
+  std::string radlenAttribute = dom2Std (element->getAttribute (radlenString));
   if (!radlenAttribute.empty()) {
     dataObj->setRadiationLength (xmlSvc()->eval(radlenAttribute));
   }
-  std::string lambdaAttribute = dom2Std (element.getAttribute ("lambda"));
+  std::string lambdaAttribute = dom2Std (element->getAttribute (lambdaString));
   if (!lambdaAttribute.empty()) {
     dataObj->setAbsorptionLength (xmlSvc()->eval(lambdaAttribute));
   }
@@ -120,8 +154,8 @@ StatusCode XmlIsotopeCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlIsotopeCnv::i_fillObj (DOM_Element        childElement   ,
-                                     DataObject*        refpObject     ,
+StatusCode XmlIsotopeCnv::i_fillObj (xercesc::DOMElement* childElement,
+                                     DataObject* refpObject,
                                      IOpaqueAddress* /* address     */ ) 
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
@@ -129,19 +163,19 @@ StatusCode XmlIsotopeCnv::i_fillObj (DOM_Element        childElement   ,
   // gets the object
   Isotope* dataObj = dynamic_cast<Isotope*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
-  if ("tabprops" == tagName) {
+  if (0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
     // if we have a tabprops element, adds it to the current object
     const std::string address =
-      dom2Std (childElement.getAttribute("address"));
+      dom2Std (childElement->getAttribute(addressString));
     long linkID = dataObj->linkMgr()->addLink(address, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to isotope: "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
 
   // returns

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlMixtureCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlMixtureCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $
 
 #ifndef DETDESCCNV_XMLMIXTURECNV_H
 #define DETDESCCNV_XMLMIXTURECNV_H
@@ -46,17 +46,16 @@ class XmlMixtureCnv : public XmlGenericCnv {
   /**
    * Default destructor
    */
-  virtual ~XmlMixtureCnv() {}
+  virtual ~XmlMixtureCnv();
 
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj 
-  ( DOM_Element  element    ,
-    DataObject*& refpObject );
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
+                                  DataObject*& refpObject);
   
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
@@ -65,10 +64,9 @@ class XmlMixtureCnv : public XmlGenericCnv {
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj 
-  ( DOM_Element childElement ,
-    DataObject* refpObject   ,
-    IOpaqueAddress* address  );
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
   
   /** This processes the current object.
    * Overrides the default method in XmlGenericCnv
@@ -76,9 +74,8 @@ class XmlMixtureCnv : public XmlGenericCnv {
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_processObj 
-  ( DataObject*     refpObject ,
-    IOpaqueAddress* address    );
+  virtual StatusCode i_processObj (DataObject* refpObject,
+                                   IOpaqueAddress* address);
   
   /**
    * This is used to describe the kind of ponderation used so far in the
@@ -101,6 +98,25 @@ class XmlMixtureCnv : public XmlGenericCnv {
    */
   std::string compactPath(std::string path);
 
+
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* temperatureString;
+  const XMLCh* pressureString;
+  const XMLCh* stateString;
+  const XMLCh* AeffString;
+  const XMLCh* ZeffString;
+  const XMLCh* densityString;
+  const XMLCh* radlenString;
+  const XMLCh* lambdaString;
+  const XMLCh* tabpropsString;
+  const XMLCh* addressString;
+  const XMLCh* componentString;
+  const XMLCh* nameString;
+  const XMLCh* natomsString;
+  const XMLCh* fractionmassString;
+  
 };
 
 #endif // DETDESCCNV_XMLCNVSVC_XMLMIXTURECNV_H

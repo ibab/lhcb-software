@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlSurfaceCnv.h,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlSurfaceCnv.h,v 1.2 2003-04-24 09:15:35 sponce Exp $
 
 #ifndef     DETDESCCNV_XMLSurfaceCNV_H
 #define     DETDESCCNV_XMLSurfaceCNV_H 1 
@@ -44,15 +44,15 @@ class XmlSurfaceCnv : public XmlGenericCnv {
   /**
    * Default destructor
    */
-  virtual ~XmlSurfaceCnv() {};
+  virtual ~XmlSurfaceCnv();
 
-  /** Creates the transient representation of an object from a DOM_Element.
+  /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOM_Element to be used to builds the object
+   * @param element the DOMElement to be used to builds the object
    * @param refpObject the object to be built
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_createObj (DOM_Element element,
+  virtual StatusCode i_createObj (xercesc::DOMElement* element,
                                   DataObject*& refpObject);
 
   /** Fills the current object for its child element childElement.
@@ -62,9 +62,23 @@ class XmlSurfaceCnv : public XmlGenericCnv {
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
-  virtual StatusCode i_fillObj (DOM_Element childElement,
+  virtual StatusCode i_fillObj (xercesc::DOMElement* childElement,
                                 DataObject* refpObject,
                                 IOpaqueAddress* address);
+
+
+private:
+
+  // Constant strings for element and parameter names
+  const XMLCh* nameString;
+  const XMLCh* modelString;
+  const XMLCh* finishString;
+  const XMLCh* typeString;
+  const XMLCh* valueString;
+  const XMLCh* volfirstString;
+  const XMLCh* volsecondString;
+  const XMLCh* tabpropsString;
+  const XMLCh* addressString;
 
 };
 

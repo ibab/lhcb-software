@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.2 2003-04-24 09:15:34 sponce Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -55,51 +55,91 @@ XmlElementCnv::XmlElementCnv (ISvcLocator* svc) :
     s_sMap.insert (Str2StateMap::value_type
                    (std::string ("gas"), stateGas));
   }
+  nameString = xercesc::XMLString::transcode("name");
+  temperatureString = xercesc::XMLString::transcode("temperature");
+  pressureString = xercesc::XMLString::transcode("pressure");
+  stateString = xercesc::XMLString::transcode("state");
+  densityString = xercesc::XMLString::transcode("density");
+  radlenString = xercesc::XMLString::transcode("radlen");
+  lambdaString = xercesc::XMLString::transcode("lambda");
+  symbolString = xercesc::XMLString::transcode("symbol");
+  AString = xercesc::XMLString::transcode("A");
+  ZeffString = xercesc::XMLString::transcode("Zeff");
+  hrefString = xercesc::XMLString::transcode("href");
+  fractionmassString = xercesc::XMLString::transcode("fractionmass");
+  tabpropsString = xercesc::XMLString::transcode("tabprops");
+  addressString = xercesc::XMLString::transcode("address");
+  isotoperefString = xercesc::XMLString::transcode("isotoperef");
+  atomString = xercesc::XMLString::transcode("atom");
+}
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// -----------------------------------------------------------------------
+XmlElementCnv::~XmlElementCnv () {
+  delete nameString;
+  delete temperatureString;
+  delete pressureString;
+  delete stateString;
+  delete densityString;
+  delete radlenString;
+  delete lambdaString;
+  delete symbolString;
+  delete AString;
+  delete ZeffString;
+  delete hrefString;
+  delete fractionmassString;
+  delete tabpropsString;
+  delete addressString;
+  delete isotoperefString;
+  delete atomString;
 }
 
 
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlElementCnv::i_createObj (DOM_Element element,
+StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
                                        DataObject*& refpObject) {
-
   // creates an object for the node found
-  std::string elementName = dom2Std (element.getAttribute ("name"));
+  std::string elementName = dom2Std (element->getAttribute (nameString));
   Element* dataObj = new Element(elementName);
   refpObject = dataObj;
   // Now we have to process more material attributes if any      
   std::string temperatureAttribute =
-    dom2Std (element.getAttribute ("temperature"));
+    dom2Std (element->getAttribute (temperatureString));
   if (!temperatureAttribute.empty()) {
     dataObj->setTemperature
       (xmlSvc()->eval(temperatureAttribute));
   }
-  std::string pressureAttribute = dom2Std (element.getAttribute ("pressure"));
+  std::string pressureAttribute =
+    dom2Std (element->getAttribute (pressureString));
   if (!pressureAttribute.empty()) {
     dataObj->setPressure
       (xmlSvc()->eval(pressureAttribute));
   }
-  std::string stateAttribute = dom2Std (element.getAttribute ("state"));
+  std::string stateAttribute = dom2Std (element->getAttribute (stateString));
   if (!stateAttribute.empty()) {
     dataObj->setState (s_sMap[stateAttribute]);
   }
-  std::string densityAttribute = dom2Std (element.getAttribute ("density"));
+  std::string densityAttribute =
+    dom2Std (element->getAttribute (densityString));
   if (!densityAttribute.empty()) {
     dataObj->setDensity
       (xmlSvc()->eval(densityAttribute));
   }
-  std::string radlenAttribute = dom2Std (element.getAttribute ("radlen"));
+  std::string radlenAttribute = dom2Std (element->getAttribute (radlenString));
   if (!radlenAttribute.empty()) {
     dataObj->setRadiationLength
       (xmlSvc()->eval(radlenAttribute));
   }
-  std::string lambdaAttribute = dom2Std (element.getAttribute ("lambda"));
+  std::string lambdaAttribute = dom2Std (element->getAttribute (lambdaString));
   if (!lambdaAttribute.empty()) {
     dataObj->setAbsorptionLength
       (xmlSvc()->eval(lambdaAttribute));
   }
-  std::string symbolAttribute = dom2Std (element.getAttribute ("symbol"));
+  std::string symbolAttribute = dom2Std (element->getAttribute (symbolString));
   if (!symbolAttribute.empty()) {
     dataObj->setSymbol (symbolAttribute);
   }
@@ -112,7 +152,7 @@ StatusCode XmlElementCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlElementCnv::i_fillObj (DOM_Element        childElement ,
+StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
                                      DataObject*        refpObject   , 
                                      IOpaqueAddress* /* address  */  ) 
 {
@@ -121,37 +161,40 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element        childElement ,
   // gets the object
   Element* dataObj = dynamic_cast<Element*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   
   // dispatches, based on the name
-  if ("tabprops" == tagName) {
+  if (0 == xercesc::XMLString::compareString(tabpropsString, tagName)) {
     log << MSG::VERBOSE << "looking at tabprops" << endreq;
     // if we have a tabprops element, adds it to the current object
     const std::string address =
-      dom2Std (childElement.getAttribute ("address"));
+      dom2Std (childElement->getAttribute (addressString));
     long linkID = dataObj->linkMgr()->addLink(address, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
-  } else if ("atom" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString(atomString, tagName)) {
     
     log << MSG::VERBOSE << "looking at an atom" << endreq;
     // Now we have to process atom attributes
-    std::string aAttribute = dom2Std (childElement.getAttribute ("A"));
+    std::string aAttribute = dom2Std (childElement->getAttribute (AString));
     if (!aAttribute.empty()) {
       dataObj->setA (xmlSvc()->eval(aAttribute));
     }
-    std::string zeffAttribute = dom2Std (childElement.getAttribute ("Zeff"));
+    std::string zeffAttribute =
+      dom2Std (childElement->getAttribute (ZeffString));
     if (!zeffAttribute.empty()) {
       dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
     }
     
-  } else if ("isotoperef" == tagName) {
+  } else if (0 == xercesc::XMLString::compareString
+             (isotoperefString, tagName)) {
 
     log << MSG::VERBOSE << "looking at an isotoperef" << endreq;
-    // Unlike XmlCatalogCnv we don't create XmlAdress hooks for children
+    // Unlike XmlCatalogCnv we don't create XmlAddress hooks for children
     // we try to load the referred elements and mixtures instead
     // gets and parses the href attribute
-    std::string hrefAttribute = dom2Std (childElement.getAttribute ("href"));
+    std::string hrefAttribute =
+      dom2Std (childElement->getAttribute (hrefString));
     log << MSG::VERBOSE << "href attribute is : " << hrefAttribute << endreq;
     unsigned int poundPosition = hrefAttribute.find_last_of('#');
     // builds an entry name for the child
@@ -177,7 +220,7 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element        childElement ,
     // so it can be used to detect which is the one that is provided.
     double m_itemFraction = 0.0;
     std::string fractionMassAttribute =
-      dom2Std (childElement.getAttribute ("fractionmass"));
+      dom2Std (childElement->getAttribute (fractionmassString));
     if (!fractionMassAttribute.empty()) {
       m_itemFraction = xmlSvc()->eval (fractionMassAttribute, false);
     }
@@ -197,7 +240,7 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element        childElement ,
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to element : "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
 
   // returns

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDescCnv/src/component/XmlTabulatedPropertyCnv.cpp,v 1.2 2003-04-24 09:15:35 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -44,37 +44,62 @@ XmlTabulatedPropertyCnv::XmlTabulatedPropertyCnv (ISvcLocator* svcs) :
   XmlGenericCnv (svcs, classID()),
   m_xunit (1),
   m_yunit (1){
+  nameString = xercesc::XMLString::transcode("name");
+  typeString = xercesc::XMLString::transcode("type");
+  xaxisString = xercesc::XMLString::transcode("xaxis");
+  yaxisString = xercesc::XMLString::transcode("yaxis");
+  xunitString = xercesc::XMLString::transcode("xunit");
+  yunitString = xercesc::XMLString::transcode("yunit");
+  entryString = xercesc::XMLString::transcode("entry");
+  xString = xercesc::XMLString::transcode("x");
+  yString = xercesc::XMLString::transcode("y");
 };
+
+
+// -----------------------------------------------------------------------
+// Destructor
+// ------------------------------------------------------------------------
+XmlTabulatedPropertyCnv::~XmlTabulatedPropertyCnv () {
+  delete nameString;
+  delete typeString;
+  delete xaxisString;
+  delete yaxisString;
+  delete xunitString;
+  delete yunitString;
+  delete entryString;
+  delete xString;
+  delete yString;
+}
 
 
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlTabulatedPropertyCnv::i_createObj (DOM_Element element,
+StatusCode XmlTabulatedPropertyCnv::i_createObj (xercesc::DOMElement* element,
                                                  DataObject*& refpObject) {
   m_xunit   = 1    ;
   m_yunit   = 1    ;
 
   // creates an object for the node found
-  std::string elementName = dom2Std (element.getAttribute("name"));
+  std::string elementName = dom2Std (element->getAttribute(nameString));
   TabulatedProperty* dataObj = new TabulatedProperty (elementName);
   refpObject = dataObj;
 
   /// get all attributes           
   dataObj->table().clear()   ;
-  const std::string Type = dom2Std (element.getAttribute ("type"));
+  const std::string Type = dom2Std (element->getAttribute (typeString));
   dataObj->setType(Type) ;
-  const std::string xAxis= dom2Std (element.getAttribute ("xaxis"));
+  const std::string xAxis= dom2Std (element->getAttribute (xaxisString));
   dataObj->setXAxis(xAxis) ;
-  const std::string yAxis= dom2Std (element.getAttribute ("yaxis"));
+  const std::string yAxis= dom2Std (element->getAttribute (yaxisString));
   dataObj->setYAxis(yAxis) ;
-  std::string xUnitAttribute = dom2Std (element.getAttribute ("xunit"));
+  std::string xUnitAttribute = dom2Std (element->getAttribute (xunitString));
   if (xUnitAttribute.empty()) {
     m_xunit = 1.0;
   } else {
     m_xunit = xmlSvc()->eval(xUnitAttribute, false);
   }
-  std::string yUnitAttribute = dom2Std (element.getAttribute ("yunit"));
+  std::string yUnitAttribute = dom2Std (element->getAttribute (yunitString));
   if (yUnitAttribute.empty()) {
     m_yunit = 1.0;
   } else {
@@ -89,25 +114,26 @@ StatusCode XmlTabulatedPropertyCnv::i_createObj (DOM_Element element,
 // -----------------------------------------------------------------------
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
-StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Element childElement,
-                                               DataObject* refpObject,
-                                               IOpaqueAddress* /*address*/) {
+StatusCode
+XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMElement* childElement,
+                                    DataObject* refpObject,
+                                    IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "TabulatedPropertyCnv" );
   
   // gets the object
   TabulatedProperty* dataObj = dynamic_cast<TabulatedProperty*> (refpObject);
   // gets the element's name
-  std::string tagName = dom2Std (childElement.getNodeName());
+  const XMLCh* tagName = childElement->getNodeName();
   // dispatches, based on the name
-  if ("entry" == tagName) {
-    std::string xAttribute = dom2Std (childElement.getAttribute ("x"));
+  if (0 == xercesc::XMLString::compareString(entryString, tagName)) {
+    std::string xAttribute = dom2Std (childElement->getAttribute (xString));
     if (xAttribute.empty()) {
       throw XmlCnvException
         ("XmlTabulatedPropertyCnv: 'x' attribute for tag='entry'"
          " could bot be omitted! ");
     }
     const double vx = xmlSvc()->eval(xAttribute ,false) * m_xunit;
-    std::string yAttribute = dom2Std (childElement.getAttribute ("y"));
+    std::string yAttribute = dom2Std (childElement->getAttribute (yString));
     if (yAttribute.empty()) {
       throw XmlCnvException
         ("XmlTabulatedPropertyCnv: 'y' attribute for tag='entry'"
@@ -118,7 +144,7 @@ StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Element childElement,
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to tabulated property : "
-        << tagName << endreq;
+        << xercesc::XMLString::transcode(tagName) << endreq;
   }
   // returns
   return StatusCode::SUCCESS;
@@ -128,20 +154,25 @@ StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Element childElement,
 // -----------------------------------------------------------------------
 // Fill an object with a new text child
 // -----------------------------------------------------------------------
-StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Text childText,
-                                               DataObject* refpObject,
-                                               IOpaqueAddress* /*address*/) {
+StatusCode
+XmlTabulatedPropertyCnv::i_fillObj (xercesc::DOMText* childText,
+                                    DataObject* refpObject,
+                                    IOpaqueAddress* /*address*/) {
   // gets the object
   TabulatedProperty* dataObj = dynamic_cast<TabulatedProperty*> (refpObject);
   // gets the text
-  DOMString text = childText.getData();
-  char *textValue = text.transcode();
+  const XMLCh* text = childText->getData();
+  char *textValue = xercesc::XMLString::transcode(text);
 
   // parses it
   std::string x ;
   std::string y ;
 #if defined (__GNUC__) && ( __GNUC__ <= 2 )
-  std::istrstream cstr (textValue, text.length());
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+  std::istrstream cstr (textValue, xercesc::XMLString::stringLen(text));
+#else
+  std::istringstream cstr (textValue);
+#endif
 #else
   std::istringstream cstr (textValue);
 #endif
