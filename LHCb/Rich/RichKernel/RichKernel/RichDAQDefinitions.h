@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.1 2005-01-07 13:16:23 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.2 2005-01-13 12:16:53 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 13:16:23  jonrob
+ *  Add to CVS
+ *
  *  Revision 1.7  2004/07/27 13:46:06  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -13,12 +16,14 @@
  *  @date   2003-11-06
  */
 
-#ifndef RICHKERNEL_RICHDAQDEFINITIONS_H 
+#ifndef RICHKERNEL_RICHDAQDEFINITIONS_H
 #define RICHKERNEL_RICHDAQDEFINITIONS_H 1
 
 // from STL
 #include <vector>
-#include <map>
+
+// GaudiKernel
+#include "GaudiKernel/stl_hash.h"
 
 // Event model
 #include "Event/DAQTypes.h"
@@ -26,6 +31,9 @@
 
 // Kernel
 #include "Kernel/RichSmartID.h"
+#include "RichKernel/RichHashMap.h"
+#include "RichKernel/RichMap.h"
+#include "RichKernel/RichSmartIDHashFuncs.h"
 
 /** @namespace RichDAQ
  *
@@ -46,10 +54,10 @@ namespace RichDAQ {
   typedef ShortType                                         Level1ID;
 
   /// Container for RICH HPD data, sorted by HPD number
-  typedef std::map< RichSmartID, RichSmartID::Collection >  PDMap;
+  typedef RichMap< RichSmartID, RichSmartID::Collection >   PDMap;
 
   /// Container for RICH HPD data, sorted by Level1 board number
-  typedef std::map< Level1ID, PDMap >                       L1Map;
+  typedef RichMap< Level1ID, PDMap >                        L1Map;
 
   /// Local definition of a RawBank constructed from 32bit ints
   typedef std::vector< LongType >                           RAWBank;
@@ -63,9 +71,15 @@ namespace RichDAQ {
   /// Vector of HPD Hardware IDs
   typedef std::vector< HPDHardwareID >                      HPDHardwareIDs;
 
+  /// Mapping from Level1 ID to list of HPD RichSmartIDs
+  typedef RichMap< const RichDAQ::Level1ID, RichSmartID::Collection > L1ToSmartIDs;
+
+  /// Mapping from Level1 ID to list of HPD RichSmartIDs
+  typedef RichMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs > L1ToHardIDs;
+
   /// Maximum data block size
   static const RichDAQ::ShortType MaxDataSize = 32;
- 
+
   /** @enum BankVersion
    *
    *  Enumeration for the RICH DAQ bank version
@@ -76,10 +90,23 @@ namespace RichDAQ {
   enum BankVersion
     {
       LHCb0  = 0,   ///< First LHCb mode version. Compatible with DC04
-      LHCb1  = 1,   ///< Second LHCb mode version. Level1 grouping + new zero suppression format
-      Alice0 = 2    ///< First Alice mode version.
+      LHCb1  = 1,   ///< Second LHCb mode version. Same as LHCb0 with new header + Level1 grouping 
+      LHCb2  = 2    ///< Third LHCb mode version. Same as LHCb1 with new zero suppression format
     };
 
 }
 
-#endif // RICHKERNEL_RICHDAQDEFINITIONS_H 
+// Hash functions
+
+#ifdef __GNUC__
+namespace __gnu_cxx
+{
+  // HPDHardwareID
+  template <> struct hash<const RichDAQ::HPDHardwareID>
+  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id ; } } ;
+  template <> struct hash<const RichDAQ::HPDHardwareID&>
+  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id ; } } ;
+}
+#endif
+
+#endif // RICHKERNEL_RICHDAQDEFINITIONS_H
