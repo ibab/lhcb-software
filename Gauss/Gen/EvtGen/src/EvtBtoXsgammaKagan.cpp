@@ -35,10 +35,6 @@
 //------------------------------------------------------------------------
 //
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include "EvtGenModels/EvtBtoXsgamma.hh"
 #include "EvtGenBase/EvtRandom.hh"

@@ -18,10 +18,6 @@
 //
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <math.h>
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtKine.hh"

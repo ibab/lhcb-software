@@ -1,16 +1,12 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtIntegralDb.cpp,v 1.2 2004-01-12 13:48:49 robbep Exp $
+ *    File: $Id: EvtIntegralDb.cpp,v 1.3 2004-07-12 16:13:30 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
  *******************************************************************************/
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <string.h>
 #include <stdio.h>
 #include "EvtGenBase/EvtIntegralDb.hh"

@@ -19,10 +19,6 @@
 //                                           z parameter (CPT violation)
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"

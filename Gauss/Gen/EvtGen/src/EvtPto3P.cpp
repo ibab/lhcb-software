@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtPto3P.cpp,v 1.2 2004-01-12 13:48:49 robbep Exp $
+//      $Id: EvtPto3P.cpp,v 1.3 2004-07-12 16:13:32 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -14,10 +14,6 @@
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtPatches.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtPto3P.hh"

@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-// 	$Id: EvtItgFunction.cpp,v 1.2 2003-10-02 17:39:00 robbep Exp $
+// 	$Id: EvtItgFunction.cpp,v 1.3 2004-07-12 16:13:30 robbep Exp $
 //
 // Description:
 //	Class EvtItgFunction
@@ -21,10 +21,6 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenModels/EvtItgFunction.hh"
 
 //-------------

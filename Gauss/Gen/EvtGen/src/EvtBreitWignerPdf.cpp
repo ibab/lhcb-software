@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtBreitWignerPdf.cpp,v 1.1 2003-10-02 17:34:48 robbep Exp $
+ *    File: $Id: EvtBreitWignerPdf.cpp,v 1.2 2004-07-12 16:13:27 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -10,10 +10,6 @@
 // Breit-Wigner shape PDF. If the width is zero it degenerates into a delta 
 // function. The integral and its inverse can be still evaluated. 
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>

@@ -18,10 +18,6 @@
 //
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtAmpIndex.hh"
 #include "EvtGenBase/EvtAmpSubIndex.hh"
 #include <vector>

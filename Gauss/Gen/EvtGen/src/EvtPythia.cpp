@@ -18,10 +18,6 @@
 //    RS      October 28, 2002        copied from JETSET module
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size  
-#endif 
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtStringParticle.hh"
 #include "EvtGenBase/EvtDecayTable.hh"

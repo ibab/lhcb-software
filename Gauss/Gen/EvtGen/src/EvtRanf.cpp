@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanf.cpp,v 1.2 2004-01-15 13:43:05 robbep Exp $
+//      $Id: EvtRanf.cpp,v 1.3 2004-07-12 16:13:32 robbep Exp $
 //
 // Description:
 //	subroutine evtranf_.
@@ -11,10 +11,6 @@
 //
 //
 //------------------------------------------------------------------------
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

@@ -1,16 +1,12 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtPto3PAmp.cpp,v 1.1 2003-10-02 17:33:14 robbep Exp $
+ *    File: $Id: EvtPto3PAmp.cpp,v 1.2 2004-07-12 16:13:32 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
  *******************************************************************************/
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <assert.h>
 #include <math.h>
 #include <iostream>

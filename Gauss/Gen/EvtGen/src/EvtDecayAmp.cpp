@@ -20,10 +20,6 @@
 
 
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtDecayBase.hh"
 #include "EvtGenBase/EvtDecayAmp.hh"
 #include "EvtGenBase/EvtParticle.hh"

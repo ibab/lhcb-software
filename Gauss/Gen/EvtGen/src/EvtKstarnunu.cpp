@@ -29,10 +29,6 @@
 // Created:     Sept. 29 1997
 //
 //
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include <iostream>
 #include <string>

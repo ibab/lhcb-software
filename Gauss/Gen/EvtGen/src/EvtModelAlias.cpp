@@ -19,10 +19,6 @@
 //
 //------------------------------------------------------------------------
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtModelAlias.hh"
 
 EvtModelAlias::EvtModelAlias(std::string alias, std::string model, std::vector<std::string> args):

@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDecayMode.cpp,v 1.1 2003-10-02 17:34:48 robbep Exp $
+//      $Id: EvtDecayMode.cpp,v 1.2 2004-07-12 16:13:29 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -18,10 +18,6 @@
 // of the mother and of the daughters. The string should 
 // be in standard format e.g. "B+ -> pi+ pi+ pi-"
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtPatches.hh"
 #include <assert.h>
 #include <iostream>

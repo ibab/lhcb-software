@@ -22,10 +22,6 @@
 //-----------------------
 // This Class's Header --
 //-----------------------
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenModels/EvtBtoXsgammaFermiUtil.hh"
 #include "EvtGenModels/EvtItgTwoCoeffFcn.hh"
 #include "EvtGenModels/EvtBtoXsgammaRootFinder.hh"

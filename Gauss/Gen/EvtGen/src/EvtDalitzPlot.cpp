@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtDalitzPlot.cpp,v 1.1 2003-10-02 17:34:48 robbep Exp $
+//      $Id: EvtDalitzPlot.cpp,v 1.2 2004-07-12 16:13:28 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -17,10 +17,6 @@
 // Global 3-body Dalitz decay kinematics as defined by the mass
 // of the mother and the daughters. Spins are not considered.
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtPatches.hh"
 #include <math.h>
 #include <assert.h>

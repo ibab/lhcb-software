@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMassAmp.cpp,v 1.1 2003-10-02 17:33:14 robbep Exp $
+//      $Id: EvtMassAmp.cpp,v 1.2 2004-07-12 16:13:31 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -14,10 +14,6 @@
 //      Alexei Dvoretskii, Caltech, 2001-2002.
 //-----------------------------------------------------------------------
 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtMassAmp.hh"
 
 EvtMassAmp::EvtMassAmp(const EvtPropBreitWignerRel& prop, const EvtTwoBodyVertex& vd)

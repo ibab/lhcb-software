@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanFor.cpp,v 1.3 2003-10-02 17:39:01 robbep Exp $
+//      $Id: EvtRanFor.cpp,v 1.4 2004-07-12 16:13:32 robbep Exp $
 //
 // Description:
 //	subroutine emcranfor_.
@@ -18,10 +18,6 @@
 // Copyright Information: See EvtGen/COPYRIGHT
 //
 //------------------------------------------------------------------------
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>

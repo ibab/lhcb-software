@@ -18,10 +18,6 @@
 //
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <iostream>
 #include <math.h>
 #include <assert.h>

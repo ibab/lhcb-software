@@ -18,10 +18,6 @@
 //
 //------------------------------------------------------------------------
 //
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include "EvtGenBase/EvtConst.hh"
 
 const double EvtConst::pi           =  3.141592653589793238;

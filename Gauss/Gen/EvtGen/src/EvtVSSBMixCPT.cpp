@@ -21,10 +21,6 @@
 //
 //------------------------------------------------------------------------
 // 
-#ifdef WIN32 
-  #pragma warning( disable : 4786 ) 
-  // Disable anoying warning about symbol size 
-#endif 
 #include <stdlib.h>
 #include "EvtGenBase/EvtConst.hh"
 #include "EvtGenBase/EvtParticle.hh"
