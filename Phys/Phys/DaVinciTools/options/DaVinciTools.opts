@@ -3,7 +3,7 @@
 // package.
 //---------------------------------------------------------------
 
-ToolSvc.AxPart2MCParticleAsct.DataLocation = "/Event/Anal/AxPart2MCParticle" ;
+ToolSvc.AxPart2MCParticleAsct.DataLocation = "/Event/Rec/AxPart2MCParticle" ;
 ToolSvc.MCUtilityTool.PrintDepth = 999;
 
 //##############################################################
