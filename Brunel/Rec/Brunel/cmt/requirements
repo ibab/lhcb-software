@@ -70,7 +70,7 @@ use CaloDigit           v1r2  	Calo
 use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r9 	IT
+use ITAlgorithms        v12r9p1	IT
 use ITCheckers          v1r3  	IT
 
 # Outer Tracker

@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v18r1>2003-06-05 Brunel v18r1</A></H1><PRE>
+</PRE><H1><A NAME=v18r1>2003-06-10 Brunel v18r1</A></H1><PRE>
 - New features:
    . New algorithm MCEvTypeFilter to allow different DST definitions depending
      on event type (BrunelAlgs v2r0)
@@ -22,6 +22,7 @@ Purpose: LHCb reconstruction program
    . Fix bug 424: crashes due to rounding problem (MuonBackground v1r1)
    . Fix bug 135: Solids deleted twice at finalisation (DetDesc v1r9p1)
    . Fix some Rich1 overlaps reported by transport service (XmlDDDB v15r5)
+   . Fix uninitialised bin in IT charge sharing function (ITAlgorithms v12r9p1)
 
 - Packaging changes:
 	 . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
