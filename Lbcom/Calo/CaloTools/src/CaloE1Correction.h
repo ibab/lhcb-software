@@ -1,8 +1,11 @@
-// $Id: CaloE1Correction.h,v 1.1 2002-07-21 18:56:18 ibelyaev Exp $
+// $Id: CaloE1Correction.h,v 1.2 2002-07-22 08:19:43 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/07/21 18:56:18  ibelyaev
+//  add new energy correction
+//
 // Revision 1.1  2002/06/21 11:02:47  ibelyaev
 //  update in S-,L- and E-corrections
 //
@@ -94,7 +97,7 @@ protected:
                               const Params& pars   ) const 
   {
     if( energy <= 0 ) { return 0 ; } 
-    const double sei = 1.0 / sqrt( energy );
+    const double sei = 1.0 / sqrt( energy / GeV );
     return energy * ( pars[0] + pars[1]*sei + pars[2]*sei*sei );  
   };
   
@@ -107,10 +110,10 @@ protected:
                               const Params& pars   ) const 
   {
     if( energy <= 0 ) { return 1 ; } 
-    const double sei = 1.0 / sqrt( energy );
-    return pars[0] + 0.5 * pars[1]*sei ;  
+    const double sei = 1.0 / sqrt( energy / GeV );
+    return ( pars[0] + 0.5 * pars[1] * sei );
   };
-
+  
 private:
 
   ///  default  constructor   is   private

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.28 2002-07-21 18:56:17 ibelyaev Exp $
+! $Id: release.notes,v 1.29 2002-07-22 08:19:42 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-07-22 - Ivan Belyaev
+ - src/CaloE1Correction.h,.cpp   fix trivial bug 
 
 ! 2002-07-21 - Ivan Belyaev
  - src/CaloE1Correction.h,.cpp   new energy correction
