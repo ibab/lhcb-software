@@ -4,10 +4,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== LHCbSys v12r1 2003-07-07 ========================
-! 2003-07-07 - Marco Cattaneo
+!======================== LHCbSys v12r1 2003-07-08 ========================
+! 2003-07-08 - Marco Cattaneo
  - Modifications to Rich for Gauss and OO digitization
  - Modified packages: 
+      GaudiConf v6r10,
       DetSys v2r1, RichDet v5r0,
       EventSys v14r1, Event v3r4, RichEvent v5r0,
       KernelSys v1r4, RichKernel v3r1,

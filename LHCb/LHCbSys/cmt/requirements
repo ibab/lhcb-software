@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 use LHCb		v12r1
 
-use GaudiConf		v6r9
+use GaudiConf		v6r10
 
 use BookKeeping 	v1r2	Tools
 
