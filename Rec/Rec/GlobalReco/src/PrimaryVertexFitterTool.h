@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFitterTool.h,v 1.2 2002-07-26 19:28:13 gcorti Exp $
+// $Id: PrimaryVertexFitterTool.h,v 1.3 2002-10-22 21:56:36 gcorti Exp $
 #ifndef PRIMARYVERTEXFITTERTOOL_H 
 #define PRIMARYVERTEXFITTERTOOL_H 1
 
@@ -73,12 +73,14 @@ class IPrimaryVertexFitterTool : virtual public IAlgTool {
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() {return IID_IPrimaryVertexFitterTool;}
   /// fit
-  virtual MyVertex* fitter(std::vector< MyTrack >, 
+  //  virtual MyVertex* fitter(std::vector< MyTrack > mytr, 
+  virtual StatusCode fitter(std::vector< MyTrack > mytr, 
                            //       std::vector< MyVertex >,
                             int m_maxIteration,
                             double m_chi2min,
                             std::string fitModel,
-                            int m_minNumbersOfTracks) = 0;
+                            int m_minNumbersOfTracks,
+                      MyVertex* vtx) = 0;
 
 protected:
   
@@ -100,11 +102,13 @@ public:
 
   ~PrimaryVertexFitterTool() {} ///< Destructor
   
-  MyVertex* fitter(std::vector< MyTrack >, 
+  //  MyVertex* fitter(std::vector< MyTrack >, 
+  StatusCode fitter(std::vector< MyTrack > mytr, 
                     int m_maxIteration,
                     double m_chi2min,
                     std::string fitModel,
-                    int m_minNumbersOfTracks);
+                    int m_minNumbersOfTracks,
+                    MyVertex* vtx);
 
 protected: ///< protected members
 private: ///< private members

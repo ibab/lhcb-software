@@ -4,9 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-10-18 - Gloria Corti
+ - Remove use of clone in TrState and change interface in
+	 PrimaryVertexFitterTool to return StatusCode and pass vertex as return
+   argument: new and delete of vertex are done in PrimaryVertexFinderAlg.
+   These changes fixes some of the memory leaks.
+
 ! 2002-10-13 - Gloria Corti
  - Improve printing of counters in ChargedProtoPAlg
-
 
 ! 2002-09-09 - Gloria Corti
  - change ChargeProtoPAlg to introduce Chi2/NdF cut on tracks, isMuon,

@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.4 2002-07-27 19:19:08 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.5 2002-10-22 21:56:43 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
@@ -243,10 +243,9 @@ StatusCode PrimaryVertexFinderAlg::execute() {
     SmartRef<TrStoredTrack> RefTrack = str;
     wtra->track = RefTrack;
     
-    const TrState* myState = str->closestState(0.0);
-    TrState* sta = myState->clone();
+    TrState* sta = const_cast<TrState*>(str->closestState(0.0));
     
-    double ztemp = myState->z();
+    double ztemp = sta->z();
     
     log << MSG::DEBUG << "Z = " << ztemp << endreq;
     
@@ -346,6 +345,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       
       wtra->p = 400.0;  
     }
+
 
     TrStoredMeasurement* myMeas;
     VeloClusterOnStoredTrack* vCluOnTr;
@@ -564,13 +564,17 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       continue;
     }
     
-    MyVertex* vtx = m_pvft->fitter(m_tr,
-                                   m_maxIteration,
-                                   m_chi2min,
-                                   "Gauss",
-                                   m_minNumberOfTracks);
+    //    MyVertex* vtx = m_pvft->fitter(m_tr,
+    MyVertex* vtx = new MyVertex();
+    StatusCode scfit = m_pvft->fitter(m_tr,
+                                      m_maxIteration,
+                                      m_chi2min,
+                                      "Gauss",
+                                      m_minNumberOfTracks,
+                                      vtx);
 
-    if (vtx == NULL) {
+    //    if (vtx == NULL) {
+    if( scfit.isFailure() ) {
       log << MSG::DEBUG 
           << "===> Failed to find PrimVtx position..." << endreq;
     } else {
@@ -607,6 +611,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       }
       
       createdVertices->insert(vertex);
+      delete vtx;
       
       log << MSG::DEBUG
           << "Primary vertex " << kPV+1 << " added to TES" << endreq;

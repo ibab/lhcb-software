@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFitterTool.cpp,v 1.2 2002-07-26 19:28:15 gcorti Exp $
+// $Id: PrimaryVertexFitterTool.cpp,v 1.3 2002-10-22 21:56:38 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -35,11 +35,13 @@ PrimaryVertexFitterTool::PrimaryVertexFitterTool( const std::string& type,
 //=============================================================================
 
 //=============================================================================
-MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr, 
+//MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr, 
+StatusCode PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr, 
                                            int maxIteration,
                                            double chi2min,
                                            std::string m_fitModel,
-                                           int m_minNumberOfTracks)
+                                           int m_minNumberOfTracks,
+                                           MyVertex* vtx)
 {
   MsgStream log(msgSvc(), name());
   
@@ -62,7 +64,7 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   sumw = sumwz = 0.0;
   
   std::vector<MyTrack>::iterator itr;
-  MyVertex* vtx = new MyVertex;
+  //  MyVertex* vtx = new MyVertex;
 
   std::vector<MyTrack> mtr;
 
@@ -112,7 +114,8 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
     log << MSG::ERROR
         << " sumw = 0.0 ==> No tracks found  - exiting..."
         << endreq;
-    return vtx;
+    //    return vtx;
+    return StatusCode::FAILURE;
   } else {
     HepVector3D pos(0.0, 0.0, sumwz/sumw);
     vtx->pos = pos;
@@ -162,7 +165,8 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
           << "==> Failed to find PV position..."
           << endreq;
       vtx = NULL;
-      return vtx;
+      //      return vtx;
+      return StatusCode::FAILURE;
     } // too few tracks left
 
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
@@ -381,7 +385,7 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
 
     ///<updating chi2 & rejecting tracks with biggest chi2
     chi2 = 0.0;
-    std::vector<MyTrack>::iterator reject;    
+//      std::vector<MyTrack>::iterator reject;    
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
       if ((*itr).isUsed == true) {
         chi2 += (*itr).chi2;   
@@ -456,7 +460,8 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
           << "* * *  Please, increase MaxIteration in your options file * * *"
           << endreq;
       vtx = NULL;
-      return vtx;
+      //      return vtx;
+      return StatusCode::FAILURE;
     } // max iteration reached -> PV NOT FOUND !!!
     
   };
@@ -488,6 +493,7 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   }
   
   log << MSG::DEBUG << "...exiting from PVFitterTool" << endreq;
-  return vtx;
+  //  return vtx;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
