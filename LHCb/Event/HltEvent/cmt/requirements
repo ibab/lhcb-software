@@ -24,6 +24,7 @@ include_dirs $(HLTEVENTROOT)
 use     VeloEvent       v12r*   Event
 use     ITEvent         v12r*   Event
 use     OTEvent         v12r*   Event
+use     PhysEvent	v7r*	Event
 
 use 	GaudiObjDesc	v5r*    -no_auto_imports
 
