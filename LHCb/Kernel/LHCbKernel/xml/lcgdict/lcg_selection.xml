@@ -24,4 +24,6 @@
   <class name="std::vector<SmartRef<ContainedObject> >"/>
   <class name="std::pair<double,CaloCellID>"/>
   <class name="std::vector<std::pair<double,CaloCellID> >"/>
+  <class name="std::vector<HepGeom::Vector3D<double> >"/>
+  <class name="std::vector<HepGeom::Point3D<double> >"/>
 </lcgdict>

@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-02-17 - Chris Jones
+ - Add entries to generate lcg dictionary information for :-
+  + std::vector<HepGeom::Vector3D<double> >
+  + std::vector<HepGeom::Point3D<double> >
+
 !====================== LHCbKernel v5r7 2005-02-09 ========================
 ! 2005-02-09 - Marco Cattaneo
  - Fixes to RichSmartID (backwards incompatible) for GaudiObjDesc v7r3
