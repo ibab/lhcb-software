@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.5 2002-04-02 10:33:43 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.6 2002-04-04 15:25:23 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/02 10:33:43  ibelyaev
+//  minor modifications in CaloAlgorithm/CaloTool
+//
 // Revision 1.4  2002/04/01 12:50:24  ibelyaev
 //  add templated accesssors to tools and improve exceptions
 //
@@ -58,16 +61,22 @@ class CaloAlgorithm : public Algorithm
 public:
   
   /** standard initialization method
+   *  @see  Algorithm
+   *  @see IAlgorithm 
    *  @return status code 
    */
   virtual StatusCode initialize(); 
   
   /** standard execution method
+   *  @see  Algorithm
+   *  @see IAlgorithm 
    *  @return status code 
    */
   virtual StatusCode execute   (); 
   
   /** standard finalization method
+   *  @see  Algorithm
+   *  @see IAlgorithm 
    *  @return status code 
    */
   virtual StatusCode finalize  (); 
@@ -75,14 +84,15 @@ public:
 protected:
   
   /** Standard constructor (protected)
+   *  @see  Algorithm
    *  @param name           name of the algorithm
    *  @param pSvcLocator    poinetr to Service Locator 
    */
-  CaloAlgorithm( const std::string& name        , 
-                 ISvcLocator*       pSvcLocator );
+  CaloAlgorithm
+  ( const std::string& name        , 
+    ISvcLocator*       pSvcLocator );
   
-  /** destructor, virtual and protected 
-   */  
+  /// destructor, virtual and protected 
   virtual ~CaloAlgorithm();
   
 protected:
@@ -100,6 +110,8 @@ protected:
    *      get<const DeCalorimeter>( detSvc() , detData() );
    *  if( 0 == det ) { return StatusCode::FAILURE ;}
    *
+   *  @see IDataProviderSvc
+   *  @see SmartDataPtr
    *  @exception CaloException for Invalid Data Provider Service 
    *  @exception CaloException for invalid/unavailable  data  
    *  @param svc pointer to data service (data provider)
@@ -119,6 +131,8 @@ protected:
    * 
    * 'Output' results: 
    *  register the output object in Gaudi Event Transient Store 
+   *
+   *  @see IDataProviderSvc
    *  @param object object to be registered 
    *  @param address address in Gaudi Event Transient Store 
    *           ("/Event" could be omitted )
@@ -132,6 +146,8 @@ protected:
     const std::string& address ) const ;
   
   /** the useful method for location of tools 
+   *  @see IToolSvc
+   *  @see IAlgTool
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
    *  @exception CaloException for invalid tool 
@@ -161,6 +177,8 @@ protected:
   };
   
   /** the useful method for location of tools 
+   *  @see IToolSvc
+   *  @see IAlgTool
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
    *  @exception CaloException for invalid tool 
@@ -191,104 +209,127 @@ protected: ///< "technical" methods
   
   /** Print the error  message, return status code
    *  and perform the statistics of error messages 
+   *  @see MsgStream
+   *  @see IMessageSvc 
+   *  @see StatusCode 
    *  @param msg    error message 
    *  @param st     status code 
    *  @return       status code 
    */
-  StatusCode 
-  Error     ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ) const ;
+  StatusCode Error     
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ) const ;
   
   /** Print the warning  message, return status code 
    *  and perform the statistics of warning  messages 
+   *  @see MsgStream
+   *  @see IMessageSvc 
+   *  @see StatusCode 
    *  @param msg    warning message 
    *  @param st     statsu code 
    *  @return       status code 
    */
-  StatusCode 
-  Warning   ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ) const ; 
+  StatusCode Warning   
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ) const ; 
   
   /** Print the message and return status code 
+   *  @see MsgStream
+   *  @see IMessageSvc 
+   *  @see StatusCode 
    *  @param msg    warning message 
    *  @param st     status code 
    *  @param lev    print level 
    *  @return       status code 
    */
-  StatusCode 
-  Print     ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ,
-              const MSG::Level & lev = MSG::INFO           ) const ;
+  StatusCode Print     
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ,
+    const MSG::Level & lev = MSG::INFO           ) const ;
   
   /** Assertion - throw exception, if condition is not fulfilled 
-   *  @param ok            condition which should be "true"
+   *  @see CaloException
+   *  @see GaudiException
+   *  @exception CaloException for invalid condifition 
+   *  @param ok           condition which should be "true"
    *  @param mesage       message to be associated with the exception 
    *  @param sc           status code to be returned (artificial) 
    *  @return             status code        
    */ 
-  inline StatusCode 
-  Assert ( const bool         ok                            , 
-           const std::string& message = ""                  , 
-           const StatusCode&  sc      = StatusCode::FAILURE ) const;
+  inline 
+  StatusCode Assert 
+  ( const bool         ok                            , 
+    const std::string& message = ""                  , 
+    const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Assertion - throw exception, if condition is not fulfilled 
-   *  @param ok            condition which shoudl be "true"
+   *  @see CaloException
+   *  @see GaudiException
+   *  @exception CaloException for invalid condition
+   *  @param ok           condition which shoudl be "true"
    *  @param mesage       message to eb associated with the exception 
    *  @param sc           status code to be returned (artificial) 
    *  @return             status code        
    */ 
-  inline StatusCode
-  Assert ( const bool         ok                            , 
-           const char*        message                       ,
-           const StatusCode&  sc      = StatusCode::FAILURE ) const;
+  inline 
+  StatusCode Assert 
+  ( const bool         ok                            , 
+    const char*        message                       ,
+    const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Create and (re)-throw the exception  
+   *  @see CaloException
+   *  @see GaudiException
+   *  @exception CaloException always!
    *  @param msg    exception message 
    *  @param exc    (previous) exception of type GaudiException
    *  @param lvl    print level 
    *  @param sc     status code  
    *  @return       status code (fictive) 
    */
-  StatusCode 
-  Exception ( const std::string    & msg                        ,  
-              const GaudiException & exc                        , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  StatusCode Exception 
+  ( const std::string    & msg                        ,  
+    const GaudiException & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** Create and (re)-throw the exception  
+   *  @see CaloException
+   *  @see GaudiException
+   *  @exception CaloException always!
    *  @param msg    exception message 
    *  @param exc    (previous) exception of type std::exception
    *  @param lvl    print level 
    *  @param sc     status code  
    *  @return       status code (fictive) 
    */
-  StatusCode 
-  Exception ( const std::string    & msg                        ,  
-              const std::exception & exc                        , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  StatusCode Exception 
+  ( const std::string    & msg                        ,  
+    const std::exception & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** Create and throw the exception  
+   *  @see CaloException
+   *  @see GaudiException
+   *  @exception CaloException always!
    *  @param msg    exception message 
    *  @param lvl    print level 
    *  @param sc     status code  
    *  @return       status code (fictive) 
    */
-  StatusCode 
-  Exception ( const std::string& msg = "no message"        ,  
-              const MSG::Level & lvl = MSG::FATAL          ,
-              const StatusCode & sc  = StatusCode::FAILURE ) const ;
+  StatusCode Exception 
+  ( const std::string& msg = "no message"        ,  
+    const MSG::Level & lvl = MSG::FATAL          ,
+    const StatusCode & sc  = StatusCode::FAILURE ) const ;
   
-  /** address/location/name in Transient Store of input  data container 
-   */
+  /// address/location/name in Transient Store of input  data container 
   const std::string& inputData  () const { return m_inputData  ; }
   
-  /** address/location/name in Transient Store of output data container 
-   */
+  /// address/location/name in Transient Store of output data container 
   const std::string& outputData () const { return m_outputData ; }
   
-  /** address/location/name in Transient Store of detector data  
-   */
+  /// address/location/name in Transient Store of detector data  
   const std::string& detData    () const { return m_detData    ; }
   
   /** set address/location/name in Transient Store of input  data container 

@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.6 2002-04-04 13:16:26 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.7 2002-04-04 15:25:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/04 13:16:26  ibelyaev
+//  bug fix in CaloAlgorithm::put(...) method
+//
 // Revision 1.5  2002/04/04 12:54:38  ibelyaev
 //  bug fix in CaloAlgorithm::put(...) method
 //
@@ -279,10 +282,10 @@ StatusCode CaloAlgorithm::finalize()
 StatusCode CaloAlgorithm::execute() 
 {
   MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG 
-      << "==> Execute" << endreq;
+  log << MSG::ERROR 
+      << "==> One should NEVER see this message !!" << endreq;
   ///
-  return StatusCode::SUCCESS ;
+  return StatusCode::FAILURE ;
   ///
 };
 
