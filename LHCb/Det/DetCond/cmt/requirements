@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2002-03-08 15:25:15 andreav Exp $
+# $Id: requirements,v 1.17 2002-03-28 08:57:13 andreav Exp $
 package DetCond
 version v2r1
 
@@ -8,10 +8,25 @@ branches DetCond cmt src doc
 use GaudiKernel v11r*
 use GaudiSvc    v7r*
 
-# ConditionsDB package (only on Linux)
-macro CONDDB_use "CONDDB v3r02*" \
-      WIN32 "CondDBOracle v2r10 Det"
+# ConditionsDB package
+macro CONDDB_use            "CONDDB v3r02" \
+      rh72_gcc29521         "CondDBOracle v3r10 Det"\
+      rh72_gcc29521dbx      "CondDBOracle v3r10 Det"\
+      rh72_gcc29521Static   "CondDBOracle v3r10 Det" \
+      WIN32                 "CondDBOracle v3r10 Det"
 use $(CONDDB_use)
+
+# ConditionsDB package implementation
+# This should be moved to CONDDB and CondDBOracle
+set   CONDDB_implementation "CondDBObjy"   \
+      rh72_gcc29521         "CondDBOracle" \
+      rh72_gcc29521dbx      "CondDBOracle" \
+      rh72_gcc29521Static   "CondDBOracle" \
+      WIN32                 "CondDBOracle"
+
+# Inform the C++ precompiler which ConditionsDB implementation is used
+macro_append cppflags ' -D__$(CONDDB_implementation)__' \
+             WIN32    ' /D "__$(CONDDB_implementation)__"'
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)
@@ -27,9 +42,7 @@ library DetCond $(DetCond_sources)
 apply_pattern package_Clinkopts
 apply_pattern packageShr
 
-# Inform the C++ precompiler which ConditionsDB implementation is used
-macro_append cppflags ' -D__CondDBObjy__' \
-             WIN32    ' /D "__CondDBOracle__"'
+apply_pattern ld_library_path
 
 #==================================================================
 private

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.8 2002-03-01 17:01:08 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.9 2002-03-28 08:57:13 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -158,6 +158,12 @@ StatusCode ConditionsDBGate::initialize()
     log << MSG::ERROR << "*** ConditionsDB exception caught:"      << endreq;
     log << MSG::ERROR << "***  error message:" << e.getMessage()   << endreq;
     log << MSG::ERROR << "***  error code:   " << e.getErrorCode() << endreq;
+    return StatusCode::FAILURE;
+
+  } catch (...) {
+
+    log << MSG::ERROR << "Error in CondDB initialization!" << endreq;
+    log << MSG::ERROR << "***  UNKNOWN exception caught"   << endreq;
     return StatusCode::FAILURE;
 
   }
