@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050217 - Stefan
+- new <bitfield> attribute "exclusive" triggers inclusive or exclusive setting of the bitfield
+- fix for bitfield check-methods, bit to check shifted into right position
+
 ===============================GaudiObjDesc v7r3============================
 
 !20050206 - Stefan

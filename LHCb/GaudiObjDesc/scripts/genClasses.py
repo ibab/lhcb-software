@@ -303,8 +303,6 @@ class genClasses(genSrcUtils.genSrcUtils):
       metName = bf['name'][0].upper() + bf['name'][1:]
       param = self.tools.genParamFromStrg(bfType) + ' value'
     if what == 'get':
-# fixme, lowering getter names for bitfields was not done in old GOD
-# should be done now to be consistent
       metName = self.tools.lowerGetterName(metName)
       what = ''
       ret = self.tools.genReturnFromStrg(bfType,self.generatedTypes,scopeName) + ' '
@@ -325,11 +323,11 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '\n{\n  return %s((m_%s & %sMask) >> %sBits);\n}\n\n' % (retF, attAtt['name'],bf['name'],bits)
       elif what == 'set' :
         s += '\n{\n  unsigned int val = (unsigned int)value;\n' 
-        s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 
+        if bf['exclusive'] == 'TRUE' : s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 
         s += '  m_%s |= ((((unsigned int)val) << %sBits) & %sMask);\n}\n\n' % (attAtt['name'],bits,bf['name'])
       elif what == 'check':
-        s += '\n{\n  unsigned int val = (unsigned int)value;'
-        s += '  return 0 != ( m_%s & %sMask & val );\n}\n\n' % ( attAtt['name'], bf['name'] )
+        s += '\n{\n  unsigned int val = (unsigned int)value;\n'
+        s += '  return 0 != ( m_%s & %sMask & ( val << %sBits ));\n}\n\n' % ( attAtt['name'], bf['name'], bf['name'] )
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethods(self,godClass,clname=''):
