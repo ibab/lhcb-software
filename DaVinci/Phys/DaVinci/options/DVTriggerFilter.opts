@@ -32,7 +32,6 @@ PassedL0.OutputLevel = 2;
 PassedL1.OutputLevel = 2;
 
 #include "$DAVINCIROOT/options/DstContent.opts"
-DstWriter.ItemList += {"/Event/Phys#1"};
 DstWriter.RequireAlgs  = { "L0L1Seq" } ;
 DstWriter.Preload  = false ;
 DstWriter.Output = "DATAFILE='MBL0L1accepted.oodst' TYP='POOL_ROOTTREE' OPT='CREATE'" ;
@@ -50,7 +49,7 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 1000;
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 //***************************************************************
