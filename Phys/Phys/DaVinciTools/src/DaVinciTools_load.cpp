@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.19 2003-04-29 09:27:32 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.20 2003-05-05 13:05:32 graven Exp $
 // Include files 
 
 
@@ -25,6 +25,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( LagrangeDirectionFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );
   DECLARE_TOOL( UnconstVertexFitter );  
+  DECLARE_TOOL( LifetimeFitter );
   DECLARE_TOOL( GeomDispCalculator );
 
   DECLARE_TOOL( PIDFilterCriterion );

@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.54 2003-05-01 18:16:52 gcorti Exp $
+! $Id: release.notes,v 1.55 2003-05-05 13:05:39 graven Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+! 2003-05-05 - Gerhard Raven
+ - DaVinciTools/ILifetimeFitter.h
+ - src/LifetimeFitter.{cpp,h}
+   . add code to compute, given a particle and its production vertex,
+     the corresponding particle lifetime
 
 !========================== DaVinciTools v8r0 2003-05-01 ====================
 ! 2003-05-01 - Gloria Corti
