@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.43 2004-05-12 12:03:20 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.44 2004-06-03 14:30:57 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -1519,12 +1519,15 @@ void printCppDictionary(DaDiPackage* gddPackage,
 
       gddAttType = checkForReplacement(gddAttType);
 
+      std::string ref = "";
+      if (!DaDiTools::isSimple(gddAttType)) { ref = "&"; }
+
       if (getMeth)
       {
         metaOut << constructTypes(gddAttType)
                 << "  metaC.addMethod(\"" << gddAttName << "\"," << std::endl
                 << indent << "\"" << gddAttDesc << "\"," << std::endl
-                << indent << "\"" << gddAttType << "\"," << std::endl
+                << indent << "\"" << gddAttType << ref << "\"," << std::endl
                 << indent << gddClassName << "_" << gddAttName <<  "_"
                 << methodCounter++ << ");" << std::endl
                 << std::endl;
@@ -1535,7 +1538,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
         metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddAttName)
                 << "\"," << std::endl
                 << indent << "\"" << gddAttDesc << "\"," << std::endl
-                << indent << "\"" << gddAttType <<"\"," << std::endl
+                << indent << "\"" << gddAttType << ref <<"\"," << std::endl
                 << indent << gddClassName << "_set"
                 << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++
                 << ");" << std::endl

@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v6r2p3============================
+!20040603 - Stefan
+- bugfix: getters in dictionaries sometimes returned by value instead ref
+
 !20040512 - Stefan
 - bugfix: Class::resolvePending() now called at the end of the loading of 
           each file
