@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.8 2002-02-12 17:07:26 gcorti Exp $
+! $Id: release.notes,v 1.9 2002-02-28 14:41:05 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+
+! 28022002 - DaVinci v3r0 (GCorti)
+  - Begin to adapt to changes in PhysEvent: new structure and new Vertex
+    class
+
+! =======================================================================
 
 ! 12022002 - DaVinci v2r0 (GCorti)
   - adapt DaVinci.job to new configuration

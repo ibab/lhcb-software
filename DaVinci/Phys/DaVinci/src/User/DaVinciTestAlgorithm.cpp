@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.2 2002-02-12 09:32:48 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.3 2002-02-28 14:41:28 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -21,8 +21,8 @@
 #include "LHCbEvent/MCParticle.h"
 #include "LHCbEvent/RefTable.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-#include "PhysEvent/VtxCandidate.h"
-#include "PhysEvent/PhysSel.h"
+#include "Event/Vertex.h"
+#include "Event/PhysSel.h"
 #include "Event/L0DUReport.h"
 
 // from DaVinci
@@ -166,7 +166,7 @@ StatusCode DaVinciTestAlgorithm::execute() {
   }
 
   // Retrive VtxCandidate
-  SmartDataPtr<VtxCandidateVector> vertices (evt, "/Phys/PrimaryVertices");
+  SmartDataPtr<Vertices> vertices (evt, "/Phys/PrimaryVertices");
   if( ! vertices ) {
     log << MSG::INFO << "    unable to retrieve vertices " << endreq;
   }
@@ -174,13 +174,13 @@ StatusCode DaVinciTestAlgorithm::execute() {
     log << MSG::INFO << "    Number of primary vertices  = " 
         << vertices->size() << endreq;
 
-    VtxCandidateVector::iterator ivert = 0;
+    Vertices::iterator ivert = 0;
     for( ivert = vertices->begin(); ivert != vertices->end(); ivert++ ) {
       log << MSG::DEBUG << "    Vertex coordinates = ( " 
           << (*ivert)->position().x() 
           << " , " << (*ivert)->position().y() 
           << " , " << (*ivert)->position().z() << endreq;
-      log << MSG::DEBUG << "    Vertex ChiSquare = " << (*ivert)->chiSquare() 
+      log << MSG::DEBUG << "    Vertex ChiSquare = " << (*ivert)->chi2() 
           << " ) " << endreq;  
     }
   }

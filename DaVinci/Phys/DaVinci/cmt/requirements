@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-02-12 11:07:40 gcorti Exp $
+# $Id: requirements,v 1.13 2002-02-28 14:40:58 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,7 +8,7 @@
 #--- Allows reading of data produced with Brunel >= v5
 #    Reading of files produced with SICBDST is not supported in DaVinci v2r0
 package           DaVinci
-version           v2r0
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -75,7 +75,7 @@ use CaloEvent      v7r*   Event
 use VeloEvent      v6r*   Event
 use L0Event        v10r*  Event
 use L1Event        v6r*   Event
-use PhysEvent      v2r*   Event
+use PhysEvent      v3r*   Event
 
 #--- SicB event data persistency
 use SicbCnv        v15r*  SICB
@@ -103,8 +103,8 @@ use axreclib       v4r*   SICB
 use axsellib       v6r*   SICB
 
 #--- DaVinci packages
-use DaVinciSicb    v1r*   Phys
-use DaVinciTools   v2r*   Phys
+use DaVinciSicb    v2r*   Phys
+use DaVinciTools   v3r*   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
