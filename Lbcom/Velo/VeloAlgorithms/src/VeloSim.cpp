@@ -1,10 +1,10 @@
-// $Id: VeloSim.cpp,v 1.8 2002-06-24 11:47:34 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.9 2002-06-24 11:51:18 cattanem Exp $
 // Include files
 // STL
 #include <string>
 #include <stdio.h>
 #include <vector>
-#include <math>
+#include <math.h>
 
 // clhep
 #include "CLHEP/Units/PhysicalConstants.h"
