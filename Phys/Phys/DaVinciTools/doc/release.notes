@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.59 2003-06-17 17:41:32 gcorti Exp $
+! $Id: release.notes,v 1.60 2003-06-18 12:21:51 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 !========================== DaVinciTools v8r1p1 2003-06-18 ==================
+! 2003-06-18 - Gloria CORTI
+ - src/PhysDesktop.cpp
+   . replace name of MsgStream log with msg and set all messages in
+     getInput() in DEBUG mode
+   . release partilce maker tool in finalize
+ - src/ChargedParticleMaker.cpp
+   . replace name of MsgStream log with msg and set all message in
+     makeParticles() in DEBUG mode
+     
 ! 2003-06-06 - Gloria CORTI
- - Fix debugging bug that was checking size of particles container instead
-   of that of vertices to print message when vertex container is empty
+ - src/PhysDesktop.cpp
+   . fix debugging bug that was checking size of particles container instead
+     of that of vertices to print message when vertex container is empty
 
 !========================== DaVinciTools v8r1 2003-06-03 ====================
 ! 2003-06-03 - Gloria CORTI

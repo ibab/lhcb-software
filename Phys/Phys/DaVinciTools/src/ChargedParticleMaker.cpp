@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMaker.cpp,v 1.4 2002-10-21 17:54:44 gcorti Exp $
+// $Id: ChargedParticleMaker.cpp,v 1.5 2003-06-18 12:21:51 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -59,32 +59,32 @@ ChargedParticleMaker::~ChargedParticleMaker( ) { };
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode ChargedParticleMaker::initialize() {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> ChargedParticleMaker:Initialising" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> ChargedParticleMaker:Initialising" << endreq;
   
   StatusCode sc;
   
   // Retrieve the data service
   sc = service("EventDataSvc", m_EDS, true);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Event Data Service"
+    msg << MSG::FATAL << "    Unable to locate Event Data Service"
         << endreq;
     return sc;
   }
   
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
-  log << MSG::DEBUG << "    Looking for Particle Property Service." << endreq;
+  msg << MSG::DEBUG << "    Looking for Particle Property Service." << endreq;
   
   sc = service("ParticlePropertySvc", m_ppSvc, true);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service"
+    msg << MSG::FATAL << "    Unable to locate Particle Property Service"
         << endreq;
     return sc;
   }  
   
   // Test the ParticleNames Vector 
   if (m_particleNames.size() == 0) {
-    log << MSG::ERROR << " ParticleNames is empty. "  
+    msg << MSG::ERROR << " ParticleNames is empty. "  
         << "Please, initialize it in your job options file" <<  endreq;
     return StatusCode::FAILURE;
   }
@@ -93,7 +93,7 @@ StatusCode ChargedParticleMaker::initialize() {
     if(m_particleNames[0] == "AllCompatible" ){ 
       // Test the Confidence Level Cuts Vector 
       if (m_confLevels.size() == 0) {
-        log << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
+        msg << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
             << "Option AllCompatible requires this to be set. "
             << "Please, initialize it in your job options file " << endreq;
         return StatusCode::FAILURE;
@@ -103,7 +103,7 @@ StatusCode ChargedParticleMaker::initialize() {
     else {  
       // Test the Confidence Level Cuts Vector 
       if (m_confLevels.size() == 0) {
-        log << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
+        msg << MSG::ERROR << "PhysDesktopConfLevelCuts is empty. " 
             << "Please, initialize it in your job options file " << endreq;
         return StatusCode::FAILURE;
       }
@@ -111,7 +111,7 @@ StatusCode ChargedParticleMaker::initialize() {
       // Test if the the Confidence Level Cuts Vector and ParticleNames 
       // have the same size
       if (m_confLevels.size() != m_particleNames.size() ) {
-        log << MSG::ERROR << "PhysDesktopConfLevelCuts size is  " 
+        msg << MSG::ERROR << "PhysDesktopConfLevelCuts size is  " 
             << "different from  PhysDesktopParticleNames" << endreq;
         return StatusCode::FAILURE;
       }
@@ -125,7 +125,7 @@ StatusCode ChargedParticleMaker::initialize() {
             ipartsName != m_particleNames.end(); ++ipartsName ) {
         ParticleProperty* partProp = m_ppSvc->find( *ipartsName );
         if ( 0 == partProp )   {
-          log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
+          msg << MSG::ERROR << "Cannot retrieve properties for particle \"" 
               << *ipartsName << "\" " << endreq;
           return StatusCode::FAILURE;
         }
@@ -138,7 +138,7 @@ StatusCode ChargedParticleMaker::initialize() {
         //                                                (*iConfLevel++)) );
         //}
         // Print Debug message:
-        log << MSG::DEBUG << " Particle Requested: Name = " << (*ipartsName) 
+        msg << MSG::DEBUG << " Particle Requested: Name = " << (*ipartsName) 
             << " PID = " << partProp->jetsetID() << endreq;
       }
     } // else of "if(m_particleNames[0] != "AllCompatible" )"
@@ -163,9 +163,9 @@ IDataProviderSvc* ChargedParticleMaker::eventSvc() const
 //=============================================================================
 StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  msg( msgSvc(), name() );
   
-  log << MSG::DEBUG << "==> ChargedParticleMaker::makeParticles() is running." 
+  msg << MSG::DEBUG << "==> ChargedParticleMaker::makeParticles() is running." 
       << endreq;
   
   int protoID;
@@ -176,19 +176,19 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   
   SmartDataPtr<ProtoParticles> candidates ( eventSvc(),m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
-    log << MSG::INFO << "    No Charged ProtoParticles retrieved from"  
+    msg << MSG::DEBUG << "    No Charged ProtoParticles retrieved from"  
         << m_input << endreq;
     return StatusCode::SUCCESS;
   }
   
-  // Log number of ProtoPartCandidates retrieved
-  log << MSG::INFO << "    Number of Charged ProtoParticles retrieved   = "
+  // Msg number of ProtoPartCandidates retrieved
+  msg << MSG::DEBUG << "    Number of Charged ProtoParticles retrieved   = "
       << candidates->size() << endreq;
   
   // Make all parrticles using bestPID
   if( "All" == m_particleNames[0] ){
     
-    log << MSG::INFO << "Making all particles " << endreq;
+    msg << MSG::DEBUG << "Making all particles " << endreq;
     // Loop over all Protoparticles and fill Particle using bestPID :
     
     ProtoParticles::const_iterator icand = 0;  // Iterator on ProtoParticles.
@@ -216,7 +216,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   // conf. level cut
   if( "AllCompatible" == m_particleNames[0] ){
     
-    log << MSG::INFO << "Making all compatible particles " << endreq;
+    msg << MSG::DEBUG << "Making all compatible particles " << endreq;
     // Loop over all Protoparticles. For each one, create Particle 
     // with the PID's for which the conf. level is above requested cut
     
@@ -231,7 +231,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
         
         if ( protoCL >= m_confLevels[0]  ){ 
           // We have a candidate compatible with this PID:
-          log << MSG::DEBUG << icand << " ProtoID = " << protoID 
+          msg << MSG::DEBUG << icand << " ProtoID = " << protoID 
               << " protoCL = " << protoCL << endreq;
           
           partPerProto++;
@@ -248,7 +248,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
           
         }
       }
-      log << MSG::DEBUG << "Made " << partPerProto 
+      msg << MSG::DEBUG << "Made " << partPerProto 
           << " particles with one protoparticle"  << endreq;
     }
     return StatusCode::SUCCESS;
@@ -256,7 +256,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   
   // Make only the requested particles with the corresponding conf. level cut  
   
-  log << MSG::INFO << "Making only the requested particles " << endreq;
+  msg << MSG::DEBUG << "Making only the requested particles " << endreq;
   
   if( m_ids.size() !=0 ) {
     
@@ -304,7 +304,7 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
                                                int protoID, double protoCL,
                                                Particle* particle ) {
   
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  msg( msgSvc(), name() );
   
   // Start filling the particle:     
   particle->setParticleID( protoID );
@@ -322,10 +322,10 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   // Set position of first measured point on track:
   HepPoint3D position( trackState->x(), trackState->y(), trackState->z() ) ;
   particle->setPointOnTrack( position );
-//    log << MSG::DEBUG << "track (x,y,z) = "
+//    msg << MSG::DEBUG << "track (x,y,z) = "
 //        << trackState->x() << ", " << trackState->y() << ", " 
 //        << trackState->z() << endreq;
-//    log << MSG::DEBUG << "position = " << position << endreq;
+//    msg << MSG::DEBUG << "position = " << position << endreq;
   
   // Calculate and set four momentum: do this in ProtoParticle... 
   double momentum = trackState->p();
@@ -338,10 +338,10 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   quadriMomentum.setPz( pZ );
   quadriMomentum.setE( sqrt( mass*mass + momentum*momentum) );
   particle->setMomentum( quadriMomentum );
-//    log << MSG::DEBUG << "track (sx,sy,p) = "
+//    msg << MSG::DEBUG << "track (sx,sy,p) = "
 //        << trackState->tx() << ", " << trackState->ty() << ", " 
 //        << trackState->p() << endreq;
-//    log << MSG::DEBUG << "momentum = " << quadriMomentum << endreq;
+//    msg << MSG::DEBUG << "momentum = " << quadriMomentum << endreq;
   
   // Retrieve track state covariance matrix and set particle error matrices:
   const HepSymMatrix& trkCov = trackState->pCovMatrix();
@@ -373,22 +373,22 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
   particle->setPosSlopesCorr(posSlopesCorr);
   
   // Print out informations 
-//    log << MSG::DEBUG << "ProtoParticle error matrix" 
+//    msg << MSG::DEBUG << "ProtoParticle error matrix" 
 //        << trkCov << endreq;
   
-//    log << MSG::DEBUG << "pointOnTrackErr" << particle->pointOnTrackErr() 
+//    msg << MSG::DEBUG << "pointOnTrackErr" << particle->pointOnTrackErr() 
 //        << endreq;
   
-//    log << MSG::DEBUG << "slopesMomErr" << particle->slopesMomErr() 
+//    msg << MSG::DEBUG << "slopesMomErr" << particle->slopesMomErr() 
 //        << endreq;
   
-//    log << MSG::DEBUG << "correlation" << particle->posSlopesCorr() 
+//    msg << MSG::DEBUG << "correlation" << particle->posSlopesCorr() 
 //        << endreq;
   
-//    log << MSG::DEBUG << "momentumErr" << particle->momentumErr()
+//    msg << MSG::DEBUG << "momentumErr" << particle->momentumErr()
 //        << endreq;
   
-//    log << MSG::DEBUG << "correlation" << particle->posMomCorr()
+//    msg << MSG::DEBUG << "correlation" << particle->posMomCorr()
 //        << endreq;
 
   particle->setOrigin(protoCand);
@@ -400,8 +400,8 @@ StatusCode ChargedParticleMaker::fillParticle( const ProtoParticle* protoCand,
 //==========================================================================
 StatusCode ChargedParticleMaker::finalize() {
   
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> ChargedParticleMaker::finalizing" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> ChargedParticleMaker::finalizing" << endreq;
   
   return StatusCode::SUCCESS;
 }
