@@ -4,11 +4,19 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
-!======================= EventAssoc v1r2 2004-06-11 ==========================
-! 2004-06-11 - Marco Cattaneo
+!======================= EventAssoc v1r2 2004-06-16 ==========================
+! 2004-06-16 - Marco Cattaneo
  - Remove   <assoc from="L1Track2d" to="MCParticle" weight="double"/>
             <assoc from="L1Track3d" to="MCParticle" weight="double"/>
    as these L1Event classes are obsolete
+
+!====================== EventAssoc v1r1p1 2004-06-16 =========================
+! 2004-06-16 - Marco Cattaneo
+ - Add dictionaries for Relations used in LoKi:
+     Relation2D<Particle,FlavourTag>
+     Relation1D<Particle,FlavourTag>
+     RelationWeighted2D<Particle,Vertex,float>
+     RelationWeighted1D<Particle,Vertex,float>
 
 !======================= EventAssoc v1r1 2004-05-05 ==========================
 ! 2004-05-05 - P. Koppenburg

@@ -31,6 +31,11 @@
 
     <assoc from="Particle" to="MCParticle" weight="double"/>
     <assoc from="Particle" to="MCParticle"/>
+
+    <assoc from="Particle" to="FlavourTag" type="1D"/>
+    <assoc from="Particle" to="FlavourTag" type="2D"/>
+    <assoc from="Particle" to="Vertex" weight="float"/>
+    <assoc from="Particle" to="Vertex" weight="float" type="2D"/>
 </package>
 
 </gdd>
