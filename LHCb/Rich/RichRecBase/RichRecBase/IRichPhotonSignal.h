@@ -1,4 +1,4 @@
-// $Id: IRichPhotonSignal.h,v 1.1 2003-06-30 15:11:54 jonrob Exp $
+// $Id: IRichPhotonSignal.h,v 1.2 2003-08-08 10:40:58 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_IRICHPHOTONSIGNAL_H 1
 
@@ -26,6 +26,14 @@ public:
   /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   virtual double predictedPixelSignal( RichRecPhoton * photon,
                                        const Rich::ParticleIDType id ) = 0;
+
+  /// Signal Probability
+  virtual double signalProb( RichRecPhoton * photon,
+                             const Rich::ParticleIDType id ) = 0;
+
+  /// Scatter Probability
+  virtual double scatterProb( RichRecPhoton * photon,
+                              const Rich::ParticleIDType id ) = 0;
 
 };
 
