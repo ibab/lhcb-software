@@ -1,8 +1,11 @@
-// $Id: RelationUtils.cpp,v 1.4 2003-06-25 14:59:02 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.5 2003-06-25 15:40:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/06/25 14:59:02  ibelyaev
+//  Modifications in Relations-subpackage
+//
 // Revision 1.3  2002/05/24 18:36:33  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes
 //
@@ -132,7 +135,7 @@ Relations::InstanceCounter::counter
 Relations::InstanceCounter::report () const 
 {
   counter total = 0 ;
-  for( Counters::const_iterator record = m_counters.begin() ; 
+  for( Counters::iterator record = m_counters.begin() ; 
        m_counters.end() != record ; ++record ) 
     {
       if ( 0 == record->second ) { continue ; }  
