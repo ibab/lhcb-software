@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.h,v 1.1 2002-03-27 20:35:00 gcorti Exp $
+// $Id: ParticleFilter.h,v 1.2 2002-05-15 23:26:20 gcorti Exp $
 #ifndef PARTICLEFILTER_H 
 #define PARTICLEFILTER_H 1
 
@@ -14,11 +14,13 @@
 #include "DaVinciTools/IFilterCriterion.h"
 
 /** @class ParticleFilter ParticleFilter.h
- *
+ *  Given a vector of Particles, provides a sub-vector of Particles 
+ *  satisfying a set of FilterCriteriums
  *  @author Paul colrain
  *  @date   14/03/2002
  */
-class ParticleFilter : public AlgTool, virtual public IParticleFilter {
+class ParticleFilter : public AlgTool, 
+                       virtual public IParticleFilter {
 
 public:
 
@@ -30,16 +32,17 @@ public:
   /// Desctructor
   virtual ~ParticleFilter( ){ }; 
   
-  /// Initialize
+  /// Initialize: Retrieve all the Filter Criterion Tools. 
   StatusCode initialize( );
 
-  /// Filter
+  /// Apply the filter to the input vector of Particles and outputs the 
+  /// result in another vector.
   StatusCode filter( const ParticleVector&, ParticleVector& ); 
   
-  /// Filter positive particles
+  /// Apply the filter and selects positive particles.
   StatusCode filterPositive( const ParticleVector&, ParticleVector& ); 
   
-  /// Filter negative particles
+  /// Apply the filter and selects negative particles.
   StatusCode filterNegative( const ParticleVector&, ParticleVector& ); 
   
 protected:

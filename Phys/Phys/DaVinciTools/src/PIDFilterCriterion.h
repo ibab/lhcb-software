@@ -1,4 +1,4 @@
-// $Id: PIDFilterCriterion.h,v 1.1 2002-03-27 20:35:00 gcorti Exp $
+// $Id: PIDFilterCriterion.h,v 1.2 2002-05-15 23:26:59 gcorti Exp $
 #ifndef PIDFILTERCRITERION_H 
 #define PIDFILTERCRITERION_H 1
 
@@ -15,12 +15,13 @@
 // Forward declarations
 class IParticlePropertySvc;
 
-/** @class PIDFilterCriterion PIDFilterCriterion.h
- *
+/** @class PIDFilterCriterion PIDFilterCriterion.h 
+ *  Returns a yes/no depending on the particle ID and their confidence level. 
  *  @author Paul colrain
  *  @date   14/03/2002
  */
-class PIDFilterCriterion : public AlgTool, virtual public IFilterCriterion {
+class PIDFilterCriterion : public AlgTool,
+                           virtual public IFilterCriterion {
 
 public:
 
@@ -35,25 +36,22 @@ public:
   /// Initialize
   StatusCode initialize( );
 
-  /// Test if filter is satisfied
+  /// Test if Particle ID Confidence Level filter is satisfied
   inline bool isSatisfied( const Particle* const & part );
 
-  /// Test if filter is satisfied  
+  /// Test if Particle ID Confidence Level filter is satisfied  
   inline bool operator()( const Particle* const & part );
 
 private:
 
-  /// Particle names
-  std::vector< std::string > m_partNames;
-
-  /// Particle codes
-  std::vector< int >         m_partCodes;
+  std::vector< std::string > m_partNames;  ///< Particle names
+  std::vector< int >         m_partCodes;  ///< Particle codes
 
   /// Minimum Particle hypothesis confidence levels
-  std::vector< double >      m_confLevels;
+  std::vector< double >      m_confLevels; 
 
   /// Pointer to the ParticlePropertySvc
-  IParticlePropertySvc* m_ppSvc;
+  IParticlePropertySvc* m_ppSvc;   
 
 };
 
