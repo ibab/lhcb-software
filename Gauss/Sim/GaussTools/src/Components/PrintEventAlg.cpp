@@ -22,6 +22,8 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/MCHit.h"
+#include "Event/GenHeader.h"
+#include "Event/Collision.h"
 /// local 
 #include "PrintEventAlg.h"
 
@@ -99,8 +101,36 @@ StatusCode PrintEventAlg::execute()
   typedef MCVertices  Vertices  ;
   ///
   int licz=0;
-  
+
   MsgStream log( msgSvc() , name() ) ;
+
+  SmartDataPtr<GenHeader> hobj( eventSvc() , GenHeaderLocation::Default ) ;
+  
+  if( hobj ) 
+    {
+      log << MSG::INFO
+              << "Event type "
+          << hobj->evType() 
+          << endreq ;
+    }  
+  
+  SmartDataPtr<Collisions> colobj(eventSvc(), CollisionLocation::Default);  
+  
+  if(colobj)
+    {
+      log << MSG::INFO<<"Number of collisions " << colobj->size() 
+          << endreq;
+      
+      for(Collisions::const_iterator citer=colobj->begin();colobj->end()!=citer;
+          citer++)
+        {
+          log << MSG::INFO << "Process type " << (*citer)->processType()
+              << " signal " << (*citer)->isSignal() <<
+            " vertex " << (*citer)->primVtxPosition()<< endreq;
+        }
+    }
+  
+  
   if( !m_particles.empty() )
     {
       SmartDataPtr<Particles> obj( eventSvc() , m_particles ) ;
@@ -157,6 +187,7 @@ StatusCode PrintEventAlg::execute()
           return StatusCode::FAILURE;
         } 
     }
+
   ///
   return StatusCode::SUCCESS;
 };
@@ -203,14 +234,33 @@ void PrintEventAlg::printDecayTree
       z=-99999.9;
     }
 
+  if (mother->collision())
+    {
   log << MSG::INFO << depth << prefix.substr(0, prefix.length()-1)
       << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
       << name 
       << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
       << " x:" << std::setw(12) << x
       << " y:" << std::setw(12) << y
-      << " z:" << std::setw(12) << z 
+      << " z:" << std::setw(12) << z << " process " 
+      << mother->collision()->processType() 
+      << " signal " << mother->collision()->isSignal()
+      << " primary vertex " 
+      << mother->collision()->primVtxPosition()
       << endreq;
+    }
+  else
+    {
+      log << MSG::INFO << depth << prefix.substr(0, prefix.length()-1)
+      << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
+      << name 
+      << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
+      << " x:" << std::setw(12) << x
+      << " y:" << std::setw(12) << y
+      << " z:" << std::setw(12) << z << " no collision!"
+          << endreq;
+    }
+  
   if ( depth < m_depth )  
     {
       SmartRefVector<MCVertex>::const_iterator ivtx;

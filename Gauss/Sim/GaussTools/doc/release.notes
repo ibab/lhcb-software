@@ -5,6 +5,10 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r2 2003-07-15 =======================
+! 2003-07-15 - Witek Pokorski
+ - PrintEventAlg - added printing of GenHeader and Collisions
+
 !======================== GaussTools v8r1 2003-07-07 =======================
 ! 2003-07-07 - Florence RANJARD
  - fix for gcc32 (S.Ponce)

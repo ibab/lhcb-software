@@ -1,12 +1,12 @@
 # =============================================================================
 package GaussTools
-version v8r1
+version v8r2
 
 # =============== package structure ===========================================
 branches          cmt src doc GaussTools
 
 # =============== explicit dependencies =======================================  
-use GiGaCnv       v12r*     Sim
+use GiGaCnv       v13r*     Sim
 
 # =============== Event =======================================================
 use VeloEvent     v*     Event
