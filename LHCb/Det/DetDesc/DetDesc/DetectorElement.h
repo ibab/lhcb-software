@@ -1,149 +1,197 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.10 2001-06-20 07:48:41 sponce Exp $
+
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
-// STD and STL 
+
+
+// Include Files
 #include <algorithm>
-/// GaudiKernel
+#include <string>
+#include <vector>
+#include <map>
+
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
 #include "GaudiKernel/ISvcLocator.h"
-// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
-/// DetDesc 
+
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/CLIDDetectorElement.h"
-///
+
+
+// Forward declarations
 class IDataProviderSvc;
 class IMessageSvc;
 template <class T> class DataObjectFactory;
-///
 
 
 /** @class DetectorElement DetectorElement.h GaudiKernel/DetectorElement.h
-
-    A "basic" implementation of Detector Description - Detector Element
-
-    @author Rado Chytracek
-    @author Ivan Belyaev
+ *
+ *  A "basic" implementation of Detector Description - Detector Element
+ *
+ *  @author Sebastien Ponce
+ *  @author Rado Chytracek
+ *  @author Ivan Belyaev
 */
-
-///
 class DetectorElement: public DataObject,
                        public IDetectorElement,
-                       public IValidity 
-{
-  ///
+                       public IValidity {
+
   friend class DataObjectFactory<DetectorElement> ;  
-  ///
- public:
-  ///
+
+public:
+
   /// Constructors 
-  DetectorElement( const std::string& name  = "NotYetDefined" );
+  DetectorElement (const std::string& name = "NotYetDefined");
   
-  DetectorElement( const std::string& name         ,
-                   const ITime&       iValidSince  , 
-                   const ITime&       iValidTill   ); 
+  DetectorElement (const std::string& name,
+                   const ITime& iValidSince,
+                   const ITime& iValidTill); 
+
   ///  Destructor 
   virtual ~DetectorElement(); 
- public:
+
+
+public:
+
   /// Obtain class ID
   virtual const  CLID& clID()   const  { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
-  ///
-  inline virtual const std::string& name () const { return DataObject::fullpath() ; } 
+
+  inline virtual const std::string& name () const {
+    return DataObject::fullpath() ; } 
+
   /// delegation for geometry 
   inline        IGeometryInfo* geometry(); 
+
   /// delegation for geometry  (const version) 
   inline  const IGeometryInfo* geometry() const; 
+
   /// delegation for alignnment                
   inline        IAlignment*    alignment(); 
+
   /// delegation for alignment (const version) 
   inline  const IAlignment*    alignment() const; 
+
   // delegation for calibration 
   inline        ICalibration*  calibration(); 
+
   // delegation for calibration (const version) 
   inline  const ICalibration*  calibration() const; 
+
   // delegation for readout 
   inline        IReadOut*      readOut(); 
+
   // delegation for readout (const version) 
   inline  const IReadOut*      readOut() const ; 
+
   // delegation for slow control 
   inline        ISlowControl*  slowControl(); 
+
   // delegation for slow control (const version) 
   inline  const ISlowControl*  slowControl() const; 
+
   // delegation for fast control 
   inline        IFastControl*  fastControl(); 
+
   // delegation for fast control (const version) 
   inline  const IFastControl*  fastControl() const; 
+
   // another way to access: "pseudo-conversion"
-  // cast to         IGeometryInfo* 
+  // cast to         IGeometryInfo*
   inline operator       IGeometryInfo*(); 
+
   // cast to   const IGeometryInfo* 
   inline operator const IGeometryInfo*() const; 
+
   // cast to         IAligment*     
   inline operator       IAlignment*   (); 
+
   // cast to   const IAlignment*    
   inline operator const IAlignment*   () const; 
+
   // cast to         ICalibration*  
   inline operator       ICalibration* (); 
+
   // cast to   const ICalibration*  
   inline operator const ICalibration* () const; 
+
   // cast to         IReadOut*      
   inline operator       IReadOut*     (); 
+
   // cast to   const IReadOut*      
   inline operator const IReadOut*     () const; 
+
   // cast to         ISlowControl*  
   inline operator       ISlowControl* (); 
+
   // cast to   const ISlowControl*  
   inline operator const ISlowControl* () const; 
+
   // cast to         IFastControl*  
   inline operator       IFastControl* (); 
+
   // cast to   const IFastControl*  
   inline operator const IFastControl* () const; 
+
   // cast to         IGeometryInfo&     
   // (potentially could throw DetectorElementException)
   inline operator       IGeometryInfo&(); 
+
   // cast to   const IGeometryInfo& 
   // (potentially could throw DetectorElementException)
   inline operator const IGeometryInfo&() const; 
+
   // cast to         IAlignment&    
   // (potentially could throw DetectorElementException)
   inline operator       IAlignment&   (); 
+
   // cast to   const IAlignment&    
   // (potentially could throw DetectorElementException)
   inline operator const IAlignment&   () const; 
+
   // cast to         ICalibration&  
   // (potentially could throw DetectorElementException)
   inline operator       ICalibration& ()                ; 
+
   // cast to   const ICalibration&  
   // (potentially could throw DetectorElementException)
   inline operator const ICalibration& ()          const ; 
+
   // cast to         IReadOut&      
   // (potentially could throw DetectorElementException)
   inline operator       IReadOut&     ()                ; 
+
   // cast to   const IReadOut&      
   // (potentially could throw DetectorElementException)
   inline operator const IReadOut&     ()          const ; 
+
   // cast to         ISlowControl&  
   // (potentially could throw DetectorElementException)
   inline operator       ISlowControl& ()                ; 
+
   // cast to   const ISlowControl&  
   // (potentially could throw DetectorElementException)
   inline operator const ISlowControl& ()          const ; 
+
   // cast to         IFastControl&  
   // (potentially could throw DetectorElementException)
   inline operator       IFastControl& ()                ; 
+
   // cast to   const IFastControl&  
   // (potentially could throw DetectorElementException)
   inline operator const IFastControl& ()          const ; 
+
   //  printout (overloaded)
   // (potentially could throw DetectorElementException)
   virtual std::ostream& printOut( std::ostream& ) const;  
+
   // from IValidity interface
   inline        bool    isValid          ()                ;   
   inline        bool    isValid          ( const ITime& )  ;   
@@ -154,61 +202,193 @@ class DetectorElement: public DataObject,
   inline        void    setValiditySince ( const ITime& )  ;  
   inline        void    setValidityTill  ( const ITime& )  ;   
   StatusCode            updateValidity   ()                ;   // not yet
+
   /// reset to the initial state
   IDetectorElement* reset() ;    
-  /// 
+
   virtual MsgStream&    printOut( MsgStream&    ) const;  
+
   // pointer to parent IDetectorElement
   inline virtual       IDetectorElement*  parentIDetectorElement()       
-    { return ( 0 != parent() ) ? dynamic_cast<IDetectorElement*>     ( parent() ) : 0 ; };  
+    { return ( 0 != parent() ) ?
+        dynamic_cast<IDetectorElement*> (parent()) : 0 ; };  
+
   // pointer to parent IDetectorElement (const version)
   inline virtual const IDetectorElement*  parentIDetectorElement() const  
-    { return ( 0 != parent() ) ? dynamic_cast<const IDetectorElement*>( parent() ) : 0 ; };  
+    { return ( 0 != parent() ) ?
+        dynamic_cast<const IDetectorElement*>( parent() ) : 0 ; };  
+
   // (reference to) container of pointers to child detector elements 
-  inline virtual       IDetectorElement::IDEContainer&  childIDetectorElements()       ;
-  inline virtual const IDetectorElement::IDEContainer&  childIDetectorElements() const ;
+  inline virtual IDetectorElement::IDEContainer& childIDetectorElements();
+  inline virtual const IDetectorElement::IDEContainer&
+     childIDetectorElements() const ;
+
   // iterators for manipulation of daughter elements 
-  inline virtual IDetectorElement::IDEContainer::iterator        childBegin()       { return childIDetectorElements().begin() ; }
-  inline virtual IDetectorElement::IDEContainer::const_iterator  childBegin() const { return childIDetectorElements().begin() ; }
-  inline virtual IDetectorElement::IDEContainer::iterator        childEnd  ()       { return childIDetectorElements().end  () ; }
-  inline virtual IDetectorElement::IDEContainer::const_iterator  childEnd  () const { return childIDetectorElements().end  () ; }
+  inline virtual IDetectorElement::IDEContainer::iterator childBegin() {
+    return childIDetectorElements().begin();
+  }
+  inline virtual IDetectorElement::IDEContainer::const_iterator
+    childBegin() const { return childIDetectorElements().begin() ; }
+  inline virtual IDetectorElement::IDEContainer::iterator
+    childEnd  () { return childIDetectorElements().end  () ; }
+  inline virtual IDetectorElement::IDEContainer::const_iterator
+    childEnd  () const { return childIDetectorElements().end  () ; }
+
   /// IInspectable interface:
   virtual bool acceptInspector( IInspector* )       ; 
   virtual bool acceptInspector( IInspector* ) const ; 
+
   /// serialization for reading 
   virtual StreamBuffer& serialize( StreamBuffer& )       ; 
+
   /// serialization for writing 
   virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
+
   ///
   /// specific   
   // create "ghost" 
   const IGeometryInfo* createGeometryInfo();
+
   // create "orphan"
-  const IGeometryInfo* createGeometryInfo( const std::string&            logVol      );
+  const IGeometryInfo* createGeometryInfo( const std::string& logVol);
+
   // create "regular"
-  const IGeometryInfo* createGeometryInfo( const std::string&            logVol      , 
-                                           const std::string&            support     ,
-                                           const ILVolume::ReplicaPath & replicaPath );
-  const IGeometryInfo* createGeometryInfo( const std::string&            logVol      , 
-                                           const std::string&            support     ,
-                                           const std::string&            namePath    );
- protected:
+  const IGeometryInfo* createGeometryInfo
+         (const std::string& logVol, 
+          const std::string& support,
+          const ILVolume::ReplicaPath & replicaPath );
+  const IGeometryInfo* createGeometryInfo
+         (const std::string& logVol, 
+          const std::string& support,
+          const std::string& namePath);
+
+  /**
+   * This adds a new userParameter to the detectorElement. This parameter has
+   * a name, a type, a comment and a value, given as a std::string and as a
+   * double.
+   * If this parameter was already existing, it is replaced by the new one.
+   * @param name the name of the parameter
+   * @param type the type of the parameter. This is only a clue for the user, it
+   * is not used by the detector element itself
+   * @param comment a comment on this parameter use
+   * @param value the value of the parameter, as a string
+   * @param d_value the value of the parameter, as a double
+   */
+  inline virtual void addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value,
+                                        double d_value);
+  
+  /**
+   * This adds a new userParameterVector to the detectorElement. This parameter
+   * has a name, a type, a comment and a value, given as a
+   * std::vector<std::string>
+   * If this parameter vector was already existing, it is replaced by the new
+   * one.
+   * @param name the name of the parameter vector
+   * @param type the type of the parameter vector. This is only a clue for
+   * the user, it is not used by the detector element itself
+   * @param comment a comment on this parameter vector use
+   * @param value the value of the parameter vector, as a vector of strings
+   * @param d_value the value of the parameter vector, as a vector of doubles
+   * strings by default
+   */
+  inline virtual void addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value,
+                                              std::vector<double> d_value);
+  
+  /**
+   * this gets the type of the parameter.
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter
+   * @return its type
+   */
+  inline virtual std::string userParameterType (std::string name);
+  
+  /**
+   * this gets the comment of the parameter
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter
+   * @return its comment
+   */
+  inline virtual std::string userParameterComment (std::string name);
+  
+  /**
+   * this gets the value of the parameter, as a string
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter
+   * @return its value, as a string
+   */
+  inline virtual std::string userParameterValue (std::string name);
+  
+  /**
+   * this gets the value of the parameter as a double. If the value is not
+   * a double, it displays an error message and returns 0.
+   * If this parameter does not exist, it returns 0 too.
+   * @param name the name of the parameter
+   * @return its value, as a double
+   */
+  inline virtual double userParameter (std::string name);
+  
+  /**
+   * this gets the type of the parameter vector
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter vector
+   * @return its type
+   */
+  inline virtual std::string userParameterVectorType (std::string name);
+  
+  /**
+   * this gets the comment of the parameter vector
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter vector
+   * @return its comment
+   */
+  inline virtual std::string userParameterVectorComment (std::string name);
+  
+  /**
+   * this gets the value of the parameter vector, as a vector of string
+   * If this parameter does not exist, it returns an empty string.
+   * @param name the name of the parameter vector
+   * @return its value, as a string
+   */
+  inline virtual std::vector<std::string>
+  userParameterVectorValue (std::string name);
+  
+  /**
+   * this gets the value of the parameter as a vector of double.
+   * If one of the values is not a double, it displays an error message
+   * and puts a 0 in its place.
+   * If this parameter does not exist, it returns 0 too.
+   * @param name the name of the parameter
+   * @return its value, as a vector of double
+   */
+  inline virtual std::vector<double> userParameterVector (std::string name);
+  
+
+protected:
+
   /// specific 
   void setGeometry( IGeometryInfo* geoInfo ) { m_de_iGeometry = geoInfo; }
-  ///
+
   inline IMessageSvc*       msgSvc         () const { return m_de_msgSvc ; }  
   inline IMessageSvc*       messageService () const { return msgSvc()    ; }
   inline ISvcLocator*       svcLoc         () const { return m_de_svcLoc ; } 
   inline ISvcLocator*       svcLocator     () const { return svcLoc()    ; } 
-  ///
- private:
-  ///
+
+
+private:
+
   // technicalities 
   inline IDataProviderSvc*  dataSvc () const { return m_de_dataSvc ; } 
-  ////
-  inline void Assert( bool assertion , const std::string& name = "DetectorElement Unknown Exception" ) const; 
-  ///
- private:   
+
+  inline void Assert (bool assertion,
+                      const std::string& name =
+                      "DetectorElement Unknown Exception") const;
+
   // for IDetectorElement implementation 
   IGeometryInfo*         m_de_iGeometry     ;
   IAlignment*            m_de_iAlignment    ;
@@ -216,23 +396,45 @@ class DetectorElement: public DataObject,
   IReadOut*              m_de_iReadOut      ;
   ISlowControl*          m_de_iSlowControl  ;
   IFastControl*          m_de_iFastControl  ;
-  //
+
   mutable bool                              m_de_childrensLoaded;
   mutable IDetectorElement::IDEContainer    m_de_childrens; 
+
   // for IValidity implementation
   ITime*                 m_de_validSince    ;
-  ITime*                 m_de_validTill     ; 
-  //  
- private: 
+  ITime*                 m_de_validTill     ;
+
   // technicalities:
   IDataProviderSvc*      m_de_dataSvc       ;
   IMessageSvc*           m_de_msgSvc        ; 
   ISvcLocator*           m_de_svcLoc        ;
-  //
+
+  /// This defines a user parameter
+  typedef struct _userParam {
+    std::string type;
+    std::string comment;
+    std::string value;
+    double d_value;
+  } UserParam;
+
+  /// this is the list of user defined parameters
+  std::map<std::string, UserParam> m_userParameters;
+
+  /// This defines a user parameter
+  typedef struct _userParamVector {
+    std::string type;
+    std::string comment;
+    std::vector<std::string> value;
+    std::vector<double> d_value;
+  } UserParamVector;
+
+  /// this is the list of user defined parameter vectors
+  std::map<std::string, UserParamVector> m_userParameterVectors;
+
 };
-///
+
+// implementation of the inlines functions
 #include "DetDesc/DetectorElement.icpp"
-///
 
 #endif    //    DETDESC_DETECTORELEMENT_H 
 

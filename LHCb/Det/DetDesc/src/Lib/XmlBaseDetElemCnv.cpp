@@ -1,10 +1,11 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.4 2001-06-14 13:27:03 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.5 2001-06-20 07:48:42 sponce Exp $
 
 // include files
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cctype>
 
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
@@ -231,6 +232,76 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
         }
       }
     }
+  } else if ("userParameter" == tagName || "userParameterVector" == tagName) {
+    // get the attributes
+    std::string type = dom2Std (childElement.getAttribute ("type"));
+    std::string name = dom2Std (childElement.getAttribute ("name"));
+    std::string comment = dom2Std (childElement.getAttribute ("comment"));
+    
+    // gets the value
+    std::string value;
+    DOM_NodeList nodeChildren = childElement.getChildNodes();
+    unsigned int i;
+    for (i = 0; i < nodeChildren.getLength(); i++) {
+      if (nodeChildren.item(i).getNodeType() == DOM_Node::TEXT_NODE) {
+        std::string newVal = dom2Std (nodeChildren.item(i).getNodeValue());
+        unsigned int begin = 0;
+        while (begin < newVal.length() && isspace(newVal[begin])) {
+          begin++;
+        }
+        if (begin < newVal.length()) {
+          unsigned int end = newVal.length() - 1;
+          while (isspace(newVal[end])) {
+            end--;
+          }
+          value += " ";
+          value += newVal.substr(begin, end - begin + 1);
+        }
+      }
+    }
+
+    if ("userParameter" == tagName) {
+      // adds the new parameter to the detectorElement
+      log << MSG::DEBUG << "Adding user parameter " << name << " with value "
+          << value << ", type " << type << " and comment \"" << comment
+          << "\"" << endreq;
+      dataObj->addUserParameter (name,
+                                 type,
+                                 comment,
+                                 value,
+                                 xmlSvc()->eval(value, false));
+    } else if ("userParameterVector" == tagName) {
+      // parses the value
+      std::vector<std::string> vect;
+      const char *textValue = value.c_str();
+      std::string val;
+      std::istrstream cstr (textValue, value.length());
+      //delete (textValue);
+      while (cstr >> val) {
+        vect.push_back (val);
+      }
+      
+      // evaluates the value
+      std::vector<double> d_vect;
+      for (std::vector<std::string>::iterator it = vect.begin();
+           vect.end() != it;
+           ++it) {
+        d_vect.push_back (xmlSvc()->eval(*it, false));
+      }
+      
+      // adds the new parameterVector to the detectorElement
+      log << MSG::DEBUG << "Adding user parameter vector " << name
+          << " with values ";
+      for (std::vector<std::string>::iterator it = vect.begin();
+           vect.end() != it;
+           ++it) {
+        log << *it << " ";
+      }
+      log << ", type " << type << " and comment \""
+          << comment << "\"" << endreq;
+      dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
+    }
+    
   } else {
     // Something goes wrong, does it?
     log << MSG::WARNING << "This tag makes no sense to element : "

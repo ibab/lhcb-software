@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolume.cpp,v 1.6 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/PVolume.cpp,v 1.7 2001-06-20 07:48:42 sponce Exp $
 
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -36,8 +36,7 @@ PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
   , m_pv_dataSvc   ( 0              )
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
-  Hep3Vector translation = -1.0 * Position;
-  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(translation ) ;
+  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
   //m_pv_matrix = HepTranslate3D(translation)*HepRotate3D(Rotation);
   //
   ///

@@ -2,6 +2,11 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010620 - Sebastien Ponce
+ - Added userParameter and userParameterVector in the xml converters.
+ - corrected a bug in PVolume constructor.
+
+!===========================================================================
 ! 20010614 - Sebastien Ponce
  - New implementation of the whole geometry converters. Several
  functionnalities had been added by the way : recursivity on boolean solids
