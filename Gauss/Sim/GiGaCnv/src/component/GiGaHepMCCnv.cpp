@@ -199,7 +199,6 @@ StatusCode GiGaHepMCCnv::updateRep
 
 
   int nVertex=0;
-  int nOutvtx=0;
   int nPart=0;
 
 
@@ -218,56 +217,31 @@ StatusCode GiGaHepMCCnv::updateRep
          pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++){
 
      nVertex++;
-     
-     bool outvert=false;
-     bool origvtx=((*pVertex)->position().x()==0 &&
-                 (*pVertex)->position().y()==0 &&
-                 (*pVertex)->position().z()==0 &&
-                 (*pVertex)->position().t()==0);
       
-      // loop over outgoing particles and find the ones without end vertices
+      // loop over outgoing particles and find the ones with status=1
 
       for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
            (*pVertex)->particles_out_const_begin();
            (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
         {
           // skip particles with end vertices
-          if (!((*pParticle)->end_vertex())) {          
-
+          //          if (!((*pParticle)->end_vertex())) {          
+          if((*pParticle)->status()==1){
+            
             nPart++;
             
           /// if a particle is without end vertex then perform the conversion
             
-          G4PrimaryParticle* Particle = Cnv( *pParticle );
+            //            G4PrimaryParticle* Particle = Cnv( *pParticle );
+            G4PrimaryParticle* Particle=GenPartG4Part(*pParticle);
+            
 
-          // if this not yet done, create PrimaryVertex to which it will belong
-   
-            if(!outvert && !origvtx){
-              outvert=true;
-              nOutvtx++;              
-              Vertex = 
-                new G4PrimaryVertex( (*pVertex)->position().x()*mm ,
-                                     (*pVertex)->position().y()*mm ,
-                                     (*pVertex)->position().z()*mm ,
-                                     (*pVertex)->position().t()*mm ) ;
-            }
+            OrigVertex->SetPrimary ( Particle );
 
-            if(!origvtx){            
-              Vertex->SetPrimary( Particle );           
-            }
-            else{
-              
-              OrigVertex->SetPrimary ( Particle );
-            }
+            
             
           }
-          
-        }
-            
-      if (outvert && !origvtx){        
-        *gigaSvc() << Vertex ;
-      }
-      
+        }      
 
       { MsgStream log( msgSvc(),  name() ) ;
       log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
@@ -279,10 +253,8 @@ StatusCode GiGaHepMCCnv::updateRep
   { MsgStream log( msgSvc(),  name() ) ;
        log << MSG::INFO << 
          " Number of vertices examined "<< nVertex << endreq;
-       log << MSG::INFO <<
-         " Number of vertices converted "<< nOutvtx + 1 << endreq;
        log << MSG::INFO << 
-         " Number of particles converted "<< nPart << endreq;
+         " Number of Pythia particles converted "<< nPart << endreq;
   }
   
 
@@ -291,6 +263,38 @@ StatusCode GiGaHepMCCnv::updateRep
 }; 
 
 // ============================================================================
+
+
+G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
+{
+  static const std::string 
+    ErrMsg1("GiGaCnv::GenPart2GenPart: GenParticle* points to NULL!");
+
+  if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
+
+  G4PrimaryParticle* Particle = 
+    new G4PrimaryParticle( particle->pdg_id() , 
+                           particle->momentum().px()*GeV ,
+                           particle->momentum().py()*GeV ,
+                           particle->momentum().pz()*GeV );
+
+            if (particle->end_vertex()) 
+              {
+
+                for (HepMC::GenVertex::particles_out_const_iterator 
+                       outPart=(particle->end_vertex())->particles_out_const_begin();
+                     outPart!=(particle->end_vertex())->particles_out_const_end();
+                     ++outPart)
+                  {
+
+                    Particle->SetDaughter(GenPartG4Part(*outPart));
+
+                  }
+              
+              }
+  
+  return Particle;  
+};
 
 
 

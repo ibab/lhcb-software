@@ -92,6 +92,8 @@ private:
   GiGaHepMCCnv () ; ///< no default constructor 
   GiGaHepMCCnv ( const GiGaHepMCCnv& ); ///< no copy
   GiGaHepMCCnv& operator=( const GiGaHepMCCnv& ); ///< no assignment  
+  G4PrimaryParticle* GenPartG4Part(HepMC::GenParticle*);  
+
   ///
 private:
 
