@@ -4,6 +4,12 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-02-22 - Chris Jones
+ - Add protection in RichSmartIDTool against exceptions during the creation
+   of RichSmartIDs from positions, so these errors no longer cause processing
+   to halt
+ - Update active channel list method in RichSmartTool
+
 ! 2005-02-17 - Chris Jones
  - Update RichTrSegMakerFromTrStoredTracks with ability to avoid multiple
    state extrapolations and a few other minor improvements

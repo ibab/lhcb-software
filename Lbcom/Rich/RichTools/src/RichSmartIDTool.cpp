@@ -5,22 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.9 2005-01-13 17:44:49 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.8  2005/01/13 13:19:22  jonrob
- * Update the way the active readout list is created and accessed
- *
- * Revision 1.7  2005/01/07 13:24:31  jonrob
- * Changes to interface methods
- *
- * Revision 1.6  2004/10/27 14:41:03  jonrob
- * Various updates
- *
- * Revision 1.5  2004/10/12 09:58:26  papanest
- * speed up globaltoPDpanel
- *
- * Revision 1.4  2004/07/26 18:03:05  jonrob
- * Various improvements to the doxygen comments
+ * $Id: RichSmartIDTool.cpp,v 1.10 2005-02-22 14:07:29 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -127,34 +112,55 @@ HepPoint3D RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
 StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
                                       RichSmartID& smartid) const
 {
-  if (globalPoint.z() < 8000.0)
-    // Rich1
-    if (globalPoint.y() > 0.0) {
-      // top side
-      smartid.setRich(Rich::Rich1);
-      smartid.setPanel(Rich::top);
-      return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
-    }
-    else {
-      // bottom side
-      smartid.setRich(Rich::Rich1);
-      smartid.setPanel(Rich::bottom);
-      return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->smartID(globalPoint, smartid) );
-    }
-  else
-    // Rich2
-    if (globalPoint.x() > 0.0) {
-      // left side
-      smartid.setRich(Rich::Rich2);
-      smartid.setPanel(Rich::left);
-      return ( m_photoDetPanels[Rich::Rich2][Rich::left]->smartID(globalPoint, smartid) );
-    }
-    else {
-      // right side
-      smartid.setRich(Rich::Rich2);
-      smartid.setPanel(Rich::right);
-      return ( m_photoDetPanels[Rich::Rich2][Rich::right]->smartID(globalPoint, smartid) );
-    }
+
+  try {
+
+    if (globalPoint.z() < 8000.0)
+      // Rich1
+      if (globalPoint.y() > 0.0) {
+        // top side
+        smartid.setRich(Rich::Rich1);
+        smartid.setPanel(Rich::top);
+        return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
+      }
+      else {
+        // bottom side
+        smartid.setRich(Rich::Rich1);
+        smartid.setPanel(Rich::bottom);
+        return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->smartID(globalPoint, smartid) );
+      }
+    else
+      // Rich2
+      if (globalPoint.x() > 0.0) {
+        // left side
+        smartid.setRich(Rich::Rich2);
+        smartid.setPanel(Rich::left);
+        return ( m_photoDetPanels[Rich::Rich2][Rich::left]->smartID(globalPoint, smartid) );
+      }
+      else {
+        // right side
+        smartid.setRich(Rich::Rich2);
+        smartid.setPanel(Rich::right);
+        return ( m_photoDetPanels[Rich::Rich2][Rich::right]->smartID(globalPoint, smartid) );
+      }
+
+  }
+
+  // Catch any GaudiExceptions thrown
+  catch ( const GaudiException & excpt )
+  {
+
+    // Print exception as an error
+    Error ( "Caught GaudiException " + excpt.tag() + " message '" + excpt.message() + "'" );
+
+    // reset smartid to an invalid one
+    smartid = RichSmartID(0);
+
+    // return failure status
+    return StatusCode::FAILURE;
+
+  }
+
 }
 
 //=============================================================================
@@ -217,32 +223,17 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
   // Only do if list is empty
   if ( m_readoutChannels.empty() ) {
 
-    // Form the raw list
-    unsigned int marker(0), i(0);
-    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
-    for ( i = 0; i < m_readoutChannels.size(); ++i ) {
-      m_readoutChannels[i].setRich(Rich::Rich1);
-      m_readoutChannels[i].setPanel(Rich::top);
-    }
-    marker = m_readoutChannels.size();
-    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
-    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
-      m_readoutChannels[i].setRich(Rich::Rich1);
-      m_readoutChannels[i].setPanel(Rich::bottom);
-    }
-    marker = m_readoutChannels.size();
+    // Reserve size ( RICH1 + RICH2 );
+    m_readoutChannels.reserve( 400000 );
+
+    // Fill for RICH1
+    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels,Rich::Rich1,Rich::top);
+    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels,Rich::Rich1,Rich::bottom);
     const unsigned int nRich1 = m_readoutChannels.size();
-    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
-    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
-      m_readoutChannels[i].setRich(Rich::Rich2);
-      m_readoutChannels[i].setPanel(Rich::left);
-    }
-    marker = m_readoutChannels.size();
-    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
-    for ( i = marker; i < m_readoutChannels.size(); ++i ) {
-      m_readoutChannels[i].setRich(Rich::Rich2);
-      m_readoutChannels[i].setPanel(Rich::right);
-    }
+
+    // Fill for RICH2
+    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels,Rich::Rich2,Rich::left);
+    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels,Rich::Rich2,Rich::right);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     // Sort the list
@@ -251,10 +242,11 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
 
     info() << "Created active HPD channel list : # channels RICH(1/2) = "
            << nRich1 << " / " << nRich2 << endreq;
-    if ( msgLevel(MSG::VERBOSE) ) 
+
+    if ( msgLevel(MSG::VERBOSE) )
     {
       for ( RichSmartID::Collection::const_iterator iID = m_readoutChannels.begin();
-            iID != m_readoutChannels.end(); ++iID ) 
+            iID != m_readoutChannels.end(); ++iID )
       {
         const HepPoint3D gPos = globalPosition(*iID);
         verbose() << " RichSmartID " << *iID << endreq
