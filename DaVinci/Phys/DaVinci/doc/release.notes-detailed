@@ -6,7 +6,7 @@
 
 ! 2004-07-28 - P. Koppenburg
   - options/DaVinciCommon.opts
-    . Remove $STDOPTS/RootDb.opts
+    . Remove $STDOPTS/RootDb.opts and HbookCnv
 
 ! 2004-07-27 - P. Koppenburg
   - options/DstContents.opts
