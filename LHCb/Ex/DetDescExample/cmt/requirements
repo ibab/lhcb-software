@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.11 2001-11-20 15:23:41 sponce Exp $
+# $Id: requirements,v 1.12 2001-11-23 17:35:12 sponce Exp $
 package DetDescExample
-version v2
+version v3
 
 branches doc src options cmt
 
@@ -11,7 +11,7 @@ use GaudiConf     v5*
 use GaudiSys      v9*
 
 # Detector Description package and database
-use DetDesc       v8*   Det
+use DetDesc       v9*   Det
 use XmlDDDB       v6*   Det
 
 #==> DetDesc example

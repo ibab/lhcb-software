@@ -5,6 +5,10 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20011123 v3 Sebastien Ponce
+ - new version number
+ - uses the new DetDesc version number
+
 !20011120 Sebastien Ponce
  - make use of the new GaudiKernel and GaudiSvc
  - take care that ILvolumes may have no solid
