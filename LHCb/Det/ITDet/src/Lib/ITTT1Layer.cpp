@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.5 2002-10-04 07:24:47 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.6 2002-10-07 13:29:27 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -120,10 +120,10 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   // max dimensions
   nSensorHigh = 0;
   unsigned int iLad2=0;
-  for (iLad2=0; iLad2<ladderSize2.size()/2;iLad2++){
+  for (iLad2=0; iLad2<ladderSize2.size();iLad2++){
     nSensorHigh += ladderSize2[iLad2]; 
   } // iLad
- 
+
   // cache the x centers of ladders
   std::vector<double> xSideLad; 
   for (iLad2=1;iLad2<=wafersX2;iLad2++){
@@ -141,7 +141,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     double xLad = -xSideLad[iLWafer-1]; 
     double uLad = xLad*cosAngle() + ySideLad*sinAngle();
     double vLad = ySideLad*cosAngle() - xLad*sinAngle();
-    double v = -(vLad+((double)nSensorHigh)*waferHeight);
+    double v = -(vLad+((double)(nSensorHigh)/2.0)*waferHeight);
 
     for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
@@ -184,7 +184,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     double xLad = xSideLad[wafersX2-iRWafer];
     double uLad = xLad*cosAngle() + ySideLad*sinAngle();
     double vLad = ySideLad*cosAngle() - xLad*sinAngle();
-    double v = -(vLad+((double)nSensorHigh)*waferHeight);
+    double v = -(vLad+((double)(nSensorHigh)/2.0)*waferHeight);
 
     for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
