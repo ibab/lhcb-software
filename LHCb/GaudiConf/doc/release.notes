@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v8r2 2004-11-26 ========================
+! 2004-11-26 - Marco Cattaneo
+ - Remove obsolete options files (Common.opts, Dlls.opts, Services.opts)
+ - Remove corresponding STDOPTIONS environment variable
+
 !======================== GaudiConf v8r1 2004-11-18 ========================
 ! 2004-11-18 - Marco Cattaneo
  - For rh73_gcc323 and slc_ia32_gcc323, append "_0411" to ROOT_native_version,

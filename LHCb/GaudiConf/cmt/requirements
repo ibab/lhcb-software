@@ -1,11 +1,10 @@
 package GaudiConf
-version v8r1
+version v8r2
 
 branches doc cmt options src
 
 ignore_pattern package_stamps
 
-set STDOPTIONS ${GAUDICONFROOT}/options/Common.opts
 set STDOPTS    ${GAUDICONFROOT}/options
 
 macro_append ROOT_native_version    "" \

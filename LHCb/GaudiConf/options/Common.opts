@@ -1,4 +1,0 @@
-//============== Standard job options file =====================
-#units   "$STDOPTS/units.opts"
-#include "$STDOPTS/Services.opts"
-#include "$STDOPTS/Dlls.opts"
