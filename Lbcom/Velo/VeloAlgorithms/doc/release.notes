@@ -1,6 +1,10 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+! 2004-02-03 - Mark Tobin
+ - Modified VeloSim and VeloClusterMaker to be compatible with the new
+   VeloDet.  Added histograms and extra routine to monitor detector element.
+
 !===================== VeloAlgorithms v2r9 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo
  - Move to Gaudi v14 9use VeloEvent v13r* in requirements)
