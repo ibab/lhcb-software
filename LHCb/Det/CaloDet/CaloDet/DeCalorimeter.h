@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.10 2002-04-02 14:55:16 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.11 2002-06-15 06:25:25 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/04/02 14:55:16  ibelyaev
+//  add 'const' qualifier to DeCalorimeter::Cell method
+//
 // Revision 1.9  2002/03/28 13:47:13  ibelyaev
 // new version of Kernel packages, move out all XMl-stuff
 //
@@ -46,6 +49,13 @@
 
 /// forwad declarations
 class MsgStream;
+
+namespace DeCalorimeterLocation {
+  static const std::string Spd  = "/dd/Structure/LHCb/Spd"  ;
+  static const std::string Prs  = "/dd/Structure/LHCb/Prs"  ;
+  static const std::string Ecal = "/dd/Structure/LHCb/Ecal" ;
+  static const std::string Hcal = "/dd/Structure/LHCb/Hcal" ;
+}
 
 /** @class DeCalorimeter DeCalorimeter.h CaloDet/DeCalorimeter.h 
  *
@@ -233,6 +243,13 @@ private:
   int m_cards;
   ///  Parameters for the cards
   std::vector<CardParam> feCards ;
+  
+  /// Y to X ration, close to 1.
+  double m_YToXSizeRatio;
+  /// number of non-connected cells on both sides of the beam, horizontal
+  int    m_centralHoleX;
+  /// number of non-connected cells on both sides of the beam, vertical
+  int    m_centralHoleY;
   
 };
 

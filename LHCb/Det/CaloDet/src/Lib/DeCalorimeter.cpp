@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.17 2002-04-02 14:55:16 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.18 2002-06-15 06:25:25 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2002/04/02 14:55:16  ibelyaev
+//  add 'const' qualifier to DeCalorimeter::Cell method
+//
 // Revision 1.16  2002/03/28 13:47:14  ibelyaev
 // new version of Kernel packages, move out all XMl-stuff
 //
@@ -145,6 +148,30 @@ StatusCode DeCalorimeter::initialize()
       pars.erase( it );
     }
   }
+  { /// Y to X size ratio 
+    Iterator it =
+      std::find( pars.begin() , pars.end () , std::string("YToXSizeRatio") );
+    if( pars.end() != it ) {
+      m_YToXSizeRatio = userParameterAsDouble( *it ) ; 
+      pars.erase( it );
+    }
+  }
+  { /// central hole X size 
+    Iterator it =
+      std::find( pars.begin() , pars.end () , std::string("centralHoleX") );
+    if( pars.end() != it ) {
+      m_centralHoleX = userParameterAsInt( *it ) ; 
+      pars.erase( it );
+    }
+  }
+  { /// central hole Y size 
+    Iterator it =
+      std::find( pars.begin() , pars.end () , std::string("centralHoleY") );
+    if( pars.end() != it ) {
+      m_centralHoleY = userParameterAsInt( *it ) ; 
+      pars.erase( it );
+    }
+  }
   ///
   if( !pars.empty() ) {
     // some "extra" parameters.
@@ -204,12 +231,21 @@ StatusCode DeCalorimeter::buildCells( ) {
     // ** in the local frame. One has to convert to the global frame
 
     for( int Row = 0 ; maxRowCol >= Row    ; ++Row    ) {
-      pointLocal.setY( cellSize[ Area ] * ( Row - centerRowCol ) ) ;
+      pointLocal.setY( m_YToXSizeRatio * cellSize[Area] * (Row-centerRowCol));
 
       for( int Column = 0; maxRowCol >= Column ; ++Column )  {
         pointLocal.setX( cellSize[ Area ] * ( Column - centerRowCol ) ) ;
  
         if( !lv->isInside( pointLocal ) ) {  continue ; }
+
+        // Mask the non connected calorimeter cells. 
+        // Should be only for central part, but is OK also for middle and
+        // outer as the hole is quite small...
+        
+        if ( ( m_centralHoleX > fabs(Column - centerRowCol) ) &&
+             ( m_centralHoleY > fabs(Row    - centerRowCol) ) ) {
+          continue;
+        }
 
         CaloCellID id( m_caloIndex, Area , Row , Column ) ;
         cells.addEntry( CellParam(id) , id );  // store the new cell

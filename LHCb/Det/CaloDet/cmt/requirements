@@ -1,11 +1,5 @@
-# =========================================================================	
-# $Log: not supported by cvs2svn $
-# Revision 1.20  2002/04/22 17:08:38  cattanem
-# fix shlib linkopts for Windows
-# =========================================================================	
-
 package  CaloDet 
-version  v4r0
+version  v4r1
 
 # =============== structure ===============================================	
 branches         src cmt doc options CaloDet 

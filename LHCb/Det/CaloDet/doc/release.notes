@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.21 2002-04-22 08:09:35 cattanem Exp $ 
+! $Id: release.notes,v 1.22 2002-06-15 06:25:25 ocallot Exp $ 
 ! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
-
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-06-15 - Olivier Callot
+ - Changed Ecal cell size to 121.700 mm (X)
+ - Use the new user parameters to define the cell size ratio and the central
+   hole size.
+ - Add the namespace DeCalorimeterLocation for detector location values.
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>>> CaloDet v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 19/04/2002 - Marco Cattaneo
