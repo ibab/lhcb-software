@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.12 2003-11-21 22:27:40 jonesc Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.13 2004-02-16 14:11:53 papanest Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -100,11 +100,11 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
   
   unsigned int HPDColumn = 0;
   if (0 == HPDRow%2) {
-    HPDColumn = static_cast<unsigned int> (floor((inPanel.x() - m_panelHorizEdgeEven)
-                                                 / m_columnPitch));
+    HPDColumn = static_cast<unsigned int> 
+      (floor((inPanel.x() - m_panelHorizEdgeEven) / m_columnPitch));
   } else {
-    HPDColumn = static_cast<unsigned int> (floor((inPanel.x() - m_panelHorizEdgeOdd)
-                                                 / m_columnPitch));
+    HPDColumn = static_cast<unsigned int> 
+      (floor((inPanel.x() - m_panelHorizEdgeOdd) / m_columnPitch));
   }
 
   if (HPDColumn >= m_HPDColumns) return false;
@@ -114,3 +114,19 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
 }
 
 
+//=========================================================================
+//  convert a point from the panel to the global coodinate system
+//=========================================================================
+HepPoint3D DeRich1HPDPanel::globalPosition( const HepPoint3D& localPoint,
+                                           Rich::Side side) {
+
+  int sign(1);
+  if (side == Rich::top) sign = -1;
+  
+  return (geometry()->
+          toGlobal(HepPoint3D(localPoint.x(), 
+                              localPoint.y()+sign*m_detPlaneVertEdge, 
+                              localPoint.z() + m_detPlaneZ )));
+}
+
+//============================================================================

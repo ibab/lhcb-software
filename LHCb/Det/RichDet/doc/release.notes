@@ -4,6 +4,11 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v7r0 2004-02-04 =========================
+! 2004-02-16 - Antonis Papanestis
+ - Removed DeRichPDPanel
+ - Added local to global conversion for HPDPanel (globalPosition)
+
 !========================= RichDet v6r5 2004-02-04 =========================
 ! 2004-01-28 - Antonis Papanestis
  - Started the process of removing DeRichPDPanel, by removing the .cpp file

@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.h,v 1.8 2004-01-28 16:33:30 papanest Exp $
+// $Id: DeRich1HPDPanel.h,v 1.9 2004-02-16 14:11:52 papanest Exp $
 #ifndef RICHDET_DERICH1HPDPANEL_H
 #define RICHDET_DERICH1HPDPANEL_H 1
 
@@ -67,6 +67,12 @@ public:
     return m_detPlaneVertEdge;
   }
     
+  /**
+   * Returns the global position given a local position and panel number
+   */
+  virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
+                                     Rich::Side side);
+
 protected:
 
   /**  

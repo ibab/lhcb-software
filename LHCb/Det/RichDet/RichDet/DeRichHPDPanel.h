@@ -1,16 +1,21 @@
-// $Id: DeRichHPDPanel.h,v 1.10 2004-01-28 16:33:30 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.11 2004-02-16 14:11:52 papanest Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
 
+// Include files
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Plane3D.h"
+
 // LHCbKernel
 #include "Kernel/CLHEPStreams.h"
-
-// Bse class
-#include "RichDet/DeRichPDPanel.h"
+#include "Kernel/RichSmartID.h"
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/DetectorElement.h"
+#include "DetDesc/ISolid.h"
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
@@ -19,7 +24,7 @@
  * @author Antonis Papanestis
  */
 
-class DeRichHPDPanel: public DeRichPDPanel {
+class DeRichHPDPanel: public DetectorElement {
 
 public:
 
@@ -93,8 +98,7 @@ public:
                                     const HepPoint3D& pGlobal, 
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,
-                                    DeRichPDPanel::traceMode mode = 
-                                    DeRichPDPanel::circle );
+                                    traceMode mode = circle );
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -105,8 +109,7 @@ public:
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
                               HepPoint3D& hitPosition,
-                              DeRichPDPanel::traceMode mode = 
-                              DeRichPDPanel::loose);
+                              traceMode mode = loose);
 
   /**
    * Converts a global position to the coordinate system of the
@@ -117,6 +120,13 @@ public:
     //  {
     //    return ( geometry()->toLocal( globalPoint ) );
     //  }
+  
+
+  /**
+   * Returns the global position given a local position and panel number
+   */
+  virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
+                                     Rich::Side side) = 0;
   
 
   /**

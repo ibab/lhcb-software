@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.10 2004-01-28 16:33:30 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.11 2004-02-16 14:11:53 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -286,7 +286,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                           const HepPoint3D& pGlobal,
                                           HepPoint3D& windowPointGlobal,
                                           RichSmartID& smartID,
-                                          DeRichPDPanel::traceMode mode) {
+                                          DeRichHPDPanel::traceMode mode) {
 
   // transform point and vector to the HPDPanel coordsystem.
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
@@ -303,7 +303,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   unsigned int  HPDNumber(0), HPDRow(0), HPDColumn(0);
   RichSmartID id;
 
-  if ( mode == DeRichPDPanel::circle ) {  // do it quickly
+  if ( mode == DeRichHPDPanel::circle ) {  // do it quickly
     if ( findHPDRowCol(panelIntersection, id) ) {
 
       HPDRow = id.PDRow();
@@ -448,7 +448,7 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
 bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
                                     const HepVector3D& vGlobal,
                                     HepPoint3D& hitPosition,
-                                    DeRichPDPanel::traceMode mode) {
+                                    DeRichHPDPanel::traceMode mode) {
 
   // transform point and vector to the MaPMT Panel coordsystem.
   HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
@@ -463,7 +463,7 @@ bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
 
   hitPosition = geometry()->toGlobal( hitInPanel );
 
-  if ( mode == DeRichPDPanel::tight) {
+  if ( mode == DeRichHPDPanel::tight) {
     if ( fabs(hitInPanel.x()) >= m_detPlaneHorizEdge ||
          fabs(hitInPanel.y()) >= m_detPlaneVertEdge ) {
       return false;

@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.14 2003-11-22 20:43:48 jonesc Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.15 2004-02-16 14:11:53 papanest Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -127,5 +127,19 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
   return true;
 }
 
+//=========================================================================
+//  convert a point from the panel to the global coodinate system
+//=========================================================================
+HepPoint3D DeRich1CdfHPDPanel::globalPosition( const HepPoint3D& localPoint,
+                                           Rich::Side side) {
+
+  int sign(1);
+  if (side == Rich::top) sign = -1;
+  
+  return (geometry()->
+          toGlobal(HepPoint3D(localPoint.x(), 
+                              localPoint.y()+sign*m_detPlaneVertEdge, 
+                              localPoint.z() + m_detPlaneZ )));
+}
 //============================================================================
 
