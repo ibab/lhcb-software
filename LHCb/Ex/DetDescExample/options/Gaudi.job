@@ -33,6 +33,7 @@ else
   setenv WORKDIR $HOME/w1
   if ($#argv == 1) set MODE = "$1" 
 endif
+set current = $PWD
 #
 # == set the root directory of your job
 setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v2
@@ -41,7 +42,10 @@ unsetenv LD_LIBRARY_PATH
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 # == create soft_links to use packages
+cd $MYJOBROOT/cmt
 $CMTROOT/mgr/cmt build library_links
+cd $current
+
 #
 # == in batch copy the executable,======================================= 
 #    in interactive create a link to the executable you want to run =======
