@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.41 2004-03-29 13:22:21 cattanem Exp $
+! $Id: release.notes,v 1.42 2004-05-11 08:40:18 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,17 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2004-05-11 - Vanya BELYAEV
+
+- src/Calo04ECorrection.cpp 
+   modification of energy correction tool to be used for analysis 
+   of DC04 data (produced with XmlDDDB >= v22r2 ) from Oliver Deschamps
+- options/Calo04*.opts 
+   new parameters foe E/S/L corrections to be used for DC04 data 
+   from Olivier Deschamps 
+- cmt/requirements 
+   increment the version to v2r2 
+ 
 !======================= CaloReco v2r1p1 2004-03-29 ======================
 ! 2004-03-29 - Marco Cattaneo
  - Fix Reco.opts to avoid multiple inclusion of options files

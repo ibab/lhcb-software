@@ -3,6 +3,12 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/05/06 16:32:20  odescham
+//  new reevaluation of parameters for DC04 (from Geant v6r1 PGUN photons)
+//
+// Revision 1.1  2004/03/17 16:32:19  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.2  2004/02/06 odescham
 //  add new E-correction tuned for DC04 data
 //
@@ -35,62 +41,61 @@ ToolSvc.ECorrection.GlobalFactor={   1. , 1. , 1. } ;
 //--------------------------- Unconverted photons -----------------------//
 
 // Energie dependency Spd=0
-ToolSvc.ECorrection.Alpha1_NoSpdHit_a={  0.9560 ,   0.9735 ,   0.9499 } ;
-ToolSvc.ECorrection.Alpha1_NoSpdHit_b={  0.0234 ,   0.0120 ,   0.0211 } ;
-ToolSvc.ECorrection.Alpha1_NoSpdHit_c={ -0.0036 ,  -0.0012 ,  -0.0025 } ;
+ToolSvc.ECorrection.Alpha1_NoSpdHit_a={  0.9980 ,   0.9885 ,   0.9739 } ;
+ToolSvc.ECorrection.Alpha1_NoSpdHit_b={  0.0061 ,   0.0021 ,   0.0055 } ;
+ToolSvc.ECorrection.Alpha1_NoSpdHit_c={ -0.0012 ,  -0.0005 ,  -0.0010 } ;
 // Barycenter position dependency Spd=0
-ToolSvc.ECorrection.Alpha2_NoSpdHit_a={  0.9989 ,   0.9848 ,   0.9841 } ;
-ToolSvc.ECorrection.Alpha2_NoSpdHit_b={ -0.0095 ,   0.0984 ,   0.1432 } ;
-ToolSvc.ECorrection.Alpha2_NoSpdHit_c={  0.0258 ,  -0.1675 ,  -0.2505 } ;
-ToolSvc.ECorrection.Alpha2_NoSpdHit_d={ -0.0239 ,   0.1017 ,   0.1376 } ;
+ToolSvc.ECorrection.Alpha2_NoSpdHit_a={  0.9989 ,   0.9796 ,   0.9758 } ;
+ToolSvc.ECorrection.Alpha2_NoSpdHit_b={ -0.0552 ,   0.1550 ,   0.1604 } ;
+ToolSvc.ECorrection.Alpha2_NoSpdHit_c={  0.1791 ,  -0.3143 ,  -0.2373 } ;
+ToolSvc.ECorrection.Alpha2_NoSpdHit_d={ -0.1419 ,   0.2324 ,   0.1019 } ;
 // Module frame dependency Spd=0
-ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_0={ 1.0   ,  -0.036 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_1={ 1.0   ,   0.036 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_2={ 1.014 ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_0={ 1.0   ,  -0.038 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_1={ 1.0   ,   0.038 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_NoSpdHit_2={ 1.0   ,   0.0   ,   0.0 } ;
 ToolSvc.ECorrection.Alpha3Y_Inner_NoSpdHit_0={ 1.0   ,  -0.036 ,   0.0 } ;
 ToolSvc.ECorrection.Alpha3Y_Inner_NoSpdHit_1={ 1.0   ,   0.036 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Inner_NoSpdHit_2={ 1.010 ,   0.0   ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Middle_NoSpdHit_0={ 1.0  ,  -0.025 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Middle_NoSpdHit_1={ 1.0  ,   0.025 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Inner_NoSpdHit_2={ 1.0   ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Middle_NoSpdHit_0={ 1.0  ,  -0.027 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Middle_NoSpdHit_1={ 1.0  ,   0.027 ,   0.0 } ;
 ToolSvc.ECorrection.Alpha3Y_Middle_NoSpdHit_0={ 1.0  ,  -0.027 ,   0.0 } ;
 ToolSvc.ECorrection.Alpha3Y_Middle_NoSpdHit_1={ 1.0  ,   0.027 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Outer_NoSpdHit_0={ 1.007 ,   0.0   ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Outer_NoSpdHit_0={ 1.001 ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Outer_NoSpdHit_0={ 1.0   ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Outer_NoSpdHit_0={ 1.0   ,   0.0   ,   0.0 } ;
 // Prs leakage
-ToolSvc.ECorrection.BetaPrs_NoSpdHit_a={  11.40 ,  12.11 ,  13.66 } ;
-ToolSvc.ECorrection.BetaPrs_NoSpdHit_b={ -0.013 , -0.027 , -0.020 } ;
+ToolSvc.ECorrection.BetaPrs_NoSpdHit_a={  13.44 ,  15.37 ,  19.15 } ;
+ToolSvc.ECorrection.BetaPrs_NoSpdHit_b={  -1.29 ,  -1.65 ,  -2.56 } ;
 
 //----------------------------- Converted photons -----------------------//
 // Energie dependency Spd>0
-ToolSvc.ECorrection.Alpha1_SpdHit_a={  0.7937 ,   0.8004 ,   0.7855 } ;
-ToolSvc.ECorrection.Alpha1_SpdHit_b={  0.1007 ,   0.0818 ,   0.0875 } ;
-ToolSvc.ECorrection.Alpha1_SpdHit_c={ -0.0130 ,  -0.0091 ,  -0.0094 } ;
+ToolSvc.ECorrection.Alpha1_SpdHit_a={  0.9449 ,   0.9316 ,   0.9431 } ;
+ToolSvc.ECorrection.Alpha1_SpdHit_b={  0.0188 ,   0.0216 ,   0.0075 } ;
+ToolSvc.ECorrection.Alpha1_SpdHit_c={ -0.0018 ,  -0.0025 ,  -0.0005 } ;
 // Barycenter position dependency Spd>0
-ToolSvc.ECorrection.Alpha2_SpdHit_a={  1.0039 ,   0.9867 ,   0.9842 } ;
-ToolSvc.ECorrection.Alpha2_SpdHit_b={ -0.0857 ,   0.0518 ,   0.0854 } ;
-ToolSvc.ECorrection.Alpha2_SpdHit_c={  0.1969 ,  -0.0633 ,  -0.1705 } ;
-ToolSvc.ECorrection.Alpha2_SpdHit_d={ -0.1563 ,   0.0189 ,   0.1140 } ;
+ToolSvc.ECorrection.Alpha2_SpdHit_a={  1.0106 ,   0.9927 ,   0.9859 } ;
+ToolSvc.ECorrection.Alpha2_SpdHit_b={ -0.0796 ,   0.0383 ,   0.1061 } ;
+ToolSvc.ECorrection.Alpha2_SpdHit_c={  0.1101 ,  -0.0253 ,  -0.1467 } ;
+ToolSvc.ECorrection.Alpha2_SpdHit_d={  0.0000 ,   0.0000 ,   0.0000 } ;
 // Module frame dependency Spd>0
-ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_0={ 1.0   ,  -0.039 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_1={ 1.0   ,   0.039 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_2={ 1.005 ,   0.0   ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_0={ 1.0   ,  -0.026 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_1={ 1.0   ,   0.026 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_2={ 1.003 ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_0={ 1.0   ,  -0.035 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_1={ 1.0   ,   0.035 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Inner_SpdHit_2={ 1.0   ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_0={ 1.0   ,  -0.018 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_1={ 1.0   ,   0.018 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Inner_SpdHit_2={ 1.0   ,   0.0   ,   0.0 } ;
 
-ToolSvc.ECorrection.Alpha3X_Middle_SpdHit_0={ 1.0  ,  -0.028 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Middle_SpdHit_1={ 1.0  ,   0.028 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Middle_SpdHit_0={ 1.0  ,  -0.018 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Middle_SpdHit_1={ 1.0  ,   0.018 ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3X_Outer_SpdHit_0={ 0.992 ,   0.0   ,   0.0 } ;
-ToolSvc.ECorrection.Alpha3Y_Outer_SpdHit_0={ 1.002 ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Middle_SpdHit_0={ 1.0  ,  -0.018 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Middle_SpdHit_1={ 1.0  ,   0.018 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Middle_SpdHit_0={ 1.0  ,  -0.017 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Middle_SpdHit_1={ 1.0  ,   0.017 ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3X_Outer_SpdHit_0={ 1.0   ,   0.0   ,   0.0 } ;
+ToolSvc.ECorrection.Alpha3Y_Outer_SpdHit_0={ 1.0   ,   0.0   ,   0.0 } ;
 // Prs leakage
-ToolSvc.ECorrection.BetaPrs_SpdHit_a={  9.51 ,  11.24 ,  13.44 } ;
-ToolSvc.ECorrection.BetaPrs_SpdHit_b={  0.194 ,  0.110 ,  0.127 } ;
-
+ToolSvc.ECorrection.BetaPrs_SpdHit_a={  13.44 ,  15.37 ,  19.15 } ;
+ToolSvc.ECorrection.BetaPrs_SpdHit_b={  -1.29 ,  -1.65 ,  -2.56 } ;
 //----------------------------- Split photons -----------------------//
 // Split Photon Factor
-ToolSvc.ECorrection.SplitPhotonFactor={   0.9975 , 1.006 , 1.00 } ;
+ToolSvc.ECorrection.SplitPhotonFactor={   1.00 , 1.00 , 1.00 } ;
 // ============================================================================
 // The End 
 // ============================================================================

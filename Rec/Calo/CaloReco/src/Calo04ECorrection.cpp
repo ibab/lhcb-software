@@ -1,8 +1,14 @@
-// $Id: Calo04ECorrection.cpp,v 1.1 2004-03-17 16:32:21 ibelyaev Exp $
+// $Id: Calo04ECorrection.cpp,v 1.2 2004-05-11 08:40:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/05/06 16:32:21  odescham
+// Minor changes (to be consistent with v1r2 revision of options file)
+//
+// Revision 1.1  2004/03/17 16:32:21  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.4   2004/02/06 odescham
 // New E-corrections for DC04
 //
@@ -327,7 +333,7 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
       else if( m_spd( *d ) ) { eSpdSum  += (*d)->e() ; } 
     }
   const CaloPosition& position = cluster->position();
-  const double eEcal = position. e () ;
+  double eEcal = position. e () ;
   const double xBar  = position. x () ;
   const double yBar  = position. y () ;
   /*
@@ -453,11 +459,21 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
   if( 0 == area && 0 == Col % (area+1) && 0 != eSpd ){A3x_p = A3x_Out0_spd;}
   if( 0 == area && 0 == Row % (area+1) && 0 != eSpd ){A3y_p = A3y_Out0_spd;}
 
-  // Longitudinal correction
+
+
+  // Apply global rescaling before correction 
+  // (same rescaling for both Ecal and Preshower)
+  if( Level[4] ){
+    eEcal = eEcal / A0[area] ;
+    ePrsSum = ePrsSum / A0[area];
+    ePrs = ePrs / A0[area];
+  } 
   
+
   double elog=0;
   if(0 < eEcal)elog =log(eEcal/GeV);
-  if( Level[0] && 0 < ePrsSum  ){
+  //  if( Level[0] && 0 < ePrsSum  ){ // Modif Mai 2004 : no Prs requirement
+  if( Level[0] ){
     A1 = 1./(A1_a[area]+A1_b[area]*elog+A1_c[area]*elog*elog); 
   }
   // Lateral correction
@@ -484,11 +500,9 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
   double Eps = ePrsSum;
   // Avoid double counting (should be corrected in CaloMergedPi0Alg)
   if( CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){Eps = ePrs;}
-  double Beta = Beta_a[area] + Beta_b[area] * Ecor/GeV;
+  double Beta = Beta_a[area] + Beta_b[area] * elog; // Modif Mai 2004 (elog <-> Ecor/GeV)
   if( Level[3] ){Ecor  += Beta * Eps ;}
- 
- // Apply global rescaling 
-  if( Level[4] ){Ecor = Ecor / A0[area] ;} 
+  
 
   // Split Photon rescaling
   if( Level[5] && CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){
@@ -509,6 +523,7 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
      << "ePrsSum "  << ePrsSum  <<  " "
      << "eEcal " << eEcal/GeV <<  " "
      << "Ecor "  <<  Ecor/GeV <<  " "
+     << "A0 "  <<  A0[area] <<  " "
      << "A1 "  <<  A1 <<  " "
      << "A2 "  <<  A2 <<  " "
      << "A3 "  <<  A3 <<  " "

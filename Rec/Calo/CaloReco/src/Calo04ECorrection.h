@@ -1,8 +1,11 @@
-// $Id: Calo04ECorrection.h,v 1.1 2004-03-17 16:32:21 ibelyaev Exp $
+// $Id: Calo04ECorrection.h,v 1.2 2004-05-11 08:40:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/03/17 16:32:21  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.2  2004/02/09 09:33:35  odescham
 //  add new E-,S- and L-corrections tuned for DC044
 //

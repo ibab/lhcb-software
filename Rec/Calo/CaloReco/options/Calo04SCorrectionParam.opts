@@ -3,6 +3,12 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/05/06 16:32:20  odescham
+//  new reevaluation of parameters for DC04 (from Geant v6r1 PGUN photons)
+//
+// Revision 1.1  2004/03/17 16:32:20  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.2  2004/02/09 odescham
 //  add new E-,S- and L-corrections tuned for DC04
 //
@@ -24,27 +30,27 @@ ToolSvc.SCorrection.CorrectionLevel={
 // ============================================================================
 // Asinh Sshaping
 // Main Parameter           pd/Prs   Outer    Middle    Inner 
-ToolSvc.SCorrection.Par_Asinh_00 = { 0.0855 , 0.1110 ,  0.1233 } ;
-ToolSvc.SCorrection.Par_Asinh_01 = { 0.0929 , 0.1175 ,  0.1284 } ;
-ToolSvc.SCorrection.Par_Asinh_11 = { 0.1024 , 0.1237 ,  0.1312 } ;
+ToolSvc.SCorrection.Par_Asinh_00 = { 0.0890 , 0.1132 ,  0.1246 } ;
+ToolSvc.SCorrection.Par_Asinh_01 = { 0.0970 , 0.1205 ,  0.1306 } ;
+ToolSvc.SCorrection.Par_Asinh_11 = { 0.1038 , 0.1261 ,  0.1340 } ;
 
 // Residual Sshape
-ToolSvc.SCorrection.Par_ResOut_0={ -0.0015,  0.5521,  0.0524,-10.0770, -0.4322, 54.4953,  0.9970,-90.1430 };
-ToolSvc.SCorrection.Par_ResMid_0={ -0.0037,  0.4663,  0.0507, -6.1072, -0.3143, 25.3507,  0.6450,-30.7389 };
-ToolSvc.SCorrection.Par_ResInn_0={  0.0000,  0.4404,  0.0013, -5.0900,  0.0623, 16.6704, -0.2300,-11.3254 };
+ToolSvc.SCorrection.Par_ResOut_0={ -0.0004,  0.5358,  0.0048, -9.3383,  0.0053, 46.5724, -0.0847 ,-68.7009};
+ToolSvc.SCorrection.Par_ResMid_0={ -0.0039,  0.4590,  0.0456, -6.3650, -0.4325, 29.0513, 1.3476,-41.8911 };
+ToolSvc.SCorrection.Par_ResInn_0={  0.0019,  0.4450, -0.0469, -5.8746,  0.3158, 25.1393,  -0.6109,-35.1835 };
 
-ToolSvc.SCorrection.Par_ResOut_1={  0.0004,  0.4785, -0.0332, -7.5078,  0.4361, 40.9903, -1.2052,-78.8018 };
-ToolSvc.SCorrection.Par_ResMid_1={  0.0004,  0.5100, -0.1688, -6.4536,  1.3949, 34.1676, -2.6303,-74.4839 };
-ToolSvc.SCorrection.Par_ResInn_1={  0.0012,  0.5122,  0.0548, -5.3775, -1.4190, 21.0355,  5.9186,-38.0502 };
+ToolSvc.SCorrection.Par_ResOut_1={  -0.0030,  0.4434,  0.0969, -7.7059, -0.7914, 43.4200, 1.6839,-85.2115 };
+ToolSvc.SCorrection.Par_ResMid_1={  -0.0056,  0.3813,  0.1037, -4.0731, -0.9612, 16.1832, 2.7680,-30.9646 };
+ToolSvc.SCorrection.Par_ResInn_1={  0.0024,  0.4669, -0.0514, -5.1266,  1.1503, 21.7334,-5.4942,-43.1078 };
 
 // L/R & B/U Asymmetries
-ToolSvc.SCorrection.Par_AsOut_0={ -0.0038 ,  0.0134,  0.3129 };
-ToolSvc.SCorrection.Par_AsMid_0={ -0.0082 ,  0.0203,  0.4139 };
-ToolSvc.SCorrection.Par_AsInn_0={  0.0069 ,  0.0139,  0.2667 };
+ToolSvc.SCorrection.Par_AsOut_0={ -0.0146 ,  0.0101,  0.3324 };
+ToolSvc.SCorrection.Par_AsMid_0={ -0.0206 ,  0.0199,  0.4370 };
+ToolSvc.SCorrection.Par_AsInn_0={  0.0016 ,  0.0181,  0.2825 };
 
-ToolSvc.SCorrection.Par_AsOut_1={  0.0153,  0.0137,  0.1693 };
-ToolSvc.SCorrection.Par_AsMid_1={  0.0136,  0.0365,  0.2478 };
-ToolSvc.SCorrection.Par_AsInn_1={  0.0210,  0.0313,  0.1694 };
+ToolSvc.SCorrection.Par_AsOut_1={  0.0088 ,  0.0112,  0.1375 };
+ToolSvc.SCorrection.Par_AsMid_1={ -0.0076 ,  0.0293,  0.2163 };
+ToolSvc.SCorrection.Par_AsInn_1={  0.0161 ,  0.0266,  0.1301 };
 // ============================================================================
 // The End 
 // ============================================================================
