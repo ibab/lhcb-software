@@ -25,9 +25,9 @@ use DbCnv         v6r* Event
 # Histogram persistency
 use HbookCnv      v12r*
 
-# SICB stuff (access to magnetic field service)
-use dbase         v240 SICB
-use SicbCnv       v16r* SICB
+# Access to magnetic field service
+use dbase         v245r0 SICB
+use Magnet        v1r*  Det
 
 #GiGa staff...
 use GiGaCnv       v5r*  Sim
