@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic_2.py,v 1.1 2004-11-08 17:02:46 ibelyaev Exp $ 
+# $Id: Minimalistic_2.py,v 1.2 2005-01-24 17:29:40 ibelyaev Exp $ 
+# =============================================================================
+# CVS version $Revision: 1.2 $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
-
+"""
+Simple script to run 'DaVinci' job in Bender environment
+"""
+__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 
 
 from bendermodule import *
@@ -42,6 +47,8 @@ if __name__ == '__main__' :
     # for the interactive mode it is better to comment the last line
     gaudi.exit()
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

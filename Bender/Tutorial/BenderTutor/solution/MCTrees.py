@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
+# $Id: MCTrees.py,v 1.5 2005-01-24 17:29:40 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.5 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-
+""" 'Solution'-file for 'MCTrees.py' example (Bender Tutorial) """
 # =============================================================================
 # @file
 #
@@ -13,6 +15,7 @@
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
 
 # import everything from BENDER
 from bendermodule import *
@@ -74,9 +77,12 @@ def configure() :
     # configure the histograms:
     hsvc = gaudi.histoSvc()
     hsvc.setOutput( 'mctreeshistos.hbook', 'HBOOK' )
-    
+
+    # add the printout of the histograms
+    hsvc = gaudi.service( 'HbookHistSvc' )
+    hsvc.PrintHistos = True
+
     # configure the N-Tuples:
-    if not 'NTupleSvc' in gaudi.ExtSvc : gaudi.ExtSvc += ['NTupleSvc']
     ntsvc = gaudi.nTupleSvc()
     ntsvc.defineOutput( { 'MC' : 'mytuples.hbook' } , 'HBOOK' )
 
@@ -110,7 +116,7 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(50)
+    gaudi.run(500)
 
     # for the interactive mode it is better to comment the last line
     gaudi.exit()

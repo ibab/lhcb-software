@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2004-11-23 17:16:35 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2005-01-24 17:29:40 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # ============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya Belyaev belyaev@lapp.in2p3.fr 
 # ============================================================================
 package           BenderTutor
-version           v4r4
+version           v4r5
 
 # =============== structure ==================================================
 branches          cmt doc python options solution
@@ -17,8 +17,13 @@ set               BENDERTUTORSOLUTION  $(BENDERTUTORROOT)/solution
 set               BENDERTUTOROPTS      $(BENDERTUTORROOT)/options
 
 path_remove       PYTHONPATH 'BenderTutor'
-path_append       PYTHONPATH $(BENDERTUTORSOLUTION)
 path_append       PYTHONPATH $(BENDERTUTORPYTHON)
+path_append       PYTHONPATH $(BENDERTUTORSOLUTION)
+
+path_remove       PATH  'BenderTutor/python'   WIN32 'BenderTutor\python'
+path_remove       PATH  'BenderTutor/solution' WIN32 'BenderTutor\solution'
+path_append       PATH  $(BENDERTUTORPYTHON)
+path_append       PATH  $(BENDERTUTORSOLUTION)
 
 # =============== dependencies ===============================================
 use               BenderExample      v*    Ex

@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: DataAccess.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
+# $Id: DataAccess.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.4 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-
+"""
+'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
+"""
 # =============================================================================
 # @file
 #
@@ -13,6 +17,7 @@
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
 
 # import everything from BENDER
 from bendermodule import *

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.4 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -15,6 +17,7 @@ using '*'.opts configuration
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 
 # get EVERYTHING from Bender
 from bendermodule import *
@@ -31,8 +34,8 @@ def configure() :
     
     # define input data files :
     #    1) get the Event Selector from Gaudi
-    #    2) configure Event Selector 
     evtSel = gaudi.evtSel()
+    #    2) configure Event Selector 
     evtSel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst' , 
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst' ,
                    'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst' ,

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn2.py,v 1.3 2004-11-08 17:02:45 ibelyaev Exp $
+# $Id: HandsOn2.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.4 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-
+""" 'Solution'-file for 'Hands-On 2' example (Bender Tutorial) """
 # =============================================================================
 # @file
 #
@@ -13,6 +15,7 @@
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
 
 # import everything from BENDER
 from bendermodule import *
@@ -61,14 +64,14 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(100)
+    gaudi.run(500)
 
     # for the interactive mode it is better to comment the last line
     gaudi.exit()
 # =============================================================================
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

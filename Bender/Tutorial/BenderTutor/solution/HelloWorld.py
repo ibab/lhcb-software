@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HelloWorld.py,v 1.3 2004-11-08 17:02:46 ibelyaev Exp $
+# $Id: HelloWorld.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.4 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -15,6 +17,7 @@ Standard 'Hello, world!' example. No way to avoid it!
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 
 # import everything from BENDER
 from bendermodule import *
@@ -25,7 +28,13 @@ from bendermodule import *
 # =============================================================================
 class HelloWorld(Algo):
     def analyse( self ) :
+        
+        # use Python printout:
         print 'Hello, world!'
+        
+        # use Gaudi printout:
+        self.Print( message = 'Hello, World! (using Gaudi)')
+        
         return SUCCESS
 # =============================================================================
 
@@ -67,12 +76,7 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(10)
-    print ' 10 events have been processed '
-    gaudi.run(5)
-    print '  5 events have been processed '
-    gaudi.run(1)
-    print '  1  event has  been processed '
+    gaudi.run(50)
         
     # for the interactive mode it is better to comment the last line
     gaudi.exit()

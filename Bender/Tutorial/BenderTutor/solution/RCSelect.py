@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.4 2004-11-25 12:10:35 ibelyaev Exp $
+# $Id: RCSelect.py,v 1.5 2005-01-24 17:29:40 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS version $Revision: 1.5 $ 
 # =============================================================================
-
+# CVS tag     $Name: not supported by cvs2svn $ 
+# =============================================================================
+""" 'Solution'-file for 'RCselect.py' example (Bender Tutorial) """ 
 # =============================================================================
 # @file
 #
@@ -13,6 +15,7 @@
 # @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # @date   2004-10-12
 # =============================================================================
+__author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
 
 
 # import everything from BENDER
@@ -46,7 +49,7 @@ class RCSelect(Algo):
             # check the chi2 of the vertex fit
             if not 0 <= VCHI2( psi ) < 49 : continue
             
-            self.plot( title = " dimuon invariantt mass " ,
+            self.plot( title = " dimuon invariant mass " ,
                        value = M(psi) / GeV ,
                        low   = 2.5          ,
                        high  = 3.5          ) 
@@ -64,7 +67,7 @@ class RCSelect(Algo):
             # check the chi2 of the vertex fit
             if not 0 <= VCHI2( phi ) < 49 : continue
             
-            self.plot ( title = " dikaon invarinat mass " ,
+            self.plot ( title = " dikaon invariant mass " ,
                         value = M(phi) / GeV  ,
                         low   = 1.0           ,
                         high  = 1.050         )
@@ -125,14 +128,10 @@ def configure() :
     hsvc = gaudi.histoSvc()
     hsvc.setOutput('myhistos.hbook', 'HBOOK')
     
-     # configure the N-Tuples:
-    if not 'NTupleSvc' in gaudi.ExtSvc : gaudi.ExtSvc += ['NTupleSvc']
-    ntsvc = gaudi.nTupleSvc()
-    ntsvc.defineOutput( { 'RC' : 'mytuples.hbook' } , 'HBOOK' )
+    # add the printout of the histograms
+    hsvc = gaudi.service( 'HbookHistSvc' )
+    hsvc.PrintHistos = True
     
-    myAlg = gaudi.algorithm('RC')
-    myAlg.NTupleLUN = 'RC'
-
     # redefine input files 
     evtsel = gaudi.evtSel()
     evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
@@ -158,7 +157,7 @@ if __name__ == '__main__' :
     configure()
 
     # event loop 
-    gaudi.run(100)
+    gaudi.run(500)
 
     # for the interactive mode it is better to comment the last line
     gaudi.exit()
