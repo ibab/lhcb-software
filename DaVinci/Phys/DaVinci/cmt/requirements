@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2002-05-23 23:30:48 gcorti Exp $
+# $Id: requirements,v 1.22 2002-05-24 10:57:12 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -74,8 +74,7 @@ use DetDesc        v10r0   Det
 use VeloDet        v5r0   Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
-use PhysEvent      v4r1   Event
-use EventSys       v10r0  Event
+use EventSys       v10r1  Event
 
 #--- SicB event data persistency
 use SicbCnv        v16r0  SICB
