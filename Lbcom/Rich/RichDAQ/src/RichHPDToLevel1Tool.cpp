@@ -5,8 +5,11 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.4 2005-01-18 09:06:55 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.5 2005-01-22 13:33:42 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2005/01/18 09:06:55  jonrob
+ * Add method to get RICH detector from Level1 ID
+ *
  * Revision 1.3  2005/01/14 16:57:12  jonrob
  * Add functionality to use job options for mapping data
  *
@@ -64,7 +67,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
   // Use data from job options...
   JOData::const_iterator iD = m_joData.begin();
   bool newL1Bank = true;
-  RichDAQ::Level1ID L1ID = 1;
+  RichDAQ::Level1ID L1ID = 0;
   std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
   while ( iD != m_joData.end() )
   {
@@ -212,7 +215,7 @@ void RichHPDToLevel1Tool::buildTempMapping()
   // Create temporary mapping between RichSmartID/hardwareID and Level1 number
   // Eventually, will need to come from some sort of data base
   std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
-  RichDAQ::Level1ID L1ID = 1;
+  RichDAQ::Level1ID L1ID = 0;
   unsigned int iHPD = 0;
   Rich::DetectorType rich = Rich::InvalidDetector;
   for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID )
