@@ -64,10 +64,11 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
 
   if(charge!=0.0)
     {
-      double timeof = track-> GetGlobalTime();
       double edep = step->GetTotalEnergyDeposit();
+
       if(edep!=0.0)
         {
+          double timeof = track-> GetGlobalTime();
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
           HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
           int trid = step->GetTrack()->GetTrackID();
@@ -78,10 +79,10 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
           
           // temp      
-          G4TouchableHistory* postTT =  
-            (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-          G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+//           G4TouchableHistory* postTT =  
+//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
 
           //       MsgStream log( msgSvc() , name() );
           
@@ -133,7 +134,6 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
               if(lorr=="L") ishift=1;
               numsens=98+2*atoi(stnumb.c_str())+ishift;
             }
-          
           
           //       log << MSG::DEBUG << "Mother: " << stname << " sensor number: " 
           //           << numsens << endreq;      

@@ -74,15 +74,15 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
           int trid = track->GetTrackID();
           
           // temp
-          G4TouchableHistory* TT =  
-            (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  PV =   TT->GetVolume();
-          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
+//           G4TouchableHistory* TT =  
+//             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
+//           G4VPhysicalVolume*  PV =   TT->GetVolume();
+//           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
           
-          G4TouchableHistory* postTT =  
-            (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-          G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+//           G4TouchableHistory* postTT =  
+//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
           
 //           MsgStream log( msgSvc() , name() );
           
