@@ -1,8 +1,11 @@
-// $Id: GiGaUIsession.cpp,v 1.1 2002-12-04 21:17:38 ibelyaev Exp $
+// $Id: GiGaUIsession.cpp,v 1.2 2002-12-07 14:41:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/04 21:17:38  ibelyaev
+//  add UI and Vis stuff
+// 
 // ============================================================================
 // Include files
 /// GaudiKernel
@@ -10,36 +13,37 @@
 #include "GaudiKernel/System.h"
 // GiGa 
 #include "GiGa/GiGaMACROs.h"
-/// G4 
+// G4 
 #ifdef      G4UI_NONE
+// nothing to load 
 #else 
 #ifdef      G4UI_USE_WO
 #include   "G4UIWo.hh"   
-#endif ///< G4UI_USE_WO 
+#endif //   G4UI_USE_WO 
 /// G4 
 #ifdef      G4UI_USE_GAG
 #include   "G4UIGAG.hh" 
-#endif ///< G4UI_USE_GAG
+#endif //   G4UI_USE_GAG
 /// G4 
 #ifdef      G4UI_USE_XM
 #include   "G4UIXm.hh"  
-#endif ///< G4UI_USE_XM 
+#endif //   G4UI_USE_XM 
 /// G4 
 #ifdef      G4UI_USE_XAW
 #include   "G4UIXaw.hh"  
-#endif ///< G4UI_USE_XAW
+#endif //   G4UI_USE_XAW
 /// G4 
 #ifdef      G4UI_USE_TERMINAL
 #include   "G4UIterminal.hh"             
 #include   "G4UItcsh.hh"             
 #include   "G4UIcsh.hh"             
-#endif ///< G4UI_USE_TERMINAL 
+#endif //   G4UI_USE_TERMINAL 
 /// G4
 #include    "G4UIterminal.hh"             
 #include    "G4UItcsh.hh"             
 #include    "G4UIcsh.hh"             
 #include    "G4UIGAG.hh" 
-#endif   ///<G4UI_NONE
+#endif   //  G4UI_NONE
 // local
 #include "GiGaUIsession.h"
 

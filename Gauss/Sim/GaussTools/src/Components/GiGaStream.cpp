@@ -1,8 +1,11 @@
-// $Id: GiGaStream.cpp,v 1.2 2002-12-03 17:22:05 ibelyaev Exp $ 
+// $Id: GiGaStream.cpp,v 1.3 2002-12-07 14:41:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/03 17:22:05  ibelyaev
+//  fix the bug with conversion of hierarchy of objects
+//
 // ============================================================================
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IDataManagerSvc.h" 
@@ -14,7 +17,9 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SmartDataPtr.h"
-/// local 
+/// GiGaCnv 
+#include "GiGaCnv/IGiGaCnvSvcLocation.h"
+/// local
 #include "GiGaStream.h" 
 
 // ============================================================================
@@ -39,11 +44,11 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
                         ISvcLocator*       ServiceLocator )
   : Algorithm( StreamName , ServiceLocator ) 
   /// 
-  , m_executeOnce           ( false            )     
-  , m_execute               ( true             ) 
+  , m_executeOnce           ( false                     )     
+  , m_execute               ( true                      ) 
   ///
-  , m_nameOfCnvSvc          ( "GiGaKineCnvSvc" )  
-  , m_cnvSvc                (  0               )  
+  , m_nameOfCnvSvc          ( IGiGaCnvSvcLocation::Kine )  
+  , m_cnvSvc                (  0                        )  
   ///
   , m_nameOfDataSvc         ( "EventDataSvc"   ) 
   , m_dataSvc               (  0               ) 
@@ -74,25 +79,23 @@ StatusCode GiGaStream::initialize()
   StatusCode status = StatusCode::SUCCESS; 
   ///
   {
-    status = service( m_nameOfDataSvc , m_dataSvc ) ;
+    status = service( m_nameOfDataSvc , m_dataSvc , true ) ;
     if( status.isFailure() )  
       { return Error("Unable to locate IDataProviderSvc* =" +
                      m_nameOfDataSvc , status ) ; }
     if( 0 == m_dataSvc )
       { return Error("IUnable to locate IDataProviderSvc* ="+
                      m_nameOfDataSvc          ) ; }
-    m_dataSvc -> addRef();
   }
   ///
   {
-    status = service( m_nameOfCnvSvc , m_cnvSvc ) ;
+    status = service( m_nameOfCnvSvc , m_cnvSvc , true ) ;
     if( status.isFailure() )  
       { return Error("Unable to locate IConversionSvc ="+
                      m_nameOfCnvSvc,status);}
     if( 0 == m_cnvSvc )
       { return Error("Unable to locate IConversionSvc ="+
                      m_nameOfCnvSvc       );}
-    m_cnvSvc -> addRef() ;
   }
   /// 
   for( Names::const_iterator pName = m_namesOfItems.begin(); 
@@ -232,8 +235,8 @@ StatusCode GiGaStream::Error( const std::string& message ,
 StatusCode GiGaStream::finalize()
 {
   ///
-  if( 0 != m_dataSvc ) { m_dataSvc -> release() ; m_dataSvc = 0 ; }
-  if( 0 != m_cnvSvc  ) { m_cnvSvc  -> release() ; m_cnvSvc  = 0 ; }
+  if( 0 != m_dataSvc ) { m_dataSvc -> release () ; m_dataSvc = 0 ; }
+  if( 0 != m_cnvSvc  ) { m_cnvSvc  -> release () ; m_cnvSvc  = 0 ; }
   ///
   m_namesOfItems .clear () ; 
   m_dataSelector .clear () ; 

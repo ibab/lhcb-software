@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.3 2002-10-31 17:36:25 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.4 2002-12-07 14:41:44 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,7 @@
 #include "Event/MCHit.h"
 #include "Event/MCVeloHit.h"
 #include "Event/MCMuonHit.h"
+#include "Event/MCCaloHit.h"
 #include "Event/MCMuonHitPath.h"
 #include "Event/MCRichPhotodetectorHit.h"
 
@@ -46,13 +47,20 @@ GetGiGaHitsAlg::GetGiGaHitsAlg( const std::string& name,
   , m_puvelohits  ( MCVeloHitLocation::PuVeto )
   , m_muonhits    ( MCMuonHitLocation::MCMuonHits )
   , m_richhits    ( MCRichPhotodetectorHitLocation::Default )
+  , m_caloHits    ()
 { 
+  m_caloHits.push_back ( MCCaloHitLocation::Spd  ) ;
+  m_caloHits.push_back ( MCCaloHitLocation::Prs  ) ;
+  m_caloHits.push_back ( MCCaloHitLocation::Ecal ) ;
+  m_caloHits.push_back ( MCCaloHitLocation::Hcal ) ;
+  
   declareProperty( "OTHits"    , m_othits     ); 
   declareProperty( "ITHits"    , m_ithits     );
   declareProperty( "VeloHits"  , m_velohits   );
   declareProperty( "PuVeloHits", m_puvelohits );
   declareProperty( "MuonHits"  , m_muonhits   );
   declareProperty( "RichHits"  , m_richhits   );
+  declareProperty( "CaloHits"  , m_caloHits   );
 }
 
 //=============================================================================
@@ -216,7 +224,26 @@ StatusCode GetGiGaHitsAlg::execute() {
                 ///
               }
       }
-
+    
+    /// calorimeter hits 
+    for(Addresses::const_iterator address = m_caloHits.begin() ; 
+        m_caloHits.end() != address ; ++address )
+      {
+        SmartDataPtr<MCCaloHits> hits( eventSvc() , *address );
+        if( hits ) 
+          {
+            log << MSG::INFO
+                << "Number of extracted MCCaloHits  '" << *address << "' is "
+                << hits->size() << endreq ;
+          }
+        else 
+          {
+            log << MSG::INFO 
+                << " No 'MCCaloHits' extracted from '"
+                << *address << "'" << endreq ;
+          }
+      }
+    
   return StatusCode::SUCCESS;
 };
 

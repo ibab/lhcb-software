@@ -46,8 +46,8 @@ GiGaRichHitCnv::GiGaRichHitCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   ///
-  setNameOfGiGaConversionService( "GiGaHitsCnvSvc" ); 
-  setConverterName              ( "GiGaRichHitCnv"     );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
+  setConverterName              ( "GiGaRichHitCnv"          ) ;
   ///
   GiGaLeaf::Pars pars1;
   pars1.push_back("");

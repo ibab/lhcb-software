@@ -87,7 +87,7 @@ StatusCode GiGaPhysListModular::initialize()
       for( i=m_physconstr.begin(); i!= m_physconstr.end(); i++)
         {
           log << MSG::INFO << "Registering physics list: " << (*i) << endreq;
-          StatusCode scc= toolSvc->retrieveTool(*i,theconstr);
+          StatusCode scc= toolSvc->retrieveTool( *i , theconstr , this );
           if(!scc) {
             log << MSG::WARNING << "Could not find: " << (*i) << endreq;
           }

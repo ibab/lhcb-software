@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.h,v 1.2 2002-09-06 17:15:00 witoldp Exp $
+// $Id: GetGiGaHitsAlg.h,v 1.3 2002-12-07 14:41:44 ibelyaev Exp $
 #ifndef GETGIGAHITSALG_H 
 #define GETGIGAHITSALG_H 1
 
@@ -31,12 +31,15 @@ protected:
 
 private:
 
-  std::string    m_othits    ;
-  std::string    m_ithits    ;
-  std::string    m_velohits  ;
+  std::string    m_othits      ;
+  std::string    m_ithits      ;
+  std::string    m_velohits    ;
   std::string    m_puvelohits  ;
-  std::string    m_muonhits  ;
-  std::string    m_richhits  ;
-
+  std::string    m_muonhits    ;
+  std::string    m_richhits    ;
+  
+  typedef std::vector<std::string> Addresses ;
+  Addresses      m_caloHits    ;
+  
 };
 #endif // GETGIGAHITSALG_H

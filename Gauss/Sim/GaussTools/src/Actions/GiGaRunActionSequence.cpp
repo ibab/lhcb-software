@@ -1,8 +1,11 @@
-// $Id: GiGaRunActionSequence.cpp,v 1.1 2002-09-26 18:10:52 ibelyaev Exp $ 
+// $Id: GiGaRunActionSequence.cpp,v 1.2 2002-12-07 14:41:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:10:52  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // Revision 1.7  2002/05/07 12:21:35  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -84,18 +87,9 @@ StatusCode GiGaRunActionSequence::initialize  ()
   for( MEMBERS::const_iterator member = m_members.begin() ;
        m_members.end() != member ; ++member ) 
     {
-      sc = GiGaUtil::SplitTypeAndName( *member , Type , Name );
-      if( sc.isFailure() )
-        { return Error("Member Type/Name '"+(*member)+"' is unparsable",sc);}
-      IGiGaRunAction* action = 0 ;
-      sc = toolSvc()->retrieveTool( Type , Name , action , gigaSvc() );
-      if( sc.isFailure() ) 
-        { return Error("Could not create IGiGaRunAction '" 
-                       + Type + "'/'" + Name + "'" , sc  ) ; }
-      if( 0 == action    ) 
-        { return Error("Could not create IGiGaRunAction '" 
-                       + Type + "'/'" + Name + "'"       ) ; }
-      action->addRef();
+      IGiGaRunAction* action = tool( *member , action , this );
+      if( 0 == action    ) { return Error("Could not create IGiGaRunAction '" 
+                                          + *member + "'"       ) ; }
       m_actions.push_back( action );
     }       
   ///

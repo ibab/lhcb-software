@@ -3,6 +3,21 @@
 ! Responsible	: Witold Pokorski
 ! Purpose     : collection of sensitive detectors, G4 actions, etc
 !-----------------------------------------------------------------------------
+	
+
+! 2002-12-07 - Ivan Belyaev
+ - src/Calo                    new directory with calorimeter stuff 
+   src/Calo/CaloHit.cpp
+   src/Calo/CaloHit.h
+   src/Calo/CaloSensDet.cpp
+   src/Calo/CaloSensDet.h
+   src/Calo/CaloSim.h
+   src/Calo/CaloSimHash.h
+   src/Calo/CaloSubHit.cpp
+   src/Calo/CaloSubHit.h
+   src/Calo/GiGaCaloHitCnv.cpp
+   src/Calo/GiGaCaloHitCnv.h
+ - cmt/requirements             version update for newer GiGa  
 
 ! 2002-12-04 - Ivan Belyaev
  - src/UIVis/GiGaUIsession.h,.cpp       UI sessions 	

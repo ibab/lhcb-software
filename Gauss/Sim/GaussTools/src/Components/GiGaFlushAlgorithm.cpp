@@ -1,8 +1,11 @@
-// $Id: GiGaFlushAlgorithm.cpp,v 1.1 2002-09-26 18:10:56 ibelyaev Exp $
+// $Id: GiGaFlushAlgorithm.cpp,v 1.2 2002-12-07 14:41:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2002/09/26 18:10:56  ibelyaev
+///  repackageing: add all concrete implementations from GiGa
+///
 /// Revision 1.1  2002/01/22 18:20:53  ibelyaev
 ///  Vanya: update for newer versions of Gaudi and Geant4
 /// 
@@ -46,9 +49,9 @@ const        IAlgFactory&GiGaFlushAlgorithmFactory = s_factory ;
 GiGaFlushAlgorithm::GiGaFlushAlgorithm( const std::string& Name   ,
                                         ISvcLocator*       SvcLoc )
   : Algorithm ( Name , SvcLoc ) 
-  , m_gigaSvcName ( "GiGaSvc" ) 
+  , m_gigaSvcName ( "GiGa" ) 
   , m_gigaSvc     ( 0         ) 
-{ declareProperty( "GiGaService" , m_gigaSvcName ) ; };
+{ declareProperty( "GiGa" , m_gigaSvcName ) ; };
 
 // ============================================================================
 /** destructor 

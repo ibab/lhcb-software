@@ -46,8 +46,8 @@ GiGaVeloHitCnv::GiGaVeloHitCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   ///
-  setNameOfGiGaConversionService( "GiGaHitsCnvSvc" ); 
-  setConverterName              ( "GiGaVeloHitCnv" );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
+  setConverterName              ( "GiGaVeloHitCnv"          ) ;
   ///
 
   GiGaLeaf::Pars pars1;

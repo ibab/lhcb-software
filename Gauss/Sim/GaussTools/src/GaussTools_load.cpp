@@ -1,14 +1,8 @@
-// $Id: GaussTools_load.cpp,v 1.4 2002-12-04 21:17:38 ibelyaev Exp $
+// $Id: GaussTools_load.cpp,v 1.5 2002-12-07 14:41:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/11/28 08:53:52  witoldp
-// added factories for phys list
-//
-// Revision 1.2  2002/09/26 18:10:50  ibelyaev
-//  repackageing: add all concrete implementations from GiGa
-//
 // ============================================================================
 #define GAUSSTOOLS_GAUSSTOOLS_LOAD_CPP 1 
 // ============================================================================
@@ -31,10 +25,14 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaSensDetTracker      );
   DECLARE_GiGaFactory     (    GiGaSensDetVelo         );
   DECLARE_GiGaFactory     (    GiGaSensDetMuon         );
+  DECLARE_GiGaFactory     (    CaloSensDet             );
 
   /// Algorithms
-  DECLARE_ALGORITHM       (    GetGiGaHitsAlg           );
+  DECLARE_ALGORITHM       (    GetGiGaHitsAlg          );
   DECLARE_ALGORITHM       (    GiGaFlushAlgorithm      );
+
+  /// Converters 
+  DECLARE_CONVERTER       (    GiGaCaloHitCnv          );
   
   /// Magnetic Field  
   DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      );

@@ -1,19 +1,24 @@
-# $Id: requirements,v 1.10 2002-12-04 21:17:37 ibelyaev Exp $
+# $Id: requirements,v 1.11 2002-12-07 14:41:44 ibelyaev Exp $
 # =============================================================================
 package GaussTools
 version v3r4
 
-# ============== package structure ============================================
-branches         cmt src doc
+# =============== package structure ===========================================
+branches          cmt src doc
 
-# ============== explicit dependencies ========================================  
-use AIDA         v*
-use GiGaCnv      v9r*      Sim
+# =============== explicit dependencies =======================================  
+use AIDA          v*
+use GiGaCnv       v10r*     Sim
 
-# ============== Event ========================================================
-use VeloEvent    v12r*     Event
-use MuonEvent    v2r*      Event
-use RichEvent    v4r*      Event
+# =============== Event =======================================================
+use VeloEvent     v12r*     Event
+use MuonEvent     v2r*      Event
+use RichEvent     v4r*      Event
+use CaloEvent     v11r*     Event 
+
+# =============== Det =========================================================
+use CaloDet       v6r*      Det 
+use CaloDetXmlCnv v2r*      Det 
 
 # ============== linker library ===============================================
 library          GaussToolsLib           Lib/*.cpp
@@ -24,6 +29,7 @@ library          GaussTools   *.cpp                  \
                               UIVis/*.cpp            \
                               Actions/*.cpp          \
                               Tracking/*.cpp         \
+                              Calo/*.cpp             \
                               RICH/SensDet/*.cpp     \ 
                               RICH/PhysProcess/*.cpp \
                               RICH/PhysProcess/*.cc  \

@@ -46,8 +46,8 @@ GiGaTrackerHitCnv::GiGaTrackerHitCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ) 
 {
   ///
-  setNameOfGiGaConversionService( "GiGaHitsCnvSvc" ); 
-  setConverterName              ( "GiGaTrHitCnv"     );
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
+  setConverterName              ( "GiGaTrHitCnv"            ) ;
   ///
   GiGaLeaf::Pars pars1;
   pars1.push_back("OTSDet/Hits");
