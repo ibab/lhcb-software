@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.18 2002-06-18 06:55:01 ocallot Exp $
+! $Id: release.notes,v 1.19 2002-06-19 06:32:05 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
@@ -11,7 +11,7 @@ package manager : Velo Group
    2 phi sensors can match a R sensor. No longer virtual strips > 2048
  - New methods needed for the Velo signal processing (Chris Parkes)
 
-!=============================================================================
+!======================== VeloDet v5r0 2002-04-05 ============================
 ! 04/05/2002 - Olivier Callot
   - Fix the rOfStrip method: Was always returning the first strip position
 
