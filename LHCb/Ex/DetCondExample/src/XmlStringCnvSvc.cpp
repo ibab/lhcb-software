@@ -1,4 +1,4 @@
-//$Id: XmlStringCnvSvc.cpp,v 1.3 2001-11-23 18:08:59 andreav Exp $
+//$Id: XmlStringCnvSvc.cpp,v 1.4 2001-12-10 22:18:00 andreav Exp $
 #include <string>
 
 #include "XmlStringCnvSvc.h"
@@ -100,7 +100,7 @@ StatusCode XmlStringCnvSvc::createAddress( unsigned char svc_type,
   }
   
   // Now create the address
-  refpAddress = new XmlStringAddress ( clid, par[0] );
+  refpAddress = new XmlStringAddress ( clid, par[0], par[1] );
   return StatusCode::SUCCESS;
 
 }

@@ -1,4 +1,4 @@
-//$Id: XmlStringAddress.h,v 1.2 2001-11-23 18:12:23 andreav Exp $
+//$Id: XmlStringAddress.h,v 1.3 2001-12-10 22:18:00 andreav Exp $
 #ifndef DETCONDEXAMPLE_XMLSTRINGADDRESS_H
 #define DETCONDEXAMPLE_XMLSTRINGADDRESS_H 1
 
@@ -32,7 +32,8 @@ class XmlStringAddress : public GenericAddress {
 
   /// Constructor
   XmlStringAddress( const CLID& clid,               // classID
-		    const std::string& xmlString ); // the Xml string data
+		    const std::string& xmlString,   // the Xml string data
+		    const std::string& xmlName   ); // the Xml element name
 
  public:
 
@@ -40,6 +41,9 @@ class XmlStringAddress : public GenericAddress {
 
   /// Get the XML string data
   const std::string xmlString ( );
+
+  /// Get the name of the element that will be looked for in the XML string
+  const std::string xmlName ( );
 
 };
 
