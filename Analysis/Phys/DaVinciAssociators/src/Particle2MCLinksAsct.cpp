@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.6 2004-07-27 17:42:16 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.7 2004-07-28 07:33:57 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -69,6 +69,7 @@ void Particle2MCLinksAsct::handle(const Incident& incident){
   MsgStream msg(msgSvc(), name());
   msg << MSG::VERBOSE << "Entering handle()" << endreq;
   if( m_table ) m_table->clear();
+  AssociatorWeighted<Particle,MCParticle,double>::handle(incident);
 }
 //=============================================================================
 // Interface implementation
