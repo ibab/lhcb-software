@@ -1,8 +1,13 @@
-// $Id: Calo.opts,v 1.1 2003-05-27 12:40:24 robbep Exp $ 
+// $Id: Calo.opts,v 1.2 2003-06-05 08:26:13 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/05/27 12:40:24  robbep
+// Added options/Calo.opts (moved from Gauss package)
+// Added Hcal sensitive detector
+// Added z range for Ecal and Hcal
+//
 // Revision 1.3  2002/12/16 11:00:29  witoldp
 // use fixed version of GiGa and GiGaCnv
 //
@@ -24,19 +29,22 @@
 
 GiGaGeo.Ecal.StartVolumes = 
 {
-  "/dd/Geometry/Ecal/Modules/InnCentSubCellSc"  ,
-  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      , 
-  "/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
-  "/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
-  "/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
-  "/dd/Geometry/Ecal/Modules/OutSubCellSc" 
+  //  "/dd/Geometry/Ecal/Modules/InnCentSubCellSc"  ,
+  //  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      , 
+  //  "/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
+  //  "/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
+  //  "/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
+  //  "/dd/Geometry/Ecal/Modules/OutSubCellSc" 
+  "/dd/Geometry/Ecal/Modules/InnCell",
+  "/dd/Geometry/Ecal/Modules/MidCell",
+  "/dd/Geometry/Ecal/Modules/OutCell"
 };
 
 GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
 GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
 GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
 GiGaGeo.Ecal.zMin           =  12300. * mm ;
-GiGaGeo.Ecal.zMax           =  14600. * mm ;
+GiGaGeo.Ecal.zMax           =  15000. * mm ;
 
 GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
 
@@ -52,9 +60,15 @@ GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/Hcal/Installation/lvHcal" ;
 GiGaGeo.Hcal.CollectionName =  "HcalHits"                            ;
 GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/Hcal"             ;
 GiGaGeo.Hcal.zMin           =  12300. * mm ;
-GiGaGeo.Hcal.zMax           =  14600. * mm ;
+GiGaGeo.Hcal.zMax           =  15000. * mm ;
 
 GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo"             ;
+
+GiGaGeo.GiGaFieldMgr.MagneticField = "GiGaMagFieldZero/FieldZero" ;
+//"GiGaMagFieldUniform/ZeroField";
+GiGaGeo.GiGaFieldMgr.Global = false;
+GiGaGeo.GiGaFieldMgr.MinStep = 0.01 * mm;
+GiGaGeo.GiGaFieldMgr.Stepper = "ClassicalRK4";
 
 // ============================================================================
 // The END 
