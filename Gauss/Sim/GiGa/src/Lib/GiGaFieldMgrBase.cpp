@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.3 2003-06-05 10:49:11 witoldp Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.4 2003-08-15 12:51:50 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/06/05 10:49:11  witoldp
+// change to deal with null magn field
+//
 // Revision 1.2  2003/06/05 08:20:54  witoldp
 // mistake corrected
 //
@@ -256,7 +259,7 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
         G4TransportationManager::GetTransportationManager () ;
       if( 0 == mgr ) { return Error("Invalid Transportation manager" ) ; }
       m_manager = mgr -> GetFieldManager() ;
-      Warning ( "Global G4FieldManager will be (re)configured!" ) ;
+      Print ( "Global G4FieldManager will be (re)configured." ) ;
     }
   else 
     { m_manager = new G4FieldManager() ; }

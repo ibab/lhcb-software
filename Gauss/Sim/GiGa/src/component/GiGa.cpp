@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.5 2003-07-07 16:48:09 ranjard Exp $ 
+// $Id: GiGa.cpp,v 1.6 2003-08-15 12:51:50 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/07/07 16:48:09  ranjard
+// v14r2 - fix for gcc 3.2
+//
 // Revision 1.4  2003/04/06 18:49:48  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -374,7 +377,7 @@ GiGa::initialize()
             + GiGaUtil::ObjTypeName( m_visManager  ) 
             + "/" + m_visManager -> name() );
     }
-  else { Warning("Visualisation Manager is not required to be created!") ; } 
+  else { Print("Visualisation Manager is not required to be created.") ; } 
 
   // Locate random number service 
   if( !m_rndmSvcName.empty() )
