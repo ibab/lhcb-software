@@ -1,0 +1,27 @@
+//
+// This option files shows how to use the 
+// FilterByBestParticles algorithm and
+// the KinBestParticles tool.
+//
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
+Combined.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+
+ApplicationMgr.TopAlg += { "FilterByBestParticles/FilterByPt" };
+
+FilterByPt.PhysDesktop.InputLocations = { "/Event/Phys/Combined" } ;
+FilterByPt.BestFilterName = "KinBestParticles/BestPt" ; // the only available yet
+FilterByPt.BestPt.byPt    = true ;
+FilterByPt.BestPt.number  = 5 ; // 5 highest Pt
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+#pragma print on
+ApplicationMgr.EvtMax = 10 ;
+
+FilterByPt.OutputLevel = 2 ;
+

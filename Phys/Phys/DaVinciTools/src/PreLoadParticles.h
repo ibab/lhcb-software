@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.h,v 1.2 2004-03-16 18:49:45 pkoppenb Exp $
+// $Id: PreLoadParticles.h,v 1.3 2004-07-16 11:20:48 pkoppenb Exp $
 #ifndef PRELOADPARTICLES_H 
 #define PRELOADPARTICLES_H 1
 
@@ -32,11 +32,8 @@ public:
 
 protected:
   
-  IPhysDesktop* desktop() const;            ///< Accessor to desktop
   
 private:
 
-  IPhysDesktop*  m_pDesktop;           ///< Reference to desktop
-  
 };
 #endif // PRELOADPARTICLES_H

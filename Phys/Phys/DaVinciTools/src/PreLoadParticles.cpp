@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.2 2004-03-16 18:49:45 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.3 2004-07-16 11:20:48 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -47,13 +47,6 @@ StatusCode PreLoadParticles::initialize() {
 
   MsgStream msg(msgSvc(), name());
 
-  // Retrieve PhysDesktop
-  StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
-  if( sc.isFailure() ) {
-    msg << MSG::ERROR << "PhysDesktop not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   return StatusCode::SUCCESS;
 };
 
@@ -64,14 +57,7 @@ StatusCode PreLoadParticles::execute() {
 
   MsgStream  msg( msgSvc(), name() );
 
-  // Produce particles via desktop configuration
-  //  StatusCode scDesktop = desktop()->getInput();
-  //  if( !scDesktop.isSuccess() ) {
-  //    msg << MSG::ERROR << "Not able to fill desktop " << endreq;
-  //    return StatusCode::FAILURE;
-  //  }
-  
-  // Save all of them
+  // Save desktop
   StatusCode scDesktop = desktop()->saveDesktop();
   if( !scDesktop.isSuccess() ) {
     msg << MSG::ERROR << "Not able to save desktop " << endreq;
@@ -80,9 +66,9 @@ StatusCode PreLoadParticles::execute() {
 
   
   // Log number of vertices and particles
-  msg << MSG::DEBUG << "  Number of particles in desktop = " << 
+  msg << MSG::DEBUG << "Number of particles in desktop = " << 
     desktop()->particles().size() << endreq;
-  msg << MSG::DEBUG << "  Number of vertices in desktop = " << 
+  msg << MSG::DEBUG << "Number of vertices in desktop = " << 
       desktop()->vertices().size() << endreq;
 
   setFilterPassed(true);
@@ -101,11 +87,3 @@ StatusCode PreLoadParticles::finalize() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// desktop
-//=============================================================================
-IPhysDesktop* PreLoadParticles::desktop() const {
-  return m_pDesktop;
-}
-
-//=============================================================================

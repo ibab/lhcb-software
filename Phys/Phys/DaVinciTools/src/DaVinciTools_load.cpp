@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.34 2004-07-15 09:14:16 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.35 2004-07-16 11:20:48 pkoppenb Exp $
 // Include files 
 
 
@@ -53,6 +53,9 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( TrackTypeFilterCriterion );
   DECLARE_TOOL( LifetimeSignificanceCriterion );
 
+  // Filter n particles
+  DECLARE_TOOL( KinBestParticles );
+
   // Fitters
   DECLARE_TOOL( LagrangeDirectionFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );
@@ -77,10 +80,12 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   DECLARE_DATAOBJECT( Particle2VertexTable );
 
+  // Algorithms
   DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );
   DECLARE_ALGORITHM( PreDV );
   DECLARE_ALGORITHM( ChangePID );
+  DECLARE_ALGORITHM( FilterByBestParticles );
   
 }
 

@@ -1,17 +1,13 @@
 #ifndef DAVINCITOOLS_DVALGORITHM_H
 #define DAVINCITOOLS_DVALGORITHM_H 1
 
-// Include files
-// from STL
-#include <string>
-
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IToolSvc.h"
+//#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/SmartDataPtr.h"
+//#include "GaudiKernel/SmartDataPtr.h"
 
 // from EventSys
 #include "Event/Particle.h"
@@ -34,33 +30,13 @@
  *  @date   19/04/2002
  *  04/03/2004: Hugo Ruiz: automatically produce SelResult object
  *  use always algorithm name as output location in TES
+ *  16/07/2004: P. Koppenburg: Make it a GaudiAlgorithm
  */
-class DVAlgorithm : public Algorithm {
+class DVAlgorithm : public GaudiAlgorithm {
 public:
-  /// Standard constructor
-  DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
-    : Algorithm ( name , pSvcLocator )
-      , m_pDesktop(0)
-      , m_pLagFit(0)
-      , m_pVertexFit(0)
-      , m_pGeomDispCalc(0)
-      , m_pStuffer(0)
-      , m_pFilter(0)
-      , m_ppSvc(0)
-      , m_setFilterCalled(false)
-      , m_toolsLoaded(false)
-      , m_countFilterWrite(0)
-      , m_countFilterPassed(0)
-  {  
-    
-    declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
-    declareProperty("MassVertexFitter", 
-                    m_typeLagFit="LagrangeMassVertexFitter");
-    declareProperty("DecayDescriptor", m_decayDescriptor="not specified");
-    declareProperty("AvoidSelResult", m_avoidSelResult = false);
-    declareProperty("PrintSelResult", m_printSelResult = true);
 
-  };
+  /// Standard constructor
+  DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
 

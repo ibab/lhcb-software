@@ -1,5 +1,29 @@
 #include "DaVinciTools/DVAlgorithm.h"
 
+  /// Standard constructor
+DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_pDesktop(0)
+  , m_pLagFit(0)
+  , m_pVertexFit(0)
+  , m_pGeomDispCalc(0)
+  , m_pStuffer(0)
+  , m_pFilter(0)
+  , m_ppSvc(0)
+  , m_setFilterCalled(false)
+  , m_toolsLoaded(false)
+  , m_countFilterWrite(0)
+  , m_countFilterPassed(0)
+{  
+    
+  declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
+  declareProperty("MassVertexFitter", 
+                  m_typeLagFit="LagrangeMassVertexFitter");
+  declareProperty("DecayDescriptor", m_decayDescriptor="not specified");
+  declareProperty("AvoidSelResult", m_avoidSelResult = false);
+  declareProperty("PrintSelResult", m_printSelResult = true);
+
+};
 //=============================================================================
 // Load standard tools
 //=============================================================================
@@ -219,6 +243,14 @@ StatusCode DVAlgorithm::sysInitialize () {
   if (m_avoidSelResult) msg << MSG::WARNING << 
                           "Avoiding SelResult" << endreq ;
 
+  StatusCode sc;
+  // initialize Algorithm base class first -> calls initialize()
+  sc = this->Algorithm::sysInitialize();
+  if (!sc ) return sc;
+  // initialize GaudiAlgorithm base class then
+  sc = this->GaudiAlgorithm::initialize();  
+  if (!sc ) return sc;
+
   // Load tools
   StatusCode scLT = loadTools();
   if(scLT.isFailure()) {
@@ -226,8 +258,6 @@ StatusCode DVAlgorithm::sysInitialize () {
     return scLT;
   }
   
-  StatusCode sc = this->Algorithm::sysInitialize();  
-
   if (m_decayDescriptor == "not specified"){
     msg << MSG::WARNING << "Decay Descriptor string not specified" << endreq;
   }
@@ -267,8 +297,18 @@ StatusCode DVAlgorithm::sysFinalize () {
         r << "+/-" << re << endreq;
     }
   }
+  // release tools
+  StatusCode sc = releaseTools();
+  if (!sc) return sc;
   
-  return this->Algorithm::sysFinalize();
+  // finalize Algorithm base class -> calls finalize() 
+  sc = Algorithm::sysFinalize();
+  if (!sc) return sc;
+  
+  // finalize GaudiAlgorithm base class
+  sc = GaudiAlgorithm::finalize();
+  return sc;
+
 }
  
 //=============================================================================
@@ -282,3 +322,4 @@ void DVAlgorithm::imposeOutputLocation
   return;
   
 }
+// ============================================================================

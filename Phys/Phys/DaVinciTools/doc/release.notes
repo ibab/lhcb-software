@@ -1,7 +1,25 @@
-! $Id: release.notes,v 1.108 2004-07-15 09:14:15 pkoppenb Exp $
+! $Id: release.notes,v 1.109 2004-07-16 11:20:48 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-07-16 - P. Koppenburg
+  - DaVinciTools/DVAlgorithm.h, Lib/DVAlgorithm.cpp
+    . Make it inherit from GaudiAlgorithm. This allows for instance
+      to use the shortcuts warning(), err(), debug() for msg << MSG::XXXX
+
+  - DaVinciTools/IBestParticles.h  
+    . Interface for a new kind of "filter" tool that filters a ParticleVector
+      and returns another ParticleVector.
+  - src/FilterByBestParticles.{h,cpp}
+    . Generic DVAlgorithm that uses an IBestParticles tool to filter
+      particles.  
+  - src/KinBestParticles.{h,cpp}
+    . IBestParticles tool that returns an ordered vector with the n particles 
+      with highest P, Pt, E from a vector. 
+  - options/DVFilterByBestParticles.opts
+    . Example option file to use FilterByBestParticles with KinBestParticles.
+      
+!========================== DaVinciTools v9r8 2004-07-16 ===================
 ! 2004-07-15 - P. Koppenburg
   - src/DaVinciTools_load.cpp
     . Missing BooleanFilterCriterion added
