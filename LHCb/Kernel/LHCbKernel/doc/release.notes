@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v3r0 2003-12-08 ========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to GAUDI_v13r0 (in requirements: use GaudiKernel v14r*)
+ - SerializeStl.h: add serialisation methods for std::map (taken from RichKernel)
+ - Remove Kernel/MuonTileID.h (more recent version exists in MuonKernel)
+
 !====================== LHCbKernel v2r10 2003-12-04 =======================
 ! 2003-12-01 - Jacopo Nardulli
  - Modifications of bits in OTChannelID.xml. Stations runs from 1-3, layers 

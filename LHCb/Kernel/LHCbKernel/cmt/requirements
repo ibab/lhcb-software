@@ -1,14 +1,14 @@
-# $Id: requirements,v 1.42 2003-12-04 12:41:14 cattanem Exp $
+# $Id: requirements,v 1.43 2003-12-09 10:14:29 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v2r10
+version v3r0
 
 include_dirs $(LHCBKERNELROOT) $(BOOSTHOME)
 
-use GaudiKernel  v13r*
+use GaudiKernel  v14r*
 use CLHEP        v*
 use BOOST        v*     -no_auto_imports
 use GaudiObjDesc v5r*   -no_auto_imports
@@ -28,23 +28,19 @@ document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 library LHCbKernel     *.cpp
 library LHCbKernelDict ../dict/*.cpp -import=GaudiIntrospection
         
-# - uncomment to find memory leaks - 
+# Standard patterns (order is essential)
+#============================================================================
+apply_pattern component_library library=LHCbKernelDict
+apply_pattern linker_library    library=LHCbKernel
+
+# Uncomment to find memory leaks in Relations - 
+#============================================================================
 #macro_append LHCbKernel_pp_cppflags '  -DCOUNT_INSTANCES  ' \
 #        WIN32                       ' /D"COUNT_INSTANCES" '
 
-# Define link options
-#============================================================================
-apply_pattern package_linkopts
-apply_pattern package_stamps
-apply_pattern linker_path
-
-apply_pattern package_shlibflags
-
+# Test applications (currently not available in CVS!)
 #============================================================================
 private
-macro LHCbKernelDict_shlibflags  "$(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-        
-private 
 #application   RelationTest1  -check     Test/RelationTest1.cpp 
 #application   RelationTest2  -check     Test/RelationTest2.cpp 
 #application   RelationTest3  -check     Test/RelationTest3.cpp 

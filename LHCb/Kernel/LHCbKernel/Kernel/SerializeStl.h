@@ -1,6 +1,6 @@
-// $Id: SerializeStl.h,v 1.6 2003-01-17 14:07:01 sponce Exp $
+// $Id: SerializeStl.h,v 1.7 2003-12-09 10:14:29 cattanem Exp $
 /*
-    Small header file to serialize vectors and lists
+    Small header file to serialize vectors, lists, pairs, maps
     to standard Gaudi StreamBuffer objects
 */
 #ifndef LHCBKERNEL_SERIALIZESTL_H
@@ -10,6 +10,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include <vector>
 #include <list>
+#include <map>
 #include <utility>
 
 static const int NUMBERS_PER_LINE = 6;
@@ -44,9 +45,6 @@ std::ostream& operator<< ( std::ostream& s, const std::list<T>& l )
   return s;
 }
   
-
-
-
 // Output serialize a pair of items
 template <class T1, class T2> inline 
 StreamBuffer& operator << (StreamBuffer& s, const std::pair<T1,T2>& p)  {
@@ -70,6 +68,45 @@ template <class T1, class T2> inline
 std::ostream& operator<< ( std::ostream& s, const std::pair<T1,T2>& p ) 
 {
   s << "[" << p.first << ", " << p.second << "]";
+  return s;
+}
+
+/// Output ostream a std::map
+template <class T1, class T2> inline
+std::ostream& operator << ( std::ostream& s, const std::map<T1,T2>& m )
+{
+  for ( typename std::map<T1,T2>::const_iterator i = m.begin(); 
+        i != m.end(); 
+        i++ ) {
+    s << "[" << i->first << ", " << i->second << "]";
+  }
+  return s;
+}
+
+/// Output serialize an std::map
+template <class T1, class T2> inline
+StreamBuffer& operator << ( StreamBuffer& s, const std::map<T1,T2>& m ) 
+{
+  s << m.size();
+  for ( typename std::map<T1,T2>::const_iterator i = m.begin(); 
+        i != m.end(); 
+        i++ ) {
+    s << i->first << i->second;
+  }
+  return s;
+}
+
+/// Input serialize an std::map
+template <class T1, class T2> inline
+StreamBuffer& operator >> ( StreamBuffer& s, std::map<T1,T2>& m ) 
+{
+  long length;
+  s >> length;
+  for ( int i = 0; i < length; i++ ) {
+    T1 key; s >> key;
+    T2 value; s >> value;
+    m[key] = value;
+  }
   return s;
 }
   

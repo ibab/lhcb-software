@@ -4,6 +4,10 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v2r0 2003-12-08 ========================
+! 2003-12-08 - Marco Cattaneo
+ - Use LHCbKernel v3r0, CaloKernel v2r4, RichKernel v4r2, MuonKernel v2r4
+
 !======================== KernelSys v1r9 2003-12-04 ========================
 ! 2003-12-04 - Marco Cattaneo
  - Use LHCbKernel v2r10
