@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAlg.cpp,v 1.6 2004-04-13 14:13:44 asatta Exp $
+// $Id: MuonCoord2MCParticleAlg.cpp,v 1.7 2004-04-19 11:54:53 cattanem Exp $
 // Include files 
 
 #include "Event/MuonCoord.h"
@@ -10,11 +10,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/IRegistry.h"
-
 
 // local
 #include "MuonCoord2MCParticleAlg.h"
@@ -147,10 +144,7 @@ MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
 
     unsigned int bcross=mcDigit->DigitInfo().BX();
     log<<MSG::DEBUG<<"bunch crossing "<<bcross<<endreq;
-      
-    
-    
-    if(bcross!=0)return StatusCode::SUCCESS;
+    if( bcross != 0 ) return StatusCode::SUCCESS;
     
     // loop over MCMuonHits attached to this MCMuonDigit
     SmartRefVector<MCMuonHit>::const_iterator iHit;
@@ -160,50 +154,27 @@ MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
       iterHistory=(mcDigit)->HitsHistory().begin();
     for( iHit = mcDigit->mcMuonHits().begin() ;
          iHit != mcDigit->mcMuonHits().end() ;
-         iHit++ ){
-      const MCMuonHit * mcHit = *iHit;
+         iHit++, iterHistory++ ){
       // check the MCMuonHit is still available
       log<<MSG::DEBUG<<"bunch crossing "<< iterHistory->BX()<<" "<<
         iterHistory->isGeantHit()<<endreq;
-      
-      if( iterHistory->BX()==0){
-        if( iterHistory->isGeantHit()){
-          if(mcHit) {
-            std::string path;
-            if(mcHit->parent()){
-            
-              
-              LinkManager* link=mcHit->parent()->linkMgr();
-            
-              if(link){
-                
-                 if(link->link(mcHit->parent()))
-                path=link->link(mcHit->parent())->path(); 
-                
-              }
-              
-            }
-            
-            
-            const MCParticle * mcPart = mcHit->mcParticle();
-            // check found mcParticle
-            
-            
-            if(mcPart){
-              // check in the current event container
-              if( mcParticles == mcPart->parent() ){
-              
-              
-                  log<<MSG::DEBUG<<mcPart->parent()->registry()->
-                 identifier()<<endreq;
-                
-                aTable->relate(coord,mcPart);
-              }
+
+      // Make association only for hits in main event
+      if( (0 == iterHistory->BX()) && iterHistory->isGeantHit() ){
+        const MCMuonHit * mcHit = *iHit;
+        if(mcHit) {
+          const MCParticle * mcPart = mcHit->mcParticle();
+          // check found mcParticle
+          if(mcPart){
+            // check in the current event container
+            if( mcParticles == mcPart->parent() ){
+              log<<MSG::DEBUG<<mcPart->parent()->registry()->identifier()
+                 <<endmsg;
+              aTable->relate(coord,mcPart);
             }
           }
         }  
       }      
-      iterHistory++;
     }    
   }
 
