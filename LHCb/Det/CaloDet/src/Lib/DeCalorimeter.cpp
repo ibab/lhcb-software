@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.15 2001-12-09 14:16:17 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.16 2002-03-28 13:47:14 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2001/12/09 14:16:17  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.14  2001/11/25 15:08:46  ibelyaev
 //  update for newer CaloKernel Package
 //
@@ -20,12 +23,14 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 // CaloKernel
-#include "CaloKernel/OutputStreamIterator.h"
+#include "CaloKernel/OSiterator.h"
+#include "CaloKernel/CaloPrint.h"
 //
 // from Det/CaloDet
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
 
+// ============================================================================
 /** @file DeCalorimeter.cpp
  *
  *  Implementation of class :  DeCalorimeter
@@ -33,9 +38,12 @@
  *  @author Olivier Callot Olivier.Callot@cern.ch
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru 
  */
+// ============================================================================
 
-// **  Standard Constructors
-
+// ============================================================================
+/** constructor 
+ *  @name object name (useless)
+ */
 DeCalorimeter::DeCalorimeter( const std::string& name )
   :  DetectorElement     ( name       )
   ,  m_initialized       ( false      )
@@ -46,11 +54,12 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_adcMax            ( 4095       )
   ,  m_activeToTotal     ( 6.         )
 { };
+// ============================================================================
 
-//
-// Standard Destructor
-DeCalorimeter::~DeCalorimeter()
-{ };
+// ============================================================================
+/// Destructor
+DeCalorimeter::~DeCalorimeter() {};
+// ============================================================================
 
 // ============================================================================
 // object identification
@@ -485,13 +494,15 @@ StatusCode DeCalorimeter::buildCards( )  {
   return StatusCode::SUCCESS;
 };
 
+// ============================================================================
 /// print to std::stream
+// ============================================================================
 std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
 {
-
-  os << "\tDeCalorimeter index="
-     << std::setw(2)          << m_caloIndex
-     << ", name from index ='"
+  CaloPrint print;
+  
+  os << "\tDeCalorimeter index=" << print( m_caloIndex ) 
+     << ", name from index ='"   
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
      << ", fullname ='"   << name ()  << "'"
      << "\tCellsInitialized=" ;
@@ -501,32 +512,32 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
   if( m_cardsInitialized ) { os <<  "true" ; }
   else                     { os << "false" ; }
   os << std::endl;
-
+  
   os << "\t Parameters"
      << std::endl
      << "\t\tEt value for maximum ADC value at theta(0) =  "
-     << std::setw(12) << m_maxEtInCenter
+     << print( m_maxEtInCenter ) 
      << std::endl
      << "\t\tIncrease in Et per radian                  =  "
-     << std::setw(12) << m_maxEtSlope
+     << print( m_maxEtSlope    ) 
      << std::endl
      << "\t\tMaximum codage in the ADC                  =  "
-     << std::setw(12) << m_adcMax
+     << print( m_adcMax        )
      << std::endl
      << "\t\tConversion from activeE() to energy seen   =  "
-     << std::setw(12) << m_activeToTotal
+     << print( m_activeToTotal )
      << std::endl
      << "\t\tZ of the shower maximum in the local frame =  "
-     << std::setw(12) << m_zShowerMax
+     << print( m_zShowerMax    )
      << std::endl
      << "\t\tMaximum value for Row/Column               =  "
-     << std::setw(12) << maxRowCol
+     << print(   maxRowCol     )
      << std::endl
      << "\t\tFirst Row or Column  over center           =  "
-     << std::setw(12) << firstRowUp
+     << print( firstRowUp      )
      << std::endl
      << "\t\tCentral Value = maxRowCol/2                =  "
-     << std::setw(12) << centerRowCol
+     << print( centerRowCol    )
      << std::endl ;
 
   if( m_initialized )
@@ -538,7 +549,7 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
           os << "Cell " << id << " Neighbors ";
           std::copy( neighborCells( id ).begin() ,
                      neighborCells( id ).end()   ,
-                     OutputStreamIterator<CaloCellID,std::ostream>(os) );
+                     OS_iterator<CaloCellID,std::ostream>( os , "," ) );
           os << std::endl;
         }
     }
@@ -546,10 +557,12 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
   return os ;
 };
 
+// ============================================================================
 /// print to MsgStream
+// ============================================================================
 MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
 {
-
+  CaloPrint print;
   os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex
      << ", name from index='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
@@ -565,30 +578,29 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
   os << "\t Parameters"
      << endreq
      << "\t\tEt value for maximum ADC value at theta(0) =  "
-     << std::setw(12) << m_maxEtInCenter
+     << print( m_maxEtInCenter )
      << endreq
      << "\t\tIncrease in Et per radian                  =  "
-     << std::setw(12) << m_maxEtSlope
+     << print( m_maxEtSlope    )
      << endreq
      << "\t\tMaximum codage in the ADC                  =  "
-     << std::setw(12) << m_adcMax
+     << print( m_adcMax        )
      << endreq
      << "\t\tConversion from activeE() to energy seen   =  "
-     << std::setw(12) << m_activeToTotal
+     << print( m_activeToTotal )
      << endreq
      << "\t\tZ of the shower maximum in the local frame =  "
-     << std::setw(12) << m_zShowerMax
+     << print( m_zShowerMax    )
      << endreq
      << "\t\tMaximum value for Row/Column               =  "
-     << std::setw(12) << maxRowCol
+     << print(  maxRowCol      )
      << endreq
      << "\t\tFirst Row or Column  over center           =  "
-     << std::setw(12) << firstRowUp
+     << print( firstRowUp      )
      << endreq
      << "\t\tCentral Value = maxRowCol/2                =  "
-     << std::setw(12) << centerRowCol
+     << print( centerRowCol    )
      << endreq ;
-
 
   if( m_initialized )
     {
@@ -602,7 +614,7 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
           os << " Cell " << id << " Neighbors ";
           std::copy( neighborCells( id ).begin() ,
                      neighborCells( id ).end()   ,
-                     OutputStreamIterator<CaloCellID,MsgStream>(os) );
+                     OS_iterator<CaloCellID,MsgStream>(os,",") );
           os << endreq;
         }
       ///
@@ -612,7 +624,9 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
   return os ;
 };
 
-
+// ============================================================================
+// The End 
+// ============================================================================
 
 
 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.18 2001-12-15 18:28:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.19 2002-03-28 13:47:13 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -6,8 +6,14 @@ Package         : CaloDet
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
   
 ! =============================================================================
+! 28/03/2002 - v4r0 - Vanya Belyaev
+! - update for newer CaloKernel and LHCbKernel packages 
+! - move all Xml-related stuff into new package Det/CaloDetXmlCnv     
+! =============================================================================
+
+! =============================================================================
 ! 15/12/2001 - Vanya Belyaev
-  add the simplest detector test algorithm  
+!  add the simplest detector test algorithm  
 ! =============================================================================
 
 ! =============================================================================

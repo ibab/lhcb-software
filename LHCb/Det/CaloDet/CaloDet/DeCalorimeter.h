@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.8 2001-11-25 15:08:45 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.9 2002-03-28 13:47:13 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2001/11/25 15:08:45  ibelyaev
+//  update for newer CaloKernel Package
+//
 // Revision 1.7  2001/08/21 13:05:08  ibelyaev
 // fix problems of user parameters on Win2K
 //
@@ -27,15 +30,16 @@
 #include "GaudiKernel/MsgStream.h"
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
+// LHCbKernel
+#include "Kernel/CaloCellID.h"
 /// from CaloKernel
-#include "CaloKernel/CaloCellID.h"
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloException.h"
 /// from Det/CaloDet
 #include "CaloDet/CaloCardParams.h"
-#include "CaloDet/CLIDDeCalorimeter.h"
 #include "CaloDet/CellParam.h"
 #include "CaloDet/CardParam.h"
+#include "CaloDet/CLIDDeCalorimeter.h"
 
 /// forwad declarations
 class MsgStream;
@@ -47,7 +51,6 @@ class MsgStream;
  *  @author Olivier Callot Olivier.Callot@cern.ch
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru  
  */
-
 class DeCalorimeter: public DetectorElement {
 
 public:
@@ -230,30 +233,51 @@ private:
   
 };
 
-
 // ===========================================================================
-//  ouput operator 
-// ===========================================================================
+/** ouput operator for class DeCalorimeter
+ *  @see DeCalorimeter 
+ *  @param os reference to standard STL/STD output stream 
+ *  @param de reference to DeCalorimeter object 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
 { return de.printOut( os ); } 
+// ===========================================================================
 
 // ===========================================================================
-//  ouput operator 
-// ===========================================================================
+/** ouput operator for class DeCalorimeter
+ *  @see DeCalorimeter 
+ *  @param os reference to standard STL/STD output stream 
+ *  @param de pointer to DeCalorimeter object 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
 { return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<std::endl); }
+// ===========================================================================
 
 // ===========================================================================
-//  ouput operator 
-// ===========================================================================
+/** ouput operator for class DeCalorimeter
+ *  @see DeCalorimeter 
+ *  @see MsgStream
+ *  @param os reference to Gaudi message output stream 
+ *  @param de reference to DeCalorimeter object 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
 { return de.printOut( os ); } 
+// ===========================================================================
 
 // ===========================================================================
-//  ouput operator 
-// ===========================================================================
+/** ouput operator for class DeCalorimeter
+ *  @see DeCalorimeter 
+ *  @see MsgStream
+ *  @param os reference to Gaudi message output stream 
+ *  @param de pointer to DeCalorimeter object 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
 { return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
+// ===========================================================================
 
 // ===========================================================================
 //  validity flag for the cell
