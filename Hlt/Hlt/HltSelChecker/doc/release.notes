@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2005-01-10 - P. Koppenburg
+  - options/Plots.opts
+    . Use built-in plots from MakeResonances and FilterDesktop
+  - options/options/DVHLTCorr.opts
+    . rename "HLTDstar2D0Pi" to "HLTDstarForBd2DstarPi"
+
 ! 2005-01-06 - P. Koppenburg
   # Complete rewriting of the options using the new MakeResonances and 
   # FilterDesktop algorithms. Wherever it is possible a single algorithm

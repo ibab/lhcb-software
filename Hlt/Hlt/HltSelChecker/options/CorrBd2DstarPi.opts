@@ -10,7 +10,7 @@ CorrBd2DstarPi.Algorithms = { "AllBd2DstarPiTracks",
                                "WrongSignD0",
                                "HLTSharedD02HH",
                                "FilterD0ForHLTBd2DstarPi", 
- 			      "HLTDstar2D0Pi", 
+ 			      "HLTDstarForBd2DstarPi", 
  			      "HLTFilterBd2DstarPi", 
  			      "TDRselBd2DstarPi",
 			      "Bd2DstarPiAndTDR" } ;
