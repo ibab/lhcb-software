@@ -14,6 +14,7 @@ Purpose: LHCb reconstruction program
    (RiSicbCnv v4r2, recrich v7r0)
  - Add histogram for virtual memory usage (SicbCnv v17r1)
 
+ - 'err' on 2d tracks now means 45 degree subsector (L1VeloTrack v2r1) 
  - Fix pi0 mass (CaloTools v4r2, CaloRec v2r2)
  - Fix Rich2 position (XmlDDDB v12r3)
  - Latest Gaudi bug fixes (GaudiSvc v8r3) 
