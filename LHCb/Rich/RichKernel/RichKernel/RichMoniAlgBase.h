@@ -4,8 +4,11 @@
  *  Header file for algorithm base class : RichMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.h,v 1.1 2005-01-07 13:16:27 jonrob Exp $
+ *  $Id: RichMoniAlgBase.h,v 1.2 2005-01-13 13:42:15 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 13:16:27  jonrob
+ *  Add to CVS
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/12/2004
@@ -26,7 +29,8 @@
 /** @class RichMoniAlgBase RichMoniAlgBase.h RichKernel/RichMoniAlgBase.h
  *
  *  Abstract base class for RICH algorithms providing
- *  some basic functionality.
+ *  some basic functionality (same as RichAlgBase) together with
+ *  the histogramming and ntuple functionality provided by GaudiTupleAlg.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/12/2004
