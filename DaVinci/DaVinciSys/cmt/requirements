@@ -1,5 +1,5 @@
 package DaVinciSys
-version v11r3
+version v11r4
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v11r3  Phys
+use  DaVinci            v11r4  Phys
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r0     Calo 
@@ -58,8 +58,6 @@ use  Bs2MuMu         v1r4    PhysSel
 use  Bs2PhiEtac      v1r4p1  PhysSel
 use  Bd2a1Dstar      v1r0    PhysSel
 
-use  LoKi            v2r*    Tools
-
 #============================================================================
 # Quarantine 
 #============================================================================
@@ -80,7 +78,7 @@ use  LoKi            v2r*    Tools
 # use  Bs2PhiPhi       v1r2    PhysSel
 
 #--- Tools
-use  LoKi              v2r0  Tools
+use  LoKi              v2r1  Tools
 
 #--- Only Here ------------------------------
 use  RecoTools           v1r1   Rec
