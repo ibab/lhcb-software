@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.2 2003-09-26 16:00:03 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.3 2003-10-31 16:46:30 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -122,6 +122,22 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
     title = rich[iRich]+" MCRichHit Occupancy";
     id = (1+iRich)*richOffset + 2;
     m_hitMult[iRich] = histoSvc()->book(m_histPth, id, title, nBins, 0, maxMult[iRich] );
+
+    title = rich[iRich] + " Hit mult. per Digit";
+    id = richOffset*(iRich+1) + 3;
+    m_hitsPerDigi[iRich] = histoSvc()->book(m_histPth,id,title,11,-0.5,10.5);
+
+    title = rich[iRich] + " Digits per PD";
+    id = richOffset*(iRich+1) + 4;
+    m_pdOcc[iRich] = histoSvc()->book(m_histPth,id,title,101,-0.5,100.5);
+
+    title = rich[iRich] + " ChargedTrack Deposits";
+    id = richOffset*(iRich+1) + 5;
+    m_chargedTkDeps[iRich] = histoSvc()->book(m_histPth,id,title,100,0,400);
+
+    title = rich[iRich] + " ChargedTrack Digits";
+    id = richOffset*(iRich+1) + 6;
+    m_chargedTkDigs[iRich] = histoSvc()->book(m_histPth,id,title,100,0,400);
 
     title = rich[iRich]+" digits x global";
     id = (1+iRich)*richOffset + 11;
@@ -261,13 +277,21 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
 
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) { // loop over radiators
 
-    title = "# MCRichHit p.e.s beta=1 : " + radiator[iRad];
+    title = "# MCRichHit p.e.s : beta=1 : " + radiator[iRad];
     id = radOffset*(iRad+1) + 1;
     m_mchitNpes[iRad] = histoSvc()->book( m_histPth,id,title,101,-0.5,100.5);
 
-    title = "# MCRichDigit p.e.s beta=1 : " + radiator[iRad];
+    title = "# MCRichDeposit p.e.s : beta=1 : " + radiator[iRad];
     id = radOffset*(iRad+1) + 2;
+    m_mcdepNpes[iRad] = histoSvc()->book( m_histPth,id,title,101,-0.5,100.5);
+
+    title = "# MCRichDigit p.e.s : beta=1 : " + radiator[iRad];
+    id = radOffset*(iRad+1) + 3;
     m_mcdigitNpes[iRad] = histoSvc()->book( m_histPth,id,title,101,-0.5,100.5);
+
+    title = "Retained p.e.s : beta=1 : " + radiator[iRad];
+    id = radOffset*(iRad+1) + 4;
+    m_npesRetained[iRad] = histoSvc()->book(  m_histPth,id,title,100,0,1);
 
   }
 
@@ -280,15 +304,37 @@ StatusCode RichDigiAlgMoni::execute() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Execute" << endreq;
 
+  // Maps for number of pe's
+  PhotMap ckPhotMapHit;
+  PhotMap ckPhotMapDig;
+  PhotMap ckPhotMapDep;
+
   // Locate RichDigits
+  // ================================================================================
   SmartDataPtr<RichDigits> richDigits( eventSvc(), m_digitTES );
   if ( !richDigits ) {
     msg << MSG::WARNING << "Cannot locate RichDigits at " << m_mcdigitTES << endreq;
   } else {
 
+    // PD occupancy
+    PDMulti pdMult;
+
+    // Initialise mult counts
+    double digMult[Rich::NRiches];
+    digMult[Rich::Rich1] = 0;
+    digMult[Rich::Rich2] = 0;
+
     // Loop over all RichDigits
     for ( RichDigits::const_iterator iDigit = richDigits->begin();
           iDigit != richDigits->end(); ++iDigit ) {
+
+      RichSmartID id = (*iDigit)->key();
+
+      // increment digit count
+      ++digMult[id.rich()];
+
+      // increment PD multiplicity count
+      ++pdMult[id.pdID()];
 
       // Check that MCRichDigit link works
       MCRichDigit * mcDigit = MCTruth<MCRichDigit>(*iDigit);
@@ -300,17 +346,20 @@ StatusCode RichDigiAlgMoni::execute() {
 
     } // end RichDigit loop
 
+      // Fill multiplicity plots
+    m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
+    m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
+
+    // Fill PD occupancy plots
+    for ( PDMulti::const_iterator iOcc = pdMult.begin();
+          iOcc != pdMult.end(); ++iOcc ) {
+      m_pdOcc[ ((*iOcc).first).rich() ]->fill( (*iOcc).second );
+    }
+
   } // RichDigits exist
 
-  // Initialise mult counts
-  double digMult[Rich::NRiches];
-  double hitMult[Rich::NRiches];
-  hitMult[Rich::Rich1] = 0;
-  hitMult[Rich::Rich2] = 0;
-  digMult[Rich::Rich1] = 0;
-  digMult[Rich::Rich2] = 0;
-
   // Locate MCRichDigits
+  // ================================================================================
   SmartDataPtr<MCRichDigits> mcRichDigits( eventSvc(), m_mcdigitTES );
   if ( !mcRichDigits ) {
     msg << MSG::WARNING << "Cannot locate MCRichDigits at " << m_mcdigitTES << endreq;
@@ -318,7 +367,9 @@ StatusCode RichDigiAlgMoni::execute() {
     msg << MSG::DEBUG << "Successfully located " << mcRichDigits->size()
         << " MCRichDigits at " << m_mcdigitTES << endreq;
 
-    PhotMap ckPhotMap;
+    int nChargedTracks[Rich::NRiches];
+    nChargedTracks[Rich::Rich1] = 0;
+    nChargedTracks[Rich::Rich2] = 0;
 
     // Loop over all MCRichDigits
     for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
@@ -326,14 +377,12 @@ StatusCode RichDigiAlgMoni::execute() {
 
       RichSmartID id = (*iMcDigit)->key();
 
-      // increment digit count
-      ++digMult[id.rich()];
-
       HepPoint3D point;
       if ( !getPosition( id, point ) ) {
         msg << MSG::WARNING << "Position conversion error : ID = " << id << endreq;
       }
 
+      // Position plots
       m_pdDigsXGlobal[id.rich()]->fill( point.x() );
       m_pdDigsYGlobal[id.rich()]->fill( point.y() );
       m_pdDigsZGlobal[id.rich()]->fill( point.z() );
@@ -345,6 +394,15 @@ StatusCode RichDigiAlgMoni::execute() {
 
       // loop over all hits associated to the digit
       SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
+      if ( mcHits.empty() ) {
+        msg << MSG::WARNING << "MCRichDigit " << (int)(*iMcDigit)->key()
+            << " has no MCRichHits..." << endreq;
+      }
+
+      // hit mult per digit
+      m_hitsPerDigi[id.rich()]->fill( mcHits.size() );
+
+      bool thisDigCounted = false;
       for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
             iHit != mcHits.end(); ++iHit ) {
 
@@ -354,43 +412,26 @@ StatusCode RichDigiAlgMoni::execute() {
         m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
         m_digiErrR[id.rich()]->fill( point.distance( (*iHit)->entry() ) );
 
-        // Which radiator
-        Rich::RadiatorType rad = (Rich::RadiatorType)(*iHit)->radiator();
+        // Count beta=1 PEs
+        countNPE( ckPhotMapDig, *iHit );
 
-        // beta
-        double beta = mcBeta( (*iHit)->mcParticle() );
-
-        // Parent particle hypothesis
-        Rich::ParticleIDType mcid = massHypothesis( (*iHit)->mcParticle() );
-
-        // Increment PES count for high beta tracks
-        if ( mcid != Rich::Unknown && beta > 0.99 &&
-             !(*iHit)->scatteredPhoton() && !(*iHit)->chargedTrack() ) {
-          if ( rad == Rich::Aerogel ||
-               rad == Rich::Rich1Gas ||
-               rad == Rich::Rich2Gas ) {
-            PhotPair pairC( (*iHit)->mcParticle(), rad );
-            ++ckPhotMap[ pairC ];
-          }
+        // vount digits from charged tracks
+        if ( !thisDigCounted && (*iHit)->chargedTrack() ) {
+          thisDigCounted = true;
+          ++nChargedTracks[id.rich()];
         }
 
       } // end hits loop
 
     } // MCRichDigits Loop
 
-    // Fill multiplicity plots
-    m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
-    m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
-
-    // Loop over counted PES
-    for ( PhotMap::iterator iPhot = ckPhotMap.begin();
-          iPhot != ckPhotMap.end(); ++iPhot ) {
-      m_mcdigitNpes[ ((*iPhot).first).second ]->fill( (*iPhot).second );
-    }
+    m_chargedTkDigs[Rich::Rich1]->fill( nChargedTracks[Rich::Rich1] );
+    m_chargedTkDigs[Rich::Rich2]->fill( nChargedTracks[Rich::Rich2] );
 
   } // MCRichDigits exist
 
-  // Locate MCRichDeposits
+    // Locate MCRichDeposits
+    // ================================================================================
   SmartDataPtr<MCRichDeposits> deps( eventSvc(), m_mcdepTES );
   if ( !deps ) {
     msg << MSG::DEBUG << "Cannot locate MCRichDeposits at "
@@ -399,33 +440,52 @@ StatusCode RichDigiAlgMoni::execute() {
     msg << MSG::DEBUG << "Successfully located " << deps->size()
         << " MCRichDeposits at " << MCRichDepositLocation::Default << endreq;
 
+    int nChargedTracks[Rich::NRiches];
+    nChargedTracks[Rich::Rich1] = 0;
+    nChargedTracks[Rich::Rich2] = 0;
+
     // Loop over deposits
     for ( MCRichDeposits::const_iterator iDep = deps->begin();
           iDep != deps->end(); ++iDep ) {
 
       // Which RICH ?
       int rich = (*iDep)->parentHit()->rich();
+
       // TOF for this deposit
       m_tofDep[rich]->fill( (*iDep)->time() );
+
       // Deposit energy
       m_depEnDep[rich]->fill( (*iDep)->energy() );
 
+      // Count beta=1 PEs
+      countNPE( ckPhotMapDep, (*iDep)->parentHit() );
+
+      // count hits from charged tracks
+      if ( (*iDep)->parentHit()->chargedTrack() ) ++nChargedTracks[rich];
+
     } // MCRichDeposits loop
+
+    m_chargedTkDeps[Rich::Rich1]->fill( nChargedTracks[Rich::Rich1] );
+    m_chargedTkDeps[Rich::Rich2]->fill( nChargedTracks[Rich::Rich2] );
 
   } // MCRichDeposits exist
 
-  // Map to link MCRichHits to MCParticles
-  //typedef std::map< MCParticle*, std::vector<unsigned int> > MCP2Hits;
-  //MCP2Hits mcPhits;
+    // Map to link MCRichHits to MCParticles
+    //typedef std::map< MCParticle*, std::vector<unsigned int> > MCP2Hits;
+    //MCP2Hits mcPhits;
 
-  // Locate MCRichHits
+    // Locate MCRichHits
+    // ================================================================================
   SmartDataPtr<MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
     msg << MSG::DEBUG << "Cannot locate MCRichHits at "
         << MCRichDepositLocation::Default << endreq;
   } else {
 
-    PhotMap ckPhotMap;
+    // Hit mult counters
+    double hitMult[Rich::NRiches];
+    hitMult[Rich::Rich1] = 0;
+    hitMult[Rich::Rich2] = 0;
 
     // Loop over hits
     for ( MCRichHits::const_iterator iHit = hits->begin();
@@ -433,9 +493,6 @@ StatusCode RichDigiAlgMoni::execute() {
 
       // Which RICH ?
       int rich = (*iHit)->rich();
-
-      // Which radiator
-      Rich::RadiatorType rad = (Rich::RadiatorType)(*iHit)->radiator();
 
       // TOF for this hit
       m_tofHit[rich]->fill( (*iHit)->timeOfFlight() );
@@ -449,22 +506,8 @@ StatusCode RichDigiAlgMoni::execute() {
       // Add to MCP2Hits
       //mcPhits[(*iHit)->mcParticle()].push_back( (*iHit)->key() );
 
-      // beta
-      double beta = mcBeta( (*iHit)->mcParticle() );
-
-      // Parent particle hypothesis
-      Rich::ParticleIDType mcid = massHypothesis( (*iHit)->mcParticle() );
-
       // Increment PES count for high beta tracks
-      if ( mcid != Rich::Unknown && beta > 0.99 ) {
-        if ( rad == Rich::Aerogel ||
-             rad == Rich::Rich1Gas ||
-             rad == Rich::Rich2Gas && 
-             !(*iHit)->scatteredPhoton() && !(*iHit)->chargedTrack() ) {
-          PhotPair pairC( (*iHit)->mcParticle(), rad );
-          ++ckPhotMap[ pairC ];
-        }
-      }
+      countNPE( ckPhotMapHit, *iHit );
 
       // Plot hit positions
       HepPoint3D & point = (*iHit)->entry();
@@ -483,13 +526,34 @@ StatusCode RichDigiAlgMoni::execute() {
     m_hitMult[Rich::Rich1]->fill( hitMult[Rich::Rich1] );
     m_hitMult[Rich::Rich2]->fill( hitMult[Rich::Rich2] );
 
-    // Loop over counted PES
-    for ( PhotMap::iterator iPhot = ckPhotMap.begin();
-          iPhot != ckPhotMap.end(); ++iPhot ) {
-      m_mchitNpes[ ((*iPhot).first).second ]->fill( (*iPhot).second );
-    }
-
   } // MCRichHits exist
+
+  // Loop over counted PES for MCRichHits
+  {for ( PhotMap::iterator iPhot = ckPhotMapHit.begin();
+         iPhot != ckPhotMapHit.end(); ++iPhot ) {
+    m_mchitNpes[ ((*iPhot).first).second ]->fill( (*iPhot).second );
+  }}
+
+  // Loop over counted PES for MCRichDeposits
+  {for ( PhotMap::iterator iPhot = ckPhotMapDep.begin();
+         iPhot != ckPhotMapDep.end(); ++iPhot ) {
+    m_mcdepNpes[ ((*iPhot).first).second ]->fill( (*iPhot).second );
+  }}
+
+  // Loop over counted PES for MCRichDigits
+  {for ( PhotMap::iterator iPhot = ckPhotMapDig.begin();
+         iPhot != ckPhotMapDig.end(); ++iPhot ) {
+
+    double digCount = (*iPhot).second;
+    m_mcdigitNpes[ ((*iPhot).first).second ]->fill( digCount );
+
+    // locate the entry for the MCRichDeps
+    double depCount = ckPhotMapDep[ (*iPhot).first ];
+
+    double frac = ( depCount != 0 ? digCount/depCount : 0 );
+    m_npesRetained[ ((*iPhot).first).second ]->fill( frac );
+
+  }}
 
   // All MCParticles
   /*
@@ -502,7 +566,7 @@ StatusCode RichDigiAlgMoni::execute() {
     for ( MCParticles::const_iterator iMP = mcPs->begin();
     iMP != mcPs->end(); ++iMP ) {
 
-    double pTot = (*iMP)->momentum().vect().mag();
+    double pTot = momentum( *iMP );
     if ( pTot < 1000 ) continue;
 
     msg << MSG::DEBUG << "MCParticle " << (*iMP)->key()
@@ -519,6 +583,34 @@ StatusCode RichDigiAlgMoni::execute() {
   return StatusCode::SUCCESS;
 };
 
+void RichDigiAlgMoni::countNPE( PhotMap & photMap,
+                                const MCRichHit * hit ) {
+
+  // MCParticle momentum
+  double tkPtot = momentum( hit->mcParticle() );
+
+  // Parent particle hypothesis
+  Rich::ParticleIDType mcid = massHypothesis( hit->mcParticle() );
+
+  // Which radiator
+  Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+
+  // Increment PES count for high beta tracks
+  if ( tkPtot > 1*GeV &&
+       mcid != Rich::Unknown &&
+       mcid != Rich::Electron &&
+       mcBeta( hit->mcParticle() ) > 0.99 &&
+       !hit->scatteredPhoton() &&
+       !hit->chargedTrack()
+       && ( rad == Rich::Aerogel ||
+            rad == Rich::Rich1Gas ||
+            rad == Rich::Rich2Gas ) ) {
+    PhotPair pairC( hit->mcParticle(), rad );
+    ++photMap[ pairC ];
+  }
+
+}
+
 //  Finalize
 StatusCode RichDigiAlgMoni::finalize() {
 
@@ -533,8 +625,8 @@ StatusCode RichDigiAlgMoni::finalize() {
   return StatusCode::SUCCESS;
 }
 
-bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position ) {
-
+bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position )
+{
   if ( "HPDSICB" == m_detMode ) {
     position = 10.0 * (m_sicbDet->globalPosition(id));
     return true;
@@ -550,9 +642,7 @@ bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position
 double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )
 {
   if ( !mcPart ) return 0;
-
-  double momentum = mcPart->momentum().vect().mag();
-  double Esquare = momentum*momentum + pow(mass(mcPart),2);
-
-  return ( Esquare > 0 ? momentum/sqrt(Esquare) : 0 );
+  double pTot = momentum( mcPart );
+  double Esquare = pTot*pTot + pow(mass(mcPart),2);
+  return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
 }

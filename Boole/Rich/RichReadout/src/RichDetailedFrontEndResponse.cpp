@@ -1,37 +1,50 @@
 
-#include "RichDetailedMaPMTFrontEndResponse.h"
+#include "RichDetailedFrontEndResponse.h"
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichDetailedMaPMTFrontEndResponse>  s_factory ;
-const         IAlgFactory& RichDetailedMaPMTFrontEndResponseFactory = s_factory ;
+static const  AlgFactory<RichDetailedFrontEndResponse>  s_factory ;
+const         IAlgFactory& RichDetailedFrontEndResponseFactory = s_factory ;
 
 // Standard constructor, initializes variables
-RichDetailedMaPMTFrontEndResponse::RichDetailedMaPMTFrontEndResponse( const std::string& name,
-                                                                      ISvcLocator* pSvcLocator)
+RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,
+                                                            ISvcLocator* pSvcLocator)
   : Algorithm ( name, pSvcLocator ) {
 
   declareProperty( "MCRichSummedDepositsLocation",
                    m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "MCRichDigitsLocation",
                    m_mcRichDigitsLocation = MCRichDigitLocation::Default );
-  declareProperty( "SimpleCalibration", m_Calibration = 4420 );
-  declareProperty( "SimpleBaseline",    m_Baseline = 50 );
+  //  declareProperty( "SimpleCalibration", m_Calibration = 12500. );
+  declareProperty( "SimpleCalibration", m_Calibration = 8330. );
+  declareProperty( "SimpleBaseline",    m_Pedestal = 50 );
+  declareProperty( "DetectorMode", m_detMode = "GAUSS" );
+  declareProperty( "Noise", m_Noise = 150. );  // in electrons
+  declareProperty( "Threshold", m_Threshold = 1400. ); // in electrons
+  declareProperty( "ThresholdSigma", m_ThresholdSigma = 140. ); // in electrons
+  //  declareProperty( "ThresholdSigma", m_ThresholdSigma = 35?. ); // in electrons - Jolly improvement
+
+  declareProperty( "HistoPath", m_histPth = "RICH/DIGI/Readout/" );
+
+  el_per_adc = 40.;
+
+  Rndm::Numbers m_gaussThreshold;
+  Rndm::Numbers m_gaussNoise; // currently hardwired to be 150 electrons (sigma) hack
+
 
 }
 
-RichDetailedMaPMTFrontEndResponse::~RichDetailedMaPMTFrontEndResponse (){ };
+RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse (){ };
 
-StatusCode RichDetailedMaPMTFrontEndResponse::initialize() {
+StatusCode RichDetailedFrontEndResponse::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Initialize" << endreq;
+  MsgStream msg(msgSvc(), name());
 
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
   if ( "SICB" == m_detMode ) {
     IPixelFinder* finder;
     if ( !toolSvc()->retrieveTool("PixelFinder", finder ) ) {
-      log << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
+      msg << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
       return StatusCode::FAILURE;
     }
     finder->PixelList(pixels);
@@ -39,7 +52,7 @@ StatusCode RichDetailedMaPMTFrontEndResponse::initialize() {
   } else if ( "GAUSS" == m_detMode ) {
     IRichDetInterface * detint;
     if ( !toolSvc()->retrieveTool("RichDetInterface" , detint ) ) {
-      log << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
+      msg << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
       return StatusCode::FAILURE;
     }
     detint->readoutChannelList(pixels);
@@ -47,35 +60,41 @@ StatusCode RichDetailedMaPMTFrontEndResponse::initialize() {
   }
   actual_base = theRegistry.GetNewBase( pixels );
 
-  log << MSG::DEBUG
-      << " Using detailed MaPMT frontend response algorithm for " << m_detMode << endreq
-      << " Acquired information for " << pixels.size() << " pixels" << endreq;
+  m_gaussNoise.initialize( randSvc(), Rndm::Gauss(0., m_Noise) );
+  //m_GaussThreshold.initialize( randSvc(), Rndm::Gauss(m_adc_cut,200./20.)));
+  m_gaussThreshold.initialize( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma));
+
+  msg << MSG::DEBUG
+      << " Using detailed HPD frontend response algorithm for " << m_detMode << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichDetailedMaPMTFrontEndResponse::finalize()
+StatusCode RichDetailedFrontEndResponse::finalize()
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "finalize" << endreq;
+
+  m_gaussNoise.finalize();
+  m_gaussThreshold.finalize();
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichDetailedMaPMTFrontEndResponse::execute() {
+StatusCode RichDetailedFrontEndResponse::execute() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Execute" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Execute" << endreq;
 
   SmartDataPtr<MCRichSummedDeposits> DepPtr( eventSvc(),
                                              m_mcRichSummedDepositsLocation );
   SummedDeposits = DepPtr;
   if ( !SummedDeposits ) {
-    log << MSG::WARNING << "Cannot locate MCRichSummedDeposits at "
+    msg << MSG::WARNING << "Cannot locate MCRichSummedDeposits at "
         << m_mcRichSummedDepositsLocation << endreq;
     return StatusCode::FAILURE;
   } else {
-    log << MSG::DEBUG << "Successfully located " << SummedDeposits->size()
+    msg << MSG::DEBUG << "Successfully located " << SummedDeposits->size()
         << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
   }
 
@@ -88,9 +107,7 @@ StatusCode RichDetailedMaPMTFrontEndResponse::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichDetailedMaPMTFrontEndResponse::Analog() {
-
-  MsgStream log(msgSvc(), name());
+StatusCode RichDetailedFrontEndResponse::Analog() {
 
   for ( MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
@@ -105,6 +122,7 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Analog() {
     RichPixel * pid = new RichPixel(props);
     unsigned int tsize = readOut->FrameSize();
     const RichShape* shape = readOut->Shape();
+
     if ( shape ) {
 
       RichTimeSample ts(pid,readOut->FrameSize(),readOut->BaseLine());
@@ -115,7 +133,8 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Analog() {
       if ( readOut->Noisifier() ) {
         ts += readOut->Noisifier()->noisify( ts.MyPixel() );
       } else {
-        log << MSG::ERROR << " No Noisifier " << endreq;
+        MsgStream msg(msgSvc(), name());
+        msg << MSG::ERROR << " No Noisifier " << endreq;
         return StatusCode::FAILURE;
       }
 
@@ -125,19 +144,29 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Analog() {
       double summedEnergy = 0.0;
       for( SmartRefVector<MCRichDeposit>::const_iterator iDep
              = deposits.begin(); iDep != deposits.end(); ++iDep ) {
-        if( (*iDep)->time() > 0.0 &&  (*iDep)->time() < 25.0 ) {
-          int binZero = (int)( (*iDep)->time()/0.25 );
-          double binTime = 0.;
-          double e = ( (*iDep)->energy()*m_Calibration );
+ 
+        if( (*iDep)->time() > -100.0 &&  (*iDep)->time() < 100.0 ) {
+
+          int binZero = (int)( (*iDep)->time());
+          double binTime = -binZero + 25.; // locked into peakTime - hardwired hack
+
+          double e = ( (*iDep)->energy()*m_Calibration ) + m_gaussNoise()/el_per_adc;
           summedEnergy += (*iDep)->energy();
-          for ( unsigned int bin = binZero; bin < tsize; ++bin ) {
-            binTime += 1.;
-            ts[bin] += (*shape)(binTime)*e;
+
+          for ( unsigned int bin = 0; bin < tsize; ++bin ) {
+            binTime += 25./tsize;
+            if ( binZero < 0 && binZero > -50 ) {
+              // make pixel dead for this event
+              ts[bin] -= 999999;
+            } else {
+              ts[bin] += (*shape)(binTime)*e;
+            }
           }
         }
+
       } // MCrichDeposit loop
       (*iSumDep)->setSummedEnergy(summedEnergy);
-
+ 
       tscache.insert( samplecache_t::value_type( (*iSumDep), ts ) );
 
     } // if shape
@@ -149,14 +178,13 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Analog() {
 
 }
 
-StatusCode RichDetailedMaPMTFrontEndResponse::Digital() {
-
-  MsgStream log(msgSvc(), name());
+StatusCode RichDetailedFrontEndResponse::Digital() {
 
   // Register new RichDigit container to Gaudi data store
   MCRichDigits* mcRichDigits = new MCRichDigits();
   if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
-    log << MSG::ERROR << "Failed to register RichDigits at "
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to register RichDigits at "
         << m_mcRichDigitsLocation << endreq;
     return StatusCode::FAILURE;
   }
@@ -164,11 +192,15 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Digital() {
   for ( samplecache_t::iterator tsc_it = tscache.begin();
         tsc_it != tscache.end(); ++tsc_it ) {
 
-    RichPixelProperties* props = actual_base->DecodeUniqueID( ((*tsc_it).first)->key().index() );
+    RichPixelProperties* props = 
+      actual_base->DecodeUniqueID( ((*tsc_it).first)->key().index() );
     const RichPixelReadout* readOut = props->Readout();
     if ( readOut ) {
 
-      if ( readOut->ADC()->process((*tsc_it).second) ) {
+      double temp_threshold = m_gaussThreshold()/el_per_adc + readOut->BaseLine();
+ 
+      if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) {
+
         MCRichDigit* newDigit = new MCRichDigit();
         mcRichDigits->insert( newDigit, ((*tsc_it).first)->key() );
         // Create MCRichHit links
@@ -177,14 +209,11 @@ StatusCode RichDetailedMaPMTFrontEndResponse::Digital() {
               iDep != deps.end(); ++iDep ) {
           newDigit->addToHits( (*iDep)->parentHit() );
         }
+
       }
 
-    }
+    } // readout exits
   }
-
-  log << MSG::DEBUG
-      << "Created " << mcRichDigits->size() << " MCRichDigits at "
-      << m_mcRichDigitsLocation << endreq;
 
   return StatusCode::SUCCESS;
 }

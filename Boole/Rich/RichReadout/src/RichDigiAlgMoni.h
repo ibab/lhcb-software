@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.2 2003-09-26 16:00:03 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.3 2003-10-31 16:46:30 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -62,6 +62,13 @@ public:
 
 private: // methods
 
+  // Map to count cherenkov photons for each radiator
+  typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
+  typedef std::map< PhotPair, int > PhotMap;
+
+  // PD occupancies
+  typedef std::map<RichSmartID,int> PDMulti;
+
   /// Book histograms
   StatusCode bookHistograms();
 
@@ -77,11 +84,13 @@ private: // methods
   /// Returns beta for a given MCParticle
   double mcBeta( const MCParticle * mcPart );
 
-private: // data
+  /// Returns the momentum for a given MCParticle
+  double momentum( const MCParticle * mcPart );
 
-  // Map to count cherenkov photons for each radiator
-  typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
-  typedef std::map< PhotPair, int > PhotMap;
+  void countNPE( PhotMap & photMap,
+                 const MCRichHit * hit );
+
+private: // data
 
   IMaPMTDetTool *     m_mapmtDet;
   IPixelFinder *      m_sicbDet;
@@ -136,8 +145,17 @@ private: // data
   IHistogram1D* m_digiErrZ[Rich::NRiches]; ///< Distance in z between hit and digit positions
   IHistogram1D* m_digiErrR[Rich::NRiches]; ///< Absolute distance between hit and digit positions
 
-  IHistogram1D* m_mchitNpes[Rich::NRadiatorTypes]; ///< Number of MCRichHit p.e.s. per radiator 
+  IHistogram1D* m_hitsPerDigi[Rich::NRiches];  ///< The number of MCRichHits per Digit
+  IHistogram1D* m_pdOcc[Rich::NRiches];  ///< The number of digits in each PD
+
+  IHistogram1D* m_mchitNpes[Rich::NRadiatorTypes];   ///< Number of MCRichHit p.e.s. per radiator 
   IHistogram1D* m_mcdigitNpes[Rich::NRadiatorTypes]; ///< Number of MCRichDigit p.e.s. per radiator 
+  IHistogram1D* m_mcdepNpes[Rich::NRadiatorTypes];   ///< Number of MCRichDeposit p.e.s. per radiator 
+
+  IHistogram1D* m_npesRetained[Rich::NRadiatorTypes]; ///< The fraction of signal p.e.s retained by the digitisation
+
+  IHistogram1D* m_chargedTkDeps[Rich::NRiches];
+  IHistogram1D* m_chargedTkDigs[Rich::NRiches];
 
 };
 
@@ -149,6 +167,11 @@ inline double RichDigiAlgMoni::mass( const MCParticle * mcPart )
 inline Rich::ParticleIDType RichDigiAlgMoni::massHypothesis( const MCParticle * mcPart ) 
 {
   return ( mcPart ? m_localID[abs(mcPart->particleID().pid())] : Rich::Unknown );
+}
+
+inline double RichDigiAlgMoni::momentum( const MCParticle * mcPart )
+{
+  return mcPart->momentum().vect().mag();
 }
 
 #endif // RICHMONITOR_RICHDIGIALGMONI_H

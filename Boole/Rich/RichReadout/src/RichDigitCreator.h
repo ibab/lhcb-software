@@ -1,4 +1,4 @@
-// $Id: RichDigitCreator.h,v 1.1 2003-09-20 15:12:53 jonesc Exp $
+// $Id: RichDigitCreator.h,v 1.2 2003-10-31 16:46:30 jonrob Exp $
 #ifndef RICHREADOUT_RICHDIGITCREATOR_H
 #define RICHREADOUT_RICHDIGITCREATOR_H 1
 

@@ -1,5 +1,5 @@
 package RichReadout
-version v1r0
+version v1r1
 
 # ================ structure =================================================
 branches RichReadout cmt doc src
@@ -24,4 +24,3 @@ apply_pattern packageShr
 
 private
 apply_pattern package_Cshlibflags
-

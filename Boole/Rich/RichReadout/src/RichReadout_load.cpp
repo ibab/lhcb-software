@@ -2,21 +2,13 @@
 
 DECLARE_FACTORY_ENTRIES( RichReadout  ) {
 
-  // Process the HPD MCHit signals
-  DECLARE_ALGORITHM( RichHPDSignal );
-  DECLARE_ALGORITHM( RichHPDSignalSICB );
+  // Process the MCHit signals
+  DECLARE_ALGORITHM( RichSignal );
+  DECLARE_ALGORITHM( RichSignalSICB );
 
-  // Simulate the HPD frontend response
-  DECLARE_ALGORITHM( RichSimpleHPDFrontEndResponse ); 
-  DECLARE_ALGORITHM( RichDetailedHPDFrontEndResponse ); 
-
-  // Process the MaPMT MCHit signals
-  DECLARE_ALGORITHM( RichMaPMTSignal ); 
-  DECLARE_ALGORITHM( RichMaPMTSignalSICB );
-
-  // Simulate the HPD frontend response
-  DECLARE_ALGORITHM( RichSimpleMaPMTFrontEndResponse ); 
-  DECLARE_ALGORITHM( RichDetailedMaPMTFrontEndResponse ); 
+  // Simulate the frontend response
+  DECLARE_ALGORITHM( RichSimpleFrontEndResponse ); 
+  DECLARE_ALGORITHM( RichDetailedFrontEndResponse ); 
 
   // Digit creator
   DECLARE_ALGORITHM( RichDigitCreator );

@@ -1,6 +1,6 @@
 
-#ifndef RICHREADOUT_RICHSIMPLEMaPMTFRONTENDRESPONSE_H
-#define RICHREADOUT_RICHSIMPLEMaPMTFRONTENDRESPONSE_H 1
+#ifndef RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H
+#define RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H 1
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -40,12 +40,12 @@
 // CLHep
 #include "CLHEP/Random/Random.h"
 
-class RichSimpleMaPMTFrontEndResponse : public Algorithm {
+class RichSimpleFrontEndResponse : public Algorithm {
 
 public:
 
-  RichSimpleMaPMTFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~RichSimpleMaPMTFrontEndResponse();
+  RichSimpleFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
+  virtual ~RichSimpleFrontEndResponse();
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
@@ -77,4 +77,4 @@ private: // data
 
 };
 
-#endif // RICHREADOUT_RICHSIMPLEMaPMTFRONTENDRESPONSE_H
+#endif // RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H

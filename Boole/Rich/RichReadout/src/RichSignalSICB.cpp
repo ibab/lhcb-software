@@ -1,18 +1,13 @@
 
-//#include "RiSicbGeom/SicbPixelLocation.h"
-
-//#include "Event/MCParticle.h"
-//#include "Event/ParticleID.h"
-
-#include "RichHPDSignalSICB.h"
+#include "RichSignalSICB.h"
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichHPDSignalSICB>  s_factory ;
-const         IAlgFactory& RichHPDSignalSICBFactory = s_factory ;
+static const  AlgFactory<RichSignalSICB>  s_factory ;
+const         IAlgFactory& RichSignalSICBFactory = s_factory ;
 
 // Standard constructor, initializes variables
-RichHPDSignalSICB::RichHPDSignalSICB( const std::string& name,
-                                      ISvcLocator* pSvcLocator)
+RichSignalSICB::RichSignalSICB( const std::string& name,
+                                ISvcLocator* pSvcLocator)
   : Algorithm ( name, pSvcLocator ) {
 
   declareProperty( "HitLocation",
@@ -23,87 +18,93 @@ RichHPDSignalSICB::RichHPDSignalSICB( const std::string& name,
                    m_RichPrevPrevLocation = "PrevPrev/" + MCRichHitLocation::Default );
   declareProperty( "NextLocation",
                    m_RichNextLocation = "Next/" + MCRichHitLocation::Default );
+  declareProperty( "NextNextLocation",
+                   m_RichNextNextLocation = "NextNext/" + MCRichHitLocation::Default );
   declareProperty( "SummedDepositLocation",
                    m_RichSummedDepositLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "DepositLocation",
                    m_RichDepositLocation = MCRichDepositLocation::Default );
 
+  declareProperty( "ChargedTrackTreatment", m_doChargedTracks = true );
+  declareProperty( "UseSpillover", m_doSpillover = true );
+
 }
 
-RichHPDSignalSICB::~RichHPDSignalSICB() {};
+RichSignalSICB::~RichSignalSICB() {};
 
-StatusCode RichHPDSignalSICB::initialize() {
+StatusCode RichSignalSICB::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Initialize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Initialize" << endreq;
 
   if ( !toolSvc()->retrieveTool( "PixelFinder", m_finder ) ) {
-    log << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
+    msg << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
     return StatusCode::FAILURE;
   }
 
   if ( !m_rndm.initialize( randSvc(), Rndm::Flat(0.,1.) ) ) {
-    log << MSG::FATAL << "Unable to create Random generator" << endreq;
+    msg << MSG::FATAL << "Unable to create Random generator" << endreq;
     return StatusCode::FAILURE;
   }
-
-  m_BunchSpace = 25.0;
 
   // initialise charged track treatment
   if ( !InitParameters() ) return StatusCode::FAILURE;
 
-  log << MSG::DEBUG
+  msg << MSG::DEBUG
       << " Using HPD signal algorithm for SICB" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichHPDSignalSICB::execute() {
+StatusCode RichSignalSICB::execute() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Execute" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Execute" << endreq;
 
   // Form a new containers of MCRichSummedDeposits and MCRichDeposits
   mcSummedDeposits = new MCRichSummedDeposits();
   if ( !eventSvc()->registerObject(m_RichSummedDepositLocation,mcSummedDeposits) ) {
-    log << MSG::ERROR << "Failed to register MCRichSummedDeposits at "
+    msg << MSG::ERROR << "Failed to register MCRichSummedDeposits at "
         << m_RichSummedDepositLocation << endreq;
     return StatusCode::FAILURE;
   }
   mcDeposits = new MCRichDeposits();
   if ( !eventSvc()->registerObject(m_RichDepositLocation,mcDeposits) ) {
-    log << MSG::ERROR << "Failed to register MCRichDeposits at "
+    msg << MSG::ERROR << "Failed to register MCRichDeposits at "
         << m_RichDepositLocation << endreq;
     return StatusCode::FAILURE;
   }
 
   // Process main and spillover events with TOF offsets
   ProcessEvent( m_RichHitLocation,       0  );
-  ProcessEvent( m_RichPrevLocation,     -25 );
-  ProcessEvent( m_RichPrevPrevLocation, -50 );
-  ProcessEvent( m_RichNextLocation,      25 );
+  if ( m_doSpillover ) {
+    ProcessEvent( m_RichPrevLocation,     -25 );
+    ProcessEvent( m_RichPrevPrevLocation, -50 );
+    ProcessEvent( m_RichNextLocation,      25 );
+    ProcessEvent( m_RichNextNextLocation,  50 );
+  }
 
   // Debug Printout
-  log << MSG::DEBUG << "Created " << mcSummedDeposits->size()
+  msg << MSG::DEBUG << "Created " << mcSummedDeposits->size()
       << " MCRichSummedDeposits at " << m_RichSummedDepositLocation << endreq;
-  log << MSG::DEBUG << "Created " << mcDeposits->size()
+  msg << MSG::DEBUG << "Created " << mcDeposits->size()
       << " MCRichDeposits at " << m_RichDepositLocation << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
-                                            double tofOffset ) {
+StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
+                                         double tofOffset ) {
 
-  MsgStream log(msgSvc(), name());
+  MsgStream msg(msgSvc(), name());
 
   // Load hits
   SmartDataPtr<MCRichHits> hits( eventSvc(), hitLoc );
   if ( !hits ) {
-    log << MSG::DEBUG << "Cannot locate MCRichHits at " << hitLoc << endreq;
+    msg << MSG::DEBUG << "Cannot locate MCRichHits at " << hitLoc << endreq;
     return StatusCode::SUCCESS;
   } else {
-    log << MSG::DEBUG << "Successfully located " << hits->size()
+    msg << MSG::DEBUG << "Successfully located " << hits->size()
         << " MCRichHits at " << hitLoc << endreq;
   }
 
@@ -112,7 +113,6 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
         iHit != hits->end(); ++iHit ) {
 
     // Select normal hits
-    // if( (*iHit)->radiator() <= 2 || !(*iHit)->scatteredPhoton() ) {
     if ( !(*iHit)->chargedTrack() ) {
 
       // positions on HPD window and correlated pixelID
@@ -121,6 +121,16 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
 
       // Is hit in active pixel
       if ( 0 != id.index() && m_finder->isActive(id) ) {
+
+        // Find out if we already have a hit for this super-pixel
+        MCRichSummedDeposit * dep = mcSummedDeposits->object(id);
+        if ( tofOffset < -1 && dep ) {
+          // Toss a coin to see if we add this hit to the existing deposits
+          // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
+          // already existing hit
+          int iRan = (int)(m_rndm()*8.);
+          if ( iRan != 0 ) continue;
+        }
 
         // Then create a new deposit
         MCRichDeposit* newDeposit = new MCRichDeposit();
@@ -133,10 +143,11 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
         // TOF information
         double tof = tofOffset + (*iHit)->timeOfFlight()/1e9;
         if ( (*iHit)->rich() == Rich::Rich2 ) tof -= 30; // Global shift for Rich2
+        //std::cout <<  (*iHit)->rich() << " normal hit tof " << tof << std::endl;
         newDeposit->setTime( tof );
+        msg << MSG::VERBOSE << "Creating Deposit with TOF = " << tof << endreq;
 
         // Add to the set of other deposits in the pixel
-        MCRichSummedDeposit * dep = mcSummedDeposits->object(id);
         if ( !dep ) {
           dep = new MCRichSummedDeposit();
           mcSummedDeposits->insert( dep, id );
@@ -148,7 +159,7 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
     } // normal hit if
 
     // select charged track hits
-    if ( (*iHit)->chargedTrack() ) {
+    if ( m_doChargedTracks && (*iHit)->chargedTrack() ) {
 
       // positions on HPD window and correlated pixelID
       HepPoint3D position( (*iHit)->entry()/10.0  );
@@ -293,6 +304,15 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
 
                 if ( ( newid.index() != 0 ) && m_finder->isActive(newid) ) {
 
+                  MCRichSummedDeposit * dep = mcSummedDeposits->object(newid);
+                  if ( tofOffset < -1 && dep ) {
+                    // Toss a coin to see if we add this hit to the existing deposits
+                    // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
+                    // already existing hit
+                    int iRan = (int)(m_rndm()*8.);
+                    if ( iRan != 0 ) continue;
+                  }
+
                   MCRichDeposit* newDeposit = new MCRichDeposit();
                   mcDeposits->insert( newDeposit );
                   newDeposit->setParentHit( *iHit );
@@ -301,13 +321,13 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
                   newDeposit->setEnergy( SimpleEnergy() );
 
                   // Charged track TOF correction
-                  double tof = tofOffset + (*iHit)->timeOfFlight()/1e9;
-                  if ( (*iHit)->rich() == Rich::Rich2 ) tof -= 47; // Incident shift for Rich2
-                  if ( (*iHit)->rich() == Rich::Rich1 ) tof -= 5;  // Incident shift for Rich1
+                  //double tof = tofOffset + (*iHit)->timeOfFlight()/1e9;
+                  //if ( (*iHit)->rich() == Rich::Rich2 ) tof -= 47; // Incident shift for Rich2
+                  //if ( (*iHit)->rich() == Rich::Rich1 ) tof -= 5;  // Incident shift for Rich1
+                  double tof = tofOffset + 5;
                   newDeposit->setTime( tof );
 
                   // Add to the set of other deposits in the pixel
-                  MCRichSummedDeposit * dep = mcSummedDeposits->object(newid);
                   if ( !dep ) {
                     dep = new MCRichSummedDeposit();
                     mcSummedDeposits->insert( dep, newid );
@@ -330,12 +350,12 @@ StatusCode RichHPDSignalSICB::ProcessEvent( std::string hitLoc,
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichHPDSignalSICB::finalize() {
+StatusCode RichSignalSICB::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // release pixel finder
+  // release tools
   if (m_finder) { toolSvc()->releaseTool(m_finder); m_finder = NULL; }
 
   // finalize randomn number generator
@@ -344,7 +364,7 @@ StatusCode RichHPDSignalSICB::finalize() {
   return StatusCode::SUCCESS;
 }
 
-double RichHPDSignalSICB::SimpleEnergy() {
+double RichSignalSICB::SimpleEnergy() {
 
   double energy = 0.015; // MeV
   if ( m_rndm() <= 0.2 ) {
@@ -356,9 +376,9 @@ double RichHPDSignalSICB::SimpleEnergy() {
   return 0; // shouldn't happen
 }
 
-bool RichHPDSignalSICB::InitParameters() {
+bool RichSignalSICB::InitParameters() {
 
-  MsgStream log(msgSvc(), name());
+  MsgStream msg(msgSvc(), name());
 
   m_Angle.clear();
   m_NPhotons.clear();
@@ -403,15 +423,15 @@ bool RichHPDSignalSICB::InitParameters() {
   m_NPhotons.insert( photonmap2::value_type(18,  0));
 
   std::ifstream input;
-  std::string dataFile = (std::string)getenv("PARAMFILESROOT") + 
-                                       "/data/RichHPD_sicb_incident_track.data";
+  std::string dataRoot = (std::string)getenv("RICHREADOUTHPDOPTS");
+  std::string dataFile = dataRoot + "/sicb_incident_track.data";
   input.open(dataFile.c_str());
 
   if ( !input ) {
-    log << MSG::ERROR << "Failed to load background from " << dataFile << endreq;
+    msg << MSG::ERROR << "Failed to load background from " << dataFile << endreq;
     return false;
   } else {
-    log << MSG::DEBUG << " Reading background file " << dataFile << endreq;
+    msg << MSG::DEBUG << " Reading background file " << dataFile << endreq;
 
     char cline[1024];
     std::string line;

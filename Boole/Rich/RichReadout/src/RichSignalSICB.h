@@ -1,5 +1,7 @@
-#ifndef RICHREADOUT_RICHMaPMTSIGNALSICB_H
-#define RICHREADOUT_RICHMaPMTSIGNALSICB_H 1
+#ifndef RICHREADOUT_RICHSIGNALSICB_H
+#define RICHREADOUT_RICHSIGNALSICB_H 1
+
+#include <fstream>
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -17,34 +19,39 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Vector/LorentzVector.h"
 
-// Event model
-#include "Event/MCRichHit.h"
-#include "Event/MCRichDeposit.h"
-#include "Event/MCRichSummedDeposit.h"
-#include "Event/MCParticle.h"
-#include "Event/ParticleID.h"
+#include "RiSicbGeom/SicbGeom.h"
+#include "RiSicbGeom/PixelFinder.h"
 
 // RichKernel
 #include "RichKernel/RichDetectorType.h"
 
-// MaPMT detector tool
-#include "RichDetTools/IMaPMTDetTool.h"
+// Event model
+#include "Event/MCParticle.h"
+#include "Event/MCRichHit.h"
+#include "Event/MCRichDeposit.h"
+#include "Event/MCRichSummedDeposit.h"
 
-class RichMaPMTSignalSICB : public Algorithm {
+class RichSignalSICB : public Algorithm {
 
 public:
 
-  RichMaPMTSignalSICB(const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~RichMaPMTSignalSICB();
+  RichSignalSICB( const std::string& name, ISvcLocator* pSvcLocator );
+
+  virtual ~RichSignalSICB();
 
   virtual StatusCode initialize();
   virtual StatusCode execute();
   virtual StatusCode finalize();
 
-private:
+private: // methods
 
   StatusCode ProcessEvent( std::string hitLoc, double tofOffset );
+
   double SimpleEnergy();
+
+  bool InitParameters();
+
+private: // data
 
   MCRichSummedDeposits* mcSummedDeposits;
   MCRichDeposits* mcDeposits;
@@ -54,14 +61,24 @@ private:
   std::string m_RichPrevLocation;
   std::string m_RichPrevPrevLocation;
   std::string m_RichNextLocation;
+  std::string m_RichNextNextLocation;
   std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
 
-  double m_BunchSpace;
-  Rndm::Numbers m_rndm;
+  typedef std::map<int, double> photonmap;
+  typedef std::map<int, int> photonmap2;
+  photonmap2 m_NPhotons;
+  photonmap m_Angle;
 
-  IMaPMTDetTool * m_mapmtDet;
+  bool m_doChargedTracks;
+  bool m_doSpillover;
+
+  double x[19][500];
+  double y[19][500];
+
+  IPixelFinder* m_finder;
+  Rndm::Numbers m_rndm;
 
 };
 
-#endif // RICHREADOUT_RICHMaPMTSIGNALSICB_H
+#endif // RICHREADOUT_RICHSIGNALSICB_H

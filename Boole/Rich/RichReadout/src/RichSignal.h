@@ -1,5 +1,5 @@
-#ifndef RICHREADOUT_RICHHPDSIGNAL_H
-#define RICHREADOUT_RICHHPDSIGNAL_H 1
+#ifndef RICHREADOUT_RICHSIGNAL_H
+#define RICHREADOUT_RICHSIGNAL_H 1
 
 #include <algorithm>
 #include <string>
@@ -9,23 +9,24 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 
-//From RichDetTools
+// from RichDetTools
 #include "RichDetTools/IRichDetInterface.h"
 
 #include "Event/MCRichHit.h"
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 
-class RichHPDSignal : public Algorithm {
+class RichSignal : public Algorithm {
 
 public:
 
-  RichHPDSignal(const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~RichHPDSignal();
+  RichSignal(const std::string& name, ISvcLocator* pSvcLocator );
+  virtual ~RichSignal();
 
   virtual StatusCode initialize();
   virtual StatusCode execute();
@@ -45,13 +46,14 @@ private: // data
   std::string m_RichPrevLocation;
   std::string m_RichPrevPrevLocation;
   std::string m_RichNextLocation;
+  std::string m_RichNextNextLocation;
   std::string m_RichSummedDepositLocation;
   std::string m_RichDepositLocation;
 
-  double m_BunchSpace;
-
   IRichDetInterface* m_DetInterface;
+
+  Rndm::Numbers m_rndm;
 
 };
 
-#endif // RICHREADOUT_RICHHPDSIGNAL_H
+#endif // RICHREADOUT_RICHSIGNAL_H

@@ -1,6 +1,6 @@
 
-#ifndef RICHREADOUT_RICHDETAILEDMaPMTFRONTENDRESPONSE_H
-#define RICHREADOUT_RICHDETAILEDMaPMTFRONTENDRESPONSE_H 1
+#ifndef RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H
+#define RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H 1
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -10,6 +10,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // Detector geom
 #include "RiSicbGeom/SicbGeom.h"
@@ -26,6 +27,7 @@
 #include "RichFrontEndDigitiser.h"
 #include "RichRegistry.h"
 #include "RichPixelReadout.h"
+//#include "RichShape_flat.h"
 #include "RichShape.h"
 #include "RichNoisifier.h"
 #include "RichBase.h"
@@ -39,12 +41,13 @@
 // CLHep
 #include "CLHEP/Random/Random.h"
 
-class RichDetailedMaPMTFrontEndResponse : public Algorithm {
+class RichDetailedFrontEndResponse : public Algorithm {
 
 public:
 
-  RichDetailedMaPMTFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~RichDetailedMaPMTFrontEndResponse();
+  RichDetailedFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
+
+  virtual ~RichDetailedFrontEndResponse();
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
@@ -70,9 +73,20 @@ private: // data
   std::string m_mcRichDigitsLocation;
   std::string m_detMode;
 
-  int m_Baseline;
+  std::string m_histPth;
+
+  int m_Pedestal;
   double m_Calibration;
+
+  double m_Noise;
+  double m_Threshold;
+  double m_ThresholdSigma;
+
+  double el_per_adc;
+
+  Rndm::Numbers m_gaussThreshold;
+  Rndm::Numbers m_gaussNoise;
 
 };
 
-#endif // RICHREADOUT_RICHMaPMTFRONTENDRESPONSESICB_H
+#endif // RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H

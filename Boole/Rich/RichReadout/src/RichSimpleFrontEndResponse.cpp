@@ -1,13 +1,13 @@
 
-#include "RichSimpleMaPMTFrontEndResponse.h"
+#include "RichSimpleFrontEndResponse.h"
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichSimpleMaPMTFrontEndResponse>  s_factory ;
-const         IAlgFactory& RichSimpleMaPMTFrontEndResponseFactory = s_factory ;
+static const  AlgFactory<RichSimpleFrontEndResponse>  s_factory ;
+const         IAlgFactory& RichSimpleFrontEndResponseFactory = s_factory ;
 
 // Standard constructor, initializes variables
-RichSimpleMaPMTFrontEndResponse::RichSimpleMaPMTFrontEndResponse( const std::string& name,
-                                                                  ISvcLocator* pSvcLocator)
+RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
+                                                        ISvcLocator* pSvcLocator )
   : Algorithm ( name, pSvcLocator ) {
 
   declareProperty( "MCRichSummedDepositsLocation",
@@ -22,9 +22,9 @@ RichSimpleMaPMTFrontEndResponse::RichSimpleMaPMTFrontEndResponse( const std::str
   Rndm::Numbers m_gaussRndm;
 }
 
-RichSimpleMaPMTFrontEndResponse::~RichSimpleMaPMTFrontEndResponse (){ };
+RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse (){ };
 
-StatusCode RichSimpleMaPMTFrontEndResponse::initialize() {
+StatusCode RichSimpleFrontEndResponse::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Initialize" << endreq;
@@ -33,7 +33,7 @@ StatusCode RichSimpleMaPMTFrontEndResponse::initialize() {
   std::vector<RichSmartID> pixels;
   if ( "SICB" == m_detMode ) {
     IPixelFinder* finder;
-    if ( !toolSvc()->retrieveTool("PixelFinder", finder ) ) {
+    if ( !toolSvc()->retrieveTool( "PixelFinder", finder ) ) {
       log << MSG::FATAL << "Unable to create PixelFinder tool" << endreq;
       return StatusCode::FAILURE;
     }
@@ -41,7 +41,7 @@ StatusCode RichSimpleMaPMTFrontEndResponse::initialize() {
     toolSvc()->releaseTool(finder);
   } else if ( "GAUSS" == m_detMode ) {
     IRichDetInterface * detint;
-    if ( !toolSvc()->retrieveTool("RichDetInterface", detint ) ) {
+    if ( !toolSvc()->retrieveTool( "RichDetInterface", detint ) ) {
       log << MSG::FATAL << "Unable to create RichDetInterface" << endreq;
       return StatusCode::FAILURE;
     }
@@ -56,13 +56,13 @@ StatusCode RichSimpleMaPMTFrontEndResponse::initialize() {
   m_gaussRndm.initialize( randSvc(), Rndm::Gauss(0.0,0.9) );
 
   log << MSG::DEBUG
-      << " Using simple MaPMT frontend response algorithm for " << m_detMode << endreq
+      << " Using simple HPD frontend response algorithm for " << m_detMode << endreq
       << " Acquired information for " << pixels.size() << " pixels" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSimpleMaPMTFrontEndResponse::finalize() {
+StatusCode RichSimpleFrontEndResponse::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "finalize" << endreq;
@@ -73,7 +73,7 @@ StatusCode RichSimpleMaPMTFrontEndResponse::finalize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSimpleMaPMTFrontEndResponse::execute() {
+StatusCode RichSimpleFrontEndResponse::execute() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Execute" << endreq;
@@ -96,29 +96,31 @@ StatusCode RichSimpleMaPMTFrontEndResponse::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSimpleMaPMTFrontEndResponse::Simple() {
+StatusCode RichSimpleFrontEndResponse::Simple() {
 
   MsgStream log(msgSvc(), name());
 
   MCRichDigits* mcRichDigits = new MCRichDigits();
   if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
-    log << MSG::ERROR << "Failed to register MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+    log << MSG::ERROR << "Failed to register MCRichDigits at " 
+        << m_mcRichDigitsLocation << endreq;
     return StatusCode::FAILURE;
   }
 
   for ( MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
 
-    RichPixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key().index()  );
+    RichPixelProperties* props = 
+      actual_base->DecodeUniqueID( (*iSumDep)->key().index() );
     if ( props ) {
 
       // Make new MCRichDigit
       MCRichDigit * newDigit = new MCRichDigit();
 
       double summedEnergy = 0.0;
-      for (SmartRefVector<MCRichDeposit>::const_iterator deposit =
-             (*iSumDep)->deposits().begin();
-           deposit != (*iSumDep)->deposits().end(); ++deposit ) {
+      for ( SmartRefVector<MCRichDeposit>::const_iterator deposit =
+              (*iSumDep)->deposits().begin();
+            deposit != (*iSumDep)->deposits().end(); ++deposit ) {
         if ( (*deposit)->time() > 0.0 &&
              (*deposit)->time() < 25.0 ) {
           summedEnergy += (*deposit)->energy();
@@ -127,14 +129,15 @@ StatusCode RichSimpleMaPMTFrontEndResponse::Simple() {
       }
       (*iSumDep)->setSummedEnergy( summedEnergy );
 
-      int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration ) + m_Baseline;
-      if ( value >= m_AdcCut) {
-        mcRichDigits->insert( newDigit, ((*iSumDep)->key()) );
+      int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
+      if ( !newDigit->hits().empty() && value >= m_AdcCut ) {
+        mcRichDigits->insert( newDigit, (*iSumDep)->key() );
       } else {
         delete newDigit;
       }
 
     }
+
   }
 
   log << MSG::DEBUG << "Created " << mcRichDigits->size() << " MCRichDigits at "

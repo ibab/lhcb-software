@@ -3,6 +3,7 @@
 #define RICHPIXELREADOUT_H 1
 
 class RichShape;
+class RichShape_flat;
 class RichNoisifier;
 class RichFrontEndDigitiser;
 
@@ -14,6 +15,7 @@ public:
   ~RichPixelReadout();
 
   const RichShape* Shape() const;
+  const RichShape_flat* Shape_flat() const;
   const RichNoisifier* Noisifier() const;
   const RichFrontEndDigitiser* ADC() const;
 
@@ -23,6 +25,7 @@ public:
   int FrameSize() const;
 
   void setShape ( RichShape * ) ;
+  void setShape_flat ( RichShape_flat * ) ;
   void setNoisifier( RichNoisifier * ) ;
   void setADC( RichFrontEndDigitiser *) ;
   void setBaseLine ( unsigned int index, double ) ;
@@ -38,6 +41,7 @@ private: // methods
 private: // data
 
   RichShape* m_shape;
+  RichShape_flat* m_shape_flat;
   RichNoisifier * m_noisifier;
   RichFrontEndDigitiser* m_frontEnd;
 
@@ -52,6 +56,11 @@ private: // data
 inline const RichShape* RichPixelReadout::Shape() const
 {
   return m_shape;
+}
+
+inline const RichShape_flat* RichPixelReadout::Shape_flat() const
+{
+  return m_shape_flat;
 }
 
 inline const RichNoisifier* RichPixelReadout::Noisifier() const
@@ -84,6 +93,11 @@ inline double RichPixelReadout::SigmaElecNoise() const
 inline void RichPixelReadout::setShape ( RichShape* p)
 {
   m_shape = p;
+}
+
+inline void RichPixelReadout::setShape_flat ( RichShape_flat* p)
+{
+  m_shape_flat = p;
 }
 
 inline void RichPixelReadout::setNoisifier (RichNoisifier* p)
