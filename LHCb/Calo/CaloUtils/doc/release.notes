@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.8 2002-04-02 12:30:20 ocallot Exp $
+! $Id: release.notes,v 1.9 2002-04-04 13:58:05 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!=============================================================================
+! 04/04/2002 - Vanya Belyaev 
+  - add "dirHbookName()" function to histoHbookName.h file 
 
 !=============================================================================
 ! 02/04/2002 - Olivier Callot
