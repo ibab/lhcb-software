@@ -1,36 +1,31 @@
 
-#include "RichReadout/RichRegistry.h"
-#include "RichReadout/RichBase.h"
+#include "RichRegistry.h"
+#include "RichBase.h"
 
-const RichBase * RichRegistry::GetNewBase( std::vector< unsigned int > pixels )
+// Static data members
+RichRegistry::RegisterMap RichRegistry::theRegister;
+
+void RichRegistry::cleanUp()
 {
+  for ( RegisterMap::iterator i = theRegister.begin();
+        i != theRegister.end(); ++i ) {
+    RichBase * const & ptr = *i;
+    if ( ptr ) { delete ptr; }
+  }
+}
 
-  RichBase* theBase = SetupBase(pixels);
-  pixels.clear();
-
+const RichBase * RichRegistry::GetNewBase( std::vector<RichSmartID> & pixels )
+{
+  RichBase* theBase = new RichBase();
+  theBase->upDate(pixels);
   return theBase;
-
 }
 
 const RichBase * RichRegistry::GetBase( )
 {
-
   RegisterMap::iterator f = theRegister.begin();
-
   return (*f);
-
 }
-
-RichBase* RichRegistry::SetupBase( std::vector<unsigned int> pixels)
-{
-
-  RichBase* theBase;
-  theBase->upDate(pixels);
-
-  return theBase;
-}
-
-RichRegistry::RegisterMap RichRegistry::theRegister;
 
 void RichRegistry::RegisterMe(RichBase*b)
 {

@@ -1,4 +1,0 @@
-
-BrunelDigiRICHSeq.Members += { "RichSignal", "RichReadout", "RichDigitCreator" };
-
-RichFrontEndResponse.Mode = "Simple";

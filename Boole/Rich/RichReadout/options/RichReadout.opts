@@ -1,5 +1,0 @@
-#pragma print on
-
-RichFrontEndResponse.Mode ="Simple";
-
-#pragma print off

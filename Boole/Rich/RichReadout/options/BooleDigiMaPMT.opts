@@ -1,0 +1,19 @@
+
+// Rich OO digitisation for Gauss Data
+
+// Process the raw hit signals
+DigiRICHSeq.Members += { "RichMaPMTSignal/RichPDSignal" };
+
+// Simple treatment of HPD response
+DigiRICHSeq.Members += { "RichSimpleMaPMTFrontEndResponse/RichPDResponse" };
+RichPDResponse.SimpleSigma = 0.9;
+
+// Detailed treatment of HPD response
+//DigiRICHSeq.Members += { "RichDetailedMaPMTFrontEndResponse/RichPDResponse" };
+
+// Create final container of digits
+DigiRICHSeq.Members += { "RichDigitCreator" };
+
+// temporary. 
+//Tell the monitor what sort of digits we have
+RiDigiAlgMon.DetMode = "GAUSS";

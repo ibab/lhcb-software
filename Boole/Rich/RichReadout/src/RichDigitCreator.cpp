@@ -1,4 +1,4 @@
-// $Id: RichDigitCreator.cpp,v 1.1.1.1 2003-06-19 11:22:53 jonesc Exp $
+// $Id: RichDigitCreator.cpp,v 1.2 2003-09-20 15:12:53 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -9,8 +9,7 @@
 #include "RichKernel/RichSmartID.h"
 
 // local
-#include "RichReadout/RichDigitCreator.h"
-
+#include "RichDigitCreator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichDigitCreator
@@ -63,7 +62,7 @@ StatusCode RichDigitCreator::execute() {
         << " MCRichDigits at "
         << m_mcRichDigitsLocation << endreq;
   }
-  
+
   // Form a new container of RichDigits
   RichDigits * digits = new RichDigits();
 
