@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.14 2003-07-07 16:45:30 ranjard Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.15 2003-12-10 17:25:46 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2003/07/07 16:45:30  ranjard
+// v12r3 - fix for gcc3.2
+//
 // Revision 1.13  2003/01/23 09:20:37  ibelyaev
 //  few fixes for Win2K platform
 //
@@ -623,7 +626,7 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
  */
 // ============================================================================
 StatusCode GiGaCnvSvcBase::createAddress
-( unsigned char         svc_type ,
+( long                  svc_type ,
   const CLID&           clid     ,
   const std::string*    par      , 
   const unsigned long*  ipar     ,

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.h,v 1.10 2002-12-07 21:13:48 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.11 2003-12-10 17:25:45 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/07 21:13:48  ibelyaev
+//  bug fix and small CPU performace optimization
+//
 // Revision 1.9  2002/12/07 14:36:25  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -116,7 +119,7 @@ public:
    *  @return     Status code indicating success or failure.
    */
   virtual StatusCode createAddress
-  ( unsigned char         svc_type ,
+  ( long                  svc_type ,
     const CLID&           clid     ,
     const std::string*    par      , 
     const unsigned long*  ip       ,
