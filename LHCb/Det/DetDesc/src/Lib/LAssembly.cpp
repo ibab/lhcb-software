@@ -1,15 +1,18 @@
-// $Id: LAssembly.cpp,v 1.1 2001-11-18 15:32:44 ibelyaev Exp $
+// $Id: LAssembly.cpp,v 1.2 2002-07-03 08:15:37 ocallot Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 // Include files
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
 // DetDesc
 #include "DetDesc/LAssembly.h"
-
+#include "DetDesc/SolidBase.h"
 // ============================================================================
 /** @file LAssembly.cpp
  *
@@ -35,6 +38,7 @@ LAssembly::LAssembly
   : LogVolBase( name        , 
                 sensitivity , 
                 magnetic    )
+  , m_coverComputed( false )
 {};
 
 // ============================================================================
@@ -55,6 +59,7 @@ LAssembly::LAssembly
                 validity    , 
                 sensitivity , 
                 magnetic    )
+  , m_coverComputed( false )
 {};
 
 // ============================================================================
@@ -78,6 +83,7 @@ LAssembly::LAssembly
                  validTill   , 
                  sensitivity , 
                  magnetic    )
+  , m_coverComputed( false )
 {};
 
 // ============================================================================
@@ -256,14 +262,31 @@ unsigned int LAssembly::intersectLine
   if( tickMin >= tickMax ) { return 0 ;} 
   /** line with null direction vector 
    * is not able to intersect any volume
-   */ 
+   */
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
+
+  
+  //== Check the 'cover'
+  if ( !m_coverComputed ) { 
+    LAssembly* myAss = const_cast<LAssembly*>( this );
+    myAss->computeCover();  
+  }
+  HepPoint3D p1 = Point + tickMin * Vector;
+  HepPoint3D p2 = Point + tickMax * Vector;
+  if ( (m_zMin > p1.z()) && (m_zMin > p2.z()) ) return 0 ;
+  if ( (m_zMax < p1.z()) && (m_zMax < p2.z()) ) return 0 ;
+  if ( (m_xMin > p1.x()) && (m_xMin > p2.x()) ) return 0 ;
+  if ( (m_xMax < p1.x()) && (m_xMax < p2.x()) ) return 0 ;
+  if ( (m_yMin > p1.y()) && (m_yMin > p2.y()) ) return 0 ;
+  if ( (m_yMax < p1.y()) && (m_yMax < p2.y()) ) return 0 ;
+
   /** look for the intersections of the given 
    *  line with daughter elements construct the 
    *  intersections container for daughter volumes
    */
   intersectDaughters
     ( Point , Vector , intersections , tickMin , tickMax , Threshold  );
+
   return intersections.size();    ///< RETURN!!!
 };
 
@@ -311,6 +334,102 @@ MsgStream&    LAssembly::printOut
 { return LogVolBase::printOut( os ) ; }
 
 
+
+//=========================================================================
+//  
+//=========================================================================
+void LAssembly::computeCover() {
+
+  if ( m_coverComputed ) return;
+
+  MsgStream log ( DetDesc::msgSvc() , "TransportSvc" );
+
+  m_xMin = 1000000.;
+  m_yMin = 1000000.;
+  m_zMin = 1000000.;
+  m_xMax = -1000000.;
+  m_yMax = -1000000.;
+  m_zMax = -1000000.;
+
+  HepPoint3D point( 0., 0., 0. );
+  HepPoint3D motherPt( 0., 0., 0. );
+  int i, j, k;
+  
+  for ( ILVolume::PVolumes::const_iterator ipv = pvBegin(); 
+        pvEnd() != ipv; ipv++ ) {
+    IPVolume* pv = *ipv;
+    if ( 0 != pv ) {
+      const ISolid* mySolid = pv->lvolume()->solid();
+      if ( 0 != mySolid ) {  //== Solid => has a cover
+        const ISolid* iCover = mySolid->cover();
+        const SolidBase* cover = dynamic_cast<const SolidBase*>( iCover );
+        if ( 0 != cover ) {
+          //== Compute the 8 corners, transform to mother frame and build the 
+          //== envelop as a box (x,y,z Min/Max)
+          point.setX( cover->xMin() );
+          for ( i = 0 ; 2 > i ; i++ ) {
+            point.setY( cover->yMin() );
+            for ( j = 0 ; 2 > j ; j++ ) {
+              point.setZ( cover->zMin() );
+              for ( k = 0 ; 2 > k ; k++ ) {
+                motherPt = pv->toMother( point );
+                if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
+                if ( m_xMax < motherPt.x() ) m_xMax = motherPt.x();
+                if ( m_yMin > motherPt.y() ) m_yMin = motherPt.y();
+                if ( m_yMax < motherPt.y() ) m_yMax = motherPt.y();
+                if ( m_zMin > motherPt.z() ) m_zMin = motherPt.z();
+                if ( m_zMax < motherPt.z() ) m_zMax = motherPt.z();
+                point.setZ( cover->zMax() );
+              }
+              point.setY( cover->yMax() );
+            }
+            point.setX( cover->xMax() );
+          }
+        } else {
+          log << MSG::ERROR << " === No cover for assembly " << name() 
+              << " pv " << pv->name() << endreq;;
+        }
+      } else {  //== No solid : This is an assembly
+        const LAssembly* assem = dynamic_cast<const LAssembly*>(pv->lvolume());
+        if ( 0 == assem ) {
+          log << MSG::ERROR << " === No solid for assembly " << name() 
+              << " pv " << pv->name() << " not assembly !" << endreq;
+        } else {
+          LAssembly* myAss = const_cast<LAssembly*>( assem );
+          //== Compute the cover of the assembly
+          myAss->computeCover();
+          //== Compute the 8 corners, transform to mother frame and build the 
+          //== envelop as a box (x,y,z Min/Max)
+          point.setX( assem->xMin() );
+          for ( i = 0 ; 2 > i ; i++ ) {
+            point.setY( assem->yMin() );
+            for ( j = 0 ; 2 > j ; j++ ) {
+              point.setZ( assem->zMin() );
+              for ( k = 0 ; 2 > k ; k++ ) {
+                motherPt = pv->toMother( point );
+                if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
+                if ( m_xMax < motherPt.x() ) m_xMax = motherPt.x();
+                if ( m_yMin > motherPt.y() ) m_yMin = motherPt.y();
+                if ( m_yMax < motherPt.y() ) m_yMax = motherPt.y();
+                if ( m_zMin > motherPt.z() ) m_zMin = motherPt.z();
+                if ( m_zMax < motherPt.z() ) m_zMax = motherPt.z();
+                point.setZ( assem->zMax() );
+              }
+              point.setY( assem->yMax() );
+            }
+            point.setX( assem->xMax() );
+          }
+        }
+      }  
+    }
+  }
+  log << MSG::INFO << "Assembly " << name() 
+      << " x [" << m_xMin << "," << m_xMax
+      << "], y [" << m_yMin << "," << m_yMax
+      << "], z [" << m_zMin << "," << m_zMax
+      << "]" << endreq;
+  m_coverComputed = true;
+}
 // ============================================================================
 // The End 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.cpp,v 1.9 2002-05-26 10:47:14 ibelyaev Exp $
+// $Id: SolidBoolean.cpp,v 1.10 2002-07-03 08:15:37 ocallot Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/26 10:47:14  ibelyaev
+//  remove checks/tests and update requiements
+//
 // Revision 1.8  2002/05/11 18:25:47  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -279,6 +282,8 @@ SolidBoolean::intersectionTicks
   const ISolid::Tick& tickMax , 
   ISolid::Ticks     & ticks   ) const 
 {
+  // check for bounding box 
+  if( isOutBBox( point , vect , tickMin , tickMax ) ) { return 0; }
   ///
   intersectionTicks( point , vect , ticks ); 
   // sort and remove adjancent and some EXTRA ticks and return 

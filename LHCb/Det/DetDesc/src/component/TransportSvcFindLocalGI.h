@@ -1,4 +1,4 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.7 2002-06-22 15:58:36 ocallot Exp $ 
+// $Id: TransportSvcFindLocalGI.h,v 1.8 2002-07-03 08:15:37 ocallot Exp $ 
 // ============================================================================
 #ifndef        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__
 #define        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__ 1
@@ -32,28 +32,16 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
   
   try {  
     /// find the nearest "upper" volume, which contains the  first point  
-    IGeometryInfo* gi1   = gi ;   
-    log << MSG::VERBOSE << "Original geom " << gi1->lvolumeName() 
+    log << MSG::VERBOSE << "Original geom " << gi->lvolumeName() 
         << " point z = " << point1.z() << endreq;
-    gi1   = gi1->belongsTo( point1, -1 ) ;   
-    log << MSG::VERBOSE << "  belongsTo geom " << gi1->lvolumeName() 
-        << endreq;
-    {  
-      bool loc = false ;  
-      for( loc = gi1->isInside( point1 ) ; 
-           !loc && (0 != gi1) && (gi != gi1) ; 
-           gi1 = gi1->parentIGeometryInfo() ) {
-        loc = gi1->isInside( point1 ); 
-        log << MSG::VERBOSE << " inside loop " <<  loc 
-            << " pointr=" << gi1->lvolumeName() << endreq;  
-        if ( loc ) break;
-      }  
-      if( !loc || 0 == gi1 ) { 
-        log << MSG::VERBOSE << " .. point1 not inside" << endreq;
-        return 0; 
-      }   
+    if ( !gi->isInside( point1 ) ) {
+      log << MSG::VERBOSE << " point is not inside. Return 0 " << endreq;
+      return 0;
     }
-    log << MSG::VERBOSE << "  p1 isInside geom " << gi1->lvolumeName() 
+    IGeometryInfo* gi1   = gi->belongsTo( point1, -1 ) ;   
+    log << MSG::VERBOSE << "  p1 " << point1.x() << " " 
+        << point1.y() << " " << point1.z()
+        << " isInside geom " << gi1->lvolumeName() 
         << endreq;
   
     /// find the nearest "upper" volume, which contains the second point  
@@ -72,119 +60,28 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
         return 0; 
       }
     }
-    log << MSG::VERBOSE << "  p2 isInside geom " << gi2->lvolumeName() 
+    log << MSG::VERBOSE << "  p2 " << point2.x() << " " 
+        << point2.y() << " " << point2.z()
+        << " isInside geom " << gi2->lvolumeName() 
         << endreq;
     
-    /// here both points are located 
-    ///  try fo find the "common" location 
+    // Here both points are located, gi2 is a parent of gi1. Get the first 
+    // parent of gi2 which is a good GI.
 
-    /// if both points are located in the same geometry element
-    if( gi1 == gi2 ) {  
-      ///  try to find a "good" geometry element in geometry hierarhy
-      for( IGeometryInfo* gl = gi1 ; 0 != gl ; 
-           gl = gl->parentIGeometryInfo() ) { 
-        if ( 0 == gl ) return 0;
-        if( goodLocalGI( point1 , point2 , gl ) ) { 
-          log << MSG::VERBOSE << "  goodLocalGI geom " << gl->lvolumeName()
-              << endreq;
-          return gl; 
-        } 
-      }
-      /// we have failed to find "good" element 
-      log << MSG::VERBOSE << "  failed to find good element" << endreq;
-      return 0;                      /// RETURN !!! 
+    for( IGeometryInfo* gl = gi2 ; 0 != gl ; 
+         gl = gl->parentIGeometryInfo() ) { 
+      if ( 0 == gl ) return 0;
+      if( goodLocalGI( point1 , point2 , gl ) ) { 
+        log << MSG::VERBOSE << "+++ Exit with goodLocalGI geom " 
+            << gl->lvolumeName() << endreq;
+        return gl; 
+      } 
+      if ( topGi == gl ) return 0;
     }
-    
-    
-    /// points are located in different geometry elements, 
-    /// or geometry element is not good!
-    
-    /// "top" geometry tree for the first point 
-    IGeometryInfo* vgi;
+    /// we have failed to find "good" element 
+    log << MSG::INFO << "--- failed to find good GI element" << endreq;
+    return 0;                      /// RETURN !!! 
 
-    m_vGi1.clear();   
-    for( vgi = gi1 ; (0 != vgi); vgi = vgi->parentIGeometryInfo() ) { 
-      log << MSG::VERBOSE << "  store parent 1 " << vgi->lvolumeName() 
-          << endreq;
-      m_vGi1.push_back( vgi ); 
-      if ( topGi == vgi ) break;
-    }
-    
-    /// "top" geometry tree for the second point 
-    m_vGi2.clear(); 
-    for( vgi = gi2 ; (0 != vgi); vgi = vgi->parentIGeometryInfo()  ) { 
-      log << MSG::VERBOSE << "  store parent 2 " << vgi->lvolumeName() 
-          << endreq;
-      m_vGi2.push_back( vgi ); 
-      if ( topGi == vgi ) break;
-    }  
-    
-    /// "common" top tree for both points 
-    m_vGi.clear(); 
-    {
-      rGeoIt it1 = m_vGi1.rbegin(); 
-      rGeoIt it2 = m_vGi2.rbegin(); 
-      while( ( m_vGi1.rend() !=  it1 ) && 
-             ( m_vGi2.rend() !=  it2 ) && 
-             (      0        != *it1 ) && 
-             (      0        != *it2 ) &&  
-             (   *it1        == *it2 )    ) { 
-        log << MSG::VERBOSE << "  store common " << (*it1)->lvolumeName()
-            << endreq;
-        m_vGi.push_back( *it1 ) ; 
-        ++it1 ; 
-        ++it2 ; 
-      }
-    }
-    
-    /// no common elements found !!!
-    if( m_vGi.empty() ) { 
-      log << MSG::VERBOSE << " .. no common element" << endreq;
-      return 0 ; 
-    } 
-
-    /// common "top" tree is found! 
-    {
-      log << MSG::VERBOSE << "  extend tree" << endreq;
-      
-      /// extend it to lower level!   ???? DO WE NEED IT ????  YES!!! 
-      IGeometryInfo*  gl = *(m_vGi.rbegin()); 
-      while( 0 != gl ) {
-        log << MSG::VERBOSE << "     test " << gl->lvolumeName() 
-            << endreq;
-        IGeometryInfo* gl1 = gl->belongsTo( point1 ); 
-        if( 0 == gl1 ) { 
-          gl = 0 ; 
-        } else {
-          IGeometryInfo* gl2 = gl->belongsTo( point2 ); 
-          if   ( gl1 == gl2 ) {
-            log << MSG::VERBOSE << "   extended to " 
-                << gl2->lvolumeName() << endreq;
-            m_vGi.push_back( gl2 ); gl = gl2 ; 
-          } else {
-            gl = 0; 
-          }  
-        }
-      }
-    } 
-    
-    goodGI =gi;
-    
-    /// try to find a "good" geometry element in this tree 
-    for( rGeoIt it = m_vGi.rbegin() ; m_vGi.rend() != it ; ++it ) { 
-      log << MSG::VERBOSE << "   test goodLocalGI " <<  (*it)->lvolumeName()
-          << endreq;
-      if ( goodLocalGI( point1 , point2 , *it ) ) {
-        goodGI = (*it); 
-        log << MSG::VERBOSE << " geometry " << (*it)->lvolumeName() 
-                               << endreq;
-        break;
-      }
-    } 
-    log << MSG::VERBOSE << " +++ exit with goodGI = " 
-        << goodGI->lvolumeName() << endreq;
-    
-    ///  "good" element if found , or not found ;-))) 
   }
   catch( const GaudiException& Exception ) 
     {

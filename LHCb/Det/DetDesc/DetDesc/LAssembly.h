@@ -1,8 +1,11 @@
-// $Id: LAssembly.h,v 1.1 2001-11-18 15:32:44 ibelyaev Exp $
+// $Id: LAssembly.h,v 1.2 2002-07-03 08:15:36 ocallot Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 #ifndef DETDESC_LASSEMBLY_H 
 #define DETDESC_LASSEMBLY_H 1
@@ -10,6 +13,7 @@
 // from DetDesc 
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/CLIDLAssembly.h"
+#include "DetDesc/DetDesc.h"
 
 template <class TYPE>
 class DataObjectFactory;
@@ -245,11 +249,28 @@ public:
   virtual MsgStream&    printOut
   ( MsgStream    & os             ) const;
 
+  double xMin() const   { return m_xMin;  }
+  double xMax() const   { return m_xMax;  }
+  double yMin() const   { return m_yMin;  }
+  double yMax() const   { return m_yMax;  }
+  double zMin() const   { return m_zMin;  }
+  double zMax() const   { return m_zMax;  }
+  
+  void   computeCover ();
 protected:
   
   /** default constructor
    */
   LAssembly();
+
+private:
+  double m_xMin;
+  double m_xMax;
+  double m_yMin;
+  double m_yMax;
+  double m_zMin;
+  double m_zMax;
+  bool   m_coverComputed;
   
 };
 
