@@ -1,4 +1,4 @@
-//$Id: condDB.opts,v 1.2 2002-03-01 15:53:59 andreav Exp $
+//$Id: condDB.opts,v 1.3 2002-07-25 15:39:21 andreav Exp $
 //==============================================================
 // Common job options to use a CondDB in DetCondExample
 //==============================================================
@@ -33,6 +33,9 @@ ConditionsDBGate.condDBPswd = "$DETCONDEXAMPLE_DBPSWD";
 
 // Database name (Oracle user-defined DB name, Objectivity boot file full path)
 ConditionsDBGate.condDBName = "$DETCONDEXAMPLE_DBNAME";
+
+// Show database password?
+ConditionsDBGate.showCondDBPswd = false;
 
 //==============================================================
 // End of common job options to use a CondDB in DetCondExample

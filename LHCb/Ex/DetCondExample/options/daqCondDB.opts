@@ -1,0 +1,48 @@
+//$Id: daqCondDB.opts,v 1.1 2002-07-25 15:39:21 andreav Exp $
+//==============================================================
+// Job options for DetCondExample DAQ test of CondDB
+//==============================================================
+
+#include "../options/condDB.opts"
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "Sequencer" };
+Sequencer.Members   = { };
+Sequencer.Members  += { "DAQCondDBAlgorithm" };
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed
+ApplicationMgr.EvtMax = $DETCONDEXAMPLE_DAQEVTMAX;
+
+//--------------------------------------------------------------
+// ConditionsDB folder and string size
+//--------------------------------------------------------------
+
+// Relative folder name under /CONDDB (do NOT put any "/")
+DAQCondDBAlgorithm.daqFolderName = "$DETCONDEXAMPLE_DAQFOLDERNAME";
+
+// Size of the string stored at each event 
+DAQCondDBAlgorithm.daqRecordSize = $DETCONDEXAMPLE_DAQRECORDSIZE;
+
+// Show event by event progress ( every n events if n>0 )
+DAQCondDBAlgorithm.daqShowProgress = 1;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 3;
+
+//==============================================================
+// End of job options for DetCondExample test of CondDB
+//==============================================================
