@@ -53,6 +53,7 @@ class genClassDicts(importUtils.importUtils):
               if s[-1] != '(': s += ',\n%s' % (indent*' ')
               if p.find('=') != -1: p = p.split('=')[0]
               p = (' ').join(p.split()[:-1])
+              if p in self.generatedEnums : p = 'int'
               p = self.checkTypedefEnums(p,godClass['attrs']['name'])
               if self.tools.isReferenceT(p) : p = p.strip()[:-1]
               if self.tools.isPointerT(p) : s += '(%s)argList[%d]' % (p, i)
@@ -113,6 +114,7 @@ class genClassDicts(importUtils.importUtils):
         s += self.rem
         s += '{\n'
         if retType :
+          if retType in self.generatedEnums : retType = 'int'
           retType = self.checkTypedefEnums(retType, godClass['attrs']['name'])
           if self.tools.isFundamentalT(retType):
             s += '  static %s ret;\n' % retType
@@ -139,6 +141,7 @@ class genClassDicts(importUtils.importUtils):
             if s[-1] != '(': s += ',\n%s' % (indent*' ')
             if p.find('=') != -1: p = p.split('=')[0]
             p = (' ').join(p.split()[:-1])
+            if p in self.generatedEnums : p = 'int'
             p = self.checkTypedefEnums(p,godClass['attrs']['name'])
             if self.tools.isPointerT(p) :
               s += '(%s)argList[%d]' % (p, i)
@@ -169,6 +172,7 @@ class genClassDicts(importUtils.importUtils):
     s += ')\n%s{\n' % self.rem
     if ret != 'void' :
       ret = self.tools.unQualifyT(ret)
+      if ret in self.generatedEnums : ret = 'int'
       ret = self.checkTypedefEnums(ret, cl)
       if self.tools.isFundamentalT(ret):
         s += '  static %s ret;\n' % ret
@@ -187,6 +191,7 @@ class genClassDicts(importUtils.importUtils):
     if len(params) :
       for p in params :
         if i : s += '\n' + indent
+        if p in self.generatedEnums : p = 'int'
         p = self.checkTypedefEnums(p, cl)
         if p[:9] == 'SmartRef<' : s += '(%s*)' % p[p.find('<')+1:p.find('>')]
         elif self.tools.isReferenceT(p) : s += '*(%s*)' % p[:-1]
@@ -324,7 +329,11 @@ class genClassDicts(importUtils.importUtils):
           if constAtt.has_key('argList') : par = self.tools.genParamsFromStrg(constAtt['argList'])
           elif const.has_key('arg') : par = self.tools.genParamsFromElem(const['arg'])
           if ((not const['attrs'].has_key('argList')) and (not const.has_key('arg'))): self.hasDefaultConstructor = 1 
-          if len(par) : par = (';').join([(' ').join(x.split()[:-1]) for x in par])
+          if len(par) :
+            for p in par :
+              for e in self.generatedEnums :
+                if p.find(e) != -1 : p = p.replace(e,'int')
+            par = (';').join([(' ').join(x.split()[:-1]) for x in par])
           mod = ''
           if constAtt['explicit'] == 'TRUE' : mod = 'EXPLICIT'
           s += self.genMethod(clName, constAtt['desc'], clName, par, '%s_constructor_%d'%(clName,self.cNum), mod) 
@@ -383,10 +392,15 @@ class genClassDicts(importUtils.importUtils):
         ret = ''
         if metAtt['type'].strip()  : ret = self.tools.genReturnFromStrg(metAtt['type'],[],'')
         elif met.has_key('return') : ret = self.tools.genReturnFromElem(met['return'],[],'')
+        if ret in self.generatedEnums : ret = 'int'
         par = []
         if metAtt.has_key('argList') : par = self.tools.genParamsFromStrg(metAtt['argList'])
         elif met.has_key('arg') : par = self.tools.genParamsFromElem(met['arg'])
-        if len(par) : par = (';').join([(' ').join(x.split()[:-1]) for x in par])
+        if len(par) :
+          for p in par :
+            for e in self.generatedEnums :
+              if p.find(e) != -1 : p = p.replace(e,'int')
+          par = (';').join([(' ').join(x.split()[:-1]) for x in par])
         mod = []
         if metAtt['const']   == 'TRUE' : mod.append('CONST')
         if metAtt['virtual'] == 'TRUE' : mod.append('VIRTUAL')
@@ -409,14 +423,15 @@ class genClassDicts(importUtils.importUtils):
         bfAtt = bf['attrs']
         bfType = 'bool'
         if bfAtt.has_key('type'): bfType = bfAtt['type']
+        if bfType in self.generatedEnums : bfType = 'int'
         if bfAtt['setMeth'] == 'TRUE':
           metName = 'set'+self.tools.firstUp(bfAtt['name'])
-          s += self.genMethod(metName,'set '+bfAtt['desc'],'void',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+          s += self.genMethod(metName,'set '+bfAtt['desc'],'void',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
         if bfAtt['getMeth'] == 'TRUE':
-          s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'',bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+          s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'',bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
         if bfAtt['checkMeth'] == 'TRUE':
           metName = 'check'+self.tools.firtUp(bfAtt['name'])
-          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum),'PUBLIC')
       self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
@@ -427,17 +442,18 @@ class genClassDicts(importUtils.importUtils):
       for att in godClass['attribute']:
         attAtt = att['attrs']
         attType = attAtt['type']
+        if attType in self.generatedEnums : attType = 'int'
         if attType == 'bitfield' :
           s += genGetSetBitfieldMethods(att)
           attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
           ret = self.tools.genReturnFromStrg(attType,[],'')
-          s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum), attAtt['access'])
+          s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum), 'PUBLIC')
           self.mNum += 1
         if attAtt['setMeth'] == 'TRUE' :
           metName = 'set'+self.tools.firstUp(attAtt['name'])
           param = self.tools.genParamFromStrg(attType)
-          s += self.genMethod(metName, attAtt['desc'], '', param, '%s_%s_%d'%(clName,metName,self.mNum), attAtt['access'])
+          s += self.genMethod(metName, attAtt['desc'], '', param, '%s_%s_%d'%(clName,metName,self.mNum), 'PUBLIC')
           self.mNum += 1
     if godClass.has_key('relation'):
       for rel in godClass['relation']:
@@ -447,31 +463,31 @@ class genClassDicts(importUtils.importUtils):
         metNameUp = self.tools.firstUp(relAtt['name'])
         if relAtt['getMeth'] == 'TRUE' :
           ret = ''
-          if mult : ret = self.tools.genReturnFromStrg('%s*'%relAtt['type'],[],'')
-          else    : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>'%relAtt['type'],[],'')
-          s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum),relAtt['access'])
+          if mult : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>'%relAtt['type'],[],'')
+          else    : ret = self.tools.genReturnFromStrg('%s*'%relAtt['type'],[],'')
+          s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum),'PUBLIC')
           self.mNum += 1
         if relAtt['setMeth'] == 'TRUE' :
           metName = 'set'+metNameUp
           par = ''
           if mult : par = self.tools.genParamFromStrg('SmartRefVector<%s>'%relAtt['type'])
-          else    : par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-          s += self.genMethod(metName, relAtt['desc'], '', par, '%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
+          else    : par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
+          s += self.genMethod(metName, relAtt['desc'], '', par, '%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
           self.mNum += 1
         if mult:
           if relAtt['addMeth'] == 'TRUE' :
             metName = 'addTo'+metNameUp
-            par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
+            par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
+            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
             self.mNum += 1
           if relAtt['remMeth'] == 'TRUE' :
             metName = 'removeFrom'+metNameUp
-            par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
+            par = self.tools.genParamFromStrg('%s*'%relAtt['type'])
+            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
             self.mNum += 1
           if relAtt['clrMeth'] == 'TRUE' :
             metName = 'clear'+metNameUp
-            s += self.genMethod(metName,relAtt['desc'],'','','%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
+            s += self.genMethod(metName,relAtt['desc'],'','','%s_%s_%d'%(clName,metName,self.mNum),'PUBLIC')
             self.mNum += 1
     return s
 #--------------------------------------------------------------------------------

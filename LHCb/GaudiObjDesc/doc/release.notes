@@ -3,9 +3,21 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v7r1============================
+
+!20050117 - Stefan
+- methods returning enums or taking enums as arguments now accept/return "int"s in the dictionary code
+- fix in dictionary code: methods returning or taking a SmartRef<T> will be described as T* in the dictionaries
+
+!20050117 - Stefan
+- import names stay unchanged if they contain a '.'. E.g. <import name='file.hh'/> will convert to #include "file.hh"
+- fix: all get/set/addTo/etc. methods are now public in the dictionaries by default
+
 !20050111 - Stefan
 - generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject) 
-  class attributes 'stdVectorTypeDef, keyedContTypeDef, templateVector, templateList' will be depricated and replaced by new ones
+- class attributes 'stdVectorTypeDef, templateVector, templateList' will be depricated and replaced by new ones
+- ATTENTION: if the typedefs for KeyedObjects/ContainedObjects at the end of the class should be generated, then:
+             - classes not inheriting directly form KeyedObject<T> must have the <class> attribute "keyedContTypeDef" set to "TRUE" 
+             - classes not inheriting directly form ContainedObject must have <class> the attribute "contObjectTypeDef" set to "TRUE"
 
 !20050103 - Stefan
 - fix: generate unique include line in case of stl includes (generated from forward declarations)

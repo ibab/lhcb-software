@@ -115,7 +115,9 @@ class importUtils:
 #--------------------------------------------------------------------------------
   def genIncludes(self):
     s = ''
-    for imp in self.include : s += '#include "%s.h"\n' % imp
+    for imp in self.include :
+      if imp.find('.') != -1 : s += '#include "%s"\n' % imp
+      else                   : s += '#include "%s.h"\n' % imp
     s += self.genStdIncludes()
     return s
 #--------------------------------------------------------------------------------

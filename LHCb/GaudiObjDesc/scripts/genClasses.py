@@ -428,12 +428,12 @@ class genClasses(genSrcUtils.genSrcUtils):
   def genClassTypedefs(self, godClass):
     s = ''
     classname =  godClass['attrs']['name']
-    if self.gKeyedContainerTypedef:
+    if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
       self.addInclude('KeyedContainer')
       s += '// Definition of Keyed Container for %s\n' % classname
       s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n\n' \
            % (classname, self.genClassnamePlurial(classname))
-    if self.gContainedObjectTypedef:
+    if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
       self.addInclude('ObjectVector')
       s += '// Definition of vector container type for %s\n' % classname
       s += 'template <class TYPE> class ObjectVector;\n'
@@ -444,8 +444,8 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += 'typedef ObjectList<%s> %sList;' % (classname, classname)
     if godClass['attrs']['stdVectorTypeDef'] == 'TRUE' and not self.gContainedObjectTypedef:
       self.addInclude('std::vector')
-      s += '// typedef for std::vector of %s\n' % className
-      s += 'typedef std::vector<%s*> %sVector;\n\n' % ( className, className )
+      s += '// typedef for std::vector of %s\n' % classname
+      s += 'typedef std::vector<%s*> %sVector;\n\n' % ( classname, classname )
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
