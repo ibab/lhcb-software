@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.10 2003-09-22 13:58:20 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.11 2003-10-09 15:44:39 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/09/22 13:58:20  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // Revision 1.9  2003/09/08 16:58:34  witoldp
 // fixing bug introduced in previous version
 //
@@ -603,7 +606,7 @@ G4VPhysicalVolume* GiGaGeo::world ()
   if( 0 != m_worldPV ) { return m_worldPV ; } /// already created 
   ///
   { MsgStream log(msgSvc(),name()); 
-  log << MSG::INFO << " Create the WORLD volume!" << endreq; } 
+  log << MSG::DEBUG << " Create the WORLD volume!" << endreq; } 
   // create it!
   G4Material* MAT = material ( m_worldMaterial );   
   if( 0 == MAT )

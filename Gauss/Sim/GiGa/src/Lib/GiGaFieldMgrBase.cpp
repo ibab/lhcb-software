@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.4 2003-08-15 12:51:50 witoldp Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.5 2003-10-09 15:44:21 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/08/15 12:51:50  witoldp
+// few warnings changed to prints
+//
 // Revision 1.3  2003/06/05 10:49:11  witoldp
 // change to deal with null magn field
 //
@@ -185,11 +188,11 @@ StatusCode GiGaFieldMgrBase::createStepper () const
   types.push_back( "HelixSimpleRunge"    ) ;
   types.push_back( "HelixHeum"           ) ;
   
-  log << MSG::INFO 
+  log << MSG::VERBOSE 
       << " \t The available steppers are: " << endreq ;
   for( Types::const_iterator step = types.begin() ;
        types.end() != step ; ++step ) 
-    { log << MSG::INFO << " \t\t (G4)" << *step << endreq ; }
+    { log << MSG::VERBOSE << " \t\t (G4)" << *step << endreq ; }
   
   if      ( types  [0] == m_stepperType ) 
     { m_stepper = new G4ExplicitEuler      ( equation ) ; }
@@ -217,7 +220,7 @@ StatusCode GiGaFieldMgrBase::createStepper () const
     { return Error("createStepper(): Invalid stepper type '" + 
                    m_stepperType + "'" ) ; }
   
-  log << MSG::INFO 
+  log << MSG::DEBUG 
       << " Stepper of type '" + 
     GiGaUtil::ObjTypeName( m_stepper ) + "' is created " << endreq ;
   
@@ -259,7 +262,7 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
         G4TransportationManager::GetTransportationManager () ;
       if( 0 == mgr ) { return Error("Invalid Transportation manager" ) ; }
       m_manager = mgr -> GetFieldManager() ;
-      Print ( "Global G4FieldManager will be (re)configured." ) ;
+      //Print ( "Global G4FieldManager will be (re)configured." ) ;
     }
   else 
     { m_manager = new G4FieldManager() ; }
