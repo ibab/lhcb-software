@@ -1,19 +1,3 @@
-# $Id: requirements,v 1.8 2002-04-25 08:16:07 witoldp Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.7  2002/04/09 17:19:39  ibelyaev
-#  fix problems with event-drawing and magnetic field
-#
-# Revision 1.6  2002/04/05 16:38:36  witoldp
-# uses restructured GeneratorModules
-#
-# Revision 1.5  2002/03/13 12:56:11  ibelyaev
-#  small restructurusation of job-options
-# 
-# =============================================================================
-
 package Gauss
 version v2r2
 
@@ -41,15 +25,15 @@ use GaudiRootDb   v6r*
 use HbookCnv      v12r*
 
 # SICB stuff (access to magnetic field service)
-#use dbase         v240 SICB
-#use SicbCnv       v15r* SICB
+use dbase         v240 SICB
+use SicbCnv       v16r* SICB
 
 #GiGa staff...
 use GiGaCnv       v5r*  Sim
 #use EvGen         v2r*   Sim
 
 #geometry source 
-use XmlDDDB       v10r*   Det 
+use XmlDDDB       v11r*   Det 
 
 # =============================================================================
 # Essential environment variables 
