@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.24 2005-02-22 13:53:51 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.25 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -40,16 +40,50 @@ DeRichHPDPanel::~DeRichHPDPanel() {}
 //=========================================================================
 //  Initialize
 //=========================================================================
-StatusCode DeRichHPDPanel::initialize() {
+StatusCode DeRichHPDPanel::initialize() 
+{
 
   // store the name of the panel, without the /dd/Structure part
   const std::string::size_type pos = name().find("Rich");
-  if ( std::string::npos != pos ) {
-    m_name = name().substr(pos);
-  } else { m_name = "DeRichHPDPanel_NO_NAME"; }
+  m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
 
   MsgStream log ( msgSvc(), myName() );
-  log << MSG::DEBUG << "Initializing base class for " << myName() << endreq;
+
+  // Work out what Rich/panel I am
+  m_rich = Rich::InvalidDetector;
+  m_side = Rich::InvalidSide;
+  if      ( name().find("Rich1") != std::string::npos )
+  {
+    m_rich = Rich::Rich1; 
+    if      ( name().find("PDPanel0") != std::string::npos )
+    { 
+      m_side = Rich::top; 
+    } 
+    else if ( name().find("PDPanel1") != std::string::npos )
+    { 
+      m_side = Rich::bottom; 
+    }
+  }  
+  else if ( name().find("Rich2") != std::string::npos )
+  { 
+    m_rich = Rich::Rich2; 
+    if      ( name().find("PDPanel0") != std::string::npos )
+    { 
+      m_side = Rich::left; 
+    } 
+    else if ( name().find("PDPanel1") != std::string::npos )
+    { 
+      m_side = Rich::right; 
+    }
+  }
+  if ( m_rich == Rich::InvalidDetector ||
+       m_side == Rich::InvalidSide )
+  {
+    log << MSG::ERROR << "Error initializing HPD panel " << name() << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  log << MSG::INFO << "Initializing HPD Panel : " << rich() << " " << (int)side() << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
@@ -179,19 +213,36 @@ StatusCode DeRichHPDPanel::initialize() {
   m_HPDCentres.clear();
   for ( unsigned int HPD = 0; HPD < PDMax(); ++HPD ) {
     const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPD);
-    if ( !pvHPDMaster ) { log << MSG::ERROR << "Failed to access HPDMaster" << endreq; return  StatusCode::FAILURE; }
+    if ( !pvHPDMaster ) 
+    { 
+      log << MSG::ERROR << "Failed to access HPDMaster" << endreq; 
+      return  StatusCode::FAILURE; 
+    }
     const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-    if ( !pvHPDSMaster ) { log << MSG::ERROR << "Failed to access HPDSMaster" << endreq; return  StatusCode::FAILURE; }
+    if ( !pvHPDSMaster ) 
+    { 
+      log << MSG::ERROR << "Failed to access HPDSMaster" << endreq; 
+      return  StatusCode::FAILURE; 
+    }
     const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
-    if ( !pvWindow ) { log << MSG::ERROR << "Failed to access HPDWindow" << endreq; return  StatusCode::FAILURE; }
+    if ( !pvWindow ) 
+    { 
+      log << MSG::ERROR << "Failed to access HPDWindow" << endreq; 
+      return  StatusCode::FAILURE; 
+    }
     const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
-    if ( !pvSilicon ) { log << MSG::ERROR << "Failed to access HPDSilicon" << endreq; return  StatusCode::FAILURE; }
+    if ( !pvSilicon ) 
+    { 
+      log << MSG::ERROR << "Failed to access HPDSilicon" << endreq; 
+      return  StatusCode::FAILURE; 
+    }
     m_pvHPDMaster.push_back( pvHPDMaster );
     m_pvHPDSMaster.push_back( pvHPDSMaster );
     m_pvSilicon.push_back( pvSilicon );
     m_pvWindow.push_back( pvWindow );
     m_HPDCentres.push_back( pvHPDMaster->toMother(zero) );
-    m_trans1.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() * pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
+    m_trans1.push_back( geometry()->matrixInv() * pvHPDMaster->matrixInv() * 
+                        pvHPDSMaster->matrixInv() * pvWindow->matrixInv() );
     m_trans2.push_back( pvSilicon->matrix() * pvHPDSMaster->matrix() * pvHPDMaster->matrix() );
   }
  
@@ -340,7 +391,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   ISolid::Ticks HPDWindowTicks;
 
-  unsigned int noTicks;
+  unsigned int noTicks(0);
 
   bool HPDFound(false);
 
@@ -358,8 +409,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     if ( !pvHPDMaster ) {
       MsgStream log(msgSvc(), myName() );
       log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
-          << " from HPDRow:" << id.pdRow() << " and HPDColumn:" << id.pdCol()
-          << " please notify Antonis" << endreq
+          << " from HPDRow:" << id.pdRow() << " and HPDColumn:" << id.pdCol() << endreq
           << " x:" << panelIntersection.x()
           << " y:" << panelIntersection.y() <<  endreq;
       return StatusCode::FAILURE;
@@ -405,10 +455,10 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 //=========================================================================
 //  return a list with all the valid readout channels (smartIDs)
 //=========================================================================
-StatusCode DeRichHPDPanel::readoutChannelList ( std::vector<RichSmartID>& readoutChannels,
-                                                const Rich::DetectorType rich,
-                                                const Rich::Side panel ) const
+StatusCode 
+DeRichHPDPanel::readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const
 {
+
   // Square of active radius
   const double activeRadiusSq = gsl_pow_2(m_activeRadius*m_deMagFactor[0]);
 
@@ -432,7 +482,7 @@ StatusCode DeRichHPDPanel::readoutChannelList ( std::vector<RichSmartID>& readou
         if ( radcornSq <= activeRadiusSq ) 
         {
           // Add a smart ID for this pixel to the vector
-          readoutChannels.push_back ( RichSmartID(rich,panel,pdRow,pdCol,pixRow,pixCol) );
+          readoutChannels.push_back ( RichSmartID(rich(),side(),pdRow,pdCol,pixRow,pixCol) );
         }
 
       } // loop over pixel columns

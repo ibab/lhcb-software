@@ -1,24 +1,16 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRichRadiator.h
  *
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.12 2004-10-20 16:16:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.10  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.9  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: DeRichRadiator.h,v 1.13 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
@@ -148,6 +140,11 @@ public:
                                            std::vector<HepPoint3D>& points ) const = 0;
 
 
+  /** Returns the name of this particular radiator medium
+   *  @return radiator name
+   */
+  inline const std::string & myName() const { return m_name; }
+
 protected:
 
   Rich::RadiatorType m_radiatorID;  ///< The radiator id (Aerogel, CF4, C4F10)
@@ -158,6 +155,11 @@ protected:
 
   /// pointer to the Rayleigh scattering properties
   const TabulatedProperty* m_rayleigh;
+
+private:
+
+  std::string m_name; ///< The name of this radiator
+
 };
 
 #endif    // RICHDET_DERICHRADIATOR_H

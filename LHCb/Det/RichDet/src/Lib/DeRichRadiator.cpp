@@ -1,13 +1,15 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRichRadiator.cpp
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.8 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.9 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #define DERICHRADIATOR_CPP
 
@@ -28,32 +30,32 @@
 
 //----------------------------------------------------------------------------
 
-StatusCode DeRichRadiator::initialize() {
+StatusCode DeRichRadiator::initialize() 
+{
 
-  MsgStream msg(msgSvc(), "DeRichRadiator" );
-  msg << MSG::DEBUG <<"Starting initialisation for DeRichRadiator"<< endreq;
+  // store the name of the radiator
+  const std::string::size_type pos = name().find("Rich");
+  m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichRadiator_NO_NAME" );
 
-  std::string tempName = name();
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Starting initialisation" << endreq;
 
-  const std::string::size_type pos = tempName.find("Rich2");
-  if( std::string::npos != pos ) {
+  if ( std::string::npos != name().find("Rich2") ) {
     m_radiatorID = Rich::CF4;
     m_rich = Rich::Rich2;
   }
   else {
-    const std::string::size_type pos = tempName.find("Aerogel");
-    if( std::string::npos != pos ) {
+    if ( std::string::npos != name().find("Aerogel") ) {
       m_radiatorID = Rich::Aerogel;
       m_rich = Rich::Rich1;
     }
     else {
-      const std::string::size_type pos = tempName.find("C4F10");
-      if( std::string::npos != pos ) {
+      if ( std::string::npos != name().find("C4F10") ) {
         m_radiatorID = Rich::C4F10;
         m_rich = Rich::Rich1;
       }
       else {
-        msg << MSG::ERROR << "Cannot find radiator type" << endreq;
+        msg << MSG::ERROR << "Cannot find radiator type for " << name() << endreq;
         return StatusCode::FAILURE;
       }
     }
@@ -62,7 +64,7 @@ StatusCode DeRichRadiator::initialize() {
   m_refIndex = 0;
   m_rayleigh = 0;
 
-  msg << MSG::DEBUG <<"Finished initialisation for DeRichRadiator"<< endreq;
+  msg << MSG::INFO << "Initializing Radiator : " << m_rich << " " << m_radiatorID << endreq;
 
   return StatusCode::SUCCESS;
 }

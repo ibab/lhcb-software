@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.7 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.8 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -40,15 +40,13 @@ const CLID& DeRichMultiSolidRadiator::classID() {
   return CLID_DeRichMultiSolidRadiator;
 }
 
-StatusCode DeRichMultiSolidRadiator::initialize() {
-
-  MsgStream log(msgSvc(), "DeRichMultiSolidRadiator" );
+StatusCode DeRichMultiSolidRadiator::initialize()
+{
+  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
+ 
+  MsgStream log( msgSvc(), myName() );
   log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator "
       << name() << endreq;
-
-  StatusCode fail = StatusCode::FAILURE ;
-
-  if ( DeRichRadiator::initialize().isFailure() ) return fail;
 
   // multi solid specific initialisation
   const ILVolume* lv = geometry()->lvolume();
@@ -79,20 +77,18 @@ StatusCode DeRichMultiSolidRadiator::initialize() {
     }
   }
 
-  if (0 == m_refIndices.size() ) {
+  if ( m_refIndices.empty() ) 
+  {
     log << MSG::ERROR << "Radiator " << name() << " without refractive index"
         << endmsg;
-    return fail;
+    return StatusCode::FAILURE;
   }
   // for the time being use the refIndex of the first volume for the whole 
   // radiator
   m_refIndex = m_refIndices[0];
 
-  if ( m_rayleighVector.size() != 0 )
-    m_rayleigh = m_rayleighVector[0];
+  if ( m_rayleighVector.size() != 0 ) m_rayleigh = m_rayleighVector[0];
   
-  log << MSG::DEBUG <<"Finished initialisation of " << name() << endreq;
-
   return StatusCode::SUCCESS;
 }
 

@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.23 2005-02-22 14:33:51 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.24 2005-02-22 18:11:37 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.23  2005/02/22 14:33:51  jonrob
+ *  update
+ *
  *  Revision 1.22  2004/10/27 14:18:04  jonrob
  *  more minor additions
  *
@@ -116,8 +119,6 @@ StatusCode DeRich1CdfHPDPanel::initialize()
       << " panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
-
-  log << MSG::INFO << "Initialized Successfully" << endreq;
 
   return StatusCode::SUCCESS;
 }

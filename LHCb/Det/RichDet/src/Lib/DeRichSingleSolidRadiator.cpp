@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.8 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.9 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -40,16 +40,14 @@ const CLID& DeRichSingleSolidRadiator::classID() {
   return CLID_DeRichSingleSolidRadiator;
 }
 
-StatusCode DeRichSingleSolidRadiator::initialize() {
+StatusCode DeRichSingleSolidRadiator::initialize()
+{
+  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
 
-  MsgStream log(msgSvc(), "DeRichSingleSolidRadiator" );
+  MsgStream log( msgSvc(), myName() );
   log << MSG::DEBUG << "Starting initialisation for DeRichSingleSolidRadiator "
       << name() << endreq;
 
-  StatusCode sc = StatusCode::SUCCESS;
-
-  if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
-  
   m_solid = geometry()->lvolume()->solid();
 
   const Material::Tables& myTabProp = geometry()->lvolume()->material()->tabulatedProperties();
@@ -72,18 +70,17 @@ StatusCode DeRichSingleSolidRadiator::initialize() {
   }
 
   HepPoint3D zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG << "Found  TabProp " << m_refIndex->name() << " type " 
+  log << MSG::DEBUG << "Found  TabProp " << m_refIndex->name() << " type "
       << m_refIndex->type() << endmsg;
-  if ( m_rayleigh ) 
-    log << MSG::DEBUG << "Found  TabProp " << m_rayleigh->name() << " type " 
+  if ( m_rayleigh )
+    log << MSG::DEBUG << "Found  TabProp " << m_rayleigh->name() << " type "
         << m_rayleigh->type() << endmsg;
   log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
-  log << MSG::DEBUG <<"Finished initialisation for "  << name() << endreq;
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
-StatusCode 
+StatusCode
 DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                   const HepVector3D& vGlobal,
                                                   HepPoint3D&  returnPoint ) const
@@ -107,9 +104,9 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
-StatusCode 
+StatusCode
 DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                                const HepVector3D& direction,
                                                HepPoint3D& entryPoint,
@@ -124,7 +121,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if (0 == noTicks)  return StatusCode::FAILURE;
-  
+
   entryPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
   exitPoint  = geometry()->toGlobal( pLocal + ticks[noTicks-1] * vLocal );
   return StatusCode::SUCCESS;
@@ -133,12 +130,12 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
 
 
 //=========================================================================
-//  
+//
 //=========================================================================
-unsigned int 
+unsigned int
 DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                                const HepVector3D& vGlobal,
-                                               std::vector<HepPoint3D>& 
+                                               std::vector<HepPoint3D>&
                                                points) const
 {
 

@@ -1,13 +1,15 @@
 
+//----------------------------------------------------------------------------
 /** @file DeRichHPDPanel.h
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.23 2005-02-22 12:35:17 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.24 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//----------------------------------------------------------------------------
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -196,9 +198,13 @@ public:
    *
    * @return Status code
    */
-  StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels, 
-                                 const Rich::DetectorType,
-                                 const Rich::Side panel ) const;
+  StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const;
+
+  /// Access the RICH detector type
+  inline Rich::DetectorType rich() const { return m_rich; }
+
+  /// Access the HPD panel side
+  inline Rich::Side side() const { return m_side; }
 
 protected:
 
@@ -327,13 +333,15 @@ protected:
 
 private:
 
+  Rich::DetectorType m_rich;
+  Rich::Side m_side;
+
   std::vector<const IPVolume*> m_pvHPDMaster;
   std::vector<const IPVolume*> m_pvHPDSMaster;
   std::vector<const IPVolume*> m_pvSilicon;
   std::vector<const IPVolume*> m_pvWindow;
   std::vector<HepTransform3D> m_trans1;
   std::vector<HepTransform3D> m_trans2;
-
 
 };
 

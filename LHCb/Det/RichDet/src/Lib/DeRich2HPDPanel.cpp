@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.20 2005-02-22 13:53:50 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.21 2005-02-22 18:11:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,8 +88,6 @@ StatusCode DeRich2HPDPanel::initialize()
       << " m_panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
-
-  log << MSG::INFO << "Initialized Successfully" << endreq;
 
   return StatusCode::SUCCESS;
 }

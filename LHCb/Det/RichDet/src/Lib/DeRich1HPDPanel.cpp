@@ -84,8 +84,6 @@ StatusCode DeRich1HPDPanel::initialize()
       << " m_detPlaneHorizEdge:" << m_detPlaneHorizEdge
       << endreq;
 
-  log << MSG::INFO << "Initialized Successfully" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
