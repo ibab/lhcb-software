@@ -13,10 +13,10 @@ use Brunel              v16r1    Rec
 # Brunel utilities
 use BrunelKernel        v5r1p1   Rec
 use BrunelSicb          v4r0     Rec
-use BrunelAlgs          v1r4p1   Rec
+use BrunelAlgs          v1r6p1   Rec
 
 # L0 trigger
-use L0Calo              v6r1p1    L0
+use L0Calo              v6r2p1    L0
 use L0Muon              v6r2p1    L0
 use PuVeto              v4r1p1    L0
 use L0DU                v6r1p1    L0
@@ -25,37 +25,35 @@ use L0DU                v6r1p1    L0
 use L1VeloTrack         v3r2p1    L1
 
 # Calorimeter
-use CaloInterfaces      v2r2p1  Calo
-use CaloUtils           v4r2p1  Calo
-use CaloTools           v4r4    Calo
-use CaloAlgs            v7r2p1  Calo
-use CaloMonitor         v1r1p1  Calo
-use CaloRec             v2r5p1  Calo
-use CaloTrackTools      v1r4p1  Calo
+use CaloInterfaces      v2r3p1  Calo
+use CaloUtils           v4r3p1  Calo
+use CaloMonitor         v1r2p1  Calo
+use CaloReco            v1r0p1  Calo
+use CaloDigit           v1r0p1  Calo
 
 # Velo
 use VeloAlgorithms      v2r4p1  Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r3p1 IT
-use ITCheckers          v1r0p1  IT
+use ITAlgorithms        v12r4p1 IT
+use ITCheckers          v1r1p1  IT
 
 # Outer Tracker
 use OTAlgorithms        v12r1p1 OT
 
 # Tracking
-use VeloTrack           v4r2p1  Velo
-use TrCheck             v1r1	Tr
-use LongTrack           v1r2    Tr
-use TrFitter            v3r4    Tr
+use VeloTrack           v4r3p1  Velo
+use TrCheck             v1r2	Tr
+use LongTrack           v1r3p1  Tr
+use TrFitter            v3r5    Tr
 use TrExtrapolator      v2r3p1  Tr
-use TrTools             v2r1    Tr
+use TrTools             v2r2    Tr
 use Seeding             v2r2p1  Tr 
 use TrMatching          v2r3p1  Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR           v2r2    Tr
-use UpstreamPR          v2r3p1  Tr
-use VeloTT              v1r1    Tr
+use UpstreamPR          v2r4p1  Tr
+use VeloTT              v1r2    Tr
 
 # Muon
 use MuonAlgs            v3r0p1  Muon
@@ -63,7 +61,13 @@ use MuonRec             v2r3    Muon
 use MuonID              v3r4    Muon
 
 # Rich
-use RichMonitor         v1r2p1  Rich
+use RichMonitor         v2r0p1  Rich
+use RichRecAlgs		v1r0p1	Rich
+use RichRecTools	v1r0p1	Rich
+use RichRecKernel	v1r0	Rich
+use RichUtils		v2r0p1	Rich
+use RichDetTools	v1r0p1	Rich
+use RichRecEvent        v1r0p1  Rich
 
 # SICBDST packages
 use recevt              v3r4p1   SICB
