@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v9r1p2 2003-10-24 ===========================
+! 2003-10-24 - Gloria CORTI
+ - use B2DD                v1r5
+       PhysSelSys          v5r12
+       DaVinci             v9r1p2
+       DecayPresel         v2r1p2
+   (added to DaVinciSys v9r1 packages)
+
 !====================  DaVinciSys v9r1p1 2003-10-14 ===========================
 ! 2003-10-14 - Gloria CORTI
  - use Bd2D0Kstar          v2r1
