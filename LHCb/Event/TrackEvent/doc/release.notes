@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-04-31 - Eduardo Rodrigues
+ - added methods to update the state/measurement in a Node
+
+! 2005-04-31 - Eduardo Rodrigues
  - attributes in Track and State made protected (for inheritance)
 
 ! 2005-04-30 - Eduardo Rodrigues

@@ -71,6 +71,14 @@
         name    = 'projectionMatrix'
         desc    = 'the projection matrix' />
 
+      <destructor
+        desc    = 'specific destructor'>
+        <code>
+  delete m_measurement;
+  delete m_state;
+        </code>
+      </destructor>
+
       <method
         type    = 'double'
         name    = 'chi2'
@@ -127,6 +135,24 @@
         virtual = 'TRUE'>
         <code>
   Node* me = new Node(); *me = *this; return me;
+        </code>
+      </method>
+
+      <method
+        name    = 'setMeasurement'
+        argList = 'Measurement meas'
+        desc    = 'Update the measurement'>
+        <code>
+  m_measurement = meas.clone();
+        </code>
+      </method>
+
+      <method
+        name    = 'setState'
+        argList = 'State state'
+        desc    = 'Update the state'>
+        <code>
+  m_state = state.clone();
         </code>
       </method>
 
