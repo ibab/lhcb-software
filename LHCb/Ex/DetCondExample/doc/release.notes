@@ -1,6 +1,19 @@
-#$Id: release.notes,v 1.19 2002-07-17 15:23:38 andreav Exp $
+#$Id: release.notes,v 1.20 2002-07-25 15:51:29 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020725 - Andrea Valassi
+Upgrade to CondDBOracle v4r15 and Gaudi v10r4
+- Dependency on Det/DetCond changed from v3r0 to v4r0
+- No major changes to the code, just test that everything is OK
+  > produce new reference log files
+  > added a new "DAQ" example using the CondDB to measure writing speed
+- Updated documentation
+  > no changes to CLHEP necessary anymore (RH7 libraries now available)
+  > MsgStream modification is now released in GaudiKernel v12r3
+  > lxplus7 has been setup (replaces tbed0087/88/89)
+Requirements v4r0, private tag h20020725
 
 ==============================================================================
 !20020717 - Andrea Valassi

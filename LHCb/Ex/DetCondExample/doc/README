@@ -1,24 +1,27 @@
-# $Id: README,v 1.22 2002-07-12 15:13:18 andreav Exp $
+# $Id: README,v 1.23 2002-07-25 15:51:29 andreav Exp $
 
-Two examples are distributed in this package: a test of condition data 
-stored in flat XML files, and a test of condition data stored in the CondDB.
+Three examples are distributed in this package: a test of condition data 
+stored in flat XML files, a test of condition data stored in the CondDB,
+and a test of the speed for writing condition data in the CondDB.
 
 The XML example does not require DetCond and works in the same way
 under Windows and under Linux (RedHat6.1 or RedHat7.2).
 
-The CondDB example requires package DetCond. 
+The CondDB examples require package DetCond. 
 Under Linux RedHat6.1, DetCond uses CONDDB (based on Objectivity).
 Under Windows and Linux RedHat7.2, DetCond uses CondDBOracle (based on Oracle).
 The Oracle implementation is based on Oracle 9i using the OCCI library.
 
-Three main job options exist in the options directory:
+Four main job options exist in the options directory:
  1) testXml.opts    -> test of condition data stored in XML files (NO Ora/Objy)
 2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (Ora/Objy)
 2b) testCondDB.opts -> test of condition data stored in the CondDB (Ora/Objy)
+ 3) daqCondDB.opts  -> test speed to write data in the CondDB (Ora/Objy)
 
-By default, the MsgSvc level is set to 3 (VERBOSE) in all 3 job options files.
+By default, the MsgSvc level is set to 3 (VERBOSE) for the first 3 examples.
 To see less verbose comments, set it to 2 (DEBUG) or 1 (INFO).
 Standard outputs for the VERBOSE mode are included in the release.
+By default, the MsgSvc level is set to 1 in the last job options file.
 
 The detector elements used in the tests are the following:
 > Ecal is used to test all kinds of conditions in XML files
@@ -26,7 +29,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v3r0
+Packages needed to run DetCondExample v4r0
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -49,39 +52,18 @@ Check the result with
 To run the detector condition example, you need the following packages,
 as well as the standard Gaudi packages from the release area of Gaudi v10.
         cd ~/newmycmt
-        getpack Det/DetCond        v3r0     head
-        getpack Ex/DetCondExample  v3r0     head
-	getpack Det/DetDesc        v10r0    head
+        getpack Det/DetCond        v4r0     head
+        getpack Ex/DetCondExample  v4r0     head
+	getpack Det/DetDesc        v10r3
 Under Linux (RedHat6.1)
         getpack CONDDB             v3r02p2
 Under Windows:
-        getpack Det/CondDBOracle   v3r10p1  head
+        getpack Det/CondDBOracle   v4r15    head
 Under Linux (RedHat7.2)
-        getpack Det/CondDBOracle   v3r10p1  head
+        getpack Det/CondDBOracle   v4r15    head
 
 Under Linux (RedHat7.2) many more packages need to be getpack'ed and MODIFIED.
 Refer to the doc/README.RedHat72 for more details.
-
-------------------------------------------------------------------------------
-Additional modifications to GaudiKernel
-------------------------------------------------------------------------------
-
-Minor additional modifications to GaudiKernel were used to produce the
-logfiles for the examples, to correct a bug for Windows and print out 
-correctly int64 integers in hexadecimal format on Windows.
-
-If the following lines are not already included in GaudiKernel/MsgStream.h
-for the version of GaudiKernel that you are using, getpack GaudiKernel, add 
-these lines to MsgStream.h and recompile GaudiKernel and the CondDB packages.
-
-#ifdef WIN32
-  /// Accept ios base class modifiers
-  /// On Windows this is needed to accept std::hex and std::dec
-  MsgStream& operator<<(std::ios_base& (*_f)(std::ios_base&))    {
-    if ( isActive() ) _f(m_stream);
-    return *this;
-  }
-#endif
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus
@@ -98,7 +80,7 @@ How to setup the environment and link DetCondExample on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v3r0/cmt
+cd Ex/DetCondExample/v4r0/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
@@ -120,7 +102,7 @@ How to run DetCondExample on lxplus (without debugger)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v3r0/options
+cd Ex/DetCondExample/v4r0/options
 
 ============
 (1) testXml
@@ -175,6 +157,19 @@ tkdiff log.fillCondDB_2.Objy.Linux61 ../job &
 ../$CMTDEB/DetCondExample.exe testCondDB.opts > log.testCondDB.Objy.Linux61
 tkdiff log.testCondDB.Objy.Linux61 ../job &
 
+================
+(3) daqCondDB
+================
+
+# Run the application
+# You can run this as many times as you like and observe how speed changes
+../$CMTDEB/DetCondExample.exe daqCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+/bin/rm -f log.daqCondDB.Objy.Linux61
+../$CMTDEB/DetCondExample.exe daqCondDB.opts >log.daqCondDB.Objy.Linux61
+tkdiff log.daqCondDB.Objy.Linux61 ../job &
+
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus with the debugger
 ------------------------------------------------------------------------------
@@ -183,7 +178,7 @@ How to run DetCondExample on lxplus with the debugger
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v3r0/options
+cd Ex/DetCondExample/v4r0/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -234,7 +229,7 @@ How to cleanup the environment on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v3r0/cmt
+cd Ex/DetCondExample/v4r0/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -261,7 +256,7 @@ How to setup the environment and link DetCondExample under Windows
 cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v3r0\cmt
+cd Ex\DetCondExample\v4r0\cmt
 
 # Setup the environment
 setup
@@ -277,7 +272,7 @@ How to run DetCondExample under Windows
 cd H:\newmycmt
 
 # Go to the working directory
-cd Ex\DetCondExample\v3r0\options
+cd Ex\DetCondExample\v4r0\options
 
 ============
 (1) testXml
@@ -338,6 +333,17 @@ run DetCondExample testCondDB.opts
 # Run the application and create an output comparable to the standard one
 run DetCondExample testCondDB.opts > log.testCondDB.Orac.Windows
 
+================
+(3) daqCondDB
+================
+
+# Run the application using the "run" script 
+# You can run this as many times as you like and observe how speed changes
+run DetCondExample daqCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+run DetCondExample daqCondDB.opts > log.daqCondDB.Orac.Windows
+
 ------------------------------------------------------------------------------
 How to browse the Oracle database using SQL commands on Windows
 ------------------------------------------------------------------------------
@@ -346,7 +352,7 @@ How to browse the Oracle database using SQL commands on Windows
 cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v3r0\cmt
+cd Ex\DetCondExample\v4r0\cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above
