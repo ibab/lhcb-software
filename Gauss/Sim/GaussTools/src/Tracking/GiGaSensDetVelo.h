@@ -47,7 +47,7 @@ private:
   ///
 private:
   ///
-  VeloHitsCollection* veloCol[2];
+  VeloHitsCollection* veloCol;
 };
 
 // ============================================================================

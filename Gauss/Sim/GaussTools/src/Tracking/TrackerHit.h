@@ -19,7 +19,7 @@ class TrackerHit : public G4VHit
 public:
 
   TrackerHit();
-  ~TrackerHit();
+  virtual ~TrackerHit();
   TrackerHit(const TrackerHit &right);
   const TrackerHit& operator=(const TrackerHit &right);
   int operator==(const TrackerHit &right) const;

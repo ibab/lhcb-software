@@ -1,9 +1,10 @@
-// $Id: VeloHit.h,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: VeloHit.h,v 1.2 2002-10-09 16:03:09 witoldp Exp $
 #ifndef TRACKING_VELOHIT_H 
 #define TRACKING_VELOHIT_H 1
 
 // Include files
 #include "TrackerHit.h"
+
 
 /** @class VeloHit VeloHit.h Tracking/VeloHit.h
  *  
@@ -17,6 +18,9 @@ public:
   VeloHit();
   
   ~VeloHit( ); ///< Destructor
+
+  void *operator new(size_t);
+  void operator delete(void *aHit);
 
   /// Retrieve Sensor Number
   G4long Sensor() const; 
@@ -45,5 +49,6 @@ inline void VeloHit::SetSensor(G4long value)
 
 typedef G4THitsCollection<VeloHit> VeloHitsCollection;
 
+extern G4Allocator<VeloHit> VeloHitAllocator;
 
 #endif // TRACKING_VELOHIT_H

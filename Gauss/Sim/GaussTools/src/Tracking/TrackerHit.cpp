@@ -19,7 +19,7 @@ TrackerHit::TrackerHit()
 {;}
 
 TrackerHit::~TrackerHit()
-{;}
+{cout << " I am in ~TrackerHit" << endl;}
 
 TrackerHit::TrackerHit(const TrackerHit &right):G4VHit(right)
 {

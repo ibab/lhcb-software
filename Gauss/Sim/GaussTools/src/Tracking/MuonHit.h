@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: MuonHit.h,v 1.2 2002-10-09 16:03:09 witoldp Exp $
 #ifndef TRACKING_MuonHit_H 
 #define TRACKING_MuonHit_H 1
 
@@ -17,6 +17,9 @@ public:
   MuonHit();
   
   ~MuonHit( ); ///< Destructor
+
+  void *operator new(size_t);
+  void operator delete(void *aHit);
 
   /// Retrieve Chamber Number
   G4int ChamberID() const; 

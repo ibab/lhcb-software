@@ -1,8 +1,24 @@
-// $Id: MuonHit.cpp,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: MuonHit.cpp,v 1.2 2002-10-09 16:03:09 witoldp Exp $
 // Include files
 
 // local
 #include "MuonHit.h"
+
+G4Allocator<MuonHit> MuonHitAllocator;
+
+
+void* MuonHit::operator new(size_t)
+{
+  void *aHit;
+  aHit = (void *) MuonHitAllocator.MallocSingle();
+  return aHit;
+}
+
+void MuonHit::operator delete(void *aHit)
+{
+  MuonHitAllocator.FreeSingle((MuonHit*) aHit);
+}
+
 
 
 //-----------------------------------------------------------------------------

@@ -60,15 +60,16 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
 {
   if( 0 == step ) { return false ; } 
   
-  double edep = step->GetTotalEnergyDeposit();
-  double timeof = step->GetTrack()-> GetGlobalTime();
-  HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
-  HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
-  int trid = step->GetTrack()->GetTrackID();
   G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
 
   if(charge!=0.0)
     {
+      double edep = step->GetTotalEnergyDeposit();
+      double timeof = step->GetTrack()-> GetGlobalTime();
+      HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
+      HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+      int trid = step->GetTrack()->GetTrackID();
+
       // temp  
       G4TouchableHistory* TT =  
       (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());

@@ -29,9 +29,7 @@ GiGaSensDetVelo::GiGaSensDetVelo
   , G4VSensitiveDetector( name  )
 {  
   G4String HCname;
-
   collectionName.insert(HCname="Hits");
-  collectionName.insert(HCname="PuHits");
 };
 
 // ============================================================================
@@ -42,21 +40,16 @@ GiGaSensDetVelo::~GiGaSensDetVelo(){};
 
 void GiGaSensDetVelo::Initialize(G4HCofThisEvent*HCE)
 {
-  static int HCID;
-
-  for(int i=0;i<2;i++)
-    {
-      // i=0 Hits
-      // i=1 PuHits
-
-      veloCol[i] = new VeloHitsCollection
-        (SensitiveDetectorName,collectionName[i]);
-
-      HCID=G4SDManager::GetSDMpointer()
-        ->GetCollectionID(SensitiveDetectorName + "/" + collectionName[i]);
+  //static 
+  int HCID;
   
-      HCE->AddHitsCollection(HCID,veloCol[i]);
-    }
+  veloCol= new VeloHitsCollection
+    (SensitiveDetectorName,collectionName[0]);
+  
+  HCID=G4SDManager::GetSDMpointer()
+    ->GetCollectionID(SensitiveDetectorName + "/" + collectionName[0]);      
+  
+  HCE->AddHitsCollection(HCID,veloCol);
 }
 
 
@@ -65,15 +58,16 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
 {
   if( 0 == step ) { return false ; } 
   
-  double edep = step->GetTotalEnergyDeposit();
-  double timeof = step->GetTrack()-> GetGlobalTime();
-  HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
-  HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
-  int trid = step->GetTrack()->GetTrackID();
   G4double charge = step->GetTrack()->GetDefinition()->GetPDGCharge();
 
   if(charge!=0.0)
     {
+      double timeof = step->GetTrack()-> GetGlobalTime();
+      double edep = step->GetTotalEnergyDeposit();
+      HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
+      HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+      int trid = step->GetTrack()->GetTrackID();
+
       // temp  
       G4TouchableHistory* TT =  
       (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
@@ -160,7 +154,7 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
       ///
 
       //  newHit->Print();
-      veloCol[puornot]->insert( newHit );
+      veloCol->insert( newHit );
     }
      return false;
      

@@ -1,10 +1,24 @@
-// $Id: VeloHit.cpp,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: VeloHit.cpp,v 1.2 2002-10-09 16:03:09 witoldp Exp $
 // Include files
 
 // local
 #include "VeloHit.h"
 
-//G4Allocator<VeloHit> VeloHitAllocator;
+G4Allocator<VeloHit> VeloHitAllocator;
+
+
+void* VeloHit::operator new(size_t)
+{
+  void *aHit;
+  aHit = (void *) VeloHitAllocator.MallocSingle();
+  return aHit;
+}
+
+void VeloHit::operator delete(void *aHit)
+{
+  VeloHitAllocator.FreeSingle((VeloHit*) aHit);
+}
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloHit
