@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.5 2002-05-07 07:17:04 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.6 2002-08-02 10:43:53 atsareg Exp $
 
 #ifndef L0MUON_L0MPROCUNIT_H     
 #define L0MUON_L0MPROCUNIT_H     1 
@@ -44,10 +44,14 @@ public:
     void clear();
     /// Get the number of active towers 
     int towers() { return m_towers.size(); }
+    /// Apply cleaning of the adjacent seeds (clusters)
+    void cleanAdjacentSeeds();
     /// get candidates
     std::vector<L0MuonCandidate*> candidates() {return m_candidates; }
     /// print Processing Unit parameters
     void printParameters( MsgStream& log);
+    /// Set flag for cleaning of the adjacent seeds
+    void setSeedCleaningFlag(bool flag) {m_seedClustering=flag;}
     // class L0mTower is our friend to get algorithm parameters
     friend class L0mTower;
     
@@ -72,6 +76,8 @@ private:
     int m_bins;
     // PU status
     int m_status;
+    // flag to apply seed clustering
+    bool m_seedClustering;
        
 };
 

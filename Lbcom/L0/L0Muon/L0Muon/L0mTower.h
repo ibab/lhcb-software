@@ -1,4 +1,4 @@
-// $Id: L0mTower.h,v 1.6 2002-05-07 07:17:04 atsareg Exp $
+// $Id: L0mTower.h,v 1.7 2002-08-02 10:43:54 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -71,6 +71,8 @@ public:
     int getExtra1() { return m_extra1; }
     /// Do the "limited" Y smearing of pads falling out of the PU
     void limitedY();
+    /// set the flag to ignore or not M1
+    void setFlagIgnoreM1(bool flag){ m_ignoreM1 = flag ;}
     
     typedef std::pair<int,int> HitIndex;
     typedef std::map< HitIndex, MuonTileID > StationMap;	
@@ -95,6 +97,9 @@ private:
     bool m_found;
     // LimitedY was applied
     bool m_limited;
+    // Ignore M1 flag
+    bool m_ignoreM1;
+    
     
     // Calculated track parameters
     double m_pt;
@@ -114,7 +119,7 @@ private:
     HitIndex searchStation(bool& found, int st, int foiX, 
                            int cindex = 0, int yindex = 0 );
      /// Pt calculation of the found candidate
-    double ptcalc();   
+    double ptcalc();  
 };
 
 #endif
