@@ -38,9 +38,8 @@
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenParticle.h"
-/// GeneratorObjects
-#include "GeneratorObjects/McEventCollection.h"
-
+/// GenEvent
+#include "GenEvent/HepMCEvent.h"
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
@@ -85,7 +84,7 @@ GiGaHepMCCnv::~GiGaHepMCCnv(){};
 // ============================================================================
 const CLID&         GiGaHepMCCnv::classID     () 
 {
-  return McEventCollection::classID();
+  return HepMCEventVector::classID(); 
 }
 
 // ============================================================================
@@ -143,10 +142,10 @@ StatusCode GiGaHepMCCnv::createRep
   ///
   if( 0 ==  object   ) { return Error(" DataObject* points to NULL"  ); }
 
-  McEventCollection* hepColl=dynamic_cast<McEventCollection*>( object );
-  if( 0 ==  hepColl ) { return Error(" DataObject*(of type '"       +
+  HepMCEventVector* hepVect=dynamic_cast<HepMCEventVector*>( object );
+  if( 0 ==  hepVect ) { return Error(" DataObject*(of type '"       +
                                         GiGaUtil::ObjTypeName( object) +
-                                    "*') is not 'McEventCollection*'!") ; }
+                                    "*') is not 'HepMCEventVector*'!") ; }
   /// create IOpaqueAddress
   if( 0 == addressCreator() ) 
     { return Error("CreateRep::AddressCreator is not available"); } 
@@ -186,17 +185,17 @@ StatusCode GiGaHepMCCnv::updateRep
   if( 0 ==  object   ) { return Error(" DataObject*     points to NULL" ) ; } 
   ///
 
-  McEventCollection* hepColl = dynamic_cast<McEventCollection*>( object ) ;
-  if( 0 ==  hepColl ) { return Error("DataObject*(of type '"           + 
+  HepMCEventVector* hepVect = dynamic_cast<HepMCEventVector*>( object ) ;
+  if( 0 ==  hepVect ) { return Error("DataObject*(of type '"           + 
                                       GiGaUtil::ObjTypeName( object )   + 
-                                      "*') is not 'McEventCollection*'!") ; }  
+                                      "*') is not 'HepMCEventVector*'!") ; }  
 
   //create a particle converter
 
   GenPart2GenPart Cnv( ppSvc() );
 
   /// loop over all events in McEventCollection
-  McEventCollection::iterator it;
+  HepMCEventVector::iterator it;
 
 
   int nVertex=0;
@@ -204,7 +203,7 @@ StatusCode GiGaHepMCCnv::updateRep
   int nPart=0;
 
 
-  for(it=hepColl->begin(); it!=hepColl->end(); it++) {
+  for(it=hepVect->begin(); it!=hepVect->end(); it++) {
     
 
   // create a primary vertex at (0,0,0,0)
@@ -281,7 +280,7 @@ StatusCode GiGaHepMCCnv::updateRep
        log << MSG::INFO << 
          " Number of vertices examined "<< nVertex << endreq;
        log << MSG::INFO <<
-         " Number of vertices converted (- origin) "<< nOutvtx << endreq;
+         " Number of vertices converted "<< nOutvtx + 1 << endreq;
        log << MSG::INFO << 
          " Number of particles converted "<< nPart << endreq;
   }
