@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2004-06-15 15:54:56 phicharp Exp $
+# $Id: requirements,v 1.22 2004-06-15 16:51:07 phicharp Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -22,10 +22,10 @@ include_dirs     $(DAVINCIASSOCIATORSROOT)
 #============================================================================
 use AIDA            v* 
 use PhysEvent       v*     Event
-use TrAssociators   v4r*   Tr 
-use CaloAssociators v4r*   Calo  
+use TrAssociators   v*     Tr 
+use CaloAssociators v*     Calo  
 use LinkerEvent     v*     Event
-use MCTools         v1r*   Phys
+use MCTools         v*     Phys
 
 # Linker library building rule
 library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
