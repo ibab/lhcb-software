@@ -124,7 +124,10 @@ StatusCode VeloDataProcessor::finalize() {
 
 int VeloDataProcessor::digitise(float electrons) {
   // convert electrons to ADC counts
-  return int(electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale));
+  int digi = int(electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale));
+  if (digi>(VeloDigiParams::ADCFullScale-1)) digi=int(VeloDigiParams::ADCFullScale-1);
+
+  return digi;
 }
 
 
