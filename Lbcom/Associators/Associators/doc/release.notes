@@ -1,6 +1,10 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! 2004-07-29 - Vanya BELYAEV
+ - add factories for relation tables and associators from 
+   Event/CaloEvent and Calo/CaloAssociators packages 
+
 ! 2004-06-11 - Marco Cattaneo
  - Remove factories for obsolete L1Event relations 
 
