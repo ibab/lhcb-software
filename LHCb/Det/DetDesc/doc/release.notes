@@ -3,6 +3,11 @@ package manager : N.N
 
 !===========================================================================
 ! 20010622 - Sebastien Ponce
+ - Added checks in the userParameter(Vector) processing. If a parameter (or
+ one of its properties) is asked that does not exist, an exception is issued
+
+!===========================================================================
+! 20010622 - Sebastien Ponce
  - This implements userParameters and userParameterVectors functions in
    DetectorElement. These can be used to get the list of user parameters
    defined for a given element.

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.3 2001-06-22 10:15:09 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.4 2001-06-22 13:10:33 sponce Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -271,6 +271,10 @@ void DetectorElement::addUserParameterVector (std::string name,
 /// userParameterType
 //////////////////////////////////////////////////////
 inline std::string DetectorElement::userParameterType (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameters[name].type;
 }
   
@@ -278,6 +282,10 @@ inline std::string DetectorElement::userParameterType (std::string name) {
 /// userParameterComment
 //////////////////////////////////////////////////////
 inline std::string DetectorElement::userParameterComment (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameters[name].comment;
 }
   
@@ -285,6 +293,10 @@ inline std::string DetectorElement::userParameterComment (std::string name) {
 /// userParameterValue
 //////////////////////////////////////////////////////
 inline std::string DetectorElement::userParameterValue (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameters[name].value;
 }
   
@@ -292,6 +304,10 @@ inline std::string DetectorElement::userParameterValue (std::string name) {
 /// userParameter
 //////////////////////////////////////////////////////
 inline double DetectorElement::userParameter (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameters[name].d_value;
 }
   
@@ -299,6 +315,10 @@ inline double DetectorElement::userParameter (std::string name) {
 /// userParameterVectorType
 //////////////////////////////////////////////////////
 inline std::string DetectorElement::userParameterVectorType (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameterVectors[name].type;
 }
   
@@ -307,6 +327,10 @@ inline std::string DetectorElement::userParameterVectorType (std::string name) {
 //////////////////////////////////////////////////////
 inline std::string
 DetectorElement::userParameterVectorComment (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameterVectors[name].comment;
 }
   
@@ -315,6 +339,10 @@ DetectorElement::userParameterVectorComment (std::string name) {
 //////////////////////////////////////////////////////
 inline std::vector<std::string>
 DetectorElement::userParameterVectorValue (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameterVectors[name].value;
 }
   
@@ -323,6 +351,10 @@ DetectorElement::userParameterVectorValue (std::string name) {
 //////////////////////////////////////////////////////
 inline std::vector<double>
 DetectorElement::userParameterVector (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
   return m_userParameterVectors[name].d_value;
 }
 
