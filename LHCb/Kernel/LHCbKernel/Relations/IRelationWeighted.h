@@ -1,11 +1,8 @@
-// $Id: IRelationWeighted.h,v 1.3 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.4 2002-05-10 12:29:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -64,22 +61,30 @@ public:
   /** retrive all relations from the object
    *
    *  - relations are returned in the form of iterator pair:
-   *     \n IRelation<FROM,TO,WEIGHT>* irel   = ... ;
-   *     \n From                       object = ... ;
-   *     \n Range r = irel->relations( object );
+   *  @code 
+   *      IRelation<FROM,TO,WEIGHT>* irel   = ... ;
+   *      From                       object = ... ;
+   *      Range r = irel->relations( object );
+   *  @endcode
    *
-   *  - the number of related object is:
-   *     \n    const unsigned nRel = r.begin() - r.end() ;
-   *     \n // const unsigned nRel = r.second  - r.first ; // the same
+   *  - the number of related objects is:
+   *  @code 
+   *     const unsigned nRel    = r.size() ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
    *
-   *  - the related elements could be retrieved using the iterations:
-   *     \n for( iterator it = r.begin() ; r.end() != it ; ++it ){
-   *     \n /// extract and use the relation
-   *     \n To     to     = it->to()      ; // get the object
-   *     \n // To  to     = *it           ; // the same
-   *     \n Weight weight = it->weight () ; // get the weight
-   *     \n From   from   = it->from   () ; // again get the "from" object
-   *     \n };
+   *  - the related elements could be retrieved using the explicit loop 
+   *  @code
+   *     for( iterator it = r.begin() ; r.end() != it ; ++it )
+   *        {
+   *          // extract and use the relation
+   *          To     to     = it->to()     ; // get the object
+   *          // To  to     = *it          ; // the same
+   *          Weight weight = it->weight() ; // "weight" of the relation
+   *          From   from   = it->from()   ; // again "from" object!
+   *        };
+   *  @endcode 
    *
    *  @param  object  the object
    *  @return pair of iterators for output relations
@@ -89,6 +94,19 @@ public:
 
   /** retrive ALL relations from ALL objects
    *
+   *  - relations are returned in the form of @p Range object 
+   *  @code 
+   *     IRelation<FROM,TO>* irel   = ...    ;
+   *     Range r = irel->relations()         ;
+   *  @endcode 
+   * 
+   *  - the total number of relations is:
+   *  @code 
+   *     const unsigned nRel    = r.size()             ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
+   *
    *  @param  object  the object
    *  @return pair of iterators for output relations
    */
@@ -96,6 +114,35 @@ public:
 
   /** retrive all relations from the object which has weigth
    *  larger/smaller than the threshold value
+   *
+   *  - relations are returned in the form of @p Range object 
+   *  @code 
+   *     IRelation<FROM,TO>* irel      = ... ;
+   *     From                object    = ... ;
+   *     Weight              threshold = ... ;
+   *     Range r = irel->relations( object , threshold , true );
+   *  @endcode 
+   * 
+   *  - the total number of relations is:
+   *  @code 
+   *     const unsigned nRel    = r.size()             ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
+   *
+   *  - the related elements could be retrieved using the explicit loop 
+   *  @code 
+   *     for( iterator it = r.begin() ; r.end() != it ; ++it )
+   *        {
+   *          // extract and use the relation
+   *          To     to     = it->to()     ; // get the object
+   *          // To  to     = *it          ; // the same
+   *          Weight weight = it->weight() ; // "weight" of the relation
+   *          From   from   = it->from()   ; // again "from" object!
+   *        };
+   *  @endcode 
+   *  Here the obtained @p weight will always be larger that @p threshold 
+   *
    *  @param  object    the object
    *  @param  threshold threshold value for the weight
    *  @param  flag      flag for larger/smaller
@@ -107,6 +154,16 @@ public:
     const bool       flag      ) const = 0 ;
 
   /** make the relation between 2 objects
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel    = ... ;
+   *    From                       object1 = ... ;
+   *    To                         object2 = ... ;
+   *    Weight                     weight  = ... ; 
+   *    irel->relate( object1 , object2 , weight );
+   *  @endcode
+   *
    *  @param  object1 the first object
    *  @param  object2 the second object
    *  @param  weight  the weigth for this relation
@@ -116,8 +173,21 @@ public:
   ( const From&      object1 ,
     const To&        object2 ,
     const Weight&    weight  ) = 0 ;
-
+  
   /** remove the concrete relation between objects
+   *
+   *   - if there are no relations between the given object
+   *     the error code will be returned
+   *
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel    = ... ;
+   *    From                       object1 = ... ;
+   *    To                         object2 = ... ;
+   *    irel->remove( object1 , object2 );
+   *  @endcode
+   *
    *  @param  object1 the first object
    *  @param  object2 the second object
    *  @return status  code
@@ -127,13 +197,35 @@ public:
     const To&        object2 ) = 0 ;
 
   /** remove all relations FROM the defined object
+   *
+   *   - if there are no relations from the given onject
+   *     the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel   = ... ;
+   *    From                       object = ... ;
+   *    irel->removeFrom( object );
+   *  @endcode
+   *
    *  @param  object the object
    *  @return status code
    */
   virtual StatusCode removeFrom
   ( const From&      object )  = 0 ;
-
+  
   /** remove all relations TO the defined object
+   *
+   *   - if there are no relations to the given object
+   *     the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel   = ... ;
+   *    To                         object = ... ;
+   *    irel->removeTo( object );
+   *  @endcode
+   *
    *  @param  object the object
    *  @return status code
    */
@@ -142,6 +234,16 @@ public:
 
   /** filter out the relations FROM the defined object, which
    *  have a weight larger(smaller)than the threshold weight
+   *  (driven by boolean third argument) 
+   * 
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel      = ... ;
+   *    From                       object    = ... ;
+   *    Weight                     threshold = ... ;
+   *    irel->filterFrom( object , threshold , true  );
+   *  @endcode
+   *
    *  @param  object    the object
    *  @param  threshold threshold value for the weight
    *  @param  flag      flag for larger/smaller
@@ -154,6 +256,16 @@ public:
 
   /** filter out the relations TO the defined object, which
    *  have a weight larger/smaller than the threshold weight
+   *  (driven by boolean third argument) 
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel      = ... ;
+   *    To                         object    = ... ;
+   *    Weight                     threshold = ... ;
+   *    irel->filterTo( object , threshold , true  );
+   *  @endcode
+   *
    *  @param  object    the object
    *  @param  threshold threshold value for the weight
    *  @param  flag      flag for larger/smaller
@@ -163,9 +275,18 @@ public:
   ( const To&        object    ,
     const Weight&    threshold ,
     const bool       flag      )  = 0 ;
-
+  
   /** filter out all relations which
    *  have a weight larger/smaller than the threshold weight
+   *  (driven by boolean second argument) 
+   *
+   *  Example:
+   *  @code
+   *    IRelation<FROM,TO,WEIGHT>* irel      = ... ;
+   *    Weight                     threshold = ... ;
+   *    irel->filter( threshold , true  );
+   *  @endcode
+   *
    *  @param  threshold threshold value for the weight
    *  @param  flag      flag for larger/smaller
    *  @return status code
@@ -173,7 +294,7 @@ public:
   virtual StatusCode filter
   ( const Weight&    threshold ,
     const bool       flag      )  = 0 ;
-
+  
   /** filter out all "to-many" relations and convert them
    *  into "to-one" relations, keeping only the
    *  relations with the largest/smallest weight
@@ -183,17 +304,17 @@ public:
    */
   // virtual StatusCode filter
   // ( const bool       flag      )  = 0 ;
-
-  /** reomve ALL relations from ALL objects to ALL objects 
-   *  have a weight larger/smaller than the threshold weight
+  
+  /** remove ALL relations from ALL objects to ALL objects 
    *  @param  threshold threshold value for the weight
    *  @param  flag      flag for larger/smaller
    *  @return status code
    */
   virtual StatusCode clear ()  = 0 ;
   
-  /** static interface identification
-   *  @attention the unique interface identifier is
+  /** interface identification (static)
+   *
+   *  The unique interface identifier is
    *  constructed "on-fly" using hash-technique from
    *  the generic interface name and unique identifiers
    *  of related objects and teh identifier of the type of the weight

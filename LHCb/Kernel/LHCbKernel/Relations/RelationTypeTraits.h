@@ -1,17 +1,8 @@
-// $Id: RelationTypeTraits.h,v 1.7 2002-04-28 09:35:43 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.8 2002-05-10 12:29:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/04/25 08:44:04  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.5  2002/04/25 08:02:03  ibelyaev
-//  bug fix on Win2K
-//
-// Revision 1.4  2002/04/24 21:16:40  ibelyaev
-//  fix one more problem for Win2K
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -59,9 +50,9 @@ namespace Relations
      *  @brief An auxillary class to implement the relations
      *
      *  For efficiency reason 
-     *  the inheritance from std::pair is public, 
+     *  the inheritance from @p std::pair is public, 
      *  to allow comparision functors to have a direct 
-     *  access to std::pair - fields
+     *  access to @ std::pair - fields
      *  
      *  @see std::pair 
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -132,55 +123,59 @@ namespace Relations
                                const Entry& entry2 ) const
       { return EqualT() ( entry1.second , entry2.second ) ; };
     };
-
-    /** definition of the internal storage */
+    
+    /** definition of the internal storage
+     *  alternatively one could use @p std::deque
+     */
     typedef std::vector<Entry>      Entries;
-    // typedef std::deque<Entry>      Entries;
     
     /** definition of the standard iterator types
-     *  @attention the true 'iterator' type is indeed 'const_iterator'!
+     *  @attention the true  @p iterator type is indeed  @p const_iterator !
      */
     typedef Entries::const_iterator iterator ;
     
     /** @struct Range
      *
-     *  An auxilalry structure to provide a little bit
+     *  An auxillary structure to provide a little bit
      *  better access to the components of standard
-     *  std::pair class
+     *  @p std::pair class
      *
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   27/01/2002
      */
-    struct Range
-      : public std::pair<iterator,iterator>
+    struct Range : public std::pair<iterator,iterator>
     {
       /// short cut for own base class
       typedef std::pair<iterator,iterator> Base;
-      /// constructor
-      Range( iterator begin , iterator end ) : Base( begin , end ) {};
+      /// default constructor
+      Range()                                : Base()              {} ;
+      /// constructor      
+      Range( iterator begin , iterator end ) : Base( begin , end ) {} ;
       /// begin-iterator (non-const version)
-      iterator& begin ()       { return Base::first                 ; }
+      iterator& begin ()       { return Base::first                   ; }
       /// begin-iterator (    const version)
-      iterator  begin () const { return Base::first                 ; }
+      iterator  begin () const { return Base::first                   ; }
       /// end-iterator   (non-const version)
-      iterator& end   ()       { return Base::second                ; }
+      iterator& end   ()       { return Base::second                  ; }
       /// end-iterator   (    const version)
-      iterator  end   () const { return Base::second                ; }
+      iterator  end   () const { return Base::second                  ; }
       /// number of relations 
-      size_t    size  () const { return Base::second -  Base::first ; }
+      size_t    size  () const { return Base::second -  Base::first   ; }
       /// empty?
-      bool      empty () const { return Base::second == Base::first ; }
+      bool      empty () const { return Base::second == Base::first   ; }
     };
     
-    /** technical definitions, useful for  for implementation */
+    /** technical definitions, useful for  for implementation 
+     *  ordinary users should not use them 
+     */
     typedef Entries::iterator       IT  ;
     typedef Entries::const_iterator CIT ;
     typedef std::pair<IT,IT>        IP  ;
     typedef std::pair<CIT,CIT>      CIP ;
-    
-  }; //< end of struct
 
-};
+  }; //< end of struct
+  
+}; // end of the namespace
 
 // ============================================================================
 // The End

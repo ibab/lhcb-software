@@ -1,8 +1,11 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.7 2002-04-28 09:35:44 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.8 2002-05-10 12:29:43 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/28 09:35:44  ibelyaev
+//  update a little bit the RelationTypeTraits
+//
 // Revision 1.6  2002/04/25 08:44:04  ibelyaev
 //  bug fix for Win2K
 //
@@ -185,6 +188,8 @@ namespace Relations
     {
       /// short cut for own base class
       typedef std::pair<iterator,iterator> Base;
+      /// default constructor
+      Range()                                : Base()              {} ;
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {};
       /// the aliases for standard "first" and "second"

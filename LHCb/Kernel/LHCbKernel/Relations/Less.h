@@ -1,4 +1,4 @@
-// $Id: Less.h,v 1.3 2002-05-08 12:51:20 ibelyaev Exp $
+// $Id: Less.h,v 1.4 2002-05-10 12:29:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -9,8 +9,18 @@
 // Include files
 // STD & STL 
 #include <functional>
-#ifndef WIN32
 
+/** @file 
+ *  
+ *  Partial specialization of @p std::less structure for 
+ *  @p SmartRef classes for no-MicroSoft compilers and 
+ *  defininion of templated "operator<" for MicroSoft compiler 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   08/05/2002
+ */
+
+#ifndef WIN32 
 /** @struct less Less.h Relations/Less.h
  *  
  *  Partial specialiations of std::less.
@@ -24,22 +34,31 @@ struct std::less<SmartRef<TYPE> >
   : public std::binary_function<const SmartRef<TYPE>,const SmartRef<TYPE>,bool>
 {
   /** the only one essential method 
-   *  comparison of smart references through their pointers
+   *  comparison of smart references through 
+   *  dereference to underlying raw pointers
    *  @param obj1 the first smart reference 
    *  @param obj1 the first smart reference 
    *  @return result of comparioson of raw pointers 
    */
   bool operator() ( const SmartRef<TYPE>& obj1 , 
                     const SmartRef<TYPE>& obj2 ) const
-  {
-    return ( const TYPE*) obj1 < (const TYPE*) obj2 ;    
-  };
+  { return ( const TYPE*) obj1 < (const TYPE*) obj2 ; };
 };
-
-/// the same for "const version"
+/// remove "const" qualifier
 template<class TYPE> 
-struct std::less<const SmartRef<TYPE> >
-  : public std::less<SmartRef<TYPE> > {};
+struct std::less<const SmartRef<TYPE> > : public std::less<SmartRef<TYPE> > {};
+
+#else
+
+/** For MicroSoft compiler we could not use the partial 
+ *  specialization of templated std::less, but we could
+ *  use the templated operator!
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   08/05/2002
+ */
+template <class TYPE> bool operator<( const SmartRef<TYPE>& obj1 , 
+                                      const SmartRef<TYPE>& obj2 ) 
+{ return std::less<const TYPE*>()( obj1 , obj2 ) ; };
 
 #endif 
 

@@ -1,11 +1,8 @@
-// $Id: IRelation.h,v 1.3 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: IRelation.h,v 1.4 2002-05-10 12:29:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_IRELATION_H
 #define RELATIONS_IRELATION_H 1
@@ -17,9 +14,6 @@
 /// local
 #include "Relations/RelationTypeTraits.h"
 #include "Relations/RelationUtils.h"
-/// forward declarations
-template <class OBJECT>
-class SmartRef            ; // from GaudiKernel
 
 /** @class IRelation IRelation.h Relations/IRelation.h
  *
@@ -57,49 +51,54 @@ public:
   typedef IRelation<TO,FROM>                     InverseType    ;
 
 public:
-
+  
   /** retrive all relations from the given object object
    *
-   *  - relations are returned in the form of iterator pair:
-   *     \n IRelation<FROM,TO>* irel   = ... ;
-   *     \n From                object = ... ;
-   *     \n Range r = irel->relations( object );
+   *  - relations are returned in the form of @p Range object 
+   *  @code 
+   *     IRelation<FROM,TO>* irel   = ...    ;
+   *     From                object = ...    ;
+   *     Range r = irel->relations( object ) ;
+   *  @endcode 
+   * 
+   *  - the number of related objects is:
+   *  @code 
+   *     const unsigned nRel    = r.size() ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
    *
-   *  - the number of related object is:
-   *     \n    const unsigned nRel = r.end()  - r.begin() ;
-   *     \n // const unsigned nRel = r.second - r.first  ; // the same!
-   *
-   *  - the related elements could be retrieved using the iterations:
-   *     \n for( iterator it = r.begin() ; r.end() != it ; ++it ){
-   *     \n /// extract and use the relation
-   *     \n To    to    = it->to()   ; // get the object
-   *     \n // To to    = *it        ; // the same
-   *     \n From  from  = it->from() ; // again "from" object!
-   *     \n };
+   *  - the related elements could be retrieved using the explicit loop 
+   *  @code 
+   *     for( iterator it = r.begin() ; r.end() != it ; ++it )
+   *        {
+   *          // extract and use the relation
+   *          To    to    = it->to()   ; // get the object
+   *          // To to    = *it        ; // the same
+   *          From  from  = it->from() ; // again "from" object!
+   *        };
+   *  @endcode 
    *
    *  @param  object  the object
    *  @return pair of iterators for output relations
    */
   virtual Range      relations
   ( const From&      object    ) const = 0 ;
-
+  
   /** retrive ALL relations from ALL objects  
    *
-   *  - relations are returned in the form of iterator pair:
-   *     \n IRelation<FROM,TO>* irel   = ... ;
-   *     \n Range r = irel->relations();
-   *
-   *  - the number of related object is:
-   *     \n    const unsigned nRel = r.end()  - r.begin() ;
-   *     \n // const unsigned nRel = r.second - r.first  ; // the same!
-   *
-   *  - the related elements could be retrieved using the iterations:
-   *     \n for( iterator it = r.begin() ; r.end() != it ; ++it ){
-   *     \n /// extract and use the relation
-   *     \n To    to    = it->to()   ; // get the object
-   *     \n // To to    = *it        ; // the same
-   *     \n From  from  = it->from() ; // again "from" object!
-   *     \n };
+   *  - relations are returned in the form of @p Range object 
+   *  @code 
+   *     IRelation<FROM,TO>* irel   = ...    ;
+   *     Range r = irel->relations()         ;
+   *  @endcode 
+   * 
+   *  - the total number of relations is:
+   *  @code 
+   *     const unsigned nRel    = r.size()             ;
+   *     // const unsigned nRel = r.end()  - r.begin() ; // the same!
+   *     // const unsigned nRel = r.second - r.first   ; // the same!
+   *  @endcode 
    *
    *  @param  object  the object
    *  @return pair of iterators for output relations
@@ -110,6 +109,13 @@ public:
    *
    *  - if the relation between given 2 object is already exist
    *    the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    From object1 = ... ;
+   *    To   object2 = ... ;
+   *    irel->relate( object1 , object2 );
+   *  @endcode
    *
    *  @param  object1 the first object
    *  @param  object2 the second object
@@ -124,6 +130,13 @@ public:
    *   - if there are no relations between the given object
    *     the error code will be returned
    *
+   *  Example:
+   *  @code
+   *    From object1 = ... ;
+   *    To   object2 = ... ;
+   *    irel->remove( object1 , object2 );
+   *  @endcode
+   *
    *  @param  object1 the first object
    *  @param  object2 the second object
    *  @return status  code
@@ -137,6 +150,13 @@ public:
    *   - if there are no relations from the given onject
    *     the error code will be returned
    *
+   *  Example:
+   *  @code
+   *    From object1 = ... ;
+   *    irel->removeFrom( object1 );
+   *  @endcode
+   *
+   *
    *  @param  object the object
    *  @return status code
    */
@@ -148,25 +168,31 @@ public:
    *   - if there are no relations to the given object
    *     the error code will be returned
    *
-   *  @attention the method potentially could be relatively slow
+   *  Example:
+   *  @code
+   *    To object1 = ... ;
+   *    irel->removeTo( object1 );
+   *  @endcode
+   *
    *  @param  object the object
    *  @return status code
    */
   virtual StatusCode   removeTo
   ( const To&          object )  = 0 ;
-
+  
   /** remove ALL relations from ALL to ALL objects
    *
-   *  @attention the method potentially could be relatively slow
    *  @param  object the object
    *  @return status code
    */
   virtual StatusCode   clear ()  = 0 ;
   
   /** interface identification (static)
-   *  @attention the unique interface identifier is constructed "on-fly"
+   *
+   *  The unique interface identifier is constructed "on-fly"
    *  using hash-technique from the generic interface name and 
    *  unique identifiers of related objects 
+   *
    *  @see IInterface
    *  @return the uniqie interface identifier
    */
@@ -181,19 +207,12 @@ public:
     return s_iid ;
   };
 
-
 protected:
   
-  /// virtual destructor
+  /// destructor (virtual and protected)
   virtual ~IRelation() {};
-
+  
 };
-
-
-#ifndef WIN32
-template<class T>
-class IRelation<T,T> : public virtual IInterface {};
-#endif
 
 // ============================================================================
 // The End

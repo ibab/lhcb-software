@@ -2,6 +2,65 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+!=============================================================================
+! 10/05/2002 - Vanya Belyaev  
+
+  - new files in Relations subdirectory:
+    Relations/TypeSelect.h           compile-time selection of objects
+    Relations/TypeContainedObject.h  compile-time detection of public 
+                                     inheritance from class ContainedObject   
+    Relations/TypeDataObject.h       compile-time detection of public 
+                                     inheritance from class DataObject
+    Relations/TypeStorable.h         compiler-time detection of public  
+                                     inheritance either from class DataObject 
+                                     or from class Contained Object   
+    Relations/TypePersistent.h       Compile-time evaluation of "persistent" 
+                                     representation of the class: 
+                                     "SmartPtr<TYPE>" if it has sense,
+                                     "TYPE" otherwise
+    Relations/TypeId.h               Unique object type identification:
+                                     "TYPE::classID()" if it has sence and 
+                                     artificially hashed value otherwise  
+    Relations/TypeSerializers.h       
+    Relations/TypeIdAux.h 
+    Relations/TypeSelectAux.h
+    Relations/ObjectTypeTraitsStripped.h
+    Relations/TypeApplyAux.h
+  The first 6 files could be of more or less general interest, 
+  all other are "private" for Relations sub-package.
+
+  - modified files 
+    Relations/IRelation.h            improve the "quality" of comments 
+                                     to produce better DoxyGen documentation
+    Relations/IRelationWeighted.h    improve the "quality" of comments 
+                                     to produce better DoxyGen documentation
+    Relation/ObjectTypeTraits.h      drastical redesign:
+                                     remove all #ifdef/#endif
+                                     remove all FULL template specialization
+    Relations/Less.h                 add the template specialization of 
+                                     std::less structure for SmartRef objects 
+                                     (to suppress warnings) (on Linux) and 
+                                     templated comparison operator for SmartRef
+                                     objects to Win32 platform               
+    Relations/RelationTypeTraits.h   add default(empty) constructor to Range
+    Relations/RelationWeightedTypeTraits.h - add default(empty) constructor to 
+                                     Range
+    TypeConversion.h                 update for usage of Boost 
+    TypeApply.h                      set the environment for SmartRefs 
+    TypeSerializer.h                 specialization to please Win32
+  - remove file 
+    Relations/TypeApply_WIN32.h
+  - new files 
+    doc/DoxyFile.cfg                Doxygen configuration file
+    doc/Doxyheader.html,Doxyfooter.html   header and footer for doxygen 
+ -  new directory 
+    src/Test
+ -  new files in test directory 
+    src/Test/LHCbKernelTest.cpp     simple primitive test file to test 
+                                    some basic features of Relations 
+                                    sub-package 
+!=============================================================================
+
 
 ! 20020507 Vanya Belyaev
  - Relations/Less.h
