@@ -171,7 +171,7 @@ m_OTCluster.reserve( 20 );
       desc           = "Hlt Primary Vertex " 
       id             = "7502" 
       name           = "HltVertex" 
-      location       = "Rec/Hlt/PrimVertices"
+      location       = "Phys/Hlt/Vertices"
       keyedContTypeDef = "TRUE" >
 
       <base name="Vertex"/>

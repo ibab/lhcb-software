@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2003-10-03 - Olivier Callot
+ - Fix the default location for HltVertices, to be comaptible with tracks and
+   make the use by th eDesktop easier.
+
 !======================== HltEvent v4r0 2003-09-25 ========================
 ! 2003-09-08 - Olivier Callot
  - New object HltVertex to store the PV found with HLT tracks. They have a list
