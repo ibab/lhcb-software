@@ -1,0 +1,18 @@
+!-----------------------------------------------------------------------------
+! Package     : Det/Magnet
+! Responsible : Edgar De Oliveira
+! Purpose     : Provides magnetic field map
+!-----------------------------------------------------------------------------
+
+! >>>>>>>>>>>>>>>>>>>>>  Magnet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-21 - Edgar De Oliveira
+ - New version of MagneticFieldSvc (originally in SicbCnv).
+   This version does not make use anymore of SICB utilities.
+   The fortran interpolation of the grid has been replaced by a C++ 
+   translation of the code.
+   This version has as property the name of the field map file
+   (property "FieldMapFile"). The default name of the field map will be
+   $LHCBDASE/cdf/field043.cdf (if LHCBDBASE is defined) or field043.cdf
+   in the local directory.
+   The file is read in the initialize method of the service.
