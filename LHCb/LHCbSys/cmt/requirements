@@ -16,8 +16,8 @@ use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r6	Kernel
-use LHCbKernel  	v4r6	Kernel
+use KernelSys   	v3r7	Kernel
+use LHCbKernel  	v4r7	Kernel
 use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr

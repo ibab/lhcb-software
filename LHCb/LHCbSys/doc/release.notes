@@ -9,9 +9,13 @@
 ! 2004-06-11 - Marco Cattaneo
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
 
- - Modified packages: EventSys v18r0, EventAssoc v1r2, DetSys v5r7, STDet v1r2,
+ - Modified packages: KernelSys v3r7, LHCbKernel v4r7, 
+                      EventSys v18r0, EventAssoc v1r2, DetSys v5r7, STDet v1r2,
                       AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, MCTools v1r6
+
+ - In LHCbKernel v4r7:
+   . Use GaudiSequencer as base class of ProcessPhase
 
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports
