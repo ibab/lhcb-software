@@ -37,7 +37,7 @@ use AsctToLinker        v1r3    Rec
 
 # Calorimeter
 use CaloMoniDst         v1r0	Calo
-use CaloReco            v2r6	Calo
+use CaloReco            v2r7	Calo
 use CaloPIDs		v2r4	Calo
 
 # Inner Tracker
