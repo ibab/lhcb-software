@@ -1,8 +1,11 @@
-// $Id: IAssociatorWeighted.h,v 1.3 2002-04-26 13:21:42 phicharp Exp $
+// $Id: IAssociatorWeighted.h,v 1.4 2002-04-29 09:09:56 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/26 13:21:42  phicharp
+// Add typedefs and methods to IAssociator(s)
+//
 // Revision 1.2  2002/04/25 08:44:03  ibelyaev
 //  bug fix for Win2K
 //
@@ -125,6 +128,33 @@ public:
   {
     return inverse()->relations( to );
   }
+
+  /** Safer method to retrieve a range associated to a given FROM element
+   */
+  StatusCode retrieveRangeFrom( const FROM* from, ToRange& range)
+  {
+    FromTable* table = direct();
+    if( 0 == table ) {
+      range = DirectType::Range() ;
+      return StatusCode::FAILURE;
+    }
+    range = table->relation( from );
+    return StatusCode::SUCCESS;
+  }
+
+  /** Safer method to retrieve a range associated to a given TO element
+   */
+  StatusCode retrieveRangeTo( const TO* to, FromRange& range)
+  {
+    ToTable* table = inverse();
+    if( 0 == table ) {
+      range = InverseType::Range() ;
+      return StatusCode::FAILURE;
+    }
+    range = table->relation( to );
+    return StatusCode::SUCCESS;
+  }
+  
 
 protected:
 
