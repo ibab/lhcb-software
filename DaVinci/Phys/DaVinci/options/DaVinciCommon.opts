@@ -11,7 +11,8 @@ ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.DLLs   += { "Magnet" };
-ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet", "CaloDet" };
+ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet" };
+ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 
 // Persistency setup
 EventDataSvc.ForceLeaves = true;
@@ -30,9 +31,9 @@ ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 // Physics packages
 ApplicationMgr.DLLs += { "GlobalReco" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
-//ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
 ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
+//ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
 //ApplicationMgr.DLLs += { "DaVinciUser" };
 
 // No Histogram persistency chosen at this point
