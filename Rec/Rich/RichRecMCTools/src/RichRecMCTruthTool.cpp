@@ -1,28 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRecMCTruthTool.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.12 2004-11-20 12:32:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2004/11/03 12:53:53  jonrob
- *  Update method to locate MCRichDigit so it works when
- *  RichRecPixels are created directly from the RawBuffer
- *
- *  Revision 1.10  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
- *
- *  Revision 1.9  2004/08/20 14:48:52  jonrob
- *  Add more protection against bad data pointers
- *
- *  Revision 1.8  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichRecMCTruthTool.cpp,v 1.13 2005-03-02 14:47:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecMCTruthTool.h"
