@@ -23,7 +23,7 @@ use GiGaCnv     	v12r0   Sim
 use GiGaVisUI		v2r0	Sim
 
 use VisSvc              v2r1    Vis
-use SimSvc              v1r1    Sim
+use SimSvc              v2r0    Sim
 
 # Gauss stuff...
 use GaussTools		v7r1	Sim
