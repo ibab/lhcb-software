@@ -1,7 +1,7 @@
 # Created by Rutger Hierck 07-07-2002
 #
 package Associators
-version v2r0
+version v2r1
 
 branches Associators src cmt doc
 
