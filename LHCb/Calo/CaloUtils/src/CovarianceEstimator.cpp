@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.4 2002-04-02 10:59:31 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.5 2002-04-07 18:05:41 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/02 10:59:31  ibelyaev
+//  update for new event model
+//
 // Revision 1.3  2001/11/22 16:02:34  ibelyaev
 //  new utilities
 //
@@ -125,8 +128,8 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
           ( entry.status() & CaloDigitStatus::UseForCovariance ) ) 
         {
           use[i] = true ; ///< use this cell!
-          entry.setStatus    ( CaloDigitStatus::UseForEnergy   );
-          entry.setStatus    ( CaloDigitStatus::UseForPosition );
+          entry.addStatus    ( CaloDigitStatus::UseForEnergy   );
+          entry.addStatus    ( CaloDigitStatus::UseForPosition );
         }
       else 
         {    

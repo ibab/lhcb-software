@@ -1,8 +1,11 @@
-// $Id: ClusterFunctors.h,v 1.4 2002-04-02 14:49:29 ibelyaev Exp $ 
+// $Id: ClusterFunctors.h,v 1.5 2002-04-07 18:05:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/02 14:49:29  ibelyaev
+//  bug fix in ClusterFunctors.h
+//
 // Revision 1.3  2002/04/02 10:59:30  ibelyaev
 //  update for new event model
 //
@@ -640,9 +643,9 @@ namespace ClusterFunctors
     CaloCluster::Entries& entries = cluster->entries() ;
     // find seed digit
     CaloCluster::Entries::iterator seedEntry = 
-      ClusterFunctors::locateDigit( entries.begin ()          , 
-                                    entries.end   ()          , 
-                                    CaloDigitStatus::SeedCell );
+      locateDigit( entries.begin ()          , 
+                   entries.end   ()          , 
+                   CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
     const CaloDigit* seed = seedEntry->digit() ;
@@ -711,14 +714,14 @@ namespace ClusterFunctors
     CaloCluster::Entries& entries = cluster->entries() ;
     // find seed digit
     CaloCluster::Entries::iterator seedEntry = 
-      ClusterFunctors::locateDigit( entries.begin ()          , 
-                                    entries.end   ()          , 
-                                    CaloDigitStatus::SeedCell );
+      locateDigit( entries.begin ()          , 
+                   entries.end   ()          , 
+                   CaloDigitStatus::SeedCell );
     // check the seed
     if( entries.end() == seedEntry ) { return StatusCode( 226 ) ; }
     const CaloDigit* seed = seedEntry->digit() ;
     if( 0             == seed      ) { return StatusCode( 227 ) ; }
-    // loop over all entried 
+    // loop over all entries 
     for( CaloCluster::Entries::iterator entry = entries.begin() ; 
          entries.end() != entry ; ++entry )
       {

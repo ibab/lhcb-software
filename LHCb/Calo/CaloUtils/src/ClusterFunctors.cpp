@@ -1,6 +1,9 @@
-// $Id: ClusterFunctors.cpp,v 1.3 2002-04-02 10:59:31 ibelyaev Exp $ 
+// $Id: ClusterFunctors.cpp,v 1.4 2002-04-07 18:05:41 ibelyaev Exp $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/02 10:59:31  ibelyaev
+//  update for new event model
+//
 // Revision 1.2  2001/12/02 14:59:49  ibelyaev
 //  add new functor for z-position of cluster
 //
@@ -33,20 +36,22 @@
 /** @file ClusterFunctors.cpp
  * 
  *  Implementation of non-inline method from ClusterFunctors namespace
+ *  @see ClusterFunctors 
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 04/07/2001 
  */
 // ============================================================================
 
-/// ===========================================================================
+// ============================================================================
 /**  Calculate the "energy" of the cluster as a sum of 
  *   energies of its digits, weighted with energy fractions
  *   @param   cl  pointer to cluster 
  *   @return      "energy" of cluster
  */
-/// ===========================================================================
-double  ClusterFunctors::energy( const CaloCluster* cl )
+// ============================================================================
+double  ClusterFunctors::energy
+( const CaloCluster* cl )
 {
   if( 0 == cl ||  cl->entries().empty() ) { return 0 ; }
   return 
@@ -64,8 +69,9 @@ double  ClusterFunctors::energy( const CaloCluster* cl )
  *     @return "true" if clusters have at least 1 common cell 
  */
 // ===========================================================================
-bool ClusterFunctors::overlapped( const CaloCluster* cl1 ,
-                                  const CaloCluster* cl2 )
+bool ClusterFunctors::overlapped
+( const CaloCluster* cl1 ,
+  const CaloCluster* cl2 )
 { 
   if( 0 == cl1              || 0 == cl2              || 
       cl1->entries().empty() || cl2->entries().empty() ){ return false ; }
@@ -94,11 +100,12 @@ bool ClusterFunctors::overlapped( const CaloCluster* cl1 ,
  *   @return    status code
  */
 // ===========================================================================
-StatusCode  ClusterFunctors::calculateEXY( const CaloCluster*   cl ,
-                                           const DeCalorimeter* de , 
-                                           double& e               ,
-                                           double& x               ,
-                                           double& y               )
+StatusCode  ClusterFunctors::calculateEXY
+( const CaloCluster*   cl ,
+  const DeCalorimeter* de , 
+  double& e               ,
+  double& x               ,
+  double& y               )
 {
   e = 0 ;
   x = 0 ;
@@ -116,13 +123,15 @@ StatusCode  ClusterFunctors::calculateEXY( const CaloCluster*   cl ,
  *  @return status code (fictive)
  */
 // ===========================================================================
-StatusCode ClusterFunctors::throwException ( const std::string& message )
+StatusCode ClusterFunctors::throwException 
+( const std::string& message )
 {
   // throw the exception
   if( true ) { throw CaloException(" ClusterFunctors::" + message ); }
   ///
   return StatusCode::FAILURE ;
 };
+
 
 // ===========================================================================
 // The End 

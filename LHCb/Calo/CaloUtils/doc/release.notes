@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.10 2002-04-05 09:32:18 ibelyaev Exp $
+! $Id: release.notes,v 1.11 2002-04-07 18:05:41 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!=============================================================================
+! 07/04/2002 - Vanya Belyaev 
+! - histoHbookName.h, dirHbookName.h  bug fix 
+!=============================================================================
 
 !=============================================================================
 ! 05/04/2002 - Vanya Belyaev 
