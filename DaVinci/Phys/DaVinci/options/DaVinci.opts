@@ -9,9 +9,9 @@
 // DaVinciXXX.opts. Choose the appropriate one.
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 // For data produced with Brunel v13r1 or v14r2
-#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
+//  #include "$DAVINCIROOT/options/DaVinciv248r4.opts"
 // For data produced with Brunel v16r4
-//  #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
+#include "$DAVINCIROOT/options/DaVinciv253r0.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -74,7 +74,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKs.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2JpsiKs.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Ks2pipi.opts"
-//  // Data sets for this channel (Brunel v14r2p1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/411300.opts"
+//  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/411300_4.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
@@ -86,7 +88,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
 //  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
-//  // Data sets for this channel (Brunel v14r2p1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/611300.opts"
+//  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/611300_4.opts"
 
 // Bs ->Ds(KKpi) K
@@ -96,7 +100,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_K.opts"
-//  // Data sets for this channel (Brunel v14r2p1)
+//  // Data sets for this channel (Brunel v16r2 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/613450.opts"
+//  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/613400_4.opts"
 
 // Bs ->Ds(KKpi) pi
@@ -106,7 +112,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpiForBs2Dspi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_pi.opts"
-//  // Data sets for this channel (Brunel v14r2p1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/613350.opts"
+//  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/613300_4.opts"
 
 // Bd -> mu mu Kstar(Kpi)
@@ -118,7 +126,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectMuMu.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKstar2KPiForB02MuMuKstar.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectB02MuMuKstar.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/411800.opts"
 
 // Bs -> mu mu
@@ -126,7 +134,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //    "SelectBs2mumu"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2mumu.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4)
 //  #include "$LHCBHOME/project/web/cards/612200.opts"
 
 // Bd -> D0(Kpi) Kstar(Kpi)
@@ -136,7 +144,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  };                            
 //  #include "$PHYSSELECTIONSOPTS/SelectD0andKstar2Kpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_D02Kpi.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/414500.opts"
 
 // Bd -> J/Psi(mumu) K*(Kpi)
@@ -148,7 +156,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKstar.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKstar2Kpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4)
 //  #include "$LHCBHOME/project/web/cards/411500.opts"
 
 // Bd -> pi+pi-
@@ -156,7 +164,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //    "SelectBd2pipi"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2pipi.opts"
-//  // Data sets for this channel (Brunel v14r2p1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/412100.opts"
+//  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/412100_4.opts"
 
 // Bd -> phi(KK) Ks(pipi)
@@ -168,7 +178,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBd2phiKs.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2phiKs.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2phi2KK_Ks2pipi.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/412000.opts"
 
 // Bd -> D+(K- pi+ pi+) D-(K+ pi- pi-)
@@ -203,8 +213,10 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // Resolved pi0
 //  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 //  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
-//  // Data sets for this channel (Brunel v13r1)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/412800.opts"
+//  // Data sets for this channel (Brunel v13r1 - Summer production)
+//  #include "$LHCBHOME/project/web/cards/summer_412800.opts"
 
 // Bd -> Kstar(Kpi) gamma
 //  ApplicationMgr.TopAlg += { 
@@ -214,8 +226,11 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  };
 //  #include "$PHYSSELECTIONSOPTS/PreLoadBd2Kstar2Kpi_gamma.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_gamma.opts"
-//  //  // Data sets for this channel (Brunel v14r2)
-//  //  #include "$LHCBHOME/project/web/cards/412500_4.opts"
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/412500.opts"
+//  // Data sets for this channel (Brunel v14r2)
+//  #include "$LHCBHOME/project/web/cards/412500_4.opts"
+//  // Data sets for this channel (Brunel v13r1 - Summer production)
 //  #include "$LHCBHOME/project/web/cards/summer_412500.opts"
 
 // Uncomment the following line to run the example UserAlgorithm
