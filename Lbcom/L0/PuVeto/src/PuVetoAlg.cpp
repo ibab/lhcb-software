@@ -1,12 +1,13 @@
-// $Id: PuVetoAlg.cpp,v 1.11 2004-03-24 19:01:56 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.12 2004-03-25 08:39:48 cattanem Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ObjectVector.h"
 
+// from DAQEvent
+#include "Event/RawBuffer.h"
 // from VeloEvent
 #include "Event/MCVeloFE.h"
 // from L0Event

@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.8 2004-03-24 19:01:56 mzupan Exp $
+// $Id: PuVetoAlg.h,v 1.9 2004-03-25 08:39:48 cattanem Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -9,10 +9,6 @@
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
 
-// from VeloEvent
-#include "Event/MCVeloFE.h"
-#include "Event/DAQTypes.h"
-#include "Event/RawBuffer.h"
 // from VeloDet
 #include "VeloDet/DeVelo.h"
 
@@ -22,7 +18,7 @@ public:
   virtual ~VetoInput( ) { };
   double zSensor()               const { return m_zSensor; };
 
-  void addStrip( double strip )        { m_strip.push_back( strip ); };
+  void addStrip( int strip )        { m_strip.push_back( strip ); };
   
   std::vector<int>* strips( )          { return &m_strip;            };
   
