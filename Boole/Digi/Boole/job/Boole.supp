@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v4r0, gcc 3.2, valgrind 1.9.6
+# Error suppression file Boole v5r0, gcc 3.2, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,7 +15,16 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# GaudiKernel v14r2 problem (Savannah bug 2066)
+# POOL_1_5_0-gamma (reported to Markus)
+{
+  Pool/1.5.0
+  Memcheck:Free
+  fun:__builtin_delete
+  fun:_ZdlPv
+  fun:_ZN4CINT4TypeD0Ev
+}
+
+# GaudiKernel v14r2 problem (Savannah bug 2066). Also in v15r0
 {
   Gaudi/2066
   Memcheck:Cond
@@ -32,56 +41,6 @@
   fun:iucomp_
   fun:hfinop_
   fun:hstati_
-}
-
-# Root 3.10.01 errors (Common with Brunel)
-{
-  Root/memvar
-  Memcheck:Cond
-  fun:G__getexpr
-  fun:G__getexpr
-  fun:G__memvar_setup
-}
-
-{
-  Root/stdio
-  Memcheck:Cond
-  fun:G__getexpr
-  fun:G__getexpr
-  fun:G__set_stdio
-}
-
-# Root 3.10.01 errors (already in earlier versions, known to Fons...)
-{
-  Root/longest_match
-  Memcheck:Cond
-  fun:R__longest_match
-  fun:R__Deflate_fast
-  fun:R__Deflate
-}
-
-{
-  Root/cd_tally
-  Memcheck:Value4
-  fun:R__ct_tally
-  fun:R__Deflate_fast
-  fun:R__Deflate
-}
-
-{
-  Root/deflate
-  Memcheck:Value4
-  fun:R__Deflate_fast
-  fun:R__Deflate
-  fun:R__zip
-}
-
-{
-  Root/compress
-  Memcheck:Value4
-  fun:R__compress_block
-  fun:R__flush_block
-  fun:R__Deflate_fast
 }
 
 # Known DNS system library problems (Linux rh6.1 - rh7.3)
