@@ -8,6 +8,8 @@ class genClassDicts(importUtils.importUtils):
     importUtils.importUtils.__init__(self,cdb)
     self.godRoot = godRoot
     self.classIsAbstract = 0
+    self.hasDefaultConstructor = 0
+    self.generatedEnums = []
     self.rem = '//' + '-'*78 + '\n'
     self.mNum = 0
     self.cNum = 0
@@ -15,9 +17,16 @@ class genClassDicts(importUtils.importUtils):
   def reset(self, godClass):
     importUtils.importUtils.reset(self,godClass)
     self.classIsAbstract = 0
+    self.hasDefaultConstructor = 0
+    self.generatedEnums = []
     self.include = []
     self.mNum = 0
     self.cNum = 0
+#--------------------------------------------------------------------------------
+  def generateEnums(self,godClass):
+    if godClass.has_key('enum'):
+      for enum in godClass['enum']:
+        self.generatedEnums.append(enum['attrs']['name'])
 #--------------------------------------------------------------------------------
   def genConstructorStubs(self,godClass):
     classname = godClass['attrs']['name']
@@ -29,6 +38,7 @@ class genClassDicts(importUtils.importUtils):
           paramList = []
           if const['attrs'].has_key('argList') : paramList += self.tools.genParamsFromStrg(const['attrs']['argList'])
           if const.has_key('arg')              : paramList += self.tools.genParamsFromElem(const['arg'])
+          if ((not const['attrs'].has_key('argList')) and (not const.has_key('arg'))): self.hasDefaultConstructor = 1 
           s += self.rem
           s += 'static void* %s_constructor_%d(void* mem' % ( classname, self.cNum )
           if len(paramList) : s += ', const std::vector<void*>& argList'
@@ -49,9 +59,9 @@ class genClassDicts(importUtils.importUtils):
               i += 1
           s += ');\n}\n\n'
           self.cNum += 1
-      else :                                                                       # there is no constructor defined
+      if not self.hasDefaultConstructor :                                                                       # there is no default constructor defined
         s += self.rem
-        s += 'static void* %s_constructor_1(void* mem)\n' % classname
+        s += 'static void* %s_constructor_%d(void* mem)\n' % ( classname, self.cNum )
         s += self.rem
         s += '{\n  return new(mem) %s();\n}\n\n' % classname
     return s
@@ -193,12 +203,34 @@ class genClassDicts(importUtils.importUtils):
     self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
+  def genGetSetBitfieldMethodStubs(self, att, cl) :
+    s = ''
+    if att.has_key('bitfield'):
+      for bf in att['bitfield']:
+        bfAtt = bf['attrs']
+        bfType = 'bool'
+        if bfAtt.has_key('type') : bfType = bfAtt['type']
+        if bfAtt['setMeth'] == 'TRUE':
+          metName = 'set' + self.tools.firstUp(bfAtt['name'])
+          s += self.genStubFunction('void',cl,metName,bfType)
+        if bfAtt['getMeth'] == 'TRUE':
+          s += self.genStubFunction(bool,cl,bfAtt['name'],'')
+#        if bfAtt['checkMeth'] == 'TRUE':
+#          metName = 'check' + self.tools.firstUp(bfAtt['name'])
+#          s += self.genStubFunction(bool,cl,metName,bfType)
+      self.mNum += 1
+    return s
+#--------------------------------------------------------------------------------
   def genGetSetMethodStubs(self,godClass):
     s = ''
     cl = godClass['attrs']['name']
     if godClass.has_key('attribute'):
       for att in godClass['attribute']:
         attAtt = att['attrs']
+        attType = attAtt['type']
+        if attAtt['type'] == 'bitfield':
+          s += self.genGetSetBitfieldMethodStubs(att,godClass['attrs']['name'])
+          attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
           ret = self.tools.genReturnFromStrg(attAtt['type'],[],'')
           s += self.genStubFunction(ret,cl,attAtt['name'],[])
@@ -230,6 +262,20 @@ class genClassDicts(importUtils.importUtils):
     return s
 #--------------------------------------------------------------------------------
   def classIsVirtual(self,godClass):
+    if godClass['attrs'].has_key('id') : return 1
+    if not godClass.has_key('destructor') : return 1
+    if godClass.has_key('base') :
+      for base in godClass['base']:
+        if base['attrs']['virtual'] == 'TRUE' : return 1
+    if godClass.has_key('method') :
+      for method in godClass['method']:
+        if method['attrs']['virtual'] == 'TRUE' : return 1
+    return 0
+#--------------------------------------------------------------------------------
+  def classIsAbstrct(self,godClass):
+    if godClass.has_key('method'):
+      for method in godClass['method']:
+        if method['attrs']['virtual'] == 'PURE' : return 1
     return 0
 #--------------------------------------------------------------------------------
   def genClassBuilder(self,godClass):
@@ -245,7 +291,8 @@ class genClassDicts(importUtils.importUtils):
     s += '%s NOCONTAINER,' % indent
     s += '%s 0,' % indent
     s += '%s PUBLIC' % indent
-    if self.classIsVirtual(godClass) : s += ' | VIRTUAL'
+    if self.classIsAbstrct(godClass)  : s += ' | ABSTRACT'
+    if self.classIsVirtual(godClass)  : s += ' | VIRTUAL'
     s += ');\n\n'
     return s
 #--------------------------------------------------------------------------------
@@ -272,11 +319,14 @@ class genClassDicts(importUtils.importUtils):
           par = []
           if constAtt.has_key('argList') : par = self.tools.genParamsFromStrg(constAtt['argList'])
           elif const.has_key('arg') : par = self.tools.genParamsFromElem(const['arg'])
+          if ((not const['attrs'].has_key('argList')) and (not const.has_key('arg'))): self.hasDefaultConstructor = 1 
           if len(par) : par = (';').join([(' ').join(x.split()[:-1]) for x in par])
-          s += self.genMethod(clName, constAtt['desc'], clName, par, '%s_constructor_%d'%(clName,self.cNum)) 
+          mod = ''
+          if constAtt['explicit'] == 'TRUE' : mod = 'EXPLICIT'
+          s += self.genMethod(clName, constAtt['desc'], clName, par, '%s_constructor_%d'%(clName,self.cNum), mod) 
           self.cNum += 1
-      else :
-        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_1'%clName)
+      if not self.hasDefaultConstructor :
+        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_%d' % ( clName, self.cNum ))
     return s
 #--------------------------------------------------------------------------------
   def genDestructor(self,godClass):
@@ -288,7 +338,7 @@ class genClassDicts(importUtils.importUtils):
       destAtt = dest['attrs']
       s += self.genMethod('~'+clName,destAtt['desc'],'','',clName+'_destructor')
     else :
-      s += self.genMethod('~'+clName,'default destructor','','',clName+'_destructor')
+      s += self.genMethod('~'+clName,'default destructor','','',clName+'_destructor','PUBLIC | VIRTUAL')
     return s
 #--------------------------------------------------------------------------------
   def genBases(self,godClass):
@@ -298,19 +348,22 @@ class genClassDicts(importUtils.importUtils):
       if not self.classIsAbstract : s += '  %s* cl = new %s();\n' % (clName, clName)
       for b in godClass['base']:
         bName = b ['attrs']['name']
-        if self.classIsAbstract : baseStub = '0'
-        else : baseStub = '%s_to_%s' % (clName, self.tools.cppEscape(bName))
+        #if self.classIsAbstract : baseStub = '0'
+        #else :
+        baseStub = '%s_to_%s' % (clName, self.tools.cppEscape(bName))
         s += '  metaC.addSuperClass("%s", 0, %s);\n' % (bName, baseStub)
       if not self.classIsAbstract : s += '  delete cl;\n\n'
     return s
 #--------------------------------------------------------------------------------
-  def genMethod(self, name, desc, ret, par, fp):
+  def genMethod(self, name, desc, ret, par, fp, mod=''):
     indent = '\n' + 17 * ' '
     s  = '  metaC.addMethod("%s",' % name
     s += '%s "%s",' % (indent, desc)
     if ret and ret != 'void' : s += '%s "%s",' % (indent, ret)
     if par : s += '%s "%s",' % (indent, par)
-    s += '%s %s);\n\n' % (indent, self.tools.cppEscape(fp))
+    s += '%s %s' % (indent, self.tools.cppEscape(fp))
+    if mod : s += ',%s %s' % (indent, mod)
+    s += ');\n\n'
     return s
 #--------------------------------------------------------------------------------
   def genMethods(self,godClass):
@@ -330,12 +383,38 @@ class genClassDicts(importUtils.importUtils):
         if metAtt.has_key('argList') : par = self.tools.genParamsFromStrg(metAtt['argList'])
         elif met.has_key('arg') : par = self.tools.genParamsFromElem(met['arg'])
         if len(par) : par = (';').join([(' ').join(x.split()[:-1]) for x in par])
+        mod = []
+        if metAtt['const']   == 'TRUE' : mod.append('CONST')
+        if metAtt['virtual'] == 'TRUE' : mod.append('VIRTUAL')
+        if metAtt['static']  == 'TRUE' : mod.append('STATIC')
+        if metAtt['inline']  == 'TRUE' : mod.append('INLINE')
+        if metAtt['friend']  == 'TRUE' : mod.append('FRIEND')
         s += self.genMethod(metAtt['name'],
                             metAtt['desc'],
                             ret,
                             par,
-                            '%s_%s_%d%s'%(godClass['attrs']['name'],metAtt['name'],self.mNum,constF))
+                            '%s_%s_%d%s'%(godClass['attrs']['name'],metAtt['name'],self.mNum,constF),
+                            ' | '.join(mod))
         self.mNum += 1
+    return s
+#--------------------------------------------------------------------------------
+  def genGetSetBitfieldMethods(self, att, godClassName) :
+    s = ''
+    if att.has_key('bitfield'):
+      for bf in att['bitfield']:
+        bfAtt = bf['attrs']
+        bfType = 'bool'
+        if bfAtt.has_key('type'): bfType = bfAtt['type']
+        if bfAtt['setMeth'] == 'TRUE':
+          metName = 'set'+self.tools.firstUp(bfAtt['name'])
+          s += self.genMethod(metName,'set '+bfAtt['desc'],'void',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+        if bfAtt['getMeth'] == 'TRUE':
+          s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'',bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+# fixme
+#        if bfAtt['checkMeth'] == 'TRUE':
+#          metName = 'check'+self.tools.firtUp(bfAtt['name'])
+#          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+      self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethods(self,godClass):
@@ -344,14 +423,18 @@ class genClassDicts(importUtils.importUtils):
     if godClass.has_key('attribute'):
       for att in godClass['attribute']:
         attAtt = att['attrs']
+        attType = attAtt['type']
+        if attType == 'bitfield' :
+          s += genGetSetBitfieldMethods(att)
+          attType = 'unsigned int'
         if attAtt['getMeth'] == 'TRUE' :
-          ret = self.tools.genReturnFromStrg(attAtt['type'],[],'')
-          s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum))
+          ret = self.tools.genReturnFromStrg(attType,[],'')
+          s += self.genMethod(attAtt['name'], attAtt['desc'], ret, '', '%s_%s_%d'%(clName,attAtt['name'],self.mNum), attAtt['access'])
           self.mNum += 1
         if attAtt['setMeth'] == 'TRUE' :
           metName = 'set'+self.tools.firstUp(attAtt['name'])
-          param = self.tools.genParamFromStrg(attAtt['type'])
-          s += self.genMethod(metName, attAtt['desc'], '', param, '%s_%s_%d'%(clName,metName,self.mNum))
+          param = self.tools.genParamFromStrg(attType)
+          s += self.genMethod(metName, attAtt['desc'], '', param, '%s_%s_%d'%(clName,metName,self.mNum), attAtt['access'])
           self.mNum += 1
     if godClass.has_key('relation'):
       for rel in godClass['relation']:
@@ -363,29 +446,29 @@ class genClassDicts(importUtils.importUtils):
           ret = ''
           if mult : ret = self.tools.genReturnFromStrg('%s*'%relAtt['type'],[],'')
           else    : ret = self.tools.genReturnFromStrg('SmartRefVector<%s>'%relAtt['type'],[],'')
-          s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum))
+          s += self.genMethod(relAtt['name'], relAtt['desc'], ret, '', '%s_%s_%d'%(clName,relAtt['name'],self.mNum),relAtt['access'])
           self.mNum += 1
         if relAtt['setMeth'] == 'TRUE' :
           metName = 'set'+metNameUp
           par = ''
           if mult : par = self.tools.genParamFromStrg('SmartRefVector<%s>'%relAtt['type'])
           else    : par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-          s += self.genMethod(metName, relAtt['desc'], '', par, '%s_%s_%d'%(clName,metName,self.mNum))
+          s += self.genMethod(metName, relAtt['desc'], '', par, '%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
           self.mNum += 1
         if mult:
           if relAtt['addMeth'] == 'TRUE' :
             metName = 'addTo'+metNameUp
             par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum))
+            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
             self.mNum += 1
           if relAtt['remMeth'] == 'TRUE' :
             metName = 'removeFrom'+metNameUp
             par = self.tools.genParamFromStrg('SmartRef<%s>'%relAtt['type'])
-            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum))
+            s += self.genMethod(metName,relAtt['desc'],'',par,'%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
             self.mNum += 1
           if relAtt['clrMeth'] == 'TRUE' :
             metName = 'clear'+metNameUp
-            s += self.genMethod(metName,relAtt['desc'],'','','%s_%s_%d'%(clName,metName,self.mNum))
+            s += self.genMethod(metName,relAtt['desc'],'','','%s_%s_%d'%(clName,metName,self.mNum),relAtt['access'])
             self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
@@ -396,8 +479,12 @@ class genClassDicts(importUtils.importUtils):
     if godClass.has_key('attribute'):
       for att in godClass['attribute']:
         attAtt = att['attrs']
+        attType = attAtt['type'].replace('std::string','std::basic_string<char> ')
+        if attType[-1] == ' ' : attType = attType[:-1]
+        if attAtt.has_key('dictalias') : attType = attAtt['dictalias']
+        if attType in self.generatedEnums : attType = 'int'
         s += '  metaC.addField("%s",' % attAtt['name']
-        s += '%s "%s",' % (indent, attAtt['type'])
+        s += '%s "%s",' % (indent, attType)
         s += '%s "%s",' % (indent, attAtt['desc'])
         s += '%s OffsetOf(%s, m_%s),' % (indent, clName, attAtt['name'])
         s += '%s %s);\n\n' % (indent, attAtt['access'])
@@ -434,6 +521,7 @@ class genClassDicts(importUtils.importUtils):
     for godClass in godClasses:
 
       self.reset(godClass)
+      self.generateEnums(godClass)
 
       classDict = package.dict
       classname = godClass['attrs']['name']

@@ -231,7 +231,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       ret = 'void '
       param = self.tools.genParamFromStrg(att['type']) + ' value'
     elif what in ['get','get_c'] : 
-      ret = self.tools.genReturnFromStrg(ret + att['type'], self.generatedTypedefs, scopeName)
+      ret = self.tools.genReturnFromStrg(ret + att['type'], self.generatedTypes, scopeName)
       if not self.tools.isFundamentalT(att['type']) and not self.tools.isPointerT(att['type']): ret += '&'
       ret += ' '
       what = ''
@@ -255,9 +255,9 @@ class genClasses(genSrcUtils.genSrcUtils):
     ret = 'void '
     if what in ['get', 'get_c']:
       if rel['multiplicity'] != '1' : 
-        ret = self.tools.genReturnFromStrg('SmartRefVector<'+rel['type']+'>&',self.generatedTypedefs,scopeName) + ' '
+        ret = self.tools.genReturnFromStrg('SmartRefVector<'+rel['type']+'>&',self.generatedTypes,scopeName) + ' '
       else : 
-        ret = self.tools.genReturnFromStrg(rel['type'] + '*',self.generatedTypedefs,scopeName) + ' '
+        ret = self.tools.genReturnFromStrg(rel['type'] + '*',self.generatedTypes,scopeName) + ' '
     metName = ''
     if what in ['get', 'get_c'] :
       metName = self.tools.lowerGetterName(rel['name'])
@@ -308,7 +308,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       param = self.tools.genParamFromStrg(bfType) + ' value'
     if what == 'get':
       what = ''
-      ret = self.tools.genReturnFromStrg(bfType,self.generatedTypedefs,scopeName) + ' '
+      ret = self.tools.genReturnFromStrg(bfType,self.generatedTypes,scopeName) + ' '
       constF = ' const'
 # fixme, lowering getter names for bitfields was not done in old GOD
 # should be done now to be consistent
@@ -319,11 +319,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       if bf['length'].isdigit() : bits = bf['name']
       else : bits = bf['length'].split(',')[0]
       if not what        :
-        s += '\n{\n  return (bool)((m_%s & %sMask) >> %sBits);\n}\n\n' % (attAtt['name'],bf['name'],bits)
+        s += '\n{\n  return (%s)((m_%s & %sMask) >> %sBits);\n}\n\n' % (ret[:-1],attAtt['name'],bf['name'],bits)
       elif what == 'set' :
-        s += '\n{\n  unsigned val = (unsigned)value;\n' 
+        s += '\n{\n  unsigned int val = (unsigned int)value;\n' 
         s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 
-        s += '  m_%s != ((((unsigned)val) << %sBits) & %sMask);\n}\n\n' % (attAtt['name'],bits,bf['name'])
+        s += '  m_%s |= ((((unsigned int)val) << %sBits) & %sMask);\n}\n\n' % (attAtt['name'],bits,bf['name'])
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethods(self,godClass,clname=''):
@@ -451,9 +451,9 @@ class genClasses(genSrcUtils.genSrcUtils):
           if metName in ('operator<<','fillStream'):
             ret = ''
             if metAtt.has_key('type')  :
-              ret = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypedefs,godClass['attrs']['name'])
+              ret = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypes,godClass['attrs']['name'])
             elif met.has_key('return') :
-              ret = self.tools.genReturnFromElem(met['return'],self.generatedTypedefs,godClass['attrs']['name'])
+              ret = self.tools.genReturnFromElem(met['return'],self.generatedTypes,godClass['attrs']['name'])
             if metName == 'operator<<' and ret == 'std::ostream&' : self.genOStream = 0
             if metName == 'fillStream' and ret == 'std::ostream&' : self.genFillStream = 0
     else :

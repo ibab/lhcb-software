@@ -7,10 +7,14 @@ class genSrcUtils(importUtils.importUtils):
   def __init__(self,cdb):
     importUtils.importUtils.__init__(self,cdb)
     self.generatedTypedefs = []
+    self.generatedEnums = []
+    self.generatedTypes = []
 #--------------------------------------------------------------------------------
   def reset(self,godClass):
     importUtils.importUtils.reset(self,godClass)
     self.generatedTypedefs = []
+    self.generatedEnums = []
+    self.generatedTypes = []
 #--------------------------------------------------------------------------------
   def genDesc(self, godClass):
     s = ''
@@ -46,6 +50,7 @@ class genSrcUtils(importUtils.importUtils):
           s += '  /// %s\n' % tdAtt['desc']
           s += '  typedef %s %s;\n' % (tdAtt['type'], tdAtt['def'])
           self.generatedTypedefs.append(tdAtt['def'])
+          self.generatedTypes.append(tdAtt['def'])
     return s
 #--------------------------------------------------------------------------------
   def genEnums(self,modifier,godClass):
@@ -54,6 +59,8 @@ class genSrcUtils(importUtils.importUtils):
       for enum in godClass['enum']:
         enumAtt = enum['attrs']
         if enumAtt['access'] == modifier.upper() or modifier == 'all':
+          self.generatedEnums.append(enumAtt['name'])
+          self.generatedTypes.append(enumAtt['name'])
           indent = ' ' * (len(enumAtt['name'])+8)
           values = enumAtt['value'].split(',')
           s += '  /// %s\n' % enumAtt['desc']
@@ -92,7 +99,7 @@ class genSrcUtils(importUtils.importUtils):
         if attAtt['access'] == modifier.upper() or modifier == 'all':
           if attAtt['type'] == 'bitfield':
             self.bitfieldEnums[modifier.lower()] += self.genBitfield(att)
-            attAtt['type'] = 'unsigned'
+            attAtt['type'] = 'unsigned int'
           self.addInclude(attAtt['type'])
           name = attAtt['name']
           namespaceInit = ''
@@ -143,8 +150,8 @@ class genSrcUtils(importUtils.importUtils):
     if metAtt.has_key('argList'): pList = self.tools.genParamsFromStrg(metAtt['argList'])
     if met.has_key('arg')       : pList = self.tools.genParamsFromElem(met['arg'])
     metRet = ''
-    if metAtt['type'].strip() :  metRet = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypedefs,scopeName) + ' '
-    if met.has_key('return') :   metRet = self.tools.genReturnFromElem(met['return'],self.generatedTypedefs,scopeName) + ' '
+    if metAtt['type'].strip() :  metRet = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypes,scopeName) + ' '
+    if met.has_key('return') :   metRet = self.tools.genReturnFromElem(met['return'],self.generatedTypes,scopeName) + ' '
     self.addForwardDecl(metRet)
     indent += len(metRet) + len(metAtt['name'])
     s += metRet + scopeName + metAtt['name'] + '('
