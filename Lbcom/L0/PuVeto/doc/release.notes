@@ -1,15 +1,14 @@
-! $Id: release.notes,v 1.22 2004-04-28 13:07:05 mzupan Exp $
+! $Id: release.notes,v 1.23 2004-04-28 13:35:29 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
-<<<<<<< release.notes
 !========================= PuVeto v5r7 2004-04-28 =========================
 ! 2004-04-28 - Marko Zupan
  - Changed default thresholds for decision(),  to avoid confusion
 
 !========================= PuVeto v5r6 2004-03-25 =========================
 ! 2004-03-25 - Marco Cattaneo
- - In PuVeotoAlg.h, change argument of (unused method) addStrip to int 
+ - In PuVetoAlg.h, change argument of (unused method) addStrip to int 
    to fix compiler warning
 
 ! 2004-01-06 - Marko Zupan
