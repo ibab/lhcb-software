@@ -1,4 +1,4 @@
-// $Id: L0Monitor.h,v 1.3 2003-02-03 11:16:10 ocallot Exp $
+// $Id: L0Monitor.h,v 1.4 2004-09-20 14:27:36 cattanem Exp $
 #ifndef L0MONITOR_H 
 #define L0MONITOR_H 1
 
@@ -14,7 +14,7 @@
 class IPhysSelTool;
 class IAssociator;
 
-/** @class  L0Monitor.h
+/** @class  L0Monitor L0Monitor.h
  *  Produces Tuples to store L0 trigger decision
  *
  *  @author Olivier Callot
