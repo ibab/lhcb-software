@@ -23,6 +23,8 @@ Requires data produced by Gauss v14r3 or greater
   . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
   . New version of RawBuffer for OT: new bank structure, multiple hit
     capability, new straw numbering (OTDAQ v2r0)
+  . HepMC now made persistent also for POOL data (GenEvent v3r1). Only for data
+    produced with Gauss v15r4 or greater.
 
 - Bug fixes
   . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)
