@@ -1,8 +1,20 @@
 !-----------------------------------------------------------------------------
 ! Package     : LHCbSys
-! Responsible : Florence Ranjard
+! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
+
+!======================== LHCbSys v12r2 2003-07-16 ========================
+! 2003-07-16 - Marco Cattaneo
+ - Modified packages:
+      GaudiConf v6r11,
+      AssociatorsSys v1r5, VeloAssociators v1r6, ITAssociators v2r5, 
+                           OTAssociators v2r6, CaloAssociators v3r4
+      DetSys v2r2, ITDet v1r5
+      EventSys v14r2, CaloEvent v12r0, PhysEvent v7r7
+      SICBSys v1r6, CaloSicbCnv v7r5, RiSicbCnv v6r1, Futio v13r2
+ - Removed packages:
+      SicbToOORawh (moved to BOOLE project)
 
 !======================== LHCbSys v12r1 2003-07-08 ========================
 ! 2003-07-08 - Marco Cattaneo
