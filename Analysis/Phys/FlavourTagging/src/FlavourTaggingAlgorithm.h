@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.h,v 1.1.1.1 2002-05-23 23:25:50 gcorti Exp $
+// $Id: FlavourTaggingAlgorithm.h,v 1.2 2002-09-03 08:22:07 odie Exp $
 #ifndef FLAVOURTAGGINGALGORITHM_H 
 #define FLAVOURTAGGINGALGORITHM_H 1
 
@@ -32,16 +32,16 @@ public:
 protected:
 
 private:
-  int n_B_events;
-  int n_B;
-  int n_b_tags;
-  int n_bbar_tags;
+  int m_n_B_events;
+  int m_n_B;
+  int m_n_b_tags;
+  int m_n_bbar_tags;
 
   std::string m_pDesktop_name;
   std::string m_taggingTool_name;
   std::string m_tags_location;
-  std::string m_particles_location;
   std::string m_primVertices_location;
+  std::vector<std::string> m_hypothesis_locations;
 
   IPhysDesktop *m_pDesktop;        ///< Reference to desktop tool
   IFlavourTaggingTool *m_taggingTool;

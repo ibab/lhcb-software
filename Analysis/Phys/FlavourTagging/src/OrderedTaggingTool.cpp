@@ -1,4 +1,4 @@
-// $Id: OrderedTaggingTool.cpp,v 1.2 2002-05-24 21:14:49 gcorti Exp $
+// $Id: OrderedTaggingTool.cpp,v 1.3 2002-09-03 08:22:07 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -94,6 +94,27 @@ void OrderedTaggingTool::tagThisB( const Particle &theB,
   }
 }
 
+void OrderedTaggingTool::tagThisB( const Particle &theB,
+                                   const ParticleVector &theEvent,
+                                   const Vertex &thePrimVtx,
+                                   FlavourTag &theTag )
+{
+  MsgStream log(msgSvc(), name());
+
+  std::vector<std::string>::iterator tni;
+  std::vector<IFlavourTaggingTool*>::iterator ti;
+  for( ti=m_taggingTools.begin(), tni=m_taggingTools_names.begin();
+       ti!=m_taggingTools.end() && (theTag.decision()==FlavourTag::none);
+       ti++, tni++ )
+  {
+    log << MSG::DEBUG << "Calling 'tagThisB' on '" << *tni << "'" << endreq;
+    (*ti)->tagThisB( theB, theEvent, thePrimVtx, theTag );
+    if( theTag.decision() != FlavourTag::none )
+      log << MSG::DEBUG << *tni << " result: "
+          << theTag.tagger()->particleID().pid() << endreq;
+  }
+}
+
 void OrderedTaggingTool::tagFromList( const Particle &theB,
                                       const ParticleVector &theCandidates,
                                       const Vertex &thePrimVtx,
@@ -114,6 +135,25 @@ void OrderedTaggingTool::tagFromList( const Particle &theB,
 
 void OrderedTaggingTool::tagExcludingFromList(const Particle &theB,
                                               const Particles &theEvent,
+                                              const ParticleVector &theExcluded,
+                                              const Vertex &thePrimVtx,
+                                              FlavourTag &theTag )
+{
+  MsgStream log(msgSvc(), name());
+
+  std::vector<std::string>::iterator tni;
+  std::vector<IFlavourTaggingTool*>::iterator ti;
+  for( ti=m_taggingTools.begin(), tni=m_taggingTools_names.begin();
+       ti!=m_taggingTools.end() && (theTag.decision()==FlavourTag::none);
+       ti++, tni++ )
+  {
+    log << MSG::DEBUG << "Calling 'tagThisB' on '" << *tni << "'" << endreq;
+    (*ti)->tagExcludingFromList( theB,theEvent,theExcluded,thePrimVtx,theTag );
+  }
+}
+
+void OrderedTaggingTool::tagExcludingFromList(const Particle &theB,
+                                              const ParticleVector &theEvent,
                                               const ParticleVector &theExcluded,
                                               const Vertex &thePrimVtx,
                                               FlavourTag &theTag )

@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.h,v 1.1.1.1 2002-05-23 23:25:50 gcorti Exp $
+// $Id: SingleParticleTaggingTool.h,v 1.2 2002-09-03 08:22:07 odie Exp $
 #ifndef SINGLEPARTICLETAGGINGTOOL_H 
 #define SINGLEPARTICLETAGGINGTOOL_H 1
 
@@ -6,6 +6,8 @@
 #include <functional>
 
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/INTupleSvc.h"
+#include "GaudiKernel/NTupleItems.h"
 #include "Event/Particle.h"
 #include "FlavourTagging/IFlavourTaggingTool.h"
 
@@ -40,6 +42,10 @@ public:
                  const Particles &theEvent,
                  const Vertex &thePrimVtx,
                  FlavourTag &theTag );
+  void tagThisB( const Particle &theB,
+                 const ParticleVector &theEvent,
+                 const Vertex &thePrimVtx,
+                 FlavourTag &theTag );
   void tagFromList( const Particle &theB,
                     const ParticleVector &theCandidates,
                     const Vertex &thePrimVtx,
@@ -49,6 +55,16 @@ public:
                              const ParticleVector &theExcluded,
                              const Vertex &thePrimVtx,
                              FlavourTag &theTag );
+  void tagExcludingFromList( const Particle &theB,
+                             const ParticleVector &theEvent,
+                             const ParticleVector &theExcluded,
+                             const Vertex &thePrimVtx,
+                             FlavourTag &theTag );
+
+protected:
+  NTuple::Item<long>   m_n_cands, m_n_vtxs, m_i_selected, m_tag;
+  NTuple::Array<float> m_px, m_py, m_pz, m_vx, m_vy, m_vz, m_id, m_cl;
+  NTuple::Matrix<float> m_ip, m_iperr;
 
 private:
   void FlattenTree( Particle *part, ParticleVector &flat );
@@ -65,5 +81,10 @@ private:
   IParticleFilter *m_Filter;
   IGeomDispCalculator *m_GeomDisp;
   IDataProviderSvc *m_EventSvc;
+  INTupleSvc *m_NTupleSvc;
+  std::string m_NTupleName;
+  bool m_NoNTuple;
+  std::string m_MonitorLocation;
+  bool m_Monitor;
 };
 #endif // SINGLEPARTICLETAGGINGTOOL_H

@@ -23,6 +23,8 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 # Used packages. 
 #============================================================================
 use DaVinciTools	v5r*	Phys
+use DaVinciAssociators  v2r*    Phys
+use PhysEvent           v6r*    Event
 
 #============================================================================
 # Component library building rule

@@ -1,9 +1,15 @@
 //
 //FlavourTaggingAlgorithm.TagLocation = "/Event/Phys/User/Tags";
-FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/Prod";
+//FlavourTaggingAlgorithm.HypothesisLocations = { "/Event/Phys/B0" };
 //FlavourTaggingAlgorithm.PrimaryVerticesLocation = "";
 //FlavourTaggingAlgorithm.DesktopName = "PhysDesktop";
-FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/User" };
+
+FlavourTaggingAlgorithm.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
+//FlavourTaggingAlgorithm.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
+FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ParticleNames = {"e+", "e-", "mu+", "mu-", "K+", "K-"};
+FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ConfLevelCuts = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+
+//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/User" };
 //FlavourTaggingAlgorithm.TaggingTool = "OrderedTaggingTool";
 
 FlavourTaggingAlgorithm.OrderedTaggingTool.TaggingTools =

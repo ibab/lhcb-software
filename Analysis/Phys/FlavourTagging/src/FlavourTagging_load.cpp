@@ -17,7 +17,8 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_ALGORITHM(FlavourTaggingAlgorithm);
+  DECLARE_ALGORITHM(FlavourMonitorAlgorithm);
   DECLARE_TOOL(ParticleTaggerCriterion);
-  //  DECLARE_TOOL(SingleParticleTaggingTool);
+  DECLARE_TOOL(SingleParticleTaggingTool);
   DECLARE_TOOL(OrderedTaggingTool);
 }

@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.1.1.1 2002-05-23 23:25:51 gcorti Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.2 2002-09-03 08:22:07 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -31,11 +31,12 @@ const        IAlgFactory& FlavourTaggingAlgorithmFactory = s_factory ;
 //=============================================================================
 FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ), m_pDesktop(0), m_taggingTool(0)
+  : Algorithm ( name , pSvcLocator ), m_hypothesis_locations(0), m_pDesktop(0),
+    m_taggingTool(0)
 {
   declareProperty("TagLocation", m_tags_location = FlavourTagLocation::User);
-  declareProperty("ParticlesLocation",
-                  m_particles_location = ParticleLocation::Production );
+  m_hypothesis_locations.clear();
+  declareProperty("HypothesisLocations", m_hypothesis_locations );
   declareProperty("PrimaryVerticesLocation",
                   m_primVertices_location = VertexLocation::Primary );
   declareProperty("DesktopName", m_pDesktop_name = "PhysDesktop");
@@ -70,10 +71,10 @@ StatusCode FlavourTaggingAlgorithm::initialize() {
     return sc;
   }
 
-  n_B_events = 0;
-  n_B = 0;
-  n_b_tags = 0;
-  n_bbar_tags = 0;
+  m_n_B_events = 0;
+  m_n_B = 0;
+  m_n_b_tags = 0;
+  m_n_bbar_tags = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -92,11 +93,24 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     return StatusCode::SUCCESS;
   }
 
-  SmartDataPtr<Particles> theEvent(eventSvc(),m_particles_location);
-  if( !theEvent )
+  ParticleVector hypothesis(0);
+  std::vector<std::string>::const_iterator loc_iter;
+  for( loc_iter = m_hypothesis_locations.begin();
+       loc_iter != m_hypothesis_locations.end(); loc_iter++ )
   {
-    log << MSG::ERROR << "Unable to find the particles at '"
-        << m_particles_location << "'" << endreq;
+    SmartDataPtr<Particles> keyed_hypothesis(eventSvc(),*loc_iter);
+    if( !keyed_hypothesis )
+    {
+      log << MSG::ERROR << "Unable to find the B hypothesis at '"
+          << *loc_iter << "'. Skipping it!" << endreq;
+      continue;
+    }
+    hypothesis.insert( hypothesis.end(),
+                       keyed_hypothesis->begin(), keyed_hypothesis->end() );
+  }
+  if( hypothesis.size() == 0 )
+  {
+    log << MSG::DEBUG << "No hypothesis found. Giving up!" << endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -117,24 +131,24 @@ StatusCode FlavourTaggingAlgorithm::execute() {
 
   FlavourTags *tags = new FlavourTags;
   const ParticleVector& parts = m_pDesktop->particles();
-  log << MSG::DEBUG << "About to tag " << parts.size() << " B s" << endreq;
-  ParticleVector::const_iterator pi;
-  for( pi=parts.begin(); pi!=parts.end(); pi++ )
+  log << MSG::DEBUG << "About to tag " << hypothesis.size() << " B s" << endreq;
+  ParticleVector::const_iterator hi;
+  for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )
   {
-    n_B++;
-    log << MSG::DEBUG << "About to tag a " << (*pi)->particleID().pid()
+    m_n_B++;
+    log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;
     FlavourTag *theTag = new FlavourTag;
-    m_taggingTool->tagThisB( *(*pi), *theEvent, *thePrimVtx, *theTag );
+    m_taggingTool->tagThisB( *(*hi), parts, *thePrimVtx, *theTag );
     log << MSG::DEBUG << "Result is ";
     switch( theTag->decision() )
     {
     case FlavourTag::b:
-      n_b_tags++;
+      m_n_b_tags++;
       log << "'b'" << theTag->tagger()->particleID().pid();
       break;
     case FlavourTag::bbar:
-      n_bbar_tags++;
+      m_n_bbar_tags++;
       log << "'bbar'" << theTag->tagger()->particleID().pid();
       break;
     case FlavourTag::none:
@@ -147,7 +161,7 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     tags->insert(theTag);
   }
   if( parts.size() )
-    n_B_events++;
+    m_n_B_events++;
   sc = eventSvc()->registerObject(m_tags_location,tags);
   if (sc.isFailure())
     log << MSG::ERROR << "Unable to register the tags under '"
@@ -167,12 +181,12 @@ StatusCode FlavourTaggingAlgorithm::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
-  log << MSG::INFO << "Number of events with a B: " << n_B_events << endreq;
-  log << MSG::INFO << "Number of B:               " << n_B << endreq;
-  log << MSG::INFO << "Number of b tag:           " << n_b_tags << endreq;
-  log << MSG::INFO << "Number of bbar tag:        " << n_bbar_tags << endreq;
+  log << MSG::INFO << "Number of events with a B: " << m_n_B_events << endreq;
+  log << MSG::INFO << "Number of B:               " << m_n_B << endreq;
+  log << MSG::INFO << "Number of b tag:           " << m_n_b_tags << endreq;
+  log << MSG::INFO << "Number of bbar tag:        " << m_n_bbar_tags << endreq;
   log << MSG::INFO << "Efficency:                 "
-      << float(n_b_tags+n_bbar_tags)/n_B << endreq;
+      << float(m_n_b_tags+m_n_bbar_tags)/m_n_B << endreq;
 
   return StatusCode::SUCCESS;
 }

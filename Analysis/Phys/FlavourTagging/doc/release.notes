@@ -4,6 +4,15 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-09-03 - Olivier Dormond
+ - Swapped the way particles and B hypothesis are setup. Now the PhysDesktop
+   takes care of the particles and the B are handled seperatly.
+ - Support multiple locations for the B.
+ - The tools support both Particles and ParticleVector.
+ - The tools can produce an ntuple for optimization.
+ - The tools can save a FlavourTag for the monitoring only.
+ - Added a FlavourMonitorAlgorithm to check the FlavourTag against the truth.
+
 ! 2002-07-18 - Gloria Corti
  - Increase version number to v2r0 and use DaVinciTools v5r*
 
