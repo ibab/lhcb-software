@@ -1,8 +1,0 @@
-//== Ignore time information
-SpdSignal.IgnoreTimeInfo = true;
-PrsSignal.IgnoreTimeInfo = true;
-EcalSignal.IgnoreTimeInfo = true;
-HcalSignal.IgnoreTimeInfo = true;
-//== Don't subtract the 15% of the previous BX.
-SpdDigit.InputPrevData = "";
-PrsDigit.InputPrevData = "";
