@@ -4,7 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v5r2 2004-02-03 ========================
+!======================== MuonAlgs v5r2 2004-03-31 ========================
+! 2004-03-31 - Alessia Satta
+ - Fix rounding problem
+
 ! 2004-02-03 - Alessia Satta
  - Modify to cope with the new digit time format (MuonEvent v3r1)
 
