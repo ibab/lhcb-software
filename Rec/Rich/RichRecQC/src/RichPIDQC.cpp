@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.33 2004-11-05 18:04:46 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.34 2004-12-13 17:27:13 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.33  2004/11/05 18:04:46  jonrob
+ *  Update Warning message
+ *
  *  Revision 1.32  2004/11/04 16:30:45  jonrob
  *  Add protection against missing track containers
  *
@@ -72,12 +75,10 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
-
-  declareProperty( "TightNSigmaCutPion", m_tightNsigCutPion = 0. );
-  declareProperty( "LooseNSigmaCutPion", m_looseNsigCutPion = -99999999. );
-  declareProperty( "TightNSigmaCutKaon", m_tightNsigCutKaon = 0. );
-  declareProperty( "LooseNSigmaCutKaon", m_looseNsigCutKaon = -99999999. );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "IgnoreThresholds", m_ignoreThres = true );
+  declareProperty( "KaonDLLCut", m_dllKaonCut = 15 );
+  declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
 
 }
 
@@ -115,12 +116,21 @@ StatusCode RichPIDQC::initialize()
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
-  // Warn if extra histos are enabled (To be renoved for public release)
+  // Warn if extra histos are enabled
   if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
-  // debug printout of configuration
-  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes()
-          << endreq;
+  // Warn if ignoring threshold information
+  if ( m_ignoreThres ) Warning( "Ignoring threshold information", StatusCode::SUCCESS );
+
+  // Warn if using kaon DLL cut
+  if ( m_dllKaonCut > 0 ) Warning( "Applying kaon selection dll(kaon) < " + 
+                                   boost::lexical_cast<std::string>(m_dllKaonCut), 
+                                   StatusCode::SUCCESS );
+
+  // Warn if using pion DLL cut
+  if ( m_dllPionCut > 0 ) Warning( "Applying pion selection dll(pion) < " + 
+                                   boost::lexical_cast<std::string>(m_dllPionCut), 
+                                   StatusCode::SUCCESS );
 
   return StatusCode::SUCCESS;
 };
@@ -263,7 +273,7 @@ StatusCode RichPIDQC::execute()
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Track type
-      Rich::Track::Type tkType = trackType(iPID);
+      const Rich::Track::Type tkType = trackType(iPID);
 
       // Count PIDs and tracks
       ++m_trackCount[tkType].first;
@@ -273,33 +283,36 @@ StatusCode RichPIDQC::execute()
       // Get best PID
       Rich::ParticleIDType pid = iPID->bestParticleID();
 
-      // Apply loose nsigma cut.
-      if      ( iPID->nSigmaSeparation(pid,Rich::Kaon) < m_looseNsigCutKaon ) { pid = Rich::Kaon; }
-      else if ( iPID->nSigmaSeparation(pid,Rich::Pion) < m_looseNsigCutPion ) { pid = Rich::Pion; }
-
-      // apply tight cut
-      if      ( Rich::Pion == pid &&
-                iPID->nSigmaSeparation(Rich::Pion,Rich::Kaon) < m_tightNsigCutPion ) { pid = Rich::BelowThreshold; }
-      else if ( Rich::Kaon == pid &&
-                iPID->nSigmaSeparation(Rich::Kaon,Rich::Pion) < m_tightNsigCutKaon ) { pid = Rich::BelowThreshold; }
+      // Aply DLL based selection for kaons
+      if      ( iPID->particleDeltaLL(Rich::Kaon) < m_dllKaonCut ) { pid = Rich::Kaon; }
+      else if ( iPID->particleDeltaLL(Rich::Pion) < m_dllPionCut ) { pid = Rich::Pion; }
 
       // Check for threshold
-      if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
+      if ( !m_ignoreThres && !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
 
       // some verbose printout
       if ( msgLevel(MSG::VERBOSE) ) {
         verbose() << "RichPID " << iPID->key() << " ("
-                  << iPID->pidType() << "), Track type "
-                  << tkType << tkPtot << " GeV/c,"
-                  << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
-                  << endreq
-                  << "  Dlls      = " << iPID->particleLLValues() << endreq
-                  << "  Prob(r/n) = ";
-        for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
+                  << iPID->pidType() << "), '"
+                  << tkType << "' track, Ptot " << tkPtot << " GeV/c," << endreq
+                  << "  Active rads =";
+        if ( iPID->usedAerogel() ) { verbose() << " " << Rich::Aerogel; }
+        if ( iPID->usedC4F10()   ) { verbose() << " " << Rich::C4F10;   }
+        if ( iPID->usedCF4()     ) { verbose() << " " << Rich::CF4;     }
+        verbose() << endreq
+                  << "  Threshold   = ";
+        {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
+          const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
+          verbose() << iPID->isAboveThreshold(pid) << " ";
+        }}
+        verbose() << endreq
+                  << "  Dlls        = " << iPID->particleLLValues() << endreq
+                  << "  Prob(r/n)   = ";
+        {for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
           const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
           verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
-        }
-        verbose() << endreq << "  RecoPID   = " << pid;
+        }}
+        verbose() << endreq << "  RecoPID     = " << pid;
       }
 
       // Fill histos for deltaLLs and probabilities
@@ -320,6 +333,7 @@ StatusCode RichPIDQC::execute()
         // Get true track type from MC
         Rich::ParticleIDType mcpid = trueMCType( iPID );
         if ( mcpid != Rich::Unknown &&
+             !m_ignoreThres && 
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
         if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
 
@@ -331,7 +345,7 @@ StatusCode RichPIDQC::execute()
 
         // Fill performance tables
         m_perfTable->fill( mcpid+1, pid+1 );
-        if ( mcpid>=0 && pid>=0 ) { m_sumTab[mcpid][pid] += 1; }
+        if ( mcpid>=0 && pid>=0 ) { ++m_sumTab[mcpid][pid]; }
 
         // Momentum spectra
         if ( mcpid != Rich::Unknown &&
@@ -493,8 +507,14 @@ StatusCode RichPIDQC::finalize()
       info() << " " << (*iPC).first << "=" << (*iPC).second.first
              << "(" << (*iPC).second.second << ")";
     }
-    info() << endreq
-           << "-------------+-------------------------------------------------+------------"
+    info() << endreq;
+    if ( m_dllKaonCut > 0 ) { 
+      info() << " Tagging tracks as kaons if kaon DLL < " << m_dllKaonCut << endreq;
+    }
+    if ( m_dllPionCut > 0 ) { 
+      info() << " Tagging tracks as pions if pion DLL < " << m_dllPionCut << endreq;
+    }
+    info() << "-------------+-------------------------------------------------+------------"
            << endreq
            << "   %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
            << endreq

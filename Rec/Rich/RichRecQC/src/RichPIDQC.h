@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.16 2004-10-30 22:14:54 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.17 2004-12-13 17:27:13 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/10/30 22:14:54  jonrob
+ *  removed debug compile warnings
+ *
  *  Revision 1.15  2004/10/29 09:35:09  jonrob
  *  Update final printout format
  *
@@ -65,6 +68,9 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
+
+// Boost
+#include "boost/lexical_cast.hpp"
 
 /** @class RichPIDQC RichPIDQC.h
  *
@@ -142,11 +148,7 @@ private: // data
   int m_bins;                    ///< Number of bins
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
-
-  float m_tightNsigCutPion;
-  float m_looseNsigCutPion;
-  float m_tightNsigCutKaon;
-  float m_looseNsigCutKaon;
+  bool m_ignoreThres; ///< Flag to turn on/off the setting of PIDs as "below threshold"
 
   RichTrackSelector m_trSelector;  ///< Track selector
 
@@ -167,6 +169,9 @@ private: // data
   typedef std::map<std::string,std::pair<unsigned int,unsigned int> > PIDsByType;
   /// Count the number of PID objects by PID type
   PIDsByType m_pidPerTypeCount;
+
+  float m_dllKaonCut;
+  float m_dllPionCut;
 
   // Histograms
 
