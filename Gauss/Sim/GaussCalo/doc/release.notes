@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-22 - Vanya BELYAEV
+ - src/CaloHit.h  
+ - src/CaloSubHit.h   add few more doxygen documentation strings 
+
 !============================ GaussCalo v4r0 ==============================
 
 ! 2003-07-17 - Grigory Rybkine 

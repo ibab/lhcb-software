@@ -1,8 +1,11 @@
-// $Id: CaloSubHit.h,v 1.3 2003-07-08 19:40:57 ibelyaev Exp $
+// $Id: CaloSubHit.h,v 1.4 2003-07-22 19:05:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/08 19:40:57  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // Revision 1.2  2002/12/13 16:52:57  ibelyaev
 //  put updated versions of the packages
 //
@@ -28,7 +31,7 @@
 /** @class CaloSubHit CaloSubHit.h
  * 
  *  Elementary "sub-hit" for calorimeter devices.
- *  The class represents an list of energy depositios 
+ *  The class represents an list of energy depositions 
  *  from given particle in the given calorimeter cell.
  *
  *  These objects are not expected to be stored directly 
@@ -60,13 +63,13 @@ public:
    *  @param cellID  cellID  of the detector cell  
    *  @param trackID trackID of the particle
    */
-  CaloSubHit( const CaloCellID& cellID  = CaloCellID() , 
-              const int         trackID = 0            ) ;
+  CaloSubHit ( const CaloCellID& cellID  = CaloCellID() , 
+               const int         trackID = 0            ) ;
   
   /** copy constructor 
    *  @param right object to be copied 
    */
-  CaloSubHit( const CaloSubHit& right                  ) ;
+  CaloSubHit ( const CaloSubHit& right                  ) ;
   
   /// clone method (virtual constructor) 
   virtual CaloSubHit* clone() const ;
@@ -78,14 +81,27 @@ public:
   void  operator delete ( void *hit ) ;
   
   /// access to cell ID for given hit  
-  const CaloCellID& cellID() const         { return m_cellID        ; }  
+  const CaloCellID& cellID() const          { return m_cellID        ; }  
   // set new cell ID for given hit 
-  void setCellID( const CaloCellID& cell ) {        m_cellID = cell ; }
+  void setCellID ( const CaloCellID& cell ) {        m_cellID = cell ; }
   
   /** add energy deposition for given hit (safe method)
    *  Error flags:
    *   - inconsistent track ID :  300 
    *   - inconsistent cell  ID :  301
+   * 
+   *  @code 
+   *
+   *  CaloSubHit*        hit   = ... ;
+   *  CaloSubHit::Time   time  = ... ;
+   *  CaloSubHit::Energy e     = ... ;
+   *  const int          track = ... ;
+   *  const CaloCellID&  cell  = ... ;
+   * 
+   *  StatusCode sc  = hit->add( track , cell , time , energy ) ;
+   *  if( sc.isFailure() ) { .... } 
+   *
+   *  @endcode 
    * 
    *  @param track  trackID for energy deposition
    *  @param cell   cellID  for the detector cell
@@ -98,12 +114,23 @@ public:
                    const Time        time    , 
                    const Energy      energy  )
   {
-    if( trackID () != track ) { return StatusCode( 300 ) ; }
-    if( cellID  () != cell  ) { return StatusCode( 301 ) ; }    
+    if ( trackID () != track ) { return StatusCode( 300 ) ; }
+    if ( cellID  () != cell  ) { return StatusCode( 301 ) ; }    
     return add( time , energy );
   };
   
   /** add energy deposition for given hit (fast method)
+   * 
+   *  @code 
+   *
+   *  CaloSubHit*        hit  = ... ;
+   *  CaloSubHit::Time   time = ... ;
+   *  CaloSubHit::Energy e    = ... ;
+   * 
+   *  hit->add( time , energy ) ;
+   *
+   *  @endcode 
+   * 
    *  @param track  trackID for energy deposition
    *  @param cell   cellID  for the detector cell
    *  @param time   the time of the energy deposition 
@@ -117,16 +144,56 @@ public:
     return StatusCode::SUCCESS ;
   };
   
-  /// access for map iterator "begin" (const)
+  /** access for map iterator "begin" (const)
+   *  
+   *  @code 
+   *  
+   *  CaloSubHit* hit = ... ;
+   *
+   *  for( CaloSubHit::iterator entry = hit->begin() ; 
+   *       hit->end() != entry ; ++entry ) 
+   *    {
+   *       CaloSubHit::Energy e = entry->first   ;
+   *       CaloSubHit::Time   t = entry->second  ; 
+   *    }
+   *  
+   *   @endcode 
+   *   @return 'begin' iterator to the sequence of entries 
+   */
   iterator begin   () const { return m_map.begin () ; }
-  /// access for map iterator "end"   (const)
+  /** access for map iterator "end"   (const)
+   *  
+   *  @code 
+   *  
+   *  CaloSubHit* hit = ... ;
+   *
+   *  for( CaloSubHit::iterator entry = hit->begin() ; 
+   *       hit->end() != entry ; ++entry ) 
+   *    {
+   *       CaloSubHit::Energy e = entry->first   ;
+   *       CaloSubHit::Time   t = entry->second  ; 
+   *    }
+   *  
+   *   @endcode 
+   *   @return 'end' iterator to teh sequence of entries 
+   */
   iterator end     () const { return m_map.end   () ; }
   
   /// number of entries/map size 
   size_t   size    () const { return m_map.size  () ; }
   size_t   entries () const { return       size  () ; }
   
-  /// overall subhit evergy  (integrated over the time )
+  /** overall subhit evergy  (integrated over the time )
+   * 
+   *  @code 
+   *  
+   *  CaloSubHit* hit = ... ;
+   *  CaloSubHit::Energy e = hit->energy() ;
+   * 
+   *  @endcode 
+   *  @return total subhit energy (total energy deposition from given particle 
+   *          in the given calorimeter cell)
+   */
   Energy   energy  () const 
   {
     Energy e = 0 ;

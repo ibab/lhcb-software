@@ -1,8 +1,11 @@
-// $Id: CaloHit.h,v 1.4 2003-07-10 11:27:56 ibelyaev Exp $
+// $Id: CaloHit.h,v 1.5 2003-07-22 19:05:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/07/10 11:27:56  ibelyaev
+//  fixes to please the gcc3.2 compiler
+//
 // Revision 1.3  2003/07/08 19:40:57  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //
@@ -89,12 +92,58 @@ public:
   // set new cellID 
   void  setCellID ( const CaloCellID& cell ) {        m_cellID = cell ; }
   
-  /// get the hit for the given particle 
+  /** get the hit for the given particle 
+   * 
+   *  @code 
+   * 
+   *  CaloHit*                hit   = ... ;
+   *  const CaloHit::TrackID  track = ... ;
+   *  
+   *  CaloSubHit*& subhit = hit->hit( track ) ;
+   *  if ( 0 == subhit ) 
+   *        { subhit = new CaloSubHit( hit->cellID() , track ) ; } 
+   *  
+   *  @endcode
+   *
+   *  @return the sub-hit for the given track id (or NULL) 
+   */
   CaloSubHit*& hit( const TrackID track )    { return m_map( track ) ; }
   
-  /// access to 'begin' iterator of the sub-hit collections (const)
+  /** access to 'begin' iterator of the sub-hit collections (const)
+   *  
+   *  @code
+   *
+   *  CaloHit* hit = ... ;
+   *  
+   *  for ( CaloHit::iterator entry = hit->begin() ; 
+   *        hit->end() != entry ; ++entry  ) 
+   *       {
+   *         const CaloHit::TrackID track  = entry->first  ; 
+   *         const CaloSubHit*      subhit = entry->second ; 
+   *       }
+   *
+   *  @endcode
+   *  
+   *  @return 'begin' iterator for sequence of subhits
+   */
   iterator begin     () const { return m_map.begin () ; }
-  /// access to 'end'   iterator of the sub-hit collections (const)
+  /** access to 'end'   iterator of the sub-hit collections (const)
+   *  
+   *  @code
+   *
+   *  CaloHit* hit = ... ;
+   *  
+   *  for ( CaloHit::iterator entry = hit->begin() ; 
+   *        hit->end() != entry ; ++entry  ) 
+   *       {
+   *         const CaloHit::TrackID track  = entry->first  ; 
+   *         const CaloSubHit*      subhit = entry->second ; 
+   *       }
+   *
+   *  @endcode
+   *  
+   *  @return 'end' iterator for sequence of subhits
+   */
   iterator end       () const { return m_map.end   () ; }
   
   /// number of entries/map size 
@@ -109,15 +158,25 @@ public:
       { if( 0 != hit->second ) { size += hit->second->size() ; } }
     return size ;
   };
-  /// the total energy (integrated over teh time and all particles)
+  /** the total energy (integrated over all time slots  and all particles)
+   *  
+   *  @code
+   * 
+   *  const CaloHit*           hit = ... ;
+   *  const CaloSubHit::Energy e   = hit->energy() ;
+   *
+   *  @endcode 
+   *  
+   *  @return the total energy (integrated over all time 
+   *                             slots  and all particles)
+   */
   CaloSubHit::Energy energy () const 
   {
     CaloSubHit::Energy e = 0 ;
     for( iterator entry = begin() ; end() != entry ; ++entry ) 
       {
         const CaloSubHit* hit = entry -> second  ;
-        if( 0 == hit ) { continue ; }
-        e += hit->energy() ;
+        if( 0 != hit ) { e += hit->energy() ; } 
       }
     return e ;
   }
