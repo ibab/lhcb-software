@@ -1,4 +1,4 @@
-// $Id: BuildMCRichDigitLinks.cpp,v 1.4 2004-04-19 22:55:07 jonesc Exp $
+// $Id: BuildMCRichDigitLinks.cpp,v 1.5 2004-07-26 17:52:01 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -80,10 +80,8 @@ StatusCode BuildMCRichDigitLinks::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode BuildMCRichDigitLinks::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode BuildMCRichDigitLinks::finalize() 
+{
   // finalise base
   return RichAlgBase::finalize();
 }
