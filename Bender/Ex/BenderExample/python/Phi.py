@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.9 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Phi.py,v 1.10 2005-01-24 17:33:00 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# CVS version $Revision: 1.10 $
+# =============================================================================
+# CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
 # @file 
 # "Demo" algorithm for Python based phi -> K+ K- "analysis"
@@ -67,20 +69,25 @@ def configure() :
     preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
     
     # create analysis algorithm and add it to the list of
-    phi = Phi('Phi')
-    
+    phi = Phi('Phi')    
     gaudi.addAlgorithm ( phi ) 
-    
-    phi = gaudi.algorithm('Phi')
-    phi.OutputLevel = 5
     
     desktop = gaudi.tool('Phi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
-    
+
     # output histogram file 
     hsvc = gaudi.service( 'HistogramPersistencySvc' )
+    hsvc.HistogramPersistency = "HBOOK" 
     hsvc.OutputFile = 'phi.hbook'
+    
+    # add the printout of the histograms
+    hsvc = gaudi.service( 'HbookHistSvc' )
+    hsvc.PrintHistos = True
 
+    # switch off Davinci histograms
+    dv = gaudi.algorithm('DaVinci')
+    dv.doHistos = False
+    
     return SUCCESS
 
 # =============================================================================
@@ -92,7 +99,7 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 100  )
+    gaudi.run  ( 2500 )
     # terminate the Application Manager 
     gaudi.exit ()
     

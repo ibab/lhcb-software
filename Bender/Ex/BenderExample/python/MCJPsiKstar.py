@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCJPsiKstar.py,v 1.4 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: MCJPsiKstar.py,v 1.5 2005-01-24 17:33:00 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.5 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -24,11 +26,11 @@ class MCJPsiKstar(Algo):
     def analyse ( self ) :
         
         mc  = self.mctruth()
-        Bmc = mc.find ( decay = "[B0 -> J/psi(1S) K*(892)0]cc" )
-        print ' #Decay tree dound: ' , Bmc.size()
-        
-        lst = Seq2List  ( Bmc )
-        tup = Seq2Tuple ( Bmc )
+        Bmc  = mc.find ( decay = "[ B0 ->  J/psi(1S)  K*(892)0]cc" )
+        Psi  = mc.find ( decay = "[ B0 -> ^J/psi(1S)  K*(892)0]cc" )
+        Kst  = mc.find ( decay = "[ B0 ->  J/psi(1S) ^K*(892)0]cc" )
+        print ' #Decay tree found: '  ,  \
+              Bmc.size()  , Psi.size()  , Kst.size() 
         
         return SUCCESS 
     
@@ -56,20 +58,6 @@ def configure() :
     
     gaudi.setAlgorithms( [ alg ] ) 
     
-    alg = gaudi.algorithm('MC')
-    alg.OutputLevel = 5
-    alg.NTupleLUN    = 'MC'
-    
-    desktop = gaudi.tool('Dstar.PhysDesktop')
-    desktop.InputLocations  = [ "/Event/Phys/Charged"]
-    
-    # output histogram file 
-    hsvc = gaudi.service( 'HistogramPersistencySvc' )
-    hsvc.OutputFile = 'mc.hbook'
-    
-    nsvc = gaudi.service( 'NTupleSvc' )
-    nsvc.Output =[ "DSTAR DATAFILE='mc_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
-
     return SUCCESS
 # =============================================================================
 
@@ -81,7 +69,7 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 100 )
+    gaudi.run  ( 500 )
     # terminate the Application Manager 
     gaudi.exit ()
 # =============================================================================

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TES.py,v 1.4 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: TES.py,v 1.5 2005-01-24 17:33:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -24,30 +24,18 @@ class TES(Algo):
     " My own algorithm to demonstaret the direct manipulation with TES  "
     def analyse ( self ) :
 
-##         # get all mc-particles from Transient event store
-##         # (make on-flight convertsion to std::vector<> ) 
-##         mcps = self.get ( address = 'MC/Particles'  , vector = TRUE  )
+        # get all mc-particles from Transient event store
+        # (make on-flight convertsion to std::vector<> ) 
+        mcps = self.get ( address = 'MC/Particles'  , vector = TRUE  )
         
-##         # print the first 2 particles 
-##         i = 0 
-##         for mcp in mcps :
-##             if i < 2 :
-##                 print ' *** *** *** MC-particle *** *** *** \n' , `mcp` , \
-##                       mcp.particleID()
-##             i+=1
-            
-##         # get all "selection results" from the store 
-##         #  (make on-flight conversion to list) 
-##         sels = self.get ( address = 'Phys/Selections' , list = TRUE )
-
-##         # print all available selection results 
-##         if sels :
-##             for sel in sels :
-##                 print ' *** *** *** SelResult   *** *** *** \n' , \
-##                       `sel` , type(sel)          , \
-##                       hasattr( sel , 'decay' )  
-##                       #sel.decay() 
-
+        # print the first 2 particles 
+        i = 0 
+        for mcp in mcps :
+            if i < 2 :
+                print ' *** *** *** MC-particle *** *** *** \n' , `mcp` , \
+                      mcp.particleID()
+            i+=1
+                
         l0 = self.get( address = '/Event/Trig/L0/Decision')
         if l0 : self.Print( message = ' L0 desision ' + `l0.decision()` )  
         l1 = self.get( address = '/Event/Trig/L1/Decision')
@@ -60,9 +48,9 @@ class TES(Algo):
 # =============================================================================
 def configure() :
     
-    bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,
-                               '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,
-                               '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] )
+    gaudi.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,
+                              '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,
+                              '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] )
     
     # specific job configuration    
     # create analysis algorithm and add it to the list of

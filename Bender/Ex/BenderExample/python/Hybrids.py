@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-# $Id: Hybrids.py,v 1.3 2004-08-06 12:12:03 ibelyaev Exp $
+# =============================================================================
+# $Id: Hybrids.py,v 1.4 2005-01-24 17:33:00 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.4 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -12,7 +15,7 @@
 
 # import the Bender itself  
 from   bendermodule import *
-import benderconfig  as bender 
+import benderPreLoad as preload
 
 # =============================================================================
 # Specific physics analysis algorithm 
@@ -22,53 +25,50 @@ import benderconfig  as bender
 class Hybrids(Algo):
     " Trivial algorithm to text LoKiHybrid approach "
     def analyse ( self ) :
-
+        
         self.setFilterPassed ( TRUE )
         
+        pions = self.select( tag = 'pions' , cuts = ABSID == 'pi+' )
+        
         cut   = FILTER ( self.filterCriterion(0) )
-        pions = self.select( tag = 'pions' , cuts = ( ID == 'pi+' ) & ( cut ) )
-
+        sel   = self.select( tag    = 'sel'   ,
+                             source = pions   ,
+                             cuts   = cut     )
+        
+        self.Print( message = "Selected:\t#%d\tparticles from \t#%d pions" % ( sel.size() , pions.size() ) )
+        
         return SUCCESS 
 
 def configure() :    
     # Generic job configuration 
     
-    bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
-                   options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                               'HcalPIDmu.OutputLevel     =   5  ' ,
-                               'EcalPIDe.OutputLevel      =   5  ' ,
-                               'HcalPIDe.OutputLevel      =   5  ' ,
-                               'BremPIDe.OutputLevel      =   5  ' ,
-                               'PrsPIDe.OutputLevel       =   5  ' ,
-                               'Hybrids.Hybrid.Code  =  " ( PT > 0.1 * MeV  ) & ( P < 30 * GeV ) "  ' ,
-                               'Hybrids1.Hybrid.Code  =  " ( PT > 0.1 * MeV  ) & ( P < 30 * GeV ) "  ' ,
-                               'EventSelector.PrintFreq   =  50  ' ] )
-    
-    # define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
-    g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
+    gaudi.config( files =
+                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] ) # input data 
     
     # specific job configuration 
-    
-    # load LoKiHybrid library 
-    g.DLLs += [ 'LoKiHybrid' ] 
-    
-    # create analysis algorithm and add it to the list of
-    alg = Hybrids('Hybrids')
-    g.topAlg += [ 'Hybrids' ]
-    alg = gaudi.iProperty('Hybrids')
-    alg.OutputLevel = 5
-    alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
+    gaudi.addAlgorithm( 'LoKiPreLoad/Hadrons' ) 
+    preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
     
     # create analysis algorithm and add it to the list of
-    alg = Hybrids('Hybrids1')
-    g.topAlg += [ 'Hybrids1' ]
-    alg = gaudi.iProperty('Hybrids1')
-    alg.OutputLevel = 5
+    alg  = Hybrids('Hybrids')
+    gaudi.addAlgorithm( alg )    
+    alg  = gaudi.algorithm('Hybrids')
     alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
-    
-    # output histogram file 
-    hsvc = g.property( 'HistogramPersistencySvc' )
-    hsvc.OutputFile = 'Hybrids.hbook'
+    fltr = gaudi.tool('Hybrids.Hybrid')
+    fltr.Code = " PT > ( 1 * GeV )   "                  # NB!!!
+    desktop = gaudi.tool('Hybrids.PhysDesktop')
+    desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
+
+    alg  = Hybrids('Hybrids1')
+    gaudi.addAlgorithm( alg )    
+    alg  = gaudi.algorithm('Hybrids1')
+    alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']    
+    fltr = gaudi.tool('Hybrids1.Hybrid')
+    fltr.Code = " PT < ( 1 * GeV )   "                  # NB !
+    desktop = gaudi.tool('Hybrids1.PhysDesktop')
+    desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
     
     return SUCCESS
 
@@ -77,14 +77,10 @@ def configure() :
 # =============================================================================
 
 if __name__ == '__main__' :
-    import sys 
-    # analyse the options
-    nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 1000 
     # configure the job
     configure() 
     # run job 
-    g.run  ( nEvents )
+    g.run  ( 100  )
     # terminate the Application Manager 
     g.exit ()
  

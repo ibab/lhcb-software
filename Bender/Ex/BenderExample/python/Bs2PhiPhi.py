@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi.py,v 1.3 2004-11-25 14:55:05 ibelyaev Exp $
+# $Id: Bs2PhiPhi.py,v 1.4 2005-01-24 17:33:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -84,6 +84,7 @@ def configure () :
                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                     'HcalPIDmu.OutputLevel     =   5  ' ,
                     'EcalPIDe.OutputLevel      =   5  ' ,
+                    'NTupleSvc.OutputLevel     =   2  ' ,
                     'HcalPIDe.OutputLevel      =   5  ' ,
                     'BremPIDe.OutputLevel      =   5  ' ,
                     'PrsPIDe.OutputLevel       =   5  ' ,
@@ -99,14 +100,15 @@ def configure () :
     # create analysis algorithm and add it to the list of
     bs = Bs2PhiPhi('Bs2PhiPhi')
     gaudi.addAlgorithm( bs ) 
-    
+
+    #N-Tuple configuration 
+    nsvc = gaudi.service ('NTupleSvc')
+    nsvc.Output = ["PHIPHI DATAFILE='bs2phiphi_tup.hbook' OPT='NEW' TYP='HBOOK'"]
+        
     # output histogram file 
     hsvc = gaudi.histoSvc()
-    hsvc.setOutput( 'phi1.hbook' , 'HBOOK')
+    hsvc.setOutput( 'bs2phiphi_his.hbook' , 'HBOOK')
     
-    nsvc = gaudi.nTupleSvc()
-    nsvc.defineOutput( { 'PHIPHI' : 'bs2phiphi_tup.hbook' } , 'HBOOK')
-    nsvc.OutputLevel = 2
     
     bs = gaudi.algorithm('Bs2PhiPhi')
     bs.OutputLevel = 5
@@ -131,9 +133,6 @@ if __name__ == '__main__' :
   
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.2  2004/11/12 14:24:42  ibelyaev
-#  v4r2
-#
 # =============================================================================
 # The END 
 # =============================================================================

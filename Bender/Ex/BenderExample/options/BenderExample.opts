@@ -1,6 +1,8 @@
-// $Id: BenderExample.opts,v 1.5 2004-11-25 14:56:50 ibelyaev Exp $ 
+// $Id: BenderExample.opts,v 1.6 2005-01-24 17:33:00 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS version $Revision: 1.6 $ 
+// ============================================================================
+// CVS tag     $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -19,7 +21,6 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
 #pragma print on
 
 // Histogram persistency 

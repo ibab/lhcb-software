@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ExHlt.py,v 1.3 2004-11-30 16:31:37 ibelyaev Exp $
+# $Id: ExHlt.py,v 1.4 2005-01-24 17:33:00 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -85,7 +85,7 @@ def configure() :
                     '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ,   # input data 
                     '$TRGSYSROOT/options/L1.opts'           ,   # L1 procession 
                     '$TRGSYSROOT/options/Hlt.opts'          ,   # HLT configuration
-                    '$BENDEREXAMPLEOPTS/TrgTracks.opts' ,   # HLT configuration
+                    '$BENDEREXAMPLEOPTS/TrgTracks.opts'     ,   # HLT configuration
                     '$TRGSYSROOT/options/TrgChecking.opts'  ] , # HLT configuration
                   options =
                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
@@ -98,13 +98,9 @@ def configure() :
                     'Hadrons.OutputLevel       =   5  ' ,
                     'EventSelector.PrintFreq   = 100  ' ] )
     
-    
-    #if not 'TrgTools'  in gaudi.DLLs : gaudi.DLLs += [ 'TrgTools'  ] 
-    #if not 'TrgVelo'   in gaudi.DLLs : gaudi.DLLs += [ 'TrgVelo'   ] 
-    #if not 'TrgVeloTT' in gaudi.DLLs : gaudi.DLLs += [ 'TrgVeloTT' ] 
-    #if not 'STDAQ'     in gaudi.DLLs : gaudi.DLLs += [ 'STDAQ'     ] 
-    if not 'TrgChecker'     in gaudi.DLLs : gaudi.DLLs += [ 'TrgChecker' ] 
-    if not 'PhysSelections'  in gaudi.DLLs : gaudi.DLLs += [ 'PhysSelections'  ] 
+    _libs_ = ( 'TrgTools' , 'TrgVelo' , 'TrgVeloTT' ,
+               'STDAQ' , 'TrgChecker' , 'PhysSelections' )
+    for lib in _libs_ : if not lib in gaudi.DLLs : gaudi.DLLs += [ lib ]
 
     # specific job configuration 
 
@@ -143,6 +139,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/11/30 16:31:37  ibelyaev
+#  update for ExHlt for MC mathching
+#
 # Revision 1.2  2004/11/25 15:21:02  ibelyaev
 #  some polishing of ExHLT.py example
 #

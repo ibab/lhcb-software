@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi_Dst.py,v 1.2 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Bs2PhiPhi_Dst.py,v 1.3 2005-01-24 17:33:00 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revisison:  $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -81,7 +83,7 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 10  )
+    gaudi.run  ( 10 )
     # terminate Application Manager 
     gaudi.exit ()
     
