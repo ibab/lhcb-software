@@ -350,6 +350,7 @@ public:
   bool isInitialized() {return _isInit;}
   bool hasValidP4() {return _validP4;}
   bool isDecayed() {return _isDecayed;}
+  bool isBsMixed() ;
 protected:
 
   void setp( double e, double px, double py, double pz) { _p.set(e,px,py,pz); }

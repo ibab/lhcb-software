@@ -226,7 +226,7 @@ void EvtParticle::initDecay(bool useMinMass) {
     for ( i=0;i<par->getNDaug();i++) {
       EvtParticle *tDaug=par->getDaug(i);
       if ( p != tDaug )
-	parMass-=EvtPDL::getMinMass(tDaug->getId());
+        parMass-=EvtPDL::getMinMass(tDaug->getId());
     }
   }
 
@@ -235,12 +235,13 @@ void EvtParticle::initDecay(bool useMinMass) {
     if ( _ndaug>0) {
       int ii;
       for(ii=0;ii<_ndaug;ii++){
-	if ( EvtPDL::getWidth(p->getDaug(ii)->getId()) > 0.0000001)
-	  p->getDaug(ii)->initDecay(useMinMass);
-	else p->getDaug(ii)->setMass(EvtPDL::getMeanMass(p->getDaug(ii)->getId()));
+        if ( EvtPDL::getWidth(p->getDaug(ii)->getId()) > 0.0000001)
+          p->getDaug(ii)->initDecay(useMinMass);
+        else p->getDaug(ii)->
+               setMass(EvtPDL::getMeanMass(p->getDaug(ii)->getId()));
       }
     }
-
+    
     int j;
     EvtId *dauId=0;
     double *dauMasses=0;
@@ -248,8 +249,8 @@ void EvtParticle::initDecay(bool useMinMass) {
       dauId=new EvtId[_ndaug];
       dauMasses=new double[_ndaug];
       for (j=0;j<_ndaug;j++) { 
-	dauId[j]=p->getDaug(j)->getId();
-	dauMasses[j]=p->getDaug(j)->mass();
+        dauId[j]=p->getDaug(j)->getId();
+        dauMasses[j]=p->getDaug(j)->mass();
       }
     }
     EvtId *parId=0;
@@ -258,9 +259,10 @@ void EvtParticle::initDecay(bool useMinMass) {
     if (tempPar) {
       parId=new EvtId(tempPar->getId());
       if ( tempPar->getNDaug()==2 ) {
-	if ( tempPar->getDaug(0) == this ) othDauId=
-                                       new EvtId(tempPar->getDaug(1)->getId());
-	else othDauId=new EvtId(tempPar->getDaug(0)->getId());
+        if ( tempPar->getDaug(0) == this ) 
+          othDauId=
+            new EvtId(tempPar->getDaug(1)->getId());
+        else othDauId=new EvtId(tempPar->getDaug(0)->getId());
       }
     }
     if ( p->getParent() && _validP4==false ) {
@@ -275,57 +277,19 @@ void EvtParticle::initDecay(bool useMinMass) {
     if ( dauId) delete [] dauId;
     if ( dauMasses) delete [] dauMasses;
     return;
-  }
-
-  //Will include effects of mixing here
-  //added by Lange Jan4,2000
-  static EvtId BS0=EvtPDL::getId("B_s0");
-  static EvtId BSB=EvtPDL::getId("anti-B_s0");
-
-  if (getId()==BS0||getId()==BSB){
-    double t;
-    int mix;
-    EvtCPUtil::incoherentMix(getId(), t, mix);
-    setLifetime(t);
-    
-    if (mix) {
-
-      EvtScalarParticle* scalar_part;
-    
-      scalar_part=new EvtScalarParticle;
-      if (getId()==BS0) {
-	EvtVector4R p_init(EvtPDL::getMass(BSB),0.0,0.0,0.0);
-	scalar_part->init(BSB,p_init);
-      }
-      else{
-	EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
-	scalar_part->init(BS0,p_init);
-      }
-
-      scalar_part->setLifetime(0);
-
-      scalar_part->setDiagonalSpinDensity();      
-    
-      insertDaugPtr(0,scalar_part);
-
-      _ndaug=1;
-
-      p=scalar_part;
-
-    }
-  }
+  }  
 
   EvtDecayBase *decayer;
-  decayer = EvtDecayTable::GetDecayFunc(p);
+  decayer = EvtDecayTable::GetDecayFunc( p );
 
   if ( decayer ) {
-    p->makeDaughters(decayer->nRealDaughters(),decayer->getDaugs());
+    p->makeDaughters( decayer->nRealDaughters() , decayer->getDaugs() ) ;
     //report(INFO,"EvtGen") << "has inited " << p << std::endl;
     //then loop over the daughters and init their decay
-    int i;
-    for(i=0;i<_ndaug;i++){
+    int i ;
+    for( i=0 ; i<_ndaug ; i++ ) {
       if ( EvtPDL::getWidth(p->getDaug(i)->getId()) > 0.0000001)
-	p->getDaug(i)->initDecay(useMinMass);
+        p->getDaug(i)->initDecay(useMinMass);
       else p->getDaug(i)->setMass(EvtPDL::getMeanMass(p->getDaug(i)->getId()));
       //report(INFO,"EvtGen") << "has inited " << p->getDaug(i) << std::endl;
     }
@@ -344,7 +308,7 @@ void EvtParticle::initDecay(bool useMinMass) {
       dauMasses[j]=p->getDaug(j)->mass();
     }
   }
-
+  
   EvtId *parId=0;
   EvtId *othDauId=0;
   EvtParticle *tempPar=p->getParent();
@@ -375,6 +339,44 @@ void EvtParticle::decay(){
   //P is particle to decay, typically 'this' but sometime
   //modified by mixing 
   EvtParticle* p=this;
+
+  //Will include effects of mixing here
+  //added by Lange Jan4,2000
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");  
+  
+  if ( ( getId()==BS0 || getId()==BSB ) && ( ! isBsMixed() ) ) {
+    double t;
+    int mix;
+    EvtCPUtil::incoherentMix(getId(), t, mix);
+    setLifetime(t);
+    
+    if (mix) {
+      
+      EvtScalarParticle* scalar_part;
+      
+      scalar_part=new EvtScalarParticle;
+      if (getId()==BS0) {
+        EvtVector4R p_init(EvtPDL::getMass(BSB),0.0,0.0,0.0);
+        scalar_part->init(BSB,p_init);
+      }
+      else{
+        EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
+        scalar_part->init(BS0,p_init);
+      }
+      
+      scalar_part->setLifetime(0);
+      
+      scalar_part->setDiagonalSpinDensity();      
+      
+      insertDaugPtr(0,scalar_part);
+      
+      _ndaug=1;
+      
+      p=scalar_part;      
+    }
+  }
+
   //Did it mix?
   //if ( p->getMixed() ) {
     //should take C(p) - this should only
@@ -386,6 +388,7 @@ void EvtParticle::decay(){
 
   EvtDecayBase *decayer;
   decayer = EvtDecayTable::GetDecayFunc(p);
+  
   //  if ( decayer ) {
   //    report(INFO,"EvtGen") << "calling decay for " 
   //<< EvtPDL::name(p->getId()) << " " << p->mass() << " " << p->getP4() 
@@ -406,7 +409,7 @@ void EvtParticle::decay(){
 
   //if there are already daughters, then this step is already done!
   // figure out the masses
-  if ( _ndaug == 0 ) generateMassTree();
+  if ( p->getNDaug() == 0 ) p->generateMassTree();
 
   //now we have accepted a set of masses - time
   if ( decayer ) {
@@ -415,8 +418,8 @@ void EvtParticle::decay(){
   else{
     p->_rhoBackward.SetDiag(p->getSpinStates());
   }
-  _isDecayed=true;
-  return;    
+  _isDecayed=true; p->_isDecayed = true ;
+  return;
 
 }
 
@@ -940,8 +943,8 @@ void init_string( EvtParticle **part ){
 
 double EvtParticle::initializePhaseSpace(
                    int numdaughter,EvtId *daughters, double poleSize,
-		   int whichTwo1, int whichTwo2) {
-
+                   int whichTwo1, int whichTwo2) {
+  
   double m_b;
   int i;
   //lange
@@ -963,6 +966,7 @@ double EvtParticle::initializePhaseSpace(
   //report(INFO,"EvtGen") << "and this is\n";
   //if ( this) this->printTree();
   bool resetDaughters=false;
+
   for (i=0; i<numdaughter;i++) {
     if ( this->getDaug(i)->getId() != daughters[i] ) resetDaughters=true;
     //report(INFO,"EvtGen") << this->getDaug(i)->getId() << " " 
@@ -997,7 +1001,6 @@ double EvtParticle::initializePhaseSpace(
     for(i=0;i<numdaughter;i++){
       this->getDaug(i)->init(daughters[i],p4[i]);
     }
-
   }
   else  {
     if ( numdaughter != 3 ) {
@@ -1074,4 +1077,19 @@ void EvtParticle::makeDaughters( int ndaugstore, EvtId *id){
 
   } //else
 } //makeDaughters
+
+bool EvtParticle::isBsMixed ( ) 
+{ 
+  if ( ! ( getParent() ) ) return false ;
+  
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
+  
+  if ( ( getId() != BS0 ) && ( getId() != BSB ) ) return false ;
+  
+  if ( ( getParent()->getId() == BS0 ) ||
+       ( getParent()->getId() == BSB ) ) return true ;
+  
+  return false ;
+}
 
