@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v2r0 2005-01-18 ===========================
 ! 2005-01-18 - P. Koppenburg
   - options/Plots.opts
     . Add more wide-mass plots 
