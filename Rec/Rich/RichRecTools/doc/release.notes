@@ -4,8 +4,9 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
-! 2002-12-17 - Marco Cattaneo
+! 2002-12-20 - Marco Cattaneo
  - RichRecSegmentTool.cpp: release tools at finalize
+ - requirements:           use RichRecInterfaces v2r*
 
 !========================== RichRecTools v1r2 2003-12-06 ======================
 ! 2002-12-06 - Marco Cattaneo

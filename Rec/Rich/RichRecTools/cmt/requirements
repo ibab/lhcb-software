@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2002-12-19 09:32:44 cattanem Exp $
+# $Id: requirements,v 1.10 2002-12-20 11:02:44 cattanem Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 #
@@ -15,7 +15,7 @@ include_dirs $(RICHRECTOOLSROOT)
 
 # ================ dependencies =============================================
 use RichDetTools       v1r*   Rich
-use RichRecInterfaces  v1r*   Rich
+use RichRecInterfaces  v2r*   Rich
 use TrEvent            v12r*  Event
 # Temporary usage while SICB pixels used
 use RiSicbGeom         v3r*   SICB
