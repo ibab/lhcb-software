@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.13 2002-04-09 12:30:42 ibelyaev Exp $
+! $Id: release.notes,v 1.14 2002-04-22 07:58:39 cattanem Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,12 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+!=============================================================================
+! 18/04/2002 - Marco Cattaneo
+! - requirements - move to Gaudi v10
+!                - add a "private" which was reset by a previous pattern
+!=============================================================================
 
 !=============================================================================
 ! 09/04/2002 - Ivan Belyaev

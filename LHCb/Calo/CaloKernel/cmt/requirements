@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.10 2002-04-09 12:30:42 ibelyaev Exp $
+# $Id: requirements,v 1.11 2002-04-22 07:58:39 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2002/04/09 12:30:42  ibelyaev
+#  fix problems in 'requirements' file
+#
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -18,8 +21,8 @@ branches          src cmt doc CaloKernel
 include_dirs      $(CALOKERNELROOT)
 
 # =============== used packages ===============================================
-use LHCbKernel    v1*
-use GaudiKernel   v11r*
+use LHCbKernel    v1r*  Kernel
+use GaudiKernel   v12r*
 use CLHEP         v17r* 
         
 # =============== linker library ==============================================
@@ -39,6 +42,7 @@ apply_pattern     package_shlibflags
 # macro_append      CaloKernel_shlibflags " $(CLHEP_linkopts) "
 
 # =============== test application ============================================
+private
 application       CaloKernelTest  -check Test/*.cpp 
 macro CaloKernelTestlinkopts " $(CaloKernel_linkopts) "
 apply_pattern     application_path
