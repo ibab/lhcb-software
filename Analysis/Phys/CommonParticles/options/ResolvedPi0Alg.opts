@@ -1,29 +1,30 @@
-/** @file 
- *  Recommended options for ResolvedPi0Alg algorithm for reconstruction
- *  of pi0 -> gamma gamma
+/** @file
+ *
+ *  options for resolved Pi0 reconstruction
  *
  *  @author F.Machefert
- *  @date 2003-03-18
+ *  @date 2003-20-04
  */
 
-//  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 
 // Configure PhysDesktop Tool with necessary values
 ResolvedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";
-//ResolvedPi0Alg.PhysDesktop.OutputLocation="/Event/Phys/ResolvedPi0";
+ResolvedPi0Alg.PhysDesktop.OutputLocation="/Event/Phys/ResolvedPi0";
 
-ResolvedPi0Alg.PhysDesktop.PhotonParticleMaker.OutputLevel = 4;
-ResolvedPi0Alg.OutputLevel = 4;
+ResolvedPi0Alg.PhysDesktop.PhotonParticleMaker.OutputLevel = 3;
+ResolvedPi0Alg.OutputLevel = 3;
 
-ResolvedPi0Alg.HistogramFlag = true;
-ResolvedPi0Alg.Pi0MassWindow = 30.;     // MeV
-ResolvedPi0Alg.GammaPtCut    = 200.;     // MeV 
+ResolvedPi0ALg.PhotonMinLikelihood = 0.;
+ResolvedPi0Alg.MassWindow          = 30.;     // MeV
+ResolvedPi0Alg.SinglePhotonUse     = false;
+ResolvedPi0Alg.GammaPtCut          = 200.;    // MeV
+
+ResolvedPi0Alg.HistogramFlag       = true;
 
 // List of Criteria to use in Filter
 ResolvedPi0Alg.ParticleFilter.CriteriaNames = {"PIDFilterCriterion"};
 
 // Configure its PIDFilterCriterion Tool
 ResolvedPi0Alg.ParticleFilter.PIDFilterCriterion.ParticleNames = { "gamma" };
-ResolvedPi0Alg.ParticleFilter.PIDFilterCriterion.ConfidenceLevels = { 0.4 };
-
-ResolvedPi0Alg.DecayDescriptor = "pi0 -> gamma gamma";
+ResolvedPi0Alg.ParticleFilter.PIDFilterCriterion.ConfidenceLevels = { -1. };

@@ -26,7 +26,7 @@
 #include "ResolvedPi0Alg.h"
 
 static const  AlgFactory<ResolvedPi0Alg>         s_Factory ;
-const        IAlgFactory&ResolvedPi0AlgFactory = s_Factory ; 
+const        IAlgFactory&ResolvedPi0AlgFactory = s_Factory ;
 // ============================================================================
 
 // ============================================================================
@@ -42,51 +42,46 @@ ResolvedPi0Alg::ResolvedPi0Alg
     m_nEvents(0),
     m_pi0Count(0) 
 {
-  declareProperty( "HistogramFlag", m_produceHistogram = false );
-  declareProperty( "Pi0MassWindow", m_pi0MassWin = 35. * MeV);
-  declareProperty( "GammaPtCut", m_gPtCut = 200. * MeV);
+  declareProperty( "PhotonMinLikelihood" , m_photonLhMin = 0. );
+  declareProperty( "SinglePhotonUse"     , m_singlePhotonUse  = false);
+  declareProperty( "MassWindow"          , m_pi0MassWin = 35. * MeV);
+  declareProperty( "GammaPtCut"          , m_gPtCut     = 200. * MeV);
+  declareProperty( "Pi0PtCut"            , m_pi0PtCut   = -1000. * MeV);
+  declareProperty( "HistogramFlag"       , m_produceHistogram = false );
 };
 // ============================================================================
 
 // ============================================================================
 /// destructor (protected and virtual)
 // ============================================================================
-ResolvedPi0Alg::~ResolvedPi0Alg() {}; 
+ResolvedPi0Alg::~ResolvedPi0Alg() {};
 // ============================================================================
 
 // ============================================================================
 /**  standard Algorithm initialization
- *   @return status code 
+ *   @return status code
  */
 // ============================================================================
-StatusCode
-ResolvedPi0Alg::initialize() 
+StatusCode ResolvedPi0Alg::initialize()
 {
   MsgStream  logbk( msgSvc(), name() );
   logbk << MSG::INFO <<  " == > Initialize " << endreq;
-  
+
   StatusCode sc=StatusCode::SUCCESS;
-  
-  //  sc=loadTools(); 
-  
-  //  if( sc.isFailure() ) {
-  //    logbk << MSG::ERROR << "   Unable to load tools" << endreq;
-  //    return StatusCode::FAILURE;
-  //  }
-  
+
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   logbk << MSG::INFO << "    Looking for Particle Property Service." << endreq;
-  
-  IParticlePropertySvc* ppSvc = 0; 
+
+  IParticlePropertySvc* ppSvc = 0;
   sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-    logbk << MSG::FATAL << "    Unable to locate Particle Property Service" 
+    logbk << MSG::FATAL << "    Unable to locate Particle Property Service"
 	  << endreq;
     return sc;
   }
 
   ParticleProperty* partProp;
-  
+
   partProp = ppSvc->find( "pi0" );
   m_pi0ID = (*partProp).jetsetID();
   m_pi0Mass = (*partProp).mass();
@@ -98,54 +93,38 @@ ResolvedPi0Alg::initialize()
   if( m_produceHistogram )   {
     logbk << MSG::INFO << "    histograms will be produced" << endreq;
 
-    // Create the histograms 
+    // Create the histograms
     m_hMassPi0 = histoSvc()->
-      book("/stat/simple/1", "Reconstructed Pi0 Mass",
+      book("/stat/pi0/1", "Reconstructed Pi0 Mass",
 	   100,m_pi0Mass-m_pi0MassWin,m_pi0Mass+m_pi0MassWin);
     if( 0 == m_hMassPi0 ) {
       logbk << MSG::ERROR << "    Cannot register histogram 1" << endreq;
       return StatusCode::FAILURE;
     }
-  }    
+  }
 
-  /*
-  logbk << MSG::DEBUG << ">>> Retriving PhysDesktop" << endreq;
-  sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
-  if( sc.isFailure() ) {
-    logbk << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  logbk << MSG::DEBUG << ">>> Retriving ParticleStuffer" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer);
-  if( sc.isFailure() ) {
-    logbk << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
-	  << endreq;
-    return StatusCode::FAILURE;
-  }
-  */
+  logbk<<MSG::WARNING<<"setFilterPassed is systematically FALSE"<<endreq;
 
   ///
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 };
 // ============================================================================
 
 // ============================================================================
 /**  standard Algorithm finalization
- *   @return status code 
+ *   @return status code
  */
 // ============================================================================
-StatusCode 
-ResolvedPi0Alg::finalize() 
+StatusCode ResolvedPi0Alg::finalize()
 {
   MsgStream  logbk( msgSvc(), name() );
   logbk << MSG::INFO <<  " == > Finalize " << endreq;
-  
+
   // Print out counters
-  logbk << MSG::INFO << "    Number of events processed      = " 
+  logbk << MSG::INFO << "    Number of events processed      = "
 	<< m_nEvents << endreq;
 
-  logbk << MSG::INFO << "    Number of selected Pi0          = " 
+  logbk << MSG::INFO << "    Number of selected Pi0          = "
 	<< m_pi0Count << endreq;
   // End of finalization step
 
@@ -155,22 +134,22 @@ ResolvedPi0Alg::finalize()
 
 // ============================================================================
 /**  standard Algorithm execution
- *   @return status code 
+ *   @return status code
  */
 // ============================================================================
-StatusCode 
-ResolvedPi0Alg::execute() 
+StatusCode ResolvedPi0Alg::execute()
 {
   MsgStream  logbk( msgSvc(), name() );
 
-  setFilterPassed(false);	
   // Counter of events processed
   logbk << MSG::DEBUG << "    processing event number " << ++m_nEvents << endreq;
-  
+
   // Retrieve informations about event
   SmartDataPtr<EventHeader> evt(eventSvc(), EventHeaderLocation::Default );
-  
-  if ( evt ) {   
+
+  setFilterPassed(true);
+
+  if ( evt ) {
     logbk << MSG::DEBUG << "    retrieved EVENT: " << evt->evtNum()
 	  << " RUN: " << evt->runNum() << endreq;
   }
@@ -178,17 +157,14 @@ ResolvedPi0Alg::execute()
     logbk << MSG::ERROR << "    not able to retrieve event" << endreq;
     return StatusCode::FAILURE;
   }
-  
-  StatusCode scDesktop = desktop()->getInput();
-  if (!scDesktop) {
-    logbk << MSG::WARNING<< "    not able to fill PhysDesktop " << endreq;
-    return StatusCode::SUCCESS;
-  }
-  
-  // Retrieve the particles  from PhysDesktop 
+
+
+  StatusCode scDesktop;
+
+  // Retrieve the particles  from PhysDesktop
   const VertexVector& verts = desktop()->vertices();
   const ParticleVector& parts = desktop()->particles();
-  
+
   logbk<<MSG::DEBUG<<"Number of Vertices  :"<<verts.size()<<endreq;
   logbk<<MSG::DEBUG<<"Number of Particles :"<<parts.size()<<endreq;
 
@@ -203,100 +179,109 @@ ResolvedPi0Alg::execute()
 
   int pi0countperevt=0;
 
-  ParticleVector::const_iterator ip,ip1,ip2;
+  ParticleVector::iterator ip;
 
-  ParticleVector ptSelectedParts;
+  ParticleVector selectedPtConf;
 
   for( ip = selectedParts.begin() ; ip != selectedParts.end() ; ++ip ) {
-    unsigned int ind=ip-selectedParts.begin();
+    //unsigned int ind=ip-selectedParts.begin();
     double pt=(*ip)->momentum().et();
-    if (pt>m_gPtCut) {
-      ptSelectedParts.push_back(*ip);
-      logbk << MSG::DEBUG << " Photon Candidate "<<
-	ind<<" ["<<(*ip)->confLevel()<<"] : pt= "<< 
-	pt << "MeV" << endreq;
+    if (pt>m_gPtCut &&
+        (*ip)->confLevel()>m_photonLhMin &&
+        (*ip)->particleID()==m_gammaID
+        ) {
+      selectedPtConf.push_back(*ip);
+      /*
+      logbk << MSG::DEBUG << "Photon Candidate "<<
+        ind<<" [ConfLevel="<<(*ip)->confLevel()<<"], pt= "<<
+        pt << "MeV -> selected"<< endreq;
+*/
     }
   }
 
-  logbk<<MSG::DEBUG<<"Number of Particles passing Pt Cut :"<<ptSelectedParts.size()<<endreq;
+  logbk<<MSG::DEBUG<<"Number of Particles passing Pt Cut :"
+       <<selectedPtConf.size()<<endreq;
 
-  for( ip1 = ptSelectedParts.begin() ; ip1 != ptSelectedParts.end() ; ++ip1 ) {
-    if( (*ip1)->particleID() == m_gammaID ) {
-      for( ip2 = ip1+1 ; ip2 != ptSelectedParts.end() ; ++ip2 ) {
-	if( (*ip2)->particleID() == m_gammaID ) {
-	  // 
-	  unsigned int ind1=ip1-ptSelectedParts.begin();
-	  unsigned int ind2=ip2-ptSelectedParts.begin();
-	  
-	  HepLorentzVector ggComb(0.0, 0.0, 0.0, 0.0);
-	  ggComb = (*ip1)->momentum() + (*ip2)->momentum() ;
-	  double mass=ggComb.m();
-	  logbk << MSG::DEBUG << " Combinaison "<<
-	    ind1<<" ["<<(*ip1)->confLevel()<<"] + "<<
-	    ind2<<" ["<<(*ip2)->confLevel()<<"]"<<
-	    "  -> Pi0 hypo Mass = " << mass << " MeV" << endreq;
-	  if (fabs(mass-m_pi0Mass)<m_pi0MassWin) {
-	    logbk << MSG::DEBUG << " * Kept Pi0 candidate - (m=" << 
-	      m_pi0Mass << "+/-" <<
-	      m_pi0MassWin<<"MeV)"<<
-	      endreq;
-	    Vertex vtx;
-      HepPoint3D coord(0.,0.,0.);
-      vtx.setPosition( coord );
-	    vtx.addToProducts(*ip1);
-	    vtx.addToProducts(*ip2);
-	    vtx.setType(Vertex::Decay);
-	    
-	    Particle candPi0;
-	    ParticleID pi0PID( m_pi0ID );
-	    StatusCode scStuff = 
-	      particleStuffer()->fillParticle( vtx, candPi0, pi0PID );
-	    if ( !scStuff )  {
-	      logbk << MSG::ERROR << ">>> Particle stuffing failed" 
-		    << endreq;
-	      return StatusCode::FAILURE;
-	    }      
+  if (0==selectedPtConf.size()) {return StatusCode::SUCCESS;}
 
-	    Particle* pInDesktop  = desktop()->createParticle(&candPi0);
+  if (m_singlePhotonUse){
 
-	    pi0countperevt++;
+    // Single Photon use
+    std::vector< std::pair< SmartRef<Particle> ,bool> > orderedSelectedPtConf;
+    unsigned int isize=selectedPtConf.size();
 
-	    if( pInDesktop ) {
-	      if( m_produceHistogram ) {
-		m_hMassPi0->fill( mass/MeV, 1. );
-	      }
-	      logbk << MSG::DEBUG << "Pi0 added to PhysDesktop "
-		    << "Pid and momentum = " 
-		    << pInDesktop->particleID().pid() << ", "
-		    << pInDesktop->momentum().px() << ", "
-		    << pInDesktop->momentum().py() << ", "
-		    << pInDesktop->momentum().pz() << endreq;
-	      logbk << MSG::DEBUG << "Its decay vertex position = " 
-		    <<(pInDesktop->endVertex())->position().x()<< ", "
-		    <<(pInDesktop->endVertex())->position().y()<< ", "
-		    <<(pInDesktop->endVertex())->position().z()
-		    << endreq;
-		    }
-		    else {
-	      logbk <<MSG::DEBUG<< "not able to save Pi0 in desktop"
-		    << endreq;  
-	    }
-	  }
-	}
+    // sort photon candidates according to Pt reconstructed
+    for ( unsigned int i=0 ; i < isize ; ++i ){
+      double ptmax=-1.;
+      ParticleVector::iterator part;
+      for ( ip = selectedPtConf.begin() ;
+            ip != selectedPtConf.end() ;
+            ++ip ){
+        double pt=(*ip)->momentum().et();
+        if (pt>=ptmax){
+          ptmax=pt;
+          part=ip;
+        }
+      }
+      orderedSelectedPtConf.push_back(
+        std::pair< SmartRef<Particle> , bool > (*part,true));
+      selectedPtConf.erase(part);
+    }
+    if ( 0 != selectedPtConf.size() ) {
+      logbk<<MSG::WARNING<<"Photon candidate sorting was wrong..."<<endreq;
+      return StatusCode::FAILURE;
+    }
+
+    // Make Pi0 candidates from sorted list
+    std::vector< std::pair< SmartRef<Particle> ,bool> >::iterator ip1, ip2;
+    for( ip1 = orderedSelectedPtConf.begin() ;
+         ip1 != orderedSelectedPtConf.end()-1 ;
+         ++ip1 ) {
+      if ((*ip1).second) {
+        for( ip2 = ip1+1 ;
+             ip2 != orderedSelectedPtConf.end() ;
+             ++ip2 ) {
+          if ( (*ip1).second && (*ip2).second ) {
+            if (goodComb((*ip1).first,(*ip2).first)) {
+  //            unsigned int ind1=ip1-orderedSelectedPtConf.begin();
+  //            unsigned int ind2=ip2-orderedSelectedPtConf.begin();
+  //            logbk<<MSG::DEBUG<<"Pi0 <--"<<ind1<<" + "<<ind2<<endreq;
+              makePi0((*ip1).first,(*ip2).first);
+              pi0countperevt++;
+              (*ip1).second = false;
+              (*ip2).second = false;
+            }
+          }
+        }
       }
     }
   }
-	  
+  else {
+
+    // Multiple Photon use
+    ParticleVector::const_iterator ip1,ip2;
+
+    // Make Pi0 candidates
+    for( ip1 = selectedPtConf.begin() ; ip1 != selectedPtConf.end()-1 ; ++ip1 ){
+      for( ip2 = ip1+1 ; ip2 != selectedPtConf.end() ; ++ip2 ) {
+        if (goodComb(*ip1,*ip2)) {
+          makePi0(*ip1,*ip2);
+          pi0countperevt++;
+        }
+      }
+    }
+  }
+
   // Log number of Combinations found by previous step
-  logbk << MSG::INFO << "  Number of Pi0 found  = " 
+  logbk << MSG::DEBUG << "  Number of Pi0 found  = "
 	<< pi0countperevt<<endreq;
-  
-  logbk << MSG::INFO << "  Number of particles in desktop = " << parts.size() 
+
+  logbk << MSG::DEBUG << "  Number of particles in desktop = " << parts.size()
 	<< endreq;
 
   scDesktop = desktop()->saveDesktop(); // save all new particles
   if (scDesktop) {
-    logbk << MSG::INFO << " PhysDeskTop Saved to TES"<<endreq;
+    logbk << MSG::DEBUG << " PhysDeskTop Saved to TES"<<endreq;
   }
   else {
     logbk << MSG::ERROR << "not able to save desktop in TES"
@@ -310,9 +295,76 @@ ResolvedPi0Alg::execute()
 };
 // ============================================================================
 
+StatusCode ResolvedPi0Alg::makePi0(SmartRef<Particle> p1,
+                                   SmartRef<Particle> p2){
+  MsgStream  logbk( msgSvc(), name() );
+  //
+  Vertex vtx;
+  HepPoint3D coord(0.,0.,0.);
+  vtx.setPosition( coord );
+  vtx.addToProducts(p1);
+  vtx.addToProducts(p2);
+  vtx.setType(Vertex::Decay);
+
+  Particle candPi0;
+  ParticleID pi0PID( m_pi0ID );
+  StatusCode scStuff =
+        particleStuffer()->fillParticle( vtx, candPi0, pi0PID );
+  if ( !scStuff )  {
+    logbk << MSG::ERROR << ">>> Particle stuffing failed"<< endreq;
+    return StatusCode::FAILURE;
+  }
+
+  Particle* pInDesktop  = desktop()->createParticle(&candPi0);
+
+  if( pInDesktop ) {
+    if( m_produceHistogram ) {m_hMassPi0->fill( candPi0.mass()/MeV, 1. );}
+/*
+      logbk << MSG::DEBUG << "Pi0 added to PhysDesktop "
+        << "Pid and momentum = "
+        << pInDesktop->particleID().pid() << ", "
+        << pInDesktop->momentum().px() << ", "
+        << pInDesktop->momentum().py() << ", "
+        << pInDesktop->momentum().pz() << endreq;
+      logbk << MSG::DEBUG << "Its decay vertex position = "
+        <<(pInDesktop->endVertex())->position().x()<< ", "
+        <<(pInDesktop->endVertex())->position().y()<< ", "
+        <<(pInDesktop->endVertex())->position().z()
+        << endreq;
+*/
+  }
+  else {
+    logbk <<MSG::DEBUG<< "not able to save Pi0 in desktop"<< endreq;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+};
 
 // ============================================================================
-// The End 
+
+bool ResolvedPi0Alg::goodComb(SmartRef<Particle> p1,
+                                       SmartRef<Particle> p2){
+  MsgStream  logbk( msgSvc(), name() );
+  //
+  bool isGood=false;
+
+  HepLorentzVector ggComb(0.0, 0.0, 0.0, 0.0);
+  ggComb = (p1)->momentum() + (p2)->momentum() ;
+  double mass=ggComb.m();
+  double pt=ggComb.perp();
+
+//  logbk << MSG::DEBUG << " Combinaison  Mass = " << mass << " MeV" << endreq;
+
+  if (fabs(mass-m_pi0Mass)<m_pi0MassWin && pt>m_pi0PtCut ) {
+    isGood=true;
+    logbk << MSG::DEBUG << " Pi0 candidate  mass="<<mass<<" pt="<<pt
+          <<" (m=" <<m_pi0Mass << "+/-" <<m_pi0MassWin<<"MeV)"<<endreq;
+  }
+  return isGood;
+};
+
+// ============================================================================
+// The End
 // ============================================================================
 
 

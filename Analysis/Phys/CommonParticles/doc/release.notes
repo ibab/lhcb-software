@@ -4,8 +4,14 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2004-04-28 - P.Koppenburg
+ - options/ResolvedPi0Alg.opts
+ - src/ResolvedPi0Alg.cpp
+ - src/ResolvedPi0Alg.h
+   . New version with modified options
+
 !==================== CommonParticle v1r2 2004-04-20 ========================
-! 2004-04-22 - P.Koppenburg
+! 2004-04-22 - P.Koppenburg for F. Machefer
  - Added ResolvedPi0Alg and MergedPi0Alg
 
 !==================== CommonParticle v1r1 2004-04-20 ========================
