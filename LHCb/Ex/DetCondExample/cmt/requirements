@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2005-02-09 13:24:43 marcocle Exp $
+# $Id: requirements,v 1.21 2005-02-10 10:24:29 marcocle Exp $
 package DetCondExample
 version v6r1
 
@@ -25,6 +25,7 @@ use DetCond v6* Det
 use myodbc   v* LCG_Interfaces
 use mysql    v* LCG_Interfaces
 use unixodbc v* LCG_Interfaces
+set ODBCINST $(unixodbc_home)
 
 # library path needed for sqlite backend
 #path_remove LD_LIBRARY_PATH "/sqlite/"
