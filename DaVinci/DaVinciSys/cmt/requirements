@@ -1,5 +1,5 @@
 package DaVinciSys
-version v7r2
+version v7r3
 
 branches doc cmt
 
@@ -8,32 +8,31 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v7r2	Phys
+use  DaVinci             v7r3	Phys
 
 #--- DaVinci packages
-use  DaVinciTools        v7r2   Phys
+use  MCTools             v1r0   Phys
+use  DaVinciTools        v7r3   Phys
 use  DaVinciAssociators  v3r1   Phys
 use  DaVinciMCTools      v4r1   Phys
 use  DaVinciTest         v4r0   Phys
-use  PhysSelections      v4r2	Phys
+use  PhysSelections      v4r3	Phys
 use  FlavourTagging      v4r2	Phys
-use  DaVinciEff          v2r1   Phys
+use  DaVinciEff          v2r2   Phys
 use  DaVinciUser         v4r0   Phys
-use  GlobalReco          v2r3	Rec
-use  KsReco		 v1r4   Rec
+
+use  GlobalReco          v3r0	Rec
+use  KsReco		 v1r4p1 Rec
+use  PrimVtx             v2r0   Rec
 
 #--- Trigger
-use  L0Calo		v6r4	L0
-use  L0Muon             v6r3    L0
-use  L1VeloTrack 	v3r5	L1
-use  L0DU               v6r2	L0
-use  L1Decision         v1r4    L1
-
+use  L0DU                v6r4	L0
+use  L1Decision          v1r7   L1
 
 #--- ProtoParticles 
-use  CaloInterfaces     v2r4    Calo
-use  CaloUtils          v4r4    Calo
-use  CaloReco		v1r2	Calo
+use  CaloInterfaces      v2r4   Calo
+use  CaloUtils           v4r4   Calo
+use  CaloReco		 v1r3p1	Calo
 
 #--- Necessary tools
-use  TrExtrapolator     v2r4   Tr
+use  TrExtrapolator      v2r5   Tr
