@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.cpp,v 1.2 2003-04-16 09:24:40 cattanem Exp $
+// $Id: ParticleInfo.cpp,v 1.3 2003-04-16 13:49:38 cattanem Exp $
 // Include files 
 
 #include <iostream> 
@@ -41,7 +41,8 @@ ParticleInfo::ParticleInfo(MCParticle* particle)
   m_resultPointer = new std::vector<int> (maxDimension) ;
 //	cout<<"pippo "<<endl;
 }
-inline int ParticleInfo::getCollision()
+
+int ParticleInfo::getCollision()
 {
   return  m_pileupEventNumber;  
 }
