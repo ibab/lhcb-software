@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.7 2002-08-02 10:46:42 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.8 2002-11-04 08:40:10 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -183,6 +183,15 @@ StatusCode L0mTrigger::execute() {
   
   log << MSG::DEBUG << "Creating towers...  "; 
   
+  // Clean-up towers if the container is not empty
+  if ( ! m_towers.empty() ) {
+    std::vector<L0mTower*>::iterator it;
+    for (it = m_towers.begin(); it != m_towers.end(); it++ ) {
+      delete *it;
+    }
+    m_towers.clear();
+  }
+  
   L0mTower* lt; 
   
   for(ip=m_pads.begin(); ip != m_pads.end(); ip++ ) {
@@ -249,17 +258,6 @@ StatusCode L0mTrigger::execute() {
     // Make cleanup after the work is done
     (*ic)->clear();
   }
-  
-  //======================================
-  // Execution is over. Clean up towers
-  //======================================
-    	  
-  std::vector<L0mTower*>::iterator it;
-  for (it = m_towers.begin(); it != m_towers.end(); it++ ) {
-    delete *it;
-  }
-  m_towers.clear();
-  m_pads.clear();
   
   log << MSG::DEBUG << "=======> This event L0Muon trigger summary: " << endreq;
   log << MSG::DEBUG << "Total number of the candidates: " << cand->size()
