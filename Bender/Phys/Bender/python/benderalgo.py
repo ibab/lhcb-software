@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.2 2004-07-24 14:05:00 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.3 2004-08-06 12:07:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/07/11 15:47:05  ibelyaev
-#  regular incrment
-#
 # =============================================================================
 
 
 # =============================================================================
 # @file
 #
-# defintion of all Lo?ki/Bender functions/cuts 
+# defintion of basic Bender algorithm 
 #
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -242,9 +239,13 @@ class Algo(BenderAlgo):
     
     def evtCol         ( self , **args ) :
         " Retrive/Book the Event Tag Collection  object "
-        if not args.has_key( 'title' ) :
-            raise TypeError, "Tuple 'title' is not specified"
-        return Tuple( BenderAlgo.evtCol( self , args.get('title') ) ) 
+        if args.has_key ( 'ID'    ) :
+            _t = BenderAlgo.evtcol ( self , args.get ( 'ID' ) , args.get ( 'title' ,'' ) )
+            return Tuple ( _t ) ;
+        if args.has_key ( 'title' ) :
+            _t = BenderAlgo.evtcol ( self , args.get ( 'title' ) )
+            return Tuple ( _t ) ;
+        raise TypeError, "Tuple neither 'title' nor 'ID' is not specified"
     
     def evtCollection  ( self , **args ) : return self.evtCol( args )
     
@@ -306,16 +307,31 @@ class Algo(BenderAlgo):
         else      : return self.point (      ) 
         
     def Error          ( self , **args ) :
-        " Error printout and statistics "
-        message = args.get ( 'msg'    , 'Unspecified Error' )
-        code    = args.get ( 'code'   ,  FAILURE            )
-        prints  = args.get ( 'prints' , 10                  ) 
-        return BenderAlgo.Error( self , msg , code , prints )
+        """
+        Error printout and statistics
+        """
+        message = args.get ( 'message' , 'Unspecified Error' )
+        code    = args.get ( 'code'    ,  FAILURE            )
+        prints  = args.get ( 'prints'  , 10                  ) 
+        return BenderAlgo.Error( self  , msg , code , prints )
     
     def Warning        ( self , **args ) :
-        " Warning printout and statistics "
-        message = args.get ( 'msg'    , 'Unspecified Error' )
-        code    = args.get ( 'code'   , FAILURE             )
-        prints  = args.get ( 'prints' , 10                  ) 
+        """
+        Warning printout and statistics
+        """
+        message = args.get ( 'message' , 'Unspecified Error' )
+        code    = args.get ( 'code'    , FAILURE             )
+        prints  = args.get ( 'prints'  , 10                  ) 
         return BenderAlgo.Warning( self , msg , code , prints )
+    
+    def Print        ( self , **args ) :
+        """
+        Print the message with the given vernosity level 
+        """
+        message = args.get ( 'message' , ' <* EMPTY MESSAGE *> ' )
+        code    = args.get ( 'code'    , SUCCESS                 )
+        level   = args.get ( 'level'   , MSG.ALWAYS              )
+        if level >= MSG.NUM_LEVEL : level = MSG.ALWAYS
+        if level <  MSG.NIL       : level = MSG.ALWAYS  
+        return BenderAlgo.Print( self  , message , code , level  )
     

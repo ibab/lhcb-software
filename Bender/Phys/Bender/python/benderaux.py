@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.4 2004-07-25 12:06:13 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.5 2004-08-06 12:07:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/07/25 12:06:13  ibelyaev
+#  remove Bender.RootHelper
+#
 # Revision 1.3  2004/07/24 14:05:00  ibelyaev
 #  v3r5
 #
@@ -48,6 +51,41 @@ FitMassVertex = FitStrategy ( 2 )
 FitDirection  = FitStrategy ( 3 )
 FitLifeTime   = FitStrategy ( 4 )
 
+class _MSG_Levels ( object ) :
+    """
+    Pseudo 'Import of MSG::Levels enum into Bender
+    enum Level   {
+    NIL = 0,
+    VERBOSE,
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR,
+    FATAL,
+    ALWAYS,
+    NUM_LEVELS
+    };
+    """
+    __slots__ = ( 'NIL'       ,
+                  'VERBOSE'   ,
+                  'DEBUG'     ,
+                  'INFO'      ,
+                  'WARNING'   ,
+                  'ERROR'     ,
+                  'FATAL'     ,
+                  'ALWAYS'    ,
+                  'NUM_LEVEL' )
+
+MSG = _MSG_Levels()
+MSG.NIL       = 0
+MSG.VERBOSE   = 1
+MSG.DEBUG     = 2
+MSG.INFO      = 3
+MSG.WARNING   = 4
+MSG.ERROR     = 5
+MSG.FATAL     = 6
+MSG.ALWAYS    = 7
+MSG.NUM_LEVEL = 8
 
 # 'import' Vertex type enum 
 class _VertexType(object) :

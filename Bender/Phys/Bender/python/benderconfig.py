@@ -9,14 +9,21 @@ def getOptSvc( appMgr = None ) :
     svc    = gaudi.Interface( gaudi.gbl.IJobOptionsSvc ).cast( svc )
     return svc
 
-def extractProperty ( name , ownername ) :
+def replaceQuatas ( name ) :
+    return string.replace( name  , '"' , '')
+
+def getProperty     ( name , ownername ) :
     optSvc = getOptSvc() 
     props  = optSvc.getProperties( ownername )
-    res = []
     for p in props :
-        if name == p.name() : res = p.value() 
+        if name == p.name() :  return p.value()
+    return None
+
+def extractProperty ( name , ownername ) :
+    res = getProperty ( name , ownername )
+    if not res : res = [] 
     result = []
-    for p in res   : result += [ string.replace( p , '"' , '' ) ]
+    for p in res   : result += [ replaceQuatas ( p )  ]
     return result
 
 def config ( **args ) :
@@ -56,5 +63,40 @@ def config ( **args ) :
     for SVC in ExtSvc :
             if not SVC in appMgr.ExtSvc : appMgr.ExtSvc += [ SVC ]
     # add algorithms 
-    TopAlg = extractProperty( 'TopAlg'  , appMgr.name() )
+    TopAlg = extractProperty( 'TopAlg'    , appMgr.name() )
     appMgr.topAlg = TopAlg 
+    # add output streams
+    OutStr = extractProperty( 'OutStream' , appMgr.name() )
+    if OutStr : appMgr.OutStream = OutStr ;
+    # histogram persistency
+    histos = getProperty ( 'HistogramPersistency' , appMgr.name() )
+    if histos : appMgr.HistogramPersistency = replaceQuatas( histos ) ;
+    # number of events
+    #EvtMax = getProperty ( 'EvtMax' , appMgr.name() )
+    #if EvtMax :
+    #    print " evt MAx " , EvtMax , " type " , type(EvtMax) 
+    #    appMgr.EvtMax = EvtMax
+    
+    
+def getNEvents  ( options ) :
+    import getopt, string 
+    try:
+        opts , args = getopt.getopt ( options , "n:e:" ,
+                                      [ 'events=' , 'nevents=' ] )
+    except :
+        return None 
+    for o,a in opts :
+        if o in ( '-e' , '-n' , '--events=' , '--nevents' ) : return int( a )  
+    return None
+
+def getDVoptions ( options ) :
+    import getopt
+    try:
+        opts , args = getopt.getopt ( options , "d:o:j:" ,
+                                      [ 'davinci=' , 'options=' , "job=" ] )
+    except :
+        return None 
+    for o,a in opts :
+        if o in ( '-d' , '-o' , '-j' , '--davinci=' , '--options' , '--job' ) : return a 
+    return None
+    

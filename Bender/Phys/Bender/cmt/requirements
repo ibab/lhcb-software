@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.11 2004-07-24 14:04:59 ibelyaev Exp $ 
+# $Id: requirements,v 1.12 2004-08-06 12:07:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,20 +6,19 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           Bender
-version           v3r5
+version           v3r6
 
 #============================================================================
 branches          cmt doc src python
 
 # =============== dependencies ================================================
-use               BenderDict  v3r*  Tools 
-use               BenderDet   v1r*  Det  
-use               LoKiHybrid  v1r*  Tools 
-use               DaVinci     v11r* Phys 
+use               BenderDict  v*  Tools 
+use               BenderDet   v*  Det  
+use               LoKiHybrid  v*  Tools 
+use               DaVinci     v*  Phys 
 	
 # =============== consituents =================================================
 application       Bender      Bender.cpp
-
 
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              

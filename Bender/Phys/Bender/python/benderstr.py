@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstr.py,v 1.1 2004-07-24 15:03:33 ibelyaev Exp $ 
+# $Id: benderstr.py,v 1.2 2004-08-06 12:07:09 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/24 15:03:33  ibelyaev
+#  add benderstr
+#
 # =============================================================================
 
 
@@ -30,8 +33,6 @@ g.loaddict ( 'VeloEventDict' )
 g.loaddict ( 'RichEventDict' )
 g.loaddict ( 'MuonEventDict' )
 g.loaddict ( 'CaloEventDict' )
-g.loaddict ( 'L1EventDict'   )
-g.loaddict ( 'L0EventDict'   )
 
 def _fillStream_ ( self ) :
     _obj = self 
@@ -50,9 +51,7 @@ types = [ gbl.MCParticle    ,
           gbl.CaloParticle  ,
           gbl.CaloHypo      ,
           gbl.CaloCluster   ,
-          gbl.CaloDigit     ,
-          gbl.L0DUReport    ,
-          gbl.L1Report      ]
+          gbl.CaloDigit     ]
 
 for t in types :
     t.__repr__ = _fillStream_

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermcparticlecuts.py,v 1.1 2004-07-11 15:47:06 ibelyaev Exp $ 
+# $Id: bendermcparticlecuts.py,v 1.2 2004-08-06 12:07:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/11 15:47:06  ibelyaev
+#  regular incrment
+#
 # =============================================================================
 
 
@@ -33,31 +36,40 @@ g.loaddict('BenderDict')
 
 
 # interface functions, load & add the operators!!!
-MCFunc   = helper.loadFunMCP ( gbl.LoKi.Function  ( 'const MCParticle*' ) )
-
+MCFunc    = helper.loadFunMCP ( gbl.LoKi.Function               ( 'const MCParticle*' ) )
 # interface functions, load & add the operators!!!
-MCCuts   = helper.loadCutMCP ( gbl.LoKi.Predicate ( 'const MCParticle*' ) )
-
+MCCuts    = helper.loadCutMCP ( gbl.LoKi.Predicate              ( 'const MCParticle*' ) )
 # load & add the operators 
-MCFun    = helper.loadFunMCP ( gbl.LoKi.FunctionFromFunction   ( 'const MCParticle*' ) ) 
-
+MCFun     = helper.loadFunMCP ( gbl.LoKi.FunctionFromFunction   ( 'const MCParticle*' ) ) 
 # load & add the operators 
-MCCut    = helper.loadCutMCP ( gbl.LoKi.PredicateFromPredicate ( 'const MCParticle*' ) ) 
-
+MCCut     = helper.loadCutMCP ( gbl.LoKi.PredicateFromPredicate ( 'const MCParticle*' ) ) 
 # load & add the operators 
-MCPCONST = helper.loadFunMCP ( gbl.LoKi.Constant ( 'const MCParticle*' ) ) 
-
+MCPCONST  = helper.loadFunMCP ( gbl.LoKi.Constant               ( 'const MCParticle*' ) ) 
 # load & add the operators 
-MCPBCONST = helper.loadCutMCP ( gbl.LoKi.BooleanConstant ( 'const MCParticle*' ) ) 
+MCPBCONST = helper.loadCutMCP ( gbl.LoKi.BooleanConstant        ( 'const MCParticle*' ) ) 
+
+MCONE      = MCPCONST  ( 1.0 )
+MCPONE     = MCONE
+MCPZERO    = MCPCONST  ( 0.0 )
+MCZERO     = MCPZERO
 
 MCPALL     = MCPBCONST ( 1 )
+MCALL      = MCPALL 
 MCPTRUE    = MCPALL
+MCTRUE     = MCPALL 
 MCPNONE    = MCPBCONST ( 0 )
+MCNONE     = MCPNONE 
 MCPFALSE   = MCPNONE
+MCFALSE    = MCPNONE 
+
+MCPMIN     = helper.loadFunMCP ( gbl.LoKi.Min ( 'const MCParticle*' ) )
+MCMIN      = MCPMIN 
+MCPMAX     = helper.loadFunMCP ( gbl.LoKi.Max ( 'const MCParticle*' ) )
+MCMAX      = MCPMAX
 
 # objects 
-MCE     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
 MCP     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
+MCE     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
 MCPT    = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
 MCPX    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumX          ) ()
 MCPY    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumY          ) ()
@@ -69,6 +81,16 @@ MC3Q    = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
 MCCTAU  = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
 MCTIME  = MCCTAU
 
+
+# objects 
+CHARGED = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsCharged ) ()
+NEUTRAL = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNeutral ) ()
+LEPTON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsLepton  ) ()
+MESON   = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsMeson   ) ()
+BARYON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsBaryon  ) ()
+HADRON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsHadron  ) ()
+NUCLEUS = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNucleus ) ()
+
 # function
 MCQUARK = helper.loadCutMCP ( gbl.LoKi.MCParticles.HasQuark )
 
@@ -76,15 +98,6 @@ MCQUARK = helper.loadCutMCP ( gbl.LoKi.MCParticles.HasQuark )
 BEAUTY  = MCQUARK( 5 ) 
 CHARM   = MCQUARK( 4 ) 
 STRANGE = MCQUARK( 3 )
-
-# objects 
-NEUTRAL = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNeutral ) ()
-CHARGED = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsCharged ) ()
-LEPTON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsLepton  ) ()
-MESON   = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsMeson   ) ()
-BARYON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsBaryon  ) ()
-HADRON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsHadron  ) ()
-NUCLEUS = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNucleus ) ()
 
 # function 
 FROMMCTREE = helper.loadCutMCP ( gbl.LoKi.MCParticles.FromMCDecayTree )
