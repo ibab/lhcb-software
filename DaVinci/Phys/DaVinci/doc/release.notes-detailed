@@ -4,6 +4,10 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-09-01- P. Koppenburg
+  - job/DaVinci.job, job/Stripping.job
+    . Use cmtuser directory
+    
 !========================== DaVinci v12r0 2004-08-24 ====================
 ! 2004-08-25 - P. Koppenburg
   - src/Main/DaVinci.cpp

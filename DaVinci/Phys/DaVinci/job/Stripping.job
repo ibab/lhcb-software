@@ -45,8 +45,8 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v12r0"
-setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
+set Dversion = "v12r1"
+setenv MYJOBROOT $HOME/cmtuser/Phys/DaVinci/$Dversion
 
 # == set the program environment
 source $DaVinci_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
