@@ -4,6 +4,16 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2004-03-17 - Vanya BELYAEV
+ - src/NeutralPPsFromCPsAlg.cpp
+   1) add the usage of Frederic's Machefert CaloPhotonEstimatorTool/'PhotonPID'
+   ATTENTION!!!
+             It REQUIRES the usage of newer Calo/CaloPIDa package 
+   2) remove extra "release" (not needed anymore) 
+ -cmt/requirements
+   increase the version to v4r5 
+ 
+
 !===================== GlobalReco v4r4 2004-03-11 ===========================
 ! 2004-02-11 - P. Koppenburg
  - options/ChargedProtoPAlg.opts, src/ChargedProtoPAlg.*

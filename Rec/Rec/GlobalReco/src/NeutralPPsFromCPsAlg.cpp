@@ -1,20 +1,8 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.5 2004-03-11 10:35:46 pkoppenb Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.6 2004-03-17 16:27:56 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2003/04/08 08:49:12  ibelyaev
-//  NeutralPPsFromCPsAlg: reduce number of warnings for 0==CaloPosition*
-//
-// Revision 1.3  2003/04/08 08:37:03  ibelyaev
-//  NeutralPPsFromCPsAlg: add PhotonsFromMergedPi0 to the default list
-//
-// Revision 1.2  2003/01/19 11:41:20  ibelyaev
-//  bug fix for neutral ProtoParticle creator
-//
-// Revision 1.1  2002/11/20 20:00:24  ibelyaev
-//  new algorithm for creation of Neutral ProtoParticles
-// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -62,18 +50,23 @@ NeutralPPsFromCPsAlg::NeutralPPsFromCPsAlg( const std::string& name ,
   , m_hyposLong   ()
   , m_hypos       ()
   ///
-  , m_matchType   ("AssociatorWeighted<CaloCluster,TrStoredTrack,float>")
-  , m_matchName   ("PhotonMatch")
-  , m_match       ( 0           )
+  , m_matchType    ("AssociatorWeighted<CaloCluster,TrStoredTrack,float>")
+  , m_matchName    ("PhotonMatch")
+  , m_match        ( 0           )
   ///
-  , m_spdprsType  ("CaloSingleGammaTool")
-  , m_spdprsName  ("SpdPrsID"   )
-  , m_spdprs      ( 0           )
+  , m_spdprsType   ("CaloSingleGammaTool")
+  , m_spdprsName   ("SpdPrsID"   )
+  , m_spdprs       ( 0           )
+  ///
+  , m_photonIDType ( "CaloPhotonEstimatorTool")
+  , m_photonIDName ( "PhotonPID"  )
+  , m_photonID     ( 0            )
   ///
   , m_caloTrMatch_bad   (  1.e+6 )
   , m_caloDepositID_bad ( -1.e+6 )
   , m_showerShape_bad   ( -1.e+6 )
   , m_clusterMass_bad   ( -1.e+6 )
+  , m_photonID_bad      ( -1.e+6 )
   ///
   , m_calo              ( DeCalorimeterLocation:: Ecal )
 {
@@ -81,11 +74,13 @@ NeutralPPsFromCPsAlg::NeutralPPsFromCPsAlg( const std::string& name ,
   m_hyposLong.push_back( (long) CaloHypotheses::Pi0Merged           ) ;
   m_hyposLong.push_back( (long) CaloHypotheses::PhotonFromMergedPi0 ) ;
   // declare the properties 
-  declareProperty( "Hypos"        , m_hyposLong  ) ;
-  declareProperty( "MatchingType" , m_matchType  ) ;
-  declareProperty( "MatchingName" , m_matchName  ) ;
-  declareProperty( "SpdPrsIDType" , m_spdprsType ) ;
-  declareProperty( "SpdPrsIDName" , m_spdprsName ) ;
+  declareProperty( "Hypos"        , m_hyposLong    ) ;
+  declareProperty( "MatchingType" , m_matchType    ) ;
+  declareProperty( "MatchingName" , m_matchName    ) ;
+  declareProperty( "SpdPrsIDType" , m_spdprsType   ) ;
+  declareProperty( "SpdPrsIDName" , m_spdprsName   ) ;
+  declareProperty( "PhotonIDType" , m_photonIDType ) ;
+  declareProperty( "PhotonIDName" , m_photonIDName ) ;
   
   // set the appropriate default for input data
   setInputData  ( CaloParticleLocation::  Default  ) ;
@@ -130,33 +125,21 @@ StatusCode NeutralPPsFromCPsAlg::initialize()
     };
   
   // locate match 
-  m_match  = tool< IMatch >( m_matchType  , m_matchName ) ;
+  m_match    = tool< IMatch >( m_matchType  , m_matchName ) ;
   if( 0 == m_match  ) { return StatusCode::FAILURE ; }
   
   // locate spdprs
-  m_spdprs = tool< ICaloHypoLikelihood>( m_spdprsType , m_spdprsName ) ;
+  m_spdprs   = tool< ICaloHypoLikelihood>( m_spdprsType , m_spdprsName ) ;
   if( 0 == m_spdprs ) { return StatusCode::FAILURE ; }
 
+  // locate photon ID 
+  m_photonID = tool< ICaloHypoLikelihood>( m_photonIDType , m_photonIDName ) ;
+  if( 0 == m_spdprs ) { return StatusCode::FAILURE ; }
+  
   // redefine the  detector 
   m_calo.setCalo( detData() );
   
   return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization method 
- *  @see CaloAlgorithm
- *  @return statsu code 
- */
-// ============================================================================
-StatusCode NeutralPPsFromCPsAlg::finalize() 
-{
-  // release used tools 
-  if( 0 != m_spdprs ) { m_spdprs -> release ()  ; m_spdprs = 0 ; }
-  if( 0 != m_match  ) { m_match  -> release ()  ; m_match  = 0 ; }
-  // finalize the base class 
-  return CaloAlgorithm::finalize() ;
 };
 // ============================================================================
 
@@ -167,8 +150,6 @@ StatusCode NeutralPPsFromCPsAlg::finalize()
 // ============================================================================
 StatusCode NeutralPPsFromCPsAlg::execute() 
 {
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
   
   /// avoid long names 
   typedef const CaloParticles       CPs   ;
@@ -200,6 +181,7 @@ StatusCode NeutralPPsFromCPsAlg::execute()
       double         caloDepositID_ =  m_caloDepositID_bad ;
       double         showerShape_   =  m_showerShape_bad   ;
       double         clusterMass_   =  m_clusterMass_bad   ;
+      double         photonID_      =  m_photonID_bad      ;
       
       // get all hypos, and loop over all "allowed" hypos  
       const Hypos& hypos = cp->hypos();
@@ -243,6 +225,13 @@ StatusCode NeutralPPsFromCPsAlg::execute()
             if( clusterMass_  < mass  ) { clusterMass_ = mass ; }
           } // end of ClusterMass processing
           
+          { // process with PhotonID estimator 
+            const double phID          = photonID  ( hypo );
+            // select MAXIMAL photon ID estimator 
+            if( photonID_ < phID  ) { photonID_ = phID ; }
+            // end of Phtoon ID  processing
+          }             
+          
         } // end of loop over all hypos for given CaloParticle
       
       // ProtoParticle was not created ? 
@@ -262,11 +251,10 @@ StatusCode NeutralPPsFromCPsAlg::execute()
       pp-> pIDDetectors().
         push_back( std::make_pair( ProtoParticle::ClusterMass   , 
                                    clusterMass_                 ) );
+      pp-> pIDDetectors().
+        push_back( std::make_pair( ProtoParticle::PhotonID      , 
+                                   photonID_                    ) );
     }
-  
-  msg << MSG::DEBUG 
-      << " Total number of created neutral ProtoParticles is " 
-      << pprtcls -> size() << endreq ;
   
   return StatusCode::SUCCESS;
 };
@@ -398,18 +386,46 @@ double  NeutralPPsFromCPsAlg::caloDepositID ( const CaloHypo*  hypo  )  const
   double dep = m_caloDepositID_bad ;
   // check arguments
   if     ( 0 == hypo ) 
-    {
-      Error("caloDepositID(): CaloHypo* points to NULL!");
-      return dep;                                              // RETURN !!
-    }
+  {
+    Error("caloDepositID(): CaloHypo* points to NULL!");
+    return dep;                                              // RETURN !!
+  }
   
   if( hypo->hypothesis() != CaloHypotheses::Pi0Merged ) 
-    { dep = m_spdprs -> likelihood( hypo ) ; }
+  { dep = m_spdprs -> likelihood( hypo ) ; }
   
   return dep ;
 };
 // ============================================================================
+
+// ============================================================================
+/** helpful technical method to evaluate 
+ *  the ProtoParticle::PhotonID estimator
+ *  @see ProtoParticle
+ *  @param hypo  pointer to the hypo 
+ *  @return the value of the estimator 
+ */
+// ============================================================================
+double NeutralPPsFromCPsAlg::photonID      
+( const CaloHypo*  hypo  )  const 
+{
+  double phID = m_photonID_bad ;
+  if ( 0 == hypo ) 
+  {
+    Error ( "photonID(): CaloHypo* points to NULL!" ) ;
+    return phID ;                                              // RETURN !!
+  }
   
+  if( hypo->hypothesis() == CaloHypotheses::Photon               || 
+      hypo->hypothesis() == CaloHypotheses::PhotonFromMergedPi0  || 
+      hypo->hypothesis() == CaloHypotheses::BremmstrahlungPhoton || 
+      hypo->hypothesis() == CaloHypotheses::BremmstrahlungPhoton  ) 
+  { phID = m_spdprs -> likelihood( hypo ) ; }
+  
+  return phID  ;
+};
+// ============================================================================
+
 
 // ============================================================================
 // The END 
