@@ -1,4 +1,4 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.5 2002-06-21 13:43:44 ocallot Exp $ 
+// $Id: TransportSvcFindLocalGI.h,v 1.6 2002-06-21 13:46:11 ocallot Exp $ 
 // ============================================================================
 #ifndef        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__
 #define        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__ 1
@@ -160,7 +160,8 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
         } else {
           IGeometryInfo* gl2 = gl->belongsTo( point2 ); 
           if   ( gl1 == gl2 ) {
-            std::cout << "   extended to " << gl2->lvolumeName() << std::endl;
+            if ( debug ) std::cout << "   extended to " 
+                                   << gl2->lvolumeName() << std::endl;
             m_vGi.push_back( gl2 ); gl = gl2 ; 
           } else {
             gl = 0; 
