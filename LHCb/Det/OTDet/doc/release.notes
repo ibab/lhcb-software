@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.14 2002-11-11 14:13:36 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-11-12 12:48:50 jvantilb Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2002-11-12 - Jeroen van Tilburg
+ - Add inefficiency around y=0. Halfway each long module are wire
+   terminators which are inefficient. Since the modules are divided into
+   a top and bottom part, the A layer (of the staggered double layer) is
+   inefficient in the last 45 mm of the bottom part and the B layer in the
+   last 45 mm of the top part.
 
 !========================= OTDet v3r1 2002-11-11 ===========================
 ! 2002-11-11 - Jeroen van Tilburg

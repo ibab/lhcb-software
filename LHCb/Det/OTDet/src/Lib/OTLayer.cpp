@@ -1,4 +1,4 @@
-// $Id: OTLayer.cpp,v 1.5 2002-10-14 15:44:08 jvantilb Exp $
+// $Id: OTLayer.cpp,v 1.6 2002-11-12 12:48:50 jvantilb Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -26,7 +26,8 @@ OTLayer::OTLayer(int iLayer, int iStation, double zLayer,
       m_zOfLayer(zLayer), 
       m_pitchStraw(pitchStraw),  
       m_cellRadius(2.5*mm),
-      m_stereoAngle(stereoAngle*degree)
+      m_stereoAngle(stereoAngle*degree),
+      m_inefficientRegion(44.*mm)
 {
   m_sinAngle = sin(stereoAngle*degree);  
   m_cosAngle = cos(stereoAngle*degree);  
@@ -805,5 +806,26 @@ void OTLayer::hitModuleAndStraw( double u, double v,
   if ( hitStrA > m_halfNumStraw[hitMod]) { hitStrA = m_halfNumStraw[hitMod]; }
   if ( hitStrB > m_halfNumStraw[hitMod]) { hitStrB = m_halfNumStraw[hitMod]; }
   hitStrB += m_halfNumStraw[hitMod];
+
+  // Add inefficiency from wire terminators around y=0 
+  if ( hitMod <= m_halfNumModule ) { // Bottom module
+    // check if a) the module is long module ( not below or above IT )
+    //          b) the v value is in the inefficient region
+    if ( ( hitMod < m_halfNumModule/2 || hitMod > (m_halfNumModule+3)/2 ) && 
+         v - vCen - vHalf > -m_inefficientRegion ) {
+      // straw A is inefficient
+      hitStrA = -9999;
+    }
+  } else { // Top Module
+    // check if a) the module is long module ( not below or above IT )
+    //          b) the v value is in the inefficient region
+    if ( ( hitMod - m_halfNumModule < m_halfNumModule/2 || 
+           hitMod - m_halfNumModule > (m_halfNumModule+2)/2 ) &&
+         v - vCen + vHalf < m_inefficientRegion) {
+      // straw B is inefficient
+      hitStrB = -9999;
+    }
+  }
+
 }    
 

@@ -1,4 +1,4 @@
-// $Id: OTLayer.h,v 1.6 2002-11-11 11:40:39 jvantilb Exp $
+// $Id: OTLayer.h,v 1.7 2002-11-12 12:48:49 jvantilb Exp $
 #ifndef OTDET_OTLAYER_H
 #define OTDET_OTLAYER_H 1
 
@@ -157,6 +157,7 @@ private:
   double  m_stereoAngle;     ///< stereo angle
   double  m_sinAngle;        ///< sin of the stereo angle
   double  m_cosAngle;        ///< cos of the stereo angle
+  double m_inefficientRegion;///< size of inefficient region around y=0
 
 };
 
