@@ -1,4 +1,4 @@
-// $Id: LHCbAlgs_load.cpp,v 1.4 2004-07-14 16:17:33 cattanem Exp $
+// $Id: LHCbAlgs_load.cpp,v 1.5 2004-07-21 08:02:14 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -17,5 +17,4 @@ DECLARE_FACTORY_ENTRIES( LHCbAlgs ) {
   DECLARE_ALGORITHM( LbAppInit );
   DECLARE_ALGORITHM( ProcessPhase );
   DECLARE_ALGORITHM( TESFilter );
-  DECLARE_ALGORITHM( StoreExplorer );
 }

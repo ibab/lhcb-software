@@ -2,7 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!====================== LHCbKernel v4r7 2004-07-01 ========================
+!====================== LHCbKernel v5r0 2004-07-19 ========================
+! 2004-07-19 - Marco Cattaneo
+ - Adapt requirements for Gaudi v15
+ - Remove Relations subpackage, now a separate package
+ - Remove some serializers from SerializeStl.h, now defined in GaudiKernel
+ - Put use GaudiObjDesc in private section
+
 ! 2004-06-29 - Chris Jones
  - Added "Invalid" to the RichDetectorType, RichRadiatorType and 
    RichSide enumerations.

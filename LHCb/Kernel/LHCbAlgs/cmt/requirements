@@ -15,7 +15,7 @@ include_path    none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use GaudiAlg    	v7r*
+use GaudiAlg    	v*
 use LHCbInterfaces	v1r*	Kernel
 use GenEvent    	v3r*    Event
 

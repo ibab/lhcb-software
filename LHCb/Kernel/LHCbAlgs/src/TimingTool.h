@@ -1,11 +1,11 @@
-// $Id: TimingTool.h,v 1.1 2004-07-14 16:17:33 cattanem Exp $
+// $Id: TimingTool.h,v 1.2 2004-07-21 08:02:14 cattanem Exp $
 #ifndef TIMINGTOOL_H 
 #define TIMINGTOOL_H 1
 
 // Include files
 
 // from Gaudi
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Chrono.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 

@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.56 2004-06-14 12:58:09 cattanem Exp $
+# $Id: requirements,v 1.57 2004-07-21 08:02:05 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v4r7
+version v5r0
 
 include_dirs $(LHCBKERNELROOT)
 
-use GaudiTools   v*
-use GaudiObjDesc v6r*
+use GaudiKernel  v16r*
+use CLHEP        v*    LCG_Interfaces
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
@@ -22,11 +22,11 @@ macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
 document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 
 # Produce lcg dictionary for stl containers used in LHCb
-apply_pattern lcg_dictionary dictionary=LHCbKernel                  \
-                             headerfiles=$(LHCBKERNELROOT)/Kernel/lcgStl.h     \
-                             selectionfile=$(LHCBKERNELROOT)/xml/lcg_selection.xml \
-                             options="--split"
-
+document lcg_dictionary_generator LHCbKernelGen \
+      $(LHCBKERNELROOT)/Kernel/lcgStl.h dictionary=LHCbKernel
+macro_append LHCbKernel_lcgdict_options \
+      '--select=$(LHCBKERNELROOT)/xml/lcg_selection.xml --split --pool \
+       -I"$(POOL_home)/../include" $(includes)'
 
 # Build libraries (including dictionary)
 #============================================================================
@@ -38,25 +38,6 @@ library LHCbKernelDict ../dict/*.cpp ../$(tag)/dict/LHCbKernel/*.cpp
 apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
-# Uncomment to find memory leaks in Relations - 
-#============================================================================
-macro_append LHCbKernel_pp_cppflags '  -DCOUNT_INSTANCES  ' \
-        WIN32                       ' /D"COUNT_INSTANCES" '
+private
+use GaudiObjDesc v6r*
 
-# Test applications (currently not available in CVS!)
-#============================================================================
-#private
-#application   RelationTest1  -check     Test/RelationTest1.cpp 
-#application   RelationTest2  -check     Test/RelationTest2.cpp 
-#application   RelationTest3  -check     Test/RelationTest3.cpp 
-#application   RelationTest4  -check     Test/RelationTest4.cpp 
-#application   RelationTest5  -check     Test/RelationTest5.cpp 
-#macro_prepend RelationTest1linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-#macro_prepend RelationTest2linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-#macro_prepend RelationTest3linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-#macro_prepend RelationTest4linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-#macro_prepend RelationTest5linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-
-#apply_pattern application_path
-#path_remove   PATH                  "LHCbKernel"
-#path_append   PATH                  ${LHCBKERNELROOT}/${BINDIR}
