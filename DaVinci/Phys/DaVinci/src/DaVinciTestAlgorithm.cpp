@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.1.1.1 2001-07-09 09:30:15 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.2 2001-07-16 15:21:49 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -253,8 +253,18 @@ StatusCode DaVinciTestAlgorithm::execute() {
     bool lSELFlag = false;
     bool lTAGFlag = false;
 
-    mysel->results(m_selDec,lMCFlag,lTKRFlag,lPQUALFlag,
+    std::vector<std::string> selList;    
+    mysel->whichPhysSelDecays(selList);
+    
+    if( selList.size() < 1 ) {
+      return StatusCode::SUCCESS;
+    }
+    
+    std::string tmpName = selList[0];
+    mysel->results(tmpName,lMCFlag,lTKRFlag,lPQUALFlag,
                                  lSELFlag,lAGRFlag,lTAGFlag);
+    //    mysel->results(m_selDec,lMCFlag,lTKRFlag,lPQUALFlag,
+    //                             lSELFlag,lAGRFlag,lTAGFlag);
     log << MSG::DEBUG << "    PhysSel results for " << m_selDec << std::endl
         << "                              MCFlag    " << lMCFlag << std::endl
         << "                              TKRFlag   " << lTKRFlag << std::endl
