@@ -5,8 +5,10 @@
  *  Header file for tool interface : IRichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: IRichHPDToLevel1Tool.h,v 1.1 2005-01-07 12:41:57 jonrob Exp $
+ *  $Id: IRichHPDToLevel1Tool.h,v 1.2 2005-01-13 12:15:18 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:41:57  jonrob
+ *  Add new interfaces
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -73,6 +75,18 @@ public:
    *  @return HPD hardware identifiers
    */
   virtual const RichDAQ::HPDHardwareIDs & l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const = 0;
+
+  /** Access mapping between Level 1 IDs and HPD RichSmartIDs
+   *
+   *  @return Mapping between L1 and RichSmartIDs
+   */
+  virtual const RichDAQ::L1ToSmartIDs & l1HPDSmartIDs() const = 0;
+
+  /** Access mapping between Level 1 IDs and HPD RichSmartIDs
+   *
+   *  @return Mapping between L1 and RichSmartIDs
+   */
+  virtual const RichDAQ::L1ToHardIDs & l1HPDHardIDs() const = 0;
 
 };
 
