@@ -2305,8 +2305,7 @@ StatusCode LagrangeGeomVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   cte(6) = sqrt( p12 ) - p1*p2*co12 - beta1;
   cte(7) = sqrt( p34 ) - p3*p4*co34 - beta2;
   
-  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with two
- ressonances" << endreq;
+  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with two ressonances" << endreq;
   log << MSG::DEBUG << cte << endreq;
   
   // Partial derivatives of 'sqrt' of momenta combinations.
