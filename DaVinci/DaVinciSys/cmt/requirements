@@ -1,5 +1,5 @@
 package DaVinciSys
-version v8r3p3
+version v8r3p4
 
 branches doc cmt
 
@@ -8,14 +8,13 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v8r3p3 Phys
+use  DaVinci             v8r3p4 Phys
 
-use  DaVinciEff          v2r7   Phys
-
-use  PhysSelSys          v5r7   PhysSel
-use  Bd2MuMuKstar        v1r2   PhysSel
+use  PhysSelSys          v5r8   PhysSel
+use  Bs2MuMu             v1r3   PhysSel
+use  Bd2DstarPi          v1r2   PhysSel
+use  B2DD                v1r4   PhysSel
 
 #--- DecayPreselections
-use  DecayPresel         v1r5p3 Tools
-
+use  DecayPresel         v1r5p4 Tools
 
