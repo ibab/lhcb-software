@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.4 2004-07-08 13:27:48 pkoppenb Exp $
+// $Id: BTagging.h,v 1.5 2004-07-28 14:18:05 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -27,7 +27,7 @@
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
 #include "Event/L0DUReport.h"
-#include "Event/L1Report.h"
+//#include "Event/L1Report.h"
 #include "Event/FlavourTag.h"
 #include "Event/GenMCLink.h"
 // from RecoTools

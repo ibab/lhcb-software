@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v5r1
+version           v5r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -22,13 +22,13 @@ use DaVinciTools    v*  Phys
 use DaVinciMCTools  v*  Phys
 use MCTools         v*  Phys
 use L0Event	    v*  Event
-use L1Event         v*  Event
+use TrgEvent        v*  Event
 use GenEvent        v*  Event
 use RecoTools       v*  Rec
 
 # Component library building rule
 #============================================================================
-library          FlavourTagging    ../src/*.cpp
+library          FlavourTagging    ../src/*.cpp -import=AIDA
 
 # define component library link options
 #============================================================================

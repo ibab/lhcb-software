@@ -105,8 +105,8 @@ StatusCode BTagging::execute() {
   m_trig0 = 0; if( 0 != l0du ) if( l0du->decision() ) m_trig0 = 1;
 
   // Retrieve L1-trigger info
-  SmartDataPtr<L1Report> L1Report( eventSvc(), L1ReportLocation::Default );
-  m_trig1 = 0; if( 0 != L1Report ) if( L1Report->decision() ) m_trig1 = 1;
+  //  SmartDataPtr<L1Report> L1Report( eventSvc(), L1ReportLocation::Default );
+  //  m_trig1 = 0; if( 0 != L1Report ) if( L1Report->decision() ) m_trig1 = 1;
 
   // Counter of events processed
   req << MSG::DEBUG << ">>>>>  Tagging Event Nr " << evt->evtNum()

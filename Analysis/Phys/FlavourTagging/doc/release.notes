@@ -4,6 +4,12 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2004-07-23 - P. Koppenburg
+ - cmt/requirements
+   . L1Event -> TrgEvent
+   . Import AIDA
+ - src/*.cpp
+   . Comment out all obsolete L1 stuff
 !========================== FlavourTagging v5r1 2004-07-22 ===================
 ! 2004-07-08 - P. Koppenburg for Marco Musy
   - options/BTagging.opts
