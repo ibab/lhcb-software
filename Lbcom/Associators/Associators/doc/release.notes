@@ -1,6 +1,11 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! ======================= Associators v2r0 2003-03-20 ===================
+! 2003-03-19 - Gloria Corti
+ - Add associactors and relation tables factories for L0Candidates,
+   L1Track2d and L1Track3d taken from L0Calo and L1VeloTrack package
+
 ! ======================= Associators v1r0 2002-10-11 ===================
 ! 2002-10-09 - Rutger van der Eijk
  - MCParticle2MCHitAlg & MCParticle2MCVeloHitAlg: Remove uses of protected

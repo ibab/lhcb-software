@@ -1,7 +1,7 @@
 # Created by Rutger Hierck 07-07-2002
 #
 package Associators
-version v1r0
+version v2r0
 
 branches Associators src cmt doc
 
@@ -10,7 +10,9 @@ include_dirs $(ASSOCIATORSROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use VeloEvent   v11r* Event
+use VeloEvent   v12r* Event
+use L0Event	v13r* Event
+use L1Event     v11r* Event
 
 # default library
 #============================================================================
