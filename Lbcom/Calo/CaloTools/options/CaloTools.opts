@@ -1,8 +1,11 @@
-// $Id: CaloTools.opts,v 1.6 2002-07-15 18:50:15 ibelyaev Exp $ 
+// $Id: CaloTools.opts,v 1.7 2002-07-21 18:56:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/07/15 18:50:15  ibelyaev
+//  add new tool for combined Spd/Prs ID
+//
 // Revision 1.5  2002/06/21 11:02:41  ibelyaev
 //  update in S-,L- and E-corrections
 //
@@ -32,6 +35,9 @@ ApplicationMgr.DLLs += { "CaloTools" };
 
 /// Energy correction for Photons 
 #include "$CALOTOOLSOPTS/ECorrection.opts"
+
+/// Energy correction for Photons 
+#include "$CALOTOOLSOPTS/E1Correction.opts"
 
 /// S-shape correction 'Holleebeek' 
 #include "$CALOTOOLSOPTS/SShapeAsinh.opts"

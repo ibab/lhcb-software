@@ -1,17 +1,8 @@
-// $Id: CaloTools_load.cpp,v 1.13 2002-07-19 16:13:38 cattanem Exp $
+// $Id: CaloTools_load.cpp,v 1.14 2002-07-21 18:56:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2002/07/15 18:50:15  ibelyaev
-//  add new tool for combined Spd/Prs ID
-//
-// Revision 1.11  2002/06/21 11:29:33  beneyton
-// *** empty log message ***
-//
-// Revision 1.10  2002/06/14 17:46:05  ibelyaev
-//  new L-correction
-//
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -43,6 +34,7 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
   DECLARE_TOOL( CaloSShape                   ) ;
   DECLARE_TOOL( CaloLCorrection              ) ;
   DECLARE_TOOL( CaloECorrection              ) ;
+  DECLARE_TOOL( CaloE1Correction             ) ;
 
   DECLARE_TOOL( CaloPhotonMomentumTool       ) ;
 
