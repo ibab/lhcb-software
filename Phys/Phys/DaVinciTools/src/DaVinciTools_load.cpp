@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.31 2004-07-08 16:24:41 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.32 2004-07-08 16:46:25 pkoppenb Exp $
 // Include files 
 
 
@@ -26,11 +26,11 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( PhysDesktop );
 
   // Particle Makers
-  DECLARE_TOOL( ChargedParticleMaker );  // to be retired soon
-  //  DECLARE_TOOL( ElectronParticleMaker );
-  //  DECLARE_TOOL( MuonParticleMaker );
-  //  DECLARE_TOOL( NeutralParticleMaker );
-  //  DECLARE_TOOL( RichParticleMaker );
+  //  DECLARE_TOOL( ChargedParticleMaker ); // obsolete
+  //  DECLARE_TOOL( ElectronParticleMaker ); // obsolete
+  //  DECLARE_TOOL( MuonParticleMaker ); // obsolete
+  //  DECLARE_TOOL( NeutralParticleMaker ); // obsolete
+  //  DECLARE_TOOL( RichParticleMaker ); // obsolete
   DECLARE_TOOL( CombinedParticleMaker ); // "the official one"
   DECLARE_TOOL( PhotonParticleMaker    ) ;  
   DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
