@@ -43,15 +43,21 @@
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
+//--- Neutral ProtoParticles (gammas and pi0) for Brunel >= v17r4
+//    including bug fix for bad cluster association to SplitPhotons in 
+//    CaloMergedPi0Alg and Re-calibration for single gammas and merged pi0
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+
+//--- Neutral ProtoParticles (only single photons) for 
 //--- Recalibration for gammas (only for Brunel v13r1 data)
 //#include "$DAVINCIROOT/options/CaloReCalibration.opts"
- 
 //--- Neutral ProtoParticles
 //    (only available algorithm when reading data produced with Brunel v13r1
-//    or v14r2, it can be used with any version of OODST data)
+//    or v14r2)
 //ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+ 
 //    (when reading data produced with Brunel v16r4 or v17r4)
-//ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
+ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
 
 //--- Ks->pi+pi- with Upstream tracks
 //    Read V0 as produced by Brunel and transform them into Particles

@@ -44,11 +44,13 @@ ApplicationMgr.DLLs += { "DaVinciAssociators" };
 // ProtoParticles creation: charged and neutrals
 ApplicationMgr.DLLs += { "KsReco" };
 ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
+ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
 #pragma print off
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALOPIDSOPTS/CaloPIDs.opts"
+#include "$MUONIDROOT/options/MuonIDdll.opts"
 #pragma print on
 
 // Physics packages and necessary dependent packages

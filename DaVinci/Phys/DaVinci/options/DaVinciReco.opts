@@ -6,8 +6,12 @@
  *  @date 2003-04-10
  */
 
-// Charged ProtoParticles
-ApplicationMgr.TopAlg =  { "ChargedProtoPAlg" };
+// Redo MuonID with new tuning
+#include "$DAVINCIROOT/optiosn/MuonIDReTuning.opts"
+
+// Charged ProtoParticles using new MuonID
+ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
+ChargedProtoPAlg.MuonPIDsInput = "/Event/Rec/Muon/NewMuonID";
 
 // Primary vertex
 ApplicationMgr.DLLs += { "PrimVtx" };
