@@ -3,6 +3,17 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020507 Pere Mato
+- src/CLHEPstreams.cpp
+  1) modify the persistent representation of HepLorentzVector to
+     preserve the 4-length of the vectror to be subjected truncation 
+     errors
+  2) modify the persistent representation of HepVector to write the 
+     vector length in teh format of "unsigned char".It implies the 
+     limitation of the mamximal vector length to be 256 elements
+  3) the same for HepSymMatrix, HepDiagMatrix and HepMatrix 
+
+>>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020503 Pere Mato
 - added dictionary for CLHEP classes in /dict
 

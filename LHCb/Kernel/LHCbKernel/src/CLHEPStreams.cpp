@@ -1,4 +1,4 @@
-// $Id: CLHEPStreams.cpp,v 1.1.1.1 2002-03-18 09:02:18 cattanem Exp $
+// $Id: CLHEPStreams.cpp,v 1.2 2002-05-07 14:49:40 ibelyaev Exp $
 // Include files
 
 // CLHEP
@@ -134,14 +134,22 @@ MsgStream& printHepVector3D(MsgStream& s, const HepVector3D& value )    {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator>> ( StreamBuffer& s, HepLorentzVector& value )   {
-  float px, py, pz, E;
-  s  >> px >> py >> pz >> E;
-  value.setPx(px);
-  value.setPy(py);
-  value.setPz(pz);
-  value.setE(E);
+  float px, py, pz, m2 ;
+  char  esign;
+  // get spatial components, 4-length squared and sing of time-like component
+  s  >> px >> py >> pz >> m2 >> esign ;
+  value.setPx ( px ) ;
+  value.setPy ( py ) ;
+  value.setPz ( pz ) ;
+  // calculate the time-like component 
+  value.setE  ( sqrt ( double ( m2 )           + 
+                       value.px() * value.px() + 
+                       value.py() * value.py() +
+                       value.pz() * value.pz() ) );
+  // correct the sign of time-like component 
+  if( esign ) { value.setE( -1 * value.e() ); }
   return s;
-}
+};
 
 /** Output operator for class HepLorentzVector to Gaudi StreamBuffer object
  *  @see StreamBuffer
@@ -153,11 +161,16 @@ StreamBuffer& operator>> ( StreamBuffer& s, HepLorentzVector& value )   {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator<< ( StreamBuffer& s, const HepLorentzVector& value) {
-  return s  << float(value.px()) 
-            << float(value.py())
-            << float(value.pz())
-            << float(value.e());
-}
+  /** serialize spatial components, 
+   *  4-length squared and the  
+   *  sign of time-like component
+   */
+  return s  << float( value.px() ) 
+            << float( value.py() )
+            << float( value.pz() )
+            << float( value.m2() )  
+            << ( ( 0 > value.e () ) ? char( true ) : char( false ) ) ;
+};
 
 /** HepLorentzVector printout method to Gaudi MsgStream object
  *  @see MsgStream
@@ -188,7 +201,8 @@ MsgStream& printHepLorentzVector(MsgStream& s, const HepLorentzVector& value )  
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator>> ( StreamBuffer& s, HepVector & value )     {
-  int   nrow;
+  // 256 elements is a maximum!
+  unsigned char nrow;
   float _val;
   s >> nrow;
   if ( nrow != value.num_row() )  {
@@ -212,10 +226,11 @@ StreamBuffer& operator>> ( StreamBuffer& s, HepVector & value )     {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator<< ( StreamBuffer& s, const HepVector& value)    {
-  int nrow = value.num_row();
+  // 256 elements is a maximum!
+  unsigned char  nrow = value.num_row();
   s << nrow;
   for ( int i = 1; i <= nrow; ++i)  {
-    s << float(value(i));
+    s << float( value(i) );
   }
   return s;  
 }
@@ -252,7 +267,8 @@ MsgStream& printHepVector(MsgStream& s, const HepVector& value)   {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator>> ( StreamBuffer& s, HepSymMatrix & value )  {
-  int nrow;
+  // 256 elements is a maximum!
+  unsigned char  nrow;
   float _val;
   s >> nrow;
   if ( nrow != value.num_row() )  {
@@ -278,7 +294,8 @@ StreamBuffer& operator>> ( StreamBuffer& s, HepSymMatrix & value )  {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator<< ( StreamBuffer& s, const HepSymMatrix& value) {
-  int  nrow = value.num_row();
+  // 256 elements is a maximum!
+  unsigned char  nrow = value.num_row();
   s << nrow;
   for( int i=1; i<=nrow; i++ ) {
     for( int j=1; j<=i; j++ ) {
@@ -324,7 +341,8 @@ MsgStream& printHepSymMatrix(MsgStream& s, const HepSymMatrix & value)   {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator>> ( StreamBuffer& s, HepDiagMatrix & value )  {
-  int nrow;
+  // 256 elements is a maximum!
+  unsigned char nrow;
   float _val;
   s >> nrow;
   if ( nrow != value.num_row() )  {
@@ -348,7 +366,8 @@ StreamBuffer& operator>> ( StreamBuffer& s, HepDiagMatrix & value )  {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator<< ( StreamBuffer& s, const HepDiagMatrix& value) {
-  int  nrow = value.num_row();
+  // 256 elements is a maximum!
+  unsigned char   nrow = value.num_row();
   s << nrow;
   for( int i=1; i<=nrow; i++ ) {
     s << float(value(i,i));
@@ -389,7 +408,8 @@ MsgStream& printHepDiagMatrix(MsgStream& s, const HepDiagMatrix& value)   {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator>> ( StreamBuffer& s, HepMatrix & value )   {
-  int nrow, ncol;
+  // 256 elements is a maximum!
+  unsigned char nrow, ncol;
   float _val;
   s >> nrow >> ncol;
   if ( nrow != value.num_row() ||
@@ -416,8 +436,9 @@ StreamBuffer& operator>> ( StreamBuffer& s, HepMatrix & value )   {
  *  @return reference to Gaudi stream
  */
 StreamBuffer& operator<< ( StreamBuffer& s, const HepMatrix& value) {
-  int   nrow = value.num_row();
-  int   ncol = value.num_col();
+  // 256 elements is a maximum!
+  unsigned char   nrow = value.num_row();
+  unsigned char   ncol = value.num_col();
   s << nrow << ncol;
   for( int i=1; i<=nrow; i++ ) {
     for( int j=1; j<=ncol; j++ ) {
