@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2002-05-24 10:57:12 gcorti Exp $
+# $Id: requirements,v 1.23 2002-06-05 09:01:48 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -35,7 +35,7 @@ use GaudiPolicy  v5r5
 #--- It must be consistent with the file you are reading
 #use dbase v241 SICB
 
-#--- External libraries - Gaudi v10r0
+#--- External libraries - Gaudi v10r1
 use ExternalLibs   v3r6
 use AIDA           v2r2
 use CLHEP          v17r10p1
@@ -45,7 +45,7 @@ use HTL            v13r10p1
 use XERCES         v16r0p1
 use CERNLIB        v2001
 
-#--- Gaudi libraries - Gaudi v10r2
+#--- Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r2
 use GaudiSvc           v8r0
 use GaudiAlg           v6r0
@@ -61,23 +61,22 @@ use HbookCnv           v12r0
 #---LHCb common libraries
 use GaudiConf      v6r3
 use BookKeeping    v1r1   Tools
-use LHCbKernel     v1r0   Kernel
+use LHCbKernel     v1r1   Kernel
 use Finclude       v12r2  SICB
 use Futio          v11    SICB
 
 #--- Subdetector Kernels ( add any other Kernel you need )
-# do we want * here or not?
 
 #--- Detector description ( add any other Det package you need )
-use XmlDDDB        v11r0   Det
-use DetDesc        v10r0   Det
+use XmlDDDB        v12r0   Det
+use DetDesc        v10r2   Det
 use VeloDet        v5r0   Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 use EventSys       v10r1  Event
 
 #--- SicB event data persistency
-use SicbCnv        v16r0  SICB
+use SicbCnv        v16r2  SICB
 use PhysSicbCnv    v1r0   SICB
 
 #--- SICBDST necessary libraries
@@ -88,8 +87,8 @@ use Futil          v10r3  SICB
 use detdes         v14    SICB
 use digvdet        v2r3   SICB
 use trivert        v5r3   SICB
-use axreclib       v4r*   SICB
-use axsellib       v6r*   SICB
+use axreclib       v4r3   SICB
+use axsellib       v6r3   SICB
 
 #--- DaVinci packages
 use DaVinciSicb          v3r0   Phys
