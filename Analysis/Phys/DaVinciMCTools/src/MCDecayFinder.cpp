@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.2 2002-06-26 14:04:36 odie Exp $
+// $Id: MCDecayFinder.cpp,v 1.3 2002-07-12 09:30:24 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -108,7 +108,7 @@ bool MCDecayFinder::hasDecay( const std::vector<MCParticle*> &event )
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
   const MCParticle *drop_me = NULL;
-  return m_decay->test( event, drop_me );
+  return m_decay->test( event.begin(), event.end(), drop_me );
 }
 
 bool MCDecayFinder::findDecay( const std::vector<MCParticle*> &event,
@@ -116,7 +116,23 @@ bool MCDecayFinder::findDecay( const std::vector<MCParticle*> &event,
 {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
-  return m_decay->test( event, previous_result );
+  return m_decay->test( event.begin(), event.end(), previous_result );
+}
+
+bool MCDecayFinder::hasDecay( const MCParticles &event )
+{
+  MsgStream log( msgSvc(), name() );
+  log << MSG::DEBUG << "About to test the event" << endreq;
+  const MCParticle *drop_me = NULL;
+  return m_decay->test( event.begin(), event.end(), drop_me );
+}
+
+bool MCDecayFinder::findDecay( const MCParticles &event,
+                               const MCParticle *&previous_result )
+{
+  MsgStream log( msgSvc(), name() );
+  log << MSG::DEBUG << "About to test the event" << endreq;
+  return m_decay->test( event.begin(), event.end(), previous_result );
 }
 
 MCDecayFinder::Descriptor::Descriptor( IParticlePropertySvc *ppSvc,
@@ -158,13 +174,14 @@ MCDecayFinder::Descriptor::~Descriptor()
     delete alternate;
 }
 
-bool MCDecayFinder::Descriptor::test( const std::vector<MCParticle*> &event,
+template<class iter>
+bool MCDecayFinder::Descriptor::test( const iter first, const iter last,
                                       const MCParticle *&previous_result )
 {
-  std::vector<MCParticle *>::const_iterator start;
+  iter start;
   if( previous_result &&
-      ((start=std::find(event.begin(),event.end(),previous_result))
-       == event.end()) )
+      ((start=std::find(first,last,previous_result))
+       == last) )
   {
     previous_result = NULL;
     return false; // Bad previous_result
@@ -175,8 +192,8 @@ bool MCDecayFinder::Descriptor::test( const std::vector<MCParticle*> &event,
   if( mother == NULL ) // No mother == pp collision
   {
     std::list<const MCParticle*> prims;
-    std::vector<MCParticle*>::const_iterator i;
-    for( i=(previous_result ? start : event.begin()); i != event.end(); i++ )
+    iter i;
+    for( i=(previous_result ? start : first); i != last; i++ )
     {
       MCVertex *origin = (*i)->originVertex();
       if( origin && origin->mother() )
@@ -193,12 +210,12 @@ bool MCDecayFinder::Descriptor::test( const std::vector<MCParticle*> &event,
     return false;
   }
 
-  std::vector<MCParticle*>::const_iterator part_i;
-  part_i = (previous_result ? start : event.begin());
-  while( (part_i != event.end()) && (test(*part_i) == false) )
+  iter part_i;
+  part_i = (previous_result ? start : first);
+  while( (part_i != last) && (test(*part_i) == false) )
     part_i++;
 
-  if( part_i != event.end() )
+  if( part_i != last )
   {
     previous_result = *part_i;
     return true;
@@ -404,6 +421,100 @@ MCDecayFinder::ParticleMatcher::ParticleMatcher(Quantums q,Relations r,double d,
   parms.relation.d = d;
 }
 
+static inline int DIGIT( int n, int id )
+{
+  int base = 1;
+  for( ; n; n-- ) base *= 10;
+  return ((abs(id)%(10*base))/base);
+}
+
+static inline int quarkOne( int id )
+{
+  return DIGIT(3,id);
+}
+
+static inline int quarkTwo( int id )
+{
+  return DIGIT(2,id);
+}
+
+static inline int quarkThree( int id )
+{
+  return DIGIT(1,id);
+}
+
+static inline bool isIon( int id )
+{
+  return( 1==DIGIT(10,id) );
+}
+
+static inline bool isHadron( int id )
+{
+  return abs(id)>=110;
+}
+
+static inline bool isMeson( int id )
+{
+  return( isHadron(id) && !isIon(id) && 0==quarkOne(id) );
+}
+
+static const int QuarksCharge[] = { 0, -1, 1, -1, 1, -1, 1 };
+
+static int firstQuark( int id )
+{
+  int q;
+
+  if( !isHadron(id) || isIon(id) )
+    return 0;
+
+  if( isMeson(id) )
+  {
+    q = quarkTwo(id);
+    q *= QuarksCharge[q];
+  }
+  else
+    q = quarkOne(id);
+
+  return q*(id>0 ? 1 : -1);
+}
+
+static int secondQuark( int id )
+{
+  int q;
+
+  if( !isHadron(id) || isIon(id) )
+    return 0;
+
+  if( isMeson(id) )
+  {
+    q = quarkThree(id);
+    int r = quarkTwo(id);
+    if( QuarksCharge[q] == QuarksCharge[r] )
+      q *= -QuarksCharge[q];
+    else
+      q *= QuarksCharge[q];
+  }
+  else
+    q = quarkTwo(id);
+
+  return q*(id>0 ? 1 : -1);
+}
+
+static int thirdQuark( int id )
+{
+  int q;
+
+  if( !isHadron(id) || isIon(id) )
+    return 0;
+
+  if( isMeson(id) )
+    q = 0;
+  else
+    q = quarkThree(id);
+
+  return q*(id>0 ? 1 : -1);
+}
+
 bool MCDecayFinder::ParticleMatcher::test( const MCParticle *part )
 {
   switch( type )
@@ -413,15 +524,11 @@ bool MCDecayFinder::ParticleMatcher::test( const MCParticle *part )
   case id:
     {
       bool result = false;
-      ParticleProperty *pp = 
-        m_ppSvc->findByStdHepID( part->particleID().pid() );
-      if( !pp )
-        return false;
-      result = (parms.stdHepID == pp->jetsetID());
+      result = (parms.stdHepID == part->particleID().pid());
       if( conjugate )
       {
         int cc_id = conjugatedID(parms.stdHepID);
-        result = result || (cc_id == pp->jetsetID());
+        result = result || (cc_id == part->particleID().pid());
       }
       if( oscilate )
         result = result && part->hasOscillated();
@@ -441,8 +548,80 @@ bool MCDecayFinder::ParticleMatcher::test( const MCParticle *part )
       return result;
     }
   case quark:
-    // ******* NOT IMPLEMENTED YES *******
+    {
+      static Quarks Q[] = { empty, down, up, strange, charm, bottom, top };
+      static Quarks AQ[] = { empty, antidown, antiup, antistrange,
+                              anticharm, antibottom, antitop };
+      int q = firstQuark(part->particleID().pid());
+      Quarks q1 = (q<0 ? AQ[-q] : Q[q]);
+      Quarks cq1 = (q<0 ? Q[-q] : AQ[q]); // cc hypothesis
+      q = secondQuark(part->particleID().pid());
+      Quarks q2 = (q<0 ? AQ[-q] : Q[q]);
+      Quarks cq2 = (q<0 ? Q[-q] : AQ[q]); // cc hypothesis
+      q = thirdQuark(part->particleID().pid());
+      Quarks q3 = (q<0 ? AQ[-q] : Q[q]);
+      Quarks cq3 = (q<0 ? Q[-q] : AQ[q]); // cc hypothesis
+      
+      // Shortcuts
+      Quarks pq1 = parms.quarks.q1;
+      Quarks pq2 = parms.quarks.q2;
+      Quarks pq3 = parms.quarks.q3;
+
+      // We don't care of the ordering so we check all permutations.
+      // q1, q2, q3
+      if( (pq1 == q1 || pq1 == empty) && (pq2 == q2 || pq2 == empty) &&
+          (pq3 == q3 || pq3 == empty) )
+        return true;
+      // q1, q3, q2
+      if( (pq1 == q1 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
+          (pq3 == q2 || pq3 == empty) )
+        return true;
+      // q2, q1, q3
+      if( (pq1 == q2 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
+          (pq3 == q3 || pq3 == empty) )
+        return true;
+      // q2, q3, q1
+      if( (pq1 == q2 || pq1 == empty) && (pq2 == q3 || pq2 == empty) &&
+          (pq3 == q1 || pq3 == empty) )
+        return true;
+      // q3, q1, q2
+      if( (pq1 == q3 || pq1 == empty) && (pq2 == q1 || pq2 == empty) &&
+          (pq3 == q2 || pq3 == empty) )
+        return true;
+      // q3, q2, q1
+      if( (pq1 == q3 || pq1 == empty) && (pq2 == q2 || pq2 == empty) &&
+          (pq3 == q1 || pq3 == empty) )
+        return true;
+
+      // Should we check for the charge conjugated particle ?
+      if( !conjugate )
     return false;
+      // cq1, cq2, cq3
+      if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
+          (pq3 == cq3 || pq3 == empty) )
+        return true;
+      // cq1, cq3, cq2
+      if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
+          (pq3 == cq2 || pq3 == empty) )
+        return true;
+      // cq2, cq1, cq3
+      if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
+          (pq3 == cq3 || pq3 == empty) )
+        return true;
+      // cq2, cq3, cq1
+      if( (pq1 == cq2 || pq1 == empty) && (pq2 == cq3 || pq2 == empty) &&
+          (pq3 == cq1 || pq3 == empty) )
+        return true;
+      // cq3, cq1, cq2
+      if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq1 || pq2 == empty) &&
+          (pq3 == cq2 || pq3 == empty) )
+        return true;
+      // cq3, cq2, cq1
+      if( (pq1 == cq3 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
+          (pq3 == cq1 || pq3 == empty) )
+        return true;
+      return false;
+    }
   case quantum:
     // ******* NOT IMPLEMENTED YES *******
     return false;
