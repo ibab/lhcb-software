@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2003-09-22 13:57:10 ibelyaev Exp $ 
+# $Id: requirements,v 1.51 2003-09-25 12:09:48 ranjard Exp $ 
 # =============================================================================
 package  GiGa
 version  v14r4
@@ -8,7 +8,7 @@ branches         cmt src doc GiGa
 
 # ============== explicit dependencies ========================================
 use GaudiKernel  v13r* 
-use GEANT4       v* Sim 
+use  G4readout   v* 	Geant4
 
 # ============== standard includes ============================================
 include_dirs     $(GIGAROOT)
