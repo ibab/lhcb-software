@@ -45,7 +45,7 @@ use GeneratorModules    v4r*    Gen
 #use EvGen               v4r*    Sim 
 
 #geometry source 
-use XmlDDDB             v1r*   Det 
+use XmlDDDB             v13r*   Det 
 
 # =============================================================================
 # Essential environment variables 
