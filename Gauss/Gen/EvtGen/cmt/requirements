@@ -7,7 +7,7 @@ use         CLHEP        v*
 use         PYTHIA       v*  Gen
 use         GaudiPolicy  v*
 
-include_dirs  $(EVTGENROOT)
+include_dirs  $(EVTGENROOT) 
 
 library       EvtGen -no_share *.cpp *.F 
 
