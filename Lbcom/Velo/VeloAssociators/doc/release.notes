@@ -1,6 +1,11 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!===================== VeloAssociators v1r6 2003-07-11 =====================
+! 2003-07-10 - David Hutchcroft
+ - Changed VeloCluster2MCParticleAlg to use (or make then use) the 
+   VeloCluster2MCHit table. Needed for the switch from Brunel -> Boole+Brunel
+
 !===================== VeloAssociators v1r5 2003-06-17 =====================
 ! 2003-06-17 - Marco Cattaneo
  - Fix a relations factory

@@ -6,6 +6,7 @@
 
 #include "GaudiKernel/Algorithm.h"
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
+#include "VeloAssociators/VeloCluster2MCHitAsct.h"
 
 class DeVelo;
 
@@ -42,6 +43,8 @@ public:
 protected:
 
 private:
+
+  VeloCluster2MCHitAsct::IAsct *m_pV2MCHit;
 
   std::string m_outputData;
   DeVelo* m_velo;

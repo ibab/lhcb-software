@@ -15,12 +15,12 @@
 // local
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
 #include "VeloCluster2MCParticleAlg.h"
-#include "VeloTruthTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VeloCluster2MCParticleAlg
 //
 // 22/05/2002 : Chris Parkes
+// 10/07/2003 : David Hutchcroft Modified to use VeloCluster2MCHit table
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -61,45 +61,70 @@ StatusCode VeloCluster2MCParticleAlg::initialize() {
 StatusCode VeloCluster2MCParticleAlg::execute() {
    MsgStream log(msgSvc(), name());
    log << MSG::DEBUG << "--- execute---" << endreq;
+
+  // DEH try and get the /Event/Rec/Relations/VeloClusters2MCHits 
+  // if this exists use that to build the table
+  const std::string Type = "VeloCluster2MCHitAsct";
+  StatusCode sc = toolSvc()->retrieveTool (Type, m_pV2MCHit);
+
+  if ( sc.isFailure() || 0==m_pV2MCHit ) {
+    log << MSG::ERROR
+        << "No table of VeloCluster2MCHit available"
+        << endmsg;
+    return StatusCode::FAILURE;
+  } 
+
+  log << MSG::DEBUG 
+      << " Using VeloCluster2MCHit to build table" 
+      << endmsg;
+
   // get VeloClusters
-  SmartDataPtr<VeloClusters> clusterCont(eventSvc(),VeloClusterLocation::Default);
-  if (0 == clusterCont){ 
+  SmartDataPtr<VeloClusters> clusterCont(eventSvc(),
+                                         VeloClusterLocation::Default);
+  if (0 == clusterCont){
     log << MSG::WARNING << "Failed to find VeloClusters" << endreq;
     return StatusCode::FAILURE;
   }
 
-
-  // get VeloFEs
-  SmartDataPtr<MCVeloFEs> feCont(eventSvc(),  MCVeloFELocation::Default);
-  if (0 == feCont){ 
-    log << MSG::WARNING << "Failed to find MCVeloFEs" << endreq;
-    return StatusCode::FAILURE;
-  } 
- 
   // create an association table 
-  VeloCluster2MCParticleAsct::Table* aTable = new VeloCluster2MCParticleAsct::Table(); 
+  VeloCluster2MCParticleAsct::Table* aTable = 
+    new VeloCluster2MCParticleAsct::Table(); 
   // loop and link VeloClusters to MC truth
   VeloClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-      std::map<MCParticle*,double> particleMap;
-      StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,particleMap,feCont);
-    if (sc){
-      std::map<MCParticle*,double>::const_iterator iterMap;
-      for (iterMap = particleMap.begin(); iterMap !=  particleMap.end(); iterMap++){
-        SmartRef<MCParticle> aParticle = (*iterMap).first;
-        double charge = (*iterMap).second;
-        log << MSG::DEBUG << "VeloTruthTool output - particle "  << " charge " << charge << endreq;
+
+    typedef AssociatorWeighted<VeloCluster,MCVeloHit,double> VCl2MCHit;
+    typedef VCl2MCHit::DirectType Table;
+    typedef Table::Range Range;
+    typedef Table::iterator iterator;
+    
+    const Table* table = m_pV2MCHit->direct();
+    if (0==table){ 
+      return StatusCode::FAILURE;
+    }
+    
+    Range range1 = table->relations(*iterClus);
+    iterator relation;
+    for (relation=range1.begin(); relation !=range1.end(); relation++){
+      // loop over relations
+      MCVeloHit * hit = relation->to ();
+      MCParticle * aParticle = hit->mcParticle();
+      double charge = relation->weight();
+      log << MSG::DEBUG 
+          << "Relation output - particle charge " 
+          << charge << endreq;
+      if(0==aParticle){
+        log << MSG::WARNING
+            << "MCHit did not have an MCParticle parent" << endreq;
+      }else{
         aTable->relate(*iterClus,aParticle,charge);
       }
     }
-    else{
-      log << MSG::DEBUG << "VeloTruthTool output - no particles found, e.g. noise / spillover hits" << endreq;
-    }
   } // loop iterClus
-
+  
   // register table in store
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
+  sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
     MsgStream log(msgSvc(), name());
     log << MSG::FATAL << "     *** Could not register " << outputData()
@@ -109,7 +134,7 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
   }
  
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode VeloCluster2MCParticleAlg::finalize() {
 
