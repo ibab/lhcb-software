@@ -265,8 +265,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   if ( (aKinEnergyFinal <= MinKineticEnergy) || 
       (aCreatorProcessName == "RichHpdPhotoelectricProcess") ) {
     aParticleChange.ProposeTrackStatus(fStopAndKill);
-    G4Track* theTrack = aStep.GetTrack();
-    theTrack->SetTrackStatus(fStopAndKill);
+    aParticleChange.ProposeEnergy(0.0);
 
   }else {
     aParticleChange.ProposeEnergy(aKinEnergyFinal);

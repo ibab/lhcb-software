@@ -5,6 +5,12 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+! 2004-12-16 - Gloria CORTI, Sajan EASO
+ - src/PhysProcess/RichHpdSiEnergyLoss.cpp
+   . introduce fix to adapt to new behaviour of Geant4 for stopping and
+     killing of particles in AlongStepDoIt of continuous processes by setting
+     final energy to 0.0 as suggested by V.Ivantchenko (G4)
+
 !========================= GaussRICH v4r9 =================================
 ! 2004-12-13 - Gloria CORTI
  - src/PhysProcess/RichHpdSiEnergyLoss.cpp
