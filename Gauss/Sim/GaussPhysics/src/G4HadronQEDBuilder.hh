@@ -3,7 +3,6 @@
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "g4std/vector"
 
 #include "G4MultipleScattering.hh"
 #include "G4hIonisation.hh"

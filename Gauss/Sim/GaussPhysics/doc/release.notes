@@ -4,7 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!======================= GaussPhysics v2r3 2003-06-23 ======================= 
+!======================= GaussPhysics v2r3 2003-08-07 ======================= 
+! 2003-08-07 - Witek Pokorski
+ - removed g4std
+ - removed multiple scattering for ions (cause non-reproducibility of events)
+
 ! 2003-06-23 - Witek Pokorski 
  - EMPhysics - added OpticalPhoton to the list of constructed particles
 

@@ -1,13 +1,12 @@
 #ifndef G4ProtonBuilder_h
 #define G4ProtonBuilder_h 1
 
+#include<vector>
 #include "globals.hh"
 
 #include "G4HadronElasticProcess.hh"
 #include "G4ProtonInelasticProcess.hh"
 #include "G4VProtonBuilder.hh"
-
-#include "g4std/vector"
 
 class G4ProtonBuilder
 {
@@ -23,7 +22,7 @@ class G4ProtonBuilder
     G4HadronElasticProcess theProtonElasticProcess;
     G4ProtonInelasticProcess  theProtonInelastic;
     
-    G4std::vector<G4VProtonBuilder *> theModelCollections;
+    std::vector<G4VProtonBuilder *> theModelCollections;
 
 };
 

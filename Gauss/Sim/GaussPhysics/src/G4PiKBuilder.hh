@@ -1,13 +1,13 @@
 #ifndef G4PiKBuilder_h
 #define G4PiKBuilder_h 1
 
+#include<vector>
+
 #include "globals.hh"
 
 #include "G4HadronElasticProcess.hh"
 #include "G4ProtonInelasticProcess.hh"
 #include "G4VPiKBuilder.hh"
-
-#include "g4std/vector"
 
 class G4PiKBuilder
 {
@@ -34,7 +34,7 @@ class G4PiKBuilder
     G4KaonZeroLInelasticProcess theKaonZeroLInelastic;
     G4KaonZeroSInelasticProcess theKaonZeroSInelastic;
      
-    G4std::vector<G4VPiKBuilder *> theModelCollections;
+    std::vector<G4VPiKBuilder *> theModelCollections;
 
 };
 

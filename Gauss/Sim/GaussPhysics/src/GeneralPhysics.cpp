@@ -3,8 +3,6 @@
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
 #include "GiGa/GiGaMACROs.h"
-// G4 
-#include "g4std/iomanip" 
 // local
 #include "GeneralPhysics.h"
 

@@ -9,7 +9,7 @@
 // GiGa 
 #include "GiGa/GiGaPhysConstructorBase.h"
 
-//G4
+//G4/
 #include "globals.hh"
 #include "G4ios.hh"
 

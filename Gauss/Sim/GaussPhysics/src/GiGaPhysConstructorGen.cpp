@@ -12,7 +12,6 @@
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4ios.hh"
-#include "g4std/iomanip"   
 #include "G4ShortLivedConstructor.hh" 
 // local
 #include "GiGaPhysConstructorGen.h"
