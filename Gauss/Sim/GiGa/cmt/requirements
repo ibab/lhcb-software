@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.16 2001-04-26 21:01:16 ibelyaev Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.17 2001-04-27 09:16:46 ibelyaev Exp $ 
 
 package  GiGa 
 version  v4
@@ -19,19 +19,22 @@ use G4Wrapper     v1 Sim
 include_dirs                     $(GIGAROOT)
 
 ################ linker library ##########################################
-library        GiGaLib   Lib/*.cpp 	        
+#library        GiGaLib   Lib/*.cpp 	        
 
 ################ component library #######################################
-library        GiGa      component/*.cpp  	        
+library         GiGa      component/*.cpp Lib/*.cpp   	        
 
-apply_pattern package_Llinkopts
-apply_pattern ld_library_path
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+macro GiGaLinkOpts    "-L$(GiGaDir) -lGiGa " \ 
+	WIN32         "$(GiGaDir)/GiGa.arc "  
 
 ################ private stuff ###########################################
 private
 
 apply_pattern package_Cshlibflags
-macro_append  GiGaLib_shlibflags  "$(GaudiKernel_linkopts) $(G4Wrapper_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
+#macro_append  GiGaLib_shlibflags  "$(GaudiKernel_linkopts) $(G4Wrapper_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
 
 ################ to reduce number of warnings ###########################
 macro_remove cppflags "-Wall "
