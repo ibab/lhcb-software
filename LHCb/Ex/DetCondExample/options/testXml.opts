@@ -1,0 +1,43 @@
+//$Id: testXml.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//==============================================================
+// Job options for DetCondExample test of XML files
+//==============================================================
+
+#include "../options/common.opts"
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+
+ApplicationMgr.TopAlg  = { "Sequencer" };
+Sequencer.Members   = { };
+Sequencer.Members  += { "EvtClock" };
+Sequencer.Members  += { "XmlTestAlgorithm" };
+Sequencer.Members  += { "DumpDetectorStore" };
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 3;
+
+// Event clock attributes
+EvtClock.startTime = 12;
+EvtClock.delayTime = 5;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//==============================================================
+// End of job options for DetCondExample test of XML files
+//==============================================================
+

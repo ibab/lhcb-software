@@ -1,0 +1,54 @@
+//$Id: testCondDB.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//==============================================================
+// Job options for DetCondExample test of CondDB
+//==============================================================
+
+#include "../options/condDB.opts"
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "Sequencer" };
+Sequencer.Members   = { };
+Sequencer.Members  += { "EvtClock" };
+Sequencer.Members  += { "CondDBTestAlgorithm" };
+Sequencer.Members  += { "DumpDetectorStore" };
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 5;
+
+// Event clock attributes
+EvtClock.startTime = 12;
+EvtClock.delayTime = 5;
+
+//--------------------------------------------------------------
+// Default global tag for the ConditionsDB
+//--------------------------------------------------------------
+
+// Production set of temperatures: Ecal is hot, LHCb is cold
+ConditionsDBCnvSvc.condDBGlobalTag = "PRODUCTION";
+
+// Cold set of temperatures
+//ConditionsDBCnvSvc.condDBGlobalTag = "COLD";
+
+// Hot set of temperatures
+//ConditionsDBCnvSvc.condDBGlobalTag = "HOT";
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//==============================================================
+// End of job options for DetCondExample test of CondDB
+//==============================================================

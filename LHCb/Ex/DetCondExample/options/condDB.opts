@@ -1,0 +1,30 @@
+//$Id: condDB.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//==============================================================
+// Common job options to use a CondDB in DetCondExample
+//==============================================================
+
+#include "../options/common.opts"
+
+//--------------------------------------------------------------
+// Extra services needed in the application
+//--------------------------------------------------------------
+
+// Dynamically load component library for DetCond services and converters
+ApplicationMgr.DLLs += { "DetCond" };
+
+// Add other external services to the list of known services
+ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
+
+// Detector Persistency service setup: 
+DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
+
+//--------------------------------------------------------------
+// Location of ConditionsDB boot file
+//--------------------------------------------------------------
+ConditionsDBGate.condDBBootHost  = "$DETCONDEXAMPLE_BOOTHOST";
+ConditionsDBGate.condDBBootDir   = "$DETCONDEXAMPLE_BOOTDIR";
+ConditionsDBGate.condDBBootFile  = "$DETCONDEXAMPLE_BOOTFILE";
+
+//==============================================================
+// End of common job options to use a CondDB in DetCondExample
+//==============================================================
