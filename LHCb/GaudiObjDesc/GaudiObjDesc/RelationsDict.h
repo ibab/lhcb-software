@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/RelationsDict.h,v 1.1 2003-12-17 17:31:16 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/RelationsDict.h,v 1.2 2004-06-16 07:19:10 mato Exp $
 //====================================================================
 //	RelationsDict.h
 //--------------------------------------------------------------------
@@ -523,7 +523,7 @@ namespace GaudiDict {
     /// Cast function to DataObject
     static int to_DataObject(void*);
     /// Static function to execute object destructor
-    static void  destructor( void* o ) { ((_Me_*)o)->~Relation1D(); }
+    static void  destructor( void* o ) { ((_Me_*)o)->~Relation2D(); }
     /// Static function to execute object constructor
     static void* ctor( void* );
   };
