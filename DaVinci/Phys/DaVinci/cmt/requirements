@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.90 2004-03-15 15:16:55 pkoppenb Exp $
+# $Id: requirements,v 1.91 2004-03-16 18:51:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r3
+version           v11r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -87,9 +87,9 @@ use  CommonParticles    v1r0     Phys
 use  DaVinciAssociators v4r4     Phys
 use  DaVinciChecks      v2r1     Phys
 use  DaVinciEff         v2r9     Phys
-use  DaVinciMCTools     v5r2     Phys
+use  DaVinciMCTools     v5r3     Phys
 use  DaVinciTest        v4r2     Phys
-use  DaVinciTools       v9r0     Phys
+use  DaVinciTools       v9r1     Phys
 use  DaVinciUser        v4r2     Phys
 use  FlavourTagging     v4r8     Phys
 use  Ks2PiPiSel         v1r1     Phys

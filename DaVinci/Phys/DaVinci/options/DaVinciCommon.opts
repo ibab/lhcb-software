@@ -74,8 +74,6 @@ ApplicationMgr.DLLs += { "RecoTools" };
 // Generic Utility package
 ApplicationMgr.DLLs += { "Utilities" };
 
-// No Histogram persistency chosen at this point
-ApplicationMgr.HistogramPersistency = "NONE";
 
 // Profiling
 #pragma print on
@@ -102,6 +100,8 @@ EventSelector.PrintFreq  = 1;
 // might be needed for users. 
 ApplicationMgr.DLLs += { "RootHistCnv" };
 ApplicationMgr.DLLs += { "HbookCnv" };
+// Need a histogram persistency or Calo crashed :-(
+ApplicationMgr.HistogramPersistency = "ROOT";
 
 //--------------------------------------------------------------
 // Pre DaVinci algorithm. MUST BE FIRST.
