@@ -1,5 +1,5 @@
 package Boole
-version v2r1
+version v3r0
 
 branches doc cmt job options
 
@@ -15,7 +15,8 @@ use GaudiPolicy v5r11p2
 
 #-- External libraries (as defined in GAUDI_v12r0)
 use ExternalLibs	v4r0p1
-use AIDA		v3r22p2
+use AIDA		v3r22p2		-no_auto_imports
+use BOOST		v2r1290p0	-no_auto_imports
 use CLHEP		v2r1800p0
 use HTL			v2r1321p0
 use XERCES		v2r220p0
@@ -34,19 +35,19 @@ use GaudiIntrospection 	v4r6
 use HbookCnv 		v13r4
 
 #-- Databases
-use XmlDDDB	v18r2	Det
+use XmlDDDB	v19r0	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v13r2)
-use LHCb	v13r2
+#-- LHCb libraries (from LHCB_v13r3)
+use LHCb	v13r3
 
 #-> SICB libraries included to avoid dependency on SICBOO package
-use RiSicbGeom	v3r4	SICB
+use RiSicbGeom	v3r5	SICB
 
-#-- BooleSys v2r1 packages
+#-- BooleSys v3r0 packages
 
-use DigiAlg		v2r0p1	Digi
+use DigiAlg		v2r1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -79,10 +80,10 @@ use MuonAlgs            v5r0    Muon
 use MuonBackground	v1r4	Muon
 
 # Rich
-use RichDigiQC	        v1r1  	Rich
-use RichUtils		v3r3  	Rich
-use RichDetTools	v3r0  	Rich
-use RichReadout		v1r0	Rich
+use RichDigiQC	        v1r2  	Rich
+use RichUtils		v3r4  	Rich
+use RichDetTools	v3r1  	Rich
+use RichReadout		v1r1	Rich
 
 #
 #===== build Boole =========================

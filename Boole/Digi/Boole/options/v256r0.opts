@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 ///  Job options for Boole, for data produced by SICBMC v264r2 or greater  ///
-///    and with dbase geometry compatible with v256r0 (HPD versions only)  ///
+///             and with dbase geometry compatible with v256r0             ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
 Digi.DetectorList = { "Spillover" };      // Comment to switch off spillover
@@ -13,7 +13,7 @@ Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC backgroun
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
-#include "$RICHREADOUTOPTS/BooleDigiHPD_SICB.opts"
+#include "$RICHREADOUTOPTS/BooleDigi_SICB.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------

@@ -3,6 +3,31 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v3r0>2003-11-03 Boole v3r0</A></H1><PRE>
+
+- New tuning
+   - Changes to Rich HPD digitization
+     (RiSicbGeom v3r5, RichUtils v3r4, RichDetTools v3r1, RichReadout v1r1)
+   - Changes to Rich monitoring (RichDigiQC v1r2)
+
+- DST changes
+   - Change to RichSmartID. Data produced with this version of Boole requires
+     Brunel v21r*. (RichKernel v4r0, RichEvent v5r2)
+
+- Geometry changes
+   - Renamed v200309-hpd.opts to v200311.opts
+   - Removed v256-MaPMT.opts and v200309.opts (MaPMT geometries)   
+
+- Bug fixes
+   - Fix uninitalised variable in RichHPDSignalSICB.cpp (bug 1669)
+
+- Package changes
+   - New name HltBuffer (instead of HLTBuffer) (DAQEvent v2r0, DigiAlgs v2r1)
+   - Remove dependency from ParamFiles for beam data in LumiTool: "BeamCrossRate"
+     and "TotalCrossSection" taken from job options (DigiAlgs v2r1)
+   - Remove dependency from CERNLIB for solution of quartic polynomial. Now done
+     in private code, to be submitted to GSL (RichDetTools v3r1)
+
 </PRE><H1><A NAME=v2r1>2003-10-16 Boole v2r1</A></H1><PRE>
 
 - Bug fixes

@@ -1,5 +1,5 @@
 package BooleSys
-version v2r1
+version v3r0
 
 branches cmt doc
  
@@ -8,8 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v2r1	Digi
-use DigiAlg		v2r0p1	Digi
+use Boole		v3r0	Digi
+use DigiAlg		v2r1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -42,10 +42,10 @@ use MuonAlgs            v5r0	Muon
 use MuonBackground	v1r4	Muon
 
 # Rich
-use RichDigiQC		v1r1	Rich
-use RichUtils		v3r3  	Rich
-use RichDetTools	v3r0	Rich
-use RichReadout		v1r0	Rich
+use RichDigiQC		v1r2	Rich
+use RichUtils		v3r4  	Rich
+use RichDetTools	v3r1	Rich
+use RichReadout		v1r1	Rich
 
 # SICB packages - included to avoid dependency on SICBOO project
-use RiSicbGeom		v3r4	SICB
+use RiSicbGeom		v3r5	SICB
