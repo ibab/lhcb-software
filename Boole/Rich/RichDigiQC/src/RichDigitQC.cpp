@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.12 2005-02-20 20:32:48 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.13 2005-03-03 15:43:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -59,6 +59,12 @@ StatusCode RichDigitQC::initialize()
   // Initialise variables
   m_evtC = 0;
 
+  m_evtLocs.push_back( "/Event/MC/Rich/Hits" );
+  m_evtLocs.push_back( "/Event/PrevPrev/MC/Rich/Hits" );
+  m_evtLocs.push_back( "/Event/Prev/MC/Rich/Hits" );
+  m_evtLocs.push_back( "/Event/Next/MC/Rich/Hits" );
+  m_evtLocs.push_back( "/Event/NextNext/MC/Rich/Hits" );
+
   // Warn if extra histos are enabled
   if ( m_extraHists ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
@@ -104,15 +110,16 @@ StatusCode RichDigitQC::execute()
 
   // Get total number of hits in each event
   //------------------------------------------------------------------------------
-  for ( std::map<std::string,bool>::const_iterator iC = locations.begin(); iC != locations.end(); ++iC )
+  for ( std::vector<std::string>::const_iterator iC = m_evtLocs.begin(); iC != m_evtLocs.end(); ++iC )
   {
-    if ( exist<MCRichHits>( (*iC).first ) )
+    if ( exist<MCRichHits>(*iC) )
     {
-      MCRichHits * hits = get<MCRichHits>( (*iC).first );
+      MCRichHits * hits = get<MCRichHits>( *iC );
       for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
-        ++(m_totalSpills[(*iH)->rich()])[(*iC).first];
+        ++(m_totalSpills[(*iH)->rich()])[*iC];
       }
+      debug() << "Found " << hits->size() << " MCRichHits at " << *iC << endreq;
     }
   }
 
@@ -193,7 +200,7 @@ StatusCode RichDigitQC::execute()
     {
       debug() <<  "      : " << iC->first << " " << iC->second << endreq;
     }
-    debug() << "      : # background " << backs[Rich::Rich1] << endreq;
+    debug() << "      : # background " << backs[Rich::Rich2] << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -217,7 +224,7 @@ StatusCode RichDigitQC::finalize()
 
   // RICH1 ----------------------------------------------------------------------------------
   {
-    debug() << " RICH1 : Individual HPD info :-" << endreq;
+    verbose() << " RICH1 : Individual HPD info :-" << endreq;
     for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich1].begin();
           iHPD != m_nHPD[Rich::Rich1].end(); ++iHPD )
     {
@@ -234,11 +241,11 @@ StatusCode RichDigitQC::finalize()
         plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdRow() );
         plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
       }
-      debug() << "    HPD " << (*iHPD).first << " hardID "
-              << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
-              << "      Global position : " << hpdGlo << endreq
-              << "      Local position  : " << hpdLoc << endreq
-              << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
+      verbose() << "    HPD " << (*iHPD).first << " hardID "
+                << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+                << "      Global position : " << hpdGlo << endreq
+                << "      Local position  : " << hpdLoc << endreq
+                << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
     info() << " RICH1 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich1],m_evtC) << " hits/event" << endreq
@@ -267,7 +274,7 @@ StatusCode RichDigitQC::finalize()
 
   // RICH2 ----------------------------------------------------------------------------------
   {
-    debug() << " RICH2 : Individual HPD info :-" << endreq;
+    verbose() << " RICH2 : Individual HPD info :-" << endreq;
     for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich2].begin();
           iHPD != m_nHPD[Rich::Rich2].end(); ++iHPD )
     {
@@ -284,11 +291,11 @@ StatusCode RichDigitQC::finalize()
         plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Row layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.pdRow() );
         plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Col layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.pdCol() );
       }
-      debug() << "    HPD " << (*iHPD).first << " hardID "
-              << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
-              << "      Global position : " << hpdGlo << endreq
-              << "      Local position  : " << hpdLoc << endreq
-              << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
+      verbose() << "    HPD " << (*iHPD).first << " hardID "
+                << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+                << "      Global position : " << hpdGlo << endreq
+                << "      Local position  : " << hpdLoc << endreq
+                << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
     info() << " RICH2 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich2],m_evtC) << " hits/event" << endreq

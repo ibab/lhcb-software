@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.7 2005-02-20 18:37:54 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.8 2005-03-03 15:43:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -115,15 +115,15 @@ private: // data
   /// Number of background hits in each RICH
   std::vector< unsigned int > m_bkgHits;
 
+  /// List of event locations to look into
+  std::vector< std::string > m_evtLocs;
+
+
 };
 
 inline std::string RichDigitQC::mchitLocation( const MCRichDigit * digit ) const
 {
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
-        iHit != digit->hits().end(); ++iHit )
-  {
-    if ( *iHit && !m_mcTool->isSpillover(*iHit) ) return objectLocation( (*iHit)->parent() );
-  } 
+  // if signal, always first hit
   return objectLocation( digit->hits().front()->parent() );
 }
 
