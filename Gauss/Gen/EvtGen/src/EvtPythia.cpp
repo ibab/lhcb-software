@@ -1001,7 +1001,7 @@ void EvtPythia::MakePythiaFile(char* fname){
       
       ipar=EvtId(iipar,iipar);
 
-      //      if ( EvtDecayTable::isJetSet( ipar ) ) {
+      if ( EvtDecayTable::isJetSet( ipar ) ) {
 
         //no aliased particles!
         std::string tempStr = EvtPDL::name(ipar);
@@ -1049,8 +1049,7 @@ void EvtPythia::MakePythiaFile(char* fname){
             }
             
           }
-           
-        //  }
+      }
     }
   
     
@@ -1122,7 +1121,12 @@ void EvtPythia::pythiaInit(int dummy){
           iipar < EvtPDL::entries() ;
           iipar++ ) {
       ipar = EvtId( iipar , iipar ) ;
-      lundkc = EvtPDL::getLundKC( ipar ) ;
+      int istdhep = EvtPDL::getStdHep( ipar ) ;
+#ifdef WIN32
+      lundkc = PYCOMP( &istdhep ) ;
+#else
+      lundkc = pycomp_( &istdhep ) ;
+#endif
       if ( 0 != lundkc ) {
         mass  = EvtPDL::getMeanMass( ipar ) ;
         width = EvtPDL::getWidth( ipar ) ;
