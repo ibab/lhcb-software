@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/RawVeloHit.h,v 1.1.1.1 2000-11-23 13:39:24 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/RawVeloHit.h,v 1.2 2001-03-31 00:15:16 ebanas Exp $
 #ifndef LHCBEVENT_RAWVELOHIT_H
 #define LHCBEVENT_RAWVELOHIT_H 1
 
@@ -8,8 +8,8 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/ContainedObject.h"
 
-// Externals 
-extern const CLID& CLID_RawVeloHit;
+// RawVeloHit CLID 
+static const CLID CLID_RawVeloHit = 4600;
 
 //--------------------------------------------------------------------------
 //

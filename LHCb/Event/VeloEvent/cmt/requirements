@@ -1,9 +1,9 @@
 package VeloEvent
-version v2r1
+version v3
 
 branches VeloEvent src cmt doc
 
-use LHCbEvent v8* Event
+use LHCbEvent v9* Event
 
 include_dirs $(VELOEVENTROOT)
 
@@ -16,6 +16,7 @@ library VeloEvent          ../src/VeloEventInstantiation.cpp \
 
 apply_pattern package_Llinkopts
 
+macro_append VeloEvent_stamps " $(VeloEventDir)/VeloEventLib.stamp"
 macro_append VeloEvent_stamps " $(VeloEventDir)/VeloEventLib.stamp"
 
 apply_pattern packageShr

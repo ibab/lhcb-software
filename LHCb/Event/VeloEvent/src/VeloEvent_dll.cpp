@@ -18,13 +18,13 @@
 #include "GaudiKernel/DllMain.icpp"
 extern void VeloEvent_load();
 
-void GaudiDll::initialize(void* hinstDLL)    {
+void GaudiDll::initialize(void* /* hinstDLL */ )    {
 }
 
-void GaudiDll::finalize(void* hinstDLL)    {
+void GaudiDll::finalize(void* /* hinstDLL */ )    {
 }
 
-#include "GaudiKernel/FactoryTable.cpp"
+#include "GaudiKernel/FactoryTable.h"
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
   static bool first = true;
   if ( first )    {
