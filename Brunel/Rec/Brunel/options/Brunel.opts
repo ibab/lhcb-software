@@ -7,7 +7,6 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 #include "$STDOPTIONS"
-#include "$STDOPTS/DetDesc.opts"
 
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
@@ -31,9 +30,30 @@ BrunelDigi.DetectorList  = { "SpillOver" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON" };
-BrunelReco.DetectorList += { "OORICH" };
+BrunelReco.DetectorList += { "SICBRICH" }; // Old SICB Rich processing
 BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
+
+//--------------------------------------------------------------
+// Geometry and magnetic field
+//--------------------------------------------------------------
+#include "$STDOPTS/DetDesc.opts"
+ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
+ApplicationMgr.DLLs += { "RichDet" };
+ApplicationMgr.DLLs += { "MuonDet" };
+ApplicationMgr.DLLs += { "OTDet" };
+ApplicationMgr.DLLs += { "VeloDet" };
+ApplicationMgr.DLLs += { "Magnet" };
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+
+//--------------------------------------------------------------
+// Sicb converters
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "CaloSicbCnv" };
+ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
+ApplicationMgr.DLLs += { "MuonSicbCnv" };
+ApplicationMgr.DLLs += { "VSicbCnv" };
+
 //--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------
@@ -61,36 +81,34 @@ BrunelTriggerTRIGGERSeq.Members += { "L1Track2dTruth" };
 BrunelTriggerTRIGGERSeq.Members += { "L1Track3dTruth" };
 
 // Calorimeter digitisation and reconstruction
-ApplicationMgr.DLLs += { "CaloSicbCnv"   , 
-                         "CaloDetXmlCnv" , 
-                         "CaloReco"      , 
+ApplicationMgr.DLLs += { "CaloReco"      , 
+                         "CaloPIDs"     ,
                          "CaloDigit"     ,
                          "CaloEvent"     };
 #include "$CALODIGITROOT/options/Brunel.opts"
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
+#include "$CALOPIDSOPTS/Brunel.opts"
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
-#include "$CALOMONITOROPTS/Brunel.opts"
 
 // Rich Fortran digitisation and OO digits creator 
-ApplicationMgr.DLLs += { "RichDet", "RiSicbGeom", "RiSicbCnv" };
 BrunelDigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Muon digitisation
-ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet" };
-ApplicationMgr.DLLs += { "MuonAlgs" };
-BrunelDigiMUONSeq.Members = { "MuonDigitization" };
+ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
+#include "$MUONBACKGROUNDROOT/options/Brunel.opts"
+BrunelDigiMUONSeq.Members += { "MuonBackground" };
+BrunelDigiMUONSeq.Members += { "MuonDigitization" };
 
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
 
 // Outer tracker digitisation and reconstruction (clustering)
-ApplicationMgr.DLLs   += { "Magnet", "OTDet", "OTAlgorithms" };
-ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+ApplicationMgr.DLLs   += { "OTAlgorithms" };
 #include "$OTALGORITHMSROOT/options/otDigi.opts"
 BrunelDigiOTSeq.Members += { "MCOTDepositCreator",
                              "MCOTDigitCreator",
@@ -99,7 +117,7 @@ BrunelDigiOTSeq.Members += { "MCOTDepositCreator",
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
-ApplicationMgr.DLLs += { "VSicbCnv", "VeloAlgorithms", "VeloDet" };
+ApplicationMgr.DLLs += { "VeloAlgorithms" };
 BrunelDigiVELOSeq.Members += { "VeloSim" };
 BrunelDigiVELOSeq.Members += { "VeloDataProcessor" };
 BrunelDigiVELOSeq.Members += { "VeloClusterMaker" };
@@ -154,20 +172,17 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
-// Rich Fortran reconstruction
+// Old Rich Fortran reconstruction
 BrunelRecoRICHSeq.Members += { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
 BrunelRecoRICHSeq.Members += { "RichDSTPrepare" };
 TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
+RichDSTPrepare.OutputPIDs = "Rec/Rich/PIDs";
 
 // Rich OO Reconstruction
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
 #include "$RICHRECALGSOPTS/BrunelReco.opts"
-// retuning for XmlDDDB v15r0
-ToolSvc.RichRecPhotonTool.MinTrackROI         = { 130.0,  0.0,   0.0 };
-ToolSvc.RichRecPhotonTool.MaxTrackROI         = { 350.0, 90.0, 200.0 };
-ToolSvc.RichRecPhotonTool.MinCherenkovTheta   = { 0.0, 0.0,  0.0  };
-ToolSvc.RichRecPhotonTool.MaxCherenkovTheta   = { 0.3, 0.08, 0.05 };
+PrepareRichPIDs.OutputPIDLocation = "Rec/Rich/OOPIDs";
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
@@ -186,6 +201,3 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
-
-// Intialise random number at every event
-BrunelInit.InitRndmOnce = false;

@@ -115,7 +115,7 @@
 }
 
 
-# DetDesc v11r7 problem (bug in valgrind?)
+# DetDesc (since v11r7) problem (bug in valgrind?)
 {
   DetDesc/DetectorElement
   Value8
@@ -125,7 +125,7 @@
   fun:addUserParameter__15DetectorElementGt12basic_string*
 }
 
-# Property initialisation problems (Brunel v16r4)
+# Property initialisation problems (since Brunel v16r4)
 {
   SICB/RiSicbCnv/v5r3
   Cond
@@ -138,42 +138,7 @@
   fun:execute__16TrToRichTrackAlg
 }
 
-# Rich problems (Brunel v16r4) - checked by CJ, reason not obvious
-{
-  RichUtils/v2r1/PhotonSpectrum
-  Value8
-  fun:__18RichPhotonSpectrumddPCd
-  fun:initialize__16RichDetInterface
-}
-
-{
-  RichUtils/v2r1/PhotonSpectrum
-  Value8
-  fun:*
-  fun:*
-  fun:__18RichPhotonSpectrumddPCd
-  fun:initialize__16RichDetInterface
-}
-
-# Rich problems (Brunel v17r2)
-{
-  OORich/BugId-138
-  Value4
-  fun:ringProb__16RichLocalPIDToolRt6vector2ZfZt9allocator1ZffRCQ24Rich12RadiatorType
-  fun:calcPID__16RichLocalPIDToolP12RichRecTrackP12RichLocalPID
-  fun:particleID__16RichLocalPIDToolP13TrStoredTrack
-  fun:execute__15RichLocalPIDAlg
-}
-
-{
-  OORich/BugId-139
-  Value4
-  fun:calcPID__16RichLocalPIDToolP12RichRecTrackP12RichLocalPID
-  fun:particleID__16RichLocalPIDToolP13TrStoredTrack
-  fun:execute__15RichLocalPIDAlg
-}
-
-# Random numbers usage
+# Random numbers usage (Gaudi v11r4)
 {
   RanluxEngine/TimingAlg-VeloSim
   Value8

@@ -36,7 +36,7 @@ else
   setenv LHCBDBASE $LHCb_release_area/DBASE/SICB/dbase/$1
 endif
 #   
-set Bversion = "v17r4"
+set Bversion = "v18r0"
 #
 set MODE = $CMTCONFIG
 
@@ -82,13 +82,15 @@ else
 endif
 
 #  Is there a core dump
-if (-e core) then
-   gdb tmpjob_$1.exe core << EOF
-where
-quit
+set corefile = `ls -a | grep core`
+if ($corefile != "") then
+   if(-e gdbcmds) rm gdbcmds
+   echo where > gdbcmds
+   echo quit >> gdbcmds
+   gdb -x gdbcmds tmpjob_$1.exe $corefile<<EOF
 EOF
+rm gdbcmds
 endif
-
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$1.exe
@@ -100,11 +102,3 @@ if ($?LS_SUBCWD) then
 endif
 
 exit 0
-
-
-
-
-
-
-
-

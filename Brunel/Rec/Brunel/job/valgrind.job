@@ -33,7 +33,7 @@ else
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
-set Bversion = "v17r4"
+set Bversion = "v18r0"
 #
 set MODE = $CMTCONFIG
 
@@ -85,11 +85,3 @@ if ($?LS_SUBCWD) then
 endif
 
 exit 0
-
-
-
-
-
-
-
-

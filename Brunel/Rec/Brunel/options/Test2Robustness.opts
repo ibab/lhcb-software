@@ -1,0 +1,6 @@
+// >>>>> options for L0Muon "Maximal new low-energy background" test <<<<<<<
+// >>>>>>>>>>  to be included at the end of Brunelv254r1.opts <<<<<<<<<<<<<<
+
+// Muon Background (from Alessia Satta)
+MuonBackground.SafetyFactors ={ 1, 5, 5, 5, 5 }; // default 0,1,1,1,1
+

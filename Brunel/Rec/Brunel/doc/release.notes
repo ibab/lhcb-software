@@ -3,6 +3,83 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v18r0>2003-04-17 Brunel v18r0</A></H1><PRE>
+- New features:
+   . DST content is now defined in GaudiConf package, not in BrunelDst.opts
+     As side-effect, OutputStream is now called DstWriter, not BrunelDstWriter
+   . Improved default monitoring for automatic data quality checks
+     (VeloAlgorithms v2r7, RichMonitor v3r0)
+   . Support for dead strips in Velo (zero dead strips by default)
+     (VeloAlgorithms v2r7, VeloTrack v5r0)
+   . Muon low energy background is no longer read from SICBMC RAWH file. 
+     Instead it is generated in the digitisation, using a parameterisation from
+     the histograms in $LHCBHOME/Sim/mubg1.hbook
+     (MuonAlgs v4r0, MuonUtils v1r0, MuonBackground v1r0, MuonSicbCnv v7r0) 
+   . Support for dead cells in Calorimeters (zero dead cells by default)
+     (CaloDigit v1r2)
+   . Support for IT cluster smearing, to simulate misaligment (zero smearing by 
+     default) (ITAlgorithms v12r9)
+   . Support for random noise in OT (no noise by default) (OTAlgorithms v12r4)
+   . Support for degraded efficiency and resolution (swiched off by default)
+     (RichRecTools v2r0, RichRecAlgs v2r0, recrich v7r4, BrunelSicb v4r1)
+   . Support for extra noise and smearing to mimic misalignment (off by default)
+     (VeloAlgorithms v2r7)
+   . Added a new options files for robustness tests. The different cases shown in
+     http://cern.ch/lhcb-phys/task_force/TDR_studies_2002-2003/robustness/
+     are implemented as follows:
+   
+     case 0: add GlobalRobustness.opts at end of Brunelv254r1.opts
+     case 1: default settings, use Brunelv254r1.opts as is
+     case 2: add Test2Robustness.opts at end of Brunelv254r1.opts
+     case 3: Not yet implemented
+     case 4: independent of Brunel. Use Brunelv254r1.opts as is
+     case 5: independent of Brunel. Use Brunelv254r1.opts as is
+     case 6: Not yet implemented
+
+
+- Removed features:
+   . Removed support for data produced with dbase v253r99 (Xmas 02 production) 
+
+- New tuning:
+   . Random number is now initialised by hashing a string containing the 
+     complete run and event numbers (BrunelKernel v5r4)
+   . Faster Calo MC truth association (CaloEvent v11r5, CaloAssociators v1r3)
+   . New more efficient version of OO-Rich. OO reconstruction now similar or 
+     better efficiency than Fortran. (RichKernel v3r0, RichUtils v3r0,
+     RiSicbGeom v3r1, RichDet v4r1, RichDetTools v2r0, RichEvent v4r3,
+     RichRecBase v1r0, RichRecAlgs v2r0, RiSicbCnv v5r5, RichRecTools v2r0)
+   . Changed full scale of Prs and SPD (XmlDDDB v15r3)
+   . Changed default pe/Mev and Prs/Spd fractional correction (CaloDigit v1r2)
+   . Update S corrections (CaloReco v1r4, CaloPIDs v1r0)
+   . M3 seed cleaning no longer done in y direction, increases L0Muon efficiency
+     (L0Muon v6r5)
+
+- DST changes:
+   . Add VeloTrackAlg timing to Timing.opts - fixes bug 191 (BrunelAlgs v1r9)
+   . Do not filter MCParticles and MCVertices containers if relations 
+     between MCParticles and MCVertices are corrupt (checked with new tool
+     CheckMCEventTool) to protect against bug 208 (BrunelAlgs v1r9, MCTools v1r1)
+   . Add Trig/L1/TTClusters, ITClusters, OTClusters (GaudiConf v6r6) (These
+     were available in Winter 2003 production via additional job options in
+     production workflow) 
+   . ProcStat now contains information from the OO Rich reconstruction:
+     - for global and local algorithms, the number of PIDs produced, or the
+       (negative) error codes if the processing was aborted
+     - for the merging algorithm, the number of local and global results that
+       were used in the merged output container
+
+- Bug fixes:
+   . Brunel.job again analyses core dump file, also on RH7
+   . Bug 203: check array boundary for OT (L1VeloTrack v5r0)
+   . Bugs 191, 208: see DST changes above.
+   . Bug 305: fix initialisation of Calo monitoring (CaloMonitor v1r4)
+   . Bugs 138,139: valgrind errors disappeared with new version of Rich code
+   . Several fixes to geometry solids (DetDesc v11r9)
+   . Fix position of magnet material (XmlDDDB v15r3)
+   . Minor bug fixes in ITCrossTalk (ITAlgorithms v12r9)
+   . Fix clustering for merged pi zeros (CaloReco v1r4, CaloPIDs v1r0)
+   . Fix bug in a loop index (MuonTools v3r4)
+
 </PRE><H1><A NAME=v17r4>2003-02-06 Brunel v17r4</A></H1><PRE>
  - New tuning:
    . L1 minimum bias parameterization (L1Decision v1r7)

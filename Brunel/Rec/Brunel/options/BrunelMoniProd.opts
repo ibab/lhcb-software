@@ -1,13 +1,5 @@
 // Default monitoring options for production jobs
-BrunelMoni.DetectorList  = { "Tr","TRIGGER", "RICH" };
-BrunelMoni.DetectorList += { "OORICH" };
+BrunelMoni.DetectorList  = { "VELO", "Tr","TRIGGER", "RICH" };
 
 // Produce only the summary table
 L1TrackMonitor.Histograms = false;
-
-// Monitor for final combined PIDs
-BrunelMoniRICHSeq.Members = { "RichPIDMonitor" };
-BrunelMoniOORICHSeq.Members = { "RichPIDMonitor/RichOOPIDMoni" };
-RichOOPIDMoni.InputPIDs = "Rec/Rich/OOPIDs";
-RichOOPIDMoni.MCHistoPath = "OORICH/PIDMC/";
-RichOOPIDMoni.HistoPath = "OORICH/PID/";

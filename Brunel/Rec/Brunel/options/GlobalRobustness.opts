@@ -1,0 +1,60 @@
+// Include this options file for TDR "robustness" tests
+
+// Special XmlDDDB (Jeroen van Tilburg, Roberta Santacesaria) for: 
+//   OT: degraded straw resolution  (0.250*mm instead of 0.200*mm)
+// Muon: degraded efficiency        (0.90     instead of 0.95)
+//                electronics noise (1000.    instead of 100.)
+//                mean dead time    (  80.    instead of  50.)
+//                cluster probabilities (station dependent)
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1-Apr03.xml";
+
+// Velo (from Chris Parkes)
+VeloSim.StripInefficiency=0.015;         // default 0.
+VeloDataProcessor.NoiseConstant = 900.;  // default 500.
+VeloSim.NoiseConstant = 900.;            // default 500.
+VeloSim.SmearPosition = 0.005;           // default 0.
+
+// ST (from Matt Needham)
+ITDigitCreator.ITEffCalculator.efficiency = 0.975; // default 1.0 
+BrunelRecoITSeq.Members +={"ITClusterSmearer"};    // adds 30um smearing
+
+// OT (from Jeroen van Tilburg)
+MCOTDepositCreator.crossTalkLevel = 0.04;          // default 0.025
+MCOTDepositCreator.addNoise = true;                // default false
+MCOTDepositCreator.OTRandomDepositCreator.noiseRate = 1.e-5; // default 0.
+MCOTDepositCreator.effCalculator3.etaZero = 0.96;  // default 0.99
+MCOTDepositCreator.effCalculator4.etaZero = 0.96;  // default 0.99
+MCOTDepositCreator.effCalculator5.etaZero = 0.96;  // default 0.99
+
+// Rich (from Chris Jones, Guy Wilkinson)
+//   20% less photon efficiency
+//   0.3% pixel noise
+//   additional smearing of 0.95 mrad in C4F10 
+#include "$RICHRECALGSOPTS/RobustnessTests.opts"
+BrunelDigiRICH.RobustnessTest = true;
+BrunelRecoRICH.RobustnessTest = true;
+
+// Calorimeters (from Olivier Callot)
+SpdDigit.CoherentNoise     = 0.0   ;   // default 0.
+SpdDigit.IncoherentNoise   = 0.0   ;   // default 0.
+SpdDigit.GainError         = 0.015 ;   // default 0.
+SpdDigit.DeadCellFraction  = 0.010 ;   // default 0.
+
+PrsDigit.CoherentNoise     = 0.5   ;   // default 0.0
+PrsDigit.IncoherentNoise   = 1.5   ;   // default 1.0
+PrsDigit.GainError         = 0.015 ;   // default 0.01
+PrsDigit.DeadCellFraction  = 0.010 ;   // default 0.
+
+EcalDigit.CoherentNoise    = 0.5   ;   // default 0.3
+EcalDigit.IncoherentNoise  = 1.5   ;   // default 1.2
+EcalDigit.GainError        = 0.015 ;   // default 0.01
+EcalDigit.DeadCellFraction = 0.002 ;   // default 0.
+
+HcalDigit.CoherentNoise    = 0.5   ;   // default 0.3
+HcalDigit.IncoherentNoise  = 1.5   ;   // default 1.2
+HcalDigit.GainError        = 0.015 ;   // default 0.01
+HcalDigit.DeadCellFraction = 0.002 ;   // default 0.
+
+// Muon background (from Alessia Satta)
+MuonBackground.SafetyFactors ={ 0 , 2 ,2, 2, 2}; // default 0,1,1,1,1
+

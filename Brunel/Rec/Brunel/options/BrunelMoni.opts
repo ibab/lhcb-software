@@ -11,17 +11,22 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO","TRIGGER" };
+BrunelMoni.DetectorList = { "VELO","IT","OT","Tr","RICH","CALO","TRIGGER" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 
 // Trigger
+ApplicationMgr.DLLs += { "Associators" };
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
 BrunelMoniTRIGGERSeq.Members += { "Level1Check" };
 #include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
+
+// Velo
+BrunelMoniVELOSeq.Members += { "VeloMonitor" };
+#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
 
 // IT digitisation and clustering
 #include "$ITCHECKERSROOT/options/Brunel.opts"
@@ -41,10 +46,17 @@ ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
-// Rich monitoring
+// Rich
 ApplicationMgr.DLLs += { "RichMonitor" };
-#include "$RICHMONITOROPTS/BrunelMoni.opts" // Standard Rich monitoring
-#include "$RICHMONITOROPTS/OORecoMoni.opts" // OO Reco Rich monitoring
+BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier", // SICB digit Cnv checks
+                               "RichPIDCnvVerifier" }; // SICB pid Cnv checks
+#include "$RICHMONITOROPTS/DigiMoni_Brunel.opts"    // Digitisation
+#include "$RICHMONITOROPTS/RichPIDMoni_Brunel.opts" // Monitor Rec/Rich/PIDs
+RichPIDCnvVerifier.InputPIDs = "Rec/Rich/PIDs";
+#include "$RICHMONITOROPTS/RichOOPIDMoni_Brunel.opts"  // Monitor Rec/Rich/OOPIDs
+
+// Calorimeters
+#include "$CALOMONITOROPTS/Brunel.opts"
 
 // Framework monitoring
 EventSelector_0.doHistos = true;
