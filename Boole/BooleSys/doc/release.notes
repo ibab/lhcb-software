@@ -6,8 +6,10 @@
 
 !======================== BooleSys v5r3 2004-02-26 ========================
 ! 2004-02-26 - Marco Cattaneo
+ - Packages added:    STDAQ v1r0
+
  - Packages modified: OTDAQ v1r1, VeloAlgorithms v3r0, CaloDigit v1r6,
-                      CaloMonitor v2r0
+                      CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1
 
  - Packages temporarily disabled pending adapation to new VeloDet:
    PuVeto, TrgTools
