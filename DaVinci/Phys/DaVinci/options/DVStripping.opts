@@ -5,4 +5,4 @@
 ApplicationMgr.EvtMax    = -1;
 EventSelector.PrintFreq  = 1;
 
-#include "$STRIPPINGROOT/options/MBL0L1-new.opts"
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
