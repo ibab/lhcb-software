@@ -1,7 +1,53 @@
 <PRE>
-Package     : DaVinci 
-Responsible : Gloria Corti
+Package     : Phys/DaVinci 
+Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
+
+</PRE><H1><A NAME=v7r3>2003-02-10 DaVinci v7r3</A></H1><PRE>
+
+ - New features:
+   . Add support for data produced with dbase v254r1 (XmlDDDB v15r2,
+     DaVinciv254r1.opts)
+   . Use new algorithm (and package) for finding Primary vertex. Multiple
+     primaries are found (PrimVtx v2r0).
+   . Remove old (first) version of algorithm to find primary vertices
+     (GlobalReco v3r0)
+   . New package for MCtools that could be used both by Brunel and DaVinci
+     (MCTools v1r0)
+   . Release VisPrimVertTool by C.Jacoby that allows to flag and count
+     visible collisions (MCTools v1r0)
+   . Modify location of Kshort made with upstream tracks when re-executing
+     algorithms already executed in Brunel: "Phys/UpstreamKs" (KsReco v1r4p1) 
+   . Introduce algorithm (V0MakerAlg) to read Kshort made with upstream tracks
+     that are in OODST (V0 objects) and transform them into Particles.
+     They are put in "Phys/UpstreamKs". (DaVinciTools v7r3).
+   . Repackaging of L1Decision to remove some dependencies (L1Decision v1r7)
+   . Removal of use of packages no longer necessary for L1Decision (L0Muon,
+     L1VeloTracks)
+   . Removal of use of package no longer necessary for L0DU (L0Calo)
+
+ - New tuning:
+   . L0 thresholds adjusted (L0DU v6r4) 
+   . PuVeto decision taken on sum of second peak: >= 3 is vetoed (L0DU v6r4)
+   . L1 minimum bias parameterization (L1Decision v1r7)
+   . Tuning for new TT strip pitch and magnetic field, plus minor improvements
+     (L1Decision v1r7)
+   . Use most recent version of package CaloReco where changes are in code
+     used by Brunel (CaloReco v1r3)
+
+ - Tuning, features and Bug fixes of LHCb common packages done in Brunel
+   and incorporated (LHCb v11r10)
+   . Fix of many minor problems flagged by valgrind (OTAssociators v2r4,
+     TrAssociators v3r4, KsReco v1r4, VeloDet v8r4, TrExtrapolator v2r5,
+     CaloDet v6r4, CaloReco v1r3) 
+   . Brunel BugID 136: fix a Rich1 volume overlap (XmlDDDB v15r2)
+   . Add missing factories for L1OTCluster and L1ITCluster (L1Event v11r6)
+   . Fix a boundary problem in DeVelo (VeloDet v8r4)
+   . Improved agreement between Xml and CDF geometry for OO-Rich
+     (XmlDDDB v15r2, RichDet v4r0)
+   . Introduce fix to inner tracker materials that was mistakenly left out in
+     XmlDDDB v14r1 (XmlDDDB v15r2)
+
 
 </PRE><H1><A NAME=v7r2>2003-01-14 DaVinci v7r2</A></H1><PRE>
  2003-01-13 - Gloria Corti
