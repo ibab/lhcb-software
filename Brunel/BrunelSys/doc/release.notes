@@ -6,7 +6,9 @@
 
 !======================= BrunelSys v23r5 2004-04-07 =======================
 ! 2004-04-05 - Marco Cattaneo
- - Move to Gaudi v14r4
+ - Modified requirements for Brunel v23r5 (Move to Gaudi v14r4)
+
+   Packages modified: LHCbTools v1r1
 
 !======================= BrunelSys v23r4 2004-03-31 =======================
 ! 2004-03-31 - Marco Cattaneo
