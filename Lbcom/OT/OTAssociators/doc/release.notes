@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.12 2002-12-05 08:51:28 ranjard Exp $
+! $Id: release.notes,v 1.13 2002-12-19 09:31:47 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2002-12-18 - Marco Cattaneo
+ - Release tools at finalise
 
 !===================== OTAssociators v2r3 2002-12-05 ====================
 ! 2002-10-30 - Florence Ranjard

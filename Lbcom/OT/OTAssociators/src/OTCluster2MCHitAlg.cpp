@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.7 2002-10-17 08:38:24 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.8 2002-12-19 09:31:47 cattanem Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -117,6 +117,9 @@ StatusCode OTCluster2MCHitAlg::finalize()
 {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
+
+  // Release tools
+  if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
 
   return StatusCode::SUCCESS;
 }
