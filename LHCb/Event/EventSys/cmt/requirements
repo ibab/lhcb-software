@@ -18,7 +18,7 @@ use L0Event	v13r3	Event
 use L1Event	v11r7	Event
 use PhysEvent	v7r8	Event
 use HltEvent	v4r0	Event
-use DAQEvent	v3r0	Event
+use DAQEvent	v3r1	Event
 use DbCnv	v7r2p1	Event
 
 
