@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.1 2003-01-16 17:46:05 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.2 2003-01-21 20:38:38 papanest Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -57,10 +57,17 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   // this is 2*rows-1 of what you would expect from a normal grid
   HPDRows = userParameterAsInt("HPDRows");
   HPDsInBigCol = static_cast<int>(ceil(HPDRows/2.0));
-  halfHPDCols = HPDColumns/2;
+  int halfHPDCols = HPDColumns/2;
   HPDsIn2Cols = 2*HPDsInBigCol - 1;
   
-  log << MSG::DEBUG <<"HPDsInBigCol:" << HPDsInBigCol << endreq;
+  if (0 == HPDColumns%2) {
+    totalHPDs = halfHPDCols * HPDsIn2Cols;
+  } else {
+    totalHPDs = halfHPDCols * HPDsIn2Cols + HPDsInBigCol;
+  }
+  
+  log << MSG::DEBUG <<"HPDsInBigCol:" << HPDsInBigCol 
+      << " totalHPDs:" << totalHPDs << endreq;
   
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0 = geometry()->lvolume()->pvolume(0);
@@ -439,11 +446,8 @@ StatusCode DeRich1CdfHPDPanel::HPDWindowPoint(const HepVector3D& vGlobal,
   if (!HPDFound1) {
     // first attempt to find relevant HPD failed.
     // search all HPDs for intersection
-    //int HPDMax = HPDColumns * HPDRows;
     
-    int HPDMax = static_cast<int>(round((HPDColumns*HPDRows)/2.0 + 0.1));
-    
-    for (int HPD=0; HPD<HPDMax; ++HPD) {      
+    for (int HPD=0; HPD<totalHPDs; ++HPD) {      
       pvHPDMaster = geometry()->lvolume()->pvolume(HPD);      
       pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
       pvWindow = pvHPDSMaster->lvolume()->pvolume(2);

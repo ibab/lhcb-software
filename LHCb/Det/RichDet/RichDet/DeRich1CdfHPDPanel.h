@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.1 2003-01-16 17:46:04 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.2 2003-01-21 20:38:37 papanest Exp $
 
 #ifndef DERICH1CDFHPDPANEL_H
 #define DERICH1CDFHPDPANEL_H 1
@@ -124,7 +124,7 @@ private:
   int HPDColumns;
   int HPDsInBigCol;
   int HPDsIn2Cols;
-  int halfHPDCols;
+  int totalHPDs;
 
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;
