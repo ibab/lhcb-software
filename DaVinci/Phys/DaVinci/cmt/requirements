@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2002-07-18 20:21:14 gcorti Exp $
+# $Id: requirements,v 1.33 2002-07-19 13:44:12 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -28,7 +28,7 @@ branches          cmt doc src job options
 #--- CMT and Gaudi policy
 use GaudiPolicy  v5r5
 
-#--- External libraries - Gaudi v10r1
+#--- External libraries - Gaudi v10r4
 use ExternalLibs   v3r6
 use AIDA           v2r2
 use CLHEP          v17r10p1
@@ -54,7 +54,7 @@ use RootHistCnv        v8r0
 #---LHCb common libraries
 use GaudiConf      v6r3
 use BookKeeping    v1r1   Tools
-use LHCbKernel     v1r2   Kernel
+use LHCbKernel     v1r3   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
 use RichKernel   v1r2   Rich
@@ -62,41 +62,28 @@ use TrKernel     v11r0  Tr
 use CaloKernel   v2r0   Calo
 use MuonKernel   v2r1   Muon
 
-
 #--- Detector description ( add any other Det package you need )
 use DetDesc        v10r3   Det
-use XmlDDDB        v12r1   Det
+use XmlDDDB        v12r2   Det
+use VeloDet        v6r0    Det
 use ITDet          v1r0    Det
 use OTDet          v2r0    Det
 use CaloDet        v5r0    Det
-use VeloDet        v6r0    Det
+use CaloDetXmlCnv  v2r0    Det
 use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 #    explicit packages now becuase of DEV development
-use EventKernel  v2r0    Event
-use Event        v2r0    Event
-use VeloEvent    v11r0   Event
-use ITEvent      v11r0   Event
-use OTEvent      v11r0   Event
-use TrEvent      v11r0   Event
-use RichEvent    v3r1    Event
-use CaloEvent    v11r1   Event
-use MuonEvent    v2r0    Event
-use L0Event      v12r0   Event
-use L1Event      v11r0   Event
-use PhysEvent    v6r0    Event
-use DbCnv        v7r0    Event
-#use EventSys       v11r0  Event
+use EventSys       v12r0  Event
 
 #--- Associators
 use  ITAssociators      v2r0    IT
 use  OTAssociators      v2r0    OT
 use  VeloAssociators    v1r0    Velo
-use  CaloAssociators    v2r0    Calo
+use  CaloAssociators    v2r1    Calo
 use  CaloRec   		v2r1    Calo
 use  MuonAssociators    v1r0    Muon
-use  TrAssociators      v2r0    Tr
+use  TrAssociators      v3r0    Tr
 use  L0Calo		v6r0	L0
 use  L1VeloTrack 	v1r0	L1
 
@@ -112,7 +99,7 @@ use DaVinciMCTools       v2r0   Phys
 use DaVinciTest          v2r0   Phys
 #use PhysSelections       v2r0   Phys
 #use FlavourTagging       v2r0   Phys
-#use DaVinciUser          v2r0   Phys
+use DaVinciUser          v2r0   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
