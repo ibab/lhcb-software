@@ -1,6 +1,6 @@
 //*************************************************************
 //   Options to re-run the Level 0 trigger decision in DaVinci
-//*************************************************************
+//=============================================================
 
 // Decison Unit, needs Sicb converter
 ApplicationMgr.DLLs    += { "L0DU" };

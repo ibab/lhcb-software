@@ -1,0 +1,28 @@
+//*************************************************************
+//   Options to re-calibrate calorimeter in DaVinci
+//=============================================================
+
+ApplicationMgr.DLLs   += { "CaloAlgs" };
+ApplicationMgr.TopAlg += { "CaloHypoAlg/PhotonReCalibration" };
+
+PhotonReCalibration.Input     =   "Rec/Calo/Photons"        ;
+PhotonReCalibration.Detector  =   "/dd/Structure/LHCb/Ecal" ;
+
+// Energy recalibration
+PhotonReCalibration.Tools    += { "CaloE1Correction/E2Correction" };
+
+// PreShower correction 
+PhotonReCalibration.Tools    += { "CaloPrsCorrection/PrsCorrection" };
+
+// Remove evaluated 4-momentum and reevaluate it again with new parameters
+PhotonReCalibration.Tools    += { "CaloRemoveMomentum" };
+PhotonReCalibration.Tools    += { "CaloPhotonMomentumTool" };
+
+// Energy (re-)correction for Photons 
+#include "$CALOTOOLSOPTS/E2Correction.opts"
+#include "$CALOTOOLSOPTS/E3Correction.opts"
+
+// Energy (re-)correction for Photons for losses in Prs 
+#include "$CALOTOOLSOPTS/PrsCorrection.opts"
+#include "$CALOTOOLSOPTS/EPrsCorrection.opts"
+
