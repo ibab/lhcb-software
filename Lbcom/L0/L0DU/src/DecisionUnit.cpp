@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.2 2001-06-15 12:42:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.3 2001-06-25 13:09:30 nbrun Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -203,6 +203,9 @@ StatusCode DecisionUnit::execute() {
           << "No Calo candidates"
           << endreq;
     }
+    log << MSG::DEBUG
+        << "Only Cand Calo El, Ph, Ha, SumEt, Pi0L, Pi0G used "
+        << endreq;
     while ( itCandCalo != candCalo->end() ) {
       log << MSG::DEBUG 
           << "Cand "
@@ -212,56 +215,71 @@ StatusCode DecisionUnit::execute() {
           << " Et(GeV) = "
           << (*itCandCalo)->et() / GeV 
           << endreq;
-      log << MSG::DEBUG
-          <<"  eCut1(GeV) = "; 
       if ( L0::Electron == (*itCandCalo)->type() ) {
         m_Electron = (*itCandCalo);
-        log << m_eElCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = "       
+            << m_eElCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eElCut2 / GeV
             << " scal = "
-            << m_scalEl; 
+            << m_scalEl 
+            << endreq;
       }
       if ( L0::Photon == (*itCandCalo)->type() ) {
         m_Photon = (*itCandCalo);
-        log << m_ePhCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = " 
+            << m_ePhCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePhCut2 / GeV
             << " scal = "
-            << m_scalPh; 
+            << m_scalPh
+            << endreq;
       } 
       if ( L0::Hadron == (*itCandCalo)->type() ) {
         m_Hadron = (*itCandCalo);
-        log << m_eHaCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = " 
+            << m_eHaCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eHaCut2 / GeV
             << " scal = "
-            << m_scalHa; 
+            << m_scalHa
+            << endreq;    
       }
       if ( L0::SumEt == (*itCandCalo)->type() ) {
         m_SumEt = (*itCandCalo);
-        log << m_eSumEtCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = " 
+            << m_eSumEtCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eSumEtCut2 / GeV
-            << " scal not used"; 
+            << " scal not used"
+            << endreq;
       } 
       if ( L0::Pi0Local == (*itCandCalo)->type() ) {
         m_Pi0Local = (*itCandCalo);
-        log << m_ePi0LCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = " 
+            << m_ePi0LCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePi0LCut2 / GeV
             << " scal = "
-            << m_scalPi0L; 
+            << m_scalPi0L
+            << endreq;
       }
       if ( L0::Pi0Global == (*itCandCalo)->type() ) {
         m_Pi0Global = (*itCandCalo);
-        log << m_ePi0GCut1 / GeV
+        log << MSG::DEBUG
+            <<"  eCut1(GeV) = "
+            << m_ePi0GCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePi0GCut2 / GeV
             << " scal = "
-            << m_scalPi0G; 
-      } 
-      log << endreq;
+            << m_scalPi0G
+            << endreq;
+      }
       itCandCalo++;
     }
   }
@@ -291,21 +309,17 @@ StatusCode DecisionUnit::execute() {
         log << MSG::DEBUG 
             << "Cand Muon " 
             << " Pt(GeV) = "
-            << (*itCandMuon)->pt() 
-            << "\n( x y teta phi status = "
+            << (*itCandMuon)->pt() / GeV 
+            << "( x y status = "
             << (*itCandMuon)->x()
             << " "
             << (*itCandMuon)->y()
-            << " "
-            << (*itCandMuon)->theta()
-            << " "
-            << (*itCandMuon)->phi()
             << " "
             << (*itCandMuon)->status()
             << " )"
             << endreq;
         if ( L0Muon::OK == (*itCandMuon)->status() ) {
-          eMuons.push_back( fabs( (*itCandMuon)->pt() ) * GeV );
+          eMuons.push_back( fabs( (*itCandMuon)->pt() ) );
         }
         itCandMuon++;
       }
@@ -337,7 +351,7 @@ StatusCode DecisionUnit::execute() {
       if ( 1 <= eMuons.size() ) {
         itCandMuon = candMuon->begin();
         while ( itCandMuon != candMuon->end() ) {
-          if ( eMuons[ 0 ] == fabs( (*itCandMuon)->pt() ) * GeV ) {
+          if ( eMuons[ 0 ] == fabs( (*itCandMuon)->pt() ) ) {
             break;
           }
           itCandMuon++;   
