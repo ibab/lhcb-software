@@ -313,9 +313,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     // Kill the incident photon when it has converted to photoelectron.
     // G4cout<<"Now killing photon which is converted"<<G4endl;
-    aParticleChange.SetLocalEnergyDeposit(PhotonEnergy);
+    aParticleChange.ProposeLocalEnergyDeposit(PhotonEnergy);
     //   aParticleChange.SetEnergyChange(0.);
-    aParticleChange.SetStatusChange(fStopAndKill);
+    aParticleChange.ProposeTrackStatus(fStopAndKill);
 
   } else {
     //photon is not to be killed if it is not converted to photoelectron. This is to
@@ -324,9 +324,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
     // for now for test the incident photon is killed SE 13-3-02
     //  G4cout<<"Now  killing photon which is not converted"<<G4endl;
-    aParticleChange.SetLocalEnergyDeposit(PhotonEnergy);
+    aParticleChange.ProposeLocalEnergyDeposit(PhotonEnergy);
     // aParticleChange.SetEnergyChange(0.);
-    aParticleChange.SetStatusChange(fStopAndKill);
+    aParticleChange.ProposeTrackStatus(fStopAndKill);
   }
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 

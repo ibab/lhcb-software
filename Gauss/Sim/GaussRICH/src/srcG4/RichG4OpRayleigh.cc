@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.6 2004-06-29 16:17:24 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.7 2004-12-13 15:18:05 gcorti Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 //
@@ -171,7 +171,7 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
       //      G4cout<<" Optical Photon killed in Rayleigh after    " 
       //      <<CurStepNum <<"   steps" <<G4endl;
-      aParticleChange.SetStatusChange(fStopAndKill);
+      aParticleChange.ProposeTrackStatus(fStopAndKill);
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
 
@@ -214,19 +214,19 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
   if(G4UniformRand() < 0.5)NewMomentumDirection = -NewMomentumDirection;
   NewMomentumDirection = NewMomentumDirection.unit();
 
-  aParticleChange.SetPolarizationChange(NewPolarization);
+  aParticleChange.ProposePolarization(NewPolarization);
 
-  aParticleChange.SetMomentumChange(NewMomentumDirection);
+  aParticleChange.ProposeMomentumDirection(NewMomentumDirection);
 
   if (verboseLevel>0) {
     G4cout << "New Polarization: "
            << NewPolarization << G4endl;
     G4cout << "Polarization Change: "
-           << *(aParticleChange.GetPolarizationChange()) << G4endl;
+           << *(aParticleChange.GetPolarization()) << G4endl;
     G4cout << "New Momentum Direction: "
            << NewMomentumDirection << G4endl;
     G4cout << "Momentum Change: "
-           << *(aParticleChange.GetMomentumChange()) << G4endl;
+           << *(aParticleChange.GetMomentumDirection()) << G4endl;
   }
 
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);

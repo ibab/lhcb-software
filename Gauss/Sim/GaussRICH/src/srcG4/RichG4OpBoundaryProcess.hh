@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.2 2004-06-03 12:44:44 seaso Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.3 2004-12-13 15:18:05 gcorti Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -367,17 +367,17 @@ void RichG4OpBoundaryProcess::DoAbsorption()
               if ( G4BooleanRand(theEfficiency) ) {
                  // EnergyDeposited =/= 0 means: photon has been detected
                  theStatus = Detection;
-                 aParticleChange.SetLocalEnergyDeposit(thePhotonMomentum);
+                 aParticleChange.ProposeLocalEnergyDeposit(thePhotonMomentum);
               }
               else {
-                 aParticleChange.SetLocalEnergyDeposit(0.0);
+                 aParticleChange.ProposeLocalEnergyDeposit(0.0);
               }
 
               NewMomentum = OldMomentum;
               NewPolarization = OldPolarization;
 
 //              aParticleChange.SetEnergyChange(0.0);
-              aParticleChange.SetStatusChange(fStopAndKill);
+              aParticleChange.ProposeTrackStatus(fStopAndKill);
 }
 
 inline

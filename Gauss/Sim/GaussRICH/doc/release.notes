@@ -5,6 +5,25 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!========================= GaussRICH v4r9 =================================
+! 2004-12-13 - Gloria CORTI
+ - src/PhysProcess/RichHpdSiEnergyLoss.cpp
+	 . temporary fix for BUG seen with geant4.6.2.ref05: 
+     "ERROR Inadmisible Rich Det Sector=  1078  Current RichDetNum =   0"
+     due to killing of photoelectron in process not propagated to G4track 
+ - src/PhysProcess/RichHpdPhotoElectricEffect.cpp
+   src/PhysProcess/RichHpdSiEnergyLoss.cpp 
+	 src/srcG4/RichG4Cerenkov.cc
+   src/srcG4/RichG4OpBoundaryProcess.{hh,cc}
+   src/srcG4/RichG4OpRayleigh.cc
+   . replace methods to be retired in Geant4 version 7 to be ready:
+	   SetLocalEnergyDeposit -> ProposeLocalEnergyDeposit
+     SetStatusChange       -> ProposeTrackStatus
+     SetMomentumChange     -> ProposeMomentumDirection
+     SetPolarizationChange -> ProposePolarization
+     GetPolarizationChange -> GetPolarization
+     GetMomentumChange     -> GetMomentumDirection
+
 !========================= GaussRICH v4r8 =================================
 ! 2004-08-30 - Sajan Easo
  - src/RichAnalysis/RichG4CkvRecon.cpp - modification to make WIN32 compatible.

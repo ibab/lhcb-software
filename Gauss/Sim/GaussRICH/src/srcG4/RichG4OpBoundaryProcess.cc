@@ -139,7 +139,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
     Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
   }
   else {
-    aParticleChange.SetStatusChange(fStopAndKill);
+    aParticleChange.ProposeTrackStatus(fStopAndKill);
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
@@ -147,7 +147,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
     Rindex1 = Rindex->GetProperty(thePhotonMomentum);
   }
   else {
-    aParticleChange.SetStatusChange(fStopAndKill);
+    aParticleChange.ProposeTrackStatus(fStopAndKill);
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
@@ -189,7 +189,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
           Rindex2 = Rindex->GetProperty(thePhotonMomentum);
         }
         else {
-          aParticleChange.SetStatusChange(fStopAndKill);
+          aParticleChange.ProposeTrackStatus(fStopAndKill);
           return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
         }
       }
@@ -228,7 +228,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
 
     else if (theFinish == polishedbackpainted ||
              theFinish == groundbackpainted ) {
-      aParticleChange.SetStatusChange(fStopAndKill);
+      aParticleChange.ProposeTrackStatus(fStopAndKill);
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
 
@@ -250,7 +250,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
         Rindex2 = Rindex->GetProperty(thePhotonMomentum);
       }
       else {
-        aParticleChange.SetStatusChange(fStopAndKill);
+        aParticleChange.ProposeTrackStatus(fStopAndKill);
         return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
       }
     }
@@ -351,8 +351,8 @@ RichG4OpBoundaryProcess::PostStepDoIt
       G4cout << " *** Detection *** " << G4endl;
   }
 
-  aParticleChange.SetMomentumChange(NewMomentum);
-  aParticleChange.SetPolarizationChange(NewPolarization);
+  aParticleChange.ProposeMomentumDirection(NewMomentum);
+  aParticleChange.ProposePolarization(NewPolarization);
 
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }

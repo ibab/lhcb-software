@@ -22,7 +22,7 @@
 //
 //
 // RichG4Cerenkov.cc
-// $Id: RichG4Cerenkov.cc,v 1.4 2004-06-03 12:44:44 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.5 2004-12-13 15:18:05 gcorti Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
   if (fTrackSecondariesFirst) {
     if (aTrack.GetTrackStatus() == fAlive )
-      aParticleChange.SetStatusChange(fSuspend);
+      aParticleChange.ProposeTrackStatus(fSuspend);
   }
 
   ////////////////////////////////////////////////////////////////

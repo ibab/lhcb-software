@@ -195,7 +195,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   if( fMatIndexHpdEnvelopeKovar == (G4int) aTrack.GetMaterial() -> GetIndex()) {
     //  G4cout<<"particle in HPD Kovar "<<G4endl;
     if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-      aParticleChange.SetStatusChange(fStopAndKill);
+      aParticleChange.ProposeTrackStatus(fStopAndKill);
     }
     return &aParticleChange;
   }
@@ -226,14 +226,15 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // energy. Hence the energy deposited on the hit is 20 keV.
   G4double EnegydepositMultFactor=1.0;
 
-       if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-        if(aKinEnergyInit > 1500 ) {
-          aKinEnergyInit= aKinEnergyInit/100000;
-          // EnegydepositMultFactor=10.0;
-        }    
-       }
+  if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
+    if(aKinEnergyInit > 1500 ) {
+      aKinEnergyInit= aKinEnergyInit/100000;
+      // EnegydepositMultFactor=10.0;
+    }    
+  }
     
   //end of temporary fix.
+  
 
   if(aKinEnergyInit < MinKineticEnergy ) {  Eloss=0.0 ; }
   else if( aKinEnergyInit <= PhElectronMaxEnergy ) {Eloss= aKinEnergyInit ;}
@@ -257,18 +258,21 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
   if(   EnergyTransfer > 0.0 ) {
 
-    aParticleChange.SetLocalEnergyDeposit(EnergyTransfer);
+    aParticleChange.ProposeLocalEnergyDeposit(EnergyTransfer);
   }
 
 
   if ( (aKinEnergyFinal <= MinKineticEnergy) || 
       (aCreatorProcessName == "RichHpdPhotoelectricProcess") ) {
-    aParticleChange.SetStatusChange(fStopAndKill);
+    aParticleChange.ProposeTrackStatus(fStopAndKill);
+    G4Track* theTrack = aStep.GetTrack();
+    theTrack->SetTrackStatus(fStopAndKill);
 
   }else {
-    aParticleChange.SetEnergyChange(aKinEnergyFinal);
+    aParticleChange.ProposeEnergy(aKinEnergyFinal);
 
   }
+  
   return &aParticleChange;
 
 }
