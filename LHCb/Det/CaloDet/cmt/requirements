@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.7 2001-03-24 12:23:02 ibelyaev Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.8 2001-06-14 16:09:41 sponce Exp $ 
 
 package  CaloDet 
 version  v1
@@ -10,7 +10,7 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
-use DetDesc      v6*  Det 
+use DetDesc      v7*  Det 
 use CaloGen      v1*  Calo 
 
 # =============== own options ==========================================

@@ -2,6 +2,9 @@ Package         : CaloDet
 Package manager : Vanya Belyaev 
 
 ! =====================================================================
+! 2001/06/14  - Sebastien Ponce
+      new implementation of the converters. Use of DOM instead of SAX.
+! =====================================================================
 ! 2001/03/24  - Vanya Belyaev
       final polishing before official release 
 ! =====================================================================
