@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.14 2004-05-31 22:02:06 jonrob Exp $
+// $Id: RichPhotonCreator.cpp,v 1.15 2004-05-31 22:09:15 jonrob Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -133,6 +133,11 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
       }
 
       if ( keepPhoton ) {
+
+        if ( msgLevel(MSG::VERBOSE) ) {
+          verbose() << "Reconstructed a photon candidate for segment " << segment->key()
+                    << " and pixel " << pixel->key() << endreq;
+        }
 
         richPhotons()->insert( newPhoton, key );
 

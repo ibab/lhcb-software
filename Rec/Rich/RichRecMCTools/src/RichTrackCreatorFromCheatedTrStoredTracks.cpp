@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromCheatedTrStoredTracks.cpp,v 1.5 2004-04-19 23:01:24 jonesc Exp $
+// $Id: RichTrackCreatorFromCheatedTrStoredTracks.cpp,v 1.6 2004-05-31 22:04:53 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromCheatedTrStoredTracks.h"
@@ -299,6 +299,9 @@ RichRecTracks * RichTrackCreatorFromCheatedTrStoredTracks::richTracks() const
 
     } else {
 
+      debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
+              << m_richRecTrackLocation << endreq;
+      
       // Set smartref to TES track container
       m_tracks = tdsTracks;
 

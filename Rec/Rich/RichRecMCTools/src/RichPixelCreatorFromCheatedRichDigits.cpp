@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.5 2004-04-19 23:01:23 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.6 2004-05-31 22:04:53 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -174,6 +174,9 @@ RichRecPixels * RichPixelCreatorFromCheatedRichDigits::richPixels() const
       put( m_pixels, m_richRecPixelLocation );
 
     } else {
+
+      debug() << "Found " << tdsPixels->size() << " pre-existing RichRecPixels in TES at "
+              << m_richRecPixelLocation << endreq;
 
       // Set smartref to TES pixel container
       m_pixels = tdsPixels;

@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.7 2004-04-19 23:06:14 jonesc Exp $
+// $Id: RichSegmentCreator.cpp,v 1.8 2004-05-31 22:02:06 jonrob Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -118,6 +118,9 @@ RichRecSegments * RichSegmentCreator::richSegments() const
       put( m_segments, m_richRecSegmentLocation );
 
     } else {
+
+      debug() << "Found " << tdsSegments->size() << " pre-existing RichRecSegments in TES at "
+              << m_richRecSegmentLocation << endreq;
 
       // Set smartref to TES segment container
       m_segments = tdsSegments;

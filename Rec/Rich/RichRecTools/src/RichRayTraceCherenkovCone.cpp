@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.1 2004-05-31 21:30:50 jonrob Exp $
+// $Id: RichRayTraceCherenkovCone.cpp,v 1.2 2004-05-31 22:02:06 jonrob Exp $
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -133,9 +133,9 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 
     }
 
-    if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "Successfully traced " << points.size() 
-              << " points to detector plane for segment " << segment->key() << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Successfully traced " << points.size() 
+                << " points to detector plane for segment " << segment->key() << endreq;
     }
 
     return StatusCode::SUCCESS;
