@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.12 2002-10-03 14:58:33 cattanem Exp $
+# $Id: requirements,v 1.13 2002-10-22 06:37:56 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v4r0
+version  v4r1
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet

@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.23 2002-10-21 20:38:03 asatta Exp $
+! $Id: release.notes,v 1.24 2002-10-22 06:37:57 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
-!========================= MuonDet v4r0 2002-10-11 =========================
+!========================= MuonDet v4r1 2002-10-22 =========================
 ! 2002-10-21 - Alessia Satta
- - add the MuonBasicGeometry class which is usefull to deal with M1-noM1
-   case 
+ - add the MuonBasicGeometry class which is useful to deal with M1-noM1 case 
+
+!========================= MuonDet v4r0 2002-10-11 =========================
 ! 2002-10-03 - Marco Cattaneo
  - requirements: changed version to v4r0. Has to be used with XmlDDDB v13r0 
    or greater due to structural changes in the Xml description.
