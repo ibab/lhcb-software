@@ -2,6 +2,7 @@
 // HLT with offline tracks
 //==============================================================================
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
 // Make all particles as "pions" with long tracks
 HLTSelections.Members += {"PreLoadParticles/HLTPions"};

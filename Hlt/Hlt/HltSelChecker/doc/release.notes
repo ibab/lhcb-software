@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-12-06 - Luis Fernandez
+ - options/OfflineTracks.opts
+   . Add include of option file to allow the PhotonParticleMaker to produce neutrals
+
 ! 2004-11-25 - P. Koppenburg
   - options/DV*.opts
     . Adapt input data to new data in HltSelections.
