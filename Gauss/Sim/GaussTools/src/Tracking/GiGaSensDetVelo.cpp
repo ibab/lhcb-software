@@ -100,11 +100,15 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
       // old version:
       //      if(stname.substr(25,1)=="P") puornot=1;
 
+      // to find the position of "Station" in vol name
+
+      int stpos=stname.rfind("Station")+7;
+
       if(puornot==0)
         {
           // normal sensor
-          std::string stnumb=stname.substr(33,2);
-          std::string lorr=stname.substr(35,1);
+          std::string stnumb=stname.substr(stpos,2);
+          std::string lorr=stname.substr(stpos,1);
           std::string phiorr=pvname.substr(36,2);
           
           int ishift1=0;
@@ -117,8 +121,8 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
       else
         {
           // PuVeto sensor
-          std::string stnumb=stname.substr(34,1);
-          std::string lorr=stname.substr(35,1);
+          std::string stnumb=stname.substr(stpos,1);
+          std::string lorr=stname.substr(stpos,1);
           
           int ishift=0;
           
