@@ -1,4 +1,4 @@
-! $Id:E
+! $Id: release.notes,v 1.2 2004-11-17 15:06:07 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloMoniDigi v1r0 2004-11-16 ========================
 ! 2004-10-25 - Vanya BELYAEV
   - new package: the code is imported from Calo/CaloMonitor package
 
