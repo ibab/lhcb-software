@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.32 2002-09-25 12:38:40 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.33 2002-09-25 12:45:51 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -164,8 +164,8 @@ std::string constructTypes(std::string type)
 void printCppDictionary(DaDiPackage* gddPackage,
                         char* envXmlDB,
                         const char* envOut,
-                        bool additionalImports,
-                        std::string dothDir)
+                        bool additionalImports)
+                        //std::string dothDir)
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0 ,k=0;
@@ -1241,8 +1241,8 @@ int main(int argC, char* argV[])
     printCppDictionary(gddPackage,
                        envXmlDB,
                        envOut,
-                       additionalImports,
-                       dothDir);
+                       additionalImports);
+    //                       dothDir);
   }
 
   return 0;
