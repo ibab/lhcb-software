@@ -209,6 +209,11 @@ void KaonSameSideTaggingTool::tagFromList( const Particle &theB,
                                            FlavourTag &theTag )
 {
   MsgStream log(msgSvc(), name());
+
+  log << MSG::DEBUG
+      << "Entering the active region of the KaonSameSideTaggingTool"
+      << endreq;
+  
   // Only keep particles which passe the cuts.
   ParticleVector candidates(0);
   log << MSG::DEBUG << "Filtering the candidates" << endreq;

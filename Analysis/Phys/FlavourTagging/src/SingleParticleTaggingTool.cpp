@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.8 2002-11-20 08:24:47 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.9 2003-06-16 07:09:53 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -215,6 +215,11 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
                                              FlavourTag &theTag )
 {
   MsgStream log(msgSvc(), name());
+
+  log << MSG::DEBUG
+      << "Entering the active region of the SingleParticleTaggingTool"
+      << endreq;
+  
   // Only keep particles which passe the cuts.
   ParticleVector candidates(0);
   log << MSG::DEBUG << "Filtering the candidates" << endreq;
