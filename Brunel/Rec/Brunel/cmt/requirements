@@ -53,7 +53,7 @@ use PuVeto              v5r3    L0
 use L0DU                v6r3    L0
 
 # L1 trigger
-use L1VeloTrack         v4r0    L1
+use L1VeloTrack         v4r1    L1
 use L1Decision		v1r6	L1
 
 # Calorimeter

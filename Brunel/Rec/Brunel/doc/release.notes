@@ -19,6 +19,7 @@ Purpose: LHCb reconstruction program
 
  - Bug fixes:
    . Fix a boundary problem in DeVelo (VeloDet v8r4)
+   . Fix a rare duplicate key problem in VeloFEToL1 (L1VeloTrack v4r1)
 
 </PRE><H1><A NAME=v17r2>2003-01-23 Brunel v17r2</A></H1><PRE>
  - New tuning:
