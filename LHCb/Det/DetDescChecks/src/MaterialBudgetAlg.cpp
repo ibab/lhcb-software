@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.5 2002-08-21 17:08:29 witoldp Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.6 2002-08-22 10:10:50 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/08/21 17:08:29  witoldp
+// mods by Juan Palacios
+//
 // Revision 1.4  2002/07/12 07:45:59  witoldp
 // a few improvements for grid-shooting
 //
@@ -431,7 +434,7 @@ StatusCode MaterialBudgetAlg::execute()
         }
       aveDist = aveDist/shot;
       xx=m_xMin+dxgrid/2;
-      for ( int iii = 0 ; ii < m_nbx ; iii++ ) {
+      for ( int iii = 0 ; iii < m_nbx ; iii++ ) {
 	m_budget1DY        -> fill( xx , storeEtaValues[iii] ) ;
 	xx=xx+dxgrid;
       }
