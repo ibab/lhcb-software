@@ -1,6 +1,13 @@
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 20010606 L0Muon v2 A.T.
+
+  Major revision of all the code. A detailed ( including crates
+  and processing units ) version of the trigger processor is
+  included. 
+  The library is subdivided into component and static parts.
+
 ! 20010503 L0Muon v1r1 A.T.
 
   Same functionality.
