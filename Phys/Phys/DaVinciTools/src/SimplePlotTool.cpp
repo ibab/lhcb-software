@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.6 2005-01-14 12:55:13 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.7 2005-01-14 15:03:56 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -179,8 +179,8 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
   if ( var == "M" ) {
     if ( P->endVertex()){
       if ( hmin < 0 ){
-        double mn = pp->mass() - gsl_max(pp->mass()/50.,pp->maxWidth()); // at least 2%
-        double mx = pp->mass() + gsl_max(pp->mass()/50.,pp->maxWidth());
+        double mn = pp->mass() - gsl_max(pp->mass()/25.,pp->maxWidth()); // at least 4%
+        double mx = pp->mass() + gsl_max(pp->mass()/25.,pp->maxWidth());
         plot(P->mass(),"Mass of "+name,mn,mx );
       } else {
         plot(P->mass(),"Mass of "+name,hmin,hmax );
