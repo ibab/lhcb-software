@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.2 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloPhiType.h,v 1.3 2004-02-13 16:01:58 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -102,6 +102,9 @@ public:
 
   /// The phi position of a strip at a given radius
   double phiOfStrip(unsigned int strip, double fraction, const double radius);
+  
+  /// The angle of the strip wrt to the x axis
+  double angleOfStrip(unsigned int strip, double fraction);
   
   /// Returns the offset in phi for a given radius
   double phiOffset(double radius);

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.36 2004-02-13 13:44:15 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.37 2004-02-13 16:02:15 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -415,6 +415,26 @@ StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
   unsigned int index=sensorIndex(sensor);
   if(DeVeloPhiType* phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[index])){
     phiOfStrip = phiPtr->phiOfStrip(channel.strip(),fraction,radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the angle of the strip wrt the x axis for the strip
+StatusCode DeVelo::angleOfStrip( VeloChannelID channel,
+			       double &angleOfStrip ) {
+  return this->angleOfStrip(channel,0.,angleOfStrip);
+}
+
+// returns the angle of the strip wrt the x axis for
+// the strip+fractional distance to strip
+StatusCode DeVelo::angleOfStrip( VeloChannelID channel,
+                               double fraction, double &angleOfStrip ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  if(DeVeloPhiType* phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[index])){
+    angleOfStrip = phiPtr->angleOfStrip(channel.strip(),fraction);
     return StatusCode::SUCCESS;
   }else{
     return StatusCode::FAILURE;

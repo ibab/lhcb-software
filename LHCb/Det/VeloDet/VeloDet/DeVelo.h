@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.15 2004-02-13 07:05:47 cattanem Exp $
+// $Id: DeVelo.h,v 1.16 2004-02-13 16:01:58 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -217,6 +217,14 @@ public:
   /// at the specified radius for this sensor.
   StatusCode phiOfStrip( VeloChannelID channel, double fraction,
                                 double radius, double &phiOfStrip ) ;
+
+  /// returns the angle of the strip wrt the x axis for the strip
+  StatusCode angleOfStrip( VeloChannelID channel, double &angleOfStrip ) ;
+                               
+  /// returns the angle of the strip wrt the x axis for
+  /// the strip+fractional distance to strip
+  StatusCode angleOfStrip( VeloChannelID channel, double fraction,
+                           double &angleOfStrip ) ;
 
   /** The stereo angle of the phi strips in radians,
       signed so that positive indicates phi increases with radius */

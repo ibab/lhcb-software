@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.3 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloPhiType.cpp,v 1.4 2004-02-13 16:02:15 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -512,6 +512,21 @@ double DeVeloPhiType::phiOfStrip(unsigned int strip, double fraction,
     phiOfStrip = (effectiveStrip*m_outerPitch) + phiOffset(radius);
   }
   return phiOfStrip;
+}
+//==============================================================================
+/// the angle of the strip wrt to the x axis
+//==============================================================================
+double DeVeloPhiType::angleOfStrip(unsigned int strip, double fraction)
+{
+  double angleOfStrip;
+  double effectiveStrip=fraction+static_cast<double>(strip);
+  if (m_nbInner > strip) {
+    angleOfStrip = (effectiveStrip*m_innerPitch) + m_innerTilt;
+  } else {
+    effectiveStrip -= m_nbInner;
+    angleOfStrip = (effectiveStrip*m_outerPitch) + m_outerTilt;
+  }
+  return angleOfStrip;
 }
 //==============================================================================
 /// Phi Offset
