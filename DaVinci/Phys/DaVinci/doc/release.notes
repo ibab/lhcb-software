@@ -164,6 +164,13 @@ Purpose     : LHCb analysis program
 ! 2004-11-11 - Eduardo Rodrigues
  - some ntuple variables were renamed, for future easy extension
    of the ntuple entries
+!======================= L0MuonKernel v2r3 2004-12-01 ========================
+! 2004-12-01 - Luisanna Tocco
+ - In CandidateTower, setOrderedBit corrected to include y Foi=0
+!=================== L0MuonTrigger v2r3p1 2004-10-17 =====================
+! 2004-11-17 - P. Koppenburg
+ - cmt/requirements
+   . Use L0MuonKernel v2r* instead of v2r2 to allow use of v2r3...
 ##################################### PHYS #####################################
 !========================== DaVinciAssociators v5r2p1 2004-12-01 ===================
 ! 2004-11-23 - P. Koppenburg
