@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.3 2003-06-30 15:11:56 jonrob Exp $
+// $Id: RichRecAlgBase.h,v 1.4 2003-07-02 09:02:26 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -49,10 +49,6 @@ protected:  // Protected methods
   RichRecPhotons * richPhotons();   ///< Returns RichRecPhotons pointer
   RichRecStatus * richStatus();     ///< Returns RichRecStatus pointer
 
-  // Miscellaneous data
-  TrStoredTracks * trTracks();     ///< Returns TrStoredTracks pointer
-  ProcStatus * procStatus();       ///< Returns ProcStatus pointer
-
   /// Test printout level
   bool msgLevel( int mLevel );
 
@@ -69,19 +65,10 @@ protected:  // Protected methods
   /// Release a tool
   void releaseTool( std::string name );
 
-private:  // private methods
-
-  RichRecStatus * updateRichStatus();    ///< Updates RichRecStatus pointer
-  ProcStatus * updateProcStatus();       ///< Updates ProcStatus pointer
-  TrStoredTracks * updateTrTracks();     ///< Updates TrStoredTracks pointer
-
 private:   // Private data
 
   /// Pointer to tool registry
   IRichToolRegistry * m_toolReg;
-  
-  ///< pointer to ProcStatus
-  ProcStatus * m_procStat;
   
   /// Pointer to RichRecTracks
   RichRecTracks ** m_richTracks;
@@ -96,16 +83,7 @@ private:   // Private data
   RichRecPhotons ** m_richPhotons;
   
   /// Pointer to RichRecStatus
-  RichRecStatus * m_richStatus;
-  
-  /// Handle object for TrStoredTracks
-  TrStoredTracks * m_trTracks;
-
-  /// Location of processing status object in TES
-  std::string m_procStatLocation;
-
-  /// Location of TrStoredTracks in TES
-  std::string m_trTracksLocation;
+  RichRecStatus ** m_richStatus;
 
   /// Location of RichRecStatus in TES
   std::string m_richRecStatusLocation;
@@ -139,14 +117,9 @@ inline RichRecPhotons * RichRecAlgBase::richPhotons()
   return *m_richPhotons;
 }
 
-inline TrStoredTracks * RichRecAlgBase::trTracks()
-{
-  return updateTrTracks();
-}
-
 inline RichRecStatus * RichRecAlgBase::richStatus()
 {
-  return updateRichStatus();
+  return *m_richStatus;
 }
 
 inline bool RichRecAlgBase::msgLevel( int mLevel )
@@ -157,11 +130,6 @@ inline bool RichRecAlgBase::msgLevel( int mLevel )
 inline int RichRecAlgBase::msgLevel()
 {
   return m_msgLevel;
-}
-
-inline ProcStatus * RichRecAlgBase::procStatus()
-{
-  return ( updateProcStatus() );
 }
 
 inline void RichRecAlgBase::releaseTool( std::string name ) {
