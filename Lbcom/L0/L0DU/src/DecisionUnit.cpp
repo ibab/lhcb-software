@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.11 2002-09-12 11:53:29 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.12 2002-09-21 16:41:19 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -58,8 +58,8 @@ DecisionUnit::DecisionUnit( const std::string& name,
   declareProperty( "EElCut2"             , m_eElCut2    = 2.40 * GeV );
   declareProperty( "ScalEl"              , m_scalEl     = 0 );
 
-  declareProperty( "EPhCut1"             , m_ePhCut1    = 4.99 * GeV);
-  declareProperty( "EPhCut2"             , m_ePhCut2    = 4.99 * GeV);
+  declareProperty( "EPhCut1"             , m_ePhCut1    = 3.99 * GeV);
+  declareProperty( "EPhCut2"             , m_ePhCut2    = 3.99 * GeV);
   declareProperty( "ScalPh"              , m_scalPh     = 0 );
 
   declareProperty( "EHaCut1"             , m_eHaCut1    = 3.18 * GeV );

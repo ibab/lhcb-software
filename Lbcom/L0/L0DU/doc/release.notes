@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.15 2002-09-12 11:53:29 ocallot Exp $
+$Id: release.notes,v 1.16 2002-09-21 16:41:19 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2002-09-21 - Olivier Callot
+ - Change the photon threshold to 3.99 GeV to have some efficiency !
 
 ! 2002-09-12 - Olivier Callot
  - L0Monitor prints now also the exclusive. 'any Pi0' means the OR of the two
