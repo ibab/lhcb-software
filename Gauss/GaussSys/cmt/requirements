@@ -24,7 +24,7 @@ use GiGaCnv     	v11r0   Sim
 # Gauss stuff...
 use GaussTools		v6r0	Sim
 use GaussRICH		v2r0	Sim
-use GaussTracker	v2r0	Sim
+use GaussTracker	v2r0p1	Sim
 use GaussCalo		v2r0	Sim
 use GaussPhysics	v2r0	Sim
 #use GaussImports        v4r0    Sim

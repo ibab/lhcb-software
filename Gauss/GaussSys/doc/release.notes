@@ -7,7 +7,7 @@
 !=========================== GaussSys v8r1 2003-02-03 =================
 ! 2003-02-03 - Florence RANJARD
  - requirements - use LHCb v11r8,
-                  use GEANT4 v2r5010p0 1st release of cut per region)
+                  use GEANT4 v2r5010p0 (1st release of cut per region)
 
 !============================ GaussSys v8r0 2002-12-18 ==================
                          new version using just released Geant4 5.0
