@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-/// Job options for Brunel for data produced with Boole v2r0 or greater and ///
-/// and with XmlDDDB geometry compatible with lhcb-200309-hpd (HPD version) ///
+///   Job options for Brunel for data produced with Boole v3r0 or greater   ///
+///          and with XmlDDDB geometry compatible with lhcb-200311          ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
@@ -10,7 +10,7 @@
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309-hpd.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 #include "$RICHRECSYSOPTS/BrunelRecoHPD.opts"
 #include "$RICHRECSYSOPTS/RecoParamForHPD.opts"
 #include "$VELOTTROOT/options/BrunelField043.opts"
@@ -24,9 +24,12 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309-hpd.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v2r1/360000_1310.oodigi' TYP='ROOT' opt='READ'" }; // evtype 360000
+  //  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r0/360000_1310.oodigi' TYP='ROOT' opt='READ'" }; // evtype 370000
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r0/370000_0111.oodigi' TYP='ROOT' opt='READ'" }; // evtype 370000
 
-DstWriter.Output = "DATAFILE='360000_1310.dst' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "360000_1310.hbook";  // Monitoring histos
+//DstWriter.Output = "DATAFILE='360000_1310.dst' TYP='ROOT' OPT='NEW'";
+DstWriter.Output = "DATAFILE='370000_0111.dst' TYP='ROOT' OPT='NEW'";
+//HistogramPersistencySvc.OutputFile = "360000_1310.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "370000_0111.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
 //////////////////////////////////////////////////////////////////////////////

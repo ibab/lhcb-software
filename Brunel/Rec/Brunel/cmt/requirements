@@ -1,5 +1,5 @@
 package Brunel
-version v20r1
+version v21r0
 
 branches doc cmt job options
 
@@ -33,19 +33,19 @@ use GaudiObjDesc 	v5r0
 use HbookCnv 		v13r4
 
 #-- Database
-use XmlDDDB		v18r2	Det
+use XmlDDDB		v19r0	Det
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v13r2)
-use LHCb	v13r2
+#-- LHCb libraries (from LHCB_v13r3)
+use LHCb	v13r3
 
-#-- BrunelSys v20r0 packages
+#-- BrunelSys v21r0 packages
 
 # Phys utilities
 use MCTools		v1r1p1	Phys
 
 # Brunel utilities
-use BrunelAlgs          v3r0	Rec
+use BrunelAlgs          v3r1	Rec
 
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
@@ -62,14 +62,14 @@ use ITAlgorithms        v12r10	IT
 use ITCheckers          v1r3p1	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r2 	OT
+use OTAlgorithms        v13r3 	OT
 
 # Tracking
 use VeloTrack           v5r1  	Velo
-use TrCheck             v2r0  	Tr
+use TrCheck             v2r1  	Tr
 use LongTrack           v1r8	Tr
-use TrFitter            v3r6	Tr
-use TrExtrapolator      v2r7	Tr
+use TrFitter            v3r7	Tr
+use TrExtrapolator      v2r8	Tr
 use TrTools             v2r5 	Tr
 use Seeding             v2r5  	Tr 
 use TrMatching          v2r7	Tr
@@ -84,12 +84,12 @@ use MuonRec             v2r3    Muon
 use MuonID              v3r6    Muon
 
 # Rich
-use RichUtils		v3r3  	Rich
-use RichDetTools	v3r0	Rich
-use RichRecSys		v1r1	Rich
-use RichRecQC		v1r1	Rich
+use RichUtils		v3r4  	Rich
+use RichDetTools	v3r1	Rich
+use RichRecSys		v1r2	Rich
+use RichRecQC		v1r2	Rich
 use RichRecMCTools	v1r0	Rich
-use RiSicbGeom          v3r4	SICB
+use RiSicbGeom          v3r5	SICB
 
 #
 #===== build Brunel =========================

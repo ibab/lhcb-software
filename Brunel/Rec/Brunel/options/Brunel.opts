@@ -128,7 +128,7 @@ TrTrackCloneKiller.flagMode = true;
 
 // Rich Reconstruction algorithms defined in database specific file
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
-        "RichGlobalPID", "RichLocalPID", "RichRingRefit", "RichPIDMerge" };
+ "RichUtils", "RichGlobalPID", "RichLocalPID", "RichRingRefit", "RichPIDMerge"};
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };

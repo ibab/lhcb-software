@@ -3,6 +3,38 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v21r0>2003-11-05 Brunel v21r0</A></H1><PRE>
+ Version built against LHCB v13r3. Requires oodigi produced by Boole v3r0 or
+ later (due to backward incompatible change in Rich data and DAQEvent)
+
+- New tuning
+   . Changes to Rich monitoring (RichRecQC v1r2)
+   . Updates and new features in Rich ring refit (RichRingRefit v1r2)
+   . Implement fast refit with outlier removal. Default is five iterations, 
+     removing outliers at chi2 > 9. (TrFitter v3r7)
+   . New tuning of dE/dx and MS (TrExtrapolator v2r8)
+
+- New feature
+   . Possibility to switch on detailed OT monitoring. 
+     Default is "fullDetail" = false (OTAlgorithms v13r3)
+
+- DST changes
+   . Requires oodigi produced by Boole v3r0 or later, due to backwards
+     incompatible changes to event model and oodigi content
+     (RichKernel v4r0, RichEvent v6r0, DAQEvent v2r0, GaudiConf v7r2)
+   . Reading program has to be linked with LHCB v13r3 or later due to backwards
+     incompatible change to Rich Event model (RichKernel v4r0, RichEvent v6r0)
+   . Add L1Buffer to DST (GaudiConf v7r2)
+
+- Geometry changes
+   - Renamed v200309-hpd.opts to v200311.opts
+   - Removed v256-MaPMT.opts and v200309.opts (MaPMT geometries)
+
+- Bug fixes
+   . Fixes to material description of IT frames, was not consistent with cdf
+     description (XmlDDDB v19r0)
+   . Fix uninitialised variables (bug 1673) (TrCheck v3r7)
+
 </PRE><H1><A NAME=v20r1>2003-10-17 Brunel v20r1</A></H1><PRE>
 
 - New functionality
