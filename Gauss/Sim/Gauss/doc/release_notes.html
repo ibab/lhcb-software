@@ -3,8 +3,131 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
-<H1><A NAME="v16r0">2004-08-02 - Gauss v17r0</A></H1><PRE>
-this version is based on Gaudi v15r1 and LHCb v16r1
+<H1><A NAME="v17r0">2004-08-11 - Gauss v17r0</A></H1><PRE>
+this version is based on Gaudi v15r1 and LHCb v16r1.
+It uses geant4 6.2.p01
+
+!========================= PYTHIA v2r6205p4 =========================
+! 2004-07-27 - Gloria CORTI
+ - requirements - use cernlib (2003) from LCG_Interfaces
+
+!================= EvtGen v5r6 ====================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces packages
+
+!================== GeneratorModules v12r0 2004-08-02=================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG Interfaces
+ - ParticleGun.{h,cpp}, modifications from Chris Jones to allow for particles
+   of more than one type to be prodcued at the same time.
+   The property PDGCode is changed to PDGCodes and is now a vector: old
+   property does not work any more.
+
+! 2004-07-15 - Patrick Robbe
+ - EvtGenTool.cpp : Fix for windows compilation (constant size of array)
+ - DumpMCDecay.cpp : Remove include "CLHEP/HepMC/GenParticle.h" statement.
+
+!====================== GaussCalo v7r1 ===================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
+!======================= GaussMonitor v1r2 2004-08-02 ========================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
+! 2004-05-14 - Patrick Robbe
+ - src/GeneratorFullMonitor.cpp
+   . store in ntuple all particles which are converted from HepMC to
+     G4PrimaryParticle in GiGaHepMCCnv (Use the same logic and the same
+     tests on the type and status of particle to store).
+
+!========================= GaussRICH v4r8 =================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
+! 2004-07-30 - Chris Jones
+ - Update doxygen comments in GiGa converters
+
+! 2004-06-29 - Sajan Easo
+ - Add another option parameter in Rich.opts for the max number
+   of steps for optical photon to be used Rayleigh scattering.
+ - Fixed some compliation problems with convertor until the 
+    the Rich event package is updated.
+
+! 2004-06-24 - Chris Jones
+ - Update GiGa converters for MCRichHits and MCRichOpticalPhotons to 
+   include more history information
+
+! 2004-06-04 - Sajan Easo 
+  - Added additional protection to photon step points 
+    in RichG4StepAnalysis5.cpp for verbose mode running.
+! 2004-06-04 - Chris Jones
+ - Update GiGaMCRichOpticalPhotonCnv to use the mirror reflection points
+
+! 2004-06-02 - Sajan Easo
+  - Created RichPhotoelectron particle for transport inside HPD.
+  - It still has 2 GeV/c momentum to ensure straight line tracking.
+    A low momentum of 20 keV has devaition from straight line when
+    tracked by B=0 field tracking. 
+  - the photoelectron has only transportation and hpdenergyloss process.
+  - Files modified are GiGaPhysConstructorHpd.cpp and .h, 
+     RichHpdPhotoElectricEffect.cpp, RichHpdSiEnergyLoss.cpp
+  - Fixed the GiGaMCRichHitCnv.cpp to avoid the division by 10 for the
+    the energy of the hit which is the energy deposted by photoelectron.
+    Typcial energy of the hit is 20 keV.
+  - Process Type created for all processes defined in GaussRICH.
+  - Coordinates of Photon Reflection points on spherical and flat Mirrors 
+    added to RichG4Hit so that they can be accessed when running in 'Verbose Output' mode.
+  - Added the functionality to set different max number 
+    of Cherenkov photons created per step in the three different Radiators.
+    These values can be set from Rich.opts file. The default setup is to use a single
+    value for all radiators.
+  - Further cleanup of Rich.opts, RichVerbose.opts and RichAnalysis.opts.
+    
+! 2004-05-05 - Gloria CORTI
+ - Clean up of Rich.opts so that commented options refer to tools instances
+   as in standard simulation
+ - Clean up of RichVerbose.opts so that it can be included in addition to
+   Rich.opts
+
+! 2004-03-26 - Chris JONES
+ - Few little changes for CPU optimization
+
+!======================= GiGa v17r1 =====================================
+! 2004-08-02 - Gloria CORTI
+ - requirements
+   . modify to replace use of GaudiTools with GaudiAlg to adapt to Gaudi v16
+ - GiGaBase.h 
+   . modify include for GaudiTools to adapt to new Gaudi v16
+ - GiGa.cpp
+   . modify to use InterfaceID instead of IID to adapt to Gaudi v16 
+
+! 2004-07-05 - Gloria CORTI
+ - GiGa/GiGaFieldMgrBase.h
+   src/Lib/GiGaFieldMgrBase.cpp
+   . introduce new property (DeltaChord) to control the delta chord value,
+     set as default value the G4 default (0.25 * mm ) 
+
+!====================== GiGaCnv v15r8 2004-08-02 ===========================
+! 2004-08-02 - Gloria CORTI
+ - GiGaCnvSvcBase.h/cpp and GiGaGeo.cpp 
+   . modify to use InterfaceID instead of IID to adapt to Gaudi v16
+
+! 2004-07-05 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . add some inelastic processes to the list (messages from production)
+   . correct typing for muon Brem
+   . add Cerenkov type to MCVertexType
+
+!======================== SimSvc v4r1 ==================================
+! 2004-08-02 - Gloria CORTI
+ - SimulationSvc.{h,cpp}
+   . use InterfaceID instead of IID to adapt to Gaudi v16
+
+!====================== VisSvc v3r3 2004-08-02 =============================
+! 2004-08-02 - Gloria CORTI
+ - SimulationSvc.{h,cpp}
+   . use InterfaceID instead of IID to adapt to Gaudi v16
 
 !==========================================================================
 <H1><A NAME="v16r0">2004-06-28 - Gauss v16r0</A></H1><PRE>
