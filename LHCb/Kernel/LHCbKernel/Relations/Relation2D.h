@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.14 2004-01-14 15:13:03 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.15 2004-01-14 16:30:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2004/01/14 15:13:03  ibelyaev
+//  few tricks to make POOL/ROOT happy
+//
 // Revision 1.13  2003/12/18 15:32:58  cattanem
 // For LHCB v15r0
 //
@@ -324,6 +327,17 @@ public: // abstract methods from interface
    *  @return status code
    */
   virtual  StatusCode rebuild() { return i_rebuild () ; };
+  
+  /** update the object after POOL/ROOT reading 
+   *  @see IUpdateable 
+   *  @param flag    0 - update after read, 1 - update before write 
+   *  @return status code
+   */
+  virtual StatusCode update( int flag ) 
+  {
+    if( 0 == flag ) { return i_rebuild() ; }
+    return StatusCode::SUCCESS ;
+  };
 
 public:  // abstract methods from interface
   

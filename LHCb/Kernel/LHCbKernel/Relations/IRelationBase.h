@@ -1,8 +1,11 @@
-// $Id: IRelationBase.h,v 1.1 2004-01-14 15:13:02 ibelyaev Exp $
+// $Id: IRelationBase.h,v 1.2 2004-01-14 16:30:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/01/14 15:13:02  ibelyaev
+//  few tricks to make POOL/ROOT happy
+// 
 // ============================================================================
 #ifndef RELATIONS_IRELATIONBASE_H 
 #define RELATIONS_IRELATIONBASE_H 1
@@ -13,7 +16,7 @@
 // from Gaudi
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/IUpdateable.h"
 
 static const InterfaceID IID_IRelationBase ( "IRelationBase", 1, 0 );
 
@@ -23,7 +26,8 @@ static const InterfaceID IID_IRelationBase ( "IRelationBase", 1, 0 );
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2004-01-14
  */
-class IRelationBase : public virtual IInterface 
+class IRelationBase : public virtual IInterface , 
+                      public virtual IUpdateable  
 {
 public:
   

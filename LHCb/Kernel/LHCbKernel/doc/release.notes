@@ -3,6 +3,19 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 ! 2004-01-14 - Vanya BELYAEV
+ - Relations/IRelationBase.h
+   Relations/Relation.h
+   Relations/Relation1D.h
+   Relations/Relation2.h
+   Relations/Relation2D.h
+   Relations/Relation2Weighted.h
+   Relations/RelationWeighted.h
+   Relations/RelationWeighted1D.h
+   Relations/RelationWeighted2D.h
+  Update for usage of new interface IUpdateable ("GaudiKernel/IUpdateable.h")
+
+
+! 2004-01-14 - Vanya BELYAEV
  - Relations subpackage 
    few tricks to make the Relations "POOL'able"
    1) all relations now inherit from 
