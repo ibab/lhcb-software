@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.11 2002-07-07 19:48:17 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.12 2002-07-09 11:07:42 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -550,13 +550,14 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
 //=========================================================================
 void VeloSim::fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge){
   myFE->setAddedSignal(myFE->addedSignal()+charge);
-  // add link to MC hit (if not already there)
-  SmartRefVector<MCVeloHit> hitlist = myFE->mcVeloHits();
-  bool present=false;
-  for(SmartRefVector<MCVeloHit>::const_iterator hitIt =hitlist.begin();
-      hitIt < hitlist.end(); hitIt++){if (hit==(*hitIt)) present=true;}
-  if (!present) myFE->addToMCVeloHits(hit);
-
+  // add link to MC hit (if not already there and not for spillover)
+  if (m_simMode=="velo"){
+    SmartRefVector<MCVeloHit> hitlist = myFE->mcVeloHits();
+    bool present=false;
+    for(SmartRefVector<MCVeloHit>::const_iterator hitIt =hitlist.begin();
+        hitIt < hitlist.end(); hitIt++){if (hit==(*hitIt)) present=true;}
+    if (!present) myFE->addToMCVeloHits(hit);
+  }
   return;
 }
 
