@@ -1,4 +1,4 @@
 // This file is for Joel. It only includes the 
 // Stripping job options from the $STRIPPINGROOT 
 // directory
-#include "$STRIPPINGROOT/options/DVComb.opts"
+#include "$STRIPPINGROOT/options/DVComb.opts" ;
