@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2001-11-23 17:10:32 andreav Exp $
+# $Id: requirements,v 1.7 2001-11-26 18:47:26 andreav Exp $
 package DetCond
 version v2
 
@@ -17,10 +17,6 @@ use GaudiSys     v9*
 use CONDDB       v3r02*
 
 include_dirs $(DETCONDROOT)
-
-# Build a Linker library
-library DetCondLib   Lib/*.cpp 
-apply_pattern package_Llinkopts
 
 # Build a component library
 library DetCond      component/*.cpp
