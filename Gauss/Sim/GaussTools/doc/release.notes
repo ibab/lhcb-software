@@ -1,9 +1,19 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussTools
 ! Responsible	: Witold Pokorski
-! Purpose     : collection of sensitive detectors, G4 actions, etc
+! Purpose     : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
+
+!============================ GaussTools v5r0 2002-12-11 =====================
 	
+! 2002-12-11 - Witek Pokorski
+
+ Major reorganization of the package. All subdetector specific stuff moved
+ to GaussTracker, GaussRICH and GaussCalo. Physics constructors moved to
+ GaussPhysics. Visualisation driver and UI moved to GiGaVisUI. 
+
+ Added PrintEventAlg, to print the decay tree of MCParticles
+!============================ GaussTools v4r0 2002-12-07 =====================
 
 ! 2002-12-07 - Ivan Belyaev
  - GaussTools/GaussHitBase.h               Instrument the classes with fast and  

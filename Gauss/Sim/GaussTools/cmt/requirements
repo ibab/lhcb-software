@@ -1,13 +1,11 @@
-# $Id: requirements,v 1.12 2002-12-07 14:51:01 ibelyaev Exp $
 # =============================================================================
 package GaussTools
-version v4r0
+version v5r0
 
 # =============== package structure ===========================================
-branches          cmt src doc
+branches          cmt src doc GaussTools
 
 # =============== explicit dependencies =======================================  
-use AIDA          v*
 use GiGaCnv       v10r*     Sim
 
 # =============== Event =======================================================
@@ -16,26 +14,11 @@ use MuonEvent     v2r*      Event
 use RichEvent     v4r*      Event
 use CaloEvent     v11r*     Event 
 
-# =============== Det =========================================================
-use CaloDet       v6r*      Det 
-use CaloDetXmlCnv v2r*      Det 
-
 # ============== linker library ===============================================
 library          GaussToolsLib           Lib/*.cpp
 
 # ============== component library ============================================
-library          GaussTools   *.cpp                  \
-                              Components/*.cpp       \
-                              UIVis/*.cpp            \
-                              Actions/*.cpp          \
-                              Tracking/*.cpp         \
-                              Calo/*.cpp             \
-                              RICH/SensDet/*.cpp     \ 
-                              RICH/PhysProcess/*.cpp \
-                              RICH/PhysProcess/*.cc  \
-                              RICH/Misc/*.cpp        \ 
-                              PhysConstructors/*.cpp \
-                              PhysConstructors/*.cc
+library          GaussTools              Components/*.cpp       
 
 # ============== standard includes ============================================
 include_dirs     $(GAUSSTOOLSROOT)
