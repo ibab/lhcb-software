@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.22 2002-10-14 15:05:26 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.23 2002-10-14 16:23:01 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -619,7 +619,7 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   //=== put back in the proper space location 
   if ( 0 == phiType%2 ) { phiLocal += pi;  }
 
-  point.set( rAtPhi * cos(phiLocal),  rAtPhi * sin(phiLocal), zPhi );
+  point.set( localR * cos(phiLocal), localR * sin(phiLocal), zR );
 
   // Here we should convert a local point to a global point, using the 
   // toGlobal method of the R sensor detector element... Not now !
@@ -627,7 +627,7 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   // Compute the pitches. 
 
   rPitch   = this->rPitch( localR );
-  phiPitch = this->phiPitch( rAtPhi );
+  phiPitch = this->phiPitch( localR );
   
   return status;
 }
