@@ -1,4 +1,4 @@
-//$Id: ConditionsDBAddress.cpp,v 1.3 2001-11-26 19:07:34 andreav Exp $
+//$Id: ConditionsDBAddress.cpp,v 1.4 2001-11-27 18:23:52 andreav Exp $
 
 #include "ConditionsDBAddress.h"
 
@@ -16,37 +16,27 @@ const unsigned char& ConditionsDBAddress_undefinedStringType= TEST_StorageType;
 /// Constructor 
 ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
 					   const std::string& tagName,   
-					   const ITime& validityTime,
 					   const CLID& clid,
-					   const unsigned char& stringType,
-					   IRegistry* entry )
-
+					   const unsigned char& stringType )
   : GenericAddress  ( CONDDB_StorageType,
-		      clid                )
-  , m_folderName    ( folderName          )
-  , m_tagName       ( tagName             )
-  , m_stringType    ( stringType          )
+		      clid,
+		      folderName,
+		      tagName,
+		      (unsigned long)stringType )
 {
-  setRegistry( entry );
-  m_time = new TimePoint ( validityTime );
 }
 
 //---------------------------------------------------------------------------
 
 /// Constructor 
 ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
-					   const std::string& tagName,   
-					   const ITime& validityTime,
-					   IRegistry* entry )
+					   const std::string& tagName    )
   : GenericAddress  ( CONDDB_StorageType,
-		      ConditionsDBAddress_undefinedClassID )
-  , m_folderName    ( folderName          )
-  , m_tagName       ( tagName             )
-  , m_stringType    ( ConditionsDBAddress_undefinedStringType )
-
+		      ConditionsDBAddress_undefinedClassID,
+		      folderName,
+		      tagName,
+		      (unsigned long)ConditionsDBAddress_undefinedStringType )
 {
-  setRegistry( entry );
-  m_time = new TimePoint ( validityTime );
 }
 
 //---------------------------------------------------------------------------
@@ -54,44 +44,29 @@ ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
 /// Destructor
 ConditionsDBAddress::~ConditionsDBAddress()
 {
-  delete m_time;
-}
-
-//---------------------------------------------------------------------------
-
-/// Get the event time  
-const ITime& ConditionsDBAddress::time ( ) {
-  return *m_time; 
-}
-
-//---------------------------------------------------------------------------
-
-/// Set the new validity time  
-void ConditionsDBAddress::setTime ( const ITime& time ) {
-  if( 0 != m_time ) delete m_time; 
-  m_time = new TimePoint( time );   
 }
 
 //---------------------------------------------------------------------------
 
 /// Get the folder name
 const std::string ConditionsDBAddress::folderName ( ) {
-  return m_folderName; 
+  return par()[0]; 
 }
 
 //---------------------------------------------------------------------------
 
 /// Get the tag name
 const std::string ConditionsDBAddress::tagName ( ) {
-  return m_tagName; 
+  return par()[1]; 
 }
 
 //---------------------------------------------------------------------------
 
 /// Get the string type
 const unsigned char& ConditionsDBAddress::stringType ( ) {
-  return m_stringType; 
+  return (unsigned char)(ipar()[0]); 
 }
 
 //---------------------------------------------------------------------------
+
 

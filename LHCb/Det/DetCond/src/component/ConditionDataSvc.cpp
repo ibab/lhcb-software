@@ -1,9 +1,7 @@
-//$Id: ConditionDataSvc.cpp,v 1.4 2001-11-26 20:16:50 andreav Exp $
+//$Id: ConditionDataSvc.cpp,v 1.5 2001-11-27 18:26:20 andreav Exp $
 #include <string>
 
 #include "ConditionDataSvc.h"
-
-#include "DetCond/IConditionAddress.h"
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/DataSvc.h"
@@ -73,9 +71,9 @@ StatusCode ConditionDataSvc::finalize()
 StatusCode ConditionDataSvc::queryInterface(const IID& riid, 
 					    void** ppvInterface)
 {
-  if ( IID_IConditionDataSvc == riid )  {
+  if ( IID_IDetDataSvc == riid )  {
     // With the highest priority return the specific interface of this service
-    *ppvInterface = (IConditionDataSvc*)this;
+    *ppvInterface = (IDetDataSvc*)this;
   } else  {
     // Interface is not directly available: try out a base class
     return DataSvc::queryInterface(riid, ppvInterface);
@@ -99,14 +97,14 @@ void ConditionDataSvc::setEventTime ( const ITime& time ) {
 //----------------------------------------------------------------------------
 
 /// Check if the event time has been set
-const bool ConditionDataSvc::checkEventTime ( ) { 
+const bool ConditionDataSvc::validEventTime ( ) const { 
   return m_eventTimeDefined; 
 }
 
 //----------------------------------------------------------------------------
 
 /// Get the event time  
-const ITime& ConditionDataSvc::eventTime ( ) { 
+const ITime& ConditionDataSvc::eventTime ( ) const { 
   return *m_eventTime; 
 }
 
@@ -135,36 +133,13 @@ StatusCode ConditionDataSvc::updateObject( DataObject* toUpdate ) {
     return StatusCode::SUCCESS;
   }
 
-  // Check if the event time has been defined
-  if ( !checkEventTime() ) {
+  // Check that the event time has been defined
+  if ( !validEventTime() ) {
     log << MSG::WARNING
 	<< "Cannot update DataObject: event time undefined"
 	<< endreq; 
     return StatusCode::SUCCESS;
   }
-
-  // Set the new event time in the address (even if object is still valid!)
-  if ( 0 == toUpdate->registry() )    {
-    log << MSG::ERROR 
-	<< "The object is not registered in a DataDirectory" << endreq; 
-    return INVALID_OBJ_ADDR;
-  }
-  if ( 0 == toUpdate->registry()->address() )    {
-    return INVALID_OBJ_ADDR;
-    log << MSG::ERROR 
-	<< "The object has no associated address" << endreq; 
-  } 
-  IConditionAddress* addr;
-  addr = dynamic_cast< IConditionAddress* >
-    ( toUpdate->registry()->address() );
-  if ( 0 == addr ) {
-    log << MSG::ERROR 
-	<< "Object address is not an IConditionAddress" << endreq;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::DEBUG 
-      << "Setting new event time in the object address" << endreq;
-  addr->setTime( eventTime() );
 
   // No need to update if condition is valid
   if ( condition->isValid( eventTime() ) ) {

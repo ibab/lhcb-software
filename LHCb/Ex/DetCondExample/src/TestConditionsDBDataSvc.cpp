@@ -1,15 +1,15 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestConditionsDBDataSvc.cpp,v 1.2 2001-11-26 19:19:22 andreav Exp $
+//$Id: TestConditionsDBDataSvc.cpp,v 1.3 2001-11-27 18:31:41 andreav Exp $
 #include <stdio.h>
 
 #include "ConditionData.h"
 #include "TestConditionsDBDataSvc.h"
 
-#include "DetCond/IConditionDataSvc.h"
 #include "DetCond/IConditionsDBDataSvc.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
@@ -23,9 +23,9 @@ const IAlgFactory& TestConditionsDBDataSvcFactory = Factory;
 /// Constructor
 TestConditionsDBDataSvc::TestConditionsDBDataSvc ( const std::string& name, 
 						   ISvcLocator* pSvcLocator )
-  : Algorithm             ( name, pSvcLocator)
-  , m_conditionDataSvc    ( 0                )
-  , m_conditionsDBDataSvc ( 0                )
+  : Algorithm             ( name, pSvcLocator )
+  , m_detDataSvc          ( 0 )
+  , m_conditionsDBDataSvc ( 0 )
 {
 }
 
@@ -41,17 +41,17 @@ StatusCode TestConditionsDBDataSvc::initialize() {
   log << MSG::INFO << "Initialize()" << endreq;
   StatusCode sc;
 
-  // Query the IConditionDataSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IConditionDataSvc, 
-				(void**) &m_conditionDataSvc);
+  // Query the IDetDataSvc interface of the detector data service
+  sc = detSvc()->queryInterface(IID_IDetDataSvc, 
+				(void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
-	<< "Could not query IConditionDataSvc interface of DetectorDataSvc" 
+	<< "Could not query IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
     return sc;
   } else {
     log << MSG::DEBUG 
-	<< "Retrieved IConditionDataSvc interface of DetectorDataSvc" 
+	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
   }
 
@@ -109,7 +109,7 @@ StatusCode TestConditionsDBDataSvc::execute( ) {
     return StatusCode::FAILURE;
   }
   log << MSG::INFO << "Condition at time " 
-      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
+      << m_detDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << aCondition << endreq;
   return StatusCode::SUCCESS;
 }

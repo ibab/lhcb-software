@@ -1,15 +1,15 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestSmartDataPtr.cpp,v 1.2 2001-11-26 19:19:03 andreav Exp $
+//$Id: TestSmartDataPtr.cpp,v 1.3 2001-11-27 18:31:15 andreav Exp $
 #include <stdio.h>
 
 #include "ConditionData.h"
 #include "TestSmartDataPtr.h"
 
-#include "DetCond/IConditionDataSvc.h"
 #include "DetCond/IConditionsDBDataSvc.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -44,17 +44,17 @@ StatusCode TestSmartDataPtr::initialize() {
   log << MSG::INFO << "Initialize()" << endreq;
   StatusCode sc;
 
-  // Query the IConditionDataSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IConditionDataSvc, 
-				(void**) &m_conditionDataSvc);
+  // Query the IDetDataSvc interface of the detector data service
+  sc = detSvc()->queryInterface(IID_IDetDataSvc, 
+				(void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
-	<< "Could not query IConditionsDBDataSvc interface of DetectorDataSvc" 
+	<< "Could not query IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
     return sc;
   } else {
     log << MSG::DEBUG 
-	<< "Retrieved IConditionsDBDataSvc interface of DetectorDataSvc" 
+	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
   }
 
@@ -140,7 +140,7 @@ StatusCode TestSmartDataPtr::execute( ) {
       << "Retrieved smart data pointer to path " << tdsName << endreq;
   log << MSG::INFO 
       << "Before update, condition at time " 
-      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
+      << m_detDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << (ConditionData*)aCondition << endreq;
   log << MSG::INFO << "Now update the condition" << endreq;
   if ( !( ( detSvc()->updateObject( (DataObject*)aCondition ) 
@@ -151,7 +151,7 @@ StatusCode TestSmartDataPtr::execute( ) {
   }
   log << MSG::INFO 
       << "After update, condition at time " 
-      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
+      << m_detDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << (ConditionData*)aCondition << endreq;
   return StatusCode::SUCCESS;
 }

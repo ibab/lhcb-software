@@ -1,24 +1,21 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/DetCond/IConditionsDBAddress.h,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+//$Id: IConditionsDBAddress.h,v 1.2 2001-11-27 18:17:03 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBADDRESS_H
 #define DETCOND_ICONDITIONSDBADDRESS_H 1
-
-// Base class
-#include "DetCond/IConditionAddress.h"
 
 ///---------------------------------------------------------------------------
 /** @class IConditionsDBAddress IConditionsDBAddress.h Det/DetCond/IConditionsDBAddress.h
 
-    Abstract interface to CERN-IT CondDB opaque addresses.
+    Abstract interface to CERN-IT CondDB opaque addresses,
+    specifying folder name, tag name, string technology.
+    The event time is NOT specified by the address.
 
     @author Andrea Valassi 
     @date August 2001
 *///--------------------------------------------------------------------------
 
-class IConditionsDBAddress : virtual public IConditionAddress {
+class IConditionsDBAddress {
 
  public:
-
-  // ConditionsDB-specific methods
 
   /// Get the folder name in the CondDB
   virtual const std::string folderName    ( ) = 0 ;

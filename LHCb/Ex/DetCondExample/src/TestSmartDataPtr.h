@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestSmartDataPtr.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: TestSmartDataPtr.h,v 1.2 2001-11-27 18:31:02 andreav Exp $
 #ifndef DETCONDEXAMPLE_TESTSMARTDATAPTR_H
 #define DETCONDEXAMPLE_TESTSMARTDATAPTR_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
-class IConditionDataSvc;
+class IDetDataSvc;
 class IConditionsDBDataSvc;
 
 ///---------------------------------------------------------------------------
@@ -32,8 +32,8 @@ class TestSmartDataPtr : public Algorithm {
   
  private:
 
-  /// IConditionDataSvc interface of the detector data service
-  IConditionDataSvc* m_conditionDataSvc;
+  /// IDetDataSvc interface of the detector data service
+  IDetDataSvc*          m_detDataSvc;
 
   /// IConditionsDBDataSvc interface of the detector data service
   IConditionsDBDataSvc* m_conditionsDBDataSvc;

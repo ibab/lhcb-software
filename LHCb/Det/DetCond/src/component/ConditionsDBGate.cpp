@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.2 2001-11-23 17:12:58 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.3 2001-11-27 18:19:59 andreav Exp $
 #include <string>
 #include <unistd.h>
 #include <sys/param.h>
@@ -151,17 +151,15 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
 					  const ITime&        time ) {
 
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  StatusCode status;
-
-  log << MSG::DEBUG << "Reading CondDBObject parameters" << endreq;
+  log << MSG::DEBUG << "Retrieving CondDBObject from the CondDB" << endreq;
   log << MSG::DEBUG << "FolderName=" << folderName << endreq;
-  log << MSG::DEBUG << "TagName=" << tagName
-      << ", AbsoluteTime=" << time.absoluteTime() << endreq;
+  log << MSG::DEBUG << "AbsoluteTime=" << time.absoluteTime() << endreq; 
 
   // Convert ITime to CondDBKey
   CondDBKey key;
-  status = i_convertToKey ( key, time );
+  StatusCode status = i_convertToKey ( key, time );
   if ( !status.isSuccess() ) return status;
+  log << MSG::DEBUG << "Key=" << key << endreq; 
 
   // Create an object (must delete it at the end)
   ICondDBObject* aCondDBObject;
@@ -234,10 +232,6 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
 {
 
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  log << MSG::DEBUG << "Retrieving CondDBObject from the CondDB" << endreq;
-  log << MSG::DEBUG << "FolderName=" << folderName << endreq;
-  log << MSG::DEBUG << "TagName="  << tagName << ", Key=" << key << endreq;
-
   try {
 
     m_condDBmgr->startRead();

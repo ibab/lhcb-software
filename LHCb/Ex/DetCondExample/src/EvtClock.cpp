@@ -1,12 +1,11 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/EvtClock.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: EvtClock.cpp,v 1.2 2001-11-27 18:32:06 andreav Exp $
 #include <stdio.h>
 
 #include "EvtClock.h"
 
-#include "DetCond/IConditionDataSvc.h"
-
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
 
@@ -19,9 +18,9 @@ const IAlgFactory& EvtClockFactory = Factory;
 /// Constructor
 EvtClock::EvtClock( const std::string&  name, 
 		    ISvcLocator*        pSvcLocator )
-  : Algorithm(name, pSvcLocator)
-  , m_eventNumber      ( 0 )
-  , m_conditionDataSvc ( 0 )
+  : Algorithm     ( name, pSvcLocator )
+  , m_eventNumber ( 0 )
+  , m_detDataSvc  ( 0 )
 {
   declareProperty( "startTime",  m_startTime = 2 );
   declareProperty( "delayTime",  m_delayTime = 5 );
@@ -37,17 +36,17 @@ StatusCode EvtClock::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
 
-  // Query the IConditionDataSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IConditionDataSvc, 
-				(void**) &m_conditionDataSvc);
+  // Query the IDetDataSvc interface of the detector data service
+  sc = detSvc()->queryInterface(IID_IDetDataSvc, 
+				(void**) &m_detDataSvc);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
-	<< "Could not query IConditionDataSvc interface of DetectorDataSvc" 
+	<< "Could not query IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
     return sc;
   } else {
     log << MSG::DEBUG 
-	<< "Retrieved IConditionDataSvc interface of DetectorDataSvc" 
+	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
 	<< endreq;
   }
 
@@ -83,7 +82,7 @@ StatusCode EvtClock::execute( ) {
   // Set the event time
   long time = i_evtTime();
   log << MSG::INFO << "Event time: " << time << endreq;
-  m_conditionDataSvc->setEventTime( TimePoint(time) );
+  m_detDataSvc->setEventTime( TimePoint(time) );
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/EvtClock.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: EvtClock.h,v 1.2 2001-11-27 18:31:57 andreav Exp $
 #ifndef DETCONDEXAMPLE_EVTCLOCK_H
 #define DETCONDEXAMPLE_EVTCLOCK_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
-class IConditionDataSvc;
+class IDetDataSvc;
 
 ///---------------------------------------------------------------------------
 /** @class EvtClock EvtClock.h DetCondExample/EvtClock.h
@@ -45,8 +45,8 @@ class EvtClock : public Algorithm {
   /// Absolute time spacing between events
   long m_delayTime;
 
-  /// Handle to the IConditionDataSvc
-  IConditionDataSvc* m_conditionDataSvc;
+  /// Handle to the IDetDataSvc interface of the DetectorDataSvc
+  IDetDataSvc* m_detDataSvc;
   
 };
 

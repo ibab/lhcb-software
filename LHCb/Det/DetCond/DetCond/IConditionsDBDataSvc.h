@@ -1,16 +1,15 @@
-//$Id: IConditionsDBDataSvc.h,v 1.2 2001-11-26 18:57:46 andreav Exp $
+//$Id: IConditionsDBDataSvc.h,v 1.3 2001-11-27 18:17:46 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBDATASVC_H
 #define DETCOND_ICONDITIONSDBDATASVC_H 1
 
 // Base class
 #include "GaudiKernel/IInterface.h"
-#include "DetCond/IConditionDataSvc.h"
 
 // External constants
 #include "GaudiKernel/ClassID.h"
 
 // Service ID (interface id, major version, minor version)
-static const InterfaceID IID_IConditionsDBDataSvc (19701, 1, 0);
+static const InterfaceID IID_IConditionsDBDataSvc ("IConditionsDBDataSvc",1,0);
 
 // Forward declarations
 class ITime;
@@ -18,7 +17,7 @@ class ITime;
 ///---------------------------------------------------------------------------
 /** @class IConditionsDBDataSvc IConditionsDBDataSvc.h Det/DetCond/IConditionsDBDataSvc.h
 
-    Abstract interface for a ConditionDataSvc based on the CERN-IT CondDB.
+    Abstract interface for a DataSvc manipulating DataObjects from the CondDB.
 
     @author Andrea Valassi 
     @date August 2001

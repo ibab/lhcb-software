@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.5 2001-11-26 20:16:21 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.6 2001-11-27 18:21:28 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -9,6 +9,7 @@
 /// Forward and external declarations
 class ConditionsDBGate;
 template <class TYPE> class SvcFactory;
+class IDetDataSvc;
 class IOpaqueAddress;
 
 ///---------------------------------------------------------------------------
@@ -125,11 +126,14 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
  private:
 
-  /// Handle to the low-level ConditionsDB gate
+  /// Handle to the low-level gate to the ConditionsDB
   ConditionsDBGate*    m_conditionsDBGate;
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;
+
+  /// Handle to the IDetDataSvc interface of the DetectorDataSvc
+  IDetDataSvc*         m_detDataSvc;
 
 };
 

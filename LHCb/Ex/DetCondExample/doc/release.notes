@@ -1,6 +1,9 @@
-#$Id: release.notes,v 1.4 2001-11-26 19:21:16 andreav Exp $
+#$Id: release.notes,v 1.5 2001-11-27 18:33:15 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+!20011127 - Andrea Valassi
+-> move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
 
 !20011126 - Andrea Valassi
 -> moved here ConditionData from DetCond/src/Lib

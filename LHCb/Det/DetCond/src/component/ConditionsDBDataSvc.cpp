@@ -1,8 +1,7 @@
-//$Id: ConditionsDBDataSvc.cpp,v 1.4 2001-11-26 20:16:02 andreav Exp $
+//$Id: ConditionsDBDataSvc.cpp,v 1.5 2001-11-27 18:21:53 andreav Exp $
 #include <string>
 
 #include "ConditionsDBDataSvc.h"
-
 #include "ConditionsDBAddress.h"
 
 #include "DetCond/IConditionsDBCnvSvc.h"
@@ -200,7 +199,7 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   log << MSG::DEBUG << folderName << endreq;
 
   // Check if the event time is set
-  if ( !checkEventTime() ) {
+  if ( !validEventTime() ) {
     log << MSG::ERROR << "The event time is not set yet" << endreq;
     return StatusCode::FAILURE;
   }
@@ -264,10 +263,10 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
       << "Create a new address and associate it to:" << endreq;
   log << MSG::DEBUG << path << endreq;
   IOpaqueAddress* theAddress = new ConditionsDBAddress
-    ( folderName, m_tagName, eventTime(), classID, type, entry );
+    ( folderName, m_tagName, classID, type );
   log << MSG::DEBUG << "Address of CondDB type=" << (int)theAddress->svcType() 
-      << " classID=" << classID << " stringType=" << (int)type 
-      << " @time=" << eventTime().absoluteTime() << endreq;
+      << " classID=" << classID << " stringType=" << (int)type << endreq;
+  theAddress->setRegistry(entry);
   entry->setAddress(theAddress);
   theAddress->addRef();
 

@@ -1,4 +1,4 @@
-# $Id: README,v 1.9 2001-11-23 18:16:36 andreav Exp $
+# $Id: README,v 1.10 2001-11-27 18:33:14 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to run DetCondExample v2
@@ -92,8 +92,12 @@ setenv COND_DB_DEBUG none
 /bin/rm -f job_next.log;  ../$CMTDEB/DetCondExample.exe >& job_next.log
 
 # Compare the output files to the standard ones
-diff job_first.log ../job; /bin/rm -f job_first.log 
-diff job_next.log  ../job; /bin/rm -f job_next.log 
+diff job_first.log ../job
+diff job_next.log  ../job
+
+# To start again with an empty database:
+source ../cmt/cleanupDB.csh
+source ../cmt/setupDB.csh
 
 # Debug the application using gdb
 # (NB gdb "run" executes .cshrc: you can NOT change LD_LIBRARY_PATH in .cshrc!)
@@ -108,10 +112,6 @@ ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe"
 (gdb) source DetCondExample.gdb
 # The same can be achieved by typing the following
 ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
-
-# To start again with an empty database:
-source ../cmt/cleanupDB.csh
-source ../cmt/setupDB.csh
 
 ------------------------------------------------------------------------------
 How to browse the database using the GUIbrowser on lxplus

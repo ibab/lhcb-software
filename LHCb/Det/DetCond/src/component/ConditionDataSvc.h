@@ -1,10 +1,10 @@
-//$Id: ConditionDataSvc.h,v 1.3 2001-11-26 19:06:49 andreav Exp $
+//$Id: ConditionDataSvc.h,v 1.4 2001-11-27 18:26:20 andreav Exp $
 #ifndef DETCOND_CONDITIONDATASVC_H
 #define DETCOND_CONDITIONDATASVC_H 1
 
 // Base classes
 #include "GaudiKernel/DataSvc.h"
-#include "DetCond/IConditionDataSvc.h"
+#include "GaudiKernel/IDetDataSvc.h"
 
 // Forward and external declarations
 class ITime;
@@ -22,7 +22,7 @@ class TimePoint;
 *///--------------------------------------------------------------------------
 
 class ConditionDataSvc : public DataSvc,
-			 virtual public IConditionDataSvc
+			 virtual public IDetDataSvc
 {
 
   /// Only factories can access protected constructors
@@ -59,16 +59,16 @@ class ConditionDataSvc : public DataSvc,
 
  public:
 
-  // Implementation of IConditionDataSvc interface
-
-  /// Set the new event time  
-  virtual void setEventTime            ( const ITime& time );
+  // Implementation of IDetDataSvc interface
 
   /// Check if the event time has been set 
-  virtual const bool checkEventTime    ( );
+  virtual const bool validEventTime ( ) const ;
 
   /// Get the event time  
-  virtual const ITime& eventTime       ( );
+  virtual const ITime& eventTime    ( ) const ;
+
+  /// Set the new event time  
+  virtual void setEventTime         ( const ITime& time );
 
  private:
 
@@ -76,7 +76,7 @@ class ConditionDataSvc : public DataSvc,
   bool               m_eventTimeDefined;
 
   /// Current event time
-  ITime*              m_eventTime;
+  ITime*             m_eventTime;
 
 };
 

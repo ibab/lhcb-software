@@ -1,16 +1,19 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.5 2001-11-26 20:16:35 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.6 2001-11-27 18:21:28 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/param.h>
 
 #include "ConditionsDBCnvSvc.h"
-#include "ConditionsDBAddress.h"
 #include "ConditionsDBGate.h"
+
+#include "DetCond/IConditionsDBAddress.h"
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConverter.h"
+#include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/TimePoint.h"
@@ -83,6 +86,20 @@ StatusCode ConditionsDBCnvSvc::initialize()
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not set data provider" << endreq;
     return sc;
+  }
+
+  // Query the IDetDataSvc interface of the detector data service
+  sc = pDDS->queryInterface(IID_IDetDataSvc, 
+			    (void**) &m_detDataSvc);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Cannot query IDetDataSvc interface of DetectorDataSvc" 
+	<< endreq;
+    return sc;
+  } else {
+    log << MSG::DEBUG 
+	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
+	<< endreq;
   }
 
   // Locate IConversionSvc interface of the DetectorPersistencySvc
@@ -168,10 +185,10 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method createObj starting" << endreq;
 
-  /// Dynamic cast the IOpaqueAddress to a ConditionsDBAddress
-  /// The ConditionsDBAddress specifies the requested folder, time, tag
-  ConditionsDBAddress* 
-    pCaddress = dynamic_cast< ConditionsDBAddress* >( pAddress );
+  // Dynamic cast the IOpaqueAddress to a IConditionsDBAddress
+  // IConditionsDBAddress specifies requested folder, tag, clid, string type
+  IConditionsDBAddress* 
+    pCaddress = dynamic_cast< IConditionsDBAddress* >( pAddress );
   if ( 0 == pCaddress ) {
     log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
     log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
@@ -179,15 +196,32 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  /// Next, create a new condition DataObject for the given folder, time, tag
-  //  Notice that the ConditionsDBCnvSvc has no converters of its own:
-  //  object creation is delegated to another CnvSvc via a temporary address
-  StatusCode status = createConditionData ( refpObject, 
-					    pCaddress->folderName(), 
-					    pCaddress->tagName(), 
-					    pCaddress->time(), 
-					    pCaddress->clID(), 
-					    pCaddress->stringType() );
+  // Check that the event time has been defined
+  // The event time is obtained from the ConditionDataSvc
+  if ( !m_detDataSvc->validEventTime() ) {
+    log << MSG::ERROR
+	<< "Cannot create DataObject: event time undefined"
+	<< endreq; 
+    return StatusCode::FAILURE;
+  } else {
+    ITime::AbsoluteTime absTime;
+    absTime = m_detDataSvc->eventTime().absoluteTime();
+    log << MSG::DEBUG
+	<< "Event time: " << absTime
+	<< " (msb:" << (long)(   absTime         >> 32 )
+	<< ", lsb:" << (long)( ( absTime << 32 ) >> 32 )
+	<< ")" << endreq; 
+  }
+
+  // Create the object according to folder, tag, time, clid, string type
+  // Notice that the ConditionsDBCnvSvc has no converters of its own:
+  // object creation is delegated to another CnvSvc via a temporary address
+  StatusCode status = createConditionData( refpObject, 
+					   pCaddress->folderName(), 
+					   pCaddress->tagName(), 
+					   m_detDataSvc->eventTime(), 
+					   pAddress->clID(), 
+					   pCaddress->stringType() );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not create condition DataObject" << endreq;
     return StatusCode::FAILURE;
@@ -222,10 +256,10 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
 
-  /// Dynamic cast the IOpaqueAddress to a ConditionsDBAddress
-  /// The ConditionsDBAddress specifies the requested folder, time, tag
-  ConditionsDBAddress* 
-    pCaddress = dynamic_cast< ConditionsDBAddress* >( pAddress );
+  // Dynamic cast the IOpaqueAddress to a IConditionsDBAddress
+  // IConditionsDBAddress specifies requested folder, tag, clid, string type
+  IConditionsDBAddress* 
+    pCaddress = dynamic_cast< IConditionsDBAddress* >( pAddress );
   if ( 0 == pCaddress ) {
     log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
     log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
@@ -233,7 +267,26 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  // Next, update the object according to the specifications of the address
+  // Check that the event time has been defined
+  // The event time is obtained from the ConditionDataSvc
+  if ( !m_detDataSvc->validEventTime() ) {
+    log << MSG::ERROR
+	<< "Cannot update DataObject: event time undefined"
+	<< endreq; 
+    return StatusCode::FAILURE;
+  } else {
+    ITime::AbsoluteTime absTime;
+    absTime = m_detDataSvc->eventTime().absoluteTime();
+    log << MSG::DEBUG
+	<< "Event time: " << absTime
+	<< " (msb:" << (long)(   absTime         >> 32 )
+	<< ", lsb:" << (long)( ( absTime << 32 ) >> 32 )
+	<< ")" << endreq; 
+  }
+
+  // Update the object according to folder, tag, time, clid, string type
+  // Notice that the ConditionsDBCnvSvc has no converters of its own:
+  // object creation is delegated to another CnvSvc via a temporary address
   if( 0 == pObject ) {
     log << MSG::ERROR << "There is no object to update" << endreq;
     return StatusCode::FAILURE;
@@ -250,8 +303,8 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   StatusCode status = updateConditionData( pObject, 
 					   pCaddress->folderName(), 
 					   pCaddress->tagName(), 
-					   pCaddress->time(), 
-					   pCaddress->clID(), 
+					   m_detDataSvc->eventTime(), 
+					   pAddress->clID(), 
 					   pCaddress->stringType() );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not update condition DataObject" << endreq;

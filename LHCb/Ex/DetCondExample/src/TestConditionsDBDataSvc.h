@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestConditionsDBDataSvc.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: TestConditionsDBDataSvc.h,v 1.2 2001-11-27 18:31:30 andreav Exp $
 #ifndef DETCONDEXAMPLE_TESTCONDITIONSDBDATASVC_H
 #define DETCONDEXAMPLE_TESTCONDITIONSDBDATASVC_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
-class IConditionDataSvc;
+class IDetDataSvc;
 class IConditionsDBDataSvc;
 
 ///---------------------------------------------------------------------------
@@ -33,8 +33,8 @@ class TestConditionsDBDataSvc : public Algorithm {
   
  private:
 
-  /// IConditionDataSvc interface of the detector data service
-  IConditionDataSvc*    m_conditionDataSvc;
+  /// IDetDataSvc interface of the detector data service
+  IDetDataSvc*          m_detDataSvc;
 
   /// IConditionsDBDataSvc interface of the detector data service
   IConditionsDBDataSvc* m_conditionsDBDataSvc;
