@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.59 2004-11-16 17:12:43 cattanem Exp $
+! $Id: release.notes,v 1.60 2005-01-07 13:16:57 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-01-07 - Chris Jones
+ - Add interfaces for new DAQ tools
+ - Change interface to RichSmartID tool
+ - Add various new files
 
 !======================= RichKernel v5r1 2004-11-16 =======================
 ! 2004-10-30 - Chris Jones
