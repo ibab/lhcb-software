@@ -13,6 +13,7 @@ Purpose: LHCb reconstruction program
      - Inner Tracker digitisation and clustering
      - Velo digitisation and standalone tracking
      - RICH Digitisation (old SICB Fortran version)
+     - Calo digitisation and reconstruction
      - MUON Digitisation (old SICB Fortran version) and reconstruction
    >>>>>>
 
@@ -37,6 +38,11 @@ Purpose: LHCb reconstruction program
    - use VeloTrack     v2r0 Velo 
    - use MuonTools     v2r0 Muon
    - use MuonRec       v1r0 Muon
+   - use CaloInterfaces v2r0 Calo
+   - use CaloUtils      v2r0 Calo
+   - use CaloTools      v2r0 Calo
+   - use CaloAlgs       v5r0 Calo
+   - use CaloCA         v4r0 Calo
 
 ! =================================================================
 </PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>

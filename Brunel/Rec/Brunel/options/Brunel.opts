@@ -71,12 +71,12 @@ BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 //#include "$L0DUROOT/options/Brunel.opts"
 //ApplicationMgr.DLLs += { "MuonSicbCnv" };
 
-// Calorimeter digitisation
-//   and back conversion of digits to SICB bank
-//#include "$CALOTOOLSOPTS/Brunel.opts"
-//#include "$CALOCAOPTS/Brunel.opts"
-//#include "$CALOALGSOPTS/Brunel.opts"
-//#include "$CALOSICBCNVOPTS/Brunel.opts"
+// Calorimeter RAWH conversion, digitisation, reconstruction
+ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
+#include "$CALOSICBCNVOPTS/Brunel.opts"
+#include "$CALOTOOLSOPTS/Brunel.opts"
+#include "$CALOCAOPTS/Brunel.opts"
+#include "$CALOALGSOPTS/Brunel.opts"
 
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"

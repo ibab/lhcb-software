@@ -24,6 +24,7 @@ use ExternalLibs   v3r6
 use AIDA           v2r2
 use CLHEP          v17r10p1
 use HTL            v13r10p1
+use NAGC           v5r0
 use XERCES         v16r0p1
 use CERNLIB        v2001
 
@@ -33,10 +34,7 @@ use GaudiSvc           v8r0
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
-use GaudiDb            v6r0
-# -- Not needed, used privately by Event
-use GaudiIntrospection v4r0
-#use GaudiObjDesc       v4r1 -- Not needed, used privately by Event
+use GaudiDb            v7r0
 use HbookCnv           v12r0
 use RootHistCnv        v6r0
 
@@ -56,9 +54,10 @@ use TrKernel     v10r0  Tr
 # Detector description
 use DetDesc      v10r0  Det
 use XmlDDDB      v11r0  Det
-#use CaloDet      v3r0   Det
-use MuonDet      v3r0   Det
-use VeloDet      v5r0   Det
+use CaloDet       v4r0  Det
+use CaloDetXmlCnv v1r0  Det
+use MuonDet       v3r0  Det
+use VeloDet       v5r0  Det
 
 use MuonTools    v2r0   Muon
 
@@ -69,7 +68,7 @@ use EventSys     v10r0  Event
 use SicbCnv      v16r0  SICB
 use ITSicbGeom   v1r0   SICB
 use OTSicbGeom   v1r0   SICB
-#use CaloSicbCnv  v5r1   SICB
+use CaloSicbCnv  v6r0   SICB
 use MuonSicbCnv  v5r0   SICB
 #use TrSicbCnv    v4r0   SICB
 use VSicbCnv     v7r0   SICB
@@ -85,11 +84,11 @@ use BrunelSicb   v3r0   Rec
 #use L0DU         v4r0   L0
 
 # Calorimeter
-#use CaloInterfaces v1r0 Calo
-#use CaloUtils      v1r1 Calo
-#use CaloTools      v1r1 Calo
-#use CaloAlgs       v4r3 Calo
-#use CaloCA         v3r1 Calo
+use CaloInterfaces v2r0 Calo
+use CaloUtils      v2r0 Calo
+use CaloTools      v2r0 Calo
+use CaloAlgs       v5r0 Calo
+use CaloCA         v4r0 Calo
 
 # Velo
 use VeloDigit     v2r0   Velo
