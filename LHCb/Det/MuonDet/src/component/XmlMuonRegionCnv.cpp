@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.8 2002-04-25 10:16:31 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.9 2002-09-27 13:59:41 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/25 10:16:31  dhcroft
+// Fix to reading Cathode channels
+//
 // Revision 1.7  2002/04/22 07:42:15  dhcroft
 // Fixed a bug in setting the number of Anode and Cathoed FE channels per chamber
 //
@@ -99,7 +102,6 @@ private:
   StatusCode makeChamberObjects(DOM_Element &childElement,
                                 DeMuonRegion *dataObj,
                                 IOpaqueAddress* address,
-                                double padx, double pady,
                                 std::string &readout,
                                 int &gasGapNumber, int &gasGapOffset,
                                 std::string &gasGapLogvol,
@@ -177,9 +179,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
     <!ATTLIST Chambers 
               Number CDATA #REQUIRED
               logvol CDATA #REQUIRED
-              support CDATA #REQUIRED
-              padx CDATA #REQUIRED
-              pady CDATA #REQUIRED>
+              support CDATA #REQUIRED>
     
     <!-- Information on the logical location of the gas gap -->
     <!ELEMENT GasGap EMPTY>
@@ -272,25 +272,6 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
   MsgStream log (msgSvc(), "XmlMuonRegionCnv");
   StatusCode sc;
 
-  // get a value of the 'padx' attribute
-  const std::string padx = dom2Std (childElement.getAttribute ("padx"));
-  const std::string pady = dom2Std (childElement.getAttribute ("pady"));
-
-  double evalPadx;
-  double evalPady;
-
-  if(!padx.empty() && !pady.empty()){
-    evalPadx=xmlSvc()->eval(padx.c_str());
-    evalPady=xmlSvc()->eval(pady.c_str());
-    log << MSG::DEBUG 
-        << "Pad size padx="  << evalPadx 
-        << "mm pady=" << evalPady << "mm" 
-        << endreq;
-  } else {
-    log << MSG::WARNING << "Failed to find padx and pady" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // look for children: 
   // both GasGap and Readout should be here
 
@@ -332,8 +313,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
   
   dataObj->setchamberNum (atol(Number.c_str()));
   
-  sc=makeChamberObjects(childElement,dataObj,address,
-                        evalPadx,evalPady,readout,
+  sc=makeChamberObjects(childElement,dataObj,address,readout,
                         gasGapNumber,gasGapOffset,
                         gasGapLogvol,gasGapSupport);
   if(!sc.isSuccess()){
@@ -414,7 +394,6 @@ StatusCode
 XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
                                      DeMuonRegion *dataObj,
                                      IOpaqueAddress* address,
-                                     double padx, double pady,
                                      std::string &readout,
                                      int &gasGapNumber, int &gasGapOffset,
                                      std::string &gasGapLogvol,
@@ -460,10 +439,7 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
   for(chamNum=1;chamNum<=dataObj->chamberNum();chamNum++){
     // NOTE: this is a "safe" new as this is passed to the transisent store
     DeMuonChamber *cChamber = 
-      new DeMuonChamber(statNum,regNum,chamNum,padx,pady,gasGapNumber);
-
-    log << MSG::DEBUG << "Set padx=" << cChamber->padx()
-        << " and pady=" << cChamber->pady() << endreq;
+      new DeMuonChamber(statNum,regNum,chamNum,gasGapNumber);
     
     // add the readout to the chamber
     cChamber->createReadOut(readout);
