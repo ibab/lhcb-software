@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.16 2002-04-24 13:44:21 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.17 2002-04-24 13:50:06 sponce Exp $
 
 // include files
 
@@ -307,7 +307,6 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
         // check whether there are "" around the string. If yes, remove them
         if ((value.length() > 1) &&
             (value[0] == '"' && value[value.length()-1] == '"')) {
-          cout << "Reducing size of value" << endl;
           value = value.substr(1, value.length()-2);
         }
         dataObj->addUserParameter (name,
