@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.9 2004-03-18 09:21:30 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.10 2004-04-07 13:34:43 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -35,10 +35,10 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
 {
   if(getenv("FIELDMAPROOT") != NULL) {
     m_filename = std::string(getenv( "FIELDMAPROOT" )) + 
-      std::string( "/cdf/field043.cdf");
+      std::string( "/cdf/field045.cdf");
   }
   else {
-    m_filename = std::string( "field043.cdf" );
+    m_filename = std::string( "field045.cdf" );
   }
   declareProperty( "FieldMapFile", m_filename ); 
 }
@@ -162,13 +162,15 @@ StatusCode MagneticFieldSvc::parseFile() {
       else continue; 
       ig++;  
     } while (token != NULL);
-    m_Dxyz[0] = atof( sGeom[0].c_str() );
-    m_Dxyz[1] = atof( sGeom[1].c_str() );
-    m_Dxyz[2] = atof( sGeom[2].c_str() );
+
+    // Grid dimensions are given in cm in CDF file. Convert to CLHEP units
+    m_Dxyz[0] = atof( sGeom[0].c_str() ) * cm;
+    m_Dxyz[1] = atof( sGeom[1].c_str() ) * cm;
+    m_Dxyz[2] = atof( sGeom[2].c_str() ) * cm;
     m_Nxyz[0] = atoi( sGeom[3].c_str() );
     m_Nxyz[1] = atoi( sGeom[4].c_str() );
     m_Nxyz[2] = atoi( sGeom[5].c_str() );
-    m_zOffSet = atof( sGeom[6].c_str() );
+    m_zOffSet = atof( sGeom[6].c_str() ) * cm;
     
     // Number of lines with data to be read
     long int nlines = ( npar - 7 ) / 3;
@@ -191,10 +193,10 @@ StatusCode MagneticFieldSvc::parseFile() {
   	  if ( token ) { sFz = token; token = strtok( NULL, " " );} else continue;
 	    if ( token != NULL ) continue;
       
-      // Keep cdf magnetic field values (gauss)
-      double fx = atof( sFx.c_str() );
-      double fy = atof( sFy.c_str() );
-      double fz = atof( sFz.c_str() );
+      // Field values are given in gauss in CDF file. Convert to CLHEP units
+      double fx = atof( sFx.c_str() ) * gauss;
+      double fy = atof( sFy.c_str() ) * gauss;
+      double fz = atof( sFz.c_str() ) * gauss;
       
       // Add the magnetic field components of each point to 
       // sequentialy in a vector 
@@ -223,23 +225,11 @@ StatusCode MagneticFieldSvc::parseFile() {
 StatusCode MagneticFieldSvc::fieldVector(const HepPoint3D& r, 
                                          HepVector3D& b) const
 {
-  StatusCode sc = StatusCode::SUCCESS;
+  // This routine is now dummy. Was previously converting to/from CLHEP units
 
-  HepPoint3D pxyz;
-  HepVector3D fxyz;
-  pxyz[0] = (r.x())/cm;
-  pxyz[1] = (r.y())/cm;
-  pxyz[2] = (r.z())/cm;
+  this->fieldGrid( r, b );
 
-  this->fieldGrid( pxyz, fxyz );
-
-  // note the basic unit of Magnetic field is: megavolt*ns/mm2
-
-  b.setX( fxyz[0] * gauss );
-  b.setY( fxyz[1] * gauss );
-  b.setZ( fxyz[2] * gauss );
-  
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

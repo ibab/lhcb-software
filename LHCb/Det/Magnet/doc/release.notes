@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v2r6 2004-04-07 ==========================
+! 2004-04-07 - Marco Cattaneo
+ - Use field045 by default
+ - Use mm internally to define the grid spacing, to avoid conversion of
+   space points to mm for each call to fieldVector()
+
 !====================== Magnet v2r5 2004-03-18 ==========================
 ! 2004-03-18 - Florence RANJARD
  - remove the use FieldMap v4r*
