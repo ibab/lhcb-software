@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.5 2004-09-07 14:05:55 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.6 2004-12-01 07:36:49 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
@@ -56,6 +56,10 @@ public:
 
   //Save all Particles with a given particleID code
   virtual StatusCode saveTrees( int pid ) = 0;
+
+  //Clone all particles given by a list. This duplicates information on the TES
+  // and should be used only when necessary.
+  virtual StatusCode cloneTrees( ParticleVector& ) = 0;
 
   //Save all Particles with a given particleID
   // virtual StatusCode saveTrees( const ParticleID& pid ) = 0;

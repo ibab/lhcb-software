@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.6 2004-09-08 16:59:27 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.7 2004-12-01 07:36:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -113,10 +113,8 @@ StatusCode PhysDesktop::initialize() {
     // Retrieve the ParticleMaker tool:
     info() << " Using " << m_pMakerType << " to make particles"
            << endreq;
-    sc = StatusCode::FAILURE;
-    sc = toolSvc()->retrieveTool(m_pMakerType, m_pMaker,this); 
-    
-    if(sc.isFailure()) {
+    m_pMaker = tool<IParticleMaker>(m_pMakerType, this);
+    if(!m_pMaker) {
       fatal() << " Unable to retrieve " << m_pMakerType << endreq;
       return sc;
     }
@@ -129,7 +127,7 @@ StatusCode PhysDesktop::initialize() {
   }
   else {
     info() << "Particles and Vertices will be loaded from "
-           << std::endl;
+           << std::endl ;
     for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
          iloc != m_inputLocn.end(); iloc++ ) {
       
@@ -499,6 +497,21 @@ StatusCode PhysDesktop::saveTrees( int partid ) {
   
 }
 
+//=============================================================================
+// Clone selected particles
+//=============================================================================
+StatusCode PhysDesktop::cloneTrees( ParticleVector& pToSave ) {
+  
+  ParticleVector cloned;
+  for (ParticleVector::iterator i=pToSave.begin();i!=pToSave.end();++i) {
+    Particle *clone = (*i)->clone();
+    cloned.push_back(clone);
+    debug() << "Clone " << clone->particleID().pid() << " with momentum " << 
+      clone->momentum() << " m=" << clone->mass() << endreq ;
+  }
+  return saveTrees(cloned);
+    
+}
 
 //=============================================================================
 // Find all particle and vertices connected to this tree

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.4 2004-09-08 14:25:55 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.5 2004-12-01 07:36:49 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -70,6 +70,10 @@ public:
   /// If a particle is composite its descendents are also saved, but the
   /// rest of the particles in the Desktop are not saved.
   StatusCode saveTrees( ParticleVector& );
+  
+  //Clone all particles given by a list. This duplicates information on the TES
+  // and should be used only when necessary.
+  StatusCode cloneTrees( ParticleVector& );
   
   /// Save all Particles and its descendent with a given particleID code,
   /// the rest of the particles in the Desktop are not saved.

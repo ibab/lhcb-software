@@ -2,6 +2,14 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-12-01 - P. Koppenbyrg
+ - DaVinciTools/IPhysDesktop.h
+ - src/component/PhysDesktop.h
+ - src/component/PhysDesktop.cpp
+   . Added StatusCode cloneTrees( ParticleVector& ) method that allows
+     to *clone* selected particles (.i.e. duplicating them in the TES).
+     To be revised someday...
+   
 ! 2004-11-11 - P. Koppenbyrg
  - DaVinciTools/DVAlgorithm.h
  - src/DVAlgorithm.cpp 
