@@ -1,4 +1,6 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.9 2001-06-25 09:30:25 ranjard Exp $ 
+# =========================================================================	
+# $Log: not supported by cvs2svn $
+# =========================================================================	
 
 package  CaloDet 
 version  v2
@@ -29,5 +31,7 @@ library          CaloDet           component/*.cpp
 private
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
-macro_append CaloDetLib_shlibflags " $(DetDesc_linkopts) $(GaudiKernel_linkopts) $(CLHEP_linkopts)"
+macro_append     CalloDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     CaloDetLib_shlibflags  " $(GaudiKernel_linkopts) "
+macro_append     CaloDetLib_shlibflags  " $(CLHEP_linkopts) "
 

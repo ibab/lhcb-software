@@ -1,6 +1,18 @@
+! =====================================================================
+! $Id: release.notes,v 1.10 2001-06-29 10:26:18 ibelyaev Exp $ 
+! =====================================================================
+
 Package         : CaloDet 
 Package manager : Vanya Belyaev 
 
+! =====================================================================
+! 20010629 - CaloDet v2 Vanya Belyaev 
+    The code update due to changes in DetDesc 
+    (1) DeCalorimeter.h/cpp,DeSubCalorimeter.h/cpp -
+                              implement "initialize" method
+    (2) Remove specialized Xml-converters for 
+        DeCalorimeter and DeSubCalorimeter class 
+! =====================================================================   
 ! 20010625 - CaloDet v2 (Flr)
   requirements - use DetDesc v7, CaloGen v2
                  updated for GaudiSys v8 and CMT v1r8

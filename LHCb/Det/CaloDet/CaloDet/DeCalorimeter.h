@@ -1,32 +1,27 @@
+// $Log: not supported by cvs2svn $ 
 #ifndef       CALODET_DECALORIMETER_H
-#define       CALODET_DECALORIMETER_H 1 
-
-/// from STL 
-///
+#define       CALODET_DECALORIMETER_H 1
+/// from STL
 #include <iostream>
 #include <vector>
-
-/// from CLHEP 
-///
+/// from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
 /// from Det/DetDesc
-///
 #include "DetDesc/DetectorElement.h"
 
-/// from Event/CaloGen 
-///
+/// from Event/CaloGen
 #include "CaloGen/CaloCellID.h"
 #include "CaloGen/CaloVector.h"
 #include "CaloGen/CaloException.h"
 
 /// from Det/CaloDet
-///
 #include "CaloDet/CaloCardParams.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
 
+/// forwad declarations
 class MsgStream;
 
 //-----------------------------------------------------------------------------
@@ -43,116 +38,133 @@ class DeCalorimeter: public DetectorElement {
 
 public:
   
-  // ** Constructors
-
+  /// Constructors
   DeCalorimeter( const std::string& name    = "" );
   
-  // ** Destructor
-  
+  /// (dirtual) Destructor
   virtual ~DeCalorimeter() ;
   
-  // ** Retrieve reference to class identifier
-  
-  virtual const CLID& clID    () const { return classID()          ; } 
+  /// object identification
   static  const CLID& classID ()       { return CLID_DeCalorimeter ; } 
+  /// object identification
+  virtual const CLID& clID    () const ;
   
-  // ** printout to std::ostream 
+  /// printout to std::ostream 
   virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
+  /// printout to MsgStream 
   virtual MsgStream&    printOut( MsgStream&                  ) const;
-  
-  // ** if initialized in a proper way? 
-  
+
+  /// initialization method 
+  virtual StatusCode initialize(); 
+ 
+  /// if initialized in a proper way?
   inline  bool  isInitialized() const  { return m_initialized ; }  
   
-// ** Initialization methods
-  
-  StatusCode     buildCells    ();
-  StatusCode     buildCards    ();
-  unsigned int   numberOfCells () { buildCells() ; return cells.size(); }; 
-  
-// ** setters:
+  /// accessor to number of builded cells 
+  unsigned int   numberOfCells () { buildCells() ; return cells.size(); };
 
+  /// set function for coding 
   void setCoding     ( unsigned int nb );
+  /// set function for maxEt 
   void setEtInCenter ( double maxEt         ) { m_maxEtInCenter = maxEt; }
+  /// set function for maxEtSlope  
   void setEtSlope    ( double maxEtSlope    ) { m_maxEtSlope    = maxEtSlope; }
+  /// set function for AdcMax 
   void setAdcMax     ( unsigned int adcMax  ) { m_adcMax        = adcMax; }
+  /// set function for active/total ratio 
   void setActiveToTotal (double actToTotal  ) { m_activeToTotal = actToTotal; }
+  /// set function for ZshowerMax 
   void setZShowerMax ( double ZShowerMax    ) { m_zShowerMax    = ZShowerMax; }
 
-// ** getters:
-
+  /// retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
+  /// retrieve max et slope 
   double        maxEtSlope    () const { return m_maxEtSlope    ; }; 
+  /// retrieve adcMax 
   unsigned int  adcMax        () const { return m_adcMax        ; }; 
+  /// retrieve active/total energy ratio 
   double        activeToTotal () const { return m_activeToTotal ; };
+  /// retrieve position of shower max 
   double        zShowerMax    () const { return m_zShowerMax    ; };
-
-// ** Parameters of a specified cell
-
+  
+  /// validity flag for the cell 
   bool   valid    ( const CaloCellID& ID ) const { return cells[ID].size() >0;}
+  /// x-position of center of the cell 
   double cellX    ( const CaloCellID& ID ) const { return cells[ID].x (); }
+  /// y-position of center of the cell 
   double cellY    ( const CaloCellID& ID ) const { return cells[ID].y (); }
+  /// z-position of center of the cell 
   double cellZ    ( const CaloCellID& ID ) const { return cells[ID].z (); }
+  /// cell size  
   double cellSize ( const CaloCellID& ID ) const { return cells[ID].size (); }
+  /// sine function for given cell 
   double cellSine ( const CaloCellID& ID ) const { return cells[ID].sine (); }
+  /// PM gain for given cell  
   double cellGain ( const CaloCellID& ID ) const { return cells[ID].gain (); }
+  /// Timing for for given cell  
   double cellTime ( const CaloCellID& ID ) const { return cells[ID].time (); }
-
+  /// cell center 
   const HepPoint3D&    cellCenter       ( const CaloCellID& ID ) const { 
-                                          return cells[ID].center       (); }
+    return cells[ID].center       (); }
+  /// list of neighbour cells 
   const CaloNeighbors& neighborCells    ( const CaloCellID& ID ) const { 
-                                          return cells[ID].neighbors    (); }
+    return cells[ID].neighbors    (); }
+  /// list of neighbour cells 
   const CaloNeighbors& zsupNeighborCells( const CaloCellID& ID ) const { 
-                                          return cells[ID].zsupNeighbors(); }
-
-// ** From ID to cell serial number and vice-versa
-
+    return cells[ID].zsupNeighbors(); }
+  
+  /// From ID to cell serial number and vice-versa
   int    cellIndex( const CaloCellID& ID ) const { return cells.index(ID); }
   CaloCellID cellIdByIndex( const unsigned int num )    const {
     return ( (num < cells.size() ) ? 
 	     (cells.begin()+num)->cellID() : CaloCellID() );
   }
   
-// ** More complex functions
-
+  /// More complex functions
   CaloCellID  Cell    ( const HepPoint3D& point )             ;
-
-// ** Front-end card information
-
+  
+  /// Front-end card information
+  /// card number 
   int cardNumber( const CaloCellID& ID ) const {return cells[ID].cardNumber(); }
+  /// card row  
   int cardRow   ( const CaloCellID& ID ) const {return cells[ID].cardRow();    }
+  /// card column  
   int cardColumn( const CaloCellID& ID ) const {return cells[ID].cardColumn(); }
-
+  /// card address 
   void cardAddress ( const CaloCellID& ID, 
 		     int& card, int& row, int& column ) const {
     card   = cells[ID].cardNumber ();
     row    = cells[ID].cardRow() ;
     column = cells[ID].cardColumn() ;
   }
-
+  /// number of cards 
   int nCards          ( )                 const { return m_cards; }
+  /// down card number 
   int downCardNumber  ( const int card )  const { 
                                           return feCards[card].downNumber(); }
+  /// left card number 
   int leftCardNumber  ( const int card )  const { 
                                           return feCards[card].leftNumber(); }
+  /// corder card number 
   int cornerCardNumber( const int card )  const { 
                                           return feCards[card].cornerNumber();}
+  /// previous card number 
   int previousCardNumber(const int card ) const{ 
                                         return feCards[card].previousNumber();}
-
+  /// card neighbours
   void cardNeighbors ( const int card, int& down, int& left, int& corner )const{
     down   = feCards[card].downNumber();
     left   = feCards[card].leftNumber();
     corner = feCards[card].cornerNumber();
   }
-
-  int cardArea      ( const int card ) const {return feCards[card].area();   }
-  int cardFirstRow  ( const int card ) const {return feCards[card].firstRow();}
+  /// card area 
+  int cardArea       ( const int card ) const {return feCards[card].area();   }
+  /// card first row 
+  int cardFirstRow   ( const int card ) const {return feCards[card].firstRow();}
+  /// card first column 
   int cardFirstColumn( const int card ) const {
-                       return feCards[card].firstColumn(); }
-
-// ** ID of the bottom left cell, of the top right cell, of the specified cell
-
+    return feCards[card].firstColumn(); }
+  /// ID of the bottom left cell, of the top right cell, of the specified cell
   CaloCellID firstCellID ( const int card ) const {  
     return CaloCellID( m_caloIndex,
 		       feCards[card].area(), 
@@ -170,6 +182,13 @@ public:
 		       feCards[card].area(), 
 		       feCards[card].firstRow()    + row ,
 		       feCards[card].firstColumn() + col  ); }
+  
+protected: 
+  
+  /// Initialization method for building the cells 
+  StatusCode     buildCells    ();
+  /// Initialization method for building the cards 
+  StatusCode     buildCards    ();
   
 protected:
 
@@ -344,8 +363,42 @@ private:
 
 };
 ///
-#include "CaloDet/DeCalorimeter.icpp"
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// CaloDet 
 ///
+inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
+{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<std::endl); }
+///
+inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
+{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
+///
+
+//----------------------------------------------------------------------------
+// Explicit inline methods, those needing more than a single statement...
+//----------------------------------------------------------------------------
+
+inline void DeCalorimeter::Assert( bool assertion , 
+                                   const char* message ) const {
+  if( !assertion ) {
+    std::string msg("DeCalorimeter:: ");  
+    throw CaloException( msg += message  );  
+  }
+}; 
+
+inline void DeCalorimeter::Assert( bool assertion , 
+                                   const std::string&  message ) const {
+  if( !assertion ) {
+    std::string msg("DeCalorimeter:: ");  
+    throw CaloException( msg += message  );  
+  }
+};
 
 #endif  //    CALODET_DECALORIMETER_H
 

@@ -1,10 +1,11 @@
+// $Log: not supported by cvs2svn $ 
 #ifndef   CALODET_DESUBCALORIMETER_H
 #define   CALODET_DESUBCALORIMETER_H   1
-
-
-// Include files
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+// DetDesc 
 #include "DetDesc/DetectorElement.h"
-
+// CaloDet 
 #include "CaloDet/CLIDDeSubCalorimeter.h"
 
 class MsgStream;
@@ -19,38 +20,49 @@ class MsgStream;
 //------------------------------------------------------------------------------
 
 
-class DeSubCalorimeter: public DetectorElement {
-  
+class DeSubCalorimeter: public DetectorElement 
+{
 public:
-
-// ** Constructors
-
+  /// Constructors
   DeSubCalorimeter( const std::string& name    = ""  );
-
-// ** Destructor
-
-  ~DeSubCalorimeter();
-
-// ** Retrieve refrence to class identifier
-
-  virtual const CLID& clID   () const { return classID()             ; } 
-  static  const CLID& classID()       { return CLID_DeSubCalorimeter ; } 
-
+  /// Destructor
+  virtual ~DeSubCalorimeter();
+  /// object identification 
+  static  const CLID& classID()       { return CLID_DeSubCalorimeter ; }
+  /// printout to standard STL stream 
   virtual std::ostream& printOut( std::ostream& os = std::cerr ) const ; 
-  virtual MsgStream&    printOut( MsgStream&                   ) const ; 
-
-// ** Get/Set size
-
+  /// printout to standard Gaudi stream 
+  virtual MsgStream&    printOut( MsgStream&                   ) const ;
+  /// object identification 
+  virtual const CLID& clID   () const ;
+  /// standard initialization
+  virtual StatusCode    initialize() ;
+  /// get cell  size
   inline double size   ()            const    { return m_size; };
+  /// set cell  size
   inline void   setSize( double s )           { m_size = s;    };
-
+  ///
 private:
-
-  double    m_size;      // ** Cell dimension
-
+  double    m_size;      ///< Cell dimension
 };
 ///
-#include "CaloDet/DeSubCalorimeter.icpp"
+inline std::ostream&  operator<<( std::ostream& os , 
+                                  const DeSubCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline std::ostream&  operator<<( std::ostream& os , 
+                                  const DeSubCalorimeter* de )
+{ return de ? (os<<*de) : 
+  (os<<" DeSubCalorimeter* points to NULL!"<<std::endl); }
+///
+inline MsgStream&     operator<<( MsgStream&    os , 
+                                  const DeSubCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline MsgStream&     operator<<( MsgStream&    os , 
+                                  const DeSubCalorimeter* de )
+{ return de ? (os<<*de) : 
+  (os<<" DeSubCalorimeter* points to NULL!"<<endreq   ); }
 ///
 
 #endif    //   CALODET_DESUBCALORIMETER_H

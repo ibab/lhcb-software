@@ -1,12 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/src/Lib/DeCalorimeter.cpp,v 1.6 2001-03-23 18:25:17 ibelyaev Exp $ 
+// $Log: not supported by cvs2svn $
 #define  CALODET_DECALORIMETER_CPP 1 
-//
 // from STL
 #include <cmath> 
-//
 // from CLHEP 
 #include "CLHEP/Units/SystemOfUnits.h"
-//
 // from Gaudi 
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/TransientStore.h"
@@ -43,17 +40,89 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
 // Standard Destructor
 DeCalorimeter::~DeCalorimeter() 
 { };
-  
+
+/// ===========================================================================
+/// object identification
+/// ===========================================================================
+const CLID& DeCalorimeter::clID () const { return DeCalorimeter::classID() ; } 
+
 //----------------------------------------------------------------------------
 // ** Defines the maximum and center Row and Column in the cell number
 //----------------------------------------------------------------------------
-
 void DeCalorimeter::setCoding( unsigned int nb ) {
 
   maxRowCol     = (1<< nb ) - 1;               // 63   (31   for HCAL)
   firstRowUp    = maxRowCol/2 + 1 ;            // 32   (16   for HCAL)
   centerRowCol  = .5 * (double) maxRowCol ;    // 31.5 (15.5 for HCAL)
 }
+
+/// ===========================================================================
+/// intialization method 
+/// ===========================================================================
+StatusCode DeCalorimeter::initialize()
+{
+  StatusCode sc = DetectorElement::initialize();
+  ///
+  if( sc.isFailure() ) { return sc ; }
+  ///
+  typedef std::vector<std::string> Parameters;
+  typedef Parameters::iterator     Iterator;
+  ///
+  Parameters pars( userParameters() );
+  ///
+  { /// coding bits 
+    Iterator it = std::find( pars.begin() , pars.end () , "CodingBit" );
+    if( pars.end() != it ) {
+      setCoding( userParameterAsInt(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  { /// Et in Center 
+    Iterator it = std::find( pars.begin() , pars.end () , "EtInCenter" );
+    if( pars.end() != it ) {
+      setEtInCenter( userParameterAsDouble(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  { /// Et in slope  
+    Iterator it = std::find( pars.begin() , pars.end () , "EtSlope" );
+    if( pars.end() != it ) {
+      setEtSlope( userParameterAsDouble(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  { /// AdcMax
+    Iterator it = std::find( pars.begin() , pars.end () , "AdcMax" );
+    if( pars.end() != it ) {
+      setAdcMax( userParameterAsInt(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  { /// Total/Active ratio
+    Iterator it =  std::find( pars.begin() , pars.end () , "ActiveToTotal" );
+    if( pars.end() != it ) {
+      setActiveToTotal( userParameterAsDouble(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  { /// Z shower max position 
+    Iterator it = std::find( pars.begin() , pars.end () , "ZShowerMax" );
+    if( pars.end() != it ) {
+      setZShowerMax( userParameterAsDouble(*it) ) ;
+      pars.erase( it );
+    }
+  }
+  ///
+  if( !pars.empty() ) {
+    // some "extra" parameters.
+    // should be an error??
+  }
+  ///
+  if( sc.isSuccess() ) { buildCells(); }
+  if( sc.isSuccess() ) { buildCards(); }
+  ///
+  return sc;
+};
 
 //----------------------------------------------------------------------------
 // ** Builds the cells from the geometry of the Detector Element
@@ -386,7 +455,8 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
   
   os << "\tDeCalorimeter index=" 
      << std::setw(2)          << m_caloIndex 
-     << ", name from index ='" << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
+     << ", name from index ='" 
+     << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
      << ", fullname ='"   << fullpath()  << "'" 
      << "\tCellsInitialized=" ; 
   if( m_initialized ) { os <<  "true" ; } 
@@ -398,21 +468,29 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
   
   os << "\t Parameters" 
      << std::endl
-     << "\t\tEt value for maximum ADC value at theta(0) =  " << std::setw(12) << m_maxEtInCenter 
+     << "\t\tEt value for maximum ADC value at theta(0) =  " 
+     << std::setw(12) << m_maxEtInCenter 
      << std::endl
-     << "\t\tIncrease in Et per radian                  =  " << std::setw(12) << m_maxEtSlope   
+     << "\t\tIncrease in Et per radian                  =  " 
+     << std::setw(12) << m_maxEtSlope   
      << std::endl
-     << "\t\tMaximum codage in the ADC                  =  " << std::setw(12) << m_adcMax 
+     << "\t\tMaximum codage in the ADC                  =  " 
+     << std::setw(12) << m_adcMax 
      << std::endl
-     << "\t\tConversion from activeE() to energy seen   =  " << std::setw(12) << m_activeToTotal 
+     << "\t\tConversion from activeE() to energy seen   =  "
+     << std::setw(12) << m_activeToTotal 
      << std::endl
-     << "\t\tZ of the shower maximum in the local frame =  " << std::setw(12) << m_zShowerMax 
+     << "\t\tZ of the shower maximum in the local frame =  " 
+     << std::setw(12) << m_zShowerMax 
      << std::endl
-     << "\t\tMaximum value for Row/Columnt              =  " << std::setw(12) << maxRowCol 
+     << "\t\tMaximum value for Row/Columnt              =  " 
+     << std::setw(12) << maxRowCol 
      << std::endl
-     << "\t\tFirst Row or Column  over center           =  " << std::setw(12) << firstRowUp
+     << "\t\tFirst Row or Column  over center           =  " 
+     << std::setw(12) << firstRowUp
      << std::endl
-     << "\t\tCentral Value = maxRowCol/2                =  " << std::setw(12) << centerRowCol
+     << "\t\tCentral Value = maxRowCol/2                =  " 
+     << std::setw(12) << centerRowCol
      << std::endl ;
   
   if( m_initialized ) 
@@ -437,7 +515,8 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
 {
   
   os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex 
-     << ", name from index='"      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
+     << ", name from index='"      
+     << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
      << ", fullname ='"            << fullpath()  << "'" 
      << "\tCellsInitialized=" ;
   if( m_initialized ) { os <<  "true" ; } 
@@ -449,21 +528,29 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
   
   os << "\t Parameters" 
      << endreq   
-     << "\t\tEt value for maximum ADC value at theta(0) =  " << std::setw(12) << m_maxEtInCenter 
+     << "\t\tEt value for maximum ADC value at theta(0) =  " 
+     << std::setw(12) << m_maxEtInCenter 
      << endreq   
-     << "\t\tIncrease in Et per radian                  =  " << std::setw(12) << m_maxEtSlope   
+     << "\t\tIncrease in Et per radian                  =  " 
+     << std::setw(12) << m_maxEtSlope   
      << endreq   
-     << "\t\tMaximum codage in the ADC                  =  " << std::setw(12) << m_adcMax 
+     << "\t\tMaximum codage in the ADC                  =  "
+     << std::setw(12) << m_adcMax 
      << endreq   
-     << "\t\tConversion from activeE() to energy seen   =  " << std::setw(12) << m_activeToTotal 
+     << "\t\tConversion from activeE() to energy seen   =  "
+     << std::setw(12) << m_activeToTotal 
      << endreq   
-     << "\t\tZ of the shower maximum in the local frame =  " << std::setw(12) << m_zShowerMax 
+     << "\t\tZ of the shower maximum in the local frame =  " 
+     << std::setw(12) << m_zShowerMax 
      << endreq   
-     << "\t\tMaximum value for Row/Columnt              =  " << std::setw(12) << maxRowCol 
+     << "\t\tMaximum value for Row/Columnt              =  " 
+     << std::setw(12) << maxRowCol 
      << endreq   
-     << "\t\tFirst Row or Column  over center           =  " << std::setw(12) << firstRowUp 
+     << "\t\tFirst Row or Column  over center           =  "
+     << std::setw(12) << firstRowUp 
      << endreq   
-     << "\t\tCentral Value = maxRowCol/2                =  " << std::setw(12) << centerRowCol
+     << "\t\tCentral Value = maxRowCol/2                =  " 
+     << std::setw(12) << centerRowCol
      << endreq ; 
   
   if( m_initialized ) 
