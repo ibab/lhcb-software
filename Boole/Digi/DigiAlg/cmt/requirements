@@ -9,7 +9,7 @@ branches        cmt doc src options
 include_dirs    "$(DIGIALGROOT)"
 
 use Event       v*      Event
-use GaudiAlg    v7r*
+use GaudiAlg    v*
 
 library         DigiAlg    ../src/*.cpp  -import=AIDA
 
