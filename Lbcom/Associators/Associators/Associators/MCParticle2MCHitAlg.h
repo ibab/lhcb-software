@@ -15,7 +15,7 @@
 
 class MCParticle2MCHitAlg : public Algorithm {
   // friend factory for instantiation 
-  friend AlgFactory<MCParticle2MCHitAlg>;
+  friend class AlgFactory<MCParticle2MCHitAlg>;
   
 public:
 

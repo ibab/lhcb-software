@@ -1,6 +1,9 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! 2003-06-16 - Sebastien Ponce
+ - fixes for gcc 3.2/3.3
+
 ! ======================= Associators v2r0 2003-03-20 ===================
 ! 2003-03-19 - Gloria Corti
  - Add associactors and relation tables factories for L0Candidates,
