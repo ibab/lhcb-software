@@ -5,6 +5,10 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+
+!20010702 Sebastien Ponce
+ - now it's working under windows
+
 !20010628 Sebastien Ponce
  - added a new converter for DeCalorimeter in order to illustrate the
  use of the initialize method in the DetectorElement class and its
