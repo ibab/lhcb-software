@@ -1,5 +1,5 @@
 package Boole
-version v5r6
+version v5r7
 
 branches doc cmt job options
 
@@ -45,8 +45,8 @@ use XmlDDDB	v22r1	Det
 use ParamFiles	v3r5	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v15r7)
-use LHCb	v15r7
+#-- LHCb libraries (from LHCB_v15r8)
+use LHCb	v15r8
 
 #-- BooleSys v5r5 packages
 
@@ -62,11 +62,11 @@ use L0MuonKernel	v1r1	L0
 use L0MuonTrigger	v1r1p1	L0
 
 # L1 trigger
-use TrgTools		v3r0	Trg
+use TrgTools		v3r1	Trg
 use TrgChecker		v3r0p1	Trg
 use TrgVelo		v3r0	Trg
-use TrgVeloTT		v3r0	Trg
-use L1Reco		v3r0	Trg
+use TrgVeloTT		v3r1	Trg
+use L1Reco		v3r1	Trg
 use TrgMonitor		v1r0	Trg
 
 # Calorimeter

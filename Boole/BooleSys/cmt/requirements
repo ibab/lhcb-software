@@ -1,5 +1,5 @@
 package BooleSys
-version v5r6
+version v5r7
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v5r6	Digi
+use Boole		v5r7	Digi
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r1	Kernel
 
@@ -21,11 +21,11 @@ use L0MuonKernel        v1r1    L0
 use L0MuonTrigger       v1r1p1  L0
 
 # L1 trigger
-use TrgTools            v3r0    Trg
+use TrgTools            v3r1    Trg
 use TrgChecker          v3r0p1	Trg
 use TrgVelo             v3r0    Trg
-use TrgVeloTT           v3r0    Trg
-use L1Reco              v3r0    Trg
+use TrgVeloTT           v3r1    Trg
+use L1Reco              v3r1    Trg
 use TrgMonitor		v1r0	Trg
 
 # Calorimeter
