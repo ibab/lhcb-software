@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.9 2005-02-20 18:40:03 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.10 2005-03-03 15:44:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -187,28 +187,6 @@ public:
    *  @retval false MCRichHit originated from Cherenkov Radiation
    */
   virtual bool isBackground ( const MCRichHit * hit ) const = 0;
-
-  /** Checks if the given MCRichHit came from a spillover event
-   *
-   *  @param hit Pointer to an MCRichHit
-   *
-   *  @return Boolean indicating if the hit is from spillover
-   *  @retval true  MCRichHit originated from a spillover event
-   *  @retval false MCRichHit originated from the signal event
-   */
-  virtual bool isSpillover ( const MCRichHit * hit ) const = 0;
-
-  /** Checks if the given MCRichDigit came from a spillover event
-   *
-   *  @param hit Pointer to an MCRichDigit
-   *
-   *  @return Boolean indicating if the digit is from spillover
-   *  @retval true  MCRichDigit originated from a spillover event
-   *                (None of the associated MCRichHits came from the signal event)
-   *  @retval false MCRichDigit originated from the signal event
-   *                (All of the associated MCRichHits came from spillover events)
-   */
-  virtual bool isSpillover ( const MCRichDigit * digit ) const = 0;
 
 };
 
