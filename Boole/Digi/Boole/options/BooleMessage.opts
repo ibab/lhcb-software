@@ -20,5 +20,4 @@ MessageSvc.OutputLevel = 3;
 
 
 // Suppress excessive messages from some algorithms/components
-ApplicationMgr.OutputLevel = 4;
-RootEventCnvSvc.OutputLevel = 4;
+//RootEventCnvSvc.OutputLevel = 4;

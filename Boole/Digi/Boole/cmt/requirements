@@ -1,5 +1,5 @@
 package Boole
-version v7r3
+version v8r0
 
 branches doc cmt job options
 
@@ -11,16 +11,17 @@ pattern BooleVersion path_append APPVERSION <version>
 apply_pattern BooleVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r19
+use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r3)
-use GaudiKernel		v17r0
-use GaudiSvc 		v12r6
-use GaudiAlg 		v8r2
-use GaudiPoolDb		v1r10p1
-use HbookCnv 		v14r2p1
+#-- Gaudi libraries (from GAUDI_v16r0)
+use GaudiKernel		v18r1
+use GaudiSvc 		v13r0
+use GaudiAlg 		v8r4
+use GaudiPoolDb		v1r12
+use GaudiObjDesc 	v7r2
+use HbookCnv 		v14r3
 
 #-- Databases
 use XmlDDDB	v23r1	Det
@@ -28,22 +29,15 @@ use ParamFiles	v3r9	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v17r3)
-use LHCb	v17r3
-use GaudiObjDesc 	v7r0
+#-- LHCb libraries (from LHCB_v18r0)
+use LHCb	v18r0
 
-#-- BooleSys v7r3 packages
+#-- Lbcom packages (from LBCOM_v1r0)
+use LbcomSys    v1r0
+
+#-- BooleSys v8r0 packages
 
 use DigiAlg		v3r0	Digi
-use AsctToLinker        v1r3    Rec
-
-# L0 trigger
-use L0Calo              v8r0	L0
-use PuVeto              v6r0	L0
-use L0DU                v6r7p2	L0
-use L0mConf		v2r2p3	L0
-use L0MuonKernel	v2r3	L0
-use L0MuonTrigger	v2r3p1	L0
 
 # Calorimeter
 use CaloMoniDigi        v1r0	Calo
@@ -54,11 +48,10 @@ use VeloAlgorithms      v3r2	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
-use ITCheckers          v2r4	IT
+use ITCheckers          v2r4p1	IT
 
 # Outer Tracker
 use OTSimulation	v1r3	OT
-use OTMonitor		v1r1	OT
 
 # Muon
 use MuonAlgs            v5r6	Muon

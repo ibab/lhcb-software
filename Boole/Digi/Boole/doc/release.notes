@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r0>2005-02-03 Boole v8r0</A></H1><PRE>
+- Adapt requirements to Gaudi v16r0, Lbcom v1r0 and LHCb v18r0
+
 </PRE><H1><A NAME=v7r3>2005-01-18 Boole v7r3</A></H1><PRE>
 - Release notes for Boole application are now in BooleSys package
 - Remove doxygen configuration files (moved to BooleSys)

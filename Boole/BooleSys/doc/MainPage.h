@@ -10,7 +10,8 @@
  * of the Boole project
  *
  * \sa
- * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
+ * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb shared components)"
+ * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core classes)"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
 

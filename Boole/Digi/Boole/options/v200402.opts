@@ -44,19 +44,19 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
- "DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_2.sim' TYP='POOL_ROOT' OPT='READ'" 
-,"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_3.sim' TYP='POOL_ROOT' OPT='READ'" 
-}; // DC04: Gauss v15r8, XmlDDDB v22r2, evtype 30000000 (minbias)
+  // "DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_2.sim' TYP='POOL_ROOT' OPT='READ'" 
+  //,"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_3.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // Input data not yet available
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_1.sim' TYP='POOL_ROOT' OPT='READ'" 
-}; // DC04: Gauss v15r4, XmlDDDB v22r2, evttype 11144100 (Bd_JpsiKS,mm)
+  // "DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_1.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // Input data not yet available
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:BooleTest.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:Boole200402.digi' TYP='POOL_ROOTTREE' OPT='REC'";

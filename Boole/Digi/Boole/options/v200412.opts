@@ -3,7 +3,7 @@
 //  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
+//InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
 ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
@@ -21,7 +21,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = -1;
 
 //EventSelector.FirstEvent = 7;      // Skip some events in main input file
 //SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
@@ -42,19 +42,19 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_2.sim' TYP='POOL_ROOT' OPT='READ'" 
-,  "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_3.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Test data (5 events) produced by Gloria.
+  //   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_2.sim' TYP='POOL_ROOT' OPT='READ'" 
+  //,  "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_3.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Input data not yet available
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/11144100_1.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Test data (5 events) produced by Gloria.
+   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_0412.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Test data (10 events) produced by Florence with Gauss v19r0 pre-release
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:BooleTest.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:Boole200412.digi' TYP='POOL_ROOTTREE' OPT='REC'";

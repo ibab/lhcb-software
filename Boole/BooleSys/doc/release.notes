@@ -3,9 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r0>2005-02-02 Boole v8r0</A></H1><PRE>
+This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0) 
+Requires input data from Gauss v19r* - Cannot process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v26r0 or greater
+
+- Packages removed:  AsctToLinker, L0mConf, L0MuonKernel (now in LHCbSys)
+          L0Calo, L0DU, L0MuonTrigger, PuVeto, OTMonitor (now in LbcomSys)
+- Packages modified: ITCheckers v2r4p1
+
+- Bug fixes:
+  . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
+
 </PRE><H1><A NAME=v7r3>2005-01-25 Boole v7r3</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r3. Can process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v25r3 or greater
+Output data incompatible with DC04 versions, needs Brunel v25r3
 
 - Packages modified: L0Calo v8r0, CaloDigit v1r8, OTSimulation v1r3, 
                      RichReadout v1r11, RichDigiQC v2r0, ITCheckers v2r4
