@@ -4,6 +4,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v13r3p1 2003-11-10 =======================
+! 2003-11-10 - Marco Cattaneo
+ - Modified packages: EventSys v15r1, DAQEvent v2r1
+
 !======================== LHCbSys v13r3 2003-11-03 ========================
 ! 2003-11-03 - Marco Cattaneo
  - Modified packages: GaudiConf v7r2,
