@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.6 2004-11-10 17:51:12 abuckley Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.7 2004-11-22 16:24:39 abuckley Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -57,7 +57,7 @@ StatusCode RichPixelStrippingAlg::execute()
   if ( m_savePreStrippedPixels ) {
     RichRecPixels * oldPixs = new RichRecPixels();
     for ( RichRecPixels::const_iterator iPix = richPixels()->begin(); iPix != richPixels()->end(); ++iPix ) {
-       oldPixs->insert( new RichRecPixel( **iPix ), (*iPix)->key() );
+      oldPixs->insert( new RichRecPixel( **iPix ), (*iPix)->key() );
     }
     put( oldPixs, "Rec/Rich/RecoEvent/PreStrippingPixels" );
   }
@@ -84,6 +84,7 @@ StatusCode RichPixelStrippingAlg::execute()
       decisionMap[*iPix] = ( Rich::Rich1 == (*iPix)->smartID().rich() );
     }
 
+    std::map<const RichRecSegment*, unsigned int> pixelsPerSegment;
 
     // Loop over all Markov rings
     for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
@@ -94,6 +95,9 @@ StatusCode RichPixelStrippingAlg::execute()
         if ( !m_StripUntrackedMCMCPixs || // if we're only stripping non-MCMC pixs
              (*iRing)->richRecSegment() ) { // or if the Markov ring corresponds to a non-null track segment...
           decisionMap[*iPix] = true; // then keep this pixel
+          if ( (*iRing)->richRecSegment() ) {
+            ++pixelsPerSegment[(*iRing)->richRecSegment()];
+          }
         }
       }
     }
@@ -117,12 +121,21 @@ StatusCode RichPixelStrippingAlg::execute()
       if ( ! (*iP).second  ) richPixels()->remove( (*iP).first );
     }
 
+    if ( msgLevel(MSG::DEBUG) ) {
+      for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
+        debug() << "Segment " << (*iSeg)->key() << " " << (*iSeg)->trackSegment().radiator() 
+                << " Track " << (*iSeg)->richRecTrack()->key() << " has " <<  pixelsPerSegment[*iSeg] << " Pixels" << endreq;
+      }
+    }
+
   }
 
   // Number of pixels after stripping
   const unsigned int nPixAfter = richPixels()->size();
 
-  debug() << "Stripped " << nPixBefore << " starting pixels to " << nPixAfter << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Stripped " << nPixBefore << " starting pixels to " << nPixAfter << endreq;
+  }
 
   return StatusCode::SUCCESS;
 };

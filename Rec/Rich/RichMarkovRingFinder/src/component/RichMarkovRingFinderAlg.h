@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.12 2004-11-10 17:51:12 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.13 2004-11-22 16:24:39 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -139,6 +139,13 @@ private: // data
   /// The fraction of the hit->ring "best-match" probability which must be
   /// reached if multiple hit->ring associations are allowed (\sa m_OnlyMatchPixelToBestRing)
   double m_FractionOfBestProbReqdForHitCircleAssoc;
+
+  /// Distance in ring radius units which pixel has to be within in order to 
+  /// be considered as associated to that ring.
+  double m_pixDistFromMCMCRing;
+  
+  /// Do the matching of pixs to rings purely by distance from the ring
+  bool m_pixToRingMatchByProximity;
 
 };
 

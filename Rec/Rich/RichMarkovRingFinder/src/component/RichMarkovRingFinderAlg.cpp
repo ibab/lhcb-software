@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.13 2004-11-10 17:51:12 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.14 2004-11-22 16:24:39 abuckley Exp $
 // Include files
 
 // local
@@ -52,6 +52,8 @@ RichMarkovRingFinderAlg<MyFinder>::RichMarkovRingFinderAlg( const std::string& n
   declareProperty( "HitIsBgProbabilityLowCut", m_HitIsBgProbabilityLowCut = 0.5 );
   declareProperty( "OnlyMatchPixelToBestRing", m_OnlyMatchPixelToBestRing = false );
   declareProperty( "FractionOfBestProbReqdForHitCircleAssoc", m_FractionOfBestProbReqdForHitCircleAssoc = 0.6 );
+  declareProperty( "PixelDistanceFromMCMCRing", m_pixDistFromMCMCRing = 0.1 ); // in ring radii
+  declareProperty( "PixelToRingMatchByProximity", m_pixToRingMatchByProximity = false );
 }
 
 
@@ -272,12 +274,17 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       if ( prob > bestHitCircleProbs[&(*hIt)].second ) {
         bestHitCircleProbs[&(*hIt)] = pair<const MarkovCircle*, double>(&(*iCircle), prob);
       }
+
     }
   }
 
 
   // Data scale factor between Ck angle space and the length scale on the PD plane
   const double scale = m_finder->getmode().realXYDataInputScaleFactor();
+
+  // Map from ring-matched segments to rings
+  typedef map<RichRecSegment*, vector<RichRecRing*> > SegsToRings;
+  SegsToRings segsToRings;
 
   for ( typename MarkovCircles::const_iterator iCircle = bestRPSoFar.getCircles().begin();
         iCircle != bestRPSoFar.getCircles().end(); ++iCircle ) {
@@ -286,27 +293,43 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     const MarkovCircle* thisCircle(&(*iCircle)); 
 
 
-    // Run over hits effectively
-    for ( typename HitToCircleProbs::const_iterator circleProbs = hitToCircleProbs.begin();
-          circleProbs != hitToCircleProbs.end(); ++circleProbs ) {
-      const MarkovHit* thisHit( &(*circleProbs->first) );
-      const double bgprob( hitBgProbs[thisHit] );
+    // Matching pixs to rings by raw proximity or via the Markov probabilities
+    if (m_pixToRingMatchByProximity) {
 
-      if ( bgprob < m_HitIsBgProbabilityLowCut ) {
-        const pair<const MarkovCircle*, double> bestCircleAndProb( bestHitCircleProbs[thisHit] ); 
-        const MarkovCircle* bestCircle( bestCircleAndProb.first );
-        const double bestProb( bestCircleAndProb.second );
-        const double thisProb( hitToCircleProbs[thisHit][thisCircle] );
+      const HepPoint3D centreLocal( (*iCircle).centre().x()/scale, (*iCircle).centre().y()/scale, 0 );
+      const double radiusOnPlane( (*iCircle).radius()/scale );
 
-        // Match hits to rings: either unique or with some tolerance on the fraction of
-        // the best-match probability that must be reached to achieve association
-        if ( ( m_OnlyMatchPixelToBestRing  && thisCircle == bestCircle ) || 
-             ( !m_OnlyMatchPixelToBestRing && thisProb >= m_FractionOfBestProbReqdForHitCircleAssoc * bestProb ) ) {
-          hitsOnCircle.push_back( thisHit ); 
+      for ( typename MarkovHits::const_iterator iHit = eio.data().hits.begin(); iHit != eio.data().hits.end(); ++iHit ) {
+        const double pixDistanceToRingCentre( fabs(centreLocal.distance((*iHit).richPixel()->localPosition())) );
+        if ( fabs(pixDistanceToRingCentre - radiusOnPlane)/radiusOnPlane < m_pixDistFromMCMCRing ) {
+          hitsOnCircle.push_back( &(*iHit) );
         }
       }
-    } // loop over hits
 
+    } else {
+      
+      // Effectively run over hits
+      for ( typename HitToCircleProbs::const_iterator circleProbs = hitToCircleProbs.begin();
+            circleProbs != hitToCircleProbs.end(); ++circleProbs ) {
+        const MarkovHit* thisHit( &(*circleProbs->first) );
+        const double bgprob( hitBgProbs[thisHit] );
+        
+        if ( bgprob < m_HitIsBgProbabilityLowCut ) {
+          const pair<const MarkovCircle*, double> bestCircleAndProb( bestHitCircleProbs[thisHit] ); 
+          const MarkovCircle* bestCircle( bestCircleAndProb.first );
+          const double bestProb( bestCircleAndProb.second );
+          const double thisProb( hitToCircleProbs[thisHit][thisCircle] );
+          
+          // Match hits to rings: either unique or with some tolerance on the fraction of
+          // the best-match probability that must be reached to achieve association
+          if ( ( m_OnlyMatchPixelToBestRing  && thisCircle == bestCircle ) || 
+               ( !m_OnlyMatchPixelToBestRing && thisProb >= m_FractionOfBestProbReqdForHitCircleAssoc * bestProb ) ) {
+            hitsOnCircle.push_back( thisHit );
+          }
+        }
+      } // loop over hits
+      
+    }
 
 
     if (!hitsOnCircle.empty()) {
@@ -344,6 +367,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           pixels->insert( new RichRecPixel( **pix ), (*pix)->key() );
       }
 
+
       // Identify which rings have no associated track within them
       RichRecSegment* chosenSeg(0);
       double currentBestNormSeparation( static_cast<double>( std::numeric_limits<int>::max() ) );
@@ -371,6 +395,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
 
       // set segment
       newRing->setRichRecSegment( chosenSeg );
+      if (chosenSeg) { segsToRings[chosenSeg].push_back(newRing); }
 
       // Add matched rings and pixels to TES containers
       if ( newRing->richRecSegment() ) {
@@ -385,6 +410,17 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     }
 
   } // loop over circles
+
+  // Painfully complicated printout of what track-matched Markov rings are attached to a given matched segment
+  for (SegsToRings::const_iterator segToRings = segsToRings.begin(); segToRings != segsToRings.end(); ++segToRings ) {
+    info() << "Segment " << segToRings->first->key() << " associates to rings { ";
+    unsigned int ringcounter(0);
+    for (vector<RichRecRing*>::const_iterator ring = segToRings->second.begin(); ring != segToRings->second.end(); ++ring) {
+      ++ringcounter;
+      info() << (*ring)->key() << (ringcounter != segToRings->second.size() ? "," : "") << " ";
+    }
+    info() << "}" << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -454,8 +490,8 @@ RichMarkovRingFinderAlg<MyFinder>::addDataPoints( AnInitialisationObject & eio )
               << "," << scale * (*iPix)->localPosition().y() << endreq;
       eio.addHit( Hit( scale * (*iPix)->localPosition().x(),
                        scale * (*iPix)->localPosition().y(), *iPix ) );
-    };
-  };
+    }
+  }
 
   debug() << "Selected " << eio.data().getHits().size() << " data points" << endreq;
 
