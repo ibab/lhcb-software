@@ -4,8 +4,10 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.20 2004-07-27 10:56:36 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.21 2004-11-20 12:23:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.20  2004/07/27 10:56:36  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -108,6 +110,8 @@ StatusCode RichGlobalPIDAlg::execute()
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
     debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
+    if ( richPhotons()->empty() ) 
+      return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
 
   // Compute complete likelihood for event with starting hypotheses
@@ -514,7 +518,7 @@ void RichGlobalPIDAlg::updateDllThres()
     c = (m_cP[0]*B-A*m_cP[1])/(m_cP[0]-m_cP[1]);
     m_currentDllTreshold = m*m_trackIteration + c;
   }
-
+  verbose() << "New update DLL threshold " << m_currentDllTreshold  << endreq;
 }
 
 void RichGlobalPIDAlg::updateFreezeOutValue()
@@ -547,5 +551,5 @@ void RichGlobalPIDAlg::updateFreezeOutValue()
     c = (m_fP[0]*B-A*m_fP[1])/(m_fP[0]-m_fP[1]);
     m_currentFreezeOutValue = m*m_trackIteration + c;
   }
-
+  verbose() << "New freeze out value " << m_currentFreezeOutValue << endreq;
 }
