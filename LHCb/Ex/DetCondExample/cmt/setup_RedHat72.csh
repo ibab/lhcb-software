@@ -1,5 +1,5 @@
 #!/usr/local/bin/tcsh
-# $Id: setup_RedHat72.csh,v 1.1 2002-03-28 16:19:36 andreav Exp $
+# $Id: setup_RedHat72.csh,v 1.2 2002-03-28 16:39:57 andreav Exp $
 
 # Do you need to run this script? Are you on RedHat7.2?
 if ( `fs sysname` != "Current sysname is 'i386_linux24'" ) then
@@ -47,24 +47,11 @@ g++ -v
 # Assume that ${HOME}/newmycmt is the private CMT directory
 setenv CMTPATH ${HOME}/newmycmt
 
-# Configure the external libraries
-# Need to getpack and cmt config ExternalLibs before calling its setup
-set pwd=`pwd`
-cd ${CMTPATH}
-if !( -d ${CMTPATH}/ExternalLibs/v3r5 ) then
-  echo " -------------------------------------------------------------------- "
-  echo "Downloading ${CMTPATH}/ExternalLibs/v3r5"
-  getpack ExternalLibs v3r5
-endif
-cd ExternalLibs/v3r5/cmt
+# Reconfigure the LHCXX external libraries
+# The default setup in $GAUDISOFT/ExternalLibs/v3r3 does not foresee rh72
 echo " -------------------------------------------------------------------- "
-echo "Configuring ${CMTPATH}/ExternalLibs/v3r5"
-cmt config
-cd ${pwd}
-unset pwd
-echo " -------------------------------------------------------------------- "
-echo "Setting up  ${CMTPATH}/ExternalLibs/v3r5"
-source ${CMTPATH}/ExternalLibs/v3r5/cmt/setup.csh
+echo Redefine LHCXX_DIR as ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2-from72
+setenv LHCXX_DIR ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2-from72
 
 # Closing banner
 echo " -------------------------------------------------------------------- "
