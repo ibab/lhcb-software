@@ -1,5 +1,5 @@
 package GaudiConf
-version v6r1
+version v6r2
 
 branches doc cmt options src
 
