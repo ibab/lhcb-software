@@ -4,10 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v2r0 2004-06-16 ======================
 ! 2004-06-18 - Chris Jones
  - Add includes removed from interfaces.
 
-!========================== RichMCTools v2r0 2004-06-16 ======================
 ! 2004-06-16 - Marco Cattaneo
  - Move all interfaces to RichKernel and remove RichMCTools directory
  - Add RichTrSegMakerFromMCRichTracks (moved from RichDetTools), including 
