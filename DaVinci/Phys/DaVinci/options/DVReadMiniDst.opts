@@ -51,10 +51,4 @@ EventSelector.Input   = {
 ApplicationMgr.EvtMax    = 20;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-//***************************************************************
-// Interactive prompt. 
-// WORKS ONLY WITH ROOT INPUT FOR NOW -> EDIT DaVinciTestData.opts 
-//ApplicationMgr.DLLs += { "GaudiPython" };
-//ApplicationMgr.Runable = "PythonScriptingSvc";
-//***************************************************************
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.184 2004-10-11 12:34:45 pkoppenb Exp $
+# $Id: requirements,v 1.185 2004-10-14 15:00:04 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r2
+version           v12r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -40,7 +40,7 @@ use ParamFiles          v3r8    -no_auto_imports
 use LHCb                v16r2
 
 #=======================================================
-# DaVinciSys v12r2
+# DaVinciSys v12r3
 #=======================================================
 
 # Trigger packages
@@ -103,10 +103,12 @@ use  DaVinciMCTools     	v5r6     Phys
 use  DaVinciTest        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v1r5     Tools
+use  Stripping          	v1r5p1   Tools
 
 # Physics selections
 use  PhysSelSys			v7r10    PhysSel
+
+use GaudiPython v*
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

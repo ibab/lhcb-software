@@ -139,10 +139,14 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = 1000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
+
 //***************************************************************
-// Interactive prompt. 
-// WORKS ONLY WITH ROOT INPUT FOR NOW -> EDIT DaVinciTestData.opts 
+// Interactive prompt: 
+// 1) Add "use GaudiPython v*" to the requirements 
+// 2) source setup.csh
+// 3) Uncomment the following:
 //ApplicationMgr.DLLs += { "GaudiPython" };
 //ApplicationMgr.Runable = "PythonScriptingSvc";
+// 4) Run DaVinci interactively as usual.
 //***************************************************************
 

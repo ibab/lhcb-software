@@ -52,12 +52,6 @@ ChargedProtoPAlg.OutputLevel            = 3;
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 EventSelector.FirstEvent = 1;
-//***************************************************************
-// Interactive prompt. 
-// WORKS ONLY WITH ROOT INPUT FOR NOW -> EDIT DaVinciTestData.opts 
-//ApplicationMgr.DLLs += { "GaudiPython" };
-//ApplicationMgr.Runable = "PythonScriptingSvc";
-//***************************************************************
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 ApplicationMgr.EvtMax    = 100 ;
