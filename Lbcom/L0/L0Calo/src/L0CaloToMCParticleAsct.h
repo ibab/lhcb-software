@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.h,v 1.1 2002-07-01 08:17:12 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.h,v 1.2 2003-06-23 11:52:26 ocallot Exp $
 #ifndef L0CALOTOMCPARTICLEASCT_H 
 #define L0CALOTOMCPARTICLEASCT_H 1
 
@@ -24,7 +24,7 @@ class L0CaloCandidate;
  */
 class L0CaloToMCParticleAsct : public Algorithm {
   // friend factory for instantiation 
-  friend AlgFactory<L0CaloToMCParticleAsct>; 
+  friend class AlgFactory<L0CaloToMCParticleAsct>; 
 public:
   /// Standard constructor
   L0CaloToMCParticleAsct( const std::string& name, ISvcLocator* pSvcLocator );

@@ -1,6 +1,9 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2003-06-23 - Olivier Callot
+ - Fixes for gcc 3.2, pure technicalities.
+
 !========================= L0Calo v7r0 2003-04-15 =========================
 ! 2003-04-03 - Marco Cattaneo
  - Move MC truth relations factories to Associators package, to avoid dependency
