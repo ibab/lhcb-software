@@ -21,5 +21,10 @@ ChargedProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
 ChargedProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
 ChargedProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
 
+// Calorimeter pID tables
+ChargedProtoPAlg.PhotonMatch.Location      = "Rec/Calo/PhotonMatch" ;
+ChargedProtoPAlg.ElectronMatch.Location    = "Rec/Calo/ElectronMatch" ;
+ChargedProtoPAlg.BremMatch.Location        = "Rec/Calo/BremMatch" ;
+
 // Monitoring histograms
 //  ChargedProtoPAlg.Monitor = false;     // default = false - not there ?

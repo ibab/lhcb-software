@@ -4,6 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!====================== GlobalReco v2r2 2002-12-20 ===========================
+! 2002-12-20 - Gloria Corti
+ - Copy from CaloTools v4r4 the tools CaloE1Correction and CaloPrsCorrection
+   (renamed CaloSummerPrsCorrection to avoid conflicts with CaloReco package)
+   These tools are necessary for the recalibration of the calorimeter when
+   running on Brunel v13r1 data    
+
 ! 2002-12-19 - Gloria Corti
  - PrimaryVertexFinderAlg use tracks with veloBack flag introduced in new data
  - Fix bug reported by Vincenzo Vagnoni of duplicate info when events do not
