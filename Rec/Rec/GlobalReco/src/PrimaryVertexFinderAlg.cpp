@@ -1,9 +1,10 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.2 2002-07-18 17:58:23 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.3 2002-07-26 19:27:57 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
 #include <iostream>
 ///---------------------------------------------------------
+#include "CLHEP/Units/PhysicalConstants.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Matrix/Matrix.h"
@@ -44,6 +45,8 @@
 #include "Event/PrimVertex.h"
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStoredMeasurement.h"
+#include "Event/VeloClusterOnStoredTrack.h"
+#include "Event/VeloCluster.h"
 #include "Event/TrState.h"
 #include "Event/TrStateL.h"
 #include "Event/TrStateP.h"
@@ -108,6 +111,17 @@ StatusCode PrimaryVertexFinderAlg::initialize() {
     log << MSG::DEBUG << "<== PrimaryVertexFitterTool retrived" << endreq;    
   }
 
+
+  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
+  if ( 0 == velo ) {
+    log << MSG::ERROR 
+        << "===> Unable to retrieve Velo detector element" << endreq;
+    return StatusCode::FAILURE;
+  } else {
+    log << MSG::DEBUG << "<==Velo detector element retived" << endreq;
+    m_velo = velo;
+  }
+  
   return sc;
 };
 
@@ -167,7 +181,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       log << MSG::ERROR << "Unable to register the output container = "
           << m_outputContainer << endreq;
       log << MSG::ERROR << "Status is " << sc << endreq;
-      // return sc;
+      return sc;
     }  
   } 
   
@@ -189,7 +203,8 @@ StatusCode PrimaryVertexFinderAlg::execute() {
 
   /// ptrs to KeyedContainers...
   /// ...TrStoredTracks
-  SmartDataPtr< TrStoredTracks > stTrack (eventSvc(), m_inputContainer);
+  SmartDataPtr< TrStoredTracks > stTrack (eventSvc(), 
+                                          m_inputContainer);
   if (0 == stTrack) {
     log << MSG::ERROR << "Can't find TrStoredTrack !!!" << endreq;
     return StatusCode::FAILURE;
@@ -197,10 +212,11 @@ StatusCode PrimaryVertexFinderAlg::execute() {
   
   KeyedContainer< TrStoredTrack >::iterator iST;
   m_NumberOfTracks = stTrack->size();
-  log << MSG::INFO << "Found " << 
-    m_NumberOfTracks << " in TES" << endreq;
-
+  log << MSG::INFO 
+      << "Found " << m_NumberOfTracks << " in TES" << endreq;
+  
   i=0;
+
   ///< read parameters
   for (iST = stTrack->begin(); 
        iST != stTrack->end();
@@ -209,98 +225,197 @@ StatusCode PrimaryVertexFinderAlg::execute() {
     TrStoredTrack* str = (*iST);
     
     // Pick which track to use from all available ones
-    if( !str->unique() || !str->forward() ) continue;
+    int itrok=0;
+    if( (str->unique()) && (str->velo()))  itrok=1;
+    if( (str->unique()) && (str->forward()))  itrok=1;
+    if( 0 == itrok ) continue;
+    
+     // if( (!str->unique()) || (!str->velo()))  continue;
+     //if( (!str->unique()) || (!str->forward()))  continue;
 
     MyTrack* wtra = new MyTrack;
     
-    log << MSG::DEBUG 
-        << "==> Taking parameters of track #" << i 
-        << " with #" << str->measurements().size() << " measurements and # "
-        << str->states().size() << " states. " << endreq;
+    log << MSG::DEBUG
+        << "==> Taking parameters of track #" << i << " with #" 
+        << str->measurements().size() << " measurements and # "
+        << str->states().size() << " states" << endreq;
     
-    SmartRef<TrStoredTrack> SRtrack = str;
-    wtra->track = SRtrack;
+    SmartRef<TrStoredTrack> RefTrack = str;
+    wtra->track = RefTrack;
     
-    //const 
     const TrState* myState = str->closestState(0.0);
     TrState* sta = myState->clone();
-    TrStateP* myStateP = dynamic_cast<TrStateP*>(sta);
-    if (0 == myStateP) {
-      log << MSG::DEBUG 
-          << "There are no TrStateP  at z = 0.0 !!!" << endreq;
-      return StatusCode::FAILURE;
+    
+    double ztemp = myState->z();
+    
+    log << MSG::DEBUG << "Z = " << ztemp << endreq;
+    
+    TrStateP* myStateP;
+    TrStateL* myStateL;
+    
+    if(str->forward()) {
+      
+      myStateP = dynamic_cast<TrStateP*>(sta);
+      
+      if (0 == myStateP) {
+        log << MSG::ERROR 
+            << "Forward track has no TrStateP  at z = " 
+            << ztemp << endreq;
+        return StatusCode::FAILURE;
+      } 
+      
+      ///< ok, now we have it, so take parameters
+      Hep3Vector origin; ///< local origin of this track
+      Hep3Vector slope;  ///< local slope of this track
+      
+      origin.setX( myStateP->x() );
+      origin.setY( myStateP->y() );
+      origin.setZ( ztemp );
+      
+      slope.setX( myStateP->tx() );
+      slope.setY( myStateP->ty() );
+      slope.setZ( 1.0 );
+      
+      // Propagate origin  to the reference point (0,0,0)
+      // origin  += slope * (-origin.z());
+      
+      ///< position and slope
+      wtra->pos = origin;
+      wtra->slope = slope;
+      
+      // norm slope vector
+      double slxsq = pow(slope.getX(), 2);
+      double slysq = pow(slope.getY(), 2);
+      double normDir = sqrt(slxsq + slysq + 1.0);
+      
+      HepVector3D unitDir(slope.getX()/normDir, 
+                          slope.getY()/normDir, 
+                          1.0/normDir);
+      
+      wtra->unitVect = unitDir;
+
+      ///< covariant matrix
+      HepSymMatrix cov(5,1);
+      cov = myStateP->stateCov();
+      wtra->Cov = cov;
+      wtra->p = myStateP->p();
+    }
+    
+    
+    if(str->velo()) {
+      
+      myStateL = dynamic_cast<TrStateL*>(sta);
+      
+      if (0 == myStateL) {
+        log << MSG::ERROR 
+            << "Velo track has no TrStateL at z = " << ztemp << endreq;
+        return StatusCode::FAILURE;
+      }
+      
+      ///< ok, now we have it, so take parameters
+      Hep3Vector origin; ///< local origin of this track
+      Hep3Vector slope;  ///< local slope of this track
+      
+      origin.setX( myStateL->x() );
+      origin.setY( myStateL->y() );
+      origin.setZ( ztemp );
+      
+      slope.setX( myStateL->tx() );
+      slope.setY( myStateL->ty() );
+      slope.setZ( 1.0 );
+      
+      ///< position and slope
+      wtra->pos = origin;
+      wtra->slope = slope;
+           
+      // norm slope vector -  get unitVect
+      double slxsq = pow(slope.getX(), 2);
+      double slysq = pow(slope.getY(), 2);
+      double normDir = sqrt(slxsq + slysq + 1.0);
+      
+      HepVector3D unitDir(slope.getX()/normDir, 
+                          slope.getY()/normDir, 
+                          1.0/normDir);
+      
+      wtra->unitVect = unitDir;
+
+      ///< covariant matrix
+      HepSymMatrix cov(5,1);
+      cov = myStateL->stateCov();
+      wtra->Cov = cov;
+      
+      wtra->p = 400.0;  
     }
 
-    ///< ok, now we have it, so take parameters
-    Hep3Vector origin; ///< local origin of this track
-    Hep3Vector slope;  ///< local slope of this track
+    TrStoredMeasurement* myMeas;
+    VeloClusterOnStoredTrack* vCluOnTr;
+    SmartRefVector<TrStoredMeasurement>::iterator imeas;
+    VeloCluster* vClu;
+    long ivclu = 0;
+    double lastZ;
+    double firstZ;
     
-    origin.setX( myStateP->x() );
-    origin.setY( myStateP->y() );
-    origin.setZ( 0.0 );
     
-    slope.setX( myStateP->tx() );
-    slope.setY( myStateP->ty() );
-    slope.setZ( 1. );
-    
-    // Propagate origin  to the reference point
-    origin     += slope * (-origin.z());
-    
-    ///< position and slope
-    wtra->X = origin.getX();
-    wtra->Y = origin.getY();
-    wtra->Z = origin.getZ();
 
-    wtra->Slx = slope.getX();
-    wtra->Sly = slope.getY();
-    
-    ///< covariant matrix
-    HepSymMatrix cov(5,1);
-    cov = myStateP->stateCov();
-    wtra->Cov = cov;
-    wtra->Pt = myStateP->p();
+    for (imeas = str->measurements().begin();
+         imeas != str->measurements().end();
+         imeas++, j++) {
+      myMeas = (*imeas);
+      vCluOnTr = dynamic_cast<VeloClusterOnStoredTrack*>(myMeas);
+      if (0 == vCluOnTr) {
+        log << MSG::DEBUG 
+            << "TrStoredMeasurement is NOT a VeloClusterOnStoredTrack" 
+            << endreq;
+      } else {
+        log << MSG::DEBUG
+            << "TrStoredMeasuremnt is a VeloClusterOnStoredTrack !!!" << endreq;
+        ivclu++;
+        vClu = vCluOnTr->cluster();
+        int sensor = vClu->sensor();
+        double zsen =  m_velo->zSensor( sensor );
+        log << MSG::DEBUG << ivclu << " " << zsen << " Z_trkS VELO" << endreq;
+        if (ivclu == 1) {
+          firstZ = zsen;
+        } else {
+          lastZ = zsen;
+        }
+      }
+    }
+    wtra->nbSta = ivclu;
+    log << MSG::DEBUG 
+        << "There are #" << ivclu << " VeloClusterOnStoredTracks" << endreq;
+    double L = fabs(lastZ - firstZ);
+    log << MSG::INFO << "1 " << firstZ << " 2 " << lastZ << " L " << L <<endreq;
 
-    ///< IP and ErrIP
-    wtra->d0 = sqrt((wtra->X*wtra->X) + (wtra->Y*wtra->Y));
-    wtra->errd0 = 2 * sqrt( ( wtra->X * wtra->X * wtra->Cov[0][0] )
-                            +( wtra->Y * wtra->Y * wtra->Cov[1][1]) );
+    wtra->L = L;
+    if (fabs(lastZ) > fabs(firstZ)) {
+      wtra->Z = firstZ;
+    } else {
+      wtra->Z = lastZ;
+    }
     
+    log << MSG::INFO << " Z " << wtra->Z << endreq;
+
     log << MSG::DEBUG << "tr-" << i 
-        << " " << wtra->X 
-        << " " << wtra->Y 
-        << " " << wtra->Z
-        << " " << wtra->Slx
-        << " " << wtra->Sly
-        << " " << wtra->d0
-        << " " << wtra->errd0
-        << " " << wtra->Pt
+        << " " << wtra->pos 
+        << " " << wtra->slope
         << endreq;    
-
+    
     ///< fill zclose
-    double zxint = - wtra->X/wtra->Slx;
-    double zyint = - wtra->Y/wtra->Sly;
+    double zxint = - wtra->pos.x()/wtra->slope.x() + wtra->pos.z();
+    double zyint = - wtra->pos.y()/wtra->slope.y() + wtra->pos.z();  
     
-    double xsq = pow(wtra->X,2);
-    double ysq = pow(wtra->Y,2);
-    double zsq = pow(wtra->Z,2);
-    double norm = sqrt(xsq + ysq + zsq);
-    
-    HepVector3D UnitVector(wtra->X / norm,
-                           wtra->Y / norm, 
-                           wtra->Z / norm);
-    
-    double uvx = UnitVector.x();
-    double uvy = UnitVector.y();
+    double uvx = wtra->unitVect.x();
+    double uvy = wtra->unitVect.y();
     
     double wwx = uvx*uvx/(1.0 + uvx*uvx);
     double wwy = uvy*uvy/(1.0 + uvy*uvy);
-    
-    double zclose = (wwx*zxint + wwy*zyint)/(wwx + wwy);
-    
+
+    double zclose = (wwx*zxint + wwy*zyint)/(wwx + wwy);    
     
     if (zclose > zmax) continue;
     if (zclose < zmin) continue;
-    
+
     int nb = int((zclose - zmin)/(zmax - zmin)*nbins);
     
     wtra->nBin = nb;
@@ -308,23 +423,26 @@ StatusCode PrimaryVertexFinderAlg::execute() {
     double weight = wwx+wwy;
     nzclose[nb] += 1;
     nweight[nb] += weight;
-    ///< done!
+    
+    wtra->weight = weight;
 
+    ///< done!
     m_tr.push_back(*wtra);
     delete wtra;
   }
-  ///< end of reading parameters  
- ///< shuold I find more then 3 pvtx in event ???
-  //  int Max[6] = {-1, -1, -1, -1, -1, -1};  ///< maximum in nzclose
-  //int Bin[6] = {-1, -1, -1, -1, -1, -1};  ///< index of maximum in nzclose
+
+  log << MSG::DEBUG << "MyTrack size #" << m_tr.size() << endreq;
+  ///< end of reading parameters
 
   ///< find maximum in nzclose -> preliminary position of PV
   int Max1, Max2, Max3; ///< maximum in nzclose
   int Bin1, Bin2, Bin3; ///< index of 1,2 & 3 maximum
   int NumbOfPV, usedBins;
+
   Max1 = Max2 = Max3 = -1; 
-  Bin1 = Bin2 = Bin3 = -1; 
-  usedBins = 4; ///< take +/- 4 bins with tracks to fit PV
+  Bin1 = Bin2 = Bin3 = -1;
+ 
+  usedBins = 3; ///< take +/- 3 bins with tracks to fit PV
   
   for ( i = 0; i < nbins; i++) { ///< 1st pass -> 1st PV
     if ((nzclose[i] > Max1) && (nzclose[i] != 0)) {
@@ -348,9 +466,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       Max3 = nzclose[i];
       Bin3 = i;
     }
-  }
-  
-  
+  }  
   
   log << MSG::DEBUG << "MAX1 BIN1 MAX2 BIN2 MAX3 BIN3" << endreq;
   log << MSG::DEBUG 
@@ -360,28 +476,28 @@ StatusCode PrimaryVertexFinderAlg::execute() {
   
 
   if ((Max1 > 0) && (Max2 > 0) && (Max3 > 0)) {
-    log << MSG::INFO << "Found 3 max in zclose" << endreq;
-    log << MSG::INFO << "1st prePV " << nzclose[Bin1]
+    log << MSG::DEBUG << "Found 3 max in zclose" << endreq;
+    log << MSG::DEBUG << "1st prePV " << nzclose[Bin1]
         << " in bin nr " << Bin1 << endreq;
-    log << MSG::INFO << "2nd prePV " << nzclose[Bin2]
+    log << MSG::DEBUG << "2nd prePV " << nzclose[Bin2]
         << " in bin nr " << Bin2 << endreq;
-    log << MSG::INFO << "3rd prePV " << nzclose[Bin3]
+    log << MSG::DEBUG << "3rd prePV " << nzclose[Bin3]
         << " in bin nr " << Bin3 << endreq;
     NumbOfPV = 3;
   } else if ((Max1 > 0) && (Max2 > 0) && (Max3 < 0)) {
-    log << MSG::INFO << "Found 2 max in zclose" << endreq;
-    log << MSG::INFO << "1st prePV " << nzclose[Bin1]
+    log << MSG::DEBUG << "Found 2 max in zclose" << endreq;
+    log << MSG::DEBUG << "1st prePV " << nzclose[Bin1]
         << " in bin nr " << Bin1 << endreq;
-    log << MSG::INFO << "2nd prePV " << nzclose[Bin2]
+    log << MSG::DEBUG << "2nd prePV " << nzclose[Bin2]
         << " in bin nr " << Bin2 << endreq;
     NumbOfPV = 2;
   } else if ((Max1 > 0) && (Max2 < 0) && (Max3 < 0)) {
-    log << MSG::INFO << "Found 1 max in zclose" << endreq;
-    log << MSG::INFO << "1st prePV " << nzclose[Bin1]
+    log << MSG::DEBUG << "Found 1 max in zclose" << endreq;
+    log << MSG::DEBUG << "1st prePV " << nzclose[Bin1]
         << " in bin nr " << Bin1 << endreq;
     NumbOfPV = 1;
   } else if ((Max1 < 0) && (Max2 < 0) && (Max3 < 0)) {
-    log << MSG::INFO << "Found 0 max in zclose" << endreq;
+    log << MSG::DEBUG << "Found 0 max in zclose" << endreq;
     NumbOfPV = 0;
     return StatusCode::SUCCESS;
   }
@@ -391,7 +507,8 @@ StatusCode PrimaryVertexFinderAlg::execute() {
   for (kPV = 0; kPV < NumbOfPV; kPV++) {
    
     log << MSG::INFO 
-        << "==> Searching for " << kPV+1 << " PV position <==" << endreq;
+        << "==> Searching for " 
+        << kPV+1 << " PV position <==" << endreq;
     
     std::vector<MyTrack>::iterator itr;    
 
@@ -431,34 +548,41 @@ StatusCode PrimaryVertexFinderAlg::execute() {
         << "* * * Nb of tracks before fit #" 
         << m_NumberOfTracksUsed << " * * *" <<endreq;
     
-    if (m_NumberOfTracksUsed < m_minNumberOfTracks) {
-      log << MSG::INFO 
-          << "==> There should be more then 2 tracks to find PV position!!!" 
+    double fractrac = (double)m_NumberOfTracksUsed/m_tr.size();
+    log << MSG::INFO << "MyTrack size " << m_tr.size() << endreq;
+    log << MSG::INFO << "frac # " << fractrac << endreq;
+    
+
+    if ((m_NumberOfTracksUsed<m_minNumberOfTracks)||(fractrac < 0.25)) {
+      log << MSG::INFO
+          << "==> There should be more then #" 
+          << (int)0.25 * m_NumberOfTracksUsed 
+          <<"  tracks to find PV position!!!" 
           << endreq;
+
       log << MSG::DEBUG << "===> Failed to find PV" << endreq;
       continue;
     }
     
     MyVertex* vtx = m_pvft->fitter(m_tr,
-				   m_maxIteration,
-				   m_chi2min, 
-				   "Gauss",
-				   m_minNumberOfTracks);
+                                   m_maxIteration,
+                                   m_chi2min,
+                                   "Gauss",
+                                   m_minNumberOfTracks);
 
     if (vtx == NULL) {
-      log << MSG::DEBUG << "===> Failed to find PrimVtx position..." << endreq;
+      log << MSG::DEBUG 
+          << "===> Failed to find PrimVtx position..." << endreq;
     } else {
-      //  nbvtx++;
 
       vtx->event = evHdr->evtNum();
       m_vtx.push_back(*vtx);
 
-      log << MSG::INFO << "==> Creating PrimaryVertex #" << kPV+1 << endreq;      
+      log << MSG::INFO << "==> Creating PrimaryVertex #" 
+          << kPV+1 << endreq;      
       PrimVertex* vertex = new PrimVertex();
-      
-      HepVector3D pos(vtx->X, vtx->Y, vtx->Z);
-      vertex->setPosition(pos);
-      
+    
+      vertex->setPosition(vtx->pos);
       vertex->setChi2(vtx->chi2);
       
       HepSymMatrix error(3,0);
@@ -471,7 +595,6 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       error[2][2] = vtx->Cov[2][2];
       
       vertex->setPositionErr(error);
-
       vertex->setType(Vertex::Primary);
       vertex->setNDoF(vtx->NbDeg);
 
@@ -485,12 +608,27 @@ StatusCode PrimaryVertexFinderAlg::execute() {
       
       createdVertices->insert(vertex);
       
-      log << MSG::DEBUG 
+      log << MSG::DEBUG
           << "Primary vertex " << kPV+1 << " added to TES" << endreq;
       sc = StatusCode::SUCCESS;    
     }
   }
-   
+  ///< now check size  of PV cont
+
+  int nbPrimVtx = createdVertices->size();
+  log << MSG::INFO <<  "TES location filled with #" 
+      << nbPrimVtx << " PrimVertices" << endreq;
+  
+  KeyedContainer<Vertex>::iterator ipv;
+  
+  for(ipv = createdVertices->begin();
+      ipv != createdVertices->end();
+      ipv++) {
+    Vertex* pv = (*ipv);
+    HepVector3D pos = pv->position();
+    log << MSG::INFO << "pos # " << pos << endreq;
+  }
+
   return sc;
 };
 

@@ -1,11 +1,11 @@
-// $Id: PrimaryVertexFitterTool.cpp,v 1.1 2002-07-11 16:24:20 gcorti Exp $
+// $Id: PrimaryVertexFitterTool.cpp,v 1.2 2002-07-26 19:28:15 gcorti Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartIF.h"
-
+#include "CLHEP/Units/PhysicalConstants.h"
 // local
 #include "PrimaryVertexFitterTool.h"
 
@@ -41,7 +41,6 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
                                            std::string m_fitModel,
                                            int m_minNumberOfTracks)
 {
-  StatusCode sc = StatusCode::SUCCESS;
   MsgStream log(msgSvc(), name());
   
   log << MSG::DEBUG << " -*- PrimaryVertexFitterTool::fitter() -*-" << endreq;
@@ -49,22 +48,18 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
       << "==> serching for preliminary position of vertex..."
       << endreq;  
   
-  double UnitVector[3];
+  HepVector3D UnitVector;
   int Iteration;
   std::string fitModel = m_fitModel;
   int minNumberOfTracks = m_minNumberOfTracks;
-  int NumberOfTracksUsed;
-  
+  int NumberOfTracksUsed = 0;
   double chi2;
 
   // now preliminary position of PV    
-  double SumW;
-  double SumWZ;
-  double SlXSq, SlYSq;
-  double WX, WY, ZintX, ZintY;
+  double sumw, sumwz, wx, wy, zintx, zinty;
   
-  WX = WY = ZintX = ZintY = SlXSq = SlXSq = 0.0;
-  SumW = SumWZ = 0.0;
+  wx = wy = zintx = zinty = 0.0;
+  sumw = sumwz = 0.0;
   
   std::vector<MyTrack>::iterator itr;
   MyVertex* vtx = new MyVertex;
@@ -75,11 +70,10 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
     mtr.clear();    
   }
   
-  
   for (itr = m_tr.begin(); itr != m_tr.end(); itr++) {
-
+    
     MyTrack wtra = (*itr);
-
+    
     mtr.push_back(wtra);  
     if (wtra.isUsed == true) {
       NumberOfTracksUsed++;
@@ -87,51 +81,54 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   }
   
   int i,j,k,l;
+
+ start:
   
   for (itr = mtr.begin(); itr != mtr.end(); itr++) {
     if ((*itr).isUsed == true) {
-      if ( ( (*itr).Slx != 0.0 ) && ( (*itr).Sly != 0.0 ) ) {
-        SlXSq = (*itr).Slx * (*itr).Slx;
-        SlYSq = (*itr).Sly * (*itr).Sly;
+      if ( ( (*itr).slope.x() != 0.0 ) 
+           && ( (*itr).slope.y() != 0.0 ) ) {
 
-        WX = SlXSq / (1.0 + SlXSq);
-        WY = SlYSq / (1.0 + SlYSq);
+        double uvx = (*itr).unitVect.x();
+        double uvy = (*itr).unitVect.y();
+        
+        double uvxsq = pow(uvx, 2);
+        double uvysq = pow(uvy, 2);
 
-        ZintX = (*itr).Z - (*itr).X * (*itr).Slx;
-        ZintY = (*itr).Z - (*itr).Y * (*itr).Sly;
-
-        SumW += WX + WY;
-        SumWZ += (WX * ZintX) + (WY * ZintY);
+        wx = uvxsq / (1.0 + uvxsq);
+        wy = uvysq / (1.0 + uvysq);
+ 
+        zintx = - (*itr).pos.x() / (*itr).slope.x() + (*itr).pos.z();
+        zinty = - (*itr).pos.y() / (*itr).slope.y() + (*itr).pos.z();
+        
+        sumw += wx + wy;
+        sumwz += (wx * zintx) + (wy * zinty);
       }      
     }
   }
   
-  if (SumW == 0.0) {
+
+  if (sumw == 0.0) {
     log << MSG::ERROR
-        << " SumW = 0.0 ==> No tracks found  - exiting..."
+        << " sumw = 0.0 ==> No tracks found  - exiting..."
         << endreq;
     return vtx;
   } else {
-    vtx->X = 0.0;
-    vtx->Y = 0.0;
-    vtx->Z = SumWZ/SumW;  
-    
-    log << MSG::DEBUG << "* * * Preliminary PV position * * *" << endreq;
-    log << MSG::DEBUG << "[ " 
-        << vtx->X << " , " 
-        << vtx->Y << " , "
-        << vtx->Z << " ] " << endreq;
+    HepVector3D pos(0.0, 0.0, sumwz/sumw);
+    vtx->pos = pos;
+    log << MSG::INFO << "pre pos of vtx " << vtx->pos << endreq;
   }
 
+
   ///< so... let's do it - mail minimalisation loop 
-  double chi2old; ///< 
-  chi2 = 10.0e10; ///< in the beginning a big one
-  Iteration = 0;  ///<  in the begginnig God said...
-  
-  double Hessian[3][3]; ///< H hessian matrix
-  double VD0[3];        ///< vector of D0
-  double Cov[3][3];     ///< cov matrix = H^-1 
-  HepVector3D DeltaPV;    ///< to update PV position
+  double chi2old = 10.0e9; ///< 
+  chi2 = 10.0e7; ///< in the beginning a big one
+
+
+  HepMatrix Hessian(3,3); ///< H hessian matrix
+  HepMatrix Cov(3,3);     ///< cov matrix of vertex fit
+  HepVector VD0(3);        ///< vector of D0
+  HepVector DeltaPV(3);    ///< to update PV position
   
   // just in case clear all  matrices and vectors
   for (i = 0; i < 3; i++) {
@@ -153,9 +150,9 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   ///
   ///< main minimalization loop
   ///
-  ///////////////////////////////////////////////////////////////////// 
-  while (chi2 > chi2min) {
- 
+  /////////////////////////////////////////////////////////////////////
+  for (Iteration = 0; Iteration < 5; Iteration++  ) { 
+
     ///< check that there is more then 2 tracks to fit vertex
     if (NumberOfTracksUsed < minNumberOfTracks) {
       log << MSG::INFO
@@ -167,174 +164,147 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
       vtx = NULL;
       return vtx;
     } // too few tracks left
-    
-    ++Iteration; ///< updating iteration counter
 
-    log << MSG::DEBUG << "...begin of swimming..." << endreq;
-    log << MSG::DEBUG 
-        << "...mtr size before swimming #" << mtr.size() 
-        << " ..." << endreq;
-    
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
       if ((*itr).isUsed == true) {
-
-        MyTrack wtra;
-
-        // read all parameters
-        wtra.X = (*itr).X;
-        wtra.Y = (*itr).Y;
-        wtra.Z = (*itr).Z;
-        wtra.Slx = (*itr).Slx;
-        wtra.Sly = (*itr).Sly;
-        wtra.nBin = (*itr).nBin;
-        wtra.errd0 = (*itr).errd0;
-
-        wtra.unitVect[0] = (*itr).unitVect[0];
-        wtra.unitVect[1] = (*itr).unitVect[1];
-        wtra.unitVect[2] = (*itr).unitVect[2];
-
-        wtra.vd0[0] = (*itr).vd0[0];
-        wtra.vd0[1] = (*itr).vd0[1];
-        wtra.vd0[2] = (*itr).vd0[2];
         
-
-        wtra.Pt = (*itr).Pt;
-        wtra.chi2 = (*itr).chi2;
-        wtra.NbDeg = (*itr).NbDeg;
-        wtra.idPart = (*itr).idPart;
-        wtra.isUsed = true;
+        MyTrack* wtra = itr;
         
-        log << MSG::DEBUG << " x  y z " 
-            << wtra.X << " " << wtra.Y << " " << wtra.Z
-            << " isUsed " << wtra.isUsed << endreq;
+        log << MSG::DEBUG 
+            << "tr  " << wtra->pos 
+            << " isUsed " << wtra->isUsed << endreq;
         
         // now swimming cov matrix from wtra.Z to vtx->Z
         double dz;
-        log << MSG::DEBUG << "vtx x " << vtx->X 
-            << " y " << vtx->Y
-            << " z " << vtx->Z << endreq;
-
-        dz = wtra.Z - vtx->Z;
-        log << MSG::DEBUG << "------------------------------" << endreq;
-        log << MSG::DEBUG << " dz " << dz << endreq;
-
+        
+        dz =  vtx->pos.z() - wtra->pos.z();
+        log << MSG::DEBUG << "swimming dz = " << dz << endreq;
+        
         HepSymMatrix tmpCov(5,1);
         for (j = 0; j < 6; j++) {
           for (k = 0; k < 6; k++) {    
-            tmpCov[j][k] = (*itr).Cov[j][k];
+            tmpCov[j][k] = wtra->Cov[j][k];
           }
         }
-        wtra.Cov = tmpCov;
         
+        log << MSG::DEBUG << wtra->Cov << endreq;
+
         //covariant matrix
         // Vxx
-        tmpCov[0][0] = wtra.Cov[0][0]
-          + (2 * dz * wtra.Cov[0][2])
-          + (dz * dz * wtra.Cov[2][2]);
+        tmpCov[0][0] = wtra->Cov[0][0]
+          + (2 * dz * wtra->Cov[0][2])
+          + (dz * dz * wtra->Cov[2][2]);
         // Vxx'
-        tmpCov[0][2] = wtra.Cov[0][2]
-          + (dz * wtra.Cov[2][2]);
+        tmpCov[0][2] = wtra->Cov[0][2]
+          + (dz * wtra->Cov[2][2]);
         // Vyy
-        tmpCov[1][1] = wtra.Cov[1][1]
-          + (2 * dz * wtra.Cov[1][3])
-          + (dz * dz * wtra.Cov[3][3]);
+        tmpCov[1][1] = wtra->Cov[1][1]
+          + (2 * dz * wtra->Cov[1][3])
+          + (dz * dz * wtra->Cov[3][3]);
         // Vyy'
-        tmpCov[1][4] = wtra.Cov[1][3]
-          + (dz * wtra.Cov[3][3]);
+        tmpCov[1][4] = wtra->Cov[1][3]
+          + (dz * wtra->Cov[3][3]);
         // Vxy
-        tmpCov[0][1] = wtra.Cov[0][1] 
-          + (dz * (wtra.Cov[0][3] + wtra.Cov[1][2]))
-          + (dz * dz * wtra.Cov[2][3]);
+        tmpCov[0][1] = wtra->Cov[0][1] 
+          + (dz * (wtra->Cov[0][3] + wtra->Cov[1][2]))
+          + (dz * dz * wtra->Cov[2][3]);
 
         tmpCov[1][0] = tmpCov[0][1];
         tmpCov[2][0] = tmpCov[2][0];
         tmpCov[3][1] = tmpCov[1][3];
 
-        for (j = 0; j < 5; j++) {
-          log << MSG::DEBUG 
-              << "--------------------------------------" << endreq;
-          log << MSG::DEBUG 
-              << tmpCov[j][0] << " | " 
-              << tmpCov[j][1] << " | "
-              << tmpCov[j][2] << " | "
-              << tmpCov[j][3] << " | "
-              << tmpCov[j][4] << endreq; 
-        }
-        
-        HepSymMatrix tmpinv(5,1);
-        tmpinv = tmpCov; // copy Cov matrix
-        tmpinv.invert(j); // invert it
-        /// we should check if it works...
-        for (j = 0; j < 5; j++) {
-          log << MSG::DEBUG 
-              << "--------------------------------------" << endreq;
-          log << MSG::DEBUG 
-              << tmpinv[j][0] << " | " 
-              << tmpinv[j][1] << " | "
-              << tmpinv[j][2] << " | "
-              << tmpinv[j][3] << " | "
-              << tmpinv[j][4] << endreq; 
-        }
+        log << MSG::DEBUG << "cov mat after swimming # " << endreq;
+        log << MSG::DEBUG << tmpCov << endreq;
 
-        // x y in new z plane
-        double X = wtra.X + (dz * wtra.Slx);
-        double Y = wtra.Y + (dz * wtra.Sly);
-        double Z = vtx->Z;
-        
-        HepVector3D tmpvd0;
-        double tmpd0;
-        // VectD0
-        tmpvd0.set( wtra.X - vtx->X, 
-                    wtra.Y - vtx->Y, 
-                    0.0 );
 
-        tmpd0 = sqrt((wtra.vd0(0) * wtra.vd0(0)) + (wtra.vd0(1) * wtra.vd0(1)));        
-
-        wtra.d0 = sqrt(wtra.X * wtra.X + wtra.Y * wtra.Y);
-        double ex = wtra.X  / wtra.d0;
-        double ey = wtra.Y  / wtra.d0;
-        wtra.errd0 =  sqrt(  (ex * ex * tmpCov[0][0]) 
-                             + (ey * ey * tmpCov[1][1]));
-        
+        ///< attemp o use he best formula o count chi2 
         double chisqx, chisqy, chisqmix;
         double xold, yold, xnew, ynew;
-
-        xold = wtra.X;
-        yold = wtra.Y;
-        xnew = wtra.X + dz * wtra.Slx;
-        ynew = wtra.Y + dz * wtra.Sly;
         
-        chisqx = pow((xold - xnew), 2) * tmpinv[0][0];
-        chisqy = pow((yold - ynew), 2) * tmpinv[1][1];
+        xold = wtra->pos.x();
+        yold = wtra->pos.y();
+        xnew = wtra->pos.x() + dz * wtra->slope.x();
+        ynew = wtra->pos.y() + dz * wtra->slope.y();
         
-        chisqmix = 2 * (xold - xnew) * (yold - ynew) * tmpinv[1][0];
+        chisqx = pow((xold - xnew), 2) / tmpCov[0][0];
+        chisqy = pow((yold - ynew), 2) / tmpCov[1][1];        
+        chisqmix = 2 * (xold - xnew) * (yold - ynew) / tmpCov[1][0];
 
-        wtra.chi2 = chisqx + chisqy + chisqmix;
+        wtra->chi2 = (chisqx + chisqy + chisqmix);
+
+        log << MSG::DEBUG << "chi2 from LHC-b ASL #" << wtra->chi2  << endreq;
+
+        HepVector3D DiffV = wtra->pos - vtx->pos;
         
-        wtra.X = X;
-        wtra.Y = Y;
-        wtra.Z = Z;
+        log << MSG::DEBUG << "start point  " << wtra->pos << endreq;
+        log << MSG::DEBUG << "vtx pos " << vtx->pos << endreq;
+        log << MSG::DEBUG << "DiffV " << DiffV << endreq;
+       
+        wtra->vd0 = wtra->unitVect.cross(DiffV.cross(wtra->unitVect)); 
 
-        for (j = 0; j < 6; j++) {
-          for (k = 0; k < 6; k++) {
-            wtra.Cov[j][k] = tmpCov[j][k];
-          }
+        // if (wtra->vd0.z() < 0.0) {
+        //  wtra->vd0 = -wtra->vd0;
+        // }
+        
+        log << MSG::DEBUG << "vd0 " << wtra->vd0 << endreq;
+        
+        wtra->d0 = wtra->vd0.mag(); 
+
+        log << MSG::DEBUG << "d0 " << wtra->d0 << endreq;
+
+        // d0 err
+        
+        double err_geom; // = 0.02;
+        double Z;
+        
+        if (wtra->pos.z() != 0.0) {
+          Z = fabs(vtx->pos.z() - wtra->pos.z());
+        } else {
+          Z = wtra->Z;
         }
-
-        for (j = 0; j< 3 ; j++) {
-          wtra.vd0[j] = tmpvd0[j];
-        }
         
-        // erase old parameters
-        mtr.erase(itr);
-        // insert new parameters  
-        mtr.insert(itr, wtra);
-         
+        double zl = Z / wtra->L;
+        double zll = (Z + wtra->L) / wtra->L;
+        
+        double zlsq = pow(zl, 2);
+        double zllsq = pow(zll, 2);
+        
+        err_geom = 0.0146 * sqrt(zlsq + zllsq);
+
+        double err_scat;
+        double CosTheta = wtra->unitVect.z();
+        double X0 = (double)wtra->nbSta/(fabs(CosTheta));
+        double DistFromPV = fabs((wtra->pos.z() - vtx->pos.z()))
+          / fabs(CosTheta);
+      
+        err_scat = 0.0085 * 100.0 * 1000.0 * sqrt(X0) * 
+          DistFromPV / wtra->p / GeV;
+
+        log << MSG::INFO
+            << " err_geom " << err_geom 
+            << " err_scat " << err_scat 
+            << endreq;
+
+        wtra->errd0 = sqrt(err_geom * err_geom + err_scat * err_scat);
+
+        log << MSG::INFO 
+            << "do # " << wtra->d0 
+            << " err # " << wtra->errd0 << endreq;
+        
+        double frac = pow(wtra->d0 / wtra->errd0, 2);
+        wtra->chi2 = frac;
+
+        log << MSG::INFO << "chi2 of track " << wtra->chi2 << endreq;
+        
+        if (wtra->chi2 >= (18.0)) {
+          log << MSG::INFO << "...get rid of  track!" << endreq;
+          wtra->isUsed = false;
+          goto start;
+        }      
       }
-    } //< end of swimming Cov matrix
+    } //< end of swimming Cov 
 
     NumberOfTracksUsed = 0;
-    
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
       if ((*itr).isUsed == true ) {
         NumberOfTracksUsed++;
@@ -344,32 +314,34 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
     log << MSG::DEBUG << "Nb of Used tracks if fit #" 
         << NumberOfTracksUsed << endreq;
 
+    //  clear all  matrices and vectors
+    for (i = 0; i < 3; i++) {
+      VD0[i] = 0.0;
+      DeltaPV[i] = 0.0;
+      for (j = 0; j < 3; j++){
+        Hessian[i][j] = 0.0;
+        Cov[i][j] =  0.0;
+      }
+    }
     ///< now compute VD0 and Hessian
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
-      if ((*itr).isUsed == true) {
+      MyTrack* wtra = itr;
+      if (wtra->isUsed == true) {
+        double IP = wtra->d0;
+        double ErrIP = wtra->errd0;
+        double IPSq = pow(IP, 2);
+        double ErrIPSq = pow(ErrIP, 2);
+        UnitVector = wtra->unitVect;
 
-        double IP = (*itr).d0;
-        double ErrIP = (*itr).errd0;
-        double IPSq = pow(IP,2);
-        double ErrIPSq = pow(ErrIP,2);
-        double component3 = 1.0 / 
-          (sqrt( 1.0 + (*itr).Slx * (*itr).Slx + (*itr).Sly * (*itr).Sly));
-        double component1 = (*itr).Slx * component3;
-        double component2 = (*itr).Sly * component3;
-
-        UnitVector[0] = component1;
-        UnitVector[1] = component2;
-        UnitVector[2] = component3;
         // sum VD0 vector
         for (k = 0; k < 3; k++) {
           if (fitModel == "Gauss") {
-            VD0[k] +=
-              (2.0 / ErrIPSq) * (*itr).vd0(k) * 2.0 / (1.0 + IPSq/ErrIPSq);
+            VD0[k] += (2.0 / ErrIPSq) * wtra->vd0(k) 
+              * 2.0 / (1.0 + IPSq/ErrIPSq);
           } else { // fitModel == "Breit-Wigner"
-            VD0[k] += 2.0 * (*itr).vd0(k)/ ErrIPSq;
+            VD0[k] += 2.0 * wtra->vd0(k)/ ErrIPSq;
           }
         }
-        
         
         double delta_kl;
         // prepare Hessian
@@ -382,166 +354,89 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
             } // end of delta_kl
             
             if (fitModel == "Gauss") {
-              Hessian[l][k] += 
-                (2.0 / ErrIPSq ) * (delta_kl - UnitVector[k]*UnitVector[l]);
+              Hessian[l][k] += (2.0 / ErrIPSq ) 
+                * (delta_kl - UnitVector[k]*UnitVector[l])
+                * 2.0/(1.0 + wtra->chi2);
             } else { // m_fitModel == "Breit-Wigner"
               Hessian[l][k] +=
                 ErrIPSq * (delta_kl - UnitVector[k]*UnitVector[l]) /
-                (1.0 + (*itr).chi2);
+                (1.0 + wtra->chi2);
             }
-          } // end of countig Hessian  
+          } // end of counting Hessian  
         } 
       } //  hessian
     }
-    
-    log << MSG::DEBUG << " UnitVector x " << UnitVector[0] 
-        << " y " << UnitVector[1] 
-        << " z " << UnitVector[2] << endreq;
-    
-    
-    // invert hessian - get covariance matrix
-    double determinant;
-    double r00,r01,r02;
-    
-    r00 = Hessian[1][1]*Hessian[2][2] - Hessian[2][1]*Hessian[1][2];
-    r01 = Hessian[2][1]*Hessian[0][2] - Hessian[0][1]*Hessian[2][2];
-    r02 = Hessian[0][1]*Hessian[1][2] - Hessian[1][1]*Hessian[0][2];
-    
-    
-    determinant = r00 * Hessian[0][0]
-      + r01 * Hessian[1][0]
-      + r02 * Hessian[2][0];        
-    
-    if (determinant != 0.0) {
-      Cov[0][0] = r00 / determinant;
-      
-      Cov[1][1] = 
-        (Hessian[0][0]*Hessian[2][2] - Hessian[2][0]*Hessian[0][2]) 
-        / determinant;
-      
-      Cov[2][2] = 
-        (Hessian[0][0]*Hessian[1][1] -  Hessian[1][0]*Hessian[0][1]) 
-        / determinant;
-      
-      Cov[0][1] =
-        (Hessian[2][0]*Hessian[1][2] - Hessian[1][0]*Hessian[2][2])
-        / determinant;
-      
-      Cov[1][0] = r01 / determinant;
-        
-      Cov[0][2] = 
-        (Hessian[1][0]*Hessian[2][1] - Hessian[2][0]*Hessian[1][1])
-        / determinant;
-      
-      Cov[2][0] = r02 / determinant;
-      
-      Cov[1][2] = 
-        (Hessian[2][0]*Hessian[0][1] - Hessian[0][0]*Hessian[2][1])
-        / determinant;
-      
-      Cov[2][1] = 
-          (Hessian[1][0]*Hessian[0][2] - Hessian[0][0]*Hessian[1][2])
-        / determinant;
-        
-    } else {
-      log << MSG::DEBUG
-          << "* * * det Hess = 0.0 - failed to  invese matrix * * *"
-          << endreq;
-      vtx = NULL;
-      return vtx;
-    }
-    
-    // now clear DeltaPV
-    DeltaPV[0] = DeltaPV[1] = DeltaPV[2] = 0.0;
-      
-    // solve DeltaPV[] = Cov[][] * VD0[]
-    for (k = 0; k < 3; k++) {
-      for (l = 0; l < 3; l++) {
-          DeltaPV[k] += Cov[k][l] * VD0[l];
-      }
-    } // end of solving
 
-    log << MSG::DEBUG << "VD0 " << VD0[0] 
-        << " " << VD0[1]
-        << " " << VD0[2] << endreq;
+    //< find out DeltaPV
+    DeltaPV = solve(Hessian , VD0);
+    log << MSG::DEBUG << "DeltaPV " << DeltaPV << endreq;
+    // update PV  position
+    vtx->pos[0] +=  DeltaPV[0];
+    vtx->pos[1] +=  DeltaPV[1];
+    vtx->pos[2] +=  DeltaPV[2];
+    
+    // invert hessian - get covariance matrix (error)
+    Cov = Hessian;
+    Cov.invert(j);   
 
-    log << MSG::DEBUG << "DeltaPV " << DeltaPV[0] 
-        << " " << DeltaPV[1]
-        << " " << DeltaPV[2] << endreq;
-    
-    // now update position of PV
-    vtx->X += DeltaPV[0];
-    vtx->Y += DeltaPV[1];
-    vtx->Z += DeltaPV[2];
-    // end of updating PV
-    
-    //updating chi2 & rejecting tracks with biggest chi2
+    ///<updating chi2 & rejecting tracks with biggest chi2
     chi2 = 0.0;
-    std::vector<MyTrack>::iterator reject;
-    
+    std::vector<MyTrack>::iterator reject;    
     for (itr = mtr.begin(); itr != mtr.end(); itr++) {
       if ((*itr).isUsed == true) {
         chi2 += (*itr).chi2;   
       }      
     }
+    chi2 /= (NumberOfTracksUsed-3);
     
-    double diff = fabs(chi2old - chi2);
 
-    log << MSG::DEBUG << "Current chi2 #" << chi2 << endreq;
-    log << MSG::DEBUG << "Last chi2 #" << chi2old << endreq;
-    log << MSG::DEBUG << "Diff #" << diff << endreq;
+    double diff = chi2old - chi2;
+
+    log << MSG::INFO << "Current chi2 #" << chi2 << endreq;
+    log << MSG::INFO << "Last chi2 #" << chi2old << endreq;
+    log << MSG::INFO << "Diff #" << diff << endreq;
     
-    if (diff <= 0.01) {
+    if ((diff > 0.0)&&(diff<=0.1)) { //< end of analysis
       log << MSG::INFO << "Ok, we have it!" << endreq;
       goto lab;
-    } else {
-      chi2old = chi2;
-    }
+    } else 
+      if ((diff > 0.0)&&(diff > 0.1)) { ///< just do next iteration
+        chi2old = chi2;
+        chi2min = chi2 / (NumberOfTracksUsed - 3);
+        continue;
+      };
 
-    if (chi2 > chi2min) { 
-      
-      double chi2max; ///<  temp for biggest chi2 of single track 
-      chi2max = 0.0;
-
-      for (itr = mtr.begin(); itr !=  mtr.end(); itr++) {
-        // MyTrack wtra = (*itr);
-        if ((*itr).isUsed == true) {   
-          if (chi2max < (*itr).chi2) { 
-            chi2max = (*itr).chi2;
-            reject = itr;      
-          }
-        }
-      }
-      log << MSG::DEBUG << "Reject tracks chi2 #"
-          << (*reject).chi2 << endreq;
-
-      MyTrack wtra;
-      wtra.isUsed = false;
-
-      mtr.erase(reject);
-      mtr.insert(reject, wtra);
-      NumberOfTracksUsed--; 
-    }
+    //log << MSG::INFO << "chi2min " << chi2min << endreq;    
+    //double chi2max; ///<  temp for biggest chi2 of single track 
+    //chi2max = 0.0;
+    //    for (itr = mtr.begin(); itr !=  mtr.end(); itr++) {   
+    //  if ((*itr).isUsed == true) { 
+    //    if (chi2max < (*itr).chi2) { 
+    //      chi2max = (*itr).chi2;
+    //      reject = itr;
+          // (*itr).isUsed = false;
+    //    }
+    //  }  
+    // }
     
+    //reject.isUsed = false;
+    //log << MSG::INFO << "Reject tracks chi2 #"
+    //    << (*reject).chi2 << endreq;
+  
     
+  
+    
+
     ///< now printing some info
-    log << MSG::INFO << "####################################" << endreq;
+    log << MSG::DEBUG << "####################################" << endreq;
     log << MSG::INFO << "   Iteration nr = " << Iteration << endreq;
     log << MSG::DEBUG << " Chi^2 minimal value = " << chi2min << endreq;
     log << MSG::INFO << " Chi^2 current value = " << chi2 << endreq;
-    
     log << MSG::INFO << " Vertex position:" << endreq;
-    log << MSG::INFO 
-        << " [ " << vtx->X 
-        << " , " << vtx->Y
-        << " , " << vtx->Z 
-        << " ]" << endreq;
-    
-    log << MSG::INFO << " Nr of tracks used to fit = "
+    log << MSG::INFO << vtx->pos << endreq;
+    log << MSG::DEBUG << " Nr of tracks used to fit = "
         << NumberOfTracksUsed+1 << endreq;
-    
     log << MSG::DEBUG << " Covariant matrix" << endreq;
-    
     for(i = 0; i < 3; i++) {
       log << MSG::DEBUG << "------------------------------------" << endreq;
       log << MSG::DEBUG
@@ -554,10 +449,10 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
       
     ///< too many iterations ?
     if  (Iteration > maxIteration) {
-      log << MSG::INFO
+      log << MSG::DEBUG
           << "===> Maximal iteration reached - exiting !"
           << endreq;
-      log << MSG::INFO
+      log << MSG::DEBUG
           << "* * *  Please, increase MaxIteration in your options file * * *"
           << endreq;
       vtx = NULL;
@@ -570,16 +465,11 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   /////////////////////////////////////////////////////////////////////
   
  lab:
+  log << MSG::INFO << "vtx last pos " << vtx->pos << endreq;
   
-  log << MSG::INFO << " PV last position" << endreq;
-  log << MSG::INFO << " [ " 
-      << vtx->X << " , " 
-      << vtx->Y << " , "
-      << vtx->Z << " ] " << endreq;
-  log << MSG::DEBUG << "==> It will be added to TES" << endreq;
-  vtx->chi2 = chi2;
+  vtx->chi2 = chi2/(NumberOfTracksUsed-3);
   HepSymMatrix tmpCov(3,1);
-
+  
   for (i = 0; i < 3 ; i++) {  
     for (j = 0; j < 3; j++) {
       tmpCov[i][j] = Cov[i][j];
@@ -587,10 +477,10 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   }
   
   vtx->Cov = tmpCov;
-  vtx->NbDeg = 2 *  NumberOfTracksUsed - 3;
-
+  vtx->NbDeg =  NumberOfTracksUsed - 3;
+  
   std::vector<MyTrack>::iterator it;
-
+  
   for (it = m_tr.begin(); it != m_tr.end(); it++) {
     if ((*it).isUsed == true) {
       vtx->tracks.push_back((*it).track);
@@ -599,6 +489,5 @@ MyVertex* PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
   
   log << MSG::DEBUG << "...exiting from PVFitterTool" << endreq;
   return vtx;
-  
 }
 //=============================================================================
