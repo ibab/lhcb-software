@@ -1,6 +1,11 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+
+
+! 2002-10-15
+ -VeloSim reject all FEs below charge threshold. +ve or -ve.
+  
 !===================== VeloAlgorithms v2r2 2002-10-11 =====================
 ! 2002-09-24 - Chris Parkes
  -  VeloClusterMaker, solve bug to allow setting of S/N cuts, 
