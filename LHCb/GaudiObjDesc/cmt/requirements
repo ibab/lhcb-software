@@ -3,7 +3,7 @@ version v4r0
 
 branches doc cmt src
 
-use XERCES v16r0*
+use XERCES v16r0* -no_auto_imports
 use GaudiIntrospection v4r* 
 
 # Macro defintion used by both fragments below
@@ -15,7 +15,7 @@ make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
 # Fragment for producing the cpp-files which will fill the MetaModel auf GaudiDict
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
-application GODWriteCppHeader ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
-application GODWriteCppDict   ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
+application GODWriteCppHeader -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
+application GODWriteCppDict   -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
 
 setup_script setDTD
