@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+# $Id: requirements,v 1.22 2004-07-30 11:11:05 jonrob Exp $
+# $Log: not supported by cvs2svn $
 #============================================================================
 
 package   RichRecBase
