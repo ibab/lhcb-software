@@ -1,14 +1,6 @@
-// $Id: CaloSShape.cpp,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
+// $Id: CaloSShape.cpp,v 1.3 2002-05-08 08:29:19 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/04/27 19:21:30  ibelyaev
-//  several 'technical' tools are added
-//
-// Revision 1.1  2002/04/07 18:15:01  ibelyaev
-//  preliminary version ('omega'-release)
-// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -111,9 +103,9 @@ StatusCode
 CaloSShape::finalize   ()
 {
   /// release all used tools 
-  for_each( m_areaCorrections.begin () , 
-            m_areaCorrections.end   () , 
-            std::mem_fun(&IInterface::release) );
+  std::for_each( m_areaCorrections.begin () , 
+                 m_areaCorrections.end   () , 
+                 std::mem_fun(&IInterface::release) );
   /// clear containers 
   m_areaCorrectionsTypeNames .clear();
   m_areaCorrections          .clear();  
