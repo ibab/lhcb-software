@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.13 2002-05-29 07:43:55 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.14 2002-05-29 14:37:28 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -491,11 +491,11 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
         return end;
       }
     } else if (isdigit(s[realStart])) {
-      // We have a number, look whether we have a negative exponent
+      // We have a number, look whether we have an exponent
       // if yes, skip it
-      if ((index != s.npos) && (s[index] == '-')) {
+      if ((index != s.npos) && ((s[index] == '-') || (s[index] == '+'))) {
         if (index > realStart + 1) {
-          if ((s[index-1] == 'e') && (isdigit(s[index-2]))) {
+          if ((s[index-1] == 'e') || (s[index-1] == 'E')) {
             index = s.find_first_of("+-/*()", index+1);
           }
         }

@@ -1,13 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.97 2002-05-29 07:43:55 sponce Exp $ 
+! $Id: release.notes,v 1.98 2002-05-29 14:37:27 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 ! 2002-05-29 - Sebastien Ponce
- - bugfix on the unit checker : floats with negative exponents were not
-   correctly parsed and were taken for subtraction
+ - bugfix on the unit checker : floats with exponents were not correctly
+   parsed and were taken for addition or subtraction
 
 ! 2002-05-28 - Sebastien Ponce
  - implements a more clever test for checking units. Basically everything is
