@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.3 2004-06-07 17:39:34 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.4 2004-06-23 17:22:28 buckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -109,6 +109,14 @@ private: // data
 
   /// Location of output rings in TES
   std::string m_ringLocation;
+
+  /// Probability of associating a hit to a Markov circle above 
+  /// which counts as a positive association
+  double m_CutoffHitOnCircleProbability;
+
+  /// Fraction of ring radius which an extrapolated track segment must lie within
+  /// to be considered associated to the ring
+  double m_CutoffSegPositionInRing;
 
 };
 

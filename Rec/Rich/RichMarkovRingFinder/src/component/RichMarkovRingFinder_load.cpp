@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinder_load.cpp,v 1.2 2004-06-01 12:14:02 jonesc Exp $
+// $Id: RichMarkovRingFinder_load.cpp,v 1.3 2004-06-23 17:22:29 buckley Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -20,5 +20,8 @@ DECLARE_FACTORY_ENTRIES(RichMarkovRingFinder) {
 
   // Monitor for Markov Chain ring finder
   DECLARE_ALGORITHM( RichMarkovRingFinderMoni ); 
+
+  // pixel stripping
+  DECLARE_ALGORITHM( RichPixelStrippingAlg    );
 
 }

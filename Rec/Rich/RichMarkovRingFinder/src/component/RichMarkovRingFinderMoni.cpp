@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.3 2004-06-07 17:39:34 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.4 2004-06-23 17:22:29 buckley Exp $
 // Include files
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
+using namespace std;
 #include "RichMarkovRingFinderMoni.h"
 
 
@@ -87,8 +88,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
 
   // loop over rings
   info() << endreq;
-  for ( RichRecRings::const_iterator iRing = rings->begin(); 
-        iRing != rings->end(); ++iRing ) {
+  for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
 
     // ring centre point
     const HepPoint3D & ringPoint = (*iRing)->centrePointLocal();
@@ -98,8 +98,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
     SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
     MCParticleVector seenMCParts;
     unsigned int totalNoTracksPerRing(0);
-    for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin();
-          iPix != pixels.end(); ++iPix ) {
+    for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
 
       MCParticleVector thispixelMCParts;
       m_richRecMCTruth->mcParticle( *iPix, thispixelMCParts );
@@ -126,13 +125,15 @@ StatusCode RichMarkovRingFinderMoni::execute()
             << " :: No unique tracks = " << seenMCParts.size()
             << endreq;
 
+
+
     if (0 == seenMCParts.size()) {
       info() << "Found a ring with no associated MC track" << endreq;
     } else if (1 == seenMCParts.size()) {
       info() << "Found a ring with only one associated MC track" << endreq;
       // *** Does it have any associated rec tracks? If not, where does it come from?
       // *** Slacken the unique association requirement to ~90% uniqueness?
-      // *** Pragmatic cut on event busyness?
+      // *** "Pragmatic" cut on event busyness?
 
       const MCParticle * mcpart = seenMCParts.front();
       // CRJ : Add MC type info
@@ -143,8 +144,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
 
       // loop over reco segments
       bool ringMatchesNoRecSegs(true);
-      for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); 
-            iSeg != richSegments()->end(); ++iSeg ) {
+      for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
 
         // NB. contains spillover
         if (*iSeg) {
@@ -302,13 +302,14 @@ StatusCode RichMarkovRingFinderMoni::finalize()
 StatusCode RichMarkovRingFinderMoni::bookHistograms() {
 
   string title, id;
-  int nbins1D(200), nbins2D(200), nbins3D(150);
+  int nbins1D(100), nbins2D(50), nbins3D(10);
   double rmax(0);
   string recOrNot[2] = {"rec", "notRec"};
   string trackingTitle[2] = {"tracking-matched MCMC rings", "MCMC rings not found by tracking"};
 
 
   for (int i = 0; i < 2; ++i) {
+
     string index = recOrNot[i];
     string subtitle = trackingTitle[i];
 
@@ -317,78 +318,80 @@ StatusCode RichMarkovRingFinderMoni::bookHistograms() {
     id = "RingTrackOriginZ-" + index;
     m_RingTrackOriginZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 12);
 
+
+
     title = "Z origins of " + subtitle;
     id = "RingTrackOriginZ1-" + index;
     m_RingTrackOriginZ1[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -0.5, 0.5);
-
+   
     title = "Z decay points of " + subtitle;
     id = "RingTrackDecayZ-" + index;
     m_RingTrackDecayZ[index] = histoSvc()->book(m_histPth, id, title, nbins1D, -1, 12);
 
-
+   
     // 2D plots
     title = "X-Y origins of VELO " + subtitle;
     id = "RingTrackOriginXY1-" + index;
     rmax = 0.01;
     m_RingTrackOriginXY1[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+   
     title = "X-Y origins of TT " + subtitle;
     id = "RingTrackOriginXY2-" + index;
     rmax = 0.35;
     m_RingTrackOriginXY2[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+   
     title = "X-Y origins of T1-T3 " + subtitle;
     id = "RingTrackOriginXY3-" + index;
     rmax = 1.5;
     m_RingTrackOriginXY3[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+   
     title = "rho-Z origins of " + subtitle;
     id = "RingTrackOriginRZ-" + index;
     rmax = 1.5;
     m_RingTrackOriginRZ[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
-
+   
     title = "rho-Z decay points of " + subtitle;
     id = "RingTrackDecayRZ-" + index;
     rmax = 1.8;
     m_RingTrackDecayRZ[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
-
+   
     title = "rho-Z origins of VELO " + subtitle;
     id = "RingTrackOriginRZ1-" + index;
     rmax = 0.02;
     m_RingTrackOriginRZ1[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -0.5, 1, nbins2D, 0, rmax);
-
+   
     title = "rho-Z origins of zoomed VELO " + subtitle;
     id = "RingTrackOriginRZ1Zoom-" + index;
     rmax = 0.01;
     m_RingTrackOriginRZ1Zoom[index] = histoSvc()->book(m_histPth, id, title, nbins2D, -0.2, 0.2, nbins2D, 0, rmax);
-
+   
     title = "rho-Z origins of TT " + subtitle;
     id = "RingTrackOriginRZ2-" + index;
     rmax = 0.35;
     m_RingTrackOriginRZ2[index] = histoSvc()->book(m_histPth, id, title, nbins2D, 1.9, 3.5, nbins2D, 0, rmax);
-
+   
     title = "rho-Z origins of T1-T3 " + subtitle;
     id = "RingTrackOriginRZ3-" + index;
     rmax = 1.5;
     m_RingTrackOriginRZ3[index] = histoSvc()->book(m_histPth, id, title, nbins2D, 7, 10, nbins2D, 0, rmax);
 
-
+   
     // 3D plots
     title = "Track origins of " + subtitle;
     id = "RingTrackOrigin-" + index;
     rmax = 1.8;
     m_RingTrackOrigin[index] = histoSvc()->book(m_histPth, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+   
     title = "Track origins of zoomed VELO " + subtitle;
     id = "RingTrackOrigin1Zoom-" + index;
     rmax = 0.01;
     m_RingTrackOrigin1Zoom[index] = histoSvc()->book(m_histPth, id, title, nbins3D, -0.2, 0.2, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+   
     title = "Track decay points of " + subtitle;
     id = "RingTrackDecay-" + index;
     rmax = 1.8;
     m_RingTrackDecay[index] = histoSvc()->book(m_histPth, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+   
   }
 
   return StatusCode::SUCCESS;

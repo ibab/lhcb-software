@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.3 2004-06-07 17:39:34 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.4 2004-06-23 17:22:29 buckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -28,8 +28,6 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
 
-using std::cout;
-using std::endl;
 using std::vector;
 using std::string;
 using std::map;

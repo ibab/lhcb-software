@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.3 2004-06-07 17:39:33 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.4 2004-06-23 17:22:28 buckley Exp $
 // Include files
 
 // local
@@ -41,6 +41,8 @@ RichMarkovRingFinderAlg<MyFinder>::RichMarkovRingFinderAlg( const std::string& n
 {
   declareProperty( "RingLocation", m_ringLocation = RichRecRingLocation::MarkovRings );
   declareProperty( "InitialiseUsingRich", m_useRichSeed = true );
+  declareProperty( "HitOnCircleProbCutoff", m_CutoffHitOnCircleProbability = 0.1 );
+  declareProperty( "SegPositionInRingCutoff", m_CutoffSegPositionInRing = 0.5 );
 }
 
 //=============================================================================
@@ -203,7 +205,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           hIt != eio.data().hits.end(); ++hIt ) {
       const double prob = inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle);
       // *** arbitrary cut on prob that hit is associated to a ring
-      if (prob > 0.5) hitsOnCircle.push_back(&(*hIt));
+      if ( prob > m_CutoffHitOnCircleProbability ) hitsOnCircle.push_back(&(*hIt));
     }
 
     if (!hitsOnCircle.empty()) {
@@ -224,6 +226,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
                                                                      rich(), panel() ) );
 
       newRing->setRadius ( (*iCircle).radius() );
+      const double ringRadiusOnPDPlane = newRing->radius() / scale;
 
       // Set detector information
       newRing->setRich  ( rich()  );
@@ -237,6 +240,29 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
 
       // build the ring points
       buildRingPoints ( newRing, scale );
+
+
+      // Identify which rings have no associated track within them
+      RichRecSegment * choosenSeg = 0;
+      for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
+        if (*iSeg) {
+          // Find the PD panel point corresponding to the track projection
+          const HepPoint3D & segPoint = (*iSeg)->pdPanelHitPointLocal();
+          
+          // Skip if ring and segment RICH types don't match
+          if ( rich() != (*iSeg)->trackSegment().rich() ) continue;
+          
+          // Do some ring-segment matching...
+          const double normSeparation = segPoint.distance(centreLocal) / ringRadiusOnPDPlane;
+          if (normSeparation < m_CutoffSegPositionInRing) {
+            // If the projected segment lies within the ring radius...
+            choosenSeg = *iSeg;
+          }
+        }
+      }
+
+      // set segment
+      newRing->setRichRecSegment( choosenSeg );
 
     }
 
