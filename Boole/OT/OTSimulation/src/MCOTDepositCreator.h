@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.4 2004-12-10 09:54:08 cattanem Exp $
+// $Id: MCOTDepositCreator.h,v 1.5 2004-12-10 14:06:45 cattanem Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -37,7 +37,7 @@ class IOTRandomDepositCreator;
  *  @date   21/10/2000
  */
 
-typedef std::vector<MCOTDeposit*> MCOTDepositStdVector;
+typedef std::vector<MCOTDeposit*> MCOTDepositVector;
 
 class MCOTDepositCreator : public GaudiAlgorithm {
 
@@ -95,7 +95,7 @@ private:
   IOTRandomDepositCreator* m_noiseTool;
  
   /// temporary deposits vector
-  MCOTDepositStdVector* m_tempDeposits;
+  MCOTDepositVector* m_tempDeposits;
 
   unsigned int m_numStations;              ///< number of stations
   unsigned int m_firstOTStation;           ///< first OT station

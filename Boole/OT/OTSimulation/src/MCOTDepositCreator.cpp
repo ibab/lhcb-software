@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.6 2004-12-10 10:21:15 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.7 2004-12-10 14:06:45 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -63,7 +63,7 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
 
   // container for temporary digit storage 
-  m_tempDeposits = new MCOTDepositStdVector();
+  m_tempDeposits = new MCOTDepositVector();
 
   // reserve some space
   m_tempDeposits->reserve(8000);
@@ -218,7 +218,7 @@ StatusCode MCOTDepositCreator::execute(){
 
   MCOTDeposits* deposits = new MCOTDeposits();
   deposits->reserve(m_tempDeposits->size());
-  MCOTDepositStdVector::iterator iterDep;
+  MCOTDepositVector::iterator iterDep;
   for ( iterDep = m_tempDeposits->begin(); iterDep != m_tempDeposits->end();
         ++iterDep ) {
     deposits->add(*iterDep);
@@ -288,7 +288,7 @@ StatusCode MCOTDepositCreator::singleCellEff()
   // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositStdVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end() ) {
     
     // number of tool - maybe there is no outer tracker station 1
@@ -318,7 +318,7 @@ StatusCode MCOTDepositCreator::applySmear()
   // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositStdVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
     
     // number of tool - there is no outer tracker station 1
@@ -349,7 +349,7 @@ StatusCode MCOTDepositCreator::applyRTrelation()
    // intialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositStdVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
     
     // number of tool - there is no outer tracker station 1
@@ -370,7 +370,7 @@ StatusCode MCOTDepositCreator::addCrossTalk()
   // Add cross talk to deposits
   std::list<MCOTDeposit*> crossTalkList;
   
-  MCOTDepositStdVector::const_iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVector::const_iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
  
     // channel

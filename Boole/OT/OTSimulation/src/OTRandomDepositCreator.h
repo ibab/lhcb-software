@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.h,v 1.3 2004-12-10 09:54:08 cattanem Exp $
+// $Id: OTRandomDepositCreator.h,v 1.4 2004-12-10 14:06:45 cattanem Exp $
 #ifndef OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 1
 
@@ -39,7 +39,7 @@ public:
   virtual StatusCode initialize();
 
   ///create method
-  virtual StatusCode createDeposits(MCOTDepositStdVector* depVector) const; 
+  virtual StatusCode createDeposits(MCOTDepositVector* depVector) const; 
 
   /// determine number to generate
   unsigned int nNoiseHits() const;

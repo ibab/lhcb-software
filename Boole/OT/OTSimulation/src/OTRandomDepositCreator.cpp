@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.5 2004-12-10 09:54:08 cattanem Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.6 2004-12-10 14:06:45 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -103,7 +103,7 @@ StatusCode OTRandomDepositCreator::initialize()
   return StatusCode::SUCCESS;  
 }
 
-StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositStdVector* depVector)
+StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVector* depVector)
   const 
 {
   // get number of modules 

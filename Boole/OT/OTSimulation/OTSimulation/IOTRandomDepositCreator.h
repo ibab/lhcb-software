@@ -1,4 +1,4 @@
-// $Id: IOTRandomDepositCreator.h,v 1.2 2004-12-10 09:54:08 cattanem Exp $
+// $Id: IOTRandomDepositCreator.h,v 1.3 2004-12-10 14:06:45 cattanem Exp $
 #ifndef OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 1
 
@@ -8,7 +8,7 @@
 // Forward declarations
 class MCOTDeposit;
 
-typedef std::vector<MCOTDeposit*> MCOTDepositStdVector;
+typedef std::vector<MCOTDeposit*> MCOTDepositVector;
 
 static const InterfaceID IID_OTRandomDepositCreator( "IOTRandomDepositCreator", 1, 0 );
 
@@ -24,7 +24,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_OTRandomDepositCreator; }
 
-  virtual StatusCode createDeposits(MCOTDepositStdVector* depVector) const = 0; 
+  virtual StatusCode createDeposits(MCOTDepositVector* depVector) const = 0; 
 
 };
 #endif // OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
