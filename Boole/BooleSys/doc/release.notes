@@ -4,11 +4,12 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v5r5 2004-04-05 ========================
-! 2004-04-05 - Marco Cattaneo
+!======================== BooleSys v5r5 2004-04-14 ========================
+! 2004-04-14 - Marco Cattaneo
  - Move to Gaudi v14r4
 
- - Packages modified: LHCbTools v1r1
+ - Packages modified: LHCbTools v1r1, MuonBackground v1r6, MuonAlgs v5r4,
+                      MuonDAQ v1r1
 
 !======================== BooleSys v5r4 2004-04-01 ========================
 ! 2004-04-01 - Marco Cattaneo

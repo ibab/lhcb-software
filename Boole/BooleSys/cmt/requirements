@@ -46,9 +46,9 @@ use OTAlgorithms        v13r4	OT
 use OTDAQ               v2r0    OT
 
 # Muon
-use MuonAlgs            v5r3	Muon
-use MuonBackground	v1r5	Muon
-use MuonDAQ             v1r0    Muon
+use MuonAlgs            v5r4	Muon
+use MuonBackground	v1r6	Muon
+use MuonDAQ             v1r1    Muon
 
 # Rich
 use RichDigiQC		v1r5	Rich
