@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.17 2003-01-09 16:52:18 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.18 2003-01-16 18:43:55 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -369,8 +369,8 @@ StatusCode L0CaloAlg::execute() {
           particle += " pi0L";
           pi0Local.setCandidate( etTot, ID );
         }
-        if ( allPi0Local[numVal].et() < etMax ) {
-          allPi0Local[numVal].setCandidate( etMax, ID );
+        if ( allPi0Local[numVal].et() < etTot ) {
+          allPi0Local[numVal].setCandidate( etTot, ID );
         }
       }
     } else {

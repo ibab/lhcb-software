@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2003-01-16 - Olivier Callot
+ - Fix Pi0Local per validation card: The 2x2 energy was used, instead of the
+   total card energy.
+
 !========================= L0Calo v6r5 2003-01-08 =========================
 ! 2003-01-06 - Olivier Callot
  - Fix an unitialized variable in the local L0Candidate class creator.
