@@ -4,6 +4,15 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-04-05 - Gloria CORTI
+ - src/Components/GaussTrackActionByEnergy.{h,cpp}
+   src/Components/GaussTrackActionByEnergyType.{h,cpp}
+   src/Components/GaussTrackActionByType.{h,cpp}
+   . introduce new options to not consider photoelectrons when storing
+     particles by energy, type or their combination
+ - src/Components/GaussTrackActionFinal.cpp
+   . change default to store Marked tracks instead of with hits
+
 !===================== GaussTools v10r1 ==================================
 ! 2004-03-22 - Vanya BELYAEV
  - src/Components/GaussTrackActionGeneral.cpp

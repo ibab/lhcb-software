@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionByEnergyType.cpp,v 1.1 2004-02-20 19:35:26 ibelyaev Exp $ 
+// $Id: GaussTrackActionByEnergyType.cpp,v 1.2 2004-04-05 13:18:35 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:26  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -62,9 +65,11 @@ GaussTrackActionByEnergyType::GaussTrackActionByEnergyType
   , m_ownNames   () 
   , m_ownTypes   () 
   , m_threshold  ( 1 * GeV )
+  , m_rejectRICHphe ( true )
 {
   declareProperty ( "OwnTypes"    , m_ownNames  ) ;
   declareProperty ( "Threshold"   , m_threshold ) ;
+  declareProperty ( "RejectRICHPhotoelectrons", m_rejectRICHphe );
 };
 // ============================================================================
 
@@ -136,6 +141,17 @@ void GaussTrackActionByEnergyType::PreUserTrackingAction
   
   if      ( track -> GetVertexPosition().z() < zMin()   ) { return ; } // RETURN
   else if ( track -> GetVertexPosition().z() > zMax()   ) { return ; } // RETURN
+  
+  if( m_rejectRICHphe ) {
+    const G4VProcess* process  = track->GetCreatorProcess() ;
+    if ( 0 == process ) 
+    { Error ( "Pre..: G4VProcess         points to NULL!" ) ; return ; } // RETURN
+    
+    if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
+      Warning ( "Pre..: RichHpdPhotoelectricProcess particles not kept" );
+      return;
+    } 
+  }
   
   // get the trajectory 
   GaussTrajectory* tr = trajectory() ;
