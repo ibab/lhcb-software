@@ -1,8 +1,11 @@
-// $Id: PhotonRec.opts,v 1.3 2002-12-01 14:22:56 ibelyaev Exp $
+// $Id: PhotonRec.opts,v 1.4 2002-12-09 17:43:09 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/01 14:22:56  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // ============================================================================
 
 /** @file 
@@ -23,15 +26,17 @@ PhotonRec.SelectionTools   = { "CaloSelectNeutralCluster/NeutralCluster" } ;
 
 /// S and 'L' correction 
 // PhotonRec.CorrectionTools  = { "CaloSCorrectionFinal/CaloSPhoton"        } ;
-PhotonRec.CorrectionTools  = { "CaloSShape/SShape2Tanh"                  } ;
-PhotonRec.CorrectionTools += { "CaloLCorrectionSimple/CaloLPhoton"       } ;
-/// Prs energy correction
-PhotonRec.CorrectionTools += { "CaloPrsCorrection/PrsCorrG"              } ;
+PhotonRec.CorrectionTools   = { "CaloSShape/SShape2Tanh"                  } ;
+PhotonRec.CorrectionTools  += { "CaloLCorrectionSimple/CaloLPhoton"       } ;
 
 /// hypo tools 
-PhotonRec.HypoTools        = { "CaloPhotonMomentumTool"                  } ;
-PhotonRec.HypoTools       += { "CaloExtraDigits/SpdExtraG"               } ;
-PhotonRec.HypoTools       += { "CaloExtraDigits/PrsExtraG"               } ;
+PhotonRec.HypoTools         = { "CaloExtraDigits/SpdExtraG"               } ;
+PhotonRec.HypoTools        += { "CaloExtraDigits/PrsExtraG"               } ;
+
+/// Prs energy correction
+PhotonRec.CorrectionTools2  = { "CaloPrsCorrection/PrsCorrG"              } ;
+
+PhotonRec.HypoTools2        = { "CaloPhotonMomentumTool"                  } ;
 
 // ============================================================================
 // The END

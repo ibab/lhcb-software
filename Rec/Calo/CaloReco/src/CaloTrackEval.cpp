@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.cpp,v 1.1 2002-12-01 14:22:57 ibelyaev Exp $
+// $Id: CaloTrackEval.cpp,v 1.2 2002-12-09 17:43:09 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/01 14:22:57  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -223,7 +226,8 @@ StatusCode CaloTrackEval::process
   // avoid long names 
   typedef std::vector<const CaloDigit*> Digits ;
   typedef std::vector<const CaloDigit*> DigVec ;
-  
+
+  m_tr = false ;
   // set the initial value to some "bad value"
   value = m_bad ;
   // check arguments 
@@ -319,6 +323,7 @@ StatusCode CaloTrackEval::findTrackProjection
 (  const double         z     ) const 
 {
   // 
+  m_tr = false ;
   StatusCode sc  = m_state->extrapolate( m_extrapolator , z , m_pid );
   if( sc.isFailure() ) 
     {

@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloElectronAlg.h,v 1.2 2002-12-09 17:43:09 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/06/13 12:36:13  ibelyaev
 //  new algorithms and new options
 //
@@ -93,6 +96,14 @@ private:
   // other hypo tools 
   Names        m_hypotoolsTypeNames    ;
   HypoTools    m_hypotools             ;
+
+  // corrections
+  Names        m_correctionsTypeNames2 ;
+  Corrections  m_corrections2          ;
+  
+  // other hypo tools 
+  Names        m_hypotoolsTypeNames2   ;
+  HypoTools    m_hypotools2            ;
 
 };
 

@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.13 2002-12-05 15:25:13 ranjard Exp $
+! $Id: release.notes,v 1.14 2002-12-09 17:43:08 cattanem Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
 
-!========================= CaloReco v1r2 2002-12-05 =====================
+!========================= CaloReco v1r2 2002-12-09 =====================
+! 2002-12-09 - Ivan Belyaev
+ - Various bug fixes to Electron and Photon Algs
+
 ! 2002-11-22 - Florence Ranjard
  - requirements - use new versions
 

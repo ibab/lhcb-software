@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.cpp,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $
+// $Id: CaloElectronAlg.cpp,v 1.2 2002-12-09 17:43:09 cattanem Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 // STD & STL 
@@ -54,22 +57,28 @@ CaloElectronAlg::CaloElectronAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
   : CaloAlgorithm ( name , pSvc )  
-  , m_selectorsTypeNames   () 
-  , m_selectors            ()
-  , m_correctionsTypeNames () 
-  , m_corrections          () 
-  , m_hypotoolsTypeNames   ()
-  , m_hypotools            () 
+  , m_selectorsTypeNames    () 
+  , m_selectors             ()
+  , m_correctionsTypeNames  () 
+  , m_corrections           () 
+  , m_hypotoolsTypeNames    ()
+  , m_hypotools             () 
+  , m_correctionsTypeNames2 () 
+  , m_corrections2          () 
+  , m_hypotoolsTypeNames2   ()
+  , m_hypotools2            () 
 {
-  declareProperty ( "SelectionTools"   , m_selectorsTypeNames   ) ;
-  declareProperty ( "CorrectionTools"  , m_correctionsTypeNames ) ;
-  declareProperty ( "HypoTools"        , m_hypotoolsTypeNames   ) ;
+  declareProperty ( "SelectionTools"   , m_selectorsTypeNames    ) ;
+  declareProperty ( "CorrectionTools"  , m_correctionsTypeNames  ) ;
+  declareProperty ( "HypoTools"        , m_hypotoolsTypeNames    ) ;
+  declareProperty ( "CorrectionTools2" , m_correctionsTypeNames2 ) ;
+  declareProperty ( "HypoTools2"       , m_hypotoolsTypeNames2   ) ;
   // set the appropriate default value for input data 
-  setInputData    ( CaloClusterLocation::   Ecal                ) ;
+  setInputData    ( CaloClusterLocation::   Ecal                 ) ;
   // set the appropriate default value for output data 
-  setOutputData   ( CaloHypoLocation::      Electrons           ) ;
+  setOutputData   ( CaloHypoLocation::      Electrons            ) ;
   // set the appropriate default value for detector data 
-  setDetData      ( DeCalorimeterLocation:: Ecal                ) ;  
+  setDetData      ( DeCalorimeterLocation:: Ecal                 ) ;  
 };
 // ============================================================================
 
@@ -94,28 +103,48 @@ CaloElectronAlg::initialize()
     { return Error("Could not initialize the base class CaloAlgorithm!",sc);}
   // check the geometry information 
   const DeCalorimeter* det = get( detSvc() , detData() , det ) ;
-  if( 0 == det ) { return Error("Detrector information is not available!");}
-  // locate selector tools
-  for( Names::const_iterator i1 = m_selectorsTypeNames.begin() ;
-       m_selectorsTypeNames.end() != i1 ; ++i1 )
-    {
-      ICaloClusterSelector* selector   = tool( *i1 , selector );
-      m_selectors.push_back( selector );
-    }  
-  // locate correction tools
-  for( Names::const_iterator i2 = m_correctionsTypeNames.begin() ;
-       m_correctionsTypeNames.end() != i2 ; ++i2 )
-    {
-      ICaloHypoTool*  correction       = tool( *i2 , correction );
-      m_corrections.push_back( correction );
-    }  
-  // locate other hypo  tools
-  for( Names::const_iterator i3 = m_hypotoolsTypeNames.begin() ;
-       m_hypotoolsTypeNames.end() != i3 ; ++i3 )
-    {
-      ICaloHypoTool*  hypotool         = tool( *i3 , hypotool );
-      m_hypotools.push_back(  hypotool  );
-    }  
+  if( 0 == det ) { return Error("Detector information is not available!");}
+  { // locate selector tools
+    for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
+         m_selectorsTypeNames.end() != item ; ++item )
+      {
+        ICaloClusterSelector* selector   = tool( *item , selector );
+        m_selectors.push_back( selector );
+      }
+  }
+  { // locate correction tools
+    for( Names::const_iterator item = m_correctionsTypeNames.begin() ;
+         m_correctionsTypeNames.end() != item ; ++item )
+      {
+        ICaloHypoTool*  correction       = tool( *item , correction );
+        m_corrections.push_back( correction );
+      }
+  }
+  { // locate other hypo  tools
+    for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
+         m_hypotoolsTypeNames.end() != item ; ++item )
+      {
+        ICaloHypoTool*  hypotool         = tool( *item , hypotool );
+        m_hypotools.push_back(  hypotool  );
+      }
+  }
+  { // locate correction tools
+    for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
+         m_correctionsTypeNames2.end() != item ; ++item )
+      {
+        ICaloHypoTool*  correction       = tool( *item , correction );
+        m_corrections2.push_back( correction );
+      }
+  }
+  { // locate other hypo  tools
+    for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;
+         m_hypotoolsTypeNames2.end() != item ; ++item )
+      {
+        ICaloHypoTool*  hypotool         = tool( *item , hypotool );
+        m_hypotools2.push_back(  hypotool  );
+      }
+  }
+
   ///
   return StatusCode::SUCCESS;
 };
@@ -176,19 +205,33 @@ CaloElectronAlg::finalize()
 {
   Print( " == > Finalize  " , StatusCode::SUCCESS , MSG::DEBUG );  
   // release all tools 
-  std::for_each( m_selectors   .begin () , 
-                 m_selectors   .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each( m_corrections .begin () , 
-                 m_corrections .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each( m_hypotools   .begin () , 
-                 m_hypotools   .end   () , std::mem_fun(&IInterface::release) );
+ // release all tools 
+  std::for_each
+    ( m_selectors    .begin () , 
+      m_selectors    .end   () , std::mem_fun(&IInterface::release) );
+  std::for_each
+    ( m_corrections  .begin () , 
+      m_corrections  .end   () , std::mem_fun(&IInterface::release) );
+  std::for_each
+    ( m_hypotools    .begin () , 
+      m_hypotools    .end   () , std::mem_fun(&IInterface::release) );
+  std::for_each
+    ( m_corrections2 .begin () , 
+      m_corrections2 .end   () , std::mem_fun(&IInterface::release) );
+  std::for_each
+    ( m_hypotools2   .begin () , 
+      m_hypotools2   .end   () , std::mem_fun(&IInterface::release) );
   // clear containers
-  m_selectors            .clear () ;
-  m_corrections          .clear () ;
-  m_hypotools            .clear () ;
-  m_selectorsTypeNames   .clear () ;
-  m_correctionsTypeNames .clear () ;
-  m_hypotoolsTypeNames   .clear () ;
+  m_selectors             .clear () ;
+  m_corrections           .clear () ;
+  m_hypotools             .clear () ;
+  m_corrections2          .clear () ;
+  m_hypotools2            .clear () ;
+  m_selectorsTypeNames    .clear () ;
+  m_correctionsTypeNames  .clear () ;
+  m_hypotoolsTypeNames    .clear () ;
+  m_correctionsTypeNames2 .clear () ;
+  m_hypotoolsTypeNames2   .clear () ;
   // finalize the base class 
   return CaloAlgorithm::finalize() ; 
 };
@@ -254,8 +297,6 @@ CaloElectronAlg::execute()
           return Error("Error from Correction Tool " , sc ); 
         }
       
-      // set "correct" hypothesis
-      hypo->setHypothesis( CaloHypotheses::EmCharged ); /// final!
 
       // loop over other hypo tools (e.g. add extra digits)
       for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
@@ -287,6 +328,31 @@ CaloElectronAlg::execute()
           continue    ;
         }
       
+      // loop over all corrections and apply corrections  
+      for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
+           sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
+        { sc = (**cor2) ( hypo ); }
+      
+      if( sc.isFailure() ) 
+        {
+          delete hypo ;                                // ATTENTION !
+          return Error("Error from Correction Tool 2 " , sc ); 
+        }
+      
+      // loop over other hypo tools (e.g. add extra digits)
+      for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
+           sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
+        { sc = (**hypotool2) ( hypo ); }
+      
+      if( sc.isFailure() ) 
+        {
+          delete hypo ;                                // ATTENTION !
+          return Error("Error from Other Hypo Tool 2 " , sc );
+        }
+
+      // set "correct" hypothesis
+      hypo->setHypothesis( CaloHypotheses::EmCharged ); /// final!
+
       /// set new Z 
       /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      
       
