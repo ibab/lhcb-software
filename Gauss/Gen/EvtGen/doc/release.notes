@@ -1,6 +1,15 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2003-12-09 - Patrick Robbe
+ - Add model BToDDalitzCPK to generate B0->D0 K*0 and B+->D0 K+ with
+    D0->Ks pi+ pi-
+ - EvtDDalitz : add some resonances and change parameters to the decay
+    D0->Ks pi+ pi-
+ - EvtModelReg : declare BToDDalitzCPK model
+ - EvtResonance2 : add spin-2 resonances
+ - requirements : increase to v4r3
+
 !===================== EvtGen v4r2 ====================================
 ! 2003-11-18 - Patrick Robbe
  - requirements : remove dependancy to GaudiKernel

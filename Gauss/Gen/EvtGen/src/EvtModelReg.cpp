@@ -105,6 +105,8 @@
 #include "EvtGenModels/EvtPto3P.hh"
 #include "EvtGenModels/EvtKstarstargamma.hh"
 
+#include "EvtGenModels/EvtBToDDalitzCPK.hh"
+
 #ifndef EVTSTANDALONE
 #include "EvtGenModels/EvtUclaII.hh"
 #include "EvtGenModels/EvtJetSet.hh"
@@ -192,6 +194,8 @@ EvtModelReg::EvtModelReg() {
 
   modelist.Register(new EvtVub);
   modelist.Register(new EvtPto3P);
+
+  modelist.Register( new EvtBToDDalitzCPK ) ;
 
 #ifndef EVTSTANDALONE
   modelist.Register(new EvtUclaII);

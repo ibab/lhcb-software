@@ -122,11 +122,20 @@ EvtComplex EvtResonance2::resAmpl() {
     //report(INFO,"EvtGen") << "fR="<<fR<<" fD="<<fD<<std::endl;
     power=3;
     break;
+  case 2:
+    // include tensor resonances (code from Belle) 
+    fR=sqrt(9.0+3.*pow(1.5*pR,2) +pow(1.5*pR,4))/
+      sqrt(9.0+3.*pow(1.5*pAB,2)+pow(1.5*pAB,4));
+    fD=sqrt(9.0+3.*pow(5.*pD,2)  +pow(5.*pD,4))/
+      sqrt(9.0+3.*pow(5.*pDAB,2)+pow(5.*pDAB,4));
+    power = 5;
+    break;
   default:
     report(INFO,"EvtGen") << "Incorrect spin in EvtResonance22.cc\n";
   }
   
   double gammaAB= gammaR*pow(pAB/pR,power)*(mR/mAB)*fR*fR;
+  double num ;
   //report(INFO,"EvtGen") << gammaAB<<std::endl;
   switch (_spin) {
   case 0:
@@ -137,6 +146,14 @@ EvtComplex EvtResonance2::resAmpl() {
     ampl=_ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
       (fR*fD*(mAC*mAC-mBC*mBC+((mD*mD-mC*mC)*(mB*mB-mA*mA)/(mR*mR)))/
        (mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB)));
+    break;
+  case 2:
+    // tensor particles, code taken from Belle
+    num = pow(mBC*mBC-mAC*mAC+(mD*mD-mC*mC)*(mA*mA-mB*mB)/(mR*mR),2)-
+      1./3.*(mAB*mAB-2.*(mD*mD+mC*mC)+pow(mD*mD-mC*mC,2)/(mR*mR))*
+      (mAB*mAB-2.*(mA*mA+mB*mB)+pow(mA*mA-mB*mB,2)/(mR*mR));
+    ampl = _ampl*EvtComplex(cos(_theta*pi180inv),sin(_theta*pi180inv))*
+      (fR*fD*num/(mR*mR-mAB*mAB-EvtComplex(0.0,mR*gammaAB)));
     break;
   default:
     report(INFO,"EvtGen") << "Incorrect spin in EvtResonance22.cc\n";

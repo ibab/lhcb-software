@@ -44,6 +44,9 @@ private:
 
   int _d1,_d2,_d3,_flag;
 
+  EvtComplex amplDtoK0PiPi(EvtVector4R p4_p,  EvtVector4R moms1, 
+                           EvtVector4R moms2, EvtVector4R moms3);
+
 };
 
 #endif
