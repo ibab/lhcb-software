@@ -13,7 +13,7 @@ include_dirs $(RICHPIDMERGEROOT)
 
 # ================ dependencies =============================================
 use RichGlobalPID     v1r*  Rich
-use RichLocalPID      v2r*  Rich
+use RichLocalPID      v1r*  Rich
 use RichRingRefit     v1r*  Rich
 
 # ================ component library=========================================
