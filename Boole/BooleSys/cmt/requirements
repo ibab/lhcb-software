@@ -37,9 +37,9 @@ use VeloAlgorithms      v2r9p2	Velo
 use VeloDAQ		v1r0	Velo
 
 # Inner Tracker
-use ITAlgorithms        v14r1	IT
-use ITCheckers          v2r1	IT
-use STDAQ		v1r0	IT
+use ITAlgorithms        v14r2	IT
+use ITCheckers          v2r2	IT
+use STDAQ		v1r1	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
