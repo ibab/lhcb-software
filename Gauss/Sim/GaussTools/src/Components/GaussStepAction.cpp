@@ -50,7 +50,7 @@ GaussStepAction::GaussStepAction
   // points where hits where generated to be stored
     , m_storeHitPoints ( false )
   // tracking cuts
-    , m_trcuteg (1.0), m_trcuthadr (10.0)
+    , m_trcuteg (1.0*MeV), m_trcuthadr (10.0*MeV)
 {
   declareProperty ("StorePointsOfSecondaries", m_storePointsOfSecondaries);
   declareProperty ("StoreNotDeltaE", m_storeNotDeltaE);
