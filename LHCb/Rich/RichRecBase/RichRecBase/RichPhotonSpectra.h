@@ -5,8 +5,11 @@
  *  Header file for utility class : RichPhotonSpectra
  *
  *  CVS Log :-
- *  $Id: RichPhotonSpectra.h,v 1.9 2004-07-26 18:00:58 jonrob Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.10 2004-07-28 11:39:46 jonesc Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/26 18:00:58  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -71,40 +74,6 @@ public: // methods
 
   /// Destructor
   ~RichPhotonSpectra( ) { }
-
-  unsigned int energyBins() const;    ///< Returns the number of energy bins
-
-  void setEnergyBins( const unsigned int bins ); ///< Set the number of energy bins
-
-  TYPE minEnergy() const;  ///< Returns the minimum photon energy
-
-  void setMinEnergy( const TYPE en ); ///< Sets the minimum photon energy
-
-  TYPE maxEnergy() const;  ///< Returns the maximum photon energy
-
-  void setMaxEnergy( const TYPE en ); ///< Sets the maximum photon energy
-
-  TYPE binSize() const;    ///< Returns the energy bin size
-
-  void setBinSize( const TYPE size ); ///< Set the energy bin size
-
-  TYPE binEnergyLowerEdge( const unsigned int bin ) const;   ///< The lower edge of the energy bin
-
-  TYPE binEnergyUpperEdge( const unsigned int bin ) const;   ///< The upper edge of the energy bin
-
-  TYPE binEnergy( const unsigned int bin ) const;   ///< The average bin energy
-
-  /// Returns the energy distribution for a given mass hypothesis
-  typename RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id );
-
-  /// Returns the energy distribution for a given mass hypothesis
-  const typename RichPhotonSpectra::PhotonData & energyDist( const Rich::ParticleIDType id ) const;
-
-  /// Returns the energy distribution for a given mass hypothesis
-  typename RichPhotonSpectra::HypoPhotonData & hypoData( );
-
-  /// Returns the energy distribution for a given mass hypothesis
-  const typename RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
   /** Access the number of energy bins
    *  @return The number of energy bins
@@ -203,7 +172,7 @@ public: // methods
    *  @retval true  Multiplication was successful
    *  @retval false Multiplication failed
    */
-  bool multiply ( const Rich::ParticleIDTpe id,
+  bool multiply ( const Rich::ParticleIDType id,
                   const typename RichPhotonSpectra::PhotonData & data );
 
   /// Reset the data
