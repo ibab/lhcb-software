@@ -16,7 +16,7 @@
 
 // DllMain entry point
 #include "GaudiKernel/DllMain.icpp"
-extern void L0EventFactories_load();
+extern void L0Event_load();
 
 void GaudiDll::initialize(void* hinstDLL)    {
 }
@@ -28,8 +28,20 @@ void GaudiDll::finalize(void* hinstDLL)    {
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
   static bool first = true;
   if ( first )    {
-    L0EventFactories_load();
+    L0Event_load();
     first = false;
   }
   return FactoryTable::instance()->getEntries();
 } 
+
+
+
+
+
+
+
+
+
+
+
+

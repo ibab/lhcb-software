@@ -2,7 +2,7 @@
 // L0EventInstantiation.cpp
 //--------------------------------------------------------------------
 //
-//      Package   : L1Event
+//      Package   : L0Event
 //
 //      Author    : Bruce Hay (after original for L1 by Markus Frank)
 //====================================================================
@@ -10,8 +10,8 @@
 
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
-#include "LHCbEvent/ObjectVector.h"
-#include "LHCbEvent/ObjectList.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/ObjectList.h"
 
 #define IMPLEMENT_L0_CONTAINED_FACTORIES(x)                             \
   static ContainedObjectFactory< x > s_##x##Factory;                    \
@@ -48,7 +48,7 @@ IMPLEMENT_L0_CONTAINED_FACTORIES(Level0MuonTrack)
 #include "L0Event/Level0PileUpVeto.h"
 static DataObjectFactory<Level0PileUpVeto> s_Level0PileUpVetoFactory;
 
-void L0EventFactories_load()  {
+void L0Event_load()  {
   // Declaration of contained object factories
   DECLARE_L0_CONTAINEDOBJECT_FACTORIES(Level0Calo2x2Sum);
   DECLARE_L0_CONTAINEDOBJECT_FACTORIES(Level0CaloClus);
@@ -57,6 +57,9 @@ void L0EventFactories_load()  {
   s_Level0PileUpVetoFactory.addRef();
 }
 
-extern "C" void L0EventFactories_loadRef()   {
-  L0EventFactories_load();
+extern "C" void L0Event_loadRef()   {
+  L0Event_load();
 }
+
+
+

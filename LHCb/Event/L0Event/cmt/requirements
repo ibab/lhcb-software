@@ -3,11 +3,10 @@ version v1
 
 branches L0Event src cmt doc
 
-use GaudiKernel v* GaudiSys 
 use LHCbEvent v8 Event
 use CaloEvent v3 Event
 
-include_dirs ${L0EVENTROOT}
+include_dirs $(L0EVENTROOT)
 
 # Linker library
 library L0EventLib       ../src/L0CLIDs.cpp
