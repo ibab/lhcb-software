@@ -48,8 +48,8 @@ apply_pattern package_Cshlibflags
 macro_remove cppflags "-Wall "
 
 # to reduce number of warnings from G4 
-macro GiGa_cppflags   " " \ 
-      Linux           "-Wno-unused " 
+macro_append GiGa_cppflags   " " \ 
+          Linux           "-Wno-unused " 
 
 
 
