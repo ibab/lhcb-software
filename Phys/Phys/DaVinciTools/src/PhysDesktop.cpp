@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.5 2002-05-23 23:12:03 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.6 2002-09-11 16:42:30 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -566,10 +566,10 @@ StatusCode PhysDesktop::getInput(){
         << " are " << m_parts.size() << endreq;
 
     // Flag these particles to be in PhysDesktop
-    //for( ParticleVector::iterator ip = m_parts.begin(); 
-    //     ip != m_parts.end(), ip++ ) {
-    //  *ip->setDesktop(1);
-    //}
+    for( ParticleVector::iterator ip = m_parts.begin(); 
+         ip != m_parts.end(); ip++ ) {
+      (*ip)->setDesktop(1);
+    }
     
   }
   
@@ -604,6 +604,7 @@ StatusCode PhysDesktop::getInput(){
         log << MSG::DEBUG << "    Vertex ChiSquare = " << (*ivert)->chi2() 
             << endreq;  
         // Put them in local containers
+        (*ivert)->setDesktop(1);
         m_verts.push_back(*ivert);
       }
     }
@@ -636,7 +637,7 @@ StatusCode PhysDesktop::getInput(){
       
       Particles::iterator icand = 0;
       for( icand = parts->begin(); icand != parts->end(); icand++ ) {
-        //(*icand)->setDesktop(1);
+        (*icand)->setDesktop(1);
         m_parts.push_back(*icand);
         Vertex* vtx = (*icand)->endVertex();
         if( 0 != vtx ) {
@@ -646,7 +647,7 @@ StatusCode PhysDesktop::getInput(){
           // For the moment only load decay of a particle, it means
           // other particles will need to be loaded
           m_verts.push_back( vtx );
-          //vtx->setDesktop(1);
+          vtx->setDesktop(1);
         }
       }
     }
