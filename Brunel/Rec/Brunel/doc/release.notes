@@ -13,6 +13,9 @@ Purpose: LHCb reconstruction program
   . Update parameterisation for Photon ID (CaloPIDs v2r2)
   . New Rich track state handling and tuning
     (RichRecSys v1r9, RichUtils v3r9, RichDetTools v4r1) 
+  . Change match Chi2 cut to 500. (from 200.) (Matching v2r10)
+  . Remove multiple scattering fudge factor from extrapolation errors
+    (TrExtrapolator v2r11)
 
 - Persistency changes
   . Removed Velo,IT,OT clusters and Muon coordinates from DST. If needed they 
