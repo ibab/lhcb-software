@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.23 2003-05-30 09:16:31 gcorti Exp $
+! $Id: release.notes,v 1.24 2003-06-03 16:05:06 gcorti Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+!========================= MuonID v3r6 2003-05-28 =========================
 ! 2003-05-28 - Gloria Corti
  - MuonID/IMuonIDDLLTool.h
    src/MuonIDDLLTool.h, MuonIDDLLTool.cpp
