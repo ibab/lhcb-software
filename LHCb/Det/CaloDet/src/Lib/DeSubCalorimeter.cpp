@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2001/07/17 17:26:53  ibelyaev
+// modifications to improve Doxygen documentation
+//
 // Revision 1.6  2001/07/12 21:53:39  ibelyaev
 // adaptation for Win2K
 //
@@ -63,7 +66,8 @@ StatusCode DeSubCalorimeter::initialize()
       std::find( pars.begin() , pars.end () , std::string("CellSize") );
     if( pars.end() != it )
       {
-        setSize( userParameterAsDouble(*it) ) ;
+		const double value = userParameterAsDouble( *it );
+        setSize( value ) ;
         pars.erase( it );
       }
     else

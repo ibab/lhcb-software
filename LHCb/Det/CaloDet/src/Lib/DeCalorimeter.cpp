@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2001/07/17 17:26:52  ibelyaev
+// modifications to improve Doxygen documentation
+//
 // Revision 1.10  2001/07/12 21:53:39  ibelyaev
 // adaptation for Win2K
 //
@@ -36,10 +39,13 @@
 #include "CaloDet/DeSubCalorimeter.h"
 
 
-/**
-    Implementation of class :  DeCalorimeter
-    @author Olivier Callot
-*/
+/** @file DeCalorimeter.cpp
+ *
+ *  Implementation of class :  DeCalorimeter
+ *
+ *  @author Olivier Callot
+ *
+ */
 
 
 // **  Standard Constructors
@@ -101,7 +107,8 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("EtInCenter") );
     if( pars.end() != it ) {
-      setEtInCenter( userParameterAsDouble(*it) ) ;
+      const double value = userParameterAsDouble( *it ) ;
+      setEtInCenter( value ) ;
       pars.erase( it );
     }
   }
@@ -109,7 +116,8 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("EtSlope") );
     if( pars.end() != it ) {
-      setEtSlope( userParameterAsDouble(*it) ) ;
+      const double value = userParameterAsDouble( *it ) ;
+      setEtSlope( value ) ;
       pars.erase( it );
     }
   }
@@ -125,7 +133,8 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("ActiveToTotal") );
     if( pars.end() != it ) {
-      setActiveToTotal( userParameterAsDouble(*it) ) ;
+      const double value = userParameterAsDouble( *it ) ;
+      setActiveToTotal( value ) ;
       pars.erase( it );
     }
   }
@@ -133,7 +142,8 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
     if( pars.end() != it ) {
-      setZShowerMax( userParameterAsDouble(*it) ) ;
+      const double value = userParameterAsDouble( *it ) ; 
+      setZShowerMax( value ) ;
       pars.erase( it );
     }
   }
@@ -154,7 +164,7 @@ StatusCode DeCalorimeter::initialize()
 //----------------------------------------------------------------------------
 
 StatusCode DeCalorimeter::buildCells( ) {
-
+	
   // ** do not initialize, if already initialize
 
   if( isInitialized() ) { return StatusCode::SUCCESS; }
@@ -191,7 +201,7 @@ StatusCode DeCalorimeter::buildCells( ) {
     HepPoint3D pointLocal(0,0,0), pointGlobal(0,0,0);
     pointLocal.setZ( zShowerMax() );
 
-
+	
     // ** The center of each cell is specified by step of one cell
     // ** in the local frame. One has to convert to the global frame
 
@@ -523,7 +533,7 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
      << "\t\tZ of the shower maximum in the local frame =  "
      << std::setw(12) << m_zShowerMax
      << std::endl
-     << "\t\tMaximum value for Row/Columnt              =  "
+     << "\t\tMaximum value for Row/Column               =  "
      << std::setw(12) << maxRowCol
      << std::endl
      << "\t\tFirst Row or Column  over center           =  "
@@ -583,7 +593,7 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
      << "\t\tZ of the shower maximum in the local frame =  "
      << std::setw(12) << m_zShowerMax
      << endreq
-     << "\t\tMaximum value for Row/Columnt              =  "
+     << "\t\tMaximum value for Row/Column               =  "
      << std::setw(12) << maxRowCol
      << endreq
      << "\t\tFirst Row or Column  over center           =  "
