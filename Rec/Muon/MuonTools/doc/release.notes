@@ -1,15 +1,19 @@
-! $Id: release.notes,v 1.36 2004-03-11 01:38:34 dhcroft Exp $
+! $Id: release.notes,v 1.37 2004-05-04 16:01:59 ranjard Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 !
+
+! 2004-05-04 - Florence RANJARD
+ - replace all apply_pattern with apply_pattern component_library to please
+   CMT v1r16
+
 ! 2004-03-10 - David Hutchcroft
  - Changed loading order of local variables for MuonTileIDXYZ: now all loaded 
    in constructor rather than on demand. Changed to make slightly faster and
    so the XML reading is not spread through the first 10 events. Also avoided 
    searching for detector elements by text name in the detector store.
-
 
 !======================== MuonTools v3r6 2003-07-02 ========================
 ! 2003-07-02 - Olivier Callot
