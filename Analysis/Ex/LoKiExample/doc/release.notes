@@ -4,6 +4,14 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2004-08-17 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bs2PhiGamma_DecayChain.opts
+     new example to run LoKiDecayTruth algorithm from recent LoKi version
+ - cmt/requirements 
+     increment the version to v3r3 (the same as LoKi) 
+
+
 ! 2004-08-15 - Vanya BELYAEV
 	update for usage with DaVinci v11r12 
  - jobs/LoKiExJob.py 

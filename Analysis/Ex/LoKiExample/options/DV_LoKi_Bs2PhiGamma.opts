@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Bs2PhiGamma.opts,v 1.3 2004-08-05 09:54:12 ibelyaev Exp $
+// $Id: DV_LoKi_Bs2PhiGamma.opts,v 1.4 2004-08-17 15:43:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/08/05 09:54:12  ibelyaev
+//  version updated for LoKi v3r* and DC04 data
+//
 // ============================================================================
 // include files 
 // ============================================================================
@@ -78,14 +81,18 @@ PrimVtxFinder.OutputLevel        = 4 ;
 RootEvtCnvSvc.OutputLevel        = 4 ;
 NeutralPPsFromCPsAlg.OutputLevel = 4 ;
 
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
-#pragma print off 
-// input data set:  Bs -> phi gamma  
-// #include "$LHCBHOME/project/web/cards/615000.opts"
-// test data set 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-#pragma print on
+#pragma   print off 
+// input data set:  DC04 Bs -> phi gamma
+#include "$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.opts"
+#pragma   print on
 
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.xml"          
+  };
 
 // ============================================================================
 // The END 

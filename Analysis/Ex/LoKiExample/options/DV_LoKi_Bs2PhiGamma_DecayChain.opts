@@ -1,0 +1,31 @@
+// $Id: DV_LoKi_Bs2PhiGamma_DecayChain.opts,v 1.1 2004-08-17 15:43:36 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  job -options fiel to run DecyaChain example
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2004-08-16
+ */
+// ============================================================================
+
+
+#include "$LOKIEXAMPLEOPTS/DV_LoKi_Bs2PhiGamma.opts"
+
+// add new algorithms 
+
+ApplicationMgr.TopAlg               += { "LoKiDecayTruth/DecChain" } ;
+DecChain.PhysDesktop.InputLocations += { "/Event/Phys/PhiGamma"    } ;
+
+// redefine number of events 
+ApplicationMgr.EvtMax = 20 ;
+
+MessageSvc.useColors = true ;
+
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+// The END 
+// ============================================================================

@@ -25,7 +25,7 @@ script = __name__
 jobexe = 'job.exe'
 jobopt = 'job.opts'
 
-verbose = (1>2)
+verbose = (1<2)
 # =============================================================================
 # Set the generic CMT environment ( Project, etc ...)
 # =============================================================================
@@ -71,12 +71,15 @@ def setCMTenv ( ) :
     cin,cout,cerr = os.popen3( command )
     for line in cout :
         line  = line.replace('\n','')
+        print 'Line = ' + `line`
         items = line.split(' ')
         for item in items :
             for variable in variables :
                 pattern = variable + '='
                 index = item.find(pattern)
-                if -1 == index : continue 
+                if -1 == index     : continue 
+                var   = item[:index]
+                if var != variable : continue 
                 value = item[index + len(pattern):]
                 if not value   : continue 
                 print ' CMT: variable/value ' + `variable` + ' ' + `value`

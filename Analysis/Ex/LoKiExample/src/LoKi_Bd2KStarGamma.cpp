@@ -1,8 +1,11 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.5 2004-08-11 12:12:20 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.6 2004-08-17 15:43:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/08/11 12:12:20  ibelyaev
+//  fix a typo (thanks to Andreas Wenger)
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -47,7 +50,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   
   const StatusCode ok    ( StatusCode::SUCCESS ) ;
   const StatusCode error ( StatusCode::FAILURE ) ;
-  
+
   // The general information: event header, event address  
   
   const EventHeader* hdr = get<EventHeader> ( EventHeaderLocation::Default ) ;
@@ -67,7 +70,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
     { return LOKI_ERROR( "No primary vertices are found" , ok ); }
   
   //   PRESELECTION CUTS  
-  
+
   Cut gamma_cut      =  ID == 22 && PT > 1.5 * GeV ;
   Cut kaon_cut       =  abs(ID) == 321 && CL > 0.05;
   Cut pion_cut       =  abs(ID) == 211 && CL > 0.05;
@@ -88,6 +91,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   Range pions  = select( "pi", pion_cut ) ;
   if ( pions.empty () ) {  return StatusCode::SUCCESS ; }      // RETURN 
 
+
   // save K*0, perform the vertex fit  
   for ( Loop Kst = loop( "K pi" , 313 ) ; Kst ; ++Kst )  
     {
@@ -101,7 +105,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   // get all saved K*0s 
   Range kstar = selected( "K*0" ) ;
   if( kstar.empty() ) { return StatusCode::SUCCESS ; }        // RETURN
-  
+
   // the counter for combinations 
   size_t  combinations = 0 ;
   
@@ -113,18 +117,20 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       const Particle* K      = child( B0 , 1 , 1 ) ;
       const Particle* pi     = child( B0 , 1 , 2 ) ;
       const Particle* photon = child( B0 , 2     ) ;
+      
       if( 0 == K || 0 == pi || 0 == photon )                 // CONTINUE  
         { LOKI_ERROR ( " Invalid daughter particle" , error ) ; continue ; }
-      
-       if( ! mass_b_cut( B0 ) )               { continue ; } // CONTINUE 
+
+      if( ! mass_b_cut( B0 ) )               { continue ; } // CONTINUE
 
       // get all "upstream" primary vertices 
       std::vector<const Vertex*> prims ;
+
       LoKi::select ( primaries.begin    ()           , 
                      primaries.end      ()           , 
                      std::back_inserter ( prims )    , 
                      VPSD( B0 , geo() )  > -200 * micrometer ) ;
-      
+
       // from all upstream primary vertices select 
       // the primary vertex with minimal B-impact parameter
       const Vertex* primary  = select_min( prims , VIP( B0 , geo() ) ) ;
@@ -172,7 +178,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       double helicity = cos( p_B0_tmp.vect().angle(p_K_tmp.vect()) );
       
       // tuple << Column ( "" , hdr ) ;
-      
+
       // the index of the combinations 
       tuple -> column ( "comb" ,    (long) combinations++    ) ; 
       // number of selected primary vertices 
@@ -198,7 +204,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
                      CL(K) ,PT(K), ip(K), ipchi2(K)  ) ;
       tuple -> fill( "clpi,ptpi,ippi,ipchi2pi" , 
                      CL(pi),PT(pi),ip(pi),ipchi2(pi) ) ;
-      
+
       tuple -> column ( "Gamma" , photon -> momentum() ) ;
       tuple -> column ( "Kstar" , B0(1)  -> momentum() ) ;
       tuple -> column ( "B0"    , B0     -> momentum() ) ;
@@ -210,13 +216,12 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
                         VCHI2   ( primary ) , 
                         VDOF    ( primary ) ,
                         VTRACKS ( primary ) ); 
-      
+
       tuple -> write() ;
-    
+
       // save B0 as a particle 
       B0->save( "B0" ) ;
     }
-
   // get the all saved B0s
   Range B0s = selected( "B0" ) ;
   if( B0s.empty() ) { return StatusCode::SUCCESS ; }                // RETURN 

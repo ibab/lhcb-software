@@ -1,8 +1,11 @@
-// $Id: LoKi_Pi0fromBdTo3pi.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
+// $Id: LoKi_Pi0fromBdTo3pi.cpp,v 1.3 2004-08-17 15:43:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/03 14:17:29  ibelyaev
+//  update for LoKi v2r0
+//
 // Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
 //  new package with LoKi examples 
 //
@@ -36,7 +39,7 @@ LOKI_ALGORITHM( LoKi_Pi0fromBdTo3pi )
   LoKi::Extract::getMCParticles( b0s.begin  () , 
                                  b0s.end    () , 
                                  std::back_inserter( pi0s ) , 
-                                 ParticleID( 111 ) );
+                                 ParticleID( 111 ) == MCID  );
   if( pi0s.empty() ) 
     { return LOKI_ERROR( "No MC pi0 is found ", StatusCode::SUCCESS ) ; }
   
