@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.1.1.1 2003-06-23 18:12:45 gcorti Exp $
+// $Id: MergeEventAlg.cpp,v 1.2 2003-06-30 13:03:20 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -178,6 +178,7 @@ StatusCode MergeEventAlg::finalize() {
 
   clearItems(m_itemList);
   m_mergeSelector->finalize();
+  m_mergeSelector->release();
 
   return StatusCode::SUCCESS;
 } 
