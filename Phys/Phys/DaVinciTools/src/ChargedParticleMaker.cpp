@@ -1,4 +1,4 @@
-// $Id: ChargedParticleMaker.cpp,v 1.1 2002-07-18 18:16:23 gcorti Exp $
+// $Id: ChargedParticleMaker.cpp,v 1.2 2002-07-27 20:24:03 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -168,7 +168,7 @@ StatusCode ChargedParticleMaker::makeParticles( ParticleVector & parts ) {
   if ( !candidates || (0 == candidates->size()) ) { 
     log << MSG::INFO << "    No Charged ProtoParticles retrieved from"  
         << m_input << endreq;
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
   
   // Log number of ProtoPartCandidates retrieved
