@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package          : Sim/GaussRICH
+! Main contributor : Sajan Easo
+! Responsible	     : Witold Pokorski
+! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
+!-----------------------------------------------------------------------------
+	
+
+
+!=========================== GaussRICH v1r0 2002-12-11 ========================
+! 2002-12-11 - Witek Pokorski
+  - New package: contains all RICH specific implementations of sensitive
+                  detectors, converters and physics process
+    
+
+!==============================================================================

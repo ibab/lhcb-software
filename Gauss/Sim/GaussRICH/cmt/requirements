@@ -1,0 +1,28 @@
+# =============================================================================
+package GaussRICH
+version v1r0
+
+# =============== package structure ===========================================
+branches          cmt src doc
+
+# =============== explicit dependencies =======================================  
+use GaussTools    v5r*     Sim
+
+# =============== Event =======================================================
+use RichEvent     v4r*      Event
+
+# ============== component library ============================================
+library          GaussRICH    *.cpp             \
+                              SensDet/*.cpp     \ 
+                              PhysProcess/*.cpp \
+                              PhysProcess/*.cc  \
+                              Misc/*.cpp         
+
+# ============== standard includes ============================================
+include_dirs     $(GAUSSRICHROOT)
+        
+# ============== standard patterns ===========================================
+apply_pattern    component_library library=GaussRICH
+# ============================================================================
+# The END 
+# ============================================================================
