@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.59 2002-12-03 18:43:38 ibelyaev Exp $
+! $Id: release.notes,v 1.60 2002-12-03 21:47:00 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-03 - Ivan Belyaev
+ - GiGa/GiGaHashMap.h   - small upgrade to make Calo Sim code more transparent  
+ - GiGa/GiGaMap.h        
 
 ! 2002-12-03 - Ivan Belyaev
  - GiGa/GiGaExternalPhC.h      Templated class for easy import of external
