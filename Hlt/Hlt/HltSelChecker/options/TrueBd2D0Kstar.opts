@@ -7,4 +7,5 @@ SelectBd2D0Kstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "P
 // check that all 4 tracks are there
 TrueSignals.Members += {"MakeResonances/AllBd2D0KstarTracks"};
 AllBd2D0KstarTracks.PhysDesktop.InputLocations = {"Phys/SelectBd2D0Kstar"};
-AllBd2D0KstarTracks.DecayDescriptor = "[B0 -> K+ K+ pi- pi-]cc" ;
+//AllBd2D0KstarTracks.DecayDescriptor = "[B0 -> K+ K+ pi- pi-]cc" ;  // with PID -> takes PID eff into account
+AllBd2D0KstarTracks.DecayDescriptor = "[B0 -> pi+ pi+ pi- pi-]cc" ;  // only tracks 

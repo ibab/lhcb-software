@@ -7,8 +7,7 @@ SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Ph
 // check that all 2 tracks are there
 TrueSignals.Members += {"MakeResonances/AllDstar2DpiTracks"};
 AllDstar2DpiTracks.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
-AllDstar2DpiTracks.DecayDescriptor = "[D*(2010)- -> K+ pi- pi-]cc" ;
-
+AllDstar2DpiTracks.DecayDescriptor = "[D*(2010)- -> pi+ pi- pi-]cc" ; // PID blind
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintDstarTracks"};

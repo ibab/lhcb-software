@@ -8,6 +8,10 @@
   - options/Corr*.opts
     . Restore MC-truth check in XXXAndTDR algorithms. They are OK if
       the TDR selection is happy and all tracks are found by HLT.
+  - options/True*.opts
+    . Don't use PID to normalize efficiencies. Hence do
+      B_s -> pi pi pi pi for Bs->phiphi, assuming that the track -> pi
+      efficiency is always 100%
     
 ! 2005-01-10 - P. Koppenburg
   - options/Plots.opts

@@ -7,4 +7,5 @@ SelectBs2JpsiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "P
 // check that all 2 tracks are there
 TrueSignals.Members += {"MakeResonances/AllBs2JpsiPhiTracks"};
 AllBs2JpsiPhiTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"};
-AllBs2JpsiPhiTracks.DecayDescriptor = "B0 -> mu+ mu- K+ K-" ;
+//AllBs2JpsiPhiTracks.DecayDescriptor = "B0 -> mu+ mu- K+ K-" ; // with PID
+AllBs2JpsiPhiTracks.DecayDescriptor = "B0 -> mu+ mu- pi+ pi-" ; // no RICH

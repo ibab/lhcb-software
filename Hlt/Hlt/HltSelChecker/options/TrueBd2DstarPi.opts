@@ -7,4 +7,5 @@ SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "P
 // check that all 4 tracks are there
 TrueSignals.Members += {"MakeResonances/AllBd2DstarPiTracks"};
 AllBd2DstarPiTracks.PhysDesktop.InputLocations = {"Phys/SelectBd2DstarPi"};
-AllBd2DstarPiTracks.DecayDescriptor = "[B0 -> K+ pi+ pi- pi-]cc" ;
+//AllBd2DstarPiTracks.DecayDescriptor = "[B0 -> K+ pi+ pi- pi-]cc" ;
+AllBd2DstarPiTracks.DecayDescriptor = "[B0 -> pi+ pi+ pi- pi-]cc" ; // No PID
