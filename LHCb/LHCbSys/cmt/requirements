@@ -1,12 +1,12 @@
 package LHCbSys
-version v11r9
+version v11r10
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v11r9
+use LHCb		v11r10
 
 use GaudiConf		v6r5
 
@@ -40,7 +40,7 @@ use MuonTools      	v3r3	Muon
 use RichDet		v4r0	Det
 
 # Event data model
-use EventSys		v13r3	Event
+use EventSys		v13r4	Event
 use EventKernel  	v2r2    Event
 use Event        	v3r2    Event
 use VeloEvent    	v12r0   Event
@@ -51,7 +51,7 @@ use RichEvent    	v4r2    Event
 use CaloEvent    	v11r4   Event
 use MuonEvent    	v2r2    Event
 use L0Event      	v13r1   Event
-use L1Event      	v11r5   Event
+use L1Event      	v11r6   Event
 use PhysEvent    	v7r3    Event
 use DbCnv        	v7r0    Event
 
