@@ -40,8 +40,8 @@ use VeloTT              v1r11	Tr
 use TrKShort		v1r4p1	Tr
 
 # Trg tracking in Velo
-use TrgTools            v7r0    Trg
-use TrgVelo             v7r0    Trg
+use TrgTools            v7r0p1  Trg
+use TrgVelo             v7r0p1  Trg
 use TrgBrunel           v1r1    Trg
 
 # Muon
