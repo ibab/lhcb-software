@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.9 2004-07-28 16:55:57 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.10 2005-01-17 13:00:10 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2004/07/28 16:55:57  ibelyaev
+//  one more fix
+//
 // Revision 1.8  2004/07/28 16:21:46  ibelyaev
 //  fix(?) a bug for Win32 in Kernel/CaloHashMap.h
 //
@@ -136,7 +139,6 @@ public:
   
   /** erase the sequence from the map
    *  @param it the "begin" iterator for the sequence 
-   *  @param last  the "end"   iterator for the sequence 
    */
   void erase ( iterator it )
   { m_map.erase      ( it ) ; } ;

@@ -1,8 +1,11 @@
-// $Id: CaloHypoPrint.h,v 1.1 2002-03-18 17:21:47 ibelyaev Exp $
+// $Id: CaloHypoPrint.h,v 1.2 2005-01-17 13:00:10 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/18 17:21:47  ibelyaev
+//  add new stuff from CaloKernel package
+//
 // Revision 1.1  2001/10/28 18:52:46  ibelyaev
 // Major redesign, new CaloHypo class and removal of 'totalE'
 // 
@@ -13,9 +16,7 @@
 // Kernel 
 #include "Kernel/CaloHypotheses.h"
 
-/** @function  CaloHypoPrint
- *  
- *  simple templated function for printout of CaloHypo 
+/** Simple templated function for printout of CaloHypo 
  *
  *  @param os reference to output stream 
  *  @param Hypo hypo 

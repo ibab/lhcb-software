@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichSide
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.5 2004-08-17 11:27:48 jonrob Exp $
+ *  $Id: RichSide.h,v 1.6 2005-01-17 13:00:10 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/08/17 11:27:48  jonrob
+ *  Update printout messages for enumerations
+ *
  *  Revision 1.4  2004/08/17 11:10:41  jonrob
  *  Update doxygen comments for RICH enumerations
  *
@@ -16,14 +19,6 @@
 
 #ifndef LHCBKERNEL_RICHSIDE_H
 #define LHCBKERNEL_RICHSIDE_H 1
-
-/** @file RichSide.h
- *
- *  Header file for enumeration : RichSide
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 
 // Include files
 #include <string>

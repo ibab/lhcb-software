@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.5 2004-08-17 11:27:48 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.6 2005-01-17 13:00:10 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/08/17 11:27:48  jonrob
+ *  Update printout messages for enumerations
+ *
  *  Revision 1.4  2004/08/17 11:10:41  jonrob
  *  Update doxygen comments for RICH enumerations
  *
@@ -17,14 +20,6 @@
 #ifndef LHCBKERNEL_RICHDETECTORTYPE_H
 #define LHCBKERNEL_RICHDETECTORTYPE_H 1
 
-/** @file RichDetectorType.h
- *
- *  Header file for enumeration : RichDetectorType
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
-
 // std include
 #include <string>
 #include <vector>
@@ -34,13 +29,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
+//  General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich {
 
   /// Number of RICH detectors

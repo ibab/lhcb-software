@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.4 2004-08-17 11:10:41 jonrob Exp $
+ *  $Id: RichRadiatorType.h,v 1.5 2005-01-17 13:00:10 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/08/17 11:10:41  jonrob
+ *  Update doxygen comments for RICH enumerations
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -13,14 +16,6 @@
 
 #ifndef LHCBKERNEL_RICHRADIATORTYPE_H
 #define LHCBKERNEL_RICHRADIATORTYPE_H 1
-
-/** @file RichRadiatorType.h
- *
- *  Header file for enumeration : RichRadiatorType
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 
 // Include files
 #include <string>
@@ -30,13 +25,7 @@
 // from Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
+//  General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich {
 
   /// Number of RICH radiators

@@ -1,8 +1,11 @@
-// $Id: CaloMap.h,v 1.7 2004-07-28 16:36:44 cattanem Exp $
+// $Id: CaloMap.h,v 1.8 2005-01-17 13:00:10 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/07/28 16:36:44  cattanem
+// more fixes...
+//
 // Revision 1.6  2004/07/27 14:07:51  ibelyaev
 //  modification/simplification of classes CaloMap&CaloHashMap
 //
@@ -136,7 +139,6 @@ public:
   
   /** erase the sequence from the map
    *  @param it the "begin" iterator for the sequence 
-   *  @param last  the "end"   iterator for the sequence 
    */
   void erase ( iterator it )
   { m_map.erase  ( it ); };

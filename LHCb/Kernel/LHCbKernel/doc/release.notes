@@ -2,10 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r6 2005-01-17 ========================
+! 2005-01-17 - Marco Cattaneo
+ - Fix some doxygen warnings
+
 ! 2005-01-07 - Chris Jones
  - Update RichSmartID. 
    + Improved constructors and messaging.
-   + Invert the bit packing order to facilitate easy sorting
 
 !====================== LHCbKernel v5r5 2004-12-08 ========================
 ! 2004-12-08 - Marco Cattaneo
