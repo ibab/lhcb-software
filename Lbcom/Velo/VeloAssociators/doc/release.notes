@@ -1,10 +1,12 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!========================  VeloAssociators v1r2 2002-10-10 =====================
 ! 2002-09-24 - Chris Parkes
  - rewrite to allow multiple particles to be linked a cluster.
-makes use of modified event model.
+   makes use of modified event model.
 
+!========================  VeloAssociators v1r1 2002-07-18 =====================
 ! 2002-07-18 - Marco Cattaneo
  - Use VeloDet v7r* (backwards compatible because not using PuVeto stuff)
 
