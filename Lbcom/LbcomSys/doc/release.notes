@@ -5,6 +5,7 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
+!========================== LbCom v1r0 2005-02-16 ============================
 ! 2005-02-08 - Marco Cattaneo
  - First version. This project contains component libraries that are shared by
    several LHCb applications. It should not contain any exported header
