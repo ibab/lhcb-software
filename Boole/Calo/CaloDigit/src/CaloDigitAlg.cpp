@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.3 2002-11-19 09:32:02 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.4 2002-12-19 14:32:14 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -52,7 +52,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   , m_coherentNoise     ( 0.3   )
   , m_incoherentNoise   ( 1.2   )
   , m_gainError         ( 0.01  )
-  , m_fracPrev          ( 0.15  )
+  , m_fracPrev          ( 0.20  )
   , m_pedShift          ( 0.00  )
 
 {

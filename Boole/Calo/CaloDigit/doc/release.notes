@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2002-12-19 - Olivier Callot
+ - Change the default Prs/Spd fractional correction, 0.15 -> 0.20
+
 !========================= CaloDigit v1r1 2002-12-05 =====================
 ! 2002-11-22 - Florence Ranjard
  - requirements - use new versions
