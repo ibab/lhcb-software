@@ -7,6 +7,73 @@ Package manager : Witek Pokorski
 ! 2003-05-01 - Witek Pokorski
  new GiGa, GiGaCnv, GaussTools, GeneratorModules
 
+!======================== GeneratorModules v6r0 ========================
+! 2003-04-28 Witek Pokorski
+ - ParticleGun - added modifications done by P. Robbe (to have a random  
+                 distribution of vertex position)
+
+! 2003-04-07 - Witek Pokorski
+ - PythiaAlg - added angular smearing of the beams, initilization of the energy
+   on event-by-event bases, setbeam.f added
+ - GenBaseAlg - added Gaussian generator
+ - ParticleGun - bug fix
+ - pyrand.f - imported from simpgen to avoid advisory warning (XSEC) from Pythia
+!=========================== GaussTracker v2r2 2002-04-29 ======================! 2003-04-29 - Witek Pokorski 
+ - requirements - put v* to avoid changing version in the future\
+
+! 2003-04-08 - Witek Pokorski
+ - cosmetic changes in the sensitive detectors code, a few lines commented out
+
+!======================== GaussTools v7r0 2003-04-28 =======================
+! 2003-04-11 - Witek Pokorski
+ - TrCutsRunAction - implemented new run action which handles the creation
+   of a special process for UserLimits
+ - added SpecialCuts base class and one implementation MinEkineCuts
+ - added GaussG4UserLimits to handle UserLimits per particle type
+ - fixed small bug in GiGaEraseFieldMgr
+
+! 2003-04-06 - Ivan BELYAEV
+ - add 3 new constrete tools 
+   GiGaFieldMgr         - field manager fore GiGa 
+   GiGaEraseFieldMgr    - "erase" teh field from defined regions 
+   GiGaSetSimAttributes - set simulation attributes  for volumes 
+   GiGaPhysListModular.cpp - update for newer interafce 
+
+!=============================== GiGa v14r0 2003-04-29 ======================
+! 2003-04-29 Witek Pokorski
+
+ - changes by Vanya Belyaev
+  - possibility of choosing the stepper added (GiGaFieldMgrBase added)
+  - GiGaToolBase added
+
+!=========================== GaussRICH v2r2 2003-04-29 ========================
+!2003-04-29 - SE
+ - Modification to be compatible with the richInfo pointer
+   from the GaussTrackInformation of the GaussTools package.
+
+!======================= GiGaCnv v12r0 ===============================
+! 2003-04-06 - Ivan BELYAEV
+ - remove the dependencies fro Simulaiton and Visualization services
+ - make an adaptation to newer version of GiGa
+
+!======================= GaussPhysics v2r2 2002-04-29 =======================
+! 2003-04-29 - Witek Pokorski
+ - requirements - user GaussTools v*
+ - some fixes from H-P.Welisch
+
+!=========================== GaussCalo v2r1 2003-04-29 ========================
+! 2003-04-29 - Witek Pokorski
+ - requirements - put v* to avoid changing version numbers
+ 
+!========================== SimSvc v1r1 =============================
+! 2003-04-16 - Sebastien Ponce
+ - added const keywords on the accessors
+
+!========================= GiGaVisUI v2r0 2003-05-01 ========================
+! 2003-05-01 - Witek Pokorski
+ - requirements - move to GiGa v14r0
+
+
 !===========================================================================
 </PRE><H1><A NAME="v9r1">2003-03-14 - Gauss v9r1</A></H1><PRE>
 ! 2003-03-14 - Florence RANJARD
