@@ -4,6 +4,7 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!========================== RichRecTools v1r1 2002-11-20 ======================
 ! 2002-11-20 - Chris Jones
  - Package restructuring to fix component library problems
 
