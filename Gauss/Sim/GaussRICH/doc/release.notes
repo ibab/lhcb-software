@@ -12,6 +12,9 @@
  - src/RichAnalysis/RichG4HistoFillSet2.cpp, RichG4EventHitCount.cpp
    . comment some debug print out (in G4cout)
 
+! 2005-03-07 - Chris Jones
+ - Remove redundant information from MCRichSegment
+
 ! 2005-01-19 - Chris Jones
  - Add simple statistical end-of-job printout to GiGa converters
 
