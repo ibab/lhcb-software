@@ -1,10 +1,11 @@
-// $Id: ChargedProtoPAlg.h,v 1.4 2002-07-26 19:27:33 gcorti Exp $
+// $Id: ChargedProtoPAlg.h,v 1.5 2002-09-09 17:16:28 gcorti Exp $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <map>
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -24,6 +25,10 @@
  */
 class ChargedProtoPAlg : public Algorithm {
 public:
+
+  enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut };
+  enum ProtoType { TrackProto=0, RichProto, MuonProto, ElectronProto };
+  
   /// Standard constructor
   ChargedProtoPAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -38,11 +43,11 @@ protected:
   /// Check if track satisfy criterias to make a ProtoParticle.
   /// Forward, Match and Upstream tracks with no error flag and
   /// Chi2 < Max value are taken
-  bool keepTrack( const TrStoredTrack* track );
+  int rejectTrack( const TrStoredTrack* track );
   StatusCode addRich( SmartDataPtr<RichPIDs>& richpids, ProtoParticle* proto );
   
 private:
-
+  
   std::string m_tracksPath;        ///< Location in TES of input tracks
   std::string m_richPath;          ///< Location in TES of input Rich pids
   std::string m_muonPath;          ///< Location in TES of input Muon pids
@@ -53,8 +58,11 @@ private:
 
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
-  double m_lastChiSqMax;      ///< Maximum Chi2 of track fit to make a ProtoP
-  bool   m_upstream;          ///< Use or not unique upstream tracks
+  bool   m_upstream;       ///< Use or not unique upstream tracks
+  double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
+  double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
+  double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
+  
  
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-
@@ -75,6 +83,10 @@ private:
   PhotonMatch*   m_photonMatch;     ///< Name of photon Match
   ElectronMatch* m_electronMatch;   ///< Name of electron Match
   BremMatch*     m_bremMatch;       ///< Name of brem Match
+
+  typedef std::map< std::string, int, std::less<std::string> > ErrorTable;
+  ErrorTable m_errorCount;          ///< Error counters
+//    bool m_monitor;                   ///< Fill histograms and special print
 
 };
 #endif // CHARGEDPROTOPALG_H

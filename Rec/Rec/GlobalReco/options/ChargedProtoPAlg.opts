@@ -3,18 +3,23 @@
 
 #pragma print off
 // Input data
-//ChargedProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
-//ChargedProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
-//ChargedProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
-//ChargedProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
-//ChargedProtoPAlg.PhotonMatching = "PhotonMatch"; 
-//ChargedProtoPAlg.ElectronMatching = "ElectronMatch";
-//ChargedProtoPAlg.BremMatching = "BremMatch";  
+//  ChargedProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
+//  ChargedProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
+//  ChargedProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
+//  ChargedProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
+//  ChargedProtoPAlg.PhotonMatching = "PhotonMatch"; 
+//  ChargedProtoPAlg.ElectronMatching = "ElectronMatch";
+//  ChargedProtoPAlg.BremMatching = "BremMatch";  
 
 // Output data
-//ChargedProtoPAlg.OutputData = "Rec/ProtoP/Charged";
+//  ChargedProtoPAlg.OutputData = "Rec/ProtoP/Charged";
 #pragma print on
 
 // Track Selections
-ChargedProtoPAlg.MaxChiSquare = 1000;       // default = 100
-ChargedProtoPAlg.UpstreamsTracks = false;   // default = false
+//  ChargedProtoPAlg.UpstreamsTracks = true;  // default = false
+ChargedProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
+ChargedProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
+ChargedProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
+
+// Monitoring histograms
+//  ChargedProtoPAlg.Monitor = false;     // default = false - not there ?

@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.6 2002-07-27 19:19:36 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.7 2002-09-09 17:16:33 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -14,6 +14,8 @@
 #include "Event/RichPID.h"
 #include "Event/MuonID.h"
 #include "Event/ProtoParticle.h"
+#include "Event/ITClusterOnStoredTrack.h"
+#include "Event/OTClusterOnStoredTrack.h"
 
 // local
 #include "ChargedProtoPAlg.h"
@@ -39,8 +41,12 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_photonMatchName( "PhotonMatch" )
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
-  , m_lastChiSqMax( 100 )
   , m_upstream( false )
+  , m_trackClassCut( 0.4 )
+  , m_chiSqITracks( 500.0 )
+  , m_chiSqOTracks( 100.0 )
+  , m_errorCount( )
+//    , m_monitor( false )
 {
   
   // Inputs
@@ -50,18 +56,23 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                   m_richPath = RichPIDLocation::Default );
   declareProperty("MuonPIDsInput",
                   m_muonPath = MuonIDLocation::Default );
-  declareProperty("ElectronsInput",   m_electronPath );
+  declareProperty("ElectronsInput",    m_electronPath );
   declareProperty("PhotonMatching",    m_photonMatchName );
-  declareProperty("ElectronMatching", m_electronMatchName );
-  declareProperty("BremMatching",     m_bremMatchName );
+  declareProperty("ElectronMatching",  m_electronMatchName );
+  declareProperty("BremMatching",      m_bremMatchName );
   
   // Outputs
   declareProperty("OutputData",
                   m_protoPath = ProtoParticleLocation::Charged );
 
   // Selections
-  declareProperty("MaxChiSquare", m_lastChiSqMax );
-  declareProperty("UpstreamsTracks", m_upstream );
+  declareProperty("UpstreamsTracks",  m_upstream );
+  declareProperty("ITFracTrackClass", m_trackClassCut );
+  declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
+  declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
+  
+  // Monitor
+//    declareProperty("Monitor", m_monitor );
 
 }
 
@@ -82,7 +93,7 @@ StatusCode ChargedProtoPAlg::initialize() {
   IParticlePropertySvc* ppSvc;
   sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service" 
+    log << MSG::FATAL << "Unable to locate Particle Property Service" 
         << endreq;
     return sc;
   }
@@ -124,6 +135,7 @@ StatusCode ChargedProtoPAlg::initialize() {
     return sc;
   }
 
+
   return StatusCode::SUCCESS;
 };
 
@@ -135,14 +147,26 @@ StatusCode ChargedProtoPAlg::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
+  // Prepare output container
+  ProtoParticles* chprotos = new ProtoParticles();
+  StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
+  if( !sc.isSuccess() ) {
+    delete chprotos; 
+    log << MSG::ERROR  
+        << "Unable to register ProtoParticles container in " 
+        << m_protoPath << endreq;
+    return sc;
+  }
+
   // Load stored tracks
   SmartDataPtr<TrStoredTracks> tracks ( eventSvc(), m_tracksPath );
   if( !tracks || 0 == tracks->size() ) {
     log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
-    return StatusCode::FAILURE;
+    m_errorCount["No Tracks"] += 1;
+    return StatusCode::SUCCESS;
   }
-  else {   
+  else {
     log << MSG::DEBUG << "Successfully retrieved " << tracks->size()
         << " TrStoredTracks at " << m_tracksPath << endreq;
   }
@@ -153,6 +177,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !richpids || 0 == richpids->size() ) {
     log << MSG::INFO  << "Failed to locate RichPIDs at "
         << m_richPath << endreq;
+    m_errorCount["No Rich pID"] += 1;
   }
   else {   
     log << MSG::DEBUG << "Successfully located " << richpids->size()
@@ -166,6 +191,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !muonpids || 0 == muonpids->size() ) {
     log << MSG::INFO << "Failed to locate MuonIDs at "
         << m_muonPath << endreq;
+    m_errorCount["No Muon pID"] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << muonpids->size()
@@ -179,6 +205,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !electrons || 0 == electrons->size() ) {
     log << MSG::INFO << "Failed to locate CaloHypos at "
         << m_electronPath << endreq;
+    m_errorCount["No electron pID"] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << electrons->size()
@@ -191,66 +218,38 @@ StatusCode ChargedProtoPAlg::execute() {
   if( 0 == phtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
+    m_errorCount["No photon table"] += 1;
   }
   const ElectronTable* etable = m_electronMatch->inverse();
   if( 0 == etable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
+    m_errorCount["No electron table"] += 1;
   }
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
-  }
-
-
-  // Prepare output container
-  ProtoParticles* chprotos = new ProtoParticles();
-  StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
-  if( !sc.isSuccess() ) {
-    delete chprotos; 
-    log << MSG::ERROR  
-        << "Unable to register ProtoParticles container in " 
-        << m_protoPath << endreq;
-    return sc;
+    m_errorCount["No brems table"] += 1;
   }
 
   // ProtoParticles should only be "good tracks"
-  //   keep only Forward, Upstream and Matched tracks, no clones 
-  //   reject tracks with fit errors
-  // Note that history does not accumulate:: it is only the nput container
-  // and then a track is classifed as a clone but not respect to what
-  int errcount = 0; 
-  int uncount = 0; 
-  int unvelo=0; int unforwr=0; int unmatch=0; int unupstr=0; int unseed=0;
-  int chvelo=0; int chforwr=0; int chmatch=0; int chupstr=0; int chseed=0;
 
-  int countTrackProto = 0;
-  int countRichProto = 0;
-  int countMuonProto = 0;
-  int countElectronProto = 0;
+  int countProto[4] = { 0, 0, 0, 0 };
+  int countRejTracks[4] = { 0, 0, 0, 0 };
+  
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); tracks->end() != iTrack; ++iTrack ) {
-    // Quality of tracks: for debugging only
-    if( (*iTrack)->errorFlag() != 0 ) errcount++;
-    if( (*iTrack)->unique() ) {
-      uncount++;
-      if( (*iTrack)->forward() )  unforwr++;
-      if( (*iTrack)->match() )    unmatch++;
-      if( (*iTrack)->upstream() ) unupstr++;
-      if( (*iTrack)->velo() )     unvelo++;
-      if( (*iTrack)->seed() )     unseed++;
-      if( (*iTrack)->forward() && ((*iTrack)->charge() == 0) )  chforwr++;
-      if( (*iTrack)->match() && ((*iTrack)->charge() == 0) )    chmatch++;
-      if( (*iTrack)->upstream() && ((*iTrack)->charge() == 0) ) chupstr++;
-      if( (*iTrack)->velo() && ((*iTrack)->charge() == 0) )     chvelo++;
-      if( (*iTrack)->seed() && ((*iTrack)->charge() == 0) )     chseed++;
+
+    // Does the track satisfies criteria to make a ProtoParticle ?
+    int reject = rejectTrack( (*iTrack) );
+    if( 0 != reject ) {
+      countRejTracks[reject] += 1;
+      continue;
     }
-    // Track satisfy criteria to make a ProtoParticle ?
-    if( !keepTrack( (*iTrack) ) ) continue;
-    
-    //std::auto_ptr<ProtoParticle> proto( new ProtoParticle() ); 
+
     ProtoParticle* proto = new ProtoParticle();
+//      std::auto_ptr<ProtoParticle> proto( new ProtoParticle() );
     proto->setTrack( *iTrack );
     double tkcharge = proto->charge();
     if( 0 == tkcharge ) {
@@ -259,19 +258,20 @@ StatusCode ChargedProtoPAlg::execute() {
       continue;
     }
 
-    countTrackProto++;
-
-    ProtoParticle::PIDDetVector iddetvec;
-    ProtoParticle::PIDInfoVector idinfovec;
-    proto->setPIDDetectors(iddetvec);
-    proto->setPIDInfo(idinfovec);
+    countProto[TrackProto]++;
+    
+    //ProtoParticle::PIDDetVector iddetvec;
+    //ProtoParticle::PIDInfoVector idinfovec;
+    //proto->setPIDDetectors(iddetvec);
+    //proto->setPIDInfo(idinfovec);
 
     // Add RichPID to this ProtoParticle
     if( richData ) {
+//        StatusCode sc = addRich( richpids, proto->get() );
       StatusCode sc = addRich( richpids, proto );
       if( !sc.isFailure() ) {
-        countRichProto++;
-      }  
+        countProto[RichProto]++;
+      }
     }
     
     // Add MuonID to this ProtoParticle
@@ -282,12 +282,12 @@ StatusCode ChargedProtoPAlg::execute() {
         if( track == (*iTrack) ) {
           proto->setMuonPID( *iMuon );
           // When MuonDet is capable of identifying it add its result
-          if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
-            countMuonProto++;
-            ProtoParticle::PIDDetPair iddet;
-            iddet.first = ProtoParticle::MuonMuon;
-            iddet.second = (*iMuon)->MuProb();
-            proto->pIDDetectors().push_back(iddet);
+//            if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
+          if( (*iMuon)->IsMuon() ) {
+            countProto[MuonProto]++;
+            double muonProb = (*iMuon)->MuProb();
+            proto->pIDDetectors().
+              push_back( std::make_pair(ProtoParticle::MuonMuon, muonProb) );
             proto->setMuonBit(1);
           }
           // The muon pid for track has been added so exit from loop
@@ -298,28 +298,24 @@ StatusCode ChargedProtoPAlg::execute() {
     
     // Add CaloElectrons to this ProtoParticle   
     if( caloData ) {  
-      log << MSG::DEBUG << "Processing CaloInfo" << endreq;
       // Add the Electron hypothesis when available (no cuts at the moment)
       ElectronRange erange = etable->relations( *iTrack );
       if( !erange.empty() ) {
-        countElectronProto++;
+        countProto[ElectronProto]++;
         CaloHypo* hypo = erange.begin()->to();
         proto->addToCalo( hypo );
 
         double chi2 = erange.begin()->weight();
-        ProtoParticle::PIDDetPair iddet;
-        iddet.first = ProtoParticle::CaloEMatch;
-        iddet.second = chi2;
-        proto->pIDDetectors().push_back(iddet);
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::CaloEMatch, chi2) );
         proto->setCaloeBit(1);
        
         // Add the CaloCluster chi2 (only lowest)
         PhotonRange phrange = phtable->relations( *iTrack );
         if( !phrange.empty() ) {
           chi2 = phrange.begin()->weight();
-          iddet.first = ProtoParticle::CaloTrMatch;
-          iddet.second = chi2;
-          proto->pIDDetectors().push_back(iddet);
+          proto->pIDDetectors().
+            push_back( std::make_pair(ProtoParticle::CaloTrMatch, chi2) );
         }
         
         // Add Brem hypothesis and chi2 (only lowest)
@@ -328,73 +324,74 @@ StatusCode ChargedProtoPAlg::execute() {
           hypo = brrange.begin()->to();
           proto -> addToCalo( hypo );
           chi2 = brrange.begin()->weight();
-          iddet.first = ProtoParticle::BremMatch;
-          iddet.second = chi2;
-          proto->pIDDetectors().push_back(iddet);
+          proto->pIDDetectors().
+            push_back( std::make_pair(ProtoParticle::BremMatch, chi2) );
         }
       }
     }
+
     // Check is at least one particleID is beeing added otherwise set NoPID
+    // and assume it is a pion
     if( (0 == proto->richBit()) && (0 == proto->muonBit()) &&
         (0 == proto->caloeBit()) ) {
+      proto->pIDDetectors().
+        push_back( std::make_pair(ProtoParticle::NoPID, 1.0) );
+      int idpion = m_idPion * (int)proto->charge();
+      proto->pIDInfo().push_back( std::make_pair( idpion, 1.0 ) );
+      proto->setNoneBit(1);
+    }
+
+    // If RichPID is not available since it is takes as combined, set NoneBit
+    // and assume pion (keep it separate because it could change and we could
+    // decide to use muon or calorimeter alone)
+    if( 0 == proto->richBit() ) {
+      int idpion = m_idPion * (int)proto->charge();
+      proto->pIDInfo().push_back( std::make_pair( idpion, 1.0 ) );
       proto->setNoneBit(1);
     }
     
-    //chprotos->insert(proto.release());
     chprotos->insert(proto);
+//        chprotos->insert(proto->release());
     
   }
-
-  log << MSG::DEBUG << "Summary per event" << std::endl
-      << "Tracks with errors  = " << errcount << std::endl
-      << "Unique tracks       = " << uncount << std::endl
-      << "         & forward  = " << unforwr << std::endl
-      << "         & matched  = " << unmatch << std::endl
-      << "         & upstream = " << unupstr << std::endl
-      << "         & velo     = " << unvelo  << std::endl
-      << "         & seed     = " << unseed  << endreq;
-  log << "Tracks with charge = 0 " << std::endl
-      << "         & forward  = " << chforwr << std::endl
-      << "         & matched  = " << chmatch << std::endl
-      << "         & upstream = " << chupstr << std::endl
-      << "         & velo     = " << chvelo  << std::endl
-      << "         & seed     = " << chseed  << endreq;
-
   
-  log << MSG::DEBUG << "Found " << (unforwr+unmatch+unupstr)
-      << " forward + upstream + matched unique tracks" << endreq;
-  log << MSG::DEBUG << "Found " << countTrackProto
+    
+  log << MSG::DEBUG << "Found " << countProto[TrackProto]
       << " tracks of quality to produce ProtoParticles" << endreq;
-  log << MSG::DEBUG << "Made " << countRichProto 
+  log << MSG::DEBUG << "Made " << countProto[RichProto] 
       << " ProtoParticle with RichPID " << endreq;
-  log << MSG::DEBUG << "Made " << countMuonProto 
+  log << MSG::DEBUG << "Made " << countProto[MuonProto]
       << " ProtoParticle with MuonID " << endreq;
-  log << MSG::DEBUG << "Made " << countElectronProto 
+  log << MSG::DEBUG << "Made " << countProto[ElectronProto]
       << " ProtoParticle with ElectronHypo " << endreq;
   log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
       << chprotos->size() << endreq;
 
-  for( ProtoParticles::iterator ip = chprotos->begin(); chprotos->end() != ip;
-       ++ip ) {
-    log << MSG::VERBOSE << "track = " << (*ip)->track() << endreq;
-    log << MSG::VERBOSE << "charge = " << (*ip)->charge() << endreq;
-    log << MSG::VERBOSE << "richid = " << (*ip)->richPID() << endreq;
-    log << MSG::VERBOSE << "muonid = " << (*ip)->muonPID() << endreq;
-    log << MSG::VERBOSE << "richhistory " << (*ip)->richBit() << endreq;
-    log << MSG::VERBOSE << "muonhistory " << (*ip)->muonBit() << endreq;
-    log << MSG::VERBOSE << "bestPID " << (*ip)->bestPID() << endreq;
-    for( ProtoParticle::PIDInfoVector::iterator id = (*ip)->pIDInfo().begin(); 
-         (*ip)->pIDInfo().end()!=id; ++id ) {
-      log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
-          << (*id).second  << endreq;
+//    if( m_monitor ) {
+    for( ProtoParticles::iterator ip = chprotos->begin();
+         chprotos->end() != ip; ++ip ) {
+      log << MSG::VERBOSE << "track = " << (*ip)->track() << endreq;
+      log << MSG::VERBOSE << "charge = " << (*ip)->charge() << endreq;
+      log << MSG::VERBOSE << "richid = " << (*ip)->richPID() << endreq;
+      log << MSG::VERBOSE << "muonid = " << (*ip)->muonPID() << endreq;
+      log << MSG::VERBOSE << "richhistory = " << (*ip)->richBit() << endreq;
+      log << MSG::VERBOSE << "muonhistory = " << (*ip)->muonBit() << endreq;
+      log << MSG::VERBOSE << "bestPID = " << (*ip)->bestPID() << endreq;
+      for(ProtoParticle::PIDInfoVector::iterator id = (*ip)->pIDInfo().begin();
+          (*ip)->pIDInfo().end()!=id; ++id ) {
+        log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
+            << (*id).second  << endreq;
+      }
+      for( ProtoParticle::PIDDetVector::iterator 
+             idd = (*ip)->pIDDetectors().begin(); 
+           (*ip)->pIDDetectors().end()!=idd; ++idd ) {
+        log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
+            << (*idd).second  << endreq;
+      }
     }
-    for( ProtoParticle::PIDDetVector::iterator 
-           idd = (*ip)->pIDDetectors().begin(); 
-         (*ip)->pIDDetectors().end()!=idd; ++idd ) {
-      log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
-          << (*idd).second  << endreq;
-    }
-  }
+
+//    } // end monitor
+
   return StatusCode::SUCCESS;
 };
 
@@ -406,28 +403,71 @@ StatusCode ChargedProtoPAlg::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
+  for( ErrorTable::iterator ierr = m_errorCount.begin();
+       ierr != m_errorCount.end(); ierr++ ) { 
+    log << MSG::INFO 
+        << "Number of events with " << (*ierr).first 
+        << " = " << (*ierr).second 
+        << endreq;
+  }
   return StatusCode::SUCCESS;
 }; 
 
 //=============================================================================
-//  keepTrack because of good quality
+// rejectTrack because of poor quality
+//   keep only Forward, Upstream and Matched tracks, no clones 
+//   reject tracks with fit errors
+// Note that history does not accumulate:: it is only the original container
+// and then a track is classifed as a clone but not respect to what
 //=============================================================================
-bool ChargedProtoPAlg::keepTrack( const TrStoredTrack* track ) {
+int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
 
-  bool keep = false;
-  if( 0 != track ) {
+  int reject = NoTrack;
+  if( NULL != track ) {
     if( 0 == track->errorFlag() ) {
-      if( track->lastChiSq() <= m_lastChiSqMax ) {
-        if( track->unique() && (track->forward() || track->match()) ) {
-          keep = true;
-        }
-        if( m_upstream && (track->unique() && track->upstream()) ) {
-          keep = true;
-        }
+      if( track->unique() && (track->forward() || track->match()) ) {
+        reject = KeepTrack;
+      }
+      if( m_upstream && (track->unique() && track->upstream()) ) {
+        reject = KeepTrack; 
       }
     }
+    else {
+      reject = NoTrackType;
+    }
   }
-  return keep;
+  
+  if( !reject ) {
+    int nIT = 0;
+    int nOT = 0;
+    SmartRefVector<TrStoredMeasurement>::const_iterator iterMeas = 
+      track->measurements().begin();
+    while( iterMeas != track->measurements().end() ) {
+      const TrStoredMeasurement* aMeas = *iterMeas;
+      if( dynamic_cast<const ITClusterOnStoredTrack*>(aMeas) ) {
+        nIT++;
+      }
+      if( dynamic_cast<const OTClusterOnStoredTrack*>(aMeas) ) {
+        nOT++;
+      }
+      iterMeas++;
+    }
+    int nTrackerMeas = nIT + nOT;
+    int nTotMeas = track->measurements().size();
+    double fracIT = (double)nIT/(double)nTrackerMeas;
+    double cutValue = 0.0;
+    if( fracIT > m_trackClassCut ) {
+      cutValue = m_chiSqITracks;
+    } else {
+      cutValue = m_chiSqOTracks;
+    }
+    
+    double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
+    if( chi2NoF >= cutValue ) {
+      reject = Chi2Cut;
+    }
+  }
+  return reject;
 };
 
 //=============================================================================
@@ -447,78 +487,86 @@ StatusCode ChargedProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       proto->setRichPID( *iRich );
 
       // store Raw probabilities for RICH as detector info
-      ProtoParticle::PIDDetVector& iddetvec = proto->pIDDetectors();
       ProtoParticle::PIDDetPair iddet;
       iddet.first = ProtoParticle::RichElectron;
       iddet.second = (*iRich)->particleRawProb(Rich::Electron);
-      iddetvec.push_back(iddet);
-      log << MSG::VERBOSE
-          << "Rich " << Rich::Electron << " = " 
-          << (*iRich)->particleRawProb(Rich::Electron)
-          << endreq;
+      proto->pIDDetectors().push_back(iddet);
       
       iddet.first = ProtoParticle::RichMuon;
       iddet.second = (*iRich)->particleRawProb(Rich::Muon);
-      iddetvec.push_back(iddet);
-      log << MSG:: VERBOSE 
-          << "Rich " << Rich::Muon << " = " 
-          << (*iRich)->particleRawProb(Rich::Muon)
-          << endreq;
+      proto->pIDDetectors().push_back(iddet);
       
       iddet.first = ProtoParticle::RichPion;
       iddet.second = (*iRich)->particleRawProb(Rich::Pion);
-      iddetvec.push_back(iddet);
-      log << MSG::VERBOSE
-          << "Rich " << Rich::Pion
-          << (*iRich)->particleRawProb(Rich::Pion)
-          << endreq;
+      proto->pIDDetectors().push_back(iddet);
       
       iddet.first = ProtoParticle::RichKaon;
       iddet.second = (*iRich)->particleRawProb(Rich::Kaon);
-      iddetvec.push_back(iddet);
-      log << MSG::VERBOSE
-          << "Rich " << Rich::Kaon
-          << (*iRich)->particleRawProb(Rich::Kaon)
-          << endreq;
-      
+      proto->pIDDetectors().push_back(iddet);
           
       iddet.first = ProtoParticle::RichProton;
       iddet.second = (*iRich)->particleRawProb(Rich::Proton);
-      iddetvec.push_back(iddet);
-      log << MSG::VERBOSE 
-          << "Rich " << Rich::Proton 
-          << (*iRich)->particleRawProb(Rich::Proton)
-          << endreq;
-      
+      proto->pIDDetectors().push_back(iddet);
+
       proto->setRichBit(1);
-        
+
+//        if( m_monitor ) {
+      log << MSG::VERBOSE << "Rich " 
+          << Rich::Electron << " = " 
+          << (*iRich)->particleRawProb(Rich::Electron) 
+          << endreq;
+      log << MSG:: VERBOSE << "Rich " 
+          << Rich::Muon << " = " << (*iRich)->particleRawProb(Rich::Muon)
+          << endreq;
+      log << MSG::VERBOSE << "Rich " 
+          << Rich::Pion << " = " << (*iRich)->particleRawProb(Rich::Pion)
+          << endreq;
+      log << MSG::VERBOSE << "Rich " 
+          << Rich::Kaon << " = " << (*iRich)->particleRawProb(Rich::Kaon)
+          << endreq;
+      log << MSG::VERBOSE << "Rich " 
+          << Rich::Proton << " = " << (*iRich)->particleRawProb(Rich::Proton)
+          << endreq;
+//        }
+
       // store normalized probabilities for combined probabilities and
       // set history flag
-      ProtoParticle::PIDInfoVector& idinfovec = proto->pIDInfo();
       ProtoParticle::PIDInfoPair idinfo;
-      double richprob = (*iRich)->particleNormProb(Rich::Electron);
-      if( richprob > 0.0 ) {  
-        idinfo.first = m_idElectron * (int)proto->charge();
-        idinfo.second = (*iRich)->particleNormProb(Rich::Electron);
-        idinfovec.push_back(idinfo);
+      double richProb = (*iRich)->particleNormProb(Rich::Electron);
+      if( richProb > 0.0 ) {
+        idinfo.first  = m_idElectron * (int)proto->charge();
+        idinfo.second = richProb;
+        proto->pIDInfo().push_back(idinfo);
+      }
+      
+      richProb = (*iRich)->particleNormProb(Rich::Muon);
+      if( richProb > 0.0 ) {
+        idinfo.first  = m_idMuon * (int)proto->charge();
+        idinfo.second = richProb;
+        proto->pIDInfo().push_back(idinfo);
       }
 
-      idinfo.first = m_idMuon * (int)proto->charge();
-      idinfo.second = (*iRich)->particleNormProb(Rich::Muon);
-      idinfovec.push_back(idinfo);
+      richProb = (*iRich)->particleNormProb(Rich::Pion);
+      if( richProb > 0.0 ) {
+        idinfo.first = m_idPion * (int)proto->charge();
+        idinfo.second = richProb;
+        proto->pIDInfo().push_back(idinfo);
+      }
       
-      idinfo.first = m_idPion * (int)proto->charge();
-      idinfo.second = (*iRich)->particleNormProb(Rich::Pion);
-      idinfovec.push_back(idinfo);
+      richProb = (*iRich)->particleNormProb(Rich::Kaon);
+      if( richProb > 0.0 ) {
+        idinfo.first = m_idKaon * (int)proto->charge();
+        idinfo.second = richProb;
+        proto->pIDInfo().push_back(idinfo);
+      }
       
-      idinfo.first = m_idKaon * (int)proto->charge();
-      idinfo.second = (*iRich)->particleNormProb(Rich::Kaon);
-      idinfovec.push_back(idinfo);
-      
-      idinfo.first = m_idProton * (int)proto->charge();
-      idinfo.second = (*iRich)->particleNormProb(Rich::Proton);
-      idinfovec.push_back(idinfo);
-          
+      richProb = (*iRich)->particleNormProb(Rich::Proton);
+      if( richProb > 0.0 ) {
+        idinfo.first = m_idProton * (int)proto->charge();
+        idinfo.second = richProb;
+        proto->pIDInfo().push_back(idinfo);
+      }
+
       proto->setRichCombined(1);
       break; // the rich pid for track has been added so exit from loop
     }
