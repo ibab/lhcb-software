@@ -2,17 +2,17 @@ package RichReadout
 version v1r1
 
 # ================ structure =================================================
-branches RichReadout cmt doc src
+branches cmt doc src
 
 # ================ environment ===============================================
-include_dirs $(RICHREADOUTROOT)
+#include_dirs $(RICHREADOUTROOT)
 
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
 use AIDA             v*                                 -no_auto_imports
 use ParamFiles       v*      $(LHCb_release_area)/PARAM -no_auto_imports
-use RichEvent        v5r*    Event
+use RichEvent        v6r*    Event
 use RiSicbGeom       v3r*    SICB
 use RichDetTools     v3r*    Rich
 
