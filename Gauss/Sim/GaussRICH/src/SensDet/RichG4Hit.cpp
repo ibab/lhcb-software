@@ -12,7 +12,7 @@ RichG4Hit::RichG4Hit() {;}
 
 RichG4Hit::~RichG4Hit(){;}
 
-RichG4Hit::RichG4Hit(const RichG4Hit &right):G4VHit(right)
+RichG4Hit::RichG4Hit(const RichG4Hit &right):GaussHitBase(right)
 {
   m_edep = right.m_edep;
   m_GlobalPos = right.m_GlobalPos;

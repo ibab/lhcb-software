@@ -1,6 +1,7 @@
 #ifndef RichG4Hit_h
 #define RichG4Hit_h 1
 
+#include "GaussTools/GaussHitBase.h"
 #include "G4VHit.hh"
 #include "G4THitsCollection.hh"
 #include "G4Allocator.hh"
@@ -8,8 +9,9 @@
 // This is the hit class for the LHCb-RICH. The coordinates of the
 // PreStepPoint at the entrance to the SiDet sensitive detector
 // are stored as the Rich hit coordinates in this class.
+// class RichG4Hit : public G4VHit
 
-class RichG4Hit : public G4VHit
+class RichG4Hit : public  GaussHitBase
 {
   public:
 

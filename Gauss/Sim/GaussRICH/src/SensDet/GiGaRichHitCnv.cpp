@@ -24,12 +24,18 @@
 #include "GiGa/GiGaTrajectory.h" 
 #include "GiGa/GiGaUtil.h"
 #include "RichG4Hit.h"
+#include "GiGa/GiGaHitsByID.h"
+#include "GiGa/GiGaHitsByName.h"
 /// GiGaCnv  
 #include "GiGaCnv/GiGaKineRefTable.h" 
 #include "GiGaCnv/GiGaCnvUtils.h"
+#include "GiGaCnv/IGiGaHitsCnvSvc.h"
+#include "GiGaCnv/IGiGaKineCnvSvc.h"
+#include "GiGaCnv/GiGaKineRefTable.h"
 /// LHCbEvent
 #include "Event/MCRichPhotodetectorHit.h" 
 /// Geant4 includes
+#include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
 // local 
@@ -156,12 +162,31 @@ StatusCode GiGaRichHitCnv::updateObj
                                         "*') is not 'MCRichPhotodetectorHits*'! "   );}  
   // clear the object 
   hits->clear(); 
+
+  // get the registry
+  const IRegistry* registry = address->registry();
+  if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
+
+  const std::string& location = registry->identifier();
+
+  //  { // try to locate MCParticles explicitely
+    // just to force the loading of the reference table 
+        std::string mcpath = 
+        location.substr( 0, location.find( "/MC" ) ) + "/" + 
+        MCParticleLocation::Default;
+    // get MCparticles 
+       const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+     if( 0 == mcps ) 
+      { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
+  //  }
   
+  
+
   // retrieve the hits container from GiGa Service
 
-  G4HCofThisEvent* hitscollections = 0 ;
+    G4HCofThisEvent* hitscollections = 0 ;
 
-  //  std::string colname = *(address->par());
+  //std::string colname = *(address->par());
   // std::string colname [2];
     //  colname[0] = "Rich1TopHC";
     // colname[1] = "Rich1BotHC";
@@ -177,42 +202,75 @@ StatusCode GiGaRichHitCnv::updateObj
 
           for (int iii=0;iii<m_RichG4HitCollectionName->RichHCSize() ;iii++)
             {
+              std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
               G4SDManager* fSDM=G4SDManager::GetSDMpointer();
-              //              int collectionID=fSDM->GetCollectionID(colname[iii]);
-              int collectionID=
-                 fSDM->
-                  GetCollectionID(m_RichG4HitCollectionName->RichHCName(iii));
+              int collectionID=fSDM->GetCollectionID(colName);
           
               RichG4HitsCollection* myCollection = 
                 (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));
-          
-              if(0==myCollection || collectionID==-1) 
-                {
-                  //return Error("No RichG4HitsCollection* object found");
-                  return StatusCode::SUCCESS;
-                }
+
+             // get the hits collection from GiGa              
+              //              GiGaHitsByName myCollection(colName );
+
+             if(0==myCollection || collectionID==-1) 
+              {
+                // return Error("No RichG4HitsCollection* object found");
+                                 return StatusCode::SUCCESS;
+              }
+
+
+
               int numberofhits=myCollection->entries();
 
               // reserve elements on object container 
               hits->reserve( numberofhits );
 
-              //convert hits          
-              for( int itr = 0 ; itr<numberofhits ; ++itr ) 
+               /// get the reference table between 
+              // G4 tracks/trajectories and MC particles
+               
+                
+               const GiGaKineRefTable& table = hitsSvc() -> table() ;
+
+             //convert hits          
+              for( int ihit = 0 ; ihit<numberofhits ; ++ihit ) 
                 {
-                  HepPoint3D pentry=(*myCollection)[itr]->GetGlobalPos();
-                  double edep=(*myCollection)[itr]->GetEdep();
-                  //             double toffl=(*myCollection)[itr]->GetTimeOfFlight();
+                  HepPoint3D pentry=(*myCollection)[ihit]->GetGlobalPos();
+                  double edep=(*myCollection)[ihit]->GetEdep();
+                  //             double toffl=(*myCollection)[ihit]->GetTimeOfFlight();
 
                   MCRichPhotodetectorHit* mchit =new MCRichPhotodetectorHit();
                   mchit->setEntry(pentry);
                   mchit->setEnergy(edep);
                   //             mchit->setTimeOfFlight(toffl);             
              
+
+                 int traid=(*myCollection)[ihit]->GetTrackID();
+                  if(table[traid].particle())              
+                   {
+                     mchit->setMCParticle(table[traid].particle());
+
+                   }
+                 
+                   else
+                   {
+                       MsgStream log(   msgSvc(), name());
+                           log << MSG::INFO 
+                               << "No pointer to MCParticle for " 
+                               <<" MCRichPhotodetectorHit associated to trackID: " 
+                      <<iii<<"  "<<ihit<< "   "<< traid << endreq;
+                    }
+
+
+
                   hits->insert( mchit);
-                }    
+                }
+              
+              
             }
-            
+          
+          
         }
+      
       else
         {
           MsgStream log(   msgSvc(), name());
@@ -220,8 +278,9 @@ StatusCode GiGaRichHitCnv::updateObj
               <<endreq;        
           return StatusCode::SUCCESS; 
         }
-        
+      
     }
+  
   
   catch( const GaudiException& Excp )
     {
@@ -246,80 +305,128 @@ StatusCode GiGaRichHitCnv::updateObj
 
 StatusCode GiGaRichHitCnv::updateObjRefs
 ( IOpaqueAddress*  address , 
-  DataObject*      object  ) 
-{  
-  if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL " );}
-  if( 0 ==   object    ) { return Error(" DataObject* points to NULL"      );}
-  MCRichPhotodetectorHits* hits = dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
-  if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
-                                        GiGaUtil::ObjTypeName(object) + 
-                                        "*') is not 'Hits*'!"    );}  
-  /// get hits 
-  G4HCofThisEvent* hitscollections = 0 ;
+  DataObject*      object  ) {
 
-  try{ *gigaSvc() >> hitscollections ; }
-  catch( const GaudiException& Excpt  ) 
-    { return Exception("UpdateObjRefs: " , Excpt ) ; }  
-  catch( const std::exception& Excpt  ) 
-    { return Exception("UpdateObjRefs: " , Excpt ) ; }  
-  catch( ... )                          
-    { return Exception("UpdateObjRefs: "         ) ; }  
-  if( 0 == hitscollections      ) 
-    {             
-      MsgStream logg(   msgSvc(), name());
-      logg << MSG::INFO 
-           << "No G4HCOfThisEvent found" << endreq;      
-      return StatusCode::SUCCESS;
-    }
+
+  return StatusCode::SUCCESS;
   
-  { // be sure that MC particles are already converted! 
+};
+
+
+  
+  //  if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL " );}
+  //  if( 0 ==   object    ) { return Error(" DataObject* points to NULL"      );}
+  //  MCRichPhotodetectorHits* hits = 
+  //              dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
+  //  if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
+  //                                        GiGaUtil::ObjTypeName(object) + 
+  //                                      "*') 
+  // is not 'Hits*'!"  
+  //                                        //  );}  
+  // Total number of hits in the container
+
+//  int TotNumHitsInRich=  hits->entries();
+  
+  /// get hits 
+// G4HCofThisEvent* hitscollections = 0 ;
+
+//  try{ *gigaSvc() >> hitscollections ; }
+//  catch( const GaudiException& Excpt  ) 
+//    { return Exception("UpdateObjRefs: " , Excpt ) ; }  
+//  catch( const std::exception& Excpt  ) 
+//    { return Exception("UpdateObjRefs: " , Excpt ) ; }  
+//  catch( ... )                          
+//    { return Exception("UpdateObjRefs: "         ) ; }  
+//  if( 0 == hitscollections      ) 
+//    {             
+//      MsgStream logg(   msgSvc(), name());
+//      logg << MSG::INFO 
+//           << "No G4HCOfThisEvent found" << endreq;      
+//      return StatusCode::SUCCESS;
+//    }
+//  
+//  { // be sure that MC particles are already converted! 
     // just to force the loading of the reference table 
     // get the registry
-    const IRegistry* registry   = address->registry();
-    if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
-    const std::string& location = registry->identifier();
-    std::string mcpath = 
-      location.substr( 0, location.find( "/MC" ) ) + "/" + 
-      MCParticleLocation::Default;
+//    const IRegistry* registry   = address->registry();
+//    if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
+//    const std::string& location = registry->identifier();
+//    std::string mcpath = 
+//      location.substr( 0, location.find( "/MC" ) ) + "/" + 
+//      MCParticleLocation::Default;
     // get MCparticles 
-    const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
-    if( 0 == mcps ) 
-      { return Error("Can not locate MCparticles at '" + mcpath + "'");}   
-  }
-  
-  
+//    const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+//   if( 0 == mcps ) 
+//    { return Error("Can not locate MCparticles at '" + mcpath + "'");}   
+//  }
+                                        //
+                                        // 
   //  std::string colname = *(address->par());  
-  std::string colname[2];
-  colname[0] = "Rich1TopHC";
-  colname[1] = "Rich1BotHC";
-  
+  //  std::string colname[2];
+  // colname[0] = "Rich1TopHC";
+  // colname[1] = "Rich1BotHC";
+                                        //  
   /// get table 
-  GiGaKineRefTable& table = hitsSvc()->table();
-
-  for (int ii=0;ii<2;ii++)
-    {
-      G4SDManager* fSDM=G4SDManager::GetSDMpointer();
-      int collectionID=fSDM->GetCollectionID(colname[ii]);
-  
-      RichG4HitsCollection* myCollection = 
-        (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));
-      if(0==myCollection || collectionID==-1) 
-        {
-          //      return Error("No RichG4HitsCollection* object found");
-          return StatusCode::SUCCESS;
-        }
-
-      int numberofhits=myCollection->entries();
-      int itr=0;
-
+  //  GiGaKineRefTable& table = hitsSvc()->table();
+                                        //
+  //  for (int ii=0;ii<m_RichG4HitCollectionName->RichHCSize();ii++)
+  //  {
+  //   G4SDManager* fSDM=G4SDManager::GetSDMpointer();
+  //  int collectionID=fSDM->
+  //      GetCollectionID(m_RichG4HitCollectionName->RichHCName(ii));
+                                        // 
+  //    RichG4HitsCollection* myCollection = 
+  //    (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));
+  //  if(0==myCollection || collectionID==-1) 
+  //    {
+        //      return Error("No RichG4HitsCollection* object found");
+  //       return StatusCode::SUCCESS;
+  //    }
+                                        //
+  //      int numberofhits=myCollection->entries();
+  //
+  //
 //        if( (size_t) hits->size() != (size_t) myCollection->entries() ) 
 //          {
-//            return Error("MCRichPhotodetectorHits and G4RichG4HitsCollection have different sizes!");
+//            return Error
+//         ("MCRichPhotodetectorHits and G4RichG4HitsCollection have different sizes!");
 //          }
-  
+  // 
       // fill the references
-      for (MCRichPhotodetectorHits::const_iterator iter=hits->begin() ; hits->end()!=iter ; ++iter)
-        { 
+  //     
+  //
+      //        for( int itr = 0 ; itr<numberofhits ; ++itr )
+      //       {
+      //          int traid=(*myCollection)[itr]->GetTrackID();
+      //           if(table[traid].particle())              
+      //           {
+      //            ((*myCollection)[itr])->
+      //              setMCParticle(table[traid].particle());
+      //           }
+                 
+      //       else
+      //         {
+                  //           MsgStream log(   msgSvc(), name());
+                  //         log << MSG::INFO 
+                  //    << "No pointer to MCParticle for MCRichPhotodetectorHit associated to trackID: " 
+                  //    <<ii<<"  "<<itr<< "   "<< traid << endreq;
+          
+                  //       }
+                                        //                
+
+      //                 
+                                        //                
+      //     }
+        
+                                        //        
+        
+      //  }
+                                        //
+              
+                                        //
+              //      for (MCRichPhotodetectorHits::const_iterator iter=hits->begin() ; 
+              //                           hits->end()!=iter ; ++iter)
+              //     { 
 //            int traid=(*myCollection)[itr]->GetTrackID();
 
 //            if(table[traid].particle())
@@ -337,14 +444,14 @@ StatusCode GiGaRichHitCnv::updateObjRefs
       
 //            std::cout << "TrackID: " << traid << " entry of MCParticle: " 
 //                      << (*iter)->entry()  << std::endl;    
-      
+//      
 //            itr++;
-        }
-    }
+//        }
+  //    }
   ///
-  return StatusCode::SUCCESS;
+                                          //  return StatusCode::SUCCESS;
   ///
-};
+                                        //};
 
 
 
