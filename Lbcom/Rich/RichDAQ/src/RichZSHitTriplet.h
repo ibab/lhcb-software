@@ -1,4 +1,4 @@
-// $Id: RichZSHitTriplet.h,v 1.3 2003-11-26 14:18:30 cattanem Exp $
+// $Id: RichZSHitTriplet.h,v 1.4 2004-02-02 14:27:40 jonesc Exp $
 #ifndef RICHDAQ_RICHZSHITTRIPLET_H
 #define RICHDAQ_RICHZSHITTRIPLET_H 1
 
@@ -19,27 +19,32 @@
  *  @date   2003-11-06
  */
 
+// Namespace for definitions related to RichDAQHeaderPD
+namespace RichZSHitTripletCode {
+
   // Define the number of bits for each field
-  #define BitsHit    5
+  static const RichDAQ::ShortType BitsHit    = 5;
 
   // shift registers
-  #define ShiftRow0  0
-  #define ShiftCol0  ShiftRow0 + BitsHit
-  #define ShiftRow1  ShiftCol0 + BitsHit
-  #define ShiftCol1  ShiftRow1 + BitsHit
-  #define ShiftRow2  ShiftCol1 + BitsHit
-  #define ShiftCol2  ShiftRow2 + BitsHit
+  static const RichDAQ::ShortType ShiftRow0  = 0;
+  static const RichDAQ::ShortType ShiftCol0  = ShiftRow0 + BitsHit;
+  static const RichDAQ::ShortType ShiftRow1  = ShiftCol0 + BitsHit;
+  static const RichDAQ::ShortType ShiftCol1  = ShiftRow1 + BitsHit;
+  static const RichDAQ::ShortType ShiftRow2  = ShiftCol1 + BitsHit;
+  static const RichDAQ::ShortType ShiftCol2  = ShiftRow2 + BitsHit;
 
   // The masks
-  #define  MaskRow0    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow0
-  #define  MaskCol0    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol0
-  #define  MaskRow1    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow1
-  #define  MaskCol1    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol1
-  #define  MaskRow2    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow2
-  #define  MaskCol2    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol2
+  static const RichDAQ::LongType  MaskRow0   = ((1 << BitsHit)-1) << ShiftRow0;
+  static const RichDAQ::LongType  MaskCol0   = ((1 << BitsHit)-1) << ShiftCol0;
+  static const RichDAQ::LongType  MaskRow1   = ((1 << BitsHit)-1) << ShiftRow1;
+  static const RichDAQ::LongType  MaskCol1   = ((1 << BitsHit)-1) << ShiftCol1;
+  static const RichDAQ::LongType  MaskRow2   = ((1 << BitsHit)-1) << ShiftRow2;
+  static const RichDAQ::LongType  MaskCol2   = ((1 << BitsHit)-1) << ShiftCol2;
 
   // the max row/column values storable
-  #define MaxRowCol  ( (Rich::ShortType)1 << BitsHit ) - 1
+  static const RichDAQ::ShortType MaxRowCol  = ( 1 << BitsHit ) - 1;
+
+}
 
 class RichZSHitTriplet {
 
@@ -51,8 +56,8 @@ public: // methods
   /// Copy Constructor
   RichZSHitTriplet( const RichZSHitTriplet & hits ) : m_data( hits.data() ) {}
 
-  /// Constructor from Rich::LongType
-  RichZSHitTriplet( const Rich::LongType data ) : m_data( data ) { }
+  /// Constructor from RichDAQ::LongType
+  RichZSHitTriplet( const RichDAQ::LongType data ) : m_data( data ) { }
 
   /// Constructor from three hits
   RichZSHitTriplet( const MCRichDigit * digOne,
@@ -77,139 +82,142 @@ public: // methods
   virtual ~RichZSHitTriplet( ) { }
 
   /// Retrieve the full value
-  inline Rich::LongType data() const { return m_data; }
+  inline RichDAQ::LongType data() const { return m_data; }
 
   /// Update the internal data
-  inline void setData( Rich::LongType data ) { m_data = data;  }
+  inline void setData( const RichDAQ::LongType data ) { m_data = data;  }
 
-  /// operator to convert to Rich::LongType
-  inline operator Rich::LongType() const { return data(); }
+  /// operator to convert to RichDAQ::LongType
+  inline operator RichDAQ::LongType() const { return data(); }
 
   /// Set the first hit row number
-  inline bool setRow0( Rich::ShortType row )
+  inline bool setRow0( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,MaxRowCol) ) {
+    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Row0 number "
                 << row << " out of range" << std::endl;
       return false;
     }
-    return set( row, ShiftRow0, MaskRow0 );
+    return set( row, RichZSHitTripletCode::ShiftRow0, 
+                RichZSHitTripletCode::MaskRow0 );
   }
 
   /// Set the first hit column number
-  inline bool setCol0( Rich::ShortType col )
+  inline bool setCol0( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,MaxRowCol) ) {
+    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Col0 number "
                 << col << " out of range" << std::endl;
       return false;
     }
-    return set( col, ShiftCol0, MaskCol0 );
+    return set( col, RichZSHitTripletCode::ShiftCol0, 
+                RichZSHitTripletCode::MaskCol0 );
   }
 
   /// Set the second hit row number
-  inline bool setRow1( Rich::ShortType row )
+  inline bool setRow1( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,MaxRowCol) ) {
+    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Row1 number "
                 << row << " out of range" << std::endl;
       return false;
     }
-    return set( row, ShiftRow1, MaskRow1 );
+    return set( row, RichZSHitTripletCode::ShiftRow1, 
+                RichZSHitTripletCode::MaskRow1 );
   }
 
   /// Set the second hit column number
-  inline bool setCol1( Rich::ShortType col )
+  inline bool setCol1( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,MaxRowCol) ) {
+    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Col1 number "
                 << col << " out of range" << std::endl;
       return false;
     }
-    return set( col, ShiftCol1, MaskCol1 );
+    return set( col, RichZSHitTripletCode::ShiftCol1, 
+                RichZSHitTripletCode::MaskCol1 );
   }
 
   /// Set the third hit row number
-  inline bool setRow2( Rich::ShortType row )
+  inline bool setRow2( const RichDAQ::ShortType row )
   {
-    if ( !dataInRange(row,MaxRowCol) ) {
+    if ( !dataInRange(row,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Row2 number "
                 << row << " out of range" << std::endl;
       return false;
     }
-    return set( row, ShiftRow2, MaskRow2 );
+    return set( row, RichZSHitTripletCode::ShiftRow2, 
+                RichZSHitTripletCode::MaskRow2 );
   }
 
   /// Set the third hit column number
-  inline bool setCol2( Rich::ShortType col )
+  inline bool setCol2( const RichDAQ::ShortType col )
   {
-    if ( !dataInRange(col,MaxRowCol) ) {
+    if ( !dataInRange(col,RichZSHitTripletCode::MaxRowCol) ) {
       std::cout << "RichZSHitTriplet ERROR : Col2 number "
                 << col << " out of range" << std::endl;
       return false;
     }
-    return set( col, ShiftCol2, MaskCol2 );
+    return set( col, RichZSHitTripletCode::ShiftCol2, 
+                RichZSHitTripletCode::MaskCol2 );
   }
 
   /// Retrieve the first hit row number
-  inline Rich::ShortType row0() const
+  inline RichDAQ::ShortType row0() const
   {
-    return ( (data() & MaskRow0) >> ShiftRow0 );
+    return ( (data() & RichZSHitTripletCode::MaskRow0) >> RichZSHitTripletCode::ShiftRow0 );
   }
 
   /// Retrieve the second hit row number
-  inline Rich::ShortType row1() const
+  inline RichDAQ::ShortType row1() const
   {
-    return ( (data() & MaskRow1) >> ShiftRow1 );
+    return ( (data() & RichZSHitTripletCode::MaskRow1) >> RichZSHitTripletCode::ShiftRow1 );
   }
 
   /// Retrieve the third hit row number
-  inline Rich::ShortType row2() const
+  inline RichDAQ::ShortType row2() const
   {
-    return ( (data() & MaskRow2) >> ShiftRow2 );
+    return ( (data() & RichZSHitTripletCode::MaskRow2) >> RichZSHitTripletCode::ShiftRow2 );
   }
 
   /// Retrieve the first hit column number
-  inline Rich::ShortType col0() const
+  inline RichDAQ::ShortType col0() const
   {
-    return ( (data() & MaskCol0) >> ShiftCol0 );
+    return ( (data() & RichZSHitTripletCode::MaskCol0) >> RichZSHitTripletCode::ShiftCol0 );
   }
 
   /// Retrieve the second hit column number
-  inline Rich::ShortType col1() const
+  inline RichDAQ::ShortType col1() const
   {
-    return ( (data() & MaskCol1) >> ShiftCol1 );
+    return ( (data() & RichZSHitTripletCode::MaskCol1) >> RichZSHitTripletCode::ShiftCol1 );
   }
 
   /// Retrieve the third hit column number
-  inline Rich::ShortType col2() const
+  inline RichDAQ::ShortType col2() const
   {
-    return ( (data() & MaskCol2) >> ShiftCol2 );
+    return ( (data() & RichZSHitTripletCode::MaskCol2) >> RichZSHitTripletCode::ShiftCol2 );
   }
-
-private: // definitions
-
 
 private: // methods
 
-  inline bool set( const Rich::ShortType value,
-                   const Rich::ShortType shift,
-                   const Rich::LongType  mask )
+  inline bool set( const RichDAQ::ShortType value,
+                   const RichDAQ::ShortType shift,
+                   const RichDAQ::LongType  mask )
   {
     setData( ((value << shift) & mask) | (data() & ~mask) );
     return true;
   }
 
   // tests whether a given value is in range for a given data field
-  inline bool dataInRange( const Rich::ShortType value,
-                           const Rich::ShortType max ) const
+  inline bool dataInRange( const RichDAQ::ShortType value,
+                           const RichDAQ::ShortType max ) const
   {
     return ( value <= max );
   }
 
 private: // data
 
-  Rich::LongType m_data;
+  RichDAQ::LongType m_data;
 
 };
 

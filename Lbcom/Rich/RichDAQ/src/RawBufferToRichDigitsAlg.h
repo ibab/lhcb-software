@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.h,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+// $Id: RawBufferToRichDigitsAlg.h,v 1.2 2004-02-02 14:27:39 jonesc Exp $
 #ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 
 #define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
 
@@ -39,10 +39,10 @@ public:
 private: // methods
 
   /// Decode a zero suppress data block
-  unsigned int decodeZeroSuppressedBank( const RawBank & bank ); 
+  unsigned int decodeZeroSuppressedBank( const RawBank & bank ) const; 
 
   /// Decode a non-zero suppress data block
-  unsigned int decodeNonZeroSuppressedBank( const RawBank & bank ); 
+  unsigned int decodeNonZeroSuppressedBank( const RawBank & bank ) const; 
 
 private: // data
 

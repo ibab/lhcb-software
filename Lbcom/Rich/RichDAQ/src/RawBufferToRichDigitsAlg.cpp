@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+// $Id: RawBufferToRichDigitsAlg.cpp,v 1.2 2004-02-02 14:27:39 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -68,13 +68,13 @@ StatusCode RawBufferToRichDigitsAlg::execute() {
   }
 
   // Get the banks for the RichDigits
-  const Rich::RAWBanks & richBanks = rawEvent->banks( RawBuffer::Rich );
+  const RichDAQ::RAWBanks & richBanks = rawEvent->banks( RawBuffer::Rich );
 
   // Make new container for RichDigits
   m_digits = new RichDigits();
 
   // Loop over data banks
-  for ( Rich::RAWBanks::const_iterator iBank = richBanks.begin();
+  for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();
         iBank != richBanks.end(); ++iBank ) {
 
     // Get the bank header
@@ -108,7 +108,7 @@ StatusCode RawBufferToRichDigitsAlg::execute() {
 };
 
 unsigned int
-RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) {
+RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const {
 
   // Get the link identifier
   RichDAQLinkNumber linkN( bank.bankSourceID() );
@@ -120,7 +120,7 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) {
   RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  Rich::ShortType digitCount = bankHeader.hitCount();
+  RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
     MsgStream  msg( msgSvc(), name() );
@@ -174,7 +174,7 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) {
 }
 
 unsigned int
-RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) {
+RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) const {
 
   // Get the link identifier
   RichDAQLinkNumber linkN( bank.bankSourceID() );
@@ -186,7 +186,7 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) {
   RichDAQHeaderPD bankHeader( bank.data()[0] );
 
   // How many digits do we expect to make
-  Rich::ShortType digitCount = bankHeader.hitCount();
+  RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
   if ( msgLevel(MSG::VERBOSE) ) {
     MsgStream  msg( msgSvc(), name() );
@@ -200,12 +200,12 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) {
   RichNonZeroSuppData nonZSdata( bank );
 
   // Get new SmartIDs
-  Rich::SmartIDs IDs;
+  RichDAQ::SmartIDs IDs;
   nonZSdata.fillSmartIDs( linkN.rich(),linkN.panel(),
                           linkN.pdRow(),linkN.pdCol(),IDs );
 
   // Create RichDigits with new RichSmartIDs
-  for ( Rich::SmartIDs::const_iterator iID = IDs.begin();
+  for ( RichDAQ::SmartIDs::const_iterator iID = IDs.begin();
         iID != IDs.end(); ++iID ) {
     if ( msgLevel(MSG::VERBOSE) ) {
       MsgStream  msg( msgSvc(), name() );

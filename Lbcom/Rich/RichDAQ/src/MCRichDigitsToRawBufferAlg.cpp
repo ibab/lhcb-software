@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2004-02-02 14:27:38 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -20,13 +20,13 @@ const        IAlgFactory& MCRichDigitsToRawBufferAlgFactory = s_factory ;
 
 // Standard constructor
 MCRichDigitsToRawBufferAlg::MCRichDigitsToRawBufferAlg( const std::string& name,
-                                                      ISvcLocator* pSvcLocator )
+                                                        ISvcLocator* pSvcLocator )
   : RichAlgBase ( name, pSvcLocator )
 {
 
   declareProperty( "RawBufferLocation",
                    m_rawBuffLoc = RawBufferLocation::Default );
-  declareProperty( "MCRichDigitsLocation", 
+  declareProperty( "MCRichDigitsLocation",
                    m_digitsLoc = MCRichDigitLocation::Default );
   declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
 
@@ -46,7 +46,7 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize() {
     msg << MSG::DEBUG << "Initialise :-" << endreq
         << " MCRichDigit location                = " << m_digitsLoc << endreq
         << " RawBuffer location                  = " << m_rawBuffLoc << endreq
-        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut 
+        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
         << endreq;
   }
 
@@ -79,7 +79,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  Rich::PDMap PDDigits;
+  RichDAQ::PDMap PDDigits;
 
   // Loop over digits and sort according to PD
   for ( MCRichDigits::const_iterator iDigit = digits->begin();
@@ -88,11 +88,11 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
   }
 
   // Loop over each photon detector and produce a digit bank for each
-  for ( Rich::PDMap::const_iterator iPD = PDDigits.begin();
+  for ( RichDAQ::PDMap::const_iterator iPD = PDDigits.begin();
         iPD != PDDigits.end(); ++iPD ) {
 
     // Make a new data bank
-    Rich::RAWBank dataBank;
+    RichDAQ::RAWBank dataBank;
 
     // Based on number of hits, decide whether to zero suppress or not
     if ( ((*iPD).second).size() < m_zeroSuppresCut ) {
@@ -117,9 +117,10 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
   return StatusCode::SUCCESS;
 };
 
-void MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
-                                                     Rich::RAWBank & dataBank,
-                                            const MCRichDigitVector & pdHits ) {
+void
+MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
+                                                RichDAQ::RAWBank & dataBank,
+                                                const MCRichDigitVector & pdHits ) const {
 
   // Make a new header word for this PD and add to data bank
   RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),
@@ -163,9 +164,10 @@ void MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
 
 }
 
-void MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
-                                            Rich::RAWBank & dataBank,
-                                            const MCRichDigitVector & pdHits ) {
+void
+MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
+                                                   RichDAQ::RAWBank & dataBank,
+                                                   const MCRichDigitVector & pdHits ) const {
 
   // Make a new header word for this PD and add to data bank
   RichDAQLinkNumber linkNumber( pdID.rich(), pdID.panel(),

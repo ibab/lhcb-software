@@ -1,4 +1,4 @@
-// $Id: RichDAQDefinitions.h,v 1.5 2003-12-11 07:36:12 cattanem Exp $
+// $Id: RichDAQDefinitions.h,v 1.6 2004-02-02 14:27:39 jonesc Exp $
 #ifndef RICHDAQ_RICHDAQDEFINITIONS_H 
 #define RICHDAQ_RICHDAQDEFINITIONS_H 1
 
@@ -15,22 +15,24 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
-namespace Rich {
+namespace RichDAQ {
 
-  // Data defintions
+  /// DAQ long type definition
   typedef raw_int        LongType;
+
+  /// DAQ short type definition
   typedef unsigned int   ShortType;
 
-  // Container for PD data
+  /// Container for PD data
   typedef std::map< RichSmartID, MCRichDigitVector > PDMap;
 
-  // Local definition of a RawBank constructed from 32bit ints
-  typedef std::vector<Rich::LongType>                RAWBank;
+  /// Local definition of a RawBank constructed from 32bit ints
+  typedef std::vector<LongType>                      RAWBank;
 
-  // Container of Rich RawBanks
+  /// Container of Rich RawBanks
   typedef std::vector<RawBank>                       RAWBanks;
 
-  // Container of RichSmartIDs
+  /// Container of RichSmartIDs
   typedef std::vector<RichSmartID>                   SmartIDs;
 
 }

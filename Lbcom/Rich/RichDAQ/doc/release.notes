@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-01-29 - Chris Jones
+ - replacement of #define with static variables
+
 !========================== RichDAQ v1r1 2004-01-07 =========================
 ! 2004-01-07 - Marco Cattaneo
  - Move to Gaudi v14 (use RichEvent v7r*, DAQEvent v4r* in requirements)

@@ -1,4 +1,4 @@
-// $Id: RichDAQHeaderPD.h,v 1.4 2003-11-26 14:18:29 cattanem Exp $
+// $Id: RichDAQHeaderPD.h,v 1.5 2004-02-02 14:27:39 jonesc Exp $
 #ifndef RICHDAQ_RICHDAQHEADERPD_H
 #define RICHDAQ_RICHDAQHEADERPD_H 1
 
@@ -17,28 +17,34 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+
+// Namespace for definitions related to RichDAQHeaderPD
+namespace RichDAQHeaderPDCode {
+
   // Define the number of bits for each field
-  #define BitsHitCount    10
-  #define BitsLinkNum     12
-  #define BitsUnUsed1     7
-  #define BitsZS          1
-  #define BitsStartPD     1
+  static const RichDAQ::ShortType BitsHitCount  =  10;
+  static const RichDAQ::ShortType BitsLinkNum   =  12;
+  static const RichDAQ::ShortType BitsUnUsed1   =  7;
+  static const RichDAQ::ShortType BitsZS        =  1;
+  static const RichDAQ::ShortType BitsStartPD   =  1;
 
   // Create the shift registers
-  #define ShiftHitCount   0
-  #define ShiftLinkNum    ShiftHitCount + BitsHitCount
-  #define ShiftZS         ShiftLinkNum  + BitsUnUsed1 + BitsLinkNum
-  #define ShiftStartPD    ShiftZS       + BitsZS
+  static const RichDAQ::ShortType ShiftHitCount  = 0;
+  static const RichDAQ::ShortType ShiftLinkNum   = ShiftHitCount + BitsHitCount;
+  static const RichDAQ::ShortType ShiftZS        = ShiftLinkNum  + BitsUnUsed1 + BitsLinkNum;
+  static const RichDAQ::ShortType ShiftStartPD   = ShiftZS       + BitsZS;
 
   // Create the Masks
-  #define MaskHitCount  (((Rich::LongType)1 << BitsHitCount)-1) << ShiftHitCount
-  #define MaskLinkNum   (((Rich::LongType)1 << BitsLinkNum)-1)  << ShiftLinkNum
-  #define MaskZS        (((Rich::LongType)1 << BitsZS)-1)       << ShiftZS
-  #define MaskStartPD   (((Rich::LongType)1 << BitsStartPD)-1)  << ShiftStartPD
+  static const RichDAQ::LongType MaskHitCount  = ((1 << BitsHitCount)-1) << ShiftHitCount;
+  static const RichDAQ::LongType MaskLinkNum   = ((1 << BitsLinkNum)-1)  << ShiftLinkNum;
+  static const RichDAQ::LongType MaskZS        = ((1 << BitsZS)-1)       << ShiftZS;
+  static const RichDAQ::LongType MaskStartPD   = ((1 << BitsStartPD)-1)  << ShiftStartPD;
 
   // Create the max values that can be stored in each field
-  #define MaxHitCount    ( (Rich::ShortType)1 << BitsHitCount ) - 1
-  #define MaxLinkNum     ( (Rich::ShortType)1 << BitsLinkNum )  - 1
+  static const RichDAQ::ShortType MaxHitCount    = ( 1 << BitsHitCount ) - 1;
+  static const RichDAQ::ShortType MaxLinkNum     = ( 1 << BitsLinkNum  ) - 1;
+
+}
 
 class RichDAQHeaderPD {
 
@@ -50,14 +56,14 @@ public: // methods
   /// Copy constructor
   RichDAQHeaderPD( const RichDAQHeaderPD & header ) : m_data( header.data() ) { }
 
-  /// Constructor from Rich::LongType
-  RichDAQHeaderPD( const Rich::LongType data ) : m_data( data ) { }
+  /// Constructor from RichDAQ::LongType
+  RichDAQHeaderPD( const RichDAQ::LongType data ) : m_data( data ) { }
 
   /// Constructor from all data
   RichDAQHeaderPD( const bool zSupp,
-                   const Rich::LongType linkN,
-                   const Rich::ShortType hitCount,
-                   const Rich::ShortType startPD = 1 ) : m_data(0)
+                   const RichDAQ::LongType linkN,
+                   const RichDAQ::ShortType hitCount,
+                   const RichDAQ::ShortType startPD = 1 ) : m_data(0)
   {
     setStartPD        ( startPD  );
     setZeroSuppressed ( zSupp    );
@@ -69,90 +75,93 @@ public: // methods
   virtual ~RichDAQHeaderPD( ) {}
 
   /// Retrieve the full value
-  inline Rich::LongType data() const { return m_data; }
+  inline RichDAQ::LongType data() const { return m_data; }
 
   /// Update the internal data
-  inline void setData( Rich::LongType data ) { m_data = data; }
+  inline void setData( const RichDAQ::LongType data ) { m_data = data; }
 
-  /// operator to convert to Rich::LongType
-  inline operator Rich::LongType() const { return data(); }
+  /// operator to convert to RichDAQ::LongType
+  inline operator RichDAQ::LongType() const { return data(); }
 
   /// Set new PD bit
-  inline void setStartPD( Rich::ShortType value)
+  inline void setStartPD( const RichDAQ::ShortType value)
   {
-    set( value, ShiftStartPD, MaskStartPD );
+    set( value, RichDAQHeaderPDCode::ShiftStartPD, 
+         RichDAQHeaderPDCode::MaskStartPD );
   }
 
   /// Set the zero suppression info
-  inline void setZeroSuppressed( bool zSupp )
+  inline void setZeroSuppressed( const bool zSupp )
   {
-    Rich::ShortType i = ( zSupp ? 1 : 0 );
-    set( i, ShiftZS, MaskZS );
+    RichDAQ::ShortType i = ( zSupp ? 1 : 0 );
+    set( i, RichDAQHeaderPDCode::ShiftZS, RichDAQHeaderPDCode::MaskZS );
   }
 
   /// Retrieve the zero suppressed information
   inline bool zeroSuppressed() const
   {
-    return ( 0 != ( (data() & MaskZS) >> ShiftZS ) );
+    return ( 0 != ( (data() & RichDAQHeaderPDCode::MaskZS) 
+                    >> RichDAQHeaderPDCode::ShiftZS ) );
   }
 
   /// Set the link number info
-  inline bool setLinkNumber( Rich::ShortType linkNum )
+  inline bool setLinkNumber( const RichDAQ::ShortType linkNum )
   {
-    if ( !dataInRange(linkNum,MaxLinkNum) ) {
+    if ( !dataInRange(linkNum,RichDAQHeaderPDCode::MaxLinkNum) ) {
       std::cout << "RichDAQHeaderPD ERROR : Link number "
                 << linkNum << " out of range" << std::endl;
       return false;
     }
-    return set( linkNum, ShiftLinkNum, MaskLinkNum );
+    return set( linkNum, RichDAQHeaderPDCode::ShiftLinkNum, 
+                RichDAQHeaderPDCode::MaskLinkNum );
   }
 
   /// Retrieve the link number
-  inline Rich::ShortType linkNumber() const
+  inline RichDAQ::ShortType linkNumber() const
   {
-    return ( (data() & MaskLinkNum) >> ShiftLinkNum );
+    return ( (data() & RichDAQHeaderPDCode::MaskLinkNum) 
+             >> RichDAQHeaderPDCode::ShiftLinkNum );
   }
 
   /// Set the hit count info
-  inline bool setHitCount( Rich::ShortType hitCount )
+  inline bool setHitCount( const RichDAQ::ShortType hitCount )
   {
-    if ( !dataInRange(hitCount,MaxHitCount) ) {
+    if ( !dataInRange(hitCount,RichDAQHeaderPDCode::MaxHitCount) ) {
       std::cout << "RichDAQHeaderPD ERROR : Hit count "
                 << hitCount << " out of range" << std::endl;
       return false;
     }
-    return set( hitCount, ShiftHitCount, MaskHitCount );
+    return set( hitCount, RichDAQHeaderPDCode::ShiftHitCount, 
+                RichDAQHeaderPDCode::MaskHitCount );
   }
 
   /// Retrieve the hit count number
-  inline Rich::ShortType hitCount() const
+  inline RichDAQ::ShortType hitCount() const
   {
-    return ( (data() & MaskHitCount) >> ShiftHitCount );
+    return ( (data() & RichDAQHeaderPDCode::MaskHitCount) 
+             >> RichDAQHeaderPDCode::ShiftHitCount );
   }
-
-private: // definitions
-
 
 private: // methods
 
-  inline bool set( const Rich::ShortType value,
-                   const Rich::ShortType shift,
-                   const Rich::LongType  mask )
+  inline bool set( const RichDAQ::ShortType value,
+                   const RichDAQ::ShortType shift,
+                   const RichDAQ::LongType  mask )
   {
     setData( ((value << shift) & mask) | (data() & ~mask) );
     return true;
   }
 
   // tests whether a given value is in range for a given data field
-  inline bool dataInRange( const Rich::ShortType value,
-                           const Rich::ShortType max ) const
+  inline bool dataInRange( const RichDAQ::ShortType value,
+                           const RichDAQ::ShortType max ) const
   {
     return ( value <= max );
   }
 
 private: // data
 
-  Rich::LongType m_data;
+  RichDAQ::LongType m_data;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.9 2003-11-26 14:18:30 cattanem Exp $
+// $Id: RichNonZeroSuppData.h,v 1.10 2004-02-02 14:27:40 jonesc Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -16,7 +16,12 @@
  *  @date   2003-11-07
  */
 
-#define MaxBits 32
+// Namespace for definitions related to RichNonZeroSuppData
+namespace RichNonZeroSuppDataCode {
+
+  static const RichDAQ::ShortType MaxBits = 32;
+  
+}
 
 class RichNonZeroSuppData {
 
@@ -26,10 +31,10 @@ public:
   RichNonZeroSuppData() { initData(); }
 
   /// Constructor from a vector of RichSmartIDs
-  RichNonZeroSuppData( const Rich::SmartIDs & digits )
+  RichNonZeroSuppData( const RichDAQ::SmartIDs & digits )
   {
     initData();
-    for ( Rich::SmartIDs::const_iterator iDig = digits.begin();
+    for ( RichDAQ::SmartIDs::const_iterator iDig = digits.begin();
           iDig != digits.end(); ++ iDig ) {
       setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
     }
@@ -50,7 +55,7 @@ public:
   {
     initData();
     // Loop over data entries and set data.
-    for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
+    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
       // NB: Skip 0th row since this is the header...
       m_data[iData] = bank.data()[iData+1];
     }
@@ -60,46 +65,46 @@ public:
   virtual ~RichNonZeroSuppData() {}
 
   /// Set a pixel as active
-  inline void setPixelActive( const Rich::ShortType row, 
-                              const Rich::ShortType col )
+  inline void setPixelActive( const RichDAQ::ShortType row, 
+                              const RichDAQ::ShortType col )
   {
     setBit( m_data[row], col );
   }
 
   /// Is a given pixel active ?
-  inline bool isPixelActive( const Rich::ShortType row, 
-                             const Rich::ShortType col ) const
+  inline bool isPixelActive( const RichDAQ::ShortType row, 
+                             const RichDAQ::ShortType col ) const
   {
     return isBitOn( m_data[row], col );
   }
 
   /// Return data size
-  inline Rich::ShortType dataSize() const
+  inline RichDAQ::ShortType dataSize() const
   {
-    return MaxBits;
+    return RichNonZeroSuppDataCode::MaxBits;
   }
 
   /// Read only access to data
-  inline const Rich::LongType * data() const
+  inline const RichDAQ::LongType * data() const
   {
     return &m_data[0];
   }
 
   /// Write access to data
-  inline Rich::LongType * data()
+  inline RichDAQ::LongType * data()
   {
     return &m_data[0];
   }
 
   /// Fill a vector with RichSmartIDs for hit pixels
-  inline void fillSmartIDs( const Rich::ShortType rich,
-                            const Rich::ShortType panel,
-                            const Rich::ShortType pdRow,
-                            const Rich::ShortType pdCol,
-                            Rich::SmartIDs & ids ) const
+  inline void fillSmartIDs( const RichDAQ::ShortType rich,
+                            const RichDAQ::ShortType panel,
+                            const RichDAQ::ShortType pdRow,
+                            const RichDAQ::ShortType pdCol,
+                            RichDAQ::SmartIDs & ids ) const
   {
-    for ( Rich::ShortType iRow = 0; iRow < dataSize(); ++iRow ) {
-      for ( Rich::ShortType iCol = 0; iCol < dataSize(); ++iCol ) {
+    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow ) {
+      for ( RichDAQ::ShortType iCol = 0; iCol < dataSize(); ++iCol ) {
         if ( isPixelActive(iRow,iCol) ) {
           ids.push_back( RichSmartID( rich,panel,pdRow,pdCol,iRow,iCol ) );
         }
@@ -108,9 +113,9 @@ public:
   }
 
   /// Fill a vector with Raw data words
-  inline void fillRAW( Rich::RAWBank & rawData ) const
+  inline void fillRAW( RichDAQ::RAWBank & rawData ) const
   {
-    for ( Rich::ShortType iData = 0; iData < dataSize(); ++iData ) {
+    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
       rawData.push_back( m_data[iData] );
     }
   }
@@ -123,25 +128,25 @@ private: // methods
   /// Reset all data to zero
   inline void initData()
   {
-    for ( Rich::ShortType i = 0; i < dataSize(); ++i ) { m_data[i] = 0; }
+    for ( RichDAQ::ShortType i = 0; i < dataSize(); ++i ) { m_data[i] = 0; }
   }
 
   /// Test if a given bit in a word is set on
   inline bool 
-  isBitOn( const Rich::LongType data, const Rich::ShortType pos ) const
+  isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
   {
     return ( 0 != (data & (1<<pos)) );
   }
 
   /// Set a given bit in a data word on
-  inline void setBit( Rich::LongType & data, Rich::ShortType pos )
+  inline void setBit( RichDAQ::LongType & data, const RichDAQ::ShortType pos )
   {
     data |= 1<<pos;
   }
 
 private: //data
 
-  Rich::LongType m_data[MaxBits];
+  RichDAQ::LongType m_data[RichNonZeroSuppDataCode::MaxBits];
 
 };
 
@@ -149,10 +154,10 @@ private: //data
 inline MsgStream & operator << ( MsgStream & os,
                                  const RichNonZeroSuppData & data )
 {
-  for ( Rich::ShortType iRow = 0; iRow < data.dataSize(); ++iRow ) {
+  for ( RichDAQ::ShortType iRow = 0; iRow < data.dataSize(); ++iRow ) {
     os << "  ";
-    for ( Rich::ShortType iCol = 0; iCol < data.dataSize(); ++iCol ) {
-      os << (bool)( data.data()[iRow] & (1<<iCol) ) << " ";
+    for ( RichDAQ::ShortType iCol = 0; iCol < data.dataSize(); ++iCol ) {
+      os << static_cast<bool>( data.data()[iRow] & (1<<iCol) ) << " ";
     }
     os << endreq;
   }

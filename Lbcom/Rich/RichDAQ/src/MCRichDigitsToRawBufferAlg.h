@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.h,v 1.1 2003-11-26 11:11:29 cattanem Exp $
+// $Id: MCRichDigitsToRawBufferAlg.h,v 1.2 2004-02-02 14:27:39 jonesc Exp $
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
 
@@ -46,11 +46,11 @@ public:
 private: // methods
 
   void fillZeroSuppressed    ( RichSmartID pdID,
-                               Rich::RAWBank & dataBank,
-                               const MCRichDigitVector & pdHits );
+                               RichDAQ::RAWBank & dataBank,
+                               const MCRichDigitVector & pdHits ) const;
   void fillNonZeroSuppressed ( RichSmartID pdID,
-                               Rich::RAWBank & dataBank,
-                               const MCRichDigitVector & pdHits );
+                               RichDAQ::RAWBank & dataBank,
+                               const MCRichDigitVector & pdHits ) const;
 
 private: // data
 
