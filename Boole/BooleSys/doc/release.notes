@@ -30,9 +30,8 @@ Output data incompatible with DC04 versions, needs Brunel v26r2 or greater
 
 - Persistency changes
   . Add Link/ITDigits2MCHits, /Link/OTTimes2MCHits, /Link/VeloClusters2MCHits
-    and remove Relations/OTTimes2MCHits Relations/VeloClusters2MCHits. Keep
-    Relations/ITDigits2MCHits for now, due to inconsistency with corresponding
-    Linker table, under investigation
+    and remove Relations/OTTimes2MCHits Relations/VeloClusters2MCHits,
+               Relations/ITDigits2MCHits
   (DigiContent.opts,ITAssociators v2r11,OTAssociators v3r2,VeloAssociators v1r14)
   . Backwards incompatible changes to internals of MCHit and MCParticle
     (Event v4r7)
