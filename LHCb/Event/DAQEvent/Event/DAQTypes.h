@@ -1,8 +1,6 @@
 #ifndef DAQTypes_H
 #define DAQTypes_H 1
 
-#include <sys/types.h>
-//(See at /usr/include/sys/types.h)
 
 /** @file
  *
@@ -15,14 +13,12 @@
  */
  
 #ifdef WIN32
-//typedef u__int32_t hlt_int ;
-//typedef u__int16_t l1_int ;
-typedef __int32_t hlt_int ;
-typedef __int16_t l1_int ;
+typedef __int32 hlt_int ;
+typedef __int16 l1_int ;
 
 #else
-//typedef u_int32_t hlt_int ;
-//typedef u_int16_t l1_int ;
+//(See at /usr/include/sys/types.h)
+#include <sys/types.h>
 typedef int32_t hlt_int ;
 typedef int16_t l1_int ;
 #endif   // WIN32
