@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.15 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.16 2004-07-28 13:41:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -55,7 +58,7 @@ namespace DeRichHPDPanelLocation {
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
- * DeRichHPDPanel provides geometry info for the panels, converts RichSmartIDs
+ * DeRichHPDPanel provides geometry information for the HPD panels, converts RichSmartIDs
  * to space points and finds intersections with the HPDs
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
