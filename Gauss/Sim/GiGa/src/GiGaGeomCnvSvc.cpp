@@ -280,11 +280,11 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
       if( 0 == g4child ) 
 	{ Error("g4BoolSolid, could not convert CHILD solid for Boolean solid="+Sd->name())  ; return 0; }
       if      ( 0 != sSub    ) 
-	{ g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix() ) ; }
+	{ g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sInt    )
-	{ g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix() ) ; }
+	{ g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else if ( 0 != sUni    )
-	{ g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix() ) ; }
+	{ g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix().inverse() ) ; }
       else
 	{ Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }
     } 

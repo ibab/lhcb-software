@@ -104,7 +104,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
       if( 0 == LV ) { return Error("updateRep:: Could not convert daughter LVolume for "+lv->name() );}
       G4VPhysicalVolume*  PV = 
 	///	new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
-	new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
+	new G4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
     }
   /// look again at the G4 static store
   {
