@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi_Tags.py,v 1.3 2004-11-14 16:56:49 ibelyaev Exp $
+# $Id: Bs2PhiPhi_Tags.py,v 1.4 2004-11-25 14:55:05 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -67,6 +67,9 @@ def configure () :
                     'HcalPIDmu.OutputLevel     =   5  ' ,
                     'EcalPIDe.OutputLevel      =   5  ' ,
                     'HcalPIDe.OutputLevel      =   5  ' ,
+                    'HcalPIDe.OutputLevel      =   5  ' ,
+                    'EvtTupleSvc.OutputLevel   =   1  ' ,
+                    'NTupleSvc.OutputLevel     =   1  ' ,
                     'BremPIDe.OutputLevel      =   5  ' ,
                     'PrsPIDe.OutputLevel       =   5  ' ,
                     'NeutralPP2MC.OutputLevel  =   5  ' ,
@@ -74,6 +77,7 @@ def configure () :
                     'EventSelector.PrintFreq   = 100  ' ] )
 
     gaudi.HistogramPersistency = "ROOT"
+
     
     # specific job configuration 
     # preload algorithm(s)
@@ -107,16 +111,13 @@ def configure () :
     tagw.ItemList    = [ '/NTUPLES/EVTTAGS/TagCreator/1' ]
     tagw.EvtDataSvc  =   'EvtTupleSvc' ;
     
-    # event collections
-    #tsvc = gaudi.service('EvtTupleSvc')
-    #tsvc.Output =  [ "EVTTAGS DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOTTREE' OPT='NEW' " ]
-    #print ' OUTPUT ' , tsvc.Output
-
     # ntuples 
-    nsvc = gaudimodule.iProperty( 'NTupleSvc' )
-    nsvc.Output = [ "PHIPHI  DATAFILE='bs2phiphi_tup.root' TYP='ROOT' OPT='NEW'" ]
+    nsvc = gaudi.nTupleSvc()
+    nsvc.defineOutput( { 'PHIPHI' : 'bs2phiphi_tup.hbook' } , 'HBOOK' ) 
     
-
+    # event collections
+    tsvc = gaudi.evtcolsvc()
+    tsvc.defineOutput( { 'EVTTAGS' : 'EventTags.tags' } , 'POOL_ROOTTREE' )
     
     return SUCCESS 
     
@@ -134,6 +135,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/11/14 16:56:49  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.2  2004/11/12 14:24:42  ibelyaev
 #  v4r2
 #

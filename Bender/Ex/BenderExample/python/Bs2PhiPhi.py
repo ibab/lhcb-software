@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi.py,v 1.2 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Bs2PhiPhi.py,v 1.3 2004-11-25 14:55:05 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -85,7 +85,7 @@ def configure () :
                     'HcalPIDmu.OutputLevel     =   5  ' ,
                     'EcalPIDe.OutputLevel      =   5  ' ,
                     'HcalPIDe.OutputLevel      =   5  ' ,
-                     'BremPIDe.OutputLevel      =   5  ' ,
+                    'BremPIDe.OutputLevel      =   5  ' ,
                     'PrsPIDe.OutputLevel       =   5  ' ,
                     'NeutralPP2MC.OutputLevel  =   5  ' ,
                     'Hadrons.OutputLevel       =   5  ' ,
@@ -100,20 +100,21 @@ def configure () :
     bs = Bs2PhiPhi('Bs2PhiPhi')
     gaudi.addAlgorithm( bs ) 
     
+    # output histogram file 
+    hsvc = gaudi.histoSvc()
+    hsvc.setOutput( 'phi1.hbook' , 'HBOOK')
+    
+    nsvc = gaudi.nTupleSvc()
+    nsvc.defineOutput( { 'PHIPHI' : 'bs2phiphi_tup.hbook' } , 'HBOOK')
+    nsvc.OutputLevel = 2
+    
     bs = gaudi.algorithm('Bs2PhiPhi')
     bs.OutputLevel = 5
     bs.NTupleLUN  = "PHIPHI"
-    
+
     desktop = gaudi.tool('Bs2PhiPhi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
     
-    # output histogram file 
-    hsvc = gaudi.service( 'HistogramPersistencySvc' )
-    hsvc.OutputFile = 'phi.hbook'
-    
-    nsvc = gaudimodule.iProperty( 'NTupleSvc' )
-    nsvc.Output += [ "PHIPHI DATAFILE='bs2phiphi_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
-
     return SUCCESS
 
 # =============================================================================
@@ -130,6 +131,9 @@ if __name__ == '__main__' :
   
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/11/12 14:24:42  ibelyaev
+#  v4r2
+#
 # =============================================================================
 # The END 
 # =============================================================================
