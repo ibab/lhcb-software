@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.11 2002-04-30 08:41:20 cattanem Exp $
+! $Id: release.notes,v 1.12 2002-05-15 15:42:41 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
 ! >>>>>>>>>>>>>>>>>>>>>>> PhysEvent v4r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020515 Gloria Corti
+  - introduce clone methods in Particle and Vertex, new class
+    PrimVertex, introduce default location in PhysSel
+
 ! 20020430 Marco Cattaneo
   - requirements: remove run time dependency on GaudiIntrospection
 
@@ -30,8 +34,7 @@
    src/PhysSel.cpp          - adapt serializer dropping LHCbEvent dependecie
    src/PhysEvent_load.cpp   - declare AxPartCandidate(s) factories
    
-! ======================================================================
-
+! >>>>>>>>>>>>>>>>>>>>>>> PhysEvent v3r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020402 - PhysEvent v3r0 (G.Corti)
 	New event model for Physics Event part.
   Still depend of LHCbEvent v12r2 and SicbCnv v15r1 (uses old ParticleID)
@@ -69,11 +72,11 @@
   - Added xml/PhysEvent.xml file
   - Modified requirements to build the dictionary (disabled generation of .h files)
 
-! 16072001 - PhysEvent (GCorti)
+! 20010716 - PhysEvent (GCorti)
   Introduced new method in PhysSel (whichPhysSelDecays) that returns the
   list of name of SelDecay which selectionhas been executed
 
-! 09072001 - PhysEvent v1 (GCorti)
+! 20010709 - PhysEvent v1 (GCorti)
   First release of the package.
   This package is foreseen to contain the event data model for physics
   analysis. 
