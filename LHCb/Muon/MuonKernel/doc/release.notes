@@ -1,0 +1,10 @@
+Package MuonKernel
+Package manager: A.Tsaregorodtsev
+
+! 20020127 - MuonKernel v1 Andrei TSaregorodtsev
+
+  Initial version of the package containing basic Muon system classes 
+  to manage the Muon system entities bookkeeping.
+  
+  The package builds the library as well as "test" application. The
+  latter serves mostly as an example of the use.

@@ -1,0 +1,30 @@
+package MuonKernel
+
+version v1
+
+branches cmt src MuonKernel doc Test
+
+include_dirs $(MUONKERNELROOT)
+
+use Gaudi v9* Gaudi
+
+#----------------------------------------------
+library MuonKernelLib ../src/*.cpp
+
+apply_pattern package_Llinkopts  
+apply_pattern linker_path   
+
+#----------------------------------------------
+#  Build small test program which also presents examples
+#  of MuonKernel classes use
+
+application test   ../Test/*.cpp
+apply_pattern application_path
+macro Test_linkopts  "$(application_linkopts)"   
+
+#----------------------------------------------
+
+private
+
+apply_pattern package_Lshlibflags
+macro_append MuonKernelLib_shlibflags "$(GaudiKernel_linkopts)"          
