@@ -1,5 +1,5 @@
 package Boole
-version v6r1
+version v6r2
 
 branches doc cmt job options
 
@@ -46,7 +46,7 @@ use L0MuonTrigger	v2r1	L0
 
 # Calorimeter
 use CaloMonitor         v2r2p1	Calo
-use CaloDigit           v1r6p1	Calo
+use CaloDigit           v1r7	Calo
 
 # Velo
 use VeloAlgorithms      v2r9p3	Velo
