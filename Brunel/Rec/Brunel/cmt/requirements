@@ -1,5 +1,5 @@
 package Brunel
-version v10r0
+version v10r1
 
 branches doc cmt job options
 
@@ -54,7 +54,7 @@ use TrKernel     v10r0  Tr
 
 # Detector description
 use DetDesc      v10r2  Det
-use XmlDDDB      v12r0  Det
+use XmlDDDB      v12r1  Det
 use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r1  Det

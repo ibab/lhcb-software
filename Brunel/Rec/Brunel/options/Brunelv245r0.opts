@@ -1,0 +1,38 @@
+//--------------------------------------------------------------
+// Job options for Brunel when using $LHCBDBASE version v245r0
+// ------ "Realistic LHCb light, split OT+IT TT1" detector -----
+#pragma print off
+// --- Define input data. Spillover first (if required), then signal ---
+#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+//SpillOverSelector.Input = {"JOBID='92113'"}; // evtype 61 RAWH3 for spillover
+SpillOverSelector.Input = {"FILE='/shift/shd18/data11/z5/stage/mcv252.data_61P'"};
+#pragma print on
+//EventSelector.Input = {"JOBID='92119'"}; // evtype 412100 RAWH3 signal
+EventSelector.Input = {"FILE='/shift/shd18/data11/z5/stage/mcv252.data'"};
+#pragma print off
+
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
+//--------------------------------------------------------------
+
+// Define outputs
+HistogramPersistencySvc.OutputFile = "brunel_v245r0.hbook";  // Monitoring histos
+#include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
+BrunelDstWriter.Output = "DATAFILE='dst_v245.root' TYP='ROOT' OPT='NEW'";
+
+//--------------------------------------------------------------
+// Database specific options
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/BrunelTrOtItTT1.opts"  // dbase v243r3 tracking layout
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v245r0.xml";
+// Remove RICH digitisation until new code becomes available
+BrunelDigi.DetectorList = { "VELO" , "IT", "OT" ,  "CALO", "MUON" };
+
+//--------------------------------------------------------------
+// Add here your specific options. These over-ride previously defined options
+//EventSelector.FirstEvent = 6;
+#pragma print on
+ApplicationMgr.EvtMax = 10;
+//--------------------------------------------------------------
+#pragma print off
+//ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 

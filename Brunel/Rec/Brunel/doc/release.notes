@@ -4,6 +4,9 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v10r0>2002-06-06 Brunel v10r1</A></H1><PRE>
+ - Add support for dbase v245 (without RICH for now)
+
 </PRE><H1><A NAME=v10r0>2002-06-04 Brunel v10r0</A></H1><PRE>
 Pre-release of Brunel using new event model, in preparation for summer 2002
 production
