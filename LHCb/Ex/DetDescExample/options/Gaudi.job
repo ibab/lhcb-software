@@ -36,7 +36,7 @@ endif
 set current = $PWD
 #
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r1
+setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r2
 
 # == set the LHCB version number
 set opts = `grep STDOPTS $MYJOBROOT/cmt/${MODE}.make`
