@@ -1,8 +1,16 @@
+<PRE>
 !-----------------------------------------------------------------------------
 ! Package     : LHCbSys
 ! Responsible : Florence Ranjard, Marco Cattaneo
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
+
+!====================== LHCbSys v15r10 2004-05-13 =======================
+! 2004-05-13 - Marco Cattaneo
+ - Modified packages: EventSys v17r9p1
+ 
+ - In EventSys v17r9p1:
+   . Load SealSTLDict last, to bypass a problem with unresolved dictionaries
 
 !======================= LHCbSys v15r9 2004-05-05 =======================
 ! 2004-05-05 - Marco Cattaneo
@@ -574,3 +582,4 @@
 ! 2002-09-25 - Florence Ranjard
  - requirements - it is LHCb minus SICBSys
 !==========================================================================
+</PRE>

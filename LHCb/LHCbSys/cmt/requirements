@@ -1,12 +1,12 @@
 package LHCbSys
-version v15r9
+version v15r10
 
 branches doc cmt
 
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r9
+use LHCb		v15r10
 
 use GaudiConf		v7r8
 
@@ -39,7 +39,7 @@ use RichDet		v7r1	Det
 use STDet          	v1r1	Det
 
 # Event data model
-use EventSys		v17r9	Event
+use EventSys		v17r9p1	Event
 use Event        	v4r3	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
