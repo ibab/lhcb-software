@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.cpp,v 1.2 2004-04-16 15:14:59 beneyton Exp $
+// $Id: ProducePairPhotons.cpp,v 1.3 2004-04-16 16:58:59 beneyton Exp $
 // Include files
 #include <string>
 
@@ -116,16 +116,19 @@ StatusCode ProducePairPhotons::execute() {
 	MsgStream  msg( msgSvc(), name() );
 	IFD msg << MSG::DEBUG << "==> Execute" << endreq;
 
+	setFilterPassed(false);
 	int Nreconstructed = 0;
 	bool reconstructed = false;
 //=============================================================================
 // Get all created Particle and create gammas
 //=============================================================================
+	/*
 	status = desktop()->getInput();
 	if (!status) {
 		msg << MSG::ERROR << "    not able to fill PhysDesktop " << endreq;
 		return StatusCode::FAILURE;
 	}
+	*/
 	const ParticleVector& parts = desktop()->particles();
 	ParticleVector tmpparts(parts.begin(), parts.end());
 	IFD msg << MSG::DEBUG << "found " << tmpparts.size() << " particles" << endreq;
@@ -393,6 +396,7 @@ StatusCode ProducePairPhotons::execute() {
 			}
 			Nreconstructed++;
 			reconstructed = true;
+			setFilterPassed(true);
 		}
 	}
 
