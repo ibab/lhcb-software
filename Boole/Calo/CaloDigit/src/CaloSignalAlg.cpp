@@ -1,29 +1,20 @@
-// $Id: CaloSignalAlg.cpp,v 1.4 2004-02-23 09:17:54 ibelyaev Exp $
-// STL
-#include <string>
-#include <algorithm>
-#include <stdio.h>
+// $Id: CaloSignalAlg.cpp,v 1.5 2005-01-12 09:14:33 ocallot Exp $
+
 /// CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/Stat.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-// Event/LHCbEvent
+
 #include "Event/MCParticle.h"
+
 // Calo/CaloGen
 #include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloException.h"
+
 /// Event/CaloEvent
 #include "Event/MCCaloDigit.h"
 #include "Event/MCCaloHit.h"
-/// Det/CaloDet
-#include "CaloDet/DeCalorimeter.h"
+
 /// local
 #include "CaloSignalAlg.h"
 
@@ -48,7 +39,7 @@ const       IAlgFactory& CaloSignalAlgFactory = Factory ;
 //=============================================================================
 CaloSignalAlg::CaloSignalAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : CaloAlgorithm ( name , pSvcLocator ) 
+  : GaudiAlgorithm ( name , pSvcLocator ) 
 {
   //** Declare the algorithm's properties which can be set at run time and 
   //** default values
@@ -57,37 +48,28 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   declareProperty( "MinimalDeposit"    , m_minimalDeposit     = 0.1  ) ;
   declareProperty( "BackgroundScaling" , m_backgroundScaling  = 0.25 ) ;
   declareProperty( "IgnoreTimeInfo"    , m_ignoreTimeInfo     = false) ;
-  declareProperty( "BackgroundData"    , m_backgroundData     = ""   ) ;
 
   if ( "SpdSignal" == name ) {
-    setDetData(    "/dd/Structure/LHCb/Spd" );
-    setInputData(  MCCaloHitLocation::Spd );
-    setOutputData( MCCaloDigitLocation::Spd );
-    m_previousData    = "Prev/" + MCCaloHitLocation::Spd;
-    m_previousDigits  = "Prev/" + MCCaloDigitLocation::Spd;
-    m_minimalDeposit  = 0.0;   //== Full history
-    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Spd;
+    m_detectorName   = "/dd/Structure/LHCb/Spd" ;
+    m_inputData      = MCCaloHitLocation::Spd ;
+    m_outputData     = MCCaloDigitLocation::Spd ;
+    m_previousDigits = "Prev/" + MCCaloDigitLocation::Spd;
+    m_minimalDeposit = 0.0;   //== Full history
   } else if ( "PrsSignal" == name ) {
-    setDetData(    "/dd/Structure/LHCb/Prs" );
-    setInputData(  MCCaloHitLocation::Prs );
-    setOutputData( MCCaloDigitLocation::Prs );
-    m_previousData    = "Prev/" + MCCaloHitLocation::Prs;
-    m_previousDigits  = "Prev/" + MCCaloDigitLocation::Prs;
-    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Prs;
+    m_detectorName   = "/dd/Structure/LHCb/Prs" ;
+    m_inputData      = MCCaloHitLocation::Prs ;
+    m_outputData     = MCCaloDigitLocation::Prs ;
+    m_previousDigits = "Prev/" + MCCaloDigitLocation::Prs;
   } else if ( "EcalSignal" == name ) {
-    setDetData(    "/dd/Structure/LHCb/Ecal" );
-    setInputData(  MCCaloHitLocation::Ecal );
-    setOutputData( MCCaloDigitLocation::Ecal );
-    m_previousData    = "Prev/" + MCCaloHitLocation::Ecal;
-    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Ecal;
+    m_detectorName   = "/dd/Structure/LHCb/Ecal" ;
+    m_inputData      = MCCaloHitLocation::Ecal ;
+    m_outputData     = MCCaloDigitLocation::Ecal ;
   } else if ( "HcalSignal" == name ) {
-    setDetData(    "/dd/Structure/LHCb/Hcal" );
-    setInputData(  MCCaloHitLocation::Hcal );
-    setOutputData( MCCaloDigitLocation::Hcal );
-    m_previousData    = "Prev/" + MCCaloHitLocation::Hcal;
-    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Hcal;
+    m_detectorName   = "/dd/Structure/LHCb/Hcal" ;
+    m_inputData      = MCCaloHitLocation::Hcal ;
+    m_outputData     = MCCaloDigitLocation::Hcal ;
   }
-
+  m_previousData   = "Prev/" + m_inputData;
  };
 
 //=============================================================================
@@ -100,37 +82,23 @@ CaloSignalAlg::~CaloSignalAlg() {};
 //=============================================================================
 StatusCode CaloSignalAlg::initialize() {
   
-  MsgStream msg(msgSvc(), name());
-  
-  StatusCode sc = CaloAlgorithm::initialize();
-  if( sc.isFailure() ) { 
-    return Error("Can not initialize the base class  CaloAlgorithm!", sc); 
-  }
-  
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( sc.isFailure() ) { return sc; }
   
   // Retrieve the calorimeter we are working with.
-  m_calo = getDet<DeCalorimeter>( detData() );
-  if( 0 == m_calo ) { return StatusCode::FAILURE ; }
+  m_calo = getDet<DeCalorimeter>( m_detectorName );
   
   // Initialize the random number service
   
-  m_rndmSvc = 0;
-  StatusCode status = service("RndmGenSvc", m_rndmSvc , true  ) ;
-  
-  if ( status.isFailure() ) {
-    return Error( "Can not initialize the RndmGenSvc", status ) ;
-  }
-  if ( 0 == m_rndmSvc     ) {
-    return Error( "Can not initialize the RndmGenSvc"        ) ;
-  }
+  m_rndmSvc = svc<IRndmGenSvc>("RndmGenSvc", true  );
 
   m_storePrevious  = ( "" != m_previousDigits ) ;
   m_minimalDeposit = m_minimalDeposit / m_calo->activeToTotal() ;
 
-  msg << MSG::INFO << "Initialised. ";
-  if ( m_storePrevious )  msg << "Store also previous BX. ";
-  if ( m_ignoreTimeInfo ) msg << "Ignore time information. ";
-  msg << endreq;
+  info() << "Initialised. ";
+  if ( m_storePrevious )  info() << "Store also previous BX. ";
+  if ( m_ignoreTimeInfo ) info() << "Ignore time information. ";
+  info() << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -141,17 +109,15 @@ StatusCode CaloSignalAlg::initialize() {
 
 StatusCode CaloSignalAlg::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  bool verbose = ( MSG::VERBOSE >= msg.level() );
+  bool isVerbose = ( MSG::VERBOSE >= msgLevel() );
 
   // some trivial printout
-  msg << MSG::DEBUG     << "Perform signal processing from "
-      << inputData  ()  << " to "
-      << outputData ()  << endreq;
+  debug() << "Perform signal processing from "
+          << m_inputData << " to " << m_outputData << endreq;
   
   // prepare the output container
   MCCaloDigits* mcDigits = new MCCaloDigits();
-  StatusCode sc = put( mcDigits , outputData() );
+  StatusCode sc = put( mcDigits , m_outputData );
   if( sc.isFailure() ) { return sc ; }
 
   MCCaloDigits* mcPrevDigits = 0;
@@ -162,8 +128,7 @@ StatusCode CaloSignalAlg::execute() {
   }
   
   // get the input data
-  MCCaloHits* hits = get<MCCaloHits>( inputData() );
-  if( 0 == hits      ) { return StatusCode::FAILURE ; }
+  MCCaloHits* hits = get<MCCaloHits>( m_inputData );
 
   // initialize the background random number
   Rndm::Numbers BackgroundFraction ( m_rndmSvc , Rndm::Flat( 0.0 , 1. ) );
@@ -197,7 +162,7 @@ StatusCode CaloSignalAlg::execute() {
   for( hitIt = hits->begin(); hits->end() != hitIt ; ++hitIt ) {
     hit = *hitIt;
     CaloCellID id = hit->cellID() ;
-    if ( !m_calo->valid( id ) ) { continue; }
+    if ( !m_calo->valid( id ) ) continue; 
 
     // Set the timeBin (careful of bad rounding), If in time, store.
     // if late, get a selected fraction of it, and assign it at a
@@ -237,13 +202,13 @@ StatusCode CaloSignalAlg::execute() {
       myDig->addActiveE( storedE );
       if ( 1 == storeType ) myDig->addToHits( *hitIt );
 
-      if ( verbose ) {
+      if ( isVerbose ) {
         std::string text;
         if ( 1 == storeType ) text = " stored";
         if ( 2 == storeType ) text = "  added";
         if ( 3 == storeType ) text = "    bkg";
         MCParticle* part = hit->particle();
-        msg << id << text << format( 
+        verbose() << id << text << format( 
     " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
     storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
     part->momentum().e()/GeV ) 
@@ -256,9 +221,8 @@ StatusCode CaloSignalAlg::execute() {
   // == Process the spill-over data, but only if container specified
   //--------------------------------
   if( !m_previousData.empty() ) {
-    SmartDataPtr<MCCaloHits> spill( eventSvc(), m_previousData );
-    MCCaloHits* spillOver = spill;
-    if ( 0 != spillOver ) {
+    if ( exist<MCCaloHits>( m_previousData ) ) {
+      MCCaloHits* spillOver = get<MCCaloHits>( m_previousData );
       for( hitIt = spillOver->begin(); spillOver->end() != hitIt ; ++hitIt ) {
         hit = *hitIt;
         const CaloCellID id = hit->cellID() ;
@@ -290,13 +254,13 @@ StatusCode CaloSignalAlg::execute() {
         
         if ( 0 != storeType ) {
           myDig->addActiveE( storedE );
-          if ( verbose ) {
+          if ( isVerbose ) {
             std::string text;
             if ( 4 == storeType ) text = "  spill";
             if ( 5 == storeType ) text = " PREV  ";
             
             MCParticle* part = hit->particle();
-            msg << id << text << format(
+            verbose() << id << text << format(
   " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
   storedE/MeV, timeBin, (int) part->index(),  part->particleID().pid(),
   part->momentum().e()/GeV ) 
@@ -306,82 +270,26 @@ StatusCode CaloSignalAlg::execute() {
       }
     }
   }
-  //--------------------------------
-  // == Process the LHC background data 
-  //--------------------------------
-  if( !m_backgroundData.empty() ) {
-    SmartDataPtr<MCCaloHits> lhc( eventSvc(), m_backgroundData );
-    MCCaloHits* lhcBackground = lhc;
-    if ( 0 != lhcBackground ) {
-      for( hitIt = lhcBackground->begin(); lhcBackground->end() != hitIt ; 
-           ++hitIt ) {
-        hit = *hitIt;
-        const CaloCellID id = hit->cellID() ;
-        if ( ! m_calo->valid( id ) ) { continue; }
-        
-        storeType = 0;
-        storedE   = hit->activeE();
-        timeBin   = int( floor( hit->time() + .5 ) );//== time bin number...
 
-        if ( m_ignoreTimeInfo ) timeBin = 0;
-
-        if ( 0 == timeBin ) {
-          myDig = mcDigitPtr[id];
-          if ( 0 == myDig ) {
-            myDig = new MCCaloDigit( );
-            myDig->setCellID( id );
-            mcDigitPtr.addEntry( myDig, id );
-          }
-
-          myDig->addActiveE( storedE );
-          if ( verbose ) {
-            MCParticle* part = hit->particle();
-            msg << MSG::INFO << id << " LHCbk " << format(
-  " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV) zv%9.1f rv%9.1f",
-  storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
-  part->momentum().e()/GeV, part->originVertex()->position().z(),
-  part->originVertex()->position().perp() ) 
-                << endreq;
-          }  
-        }
-      }
-    }
-  }
-  
   /// copy data into output container 
+
   for( vi = mcDigitPtr.begin(); mcDigitPtr.end() != vi; ++vi ){
     MCCaloDigit* digit = *vi ;
-    if( 0 == digit ) { continue ; }
-    mcDigits->insert( digit );
+    if( 0 != digit ) mcDigits->insert( digit );
   }
 
-  msg << MSG::DEBUG << "-- Stored " << mcDigits->size() << " MCDigits";
+  debug() << "-- Stored " << mcDigits->size() << " MCDigits";
 
   if ( m_storePrevious ) {
     for( vi = mcPrevDigitPtr.begin(); mcPrevDigitPtr.end() != vi; ++vi ){
       MCCaloDigit* digit = *vi ;
-      if( 0 == digit ) { continue ; }
-      mcPrevDigits->insert( digit );
+      if( 0 != digit )  mcPrevDigits->insert( digit );
     }
-    msg << " (plus " << mcPrevDigits->size() << " in Prev container)";
+    debug() << " (plus " << mcPrevDigits->size() << " in Prev container)";
   }
-  msg << endreq;
+  debug() << endreq;
   
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloSignalAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << " >>> Finalize" << endreq;
-  if( 0 != m_rndmSvc ) { m_rndmSvc->release() ; m_rndmSvc = 0 ; }
-  
-  return CaloAlgorithm::finalize();
-};
-
-// ============================================================================
-// The End 
 // ============================================================================

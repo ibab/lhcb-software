@@ -4,6 +4,18 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2005-01-12 - Olivier Callot
+ - Remove the production of the RawBuffer for Calo digits and trigger
+   This is now done in the (new) Calo/CaloDAQ package by dedicated
+   algorithms. CaloZSup produces banks for the trigger, of type L0PrsSpdHits and 
+   L0CaloAdcs. These are the input (with CaloDigits) for the Raw buffer 
+   creation.
+
+! 2004-12-16 - Olivier Callot
+ - Transform CaloAlgoprithm to GaudiAlgorithm
+ - Remove processing of LHC background in CaloSignalAlg as this is now 
+   obsolete, will be added to the normal event.
+
 !======================== CaloDigit v1r7 2004-09-10 ========================
 ! 2004-09-10 - Marco Cattaneo
  - Remove obsolete CaloDigitToMCParticle associator. Removes dependency on

@@ -1,16 +1,16 @@
-// $Id: CaloZSupAlg.h,v 1.4 2003-11-26 13:17:02 cattanem Exp $ 
+// $Id: CaloZSupAlg.h,v 1.5 2005-01-12 09:14:33 ocallot Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
-// ============================================================================
-// from STL 
-#include <cmath>
-#include <string>
-#include <vector>
+
 // from Gaudi 
 #include "GaudiKernel/IRndmGenSvc.h" 
+#include "GaudiAlg/GaudiAlgorithm.h"
+
 // from CaloKernel
 #include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloAlgorithm.h"
+
+// CaloDet
+#include "CaloDet/DeCalorimeter.h"
 
 /** @class CaloZSupAlg CaloZSupAlg.h   
  *
@@ -21,24 +21,16 @@
  *   @date:   5 June 2000
  */
 
-class CaloZSupAlg : public CaloAlgorithm { 
+class CaloZSupAlg : public GaudiAlgorithm { 
   friend class AlgFactory<CaloZSupAlg>;
 public:
   
-  // ** Constructor of this form must be provided
-  
-  CaloZSupAlg(const std::string& name, 
-              ISvcLocator* pSvcLocator);
-  
-  // ** Standard Destructor
+  CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator);
   
   virtual ~CaloZSupAlg();
   
-  // ** Three mandatory member functions of any algorithm
-  
-  StatusCode initialize();
-  StatusCode execute   ();
-  StatusCode finalize  ();
+  virtual StatusCode initialize();
+  virtual StatusCode execute   ();
   
 protected:
 
@@ -74,29 +66,25 @@ protected:
   }
   
 private:   
-
-  std::string m_inputMCData  ;    ///< Input data container
+  std::string m_detectorName;       ///< Detector element name
+  std::string m_inputData;          ///< Input container
+  std::string m_outputData;         ///< Output container
+  std::string m_inputMCData;        ///< Input data container
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method
+  std::string m_triggerName       ; ///< Name of the trigegr bank
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
   int         m_bankType          ; ///< BankType for RawBuffer
   double      m_energyScale       ; ///< To convert energy to RawBuffer
-  int         m_numberOfBanks     ; ///< Number of TELL1 boards = output banks
-  std::string m_spdInputData      ; ///< SPD signals, for Prs trigger.
-  double      m_triggerEtScale    ; ///< Transverse energy scale E/Hcal trigger
-  double      m_triggerThreshold  ; ///< Preshower trigger Threshold 
-  int         m_triggerBankType   ; ///< Trigger BankType for RawBuffer
+  double      m_triggerEtScale    ; ///< Scale for trigger ADC
+  double      m_triggerThreshold  ; ///< Zero suppress for trigger
+  bool        m_triggerIsBit;       ///< Trigger data is a bit bank
   std::vector<double> m_corrArea  ; ///< Correction factor, area dependence
 
   DeCalorimeter*         m_calo;           ///< Detector element pointer
       
   int         m_numberOfCells     ; ///< Number of cells of this detector.
-  int         m_detNum            ; ///< Calo detector number, for cellID
 
-  double m_totDataSize;
-  double m_totTrigSize;
-  int m_nbEvents;
-  
 };
 
 

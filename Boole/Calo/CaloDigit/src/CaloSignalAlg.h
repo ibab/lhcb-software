@@ -1,95 +1,47 @@
-// $Id: CaloSignalAlg.h,v 1.3 2003-11-18 10:20:24 ocallot Exp $
+// $Id: CaloSignalAlg.h,v 1.4 2005-01-12 09:14:33 ocallot Exp $
 #ifndef   CALODIGIT_CALOSIGNALALG_H
 #define   CALODIGIT_CALOSIGNALALG_H 1
 // ============================================================================
-// from STL 
-#include <cmath>
-#include <string>
-#include <vector>
 // from Gaudi 
 #include "GaudiKernel/IRndmGenSvc.h"
-// from CaloKernel
-#include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+
+/// Det/CaloDet
+#include "CaloDet/DeCalorimeter.h"
 
 /** @class CaloSignalAlg CaloSignalAlg.h 
  *
  *  @brief Calorimeter Signal Processing Algorithm 
  *
  *  Algorithm responsible for Signal processing of MC-information.
- *  Converts the RAWH banks to MCCaloHits, processing the time information.
- *  Note that the time is ignored so far, as the rest of the FORTRAN Calo 
- *  software doesn't accept clusters without Truth information.
+ *  Converts the MCHit banks to MCCaloHits, processing the time information.
  *      
  *  @author: Olivier Callot  Olivier.Callot@cern.ch
  *  @date:   21 February 2001
  */
 
-class CaloSignalAlg : 
-  public CaloAlgorithm 
-{
-  /// frined factory for instantiatio
-  friend class AlgFactory<CaloSignalAlg>;
+class CaloSignalAlg : public GaudiAlgorithm  {
   
 public:
+  /// Standard constructor
+  CaloSignalAlg  ( const std::string& name, ISvcLocator* pSvcLocator );
   
-  /** standard initialization 
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode initialize () ;
-  
-  /** standard execution 
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode execute    () ;
-  
-  /** standard finalization
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
+  virtual ~CaloSignalAlg();  ///< Destructor
+
+  virtual StatusCode initialize () ;  ///< Algorithm initialization  
+  virtual StatusCode execute    () ;  ///< Algorithm execution
   
 protected: 
   
-  /** Standard Constructor
-   *  @param name name of algorithm
-   *  @param pSvcLocator pointer to service locator 
-   */
-  CaloSignalAlg
-  ( const std::string& name        , 
-    ISvcLocator*       pSvcLocator );
-  
-  /// Destructor (virtual and protected)
-  virtual ~CaloSignalAlg();
-  
 private:
-  
-  /// default  constructor  is  private 
-  CaloSignalAlg();
-  /// copy     constructor  is  private 
-  CaloSignalAlg
-  ( const CaloSignalAlg& );
-  /// assignement operator is  private 
-  CaloSignalAlg& operator=
-  ( const CaloSignalAlg& );
-  
-private:   
-  //== JobOptions variables
-
-  std::string  m_previousData       ; ///< address of 'previous' container
-  std::string  m_previousDigits     ; ///< address of 'previous' Digits 
-  double       m_minimalDeposit     ; ///< Minimal energy to be kept
-  double       m_backgroundScaling  ; ///< Downscale for the background hits
-  bool         m_ignoreTimeInfo     ; ///< flag to ignore SICBMC time info.
-  std::string  m_backgroundData     ; ///< name of LHC background container
+  std::string m_detectorName;      ///< Detector element location
+  std::string m_inputData;         ///< Input container
+  std::string m_outputData;        ///< Output container
+  std::string m_previousData;      ///< address of 'previous' container
+  std::string m_previousDigits;    ///< address of 'previous' Digits 
+  double      m_minimalDeposit;    ///< Minimal energy to be kept
+  double      m_backgroundScaling; ///< Downscale for the background hits
+  bool        m_ignoreTimeInfo;    ///< flag to ignore SICBMC time info.
   
   //== Variables internally used
 
@@ -99,4 +51,4 @@ private:
 };
 
 #endif // CALODIGIT_CALOSIGNALALG_H
-// ============================================================================
+

@@ -1,16 +1,13 @@
-// $Id: CaloDigitAlg.h,v 1.4 2003-11-26 13:17:02 cattanem Exp $ 
+// $Id: CaloDigitAlg.h,v 1.5 2005-01-12 09:14:33 ocallot Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
-// from STL 
-#include <cmath>
-#include <string>
-#include <vector>
 // from Gaudi 
 #include "GaudiKernel/IRndmGenSvc.h" 
-// from CaloKernel
-#include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+
+// CaloDet
+#include "CaloDet/DeCalorimeter.h"
 
 /** @class CaloDigitAlg CaloDigitAlg.h   
  *
@@ -21,25 +18,16 @@
  *   @date:   5 June 2000
  */
 
-class CaloDigitAlg : public CaloAlgorithm {  
-  friend class AlgFactory<CaloDigitAlg>;
+class CaloDigitAlg : public GaudiAlgorithm {  
+
 public:
+  CaloDigitAlg( const std::string& name, ISvcLocator* pSvcLocator);
   
-  // ** Constructor of this form must be provided
+  virtual ~CaloDigitAlg();  ///< Destructor
   
-  CaloDigitAlg(const std::string& name, 
-               ISvcLocator* pSvcLocator);
-  
-  // ** Standard Destructor
-  
-  virtual ~CaloDigitAlg();
-  
-  // ** Three mandatory member functions of any algorithm
-  
-  StatusCode initialize();
-  StatusCode execute   ();
-  StatusCode finalize  ();
-  
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+
 protected:
   
   // ** Convert a floating ADC value to a digit: quantification + saturation
@@ -54,7 +42,10 @@ protected:
 
 private:   
 
-  std::string            m_inputPrevData;  ///< Input data (prev.BX)
+  std::string m_detectorName;      ///< Detector element location
+  std::string m_inputData;         ///< Input container
+  std::string m_outputData;        ///< Output container
+  std::string m_inputPrevData;  ///< Input data (prev.BX)
 
   DeCalorimeter*         m_calo;           ///< Detector element pointer
   mutable IRndmGenSvc*   m_rndmSvc;        ///< random number service 
@@ -73,6 +64,4 @@ private:
   int         m_maxAdcValue       ; ///< Maximum ADC content, after ped. substr
   double      m_activeToTotal     ; ///< Ratio activeE to total energy in ADC.
 };
-
-
 #endif //    CALODIGIT_CALODIGITALG_H

@@ -1,26 +1,20 @@
-// $Id: CaloDigitAlg.cpp,v 1.6 2004-02-23 09:17:54 ibelyaev Exp $
-// STL
-#include <string>
-#include <stdio.h>
+// $Id: CaloDigitAlg.cpp,v 1.7 2005-01-12 09:14:33 ocallot Exp $
+
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/Stat.h"
-#include "GaudiKernel/ObjectVector.h"
+
 // Event 
 #include "Event/MCTruth.h"
 // Calo/CaloKernel
 #include "CaloKernel/CaloVector.h"
-#include "CaloKernel/CaloException.h"
+
 // CaloEvent
 #include "Event/MCCaloDigit.h"
 #include "Event/CaloDigit.h"
-// CaloDet
-#include "CaloDet/DeCalorimeter.h"
+
 // local
 #include "CaloDigitAlg.h"
 
@@ -28,15 +22,13 @@
 /** @file CaloDigitAlg.cpp
  *
  *    Calorimeter Digitisation, including noise, and Zero suppression.
- *    (1) modified by Vanya Belyaev (end of July 2000),
- *    (2) modified by Olivier Callot, September 2000
  *
  *    @author: Olivier Callot
  *    @Date:   5 June 2000
  */
 // ============================================================================
 
-// MANDATORY!!!
+
 static const AlgFactory<CaloDigitAlg>          Factory ;
 const       IAlgFactory& CaloDigitAlgFactory = Factory ;
 
@@ -46,19 +38,22 @@ const       IAlgFactory& CaloDigitAlgFactory = Factory ;
 //=============================================================================
 CaloDigitAlg::CaloDigitAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : CaloAlgorithm ( name , pSvcLocator            )
-  , m_inputPrevData     ( ""    )
-  , m_rndmSvc           (  0    )
-  , m_coherentNoise     ( 0.3   )
-  , m_incoherentNoise   ( 1.2   )
-  , m_gainError         ( 0.01  )
-  , m_fracPrev          ( 0.20  )
-  , m_pedShift          ( 0.00  )
-  , m_pePerMeV          ( 0.    )
-  , m_deadCellFraction  ( 0.00  )
+  : GaudiAlgorithm ( name , pSvcLocator            )
+    , m_inputPrevData     ( ""    )
+    , m_rndmSvc           (  0    )
+    , m_coherentNoise     ( 0.3   )
+    , m_incoherentNoise   ( 1.2   )
+    , m_gainError         ( 0.01  )
+    , m_fracPrev          ( 0.20  )
+    , m_pedShift          ( 0.00  )
+    , m_pePerMeV          ( 0.    )
+    , m_deadCellFraction  ( 0.00  )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
+  declareProperty("DetectorName"       , m_detectorName     ) ;
+  declareProperty("InputData"          , m_inputData        ) ;
+  declareProperty("OutputData"         , m_outputData       ) ;
   declareProperty("InputPrevData"      , m_inputPrevData    ) ;
   declareProperty("CoherentNoise"      , m_coherentNoise    ) ;
   declareProperty("IncoherentNoise"    , m_incoherentNoise  ) ;
@@ -67,33 +62,33 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("PedestalShift"      , m_pedShift         ) ;
   declareProperty("PhotoElectronPerMeV", m_pePerMeV         ) ;
   declareProperty("DeadCellFraction"   , m_deadCellFraction ) ;
-
+  
   if ( "SpdDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Spd"   );
-    setInputData(     MCCaloDigitLocation::Spd   );
-    setOutputData(    CaloDigitLocation::FullSpd );
+    m_detectorName    = "/dd/Structure/LHCb/Spd";
+    m_inputData       = MCCaloDigitLocation::Spd;
+    m_outputData      = CaloDigitLocation::FullSpd;
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Spd;
     m_pePerMeV        = 10.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 0.0;
     m_gainError       = 0.0;
   } else if ( "PrsDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Prs"   );
-    setInputData(     MCCaloDigitLocation::Prs   );
-    setOutputData(    CaloDigitLocation::FullPrs );
+    m_detectorName    = "/dd/Structure/LHCb/Prs";
+    m_inputData       = MCCaloDigitLocation::Prs;
+    m_outputData      = CaloDigitLocation::FullPrs;
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Prs;
     m_pePerMeV        = 10.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 1.0;
   } else if ( "EcalDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Ecal"   );
-    setInputData(     MCCaloDigitLocation::Ecal   );
-    setOutputData(    CaloDigitLocation::FullEcal );
+    m_detectorName    = "/dd/Structure/LHCb/Ecal";
+    m_inputData       = MCCaloDigitLocation::Ecal;
+    m_outputData      = CaloDigitLocation::FullEcal;
     m_pedShift        = 0.40;
-  } else if ( "HcalDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Hcal"   );
-    setInputData(     MCCaloDigitLocation::Hcal   );
-    setOutputData(    CaloDigitLocation::FullHcal );
+} else if ( "HcalDigit" == name ) {
+    m_detectorName    = "/dd/Structure/LHCb/Hcal";
+    m_inputData       = MCCaloDigitLocation::Hcal;
+    m_outputData      = CaloDigitLocation::FullHcal;
     m_pedShift        = 0.40;
   }
 
@@ -109,30 +104,15 @@ CaloDigitAlg::~CaloDigitAlg() {};
 //=============================================================================
 StatusCode CaloDigitAlg::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
-  StatusCode sc = CaloAlgorithm::initialize();
-  if( sc.isFailure() ) { 
-    return Error("Can not initialize the base class  CaloAlgorithm!", sc); 
-  } 
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( sc.isFailure() ) return sc;
 
   // Retrieve the calorimeter we are working with.
-  m_calo = getDet<DeCalorimeter>( detData() );
-  if( 0 == m_calo ) { return StatusCode::FAILURE ; }
+  m_calo = getDet<DeCalorimeter>( m_detectorName );
 
   //*** Initialize the random number service
 
-  m_rndmSvc = 0;
-  StatusCode status = service("RndmGenSvc" , m_rndmSvc , true );
-
-  if ( status.isFailure() ) {
-    msg << MSG::ERROR << "Can not initialize the RndmGenSvc"
-        << status << endreq;
-  }
-  if( 0 == rndmSvc()      ) {
-    msg << MSG::ERROR << "Can not initialize the RndmGenSvc" << endreq;
-    status = StatusCode::FAILURE ;
-  }
+  m_rndmSvc = svc< IRndmGenSvc>( "RndmGenSvc" , true );
 
   //** Number of Cells and other detector parameters
 
@@ -143,21 +123,20 @@ StatusCode CaloDigitAlg::initialize() {
   if( m_maxAdcValue == 0 ) { m_maxAdcValue = 1; }    // For SPD, one bit output
 
   m_pedestalShift = m_pedShift * (m_incoherentNoise + m_coherentNoise);
-  if( status.isSuccess() ) {
-    msg << MSG::INFO 
-        << format( "Noise:%5.1f +%5.1f (coherent) counts.",
-                   m_incoherentNoise, m_coherentNoise );
-    msg << format( " Gain error:%4.1f%%, pedestal shift:%5.2f",
-                   m_gainError * 100., m_pedestalShift );
-    if ( "" != m_inputPrevData ) {
-      msg << " Subtract " << m_fracPrev << " of previous BX.";
-    }
-    if ( 0 != m_deadCellFraction ) {
-      msg << ", " << m_deadCellFraction << " of the cells as dead (gain=0).";
-    }
-    msg << endreq;
+
+  info() << format( "Noise:%5.1f +%5.1f (coherent) counts.",
+                    m_incoherentNoise, m_coherentNoise );
+  info() << format( " Gain error:%4.1f%%, pedestal shift:%5.2f",
+                    m_gainError * 100., m_pedestalShift );
+  if ( "" != m_inputPrevData ) {
+    info() << " Subtract " << m_fracPrev << " of previous BX.";
   }
-  return status;
+  if ( 0 != m_deadCellFraction ) {
+    info() << ", " << m_deadCellFraction << " of the cells as dead (gain=0).";
+  }
+  info() << endreq;
+  
+  return StatusCode::SUCCESS;
 };
 
 //=============================================================================
@@ -165,33 +144,23 @@ StatusCode CaloDigitAlg::initialize() {
 //=============================================================================
 StatusCode CaloDigitAlg::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  bool debug = (msg.level() <= MSG::DEBUG );
+  bool isDebug = (msgLevel() <= MSG::DEBUG );
 
   //*** get the input data
   
-  MCCaloDigits* mcDigits = get<MCCaloDigits>( inputData() );
+  MCCaloDigits* mcDigits = get<MCCaloDigits>( m_inputData );
   
   //=== Get the previous BX's data if needed
   MCCaloDigits* prevDigits = 0;
-  if ( "" != m_inputPrevData ) {
-    SmartDataPtr<MCCaloDigits> mcPrev ( eventSvc(), m_inputPrevData );
-    if( 0 == mcPrev ) {
-      msg << MSG::ERROR << "Unable to retrieve input container=" 
-          << m_inputPrevData << endreq;
-      return StatusCode::FAILURE;
-    }
-    prevDigits = mcPrev;
-  }
+  if ( "" != m_inputPrevData )  prevDigits = get<MCCaloDigits>( m_inputPrevData );
 
   //***  prepare and register the output container it into the Transient Store!
 
   CaloDigits* digits = new CaloDigits();
-  StatusCode sc = put( digits, outputData() );
-  if( sc.isFailure() ) { return sc ; }
+  put( digits, m_outputData );
 
-  msg << MSG::DEBUG << "Processing " << mcDigits->size() << " mcDigits." 
-      << endreq;
+  debug() << "Processing " << mcDigits->size() << " mcDigits." 
+          << endreq;
 
   // == prepare buffers for energies and tags. Size is only real cells.
   // == fill with MCCaloDigit, using the calibration activeToTotal
@@ -214,15 +183,13 @@ StatusCode CaloDigitAlg::execute() {
   std::vector<double> gainErrors ( m_numberOfCells, 1.0 );
   if( 0 < m_gainError      ) {
     std::generate( gainErrors.begin() , gainErrors.end () ,
-                   Rndm::Numbers( rndmSvc() ,
-                                  Rndm::Gauss( 1.0 , m_gainError ) ) );
+                   Rndm::Numbers( rndmSvc(), Rndm::Gauss( 1.0 , m_gainError ) ) );
   }
 
   std::vector<double> incoherentNoise   ( m_numberOfCells, 0.0 );
   if( 0 < m_incoherentNoise ) {
-    std::generate( incoherentNoise.begin () , incoherentNoise.end   () ,
-                   Rndm::Numbers( rndmSvc() ,
-                                  Rndm::Gauss( 0.0 , m_incoherentNoise ) ) );
+    std::generate( incoherentNoise.begin(), incoherentNoise.end() ,
+                   Rndm::Numbers( rndmSvc(), Rndm::Gauss( 0.0 , m_incoherentNoise ) ) );
   }
 
   //== Add dead cells : Set the gain to zero in this cell
@@ -253,8 +220,7 @@ StatusCode CaloDigitAlg::execute() {
 
     //== generate the photo-electron fluctuation...
     if ( 0. < energy && 0. < m_pePerMeV ) {
-      Rndm::Numbers nPe ( rndmSvc() , 
-                          Rndm::Poisson( energy * m_pePerMeV) );
+      Rndm::Numbers nPe ( rndmSvc(), Rndm::Poisson( energy * m_pePerMeV) );
       energy = nPe() / m_pePerMeV;
     }
 
@@ -272,43 +238,29 @@ StatusCode CaloDigitAlg::execute() {
 
         //== generate the photo-electron fluctuation on the previous BX signal
         if ( 0. < prevEnergy && 0. < m_pePerMeV ) {
-          Rndm::Numbers pe ( rndmSvc() , 
-                             Rndm::Poisson( prevEnergy * m_pePerMeV));
+          Rndm::Numbers pe ( rndmSvc(), Rndm::Poisson( prevEnergy * m_pePerMeV));
           prevEnergy = pe() / m_pePerMeV;
         }
 
         double cor = m_fracPrev * prevEnergy / gain;
-        if ( debug && .5 < cor ) {
-          msg << MSG::DEBUG << id 
-              << format( " adc%7.1f correct%7.1f => %7.1f",
-                         adc, cor, adc-cor ) 
-              << endreq;
+        if ( isDebug && .5 < cor ) {
+          debug() << id << format( " adc%7.1f correct%7.1f => %7.1f",
+                                   adc, cor, adc-cor ) 
+                  << endreq;
         }
         adc = adc - cor;
       }
     }
     energy =  gain * ( adcCount(adc) - m_pedestalShift ) ;
     CaloDigit* digit = new CaloDigit( id, energy );
-    digits->add( digit ) ;
+    digits->insert( digit ) ;
   }
 
-  msg << MSG::DEBUG
-      << format( "Have digitized and stored %5d digits from %5d MCDigits.",
-                 digits->size(), mcDigits->size() )
-      << endreq;
+  debug() << format( "Have digitized and stored %5d digits from %5d MCDigits.",
+                     digits->size(), mcDigits->size() )
+          << endreq;
 
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode CaloDigitAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << " >>> Finalize" << endreq;
-
-  if( 0 != m_rndmSvc ) { m_rndmSvc->release() ; m_rndmSvc = 0 ; }
-
-  return CaloAlgorithm::finalize();
-}

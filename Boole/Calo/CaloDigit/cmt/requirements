@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package          CaloDigit
-version          v1r7
+version          v1r8
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,6 +21,7 @@ branches         cmt doc src options
 #============================================================================
 use CaloEvent    v13r* Event
 use CaloDet      v6r*  Det
+use L0Event      v14r*  Event
 
 #============================================================================
 # Component library building rule
