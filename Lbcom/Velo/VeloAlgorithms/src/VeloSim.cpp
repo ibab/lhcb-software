@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.15 2002-07-11 17:17:19 ocallot Exp $
+// $Id: VeloSim.cpp,v 1.16 2002-07-11 18:09:13 ocallot Exp $
 // Include files
 // STL
 #include <string>
@@ -219,7 +219,7 @@ StatusCode VeloSim::getInputData() {
         << m_inputContainer << endreq;
     return StatusCode::FAILURE;
   }
-  else log << MSG::DEBUG << m_veloHits->size() << " hits retrieved" << endreq;
+  log << MSG::DEBUG << m_veloHits->size() << " hits retrieved" << endreq;
 
   //*** get the pile-up input data
   if (m_pileUp) {
@@ -234,8 +234,8 @@ StatusCode VeloSim::getInputData() {
           << m_pileUpInputContainer << endreq;
       return StatusCode::FAILURE;
     }
-    else log << MSG::DEBUG << m_pileUpHits->size()
-             << " pile-up hits retrieved" << endreq;
+    log << MSG::DEBUG << m_pileUpHits->size()
+        << " pile-up hits retrieved" << endreq;
     for (MCVeloHits::const_iterator hitIt=m_pileUpHits->begin(); 
          hitIt < m_pileUpHits->end(); hitIt++){
       // add 100 to pileup sensors number
@@ -256,9 +256,10 @@ StatusCode VeloSim::getInputData() {
       log << MSG::DEBUG
           << "Spill over event not present unable to retrieve input container="
           << m_spillOverInputContainer << endreq;
+    } else { 
+      log << MSG::DEBUG << m_veloSpillOverHits->size()
+          << " spill over hits retrieved" << endreq;
     }
-    else log << MSG::DEBUG << m_veloSpillOverHits->size()
-             << " spill over hits retrieved" << endreq;
   }
 
   //*** get the pileUp SpillOver input data
@@ -274,14 +275,16 @@ StatusCode VeloSim::getInputData() {
       log << MSG::DEBUG
           << "Spill over event for PileUp not present unable to retrieve " 
           << "input data container=" << m_spillOverInputContainer << endreq;
-    }
-    else log << MSG::DEBUG << m_pileUpSpillOverHits->size()
-             << " PileUp Spill over hits retrieved" << endreq;
-    for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
-         hitIt < m_pileUpSpillOverHits->end(); hitIt++){
-      // add 100 to pileup sensors number
-      (*hitIt)->setSensor((*hitIt)->sensor()+100);
-      log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() << endreq;
+    } else {
+      log << MSG::DEBUG << m_pileUpSpillOverHits->size()
+          << " PileUp Spill over hits retrieved" << endreq;
+      for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
+           hitIt < m_pileUpSpillOverHits->end(); hitIt++){
+        // add 100 to pileup sensors number
+        (*hitIt)->setSensor((*hitIt)->sensor()+100);
+        log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() 
+            << endreq;
+      }
     }
   }
 
@@ -850,7 +853,10 @@ StatusCode VeloSim::noiseSim(){
 
   for (int iSensorArrayIndex=0; iSensorArrayIndex< maxSensor;
        iSensorArrayIndex++){
-    double sensor=m_velo->sensorNumber(iSensorArrayIndex);
+    unsigned int sensor=m_velo->sensorNumber(iSensorArrayIndex);
+
+    if (m_simMode=="pileUp") sensor += 100;    //=== OC == 
+
     double noiseSig=noiseSigma(stripCapacitance);
     // use average capacitance of sensor, should be adequate if variation in
     // cap. not too large.

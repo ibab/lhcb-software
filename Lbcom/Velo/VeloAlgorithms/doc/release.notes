@@ -3,6 +3,7 @@
 
 ! 2002-07-11 - Olivier Callot
  - Correct also the sensor number for spill-over of the PuVeto detector.
+ - Set the sensor number correctly for noise generation in PileUp Veto.
  - Cleaned the indentation, and broken a few lines, to conform to LHCb coding
    conventions.
 
