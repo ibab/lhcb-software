@@ -5,6 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!======================= MuonBackground v1r4 2003-10-15 =======================
+! 2003-10-15 - Marco Cattaneo
+ - Fix to get new (non-SICB) version of SpilloverAlg
+
 !======================= MuonBackground v1r3 2003-10-01 =======================
 ! 2003-10-01 - Marco Cattaneo
  - Fix some gcc 3.2 compilation warnings

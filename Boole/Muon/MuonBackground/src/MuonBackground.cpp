@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.14 2003-10-03 12:52:41 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.15 2003-10-16 13:40:42 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,6 @@
 #include "MuonDet/MuonReadoutCond.h"
 #include "MuonDet/MuonBasicGeometry.h"
 #include "Event/MCMuonHit.h"
-//#include "MuonUtils/MuonGeometryStore.h" 
 // local
 #include "MuonBackground.h"
 
@@ -161,32 +160,30 @@ StatusCode MuonBackground::initialize() {
       }
     }
     
+    // Get the number of spillover events from the SpilloverAlg
     IAlgManager* algmgr;
     sc = service( "ApplicationMgr", algmgr );
     if( !sc.isSuccess() ) {
-      msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr" 
-          <<endmsg;
+      msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr"<< endmsg;
       return sc;
-    }   
+    }
     IAlgorithm*  spillAlg;
-    sc = algmgr->getAlgorithm( "SpillOverAlg", spillAlg );
+    sc = algmgr->getAlgorithm( "SpilloverAlg", spillAlg );
     if( !sc.isSuccess() ) {
-      msg << MSG::DEBUG << "SpillOverAlg not found" << endmsg;
-      m_readSpilloverEvents =0;
+      msg << MSG::WARNING << "SpilloverAlg not found" << endmsg;
+      m_readSpilloverEvents = 0;
     }
     else {
       IProperty* spillProp;
       spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
-      IntegerProperty numPrev = 0;
-      IntegerProperty numNext = 0;
-      numPrev.assign( spillProp->getProperty("SpillOverPrev") );
-      numNext.assign( spillProp->getProperty("SpillOverNext") ); 
-      m_readSpilloverEvents= numPrev + numNext;
-      msg << MSG::DEBUG << "SpillOverAlg " << numPrev << numNext<<endreq;
-      // Release the interfaces that are no longer needed  
+      StringArrayProperty evtPaths;
+      evtPaths.assign( spillProp->getProperty("PathList") );
+      m_readSpilloverEvents = evtPaths.value().size();
+      // Release the interfaces no longer needed
       spillAlg->release();
     }
     algmgr->release();
+
     msg << MSG::DEBUG << "number of spillover events read from aux stream "
         << m_readSpilloverEvents << endmsg;  
   }else if(m_type==FlatSpillover){
@@ -195,9 +192,6 @@ StatusCode MuonBackground::initialize() {
     //    m_readSpilloverEvents=m_numberOfFlatSpill;    
   }
   
-  
-    
-
   return StatusCode::SUCCESS;
 };
 
