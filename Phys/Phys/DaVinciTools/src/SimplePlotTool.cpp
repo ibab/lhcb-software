@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.5 2005-01-13 13:32:04 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.6 2005-01-14 12:55:13 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -230,7 +230,15 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
         if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
       }
     }
-  } else {
+  } else if ( var == "Vz" ){
+    if (P->endVertex()) plot(P->endVertex()->position().z(),"Vz of "+name,hmin,hmax);
+  } else if ( var == "Vx" ){
+    if (P->endVertex()) plot(P->endVertex()->position().x(),"Vx of "+name,hmin,hmax);
+  } else if ( var == "Vy" ){
+    if (P->endVertex()) plot(P->endVertex()->position().y(),"Vy of "+name,hmin,hmax);
+  } else if ( var == "Vr" ){
+    if (P->endVertex()) plot(P->endVertex()->position().perp(),"Vr of "+name,hmin,hmax);
+ } else {
     err() << "Unknown variable " << var << endreq ;
     return  StatusCode::FAILURE;
   }
@@ -249,7 +257,7 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
     m_max = 5.7*GeV ;
   } else if ( var == "P" ){
     m_min = 0. ;
-    m_max = 100.*GeV ;
+    m_max = 50.*GeV ;
   } else if ( var == "Pt" ){
     m_min = 0. ;
     m_max = 10.*GeV ;
@@ -268,6 +276,12 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
   } else if ( var == "FS" ){
     m_min = 0. ;
     m_max = 20. ;
+  } else if ( var == "Vz" ){
+    m_min = -150.*mm ;
+    m_max = 150.*mm ;
+  } else if ( ( var == "Vr" ) || ( var == "Vx" ) || ( var == "Vy" )){
+    m_min = -10.*mm ;
+    m_max = 10.*mm ;
   } else {
     return false;
   }
