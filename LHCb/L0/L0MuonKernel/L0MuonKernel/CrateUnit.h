@@ -3,14 +3,14 @@
 
 /** @class CrateUnit CrateUnit.h L0MuonKernel/CrateUnit.h
 
-   Class representing a quarter 
-   of the level-0 trigger: It constructs 
-   boards, best candidate selection unit and processing 
-   units. It initialize, execute and finalize all 
-   the subunits. 
+Class representing a quarter 
+of the level-0 trigger: It constructs 
+boards, best candidate selection unit and processing 
+units. It initialize, execute and finalize all 
+the subunits. 
    
-   author  Luisanna Tocco
-   date  24 September 2003
+author  Luisanna Tocco
+date  24 September 2003
 */ 
 
 
@@ -37,22 +37,17 @@ namespace L0Muon {
 
     /** Constructor
 
-        @param pProNet   :  processor network from the configuration files
-        @param ptpara    :  geometrical parameters for calculating pT
-        @param ignoreM1  :  flag for searching candidates without M1
-        @param foix      :  field of interest in the x direction 
-        @param foiy      :  field of interest in the y direction 
-        @param precision :  precision for calculating pT
-        @param bits      :  number of bits for codifying pT
-        @param writeL0Buffer         :  flag for writing L0Buffers on files
-	@param config_pus         :  vector of PU's to be used
+    @param pProNet   :  processor network from the configuration files
+    @param ptpara    :  geometrical parameters for calculating pT
+    @param ignoreM1  :  flag for searching candidates without M1
+    @param foix      :  field of interest in the x direction 
+    @param foiy      :  field of interest in the y direction 
+    @param precision :  precision for calculating pT
+    @param bits      :  number of bits for codifying pT
+    @param writeL0Buffer         :  flag for writing L0Buffers on files
+    @param config_pus         :  vector of PU's to be used
     */
     CrateUnit(PL0MProNet & pProNet, 
-              std::vector<double> & ptpara, bool & ignoreM1,
-              std::vector<int> & foix, std::vector<int> & foiy,
-              double & precision,
-              int & bits,
-              std::string writeL0buffer,
 	      std::vector<MuonTileID> config_pus );
 
     /// Destructor
@@ -61,6 +56,9 @@ namespace L0Muon {
     /// Initialize subunits
     void initialize();
 
+    /// Bootstrap subunits
+    void bootstrap();
+ 
 
     /// Execute subunits
     void execute();
@@ -84,7 +82,7 @@ namespace L0Muon {
 
     /// Return offsets
     std::vector<std::pair<Candidate*, std::vector<int> > > 
-    offsets() { return m_offsets; }
+      offsets() { return m_offsets; }
 
     /** Set an integer for Crate status: if candidates are found
         status is OK
@@ -101,6 +99,24 @@ namespace L0Muon {
     std::string type() {
       return "CrateUnit";
     }         
+
+    /// Set the FOIs
+    void setFois(std::vector<int> & foix, std::vector<int> & foiy){m_xfoi= foix;m_yfoi= foiy;}
+
+    /// Return x foi in station sta
+    int xFoi(int sta);
+    
+    /// Return y foi in station sta
+    int yFoi(int sta);
+    
+    /// Return the flag for searching candidates without M1 
+    bool ignoreM1(){ return m_ignoreM1;}
+    void setIgnoreM1(bool & ignoreM1){m_ignoreM1=ignoreM1;}
+ 
+   /// Return parameters for calculating pT
+    std::vector<double> ptParameters(){ return m_ptparameters;}
+    void setPtParameters(std::vector<double> & ptpara){m_ptparameters=ptpara;}
+
     
   private:
 
@@ -110,14 +126,21 @@ namespace L0Muon {
 
     unsigned int m_status;
 
+    /// Fois (one vector element per station)
+    std::vector<int> m_xfoi;
+    std::vector<int> m_yfoi;
+    
+    bool m_ignoreM1;
+    std::vector<double> m_ptparameters;
+
   };
 
   class ComparePt {
   public:
 
     /** @class 
-      Class to  compaire two pts and to choice 
-      the candidates with the highest one
+	Class to  compaire two pts and to choice 
+	the candidates with the highest one
     */
 
     int operator() (Candidate* lmc1,
@@ -128,11 +151,11 @@ namespace L0Muon {
 
     int operator() (std::pair<Candidate*,boost::dynamic_bitset<> >  p1,
                     std::pair<Candidate*,boost::dynamic_bitset<> >  p2) 
-    {
+      {
       
-      return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
+	return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
       
-    }
+      }
     
 
     int operator() (std::pair<Candidate*,std::vector<int> >  p1,

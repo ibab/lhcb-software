@@ -1,16 +1,14 @@
-// $Id: L0mProcUnit.h,v 1.6 2005-02-11 09:42:02 jucogan Exp $
+// $Id: L0mProcUnit.h,v 1.7 2005-03-31 16:08:07 jucogan Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
 
 /* @class L0mProcUnit L0mProcUnit.h L0MuonKernel/L0mProcUnit.h
 
-   Class representing a processing unit 
-   of the level-0 muon trigger 
+Class representing a processing unit 
+of the level-0 muon trigger 
    
 */
-
-
 
 #include <vector>
 #include "ProcessorKernel/Unit.h"
@@ -25,105 +23,56 @@
 
 namespace L0Muon {
 
-class L0mProcUnit : public Unit {
+  class L0mProcUnit : public Unit {
 
- public:
+  public:
 
-  /// Default constructor
-  L0mProcUnit();
+    /// Default constructor
+    L0mProcUnit();
 
-  /** Constructor
+    /** Constructor
 
-        @param pProNet   :  data flow from L0mConf
-        @param ptpara    :  geometrical parameters for calculating pT
-        @param ignoreM1  :  flag for searching candidates without M1
-        @param foix      :  field of interest in the x direction
-        @param foiy      :  field of interest in the y direction
-        @param precision :  precision for calculating pT
-        @param bits      :  number of bits for codifying pT
-        @param writeL0Buffer         :  flag for writing L0Buffers on files
-  */
-  L0mProcUnit(L0MPuNodeBase& puNode,
-              std::vector<double> & ptpara,
-              bool & ignoreM1,
-              std::vector<int> & foix,
-              std::vector<int> & foiy,
-              double & precision,
-              int & bits,
-              std::string writeL0buffer);
+    @param pProNet   :  data flow from L0mConf
+    @param ptpara    :  geometrical parameters for calculating pT
+    @param ignoreM1  :  flag for searching candidates without M1
+    @param foix      :  field of interest in the x direction
+    @param foiy      :  field of interest in the y direction
+    @param precision :  precision for calculating pT
+    @param bits      :  number of bits for codifying pT
+    @param writeL0Buffer         :  flag for writing L0Buffers on files
+    */
+    L0mProcUnit(L0MPuNodeBase& puNode);
 
-  /// Destructor
-  ~L0mProcUnit();
+    /// Return the MuonTileID of the PU
+    MuonTileID puId(){return m_pu;} 
+
+    /// Return the MuonTileID of the board
+    MuonTileID boardId(){return m_boardID;}
+
+    /// Return the field of interest from L0mConf
+    L0MFoi foi() {return m_maxFoi; }
+  
+    /// Bootstrap 
+    void bootstrap();
  
-  /// Return the MuonTileID of the PU
-  MuonTileID puId(){return m_puID;} 
+    /// Return the list of tiles in the l0buffer
+    std::vector<L0MTile> l0bufferTileList(L0MPuNodeBase & puNode);
 
-  /// Return the MuonTileID of the board
-  MuonTileID boardId(){return m_boardID;}
-
-  /// Return the field of interest from L0mConf
-  L0MFoi foi() {return m_maxFoi; }
+    /// Set the registers for the l0buffer used in the testbench (temporarly)
+    std::map<std::string, std::string> setPLLRegisters(MuonTileID puid, std::string L0BufferMapPath);
   
-  /// Return parameters for calculating pT
-  std::vector<double> ptParameters(){ return m_ptparameters;}
- 
-  /** Return the flag for searching 
-      candidates without M1
-  */ 
-  bool ignoreM1(){ return m_ignoreM1;}
- 
-  /// Return the flag for writing L0Buffer
-  std::string writeL0Buffer(){ return m_writeL0buffer;}
+    /// Give a static type name to the unit
+    std::string type() {
+      return "L0mProcUnit";
+    }  
 
-  /// Return the precision for pT
-  double precision(){ return m_precision;}
+  private:
 
-  /// Return the number of bits for codifying pT
-  int bits(){ return m_bits;}
-
-  /// Return x foi in station sta
-  int xFoi(int sta);
+    MuonTileID  m_pu;
+    MuonTileID  m_boardID;
+    L0MFoi      m_maxFoi;
   
-  /// Return y foi in station sta
-  int yFoi(int sta);
-
-  /// Initialize subunits
-  //void initialize();
-
- 
-  /// Execute subunits
-  //void execute();
-
-  /// Finalize subunits
-  //void finalize();
-  
-  /// Give a static type name to the unit
-  std::string type() {
-    return "L0mProcUnit";
-  }
-  
-
- private:
-
-    
-  CablingUnit * m_cu;
-  L0BufferUnit * m_l0b;
-  L0BufferUnit * m_l0bpll;
-  FormattingUnit * m_formatting;
-  MuonTileID m_puID;
-  MuonTileID m_boardID;
-  L0MFoi m_maxFoi;
-  
-  std::vector<double> m_ptparameters;
-  std::vector<int> m_xfoi;
-  std::vector<int> m_yfoi;
-  double m_precision;
-  int m_bits;
-  bool m_ignoreM1;
-
-  std::string m_writeL0buffer;
-    
-};
+  };
 
 };  // namespace L0Muon
 

@@ -3,8 +3,6 @@
 L0Muon::FormattingUnit::FormattingUnit(){
   
   
-
-  
 }
 
 
@@ -21,13 +19,13 @@ void L0Muon::FormattingUnit::makePads() {
 
   std::map<std::string,Register*>::iterator ir;
 
-  if (m_debug) std::cout << "Formatting: registers in input"  << std::endl;
+  if (m_debug) std::cout << "Formatting::makePads: registers in input"  << std::endl;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-    if (m_debug) std::cout << "Formatting:   " << ir->first << std::endl;
     
     std::vector<MuonTileID> tmp = itr->firedTiles();
 
+    if (m_debug) std::cout <<"Formatting::makePads:   "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
     itr->makePads();
       
     std::vector<MuonTileID> pads = itr->Pads();
@@ -55,6 +53,7 @@ void L0Muon::FormattingUnit::initialize(){
     
   if ( ! m_outputs.empty()){
    
+    if (m_debug) std::cout << "Formatting::initialize: registers in ouput"  << std::endl;
     for ( out = m_outputs.begin(); out != m_outputs.end(); out++ ) {
       TileRegister* outtr = dynamic_cast<TileRegister*>(out->second);
       std::vector<MuonTileID> outPads = outtr->getTileVector();
@@ -75,6 +74,11 @@ void L0Muon::FormattingUnit::initialize(){
           }
         }
       }
+      if (m_debug) std::cout <<"Formatting::initialize:   "<<out->first
+			     <<" "<<outPads.size()<<" pads"
+			     <<" "<<outtr->firedTiles().size()<<" fired tiles"
+			     <<std::endl;
+      
     }    
   }  
 }

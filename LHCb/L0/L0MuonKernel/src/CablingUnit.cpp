@@ -7,10 +7,7 @@
 
 
 L0Muon::CablingUnit::CablingUnit() {  
-    
- 
   m_status = 0;
- 
 }
     
 L0Muon::CablingUnit::~CablingUnit() {};  
@@ -23,16 +20,17 @@ void L0Muon::CablingUnit::makePads() {
   
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
+   
     if ( ! itr->empty() ) {
-      if (m_debug) std::cout << "Cabling: register key  " << ir->first   << std::endl;
-      if (m_debug) std::cout << "Cabling: register name " << itr->name() << std::endl;
+      if (m_debug) std::cout << "Cabling::makePads: register key  " << ir->first   << std::endl;
+      if (m_debug) std::cout << "Cabling::makePads: register name " << itr->name() << std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
-      if (m_debug) std::cout << "Cabling: reg size" << " " <<r.size() << std::endl;
+      if (m_debug) std::cout << "Cabling::makePads: reg size" << " " <<r.size() << std::endl;
       std::vector<MuonTileID> tmp = itr->firedTiles();
       std::vector<MuonTileID>::iterator itmp;
-      if (m_debug) std::cout << "Cabling: fired tiles: " << std::endl;
+      if (m_debug) std::cout << "Cabling::makePads: fired tiles: " << std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-	if (m_debug) std::cout << "Cabling:   " << (*itmp).toString()<< std::endl;
+	if (m_debug) std::cout << "Cabling::makePads:   " << (*itmp).toString()<< std::endl;
       }
 
       itr->makePads();
@@ -101,6 +99,24 @@ void L0Muon::CablingUnit::makeTower() {
   } 
 }
 
+void L0Muon::CablingUnit::bootstrap() {
+  // Get a pointer to the parent Crate Unit
+  CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+
+  // Set the foi
+  for (int ista=0; ista<5; ista++){ 
+    m_tower.setFoi(ista,pcrate->xFoi(ista),pcrate->yFoi(ista));
+    if (m_debug) std::cout << "Cabling: FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
+  }
+      
+  // Set the pt parameters
+  m_tower.setPtparam(pcrate->ptParameters());
+
+  // Set the NO M1 flag
+  m_tower.setIgnoreM1(pcrate->ignoreM1());
+  
+  L0Muon::Unit::bootstrap();
+}
 
 void L0Muon::CablingUnit::initialize() {
 
@@ -116,16 +132,19 @@ void L0Muon::CablingUnit::execute() {
 
   if (m_debug) std::cout << "Cabling: executing PU " << m_parent->name() << std::endl; 
 
+  // Get a pointer to the Board Unit
   Unit * myBoard = m_parent->parent();
   BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
   
-  BestCandidateSelectionUnit* bcsu= dynamic_cast<BestCandidateSelectionUnit*>
-    (bu->subUnit("bcsu"));
+  // Get a pointer to the BCSU
+  BestCandidateSelectionUnit* bcsu= 
+    dynamic_cast<BestCandidateSelectionUnit*> (bu->subUnit("bcsu"));
   
- 
-  Unit * myCrate = myBoard->parent();
-  CrateUnit * cr = dynamic_cast<CrateUnit*>(myCrate);
+  // Get a pointer to the Crate Unit
+  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
+
   
+  // Reset the tower
   m_tower.reset();
 
   makePads();
@@ -134,17 +153,6 @@ void L0Muon::CablingUnit::execute() {
   if (m_debug) std::cout << "Cabling: after makeTower "<< std::endl; 
 
   
-  L0mProcUnit * mpu = dynamic_cast<L0mProcUnit*>(m_parent);
-  
-  
-   for (int ista=0; ista<5; ista++){ 
-     m_tower.setFoi(ista,mpu->xFoi(ista),mpu->yFoi(ista));
-     if (m_debug) std::cout << "Cabling: FOI sta M" <<ista+1<< "X: "<< mpu->xFoi(ista)<< "Y: "<< mpu->yFoi(ista) << std::endl; 
-   }
-      
-   m_tower.setPtparam(mpu->ptParameters());
-   m_tower.setIgnoreM1(mpu->ignoreM1());
-
   //IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();
   
   //m_tower.setMuonToolInTower(iTileXYZTool);
@@ -160,22 +168,22 @@ void L0Muon::CablingUnit::execute() {
   std::vector< std::pair<Candidate*, std::vector<int> > >::iterator ioff;  
   for (ioff = m_offForCand.begin(); ioff != m_offForCand.end(); ioff++){
     
-    std::vector<int> tmp =(*ioff).second;
+  std::vector<int> tmp =(*ioff).second;
     
 
-    if (m_debug) std::cout << "Pt of the candidate = " << (*ioff).first->pt()
-        << std::endl;
+  if (m_debug) std::cout << "Pt of the candidate = " << (*ioff).first->pt()
+  << std::endl;
     
-    if (m_debug) std::cout << "Offsets = " << tmp[0] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[1] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[2] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[3] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[4] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[5] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[6] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[7] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[8] << std::endl;
-    if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[0] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[1] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[2] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[3] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[4] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[5] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[6] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[7] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[8] << std::endl;
+  if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;
     
     
   }
@@ -188,190 +196,141 @@ void L0Muon::CablingUnit::execute() {
     m_status = L0MuonStatus::PU_OVERFLOW;
   }
   if (m_debug) std::cout << "Cabling: " << "Number of Candidates" <<" " 
-      << m_cand.size() << std::endl;
+			 << m_cand.size() << std::endl;
 
-    //addresses for candidates (L0Buffers)
+  //addresses for candidates (L0Buffers)
 
 
-    if (! mpu->writeL0Buffer().empty() ){
-      L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-      L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("l0buf"));
+  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
+  L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("l0buf"));
      
-      for (int icand= 0; icand<2; icand++){
-        int nbits = m_tower.addr(icand).size();
+  for (int icand= 0; icand<2; icand++){
+    int nbits = m_tower.addr(icand).size();
     
-      // Prepare registers with addresser for candidates
-          char * name = "(R%d,%d,%d)_addr_candidate%d";
-          char buf[4096];     
-          sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY(),icand+1);
-          TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
-          pReg->setType("Outputfield");     
-          pReg->set(m_tower.addr(icand));
+    // Prepare registers with addresser for candidates
+    char * name = "(R%d,%d,%d)_addr_candidate%d";
+    char buf[4096];     
+    sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY(),icand+1);
+    TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
+    pReg->setType("Outputfield");     
+    pReg->set(m_tower.addr(icand));
          
-          //l0ad address in l0buffer
-          if (l0buffer != NULL){
-	    char * name = "cand%d";      
-	    char buf[4096];      
-	    sprintf(buf,name,icand);      
-            l0buffer->addInputRegister(pReg,buf);
-          }
- 
-          if (bcsu != NULL){
-            bcsu->addInputRegister(pReg);
-          }
-          
-      }
-      
-    
-
-      // Status world for candidates: Prepare register with status word
-      char * name = "(R%d,%d,%d)_status";      
+    //load address in l0buffer
+    if (l0buffer != NULL){
+      char * name = "cand%d";      
       char buf[4096];      
-      sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY());      
-      unsigned long int status= m_cand.size()<3 ? m_cand.size() : 3ul;
-      boost::dynamic_bitset<> bits(4,status);
-      int nbits = bits.size();
-      TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
-      pReg->setType("Outputfield");
-      pReg->set(bits);
-
-      // load register in l0buf
-      
-      if (l0buffer != NULL){
-	char * name = "status";      
-	char buf[4096];      
-	sprintf(buf,name);      
-        l0buffer->addInputRegister(pReg,buf);
-      }
-          //      
-      if (bcsu != NULL){
-        bcsu->addInputRegister(pReg);
-      }
-      
+      sprintf(buf,name,icand);      
+      l0buffer->addInputRegister(pReg,buf);
     }
-    
-    
-     
-        
-        // load Candidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
-        if (m_cand.size()>0 && m_cand.size()<3){
-          for (std::vector<Candidate*>::iterator icand= m_cand.begin();
-               icand < m_cand.end(); icand++){
-            bcsu->loadCandidates(*icand);           
-          }
-          
-
-          if (m_cand.size()==1){            
-            bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));            
-          }
-          
-          bcsu->loadStatus(L0MuonStatus::OK);
-          
-        }
-        
-        if (m_cand.size() >2){  
-          for (std::vector<Candidate*>::iterator icand= m_cand.begin();
-               icand < m_cand.begin()+2; icand++){
-            bcsu->loadCandidates(*icand);
-            
-          }          
-          bcsu->loadStatus(L0MuonStatus::OK);
-        }
-        
-        if (m_cand.size()==0){
-          m_status =0;
-          bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
-          bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
-          bcsu->loadStatus(1);
-          
-        }
-        
-          
-          
-        
-        if (m_offForCand.size()>0 && m_offForCand.size()<3){
-          
-    
-          for (std::vector< std::pair<Candidate*, 
-                 std::vector<int> > >::iterator ioff= m_offForCand.begin();
-               ioff < m_offForCand.end(); ioff++){
-            
-           
-            bcsu->loadOffsets(*ioff);
-            
-          }
-          
-        
-    
-        if (m_offForCand.size()==1){
-            
-          std::vector<int> tmp;
-            
-          for (int iv =0; iv<10; iv++){
-                     
-            tmp.push_back(0);
-              
-          }
-            
-      
-          std::pair<Candidate* , std::vector<int> > empty = 
-            std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
-            
-
-            bcsu->loadOffsets(empty);
-            
-            
-          }
-          
-      
-      
-      
-    
-    
-    
-          
-        }
-        
-        
  
-        if (m_offForCand.size()>2){
+    if (bcsu != NULL){
+      bcsu->addInputRegister(pReg);
+    }
           
-          for (std::vector< std::pair<Candidate*, 
-                 std::vector<int> > >::iterator ioff= m_offForCand.begin();
-               ioff < m_offForCand.begin()+2; ioff++){
-            
-            bcsu->loadOffsets(*ioff);
-            
-          }
-          
-        }
+  }
+
+  // Status world for candidates: Prepare register with status word
+  char * name = "(R%d,%d,%d)_status";      
+  char buf[4096];      
+  sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY());      
+  unsigned long int status= m_cand.size()<3 ? m_cand.size() : 3ul;
+  boost::dynamic_bitset<> bits(4,status);
+  int nbits = bits.size();
+  TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
+  pReg->setType("Outputfield");
+  pReg->set(bits);
+
+  // load register in l0buf  
+  if (l0buffer != NULL){
+    char * name = "status";      
+    char buf[4096];      
+    sprintf(buf,name);      
+    l0buffer->addInputRegister(pReg,buf);
+  }
+  //      
+  if (bcsu != NULL){
+    bcsu->addInputRegister(pReg);
+  }
         
-        if (m_offForCand.size()==0){
-          
-          std::vector<int> tmp;
-          
-          for (int iv =0; iv<10; iv++){
-            
-       
-            tmp.push_back(0);
-            
-          }
-          
-          
-          std::pair<Candidate* , std::vector<int> > empty = 
-            std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
-          
-          bcsu->loadOffsets(empty);
-          
-          bcsu->loadOffsets(empty);
-          
-        }
+  // load Candidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
+  if (m_cand.size()>0 && m_cand.size()<3){
+    for (std::vector<Candidate*>::iterator icand= m_cand.begin();
+	 icand < m_cand.end(); icand++){
+      bcsu->loadCandidates(*icand);           
+    }
+    if (m_cand.size()==1){            
+      bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));            
+    }
+    bcsu->loadStatus(L0MuonStatus::OK);
+  }
         
+  if (m_cand.size() >2){  
+    for (std::vector<Candidate*>::iterator icand= m_cand.begin();
+	 icand < m_cand.begin()+2; icand++){
+      bcsu->loadCandidates(*icand);
+            
+    }          
+    bcsu->loadStatus(L0MuonStatus::OK);
+  }
+        
+  if (m_cand.size()==0){
+    m_status =0;
+    bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
+    bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
+    bcsu->loadStatus(1);
+          
+  }
+  
+  if (m_offForCand.size()>0 && m_offForCand.size()<3){
+    for (std::vector< std::pair<Candidate*, 
+	   std::vector<int> > >::iterator ioff= m_offForCand.begin();
+	 ioff < m_offForCand.end(); ioff++){
+      bcsu->loadOffsets(*ioff);
+    }
+        
+    if (m_offForCand.size()==1){
+      
+      std::vector<int> tmp;
+            
+      for (int iv =0; iv<10; iv++){
+                     
+	tmp.push_back(0);
+              
+      }
+                 
+      std::pair<Candidate* , std::vector<int> > empty = 
+	std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
+      bcsu->loadOffsets(empty);
+            
+    }
+  }
+   
+  if (m_offForCand.size()>2){
+          
+    for (std::vector< std::pair<Candidate*, 
+	   std::vector<int> > >::iterator ioff= m_offForCand.begin();
+	 ioff < m_offForCand.begin()+2; ioff++){
+            
+      bcsu->loadOffsets(*ioff);
+    }
+  }
+        
+  if (m_offForCand.size()==0){
+          
+    std::vector<int> tmp;
+          
+    for (int iv =0; iv<10; iv++){
+      tmp.push_back(0);
+    }
+    std::pair<Candidate* , std::vector<int> > empty = 
+      std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
+          
+    bcsu->loadOffsets(empty);
+          
+    bcsu->loadOffsets(empty);
+  }
         
 }
-
-
-
 
 
 void L0Muon::CablingUnit::finalize() {

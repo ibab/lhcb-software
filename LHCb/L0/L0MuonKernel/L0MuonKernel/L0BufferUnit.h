@@ -30,10 +30,13 @@ namespace L0Muon {
     L0BufferUnit();
 
     /// Constructor
-    L0BufferUnit(MuonTileID &pu, std::vector<int> & foix, std::vector<int> & foiy, int & type);
+    L0BufferUnit(int & type);
     /// Destructor
     ~L0BufferUnit();
     
+    /// Set the MuonTileID of the PU 
+    void setPU( MuonTileID pu ) { m_pu = pu; }
+
     /// Return x foi in station sta
     int xFoi(int sta);
   
@@ -49,31 +52,20 @@ namespace L0Muon {
     /// Return the type of the buffer 
     int type(int type){return m_type;}
     
-    /// Fill the bit of the output registers
+    /// Fill the bits of the output register
     void setL0buf();
     void setL0bufStd();
     void setL0bufPLL();
     void setOLPLL();
 
-/*     /// Read the external file describing the buffer and return the L0MTileList */
-/*     std::vector<L0MTile> tileListFromMap(int type); */
-
-/*     /// Generic method to extract a tile list from the map */
-/*     std::vector<L0MTile> readTileListFromMap(FILE *file,int max); */
-
     /// Open the output file 
-    void setOutputFile(std::string suffixe);
+    void setOutputFile(MuonTileID puid, std::string suffixe);
  
     /// Write the l0buffer on the output file
     void writeEvent();
     void writeHeader();
-
-   
-    void initialize();
-
-    void execute();
     
-    void finalize();
+    void execute();
 
     /// Give a static type name to the unit
     std::string type() {
@@ -87,10 +79,6 @@ namespace L0Muon {
 
     /// PU ID
     MuonTileID m_pu;
-
-    /// Fois (one vector element per station)
-    std::vector<int> m_xfoi;
-    std::vector<int> m_yfoi;
     
     /// Type of the Unit : "standard" or PLL type.
     int m_type;

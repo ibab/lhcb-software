@@ -1,11 +1,14 @@
 #include "L0MuonKernel/L0BufferUnit.h"
 #include "L0MuonKernel/L0mProcUnit.h"
+#include "L0MuonKernel/CrateUnit.h"
 #include "L0mConf/L0MBase.h" 
 #include <cmath>
 #include <iostream.h>
 #include <fstream.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#define UNKNOWN "Unknown"
 
 #define  XM1FOI_OFFSET    5*16+8
 #define  XM2FOI_OFFSET    5*16+4
@@ -27,51 +30,42 @@
 #define  BCID_SIZE        4
 
 
-/*
-  Constructor.
+/**
+   Constructor.
 */
-L0Muon::L0BufferUnit::L0BufferUnit(MuonTileID & pu,
-				   std::vector<int> & foix,
-				   std::vector<int> & foiy,
-				   int & type){
+L0Muon::L0BufferUnit::L0BufferUnit(int & type){
    
-  m_pu = pu;
-  m_xfoi= foix;
-  m_yfoi= foiy;   
-  m_type = type;
+  m_type = type; // 0 for standard; 1 for PLL
 
   m_l0bufferFile = NULL;
   m_l0EventNumber=0;
 
 };
 
-/*
-  Open the Output file where to write the L0Buffers, and write the header.
+/**
+   Open the Output file where to write the L0Buffers, and write the header.
 */
-void L0Muon::L0BufferUnit::setOutputFile(std::string suffixe){
+void L0Muon::L0BufferUnit::setOutputFile(MuonTileID puid, std::string suffixe){
 
   // Open the output file 
-
-  //char * name = "/marmuon3/NewInputFiles/l0buf_sim_PUQ%dR%d%d%d_%s.txt";
-  //char buf[4096];
-  //sprintf(buf,name,m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY(),suffixe.c_str());
   char * name = "/marmuon3/NewInputFiles/l0buf_sim_R%d%d%d_%s.txt";
   char buf[4096];
-  sprintf(buf,name,m_pu.region()+1,m_pu.nX(),m_pu.nY(),suffixe.c_str());
+  sprintf(buf,name,puid.region()+1,puid.nX(),puid.nY(),suffixe.c_str());
   m_l0bufferFile = fopen(buf,"w");
 
+  // Write file header
   writeHeader();
 }
 
-/*
-  Destructor
+/**
+   Destructor
 */
 L0Muon::L0BufferUnit::~L0BufferUnit(){
   if (m_l0bufferFile!=NULL) fclose(m_l0bufferFile);
 }
 
-/*
-  Fill the L0Buffer output register.
+/**
+   Fill the L0Buffer output register.
 */
 void L0Muon::L0BufferUnit::setL0buf(){
 
@@ -84,12 +78,11 @@ void L0Muon::L0BufferUnit::setL0buf(){
 }
 
 
-/*
-  Fill the L0Buffer output register with the "standard" format.
+/**
+   Fill the L0Buffer output register with the "standard" format.
 */
 void L0Muon::L0BufferUnit::setL0bufStd(){
   
-
   // Get a pointer to the L0buffer output register
   TileRegister * pOutRegister = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
   // Clear the ouptut register bit set
@@ -101,18 +94,18 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
   //
 
   // Loop over input registers
-  std::map<std::string,Register*>::iterator ir ;
+  std::map<std::string,L0Muon::Register*>::iterator ir;
   for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
     
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-
+    
     // Filter the input register according to their type
-    if (itr->Type()=="InputfieldOL" || itr->Type()=="InputfieldNeigh") {
+    if (itr->Type()=="OpticalLink" || itr->Type()=="Neighbours") {
 
       // Get the list of fired tiles
       std::vector<MuonTileID> firedTilesList = itr->firedTiles();
       std::vector<MuonTileID>::iterator itfired;
-      
+     
       // For each fired tile, set to 1 the corresponding tiles in the output register bit set
       for (itfired=firedTilesList.begin(); itfired!= firedTilesList.end(); itfired++){
 	pOutRegister->setTile(*itfired);
@@ -170,7 +163,6 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
     }
   }
 
-  
 
   // Update the bit set.
   pOutRegister->set(outBitSet);
@@ -178,8 +170,8 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
 
 }
 
-/*
-  Fill the L0Buffer output register with the PLL format.
+/**
+   Fill the L0Buffer output register with the PLL format.
 */
 void L0Muon::L0BufferUnit::setL0bufPLL(){
 
@@ -196,8 +188,6 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   std::vector<MuonTileID> firedPadsList = pInRegister->Pads();
   // Get the list of fired tiles 
   std::vector<MuonTileID> firedTilesList = pInRegister->firedTiles();
-//   std::cout << "L0buffer:  firedPadsList.size()= "<< firedPadsList.size() << std::endl; 
-//   std::cout << "L0buffer:  firedTilesList.size()= "<< firedTilesList.size() << std::endl; 
 
     
   // Get a pointer to the L0buffer output register
@@ -216,9 +206,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
        itl0buffer++){
     
     if (! itl0buffer->isValid()) continue;
-//     std::cout << "L0buffer: l0buffer tile is "<< itl0buffer->toString()<< std::endl; 
     if (itl0buffer->station()>2) {
-//       std::cout << "L0buffer: start loop over firedPadsList"<< std::endl; 
       // Loop over the fired pads for stations M4 & M5
       for (std::vector<MuonTileID> ::iterator itfired=firedPadsList.begin(); 
 	   itfired!= firedPadsList.end(); 
@@ -230,23 +218,13 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
       }
     } else {
       // Loop over the fired tiles for stations M1, M2 & M3
-//       std::cout << "L0buffer: start loop over firedTilesList"<< std::endl; 
       for (std::vector<MuonTileID> ::iterator itfired=firedTilesList.begin(); 
 	   itfired!= firedTilesList.end(); 
 	   itfired++){
-	//if (! itfired->isValid()) continue;
-	//std::cout << "L0buffer:   fired tile is: " <<itfired->toString() << std::endl; 
 	MuonTileID  intercept= itfired->intercept(*itl0buffer);
 
 	MuonTileID  container= itl0buffer->containerID(itfired->layout());
-	//	if (container == (*itfired) ){
 	if ( intercept== (*itl0buffer) ){
-// 	  std::cout << "L0buffer:   "
-// 		    <<" ... "<< intercept.toString() 
-// 		    <<" ... "<< container.toString() 
-// 		    <<" ... "<< itfired->toString()
-// 		    <<" ..." << itl0buffer->toString() 
-// 		    << std::endl; 
 	  pOutRegister->setTile(*itl0buffer);
 	}
       }
@@ -339,12 +317,10 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
 
 }
 
-/*
-  Fill the OL output register with the PLL format.
+/**
+   Fill the OL output register with the PLL format.
 */
 void L0Muon::L0BufferUnit::setOLPLL(){
-
-  
 
   // 
   // Build the list of fired tiles
@@ -357,7 +333,7 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
 
-    if (itr->Type()=="InputfieldOL" ) {
+    if (itr->Type()=="OpticalLink" ) {
       std::vector<MuonTileID> inputFiredTiles = itr->firedTiles();
       for (std::vector<MuonTileID>::iterator itfired=inputFiredTiles.begin(); 
 	   itfired!= inputFiredTiles.end(); 
@@ -405,13 +381,12 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 }
 
 
-
-void L0Muon::L0BufferUnit::initialize(){
-  if (m_debug) std::cout << "Initialize L0Buffer" << std::endl;  
-}
-
+/**
+   Execute event
+*/
 void L0Muon::L0BufferUnit::execute(){
   
+  if (m_debug) std::cout << "L0BufferUnit::execute" << std::endl;
 
   setL0buf();
 
@@ -429,8 +404,6 @@ void L0Muon::L0BufferUnit::execute(){
   m_l0EventNumber++;
 }
 
-void L0Muon::L0BufferUnit::finalize(){
-}
 
 /*
   Write output file header 
@@ -462,6 +435,7 @@ void L0Muon::L0BufferUnit::writeHeader(){
   yFOI |= ( yM2&0xF ) <<  8 ;
   yFOI |= ( yM1&0xF ) << 12 ;
   
+
   fprintf(m_l0bufferFile,"#- PU\n");
   fprintf(m_l0bufferFile,"Q%d R%d%d%d\n",m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY());
   fprintf(m_l0bufferFile,"#- FOI \n");
@@ -472,8 +446,8 @@ void L0Muon::L0BufferUnit::writeHeader(){
   
 }
 
-/*
-  Write event to output file
+/**
+   Write event to output file
 */
 void L0Muon::L0BufferUnit::writeEvent(){
 
@@ -484,59 +458,64 @@ void L0Muon::L0BufferUnit::writeEvent(){
   fprintf(m_l0bufferFile,"#- Header\n");
   fprintf(m_l0bufferFile,"%04x %04x\n",m_l0EventNumber%16,0);
   
-  std::map<std::string,Register*>::iterator ir ;
+  //std::map<std::string,Register*>::iterator ir ;
 
- 
   // Write Optical link in INPUT
   fprintf(m_l0bufferFile,"#- Optical links\n");
-  for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
-    TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-     if (itr->Type()=="OpticalLink" ) {
-       itr->print_words(m_l0bufferFile,3);
-     }
-  }
+  //   for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
+  //     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
+  //     if (itr->Type()=="OLBuffer" ) {
+  //       itr->print_words(m_l0bufferFile,3);
+  //     }
+  //   }
+  TileRegister * pOLOut = dynamic_cast<TileRegister*>(m_outputs["OLOut"]);
+  pOLOut->print_words(m_l0bufferFile,3);
 
   // Write L0Buffer
   fprintf(m_l0bufferFile,"#- L0Buffer\n");
-  for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
-    TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-     if (itr->Type()=="L0Buffer" ) {
-       itr->print_words(m_l0bufferFile);
-     }
-  }
-
+  //   for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
+  //     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
+  //     if (itr->Type()=="L0Buffer" ) {
+  //       itr->print_words(m_l0bufferFile);
+  //     }
+  //   }
+  TileRegister * pL0bOut = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
+  pL0bOut->print_words(m_l0bufferFile);
+  
+  // Write Event Trailer
   fprintf(m_l0bufferFile,"#----\n");
-
-  
 }
 
-int L0Muon::L0BufferUnit::xFoi(int sta)
-{
-  int xfoi= m_xfoi[sta];
-  return xfoi;
-  
+/**
+   Return the Foi in x for the given station
+*/
+int L0Muon::L0BufferUnit::xFoi(int sta){
+  CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+  return pcrate->xFoi(sta);  
 }
 
-int L0Muon::L0BufferUnit::yFoi(int sta)
-{
-  int yfoi= m_yfoi[sta];
-  return yfoi;
-  
+/**
+   Return the Foi in y for the given station
+*/
+int L0Muon::L0BufferUnit::yFoi(int sta){
+  CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+  return pcrate->yFoi(sta);  
 }
 
-int L0Muon::L0BufferUnit::xHardFoi(int sta)
-{
+/**
+   Return the Foi in x for the given station in the hardware convention
+*/
+int L0Muon::L0BufferUnit::xHardFoi(int sta){
   int soft2hardxFoi[5]={2,1,0,4,4};
-  int xfoi= m_xfoi[sta]/soft2hardxFoi[sta];
-  return xfoi;
+  return xFoi(sta)/soft2hardxFoi[sta];
   
 }
 
-int L0Muon::L0BufferUnit::yHardFoi(int sta)
-{
+/**
+   Return the Foi in y for the given station in the hardware convention
+*/
+int L0Muon::L0BufferUnit::yHardFoi(int sta){
   int soft2hardyFoi[5]={1,1,0,1,1};
-  int yfoi= m_yfoi[sta]/soft2hardyFoi[sta];
-  return yfoi;
-  
+  return yFoi(sta)/soft2hardyFoi[sta];
 }
 

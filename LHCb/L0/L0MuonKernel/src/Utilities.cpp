@@ -11,20 +11,24 @@
   to build the file name as well as to determine the size of the 
   output tile list.
 */
-std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type){
+std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type, std::string path){
   std::vector<L0MTile> ltiles;
 
   // Open the map file 
   char name[4096];
   if (type == 0) {
     // for the L0Buffer
-    char * format = "/lhcb/users/cogan/public/TestBench/L0BufferMaps/map_l0buffer_PLL_Q%dR%d%d%d.txt";
-    sprintf(name,format,pu.quarter()+1,pu.region()+1,pu.nX(),pu.nY());
+    //     char * format = "%s/config/map_l0buffer_R%d%d%d.txt";
+    //     sprintf(name,format,path.c_str(),pu.quarter()+1,pu.region()+1,pu.nX(),pu.nY());
+    char * format = "/lhcb/users/cogan/cmtuser/L0/L0MuonKernelTest/v1r0/config/map_l0buffer_R%d%d%d.txt";
+    sprintf(name,format,pu.region()+1,pu.nX(),pu.nY());
   } else  if (type == 1){
     // for the OLs
-    char * format = "/lhcb/users/cogan/public/TestBench/L0BufferMaps/map_OL_PLL_Q%dR%d%d%d.txt";
-    sprintf(name,format,pu.quarter()+1,pu.region()+1,pu.nX(),pu.nY());
-  } 
+    //     char * format = "%s/config/map_ol_R%d%d%d.txt";
+    //     sprintf(name,format,path.c_str(),pu.quarter()+1,pu.region()+1,pu.nX(),pu.nY());
+    char * format = "/lhcb/users/cogan/cmtuser/L0/L0MuonKernelTest/v1r0/config/map_ol_R%d%d%d.txt";
+    sprintf(name,format,pu.region()+1,pu.nX(),pu.nY());
+  }
   FILE * mapfile = fopen(name,"r");
   if (mapfile==NULL) return ltiles;
 
@@ -50,35 +54,10 @@ std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type){
 */
 std::vector<L0MTile>  L0Muon::readTileListFromMap(FILE *mapfile,int max){
   std::vector<L0MTile> ltiles(max);
+  
+  int ic=0;
   while (1)
   {
-//     // Read line
-//     int ibit;
-//     int Q;
-//     int R; 
-//     int sta;
-//     char type[8];
-//     int gridX;
-//     int gridY;
-//     int nX;
-//     int nY;
-
-
-//     if (fscanf(mapfile,"%d %d %d %d %s %d %d %d %d",&ibit,&Q,&R,&sta,type,&gridX,&gridY,&nX,&nY)==EOF) break;
-
-//     L0MBase::L0MTileType tag; 
-//     if      (type == "Pad")     { tag = L0MBase::Pad; }
-//     else if (type == "HS")      { tag = L0MBase::StripH; }
-//     else if (type == "VS")      { tag = L0MBase::StripV; }
-//     else { tag = L0MBase::Unknown; }
-    
-//     // Build the L0MTile
-  
-//     MuonLayout layout(gridX,gridY);
-//     MuonTileID mid(sta,0,0,layout,R,Q,nX,nY);
-//     L0MTile tile(mid,tag);
-//     ltiles[ibit]=tile;
-
 
     // Read line
     int ibit;
@@ -96,6 +75,7 @@ std::vector<L0MTile>  L0Muon::readTileListFromMap(FILE *mapfile,int max){
     // Build the L0MTile
   
     MuonTileID mid(smid);
+    
     L0MTile tile(mid,tag);
     ltiles[ibit]=tile;
   }

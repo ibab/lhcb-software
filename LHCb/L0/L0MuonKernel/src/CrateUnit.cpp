@@ -3,33 +3,23 @@
 #include "L0MuonKernel/CrateUnit.h"
 #include "L0MuonKernel/BestCandidateSelectionUnit.h"
 
-L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet, 
-                             std::vector<double> & ptpara,
-                             bool & ignoreM1,
-                             std::vector<int> & foix, 
-                             std::vector<int> & foiy,
-                             double & precision,
-                             int & bits,
-                             std::string writeL0buffer,
-			     std::vector<MuonTileID> config_pus )
+L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config_pus )
 {
-
-
-
   
 
   if ( ! m_units.empty() ) {
     m_units.clear();
   }
+
+  
    
    std::vector<MuonTileID> boards = pProNet->boards();
    std::vector<MuonTileID>::iterator ib;
    std::vector<MuonTileID>::iterator ipusb;
 
-   // std::cout << "Crate constructor " <<  std::endl;
-//    for ( int i = 0; i<5 ; i++ ) {
-//      std::cout << "Foi X in station " << i << " " << foix[i] <<  std::endl;
-//    }
+   //    for ( int i = 0; i<5 ; i++ ) {
+   //      std::cout << "Foi X in station " << i << " " << foix[i] <<  std::endl;
+   //    }
 
    bool ok;
 
@@ -58,7 +48,16 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
      std::vector<MuonTileID> pusb = pProNet->pusInBoard(*ib);
 
      BoardUnit * board = new BoardUnit();
+     board->setParent(this);
+     addUnit(board);
+
      BestCandidateSelectionUnit * bcsu = new BestCandidateSelectionUnit(*ib);
+     bcsu->setParent(board);     
+     board->addUnit(bcsu, "bcsu");
+//      if ( ! writeL0buffer.empty() ) {
+//        // Open output file for the L0Buffer
+//        // bcsu->setOutputFile(writeL0buffer);
+//      }
      
      
      for ( ipusb = pusb.begin(); ipusb != pusb.end(); ipusb++ ){
@@ -79,33 +78,13 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
 	        
        if ( ok ) {
 	 L0MPuNodeBase m_pPuNode = pProNet->puNode(*ipusb);
-	 Unit * pProcUnit = new L0mProcUnit(m_pPuNode,ptpara,ignoreM1,foix,foiy,
-                                           precision, bits, writeL0buffer);
+	 Unit * pProcUnit = new L0mProcUnit(m_pPuNode);
 
 	 pProcUnit->setParent(board);
 	 board->addUnit(pProcUnit);
        }	 
      }
-     
-     bcsu->setParent(board);     
-
-     board->addUnit(bcsu, "bcsu");
-     if ( ! writeL0buffer.empty() ) {
-       // Open output file for the L0Buffer
-       // bcsu->setOutputFile(writeL0buffer);
-     }
-     
-
-     board->setParent(this);
-
-     addUnit(board);
-
-
-     
-
-
-   }
-   
+   }  
 }
 
 
@@ -121,6 +100,9 @@ void L0Muon::CrateUnit::initialize()
   L0Muon::Unit::initialize();
 }
 
+void L0Muon::CrateUnit::bootstrap() {
+  L0Muon::Unit::bootstrap();
+}
 
 
 void L0Muon::CrateUnit::execute()
@@ -279,6 +261,20 @@ void L0Muon::CrateUnit::sortCandidates()
        if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;*/
      } 
    }  
+}
+
+int L0Muon::CrateUnit::xFoi(int sta)
+{
+  int xfoi= m_xfoi[sta];
+  return xfoi;
+  
+}
+
+int L0Muon::CrateUnit::yFoi(int sta)
+{
+  int yfoi= m_yfoi[sta];
+  return yfoi;
+  
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.6 2005-02-03 19:49:51 atsareg Exp $
+// $Id: CablingUnit.h,v 1.7 2005-03-31 16:08:07 jucogan Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -53,10 +53,9 @@ public:
   void drawTower() {m_tower.draw();}
 
   // Overloads from Unit
+  void bootstrap(); 
   void initialize();
-
   void execute();
-
   void finalize();
   
   /// Give a static type name to the unit
