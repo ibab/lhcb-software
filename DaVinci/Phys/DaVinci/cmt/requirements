@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.35 2002-07-24 18:57:28 gcorti Exp $
+# $Id: requirements,v 1.36 2002-07-26 20:00:12 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -57,6 +57,7 @@ use BookKeeping    v1r1   Tools
 use LHCbKernel     v1r3   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
+use VeloKernel   v1r1    Velo
 use RichKernel   v1r2   Rich
 use TrKernel     v11r0  Tr
 use CaloKernel   v2r0   Calo
@@ -64,17 +65,17 @@ use MuonKernel   v2r1   Muon
 
 #--- Detector description ( add any other Det package you need )
 use DetDesc        v10r3   Det
-use XmlDDDB        v12r2   Det
+use XmlDDDB        v12r3   Det
 use VeloDet        v7r0    Det
 use ITDet          v1r0    Det
-use OTDet          v2r0    Det
+use OTDet          v2r1    Det
 use CaloDet        v5r0    Det
 use CaloDetXmlCnv  v2r0    Det
 use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 #    explicit packages now becuase of DEV development
-use EventSys       v12r0  Event
+use EventSys       v12r1  Event
 
 #--- Associators
 use  ITAssociators      v2r0    IT
@@ -85,7 +86,7 @@ use  CaloRec   		v2r1    Calo
 use  MuonAssociators    v1r0    Muon
 use  TrAssociators      v3r0    Tr
 use  L0Calo		v6r1	L0
-use  L1VeloTrack 	v2r0	L1
+use  L1VeloTrack 	v2r1	L1
 
 #--- ProtoParticles 
 use CaloUtils 	    v4r1   Calo
