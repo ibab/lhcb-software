@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.2 2002-01-10 15:57:41 ocallot Exp $
+// $Id: DeVelo.h,v 1.3 2002-01-22 16:27:32 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -77,10 +77,10 @@ public:
   virtual StatusCode initialize(); 
 
   /// return the wafer number for a point
-  int waferNumber( HepPoint3D& point );
+  int waferNumber( const HepPoint3D& point );
 
   /// return the PU wafer number for a point
-  int puWaferNumber( HepPoint3D& point );
+  int puWaferNumber( const HepPoint3D& point );
 
   /// return the number of wafers
   int nbWafer()  const { return m_wafer.size() ; };
@@ -90,17 +90,17 @@ public:
   
   /// return the (floating) strip number for this wafer;
   double stripNumber( unsigned int waferNumber, 
-                      HepPoint3D& point, 
+                      const HepPoint3D& point, 
                       double& pitch );
 
   /// return the (floating) strip number for this wafer;
   double puStripNumber( unsigned int waferNumber, 
-                        HepPoint3D& point, 
+                        const HepPoint3D& point, 
                         double& pitch );
 
   /// return the (floating) strip number for this wafer;
   double stripNumberByType( int type,
-                            HepPoint3D& point, 
+                            const HepPoint3D& point, 
                             double& pitch );
 
   /// return the space point and sigma for a given pair of strips.
@@ -116,15 +116,44 @@ public:
   double zWafer( unsigned int num ) { 
     if ( m_wafer.size() > num ) {
       return m_wafer[num]->z(); 
-    } else if ( (100 <= num ) && (m_puWafer.size() > num-100) ) {
-      return m_puWafer[num-100]->z();
     } else{
       return -9999.;
     }
   }
   
   
-    
+  double zPuWafer( unsigned int num ) { 
+    if ( m_puWafer.size() > num ) {
+      return m_puWafer[num]->z(); 
+    } else{
+      return -9999.;
+    }
+  }
+
+  /// returns the local radius of the strip
+  double rOfStrip( double strip, int& phiZone );
+
+  /// returns the phi of the strip at the specified radius for this wafer.
+  double phiOfStrip( double strip, double radius, int wafer );
+
+  /// returns the R pitch at the given radius
+  double rPitch( double radius ) {
+    if ( m_fixPitchRadius > radius ) {
+      return m_innerPitch;
+    } else {
+      return m_innerPitch + m_pitchSlope * ( radius -  m_fixPitchRadius);
+    }
+  }
+
+  /// returns the Phi pitch (in mm) at the given radius
+  double phiPitch( double radius ) {
+    if ( m_phiBoundRadius > radius ) {
+      return m_phiPitchInner * radius;
+    } else {
+      return m_phiPitchOuter * radius;
+    }
+  }
+  
 protected: 
 
 private:

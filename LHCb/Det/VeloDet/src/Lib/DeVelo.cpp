@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.3 2002-01-10 15:57:41 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.4 2002-01-22 16:27:32 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -10,7 +10,6 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/TransientStore.h"
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
@@ -47,10 +46,14 @@ const CLID& DeVelo::clID () const { return DeVelo::classID() ; }
 // intialization method
 // ============================================================================
 StatusCode DeVelo::initialize() {
-
+  MsgStream loging( msgSvc(), "DeVelo" );
+  
   StatusCode sc = DetectorElement::initialize();
   ///
-  if( sc.isFailure() ) { return sc ; }
+  if( sc.isFailure() ) { 
+    loging << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    return sc ; 
+  }
   ///
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
@@ -132,7 +135,6 @@ StatusCode DeVelo::initialize() {
   }
   ///
 
-  MsgStream loging( msgSvc(), "DeVelo" );
   loging << MSG::INFO << "Velo : Radius from " << m_innerRadius/mm 
          << " to " << m_outerRadius/mm << endreq;
  
@@ -229,7 +231,7 @@ StatusCode DeVelo::initialize() {
 // ============================================================================
 // Get the wafer a point is in.
 // ============================================================================
-int DeVelo::waferNumber( HepPoint3D& point ) {
+int DeVelo::waferNumber( const HepPoint3D& point ) {
   std::vector<VeloWafer*>::const_iterator it ;
   for ( it = m_wafer.begin() ; m_wafer.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
@@ -242,7 +244,7 @@ int DeVelo::waferNumber( HepPoint3D& point ) {
 // ============================================================================
 // Get the wafer a point is in.
 // ============================================================================
-int DeVelo::puWaferNumber( HepPoint3D& point ) {
+int DeVelo::puWaferNumber( const HepPoint3D& point ) {
   std::vector<VeloWafer*>::const_iterator it ;
   for ( it = m_puWafer.begin() ; m_puWafer.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
@@ -256,7 +258,7 @@ int DeVelo::puWaferNumber( HepPoint3D& point ) {
 // Returns the strip number for the specified wafer
 //=============================================================================
 double DeVelo::stripNumber( unsigned int waferNumber, 
-                            HepPoint3D& point, 
+                            const HepPoint3D& point, 
                             double& pitch ) {
   int type;
   if ( m_wafer.size() <= waferNumber ) {
@@ -271,8 +273,8 @@ double DeVelo::stripNumber( unsigned int waferNumber,
 // Returns the strip number for the specified wafer
 //=============================================================================
 double DeVelo::puStripNumber( unsigned int waferNumber, 
-                            HepPoint3D& point, 
-                            double& pitch ) {
+                              const HepPoint3D& point, 
+                              double& pitch ) {
   int type;
   if ( m_puWafer.size() <= waferNumber ) {
     return -1;
@@ -285,7 +287,7 @@ double DeVelo::puStripNumber( unsigned int waferNumber,
 // Returns the strip number for the specified wafer
 //=============================================================================
 double DeVelo::stripNumberByType( int type,
-                                  HepPoint3D& point, 
+                                  const HepPoint3D& point, 
                                   double& pitch ) {
   double strip = -1.;
   pitch  = -1.;
@@ -365,6 +367,72 @@ double DeVelo::stripNumberByType( int type,
 }
 
 //=============================================================================
+// Returns the (local) radius of the specified strip, and also its zone.
+//=============================================================================
+double DeVelo::rOfStrip( double strip, int& phiZone ) {
+  double localStrip = strip;
+  phiZone = 0;
+  if ( 1024. <= localStrip ) {
+    localStrip -= 1024.;
+    phiZone = 3;
+  }
+  
+  if ( m_nbRInner < localStrip ) {
+    localStrip -= (int)m_nbRInner;
+    phiZone += 1;
+    if  ( m_nbRInner < localStrip ) {
+      phiZone += 1;
+    }
+  }
+  double localR;
+  if ( m_nbRFixedPitch > localStrip ) {
+    localR = m_innerRadius + localStrip * m_innerPitch;
+  } else {
+    double dStrip = localStrip-m_nbRFixedPitch;
+    localR = m_fixPitchRadius + m_innerPitch * 
+      ( exp(dStrip * m_logPitchStep) - 1. ) / m_pitchSlope;
+  }
+  return  localR;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
+
+  // This version codes unphysical strips as SICBMC generates hits in semi-
+  // circular wafer, not taking into accound the real Phi wafer shape. The 
+  // non-official strips are coded as 2048 plus the strip number of the 
+  // wafer which covers this region in th enext half station.
+
+  double phiLocal;
+  if ( strip < m_nbPhiInner ) {
+    phiLocal = (strip * m_phiPitchInner) + 
+               m_phiInnerTilt - asin( m_innerTiltRadius / radius );
+    if ( 2047 < strip ) {  
+      phiLocal = phiLocal-2*m_halfAngle; 
+    }
+  } else {
+    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + 
+               m_phiOuterTilt - asin( m_outerTiltRadius / radius );
+    if ( 2047 < strip ) {  
+      phiLocal = phiLocal-2*m_halfAngle; 
+    }
+  }
+  phiLocal -= halfpi;
+
+  if ( halfpi < phiLocal ) {
+    phiLocal -= pi;
+  } else if ( -halfpi > phiLocal ) {
+    phiLocal += pi;
+  }
+
+  if ( 0 == ( m_wafer[waferNb]->type()%2 ) ) {
+    phiLocal = -phiLocal;
+  }
+  return phiLocal;
+}
+//=============================================================================
 // Returns the strip number for the specified wafer
 //=============================================================================
 bool DeVelo::getSpacePoint( unsigned int RWaferNumber, 
@@ -397,33 +465,9 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
     return false;
   }
   
-  // Compute R from strip. Could be tabulated for perfromance, if needed.
-  double localR;
+  // Compute R from strip. Could be tabulated for performance, if needed.
   int    phiZone;
-  double localStrip;
-  
-  localStrip = RStripNumber;
-  phiZone = 0;
-  if ( 1024. <= localStrip ) {
-    localStrip -= 1024.;
-    phiZone = 3;
-  }
-  
-  if ( m_nbRInner < localStrip ) {
-    localStrip -= (int)m_nbRInner;
-    phiZone += 1;
-    if  ( m_nbRInner < localStrip ) {
-      phiZone += 1;
-    }
-  }
-  
-  if ( m_nbRFixedPitch > localStrip ) {
-    localR = m_innerRadius + localStrip * m_innerPitch;
-  } else {
-    double dStrip = localStrip-m_nbRFixedPitch;
-    localR = m_fixPitchRadius + m_innerPitch * 
-      ( exp(dStrip * m_logPitchStep) - 1. ) / m_pitchSlope;
-  }
+  double localR = rOfStrip( RStripNumber, phiZone );
   
   // check some matching in the detector region.
   double zRef = 0.;  // Should be a 'nominal' vertex.
@@ -444,33 +488,8 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
     }
   }
 
-  double phiLocal;
+  double phiLocal = phiOfStrip( myPhiStrip, rAtPhi, PhiWaferNumber );
   
-  if ( myPhiStrip < m_nbPhiInner ) {
-    phiLocal = (myPhiStrip * m_phiPitchInner) + 
-               m_phiInnerTilt - asin( m_innerTiltRadius / rAtPhi );
-    if ( 2047 < PhiStripNumber ) {
-        phiLocal = phiLocal-2*m_halfAngle;
-    }
-  } else {
-    phiLocal = ((myPhiStrip-m_nbPhiInner) * m_phiPitchOuter) + 
-               m_phiOuterTilt - asin( m_outerTiltRadius / rAtPhi );
-    if ( 2047 < PhiStripNumber ) {
-        phiLocal = phiLocal-2*m_halfAngle;
-    }
-  }
-  phiLocal -= halfpi;
-
-  if ( halfpi < phiLocal ) {
-    phiLocal -= pi;
-  } else if ( -halfpi > phiLocal ) {
-    phiLocal += pi;
-  }
-
-  if ( 0 == phiType%2 ) {
-    phiLocal = -phiLocal;
-  }
-
   // phi is in the -pi/2, pi/2 range. Test for R compatibility
 
   if ( 0 == phiZone  ) {
@@ -514,18 +533,11 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   // toGlobal method of the R wafer detector element... Not now !
 
 
-  // Compute the pitch. 
-  if ( m_fixPitchRadius > localR ) {
-    rPitch = m_innerPitch;
-  } else {
-    rPitch = m_innerPitch +  m_pitchSlope * (localR - m_fixPitchRadius);
-  }
-  if ( m_phiBoundRadius > localR ) {
-    phiPitch = m_phiPitchInner * localR;
-  } else {
-    phiPitch = m_phiPitchOuter * localR;
-  }
+  // Compute the pitches. 
 
+  rPitch   = this->rPitch( localR );
+  phiPitch = this->phiPitch( localR );
+  
   return true;
 }
 

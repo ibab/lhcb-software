@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.5 2002-01-10 15:57:41 ocallot Exp $
+! $Id: release.notes,v 1.6 2002-01-22 16:27:32 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+!=============================================================================
+! 22/01/2002 - Olivier Callot  v3r0
+  - Added new members to DeVelo (.h,.cpp) : rOfStrip, phiOfStrip rPitch and 
+    phiPitch to be able to implement the VeloClusterOnTrack with this geometry.
+    Also adapted the requirements to GaudiSys v9
 
 !=============================================================================
 ! 10/01/2002 - Olivier Callot
