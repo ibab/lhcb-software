@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.2 2004-03-19 12:44:05 parkesb Exp $
+// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.3 2004-03-19 14:22:25 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -43,6 +43,7 @@ PrepareVeloL1BufferFPGA::PrepareVeloL1BufferFPGA( const std::string& name,
   declareProperty( "DoSlopeCorrection"    , m_doslopecorrection);
   declareProperty( "ClusterThreshold"     , m_cluthreshold_ston);
   declareProperty( "RelThresholdNeighbour", m_relthreshold_neig);
+  declareProperty( "ChargeThreshold"      , m_chargeThreshold = 12000. );
 }
 
 //=============================================================================
@@ -78,7 +79,8 @@ StatusCode PrepareVeloL1BufferFPGA::initialize() {
       << "HitThreshold          = " << m_hitthreshold_ston << endreq
       << "DoSlopeCorrection     = " << m_doslopecorrection << endreq
       << "ClusterThreshold      = " << m_cluthreshold_ston << endreq
-      << "RelThresholdNeighbour = " << m_relthreshold_neig << endreq;
+      << "RelThresholdNeighbour = " << m_relthreshold_neig << endreq
+      << "ChargeThreshold       = " << m_chargeThreshold   << endreq;
 
   return StatusCode::SUCCESS;
 };
