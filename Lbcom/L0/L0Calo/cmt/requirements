@@ -13,7 +13,7 @@ set L0CALOOPTS	$(L0CALOROOT)/options
 # ================ used packages =========================================
 use L0Event     v12r*   Event
 use CaloEvent	v11r*	Event
-use CaloDet	v4r*	Det
+use CaloDet	v5r*	Det
 private
 use AIDA        v2r*
 public
