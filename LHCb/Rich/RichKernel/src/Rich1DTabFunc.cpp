@@ -5,8 +5,11 @@
  *  Implementation file for class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: Rich1DTabFunc.cpp,v 1.4 2005-01-13 12:21:37 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -81,8 +84,8 @@ Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
 
 //============================================================================
 
-// Constructor from std::map
-Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
+// Constructor from map
+Rich1DTabFunc::Rich1DTabFunc( const RichMap<double,double> & data,
                               const gsl_interp_type * interType ) :
   m_data               ( data ),
   m_OK                 ( false ),
@@ -113,7 +116,7 @@ bool Rich1DTabFunc::initInterpolator( const gsl_interp_type * interType )
   double * y  = new double[size];
   double * xy = new double[size];
   unsigned int i = 0;
-  for ( std::map<double,double>::const_iterator iD = m_data.begin();
+  for ( RichMap<double,double>::const_iterator iD = m_data.begin();
         iD != m_data.end(); ++iD, ++i ) {
     x[i] = (*iD).first;
     y[i] = (*iD).second;
