@@ -1,5 +1,5 @@
 package Brunel
-version v18r0p1
+version v18r0p2
 
 branches doc cmt job options
 
@@ -41,7 +41,7 @@ use SICBSys	v1r3	SICB
 #-- BrunelSys v18r0 packages
 
 # Brunel utilities
-use BrunelKernel        v5r4	Rec
+use BrunelKernel        v5r4p1	Rec
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v1r9    Rec
 use KsReco              v1r4    Rec
@@ -123,8 +123,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=180001 " \
-           VisualC  " /DBrunelVersion=180001 "
+macro_append fflags " -DBrunelVersion=180002 " \
+           VisualC  " /DBrunelVersion=180002 "
 
 apply_pattern application_path
 
