@@ -34,6 +34,13 @@
         argList="Vertex vert"
         desc="Copy constructor, note that the product particles are cloned"
        />
+       <constructor
+        argList="int key"
+        desc="create a vertex with a selected key"
+        initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*km),
+m_positionErr(3, 0), m_chi2(-1.0), m_nDoF(-1), m_type(Vertex::Unknown),
+m_desktop(0)"
+       />
        <method
         name="clone"
         desc="Clone vertex and related particles"

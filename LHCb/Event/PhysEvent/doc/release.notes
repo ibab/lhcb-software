@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.42 2003-12-18 15:33:29 cattanem Exp $
+! $Id: release.notes,v 1.43 2004-02-06 16:26:20 ocallot Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2004-02-06 - Olivier Callot
+ - Add a constructor with key to Vertex, for Trg usage.
 
 !======================== PhysEvent v8r0 2003-12-16 ========================
 ! 2003-12-16 - Marco Cattaneo
