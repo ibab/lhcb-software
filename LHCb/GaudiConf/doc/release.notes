@@ -1,7 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v7r1 2003-07-22 ========================
+!======================== GaudiConf v7r1 2003-08-08 ========================
+! 2003-08-08 - Marco Cattaneo
+ - DigiContent.opts: add MC/Rich/Digits to preserve relation to Hits
+
 ! 2003-07-22 - Grigori Rybkine
  - options/units.opts  add basic time units (ns, s, ms, microsecond, picosecond)
                        used only names from SystemOfUnits.h of CLHEP/1.8.0.0

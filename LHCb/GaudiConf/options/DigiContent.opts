@@ -90,6 +90,7 @@ DigiWriter.ItemList =
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
 , "/Event/Rec/Relations/OTDigits2MCHits#1"
 , "/Event/Rec/Relations/VeloClusters2MCHits#1"
+, "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Prs/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Spd/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Ecal/Digits#1" // Single hop to MCHit, instead of relations
