@@ -1,8 +1,11 @@
-// $Id: LVolume.h,v 1.16 2001-11-18 15:32:44 ibelyaev Exp $ 
+// $Id: LVolume.h,v 1.17 2001-11-20 15:22:20 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.15  2001/08/24 12:06:13  ibelyaev
 //  changes to take into account Assembly Volumes
 //
@@ -15,9 +18,11 @@
 // ===========================================================================
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
+
 /// DetDesc  includes 
 #include "DetDesc/LogVolBase.h"
 #include "DetDesc/CLIDLVolume.h"
+
 /// forward declarations 
 template <class TYPE> 
 class DataObjectFactory;

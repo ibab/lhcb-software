@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.7 2001-07-02 14:11:00 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.8 2001-11-20 15:22:19 sponce Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -191,48 +191,5 @@ inline void DetectorElement::Assert (bool assertion,
     throw DetectorElementException (assertionName, this);
   }
 };
-/// (reference to) container of pointers to child detector elements ///////////
-inline IDetectorElement::IDEContainer&
-DetectorElement::childIDetectorElements() {
-  /// already loaded? 
-  if( m_de_childrensLoaded ) { return m_de_childrens; } 
-  /// load them! 
-  const IDataDirectory*  dir = this->directory(); 
-  Assert (0 != dir , "const IDataDirectory** point to NULL!" );
-  for (IDataDirectory::ConstDirIterator it = dir->begin();
-       dir->end() != it ;
-       ++it) {
-    Assert (0 != *it , "ConstDirIterator points to NULL!" );
-    SmartDataPtr<IDetectorElement> de( dataSvc() , (*it)->fullpath() );
-    IDetectorElement* ide = de ;
-    Assert (0 != ide , "Could not load child object="+(*it)->fullpath() );
-    m_de_childrens.push_back( ide  );
-  }
-  m_de_childrensLoaded = true; 
-  return m_de_childrens;
-};
-/// (reference to) container of pointers to child detector elements ///////////
-inline const IDetectorElement::IDEContainer&
-DetectorElement::childIDetectorElements() const {
-  /// already loaded? 
-  if( m_de_childrensLoaded ) { return m_de_childrens; } 
-  /// load them! 
-  const IDataDirectory*  dir = this->directory(); 
-  Assert (0 != dir , "const IDataDirectory** point to NULL!" );
-  for (IDataDirectory::ConstDirIterator it = dir->begin();
-       dir->end() != it;
-       ++it) {
-    Assert (0 != *it , "ConstDirIterator points to NULL!" );
-    SmartDataPtr<IDetectorElement> de( dataSvc() , (*it)->fullpath() );
-    IDetectorElement* ide = de ;
-    Assert (0 != ide , "Could not load child object="+(*it)->fullpath() );
-    m_de_childrens.push_back( ide  );
-  }
-  ///
-  m_de_childrensLoaded = true; 
-  ///
-  return m_de_childrens;
-};
-///
 
 #endif  //    DETDESC_DETECTORELEMENT_ICPP 

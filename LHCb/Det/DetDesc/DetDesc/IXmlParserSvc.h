@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlParserSvc.h,v 1.4 2001-07-03 10:03:09 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlParserSvc.h,v 1.5 2001-11-20 15:22:20 sponce Exp $
 
 #ifndef DETDESC_IXMLPARSERSVC_H
 #define DETDESC_IXMLPARSERSVC_H
@@ -33,6 +33,14 @@ class IXmlParserSvc : virtual public IInterface {
    * @return the document issued from the parsing
    */
   virtual DOM_Document parse (const char* fileName) = 0;
+
+  /**
+   * This method parses XML from a string and produces the corresponding DOM
+   * document.
+   * @param source the string to parse
+   * @return the document issued from the parsing
+   */
+  virtual DOM_Document parseString (std::string source) = 0;
 
   /**
    * This clears the cache of previously parsed xml files.

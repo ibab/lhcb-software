@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.22 2001-11-18 16:08:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2001-11-20 15:22:23 sponce Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.22  2001/11/18 16:08:26  ibelyaev
+#  bug fix for Win2K
+#
 # Revision 1.21  2001/11/18 15:32:44  ibelyaev
 #  update for Logical Assemblies
 #
@@ -28,7 +31,7 @@ branches DetDesc doc cmt src
 
 include_dirs $(DETDESCROOT)
 
-use GaudiKernel v10*
+use GaudiKernel v11*
 use CLHEP v1*
 use XERCES v1*
 

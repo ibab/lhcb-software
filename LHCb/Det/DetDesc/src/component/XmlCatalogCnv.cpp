@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.5 2001-05-14 15:13:42 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.6 2001-11-20 15:22:24 sponce Exp $
 
 // include files
 #include <stdlib.h>
@@ -8,13 +8,14 @@
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/Converter.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
@@ -25,7 +26,6 @@
 #include <dom/DOM_NodeList.hpp>
 #include <dom/DOM_NamedNodeMap.hpp>
 
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/IXmlSvc.h"
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/CLIDIsotope.h"
@@ -71,11 +71,10 @@ StatusCode XmlCatalogCnv::i_createObj (DOM_Element element,
 StatusCode XmlCatalogCnv::i_fillObj (DOM_Element childElement,
                                      DataObject* refpObject) {
   MsgStream log( msgSvc(), "XmlCatalogCnv" );
-  // We will create an XmlAddress for this element
-  XmlAddress* xmlAddr = 0;
+  // We will create an address for this element
+  IOpaqueAddress* xmlAddr = 0;
   // the registry entry corresponding to the current object
-  RegistryEntry* searchedDir = 
-    dynamic_cast<RegistryEntry*> (m_objRcpt->directory());
+  IRegistry* searchedDir = m_objRcpt->registry();
   // gets the element name
   std::string tagName (dom2Std (childElement.getNodeName()));
   std::string entryName;
@@ -95,52 +94,66 @@ StatusCode XmlCatalogCnv::i_fillObj (DOM_Element childElement,
   log << MSG::VERBOSE << "tag is " << tagName << ", clsID is "
       << clsID << endreq;
   checkConverterExistence(clsID);
+  StatusCode sc;
   // take care whether it is a reference or not
   if ("ref" == tagName.substr(tagName.length()-3,3)) {
     // gets the reference value and the position of the '#' in it
     std::string referenceValue = dom2Std (childElement.getAttribute ("href"));
     unsigned int poundPosition = referenceValue.find_last_of('#');
     // builds an entryName
-    entryName = "/" + referenceValue.substr(poundPosition + 1);        
+    entryName = "/" + referenceValue.substr(poundPosition + 1);
     // gets the directory where the xmlFile is located
-    unsigned int dPos  = m_objRcpt->dbName().find_last_of('/');
-    std::string locDir = m_objRcpt->dbName().substr( 0, dPos + 1 );
+    unsigned int dPos  = m_objRcpt->par()[0].find_last_of('/');
+    std::string locDir = m_objRcpt->par()[0].substr( 0, dPos + 1 );
     // builds the location of the file
     std::string location = referenceValue.substr(0, poundPosition);
     if( location.empty() ) {
       // This means that "href" has the form "#objectID" and referenced
       // object resides in the same file we are currently parsing
-      location = m_objRcpt->dbName();
+      location = m_objRcpt->par()[0];
     } else {
       location = locDir + location;
     }
     // builds an XmlAdress
-    xmlAddr = new XmlAddress( clsID, location, searchedDir->fullpath());        
+    const std::string par[2] = {location, entryName};
+    sc = addressCreator()->createAddress (XML_StorageType,
+                                          clsID,
+                                          par,
+                                          0,
+                                          xmlAddr);
   } else {
     // builds an entryName
     entryName = std::string("/") +
       dom2Std (childElement.getAttribute ("name"));
     // Then builds an XmlAdress
-    xmlAddr = new XmlAddress
-      (clsID, m_objRcpt->dbName(), searchedDir->fullpath());
+    const std::string par[2] = {m_objRcpt->par()[0], entryName};
+    sc = addressCreator()->createAddress (XML_StorageType,
+                                          clsID,
+                                          par,
+                                          0,
+                                          xmlAddr);
   }
-  if (xmlAddr) {
+  if (sc.isSuccess()) {
     log << MSG::VERBOSE << " XML address : objectName = "
-        << xmlAddr->objectName()
-        << ", containerName = " << xmlAddr->containerName()
-        << ", dbName = " << xmlAddr->dbName() << endreq; 
+        << xmlAddr->par()[1]
+        << ", dbName = " << xmlAddr->par()[0] << endreq; 
     // Now we have a new entry name and a corresponding xml address,
     // just add the new entry to the current registry entry
-    StatusCode status = searchedDir->add(entryName, xmlAddr);
+    IDataProviderSvc* dsvc = dataProvider();
+    IDataManagerSvc* mgr = 0;
+    StatusCode status =
+      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+    if ( status.isSuccess() ) {
+      status = mgr->registerAddress(searchedDir, entryName, xmlAddr);
+      mgr->release();        
+    }
     if ( !status.isSuccess() )   {
-      status = searchedDir->add(entryName, xmlAddr);
       log << MSG::FATAL << " File " << __FILE__ << " line "
           << __LINE__ << endreq;
       log << MSG::FATAL << " XML address:" << endreq;
       log << MSG::FATAL << " entryName:" << entryName
-          << " objectName: " << xmlAddr->objectName()
-          << " containerName:" << xmlAddr->containerName()
-          << " dbName:" << xmlAddr->dbName() << endreq;
+          << " objectName: " << xmlAddr->par()[1]
+          << " dbName:" << xmlAddr->par()[0] << endreq;
       xmlAddr->release();
       xmlAddr = 0;
       StatusCode stcod = ERROR_ADDING_TO_TS;
@@ -176,7 +189,7 @@ void XmlCatalogCnv::checkConverterExistence (const CLID& clsID) {
   if (!cnvExists) {
     MsgStream log (msgSvc(), "XmlCatalogCnv");
     log << MSG::ERROR
-        << "File " << m_objRcpt->dbName()
+        << "File " << m_objRcpt->par()[0]
         << " class ID "
         << clsID << ", proper converter not found" << endreq;
     stcod.setCode (INVALID_CLASS_ID);  

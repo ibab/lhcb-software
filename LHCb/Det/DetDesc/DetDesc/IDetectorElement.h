@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/10 16:41:28  ibelyaev
+/// modifitcations in IDetectorElement and related classes
+/// 
 /// ===========================================================================
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -36,8 +39,7 @@ static const InterfaceID IID_IDetectorElement( 156 , 2 , 0 );
  */
 
 class IDetectorElement: virtual public IInterface ,
-                        virtual public ISerialize ,
-                        virtual public IInspectable
+                        virtual public ISerialize
 {
   ///
  public: 
@@ -135,14 +137,10 @@ class IDetectorElement: virtual public IInterface ,
 
   /// some functions to simplify the navigation 
   /// (according to feedback after release 3) 
-  /// pointer to parent IDetectorElement
-  virtual       IDetectorElement*  parentIDetectorElement()        = 0 ;  
   /// pointer to parent IDetectorElement (const version)
-  virtual const IDetectorElement*  parentIDetectorElement() const  = 0 ; 
+  virtual IDetectorElement*  parentIDetectorElement() const  = 0 ; 
   /// (reference to) container of pointers to child detector elements 
-  virtual       IDetectorElement::IDEContainer&  childIDetectorElements() = 0 ;
-  /// (reference to) container of pointers to child detector elements 
-  virtual const IDetectorElement::IDEContainer&
+  virtual IDetectorElement::IDEContainer&
   childIDetectorElements() const = 0;
   /// iterators for manipulation of daughter elements 
   /// begin iterator 

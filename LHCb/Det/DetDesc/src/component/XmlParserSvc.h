@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.3 2001-08-22 11:45:48 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.4 2001-11-20 15:22:25 sponce Exp $
 #ifndef DETDESC_XMLPARSERSVC_H
 #define DETDESC_XMLPARSERSVC_H
 
@@ -63,6 +63,14 @@ public:
    * @return the document issued from the parsing
    */
   virtual DOM_Document parse (const char* fileName);
+
+  /**
+   * This method parses XML from a string and produces the corresponding DOM
+   * document.
+   * @param source the string to parse
+   * @return the document issued from the parsing
+   */
+  virtual DOM_Document parseString (std::string source);
 
   /**
    * This clears the cache of previously parsed xml files.

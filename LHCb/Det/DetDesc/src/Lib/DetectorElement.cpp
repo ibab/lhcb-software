@@ -2,17 +2,19 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.10  2001/08/10 16:41:29  ibelyaev
+/// modifitcations in IDetectorElement and related classes
+///
 /// Revision 1.9  2001/08/10 14:59:02  ibelyaev
 /// modifications in IGeometryInfo and related classes
 /// 
 /// ===========================================================================
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/TimePoint.h" 
-#include "GaudiKernel/TransientStore.h" 
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Bootstrap.h"
@@ -35,7 +37,7 @@ unsigned long DetectorElement::s_count = 0 ;
 DetectorElement::DetectorElement( const std::string&   name        ,
                                   const ITime&         validSince  ,   
                                   const ITime&         validTill   )
-  : DataObject           (  name   )
+  : DataObject           (         )
   , m_de_iGeometry       (    0    ) 
   // 
   , m_de_iAlignment      (    0    ) 
@@ -58,7 +60,7 @@ DetectorElement::DetectorElement( const std::string&   name        ,
 };
 ////
 DetectorElement::DetectorElement( const std::string&   name   )
-  : DataObject           (  name   )
+  : DataObject           (         )
   , m_de_iGeometry       (    0    ) 
   // 
   , m_de_iAlignment      (    0    ) 
@@ -115,6 +117,23 @@ IMessageSvc*  DetectorElement::msgSvc ()
   return s_msgSvc; 
 };
 
+IDetectorElement*  DetectorElement::parentIDetectorElement() const {
+  IDataProviderSvc* dsvc = dataSvc();
+  if ( 0 != dsvc ) {
+    IDataManagerSvc* mgr = 0;
+    StatusCode sc =
+      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+    if ( sc.isSuccess() ) {
+      IRegistry* pRegParent = 0;      
+      sc = mgr->objectParent(this, pRegParent);
+      if ( sc.isSuccess() && 0 != pRegParent ) {
+        return dynamic_cast<IDetectorElement*>(pRegParent->object());
+      } 
+    }
+  }
+  return 0;
+};
+
 ///
 StatusCode 
 DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
@@ -140,19 +159,19 @@ unsigned long DetectorElement::release ()
 { return 0 < s_count ? --s_count : 0 ; }
 
 ///
-bool DetectorElement::acceptInspector( IInspector* pInspector ) 
-{
-  if( 0 == pInspector ) { return false; } 
-  pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
-  return DataObject::acceptInspector( pInspector ) ;
-};  
-//
-bool DetectorElement::acceptInspector( IInspector* pInspector ) const  
-{
-  if( 0 == pInspector ) { return false; } 
-  pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
-  return DataObject::acceptInspector( pInspector ) ;
-};  
+// bool DetectorElement::acceptInspector( IInspector* pInspector ) 
+// {
+//   if( 0 == pInspector ) { return false; } 
+//   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
+//   return DataObject::acceptInspector( pInspector ) ;
+// };  
+// //
+// bool DetectorElement::acceptInspector( IInspector* pInspector ) const  
+// {
+//   if( 0 == pInspector ) { return false; } 
+//   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
+//   return DataObject::acceptInspector( pInspector ) ;
+// };  
 //
 StreamBuffer& DetectorElement::serialize( StreamBuffer& sb ) const 
 {
@@ -173,13 +192,13 @@ StreamBuffer& DetectorElement::serialize( StreamBuffer& sb )
 //
 std::ostream& DetectorElement::printOut( std::ostream& os ) const
 { 
-  os << "DetectorElement::"  << fullpath(); 
+  os << "DetectorElement::"  << name(); 
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry()) ); 
 };
 
 MsgStream& DetectorElement::printOut( MsgStream& os ) const
 { 
-  os << "DetectorElement::"  << fullpath(); 
+  os << "DetectorElement::"  << name(); 
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry() ) );
 };
 /// reset to the initial state/////
@@ -198,7 +217,8 @@ IDetectorElement* DetectorElement::reset()
 const IGeometryInfo* 
 DetectorElement::createGeometryInfo()
 {
-  Assert( 0 == geometry() , "Could not create GHOST: Geometry already exist!" );
+  Assert( 0 == geometry() ,
+          "Could not create GHOST: Geometry already exist!" );
   m_de_iGeometry = GeoInfo::createGeometryInfo( this );
   return geometry();
 };
@@ -206,7 +226,8 @@ DetectorElement::createGeometryInfo()
 const IGeometryInfo* 
 DetectorElement::createGeometryInfo( const std::string& LogVol )
 {
-  Assert( 0 == geometry() , "Could not create ORPHAN: Geometry already exist!" );
+  Assert( 0 == geometry() ,
+          "Could not create ORPHAN: Geometry already exist!" );
   m_de_iGeometry = GeoInfo::createGeometryInfo( this , LogVol );
   return geometry();
 };
@@ -251,8 +272,7 @@ const ITime&  DetectorElement::validTill  ()
   return *m_de_validTill; 
 };
 //
-void          DetectorElement::setValidity       ( const ITime& Since , 
-                                                                const ITime& Till )
+void DetectorElement::setValidity (const ITime& Since, const ITime& Till)
 {
   setValiditySince( Since );
   setValidityTill ( Till  );
@@ -567,8 +587,33 @@ std::vector<std::string> DetectorElement::userParameterVectors() {
   }
   return result;
 }
-
-
-
-
-
+/// (reference to) container of pointers to child detector elements ///////////
+IDetectorElement::IDEContainer&
+DetectorElement::childIDetectorElements() const {
+  /// already loaded? 
+  if( m_de_childrensLoaded ) { return m_de_childrens; } 
+  /// load them! 
+  IDataProviderSvc* dsvc = dataSvc();
+  if ( 0 != dsvc ) {
+    IDataManagerSvc* mgr = 0;
+    StatusCode sc =
+      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+    if ( sc.isSuccess() ) {
+      typedef std::vector<IRegistry*> Leaves;
+      Leaves leaves;
+      sc = mgr->objectLeaves(this, leaves);
+      if ( sc.isSuccess() ) {
+        for ( Leaves::iterator it = leaves.begin(); it != leaves.end(); it++ ) {
+          Assert (0 != *it , "DirIterator points to NULL!" );
+          const std::string& nam = (*it)->identifier();
+          SmartDataPtr<IDetectorElement> de( dataSvc() , nam );
+          IDetectorElement* ide = de;
+          Assert (0 != ide , "Could not load child object="+nam );
+          m_de_childrens.push_back( ide  );
+        }
+        m_de_childrensLoaded = true; 
+      }
+    }
+  }
+  return m_de_childrens;
+};

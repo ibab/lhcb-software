@@ -3,6 +3,7 @@
 /// GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"       
+#include "GaudiKernel/IRegistry.h"
 /// DetDesc
 #include "DetDesc/Material.h"
 
@@ -25,8 +26,15 @@ inline bool Material::operator==( const Material* right ) const { return right =
 /////////////////////////////////////////////////////////////////////////////////////////////////
 inline bool Material::operator!=( const Material* right ) const { return right != this ; }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-inline const std::string& Material::name      () const 
-{ return m_name.empty() ? DataObject::fullpath() : m_name ;  }
+inline const std::string& Material::name      () const {
+  if (m_name.empty()) {
+    IRegistry* pReg = registry();
+    return (0!=pReg) ? pReg->identifier() : m_name;    
+  } else {
+    return  m_name ;
+  }
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////
 inline void               Material::setName( const std::string& value ) { m_name = value; }
 /////////////////////////////////////////////////////////////////////////////////////////////////

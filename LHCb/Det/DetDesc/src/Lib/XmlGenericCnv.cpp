@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.2 2001-06-14 13:27:03 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.3 2001-11-20 15:22:24 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -9,13 +9,11 @@
 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/IXmlSvc.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
 
 
@@ -69,12 +67,12 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
                                      DataObject*&    refpObject)  {
    // creates a msg stream for debug purposes
    MsgStream log( msgSvc(), "XmlGenericCnv" );
-  
-   // retrieves the XmlAddress fo the object we have to create
+   
+   // retrieves the address for the object we have to create
    GenericAddress* addr;
    if (0 != pAddress) {
      try {
-       addr = dynamic_cast<XmlAddress*> (pAddress);
+       addr = dynamic_cast<GenericAddress*> (pAddress);
      } catch( ... ) {
        return StatusCode::FAILURE;
      }
@@ -86,16 +84,15 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
    m_objRcpt = addr;
 
    // displays the address for debug purposes  
-   log << MSG::DEBUG << "XmlAddress : dbname = " << addr->dbName()
-       << ", containerName = " << addr->containerName()
-       << ", ObjectName = " << addr->objectName() << endreq;
+   log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
+       << ", ObjectName = " << addr->par()[1] << endreq;
 
    // parses the xml file and retrieves a DOM document
-   DOM_Document document = xmlSvc()->parse(addr->dbName().c_str());
+   DOM_Document document = xmlSvc()->parse(addr->par()[0].c_str());
    if (document.isNull()) {
      log << MSG::FATAL
          << "XmlParser failed, can't convert "
-         << addr->objectName() << "!" << endreq;
+         << addr->par()[1] << "!" << endreq;
      return StatusCode::FAILURE;
    }
 
@@ -121,7 +118,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
    }
    // check it exists
    if (mainNode.isNull()) {
-     log << MSG::FATAL << addr->objectName()
+     log << MSG::FATAL << addr->par()[1]
          << " has no DDDB element at the beginning of the file."
          << endreq;
      return StatusCode::FAILURE;
@@ -133,10 +130,10 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
        log << MSG::DEBUG
            << "Detector Description Markup Language Version "
            << versionAttribute << endreq;
-       if (versionAttribute != "3.2" ) {
+       if (versionAttribute != "3.3" ) {
          StatusCode sc;
          sc.setCode(WRONG_DTD_VERSION);
-         std::string msg = "DDDB DTD Version 3.2 required, ";
+         std::string msg = "DDDB DTD Version 3.3 required, ";
          msg += "please update your DTD and XML data files.";
          throw XmlCnvException(msg.c_str(), sc);
        }
@@ -159,7 +156,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
    
    // retrieve the name of the object we want to create. Removes the leading
    // '/' if needed
-   std::string objectName = addr->objectName();
+   std::string objectName = addr->par()[1];
    unsigned int slashPosition = objectName.find_last_of('/');
    if (std::string::npos != slashPosition) {
      objectName= objectName.substr(slashPosition + 1);
@@ -170,14 +167,22 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* pAddress,
    DOM_Element element = document.getElementById(domObjectName);
    if (element.isNull()){
      log << MSG::FATAL
-         << addr->objectName().c_str() << " : "
-         << "No such object in file " << addr->dbName().c_str()
+         << objectName << " : "
+         << "No such object in file " << addr->par()[0]
          << endreq;
      return StatusCode::FAILURE;
    }
-
-   // deal with the node found itself
-   return internalCreateObj (element, refpObject);
+   
+   try {
+     // deal with the node found itself
+     return internalCreateObj (element, refpObject);
+   } catch (GaudiException e) {
+     log << MSG::FATAL << "An exception went out of the conversion process : ";
+     e.printOut (log);
+     log << endreq;
+     return StatusCode::FAILURE;
+   }
+   
 } // end createObj
 
 
@@ -188,7 +193,7 @@ StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
                                              DataObject*& refpObject) {
   // creates a msg stream for debug purposes
   MsgStream log( msgSvc(), "XmlGenericCnv" );
-  
+
   // creates an object for the node found
   StatusCode sc = i_createObj (element, refpObject);
   if (sc.isFailure()) {

@@ -1,20 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.10 2001-06-25 09:02:50 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.11 2001-11-20 15:22:25 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
@@ -136,19 +134,19 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement.getAttribute ("address"));
-    long linkID = dataObj->addLink(address, 0);
+    long linkID = dataObj->linkMgr()->addLink(address, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if ("component" == tagName) {
     StatusCode stcod;
         
     // We need to get directory where the XML files are located
-    unsigned int slashPosition = m_objRcpt->dbName().find_last_of('/');
-    std::string locDir = m_objRcpt->dbName().substr( 0, slashPosition + 1 );
+    unsigned int slashPosition = m_objRcpt->par()[0].find_last_of('/');
+    std::string locDir = m_objRcpt->par()[0].substr( 0, slashPosition + 1 );
     
     // builds the entry name
     std::string nameAttribute = dom2Std (childElement.getAttribute ("name"));
-    std::string entryName = m_objRcpt->containerName () + "/" + nameAttribute;
+    std::string entryName = "/dd/Materials/" + nameAttribute;
     
     // Check if path is a relative path, if it has ../ 
     int dotsPos = entryName.find_first_of("..");
@@ -157,7 +155,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
       entryName = compactPath(entryName);
     }
     
-    log << MSG::VERBOSE << "Converter for " << m_objRcpt->objectName()
+    log << MSG::VERBOSE << "Converter for " << m_objRcpt->par()[1]
         << " is gonna retrieve " << entryName << endreq;
 
     DataObject *itemObj = 0;
@@ -169,7 +167,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
       log << MSG::ERROR << "Error retrieving material: " << entryName << endreq;
       return StatusCode::FAILURE;
     }
-    log << MSG::VERBOSE << "Converter for " << m_objRcpt->objectName()
+    log << MSG::VERBOSE << "Converter for " << m_objRcpt->par()[1]
         << " retrieved successfully " << ((Material *)itemObj)->name()
         << endreq;
     
@@ -200,7 +198,7 @@ StatusCode XmlMixtureCnv::i_fillObj (DOM_Element childElement,
           << "XmlCnvException due to natoms/fractionmass inconsistency"
           << endreq;
       std::string msg = "Material references for material ";
-      msg += m_objRcpt->objectName();
+      msg += m_objRcpt->par()[1];
       msg += " are not consistent.";
       StatusCode st = CORRUPTED_DATA;
       throw XmlCnvException(msg.c_str(),st);

@@ -1,17 +1,34 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.55 2001-11-18 15:32:44 ibelyaev Exp $ 
+! $Id: release.notes,v 1.56 2001-11-20 15:22:23 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
 ! =============================================================================
+! 20011120 - Sebastien Ponce
+   - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+   is the removal of the class XmlAddress
+   - centralization of address creations in conversion services, as suggested
+   by the new architecture
+   - add a parseString method on the XMLParserSvc. This allows to parse XML
+   directly from a string
+   - use of the new Assembly objects in the XML converters
+   - update of the converters to handle the definition of detelem inside
+   detelems, without using detelemrefs
+   - take care of a possible indexing of detelems and parametrized detelems.
+   The numbering is given by adding :<digits> to the name of the element.
+   - add support for polycones in the converters
+   - add code convention compliance to many files
+
+! =============================================================================
 ! 20011118 - Vanya Belyaev
   1) new notion of Logical Assembly (class LAssembly) 
   2) new base class LogVolBase 
-  3) small update of ILVolume and IPVoluem interfaces 
+  3) small update of ILVolume and IPVolume interfaces 
   (more methods are "const" now)
+
 ! =============================================================================
 ! 20011105 - Sebastien Ponce
   XmlLVolumeCnv : add new test for dealing with precision problems in the

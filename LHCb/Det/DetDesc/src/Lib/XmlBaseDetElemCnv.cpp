@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.10 2001-07-03 06:33:27 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.11 2001-11-20 15:22:24 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -8,16 +8,16 @@
 #include <cctype>
 
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/ICnvManager.h"
+#include "GaudiKernel/IAddressCreator.h"
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlCnvException.h"
 #include "DetDesc/XmlBaseDetElemCnv.h"
@@ -108,7 +108,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
   // gets the element's name
   std::string tagName = dom2Std (childElement.getNodeName());
   // dispatches, based on the name
-  if ("detelemref" == tagName) {
+  if (("detelemref" == tagName) || ("detelem" == tagName)) {
     // first get the CLID and checks a converter exists for this type
     // even it it does not exist, we could continue using a generic
     // converter if checkConverterExistence returns true
@@ -125,44 +125,58 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       usedCLID = clsID;
     }
     
-    // gets the reference value and the position of the '#' in it
-    std::string referenceValue = dom2Std (childElement.getAttribute("href"));
-    unsigned int poundPosition = referenceValue.find_last_of('#');
-    // gets the directory where the xmlFile is located
-    unsigned int dPos  = m_objRcpt->dbName().find_last_of('/');
-    std::string locDir = m_objRcpt->dbName().substr( 0, dPos + 1 );
-    // builds the location of the file
-    std::string location = referenceValue.substr(0, poundPosition);
-    if( location.empty() ) {
-      // This means that "href" has the form "#objectID" and referenced
-      // object resides in the same file we are currently parsing
-      location = m_objRcpt->dbName();
-    } else {
-      location = locDir + location;
+    std::string entryName, location;
+    if ("detelemref" == tagName) {
+      // gets the reference value and the position of the '#' in it
+      std::string referenceValue = dom2Std (childElement.getAttribute("href"));
+      unsigned int poundPosition = referenceValue.find_last_of('#');
+      // builds an entryName
+      entryName = "/" + referenceValue.substr(poundPosition + 1);
+      // gets the directory where the xmlFile is located
+      unsigned int dPos  = m_objRcpt->par()[0].find_last_of('/');
+      std::string locDir = m_objRcpt->par()[0].substr( 0, dPos + 1 );
+      // builds the location of the file
+      location = referenceValue.substr(0, poundPosition);
+      if( location.empty() ) {
+        // This means that "href" has the form "#objectID" and referenced
+        // object resides in the same file we are currently parsing
+        location = m_objRcpt->par()[0];
+      } else {
+        location = locDir + location;
+      }
+    } else { // here "detelem" == tagName
+      entryName = "/" + dom2Std (childElement.getAttribute("name"));
+      location = m_objRcpt->par()[0];
     }
 
-    // creation of the XmlAddress for this child
-    XmlAddress* xmlAddress = new XmlAddress (usedCLID,
-                                             location,
-                                             m_objRcpt->objectName());
-
-    // builds an entryName
-    std::string entryName = referenceValue.substr(poundPosition + 1);
-    entryName = /*m_objRcpt->objectName() +*/ "/" + entryName;
-
-    log << MSG::DEBUG << "New XmlAddress created : CLID = " << usedCLID
-        << ", location = " << location << ", container name = "
-        << m_objRcpt->objectName() << ", object name = " << entryName
-        << endreq;
-
-    // stores the new entry
-    xmlAddress->setObjectName (entryName);
-    
-    // And register it to current data object we're converting now
-    RegistryEntry* currentEntry = 
-      dynamic_cast<RegistryEntry*> (m_objRcpt->directory());
-    currentEntry->add (entryName, xmlAddress);
-
+    // creation of the address for this child
+    IOpaqueAddress* addr;
+    const std::string par[2] = {location, entryName};
+    StatusCode sc = addressCreator()->createAddress (XML_StorageType,
+                                                     usedCLID,
+                                                     par,
+                                                     0,
+                                                     addr);
+    if (sc.isSuccess()) {
+      log << MSG::DEBUG << "New address created : CLID = " << usedCLID
+          << ", location = " << location << ", object name = " << entryName
+          << endreq;
+      
+      // Registers the address to current data object we're converting now
+      IDataProviderSvc* dsvc = dataProvider();
+      IDataManagerSvc* mgr = 0;
+      sc =
+        dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+      if ( sc.isSuccess() ) {
+        sc = mgr->registerAddress(m_objRcpt->registry(), entryName, addr);
+        mgr->release();        
+      }
+    }
+    if ( !sc.isSuccess() ) {
+      throw GaudiException ("Unable to register new Address",
+                            "XmlBaseDetElemCnv",
+                            sc);
+    }
   } else if ("version" == tagName || "author" == tagName) {
     // currently ignored
   } else if ("geometryinfo" == tagName) {
@@ -215,7 +229,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       } while (*rp != 0);
       dataObj->createGeometryInfo (logVolName,support,repPath);
     } else {
-      log << MSG::ERROR << "File " << m_objRcpt->dbName() << ": "
+      log << MSG::ERROR << "File " << m_objRcpt->par()[0] << ": "
           << tagName
           << " Missing \"rpath\" or \"npath\" element, "
           << "please correct XML data\n"
@@ -379,7 +393,7 @@ bool XmlBaseDetElemCnv::checkConverterExistence (const CLID& clsID) {
     if (!m_doGenericCnv) {
       MsgStream log(msgSvc(), "XmlCatalogCnv");
       log << MSG::ERROR
-          << "File " << m_objRcpt->dbName()
+          << "File " << m_objRcpt->par()[0]
           << " class ID "
           << clsID << ", proper converter not found" << endreq;
       stcod.setCode (INVALID_CLASS_ID);  

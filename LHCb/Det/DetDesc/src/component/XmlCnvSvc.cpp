@@ -1,10 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.6 2001-06-28 09:14:06 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.7 2001-11-20 15:22:24 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
 
-#include "GaudiKernel/AddrFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/CnvFactory.h"
@@ -12,13 +11,10 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GenericAddress.h"
 
 #include "XmlCnvSvc.h"
-#include "DetDesc/XmlAddress.h"
 #include "XmlParserSvc.h"
-
-// Forward and external declarations
-extern const IAddrFactory& XmlAddressFactory;
 
 
 // -----------------------------------------------------------------------
@@ -34,7 +30,6 @@ const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
   ConversionSvc(name, svc, XML_StorageType) {
-  setAddressFactory(new AddrFactory<XmlAddress> (XML_StorageType));
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
@@ -58,29 +53,11 @@ StatusCode XmlCnvSvc::initialize() {
   // Service MUST be initialized BEFORE!
   MsgStream log (msgSvc(), "XmlCnvSvc");
 
-  if (status.isSuccess()) {
-    
-    // Set detector data store
-    IDataProviderSvc *pDDPS = 0;
-    status = serviceLocator()->getService("DetectorDataSvc",
-      IID_IDataProviderSvc, (IInterface*&)pDDPS);
-    
-    if (status.isSuccess()) {
-      status = setStore ( pDDPS );
-    } else {
-      return status;
-    }
-    
-    // Get my properties from the JobOptionsSvc
-    status = setProperties();
-    if (!status.isSuccess()) {
-      return StatusCode::FAILURE;
-    }
-  } else {
+  if (!status.isSuccess()) {
     return status;  
   }
 
-  // Initialize the XML4C2 system
+  // Initialize the xerces system
   try  {
     XMLPlatformUtils::Initialize();
   } catch (const XMLException& toCatch) {
@@ -139,6 +116,27 @@ StatusCode XmlCnvSvc::queryInterface(const IID& riid, void** ppvInterface) {
 
 
 // -----------------------------------------------------------------------
+// Create an XML address
+// -----------------------------------------------------------------------
+StatusCode XmlCnvSvc::createAddress(unsigned char svc_type,
+                                    const CLID& clid,
+                                    const std::string* par, 
+                                    const unsigned long* /*ip*/,
+                                    IOpaqueAddress*& refpAddress) {
+  if (svc_type == repSvcType()) {
+    refpAddress = new GenericAddress (XML_StorageType,
+                                      clid,
+                                      par[0],
+                                      par[1]);
+    if (0 != refpAddress) {
+      return StatusCode::SUCCESS;
+    }
+  }
+  return StatusCode :: FAILURE;
+}
+
+
+// -----------------------------------------------------------------------
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
 DOM_Document XmlCnvSvc::parse (const char* fileName) {
@@ -148,6 +146,20 @@ DOM_Document XmlCnvSvc::parse (const char* fileName) {
   DOM_Document null_result;
   MsgStream log (msgSvc(), "XmlCnvSvc");
   log << MSG::DEBUG << "null result returned in parse" << endreq;
+  return null_result;
+}
+
+
+// -----------------------------------------------------------------------
+// Parses an Xml file and provides the DOM tree representing it
+// -----------------------------------------------------------------------
+DOM_Document XmlCnvSvc::parseString (std::string source) {
+  if (0 != m_parserSvc) {
+    return m_parserSvc->parseString (source);
+  }
+  DOM_Document null_result;
+  MsgStream log (msgSvc(), "XmlCnvSvc");
+  log << MSG::DEBUG << "null result returned in parseString" << endreq;
   return null_result;
 }
 

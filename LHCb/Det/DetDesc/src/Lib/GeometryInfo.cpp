@@ -1,8 +1,11 @@
-// $Id: GeometryInfo.cpp,v 1.7 2001-11-18 15:32:44 ibelyaev Exp $ 
+// $Id: GeometryInfo.cpp,v 1.8 2001-11-20 15:22:23 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.6  2001/08/10 14:59:02  ibelyaev
 // modifications in IGeometryInfo and related classes
 // 
@@ -14,6 +17,7 @@
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/StreamBuffer.h" 
@@ -339,7 +343,10 @@ StatusCode GeometryInfo::loadChildren() const
         std::string    path("")  ;  
         if( 0 != ide  ) { igi  = ide->geometry();                }
         if( 0 != ide  ) { pObj = dynamic_cast<DataObject*>(ide); }
-        if( 0 != pObj ) { path = pObj->fullpath();               }
+        if( 0 != pObj ) {
+          IRegistry* pReg = pObj->registry();
+          if (0!=pReg) path=pReg->identifier();
+        }
         if( 0 != igi &&  0 != path.size() )
           { m_gi_childrensNames.push_back( path ); 
           m_gi_childrens.push_back( igi  ); }    

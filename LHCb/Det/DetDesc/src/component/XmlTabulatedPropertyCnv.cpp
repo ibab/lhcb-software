@@ -1,19 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.6 2001-06-22 12:44:18 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.7 2001-11-20 15:22:25 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/IXmlSvc.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/XmlCnvException.h"

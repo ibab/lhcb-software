@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Surface.cpp,v 1.4 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Surface.cpp,v 1.5 2001-11-20 15:22:24 sponce Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -9,7 +9,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 Surface::Surface ( const std::string& name   ) 
-  : DataObject   ( name       )
+  : DataObject   (        )
   , m_model      ()
   , m_finish     ()
   , m_type       () 

@@ -1,14 +1,18 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.15  2001/08/10 16:41:28  ibelyaev
+/// modifitcations in IDetectorElement and related classes
+/// 
 /// ===========================================================================
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
 // Some pragmas to avoid warnings in VisualC
-#ifdef WIN32
-  // Disable warning C4786: identifier was truncated to '255' characters in the debug information
+#ifdef WIN32 
+  // Disable warning C4786: identifier was truncated to '255' characters
+  // in the debug information
   #pragma warning ( disable : 4786 )
 #endif
 
@@ -19,9 +23,9 @@
 #include <map>
 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/ITime.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/MsgStream.h"
@@ -72,8 +76,12 @@ public:
   virtual const  CLID& clID()   const  { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
 
-  inline virtual const std::string& name () const {
-    return DataObject::fullpath() ; } 
+  
+  virtual const std::string& name () const {
+    static string s_empty = "";
+    IRegistry* pReg = registry();
+    return (0!=pReg) ? pReg->identifier() : s_empty;;
+  } 
 
   /// delegation for geometry 
   inline        IGeometryInfo* geometry(); 
@@ -216,20 +224,11 @@ public:
 
   virtual MsgStream&    printOut( MsgStream&    ) const;  
 
-  // pointer to parent IDetectorElement
-  inline virtual       IDetectorElement*  parentIDetectorElement()       
-    { return ( 0 != parent() ) ?
-        dynamic_cast<IDetectorElement*> (parent()) : 0 ; };  
-
   // pointer to parent IDetectorElement (const version)
-  inline virtual const IDetectorElement*  parentIDetectorElement() const  
-    { return ( 0 != parent() ) ?
-        dynamic_cast<const IDetectorElement*>( parent() ) : 0 ; };  
+  virtual IDetectorElement*  parentIDetectorElement() const;
 
   // (reference to) container of pointers to child detector elements 
-  inline virtual IDetectorElement::IDEContainer& childIDetectorElements();
-  inline virtual const IDetectorElement::IDEContainer&
-     childIDetectorElements() const ;
+  inline virtual IDetectorElement::IDEContainer& childIDetectorElements() const;
 
   // iterators for manipulation of daughter elements 
   inline virtual IDetectorElement::IDEContainer::iterator childBegin() {
@@ -243,8 +242,8 @@ public:
     childEnd  () const { return childIDetectorElements().end  () ; }
 
   /// IInspectable interface:
-  virtual bool acceptInspector( IInspector* )       ; 
-  virtual bool acceptInspector( IInspector* ) const ; 
+//   virtual bool acceptInspector( IInspector* )       ; 
+//   virtual bool acceptInspector( IInspector* ) const ; 
 
   /// serialization for reading 
   virtual StreamBuffer& serialize( StreamBuffer& )       ; 

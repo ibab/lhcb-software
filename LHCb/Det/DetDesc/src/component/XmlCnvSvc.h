@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.3 2001-06-28 09:14:07 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.4 2001-11-20 15:22:24 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -52,6 +52,23 @@ public:
    */
   virtual StatusCode queryInterface (const IID& riid, void** ppvInterface);
 
+  /**
+   * Create an XML address using explicit arguments to identify a single object
+   * @param svc_type the service type
+   * @param CLID the CLID of the XML Element for which an address is created
+   * @param par an array of two strings containing the dbname and objectname 
+   * in this order
+   * @param ip can be ignored for XML addresses
+   * @param refpAddress the new address created
+   * @return a StatusCode giving the status of the address creation
+   */
+  virtual StatusCode createAddress(unsigned char svc_type,
+                                   const CLID& clid,
+                                   const std::string* par, 
+                                   const unsigned long* /*ip*/,
+                                   IOpaqueAddress*& refpAddress);
+  
+
   ///////////////////////////////////////////////////
   // implementation of the IXmlParserSvc interface //
   ///////////////////////////////////////////////////
@@ -63,6 +80,14 @@ public:
    * @return the document issued from the parsing
    */
   virtual DOM_Document parse (const char* fileName);
+
+  /**
+   * This method parses XML from a string and produces the corresponding DOM
+   * document.
+   * @param source the string to parse
+   * @return the document issued from the parsing
+   */
+  virtual DOM_Document parseString (std::string source);
 
   /**
    * This clears the cache of previously parsed xml files.

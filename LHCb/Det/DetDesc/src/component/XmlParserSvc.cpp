@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.5 2001-10-05 12:17:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.6 2001-11-20 15:22:25 sponce Exp $
 
 // Include Files
 #include <limits.h>
@@ -6,6 +6,7 @@
 #include <parsers/DOMParser.hpp>
 #include <util/PlatformUtils.hpp>
 #include <dom/DOM_DOMException.hpp>
+#include <framework/MemBufInputSource.hpp>
 
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/MsgStream.h"
@@ -100,6 +101,32 @@ DOM_Document XmlParserSvc::parse (const char* fileName) {
     if (m_parser->getDocument() != 0) {
       cacheItem (fileName, m_parser->getDocument());
     }
+    // returns the parsed document
+    return m_parser->getDocument();
+  }
+  // no way to parse the file, returns an empty document
+  DOM_Document null_result;
+  return null_result;
+}
+
+
+// -----------------------------------------------------------------------
+// Parses an Xml file and provides the DOM tree representing it
+// -----------------------------------------------------------------------
+DOM_Document XmlParserSvc::parseString (std::string source) {
+  // there is of course no cache for parsing XML strings directly
+  // try to parse the string if a parser exists
+  if (0 != m_parser) {
+    // resets it
+    m_parser->reset();
+    // builds a new InputSource
+    MemBufInputSource inputSource ((XMLByte*) source.data(),
+                                   source.length(),
+                                   "");
+    // parses the file
+    m_parser->parse(inputSource);
+    MsgStream log (msgSvc(), "XmlParserSvc");
+    log << MSG::DEBUG << "parsing xml string..." << endreq;
     // returns the parsed document
     return m_parser->getDocument();
   }

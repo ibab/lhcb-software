@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.6 2001-07-02 14:11:03 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.7 2001-11-20 15:22:24 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -74,11 +74,14 @@ class XmlLVolumeCnv : public XmlGenericCnv {
   typedef struct _PVolumeItem {
     /// the name of the physical volume
     std::string physvolName;
-    /** a number to be added to the name if it is not 0
+    /**
+     * a number to be added to the name if indexed is true
      * this is to differentiate two volumes with the same name inside
      * a parametrized physical volume
      */
     unsigned int tag;
+    /// tells whether tag should be added to the name or not
+    bool indexed;
     /// the name of the logical volume
     std::string logvolName;
     /// the transformation to place the volume
@@ -106,6 +109,15 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * this defines a vector of PlacedSolids
    */
   typedef std::deque<PlacedSolid> PlacedSolidList;
+
+  /**
+   * this builds the name of a PVolumeItem.
+   * The name is either the physvolName field of the struct if indexed is false
+   * or the physvolName field + ':' + the tag field if indexed is true.
+   * @param pv the PVolumeItem
+   * @return the corresponding name
+   */
+  std::string createPvName (PVolumeItem* pv);
 
   /**
    * says whether the given tag is denoting a simple solid
@@ -298,6 +310,16 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @return status depending on the completion of the call
    */
   SolidCons* dealWithCons (DOM_Element element);
+
+  /**
+   * deals with the xml tag <polycone>. Creates the corresponding C++ Object.
+   * Take care that memory is allocated and that the caller is responsible
+   * for deallocating it
+   * @param element the DOM element representing the tag
+   * @return the C++ object or 0 if an error occured
+   * @return status depending on the completion of the call
+   */
+  SolidPolycone* dealWithPolycone (DOM_Element element);
 
   /**
    * deals with the xml tag <tubs>. Creates the corresponding C++ Object.

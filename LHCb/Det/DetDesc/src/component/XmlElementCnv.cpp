@@ -1,20 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.7 2001-06-25 09:02:50 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.8 2001-11-20 15:22:24 sponce Exp $
 
 // Include Files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/IXmlSvc.h"
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
@@ -132,7 +130,7 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
     // if we have a tabprops element, adds it to the current object
     const std::string address =
       dom2Std (childElement.getAttribute ("address"));
-    long linkID = dataObj->addLink(address, 0);
+    long linkID = dataObj->linkMgr()->addLink(address, 0);
     SmartRef<TabulatedProperty> ref(dataObj, linkID);
     dataObj->tabulatedProperties().push_back(ref); 
   } else if ("atom" == tagName) {

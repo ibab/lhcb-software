@@ -1,26 +1,25 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.18 2001-11-18 15:32:45 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.19 2001-11-20 15:22:24 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiKernel/GenericLink.h"
-
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/xtoa.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
-#include "DetDesc/XmlAddress.h"
 #include "DetDesc/IXmlSvc.h"
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/LogVolBase.h"
 #include "DetDesc/LVolume.h"
+#include "DetDesc/LAssembly.h"
 #include "DetDesc/Surface.h"
 #include "DetDesc/XmlCnvException.h"
 
@@ -70,6 +69,7 @@ bool XmlLVolumeCnv::isSimpleSolid (std::string tag) {
       "trd" == tag ||
       "trap" == tag ||
       "cons" == tag ||
+      "polycone" == tag ||
       "tubs" == tag ||
       "sphere" == tag) {
     return true;
@@ -182,6 +182,31 @@ std::string XmlLVolumeCnv::locateElement (DOM_Element element) {
 
 
 // -----------------------------------------------------------------------
+// Create the name of a physical volume
+// -----------------------------------------------------------------------
+std::string XmlLVolumeCnv::createPvName (PVolumeItem* pv) {
+  if (0 == pv) {
+    return "";
+  }
+  if (!pv->indexed) {
+    return pv->physvolName;
+  }
+  // builds the actual name of the volume
+  const int buffer_size = 256;
+  char buffer [buffer_size] = { 0 , 0 };
+  std::ostrstream ost(buffer, buffer_size);
+  ost << pv->physvolName << ":" << pv->tag;
+  const unsigned int len = strlen(ost.str()); 
+  char *resstr = new char[len+1]; 
+  strncpy(resstr,ost.str(),len);
+  resstr[len] = 0; 
+  std::string result (resstr); 
+  delete [] resstr;
+  return result;
+}
+
+
+// -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
 StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
@@ -192,19 +217,6 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
   std::string sensDetName = dom2Std (element.getAttribute ("sensdet"));
   std::string volName = dom2Std (element.getAttribute ("name"));
 
-  // computes the actual material name
-  if (materialName.empty() || materialName[0] != '/') {
-    materialName.insert(0,"/dd/Materials/");
-  }
-
-  // creates an empty LVolume
-  LVolume* dataObj = new LVolume(volName, 
-                                 0, 
-                                 materialName,
-                                 sensDetName,
-                                 magFieldName);
-  refpObject = dataObj;
-  
   // processes the children. The dtd says we should find
   // ((%solid;, %transformation;?)?, (physvol | paramphysvol | surf)*)
   DOM_NodeList childNodes = element.getChildNodes();
@@ -228,9 +240,10 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
 
   // try to see if it is a solid and deal with it and a possible
   // transformation if yes
+  ISolid* solid = 0;
   if (isSolid (tagName)) {
     // deal with the solid itself
-    ISolid* solid = dealWithSolid (childElement);
+    solid = dealWithSolid (childElement);
     // finds the next child
     i += 1;
     while (i < childNodes.getLength() && 
@@ -263,13 +276,35 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
         }
       }
     }
-    // stores the solid inside the logical volume
-    if (0 != solid) {
-      /// Atention!!! commented by I.B!!
-      /// dataObj->setSolid(solid);
+  }
+  LogVolBase* dataObj;
+  if (0 != solid) {
+    // computes the actual material name
+    if (materialName.empty() || materialName[0] != '/') {
+      materialName.insert(0,"/dd/Materials/");
+    }
+    // if there is a solid, creates a logical volume and stores the solid inside
+    dataObj = new LVolume(volName, 
+                          solid, 
+                          materialName,
+                          sensDetName,
+                          magFieldName);
+  } else {
+    // else create an Assembly volume
+    dataObj = new LAssembly(volName, 
+                            sensDetName,
+                            magFieldName);
+    // if materialName was not null, display a warning that it will be ignored
+    if (!materialName.empty()) {
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING << "The logical volume " << volName
+          << " has no associated solid. Thus, the material that you "
+          << "defined for it (" << materialName << ") will be ignored."
+          << endreq;
     }
   }
-  
+  refpObject = dataObj;
+    
   // Whatever we found up to now, the next child to process is at index i.
   // The dtd says that we will find (physvol | paramphysvol | surf)* now
   // So let's deal with it.
@@ -283,11 +318,11 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
       // and frees the memory
       PVolumeItem* volume = dealWithPhysvol(childElement);
       if (0 == volume->transformation) {
-        dataObj->createPVolume (volume->physvolName,
+        dataObj->createPVolume (createPvName (volume),
                                 volume->logvolName,
                                 HepTransform3D::Identity);
       } else {
-        dataObj->createPVolume (volume->physvolName,
+        dataObj->createPVolume (createPvName (volume),
                                 volume->logvolName,
                                 volume->transformation->inverse());
       }
@@ -304,23 +339,12 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
       for (PVolumes::iterator it = volumes->begin();
            volumes->end() != it;
            ++it) {
-        // builds the actual name of the volume
-        const int buffer_size = 256;
-        char buffer [buffer_size] = { 0 , 0 };
-        std::ostrstream ost(buffer, buffer_size);
-        ost << (*it)->physvolName << "_[" << (*it)->tag << "]";
-        const unsigned int len = strlen(ost.str()); 
-        char *resstr = new char[len+1]; 
-        strncpy(resstr,ost.str(),len);
-        resstr[len] = 0; 
-        std::string pvname (resstr); 
-        delete [] resstr;
         if (0 == (*it)->transformation) {
-          dataObj->createPVolume (pvname,
+          dataObj->createPVolume (createPvName (*it),
                                   (*it)->logvolName,
                                   HepTransform3D::Identity);
         } else {
-          dataObj->createPVolume (pvname,
+          dataObj->createPVolume (createPvName (*it),
                                   (*it)->logvolName,
                                   (*it)->transformation->inverse());
         }
@@ -340,7 +364,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
     } else if ("surf" == tagName) {
       // deals with a surface and adds it to the logical volume
       std::string address = dealWithSurf(childElement);
-      long linkID = dataObj->addLink (address, 0);
+      long linkID = dataObj->linkMgr()->addLink(address, 0);
       SmartRef<Surface> reference (dataObj, linkID);
       dataObj->surfaces().push_back(reference); 
     } else {
@@ -408,10 +432,24 @@ XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
         << endreq;
   }
 
+  // deals with the name of the physical volume
+  // it could end with ':' and digits. In this case, the name itself is the
+  // part before ':' and the digits give an index for this volume
+  std::string::size_type columnPos = nameAttribute.find_last_of (':');
+  int index = 0;
+  int indexed = false;
+  if (columnPos != std::string::npos) {
+    std::string digits = nameAttribute.substr (columnPos + 1);
+    nameAttribute = nameAttribute.substr (0, columnPos);
+    indexed = true;
+    index = atoi (digits.data());
+  }
+
   // builds physvol and returns
   PVolumeItem* result = new PVolumeItem;
   result->physvolName = nameAttribute;
-  result->tag = 0;
+  result->tag = index;
+  result->indexed = indexed;
   result->logvolName = logvolAttribute;
   result->transformation = transformation;
   return result;
@@ -687,6 +725,7 @@ XmlLVolumeCnv::expandParamPhysVol
       PVolumeItem* newPvi = new PVolumeItem;
       newPvi->physvolName = (*it)->physvolName;
       newPvi->tag = tag;
+      newPvi->indexed = true;
       newPvi->logvolName = (*it)->logvolName;
       if (0 == (*it)->transformation) {
         HepTransform3D *transformation =
@@ -952,6 +991,8 @@ ISolid* XmlLVolumeCnv::dealWithSimpleSolid (DOM_Element element) {
     return dealWithTrap (element);
   } else if ("cons" == tagName) {
     return dealWithCons (element);
+  } else if ("polycone" == tagName) {
+    return dealWithPolycone (element);
   } else if ("tubs" == tagName) {
     return dealWithTubs (element);
   } else if ("sphere" == tagName) {
@@ -1222,6 +1263,91 @@ SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
   // returns
   return result;
 } // end dealWithCons
+
+
+// -----------------------------------------------------------------------
+// Deal with polycone
+// -----------------------------------------------------------------------
+SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
+  MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+  // gets attributes
+  std::string startPhiAngleAttribute =
+    dom2Std (element.getAttribute ("startPhiAngle"));
+  std::string deltaPhiAngleAttribute =
+    dom2Std (element.getAttribute ("deltaPhiAngle"));
+  std::string polyconeName = dom2Std (element.getAttribute ("name"));
+
+  // computes the values
+  double startPhiAngle = 0.0;
+  double deltaPhiAngle = 360.0 * degree;
+  if (!startPhiAngleAttribute.empty()) {
+    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute);
+  }
+  if (!deltaPhiAngleAttribute.empty()) {
+    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute);
+  }
+
+  // this are the zplanes contained by this node
+  SolidPolycone::Triplets zplanes;
+
+  // deals with the children
+  DOM_NodeList children = element.getElementsByTagName ("zplane");
+  for (unsigned int i = 0; i < children.getLength(); i++) {
+    DOM_Node childNode = children.item(i);
+    DOM_Element child = (DOM_Element&) childNode;
+
+    // gets attributes
+    std::string zAttribute =
+      dom2Std (child.getAttribute ("z"));
+    std::string outerRadiusAttribute =
+      dom2Std (child.getAttribute ("outerRadius"));
+    std::string innerRadiusAttribute =
+      dom2Std (child.getAttribute ("innerRadius"));
+    
+    // computes the values
+    double z = 0.0;
+    double outerRadius = 0.0;
+    double innerRadius = 0.0;
+    if (!zAttribute.empty()) {
+      z = xmlSvc()->eval(zAttribute);
+    }
+    if (!outerRadiusAttribute.empty()) {
+      outerRadius = xmlSvc()->eval(outerRadiusAttribute);
+    }
+    if (!innerRadiusAttribute.empty()) {
+      innerRadius = xmlSvc()->eval(innerRadiusAttribute);
+    }
+    
+    // builds zplane and adds it to the list
+    zplanes.push_back (SolidPolycone::Triplet
+                       (z, SolidPolycone::Pair (outerRadius, innerRadius)));
+    
+    // checks there are no children
+    if (child.hasChildNodes()) {
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING << "In " << locateElement (child)
+          << "A zplane should not have any child. They will be ignored"
+          << endreq;
+    }
+  }
+    
+  // builds solid
+  SolidPolycone* result;
+  try {
+    result = new SolidPolycone
+      (polyconeName, zplanes, startPhiAngle, deltaPhiAngle);
+  } catch (GaudiException e) {
+    MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+    log << MSG::ERROR << "Was not able to create SolidPolycone "
+        << "due to following GaudiException : ";
+    e.printOut (log);
+    log << endreq;
+    result = 0;
+  }
+    
+  // returns
+  return result;
+} // end dealWithPolycone
 
 
 // -----------------------------------------------------------------------

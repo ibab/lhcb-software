@@ -13,7 +13,7 @@ Material::Material( const std::string& name   ,
                     const double       temp   , 
                     const double       press  , 
                     const eState       s      )
-  : DataObject          ( name       )
+  : DataObject          ( )
   , m_name              ( ""         )
   , m_density           ( dens       )
   , m_radiationLength   ( rl         )

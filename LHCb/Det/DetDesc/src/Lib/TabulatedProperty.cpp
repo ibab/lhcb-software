@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/TabulatedProperty.cpp,v 1.3 2001-03-13 11:58:08 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/TabulatedProperty.cpp,v 1.4 2001-11-20 15:22:24 sponce Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"
@@ -9,7 +9,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////
 TabulatedProperty::TabulatedProperty( const std::string& Name )
-  : DataObject( Name        )
+  : DataObject( )
   , m_type    ( "(Unknown)" ) 
   , m_xAxis   ( "(empty)"   ) 
   , m_yAxis   ( "(empty)"   ) 
