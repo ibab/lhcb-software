@@ -1,4 +1,4 @@
-// $Id: PMakerSelection.h,v 1.1 2003-05-30 11:55:13 gcorti Exp $
+// $Id: PMakerSelection.h,v 1.2 2003-06-03 07:30:56 gcorti Exp $
 #ifndef PMAKERSELECTION_H 
 #define PAKERSELECTION_H 1
 
@@ -68,6 +68,8 @@ public:
   
   /// Set list of Dll cuts to apply
   void setDllCuts( const std::vector< double >& value );  
+
+  std::string cutType( const PMakerSelection::DLLCuts& cut );
   
 protected:
 
@@ -145,5 +147,32 @@ inline void PMakerSelection::setDllCuts( const std::vector< double >& value )
 {
   m_dllCuts = value;
 }
+
+std::string PMakerSelection::cutType( const PMakerSelection::DLLCuts& cut ) {
+  switch( cut ) {
+  case PMakerSelection::DLLE_PI:      return "DLLE_PI";
+  case PMakerSelection::DLLE_MU:      return "DLLE_MU";
+  case PMakerSelection::DLLE_K:       return "DLLE_K";
+  case PMakerSelection::DLLE_P:       return "DLLE_P";
+  case PMakerSelection::DLLMU_PI:     return "DLLMU_PI";
+  case PMakerSelection::DLLMU_E:      return "DLLMU_E";
+  case PMakerSelection::DLLMU_K:      return "DLLMU_K";
+  case PMakerSelection::DLLMU_P:      return "DLLMU_P";
+  case PMakerSelection::DLLK_PI:      return "DLLK_PI";
+  case PMakerSelection::DLLK_E:       return "DLLK_E";
+  case PMakerSelection::DLLK_MU:      return "DLLK_MU";
+  case PMakerSelection::DLLK_P:       return "DLLK_P";
+  case PMakerSelection::DLLP_PI:      return "DLLP_PI";
+  case PMakerSelection::DLLP_E:       return "DLLP_E";
+  case PMakerSelection::DLLP_MU:      return "DLLP_MU";
+  case PMakerSelection::DLLP_K:       return "DLLP_P";
+  case PMakerSelection::DLLPI_E:      return "DLLPI_E";
+  case PMakerSelection::DLLPI_MU:     return "DLLPI_MU";
+  case PMakerSelection::DLLPI_K:      return "DLLPI_K";
+  case PMakerSelection::DLLPI_P:      return "DLLPI_P";
+  default:                   return "?"; // should never happen
+  }
+}
+
 
 #endif // PMAKERSELECTION_H
