@@ -4,7 +4,11 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2004-07-02 - Chris Jones
+ - Update RichRayTracing tool to altered interface
+
 !=========================== RichTools v1r0 2004-06-17 =======================
+
 
 ! 2004-07-01 - Antonis Papanestis
  - changed the tracing methods to use the new RichTraceMode

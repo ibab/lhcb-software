@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.2 2004-07-01 11:10:08 papanest Exp $
+// $Id: RichRayTracing.h,v 1.3 2004-07-02 14:36:08 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHRAYTRACING_H
 #define RICHDETTOOLS_RICHRAYTRACING_H 1
 
@@ -64,7 +64,7 @@ public:
                                        const HepPoint3D& startPoint,
                                        const HepVector3D& startDir,
                                        RichGeomPhoton& photon,
-                                       RichTraceMode mode = RichTraceMode(),
+                                       const RichTraceMode mode = RichTraceMode(),
                                        Rich::Side fSide = Rich::top
                                        ) const;
 
@@ -72,9 +72,8 @@ public:
                                                 const HepPoint3D& position,
                                                 const HepVector3D& direction,
                                                 HepPoint3D& hiPosition,
-                                                RichTraceMode mode = RichTraceMode(),
-                                                Rich::Side fSide = Rich::top
-                                                ) const;
+                                                const RichTraceMode mode = RichTraceMode(),
+                                                Rich::Side fSide = Rich::top ) const;
 
 
   /// For a given detector, raytraces a given direction from a given point
@@ -95,23 +94,22 @@ public:
                                 HepVector3D& direction,
                                 const HepPoint3D& CoC,
                                 double radius,
-                                RichTraceMode mode = RichTraceMode() ) const;
-private:
+                                const RichTraceMode mode = RichTraceMode() ) const;
+private: // methods
 
-  // methods
   StatusCode reflectBothMirrors ( Rich::DetectorType rich,
                                   HepPoint3D& position,
                                   HepVector3D& direction,
                                   RichGeomPhoton& photon,
-                                  RichTraceMode mode,
-                                  Rich::Side fSide ) const;
+                                  const RichTraceMode mode,
+                                  const Rich::Side fSide ) const;
 
 
   StatusCode reflectFlat ( HepPoint3D& position,
                            HepVector3D& direction,
-                           const HepPlane3D& plane) const;
+                           const HepPlane3D& plane ) const;
 
-  // data
+private: // data
 
   /// Rich1 and Rich2
   DeRich* m_rich[Rich::NRiches];

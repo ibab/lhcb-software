@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.3 2004-07-01 11:10:08 papanest Exp $
+// $Id: RichRayTracing.cpp,v 1.4 2004-07-02 14:36:08 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -33,7 +33,7 @@ const        IToolFactory& RichRayTracingFactory = Factory ;
 RichRayTracing::RichRayTracing( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent)
-  : RichToolBase ( type, name, parent ) 
+  : RichToolBase ( type, name, parent )
 {
   declareInterface<IRichRayTracing>(this);
 }
@@ -46,7 +46,7 @@ RichRayTracing::~RichRayTracing() { }
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichRayTracing::initialize() 
+StatusCode RichRayTracing::initialize()
 {
 
   if ( !RichToolBase::initialize() ) return StatusCode::FAILURE;
@@ -121,7 +121,7 @@ StatusCode RichRayTracing::traceToDetector ( Rich::DetectorType rich,
                                              const HepPoint3D& startPoint,
                                              const HepVector3D& startDir,
                                              RichGeomPhoton& photon,
-                                             RichTraceMode mode,
+                                             const RichTraceMode mode,
                                              Rich::Side fSide )
   const {
 
@@ -164,7 +164,7 @@ RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
                                            const HepPoint3D& position,
                                            const HepVector3D& direction,
                                            HepPoint3D& hitPosition,
-                                           RichTraceMode mode,
+                                           const RichTraceMode mode,
                                            Rich::Side fSide ) const {
 
   HepPoint3D tmpPosition( position );
@@ -188,19 +188,19 @@ RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
 //  reflect a photon on both mirrors and return the position and direction
 //  on the flat mirror.
 //=========================================================================
-StatusCode RichRayTracing::reflectBothMirrors(Rich::DetectorType rich,
-                                              HepPoint3D& position,
-                                              HepVector3D& direction,
-                                              RichGeomPhoton& photon,
-                                              RichTraceMode mode,
-                                              Rich::Side fSide) const {
+StatusCode RichRayTracing::reflectBothMirrors( Rich::DetectorType rich,
+                                               HepPoint3D& position,
+                                               HepVector3D& direction,
+                                               RichGeomPhoton& photon,
+                                               const RichTraceMode mode,
+                                               const Rich::Side fSide ) const {
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
 
   Rich::Side side;
 
-  if ( !mode.forcedSide() ) 
+  if ( !mode.forcedSide() )
     side = m_rich[rich]->side(tmpPosition);
   else
     side = fSide;
@@ -224,7 +224,7 @@ StatusCode RichRayTracing::reflectBothMirrors(Rich::DetectorType rich,
         return StatusCode::FAILURE;
     }
   }
-  
+
 
   // find segment
   DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich,
@@ -238,7 +238,7 @@ StatusCode RichRayTracing::reflectBothMirrors(Rich::DetectorType rich,
     // if reflection from a mirror segment is required
     if ( !sphSegment->intersects( tmpPosition, tmpDirection ) )
       return StatusCode::FAILURE;
-  } 
+  }
 
   // Spherical mirror reflection with exact parameters
   if ( !reflectSpherical( tmpPosition, tmpDirection,
@@ -286,7 +286,7 @@ StatusCode RichRayTracing::reflectSpherical ( HepPoint3D& position,
                                               HepVector3D& direction,
                                               const HepPoint3D& CoC,
                                               double radius,
-                                              RichTraceMode mode ) const 
+                                              const RichTraceMode /* mode */ ) const
 {
   // find intersection point
   // for line sphere intersection look at:http://www.realtimerendering.com/int/
@@ -316,12 +316,12 @@ StatusCode RichRayTracing::reflectSpherical ( HepPoint3D& position,
 //=========================================================================
 StatusCode RichRayTracing::reflectFlat ( HepPoint3D& position,
                                          HepVector3D& direction,
-                                         const HepPlane3D& plane ) const 
+                                         const HepPlane3D& plane ) const
 {
   HepPoint3D intersection;
   HepVector3D normal( plane.normal() );
 
-  if ( intersectPlane( position, direction, plane, intersection ).isFailure() ) 
+  if ( intersectPlane( position, direction, plane, intersection ).isFailure() )
     return StatusCode::FAILURE;
 
   position = intersection;
@@ -340,7 +340,7 @@ StatusCode RichRayTracing::reflectFlat ( HepPoint3D& position,
 StatusCode RichRayTracing::intersectPlane (const HepPoint3D& position,
                                            const HepVector3D& direction,
                                            const HepPlane3D& plane,
-                                           HepPoint3D& intersection ) const  
+                                           HepPoint3D& intersection ) const
 {
   const HepPoint3D normal( plane.normal() );
 
