@@ -4,6 +4,46 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r2 2004-02-04 =======================
+! 2004-02-04 - Marco Cattaneo
+
+ - New packages:      STDet v1r0
+
+ - Modified packages: KernelSys v3r2, LHCbKernel v4r2, RichKernel v4r4,
+                    EventSys v17r2, ITEvent v13r1, RichEvent v7r1, MuonEvent v3r1
+                    DetSys v5r0, RichDet v6r5, MuonDet v4r5
+                    AssociatorsSys v1r10, TrFitEvent v4r3, MCTools v1r3
+
+ - Removed packages:  ITDet, RiSicbGeom
+
+ - In ITEvent v13r1:
+   . Add total deposited charge to ITCluster. Backwards compatible for GaudiDb
+     persistency, incompatible for POOL persistency.
+
+ - In STDet v1r0:
+   . New ST detector element to support new TT geometries
+   . Replaces ITDet, requires XmlDDDB v21r0 and geometry lhcb-2004*
+   . Incompatible with previous geometries
+
+ - In TrFitEvent v4r3, MCTools v1r3:
+   . Adapt to STDet change
+
+ - In LHCbKernel v4r2, RichKernel v4r4
+   . Backwards compatible changes to RichSmartID
+
+ - In RichEvent v7r1
+   . Added debug objects for Gauss MCTruth
+   . removed obsolete SicbCnv classes MCRichPhotodetectorHit, MCRichRadiatorHit
+
+ - In RichDet v6r5
+   . Added global-local conversion for HPD panels
+
+ - In MuonEvent v3r1
+   . Add one significant bit to DAQ time stamp in MuonDigit
+
+ - In MuonDet v4r5
+   . Add support for RawBuffer simulation
+
 !======================= LHCbSys v15r1 2004-01-27 =======================
 ! 2004-01-27 - Marco Cattaneo
 
