@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.65 2002-06-19 09:38:24 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.66 2003-01-10 12:22:53 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -156,7 +156,7 @@ template <class T> void printArguments(std::ofstream& xmlOut,
     {
       xmlOut << "const ";
     }
-	  else if (gddArgIsConst)
+    else if (gddArgIsConst)
     {
       xmlOut << "const ";
     }
@@ -192,7 +192,7 @@ template <class T> void printArguments(std::ofstream& xmlOut,
 
  /*       if (gddMethArgument->const_() ||
           (!DaDiTools::isSimple(gddMethArgument->type().transcode()) &&
-			 gddMethArgument->const_()) ) */
+           gddMethArgument->const_()) ) */
 }
 
 
@@ -260,6 +260,13 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
       {
         xmlOut << " = 0";
       }
+      else if (gddMethodCode != "" && !DaDiTools::isEmpty(gddMethodTemplate))
+      {
+        xmlOut << std::endl 
+         << "  {" << std::endl 
+         << "     " << gddMethodCode << std::endl 
+         << "  }";
+      }
 /*      if (gddMethodIsFriend)
       {
         xmlOut << std::endl 
@@ -267,12 +274,9 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
           << gddMethodCode << std::endl 
           << "  }" << std::endl 
           << std::endl;
-      }
-      else
-      { */
-        xmlOut << ";" << std::endl 
-          << std::endl;
-//      }
+      } */
+      xmlOut << ";" << std::endl 
+        << std::endl;
     }
   }
 }
@@ -835,11 +839,11 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
             << "removeFrom" << DaDiTools::firstUp(gddRelName)
             << "(" << gddRelType << "* value)"  << std::endl 
           << "{" << std::endl 
-		      << "  SmartRefVector<" << gddRelType << ">::iterator iter;" << std::endl
-		      << "  for (iter = m_" << gddRelName << ".begin(); iter != m_" 
+          << "  SmartRefVector<" << gddRelType << ">::iterator iter;" << std::endl
+          << "  for (iter = m_" << gddRelName << ".begin(); iter != m_" 
             << gddRelName << ".end(); ++iter)" << std::endl 
           << "  {" << std::endl
-		      << "    if (iter->target() == value)" << std::endl 
+          << "    if (iter->target() == value)" << std::endl 
           << "    {" << std::endl 
           << "      m_" << gddRelName << ".erase(iter);" << std::endl 
           << "    }" << std::endl 
@@ -851,10 +855,10 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
             << "(const SmartRef<" << gddRelType << ">& value)" << std::endl 
           << "{" << std::endl 
           << "  SmartRefVector<" << gddRelType << ">::iterator iter =" << std::endl
-		      << "    std::find(m_" << gddRelName << ".begin(), m_" 
+          << "    std::find(m_" << gddRelName << ".begin(), m_" 
             << gddRelName << ".end(), value);" << std::endl 
           << "  if (iter != m_" << gddRelName << ".end() )" << std::endl 
-		      << "  {" << std::endl 
+          << "  {" << std::endl 
           << "    m_" << gddRelName << ".erase(iter);" << std::endl 
           << "  }" << std::endl 
           << "}" << std::endl 
@@ -865,7 +869,7 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
             << "(const SmartRef<" << gddRelType << ">& value)" << std::endl 
           << "{" << std::endl 
           << "  SmartRefVector<" << gddRelType << ">::iterator iter =" << std::endl
-		      << "    std::remove(m_" << gddRelName << ".begin(), m_" 
+          << "    std::remove(m_" << gddRelName << ".begin(), m_" 
             << gddRelName << ".end(), value);" << std::endl 
           << "  m_" << gddRelName << ".erase(iter, m_" << gddRelName 
             << ".end());" << std::endl
@@ -1176,8 +1180,6 @@ void printClass(std::ofstream& xmlOut,
        classTemplateList = false;
 
   std::vector<std::string>::iterator coIter, koIter;
-
-
               
   std::string gddClassName = gddClass->name().transcode(),
               gddClassID = gddClass->ID().transcode(),
@@ -1344,7 +1346,7 @@ void printClass(std::ofstream& xmlOut,
         KeyedObjectClasses.push_back(gddClassName);
         classTemplate = true;
       }
-      //////////////////////  tbd
+      //////////////////////  tbd -->
       coIter = std::find(ContainedObjectClasses.begin(), ContainedObjectClasses.end(), baseClName);
       if (coIter != ContainedObjectClasses.end())
       {
@@ -1358,7 +1360,7 @@ void printClass(std::ofstream& xmlOut,
           classTemplateList = true;
         }
       }
-      //////////////////////////
+      ////////////////////////// <--
       if (i>0) {xmlOut << ", ";}
       if (gddBaseClassIsVirtual)
       {
@@ -1600,29 +1602,29 @@ void printClass(std::ofstream& xmlOut,
   {    
     if (!isEventClass)
     {
-	  xmlOut << "  /// Operator overloading for serializing (writing)"  << std::endl 
-	    << "  friend StreamBuffer& operator<< (StreamBuffer& s, const "
-	      << gddClassName << "& obj)" << std::endl 
-      << "  {" << std::endl 
-      << "    return obj.serialize(s);" << std::endl 
-      << "  }" << std::endl 
-      << std::endl;
+      xmlOut << "  /// Operator overloading for serializing (writing)"  << std::endl 
+        << "  friend StreamBuffer& operator<< (StreamBuffer& s, const "
+        << gddClassName << "& obj)" << std::endl 
+        << "  {" << std::endl 
+        << "    return obj.serialize(s);" << std::endl 
+        << "  }" << std::endl 
+        << std::endl;
 
-	  xmlOut << "  /// Operator overloading for serializing (reading)" << std::endl
-	    << "  friend StreamBuffer& operator>> (StreamBuffer& s, "
-      << gddClassName << "& obj)" << std::endl 
-      << "  {" << std::endl
-	    << "    return obj.serialize(s);" << std::endl 
-      << "  }" << std::endl
-	    << std::endl;
+      xmlOut << "  /// Operator overloading for serializing (reading)" << std::endl
+        << "  friend StreamBuffer& operator>> (StreamBuffer& s, "
+        << gddClassName << "& obj)" << std::endl 
+        << "  {" << std::endl
+        << "    return obj.serialize(s);" << std::endl 
+        << "  }" << std::endl
+        << std::endl;
 
-	  xmlOut << "  /// Operator overloading for stringoutput" << std::endl
-	    << "  friend std::ostream& operator<< (std::ostream& s, const "
-	    << gddClass->name().transcode() << "& obj)" << std::endl 
-      << "  {" << std::endl 
-      << "    return obj.fillStream(s);" << std::endl 
-      << "  }" << std::endl
-      << std::endl;
+      xmlOut << "  /// Operator overloading for stringoutput" << std::endl
+        << "  friend std::ostream& operator<< (std::ostream& s, const "
+        << gddClass->name().transcode() << "& obj)" << std::endl 
+        << "  {" << std::endl 
+        << "    return obj.fillStream(s);" << std::endl 
+        << "  }" << std::endl
+        << std::endl;
 
   /*    xmlOut << "/// Serialize the object for writing" << std::endl
         << "virtual StreamBuffer& serialize(StreamBuffer& s) const;" 
@@ -1668,19 +1670,19 @@ void printClass(std::ofstream& xmlOut,
     if (!streamOut)
     {
       xmlOut << "  /// Serialize the object for writing" << std::endl
-	      << "  virtual StreamBuffer& serialize(StreamBuffer& s) const;" << std::endl 
+        << "  virtual StreamBuffer& serialize(StreamBuffer& s) const;" << std::endl 
         << std::endl;
     }
     if (!streamIn)
     {
       xmlOut << "  /// Serialize the object for reading" << std::endl
-	      << "  virtual StreamBuffer& serialize(StreamBuffer& s);" << std::endl 
+        << "  virtual StreamBuffer& serialize(StreamBuffer& s);" << std::endl 
         << std::endl;
     }
     if (!ostreamOut)
     {
       xmlOut << "  /// Fill the ASCII output stream" << std::endl
-	      << "  virtual std::ostream& fillStream(std::ostream& s) const;" << std::endl 
+        << "  virtual std::ostream& fillStream(std::ostream& s) const;" << std::endl 
         << std::endl;
     }
   }
@@ -1865,22 +1867,22 @@ void printClass(std::ofstream& xmlOut,
 
     /*if (!isEventClass)
     {
-	  xmlOut << "StreamBuffer& operator<< (StreamBuffer& s, const "
-	      << gddClassName << "& obj)" << std::endl 
+      xmlOut << "StreamBuffer& operator<< (StreamBuffer& s, const "
+      << gddClassName << "& obj)" << std::endl 
       << "{" << std::endl 
       << "  return obj.serialize(s);" << std::endl 
       << "}" << std::endl 
       << std::endl;
 
-	  xmlOut << "StreamBuffer& operator>> (StreamBuffer& s, "
+      xmlOut << "StreamBuffer& operator>> (StreamBuffer& s, "
       << gddClassName << "& obj)" << std::endl 
       << "{" << std::endl
-	    << "  return obj.serialize(s);" << std::endl 
+      << "  return obj.serialize(s);" << std::endl 
       << "}" << std::endl
-	    << std::endl;
+      << std::endl;
 
-	  xmlOut << "std::ostream& operator<< (std::ostream& s, const "
-	    << gddClass->name().transcode() << "& obj)" << std::endl 
+      xmlOut << "std::ostream& operator<< (std::ostream& s, const "
+      << gddClass->name().transcode() << "& obj)" << std::endl 
       << "{"  << std::endl 
       << "  return obj.fillStream(s);" << std::endl 
       << "}" << std::endl 
@@ -1896,7 +1898,7 @@ void printClass(std::ofstream& xmlOut,
     {
       /// function header
       xmlOut << "inline StreamBuffer& " << gddClassName 
-          << "::serialize(StreamBuffer& s) const " << std::endl
+        << "::serialize(StreamBuffer& s) const " << std::endl
         << "{" << std::endl;
 
       /// treating boolean values
@@ -1979,7 +1981,7 @@ void printClass(std::ofstream& xmlOut,
         }
       }
 
-	    if (seriAtt)
+      if (seriAtt)
       {
         xmlOut << ";" << std::endl;
       }
@@ -1993,7 +1995,6 @@ void printClass(std::ofstream& xmlOut,
 //
 // StreamBuffer>>
 //
-
     if(!streamIn)
     {
       /// function header
@@ -2001,7 +2002,7 @@ void printClass(std::ofstream& xmlOut,
           << "::serialize(StreamBuffer& s)" << std::endl
         << "{" << std::endl;
 
-      bool attBool=false, attFloat=false;
+      bool typePrinted = false;
   
       /// treating boolean values
       for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
@@ -2013,10 +2014,10 @@ void printClass(std::ofstream& xmlOut,
 
         if (gddAttType == "bool" && gddAttSerialize)
         {
-          if (!attBool)
+          if (!typePrinted)
           {
             xmlOut << "  unsigned char ";
-            attBool = true;
+            typePrinted = true;
           }
           else
           {
@@ -2025,9 +2026,38 @@ void printClass(std::ofstream& xmlOut,
           xmlOut << "l_" << gddAttName;
         }
       }
-      if (attBool) 
+      if (typePrinted) 
       { 
-        xmlOut << ";" << std::endl; 
+        xmlOut << ";" << std::endl;
+        typePrinted = false; 
+      }
+
+      /// treating enums
+      for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
+      {
+        DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+        std::string gddAttType = gddAttribute->type().transcode(),
+                    gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize();
+
+        if (std::find(gddDefEnums.begin(), gddDefEnums.end(), gddAttType) != gddDefEnums.end() && gddAttSerialize)
+        {
+          if (!typePrinted)
+          {
+            xmlOut << "  unsigned ";
+            typePrinted = true;
+          }
+          else
+          {
+            xmlOut << ", ";
+          }
+          xmlOut << "l_" << gddAttName;
+        }
+      }
+      if (typePrinted) 
+      { 
+        xmlOut << ";" << std::endl;
+        typePrinted = false; 
       }
 
       /// treating float values
@@ -2041,10 +2071,10 @@ void printClass(std::ofstream& xmlOut,
 
         if (gddAttType == "double" && gddAttSerialize && gddAttCompression)
         {
-          if (!attFloat)
+          if (!typePrinted)
           {
             xmlOut << "  float ";
-            attFloat = true;
+            typePrinted = true;
           }
           else
           {
@@ -2053,9 +2083,10 @@ void printClass(std::ofstream& xmlOut,
           xmlOut << "l_" << gddAttName;
         }
       }
-      if (attFloat) 
+      if (typePrinted) 
       {  
-        xmlOut << ";" << std::endl; 
+        xmlOut << ";" << std::endl;
+        typePrinted = false; 
       }
 
       bool seriAtt = false;
@@ -2064,7 +2095,7 @@ void printClass(std::ofstream& xmlOut,
         std::string gddBaseName = gddClass->popDaDiBaseClass()->name().transcode();
         if (gddBaseName != "ContainedObject" && gddBaseName != "DataObject")
         {
-		    xmlOut << "  " << gddBaseName << "::serialize(s);" << std::endl;
+          xmlOut << "  " << gddBaseName << "::serialize(s);" << std::endl;
         }
       }
 
@@ -2087,7 +2118,8 @@ void printClass(std::ofstream& xmlOut,
           {
             xmlOut << std::endl << "    ";
           }
-          if (gddAttType == "bool" || (gddAttType == "double" && gddAttCompression))
+          if ((gddAttType == "bool") || (gddAttType == "double" && gddAttCompression) || 
+              (std::find(gddDefEnums.begin(), gddDefEnums.end(), gddAttType) != gddDefEnums.end()))
           {
             xmlOut << ">> l_";
           }
@@ -2118,7 +2150,7 @@ void printClass(std::ofstream& xmlOut,
           }
         }
       }
-  	  if (seriAtt)
+      if (seriAtt)
       {
         xmlOut << ";" << std::endl;
       }
@@ -2128,14 +2160,25 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
-        bool gddAttSerialize = gddAttribute->serialize();
+        bool gddAttSerialize = gddAttribute->serialize(),
+             gddAttCompression = gddAttribute->compression();
 
         if (gddAttType == "bool" && gddAttSerialize)
         {
           xmlOut << "  m_" << gddAttName << " = (l_" << gddAttName
             << ") ? true : false;" << std::endl;
         }
+        if (std::find(gddDefEnums.begin(), gddDefEnums.end(), gddAttType) != gddDefEnums.end())
+        {
+          xmlOut << "  m_" << gddAttName << " = " << gddAttType << "(l_" << gddAttName << ");" << std::endl;
+        }
+        if (gddAttType == "double" && gddAttSerialize && gddAttCompression)
+        {
+          xmlOut << "  m_" << gddAttName << " = l_" << gddAttName << ";" << std::endl;
+        }
       }
+
+      /*
       for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
       {
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
@@ -2149,6 +2192,8 @@ void printClass(std::ofstream& xmlOut,
           xmlOut << "  m_" << gddAttName << " = l_" << gddAttName << ";" << std::endl;
         }
       }
+      */
+
       xmlOut << "  return s;" << std::endl 
         << "}" << std::endl 
         << std::endl;
@@ -2157,8 +2202,7 @@ void printClass(std::ofstream& xmlOut,
 
 //
 // std::ostream<<
-//
-  
+//  
     if (!ostreamOut)
     {
       /// function header
@@ -2181,6 +2225,16 @@ void printClass(std::ofstream& xmlOut,
         }     
       }
 
+      for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+      {
+        std::string gddBaseName = gddClass->popDaDiBaseClass()->name().transcode();
+        if (gddBaseName != "ContainedObject" &&
+            gddBaseName != "DataObject" &&
+            gddBaseName.substr(0,gddBaseName.find("<")) != "KeyedObject")
+        {
+          xmlOut << "  " << gddBaseName << "::fillStream(s);" << std::endl;
+        }
+      }
       bool seriAtt = false;
       for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
       {
@@ -2196,11 +2250,11 @@ void printClass(std::ofstream& xmlOut,
                << ":\""; */
           xmlOut << "  s << \"{ \"" << std::endl << "    << \" " 
              << gddAttName << ":\\t\" ";
-		      seriAtt = true;
+          seriAtt = true;
         }
-	      else
+        else
         {
-		      xmlOut << " << std::endl" << std::endl << "    << \"   " 
+          xmlOut << " << std::endl" << std::endl << "    << \"   " 
             << gddAttName << ":\\t\" ";
         }          
         if (gddAttType == "bool")
@@ -2216,7 +2270,7 @@ void printClass(std::ofstream& xmlOut,
           xmlOut << "<< m_";
         }
         xmlOut << gddAttName;
-      
+
         if (gddAttIsBitset)
         {
           for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
@@ -2234,7 +2288,7 @@ void printClass(std::ofstream& xmlOut,
         }
         
       }
-	    if (seriAtt)
+      if (seriAtt)
       {
         xmlOut << " << \" } \";" << std::endl;
       }
@@ -2336,6 +2390,8 @@ void printNamespace(std::ofstream& xmlOut,
   {
     gddDefTypeDefs.push_back(gddNamespace->popDaDiTypeDef()->def().transcode());
   }
+
+  time(&ltime);
 
   xmlOut << std::endl 
     << "/** @namespace " << gddNamespName << std::endl 
