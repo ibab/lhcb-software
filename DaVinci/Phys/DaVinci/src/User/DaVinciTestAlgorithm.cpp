@@ -1,4 +1,4 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.3 2002-02-28 14:41:28 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.4 2002-03-12 19:37:24 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
@@ -363,7 +363,7 @@ StatusCode DaVinciTestAlgorithm::execute() {
   }
 
   // Example of how to access L0 Decision Unit info
-  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
+  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/Trig/L0/Decision" );
   
   if ( 0 != L0Report ) {
     if ( (*L0Report).decision() ) {
