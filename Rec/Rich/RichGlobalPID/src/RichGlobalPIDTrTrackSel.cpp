@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.14 2004-04-19 23:04:00 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.15 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 // local
@@ -42,10 +42,10 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
 RichGlobalPIDTrTrackSel::~RichGlobalPIDTrTrackSel() {}
 
 //  Initialize
-StatusCode RichGlobalPIDTrTrackSel::initialize() {
-
+StatusCode RichGlobalPIDTrTrackSel::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -171,18 +171,9 @@ RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
   return quality;
 }
 
-void RichGlobalPIDTrTrackSel::deleteEvent()
-{
-  // Tidy up incase of event abort
-  if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
-  if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
-}
-
 //  Finalize
-StatusCode RichGlobalPIDTrTrackSel::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichGlobalPIDTrTrackSel::finalize() 
+{
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

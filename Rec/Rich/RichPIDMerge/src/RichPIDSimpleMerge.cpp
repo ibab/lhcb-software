@@ -1,4 +1,4 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.5 2004-04-20 13:33:40 jonesc Exp $
+// $Id: RichPIDSimpleMerge.cpp,v 1.6 2004-07-12 14:52:49 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -45,14 +45,17 @@ RichPIDSimpleMerge::~RichPIDSimpleMerge() {};
 StatusCode RichPIDSimpleMerge::initialize() 
 {
   // initialise base classclean
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  // Add any customisations here
 
   return StatusCode::SUCCESS;
 };
 
 // Main execution
-StatusCode RichPIDSimpleMerge::execute() {
+StatusCode RichPIDSimpleMerge::execute()
+{
 
   //
   // For the moment take global then local result in that order of preference
@@ -169,8 +172,6 @@ StatusCode RichPIDSimpleMerge::execute() {
 //  Finalize
 StatusCode RichPIDSimpleMerge::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // base class finalise
   return RichAlgBase::finalize();
 }

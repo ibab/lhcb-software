@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.10 2004-04-19 23:03:59 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.11 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 // local
@@ -32,9 +32,8 @@ RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
 //  Initialize
 StatusCode RichGlobalPIDDigitSel::initialize() 
 {
-
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   return StatusCode::SUCCESS;
@@ -73,8 +72,6 @@ StatusCode RichGlobalPIDDigitSel::execute() {
 //  Finalize
 StatusCode RichGlobalPIDDigitSel::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

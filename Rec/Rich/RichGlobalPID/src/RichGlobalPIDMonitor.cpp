@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDMonitor.cpp,v 1.2 2004-03-16 13:43:35 jonesc Exp $
+// $Id: RichGlobalPIDMonitor.cpp,v 1.3 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -27,30 +27,26 @@ RichGlobalPIDMonitor::RichGlobalPIDMonitor( const std::string& name,
 RichGlobalPIDMonitor::~RichGlobalPIDMonitor() {}
 
 //  Initialize
-StatusCode RichGlobalPIDMonitor::initialize() {
-
+StatusCode RichGlobalPIDMonitor::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  debug() << "Initialize" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 // Main execution
-StatusCode RichGlobalPIDMonitor::execute() {
-
+StatusCode RichGlobalPIDMonitor::execute() 
+{
   debug() << "Execute" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 //  Finalize
-StatusCode RichGlobalPIDMonitor::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichGlobalPIDMonitor::finalize() 
+{
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

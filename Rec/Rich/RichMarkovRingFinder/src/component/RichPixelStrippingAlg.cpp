@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.2 2004-06-29 16:14:47 buckley Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.3 2004-07-12 14:52:31 jonrob Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -33,8 +33,6 @@ RichPixelStrippingAlg::~RichPixelStrippingAlg() {};
 //=============================================================================
 StatusCode RichPixelStrippingAlg::initialize()
 {
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -111,8 +109,6 @@ StatusCode RichPixelStrippingAlg::execute()
 //=============================================================================
 StatusCode RichPixelStrippingAlg::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

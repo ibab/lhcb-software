@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.6 2004-06-29 19:42:45 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.7 2004-07-12 14:52:31 jonrob Exp $
 // Include files
 
 // local
@@ -57,12 +57,11 @@ RichMarkovRingFinderAlg<MyFinder>::~RichMarkovRingFinderAlg() {};
 // Initialisation
 //=============================================================================
 template <class MyFinder>
-StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize() {
-
-  debug() << "Initialize :-" << endreq;
-
+StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize() 
+{
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  const StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle     );
@@ -373,8 +372,6 @@ RichMarkovRingFinderAlg<MyFinder>::inCorrectArea( const RichRecPixel * pixel ) c
 template <class MyFinder>
 StatusCode RichMarkovRingFinderAlg<MyFinder>::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // remove ring finder
   if ( m_finder ) { delete m_finder; m_finder = NULL; }
 

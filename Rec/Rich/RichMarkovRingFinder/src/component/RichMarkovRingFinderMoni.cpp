@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.5 2004-06-29 16:14:46 buckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.6 2004-07-12 14:52:31 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -50,12 +50,11 @@ RichMarkovRingFinderMoni::~RichMarkovRingFinderMoni() {};
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode RichMarkovRingFinderMoni::initialize() {
-
-  debug() << "Initialize" << endreq;
-
+StatusCode RichMarkovRingFinderMoni::initialize() 
+{
   // Sets up various tools and services
-  if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
+  const StatusCode sc = RichRecAlgBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   acquireTool( "RichRecMCTruthTool",  m_richRecMCTruth );
   acquireTool( "RichMCTruthTool",     m_richMCTruth    );
@@ -289,8 +288,6 @@ StatusCode RichMarkovRingFinderMoni::execute()
 //=============================================================================
 StatusCode RichMarkovRingFinderMoni::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

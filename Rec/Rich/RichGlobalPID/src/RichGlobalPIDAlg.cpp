@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.18 2004-04-19 23:03:59 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.19 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 
@@ -63,9 +63,8 @@ RichGlobalPIDAlg::~RichGlobalPIDAlg() {}
 //  Initialize
 StatusCode RichGlobalPIDAlg::initialize()
 {
-
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
@@ -81,15 +80,13 @@ StatusCode RichGlobalPIDAlg::initialize()
 //  Finalize
 StatusCode RichGlobalPIDAlg::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }
 
 // Main execution
-StatusCode RichGlobalPIDAlg::execute() {
-
+StatusCode RichGlobalPIDAlg::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Update RichRecEvent pointers
@@ -175,8 +172,8 @@ StatusCode RichGlobalPIDAlg::execute() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
-
+StatusCode RichGlobalPIDAlg::initMinLogLikelihood() 
+{
   RichGlobalPIDTrackVector minTrack;
   Rich::ParticleIDTypeVector minTrackHypo;
   std::vector<double> minDLL;
@@ -265,7 +262,8 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
   return StatusCode::SUCCESS;
 }
 
-void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
+void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) 
+{
 
   // which RICHes to look at ?
   if ( !minTracks.empty() ) {
@@ -385,8 +383,10 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
 
 }
 
-double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
-                                             const Rich::ParticleIDType newHypo ) {
+double
+RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
+                                      const Rich::ParticleIDType newHypo )
+{
 
   // Change due to track expectation
   double deltaLL = m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
@@ -430,7 +430,8 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
   return deltaLL;
 }
 
-double RichGlobalPIDAlg::logLikelihood() {
+double RichGlobalPIDAlg::logLikelihood() 
+{
 
   // Loop over tracks to form total expected hits part of LL
   double trackLL = 0.0;
@@ -478,8 +479,8 @@ double RichGlobalPIDAlg::logLikelihood() {
 
 // Please don't look at these following methods ....
 
-void RichGlobalPIDAlg::updateDllThres() {
-
+void RichGlobalPIDAlg::updateDllThres() 
+{
   double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_cP[2] ) {
     A = m_cP[4];
@@ -511,8 +512,8 @@ void RichGlobalPIDAlg::updateDllThres() {
 
 }
 
-void RichGlobalPIDAlg::updateFreezeOutValue() {
-
+void RichGlobalPIDAlg::updateFreezeOutValue() 
+{
   double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_fP[2] ) {
     A = m_fP[4];

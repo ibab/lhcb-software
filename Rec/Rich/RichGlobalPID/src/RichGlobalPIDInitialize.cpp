@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDInitialize.cpp,v 1.4 2004-03-16 13:43:34 jonesc Exp $
+// $Id: RichGlobalPIDInitialize.cpp,v 1.5 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 // local
@@ -23,20 +23,18 @@ RichGlobalPIDInitialize::RichGlobalPIDInitialize( const std::string& name,
 RichGlobalPIDInitialize::~RichGlobalPIDInitialize() {}
 
 //  Initialize
-StatusCode RichGlobalPIDInitialize::initialize() {
-
+StatusCode RichGlobalPIDInitialize::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  debug() << "Initialize" << endreq;
   
   return StatusCode::SUCCESS;
 }
 
 // Main execution
-StatusCode RichGlobalPIDInitialize::execute() {
-
+StatusCode RichGlobalPIDInitialize::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Set event status to OK for start of GlobalPID processing
@@ -60,8 +58,6 @@ StatusCode RichGlobalPIDInitialize::execute() {
 //  Finalize
 StatusCode RichGlobalPIDInitialize::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }

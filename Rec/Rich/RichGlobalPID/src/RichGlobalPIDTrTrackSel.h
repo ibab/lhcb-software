@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.7 2004-02-02 14:25:54 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.8 2004-07-12 14:51:48 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -77,5 +77,13 @@ private:
   RichTrackSelector m_trSelector;
 
 };
+
+inline void RichGlobalPIDTrTrackSel::deleteEvent()
+{
+  // Tidy up incase of event abort
+  if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
+  if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
+}
+
 
 #endif // RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.10 2004-05-26 16:14:43 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.11 2004-07-12 14:51:48 jonrob Exp $
 // Include files
 
 // local
@@ -37,8 +37,8 @@ StatusCode RichGlobalPIDFinalize::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGlobalPIDFinalize::execute() {
-
+StatusCode RichGlobalPIDFinalize::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Event Status
@@ -99,8 +99,6 @@ StatusCode RichGlobalPIDFinalize::execute() {
 //  Finalize
 StatusCode RichGlobalPIDFinalize::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecAlgBase::finalize();
 }
