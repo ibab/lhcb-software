@@ -1,4 +1,4 @@
-// $Id: RegionCuts.h,v 1.1 2003-06-04 10:56:36 witoldp Exp $
+// $Id: RegionCuts.h,v 1.2 2003-06-04 12:59:30 witoldp Exp $
 #ifndef SIMSVC_REGIONCUTS_H 
 #define SIMSVC_REGIONCUTS_H 1
 
@@ -48,12 +48,12 @@ public:
     m_aneutroncut(aneutroncut)
   {};
   
-  const std::string region() const 
+  const std::string& region() const 
   {
     return m_regionName;
   }
 
-  const std::vector<std::string> volumes() const
+  const std::vector<std::string>& volumes() const
   {
     return m_volumes;
   }

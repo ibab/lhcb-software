@@ -28,13 +28,13 @@ static const InterfaceID IID_ISimulationSvc(948, 1 , 0);
  */
 
 class ISimulationSvc : virtual public IInterface {
-
-protected:
-
-  typedef std::map<int, const SimAttribute*> PartAttr;
   
 public:
-  
+
+  // typedefs used  
+  typedef std::map<int, const SimAttribute*> PartAttr;
+  typedef std::vector<RegionCuts> VectOfRegCuts;
+
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ISimulationSvc; }
 

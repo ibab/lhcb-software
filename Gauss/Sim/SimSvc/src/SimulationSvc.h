@@ -131,7 +131,7 @@ private:
   Dict m_logvol2Sim;
 
   /// vector of regions definitions
-  std::vector<RegionCuts> m_regionsDefs;
+  VectOfRegCuts m_regionsDefs;
 
   /// definition of a struct used for temporary purposes
   struct Prcuts
