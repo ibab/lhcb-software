@@ -82,5 +82,5 @@ PhysSelectAlgorithm.HistFileName = "physsel.hbook";
 // Filename of cdf file containing cuts if different from the one in 
 // $LHCBDBASE
 //-------------------------------------------------------------------------
-//PhysSelectAlgorithm.CutsFileName = "$AXSELLLIBROOT/cdf/seldecay.cdf";
+PhysSelectAlgorithm.CutsFileName = "$AXSELLIBROOT/cdf/seldecay.cdf";
 
