@@ -133,9 +133,12 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 // Sample input file 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 1000;
+ApplicationMgr.EvtMax    = 10000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
+
+// set this to 2 to get memory usage at each event
+DaVinci.OutputLevel = 3 ;                                                                                                
 
 //***************************************************************
 // Interactive prompt: 

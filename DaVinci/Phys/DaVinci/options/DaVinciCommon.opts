@@ -124,6 +124,8 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 ApplicationMgr.TopAlg += { "GaudiSequencer/DaVinciMainSeq" } ;
 DaVinciMainSeq.IgnoreFilterPassed = true ; // because of DaVinciElectrons
 DaVinciMainSeq.MeasureTime = true ;
+DaVinciMainSeq.Members += { "LbAppInit/DaVinci" };
+DaVinci.OutputLevel = 3 ;                                                                                                
 //--------------------------------------------------------------
 // Temporary hack converting old RICH data to new format
 //
