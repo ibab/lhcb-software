@@ -10,9 +10,9 @@
 set MODE = $CMTCONFIG
 
 if ($#argv == 0 ) then
-  echo "\nUsage: Gauss.job [<mode>]"
+  echo "\nUsage: Gauss.job <version> [<mode>]"
   echo " where:"
-  echo "  <version> (mandatory) is the Gauss version number (e.g. v19r0)"
+  echo "  <version> (mandatory) is the Gauss version number (e.g. v19r1)"
   echo "  <mode>    (optional)  is execution mode (e.g. $CMTDEB)"
   exit 0
 else
