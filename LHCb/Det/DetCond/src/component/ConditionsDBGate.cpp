@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.3 2001-11-27 18:19:59 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.4 2001-12-16 15:22:05 andreav Exp $
 #include <string>
 #include <unistd.h>
 #include <sys/param.h>
@@ -48,7 +48,7 @@ StatusCode ConditionsDBGate::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  log << MSG::DEBUG << "Specific initialization starting" << endreq;
+  log << MSG::INFO << "Specific initialization starting" << endreq;
 
   // Get properties from the JobOptionsSvc
   status = setProperties();
@@ -75,6 +75,7 @@ StatusCode ConditionsDBGate::initialize()
     std::string condDBBootPath;
     status = i_buildCondDBBootPath( condDBBootPath );
     if ( !status.isSuccess() ) return status;
+    log << MSG::INFO << "CondDB boot path is " << condDBBootPath << endreq;
     m_condDBmgr->init( condDBBootPath );
 
     // Create the database 
@@ -105,7 +106,7 @@ StatusCode ConditionsDBGate::initialize()
 
   }
 
-  log << MSG::DEBUG << "Specific initialization completed" << endreq;
+  log << MSG::INFO << "Specific initialization completed" << endreq;
   return status;
 }
 
@@ -176,10 +177,10 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
   // Delete the object and return
   delete aCondDBObject;
   log << MSG::DEBUG << "CondDBObject data succesfully read" << endreq;
-  log << MSG::DEBUG 
-      << "In absTime = [ " << refValidSince.absoluteTime()
-      << " , "   << refValidTill.absoluteTime()
-      << " ] : '" << data << "'" << endreq;
+  log << MSG::VERBOSE 
+      << "In absTime = [" << refValidSince.absoluteTime()
+      << ","   << refValidTill.absoluteTime()
+      << "] :" << endl << data << endreq;
   return StatusCode::SUCCESS;
 
 }
@@ -286,8 +287,8 @@ ConditionsDBGate::i_buildCondDBBootPath( std::string& condDBBootPath )
   // Assume it is on current host if no host is specified:
   // retrieve it via gethostname (MAXHOSTNAMELEN is defined in sys/param.h)
   if ( m_condDBBootHost != "" ) {
-    log << MSG::DEBUG 
-	<< "Using condDBBootHost from jobOptions file:" << endreq; 
+    log << MSG::DEBUG
+	<< "Using condDBBootHost from jobOptions:" << endreq; 
     log << MSG::DEBUG << m_condDBBootHost << endreq;    
   } else {
     log << MSG::DEBUG << "Using current host as condDBBootHost:" << endreq; 
@@ -304,22 +305,22 @@ ConditionsDBGate::i_buildCondDBBootPath( std::string& condDBBootPath )
   // Try to retrieve the boot file directory from the jobOptions
   if ( m_condDBBootDir != "" ) {
     log << MSG::DEBUG 
-	<< "Using condDBBootDir from jobOptions file:" << endreq; 
+	<< "Using condDBBootDir from jobOptions:" << endreq; 
     log << MSG::DEBUG << m_condDBBootDir << endreq;    
   } else {
     log << MSG::ERROR 
-	<< "Property condDBBootDir not set in jobOptions file" << endreq; 
+	<< "Property condDBBootDir not set in jobOptions" << endreq; 
     return StatusCode::FAILURE;
   }
 
   // Try to retrieve the boot file name from the jobOptions
   if ( m_condDBBootFile != "" ) {
     log << MSG::DEBUG 
-	<< "Using condDBBootFile from jobOptions file:" << endreq; 
+	<< "Using condDBBootFile from jobOptions:" << endreq; 
     log << MSG::DEBUG << m_condDBBootFile << endreq;    
   } else {
     log << MSG::ERROR 
-	<< "Property condDBBootFile not set in jobOptions file" << endreq; 
+	<< "Property condDBBootFile not set in jobOptions" << endreq; 
     return StatusCode::FAILURE;
   }
 

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.7 2001-11-28 09:35:12 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.8 2001-12-16 15:22:45 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -48,36 +48,52 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
  public:
 
-  // Reimplemented from ConversionSvc
+  // Overloaded from ConversionSvc
 
   /// Initialize the service
-  virtual StatusCode initialize    ( );
+  virtual StatusCode initialize();
   
   /// Finalize the service
-  virtual StatusCode finalize      ( );
+  virtual StatusCode finalize();
   
   /// Create a transient representation from another rep of this object.
   virtual StatusCode createObj     ( IOpaqueAddress* pAddress, 
-				     DataObject*&    refpObject);
+				     DataObject*&    refpObject );
   
   /// Resolve the references of the created transient object.
   virtual StatusCode fillObjRefs   ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject);
+				     DataObject* pObject );
   
   /// Update a transient representation from another rep of this object.
   virtual StatusCode updateObj     ( IOpaqueAddress* pAddress, 
-				     DataObject*     pObject);
+				     DataObject* pObject );
 
   /// Update the references of an updated transient object.
   virtual StatusCode updateObjRefs ( IOpaqueAddress* pAddress, 
-				     DataObject*     pObject);
+				     DataObject* pObject );
+
+  /// Convert a transient object to a requested representation.
+  virtual StatusCode createRep     ( DataObject* pObject, 
+				     IOpaqueAddress*& refpAddress );
+
+  /// Resolve the references of a converted object. 
+  virtual StatusCode fillRepRefs   ( IOpaqueAddress* pAddress,
+				     DataObject* pObject );
+
+  /// Update a converted representation of a transient object.
+  virtual StatusCode updateRep     ( IOpaqueAddress* pAddress, 
+				     DataObject* pObject );
+
+  /// Update the references of an already converted object.
+  virtual StatusCode updateRepRefs ( IOpaqueAddress* pAddress, 
+				     DataObject* pObject );
 
   /// Create an address using explicit arguments to identify a single object.
   virtual StatusCode createAddress ( unsigned char svc_type,
 				     const CLID& clid,
 				     const std::string* par, 
 				     const unsigned long* ip,
-				     IOpaqueAddress*& refpAddress);
+				     IOpaqueAddress*& refpAddress );
   
  public:
 
@@ -85,47 +101,37 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   // Create/update condition DataObject not necessarily registered in the TDS.
   
   /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
+  /// This method does not register DataObject in the transient data store,
+  /// but may register TDS addresses for its children if needed (e.g. Catalog).
+  /// The string storage type is discovered at runtime in the CondDB.
+  /// The entry name identifies a condition amongst the many in the string.
   StatusCode createConditionData   ( DataObject*&         refpObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
+				     const std::string&   entryName,
 				     const ITime&         time,
 				     const CLID&          classID,
-				     const unsigned char& type );
-  
-  /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
-  /// If not specifed, type and clID are discovered at runtime in the CondDB.
-  StatusCode createConditionData   ( DataObject*&         refpObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time );
+				     IRegistry*           entry = 0);
   
   /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
+  /// This method does not register DataObject in the transient data store,
+  /// but may register TDS addresses for its children if needed (e.g. Catalog).
+  /// The string storage type is discovered at runtime in the CondDB.
+  /// The entry name identifies a condition amongst the many in the string.
   StatusCode updateConditionData   ( DataObject*          pObject,
 				     const std::string&   folderName,
 				     const std::string&   tagName,
+				     const std::string&   entryName,
 				     const ITime&         time,
 				     const CLID&          classID,
-				     const unsigned char& type );
+				     IRegistry*           entry = 0);
   
-  /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
-  /// If not specifed, type and clID are discovered at runtime in the CondDB.
-  StatusCode updateConditionData   ( DataObject*          pObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time );
-
-  /// Decode classID and storage type from the folder description string
+  /// Decode the string storage type from the folder description string
   StatusCode decodeDescription     ( const std::string&   description,
-				     CLID&                classID,
 				     unsigned char&       type);
 
-  /// Encode classID and storage type into the folder description string
-  StatusCode encodeDescription     ( const CLID&          classID,
-				     const unsigned char& type,
+  /// Encode the string storage type into the folder description string
+  StatusCode encodeDescription     ( const unsigned char& type,
 				     std::string&         description);
   
   /// Get the global tag name

@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.4 2001-11-28 09:27:42 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.5 2001-12-16 15:19:39 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -17,6 +17,7 @@ static const InterfaceID IID_IConditionsDBCnvSvc ("IConditionsDBCnvSvc", 1, 0);
 // Forward declarations
 class DataObject;
 class IConditionsDBGate;
+class IRegistry;
 class ITime;
 
 ///---------------------------------------------------------------------------
@@ -45,54 +46,42 @@ class IConditionsDBCnvSvc : virtual public IInterface
   // Create/update condition DataObject not necessarily registered in the TDS.
 
   /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
-  virtual 
-    StatusCode createConditionData ( DataObject*&         refpObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time,
-				     const CLID&          classID,
-				     const unsigned char& type )       = 0;
-
-  /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
-  /// If not specifed, type and clID are discovered at runtime in the CondDB.
-  virtual 
-    StatusCode createConditionData ( DataObject*&         refpObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time )       = 0;
-
+  /// This method does not register DataObject in the transient data store,
+  /// but may register TDS addresses for its children if needed (e.g. Catalog).
+  /// The string storage type is discovered at runtime in the CondDB.
+  /// The entry name identifies a condition amongst the many in the string.
+ virtual
+    StatusCode createConditionData( DataObject*&         refpObject,
+				    const std::string&   folderName,
+				    const std::string&   tagName,
+				    const std::string&   entryName,
+				    const ITime&         time,
+				    const CLID&          classID,
+				    IRegistry*           entry=0 ) = 0;
+  
   /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
+  /// This method does not register DataObject in the transient data store,
+  /// but may register TDS addresses for its children if needed (e.g. Catalog).
+  /// The string storage type is discovered at runtime in the CondDB.
+ /// The entry name identifies a condition amongst the many in the string.
+  virtual
+    StatusCode updateConditionData( DataObject*          pObject,
+				    const std::string&   folderName,
+				    const std::string&   tagName,
+				    const std::string&   entryName,
+				    const ITime&         time,
+				    const CLID&          classID,
+				    IRegistry*           entry=0 ) = 0;
+  
+  /// Decode the string storage type from the folder description string
   virtual 
-    StatusCode updateConditionData ( DataObject*          pObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time,
-				     const CLID&          classID,
-				     const unsigned char& type )       = 0;
-
-  /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store.
-  /// If not specifed, type and clID are discovered at runtime in the CondDB.
+    StatusCode decodeDescription( const std::string&   description,
+				  unsigned char&       type ) = 0;
+  
+  /// Encode the string storage type into the folder description string
   virtual 
-    StatusCode updateConditionData ( DataObject*          pObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const ITime&         time )       = 0;
-
-  /// Decode classID and storage type from the folder description string.
-  virtual 
-    StatusCode decodeDescription   ( const std::string&   description,
-				     CLID&                classID,
-				     unsigned char&       type )       = 0;
-
-  /// Encode classID and storage type into the folder description string.
-  virtual 
-    StatusCode encodeDescription   ( const CLID&          classID,
-				     const unsigned char& type,
-				     std::string&         description) = 0;
+    StatusCode encodeDescription( const unsigned char& type,
+				  std::string&         description ) = 0;
   
   /// Get the global tag name
   virtual const std::string& globalTag ( ) = 0;
