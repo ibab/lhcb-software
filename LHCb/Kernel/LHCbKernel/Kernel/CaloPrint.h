@@ -1,8 +1,6 @@
-// $Id: CaloPrint.h,v 1.1 2002-04-22 16:49:51 ibelyaev Exp $
+// $Id: CaloPrint.h,v 1.2 2003-11-24 10:54:52 cattanem Exp $
 // ============================================================================
-// CV stag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 #ifndef KERNEL_CALOPRINT_H
 #define KERNEL_CALOPRINT_H 1
@@ -62,6 +60,20 @@ public:
    *  @return string representation of the value according to format
    */
   inline std::string print ( const unsigned int   value       ,
+                             const char*          format = 0  ) const
+  {
+    char* aux = storage() ;
+    if( 0 == format ) { format = formatInteger ()         ; } 
+    else              { setFormatInteger       ( format ) ; }
+    return std::string( aux , aux + sprintf( aux , format , value ) );
+  };
+  
+  /** the main method for long unsigned integers  
+   *  @param value  value to be printed
+   *  @param format format
+   *  @return string representation of the value according to format
+   */
+  inline std::string print ( const long unsigned int   value       ,
                              const char*          format = 0  ) const
   {
     char* aux = storage() ;

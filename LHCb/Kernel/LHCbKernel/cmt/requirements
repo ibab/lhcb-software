@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.40 2003-11-23 12:42:59 ibelyaev Exp $
+# $Id: requirements,v 1.41 2003-11-24 10:54:53 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -45,16 +45,16 @@ private
 macro LHCbKernelDict_shlibflags  "$(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
         
 private 
-application   RelationTest1  -check     Test/RelationTest1.cpp 
-application   RelationTest2  -check     Test/RelationTest2.cpp 
-application   RelationTest3  -check     Test/RelationTest3.cpp 
-application   RelationTest4  -check     Test/RelationTest4.cpp 
-application   RelationTest5  -check     Test/RelationTest5.cpp 
-macro_prepend RelationTest1linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-macro_prepend RelationTest2linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-macro_prepend RelationTest3linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-macro_prepend RelationTest4linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
-macro_prepend RelationTest5linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
+#application   RelationTest1  -check     Test/RelationTest1.cpp 
+#application   RelationTest2  -check     Test/RelationTest2.cpp 
+#application   RelationTest3  -check     Test/RelationTest3.cpp 
+#application   RelationTest4  -check     Test/RelationTest4.cpp 
+#application   RelationTest5  -check     Test/RelationTest5.cpp 
+#macro_prepend RelationTest1linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
+#macro_prepend RelationTest2linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
+#macro_prepend RelationTest3linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
+#macro_prepend RelationTest4linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
+#macro_prepend RelationTest5linkopts   " $(LHCbKernel_linkopts) $(use_linkopts) "
 
 apply_pattern application_path
 path_remove   PATH                  "LHCbKernel"

@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!======================= LHCbKernel v2r9 2003-11-24 =======================
+! 2003-11-24 - Guy Barrand
+ - CaloPrint.h: add print method for long unsigned int, to please Mac OS X
+
 ! 2003-11-23 - Chris Jones
  - Add XML file for RichSmartID
 
@@ -9,11 +13,11 @@ Purpose: LHCb specific Kernel classes
 
  - Relations/RelationBase.h     add method "i_reserve" to reserve the number 
                                 of relations (efficiency reasons)
- - Relations/Relation.h         add method "reserve"  to reserve the number of relations 
- - Relations/Relation.h         duplicate all essential methods in fast "inline"
-                                varinant and in "virtual" variant  (efficiency reasons)
- - the same procedue for Relation2, RelationWeighted, Relation2Weighted, Relation1D,
-   Relation2D,RelationWeighted2D and RelationWeighted2D classes.
+ - Relations/Relation.h add method "reserve"  to reserve the number of relations 
+ - Relations/Relation.h duplicate all essential methods in fast "inline"
+                        variant and in "virtual" variant  (efficiency reasons)
+ - the same procedure for Relation2, RelationWeighted, Relation2Weighted, 
+   Relation1D, Relation2D, RelationWeighted2D and RelationWeighted2D classes.
  - remove *ALL* virtual inheritances 
    (with exception for virtual inheritance in interfaces from IInterface)
  - remove *ALL* multiple inheritances 
