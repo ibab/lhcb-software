@@ -1,8 +1,15 @@
-// $Id: CaloMergedPi0Alg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.h,v 1.2 2004-03-17 16:32:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2 2004/09/02 20:46:40  odescham 
+// - Transv. Shape parameters in option file 
+// - new parameters tuned for DC04
+//
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.4  2002/07/05 10:03:13  ibelyaev
 //  new version of MergedPi0 algorithm
 //
@@ -78,6 +85,8 @@ protected:
 
   // L-correction
   double BarZ ( const double e,
+                const double eprs,
+                const unsigned int area,
                 const double x,
                 const double y,
                 const double z );
@@ -91,6 +100,7 @@ protected:
   // Shower Transverse fit
   double TrShape( const int Neig,
                   const unsigned int area,
+                  const double SpdHit,
                   const double D3D);
   
     
@@ -105,12 +115,30 @@ private:
   std::string          m_nameOfSplitPhotons  ;
   std::string          m_nameOfSplitClusters ;
 
+
   // tools to be applied for all hypotheses 
   typedef std::vector<std::string>     Names ;
   typedef std::vector<ICaloHypoTool*>  Tools ;
   Names        m_toolTypeNames               ;
   Tools        m_tools                       ;
   
+  // Input Parameters
+  typedef std::vector<double>    Parameters  ;
+  Parameters TrShOut_nospd;
+  Parameters TrShMid_nospd;
+  Parameters TrShInn_nospd;
+  Parameters TrShOut_spd;
+  Parameters TrShMid_spd;
+  Parameters TrShInn_spd;
+  Parameters SPar;
+  Parameters LPar_Al1;
+  Parameters LPar_Al2;
+  Parameters LPar_Al3;
+  Parameters LPar_Be0;
+  Parameters LPar_Be1;
+  Parameters LPar_Be2;
+  Parameters LPar_Be3;
+  Parameters LPar_z0;
 };
 
 // ============================================================================

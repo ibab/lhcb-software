@@ -1,8 +1,11 @@
-// $Id: CaloHypoAlg.cpp,v 1.2 2004-02-17 12:08:07 ibelyaev Exp $
+// $Id: CaloHypoAlg.cpp,v 1.3 2004-03-17 16:32:21 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 12:08:07  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // ============================================================================
 // Include files
 // STD & STL 
@@ -70,9 +73,6 @@ CaloHypoAlg::~CaloHypoAlg() {};
 // ============================================================================
 StatusCode CaloHypoAlg::initialize() 
 {  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-  
   StatusCode sc = CaloAlgorithm::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class CaloAlgorithm",sc);}
@@ -118,8 +118,6 @@ StatusCode CaloHypoAlg::execute()
 {
   // avoid long name and types 
   typedef CaloHypos  Hypos;
-  
-  debug() << "==> Execute" << endreq;
   
   Hypos* hypos = get<Hypos>( inputData() ) ;
   if( 0 == hypos ) { return StatusCode::FAILURE ; }

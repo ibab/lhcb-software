@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.8 2004-02-17 12:08:08 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.9 2004-03-17 16:32:21 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -40,6 +40,10 @@
  * 
  *  @author Olivier Deschamps 
  *  @date 10/05/2002
+ *
+ *  Revision 1.2 2004/09/02 20:46:40  odescham 
+ * - Transv. Shape parameters in option file 
+ *
  */
 // ============================================================================
 
@@ -65,6 +69,13 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , m_nameOfSplitClusters ( CaloClusterLocation:: EcalSplit     )
   , m_toolTypeNames       ()
   , m_tools               ()
+  , TrShOut_nospd ()
+  , TrShMid_nospd ()
+  , TrShInn_nospd ()
+  , TrShOut_spd ()
+  , TrShMid_spd ()
+  , TrShInn_spd ()
+  , SPar ()
 {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
   m_toolTypeNames.push_back( "CaloExtraDigits/PrsExtraG" ) ;
@@ -74,7 +85,25 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "SplitClusters"          , m_nameOfSplitClusters ) ;
   // tool to be apllyed to all hypos 
   declareProperty ( "Tools"                 , m_toolTypeNames       ) ;
-  // set the appropriate defaults for input    data 
+  // Transv. shape parametrization
+  declareProperty ( "TrShOut_nospd"         , TrShOut_nospd ) ;
+  declareProperty ( "TrShMid_nospd"         , TrShMid_nospd ) ;
+  declareProperty ( "TrShInn_nospd"         , TrShInn_nospd ) ;
+  declareProperty ( "TrShOut_spd"           , TrShOut_spd ) ;
+  declareProperty ( "TrShMid_spd"           , TrShMid_spd ) ;
+  declareProperty ( "TrShInn_spd"           , TrShInn_spd ) ;
+  declareProperty ( "SPar"                  , SPar ) ;
+  declareProperty ( "LPar_Al1"              , LPar_Al1 ) ;
+  declareProperty ( "LPar_Al2"              , LPar_Al2 ) ;
+  declareProperty ( "LPar_Al3"              , LPar_Al3 ) ;
+  declareProperty ( "LPar_Be0"              , LPar_Be0 ) ;
+  declareProperty ( "LPar_Be1"              , LPar_Be1 ) ;
+  declareProperty ( "LPar_Be2"              , LPar_Be2 ) ;
+  declareProperty ( "LPar_Be3"              , LPar_Be3 ) ;
+  declareProperty ( "LPar_z0"               , LPar_z0 ) ;
+
+ 
+ // set the appropriate defaults for input    data 
   setInputData    ( CaloClusterLocation::   Ecal       ) ;
   // set the appropriate defaults for output   data 
   setOutputData   ( CaloHypoLocation::      MergedPi0s ) ;
@@ -113,35 +142,22 @@ StatusCode CaloMergedPi0Alg::initialize()
     m_tools.push_back( t ) ;
   }
   
-//    /// NTuple identifier 
-//    if( 0 == ntupleSvc() )
-//      { return Error("INTupleSvc* points to NULL!");}
-//    const std::string ntupleID( m_ntupleLUN+"/"+name()+"/200");
-//    NTuplePtr nt( ntupleSvc() , ntupleID );
-//    if( !nt ) 
-//      {
-//        nt = ntupleSvc()->
-//          book( ntupleID                           ,
-//                CLID_ColumnWiseTuple               , 
-//                "Pi0 reconstruction " ) ; 
-//      }
-//    if( !nt )
-//      { return Error("could not book NTUPLE='"+ntupleID+"'");}
+  // check vectors of parameters 
+  if( 10 != TrShOut_nospd.size() ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 10 != TrShMid_nospd.size() ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 10 != TrShInn_nospd.size() ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 10 != TrShOut_spd.size()   ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 10 != TrShMid_spd.size()   ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 10 != TrShInn_spd.size()   ) 
+  { return Error ( "Invalid number of parameters" ) ; }
+  if( 3  != SPar.size()          )
+  { return Error ( "Invalid number of parameters" ) ; }
   
-//    if( sc.isSuccess() ) 
-//      { sc = nt -> addItem ( "mas"   , m_mas ) ; }
-//    if( sc.isSuccess() ) 
-//      { sc = nt -> addItem ( "ncls"    , m_cls ) ; }
-//    iff( sc.isSuccess() ) 
-//      { sc = nt -> addItem ( "itr"   , m_iter ) ; }
-  
-//    if( sc.isFailure() )
-//      { return Error("Could not add item to ntuple ="+ntupleID+"'",sc);}
-//    m_ntuple = nt ;
-//    if( 0 == m_ntuple ) 
-//      { return Error("INTuple* points to NULL for ntuple='"+ntupleID+"'");}
-  
-
   return StatusCode::SUCCESS;
 };
 
@@ -151,11 +167,10 @@ StatusCode CaloMergedPi0Alg::initialize()
  */
 // ============================================================================
 StatusCode CaloMergedPi0Alg::finalize() 
-{
+{  
   m_tools.clear() ;
   /// finalize the base class 
   return CaloAlgorithm::finalize();
-
 };
 
 // ============================================================================
@@ -173,15 +188,15 @@ long CaloMergedPi0Alg::numberOfDigits
 {
   /// check arguments 
   if( 0 == cluster ) 
-    { Error(" numberOfDigits! CaloCluster* points to NULL!"); return -1;}
+  { Error(" numberOfDigits! CaloCluster* points to NULL!"); return -1;}
   ///
   long num = 0 ;
   for( CaloCluster::Entries::const_iterator entry = 
          cluster->entries().begin() ;
        cluster->entries().end() != entry ; ++entry )
-    {
-      if( entry->status() & status ) { ++num ; }
-    }
+  {
+    if( entry->status() & status ) { ++num ; }
+  }
   ///
   return num ;
 };
@@ -197,28 +212,36 @@ long CaloMergedPi0Alg::numberOfDigits
 // ============================================================================
 double CaloMergedPi0Alg::TrShape( const int Neig,
                             const unsigned int area,
-                            const double D3D)
+                            const double SpdHit,
+                            const double D3D )
 {
+
+  Parameters TrShPar;
+  
+  if ( 0 == area && 0 == SpdHit ) { TrShPar = TrShOut_nospd; }
+  if ( 1 == area && 0 == SpdHit ) { TrShPar = TrShMid_nospd; }
+  if ( 2 == area && 0 == SpdHit ) { TrShPar = TrShInn_nospd; }
+  if ( 0 == area && 0 != SpdHit ) { TrShPar = TrShOut_spd; }
+  if ( 1 == area && 0 != SpdHit ) { TrShPar = TrShMid_spd; }
+  if ( 2 == area && 0 != SpdHit ) { TrShPar = TrShInn_spd; }
+  
+  
+
   double x = D3D;
   double Frac = 0;
-  if( 2 == area && 0 == Neig ){
-    Frac=2.-0.98408*exp(-0.27643*x)-0.16372*exp(2.2917*x);
+  if( 0.5 < D3D ){
+    Frac =  TrShPar[0]*exp(-TrShPar[1]*x) ;
+    Frac += TrShPar[2]*exp(-TrShPar[3]*x) ;
+    Frac += TrShPar[4]*exp(-TrShPar[5]*x) ;
   }
-  if( 1 == area && 0 == Neig ){
-    Frac=2.-0.82251*exp(-0.66440*x)-0.29564*exp(1.8377*x);
+  if( 0.5 >= D3D ){
+    Frac  = 2. ;
+    Frac -=  TrShPar[6]*exp(-TrShPar[7]*x) ;
+    Frac -=  TrShPar[8]*exp(-TrShPar[9]*x) ;
   }
-  if( 0 == area && 0 == Neig ){
-    Frac=2.-0.91188*exp(-0.39684*x)-0.14233*exp(2.4897*x);
-  }
-  if( 2 == area && 1 == Neig ){
-    Frac=6.6407*exp(-6.1296*x)+0.95950E-01*exp(-1.6793*x);
-  }
-  if( 1 == area && 1 == Neig ){
-    Frac=6.4768*exp(-6.3658*x)+0.88887E-01*exp(-1.9469*x);
-  }
-  if( 0 == area && 1 == Neig ){
-    Frac=7.0756*exp(-6.9016*x)+0.26618E-01*exp(-1.9711*x);
-  }
+
+
+
   if( 0. > Frac ) { Frac=0.; }
   if( 1. < Frac ) { Frac=1.; }
   return Frac ;
@@ -234,27 +257,29 @@ double CaloMergedPi0Alg::TrShape( const int Neig,
  */
 // ============================================================================
 double CaloMergedPi0Alg::BarZ( const double e,
-                         const double x,
-                         const double y,
-                         const double z )
+                               const double eprs,
+                               const unsigned int area,
+                               const double x,
+                               const double y,
+                               const double z )
 {
-  double TanTheta,CosTheta;         // Tan/Cos of Polar angle
-  const double Ec=7.32;             // Critical Energy in MeV
-  const double Xfac=17.1;           // X0/mm conversion factor (17.1 mm/X0 )
-  double Tmax;                      // Shower maximum (X0 unit)
-  double Tbar=1.7;                  // Shower barycenter wrt maximum
-  double TPrS=2.5;                  // PreShower depth (X0 unit)
-  double DeltaZ=0;
-  if( 0 < e) {
-    TanTheta=sqrt(x*x+y*y)/z;
-    CosTheta=cos(atan(TanTheta));
-    Tmax=log(e/Ec)-0.5;
-    TPrS=TPrS/CosTheta;
-    Tbar=(Tmax+Tbar-TPrS)*Xfac;
-    TanTheta=TanTheta/(1.0+Tbar*CosTheta/z);
-    CosTheta=cos(atan(TanTheta));
-    DeltaZ=CosTheta*Tbar;
-  }
+
+  double z0 = LPar_z0[0] ;// Parameter tuned wrt to z0=12566 mm !!
+  // Uncorrected angle
+  double tth   = sqrt ( pow(x,2) + pow(y,2) ) / z0 ;
+  double cth   = cos  ( atan( tth ) ) ;
+  // Corrected angle
+  double alpha = 
+    LPar_Al1[area] + LPar_Al2[area]*eprs + LPar_Al3[area] * eprs*eprs;
+  double beta  = 
+    LPar_Be1[area] + LPar_Be2[area]*eprs + LPar_Be3[area] * eprs*eprs;
+  if(0 >= eprs ){beta = LPar_Be0[area]; }
+  double tgfps = alpha * log(e/GeV) + beta ;
+  tth = tth / ( 1. + tgfps * cth / z0 ) ;
+  cth= cos( atan( tth ) ) ;
+  double dzfps = cth * tgfps ;
+// Recompute Z position 
+  double DeltaZ = z0+dzfps;
   return DeltaZ ;
 };
 // ============================================================================
@@ -298,46 +323,21 @@ double CaloMergedPi0Alg::BarXY(const int axis,
           
   // S-correction of Energy-weighted Barycenter
 
-    double Bparx=0;
-    double Bpary=0;
-    if(2 == area ){Bparx=0.1479;}
-    if(1 == area ){Bparx=0.1250;}
-    if(0 == area ){Bparx=0.1159;}
-    if(2 == area ){Bpary=0.1489;}
-    if(1 == area ){Bpary=0.13660;}
-    if(0 == area ){Bpary=0.1216;}
-    double ArgX,ArgY;
-    double DeltaX=0;
-    double DeltaY=0;
-    double DeltaXY=0;
-    ArgX=2.*AsymX*sinh(0.5/Bparx);
-    DeltaX=Bparx*log(ArgX+sqrt(ArgX*ArgX+1.));
-    ArgY=2.*AsymY*sinh(0.5/Bpary);
-    DeltaY=Bpary*log(ArgY+sqrt(ArgY*ArgY+1.));
-
-  /*
-    double Bpar=0;
-    
-    if(2 == area ){Bpar=0.1462;}
-    if(1 == area ){Bpar=0.1326;}
-    if(0 == area ){Bpar=0.1093;}
-    
-    double ArgX,ArgY;
-    double DeltaX=0;
-    double DeltaY=0;
-    double DeltaXY=0;
-    
-    if ( 0 != Bpar){
-    ArgX=2.*AsymX*sinh(0.5/Bpar);
-     DeltaX=Bpar*log(ArgX+sqrt(ArgX*ArgX+1.));
-     ArgY=2.*AsymY*sinh(0.5/Bpar);
-     DeltaY=Bpar*log(ArgY+sqrt(ArgY*ArgY+1.));
-     }
-  */
-
+  double Bparx=SPar[area];
+  double Bpary=SPar[area];
+  
+  double ArgX,ArgY;
+  double DeltaX=0;
+  double DeltaY=0;
+  double DeltaXY=0;
+  ArgX=2.*AsymX*sinh(0.5/Bparx);
+  DeltaX=Bparx*log(ArgX+sqrt(ArgX*ArgX+1.));
+  ArgY=2.*AsymY*sinh(0.5/Bpary);
+  DeltaY=Bpary*log(ArgY+sqrt(ArgY*ArgY+1.));
+  
   if(1 == axis){DeltaXY = DeltaX;} 
   if(2 == axis){DeltaXY = DeltaY;} 
-
+  
   return DeltaXY ;
 };
 
@@ -385,8 +385,6 @@ StatusCode CaloMergedPi0Alg::execute()
 
   // create the container of split clusters 
   CaloClusters* clusts = new CaloClusters();
-  // update the version for new clusters (needed for serialization)
-  clusts -> setVersion( 2 ) ;
   {  
     StatusCode status = put( clusts , m_nameOfSplitClusters);
     if( status.isFailure() ) { return status ; }
@@ -433,9 +431,21 @@ StatusCode CaloMergedPi0Alg::execute()
       double seede  = seed->e();
       int seedrow  = idseed.row();
       int seedcol  = idseed.col();
-
-
       
+      // SpdHit in front of Cluster Seed (new 09/02/2004)
+      CaloDigits* spds = get<CaloDigits>( CaloDigitLocation::Spd );
+      if( 0 == spds ) { return StatusCode::FAILURE ;}
+      double SpdHit = 0 ;
+      const CaloDigit* spddigit = spds->object( seed->key() );
+      if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
+      // Prs deposit in front of Cluster Seed (new 09/02/2004)
+      CaloDigits* prss = get<CaloDigits>( CaloDigitLocation::Prs );
+      if( 0 == prss ) { return StatusCode::FAILURE ;}
+      double PrsDep = 0 ;
+      const CaloDigit* prsdigit = prss->object( seed->key() );
+      if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
+      
+
       log << MSG::DEBUG << " -----> Find SubSeed " << endreq;
       /// Find SubSeed  - Loop on Cluster CaloCluster:Digits
       // (New DigitStatus to be defined)
@@ -615,7 +625,7 @@ StatusCode CaloMergedPi0Alg::execute()
         double Ene3x3[2];
         {
           for(int is=0;is<2;++is){
-            const CaloDigit* digit   = SubClus[is][1][1];;
+            const CaloDigit* digit   = SubClus[is][1][1];
             if( 0 == SubClus[is][1][1]) { continue ; }   ///< CONTINUE!
             const CaloCellID  idigit = digit->cellID() ;
             SubSize[is] = detector->cellSize( idigit ) ;
@@ -633,7 +643,8 @@ StatusCode CaloMergedPi0Alg::execute()
             }
             SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
             SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
-            SubZ[is]=SubZ[is]+BarZ(Ene3x3[is],SubX[is],SubY[is],SubZ[is]);
+            SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
+            log << MSG::DEBUG << "==> Lcorr " << SubZ[is] << endreq;
           }
         }
         
@@ -675,7 +686,7 @@ StatusCode CaloMergedPi0Alg::execute()
                                   (SubY[is]-CelY)*(SubY[is]-CelY))/CelSize;
                   int Neig=1;
                   if(0.5 > D2D)Neig=0;
-                  double Frac=TrShape(Neig,area,D3D);
+                  double Frac=TrShape(Neig,area,SpdHit,D3D);
                   double EFrac=Ene3x3[is]*Frac;
                   int jr=rowc-rows+1;
                   int jc=colc-cols+1;
@@ -704,6 +715,8 @@ StatusCode CaloMergedPi0Alg::execute()
       log << MSG::DEBUG << " -----> Compute Pi0 mass " << endreq;
       // energy
       double Ene3x3[2];
+      double PosX[2];
+      double PosY[2];
       {
         for(int is=0;is<2;++is){
           const CaloDigit* digit   = SubClus[is][1][1];;
@@ -724,10 +737,15 @@ StatusCode CaloMergedPi0Alg::execute()
           }
           SubX[is]=SubX[is]-BarXY(1,area,Etemp)*SubSize[is];
           SubY[is]=SubY[is]-BarXY(2,area,Etemp)*SubSize[is];
-          SubZ[is]=SubZ[is]+BarZ(Ene3x3[is],SubX[is],SubY[is],SubZ[is]);
+          SubZ[is]=BarZ(Ene3x3[is],PrsDep,area,SubX[is],SubY[is],SubZ[is]);
+          PosX[is]=detector->cellX( SubClus[is][1][1]->cellID() )
+            -SubSize[is]*(+ Etemp[0][0] + Etemp[1][0] + Etemp[2][0]
+                          - Etemp[0][2] - Etemp[1][2] - Etemp[2][2])/Ene3x3[is];
+          PosY[is]=detector->cellY( SubClus[is][1][1]->cellID() )
+            -SubSize[is]*(+ Etemp[0][0] + Etemp[0][1] + Etemp[0][2]
+                          - Etemp[2][0] - Etemp[2][1] - Etemp[2][2])/Ene3x3[is];
         }
       }
-      
       double ep1=0;
       double ep2=0;
       ep1=Ene3x3[0];
@@ -781,34 +799,8 @@ StatusCode CaloMergedPi0Alg::execute()
       double dmin=zpos*2*mpi0/epi0/csiz;
 
       
-//        log << MSG::WARNING << " ------------------------------ RecPi0Mas " 
-//            << RecPi0Mas << " " << cluscount <<  " " << dmin<<endreq;
 
-      /*
-      /// write record to  NTuple  and Checks
-      m_mas=RecPi0Mas; 
-      m_cls=cluscount;  
-      m_iter=mxiter; 
-      m_ntuple->write() ; 
-      */
-
-//        log << MSG::WARNING << " Pi0Mas " <<RecPi0Mas << " " 
-//            << cluscount << " " 
-//            << iter  << " " 
-//            << m_cluDigs
-//            << endreq;
-//        log << MSG::WARNING << " 4-vector g1 " 
-//            << ep1 << "/"
-//            << xp1 << "/"
-//            << yp1 << "/"
-//            << zp1 << "/"
-//            << endreq;
-//        log << MSG::WARNING << " 4-vector g2 " 
-//            << ep2 << "/"
-//            << xp2 << "/"
-//            << yp2 << "/"
-//            << zp2 << "/"
-//            << endreq;
+      log << MSG::DEBUG << " Pi0Mas =  " <<RecPi0Mas << endreq;
       
 
       /*
@@ -819,21 +811,14 @@ StatusCode CaloMergedPi0Alg::execute()
       const double TruePi0Mas=134.9;
       const double SigmaRec=16.;
       const double LowMasSigmaCut=7.0;
-      const double HighMasSigmaCut=10.0;
-      /*
-        Pi0 MassRec window = [ 12.9 ; 294.9 ]
-       */
-
+      const double HighMasSigmaCut=999.0;
+      // revision 1.7 (February 2004) : 
+      // remove dmin cut and relax HighMasSigmaCut ...
         
       if(RecPi0Mas < TruePi0Mas - LowMasSigmaCut*SigmaRec){KeepPi0=0;}
       if(RecPi0Mas > TruePi0Mas + HighMasSigmaCut*SigmaRec){KeepPi0=0;}
-      if(dmin      >  3.){KeepPi0=0;}
-      if(dmin      <= 0.){KeepPi0=0;}
-      // Cuts for checks *** TO BE APPLIED ONLY ON SINGLE pi0 SAMPLE*
-      //if(cluscount != 1){KeepPi0=0;}
-      //if(m_cluDigs <= 1){KeepPi0=0;}
-          
-
+      //if(dmin      >  3.){KeepPi0=0;}
+      //if(dmin      <= 0.){KeepPi0=0;}
       
       /*
          Fill CaloHypos and SubClusters if "good" MergePi0
@@ -852,59 +837,45 @@ StatusCode CaloMergedPi0Alg::execute()
                cluster->entries().begin() ;
              cluster->entries().end() != it3 ; ++it3 ){
           const CaloDigit* d = it3->digit() ;   
-          const CaloDigitStatus::Status s1   = CaloDigitStatus::OwnedCell    ;
-          const CaloDigitStatus::Status s2   = CaloDigitStatus::OwnedCell    ;
+          CaloDigitStatus::Status s1   = CaloDigitStatus::OwnedCell    ;
+          CaloDigitStatus::Status s2   = CaloDigitStatus::OwnedCell    ;
           double     w1=0;
           double     w2=0;
           // Then fill correctly the 3x3 matrix cells around seed and subseed
-          {
-            for(int ir=0;ir<3;++ir){
-              for(int ic=0;ic<3;++ic){
-                const CaloDigit* d1 = SubClus[0][ir][ic];
-                if (d == d1 ) {
-                  w1 = Weight[0][ir][ic] ;      
-                  CaloDigitStatus::Status s1   =  
-                    CaloDigitStatus::OwnedCell      | 
-                    CaloDigitStatus::UseForEnergy   | 
-                    CaloDigitStatus::UseForPosition | 
-                    CaloDigitStatus::UseForCovariance  ;
-                  if(1 == ir && 1==ic){
-                    // set SEED for the cluster (I.B.)
-                    cl1->setSeed( d->cellID() ) ;
-                    //
-                    s1   =  
-                      CaloDigitStatus::SeedCell       | 
-                      CaloDigitStatus::LocalMaximum   | 
-                      CaloDigitStatus::UseForEnergy   | 
-                      CaloDigitStatus::UseForPosition | 
-                      CaloDigitStatus::UseForCovariance  ;
-                  }
-                }
-              }
-            }
-          }
-          {
-            for(int ir=0;ir<3;++ir){
-              for(int ic=0;ic<3;++ic){
-                const CaloDigit* d2 = SubClus[1][ir][ic];
-                if (d == d2 ) {
-                  w2 = Weight[1][ir][ic] ;      
-                  CaloDigitStatus::Status s2   =  
-                    CaloDigitStatus::OwnedCell      | 
+          for(int ir=0;ir<3;++ir){
+            for(int ic=0;ic<3;++ic){
+              const CaloDigit* d1 = SubClus[0][ir][ic];
+              if (d == d1 ) {
+                w1 = Weight[0][ir][ic] ;      
+                s1   = CaloDigitStatus::OwnedCell      | 
+                  CaloDigitStatus::UseForEnergy   | 
+                  CaloDigitStatus::UseForPosition | 
+                  CaloDigitStatus::UseForCovariance  ;
+                if(1 == ir && 1==ic){
+                  s1   =  CaloDigitStatus::SeedCell       | 
                     CaloDigitStatus::LocalMaximum   | 
                     CaloDigitStatus::UseForEnergy   | 
                     CaloDigitStatus::UseForPosition | 
                     CaloDigitStatus::UseForCovariance  ;
-                  if(1 == ir && 1==ic){
-                    // set SEED for the cluster  (I.B.)
-                    cl2->setSeed( d->cellID() ) ;
-                    //
-                    s2   =  
-                      CaloDigitStatus::SeedCell       | 
-                      CaloDigitStatus::UseForEnergy   | 
-                      CaloDigitStatus::UseForPosition | 
-                      CaloDigitStatus::UseForCovariance  ;
-                  }
+                }
+              }
+            }
+          }
+          for(int ir=0;ir<3;++ir){
+            for(int ic=0;ic<3;++ic){
+              const CaloDigit* d2 = SubClus[1][ir][ic];
+              if (d == d2 ) {
+                w2 = Weight[1][ir][ic] ;      
+                s2   =  CaloDigitStatus::OwnedCell      | 
+                  CaloDigitStatus::LocalMaximum   | 
+                  CaloDigitStatus::UseForEnergy   | 
+                  CaloDigitStatus::UseForPosition | 
+                  CaloDigitStatus::UseForCovariance  ;
+                if(1 == ir && 1==ic){
+                  s2   = CaloDigitStatus::SeedCell       | 
+                    CaloDigitStatus::UseForEnergy   | 
+                    CaloDigitStatus::UseForPosition | 
+                    CaloDigitStatus::UseForCovariance  ;
                 }
               }
             }
@@ -913,8 +884,9 @@ StatusCode CaloMergedPi0Alg::execute()
           cl1->entries().push_back( entry1 );
           CaloClusterEntry entry2( d , s2 , w2 );
           cl2->entries().push_back( entry2 );
+          log << MSG::DEBUG << " s1 after loop =  " <<s1<< endreq;
         }
-
+        
 
         clusts->insert( cl1 ) ;
         clusts->insert( cl2 ) ;
@@ -942,13 +914,15 @@ StatusCode CaloMergedPi0Alg::execute()
                                               zp1 ,
                                               ep1 ) );
         CaloPosition* p1 = new CaloPosition();
-        p1 ->parameters()( CaloPosition::X ) = SubX[0];
-        p1 ->parameters()( CaloPosition::Y ) = SubY[0];
+        p1 ->parameters()( CaloPosition::X ) = PosX[0];
+        p1 ->parameters()( CaloPosition::Y ) = PosY[0];
         p1 ->setZ( SubZ[0] ) ;
         p1 ->parameters()( CaloPosition::E ) = ep1    ;
-
-        p1 ->center()( CaloPosition::X ) = SubX[0];
-        p1 ->center()( CaloPosition::Y ) = SubY[0];
+        
+        p1 ->center()( CaloPosition::X ) = 
+          detector->cellX( SubClus[0][1][1]->cellID() ) ;
+        p1 ->center()( CaloPosition::Y ) = 
+          detector->cellY( SubClus[0][1][1]->cellID() ) ;
         g1 -> setPosition( p1);
         pi0 -> addToHypos ( g1 );
         
@@ -966,13 +940,15 @@ StatusCode CaloMergedPi0Alg::execute()
                                               zp2 ,
                                               ep2 ) );
         CaloPosition* p2 = new CaloPosition();
-        p2 ->parameters()( CaloPosition::X ) = SubX[1];
-        p2 ->parameters()( CaloPosition::Y ) = SubY[1];
+        p2 ->parameters()( CaloPosition::X ) = PosX[1];
+        p2 ->parameters()( CaloPosition::Y ) = PosY[1];
         p2 ->setZ( SubZ[1] ) ;
         p2 ->parameters()( CaloPosition::E ) = ep2    ;
 
-        p2 ->center()( CaloPosition::X ) = SubX[1];
-        p2 ->center()( CaloPosition::Y ) = SubY[1];
+        p2 ->center()( CaloPosition::X ) = 
+          detector->cellX( SubClus[1][1][1]->cellID() );
+        p2 ->center()( CaloPosition::Y ) = 
+          detector->cellY( SubClus[1][1][1]->cellID() );
         g2 -> setPosition( p2);
         pi0 -> addToHypos ( g2 );
         
@@ -1005,9 +981,10 @@ StatusCode CaloMergedPi0Alg::execute()
     } // End of cluster loop
 
   /* OD COMMENTS for next version
-    - Energy from 3x3 matrix w/o energy calibration 
-    - No correlations matrices
-    - No Mass versus energy correction
+     - Split code and use standard S/L correction
+     - Energy from 3x3 matrix w/o energy calibration 
+     - No correlations matrices
+     - No Mass versus energy correction
    */ 
 
   
@@ -1019,65 +996,6 @@ StatusCode CaloMergedPi0Alg::execute()
       << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
 
   
-  /*
-    //SOME CHECKS BEFORE OFFICIALISATION !
-    
-    // Loop over SubCluster
-    log << MSG::DEBUG << " --------------------"<< endreq;
-    long newcount=0;
-    for( Iterator icluster = clusts ->begin() ; 
-    clusts ->end() != icluster ; ++icluster ) 
-    { 
-    newcount=newcount+1;
-    log << MSG::DEBUG << " -----> # new cluster number " << newcount << endreq;
-    CaloCluster* newclust = *icluster ;
-    for( CaloCluster::Digits::const_iterator it =
-    newclust ->entries().begin() ;
-    newclust ->entries().end() != it ; ++it ){
-    
-    const CaloDigit* dig = it->digit() ;   
-    double weig = it-> fraction();
-    //        const CaloDigitStatus::Status stat = it-> status() ;
-    double ene = dig -> e() ;
-    const CaloCellID  id = dig->cellID() ;
-    log << MSG::DEBUG << " -----> digit " 
-    << id   <<  " "
-    << ene  <<  " "
-    << weig <<  " "
-    << endreq; 
-    }
-    // Loop over SplitPhotons ... 
-    
-    typedef CaloHypos Hypos ;
-    const Hypos* hypos = get( eventSvc (),"Rec/Calo/SplitPhotons", hypos ) ;
-    typedef Hypos::const_iterator   Ihypos ;
-    for(Ihypos ipos = hypos->begin() ;
-    hypos->end() != ipos ; ++ipos ){
-    const CaloHypo* thehypo = *ipos;
-    log << MSG::DEBUG << " -----> Hypo Split photons " 
-    << ipos      << " "
-    << thehypo->hypothesis() << " "
-    << CaloHypotheses::Photon << " "
-    << CaloHypotheses::PhotonFromMergedPi0 << " "
-    << thehypo->position()->e() << " "
-    << thehypo->position()->x() << " "
-    << thehypo->position()->y() << " "
-    << thehypo->position()->z() << " "
-    << thehypo->momentum()->momentum().e() << " "
-    << thehypo->momentum()->momentum().px() << " "
-    << thehypo->momentum()->momentum().py() << " "
-    << thehypo->momentum()->momentum().pz() << " "
-    << endreq; 
-    }
-    }
-    log << MSG::DEBUG << " ------------------------------------ "<< endreq;
-    
-  */
-  log << MSG::DEBUG << " ------------"<< endreq;
-  log << MSG::DEBUG << " ------------"<< endreq;
-  log << MSG::DEBUG << " -- COUCOU --"<< endreq;
-  log << MSG::DEBUG << " ------------"<< endreq;
-  log << MSG::DEBUG << " ------------"<< endreq;
 
    
   return StatusCode::SUCCESS;

@@ -1,0 +1,50 @@
+// $Id:
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/09 odescham
+//  add new E-,S- and L-corrections tuned for DC04
+//
+// Revision 1.1  2003/04/11 09:33:31  ibelyaev
+//  add new E-,S- and L-corrections from Olivier Deschamps
+//
+// ============================================================================
+// ============================================================================
+/** @file 
+ *  Configuration of S-correction
+ *
+ */
+// ============================================================================
+ToolSvc.SCorrection.CorrectionLevel={ 
+  true,    // Asinh Sshape 
+  true,    // Residual   asymmetries
+  true     // L/R &  B/U asymmetries 
+} ;
+// ============================================================================
+// Asinh Sshaping
+// Main Parameter           pd/Prs   Outer    Middle    Inner 
+ToolSvc.SCorrection.Par_Asinh_00 = { 0.0855 , 0.1110 ,  0.1233 } ;
+ToolSvc.SCorrection.Par_Asinh_01 = { 0.0929 , 0.1175 ,  0.1284 } ;
+ToolSvc.SCorrection.Par_Asinh_11 = { 0.1024 , 0.1237 ,  0.1312 } ;
+
+// Residual Sshape
+ToolSvc.SCorrection.Par_ResOut_0={ -0.0015,  0.5521,  0.0524,-10.0770, -0.4322, 54.4953,  0.9970,-90.1430 };
+ToolSvc.SCorrection.Par_ResMid_0={ -0.0037,  0.4663,  0.0507, -6.1072, -0.3143, 25.3507,  0.6450,-30.7389 };
+ToolSvc.SCorrection.Par_ResInn_0={  0.0000,  0.4404,  0.0013, -5.0900,  0.0623, 16.6704, -0.2300,-11.3254 };
+
+ToolSvc.SCorrection.Par_ResOut_1={  0.0004,  0.4785, -0.0332, -7.5078,  0.4361, 40.9903, -1.2052,-78.8018 };
+ToolSvc.SCorrection.Par_ResMid_1={  0.0004,  0.5100, -0.1688, -6.4536,  1.3949, 34.1676, -2.6303,-74.4839 };
+ToolSvc.SCorrection.Par_ResInn_1={  0.0012,  0.5122,  0.0548, -5.3775, -1.4190, 21.0355,  5.9186,-38.0502 };
+
+// L/R & B/U Asymmetries
+ToolSvc.SCorrection.Par_AsOut_0={ -0.0038 ,  0.0134,  0.3129 };
+ToolSvc.SCorrection.Par_AsMid_0={ -0.0082 ,  0.0203,  0.4139 };
+ToolSvc.SCorrection.Par_AsInn_0={  0.0069 ,  0.0139,  0.2667 };
+
+ToolSvc.SCorrection.Par_AsOut_1={  0.0153,  0.0137,  0.1693 };
+ToolSvc.SCorrection.Par_AsMid_1={  0.0136,  0.0365,  0.2478 };
+ToolSvc.SCorrection.Par_AsInn_1={  0.0210,  0.0313,  0.1694 };
+// ============================================================================
+// The End 
+// ============================================================================

@@ -1,8 +1,11 @@
-// $Id: Brunel.opts,v 1.6 2003-03-13 18:47:49 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.7 2004-03-17 16:32:19 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/03/13 18:47:49  ibelyaev
+//  see ../doc/release.notes file
+//
 // Revision 1.5  2003/02/04 14:24:39  ibelyaev
 //  new Ecal/Prs calibration constants and improved PhotonID tool
 //
@@ -26,8 +29,13 @@ BrunelRecoCALOSeq.Members +=
 BrunelRecoCALOSeq.Members += 
   {
     "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
+    //
     "CaloMergedPi0Alg/Pi0Rec"            , /// Reconstruction of merged pi0s
+    "CaloHypoAlg/PhotonFromMergedCalibration" ,/// E/S/L-corrections  
+    //
     "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
+    "CaloHypoAlg/PhotonCalibration"      , /// E/S/L-corrections 
+    //
     "CaloElectronAlg/ElectronRec"        , /// Reconstruction of electrons  
     "CaloHypo2TrackAlg/ElectronMatch"    , /// 3D     track-hypo match (e+/e- ID) 
     "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
