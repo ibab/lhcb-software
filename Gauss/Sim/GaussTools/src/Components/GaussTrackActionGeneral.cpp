@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionGeneral.cpp,v 1.1 2004-02-20 19:35:27 ibelyaev Exp $ 
+// $Id: GaussTrackActionGeneral.cpp,v 1.2 2004-03-22 16:51:05 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:27  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -111,7 +114,7 @@ void GaussTrackActionGeneral::PreUserTrackingAction  ( const G4Track* track )
   
   if      ( trackMgr() ->GetStoreTrajectory()              ) { store = true ; }
   else if ( storeAll       ()                              ) { store = true ; }
-  else if ( storePrimaries () || 0 == track->GetParentID() ) { store = true ; }
+  else if ( storePrimaries () && 0 == track->GetParentID() ) { store = true ; }
   else if ( storeDecays () && fDecay == track 
             -> GetCreatorProcess() -> GetProcessType()     ) { store = true ; }
   else if ( storePreDecays () && track -> GetDynamicParticle ()

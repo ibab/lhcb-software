@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-03-22 - Vanya BELYAEV
+ - src/Components/GaussTrackActionGeneral.cpp
+      fix a stuid bug with  saving of primary particles 
+ - cmt/requirements  increase the version to v10r1 
+
+
 !===================== GaussTools v10r0 ====================================
 ! 2004-02-19 - Vanya BELYAEV
 
