@@ -1,4 +1,4 @@
-// $Id: Part2MCPartAsct.h,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+// $Id: Part2MCPartAsct.h,v 1.2 2002-04-26 17:05:10 gcorti Exp $
 #ifndef ASSOCIATORS_Part2MCPartASCT_H 
 #define ASSOCIATORS_Part2MCPartASCT_H 1
 
@@ -6,11 +6,13 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 // Event
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/AxPartCandidate.h"
+#include "Event/MCParticle.h"
+#include "Event/Particle.h"
 // Associators
 #include "Relations/Associator.h"
 #include "Relations/Relation2D.h"
+
+static const std::string& Part2MCPartAsctLocation = "Phys/Relations/Part2MC";
 
 /** @class Part2MCPartAsct Part2MCPartAsct.h Associators/Part2MCPartAsct.h
  *  
@@ -19,13 +21,13 @@
  *  @date   05/04/2002
  */
 
-class Part2MCPartAsct : public Associator<AxPartCandidate,MCParticle>
+class Part2MCPartAsct : public Associator<Particle,MCParticle>
 {
   friend ToolFactory<Part2MCPartAsct>;
   
 public:
   // Define data types
-  typedef Relation2D<AxPartCandidate,MCParticle>  Table;
+  typedef Relation2D<Particle,MCParticle>  Table;
   typedef OwnType                               Asct;
   typedef ToRange                               Parts;
   typedef ToIterator                            PartsIterator;
@@ -40,7 +42,7 @@ protected:
                   const IInterface* parent )
     : Asct( type, name, parent) {
 
-    setProperty( "Location", "MC/Part2MC" );
+    setProperty( "Location", Part2MCPartAsctLocation );
     setProperty( "AlgorithmType", "Part2MCPartChi2Alg" );
     setProperty( "AlgorithmName", "Part2MC" );
     

@@ -4,12 +4,13 @@
 //
 // This is the default parameters for the Part2MCPart Associator
 //
-//Toolsvc.Part2MCPartAsct.Location      = "MC/Part2MC";
+//Toolsvc.Part2MCPartAsct.Location      = "Phys/Relations/Part2MC";
 //ToolSvc.Part2MCPartAsct.AlgorithmType = "Part2MCPartChi2Alg";
 //ToolSvc.Part2MCPartAsct.AlgorithmName = "Part2MC";
 //
 // ... and for the corresponding algorithm
 //
-Part2MC.OutputData  = "MC/Part2MC";
-Part2MC.OutputLevel = 3;
+//Part2MC.InputData  = "Phys/Production/Particles";
+Part2MC.OutputData  = "Phys/Relations/Part2MC";
 Part2MC.Chi2Cut = 100.;
+Part2MC.FillHistos = true;

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+# $Id: requirements,v 1.2 2002-04-26 17:05:10 gcorti Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -18,13 +18,12 @@ branches          cmt doc src DaVinciAssociators
 #============================================================================
 include_dirs     $(DAVINCIASSOCIATORSROOT)
 
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages. 
 #============================================================================
-# use  Package      v1*    Hat
 use LHCbKernel     v1r0   Kernel
-use LHCbEvent      v12r3  Event
-use PhysEvent      v3r*   Event
+use PhysEvent      v4r*   Event
+use AIDA           v2r2   
+use HTL            v13r10p1
 
 # Component library building rule
 #============================================================================
