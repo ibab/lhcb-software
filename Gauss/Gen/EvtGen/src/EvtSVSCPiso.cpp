@@ -29,7 +29,7 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -132,12 +132,12 @@ void EvtSVSCPiso::decay( EvtParticle *p){
    double tag = EvtRandom::Flat(0.0,1.0);
    if (tag < 0.5) {
  
-    EvtCPUtil::OtherB(p,t,other_b,1.0);
+    EvtIncoherentMixing::OtherB(p,t,other_b,1.0);
     other_b = B0;
    }
    else {
     
-    EvtCPUtil::OtherB(p,t,other_b,0.0);
+    EvtIncoherentMixing::OtherB(p,t,other_b,0.0);
     other_b = B0B;
    }
 

@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtPDL.hh"

@@ -27,7 +27,7 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtSSSCPpng.hh"
@@ -123,7 +123,7 @@ void EvtSSSCPpng::decay( EvtParticle *p ){
   //fraction of B0 _tags_
   double fract =(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio))/(Abar2*(1+ rbarf2 + (1 - rbarf2)*ratio) + A2*(1+ rf2 + (1 - rf2)*ratio)); 
   
-  EvtCPUtil::OtherB(p,t,other_b,fract);
+  EvtIncoherentMixing::OtherB(p,t,other_b,fract);
 
 //this method works just as well -- NK
 //randomly generate the tag (B0 or B0B) 

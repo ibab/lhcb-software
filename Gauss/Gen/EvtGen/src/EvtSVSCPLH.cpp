@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtSVSCPLH.hh"
@@ -105,7 +105,7 @@ void EvtSVSCPLH::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5);
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   //convert time from mm to seconds
   t/=EvtConst::c;

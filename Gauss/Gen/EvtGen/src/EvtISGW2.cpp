@@ -87,6 +87,9 @@ void EvtISGW2::initProbMax() {
   static EvtId B0=EvtPDL::getId("B0");
   static EvtId B0B=EvtPDL::getId("anti-B0");
 
+  static EvtId BS=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
+
   static EvtId DST0=EvtPDL::getId("D*0");
   static EvtId DSTB=EvtPDL::getId("anti-D*0");
   static EvtId DSTP=EvtPDL::getId("D*+");
@@ -209,7 +212,17 @@ void EvtISGW2::initProbMax() {
   static EvtId PHI=EvtPDL::getId("phi");
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");
-
+  static EvtId DSSP=EvtPDL::getId("D_s*+");
+  static EvtId DSSM=EvtPDL::getId("D_s*-");
+  static EvtId DSS0P=EvtPDL::getId("D_s0*+");
+  static EvtId DSS0M=EvtPDL::getId("D_s0*-");
+  static EvtId DS1P=EvtPDL::getId("D_s1+");
+  static EvtId DS1M=EvtPDL::getId("D_s1-");
+  static EvtId DS2SP=EvtPDL::getId("D_s2*+");
+  static EvtId DS2SM=EvtPDL::getId("D_s2*-");
+  static EvtId DPS1P=EvtPDL::getId("D'_s1+");
+  static EvtId DPS1M=EvtPDL::getId("D'_s1-");
+ 
 
 EvtId parnum,mesnum,lnum;
 
@@ -570,8 +583,136 @@ if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
        return;
     }
   }
-
+  
 }
+
+
+
+
+if ( parnum==BS||parnum==BSB ) {
+
+  if ( mesnum==DSSP||mesnum==DSSM) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(10000.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(7000.0);
+       return;
+    }
+  }
+
+
+  if ( mesnum==DSP||mesnum==DSM ) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(4000.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(3500.0);
+       return;
+    }
+  }
+
+
+  if ( mesnum==DS1P||mesnum==DS1M) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(1100.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(470.0);
+       return;
+    }
+  }
+
+  if ( mesnum==DPS1P||mesnum==DPS1M) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(450.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+      setProbMax(68.0);//???
+       return;
+    }
+  }
+
+  if ( mesnum==DSS0P||mesnum==DSS0M) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(280.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(132.0);
+       return;
+    }
+  }
+  if ( mesnum==DS2SP||mesnum==DS2SM) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(400.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(220.0);
+       return;
+    }
+  }
+
+  if ( mesnum==KP||mesnum==KM) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(6500.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(6000.0);
+       return;
+    }
+  }
+
+  if ( mesnum==KSTP||mesnum==KSTM) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(6500.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(6000.0);
+       return;
+    }
+  }
+
+  if ( mesnum==K1P || mesnum==K1M ) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(2500.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(1700.0);
+       return;
+    }
+  }
+
+  if ( mesnum==K1STP||mesnum==K1STM) {
+
+    if ( lnum==EP||lnum==EM||lnum==MUP||lnum==MUM ) {
+       setProbMax(4500.0);
+       return;
+    }
+    if ( lnum==TAUP||lnum==TAUM ) {
+       setProbMax(3500.0);
+       return;
+    }
+  }  
+}
+ 
 
 if ( parnum==D0||parnum==DP||parnum==DM||parnum==D0B ) {
 
@@ -659,8 +800,8 @@ if ( parnum==D0||parnum==DP||parnum==DM||parnum==D0B ) {
        return;
     }
   }
-
-}
+  
+} 
 
 if ( parnum==DSP||parnum==DSM ) {
 

@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtPDL.hh"
@@ -89,7 +89,7 @@ void EvtSTSCP::decay( EvtParticle *p){
   EvtVector4R moms = p->getDaug(1)->getP4();
   double masst = t1->mass();
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b);
 
   double m_parent = p->mass();
 

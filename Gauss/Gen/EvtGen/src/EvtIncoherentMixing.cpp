@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.1 2003-10-10 09:21:45 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.2 2003-10-21 12:25:27 robbep Exp $
 // Include files 
 
 
@@ -19,6 +19,7 @@
 
 bool EvtIncoherentMixing::_doB0Mixing = false ;
 bool EvtIncoherentMixing::_doBsMixing = false ;
+bool EvtIncoherentMixing::_enableFlip = false ;
 double EvtIncoherentMixing::_dGammad = 0. ;
 double EvtIncoherentMixing::_deltamd = 0.489e12 ;
 double EvtIncoherentMixing::_dGammas = 0. ;
@@ -34,6 +35,7 @@ EvtIncoherentMixing::EvtIncoherentMixing(  ) {
   _dGammas = 0. ;
   _deltamd = 0.489e12 ;
   _deltams = 0. ;
+  _enableFlip = false ;
 }
 //=============================================================================
 EvtIncoherentMixing::~EvtIncoherentMixing( ) 
@@ -153,5 +155,77 @@ bool EvtIncoherentMixing::isB0Mixed ( EvtParticle * p )
   
   return false ;
 }
+//============================================================================
+// Return the tag of the event (ie the anti-flavour of the produced 
+// B meson). Flip the flavour of the event with probB probability
+//============================================================================
+void EvtIncoherentMixing::OtherB( EvtParticle * p ,
+                                  double & t ,
+                                  EvtId & otherb ,
+                                  double probB ) 
+{
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    p->getParent()->setLifetime() ;
+    t = p->getParent()->getLifetime() ;
+  }
+  else {
+    p->setLifetime() ;
+    t = p->getLifetime() ;
+  }
 
+  if ( flipIsEnabled() ) {
+  
+    // Flip the flavour of the particle with probability probB
+    bool isFlipped = ( EvtRandom::Flat( 0. , 1. ) < probB ) ;
+    
+    if ( isFlipped ) {
+      if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+        p->getParent()
+          ->setId( EvtPDL::chargeConj( p->getParent()->getId() ) ) ;
+      }
+      else {
+        p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
+      }
+    }
+  }
+  
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    // if B has mixed, tag flavour is charge conjugate of parent of B-meson
+    otherb = EvtPDL::chargeConj( p->getParent()->getId() ) ;
+  }
+  else {
+    // else it is opposite flavour than this B hadron
+    otherb = EvtPDL::chargeConj( p->getId() ) ;
+  }
+
+  return ;
+}
+//============================================================================
+// Return the tag of the event (ie the anti-flavour of the produced 
+// B meson). No flip
+//============================================================================
+void EvtIncoherentMixing::OtherB( EvtParticle * p ,
+                                  double & t ,
+                                  EvtId & otherb ) 
+{
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    p->getParent()->setLifetime() ;
+    t = p->getParent()->getLifetime() ;
+  }
+  else {
+    p->setLifetime() ;
+    t = p->getLifetime() ;
+  }
+  
+  if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
+    // if B has mixed, tag flavour is charge conjugate of parent of B-meson
+    otherb = EvtPDL::chargeConj( p->getParent()->getId() ) ;
+  }
+  else {
+    // else it is opposite flavour than this B hadron
+    otherb = EvtPDL::chargeConj( p->getId() ) ;
+  }
+
+  return ;
+}
 

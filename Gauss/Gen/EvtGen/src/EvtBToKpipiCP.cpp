@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtBToKpipiCP.hh"
@@ -95,7 +95,7 @@ void EvtBToKpipiCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b);
 
   EvtParticle *Kp,*pim,*pi0;
 

@@ -25,7 +25,7 @@
 #endif 
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtBTo3piCP.hh"
@@ -93,7 +93,7 @@ void EvtBTo3piCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b);
 
   EvtParticle *pip,*pim,*pi0;
 

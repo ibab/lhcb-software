@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtSVVHelAmp.hh"
 #include "EvtGenBase/EvtReport.hh"
@@ -81,7 +81,7 @@ void EvtSVVCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b);
 
    EvtComplex G0P,G1P,G1M;
 

@@ -26,7 +26,7 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtRandom.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtVector4C.hh"
@@ -193,8 +193,9 @@ void EvtSSDCP::decay( EvtParticle *p){
   EvtComplex amp;
 
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
+  //  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
 
+  EvtIncoherentMixing::OtherB( p , t , other_b , 0.5 ) ;
 
   //FS We assume DGamma=GammaLow-GammaHeavy and Dm=mHeavy-mLow
   EvtComplex expL=exp(-EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));

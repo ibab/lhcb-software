@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtGenKine.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenModels/EvtSSSCP.hh"
@@ -77,7 +77,7 @@ void EvtSSSCP::decay( EvtParticle *p ){
   double t;
   EvtId other_b;
 
-  EvtCPUtil::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b);
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
 
