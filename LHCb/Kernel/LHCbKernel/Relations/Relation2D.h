@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.10 2003-06-16 13:27:54 sponce Exp $
+// $Id: Relation2D.h,v 1.11 2003-06-25 14:59:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/06/16 13:27:54  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.9  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -61,26 +64,47 @@ public:
   /// shortcut for "inverse interface  interface
   typedef IRelation<TO,FROM>               IBase2     ;
   /// shortcut for actual implementation  
-  typedef Relations::Relation2<FROM,TO>    Base       ;
-  
+  typedef Relations::Relation2<FROM,TO>    Base       ;  
 public:
   
   /** Standard/default  constructor
    *  @param reserve the map-size to be preallocated
    */
   Relation2D ( const size_t reserve  = 0 ) 
-    : IBase(), Base ( reserve ), DataObject () {};
-  
+    : IBase(), Base ( reserve ), DataObject () 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+
   /** constructor from the inverse type!
    *  @attention it is the way to "invert" all relations!
    *  @param inv the inverse relation object
    *  @param flag artificial argument to invert the relations 
    */
   Relation2D ( const InvType& inv , int flag ) 
-    : IBase(), Base( inv , flag ), DataObject ( inv ) {};
+    : IBase(), Base( inv , flag ), DataObject ( inv )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
   
   /// destructor (virtual) 
-  virtual ~Relation2D() {} ;
+  virtual ~Relation2D()
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().decrement( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /// the type name 
+  const std::string& type() const 
+  {
+    static const std::string s_type( System::typeinfoName( typeid(OwnType) ) ) ;
+    return s_type ;
+  };
   
   /** object identification (static method) 
    *  @see DataObject 
@@ -152,8 +176,8 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    typename Relation2D<FROM, TO>::From from ;
-    typename Relation2D<FROM, TO>::To to ;
+    typename IBase::From from ;
+    typename IBase::To   to ;
     while( _size-- > 0 )
       {
         //

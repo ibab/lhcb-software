@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.h,v 1.3 2002-05-12 08:45:28 ibelyaev Exp $
+// $Id: AssociatorBase.h,v 1.4 2003-06-25 14:59:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/12 08:45:28  ibelyaev
+//  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
+//
 // Revision 1.2  2002/04/25 08:44:02  ibelyaev
 //  bug fix for Win2K
 //
@@ -48,6 +51,9 @@ namespace Relations
     public                   AlgTool  ,
     public virtual IIncidentListener 
   {
+  public:
+    // the type for counter 
+    typedef long counter ;
   public:
     
     /** standard initialization method
@@ -264,6 +270,18 @@ namespace Relations
     
   protected: 
     
+    /** add the reference to existing interafce 
+     *  @param  iif interface 
+     *  @return current value of reference counter 
+     */
+    inline counter addRef  ( IInterface* iif ) const ;
+    
+    /** release the used interface 
+     *  @param  iif interface to be released 
+     *  @return current value of reference counter 
+     */
+    inline counter release ( IInterface* iif ) const ;
+    
   private:
     
     // event data service 
@@ -284,9 +302,12 @@ namespace Relations
     mutable IAlgorithm* m_algorithm    ; ///< relation builder itself 
     // relation table!    
     mutable IInterface* m_object       ; ///< relation table
+    
+    // reference counter 
+    mutable counter     m_counter      ; ///< reference ounter 
 
     // error/warnins/exception counters 
-    typedef std::map<std::string,unsigned int> Counter;
+    typedef std::map<std::string,counter> Counter;
     mutable Counter     m_errors       ; ///< counter of errors      
     mutable Counter     m_warnings     ; ///< counter of warnings  
     mutable Counter     m_exceptions   ; ///< counter of exceptions 
@@ -386,6 +407,32 @@ namespace Relations
     StatusCode OK ( StatusCode::SUCCESS ) ;
     return ok ? OK : Exception( message , MSG::ERROR ) ; 
   };
+  
+  /** add the reference to existing interafce 
+   *  @param  iif interface 
+   *  @return current value of reference counter 
+   */
+  inline AssociatorBase::counter 
+  AssociatorBase::addRef  ( IInterface* iif ) const 
+  {
+    if ( 0 == iif ) { return m_counter ; }
+    iif -> addRef () ; 
+    return ++m_counter ;
+  };
+  
+  /** release the used interface 
+     *  @param  iif interface to be released 
+     *  @return current value of reference counter 
+     */
+  inline AssociatorBase::counter 
+  AssociatorBase::release ( IInterface* iif ) const 
+  {
+    if ( 0 == iif ) { return m_counter ; }
+    iif->release () ; 
+    return --m_counter ;
+  };
+  
+    
   
 }; ///< end of namespace Relations 
 

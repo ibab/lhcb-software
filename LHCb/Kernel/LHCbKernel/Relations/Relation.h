@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.6 2003-01-22 11:29:16 sponce Exp $
+// $Id: Relation.h,v 1.7 2003-06-25 14:59:01 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/01/22 11:29:16  sponce
+// makes gcc 3.2 modifications compile under windows
+//
 // Revision 1.5  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -70,23 +73,30 @@ namespace Relations
   public:
   
     /// short cut for own     type
-    typedef Relation<FROM,TO>                OwnType        ;
+    typedef          Relation<FROM,TO>                OwnType        ;
     /// short cut for inverse type
-    typedef Relation<TO,FROM>                InvType        ;
+    typedef          Relation<TO,FROM>                InvType        ;
     /// short cut for interface 
-    typedef IRelation<FROM,TO>               IBase          ;
+    typedef          IRelation<FROM,TO>               IBase          ;
     /// short cut for the actual implementation type 
-    typedef Relations::RelationBase<FROM,TO> Base           ;
+    typedef typename Relations::RelationBase<FROM,TO> Base           ;
     /// shortcut for inverse base
-    typedef Relations::RelationBase<TO,FROM> InvBase        ;
+    typedef typename Relations::RelationBase<TO,FROM> InvBase        ;
     /// shortcut for direct base type 
-    typedef Base                             Direct         ;
+    typedef          Base                             Direct         ;
     /// shortcut for inverse base type 
-    typedef InvBase                          Inverse        ;
+    typedef          InvBase                          Inverse        ;
     /// shortcut for direct  interface 
-    typedef IBase                            IDirect        ;
+    typedef          IBase                            IDirect        ;
     /// shortcut for inverse base type 
     typedef typename IDirect::InverseType             IInverse       ;
+    
+    /// basic types from Interface 
+    typedef typename IBase::Range Range ;
+    /// basic types from Interface 
+    typedef typename IBase::From  From  ;
+    /// basic types from Interface 
+    typedef typename IBase::To    To    ;
     
   public:
     
@@ -134,12 +144,13 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    virtual typename IRelation<FROM, TO>::Range       relations
-    ( const typename IRelation<FROM, TO>::From&       object    ) const
+    //    virtual typename IRelation<FROM, TO>::Range       relations
+    // ( const typename IRelation<FROM, TO>::From&       object    ) const
+    virtual Range       relations
+    ( const From&       object    ) const
     {
-      typedef typename IRelation<FROM, TO>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object );
-      return localRange( ip.first , ip.second );
+      return   Range( ip.first , ip.second );
     };
     
     /** retrive all relations from ALL objects 
@@ -149,11 +160,10 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    virtual typename IRelation<FROM, TO>::Range       relations () const
+    virtual Range       relations () const
     {
-      typedef typename IRelation<FROM, TO>::Range localRange;
       typename Base::IP ip = m_direct.i_relations();
-      return localRange( ip.first , ip.second );
+      return Range( ip.first , ip.second );
     };
     
     /** make the relation between 2 objects
@@ -176,8 +186,8 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode relate
-    ( const  typename IRelation<FROM, TO>::From&      object1 ,
-      const  typename IRelation<FROM, TO>::To&        object2 )
+    ( const  From&      object1 ,
+      const  To&        object2 )
     {
       StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -204,8 +214,8 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode remove
-    ( const  typename IRelation<FROM, TO>::From&      object1 ,
-      const  typename IRelation<FROM, TO>::To&        object2 )
+    ( const  From&      object1 ,
+      const  To&        object2 )
     { 
       StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -231,7 +241,7 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode removeFrom
-    ( const  typename IRelation<FROM, TO>::From&      object )
+    ( const  From&      object )
     { 
       StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -252,7 +262,7 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode removeTo
-    ( const  typename IRelation<FROM, TO>::To&        object )
+    ( const  To&        object )
     { 
       StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }

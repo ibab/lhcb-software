@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.10 2003-06-16 13:27:54 sponce Exp $
+// $Id: Relation1D.h,v 1.11 2003-06-25 14:59:01 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/06/16 13:27:54  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.9  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -81,7 +84,12 @@ public:
   
   /// the default constructor
   Relation1D ( const size_t reserve = 0 ) 
-    : IBase(), Base(reserve), DataObject() {};
+    : IBase(), Base(reserve), DataObject() 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
   
   /** constructor from "inverted object"
    *  @param inv object to be inverted
@@ -89,7 +97,12 @@ public:
    *  copy constructor
    */
   Relation1D ( const InvType& inv , int flag ) 
-    : IBase(), Base( inv  , flag ), DataObject ( inv ) {};
+    : IBase(), Base( inv  , flag ), DataObject ( inv ) 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
 
   /** constructor from "inverted interface"
    *  @param inv object to be inverted
@@ -97,10 +110,27 @@ public:
    *  copy constructor
    */
   Relation1D ( const typename IBase::InverseType& inv , int flag ) 
-    : IBase(), Base( inv  , flag ), DataObject () {};
-  
+    : IBase(), Base( inv  , flag ), DataObject ()
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+
   /// destructor (virtual)
-  virtual ~Relation1D() {} ;
+  virtual ~Relation1D() 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().decrement( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /// the type name 
+  const std::string& type() const 
+  {
+    static const std::string s_type( System::typeinfoName( typeid(OwnType) ) ) ;
+    return s_type ;
+  };
   
   /** object identification (static method)
    *  @see DataObject
@@ -173,8 +203,8 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    typename IRelation<FROM, TO>::From from ;
-    typename IRelation<FROM, TO>::To to ;
+    typename IBase::From from ;
+    typename IBase::To   to ;
     while( _size-- > 0 )
       {
         //
@@ -191,16 +221,14 @@ public:
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long addRef  ()  
-  { return  DataObject::addRef  () ; }
+  virtual unsigned long addRef  () { return  DataObject::addRef  () ; }
   
   /** release the reference counter
    *  @see    IInterface
    *  @see    DataObject
    *  @return current number of references
    */
-  virtual unsigned long release ()  
-  { return  DataObject::release () ; }
+  virtual unsigned long release () { return  DataObject::release () ; }
   
 };
 

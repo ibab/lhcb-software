@@ -1,8 +1,11 @@
-// $Id: RelationsTest.cpp,v 1.3 2003-05-15 16:25:58 ibelyaev Exp $
+// $Id: RelationsTest.cpp,v 1.4 2003-06-25 14:59:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/05/15 16:25:58  ibelyaev
+//  fix a bug for Win platform
+//
 // Revision 1.2  2003/05/15 15:22:11  ibelyaev
 //  few modification to conform SLT interface for 'Range' types
 //
@@ -46,10 +49,6 @@ int main()
   std::cout << stars                         << std::endl;
   std::cout << " Test for 'convertability' " << std::endl;
   std::cout << stars                         << std::endl;
-  
-  std::cout << " 'Conversion' from double to int         "
-            << (bool) Relations::TypeConversion<double,int>::exists
-            << " (should be " << ( 1 < 2 ) << ")" << std::endl ;
   
   std::cout << " 'Conversion' from char to unsigned long "
             << (bool) Relations::TypeConversion<char,unsigned long>::exists

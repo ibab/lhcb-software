@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.5 2003-01-22 11:29:16 sponce Exp $
+// $Id: RelationWeighted.h,v 1.6 2003-06-25 14:59:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/01/22 11:29:16  sponce
+// makes gcc 3.2 modifications compile under windows
+//
 // Revision 1.4  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -67,6 +70,15 @@ namespace Relations
     typedef IBase                                           IDirect  ;
     /// shortcut for inverse base type 
     typedef typename IDirect::InverseType                   IInverse ;
+    
+    /// basic types from Interface 
+    typedef typename IBase::Range  Range   ;
+    /// basic types from Interface 
+    typedef typename IBase::From   From    ;
+    /// basic types from Interface 
+    typedef typename IBase::To     To      ;
+    /// basic types from Interface 
+    typedef typename IBase::Weight Weight  ;
  
   public:
     
@@ -132,12 +144,11 @@ namespace Relations
      *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
-    virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations
-    ( const typename RelationWeighted<FROM, TO, WEIGHT>::From& object) const
+    virtual Range relations
+    ( const From& object) const
     {
-      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object );
-      return localRange(ip.first, ip.second);
+      return Range(ip.first, ip.second);
     };
     
     /** retrive ALL relations from ALL objects
@@ -148,11 +159,10 @@ namespace Relations
      *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
-    virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations() const
+    virtual Range relations() const
     {
-      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations();
-      return localRange(ip.first, ip.second);
+      return Range(ip.first, ip.second);
     };
     
     /** retrive all relations from the object which has weigth 
@@ -162,14 +172,13 @@ namespace Relations
      *  @param  flag      flag for larger/smaller
      *  @return pair of iterators for output relations   
      */
-    virtual  typename RelationWeighted<FROM, TO, WEIGHT>::Range      relations
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object,
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
+    virtual  Range      relations
+    ( const  From&      object,
+      const  Weight&    threshold ,
       const  bool       flag      ) const 
     {
-      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object , threshold , flag );
-      return localRange(ip.first, ip.second);
+      return Range(ip.first, ip.second);
     };
 
     /** make the relation between 2 objects 
@@ -179,9 +188,9 @@ namespace Relations
      *  @return status  code 
      */
     virtual  StatusCode relate 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object1 , 
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object2 ,
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight&    weight  ) 
+    ( const  From&      object1 , 
+      const  To&        object2 ,
+      const  Weight&    weight  ) 
     {
       StatusCode sc = m_direct.  i_relate ( object1 , object2 , weight );
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -194,8 +203,8 @@ namespace Relations
      *  @return status  code 
      */
     virtual  StatusCode remove 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object1 , 
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object2 ) 
+    ( const  From&      object1 , 
+      const  To&        object2 ) 
     { 
       StatusCode sc = m_direct.  i_remove ( object1 , object2 ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -207,7 +216,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode removeFrom 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object )
+    ( const  From&      object )
     { 
       StatusCode sc = m_direct.  i_removeFrom ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -219,7 +228,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode removeTo 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object )
+    ( const  To&        object )
     { 
       StatusCode sc = m_direct.  i_removeTo   ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -234,8 +243,8 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filterFrom 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object    ,
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
+    ( const  From&      object    ,
+      const  Weight&    threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc = m_direct.  i_filterFrom ( object , threshold , flag ) ; 
@@ -251,8 +260,8 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filterTo 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object,
-      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
+    ( const  To&        object    ,
+      const  Weight&    threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc =  m_direct.  i_filterTo   ( object , threshold , flag ) ; 
@@ -267,7 +276,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filter 
-    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
+    ( const  Weight&    threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc =  m_direct.  i_filter( threshold , flag ) ; 

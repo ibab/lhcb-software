@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.10 2003-06-16 13:27:54 sponce Exp $
+// $Id: RelationWeighted1D.h,v 1.11 2003-06-25 14:59:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/06/16 13:27:54  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.9  2003/01/17 14:07:02  sponce
 // support for gcc 3.2
 //
@@ -61,24 +64,51 @@ public:
   
   /// the standard/default constructor
   RelationWeighted1D ( const size_t reserve = 0 ) 
-    : IBase(), Base (reserve), DataObject() {};
-  
+    : IBase(), Base (reserve), DataObject() 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+
   /** constructor from inverse object 
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const InvType& inv , int flag ) 
-    : IBase(), Base( inv , flag ), DataObject( inv ) {};
-
+    : IBase(), Base( inv , flag ), DataObject( inv )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
   /** constructor from inverse interface
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const typename IBase::InverseType & inv , int flag ) 
-    : IBase(), Base( inv , flag ), DataObject() {};
+    : IBase(), Base( inv , flag ), DataObject() 
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
 
   /// destructor (virtual)
-  virtual ~RelationWeighted1D (){};
+  virtual ~RelationWeighted1D ()
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().decrement( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /// the type name 
+  const std::string& type() const 
+  {
+    static const std::string s_type( System::typeinfoName( typeid(OwnType) ) ) ;
+    return s_type ;
+  };
   
   /** object identifier (static method)
    *  @see DataObject 
@@ -157,9 +187,9 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    typename RelationWeighted1D<FROM, TO, WEIGHT>::From from ;
-    typename RelationWeighted1D<FROM, TO, WEIGHT>::Weight weight  ;
-    typename RelationWeighted1D<FROM, TO, WEIGHT>::To to ;
+    typename IBase::From   from   ;
+    typename IBase::Weight weight ;
+    typename IBase::To     to     ;
     while( _size-- > 0 )
       {
         //

@@ -1,8 +1,11 @@
-// $Id: RelationUtils.cpp,v 1.3 2002-05-24 18:36:33 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.4 2003-06-25 14:59:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/24 18:36:33  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes
+//
 // Revision 1.2  2002/04/03 15:35:19  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 // 
@@ -10,7 +13,8 @@
 // Include files
 // STD & STL
 #include <string>
-#include <stdio.h>
+#include <cstdio>
+#include <iostream>
 // GaudiKernel
 #include "GaudiKernel/IInterface.h"   
 #include "GaudiKernel/ClassID.h"      
@@ -103,6 +107,89 @@ CLID        Relations::clid
   cl = ~CLID_ObjectList   & cl ;
   //
   return cl ;
+};
+// ============================================================================
+
+// ============================================================================
+/// constructor 
+// ============================================================================
+Relations::InstanceCounter::InstanceCounter() : m_counters() {}
+// ============================================================================
+
+// ============================================================================
+/// destructor 
+// ============================================================================
+Relations::InstanceCounter::~InstanceCounter() 
+{ report () ; m_counters.clear() ; };
+// ============================================================================
+
+// ============================================================================
+/** make a report 
+ *  @return the total number of alive objects 
+ */
+// ============================================================================
+Relations::InstanceCounter::counter 
+Relations::InstanceCounter::report () const 
+{
+  counter total = 0 ;
+  for( Counters::const_iterator record = m_counters.begin() ; 
+       m_counters.end() != record ; ++record ) 
+    {
+      if ( 0 == record->second ) { continue ; }  
+      std::cout << "RelationUtils::InstanceCounter " 
+                << " INFO \t #" 
+                << record->second 
+                << " objects of type \t '"
+                << record->first 
+                << "' \t still alive " << std::endl ;
+      ++total ;
+    }
+  return total ;
+};
+// ============================================================================
+
+// ============================================================================
+/** increment the counter
+ *  @param type object type 
+ *  @return the current value of counter
+ */
+// ============================================================================
+Relations::InstanceCounter::counter 
+Relations::InstanceCounter::increment ( const std::string& type ) 
+{ return ++m_counters[type] ;}    
+// ============================================================================
+
+// ============================================================================
+/** decrement the counter
+ *  @param type object type 
+ *  @return the current value of counter
+ */
+// ============================================================================
+Relations::InstanceCounter::counter 
+Relations::InstanceCounter::decrement ( const std::string& type ) 
+{ return --m_counters[type] ;}    
+// ============================================================================
+
+
+// ============================================================================
+/** get the current value of the counter
+ *  @param type object type 
+ *  @return the current value of counter
+ */
+// ============================================================================
+Relations::InstanceCounter::counter 
+Relations::InstanceCounter::count     ( const std::string& type ) const 
+{ return   m_counters[type] ;}
+// ============================================================================
+
+// ============================================================================
+// the accessor to static instance
+// ============================================================================
+Relations::InstanceCounter&
+Relations::InstanceCounter::instance() 
+{
+  static Relations::InstanceCounter s_counter ;
+  return s_counter ;
 };
 // ============================================================================
 

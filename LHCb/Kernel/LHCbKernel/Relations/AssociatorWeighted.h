@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.11 2003-05-12 11:51:41 phicharp Exp $
+// $Id: AssociatorWeighted.h,v 1.12 2003-06-25 14:59:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/05/12 11:51:41  phicharp
+// =Add possibility to get last associated item in AssociatorWeighted.h
+//
 // Revision 1.10  2003/01/22 11:29:16  sponce
 // makes gcc 3.2 modifications compile under windows
 //
@@ -62,6 +65,21 @@ public:
   typedef  AssociatorWeighted<FROM,TO,WEIGHT>   OwnType         ;
   /// shortcut for interface type 
   typedef IAssociatorWeighted<FROM,TO,WEIGHT>   IBase           ;
+
+  /// export type from interface 
+  typedef typename IBase::DirectType  DirectType  ;
+  /// export type from interface 
+  typedef typename IBase::InverseType InverseType ;
+  /// export type from interface 
+  typedef typename IBase::From        From        ;
+  /// export type from interface 
+  typedef typename IBase::To          To          ;
+  /// export type from interface 
+  typedef typename IBase::Weight      Weight      ;
+  /// export type from interface 
+  typedef typename IBase::FromRange   FromRange   ;
+  /// export type from interface 
+  typedef typename IBase::ToRange     ToRange     ;
   
 protected:
   
@@ -85,7 +103,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
-   virtual typename OwnType::DirectType* direct ()
+  virtual       DirectType* direct ()
   {
     if( 0 == m_direct  ) { i_direct  () ; }
     return m_direct;
@@ -97,8 +115,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
-  virtual const typename OwnType::DirectType*
-    direct () const  
+  virtual const DirectType* direct () const  
   {
     if( 0 == m_direct  ) { i_direct  () ; }
     return m_direct;
@@ -110,7 +127,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
-  virtual typename OwnType::InverseType* inverse ()
+  virtual       InverseType* inverse ()
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
@@ -122,8 +139,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
-  virtual const typename OwnType::InverseType*
-    inverse () const  
+  virtual const InverseType* inverse () const  
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
@@ -146,10 +162,10 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeFrom
-  ( const typename OwnType::From& from  , 
-    typename OwnType::ToRange& range ) const 
+  ( const From& from  , 
+    ToRange&    range ) const 
   {
-    const typename OwnType::Table* table = direct();
+    const DirectType* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -166,11 +182,10 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeTo
-  ( const typename OwnType::To& to,
-    typename OwnType::FromRange& range ) const
+  ( const To&  to    ,
+    FromRange& range ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
+    const InverseType* table = inverse();
     if( 0 == table ) {
       range = FromRange() ;
       return StatusCode::FAILURE;
@@ -184,13 +199,11 @@ public:
    *  @param  from object one want to retrieve associated range
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename OwnType::ToRange rangeFrom
-  ( const typename OwnType::From& from) const 
+  virtual ToRange rangeFrom
+  ( const From& from) const 
   {
-    const typename OwnType::Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
+    const DirectType* table = direct();
+    if ( 0 == table ) { return ToRange() ; }
     return table->relations( from );
   };
 
@@ -200,17 +213,14 @@ public:
    *  @return A range of associated objects. 
    *               It is empty if no table was found
    */
-  virtual typename OwnType::FromRange rangeTo
-  ( const typename OwnType::To& to ) const
+  virtual FromRange rangeTo
+  ( const To& to ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
+    const InverseType* table = inverse();
+    if ( 0 == table ) { return FromRange() ; }
     return table->relations( to );
   };
-
+  
   
   /** Method to retrieve a range associated to a given FROM element which 
    *  have a weight larger than a given threshold
@@ -222,11 +232,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithLowCutFrom
-  ( const typename OwnType::From& from,
-    const typename OwnType::Weight& threshold ,
-    typename OwnType::ToRange& range ) const
+  ( const From&   from      ,
+    const Weight& threshold ,
+    ToRange&      range     ) const
   {
-    const typename OwnType::Table* table = direct();
+    const DirectType* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -245,12 +255,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithLowCutTo
-  ( const typename OwnType::To& to,
-    const typename OwnType::Weight& threshold,
-    typename OwnType::FromRange& range ) const
+  ( const To&     to        ,
+    const Weight& threshold ,
+    FromRange&    range     ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
+    const InverseType* table = inverse();
     if( 0 == table ) {
       range = FromRange() ;
       return StatusCode::FAILURE;
@@ -269,11 +278,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithHighCutFrom
-  ( const typename OwnType::From& from, 
-    const typename OwnType::Weight& threshold,
-    typename OwnType::ToRange& range ) const
+  ( const From&   from      , 
+    const Weight& threshold ,
+    ToRange&      range     ) const
   {
-    const typename OwnType::Table* table = direct();
+    const DirectType* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -292,11 +301,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithHighCutTo
-  ( const typename OwnType::To& to, 
-    const typename OwnType::Weight& threshold , 
-    typename OwnType::FromRange& range) const
+  ( const To&     to        , 
+    const Weight& threshold , 
+    FromRange&    range     ) const
   {
-    const typename OwnType::InvTable* table =
+    const InverseType* table =
       inverse();
     if( 0 == table ) {
       range = FromRange() ;
@@ -315,15 +324,12 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual typename OwnType::ToRange
-    rangeWithLowCutFrom
-  ( const typename OwnType::From& from, 
-    const typename OwnType::Weight& threshold ) const
+  virtual ToRange rangeWithLowCutFrom
+  ( const From&   from      , 
+    const Weight& threshold ) const
   {
-    const typename OwnType::Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
+    const DirectType* table = direct();
+    if( 0 == table ) { return ToRange() ; }
     return table->relations( from, threshold, true );
   };
   
@@ -334,16 +340,12 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename OwnType::FromRange
-    rangeWithLowCutTo
-  ( const typename OwnType::To& to,
-    const typename OwnType::Weight& threshold ) const
+  virtual FromRange rangeWithLowCutTo
+  ( const To&     to        ,
+    const Weight& threshold ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
+    const InverseType* table = inverse();
+    if( 0 == table ) { return FromRange() ; }
     return table->relations( to, threshold, true );
   };
   
@@ -354,15 +356,12 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual typename OwnType::ToRange
-    rangeWithHighCutFrom
-  ( const typename OwnType::From& from,
-    const typename OwnType::Weight& threshold ) const
+  virtual ToRange rangeWithHighCutFrom
+  ( const From&   from      ,
+    const Weight& threshold ) const
   {
-    const typename OwnType::Table* table = direct();
-    if( 0 == table ) {
-      return ToRange() ;
-    }
+    const DirectType* table = direct();
+    if( 0 == table ) { return ToRange() ; }
     return table->relations( from, threshold, false );
   };
   
@@ -373,16 +372,12 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename OwnType::FromRange
-    rangeWithHighCutTo
-  ( const typename OwnType::To& to,
-    const typename OwnType::Weight& threshold ) const
+  virtual FromRange rangeWithHighCutTo
+  ( const To& to,
+    const Weight& threshold ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
-    if( 0 == table ) {
-      return FromRange() ;
-    }
+    const InverseType* table = inverse();
+    if( 0 == table ) { return FromRange() ; }
     return table->relations( to, threshold, false );
   };
   
@@ -393,19 +388,15 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename OwnType::To associatedFrom
-  ( const typename OwnType::From& from ) const
+  virtual To associatedFrom
+  ( const From& from ) const
   {
-    const typename OwnType::Table* table = direct();
-    if (0 != table) {
-      typename OwnType::ToRange range =
-        table->relations( from );
-      if( !range.empty() ) {
-        if( !m_decreasing ) return range.begin()->to();
-        return range.rbegin()->to();
-      }
-    }
-    return To();
+    const DirectType* table = direct();
+    if ( 0 == table    ) { return To () ; }
+    ToRange range = table->relations( from );
+    if ( range.empty() ) { return To () ; }
+    if ( !m_decreasing ) return range.begin()->to();
+    return range.rbegin()->to();
   };
 
   /** Method to retrieve a single element associated to a given FROM element
@@ -416,13 +407,13 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename OwnType::To associatedFrom
-  ( const typename OwnType::From& from, 
-    typename OwnType::Weight& weight ) const
+  virtual To associatedFrom
+  ( const From& from, 
+    Weight&     weight ) const
   {
-    const typename OwnType::Table* table = direct();
+    const DirectType* table = direct();
     if (0 != table) {
-      typename OwnType::ToRange range =
+      ToRange range =
         table->relations( from );
       if( !range.empty() ) {
         if( !m_decreasing ) {
@@ -444,22 +435,17 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename OwnType::From associatedTo
-  ( const typename OwnType::To& to) const
+  virtual From associatedTo
+  ( const To& to) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
-    if (0 != table) {
-      typename OwnType::FromRange range =
-        table->relations( to );
-      if( !range.empty() ) {
-        if( !m_decreasing ) return range.begin()->to();
-        return range.rbegin()->to();
-      }
-    }
-    return From();
+    const InverseType* table = inverse();
+    if ( 0 == table    ) { return From () ; } 
+    FromRange range = table->relations( to );
+    if ( range.empty() ) { return From () ; }
+    if( !m_decreasing ) return range.begin()->to();
+    return range.rbegin()->to();
   };
-
+  
   /** Method to retrieve a single element associated to a given TO element
    *
    *  @param to  'TO' object one want to retrieve associated (first) element
@@ -468,15 +454,13 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename OwnType::From associatedTo
-  ( const typename OwnType::To& to,
-    typename OwnType::Weight& weight ) const
+  virtual From associatedTo
+  ( const To&  to,
+    Weight&    weight ) const
   {
-    const typename OwnType::InvTable* table =
-      inverse();
+    const InverseType* table = inverse();
     if (0 != table) {
-      typename OwnType::FromRange range =
-        table->relations( to );
+      FromRange range = table->relations( to );
       if( !range.empty() ) {
         if( !m_decreasing ) {
         } else {
@@ -504,9 +488,12 @@ public:
    */
   virtual void handle( const Incident& incident ) 
   {
+    // release reference tables 
+    release ( m_direct  ) ; m_direct  = 0 ;
+    // release reference tables 
+    release ( m_inverse ) ; m_inverse = 0 ;
+    // handle incident with base class 
     AssociatorBase::handle( incident ) ;
-    if( 0 != m_direct  ) { m_direct  -> release() ; m_direct  = 0 ; }
-    if( 0 != m_inverse ) { m_inverse -> release() ; m_inverse = 0 ; }
   };
   
 protected:
@@ -522,12 +509,10 @@ protected:
     if( 0 != m_direct ) { return StatusCode::SUCCESS                     ; }
     IInterface* obj = object () ;
     if( 0 == obj      ) { return Error("'Object' is not located/built!") ; }
-    typedef
-      typename OwnType::DirectType localDirectType;
-    SmartIF<localDirectType> aux ( DirectType::interfaceID() , obj );
+    SmartIF<DirectType> aux ( DirectType::interfaceID() , obj );
     m_direct = aux ;
     if( 0 == m_direct ) { return Error("'DirectType' points to NULL!"  ) ; }
-    m_direct ->addRef () ;
+    addRef ( m_direct ) ;
     return StatusCode::SUCCESS ;
   };
   
@@ -554,7 +539,7 @@ protected:
         m_inverse = new LocalInverseType( *m_direct , 1 );
       }
     ///
-    m_inverse -> addRef() ;
+    addRef ( m_inverse ) ;
     ///
     return StatusCode::SUCCESS ;
   };
@@ -603,8 +588,8 @@ protected:
 private:
   
   // relations 
-  mutable typename OwnType::DirectType*   m_direct;
-  mutable typename OwnType::InverseType*  m_inverse;
+  mutable DirectType*   m_direct;
+  mutable InverseType*  m_inverse;
   bool m_decreasing;
 };
 // ============================================================================

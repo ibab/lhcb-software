@@ -1,5 +1,5 @@
-// $Id: AssociatorBase.cpp,v 1.9 2003-06-25 11:17:04 ibelyaev Exp $
-// $Id: AssociatorBase.cpp,v 1.9 2003-06-25 11:17:04 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.10 2003-06-25 14:59:02 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.10 2003-06-25 14:59:02 ibelyaev Exp $
 
 // Include files
 
@@ -70,6 +70,7 @@ Relations::AssociatorBase::AssociatorBase
   , m_builderName ( "" )
   , m_algorithm   ( 0  )
   , m_object      ( 0  ) 
+  , m_counter     ( 0  )
   , m_errors      (    )
   , m_warnings    (    )
   , m_exceptions  (    )
@@ -390,7 +391,7 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   if( object1 ) 
     { 
       m_object =  object1 ; 
-      m_object -> addRef();
+      addRef ( m_object ) ;
       return Print( "Retrieved relation table is '" + location() + 
                     "' (type '" + System::typeinfoName( typeid( *m_object ) ) +
                     "'", StatusCode::SUCCESS , MSG::VERBOSE  ); 
@@ -404,7 +405,7 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   SmartDataPtr<IInterface> object2( evtSvc() , location () );
   if( !object2 ) { return Error("Data after 'Builder' are not available!" ) ; }
   m_object =  object2  ;
-  m_object -> addRef() ; // do we need this line ?
+  addRef ( m_object ) ; // do we need this line ?
   //
   return Print( "Builded relation table is '" + location() + 
                 "' (type '" + System::typeinfoName( typeid( *m_object ) ) +
@@ -421,7 +422,10 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
 // ============================================================================
 void Relations::AssociatorBase::handle
 ( const Incident& /* incident */ ) 
-{ if( 0 != m_object ) { m_object->release() ; m_object = 0 ; } };
+{ 
+  release( m_object ) ; m_object = 0 ;
+  if( 0 != m_counter ) { Warning ( "Mismatch in addRef/release" ) ; }
+} ;
 // ============================================================================
 
 // ============================================================================
@@ -490,4 +494,8 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
   //
   return StatusCode::SUCCESS ;
 };
+// ============================================================================
+
+// ============================================================================
+// The END 
 // ============================================================================

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.37 2003-06-16 14:43:01 cattanem Exp $
+# $Id: requirements,v 1.38 2003-06-25 14:59:02 ibelyaev Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v2r8
+version v2r9
 
 include_dirs $(LHCBKERNELROOT) $(BOOSTHOME)
 
@@ -27,6 +27,10 @@ document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 #============================================================================
 library LHCbKernel     *.cpp
 library LHCbKernelDict ../dict/*.cpp -import=GaudiIntrospection
+        
+# - uncomment to find memory leaks - 
+#macro_append LHCbKernel_pp_cppflags '  -DCOUNT_INSTANCES  ' \
+#        WIN32                       ' /D"COUNT_INSTANCES" '
 
 # Define link options
 #============================================================================
