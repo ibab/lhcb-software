@@ -1,6 +1,13 @@
 package Event/VeloEvent
 package manager: E.Banas
 
+! ===================================================================
+! 20020107 - VeloEvent v6r0 (MC)
+  Changes for Gaudi v9:
+  requirements - use LHCbEvent v12
+  RecVeloEvent.h - remove call to DataObject constructor
+
+! ===================================================================
 ! 20010711 - VeloEvent v5 (Markus Frank)
   Change CLID in RecVeloEvent, VeloCluster to the way 
   encouraged by new Gaudi release.

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/RecVeloEvent.h,v 1.2 2001-07-10 07:47:58 frankm Exp $
+// $Id: RecVeloEvent.h,v 1.3 2002-01-14 09:55:17 cattanem Exp $
 #ifndef LHCBEVENT_RECVELOEVENT_H
 #define LHCBEVENT_RECVELOEVENT_H 1
 
@@ -6,7 +6,6 @@
 #include <iostream>
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/DataObject.h"
 #include "LHCbEvent/Definitions.h"
 
 
@@ -14,7 +13,7 @@
 static const CLID& CLID_RecVeloEvent = 610;
 
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // ClassName:   RecVeloEvent
 //  
@@ -22,21 +21,23 @@ static const CLID& CLID_RecVeloEvent = 610;
 //
 // Author:      Bruce Hay
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 class RecVeloEvent : public DataObject  {
 
 public:
 	/// Constructors
-	RecVeloEvent( const char* name = "RecVeloEvent" )
-		: DataObject(name)                             { }
+  // "name" argument no longer necessary for Gaudi v9
+  // kept for backward compatibility, but generate warning of unused variable 
+	RecVeloEvent( const char* name = "RecVeloEvent" ) { }
+
 	/// Destructor
-  virtual ~RecVeloEvent()                              { }
+        virtual ~RecVeloEvent()                           { }
 
 	/// Retrieve reference to class definition structure
-	virtual const CLID& clID() const                 { return RecVeloEvent::classID(); }
-	static const CLID& classID()                     { return CLID_RecVeloEvent; }
+	virtual const CLID& clID() const  { return RecVeloEvent::classID(); }
+	static const CLID& classID()      { return CLID_RecVeloEvent; }
 
   /// Serialize the object for writing
   virtual StreamBuffer& serialize( StreamBuffer& s ) const                 {
@@ -49,12 +50,12 @@ public:
     return s >> m_dummy;
   }
 
-	/// Output operator (ASCII)
-	friend std::ostream& operator<< ( std::ostream& s, const RecVeloEvent& obj ) {
-		return obj.fillStream(s);
-	}
+  /// Output operator (ASCII)
+  friend std::ostream& operator<< (std::ostream& s, const RecVeloEvent& obj) {
+	return obj.fillStream(s);
+  }
   /// Fill the output stream (ASCII)
-	virtual std::ostream& fillStream( std::ostream& s ) const                {
+	virtual std::ostream& fillStream( std::ostream& s ) const {
     return s
       << "class RecVeloEvent :"
       << "\n    Dummy     = "
