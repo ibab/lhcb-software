@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.8 2005-01-17 18:14:41 robbep Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.9 2005-01-17 19:35:10 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/01/17 18:14:41  robbep
+// Use generator energy instead of Geant4 energy for short lived particles.
+//
 // Revision 1.7  2004/05/03 13:50:19  gcorti
 // set particle type for ions
 //
@@ -109,7 +112,11 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
     HepMC::GenEvent    * gEvt = trajectory -> pHepMCEvent() -> pGenEvt() ;
     HepMC::GenParticle * gPart = 
       gEvt -> barcode_to_particle( trajectory -> signalBarcode() ) ;
-    particle -> setMomentum( gPart -> momentum() ) ;
+    HepLorentzVector theFMom( gPart -> momentum().px() * GeV ,
+                              gPart -> momentum().py() * GeV ,
+                              gPart -> momentum().pz() * GeV ,
+                              gPart -> momentum().e () * GeV ) ;
+    particle -> setMomentum( theFMom ) ;
   }
   else particle->setMomentum     ( trajectory->fourMomentum()           ) ;
   
