@@ -5,14 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-28 =======================
-! 2004-06-14 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-29 =======================
+! 2004-06-29 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
                  RichTools v1r0 (previously RichDetTools, 
                                  moved here from applications projects)
                  RichMCTools v2r0 (moved here from applications projects)
                  RichDAQ v1r5 (moved here from applications projects)
+                 DetDescChecks v2r1 (checks of XmlDDDB geometry)
 
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
                       PYTHIA. No longer needed to compile HepMC - removes last
@@ -22,7 +23,7 @@
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
                       DAQEvent v5r0, HepMC v4r121p0, 
                       DetSys v5r7, STDet v1r2, RichDet v7r2, OTDet v5r3, 
-                      AssociatorsSys v1r14, ITAssociators v2r9, 
+                      Magnet v2r1, AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, IOExample v1r2
 
  - In LHCbKernel v4r7:
@@ -33,6 +34,9 @@
 
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports
+
+ - In Magnet v2r1:
+   . Speed up, by avoiding unneccessary array copies and re-initialisations 
 
  - In ITAssociators v2r9:
    . Use new GaudiAlg, GaudiTools base classes
@@ -63,6 +67,10 @@
 
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
+
+ - In DetDescChecks v2r1
+   . Package to check integrity and material distribution of XmlDDDB. See 
+     release notes for details
 
 !====================== LHCbSys v15r12 2004-06-28 =======================
 Built against Gaudi v14r6
