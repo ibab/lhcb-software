@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2004-11-23 17:18:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.18 2005-01-24 17:33:00 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -10,7 +10,7 @@ author           Vanya BELYAEV
 version          v4r4
 
 # ============== structure ===================================================
-branches         cmt doc src python options jobs 
+branches         cmt doc src test python options jobs 
 
 # ============== environment =================================================
 set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
@@ -37,6 +37,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.17  2004/11/23 17:18:36  ibelyaev
+#  v4r2
+#
 # ============================================================================
 # The END 
 # ============================================================================
