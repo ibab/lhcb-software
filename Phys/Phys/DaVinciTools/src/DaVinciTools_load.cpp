@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.47 2005-01-10 09:57:17 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.48 2005-02-15 07:33:03 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -26,6 +26,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_ALGORITHM( CheckPV );  
   DECLARE_ALGORITHM( ResetPVLocation ) ;
   DECLARE_ALGORITHM( SimplePlots );  
+  DECLARE_ALGORITHM( PIDFilter );  
   
 }
 
