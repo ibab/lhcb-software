@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Errors to suppress by default with Brunel v19r0, gcc 3.2, valgrind 1.9.6
+# Errors to suppress by default with Brunel v20r1, gcc 3.2, valgrind 1.9.6
 
 # Format of this file is:
 # {
@@ -14,6 +14,14 @@
 #     (optionally: caller2 name)
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
+
+# Brunel problems
+{
+  TrCheck/v2r0/bug-1673
+  Memcheck:Value8
+  fun:_ZN9TrChecker7executeEv
+}
+
 
 # glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
@@ -96,6 +104,14 @@
 }
 
 # Root 3.05.04 errors (reported, known to Fons...)
+{
+  Root/libc_write
+  Memcheck:Param
+  fun:__libc_write
+  fun:_ZN5TFile8SysWriteEiPKvi
+  fun:_ZN5TFile11WriteBufferEPKci
+}
+
 {
   Root/longest_match
   Memcheck:Cond
