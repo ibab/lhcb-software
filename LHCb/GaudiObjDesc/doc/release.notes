@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v6r3============================
+!20040706 - Pere Mato
+- requirements: adapted to use new LCGCMT interface packages
+
 ===============================GaudiObjDesc v6r2p3============================
 !20040614 - Stefan
 - removed include for RelationsDict.h for general dictionary files (only for <assoc> left)

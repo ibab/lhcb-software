@@ -1,10 +1,10 @@
 package GaudiObjDesc
 
-version v6r2p3
+version v6r3
 
 branches doc cmt src GaudiObjDesc
 
-use XERCES v* -no_auto_imports
+use XercesC v* LCG_Interfaces -no_auto_imports
 use GaudiPolicy v*
 
 include_dirs $(GAUDIOBJDESCROOT)
@@ -18,6 +18,6 @@ make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
 # Fragment for producing the cpp-files which will fill the MetaModel auf GaudiDict
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
-application GODWriteCppHeader -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
-application GODWriteCppDict   -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
+application GODWriteCppHeader -import=XercesC ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
+application GODWriteCppDict   -import=XercesC ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
 
