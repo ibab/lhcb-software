@@ -21,6 +21,9 @@ Purpose: LHCb reconstruction program
 - DST changes
    . Added DAQ/RawBuffer (GaudiConf v7r3)
 
+- Bug fixes
+   . Fix to off diagonal elements of TrStateP p covariance matrix (TrEvent v12r2)
+
 - Removed features
    . Remove support for v254r1 (optimization TDR) geometry
 
