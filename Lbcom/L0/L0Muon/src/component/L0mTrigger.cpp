@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.3 2002-05-07 07:33:43 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.4 2002-05-07 08:48:07 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -191,7 +191,7 @@ StatusCode L0mTrigger::execute() {
   }
   
   
-  log << "Done, # of L0mPads " << m_pads.size() << endreq;  
+  log << MSG::DEBUG << "Done, # of L0mPads " << m_pads.size() << endreq;  
   
   std::vector<L0mPad>::iterator ip;
   
@@ -205,15 +205,7 @@ StatusCode L0mTrigger::execute() {
   L0mTower* lt; 
   
   for(ip=m_pads.begin(); ip != m_pads.end(); ip++ ) {
-  
-//     cout << " L0mTrigger: pads: " << (*ip)->station() << "/"
-//                                        << (*ip)->quarter() << "/"  
-// 				       << (*ip)->region() << "/" 
-// 				       << (*ip)->nX() << "/" 
-// 				       << (*ip)->nY() << "/" << endl;
-  
-    if((*ip).padId().station() == 2) {
-        
+    if((*ip).padId().station() == 2) {        
       lt = createTower(ip, m_pads);
       lt->setMuonTool(m_iTileXYZTool);
       m_towers.push_back(lt);
@@ -287,11 +279,19 @@ StatusCode L0mTrigger::execute() {
   m_towers.clear();
   m_pads.clear();
   
+  log << MSG::DEBUG << "Total number of the candidates: " << cand->size()
+      << endreq;  
   L0MuonCandidates::iterator im;
   for(im = cand->begin(); im != cand->end(); im++ ) {
     if ( (*im)->status() == L0Muon::OK ) {
-      log << MSG::DEBUG << "Pt of the candidate = " 
-                        << (*im)->pt() << endreq;   
+      log << MSG::DEBUG << "Pt of the candidate = " << (*im)->pt() 
+          << endreq;   
+      log << MSG::DEBUG << "\nTheta of the candidate = " << (*im)->theta() 
+          << endreq;  
+      log << MSG::DEBUG	<< "\nPhi of the candidate = " << (*im)->phi() 
+          << endreq;  
+      log << MSG::DEBUG << "\nStatus of the candidate = " << (*im)->status()
+	  << endreq;   
     }			 
   }
   
