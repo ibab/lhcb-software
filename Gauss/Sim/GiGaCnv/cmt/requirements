@@ -1,42 +1,26 @@
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $      
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# =============================================================================
-
 package  GiGaCnv 
 version v1
 
-# ============== structure ====================================================
 branches cmt src doc GiGaCnv 
 
-# ============== own includes =================================================
-include_dirs                     $(GIGACNVROOT)
+include_dirs     $(GIGACNVROOT)
 
-# ============== ownoptions ===================================================
-set GIGACNVOPTIONS  "${GIGACNVROOT}/options/GiGaCnvOptions.txt"
-
-# ============== GiGa =========================================================
 use GiGa          v5*   Sim 
-# ============== LHCbEvent ====================================================
 use LHCbEvent     v11*	Event
-# ============== Detector Description =========================================
 use DetDesc       v7*	Det
 
-
 # ============== linker library (base classes) ================================
-#library         GiGaCnvLib  -no_share Lib/*.cpp
 library          GiGaCnvLib            Lib/*.cpp
-  
-# ============== component library ============================================
-#library         GiGaCnv     -no_share component/*.cpp 	        
-library          GiGaCnv               component/*.cpp 	        
-
-# ============== patterns =====================================================
-
 apply_pattern    package_Lstamps
-apply_pattern    package_Llinkopts
 apply_pattern    linker_path
+
+# ============== component library ============================================
+library          GiGaCnv               component/*.cpp 	        
+apply_pattern    package Shr
+
+# ============== link options =================================================
+apply_pattern    package_Clinkopts 
+apply_pattern    package_Llinkopts
 
 # ============== private stuff ================================================
 private
