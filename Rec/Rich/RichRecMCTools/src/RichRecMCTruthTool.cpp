@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.8 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.9 2004-08-20 14:48:52 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -53,7 +56,10 @@ const MCParticle *
 RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
 {
   const ContainedObject * obj = richTrack->parentTrack();
-  if ( !obj ) return NULL;
+  if ( !obj ) {
+    Warning ( "RichRecTrack has NULL pointer to parent" );
+    return NULL;
+  }
 
   // Try TrStoredTrack
   const TrStoredTrack * track = dynamic_cast<const TrStoredTrack*>(obj);
@@ -76,13 +82,20 @@ RichRecMCTruthTool::mcRichHits( const RichRecPixel * richPixel ) const
 const MCRichDigit *
 RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
 {
-  const RichDigit * digit =
-    dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
-  if ( !digit ) {
-    Warning("RichRecPixel has no associated RichDigit");
+  // protect against bad pixels
+  if ( !richPixel ) {
+    Warning ( "NULL RichRecPixel pointer in RichRecMCTruthTool::mcRichDigit" );
     return NULL;
   }
 
+  // try to get parent RichDigit
+  const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
+  if ( !digit ) {
+    Warning ( "RichRecPixel has no associated RichDigit" );
+    return NULL;
+  }
+
+  // All OK, so find and return MCParticle for this RichDigit
   return m_truth->mcRichDigit( digit );
 }
 
@@ -98,12 +111,19 @@ bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
   if ( hits.empty() ) return false;
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
-    if ( !(*iHit) ) continue; // protect against bad hits
+
+    // protect against bad hits
+    if ( !(*iHit) ) continue; 
+
+    // find MCParticle
     const MCParticle * mcPart = (*iHit)->mcParticle();
     if ( !mcPart ) continue;
+
+    // Add to vector, once per MCParticle
     std::vector<const MCParticle*>::const_iterator iFind =
       std::find( mcParts.begin(), mcParts.end(), mcPart );
     if ( mcParts.end() == iFind ) mcParts.push_back( mcPart );
+
   }
 
   return true;
@@ -119,6 +139,10 @@ RichRecMCTruthTool::trueRecPhoton( const RichRecPhoton * photon ) const
 const MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecSegment * segment,
                                                       const RichRecPixel * pixel ) const
 {
+  // protect against bad input data
+  if (!segment) { Warning("NULL RichRecSegment in RichRecMCTruthTool::trueRecPhoton"); return 0; }
+  if (!pixel)   { Warning("NULL RichRecPixel in RichRecMCTruthTool::trueRecPhoton");   return 0; }
+
   const RichRecTrack * track = segment->richRecTrack();
   const MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
   if ( !mcTrack ) return NULL;
@@ -192,12 +216,17 @@ RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel,
   const SmartRefVector<MCRichHit> & hits = mcRichHits(richPixel);
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
-    if ( !(*iHit) ) continue; // protect against bad hits
+
+    // protect against bad hits
+    if ( !(*iHit) ) continue;
+
+    // Find MC photon
     const MCRichOpticalPhoton * phot = m_truth->mcOpticalPhoton( *iHit );
     if ( phot ) phots.push_back( phot );
+
   }
-  if ( phots.empty() ) return false;
-  return true;
+
+  return !phots.empty();
 }
 
 const MCRichSegment *
@@ -260,6 +289,7 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecPhoton * photon ) const
   // get true MCRichHit
   const MCRichHit * mchit = trueCherenkovHit( photon );
   if ( !mchit ) return NULL;
+
   // return associated MCRichOpticalPhoton
   return m_truth->mcOpticalPhoton( mchit );
 }
