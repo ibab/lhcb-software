@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.13 2002-10-22 06:37:56 cattanem Exp $
+# $Id: requirements,v 1.14 2002-11-27 08:06:39 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v4r1
+version  v4r2
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet
@@ -40,5 +40,3 @@ private
 macro_remove use_linkopts $(MuonDet_linkopts)
 macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
 macro_append MuonDet_shlibflags $(MuonDet_linkopts)
-
-#macro_append  MuonDetLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"

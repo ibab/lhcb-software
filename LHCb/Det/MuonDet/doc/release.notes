@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.25 2002-11-26 18:07:33 dhcroft Exp $
+! $Id: release.notes,v 1.26 2002-11-27 08:06:40 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+!========================= MuonDet v4r2 2002-10-27 =========================
 ! 2002-11-26 - David Hutchcroft
  - Corrected a bug in MuonReadoutCond.cpp, wrong array size used
 
