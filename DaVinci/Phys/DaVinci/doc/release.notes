@@ -1,14 +1,19 @@
-! $Id: release.notes,v 1.4 2001-10-08 12:53:24 gcorti Exp $
+! $Id: release.notes,v 1.5 2001-10-10 08:14:07 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 
 ! ========================================================================
+
+! 10102001 - DaVinci v1r2 (GCorti)
+  introduce files to produce doxygen documentation
 
 ! 07102001 - DaVinci v1r2 (GCorti)
   introduced new package ReadData for configuration of executable for
     DST/MC produced with different versions of Brunel and SICBMC/DST
   introduce possibility to run the L0 trigger simulation and example of
     accessing such info
+
+! ========================================================================
 
 ! 17072001 - DaVinci v1r1 (GCorti)
   introduce stars in requirements 
