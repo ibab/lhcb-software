@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.5 2002-05-07 12:21:34 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.1 2002-09-26 18:05:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/07 12:21:34  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"

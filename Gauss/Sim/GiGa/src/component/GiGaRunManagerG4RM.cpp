@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerG4RM.cpp,v 1.5 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGaRunManagerG4RM.cpp,v 1.1 2002-09-26 18:05:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/01 18:23:38  ibelyaev
+//  import errors/warnings/exception counterf from LHCb Calo software
+//
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaUtil.h"

@@ -1,11 +1,21 @@
+! $Id: release.notes,v 1.55 2002-09-26 18:05:17 ibelyaev Exp $
+! =============================================================================
+! CVS tag $Name: not supported by cvs2svn $ 
+! =============================================================================
 Package:          GiGa
-Package manager : Vanya Belyaev 
+Packagxe manager : Vanya Belyaev
+
+! 2002-09-26 - Ivan Belyaev
+ - remove ALL concrete implementation to GaussTools package 
+   Now GiGa becomes "light" package. It containes only 
+   base classes, base interfaces, GiGa service itself 
+   and GiGa Run Manager.  
 
 ! 2002-09-03 - Witek Pokorski
   GiGaBase.h - changed "protected" to "public" for service accessors
 
 ! 2002-08-31 - Witek Pokorski
-  added modular physics lists and physics constructors (GiGaPhysListModular, 
+  added modular physics lists and physics constructors (GiGaPhysListModular,
 							GiGaPhysConstructorBase)
 
 ! 2002-08-26 - Witek Pokorski
@@ -13,7 +23,7 @@ Package manager : Vanya Belyaev
                     the name of the parent service)
 
 ! 2002-08-23 - Witek Pokorski
-  removed SensitiveDetectors and G4Hits from GiGa package (and moved to 
+  removed SensitiveDetectors and G4Hits from GiGa package (and moved to
   GaussTools)
 
 ! ========================== GiGa v9r0p1 ===================================
@@ -30,147 +40,147 @@ Package manager : Vanya Belyaev
 
 ! ========================= GiGa v8r0 ====================================
 ! 20020507 - GiGa v8r0 - Vanya
-  MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
-  ALL objects, except GiGaSvc, converison services and converters are now 
+  MAJOR redesing of ALL interfaces but it is still 100% "compatible"
+  ALL objects, except GiGaSvc, converison services and converters are now
   "Tools", owned by GiGa Service
   Thus ALL job otions must be changed like:
-   AAA.bb = "some value";          
+   AAA.bb = "some value";
    GiGaSvc.AAA.bb = "some value" ;   // NOW
 
 ! 20020503 - GiGa v8r0 Flr
   - requirements - apply  new library patterns
- 
+
 ! 20020502 - GiGa v8r0 Vanya Belyaev
- 1) Add errors/warnings/exceptions counters for major classes 
+ 1) Add errors/warnings/exceptions counters for major classes
     (imported from LHCb Calo software)
- 2) Decrease teh dependency form Run and Vis Managers, remove classes 
+ 2) Decrease teh dependency form Run and Vis Managers, remove classes
     form "public" places
- 3) Fix some problems with user interafces   
+ 3) Fix some problems with user interafces
 
 ! 20020424 - GiGa v8r0 Vanya Belyaev
   - add DEFINE_xxx and  IMPLEMENT_xxx macros to avoid notorious typing
 
 ! 20020423 - GiGa v8r0 Vanya Belyaev
-  - update for newer Gaudi & Geant4 versions 
+  - update for newer Gaudi & Geant4 versions
 
 ! 20020409 - GiGa v8r0 Vanya Belyaev
-  - minor changes mainly to increase a little bit the printout level 
+  - minor changes mainly to increase a little bit the printout level
 
 ! 20020313 - GiGa v8r0 Ivan Belyaev
-  - fix interface for GiGaMagnetic field object 
+  - fix interface for GiGaMagnetic field object
 
 ! ======================== GiGa v7r1 =====================================
 
-! 20020313 - GiGa v7r1 Vanya 
-  update for newer Gaudi & Geant4 
+! 20020313 - GiGa v7r1 Vanya
+  update for newer Gaudi & Geant4
 
 ! ======================= GiGa v7r0 =======================================
 
-! 20020122 - v7r0 Vanya 
-! update for newer Gaudi & Geant4 
+! 20020122 - v7r0 Vanya
+! update for newer Gaudi & Geant4
 
 ! ====================== GiGa v6r1 =======================================
 
 ! 20011008 - v6r1 Flr & S.Ponce
-  src/component/GiGaSvc.cpp, GiGaSvcIGiGaSetUpSvc.cpp - include some G4 
+  src/component/GiGaSvc.cpp, GiGaSvcIGiGaSetUpSvc.cpp - include some G4
      include file to please new compiler.
-            
+
 ! ===================== GiGa v6 =========================================
 
 ! 20010801    Vanya Belyaev
      redesign and reimplementation of GiGaRunManager class
 
 ! 20010726    Vanya Belyaev
-    (1) add several concrete Run Action components 
-    (2) improve the printout for all base classes 
-    (3) add Sensitive Detector component GiGaSensDetPrint   
+    (1) add several concrete Run Action components
+    (2) improve the printout for all base classes
+    (3) add Sensitive Detector component GiGaSensDetPrint
 
 ! 20010727    Vanya Belyaev
-     add new abstract interface IGiGaRunAction 
- 
-! 20010724    Vanya Belyaev 
-     src/component/GiGaEventActionCommand.h/.cpp 
+     add new abstract interface IGiGaRunAction
+
+! 20010724    Vanya Belyaev
+     src/component/GiGaEventActionCommand.h/.cpp
       - new "component" Event actions.
       - it is simple, it ij just call user interface to execute
-        Geant4 commands at the begin of each event and at the 
-        end of each event  
+        Geant4 commands at the begin of each event and at the
+        end of each event
 
-! 20010724    Vanya Belyaev 
+! 20010724    Vanya Belyaev
 
      1) Remove ALL conversions from GiGa!
-     2) Introduce new interface IGiGaGeoSrc - minimal source of geometry 
-        information. 
+     2) Introduce new interface IGiGaGeoSrc - minimal source of geometry
+        information.
 
-! 20010723    Vanya Belyaev 
+! 20010723    Vanya Belyaev
      src/component/GiGaTrackActionSequence.h/.cpp
-      - a new concrete Tracking Actions, it is just a sequence of 
-        other tracking actions 
+      - a new concrete Tracking Actions, it is just a sequence of
+        other tracking actions
      src/component/GiGaEventActionSequence.h/.cpp
-      - a new concrete Event Actions, it is just a sequence of 
-        other event actions 
+      - a new concrete Event Actions, it is just a sequence of
+        other event actions
 
-! 20010723    Vanya Belyaev 
-     GiGa/GiGaUtil.h 
-     three new useful utilities for deletion of object
-          GiGaUtil::Delete     - class swith templated method  
-          GiGaUtil::Eraser     - templated class 
-          GiGaUtil::Delete_Ptr - templated function
- 
-! 20010723   v Vanya Belyaev 
+! 20010723    Vanya Belyaev
      GiGa/GiGaUtil.h
-     src/Lib/GiGaUtil.cpp 
+     three new useful utilities for deletion of object
+          GiGaUtil::Delete     - class swith templated method
+          GiGaUtil::Eraser     - templated class
+          GiGaUtil::Delete_Ptr - templated function
+
+! 20010723   v Vanya Belyaev
+     GiGa/GiGaUtil.h
+     src/Lib/GiGaUtil.cpp
        - move all utilities into GiGaUtil name space
-       - make use of this utilities 
-       - a lot of new utilities, among them 
-           helper "creators" for different classes  
-     GiGaStepActionSequence.h/.cpp 
-       - new type of Step Action - it is just a sequence of all other 
-         Step Actions  (a'la  CMS "action units") 
-  
-! 20010721   v6 Vanya Belyaev 
+       - make use of this utilities
+       - a lot of new utilities, among them
+           helper "creators" for different classes
+     GiGaStepActionSequence.h/.cpp
+       - new type of Step Action - it is just a sequence of all other
+         Step Actions  (a'la  CMS "action units")
+
+! 20010721   v6 Vanya Belyaev
    move several interfaces to make the package
-   interdependencies weaker 
+   interdependencies weaker
 
 !===========================================================================
-! 20010716   v5 Flr 
+! 20010716   v5 Flr
   requirements - add linkopts for component library.
 
-! 20010715   v5 Vanya Belyaev "UNDO" all "G4wrapper" modifications   
-             
+! 20010715   v5 Vanya Belyaev "UNDO" all "G4wrapper" modifications
+
 !===========================================================================
 ! 20010426 - Vanya Belyaev
-    use new package Sim/G4Wrapper 
-    - set of wrapper methods over Geant4 tool kit to resolve 
-	problems with shared library on NT 
+    use new package Sim/G4Wrapper
+    - set of wrapper methods over Geant4 tool kit to resolve
+	problems with shared library on NT
 !===========================================================================
 ! 20010420 - Vanya Belyaev
-    Large restructiruzation 
+    Large restructiruzation
     (1) GiGa v4 is splitted into 2 packages
-           GiGa v5 and GiGaCnv v1 
-       The first one is EXPERIMENT neutral and therefore 
-       depends only on GaudiKernel and GEANT4 packages  
-       The second package containes conversion services, 
-       converters and base class for sensitive detector and 
-       it depends on LHCbEvent and DetDesc package. Thus it is 
-       "LHCb" -specific but still "subdetector-neutral". 
-    (2)  GiGa itself is splitted into 2 libraries 
-          component library GiGa and 
-          linker    library         GiGaLib, which containes base classes.  
+           GiGa v5 and GiGaCnv v1
+       The first one is EXPERIMENT neutral and therefore
+       depends only on GaudiKernel and GEANT4 packages
+       The second package containes conversion services,
+       converters and base class for sensitive detector and
+       it depends on LHCbEvent and DetDesc package. Thus it is
+       "LHCb" -specific but still "subdetector-neutral".
+    (2)  GiGa itself is splitted into 2 libraries
+          component library GiGa and
+          linker    library         GiGaLib, which containes base classes.
 !===========================================================================
 ! 20010322 - Vanya Belyaev
-    src/GiGaSensDetBase.cpp 
-      remove compilation warning on NT 
+    src/GiGaSensDetBase.cpp
+      remove compilation warning on NT
 !===========================================================================
 ! 20010322 - Vanya Belyaev
        remove claches with allocated InterfaceID
-      GiGa/IIDIGIGaMagField.h 
-      GiGa/IIDIGIGaMagFieldFactory.h 
-      GiGa/IIDIGiGaHitsCnvSvc.h 
+      GiGa/IIDIGIGaMagField.h
+      GiGa/IIDIGIGaMagFieldFactory.h
+      GiGa/IIDIGiGaHitsCnvSvc.h
 !===========================================================================
 ! 20010317 - Vanya Belyaev
     new features:
-    (1) possibility to define "Event Action" with 2 methods: 
-        extarction form G4EventAction.hh file: 
+    (1) possibility to define "Event Action" with 2 methods:
+        extarction form G4EventAction.hh file:
           //  This is the base class of one of the user's optional action classes.
           // The two methods BeginOfEventAction() and EndOfEventAction() are invoked
           // at the beginning and the end of one event processing. These methods are
@@ -181,146 +191,146 @@ Package manager : Vanya Belyaev
           // before generating primaries (i.e., store random number status), do it in
           // the G4VUserPrimaryGeneratorAction concrete class.
      (2) New interface IGiGaEventAction, and ocrresponding factory.
-     (3) 2 concrete event actions are implemented : "empty" and "draw". 
-         The "draw" event action performs event visualisation at teh end of 
-         the event. Trajectories, hits and digits are visualized. 
+     (3) 2 concrete event actions are implemented : "empty" and "draw".
+         The "draw" event action performs event visualisation at teh end of
+         the event. Trajectories, hits and digits are visualized.
 
      (4) New option "EventAction" for GiGaSvc
- 
-     (5) Additional step action is implemented GiGaStepActionDraw, which 
-         performs visualization of step. NB: it is different from 
+
+     (5) Additional step action is implemented GiGaStepActionDraw, which
+         performs visualization of step. NB: it is different from
          visualization of trajectories!
      (6) remove some redundant printout for conversion services
 
-  GiGa/GiGaEventActionBase.icpp        - new file 
-  GiGa/IIDIGiGaEventAction.h           - new file 
-  GiGa/GiGaEventActionBase.h           - new file 
-  GiGa/IIDIGiGaEventActionFactory.h    - new file 
-  GiGa/IGiGaEventAction.h              - new file 
-  GiGa/IGiGaEventActionFactory.h       - new file 
-  GiGa/GiGaEventActionFactory.h        - new file 
+  GiGa/GiGaEventActionBase.icpp        - new file
+  GiGa/IIDIGiGaEventAction.h           - new file
+  GiGa/GiGaEventActionBase.h           - new file
+  GiGa/IIDIGiGaEventActionFactory.h    - new file
+  GiGa/IGiGaEventAction.h              - new file
+  GiGa/IGiGaEventActionFactory.h       - new file
+  GiGa/GiGaEventActionFactory.h        - new file
 
-  src/GiGaCnvSvcBase.cpp               - updated 
+  src/GiGaCnvSvcBase.cpp               - updated
   src/GiGaPhysListEm.cpp               - updated
   src/GiGaRunManager.cpp               - updated
   src/GiGaSvc.cpp                      - updated
-  src/GiGaSvc.h                        - updated 
-  src/GiGa_load.cpp                    - updated 
+  src/GiGaSvc.h                        - updated
+  src/GiGa_load.cpp                    - updated
 
-  src/GiGaStepActionDraw.cpp           - new file  
-  src/GiGaStepActionDraw.h             - new file 
-  src/GiGaEventActionBase.cpp          - new file 
-  src/GiGaEventActionEmpty.h           - new file 
-  src/GiGaEventActionEmpty.cpp         - new file 
-  src/GiGaEventActionDraw.h            - new file 
-  src/GiGaEventActionDraw.cpp          - new file 
+  src/GiGaStepActionDraw.cpp           - new file
+  src/GiGaStepActionDraw.h             - new file
+  src/GiGaEventActionBase.cpp          - new file
+  src/GiGaEventActionEmpty.h           - new file
+  src/GiGaEventActionEmpty.cpp         - new file
+  src/GiGaEventActionDraw.h            - new file
+  src/GiGaEventActionDraw.cpp          - new file
 
 !===========================================================================
 ! 20010315 - Vanya Belyaev
-    several changes to please NT compiler 
+    several changes to please NT compiler
 !===========================================================================
 ! 20010310 - Vanya Belyaev
     new features:
     GiGaTrajectory - not all steps are appended now to the trajectory
-        1) first step is appended 
-        2) last step is appended 
+        1) first step is appended
+        2) last step is appended
         3) if there are secondaies - step is appended
-        4) if boundary condition and track is  optical photon - step is appended 
+        4) if boundary condition and track is  optical photon - step is appended
 !===========================================================================
 ! 20010307 - Vanya Belyaev
-    (1) new converters for Surfaces 
-    (2) all material converters are updated to convert tabulated properties 
-    of materials 
-    (3) LVolume converters ar eupdated to convert the surfaces 
-    (4) remove "tab"s form all files 
+    (1) new converters for Surfaces
+    (2) all material converters are updated to convert tabulated properties
+    of materials
+    (3) LVolume converters ar eupdated to convert the surfaces
+    (4) remove "tab"s form all files
 
 !===========================================================================
 ! 20010226 - Vanya Belyaev
      New functionality:
-     (1) GiGaKineCnvSvc is extended for conversion of  
+     (1) GiGaKineCnvSvc is extended for conversion of
          GiGaTrajectories into MCParticles/MCVertices
-         (a) Essential feature - container of converted MCVertices 
+         (a) Essential feature - container of converted MCVertices
              is SORTED using src/GiGaCnvFunctors.h. It is VERY
-             important for conversion of references.   
+             important for conversion of references.
          (b) updated files:
              - src/GiGaMCParticleCnv.h
              - src/GiGaMCParticleCnv.cpp
              - src/GiGaMCVertexCnv.h
              - src/GiGaMCVertexCnv.cpp
      (2) To allow conversion, the stored trajectories MUST be of type
-         GiGaTrajectory. 
-         New example class GiGaTrackActionSimple takes care about 
-         creation of correct GiGaTrajectories. It also takes case 
-         that G4Track* object has valid G4VUserTrackInformation* 
-         pointer to GiGaTrackInformation structure. 
+         GiGaTrajectory.
+         New example class GiGaTrackActionSimple takes care about
+         creation of correct GiGaTrajectories. It also takes case
+         that G4Track* object has valid G4VUserTrackInformation*
+         pointer to GiGaTrackInformation structure.
 !===========================================================================
 ! 20010224 - Vanya Belyaev
-     (1) A lot of modifications and renaming in  /GiGa subdirectory   
-        (a) GiGaCnv          --> GiGaCnvBase 
+     (1) A lot of modifications and renaming in  /GiGa subdirectory
+        (a) GiGaCnv          --> GiGaCnvBase
         (b) GiGaCnvSvc       --> GiGaCnvSvcBase
-        (c) GiGaSensDet      --> GiGaSensDetBase  
-        (d) GiGaPhysList     --> GiGaPhysListBase  
-        (e) GiGaMagField     --> GiGaMagFieldBase  
-        (f) GiGaStackAction  --> GiGaStackActionBase  
-        (g) GiGaStepAction   --> GiGaStepActionBase  
-        (h) GiGaTrackAction  --> GiGaTrackActionBase  
-     (2) For all classes in /GiGa subdirectory move all inline functions 
-         from *.h files into *.icpp files 
-     (3) New files 
-        (a) new service for conversion of Geant4 hits into Gaudi hits 
+        (c) GiGaSensDet      --> GiGaSensDetBase
+        (d) GiGaPhysList     --> GiGaPhysListBase
+        (e) GiGaMagField     --> GiGaMagFieldBase
+        (f) GiGaStackAction  --> GiGaStackActionBase
+        (g) GiGaStepAction   --> GiGaStepActionBase
+        (h) GiGaTrackAction  --> GiGaTrackActionBase
+     (2) For all classes in /GiGa subdirectory move all inline functions
+         from *.h files into *.icpp files
+     (3) New files
+        (a) new service for conversion of Geant4 hits into Gaudi hits
             - src/GiGaHitsCnvSvc.h
-            - src/GiGaHitsCnvSvc.cpp 
-        (b) new class for implementation of Track Information 
+            - src/GiGaHitsCnvSvc.cpp
+        (b) new class for implementation of Track Information
             (inherits from G4VUserTrackInformation). To be extended in future,
-            now iomplements only "toBeStored" method. 
+            now iomplements only "toBeStored" method.
             - GiGa/GiGaTrackInformation.h
             - GiGa/GiGaTrackInformation.icpp
             - src/GiGaTrackInformationAllocator.cpp
 !===========================================================================
 ! 20010222 - Vanya Belyaev
-     New classes: 
+     New classes:
      GiGaTrajectoryPoint and GiGaTrajectory - customisation of "standard"
-     trajectory point and "standard" trajectroery to take into account 
-     the tome information 
+     trajectory point and "standard" trajectroery to take into account
+     the tome information
      Converters for trakectrories into MCParticles and MCVertices structures
-     Conversion services for Trajectories and for Hits. 
+     Conversion services for Trajectories and for Hits.
 !===========================================================================
 ! 20010222 - Gonzalo Gracia
     Fixed rotations in Detector element conversion
-    Changed file 
+    Changed file
 !===========================================================================
 ! 20010221 - Vanya Belyaev
    (1) New "pseudo-interfaces" for "Stacking Action","Tracking Action" and "Stepping Action".
-       Classes inherit from G4UserStackingAction, G4UserTrackingAction and G4UserSteppingAction. 
+       Classes inherit from G4UserStackingAction, G4UserTrackingAction and G4UserSteppingAction.
        "Pseudo-interfaces":
-       GiGa/IGiGaStackAction.h,GiGa/IGiGaTrackAction.h,GiGa/IGiGaStepAction.h 
+       GiGa/IGiGaStackAction.h,GiGa/IGiGaTrackAction.h,GiGa/IGiGaStepAction.h
        and corresponding base classes:
-       GiGa/GiGaStackAction.h,GiGa/GiGaTrackAction.h,GiGa/GiGaStepAction.h 
-       GiGaStackAction.cpp,GiGaTrackAction.cpp,GiGaStepAction.cpp 
+       GiGa/GiGaStackAction.h,GiGa/GiGaTrackAction.h,GiGa/GiGaStepAction.h
+       GiGaStackAction.cpp,GiGaTrackAction.cpp,GiGaStepAction.cpp
        and corresponding "primitive" - just empty implementations:
        GiGaStackActionEmpty.h,GiGaStackActionEmpty.cpp,
        GiGaTrackActionEmpty.h,GiGaTrackActionEmpty.cpp,
        GiGaStepActionEmpty.h,GiGaStepActionEmpty.cpp
        and corresponding abstract factories:
-       GiGa/IGiGaStackActionFactory.h,GiGa/IGiGaTrackActionFactory.h,GiGa/IGiGaStepActionFactory.h 
-       and corresponding concrete templated factories: 
-       GiGa/GiGaStackActionFactory.h,GiGa/GiGaTrackActionFactory.h,GiGa/GiGaStepActionFactory.h 
-   (2) New options for GiGaSvc 
-        (a) "ObjectManager", with default value "ApplicationMgr" - to locate IObjManager interface 
+       GiGa/IGiGaStackActionFactory.h,GiGa/IGiGaTrackActionFactory.h,GiGa/IGiGaStepActionFactory.h
+       and corresponding concrete templated factories:
+       GiGa/GiGaStackActionFactory.h,GiGa/GiGaTrackActionFactory.h,GiGa/GiGaStepActionFactory.h
+   (2) New options for GiGaSvc
+        (a) "ObjectManager", with default value "ApplicationMgr" - to locate IObjManager interface
         (b) "UseVisManager", with default falue "false"          - flag to instantiate Visualization Manager
-        (c) "StackingAction", with empty default value  - type and name of Stacking Action Object 
-        (d) "TrackingAction", with empty default value  - type and name of Tracking Action Object 
-        (e) "SteppingAction", with empty default value  - type and name of Stepping Action Object 
-        (f) "PhysicsList"   , with empty default value  - type and name of Physics  List   Object 
-   (3) GiGaVisManager.h and GiGaVisManager.cpp 
-        - Visualization Manager itself. It is just a copy of "standard" visualisation manager 
-   (4) GiGaMiscGetEventAlg.h, GiGaMiscGetEventAlg.cpp 
-        - (temporary?)  primitive algorithm to trigger event retrival, or, more correctly 
-          "end of event preparation" 
-   (5) Some miscellaneous new methods in GiGaSvc.cpp to simplify the code 
+        (c) "StackingAction", with empty default value  - type and name of Stacking Action Object
+        (d) "TrackingAction", with empty default value  - type and name of Tracking Action Object
+        (e) "SteppingAction", with empty default value  - type and name of Stepping Action Object
+        (f) "PhysicsList"   , with empty default value  - type and name of Physics  List   Object
+   (3) GiGaVisManager.h and GiGaVisManager.cpp
+        - Visualization Manager itself. It is just a copy of "standard" visualisation manager
+   (4) GiGaMiscGetEventAlg.h, GiGaMiscGetEventAlg.cpp
+        - (temporary?)  primitive algorithm to trigger event retrival, or, more correctly
+          "end of event preparation"
+   (5) Some miscellaneous new methods in GiGaSvc.cpp to simplify the code
 ===========================================================================
 ! 20010219 - Vanya Belyaev
-   remove all *.*.* files to please nmake on NT 
+   remove all *.*.* files to please nmake on NT
 
 ===========================================================================
 ! 20010219 - Marco Cattaneo
@@ -341,31 +351,31 @@ Modified Files:
 
 !==============================================================
 ! 20010205  GiGa v4 (Vanya Belyaev)
-   GiGaGeomCnvSvc.cpp - bug fix in the conversion of Boolean Solids 
+   GiGaGeomCnvSvc.cpp - bug fix in the conversion of Boolean Solids
 
 !==============================================================
 ! 20010130  GiGa v4 (Vanya Belyaev)
   a lot of major and minor modifications
-   - GiGa/*.h  ONLY  interfaces and header files for "base" classes, 
+   - GiGa/*.h  ONLY  interfaces and header files for "base" classes,
                all other files now belongs to src subdirectory
-   - GiGaLVolumeCnv - new converter for LVolume into G4LogicalVolume 
+   - GiGaLVolumeCnv - new converter for LVolume into G4LogicalVolume
    - GiGaDetectorElementCnv - new converter
    - A lot of improvement in GiGaGeomCnvSvc
-      o Name of G4LogicalVolume   objects is set to be  ILVolume::name() 
-      o If G4VPhysicalVolume object is created during an ordinary conversion of 
-        daughters volumed of mother Logical Volume, it gets the name = "MotherName#IPVolume::name()" 
+      o Name of G4LogicalVolume   objects is set to be  ILVolume::name()
+      o If G4VPhysicalVolume object is created during an ordinary conversion of
+        daughters volumed of mother Logical Volume, it gets the name = "MotherName#IPVolume::name()"
         If G4VPhysical is created durion the conversion of DetectorElementObject
-        it gets the name of IDetectorElement::name(). This convention allows to 
+        it gets the name of IDetectorElement::name(). This convention allows to
         perform an easy check and to avoid the multiple conversion of geometry.
       o It is possible to specify the "Global" magnetic field
-   - implementation of GiGaBase - a useful utility for implementation of 
+   - implementation of GiGaBase - a useful utility for implementation of
      PhysicsList, SensitiveDetector, MagneticField, Stepper and Action classes
-     in an easy and  configurable  way 
-   - Physics List business: 
+     in an easy and  configurable  way
+   - Physics List business:
       o  new "pseudo-abstract" interface IGiGaPhysList for Physics List Objects
-      o  new interface for IGiGaPhysListFactory for factories, which are able to produce IGiGaPhysList Objects  
+      o  new interface for IGiGaPhysListFactory for factories, which are able to produce IGiGaPhysList Objects
       o  implementation of templated factory GiGaPhysListFactory
-      o  GiGaPhysListL - implementation of base class for any CONCRETE physics list object 
+      o  GiGaPhysListL - implementation of base class for any CONCRETE physics list object
       o  GiGaPhysListGeantino - a  "minimal" Physics List (geantino), "cut&paste" from ExN01PhysicsList
       o  GiGaPhysListEm       - an "electromagnetic" Physics List, "cut&paste" from ExN02PhysicsList
       o  GiGaPhysListFull     - a  "quite extensive"(full?) Physics List, "cut&paste" from ExN04PhysicsList
@@ -374,59 +384,59 @@ Modified Files:
       o  new "pseudo-adstract" interface IGiGaSensDet for Sensitive Detector Objects
       o  new interface IGiGaSensDetFactory for factories, which are able to produce IGiGaSensDet Objects
       o  implementation of templated factory GiGaSensDetFactory
-      o  GiGaSensDet      - implementation of base class for any CONCRETE Sensitive Detector 
-      o  GiGaSensDetPrint - trivial example of concrete sensitive detector implementation: 
-                       no hit creation, just some printout. 
-      o  GiGaGeomCnvSvc is updates accordingly. 
-           "Sensitivity" is a property of Logical Volume 
-           ( const std::string& ILVolume::sdName() ) in a format "Type/Name". 
+      o  GiGaSensDet      - implementation of base class for any CONCRETE Sensitive Detector
+      o  GiGaSensDetPrint - trivial example of concrete sensitive detector implementation:
+                       no hit creation, just some printout.
+      o  GiGaGeomCnvSvc is updates accordingly.
+           "Sensitivity" is a property of Logical Volume
+           ( const std::string& ILVolume::sdName() ) in a format "Type/Name".
    - Magnetic Field business
-      o new "pseudo-abstrct interface IGiGaMagField foe Magnetic Field Object 
+      o new "pseudo-abstrct interface IGiGaMagField foe Magnetic Field Object
       o  new interface IGiGaMagFieldFactory for factories, which are able to produce IGiGaMagField Objects
       o  implementation of templated factory GiGaMagFieldFactory
       o  GiGaMagField       - implementation of base class  for magnetic field
       o  GiGaMagFieldGlobal - implementation of concrete Magnetic Field object
-                        It is "trivial"  example -   just delegation to IMagneticFieldSvc. 
+                        It is "trivial"  example -   just delegation to IMagneticFieldSvc.
       o  GiGaMagFieldUniform - implementation of concrete Magnetic Field object
-                         It is also "trivial"  example - just constant uniform magnetic field  
-      o  GiGaGeomCnvSvs is update to incorporate these features 
+                         It is also "trivial"  example - just constant uniform magnetic field
+      o  GiGaGeomCnvSvs is update to incorporate these features
 
 !==============================================================
 
 ! 20010122 - GiGa v3 (Flr and G.Gracia)
-  
+
   requirements - use GEANT4 v3r0
                  use GaudiSys v6*
                  works on NT
 
 !==============================================================
 
-!20000806  Giga v2 
+!20000806  Giga v2
   Vanya Belyaev
-  new version 
-  restructurized 
-  Kine and Material converters are added 
-  Conversion Service is impemented 
+  new version
+  restructurized
+  Kine and Material converters are added
+  Conversion Service is impemented
 
 !==============================================================
 
-!20000806  Giga v1r1 
+!20000806  Giga v1r1
   Vanya Belyaev
-  package updated for newer version of GEANT4 v2r0 
-  improve in requirements file 
-  now one could build tehpackage in debug mode 
+  package updated for newer version of GEANT4 v2r0
+  improve in requirements file
+  now one could build tehpackage in debug mode
 
 !==============================================================
 
 !20000623 Vanya Belyaev
-  doc/*          - greate update in documentation 
+  doc/*          - greate update in documentation
 
 !==============================================================
 
 !20000621 Vanya Belyaev
-  requirements          - minor modification 
-  GiGaRunManager.cpp    - minor and temporary change to allow 
-                          the work with previous version of Gaudi  
+  requirements          - minor modification
+  GiGaRunManager.cpp    - minor and temporary change to allow
+                          the work with previous version of Gaudi
 !==============================================================
 
 !20000620 MC
@@ -435,14 +445,14 @@ Modified Files:
 
 !==============================================================
 
-!20000618 Vanya Belyaev 
-  some small bugs were fixed 
+!20000618 Vanya Belyaev
+  some small bugs were fixed
 
 !==============================================================
 
 !20000504 Vanya Belyaev :
 
-   GiGa - it is a "Gaudi  Interface for Genat4 Application" or 
+   GiGa - it is a "Gaudi  Interface for Genat4 Application" or
                   "Geant4 Interface for Gaudi  Application"
 
  New package.
