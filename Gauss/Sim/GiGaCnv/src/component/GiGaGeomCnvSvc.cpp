@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.15 2002-09-26 15:12:33 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.16 2002-12-04 16:25:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/09/26 15:12:33  ibelyaev
+//  reimplement some methods form IConverter interface
+//
 // Revision 1.14  2002/07/09 20:33:54  ibelyaev
 //  move GiGaVolumeUtils into public location
 //
@@ -739,7 +742,6 @@ StatusCode   GiGaGeomCnvSvc::sensitive
     { return Error("Could not locate SensDet ='" 
                    + Type + "'/'" + Nick + "'"      ) ; }
   //
-  SD->addRef();
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
   if(!SDman) {return Error("Could not locate G4SDManager");}
   SDman->AddNewDetector(SD);
@@ -800,8 +802,6 @@ StatusCode   GiGaGeomCnvSvc::magnetic
   if( 0 == MF        )
     { return Error("Could not locate MagField ='" 
                    + Type + "'/'" + Nick + "'"      ) ; }
-  //
-  MF->addRef();
   //
   m_MFs.push_back( MF );
   //

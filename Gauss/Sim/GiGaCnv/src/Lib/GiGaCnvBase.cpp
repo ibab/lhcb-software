@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.9 2002-12-04 16:25:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:24:50  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes 7 May 2002
+//
 // ============================================================================
 #define GIGACNV_GIGACNVBASE_CPP 1 
 // ============================================================================
@@ -213,17 +216,13 @@ StatusCode GiGaCnvBase::initialize ()
     if ( 0 == cnvSvc()  ) 
       { return Error("Initialize::unable to locate IGiGaCnvSvs=" + 
                      m_NameOfGiGaConversionService     );} 
-    cnvSvc()->addRef() ; 
   }
   ///
   m_GiGaGeomCnvSvc = dynamic_cast<IGiGaGeomCnvSvc*> ( m_GiGaCnvSvc ); 
   m_GiGaKineCnvSvc = dynamic_cast<IGiGaKineCnvSvc*> ( m_GiGaCnvSvc ); 
   m_GiGaHitsCnvSvc = dynamic_cast<IGiGaHitsCnvSvc*> ( m_GiGaCnvSvc ); 
   ///
-  if( 0 != geoSvc  () ) { geoSvc  ()->addRef() ; } 
-  if( 0 != kineSvc () ) { kineSvc ()->addRef() ; } 
-  if( 0 != hitsSvc () ) { hitsSvc ()->addRef() ; }
- 
+
   if( 0 == geoSvc() && 0 == kineSvc() && 0 == hitsSvc() )
     { return Error("Initialize::neither Geom,Hits or Kine CnvSvc located!");} 
   ///
@@ -237,7 +236,6 @@ StatusCode GiGaCnvBase::initialize ()
     if ( 0 == evtSvc()  ) 
       { return Error("Initialize::unable to locate IDataProviderSvs=" + 
                      evtName     );} 
-    evtSvc()->addRef();
   }
   ///
   {
@@ -250,7 +248,6 @@ StatusCode GiGaCnvBase::initialize ()
     if ( 0 == detSvc()  ) 
       { return Error("Initialize::unable to locate IDataProviderSvs=" + 
                      detName     );}
-    detSvc()->addRef(); 
   }
   ///
   {
@@ -263,7 +260,6 @@ StatusCode GiGaCnvBase::initialize ()
     if ( 0 == chronoSvc()  ) 
       { return Error("Initialize::unable to locate IChronoStatSvs=" + 
                      chronoName  );}
-    chronoSvc()->addRef(); 
   }
   ///
   {
@@ -276,7 +272,6 @@ StatusCode GiGaCnvBase::initialize ()
     if ( 0 == toolSvc()  ) 
       { return Error("Initialize::unable to locate IToolSvs=" + 
                      toolName  );}
-    toolSvc()->addRef(); 
   }
   ///
   {
@@ -300,8 +295,6 @@ StatusCode GiGaCnvBase::finalize ()
   if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc      = 0 ; } 
   if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc         = 0 ; } 
   if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc         = 0 ; } 
-  if( 0 != kineSvc   () ) { kineSvc   ()->release() ; m_GiGaKineCnvSvc = 0 ; } 
-  if( 0 != geoSvc    () ) { geoSvc    ()->release() ; m_GiGaGeomCnvSvc = 0 ; } 
   if( 0 != cnvSvc    () ) { cnvSvc    ()->release() ; m_GiGaCnvSvc     = 0 ; } 
   ///
   m_leaves.clear();

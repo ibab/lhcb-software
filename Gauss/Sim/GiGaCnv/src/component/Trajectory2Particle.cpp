@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.4 2002-05-20 13:36:17 ibelyaev Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.5 2002-12-04 16:25:19 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/20 13:36:17  ibelyaev
+//  add conversion of primary vertices
+//
 // ============================================================================
 // Include files
 /// STD and STL 
@@ -39,14 +42,14 @@ GiGaCnvFunctors::Trajectory2Particle::Trajectory2Particle
 ( IParticlePropertySvc* Svc )
   : m_ppSvc ( Svc   )
 { if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 GiGaCnvFunctors::Trajectory2Particle::~Trajectory2Particle()
-{
-  if( 0 != ppSvc() ) { ppSvc()->release(); m_ppSvc = 0 ;}
-};
+{ if( 0 != ppSvc() ) { ppSvc()->release(); m_ppSvc = 0 ;} };
+// ============================================================================
 
 // ============================================================================
 /** copy constructor 
@@ -56,9 +59,8 @@ GiGaCnvFunctors::Trajectory2Particle::~Trajectory2Particle()
 GiGaCnvFunctors::Trajectory2Particle::
 Trajectory2Particle( const Trajectory2Particle& right )
   : m_ppSvc( right.ppSvc() )
-{
-  if( 0 != ppSvc() ) { ppSvc()->addRef() ; }
-};
+{ if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
+// ============================================================================
 
 // ============================================================================
 /** perform the conversion of G4VTrajectory object to 

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.30 2002-11-08 11:09:57 witoldp Exp $
+! $Id: release.notes,v 1.31 2002-12-04 16:25:18 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-12-04 - Ivan Belyaev
+ -                    remove extra calls of "addRef"
+ - cmt/requirements   version update 
 
 !========================= GiGaCnv v9r0 ================================
 ! 2002-11-08 - Witek Pokorski

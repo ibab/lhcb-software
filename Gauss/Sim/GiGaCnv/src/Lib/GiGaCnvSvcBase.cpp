@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.9 2002-08-23 08:19:41 witoldp Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.10 2002-12-04 16:25:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/08/23 08:19:41  witoldp
+// Hits converters removed, bug fix
+//
 // Revision 1.8  2002/05/07 12:24:50  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes 7 May 2002
 //
@@ -163,7 +166,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == dpSvc()       ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_dpName         );}
-      dpSvc()->addRef(); 
       setDataProvider( dpSvc() ); 
       Print( " Located DataProvider="+m_dpName, MSG::VERBOSE ); 
     } 
@@ -179,7 +181,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == gigaSvc()     ) 
         { return Error("Initialize::Could not locate IGiGaSvc=" + 
                        m_gigaName         );}
-      gigaSvc()->addRef(); 
       Print( " Located GiGa Service="+m_gigaName, MSG::VERBOSE ); 
     } 
   else { return Error(" IGiGaSvc is not requested to be located!") ;} 
@@ -194,7 +195,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == setupSvc()    ) 
         { return Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
                        m_setupName         );}
-      setupSvc()->addRef(); 
       Print( " Located GiGa SetUp Service="+m_setupName, MSG::VERBOSE ); 
     } 
   else { return Error(" IGiGaSetUpSvc is not requested to be located!") ;} 
@@ -209,7 +209,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == evtSvc()      ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_evtName         );}
-      evtSvc()->addRef(); 
       Print( " Located Event Data  Service="+m_evtName, MSG::VERBOSE ); 
     } 
   else { Warning(" Event Data Service is not requested to be located!") ;} 
@@ -224,7 +223,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == detSvc()      ) 
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_detName         );}
-      detSvc()->addRef(); 
       Print( " Located Detector Data  Service="+m_detName, MSG::VERBOSE ); 
     } 
   else { Warning(" Detector Data Service is not requested to be located!") ;} 
@@ -239,7 +237,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == chronoSvc()   ) 
         { return Error("Initialize::Could not locate IChronoStatSvc=" + 
                        m_chronoName         );}
-      chronoSvc()->addRef(); 
       Print( " Located Chrono & Stat Service="+m_chronoName, MSG::VERBOSE ); 
     } 
   else { Warning(" Chrono & Stat Service is not requested to be located!") ;} 
@@ -253,7 +250,6 @@ StatusCode GiGaCnvSvcBase::initialize()
     if( 0 == toolSvc()   ) 
       { return Error("Initialize::Could not locate IToolSvc=" + 
                      m_toolName         );}
-    toolSvc()->addRef(); 
     Print( " Located Tool  Service=" + m_toolName, MSG::VERBOSE ); 
   } 
   ///
@@ -267,7 +263,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == objMgr()      )
         { return Error("Initialize::Could not locate IObjManager=" + 
                        m_omName         );}
-      objMgr()->addRef(); 
       Print( " Located ObjectManager "+m_omName, MSG::VERBOSE ); 
     } 
   else { Warning(" Object Manager is not requested to be located!") ;} 
@@ -282,7 +277,6 @@ StatusCode GiGaCnvSvcBase::initialize()
       if( 0 == objMgr()      ) 
         { return Error("Initialize::Could not locate IIncidentSvc=" + 
                        m_inName         );}
-      incSvc()->addRef(); 
       Print( " Located Incident Service  "+m_inName, MSG::VERBOSE ); 
       incSvc()->addListener( this , "BeginEvent" );
     } 
@@ -326,13 +320,13 @@ StatusCode GiGaCnvSvcBase::locateOwnCnvs()
 StatusCode GiGaCnvSvcBase::finalize()
 {
   ///
-  if ( 0 != dpSvc     () ) { dpSvc     ()->release() ; m_dpSvc     = 0 ; } 
-  if ( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
-  if ( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
-  if ( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
-  if ( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-  if ( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
-  if ( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; } 
+  if ( 0 != dpSvc     () ) { dpSvc     () -> release() ; m_dpSvc     = 0 ; } 
+  if ( 0 != evtSvc    () ) { evtSvc    () -> release() ; m_evtSvc    = 0 ; } 
+  if ( 0 != detSvc    () ) { detSvc    () -> release() ; m_detSvc    = 0 ; } 
+  if ( 0 != gigaSvc   () ) { gigaSvc   () -> release() ; m_gigaSvc   = 0 ; } 
+  if ( 0 != setupSvc  () ) { setupSvc  () -> release() ; m_setupSvc  = 0 ; } 
+  if ( 0 != chronoSvc () ) { chronoSvc () -> release() ; m_chronoSvc = 0 ; } 
+  if ( 0 != objMgr    () ) { objMgr    () -> release() ; m_objMgr    = 0 ; } 
   ///
   m_leaves.clear();
   ///  
