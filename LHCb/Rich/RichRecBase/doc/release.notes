@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-07-29 - Chris Jones
+ - Add CVS Log information to XML files
+
 !====================== RichRecBase v1r13 2004-07-22 =======================
 ! 2004-07-22 - Marco Cattaneo
  - Fix requirements to use RichDet v8r*
