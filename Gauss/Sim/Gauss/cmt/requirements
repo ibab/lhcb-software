@@ -27,7 +27,7 @@ use GeneratorModules    v14r2   Gen
 #GiGa staff...
 use GiGaCnv             v15r10   Sim
 
-use GaussTools          v10r8 	Sim
+use GaussTools          v10r9 	Sim
 use GaussTracker        v3r3    Sim
 use GaussRICH           v4r11   Sim
 use GaussCalo           v7r2    Sim
