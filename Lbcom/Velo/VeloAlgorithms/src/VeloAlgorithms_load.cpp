@@ -14,5 +14,6 @@ DECLARE_FACTORY_ENTRIES(VeloAlgorithms) {
   DECLARE_ALGORITHM( VeloSim );
   DECLARE_ALGORITHM( VeloDataProcessor );
   DECLARE_ALGORITHM( VeloClusterMaker );
+  DECLARE_ALGORITHM( VeloMonitor );
 }
 

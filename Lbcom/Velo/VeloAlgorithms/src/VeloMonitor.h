@@ -1,0 +1,175 @@
+#ifndef VELOMONITOR_H
+#define VELOMONITOR_H 1
+
+
+// Include files
+#include "GaudiKernel/Algorithm.h"
+#include "GaudiKernel/RndmGenerators.h"
+
+class IHistogram1D;
+class IHistogram2D;
+
+class VeloChannelID;
+class VeloCluster;
+class DeVelo;
+//--------------------------------------------------------------------
+//
+//	VeloMonitor: simple example to illustrate the functionality
+//                     of the Velo classes
+//
+//	Author :   Chris Parkes
+//
+//--------------------------------------------------------------------
+
+class VeloMonitor : public Algorithm {
+
+ public:
+  // Constructor of this form must be provided
+  VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator); 
+
+  // Three mandatory member functions of any algorithm
+  StatusCode initialize();
+  StatusCode execute();
+  StatusCode finalize();
+
+private:
+
+  StatusCode testMCVeloHit();
+  StatusCode testPileUpMCVeloHit();
+  StatusCode testMCVeloFE();
+  StatusCode testVeloFullDigit();
+  StatusCode testVeloCluster();
+
+  StatusCode resolution();
+  StatusCode efficiency();
+  StatusCode associators();
+  StatusCode random();
+
+  VeloChannelID weightedMean(VeloCluster*, double &);
+
+  StatusCode detElement();
+
+  // histograms
+    IHistogram1D*         m_MCVHEnergy;
+    IHistogram2D*         m_MCVHEntryXY;
+    IHistogram2D*         m_MCVHEntryZX;
+    IHistogram2D*         m_MCVHExitXY;
+    IHistogram2D*         m_MCVHExitZX;
+    IHistogram2D*         m_MCVHSensorZ;
+    IHistogram1D*         m_MCVHTOF;
+    IHistogram1D*         m_MCVHNHits;
+
+    IHistogram1D*         m_MCPEnergy;
+
+    IHistogram1D*         m_MCVHPEnergy;
+    IHistogram2D*         m_MCVHPEntryXY;
+    IHistogram2D*         m_MCVHPEntryZX;
+    IHistogram2D*         m_MCVHPExitXY;
+    IHistogram2D*         m_MCVHPExitZX;
+    IHistogram2D*         m_MCVHPSensorZ;
+    IHistogram1D*         m_MCVHPTOF;
+    IHistogram1D*         m_MCVHPNHits;
+
+    IHistogram1D*         m_MCPUPEnergy;
+
+    IHistogram2D*         m_MCVFESensorStrip;
+    IHistogram2D*         m_MCVFESensorStrip_s;
+    IHistogram2D*         m_MCVFESensorStrip_n;
+    IHistogram2D*         m_MCVFESensorStrip_o;
+    IHistogram1D*         m_MCVFECharge;
+    IHistogram1D*         m_MCVFECharge_s;
+    IHistogram1D*         m_MCVFECharge_n;
+    IHistogram1D*         m_MCVFECharge_o;
+    IHistogram1D*         m_MCVFESignal;
+    IHistogram1D*         m_MCVFESignal_s;
+    IHistogram1D*         m_MCVFESignal_n;
+    IHistogram1D*         m_MCVFESignal_o;
+    IHistogram1D*         m_MCVFENoise;
+    IHistogram1D*         m_MCVFENoise_s;
+    IHistogram1D*         m_MCVFENoise_n;
+    IHistogram1D*         m_MCVFENoise_o;
+    IHistogram1D*         m_MCVFECMNoise;
+    IHistogram1D*         m_MCVFEPedestal;
+    IHistogram1D*         m_MCVFENHits;
+    IHistogram1D*         m_MCVFEMCHitsSignal;
+    IHistogram1D*         m_MCVFEMCHitsSignal_s;
+    IHistogram1D*         m_MCVFEMCHitsSignal_n;
+    IHistogram1D*         m_MCVFEMCHitsSignal_o;
+    IHistogram1D*         m_MCVFEMCHitsTotalSignal;
+    IHistogram1D*         m_MCVFEMCHitsTotalSignal_s;
+    IHistogram1D*         m_MCVFEMCHitsTotalSignal_n;
+    IHistogram1D*         m_MCVFEMCHitsTotalSignal_o;
+    IHistogram1D*         m_MCVFEMCHits;
+
+    IHistogram2D*         m_VDSensorStrip;
+    IHistogram1D*         m_VDNHits; 
+    IHistogram1D*         m_VDADC;
+    IHistogram1D*         m_VDRawADC;
+    IHistogram1D*         m_VDPedestal;
+    IHistogram1D*         m_VDCMNoise;
+    IHistogram1D*         m_VDNoise;
+    IHistogram1D*         m_VDRawNoise;
+
+    IHistogram2D*         m_VCSensorStrip;
+    IHistogram1D*         m_VCNHits; 
+    IHistogram1D*         m_VCNHits_s;
+    IHistogram1D*         m_VCNHits_n;
+    IHistogram1D*         m_VCNHits_o;
+    IHistogram1D*         m_VCADCSum;
+    IHistogram1D*         m_VCADCSum_s;
+    IHistogram1D*         m_VCADCSum_n;
+    IHistogram1D*         m_VCADCSum_o;
+    IHistogram1D*         m_VCSize;
+    IHistogram1D*         m_VCSize_s;
+    IHistogram1D*         m_VCSize_n;
+    IHistogram1D*         m_VCSize_o;
+
+    IHistogram1D*         m_VCEfficiencyN; 
+    IHistogram1D*         m_VCEfficiencyT;
+    IHistogram1D*         m_VCEfficiencyNP; 
+    IHistogram1D*         m_VCEfficiencyTP;
+    IHistogram2D*         m_VCEfficiencyNXY;
+    IHistogram2D*         m_VCEfficiencyTXY;
+    IHistogram2D*         m_VCEfficiencyNRZ;
+    IHistogram2D*         m_VCEfficiencyTRZ;
+
+    IHistogram1D*         m_RRes;
+    IHistogram1D*         m_RRes1s;
+    IHistogram1D*         m_RRes2s;
+    IHistogram1D*         m_RRes3s;
+    IHistogram1D*         m_RCluster;
+    IHistogram1D*         m_RResd;
+    IHistogram1D*         m_PhiRes;
+    IHistogram1D*         m_PhiResd;
+    IHistogram1D*         m_RAngle;
+    IHistogram1D*         m_RAngle1s;
+    IHistogram1D*         m_RAngle2s;
+    IHistogram1D*         m_RAngle3s;
+    IHistogram2D*         m_RResAngle;
+    IHistogram1D*         m_randomTest;
+
+    IHistogram2D*         m_PhivsStrip;
+    IHistogram2D*         m_RvsStrip;
+    IHistogram2D*         m_PhiPlot;
+
+  Rndm::Numbers m_uniformDist;
+
+  DeVelo* m_velo;
+
+
+  int m_printout;
+  // control switches
+  bool m_testMCVeloHit;
+  bool m_testMCVeloFE;
+  bool m_testVeloFullDigit;
+  bool m_testVeloCluster;
+
+  bool m_resolution;
+ 
+
+  int m_NEvent;
+};
+
+
+# endif    // HISTOGRAMS_VELOMONITOR_H
+

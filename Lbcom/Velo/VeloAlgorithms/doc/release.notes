@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 
 !===================== VeloAlgorithms v2r5 2002-12-06 =====================
+! 2002-12-06 - Juan Palacios
+ - Add VeloMonitor algorithm
+
 ! 2002-12-06 - Marco Cattaneo
  - Use LHCB_v11r4
 

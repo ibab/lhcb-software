@@ -1,0 +1,8 @@
+// JP Palacios Options file for VeloMonitor algorithm
+VeloMonitor.TestMCVeloHit       = true;
+VeloMonitor.TestMCVeloFE        = true;
+VeloMonitor.TestVeloFullDigit = false;
+VeloMonitor.TestVeloCluster   = false;
+VeloMonitor.Resolution          = false;
+VeloMonitor.Printout            = 5;
+VeloMonitor.OutputLevel = 2;

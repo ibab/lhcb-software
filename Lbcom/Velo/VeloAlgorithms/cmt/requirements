@@ -14,11 +14,12 @@ include_dirs $(VELOALGORITHMSROOT)
 #============================================================================
 use  VeloEvent  v12r*   Event
 use  VeloDet    v8r*   	Det
-use  NAGC v*
+use  NAGC 	v*
+use  AIDA 	v*	-no_auto_imports
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms    ../src/*.cpp
+library          VeloAlgorithms    ../src/*.cpp -import=AIDA
 
 # define component library link options
 #============================================================================
