@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAsct.h,v 1.3 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCHitAsct.h,v 1.4 2003-01-17 14:07:44 sponce Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCHITASCT_H 
 #define OTASSOCIATORS_OTCLUSTER2MCHITASCT_H 1
 
@@ -28,7 +28,7 @@ static const std::string& OTCluster2MCHitLocation =
 
 class OTCluster2MCHitAsct: public Associator<OTCluster,MCHit>
 {
-  friend ToolFactory<OTCluster2MCHitAsct>;
+  friend class ToolFactory<OTCluster2MCHitAsct>;
   
 public:
   // Define data types

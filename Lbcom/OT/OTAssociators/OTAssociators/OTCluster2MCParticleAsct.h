@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAsct.h,v 1.3 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCParticleAsct.h,v 1.4 2003-01-17 14:07:44 sponce Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEASCT_H
 #define OTASSOCIATORS_OTCLUSTER2MCPARTICLEASCT_H 1
 
@@ -33,7 +33,7 @@ class MCParticle;
 
 class OTCluster2MCParticleAsct: public Associator<OTCluster,MCParticle>
 {
-  friend ToolFactory<OTCluster2MCParticleAsct>;
+  friend class ToolFactory<OTCluster2MCParticleAsct>;
   
 public:
   // Define data types

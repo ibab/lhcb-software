@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCDepositAsct.h,v 1.3 2002-09-27 09:41:04 jvantilb Exp $
+// $Id: OTCluster2MCDepositAsct.h,v 1.4 2003-01-17 14:07:44 sponce Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 
 #define OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 1
 
@@ -28,7 +28,7 @@ static const std::string& OTCluster2MCDepositLocation =
 
 class OTCluster2MCDepositAsct: public Associator<OTCluster,MCOTDeposit>
 {
-  friend ToolFactory<OTCluster2MCDepositAsct>;
+  friend class ToolFactory<OTCluster2MCDepositAsct>;
   
 public:
   // Define data types

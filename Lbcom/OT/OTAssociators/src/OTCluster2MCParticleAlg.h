@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.h,v 1.4 2002-10-17 08:38:27 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.h,v 1.5 2003-01-17 14:07:44 sponce Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H 1
 
@@ -23,7 +23,8 @@ class OTCluster;
 class MCParticle;
 
 class OTCluster2MCParticleAlg : public Algorithm {
-    friend AlgFactory<OTCluster2MCParticleAlg>;
+
+  friend class AlgFactory<OTCluster2MCParticleAlg>;
   
 public:
 
