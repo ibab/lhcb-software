@@ -60,87 +60,81 @@ StatusCode DeITDetector::initialize() {
        ++iterStation ) {
 
   log << MSG::DEBUG << "*****get parameters from"<<(*iterStation)->name()
-<< endreq;
+      << endreq;
 
-      double itZ= (*iterStation)->userParameterAsDouble("zCenter");    
-      double itThickness=(*iterStation)->userParameterAsDouble("Thickness");
-      unsigned int numLayers=(*iterStation)->userParameterAsInt("numLayers");   
-      unsigned int iStation =(*iterStation)->userParameterAsInt("StationID");
-      double SensorWidth=(*iterStation)->userParameterAsDouble("SensorWidth");
-      double SensorHeight=(*iterStation)->userParameterAsDouble("SensorHeight");
-      double SensorThickness=(*iterStation)->userParameterAsDouble("SensorThickness");
-      double SensorOverlap=(*iterStation)->userParameterAsDouble("SensorOverlap");
-      double holeX =(*iterStation)->userParameterAsDouble("holeX");
-      double holeY =(*iterStation)->userParameterAsDouble("holeY");
-      double ladderDist=(*iterStation)->userParameterAsDouble("DzLadder");
-      double numStrips =(*iterStation)->userParameterAsInt("numStrips");
-      double pitch =(*iterStation)->userParameterAsDouble("pitch");
+  double itZ= (*iterStation)->userParameterAsDouble("zCenter");    
+  double itThickness=(*iterStation)->userParameterAsDouble("Thickness");
+  unsigned int numLayers=(*iterStation)->userParameterAsInt("numLayers");   
+  unsigned int iStation =(*iterStation)->userParameterAsInt("StationID");
+  double SensorWidth=(*iterStation)->userParameterAsDouble("SensorWidth");
+  double SensorHeight=(*iterStation)->userParameterAsDouble("SensorHeight");
+  double SensorThickness=(*iterStation)->userParameterAsDouble("SensorThickness");
+  double SensorOverlap=(*iterStation)->userParameterAsDouble("SensorOverlap");
+  double holeX =(*iterStation)->userParameterAsDouble("holeX");
+  double holeY =(*iterStation)->userParameterAsDouble("holeY");
+  double ladderDist=(*iterStation)->userParameterAsDouble("DzLadder");
+  double numStrips =(*iterStation)->userParameterAsInt("numStrips");
+  double pitch =(*iterStation)->userParameterAsDouble("pitch");
 
+  ITDetectionStation* station = new ITDetectionStation(itZ, itThickness, numLayers, iStation);  
+  this->setNextStation(station);
 
-      ITDetectionStation* station =
-          new ITDetectionStation(itZ, itThickness, numLayers, iStation);  
-      this->setNextStation(station);
-
-  if(numLayers>2) {
+  if(numLayers>2){
  
     log << MSG::DEBUG << "*****now loop over boxes"<<endreq;
  
     //  loop over boxes 
-      IDetectorElement::IDEContainer::const_iterator iterBox;
-      for (iterBox = (*iterStation)->childBegin(); 
-           (*iterStation)->childEnd() != iterBox;++iterBox ) {
+    IDetectorElement::IDEContainer::const_iterator iterBox;
+    for (iterBox = (*iterStation)->childBegin(); 
+          (*iterStation)->childEnd() != iterBox;++iterBox ) {
 
+      //  gets the box's name
+      std::string boxName = (*iterBox)->name();       
+      log << MSG::DEBUG << "*****get parameters from"<<boxName <<endreq;
 
+      double NSensorX = (*iterBox)->userParameterAsInt("NSensorX");
+      double NSensorY = (*iterBox)->userParameterAsInt("NSensorY");
+     
 
-    //  gets the box's name
-    std::string boxName = (*iterBox)->name();       
-    log << MSG::DEBUG << "*****get parameters from"<<boxName <<endreq;
+      log << MSG::DEBUG << "*****now loop over layers"<<endreq;
 
-        double NSensorX,NSensorY;
-
-           NSensorX       =(*iterBox)->userParameterAsInt("NSensorX");
-           NSensorY       =(*iterBox)->userParameterAsInt("NSensorY");
-
-    log << MSG::DEBUG << "*****now loop over layers"<<endreq;
-
-    //  loop over layers ( or rows for old all-Si-TT1)
+      //  loop over layers ( or rows for old all-Si-TT1)
       IDetectorElement::IDEContainer::const_iterator iterLayer;
       for (iterLayer = (*iterBox)->childBegin();
            (*iterBox)->childEnd() != iterLayer;++iterLayer ) {
 
 
-    //  gets the layer's name
+        //  gets the layer's name
         std::string layerName = (*iterLayer)->name();
+        log << MSG::DEBUG << "*****get parameters from"<<layerName <<endreq;   
+ 
+        // get the z position of a layer
+        double LayerZ = 0.0;
+        HepPoint3D pointLocal(0.0, 0.0, 0.0);
+        HepPoint3D pointGlobal(0.0, 0.0, 0.0);
+        IGeometryInfo* geoData = (*iterLayer)->geometry();
+        if ( 0 != geoData ) {
+          pointGlobal = geoData->toGlobal( pointLocal );
+          LayerZ =  pointGlobal.z();
+        } 
+        else {
+          log << MSG::ERROR << "Failure to get layer position " <<endreq;
+          return StatusCode::FAILURE ;
+        }
 
-   log << MSG::DEBUG << "*****get parameters from"<<layerName <<endreq;   
+        // make sure this layer was not created
+        unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID"); 
+        if (0 != station->layer(iLayer)) continue;  
 
-
-    // get the z position of a layer
-      double LayerZ;
-      HepPoint3D pointLocal( 0, 0, 0);
-      HepPoint3D pointGlobal( 0, 0, 0);
-      IGeometryInfo* geoData = (*iterLayer)->geometry();
-      if ( 0 != geoData ) {
-        pointGlobal = geoData->toGlobal( pointLocal );
-        LayerZ =  pointGlobal.z();
-      } else {
-    log << MSG::ERROR << "Failure to get layer position " <<endreq;
-    return StatusCode::FAILURE ;
-      }
-
-    // make sure this layer was not created
-        if(station->layerByZ(LayerZ)) continue;  
-
-    // make sure the Layer ID is in scope 
-        unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");        
+        // make sure the Layer ID is in scope 
+        //unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");        
         if(iLayer<=0||iLayer>numLayers) {
-         log << MSG::ERROR << "Layer ID out of scope!" <<endreq;
+          log << MSG::ERROR << "Layer ID out of scope!" <<endreq;
           return StatusCode::FAILURE;
         }
 
         double stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
         unsigned int position=(*iterLayer)->userParameterAsInt("position");
-        //double angle          =pi/180.*stereoAngle;
 
         ITSTLayer* layer = new ITSTLayer(iStation, iLayer, LayerZ,
                    stereoAngle, pitch, SensorWidth, SensorHeight, SensorThickness,
@@ -149,48 +143,50 @@ StatusCode DeITDetector::initialize() {
         station->setLayer(layer, iLayer);    
        } //loop layers 
       } // loop boxes
-   } else { //new TT1
-        double NSensorX1,NSensorX2;
-        std::vector<int> ladderSize1, ladderSize2;
-           NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
-           NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
-           ladderSize1 =(*iterStation)->userParameterVectorAsInt("VSensor1");
-           ladderSize2 =(*iterStation)->userParameterVectorAsInt("VSensor2");
 
+    } 
+    else { 
 
-      IDetectorElement::IDEContainer::const_iterator iterLayer;
+     //new TT1
+     std::vector<int> ladderSize1, ladderSize2;
+     double NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
+     double NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
+     ladderSize1 =(*iterStation)->userParameterVectorAsInt("VSensor1");
+     ladderSize2 =(*iterStation)->userParameterVectorAsInt("VSensor2");
 
-      for (iterLayer = (*iterStation)->childBegin();
+     IDetectorElement::IDEContainer::const_iterator iterLayer;
+
+     for (iterLayer = (*iterStation)->childBegin();
            (*iterStation)->childEnd() != iterLayer;++iterLayer ) {
-      double LayerZ;
-      HepPoint3D pointLocal( 0, 50, 0);
-      HepPoint3D pointGlobal( 0, 0, 0);
-      IGeometryInfo* geoData = (*iterLayer)->geometry();
-      if ( 0 != geoData ) {
-        pointGlobal = geoData->toGlobal( pointLocal );
-        LayerZ =  pointGlobal.z();
-      } else {
-    log << MSG::ERROR << "Failure to get layer position " <<endreq;
-    return StatusCode::FAILURE ;
-      }
 
-      
-    // make sure the Layer ID is in scope
-        unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");
-        if(iLayer<=0||iLayer>numLayers) {
+       double LayerZ = 0.0;
+       HepPoint3D pointLocal( 0.0, 50.0, 0.0);
+       HepPoint3D pointGlobal( 0.0, 0.0, 0.0);
+       IGeometryInfo* geoData = (*iterLayer)->geometry();
+       if ( 0 != geoData ) {
+         pointGlobal = geoData->toGlobal( pointLocal );
+         LayerZ =  pointGlobal.z();
+       } 
+       else {
+         log << MSG::ERROR << "Failure to get layer position " <<endreq;
+         return StatusCode::FAILURE ;
+       }
+  
+       // make sure the Layer ID is in scope
+       unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");
+       if(iLayer<=0||iLayer>numLayers) {
          log << MSG::ERROR << "Layer ID out of scope!" <<endreq;
-          return StatusCode::FAILURE;
-        }
+         return StatusCode::FAILURE;
+       }
 
-        double  stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
-	//        unsigned int position=(*iterLayer)->userParameterAsInt("position");
+       double  stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
 
-          ITTT1Layer* layer = new ITTT1Layer(iStation, iLayer, LayerZ,
+       ITTT1Layer* layer = new ITTT1Layer(iStation, iLayer, LayerZ,
                    stereoAngle, pitch, SensorWidth, SensorHeight,
                    SensorThickness, SensorOverlap,
                    NSensorX1, NSensorX2, ladderSize1, ladderSize2,
                    holeX, holeY, ladderDist, numStrips);
-          station->setLayer(layer, iLayer);
+       station->setLayer(layer, iLayer);
      }// end loop layer
    }// end new TT1
   } // loop stations

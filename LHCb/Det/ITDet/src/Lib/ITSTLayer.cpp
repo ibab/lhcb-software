@@ -1,4 +1,4 @@
-// $Id: ITSTLayer.cpp,v 1.5 2002-10-04 15:52:28 mneedham Exp $
+// $Id: ITSTLayer.cpp,v 1.6 2002-11-18 09:45:38 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -44,11 +44,10 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
 
     // sensor height and y position  
     double yCenterBox = holeY+((ladderHeight*cosAngle())
-                               +(waferWidth*fabs(sinAngle())))/2.;
+                               +(waferWidth*fabs(sinAngle())))/2.0;
 
-      for (iBox= -1; iBox <= 2; iBox += 2 ){
-	// flip sign so that wafer 1 is in top box     
-        double yWafer = (double)-iBox*yCenterBox;
+      for (iBox= -1; iBox < 2; iBox += 2 ){     
+        double yWafer = (double)iBox*yCenterBox;
         for (unsigned int cWafer = 1; cWafer<= wafersX; cWafer++){
 
           double xWafer = ((waferWidth-waferOverlap)/cosAngle())
@@ -60,10 +59,10 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
  
           m_Wafers[currWafer-1] = new ITWafer(pitch, 1,wafersY, 
 	 				    stationID,layerID,currWafer,
-                                            uWafer - sensWaferWidth/2.,  
-                                            uWafer + sensWaferWidth/2., 
-			                    vWafer - sensLadderHeight/2., 
-			                    vWafer + sensLadderHeight/2., 
+                                            uWafer - sensWaferWidth/2.0,  
+                                            uWafer + sensWaferWidth/2.0, 
+			                    vWafer - sensLadderHeight/2.0, 
+			                    vWafer + sensLadderHeight/2.0, 
                                             dz,guardRingSize);
 
          currStrip += m_Wafers[currWafer-1]->lastStrip();
@@ -77,7 +76,7 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
     // has to be side
     double yWafer = 0.;
 
-    for (iBox= -1; iBox <= 2; iBox += 2 ){
+    for (iBox= -1; iBox < 2; iBox += 2 ){
       for (unsigned int sWafer = 1; sWafer<= wafersX; sWafer++){
         double xWafer = holeX 
 	  + ((wafersX-sWafer)*(waferWidth-waferOverlap)/cosAngle())
@@ -90,17 +89,22 @@ ITSTLayer::ITSTLayer(int stationID, int layerID, double z,
        
         double uWafer = xWafer*cosAngle() + yWafer*sinAngle();
         double vWafer = yWafer*cosAngle() - xWafer*sinAngle();
-         
-        m_Wafers[currWafer-1] = new ITWafer(pitch, 1,wafersY, 
-				            stationID,layerID,currWafer,
-                                            uWafer - sensWaferWidth/2.,  
-                                            uWafer + sensWaferWidth/2., 
-			                    vWafer - sensLadderHeight/2., 
-			                    vWafer + sensLadderHeight/2., 
+
+        unsigned int waferId = sWafer; 
+        if (iBox == 1){
+          waferId = (2u*wafersX)-sWafer+1;
+	}
+
+        m_Wafers[waferId-1u] = new ITWafer(pitch, 1,wafersY, 
+				            stationID,layerID,waferId,
+                                            uWafer - sensWaferWidth/2.0,  
+                                            uWafer + sensWaferWidth/2.0, 
+			                    vWafer - sensLadderHeight/2.0, 
+			                    vWafer + sensLadderHeight/2.0, 
                                             dz,guardRingSize);
 
-       currStrip += m_Wafers[currWafer-1]->lastStrip();        
-       currWafer++;
+       currStrip += m_Wafers[waferId-1u]->lastStrip();        
+      
 
       } // sWafer 
     } // iBox

@@ -10,7 +10,10 @@ ITDetectionStation::ITDetectionStation(double z, double thickness,
   m_StationID(stationID)
  {
   // constructer
-  m_Layers.resize(numLayers);
+  m_Layers.reserve(numLayers);
+  for (unsigned int iLayer = 0; iLayer < numLayers; ++iLayer){
+    m_Layers.push_back(0);
+  } // iLayer
 }
 
 ITDetectionStation::~ITDetectionStation(){
@@ -41,8 +44,6 @@ ITDetectionLayer* ITDetectionStation::layerByZ(const double testZ) const {
   return aLayer;
 }
 
-
-
 std::ostream& ITDetectionStation::printOut( std::ostream& os ) const{
  
   os << " Station : "  << m_StationID << std::endl;
@@ -52,7 +53,6 @@ std::ostream& ITDetectionStation::printOut( std::ostream& os ) const{
    
   return os;
 }
-
 
 MsgStream& ITDetectionStation::printOut( MsgStream& os ) const{
 

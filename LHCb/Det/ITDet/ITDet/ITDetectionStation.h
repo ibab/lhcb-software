@@ -96,7 +96,7 @@ inline ITDetectionLayer* ITDetectionStation::layer(const unsigned int n) const {
  if (n>0 && n<=m_Layers.size()) {
    aLayer = m_Layers[n-1];
  }
-   return aLayer;
+ return aLayer;
 }
 
 inline void ITDetectionStation::setLayer(ITDetectionLayer* layer, 

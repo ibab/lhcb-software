@@ -37,13 +37,24 @@ public:
   virtual double halfLengthX(const ITChannelID stripID) const;
   virtual double halfLengthY(const ITChannelID stripID) const;
   virtual unsigned int numStrips() const;
-  
+
+  unsigned int nRows() const;
+  unsigned int rowID(const unsigned int iWafer) const;
+  unsigned int numStripsInRow(const unsigned int iRow) const;
+  unsigned int firstWaferInRow(const unsigned int iRow) const;
+  unsigned int lastWaferInRow(const unsigned int iRow) const;
+
+ 
 private:
 
+  std::vector<unsigned int> m_rowsVector;
   int m_totStrips;
   
 };  
 
+inline unsigned int ITTT1Layer::nRows() const{
+  return m_rowsVector.size();
+}
 
 #endif //_ITTT1LAYER
 

@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.6 2002-10-07 13:29:27 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.7 2002-11-18 09:45:38 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -14,6 +14,9 @@
 #include "ITDet/ITTT1Layer.h"
 #include "Kernel/ITChannelID.h"
 #include "ITDet/ITWafer.h"
+
+#include <iterator>
+
 
 ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z, 
                     double stereoAngle, double pitch, double waferWidth, 
@@ -218,7 +221,19 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   } // iLWafer
 
   m_totStrips = currStrip;
- 
+
+  // rows stuff
+  m_rowsVector.reserve(ladderSize2.size());
+  unsigned int lastWaferInRow;
+  for (unsigned int iRow = 1; iRow<= ladderSize2.size(); iRow++){
+    if (iRow<= ladderSize2.size()/2){
+      lastWaferInRow = iRow*((2*wafersX2)+wafersX1);
+    }
+    else {
+      lastWaferInRow = iRow*((2*wafersX2)+wafersX1) -1;
+    }
+    m_rowsVector.push_back(lastWaferInRow);
+  } //iRow 
 }
 
 ITTT1Layer::~ITTT1Layer(){
@@ -289,10 +304,73 @@ unsigned int ITTT1Layer::numStrips() const {
   return m_totStrips;
 }
 
+unsigned int ITTT1Layer::rowID(const unsigned int iWafer) const {
 
+  // return row number
+  unsigned int iRow = 0u;
 
+  if (iWafer>=1 && iWafer <= m_Wafers.size()){
 
+    std::vector<unsigned int>::const_iterator iter = m_rowsVector.begin();
+    while ((iter != m_rowsVector.end())&&(iWafer>*iter)){
+      ++iter;
+    } 
+  
+    std::vector<double>::difference_type n = 0;
+#ifdef WIN32
+    n = std::distance(m_rowsVector.begin(),iter);
+#else
+    distance(m_rowsVector.begin(),iter,n);
+#endif
+    iRow = (unsigned int)(n+1u);
+  }  // valid wafer
 
+  return iRow;
+}
+
+unsigned int ITTT1Layer::numStripsInRow(const unsigned int iRow) const {
+
+  unsigned int nStrip = 0u;
+ 
+  if ((iRow<=nRows())&&(iRow>0u)){
+
+    unsigned int lastWafer = lastWaferInRow(iRow);
+    unsigned int iWafer = firstWaferInRow(iRow);
+
+    while (iWafer <= lastWafer){
+      nStrip += wafer(iWafer)->numStrips(); 
+      ++iWafer;
+    }
+  } // valid row
+
+  return nStrip;
+}
+
+unsigned int ITTT1Layer::firstWaferInRow(const unsigned int iRow) const {
+
+ unsigned int firstWafer=0;
+ if ((iRow<=nRows())){
+   if (iRow == 1){
+     firstWafer = 1;
+   }
+   else {
+     firstWafer = m_rowsVector[iRow-2]+1; 
+   }
+ }
+
+ 
+ return firstWafer;  
+} 
+
+unsigned int ITTT1Layer::lastWaferInRow(const unsigned int iRow) const {
+
+ unsigned int lastWafer=0;
+ if ((iRow<=nRows())&&(iRow>0u)){
+   lastWafer = m_rowsVector[iRow-1]; 
+ }
+ 
+ return lastWafer;  
+} 
 
 
 

@@ -125,7 +125,7 @@ inline double ITDetectionLayer::sinAngle() const{
 }
 
 inline bool ITDetectionLayer::isInside(const double z) const { 
-  return (fabs(z - m_Z) < 0.5*m_Thickness + SAFETY_BOUND); 
+  return (fabs(z - m_Z) < (0.5*m_Thickness + SAFETY_BOUND)); 
 }
 
 inline double ITDetectionLayer::pitch() const { 

@@ -1,6 +1,13 @@
 Package         : ITDet
 Package manager : M. Needham 
 
+!========================== ITDet v1r3 2002-11-18 ==========================
+M. Needham
+  DeITDetector.cpp Initialize all variables
+  ITDetectionStation.cpp Ensure vector of layers correctly initialized                 
+  ITTT1Layer.h,.cpp Add functionality to return what row a wafer is in  
+  ITTT1Layer.cpp, ITSTLayer.cpp Ensure correct wafer numbering 
+
 !========================== ITDet v1r1 2002-10-07 ==========================
 ! 2002-10-07 - M.Needham 
   Correct positioning of layers in y in TT1
