@@ -15,7 +15,8 @@
 // Modification history:
 //
 //    RYD       August 12, 2001        Module created
-//    F. Sandrelli, Fernando M-V  March 1, 2002     Debugged and added z parameter (CPT violation)
+//    F. Sandrelli, Fernando M-V  March 1, 2002     Debugged and added 
+//                                           z parameter (CPT violation)
 //------------------------------------------------------------------------
 // 
 #ifdef WIN32 
@@ -61,7 +62,8 @@ void EvtSSDCP::init(){
   EvtSpinType::spintype d2type=EvtPDL::getSpinType(getDaug(1));
 
   // FS commented this check to include alias of B0
-  //  if ( !((getParentId() == EvtPDL::getId("B0"))||(getParentId() == EvtPDL::getId("B0B"))) ) {
+  //  if ( !((getParentId() == EvtPDL::getId("B0"))
+  // ||(getParentId() == EvtPDL::getId("B0B"))) ) {
   //    report(ERROR, "EvtGen") << "EvtSSDCP cannot decay "
   //		    << EvtPDL::name(getParentId()) 
   //		    << ". Must be specified to decay"
@@ -71,12 +73,18 @@ void EvtSSDCP::init(){
   //}
 
   if ( (!(d1type == EvtSpinType::SCALAR || d2type == EvtSpinType::SCALAR))||
-       (!((d2type==EvtSpinType::SCALAR)||(d2type==EvtSpinType::VECTOR)||(d2type==EvtSpinType::TENSOR)))||
-       (!((d1type==EvtSpinType::SCALAR)||(d1type==EvtSpinType::VECTOR)||(d1type==EvtSpinType::TENSOR)))
+       (!((d2type==EvtSpinType::SCALAR)||(d2type==EvtSpinType::VECTOR)||
+          (d2type==EvtSpinType::TENSOR)))||
+       (!((d1type==EvtSpinType::SCALAR)||(d1type==EvtSpinType::VECTOR)||
+          (d1type==EvtSpinType::TENSOR)))
        ) {
     report(ERROR,"EvtGen") << "EvtSSDCP generator expected "
-                           << "one of the daugters to be a scalar, the other either scalar, vector, or tensor, found:"
-			   << EvtPDL::name(getDaug(0)).c_str()<<" and "<<EvtPDL::name(getDaug(1)).c_str()<<std::endl;
+                           << "one of the daugters to be a scalar, "
+                           << "the other either scalar, vector, or tensor, "
+                           << "found:"
+                           << EvtPDL::name(getDaug(0)).c_str()
+                           <<" and "
+                           <<EvtPDL::name(getDaug(1)).c_str()<<std::endl;
     report(ERROR,"EvtGen") << "Will terminate execution!"<<std::endl;
     ::abort();
   }
@@ -275,7 +283,8 @@ void EvtSSDCP::decay( EvtParticle *p){
 
   if (d2type==EvtSpinType::TENSOR) {
 
-    double norm=d->mass()*d->mass()/(m_parent*d->getP4().d3mag()*d->getP4().d3mag());
+    double norm=
+      d->mass()*d->mass()/(m_parent*d->getP4().d3mag()*d->getP4().d3mag());
  
    
    vertex(0,amp*norm*d->epsTensorParent(0).cont1(p4_parent)*p4_parent);

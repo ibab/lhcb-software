@@ -3,6 +3,11 @@ Package manager : Patrick Robbe and Witek Pokorski
 
 
 !===================== EvtGen v4r1 =====================================
+! 2003-10-27 - Patrick Robbe
+ - EvtIncoherentMixing : if B0/B0s has already mixed and the CP models
+   need to flip the flavour of the B, flip both flavours (B0 mother
+   and B0 daughter)
+
 ! 2003-10-21 - Patrick Robbe
  - EvtISGW2 : initialize ISGW2 decay model for B_s0
  - Implement CP violation with incoherent B production

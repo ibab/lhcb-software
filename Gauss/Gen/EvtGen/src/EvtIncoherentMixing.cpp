@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.2 2003-10-21 12:25:27 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.3 2003-10-27 16:35:07 robbep Exp $
 // Include files 
 
 
@@ -182,6 +182,7 @@ void EvtIncoherentMixing::OtherB( EvtParticle * p ,
       if ( ( isB0Mixed( p ) ) || ( isBsMixed( p ) ) ) {
         p->getParent()
           ->setId( EvtPDL::chargeConj( p->getParent()->getId() ) ) ;
+        p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
       }
       else {
         p->setId( EvtPDL::chargeConj( p->getId() ) ) ;
