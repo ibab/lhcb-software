@@ -4,6 +4,12 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v7r2 2004-12-10 =======================
+! 2004-12-10 - Marco Cattaneo
+ - Packages modified: PuVeto v6r0, VeloAlgorithms v3r2,
+                      L0MuonKernel v2r3, L0MuonTrigger v2r3p1,
+                      OTSimulation v1r2, OTMonitor v1r1
+
 !======================== BooleSys v7r1 2004-11-22 =======================
 ! 2004-11-19 - Marco Cattaneo
  - Packages removed:  CaloMonitor (obsolete)
