@@ -1,50 +1,7 @@
-# $Id: requirements,v 1.25 2001-12-11 10:02:27 sponce Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.24  2001/11/26 10:31:46  sponce
-# use new version of CLHEP (1.7.0.0)
-#
-# Revision 1.23  2001/11/20 15:22:23  sponce
-# Lots of changes here :
-#    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-#    is the removal of the class XmlAddress
-#    - centralization of address creations in conversion services, as suggested
-#    by the new architecture
-#    - add a parseString method on the XMLParserSvc. This allows to parse XML
-#    directly from a string
-#    - use of the new Assembly objects in the XML converters
-#    - update of the converters to handle the definition of detelem inside
-#    detelems, without using detelemrefs
-#    - take care of a possible indexing of detelems and parametrized detelems.
-#    The numbering is given by adding :<digits> to the name of the element.
-#    - add support for polycones in the converters
-#    - add code convention compliance to many files
-#
-# Revision 1.22  2001/11/18 16:08:26  ibelyaev
-#  bug fix for Win2K
-#
-# Revision 1.21  2001/11/18 15:32:44  ibelyaev
-#  update for Logical Assemblies
-#
-# Revision 1.20  2001/11/05 16:36:17  sponce
-# XmlLVolumeCnv : add new test for dealing with precision problems 
-# in the  HepVis package.
-# requirements : switch to the XERCES package, forget about the XML one
-#
-# Revision 1.19  2001/10/18 15:58:55  sponce
-#  avoid displaying of warning messages coming from xerces
-#
-# Revision 1.18  2001/10/17 12:54:05  sponce
-# new version
-#
-# Revision 1.17  2001/08/09 16:48:00  ibelyaev
-# update in interfaces and redesign of solids
-# 
+# $Id: requirements,v 1.26 2001-12-14 14:35:22 ranjard Exp $ 
 # =============================================================================
 package DetDesc
-version v9
+version v9r0
 
 branches DetDesc doc cmt src
 

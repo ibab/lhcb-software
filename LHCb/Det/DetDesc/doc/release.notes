@@ -1,13 +1,13 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.61 2001-12-13 19:22:37 andreav Exp $ 
+! $Id: release.notes,v 1.62 2001-12-14 14:35:22 ranjard Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
 ! =============================================================================
-! 20011213 - Andrea Valassi
+! 20011213 - v9r0 - Andrea Valassi
    Various changes concerning condition data.
    - add IConditionInfo interface and ConditionInfo class and specific ones
      for alignment, calibration, readout, slowcontrol and fastcontrol
