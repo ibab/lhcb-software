@@ -5,6 +5,10 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20011120 Sebastien Ponce
+ - make use of the new GaudiKernel and GaudiSvc
+ - take care that ILvolumes may have no solid
+
 !20010710 v2 Flr
  - use Gaudi v8
  - add options/Gaudi.job to run the example

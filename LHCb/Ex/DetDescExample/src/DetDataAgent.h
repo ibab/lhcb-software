@@ -11,14 +11,16 @@ class DetDataAgent : virtual public IDataStoreAgent {
 public:
   DetDataAgent( IMessageSvc* msgSvc ) : m_msgSvc( msgSvc ) {} 
   virtual ~DetDataAgent() {}
-  virtual bool analyse(IDataDirectory* dir, int level );
+  virtual bool analyse(IRegistry* dir, int level );
 private:
   IMessageSvc* m_msgSvc;
 };
 
-inline bool DetDataAgent::analyse(IDataDirectory* dir, int level ){
+inline bool DetDataAgent::analyse(IRegistry* dir, int /*level*/ ){
   MsgStream log( m_msgSvc, "detDataAgent" );
-  log << MSG::INFO << dir->fullpath() << ( dir->object() ? " [loaded] " : " " ) << endreq; 
+  log << MSG::INFO << dir->identifier()
+      << ( dir->object() ? " [loaded] " : " " )
+      << endreq; 
   return true;
 }
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.11 2001-07-02 14:11:15 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.12 2001-11-20 15:23:45 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -9,6 +9,7 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/IConverter.h"
+#include "GaudiKernel/RegistryEntry.h"
 
 /// Utility classes
 #include "GaudiKernel/MsgStream.h"
@@ -34,7 +35,7 @@
 //------------------------------------------------------------------------------
 // Implementation of class :  SimpleAlgorithm
 //------------------------------------------------------------------------------
-void dumpPVs( IMessageSvc* ms, ILVolume* lv, std::string de )
+void dumpPVs( IMessageSvc* ms, const ILVolume* lv, std::string de )
 {
 
   MsgStream log(ms, "dumpPVs");
@@ -67,13 +68,13 @@ SimpleAlgorithm::SimpleAlgorithm (const std::string& name,
 /// for processing the events. In this example it declares the specific
 /// converters needed for that specific application.
 StatusCode SimpleAlgorithm::initialize() {
-
+  
   MsgStream log(msgSvc(), name());
-
+  
   StatusCode sc;
   
   log << MSG::INFO << "Initialization starting..." << endreq;
-
+  
   // This is a quick test of the TabulatedProperty feature
   log << MSG::INFO << "Testing the TabulatedProperty feature" << endreq;
   SmartDataPtr<TabulatedProperty> tab
@@ -84,7 +85,7 @@ StatusCode SimpleAlgorithm::initialize() {
         << "/MirrorSurfaceReflectivityPT" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   TabulatedProperty::Table table = tab->table();
   TabulatedProperty::Table::iterator it;
   for (it = table.begin();
@@ -93,26 +94,27 @@ StatusCode SimpleAlgorithm::initialize() {
     log << MSG::INFO << "new table Entry : "
         << "x = " << it->first << ", y = " << it->second << endreq;
   }
-
-  /// Now we retrieve the top level detector element, e.g. LHCb detector
-  /// "Structure" is the top level catalog holding detector logical structure
+  
+  // Now we retrieve the top level detector element, e.g. LHCb detector
+  // "Structure" is the top level catalog holding detector logical structure
   log << MSG::INFO << "Retrieving now detector elements" << endreq;
   SmartDataPtr<IDetectorElement> cave(detSvc(),"/dd/Structure/LHCb" );
   
-  /// We test if the smart reference is non-zero to be sure
-  /// that the data object has been loaded properly
+  // We test if the smart reference is non-zero to be sure
+  // that the data object has been loaded properly
   if (!cave) {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb" << endreq;
     return StatusCode::FAILURE;
   }
   
-  /// Fill the pointer with the information about volume
-  /// associated with "/dd/Structure/LHCb"
-  ILVolume* stvol = cave->geometry()->lvolume();
-  log << MSG::INFO << "LHCb detector is made of " << stvol->materialName()
-      << endreq;
-  
-  dumpPVs( msgSvc(), stvol, cave->name() );
+  // Fill the pointer with the information about volume
+  // associated with "/dd/Structure/LHCb"
+  if (cave->geometry()->hasLVolume()) {
+    const ILVolume* stvol = cave->geometry()->lvolume();
+    log << MSG::INFO << "LHCb detector is made of " << stvol->materialName()
+        << endreq;
+    dumpPVs( msgSvc(), stvol, cave->name() );
+  }
 
   //---------------------------------------------------------------------------
   // This is an example of usage of userParameter tag
@@ -153,16 +155,17 @@ StatusCode SimpleAlgorithm::initialize() {
   }
   //---------------------------------------------------------------------------
 
-  ILVolume* ecalo_vol = ecalouter->geometry()->lvolume();
-  if (ecalo_vol) {
-    std::string ecalo_mat = ecalo_vol->materialName();
-    log << MSG::INFO << "EcalOuter has volume "
-        << ecalouter->geometry()->lvolumeName() << endreq;
-    log << MSG::INFO << "EcalOuter module made of " << ecalo_mat << endreq;
+  if (ecalouter->geometry()->hasLVolume()) {
+    const ILVolume* ecalo_vol = ecalouter->geometry()->lvolume();
+    if (ecalo_vol) {
+      std::string ecalo_mat = ecalo_vol->materialName();
+      log << MSG::INFO << "EcalOuter has volume "
+          << ecalouter->geometry()->lvolumeName() << endreq;
+      log << MSG::INFO << "EcalOuter module made of " << ecalo_mat << endreq;
+    }
+    dumpPVs( msgSvc(), ecalo_vol, ecalouter->name() );  
   }
-
-  dumpPVs( msgSvc(), ecalo_vol, ecalouter->name() );
-
+  
   /// Now retrieve the custom, user defined detector element "Velo" with
   /// "specific" data defined in vertex.xml file.
   /// In our case the specific data holds information about number of stations
@@ -172,18 +175,20 @@ StatusCode SimpleAlgorithm::initialize() {
     return StatusCode::FAILURE;
   }
   
-  ILVolume* ivol = vertex->geometry()->lvolume();
-  const ISolid*   vsolid = ivol->solid();
-  HepTransform3D vtrans = vertex->geometry()->matrixInv();
-  /// HepRotation vrot  = vtrans.getRotation();
-  Hep3Vector vvec   = vtrans.getTranslation();
-  log << MSG::INFO << "Vertex detector is made of " << ivol->materialName()
-      << endreq;
-  std::cout << "Vertex detector has solid  " << vsolid << std::endl;
-  std::cout << "Vertex detector has position  " << vvec << std::endl;
-
-  dumpPVs( msgSvc(), ivol, vertex->name() );
-
+  if (vertex->geometry()->hasLVolume()) {
+    const ILVolume* ivol = vertex->geometry()->lvolume();
+    const ISolid*   vsolid = ivol->solid();
+    HepTransform3D vtrans = vertex->geometry()->matrixInv();
+    /// HepRotation vrot  = vtrans.getRotation();
+      Hep3Vector vvec   = vtrans.getTranslation();
+      log << MSG::INFO << "Vertex detector is made of " << ivol->materialName()
+          << endreq;
+      std::cout << "Vertex detector has solid  " << vsolid << std::endl;
+      std::cout << "Vertex detector has position  " << vvec << std::endl;
+      
+      dumpPVs( msgSvc(), ivol, vertex->name() );
+  }
+  
   /*
   SmartDataPtr<IDetectorElement> vs( vertex, "Stations/Station05" );
   if (!vs) {
@@ -219,16 +224,21 @@ StatusCode SimpleAlgorithm::initialize() {
   
   // Loop over all the muon stations found in the detector model
   // This is an example of how to use specific converters
-  DataObject::DirIterator d;
-  for (d =  stations->dirBegin();
-       d != stations->dirEnd();
-       d++) {
-    SmartDataPtr<DeMuonStation> s (detSvc(), (*d)->fullpath());
-    if (!s) {
-      log << MSG::ERROR << "Unable to retrieve: " << (*d)->fullpath() << endreq;
+  DataSvcHelpers::RegistryEntry* entry =
+    dynamic_cast<DataSvcHelpers::RegistryEntry*> (stations->registry());
+  if (0 != entry) {
+    DataSvcHelpers::RegistryEntry::Iterator it;
+    for (it =  entry->begin();
+         it != entry->end();
+         it++) {
+      SmartDataPtr<DeMuonStation> s (detSvc(), (*it)->identifier());
+      if (!s) {
+        log << MSG::ERROR << "Unable to retrieve: "
+            << (*it)->identifier() << endreq;
       return sc;
+      }
+      m_stations.push_back( s );
     }
-    m_stations.push_back( s );
   }
   
   log << MSG::INFO << "Found " << m_stations.size()
@@ -238,7 +248,7 @@ StatusCode SimpleAlgorithm::initialize() {
   unsigned int i;
   for (i = 0; i < m_stations.size(); i++) {
     log << MSG::INFO << "MUON STATION: "
-        << m_stations[i]->localPath() << endreq;
+        << m_stations[i]->registry()->name() << endreq;
     log << MSG::INFO << "Aluminium plate thickness: "
         << m_stations[i]->thickness() << endreq;
     log << MSG::INFO << "X pad dimension:           "
@@ -291,7 +301,7 @@ StatusCode SimpleAlgorithm::initialize() {
   
   /// Now retrieve simple material mixture
   SmartDataPtr<Material> mWater( detSvc(), "/dd/Materials/Water" );
-  if( !mWater )                                                            {
+  if( !mWater ) {
     log << MSG::ERROR << "Can't retrieve /dd/Materials/Water!" << endreq;
     return StatusCode::FAILURE;
   }
