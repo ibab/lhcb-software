@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.10 2002-01-18 17:25:13 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.11 2002-01-29 11:58:21 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -333,7 +333,7 @@ inline void DaDiClass::pushImportList(std::string value)
 			}
 			else
 			{
-        for (i=0; i<sizeImpSoftList(); ++i)
+        for (i=0; i<m_impSoftList.size(); ++i)
         {
           if (import == m_impSoftList.front())
           {
