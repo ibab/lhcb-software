@@ -3,6 +3,10 @@ Package manager : Patrick Robbe and Witek Pokorski
 
 
 !===================== EvtGen v4r1 =====================================
+! 2003-10-21 - Patrick Robbe
+ - EvtISGW2 : initialize ISGW2 decay model for B_s0
+ - Implement CP violation with incoherent B production
+
 ! 2003-10-20 - Patrick Robbe
  - EvtHelAmp, EvtParticleDecayList, EvtbTosllBall : fix memory leaks
 

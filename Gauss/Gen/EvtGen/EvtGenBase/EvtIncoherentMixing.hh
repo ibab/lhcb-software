@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.hh,v 1.1 2003-10-10 09:21:43 robbep Exp $
+// $Id: EvtIncoherentMixing.hh,v 1.2 2003-10-21 12:24:56 robbep Exp $
 #ifndef EVTINCOHERENTMIXING_HH 
 #define EVTINCOHERENTMIXING_HH 1
 
@@ -51,6 +51,18 @@ public:
   static bool isB0Mixed( EvtParticle * ) ;
   static bool isBsMixed( EvtParticle * ) ;
 
+  // Functions for CP models
+  // returns for particle p the decay time t , the flavour of the tag
+  // side (B0, anti-B0, B_s0, anti-B_s0). The flavour of p can flip
+  // with probability probB
+  static void OtherB( EvtParticle * p , double & t , EvtId & otherb ,
+                      double probB ) ;
+  static void OtherB( EvtParticle * p , double & t , EvtId & otherb ) ;
+
+  static bool flipIsEnabled() { return _enableFlip ; } ;
+  static void enableFlip() { _enableFlip = true ; } ;
+  static void disableFlip() { _enableFlip = false ; } ;
+
 protected:
 
 private:
@@ -61,6 +73,7 @@ private:
   static double _deltamd ;
   static double _dGammas ;
   static double _deltams ;
+  static bool _enableFlip ;
 
 };
 #endif // EVTGENBASE_EVTINCOHERENTMIXING_HH
