@@ -19,6 +19,7 @@
  - DaVinciTools/IKFFitTool.h
   . Add interface for new kinematic fit tool KFFitTool
 
+!========================= DaVinciKernel v2r0p1 2004-11-15 ==================
 ! 2004-09-27 - P. Koppenburg
  - DaVinciTools/IPVLocator.h
    . Interface to PVLocator (in DaVinciTools)
