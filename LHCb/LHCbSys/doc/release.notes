@@ -4,6 +4,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r8 2004-04-23 =======================
+! 2004-04-23 - Marco Cattaneo
+ - Modified packages: EventSys v17r8, DAQEvent v4r2, DetSys v5r6, MuonDet v4r6
+
+ - In DAQEvent v4r2:
+   . Fix range of L1Event bankType (savannah bug 3130)
+
+ - In MuonDet v4r6:
+   . Fix a memory leak (savannah bug 3129)
+
 !======================= LHCbSys v15r7 2004-04-21 =======================
 ! 2004-04-21 - Marco Cattaneo
   Built against Gaudi v14r5
