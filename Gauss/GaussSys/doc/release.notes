@@ -4,6 +4,9 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+! 2004-12-17 - Gloria Corti
+ - use CaloRICH v4r10
+
 ! 2004-12-14 - Gloria CORTI
  - requirements - use GaussTools v10r7, GaussCalo v7r2, CaloMoniSim v1r0
 
