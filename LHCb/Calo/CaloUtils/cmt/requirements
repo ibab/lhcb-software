@@ -1,10 +1,12 @@
-# $Id: requirements,v 1.21 2004-10-22 09:29:08 ibelyaev Exp $
+# $Id: requirements,v 1.22 2004-10-27 11:58:09 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # Created    : 02/11/2001
-# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
+# Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # =============================================================================
 package             CaloUtils
-version             v4r7p1
+version             v4r8
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -13,13 +15,16 @@ branches            cmt doc src CaloUtils
 include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
-use CaloEvent       v13r*   Event
 use CaloDet         v6r*    Det 
+use CaloEvent       v13r*   Event
+use TrEvent         v*      Event 
 
-# ================= constituens: linker library ===============================
+# ================= constituents: linker library ==============================
 library             CaloUtils    *.cpp
 
 # ================= patterns ==================================================
 apply_pattern       linker_library library=CaloUtils 
 
-# ================= end =======================================================
+# =============================================================================
+# The END 
+# =============================================================================

@@ -1,7 +1,23 @@
-! $Id: release.notes,v 1.30 2004-10-26 13:31:41 cattanem Exp $
+! $Id: release.notes,v 1.31 2004-10-27 11:58:09 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-10-27 - Vanya BELYAEV
+ - CaloUtils/TrTrackUse.h ,
+   src/TrTrackUse.cpp
+
+      new helper class to simplify the selection/rejection of 
+      TrStoredTrack fro e.g. mathcing, monitoring, PID, etc...
+      It defins a "standard" set of properties for "Component"
+      classes ("Algorithm", "Service", "AlgTool") and few methods 
+      for seelction.rejection of tracks, inspection, etc... 
+
+      The clients : CaloReco, CaloMoniDst. CaloPIDs 
+
+ - cmt/requirements
+    increment the version to v4r8 
+
 
 ! ============================ CaloUtils v4r7p1 2004-10-26 ====================
 ! 2004-10-26 - Marco Cattaneo
