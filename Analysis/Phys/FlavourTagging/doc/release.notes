@@ -4,6 +4,13 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2003-04-28 - Gloria Corti
+ - cmt/requiremets 
+   . use DaVinciTools v8r* and DaVinciMCTools v5r* 
+   . remove explicit use of DaVinciAssociators and TrAssociators (via
+     DaVinciMCTools)
+   . increase version numver to v4r4
+
 !==================== FlavourTagging v4r3 2003-04-25 =====================
 ! 2003-04-10 - Olivier Dormond
  - Added a combined particle maker until one is available globally.

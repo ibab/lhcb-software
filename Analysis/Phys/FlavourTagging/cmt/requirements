@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v4r3
+version           v4r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -22,11 +22,9 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 #============================================================================
 # Used packages. 
 #============================================================================
-use DaVinciTools	v7r*	Phys
-use DaVinciMCTools	v4r*	Phys
-use DaVinciAssociators	v3r*    Phys
+use DaVinciTools	v8r*	Phys
+use DaVinciMCTools	v5r*	Phys
 use L0Event		v13r*	Event
-use TrAssociators	v3r*	Tr
 
 #============================================================================
 # Component library building rule
