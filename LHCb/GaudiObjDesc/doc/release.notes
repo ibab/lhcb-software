@@ -2,6 +2,13 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+================v4r1=====================================
+
+! 20020416 Stefan Roiser
+ - Added <class>-attribute 'keyedContTypeDef' to force the production of typedefs for KeyedContainers which are inherited 
+   indirectly from 'KeyedObject' but cannot be resolved through the xml-file (inheritance from a class defined in another xml-file)
+ - Gaudi-type 'longlong' recognized as fundamental-one
+
 ================v4r0=====================================
 ! 20020328 Stefan Roiser
   - changes to produce dictionary-information compliant to the new interface of GaudiIntrospection v4r0

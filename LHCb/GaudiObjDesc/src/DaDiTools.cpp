@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.13 2002-04-08 13:03:44 mato Exp $
+// $Id: DaDiTools.cpp,v 1.14 2002-04-17 16:55:46 mato Exp $
 
 
 // Include files
@@ -101,7 +101,7 @@ bool DaDiTools::isFundamental(std::string value)
         (*iter == "long")  || (*iter == "int")      || 
         (*iter == "float") || (*iter == "double")   || 
         (*iter == "char")  || (*iter == "unsigned") ||
-        (*iter == "signed"))
+        (*iter == "signed")|| (*iter == "longlong"))
     {
       return true;
     }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.7 2002-03-14 09:29:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiNamespace.h,v 1.8 2002-04-17 16:55:45 mato Exp $
 #ifndef DADINAMESPACE_H 
 #define DADINAMESPACE_H 1
 
@@ -276,7 +276,8 @@ inline void DaDiNamespace::pushImportList(std::string value)
         (lastword != "float")  && (lastword != "double")   &&
         (lastword != "char")   && (lastword != "unsigned") &&
         (lastword != "signed") && (lastword != "")         &&
-        (lastword != "std")    && (lastword != "string"))
+        (lastword != "std")    && (lastword != "string")   &&
+        (lastword != "longlong"))
 		{
 			if ((import == "vector") || (import == "list")   ||
 				(import == "deque")    || (import == "queue")  ||

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.57 2002-04-08 13:03:43 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.58 2002-04-17 16:55:44 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -946,8 +946,8 @@ void printClass(std::ofstream& xmlOut,
 {
   time_t ltime;
   int i;
-  bool isEventClass = false, 
-       classTemplate = false, 
+  bool classTemplate = gddClass->keyedContTypeDef(), 
+       isEventClass = false, 
        classTemplateVector = false,
        classTemplateList = false;
 

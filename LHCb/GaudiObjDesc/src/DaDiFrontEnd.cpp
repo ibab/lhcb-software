@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.35 2002-04-08 13:03:44 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.36 2002-04-17 16:55:45 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -935,6 +935,11 @@ void parseClass(DOM_Node node,
     gddClass->setClassTemplateList(false);
   }
 
+  if (gddClass->classTemplateList())
+  {
+    gddClass->pushImportList("ObjectList");
+  }
+  
   if (node.getAttributes().
     getNamedItem(DOMString::transcode("serializers")).
     getNodeValue().equals("TRUE"))
@@ -957,11 +962,17 @@ void parseClass(DOM_Node node,
     gddClass->setStdVectorTypeDef(false);
   }
 
-  if (gddClass->classTemplateList())
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("keyedContTypeDef")).
+    getNodeValue().equals("TRUE"))
   {
-    gddClass->pushImportList("ObjectList");
+    gddClass->setKeyedContTypeDef(true);
   }
-  
+  else
+  {
+    gddClass->setKeyedContTypeDef(false);
+  }
+
   if(!node.getAttributes().getNamedItem(DOMString::transcode("id")).isNull())
   {
     gddClass->setID(node.getAttributes().

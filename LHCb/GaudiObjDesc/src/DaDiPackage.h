@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.8 2002-03-13 18:35:47 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.9 2002-04-17 16:55:45 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -190,7 +190,8 @@ inline void DaDiPackage::pushImportList(std::string value)
         (lastword != "float")  && (lastword != "double")   &&
         (lastword != "char")   && (lastword != "unsigned") &&
         (lastword != "signed") && (lastword != "")         &&
-        (lastword != "string") && (lastword != "std"))
+        (lastword != "string") && (lastword != "std")      &&
+        (lastword != "longlong"))
 		{
 			if ((import == "vector") || (import == "list")   ||
 				(import == "deque")  || (import == "queue")    ||

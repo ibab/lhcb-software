@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.23 2002-04-08 13:03:42 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.24 2002-04-17 16:55:44 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -68,6 +68,9 @@ public:
 
 	bool stdVectorTypeDef();
 	void setStdVectorTypeDef(bool value);
+
+	bool keyedContTypeDef();
+	void setKeyedContTypeDef(bool value);
 
 	std::string popImpSoftList();
   std::list<std::string> impSoftList();
@@ -147,7 +150,8 @@ private:
                               m_classTemplateList,
                               m_innerClass,
                               m_serializers,
-                              m_stdVectorTypeDef;
+                              m_stdVectorTypeDef,
+                              m_keyedContTypeDef;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList,
@@ -277,6 +281,16 @@ inline bool DaDiClass::stdVectorTypeDef()
 inline void DaDiClass::setStdVectorTypeDef(bool value)
 {
 	m_stdVectorTypeDef = value;
+}
+
+inline bool DaDiClass::keyedContTypeDef()
+{
+	return m_keyedContTypeDef;
+}
+
+inline void DaDiClass::setKeyedContTypeDef(bool value)
+{
+	m_keyedContTypeDef = value;
 }
 
 inline std::string DaDiClass::popImpSoftList()
@@ -415,7 +429,8 @@ inline void DaDiClass::pushImportList(std::string value)
         (lastword != "float")  && (lastword != "double")   &&
         (lastword != "char")   && (lastword != "unsigned") &&
         (lastword != "signed") && (lastword != "")         &&
-        (lastword != "std")    && (lastword != "string"))
+        (lastword != "std")    && (lastword != "string") &&
+        (lastword != "longlong"))
 		{
 			if ((import == "vector") || (import == "list")   ||
 				(import == "deque")    || (import == "queue")  ||
