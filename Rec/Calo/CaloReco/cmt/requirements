@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.26 2004-07-21 12:10:26 ibelyaev Exp $
+# $Id: requirements,v 1.27 2004-07-29 17:05:37 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloReco
-version            v2r4
+version            v2r5
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -11,6 +11,7 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces v4r*	  Calo 
 use CaloUtils      v4r*   Calo 
+use Relations      v*     Kernel 
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
