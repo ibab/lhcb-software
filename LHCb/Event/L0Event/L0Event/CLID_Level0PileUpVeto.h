@@ -1,7 +1,0 @@
-// $Id: CLID_Level0PileUpVeto.h,v 1.1 2001-06-27 10:07:06 ocallot Exp $
-#ifndef L0EVENT_CLID_LEVEL0PILEUPVETO_H 
-#define L0EVENT_CLID_LEVEL0PILEUPVETO_H 1
-
-static const CLID& CLID_Level0PileUpVeto = 8004 ;
-
-#endif // L0EVENT_CLID_LEVEL0PILEUPVETO_H
