@@ -45,7 +45,7 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc		v10r5	Det
-use XmlDDDB      	v14r1  	Det
+use XmlDDDB      	v14r2  	Det
 use CaloDet       	v5r2  	Det
 use CaloDetXmlCnv	v2r1  	Det
 use ITDet         	v1r2  	Det

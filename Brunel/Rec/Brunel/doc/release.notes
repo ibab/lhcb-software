@@ -18,6 +18,7 @@ Purpose: LHCb reconstruction program
    . Fix usage of uninitialised variable, found by valgrind (L1Decision v1r2)
    . Protect against missing L1 Vertex - causing very frequent core dumps
      (L1Decision v1r2)
+   . Fix position of wakefield cone (XmlDDDB v14r2)
 
  - Code cleanup:
    . Remove obsolete component library (CaloSicbCnv v7r3)
