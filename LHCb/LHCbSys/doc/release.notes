@@ -20,7 +20,7 @@
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
                       DetSys v5r7, STDet v1r2, RichDet v7r2
                       AssociatorsSys v1r14, ITAssociators v2r9, 
-                      Associators v2r2p1, MCTools v1r6, IOExample v1r2
+                      Associators v2r2p1, IOExample v1r2
 
  - In LHCbKernel v4r7:
    . Remove ProcessPhase (moved to LHCbAlgs)
@@ -33,9 +33,6 @@
 
  - In ITAssociators v2r9:
    . Use new GaudiAlg, GaudiTools base classes
-
- - In MCTools v1r6:
-   . Add IMCParticleSelector tool
 
  - In EventSys v18r0, EventAssoc v1r2, Associators v2r2p1
    . Remove relations, factories, dictionaries involving obsolete L1Event objects
@@ -59,7 +56,7 @@ Built against Gaudi v14r6
 ! 2004-06-18 - Marco Cattaneo
  - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3, TrgEvent v3r0,
                       PhysEvent v8r4, EventAssoc v1r1p1, 
-                      DetSys v5r6p2, MuonTools v3r7
+                      DetSys v5r6p2, MuonTools v3r7, MCTools v1r6
 
  - In EventSys v17r11:
    . Add check on completeness of LCG dictionaries, executed when building
@@ -86,6 +83,14 @@ Built against Gaudi v14r6
 
  - In MuonTools v3r7:
    . Initialize MuonTileIDXYZ completely before first event
+
+ - In MCTools v1r6:
+   . Add IMCParticleSelector tool
+   . Add method MCDecayFinder::decaySubTrees to give access to MC subdecay tree
+   . Add MCEffBuilder algorithm to calculate MC efficiency
+   . Add MCEffMonitor algorithm to read info written by MCEffBuilder
+   . Add MCEffReconstructible and MCEffBreakdown tools
+   . Add MCTools/IMCEffReconstructed.h interface
 
 !====================== LHCbSys v15r11 2004-05-27 =======================
 ! 2004-05-27 - Marco Cattaneo
