@@ -1,6 +1,7 @@
 //*************************************************************
 //   Options to re-run the Level 1 trigger decision in DaVinci
 //=============================================================
-ApplicationMgr.DLLs    += { "L1Decision" };
-ApplicationMgr.TopAlg  += { "Level1" };
+// just make nothing
+// ApplicationMgr.DLLs    += { "L1Decision" };
+// ApplicationMgr.TopAlg  += { "Level1" };
 

@@ -1,6 +1,6 @@
 //*************************************************************
 //   Options to re-run the Level 0 trigger decision in DaVinci
 //=============================================================
-
-ApplicationMgr.DLLs    += { "L0DU" };
-ApplicationMgr.TopAlg  += { "DecisionUnit", "L0Monitor" };
+// just make nothing
+// ApplicationMgr.DLLs    += { "L0DU" };
+// ApplicationMgr.TopAlg  += { "DecisionUnit", "L0Monitor" };
