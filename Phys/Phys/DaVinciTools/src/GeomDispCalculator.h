@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.1 2002-03-27 20:35:00 gcorti Exp $
+// $Id: GeomDispCalculator.h,v 1.2 2002-05-15 23:29:22 gcorti Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -15,12 +15,13 @@
 #include "DaVinciTools/IGeomDispCalculator.h"
 
 // Forward declarations
+class IParticleTransporter;
 
 /** @class GeomDispCalculator GeomDispCalculator.h 
-    Geometrical displacements calculator interface. 
-  
-   @author Miriam Gandelman
-   @date 20/03/2002 
+ *  Geometrical displacements calculator. 
+ *
+ * @author Miriam Gandelman
+ * @date 20/03/2002 
 */
 
 class GeomDispCalculator : public AlgTool,
@@ -35,26 +36,45 @@ public:
   /// Standard Destructor
   virtual ~GeomDispCalculator() { }
 
-  /// Actual operator function 
+  /// Retrieve the Transporter Tool
+  StatusCode initialize();    
 
-  void calcImpactPar( const Particle& particle,
+
+  /// Calculates the Impact Parameter and its error. 
+  /// Inputs: a particle and a vertex.
+  StatusCode calcImpactPar( const Particle& particle,
                             const Vertex& vertex, double& ip, double& ipErr );
-  void calcImpactPar( const Particle& particle,
+
+  /// Calculates the Impact Parameter and its error and outputs also
+  /// the impact parameter vector. Inputs: a particle and a vertex.
+  StatusCode calcImpactPar( const Particle& particle,
                             const Vertex& vertex, double& ip, double& ipErr,
                             Hep3Vector& ipVector, HepSymMatrix& errMatrix );
-  void calcImpactPar( const Particle& particle,
+
+  /// Calculates the Impact Parameter and its error.
+  /// Inputs: a particle and a space point.
+  StatusCode calcImpactPar( const Particle& particle,
                             HepPoint3D& point, double& ip , double& ipErr );
-  void calcImpactPar( const Particle& particle,
+
+  /// Calculates the Impact Parameter and its error and outputs also
+  /// the impact parameter vector. Inputs: a particle and a space point.
+  StatusCode calcImpactPar( const Particle& particle,
                             HepPoint3D& point, double& ip , double& ipErr,
                             Hep3Vector& ipVector, HepSymMatrix& errMatrix );
-  void calcCloseAppr( const Particle& particle1,
+  /// Calculates the distance of closest approach between two particles
+  /// and its error.
+  StatusCode calcCloseAppr( const Particle& particle1,
                             const Particle& particle2, double& dist, 
                             double& distErr );
-  void calcVertexDis( const Vertex& vertex1,
+
+  /// Calculates the distance between two vertices and its error.
+  StatusCode calcVertexDis( const Vertex& vertex1,
                             const Vertex& vertex2, double& dist, 
                             double& distErr );
+
 private:
-  
+  IParticleTransporter* m_pTransporter;  ///< Reference to ParticleTransporter
+
 };
 
 #endif // GEOMDISPCALCULATOR_H
