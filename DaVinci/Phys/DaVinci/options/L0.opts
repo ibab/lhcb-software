@@ -5,7 +5,7 @@
 
 //=============================================================
 // re-run L0Muon
-#include "$DAVINCIROOT/options/L0Calo.opts"
+#include "$DAVINCIROOT/options/L0Muon.opts"
 //=============================================================
 // Make L0 calo candidates
 #include "$DAVINCIROOT/options/L0Calo.opts"

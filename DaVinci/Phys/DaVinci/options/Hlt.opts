@@ -21,7 +21,7 @@ HLTProcessing.Members =  { "DecodeRawVelo"
                            ,"TrgParticleMaker"
                          };
 
-HltTrgTrackToContainer.prefix = "Hlt/";
+//HltTrgTrackToContainer.prefix = "Hlt/";
 
 #include "$TRGFORWARDROOT/options/Field045.opts"
 TrgVeloTTHlt.InputFromRawBuffer = true;
