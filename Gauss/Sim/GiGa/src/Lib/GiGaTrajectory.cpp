@@ -1,14 +1,18 @@
-// $Id: GiGaTrajectory.cpp,v 1.9 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.10 2002-12-16 16:23:15 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
 /// from GiGa
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
+#include "GiGa/GiGaException.h"
 /// from Geant4 
 #include "G4Polyline.hh"
 #include "G4Circle.hh"
@@ -21,6 +25,7 @@
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4SteppingManager.hh"
+#include "G4ParticleDefinition.hh"
 
 // ============================================================================
 /** @file 
@@ -252,7 +257,35 @@ void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )
   gt->erase( it , gt->end() );
   ///
 };
-///
+//
+
+/// get particle name 
+G4String      GiGaTrajectory::GetParticleName () const 
+{
+  if( 0 == partDef() ) 
+    { throw GiGaException(" GiGaTrajectory: G4ParticleDefinition is NULL"); }
+  return partDef()->GetParticleName();
+};
+
+
+/// get particle charge 
+G4double      GiGaTrajectory::GetCharge       () const 
+{
+  if( 0 == partDef() ) 
+    { throw GiGaException(" GiGaTrajectory: G4ParticleDefinition is NULL"); }
+  return partDef()->GetPDGCharge();
+};
+
+/// get particle encoding
+G4int         GiGaTrajectory::GetPDGEncoding  () const 
+{
+  if( 0 == partDef() ) 
+    { throw GiGaException(" GiGaTrajectory: G4ParticleDefinition is NULL"); }
+  return partDef()->GetPDGEncoding();
+};
+
+G4ThreeVector GiGaTrajectory::GetInitialMomentum () const 
+{ return momentum(); };
 
 // ============================================================================
 // The END 

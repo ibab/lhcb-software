@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.3 2002-12-15 17:13:21 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.4 2002-12-16 16:23:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/15 17:13:21  ibelyaev
+//  bug fixes and improved control over G4 verbosity
+//
 // Revision 1.2  2002/12/07 14:27:52  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -104,7 +107,7 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
   set_evt_Is_Processed   ( false ) ; 
   ///
   if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+    { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -140,7 +143,7 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   set_evt_Is_Processed   ( false ) ; 
   ///
   if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+    { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -168,7 +171,7 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   set_evt_Is_Processed   ( false ) ; 
   ///
   if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+    { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -203,7 +206,7 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   set_evt_Is_Processed   ( false ) ; 
   ///
   if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+    { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -236,7 +239,7 @@ StatusCode GiGaRunManager::declare( IGiGaGeoSrc                    * obj )
   set_evt_Is_Processed   ( false ) ; 
   ///
   if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+    { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };

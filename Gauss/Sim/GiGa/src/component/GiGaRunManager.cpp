@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.9 2002-12-15 17:13:21 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.10 2002-12-16 16:23:16 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/12/15 17:13:21  ibelyaev
+//  bug fixes and improved control over G4 verbosity
+//
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================
@@ -277,7 +280,8 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
           G4RunManager::StackPreviousEvent(G4RunManager::currentEvent);
           G4RunManager::currentEvent   =  0 ; 
           if( 0 != G4StateManager::GetStateManager() ) 
-            { G4StateManager::GetStateManager()->SetNewState( GeomClosed ); } 
+            { G4StateManager::GetStateManager() 
+                ->SetNewState( G4State_GeomClosed ); } 
         }
       set_evt_Is_Processed( false );
     }
@@ -340,7 +344,7 @@ StatusCode  GiGaRunManager::initializeRun()
   G4ApplicationState currentState = 
     G4StateManager::GetStateManager()->GetCurrentState();
   ///
-  if( PreInit != currentState  && Idle != currentState ) 
+  if( G4State_PreInit != currentState  && G4State_Idle != currentState ) 
     { return Exception("initializeRun(): wrong Geant4  state!"); }
   if( !G4RunManager::initializedAtLeastOnce            ) 
     { return Exception("initializeRun(): G4 kernel must be initialised!");}
@@ -381,7 +385,7 @@ StatusCode GiGaRunManager::initializeKernel()
     { Print("Geant4 User Interface        is NOT created " , 
             StatusCode::SUCCESS , MSG::DEBUG ) ; }
   ///
-  if( PreInit != currentState  && Idle !=  currentState  )
+  if( G4State_PreInit != currentState  && G4State_Idle !=  currentState  )
     { return Exception("initializeKernel(): Wronmg G4 state!");}
   if( !(G4RunManager::geometryInitialized ) && 
       ( 0 == G4RunManager::userDetector   ) && 

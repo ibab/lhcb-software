@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.14 2002-12-07 21:36:29 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.15 2002-12-16 16:23:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/12/07 21:36:29  ibelyaev
+//  trivial fix
+//
 // Revision 1.13  2002/12/07 21:05:30  ibelyaev
 //  see $GIGAROOT/doc/release.notes 2002-12-07
 //
@@ -73,20 +76,23 @@ public:
   {return ( &right == this );}
   
   /// accessors - a'la Gaudi and a'la Geant4 
-  inline const int&                  trackID     () const 
+  inline const int&                  trackID      () const 
   { return m_trackID      ; } 
-  inline const int&                  GetTrackID  () const 
-  { return trackID ()     ; }
-  inline const int&                  parentID    () const 
+  inline const int&                  parentID     () const 
   { return m_parentID     ; }  
-  inline const int&                  GetParentID () const 
-  { return parentID()     ; }
-  inline const HepLorentzVector&     fourMomentum() const 
+  inline const HepLorentzVector&     fourMomentum () const 
+  { return momentum()     ; } 
+  inline const HepLorentzVector&     momentum     () const 
   { return m_4vect        ; } 
-  inline const HepLorentzVector&     Get4Momentum() const 
+  inline const HepLorentzVector&     Get4Momentum () const 
   { return fourMomentum() ; } 
   /// 
-  inline const G4ParticleDefinition* partDef     () const 
+  G4int                              GetTrackID   () const 
+  { return trackID ()     ; }
+  G4int                              GetParentID  () const 
+  { return parentID()     ; }
+  
+  inline const G4ParticleDefinition* partDef      () const 
   { return m_partDef ; } 
   ///
   virtual void ShowTrajectory  ()                 const ;
@@ -101,8 +107,13 @@ public:
   
   G4VTrajectoryPoint*         point          ( int index ) const   
   { return (size_t) index < size() ? *(begin()+index) : 0 ; }
+
   
-  ///
+  virtual G4String      GetParticleName    () const ;
+  virtual G4double      GetCharge          () const ;
+  virtual G4int         GetPDGEncoding     () const ;
+  virtual G4ThreeVector GetInitialMomentum () const ;
+
 private:
   /// assignement operator id private 
   GiGaTrajectory& operator=( const GiGaTrajectory& );
