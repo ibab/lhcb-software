@@ -1,20 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.155 2003-10-08 20:36:54 cattanem Exp $ 
+! $Id: release.notes,v 1.156 2003-10-09 13:43:31 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
-!======================== DetDesc v13r0 2003-10-08 ========================
-! 2003-10-08 - Marco Cattaneo
- - PVolume.cpp constructors
-    Remove code that "ensures agreement between name and copy number" as this
-    breaks the GeometryInfo.
-    N.B. This removal may break the fixes to the handling of copy numbers
-         introduced by Vanya....
- - LogVolBase.cpp 
-    Add code to access msgSvc OutputLevel to allow suppression of messages about
-    copy number < 100000
+!======================== DetDesc v13r0 2003-10-09 ========================
+! 2003-10-09 - Marco Cattaneo
+ - Removed (commented out) all code and interface changes concerning copy 
+   numbers, as this was completely untested and breaks current implementations
+   of detector elements with current XmlDDDB 
 
 ! 2003-09-20 - Vanya BELYAEV
  - DetDesc/IDetectorElement.h, IGeometryInfo.h, ILVolume.h, ISolid.h 

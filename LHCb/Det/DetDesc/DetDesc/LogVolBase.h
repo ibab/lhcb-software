@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: LogVolBase.h,v 1.8 2003-10-09 13:43:07 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -469,8 +469,8 @@ protected:
 protected: 
   
   // deduce the copy number of physical volume from its name 
-  size_t   copyNumber ( const std::string& pvName ) const ;
-  bool     copyExist  ( const size_t       copy   ) const ;
+  //  size_t   copyNumber ( const std::string& pvName ) const ;
+  //  bool     copyExist  ( const size_t       copy   ) const ;
 
 protected:
   

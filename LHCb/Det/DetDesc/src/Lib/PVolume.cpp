@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.16 2003-10-08 13:49:09 cattanem Exp $ 
+// $Id: PVolume.cpp,v 1.17 2003-10-09 13:43:07 cattanem Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -55,17 +55,17 @@ namespace
 PVolume::PVolume 
 ( const std::string& PhysVol_name  ,
   const std::string& LogVol_name   ,
-  const size_t       copy_number   ,
+  //  const size_t       copy_number   ,
   const HepPoint3D&  Position      ,
   const HepRotation& Rotation      )
-  : m_copy      ( copy_number    ) 
-  , m_name      ( PhysVol_name   ) 
+  : m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   (                )
   , m_matrix    (                )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
+  //, m_copy      ( copy_number    ) 
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
   m_nominal = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
@@ -92,16 +92,16 @@ PVolume::PVolume
 PVolume::PVolume 
 ( const std::string&    PhysVol_name ,
   const std::string&    LogVol_name  ,
-  const size_t          copy_number  ,
+  //  const size_t          copy_number  ,
   const HepTransform3D& Transform    )
-  : m_copy      ( copy_number    ) 
-  , m_name      ( PhysVol_name   ) 
+  : m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   ( Transform      )
   , m_matrix    ( Transform      )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
+  //, m_copy      ( copy_number    ) 
 { 
   //  { /// ensure the agreement between name and copy number 
   //    std::string::iterator sep = 

@@ -1,8 +1,11 @@
-// $Id: IPVolume.h,v 1.6 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: IPVolume.h,v 1.7 2003-10-09 13:43:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/09/20 13:25:40  ibelyaev
+//  few fixes to solve Gauss problems
+//
 // ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
@@ -177,7 +180,7 @@ public:
    *  but it can be redefined for certain purposes, e.g. for Rich HPDs
    *  @return copy number 
    */
-  virtual size_t    copy  () const = 0 ;
+  //  virtual size_t    copy  () const = 0 ;
   
   /** apply the  misalignemnt to the transformation matrix 
    *  @param ms misalignment matrix (assumed to be small!!!)

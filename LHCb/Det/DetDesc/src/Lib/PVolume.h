@@ -1,4 +1,4 @@
-// $Id: PVolume.h,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $ 
+// $Id: PVolume.h,v 1.11 2003-10-09 13:43:07 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 /// STD & STL 
@@ -47,7 +47,7 @@ protected:
   PVolume 
   ( const std::string& PhysVol_name                  ,
     const std::string& LogVol_name                   ,
-    const size_t       copynumber                    ,
+    //    const size_t       copynumber                    ,
     const HepPoint3D&  Position     = HepPoint3D  () ,
     const HepRotation& Rotation     = HepRotation () );
   
@@ -59,7 +59,7 @@ protected:
   PVolume 
   ( const std::string&     PhysVol_name ,
     const std::string&     LogVol_name  ,
-    const size_t           copynumber   ,
+    //    const size_t           copynumber   ,
     const HepTransform3D&  Transform    );
   
   /// destructor 
@@ -193,7 +193,7 @@ public:
    *  but it can be redefined for certain purposes, e.g. for Rich HPDs
    *  @return copy number 
    */
-  virtual size_t    copy  () const { return m_copy ; }
+  //  virtual size_t    copy  () const { return m_copy ; }
   
   /** apply the  misalignemnt to the transformation matrix 
    *  @param ms misalignment matrix (assumed to be small!!!)
@@ -303,7 +303,7 @@ private:
 private:
   
   // copy number 
-  size_t                  m_copy          ;
+  //  size_t                  m_copy          ;
   // name of physical volume 
   std::string             m_name          ;
   // name of logical volume 

@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.11 2003-10-08 20:36:54 cattanem Exp $
+// $Id: LogVolBase.cpp,v 1.12 2003-10-09 13:43:07 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -354,63 +354,63 @@ IPVolume* LogVolBase::createPVolume()
 { return createPVolume("",""); }
 
 // ===========================================================================
-bool LogVolBase::copyExist  ( const size_t copy   ) const 
-{
-  for( PVolumes::const_iterator ipv = m_pvolumes.begin() ; 
-       m_pvolumes.end() != ipv ; ++ipv ) 
-    {
-      const IPVolume* pv = *ipv ;
-      if( 0 == pv ) { continue ; }
-      if( copy == pv->copy() ) { return true ; }     // RETURN 
-    }
-  
-  return false ;
-};
+//bool LogVolBase::copyExist  ( const size_t copy   ) const 
+//{
+//  for( PVolumes::const_iterator ipv = m_pvolumes.begin() ; 
+//       m_pvolumes.end() != ipv ; ++ipv ) 
+//    {
+//      const IPVolume* pv = *ipv ;
+//      if( 0 == pv ) { continue ; }
+//      if( copy == pv->copy() ) { return true ; }     // RETURN 
+//    }
+//  
+//  return false ;
+//};
 // ===========================================================================
 
 // ===========================================================================
 /// deduce the copy number of physical volume from its name 
 // ===========================================================================
-size_t LogVolBase::copyNumber( const std::string& pvName ) const
-{
+//size_t LogVolBase::copyNumber( const std::string& pvName ) const
+//{
   //
-  const size_t copy_number = m_pvolumes.size() ;
+//  const size_t copy_number = m_pvolumes.size() ;
   
   // forced copy_number ?
-  const std::string::size_type pos = pvName.find(':') ;
-  if( std::string::npos == pos ) { return copy_number ; }      // RETURN
+//  const std::string::size_type pos = pvName.find(':') ;
+//  if( std::string::npos == pos ) { return copy_number ; }      // RETURN
   
-  const std::string tmp( pvName  , pos + 1 , std::string::npos );
-  size_t copy_read = atoi( tmp.c_str() );
+//  const std::string tmp( pvName  , pos + 1 , std::string::npos );
+//  size_t copy_read = atoi( tmp.c_str() );
   
   /// check the validity of the string 
-  Assert( 0 != copy_read  , 
-          "LogVolBase::copyNumber: illegal copy_number '" + tmp + 
-          "' for '" + pvName + "' ( lv='" + name() + "') " ) ;
+//  Assert( 0 != copy_read  , 
+//          "LogVolBase::copyNumber: illegal copy_number '" + tmp + 
+//          "' for '" + pvName + "' ( lv='" + name() + "') " ) ;
   
-  if ( copy_read  < 100000 ) 
-    {
+//  if ( copy_read  < 100000 ) 
+//    {
       //========== hack to set the output level =================
-      PropertyMgr* pmgr = new PropertyMgr();
-      int outputLevel = -1;
-      pmgr->declareProperty( "OutputLevel", outputLevel );
-      IJobOptionsSvc* jobSvc;
-      m_services->svcLocator()->service("JobOptionsSvc", jobSvc );
-      jobSvc->setMyProperties( "LOGVOL", pmgr );
-      if( -1 != outputLevel ) msgSvc()->setOutputLevel( "LOGVOL", outputLevel );
-      delete pmgr;
+//      PropertyMgr* pmgr = new PropertyMgr();
+//      int outputLevel = -1;
+//      pmgr->declareProperty( "OutputLevel", outputLevel );
+//      IJobOptionsSvc* jobSvc;
+//      m_services->svcLocator()->service("JobOptionsSvc", jobSvc );
+//      jobSvc->setMyProperties( "LOGVOL", pmgr );
+//   if( -1 != outputLevel ) msgSvc()->setOutputLevel( "LOGVOL", outputLevel );
+//      delete pmgr;
       //=========================================================
-      MsgStream log( msgSvc() , "LOGVOL" ) ;
-      log << MSG::WARNING
-          << " LogVolBase: copy number ' " 
-          << copy_read << "' deduced from '" 
-          << tmp << "' is ignored! (use forced numbers > 100000) "
-          << " PV='" << pvName << "'" << endreq ;
-      return copy_number ;    
-    }
+//      MsgStream log( msgSvc() , "LOGVOL" ) ;
+//      log << MSG::WARNING
+//          << " LogVolBase: copy number ' " 
+//          << copy_read << "' deduced from '" 
+//          << tmp << "' is ignored! (use forced numbers > 100000) "
+//          << " PV='" << pvName << "'" << endreq ;
+//      return copy_number ;    
+//    }
   
-  return copy_read ;
-};
+//  return copy_read ;
+//};
 // ===========================================================================
 
 // ===========================================================================
@@ -427,14 +427,14 @@ IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         ,
                                       const HepPoint3D&     Position       ,
                                       const HepRotation&    Rotation       ) 
 {
-  const size_t copy_number = copyNumber( PVname ) ;
-  Assert( !copyExist( copy_number ) ,
-          "LVolume::createPVolume, copy number if not unique " +
-          PVname+"(lv="+LVnameForPV+")" );
+  //  const size_t copy_number = copyNumber( PVname ) ;
+  //Assert( !copyExist( copy_number ) ,
+  //        "LVolume::createPVolume, copy number if not unique " +
+  //        PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
   try{ pv = new  PVolume ( PVname      , 
                            LVnameForPV , 
-                           copy_number , 
+                           //                           copy_number , 
                            Position    , 
                            Rotation    ) ; }
   catch( const GaudiException& Exception ) 
@@ -466,14 +466,14 @@ LogVolBase::createPVolume
   const HepTransform3D& Transform   )
 {
   //
-  const size_t copy_number = copyNumber( PVname ) ;
-  Assert( ! copyExist( copy_number ) ,
-          "LVolume::createPVolume, copy number if not unique " +
-          PVname+"(lv="+LVnameForPV+")" );
+  //  const size_t copy_number = copyNumber( PVname ) ;
+  //Assert( ! copyExist( copy_number ) ,
+  //        "LVolume::createPVolume, copy number if not unique " +
+  //        PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
   try{ pv = new  PVolume ( PVname      , 
                            LVnameForPV , 
-                           copy_number , 
+                           //                         copy_number , 
                            Transform   ) ; }
   catch( const GaudiException& Exception ) 
     { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
