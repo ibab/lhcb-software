@@ -12,7 +12,4 @@ library SimSvc     *.cpp
 
 apply_pattern component_library library=SimSvc
 
-macro_remove cppflags "-ansi"
-macro_remove cppflags "-Wall "
-macro_remove cppflags "-W "
 
