@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mCrate.cpp,v 1.1 2001-06-07 16:35:53 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mCrate.cpp,v 1.2 2001-06-08 13:43:47 cattaneb Exp $
 
 #include <vector>
 #include <algorithm>
@@ -58,7 +58,7 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
   if(m_status == L0Muon::OK) {
     if (m_candidates.size() > 2) {
       // Now sort the candidates in the Pt descending order
-      sort(m_candidates.begin(),m_candidates.end(),ComparePt());
+      std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
       // Erase candidates with smaller Pt
       for (ilmc = m_candidates.begin()+2;ilmc != m_candidates.end(); ilmc++) {
         delete *ilmc;
@@ -103,7 +103,7 @@ void L0mCrate::buildUnits(const std::vector<double>& ptpara,
     if(lmp->quarter() == m_quarter) {
       mtile = pu_layout.contains(*lmp);
       pu = L0mProcUnit(ptpara, foiX, foiY, precision, bits, mtile);
-      ipu = find(m_units.begin(),m_units.end(),pu);
+      ipu = std::find(m_units.begin(),m_units.end(),pu);
       if(ipu == m_units.end()) {
         m_units.push_back(pu);
 	ipu = m_units.end();

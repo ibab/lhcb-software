@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonTile.cpp,v 1.1 2001-06-07 16:35:58 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonTile.cpp,v 1.2 2001-06-08 13:43:48 cattaneb Exp $
 #include "GaudiKernel/MsgStream.h"
 #include <algorithm>
 
@@ -20,9 +20,9 @@ MuonTile::~MuonTile() {
 }
 
 bool MuonTile::touches(MuonTile& mt) {
-    std::vector<MuonTile> vmt = m_layout.tiles(mt);
-    std::vector<MuonTile>::iterator imt = find(vmt.begin(),vmt.end(),*this);
-    return imt!=vmt.end();
+  std::vector<MuonTile> vmt = m_layout.tiles(mt);
+  std::vector<MuonTile>::iterator imt = std::find(vmt.begin(),vmt.end(),*this);
+  return imt!=vmt.end();
 }	   
 		   
 bool operator==(MuonTile mt1, MuonTile mt2) {

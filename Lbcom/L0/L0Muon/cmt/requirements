@@ -22,3 +22,4 @@ apply_pattern ld_library_path
 private
 
 apply_pattern package_Cshlibflags  
+macro_append L0MuonLib_shlibflags "$(GaudiKernel_linkopts)"

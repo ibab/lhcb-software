@@ -1,8 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.1 2001-06-07 16:35:57 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.2 2001-06-08 13:43:47 cattaneb Exp $
 // Include files
 #include <iostream>
 #include "L0Muon/MuonLayout.h"
 #include "L0Muon/MuonTile.h"
+
+// Hack to get round usage of max
+#ifdef WIN32
+#include <xutility>
+#else
+#define _MIN min
+#define _MAX max
+#endif // WIN32
 
 //------------------------------------------------------------------------------
 //
@@ -60,13 +68,12 @@ int MuonLayout::region(int ix, int iy) const {
   } else {
     nry = 4; 	
   }	
-  return max(nrx,nry);
+  return std::_MAX(nrx,nry);
     
 }
 
 std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad, 
-					int areaX = 0,
-					int areaY = 0) {
+					int areaX, int areaY) {
 					
 //  This function returns all the MuonTile's touched by the "pad"
 //  defined with the "playout" MuonLayout +- areaX and +- areaY	
@@ -83,8 +90,8 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
   // cout << playout.xGrid() << playout.yGrid() << endl;	
 
   // the finest grid of the two layouts
-  int mxgrid = max(m_xgrid, playout.xGrid() );
-  int mygrid = max(m_ygrid, playout.yGrid() );
+  int mxgrid = std::_MAX(m_xgrid, playout.xGrid() );
+  int mygrid = std::_MAX(m_ygrid, playout.yGrid() );
 
   // cout << mxgrid << mygrid << endl;	    
 
@@ -101,8 +108,8 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
   int maxY = (pad.nY()+areaY)*playout.rfactor(nreg)*yratio;
   int minX = maxX - playout.rfactor(nreg)*xratio*(2*areaX+1) + 1;
   int minY = maxY - playout.rfactor(nreg)*yratio*(2*areaY+1) + 1;
-  minX = max(1,minX);
-  minY = max(1,minY);
+  minX = std::_MAX(1,minX);
+  minY = std::_MAX(1,minY);
 
   // Which tiles are hit ?
 
