@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v3r1 2003-11-03 =========================
+! 2003-11-03 - Marco Cattaneo
+ - requirements
+   Modified packages: RichDet v6r1
+
 !========================= DetSys v3r0 2003-09-26 =========================
 ! 2003-09-26 - Marco Cattaneo
  - requirements - use DetDesc v13r0, RichDet v6r0, Magnet v2r2, CaloDet v6r6,
