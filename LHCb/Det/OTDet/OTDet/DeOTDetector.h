@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.12 2003-06-16 08:52:07 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.13 2003-12-04 10:22:08 jnardull Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -8,6 +8,7 @@
 // OTDet
 #include "OTDet/DeOTStation.h"
 #include "OTDet/DeOTLayer.h"
+#include "OTDet/DeOTQuarter.h"
 #include "OTDet/DeOTModule.h"
 
 // Kernel
@@ -59,6 +60,9 @@ public:
   
   /// return the layer for a given channelID
   DeOTLayer* layer(OTChannelID aChannel) const;
+
+  /// return the layer for a given channelID
+  DeOTQuarter* quarter(OTChannelID aChannel) const;
 
   /// return the module for a given channel ID
   DeOTModule* module(OTChannelID aChannel) const;
@@ -138,7 +142,8 @@ private:
   unsigned int m_numStations;     ///< number of stations
   unsigned int m_firstOTStation;  ///< first OT station
   std::vector<DeOTStation*> m_stations;///< vector of stations
-  std::vector<DeOTLayer*> m_layers;   ///< vector of layers
+  std::vector<DeOTLayer*> m_layers;    ///< vector of layers
+  std::vector<DeOTQuarter*> m_quarters;///< vector of layers
   std::vector<DeOTModule*> m_modules; ///< vector of modules containing geometry
   unsigned int m_nChannels;       ///< total number of channels in OT
   unsigned int m_nMaxChanInModule;///< the maximum # channels in 1 module

@@ -1,9 +1,10 @@
-// $Id: DeOTModule.h,v 1.2 2003-06-16 08:52:07 cattanem Exp $
+// $Id: DeOTModule.h,v 1.3 2003-12-04 10:22:08 jnardull Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/IGeometryInfo.h"
 
 // Kernel
 #include "Kernel/OTChannelID.h"
@@ -16,41 +17,44 @@
  *
  *  This is the detector element class for a Outer Tracker Module. It 
  *  gets the geometry from the XML.
- *  An OT station (e.g. T1) contains 4 layers (x,u,v,x). The long modules 
- *  are split in an upper and lower side, where they are read out. In 
- *  total this makes 34 modules per layer. But, in reality there are 
- *  only 20 modules.
- *  Also the central modules (9 and 26) should be split in two.
+ *  An OT station (e.g. T1) contains 4 layers (x,u,v,x). The layers
+ *  contain 4 quarters each. The quarters have 9 modules each.
+ *  The long modules are split in an upper and 
+ *  lower side. In total this makes 36 modules per layer. 
+ *
  *  This class has the calculateHits-method which calculates the closest 
  *  wires (=channels) and the distances from an entry- and exit-point. 
  *  Another method, distanceAlongWire, calculates the distance 
  *  between the hit and the read-out. These and some other functions 
  *  are used by the OT digitization as well as the track reconstruction.
- *  The numbering scheme for the OT module in the digitization is:
- *   ______________________________________________________
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |18|19|20|21|22|23|24|25| 26 |27|28|29|30|31|32|33|34|
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |____|  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |__|    |__|  |  |  |  |  |  |  |
- *   |--|--|--|--|--|--|--|__   IT __|--|--|--|--|--|--|--|
- *   |  |  |  |  |  |  |  |  |____|  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  | 
- *   | 1| 2| 3| 4| 5| 6| 7| 8|  9 |10|11|12|13|14|15|16|17|
- *   |  |  |  |  |  |  |  |  |    |  |  |  |  |  |  |  |  |
- *   |__|__|__|__|__|__|__|__|____|__|__|__|__|__|__|__|__|
+ *  The numbering scheme for the OT modules in the digitization is:
  *
+ *         Quarter 3                      Quarter 2
+ *   ____________________________   __________________________
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   | 1| 2| 3| 4| 5| 6| 7| 8|9 |   |9| 8| 7| 6| 5| 4| 3| 2| 1|
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |  |__|   |_|  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |__|        |__|  |  |  |  |  |  |  |
+ *   |--|--|--|--|--|--|--|__   IT     __|--|--|--|--|--|--|--|
+ *   |  |  |  |  |  |  |  |  |__    __|  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  | 
+ *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  | 
+ *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  |
+ *   | 1| 2| 3| 4| 5| 6| 7| 8|9|   | 9| 8| 7| 6| 5| 4| 3| 2| 1|
+ *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  |
+ *   |__|__|__|__|__|__|__|__|_|   |__|__|__|__|__|__|__|__|__|
+ *
+ *          Quarter 1                      Quarter 0
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   05-03-2003
  */
 
-static const CLID& CLID_DeOTModule = 8104;
+static const CLID& CLID_DeOTModule = 8105;
 
 class DeOTModule : public DetectorElement {
 
@@ -72,6 +76,9 @@ public:
 
   /// get moduleID
   unsigned int moduleID() const { return m_moduleID; };
+  
+  /// get quarterID
+  unsigned int quarterID() const { return m_quarterID; };
   
   /// get layerID
   unsigned int layerID() const { return m_layerID; };
@@ -178,6 +185,7 @@ private:
                double& zc, double& uc, double& rc) const;
 
   unsigned int m_moduleID;     ///< module ID number
+  unsigned int m_quarterID;    ///< quarter ID number
   unsigned int m_layerID;      ///< layer ID number
   unsigned int m_stationID;    ///< station ID number
   unsigned int m_uniqueModuleID;///< module ID number
@@ -211,18 +219,24 @@ inline bool DeOTModule::monoLayerB(const int straw) const
 
 inline bool DeOTModule::topModule() const
 {
-  return (m_moduleID > m_nModules && m_moduleID <= 2*m_nModules);
+  return m_quarterID > 1;
 }
 
 inline bool DeOTModule::bottomModule() const
 {
-  return (m_moduleID > 0 && m_moduleID <= m_nModules);
+  return m_quarterID < 2;
 }
- 
+
+inline bool DeOTModule::isInside(const HepPoint3D& point) const
+{
+  return this->geometry()->isInside(point);
+}
+
 inline bool DeOTModule::contains(OTChannelID channel) const
 {
   return (channel.station() == m_stationID && 
           channel.layer() == m_layerID && 
+          channel.quarter() == m_quarterID && 
           channel.module() == m_moduleID);
 }
 

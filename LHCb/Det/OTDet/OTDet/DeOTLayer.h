@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.2 2003-06-16 08:52:07 cattanem Exp $
+// $Id: DeOTLayer.h,v 1.3 2003-12-04 10:22:08 jnardull Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -9,11 +9,11 @@
 #include "Kernel/OTChannelID.h"
 
 // OTDet
-#include "OTDet/DeOTModule.h"
+#include "OTDet/DeOTQuarter.h"
 
 /** @class DeOTLayer DeOTLayer.h "OTDet/DeOTLayer.h"
  *
- *  This is the detector element class for a Outer Tracker Layer.
+ *  This is the detector element class for an Outer Tracker Layer.
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   04-04-2003
@@ -45,8 +45,11 @@ public:
   /// get the stereo angle for this layer
   double stereoAngle() const { return m_stereoAngle; };
 
-  /// return the module for a given moduleID
-  DeOTModule* module(unsigned int moduleID) const;
+  /// return the quarter for a given quarterID
+  DeOTQuarter* quarter(unsigned int quarterID) const;
+
+  /// return the quarter for a given 3D point (depreciated !)
+  DeOTQuarter* quarter(const HepPoint3D& point) const;
 
   /// return the module for a given 3D point
   DeOTModule* module(const HepPoint3D& point) const;
@@ -54,19 +57,19 @@ public:
   /// check if point is inside volume
   bool isInside(const HepPoint3D& point) const;
 
-  /// get the vector of all OT modules
-  std::vector<DeOTModule*>& modules() { return m_modules; }
+  /// get the vector of all OT quarter
+  std::vector<DeOTQuarter*>& quarters() { return m_quarters; }
 
-  /// get the vector of all OT modules
-  const std::vector<DeOTModule*>& modules() const { return m_modules; }
+  /// get the vector of all OT quarters
+  const std::vector<DeOTQuarter*>& quarters() const { return m_quarters; }
 
 private:
 
-  unsigned int m_layerID;             ///< layer ID number
-  double m_stereoAngle;               ///< layer stereo angle 
-  double m_z;                         ///< z of the layer
-  double m_zSize;                     ///< size in z of the layer
-  std::vector<DeOTModule*> m_modules; ///< vector of modules
+  unsigned int m_layerID;              ///< layer ID number
+  double m_stereoAngle;                ///< layer stereo angle 
+  double m_z;                          ///< z of the layer
+  double m_zSize;                      ///< size in z of the layer
+  std::vector<DeOTQuarter*> m_quarters;///< vector of quarters
 
 };
 

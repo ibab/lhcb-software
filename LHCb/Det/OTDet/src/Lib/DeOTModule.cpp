@@ -1,10 +1,9 @@
-// $Id: DeOTModule.cpp,v 1.2 2003-06-16 08:52:07 cattanem Exp $
+// $Id: DeOTModule.cpp,v 1.3 2003-12-04 10:22:09 jnardull Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 
 // DetDesc
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 
 // local
@@ -20,6 +19,7 @@
 DeOTModule::DeOTModule( const std::string& name ) :
   DetectorElement( name ),
   m_moduleID(0),
+  m_quarterID(0),
   m_layerID(0),
   m_stationID(0),
   m_uniqueModuleID(0),
@@ -45,12 +45,14 @@ const CLID& DeOTModule::clID() const {
 
 StatusCode DeOTModule::initialize() 
 {  
-  IDetectorElement* layer = this->parentIDetectorElement();
+  IDetectorElement* quarter = this->parentIDetectorElement();
+  IDetectorElement* layer = quarter->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
   IDetectorElement* ot = station->parentIDetectorElement();
 
   // Get specific parameters from the module
   m_moduleID = (unsigned int) this->userParameterAsInt("moduleID");
+  m_quarterID = (unsigned int) quarter->userParameterAsInt("quarterID");
   m_layerID = (unsigned int) layer->userParameterAsInt("layerID");
   m_stationID = (unsigned int) station->userParameterAsInt("stationID");
   m_nStraws = (unsigned int) this->userParameterAsInt("nStraws");
@@ -59,7 +61,8 @@ StatusCode DeOTModule::initialize()
   m_stereoAngle = layer->userParameterAsDouble("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
-  OTChannelID aChannel = OTChannelID(m_stationID, m_layerID, m_moduleID, 0);
+  OTChannelID aChannel = OTChannelID( m_stationID, m_layerID, 
+                                      m_quarterID, m_moduleID, 0);
   m_uniqueModuleID = aChannel.uniqueModule();
 
   // Get some general parameters for the OT
@@ -151,7 +154,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
   	bool betweenU = ( uHitStrawA > uLow-m_pitch ) && 
                     ( uHitStrawA < uHigh+m_pitch);
     if ( fabs(dist) < m_cellRadius && betweenU && isEfficientA(yMiddle)) {
-      tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, strawA);
+      tmpChan = OTChannelID( m_stationID, m_layerID, 
+                             m_quarterID, m_moduleID, strawA);
       channels.push_back(tmpChan);
       driftDistances.push_back(dist);
 
@@ -163,7 +167,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
         betweenU = ( uHitStrawA > uLow-m_pitch ) &&
                    ( uHitStrawA < uHigh+m_pitch);
         if ( fabs(dist) < m_cellRadius && betweenU ) {
-          tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, rStrawA);
+          tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                 m_quarterID, m_moduleID, rStrawA);
           channels.push_back(tmpChan);
           driftDistances.push_back(dist);
         } else {
@@ -178,7 +183,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
         betweenU = ( uHitStrawA > uLow-m_pitch ) &&
                    ( uHitStrawA < uHigh+m_pitch);
         if ( fabs(dist) < m_cellRadius && betweenU ) {
-          tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, lStrawA);
+          tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                 m_quarterID, m_moduleID, lStrawA);
           channels.push_back(tmpChan);
           driftDistances.push_back(dist);
         } else {
@@ -193,7 +199,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
   	betweenU = ( uHitStrawB > uLow-m_pitch ) &&
                ( uHitStrawB < uHigh+m_pitch);
     if ( fabs(dist) < m_cellRadius && betweenU && isEfficientB(yMiddle) ) {
-      tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, strawB);
+      tmpChan = OTChannelID( m_stationID, m_layerID, 
+                             m_quarterID, m_moduleID, strawB);
       channels.push_back(tmpChan);
       driftDistances.push_back(dist);
       
@@ -205,7 +212,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
         betweenU = ( uHitStrawB > uLow-m_pitch ) &&
                    ( uHitStrawB < uHigh+m_pitch);
         if ( fabs(dist) < m_cellRadius && betweenU ) {
-          tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, rStrawB);
+          tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                 m_quarterID, m_moduleID, rStrawB);
           channels.push_back(tmpChan);
           driftDistances.push_back(dist);
         } else {
@@ -220,7 +228,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
         betweenU = ( uHitStrawB > uLow-m_pitch ) &&
                    ( uHitStrawB < uHigh+m_pitch);
         if ( fabs(dist) < m_cellRadius && betweenU ) {
-          tmpChan = OTChannelID(m_stationID, m_layerID, m_moduleID, lStrawB);
+          tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                 m_quarterID, m_moduleID, lStrawB);
           channels.push_back(tmpChan);
           driftDistances.push_back(dist);
         } else {
@@ -271,8 +280,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
 
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0 ) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
-                                          m_moduleID, straw);
+        OTChannelID tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                           m_quarterID, m_moduleID, straw);
         channels.push_back(tmpChan);
         driftDistances.push_back(distTmp);
       }
@@ -293,8 +302,8 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
       double ambTmp = - (uStep-(x1+x2)/2.) * (distCirc-rCirc);
       if ( distTmp < m_cellRadius ) {
         if (ambTmp < 0.0) distTmp *= -1.0;
-        OTChannelID tmpChan = OTChannelID(m_stationID, m_layerID, 
-                                          m_moduleID, straw);
+        OTChannelID tmpChan = OTChannelID( m_stationID, m_layerID, 
+                                           m_quarterID, m_moduleID, straw);
         channels.push_back(tmpChan);
         driftDistances.push_back(distTmp);
       }

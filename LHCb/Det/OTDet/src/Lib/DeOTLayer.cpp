@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.1 2003-06-11 11:49:36 cattanem Exp $
+// $Id: DeOTLayer.cpp,v 1.2 2003-12-04 10:22:09 jnardull Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -20,7 +20,7 @@ DeOTLayer::DeOTLayer( const std::string& name ) :
   m_stereoAngle(0.0),
   m_z(0.0),
   m_zSize(0.0),
-  m_modules()
+  m_quarters()
 { }
 
 DeOTLayer::~DeOTLayer()
@@ -46,35 +46,55 @@ StatusCode DeOTLayer::initialize()
   const SolidBox* mainBox = dynamic_cast<const SolidBox*>( solid->cover() );
   if ( mainBox ) m_zSize = mainBox->zsize();  
 
-  //loop over modules
-  IDetectorElement::IDEContainer::const_iterator iModule;
-  for (iModule = this->childBegin(); iModule != this->childEnd();
-       ++iModule) {  
-    DeOTModule* otModule = dynamic_cast<DeOTModule*>(*iModule);
-    if ( otModule) {
-      m_modules.push_back(otModule);
+  //loop over quarters
+  IDetectorElement::IDEContainer::const_iterator iQuarter;
+  for (iQuarter = this->childBegin(); iQuarter != this->childEnd();
+       ++iQuarter) {  
+    DeOTQuarter* otQuarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
+    if ( otQuarter) {
+      m_quarters.push_back(otQuarter);
     }
   }
   return StatusCode::SUCCESS;
 }
 
-DeOTModule* DeOTLayer::module(unsigned int moduleID) const
+DeOTQuarter* DeOTLayer::quarter(unsigned int quarterID) const
 {
-  DeOTModule* otModule = 0;
-  std::vector<DeOTModule*>::const_iterator iterModule = m_modules.begin();
-  while ( iterModule != m_modules.end() &&
-          !( (*iterModule)->moduleID() == moduleID ) ) iterModule++;
+  DeOTQuarter* otQuarter = 0;
+  std::vector<DeOTQuarter*>::const_iterator iterQuarter = m_quarters.begin();
+  while ( iterQuarter != m_quarters.end() &&
+          !( (*iterQuarter)->quarterID() == quarterID ) ) ++iterQuarter;
 
-  if ( iterModule != m_modules.end()) otModule = *iterModule;
-  return otModule;
+  if ( iterQuarter != m_quarters.end()) otQuarter = *iterQuarter;
+  return otQuarter;
+}
+
+DeOTQuarter* DeOTLayer::quarter(const HepPoint3D& point) const
+{
+  DeOTQuarter* otQuarter = 0;
+  DeOTModule* otModule = 0;
+  std::vector<DeOTQuarter*>::const_iterator iterQuarter = m_quarters.begin();
+  while ( iterQuarter != m_quarters.end() && otQuarter == 0 ) {
+    if ( (*iterQuarter)->isInside(point) ) {
+      otModule = (*iterQuarter)->module( point );
+      if ( otModule != 0 ) otQuarter = (*iterQuarter);
+    }
+    ++iterQuarter;
+  }
+  return otQuarter;
 }
 
 DeOTModule* DeOTLayer::module(const HepPoint3D& point) const
 {
   DeOTModule* otModule = 0;
-  std::vector<DeOTModule*>::const_iterator iterModule = m_modules.begin();
-  while ( iterModule != m_modules.end() &&
-          !( (*iterModule)->geometry()->isInside(point) ) ) iterModule++;
-  if ( iterModule != m_modules.end() ) otModule = *iterModule;
+  bool found = false;
+  std::vector<DeOTQuarter*>::const_iterator iterQuarter = m_quarters.begin();
+  while ( iterQuarter != m_quarters.end() && !found ) {
+    if ( (*iterQuarter)->isInside(point) ) {
+      otModule = (*iterQuarter)->module( point );
+      if ( otModule != 0 ) found = true;
+    }
+    ++iterQuarter;
+  }
   return otModule;
 }

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.9 2003-06-11 11:49:36 cattanem Exp $
+// $Id: DeOTDetector.cpp,v 1.10 2003-12-04 10:22:09 jnardull Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -67,7 +67,6 @@ StatusCode DeOTDetector::initialize()
 
   m_nMaxChanInModule = 0;
   m_nChannels = 0;
-
   // loop over stations
   IDetectorElement::IDEContainer::const_iterator iStation;
   for (iStation = this->childBegin(); this->childEnd() != iStation; 
@@ -84,18 +83,27 @@ StatusCode DeOTDetector::initialize()
       if ( otLayer) {
         m_layers.push_back(otLayer);
       }
-      // loop over modules and add module to the container
-      IDetectorElement::IDEContainer::const_iterator iModule;
-      for (iModule = (*iLayer)->childBegin(); iModule != (*iLayer)->childEnd();
-           ++iModule) {    
-        DeOTModule* otModule = dynamic_cast<DeOTModule*>(*iModule);
-        if ( otModule ) {
-          unsigned int channels = otModule->nChannels();
-          m_nChannels += channels;
-          m_modules.push_back(otModule);
-          if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
-        }        
-      } // modules
+      // loop over quarters
+      IDetectorElement::IDEContainer::const_iterator iQuarter;
+      for (iQuarter = (*iLayer)->childBegin(); 
+           iQuarter != (*iLayer)->childEnd(); ++iQuarter) {    
+        DeOTQuarter* otQuarter = dynamic_cast<DeOTQuarter*>(*iQuarter);
+        if ( otQuarter ) {
+          m_quarters.push_back(otQuarter);
+        }
+        // loop over modules      
+        IDetectorElement::IDEContainer::const_iterator iModule;
+        for (iModule = (*iQuarter)->childBegin(); 
+             iModule != (*iQuarter)->childEnd(); ++iModule) {    
+          DeOTModule* otModule = dynamic_cast<DeOTModule*>(*iModule);
+          if ( otModule ) {
+            unsigned int channels = otModule->nChannels();
+            m_nChannels += channels;
+            m_modules.push_back(otModule);
+            if (channels > m_nMaxChanInModule) m_nMaxChanInModule = channels;
+          }        
+        } // modules
+      } // quarters
     } // layers
   } // stations
 
@@ -134,7 +142,7 @@ DeOTStation* DeOTDetector::station(unsigned int stationID) const
   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
   while ( iterStation != m_stations.end() &&
           !( (*iterStation)->stationID() == stationID ) )
-    iterStation++;
+    ++iterStation;
 
   if ( iterStation != m_stations.end()) otStation = *iterStation;
   return otStation;
@@ -158,11 +166,14 @@ DeOTModule* DeOTDetector::module(OTChannelID aChannel) const
   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
   while ( iterStation != m_stations.end() &&
           !( (*iterStation)->stationID() == aChannel.station() ) )
-    iterStation++;
+    ++iterStation;
 
-  if ( iterStation != m_stations.end()) {
+  if ( iterStation != m_stations.end() ) {
     DeOTLayer* otLayer = (*iterStation)->layer( aChannel.layer() ); 
-    if (otLayer != 0) otModule = otLayer->module( aChannel.module() );
+    if (otLayer != 0) {
+      DeOTQuarter* otQuarter = otLayer->quarter( aChannel.quarter() );
+      if (otQuarter != 0) otModule = otQuarter->module( aChannel.module() );
+    }
   }
   return otModule;
 }
@@ -173,7 +184,7 @@ DeOTModule* DeOTDetector::module(const HepPoint3D& point) const
   DeOTModule* otModule = 0;
   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
   while ( iterStation != m_stations.end() &&
-          !( (*iterStation)->isInside(point) ) ) iterStation++;
+          !( (*iterStation)->isInside(point) ) ) ++iterStation;
 
   if ( iterStation != m_stations.end() ) {
     DeOTLayer* otLayer = (*iterStation)->layer( point );
@@ -216,9 +227,11 @@ OTChannelID DeOTDetector::nextChannelRight(OTChannelID aChannel) const
   DeOTModule* otModule = this->module(aChannel);
   int nextRight = otModule->nextRightStraw( aChannel.straw() );
   return (nextRight == 0) ? 
-    OTChannelID(0,0,0,0) : OTChannelID(aChannel.station(), 
-                                       aChannel.layer(),
-                                       aChannel.module(), nextRight);  
+    OTChannelID( 0 ) : OTChannelID( aChannel.station(), 
+                                    aChannel.layer(),
+                                    aChannel.quarter(),
+                                    aChannel.module(), 
+                                    nextRight );  
 } 
 
 
@@ -227,9 +240,11 @@ OTChannelID DeOTDetector::nextChannelLeft(OTChannelID aChannel) const
   DeOTModule* otModule = this->module(aChannel);
   int nextLeft = otModule->nextLeftStraw( aChannel.straw() );
   return (nextLeft == 0) ? 
-    OTChannelID(0,0,0,0) : OTChannelID(aChannel.station(), 
-                                       aChannel.layer(),
-                                       aChannel.module(), nextLeft);  
+    OTChannelID( 0 ) : OTChannelID( aChannel.station(), 
+                                    aChannel.layer(),
+                                    aChannel.quarter(),
+                                    aChannel.module(),
+                                    nextLeft );  
 }
 
 
