@@ -24,7 +24,7 @@ use GaudiObjDesc 	v6r3
 use HbookCnv 		v14r2p1
 
 #-- Databases
-use XmlDDDB	v22r3	Det
+use XmlDDDB	v22r4	Det
 use ParamFiles	v3r8	-no_auto_imports
 use FieldMap	v4r5
 

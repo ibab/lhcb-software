@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v7r0>2004-10-20 Boole v7r0</A></H1><PRE>
+</PRE><H1><A NAME=v7r0>2004-11-01 Boole v7r0</A></H1><PRE>
 This version uses Gaudi v15r2, LHCb v17r0. Can process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
 
@@ -11,6 +11,7 @@ Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
   . MCOTTimeCreator replaces MCOTDigitCreator. MCOTTimes used to fill RawBuffer
   . OTDigitMonitor replaced by OTTimeMonitor and OTTimeChecker
   . OTTimeCreator + OTTime2MCHitAlg replace OTDigit2MCHitAlg for truth relations
+  . Introduce OT beam tilt capability. Tilt angle currently set to 0.
 
 - Persistency changes
   . More compact RawBuffer (Otis headers removed), requires OTDAQ v3r* to decode
