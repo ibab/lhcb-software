@@ -24,6 +24,7 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 // Output content definition (i.e. objects to be copied)
 // Modify this file to produce a reduced (or extended...) DST
 #include "$BRUNELROOT/options/DstContent.opts"
+DstWriter.PreloadOptItems = true;
 
 // Provide the input catalog describing the input files
 PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";

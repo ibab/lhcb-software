@@ -1,5 +1,5 @@
 package Brunel
-version v23r4
+version v23r5
 
 branches doc cmt job options
 
@@ -8,10 +8,10 @@ pattern BrunelVersion path_append BRUNELVERS <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r14
+use GaudiPolicy v5r15
 
-#-- External libraries (as defined in GAUDI_v14r3)
-use ExternalLibs	v4r4
+#-- External libraries (as defined in GAUDI_v14r4)
+use ExternalLibs	v4r5
 use AIDA		v3r300		-no_auto_imports
 use CLHEP		v2r1810p0	-no_auto_imports
 use GSL 		v2r14p0		-no_auto_imports
@@ -21,13 +21,14 @@ use ROOT 		v2r31002p0      -no_auto_imports
 use PI  		v1r112		-no_auto_imports
 use PCRE		v1r44		-no_auto_imports
 use UUID		v1r32		-no_auto_imports
-use SEAL		v1r133p1	-no_auto_imports
-use POOL		v1r150p1	-no_auto_imports
+use SEAL		v1r134p0	-no_auto_imports
+use POOL		v1r162p0	-no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v14r3)
+#-- Gaudi libraries (from GAUDI_v14r4)
 use GaudiKernel		v15r2
-use GaudiSvc 		v11r4
-use GaudiAlg 		v7r1
+use GaudiSvc 		v11r6
+use GaudiAlg 		v7r2
+use GaudiTools          v8r1
 use GaudiAud 		v6r4
 use GaudiGSL		v5r1
 use GaudiDb 		v9r2
@@ -36,16 +37,13 @@ use GaudiPoolDb		v1r5
 use GaudiObjDesc 	v6r2p1
 use RootHistCnv         v9r1
 
-# Temporarily from LHCb v15r5, bug fixes needed by Rich
-use GaudiTools          v8r1
-
 #-- Database
 use XmlDDDB		v22r0	Det
 use FieldMap		v4r5
 use ParamFiles          v3r4    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r5)
-use LHCb	v15r5
+#-- LHCb libraries (from LHCB_v15r6)
+use LHCb	v15r6
 
 #-- BrunelSys v23r4 packages
 
