@@ -23,6 +23,7 @@ Purpose: LHCb reconstruction program
    . Use TT1 for VTT and Upstream track association to MC (TrAssociators v3r3)
    . New tuning for Rich, use VTT tracks (recrich v7r3, dbase v251r*/v248r5)
      (not available for test data produced with dbase v249r*)
+   . Do not pass Velo only tracks to Fortran Rich reco (RiSicbCnv v5r1)
 
  - New features:
    . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)

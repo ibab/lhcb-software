@@ -63,7 +63,7 @@ use SicbCnv      v17r3  SICB
 use RiSicbGeom   v3r0   SICB
 use CaloSicbCnv  v7r2   SICB
 use MuonSicbCnv  v6r6   SICB
-use RiSicbCnv    v5r0   SICB
+use RiSicbCnv    v5r1   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
