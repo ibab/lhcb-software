@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2002-02-01 14:40:57 ocallot Exp $
+# $Id: requirements,v 1.11 2002-02-05 16:53:27 cattanem Exp $
 package L0Event
 version v10r0
 
@@ -16,7 +16,7 @@ document obj2doth L0EventObj2Doth ../xml/*.xml
 
 document obj2dict L0EventObj2Dict -group=dict ../xml/L0Event.xml
 library L0EventDict -group=dict ../dict/*.cpp
-macro L0EventDict+shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
+macro L0EventDict_shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
 
 
 
