@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.2 2003-07-01 18:17:09 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.3 2003-07-01 18:44:49 jonrob Exp $
 // Include files
 
 // local
@@ -438,25 +438,41 @@ StatusCode RichPIDQC::finalize() {
     }
 
     // Kaon Pion seperation
-    double kaonIDEff = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                         100*( m_sumTab[Rich::Kaon][Rich::Kaon] +
-                               m_sumTab[Rich::Kaon][Rich::Proton] ) /
-                         trueTotExcludeX[Rich::Kaon] : 0 );
-    double kaonMisIDEff = ( trueTotExcludeX[Rich::Kaon]>0 ?
-                            100*( m_sumTab[Rich::Kaon][Rich::Electron] +
-                                  m_sumTab[Rich::Kaon][Rich::Muon] +
-                                  m_sumTab[Rich::Kaon][Rich::Pion] ) /
-                            trueTotExcludeX[Rich::Kaon] : 0 );
-    double piIDEff = ( trueTotExcludeX[Rich::Pion]>0 ?
-                       100*( m_sumTab[Rich::Pion][Rich::Electron] +
-                             m_sumTab[Rich::Pion][Rich::Muon] +
-                             m_sumTab[Rich::Pion][Rich::Pion] ) /
-                       trueTotExcludeX[Rich::Pion] : 0 );
-    double piMisIDEff = ( trueTotExcludeX[Rich::Pion]>0 ?
-                          100*( m_sumTab[Rich::Pion][Rich::Kaon] +
-                                m_sumTab[Rich::Pion][Rich::Proton] ) /
-                          trueTotExcludeX[Rich::Pion] : 0 );
-
+    double kaonIDEff[2];
+    kaonIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                     100*( m_sumTab[Rich::Kaon][Rich::Kaon] +
+                           m_sumTab[Rich::Kaon][Rich::Proton] ) /
+                     trueTotExcludeX[Rich::Kaon] : 0 );
+    kaonIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                     sqrt( kaonIDEff[0]*(100.-kaonIDEff[0])/
+                           trueTotExcludeX[Rich::Kaon] ) : 0 );
+    double kaonMisIDEff[2];
+    kaonMisIDEff[0] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                        100*( m_sumTab[Rich::Kaon][Rich::Electron] +
+                              m_sumTab[Rich::Kaon][Rich::Muon] +
+                              m_sumTab[Rich::Kaon][Rich::Pion] ) /
+                        trueTotExcludeX[Rich::Kaon] : 0 );
+    kaonMisIDEff[1] = ( trueTotExcludeX[Rich::Kaon]>0 ?
+                        sqrt( kaonMisIDEff[0]*(100.-kaonMisIDEff[0])/
+                              trueTotExcludeX[Rich::Kaon] ) : 0 );
+    double piIDEff[2];
+    piIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                   100*( m_sumTab[Rich::Pion][Rich::Electron] +
+                         m_sumTab[Rich::Pion][Rich::Muon] +
+                         m_sumTab[Rich::Pion][Rich::Pion] ) /
+                   trueTotExcludeX[Rich::Pion] : 0 );
+    piIDEff[1] =  ( trueTotExcludeX[Rich::Pion]>0 ?
+                    sqrt( piIDEff[0]*(100.-piIDEff[0])/
+                          trueTotExcludeX[Rich::Pion] ) : 0 );
+    double piMisIDEff[2];
+    piMisIDEff[0] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                      100*( m_sumTab[Rich::Pion][Rich::Kaon] +
+                            m_sumTab[Rich::Pion][Rich::Proton] ) /
+                      trueTotExcludeX[Rich::Pion] : 0 );
+    piMisIDEff[1] = ( trueTotExcludeX[Rich::Pion]>0 ?
+                      sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
+                            trueTotExcludeX[Rich::Pion] ) : 0 );
+    
     // Scale entries to percent of total number of entries
     for ( iTrue = 0; iTrue<6; iTrue++ ) {
       for ( iRec = 0; iRec<6; iRec++ ) {
@@ -493,15 +509,19 @@ StatusCode RichPIDQC::finalize() {
         << endreq
         << " %Eff.     |" << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f",
                                      eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
-        << "     |" << endreq;
-    msg << format( " %ID/misID |    Ka: %6.2f/%6.2f    Pi: %6.2f/%6.2f     |",
-                   kaonIDEff, kaonMisIDEff, piIDEff, piMisIDEff ) << endreq
-        << "-----------+-----------------------------------------------+-----------"
+        << "     |" << endreq
+        << "-----------+-----------------------------------------------+-----------" << endreq;
+    msg << format( "  ID %     |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+                   kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
+    msg << format( "  misID %  |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f     |",
+                   kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
+    msg << "-----------+-----------------------------------------------+-----------"
         << endreq;
-  }
+
+  } // final printout
 
   // release tools
-  if ( m_trackToMCP ) toolSvc()->releaseTool( m_trackToMCP );
+  if ( m_trackToMCP ) { toolSvc()->releaseTool( m_trackToMCP ); m_trackToMCP=0; }
 
   return sc;
 }

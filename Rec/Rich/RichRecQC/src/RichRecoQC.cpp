@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.1.1.1 2003-06-30 16:51:05 jonesc Exp $
+// $Id: RichRecoQC.cpp,v 1.2 2003-07-01 18:44:49 jonrob Exp $
 // Include files
 
 // local
@@ -152,7 +152,7 @@ StatusCode RichRecoQC::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release MC tool
-  if ( m_richRecMCTruth ) toolSvc()->releaseTool( m_richRecMCTruth );
+  if ( m_richRecMCTruth ) { toolSvc()->releaseTool( m_richRecMCTruth ); m_richRecMCTruth=0; }
 
   // Execute base class method
   return RichRecAlgBase::finalize();
