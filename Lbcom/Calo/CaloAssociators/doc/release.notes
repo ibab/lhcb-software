@@ -1,10 +1,19 @@
-! $Id: release.notes,v 1.2 2002-04-08 15:53:06 ibelyaev Exp $
+! $Id: release.notes,v 1.3 2002-04-09 10:47:44 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
 ! Package     : CaloAssociators 
 ! =============================================================================
 ! Responsible : Ivan Belyaev
+! =============================================================================
+
+! =============================================================================
+! 09 Apr 2002  - v1r0 - Vanya Belyaev
+!  Add options files to drive the relation tool and relation uilder algorithm
+! NB!!! 
+! names are not fixed and should be considered as 'temporary'. We are expected
+! soem naming conventions from Gloria and Philippe soon. Do not rely heavity 
+! to current names of Tools, Algorithms and Relation Tables! 
 ! =============================================================================
 
 ! =============================================================================

@@ -1,0 +1,28 @@
+// $Id: CCs2MCPs.opts,v 1.1 2002-04-09 10:47:44 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Nam:$
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file CCs2MCPs.opts
+ *
+ *  options for associator 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 08 Apr 2002 
+ */
+// ============================================================================
+
+ToolSvc.CCs2MCPs.Location      = "Rec/Calo/CCs2MCPs"           ;
+ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruthAlg"      ;
+ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                    ; 
+
+CCs2MCPs.Input                 = "Rec/Calo/EcalLocMaxClusters" ; 
+CCs2MCPs.Output                = "Rec/Calo/CCs2MCPs"           ;
+CCs2MCPs.Detector              = "/dd/Structure/LHCb/Ecal"     ;
+
+// ============================================================================
+// The END of file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
+// ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.1 2002-04-08 15:53:07 ibelyaev Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.2 2002-04-09 10:47:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/08 15:53:07  ibelyaev
+//  add trivial/primitive relation builder algorithm as an example
+// 
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -12,7 +15,9 @@
 #include "GaudiKernel/MsgStream.h"
 // Event 
 #include "Event/MCParticle.h"
-// Event
+// CaloDet
+#include "CaloDet/DeCalorimeter.h"
+// CasloEvent/Event
 #include "Event/CaloCluster.h"
 #include "Event/CaloMCTools.h"
 // local
@@ -106,14 +111,21 @@ StatusCode CaloClustersMCTruthAlg::execute()
   /// avoid the long name and always use "const" qualifier  
   using namespace CaloMCTools;
   typedef const CaloClusters                               Clusters  ;
+  typedef const DeCalorimeter                              Detector  ;
   typedef RelationWeighted2D<CaloCluster,MCParticle,float> Table     ;
   
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get input clusters 
-  Clusters*   clusters  = get<Clusters>   ( eventSvc () , inputData() ) ;
+  Clusters*   clusters  = get<Clusters>   ( eventSvc () , inputData () ) ;
   if( 0 == clusters  ) { return StatusCode::FAILURE ; }
+  
+  // get the detector 
+  Detector*   detector  = get<Detector>   ( detSvc   () , detData   () );
+  if( 0 == detector  ) { return StatusCode::FAILURE ; }
+  
+  const double activeToTotal = detector->activeToTotal() ;
   
   // create relation table and register it in the event transient store 
   Table* table = new Table();
@@ -137,9 +149,8 @@ StatusCode CaloClustersMCTruthAlg::execute()
       if( 0 == particle || 0 == energy ) { continue ; }    // Skip NULLs 
       
       // put relation to relation table 
-      table->relate( cluster , particle , (float) energy );
+      table->relate( cluster , particle , (float) energy * activeToTotal );
     };
-  
   
   return StatusCode::SUCCESS;
 };
