@@ -1,4 +1,4 @@
-# $Id: README,v 1.18 2002-04-05 16:39:10 andreav Exp $
+# $Id: README,v 1.19 2002-04-08 15:00:03 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -37,8 +37,7 @@ The Windows environment is presented in a shorter way at the end of this file.
 The Linux RedHat7.2 environment is only meant for tests and requires
 extensive changes which are described in the doc/README.RedHat72 file.
 
-Version v1r10p20011126 or higher of CMT is needed for a proper setup.
-[However version v1r9 is still used under Linux: cleanup may give problems].
+Version v1r11 of CMT is assumed under both Windows and Linux.
 
 It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt,
 i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
@@ -94,7 +93,7 @@ How to setup the environment and link DetCondExample on lxplus
 
 # I suggest to build all packages in debug mode, i.e. using tag $CMTDEB.
 # Specify the tag by 'source setup.csh -tag=$CMTDEB' and 'gmake tag=$CMTDEB'.
-# [NB Do not change CMTCONFIG to $CMTDEB! This would cause many troubles!]
+# [NB Do not change CMTCONFIG to CMTDEB! This would cause many troubles!]
 
 # Go to your release directory
 cd ~/newmycmt

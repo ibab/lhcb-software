@@ -1,6 +1,15 @@
-#$Id: release.notes,v 1.13 2002-04-05 16:26:06 andreav Exp $
+#$Id: release.notes,v 1.14 2002-04-08 15:00:03 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020408 - Andrea Valassi
+A few changes in setup_Redhat72.csh as default CMT on Linux is now v1r11.
+- This allows to simplify setup_Redhat72.csh with respect to that for v1r9
+  > previously: default was v1r9, setup_Redhat72.csh set v1r10p20011126
+  > now: default is v1r11, setup_Redhat72.csh keeps v1r11
+Also a minor bug fix in dropCondDB.sql.
+Requirements v2r1, private tag h20020408
 
 ==============================================================================
 !20020405 - Andrea Valassi

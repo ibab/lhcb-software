@@ -1,4 +1,4 @@
-/* $Id: dropCondDB.sql,v 1.1 2002-03-01 16:54:24 andreav Exp $ */
+/* $Id: dropCondDB.sql,v 1.2 2002-04-08 15:00:03 andreav Exp $ */
 /* Drop all views, tables, sequences and rows associated with a CondDB  */
 /* (the order is important: a table may be referenced in a previos one) */
 /* Drop also the code used to manage the database                       */
@@ -11,8 +11,6 @@ define CONDDB=&2;
 drop materialized view "&USER"."&CONDDB._FLPATHS";
 drop materialized view "&USER"."&CONDDB._FSPATHS";
 drop materialized view "&USER"."&CONDDB._HEADERS";
-
-drop table    MLOG$_&CONDDB._CONOBJS;
 
 drop sequence &CONDDB._CDATSEQ;
 drop sequence &CONDDB._COBJSEQ;
