@@ -1,89 +1,98 @@
 #ifndef RICHKERNEL_RICHSMARTCODE_H
 #define RICHKERNEL_RICHSMARTCODE_H 1
 
-/** @class RichSmartCode RichSmartCode.h RichGen/RichSmartCode.h
+/** @class RichSmartCode RichSmartCode.h RichKernel/RichSmartCode.h
  *
- *  Namespace for all code/decode rules of RichSmartID class
+ *  Namespace for encoding rules of RichSmartID class
  *
- *  @author Andy Presland   (andrew.presland@cern.ch)
  *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
- *  created Tue Feb 26 09:25:55 2002
+ *  @date 2002-2-26
  */
 
 namespace RichSmartCode {
 
-  /// 32 bits in the transient  representation
-  typedef unsigned long int ContentType;
+  typedef unsigned long int LongType;
+  typedef unsigned int      ShortType;
 
-  /// 16 bits in the persistent representation
-  typedef unsigned short WriteType;
+  /// The number of bits dedicated to the RICH detector number (0-1)
+  static const ShortType BitsRich      = 1;
 
-  static const unsigned int BitsRich      = 1;
-  static const unsigned int BitsPanel     = 2;
-  static const unsigned int BitsPDRow     = 6;
-  static const unsigned int BitsPDCol     = 6;
-  static const unsigned int BitsPixelRow  = 8;
-  static const unsigned int BitsPixelCol  = 8;
-  static const unsigned int BitsIndex     =
-    BitsPDCol + BitsPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
+  /// The number of bits dedicated to the RICH panel number (0-1)
+  static const ShortType BitsPanel     = 1;
 
-  static const unsigned int BitsAll       =
-  BitsPDCol + BitsPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
+  /// The number of bits dedicated to the RICH photon detector row number (0-63)
+  static const ShortType BitsPDRow     = 6;
 
-  static const unsigned int BitsTotal     = 32 ;
-  static const unsigned int BitsRest      = BitsTotal - BitsAll;
+  /// The number of bits dedicated to the RICH photon detector column number (0-63) 
+  static const ShortType BitsPDCol     = 6;
 
-  static const unsigned int ShiftPDCol    = 0 ;
-  static const unsigned int ShiftPDRow    = ShiftPDCol   + BitsPDCol;
-  static const unsigned int ShiftPixelRow = ShiftPDRow   + BitsPDRow;
-  static const unsigned int ShiftPixelCol = ShiftPixelRow + BitsPixelRow;
-  static const unsigned int ShiftPanel    = ShiftPixelCol + BitsPixelCol;
-  static const unsigned int ShiftRich     = ShiftPanel    + BitsPanel;
+  /// The number of bits dedicated to the RICH pixel row number (0-63) 
+  static const ShortType BitsPixelRow  = 6;
 
-  static const unsigned int ShiftIndex    = ShiftPDCol;
-  static const unsigned int ShiftAll      = ShiftPDCol;
-  static const unsigned int ShiftRest     = ShiftRich + BitsRich;
+  /// The number of bits dedicated to the RICH pixel column number (0-63) 
+  static const ShortType BitsPixelCol  = 6;
 
-  static const ContentType  MaskPDCol     =
-  ( ( ( (ContentType) 1 ) << BitsPDCol  ) - 1  ) << ShiftPDCol  ;
+  /// The number of bits dedicated to the RICH sub-pixel number (0-7)
+  static const ShortType BitsSubPixel  = 3;
 
-  static const ContentType  MaskPDRow     =
-  ( ( ( (ContentType) 1 ) << BitsPDRow  ) - 1  ) << ShiftPDRow  ;
+  /// The number of bits dedicated to the overall status od the identifer (0-1)
+  static const ShortType BitsAllOK     = 1;
 
-  static const ContentType  MaskPixelRow  =
-  ( ( ( (ContentType) 1 ) << BitsPixelRow )  - 1  ) << ShiftPixelRow;
+  /// The total number of used bits
+  static const ShortType BitsIndex     = ( BitsSubPixel +
+                                           BitsPDCol    +
+                                           BitsPDRow    +
+                                           BitsPixelCol +
+                                           BitsPixelRow +
+                                           BitsPanel    +
+                                           BitsRich     +
+                                           BitsAllOK    );
 
-  static const ContentType  MaskPixelCol  =
-  ( ( ( (ContentType) 1 ) << BitsPixelCol )  - 1  ) << ShiftPixelCol;
+  // Create the shift registers for data fields
+  static const ShortType ShiftIndex    = 0;
+  static const ShortType ShiftSubPixel = ShiftIndex;
+  static const ShortType ShiftPDCol    = ShiftSubPixel + BitsSubPixel;
+  static const ShortType ShiftPDRow    = ShiftPDCol    + BitsPDCol;
+  static const ShortType ShiftPixelCol = ShiftPDRow    + BitsPDRow;
+  static const ShortType ShiftPixelRow = ShiftPixelCol + BitsPixelCol;
+  static const ShortType ShiftPanel    = ShiftPixelRow + BitsPixelRow;
+  static const ShortType ShiftRich     = ShiftPanel    + BitsPanel;
+  static const ShortType ShiftAllOK    = ShiftRich     + BitsRich;
 
-  static const ContentType  MaskPanel     =
-  ( ( ( (ContentType) 1 ) << BitsPanel ) - 1  ) << ShiftPanel ;
+  // Create the Masks
+  static const LongType MaskSubPixel  =
+  ( ( ( (LongType) 1 ) << BitsSubPixel ) - 1 ) << ShiftSubPixel;
+  static const LongType MaskPixelRow  =
+  ( ( ( (LongType) 1 ) << BitsPixelRow ) - 1 ) << ShiftPixelRow;
+  static const LongType MaskPixelCol  =
+  ( ( ( (LongType) 1 ) << BitsPixelCol ) - 1 ) << ShiftPixelCol;
+  static const LongType MaskPDCol     =
+  ( ( ( (LongType) 1 ) << BitsPDCol )    - 1 ) << ShiftPDCol;
+  static const LongType MaskPDRow     =
+  ( ( ( (LongType) 1 ) << BitsPDRow )    - 1 ) << ShiftPDRow;
+  static const LongType MaskPanel     =
+  ( ( ( (LongType) 1 ) << BitsPanel )    - 1 ) << ShiftPanel;
+  static const LongType MaskRich      =
+  ( ( ( (LongType) 1 ) << BitsRich )     - 1 ) << ShiftRich;
+  static const LongType MaskIndex     =
+  ( ( ( (LongType) 1 ) << BitsIndex)     - 1 ) << ShiftIndex;
 
-  static const ContentType  MaskRich      =
-  ( ( ( (ContentType) 1 ) << BitsRich ) - 1  ) << ShiftRich ;
-
-  static const ContentType  MaskIndex     =
-  ( ( ( (ContentType) 1 ) << BitsIndex) - 1  ) << ShiftIndex ;
-
-  static const ContentType  MaskAll       =
-  ( ( ( (ContentType) 1 ) << BitsAll  ) - 1  ) << ShiftAll   ;
-
-  static const ContentType  MaskRest      =
-  ( ( ( (ContentType) 1 ) << BitsRest ) - 1  ) << ShiftRest  ;
+  // Create the All OK bit setter
+  static const LongType MaskAllOK     =
+  ( ( ( (LongType) 1 ) << BitsAllOK)     - 1 ) << ShiftAllOK;
+  static const LongType SetAllOK     = 
+  ( (RichSmartCode::ShortType)1 << RichSmartCode::ShiftAllOK) & MaskAllOK;
+  
+  // Create the maximum allowed value for each data field
+  static const ShortType MaxRich     = ( (ShortType)1 << BitsRich     ) - 1;
+  static const ShortType MaxPanel    = ( (ShortType)1 << BitsPanel    ) - 1;
+  static const ShortType MaxPDRow    = ( (ShortType)1 << BitsPDRow    ) - 1;
+  static const ShortType MaxPDCol    = ( (ShortType)1 << BitsPDCol    ) - 1;
+  static const ShortType MaxPixelRow = ( (ShortType)1 << BitsPixelRow ) - 1;
+  static const ShortType MaxPixelCol = ( (ShortType)1 << BitsPixelCol ) - 1;
+  static const ShortType MaxSubPixel = ( (ShortType)1 << BitsSubPixel ) - 1;
 
 };
 
 #endif // RICHKERNEL_RICHSMARTCODE_H
-
-
-
-
-
-
-
-
-
-
-
-
