@@ -1,4 +1,4 @@
-// $Id: OTRetrieveBuffer.cpp,v 1.3 2004-03-25 15:53:38 jnardull Exp $
+// $Id: OTRetrieveBuffer.cpp,v 1.4 2004-03-26 18:37:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ OTRetrieveBuffer::OTRetrieveBuffer( const std::string& name,
   this->declareProperty( "RawEventLocation",
                          m_RawEventLoc = RawEventLocation::Default );
   this->declareProperty( "OutputLocation",
-                         m_digitLocation = "/Event/Rec/OT/checkDigits" );
+                         m_digitLocation = OTDigitLocation::Default );
   
 }
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.3 2004-03-26 16:34:05 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.4 2004-03-26 18:37:50 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -188,7 +188,8 @@ StatusCode OTFillRawBuffer::sortDigitsIntoBanks()
   return StatusCode::SUCCESS;
 }
 //-------------------------------------------------------------------------
-StatusCode OTFillRawBuffer::sortDigitsIntoGol(vDigi* BankDigi, dataBank* aBank)
+StatusCode OTFillRawBuffer::sortDigitsIntoGol(vDigi* BankDigi, 
+                                              dataBank* /* aBank */)
 
 {
   // create the map of OTDigi vectors, numberOfGols entries
