@@ -1,20 +1,8 @@
-// $Id: LoKi_EventTagTuple.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
+// $Id: LoKi_EventTagTuple.cpp,v 1.3 2004-08-05 09:54:15 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.3  2003/05/12 13:21:33  ibelyaev
-//  add the options files for all examples
-//
-// Revision 1.2  2003/04/11 17:31:30  ibelyaev
-//  fix for Win2K platform
-//
-// Revision 1.1  2003/03/21 18:15:48  ibelyaev
-//  3 new examples
-// 
 // ============================================================================
 // Include files
 // LoKi 
@@ -38,12 +26,13 @@ LOKI_ALGORITHM( LoKi_EventTagTuple )
   // avoid long names 
   using namespace LoKi       ;
   using namespace LoKi::Cuts ;
+  using namespace Tuples     ;
   
-  setFilterPassed( false ) ;
+  setFilterPassed ( false ) ;
   
   // select all charged kaons with Confidence level in excess of 5 percent  
   Range kaons = select( "kaons" , 321 == abs( ID ) && 0.05 < CL ) ;
-
+  
   // subdivide sample of kaons to subsamples of positive and negative kaons  
   Range kplus  = select( "K+"  , kaons , Q >  0.5 ) ;
   Range kminus = select( "K-"  , kaons , Q < -0.5 ) ;
@@ -60,26 +49,27 @@ LOKI_ALGORITHM( LoKi_EventTagTuple )
   
   // get all saved phi 
   Range phis = selected ( "phi" )  ;
-  if( phis.empty() ) { return StatusCode::SUCCESS ; } // RETURN 
+  // if( phis.empty() ) { return StatusCode::SUCCESS ; } // RETURN 
   
   // get the event tag collection/ntuple 
-  Tuple tuple = evtCol ( "EvtCollection") ;
+  Tuple tuple = evtCol ( "EvtCol") ;
   
-  // fill the tuple 
-  tuple -> farray( "M"    , M     , 
-                   "DM"   , dmass , 
-                   "P"    , P     , 
-                   "PT"   , PT    , 
-                   phis.begin ()  , 
-                   phis.end   ()  , 
-                   "nPhi"         , 
-                   100            ) ;
+  //   // fill the tuple 
+  //   tuple -> farray( "M"    , M     , 
+  //                    "DM"   , dmass , 
+  //                    "P"    , P     , 
+  //                    "PT"   , PT    , 
+  //                    phis.begin ()  , 
+  //                    phis.end   ()  , 
+  //                    "nPhi"         , 
+  //                    100            ) ;
   
   // add the event information to the N-Tuple 
   const EventHeader* evt = get<EventHeader> ( EventHeaderLocation::Default );
   
   // add event header information to N-Tuple 
-  tuple -> column ( "" , evt );
+  tuple << Column ( ""     , evt         ) ;
+  tuple -> column ( "phis" , phis.size() ) ;
   
   // get the event IOpaqueAddress  
   DataObject* event = get<DataObject>( "/Event" );

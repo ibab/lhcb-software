@@ -1,14 +1,16 @@
-// $Id: DV_LoKi_Histos.opts,v 1.3 2004-03-11 21:41:04 ibelyaev Exp $
+// $Id: DV_LoKi_Histos.opts,v 1.4 2004-08-05 09:54:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/03/11 21:41:04  ibelyaev
+//  few algorithms updated fro LoKi v2r0
+//
 // ============================================================================
 // include 
 // ============================================================================
 #pragma   print off 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$STDOPTS/RootHist.opts"
 #include "$STDOPTS/Hbook.opts"
@@ -28,9 +30,7 @@
 ApplicationMgr.DLLs    += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
-ApplicationMgr.TopAlg   = {
-  "ChargedProtoPAlg"     ,   // create the charged protoparticles 
-  "PrimVtxFinder"        ,   // create primary vertices 
+ApplicationMgr.TopAlg   += {
   "LoKiPreLoad/Charged"  ,   // create and put into TES charged particles
   "LoKi_Histos/Histos"       // execute the algorithm itsels  
 };
@@ -46,8 +46,6 @@ Histos.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
 // the output file for histograms 
 HistogramPersistencySvc.OutputFile = "Histos.hbook";
 
-// The number of events to process 
-ApplicationMgr.EvtMax    = 1000 ;
 
 
 // control for printout 
@@ -56,10 +54,21 @@ EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event
 RootEvtCnvSvc.OutputLevel    =  4 ;
 ChargedProtoPAlg.OutputLevel =  4 ;
 
-// input data set  Bs -> phi phi 
-#pragma   print off  
-#include "$LHCBHOME/project/web/cards/615300.opts"
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
+
+#pragma   print off 
+// input data set: DC04 Bs -> phi phi 
+#include "$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts"
 #pragma   print on 
+
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
+  };
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 5000 ;
 
 // ============================================================================
 // The END 

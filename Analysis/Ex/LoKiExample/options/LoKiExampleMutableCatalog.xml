@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+  <File ID="A8623E1D-3DE6-D811-9202-0007E9C96E93">
+    <physical>
+      <pfn filetype="ROOT_All" name="EventTags.tags"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

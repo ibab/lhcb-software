@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_VeloClusterMC.opts,v 1.1 2004-04-09 07:23:44 ibelyaev Exp $
+// $Id: DV_LoKi_VeloClusterMC.opts,v 1.2 2004-08-05 09:54:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/04/09 07:23:44  ibelyaev
+//  add 3 new examples
+//
 // Revision 1.3  2004/03/11 21:41:04  ibelyaev
 //  few algorithms updated fro LoKi v2r0
 //
@@ -46,22 +49,27 @@ NTupleSvc.Output      +=
 
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
-// The number of events to process 
-ApplicationMgr.EvtMax  = 1000 ;
-
-
 // control for printout 
 MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
 EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
 ChargedProtoPAlg.OutputLevel =  4 ;
 RootEvtCnvSvc.OutputLevel    =  4 ;
 
-EventSelector.Input =
-  { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r4/Pool411300-Field043.dst' TYP='POOL_ROOT' OPT='READ'"};
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
+// input data set: DC04 Bs -> phi phi 
+#pragma   print off 
+#include "$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts"
+#pragma   print on 
 
-                                                                                                                                          
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
+  };
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 1000 ;
 
 // ============================================================================
 // The END 

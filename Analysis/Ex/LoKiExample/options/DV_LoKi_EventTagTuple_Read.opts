@@ -1,4 +1,4 @@
-// $Id: DV_LoKi_MCMuon.opts,v 1.2 2004-08-05 09:54:12 ibelyaev Exp $
+// $Id: DV_LoKi_EventTagTuple_Read.opts,v 1.1 2004-08-05 09:54:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -6,17 +6,22 @@
 // ============================================================================
 // include files 
 // ============================================================================
-#pragma   print off 
+#pragma print off 
+// ============================================================================
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
-#include "$STDOPTS/RootHist.opts"
+// ============================================================================
+// Histograms
+// ============================================================================
 #include "$STDOPTS/Hbook.opts"
-#pragma   print on 
+// ============================================================================
+#pragma print on 
+// ============================================================================
 
 // ============================================================================
 /** @file 
- *  Options file to drive the simple LoKi example LoKi_MCMuon algorithm
- *  @see LoKi_MCMuon
+ *  Options file to drive the simple LoKi example LoKi_EventTagTuple algorithm
+ *  @see LoKi_EvenTagTuple
  *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
  *  @date 2003-05-12
  */
@@ -27,49 +32,48 @@ ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
 ApplicationMgr.TopAlg  +=  {
-  "LoKiPreLoad/Charged"   ,  // create and put into TES charged particles
-  "LoKi_MCMuon/MCMuon"    // execute the algorithm itsels  
+  "LoKiPreLoad/Charged"     // create and put into TES charged particles
 };
 
 // configuration of algorithm 'Charged' 
 Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
-Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-Charged.PhysDesktop.CombinedParticleMaker.Particles = 
-  { "muon" };
-Charged.PhysDesktop.CombinedParticleMaker.MuonSelection = 
-  { "det='MUON' mu-pi='-10.0' " };
+Charged.OutputLocation                = "/Event/Phys/Charged";
 
-// configuration of algorithm 'PhiPhi' 
-MCMuon.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
-MCMuon.NTupleLUN                        = "TUPLES"  ; // logical file unit 
+// event tag collections service 
+ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
+//EvtTupleSvc.Output = 
+//  { "EVTTAGS DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOTTREE' OPT='RECREAT' " } ;
 
-// N-Tuples
-ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
-NTupleSvc.Output      += 
-  {"TUPLES DATAFILE='MCMuon.hbook' TYP='HBOOK' OPT='NEW'" } ;
+PoolDbCacheSvc.Catalog = { "xmlcatalog_file:LoKiExampleCatalog.xml" };
 
 // control for printout 
 MessageSvc.OutputLevel   =   3 ;  // "WARNING" printout level
-EventSelector.PrintFreq  = 100 ;  // make a print only each 10th event 
+EventSelector.PrintFreq  =  10 ;  // make a print only each 10th event 
 // suppress some messages 
 ChargedProtoPAlg.OutputLevel     = 4 ; 
 PrimVtxFinder.OutputLevel        = 4 ; 
 RootEvtCnvSvc.OutputLevel        = 4 ;
 
-// input data set: DC04 Bs -> ( J/Psi -> mu+ mu- ) phi 
-#pragma   print off 
-#include "$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.opts"
-#pragma   print on 
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
+
+//SeqEvtTags.OutputLevel  = 2 ;
+//EvtTags.OutputLevel     = 3 ;
+//TagsWriter.OutputLevel  = 2 ;
+//EvtTupleSvc.OutputLevel = 1 ;
 
 PoolDbCacheSvc.Catalog = 
   { 
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.xml"          
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
   };
 
-// The number of events to process 
-ApplicationMgr.EvtMax  = 5000 ;
+EventSelector.Input = {
+  "COLLECTION='EvtTags/1' DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOT' SEL='(phis==1)' "
+};
 
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 1000 ;
 
 // ============================================================================
 // The END 

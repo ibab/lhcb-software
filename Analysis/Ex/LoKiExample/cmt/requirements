@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.9 2004-07-23 14:08:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.10 2004-08-05 09:54:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 
 package         LoKiExample
-version         v2r8
+version         v3r0
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -14,7 +14,7 @@ set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc
 set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
 
 # ============= dependencies  =================================================
-use LoKi  v2r* Tools
+use LoKi  v* Tools
 
 # ============= constituents ==================================================
 library LoKiExample         *.cpp 
@@ -28,7 +28,6 @@ set   LOKIEXTUPLE          "${LOKIEXAMPLEOPTS}/DV_LoKi_Tuple.opts"
 set   LOKIEXBS2PHIPHI      "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiPhi.opts" 
 set   LOKIEXBS2PHIGAMMA    "${LOKIEXAMPLEOPTS}/DV_LoKi_Bs2PhiGamma.opts" 
 set   LOKIEXBD2KSTARGAMMA  "${LOKIEXAMPLEOPTS}/DV_LoKi_Bd2KStarGamma.opts" 
-set   LOKIEXPI0            "${LOKIEXAMPLEOPTS}/DV_LoKi_Pi0fromBdTo3pi.opts" 
 set   LOKIEXEVTTAGS        "${LOKIEXAMPLEOPTS}/DV_LoKi_EventTagTuple.opts" 
                 
 alias Histos_exe           "     ${DAVINCIEXE} ${LOKIEXHISTOS}        " \
@@ -41,8 +40,6 @@ alias Bs2PhiGamma_exe      "     ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " \
       WIN32                " run ${DAVINCIEXE} ${LOKIEXBS2PHIGAMMA}   " 
 alias Bd2KStarGamma_exe    "     ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " \
       WIN32                " run ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " 
-alias Pi0_exe              "     ${DAVINCIEXE} ${LOKIEXPI0}           " \
-      WIN32                " run ${DAVINCIEXE} ${LOKIEXPI0}           " 
 alias EvtTag_exe           "     ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " \
       WIN32                " run ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " 
 

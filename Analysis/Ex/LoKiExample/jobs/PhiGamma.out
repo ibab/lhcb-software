@@ -1,0 +1,849 @@
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = "ru_RU.KOI8-R",
+	LC_NUMERIC = "C",
+	LC_COLLATE = "C",
+	LANG = "en_US"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = "ru_RU.KOI8-R",
+	LC_NUMERIC = "C",
+	LC_COLLATE = "C",
+	LANG = "en_US"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = "ru_RU.KOI8-R",
+	LC_NUMERIC = "C",
+	LC_COLLATE = "C",
+	LANG = "en_US"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+@(#)CERN job starter 01/08/2003
+Working directory is </pool/lsf/ibelyaev/387306> on <lxb1369>
+
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = "ru_RU.KOI8-R",
+	LC_NUMERIC = "C",
+	LC_COLLATE = "C",
+	LANG = "en_US"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+Setting DaVinci environment
+ ---> DaVinci environment set for version v11r11 <---
+ ------------------------------------------------------------------------
+ ---> packages searched for in /afs/cern.ch/user/i/ibelyaev/newmycmt:/afs/cern.ch/lhcb/software/releases/DAVINCI/DAVINCI_v11r11:/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v15r13:/afs/cern.ch/lhcb/software/releases/DBASE:/afs/cern.ch/lhcb/software/releases/PARAM:/afs/cern.ch/sw/Gaudi/releases/GAUDI_v14r6 <--- 
+ ------------------------------------------------------------------------
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob *       Start                                              * 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * parameter 1        = "DV_LoKi_Bs2PhiGamma"
+ * DaVinci.zjob * parameter 2        = "10000"
+ * DaVinci.zjob * File               = "DV_LoKi_Bs2PhiGamma.opts"
+ * DaVinci.zjob * N_events           = "10000"
+ * DaVinci.zjob * Run mode           = "rh73_gcc32"
+ * DaVinci.zjob * CMTCONFIG          = "rh73_gcc32"
+ * DaVinci.zjob * DaVinci version    = "v11r11"
+ * DaVinci.zjob * Job directory      = "/afs/cern.ch/user/i/ibelyaev/newmycmt/Phys/DaVinci/v11r11"
+ * DaVinci.zjob * Start directory    = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * After . setup.sh -tag=$MODE                              * 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * LHCBDBASEVERSION   = ""
+ * DaVinci.zjob * WORKDIR            = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob * TMPJOBROOT         = "/afs/cern.ch/user/i/ibelyaev/newmycmt/Phys/DaVinci/v11r11"
+ * DaVinci.zjob * PWD                = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * see the actual list of packages in used.packages file    * 
+ * DaVinci.zjob ************************************************************ 
+**********************************************************
+*                                                        *
+                DaVinci version v11r11
+
+*                                                        *
+**********************************************************
+JobOptionsSvc     WARNING 
+
+// $Id: PhiGamma.out,v 1.1 2004-08-05 09:54:07 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// include files 
+// ============================================================================
+#pragma print off // Printing switched off in job.opts Line 10
+
+// --> Including file $DAVINCIROOT/options/DaVinciCommon.opts
+
+// --> Including file $STDOPTS/DetDesc.opts
+// <-- End of including file $STDOPTS/DetDesc.opts
+
+// --> Including file $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts
+// <-- End of including file $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts
+
+// --> Including file $EVENTSYSROOT/options/PoolDicts.opts
+// <-- End of including file $EVENTSYSROOT/options/PoolDicts.opts
+
+// --> Including file $STDOPTS/RootDb.opts
+// <-- End of including file $STDOPTS/RootDb.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/Particle2MCChi2.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/Particle2MCChi2.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/Particle2MCWithChi2.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/Particle2MCWithChi2.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/CompositeParticle2MCLinks.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/CompositeParticle2MCLinks.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/Particle2MCLinks.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/Particle2MCLinks.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts
+
+// --> Including file $DAVINCIASSOCIATORSROOT/options/NeutralPP2MC.opts
+
+// --> Including file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
+
+// --> Including file $CALOASSOCIATORSOPTS/CCs2MCPs_Alg5.opts
+// <-- End of including file $CALOASSOCIATORSOPTS/CCs2MCPs_Alg5.opts
+// <-- End of including file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/NeutralPP2MC.opts
+// <-- End of including file $DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts
+
+// --> Including file $GLOBALRECOROOT/options/GlobalReco.opts
+
+// --> Including file $GLOBALRECOROOT/options/ChargedProtoPAlg.opts
+
+#pragma print on // Printing switched on in ChargedProtoPAlg.opts Line 21
+
+
+// Track Selections
+//  Note that Uptream tracks with special cuts for Ks are made with
+//    UpstreamProtoPAlg: do not execute at the same time that algorithm
+//    and ChargedProtoPAlg with the DownstreamTracks flag true
+//  ChargedProtoPAlg.DownstreamTracks = true;  // default = false
+//  ChargedProtoPAlg.VeloTTTracks = true;     // default = false
+ChargedProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
+ChargedProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
+ChargedProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
+
+// Calorimeter pID associators used are public instances configured by
+// DaVinciCommon via
+//   $CALORECOOPTS/PhotonMatch.opts
+//   $CALORECOOPTS/ElectronMatch.opts
+//   $CALORECOOPTS/BremMatch.opts
+
+
+// <-- End of including file $GLOBALRECOROOT/options/ChargedProtoPAlg.opts
+
+// --> Including file $GLOBALRECOROOT/options/NeutralProtoPAlg.opts
+
+#pragma print on // Printing switched on in NeutralProtoPAlg.opts Line 20
+
+
+
+// <-- End of including file $GLOBALRECOROOT/options/NeutralProtoPAlg.opts
+// <-- End of including file $GLOBALRECOROOT/options/GlobalReco.opts
+
+// --> Including file $DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts
+
+#pragma print on // Printing switched on in MCPIDProtoPAlg.opts Line 20
+
+MCPIDProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
+MCPIDProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
+MCPIDProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
+
+// Track associator 
+MCPIDProtoPAlg.TrackAsct = "Track2MCAsct";
+ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";
+
+// Monitoring ntuple
+// MCPIDProtoPAlg.Monitor = true;  // default = false
+
+// <-- End of including file $DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts
+
+// --> Including file $CALORECOOPTS/Reco.opts
+
+// --> Including file $CALORECOOPTS/EcalClust.opts
+// <-- End of including file $CALORECOOPTS/EcalClust.opts
+
+// --> Including file $CALORECOOPTS/EcalShare.opts
+// <-- End of including file $CALORECOOPTS/EcalShare.opts
+
+// --> Including file $CALORECOOPTS/EcalCovar.opts
+// <-- End of including file $CALORECOOPTS/EcalCovar.opts
+
+// --> Including file $CALORECOOPTS/PhotonMatch.opts
+// <-- End of including file $CALORECOOPTS/PhotonMatch.opts
+
+// --> Including file $CALORECOOPTS/Pi0Rec.opts
+// <-- End of including file $CALORECOOPTS/Pi0Rec.opts
+
+// --> Including file $CALORECOOPTS/PhotonRec.opts
+// <-- End of including file $CALORECOOPTS/PhotonRec.opts
+
+// --> Including file $CALORECOOPTS/ElectronRec.opts
+// <-- End of including file $CALORECOOPTS/ElectronRec.opts
+
+// --> Including file $CALORECOOPTS/ElectronMatch.opts
+// <-- End of including file $CALORECOOPTS/ElectronMatch.opts
+
+// --> Including file $CALORECOOPTS/BremMatch.opts
+// <-- End of including file $CALORECOOPTS/BremMatch.opts
+
+// --> Including file $CALORECOOPTS/CaloMerge.opts
+// <-- End of including file $CALORECOOPTS/CaloMerge.opts
+
+// --> Including file $CALORECOOPTS/NeutralCluster.opts
+// <-- End of including file $CALORECOOPTS/NeutralCluster.opts
+
+// --> Including file $CALORECOOPTS/ChargedCluster.opts
+// <-- End of including file $CALORECOOPTS/ChargedCluster.opts
+
+// --> Including file $CALORECOOPTS/ElectronSelect.opts
+// <-- End of including file $CALORECOOPTS/ElectronSelect.opts
+
+// --> Including file $CALORECOOPTS/ExtraDigits.opts
+// <-- End of including file $CALORECOOPTS/ExtraDigits.opts
+
+// --> Including file $CALORECOOPTS/ElectronCorrections.opts
+
+// --> Including file $CALORECOOPTS/PrsCorrE.opts
+// <-- End of including file $CALORECOOPTS/PrsCorrE.opts
+// <-- End of including file $CALORECOOPTS/ElectronCorrections.opts
+
+// --> Including file $CALORECOOPTS/PhotonCalibration04.opts
+
+// --> Including file $CALORECOOPTS/Calo04ECorrectionParam.opts
+// <-- End of including file $CALORECOOPTS/Calo04ECorrectionParam.opts
+
+// --> Including file $CALORECOOPTS/Calo04SCorrectionParam.opts
+// <-- End of including file $CALORECOOPTS/Calo04SCorrectionParam.opts
+
+// --> Including file $CALORECOOPTS/Calo04LCorrectionParam.opts
+// <-- End of including file $CALORECOOPTS/Calo04LCorrectionParam.opts
+// <-- End of including file $CALORECOOPTS/PhotonCalibration04.opts
+
+// --> Including file $CALORECOOPTS/PrsCorrG.opts
+// <-- End of including file $CALORECOOPTS/PrsCorrG.opts
+
+// --> Including file $CALORECOOPTS/SShape2Tanh.opts
+// <-- End of including file $CALORECOOPTS/SShape2Tanh.opts
+// <-- End of including file $CALORECOOPTS/Reco.opts
+
+// --> Including file $CALOPIDSOPTS/CaloPIDs.opts
+
+// --> Including file $CALOPIDSOPTS/CaloPIDsROOT.opts
+
+// --> Including file $CALOPIDSOPTS/HcalE.opts
+// <-- End of including file $CALOPIDSOPTS/HcalE.opts
+
+// --> Including file $CALOPIDSOPTS/PrsE.opts
+// <-- End of including file $CALOPIDSOPTS/PrsE.opts
+
+// --> Including file $CALOPIDSOPTS/EcalE.opts
+// <-- End of including file $CALOPIDSOPTS/EcalE.opts
+
+// --> Including file $CALOPIDSOPTS/PrsPIDe.opts
+// <-- End of including file $CALOPIDSOPTS/PrsPIDe.opts
+
+// --> Including file $CALOPIDSOPTS/HcalPIDe.opts
+// <-- End of including file $CALOPIDSOPTS/HcalPIDe.opts
+
+// --> Including file $CALOPIDSOPTS/EcalPIDe.opts
+// <-- End of including file $CALOPIDSOPTS/EcalPIDe.opts
+
+// --> Including file $CALOPIDSOPTS/BremPIDe.opts
+// <-- End of including file $CALOPIDSOPTS/BremPIDe.opts
+
+// --> Including file $CALOPIDSOPTS/EcalPIDmu.opts
+// <-- End of including file $CALOPIDSOPTS/EcalPIDmu.opts
+
+// --> Including file $CALOPIDSOPTS/HcalPIDmu.opts
+// <-- End of including file $CALOPIDSOPTS/HcalPIDmu.opts
+
+// --> Including file $CALOPIDSOPTS/EcalChi2.opts
+// <-- End of including file $CALOPIDSOPTS/EcalChi2.opts
+
+// --> Including file $CALOPIDSOPTS/BremChi2.opts
+// <-- End of including file $CALOPIDSOPTS/BremChi2.opts
+// <-- End of including file $CALOPIDSOPTS/CaloPIDsROOT.opts
+
+// --> Including file $CALOPIDSOPTS/PhotonPDF.opts
+// <-- End of including file $CALOPIDSOPTS/PhotonPDF.opts
+// <-- End of including file $CALOPIDSOPTS/CaloPIDs.opts
+
+// --> Including file $MUONIDROOT/options/MuonIDDLLTool.opts
+// <-- End of including file $MUONIDROOT/options/MuonIDDLLTool.opts
+
+#pragma print on // Printing switched on in DaVinciCommon.opts Line 81
+
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;
+
+// General output levels (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+
+// Print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+// Print Frequency
+EventSelector.PrintFreq  = 1;
+
+
+//--------------------------------------------------------------
+// Histogram persistency 
+// Root DLL for histogram persistency is needed for CALOPID. Hbook 
+// might be needed for users. 
+ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.DLLs += { "HbookCnv" };
+// Need a histogram persistency or Calo crashes :-(
+ApplicationMgr.HistogramPersistency = "ROOT";
+
+//--------------------------------------------------------------
+// Pre DaVinci algorithm. MUST BE FIRST.
+ApplicationMgr.TopAlg += { "PreDV" };
+
+// Default Database dependent configurations. The latest
+// compatible database is included from here.
+// --> Including file $DAVINCIROOT/options/DaVinciDDDB.opts
+
+
+/** @file 
+ * 
+ *  Configuration file to run using the latest compatible 
+ *  Detector Description Data Base  
+ *  This is the file that should be included by default in
+ *  a "DaVinci.opts" file
+ * 
+ *  @author G.Corti
+ *  @date 2004-01-26
+ */
+
+// When using LHCb v15r3
+// --> Including file $DAVINCIROOT/options/lhcb-200402.opts
+
+
+//****************************************************************************
+/// Job options for DaVinci, for data produced by Gauss v12r5 or greater and
+/// with XmlDDDB v19r0 or greater and geometry compatible with lhcb-200311
+// ---------------------------------------------------------------------------
+
+// Database specific options
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+
+// Velo 45 degrees sectors
+DeVelo.Design = 1;
+
+// <-- End of including file $DAVINCIROOT/options/lhcb-200402.opts
+
+#include "$DAVINCIROOT/options/lhcb-200402.opts" 
+
+// <-- End of including file $DAVINCIROOT/options/DaVinciDDDB.opts
+
+
+
+// <-- End of including file $DAVINCIROOT/options/DaVinciCommon.opts
+
+// --> Including file $DAVINCIROOT/options/DaVinciReco.opts
+
+// --> Including file $PRIMVTXROOT/options/PrimVtx.opts
+// <-- End of including file $PRIMVTXROOT/options/PrimVtx.opts
+// <-- End of including file $DAVINCIROOT/options/DaVinciReco.opts
+
+// --> Including file $DAVINCIROOT/options/DaVinciNeutrals.opts
+// <-- End of including file $DAVINCIROOT/options/DaVinciNeutrals.opts
+
+// --> Including file $STDOPTS/Hbook.opts
+// <-- End of including file $STDOPTS/Hbook.opts
+
+#pragma print on // Printing switched on in job.opts Line 18
+
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  Options file to drive the simple LoKi example LoKi_Bs2PhiGamma algorithm
+ *  @see LoKi_Bs2PhiGamma
+ *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+ *  @date 2003-05-12
+ */
+// ============================================================================
+
+// load nesessary libraries 
+ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
+
+// top level algorithms 
+ApplicationMgr.TopAlg +=  {
+  "LoKiPreLoad/Photons"       , // create and put into TES neutral particles  
+  "LoKiPreLoad/Charged"       , // create and put into TES charged particles
+  "LoKi_Bs2PhiGamma/PhiGamma"   // execute the algorithm itsels  
+};
+
+// configuration of algorithm 'Charged' 
+Charged.PhysDesktop.ParticleMakerType   = "CombinedParticleMaker";
+Charged.OutputLocation                  = "/Event/Phys/Charged";
+
+// configuration of algorithm 'Neutrals' 
+Photons.PhysDesktop.ParticleMakerType   =  "PhotonParticleMaker";
+Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true ;
+Photons.OutputLocation                  = "/Event/Phys/Photons";
+
+// configuration of algorithm 'PhiGamma' 
+PhiGamma.PhysDesktop.InputLocations       = {"/Event/Phys/Charged"  ,
+                                             "/Event/Phys/Photons" } ;
+PhiGamma.NTupleLUN                        = "TUPLES"  ; // logical file unit 
+
+// access to MC truth for neutrals  // Printing switched off in job.opts Line 54
+
+// --> Including file $CALOASSOCIATORSOPTS/CaloAssociators.opts
+
+// --> Including file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
+#001 [ from ../src/JobOptionsSvc/PropertyCompiler.cpp:156] in function: bool PropertyCompiler::alreadyIncluded(): Specified property-file /afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v15r13/Calo/CaloAssociators/v4r1/options/CCs2MCPs.opts was already included by another property-file! 
+JobOptionsSvc        INFO // <-- End of including file $CALOASSOCIATORSOPTS/CCs2MCPs.opts
+// <-- End of including file $CALOASSOCIATORSOPTS/CaloAssociators.opts
+
+#pragma print on // Printing switched on in job.opts Line 57
+
+
+// remove upstream protoparticles (suppress warning messages)
+ChargedPP2MC.InputData    = { "Rec/ProtoP/Charged" };
+
+// N-Tuples
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
+NTupleSvc.Output      += 
+  {"TUPLES DATAFILE='PhiGamma_tuples.hbook' TYP='HBOOK' OPT='NEW'" } ;
+
+// the output file for histograms 
+HistogramPersistencySvc.OutputFile = "PhiGamma_histos.hbook";
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 100 ;
+
+// control for printout 
+MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
+EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
+// suppress some messages 
+ChargedProtoPAlg.OutputLevel     = 4 ; 
+PrimVtxFinder.OutputLevel        = 4 ; 
+RootEvtCnvSvc.OutputLevel        = 4 ;
+NeutralPPsFromCPsAlg.OutputLevel = 4 ;
+
+ // Printing switched off in job.opts Line 82
+
+// --> Including file $DAVINCIROOT/options/DaVinciTestData.opts
+// <-- End of including file $DAVINCIROOT/options/DaVinciTestData.opts
+
+#pragma print on // Printing switched on in job.opts Line 88
+
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+//                                                  
+// ************************************************ 
+// * redefined parameters from batch stript       * 
+// ************************************************ 
+//                                                  
+// ************************************************ 
+// * (re)define number of events to be processed  * 
+// ************************************************ 
+ ApplicationMgr.EvtMax    = 10000  ;           
+//                                                  
+ EventSelector.PrintFreq = 100 ;                    
+//                                                  
+// ************************************************ 
+
+Job options successfully read in from ./job.opts
+ServiceManager                                                                  WARNING Service factory for type HbookCnv::PersSvc already declared
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::HRWNTupleCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::HFileCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::HDirectoryCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::HCWNTupleCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::H2DCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::H1DCnv already exists.
+ConverterFactory                                                                WARNING Converter for class:HbookCnv::DirectoryCnv already exists.
+ServiceManager                                                                  WARNING Service factory for type HbookCnv::ConvSvc already declared
+ObjectManager                                                                   WARNING Factory for class:DataObjectFactory<RelationWeighted1D<ProtoParticle,MCParticle,double> > already exists.
+WARNING Algorithm factory for type CaloClustersMCTruthAlg already declared. Overwriting it.
+WARNING Algorithm factory for type CaloClustersMCTruth5Alg already declared. Overwriting it.
+WARNING Algorithm factory for type CaloClustersMCTruth4Alg already declared. Overwriting it.
+WARNING Algorithm factory for type CaloClustersMCTruth3Alg already declared. Overwriting it.
+WARNING Algorithm factory for type CaloClustersMCTruth2Alg already declared. Overwriting it.
+ObjectManager                                                                   WARNING Factory for class:DataObjectFactory<RelationWeighted2D<CaloCluster,MCParticle,float> > already exists.
+ObjectManager                                                                   WARNING Factory for class:DataObjectFactory<RelationWeighted1D<CaloCluster,MCParticle,float> > already exists.
+ObjectManager                                                                   WARNING Factory for class:AssociatorWeighted<CaloCluster,MCParticle,float> already exists.
+ApplicationMgr                                                                     INFO Successfully loaded modules: GaudiAud, GaudiAlg, DetDesc, XmlTools, DetDescCnv, Magnet, VeloDet, OTDet, STDet, MuonDet, CaloDet, CaloDetXmlCnv, GaudiPoolDb, GaudiDb, GaudiRootDb, ITAssociators, OTAssociators, VeloAssociators, MuonAssociators, CaloEvent, CaloAssociators, TrAssociators, Associators, DaVinciAssociators, GlobalReco, CaloReco, CaloPIDs, MuonID, MuonTools, DaVinciTools, TrExtrapolator, MCTools, DaVinciMCTools, DaVinciEff, Ks2PiPiSel, FlavourTagging, RecoTools, Utilities, RootHistCnv, HbookCnv, PrimVtx, HbookCnv, LoKiExample, LoKi, CaloAssociators
+ApplicationMgr                                                                     INFO Application Manager Configured successfully
+ParticlePropertySvc                                                                INFO Opened particle properties file : /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v3r8/data/ParticleTable.txt
+MagneticFieldSvc                                                                   INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v4r5/cdf/field045.cdf
+ROOT                                                                               INFO --> Open     DbSession     Mode:UPDATE   
+ROOT                                                                               INFO --> Access   DbFederation 
+NTupleSvc                                                                          INFO Added stream file:PhiGamma_tuples.hbook as TUPLES
+
+
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Wel
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Wel
+LoKi                                                                                           LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                      Welcome to LoKi!                                     LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                    (LOops & KInematics)                                   LoKi 
+LoKi                                                                                           LoKi 
+LoKi                       Smart & Friendly C++ Physics Analysis Tool Kit                      LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                                                                           LoKi 
+LoKi                 Author:  Vanya BELYAEV (ITEP/Moscow) Ivan.Belyaev@itep.ru                 LoKi 
+LoKi                   With the kind help of Galina Pakhlova & Sergey Barsuk                   LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                     Have fun and enjoy!                                   LoKi 
+LoKi                                                                                           LoKi 
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Wel
+Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Wel
+
+
+DetectorPersistencySvc                                                             INFO "CnvServices": ["XmlCnvSvc"]
+DetectorPersistencySvc                                                             INFO Added successfully Conversion service:XmlCnvSvc
+DetectorDataSvc                                                                 SUCCESS Detector description database: /afs/cern.ch/lhcb/software/releases/DBASE/Det/XmlDDDB/v22r2/DDDB/lhcb-200402.xml
+PrimVtxFinder.PrimVtxFitterTool                                                    INFO PrimVtxFitterTool parameters
+PrimVtxFinder.PrimVtxFitterTool                                                    INFO Chi2Cut 9
+PrimVtxFinder.PrimVtxFitterTool                                                    INFO Chi2 will be computed using the track's covariance matrix
+PrimVtxFinder.PrimVtxFitterTool                                                    INFO Minimum number of tracks to fit a vertex: 6
+PrimVtxFinder.PrimVtxFitterTool                                                    INFO Maximum number of iterations: 10
+ChronoStatSvc                                                                      INFO  Number of skipped events for MemStat20
+Neutrals                                                                           INFO Member list: CaloDigitsFromRaw, CaloClusterCorrect3x3Position, CaloHypoAlg/PhotonFromMergedCalibration, CaloHypoAlg/PhotonCalibration, NeutralPPsFromCPsAlg
+ToolSvc.SpdPrsID                                                                   INFO Spd scintillateur z position : shift=30.5
+ToolSvc.PhotonPID                                                               WARNING SPD scintillator offset HARD-CODED : value=30.5
+ToolSvc.PhotonPID                                                               WARNING Vertex location HARD-CODED : IP(0.,0.,0.)
+HistogramPersistencySvc                                                            INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HbookHistSvc                                                                       INFO Setting /PAWC/ common block size to 250000
+HistogramPersistencySvc                                                            INFO Added successfully Conversion service:HbookHistSvc
+HistogramDataSvc                                                                   INFO Added stream file:/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v3r8/data/CaloPIDs.root as CaloPIDs
+Photons                                                                         WARNING LoKiPreLoad Production of Evt Collections is switched OFF  StatusCode=FAILURE
+EventPersistencySvc                                                                INFO "CnvServices": ["PoolRootEvtCnvSvc", "PoolRootTreeEvtCnvSvc", "PoolRootKeyEvtCnvSvc", "RootEvtCnvSvc"]
+Photons.PhysDesktop.PhotonParticleMaker                                         WARNING PhotonParticleMaker 	         *ALL*     'ordinary' photons are to be created StatusCode=FAILURE
+DeVelo                                                                             INFO Using VELO R Detector design 1
+Photons                                                                         WARNING LoKiPreLoad Decay descriptor is '' (empty)  StatusCode=FAILURE
+Charged                                                                         WARNING LoKiPreLoad Production of Evt Collections is switched OFF  StatusCode=FAILURE
+Charged                                                                         WARNING LoKiPreLoad Decay descriptor is '' (empty)  StatusCode=FAILURE
+PhiGamma                                                                        WARNING LoKi_Bs2PhiGamma Production of Evt Collections is switched OFF  StatusCode=FAILURE
+PhiGamma                                                                        WARNING LoKi_Bs2PhiGamma Decay descriptor is '' (empty)  StatusCode=FAILURE
+EventPersistencySvc                                                                INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventPersistencySvc                                                                INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventSelector_1                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_1 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 1. Record number within stream 0: 1
+ApplicationMgr                                                                     INFO Application Manager Initialized successfully
+PreDV                                                                              INFO SelResult container not there yet.Creating it
+RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
+HistogramPersistencySvc                                                            INFO Added successfully Conversion service:RootHistSvc
+RFileCnv                                                                           INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v3r8/data/CaloPIDs.root" for reading
+HbookNFileCnv                                                                      INFO Opened NEW HBook RZ file:PhiGamma_tuples.hbook as TUPLES
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 101. Record number within stream 0: 101
+EventSelector                                                                   SUCCESS Reading Event record 201. Record number within stream 0: 201
+EventSelector                                                                   SUCCESS Reading Event record 301. Record number within stream 0: 301
+EventSelector                                                                   SUCCESS Reading Event record 401. Record number within stream 0: 401
+EventSelector                                                                   SUCCESS Reading Event record 501. Record number within stream 0: 501
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+EventSelector                                                                   SUCCESS Reading Event record 601. Record number within stream 0: 601
+EventSelector                                                                   SUCCESS Reading Event record 701. Record number within stream 0: 701
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+EventSelector                                                                   SUCCESS Reading Event record 801. Record number within stream 0: 801
+EventSelector                                                                   SUCCESS Reading Event record 901. Record number within stream 0: 901
+EventSelector_2                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_2 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 1001. Record number within stream 1: 1
+EventSelector                                                                   SUCCESS Reading Event record 1101. Record number within stream 1: 101
+EventSelector                                                                   SUCCESS Reading Event record 1201. Record number within stream 1: 201
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 1301. Record number within stream 1: 301
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeParticle() : invalid status  StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 1401. Record number within stream 1: 401
+EventSelector                                                                   SUCCESS Reading Event record 1501. Record number within stream 1: 501
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+EventSelector                                                                   SUCCESS Reading Event record 1601. Record number within stream 1: 601
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+EventSelector                                                                   SUCCESS Reading Event record 1701. Record number within stream 1: 701
+EventSelector                                                                   SUCCESS Reading Event record 1801. Record number within stream 1: 801
+PhiGamma                                                                          ERROR LoKi_Bs2PhiGamma No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']
+EventSelector                                                                   SUCCESS Reading Event record 1901. Record number within stream 1: 901
+EventSelector_3                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_3 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 2001. Record number within stream 2: 1
+EventSelector                                                                   SUCCESS Reading Event record 2101. Record number within stream 2: 101
+EventSelector                                                                   SUCCESS Reading Event record 2201. Record number within stream 2: 201
+EventSelector                                                                   SUCCESS Reading Event record 2301. Record number within stream 2: 301
+EventSelector                                                                   SUCCESS Reading Event record 2401. Record number within stream 2: 401
+EventSelector                                                                   SUCCESS Reading Event record 2501. Record number within stream 2: 501
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 2601. Record number within stream 2: 601
+EventSelector                                                                   SUCCESS Reading Event record 2701. Record number within stream 2: 701
+EventSelector                                                                   SUCCESS Reading Event record 2801. Record number within stream 2: 801
+EventSelector                                                                   SUCCESS Reading Event record 2901. Record number within stream 2: 901
+EventSelector_4                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_4 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 3001. Record number within stream 3: 1
+EventSelector                                                                   SUCCESS Reading Event record 3101. Record number within stream 3: 101
+EventSelector                                                                   SUCCESS Reading Event record 3201. Record number within stream 3: 201
+EventSelector                                                                   SUCCESS Reading Event record 3301. Record number within stream 3: 301
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 3401. Record number within stream 3: 401
+EventSelector                                                                   SUCCESS Reading Event record 3501. Record number within stream 3: 501
+EventSelector                                                                   SUCCESS Reading Event record 3601. Record number within stream 3: 601
+EventSelector                                                                   SUCCESS Reading Event record 3701. Record number within stream 3: 701
+EventSelector                                                                   SUCCESS Reading Event record 3801. Record number within stream 3: 801
+EventSelector                                                                   SUCCESS Reading Event record 3901. Record number within stream 3: 901
+EventSelector_5                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_5 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 4001. Record number within stream 4: 1
+EventSelector                                                                   SUCCESS Reading Event record 4101. Record number within stream 4: 101
+EventSelector                                                                   SUCCESS Reading Event record 4201. Record number within stream 4: 201
+EventSelector                                                                   SUCCESS Reading Event record 4301. Record number within stream 4: 301
+EventSelector                                                                   SUCCESS Reading Event record 4401. Record number within stream 4: 401
+EventSelector                                                                   SUCCESS Reading Event record 4501. Record number within stream 4: 501
+EventSelector                                                                   SUCCESS Reading Event record 4601. Record number within stream 4: 601
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 4701. Record number within stream 4: 701
+EventSelector                                                                   SUCCESS Reading Event record 4801. Record number within stream 4: 801
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 4901. Record number within stream 4: 901
+EventSelector_6                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_6 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 5001. Record number within stream 5: 1
+EventSelector                                                                   SUCCESS Reading Event record 5101. Record number within stream 5: 101
+EventSelector                                                                   SUCCESS Reading Event record 5201. Record number within stream 5: 201
+EventSelector                                                                   SUCCESS Reading Event record 5301. Record number within stream 5: 301
+EventSelector                                                                   SUCCESS Reading Event record 5401. Record number within stream 5: 401
+EventSelector                                                                   SUCCESS Reading Event record 5501. Record number within stream 5: 501
+EventSelector                                                                   SUCCESS Reading Event record 5601. Record number within stream 5: 601
+EventSelector                                                                   SUCCESS Reading Event record 5701. Record number within stream 5: 701
+EventSelector                                                                   SUCCESS Reading Event record 5801. Record number within stream 5: 801
+EventSelector                                                                   SUCCESS Reading Event record 5901. Record number within stream 5: 901
+EventSelector_7                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_7 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 6001. Record number within stream 6: 1
+EventSelector                                                                   SUCCESS Reading Event record 6101. Record number within stream 6: 101
+EventSelector                                                                   SUCCESS Reading Event record 6201. Record number within stream 6: 201
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+PhiGamma.Loop 'K+ K-'                                                             ERROR LoKi::Reporter makeVertex(): Unable to fit      Vertex  StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+ToolSvc.LoKiError                                                                 ERROR LoKi::Reporter LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass' StatusCode=FAILURE
+PhiGamma.MCMatch <empty>                                                          ERROR LoKi::Reporter match():   Particle* points to NULL StatusCode=FAILURE
+EventSelector                                                                   SUCCESS Reading Event record 6301. Record number within stream 6: 301
+EventSelector                                                                   SUCCESS Reading Event record 6401. Record number within stream 6: 401
+EventSelector                                                                   SUCCESS Reading Event record 6501. Record number within stream 6: 501
+EventSelector                                                                   SUCCESS Reading Event record 6601. Record number within stream 6: 601
+EventSelector                                                                   SUCCESS Reading Event record 6701. Record number within stream 6: 701
+EventSelector                                                                   SUCCESS Reading Event record 6801. Record number within stream 6: 801
+EventSelector                                                                   SUCCESS Reading Event record 6901. Record number within stream 6: 901
+EventSelector_8                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_8 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 7001. Record number within stream 7: 1
+EventSelector                                                                   SUCCESS Reading Event record 7101. Record number within stream 7: 101
+EventSelector                                                                   SUCCESS Reading Event record 7201. Record number within stream 7: 201
+EventSelector                                                                   SUCCESS Reading Event record 7301. Record number within stream 7: 301
+EventSelector                                                                   SUCCESS Reading Event record 7401. Record number within stream 7: 401
+EventSelector                                                                   SUCCESS Reading Event record 7501. Record number within stream 7: 501
+EventSelector                                                                   SUCCESS Reading Event record 7601. Record number within stream 7: 601
+EventSelector                                                                   SUCCESS Reading Event record 7701. Record number within stream 7: 701
+EventSelector                                                                   SUCCESS Reading Event record 7801. Record number within stream 7: 801
+EventSelector                                                                   SUCCESS Reading Event record 7901. Record number within stream 7: 901
+EventSelector_9                                                                    INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_9 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 8001. Record number within stream 8: 1
+EventSelector                                                                   SUCCESS Reading Event record 8101. Record number within stream 8: 101
+EventSelector                                                                   SUCCESS Reading Event record 8201. Record number within stream 8: 201
+EventSelector                                                                   SUCCESS Reading Event record 8301. Record number within stream 8: 301
+EventSelector                                                                   SUCCESS Reading Event record 8401. Record number within stream 8: 401
+EventSelector                                                                   SUCCESS Reading Event record 8501. Record number within stream 8: 501
+EventSelector                                                                   SUCCESS Reading Event record 8601. Record number within stream 8: 601
+EventSelector                                                                   SUCCESS Reading Event record 8701. Record number within stream 8: 701
+EventSelector                                                                   SUCCESS Reading Event record 8801. Record number within stream 8: 801
+EventSelector                                                                   SUCCESS Reading Event record 8901. Record number within stream 8: 901
+EventSelector_10                                                                   INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_10 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 9001. Record number within stream 9: 1
+EventSelector                                                                   SUCCESS Reading Event record 9101. Record number within stream 9: 101
+EventSelector                                                                   SUCCESS Reading Event record 9201. Record number within stream 9: 201
+EventSelector                                                                   SUCCESS Reading Event record 9301. Record number within stream 9: 301
+EventSelector                                                                   SUCCESS Reading Event record 9401. Record number within stream 9: 401
+EventSelector                                                                   SUCCESS Reading Event record 9501. Record number within stream 9: 501
+EventSelector                                                                   SUCCESS Reading Event record 9601. Record number within stream 9: 601
+EventSelector                                                                   SUCCESS Reading Event record 9701. Record number within stream 9: 701
+EventSelector                                                                   SUCCESS Reading Event record 9801. Record number within stream 9: 801
+EventSelector                                                                   SUCCESS Reading Event record 9901. Record number within stream 9: 901
+EventSelector_11                                                                   INFO Selection root:/Event CLID:1
+EventSelector                                                                      INFO Stream:EventSelector_11 Def:DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000676_9.dst' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector                                                                   SUCCESS Reading Event record 10001. Record number within stream 10: 1
+Photons                                                                         SUCCESS  Exceptions/Errors/Warnings statistics:  0/0/2
+Photons                                                                         SUCCESS  #WARNINGS  = 1 Message='Decay descriptor is '' (empty) '
+Photons                                                                         SUCCESS  #WARNINGS  = 1 Message='Production of Evt Collections is switched OFF '
+Charged                                                                         SUCCESS  Exceptions/Errors/Warnings statistics:  0/0/2
+Charged                                                                         SUCCESS  #WARNINGS  = 1 Message='Decay descriptor is '' (empty) '
+Charged                                                                         SUCCESS  #WARNINGS  = 1 Message='Production of Evt Collections is switched OFF '
+PhiGamma                                                                        SUCCESS  Exceptions/Errors/Warnings statistics:  0/1/2
+PhiGamma                                                                        SUCCESS  #ERRORS    = 31 Message='No primary vertex found! [ at line 55 in the file '../src/LoKi_Bs2PhiGamma.cpp']'
+PhiGamma                                                                        SUCCESS  #WARNINGS  = 1 Message='Decay descriptor is '' (empty) '
+PhiGamma                                                                        SUCCESS  #WARNINGS  = 1 Message='Production of Evt Collections is switched OFF '
+EventLoopMgr                                                                       INFO Histograms converted successfully according to request.
+*****Chrono*****                                                                   INFO ****************************************************************************************************
+*****Chrono*****                                                                   INFO  The Final CPU consumption ( Chrono ) Table (ordered)
+*****Chrono*****                                                                   INFO ****************************************************************************************************
+PreDV:execute                                                                      INFO Time User   : Tot= 0.65  [s] Ave/Min/Max=   65(+-  804)/    0/1e+04 [us] #=10000
+BremChi2:execute                                                                   INFO Time User   : Tot= 1.32  [s] Ave/Min/Max=  132(+-1.14e+03)/    0/1e+04 [us] #=10000
+HcalPIDmu:execute                                                                  INFO Time User   : Tot=  1.3  [s] Ave/Min/Max=  130(+-1.13e+03)/    0/1e+04 [us] #=10000
+EcalChi2:execute                                                                   INFO Time User   : Tot= 1.68  [s] Ave/Min/Max=  168(+-1.29e+03)/    0/1e+04 [us] #=10000
+BremPIDe:execute                                                                   INFO Time User   : Tot= 2.37  [s] Ave/Min/Max=  237(+-1.52e+03)/    0/1e+04 [us] #=10000
+TransportSvcT                                                                      INFO Time User   : Tot= 2.31  [s] Ave/Min/Max= 1.45(+- 38.4)/    0/1.53e+03 [ms] #=1593
+Photons:execute                                                                    INFO Time User   : Tot= 7.55  [s] Ave/Min/Max=0.755(+- 2.64)/    0/   10 [ms] #=10000
+Charged:execute                                                                    INFO Time User   : Tot= 7.96  [s] Ave/Min/Max=0.796(+- 2.71)/    0/   10 [ms] #=10000
+CaloClusterCorrect3x3Position:execute                                              INFO Time User   : Tot= 8.43  [s] Ave/Min/Max=0.843(+- 2.81)/    0/   20 [ms] #=10000
+EcalPIDmu:execute                                                                  INFO Time User   : Tot= 9.49  [s] Ave/Min/Max=0.949(+- 2.93)/    0/   10 [ms] #=10000
+HcalPIDe:execute                                                                   INFO Time User   : Tot= 9.88  [s] Ave/Min/Max=0.988(+- 2.98)/    0/   10 [ms] #=10000
+PrsPIDe:execute                                                                    INFO Time User   : Tot= 10.1  [s] Ave/Min/Max= 1.01(+- 3.01)/    0/   10 [ms] #=10000
+PhotonCalibration:execute                                                          INFO Time User   : Tot=   19  [s] Ave/Min/Max=  1.9(+- 3.97)/    0/   30 [ms] #=10000
+ChargedPP2MC:execute                                                               INFO Time User   : Tot= 24.5  [s] Ave/Min/Max= 2.46(+- 4.39)/    0/   20 [ms] #=9969
+NeutralPPsFromCPsAlg:execute                                                       INFO Time User   : Tot= 42.8  [s] Ave/Min/Max= 4.28(+- 5.14)/    0/   30 [ms] #=10000
+PhotonFromMergedCalibration:execute                                                INFO Time User   : Tot= 45.9  [s] Ave/Min/Max= 4.59(+- 5.43)/    0/   40 [ms] #=10000
+CaloDigitsFromRaw:execute                                                          INFO Time User   : Tot= 51.4  [s] Ave/Min/Max= 5.14(+- 5.68)/    0/   50 [ms] #=10000
+PrimVtxFinder:execute                                                              INFO Time User   : Tot= 52.9  [s] Ave/Min/Max= 5.29(+- 16.3)/    0/1.53e+03 [ms] #=10000
+EcalPIDe:execute                                                                   INFO Time User   : Tot= 57.4  [s] Ave/Min/Max= 5.74(+- 6.09)/    0/   40 [ms] #=10000
+Neutrals:execute                                                                   INFO Time User   : Tot=  168  [s] Ave/Min/Max= 16.8(+- 9.84)/    0/   90 [ms] #=10000
+NeutralPP2MC:execute                                                               INFO Time User   : Tot= 9.49[min] Ave/Min/Max= 57.1(+- 49.1)/    0/1.14e+03 [ms] #=9969
+ChargedProtoPAlg:execute                                                           INFO Time User   : Tot= 11.1[min] Ave/Min/Max= 66.7(+- 37.1)/    0/  720 [ms] #=10000
+PhiGamma:execute                                                                   INFO Time User   : Tot=   12[min] Ave/Min/Max= 71.8(+- 57.6)/    0/1.3e+03 [ms] #=10000
+ChronoStatSvc                                                                      INFO Time User   : Tot= 29.7[min]                                             #=  1
+*****Chrono*****                                                                   INFO ****************************************************************************************************
+******Stat******                                                                   INFO ****************************************************************************************************
+******Stat******                                                                   INFO  The Final stat Table (ordered)
+******Stat******                                                                   INFO ****************************************************************************************************
+Charged:accept                                                                     INFO  #=9980                                                   
+Photons:accept                                                                     INFO  #=9980                                                   
+******Stat******                                                                   INFO ****************************************************************************************************
+ChronoStatSvc.finalize()                                                           INFO  Service finalized succesfully 
+HNTupleCnv                                                                      WARNING empty ntuple: /NTUPLES/TUPLES/PhiGamma/1
+HCWNTupleCnv                                                                       INFO Booked Column wise HBOOK N tuple with ID:1 " my n-tuple number 2 " in directory <//TUPLES/PhiGamma>
+HbookNFileCnv                                                                      INFO Closing HBook RZ file:PhiGamma_tuples.hbook as /NTUPLES/TUPLES
+NTupleSvc                                                                          INFO NTuples saved successfully
+ROOT                                                                               INFO --> Deaccess DbFederation  Mode:READ     
+ROOT                                                                               INFO --> Closed   DbSession     Mode:UPDATE   RootEvtCnvSvc.DataBase 
+PoolRootTreeEvtCnvSvc                                                              INFO POOL conversion service PoolRootTreeEvtCnvSvc successfully finalized.
+PoolRootKeyEvtCnvSvc                                                               INFO POOL conversion service PoolRootKeyEvtCnvSvc successfully finalized.
+PoolRootEvtCnvSvc                                                                  INFO POOL conversion service PoolRootEvtCnvSvc successfully finalized.
+PoolDbCacheSvc                                                                  SUCCESS POOL Cache size:1
+MagneticFieldSvc                                                                   INFO Service finalized successfully
+ParticlePropertySvc                                                                INFO Service finalised successfully
+ToolSvc                                                                            INFO Removing all tools created by ToolSvc
+PhiGamma.Loop 'K+ K-'                                                           SUCCESS  Exceptions/Errors/Warnings statistics:  0/2/0
+PhiGamma.Loop 'K+ K-'                                                           SUCCESS  #ERRORS    = 36 Message='makeParticle() : invalid status '
+PhiGamma.Loop 'K+ K-'                                                           SUCCESS  #ERRORS    = 12 Message='makeVertex(): Unable to fit      Vertex '
+PhiGamma.MCMatch <empty>                                                        SUCCESS  Exceptions/Errors/Warnings statistics:  0/1/0
+PhiGamma.MCMatch <empty>                                                        SUCCESS  #ERRORS    = 12 Message='match():   Particle* points to NULL'
+ToolSvc.LoKiError                                                               SUCCESS  Exceptions/Errors/Warnings statistics:  0/2/0
+ToolSvc.LoKiError                                                               SUCCESS  #ERRORS    = 12 Message='LoKi::Particles::DeltaMeasuredMass : 	  Invalid Particle, return 'InvalidMass''
+ToolSvc.LoKiError                                                               SUCCESS  #ERRORS    = 12 Message='LoKi::Particles::Mass : 	  Invalid Particle, return 'InvalidMass''
+Photons.PhysDesktop.PhotonParticleMaker                                         SUCCESS  Exceptions/Errors/Warnings statistics:  0/0/1
+Photons.PhysDesktop.PhotonParticleMaker                                         SUCCESS  #WARNINGS  = 1 Message='	         *ALL*     'ordinary' photons are to be created'
+ApplicationMgr                                                                     INFO Application Manager Finalized successfully
+
+
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye 
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye 
+LoKi                                                                                           LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                     Good Bye from LoKi!                                   LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                    (LOops & KInematics)                                   LoKi 
+LoKi                                                                                           LoKi 
+LoKi                       Smart & Friendly C++ Physics Analysis Tool Kit                      LoKi 
+LoKi                                                                                           LoKi 
+LoKi                                                                                           LoKi 
+LoKi                    LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                    LoKi 
+LoKi    Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome   LoKi 
+LoKi                                                                                           LoKi 
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye 
+Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye 
+
+
+./_DaVinci.exe ./job.opts  1794.93s user 41.40s system 53% cpu 57:34.81 total
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * Check for ./core file                                    * 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob *       End                                                * 
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * parameter 1        = "DV_LoKi_Bs2PhiGamma"
+ * DaVinci.zjob * parameter 2        = "10000"
+ * DaVinci.zjob * File               = "DV_LoKi_Bs2PhiGamma.opts"
+ * DaVinci.zjob * N_events           = "10000"
+ * DaVinci.zjob * CMTCONFIG          = "rh73_gcc32"
+ * DaVinci.zjob * DaVinci version    = "v11r11"
+ * DaVinci.zjob * Job directory      = "/afs/cern.ch/user/i/ibelyaev/newmycmt/Phys/DaVinci/v11r11"
+ * DaVinci.zjob * Start directory    = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob * WORKDIR            = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob * TMPJOBROOT         = "/afs/cern.ch/user/i/ibelyaev/newmycmt/Phys/DaVinci/v11r11"
+ * DaVinci.zjob * PWD                = "/pool/lsf/ibelyaev/387306"
+ * DaVinci.zjob ************************************************************ 
+ * DaVinci.zjob * see the actual list of packages in used.packages file    * 
+ * DaVinci.zjob ************************************************************ 
+
+
+CERN statistics: This job used 1:41:05 NCU hours (6065 NCU seconds)
+
