@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.3 2002-07-24 16:20:27 gcorti Exp $
+// $Id: Vertex.cpp,v 1.4 2002-08-16 07:37:37 graven Exp $
 // Include files 
 
 // STD and STL
@@ -91,14 +91,18 @@ void Vertex::setType(const Vertex::VertexType& value)
 //=============================================================================
 StreamBuffer& Vertex::serialize( StreamBuffer& s ) {
 
-  unsigned int temp = m_type;
+  float l_chi2;
+  unsigned l_type;
   KeyedObject<int>::serialize(s);
-  s << m_position
-    << m_positionErr
-    << (float)m_chi2
-    << m_nDoF
-    << temp
-    << m_products(this);
+  s >> m_position
+    >> m_positionErr
+    >> l_chi2
+    >> m_nDoF
+    >> l_type
+    >> m_desktop
+    >> m_products(this);
+  m_chi2 = l_chi2;
+  m_type = VertexType(l_type);
   return s;
 
 };
