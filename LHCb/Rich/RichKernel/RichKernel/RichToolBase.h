@@ -1,9 +1,9 @@
-// $Id: RichToolBase.h,v 1.2 2004-07-15 15:36:53 jonrob Exp $
+// $Id: RichToolBase.h,v 1.3 2004-07-21 08:04:00 cattanem Exp $
 #ifndef RICHKERNEL_RICHTOOLBASE_H
 #define RICHKERNEL_RICHTOOLBASE_H 1
 
 // GaudiTools
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"

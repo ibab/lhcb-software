@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.48 2004-07-15 15:36:53 jonrob Exp $
+! $Id: release.notes,v 1.49 2004-07-21 08:04:00 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+!======================= RichKernel v5r0 2004-07-19 =======================
+! 2004-07-19 - Marco Cattaneo
+ - Remove explicit dependency on LHCbKernel (taken from DetDesc)
+ - Pick up GaudiTool.h from GaudiAlg, for Gaudi v15
 
 ! 2004-07-15 - Chris Jones
  - More improvements to doxygen comments
@@ -22,8 +27,6 @@
 ! 2004-06-29 - Chris Jones
  - Add initialisation status test to GSL interpolators
  - Correct comment in IRichMirrorSegFinder.h
-
-!======================= RichKernel v5r0 2004-06-16 =======================
 
 ! 2004-06-18 - Chris Jones
  - Clean up interfaces to remove the need for explicit includes from
