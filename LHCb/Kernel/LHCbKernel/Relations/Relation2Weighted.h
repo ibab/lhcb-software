@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.7 2004-01-14 16:30:26 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.8 2004-05-03 15:15:38 cattanem Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/01/14 16:30:26  ibelyaev
+//  update for new interface IUpdateable
+//
 // Revision 1.6  2004/01/14 15:13:03  ibelyaev
 //  few tricks to make POOL/ROOT happy
 //
@@ -99,8 +102,8 @@ namespace Relations
     };
 
     /** constructor from "inverted object"
-     *  @param copy object to be inverted
-     *  @param int artificial argument to distinguish from copy constructor
+     *  @param inv object to be inverted
+     *  @param flag artificial argument to distinguish from copy constructor
      */
     Relation2Weighted ( const InvType& inv   , int flag ) 
       : m_direct  ( inv.m_inverse , flag )
@@ -218,7 +221,6 @@ namespace Relations
      *  @see    IRelationWeighted1D 
      *  @see    RelationWeighted1DBase
      *  @see    RelationWeighted1DTypeTraits
-     *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
     virtual Range relations() const { return i_relations () ; }
@@ -414,7 +416,7 @@ namespace Relations
     
     /** copy constructor is public
      *  @attention it is not for normal usage!
-     *  @param copy object to be copied 
+     *  @param own object to be copied 
      */
     Relation2Weighted ( const OwnType& own     ) 
       : m_direct  ( copy.m_direct  )

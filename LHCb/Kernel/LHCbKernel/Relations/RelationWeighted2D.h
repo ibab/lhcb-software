@@ -1,4 +1,4 @@
-// $Id: RelationWeighted2D.h,v 1.16 2004-01-14 16:30:26 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.17 2004-05-03 15:15:39 cattanem Exp $
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
@@ -311,7 +311,6 @@ public:  // abstract methods from interface
    *  @see    IRelationWeighted1D 
    *  @see    RelationWeighted1DBase
    *  @see    RelationWeighted1DTypeTraits
-   *  @param  object  the object
    *  @return pair of iterators for output relations   
    */
   virtual Range relations() const { return i_relations () ; }

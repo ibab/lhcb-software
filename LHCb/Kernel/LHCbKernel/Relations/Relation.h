@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.11 2004-03-17 20:17:49 ibelyaev Exp $
+// $Id: Relation.h,v 1.12 2004-05-03 15:15:38 cattanem Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2004/03/17 20:17:49  ibelyaev
+//  update Relations
+//
 // Revision 1.10  2004/01/14 16:30:25  ibelyaev
 //  update for new interface IUpdateable
 //
@@ -98,8 +101,8 @@ namespace Relations
     
     /** constructor from "inverted object"
      *  It is an efficient way to "invert" relation 
-     *  @param copy object to be inverted
-     *  @param int artificial argument to distinguish from copy constructor
+     *  @param inv object to be inverted
+     *  @param flag artificial argument to distinguish from copy constructor
      */
     Relation ( const InvType& inv   , int flag ) 
       : m_direct  ( inv.m_direct , flag ) 
@@ -108,7 +111,7 @@ namespace Relations
     
     /** constructor from "inverse interface"
      *  It is an efficient way to "invert" relation 
-     *  @param copy interafce to be inverted 
+     *  @param inv interafce to be inverted 
      *  @param int artificial argument to distinguish from copy constructor
      */
     Relation ( const IInverse& inv   , int /* flag */ ) 
@@ -230,7 +233,6 @@ namespace Relations
      *
      *  @see IRelation
      *  @see RelationBase
-     *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
     virtual Range        relations () const { return i_relations () ; }

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.10 2004-03-17 20:17:49 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.11 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2004/03/17 20:17:49  ibelyaev
+//  update Relations
+//
 // Revision 1.9  2004/01/14 16:30:26  ibelyaev
 //  update for new interface IUpdateable
 //
@@ -278,7 +281,6 @@ namespace Relations
      *  @see    IRelationWeighted1D 
      *  @see    RelationWeighted1DBase
      *  @see    RelationWeighted1DTypeTraits
-     *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
     virtual Range relations() const { return i_relations () ; }
@@ -397,8 +399,8 @@ namespace Relations
     /** query the interface 
      *  @see    IRelationWeighted1D
      *  @see    IInterface 
-     *  @param  iid interface identifier 
-     *  @param  ppi placeholder 
+     *  @param  iID interface identifier 
+     *  @param  ppI placeholder 
      *  @return status code
      */
     virtual StatusCode queryInterface( const InterfaceID& iID , void** ppI )

@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.4 2003-06-16 13:27:54 sponce Exp $
+// $Id: CaloHashMap.h,v 1.5 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/06/16 13:27:54  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.3  2002/04/27 15:31:02  ibelyaev
 //  add CaloHash.h for efficient hashing on Win32 platform
 //
@@ -139,7 +142,6 @@ public:
   /** erase the sequence from the map
    *  @warning implementation  is platform-dependent
    *  @param it the "begin" iterator for the sequence 
-   *  @param last  the "end"   iterator for the sequence 
    */
   void erase( iterator it )
   {

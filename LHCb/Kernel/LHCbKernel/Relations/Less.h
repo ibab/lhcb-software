@@ -1,4 +1,4 @@
-// $Id: Less.h,v 1.7 2003-11-24 15:09:27 cattanem Exp $
+// $Id: Less.h,v 1.8 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -40,7 +40,7 @@ struct std::less<SmartRef<TYPE> >
    *  comparison of smart references through 
    *  dereference to underlying raw pointers
    *  @param obj1 the first smart reference 
-   *  @param obj1 the first smart reference 
+   *  @param obj2 the second smart reference 
    *  @return result of comparioson of raw pointers 
    */
   bool operator() ( const SmartRef<TYPE>& obj1 , 

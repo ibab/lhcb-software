@@ -1,4 +1,4 @@
-// $Id: IAssociatorWeighted.h,v 1.12 2004-01-06 12:27:38 cattanem Exp $
+// $Id: IAssociatorWeighted.h,v 1.13 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -257,7 +257,7 @@ public:
 
   /** Method to retrieve a single element associated to a given TO element
    *
-   *  @param to  'TO' object one want to retrieve associated (first) element
+   *  @param from  'TO' object one want to retrieve associated (first) element
    *  @return to The (first) associated object. 
    *  It is a null pointer if no table was found
    *  

@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.7 2003-11-23 12:42:59 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.8 2004-05-03 15:15:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/11/23 12:42:59  ibelyaev
+//  update to remove multiple and virtual inheritance
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -132,7 +135,6 @@ namespace Relations
      *
      *  @see    IRelationWeighted
      *  @see    TypeTraits
-     *  @param  object  smart reference to the object
      *  @return pair of iterators for output relations
      */
     inline  IP    i_relations () const
@@ -394,8 +396,6 @@ namespace Relations
     /** remove ALL relations from ALL objects to ALL objects 
      *
      *  @see    IRelationWeighted
-     *  @param  object1  smart reference to the first object
-     *  @param  object2  smart reference to the second object
      *  @return status code
      */
     inline  StatusCode i_clear ()
@@ -405,7 +405,7 @@ namespace Relations
     };
     
     /** reserve the space for relations 
-     *  @param   numbe rof relation to be reserved 
+     *  @param   num number of relation to be reserved 
      *  @return  status code 
      */
     inline StatusCode i_reserve ( const size_t num  )

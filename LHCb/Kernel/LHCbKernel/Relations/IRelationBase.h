@@ -1,8 +1,11 @@
-// $Id: IRelationBase.h,v 1.3 2004-01-15 10:54:39 cattanem Exp $
+// $Id: IRelationBase.h,v 1.4 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/01/15 10:54:39  cattanem
+// fix for Windows
+//
 // Revision 1.2  2004/01/14 16:30:25  ibelyaev
 //  update for new interface IUpdateable
 //
@@ -43,7 +46,6 @@ public:
   
   /** remove ALL relations from ALL to ALL objects
    *
-   *  @param  object the object
    *  @return status code
    */
   virtual StatusCode   clear ()  = 0 ;

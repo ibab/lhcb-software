@@ -1,8 +1,11 @@
-// $Id: IRelationWeighted.h,v 1.7 2004-01-16 15:49:05 cattanem Exp $
+// $Id: IRelationWeighted.h,v 1.8 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/01/16 15:49:05  cattanem
+// fix inheritance
+//
 // Revision 1.6  2004/01/14 15:13:02  ibelyaev
 //  few tricks to make POOL/ROOT happy
 //
@@ -114,7 +117,6 @@ public:
    *     // const unsigned nRel = r.second - r.first   ; // the same!
    *  @endcode 
    *
-   *  @param  object  the object
    *  @return pair of iterators for output relations
    */
   virtual Range      relations () const = 0 ;

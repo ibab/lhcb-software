@@ -1,4 +1,4 @@
-// $Id: Relation1D.h,v 1.15 2004-01-14 16:30:25 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.16 2004-05-03 15:15:38 cattanem Exp $
 // =============================================================================
 #ifndef RELATIONS_Relation1D_H
 #define RELATIONS_Relation1D_H 1
@@ -256,7 +256,6 @@ public: // abstract methods from interface
   ( const From&      object    ) const { return i_relations( object ) ; }
   
   /** retrive ALL relations from ALL objects  
-   *  @param  object  the object
    *  @return pair of iterators for output relations
    */
   virtual Range      relations () const { return i_relations() ; }

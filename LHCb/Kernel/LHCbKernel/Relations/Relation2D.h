@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.15 2004-01-14 16:30:26 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.16 2004-05-03 15:15:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2004/01/14 16:30:26  ibelyaev
+//  update for new interface IUpdateable
+//
 // Revision 1.14  2004/01/14 15:13:03  ibelyaev
 //  few tricks to make POOL/ROOT happy
 //
@@ -246,7 +249,6 @@ public: // abstract methods from interface
   ( const From&      object    ) const { return i_relations( object ) ; }
   
   /** retrive ALL relations from ALL objects  
-   *  @param  object  the object
    *  @return pair of iterators for output relations
    */
   virtual Range      relations () const { return i_relations() ; }

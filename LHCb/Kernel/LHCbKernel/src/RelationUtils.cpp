@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.8 2004-01-14 21:05:20 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.9 2004-05-03 15:15:39 cattanem Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -31,7 +31,7 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   28/01/2002
  * 
- *  @param name     interface name
+ *  @param id       interface name
  *  @param idFrom   ID for the first ("FROM") object  
  *  @param idTo     ID for teh second("TO")   object
  *  @param weight   ID of weight class 
@@ -66,7 +66,7 @@ InterfaceID Relations::interfaceID
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   28/01/2002
  * 
- *  @param name     object name
+ *  @param id       object name
  *  @param idFrom   ID for the first ("FROM") object  
  *  @param idTo     ID for the second("TO")   object
  *  @param weight   ID of weight class 
