@@ -4,6 +4,7 @@ Package manager : Stefan Roiser
 
 
 !20020925 - Stefan
+- new database of header-files generated
 - meta-information about constructors added to the dictionary-files
 
 ===============================GaudiObjDesc v4r4p1============================

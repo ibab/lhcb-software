@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.33 2002-09-25 12:45:51 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.34 2002-09-25 20:07:47 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -412,69 +412,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
     << "};" << std::endl 
     << std::endl;
 
-
-//
-// static methods for constructors
-//
-  bool constWithZeroArgs = false;
-  for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
-  {
-    DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
-
-    metaOut << remLine << std::endl
-      << "static void* " << gddClassName << "_constructor_" << i << "(";
-    
-    if (gddConstructor->sizeDaDiMethArgument())
-    {
-      metaOut << "std::vector<void*> argList";
-    }
-    else
-    {
-      constWithZeroArgs = true;
-    }
-    
-    metaOut << ")" << std::endl
-      << remLine << std::endl
-      << "{" << std::endl
-      << "  static " << gddClassName << "* ret = new " << gddClassName << "(";
-    
-    for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
-    {
-      DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
-      std::string gddMethArgType = gddMethArgument->type().transcode();
-
-      if (j!=0) 
-      {   
-        metaOut << "," << std::endl 
-          << "          "; 
-      }
-      metaOut << "*(" << checkType(gddMethArgType,gddClassName);
-      if (gddMethArgument->isPointer())
-      {
-        metaOut << "*";
-      }
-      metaOut << "*)argList[" << j << "]";
-    }
-    
-    metaOut << ");" << std::endl
-      << "  return ret;" << std::endl
-      << "}" << std::endl
-      << std::endl;
-  }
-
-  if (!constWithZeroArgs)
-  {
-    metaOut << remLine << std::endl
-      << "static void* " << gddClassName << "_constructor_" << ++i << "()" << std::endl
-      << remLine << std::endl
-      << "{" << std::endl
-      << "  static " << gddClassName << "* ret = new " << gddClassName << "();" << std::endl
-      << "  return ret;" << std::endl
-      << "}" << std::endl
-      << std::endl;
-  }
-
-
+bool classIsAbstract = false;
+  
 // 
 // static methods for invocation
 //
@@ -491,6 +430,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
 		 gddMethIsPureVirtual = (gddMethVirtual == "PURE") ? true : false,
      gddMethIsAccessible = (gddMethod->access().equals("PROTECTED") ||
                             gddMethod->access().equals("PRIVATE")) ? false : true;
+
+    if (gddMethIsPureVirtual) { classIsAbstract = true; }
 
     if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
         && !gddMethIsTemplated && !gddMethIsFriend && !gddMethIsPureVirtual
@@ -729,6 +670,71 @@ void printCppDictionary(DaDiPackage* gddPackage,
     }
   }
 
+//
+// static methods for constructor
+//
+  bool constWithZeroArgs = false;
+  if (!classIsAbstract)
+  {      
+    for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
+    {
+      DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+
+      metaOut << remLine << std::endl
+        << "static void* " << gddClassName << "_constructor_" << i << "(";
+    
+      if (gddConstructor->sizeDaDiMethArgument())
+      {
+        metaOut << "std::vector<void*> argList";
+      }
+      else
+      {
+        constWithZeroArgs = true;
+      }
+    
+      metaOut << ")" << std::endl
+        << remLine << std::endl
+        << "{" << std::endl
+        << "  static " << gddClassName << "* ret = new " << gddClassName << "(";
+    
+      for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
+      {
+        DaDiMethArgument* gddMethArgument = gddConstructor->popDaDiMethArgument();
+        std::string gddMethArgType = gddMethArgument->type().transcode();
+
+        if (j!=0) 
+        {     
+          metaOut << "," << std::endl 
+            << "          "; 
+        }
+        metaOut << "*(" << checkType(gddMethArgType,gddClassName);
+        if (gddMethArgument->isPointer())
+        {
+          metaOut << "*";
+        }
+        metaOut << "*)argList[" << j << "]";
+      }
+    
+      metaOut << ");" << std::endl
+        << "  return ret;" << std::endl
+        << "}" << std::endl
+        << std::endl;
+    }
+
+    if (!constWithZeroArgs)
+    {
+      metaOut << remLine << std::endl
+        << "static void* " << gddClassName << "_constructor_" << ++i << "()" << std::endl
+        << remLine << std::endl
+        << "{" << std::endl
+        << "  static " << gddClassName << "* ret = new " << gddClassName << "();" << std::endl
+        << "  return ret;" << std::endl
+        << "}" << std::endl
+        << std::endl;
+    }
+  }
+  
+
 
   methodCounter = 0;
 
@@ -816,42 +822,46 @@ void printCppDictionary(DaDiPackage* gddPackage,
 //
 // Creation of constructors
 //
-  for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
-  {
-    DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
-    std::string gddConstDesc = gddConstructor->desc().transcode();
-
-    if (gddConstructor->sizeDaDiMethArgument())
+  if (!classIsAbstract)
+  {    
+    for (i=0; i<gddClass->sizeDaDiConstructor(); ++i)
     {
-      metaOut << "  argTypes.clear();" << std::endl;
+      DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+      std::string gddConstDesc = gddConstructor->desc().transcode();
 
-      for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
+      if (gddConstructor->sizeDaDiMethArgument())
       {
-        DaDiMethArgument* gddConstArgument = gddConstructor->popDaDiMethArgument();
-        std::string gddConstArgType = gddConstArgument->type().transcode();
+        metaOut << "  argTypes.clear();" << std::endl;
 
-        metaOut << constructTypes(gddConstArgType);
-        metaOut << "  argTypes.push_back(\"" << gddConstArgType << "\");" << std::endl;
+        for (j=0; j<gddConstructor->sizeDaDiMethArgument(); ++j)
+        {
+          DaDiMethArgument* gddConstArgument = gddConstructor->popDaDiMethArgument();
+          std::string gddConstArgType = gddConstArgument->type().transcode();
+
+          metaOut << constructTypes(gddConstArgType);
+          metaOut << "  argTypes.push_back(\"" << gddConstArgType << "\");" << std::endl;
+        }
       }
-    }
 
-    metaOut << "  metaC->addConstructor(\"" << gddConstDesc << "\"," << std::endl;
+      metaOut << "  metaC->addConstructor(\"" << gddConstDesc << "\"," << std::endl;
     
-    if (gddConstructor->sizeDaDiMethArgument())
-    {
-      metaOut << indent << "argTypes," << std::endl;
+      if (gddConstructor->sizeDaDiMethArgument())
+      {
+        metaOut << indent << "argTypes," << std::endl;
+      }
+
+      metaOut << indent << gddClassName << "_constructor_" << i << ");" << std::endl
+        << std::endl;
     }
 
-    metaOut << indent << gddClassName << "_constructor_" << i << ");" << std::endl
-      << std::endl;
+    if (!constWithZeroArgs)
+    {
+      metaOut << "  metaC->addConstructor(\"default constructor\"," << std::endl
+        << indent << gddClassName << "_constructor_" << ++i << ");" << std::endl
+        << std::endl;
+    }
   }
-
-  if (!constWithZeroArgs)
-  {
-    metaOut << "  metaC->addConstructor(\"default constructor\"," << std::endl
-      << indent << gddClassName << "_constructor_" << ++i << ");" << std::endl
-      << std::endl;
-  }
+  
 
 
 //
