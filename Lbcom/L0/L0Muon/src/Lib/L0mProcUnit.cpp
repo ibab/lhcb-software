@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.7 2001-10-04 16:25:00 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.8 2002-05-07 07:29:09 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -19,7 +19,7 @@ L0mProcUnit::L0mProcUnit(const std::vector<double>& ptpara,
 			 const std::vector<int>& extM1,
 			 double precision,
 			 int bins,
-			 const MuonTile& mt):
+			 const MuonTileID& mt):
 			 MuonTile(mt),
 			 m_ptParameters(ptpara),
 			 m_foiX(foiX),
@@ -53,19 +53,15 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
         //  Track found !
         log << MSG::DEBUG << "Track found" << endreq;
         (*it)->draw(log << MSG::DEBUG);
-        (*it)->pad(2)->print(log );
-        (*it)->pad(1)->print(log );
-        (*it)->pad(0)->print(log );
-        log << MSG::DEBUG << " Pt= "    << lcd->pt()
-                          << " Theta= " << lcd->theta()
-                          << " Phi= "   << lcd->phi() 
-			  << " xM1= " << (*it)->pad(0)->x() 
-			  << " yM1= " << (*it)->pad(0)->y() << endreq;
+        log << "Pad in M3: " << (*it)->pad(2) << endreq;
+	log << "Pad in M2: " << (*it)->pad(1) << endreq;
+	log << "Pad in M1: " << (*it)->pad(0) << endreq;
+        log << MSG::DEBUG << " Pt= "  << lcd->pt()                 
+			  << " xM1= " << (*it)->pad(0).nX() 
+			  << " yM1= " << (*it)->pad(0).nY() << endreq;
         m_candidates.push_back(lcd);
 	nCandidate++;
       } 
-      // draw all the towers
-      // (*it)->draw(log << MSG::DEBUG);
     }
     
     if(nCandidate>2) {
@@ -79,26 +75,11 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
     } else if ( nCandidate == 0 ) {
       m_status = L0Muon::PU_EMPTY;
     } else {
-      // Take account of the limited to 7 bits Pt presentation
-      for(ilmc=m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
-        precisionPt(*ilmc);
-      }
       m_status = L0Muon::OK;	
     }	
     
     return L0Muon::StatusCode(m_status);
 }
-
-void L0mProcUnit::precisionPt(L0MuonCandidate* plmc) {
-
-  // Take account of the limited to x bits Pt presentation
-  double realPt = plmc->pt();
-  int roundedPt = int((fabs(realPt)+m_precision/2.)/m_precision);
-  if ( roundedPt > m_bins ) roundedPt = m_bins;
-  double newPt = roundedPt*m_precision;
-  if ( realPt < 0.) newPt = -newPt;
-  plmc->setPt(newPt);
-}  
 
 
 void L0mProcUnit::clear() {
@@ -109,10 +90,10 @@ void L0mProcUnit::clear() {
 
 void L0mProcUnit::printParameters(MsgStream& log) {
 
-  log << "ProcUnit ID: " << quarter() << "/" 
-                         << region() << "/"
-			 << nX() << "/"
-			 << nY() << " at " << this << endreq;
+  log << "ProcUnit ID: " << id().quarter() << "/" 
+                         << id().region() << "/"
+			 << id().nX() << "/"
+			 << id().nY() << " at " << this << endreq;
   std::vector<double>::const_iterator iv;    
   log << "Pt parameters: " ;
   for (iv = m_ptParameters.begin(); iv != m_ptParameters.end(); iv++) {

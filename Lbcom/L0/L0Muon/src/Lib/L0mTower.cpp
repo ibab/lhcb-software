@@ -1,13 +1,15 @@
-// $Id: L0mTower.cpp,v 1.9 2001-07-26 13:24:36 cattanem Exp $
+// $Id: L0mTower.cpp,v 1.10 2002-05-07 07:29:09 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
 #include <vector>
 #include <algorithm>
 
+#include "CLHEP/Vector/ThreeVector.h"
+
 #include "L0Muon/L0mTower.h"
 #include "L0Muon/L0mPad.h"
-#include "L0Muon/L0MuonCandidate.h"
+#include "Event/L0MuonCandidate.h"
 #include "L0Muon/L0mProcUnit.h"
   
 
@@ -28,7 +30,7 @@ L0mTower::L0mTower()  {
   m_extra1 = 0;
 }
 
-L0mTower::L0mTower(L0mPad* pad)  {
+L0mTower::L0mTower(MuonTileID pad)  {
   m_pad3 = pad;
   std::pair<int,int> hi(999,999);
   for (int i = 0; i<5; i++ ) {
@@ -80,12 +82,10 @@ void L0mTower::draw(MsgStream& log) {
   log << endreq;
   
   log << " St.3                                  |#|     "  
-      <<  m_pad3->quarter() << "/" 
-      <<  m_pad3->region() << "/" 
-      <<  m_pad3->nX() << "/" 
-      <<  m_pad3->nY() 
-      << "  x=" << m_pad3->x() 
-      << "  y=" << m_pad3->y() 
+      <<  m_pad3.quarter() << "/" 
+      <<  m_pad3.region() << "/" 
+      <<  m_pad3.nX() << "/" 
+      <<  m_pad3.nY() 
       << endreq << endreq;
 
   drawStation(log,1,8,0);
@@ -99,7 +99,7 @@ void L0mTower::draw(MsgStream& log) {
   if (m_limited) log << "Limited Y was applied" << endreq; 
 }	   
 		   
-void L0mTower::addBit(int ix, int iy, int st, L0mPad* srp ) {   
+void L0mTower::addBit(int ix, int iy, int st, MuonTileID srp ) {   
  
   std::pair<int,int> bit(ix,iy);
  
@@ -156,7 +156,7 @@ L0mTower::HitIndex L0mTower::searchStation(bool& found,
   return HitIndex(999,999);
 }
 
-L0mPad* L0mTower::findTrack() {
+MuonTileID L0mTower::findTrack() {
 
   bool foundHit;
   bool searchFailed = false;
@@ -237,16 +237,12 @@ L0MuonCandidate* L0mTower::createCandidate() {
   }    
   if(trackFound()) {
     ptcalc();
-    SmartRefVector<L0mPad> srmps;
-    srmps.push_back(pad(0));
-    srmps.push_back(pad(1));
-    srmps.push_back(pad(2));
-    srmps.push_back(pad(3));
-    srmps.push_back(pad(4));
+    std::vector<MuonTileID> srmps;
+    for(int i = 0; i<5; i++) {
+      srmps.push_back(pad(i));
+    }
 
     L0MuonCandidate* lmc = new L0MuonCandidate(pt(),
-                        		       pad(0)->x(),
-					       pad(0)->y(),
 					       theta(),
 					       phi(),
 					       srmps,
@@ -262,10 +258,22 @@ double L0mTower::ptcalc() {
   double d2 = m_procUnit->m_ptParameters[1] ;
   double d3 = m_procUnit->m_ptParameters[2] ;
   double alpha = m_procUnit->m_ptParameters[3] ;
-    
-  double x1 = pad(0)->x();
-  double y1 = pad(0)->y();
-  double x2 = pad(1)->x();
+  
+  StatusCode scode;
+  double x1;
+  double y1;
+  double x2;  
+  double dx,dy,y,z,dz;
+  
+  scode = m_iTileXYZTool->calcTilePos(pad(0),x1,dx,y1,dy,z,dz); 
+  scode = m_iTileXYZTool->calcTilePos(pad(1),x2,dx,y,dy,z,dz);   
+  
+  x1 /= 10.;
+  y1 /= 10.;
+  x2 /= 10.;
+  //cout << "ptcalc: pad(cm) " << pad(0) << " " << x1 << " " << y1 << " " << x2 << endl;
+  //cout << d1 << " " << d2 << " " << d3 << " " << alpha << endl;
+  
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
         
@@ -288,9 +296,11 @@ double L0mTower::ptcalc() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
-  HepVector3D v(x0,y0,d1);
+  Hep3Vector v(x0,y0,d1);
   m_theta = v.theta();
   m_phi = v.phi();
+  
+  //cout << m_pt << " " << m_theta << " " << m_phi << endl;
   
   return m_pt;
 }
@@ -321,19 +331,19 @@ int L0mTower::nearest(int sta, int foiX, int yindex) {
 void L0mTower::limitedY() {
   
   MuonLayout pu_layout = MuonLayout(2,2);
-  MuonLayout m3_layout = padM3()->layout();
-  MuonTile mainPu = pu_layout.contains(*padM3());
-  std::vector<MuonTile> tmpTile;  
+  MuonLayout m3_layout = padM3().layout();
+  MuonTileID mainPu = pu_layout.contains(padM3());
+  std::vector<MuonTileID> tmpTile;  
   
   typedef StationMap::const_iterator SMI;
-  typedef std::vector<MuonTile>::const_iterator CMTI;
+  typedef std::vector<MuonTileID>::const_iterator CMTI;
   
   
-  int puRegion = mainPu.region();
+  unsigned int puRegion = mainPu.region();
   // int puX = mainPu.nX();
-  int puY = mainPu.nY();
-  int nx = padM3()->nX();
-  int ny = padM3()->nY();
+  unsigned int puY = mainPu.nY();
+  unsigned int nx = padM3().nX();
+  unsigned int ny = padM3().nY();
     
   // Look if there are pads in stations 4 and 5 from other PU
   
@@ -341,7 +351,7 @@ void L0mTower::limitedY() {
     StationMap stmap = m_bitmap[ist];
     if(!m_bitmap[ist].empty()) {
       for(SMI im = stmap.begin(); im != stmap.end(); im++) {
-	MuonTile pu = pu_layout.contains(*(im->second));
+	MuonTileID pu = pu_layout.contains((im->second));
 	if ( !(pu == mainPu) ) {
           // Check if the found PU is worth adding to the list
 	  bool worth = false;
@@ -374,10 +384,10 @@ void L0mTower::limitedY() {
     // Add extra bits to the tower from the PU gross structure
 
     if ( !tmpTile.empty() ) {
-      std::vector<MuonTile>::const_iterator it;
+      std::vector<MuonTileID>::const_iterator it;
       for(it = tmpTile.begin(); it != tmpTile.end(); it++) {
 	// M3 pads covered by the PU
-	std::vector<MuonTile> m3Tile = m3_layout.tiles(*it);
+	std::vector<MuonTileID> m3Tile = m3_layout.tiles(*it);
 	for(CMTI ip = m3Tile.begin(); ip != m3Tile.end(); ip++) {
           int iny = ip->nY() - ny;
 	  if(abs(iny)<2) {
@@ -394,7 +404,7 @@ void L0mTower::limitedY() {
 }
 //==============================================================
 /// accessor to the resulting pad in M2
-L0mPad* L0mTower::pad(int station) { 
+MuonTileID L0mTower::pad(int station) { 
   StationMap::iterator ism = m_bitmap[station].find(m_indices[station]);
   if(ism != m_bitmap[station].end()) {
     return m_bitmap[station].find(m_indices[station])->second; 

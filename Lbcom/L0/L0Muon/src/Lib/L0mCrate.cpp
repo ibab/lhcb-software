@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.7 2001-07-26 13:05:37 cattanem Exp $
+// $Id: L0mCrate.cpp,v 1.8 2002-05-07 07:29:09 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -10,27 +10,30 @@
 
 #include "GaudiKernel/MsgStream.h"
 
-#include "L0Muon/L0MuonCandidate.h"
+#include "Event/L0MuonCandidate.h"
 #include "L0Muon/L0mCrate.h"
 #include "L0Muon/L0mProcUnit.h"
-#include "L0Muon/L0mTriggerProcD.h"
+#include "L0Muon/L0mTrigger.h"
 
-L0mCrate::L0mCrate(int quarter, const L0mTriggerProcD& ltp) : 
+L0mCrate::L0mCrate(int quarter, const L0mTrigger& ltp) : 
       m_quarter(quarter), m_processor(ltp)  {
 
-  std::vector<MuonTile> vmt = MuonLayout(2,2).tiles(quarter);
+  std::vector<MuonTileID> vmt = MuonLayout(2,2).tiles(quarter);
   
   //========================================
   // Build all the units for this crate
   //========================================
-  std::vector<MuonTile>::const_iterator iv;
+  std::vector<MuonTileID>::const_iterator iv;
   for(iv = vmt.begin(); iv != vmt.end(); iv++ ) {
-    m_units.push_back(new L0mProcUnit(m_processor.m_ptParameters,
+    L0mProcUnit* lpu = new L0mProcUnit(m_processor.m_ptParameters,
                         	      m_processor.m_foiXSize,
 				      m_processor.m_foiYSize, 
 				      m_processor.m_extraM1, 
 				      m_processor.m_precision, 
-				      m_processor.m_bins, *iv) );
+				      m_processor.m_bins, *iv);
+    lpu ->setStation(2);				      
+    m_units.push_back(lpu );
+				      
   }
 }
 
@@ -128,22 +131,22 @@ void L0mCrate::clear() {
 
 #include <typeinfo>
 
-void L0mCrate::buildUnits(ObjectVector<L0mTower>* towers ) {
+void L0mCrate::buildUnits(const std::vector<L0mTower*>& towers ) {
 
-  ObjectVector<L0mTower>::iterator it;
+  std::vector<L0mTower*>::const_iterator it;
   std::vector<L0mProcUnit*>::iterator ipu;
   MuonLayout pu_layout(2,2);
-  MuonTile mtile;
+  MuonTileID mtile;
   L0mProcUnit* pu;
   
-  for(it=towers->begin(); it!=towers->end(); it++) {
+  for(it=towers.begin(); it!=towers.end(); it++) {
   
-    L0mPad* lmp = (*it)->padM3();
-    if(lmp->quarter() == m_quarter) {
-      mtile = pu_layout.contains(*lmp);
+    MuonTileID lmp = (*it)->padM3();
+    if(lmp.quarter() == m_quarter) {
+      mtile = pu_layout.contains(lmp);
       pu = 0;
       for(ipu = m_units.begin(); ipu != m_units.end(); ipu++) {
-        if( MuonTile(**ipu) == mtile ) {
+        if( **ipu == mtile ) {
 	  pu = *ipu;
 	  break;
 	}
@@ -158,3 +161,5 @@ void L0mCrate::buildUnits(ObjectVector<L0mTower>* towers ) {
     }
   }  
 }
+
+
