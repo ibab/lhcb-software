@@ -4,6 +4,7 @@ Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
  - New features:
+   . Use LHCb v11r11
    . Add support for data produced for robustness test (XmlDDB v15r3,
      DaVinciv254r1-Apr03.opts)
    . New DaVinciReco.opts where execution of algorithms to produce
@@ -12,11 +13,18 @@ Purpose     : LHCb analysis program
    . Introduce use of DaVinciReco.opts in DaVinci.opts to allow easy
      switching off when reading a MiniDST file where these objects
      are already present.
+   . Introduce merged Pi0 (DaVinciTools v8r0, GlobalReco v3r1, CaloReco v1r5)
    . Add CaloReCorrections.opts for new S/L/E correction, necessary for
-     merged pi0
-   . Use LHCb v11r11
-   . Use Associators v2r0 and add its dll loading in DaVinciCommon.opts
-  
+     merged pi0.
+   . Add Associator dll loading (DaVinciCommon.opts)
+   . Introduce use of PhysSelections v5r0 with ONLY generic code for
+     selection like Select2ParticleDecay.h/cpp (DaVinciCommon.opts,
+     requirements) 
+   . Introduce use of Utilities v1r0 (DaVinciCommon.opts, requirements) 
+   . Options files to preload particle in different location in TES
+     with assigned particle ID for HLT studies using ProtoParticles,
+     hence offline tracks (PreLoadNoPIDParticles.opts). 
+     Put example of use to uncomment in DaVinci.opts (DaVinciTools v8r0)
 
 </PRE><H1><A NAME=v7r3>2003-03-21 DaVinci v7r4</A></H1><PRE>
  - New version:

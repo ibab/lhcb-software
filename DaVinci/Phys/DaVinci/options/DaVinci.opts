@@ -61,6 +61,9 @@
 //ApplicationMgr.TopAlg += { "UpstreamProtoPAlg", "SelectKs2pipi" };
 //#include "$KSRECOROOT/options/KsReco.opts"
 
+//--- Particle with Assigned pID only for HLT studies
+//#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts"
+
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
 // or private code.

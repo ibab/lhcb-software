@@ -53,13 +53,20 @@ ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 
 // Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
-#include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
-//ApplicationMgr.DLLs += { "FlavourTagging" };
 //    ... for physics check on MC data
 ApplicationMgr.DLLs += { "MCTools" };
 ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
+//    ... generic algorithm for selection of decays
+ApplicationMgr.DLLs += { "PhysSelections" };
+//    ... specific algorithms for selection of decays
+#include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
+//    ... flavour tagging
+ApplicationMgr.DLLs += { "FlavourTagging" };
+
+// Generic Utility package
+ApplicationMgr.DLLs      += { "Utilities" };
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
