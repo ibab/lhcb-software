@@ -3,61 +3,8 @@
 //
 
 // Main sequencer for reconstruction
-ApplicationMgr.TopAlg += { "Sequencer/RichRecoSeq" };
+// Same name as that used in Brunel so options can be re-used
+ApplicationMgr.TopAlg += { "Sequencer/BrunelRecoRICHSeq" };
 
-// Run the Local PID first
-RichRecoSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
-
-// Initialise GlobalPID each event
-RichRecoSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
-RichRecoSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
-RichRecoSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
-
-// Backgroud alg - Uses local PID results as working particle hypotheses
-RichRecoSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
-
-// First iteration of Global PID
-RichRecoSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
-
-// Backgroud alg - Uses global 1st iter results as working particle hypotheses
-RichRecoSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
-
-// Second iteration of Global PID
-RichRecoSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
-
-// Ring refit - uses working PIDs to identify good photons and refit angles
-// Results as yet not used in formation of final PID
-RichRecoSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
-
-// Finalise Global PID algorithm each event
-RichRecoSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
-
-// Make final output PID results
-// Current uses for each track Global PID if it exists, 
-// otherwise local if that exists
-RichRecoSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
-
-// Under development
-//====================================================
-// Markov chain ring finder : RICH1
-/*
-RichRecoSeq.Members += {
-  "Rich1MarkovRingFinderAlg/Rich1P0RingFinder",
-  "Rich1MarkovRingFinderAlg/Rich1P1RingFinder"
-};
-*/
-/*
-// Markov chain ring finder : RICH2
-RichRecoSeq.Members += {
-  "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
-  "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"
-};
-*/
-
-//====================================================
-
-// Configuration of the reconstruction algorithms
-#include "$RICHRECSYSOPTS/RecoAlgPara.opts"
-
-// Configuration of the reconstruction tools
-#include "$RICHRECSYSOPTS/RecoToolPara.opts"
+// Use Brunel options
+#include "$RICHRECSYSOPTS/BrunelReco.opts"

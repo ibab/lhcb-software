@@ -41,8 +41,9 @@ BrunelRecoRICHSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
 BrunelRecoRICHSeq.Members += {
   "Rich1MarkovRingFinderAlg/Rich1P0RingFinder",
   "Rich1MarkovRingFinderAlg/Rich1P1RingFinder"
-};
+*/
 // Markov chain ring finder : RICH2
+/*
 BrunelRecoRICHSeq.Members += {
   "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
   "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"

@@ -93,16 +93,16 @@ Rich1P1RingFinder.DrawAtY = 400;
 Rich1P1RingFinder.CanvasSize = 400;
 Rich1P1RingFinder.IntialiseUsingRich = true;
 */
-/*
-Rich2P0RingFinder.DrawEvents = true;
+
+Rich2P0RingFinder.DrawEvents = false;
 Rich2P0RingFinder.DrawAtX = 0;
 Rich2P0RingFinder.DrawAtY = 0;
 Rich2P0RingFinder.CanvasSize = 400;
 Rich2P0RingFinder.IntialiseUsingRich = true;
 
-Rich2P1RingFinder.DrawEvents = true;
+Rich2P1RingFinder.DrawEvents = false;
 Rich2P1RingFinder.DrawAtX = 0;
 Rich2P1RingFinder.DrawAtY = 400;
 Rich2P1RingFinder.CanvasSize = 400;
 Rich2P1RingFinder.IntialiseUsingRich = true;
-*/
+
