@@ -4,6 +4,9 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-04-09 - Marco Cattaneo
+ - Add some missing finalisations
+
 ! 2003-04-01 - Chris Jones
  - Various updates for improved OO performance
 

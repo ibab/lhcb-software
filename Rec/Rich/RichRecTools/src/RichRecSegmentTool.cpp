@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.5 2003-04-01 14:33:22 jonrob Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.6 2003-04-09 12:36:50 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -358,6 +358,9 @@ StatusCode RichRecSegmentTool::finalize() {
 
   // Release tools
   if ( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
+
+  // Release the random generator
+  m_uniDist.finalize();
 
   return StatusCode::SUCCESS;
 }
