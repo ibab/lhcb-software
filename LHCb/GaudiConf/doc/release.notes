@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20011120 - Sebastien Ponce
+  Changed the default value for MaxDocNbInCache to 10.
+
 ! 20010822 - Sebastien Ponce
   added two options in the default joboption file for DetDesc :
   MaxDocNbInCache = 5 and CacheBehavior = 3
