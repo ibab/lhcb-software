@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.23 2002-07-29 08:50:42 cattanem Exp $
+! $Id: release.notes,v 1.24 2002-09-11 18:17:58 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+! 2002-09-11 - Gloria Corti
+ - Add CaloTools Dll to allow creation of Neutral ProtoP
 
 <H1><A NAME=v5r0> 
 !======================== DaVinci v5r0 2002-07-29 =================

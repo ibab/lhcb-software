@@ -29,7 +29,7 @@ ApplicationMgr.DLLs += { "CaloAssociators", "CaloRec" };
 ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 
 // Physics packages
-ApplicationMgr.DLLs += { "GlobalReco" };
+ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
 ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
