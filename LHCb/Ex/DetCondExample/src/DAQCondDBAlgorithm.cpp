@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.2 2004-12-08 17:32:06 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.3 2004-12-08 18:50:51 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -235,7 +235,7 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   switch (m_condDBCnvSvc->conditionsDBGate()->implementationCode()){
 #ifdef __CondDBOracle__
   case ConditionsDBGateImplementation::CONDDBORACLE :
-    condObject = cool::CondDBOracleObjectFactory::createCondDBObject
+    condObject = CondDBOracleObjectFactory::createCondDBObject
       ( System::currentTime(System::nanoSec), CondDBplusInf, m_daqRecord, "");
       break;
 #endif
@@ -284,7 +284,7 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   switch (m_condDBCnvSvc->conditionsDBGate()->implementationCode()){
 #ifdef __CondDBOracle__
   case ConditionsDBGateImplementation::CONDDBORACLE :
-    cool::CondDBOracleObjectFactory::destroyCondDBObject(condObject);
+    CondDBOracleObjectFactory::destroyCondDBObject(condObject);
       break;
 #endif
 #ifdef __CondDBMySQL__

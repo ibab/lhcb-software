@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.8 2004-12-08 17:32:24 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.9 2004-12-08 18:50:51 marcocle Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -658,7 +658,7 @@ ICondDBObject* PopulateDB::createCondDBObject(const CondDBKey& since,
   switch (m_conditionsDBGate->implementationCode()){
 #ifdef __CondDBOracle__
   case ConditionsDBGateImplementation::CONDDBORACLE :
-    condObject = cool::CondDBOracleObjectFactory::createCondDBObject
+    condObject = CondDBOracleObjectFactory::createCondDBObject
       ( since,till,data,description );
       break;
 #endif
@@ -681,7 +681,7 @@ void PopulateDB::destroyCondDBObject(ICondDBObject* CondObj)
   switch (m_conditionsDBGate->implementationCode()){
 #ifdef __CondDBOracle__
   case ConditionsDBGateImplementation::CONDDBORACLE :
-    cool::CondDBOracleObjectFactory::destroyCondDBObject(CondObj);
+    CondDBOracleObjectFactory::destroyCondDBObject(CondObj);
     break;
 #endif
 #ifdef __CondDBMySQL__
