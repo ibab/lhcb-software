@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.2 2002-03-20 18:07:59 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.3 2002-03-21 16:50:06 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -13,7 +13,6 @@
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/DeMuonGasGap.h"
 
-#include "MuonKernel/MuonGeometry.h"
 
 // from MuonKernel
 #include "MuonKernel/MuonSystemLayout.h"
@@ -30,6 +29,7 @@
 // local
 #include "MuonTileIDXYZ.h"
 #include "MuonTools/MuonChannel.h"
+#include "MuonTools/MuonGeometry.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonTileIDXYZ
