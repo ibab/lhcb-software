@@ -143,7 +143,7 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID", "MuonDAQ" };
-//BrunelRecoMUONSeq.Members  = { "MuonRawBuffer2Digit" };
+BrunelRecoMUONSeq.Members  = { "MuonRawBuffer2Digit" };
 BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 

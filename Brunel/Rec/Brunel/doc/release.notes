@@ -11,8 +11,7 @@ Purpose: LHCb reconstruction program
   . Support for new Rich features (switched off by default)
     (RichRecSys v1r7, RichDetTools v3r6, RichUtils v3r7)
   . OT digits are rebuilt from RawBuffer (OTDAQ v1r0)
-  . Muon digits can be rebuilt from RawBuffer (MuonDAQ v1r0) but have incorrect
-    MuonTileID. Disabled in default options pending investigation
+  . Muon digits are rebuilt from RawBuffer (MuonDAQ v1r0)
 
 - DST changes
   . Replace old style "relations" with new style "links" for MC truth of 
