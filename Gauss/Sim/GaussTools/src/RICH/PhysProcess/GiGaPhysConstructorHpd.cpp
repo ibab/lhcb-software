@@ -14,16 +14,16 @@
 #include "G4ios.hh"
 #include "g4std/iomanip"                
 // local
-#include "GiGaPhysConstructorGen.h"
+#include "GiGaPhysConstructorHpd.h"
 
 // ============================================================================
 /// Factory
 // ============================================================================
-IMPLEMENT_GiGaFactory( GiGaPhysConstructorGen ) ;
+IMPLEMENT_GiGaFactory( GiGaPhysConstructorHpd ) ;
 // ============================================================================
 
 // ============================================================================
-GiGaPhysConstructorGen::GiGaPhysConstructorGen
+GiGaPhysConstructorHpd::GiGaPhysConstructorHpd
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
@@ -34,30 +34,31 @@ GiGaPhysConstructorGen::GiGaPhysConstructorGen
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaPhysConstructorGen::~GiGaPhysConstructorGen(){};
+GiGaPhysConstructorHpd::~GiGaPhysConstructorHpd(){};
 // ============================================================================
 
 // ============================================================================
 // ============================================================================
-void GiGaPhysConstructorGen::ConstructParticle()
+void GiGaPhysConstructorHpd::ConstructParticle()
 {
  
 };
 
 // ============================================================================
 // ============================================================================
-void GiGaPhysConstructorGen::ConstructProcess()
+void GiGaPhysConstructorHpd::ConstructProcess()
 {  
-  ConstructGeneral();
+  ConstructHpdSiEnLoss();
 };
 
-#include "G4Decay.hh"
+//#include "G4Decay.hh"
 #include "RichHpdSiEnergyLoss.h"
 
-void GiGaPhysConstructorGen::ConstructGeneral()
+void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
 {
   // Add Decay Process
-  G4Decay* theDecayProcess = new G4Decay();
+  //  G4Decay* theDecayProcess = new G4Decay();
+
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
@@ -67,12 +68,13 @@ void GiGaPhysConstructorGen::ConstructGeneral()
       new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");
     
     pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
-    if (theDecayProcess->IsApplicable(*particle)) { 
-      pmanager ->AddProcess(theDecayProcess);
+
+    //    if (theDecayProcess->IsApplicable(*particle)) { 
+    //      pmanager ->AddProcess(theDecayProcess);
       // set ordering for PostStepDoIt and AtRestDoIt
-      pmanager ->SetProcessOrdering(theDecayProcess, idxPostStep);
-      pmanager ->SetProcessOrdering(theDecayProcess, idxAtRest);
-    }
+    //      pmanager ->SetProcessOrdering(theDecayProcess, idxPostStep);
+    //     pmanager ->SetProcessOrdering(theDecayProcess, idxAtRest);
+    //}
   }
 }
 
