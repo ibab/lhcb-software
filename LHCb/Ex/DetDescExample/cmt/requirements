@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.13 2001-12-11 00:48:53 mato Exp $
+# $Id: requirements,v 1.14 2001-12-19 12:55:22 ranjard Exp $
 package DetDescExample
-version v3
+version v3r0
 
 branches doc src options cmt
 
 # Main program and standard job options
-use GaudiConf     v5*     
+use GaudiConf     v6*     
 
 # GAUDI framework
 use GaudiSys      v9r*
