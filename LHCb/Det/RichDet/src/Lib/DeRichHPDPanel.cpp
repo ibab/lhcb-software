@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.2 2002-10-30 11:36:56 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.3 2002-11-11 13:59:05 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -242,7 +242,7 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
       return StatusCode::FAILURE;
     }
   
-    if (0 == HPDColumn%2) {
+    if (0 == HPDRow%2) {
       HPDColumn =  (unsigned int) floor((inPanel.x() - panelHorizEdgeEven)
                                          / columnPitch);
     } else {
@@ -252,8 +252,8 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
     //std::cout << inPanel.y() <<"  " << panelVerticalEdgeEven << "  " 
     //     << panelVerticalEdgeOdd << std::endl;
     
-    if (HPDRow >= (unsigned int) HPDRows) {
-      log << MSG::ERROR << "HPD row number too high" <<  endreq;
+    if (HPDColumn >= (unsigned int) HPDColumns) {
+      log << MSG::ERROR << "HPD column number too high" <<  endreq;
       id = RichSmartID(0);
       return StatusCode::FAILURE;
     }
