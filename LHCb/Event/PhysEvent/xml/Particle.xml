@@ -24,6 +24,16 @@
         name="Production"
         place="/Event/Phys/Prod/Particles"
        />
+       <constructor
+        argList='Particle part'
+        desc='copy constructor'
+       />
+       <method
+        name='clone'
+        desc='clone'
+        type='Particle*'
+        const='TRUE'
+       />
        <attribute
         name="particleID"
         desc="PDG code"

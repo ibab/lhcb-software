@@ -29,6 +29,16 @@
         name="Primary"
         place="/Event/Phys/PrimaryVertices"
        />
+       <constructor
+        argList='Vertex vert'
+        desc='copy constructor'
+       />
+       <method
+        name='clone'
+        desc='clone'
+        type='Vertex*'
+        const='TRUE'
+       />
        <attribute
         name="position"
         desc="Position in LHCb reference system"

@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.1 2002-03-27 20:05:30 gcorti Exp $
+// $Id: Vertex.cpp,v 1.2 2002-05-15 15:38:48 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -7,6 +7,7 @@
 
 // local
 #include "Event/Vertex.h"
+#include "Event/Particle.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MCVertex
@@ -14,6 +15,34 @@
 //
 // 14/03/2002 : Gloria Corti
 //----------------------------------------------------------------------------
+
+//=============================================================================
+// Copy constructor
+//=============================================================================
+Vertex::Vertex(const Vertex& vert)
+  : KeyedObject<int>() {
+  
+  m_position = vert.m_position;
+  m_positionErr = vert.m_positionErr;
+  m_chi2 = vert.m_chi2;
+  m_type = vert.m_type;
+  m_desktop = vert.m_desktop;
+  // clone the end particles
+  SmartRefVector<Particle>::const_iterator ip = vert.m_products.begin();
+  while( ip != vert.m_products.end() ) {
+    m_products.push_back((*ip)->clone());
+    ip++;
+  }
+  
+}
+
+//=============================================================================
+// Clone 
+//=============================================================================
+Vertex* Vertex::clone() const
+{
+  return new Vertex(*this);
+}
 
 //=============================================================================
 // Retrieve how the vertex was made

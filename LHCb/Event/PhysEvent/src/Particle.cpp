@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.4 2002-04-26 17:56:38 gcorti Exp $
+// $Id: Particle.cpp,v 1.5 2002-05-15 15:38:43 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -14,6 +14,40 @@
 //
 // 19/03/2002 : Gloria Corti
 //-----------------------------------------------------------------------------
+
+//=============================================================================
+// Copy constructor
+//=============================================================================
+Particle::Particle(const Particle& part)
+  : KeyedObject<int>() {
+  
+  m_particleID = part.m_particleID;
+  m_confLevel = part.m_confLevel;  
+  m_momentum = part.m_momentum;
+  m_pointOnTrack = part.m_pointOnTrack;
+  m_mass = part.m_mass;
+  m_massErr = part.m_massErr;  
+  m_momentumErr = part.m_momentumErr;
+  m_pointOnTrackErr = part.m_pointOnTrackErr;
+  m_posMomCorr = part.m_posMomCorr;
+  m_isResonance = part.m_isResonance;
+  m_slopesMomErr = part.m_slopesMomErr;
+  m_posSlopesCorr = part.m_posSlopesCorr;
+  m_desktop = part.m_desktop;
+  // Clone the end-vertex
+  m_endVertex = part.m_endVertex->clone();
+  // Keep the same pointer to origination object
+  m_origin = part.m_origin;
+
+}
+
+//=============================================================================
+// Clone 
+//=============================================================================
+Particle* Particle::clone() const
+{
+  return new Particle(*this);
+}
 
 
 //=============================================================================
