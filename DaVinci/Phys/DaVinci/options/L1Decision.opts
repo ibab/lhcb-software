@@ -22,7 +22,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/L1WithTrg" };
 L1WithTrg.Members += { //"TrgL0Filter",
                        "TrgInitEvent"
                        ,"GaudiSequencer/L1Processing"
-                       ,"GaudiSequencer/L1Checking"
+// L1Checking added in L1Checking.opts
 };
 
 
@@ -42,16 +42,7 @@ L1Processing.Members =  { "L1InitEvent"
                           ,"L1Dimuon"
                           ,"L1L0Eval"                       
                           ,"L1Decision"
+			  ,"FillTrgDecision"
                         };
 
  
-L1Checking.Members = { "TrgTrackToContainer"
-                       ,"TrgTrack2MCParticle"
-                       ,"TrgChecker"
-                       ,"L1RecoCheck" 
-                       ,"TrgVertexMonit" 
-                     };
-
-TrgVertexMonit.Vertices3D = false;
-
-L1Processing.measureTime = true;

@@ -14,7 +14,9 @@
 #pragma print on
 #include "$DAVINCIROOT/options/L0Muon.opts"
 #include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L0Checking.opts"  // for checks
 #include "$DAVINCIROOT/options/L1Decision.opts"
+#include "$DAVINCIROOT/options/L1Checking.opts"  // for checks
 
 // add efficiency monitor
 L1Checking.Members += { 

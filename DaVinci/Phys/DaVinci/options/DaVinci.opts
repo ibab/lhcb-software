@@ -20,9 +20,9 @@
 // Note that L0Muon does not work with hbook persistency :-(
 // #include "$DAVINCIROOT/options/L0Muon.opts"
 // #include "$DAVINCIROOT/options/L0.opts"
+// #include "$DAVINCIROOT/options/L0Checking.opts"  // for checks
 // #include "$DAVINCIROOT/options/L1Decision.opts"
-// Run Hlt triggers
-// #include "$DAVINCIROOT/options/Hlt.opts"
+// #include "$DAVINCIROOT/options/L1Checking.opts"  // for checks
 
 //--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms

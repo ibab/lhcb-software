@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.152 2004-08-03 15:52:09 pkoppenb Exp $
+# $Id: requirements,v 1.153 2004-08-04 13:42:27 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -72,7 +72,7 @@ use  TrgChecker         v4r0     Trg
 use  TrgForward         v2r0     Trg
 use  TrgMonitor         v2r0     Trg
 use  TrgPrimVertex      v2r0     Trg
-use  TrgTools           v4r0     Trg
+use  TrgTools           v4r1     Trg
 use  TrgVelo            v4r0     Trg
 use  TrgVeloTT          v4r0     Trg
 use  STDAQ              v1r2     IT
@@ -97,10 +97,8 @@ use  TrExtrapolator     v2r12    Tr
 
 use  LoKi               v3r0     Tools  
 
-# FROM HERE IDENTICAL TO v12r0 #
-
 # Reconstruction tools 
-use  Utilities          v1r7p1   Tools
+use  Utilities          v1r8     Tools
 
 # Physics packages
 use  CommonParticles    v1r5p2   Phys

@@ -3,9 +3,6 @@
 //=============================================================
 // Reimplemented by O.Callot for DC04
 
-#include "$DAVINCIROOT/options/L0base.opts"
-// checking
-ApplicationMgr.TopAlg  += { "L0Check"};
-L0Check.HistogramFlag = false;
-
-
+ApplicationMgr.DLLs    += { "L0DU", "L0Calo" };
+ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw",
+                            "DecisionUnit"};

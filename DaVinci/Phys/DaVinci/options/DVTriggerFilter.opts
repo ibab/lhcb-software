@@ -22,17 +22,17 @@
 //--------------------------------------------------------------
 // Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS! 
 #include "$DAVINCIROOT/options/L0Muon.opts"
-#include "$DAVINCIROOT/options/L0base.opts"  // no checking
+#include "$DAVINCIROOT/options/L0.opts"  
+//#include "$DAVINCIROOT/options/L0Checking.opts"  
 #include "$DAVINCIROOT/options/L1Decision.opts"
-L1Checking.Members = {}; // don't do L1 checking
-
-// Run Hlt triggers
-// #include "$DAVINCIROOT/options/Hlt.opts"
+//#include "$DAVINCIROOT/options/L1Checking.opts"  
 
 ApplicationMgr.TopAlg += { "Sequencer/L0L1Seq" };
-L0L1Seq.Members = { "L0Filter", "PrintHeader/PassedL0" , "L1Filter", "PrintHeader/PassedL1" };
-PassedL0.OutputLevel = 2;
-PassedL1.OutputLevel = 2;
+L0L1Seq.Members = { "TriggerFilter/L0Filter", "PrintHeader/PassedL0" , "TriggerFilter/L1Filter", "PrintHeader/PassedL1" };
+L0Filter.RequireL0 = true ;
+L1Filter.RequireL1 = true ;
+PassedL0.OutputLevel = 2 ;
+PassedL1.OutputLevel = 2 ;
 
 #include "$DAVINCIROOT/options/DstContent.opts"
 DstWriter.RequireAlgs  = { "L0L1Seq" } ;
@@ -50,9 +50,7 @@ ChargedProtoPAlg.OutputLevel            = 3;
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
-ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1;
-EventSelector.PrintFreq  = 1;
 //***************************************************************
 // Interactive prompt. 
 // WORKS ONLY WITH ROOT INPUT FOR NOW -> EDIT DaVinciTestData.opts 
@@ -61,3 +59,5 @@ EventSelector.PrintFreq  = 1;
 //***************************************************************
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
+ApplicationMgr.EvtMax    = 100 ;
+EventSelector.PrintFreq  = 1;
