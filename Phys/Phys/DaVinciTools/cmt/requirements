@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2004-08-24 07:33:23 pkoppenb Exp $
+# $Id: requirements,v 1.51 2004-09-02 14:57:18 ranjard Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -18,7 +18,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-# use  Boost               v* LCG_Interfaces
+use  Boost               v* LCG_Interfaces
 use  DaVinciKernel         v* Phys
 use  ParticleMaker         v* Phys
 use  DaVinciTransporter    v* Phys
