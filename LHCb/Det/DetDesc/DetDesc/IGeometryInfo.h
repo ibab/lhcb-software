@@ -1,14 +1,21 @@
-// $Id: IGeometryInfo.h,v 1.5 2001-11-18 15:32:43 ibelyaev Exp $ 
+// $Id: IGeometryInfo.h,v 1.6 2001-12-03 15:18:29 mato Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/11/18 15:32:43  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.4  2001/08/10 14:59:01  ibelyaev
 // modifications in IGeometryInfo and related classes
 //
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
+/** GaudiKernel includes */
+#include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/ISerialize.h"
+#include "GaudiKernel/IInspectable.h"
 /** STD & STL includes */
 #include <iostream>
 #include <string>
@@ -16,10 +23,6 @@
 #include <functional>
 /// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
-/** GaudiKernel includes */
-#include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/ISerialize.h"
-#include "GaudiKernel/IInspectable.h"
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 /** forward declarations */

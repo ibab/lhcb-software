@@ -1,8 +1,24 @@
-// $Id: LogVolBase.h,v 1.3 2001-11-20 15:22:20 sponce Exp $ 
+// $Id: LogVolBase.h,v 1.4 2001-12-03 15:18:29 mato Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/20 15:22:20  sponce
+// Lots of changes here :
+//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+//    is the removal of the class XmlAddress
+//    - centralization of address creations in conversion services, as suggested
+//    by the new architecture
+//    - add a parseString method on the XMLParserSvc. This allows to parse XML
+//    directly from a string
+//    - use of the new Assembly objects in the XML converters
+//    - update of the converters to handle the definition of detelem inside
+//    detelems, without using detelemrefs
+//    - take care of a possible indexing of detelems and parametrized detelems.
+//    The numbering is given by adding :<digits> to the name of the element.
+//    - add support for polycones in the converters
+//    - add code convention compliance to many files
+//
 // Revision 1.2  2001/11/18 16:08:26  ibelyaev
 //  bug fix for Win2K
 //
@@ -103,7 +119,7 @@ public:
    */
   inline virtual const std::string&  name () const 
   {
-    static string s_empty = "";
+    static std::string s_empty = "";
     IRegistry* pReg = registry();
     return (0!=pReg) ? pReg->identifier() : s_empty;;
   }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.19 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.20 2001-12-03 15:18:36 mato Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -437,7 +437,7 @@ XmlLVolumeCnv::dealWithPhysvol (DOM_Element element) {
   // part before ':' and the digits give an index for this volume
   std::string::size_type columnPos = nameAttribute.find_last_of (':');
   int index = 0;
-  int indexed = false;
+  bool indexed = false;
   if (columnPos != std::string::npos) {
     std::string digits = nameAttribute.substr (columnPos + 1);
     nameAttribute = nameAttribute.substr (0, columnPos);
