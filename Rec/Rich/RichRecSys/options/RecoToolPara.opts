@@ -3,7 +3,7 @@
 
 // Track creator
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
-//                                                Forward  Match  UpStream  Seed  VTT   KsTrack  Velo
+//                                                Forward  Match  Follow    Seed  VTT   KsTrack  Velo
 ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
 
 // Segment creator
