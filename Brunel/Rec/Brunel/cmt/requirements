@@ -18,12 +18,12 @@ use ROOT 		v2r30309p1
 
 #-- Gaudi libraries (from GAUDI_v11r4)
 use GaudiKernel		v13r2
-use GaudiSvc 		v10r1p2
+use GaudiSvc 		v10r1p3
 use GaudiAlg 		v6r3p1
 use GaudiTools 		v6r1
 use GaudiAud 		v6r1
 use GaudiNagC 		v7r2
-use GaudiDb 		v8r3p1
+use GaudiDb 		v8r3p2
 use GaudiRootDb 	v9r1p3
 use GaudiIntrospection 	v4r4p1
 use GaudiObjDesc 	v4r5p1

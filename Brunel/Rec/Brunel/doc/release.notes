@@ -81,6 +81,7 @@ Purpose: LHCb reconstruction program
    . Minor bug fixes in ITCrossTalk (ITAlgorithms v12r9)
    . Fix clustering for merged pi zeros (CaloReco v1r4, CaloPIDs v1r0)
    . Fix bug in a loop index (MuonTools v3r4)
+   . Use latest Gaudi bug fixes (Gaudi v11r5)
 
 </PRE><H1><A NAME=v17r4>2003-02-06 Brunel v17r4</A></H1><PRE>
  - New tuning:
