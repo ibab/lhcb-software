@@ -1,26 +1,8 @@
-// $Id: GiGaBase.cpp,v 1.20 2003-08-15 12:31:45 witoldp Exp $
+// $Id: GiGaBase.cpp,v 1.21 2003-09-22 13:57:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.19  2003/08/15 09:25:17  witoldp
-// removed info about unfinalized tools
-//
-// Revision 1.18  2003/07/14 15:45:33  ibelyaev
-//  add the counter for initialize/finalize methods
-//
-// Revision 1.17  2003/07/07 16:48:09  ranjard
-// v14r2 - fix for gcc 3.2
-//
-// Revision 1.16  2003/05/30 14:26:59  ibelyaev
-//  minor update in GiGaBase printout
-//
-// Revision 1.15  2003/04/06 18:49:47  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// Revision 1.14  2002/12/07 14:27:51  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
 // ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 // ============================================================================
@@ -55,7 +37,7 @@
 
 namespace GiGaBaseLocal
 {
-
+  
   /** @FinalizeCounter
    */
   class FinalizeCounter 
@@ -67,16 +49,16 @@ namespace GiGaBaseLocal
     // destructor
     ~FinalizeCounter() 
     {
-//       for( Map::iterator imap = m_map.begin() ; 
-//            m_map.end() != imap ; ++imap )
-//         {
-//           if( 0 == imap->second ) { continue ; }
+      for( Map::iterator imap = m_map.begin() ; 
+           m_map.end() != imap ; ++imap )
+        {
+          if( 0 == imap->second ) { continue ; }
           
-//           std::cout 
-//             << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
-//             << imap->first  << "'  (#" 
-//             << imap->second << ")"      <<std::endl;          
-//        };
+          std::cout 
+            << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
+            << imap->first  << "'  (#" 
+            << imap->second << ")"      <<std::endl;          
+        };
       m_map.clear() ;
     };
   private:

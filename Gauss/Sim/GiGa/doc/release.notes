@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.80 2003-08-15 09:25:16 witoldp Exp $
+! $Id: release.notes,v 1.81 2003-09-22 13:57:10 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2003-09-22 - Vanya BELYAEV
+ - cmt/requirements     - increase the version to v14r4 
+ - few fixes for unfinalized or undeleted tools.
+   polishing of reference counting techniques.
+   Now ALL tools have proper reference counters 
+   and finalized properly
+
 
 !============================ GiGa v14r3 2003-08-15 ========================
 ! 2003-08-15 - Witek Pokorski

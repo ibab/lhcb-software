@@ -1,23 +1,8 @@
-// $Id: GiGa.cpp,v 1.6 2003-08-15 12:51:50 witoldp Exp $ 
+// $Id: GiGa.cpp,v 1.7 2003-09-22 13:57:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2003/07/07 16:48:09  ranjard
-// v14r2 - fix for gcc 3.2
-//
-// Revision 1.4  2003/04/06 18:49:48  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-//
-// Revision 1.3  2002/12/13 13:36:31  ibelyaev
-//  add RndmGenSvc, and delete the last G4Event
-//
-// Revision 1.2  2002/12/07 21:05:31  ibelyaev
-//  see $GIGAROOT/doc/release.notes 2002-12-07
-//
-// Revision 1.1  2002/12/07 14:27:52  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -403,30 +388,36 @@ GiGa::initialize()
 StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
-  // release all used services and tools 
-  if( 0 != rndmSvc  ()  ) { rndmSvc   () -> release () ; m_rndmSvc    = 0 ; } 
-  if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
-  if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; } 
-  if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
-
-  if( 0 != m_visManager ) { m_visManager -> release () ; m_visManager = 0 ; }
-  if( 0 != m_uiSession  ) { m_uiSession  -> release () ; m_uiSession  = 0 ; }
   
-  if( 0 != m_GiGaRunAction   )
-    { m_GiGaRunAction   -> release () ; m_GiGaRunAction    = 0 ; }
-  if( 0 != m_GiGaEventAction )
-    { m_GiGaEventAction -> release () ; m_GiGaEventAction  = 0 ; }
-  // if( 0 != m_GiGaStepAction  )
-  //  { m_GiGaStepAction  -> release () ; m_GiGaStepAction   = 0 ; }
-  if( 0 != m_GiGaTrackAction )
-    { m_GiGaTrackAction -> release () ; m_GiGaTrackAction  = 0 ; }
-  if( 0 != m_GiGaStackAction )
-    { m_GiGaStackAction -> release () ; m_GiGaStackAction  = 0 ; }
-  //  if( 0 != m_GiGaPhysList    )
-  //  { m_GiGaPhysList    -> release () ; m_GiGaPhysList     = 0 ; }
+  if( 0 != m_visManager && 0 != toolSvc() ) 
+    { toolSvc() -> releaseTool ( m_visManager ) ; } 
+  m_visManager = 0 ;
+  if( 0 != m_uiSession  && 0 != toolSvc() ) 
+    { toolSvc() -> releaseTool ( m_uiSession  ) ; } 
+  m_uiSession  = 0 ; 
   
-  // release the run manager 
-  if( 0 != runMgr   ()  ) { runMgr    () -> release () ; m_runMgr    = 0 ; } 
+  if( 0 != m_GiGaRunAction  && 0 != toolSvc()  )
+    { toolSvc() -> releaseTool ( m_GiGaRunAction   ) ; } 
+  m_GiGaRunAction    = 0 ; 
+  
+  if( 0 != m_GiGaEventAction && 0 != toolSvc() )
+    { toolSvc() -> releaseTool ( m_GiGaEventAction ) ; } 
+  m_GiGaEventAction  = 0 ; 
+  
+  if( 0 != m_GiGaStepAction  )
+    { m_GiGaStepAction  -> finalize () ; m_GiGaStepAction   = 0 ; }
+  
+  if( 0 != m_GiGaTrackAction && 0 != toolSvc() )
+    { toolSvc() -> releaseTool( m_GiGaTrackAction ) ; } 
+  m_GiGaTrackAction  = 0 ; 
+  
+  if( 0 != m_GiGaStackAction && 0 != toolSvc() )
+    { toolSvc() -> releaseTool( m_GiGaStackAction ) ; } 
+  m_GiGaStackAction  = 0 ; 
+  
+  if( 0 != m_GiGaPhysList    )
+    { m_GiGaPhysList    -> finalize () ; m_GiGaPhysList     = 0 ; }
+  
   // error printout 
   if( 0 != m_errors     .size() || 
       0 != m_warnings   .size() || 
@@ -467,6 +458,14 @@ StatusCode GiGa::finalize()
   m_errors      .clear();
   m_warnings    .clear();
   m_exceptions  .clear();
+  // release the run manager (almost the last)
+  if( 0 != runMgr   ()  && 0 != toolSvc() ) 
+    { toolSvc() -> releaseTool( runMgr() ) ; m_runMgr    = 0 ; } 
+  // release all used services 
+  if( 0 != rndmSvc  ()  ) { rndmSvc   () -> release () ; m_rndmSvc    = 0 ; } 
+  if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
+  if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; } 
+  if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
   ///  finalize the base class 
   return Service::finalize();
 };

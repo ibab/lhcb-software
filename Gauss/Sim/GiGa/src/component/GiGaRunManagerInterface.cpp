@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.5 2003-04-06 18:49:49 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.6 2003-09-22 13:57:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/04/06 18:49:49  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
@@ -75,7 +78,8 @@ StatusCode GiGaRunManager::finalize   ()
          m_runTools.begin() ; m_runTools.end() != itool ; ++itool )
     {
       IGiGaTool* runTool = *itool ;
-      if( 0 != runTool ) { runTool -> release() ; }
+      if( 0 != runTool && 0 != toolSvc() ) 
+        { toolSvc() -> releaseTool( runTool ) ; }
     }  
   m_runTools.clear();
   // 

@@ -21,7 +21,9 @@ class GiGaPhysListModular : public GiGaPhysListBase,
 {
   /// friend factory for instantiation 
   friend class GiGaFactory<GiGaPhysListModular>;
-
+public:
+  // typedef for list of constructors 
+  typedef std::vector<IGiGaPhysicsConstructor*> Constructors;
 protected:
   
   /** standard constructor 
@@ -42,13 +44,15 @@ protected:
 
   ///
 public:
-  StatusCode initialize();
+  StatusCode initialize () ;
+  StatusCode finalize   () ;
   
   void SetCuts();
   ///
 private:
-  std::vector<std::string> m_physconstr;
-
+  std::vector<std::string> m_physconstr   ;
+  Constructors             m_constructors ;
+  
   ///
   GiGaPhysListModular();
   GiGaPhysListModular           ( const GiGaPhysListModular& );

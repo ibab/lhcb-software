@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.9 2003-09-08 16:58:34 witoldp Exp $ 
+// $Id: GiGaGeo.cpp,v 1.10 2003-09-22 13:58:20 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/09/08 16:58:34  witoldp
+// fixing bug introduced in previous version
+//
 // Revision 1.8  2003/09/04 14:06:41  witoldp
 // fix to avoid the precision problem in G4
 //
@@ -514,22 +517,40 @@ StatusCode GiGaGeo::initialize()
 // ============================================================================
 StatusCode GiGaGeo::finalize()   
 { 
-  // release all created sensitive detectors 
-  //    std::for_each( m_SDs.begin () , 
-  //                   m_SDs.end   () , 
-  //                   std::mem_fun( &IGiGaSensDet::release  ) );
+  // manually finalize all created sensitive detectors
+  std::for_each( m_SDs.begin () , 
+                 m_SDs.end   () , 
+                 std::mem_fun( &IGiGaSensDet::addRef     ) );
+  // eliminate duplicates
+  std::sort   ( m_SDs.begin() , m_SDs.end() );
+  m_SDs.erase ( std::unique( m_SDs.begin() , m_SDs.end() ) , m_SDs.end() );
+  std::for_each( m_SDs.begin () , 
+                 m_SDs.end   () , 
+                 std::mem_fun( &IGiGaSensDet::finalize   ) );
   m_SDs.clear() ;
-
+  
   // finalize all created magnetic field objects 
-  std::for_each( m_MFs.begin () , 
-                 m_MFs.end   () , 
-                 std::mem_fun( &IGiGaMagField::release ) );
+  // std::for_each( m_MFs.begin () , 
+  //               m_MFs.end   () , 
+  //               std::mem_fun( &IGiGaMagField::release ) );
+  { for( MFobjects::iterator imf = m_MFs.begin() ; m_MFs.end() != imf ; ++imf )
+    {
+      IAlgTool* mf = *imf ;
+      if( 0 != mf && 0 != toolSvc() ) { toolSvc()->releaseTool( mf ) ; }
+    }
+  }
   m_MFs.clear() ;
 
   // finalize all created field managers objects 
-  std::for_each( m_FMs.begin () , 
-                 m_FMs.end   () , 
-                 std::mem_fun( &IGiGaFieldMgr::release ) );
+  // std::for_each( m_FMs.begin () , 
+  //               m_FMs.end   () , 
+  //               std::mem_fun( &IGiGaFieldMgr::release ) );
+  { for( FMobjects::iterator imf = m_FMs.begin() ; m_FMs.end() != imf ; ++imf )
+    {
+      IAlgTool* mf = *imf ;
+      if( 0 != mf && 0 != toolSvc() ) { toolSvc()->releaseTool( mf ) ; }
+    }
+  }
   m_FMs.clear() ;
   
   // clear store of assemblies!

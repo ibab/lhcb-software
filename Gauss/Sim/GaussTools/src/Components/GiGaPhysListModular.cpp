@@ -85,12 +85,27 @@ StatusCode GiGaPhysListModular::initialize()
       if( 0 == theconstr -> physicsConstructor() ) 
         { return Error ( "G4PhysicsConstructor* points to NULL!" ) ; }
       
+      m_constructors.push_back( theconstr );
+      
       // register 
       RegisterPhysics( theconstr -> physicsConstructor() ) ;
     }
   
   return StatusCode::SUCCESS;
 };
+
+// ============================================================================
+StatusCode GiGaPhysListModular::finalize () 
+{
+  // release all constructors 
+  for( Constructors::iterator ic = m_constructors.begin() ; 
+       m_constructors.end() != ic ; ++ic ) 
+    { if( 0 != *ic ) { (*ic) -> finalize () ; } }
+  m_constructors.clear() ;
+  
+  return GiGaPhysListBase::finalize  ();
+};
+
 
 // ============================================================================
 void GiGaPhysListModular::SetCuts()

@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgr.h,v 1.1 2003-04-06 19:07:33 ibelyaev Exp $
+// $Id: GiGaFieldMgr.h,v 1.2 2003-09-22 13:59:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 19:07:33  ibelyaev
+//  update foe newer GiGa, add new tools
+// 
 // ============================================================================
 #ifndef GAUSSTOOLS_GIGAFIELDMGR_H 
 #define GAUSSTOOLS_GIGAFIELDMGR_H 1
@@ -40,6 +43,15 @@ public:
    *  @return status code 
    */
   virtual StatusCode   initialize     () ; 
+  
+  /** finalize   the object 
+   *  @see GiGaFieldMgrBase
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
+   *  @return status code 
+   */
+  virtual StatusCode   finalize       () ; 
   
 protected:
   

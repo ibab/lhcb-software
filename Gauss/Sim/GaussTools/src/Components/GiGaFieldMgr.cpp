@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgr.cpp,v 1.1 2003-04-06 19:07:33 ibelyaev Exp $
+// $Id: GiGaFieldMgr.cpp,v 1.2 2003-09-22 13:59:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 19:07:33  ibelyaev
+//  update foe newer GiGa, add new tools
+// 
 // ============================================================================
 // include 
 #include "GiGa/GiGaMACROs.h"
@@ -74,7 +77,9 @@ StatusCode   GiGaFieldMgr::initialize     ()
     { return Error ( "Base class is not initialized properly!" , sc ) ; }
   
   // locate the magnetic field 
-  if( 0 != m_field ) { m_field -> release () ; m_field = 0 ; }
+  if( 0 != m_field && 0 != toolSvc() ) 
+    { toolSvc() -> releaseTool( m_field ) ; } 
+  m_field = 0 ; 
   m_field = tool ( m_fieldType , m_field , this ) ;
   if( 0 == m_field ) { return StatusCode::FAILURE ; }
   
@@ -82,6 +87,24 @@ StatusCode   GiGaFieldMgr::initialize     ()
     { return Error("G4MagneticField* points to NULL!" ) ; }
   
   return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/** finalize   the object 
+ *  @see GiGaFieldMgrBase
+ *  @see GiGaBase
+ *  @see  AlgTool
+ *  @see IAlgTool
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode   GiGaFieldMgr::finalize       () 
+{
+  if ( 0 != m_field && 0 != toolSvc() ) 
+    { toolSvc() ->releaseTool( m_field ) ; }
+  m_field = 0 ;
+  return GiGaFieldMgrBase::finalize () ;
 };
 // ============================================================================
 
