@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.3 2005-02-21 09:58:22 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.4 2005-02-22 16:02:49 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
