@@ -1,5 +1,5 @@
 package Brunel
-version v24r2
+version v25r0
 
 branches doc cmt job options
 
@@ -26,13 +26,13 @@ use XmlDDDB		v22r3	Det
 use FieldMap		v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v16r2)
-use LHCb	v16r2
+#-- LHCb libraries (from LHCB_v17r0)
+use LHCb	v17r0
 
 #-- BrunelSys v24r2 packages
 
 # Tools
-use AsctToLinker        v1r2    Rec
+use AsctToLinker        v1r3    Rec
 
 # Calorimeter
 use CaloMonitor         v2r2p1	Calo
@@ -44,23 +44,22 @@ use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r4p1	OT
-use OTDAQ               v2r0    OT
+use OTMonitor        	v1r0	OT
 
 # Tracking
-use TrFitEvent          v4r6    Tr
-use TrFitAssociators    v1r1    Tr    
+use TrFitEvent          v4r7    Tr
+use TrFitAssociators    v1r2    Tr    
 use VeloTrack           v5r2  	Velo
-use TrCheck             v2r5	Tr
-use LongTrack           v1r12	Tr
+use TrCheck             v2r6	Tr
+use LongTrack           v1r13	Tr
 use TrFitter            v4r0	Tr
-use TrExtrapolator      v2r13	Tr
-use TrTools             v2r5p1 	Tr
-use Seeding             v2r9	Tr 
+use TrExtrapolator      v2r13p1	Tr
+use TrTools             v2r6 	Tr
+use Seeding             v2r10	Tr 
 use TrMatching          v2r10p1	Tr
-use TrCleanEx           v2r10	Tr
+use TrCleanEx           v2r11	Tr
 use VeloTT              v1r11	Tr
-use TrKShort		v1r4	Tr
+use TrKShort		v1r4p1	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon

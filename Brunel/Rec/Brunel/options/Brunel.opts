@@ -83,10 +83,8 @@ BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 #include "$ITALGORITHMSROOT/options/itRec.opts"
 
 // Outer tracker reconstruction (clustering)
-ApplicationMgr.DLLs     += { "OTAlgorithms", "OTDAQ" };
-BrunelRecoOTSeq.Members  = { "OTRetrieveBuffer" };
-#include "$OTALGORITHMSROOT/options/otRec.opts"
-BrunelRecoOTSeq.Members += { "OTClusterCreator" };
+ApplicationMgr.DLLs     += { "OTDAQ" };
+BrunelRecoOTSeq.Members += { "OTTimeCreator" };
 
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloDAQ", "VeloTrack" };

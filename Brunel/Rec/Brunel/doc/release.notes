@@ -3,6 +3,20 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v25r0>2004-10-19 Brunel v25r0</A></H1><PRE>
+This version uses Gaudi v15r2, LHCb v17r0.
+Requires data produced by Boole v6r2p1 or later. It *cannot* process DC04 data
+
+- New or modified functionality
+  . New OT Event model: OTTime replaces OTDigit and OTCluster, plus backward 
+    incompatble changes to OTChannelID. Not compatible with DC04 data.
+    (LHCbKernel v5r3, OTEvent v14r0, OTDAQ v3r0, OTAssociators v3r0
+     Required simple adaptation of large number of tracking packages)
+
+- DST changes
+  . Link/Raw/OT/Times replaces Link/Raw/OT/Digits
+  . Link/Rec/OT/Clusters and Rec/OT removed
+
 </PRE><H1><A NAME=v24r2>2004-09-22 Brunel v24r2</A></H1><PRE>
 This version uses Gaudi v15r2, needs CMT v1r16. It can process DC04 data
 

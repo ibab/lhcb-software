@@ -27,9 +27,10 @@ ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
 //ITEffMonitor.fullDetail = true;
 
 // OT reconstruction
-BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
-BrunelMoniOTSeq.Members += { "OTClusterChecker" };
-//OTClusterChecker.fullDetail = true;
+ApplicationMgr.DLLs     += { "OTMonitor" };
+BrunelMoniOTSeq.Members += { "OTTimeMonitor" };
+BrunelMoniOTSeq.Members += { "OTTimeChecker" };
+//OTTimeChecker.fullDetail = true;
 
 // Tracking
 ApplicationMgr.DLLs += { "TrCheck", "TrFitAssociators" };

@@ -4,6 +4,17 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v25r0 2004-10-19 =======================
+! 2004-10-19 - Marco Cattaneo
+ - Modified requirements for Brunel v25r0
+
+   Packages removed:  OTDAQ (moved to LHCbSys)
+                      OTAlgorithms (obsolete)
+   Packages added:    OTMonitor v1r0
+   Packages modified: AsctToLinker v1r3, TrFitEvent v4r7, TrFitAssociators v1r2,
+                      TrCheck v2r6, TrTools v2r6, Seeding v2r10, LongTrack v1r13,
+                      TrCleanEx v2r11, TrExtrapolator v2r13p1, TrKShort v1r4p1
+
 !======================= BrunelSys v24r2 2004-09-08 =======================
 ! 2004-09-08 - Marco Cattaneo
  - Modified requirements for Brunel v24r2
