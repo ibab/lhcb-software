@@ -1,8 +1,11 @@
-// $Id: PhotonParameters.cpp,v 1.1 2003-01-22 16:43:23 ibelyaev Exp $
+// $Id: PhotonParameters.cpp,v 1.2 2003-02-12 19:34:04 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/01/22 16:43:23  ibelyaev
+//  new tools for Photons
+// 
 // ============================================================================
 // Include files
 // CLHEP 
@@ -178,7 +181,7 @@ StatusCode PhotonParameters::process
   using namespace CaloHypotheses        ;
   
   if( 0 == photon ) { return Error (" Particle* points to NULL"     , 400 ) ; }
-  if( ParticleID(22) != photon->particleID() ) 
+  if( !(ParticleID(22) == photon->particleID()) ) 
     {                 return Error (" Particle* is not a photon"    , 405 ) ; }
   const ContainedObject* origin = photon->origin();
   if( 0 == origin ) { return Error (" Origin* points to NULL "      , 406 ) ; }
