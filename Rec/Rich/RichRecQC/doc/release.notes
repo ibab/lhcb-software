@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================== RichRecQC v1r8 2004-06-18 ========================
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure
  - Remove DaVinci includes (Brunel files can be used by simply adding the 
