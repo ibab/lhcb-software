@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.1 2004-11-22 10:26:01 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.2 2004-11-22 16:24:49 ranjard Exp $
 
 /** @file 
  * 
@@ -56,8 +56,7 @@ GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
 GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc";
-GiGaGeo.FieldMgr.MinEpsilonStep= 0.000001;
-GiGaGeo.FieldMgr.MaxEpsilonStep= 0.000001;
+
 // declare external services needed MAGNETIC FIELD 
 ApplicationMgr.DLLs   += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc"  };  

@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.54 2004-11-22 10:26:01 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.55 2004-11-22 16:24:49 ranjard Exp $ 
 
 // =========== necessary setup and steps for any Gauss executable =========== 
 #include "$GAUSSOPTS/Common.opts"
@@ -19,28 +19,22 @@ ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
 //ApplicationMgr.TopAlg += { "Sequencer/Monitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 
-/// to write a file: create and add the output stream
+// write an output file
 ApplicationMgr.OutStream +=  { "GaussTape" };
-// specify the file (only the POOL format is supported)
-GaussTape.Output = "DATAFILE='PFN:Gauss_30000000.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='REC'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
-// Set the number of events to generate
-ApplicationMgr.EvtMax     = 2;
-// Set Event & Run number 
+// initialize run, event, max event, output level
+ApplicationMgr.EvtMax     = 10;
 Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
-// Overall output level
 MessageSvc.OutputLevel    = 3;
-// Specific algorithms output level
-GiGaFlushAlgorithm.OutputLevel = 2;
+
 // Lenght of message to have longer Algorihtm/Tool identifier in printout
 //MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
  
 // to simulate <evttype> put a line similar to the following
-// List of events type available on the web:
-//   http://robbep.home.cern.ch/robbep/EvtGen/EventTypes.html
-//#include "$DECFILESROOT/options/13296200.opts"  // Bd_JpsiKS,mm
+#include "$DECFILESROOT/options/13296200.opts"  // Bd_JpsiKS,mm
 //#include "$DECFILESROOT/options/10000000.opts"  // Generic b events
-#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
+//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 
