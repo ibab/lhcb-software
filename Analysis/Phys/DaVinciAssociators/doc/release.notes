@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.36 2004-04-05 08:58:16 pkoppenb Exp $
+! $Id: release.notes,v 1.37 2004-04-05 09:06:50 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+!================= DaVinciAssociators v4r5 2004-04-05 ======================
 ! 2004-04-05 - P. Koppenburg
  - src/TestAssociators.cpp
    . (int)log10(i) -> (int)log10((double)i) for Windows
