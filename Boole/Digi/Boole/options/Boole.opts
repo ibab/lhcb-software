@@ -11,13 +11,8 @@
 ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg", "LHCbTools" };
 
 // ROOT Persistency
-ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
-// Activate the conversion service
-ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
-// Declare the persistency type for the conversion service
-RootEvtCnvSvc.DbType = "ROOT" ;
-// Declare the conversion service to the Persistency Service
-EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+#include "$STDOPTS/RootDb.opts"
+RootEvtCnvSvc.AgeLimit = 4;
 
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
@@ -68,13 +63,11 @@ InitBooleSeq.Members += { "BooleInit" };
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
-ApplicationMgr.DLLs += { "L0Calo" };
-ApplicationMgr.DLLs += { "PuVeto" };
-ApplicationMgr.DLLs += { "L0DU" };
+ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto", "L0DU" };
 ApplicationMgr.DLLs += { "MuonTools" };
-TriggerL0Seq.Members += { "L0CaloDigit", "L0CaloAlg/L0Calo" };
+TriggerL0Seq.Members += { "L0CaloAlg/L0Calo" };
 TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
-#include "$L0MUONROOT/options/Brunel.opts"  // To be modified
+#include "$L0MUONROOT/options/Boole.opts"
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 
@@ -161,6 +154,3 @@ L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
 RelationsL1Seq.Members += { "L1Track2dTruth" };
 RelationsL1Seq.Members += { "L1Track3dTruth" };
 #include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
-
-
-// Should add a timing normalisation, as in TimingAlg

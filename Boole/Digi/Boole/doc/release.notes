@@ -3,12 +3,19 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v4r0>2004-01-09 Boole v5r0</A></H1><PRE>
+</PRE><H1><A NAME=v5r0>2004-01-09 Boole v5r0</A></H1><PRE>
 
  Built against GAUDI_v14r0, LHCB_v15r0.
 
 - New tuning
   - New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
+
+- New features
+  - Populate RawBuffer and L1Buffer with L0Calo (full) clusters. L0CaloDigit
+    algorithm removed (L0Calo v7r2)
+
+- oodigi changes
+  - L0/Calo and L0/FullCalo removed (can be rebuilt from RawBuffer)
 
 </PRE><H1><A NAME=v4r0>2003-12-12 Boole v4r0</A></H1><PRE>
 
