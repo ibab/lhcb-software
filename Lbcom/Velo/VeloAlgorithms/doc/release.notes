@@ -1,13 +1,14 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
+
 !===================== VeloAlgorithms v3r0 2004-03-02 =====================
 ! 2004-03-02 - Chris Parkes
-replace VeloRound with LHCbMath::round
+ - replace VeloRound with LHCbMath::round
 
 ! 2004-02-24 - Chris Parkes
-- adapt VeloSim to cope with dead regions on sensor described in new Detector
-Element.
-- protect VeloMonitor against crashes caused by this effect.
+ - adapt VeloSim to cope with dead regions on sensor described in new Detector
+   Element.
+ - protect VeloMonitor against crashes caused by this effect.
 
 ! 2004-02-24 - Mark Tobin
  - Added extra histgrams to look at particle entry point in x-y plane for each
