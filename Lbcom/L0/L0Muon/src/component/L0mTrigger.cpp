@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.9 2002-11-06 15:51:57 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.10 2003-01-23 17:28:04 ooleroy Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -52,7 +52,7 @@ L0mTrigger::L0mTrigger(const std::string& name, ISvcLocator* pSvcLocator)
    declareProperty("Mode", m_mode);
    declareProperty("LimitedY", m_limitedY = true );
    declareProperty("IgnoreM1", m_ignoreM1 = false );
-   declareProperty("SeedClustering", m_seedClustering = false );
+   declareProperty("SeedClustering", m_seedClustering = true );
    declareProperty("InputFromMuonCoords", m_inputFromMuonCoords = false );
    declareProperty("PtPrecision", m_precision=40.);
    declareProperty("PtMaxBins", m_bins=128);
