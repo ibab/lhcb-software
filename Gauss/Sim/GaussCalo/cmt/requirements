@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.9 2003-10-10 16:17:44 witoldp Exp $ 
+# $Id: requirements,v 1.10 2003-10-16 13:38:45 witoldp Exp $ 
 # =============================================================================
 package GaussCalo
-version v4r1
+version v4r2
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -33,6 +33,9 @@ apply_pattern    component_library library=GaussCalo
 # CVS tag $Name: not supported by cvs2svn $
 # ===========================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.9  2003/10/10 16:17:44  witoldp
+# changed version number
+#
 # Revision 1.8  2003/07/07 08:44:22  ibelyaev
 #  change the location of input file
 # 
