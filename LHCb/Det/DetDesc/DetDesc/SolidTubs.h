@@ -1,34 +1,56 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
-/// STD and STL 
+///${
+/** STD and STL includes */ 
 #include <cmath>
-#include <iostream> 
-/// CLHEP 
+#include <iostream>
+///@}
+//@{  
+/** CLHEP includes */ 
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/PhysicalConstants.h" 
-/// GaudiKernel
-#include "DetDesc/ISolid.h" 
-
-class ISolidFromStream;
+///@}
+/// DetDesc 
+#include "DetDesc/SolidBase.h" 
+///@{
+/** forward declarations */
+template <class TYPE>
+class SolidFactory;
 class StreamBuffer;
 class MsgStream;
+///@}
+
 
 /** @class SolidTubs SolidTubs.h DetDesc/SolidTubs.h
+ *
+ *  A simple implementation of TUBS - the tube segment
+ *  
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+ */
 
-    A simple implementation of TUBS 
-    
-    @author Vanya Belyaev 
-*/
-
-class SolidTubs: public ISolid
+class SolidTubs: public SolidBase
 {
-  //
-  friend class ISolidFromStream;
-  //
- public:
-  //
-  //  constructor, all sizes in mm, all angles in radians 
+  /// frined factory for instantiation 
+  friend class SolidFactory<SolidTubs>;
+  
+public:
+  
+  /** constructor
+   *  @param name           name of tube segment 
+   *  @param ZHalfLength    half-length of the tube segment
+   *  @param OuterRadius    outer radius of tube segment 
+   *  @param InnerRadius    inner radius of tube segment 
+   *  @param StartPhiAngle  start phi angle 
+   *  @param DeltaPhiAngle  delta phi angle  
+   *  @param CoverModel     covering model   
+   *  @exception SolidException wrong parameter range 
+   */
   SolidTubs( const std::string& name                             ,
              const double       ZHalfLength                      , 
              const double       OuterRadius                      ,
@@ -36,96 +58,156 @@ class SolidTubs: public ISolid
              const double       StartPhiAngle =   0.0 * degree   , 
              const double       DeltaPhiAngle = 360.0 * degree   ,
              const int          CoverModel    =   0              );     
-  //
-  // destructor 
-  virtual ~SolidTubs();
-  //
-  // functions from ISolid:
-  // name of this solid 
-  inline const std::string&      name          ()                      const { return m_tubs_name  ; };
-  // type of this solid 
-  inline       std::string       typeName      ()                      const { return "SolidTubs"; };
-  // the notorious "isInside" method 
-  inline       bool              isInside      ( const HepPoint3D&   ) const; 
-  // covering solid 
-  inline const ISolid*           cover         ()                      const;
-  // "top covering solid" (normally SolidBox) 
-  inline const ISolid*           coverTop      ()                      const;
-  // overloaded printout 
-  virtual std::ostream&     printOut      ( std::ostream& = std::cerr) const;
-  virtual MsgStream&        printOut      ( MsgStream&               ) const;
-  /// reset to the initial state  
-  inline const ISolid*           reset         ()                      const;  
-  ///
-  /// calculate the intersection points("ticks") with a given line. 
-  /// Input - line, paramterised by (Point + Vector * Tick) 
-  /// "Tick" is just a value of parameter, at which the intersection occurs 
-  /// Return the number of intersection points (=size of Ticks container)   
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D& Point  ,             /// initial point for teh line 
-                                                   const HepVector3D& Vector ,             /// vector along the line 
-                                                   ISolid::Ticks   & ticks  ) const ;     /// output container of "Ticks"
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          /// initial point for the line 
-                                                   const HepVector3D  & Vector  ,          /// vector along the line
-                                                   const ISolid::Tick& tickMin ,          /// minimal value of tick
-                                                   const ISolid::Tick& tickMax ,          /// maximal value of tick 
-                                                   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
-  
-  //
-  // function specific for SolidTubs
-  // return inner radius of the tube (in mm)
-  inline       double              innerRadius   () const { return m_tubs_innerRadius   ; };
-  // return outer radius of the tube (in mm)
-  inline       double              outerRadius   () const { return m_tubs_outerRadius   ; };
-  // return half-length of the tube (in mm)
-  inline       double              zHalfLength   () const { return m_tubs_zHalfLength   ; };
-  // return start phi angle of the tube segment (in radians)
-  inline       double              startPhiAngle () const { return m_tubs_startPhiAngle ; }; 
-  // return delta phi angle of the tube segment (in radians)
-  inline       double              deltaPhiAngle () const { return m_tubs_deltaPhiAngle ; }; 
-  
-  // return inner diameter (in mm) 
-  inline       double              innerDiameter   () const { return m_tubs_innerRadius   * 2 ; };
-  // return outer diameter (in mm)
-  inline       double              outerDiameter   () const { return m_tubs_outerRadius   * 2 ; };
-  // return the full length of the tube (in mm)
-  inline       double              zLength         () const { return m_tubs_zHalfLength   * 2 ; };
-  // return end phi angle of teh tube segment (in radians)  
-  inline       double              endPhiAngle     () const { return m_tubs_startPhiAngle + m_tubs_deltaPhiAngle ; }; 
 
-  /// serialization for reading 
+  /// destructor 
+  virtual ~SolidTubs();
+
+  /** - retrieve the tubs type 
+   *  - implementation of ISolid abstract interface 
+   *  @see ISolid 
+   *  return box type
+   */
+  inline std::string typeName () const { return "SolidTubs"; };
+
+  /** - check for the given 3D-point. 
+   *    Point coordinated are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside ( const HepPoint3D& point ) const; 
+  
+  /** retrieve the pointer to "the most simplified cover" 
+   *    -# for Model = 0 
+   *      - the cover for general tube segment is tube 
+   *      - the cover for tube  is the cylinder 
+   *      - the cover for cylinder is the box 
+   *    -#  for Model = 1 
+   *      - the cover for general tube segment is teh cylinder segment 
+   *      - the cover for cylinder segment is cylinder 
+   *      - the cover for cylinder is the box 
+   *  implementation  of ISolid abstract interface 
+   *  @see ISolid 
+   *  @return pointer to the most simplified cover 
+   */
+  const ISolid* cover () const;
+  
+  /** - printout to STD/STL stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( std::ostream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param os STD/STL stream
+   *  @return reference to the stream 
+   */
+  virtual std::ostream& printOut ( std::ostream& os = std::cout ) const;
+  
+  /** - printout to Gaudi MsgStream stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( MsgStream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param os Gaudi MsgStream  stream
+   *  @return reference to the stream 
+   */
+  virtual MsgStream&    printOut ( MsgStream&    os             ) const;
+  
+  /** - calculate the intersection points("ticks") of the solid objects 
+   *    with given line. 
+   *  -# Line is parametrized with parameter \a t :
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  -# \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  -# both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  - implementation of ISolid abstract interface  
+   *  @see ISolid 
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int 
+  intersectionTicks ( const HepPoint3D&  Point  ,        
+                      const HepVector3D& Vector ,       
+                      ISolid::Ticks   &  ticks  ) const ;
+  
+  /** - serialization for reading
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param      s               reference to stream buffer
+   *  @exception  SolidException  wrong parameters range 
+   *  @return reference to stream buffer
+   */
   StreamBuffer& serialize( StreamBuffer& s )       ; 
-  /// serialization for writing
+  
+  /** - serialization for writing
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param s reference to stream buffer
+   *  @return reference to stream buffer
+   */
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  ///
-  /// Inspectable Interface 
-  virtual bool acceptInspector( IInspector* )       ; 
-  virtual bool acceptInspector( IInspector* ) const ; 
-  ///
- protected:
-  ///
-  SolidTubs();
-  ///
- private:
-  //
-  SolidTubs           ( const SolidTubs & );  // no copy-constructor 
-  SolidTubs& operator=( const SolidTubs & );  // no assignment 
-  //
-  // members
-  //
-  std::string             m_tubs_name          ;
+
+  ///@{ 
+  /** accessors to the tube segment parameters */
+  inline double innerRadius     () const 
+  { return m_tubs_innerRadius   ; };
+  inline double outerRadius     () const 
+  { return m_tubs_outerRadius   ; };
+  inline double zHalfLength     () const 
+  { return m_tubs_zHalfLength   ; };
+  inline double startPhiAngle   () const 
+  { return m_tubs_startPhiAngle ; }; 
+  inline double deltaPhiAngle   () const 
+  { return m_tubs_deltaPhiAngle ; }; 
+  inline double innerDiameter   () const 
+  { return m_tubs_innerRadius   * 2 ; };
+  inline double outerDiameter   () const 
+  { return m_tubs_outerRadius   * 2 ; };
+  inline double zLength         () const 
+  { return m_tubs_zHalfLength   * 2 ; };
+  inline double endPhiAngle     () const 
+  { return m_tubs_startPhiAngle + m_tubs_deltaPhiAngle ; }; 
+  ///@}
+  
+protected:
+  
+  /** constructor 
+   *  @param name name of tube segment 
+   */
+  SolidTubs( const std::string& name = "Anonymous Tubs");
+  
+private:
+  
+  SolidTubs           ( const SolidTubs & );  ///< no copy-constructor 
+  SolidTubs& operator=( const SolidTubs & );  ///< no assignment 
+  
+private:
+  ///@{
+  /** parameters of tube segment */
   double                  m_tubs_zHalfLength   ;
   double                  m_tubs_outerRadius   ;
   double                  m_tubs_innerRadius   ;
   double                  m_tubs_startPhiAngle ;
   double                  m_tubs_deltaPhiAngle ;
-  //
-  int                     m_tubs_coverModel    ;  // model for constructing the cover solid 
-  mutable ISolid*         m_tubs_cover         ;
-  //
+  ///@}
+  /// model for constructing the cover solid 
+  int                     m_tubs_coverModel    ;  
 };
-///
-#include "DetDesc/SolidTubs.icpp"
-///
 
-#endif //   DETDESC_SOLIDTUBS_H
+/// ===========================================================================
+#endif ///<   DETDESC_SOLIDTUBS_H
+/// ===========================================================================
 

@@ -1,40 +1,99 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/SolidBoolean.cpp,v 1.4 2001-03-13 11:58:08 mato Exp $
-
-#include   "GaudiKernel/StatusCode.h" 
-#include   "GaudiKernel/IInspector.h" 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+/// STD & STL 
+#include <functional>
+#include <algorithm>
+///@{
+/** GaudiKernel package */
+#include   "GaudiKernel/StatusCode.h"
+#include   "GaudiKernel/StreamBuffer.h" 
+#include   "GaudiKernel/IInspector.h"
+///@}
+///@{
+/** DetDesc package */  
 #include   "DetDesc/SolidBoolean.h" 
 #include   "DetDesc/SolidChild.h" 
-#include   "DetDesc/SolidException.h" 
-
-#include   "DetDesc/SolidTicks.h" 
-#include   "DetDesc/ISolidFromStream.h"
+#include   "DetDesc/SolidException.h"
 #include   "DetDesc/ClhepToStream.h"
+#include   "DetDesc/SolidTicks.h" 
+#include   "DetDesc/Solid.h" 
+///@}
 
-#include   "GaudiKernel/StreamBuffer.h" 
+/// ===========================================================================
+/** @file SolidBoolean.cpp 
+ *
+ *  implementation file for class SolidBoolean
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru  
+ *  @date   xx/xx/xxxx
+ */
+/// ===========================================================================
 
-
-// constructor //////////////////////////////////////////////////////////////////////////////////////
+/// ===========================================================================
+/** constructor - "main"("first") solid is mandatory! 
+ *  @param name name of the solid 
+ *  @param solid pointer to the "first"/"main" solid
+ */
+/// ===========================================================================
 SolidBoolean::SolidBoolean( const std::string& name  , 
                             ISolid*            solid )
-  : m_sb_name     ( name  )
+  : SolidBase     ( name  )
   , m_sb_first    ( solid )
   , m_sb_childrens(       )
+{
+  if( 0 == solid ) 
+    { throw SolidException("SolidBoolean:: ISolid* points to NULL!"); }
+};
+
+/// ===========================================================================
+/** constructor - "main"("first") solid is mandatory! 
+ *  @param name name of the solid 
+ */
+/// ===========================================================================
+SolidBoolean::SolidBoolean( const std::string& name  ) 
+  : SolidBase     ( name  )
+  , m_sb_first    (  0    )
+  , m_sb_childrens(       )
 {};
-// destructor  /////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// destructor 
+/// ===========================================================================
 SolidBoolean::~SolidBoolean()
 {
-  // remove all daughters 
-  SolidBoolean::SolidChildrens::iterator it = childBegin();
-  while( childEnd() != it ) 
-    { 
-      ISolid* child = *it++; 
-      if( 0 != child ) { delete child; } 
-    }
+  /// reset the solid;
+  reset() ;
+  /// delete all daughters 
+  for( SolidBoolean::SolidChildrens::iterator it = childBegin();
+       childEnd() != it ; ++it ) 
+    { if( 0 != *it ) { delete *it ; } }
   m_sb_childrens.clear(); 
   // remove first 
-  if   ( 0 != m_sb_first  ) { delete m_sb_first ; m_sb_first = 0; }
+  if ( 0 != m_sb_first  ) { delete m_sb_first ; m_sb_first = 0; }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** reset to the initial ("after constructor") state
+ */
+/// ===========================================================================
+const ISolid* SolidBoolean::reset() 
+{ 
+  if( 0 != m_sb_first ) { m_sb_first->reset() ; }
+  std::for_each( childBegin() , childEnd() ,
+                 std::mem_fun(&ISolid::reset) );
+  return this;
+};  
+
+/// ===========================================================================
+/** add child to daughter container 
+ *  @param chidl pointer to solid 
+ *  @param mtrx  pointer to transformation 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode SolidBoolean::addChild( ISolid*                  child , 
                                    const HepTransform3D*    mtrx  ) 
 {
@@ -44,7 +103,14 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
   m_sb_childrens.push_back(pChild); 
   return StatusCode::SUCCESS; 
 };
-// add child to daughter container ///////////////////////////////////////////////////////////////// 
+
+/// ===========================================================================
+/** add child to daughter container 
+ *  @param pointer to solid 
+ *  @param position position 
+ *  @param rotation rotation 
+ */
+/// ===========================================================================
 StatusCode SolidBoolean::addChild   ( ISolid*               child    , 
                                       const HepPoint3D&     position , 
                                       const HepRotation&    rotation )
@@ -55,50 +121,85 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
   m_sb_childrens.push_back(pChild); 
   return StatusCode::SUCCESS; 
 };
-/// serialization for reading ////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** serialization for reading
+ *  @param sb reference to stream buffer
+ *  @return reference to stream buffer
+ */
+/// ===========================================================================
 StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) 
 {
-  s >> m_sb_name ; 
-  ISolidFromStream constructor;  
-  m_sb_first = constructor( s ) ; 
-  unsigned long nC; 
-  s >> nC; 
-  while( nC-- > 0 )
+  reset();
+  /// serialize the base class
+  SolidBase::serialize( s ) ;
+  /// first solid 
+  if( 0 != m_sb_first ) { delete m_sb_first ; m_sb_first = 0 ; }
+  std::string type;
+  s >> type ;
+  m_sb_first = Solid::createSolid( type );
+  m_sb_first->serialize( s );
+  /// childrens 
+  for( SolidBoolean::SolidChildrens::iterator it = childBegin();
+       childEnd() != it ; ++it ) 
+    { if( 0 != *it ) { delete *it ; } }
+  m_sb_childrens.clear(); 
+  int n;
+  s >> n ;
+  while( --n >0 )
     {
-      HepTransform3D Mtrx;  
-      ISolid*        sd = new SolidChild();
-      s >> Mtrx >> *sd ;  
-      addChild( sd , &Mtrx ) ;
-    } 
+      s >> type ;
+      ISolid* sol = Solid::createSolid( type );
+      sol->serialize( s );
+      SolidChild* child =
+        dynamic_cast<SolidChild*> (sol);
+      if( 0 == child ) 
+        { throw SolidException("SolidBoolean: wroing chidl type!"); }
+      m_sb_childrens.push_back( child );
+    }
   ///
   return s;
-  ///
 };
-/// serialization for writing ///////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** serialization for writing
+ *  @param sb reference to stream buffer
+ *  @return reference to stream buffer
+ */
+/// ===========================================================================
 StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const 
 {
+  /// serialize the base class
+  SolidBase::serialize( s ) ;
   ///
-  if( 0 == first() ) { throw SolidException("SolidBoolean:: first() points to NULL!") ;} 
+  s << m_sb_first->typeName() ;
+  m_sb_first->serialize( s );
   ///
-  s << typeName   () << name       ()  << *first      () << noChildrens () ; 
-  ///
-  for( SolidBoolean::SolidChildrens::const_iterator ci = childBegin(); childEnd() != ci ; ++ci )
+  s << (int) m_sb_childrens.size() ;
+  for( SolidBoolean::SolidChildrens::const_iterator 
+         it = m_sb_childrens.begin() ; m_sb_childrens.end() != it ; ++it ) 
     {
-      const ISolid* sc = *ci ;  
-      s << *sc ; 
-    } 
-  
+      s << (*it)->typeName() ;
+      (*it)->serialize( s ) ;
+    }
   ///
-  return s; 
+  return s;
 };
-/** calculate the intersection points("ticks") with a given line. 
-    Input - line, paramterised by (Point + Vector * Tick) 
-    "Tick" is just a value of parameter, at which the intersection occurs 
-    Return the number of intersection points (=size of Ticks container)   
-*/
-unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,         // initial point for teh line 
-                                               const HepVector3D& vect   ,         // vector along the line 
-                                               ISolid::Ticks    & ticks  ) const   // output container of "Ticks"
+
+/// ===========================================================================
+/** calculate the intersection points("ticks") with a given line.
+ *  Input - line, paramterised by  x_vect = Point + Vector * T
+ *  "tick" is just a value of T, at which the intersection occurs
+ *  @param Point initial point for the line
+ *  @param Vector vector along the line
+ *  @param ticks output container of "Ticks"
+ *  @return the number of intersection points (=size of Ticks container)
+ */
+/// ===========================================================================
+unsigned int 
+SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,      
+                                  const HepVector3D& vect   ,      
+                                  ISolid::Ticks    & ticks  ) const
 {
   ///
   ticks.clear();
@@ -108,89 +209,72 @@ unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,      
   first()->intersectionTicks( point , vect , ticks ); 
   /// find intersections with child solids:
   ISolid::Ticks childTicks; 
-  for( SolidChildrens::const_iterator ci = childBegin() ; childEnd() != ci ; ++ci ) 
+  for( SolidChildrens::const_iterator ci = childBegin() ; 
+       childEnd() != ci ; ++ci ) 
     {
       const ISolid* child = *ci; 
-      if( 0 != child ) { child->intersectionTicks( point , vect, childTicks ); } 
-      std::copy( childTicks.begin(),childTicks.end(),std::back_inserter( ticks ) );
+      if( 0 != child ) 
+        { child->intersectionTicks( point , vect, childTicks ); } 
+      std::copy( childTicks.begin() , childTicks.end() , 
+                 std::back_inserter( ticks ) );
       childTicks.clear();
     } 
   /// sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
-/** calculate the intersection points("ticks") with a given line. 
-    Input - line, paramterised by (Point + Vector * Tick) 
-    "Tick" is just a value of parameter, at which the intersection occurs 
-    Return the number of intersection points (=size of Ticks container)   
-*/
-unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,         // initial point for teh line 
-                                               const HepVector3D & vect    ,         // vector along the line 
-                                               const ISolid::Tick& tickMin , 
-                                               const ISolid::Tick& tickMax , 
-                                               ISolid::Ticks     & ticks   ) const   // output container of "Ticks"
+
+/// ===========================================================================
+/** calculate the intersection points("ticks") with a given line.
+ *  Input - line, paramterised by  x_vect = Point + Vector * T
+ *  "tick" is just a value of T, at which the intersection occurs
+ *  @param Point initial point for the line
+ *  @param Vector vector along the line
+ *  @param tickMin minimal value of "Tick"
+ *  @param tickMax maximal value of "Tick"
+ *  @param ticks output container of "Ticks"
+ *  @return the number of intersection points (=size of Ticks container)
+ *  between tickMin and tickMax
+ */
+/// ===========================================================================
+unsigned int 
+SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,
+                                  const HepVector3D & vect    ,
+                                  const ISolid::Tick& tickMin , 
+                                  const ISolid::Tick& tickMax , 
+                                  ISolid::Ticks     & ticks   ) const 
 {
   ///
   intersectionTicks( point , vect , ticks ); 
   /// sort and remove adjancent and some EXTRA ticks and return 
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin , tickMax , *this );  
-  ///
+  return 
+    SolidTicks::RemoveAdjancentTicks( ticks , point , vect , 
+                                      tickMin , tickMax , *this );  
 };
-//////////////////////////////////////////////////////////////////////////////////////////
-bool SolidBoolean::acceptInspector( IInspector* pInspector ) 
-{
-  ///
-  const ISolid* s = this; 
-  return s->acceptInspector( pInspector ) ; 
-};
-////////////////////////////////////////////////////////////////////////////////////////
-bool SolidBoolean::acceptInspector( IInspector* pInspector ) const 
-{
-  ///
-  if( 0 == pInspector ) { return false; } 
-  ///
-  pInspector->inspectByValue   (  name()         , this , "BooleanName" ) ; 
-  pInspector->inspectByValue   (  typeName()     , this , "TypeName"    ) ; 
-  ///
-  pInspector->inspectByRef     (  m_sb_first     , this , "FirstSolid"  ) ; 
-  pInspector->inspectContByRef ( &m_sb_childrens , this , "Childrens"   ) ; 
-  ///
-  return true; 
-  ///
-};
-/////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** printout to STD/STL stream
+ *  @param os STD/STL stream
+ *  @return reference to the stream
+ */
+/// ===========================================================================
 std::ostream& SolidBoolean::printOut( std::ostream& os ) const 
 {
-  os << "\t" << typeName()      << "\tname=" << name()
-     << std::endl 
-     << "\t\t\tFirst="       << first()
-     << "\t\t\tBooled with " << m_sb_childrens.size() << " childrens"
-     << std::endl ;
-  for( SolidChildrens::const_iterator it = childBegin() ; childEnd() != it ; ++it ) 
-    {
-      os << "\t\t\t\tchild#" << std::setw(2) << it - childBegin() 
-         << std::endl 
-         << "\t\t" << *it ;
-    } 
+  /// printout the base class 
+  SolidBase::printOut( os );
   return os;
 };
-/////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** printout to Gaudi  stream
+ *  @param os Gaudi stream
+ *  @return reference to the stream
+ */
+/// ===========================================================================
 MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const 
 {
-  os << "\t" << typeName()      << "\tname=" << name()
-     << endreq    
-     << "\t\t\tFirst="       << first()
-     << "\t\t\tBooled with " << m_sb_childrens.size() << " childrens" 
-     << endreq    ;
-  for( SolidChildrens::const_iterator it = childBegin() ; childEnd() != it ; ++it ) 
-    {
-      os << "\t\t\t\tchild#" << std::setw(2) << it - childBegin()
-         << endreq          
-         << "\t\t" << *it ;
-    } 
+  /// printout the base class 
+  SolidBase::printOut( os );
   return os;
 };
-/////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
+/// ===========================================================================

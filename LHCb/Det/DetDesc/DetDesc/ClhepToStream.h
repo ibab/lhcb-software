@@ -1,21 +1,33 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     DETDESC_CLHEP_TO_STREAM_H
 #define     DETDESC_CLHEP_TO_STREAM_H 1 
 
 
 #include "GaudiKernel/StreamBuffer.h"
 
-///
-/// small collection of output operators of some CLHEP objects to StreamBuffer 
-///
-
-
-///
-/// Hep3Vector
-///
-
 #include "CLHEP/Vector/ThreeVector.h"                
+#include "CLHEP/Vector/Rotation.h"                
+#include "CLHEP/Geometry/Transform3D.h" 
+
+/**  @file ClhepTostream.h
+ *
+ *   small collection of output operators of some 
+ *   CLHEP objects to StreamBuffer 
+ *   
+ *   @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *   @date xx/xx/xxxx
+ */
+
+/** @defgroup  Hep3Vector
+ *  serialization of class Hep3Vector
+ *  @{ 
+ */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const Hep3Vector& Vect ) 
-{ return sb << Vect.x() << Vect.y() << Vect.z() ; }
+{ return sb << Vect.x() << Vect.y() << Vect.z() ; };
 inline StreamBuffer& operator>>( StreamBuffer& sb ,       Hep3Vector& Vect ) 
 { 
   double  x , y, z ;
@@ -26,34 +38,34 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       Hep3Vector& Vect )
   Vect.setZ( z ) ; 
   ///
   return sb; 
-}
+};
+///@}
 
-///
-/// HepRotation
-///
-
-#include "CLHEP/Vector/Rotation.h"                
+/** @defgroup  HepRotation
+ *  serialization of class HepRotation
+ *  @{ 
+ */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepRotation& Rot ) 
 {
   Hep3Vector Axis  ; double     Angle ;
   Rot.getAngleAxis( Angle, Axis );
   return sb << Angle << Axis ; 
-}
+};
 inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepRotation& Rot ) 
 {
   Hep3Vector Axis  ; double     Angle ;
   sb >> Angle >> Axis ; 
   Rot = HepRotation().rotate( Angle , Axis );
   return sb; 
-}
+};
+///@}
 
-///
-/// HepTransform3D
-///
-
-#include "CLHEP/Geometry/Transform3D.h" 
+/** @defgroup  HepTransform3D 
+ *  serialization of class HepTransform3D
+ *  @{ 
+ */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepTransform3D& Tr ) 
-{ return sb << Tr.getTranslation() << Tr.getRotation() ; }
+{ return sb << Tr.getTranslation() << Tr.getRotation() ; };
 inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepTransform3D& Tr ) 
 { 
   HepRotation rot;
@@ -62,12 +74,13 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepTransform3D& Tr )
   Tr.setIdentity() ; 
   Tr = HepTransform3D( rot , pos ); 
   return sb; 
-}
+};
+///@}
 
 
-
-#endif  //  DETDESC_CLHEP_TO_STREAM_H
-
+/// ===========================================================================
+#endif  ///<  DETDESC_CLHEP_TO_STREAM_H
+/// ===========================================================================
 
 
 

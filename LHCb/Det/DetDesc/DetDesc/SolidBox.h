@@ -1,114 +1,233 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidBox.h,v 1.7 2001-03-13 21:57:30 mato Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
-// CLHEP 
+/// STD and STL 
+#include <cmath> 
+#include <iostream> 
+/// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
-// GAUDI Kernel 
-#include "DetDesc/ISolid.h" 
+/// GAUDI Kernel 
 #include "GaudiKernel/StreamBuffer.h" 
-// STD and STL 
-#include <cmath> 
-#include <iostream> 
+/// DetDesc 
+#include "DetDesc/SolidBase.h" 
+/// forward declarations
+template <class TYPE>
+class SolidFactory;          ///< DetDesc 
 
-class MsgStream;
-class ISolidFromStream;
+/** @class SolidBox SolidBox.h "DetDesc/SolidBox.h"
+ *
+ *  A simple implementation of BOX 
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date xx/xx/xxx
+ */
 
-/** @class SolidBox SolidBox.h DetDesc/SolidBox.h
-
-    A simple implementation of BOX 
-    
-    @author Vanya Belyaev 
-*/
-
-
-class SolidBox: public ISolid
+class SolidBox: public virtual SolidBase
 {
-  ///
-  friend class ISolidFromStream;
-  ///
+  /// friend factory 
+  friend class SolidFactory<SolidBox>;
+
 public:
-  //
-  SolidBox( const std::string& name        ,  // name of this box                     
-            const double       XHalfLength ,  // half-size in x-direction of this box 
-            const double       YHalfLength ,  // half-size in y-direction of this box 
-            const double       ZHalfLength ); // half-size in z-direction of this box 
-  //
+  
+  /** standard(public)  constructor 
+   *  @param      Name        name of this box  
+   *  @param      xHalf half-size of the box in x-direction
+   *  @param      yHalf half-size of the box in y-direction
+   *  @param      zHalf half-size of the box in z-direction
+   *  @exception  SolidException wrong parameters range 
+   */
+  SolidBox( const std::string& Name  ,
+            const double       xHalf , 
+            const double       yHalf , 
+            const double       zHalf); 
+  
+  /** destructor  
+   */
   virtual ~SolidBox();  
-  //
-  // functions from ISolid:
-  inline  const  std::string&      name      ()                    const { return m_box_name   ; };
-  inline         std::string       typeName  ()                    const { return "SolidBox"   ; };
-  inline         bool              isInside  ( const HepPoint3D& ) const; 
-  inline  const  ISolid*           cover     ()                    const { return this         ; };
-  inline  const  ISolid*           coverTop  ()                    const { return this         ; };
   
-  virtual        std::ostream&     printOut  ( std::ostream&     ) const;
-  virtual        MsgStream&        printOut  ( MsgStream&        ) const;
+  /** - retrieve the box type 
+   *  - implementation of ISolid abstract interface 
+   *  @see ISolid 
+   *  return box type
+   */
+  inline       std::string  typeName ()  const { return "SolidBox" ; };
   
-  /// reset to the initial state 
-  inline  const  ISolid*           reset     ()                    const { return this         ; };
+  /** - check for the given 3D-point. 
+   *    Point coordinated are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  virtual inline bool isInside  ( const HepPoint3D& point ) const;
   
-  // calculate the intersection points("ticks") with a given line. 
-  // Input - line, paramterised by (Point + Vector * Tick) 
-  // "Tick" is just a value of parameter, at which the intercestion occurs 
-  // Return the number of intersection points (=size of Ticks container)  
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-                                                   const HepVector3D& Vector ,          // vector along the line 
-                                                   ISolid::Ticks   &  ticks  ) const ;  // output container of "Ticks"
-  // calculate the intersection points("ticks") with a given line. 
-  // Input - line, paramterised by (Point + Vector * Tick) 
-  // "Tick" is just a value of parameter, at which the intercestion occurs 
-  // Return the number of intersection points (=size of Ticks container)   between tickMin and tickMax 
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          // initial point for teh line 
-                                                   const HepVector3D & Vector  ,          // vector along the line 
-                                                   const ISolid::Tick& tickMin , 
-                                                   const ISolid::Tick& tickMax , 
-                                                   ISolid::Ticks     & ticks   ) const ;  // output container of "Ticks"
-  // return the full x-size of the box 
-  inline         double  xsize      ()  const { return m_box_xHalfLength*2 ; };
-  // return the full y-size of the box 
-  inline         double  ysize      ()  const { return m_box_yHalfLength*2 ; };
-  // return the full z-size of the box 
-  inline         double  zsize      ()  const { return m_box_zHalfLength*2 ; };
-  // return the half x-size of the box 
-  inline         double  xHalfLength()  const { return m_box_xHalfLength   ; };
-  // return the half y-size of the box 
-  inline         double  yHalfLength()  const { return m_box_yHalfLength   ; };
-  // return the half z-size of the box 
-  inline         double  zHalfLength()  const { return m_box_zHalfLength   ; };
-  /// serialization for reading 
-  StreamBuffer& serialize( StreamBuffer& s )       ; 
-  /// serialization for writing 
-  StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  /// from IInspectable interface  
-  virtual bool acceptInspector( IInspector* pInspector )       ; 
-  virtual bool acceptInspector( IInspector* pInspector ) const ; 
-  /// 
+  /** - retrieve the pointer to "simplified" solid - "cover"
+   *  - implementation of ISolid abstract interface 
+   *  The Box is the most simple shape
+   *  @see ISolid 
+   *  @return pointer to "simplified" solid - "cover"
+   */
+  virtual const ISolid* cover () const ;
+  
+  /** - retrieve the pointer to "the most simplified cover" 
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::coverTop() 
+   *  The Box is the most simple shape
+   *  @see ISolid 
+   *  @see SolidBase 
+   *  @return pointer to the most simplified cover 
+   */
+  virtual const ISolid* coverTop () const ;
+  
+  /** - printout to STD/STL stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( std::ostream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param os STD/STL stream
+   *  @return reference to the stream 
+   */
+  virtual std::ostream& printOut ( std::ostream& os ) const;
+  
+  /** - printout to Gaudi MsgStream stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( MsgStream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param os Gaudi MsgStream  stream
+   *  @return reference to the stream 
+   */
+  virtual MsgStream&    printOut ( MsgStream&    os ) const;
+  
+  /** - calculate the intersection points("ticks") of the solid objects 
+   *    with given line. 
+   *  -# Line is parametrized with parameter \a t :
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  -# \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  -# both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  - implementation of ISolid abstract interface  
+   *  @see ISolid 
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual inline  unsigned int 
+  intersectionTicks ( const HepPoint3D&  Point  ,
+                      const HepVector3D& Vector ,
+                      ISolid::Ticks   &  ticks  ) const ; 
+  
+  /** - serialization for reading
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param      s               reference to stream buffer
+   *  @exception  SolidException  wrong parameters range 
+   *  @return reference to stream buffer
+   */
+  virtual StreamBuffer& serialize( StreamBuffer& s )       ;
+  
+  /** - serialization for writing
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param s reference to stream buffer
+   *  @return reference to stream buffer
+   */
+  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
+  
+  /**  return the full x-size of the box 
+   *  @return the full x-size of the box 
+   */
+  inline         double  xsize      ()  const 
+  { return m_box_xHalfLength*2 ; };
+  
+  /**  return the full y-size of the box 
+   *  @return the full y-size of the box 
+   */
+  inline         double  ysize      ()  const 
+  { return m_box_yHalfLength*2 ; };
+  
+  /**  return the full z-size of the box 
+   *  @return the full z-size of the box 
+   */
+  inline         double  zsize      ()  const 
+  { return m_box_zHalfLength*2 ; };
+  
+  /**  return the half x-size of the box 
+   *  @return the half x-size of the box 
+   */
+  inline         double  xHalfLength()  const 
+  { return m_box_xHalfLength   ; };
+  
+  /**  return the half y-size of the box 
+   *  @return the half y-size of the box 
+   */
+  inline         double  yHalfLength()  const 
+  { return m_box_yHalfLength   ; };
+  
+  /**  return the half z-size of the box 
+   *  @return the half z-size of the box 
+   */
+  inline         double  zHalfLength()  const 
+  { return m_box_zHalfLength   ; };
+  
 protected:
-  ///
-  SolidBox           (                 ); /// default constructor
-  ///
+  
+  /** default (protected) constructor 
+   */
+  SolidBox(); 
+  
 private:
-  //
-  SolidBox           ( const SolidBox & );  // no copy-constructor 
-  SolidBox& operator=( const SolidBox & );  // no assignment 
-  //
+  
+  SolidBox           ( const SolidBox & );  ///< no copy-constructor 
+  SolidBox& operator=( const SolidBox & );  ///< no assignment 
+  
 private:
-  //
-  std::string          m_box_name  ;
-  double               m_box_xHalfLength ;
-  double               m_box_yHalfLength ;
-  double               m_box_zHalfLength ;
-  //
+  
+  double               m_box_xHalfLength ;   ///< x/2 
+  double               m_box_yHalfLength ;   ///< y/2 
+  double               m_box_zHalfLength ;   ///< z/2
+
 };
-///
-#include "DetDesc/SolidBox.icpp"
-///
 
+/// ===========================================================================
+/** - check for the given 3D-point. 
+ *    Point coordinated are in the local reference 
+ *    frame of the solid.   
+ *  - implementation of ISolid absstract interface  
+ *  @see ISolid 
+ *  @param point point (in local reference system of the solid)
+ *  @return true if the point is inside the solid
+ */
+/// ===========================================================================
+inline bool SolidBox::isInside( const HepPoint3D& point ) const
+{ 
+  if ( abs( point.z() ) > zHalfLength() || 
+       abs( point.x() ) > xHalfLength() ||
+       abs( point.y() ) > yHalfLength() ) { return false; }
+  return true; 
+};
 
-#endif //  DETDESC_SOLIDBOX_H
+/// ===========================================================================
+#endif ///<  DETDESC_SOLIDBOX_H
+/// ===========================================================================
 
 
 

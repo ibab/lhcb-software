@@ -1,129 +1,108 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidSubtraction.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef       DETDESC_SOLISSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
-
+///@{
+/** STD & STL */
 #include <algorithm>
 #include <functional> 
-
-#include "DetDesc/ISolid.h"
+///@}
+/// CLHEP 
+#include "CLHEP/Vector/Rotation.h" 
+///@{
+/** DetDesc package */
 #include "DetDesc/SolidBoolean.h" 
 #include "DetDesc/SolidChild.h" 
-
-
-#include "CLHEP/Vector/Rotation.h" 
-
-//
-//
-//  class SolidSubtraction: represent a "complex" solid. 
-//                          
-//          usage: 
-//  (in this example, box with cavities) 
-//
-// ISolid* s1 = new SolidBox("box1",10.0*cm,20.0*cm,30.0*cm);  // prepare "main" solid
-// 
-// ISolid* s  = new SolidSubtraction("subtraction",s1);        // activate subtraction
-// 
-// ISolid* s2 = new SolidTubs("box2",2.0*cm,1.0*cm,0.5*cm);    // prepare 1st child 
-// ISolid* s3 = new SolidTubs("box2",2.0*cm,1.0*cm,0.5*cm);    // prepare 2nd child 
-// /* ......*/ 
-// ISolid* sn = new SolidTubs("boxn",1.0*cm,1.0*cm,0.5*cm);    // prepare nth child 
-// 
-// s->subtract(s2);
-// s->subtract(s3);
-// /* .... */
-// s->subtract(sn);
-//
-// 
-
-
-
+///@}
+///@{
+/** forward declarations from GaudiKernel, CLHEP and DetDesc */
 class StatusCode;
 class HepTransform3D;
 class HepRotate;
 class HepPoint3D; 
+template <class TYPE>
+class SolidFactory;
+///@}
+
+/** @class SolidSubtraction SolidSubtraction.h "DetDesc/SolidSubtraction.h"
+ * 
+ *  Simple implementatioin of simple boolean solid - SUBTRACTION 
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date xx/xx/xxxx
+ */
 
 class SolidSubtraction: public SolidBoolean
 {
-  //
-  friend class ISolidFromStream;
-  //
- public:
-  //
-  SolidSubtraction( const std::string& name , ISolid* first ); 
-  //  
+  /// friend factory for instantiation 
+  friend class SolidFactory<SolidSubtraction>;
+  
+public:
+  
+  /** constructor 
+   *  @param name name of the intersection
+   *  @param first pointer to first/main solid 
+   */
+  SolidSubtraction( const std::string& name , ISolid* first );
+  
+  /// destructor   
   virtual ~SolidSubtraction();
-  //  
- public:
   
-  // from ISolid 
-  virtual        std::string   typeName (                      ) const { return "SolidSubtraction" ; }; 
-  inline         bool          isInside ( const HepPoint3D   & ) const ;
+public:
   
-  // specific 
-  inline         StatusCode    subtract ( ISolid*               solid , 
-                                          const HepTransform3D* mtrx  ); 
+  /** - retrieve the specific type of the solid
+   *  - implementation of ISolid interface 
+   *  @see ISolid 
+   *  @return specific type of the solid
+   */
+  virtual std::string typeName ( ) const { return "SolidSubtraction" ; };
+  
+  /** - check for the given 3D-point. 
+   *    Point coordinates are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside ( const HepPoint3D& point ) const ;
+  
+  /** subtract child solid to the solid
+   *  @param solid pointer to child solid 
+   *  @param mtrx  pointer to transformation 
+   *  @return status code 
+   */
+  StatusCode subtract ( ISolid*               solid , 
+                        const HepTransform3D* mtrx  );
+  
+  /** subtract child solid from  the solid 
+   *  @param solid pointer to child solid 
+   *  @param position position  
+   *  @return status code 
+   */
+  StatusCode subtract ( ISolid*               child                    , 
+                        const HepPoint3D&     position                 , 
+                        const HepRotation&    rotation = HepRotation() );
+  
+protected:
+  
+  /** constructor 
+   *  @param name name of the solid subtraction  
+   */
+  SolidSubtraction( const std::string& Name = "Anonymous Subtraction");
 
-  // add child to daughter container 
-  inline         StatusCode    subtract ( ISolid*               child                    , 
-                                          const HepPoint3D&     position                 , 
-                                          const HepRotation&    rotation = HepRotation() );
-  
- protected:
-  ///
-  SolidSubtraction();
-  ///
- private:
-  ///
-  SolidSubtraction           ( const SolidSubtraction& ) ; 
-  SolidSubtraction& operator=( const SolidSubtraction& ) ; 
-  ///
+private:
+
+  SolidSubtraction           ( const SolidSubtraction& ) ; ///< no copy 
+  SolidSubtraction& operator=( const SolidSubtraction& ) ; ///<no = 
+
 };
 
-//
-//
-//
-
-inline StatusCode  SolidSubtraction::subtract( ISolid*                solid    , 
-                                               const HepTransform3D*  mtrx     )
-{  return addChild( solid , mtrx ); };
-
-//
-//
-// 
-
-inline StatusCode  SolidSubtraction::subtract ( ISolid*               solid    , 
-                                                const HepPoint3D&     position , 
-                                                const HepRotation&    rotation )
-{ return addChild( solid , position , rotation ) ; }; 
-
- 
-//
-//
-//
-
-
-
-//
-//
-//
-
-inline bool SolidSubtraction::isInside     ( const HepPoint3D   & point ) const 
-{ 
-  //  is point inside the "main" volume?  
-  if ( !first()->isInside( point ) ) { return false; } 
-  
-  // find the first daughter in which the given point is placed   
-  SolidSubtraction::SolidChildrens::const_iterator ci = 
-    std::find_if( childBegin() , childEnd() , Solid_isInside( point ) );
-  
-  return ( childEnd() == ci ? true : false );   
-};
-
-//
-//
-//
-
-
-#endif  //   DETDESC_SOLIDSUBTRACTION_H
+/// ===========================================================================
+#endif  ///<   DETDESC_SOLIDSUBTRACTION_H
+/// ===========================================================================
 
 

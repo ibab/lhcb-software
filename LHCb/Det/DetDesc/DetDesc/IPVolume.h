@@ -1,108 +1,186 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IPVolume.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
-
-// Include files
-#include "GaudiKernel/IInspectable.h"
-#include "DetDesc/ILVolume.h"
-#include "DetDesc/ISolid.h"
-
+///@{
+/**  STD & STL includes */ 
 #include <iostream>
 #include <string> 
-
+///}
+///@{
+/** GaudiKernel includes */
+#include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/IInspectable.h"
+#include "GaudiKernel/ISerialize.h"
+///@}
+///@}
+/** DetDesc includes */ 
+#include "DetDesc/ILVolume.h"
+#include "DetDesc/ISolid.h"
+///@}
+///@{
+/** forward declarations */
 class ILVolume;
-
-
-/// from CLHEP 
 class HepPoint3D;
 class HepVector3D;
 class HepTransform3D;
+///@} 
 
-/** @class IPVolume IPVolume.h DetDesc/IPVolume.h
+/** Declaration of the interface ID 
+ * ( unique interface identifier , major & minor versions)
+ */
+static const InterfaceID IID_IPVolume( 154 , 2 , 0 );
 
-    Interface to deal with the notion of "positioned Logical Volume" 
-    (corresponds to Geant4 notion of "G4PhysicalVolume").
-    This is the minimal interface for "physical volume".
-    It corresponds to Geant4 "Placement" philosophy.
+/** @interface IPVolume IPVolume.h "DetDesc/IPVolume.h"
+ *
+ *  Interface to deal with the notion of "positioned Logical Volume" 
+ *  (corresponds to Geant4 notion of "G4PhysicalVolume").
+ *  This is the minimal interface for "physical volume".
+ *  It corresponds to Geant4 "Placement" philosophy.
+ *
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru 
+ *  @date xx/xx/xxxx 
+ */      
 
-    @author Vanya Belyaev
-*/      
-
-class IPVolume : virtual public IInspectable 
+class IPVolume : virtual public IInterface   , 
+                 virtual public ISerialize   ,
+                 virtual public IInspectable 
 {
- public:
+public:
   
-  ///  Name of the physical volume
+  /** retrieve the unique interface identifier 
+   *  @return unique interface identifier 
+   */
+  static const InterfaceID& interfaceID() { return IID_IPVolume; }     
+  
+public:
+  
+  /** retrieve name of the physical volume
+   *  (unique within mother logical volume)
+   *  @return name of physical volume 
+   */ 
   virtual const std::string&     name       () const = 0; 
   
-  /// Name of associated Logical Volume 
+  /**  retrieve the name of associated Logical Volume 
+   *  @return name of associated Logical Volume 
+   */
   virtual const std::string&     lvolumeName() const = 0;
-
-  /// C++ pointer to Locical Volume 
+  
+  /**  retrieve  the C++ pointer to Logical Volume 
+   *  @return pointer to Logical Volume 
+   */
   virtual       ILVolume*        lvolume    () const = 0; 
-
-  /// Tranformation matrix   
+  
+  /** get the tranformation matrix   
+   *  @return reference to transformation matrix 
+   */ 
   virtual const HepTransform3D&  matrix     () const = 0;
+  
+  /** get the inverse transformation matrix
+   *  @return reference to inverse transformationmatrix 
+   */
+  virtual const HepTransform3D&  matrixInv  () const = 0; 
+  
+  /** transform point from  Mother Reference System  to the Local one
+   *  @param PointInMother point in Mother Reference System 
+   *  @return point in local reference system 
+   */ 
+  virtual HepPoint3D toLocal ( const HepPoint3D& PointInMother ) const = 0;
+  
+  /** transform point in Local Reference System to the Mother Reference System
+   *  @param PointInLocal point in Local Referency System
+   *  @return point in mother reference system 
+   */
+  virtual HepPoint3D toMother ( const HepPoint3D& PointInLocal  ) const = 0;
+  
+  /** check for 3D-point
+   *  @param PointInMother pointin Mother Referency System 
+   *  @return true if point is inside physical volume 
+   */
+  virtual bool isInside   ( const HepPoint3D& PointInMother ) const = 0;
+  
+  /** printout to STD/STL stream 
+   *  @param os reference to STD/STL stream 
+   *  @return reference to STD/STL stream 
+   */
+  virtual std::ostream& printOut( std::ostream& os = std::cout ) const = 0;
 
-  /// Inverse transformation matrix 
-  virtual       HepTransform3D   matrixInv  () const = 0; 
+  /** printout to Gaudi stream 
+   *  @param os reference to Gaudi stream 
+   *  @return reference to Gaudi stream 
+   */
+  virtual MsgStream&    printOut( MsgStream&    os             ) const = 0;
   
-  /// transform point in Mother Reference System  to the Local one 
-  virtual       HepPoint3D       toLocal    ( const HepPoint3D& PointInMother ) const = 0;
+  /** reset to the initial state 
+   *  @return self-reference
+   */
+  virtual const IPVolume* reset () = 0; 
   
-  /// transform point in Local Reference System to the Mother Reference System  
-  virtual       HepPoint3D       toMother   ( const HepPoint3D& PointInLocal  ) const = 0;
-  
-  /// "is inside" method
-  virtual       bool             isInside   ( const HepPoint3D& PointInMother ) const = 0;
-  
-  ///  printout 
-  virtual std::ostream& printOut( std::ostream& ) const = 0;
-
-  /// reset to the initial state 
-  virtual const IPVolume*        reset      ()    const = 0; 
-       
   /** Intersection of the physical volume with with line.
-      line is parametrized in the local reference system of the mother 
-      logical volume by initial Point and direction Vector.
-      Method returns the number of intersection points("ticks") and 
-      the container of pairs - ticks and pointer to the corresponding 
-      material. The simplification is determined by value of threshold
-      (in units of radiation length) 
-      Method throws LVolumeException in the case, then 
-      solid is not defined or material is not accessible.
-      @param Point initial point at the line
-      @param Vector direction vector of the line
-      @param intersections output container 
-      @param threshold threshold value 
-  */
-  virtual unsigned int intersectLine( const HepPoint3D        & Point         ,
-				                              const HepVector3D       & Vector        , 
-				                              ILVolume::Intersections & intersections ,
-				                              const double              threshold     ) = 0 ;
+   *  The line is parametrized in the local reference system of the mother
+   *  logical volume ("Mother Reference System")  
+   *  with initial Point and direction Vector: 
+   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+   *  
+   * Method returns the number of intersection points("ticks") and 
+   * the container of pairs - ticks and pointer to the corresponding 
+   * material. @n 
+   * The simplification is determined by value of threshold
+   * (in units of radiation length) 
+   *  
+   *  @see ILVolume
+   *  @see ISolid 
+   *
+   *  @exception PVolumeException wrong environment 
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container 
+   *  @param threshold threshold value 
+   */
+  virtual unsigned int 
+  intersectLine( const HepPoint3D        & Point         ,
+                 const HepVector3D       & Vector        , 
+                 ILVolume::Intersections & intersections ,
+                 const double              threshold     ) = 0 ;
   
-  /** the same as previos method, but the intersection points ("ticks") are searched 
-      in the region  tickMin<= tick <= tickMax
-      @param Point initial point at the line
-      @param Vector direction vector of the line
-      @param intersections output container 
-      @param tickMin minimum value of possible Tick
-      @param tickMax  maximum value of possible Tick
-      @param threshold threshold value 
-  */
-  virtual unsigned int intersectLine( const HepPoint3D        & Point ,
-				                              const HepVector3D       & Vector        ,       
-				                              ILVolume::Intersections & intersections ,      
-				                              const ISolid::Tick        tickMin       ,
-				                              const ISolid::Tick        tickMax       ,
-				                              const double              Threshold     ) = 0 ;
+  /** Intersection of the physical volume with with line.
+   *  The line is parametrized in the local reference system of the mother
+   *  logical volume ("Mother Reference System")  
+   *  with initial Point and direction Vector: 
+   *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+   *  
+   * Method returns the number of intersection points("ticks") and 
+   * the container of pairs - ticks and pointer to the corresponding 
+   * material. @n 
+   * The simplification is determined by value of threshold
+   * (in units of radiation length) 
+   *  
+   *  @see ILVolume
+   *  @see ISolid 
+   *
+   *  @exception PVolumeException wrong environment 
+   *  @param Point initial point at the line
+   *  @param Vector direction vector of the line
+   *  @param intersections output container 
+   *  @param threshold threshold value 
+   */
+  virtual unsigned int 
+  intersectLine( const HepPoint3D        & Point ,
+                 const HepVector3D       & Vector        ,       
+                 ILVolume::Intersections & intersections ,      
+                 const ISolid::Tick        tickMin       ,
+                 const ISolid::Tick        tickMax       ,
+                 const double              Threshold     ) = 0 ;
+  
   /// virtual destructor
   virtual  ~IPVolume(){};  
+
 };
 
-inline std::ostream& operator<<( std::ostream&  os ,  const IPVolume& pv ) { return pv.printOut( os ) ; };
 
-inline std::ostream& operator<<( std::ostream&  os ,  const IPVolume* ppv )
-{  return ( ( 0 == ppv ) ? (os << " IPVolume* points to NULL ") : ( os << *ppv ) ); }
-
-#endif   //   DETDESC_IPVOLUME_H 
+/// ===========================================================================
+#endif   ///<   DETDESC_IPVOLUME_H 
+/// ===========================================================================

@@ -1,123 +1,218 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ISolid.h,v 1.3 2001-03-20 23:45:38 mato Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
 #ifndef DETDESC_ISOLID_H
-#define DETDESC_ISOLID_H 1 
-// STL
+#define DETDESC_ISOLID_H 1
+/// STD & STL
 #include  <iostream>
-#include  <string> 
+#include  <string>
 #include  <vector>
 #if defined(__GNUC__) &&  ( __GNUC__ == 2 &&  __GNUC_MINOR__ == 91 )
-#include  <vector> 
+#include  <vector>
 #else
-#include  <deque> 
-#endif 
-// Include files 
-#include "GaudiKernel/IInspectable.h" 
-#include "GaudiKernel/IInspector.h" 
+#include  <deque>
+#endif
+/// Gaudi Kernel
+#include "GaudiKernel/ISerialize.h"
+#include "GaudiKernel/IInspectable.h"
+#include "GaudiKernel/IInspector.h"
+#include "GaudiKernel/MsgStream.h"
+/// forward declaration
+class HepPoint3D;        ///< CLHEP
+class HepVector3D;       ///< CLHEP
+class StreamBuffer;      ///< GaudiKernel
 
-// forward declaration (from CLHEP)
-class HepPoint3D;  
-class HepVector3D;  
-class StreamBuffer;
+/// Declaration of the interface ID ( interface id, major & minor versions)
+static const InterfaceID IID_ISolid( 150 , 3 , 0 );
 
-/** @class ISolid ISolid.h DetDesc/ISolid.h
-    
-    Interface to Solid. 
+/** @interface ISolid ISolid.h "DetDesc/ISolid.h"
+ *
+ *  An abstract interface to any Solid object
+ *
+ *  @version 3 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date   xx/xx/xxxx 
+ */
 
-    @author Vanya Belyaev 
-*/
-
-class ISolid : public virtual IInspectable 
+class ISolid : public virtual ISerialize    ,
+               public virtual IInspectable
 {
- public:
+public:
   
-  /// define useful types for dealing with intersection with line 
-  typedef double             Tick  ; 
-
+  //@{
+  /** useful type definition for dealing 
+   *  with intersections of the solid and the line 
+   */
+  typedef double             Tick  ;
 #if defined (__GNUC__) && ( __GNUC__ == 2 && __GNUC_MINOR__ == 91 )
-  /// define useful types for dealing with intersection with line 
   typedef std::vector<Tick>  Ticks ;
-#else 
-  /// define useful types for dealing with intersection with line 
+#else
   typedef std::deque<Tick>   Ticks ;
-#endif 
+#endif
+  //@}
   
- public:
+public:
   
-  ///  return the specific name of the solid 
-  virtual const std::string&        name         (                      ) const = 0; 
+  /** retrieve the uninque interface identifier 
+   *  @see Interface::interfaceID()
+   *  @return uniqie interface identifier 
+   */
+  static const InterfaceID& interfaceID() { return IID_ISolid; }
   
-  /// return the name of TYPE for given solid 
-  virtual       std::string         typeName     (                      ) const = 0;
+public:
   
-  ///  check for the given point (local frame)
-  virtual       bool                isInside     ( const HepPoint3D   & ) const = 0;
+  /** retrieve the specific name of the solid object  
+   *  @return specific name of the solid
+   */
+  virtual const std::string& name     () const = 0;
   
-  /// return pointer to "simplified" solid - "cover"
-  virtual const ISolid*             cover        (                      ) const = 0;
+  /** retrieve the specific type of the solid object  
+   *  @return type of the solid
+   */
+  virtual       std::string  typeName () const = 0;
   
-  /// return pointer to "the most simplified cover" - probably, something like "gabarite box"
-  virtual const ISolid*             coverTop     (                      ) const = 0; 
+  /** check for the given 3D-point. 
+   *  Point coordinated are in the local reference 
+   *  frame of the solid.   
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  virtual bool isInside ( const HepPoint3D   & point ) const = 0;
   
-  /// printout   
-  virtual       std::ostream&       printOut     ( std::ostream&        ) const = 0;
+  /** retrieve the pointer to "simplified" solid.
+   *  @see ISolid::coverTop()
+   *  @return pointer to "simplified" solid - "cover"
+   */
+  virtual const ISolid* cover    () const = 0;
   
-  /// reset to the initial ("after constructor") state
-  virtual const ISolid*             reset        (                      ) const = 0;
+  /** retrieve the pointer to "the most simplified cover", 
+   *  ideally to something like "the bounding box"
+   *  @see ISolid::cover()
+   *  @return pointer to the most simplified cover
+   */
+  virtual const ISolid* coverTop () const = 0;
 
-  /** calculate the intersection points("ticks") with a given line. 
-      Input - line, paramterised by  x_vect = Point + Vector * T 
-      "tick" is just a value of T, at which the intersection occurs
-      @param Point initial point for the line
-      @param Vector vector along the line
-      @param ticks output container of "Ticks"
-      @return the number of intersection points (=size of Ticks container)
-  */
-  virtual       unsigned int        intersectionTicks ( const HepPoint3D & Point  , 
-							const HepVector3D& Vector , 
-							Ticks            & ticks  ) const = 0 ; 
+  /** printout to STD/STL stream
+   *  @param os STD/STL stream
+   *  @return reference to the stream
+   */
+  virtual std::ostream& printOut ( std::ostream& os = std::cout ) const = 0;
   
-  /** calculate the intersection points("ticks") with a given line. 
-      Input - line, paramterised by  x_vect = Point + Vector * T 
-      "tick" is just a value of T, at which the intersection occurs 
-      @param Point initial point for the line
-      @param Vector vector along the line
-      @param tickMin minimal value of "Tick"  
-      @param tickMax maximal value of "Tick"  
-      @param ticks output container of "Ticks"
-      @return the number of intersection points (=size of Ticks container)
-              between tickMin and tickMax
-  */
-  virtual       unsigned int        intersectionTicks ( const HepPoint3D & Point   , 
-							const HepVector3D& Vector  ,
-                                                        const Tick       & tickMin ,      
-                                                        const Tick       & tickMax , 
-							Ticks            & ticks   ) const = 0 ;
+  /** printout to Gaudi  stream
+   *  @param os Gaudi stream
+   *  @return reference to the stream
+   */
+  virtual MsgStream&    printOut ( MsgStream&    os ) const = 0;
   
-  /// destructor 
+  /** reset solid to its inititial state, remove 
+   *  all auxillary data fields and pointers. 
+   *  @see ISolid::~ISolid()
+   *  @return self-reference 
+   */
+  virtual const ISolid* reset()  = 0;
+  
+  /** calculate the intersection points("ticks") of the solid objects 
+   *  with given line. 
+   *  - Line is parametrized with parameter \a t :
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  @see ISolid::intersectionTicks()
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int
+  intersectionTicks ( const HepPoint3D & Point  ,
+                      const HepVector3D& Vector ,
+                      Ticks            & ticks  ) const = 0 ;
+  
+  /** calculate the intersection points("ticks") of the solid objects 
+   *  with given line. 
+   *  - Line is parametrized with parameter \a t : 
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  Only intersection ticks within the range 
+   *   \a tickMin and \a tickMax are taken into account.
+   *  @see ISolid::intersectionTicks()
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param tickMin minimum value of Tick 
+   *  @param tickMax maximu value of Tick 
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int
+  intersectionTicks ( const HepPoint3D & Point   ,
+                      const HepVector3D& Vector  ,
+                      const Tick       & tickMin ,
+                      const Tick       & tickMax ,
+                      Ticks            & ticks   ) const = 0 ;
+  
+  /** virtual destructor
+   *  @see ISolid::reset()
+   */
   virtual  ~ISolid(){};
-
-  /// serialization for reading
-  virtual StreamBuffer& serialize( StreamBuffer& )        = 0 ;
-
-  /// serialization for writing 
-  virtual StreamBuffer& serialize( StreamBuffer& ) const  = 0 ;
-
+  
 };
 
-/// output operator to std::ostream 
-inline std::ostream& operator<<( std::ostream&  os , const ISolid&  solid  ) 
+/// ===========================================================================
+/** output operator to STD/STL stream
+ *  @param  os      reference to output stream
+ *  @param  solid   reference to ISolid object
+ *  @return reference to the stream
+ */
+/// ===========================================================================
+inline std::ostream& operator<<( std::ostream&  os , const ISolid&  solid  )
 { return solid.printOut(os); }
 
-/// output operator to std::ostream 
-inline std::ostream& operator<<( std::ostream&  os , const ISolid*  solid  ) 
-{ return ( ( 0 == solid ) ? ( os << "ISolid* points to NULL" ) : ( os << *solid ) ); }
+/// ===========================================================================
+/** output operator to STD/STL stream
+ *  @param  os      reference to output stream
+ *  @param  solid   pointer to ISolid object
+ *  @return reference to the stream
+ */
+/// ===========================================================================
+inline std::ostream& operator<<( std::ostream&  os , const ISolid*  solid  )
+{ return ((0 == solid) ? (os<<"ISolid* points to NULL"):(os<<(*solid)));}
 
-/// input/output operators from/to StreamBuffer 
-inline StreamBuffer& operator<<( StreamBuffer& sb , const ISolid& solid ) { return solid.serialize( sb ) ; } 
-inline StreamBuffer& operator>>( StreamBuffer& sb ,       ISolid& solid ) { return solid.serialize( sb ) ; } 
+/// ===========================================================================
+/** output operator to Gaudi stream
+ *  @param  os      reference to output stream
+ *  @param  solid   reference to ISolid object
+ *  @return reference to the stream
+ */
+/// ===========================================================================
+inline MsgStream&    operator<<( MsgStream&     os , const ISolid&  solid  )
+{ return solid.printOut(os); }
 
- 
-#endif   // DETDESC_ISOLID_H
+/// ===========================================================================
+/** output operator to Gaudi stream
+ *  @param  os      reference to output stream
+ *  @param  solid   pointer  to ISolid object
+ *  @return reference to the stream
+ */
+/// ===========================================================================
+inline MsgStream&    operator<<( MsgStream&     os , const ISolid*  solid  )
+{ return ((0 == solid) ? (os<<"ISolid* points to NULL"):(os<<(*solid)));}
+
+/// ===========================================================================
+#endif   ///< DETDESC_ISOLID_H
+/// ===========================================================================
 
 
 

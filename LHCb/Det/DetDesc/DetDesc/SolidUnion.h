@@ -1,88 +1,111 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidUnion.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef       DETDESC_SOLIDUNION_H
 #define       DETDESC_SOLIDUNION_H 1 
-//
+///@{ 
+/** STD & STL */  
 #include <algorithm>
-#include <functional> 
-
-class StatusCode;
-
+#include <functional>
+///@} 
+/// CLHEP
+#include "CLHEP/Vector/Rotation.h" 
+///@{
+/** DetDesc */
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h" 
 #include "DetDesc/SolidChild.h" 
-
-#include "CLHEP/Vector/Rotation.h" 
-
+///@}
+///@{
+/** forward declarations from GaudiKernel and DetDesc  */
+class StatusCode;
 class HepTransform3D;
 class HepRotation;
 class HepPoint3D; 
-class ISolidFromStream;
+template <class TYPE> 
+class SolidFactory;
+///@}
 
+/** @class SolidUnion SolidUnion.h "DetDesc/SolidUnion.h"
+ *
+ *  implementation of simple boolean solid - UNION 
+ * 
+ *  @bug wrong cover method! 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xxx
+ */
 
 class SolidUnion: public SolidBoolean
 {
-  ///
-  friend class ISolidFromStream;
-  ///  
- public:
-  //
+  /// frined factory for instantiation 
+  friend class SolidFactory<SolidUnion>;
+  
+public:
+  
+  /** constructor 
+   *  @param name name of the intersection
+   *  @param first pointer to first/main solid 
+   */
   SolidUnion( const std::string& name , ISolid* first ); 
-  //  
+  
+  /// destruictor   
   virtual ~SolidUnion();
-  //  
- public:
   
-  // from ISolid 
-  virtual        std::string   typeName (                      ) const { return "SolidUnion" ; }; 
-  inline         bool          isInside ( const HepPoint3D   & ) const ;
+public:
   
-  // specific 
-  inline         StatusCode    unite   ( ISolid*               solid                    , 
-                                         const HepTransform3D* mtrx                     ); 
-  inline         StatusCode    unite   ( ISolid*               child                    , 
-                                         const HepPoint3D&     position                 , 
-                                         const HepRotation&    rotation = HepRotation() );
-  ///
+  /** - retrieve the specific type of the solid
+   *  - implementation of ISolid interface 
+   *  @see ISolid 
+   *  @return specific type of the solid
+   */
+  virtual std::string typeName () const { return "SolidUnion" ; };
+
+  /** - check for the given 3D-point. 
+   *    Point coordinates are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside ( const HepPoint3D   & point ) const ;
+
+  /** add child solid to the solid union
+   *  @param solid pointer to child solid 
+   *  @param mtrx  pointer to transformation 
+   *  @return status code 
+   */
+  StatusCode unite ( ISolid*               solid , 
+                     const HepTransform3D* mtrx  ); 
+
+  /** add child solid to the solid union
+   *  @param solid pointer to child solid 
+   *  @param position position  
+   *  @return status code 
+   */
+  StatusCode unite ( ISolid*               child                    , 
+                     const HepPoint3D&     position                 , 
+                     const HepRotation&    rotation = HepRotation() );
+  
  protected:
-  ///
-  SolidUnion();
-  ///
+
+  /** constructor 
+   *  @param name name of the solid union 
+   */
+  SolidUnion( const std::string& Name = "Anonymous Union");
+  
  private:
-  ///
-  SolidUnion           ( const SolidUnion& ) ;
-  SolidUnion& operator=( const SolidUnion& ) ;
-  //
+  
+  SolidUnion           ( const SolidUnion& ) ; ///< no copy 
+  SolidUnion& operator=( const SolidUnion& ) ; ///< no =
+  
 };
 
-//
-
-inline StatusCode  SolidUnion::unite( ISolid*                solid    , 
-                                      const HepTransform3D*  mtrx     )
-{  return addChild( solid , mtrx ); };
-
-//
-
-inline StatusCode  SolidUnion::unite ( ISolid*               solid    , 
-                                       const HepPoint3D&     position , 
-                                       const HepRotation&    rotation )
-{ return addChild( solid , position , rotation ) ; }; 
-
-//
-
-inline bool SolidUnion::isInside     ( const HepPoint3D   & point ) const 
-{ 
-  //  is point inside the "main" volume?  
-  if ( first()->isInside( point ) ) { return true; } 
-  
-  // find the first daughter in which the given point is placed   
-  SolidUnion::SolidChildrens::const_iterator ci = 
-    std::find_if( childBegin() , childEnd() , Solid_isInside( point ) );
-  
-  return ( childEnd() == ci ? false : true );   
-};
-
-
-
-#endif  //    DETDESC_SOLIDUNION_H
+/// ===========================================================================
+#endif  ///<  DETDESC_SOLIDUNION_H
+/// ===========================================================================
 
 

@@ -1,36 +1,41 @@
+/// ===========================================================================
+/// CVS $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
-// STD and STL 
-#include <cmath>
-#include <algorithm>
-/// CLHEP 
-#include "CLHEP/Units/PhysicalConstants.h"
-#include "CLHEP/Geometry/Point3D.h" 
-#include "CLHEP/Geometry/Vector3D.h" 
-/// GaudiKernel 
-#include "DetDesc/ISolid.h" 
-///
-
-class ISolidFromStream;
-class StreamBuffer;
-class MsgStream;
-
-/** @class SolidSphere SolidSphere.h DetDesc/SolidSphere.h
-
-    A simple implementation of SPHERE
-    
-    @author Vanya Belyaev 
-*/
+/// DetDesc 
+#include "DetDesc/SolidBase.h" 
+/// DetDesc 
+template <class TYPE>
+class SolidFactory;
 
 
-class SolidSphere: public ISolid
+/** @class SolidSphere SolidSphere.h "DetDesc/SolidSphere.h"
+ *
+ *  A simple implementation of SPHERE
+ *  
+ *  @author Vanya Belyaev 
+ */
+
+class SolidSphere: public virtual SolidBase
 {
-  ///
-  friend class ISolidFromStream;
-  ///
- public:
-  //
-  // constructor, all size - in mm, all angles in radians 
+  /// friend factory fo instantiation
+  friend class SolidFactory<SolidSphere>;
+  
+public:
+  
+  /** constructor 
+   *  @param name             name of sphere segment 
+   *  @param OuterRadius      outer radius of sphere segement        
+   *  @param InsideRadius     inner  radius of sphere segement
+   *  @param StartPhiAngle    start phi angle 
+   *  @param DeltaPhiAngle    delta phi angle 
+   *  @param StartThetaAngle  start theta angle 
+   *  @param DeltaThetaAngle  delta theta angle 
+   *  @param CoverModel       covering model 
+   */
   SolidSphere( const std::string& name                             ,
                const double       OuterRadius                      ,
                const double       InsideRadius    =   0.0          , 
@@ -39,103 +44,218 @@ class SolidSphere: public ISolid
                const double       StartThetaAngle =   0.0 * degree , 
                const double       DeltaThetaAngle = 180.0 * degree , 
                const int          CoverModel      =   0            );
-  //
+
   // destructor 
   virtual ~SolidSphere();
-  //
-  // functions from ISolid:
-  // name of this solid 
-  inline  const  std::string&      name          ()                      const { return m_sphere_name; };
-  // type of this solid 
-  inline         std::string       typeName      ()                      const { return "SolidSphere"; };
-  // the notorious "isInside" method
-  inline         bool              isInside      ( const HepPoint3D&   ) const;
-  // covering solid   
-  inline const   ISolid*           cover         ()                      const;
-  // the top covering solid (normally SolidBox)   
-  inline const   ISolid*           coverTop      ()                      const;
-  // overloaded printOut 
-  virtual std::ostream&     printOut    ( std::ostream& os = std::cerr ) const;  
-  virtual MsgStream&        printOut    ( MsgStream&                   ) const;  
-  /// reset to the initial state 
-  inline const   ISolid*           reset         ()                      const; 
   
-  // calculate the intersection points("ticks") with a given line. 
-  // Input - line, paramterised by (Point + Vector * Tick) 
-  // "Tick" is just a value of parameter, at which the intercestion occurs 
-  // Return the number of intersection points (=size of Ticks container)   
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D & Point  ,          // initial point for teh line 
-                                                   const HepVector3D& Vector ,          // vector along the line 
-                                                   ISolid::Ticks    & ticks  ) const ;  // output container of "Ticks"
-  // calculate the intersection points("ticks") with a given line. 
-  // Input - line, paramterised by (Point + Vector * Tick) 
-  // "Tick" is just a value of parameter, at which the intercestion occurs 
-  // Return the number of intersection points (=size of Ticks container)   
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D&   Point   ,          /// initial point for teh line 
-                                                   const HepVector3D&  Vector  ,          /// vector along the line 
-                                                   const ISolid::Tick& tickMin ,          /// minimal value for tick  
-                                                   const ISolid::Tick& tickMax ,          /// maximal value for tick 
-                                                   ISolid::Ticks   &   ticks   ) const ;  /// output container of "Ticks"
-  //
-  // function specific for SolidSphere
+  /** - retrieve the specific type of the solid
+   *  - implementation of ISolid abstract interface  
+   *  @see ISolid 
+   *  @return specific type of the solid
+   */
+  inline std::string typeName () const { return "SolidSphere"; };
+  
+  /** - check for the given 3D-point. 
+   *    Point coordinated are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside ( const HepPoint3D& point ) const;
+  
+  /** -# retrieve the pointer to "simplified" solid - "cover"
+   *  -# implementation of ISolid abstract interface  
+   *    The simplification scheme: 
+   *  - for Model == 0 
+   *     -# The cover for the general sphere segment is the clove 
+   *         (remove gap in theta) 
+   *     -# The cover for the clove is the sphere 
+   *         (remove gap in phi) 
+   *     -# The cover for the sphere is the ball 
+   *         (set the inner radius to zero) 
+   *     -# The cover for the ball is the box 
+   *  - alternative model 
+   *     -# The cover for general sphere segment is 
+   *          the segment with inner radius equal to zero 
+   *     -# The cover for the general sphere segment with 
+   *        inner radius equal to zero is the 
+   *        the sphere segemnt with no phi gap 
+   *     -# The cover for the general sphere segment with 
+   *         inner radius equal to zero and nophi gap 
+   *         is the ball 
+   *     -# the cover for the ball is the box   
+   *  @see ISolid 
+   *  @see SolidSphere::m_sphere_coverModel  
+   *  @return pointer to "simplified" solid - "cover"
+   */
+  const ISolid* cover () const;
+  
+  /** - printout to STD/STL stream
+   *  - implementation of ISolid abstract interface  
+   *  - reimplementation of SolidBase::printOut( std::ostream& ) 
+   *  @see ISolid 
+   *  @see SolidBase 
+   *  @param os STD/STL stream
+   *  @return reference to the stream
+   */
+  virtual std::ostream& printOut ( std::ostream& os = std::cout ) const;  
+  
+  /** - printout to Gaudi  stream
+   *  - implementation of ISolid abstract interface  
+   *  - reimplementation of SolidBase::printOut( MsgStream& ) 
+   *  @see ISolid 
+   *  @see SolidBase 
+   *  @param os Gaudi stream
+   *  @return reference to the stream
+   */
+  virtual MsgStream&    printOut ( MsgStream& os ) const;  
+  
+  /** -# calculate the intersection points("ticks") of the solid objects 
+   *    with given line. 
+   *  - Line is parametrized with parameter \a t :
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  - \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  -# implementation of ISolid abstract interface  
+   *  @see ISolid 
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int 
+  intersectionTicks ( const HepPoint3D & Point  ,         
+                      const HepVector3D& Vector ,         
+                      ISolid::Ticks    & ticks  ) const ;
+  
+  /**  return the inner radius of sphere segment
+   *  @return the inner radius of sphere segment 
+   */
+  inline       double               insideRadius   () const 
+  { return sqrt( insideR2() )   ; };
+  
+  /**  return the squared inner radius of sphere segment  
+   *  @return the squared inner radius of sphere segment 
+   */
+  inline       double               insideR2   () const 
+  { return m_sphere_insideR2 ; }; 
+  
+  /**  return the outer radius of sphere segment 
+   *  @return the outer radius of sphere segment 
+   */ 
+  inline       double               outerRadius  () const 
+  { return sqrt( outerR2() ) ; };
+  
+  /**  return the squared outer radius of sphere segment  
+   *  @return the squared outer radius of sphere segment 
+   */
+  inline       double               outerR2       () const 
+  { return m_sphere_outerR2 ; }; 
+  
+  /**  return the start of phi angle of sphere segment 
+   *  @return the start of phi angle of sphere segment 
+   */
+  inline       double               startPhiAngle  () const 
+  { return m_sphere_startPhiAngle  ; }; 
+  
+  /**  return the delta of phi angle of sphere segment 
+   *  @return the delta of phi angle of sphere segment 
+   */
+  inline       double               deltaPhiAngle  () const 
+  { return m_sphere_deltaPhiAngle  ; }; 
+  
+  /**  return the start of theta angle of sphere segment 
+   *  @return the start of theta angle of sphere segment
+   */ 
+  inline       double               startThetaAngle() const 
+  { return m_sphere_startThetaAngle; };
+ 
+  /**  return the delta of theta angle of sphere segment 
+   *  @return the delta of theta angle of sphere segment 
+   */
+  inline       double               deltaThetaAngle() const
+  { return m_sphere_deltaThetaAngle; }; 
+  
+  /**  return the inner diameter of sphere segment 
+   *  @return the inner diameter of sphere segment 
+   */
+  inline       double  insideDiameter () const 
+  { return insideRadius()    * 2 ; }; 
 
-  // return the inner radius of sphere (in mm)
-  inline       double               insideRadius   () const { return m_sphere_insideRadius   ; }; 
-  // return the outer radius of sphere (in mm)
-  inline       double               outerRadius    () const { return m_sphere_outerRadius    ; }; 
-  // return the start of phi angle of sphere segment (in radians)
-  inline       double               startPhiAngle  () const { return m_sphere_startPhiAngle  ; }; 
-  // return the delta of phi angle of sphere segment (in radians)
-  inline       double               deltaPhiAngle  () const { return m_sphere_deltaPhiAngle  ; }; 
-  // return the start of theta angle of sphere segment (in radians)
-  inline       double               startThetaAngle() const { return m_sphere_startThetaAngle; }; 
-  // return the delta of theta angle of sphere segment (in radians)
-  inline       double               deltaThetaAngle() const { return m_sphere_deltaThetaAngle; }; 
-  //
-  // return the inner diameter of sphere (in mm)
-  inline       double  insideDiameter () const { return m_sphere_insideRadius    * 2 ; }; 
-  // return the outer diameter of sphere (in mm)
-  inline       double  outerDiameter  () const { return m_sphere_outerRadius     * 2 ; }; 
-  // return the end of phi angle of sphere segment (in radians)
-  inline       double  endPhiAngle    () const { return m_sphere_deltaPhiAngle   + m_sphere_deltaPhiAngle   ; }; 
-  // return the end of theta angle of sphere segment (in radians)
-  inline       double  endThetaAngle  () const { return m_sphere_deltaThetaAngle + m_sphere_deltaThetaAngle ; };
-  ///
-  /// serialization for reading 
+  /**  return the outer diameter of sphere segment 
+   *  @return the outer diameter of sphere segment 
+   */
+  inline       double  outerDiameter  () const 
+  { return outerRadius()     * 2 ; };
+ 
+  /**  return the end of phi angle of sphere segment 
+   *  @return the end of phi angle of sphere segment 
+   */
+  inline       double  endPhiAngle    () const 
+  { return m_sphere_deltaPhiAngle   + m_sphere_deltaPhiAngle   ; }; 
+  
+  /**  return the end of theta angle of sphere segment 
+   *  @return the end of theta angle of sphere segment 
+   */
+  inline       double  endThetaAngle  () const 
+  { return m_sphere_deltaThetaAngle + m_sphere_deltaThetaAngle ; };
+  
+  /** - serialization for reading
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param s reference to stream buffer
+   *  @return reference to stream buffer
+   */
   StreamBuffer& serialize( StreamBuffer& s ) ; 
-  /// serialization for writing 
+  
+  /** - serialization for writing
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param s reference to stream buffer
+   *  @return reference to stream buffer
+   */
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
-  ///
-  virtual bool acceptInspector( IInspector* )       ; 
-  virtual bool acceptInspector( IInspector* ) const ; 
-  /// 
- protected:
-  ///
-  SolidSphere();
-  ///
- private:
+protected:
+
+  /** protected constructor 
+   *  @param name name of the sphere segment \
+   */
+  SolidSphere( const std::string& name = "Anonymous Sphere" );
+  
+private:
   //
   SolidSphere           ( const SolidSphere& );  // no copy-constructor 
   SolidSphere& operator=( const SolidSphere& );  // no assignment 
   //
-  // members
-  //
-  std::string           m_sphere_name            ;
-  double                m_sphere_outerRadius     ;  
-  double                m_sphere_insideRadius    ; 
+private:
+  ///@{ 
+  /** sphere segment parameters */ 
+  double                m_sphere_outerR2         ;  
+  double                m_sphere_insideR2        ; 
   double                m_sphere_startPhiAngle   ;
   double                m_sphere_deltaPhiAngle   ; 
   double                m_sphere_startThetaAngle ; 
   double                m_sphere_deltaThetaAngle ;
-  //
-  mutable  ISolid*      m_sphere_cover           ;
+  ///@}
+  /// cover model 
   int                   m_sphere_coverModel      ;
-  //
 };
-///
-#include "DetDesc/SolidSphere.icpp"
-///
 
-#endif //   DETDESC_SOLIDSPHERE_H
+/// ===========================================================================
+#endif ///<  DETDESC_SOLIDSPHERE_H
+/// ===========================================================================
 

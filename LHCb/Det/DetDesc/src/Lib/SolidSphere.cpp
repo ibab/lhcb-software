@@ -1,5 +1,12 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 /// CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
+#include "CLHEP/Geometry/Point3D.h" 
+#include "CLHEP/Geometry/Vector3D.h" 
 /// GaudiKernel
 #include "GaudiKernel/IInspector.h" 
 /// DetDesc 
@@ -7,8 +14,36 @@
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
+#include "DetDesc/SolidFactory.h" 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+/// ===========================================================================
+/** @file SolidSphere.cpp 
+ * 
+ *  implementation of class SolidSphere 
+ * 
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xx  
+ */
+/// ===========================================================================
+
+/// =========================================================================== 
+/// factory business 
+/// =========================================================================== 
+static const SolidFactory<SolidSphere>         s_Factory;
+const       ISolidFactory&SolidSphereFactory = s_Factory;
+
+/// =========================================================================== 
+/** constructor 
+ *  @param name             name of sphere segment 
+ *  @param OuterRadius      outer radius of sphere segement        
+ *  @param InsideRadius     inner  radius of sphere segement
+ *  @param StartPhiAngle    start phi angle 
+ *  @param DeltaPhiAngle    delta phi angle 
+ *  @param StartThetaAngle  start theta angle 
+ *  @param DeltaThetaAngle  delta theta angle 
+ *  @param CoverModel       covering model 
+ */
+/// =========================================================================== 
 SolidSphere::SolidSphere( const std::string & name             ,
                           const double        OuterRadius      ,
                           const double        InsideRadius     , 
@@ -17,317 +52,441 @@ SolidSphere::SolidSphere( const std::string & name             ,
                           const double        StartThetaAngle  , 
                           const double        DeltaThetaAngle  ,
                           const int           CoverModel       )
-  : m_sphere_name            ( name            ) 
-  , m_sphere_outerRadius     ( OuterRadius     )  
-  , m_sphere_insideRadius    ( InsideRadius    ) 
+  : SolidBase                ( name            ) 
+  , m_sphere_outerR2         ( 0               )  
+  , m_sphere_insideR2        ( 0               ) 
   , m_sphere_startPhiAngle   ( StartPhiAngle   ) 
   , m_sphere_deltaPhiAngle   ( DeltaPhiAngle   ) 
   , m_sphere_startThetaAngle ( StartThetaAngle ) 
   , m_sphere_deltaThetaAngle ( DeltaThetaAngle )
-  //
-  , m_sphere_cover           (       0         )
   , m_sphere_coverModel      (   CoverModel    )  
-  //
 {
   if( 0 >= OuterRadius ) 
-    { throw SolidException("SolidSphere constructor::OuterRadius  is not positive!"); } 
+    { throw SolidException("SolidSphere::OuterRadius  is not positive!"); } 
   if( 0 >  InsideRadius ) 
-    { throw SolidException("SolidSphere constructor::InsideRadius is negative!    "); }
+    { throw SolidException("SolidSphere::InsideRadius is negative!    "); }
   if( InsideRadius >= OuterRadius ) 
-    { throw SolidException("SolidSphere constructor::InsideRadius>=OuterRadius    "); }
+    { throw SolidException("SolidSphere::InsideRadius>=OuterRadius    "); }
+  ///
+  m_sphere_outerR2  = sqrt( OuterRadius );
+  m_sphere_insideR2 = sqrt( InsideRadius );
+  ///
   if( -180.0 * degree > StartPhiAngle )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle < -180 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle < -180 degree !"); }
   if(  360.0 * degree < StartPhiAngle )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle >  360 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle >  360 degree !"); }
   if(    0.0 * degree > DeltaPhiAngle )
-    { throw SolidException("SolidSphere constructor::DeltaPhiAngle <    0 degree !"); }
+    { throw SolidException("SolidSphere::DeltaPhiAngle <    0 degree !"); }
   if(  360.0 * degree < StartPhiAngle+DeltaPhiAngle )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle+DeltaPhiAngle > 360 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle+DeltaPhiAngle>2pi"); }
   if(    0.0 * degree > StartThetaAngle )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle < 0 degree !"); }
+    { throw SolidException("SolidSphere::StartThetaAngle < 0 degree !"); }
   if(  180.0 * degree < StartThetaAngle )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle >  180 degree !"); }
+    { throw SolidException("SolidSphere::StartThetaAngle >  180 degree !"); }
   if(    0.0 * degree > DeltaThetaAngle )
-    { throw SolidException("SolidSphere constructor::DeltaThetaAngle <    0 degree !"); }
+    { throw SolidException("SolidSphere::DeltaThetaAngle <    0 degree !"); }
   if(  180.0 * degree < StartThetaAngle+DeltaThetaAngle )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle+DeltaThetaAngle > 180 degree !"); }
+    { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
 };  
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-SolidSphere::~SolidSphere()
-{
-  if( this == m_sphere_cover ) {                       m_sphere_cover = 0 ; } 
-  if( 0    != m_sphere_cover ) { delete m_sphere_cover ; m_sphere_cover = 0 ; }   
-};
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-SolidSphere::SolidSphere()
-  : m_sphere_name            ( "unnamed Sphere" ) 
-  , m_sphere_outerRadius     ( 1000000.0        )  
-  , m_sphere_insideRadius    ( 0.0              ) 
+
+/// ==========================================================================
+/// destructor 
+/// ==========================================================================
+SolidSphere::~SolidSphere() { reset(); };
+
+/// ==========================================================================
+/** protected constructor 
+ *  @param name name of the sphere segment 
+ */
+/// ==========================================================================
+SolidSphere::SolidSphere( const std::string& name )
+  : SolidBase                ( name             ) 
+  , m_sphere_outerR2         ( 1000000.0        )  
+  , m_sphere_insideR2        ( 0.0              ) 
   , m_sphere_startPhiAngle   ( 0.0              ) 
   , m_sphere_deltaPhiAngle   ( 360.0 * degree   ) 
   , m_sphere_startThetaAngle ( 0.0              ) 
   , m_sphere_deltaThetaAngle ( 180.0 * degree   )
-  //
-  , m_sphere_cover           (       0          )
   , m_sphere_coverModel      (       0          )  
-  //
 {};
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ==========================================================================
+/** - check for the given 3D-point. 
+ *    Point coordinated are in the local reference 
+ *    frame of the solid.   
+ *  - implementation of ISolid absstract interface  
+ *  @see ISolid 
+ *  @param point point (in local reference system of the solid)
+ *  @return true if the point is inside the solid
+ */
+/// ==========================================================================
+bool  SolidSphere::isInside( const HepPoint3D & point) const
+{
+  /// check for radius 
+  const double r2 = point.mag2();
+  if ( r2 > outerR2           () ) { return false; }
+  if ( r2 < insideR2          () ) { return false; }
+  /// check for phi 
+  double phi = point.phi();
+  if( phi < 0 ){ phi+=360.0*degree; }
+  if( phi < startPhiAngle     () ) { return false; } 
+  if( phi > endPhiAngle       () ) { return false; }
+  /// check for theta 
+  const double theta = point.theta();
+  if( theta < startThetaAngle () ) { return false; } 
+  if( theta > endThetaAngle   () ) { return false; } 
+  ///
+  return true; 
+};
+
+/// ==========================================================================
+/** - serialization for reading
+ *  - implementation of ISerialize abstract interface 
+ *  - reimplementation of SolidBase::serialize 
+ *  @see ISerialize 
+ *  @see ISolid  
+ *  @see SolidBase   
+ *  @param s reference to stream buffer
+ *  @return reference to stream buffer
+ */
+/// ==========================================================================
 StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) 
 {
-  ///
-  if( 0 != m_sphere_cover ) { delete m_sphere_cover ; m_sphere_cover = 0 ; }  
-  ///
-  s >>  m_sphere_name           
-    >>  m_sphere_outerRadius    
-    >>  m_sphere_insideRadius    
+  /// reset the sphere segment
+  reset();
+  /// serialialize the base class
+  SolidBase::serialize( s );  
+  s >>  m_sphere_outerR2    
+    >>  m_sphere_insideR2     
     >>  m_sphere_startPhiAngle  
     >>  m_sphere_deltaPhiAngle   
     >>  m_sphere_startThetaAngle 
     >>  m_sphere_deltaThetaAngle 
     >>  m_sphere_coverModel  ;    
   ///
-  if( 0 >= outerRadius() ) 
-    { throw SolidException("SolidSphere constructor::OuterRadius  is not positive!"); } 
-  if( 0 >  insideRadius() ) 
-    { throw SolidException("SolidSphere constructor::InsideRadius is negative!    "); }
+  if( 0 >= outerR2() ) 
+    { throw SolidException("SolidSphere::OuterRadius2  is not positive!"); } 
+  if( 0 >  insideR2() ) 
+    { throw SolidException("SolidSphere::InsideRadius2 is negative!    "); }
   if( insideRadius() >= outerRadius() ) 
-    { throw SolidException("SolidSphere constructor::InsideRadius>=OuterRadius    "); }
+    { throw SolidException("SolidSphere::InsideRadius>=OuterRadius    "); }
   if( -180.0 * degree > startPhiAngle() )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle < -180 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle < -180 degree !"); }
   if(  360.0 * degree < startPhiAngle() )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle >  360 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle >  360 degree !"); }
   if(    0.0 * degree > deltaPhiAngle() )
-    { throw SolidException("SolidSphere constructor::DeltaPhiAngle <    0 degree !"); }
+    { throw SolidException("SolidSphere::DeltaPhiAngle <    0 degree !"); }
   if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() )
-    { throw SolidException("SolidSphere constructor::StartPhiAngle+DeltaPhiAngle > 360 degree !"); }
+    { throw SolidException("SolidSphere::StartPhiAngle+DeltaPhiAngle>2pi"); }
   if(    0.0 * degree > startThetaAngle() )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle < 0 degree !"); }
+    { throw SolidException("SolidSphere::StartThetaAngle < 0 degree !"); }
   if(  180.0 * degree < startThetaAngle() )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle >  180 degree !"); }
+    { throw SolidException("SolidSphere::StartThetaAngle >  180 degree !"); }
   if(    0.0 * degree > deltaThetaAngle() )
-    { throw SolidException("SolidSphere constructor::DeltaThetaAngle <    0 degree !"); }
+    { throw SolidException("SolidSphere::DeltaThetaAngle <    0 degree !"); }
   if(  180.0 * degree < startThetaAngle()+deltaThetaAngle() )
-    { throw SolidException("SolidSphere constructor::StartThetaAngle+DeltaThetaAngle > 180 degree !"); }  
+    { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
   ///
   return s;
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ==========================================================================
+/** - serialization for writing
+ *  - implementation of ISerialize abstract interface 
+ *  - reimplementation of SolidBase::serialize 
+ *  @see ISerialize 
+ *  @see ISolid  
+ *  @see SolidBase   
+ *  @param s reference to stream buffer
+ *  @return reference to stream buffer
+ */
+/// ==========================================================================
 StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
 {
-  ///
-  return s <<  typeName() 
-           <<  m_sphere_name           
-           <<  m_sphere_outerRadius    
-           <<  m_sphere_insideRadius    
+  /// serialialize the base class
+  SolidBase::serialize( s );   
+  return s <<  m_sphere_outerR2    
+           <<  m_sphere_insideR2    
            <<  m_sphere_startPhiAngle  
            <<  m_sphere_deltaPhiAngle   
            <<  m_sphere_startThetaAngle 
            <<  m_sphere_deltaThetaAngle 
-           <<  m_sphere_coverModel    ;   
-  ///
+           <<  m_sphere_coverModel    ;
 };
-/** construction of covering solid:
-    Model == 0 : 
-    cover for sphere segment is segment with no gap in Theta 
-    cover for sphere segment with no gap in Theta is spehere segment with no gap in Phi 
-    cover for sphere segment with no gap in Phi   is sphere with null inside radius 
-    cover for spehere with null inside radius is box 
-    Model != 0 
-    cover for sphere with not null inside radius is sphere with null inside radius 
-    cover for sphere with null inside radius is sphere segment with no gap in phi 
-    cover for sphere segment with no gap in phi is full sphere
-    cover for full sphere is box 
-*/
-const ISolid*           SolidSphere::cover         () const 
+
+/// ==========================================================================
+/** -# retrieve the pointer to "simplified" solid - "cover"
+ *  -# implementation of ISolid abstract interface  
+ *    The simplification scheme: 
+ *  - for Model == 0 
+ *     -# The cover for the general sphere segment is the clove 
+ *         (remove gap in theta) 
+ *     -# The cover for the clove is the sphere 
+ *         (remove gap in phi) 
+ *     -# The cover for the sphere is the ball 
+ *         (set the inner radius to zero) 
+ *     -# The cover for the ball is the box 
+ *  - alternative model 
+ *     -# The cover for general sphere segment is 
+ *          the segment with inner radius equal to zero 
+ *     -# The cover for the general sphere segment with 
+ *        inner radius equal to zero is the 
+ *        the sphere segemnt with no phi gap 
+ *     -# The cover for the general sphere segment with 
+ *         inner radius equal to zero and nophi gap 
+ *         is the ball 
+ *     -# the cover for the ball is the box   
+ *  @see ISolid 
+ *  @see SolidSphere::m_sphere_coverModel  
+ *  @return pointer to "simplified" solid - "cover"
+ */
+/// ==========================================================================
+const ISolid* SolidSphere::cover () const 
 {
-  if( 0 != m_sphere_cover ) { return m_sphere_cover; }              // cover is calculated already 
+  /// is cover already calculated? 
+  if( 0 != m_cover ) { return m_cover; } 
   //  
   ISolid* cov = 0 ;
   if( 0 == m_sphere_coverModel ) 
     { 
-      //    cover for sphere segment is segment with no gap in Theta 
-      if      ( 0.0*degree  != startThetaAngle() || 180.0*degree  != deltaThetaAngle()  )           
-        { cov = new SolidSphere("Cover for " + name() , 
-                                insideRadius ()       , outerRadius  () , 
-                                startPhiAngle()       , deltaPhiAngle() ); }
-      //    cover for sphere segment with no gap in Theta is spehere segment with no gap in Phi 
-      else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree  != deltaPhiAngle  ()  )           
-        { cov = new SolidSphere("Cover for " + name() , outerRadius() , insideRadius() ); } 
-      //    cover for sphere segment with no gap in Phi   is sphere with null inside radius 
-      else if ( 0.0 != insideRadius() )                                             
-        { cov = new SolidSphere("Cover for " + name() , outerRadius() ); } 
-      //    cover for spehere with null inside radius is box 
-      else                                                                        
-        { cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
-                                outerRadius()         , outerRadius() ); }
+      /** cover for sphere segment 
+       *  is the segment with no gap in Theta 
+       */
+      if      ( 0.0   * degree  != startThetaAngle() || 
+                180.0 * degree  != deltaThetaAngle()  )           
+        { cov = 
+            new SolidSphere("Cover for " + name () , 
+                            insideRadius        () , 
+                            outerRadius         () , 
+                            startPhiAngle       () , 
+                            deltaPhiAngle       () ); }
+      /** cover for sphere segment with no gap in Theta is 
+       *  the spehere segment with no gap in Phi */ 
+      else if ( 0.0   * degree  != startPhiAngle  () || 
+                360.0 * degree  != deltaPhiAngle  ()  )           
+        { cov = 
+            new SolidSphere("Cover for " + name () , 
+                            outerRadius         () , 
+                            insideRadius        () ); } 
+      /** cover for sphere segment with no gap in Phi 
+       *  is the sphere with null inside radius 
+       */
+      else if ( 0.0 != insideRadius() )
+        { cov = 
+            new SolidSphere("Cover for " + name () , 
+                            outerRadius         () ); } 
+      /** cover for sphere with null inside radius 
+       *  is the box 
+       */
+      else                                           
+        { cov = 
+            new SolidBox   ("Cover for " + name () , 
+                            outerRadius         () , 
+                            outerRadius         () , 
+                            outerRadius         () ); }
     }
   else
     {
-      //    cover for sphere with not null inside radius is sphere with null inside radius 
-      if      ( 0.0 != insideRadius() )                                             
-        { cov = new SolidSphere("Cover for " + name() , outerRadius    () ,  0.0 * mm       , 
-                                startPhiAngle      () , deltaPhiAngle  () , 
-                                startThetaAngle    () , deltaThetaAngle() , 
-                                m_sphere_coverModel                                         ); } 
-      //    cover for sphere with null inside radius is sphere segment with no gap in phi 
-      else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree  != deltaPhiAngle  ()  )           
-        { cov = new SolidSphere("Cover for " + name() , outerRadius()      , insideRadius() , 
-                                0.0 * degree          , 360.0 * degree     , 
-                                startThetaAngle()     , deltaThetaAngle () , 
-                                m_sphere_coverModel                                         ); } 
-      //    cover for sphere segment with no gap in phi is full sphere
-      else if ( 0.0*degree  != startThetaAngle() || 180.0*degree  != deltaThetaAngle()  )           
-        { cov = new SolidSphere("Cover for " + name()  ,  outerRadius  () , insideRadius()  , 
-                                startPhiAngle()        , deltaPhiAngle () ,
-                                0.0 * degree           , 180.0 * degree   , 
-                                m_sphere_coverModel                                         ); }
+      /** cover for sphere with not null inside radius is 
+       *  the sphere with null inside radius 
+       */
+      if      ( 0.0 != insideRadius() )
+        { cov = 
+            new SolidSphere("Cover for " + name () , 
+                            outerRadius         () ,  
+                            0.0 * mm               , 
+                            startPhiAngle       () , 
+                            deltaPhiAngle       () , 
+                            startThetaAngle     () , 
+                            deltaThetaAngle     () , 
+                            m_sphere_coverModel    ); } 
+      /** cover for sphere with null inside radius
+       *  is the sphere segment with no gap in phi 
+       */
+      else if ( 0.0   * degree  != startPhiAngle  () || 
+                360.0 * degree  != deltaPhiAngle  ()  )           
+        { cov = 
+            new SolidSphere("Cover for " + name () , 
+                            outerRadius         () , 
+                            insideRadius        () , 
+                            0.0 * degree           , 
+                            360.0 * degree         , 
+                            startThetaAngle     () , 
+                            deltaThetaAngle     () ,  
+                            m_sphere_coverModel    ); } 
+      /** cover for sphere segment with no gap in phi is 
+       *  the full sphere - ball 
+       */
+      else if ( 0.0   * degree  != startThetaAngle() || 
+                180.0 * degree  != deltaThetaAngle()  )           
+        { cov = 
+            new SolidSphere("Cover for " + name () ,  
+                            outerRadius         () , 
+                            insideRadius        () , 
+                            startPhiAngle       () , 
+                            deltaPhiAngle       () ,
+                            0.0 * degree           , 
+                            180.0 * degree         , 
+                            m_sphere_coverModel    ); }
       //    cover for full sphere is box 
-      else                                                                        
-        { cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
-                                outerRadius()         , outerRadius() ); }
+      else
+        { cov = 
+            new SolidBox   ("Cover for " + name () , 
+                            outerRadius         () , 
+                            outerRadius         () , 
+                            outerRadius         () ); }
     }
   //
   if( 0 == cov ) { return this; } 
   //
-  m_sphere_cover = cov; 
+  m_cover = cov; 
   //
-  return m_sphere_cover;
+  return m_cover;
   //
 };
-/** calculate the intersection points("ticks") with a given line. 
-    Input - line, paramterised by (Point + Vector * Tick) 
-    "Tick" is just a value of parameter, at which the intercestion occurs 
-    Return the number of intersection points (=size of Ticks container)   
-*/
-inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D& point  ,          // initial point for teh line 
-                                                      const HepVector3D& vect   ,          // vector along the line 
-                                                      ISolid::Ticks   & ticks  ) const    // output container of "Ticks"
+
+/// ===========================================================================
+/** -# calculate the intersection points("ticks") of the solid objects 
+ *    with given line. 
+ *  - Line is parametrized with parameter \a t :
+ *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+ *      - \f$ \vec{p} \f$ is a point on the line 
+ *      - \f$ \vec{v} \f$ is a vector along the line  
+ *  - \a tick is just a value of parameter \a t, at which the
+ *    intersection of the solid and the line occurs
+ *  - both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+ *    (\f$\vec{v}\f$) are defined in local reference system 
+ *   of the solid 
+ *  -# implementation of ISolid abstract interface  
+ *  @see ISolid 
+ *  @param Point initial point for the line
+ *  @param Vector vector along the line
+ *  @param ticks output container of "Ticks"
+ *  @return the number of intersection points
+ */
+/// ===========================================================================
+unsigned int 
+SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,       
+                                 const HepVector3D& vect   ,      
+                                 ISolid::Ticks&     ticks  ) const 
 {
   ticks.clear();
   /// line with null direction vector in not able to intersect something
-  if( vect.mag2() <= 0 ) { return 0; }   // RETURN!!!
+  if( vect.mag2() <= 0 ) { return 0; }   ///<  RETURN !!!
   ///  try to intersect with sphere outer radius
-  if( 0 == SolidTicks::LineIntersectsTheSphere( point , vect , outerRadius() , std::back_inserter( ticks ) ) ) { return 0; } 
-  
-  // check for intersection with inner radius 
+  if( 0 == 
+      SolidTicks::LineIntersectsTheSphere( point                       , 
+                                           vect                        , 
+                                           outerRadius()               , 
+                                           std::back_inserter( ticks ) ) ) 
+    { return 0; }                         ///< RETURN !!!
+  /// check for intersection with inner radius 
   if( insideRadius() > 0 ) 
-    { SolidTicks::LineIntersectsTheSphere( point , vect , outerRadius() , std::back_inserter( ticks ) ) ; }
+    { SolidTicks::LineIntersectsTheSphere( point                       , 
+                                           vect                        , 
+                                           outerRadius ()              , 
+                                           std::back_inserter( ticks ) ) ; }
   // check for phi angle 
-  if( 0 * degree != startPhiAngle() || 360 * degree != deltaPhiAngle() ) 
+  if( 0   * degree != startPhiAngle() || 
+      360 * degree != deltaPhiAngle() ) 
     {
-      SolidTicks::LineIntersectsThePhi( point , vect , startPhiAngle() , std::back_inserter( ticks ) ) ;  
-      SolidTicks::LineIntersectsThePhi( point , vect , startPhiAngle() + deltaPhiAngle() , std::back_inserter( ticks ) ) ;  
+      SolidTicks::LineIntersectsThePhi( point                       , 
+                                        vect                        , 
+                                        startPhiAngle()             , 
+                                        std::back_inserter( ticks ) ) ;  
+      SolidTicks::LineIntersectsThePhi( point                       , 
+                                        vect                        , 
+                                        endPhiAngle()               , 
+                                        std::back_inserter( ticks ) ) ;  
     }
   /// check for theta angle 
-  if( 0 * degree != startThetaAngle() || 180 * degree != deltaThetaAngle() )
+  if( 0   * degree != startThetaAngle() || 
+      180 * degree != deltaThetaAngle() )
     {
-      SolidTicks::LineIntersectsTheTheta( point , vect , startPhiAngle() , std::back_inserter( ticks ) ) ;  
-      SolidTicks::LineIntersectsTheTheta( point , vect , startPhiAngle() + deltaPhiAngle() , std::back_inserter( ticks ) ) ;  
+      SolidTicks::LineIntersectsTheTheta( point                       , 
+                                          vect                        , 
+                                          startThetaAngle()           , 
+                                          std::back_inserter( ticks ) ) ;  
+      SolidTicks::LineIntersectsTheTheta( point                       , 
+                                          vect                        , 
+                                          endThetaAngle()             , 
+                                          std::back_inserter( ticks ) ) ;  
     }
   /// sort and remove adjancent and some EXTRA ticks and return
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );    
+  return SolidTicks::RemoveAdjancentTicks( ticks , 
+                                           point , 
+                                           vect  , 
+                                           *this );    
 };
-/** calculate the intersection points("ticks") with a given line. 
-    Input - line, paramterised by (Point + Vector * Tick) 
-    "Tick" is just a value of parameter, at which the intercestion occurs 
-    Return the number of intersection points (=size of Ticks container)   
-*/
-inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D&   point  ,          // initial point for teh line 
-                                                      const HepVector3D&   vect   ,          // vector along the line 
-                                                      const ISolid::Tick& tickMin ,         // minimal value for Tick 
-                                                      const ISolid::Tick& tickMax ,         // maximal value for Tick 
-                                                      ISolid::Ticks   &   ticks  ) const    // output container of "Ticks"
-{
-  ///
-  intersectionTicks( point , vect , ticks ) ; 
-  /// sort and remove adjancent and some EXTRA ticks and return
-  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin, tickMax , *this );  
-};
-////////////////////////////////////////////////////////////////////////////////////////////////
-bool SolidSphere::acceptInspector( IInspector* pInspector ) 
-{
-  ///
-  const ISolid* s = this ; 
-  return s->acceptInspector( pInspector ); 
-};
-//////////////////////////////////////////////////////////////////////////////////////////////
-bool SolidSphere::acceptInspector( IInspector* pInspector )  const 
-{
-  ///
-  if( 0 == pInspector ) { return false; } 
-  ///
-  pInspector->inspectByRef ( &m_sphere_name            , this , "SphereName"  ) ; 
-  pInspector->inspectByRef ( &m_sphere_outerRadius     , this , "OuterRadius" ) ; 
-  pInspector->inspectByRef ( &m_sphere_insideRadius    , this , "InnerRadius" ) ; 
-  pInspector->inspectByRef ( &m_sphere_startPhiAngle   , this , "StartPhi"    ) ; 
-  pInspector->inspectByRef ( &m_sphere_deltaPhiAngle   , this , "DeltaPhi"    ) ; 
-  pInspector->inspectByRef ( &m_sphere_startThetaAngle , this , "StartTheta"  ) ; 
-  pInspector->inspectByRef ( &m_sphere_deltaThetaAngle , this , "DeltaTheta"  ) ; 
-  pInspector->inspectByRef ( &m_sphere_coverModel      , this , "CoverModel"  ) ;  
-  ///
-  return true;
-  ///
-};
-//////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** - printout to STD/STL stream
+ *  - implementation of ISolid abstract interface  
+ *  - reimplementation of SolidBase::printOut( std::ostream& ) 
+ *  @see ISolid 
+ *  @see SolidBase 
+ *  @param os STD/STL stream
+ *  @return reference to the stream
+ */
+/// ===========================================================================
 std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
 {
-  os << "\t" << typeName()            << "\tname="                        << name()
-     << std::endl 
-     << "\t\t\touterRadius        [mm]=" << std::setw(12)  << outerRadius    () / millimeter 
-     << std::endl;    
-  if( insideRadius   () > 0 ) 
-    { os << "\t\t\tinsideRadius       [mm]="  << std::setw(12) << insideRadius   () / millimeter  << std::endl; }
-  if( startPhiAngle  () != 0 * degree || deltaPhiAngle  () != 360 * degree ) 
-    {
-      os << "\t\t\tstartPhiAngle  [degree]="  << std::setw(12) << startPhiAngle  () / degree    
-         << std::endl
-         << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
-         << std::endl ;
+  /// serialize the base class
+  SolidBase::printOut( os ) ;
+  os << "outerRadius[mm]"      <<  outerRadius     () / millimeter ;
+  if( 0 != insideR2() ) 
+    { os << "innerRadius[mm]"      <<  insideRadius    () / millimeter ; }
+  if( 0   * degree != startThetaAngle ()  || 
+      180 * degree != deltaThetaAngle ()    )
+    {  
+      os << "startThetaAngle[deg]" <<  startThetaAngle () / degree     ;
+      os << "deltaThetaAngle[deg]" <<  deltaThetaAngle () / degree     ;
     }
-  if( startThetaAngle() != 0 * degree || deltaThetaAngle() != 180 * degree ) 
-    { 
-      os << "\t\t\tstartThetaAngle[degree]="  << std::setw(12) << startThetaAngle() / degree    
-         << std::endl 
-         << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
-         << std::endl ;
+  if( 0   * degree != startPhiAngle () || 
+      360 * degree != deltaPhiAngle () ) 
+    {
+      os << "startPhiAngle[deg]"   <<  startPhiAngle   () / degree     ;
+      os << "deltaPhiAngle[deg]"   <<  deltaPhiAngle   () / degree     ;
     }
   ///
   return os ;
 };
-//////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** - printout to Gaudi  stream
+ *  - implementation of ISolid abstract interface  
+ *  - reimplementation of SolidBase::printOut( MsgStream& ) 
+ *  @see ISolid 
+ *  @see SolidBase 
+ *  @param os Gaudi stream
+ *  @return reference to the stream
+ */
+/// ===========================================================================
 MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
 {
-  os << "\t" << typeName()            << "\tname="                        << name()
-     << endreq    
-     << "\t\t\touterRadius        [mm]=" << std::setw(12)  << outerRadius    () / millimeter 
-     << endreq   ;    
-  if( insideRadius   () > 0 ) 
-    { os << "\t\t\tinsideRadius       [mm]="  << std::setw(12) << insideRadius   () / millimeter  << endreq ; }
-  if( startPhiAngle  () != 0 * degree || deltaPhiAngle  () != 360 * degree ) 
-    {
-      os << "\t\t\tstartPhiAngle  [degree]="  << std::setw(12) << startPhiAngle  () / degree    
-         << endreq   
-         << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
-         << endreq    ;
+  /// serialize the base class
+  SolidBase::printOut( os ) ;
+  os << "outerRadius[mm]"      <<  outerRadius     () / millimeter ;
+  if( 0 != insideR2() ) 
+    { os << "innerRadius[mm]"      <<  insideRadius    () / millimeter ; }
+  if( 0   * degree != startThetaAngle ()  || 
+      180 * degree != deltaThetaAngle ()    )
+    {  
+      os << "startThetaAngle[deg]" <<  startThetaAngle () / degree     ;
+      os << "deltaThetaAngle[deg]" <<  deltaThetaAngle () / degree     ;
     }
-  if( startThetaAngle() != 0 * degree || deltaThetaAngle() != 180 * degree ) 
-    { 
-      os << "\t\t\tstartThetaAngle[degree]="  << std::setw(12) << startThetaAngle() / degree    
-         << endreq    
-         << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
-         << endreq    ;
+  if( 0   * degree != startPhiAngle () || 
+      360 * degree != deltaPhiAngle () ) 
+    {
+      os << "startPhiAngle[deg]"   <<  startPhiAngle   () / degree     ;
+      os << "deltaPhiAngle[deg]"   <<  deltaPhiAngle   () / degree     ;
     }
   ///
   return os ;
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
+/// =========================================================================== 
 
 
 

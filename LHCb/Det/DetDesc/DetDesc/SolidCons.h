@@ -1,5 +1,10 @@
-#ifndef     __DETDESC_SOLID_SOLIDCONS_H__
-#define     __DETDESC_SOLID_SOLIDCONS_H__  
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
+#ifndef     DETDESC_SOLIDCONS_H
+#define     DETDESC_SOLIDCONS_H 1   
 /// STD and STL 
 #include <cmath> 
 #include <iostream>
@@ -7,27 +12,40 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-/// GaudiKernel
-#include "DetDesc/ISolid.h" 
-///
-class StreamBuffer;
-///
+/// DetDesc 
+#include "DetDesc/SolidBase.h" 
+/// forward declarations 
+template <class TYPE>
+class SolidFactory;
 
 /** @class SolidCons SolidCons.h DetDesc/SolidCons.h
+ *
+ *  A simple implementation segment of conical tube.
+ *  The shape corresponds to Geant4 shape G4Cons 
+ *  and to Geant3 shape CONS   
+ *  
+ *  @author Vanya Belyaev 
+ */
 
-    A simple implementation of CONS 
-    
-    @author Vanya Belyaev 
-*/
-
-class SolidCons: public ISolid
+class SolidCons: public virtual SolidBase
 {
-  ///
-  friend class ISolidFromStream;
-  ///
+  /// friend factory for instantiation 
+  friend class SolidFactory<SolidCons>;
+
 public:
-  //
-  // constructorm, all sizes in mm, all angles in radians 
+  
+  /** standard constructor
+   *  @param name                  name of conical tube segment
+   *  @param ZHalfLength           half-length 
+   *  @param OuterRadiusAtMinusZ   outer radius at minus Z 
+   *  @param OuterRadiusAtPlusZ    outer radius at plus  Z 
+   *  @param InnerRadiusAtMinusZ   inner radius at minus Z 
+   *  @param InnerRadiusAtPlusZ    inner radius at plus  Z 
+   *  @param StartPhiAngle         start phi angle 
+   *  @param DeltaPhiAngle         delta phi angle 
+   *  @param CoverModel            covering model 
+   *  @exception SolidException    wrong parameters range 
+   */
   SolidCons( const std::string& name                                  ,
              const double       ZHalfLength                           , 
              const double       OuterRadiusAtMinusZ                   ,
@@ -37,99 +55,233 @@ public:
              const double       StartPhiAngle        =   0.0 * degree , 
              const double       DeltaPhiAngle        = 360.0 * degree ,
              const int          CoverModel           =   0            );
-  //
-  // destructor 
+
+  /// destructor 
   virtual ~SolidCons();
-  //
-  // functions from ISolid:
-  //
-  // return the name of this solid 
-  inline const std::string&     name         ()                       const { return m_cons_name  ; };
-  // return the type of this solid 
-  inline       std::string      typeName     ()                       const { return "SolidCons"; };
-  // the notorious "isInside" method 
-  inline       bool             isInside     (  const HepPoint3D&   ) const ;
-  // covering solid 
-  inline const ISolid*          cover        ()                       const ;
-  // "the top covering" solid  (normally SolidBox)
-  inline const ISolid*          coverTop     ()                       const ;
-  // overloaded printout 
-  virtual std::ostream&  printOut ( std::ostream& os = std::cerr )    const; 
-  // overloaded printout 
+  
+  /** - retrieve the conical tube segment  type 
+   *  - implementation of ISolid abstract interface 
+   *  @see ISolid 
+   *  return box type
+   */
+  inline std::string typeName () const { return "SolidCons"; };
+  
+  /** - check for the given 3D-point. 
+   *    Point coordinated are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside (  const HepPoint3D& point ) const ;
+  
+  /** -# retrieve the pointer to "simplified" solid - "cover"
+   *    - for Model = 0 
+   *        -# the cover for the general conical tube segment is 
+   *           the conical tube 
+   *        -# the cover for the conical tube is conical cylinder 
+   *        -# the cover for the conical cylinder is TRD 
+   *    - for Model != 0 
+   *        -# the cover for conical tube serment is conical cylinder segment 
+   *        -# the cover for conical cylinder segment is conical cylinder 
+   *        -# the cover for conical cylinder is TRD 
+   *  -# implementation of ISolid abstract interface 
+   *  @see ISolid 
+   *  @return pointer to "simplified" solid - "cover"
+   */
+  const ISolid* cover () const ;
+  
+  /** - printout to STD/STL stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( std::ostream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param stream STD/STL stream
+   *  @return reference to the stream 
+   */
+  virtual std::ostream&  printOut ( std::ostream& os = std::cout )    const;
+  
+  /** - printout to Gaudi MsgStream stream    
+   *  - implementation  of ISolid abstract interface 
+   *  - reimplementation of SolidBase::printOut( MsgStream& )
+   *  @see SolidBase 
+   *  @see ISolid 
+   *  @param stream STD/STL stream
+   *  @return reference to the stream 
+   */
   virtual MsgStream&     printOut ( MsgStream&                   )    const; 
-  /// reset to the initial state 
-  inline const ISolid*          reset        ()                       const; 
-  //`/
-  /** calculate the intersection points("ticks") with a given line. 
-      Input - line, paramterised by (Point + Vector * Tick) 
-      "Tick" is just a value of parameter, at which the intersection occurs 
-      Return the number of intersection points (=size of Ticks container)   
-  */
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D & Point  ,          /// initial point for teh line 
-                                                   const HepVector3D& Vector ,          /// vector along the line 
-                                                   ISolid::Ticks    & ticks  ) const ;  /// output container of "Ticks"
-  /** calculate the intersection points("ticks") with a given line. 
-      Input - line, paramterised by (Point + Vector * Tick) 
-      "Tick" is just a value of parameter, at which the intersection occurs 
-      Return the number of intersection points (=size of Ticks container)   
-  */
-  virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          /// initial point for teh line 
-                                                   const HepVector3D & Vector  ,          /// vector along the line
-                                                   const ISolid::Tick& tickMin ,          /// minimal value of tick 
-                                                   const ISolid::Tick& tickMax ,          /// maximal value of tick 
-                                                   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
-  // inner radius at minus Z  
-  inline double  innerRadiusAtMinusZ () const { return m_cons_innerRadiusMinusZ ; };
-  // outer radius at minus Z  
-  inline double  outerRadiusAtMinusZ () const { return m_cons_outerRadiusMinusZ ; };
-  // inner radius at plus Z  
-  inline double  innerRadiusAtPlusZ  () const { return m_cons_innerRadiusPlusZ  ; };
-  // outer radius at plus Z  
-  inline double  outerRadiusAtPlusZ  () const { return m_cons_outerRadiusPlusZ  ; };
-  // half length 
-  inline double  zHalfLength         () const { return m_cons_zHalfLength       ; };
-  // start phi angle   
-  inline double  startPhiAngle       () const { return m_cons_startPhiAngle     ; }; 
-  // delta phi   
-  inline double  deltaPhiAngle       () const { return m_cons_deltaPhiAngle     ; }; 
-  // inner diameter at minus Z  
-  inline double  innerDiameterAtMinusZ () const { return m_cons_innerRadiusMinusZ * 2 ; };
-  // outer radius at minus Z  
-  inline double  outerDiameterAtMinusZ () const { return m_cons_outerRadiusMinusZ * 2 ; };
-  // inner radius at plus Z  
-  inline double  innerDiameterAtPlusZ  () const { return m_cons_innerRadiusPlusZ  * 2 ; };
-  // outer radius at plus Z  
-  inline double  outerDiameterAtPlusZ  () const { return m_cons_outerRadiusPlusZ  * 2 ; };
-  // full length 
-  inline double  zLength               () const { return m_cons_zHalfLength       * 2 ; };
-  // end phi angle   
-  inline double  endPhiAngle           () const { return m_cons_startPhiAngle + m_cons_deltaPhiAngle ; }; 
-  ///
-  /// serialization for reading 
-  StreamBuffer& serialize( StreamBuffer& s )       ; 
-  /// serialization for writing 
-  StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  ///
-  virtual bool acceptInspector( IInspector* )       ; 
-  virtual bool acceptInspector( IInspector* ) const ; 
-  ///
+  
+  /** - calculate the intersection points("ticks") of the solid objects 
+   *    with given line. 
+   *  -# Line is parametrized with parameter \a t :
+   *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
+   *      - \f$ \vec{p} \f$ is a point on the line 
+   *      - \f$ \vec{v} \f$ is a vector along the line  
+   *  -# \a tick is just a value of parameter \a t, at which the
+   *    intersection of the solid and the line occurs
+   *  -# both  \a Point  (\f$\vec{p}\f$) and \a Vector  
+   *    (\f$\vec{v}\f$) are defined in local reference system 
+   *   of the solid 
+   *  - implementation of ISolid abstract interface  
+   *  @see ISolid 
+   *  @param Point initial point for the line
+   *  @param Vector vector along the line
+   *  @param ticks output container of "Ticks"
+   *  @return the number of intersection points
+   */
+  virtual unsigned int 
+  intersectionTicks ( const HepPoint3D & Point  ,  
+                      const HepVector3D& Vector ,  
+                      ISolid::Ticks    & ticks  ) const ;
+  
+  /** - serialization for reading
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param      s               reference to stream buffer
+   *  @exception  SolidException  wrong parameters range 
+   *  @return reference to stream buffer
+   */
+  StreamBuffer& serialize( StreamBuffer& sb )       ; 
+  
+  /** - serialization for writing
+   *  - implementation of ISerialize abstract interface 
+   *  - reimplementation of SolidBase::serialize 
+   *  @see ISerialize 
+   *  @see ISolid  
+   *  @see SolidBase   
+   *  @param s reference to stream buffer
+   *  @return reference to stream buffer
+   */
+  StreamBuffer& serialize( StreamBuffer& sb ) const ; 
+
+  /** inner radius at minus Z  
+   *  @return inner radius at minus Z  
+   */
+  inline double  innerRadiusAtMinusZ () const 
+  { return m_cons_innerRadiusMinusZ ; };
+  
+  /** outer radius at minus Z  
+   *  @return outer radius at minus Z  
+   */
+  inline double  outerRadiusAtMinusZ () const 
+  { return m_cons_outerRadiusMinusZ ; };
+  
+  /** inner radius at plus Z  
+   *  @return inner radius at plus Z  
+   */
+  inline double  innerRadiusAtPlusZ  () const 
+  { return m_cons_innerRadiusPlusZ  ; };
+  
+  /** outer radius at plus Z  
+   *  @return outer radius at plus Z  
+   */
+  inline double  outerRadiusAtPlusZ  () const 
+  { return m_cons_outerRadiusPlusZ  ; };
+  
+  /** half length 
+   *  @return half length
+   */ 
+  inline double  zHalfLength         () const 
+  { return m_cons_zHalfLength       ; };
+
+  /** start phi angle   
+   *  @return  start phi angle   
+   */
+  inline double  startPhiAngle       () const 
+  { return m_cons_startPhiAngle     ; }; 
+
+  /** delta phi   
+   *  @return delta phi   
+   */
+  inline double  deltaPhiAngle       () const
+  { return m_cons_deltaPhiAngle     ; }; 
+
+  /** inner diameter at minus Z  
+   *  @return inner diameter at minus Z  
+   */
+  inline double  innerDiameterAtMinusZ () const 
+  { return m_cons_innerRadiusMinusZ * 2 ; };
+  
+  /** outer radius at minus Z  
+   *  @return outer radius at minus Z  
+   */
+  inline double  outerDiameterAtMinusZ () const 
+  { return m_cons_outerRadiusMinusZ * 2 ; };
+  
+  /**inner radius at plus Z  
+   * @return inner radius at plus Z  
+   */
+  inline double  innerDiameterAtPlusZ  () const 
+  { return m_cons_innerRadiusPlusZ  * 2 ; };
+  
+  /** outer radius at plus Z  
+   *  @returnouter radius at plus Z  
+   */
+  inline double  outerDiameterAtPlusZ  () const 
+  { return m_cons_outerRadiusPlusZ  * 2 ; };
+  
+  /** full length 
+   *  @return full length 
+   */
+  inline double  zLength               () const 
+  { return m_cons_zHalfLength       * 2 ; };
+  
+  /** end phi angle   
+   *  @return end phi angle   
+   */
+  inline double  endPhiAngle           () const 
+  { return m_cons_startPhiAngle + m_cons_deltaPhiAngle ; }; 
+  
 private:
-  //
-  inline double iR_z( double z ) const;
-  inline double oR_z( double z ) const;
-  //
+
+  /** inner radius at given z  
+   *  @param z z position 
+   *  @return inner ragius at given z 
+   */
+  inline double iR_z( double z ) const
+  {  
+    ///
+    const double a = 
+      ( innerRadiusAtPlusZ () - innerRadiusAtMinusZ () ) / zHalfLength ();
+    const double b = 
+      ( innerRadiusAtPlusZ () + innerRadiusAtMinusZ () )  ; 
+    ///
+    return 0.5 * ( a * z  + b );
+  };
+  
+  /** outer radius at given z  
+   *  @param z z position 
+   *  @return outer ragius at given z 
+   */
+  inline double oR_z( double z ) const
+  {
+    ///  
+    const double a = 
+      ( outerRadiusAtPlusZ () - outerRadiusAtMinusZ () ) / zHalfLength ();
+    const double b = 
+      ( outerRadiusAtPlusZ () + outerRadiusAtMinusZ () )  ; 
+    //
+    return 0.5*(a*z+b);
+  };
+
 protected:
-  ///
-  SolidCons();
-  ///
+  
+  /** default protected  coinstructor 
+   *  @param name name of conical tube segment  
+   */
+  SolidCons( const std::string& Name = "Anonymous CONS") ;
+  
 private:
-  //
-  SolidCons           ( const SolidCons & );  // no copy-constructor 
-  SolidCons& operator=( const SolidCons & );  // no assignment 
-  //
-  // members
-  //
-  std::string             m_cons_name              ;
+
+  SolidCons           ( const SolidCons & );  ///< no copy-constructor 
+  SolidCons& operator=( const SolidCons & );  ///< no assignment 
+
+private:
+
   double                  m_cons_zHalfLength       ;
   double                  m_cons_outerRadiusMinusZ ;
   double                  m_cons_outerRadiusPlusZ  ;
@@ -137,18 +289,13 @@ private:
   double                  m_cons_innerRadiusPlusZ  ;
   double                  m_cons_startPhiAngle     ;
   double                  m_cons_deltaPhiAngle     ;
-  //
-  //
+  ///
   int                     m_cons_coverModel;
-  mutable ISolid*         m_cons_cover; 
-  //
 };
-///
-#include "DetDesc/SolidCons.icpp"
-///
 
-
-#endif //   __DETDESC_SOLID_SOLIDCONS_H__
+/// ===========================================================================
+#endif ///<  DETDESC_SOLIDCONS_H
+/// ===========================================================================
 
 
 

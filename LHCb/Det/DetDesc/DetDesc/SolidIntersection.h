@@ -1,103 +1,103 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidIntersection.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $
+/// ==========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ==========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ==========================================================================
 #ifndef      DETDESC_SOLISINTERSECTION_H
 #define      DETDESC_SOLIDINTERSECTION_H 1 
-
+// STD & STL 
 #include <algorithm>
-#include <functional> 
-
-class StatusCode;
-
-
+#include <functional>
+/// CLHEP
+#include "CLHEP/Vector/Rotation.h" 
+/// DetDesc 
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h" 
-#include "DetDesc/SolidChild.h" 
-
-
-#include "CLHEP/Vector/Rotation.h" 
-
+#include "DetDesc/SolidChild.h"
+///
 class HepTransform3D;
 class HepRotation;
-class HepPoint3D; 
-
-class ISolidFromStream;
+class HepPoint3D;
 class StreamBuffer;
+template <class TYPE> 
+class SolidFactory;
 
-
+/** @class SolidIntersection SolidIntersection.h DetDesc/SolidIntersection.h
+ *  
+ *  implementation of boolean solid - intersection of several solids 
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   xx/xx/xxxx
+ */
+ 
 class SolidIntersection: public SolidBoolean
 {
   ///
-  friend class ISolidFromStream;
-  ///  
- public:
-  //
+  friend class SolidFactory<SolidIntersection>;
+
+public:
+
+  /** constructor 
+   *  @param name name of the intersection
+   *  @param first pointer to first/main solid 
+   *  @exception SolidException wrong parameters
+   */
   SolidIntersection( const std::string& name , ISolid* first ); 
-  //  
+
+  /// destructor   
   virtual ~SolidIntersection();
-  //  
- public:
+
+public:
   
-  // from ISolid 
-  virtual        std::string   typeName (                      ) const { return "SolidIntersection" ; }; 
-  inline         bool          isInside ( const HepPoint3D   & ) const ;
+  /** retrieve the specific type of the solid
+   *  @return specific type of the solid
+   */
+  virtual std::string typeName () const { return "SolidIntersection" ; };
   
-  // specific 
-  inline         StatusCode    intersect( ISolid*               solid                    , 
-                                          const HepTransform3D* mtrx                     );
+  /** - check for the given 3D-point. 
+   *    Point coordinates are in the local reference 
+   *    frame of the solid.   
+   *  - implementation of ISolid absstract interface  
+   *  @see ISolid 
+   *  @param point point (in local reference system of the solid)
+   *  @return true if the point is inside the solid
+   */
+  bool isInside ( const HepPoint3D   & ) const ;
   
-  inline         StatusCode    intersect( ISolid*               child                    , 
-                                          const HepPoint3D&     position                 , 
-                                          const HepRotation&    rotation = HepRotation() );
- protected:
-  ///
-  SolidIntersection();
-  ///
- private:
-  ///
-  SolidIntersection           ( const SolidIntersection& );
-  SolidIntersection& operator=( const SolidIntersection& );
-  ///
+  /** add intersections 
+   *  @param solid pointer         to new solid 
+   *  @param mtrx  pointer transformation
+   *  @return status code
+   */
+  StatusCode    intersect( ISolid*               solid                    , 
+                           const HepTransform3D* mtrx                     );
+  
+  /** add intersections 
+   *  @param solid pointer         to new solid 
+   *  @param position position 
+   *  @param rotation rotation 
+   *  @return status code
+   */
+  StatusCode    intersect( ISolid*               child                    , 
+                           const HepPoint3D&     position                 , 
+                           const HepRotation&    rotation = HepRotation() );
+protected:
+
+  /** constructor 
+   *  @param name name of intersection 
+   */
+  SolidIntersection( const std::string& name = "Anonymous Intersection" );
+  
+private:
+  
+  SolidIntersection ( const SolidIntersection& ); ///< no copy 
+  SolidIntersection& operator=( const SolidIntersection& ); ///< no =
+  
 };
 
-///
-///
-///
-
-inline bool SolidIntersection::isInside     ( const HepPoint3D   & point ) const 
-{ 
-  //  is point inside the "main" volume?  
-  if ( !first()->isInside( point ) ) { return false; } 
-  
-  // find the first daughter in which the given point is NOT placed   
-  SolidBoolean::SolidChildrens::const_iterator ci = 
-    std::find_if( childBegin() , childEnd() , std::not1(Solid_isInside( point )) );
-  
-  return ( childEnd() == ci ? true : false );   
-};
-
-//
-//
-//
-
-inline StatusCode  SolidIntersection::intersect( ISolid*               solid     , 
-                                                 const HepTransform3D* mtrx      )
-{  return addChild( solid , mtrx ); };
-
-//
-//
-//
-
-inline StatusCode  SolidIntersection::intersect ( ISolid*               solid    , 
-                                                  const HepPoint3D&     position , 
-                                                  const HepRotation&    rotation )
-{ return addChild( solid , position , rotation ) ; }; 
-
- 
-//
-//
-//
-
-
-#endif  //    DETDESC_SOLIDINTERSECTION_H
+/// ===========================================================================
+#endif  ///< DETDESC_SOLIDINTERSECTION_H
+/// ===========================================================================
 
 
 
