@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v20r0p1>2003-07-18 Brunel v20r0p1</A></H1><PRE>
+
+- Bug fix:
+   . Add workaround in BrunelMoni.opts to create Tr2MCP relation table for DST
+     when Rich Monitoring is skipped
+
 </PRE><H1><A NAME=v20r0>2003-07-17 Brunel v20r0</A></H1><PRE>
  *** First version without digitisation. To be used on output of Boole v1r0 ***
 

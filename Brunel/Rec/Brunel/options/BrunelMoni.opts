@@ -37,6 +37,9 @@ ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
+// Create Tr2MCP unconditionally, in case Rich aborts monitoring
+BrunelMoniRichSeq.Members += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
+
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"

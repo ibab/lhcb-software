@@ -1,5 +1,5 @@
 package Brunel
-version v20r0
+version v20r0p1
 
 branches doc cmt job options
 
@@ -99,8 +99,8 @@ macro Brunel_linkopts    "$(application_linkopts)"
 
 # Version to be fixed, currently set in SICB code!
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=200000 " \
-           VisualC  " /DBrunelVersion=200000 "
+macro_append fflags " -DBrunelVersion=200001 " \
+           VisualC  " /DBrunelVersion=200001 "
 
 apply_pattern application_path
 
