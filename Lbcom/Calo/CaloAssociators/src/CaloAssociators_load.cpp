@@ -1,8 +1,11 @@
-// $Id: CaloAssociators_load.cpp,v 1.1.1.1 2002-04-08 14:27:28 ibelyaev Exp $
+// $Id: CaloAssociators_load.cpp,v 1.2 2002-04-08 15:53:07 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/04/08 14:27:28  ibelyaev
+// CaloAssociators: New package
+// 
 // ============================================================================
 // Include files
 // GaudiKernel 
@@ -16,8 +19,8 @@
 // CaloEvent/Event 
 #include  "Event/CaloCluster.h"
 
-IMPLEMENT_RelationW2D( CaloCluster , MCParticle , double );
-IMPLEMENT_WAssociator( CaloCluster , MCParticle , double );
+IMPLEMENT_RelationW2D( CaloCluster , MCParticle , float );
+IMPLEMENT_WAssociator( CaloCluster , MCParticle , float );
 
 /** @file CaloAssociators_load.cpp 
  * 
@@ -37,8 +40,10 @@ IMPLEMENT_WAssociator( CaloCluster , MCParticle , double );
 
 DECLARE_FACTORY_ENTRIES(CaloAssociators) {
   
-  DECLARE_RelationW2D( CaloCluster , MCParticle , double );
-  DECLARE_WAssociator( CaloCluster , MCParticle , double );
+  DECLARE_RelationW2D( CaloCluster , MCParticle , float );
+  DECLARE_WAssociator( CaloCluster , MCParticle , float );
+
+  DECLARE_ALGORITHM  ( CaloClustersMCTruthAlg           );
   
 };
 
