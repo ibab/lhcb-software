@@ -1,10 +1,16 @@
-// $Id: OutputStreamIterator.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $ 
+// $Id: OutputStreamIterator.h,v 1.2 2002-03-18 18:16:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Nane:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.4  2001/06/23 14:39:32  ibelyaev
 //  fix CVS-keywords and remove long lines
 // ============================================================================
@@ -24,15 +30,15 @@
  *  @date    26/11/1999
  */
 
-
-template <class TYPE, class OSTREAM >
+template <class TYPE, class OSTREAM, class TERMINATOR = const char* >
 class OutputStreamIterator 
 {
   ///
- protected:
+protected:
   ///  
-  OSTREAM*    stream ;
-  const char* string ;
+  OSTREAM*    stream          ;
+  TERMINATOR  terminator      ;
+  bool        has_terminator  ;
   ///
  public:
   ///
@@ -42,17 +48,21 @@ class OutputStreamIterator
   typedef void                                pointer           ;
   typedef void                                reference         ;
   ///
-  typedef OutputStreamIterator<TYPE,OSTREAM>  MyType            ;
+  typedef OutputStreamIterator<TYPE,OSTREAM,TERMINATOR>  MyType ;
   ///
   OutputStreamIterator( OSTREAM & s                 ) 
-    : stream(&s), string(0) {} ;  
-  OutputStreamIterator( OSTREAM & s , const char* c ) 
-    : stream(&s), string(c) {} ;
+    : stream         ( &s    )  
+    , terminator     (       ) 
+    , has_terminator ( false )  {} ;  
+  OutputStreamIterator( OSTREAM & s , TERMINATOR c ) 
+    : stream         ( &s    )
+    , terminator     ( c     ) 
+    , has_terminator ( true  )  {} ;
   ///
   MyType& operator=(const TYPE& value) 
   { 
     *stream << value;
-    if (string) *stream << string;
+    if (has_terminator) *stream << terminator ;
     return *this; 
   }
   ///
@@ -63,10 +73,20 @@ class OutputStreamIterator
   ///
 };
 
-template <class TYPE , class OSTREAM >
+template <class TYPE , class OSTREAM, class TERMINATOR >
 inline std::output_iterator_tag 
-iterator_category( const OutputStreamIterator<TYPE,OSTREAM> & ) 
+iterator_category( const OutputStreamIterator<TYPE,OSTREAM,TERMINATOR> & ) 
 { return std::output_iterator_tag(); }
+
+template <class TYPE , class OSTREAM, class TERMINATOR >
+inline OutputStreamIterator<TYPE,OSTREAM,TERMINATOR>
+output_stream_iterator( OSTREAM& s , TERMINATOR c ) 
+{ return OutputStreamIterator<TYPE,OSTREAM,TERMINATOR>( s , c ); }
+
+template <class TYPE , class OSTREAM>
+inline OutputStreamIterator<TYPE,OSTREAM>
+output_stream_iterator( OSTREAM& s) 
+{ return OutputStreamIterator<TYPE,OSTREAM>( s ); }
 
 // ============================================================================
 // The End 

@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.2 2002-03-18 18:16:22 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.5  2001/11/13 09:34:42  ibelyaev
 //  add accessor to IToolSvc interface in CaloAlgorithm base class
 //
@@ -56,8 +59,6 @@ CaloAlgorithm::CaloAlgorithm( const std::string&  name       ,
   , m_inputData  ( "" ) ///< no default value
   , m_outputData ( "" ) ///< no default value
   , m_detData    ( "" ) ///< no default value
-  /// Tool Service 
-  , m_toolSvc    ( 0  ) ///< NULL! 
 {
   ///
   declareProperty  ("Input"        , m_inputData  );
@@ -173,8 +174,8 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
  */
 // ============================================================================
 StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,  
-                                          const MSG::Level     & lvl ,
-                                          const StatusCode     & sc  ) const 
+                                      const MSG::Level     & lvl ,
+                                      const StatusCode     & sc  ) const 
 { 
   Error( msg , lvl );
   throw CaloException( msg , sc );
@@ -191,15 +192,6 @@ StatusCode CaloAlgorithm::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG 
       << " ==> Initialize the base class CaloAlgorithm" << endreq;
-  ///
-  if( 0 != m_toolSvc ) { toolSvc()->release() ; m_toolSvc = 0 ;}
-  StatusCode sc = 
-    serviceLocator()->service( "ToolSvc" , m_toolSvc , true ) ;
-  if( sc.isFailure() )
-    { return Error("The Tool Service could not be located!",sc); }
-  if( 0 == toolSvc() )
-    { return Error("IToolSvc* points to NULL!");}
-  toolSvc()->addRef();
   ///
   log << MSG::DEBUG
       << " \tInput data    ='" << inputData  () << "'" << endreq 
@@ -219,8 +211,6 @@ StatusCode CaloAlgorithm::finalize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG 
       << " ==> Finalize the base class CaloAlgorithm " << endreq;
-  ///
-  if( 0 != toolSvc() ) { toolSvc()->release() ; m_toolSvc = 0 ; }
   ///
   return StatusCode::SUCCESS;
 };

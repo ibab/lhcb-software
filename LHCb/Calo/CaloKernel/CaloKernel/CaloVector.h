@@ -1,8 +1,11 @@
-// $Id: CaloVector.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $ 
+// $Id: CaloVector.h,v 1.2 2002-03-18 18:16:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.8  2001/10/30 11:30:04  ibelyaev
 // update for new compiler, CaloHypotheses namespace is added
 //
@@ -57,10 +60,10 @@ public:
 public: 
   
   /** constructor: 
-      One specifies a default value, 
-      returned when the index is invalid or non existent.
-      @param   def   default value to be returned for wrong/non-existing index 
-  */
+   *  One specifies a default value, 
+   *  returned when the index is invalid or non existent.
+   *  @param   def   default value to be returned for wrong/non-existing index 
+   */
   CaloVector ( Content  def = Content() )  ///< default value
     : ContVector (   0 )
     , m_cc_def   ( def )
@@ -70,10 +73,9 @@ public:
   /// (virtual) destructor
   virtual ~CaloVector() { clear (); }
   
-  /**
-     following lines from std::vector interface 
-  */
-  
+  /** following lines from std::vector interface 
+   */
+
   /// sequential access to content container 
   inline iterator               begin ()       { return Vector::begin  (); }
   /// sequential access to content container (const version!)
@@ -94,43 +96,42 @@ public:
   inline Vector::size_type      size  () const { return Vector::size   (); }
   /// clear the container 
   inline void                   clear ()      
-  { Vector::clear() ;  m_index.clear(); }
-  
+  { Vector::clear() ;  m_index.clear(); }  
   
   /** returns the position in the vector, -1 if not present
-      @param  id index 
-  */
+   *  @param  id index 
+   */
   inline const int index( INDEX id ) const 
   {
     unsigned int indx = id.index();
     return ( ( m_index.size() > indx ) ? m_index[indx] : -1 ); 
   };
 
-  /**  Access to the content itself using CaloCellID as index. 
-       Check the boundaries of the index array. 
-       @param id index 
-  */                                         
+  /** Access to the content itself using CaloCellID as index. 
+   *  Check the boundaries of the index array. 
+   *  @param id index 
+   */                                         
   inline       Content& operator[]  ( INDEX id )       
   { 
     int indx = index( id );
     return ( (0 <= indx ) ? *(begin()+indx) : def() ); 
   };
 
-  /**  Access to the content itself using CaloCellID as index.
-       (const version)
-       Check the boundaries of the index array. 
-       @param id index 
-  */                                         
+  /** Access to the content itself using CaloCellID as index.
+   *  (const version)
+   *  Check the boundaries of the index array. 
+   *  @param id index 
+   */                                         
   inline const Content& operator[]  ( INDEX id ) const { 
     int indx = index( id );
     return ( (0 <= indx ) ? *(begin()+indx) : def() ); 
   };
-
-  /**  Add one entry. vector is extended, index vector is updated.
-       @param content   value to be added into CaloVector 
-       @param id        index 
-       @return          status code 
-  */
+  
+  /** Add one entry. vector is extended, index vector is updated.
+   *  @param content   value to be added into CaloVector 
+   *  @param id        index 
+   *  @return          status code 
+   */
   inline       StatusCode  addEntry ( const Content& content , INDEX id ) 
   {
     unsigned int indx = id.index() ; 
@@ -140,9 +141,9 @@ public:
     return StatusCode::SUCCESS;
   };
 
-  /**  set size for intermediate container
-       standart "reserve" acts on base container!
-  */
+  /** set size for intermediate container
+   *  standart "reserve" acts on base container!
+   */
   inline void setSize( const unsigned int Num )
   { m_index.reserve( Num ) ; }
   

@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.2 2001-12-09 14:12:57 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.3 2002-03-18 18:16:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/09 14:12:57  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -147,7 +150,7 @@ StatusCode    CaloTool::finalize   ()
 CaloTool::~CaloTool(){};
 
 // ============================================================================
-/** query interafce method  
+/** query interface method  
  *  @param  id  unique interface ID 
  *  @param  pI  placeholder for interface 
  *  @return status code 

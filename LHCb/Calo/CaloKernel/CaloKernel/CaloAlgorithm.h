@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.2 2002-03-18 18:16:20 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.5  2001/11/13 09:34:41  ibelyaev
 //  add accessor to IToolSvc interface in CaloAlgorithm base class
 //
@@ -25,7 +28,6 @@
 
 template<class TYPE>
 class         AlgFactory     ;
-class         IToolSvc       ;
 
 /** @class  CaloAlgorithm CaloAlgorithm.h CaloKernel/CaloAlgorithm.h
  *   
@@ -57,12 +59,6 @@ public:
    */
   virtual StatusCode finalize  (); 
   
-  /** accessor to Tool Service
-   *  @return pointer to Tool Service 
-   */
-  inline IToolSvc* toolSvc() const 
-  { return m_toolSvc; }
-
 protected:
   
   /** Standard constructor (protected)
@@ -207,9 +203,6 @@ private:
   /// address/location/name in Transient Store of detector data  
   std::string      m_detData    ;
 
-  /// pointer to Tool Service 
-  IToolSvc*        m_toolSvc    ;
-  
 };
 
 // ============================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.2 2001-12-09 14:12:57 ibelyaev Exp $
+! $Id: release.notes,v 1.3 2002-03-18 18:16:22 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -7,6 +7,18 @@
 ! =============================================================================
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
+! =============================================================================
+
+! =============================================================================
+! 09/12/2001 - v1 Vanya  Belyaev
+! move CaloCellID CaloCellCode and CaloHypotheses to LHCbKernel package 
+! =============================================================================
+
+! =============================================================================
+! 15/03/2002 - Vanya Belyaev
+!  - move CaloCellCode, CaloCellID and CaloHypotheses into "Kernel" directory
+!  - for compatibility still keep the "link"-files  into CaloKernel directory 
+!  - remove accessor to "IToolSvc" from CaloAlgorithm class 
 ! =============================================================================
 
 ! =============================================================================
