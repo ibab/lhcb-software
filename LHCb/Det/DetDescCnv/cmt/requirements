@@ -1,0 +1,26 @@
+# $Id: requirements,v 1.1.1.1 2003-04-23 13:59:45 sponce Exp $ 
+# =============================================================================
+package       DetDescCnv
+version       v1r0
+
+# =========== structure =======================================================
+branches      DetDescCnv doc cmt src
+
+# =========== own includes ====================================================
+include_dirs  $(DETDESCCNVROOT)
+
+# =========== dependencies ====================================================
+use           GaudiKernel       v13r*
+use           DetDesc           v12r*      Det
+use           XmlTools          v1r0       Tools
+#use           CLHEP             v2r1800*
+use           XERCES            v2r160*
+
+# =========== constituents =====================================================
+library       DetDescCnvLib        Lib/*.cpp
+library       DetDescCnv           component/*.cpp
+
+# =========== standard patterns (the order is essential!) ====================== 
+apply_pattern component_library library=DetDescCnv 
+apply_pattern linker_library    library=DetDescCnvLib 
+apply_pattern library_stamps    library=DetDescCnvLib 

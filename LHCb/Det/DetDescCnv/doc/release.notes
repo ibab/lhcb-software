@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Det/DetDescCnv
+! Responsible : Sebastien Ponce
+! Purpose     : standard converters for the LHCb Detector Description
+!-----------------------------------------------------------------------------
+
+! 2003-04-23 - Sebastien Ponce
+ - creation of this package. The code was residing in the package DetDesc until
+   now so please refer to it for earlier release notes.
