@@ -32,6 +32,7 @@ use GaudiAud 		v6r3
 use GaudiDb 		v9r0
 use GaudiRootDb 	v9r3
 use GaudiIntrospection 	v4r7
+use GaudiObjDesc 	v5r2
 use HbookCnv 		v14r0
 
 #-- Databases
