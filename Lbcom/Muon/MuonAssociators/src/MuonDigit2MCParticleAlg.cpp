@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.2 2002-06-28 13:46:32 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.3 2002-06-28 15:21:25 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonDigit.h"
@@ -118,7 +118,11 @@ StatusCode MuonDigit2MCParticleAlg::associateToTruth(const MuonDigit* digit,
       const MCParticle * mcPart = mcHit->mcParticle();
       // check found mcParticle
       if(mcPart){
-        table->relate(digit,mcPart);
+        // do not make links to MCParticles with no parent vertex
+        // ("fake" ATMC entries added in FORTRAN to fix MURW-ATMC links)
+        if( 0 != mcPart->originVertex() ){
+          table->relate(digit,mcPart);
+        }
       }
     }
   }

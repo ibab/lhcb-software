@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.2 2002-06-28 13:46:28 dhcroft Exp $
+! $Id: release.notes,v 1.3 2002-06-28 15:21:16 dhcroft Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
 ! 2002-06-28 - David Hutchcroft
   - First working version of a MuonCoord and MuonDigit to MCParticle 
-    associators. Added unregisterObject to allow the repeated remaking of the 
+    associators. 
+  - Added unregisterObject to allow the repeated remaking of the 
     table in case of deleted MuonCoords.
+  - Added the test that MCParticles have an originVertex, allows the 
+    removal of the fake ATMC entries added by the simmubg code.
 
 ! 2002-06-12 - David Hutchcroft
-  -First attempt at a MuonDigit to MCParticle associator
+  - First attempt at a MuonDigit to MCParticle associator
 
