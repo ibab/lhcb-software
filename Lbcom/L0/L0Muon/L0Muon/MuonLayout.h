@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.1 2001-05-03 12:08:34 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.2 2001-06-07 16:46:19 atsareg Exp $
 
 #ifndef L0MUON_MUONLAYOUT_H
 #define L0MUON_MUONLAYOUT_H 1   
@@ -61,6 +61,7 @@ private:
     
 };   
 
+bool operator==(MuonLayout ml1, MuonLayout ml2);
 MsgStream& operator<<(MsgStream& log, const MuonLayout& ml);
 
 #endif    // L0MUON_MUONLAYOUT_H

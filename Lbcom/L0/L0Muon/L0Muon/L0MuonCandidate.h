@@ -1,4 +1,4 @@
-// $Header: 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0MuonCandidate.h,v 1.3 2001-06-07 16:46:13 atsareg Exp $
 
 #ifndef L0MUON_L0MUONCANDIDATE_H
 #define L0MUON_L0MUONCANDIDATE_H 1
@@ -12,6 +12,8 @@
 #include "L0Muon/L0mPad.h"
 
 extern const CLID& CLID_L0MuonCandidate;
+
+// const CLID& CLID_L0MuonCandidate = 6002;
 
 /** @class L0MuonCandidate L0MuonCandidate.h L0Muon/L0MuonCandidate.h
 
@@ -40,7 +42,14 @@ class L0MuonCandidate : virtual public ContainedObject {
 public:
 
   /// Default constructor
-  L0MuonCandidate( ) : m_pt(0), m_xM1(0), m_yM1(0), m_theta(0), m_phi(0) { }
+  L0MuonCandidate() : 
+    m_pt(0), m_xM1(0), m_yM1(0), m_theta(0), m_phi(0) { 
+    m_status = L0Muon::EMPTY; 
+  }  
+  L0MuonCandidate(int status ) : 
+    m_pt(0), m_xM1(0), m_yM1(0), m_theta(0), m_phi(0) { 
+    m_status = status;
+  }
 
   /// Constructor setting all the candidate parameters
   L0MuonCandidate( double pt, 
@@ -48,17 +57,15 @@ public:
 		   double y, 
 		   double theta, 
 		   double phi,
-		   L0mPad* mp1,
-		   L0mPad* mp2,
-		   L0mPad* mp3 ) :
+		   SmartRefVector<L0mPad> mpads,
+		   int status ) :
                    m_pt(pt), 
 		   m_xM1(x), 
 		   m_yM1(y), 
 		   m_theta(theta), 
 		   m_phi(phi),
-		   m_pM1(mp1),
-		   m_pM2(mp2),
-		   m_pM3(mp3)          { }
+		   m_pads(mpads),
+		   m_status(status)          { }
 
   ~L0MuonCandidate() { }
 
@@ -69,6 +76,8 @@ public:
 
   /// Pt accessor
   double pt() const { return m_pt; } 
+  /// set Pt value
+  void setPt(double pt) { m_pt = pt; }
   /// X-coordinate of the muon pad in M1 accessor
   double x() const { return m_xM1; } 
   /// Y-coordinate of the muon pad in M1 accessor
@@ -78,15 +87,15 @@ public:
   /// Phi at IP of the candidate accessor
   double phi() const { return m_phi; } 
   /// accessor to L0mPad in station M1
-  L0mPad* padM1() { return m_pM1; } 
-  /// accessor to L0mPad in station M2
-  L0mPad* padM2() { return m_pM2; }   
-  /// accessor to L0mPad in station M3
-  L0mPad* padM3() { return m_pM3; } 
+  L0mPad* pad(unsigned int station);
   /// accessor to L0Muon status code
   int status() const { return m_status; }
+  /// set status
+  void setStatus(int status) { m_status = status; }
   /// Comparison < operator for sorting the candidates in Pt
-  bool operator<(const L0MuonCandidate& lmc) { return pt() < lmc.pt(); }
+  bool operator<(const L0MuonCandidate& lmc) { 
+    return fabs(pt()) < fabs(lmc.pt()); 
+  }
 
 /// Serialize the pbject, for read/write
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
@@ -95,16 +104,14 @@ public:
 
 private:
 
-  double           m_pt;	  // Pt of the candidate
-  double           m_xM1;	  // X-coordinate of the pad in M1
-  double           m_yM1;	  // Y-coordinate of the pad in M1
-  double           m_theta;	  // Theta of the muon track at the IP
-  double           m_phi;	  // Phi of the muon track at the IP
-  int              m_status;	  // L0m processor status code
-  SmartRef<L0mPad> m_pM1;         // reference to a pad in M1
-  SmartRef<L0mPad> m_pM2;         // reference to a pad in M2
-  SmartRef<L0mPad> m_pM3;         // reference to a pad in M3
-
+  double		 m_pt;    // Pt of the candidate
+  double		 m_xM1;   // X-coordinate of the pad in M1
+  double		 m_yM1;   // Y-coordinate of the pad in M1
+  double		 m_theta;	  // Theta of the muon track at the IP
+  double		 m_phi;   // Phi of the muon track at the IP
+  SmartRefVector<L0mPad> m_pads;         // references to muon pads
+  int                    m_status;	// L0m processor status code
+  
 };
 
 
@@ -112,7 +119,7 @@ private:
 inline StreamBuffer& L0MuonCandidate::serialize(StreamBuffer& s) {
   ContainedObject::serialize(s) >> m_pt >> m_xM1 >> m_yM1 
                                 >> m_theta >> m_phi >> m_status
-				>> m_pM1 >> m_pM2 >> m_pM3;
+				>> m_pads;
   return s;
 }
 
@@ -120,8 +127,17 @@ inline StreamBuffer& L0MuonCandidate::serialize(StreamBuffer& s) {
 inline StreamBuffer& L0MuonCandidate::serialize(StreamBuffer& s) const {
   ContainedObject::serialize(s) << m_pt << m_xM1 << m_yM1 
                                 << m_theta << m_phi << m_status
-				<< m_pM1 << m_pM2 << m_pM3;
+				<< m_pads;
   return s;
 }
+
+/// Auxilliary class for sorting candidates in the Pt decreasing order
+class ComparePt {
+public:
+  int operator() (L0MuonCandidate* lmc1,
+	          L0MuonCandidate* lmc2) {
+    return fabs(lmc1->pt()) > fabs(lmc2->pt());
+  }		
+};
 
 #endif // L0MUON_L0MUONCANDIDATE_H
