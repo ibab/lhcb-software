@@ -10,7 +10,7 @@ ApplicationMgr.ExtSvc     +=
 { "ParticlePropertySvc"}; 
 
 //ApplicationMgr.TopAlg       += {"SingleParticleGun","SetStatusAlg","EvtDecay","DumpMC"};
-ApplicationMgr.TopAlg     += {"PythiaModule","SetStatusAlg","EvtDecay","DumpMC"};
+ApplicationMgr.TopAlg     += {"PythiaAlg","SetDecayAlg","EvtDecayAlg","DumpMC"};
 
 
 ApplicationMgr.EvtSel      = "NONE";

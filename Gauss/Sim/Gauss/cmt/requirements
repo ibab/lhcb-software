@@ -1,5 +1,5 @@
 package Gauss
-version v4r0
+version v4r0p1
 
 # =============================================================================
 # structure 
@@ -11,7 +11,7 @@ branches doc options cmt job data
 # =============================================================================
 # dependencies 
 use ExternalLibs        v4r*
-use GEANT4              v2r4100p*	Sim
+use GEANT4              v2r4101p*	Sim
 use HepMC               v3r121p*	Sim
 # =============================================================================
 
@@ -34,6 +34,7 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
+use GiGa		v9r0p*  Sim
 use GiGaCnv             v7r*    Sim
 #use GaussImports        v2r*    Sim 
 
