@@ -1,5 +1,5 @@
 package Brunel
-version v14r1p1
+version v14r1p2
 
 branches doc cmt job options
 
@@ -106,7 +106,7 @@ use OTAssociators  	v2r2  	OT
 
 # Tracking
 use TrKernel            v11r0   Tr
-use TrFitEvent          v3r1    Tr
+use TrFitEvent          v3r2    Tr
 use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
@@ -152,7 +152,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=140101 " \
-           VisualC  " /DBrunelVersion=140101 "
+macro_append fflags " -DBrunelVersion=140102 " \
+           VisualC  " /DBrunelVersion=140102 "
 
 apply_pattern application_path
