@@ -5,8 +5,11 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.5 2004-07-27 17:01:02 jonesc Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2004/07/26 18:03:05  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -38,10 +41,11 @@ RichTrSegMakerFromTrStoredTracks::RichTrSegMakerFromTrStoredTracks( const std::s
                                                                     const std::string& name,
                                                                     const IInterface* parent)
   : RichToolBase ( type, name, parent ),
-    m_trExt1 ( 0 ),
-    m_trExt2 ( 0 ),
-    m_Ext1 ( "TrHerabExtrapolator"     ),
-    m_Ext2 ( "TrParabolicExtrapolator" )
+    m_trExt1   ( 0 ),
+    m_trExt2   ( 0 ),
+    m_Ext1     ( "TrHerabExtrapolator"      ),
+    m_Ext2     ( "TrParabolicExtrapolator"  ),
+    m_usedRads ( Rich::NRadiatorTypes, true )
 {
 
   declareInterface<IRichTrSegMaker>(this);
@@ -54,6 +58,8 @@ RichTrSegMakerFromTrStoredTracks::RichTrSegMakerFromTrStoredTracks( const std::s
 
   declareProperty( "PrimaryTrackExtrapolator", m_Ext1 );
   declareProperty( "BackupTrackExtrapolator",  m_Ext2 );
+
+  declareProperty( "UseRadiators", m_usedRads );
 
 }
 
@@ -154,7 +160,11 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
         radiator != m_radiators.end();
         ++radiator ) {    
 
+    // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
+    
+    // is this radiator in use ?
+    if ( !m_usedRads[rad] ) continue;
 
     if ( msgLevel(MSG::VERBOSE) ) {
       verbose() << " Considering radiator " << rad << endreq;

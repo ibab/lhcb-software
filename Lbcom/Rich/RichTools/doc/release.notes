@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Add flags to RichTrackSegment makers to turn off individual radiators
+
 !=========================== RichTools v1r0 2004-07-19 =======================
 ! 2004-07-15 - Antonis Papanestis
  - Added functionality (RichTraceMode) to RichRayTracing

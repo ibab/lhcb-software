@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.4 2004-07-27 17:01:02 jonesc Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/26 18:03:05  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -143,6 +146,9 @@ private: // data
   ITrExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
   std::string m_Ext1; ///< Primary track extrapolation tool name
   std::string m_Ext2; ///< Secondary track extrapolation tool name
+
+  /// Flags to turn on/off individual radiators
+  std::vector<bool> m_usedRads;
 
 };
 
