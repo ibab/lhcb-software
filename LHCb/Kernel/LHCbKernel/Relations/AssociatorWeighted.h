@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.6 2002-05-13 15:54:19 ibelyaev Exp $
+// $Id: AssociatorWeighted.h,v 1.7 2002-05-15 14:43:28 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/13 15:54:19  ibelyaev
+//  bug fix
+//
 // Revision 1.5  2002/05/13 09:48:26  phicharp
 // Add methods associatedFrom() and To() for single objects
 //
@@ -128,7 +131,7 @@ public:
    *                     It is empty if no table was found
    *  @return Failure it no table was found
    */
-  virtual StatusCode range
+  virtual StatusCode rangeFrom
   ( const From&      from  , 
     ToRange&         range ) const 
   {
@@ -148,7 +151,7 @@ public:
    *                 It is empty if no table was found
    *  @return Failure it no table was found
    */
-  virtual StatusCode invRange
+  virtual StatusCode rangeTo
   ( const To&        to    , 
     FromRange&       range ) const 
   {
@@ -166,7 +169,7 @@ public:
    *  @param  from object one want to retrieve associated range
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual ToRange    range 
+  virtual ToRange    rangeFrom
   ( const From&      from  ) const 
   {
     const Table* table = direct();
@@ -182,7 +185,7 @@ public:
    *  @return A range of associated objects. 
    *               It is empty if no table was found
    */
-  virtual FromRange  invRange
+  virtual FromRange  rangeTo
   ( const To&        to    ) const 
   {
     const InvTable* table = inverse();
@@ -202,7 +205,7 @@ public:
    *                   It is empty if no table was found
    *  @return Failure it no table was found
    */
-  virtual StatusCode rangeWithLowCut
+  virtual StatusCode rangeWithLowCutFrom
   ( const From&      from      ,
     const Weight&    threshold ,                          
     ToRange&         range     ) const 
@@ -225,7 +228,7 @@ public:
    *                   It is empty if no table was found
    *  @return Failure it no table was found
    */
-  virtual StatusCode invRangeWithLowCut
+  virtual StatusCode rangeWithLowCutTo
   ( const To&        to        , 
     const Weight&    threshold , 
     FromRange&       range     ) const  
@@ -248,7 +251,7 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return Failure it no table was found
    */
-  virtual StatusCode rangeWithHighCut
+  virtual StatusCode rangeWithHighCutFrom
   ( const From&      from      , 
     const Weight&    threshold ,
     ToRange&         range     ) const 
@@ -271,7 +274,7 @@ public:
    *                     It is empty if no table was found
    *  @return Failure it no table was found
    */
-  virtual StatusCode invRangeWithHighCut
+  virtual StatusCode rangeWithHighCutTo
   ( const To&        to        , 
     const Weight&    threshold , 
     FromRange&       range     ) const 
@@ -294,7 +297,7 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual ToRange    rangeWithLowCut 
+  virtual ToRange    rangeWithLowCutFrom
   ( const From&      from      , 
     const Weight&    threshold ) const 
   {
@@ -312,7 +315,7 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual FromRange  invRangeWithLowCut
+  virtual FromRange  rangeWithLowCutTo
   ( const To&        to        , 
     const Weight&    threshold ) const  
   {
@@ -330,7 +333,7 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual ToRange    rangeWithHighCut
+  virtual ToRange    rangeWithHighCutFrom
   ( const From&      from      , 
     const Weight&    threshold ) const 
   {
@@ -348,7 +351,7 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual FromRange  invRangeWithHighCut
+  virtual FromRange  rangeWithHighCutTo
   ( const To&        to        , 
     const Weight&    threshold ) const 
   {

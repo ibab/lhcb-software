@@ -1,8 +1,11 @@
-// $Id: Associator.h,v 1.6 2002-05-13 15:54:19 ibelyaev Exp $
+// $Id: Associator.h,v 1.7 2002-05-15 14:43:28 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/13 15:54:19  ibelyaev
+//  bug fix
+//
 // Revision 1.5  2002/05/13 09:48:25  phicharp
 // Add methods associatedFrom() and To() for single objects
 //
@@ -145,7 +148,7 @@ public:
    *  It is empty if no table was found
    *  @return StatusCode Failure it no table was found
    */
-  virtual StatusCode range 
+  virtual StatusCode rangeFrom
   ( const From&      from  , 
     ToRange&         range ) const 
   {
@@ -166,7 +169,7 @@ public:
    *  It is empty if no table was found
    *  @return StatusCode Failure it no table was found
    */
-  virtual StatusCode invRange
+  virtual StatusCode rangeTo
   ( const To&        to    , 
     FromRange&       range ) const 
   {
@@ -186,7 +189,7 @@ public:
    *  It is empty if no table was found
    *  
    */
-  virtual ToRange    range
+  virtual ToRange    rangeFrom
   ( const From&      from  ) const 
   {
     const Table* table = direct();
@@ -202,7 +205,7 @@ public:
    *  @return range  range of associated objects. 
    *  It is empty if no table was found
    */
-  virtual FromRange  invRange
+  virtual FromRange  rangeTo
   ( const To&        to    ) const 
   {
     const InvTable* table = inverse();
