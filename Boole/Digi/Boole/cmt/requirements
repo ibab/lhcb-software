@@ -34,7 +34,7 @@ use GaudiIntrospection 	v4r6
 use HbookCnv 		v13r4
 
 #-- Databases
-use XmlDDDB	v18r1	Det
+use XmlDDDB	v18r2	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
