@@ -4,6 +4,10 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2004-07-20 - Chris Jones
+ - New version of RichPIDSimpleMerge to handle merging of Ring Refitting results
+   Default options are the same behaviour as before (Ring Refit merging disabled)
+
 !======================= RichPIDMerge v1r4 2004-06-18 =======================
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure

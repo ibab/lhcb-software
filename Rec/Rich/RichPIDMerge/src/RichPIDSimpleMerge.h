@@ -1,4 +1,4 @@
-// $Id: RichPIDSimpleMerge.h,v 1.3 2004-06-18 11:18:50 jonesc Exp $
+// $Id: RichPIDSimpleMerge.h,v 1.4 2004-07-20 12:45:29 jonesc Exp $
 #ifndef RICHPIDMERGE_RICHPIDSIMPLEMERGE_H
 #define RICHPIDMERGE_RICHPIDSIMPLEMERGE_H 1
 
@@ -13,6 +13,7 @@
 #include "Event/RichPID.h"
 #include "Event/RichGlobalPID.h"
 #include "Event/RichLocalPID.h"
+#include "Event/RichRingRefitPID.h"
 
 /** @class RichPIDSimpleMerge RichPIDSimpleMerge.h RichRecAlgs/RichPIDSimpleMerge.h
  *
@@ -48,6 +49,18 @@ private:
 
   /// Input location in TES for RichLocalPIDs
   std::string m_richLocalPIDLocation;
+
+  /// Input location in TES for RichRingRefitPIDs
+  std::string m_richRingFitPIDLocation;
+
+  /// Flag to turn on/off use of Ring Refit PID results
+  bool m_useRingPIDs;
+
+  /// Flag to turn on/off use of Local PID results
+  bool m_useLocalPIDs;
+  
+  /// Flag to turn on/off use of Ring Global PID results
+  bool m_useGlobalPIDs;
 
 };
 
