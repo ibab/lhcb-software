@@ -4,6 +4,20 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-03-10 Vanya Belyaev 
+  fix a problems with building a shared library at Win2K 
+  src/Lib/GaussTrajectoryAllocator.cpp  - remove file 
+  src/Lib/GaussTrajectory.cpp           - move "inline" method from *.icpp 
+                                          file. Add the instance counter.
+  GaussTools/GaussTrajectory.h          - remove allocator from the header 
+                                          file. Move the implementation
+                                          of "new" and "delete" to *.cpp
+                                          file. Remove extra "inline" 
+                                          directives.
+  GaussTools/GaussTrajectory.icpp       - remove obsolete file 
+    
+  
+
 !=========================== GaussTools v6r1 2002-02-14 =====================
 
 ! 2003-02-14 - Witek Pokorski

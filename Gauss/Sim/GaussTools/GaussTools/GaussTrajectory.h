@@ -1,8 +1,11 @@
-// $Id: GaussTrajectory.h,v 1.2 2002-12-07 21:19:13 ibelyaev Exp $ 
+// $Id: GaussTrajectory.h,v 1.3 2003-03-11 09:45:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 21:19:13  ibelyaev
+//  few optimization updates
+//
 // ============================================================================
 #ifndef    GAUSSTOOLS_GAUSSTRAJECTORY_H
 #define    GAUSSTOOLS_GAUSSTRAJECTORY_H 1 
@@ -16,24 +19,24 @@ class GaussTrajectory: public GiGaTrajectory
   ///
 public:
   ///
-  inline GaussTrajectory (                        );
-  inline GaussTrajectory ( const G4Track*         );
-  inline GaussTrajectory ( const GaussTrajectory & );
-  virtual inline ~GaussTrajectory();
+  GaussTrajectory (                         ) ;
+  GaussTrajectory ( const G4Track*          ) ;
+  GaussTrajectory ( const GiGaTrajectory&   ) ;
+  GaussTrajectory ( const GaussTrajectory&  ) ;
+  virtual ~GaussTrajectory();
   ///  
-  inline void* operator new    ( size_t ) ;
-  inline void  operator delete ( void*  ) ;
+  void* operator new    ( size_t ) ;
+  void  operator delete ( void*  ) ;
   ///
-  inline int operator == (const GaussTrajectory& right) const
-  {return ( &right == this );} 
+  int operator == (const GaussTrajectory& right) const
+  { return ( &right == this );} 
   ///
   virtual        void AppendStep      ( const G4Step*  )       ;
+  virtual GiGaTrajectory* clone() const ;
   ///
 private:
   ///
 };
-///
-#include "GaussTools/GaussTrajectory.icpp"
 ///
 
 // ============================================================================
