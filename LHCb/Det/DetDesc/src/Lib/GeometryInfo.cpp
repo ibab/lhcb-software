@@ -1,4 +1,4 @@
-// $Id: GeometryInfo.cpp,v 1.10 2002-11-21 15:40:03 sponce Exp $ 
+// $Id: GeometryInfo.cpp,v 1.11 2002-12-10 13:13:22 sponce Exp $ 
 
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
@@ -195,7 +195,18 @@ bool GeometryInfo::acceptInspector( IInspector* pInspector ) const
 //
 GeometryInfo::~GeometryInfo()
 {
-  reset();
+  //
+  m_gi_lvolume = 0 ; 
+  //
+  if( 0 != m_gi_matrix    ){ delete m_gi_matrix   ; m_gi_matrix    = 0; }  
+  if( 0 != m_gi_matrixInv ){ delete m_gi_matrixInv; m_gi_matrixInv = 0; }  
+  //
+  m_gi_support = 0;
+  //
+  m_gi_childLoaded = false; 
+  m_gi_childrensNames.clear();
+  m_gi_childrens.clear();
+  //
   m_services->release();
 };
 //
