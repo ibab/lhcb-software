@@ -9,7 +9,7 @@ version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options FlavourTagging summary
+branches          cmt doc src options summary
 
 # Set the default paths for the Tagging options
 #============================================================================

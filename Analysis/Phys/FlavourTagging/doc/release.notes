@@ -49,6 +49,7 @@
   - src/VertexChargeTaggingTool.h
   - options/CombinedFlavourTagging.opts
   - options/DVCheatedSelection.opts
+  - FlavourTagging/IFlavourTaggingTool.h
   . Obsolete and moved to src/attic and options/attic
 
      
