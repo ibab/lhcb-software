@@ -1,20 +1,20 @@
-! $Id: release.notes,v 1.32 2002-10-30 11:09:00 gcorti Exp $
 <PRE>
-! Package     : DaVinci 
-! Responsible : Gloria Corti
-! Purpose     : LHCb analysis program 
+Package     : DaVinci 
+Responsible : Gloria Corti
+Purpose     : LHCb analysis program 
 
-! 2002-10-30 - Gloria Corti
+</PRE><H1><A NAME=v6r0>2002-10-30 DaVinci v6r0</A></H1><PRE>
+ 2002-10-30 - Gloria Corti
  - Increase version numbers of RootHistCnv (v8r0p2), XmlDDDB (v13r1),
 	 TrEvent (v11r3), TrFitEvent (v3r2), OTDet (v3r0), OTAssociators (v2r2), 
 	 TrExtrapolator (v2r2), MuonDet (v4r1), L1VeloTrack (v3r1)
 
-! 2002-10-29 - Gloria Corti
+ 2002-10-29 - Gloria Corti
  - Introduce example for running efficiency for Bs->phiJpsi in DaVinciEff.opts
  - Introduce options for running algorithms compatible with DaVinci v6r0 in
    DaVinci.opts.
 
-! 2002-10-23 - Gloria Corti
+ 2002-10-23 - Gloria Corti
  - Introduce TrFitEvent (v3r0) explicitely to avoid * problems
  - Modify DaVinci.opts to do some clean up
  - Introduce DaVinci.Eff to show how to use Efficiency Algorithm
@@ -23,7 +23,7 @@
  - Introduce file DaVinciTestData.opts used by various Test options files
  - Remove obsolete DaVinciTest.opts (all options are in DaVinciTest package)
 
-! 2002-10-21 - Gloria Corti
+ 2002-10-21 - Gloria Corti
  - Introduce use of TrExtrapolator v2r1 necessary for new TrTransporter
    in DaVinciTools.
  - Introduce CaloReCalibration.opts to run gamma recalibration of
@@ -35,16 +35,16 @@
    CaloTools (v4r4): refer to their requirements files for details
    of changes
 
-! 2002-10-13 - Gloria Corti
+ 2002-10-13 - Gloria Corti
  - Adapt L0.opts to reprocessing of data produced with Brunel v12r1 
 
-! 2002-10-11 - Gloria Corti
+ 2002-10-11 - Gloria Corti
  - Use RootHistCnv v8r0p2 (bug fix)
 
-! 2002-10-10 - Gloria Corti
+ 2002-10-10 - Gloria Corti
  - Introduce DaVinciEff package and default options for associators
 
-! 2002-09-13 - Gloria Corti
+ 2002-09-13 - Gloria Corti
  - Include FlavourTagging v3r0
  - New version (use all Phys new packaegs + PhysEvent v7r0)
  - Include L0 packages for reprocessing of L0DU and L0DU dll
@@ -52,38 +52,35 @@
  - Reoganize DaVinci.opts
  - Upgrade DaVinci.job to new version
 
-! 2002-09-11 - Gloria Corti
+ 2002-09-11 - Gloria Corti
  - Add CaloTools Dll to allow creation of Neutral ProtoP
 
-<H1><A NAME=v5r0> 
-!======================== DaVinci v5r0 2002-07-29 =================
-</A></H1>
-
-! 2002-07-29 - Marco Cattaneo
+</PRE><H1><A NAME=v5r0>2002-07-29 DaVinci v5r0</A></H1><PRE>
+ 2002-07-29 - Marco Cattaneo
  - Use LHCbKernel v1r4, CaloRec v2r3, CaloAssociators v2r2 to fix problem with
    deletion of relations on Windows.
 
-! 2002-07-26 - Gloria Corti
+ 2002-07-26 - Gloria Corti
  - Use EventSys v12r1(PhysEvent v6r1) and use in release VeloKernel v1r1,
    XmlDDDB v12r3, OTDet v2r1, L1VeloTrack v2r1 
  - Include options for GlobalReco
  - Fix problem in DaVinci.job to have histograms in directory where the
    job was launched.
 
-! 2002-07-24 - Gloria Corti
+ 2002-07-24 - Gloria Corti
  - Use VeloAssociators v1r1, L0Calo v6r1 and L1VeloTrack v2r0
 
-! 2002-07-23 - Gloria Corti
+ 2002-07-23 - Gloria Corti
  - Use VeloDet v7r0 and PhysSelections v2r0
 
-! 2002-07-22 - Gloria Corti
+ 2002-07-22 - Gloria Corti
  - Add CaloDetXmlCnv to list of Dll to load
 
-! 2002-07-19 - Gloria Corti
+ 2002-07-19 - Gloria Corti
  - Use LHCbKernel v1r3, XmlDDDB v12r2, CaloDetXmlCnv v2r0, EventSys v12r0,
    CaloAssociators v2r1, TrAssociators v3r0, DaVinciUser v2r0
 
-! 2002-07-18 - Gloria Corti
+ 2002-07-18 - Gloria Corti
  - Remove the use of the LHCBDBASE environment (dbase in no longer
    necessary) and modify DaVinci.job accordingly
  - All jobOptions dependecy from xml-dbase version are in DaVinciv248r2.opts
@@ -92,34 +89,26 @@
  - use new Gaudi packages (equivalent to GaudiSys v10r4)
  - use PhysEvent v6r*
 
-! 2002-07-11 - Gloria Corti
+ 2002-07-11 - Gloria Corti
  - use ChargeProtoPAlg and PrimVertex
 
-! 2002-07-10 - Gloria Corti
+ 2002-07-10 - Gloria Corti
  - Prepare requirements file for OODST version
 
-<H1><A NAME=v4r1p1> 
-!======================== DaVinci v4r2 2002-06-12 =================
-</A></H1>
-! 2002-06-12 - Gloria Corti
+</PRE><H1><A NAME=v4r2>2002-06-12 DaVinci v4r2</A></H1><PRE>
+ 2002-06-12 - Gloria Corti
  - Use PhysSelections v4r1 with new Bs->Ds(KKpi)K algorithms
 
-<H1><A NAME=v4r1p1> 
-!======================== DaVinci v4r1p1 2002-06-07 =================
-</A></H1>
-! 2002-06-07 - Marco Cattaneo
+</PRE><H1><A NAME=v4r1p1>2002-06-07  DaVinci v4r1p1</A></H1><PRE>
+ 2002-06-07 - Marco Cattaneo
  - use DaVinciAssociators v1r1p1 to fix a version clash on LHCbKernel
 
-<H1><A NAME=v4r1> 
-!======================== DaVinci v4r1 2002-06-06 =================
-</A></H1>
-! 2002-06-06 - Gloria Corti
+</PRE><H1><A NAME=v4r1>2002-06-06 DaVinci v4r1</A></H1><PRE>
+ 2002-06-06 - Gloria Corti
  - ParticleTransporter requires the MagneticFieldSvc:
     use Det/Magnet in requirements and Dll (not anymore in SicbCnv)   
 
-<H1><A NAME=v4r0> 
-! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinci v4r0 <<<<<<<<<<<<<<<<<<<<<<
-</A></H1>
+</PRE><H1><A NAME=v4r0>DaVinci v4r0</A></H1><PRE>
 
 ! 2002-05-24 - Gloria Corti
  - Introduce FlavourTagging and DaVinciUser new packages and change
@@ -203,4 +192,4 @@
   and access tools/algorithms/data availabel in a DaVinci application
   
 ! ========================================================================
-</PRE> 
+</PRE>
