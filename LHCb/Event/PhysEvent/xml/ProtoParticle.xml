@@ -43,7 +43,7 @@
        <enum
         desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
         name="detectorPID"
-        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrackMatch, CaloEMatch"
+        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrMatch, CaloDepositID, ClusterMass, ShowerMass, CaloEMatch, BremMatch"
         access="PUBLIC"
        />
        <location
