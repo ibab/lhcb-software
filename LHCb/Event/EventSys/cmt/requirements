@@ -1,5 +1,5 @@
 package EventSys
-version v17r9p1
+version v17r10
 
 branches doc cmt 
 
@@ -20,5 +20,5 @@ use HltEvent	v5r0	Event
 use DAQEvent	v4r2	Event
 use GenEvent	v3r2	Event
 use EventAssoc	v1r1	Event
-use LinkerEvent v1r2    Event
-use TrgEvent    v2r2    Event
+use LinkerEvent v1r3    Event
+use TrgEvent    v2r3    Event
