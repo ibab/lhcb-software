@@ -1,4 +1,4 @@
-// $Id: MCUtilityTool.cpp,v 1.1 2002-02-08 18:25:42 gcorti Exp $
+// $Id: MCUtilityTool.cpp,v 1.2 2002-02-12 09:08:14 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -234,11 +234,15 @@ void MCUtilityTool::printHistory( const MCParticle* product ) {
     ParticleProperty* p = ppSvc()->find((product)->particleID().id());
     log << MSG::INFO << p->particle();
     for ( unsigned long i=0; i<ancestors.size(); i++ ) {
-      p = m_ppSvc->find(ancestors[i]);
+      p = ppSvc()->find(ancestors[i]);
       log << MSG::INFO << " <--- " << p->particle();
     }
     log << MSG::INFO << endreq;
   }
+  else {
+    log << MSG::INFO << "Failed in retrieving history" << endreq;
+  }
+  
   
 }
 
