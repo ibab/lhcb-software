@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.57 2004-10-21 12:53:08 papanest Exp $
+! $Id: release.notes,v 1.58 2004-10-30 19:18:14 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-10-30 - Chris Jones
+ - Add interface for RawBuffer decoding tool
 
 ! 2004-10-21 - Antonis Papanestis
  - Added method traceBackFromDetector to IRichRayTracing
