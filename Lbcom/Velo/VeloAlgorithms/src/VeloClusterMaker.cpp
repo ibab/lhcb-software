@@ -263,9 +263,11 @@ VeloCluster* VeloClusterMaker::makeClusterFromDigit(
 	}
 	
   currentCluster->setSensorID(VeloChannelID(m_sensor,0));
-  log << MSG::VERBOSE << " cluster: sensor " <<  currentCluster->sensor() 
+  // temp up to INFO 
+ log << MSG::VERBOSE << " cluster: sensor " <<  currentCluster->sensor() 
       << " first strip " << currentCluster->strip(0) 
-      << " ADC " <<  currentCluster->adcValue(0) << endmsg;
+      << " ADC " <<  currentCluster->adcValue(0) 
+      << " channelID " << currentCluster->channelID(0) <<endmsg;
 
   return currentCluster;
 }
