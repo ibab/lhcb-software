@@ -14,8 +14,8 @@ Purpose: LHCb Digitization program
    - Populate RawBuffer with rich digits (RichDAQ v1r0)
    - Improved default OT monitoring, with possibility of switching on 
      detailed histograms (OTAlgorithms v13r3)
-   - New "Init" ProcessPhase to add Spillover and LHC background and initialize
-     (Boole.opts etc.) 
+   - Moved Spillover and LHC background to new "Init" phase, "Data" sequence
+   - Moved BooleInit to new "Init" phase, "Boole" sequence
 
 - oodigi changes (GaudiConf v7r3, EventSys v15r2)
    - HltBuffer etc. event classes renamed RawBuffer etc.
@@ -28,10 +28,6 @@ Purpose: LHCb Digitization program
    - Speed improvements to Rich geometry (RichDet v6r2)
    - Small fixes to Rich (RiSicbGeom v3r6)
    - Speed improvements to Relations (LHCbKernel v2r9)
-
-- New packaging
-   - Moved Spillover and LHC background to new "Init" phase, "Data" sequence
-   - Moved BooleInit to new "Init" phase, "Boole" sequence
 
 - Removed features
    - Removed support for SICBMC optimization TDR geometry (v254r1)
