@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.5 2003-07-02 09:02:26 jonrob Exp $
+// $Id: RichRecAlgBase.cpp,v 1.6 2003-07-03 09:15:22 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -57,18 +57,23 @@ StatusCode RichRecAlgBase::initialize() {
     msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
     return StatusCode::FAILURE;
   }
-  
+
   // initialise data pointers
   IRichSegmentCreator * segTool; acquireTool("RichSegmentCreator", segTool);
   m_richSegments = &(segTool->richSegments());
+  releaseTool( "RichSegmentCreator" );
   IRichPhotonCreator * photTool; acquireTool("RichPhotonCreator", photTool);
   m_richPhotons = &(photTool->richPhotons());
+  releaseTool( "RichPhotonCreator" );
   IRichPixelCreator * pixTool; acquireTool("RichPixelCreator", pixTool);
   m_richPixels = &(pixTool->richPixels());
+  releaseTool( "RichPixelCreator" );
   IRichTrackCreator * tkTool; acquireTool("RichTrackCreator", tkTool);
   m_richTracks = &(tkTool->richTracks());
+  releaseTool( "RichTrackCreator" );
   IRichStatusCreator * statTool; acquireTool("RichStatusCreator", statTool);
   m_richStatus = &(statTool->richStatus());
+  releaseTool( "RichStatusCreator" );
 
   return StatusCode::SUCCESS;
 };
