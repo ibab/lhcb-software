@@ -2,12 +2,12 @@
 // The TrStoredTrack is used as a starting point, but the gemoetrical and momentum
 // information is then extracted from the associated MCRichTrack
 
-// Define the primary RichTrackCreatorm to be the delegator tool
+// Define the primary RichTrackCreator to be the delegator tool
 // This tool sends the real work to other tools depending on the configuration
 ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 
-// Example configuration
-ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorMC",
+// Example configuration, use MC for all but forward tracks...
+ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorReco",
                                               "match/RichTrackCreatorMC",
                                               "veloTT/RichTrackCreatorMC",
                                               "seed/RichTrackCreatorMC",

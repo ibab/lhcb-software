@@ -1,0 +1,97 @@
+// Options to create RichRecTracks from TrStoredTrack reconstructed information
+//==============================================================================================
+
+//----------------------------------------------------------------------------------------------
+// Define the primary track creator tool
+//----------------------------------------------------------------------------------------------
+
+ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+
+// Setup delegated tools for each track type
+ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
+                                              "match/RichTrackCrLongVTT",
+                                              "veloTT/RichTrackCrLongVTT",
+                                              "seed/RichTrackCrSeedKs",
+                                              "velo/RichTrackCrLongVTT", // need but always rejected !
+                                              "KsTrack/RichTrackCrSeedKs" };
+
+// turn off or on book keeping
+ToolSvc.RichTrackCreator.DoBookKeeping = false;
+
+//----------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------
+// Configuration for RichTrackCrLongVTT
+//----------------------------------------------------------------------------------------------
+
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
+
+// Selected track types
+ToolSvc.RichTrackCrLongVTT.TrackSelection = 
+  { "unique", "positive", "negative", "forward", "match", "veloTT" };
+
+// Momentum cuts ( in the format tracktype/minP/maxP )
+ToolSvc.RichTrackCrLongVTT.TrackMomentumCuts = { "forward/0/9999999",
+                                                 "match/0/9999999",
+                                                 "veloTT/1/9999999" };
+
+// define the RichTrackSegment nickname to use
+ToolSvc.RichTrackCrLongVTT.TrackSegmentTool = "RichDetTrSegLongVTT";
+
+// turn off book keeping ( if needed done by delegator tool )
+ToolSvc.RichTrackCrLongVTT.DoBookKeeping = false;
+
+//----------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------
+// Configuration for RichDetTrSegLongVTT
+//----------------------------------------------------------------------------------------------
+
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegLongVTT" };
+
+// Extrapolator tools
+ToolSvc.RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
+ToolSvc.RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+
+// which radiators to use                   Aerogel   C4F10    CF4
+ToolSvc.RichDetTrSegLongVTT.UseRadiators = { true,     true,    true   };
+
+//----------------------------------------------------------------------------------------------
+
+
+//----------------------------------------------------------------------------------------------
+// Configuration for RichTrackCrSeedKs
+//----------------------------------------------------------------------------------------------
+
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
+
+// Selected track types
+ToolSvc.RichTrackCrSeedKs.TrackSelection = 
+  { "unique", "positive", "negative", "seed", "KsTrack" };
+
+// Momentum cuts ( in the format tracktype/minP/maxP )
+ToolSvc.RichTrackCrSeedKs.TrackMomentumCuts = { "seed/0/9999999",
+                                                "KsTrack/0/9999999" };
+
+// define the RichTrackSegment nickname to use
+ToolSvc.RichTrackCrSeedKs.TrackSegmentTool = "RichDetTrSegSeedKs";
+
+// turn off book keeping ( if needed done by delegator tool )
+ToolSvc.RichTrackCrSeedKs.DoBookKeeping = false;
+
+//----------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------
+// Configuration for RichDetTrSegSeedKs
+//----------------------------------------------------------------------------------------------
+
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegSeedKs" };
+
+// Extrapolator tools
+ToolSvc.RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";
+ToolSvc.RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+
+// which radiators to use                   Aerogel   C4F10    CF4
+ToolSvc.RichDetTrSegSeedKs.UseRadiators = { true,     true,    true   };
+
+//----------------------------------------------------------------------------------------------

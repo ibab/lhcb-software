@@ -15,3 +15,6 @@
 BrunelRecoRICHSeq.Members         += { "RichTrgGlobalPIDAlg/RichTrgGlobalPID" };
 RichTrgGlobalPID.TrackSelection    = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
 RichTrgGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
+// Monitoring options
+RichTrgGlobalPID.NTupleProduce = false;
+RichTrgGlobalPID.HistoProduce  = false;
