@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.21 2003-06-17 09:16:07 cattanem Exp $
+! $Id: release.notes,v 1.22 2003-10-06 09:16:43 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+!========================== OTDet v4r1 2003-10-06 ==========================
+! 2003-10-06 - Marco Cattaneo
+ - Remove explicit dependency on DetDesc, implicit through DetDescCnv
 
 !========================== OTDet v4r0 2003-06-17 ==========================
 ! 2003-06-16 - Sebastien Ponce

@@ -6,7 +6,8 @@
 
 !========================= DetSys v3r0 2003-09-26 =========================
 ! 2003-09-26 - Marco Cattaneo
- - requirements - use DetDesc v13r0, RichDet v6r0, Magnet v2r2
+ - requirements - use DetDesc v13r0, RichDet v6r0, Magnet v2r2, CaloDet v6r6,
+                      DetDescCnv v2r1, ITDet v1r5, OTDet v4r1, VeloDet v8r6
 
 !========================= DetSys v2r2 2003-07-15 =========================
 ! 2003-07-15 - Marco Cattaneo
