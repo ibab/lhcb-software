@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/23 15:44:48  ibelyaev
+/// bug(misprint) fix
+///
 /// Revision 1.5  2001/07/23 13:12:29  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -19,7 +22,7 @@
 /// local
 #include "GiGaTrackActionEmpty.h"
 
-/** Implementationof class GiGaTrackActionEmpty
+/** Implementation of the class GiGaTrackActionEmpty
  *  
  *  @author Vanya Belyaev
  */
