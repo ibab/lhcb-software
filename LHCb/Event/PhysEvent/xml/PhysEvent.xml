@@ -9,7 +9,8 @@
 <!ENTITY PhysSelDecay.xml     SYSTEM "PhysSelDecay.xml"    >
 <!ENTITY PhysSel.xml          SYSTEM "PhysSel.xml"         >
 
-<!ENTITY ProtoParticle.xml    SYSTEM "ProtoParticle.xml" >
+<!ENTITY ProtoParticle.xml    SYSTEM "ProtoParticle.xml"   >
+<!ENTITY V0.xml               SYSTEM "V0.xml"              >
 
 <!ENTITY FlavourTag.xml       SYSTEM "FlavourTag.xml"      >
 
@@ -34,7 +35,8 @@
     
     &FlavourTag.xml;
     
-    <!-- Input class, needed until ProtoParticles input from DST -->
+    <!-- Input class from DST -->
+    &V0.xml;
     &ProtoParticle.xml;
 
   </package>

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.30 2002-11-27 14:27:22 gcorti Exp $
+! $Id: release.notes,v 1.31 2002-12-03 17:16:37 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-12-03 - Gloria Corti
+ - Introduce new class V0 to hold results of Kshort search
 
 !========================= PhysEvent v7r1 2002-11-27 ========================
 ! 2002-11-27 - Gloria Corti

@@ -1,4 +1,4 @@
-// $Id: PhysEvent_load.cpp,v 1.8 2002-07-18 17:40:29 gcorti Exp $
+// $Id: PhysEvent_load.cpp,v 1.9 2002-12-03 17:16:38 gcorti Exp $
 
 // Include files
 #include "Event/EventFactoryDefs.h"
@@ -43,6 +43,11 @@ _ImplementDataObjectFactory( PhysSel );
 _ImplementContainedObjectFactory( ProtoParticle )
 _ImplementDataObjectFactory( ProtoParticles )
 
+// ===================================================================
+#include "Event/V0.h"
+_ImplementContainedObjectFactory( V0 )
+_ImplementDataObjectFactory( V0s )
+
 // ====================================================================
 void PhysEvent_load()  {
 
@@ -67,6 +72,9 @@ void PhysEvent_load()  {
 
   DLL_DECL_OBJECTFACTORY( ProtoParticle );
   DLL_DECL_OBJECTFACTORY( ProtoParticles );
+
+  DLL_DECL_OBJECTFACTORY( V0 );
+  DLL_DECL_OBJECTFACTORY( V0s );
 }
 
 extern "C" void PhysEvent_loadRef()  {

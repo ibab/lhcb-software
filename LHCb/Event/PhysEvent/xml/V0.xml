@@ -1,0 +1,53 @@
+<!-- ****************************************************************
+     * V0                                                           *
+     ****************************************************************-->
+
+     <class 
+      author="Gloria Corti"
+      desc="Holds the results of V0 searches"
+      id="806"
+      name="V0"
+      location="Rec/V0/V0"
+     >
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute
+        desc="ParticleID of positive track"
+        name="pIDPos"
+        type="ParticleID"
+       />
+       <attribute
+        desc="ParticleID of positive track"
+        name="pIDNeg"
+        type="ParticleID"
+       />
+       <relation
+        desc="Vertex of the Ks or Lambda"
+        name="vertex"
+        multiplicity="1"
+        type="Vertex"
+       />
+       <relation
+        desc="Reference to positive track"
+        name="trackPos"
+        multiplicity="1"
+        type="TrStoredTrack"
+       />
+       <relation
+        desc="Reference to negative track"
+        name="trackNeg"
+        multiplicity="1"
+        type="TrStoredTrack"
+       />
+       <relation
+        desc="Reference to TrStateP at vertex for positive track"
+        name="trStatePos"
+        multiplicity="1"
+        type="TrStateP"
+       />
+        <relation
+        desc="Reference to TrStateP at vertex for negative track"
+        name="trStateNeg"
+        multiplicity="1"
+        type="TrStateP"
+       />
+     </class>
