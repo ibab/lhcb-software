@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.1 2004-06-25 11:53:06 buckley Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.2 2004-06-29 16:14:47 buckley Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -57,7 +57,7 @@ StatusCode RichPixelStrippingAlg::execute()
   } else {
 
     if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "Successfully located " << rings->size() << " RichRecRings at " 
+      debug() << "Successfully located " << rings->size() << " RichRecRings at "
               << RichRecRingLocation::MarkovRings << endreq;
     }
 
@@ -71,29 +71,37 @@ StatusCode RichPixelStrippingAlg::execute()
 
     // Loop over all Markov rings
     for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
-      
-      // Ring centre point and radius on the PD plane
-      //const HepPoint3D & ringPoint = (*iRing)->centrePointLocal();
-      //const double ringRadius = (*iRing)->radius();
 
-   
-        
       // Set "Markov-seen pixels" to be selected by stripping
       SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
-      for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {    
+      for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
         if ( (*iRing)->richRecSegment() )
           decisionMap[*iPix] = true;
       }
     }
 
+    // Loop over all Markov rings
+    for ( RichRecRings::iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
 
-    // Remove as indicated by decisionMap
+      // Clean up SmartRefs in the ring itself
+      SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
+      std::vector<RichRecPixel*> pixsToRemove;
+      for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
+        if ( !decisionMap[*iPix] ) pixsToRemove.push_back(*iPix);
+      }
+      for ( std::vector<RichRecPixel*>::iterator iPix = pixsToRemove.begin(); iPix != pixsToRemove.end(); ++iPix) {
+        (*iRing)->removeFromRichRecPixels(*iPix);
+      }
+    }
+
+    // Actually remove stripped pixels as indicated by decisionMap
     for ( std::map<RichRecPixel*, bool>::const_iterator iP = decisionMap.begin(); iP != decisionMap.end(); ++iP) {
       if ( ! (*iP).second  ) richPixels()->remove( (*iP).first );
     }
 
+
   }
-    
+
 
   return StatusCode::SUCCESS;
 };

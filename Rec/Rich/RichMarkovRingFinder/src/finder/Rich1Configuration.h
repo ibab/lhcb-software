@@ -10,22 +10,24 @@
 namespace Lester {
   
   class Rich1Configuration : public RichConfiguration {
+
+  public:
+
+  typedef enum { upperPane, lowerPane } Pane;
+
+    Rich1Configuration( const Pane pane ) :
+      m_pane(pane) {
+    }
+
+    double geometricXYAcceptanceBottomBound() const { return m_pane != upperPane ? -600 :  -30 ; };
+    double geometricXYAcceptanceTopBound   () const { return m_pane != upperPane ?  30  :   600 ; };
+    double geometricXYAcceptanceLeftBound  () const { return -730; };
+    double geometricXYAcceptanceRightBound () const { return  730; };
+
   private:
 
-    class FatalThrow : public FinderExternalException {
-    public:
-      FatalThrow(const std::string & s) : FinderExternalException(s) {
-      };
-    };
+    const Pane m_pane;
 
-    void moan() const {
-      throw FatalThrow(std::string("Abstract functions are not yet implemented in Rich1 (as opposed to Rich2) Configuration objects."));
-    };
-  public:
-    double geometricXYAcceptanceBottomBound() const { moan(); return 0; };
-    double geometricXYAcceptanceTopBound   () const { moan(); return 0; };
-    double geometricXYAcceptanceLeftBound  () const { moan(); return 0; };
-    double geometricXYAcceptanceRightBound () const { moan(); return 0; };
   };
 
   extern Rich1Configuration globalRich1LConfiguration; //declaration

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.4 2004-06-23 17:22:28 buckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.5 2004-06-29 16:14:46 buckley Exp $
 // Include files
 
 // local
@@ -6,6 +6,7 @@
 #include "finder/Inferrer.h"
 
 using namespace Lester;
+using namespace std;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichMarkovRingFinderAlg
@@ -243,7 +244,9 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
 
 
       // Identify which rings have no associated track within them
-      RichRecSegment * choosenSeg = 0;
+      RichRecSegment* chosenSeg(0);
+      double currentBestNormSeparation( static_cast<double>( std::numeric_limits<int>::max() ) );
+      //double currentBestNormSeparation( static_cast<double>(numeric_limits<int>::max()) );
       for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
         if (*iSeg) {
           // Find the PD panel point corresponding to the track projection
@@ -254,19 +257,24 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           
           // Do some ring-segment matching...
           const double normSeparation = segPoint.distance(centreLocal) / ringRadiusOnPDPlane;
+          // If the projected segment lies within the ring radius ...
           if (normSeparation < m_CutoffSegPositionInRing) {
-            // If the projected segment lies within the ring radius...
-            choosenSeg = *iSeg;
+            // ... and it's a better match than we've seen so far ...
+            if (normSeparation < currentBestNormSeparation) {
+              // ... then we'll select it!
+              chosenSeg = *iSeg;
+              currentBestNormSeparation = normSeparation;
+            }
           }
         }
       }
 
       // set segment
-      newRing->setRichRecSegment( choosenSeg );
+      newRing->setRichRecSegment( chosenSeg );
 
     }
 
-  };
+  }
 
   return StatusCode::SUCCESS;
 }

@@ -1,8 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichMarkovRingFinder
 ! Responsible : Chris Jones
-! Purpose     : 
+! Responsible : Andy Buckley (buckley@hep.phy.cam.ac.uk)
+! Purpose     : Uses a Markov Chain sampler to do ring finding without track
 !-----------------------------------------------------------------------------
+
+! 2004-06-29 - Andrew Buckley
+ - src/component/*
+   . Moved Markov-ring to track segment matching into the *Alg from the *Moni code.
+   . Added a hit stripping algorithm which removes pixels from the TES if they don't
+     match a Markov ring associated to a track. Track association radius and ring-pixel
+     association probabilities are settable as job options.
+   . Various plotting efficiency issues sorted out in the monitor algorithm.
 
 ! 2004-05-31 - Chris Jones
  - First version in CVS

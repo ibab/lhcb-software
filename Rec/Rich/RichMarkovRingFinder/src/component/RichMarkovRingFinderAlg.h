@@ -1,10 +1,11 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.4 2004-06-23 17:22:28 buckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.5 2004-06-29 16:14:46 buckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
 // Include files
 #include <string>
 #include <iostream>
+#include <limits>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"

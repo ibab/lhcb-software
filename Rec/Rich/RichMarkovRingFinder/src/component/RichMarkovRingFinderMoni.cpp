@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.4 2004-06-23 17:22:29 buckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.5 2004-06-29 16:14:46 buckley Exp $
 // Include files
 
 // from Gaudi
@@ -33,18 +33,19 @@ void printMap(pair<string,double> element)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const string& name,
-                                                    ISvcLocator* pSvcLocator)
+RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const string& name, ISvcLocator* pSvcLocator)
   : RichRecAlgBase ( name, pSvcLocator )
 {
   declareProperty( "MCHistoPath", m_mcHistPth = "RICH/MARKOV/MC/" );
   declareProperty( "HistoPath", m_histPth = "RICH/MARKOV/" );
 }
 
+
 //=============================================================================
 // Destructor
 //=============================================================================
 RichMarkovRingFinderMoni::~RichMarkovRingFinderMoni() {};
+
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -78,8 +79,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
   // Locate RichRecRings from TES
   SmartDataPtr<RichRecRings> rings( eventSvc(), RichRecRingLocation::MarkovRings );
   if ( !rings ) {
-    warning() << "Failed to find RichRecRings at " << RichRecRingLocation::MarkovRings
-              << endreq;
+    warning() << "Failed to find RichRecRings at " << RichRecRingLocation::MarkovRings << endreq;
     return StatusCode::SUCCESS;
   } else if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Successfully located " << rings->size() << " RichRecRings at "
@@ -90,9 +90,11 @@ StatusCode RichMarkovRingFinderMoni::execute()
   info() << endreq;
   for ( RichRecRings::const_iterator iRing = rings->begin(); iRing != rings->end(); ++iRing ) {
 
+
     // ring centre point
-    const HepPoint3D & ringPoint = (*iRing)->centrePointLocal();
-    const double ringRadius = (*iRing)->radius();
+    //const HepPoint3D & ringPoint = (*iRing)->centrePointLocal();
+    //const double ringRadius = (*iRing)->radius();
+
 
     // Retrieve the pixels that constitute the ring and associate to the track MCParticles
     SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
@@ -100,14 +102,17 @@ StatusCode RichMarkovRingFinderMoni::execute()
     unsigned int totalNoTracksPerRing(0);
     for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
 
+      if ( !(*iPix) ) {
+        Error("Null RichRecPixel in RichRecRing"); continue;
+      }
+
       MCParticleVector thispixelMCParts;
       m_richRecMCTruth->mcParticle( *iPix, thispixelMCParts );
-
-      for (MCParticleVector::const_iterator iMCP = thispixelMCParts.begin();
-           iMCP != thispixelMCParts.end(); ++iMCP) {
+      
+      // Add MC particle to list of seen particles if it isn't already there 
+      for (MCParticleVector::const_iterator iMCP = thispixelMCParts.begin(); iMCP != thispixelMCParts.end(); ++iMCP) {
         bool alreadySeenThisMCP(false);
-        for (MCParticleVector::const_iterator iMCPseen = seenMCParts.begin();
-             iMCPseen != seenMCParts.end(); ++iMCPseen) {
+        for (MCParticleVector::const_iterator iMCPseen = seenMCParts.begin(); iMCPseen != seenMCParts.end(); ++iMCPseen) {
           if (*iMCPseen == *iMCP) {
             alreadySeenThisMCP = true;
             continue;
@@ -120,11 +125,11 @@ StatusCode RichMarkovRingFinderMoni::execute()
       totalNoTracksPerRing += thispixelMCParts.size();
     } // loop over pixels
 
+
     debug() << "No pixels = " << pixels.size()
             << " :: Total no assoc tracks = " << totalNoTracksPerRing
             << " :: No unique tracks = " << seenMCParts.size()
             << endreq;
-
 
 
     if (0 == seenMCParts.size()) {
@@ -148,22 +153,16 @@ StatusCode RichMarkovRingFinderMoni::execute()
 
         // NB. contains spillover
         if (*iSeg) {
-          const HepPoint3D & segPoint = (*iSeg)->pdPanelHitPointLocal();
-
           // Skip if ring and segment RICH types don't match
           if ( (*iRing)->rich() != (*iSeg)->trackSegment().rich() ) continue;
-
-          // Do some ring-segment matching...
-          const double normSeparation = segPoint.distance(ringPoint)/ringRadius;
-          if (normSeparation < 1.0) {
-            // If the projected segment lies within the ring radius...
+          
+          if ( (*iRing)->richRecSegment() ) {
+            // If the projected segment lies within the ring radius (the matching
+            // has already been done in the RichMarkovRingFinderAlg)
             ringMatchesNoRecSegs = false;
             info() << "Found a ring uniquely associated to 1 MC track which also has "
                    << "a reconstructed track within the ring radius" << endreq;
           }
-
-        } else {
-          warning() << "Segment pointer isn't valid" << endreq;
         }
 
       } // end reco segments
@@ -178,7 +177,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
 
 
       {
-        HepPoint3D startPoint = mcpart->originVertex()->position();
+        const HepPoint3D& startPoint = mcpart->originVertex()->position();
         debug() << "Start vtx position = ("
             << startPoint.x()/m << "m, "
             << startPoint.y()/m << "m, "
@@ -218,12 +217,9 @@ StatusCode RichMarkovRingFinderMoni::execute()
         }
       }
 
-
-      {
+      if (mcpart) {
         const SmartRefVector<MCVertex> endVertices = mcpart->endVertices();
-        for (SmartRefVector<MCVertex>::const_iterator vtx = endVertices.begin(); 
-             vtx != endVertices.end(); ++vtx) {
-          
+        for (SmartRefVector<MCVertex>::const_iterator vtx = endVertices.begin(); vtx != endVertices.end(); ++vtx) {
           const HepPoint3D & endPoint = (*vtx)->position();
           debug() << "Start vtx position = ("
               << endPoint.x()/m << "m, "
@@ -240,12 +236,15 @@ StatusCode RichMarkovRingFinderMoni::execute()
         }
       }
       
+    } else {
+      info() << "More than one associated track" << endreq;
     }
 
-    // loop over reco segments
-    for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); 
-          iSeg != richSegments()->end(); ++iSeg ) {
 
+    /*
+    // loop over reco segments
+    for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
+    
       // NB. contains spillover
       if (*iSeg) {
         const HepPoint3D & segPoint = (*iSeg)->pdPanelHitPointLocal();
@@ -265,8 +264,8 @@ StatusCode RichMarkovRingFinderMoni::execute()
       }
 
     } // end reco segments
-
-
+    */
+    
     // MC Segments
     /*
     SmartDataPtr<MCRichSegments> mcSegments( eventSvc(), MCRichSegmentLocation::Default );
