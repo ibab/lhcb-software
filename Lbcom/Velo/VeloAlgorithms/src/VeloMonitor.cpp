@@ -619,11 +619,15 @@ StatusCode VeloMonitor::testMCVeloHit() {
   MCVeloHits::iterator it;
 
   for (it=m_mchits->begin(); it!=m_mchits->end(); it++) {
+
+    HepPoint3D point(((*it)->entry()).x(),((*it)->entry()).y(),((*it)->entry()).z());
+    unsigned int sensor=m_velo->sensorNumber(point);
     // printout some info. for VELO hit
     if (m_printout>m_NEvent){
       log << MSG::INFO << "testMCVeloHit: \n"
-	  << "    sensor " << (*it)->sensor() 
-	  << " \n"
+	  << "    sensor from hit" << (*it)->sensor() 
+          << " sensor from det ele " << sensor
+          << " \n"
 	  << "    entry " << ((*it)->entry()).x()/mm
 	  << "mm, "  << ((*it)->entry()).y()/mm
 	  << "mm, "  << ((*it)->entry()).z()/mm
@@ -653,7 +657,7 @@ StatusCode VeloMonitor::testMCVeloHit() {
     m_MCVHSensorZ->fill((*it)->entry().z()/cm,(*it)->sensor(),1.0);
     m_MCVHTOF->fill((*it)->timeOfFlight()/ns,1.0);
     // fill xy plots for each type of sensor
-    unsigned int sensor=(*it)->sensor();
+   
     double x=(*it)->entry().x()/cm;
     double y=(*it)->entry().y()/cm;
     if(m_velo->isRight(sensor)){ // +ve x first

@@ -188,10 +188,21 @@ void VeloClusterMaker::makeClusters(){
       // global cluster S/N cut:
         if (checkCluster(currentCluster,currentClusterSTN)){
           // Cluster is OK! Add it to the event.
-          m_clusters->insert(currentCluster);
-          log << MSG::VERBOSE << "makeClusters:Cluster added S/N " 
-              << currentClusterSTN << " size " << currentCluster->size() 
-              << " total clusters " << m_clusters->size() << endreq;
+	  VeloChannelID::sensorType type;
+	  if  (m_velo->isRSensor(currentCluster->sensor())) {
+	    type=VeloChannelID::RType;
+	  }
+	  else {
+	    type=VeloChannelID::PhiType;
+	  }
+	  VeloChannelID channelID( currentCluster->sensor(), 
+                                    currentCluster->strip(0), type );
+          m_clusters->insert(currentCluster,channelID);
+          log << MSG::VERBOSE << "currentCluster key "
+	      << currentCluster->key() << " size " << currentCluster->size() 
+	      << " first strip " << currentCluster->strip(0) 
+	      << " first ADC " << currentCluster->adcValue(0)
+	      << endreq;
         } else {
 // Cluster failed its global S/N cut, so unmark channels as being used.
           unmarkCluster(currentCluster);
@@ -523,7 +534,7 @@ std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator>
   // this makes use of fact that Digits from each sensor have already been
   // sorted so that they are adjacent
 
-   int idum=0; //dummy strip number
+   int idum=0; //dummqy strip number
    VeloFullDigit selObj(VeloChannelID(sensorId,idum,VeloChannelID::Null));
    // ensure sorted   
    std::stable_sort(m_digits->begin(),m_digits->end(),

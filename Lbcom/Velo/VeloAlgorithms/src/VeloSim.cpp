@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.30 2004-03-02 14:44:40 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.31 2004-10-26 15:08:33 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -219,7 +219,6 @@ StatusCode VeloSim::getInputData() {
   log << MSG::DEBUG << "Retrieving MCVeloHits from " << m_inputContainer
       << endmsg;
   SmartDataPtr<MCVeloHits> hits ( eventSvc() , m_inputContainer );
-  log << MSG::DEBUG <<"hits" << hits << endmsg;
   m_veloHits=hits;
 
   if( 0 == m_veloHits ) {
@@ -584,6 +583,7 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
     //calculate point on path
     VeloChannelID entryChan;
     StatusCode valid=m_velo->pointToChannel(point,entryChan,fraction,pitch);
+
     if ( !valid){
       if( verbose ) { 
       log << MSG::VERBOSE << " point is not in active silicon " << point << 
@@ -967,10 +967,12 @@ StatusCode VeloSim::noiseSim(){
   // have signal
   int maxSensor=0;
   int minSensor=0;
-  if (m_simMode=="velo") maxSensor=m_velo->nbSensor();
-  if (m_simMode=="pileUp") {
-    minSensor=m_velo->nbSensor();
+  if (m_simMode=="velo"){
+    minSensor=m_velo->numberPileUpSensors();
     maxSensor=m_velo->numberSensors();
+  }
+  if (m_simMode=="pileUp") {
+    maxSensor=m_velo->numberPileUpSensors();
   }
   
   for (int iSensorArrayIndex=minSensor; iSensorArrayIndex< maxSensor;

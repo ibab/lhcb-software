@@ -1,8 +1,8 @@
 // JP Palacios Options file for VeloSim algorithm
-VeloSim.NoiseSim = true;
-VeloSim.coupling = true;
-VeloSim.SpillOver = true;
+VeloSim.NoiseSim = false;
+VeloSim.coupling = false;
+VeloSim.SpillOver = false;
 VeloSim.InhomogeneousCharge = true;
 VeloSim.TestSimulation =  false;
-VeloSim.PileUp= true;
+VeloSim.PileUp= false;
 VeloSim.OutputLevel=2;

@@ -12,14 +12,28 @@ include_dirs $(VELOALGORITHMSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v13r*   Event
-use  VeloDet    v9r*   	Det
-use  VeloKernel v1r*	Velo -no_auto_imports
-use  GSL 	v*
-use  AIDA 	v*	-no_auto_imports
+use  VeloEvent  v13r* Event
+use  VeloDet    v9r*  Det
+use  VeloKernel v1r*  Velo -no_auto_imports
+use  Relations  v*    Kernel
+use  GSL 	v*    LCG_Interfaces
 
 # Component library building rule
 #============================================================================
 library          VeloAlgorithms    ../src/*.cpp -import=AIDA -import=VeloKernel
 
 apply_pattern component_library library=VeloAlgorithms
+
+
+
+
+
+
+
+
+
+
+
+
+
+

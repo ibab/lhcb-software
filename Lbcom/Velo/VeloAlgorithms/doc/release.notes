@@ -1,6 +1,9 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+! 2004-10-26 - David Hutchcroft
+ - Modificaitons to work with new VeloDet and VeloChannelID definitions
+
 !===================== VeloAlgorithms v3r0 2004-03-02 =====================
 ! 2004-03-02 - Chris Parkes
  - replace VeloRound with LHCbMath::round
