@@ -1,31 +1,36 @@
+# $Id: requirements,v 1.4 2002-09-26 18:10:50 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
 package GaussTools
-version v1r0
+version v2r0
 
-branches         cmt src doc GaussTools
- 
-use AIDA          v3r*
+# ============== package structure ============================================
+branches         cmt src doc
 
-use GaudiKernel  v12r* 
-use GEANT4       v2r4101p0 Sim 
-use GiGa         v9r*      Sim
-use GiGaCnv      v7r*      Sim
-use DetDesc      v11r*     Det
+# ============== explicit dependencies ========================================  
+use AIDA         v3r*
+use GiGaCnv      v8r*      Sim
 
 # ============== Event ========================================================
-use Event        v3r*      Event
 use VeloEvent    v11r*     Event
 use MuonEvent    v2r*      Event
 use RichEvent    v3r*      Event
 
-include_dirs     $(GAUSSTOOLSROOT)
-
 # ============== component library ============================================
-library          GaussTools   *.cpp  Tracking/*.cpp RICH/SensDet/*.cpp RICH/PhysProcess/*.cpp \
-                              RICH/PhysProcess/*.cc RICH/Misc/*.cpp PhysConstructors/*.cpp
-apply_pattern    libraryShr library=GaussTools
+library          GaussTools   *.cpp                  \
+                              Components/*.cpp       \
+                              Actions/*.cpp          \
+                              Tracking/*.cpp         \
+                              RICH/SensDet/*.cpp     \ 
+                              RICH/PhysProcess/*.cpp \
+                              RICH/PhysProcess/*.cc  \
+                              RICH/Misc/*.cpp        \ 
+                              PhysConstructors/*.cpp 
+        
+# ============== standart patterns ===========================================
+apply_pattern    component_library library=GaussTools
 
-# ============= link options ==================================================
-apply_pattern    library_Clinkopts library=GaussTools
-
-# ============== private stuff ================================================
-apply_pattern library_Cshlibflags library=GaussTools
+# ============================================================================
+# The END 
+# ============================================================================
