@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.144 2005-01-10 09:57:17 pkoppenb Exp $
+! $Id: release.notes,v 1.145 2005-01-12 15:43:26 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-01-12 - P. Koppenburg
+  - src/DecodeSimpleDecayString.{h,cpp}
+    . Add a reset() method to reset the vectors when a new DecayDescriptor 
+      is given. For the unexpected cases where there are several to be analysed by 
+      the same tool.
+      
 ! 2005-01-10 - P. Koppenburg
   - src/RecursivePlotTool.{cpp,h}
     . IPlotTool that calls SimplePlotTool for all particles in vector and 

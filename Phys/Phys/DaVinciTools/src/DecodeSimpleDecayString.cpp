@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.3 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.4 2005-01-12 15:43:26 pkoppenb Exp $
 // Include files 
 
 // from ANSI C++
@@ -70,25 +70,25 @@ StatusCode DecodeSimpleDecayString::initialize(){
     fatal() << "ParticlePropertySvc Not Found" << endreq;
     return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
+  return reset();
 };
 
 //=============================================================================
 // setter
 //=============================================================================
-StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
-{
-  MsgStream msg( msgSvc(), name() );
+StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor){
   
-  m_descriptor = descriptor;
-  msg << MSG::DEBUG << "Going to strip cc in " << descriptor << endreq ;  
-  StatusCode sc = this->strip_cc(); // strip cc part -> sets is_cc
+  StatusCode sc = reset();
   if ( sc.isFailure() ) return sc ;
-  msg << MSG::DEBUG << "cc is " << m_iscc << " -> " 
+  m_descriptor = descriptor;
+  debug() << "Going to strip cc in " << descriptor << endreq ;  
+  sc = this->strip_cc(); // strip cc part -> sets is_cc
+  if ( sc.isFailure() ) return sc ;
+  debug() << "cc is " << m_iscc << " -> " 
       << m_descriptor << endreq ;  
   sc = this->splitDescriptor(m_descriptor, m_mother, m_daughters); // split
   if ( sc.isFailure() ) return sc ;
-  msg << MSG::DEBUG << "Mother: " << m_mother << ", " << m_daughters.size()
+  debug() << "Mother: " << m_mother << ", " << m_daughters.size()
       << " daughters: " << m_daughters << endreq ;  
   if ( m_iscc ) {
     sc = this->do_cc();
@@ -96,6 +96,15 @@ StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
   }
   
   return sc ;
+}
+//=============================================================================
+// Reset everything
+//=============================================================================
+StatusCode DecodeSimpleDecayString::reset(){
+  m_daughters.clear();
+  m_daughters_cc.clear();
+  m_iscc = false ;
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Get strings
@@ -134,7 +143,6 @@ StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
                                               const strings in_d,
                                               int& mother,
                                               ints& daughters) const {
-  MsgStream msg( msgSvc(), name() );
   
   StatusCode sc = this->PID(in_m, mother);
   if ( ! sc.isSuccess() ) return sc ;

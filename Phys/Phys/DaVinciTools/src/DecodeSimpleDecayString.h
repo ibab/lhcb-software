@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.4 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.5 2005-01-12 15:43:26 pkoppenb Exp $
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
 
@@ -40,6 +40,7 @@ public:
   bool is_cc(void) const;
   
 protected:
+  StatusCode reset();
   StatusCode PID(const std::string&, int&) const;
   StatusCode splitDescriptor(const std::string&,std::string&,
                                          strings&) const;
