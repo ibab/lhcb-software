@@ -1,8 +1,11 @@
-// $Id: CaloPhotonMomentum.cpp,v 1.1 2002-04-02 10:59:31 ibelyaev Exp $
+// $Id: CaloPhotonMomentum.cpp,v 1.2 2002-06-13 12:33:52 ibelyaev Exp $
 // =============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // =============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/02 10:59:31  ibelyaev
+//  update for new event model
+// 
 // =============================================================================
 // Include files
 #include "CaloKernel/CaloException.h"
@@ -150,6 +153,7 @@ CaloMomentum* CaloPhotonMomentum::operator()
   momentum->setMass  ( 0 ) ;
   momentum->setEMass ( 0 ) ;
   ///
+
   return momentum ;
 };
 // =============================================================================

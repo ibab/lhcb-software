@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.8 2002-05-29 07:42:43 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.9 2002-06-13 12:33:53 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/29 07:42:43  ibelyaev
+//  fix the most stupid bug in my life
+//
 // Revision 1.7  2002/05/23 11:16:30  ibelyaev
 //  remove extra printout
 //
@@ -239,7 +242,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY ;
   covariance( CaloPosition::E , CaloPosition::Y ) = CovEY ;
   covariance( CaloPosition::E , CaloPosition::E ) = CovEE ;
-  
+
   return StatusCode::SUCCESS;
 };
 // ============================================================================
