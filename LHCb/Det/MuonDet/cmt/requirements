@@ -1,0 +1,46 @@
+# =========================================================================
+#
+# $Log: not supported by cvs2svn $
+#
+# =========================================================================
+
+package MuonDet
+version  v1r0
+
+# =============== structure ===============================================
+branches         src cmt doc options MuonDet
+
+# =============== own includes ============================================
+include_dirs      $(MUONDETROOT)
+
+# =============== used packages ===========================================
+use DetDesc      v9r*  Det
+use XmlDDDB      v7r* Det
+use GaudiSys     v9r*
+use LHCbEvent    v12r* Event
+
+# =============== own options ==========================================
+set MUONDETOPTS  ${MUONDETROOT}/options
+
+
+# =============== link library (base classes) =============================
+library   MuonDetLib Lib/*.cpp
+
+# =============== component library =======================================
+library   MuonDet component/*.cpp    
+
+#================ patterns ================================================
+
+apply_pattern package_Lstamps 
+apply_pattern package_Llinkopts  
+apply_pattern linker_path   
+
+#================ private stuff ===========================================
+private
+
+apply_pattern package_Cshlibflags
+apply_pattern package_Lshlibflags   
+
+macro_append  MuonDetLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts) $(XML_linkopts)"      
+
+                                        
