@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.3 2001-10-29 11:16:18 mato Exp $
+// $Id: DaDiTools.cpp,v 1.4 2001-11-28 15:56:21 mato Exp $
 
 
 // Include files
@@ -79,3 +79,4 @@ void DaDiTools::resetErrors()
 {
   // No-op in this case
 }
+

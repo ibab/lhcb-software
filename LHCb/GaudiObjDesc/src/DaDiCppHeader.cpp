@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.18 2001-11-27 17:02:22 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.19 2001-11-28 15:56:21 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -796,12 +796,14 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       {
         xmlOut << ", ";
       }
-      if ( gddMethArgument->const_() ||
-		   (!isSimple(gddMethArgument->type().transcode()) && 
-		    gddMethArgument->const_()) )
+      if (!isSimple(gddMethArgument->type().transcode()) && gddMethArgument->const_())
       {
         xmlOut << "const ";
       }
+	  else if (gddMethArgument->const_())
+	  {
+		xmlOut << "const ";
+	  }
       xmlOut << gddMethArgument->type().transcode();
       if (gddMethArgument->isPointer()) 
       {

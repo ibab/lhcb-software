@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.12 2001-11-27 17:02:22 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.13 2001-11-28 15:56:21 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -28,6 +28,25 @@
 //-----------------------------------------------------------------------------
 
 extern std::string argV0;
+
+//-----------------------------------------------------------------------------
+bool isSimp(std::string value)
+//-----------------------------------------------------------------------------
+{
+  int i = value.find_last_of(" ");
+  value = value.substr(i+1, value.size()-i);
+  if ((value == "bool")   || (value == "short")  ||
+      (value == "long")   || (value == "int")    || 
+      (value == "float")  || (value == "double") || 
+      (value == "char"))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
 
 //-----------------------------------------------------------------------------
@@ -601,7 +620,7 @@ void DDFE::parseClass(DOM_Node node,
               {
                 gddMethArgument->setIsPointer(false);
               }
-              
+			  
               for (std::vector<DOMString>::iterator iterW = argWords.begin();
               iterW != argWords.end(); ++iterW)
               {
@@ -618,10 +637,14 @@ void DDFE::parseClass(DOM_Node node,
               argEType += argType;
               gddMethArgument->setType(argEType);
 
+
+			  if (!isSimp(argType.transcode()))
+			  {
+				  gddMethArgument->setConst_(true);
+			  }
 //
 // handling of Input/Output arguments here !!!!
 //
-
               gddMethArgument->setInout("INPUT");
 
             }
@@ -790,6 +813,7 @@ void DDFE::parseClass(DOM_Node node,
                 gddMethArgument->setIsPointer(false);
               }
               
+			  gddMethArgument->setConst_(false);
               for (std::vector<DOMString>::iterator iterW = argWords.begin();
               iterW != argWords.end(); ++iterW)
               {
@@ -805,6 +829,11 @@ void DDFE::parseClass(DOM_Node node,
               }
               argEType += argType;
               gddMethArgument->setType(argEType);
+
+			  if (!isSimp(argEType.transcode()))
+			  {
+				  gddMethArgument->setConst_(true);
+			  }
 
 //
 // handling of Input/Output arguments here !!!!

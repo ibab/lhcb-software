@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.2 2001-11-28 15:56:21 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
@@ -31,6 +31,7 @@ public:
     void error(const SAXParseException& toCatch);
     void fatalError(const SAXParseException& toCatch);
     void resetErrors();
+
     
     static char* chooseAccess(const DOMString& s);
 
