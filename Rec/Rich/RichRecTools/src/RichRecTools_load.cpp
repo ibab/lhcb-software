@@ -1,4 +1,4 @@
-// $Id: RichRecTools_load.cpp,v 1.16 2004-06-10 14:39:25 jonesc Exp $
+// $Id: RichRecTools_load.cpp,v 1.17 2004-06-29 20:05:55 jonesc Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -12,6 +12,7 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
   DECLARE_TOOL( RichPixelCreatorFromRichDigits );
   DECLARE_TOOL( RichPhotonCreator );
   DECLARE_TOOL( RichPhotonPredictor );
+  DECLARE_TOOL( RichPhotonPredictorUsingRings );
   DECLARE_TOOL( RichStatusCreator ); 
   DECLARE_TOOL( RichMassHypothesisRingCreator );
 

@@ -6,6 +6,9 @@
 
 ! 2004-06-29 - Chris Jones
  - Various minor updates
+ - Add new photon predictor that uses RichRecRings to select possible 
+   photon candidates for reconstruction by requiring that the segment and
+   pixel are associated to the same ring
 
 !===================== RichRecTools v2r10 2004-06-18 ======================
 ! 2004-06-18 - Chris Jones
