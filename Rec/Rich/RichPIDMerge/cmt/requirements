@@ -27,5 +27,3 @@ apply_pattern     packageShr
 #============================================================================
 private
 apply_pattern     package_Cshlibflags
-macro_append  RichPIDMerge_shlibflags " `cernlib kernlib` " \
-                                  WIN32 " $(CERNLIB_linkopts) kernlib.lib "
