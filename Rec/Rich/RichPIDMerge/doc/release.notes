@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v1r5 2004-11-18 =======================
 ! 2004-08-19 - Chris Jones
  - Update and rename main PID merging algorithm
  - Add new debug merging algorithm RichGPIDSelByRing
