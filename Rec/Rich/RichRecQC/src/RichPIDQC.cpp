@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.32 2004-11-04 16:30:45 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.33 2004-11-05 18:04:46 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.32  2004/11/04 16:30:45  jonrob
+ *  Add protection against missing track containers
+ *
  *  Revision 1.31  2004/10/30 22:14:54  jonrob
  *  removed debug compile warnings
  *
@@ -236,7 +239,7 @@ StatusCode RichPIDQC::execute()
     }
   }
   catch ( const GaudiException & exp ) {
-    return Warning("Failed to load Tracking objects",StatusCode::SUCCESS);
+    return Warning("Exception caught : Failed to load tracking objects",StatusCode::SUCCESS);
   }
 
   // apply track multiplicity cuts
