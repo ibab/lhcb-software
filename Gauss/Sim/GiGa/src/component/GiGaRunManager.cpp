@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaRunManager.cpp,v 1.1 2001-04-23 19:24:24 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaRunManager.cpp,v 1.2 2001-04-24 08:54:08 ibelyaev Exp $ 
 //
 #include <string> 
 #include <typeinfo> 
@@ -533,6 +533,9 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   G4RunManager::physicsInitialized = false ; 
   G4RunManager::cutoffInitialized  = false ; 
   G4RunManager::SetUserInitialization( obj ); 
+  ///
+  if( !G4RunManager::physicsInitialized ) { R4RunManager::InitializePhysics() ; } 
+  if( !G4RunManager::cutoffInitialized  ) { R4RunManager::InitializeCutOff () ; } 
   ///
   set_krn_Is_Initialized ( false ) ; 
   set_run_Is_Initialized ( false ) ; 
