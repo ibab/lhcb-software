@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.2 2002-10-10 18:30:35 gcorti Exp $
+// $Id: TestAssociators.cpp,v 1.3 2002-10-10 18:55:39 gcorti Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -428,10 +428,11 @@ StatusCode TestAssociators::execute() {
   // Collect full statistics
   m_mcPartRecons += mcPartRecons;
   m_mcPartCount += mcPartCount;
-  for( unsigned int i=0; i < m_mcPart2Track.size(); i++ ) {
+  unsigned int i =0;
+  for( i=0; i < m_mcPart2Track.size(); i++ ) {
     m_mcPart2Track[i] += mcPart2Track[i];
   }
-  for( unsigned int i=0; i < m_mcPart2Proto.size(); i++ ) {  
+  for( i=0; i < m_mcPart2Proto.size(); i++ ) {  
     m_mcPart2Proto[i] += mcPart2Proto[i];
     m_mcPart2Part[i] += mcPart2Part[i];
     m_mcPart2PartChi2[i] += mcPart2PartChi2[i];

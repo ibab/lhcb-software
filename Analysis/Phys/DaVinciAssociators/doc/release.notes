@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.16 2002-10-10 18:43:01 gcorti Exp $
+! $Id: release.notes,v 1.17 2002-10-10 18:56:36 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
@@ -6,6 +6,7 @@
  - Changes to compile and run on Windows
    - remove AsctAlgorithm:: in AsctAlgorithm.h 
    - introduce missing std:: in CompositeParticlesLink.h and TestAssociators
+   - move declaration outside for()
    - add CompositeParticlesLinks to DaVinciAssociators_load
  - Adapt to coding convention indentations in CompositeParticlesLinks
  - Modify CompositeParticlesLinks options to adapt to changes
