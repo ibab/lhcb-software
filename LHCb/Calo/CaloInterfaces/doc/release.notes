@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.14 2002-12-05 14:44:50 ranjard Exp $
+! $Id: release.notes,v 1.15 2003-12-10 16:03:05 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!======================= CaloInterfaces v3r0 2003-12-09 =====================
+! 2003-12-09 - Marco Cattaneo
+ - Move to Gaudi v13 (use GaudiKernel v14r* in requirements)
 
 !======================= CaloInterfaces v2r4 2002-12-05 =====================
 ! 2002-11-22 - Florence Ranjard

@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.13 2002-12-05 14:44:49 ranjard Exp $
+# $Id: requirements,v 1.14 2003-12-10 16:03:05 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v2r4
+version           v3r0
 
 # =============== structure ===================================================
-branches          cmt doc src CaloInterfaces
+branches          cmt doc CaloInterfaces
 
 # =============== include directories =========================================
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
-use GaudiKernel   v13r* 
+use GaudiKernel   v14r* 
 
 # =============== no constituents! ============================================
