@@ -1,8 +1,11 @@
-// $Id: Brunel.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.2 2003-04-17 11:40:38 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
+// The first import of new package 
+// 
 // ============================================================================
 
 /** @file 
@@ -15,7 +18,7 @@
  *  ApplicationMgr.DLLs += { "CaloPIDs" };
  *
  *  /// append PIDs algorithms to Brunel Calorimeter Reconstruction sequence
- *  #include "$CALOPIDSOPTS/Brunel.opts"
+ *  include "$CALOPIDSOPTS/Brunel.opts"
  *
  *  @endcode 
  *
