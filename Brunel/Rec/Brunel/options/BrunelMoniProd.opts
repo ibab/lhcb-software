@@ -1,12 +1,8 @@
 // Default monitoring options for production jobs
 BrunelMoni.DetectorList = { "Tr","TRIGGER", "OORICH" };
 
-// Global PID monitor
-BrunelMoniOORICHSeq.Members = { "RichGlobalPIDMonitor" };
-RichGlobalPIDMonitor.MCHistoPath = "OORICH/GPIDMC/";
-RichGlobalPIDMonitor.HistoPath =  "OORICH/GPID/";
 // Monitor for final combined PIDs
-BrunelMoniOORICHSeq.Members += { "RichPIDMonitor/RichOOPIDMoni" };
+BrunelMoniOORICHSeq.Members = { "RichPIDMonitor/RichOOPIDMoni" };
 RichOOPIDMoni.InputPIDs = "Rec/Rich/OOPIDs";
 RichOOPIDMoni.MCHistoPath = "OORICH/PIDMC/";
 RichOOPIDMoni.HistoPath = "OORICH/PID/";

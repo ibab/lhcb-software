@@ -13,12 +13,16 @@ Purpose: LHCb reconstruction program
    . Use 4th TT hit when possible in VTT tracks (VeloTrack v1r2)
    . Improvements in calorimeter S&L corrections (VeloRec v1r0)
    . New calorimeter energy calibration (VeloRec v1r0)
+   . Don't digitize unnecessarily 'Next' hits (ITAlgorithms v12r4)
 
  - New features:
    . Possibility to use units in job options files (GaudiConf v6r4)
    . Calorimeter algorithms and tools do not print the same message after a
      maximum number of times. Default is 10 (CaloKernel v2r1)
    . Take into account time information in Calo digitization (CaloDigit v1r0)
+   . Add TT occupancy histos (ITCheckers v1r1)
+   . New options file to define monitoring for production jobs (included by 
+     default) (BrunelMoniProd.opts)
 
  - DST changes:
    . Updated list of algorithms in Trig/AlgUsedTimes and added elapsed time 
@@ -35,8 +39,9 @@ Purpose: LHCb reconstruction program
 
  - Bug fixes:
    . Fix a memory leak in SicbMuonHitCnv (MuonSicbCnv v6r6)
-   . Minor bug fixes for evaluation of cluster spread and covarinances
+   . Minor bug fixes for evaluation of cluster spread and covariances
      (CaloUtils v4r3)
+   . Minor bug fixes (uninitialised variables) (ITDet v1r2)
 
  - Code cleanup:
    . Repackaging of Calo software
