@@ -6,6 +6,24 @@
 !-----------------------------------------------------------------------------
 
 !========================= GaussRICH v4r5 =================================
+!2004-2-4 - Sajan Easo
+ - Added more info to the UserTrackInformation of photons, photoelectrons
+ - Added more user info data to the RichG4hit class. Description of 
+ - these addtional variables are in the RichG4hit class definition. 
+ - setup a VerboseMode Activation switch so that these additional user info data are
+ -  switched off during normal production run. They can be switched on
+ -  for special runs. options/Rich.opts is for standard run.  
+ -  The options/RichVerbose.opts and RichAnalysis.opts are for special studies.
+ -  Modified the PhysProcess/ RichG4OpBoundaryProcess.cpp and 
+ -   RichG4OpRayleigh.cc to be compatible with G4.6.0, although the changes are
+ -  only cosmetic.
+ -  Added some of the Analysis software for verification of
+ -  cherenkov angle resolutions, photoelectron yield  etc. 
+ -  This Analysis software is switched off for standard runs.
+ -  Modified the Simulation.opts for the optical processes in the line
+ -  GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp/OpPhysOptions"};
+ -   This is to provide two variables through the Rich.opts to the Optical Physics
+ -   process list. Default values are provided in the program for normal production runs.  
 ! 2003-12-15 - Witek Pokorski
  - RichG4OpBoundaryProcess - fixes for G4.6.0
 
