@@ -166,12 +166,12 @@ void SimulationSvc::reload () {
       new SimAttribute
       (maxAllowedStep, maxTrackLength, maxTime, minEkine, minRange);
   }
-  xercesc::XMLString::release(&(XMLCh*) mASStr);
-  xercesc::XMLString::release(&(XMLCh*) mTRStr);
-  xercesc::XMLString::release(&(XMLCh*) mTStr);
-  xercesc::XMLString::release(&(XMLCh*) mEkStr);
-  xercesc::XMLString::release(&(XMLCh*) mRStr);   
-  xercesc::XMLString::release(&(XMLCh*) SimStr);
+  xercesc::XMLString::release((XMLCh**) &mASStr);
+  xercesc::XMLString::release((XMLCh**) &mTRStr);
+  xercesc::XMLString::release((XMLCh**) &mTStr);
+  xercesc::XMLString::release((XMLCh**) &mEkStr);
+  xercesc::XMLString::release((XMLCh**) &mRStr);   
+  xercesc::XMLString::release((XMLCh**) &SimStr);
   
 
   // go through the tree of elements and fill in the logvol2Sim map
@@ -210,13 +210,13 @@ void SimulationSvc::reload () {
         partattr->operator[](particle) = m_attributeSet[attr];
       }
     }
-    xercesc::XMLString::release(&(XMLCh*) partStr);
-    xercesc::XMLString::release(&(XMLCh*) attrStr);
-    xercesc::XMLString::release(&(XMLCh*) CutStr);
+    xercesc::XMLString::release((XMLCh**) &partStr);
+    xercesc::XMLString::release((XMLCh**) &attrStr);
+    xercesc::XMLString::release((XMLCh**) &CutStr);
   }
    
-    xercesc::XMLString::release(&(XMLCh*) LVStr);
-    xercesc::XMLString::release(&(XMLCh*) ItemStr);
+    xercesc::XMLString::release((XMLCh**) &LVStr);
+    xercesc::XMLString::release((XMLCh**) &ItemStr);
        
   ///////////////////////////////////////////////////////////
   // the part below deals with the production cuts per region
@@ -286,14 +286,14 @@ void SimulationSvc::reload () {
     // fill in the temporary map 
     regcut[name] = tempcuts;
   }
-  xercesc::XMLString::release(&(XMLCh*) GaStr);
-  xercesc::XMLString::release(&(XMLCh*) ElStr); 
-  xercesc::XMLString::release(&(XMLCh*) PoStr);
-  xercesc::XMLString::release(&(XMLCh*) PrStr); 
-  xercesc::XMLString::release(&(XMLCh*) APStr);
-  xercesc::XMLString::release(&(XMLCh*) NeStr);
-  xercesc::XMLString::release(&(XMLCh*) ANStr);
-  xercesc::XMLString::release(&(XMLCh*) ProdCutStr);
+  xercesc::XMLString::release((XMLCh**) &GaStr);
+  xercesc::XMLString::release((XMLCh**) &ElStr); 
+  xercesc::XMLString::release((XMLCh**) &PoStr);
+  xercesc::XMLString::release((XMLCh**) &PrStr); 
+  xercesc::XMLString::release((XMLCh**) &APStr);
+  xercesc::XMLString::release((XMLCh**) &NeStr);
+  xercesc::XMLString::release((XMLCh**) &ANStr);
+  xercesc::XMLString::release((XMLCh**) &ProdCutStr);
   
   // go through the tree of elements 
   const XMLCh* RegStr = xercesc::XMLString::transcode("Regions");
@@ -338,10 +338,10 @@ void SimulationSvc::reload () {
       m_regionsDefs.push_back(rcut);
     }
   }
-  xercesc::XMLString::release(&(XMLCh*) nameStr); 
-  xercesc::XMLString::release(&(XMLCh*) RegStr);
-  xercesc::XMLString::release(&(XMLCh*) VolStr);
-  xercesc::XMLString::release(&(XMLCh*) ProdStr);
+  xercesc::XMLString::release((XMLCh**) &nameStr); 
+  xercesc::XMLString::release((XMLCh**) &RegStr);
+  xercesc::XMLString::release((XMLCh**) &VolStr);
+  xercesc::XMLString::release((XMLCh**) &ProdStr);
 }
  
 

@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== SimSvc v4r1 ==================================
+! 2004-08-27 - Florence RANJARD
+ - SimulationSvc.cpp - fix for WIN32
+
 ! 2004-08-02 - Gloria CORTI
  - SimulationSvc.{h,cpp}
    . use InterfaceID instead of IID to adapt to Gaudi v16
