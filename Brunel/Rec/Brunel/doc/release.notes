@@ -10,6 +10,7 @@ Purpose: LHCb reconstruction program
      (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
 
  - Code cleanup:
+   . Minimize printout of job options (*.opts)
    . Repackaging of OO Rich software to fix building of component libraries
      (RichRecInterfaces v1r0, RichRecTools v1r1, RichRecAlgs v1r1, 
       RichMonitor v2r1, Brunel.opts)

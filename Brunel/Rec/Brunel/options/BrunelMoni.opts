@@ -34,20 +34,15 @@ BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 
 // Tracking
-#pragma print off
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
-#pragma print on
 ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };
-#pragma print off
 #include "$RICHMONITOROPTS/BrunelMoni.opts" // Standard Rich monitoring
-#pragma print off
 #include "$RICHMONITOROPTS/OORecoMoni.opts" // OO Reco Rich monitoring
-#pragma print on
 
 // Framework monitoring
 EventSelector_0.doHistos = true;

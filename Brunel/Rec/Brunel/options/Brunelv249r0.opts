@@ -2,7 +2,7 @@
 /////    Job options for Brunel when using $LHCBDBASE version v249r0     /////
 /////    --- "LHCb light detector for winter production, with M1" --     /////
 //////////////////////////////////////////////////////////////////////////////
-
+#pragma print off
 #include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
 #include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
 #include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
@@ -13,7 +13,7 @@
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
-
+#pragma print on
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 /////    Job options for Brunel when using $LHCBDBASE version v250r0     /////
 /////    --- "LHCb light detector for winter production, with M1" --     /////
 //////////////////////////////////////////////////////////////////////////////
-
+#pragma print off
 #include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
 #include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
 #include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
@@ -13,7 +13,7 @@
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v250r0.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
-
+#pragma print on
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
@@ -30,7 +30,7 @@ SpillOverSelector.Input = {
   "FILE='/castor/cern.ch/lhcb/prod/L2102182'", // JobID 143747 RAWH2 evtype 61
   "FILE='/castor/cern.ch/lhcb/prod/L2102183'"  // JobID 143699 RAWH2 evtype 61
  }; // evtype 61 RAWH2
-//SpillOverSelector.FirstEvent = 6; // Skip corresponding spillover events
+//SpillOverSelector.FirstEvent = 8; // Skip corresponding spillover events
 BrunelDstWriter.Output = "DATAFILE='v250r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v250r0.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 10;

@@ -13,7 +13,6 @@ ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
-#pragma print on
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
@@ -38,13 +37,11 @@ BrunelReco.DetectorList += { "Timing" };
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
-#pragma print off
 #include "$L0CALOROOT/options/Brunel.opts"
 #include "$L0MUONROOT/options/Brunel.opts"
 #include "$PUVETOROOT/options/Brunel.opts"
 #include "$L0DUROOT/options/Brunel.opts"
 #include "$MUONTOOLSROOT/options/MuonTools.opts"
-#pragma print on
 
 // L1 trigger
 ApplicationMgr.DLLs += { "L1VeloTrack" };
@@ -63,19 +60,12 @@ ApplicationMgr.DLLs += { "CaloSicbCnv"   ,
                          "CaloReco"      , 
                          "CaloDigit"     ,
                          "CaloEvent"     };
-#pragma print off 
 #include "$CALODIGITROOT/options/Brunel.opts"
-#pragma print off
 #include "$CALORECOOPTS/Brunel.opts"
-#pragma print off
 #include "$CALORECOOPTS/Reco.opts"
-#pragma print off
 #include "$CALORECOOPTS/Filters.opts"
-#pragma print off
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
-#pragma print off
 #include "$CALOMONITOROPTS/Brunel.opts"
-#pragma print on
 
 // Rich Fortran digitisation and OO digits creator 
 ApplicationMgr.DLLs += { "RichDet", "RiSicbGeom", "RiSicbCnv" };
@@ -89,22 +79,16 @@ ApplicationMgr.DLLs += { "MuonAlgs" };
 BrunelDigiMUONSeq.Members = { "MuonDigitization" };
 
 // Inner tracker digitisation and reconstruction (clustering)
-#pragma print off
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
-#pragma print on
 
 // Outer tracker digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs   += { "Magnet", "OTDet", "OTAlgorithms" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-#pragma print off
 #include "$OTALGORITHMSROOT/options/otDigi.opts"
-#pragma print on
 BrunelDigiOTSeq.Members += { "MCOTDepositCreator",
                              "MCOTDigitCreator",
                              "OTDigitCreator" };
-#pragma print off
 #include "$OTALGORITHMSROOT/options/otRec.opts"
-#pragma print on
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
@@ -127,17 +111,13 @@ ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FindLongTrack" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
 FitFw.TrackContainer = "Rec/FitTrack/Forward";
-#pragma print off
 #include "$LONGTRACKROOT/options/Brunel.opts"
-#pragma print on
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 
 BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
                              "TrEventTracksFitter/fitSeed" };
-#pragma print off
 #include "$SEEDINGROOT/options/Brunel.opts"
-#pragma print on
 
 // Velo Matching
 ApplicationMgr.DLLs += { "TrMatching" }; 
@@ -148,9 +128,7 @@ reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // Upstream tracking
 ApplicationMgr.DLLs += { "UpstreamPR" };
-#pragma print off
 #include "$UPSTREAMPRROOT/options/Brunel.opts"
-#pragma print on
 
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };
@@ -159,14 +137,10 @@ BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
 // VeloTT tracking
 ApplicationMgr.DLLs += { "VeloTT" };
 BrunelRecoTrSeq.Members += { "VeloTTFind" };
-#pragma print off
 #include "$VELOTTROOT/options/Brunel.opts"
-#pragma print on
 
 BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
-#pragma print off
 #include "$TRCLEANEXROOT/options/Brunel.opts"
-#pragma print on
 TrTrackCloneKiller.flagMode = true;
 
 // Rich Fortran reconstruction
@@ -182,16 +156,12 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
-#pragma print off
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
-#pragma print on
 
 // Algorithm timing
 ApplicationMgr.DLLs += { "BrunelAlgs" };
 BrunelRecoTimingSeq.Members += { "TimingAlg" };
-#pragma print off
 #include "$BRUNELALGSROOT/options/Timing.opts"
-#pragma print on
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
