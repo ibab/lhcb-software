@@ -1,4 +1,4 @@
-// $Id: DaVinciKernel_load.cpp,v 1.1 2004-08-25 16:40:40 pkoppenb Exp $
+// $Id: DaVinciKernel_load.cpp,v 1.2 2004-08-31 11:25:28 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -14,7 +14,7 @@
 
 DECLARE_FACTORY_ENTRIES( DaVinciKernel ) {
 
-  DECLARE_TOOL( PhysDesktop );
+  DECLARE_TOOL( PhysDesktop ); 
   
 }
 
