@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichRecSys
-version           v1r2
+version           v1r3
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -13,16 +13,19 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 
 # ================ dependencies =============================================
 
+# DAQ Decoding
+use RichDAQ        v1r0   Rich
+
 # Common packages
-use RichRecBase    v1r4   Rich
-use RichRecTools   v2r3   Rich
-use RichRecMCTools v1r0   Rich
-use RichRecCommon  v1r1   Rich
+use RichRecBase    v1r5   Rich
+use RichRecTools   v2r4   Rich
+use RichRecMCTools v1r1   Rich
+use RichRecCommon  v1r2   Rich
 
 # PID packages
-use RichGlobalPID  v1r1   Rich
-use RichLocalPID   v1r2   Rich
-use RichRingRefit  v1r2   Rich
+use RichGlobalPID  v1r2   Rich
+use RichLocalPID   v1r3   Rich
+use RichRingRefit  v1r3   Rich
 
 # Merging algorithms
-use RichPIDMerge   v1r1   Rich
+use RichPIDMerge   v1r2   Rich

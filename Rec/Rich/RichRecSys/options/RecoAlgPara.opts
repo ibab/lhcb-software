@@ -3,7 +3,8 @@
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
-RichLocPID.MaxUsedTracks                     = 230;
+RichLocPID.MaxUsedTracks                     = 300;
+RichLocPID.MaxInputTracks                    = 650;
 ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
@@ -14,10 +15,11 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
-RichGloPIDTrSel.MaxUsedTracks             = 230;
+RichGloPIDTrSel.MaxUsedTracks             = 200;
+RichGloPIDTrSel.MaxInputTracks            = 650;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
-RichGloPIDTrSel.ResetTracksToPion         = false; 
+RichGloPIDTrSel.ResetTracksToPion         = false;
 
 // Global Algorithm parameters - phase 1
 //                                            Its      tracks    lowT    highT

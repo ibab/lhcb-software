@@ -1,0 +1,33 @@
+//========================= Rich Reconstruction ===========================
+//
+// This option file is for running the Rich reconstruction in Brunel
+// MaPMT specific version
+//
+
+// Run the Local PID first
+BrunelRecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
+// Initialise GlobalPID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+// Backgroud alg - Uses local PID results as working particle hypotheses
+BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
+// First iteration of Global PID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+// Backgroud alg - Uses global 1st iter results as working particle hypotheses
+BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
+// Second iteration of Global PID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+// Ring refit - uses working IDs to identify good photons and refit angles
+BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
+// Backgroud alg - Uses global 2nd iter results as working particle hypotheses
+//BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3" };
+// Final iteration of Global PID
+//BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt3" };
+// Finalise Global PID
+BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+// Make final output PID results
+BrunelRecoRICHSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
+
+// parameters for the reco algorithms
+#include "$RICHRECSYSOPTS/RecoAlgPara.opts"
