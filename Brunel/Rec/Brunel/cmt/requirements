@@ -44,7 +44,7 @@ use VeloEvent    v5     Event
 
 # L0 trigger
 use L0Calo       v2     L0
-use L0Muon       v3     L0
+use L0Muon       v3r1   L0
 use L0DU         v2     L0
 
 # Calorimeter digitisation

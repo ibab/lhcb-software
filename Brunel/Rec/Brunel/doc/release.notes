@@ -3,6 +3,17 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010726 Brunel v5 (MC)
+
+   In src/BrunelSicb/
+   -----------------
+   dropbanks.F - do not drop E1RW bank (needed to generate MCSensPlaneHit)
+
+   In cmt/requirements
+   -------------------
+   use L0Muon v3r1
+
+
 ! 20010720 Brunel v5 (Flr)
    use Gaudi v8 and LHCb v8 not completely debugged
 ! =================================================================

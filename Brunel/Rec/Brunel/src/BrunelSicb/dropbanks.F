@@ -8,7 +8,7 @@
 *****************************************************************
       IMPLICIT NONE
 *------------------------------------------------------------------
-      call ubdrop('E1RW')
+C      call ubdrop('E1RW')
       call ubdrop('E2RW')
       call ubdrop('E3RW')
       call ubdrop('E4RW')
