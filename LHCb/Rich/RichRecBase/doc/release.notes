@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-10-19 - Chris Jones
+ - Update usage to RichEvent v8r*
+
 ! 2004-10-13 - Chris Jones
  - New improved versions of RichTrackID and RichTrackSelector
 
