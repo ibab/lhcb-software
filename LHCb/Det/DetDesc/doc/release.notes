@@ -1,11 +1,18 @@
-! $Id: release.notes,v 1.92 2002-05-22 06:21:38 cattanem Exp $ 
 ! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
+! $Id: release.notes,v 1.93 2002-05-24 15:28:24 sponce Exp $ 
 ! =============================================================================
-package DetDesc
-package manager : N.N 
+! package DetDesc
+! package manager : N.N 
+! =============================================================================
 
->>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-24 - Sebastien Ponce
+ - Message "found element DDDB at top level of xml file" went to VERBOSE mode
+ - update this file to the new release notes format (What a pain !)
+
+! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 2002-05-22 - Marco Cattaneo
  - XmlBaseConditionCnv.cpp, XmlBaseDetElemCnv.cpp:
    change severity of initialisation status message to MSG::DEBUG
@@ -16,64 +23,66 @@ package manager : N.N
    fix the bug in calculation of intersection ticks. 
    Add the tiny optimization into "intersectionTicks" method  
 
->>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-!20020515 - Vanya Belyaev
- DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
- DetDesc/VolumeInytersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
+! 2002-05-15 - Vanya Belyaev
+ - DetDesc/SolidTicks.h
+   fix my stupid bug (thanks to Olivier)
+ - DetDesc/VolumeInytersectionIntervals.h
+   fix my stupid bug (thanks to Olivier)
 
-!20020513 - Vanya Belyaev
- DetDesc/SolidMath.h 
+! 2002-05-13 - Vanya Belyaev
+ - DetDesc/SolidMath.h 
         fix trivial bug in finding the intersection of the 
         line and the conical surface 
- src/Lib/SolidPolyHedronHelper.cpp 
+ - src/Lib/SolidPolyHedronHelper.cpp 
         fix the bug with constructor of the Plane3D from point and normal
- SolidTrd, SolidTubs, SolidCons, SolidSphere 
+ - SolidTrd, SolidTubs, SolidCons, SolidSphere 
         improve a little bit the printout  
- src/Test/SolidsTest.cpp 
+ - src/Test/SolidsTest.cpp 
         primitive application to perform some tests of Solids. 
- cmt/requirements 
+ - cmt/requirements 
         add the test application  
 
-! 12/05/2002 - Vanya Belyaev
+! 2002-05-12 - Vanya Belyaev
   - DetDesc/SolidBase.h
     improduce tolerance parameter for bounding box, 
     bounding sphere and bounding cylinder - preparation for future tolerance 
 
-! 11/05/2002 - Vanya Belyaev
-modified files:
-  DetDesc/DetDesc.h
-  DetDesc/SolidBase.h
-  DetDesc/SolidBoolean.h
-  DetDesc/SolidBox.h
-  DetDesc/SolidChild.h
-  DetDesc/SolidCons.h
-  DetDesc/SolidPolyHedronHelper.h
-  DetDesc/SolidPolycone.h
-  DetDesc/SolidSphere.h
-  DetDesc/SolidTicks.h
-  DetDesc/SolidTrap.h
-  DetDesc/SolidTubs.h
-  DetDesc/SolidUnion.h
-  DetDesc/VolumeIntersectionIntervals.h
-  src/Lib/DetDesc.cpp
-  src/Lib/DetectorElement.cpp
-  src/Lib/LVolume.cpp
-  src/Lib/SolidBase.cpp
-  src/Lib/SolidBoolean.cpp
-  src/Lib/SolidBox.cpp
-  src/Lib/SolidChild.cpp
-  src/Lib/SolidCons.cpp
-  src/Lib/SolidIntersection.cpp
-  src/Lib/SolidPolyHedronHelper.cpp
-  src/Lib/SolidPolycone.cpp
-  src/Lib/SolidSphere.cpp
-  src/Lib/SolidSubtraction.cpp
-  src/Lib/SolidTrap.cpp
-  src/Lib/SolidTrd.cpp
-  src/Lib/SolidTubs.cpp
-  src/Lib/SolidUnion.cpp
-  src/component/MaterialBudgetAlg.cpp
+! 2002-05-11 - Vanya Belyaev
+  - modified files:
+    DetDesc/DetDesc.h
+    DetDesc/SolidBase.h
+    DetDesc/SolidBoolean.h
+    DetDesc/SolidBox.h
+    DetDesc/SolidChild.h
+    DetDesc/SolidCons.h
+    DetDesc/SolidPolyHedronHelper.h
+    DetDesc/SolidPolycone.h
+    DetDesc/SolidSphere.h
+    DetDesc/SolidTicks.h
+    DetDesc/SolidTrap.h
+    DetDesc/SolidTubs.h
+    DetDesc/SolidUnion.h
+    DetDesc/VolumeIntersectionIntervals.h
+    src/Lib/DetDesc.cpp
+    src/Lib/DetectorElement.cpp
+    src/Lib/LVolume.cpp
+    src/Lib/SolidBase.cpp
+    src/Lib/SolidBoolean.cpp
+    src/Lib/SolidBox.cpp
+    src/Lib/SolidChild.cpp
+    src/Lib/SolidCons.cpp
+    src/Lib/SolidIntersection.cpp
+    src/Lib/SolidPolyHedronHelper.cpp
+    src/Lib/SolidPolycone.cpp
+    src/Lib/SolidSphere.cpp
+    src/Lib/SolidSubtraction.cpp
+    src/Lib/SolidTrap.cpp
+    src/Lib/SolidTrd.cpp
+    src/Lib/SolidTubs.cpp
+    src/Lib/SolidUnion.cpp
+    src/component/MaterialBudgetAlg.cpp
       Significant upgrade of functionality of SolidBase class. 
       Now SolidBase  contains parameters of "bounding box", 
       "bounding sphere" and "bounding cylinder". Several 
@@ -81,13 +90,13 @@ modified files:
       for finding the "intersection ticks". 
       Also bug with SolidTrd is fixed.
 
-new file:
-  DetDesc/SolidMath.h  
+  - new file:
+    DetDesc/SolidMath.h  
       mathematical utilities for fast and effective 
       calculationof interection ticks with primitives - 
       planes , spheres, cylinders and cones  
 
-! 4 May 2002  Vanya Belyaev
+! 2002-05-04 Vanya Belyaev
   - src/Lib/LVolume.cpp  
     Implement a bright idea of O.Callot for major optimization 
     of "LVolume::intersectLine" method
@@ -111,750 +120,653 @@ new file:
   - src/component/SolidFactories.cpp
     rewrite using new MACROs
 
-! 20020502 Sebastien Ponce
+! 2002-05-02 Sebastien Ponce
   - Bug fix concerning the checking for units when calling the expression
     evaluator (XmlCnvSvc class). This checking is still very very primitive.
     It has to be improved !
 
-! 20020424 Sebastien Ponce
+! 2002-04-24 Sebastien Ponce
   - Bug fix concerning user parameters of type string (remove the added space
     in front of them).
   - Added the possibility to "double quote" strings in the value of a user
     parameter.
 
-! 20020424 Pere Mato
+! 2002-04-24 Pere Mato
   - Removed warnings in Windows (added base class IInterface in IConditionInfo)
 
-! 20020424 Vanya Belyaev 
-  Fix problems with Transport Service 
+! 2002-04-24 Vanya Belyaev 
+  - Fix problems with Transport Service 
 
-! 20020419 (M.Cattaneo)
-  Use GaudiKernel v12r*, XERCES v16r* (for Gaudi v10)
+! 2002-04-19 (M.Cattaneo)
+  - Use GaudiKernel v12r*, XERCES v16r* (for Gaudi v10)
 
-! 20020403 - Vanya Belyaev
+! 2002-04-03 - Vanya Belyaev
   - change the layout of TransportSvc-files 
   - fix the problems with uage of Assemblies for TransportSvc 
     (infinite loops observed by O.Callot for Rich geometry)
 
-! 20020221 - Sebastien Ponce
+! 2002-02-21 - Sebastien Ponce
   - change the message of the XmlParserSvc from INFO to DEBUG mode
 
-! 20020122 - Sebastien Ponce
+! 2002-01-22 - Sebastien Ponce
   - Handle exceptions of the xerces parser in the XmlParserSvc in order that
-  they don't go out of it
+    they don't go out of it
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v9r2 <<<<<<<<<<<<<<<<<<<<<<<<<
-! 20020122 - v9r2 - Sebastien Ponce
+
+! 2002-01-22 - Sebastien Ponce
   - Bug fix on the Condition converters, thanks to David
   - Better handle of the DTD version : minor version was considered as a major
     one
   - Implement versioning for the material DTD
 
-! ============================================================================
-! 20020121 - v9r1 - Sebastien Ponce
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v9r1 <<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-01-21 - Sebastien Ponce
   - Remove all warnings + some bug fixes
 
-! ============================================================================
-! 20020118 - v9r1 - Vanya Belyaev
+! 2002-01-18 - Vanya Belyaev
   - XmlIsotopeCnv and XmlElementCnv bug fin in signature of i_fillObj
     and i_processObj methods 
   - Mixture,Element and Material classes - reduce compiler warnings and 
     improve (a little bit) printout        
-! ============================================================================
-! 20020118 - Sebastien Ponce
+
+! 2002-01-18 - Sebastien Ponce
   - changes in the signature of method i_fillSpecificObj for the user
     user specilized converters of detector elements. It now provides the
     address of the new detector element. The old method was kept for
     backward compatibility and is called by the default implementation of
     the new one.
 
-! ============================================================================
-! 20020117 - Sebastien Ponce
+! 2002-01-17 - Sebastien Ponce
   - bug fix in GeometryInfo.cpp, in the printOut method. Some exceptions were
     not catched there
   - bug fix in GeometryInfo.icpp, in the convertion of npath to rpath
 
-! ============================================================================
-! 20020110 - v9r1 - Flr
+! 2002-01-10 - Flr
    - use XERCES v15r* instead of v1*
    - avoid warnings in some files due to XERCES header files
 
-! =============================================================================
-! 20011218 - Sebastien Ponce
+! 2001-12-18 - Sebastien Ponce
    - improvement in some warning message
    - Bug fix in the code for general trapezoids.
 
-! =============================================================================
-! 20011214 - Andrea Valassi
+! 2001-12-14 - Andrea Valassi
    Changes needed to use the "update" functionality for Condition objects.
    - introduce Condition::update(Condition&) to deep copy a condition
    - comment out the overloaded operator= (which also deep copies the
      properties of a DataObject, like its registry and ref counts) 
 
-! =============================================================================
-! 20011213 - v9r0 - Andrea Valassi
-   Various changes concerning condition data.
-   - add IConditionInfo interface and ConditionInfo class and specific ones
-     for alignment, calibration, readout, slowcontrol and fastcontrol
-   - implement createXxxInfo methods in DetectorElement
-   - decode xxxinfo tags in XmlBaseDetElemCnv
-   - add createReadOut in DetectorElement
-   - add methods to print parameters in IUserParameterSet and Condition
-     remove printOut method and operator<< from ValidDataObject
-   - bug fix for Windows: void method cannot return another void method
-   - bug fix in XmlBaseConditionCnv: missing 3rd argument in i_fillObj
-     (overloaded from XmlGenericCnv)
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v9r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! =============================================================================
-! 20011213 - Sebastien Ponce
+! 2001-12-13 - Andrea Valassi
+   - Various changes concerning condition data.
+     - add IConditionInfo interface and ConditionInfo class and specific ones
+       for alignment, calibration, readout, slowcontrol and fastcontrol
+     - implement createXxxInfo methods in DetectorElement
+     - decode xxxinfo tags in XmlBaseDetElemCnv
+     - add createReadOut in DetectorElement
+     - add methods to print parameters in IUserParameterSet and Condition
+       remove printOut method and operator<< from ValidDataObject
+     - bug fix for Windows: void method cannot return another void method
+     - bug fix in XmlBaseConditionCnv: missing 3rd argument in i_fillObj
+       (overloaded from XmlGenericCnv)
+
+! 2001-12-13 - Sebastien Ponce
    - bug fix : no exception should go out of createObj.
    - improvement concerning a warning message which was not precise enough
 
-! =============================================================================
-! 20011211 - Sebastien Ponce
+! 2001-12-11 - Sebastien Ponce
    - implementation of usage of the condition database. This includes new
-   objects and associated converters (like condition and XmlConditionCnv).
-   The condition object is extensible, as was detectorElement. Thus, there
-   is a templated XmlUserConditionCnv that could be extended by users as it
-   was the case for detector elements.
+     objects and associated converters (like condition and XmlConditionCnv).
+     The condition object is extensible, as was detectorElement. Thus, there
+     is a templated XmlUserConditionCnv that could be extended by users as it
+     was the case for detector elements.
    - the names for parameter and userParameter(Vector) changed. It is now
-   macro and param(Vector). For backward compatibility, old names are still
-   understood at this time.
+     macro and param(Vector). For backward compatibility, old names are still
+     understood at this time.
 
-! =============================================================================
-! 20011126 - Sebastien Ponce
+! 2001-11-26 - Sebastien Ponce
    - use new version of CLHEP (1.7.0.0)
 
-! =============================================================================
-! 20011120 - Sebastien Ponce
+! 2001-11-20 - Sebastien Ponce
    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-   is the removal of the class XmlAddress
+     is the removal of the class XmlAddress
    - centralization of address creations in conversion services, as suggested
-   by the new architecture
+     by the new architecture
    - add a parseString method on the XMLParserSvc. This allows to parse XML
-   directly from a string
+     directly from a string
    - use of the new Assembly objects in the XML converters
    - update of the converters to handle the definition of detelem inside
-   detelems, without using detelemrefs
+     detelems, without using detelemrefs
    - take care of a possible indexing of detelems and parametrized detelems.
-   The numbering is given by adding :<digits> to the name of the element.
+     The numbering is given by adding :<digits> to the name of the element.
    - add support for polycones in the converters
    - add code convention compliance to many files
 
-! =============================================================================
-! 20011118 - Vanya Belyaev
-  1) new notion of Logical Assembly (class LAssembly) 
-  2) new base class LogVolBase 
-  3) small update of ILVolume and IPVolume interfaces 
-  (more methods are "const" now)
+! 2001-11-18 - Vanya Belyaev
+  - new notion of Logical Assembly (class LAssembly) 
+  - new base class LogVolBase 
+  - small update of ILVolume and IPVolume interfaces 
+    (more methods are "const" now)
 
-! =============================================================================
-! 20011105 - Sebastien Ponce
-  XmlLVolumeCnv : add new test for dealing with precision problems in the
-  HepVis package.
-  requirements : switch to the XERCES package, forget about the XML one
+! 2001-11-05 - Sebastien Ponce
+  - XmlLVolumeCnv : add new test for dealing with precision problems in the
+    HepVis package.
+  - requirements : switch to the XERCES package, forget about the XML one
 
-! =============================================================================
-! 20011025 - Vanya Belyaev 
-  src/lib/SolidSphere.h  bug fix 
+! 2001-10-25 - Vanya Belyaev 
+  - src/lib/SolidSphere.h  bug fix 
 
-! =============================================================================
-! 20011025 - Vanya Belyaev 
-  DetDesc/SolidPolycone.h 
-  src/Lib/SolidPolycone.cpp 
-  New solid is added 
- (corresponds to Geant3 shape PCON and Geant4 shape G4Polycone)
-  SolidFactories.cpp adn DetDesc_load.cpp are updated 
+! 2001-10-25 - Vanya Belyaev 
+  - DetDesc/SolidPolycone.h 
+    src/Lib/SolidPolycone.cpp 
+    New solid is added 
+    (corresponds to Geant3 shape PCON and Geant4 shape G4Polycone)
+    SolidFactories.cpp adn DetDesc_load.cpp are updated 
 
-! =============================================================================
-! 20010825  - Vanya Belyaev
-  PVolume.h/.cpp 
-  bug fix for uninitialized pointer 
+! 2001-08-25 - Vanya Belyaev
+  - PVolume.h/.cpp 
+    bug fix for uninitialized pointer 
 
-! =============================================================================
-! 20010824  - Vanya Belyaev
-  put some modification to Logical Volume to take into account 
-  the notion of Assembly Volumes
+! 2001-08-24 - Vanya Belyaev
+  - put some modification to Logical Volume to take into account 
+  - the notion of Assembly Volumes
 
-! =============================================================================
-! 20010822  - Sebastien Ponce
-   - Implemented a cache on the parsed files in XmlParserSvc. This cache
-   uses 2 options from the joboption file : MaxDocNbInCache and CacheBehavior.
-   The first one is the maximum number of files cached, the second is the
-   behavior of the cache (FIFO for a 0 value, more and more "keep most used"
-   as value grows)
+! 2001-08-22 - Sebastien Ponce
+  - Implemented a cache on the parsed files in XmlParserSvc. This cache
+    uses 2 options from the joboption file : MaxDocNbInCache and CacheBehavior.
+    The first one is the maximum number of files cached, the second is the
+    behavior of the cache (FIFO for a 0 value, more and more "keep most used"
+    as value grows)
 	       
-! =============================================================================
-! 20010815  - Vanya Belyaev 
-   - DetDesc/SolidChild.h bug fix ("protected" versus "public")
+! 2001-08-15 - Vanya Belyaev 
+  - DetDesc/SolidChild.h bug fix ("protected" versus "public")
  
-! =============================================================================
-! 20010810  - Vanya Belyaev 
-   - modification in IDetectorElement interface and related classes  
-! =============================================================================
-! 20010810  - Vanya Belyaev
-   - modification in IGeometryInfo interface and related classes  
-! =============================================================================
-! 20010809  - v8 Vanya Belyaev
-   - change in ISolid, ILVolume and IPVolume interfaces
-   - several changes in solids 
-   - simplify LVolume and PVolume classes
-! =============================================================================
+! 2001-08-10 - Vanya Belyaev 
+  - modification in IDetectorElement interface and related classes
 
-!===========================================================================
-! 20010703 - Sebastien Ponce
+! 2001-08-10 - Vanya Belyaev
+  - modification in IGeometryInfo interface and related classes  
+
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v8 <<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2001-08-09 - Vanya Belyaev
+  - change in ISolid, ILVolume and IPVolume interfaces
+  - several changes in solids 
+  - simplify LVolume and PVolume classes
+
+! 2001-07-03 - Sebastien Ponce
   - every DetectorElement has an initialize method. This one is now called
-  in method fillObjRefs of the base converter.
+    in method fillObjRefs of the base converter.
 
-!===========================================================================
-! 20010628 - Vanya Belyaev
-   IDetectorElement.h - remove "inline" attribute from 
-                        pure abstract methods
+! 2001-06-28 - Vanya Belyaev
+  - IDetectorElement.h
+  - remove "inline" attribute from pure abstract methods
 
-!===========================================================================
-! 20010628 - Sebastien Ponce
+! 2001-06-28 - Sebastien Ponce
   - added new way of reaching userParameter. Int, Double and String
-  parameters are now handled correctly. An int can be retrieved as an int,
-  a double or a string, a double can only be retrieved as a double or
-  a string, and a string is a string !
+    parameters are now handled correctly. An int can be retrieved as an int,
+    a double or a string, a double can only be retrieved as a double or
+    a string, and a string is a string !
 
-!===========================================================================
-! 20010628 - Sebastien Ponce
+
+! 2001-06-28 - Sebastien Ponce
   - added interface for caching inthe XmlParserSvc and XmlSvc. This consist
-  at this time in a single method : clearCache
+    at this time in a single method : clearCache
 
-!===========================================================================
-! 20010625 - Sebastien Ponce
+
+! 2001-06-25 - Sebastien Ponce
   - added check on the type for userParameters and userParameterVectors.
-  You can no more retrieve the value of these as double if their type is
-  neither "int" nore "double"
+    You can no more retrieve the value of these as double if their type is
+    neither "int" nore "double"
 
-!===========================================================================
-! 20010625 - DestDesc v7 (Flr)
-  requirements - adapted to GaudiKernel v10, GaudiPolicy v5, CMT v1r8
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v7 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-!===========================================================================
-! 20010622 - Sebastien Ponce
+! 2001-06-25 - Flr
+  - requirements - adapted to GaudiKernel v10, GaudiPolicy v5, CMT v1r8
+
+! 2001-06-22 - Sebastien Ponce
  - Added checks in the userParameter(Vector) processing. If a parameter (or
- one of its properties) is asked that does not exist, an exception is issued
+   one of its properties) is asked that does not exist, an exception is issued
 
-!===========================================================================
-! 20010622 - Sebastien Ponce
+! 2001-06-22 - Sebastien Ponce
  - This implements userParameters and userParameterVectors functions in
    DetectorElement. These can be used to get the list of user parameters
    defined for a given element.
 
-!===========================================================================
-! 20010620 - Sebastien Ponce
+! 2001-06-20 - Sebastien Ponce
  - Added userParameter and userParameterVector in the xml converters.
  - corrected a bug in PVolume constructor.
 
-!===========================================================================
-! 20010614 - Sebastien Ponce
+! 2001-06-14 - Sebastien Ponce
  - New implementation of the whole geometry converters. Several
- functionnalities had been added by the way : recursivity on boolean solids
- and parametrised volumes, 2D and 3D parametrised volumes, composition of
- transformations and a new way to define transformations to be applied to
- solids.
+   functionnalities had been added by the way : recursivity on boolean solids
+   and parametrised volumes, 2D and 3D parametrised volumes, composition of
+   transformations and a new way to define transformations to be applied to
+   solids.
  - this new version was tested with the current detector descriptions
- (mainly Rich1) and had the same result than the old one. However new
- features have not been tested at this time
+   (mainly Rich1) and had the same result than the old one. However new
+   features have not been tested at this time
  - Take care that this version uses v3r2 of the xml code, which is released
- in XmlDDDB v7
+   in XmlDDDB v7
 
-!===========================================================================
-! 20010605 - Sebastien Ponce
+! 2001-06-05 - Sebastien Ponce
  - Implementation of the general trapezoid (tag trap) in the xml converters.
  - The converter was tested but the general trapezoid themselves seems not
- to be tested since I had to correct a big bug in it.
+   to be tested since I had to correct a big bug in it.
 
-!===========================================================================
-! 20010518 - Sebastien Ponce
+! 2001-05-18 - Sebastien Ponce
  - made everything work under windows
 
-!===========================================================================
-! 20010518 - Sebastien Ponce
+! 2001-05-18 - Sebastien Ponce
  - made a true service of XmlParserSvc - use it as a service in XmlCnvSvc
  - as a consequence, moved it in the component library
 
-!===========================================================================
-! 20010516 - Sebastien Ponce
+! 2001-05-16 - Sebastien Ponce
  - changed the version of the IXmlSvc interface
  - added the allowGenericCnv feature there
  - moved the XmlCnvSvc back to the component library
 
-!===========================================================================
-! 20010514 - Sebastien Ponce
+! 2001-05-14 - Sebastien Ponce
  - Created XmlBaseDetElem in order to distinguish between the base class of
- all detector elements converters and the converter for basic detector elements.
+   all detector elements converters and the converter for basic detector elements.
  - As a consequence, moved back XmlDetectorElementCnv to the component library.
 
-!===========================================================================
-! 20010510 - Sebastien Ponce
+! 2001-05-10 - Sebastien Ponce
  - This is a complete reimplementation of the xml converters. The underlying
- technology is now DOM while it was SAX. THIS HAS INFLUENCE ON THE USER
- CODE that will need to be updated. THIS IS NON BACKWARD COMPATIBLE.
+   technology is now DOM while it was SAX. THIS HAS INFLUENCE ON THE USER
+   CODE that will need to be updated. THIS IS NON BACKWARD COMPATIBLE.
 
-!===========================================================================
-! 20010430 - Gonzalo Gracia
-    Bug fixed in XmlLVolumeCnv.cpp (optical surfaces were not working properly).
-    Fix compilation warning on XmlMixtureCnv.cpp
+! 2001-04-30 - Gonzalo Gracia
+ - Bug fixed in XmlLVolumeCnv.cpp (optical surfaces were not working properly).
+   Fix compilation warning on XmlMixtureCnv.cpp
 
-!===========================================================================
-! 20010426 - Gonzalo Gracia
-   Modified DetDesc_load.cpp to include: 
-     DLL_DECL_CONVERTER( XmlSurfaceCnv           );
-     DLL_DECL_OBJECTFACTORY( Surface           );
+! 2001-04-26 - Gonzalo Gracia
+ - Modified DetDesc_load.cpp to include: 
+   DLL_DECL_CONVERTER( XmlSurfaceCnv           );
+   DLL_DECL_OBJECTFACTORY( Surface           );
 
-!===========================================================================
-! 20010412 - Gonzalo Gracia
-  Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs. 
-  Include new tag "component" in mixtures
-  Allow relative paths in components.
-  Changed files:
-   XmlCatalogCnv.cpp
-   XmlMixtureCnv.cpp/.h
+! 2001-04-12 - Gonzalo Gracia
+ - Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs. 
+   Include new tag "component" in mixtures
+   Allow relative paths in components.
+   Changed files:
+     XmlCatalogCnv.cpp
+     XmlMixtureCnv.cpp/.h
 
-!===========================================================================
-! 20010320 - Vanya Belyaev 
- -  src/component/XmlMixtureCnv.cpp - bug fix 
+! 2001-03-20 - Vanya Belyaev 
+ - src/component/XmlMixtureCnv.cpp - bug fix 
 
-!===========================================================================
-! 20010320 - Sebastien Ponce
- -  ISolid.h: Corrected mistype #ifdef logic to avoid using std::deque for gcc-2.91
+! 2001-03-20 - Sebastien Ponce
+ - ISolid.h: Corrected mistype #ifdef logic to avoid using std::deque for gcc-2.91
 
-!===========================================================================
-! 20010315 - Vanya Belyaev
-    DetDesc/ISolid.h   - change std::deque to std::vector for gcc-2.91
-    DetDesc/ILVolume.h - remove std::deque
-    cmt/requirements   - add -Wno-unused flag for Linux to suppress warnings from XML-xerces
+! 2001-03-15 - Vanya Belyaev
+ - DetDesc/ISolid.h
+   change std::deque to std::vector for gcc-2.91
+ - DetDesc/ILVolume.h
+   remove std::deque
+ - cmt/requirements
+   add -Wno-unused flag for Linux to suppress warnings from XML-xerces
 
-===========================================================================
-! 20010314 - Sebastien Ponce
+! 2001-03-14 - Sebastien Ponce
  - Avoid non fatal error during parsing to stop the parsing
 
-===========================================================================
-! 20010313 - Pere Mato
+! 2001-03-13 - Pere Mato
  - Added files ISolid.h, IPVolume.h, ILVolume.h, IDetectorElement.h, IGeometryInfo.h
    ITransportSvc.h from the GaudiKernel package.
 
-===========================================================================
-! 20010313 - Sebastien Ponce
-     Make validation of xml the default behavior
+! 2001-03-13 - Sebastien Ponce
+ - Make validation of xml the default behavior
 
-===========================================================================
-! 20010313 - Pere Mato
-     Remove some inline specifiers in Element.h that caused problems with windows
-     Changed order of include files to avoid warnings
+! 2001-03-13 - Pere Mato
+ - Remove some inline specifiers in Element.h that caused problems with windows
+   Changed order of include files to avoid warnings
 
-===========================================================================
-! 20010304 - Vanya Belyaev
-     remove all tabulations from all files
+! 2001-03-04 - Vanya Belyaev
+ - remove all tabulations from all files
 
-===========================================================================
-! 20010304 - Vanya Belyaev
-    src/Lib/Element.cpp - 3 lines are modified to please NT compiler 
+! 2001-03-04 - Vanya Belyaev
+ - src/Lib/Element.cpp - 3 lines are modified to please NT compiler 
 
-===========================================================================
-! 20010304 - Vanya Belyaev
-     New features:
-     (1) class Material now holds the container of tabulated properties 
-         ==> add tabulatedProperties() accessors (const and non const) 
-             to the Material class 
-     (2) class LVolume  now holds the container of assosiated surfaces
-         ==> add surfaces()           acessors (const and non-const) 
-             to class LVolume
-         NB! These acessors are not available from ILVolume interface! 
-     (3) new class Surface which described (optical) surfaces 
-         Probably it is quite useless in DetDesc, but it is important 
-         for G4 conversions
-     (4) TabulatedProperty class is modified according to 
-         desicions of "coffee-meeting" with P.M. and G.G. 
-     (5) class Material now has output operators to MsgStream and std::ostream
-     (6) a lot of polishing business with exception classes and Materials 
+! 2001-03-04 - Vanya Belyaev
+ - class Material now holds the container of tabulated properties 
+   ==> add tabulatedProperties() accessors (const and non const) 
+       to the Material class 
+ - class LVolume  now holds the container of assosiated surfaces
+   ==> add surfaces()     acessors (const and non-const) 
+       to class LVolume
+   NB! These acessors are not available from ILVolume interface! 
+ - new class Surface which described (optical) surfaces 
+   Probably it is quite useless in DetDesc, but it is important 
+   for G4 conversions
+ - TabulatedProperty class is modified according to 
+   desicions of "coffee-meeting" with P.M. and G.G. 
+ - class Material now has output operators to MsgStream and std::ostream
+ - a lot of polishing business with exception classes and Materials 
      New and Modified files:
-        ===
-        DetDesc/DetectorElement.h              - update in exceptions 
-        DetDesc/DetectorElement.icpp
-        DetDesc/DetectorElementException.h     
-        DetDesc/Element.h                       
-        DetDesc/Element.icpp                   - new file  
-        DetDesc/Isotope.h
-        DetDesc/Isotope.icpp                   - new file 
-        DetDesc/Material.h
-        DetDesc/Material.icpp                  - new file 
-        DetDesc/Mixture.h
-        DetDesc/Mixture.icpp                   - new file 
-        DetDesc/LVolume.h
-        DetDesc/LVolume.icpp
-        DetDesc/LVolumeException.h
-        DetDesc/SolidBox.h
-        DetDesc/SolidBox.icpp                   - new file 
-        DetDesc/SolidException.h
-        DetDesc/XmlCnvException.h
-        DetDesc/XmlCnvException.icpp
-        DetDesc/CLIDTabulatedProperty.h         - new file 
-        DetDesc/TabulatedProperty.h             - new class
-        DetDesc/TabulatedProperty.icpp          - new file  
-        DetDesc/CLIDSurface.h                   - new file  
-        DetDesc/Surface.h                       - new class
-        DetDesc/Surface.icpp                    - new file 
-        DetDesc/MaterialException.h             - new class  
-        DetDesc/SolidTrd.icpp                   - new file 
-        DetDesc/SolidCons.icpp                  - new file 
-        DetDesc/SolidSphere.icpp                - new file 
-        DetDesc/SolidTrap.icpp                  - new file 
-        DetDesc/SolidTubs.icpp                  - new file 
-        DetDesc/SolidChild.icpp                 - new file 
-        DetDesc/SolidBoolean.icpp               - new file 
-        ===
-        src/component/DetDesc_load.cpp
-        src/component/XmlCatalogCnv.cpp
-        src/component/XmlCatalogCnv.h
-        src/component/XmlElementCnv.cpp
-        src/component/XmlIsotopeCnv.cpp
-        src/component/XmlLVolumeCnv.h
-        src/component/XmlLVolumeCnv.cpp
-        src/component/XmlMixtureCnv.cpp
-        src/component/XmlTabulatedPropertyCnv.cpp   - new file 
-        src/component/XmlTabulatedPropertyCnv.h     - new file 
-        src/component/XmlSurfaceCnv.h               - new file 
-        src/component/XmlSurfaceCnv.cpp             - new file  
-        ===
-        src/Lib/DetectorElement.cpp
-        src/Lib/Element.cpp
-        src/Lib/GeometryInfo.cpp
-        src/Lib/GeometryInfo.h
-        src/Lib/GeometryInfo.icpp
-        src/Lib/GeometryInfoInlines.h             - REMOVED! 
-        src/Lib/GeometryInfoMethods.h             - REMOVED!
-        src/Lib/GeometryInfoRelations.h           - REMOVED!
-        src/Lib/PVolumeInlines.h                  - REMOVED!
-        src/Lib/Isotope.cpp
-        src/Lib/LVolume.cpp
-        src/Lib/LVolumePVolumes.cpp
-        src/Lib/Mixture.cpp
-        src/Lib/PVolume.cpp 
-        src/Lib/PVolume.h
-        src/Lib/SolidBox.cpp
-        src/Lib/PVolume.icpp                     - new file 
-        src/Lib/Material.cpp                     - new file 
-        src/Lib/Surface.cpp                      - new file 
-        src/Lib/TabulatedProperty.cpp            - new file 
-        src/Lib/SolidException.cpp               - new file 
-        src/Lib/PVolumeException.cpp             - new file 
-        src/Lib/MaterialException.cpp            - new file 
-        src/Lib/LVolumeException.cpp             - new file 
-        src/Lib/DetectorElementException.cpp     - new file 
-        src/Lib/GeometryInfoException.cpp        - new file 
+  ===
+  DetDesc/DetectorElement.h              - update in exceptions 
+  DetDesc/DetectorElement.icpp
+  DetDesc/DetectorElementException.h     
+  DetDesc/Element.h                       
+  DetDesc/Element.icpp                   - new file  
+  DetDesc/Isotope.h
+  DetDesc/Isotope.icpp                   - new file 
+  DetDesc/Material.h
+  DetDesc/Material.icpp                  - new file 
+  DetDesc/Mixture.h
+  DetDesc/Mixture.icpp                   - new file 
+  DetDesc/LVolume.h
+  DetDesc/LVolume.icpp
+  DetDesc/LVolumeException.h
+  DetDesc/SolidBox.h
+  DetDesc/SolidBox.icpp                   - new file 
+  DetDesc/SolidException.h
+  DetDesc/XmlCnvException.h
+  DetDesc/XmlCnvException.icpp
+  DetDesc/CLIDTabulatedProperty.h         - new file 
+  DetDesc/TabulatedProperty.h             - new class
+  DetDesc/TabulatedProperty.icpp          - new file  
+  DetDesc/CLIDSurface.h                   - new file  
+  DetDesc/Surface.h                       - new class
+  DetDesc/Surface.icpp                    - new file 
+  DetDesc/MaterialException.h             - new class  
+  DetDesc/SolidTrd.icpp                   - new file 
+  DetDesc/SolidCons.icpp                  - new file 
+  DetDesc/SolidSphere.icpp                - new file 
+  DetDesc/SolidTrap.icpp                  - new file 
+  DetDesc/SolidTubs.icpp                  - new file 
+  DetDesc/SolidChild.icpp                 - new file 
+  DetDesc/SolidBoolean.icpp               - new file 
+  ===
+  src/component/DetDesc_load.cpp
+  src/component/XmlCatalogCnv.cpp
+  src/component/XmlCatalogCnv.h
+  src/component/XmlElementCnv.cpp
+  src/component/XmlIsotopeCnv.cpp
+  src/component/XmlLVolumeCnv.h
+  src/component/XmlLVolumeCnv.cpp
+  src/component/XmlMixtureCnv.cpp
+  src/component/XmlTabulatedPropertyCnv.cpp   - new file 
+  src/component/XmlTabulatedPropertyCnv.h     - new file 
+  src/component/XmlSurfaceCnv.h               - new file 
+  src/component/XmlSurfaceCnv.cpp             - new file  
+  ===
+  src/Lib/DetectorElement.cpp
+  src/Lib/Element.cpp
+  src/Lib/GeometryInfo.cpp
+  src/Lib/GeometryInfo.h
+  src/Lib/GeometryInfo.icpp
+  src/Lib/GeometryInfoInlines.h             - REMOVED! 
+  src/Lib/GeometryInfoMethods.h             - REMOVED!
+  src/Lib/GeometryInfoRelations.h           - REMOVED!
+  src/Lib/PVolumeInlines.h                  - REMOVED!
+  src/Lib/Isotope.cpp
+  src/Lib/LVolume.cpp
+  src/Lib/LVolumePVolumes.cpp
+  src/Lib/Mixture.cpp
+  src/Lib/PVolume.cpp 
+  src/Lib/PVolume.h
+  src/Lib/SolidBox.cpp
+  src/Lib/PVolume.icpp                     - new file 
+  src/Lib/Material.cpp                     - new file 
+  src/Lib/Surface.cpp                      - new file 
+  src/Lib/TabulatedProperty.cpp            - new file 
+  src/Lib/SolidException.cpp               - new file 
+  src/Lib/PVolumeException.cpp             - new file 
+  src/Lib/MaterialException.cpp            - new file 
+  src/Lib/LVolumeException.cpp             - new file 
+  src/Lib/DetectorElementException.cpp     - new file 
+  src/Lib/GeometryInfoException.cpp        - new file 
 
-===========================================================================
-! 20010226 - Vanya Belyaev
-   new class TabulatedProperty, used  to hold some specific properties 
-          of materials and surfaces (and might be more?) 
-===========================================================================
-! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
-  Corrections for proper treatment of rotations
-  Mod. files in src/Lib   PVolume.cpp, SolidChild.cpp
+! 2001-02-26 - Vanya Belyaev
+ - new class TabulatedProperty, used  to hold some specific properties 
+   of materials and surfaces (and might be more?) 
 
-!===========================================================================
-! 20010213 - Marco Cattaneo
-  requirements - replace {} with () in macros, to please nmake
+! 2001-02-15 - Gonzalo Gracia Abril & Vanya Belyaev
+ - Corrections for proper treatment of rotations
+   Mod. files in src/Lib   PVolume.cpp, SolidChild.cpp
+
+! 2001-02-13 - Marco Cattaneo
+ - requirements - replace {} with () in macros, to please nmake
  
-!===========================================================================
-! 20010211 - Vanya Belyaev
-      remove all *.*.* files to please some CMT macros 
 
-!===========================================================================
-! 20010205 - Flr
-  src/         - add component/
-                 move all files from src/ to src/component/
-  requirements - add ignore_pattern package_stamps
-                 remove apply_pattern packageShr
-  cmt/         - reintroduce Makefile and NMake
+! 2001-02-11 - Vanya Belyaev
+ - remove all *.*.* files to please some CMT macros 
 
-!===========================================================================
-! 20010131 - Gonzalo Gracia
-     SolidTrd.cpp: Bug fixed.
+! 2001-02-05 - Flr
+ - src/
+   add component/
+   move all files from src/ to src/component/
+ - requirements
+   add ignore_pattern package_stamps
+   remove apply_pattern packageShr
+ - cmt/
+   reintroduce Makefile and NMake
 
-!===========================================================================
-! 20010129 - Vanya Belyaev 
-   - LVolume:
-      o remove IDataProvider, IMessageSvc* from constructor
-      o add ISvcLocator* as data member, initialize it in constructor fro Gaudi::svcLocator()
-      o update for change in ILVoluem interface (backward compatible)
-   - PVolume:
-      o Now this class is ABSOLUTELY internal. User shoudl use only interface.
-   - all PVolume.* files are moved into src/Lib, where they are used by LVolume.cpp 
-   - all CONCRETE Xml*Cnv.h are moved from DetDesc directrory 
-   - GeometryInfo
-      o Now this class is ABSOLUTELY internal, user shoudl use only interface 
-   - all GeometryInfo.* fileas are moved into src/Lib directory, where hey are used by DetectorElement.cpp
-   - Xml converters updated to incorporate these changes 
-     
-!===========================================================================
-! 20010125 - Vanya Belyaev 
-   Package polishing:
-   - small modification to reduce a little bit some compiler warnings 
-   - remove the remaining "extern const CLID&" from all places 
-   - extract CLID_DetectorElement into separate file to 
+! 2001-01-31 - Gonzalo Gracia
+ - SolidTrd.cpp: Bug fixed.
+
+! 2001-01-29 - Vanya Belyaev 
+ - LVolume:
+    o remove IDataProvider, IMessageSvc* from constructor
+    o add ISvcLocator* as data member, initialize it in constructor fro Gaudi::svcLocator()
+    o update for change in ILVoluem interface (backward compatible)
+ - PVolume:
+    o Now this class is ABSOLUTELY internal. User shoudl use only interface.
+ - all PVolume.* files are moved into src/Lib, where they are used by LVolume.cpp 
+ - all CONCRETE Xml*Cnv.h are moved from DetDesc directrory 
+ - GeometryInfo
+    o Now this class is ABSOLUTELY internal, user shoudl use only interface 
+ - all GeometryInfo.* fileas are moved into src/Lib directory, where hey are used by DetectorElement.cpp
+ - Xml converters updated to incorporate these changes 
+
+! 2001-01-25 - Vanya Belyaev 
+ - Package polishing:
+   o small modification to reduce a little bit some compiler warnings 
+   o remove the remaining "extern const CLID&" from all places 
+   o extract CLID_DetectorElement into separate file to 
      avoid the load of base class, if one need only it's CLID and it's interafce
-   - now all CLIDs, defined in DetDesc package belongd to a separate files 
+   o now all CLIDs, defined in DetDesc package belongd to a separate files 
      DetDesc/CLIDxxxx.h (just for convinience and easy maintainance) (is it true?) 
-   - remove artificial src/LVolume.cpp 
-   - rename CLID_LogicalVolume into CLID_LVolume for better mnemonics 
-   - a lot of unnesessary "#include" directives removed from header files. 
+   o remove artificial src/LVolume.cpp 
+   o rename CLID_LogicalVolume into CLID_LVolume for better mnemonics 
+   o a lot of unnesessary "#include" directives removed from header files. 
  
-!===========================================================================
-! 20010125 - Pere Mato
-  - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
-  - Fixed some bugs in the calculation of radiation and absorption lenght.
-  - Modified to use the CLHEP expression evaluator function
-  - New functionality: use of <parameter \> tag for defining XML parameters instead
-    of using XML entyties. The XML files in XMLDDDB package have been changed to 
-    exploit that new functionality
-  - Changes is the DTD required some changes in the XML converters. These changes are:
-    - element geometryinfo has now only attributes
-    - default class ID for detelem
-    - elementref can now have a fractionmass in addition to natoms attribute
+! 2001-01-25 - Pere Mato
+ - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
+ - Fixed some bugs in the calculation of radiation and absorption lenght.
+ - Modified to use the CLHEP expression evaluator function
+ - New functionality: use of <parameter \> tag for defining XML parameters instead
+   of using XML entyties. The XML files in XMLDDDB package have been changed to 
+   exploit that new functionality
+ - Changes is the DTD required some changes in the XML converters. These changes are:
+   - element geometryinfo has now only attributes
+   - default class ID for detelem
+   - elementref can now have a fractionmass in addition to natoms attribute
 
-!===========================================================================
-! 20010122 - DetDesc 
- Vanya Belyaev 
-  new functionality: 
-   (1) Solids , LVolumes , PVolumes, DetectorElements and Geometry Info are "Instectable"
-   (2) restructurization of the package : introduce new library DetDescLib
-   (3) optimization of SolidTrap and SolidTrd 
-!===========================================================================
+! 2001-01-22 - Vanya Belyaev 
+ - Solids , LVolumes , PVolumes, DetectorElements and Geometry Info are "Instectable"
+ - restructurization of the package : introduce new library DetDescLib
+ - optimization of SolidTrap and SolidTrd 
 
-! 20010116 - DetDesc 
- Vanya Belyaev 
-  new functionality: 
-   (1) now LVolume could be read/write to database (implementation of serialize methods) 
-         (head revision of GaudiKernel v9 is required)
-   (2) A helper class SolidPolyHedronHelper is introduced to simplifyt SolidTrap and SolidTrd shapes 
-!===========================================================================
+! 2001-01-16 - Vanya Belyaev 
+ - now LVolume could be read/write to database (implementation of serialize methods) 
+   (head revision of GaudiKernel v9 is required)
+ - A helper class SolidPolyHedronHelper is introduced to simplifyt SolidTrap and SolidTrd shapes 
 
-! 20010116 - DetDesc 
- Vanya Belyaev 
-  DetDesc/LVolume.h 
-  DetDesc/LVolume.create.... 
-  Add new functionality - a possibility of 2 and even 3 loops in creation on parametrized volumes.
-!===========================================================================
+! 2001-01-16 - Vanya Belyaev 
+ - DetDesc/LVolume.h 
+ - DetDesc/LVolume.create.... 
+ - Add new functionality
+   a possibility of 2 and even 3 loops in creation on parametrized volumes.
 
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v5 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20001108 - DetDesc v5
+! 2000-11-02 - Radovan Chytracek
+ - Bug fixes
+   o Due to small change in Gaudi a few Xml converters have to be fixed
+     to handle it properly, affected converters are XmlGenericCnv,
+     XmlCatalogCnv, XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
+ - New functionality
+   o New materials.dtd is understood by converters, affected converters
+     are XmlCatalogCnv XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
 
-! 20001102 - DetDesc pre v5
-Changes done by Radovan Chytracek
+! 2000-10-04 - Vanya Belyaev 
+ - DetDesc/Solid/SolidTrap.h 
+ - DetDesc/Solid/SolidTrap.cpp 
+ - A new type of Solid is added (general trapezoid) by request of Velo group. 
 
-Bug fixes
----------
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v4r1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-- Due to small change in Gaudi a few Xml converters have to be fixed to handle it properly,
-  affected converters are XmlGenericCnv, XmlCatalogCnv, XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
+! 2000-09-08 - Radovan Chytracek
+ - Bug fixes
+   o XML converters assumed the input from XML in absolute numbers. Now they
+     work internally with raw values. The effect is now that user who wants
+     to get the values out of the system in the given units must divide the
+     raw values by the corresponding  units.
+   o Fixed inheritance in the material classes hierarchy (hopefully the last
+     change in this area). No side effect.
+   o Fixed accessors for the Element class, needed for the conversion into
+     Geant4.
+   o Fixed the algorithm for the radiation length in the mixtures.
+   o Fixed bug in the XML element converter which did not initialize properly
+     the material elements created from scratch.
 
-New functionality
------------------
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v4 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-- New materials.dtd is understood by converters, affected converters are XmlCatalogCnv
-  XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
+! 2000-07-17 - Radovan Chytracek
+ - New functionality
+   o Switched from XML4C & ICU libraries for XML processing to Apache's XML
+     parser for C++ Xerces-C 1.2.0.
+   o The new feature allowing generic detector element conversion has been
+     introduced. This feature should be used in cases where either specific
+     information about user defined detector elements is not needed (e.g.
+     visualization) or can be ignored (e.g. testing). This feature is
+     triggered by the new property of the XmlCnvSvc called
+     "AllowGenericConversion".
+ - Bug fixes
+   o CLHEP translation vector NAN bug ( appeared after switch to CLEHP 1.5.0.0 )
+   o Fixed SAX callbacks for XmlDetectorElementCnv and XMLUserDeCnv.
+   o Fixed order of inheritance for DetectorElement subclasses + class ID getters
 
+! 2000-04-04 - Radovan Chytracek
+ - New functionality
+   o XML support for parametric physical volumes. This means that now one
+     is able to place as many copies as required of the same logical volume
+     in space by one definition inside XML file. For example having the
+     logical volume "wafer" one can compose "vertex station" from 6 positioned
+     wafers by only one XML definition instead of repeating the definitions
+     of the positions for each wafer separately. This is the first
+     implementation of this feature. More optimized implementation will come
+     soon.
+   o Changed the way of handling hyperlinks. This change was an implication
+     of the restructuralization of the XML DB for detector description. It's
+     backward compatible in the sense that the old XML DB and new XML DB
+     structure are handled by the current implementation in the same way.
+     There is a constraint, however, due to which the authors of the XML DB
+     files must specify the URIs for references always relative to the
+     location of the bootstrap 'dddb.xml' file. This will be improved in the
+     next version.
 
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v3 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20001004 - DetDesc  
-Vanya Belyaev 
- DetDesc/Solid/SolidTrap.h 
- DetDesc/Solid/SolidTrap.cpp 
- A new type of Solid is added (general trapezoid) by request of Velo group. 
+! 2000-03-28 - Radovan Chytracek
+ - New functionality
+   o Expressions Parser
+     - Check for CLHEP units inside numerical expressions added
+     - eval(...) method now checks for CLHEP units by default, to suppress
+       this behaviour one must call this method like: eval( "1+1", false );
+   o XmlGenericCnv
+     - The new DDDB DTD has been enhanced by version attribute of DDDB tag
+       (defaults to 3.0). This attribute is now checked inside XmlGenericCnv
+       and if differs from version supported by set of XML converters the
+       exception is thrown. The version attribute of DDDB tag does not have
+       to be explicitly mentioned inside XML data files referencing the given
+       DTD. It is, however, available to the XML parser during conversion
+       so the version check can be performed.
+   o CLHEP Units
+     - XML converters assume that CLHEP units are used inside XML data files.
+       The expressions parser is used to evaluate values inside XML files
+       for that purpose where possible. In case the units are missing the
+       exception is thrown with indication where the units are missing.
+       However this behaviour can be suppressed if needed, see point 1. above.
+     - The XML test database has been updated to tagged version v3. Only this
+       version is valid with the new set of XML coverters for detector
+       description. This version of XmlDDDB test database has been copied
+       into xml subdirectory of DDexample. One can checkout this test database
+       from CVS as:  cvs checkout XmlDDDB -r v3
 
+! 2000-03-01 - by Radovan Chytracek
+ - New functionality
+   o Reflected changes in the detector description DTD concerning
+     positions and rotations of physical volumes and solids
+   o XmlLVolumeCnv converter updated according to the new DTD
+   o New positions
+     a) posXYZ    - position in carthesian coordinate system
+     b) posRPhiZ  - position in cylindrical coordinate system
+     c) posRthPhi - position in spherical coordinate system
+   o New rotations
+     a) rotXYZ    - rotation in carthesian coordinate system
+     b) rotAxis   - rotation by vector and angle (providing theta, phi, angle input)
 
-!===========================================================================
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v2r1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20000908 - DetDesc pre v4r1
-Changes done by Radovan Chytracek
+! 2000-02-26 - Vanya Belyaev 
+ - New functionality
+   o intersectLine methods are added to LVolume and PVolume (and to their
+     interfaces)
+   o reset() method is added to LVolume, Pvolume,Solids, GeometryInfo and
+     DetectorElements (and to their interfaces)
+   o DetDesc/Volumes/doc directory is created and some documentation has been put there
+   o update on solid documentation in DetDesc/Solid/doc directory 
 
-Bug fixes
----------
+! 2000-02-24 - Vanya Belyaev 
+ - New functionality
+   For all solids "intersectionTicks" method is added (to implement the
+   extended ISolid interface). This method is to be used to estimation of the
+   distance (in radiation length units) between 2 points. (request of Tracker
+   group) Also the documentation in directory DetDesc/Solid/doc is updated.
 
-- XML converters assumed the input from XML in absolute numbers. Now they work internally with raw values.
-  The effect is now that user who wants to get the values out of the system in the given units must
-  divide the raw values by the corresponding  units.
-- Fixed inheritance in the material classes hierarchy (hopefully the last change in this area). No side effect.
-- Fixed accessors for the Element class, needed for the conversion into Geant4.
-- Fixed the algorithm for the radiation length in the mixtures.
-- Fixed bug in the XML element converter which did not initialize proiperly the material elements created from
-  scratch.
+! 2000-01-26 - Radovan Chytracek
+ - New functionality
+   Numerical expressions parser support.
+   New IXmlSvc interface for XmlCnvSvc service.
+   New base template class for user defined detector element converters.
+   Support for name based rpath of geometryinfo.
 
-! 20000717 - DetDesc v4
-Changes done by Radovan Chytracek
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v2 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-New functionality
------------------
-1. Switched from XML4C & ICU libraries for XML processing to Apache's XML parser for C++
-   Xerces-C 1.2.0.
+! 1999-11-22 - Rado Chytracek
+ - New functionality
+   Detector description persistency changed from proprietary text format to
+   industry standard XML. Built full set of XML converters for all data
+   objects in detector description model. XML conversion uses IBM XML parser
+   for C/C++ and IBM library of classes for Unicode.
 
-2. The new feature allowing generic detector element conversion has been introduced.
-   This feature should be used in cases where either specific information about user defined
-   detector elements is not needed (e.g. visualization) or can be ignored (e.g. testing).
-   This feature is triggered by the new property of the XmlCnvSvc called "AllowGenericConversion".
+! 1999-11-21 - Ivan Belyaev
+ - New functionality
+   Completely rewritten geometry part of detector description model.
+   There are new abstract interfaces: IDetectorElement, IValidity, ILVolume,
+   ISolid. Updated abstract interface IGeometryInfo. Geometry is able now
+   to describe geometry tree of volumes, locate 3D points in volumes,
+   translate local to global coordinates and vice-versa.
 
-Bug fixes
----------
+! 1999-08-27 - Rado Chytracek
+ - New functionality
+   o Added support for materials, needs some testing and tuning.
+     The design should be able provide data needed either by Geant3 or Geant4.
+     The reconstruction needs are unclear but hopefully this design can be
+     easily extended to provide required data if needed.
+ - Updates
+   o Class IDs changed for LogicalVolume from 3 to 1100 and allocated
+   new IDs for material objects as: isotopes/1201 elements/1202 mixtures/1203
+   list of allocated class IDs can be found on the Web using URL:
+   http://lhcb.cern.ch/computing/components/html/clid.html
 
-- CLHEP translation vector NAN bug ( appeared after switch to CLEHP 1.5.0.0 )
-- Fixed SAX callbacks for XmlDetectorElementCnv and XMLUserDeCnv.
-- Fixed order of inheritance for DetectorElement subclasses + class ID getters
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20000410 - DetDesc v3
-! 20000404 - DetDesc v2head
-Changes done by Radovan Chytracek
-
-New functionality
------------------
-
-1. XML support for parametric physical volumes. This means that now one is able to place
-   as many copies as required of the same logical volume in space by one definition inside XML file.
-   For example having the logical volume "wafer" one can compose "vertex station" from 6 positioned
-   wafers by only one XML definition instead of repeating the definitions of the positions for each
-   wafer separately. This is the first implementation of this feature. More optimized implementation
-   will come soon.
-2. Changed the way of handling hyperlinks. This change was an implication of the restructuralization
-   of the XML DB for detector description. It's backward compatible in the sense that the old XML DB
-   and new XML DB structure are handled by the current implementation in the same way.
-   There is a constraint, however, due to which the authors of the XML DB files must specify the URIs
-   for references always relative to the location of the bootstrap 'dddb.xml' file.
-   This will be improved in the next version.
-
-! 20000328 - DetDesc v2head
-Changes done by Radovan Chytracek
-
-New functionality
------------------
-
-1. Expressions Parser
-   - Check for CLHEP units inside numerical expressions added
-   - eval(...) method now checks for CLHEP units by default, to suppress this behaviour
-     one must call this method like: eval( "1+1", false );
-2. XmlGenericCnv
-   - The new DDDB DTD has been enhanced by version attribute of DDDB tag (defaults to 3.0).
-     This attribute is now checked inside XmlGenericCnv and if differs from version supported
-     by set of XML converters the exception is thrown. The version attribute of DDDB tag does
-     not have to be explicitly mentioned inside XML data files referencing the given DTD. It is,
-     however, available to the XML parser during conversion so the version check can be performed.
-3. CLHEP Units
-   - XML converters assume that CLHEP units are used inside XML data files. The expressions parser
-     is used to evaluate values inside XML files for that purpose where possible. In case the units
-     are missing the exception is thrown with indication where the units are missing. However this
-     behaviour can be suppressed if needed, see point 1. above.
-   - The XML test database has been updated to tagged version v3. Only this version is valid with the
-     new set of XML coverters for detector description. This version of XmlDDDB test database has been
-     copied into xml subdirectory of DDexample. One can checkout this test database from CVS as:
-               cvs checkout XmlDDDB -r v3
-
-! 20000301 - DetDesc v2head
-Changes done by Radovan Chytracek
-
-New functionality
------------------
-1. Reflected changes in the detector description DTD concerning
-   positions and rotations of physical volumes and solids
-2. XmlLVolumeCnv converter updated according to the new DTD
-3. New positions
-   a) posXYZ    - position in carthesian coordinate system
-   b) posRPhiZ  - position in cylindrical coordinate system
-   c) posRthPhi - position in spherical coordinate system
-4. New rotations
-   a) rotXYZ    - rotation in carthesian coordinate system
-   b) rotAxis   - rotation by vector and angle (providing theta, phi, angle input)
-
-! 20000226 - DetDesc v2r1
-Changes done by Vanya Belyaev 
-
-New functionality
------------------
-
-1) intersectLine methods are added to LVolume and PVolume (and to their interfaces)
-2) reset() method is added to LVolume, Pvolume,Solids, 
-                              GeometryInfo and DetectorElements
-                              (and to their interfaces)
-3) DetDesc/Volumes/doc directory is created and some documentation has been put there
-3) update on solid documentation in DetDesc/Solid/doc directory 
-
-! 20000224 - DetDesc v2r1
-Changes done by Vanya Belyaev 
-
-New functionality
------------------
-
-For all solids "intersectionTicks" method is added 
-(to implement the extended ISolid interface). 
-This method is to be used to estimation of the 
-distance (in radiation length units) between 2 points. 
-(request of Tracker group) 
-Also the documentation in directory DetDesc/Solid/doc 
-is updated.
-
-! 20000126 - DetDesc v2r1
-Changes done by Radovan Chytracek
-
-New functionality
------------------
-
-Numerical expressions parser support.
-New IXmlSvc interface for XmlCnvSvc service.
-New base template class for user defined detector element converters.
-Support for name based rpath of geometryinfo.
-
-! 19991122 - DetDesc release v2
-Changes done by Rado Chytracek
-
-New functionality
------------------
-
-Detector description persistency changed from proprietary text format to industry standard XML.
-Built full set of XML converters for all data objects in detector description model.
-XML conversion uses IBM XML parser for C/C++ and IBM library  of classes for Unicode.
-
-Changes done by Ivan Belyaev
-
-New functionality
------------------
-
-Completely rewritten geometry part of detector description model. There are new abstract
-interfaces: IDetectorElement, IValidity, ILVolume, ISolid.
-Updated abstract interface IGeometryInfo.
-Geometry is able now to describe geometry tree of volumes, locate 3D points in volumes,
-translate local to global coordinates and vice-versa.
-
-! =========================================================================
-
-! 19990827 - DetDesc release v2dev
-
-Changes done by Rado Chytracek
-
-New functionality
------------------
-
-- Added support for materials, needs some testing and tuning.
-  The design should be able provide data needed either by Geant3 or Geant4.
-  The reconstruction needs are unclear but hopefully this design can be easily extended
-  to provide required data if needed.
-
-Updates
--------
-- Class IDs changed for LogicalVolume from 3 to 1100 and allocated new IDs for material
-  objects as: isotopes/1201 elements/1202 mixtures/1203
-  list of allocated class IDs can be found on the Web using URL:
-  http://lhcb.cern.ch/computing/components/html/clid.html
-
-! ===========================================================================
-
-! 19990618 - DetDesc release v1
-
-Changes done by Rado Chytracek 
-
-New Functionality
------------------
-- This is a new package for the LHCb detector description.
+! 1999-06-18 - Rado Chytracek 
+ - This is a new package for the LHCb detector description.
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.9 2002-01-25 07:29:27 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.10 2002-05-24 15:28:36 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -109,7 +109,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
      if (list.item(index).getNodeType() == DOM_Node::ELEMENT_NODE) {
        DOM_Node childNode = list.item(index);
        DOM_Element childElement = (DOM_Element &) childNode;
-       log << MSG::DEBUG << "found element "
+       log << MSG::VERBOSE << "found element "
            << dom2Std (childElement.getNodeName())
            << " at top level of xml file." << endreq;
        if (childElement.getNodeName().equals("DDDB") ||
