@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneDet.cpp,v 1.1 2003-07-08 19:40:58 ibelyaev Exp $ 
+// $Id: GaussSensPlaneDet.cpp,v 1.2 2003-10-10 17:22:19 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/08 19:40:58  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -150,7 +153,7 @@ StatusCode GaussSensPlaneDet::finalize    ()
   if( m_stat ) 
     { /// statistical printout 
       MsgStream log( msgSvc() , name() ) ;
-      log << MSG::ALWAYS << 
+      log << MSG::DEBUG << 
         format ( " <#Hits>/Min/Max=(%3d+-%3d)/%d/%4d "                  , 
                  (long) m_hits                                          , 
                  (long) sqrt ( fabs( m_hits2 - m_hits * m_hits ) )      ,
