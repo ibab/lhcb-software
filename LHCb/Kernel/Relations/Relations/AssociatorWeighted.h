@@ -1,35 +1,8 @@
-// $Id: AssociatorWeighted.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: AssociatorWeighted.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2003/06/25 14:59:01  ibelyaev
-//  Modifications in Relations-subpackage
-//
-// Revision 1.11  2003/05/12 11:51:41  phicharp
-// =Add possibility to get last associated item in AssociatorWeighted.h
-//
-// Revision 1.10  2003/01/22 11:29:16  sponce
-// makes gcc 3.2 modifications compile under windows
-//
-// Revision 1.9  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.8  2002/05/24 18:36:32  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes
-//
-// Revision 1.7  2002/05/15 14:43:28  phicharp
-// Make name of associators' methods consistent
-//
-// Revision 1.6  2002/05/13 15:54:19  ibelyaev
-//  bug fix
-//
-// Revision 1.5  2002/05/13 09:48:26  phicharp
-// Add methods associatedFrom() and To() for single objects
-//
-// Revision 1.4  2002/05/12 09:58:02  ibelyaev
-//  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_AssociatorWeighted_H 
 #define RELATIONS_AssociatorWeighted_H 1
@@ -169,7 +142,8 @@ public:
     ToRange&    range ) const 
   {
     const DirectType* table = direct();
-    if( 0 == table ) {
+    if( 0 == table ) 
+    {
       range = ToRange() ;
       return StatusCode::FAILURE;
     }
@@ -189,7 +163,8 @@ public:
     FromRange& range ) const
   {
     const InverseType* table = inverse();
-    if( 0 == table ) {
+    if( 0 == table ) 
+    {
       range = FromRange() ;
       return StatusCode::FAILURE;
     }
@@ -240,7 +215,8 @@ public:
     ToRange&      range     ) const
   {
     const DirectType* table = direct();
-    if( 0 == table ) {
+    if( 0 == table ) 
+    {
       range = ToRange() ;
       return StatusCode::FAILURE;
     }
@@ -263,7 +239,8 @@ public:
     FromRange&    range     ) const
   {
     const InverseType* table = inverse();
-    if( 0 == table ) {
+    if( 0 == table ) 
+    {
       range = FromRange() ;
       return StatusCode::FAILURE;
     }
@@ -286,7 +263,8 @@ public:
     ToRange&      range     ) const
   {
     const DirectType* table = direct();
-    if( 0 == table ) {
+    if( 0 == table ) 
+    {
       range = ToRange() ;
       return StatusCode::FAILURE;
     }
@@ -308,9 +286,9 @@ public:
     const Weight& threshold , 
     FromRange&    range     ) const
   {
-    const InverseType* table =
-      inverse();
-    if( 0 == table ) {
+    const InverseType* table = inverse();
+    if( 0 == table ) 
+    {
       range = FromRange() ;
       return StatusCode::FAILURE;
     }
@@ -415,14 +393,18 @@ public:
     Weight&     weight ) const
   {
     const DirectType* table = direct();
-    if (0 != table) {
-      ToRange range =
-        table->relations( from );
-      if( !range.empty() ) {
-        if( !m_decreasing ) {
+    if ( 0 != table) 
+    {
+      ToRange range = table->relations( from );
+      if( !range.empty() ) 
+      {
+        if( !m_decreasing ) 
+        {
           weight = range.begin()->weight();
           return range.begin()->to();
-        } else {
+        } 
+        else 
+        {
           weight = range.rbegin()->weight();
           return range.rbegin()->to();
         }
@@ -462,11 +444,18 @@ public:
     Weight&    weight ) const
   {
     const InverseType* table = inverse();
-    if (0 != table) {
+    if ( 0 != table) 
+    {
       FromRange range = table->relations( to );
-      if( !range.empty() ) {
-        if( !m_decreasing ) {
-        } else {
+      if( !range.empty() ) 
+      {
+        if( !m_decreasing ) 
+        {
+          weight = range.begin()->weight();
+          return range.begin()->to();
+        } 
+        else 
+        {
           weight = range.rbegin()->weight();
           return range.rbegin()->to();
         }
@@ -509,12 +498,8 @@ protected:
   virtual StatusCode i_direct() const 
   {
     // exists?
-    if( 0 != m_direct ) { return StatusCode::SUCCESS                     ; }
-    IInterface* obj = object () ;
-    if( 0 == obj      ) { return Error("'Object' is not located/built!") ; }
-    SmartIF<DirectType> aux ( DirectType::interfaceID() , obj );
-    m_direct = aux ;
-    if( 0 == m_direct ) { return Error("'DirectType' points to NULL!"  ) ; }
+    if( 0 != m_direct ) { return StatusCode::SUCCESS ; }
+    m_direct = get<DirectType>( location() ) ;
     addRef ( m_direct ) ;
     return StatusCode::SUCCESS ;
   };
@@ -584,10 +569,10 @@ protected:
   
   /// destructor (virtual and protected)
   virtual ~AssociatorWeighted(){};
-
-  void setDecreasing( bool val ) {
-    m_decreasing = val;
-  }
+  
+  void setDecreasing( bool val ) 
+  { m_decreasing = val ; }
+  
 private:
   
   // relations 

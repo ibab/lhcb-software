@@ -1,6 +1,8 @@
-// $Id: IAssociatorWeighted.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: IAssociatorWeighted.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 #ifndef RELATIONS_IAssociatorWeighted_H 

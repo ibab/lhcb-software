@@ -1,22 +1,8 @@
-// $Id: IAssociator.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: IAssociator.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.8  2002/05/15 14:43:29  phicharp
-// Make name of associators' methods consistent
-//
-// Revision 1.7  2002/05/13 09:48:26  phicharp
-// Add methods associatedFrom() and To() for single objects
-//
-// Revision 1.6  2002/05/12 09:58:02  ibelyaev
-//  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
-//
-// Revision 1.5  2002/05/10 14:49:39  phicharp
-// Add retrieve methods to IAssociatorxx
 // ============================================================================
 #ifndef RELATIONS_IAssociator_H 
 #define RELATIONS_IAssociator_H 1

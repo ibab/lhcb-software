@@ -1,8 +1,105 @@
-!-----------------------------------------------------------------------------
+! $Id: release.notes,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ 
+! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
-! Responsible : Ivan Belyaev
+! Responsible : Vanya BELYAEV ibelyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2004-11-19 - Vanya BELYAEV
+ - put few *SERIOUSE* modification into Associators
+
+  
+  The purpose is to eliminate the algorithm 
+  handling by associators and to allow new 
+  Data-On-Demand service to take care about 
+  handling of algorithms. 
+
+  To allow a management of relational tables by Data-On-Demand Service
+  one needs to achive teh proper configuration of the Service: 
+
+     Assuming that the relation table at location "MyTableLocation", 
+              to be created with some algorihm of type "MyAlgorithmType" 
+              with algorihtm instance name "MyAlgInstanceName".
+
+  The corresponding configuration lines are:  
+
+  DataOnDemansSvc.Algorithms 
+     += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
+
+  e.g. for concrete examples with MC association for CaloClusters:
+
+    DataOnDemansSvc.Algorithms 
+      += { "DATA='Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
+
+  With such configuration one *DOES NOT* need teh associators at all, 
+  the relation table can be retrieved and use inside the 
+  algorithms and tools "locally", e.g. 
+  
+      typedef IRelationWeighted<CaloCluster,MCPrticle,float ITable ;
+      const ITable* table = get<ITable>( "Rec/Relations/EcalClusters2MCParticles" );
+
+      const CaloCluster* cluster = ... ;
+      // get all related MCParticles
+      ITable::Range mcps = table->relations( cluster );
+      // ordinary loop over all related objects
+      for ( ITable::iterator it = mcps.begin() ; mcps.end() != it ; ++it )
+      {
+        const MCParticle* mcp    = it->to() ;
+        const double      weight = it->weight() ;
+      };
+   
+  The associators are still *in the game*, is someone wnats to use them.
+  *BUT* from now teh usage of properties "AlgorithmType" and "AlgorithmName"
+  becomed obsolete and deprecates. Being used these properties will trigger 
+  the WARNING messages , e.g. 
+
+  --------------------------------
+      ToolSvc.CCs2MCPs    WARNING  Obsolete properties 'AlgorithmName' and 'AlgorithmType'. Use new 'Data-On-Demand' Service: 
+    
+               DataOnDemandSvc.Algorithms += { "DATA='Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
+
+  --------------------------------
+   
+   If one gets such message, one needs to *ELIMINATE* the lines 
+
+     ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth5Alg" ;
+     ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs" ;
+
+  from *.opts files and to use the line, proposed by Associators itself 
+  instead of such lines.
+
+  for general case, the lines: 
+
+    The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ;
+    The.Full.Name.Of.My.Associator.AlgorithmType = "MyAlgorithmType"   ;
+    The.Full.Name.Of.My.Associator.AlgorithmName = "MyAlgInstanceName" ;
+ 
+  need to be substituted by lines:
+
+    The.Full.Name.Of.My.Associator.Location      = "MyTableLocation"   ; // THE LINE 
+    DataOnDemansSvc.Algorithms 
+         += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
+	
+  (NB: do not forget the "The.Full.Name.Of.My.Associator" is really *FULL" name
+   and includes the parent name, e.g. "ToolSvc" for "PUBLIC" associators!)
+
+   Let me stress here once more that, the line, marked by "//THE LINE" is needed 
+   only if one still uses "Associators", for direct usage of relation table 
+   it is not needed at all.
+
+        I *THINK* (this is my personal preference) that it is worth 
+        to declare the explicit usage of "Associators" as 
+        DEPRECATED/OBSOLETE feature and I'd like to  recommend for everybody 
+        the direct manipulations with relation tables.
+
+   For further details see in lhcb-core-soft@cern.ch archive the mail 
+   titled "Relations and DataOnDemandSvc" from October 26th 
+     
+ - cmt/requirements
+ 
+     increment the MAJOR version 
 
 !====================== Relations v1r0 2004-07-19 ============================
 ! 2004-07-19 - Marco Cattaneo
@@ -12,3 +109,7 @@
 ! 2004-07-19 - Marco Cattaneo
  - First import as an independent package, previously a subpackage of
    LHCbKernel (until version v4r6)
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------

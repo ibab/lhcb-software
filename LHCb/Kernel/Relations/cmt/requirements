@@ -1,21 +1,29 @@
-# $Id: requirements,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+# $Id: requirements,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package Relations
 author  I.Belyaev
 manager I.Belyaev
 
-version v1r0
+version v2r0
 
-include_dirs $(RELATIONSROOT)
+# ============== own includes =================================================
+include_dirs     $(RELATIONSROOT)
 
-use GaudiAlg	v*
+# ============== dependencies =================================================
+use              GaudiAlg  v*
 
-# Build library
-#============================================================================
-library Relations *.cpp
-apply_pattern linker_library library=Relations
+# ============== constituents =================================================
+library          Relations *.cpp
 
-# Uncomment to find memory leaks
-#============================================================================
-macro_append Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
-        WIN32                      ' /D"COUNT_INSTANCES" '
+# ============== patterns =====================================================
+apply_pattern    linker_library library=Relations
+
+# ============== find memory leaks ============================================
+macro_append     Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
+                 WIN32                 ' /D"COUNT_INSTANCES" '
+
+# =============================================================================
+# The END 
+# =============================================================================

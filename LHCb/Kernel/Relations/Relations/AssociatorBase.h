@@ -1,11 +1,8 @@
-// $Id: AssociatorBase.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// $Id: AssociatorBase.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2004/03/17 20:17:49  ibelyaev
-//  update Relations
-//
 // ============================================================================
 #ifndef RELATIONS_AssociatorBase_H 
 #define RELATIONS_AssociatorBase_H 1
@@ -68,7 +65,7 @@ namespace Relations
      *  @see IIncidentSvc  
      *  @see incident incident to be handled 
      */
-    virtual void handle( const Incident& incident ) ;
+    virtual void handle ( const Incident& incident ) ;
     
   protected:
     
@@ -86,6 +83,11 @@ namespace Relations
     virtual ~AssociatorBase () ;
   
   protected:
+    
+    /** accessor to data location
+     *  @return data locationin Gaudi ETS 
+     */
+    inline const std::string& location  () const ;
     
     /** The "base" method for access the relation data 
      *
@@ -108,20 +110,15 @@ namespace Relations
      *  @see IAlgorithm
      *  @return poinere to relations builder
      */
-    inline IAlgorithm*        algorithm () const ;
+    IAlgorithm*        algorithm () const ;
     
     /** accessor to relations table via interface, 
      *  locate or build the table, if not yet done 
      *  @see IInterface 
      *  @return poinere to relations table 
      */
-    inline IInterface*        object    () const ;
-    
-    /** accessor to data location
-     *  @return data locationin Gaudi ETS 
-     */
-    inline const std::string& location  () const ;
-    
+    IInterface*        object    () const ;
+
   private:
     
     /** locate the algorithm for building the relations
@@ -162,47 +159,19 @@ namespace Relations
     std::string         m_builderType  ; ///< relation builder type 
     // relation builder name 
     mutable std::string m_builderName  ; ///< relation builder name 
-    // relation builder itself 
-    mutable IAlgorithm* m_algorithm    ; ///< relation builder itself 
-    // relation table!    
-    mutable IInterface* m_object       ; ///< relation table
     // reference counter 
     mutable counter     m_counter      ; ///< reference counter
     
   };
   
-  /** accessor to relations builder,
-   *  locate algorthm, if not yet done 
-   *  @see IAlgorithm
-   *  @see AssociatorBase 
-   *  @return poinere to relations builder
-   */
-  inline IAlgorithm*        AssociatorBase::algorithm () const 
-  { 
-    if( 0 == m_algorithm ) { locateAlgorithm() ; }
-    return m_algorithm ;
-  };
-  
-  /** accessor to relations table via interface, 
-   *  locate or build the table, if not yet done 
-   *  @see IInterface 
-   *  @see AssociatorBase 
-   *  @return poinere to relations table 
-   */
-  inline IInterface*        AssociatorBase::object    () const 
-  {
-    if( 0 == m_object    ) { locateOrBuild () ; } 
-    return m_object ; 
-  };
-  
   /** accessor to data location
    *  @see AssociatorBase 
-   *  @return data locationin Gaudi ETS 
+   *  @return data location in Gaudi ETS 
    */
   inline const std::string& AssociatorBase::location  () const 
   { return m_location ; }
   
-  /** add the reference to existing interafce 
+  /** add the reference to existing interface 
    *  @param  iif interface 
    *  @return current value of reference counter 
    */
