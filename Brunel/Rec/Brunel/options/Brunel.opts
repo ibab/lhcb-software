@@ -23,9 +23,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
                            "BrunelFinalisation/BrunelFinish" };
-#pragma print off
 #include "$BRUNELOPTS/BrunelMoni.opts"
-#pragma print on
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
@@ -50,30 +48,44 @@ BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 
 // Calorimeter digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
+#pragma print off
 #include "$CALOTOOLSOPTS/Brunel.opts"
+#pragma print off
 #include "$CALOALGSOPTS/Brunel.opts"
+#pragma print off
 #include "$CALORECOPTS/Brunel.opts"
+#pragma print off
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
+#pragma print off
 #include "$CALOTRACKTOOLSOPTS/Brunel.opts"
+#pragma print off
 #include "$CALOMONITOROPTS/Brunel.opts"
+#pragma print on
 
 // Rich Fortran digitisation and OO digits creator 
 ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
-BrunelDigiRICHSeq.Members = { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
+BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Inner tracker digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs += { "ITSicbGeom" };
+#pragma print off
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
+#pragma print on
 
 // Outer tracker digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs   += { "Magnet", "OTDet", "OTAlgorithms" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+#pragma print off
 #include "$OTALGORITHMSROOT/options/otDigi.opts"
+#pragma print on
 BrunelDigiOTSeq.Members += { "OTInitialization",
                              "MCOTDepositCreator",
                              "MCOTDigitCreator",
                              "OTDigitCreator" };
+#pragma print off
 #include "$OTALGORITHMSROOT/options/otRec.opts"
+#pragma print on
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 
@@ -97,19 +109,26 @@ ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FwtFind" };
 BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
-//BrunelRecoTRACKSeq.Members += { "StoreTracks" };
 
 // Seeding
 ApplicationMgr.DLLs += { "Seeding" }; 
 BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
                              "TrEventTracksFitter/fitSeed" };
+#pragma print off
 #include "$SEEDINGROOT/options/Brunel.opts"
+#pragma print on
 
 // Velo Matching
 ApplicationMgr.DLLs += { "TrMatching" }; 
 BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
 reFit.TrackContainer = "Rec/FitTrack/Match";
+
+// Upstream tracking
+ApplicationMgr.DLLs += { "UpstreamPR" };
+#pragma print off
+#include "$UPSTREAMPRROOT/options/Brunel.opts"
+#pragma print on
 
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };
@@ -119,15 +138,18 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreForward",
 //                             "TrFit2StoredTrackCnv/StoreVelo", 
 //                             "TrFit2StoredTrackCnv/StoreSeed", 
 //                             "TrFit2StoredTrackCnv/StoreMatch", 
+#pragma print off
 #include "$TRCLEANEXROOT/options/Brunel.opts"
+#pragma print on
 TrTrackCloneKiller.flagMode = true;
 
 // Back conversion of tracks for RICH reconstruction
 BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
+#pragma print off
 #include "$TRSICBCNVROOT/options/BackCnv.opts"
+#pragma print on
 
-// Rich Fortran reconstruction and OO Pid creator 
-BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+// Rich Fortran reconstruction
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
 
 // Muon digitisation
@@ -138,12 +160,16 @@ BrunelDigiMUONSeq.Members = { "MuonDigitization" };
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
+#pragma print off
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
+#pragma print on
 
 // Algorithm timing
 ApplicationMgr.DLLs += { "BrunelAlgs" };
 BrunelRecoTimingSeq.Members += { "TimingAlg" };
+#pragma print off
 #include "$BRUNELALGSROOT/options/Timing.opts"
+#pragma print on
 
 // For now, use forward tracks as input to PID algorithms
 TrStoredTrackToSicbCnv.TrStoredTracksInput = "Rec/Tr/Forward";
@@ -152,11 +178,6 @@ ElectronMatch.Tracks                       = "Rec/Tr/Forward";
 PhotonMatch.Tracks                         = "Rec/Tr/Forward";
 BremMatch.Tracks                           = "Rec/Tr/Forward";
 MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
-
-// For now, fill only forward track relations
-//ToolSvc.TrackToMCP.Location = "Rec/Relations/TrForward2MCP";
-//Tr2MCP.OutputTable          = "Rec/Relations/TrForward2MCP";
-//Tr2MCP.InputTracks          = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"

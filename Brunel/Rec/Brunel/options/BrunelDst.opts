@@ -25,12 +25,10 @@ ApplicationMgr.DLLs += { "MuonAssociators" };
 BrunelOutputFiltersSeq.Members += { "MuonCoord2MCParticleAlg" };
 
 // Filter the MCParticles/MCVertices after everything else
-//BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
-//MCParticleFilter.OutputLevel = 2;
+BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
 
 // Define DST content
 ApplicationMgr.OutStream += { "BrunelDstWriter" };
-//BrunelDstWriter.OutputLevel = 2;
 BrunelDstWriter.OptItemList =
 {
   "/Event/Prev#1"
@@ -48,8 +46,8 @@ BrunelDstWriter.ItemList =
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"  // To be filtered
-, "/Event/MC/Vertices#1"   // To be filtered
+, "/Event/MC/Particles#1"  // Filtered
+, "/Event/MC/Vertices#1"   // Filtered
 , "/Event/Trig#1"
 , "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"

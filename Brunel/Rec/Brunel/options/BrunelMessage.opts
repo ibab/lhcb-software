@@ -23,12 +23,22 @@ MessageSvc.OutputLevel = 3;
 ApplicationMgr.OutputLevel = 4;
 TransportSvc.OutputLevel = 6;
 RootEventCnvSvc.OutputLevel = 4;
+MCParticleFilter.OutputLevel = 4;
 
 ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 5;
 ToolSvc.TrHerabExtrapolator.OutputLevel = 5;
 fitSeed.OutputLevel = 5;
 fitSeed.Fitter.OutputLevel = 5;
 reFit.Fitter.OutputLevel = 5;
+
+patternRecog.OutputLevel = 4;
+convertSeeds.OutputLevel = 4;
+ToolSvc.TrackFollow1.OutputLevel = 4;
+ToolSvc.TrackFollow2.OutputLevel = 4;
+ToolSvc.TrackFollow3.OutputLevel = 4;
+ToolSvc.TrackFollow4.OutputLevel = 4;
+ToolSvc.TrackFollow5.OutputLevel = 4;
+TrLayerPartitioning.OutputLevel = 4;
 
 RichPIDMonitor.OutputLevel = 4;
 

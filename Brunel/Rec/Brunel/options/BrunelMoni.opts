@@ -10,7 +10,6 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 // ROOT persistency (use RootHistCnv v* in requirements).
 //#include "$STDOPTS/RootHist.opts"
 
-#pragma print on
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
@@ -45,22 +44,17 @@ BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 
 // Tracking
+#pragma print off
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
+#pragma print on
 ApplicationMgr.DLLs += { "VeloAssociators" };
 BrunelMoniTRACKSeq.Members += { "FwtAnalyse" };
-//BrunelMoniTRACKSeq.Members += { "FwtAnalyse/MatchAnalyse" };
-//MatchAnalyse.FitTrackContainer  = "Rec/FitTrack/Match" ;
-//MatchAnalyse.FitTrackAssociator = "MatchTrackToMCP" ;
-//MatchAnalyse.VeloTrackAssociator = "VeloMatchTrackToMCP" ;
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };
 BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" };
 BrunelMoniRICHSeq.Members += { "RichPIDCnvVerifier" };
 BrunelMoniRICHSeq.Members += { "RichPIDMonitor" };
-
-//BrunelMoniTrSeq.Members   = { "TrMonitor" };
-#pragma print off
 
 // Framework monitoring
 EventSelector_0.doHistos = true;
