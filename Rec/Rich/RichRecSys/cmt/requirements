@@ -2,6 +2,10 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
+# $Id: requirements,v 1.27 2004-07-30 11:15:05 jonrob Exp $
+# $Log: not supported by cvs2svn $
+#============================================================================
+
 package           RichRecSys
 version           v1r12
 

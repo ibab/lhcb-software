@@ -1,10 +1,11 @@
 #============================================================================
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
+# $Id: requirements,v 1.3 2004-07-30 11:08:57 jonrob Exp $
+# $Log: not supported by cvs2svn $
+#============================================================================
+
 package           RichMarkovRingFinder
 version           v1r0
 

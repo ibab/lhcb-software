@@ -1,6 +1,10 @@
-# $Id: requirements,v 1.25 2004-07-22 16:57:20 cattanem Exp $
+#============================================================================
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
+#============================================================================
+# $Id: requirements,v 1.26 2004-07-30 11:16:05 jonrob Exp $
+# $Log: not supported by cvs2svn $
+#============================================================================
 
 package RichRecTools
 version v2r11
