@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.1 2002-10-02 07:06:29 phicharp Exp $
+// $Id: TestAssociators.cpp,v 1.2 2002-10-10 18:30:35 gcorti Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -282,18 +282,18 @@ StatusCode TestAssociators::execute() {
   
   int width = (int)log10(nbParts)+1;
 
-  ifLog(MSG::DEBUG) << "========= On " << setw(width) <<  nbParts 
+  ifLog(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts 
         << " Particles =========" 
         <<endreq
-        << "   | Matched with Links | " << setw(width) << matchLinks 
-        << " | Missed with Chi2  | " << setw(width) << matchLinksNotChi2 
-        << " | Too large Chi2  | " << setw(width) << matchLinksHighChi2 
+        << "   | Matched with Links | " << std::setw(width) << matchLinks 
+        << " | Missed with Chi2  | " << std::setw(width) << matchLinksNotChi2 
+        << " | Too large Chi2  | " << std::setw(width) << matchLinksHighChi2 
         << endreq
-        << "   | Matched with Chi2  | " << setw(width) << matchChi2
-        << " | Missed with Links | " << setw(width) << matchChi2NotLinks 
+        << "   | Matched with Chi2  | " << std::setw(width) << matchChi2
+        << " | Missed with Links | " << std::setw(width) << matchChi2NotLinks 
         << endreq
-        << "   | Matched with both  | " << setw(width) << matchFull
-        << " | Matched different | " << setw(width) << matchDifferent 
+        << "   | Matched with both  | " << std::setw(width) << matchFull
+        << " | Matched different | " << std::setw(width) << matchDifferent 
         << endreq;
 
   m_matchLinks += matchLinks;
@@ -404,14 +404,14 @@ StatusCode TestAssociators::execute() {
 
   width = (int)log10(mcPartCount)+1;
   ifLog( MSG::DEBUG ) 
-    << "========= On " << setw(width) << mcPartCount
+    << "========= On " << std::setw(width) << mcPartCount
     << " MCParticles ========="
     << endreq
     << "   |                       |  Total  | Forward |  Match  |  Velo   |"
     << "  Seed   | Upstream|  Missed |" << endreq;
   width = 7;
   ifLog( MSG::DEBUG ) 
-    << "   | Reconstructible long  | " << setw(width) << mcPartRecons
+    << "   | Reconstructible long  | " << std::setw(width) << mcPartRecons
     <<endreq;
 
   prTable( log, MSG::DEBUG, 
@@ -449,7 +449,7 @@ void TestAssociators::prTable( MsgStream& log, MSG::Level level,
   if( log.level() <= level ) {
     log << level << title;
     for( unsigned int i=0; i < table.size(); i++ ) {
-      log << setw(width) << table[i] << " | ";
+      log << std::setw(width) << table[i] << " | ";
     }
     log << endreq;
   }
@@ -480,25 +480,25 @@ StatusCode TestAssociators::finalize() {
   ifLog( MSG::INFO ) 
       << "======== Statistics for Particles to MCParticles association"
       << "========" << endreq
-      << "======== On " << setw(width) <<  m_nbParts 
+      << "======== On " << std::setw(width) <<  m_nbParts 
       << " Particles ( " << m_nbEvts << " events) ========" 
       <<endreq
-      << "   | Matched with Links | " << setw(width) << m_matchLinks 
-      << " | Missed with Chi2  | " << setw(width) << m_matchLinksNotChi2 
-      << " | Too large Chi2  | " << setw(width) << m_matchLinksHighChi2 
+      << "   | Matched with Links | " << std::setw(width) << m_matchLinks 
+      << " | Missed with Chi2  | " << std::setw(width) << m_matchLinksNotChi2 
+      << " | Too large Chi2  | " << std::setw(width) << m_matchLinksHighChi2 
       << endreq
-      << "   | Matched with Chi2  | " << setw(width) << m_matchChi2
-      << " | Missed with Links | " << setw(width) << m_matchChi2NotLinks 
+      << "   | Matched with Chi2  | " << std::setw(width) << m_matchChi2
+      << " | Missed with Links | " << std::setw(width) << m_matchChi2NotLinks 
       << endreq
-      << "   | Matched with both  | " << setw(width) << m_matchFull
-      << " | Matched different | " << setw(width) << m_matchDifferent 
+      << "   | Matched with both  | " << std::setw(width) << m_matchFull
+      << " | Matched different | " << std::setw(width) << m_matchDifferent 
       << endreq;
 
   width = (int)log10(m_mcPartCount)+1;
   ifLog( MSG::INFO )
       << "======== Statistics on MCParticle associations ========"
       << endreq
-      << "======== On " << setw(width) << m_mcPartCount
+      << "======== On " << std::setw(width) << m_mcPartCount
       << " MCParticles ( " << m_nbEvts-m_skippedEvts << " events, "
       << m_skippedEvts << " skipped) ========"
       << endreq
@@ -506,7 +506,7 @@ StatusCode TestAssociators::finalize() {
       << "  Seed   | Upstream|  Missed |" << endreq;
   width = 7;
   ifLog( MSG::INFO ) 
-    << "   | Reconstructible long  | " << setw(width) << m_mcPartRecons
+    << "   | Reconstructible long  | " << std::setw(width) << m_mcPartRecons
     <<endreq;
 
   prTable( log, MSG::INFO, 
