@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker_bbincl.cpp,v 1.1 2003-04-30 17:01:06 gcorti Exp $
+// $Id: ElectronParticleMaker_bbincl.cpp,v 1.2 2003-05-01 17:12:06 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -636,11 +636,11 @@ double ElectronParticleMaker_bbincl::TDRCombinedPID( ProtoParticle* proto ){
       mulik = exp(-3.576+9.36*mmu)+exp(0.7447+4.173*mmu);
       mubkg = exp(1.593+1.883*mmu);
     }
-    rmu = rmu + std::log(mulik / 105.56);  // Update muon log-likelihood
-    re  = re  + std::log(mubkg / 21.80);   // and background hypotheses
-    rpi = rpi + std::log(mubkg / 21.80);
-    rk  = rk  + std::log(mubkg / 21.80);
-    rp  = rp  + std::log(mubkg / 21.80);
+    rmu = rmu + log(mulik / 105.56);  // Update muon log-likelihood
+    re  = re  + log(mubkg / 21.80);   // and background hypotheses
+    rpi = rpi + log(mubkg / 21.80);
+    rk  = rk  + log(mubkg / 21.80);
+    rp  = rp  + log(mubkg / 21.80);
   }
       
   // For each particle type, calculate estimator as difference between
