@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.5 2004-12-10 09:54:08 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.6 2004-12-10 10:21:15 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -158,64 +158,58 @@ StatusCode MCOTDepositCreator::execute(){
   StatusCode sc;
 
   // make initial list of deposits
-  msg () << "make digitizations from MCHits" <<  endreq;
+  debug() << "make digitizations from MCHits" << endmsg;
   sc = makeDigitizations();
   if (sc.isFailure()){
-    msg ()<< "failed to make digitizations" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "failed to make digitizations", sc );
   }
 
   // single cell eff
-  msg ()<< "deposits size before applying efficiency = " 
-           << m_tempDeposits->size() << endreq;
+  debug() << "deposits size before applying efficiency = "
+          << m_tempDeposits->size() << endmsg;
   sc = singleCellEff();
   if (sc.isFailure()){
-    msg ()<< "problems applying single cell eff" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "problems applying single cell eff", sc );
   }
-   msg ()<< "deposits size after applying efficiency = " 
-      << m_tempDeposits->size() << endreq;
+  debug() << "deposits size after applying efficiency = " 
+          << m_tempDeposits->size() << endmsg;
 
   // smear
-  msg () << "apply single cell smearing" << endreq;
+  debug() << "apply single cell smearing" << endmsg;
   sc = applySmear();
   if (sc.isFailure()){
-    msg () <<"problems applying single cell res smear" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "problems applying single cell res smear", sc );
   }  
 
   // r-to-t
-  msg () <<"convert r-to t" << endreq;
+  debug() <<"convert r-to t" << endmsg;
   sc = applyRTrelation();
   if (sc.isFailure()){
-    msg () << "problems applying single cell rt relation" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "problems applying single cell rt relation", sc );
   }  
 
   // add crosstalk
   if (m_addCrossTalk) {
-    msg ()<<"deposits size before adding XTalk = "
-             << m_tempDeposits->size() << endreq;
+    debug() << "deposits size before adding XTalk = "
+            << m_tempDeposits->size() << endmsg;
     sc = addCrossTalk();
     if (sc.isFailure()){
-      msg ()<<"problems applying crosstalk" << endreq;
-      return StatusCode::FAILURE;
+      return Error( "problems applying crosstalk", sc );
     }  
-    msg ()<<"deposits size after XTalk = " 
-             << m_tempDeposits->size() << endreq;
+    debug() << "deposits size after XTalk = " 
+            << m_tempDeposits->size() << endmsg;
   }
 
   // add random noise
   if (m_addNoise) {
-    msg ()<< "deposits size before adding noise = "
-             << m_tempDeposits->size() << endreq;
+    debug() << "deposits size before adding noise = "
+            << m_tempDeposits->size() << endmsg;
     sc = addNoise();
     if (sc.isFailure()){
-      msg ()<<"problems applying noise" << endreq;
-      return StatusCode::FAILURE;
+      return Error( "problems applying noise", sc );
     }  
-    msg ()<<"deposits size after adding noise = " 
-        << m_tempDeposits->size() << endreq;
+    debug() << "deposits size after adding noise = " 
+            << m_tempDeposits->size() << endmsg;
   }
 
   // sort - first by channel
@@ -245,7 +239,7 @@ StatusCode MCOTDepositCreator::makeDigitizations()
       monteCarloTrackerHits(eventSvc(),m_spillNames[iSpill]);
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
-      msg () <<"Unable to retrieve " +m_spillNames[iSpill] << endreq;
+      debug() <<"Unable to retrieve " +m_spillNames[iSpill] << endmsg;
     }
     else {
       // found spill - create some digitizations and add them to deposits
@@ -441,4 +435,3 @@ std::string MCOTDepositCreator::toolName(const std::string& aName,
    char buffer[32];
    return  aName+ ::_itoa(iStation,buffer,10);
 }
-

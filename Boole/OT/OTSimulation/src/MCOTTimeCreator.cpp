@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.5 2004-12-10 10:21:16 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -70,12 +70,12 @@ StatusCode MCOTTimeCreator::execute()
   put(timeCont, MCOTTimeLocation::Default);
 
   // create times
-  msg () << "Time size before =" << timeCont->size() << endreq;
+  debug() << "Time size before =" << timeCont->size() << endmsg;
   sc = createTimes( timeCont );
   if (sc.isFailure()){
     return Error ("problems applying dead time",sc);
   }  
-  msg () <<"Time size after dead time="<< timeCont->size() << endreq;
+  debug() <<"Time size after dead time="<< timeCont->size() << endmsg;
   return StatusCode::SUCCESS;
 }
 
