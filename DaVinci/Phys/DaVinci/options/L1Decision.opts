@@ -1,0 +1,6 @@
+//*************************************************************
+//   Options to re-run the Level 1 trigger decision in DaVinci
+//=============================================================
+ApplicationMgr.DLLs    += { "MuonTools", "L1Decision" };
+ApplicationMgr.TopAlg  += { "Level1" };
+
