@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.12 2004-07-21 08:09:42 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.13 2005-01-25 14:09:49 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -8,8 +8,6 @@
 
 #include "MagneticFieldSvc.h"
 
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
 #include <cstdlib>

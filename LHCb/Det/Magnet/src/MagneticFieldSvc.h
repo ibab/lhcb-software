@@ -1,10 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.7 2004-07-21 08:09:42 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.8 2005-01-25 14:09:49 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Point3D.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -51,8 +53,8 @@ public:
   virtual const InterfaceID& type() const { return IID_IMagneticFieldSvc; };
 
   /** IMagneticFieldSvc interface.
-   * @param xyz(input) Point at which magnetic field vector will be given
-   * @param fvec(output) Magnectic field vector.
+   * @param[in]  xyz Point at which magnetic field vector will be given
+   * @param[out] fvec Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const HepPoint3D& xyz, 

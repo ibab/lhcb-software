@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v6r1 2005-01-20 =========================
+! 2005-01-20 - Marco Cattaneo
+ - Use DetDesc v14r3, Magnet v2r8
+
 !========================= DetSys v6r0 2004-12-10 =========================
 ! 2004-12-10 - Marco Cattaneo
  - Use VeloDet v9r2, DetDesc v14r2p1, OTDet v5r4p1

@@ -1,7 +1,6 @@
 //##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-//                          "EventSelector" };
 
 //--------------------------------------------------------------
 // Private Application Configuration options
