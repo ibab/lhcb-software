@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v6r0 2004-02-12 =========================
+! 2004-02-12 - Marco Cattaneo
+ - use VeloDet v9r0
+
 !========================= DetSys v5r0 2004-02-04 =========================
 ! 2004-02-04 - Marco Cattaneo
  - use MuonDet v4r5, RichDet v6r5, STDet v1r0, remove ITDet

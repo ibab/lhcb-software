@@ -1,15 +1,15 @@
 package EventSys
-version v17r2
+version v18r0
 
 branches doc cmt 
 
 # LHCb Event libraries
 
 use Event	v4r1	Event
-use VeloEvent	v13r0	Event
-use ITEvent	v13r1	Event
+use VeloEvent	v14r0	Event
+use ITEvent	v13r2	Event
 use OTEvent	v13r0	Event
-use TrEvent	v13r0	Event
+use TrEvent	v13r1	Event
 use RichEvent	v7r1	Event
 use CaloEvent	v13r0	Event
 use MuonEvent	v3r1	Event
