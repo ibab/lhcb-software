@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecTools v2r4 2003-11-27 ======================
 ! 2003-11-25 - Chris Jones
  - Remove MaPMT code
  - Improved track selection
