@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v2r2 2002-10-01 ===========================
+! 2003-10-01 - Marco Cattaneo
+ - Get field map from FieldMap package (instead of LHCBDBASE)
+ - Changed default map to field043 (from field044)
+
 !====================== Magnet v2r1 2002-12-04 ===========================
 ! 2002-09-26 - Florence Ranjard
  - -requirements - use GaudiKernel v13r*
