@@ -1,11 +1,11 @@
-// $Id: RichG4Counters.h,v 1.3 2004-02-04 13:53:00 seaso Exp $
-#ifndef RICHANALYSIS_RICHG4COUNTERS_H 
+// $Id: RichG4Counters.h,v 1.4 2004-02-10 14:24:08 jonesc Exp $
+#ifndef RICHANALYSIS_RICHG4COUNTERS_H
 #define RICHANALYSIS_RICHG4COUNTERS_H 1
 
 // Include files
 #include <vector>
 /** @class RichG4Counters RichG4Counters.h RichAnalysis/RichG4Counters.h
- *  
+ *
  *
  *  @author Sajan EASO
  *  @date   2003-06-07
@@ -17,14 +17,14 @@ public:
   static  RichG4Counters* getInstance();
   void InitRichEventCounters();
 
-  
+
 protected:
 
 private:
   /// Standard constructor
-  RichG4Counters( ); 
+  RichG4Counters( );
   static  RichG4Counters*  RichG4CountersInstance;
-  
+
   int m_NumPhotProdRich1Gas;
   int m_NumPhotGasOnRich1Mirror1;
   int m_NumPhotGasOnRich1Mirror2;
@@ -44,7 +44,7 @@ private:
   int m_NumPhotAgelRich1AfterQE;
   int m_NumPhotAgelRich1SiDet;
 
-  
+
   int m_NumHitTotRich1Gas;
   int m_NumHitTotRich1Agel;
   int m_NumHitTotRich2Gas;
@@ -56,21 +56,22 @@ private:
   std::vector<int> m_NumHitSaturatedPerTrackRich1Gas;
   std::vector<int> m_NumHitSaturatedPerTrackRich1Agel;
   std::vector<int> m_NumHitSaturatedPerTrackRich2Gas;
-  
+
   int m_NumHitPartGunPrimaryPartRich1Gas;
   int m_NumHitPartGunPrimaryPartRich1Agel;
   int m_NumHitPartGunPrimaryPartRich2Gas;
-  
+
 
   int m_NumHitTotRich1All;
   int m_NumHitTotRich2All;
- 
+
   std::vector<int> m_TrackIdTraverseRich1Gas;
   std::vector<int> m_TrackIdTraverseRich1Agel;
   std::vector<int> m_TrackIdTraverseRich2Gas;
-  
-    
+
+
 public:
+
 #include "RichG4Counters.icpp"
 
 };

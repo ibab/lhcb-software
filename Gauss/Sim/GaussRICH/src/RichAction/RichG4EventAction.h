@@ -112,10 +112,8 @@ public:
   }
   bool RichG4EventActivateCkvRecon()
   {
-    return  m_RichG4EventActivateCkvRecon;
-    
+    return  m_RichG4EventActivateCkvRecon;    
   }
-  
   
 private:
  

@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.h,v 1.1 2004-02-04 13:53:01 seaso Exp $
+// $Id: RichG4ReconHpd.h,v 1.2 2004-02-10 14:24:14 jonesc Exp $
 #ifndef RICHANALYSIS_RICHG4RECONHPD_H 
 #define RICHANALYSIS_RICHG4RECONHPD_H 1
 
@@ -22,9 +22,9 @@ public:
 
   virtual ~RichG4ReconHpd( ); ///< Destructor
 
-  HepPoint3D ReconHitOnPhCathFromLocalHitCoord( HepPoint3D aLocalHitCoord);
+  HepPoint3D ReconHitOnPhCathFromLocalHitCoord( const HepPoint3D & aLocalHitCoord);
   
-  HepPoint3D ConvertLocalHitToHpdSystem(HepPoint3D aLocalHit);
+  HepPoint3D ConvertLocalHitToHpdSystem(const HepPoint3D & aLocalHit);
   double ConvertHpdSiliconZToHpdSystem(double aZcoord );
   
 protected:
@@ -47,9 +47,13 @@ private:
   double m_HpdPixelYSize;
   double m_HpdPixelXNumCol;
   double m_HpdPixelXNumRow;
-  
-
-
 
 };
+
+inline double RichG4ReconHpd::ConvertHpdSiliconZToHpdSystem(double aZcoord ) 
+{
+ return  (aZcoord + m_HpdSiDetZLocation); 
+};
+
+
 #endif // RICHANALYSIS_RICHG4RECONHPD_H

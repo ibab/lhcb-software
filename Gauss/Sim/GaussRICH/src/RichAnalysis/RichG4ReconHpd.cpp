@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.1 2004-02-04 13:53:01 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.2 2004-02-10 14:24:14 jonesc Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -134,21 +134,16 @@ RichG4ReconHpd::~RichG4ReconHpd()
 {
 };
 
-HepPoint3D RichG4ReconHpd::ConvertLocalHitToHpdSystem(HepPoint3D aLocalHit) 
+HepPoint3D RichG4ReconHpd::ConvertLocalHitToHpdSystem(const HepPoint3D & aLocalHit) 
 {
   double zloc = aLocalHit.z();
   double ZInHpdSystem = zloc - m_HpdSiDetZLocation;
-  return HepPoint3D(aLocalHit.x(),aLocalHit.y(), ZInHpdSystem);
-  
+  return HepPoint3D(aLocalHit.x(),aLocalHit.y(), ZInHpdSystem);  
 }
-double RichG4ReconHpd::ConvertHpdSiliconZToHpdSystem(double aZcoord ) 
+
+HepPoint3D 
+RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const HepPoint3D & aLocalHitCoord)
 {
- return   (aZcoord + m_HpdSiDetZLocation); 
-};
-
-
-HepPoint3D RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord 
- (HepPoint3D aLocalHitCoord){
 
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   

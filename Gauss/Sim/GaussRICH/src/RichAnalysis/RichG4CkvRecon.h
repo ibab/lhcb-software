@@ -1,16 +1,19 @@
-// $Id: RichG4CkvRecon.h,v 1.1 2004-02-04 13:52:59 seaso Exp $
-#ifndef RICHANALYSIS_RICHG4CKVRECON_H 
+// $Id: RichG4CkvRecon.h,v 1.2 2004-02-10 14:24:08 jonesc Exp $
+#ifndef RICHANALYSIS_RICHG4CKVRECON_H
 #define RICHANALYSIS_RICHG4CKVRECON_H 1
 
 // Include files
 
 /** @class RichG4CkvRecon RichG4CkvRecon.h RichAnalysis/RichG4CkvRecon.h
  *
- *  
+ *
  *
  *  @author Sajan Easo
  *  @date   2003-09-08
  */
+
+#include <vector>
+#include <complex>
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -35,61 +38,97 @@
 class RichG4CkvRecon {
 public:
 
-    /// Standard constructor
-  RichG4CkvRecon( ); 
+  /// Standard constructor
+  RichG4CkvRecon( );
 
   virtual ~RichG4CkvRecon( ); ///< Destructor
 
 
-  void SetCurrentLocalHitCoord( double xhit, 
-                                double yhit, double zhit);
-  void SetCurrentEmissPt( double xEmiss, double yEmiss, 
-                          double zEmiss);
-  void SetCurrentTkMom( double xMom, double yMom,
-                        double zMom);
-  void SetCurrentRichDetNum(int aRichDetNum) ;
-  
-  void SetCurrentHpdNum( int aHpdNum);
-  
-  void SetCurrentFlatMirrorType(int aType);
-  
-  void SetCurrentRichSector(int aSectorNum);
+  void SetCurrentLocalHitCoord( const double xhit,
+                                const double yhit, const double zhit)
+  {
+    m_curLocalHitCoord =  HepPoint3D(xhit,yhit,zhit);
+  }
 
-  void SetcurDetPoint (HepPoint3D aDetPoint );
-  
-  void SetcurReflPt (  HepPoint3D aReflPt );
-  
-  HepPoint3D ReconPhCoordFromLocalCoord( HepPoint3D aLocalHitCoord);
-  HepPoint3D ReconReflectionPointOnSPhMirror(HepPoint3D aDetectionPoint,
-            HepPoint3D aEmissionPoint );
+  void SetCurrentEmissPt( const double xEmiss, const double yEmiss,
+                          const double zEmiss)
+  {
+    m_curEmisPt= HepPoint3D(xEmiss,yEmiss, zEmiss);
+  }
+
+  void SetCurrentTkMom( const double xMom, const double yMom,
+                        const double zMom)
+  {
+    m_curTkMom=  HepVector3D( xMom, yMom,zMom);
+  }
+
+  void SetCurrentRichDetNum(const int aRichDetNum)
+  {
+    m_CurrentRichDetNum=aRichDetNum;
+  }
+
+  void SetCurrentHpdNum( const int aHpdNum)
+  {
+    m_CurrentHpdNum= aHpdNum;
+  }
+
+  void SetCurrentFlatMirrorType(const int aType)
+  {
+    m_CurrentFlatMirrorType = aType;
+  }
+
+  void SetCurrentRichSector(const int aSectorNum)
+  {
+    m_CurrentRichSector=  aSectorNum;
+  }
+
+  void SetcurDetPoint (const HepPoint3D & aDetPoint )
+  {
+    m_curDetPoint = aDetPoint;
+  }
+
+  void SetcurReflPt ( const HepPoint3D & aReflPt )
+  {
+    m_curReflPt = aReflPt;
+  }
+
+  HepPoint3D ReconPhCoordFromLocalCoord( const HepPoint3D & aLocalHitCoord);
+  HepPoint3D ReconReflectionPointOnSPhMirror(const HepPoint3D & aDetectionPoint,
+                                             const HepPoint3D & aEmissionPoint );
 
   HepPoint3D ReconReflectionPointOnSPhMirrorStdInput();
-  std::vector<std::complex<double> > SolveQuartic (double denom,  
-                                                  double a[4]);
-  
+  void SolveQuartic ( std::vector<std::complex<double> > & z,
+                      double denom,
+                      double a[4] );
+
   HepPoint3D GetSiHitCoordFromPixelNum(int aPx, int aPy);
-  HepPoint3D getPhotAgelExitZ( double ex, double ey, double ez, 
-         RichG4Hit* bHit);
-  
-    
-  int  CurrentFlatMirrorType() ;
-  int  NumRichDet() 
-  { return m_NumRichDet;
-  
+  HepPoint3D getPhotAgelExitZ( double ex, double ey, double ez,
+                               RichG4Hit* bHit);
+
+
+  int  CurrentFlatMirrorType() const
+  {
+    return m_CurrentFlatMirrorType ;
   }
-  int   CurrentRichSector() 
+
+  int  NumRichDet() const
+  { return m_NumRichDet;
+
+  }
+  int CurrentRichSector() const
   {
     return m_CurrentRichSector;
   }
-  
-  std::vector<int> NumHpdRich() 
+
+  const std::vector<int> & NumHpdRich() const
   {
     return  m_NumHpdRich;
   }
 
-  double CherenkovThetaFromReflPt(HepPoint3D aReflPoint, 
-        HepPoint3D aEmisPt );
-  RichG4ReconHpd* getRichG4ReconHpd() 
+  double CherenkovThetaFromReflPt(const HepPoint3D & aReflPoint,
+                                  const HepPoint3D & aEmisPt );
+
+  RichG4ReconHpd* getRichG4ReconHpd()
   {
     return m_RichG4ReconHpd;
   }
@@ -97,41 +136,39 @@ public:
   void SetChTrackPreStepPosition( double xprepos,
                                   double yprepos,
                                   double zprepos);
-  
-  HepPoint3D  ChTrackPreStepPosition() 
+
+  const HepPoint3D & ChTrackPreStepPosition() const
   {
     return m_ChTrackPreStepPosition;
-    
   }
+
   void SetChTrackPostStepPosition( double xpostpos,
-                                  double ypostpos,
+                                   double ypostpos,
                                    double zpostpos);
-  
- 
-  HepPoint3D  ChTrackPostStepPosition() 
+
+  const HepPoint3D  & ChTrackPostStepPosition() const
   {
     return m_ChTrackPostStepPosition;
-    
   }
-     
-  double CherenkovThetaInAerogel(HepPoint3D aReflPoint,
-         HepPoint3D aEmisPt );
-  
+
+  double CherenkovThetaInAerogel(const HepPoint3D & aReflPoint,
+                                 const HepPoint3D & aEmisPt );
+
 protected:
 
 private:
-  
+
 
   int m_NumRichDet;
   std::vector<int> m_NumHpdRich;
-  
+
   std::vector<std::vector<RichG4ReconTransformHpd*> > m_HpdTransforms;
-  
+
   std::vector<std::vector<double> > m_SphMirrCC;
   std::vector<double> m_SphMirrRad;
   RichG4ReconHpd* m_RichG4ReconHpd;
 
-  
+
   HepPoint3D m_curLocalHitCoord;
   HepPoint3D m_curEmisPt;
   HepVector3D m_curTkMom;
@@ -140,7 +177,7 @@ private:
   HepPoint3D m_curDetPoint;
   HepPoint3D m_curReflPt;
 
-  
+
   int m_CurrentRichDetNum;
   int m_CurrentHpdNum;
   int m_CurrentFlatMirrorType;
@@ -153,11 +190,10 @@ private:
   int m_HpdSiNumPixelY;
   HepPoint3D m_ChTrackPreStepPosition;
   HepPoint3D m_ChTrackPostStepPosition;
-  
+
   double m_c4f10nominalrefrativeindex;
   double m_agelnominalrefractiveindex;
   
-
-  
 };
+
 #endif // RICHANALYSIS_RICHG4CKVRECON_H

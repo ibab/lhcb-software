@@ -1,5 +1,5 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.1 2004-02-04 13:53:01 seaso Exp $
-// Include files 
+// $Id: RichG4ReconFlatMirr.cpp,v 1.2 2004-02-10 14:24:14 jonesc Exp $
+// Include files
 
 
 #include "GaudiKernel/Kernel.h"
@@ -34,46 +34,46 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichG4ReconFlatMirr::RichG4ReconFlatMirr(  ) 
-:    m_RichNumFlatMirrorOrientationParam(4),
-    m_RichNumFlatMirrorLocationTypes(4),
-    m_RichFlatMirrorNominalOrientation(m_RichNumFlatMirrorLocationTypes,
-    std::vector<double>(m_RichNumFlatMirrorOrientationParam))
+RichG4ReconFlatMirr::RichG4ReconFlatMirr(  )
+  :    m_RichNumFlatMirrorOrientationParam(4),
+       m_RichNumFlatMirrorLocationTypes(4),
+       m_RichFlatMirrorNominalOrientation(m_RichNumFlatMirrorLocationTypes,
+                                          std::vector<double>(m_RichNumFlatMirrorOrientationParam))
 {
 
   IDataProviderSvc* detSvc = RichG4SvcLocator::RichG4detSvc();
-   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
+  IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
   //  RichG4ReconFlatMirrlog << MSG::INFO <<
   //  "Now creating RichG4ReconFlatMirr "<<endreq;
 
 
- 
-   // Now for the orientation of the flat mirror.
-    // for the array   m_RichFlatMirrorNominalOrientation
-    // the first element 0->3 correspond to the flat mirrors
-    // at Rich1Top, Rich1Bottom, Rich2Left, Rich2Right respectively.
-    // The second element 0->3 is the three direction cosines 
-    // of the plane of a flatmirror and the distance of the
-    // flat mirror plane from the origin so that one can
-    // write the equation of the plane as ax+by+cz+d=0.
+
+  // Now for the orientation of the flat mirror.
+  // for the array   m_RichFlatMirrorNominalOrientation
+  // the first element 0->3 correspond to the flat mirrors
+  // at Rich1Top, Rich1Bottom, Rich2Left, Rich2Right respectively.
+  // The second element 0->3 is the three direction cosines
+  // of the plane of a flatmirror and the distance of the
+  // flat mirror plane from the origin so that one can
+  // write the equation of the plane as ax+by+cz+d=0.
 
 
 
   SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-    SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
 
-    if(Rich1DE) {
+  if(Rich1DE) {
     setRich1FlatMirrorParam();
 
-    }
-    if(Rich2DE){
+  }
+  if(Rich2DE){
 
-     setRich2FlatMirrorParam();
-   
-    }
-    
-    
+    setRich2FlatMirrorParam();
+
+  }
+
+
 }
 RichG4ReconFlatMirr::~RichG4ReconFlatMirr(  ) {
 }
@@ -88,22 +88,22 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
 
-    SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-    if( Rich1DE) {
-      
+  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  if( Rich1DE) {
+
     double r1m2A =
       Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorXCosX");
-    
+
     double r1m2B =
       Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorYCosY");
-    
+
     double r1m2C =
       Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorZCosZ");
-    
+
     double r1m2D =
       Rich1DE->userParameterAsDouble("Rich1Mirror2DParamDistance");
-    
-    
+
+
     m_RichFlatMirrorNominalOrientation[0][0]= r1m2A;
     m_RichFlatMirrorNominalOrientation[0][1]= r1m2B;
     m_RichFlatMirrorNominalOrientation[0][2]= r1m2C;
@@ -115,16 +115,16 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
     m_RichFlatMirrorNominalOrientation[1][3]= r1m2D;
 
 
-    //      RichG4ReconFlatMirrlog << MSG::INFO 
+    //      RichG4ReconFlatMirrlog << MSG::INFO
     //           << "Flat Mirr param in rich1  "
     //                         << r1m2A<<"  "<<r1m2B
     //                         <<"   "<<r1m2C
     //                         <<"   "<<r1m2D<< endreq;
- 
-    }
 
-  
-      
+  }
+
+
+
 
 }
 
@@ -135,19 +135,19 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
 
-    SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
 
-    if(Rich2DE) {
-      
+  if(Rich2DE) {
+
     double r2m2A =
       Rich2DE->userParameterAsDouble("Rich2NominalNormalCosX");
-    
+
     double r2m2B =
       Rich2DE->userParameterAsDouble("Rich2NominalNormalCosY");
-    
+
     double r2m2C =
       Rich2DE->userParameterAsDouble("Rich2NominalNormalCosZ");
-    
+
     double r2m2D =
       Rich2DE->userParameterAsDouble("Rich2DParameter");
 
@@ -161,31 +161,29 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
     m_RichFlatMirrorNominalOrientation[3][2]= r2m2C;
     m_RichFlatMirrorNominalOrientation[3][3]= r2m2D;
 
-      RichG4ReconFlatMirrlog << MSG::INFO 
-               << "Flat Mirr param in rich2  "
-                             << r2m2A<<"  "<<r2m2B
-                             <<"   "<<r2m2C
-                             <<"   "<<r2m2D<< endreq;
+    RichG4ReconFlatMirrlog << MSG::INFO
+                           << "Flat Mirr param in rich2  "
+                           << r2m2A<<"  "<<r2m2B
+                           <<"   "<<r2m2C
+                           <<"   "<<r2m2D<< endreq;
 
-    }
-    
-    
+  }
+
+
 }
 
- HepPoint3D  RichG4ReconFlatMirr::FlatMirrorReflect(HepPoint3D HitCoordQw , 
-                                                    int FlatMirrorType)
-   {
+HepPoint3D  RichG4ReconFlatMirr::FlatMirrorReflect(const HepPoint3D & HitCoordQw ,
+                                                   int FlatMirrorType)
+{
 
-  HepTransform3D aFlatMirrRefl= 
+  const HepTransform3D aFlatMirrRefl =
     HepReflect3D(m_RichFlatMirrorNominalOrientation[FlatMirrorType][0],
-               m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
-               m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
-               m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
-  
-  return  aFlatMirrRefl*HitCoordQw ;
-  
+                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][1],
+                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][2],
+                 m_RichFlatMirrorNominalOrientation[FlatMirrorType][3]);
 
-   }
- 
+  return  aFlatMirrRefl*HitCoordQw ;
+}
+
 
 //=============================================================================

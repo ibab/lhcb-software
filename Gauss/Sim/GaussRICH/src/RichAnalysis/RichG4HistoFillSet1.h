@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet1.h,v 1.1 2003-04-29 17:08:05 seaso Exp $
+// $Id: RichG4HistoFillSet1.h,v 1.2 2004-02-10 14:24:10 jonesc Exp $
 #ifndef RICHANALYSIS_RICHG4HISTOFILLSET1_H 
 #define RICHANALYSIS_RICHG4HISTOFILLSET1_H 1
 
@@ -21,7 +21,8 @@ public:
   virtual ~RichG4HistoFillSet1( ); ///< Destructor
  
   void FillRichG4HistoSet1( const G4Event* anEvent,
-           int NumRichColl, std::vector<int>RichG4CollectionID );
+                            int NumRichColl, 
+                            const std::vector<int> & RichG4CollectionID );
   
 protected:
 

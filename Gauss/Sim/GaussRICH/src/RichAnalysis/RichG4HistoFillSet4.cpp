@@ -1,12 +1,12 @@
-// $Id: RichG4HistoFillSet4.cpp,v 1.1 2004-02-04 13:53:00 seaso Exp $
-// Include files 
+// $Id: RichG4HistoFillSet4.cpp,v 1.2 2004-02-10 14:24:11 jonesc Exp $
+// Include files
 
 
 
 // local
 #include "RichG4HistoFillSet4.h"
 #include "RichG4Counters.h"
-// GiGa 
+// GiGa
 #include "GiGa/GiGaMACROs.h"
 // local
 #include "../SensDet/RichG4Hit.h"
@@ -49,99 +49,99 @@ RichG4HistoFillSet4::RichG4HistoFillSet4(  ) {
 }
 RichG4HistoFillSet4::~RichG4HistoFillSet4(  ) {
 }
-void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit, 
-     RichG4ReconResult* aReconResult)
+void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
+                                              RichG4ReconResult* aReconResult)
 {
-   //  IHistogramSvc* CurrentHistoSvc;
+  //  IHistogramSvc* CurrentHistoSvc;
   IHistogramSvc* CurrentHistoSvc = RichG4SvcLocator::RichG4HistoSvc();
 
   SmartDataPtr<IHistogram1D>hCkvRich1GasD3E1 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1500");
+                                              "RICHG4HISTOSET4/1500");
   SmartDataPtr<IHistogram1D>hCkvRich1GasD1E4 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1501");
+                                              "RICHG4HISTOSET4/1501");
   SmartDataPtr<IHistogram1D>hCkvRich1GasGen (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1504");
+                                             "RICHG4HISTOSET4/1504");
   SmartDataPtr<IHistogram1D>hCkvRich1GasRes (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1510");
+                                             "RICHG4HISTOSET4/1510");
   SmartDataPtr<IHistogram1D>hCkvRich1GasResConst (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1511");
+                                                  "RICHG4HISTOSET4/1511");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelD3E3 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1600");
+                                               "RICHG4HISTOSET4/1600");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelD1E4 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1601");
+                                               "RICHG4HISTOSET4/1601");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelGen (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1604");
+                                              "RICHG4HISTOSET4/1604");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelRes (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1610");
+                                              "RICHG4HISTOSET4/1610");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelResConst (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1611");
+                                                   "RICHG4HISTOSET4/1611");
   SmartDataPtr<IHistogram1D>hCkvRich2GasD3E1 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1700");
+                                              "RICHG4HISTOSET4/1700");
   SmartDataPtr<IHistogram1D>hCkvRich2GasD1E4 (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1701");
+                                              "RICHG4HISTOSET4/1701");
   SmartDataPtr<IHistogram1D>hCkvRich2GasGen (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1704");
+                                             "RICHG4HISTOSET4/1704");
   SmartDataPtr<IHistogram1D>hCkvRich2GasRes (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1710");
- SmartDataPtr<IHistogram1D>hCkvRich2GasResConst (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1711");
-  
+                                             "RICHG4HISTOSET4/1710");
+  SmartDataPtr<IHistogram1D>hCkvRich2GasResConst (CurrentHistoSvc,
+                                                  "RICHG4HISTOSET4/1711");
+
 
   SmartDataPtr<IHistogram2D>hCkvRich1GasCkvPhi(CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1520");
+                                               "RICHG4HISTOSET4/1520");
   SmartDataPtr<IHistogram2D>hCkvRich1AgelCkvPhi( CurrentHistoSvc,
-                                           "RICHG4HISTOSET4/1620");
+                                                 "RICHG4HISTOSET4/1620");
   SmartDataPtr<IHistogram2D>hCkvRich2GasCkvPhi(CurrentHistoSvc,
-                                           "RICHG4HISTOSET4/1720");
-                                
+                                               "RICHG4HISTOSET4/1720");
+
   //  SmartDataPtr<IProfile>hCkvRich1GasCkvResPhiProf(CurrentHistoSvc,
   //                                        "RICHG4HISTOSET4/1522");
   // SmartDataPtr<IProfile>hCkvRich1AgelCkvResPhiProf( CurrentHistoSvc,
   //                                         "RICHG4HISTOSET4/1622");
   // SmartDataPtr<IProfile>hCkvRich2GasCkvResPhiProf(CurrentHistoSvc,
   //                                         "RICHG4HISTOSET4/1722");
-                                
+
 
   SmartDataPtr<IHistogram1D>hCkvRich1GasResEmis (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1530");
+                                                 "RICHG4HISTOSET4/1530");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelResEmis (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1630");
+                                                  "RICHG4HISTOSET4/1630");
   SmartDataPtr<IHistogram1D>hCkvRich2GasResEmis (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1730");
+                                                 "RICHG4HISTOSET4/1730");
   SmartDataPtr<IHistogram1D>hCkvRich1GasResPixel (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1540");
+                                                  "RICHG4HISTOSET4/1540");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelResPixel (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1640");
+                                                   "RICHG4HISTOSET4/1640");
   SmartDataPtr<IHistogram1D>hCkvRich2GasResPixel (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1740");
+                                                  "RICHG4HISTOSET4/1740");
 
 
 
   SmartDataPtr<IHistogram1D>hCkvRich1GasResPsf (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1550");
+                                                "RICHG4HISTOSET4/1550");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelResPsf (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1650");
+                                                 "RICHG4HISTOSET4/1650");
   SmartDataPtr<IHistogram1D>hCkvRich2GasResPsf (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1750");
+                                                "RICHG4HISTOSET4/1750");
 
   SmartDataPtr<IHistogram1D>hCkvRich1GasResTotal (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1560");
+                                                  "RICHG4HISTOSET4/1560");
   SmartDataPtr<IHistogram1D>hCkvRich1AgelResTotal (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1660");
+                                                   "RICHG4HISTOSET4/1660");
   SmartDataPtr<IHistogram1D>hCkvRich2GasResTotal (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1760");
+                                                  "RICHG4HISTOSET4/1760");
 
   SmartDataPtr<IHistogram1D>hCkvRich1AgelExitResRefraction (CurrentHistoSvc,
-                                          "RICHG4HISTOSET4/1635");
+                                                            "RICHG4HISTOSET4/1635");
 
 
   int curRdet =   acHit-> GetCurRichDetNum();
   int curRadiator= acHit-> GetRadiatorNumber();
   double genckv =   acHit-> ThetaCkvAtProd();
   double genckvphi = acHit->  PhiCkvAtProd();
-  
+
   //  std::cout<<" Histofill set4 rdet radia genckv "
-  //         << curRdet<<"  "<< curRadiator<<"  " 
+  //         << curRdet<<"  "<< curRadiator<<"  "
   //         << genckv <<std::endl;
 
 
@@ -158,11 +158,11 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   double aCkvRecD1E3 = aReconResult-> ckvAngleD1E3();
   double aCkvRecD2E3 = aReconResult-> ckvAngleD2E3();
   double aCkvRecD3E3 = aReconResult-> ckvAngleD3E3();
-  
+
 
   if( (curRdet == 0) &&   (curRadiator == 0)) {
     //    std::cout<< "histo id "<<hCkvRich1Agel<<"   "<<  hCkvRich1Gas<<std::endl;
-    
+
     if(hCkvRich1AgelD3E3)hCkvRich1AgelD3E3->fill(aCkvRecD3E3) ;
     if(hCkvRich1AgelD1E4)hCkvRich1AgelD1E4->fill(aCkvRecD1E4) ;
 
@@ -171,70 +171,70 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
     if(hCkvRich1AgelRes) hCkvRich1AgelRes-> fill(aCkvRecD3E3-genckv) ;
     if(hCkvRich1AgelResEmis)hCkvRich1AgelResEmis->fill(aCkvRecD3E4-aCkvRecD3E3);
     if(  hCkvRich1AgelResPixel) hCkvRich1AgelResPixel->
-                                                fill(aCkvRecD1E3 - aCkvRecD2E3);
+                                  fill(aCkvRecD1E3 - aCkvRecD2E3);
     if(  hCkvRich1AgelResPsf)   hCkvRich1AgelResPsf->
                                   fill(aCkvRecD2E3-aCkvRecD3E3);
-    
+
 
     if(hCkvRich1AgelResTotal) hCkvRich1AgelResTotal->
                                 fill(aCkvRecD1E4-genckv);
 
     if(  hCkvRich1AgelExitResRefraction)  hCkvRich1AgelExitResRefraction->
                                             fill(aCkvRecD3E1-aCkvRecD3E3);
-    
+
     if(genckv > 0.255 && genckv < 0.257 ) {
-      
-    if(hCkvRich1AgelResConst) hCkvRich1AgelResConst-> 
-                              fill(aCkvRecD3E3-genckv) ;
-     if(hCkvRich1AgelCkvPhi) hCkvRich1AgelCkvPhi->
-                 fill(genckvphi,aCkvRecD3E3-genckv);
-     
-   
-     //   if(hCkvRich1AgelCkvResPhiProf) hCkvRich1AgelCkvResPhiProf->
-     //            fill(genckvphi,aCkvRecD3E3-genckv);
-     
+
+      if(hCkvRich1AgelResConst) hCkvRich1AgelResConst->
+                                  fill(aCkvRecD3E3-genckv) ;
+      if(hCkvRich1AgelCkvPhi) hCkvRich1AgelCkvPhi->
+                                fill(genckvphi,aCkvRecD3E3-genckv);
+
+
+      //   if(hCkvRich1AgelCkvResPhiProf) hCkvRich1AgelCkvResPhiProf->
+      //            fill(genckvphi,aCkvRecD3E3-genckv);
+
     }
-    
-    
+
+
     //    if(hCkvRich1AgelCkvPhi) hCkvRich1AgelCkvPhi->
     //             fill(aCkvRecD3E3-genckv,genckvphi);
-    
+
   }
- if((curRdet == 0) &&   (curRadiator== 1)) {
-   if(hCkvRich1GasD3E1) hCkvRich1GasD3E1->fill(aCkvRecD3E1) ;
+  if((curRdet == 0) &&   (curRadiator== 1)) {
+    if(hCkvRich1GasD3E1) hCkvRich1GasD3E1->fill(aCkvRecD3E1) ;
     if(hCkvRich1GasD1E4) hCkvRich1GasD1E4->fill(aCkvRecD1E4) ;
-  if(hCkvRich1GasGen) hCkvRich1GasGen->fill(genckv) ;
+    if(hCkvRich1GasGen) hCkvRich1GasGen->fill(genckv) ;
     if(hCkvRich1GasRes) hCkvRich1GasRes->fill(aCkvRecD3E1-genckv) ;
     if(hCkvRich1GasResEmis)hCkvRich1GasResEmis->fill(aCkvRecD3E4-aCkvRecD3E1);
     if( hCkvRich1GasResPixel) hCkvRich1GasResPixel->
                                 fill(aCkvRecD1E1-aCkvRecD2E1);
     if(   hCkvRich1GasResPsf)  hCkvRich1GasResPsf->
                                  fill(aCkvRecD2E1-aCkvRecD3E1);
-   
+
     if( hCkvRich1GasResTotal) hCkvRich1GasResTotal->
                                 fill(aCkvRecD1E4-genckv);
-    
+
 
     if(genckv > 0.050 && genckv < 0.052 ) {
-  
-       if(hCkvRich1GasResConst) hCkvRich1GasResConst->
-                fill(aCkvRecD3E1-genckv) ;
-     if(hCkvRich1GasCkvPhi)hCkvRich1GasCkvPhi->
-                 fill(genckvphi,aCkvRecD3E1-genckv);
-     //     if(hCkvRich1GasCkvResPhiProf)hCkvRich1GasCkvResPhiProf->
-     //            fill(genckvphi,aCkvRecD3E1-genckv);
-     }
-     
+
+      if(hCkvRich1GasResConst) hCkvRich1GasResConst->
+                                 fill(aCkvRecD3E1-genckv) ;
+      if(hCkvRich1GasCkvPhi)hCkvRich1GasCkvPhi->
+                              fill(genckvphi,aCkvRecD3E1-genckv);
+      //     if(hCkvRich1GasCkvResPhiProf)hCkvRich1GasCkvResPhiProf->
+      //            fill(genckvphi,aCkvRecD3E1-genckv);
+    }
+
     //   if(hCkvRich1GasCkvPhi)hCkvRich1GasCkvPhi->
     //             fill(aCkvRecD3E1-genckv,genckvphi);
 
- }
- if( (curRdet == 1) &&  (curRadiator== 2)) {
+  }
+  if( (curRdet == 1) &&  (curRadiator== 2)) {
 
-   if(hCkvRich2GasD3E1) hCkvRich2GasD3E1->fill(aCkvRecD3E1) ;
-   if(hCkvRich2GasD1E4) hCkvRich2GasD1E4->fill(aCkvRecD1E4) ;
-   if(hCkvRich2GasGen) hCkvRich2GasGen->fill(genckv) ;
-     if(hCkvRich2GasRes) hCkvRich2GasRes->fill(aCkvRecD3E1-genckv) ;
+    if(hCkvRich2GasD3E1) hCkvRich2GasD3E1->fill(aCkvRecD3E1) ;
+    if(hCkvRich2GasD1E4) hCkvRich2GasD1E4->fill(aCkvRecD1E4) ;
+    if(hCkvRich2GasGen) hCkvRich2GasGen->fill(genckv) ;
+    if(hCkvRich2GasRes) hCkvRich2GasRes->fill(aCkvRecD3E1-genckv) ;
     if(hCkvRich2GasResEmis)hCkvRich2GasResEmis->fill(aCkvRecD3E4-aCkvRecD3E1);
     if( hCkvRich2GasResPixel) hCkvRich2GasResPixel->
                                 fill(aCkvRecD1E1-aCkvRecD2E1);
@@ -245,22 +245,22 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
     if( hCkvRich2GasResTotal) hCkvRich2GasResTotal->
                                 fill(aCkvRecD1E4-genckv);
 
-   if(genckv > 0.0295 && genckv < 0.030) {
-     
-     if(hCkvRich2GasResConst) hCkvRich2GasResConst->
-               fill(aCkvRecD3E1-genckv) ;
-    if(hCkvRich2GasCkvPhi)  hCkvRich2GasCkvPhi->
-                             fill(genckvphi,aCkvRecD3E1-genckv);
-    //    if(hCkvRich2GasCkvResPhiProf)  hCkvRich2GasCkvResPhiprof->
-    //                         fill(genckvphi,aCkvRecD3E1-genckv);
-   }
-   
-   //  if(hCkvRich2GasCkvPhi)  hCkvRich2GasCkvPhi->
-   //                          fill(aCkvRecD3E1-genckv,genckvphi);
-   
- }
+    if(genckv > 0.0295 && genckv < 0.030) {
 
-  
+      if(hCkvRich2GasResConst) hCkvRich2GasResConst->
+                                 fill(aCkvRecD3E1-genckv) ;
+      if(hCkvRich2GasCkvPhi)  hCkvRich2GasCkvPhi->
+                                fill(genckvphi,aCkvRecD3E1-genckv);
+      //    if(hCkvRich2GasCkvResPhiProf)  hCkvRich2GasCkvResPhiprof->
+      //                         fill(genckvphi,aCkvRecD3E1-genckv);
+    }
+
+    //  if(hCkvRich2GasCkvPhi)  hCkvRich2GasCkvPhi->
+    //                          fill(aCkvRecD3E1-genckv,genckvphi);
+
+  }
+
+
 }
 
 //=============================================================================

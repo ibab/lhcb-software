@@ -1,367 +1,346 @@
-  inline int  NumPhotProdRich1Gas() 
-  {
-    return  m_NumPhotProdRich1Gas;
-  }
-  inline int NumPhotGasOnRich1Mirror1() 
-  {
-    return  m_NumPhotGasOnRich1Mirror1;
-  }
-  inline int  NumPhotGasOnRich1Mirror2()
-  {
-    return m_NumPhotGasOnRich1Mirror2;
-  }
-  inline int NumPhotGasOnRich1GasQW() 
-  {
-    return m_NumPhotGasOnRich1GasQW;
-    
-    
-  }
-  inline int  NumPhotGasOnRich1HpdQW()
-  {
-   return  m_NumPhotGasOnRich1HpdQW;
-  }
-  inline int NumPhotGasRich1BeforeQE()
-  {
-    return  m_NumPhotGasRich1BeforeQE;
-  }
-  
-  inline int  NumPhotGasRich1AfterQE()
-  {
-    return  m_NumPhotGasRich1AfterQE;
-  }
+inline int  NumPhotProdRich1Gas()  const
+{
+  return  m_NumPhotProdRich1Gas;
+}
+inline int NumPhotGasOnRich1Mirror1() const
+{
+  return  m_NumPhotGasOnRich1Mirror1;
+}
+inline int  NumPhotGasOnRich1Mirror2() const
+{
+  return m_NumPhotGasOnRich1Mirror2;
+}
+inline int NumPhotGasOnRich1GasQW() const
+{
+  return m_NumPhotGasOnRich1GasQW;
+}
+inline int  NumPhotGasOnRich1HpdQW() const
+{
+  return  m_NumPhotGasOnRich1HpdQW;
+}
+inline int NumPhotGasRich1BeforeQE() const
+{
+  return  m_NumPhotGasRich1BeforeQE;
+}
 
-  inline int  NumPhotGasRich1SiDet()
-  {
-    return  m_NumPhotGasRich1SiDet;
-  }
+inline int  NumPhotGasRich1AfterQE() const
+{
+  return  m_NumPhotGasRich1AfterQE;
+}
 
+inline int  NumPhotGasRich1SiDet() const
+{
+  return  m_NumPhotGasRich1SiDet;
+}
 
-
-
-  inline int  NumPhotProdRich1Agel() 
-  {
-    return  m_NumPhotProdRich1Agel;
-  }
-inline int NumPhotAgelAtAgelDownstrZ()
+inline int  NumPhotProdRich1Agel() const
+{
+  return  m_NumPhotProdRich1Agel;
+}
+inline int NumPhotAgelAtAgelDownstrZ() const
 {
   return m_NumPhotAgelAtAgelDownstrZ;
 }
 
-  inline int NumPhotAgelOnRich1Mirror1() 
-  {
-    return  m_NumPhotAgelOnRich1Mirror1;
-  }
-  inline int  NumPhotAgelOnRich1Mirror2()
-  {
-    return m_NumPhotAgelOnRich1Mirror2;
-  }
-  inline int NumPhotAgelOnRich1GasQW() 
-  {
-    return m_NumPhotAgelOnRich1GasQW;
-    
-    
-  }
-  inline int  NumPhotAgelOnRich1HpdQW()
-  {
-   return  m_NumPhotAgelOnRich1HpdQW;
-  }
-  inline int NumPhotAgelRich1BeforeQE()
-  {
-    return  m_NumPhotAgelRich1BeforeQE;
-  }
-  
-  inline int  NumPhotAgelRich1AfterQE()
-  {
-    return  m_NumPhotAgelRich1AfterQE;
-  }
-
-  inline int  NumPhotAgelRich1SiDet()
-  {
-    return  m_NumPhotAgelRich1SiDet;
-  }
-
-  inline int NumHitTotRich1Gas() 
-  {
-    return   m_NumHitTotRich1Gas;
-    
-  }
-  
-  inline int NumHitTotRich1Agel() 
-  {
-    return  m_NumHitTotRich1Agel;
-  }
-
-  inline int NumHitTotRich2Gas() 
-  {
-    return   m_NumHitTotRich2Gas;
-    
-  }
-  
-  inline std::vector<int> NumHitPerTrackRich1Gas() 
-  {
-    return  m_NumHitPerTrackRich1Gas;
-  }
-
-  inline std::vector<int> NumHitPerTrackRich1Agel()
-  {
-    return m_NumHitPerTrackRich1Agel;
-  }
-
-   inline std::vector<int> NumHitPerTrackRich2Gas() 
-  {
-    return  m_NumHitPerTrackRich2Gas;
-  }
+inline int NumPhotAgelOnRich1Mirror1() const
+{
+  return  m_NumPhotAgelOnRich1Mirror1;
+}
+inline int  NumPhotAgelOnRich1Mirror2() const
+{
+  return m_NumPhotAgelOnRich1Mirror2;
+}
+inline int NumPhotAgelOnRich1GasQW() const
+{
+  return m_NumPhotAgelOnRich1GasQW;
 
 
-  inline std::vector<int> NumHitSaturatedPerTrackRich1Gas() 
-  {
-    return  m_NumHitSaturatedPerTrackRich1Gas;
-  }
-  inline std::vector<int> NumHitSaturatedPerTrackRich1Agel()
-  {
-    return m_NumHitSaturatedPerTrackRich1Agel;
-  }
+}
+inline int  NumPhotAgelOnRich1HpdQW() const
+{
+  return  m_NumPhotAgelOnRich1HpdQW;
+}
+inline int NumPhotAgelRich1BeforeQE() const
+{
+  return  m_NumPhotAgelRich1BeforeQE;
+}
 
-  inline std::vector<int> NumHitSaturatedPerTrackRich2Gas() 
-  {
-    return  m_NumHitSaturatedPerTrackRich2Gas;
-  }
-  
-  inline int NumHitPartGunPrimaryPartRich1Gas()
-  {
-    return  m_NumHitPartGunPrimaryPartRich1Gas;
-  }
-  
-  inline int NumHitPartGunPrimaryPartRich1Agel()
-  {
-    return m_NumHitPartGunPrimaryPartRich1Agel;
-  }
+inline int  NumPhotAgelRich1AfterQE() const
+{
+  return  m_NumPhotAgelRich1AfterQE;
+}
 
-  inline int NumHitPartGunPrimaryPartRich2Gas()
-  {
-    return  m_NumHitPartGunPrimaryPartRich2Gas;
-  }
+inline int  NumPhotAgelRich1SiDet() const
+{
+  return  m_NumPhotAgelRich1SiDet;
+}
 
-  inline int NumHitTotRich1All()
-  {
-    return m_NumHitTotRich1All;
-  }
-  inline int NumHitTotRich2All()
-  {
-    return m_NumHitTotRich2All;
-  }
+inline int NumHitTotRich1Gas() const
+{
+  return   m_NumHitTotRich1Gas;
+}
 
-inline std::vector<int> TrackIdTraverseRich1Gas()
+inline int NumHitTotRich1Agel() const
+{
+  return  m_NumHitTotRich1Agel;
+}
+
+inline int NumHitTotRich2Gas() const
+{
+  return   m_NumHitTotRich2Gas;
+
+}
+
+inline const std::vector<int> & NumHitPerTrackRich1Gas() const
+{
+  return  m_NumHitPerTrackRich1Gas;
+}
+
+inline const std::vector<int> & NumHitPerTrackRich1Agel() const
+{
+  return m_NumHitPerTrackRich1Agel;
+}
+
+inline const std::vector<int> & NumHitPerTrackRich2Gas() const
+{
+  return  m_NumHitPerTrackRich2Gas;
+}
+
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1Gas() const
+{
+  return  m_NumHitSaturatedPerTrackRich1Gas;
+}
+inline const std::vector<int> & NumHitSaturatedPerTrackRich1Agel() const
+{
+  return m_NumHitSaturatedPerTrackRich1Agel;
+}
+
+inline const std::vector<int> & NumHitSaturatedPerTrackRich2Gas() const
+{
+  return  m_NumHitSaturatedPerTrackRich2Gas;
+}
+
+inline int NumHitPartGunPrimaryPartRich1Gas() const
+{
+  return  m_NumHitPartGunPrimaryPartRich1Gas;
+}
+
+inline int NumHitPartGunPrimaryPartRich1Agel() const
+{
+  return m_NumHitPartGunPrimaryPartRich1Agel;
+}
+
+inline int NumHitPartGunPrimaryPartRich2Gas() const
+{
+  return  m_NumHitPartGunPrimaryPartRich2Gas;
+}
+
+inline int NumHitTotRich1All() const
+{
+  return m_NumHitTotRich1All;
+}
+inline int NumHitTotRich2All() const
+{
+  return m_NumHitTotRich2All;
+}
+
+inline const std::vector<int> & TrackIdTraverseRich1Gas() const
 {
   return m_TrackIdTraverseRich1Gas;
-  
 }
 
-inline std::vector<int> TrackIdTraverseRich1Agel()
+inline const std::vector<int> & TrackIdTraverseRich1Agel() const
 {
   return m_TrackIdTraverseRich1Agel;
-  
 }
 
-inline std::vector<int> TrackIdTraverseRich2Gas()
+inline const std::vector<int> & TrackIdTraverseRich2Gas() const
 {
   return m_TrackIdTraverseRich2Gas;
-  
+}
+
+inline void bumpNumPhotProdRich1Gas() 
+{
+  ++m_NumPhotProdRich1Gas;
+}
+inline void bumpNumPhotGasOnRich1Mirror1() 
+{
+  ++m_NumPhotGasOnRich1Mirror1;
+}
+inline void bumpNumPhotGasOnRich1Mirror2() 
+{
+  ++m_NumPhotGasOnRich1Mirror2;
+}
+inline void bumpNumPhotGasOnRich1GasQW() 
+{
+  ++m_NumPhotGasOnRich1GasQW;
+}
+inline void bumpNumPhotGasOnRich1HpdQW() 
+{
+  ++m_NumPhotGasOnRich1HpdQW;
+}
+inline void bumpNumPhotGasRich1BeforeQE()
+{
+  ++m_NumPhotGasRich1BeforeQE;
+}
+inline void bumpNumPhotGasRich1AfterQE()
+{
+  ++m_NumPhotGasRich1AfterQE;
+}
+inline void bumpNumPhotGasRich1SiDet()
+{
+  ++m_NumPhotGasRich1SiDet;
 }
 
 
-  inline void bumpNumPhotProdRich1Gas()
-  {
-    m_NumPhotProdRich1Gas++;
-  }
-  inline void bumpNumPhotGasOnRich1Mirror1()
-  {
-    m_NumPhotGasOnRich1Mirror1++;
-  }
-  inline void bumpNumPhotGasOnRich1Mirror2()
-  {
-    m_NumPhotGasOnRich1Mirror2++;
-  }
-  inline void bumpNumPhotGasOnRich1GasQW()
-  {
-    m_NumPhotGasOnRich1GasQW++;
-  }
-  inline void bumpNumPhotGasOnRich1HpdQW()
-  {
-    m_NumPhotGasOnRich1HpdQW++;
-  }
-  inline void bumpNumPhotGasRich1BeforeQE()
-  {
-    m_NumPhotGasRich1BeforeQE++;
-  }
-  inline void bumpNumPhotGasRich1AfterQE()
-  {
-    m_NumPhotGasRich1AfterQE++;
-  }
-  inline void bumpNumPhotGasRich1SiDet()
-  {
-    m_NumPhotGasRich1SiDet++;
-  }
-  
+inline void bumpNumPhotProdRich1Agel()
+{
+  ++m_NumPhotProdRich1Agel;
+}
 
+inline void bumpNumPhotAgelAtAgelDownstrZ()
+{
+  ++m_NumPhotAgelAtAgelDownstrZ;
+}
 
-  inline void bumpNumPhotProdRich1Agel()
-  {
-    m_NumPhotProdRich1Agel++;
-  }
+inline void bumpNumPhotAgelOnRich1Mirror1()
+{
+  ++m_NumPhotAgelOnRich1Mirror1;
+}
+inline void bumpNumPhotAgelOnRich1Mirror2()
+{
+  ++m_NumPhotAgelOnRich1Mirror2;
+}
+inline void bumpNumPhotAgelOnRich1GasQW()
+{
+  ++m_NumPhotAgelOnRich1GasQW;
+}
+inline void bumpNumPhotAgelOnRich1HpdQW()
+{
+  ++m_NumPhotAgelOnRich1HpdQW;
+}
+inline void bumpNumPhotAgelRich1BeforeQE()
+{
+  ++m_NumPhotAgelRich1BeforeQE;
+}
+inline void bumpNumPhotAgelRich1AfterQE()
+{
+  ++m_NumPhotAgelRich1AfterQE;
+}
+inline void bumpNumPhotAgelRich1SiDet()
+{
+  ++m_NumPhotAgelRich1SiDet;
+}
 
-  inline void bumpNumPhotAgelAtAgelDownstrZ()
-  {
-  m_NumPhotAgelAtAgelDownstrZ++;
-  }
+inline void bumpNumHitTotRich1Gas()
+{
+  ++m_NumHitTotRich1Gas;
+}
+inline void bumpNumHitTotRich1Agel()
+{
+  ++m_NumHitTotRich1Agel;
+}
 
-  inline void bumpNumPhotAgelOnRich1Mirror1()
-  {
-    m_NumPhotAgelOnRich1Mirror1++;
-  }
-  inline void bumpNumPhotAgelOnRich1Mirror2()
-  {
-    m_NumPhotAgelOnRich1Mirror2++;
-  }
-  inline void bumpNumPhotAgelOnRich1GasQW()
-  {
-    m_NumPhotAgelOnRich1GasQW++;
-  }
-  inline void bumpNumPhotAgelOnRich1HpdQW()
-  {
-    m_NumPhotAgelOnRich1HpdQW++;
-  }
-  inline void bumpNumPhotAgelRich1BeforeQE()
-  {
-    m_NumPhotAgelRich1BeforeQE++;
-  }
-  inline void bumpNumPhotAgelRich1AfterQE()
-  {
-    m_NumPhotAgelRich1AfterQE++;
-  }
-  inline void bumpNumPhotAgelRich1SiDet()
-  {
-    m_NumPhotAgelRich1SiDet++;
-  }
+inline void bumpNumHitTotRich2Gas()
+{
+  ++m_NumHitTotRich2Gas;
+}
 
-  inline void bumpNumHitTotRich1Gas() 
-  {
-    m_NumHitTotRich1Gas++;
-  }
-  inline void bumpNumHitTotRich1Agel()
-  {
-    m_NumHitTotRich1Agel++;
-  }
+inline void bumpNumHitPerTrackRich1Gas(int ait)
+{
+  ++m_NumHitPerTrackRich1Gas[ait];
+}
 
-  inline void bumpNumHitTotRich2Gas() 
-  {
-    m_NumHitTotRich2Gas++;
-  }
-
-  inline void bumpNumHitPerTrackRich1Gas(int ait)
-  {
-    m_NumHitPerTrackRich1Gas[ait]++;
-  }
-
-inline void setNumHitPerTrackRich1Gas(std::vector<int> aGasHit ) 
+inline void setNumHitPerTrackRich1Gas(const std::vector<int> & aGasHit )
 {
   m_NumHitPerTrackRich1Gas=aGasHit;
-  
 }
 
+inline void bumpNumHitPerTrackRich1Agel(int aita)
+{
+  ++m_NumHitPerTrackRich1Agel[aita];
+}
 
+inline void bumpNumHitPerTrackRich2Gas(int ait2)
+{
+  ++m_NumHitPerTrackRich2Gas[ait2];
+}
 
-  inline void bumpNumHitPerTrackRich1Agel(int aita)
-  {
-    m_NumHitPerTrackRich1Agel[aita]++;
-  }
-
-  inline void bumpNumHitPerTrackRich2Gas(int ait2)
-  {
-    m_NumHitPerTrackRich2Gas[ait2]++;
-  }
-
-inline void setNumHitPerTrackRich2Gas(std::vector<int> aGasHit2 ) 
+inline void setNumHitPerTrackRich2Gas(const std::vector<int> & aGasHit2 )
 {
   m_NumHitPerTrackRich2Gas=aGasHit2;
-  
 }
- 
-inline void setNumHitPerTrackRich1Agel(std::vector<int> aAgelHit )
+
+inline void setNumHitPerTrackRich1Agel(const std::vector<int> & aAgelHit )
 {
   m_NumHitPerTrackRich1Agel= aAgelHit;
-  
 }
 
+inline void bumpNumHitSaturatedPerTrackRich1Gas(int it)
+{
+  ++m_NumHitSaturatedPerTrackRich1Gas[it];
+}
 
-  inline void bumpNumHitSaturatedPerTrackRich1Gas(int it)
-  {
-    m_NumHitSaturatedPerTrackRich1Gas[it]++;
-  }
-
-inline void setNumHitSaturatedPerTrackRich1Gas(std::vector<int> aGasSatHit) 
+inline void setNumHitSaturatedPerTrackRich1Gas(const std::vector<int> & aGasSatHit)
 {
   m_NumHitSaturatedPerTrackRich1Gas=aGasSatHit;
-  
 }
 
-  inline void bumpNumHitSaturatedPerTrackRich1Agel(int ita)
-  {
-    m_NumHitSaturatedPerTrackRich1Agel[ita]++;
-  }
-inline void setNumHitSaturatedPerTrackRich1Agel( std::vector<int> aAgelSatHit )
+inline void bumpNumHitSaturatedPerTrackRich1Agel(int ita)
+{
+  ++m_NumHitSaturatedPerTrackRich1Agel[ita];
+}
+inline void setNumHitSaturatedPerTrackRich1Agel( const std::vector<int> & aAgelSatHit )
 {
   m_NumHitSaturatedPerTrackRich1Agel=aAgelSatHit;
-  
 }
 
-  inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
-  {
-    m_NumHitSaturatedPerTrackRich2Gas[it2]++;
-  }
+inline void bumpNumHitSaturatedPerTrackRich2Gas(int it2)
+{
+  ++m_NumHitSaturatedPerTrackRich2Gas[it2];
+}
 
-  inline void setNumHitSaturatedPerTrackRich2Gas(std::vector<int> aGasSatHit2) 
-  {
+inline void setNumHitSaturatedPerTrackRich2Gas(const std::vector<int> & aGasSatHit2)
+{
   m_NumHitSaturatedPerTrackRich2Gas=aGasSatHit2;
-  
-  }
+}
 
-  inline void bumpNumHitPartGunPrimaryPartRich1Gas()
-  {
-    m_NumHitPartGunPrimaryPartRich1Gas++;
-  }
-  inline void bumpNumHitPartGunPrimaryPartRich1Agel()
-  {
-    m_NumHitPartGunPrimaryPartRich1Agel++;
-  }
-  inline void bumpNumHitPartGunPrimaryPartRich2Gas()
-  {
-    m_NumHitPartGunPrimaryPartRich2Gas++;
-  }
-   inline void bumpNumHitTotRich1All()
-  {
-    m_NumHitTotRich1All++;
-  }
-   inline void bumpNumHitTotRich2All()
-  {
-    m_NumHitTotRich2All++;
-  }
+inline void bumpNumHitPartGunPrimaryPartRich1Gas()
+{
+  ++m_NumHitPartGunPrimaryPartRich1Gas;
+}
+inline void bumpNumHitPartGunPrimaryPartRich1Agel()
+{
+  ++m_NumHitPartGunPrimaryPartRich1Agel;
+}
+inline void bumpNumHitPartGunPrimaryPartRich2Gas()
+{
+  ++m_NumHitPartGunPrimaryPartRich2Gas;
+}
+inline void bumpNumHitTotRich1All()
+{
+  ++m_NumHitTotRich1All;
+}
+inline void bumpNumHitTotRich2All()
+{
+  ++m_NumHitTotRich2All;
+}
 
 inline void setTrackIdTraverseRich1Gas
-   ( std::vector<int> aTrackIdTraverseRich1Gas ) 
+( const std::vector<int> & aTrackIdTraverseRich1Gas )
 {
   m_TrackIdTraverseRich1Gas = aTrackIdTraverseRich1Gas;
-  
+
 }
 inline void setTrackIdTraverseRich1Agel
-   ( std::vector<int> aTrackIdTraverseRich1Agel ) 
+( const std::vector<int> & aTrackIdTraverseRich1Agel )
 {
   m_TrackIdTraverseRich1Agel = aTrackIdTraverseRich1Agel;
-  
+
 }
 inline void setTrackIdTraverseRich2Gas
-   ( std::vector<int>  aTrackIdTraverseRich2Gas) 
+( const std::vector<int> & aTrackIdTraverseRich2Gas)
 {
   m_TrackIdTraverseRich2Gas= aTrackIdTraverseRich2Gas;
-  
+
 }

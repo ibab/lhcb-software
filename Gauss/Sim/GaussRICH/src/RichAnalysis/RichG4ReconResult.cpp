@@ -1,7 +1,5 @@
-// $Id: RichG4ReconResult.cpp,v 1.1 2004-02-04 13:53:01 seaso Exp $
-// Include files 
-
-
+// $Id: RichG4ReconResult.cpp,v 1.2 2004-02-10 14:24:14 jonesc Exp $
+// Include files
 
 // local
 #include "RichG4ReconResult.h"
@@ -18,15 +16,15 @@
 RichG4ReconResult::RichG4ReconResult(  ) {
 
   InitReconResult();
-  
+
 }
-RichG4ReconResult::~RichG4ReconResult(  )
-{
-  
-}
+
+RichG4ReconResult::~RichG4ReconResult(  ) {}
+
 void RichG4ReconResult::InitReconResult()
 {
-  m_radiatorForCkv=-1;  
+
+  m_radiatorForCkv=-1;
   m_ckvAngleD1E1 = -0.1;
   m_ckvAngleD2E1 = -0.1;
   m_ckvAngleD3E1= -0.1;
