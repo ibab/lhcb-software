@@ -10,7 +10,7 @@
 // are used. 
 //
 GiGa.ModularPL.GiGaPhysConstructorOp.RichApplyMaxNumCkvPhotPerStepPerRadiator
-=true;
+=false;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Agel
 =900;
 GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich1Gas
@@ -25,7 +25,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas
 //     uncomment the lines /Event/MC/Rich/OpticalPhotons#1, /Event/MC/Rich/Tracks#1
 //     /Event/MC/Rich/Segments#1
 // 
-#include "$GAUSSRICHROOT/options/RichVerbose.opts"
+// #include "$GAUSSRICHROOT/options/RichVerbose.opts"
 GetHits.RichOpticalPhotons = "";
 GetHits.RichSegments       = "";
 GetHits.RichTracks         = "";
@@ -48,5 +48,5 @@ GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonT
 // software for resolution studies. The RichAnalysis.opts is not needed
 // for for any standard MC production runs. It is also not needed for any production 
 // runs with 'extended output info'.
-#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
+//#include "$GAUSSRICHROOT/options/RichAnalysis.opts"
 
