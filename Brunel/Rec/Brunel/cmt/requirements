@@ -43,7 +43,7 @@ use FieldMap		v4r5
 use ParamFiles          v3r4    -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v15r6)
-use LHCb	v15r5
+use LHCb	v15r6
 
 #-- BrunelSys v23r4 packages
 
