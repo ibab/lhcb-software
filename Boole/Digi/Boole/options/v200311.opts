@@ -33,7 +33,15 @@ SpilloverSelector.Input = {
 LHCBkgSelector.Input = { 
   "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_5.oosim' TYP='ROOT' OPT='READ'" }; // "Maximal" LHC background. SicbToOORawh v3r1 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
-DigiWriter.Output = "DATAFILE='412400.oodigi' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 500;
+
+// For the output file, choose either GaudiDb or POOL formats 
+// GaudiDb format 
+DigiWriter.Output = "DATAFILE='412400.oodigi' TYP='ROOT' OPT='NEW'";
+// POOL format
+//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+//#include "$EVENTSYSROOT/options/PoolDicts.opts"
+//PoolDbCacheSvc.CatalogConnect = "xmlcatalog_file:test_catalog.xml";
+//DigiWriter.Output = "DATAFILE='PFN:Pool412400.digi' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
