@@ -16,18 +16,6 @@
         <code> </code>
       </constructor>
       <method const="TRUE" desc="Returns the type of candidate as a string, for printing" name="typeName" type="std::string">
-	<code>
-switch (m_type) {
-  case L0Calo::Electron:  return &quot;electron&quot;;
-  case L0Calo::Photon:    return &quot;photon  &quot;;
-  case L0Calo::Hadron:    return &quot;hadron  &quot;;
-  case L0Calo::Hadron2:   return &quot;hadron_2&quot;;
-  case L0Calo::Pi0Local:  return &quot;Pi0 loc &quot;;
-  case L0Calo::Pi0Global: return &quot;Pi0 glob&quot;;
-  case L0Calo::SumEt:     return &quot;Sum Et  &quot;;
-  default:            return &quot;unknown &quot;;
-}
-	</code>
       </method>
       <attribute desc="Type of trigger, from L0:L0Type" name="type" setMeth="FALSE" type="int"/>
       <attribute desc="Calo Cell ID. To access MC information..." name="ID" setMeth="FALSE" type="CaloCellID"/>
@@ -35,26 +23,8 @@ switch (m_type) {
       <attribute desc="Transverse energy" name="et" setMeth="FALSE" type="double"/>
       <attribute desc="Position" name="position" setMeth="FALSE" type="HepPoint3D"/>
       <attribute desc="Tolerance on x/y position = 1/2 cell size" name="posTol" setMeth="FALSE" type="double"/>
-      <method desc="Print on MsgStream" name="operator&lt;&lt;" type="MsgStream&amp;">
-	<arg name="ms" type="MsgStream" />
-	<code>
-if ( NULL == this) {
-  return ms &lt;&lt; &quot;L0CaloCandidate* points to null&quot;; 
-}
-ms &lt;&lt; &quot;L0Calo &quot;  &lt;&lt;  typeName() &lt;&lt;  &quot; Et(GeV) &quot; ;
-char line[80];
-sprintf( line, &quot;%4d %6.2f &quot;, m_etCode, m_et/GeV );
-ms &lt;&lt; line;
-if ( L0Calo::SumEt != m_type ) {
-  ms &lt;&lt; &quot; ID &quot; &lt;&lt; m_ID &lt;&lt; &quot; x,y,z(cm)&quot;;
-  sprintf( line, &quot;%7.1f %7.1f %7.1f Error(cm) %5.2f&quot;,
-    m_position.x()/centimeter,
-    m_position.y()/centimeter,
-    m_position.z()/centimeter,
-    m_posTol/centimeter );
-    ms &lt;&lt; line; 
- }
-return ms; </code>
+      <method const="TRUE" desc="Print on MsgStream" name="fillStream" type="MsgStream&amp;">
+	<arg name="log" type="MsgStream" />
       </method>
     </class>
     <class author="Olivier Callot" desc="Information for L0 Calo Trigger: CellID + 8-bit Et" id="6006" name="L0CaloAdc">
