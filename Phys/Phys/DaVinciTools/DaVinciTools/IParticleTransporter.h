@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.3 2002-07-24 18:20:05 gcorti Exp $
+// $Id: IParticleTransporter.h,v 1.4 2002-07-27 20:26:40 gcorti Exp $
 #ifndef DAVINCITOOLS_IPARTICLETRANSPORTER_H 
 #define DAVINCITOOLS_IPARTICLETRANSPORTER_H 1
 
@@ -13,7 +13,7 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleTransporter("IParticleTransporter",2,0); 
+static const InterfaceID IID_IParticleTransporter("IParticleTransporter",2,1); 
 
 /** @class IParticleTransporter IParticleTransporter.h
  *  DaVinciTools/IParticleTranporter.h
