@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.61 2004-10-27 12:40:08 ibelyaev Exp $
+! $Id: release.notes,v 1.62 2004-10-27 12:50:18 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v2r6 2004-10-27 ===================
 ! 2004-10-27 - Vanya BELYAEV
  - src/CaloTrackAlg.h, src/CaloTrackAlg.cpp
     the algorithm is modified to take advantage from 
@@ -89,8 +90,6 @@
        improve a little bit the error-reporting printout
 
 ! 2004-10-22 - Vanya BELYAEV
-
-
  - src/CaloTrackMatchBase.h
    src/CaloTrackMatchBase.cpp
 
