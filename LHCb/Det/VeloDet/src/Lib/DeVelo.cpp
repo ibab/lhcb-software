@@ -1,34 +1,26 @@
-// $Id: DeVelo.cpp,v 1.32 2003-03-20 09:00:24 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.33 2004-01-29 01:02:18 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
 // ============================================================================
 // from STL
-#include <stdio.h>
-#include <cmath>
 #include <algorithm>
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-// from Gaudi
-#include "GaudiKernel/Bootstrap.h"
 
+// From Gaudi
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-// DetDesc
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/ILVolume.h"
-//
+
 // from Det/VeloDet
 #include "VeloDet/DeVelo.h"
-
-#include "VeloKernel/VeloRound.h"
 
 /** @file DeVelo.cpp
  *
  *  Implementation of class :  DeVelo
  *
- *  @author Olivier Callot Olivier.Callot@cern.ch
+ *  @author David Hutchcroft David.Hutchcroft@cern.ch
  */
 
 
@@ -36,25 +28,15 @@
 
 DeVelo::DeVelo( const std::string& name )
   :  DetectorElement     ( name       )
-  , m_design             (0)
 {
-
-} ;
+  
+} 
 
 //
 // Standard Destructor
 DeVelo::~DeVelo() {
-  //=== Cleanup to make valgrind happy.
-  std::vector<VeloSensor*>::const_iterator it ;
-  for ( it = m_sensor.begin() ; m_sensor.end() != it; it++ ) {
-    delete *it;
-  }
-  m_sensor.clear();
-  for ( it = m_puSensor.begin() ; m_puSensor.end() != it; it++ ) {
-    delete *it;
-  }
-  m_puSensor.clear();
-};
+  // should be all handled by the TDS and the automatic deletion of the vectors
+}
 
 // ============================================================================
 // object identification
@@ -67,894 +49,682 @@ const CLID& DeVelo::clID () const { return DeVelo::classID() ; }
 // ============================================================================
 StatusCode DeVelo::initialize() {
 
-  //========== Trick from Pere to set the output level =================
+  MsgStream msg( msgSvc(), "DeVelo" );
+  msg << MSG::DEBUG << "Initialising DeVelo " << endreq;
+  // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
-  int outputLevel = -1;
-  pmgr->declareProperty( "OutputLevel", outputLevel );
-  pmgr->declareProperty( "Design", m_design );
-
-  // which R sensor design - 0=TDR, 1,2,3 are alternative 45 deg. sector 
-  // designs
+  int outputLevel=0;
+  pmgr->declareProperty("OutputLevel", outputLevel);
   IJobOptionsSvc* jobSvc;
   ISvcLocator* svcLoc = Gaudi::svcLocator();
-  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc );
-  jobSvc->setMyProperties( "DeVelo", pmgr );
-  if ( -1 != outputLevel ) msgSvc()->setOutputLevel( "DeVelo", outputLevel );
+  StatusCode sc = svcLoc->service("JobOptionsSvc", jobSvc);
+  jobSvc->setMyProperties("DeVelo", pmgr);
+  if ( 0 < outputLevel ) {
+    msgSvc()->setOutputLevel("DeVelo", outputLevel);
+  }
   delete pmgr;
-  //====================================================================
-
-  MsgStream msg( msgSvc(), "DeVelo" );
-  msg << MSG::INFO << "Using VELO R Detector design " << m_design << endreq;
-
-
+  // Initialise the detector element
   sc = DetectorElement::initialize();
-  ///
   if( sc.isFailure() ) { 
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
-  ///
-  typedef std::vector<std::string> Parameters;
-  typedef Parameters::iterator     Iterator;
-  ///
-  Parameters pars( userParameters() );
-  Iterator it;
+
+  // get all of the pointers to the child detector elements
+  // Childern of DeVelo (this) are the sensors
+  std::vector<IDetectorElement*> veloSensors =
+    this->childIDetectorElements();
+  msg << MSG::INFO << "Found " << veloSensors.size() 
+      << " sensors in the XML" << endreq;
   
-  ///
-  it = std::find( pars.begin() , pars.end () , std::string("InnerRadius") );
-  if( pars.end() != it ) {
-    m_innerRadius =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
+  IDetectorElement* testDetElem= veloSensors[1];
+  DeVeloSensor* testVeloSensor = dynamic_cast<DeVeloSensor*>(testDetElem);
+
+  if (!testDetElem) {
+    msg << MSG::ERROR << "Dodgy IDetectorElement"<< endreq;
   }
-  it = std::find( pars.begin() , pars.end () , std::string("OuterRadius") );
-  if( pars.end() != it ) {
-    m_outerRadius =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
+  if (!testVeloSensor) {
+    msg << MSG::ERROR << "Cannot cast DeVeloSensor* onto IDetectorElement*" 
+	<< endreq;
   }
 
-  // R detector parameters
-
-  it = std::find( pars.begin() , pars.end () , std::string("FixPitchRad") );
-  if( pars.end() != it ) {
-    m_fixPitchRadius =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("MiddleRRad") );
-  if( pars.end() != it ) {
-    m_middleRRadius =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("InnerPitch") );
-  if( pars.end() != it ) {
-    m_innerPitch =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("OuterPitch") );
-  if( pars.end() != it ) {
-    m_outerPitch =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("NbRInner") );
-  if( pars.end() != it ) {
-    m_nbRInner =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-
-  //======== HARDCODED GEOMETRY for testing new designs =====================
-    // new 45 deg designs, see http://lhcb-vd.web.cern.ch/lhcb-vd/html/
-    //                     Optimization/Alternative_Strip_Designs/default.htm
-  switch (m_design){
-  case 1:
-    m_fixPitchRadius = m_innerRadius;
-    m_outerPitch     = .1030*mm;
-    m_nbRInner       = 512;
-    break;
-  case 2:
-    m_fixPitchRadius = 13.12*mm;
-    m_outerPitch     = 0.0752*mm;
-    m_nbRInner       = 512;
-    break;
-  case 3:
-    m_fixPitchRadius = 18.24*mm;
-    m_outerPitch     = 0.0928*mm;
-    m_nbRInner       = 512;
-    break;
-  case 0:
-  default:
-    // std TDR design - no change
-    break;
-  }
-  m_nbL1Sectors    = 4;
-  if ( 512 == m_nbRInner ) m_nbL1Sectors = 8;
-     
-  // Phi Detector Parameters
-
-  it = std::find( pars.begin() , pars.end () , std::string("PhiBoundRad") );
-  if( pars.end() != it ) {
-    m_phiBoundRadius =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("InnerTilt") );
-  if( pars.end() != it ) {
-    m_innerTilt =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("OuterTilt") );
-  if( pars.end() != it ) {
-    m_outerTilt =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("PhiOrigin") );
-  if( pars.end() != it ) {
-    m_phiOrigin =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
-  it = std::find( pars.begin() , pars.end () , std::string("NbPhiInner") );
-  if( pars.end() != it ) {
-    m_nbPhiInner =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
+  std::vector<IDetectorElement*>::iterator iDESensor;
+  int detElemCount=0;
+  unsigned int RLeft=0;
+  unsigned int PhiLeft=1;
+  unsigned int RRight=50;
+  unsigned int PhiRight=51;
+  unsigned int PileUp=100;
+  for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
+      ++iDESensor){
+    //    IDetectorElement myDetElem=*iDESensor;
+    DeVeloSensor * pSensor = dynamic_cast<DeVeloSensor*>(*iDESensor);
+    if(!pSensor){
+      msg << MSG::ERROR 
+          << "Could not cast children of DeVelo to DeVeloSensors" << endreq;
+      return StatusCode::FAILURE;
+    }
+    m_vpSensor.push_back(pSensor);
+    unsigned int index=m_vpSensor.size()-1;
+    if(m_vpSensor[index]->isR() && m_vpSensor[index]->isRight()){
+      m_vpSensor[index]->sensorNumber(RRight);
+      RRight += 2;
+    } else if(m_vpSensor[index]->isR() && !m_vpSensor[index]->isRight()){
+      m_vpSensor[index]->sensorNumber(RLeft);
+      RLeft += 2;
+    } else if(m_vpSensor[index]->isPhi() && m_vpSensor[index]->isRight()) {
+      m_vpSensor[index]->sensorNumber(PhiRight);
+      PhiRight += 2;
+    } else if(m_vpSensor[index]->isPhi() && !m_vpSensor[index]->isRight()) {
+      m_vpSensor[index]->sensorNumber(PhiLeft);
+      PhiLeft += 2;
+    } else if(m_vpSensor[index]->isPileUp()){
+      m_vpSensor[index]->sensorNumber(PileUp);
+      PileUp += 2;
+    }
+    msg << MSG::DEBUG << " Sensor number " << m_vpSensor[index]->sensorNumber()
+        << " is type " << m_vpSensor[index]->type() 
+        << " at z = " << m_vpSensor[index]->z()
+        << endreq;
+    detElemCount++;
   }
 
-  it = std::find( pars.begin() , pars.end () , std::string("SiThick") );
-  if( pars.end() != it ) {
-    m_siliconThickness =  userParameterAsDouble( *it ) ;
-    pars.erase( it );
-  }
+  // Build a list of phi sensors associated to R
+  // Dog leg shape requires both phi of the station
+  // need to sort sensors into accending order in z
+  // get cute and use the STL sort routine with a custom comparator
+  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_Z());
 
-  if( !pars.empty() ) {
-    // some "extra" parameters.
-    // should be an error??
+  for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
+    //m_sensorZ.push_back(m_vpSensor[iSensor]->z());
+    unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
+    // Find phi sensors associated to R in each station (group of 4 sensors)
+    int station=(iSensor-4)/4;
+    unsigned int firstInStation=0;
+    if(0 <= station) firstInStation= 4+4*static_cast<unsigned int>(station);
+    if(m_vpSensor[iSensor]->isR()){
+      for(unsigned int isens=firstInStation; isens<firstInStation+4; isens++){
+        unsigned int aSensor = m_vpSensor[isens]->sensorNumber();
+        if(m_vpSensor[isens]->isPhi()) {
+          m_vpSensor[iSensor]->associateSensor(aSensor);
+        }
+      }
+    }
   }
-  ///
+  // Sort the sensors into increasing sensor number
+  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_sensor());
 
+  m_sensorZ.clear();
+  for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; iSensor++){
+    m_sensorZ.push_back(m_vpSensor[iSensor]->z());
+    unsigned int sensor=m_vpSensor[iSensor]->sensorNumber();
+    // work out what sensor type we have here
+    if(this->isRSensor(sensor)){
+      m_indexRType.push_back(sensor);
+    }
+    if(this->isPhiSensor(sensor)){
+      m_indexPhiType.push_back(sensor);
+    }
+    if(this->isPileUpSensor(sensor)){
+      m_indexPileUpType.push_back(sensor);
+    }
+    msg << MSG::INFO << "Index " << iSensor << " Sensor number " << sensor
+        << " is type " << m_vpSensor[iSensor]->type() 
+        << " at z = " << m_vpSensor[iSensor]->z()
+        << endreq;
+  }
+  m_nRType = m_indexRType.size();
+  m_nPhiType = m_indexPhiType.size();
+  m_nPileUpType = m_indexPileUpType.size();
+  
   msg << MSG::DEBUG 
-      << "Velo : Radius from " << m_innerRadius/mm 
-      << " to " << m_outerRadius/mm 
-      << " thick " << m_siliconThickness / micrometer << " microns"
-      << endreq;
- 
-  // Auxilliary variables for R strip computation
+      << " There are " << m_nRType << " R type, " 
+      << m_nPhiType << " Phi type and "
+      << m_nPileUpType << " pileup type sensors " << endreq;
 
-  m_pitchSlope = (m_outerPitch - m_innerPitch ) /  
-                 (m_outerRadius - m_fixPitchRadius);
-  m_halfAngle     = 91.0 * degree;
-  m_quarterAngle  = .5 * m_halfAngle;
+  if(m_nRType < 2 || m_nPhiType < 2 || m_nPileUpType < 2){
+    msg << MSG::ERROR 
+        << " This code requies at least two of each type of sensor"
+        << endreq;
+    return StatusCode::FAILURE;
+  }                                                         
 
-  // Angular limits of R zones
-  m_phiMin.push_back( -m_halfAngle );
-  m_phiMin.push_back( -m_quarterAngle );
-  m_phiMin.push_back( -m_halfAngle );
-  m_phiMin.push_back( 0. );
-  m_phiMin.push_back( m_quarterAngle );
-  m_phiMin.push_back( 0. );
-  
-  m_phiMax.push_back( -m_quarterAngle );
-  m_phiMax.push_back( 0. );
-  m_phiMax.push_back( 0. );
-  m_phiMax.push_back( m_quarterAngle );
-  m_phiMax.push_back( m_halfAngle );
-  m_phiMax.push_back( m_halfAngle );
-  
-  // For phi computation  
-  m_phiOrigin       = m_phiOrigin - halfpi; //== Xml is not rotated !
+  return StatusCode::SUCCESS;
+}
 
-  m_innerTiltRadius = m_innerRadius * sin( m_innerTilt );
-  m_outerTiltRadius = m_phiBoundRadius * sin( m_outerTilt );
-  m_phiInnerTilt    = m_innerTilt + m_phiOrigin;
-  m_phiAtBoundary   = m_phiInnerTilt - 
-                      asin( m_innerTiltRadius / m_phiBoundRadius );
-  m_phiOuterTilt    = m_phiAtBoundary + m_outerTilt;
-  m_phiPitchInner   = 2.* m_halfAngle / m_nbPhiInner;
-  m_phiPitchOuter   = 2.* m_halfAngle / (nbStrips() - m_nbPhiInner);
-
-  double phi = m_phiOuterTilt - asin( m_outerTiltRadius / m_outerRadius );
-
-  msg << "Phi (degree) inner "    << m_phiOrigin / degree
-         << " at boundary " << m_phiAtBoundary / degree
-         << " and outside " << phi / degree
-         << endreq;
-
- 
-/**  
- * Get the stations (sensors) with their Z, type and orientation
- */
-  HepPoint3D pointLocal( 0, 0, 0);
-  HepPoint3D pointGlobal( 0, 0, 0);
-  int number;
-  int index = 0;
-  bool inVeto = true;
-  char line[80];
-  
-  //  IDetectorElement* stations = *childBegin();
-  IDetectorElement* stations = this;
-  unsigned int firstInStation = 0 ;
-
-  msg << "PuVeto " ;
-
-  for( IDetectorElement::IDEContainer::iterator child = stations->childBegin();
-       stations->childEnd() != child ; ++child ) {
-    number = child - stations->childBegin();
-
-    if ( 0 == number%2) { firstInStation = m_sensor.size(); }
-
-    for(IDetectorElement::IDEContainer::iterator sens = (*child)->childBegin();
-        (*child)->childEnd() != sens ; ++sens ) {
-
-      IGeometryInfo* geoData = (*sens)->geometry();
-      if ( 0 != geoData ) {
-        pointGlobal = geoData->toGlobal( pointLocal );
-        double z =  pointGlobal.z();
-
-        int type = -1;
-        std::string typeStr = "???";
-        Parameters pars( (*sens)->userParameters() );
-
-        it = std::find( pars.begin() , pars.end () , std::string("Type") );
-        if( pars.end() != it ) {
-          typeStr = (*sens)->userParameterAsString( *it ) ;
-          if ( typeStr == "VetoL" ) {
-            type = 1;
-          } else if ( typeStr == "VetoR" ) {
-            type = 0;
-          } else {
-            if ( inVeto ) {
-              inVeto = false;
-              msg << endreq;
-              index  = 0;
-            }
-            if ( typeStr == "RRigh" ) {
-              type = 0;
-            } else if ( typeStr == "RLeft" ) {
-              type = 1;
-            } else if ( typeStr == "PhiUR" ) {
-              type = 2;
-            } else if ( typeStr == "PhiUL" ) {
-              type = 3;
-            } else if ( typeStr == "PhiDR" ) {
-              type = 4;
-            } else if ( typeStr == "PhiDL" ) {
-              type = 5;
-            }
-          }
-        }
-
-        if ( 0 > type ) {
-          msg << MSG::ERROR << "Unknown type " << typeStr
-                 << " for sensor " << index
-                 << " at z = " << z
-                 << endreq;
-          sc = StatusCode::FAILURE;
-        }
-
-        VeloSensor* sensor = new VeloSensor();
-        sensor->setNumber( index++ );
-        sensor->setType( type );
-        sensor->setZ( z );
-        sensor->setGeometry( geoData );
-        if ( inVeto ) {
-          m_puSensor.push_back( sensor );
-        } else {
-          m_sensor.push_back( sensor );
-        }
-
-        sprintf( line, "S%2d ", sensor->number() );
-        msg << line << typeStr;
-        sprintf( line, "(%d) z=%7.2f ", sensor->type(), sensor->z() );
-        msg << line;
-
-      } else {
-        msg << " no geometry !" << endreq;
-      }
-    }
-
-    if ( !inVeto && (0 != number%2) ) {
-
-      // build the list of Phi associated to R, in principle both PHI of the 
-      // station due to the dog-leg shape.
-
-      for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
-        if ( isRSensor( sR )  ) {
-          msg << " R:" << sR << "-Phi";
-          for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++) {
-            if ( !isRSensor( sP )  ) {
-              m_sensor[sR]->associate( sP );
-              msg << sP << " ";
-            }
-          }
-        }
-      }
-      msg << endreq;
-    }
-
-  }
-
-  // Build the list of radius for the R strips. In fact the boundaries.
-
-  m_rStrip.clear();
-  
-  double radius = m_innerRadius;
-  m_rStrip.push_back( radius );
-  
-  while( m_outerRadius > radius ){
-    radius += rPitch( radius );
-    m_rStrip.push_back( radius );
-  }
-  radius += rPitch( radius );
-  m_rStrip.push_back( radius );
-
-  msg << MSG::DEBUG 
-      << "RStrip buffer size " << m_rStrip.size()
-      << " last two R " << m_rStrip[ m_rStrip.size()-2 ] << " "
-      << m_rStrip[ m_rStrip.size()-1 ] << endreq;
-
-  m_zVertex = 0;   // default value.
-
-  return sc;
-};
-
-// ============================================================================
-// Get the sensor a point is in.
-// ============================================================================
-int DeVelo::sensorNumber( const HepPoint3D& point ) {
-  std::vector<VeloSensor*>::const_iterator it ;
-  for ( it = m_sensor.begin() ; m_sensor.end() != it; it++ ) {
-    if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
-      return (*it)->number();
+// return the sensor number for a point (global frame)
+unsigned int DeVelo::sensorNumber(const HepPoint3D& point){
+  double z = point.z();
+  for(unsigned int index=0;numberSensors()>index;index++){
+    if(0.250*mm > fabs(z - m_sensorZ[index])) {
+      return this->sensorNumber(index);
     }
   }
-
-  for ( it = m_puSensor.begin() ; m_puSensor.end() != it; it++ ) {
-    if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
-      return 100 + (*it)->number();
-    }
-  }
-  
-  return -1;
-};
-
-//=============================================================================
-// Returns the strip number for the specified sensor
-//=============================================================================
-double DeVelo::stripNumber( unsigned int sensorNumber, 
-                            const HepPoint3D& point, 
-                            double& pitch ) {
-  int type;
-  unsigned int num1 = sensorNumber;
-  if ( m_sensor.size() <= num1) {
-    num1 = num1 - 100;
-    if ( m_puSensor.size() <= num1 ) {
-      return -1;
-    }
-    type = m_puSensor[num1]->type();
+  return 0;
+}
+// Return the index of the sensor in the list of sensors
+unsigned int DeVelo::sensorIndex(unsigned int sensor)
+{
+  if(50 > sensor) {
+    return sensor;
+  } else if(50 <= sensor && 100 > sensor) {
+    return sensor-8;
   } else {
-    type = m_sensor[num1]->type();
+    return ((sensor%100)/2)+84;
   }
-  return stripNumberByType( type, point, pitch ) ;
+}
+// Gives the VeloChannelID and offset (in fraction of a pitch width) 
+// associated to a 3D position. with pitch width in mm
+// Sign convention is offset is +- 0.5 
+// with +ve in increasing strip number  (global frame) 
+StatusCode DeVelo::pointToChannel(const HepPoint3D &point, 
+                                  VeloChannelID &channel,
+                                  double &localOffset,
+                                  double &pitch) {
+  unsigned int sensor = this->sensorNumber(point);
+  return this->pointToChannel(point,sensor,channel,localOffset,pitch);
 }
 
-   
-//=============================================================================
-// Returns the strip number for the specified sensor
-//=============================================================================
-double DeVelo::stripNumberByType( int type,
-                                  const HepPoint3D& point, 
-                                  double& pitch ) {
-  double strip = -1.;
-  pitch  = -1.;
+// pointToChannel if sensor known (global frame)
+StatusCode DeVelo::pointToChannel(const HepPoint3D &point, 
+                                  const unsigned int &sensor,
+                                  VeloChannelID &channel,
+                                  double &localOffset,
+                                  double &pitch) {
+  unsigned int index=this->sensorIndex(sensor);
+  return m_vpSensor[index]->pointToChannel(point,channel,localOffset,pitch);
+}
 
-  double radius = point.perp();
-  double phi    = point.phi();
-
-  // Rotate the point if in the left part. Is in +- m_halfAngle
-
-  if ( 0 == (type%2) ) {
-    if ( 0 < phi ) {
-      phi = phi - pi;
-    } else {
-      phi = phi + pi;
-    }
-  }
+// Residual of 3D point to a VeloChannelID
+// returns offset in mm from closest point on channel 
+/*StatusCode  DeVelo::residual(const HepPoint3D &point, 
+                             const VeloChannelID &channel,
+                             double &residual,
+                             double &chi2) const{
   
-  if ( 1 >= type ) {
-
-    // ** This is an R sensor.
-
-    if ( -m_halfAngle < phi ) {
-      int zone  = (int) ( ( phi + m_halfAngle ) / m_quarterAngle );
-      if ( 4 > zone ) {
-        if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
-          int ifst = 0;
-          int ilst = m_rStrip.size()-1;
-          while ( 1 < ilst-ifst ) {
-            int imed = (ifst+ilst)/2;
-            if ( m_rStrip[imed] < radius ) {
-              ifst = imed;
-            } else {
-              ilst = imed;
-            }
-          }
-          pitch = m_rStrip[ilst]- m_rStrip[ifst];
-          strip = ifst + ( radius - m_rStrip[ifst] ) / pitch;
-         
-          if ( m_nbRInner <= strip ) {
-            strip += m_nbRInner;            // get space for second inner part
-          } else {
-            if ( 1 == (zone%2) ) { 
-              strip += m_nbRInner;          // second half of inner strips
-            }
-          }
-          //== Protect for out-of-nominal values
-          if ( 1023.5 < strip ) {
-            strip = -1;
-          } else {
-            if ( 1 < zone ) {
-              strip += 1024.;           // second half of the sensor
-            }
-          }
-        }
-      }
-    }
-    return strip;
-  }
-  // ** This is a phi sensor. Use symmetry to handle the second stereo...
-
-  if ( 3 < type ) { phi = - phi; }
-  
-  if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
-    phi = phi - phiOffset( radius );
-    if ( m_phiBoundRadius > radius ) {
-      strip = phi / m_phiPitchInner;
-      pitch = m_phiPitchInner * radius;
-      if ( 0 > strip) {
-        strip = -2.; 
-      } else if (m_nbPhiInner <= strip) {
-        strip = -2.; 
-      }
-    } else {
-      strip = phi / m_phiPitchOuter + m_nbPhiInner;
-      pitch = m_phiPitchOuter * radius;
-      if ( m_nbPhiInner > strip) {
-        strip = -2.; 
-      } else if ( nbStrips() < strip ) {
-        strip = -2.; 
-      }
-    }
-  }
-  return strip;
+  return this->residual(point,channel,0.,0.5,residual,chi2);
+  }*/
+StatusCode  DeVelo::residual(const HepPoint3D &point, 
+                             const VeloChannelID &channel,
+                             double &residual,
+                             double &chi2) {
+  unsigned int index=this->sensorIndex(channel.sensor());
+  return m_vpSensor[index]->residual(point,channel,residual,chi2);
 }
 
-//=============================================================================
-// Returns the (local) radius of the specified strip, and also its zone.
-//=============================================================================
-double DeVelo::rOfStrip( double strip, int& rZone ) {
-  double localStrip = strip;
-  rZone = 0;
-  if ( 1023.5 <= localStrip ) {
-    localStrip -= 1024.;
-    rZone = 3;
-  }
-  
-  if ( m_nbRInner <= localStrip ) {     // two zones in the central part
-    localStrip = localStrip - m_nbRInner;
-    rZone += 1;
-    if  ( m_nbRInner <= localStrip ) {
-      rZone += 1;
-    }
-  }
-
-  int    rBin  = (int) localStrip;
-  double delta = localStrip - (double)rBin;
-  return  m_rStrip[rBin] * (1-delta) + delta * m_rStrip[rBin+1];
+// Residual of 3D point to a VeloChannelID + offset in fraction of a channel
+// and width of the cluster in channel widths (for the chi2)
+// returns offset in mm, and chi^2 from position to point 
+StatusCode DeVelo::residual(const HepPoint3D &point, 
+                            const VeloChannelID &channel,
+                            const double &localOffset,
+                            const double &width,
+                            double &residual,
+                            double &chi2) {
+  unsigned int index=sensorIndex(channel.sensor());
+  return m_vpSensor[index]->residual(point,channel,localOffset,
+                                     width,residual,chi2);
 }
 
-//=========================================================================
-//  Return true if the two rZones are matching. This depends on the
-//  R sensor geometry
-//-- More tolerant geometry, neighbors in phi also...
-//=========================================================================
-bool DeVelo::matchingZones ( int zone1, int zone2 ) {
-  switch ( zone1 ){
-  case 0 : 
-    return 3 > zone2 ; // ( (0 == zone2) || (2 == zone2) );
-  case 1 : 
-    return 4 != zone2; // ( (1 == zone2) || (2 == zone2) );
-  case 2 : 
-    return 4 != zone2; // ( 3 >  zone2) ;
-  case 3 : 
-    return 0 != zone2; // ( (3 == zone2) || (5 == zone2) );
-  case 4 : 
-    return 2 < zone2 ; // ( (4 == zone2) || (5 == zone2) );
-  case 5 : 
-    return 0 != zone2; // ( 2 < zone2) ;
-  }
-  return false;
+// Convert global 3D Point to local 3D point in frame of the sensor 
+StatusCode DeVelo::globalToLocal(const unsigned int &sensor,
+                                 const HepPoint3D &global,
+                                 HepPoint3D &local) {
+  return m_vpSensor[sensorIndex(sensor)]->globalToLocal(global,local);
 }
-//=========================================================================
-//  
-//=========================================================================
-double DeVelo::phiOfStrip ( double strip, double radius, int sensorNb ) {
 
-  double phiLocal;
+// Convert local 3D Point to global 3D point in frame of LHCb
+StatusCode DeVelo::localToGlobal(const unsigned int &sensor,
+                                 const HepPoint3D &local,
+                                 HepPoint3D &global) {
+  return m_vpSensor[sensorIndex(sensor)]->localToGlobal(local,global);
+}
 
-  if ( strip < m_nbPhiInner ) {
-    phiLocal = (strip * m_phiPitchInner) + phiOffset( radius );
+// Get the nth (signed) neighbour strip to a given VeloChannelID
+StatusCode DeVelo::neighbour(const VeloChannelID &startChannel,
+                             const int &offset,
+                             VeloChannelID &channel) {
+  unsigned int index=sensorIndex(startChannel.sensor());
+  return m_vpSensor[index]->neighbour(startChannel,offset,channel);
+}
+
+// Check the distance in strips between two channelIDs
+StatusCode DeVelo::channelDistance(const VeloChannelID &startChannel,
+                                   const VeloChannelID &endChannel,
+                                   int &offset) {
+  unsigned int sen1= startChannel.sensor();
+  unsigned int sen2= endChannel.sensor();
+  if(sen1 != sen2){
+    offset = 2048;
+    return StatusCode::FAILURE;
+  }else{
+    sen1 = sensorIndex(sen1);
+    return m_vpSensor[sen1]->channelDistance(startChannel,endChannel,offset);
+  }
+}
+
+// Returns the vector of phi sensor numbers one can match with the 
+// specified R sensor number and vice versa
+StatusCode DeVelo::sensorAssociated( unsigned int sensor, 
+                               std::vector<unsigned int> &assocSensor ) 
+{
+  if(isPileUpSensor(sensor) || isPhiSensor(sensor)){
+    return StatusCode::FAILURE;
   } else {
-    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + phiOffset( radius );
+    assocSensor = m_vpSensor[sensorIndex(sensor)]->associatedSensors();
   }
+  return StatusCode::SUCCESS;
+}
 
-  if ( 3 < ( m_sensor[sensorNb]->type() ) ) {
-    phiLocal = -phiLocal;
+// returns the number of zones in this sensor
+unsigned int DeVelo::numberOfZones( unsigned int sensor) {
+  return m_vpSensor[sensorIndex(sensor)]->numberOfZones();
+}
+
+// returns the phi "zone" of the r strip or r zone of phi strip
+unsigned int DeVelo::zoneOfStrip( VeloChannelID channel) {
+  unsigned int index=sensorIndex(channel.sensor());
+  return m_vpSensor[index]->zoneOfStrip(channel.strip());
+}
+
+// returns the phi "zone" of the r strip or r zone of phi strip
+unsigned int DeVelo::zoneOfStrip( unsigned int strip, 
+                                  unsigned int sensor ) {
+  return m_vpSensor[sensorIndex(sensor)]->zoneOfStrip(strip);
+}
+
+// Number of strips in each zone
+unsigned int DeVelo::stripsInZone( unsigned int sensor, 
+                                   unsigned int zone ) {
+  return m_vpSensor[sensorIndex(sensor)]->stripsInZone(zone);
+}
+
+// returns the local radius of the strip
+StatusCode DeVelo::rOfStrip( VeloChannelID channel,
+			     double &radius) {
+  // check whether sensor is R type using m_vpSensor[sensor]->type()
+  //  write method bool DeVelo::isR(unsigned int sensor), isPhi etc.
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  unsigned int strip=channel.strip();
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+    radius = rPtr->rOfStrip(strip);
+  }else if(this->isPileUpSensor(sensor)){
+    DeVeloPileUpType* puPtr = 
+      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[index]);
+    radius = puPtr->rOfStrip(strip);
+  }else{
+    return StatusCode::FAILURE;
   }
-  return phiLocal;
+  return StatusCode::SUCCESS;
+}
+// returns the local radius of the strip+fractional distance to strip
+StatusCode DeVelo::rOfStrip( VeloChannelID channel, double fraction,
+			     double &radius) {
+  // check whether sensor is R type using m_vpSensor[sensor]->type()
+  //  write method bool DeVelo::isR(unsigned int sensor), isPhi etc.
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(channel.sensor());
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+    radius = rPtr->rOfStrip(channel.strip(),fraction);
+  }else if(this->isPileUpSensor(sensor)){
+    DeVeloPileUpType* puPtr = 
+      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[index]);
+    radius = puPtr->rOfStrip(channel.strip(),fraction);
+  }else{
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+// returns the R pitch at the given channelID
+StatusCode DeVelo::rPitch( VeloChannelID channel,
+			   double &rPitch ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[index]);
+    rPitch = rPtr->rPitch(channel.strip());
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the phi of the strip at the specified radius for this sensor.
+StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
+			       double radius, double &phiOfStrip ) {
+  return this->phiOfStrip(channel,0.,radius,phiOfStrip);
+}
+
+// returns the phi of the strip +fractional distance to strip
+// at the specified radius for this sensor.
+StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
+                               double fraction, double radius, 
+                               double &phiOfStrip ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    double strip=fraction+static_cast<double>(channel.strip());
+    phiOfStrip = phiPtr->phiOfStrip(strip,radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// The stereo angle of the phi strips in radians,
+// signed so that positive indicates phi increases with radius 
+StatusCode DeVelo::phiStereo( VeloChannelID channel, double radius,
+                              double &phiStereo) {
+  unsigned int index=sensorIndex(channel.sensor());
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    phiStereo = phiPtr->phiOffset(radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the Phi pitch (in mm) at the given radius (sensor local) 
+StatusCode DeVelo::phiPitch(VeloChannelID channel, double radius,
+			     double &phiPitch ) {
+  unsigned int index=sensorIndex(channel.sensor());
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    phiPitch = phiPtr->phiPitch(radius);
+    return StatusCode ::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the Phi pitch (in radians) for a given strip
+StatusCode DeVelo::phiPitch(VeloChannelID channel,
+			     double &phiPitch ) {
+  unsigned int index=sensorIndex(channel.sensor());  
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    phiPitch = phiPtr->phiPitch(channel.strip());
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+StatusCode DeVelo::distToOrigin( VeloChannelID channel,
+                             double &distance)  
+{
+  unsigned int index=sensorIndex(channel.sensor());
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
+  if(phiPtr){
+    distance = phiPtr->distToOrigin(channel.strip());
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// return the minimum sensitive radius of an R wafer, local frame
+double DeVelo::rMin(unsigned int sensor) {
+  return m_vpSensor[sensorIndex(sensor)]->innerRadius();
+}
+// return the maximum sensitive radius of an R wafer, local frame
+double DeVelo::rMax(unsigned int sensor) {
+  return m_vpSensor[sensorIndex(sensor)]->outerRadius();
+}
+
+// return the minimum sensitive radius of an R wafer in a zone, local frame
+// 4 zones (different phi) for R sensors and 2 zones (different R and stereo)
+// for the phi sensors 
+double DeVelo::rMin(unsigned int sensor, unsigned int zone) {
+  return m_vpSensor[sensorIndex(sensor)]->rMin(zone);
+}
+// return the maximum sensitive radius of an R wafer in a zone, local frame
+// 4 zones (different phi) for R sensors and 2 zones (different R and stereo)
+// for the phi sensors 
+double DeVelo::rMax(unsigned int sensor, unsigned int zone) {
+  return m_vpSensor[sensorIndex(sensor)]->rMax(zone);
+}
+
+// Smallest Phi at R (local frame) of the phi strips at R
+StatusCode DeVelo::phiMin(unsigned int sensor, double radius, 
+			     double &phiMin) {
+  DeVeloPhiType * phiPtr = 
+     dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
+  if(phiPtr){
+    phiMin = phiPtr->phiMin(radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// Smallest Phi at R (local frame) of the phi strips at R
+StatusCode DeVelo::phiMax(unsigned int sensor, double r, 
+			     double &phiMax) {
+  DeVeloPhiType * phiPtr = 
+     dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
+  if(phiPtr){
+    phiMax = phiPtr->phiMax(r);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// Smallest Phi at R (local frame) of the r strips in the zone
+StatusCode DeVelo::phiMin(unsigned int sensor, unsigned int zone,
+			   double &phiMin) {
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
+    phiMin = rPtr->phiMinZone(zone);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// Largest Phi (local frame) of the R strips in the zone
+StatusCode DeVelo::phiMax(unsigned int sensor, unsigned int zone,
+			   double &phiMax) {
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
+    phiMax = rPtr->phiMaxZone(zone);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// minimum phi at R (overlap in x) for a given zone
+StatusCode DeVelo::phiMin(unsigned int sensor, unsigned int zone,
+                          double radius, double &phiMin) {
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
+    phiMin = rPtr->phiMinZone(zone,radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// maximum phi at R (overlap in x) for a given zone
+StatusCode DeVelo::phiMax(unsigned int sensor, unsigned int zone,
+                          double radius, double &phiMax) {
+  if(this->isRSensor(sensor)){
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
+    phiMax = rPtr->phiMaxZone(zone,radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the silicon thickness
+double DeVelo::siliconThickness ( unsigned int sensor ) {
+  return m_vpSensor[sensorIndex(sensor)]->siliconThickness();
+}
+
+// returns the number of strips per sensor.
+unsigned int DeVelo::numberStrips(unsigned int sensor) {
+  return m_vpSensor[sensorIndex(sensor)]->numberOfStrips();
+}
+    
+// returns the capacitance of the strip.
+double DeVelo::stripCapacitance(VeloChannelID channel) {
+  unsigned int index=sensorIndex(channel.sensor());
+  return m_vpSensor[index]->stripCapacitance(channel.strip());
+}
+
+// Access to a strip's geometry, for Panoramix
+// from strip number and R sensor number, returns Z, R and a phi range.
+// in local frame 
+StatusCode DeVelo::stripLimitsR( unsigned int sensor, unsigned int strip,
+				 double& z, double& radius, 
+				 double& phiMin, double& phiMax )  {
+  z = zSensor(sensor);
+  VeloChannelID channel(sensor,strip);
+  if(this->isRSensor(sensor)){    
+    DeVeloRType * rPtr = 
+      dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
+    StatusCode sc=rPtr->stripLimits(strip,radius,phiMin,phiMax);
+    if(m_vpSensor[sensorIndex(sensor)]->isRight()){
+      phiMin += pi;
+      phiMax += pi;
+    }
+    return sc;
+  }else if(this->isPileUpSensor(sensor)){
+    DeVeloPileUpType * puPtr = 
+      dynamic_cast<DeVeloPileUpType*>(m_vpSensor[sensorIndex(sensor)]);
+  } else {
+      MsgStream msg( msgSvc(), "DeVelo" );
+      msg << MSG::ERROR 
+          << "Asked for phi type sensor as if r/pu type" << endreq;
+      return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+  
+// from strip number and phi sensor number, returns the two end points
+// in local frame 
+StatusCode DeVelo::stripLimitsPhi( unsigned int sensor, unsigned int strip,
+				   HepPoint3D& begin, HepPoint3D& end )  {
+  DeVeloPhiType * phiPtr = 
+    dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
+  if(phiPtr){
+    StatusCode sc = phiPtr->stripLimits(strip, begin, end);
+   return sc;
+  } else {
+    MsgStream msg( msgSvc(), "DeVelo" );
+    msg << MSG::ERROR 
+        << "Asked for r/pu type sensor as if phi type" << endreq;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
-// Returns the strip number for the specified sensor
+// Construct 3d point from R/phi channels (rFrac is fractional distance 
+// to strip (+/-0.5))
 //=============================================================================
-bool DeVelo::getSpacePoint( unsigned int RSensorNumber, 
-                            double       RStripNumber,
-                            unsigned int PhiSensorNumber, 
-                            double       PhiStripNumber,
-                            HepPoint3D& point, 
-                            double&  rPitch,
-                            double&  phiPitch ) {
+StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan, 
+                                   double rFrac,
+                                   VeloChannelID phiChan,
+                                   double phiFrac,
+                                   HepPoint3D& point, 
+                                   double&  rPitch,
+                                   double&  phiPitch )  {
   point.set( 0., 0., 0. );
   rPitch   = 0.;
   phiPitch = 0.;
-
-  // check that the sensor number are valid
-
-  if ( ( m_sensor.size() <= RSensorNumber   ) ||
-       ( m_sensor.size() <= PhiSensorNumber )    ) {
-    return false;
-  }
-
   // check that the sensor types are valid
-  int rType   = m_sensor[RSensorNumber]->type();
-  int phiType = m_sensor[PhiSensorNumber]->type();
+  if(VeloChannelID::RType != rChan.type()) return StatusCode::FAILURE;
+  if(VeloChannelID::PhiType != phiChan.type()) return StatusCode::FAILURE;
   
-  if ( ( 1 < rType ) || ( 2 > phiType ) ) {
-    return false;
-  }
-
+  unsigned int rSensor=rChan.sensor();
+  unsigned int phiSensor=phiChan.sensor();
   // Nearby sensor...
-
-  double zR   = m_sensor[RSensorNumber]->z();
-  double zPhi = m_sensor[PhiSensorNumber]->z();
-  bool status = true;
+  double zR   = m_sensorZ[sensorIndex(rSensor)];
+  double zPhi = m_sensorZ[sensorIndex(phiSensor)];
   
   // Compute R from strip.
-  int    rZone;
-  double localR = rOfStrip( RStripNumber, rZone );
-  
+  unsigned int rZone; rZone=zoneOfStrip(rChan);
+  double localR;
+  StatusCode sc=rOfStrip(rChan, rFrac, localR);
+  if(!sc) return sc;
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
-  double tolPhiBoundary = 5. * m_innerPitch;
 
-  if ( m_innerRadius - tolPhiBoundary > rAtPhi ) { return false; }
-  if ( m_outerRadius + tolPhiBoundary < rAtPhi ) { return false; }
+  double innerPitch;
+  sc=this->rPitch(VeloChannelID(rSensor,0),innerPitch);
+  if(sc.isFailure()) return sc;
+  double tolPhiBoundary = 5. * innerPitch;
+
+  double innerRadius=rMin(rSensor);
+  double outerRadius=rMax(rSensor);
+  
+  if(innerRadius-tolPhiBoundary > rAtPhi) return StatusCode::FAILURE;
+  if(outerRadius+tolPhiBoundary < rAtPhi) return StatusCode::FAILURE;
 
   // Coherence in the Phi detector region, with some tolerance
-
-  if ( m_phiBoundRadius + tolPhiBoundary < rAtPhi ) {
-    if ( PhiStripNumber < m_nbPhiInner ) {
+  double phiBoundRadius=this->rMin(phiSensor,0);
+  unsigned int nbPhiInner=this->stripsInZone(phiSensor,0);
+  if(phiBoundRadius+tolPhiBoundary < rAtPhi) {
+    if(nbPhiInner > phiChan.strip()) {
       return false;
     }
-  } else if ( m_phiBoundRadius - tolPhiBoundary > rAtPhi ) {
-    if ( m_nbPhiInner <= PhiStripNumber ) {
+  } else if(phiBoundRadius-tolPhiBoundary > rAtPhi) {
+    if (nbPhiInner <= phiChan.strip()) {
       return false;
     }
   }
-
-  double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiSensorNumber );
-
+  double phiLocal ;
+  sc=phiOfStrip(phiChan, phiFrac, rAtPhi, phiLocal);
+  if(sc.isFailure()) return sc;
+  // Test for R compatibility
   double phiMin = phiLocal + 0.02;    // Tolerance for tests
   double phiMax = phiLocal - 0.02;    // tolerance for tests
-
-  // For unusual pairing, rotate Phi ranges to match the R zone...
-  if ( ( phiType + rType )%2 != 0 ) {
-    if ( phiLocal < 0 ) {
-      phiMin += pi;
-      phiMax += pi;
-    } else {
-      phiMin -= pi;
-      phiMax -= pi;
+  unsigned int iFind=0;
+  for(unsigned int iZone=0;iZone<numberOfZones(rChan.sensor());iZone++){
+    if(iZone == static_cast<unsigned int>(rZone)) {
+      double zoneMin;
+      StatusCode sc = this->phiMin(rChan.sensor(),iZone,zoneMin);
+      if(!sc) return StatusCode::FAILURE;
+      double zoneMax;
+      sc = this->phiMax(rChan.sensor(),iZone,zoneMax);
+      if(!sc) return StatusCode::FAILURE;
+      if ((zoneMin < phiMin) && ( zoneMax > phiMax ) ){
+        iFind = iZone;
+      }
     }
   }
-  
-  // phi is in the +- m_halfAngle range. Test for R compatibility
-
-  if ( 0 == rZone  ) {
-    if ( (-m_halfAngle > phiMin) || ( -m_quarterAngle < phiMax ) ){
-      return false;
-    }
-  } else if ( 1 == rZone ) {
-    if ( (-m_quarterAngle > phiMin) || ( 0 < phiMax )  ) {
-      return false;
-    }
-  } else if ( 2 == rZone ) {
-    if ( (-m_halfAngle > phiMin) || ( 0 < phiMax ) ) {
-      return false;
-    }
-  } else if ( 3 == rZone ) {
-    if ( (0 > phiMin) || (m_quarterAngle < phiMax)  ) {
-      return false;
-    }
-  } else if ( 4 == rZone ) {
-    if ( (m_quarterAngle > phiMin) || (m_halfAngle < phiMax) ) {
-      return false;
-    }
-  } else if ( 5 == rZone ) {
-    if ( (0 > phiMin) || (m_halfAngle < phiMax) ) {
-      return false;
-    }
-  }
-  
-  //=== put back in the proper space location 
-  if ( 0 == phiType%2 ) { phiLocal += pi;  }
-
-  point.set( localR * cos(phiLocal),  localR * sin(phiLocal), zR );
-
-  // Here we should convert a local point to a global point, using the 
-  // toGlobal method of the R sensor detector element... Not now !
-
-
+  if(static_cast<unsigned int>(rZone) != iFind) return StatusCode::FAILURE;
+  // Convert a local point to a global point, using the 
+  // localToGlobal method of the R sensor
+  double x=localR*cos(phiLocal);
+  double y=localR*sin(phiLocal);
+  sc=localToGlobal(rSensor,HepPoint3D(x,y,0),point);
   // Compute the pitches. 
-
-  rPitch   = this->rPitch( localR );
-  phiPitch = this->phiPitch( localR );
-  
-  return status;
+  sc = this->rPitch(rChan, rPitch);
+  if(!sc) return sc;
+  sc = this->phiPitch(phiChan, rAtPhi, phiPitch);
+  if(!sc) return sc;
+  return StatusCode::SUCCESS;
 }
-
-//=========================================================================
-//  Compute the distance of the origin to the strip
-//=========================================================================
-double DeVelo::originToPhiDistance ( double strip, int sensorNb ) {
-
-  double distance;
-  if ( strip < m_nbPhiInner ) {
-    distance = m_innerTiltRadius ;
-  } else {
-    distance = m_outerTiltRadius ;
-  }
-
-  int phiType =  m_sensor[sensorNb]->type();
-  if ( 4 > phiType    ) { distance = -distance; }
-  return distance;
-}
-
-//=========================================================================
-//  Returns the angle of the strip with the x axis
-//=========================================================================
-double DeVelo::phiDirectionOfStrip ( double strip, int sensorNb ) {
-
-  double phiLocal;
-  if ( strip < m_nbPhiInner ) {
-    phiLocal = (strip * m_phiPitchInner) + m_phiInnerTilt;
-  } else {
-    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + m_phiOuterTilt;
-  }
-  int phiType =  m_sensor[sensorNb]->type();
-
-  if ( 3 <  phiType   ) { phiLocal = -phiLocal; }
-  if ( 0 == phiType%2 ) { phiLocal += pi;       }
-  return phiLocal;
-}
-
-//=========================================================================
-//  Return the 'numAway' channelIDfrom the specified one. 
-//=========================================================================
-VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan, 
-                                  int numAway, 
-                                  bool& valid) {
-  int strip = chan.strip();
-  int newStrip = strip + numAway;
-  valid = true;
-  
-  if ( isRSensor( chan.sensor() ) ) {
-    if ( 0 < numAway ) {
-      if ( (m_nbRInner >  strip) && 
-           (m_nbRInner <= newStrip) ) {
-        valid = false; // not with 512 inner ! : newStrip += (int)m_nbRInner;
-      } else if ( ( 1024 >  strip ) && 
-                  ( 1024 <= newStrip ) ) {
-        valid = false;
-      } else if ( (m_nbRInner+1024 >  strip) && 
-                  (m_nbRInner+1024 <= newStrip) ) {
-        valid = false; // not with 512 inner ! : newStrip += (int)m_nbRInner;
-      } else if ( nbStrips() <= newStrip ) {
-        valid = false;
-      }
-    } else {
-      if ( 0 > newStrip ) {
-        valid = false;
-      } else if ( (m_nbRInner <= strip) && 
-                  (m_nbRInner >  newStrip) ) {
-        valid = false;
-      } else if ( ( 1024 <= strip ) && 
-                  ( 1024 >  newStrip ) ) {
-        valid = false;
-      } else if ( (m_nbRInner+1024 <= strip) && 
-                  (m_nbRInner+1024 >  newStrip) ) {
-        valid = false;
-      } else if ( nbStrips() <= newStrip ) {
-        valid = false;
-      }
-    }
-  } else {
-    if ( 0 < numAway ) {
-      if ( ( m_nbPhiInner > strip ) && ( m_nbPhiInner <= newStrip ) ) {
-        valid = false;
-      } else if ( nbStrips() <= newStrip ) {
-        valid = false;
-      }
-    } else {
-      if ( 0 > newStrip ) {
-        valid = false;
-      } else if ( (m_nbPhiInner <= strip) && ( m_nbPhiInner > newStrip ) ) {
-        valid = false;
-      } else if ( nbStrips() <= newStrip ) {
-        valid = false;
-      }
-    }
-  }
-  if ( valid ) {
-    return VeloChannelID( chan.sensor(), newStrip );
-  }
-  return VeloChannelID( chan.sensor(), 0 );
-}
-
-//=========================================================================
-//  Returns the distance between these two channels.
-//=========================================================================
-int DeVelo::neighbour ( const VeloChannelID& entryChan,
-                        const VeloChannelID& exitChan,
-                        bool& valid ) {
-  valid = true;
-  if ( entryChan.sensor() != exitChan.sensor() ) {
-    valid = false;
-    return -1;
-  }
-  int str1 = entryChan.strip();
-  int str2 = exitChan.strip();
-  int dist = str2 - str1;
-  if ( str1 > str2 ) {
-    str2 = entryChan.strip();
-    str1 = exitChan.strip();
-  }
-  
-  if ( isRSensor( entryChan.sensor() ) ) {
-    if ( (1024 > str1) && (1024 <= str2) ) valid = false;
-    str1 = str1 % 1024;
-    str2 = str2 % 1024;
-    if ( (m_nbRInner > str1) && (m_nbRInner <= str2 ) ) {
-      if ( 2*m_nbRInner <= str2  ) {
-        if ( 0 < dist ) {
-          dist -= (int) m_nbRInner;
-        } else {
-          dist += (int) m_nbRInner;
-        }
-      } else {
-        valid = false;
-      }
-    }
-  } else {
-    if ( ( m_nbPhiInner > str1 ) && ( m_nbPhiInner <= str2 ) ) {
-      valid = false;
-    }
-  }
-  if ( valid ) return dist;
-  return -9999;  
-}
-
-//=========================================================================
-//  Return an index of the strip.
-//=========================================================================
-int DeVelo::stripArrayIndex ( int sensorId, int stripId ) {
-  unsigned int num = sensorId;
-  if ( m_sensor.size() > num ) {
-    return stripId;
-  }
-  num -= 100;
-  if ( m_puSensor.size() > num ) { 
-    return stripId;
-  }
-  return -1;
-}
-
-//=========================================================================
-//  
-//=========================================================================
-int DeVelo::stripNumber ( int sensorId, int stripIndex ) {
-  unsigned int num = sensorId;
-  if ( m_sensor.size() > num ) {
-    return stripIndex;
-  } 
-  num -= 100;
-  if ( m_puSensor.size() > num ) { 
-    return stripIndex;
-  }
-  return -1;
-}
-
-//=========================================================================
-//  
-//=========================================================================
-VeloChannelID DeVelo::channelID (const HepPoint3D& point, 
-                                 double& fraction, 
-                                 double& pitch,
-                                 bool& valid ) {
-  valid = true;
-  int sensor    = sensorNumber( point );
-  double strip  = stripNumber( sensor, point, pitch );
-  if ( 0 <= strip ) {
-    int iStrip = (VeloRound::round(strip));
-    fraction = strip - (double) iStrip;
-    return VeloChannelID( sensor, iStrip );
-  } else {
-    valid = false;
-    return VeloChannelID( 0, 0 );
-  }  
-}
-
-//=========================================================================
-//  Returns the geometrical description of the specified R strip
-//=========================================================================
-void DeVelo::stripLimitsR ( int sensor, double strip,
-                            double& z, double& radius, 
-                            double& phiMin, double& phiMax) {
-  z = -1000.;
-  radius = 0.;
-  phiMin = 0.;
-  phiMax = 0.;
-  if ( 0 > sensor ) return;
-  if ( m_sensor.size() <= (unsigned int)sensor ) return;
-  if ( 1 < m_sensor[sensor]->type() ) return;
-
-  z = zSensor( sensor );
-  int rZone;
-  radius = rOfStrip( strip, rZone );
-
-  //== Phi Limits of the R strip.
-  phiMin = m_phiMin[rZone];
-  phiMax = m_phiMax[rZone];
-
-  //== Right or Left sensor ?
-  if ( 0 == m_sensor[sensor]->type() ) {
-    phiMin += pi;
-    phiMax += pi;
-  }
-}
-
-//=========================================================================
-//   Returns the geometrical description of the specified Phi strip
-//=========================================================================
-void DeVelo::stripLimitsPhi( int sensor, double strip,
-                             HepPoint3D& begin, HepPoint3D& end) {
-  begin.set( 0., 0., 0. );
-  end.set( 0., 0., 0. );
-  
-  if ( 0 > sensor || m_sensor.size() <= (unsigned int)sensor ) return;
-  int sensorType =  m_sensor[sensor]->type();
-  if ( 2 > sensorType ) return;
-  
-  double rBeg = m_innerRadius;
-  double rEnd = m_phiBoundRadius;
-  if ( m_nbPhiInner <= strip ) {
-    rBeg = m_phiBoundRadius;
-    rEnd = m_outerRadius;
-  }
-  double phiBeg = phiOfStrip( strip, rBeg, sensor );
-  double phiEnd = phiOfStrip( strip, rEnd, sensor );
-  if ( 0 == sensorType%2 ) {
-    phiBeg += pi;
-    phiEnd += pi;
-  }
-  double z = zSensor( sensor );
-  begin.set( rBeg * cos(phiBeg), rBeg * sin(phiBeg), z );
-  end.set( rEnd * cos(phiEnd), rEnd * sin(phiEnd), z );
-}
-
 //=========================================================================
 //  Returns a range of strip matching the point, and the conversion factors
 //=========================================================================
@@ -966,84 +736,89 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
   stripMax = -1.;
   pitch    = 0.;
   offset   = 0.;
+  StatusCode sc;
+  if(isRSensor(sensor)) return;    // R sensor
+  if(rMin(sensor) > radius ) return;
+  if(rMax(sensor) < radius ) return;
   
-  if ( 0 > sensor || m_sensor.size() <= (unsigned int) sensor ) return;
-  int phiType = m_sensor[sensor]->type();
-  if ( 2 > phiType ) return;    // R sensor
-  int rType   = m_sensor[rSensor]->type();
-
-  if ( m_innerRadius > radius ) return;
-  if ( m_outerRadius < radius ) return;
-  bool isInner = m_phiBoundRadius > radius;
-  
-  offset = phiOffset( radius );
-  if ( isInner ) {
-    pitch  = m_phiPitchInner;
-  } else {
-    pitch  = m_phiPitchOuter;
+  bool isInner=false;
+  if(rMin(sensor,0) < radius && rMax(sensor,0) > radius){
+    isInner = true;
   }
-  if ( 3 < phiType ) {
-    pitch  = -pitch;
-    offset = -offset;
+  sc = phiStereo(VeloChannelID(sensor,0),radius,offset);
+  if(isInner){
+    sc = phiPitch(VeloChannelID(sensor,0),pitch);
+  } else {
+    sc = phiPitch(VeloChannelID(sensor,stripsInZone(sensor,0)),pitch);
   }
   //== tolerance in phi angle to match R and Phi...
-  double absDz =  fabs(m_sensor[sensor]->z() - m_sensor[rSensor]->z());
+  double absDz =  fabs(m_vpSensor[sensorIndex(sensor)]->z() - 
+                       m_vpSensor[sensorIndex(rSensor)]->z());
   double deltaPhi = angularTol * absDz / radius;
   
-  double phiMin = m_phiMin[zone]-deltaPhi - offset;
-  double phiMax = m_phiMax[zone]+deltaPhi - offset;
-  
+  double phiMin;
+  double phiMax;
+  if(0 == zone || 3 == zone){
+    sc = this->phiMin(rSensor,zone,radius,phiMin);
+    sc = this->phiMax(rSensor,zone,radius,phiMax);
+  } else {
+    sc = this->phiMin(rSensor,static_cast<unsigned int>(zone),phiMin);
+    sc = this->phiMax(rSensor,static_cast<unsigned int>(zone),phiMax);
+  }
+  phiMin += (-deltaPhi-offset);
+  phiMax += (deltaPhi-offset);
   // For unusual pairing, rotate Phi ranges to match the R zone...
   // But only in the appropriate zones...
-  if ( ( phiType + rType )%2 != 0 ) {
-    if ( 0 == zone || 2 == zone ) {
+  /*  if ( ( phiType + rType )%2 != 0 ) {
+      if ( 0 == zone || 2 == zone ) {
       phiMin += pi;
       phiMax += pi;
-    } else if ( 4 == zone || 5 == zone ) {
+      } else if ( 4 == zone || 5 == zone ) {
       phiMin -= pi;
       phiMax -= pi;
-    } else {
+      } else {
       return;
-    }
-  }
+      }
+      }*/
 
   stripMin = phiMin / pitch;
   stripMax = phiMax / pitch;
+  
   if ( stripMax < stripMin ) {
     double temp = stripMin;
     stripMin = stripMax;
     stripMax = temp;
   }
-  //== Phi strips are defined from 0 to nbStrips(). Strip center is at +.5
+  //== Phi strips are defined from 0 to nbStrips().
+  unsigned int nbPhiInner=stripsInZone(sensor,0);
+  unsigned int nbStrips=numberStrips(sensor);
   if ( isInner ) {
     if ( 0. > stripMax ) {
       stripMin = -1.;
       stripMax = -1.;
     } else if ( 0. > stripMin ) {
       stripMin = 0.;
-    } else if ( m_nbPhiInner <= stripMin ) {
+    } else if ( nbPhiInner <= stripMin ) {
       stripMin = -1.;
       stripMax = -1.;
-    } else if ( m_nbPhiInner <= stripMax ) {
-      stripMax = m_nbPhiInner;
+    } else if ( nbPhiInner <= stripMax ) {
+      stripMax = nbPhiInner;
     }
   } else {
-    stripMin += m_nbPhiInner;
-    stripMax += m_nbPhiInner;
-    offset   -= m_nbPhiInner * pitch;
-    if ( m_nbPhiInner > stripMax ) {
+    stripMin += nbPhiInner;
+    stripMax += nbPhiInner;
+    offset   -= nbPhiInner * pitch;
+    if ( nbPhiInner > stripMax ) {
       stripMin = -1.;
       stripMax = -1.;
-    } else if ( m_nbPhiInner > stripMin ) {
-      stripMin = m_nbPhiInner;
-    } else if ( nbStrips() <= stripMin ) {
+    } else if ( nbPhiInner > stripMin ) {
+      stripMin = nbPhiInner;
+    } else if ( nbStrips <= stripMin ) {
       stripMin = -1.;
       stripMax = -1.;
-    } else if ( nbStrips() <= stripMax ) {
-      stripMax = nbStrips();
+    } else if ( nbStrips <= stripMax ) {
+      stripMax = nbStrips;
     }
   }
-  if ( 0 == phiType%2 ) offset += pi;
 }
-
 //=========================================================================
