@@ -57,9 +57,6 @@ const unsigned char GiGaMCParticleCnv::storageType () { return GiGaKine_StorageT
 /// create Object 
 StatusCode GiGaMCParticleCnv::createObj( IOpaqueAddress*  Address , DataObject*&  Object )
 {
-
-	std::cout << name() << " create object!!!!" << std::endl; 
-	
   ///
   Object = 0 ;
   if( 0 ==  Address  ) { return Error("IOpaqueAddress* points to NULL!"                         ) ; }

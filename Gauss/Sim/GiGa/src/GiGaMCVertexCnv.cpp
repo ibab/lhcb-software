@@ -144,8 +144,6 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , DataObject*   
     object->erase( end , object->end() ) ; ///  remove unsorted garbage
   }
   ///
-  std::cerr << " end of create MCVertex "  << std::endl ; 
-  ///
   return StatusCode::SUCCESS;
 };
 /// update Object's References /////////////////////////////////////////////////////////////////////////////// 
