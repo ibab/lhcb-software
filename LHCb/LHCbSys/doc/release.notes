@@ -5,6 +5,29 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v17r0 2004-10-18 =======================
+! 2004-10-18 - Marco Cattaneo
+ - New packages: OTDAQ v3r0 (moved here from application projects)
+
+ - Modified packages: KernelSys v4r3, LHCbKernel v5r3, EventSys v19r0,
+     CaloEvent v13r5p1, EventAssoc v1r4, MuonEvent v3r1p1, OTEvent v14r0,
+     RichEvent v4r0p1, TrEvent v14r0, AssociatorsSys v2r0, OTAssociators v3r0,
+     TrAssociators v5r0, MCTools v1r8, GaudiConf v8r0p1
+
+ - In LHCbKernel v5r3
+   . First implementation of LHCbID
+   . Backwards incompatible modifications to OTChannelID (add TDC time)
+
+ - In OTEvent v14r0
+   . New OT Event model (incompatible with DC04 data)
+
+ - In EventAssoc v1r4, TrEvent v14r0, OTAssociators v3r0, TrAssociators v5r0,
+      MCTools v1r8
+   . Update for use with new OT Event model (replace OTCluster by OTTime)
+
+ - In GaudiConf v8r0p1
+   . Update valgrind suppression file for Gaudi v15r2
+
 !======================= LHCbSys v16r2 2004-09-23 =======================
 This version is built against Gaudi v15r2
 

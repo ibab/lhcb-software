@@ -1,5 +1,5 @@
 package LHCbSys
-version v16r2
+version v17r0
 
 branches doc cmt
 
@@ -7,16 +7,16 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v16r2
+use LHCb		v17r0
 
-use GaudiConf		v8r0
+use GaudiConf		v8r0p1
 
 # External package used by GenEvent
 use HepMC	v4r121p0	Sim
 
 # Kernel packages
-use KernelSys   	v4r2	Kernel
-use LHCbKernel  	v5r2	Kernel
+use KernelSys   	v4r3	Kernel
+use LHCbKernel  	v5r3	Kernel
 use CaloKernel  	v3r2	Calo
 use MuonKernel  	v2r6	Muon
 use TrKernel    	v11r4	Tr
@@ -39,30 +39,30 @@ use RichDet		v8r0	Det
 use STDet          	v1r2	Det
 
 # Event data model
-use EventSys		v18r2	Event
+use EventSys		v19r0	Event
 use Event        	v4r5	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
-use OTEvent      	v13r0	Event
-use TrEvent      	v13r1	Event
-use RichEvent    	v7r4	Event
-use CaloEvent    	v13r5	Event
-use MuonEvent    	v3r1	Event
+use OTEvent      	v14r0	Event
+use TrEvent      	v14r0	Event
+use RichEvent    	v7r4p1	Event
+use CaloEvent    	v13r5p1	Event
+use MuonEvent    	v3r1p1	Event
 use L0Event      	v14r1p1	Event
 use PhysEvent    	v8r4	Event
 use DAQEvent		v4r4p1	Event
 use GenEvent    	v3r3	Event
-use EventAssoc          v1r3    Event
+use EventAssoc          v1r4    Event
 use LinkerEvent         v1r4    Event
 use TrgEvent            v4r0    Event
 
 # Associators
-use AssociatorsSys	v1r15	Associators
+use AssociatorsSys	v2r0	Associators
 use Associators		v2r3	Associators
 use ITAssociators      	v2r9	IT
-use OTAssociators      	v2r9	OT
+use OTAssociators      	v3r0	OT
 use VeloAssociators    	v1r11	Velo
-use TrAssociators      	v4r0	Tr
+use TrAssociators      	v5r0	Tr
 use CaloAssociators    	v4r3	Calo
 use MuonAssociators    	v1r4	Muon
 use Relations		v1r0	Kernel
@@ -70,13 +70,14 @@ use Relations		v1r0	Kernel
 # Raw buffer encoding and decoding
 use MuonDAQ		v1r2	Muon
 use STDAQ		v1r3	IT
+use OTDAQ		v3r0	OT
 use VeloDAQ		v1r0	Velo
 use RichDAQ		v1r5	Rich
 
 # Other stuff
 use LHCbInterfaces	v1r0	Kernel
 use LHCbAlgs		v1r1	Kernel
-use MCTools		v1r7	Phys
+use MCTools		v1r8	Phys
 use CaloInterfaces	v4r2	Calo
 use CaloUtils		v4r7	Calo
 use RichTools		v1r0	Rich
