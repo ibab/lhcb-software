@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.18 2002-05-12 08:45:28 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# $Id: requirements,v 1.19 2002-05-13 15:48:10 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -12,7 +10,7 @@ include_dirs $(LHCBKERNELROOT)
 
 use GaudiKernel  v12r*
 use CLHEP        v17r*
-use BOOST        v1r27 
+use BOOST        v1r27*
 use GaudiObjDesc v4r*  -no_auto_imports
 
 # Produce Header-Files from XML description, overriding default destination
