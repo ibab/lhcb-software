@@ -27,17 +27,13 @@ private
 
 # Check completeness of LCG dictionaries. Only for Linux debug
 
-use GaudiPoolDb v*
-apply_pattern ld_library_path
+pattern dict_check \
+  use GaudiPoolDb v* ; \
+  apply_pattern ld_library_path ; \
+  make_fragment dict_check -header=dict_check_header ; \
+  document dict_check LCG_dict_check
 
-macro doCheck  "false" \
-  Linux&debug  "true"  \
-        WIN32  "0==1"
-make_fragment dict_check -header=dict_check_header
-document dict_check LCG_dict_check
+macro apply_check "" \
+      Linux&debug dict_check
 
-#
-# this can be used from cmt version v1r16pX
-#
-# action dict_check " source setup.sh ; lcgdictcheck --cmt --info -s $(GAUDIPOOLDBROOT)/rh73_gcc32/libGaudiPoolDb.so libSealSTLDict.so "
-# macro_append constituents " dict_check "
+apply_pattern ${apply_check}
