@@ -5,6 +5,14 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
+!========================== LbCom v1r2 2005-03-11 ============================
+! 2005-03-11 - Marco Cattaneo
+ - Move to LHCb v18r2
+ - Packages modified:
+
+ - In LbcomSys
+   . Improvements Doxygen welcome page
+
 !========================== LbCom v1r1 2005-03-08 ============================
 ! 2005-03-08 - Marco Cattaneo
  - Move to Gaudi v16r2, LHCb v18r1
