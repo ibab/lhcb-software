@@ -9,6 +9,9 @@ Purpose: LHCb reconstruction program
   . Temporarily disabled Rich monitoring, because it accesses Spillover hits,
     no longer available on Boole output
 
+- New tuning
+  . Update parameterisation for Photon ID (CaloPIDs v2r2)
+
 - Persistency changes
   . Removed Velo,IT,OT clusters and Muon coordinates from DST. If needed they 
     can be recreated from RawBuffer by rerunning the clustering

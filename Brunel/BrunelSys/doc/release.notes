@@ -4,7 +4,11 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v23r6 2004-04-16 =======================
+!======================= BrunelSys v23r6 2004-04-19 =======================
+! 2004-04-19 - Marco Cattaneo
+ - Modified requirements for Brunel v23r6
+   
+   Packages modified: CaloPIDs v2r2, CaloMonitor v2r2
 
 !======================= BrunelSys v23r5 2004-04-15 =======================
 ! 2004-04-15 - Marco Cattaneo

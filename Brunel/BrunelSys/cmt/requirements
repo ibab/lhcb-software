@@ -16,9 +16,9 @@ use LHCbTools           v1r1    Kernel
 use AsctToLinker        v1r1    Rec
 
 # Calorimeter
-use CaloMonitor         v2r1  	Calo
+use CaloMonitor         v2r2 	Calo
 use CaloReco            v2r1p1	Calo
-use CaloPIDs		v2r1	Calo
+use CaloPIDs		v2r2	Calo
 
 # Velo
 use VeloDAQ		v1r0	Velo
