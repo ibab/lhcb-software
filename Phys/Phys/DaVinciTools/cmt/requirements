@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2002-12-20 13:36:29 gcorti Exp $
+# $Id: requirements,v 1.22 2003-01-07 08:41:52 ranjard Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v7r1
+version           v7r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,8 +19,8 @@ include_dirs     $(DAVINCITOOLSROOT)
 # Used packages. 
 #============================================================================
 use  PhysEvent      v7r*   Event
-use  DetDesc        v10r*  Det
-use  AIDA           v2r*
+use  DetDesc        v11r*  Det
+use  AIDA           v*
 use  CaloUtils      v4r*   Calo
 use  CaloInterfaces v2r*   Calo
 
