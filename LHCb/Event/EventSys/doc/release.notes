@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v14r2 2003-07-16 ========================
+! 2003-07-16 - Marco Cattaneo
+ - Use CaloEvent v12r0, PhysEvent v7r7
+
 !======================== EventSys v14r1 2003-07-04 ========================
 ! 2003-07-04 - Marco Cattaneo
  - Use Event v3r4, RichEvent v5r0, PhysEvent v7r6

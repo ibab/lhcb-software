@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.36 2003-07-04 15:08:54 cattanem Exp $
+# $Id: requirements,v 1.37 2003-07-16 06:24:16 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
 package           PhysEvent
-version           v7r6
+version           v7r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,7 +16,7 @@ include_dirs $(PHYSEVENTROOT)
 # Used packages. 
 #============================================================================
 use RichEvent    v5r*  Event
-use CaloEvent    v11r* Event
+use CaloEvent    v12r* Event
 use MuonEvent    v2r*  Event
 use GaudiObjDesc v5r*  -no_auto_imports
 

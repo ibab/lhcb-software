@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.39 2003-07-04 15:01:41 cattanem Exp $
+! $Id: release.notes,v 1.40 2003-07-16 06:24:16 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!======================== PhysEvent v7r7 2003-07-16 ========================
+! 2003-07-16 - Marco Cattaneo
+ - Use CaloEvent v12r*
 
 !======================== PhysEvent v7r6 2003-07-04 ========================
 ! 2003-07-04 - Marco Cattaneo

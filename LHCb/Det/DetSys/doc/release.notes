@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v2r2 2003-07-15 =========================
+! 2003-07-15 - Marco Cattaneo
+ - requirements - use ITDet v1r5
+
 !========================= DetSys v2r1 2003-07-07 =========================
 ! 2003-07-07 - Marco Cattaneo
  - requirements - use RichDet v5r0
