@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.11 2004-06-29 16:02:46 cattanem Exp $
+# $Id: requirements,v 1.12 2004-06-30 08:08:02 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -29,6 +29,9 @@ application DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
 private
 use XmlDDDB v* Det
 use HbookCnv v*
+use GaudiConf v*
+use GaudiSvc v*
+use DetDescCnv v* Det
 macro DetDescCheck_linkopts "$(application_linkopts)"
 apply_pattern application_path
 
