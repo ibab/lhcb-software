@@ -1,8 +1,26 @@
-! $Id: release.notes,v 1.67 2004-02-17 15:11:48 ranjard Exp $
+! $Id: release.notes,v 1.68 2004-02-20 19:12:00 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2004-02-20 - Vanya BELYAEV
+ - GiGaCnv/GiGaPrimaryParticleInformation.h
+      updtate for "fast cast"
+ - src/Lib/GiGaCnvSvcBase.cpp
+      fix compilation warning 
+ - src/component/GiGaMCVertexCnv.cpp
+      fix compilation warning 
+ - src/component/GiGaMiscGetEventAlg.h,.cpp
+      move files into GaudiAlg package 
+ - src/component/GiGaCnv_entries.cpp 
+      remove GiGaMiscGetEventAlg 
+ - src/component/GiGaDataStoreAlgorithm.h,.cpp
+      1) update for new base GaudiAlgorithm 
+      2) remove OTHits 
+ - cmt/requirement 
+      1) add dependency on GaudiAlg package 
+      2) incrmement the version to v15r0 
+   
 !======================== GiGaCnv v14r2 ==============================
 ! 2004-02-14 - Patrick Robbe
  - GiGaPrimaryParticleInformation : class deriving from 

@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.26 2003-10-31 12:40:06 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.27 2004-02-20 19:12:00 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.26  2003/10/31 12:40:06  witoldp
+// fixed units in GiGaHepMCCnv
+//
 // Revision 1.25  2003/10/09 09:02:28  witoldp
 // added conversion of vertex type
 //
@@ -65,6 +68,7 @@
 #include "G4ParticleTable.hh"
 #include "G4TrajectoryContainer.hh"
 #include "G4Event.hh"
+#include "G4VProcess.hh"
 #include "G4PrimaryParticle.hh"
 // Local
 #include "GiGaCnvFunctors.h"
@@ -481,99 +485,96 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             if( 0 == vertex ) { return Error("MCVertex* points to NULL!") ; }
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
+            {
+              
+              // the creator of the trajectory
+              const G4VProcess* creator = trajectory->creator() ;
+              if      ( 0 == creator ) 
+              { vertex -> setType ( MCVertex::Unknown  ) ; }
+              else if ( fDecay    == creator->GetProcessType() )
+              { vertex -> setType ( MCVertex::Decay    ) ; }
+              else if ( fHadronic == creator->GetProcessType() )
+              { vertex -> setType ( MCVertex::Hadronic ) ; }
+              else 
               {
-                GiGaTrajectory* ttraj=(GiGaTrajectory*)vt;
-                std::string pname = ttraj->processName();
-
-                // deternining the vertex type from the creator process                
-                if(pname == "conv") 
-                  vertex->setType(MCVertex::Pair);
-                else if (pname == "compt")
-                  vertex->setType(MCVertex::Compton);
-                else if (pname == "Decay")
-                  vertex->setType(MCVertex::Decay);
-                else if (pname == "eBrem" || pname == "muBrem")                
-                  vertex->setType(MCVertex::Brem);
-                else if (pname =="KaonPlusInelastic" || pname =="PionMinusInelastic" ||
-                         pname =="PionPlusInelastic" || pname =="NeutronInelastic" ||
-                         pname =="LElastic" || pname =="PionMinusAbsorptionAtRest" || 
-                         pname =="ProtonInelastic" || pname =="KaonZeroLInelastic" ||
-                         pname =="KaonZeroSInelastic" || pname =="DeuteronInelastic" || 
-                         pname =="AntiProtonInelastic" || pname =="AntiNeutronInelastic" ||
-                         pname =="KaonMinusInelastic" || pname =="MuonMinusCaptureAtRest" ||
-                         pname =="TritonInelastic" || pname =="KaonMinusAbsorption" ||
-                         pname =="LambdaInelastic" || pname =="SigmaMinusInelastic" || 
-                         pname =="LCapture" || pname =="AntiNeutronAnnihilationAtRest" ||
-                         pname =="AntiProtonAnnihilationAtRest")
-                  vertex->setType(MCVertex::Hadronic);
-
-                // is the parent a trajectory with only one point?
-                // if yes do not attach the particle to the vertex
-                // it will be treated later (an additional vertex
-                // will need to be created first)
-                if(m_onepointIDs.end()==m_onepointIDs.find(parid))
-                  {
-                    // add daughter particle to the vertex 
-                    Ref dau( vertex , refID , particle->key() , particle );
-                    vertex->addToProducts( dau ) ;    
-                
-                    // mother is known ?            
-                    if ( !vertex->mother() && 0 != mother )
-                      {
-                        Ref moth( vertex , refID , mother->key() , mother ) ;
-                        vertex->setMother( moth ) ;
-                      }
-                  }
+                const std::string& pname = creator->GetProcessName() ;
+                if      ( "conv"  == pname                      ) 
+                { vertex->setType( MCVertex::Pair    ) ; }
+                else if ( "compt" == pname                      ) 
+                { vertex->setType( MCVertex::Compton ) ; }
+                else if ( "eBrem" == pname || "muBrem" == pname )    
+                { vertex->setType( MCVertex::Brem    ) ; }
               }
+              
+              // deternining the vertex type from the creator process                
+              
+              // is the parent a trajectory with only one point?
+              // if yes do not attach the particle to the vertex
+              // it will be treated later (an additional vertex
+              // will need to be created first)
+              if(m_onepointIDs.end()==m_onepointIDs.find(parid))
+              {
+                // add daughter particle to the vertex 
+                Ref dau( vertex , refID , particle->key() , particle );
+                vertex->addToProducts( dau ) ;    
+                
+                // mother is known ?            
+                if ( !vertex->mother() && 0 != mother )
+                {
+                  Ref moth( vertex , refID , mother->key() , mother ) ;
+                  vertex->setMother( moth ) ;
+                }
+              } 
+            }
             // decay vertex  ?
             else if ( !vertex->mother()  ) 
-              {                
-                Ref moth( vertex , refID , particle->key() , particle );
-                vertex->setMother( moth ) ;
-              }
+            {                
+              Ref moth( vertex , refID , particle->key() , particle );
+              vertex->setMother( moth ) ;
+            }
             // check if the one already set is correct 
             else 
-              { 
-                Ref moth( vertex , refID , particle->key() , particle );
-                Ref amother=vertex->mother();
-                if(moth!=amother)
-                  {
-                    MsgStream log( msgSvc(),  name() ) ; 
-                    log << MSG::INFO << "While looking at trajectory point "
-                        << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
-                        << trajectory->trackID() << endreq;
-                    
-                    for( ITG iP = trajectory->begin(); 
-                         trajectory->end() != iP; ++iP)
-                      log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
-                          << endreq;
+            { 
+              Ref moth( vertex , refID , particle->key() , particle );
+              Ref amother=vertex->mother();
+              if(moth!=amother)
+              {
+                MsgStream log( msgSvc(),  name() ) ; 
+                log << MSG::INFO << "While looking at trajectory point "
+                    << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
+                    << trajectory->trackID() << endreq;
                 
-                    log << MSG::INFO << "with momentum of mother of the vertex being " 
-                        << vertex->mother()->momentum() << endreq;
-                    
-                    log << MSG::INFO << "and the complete collection of trajectories being"
+                for( ITG iP = trajectory->begin(); 
+                     trajectory->end() != iP; ++iP)
+                  log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                      << endreq;
+                
+                log << MSG::INFO << "with momentum of mother of the vertex being " 
+                    << vertex->mother()->momentum() << endreq;
+                
+                log << MSG::INFO << "and the complete collection of trajectories being"
+                    << endreq;
+                
+                for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
+                {
+                  log << MSG::INFO << "trajectoryID " 
+                      << (*iT)->GetTrackID() << " motherID " 
+                      << (*iT)->GetParentID() <<
+                    "  pdgID " << (*iT)->GetPDGEncoding() 
+                      << " initial momentum " << 
+                    (HepPoint3D)((*iT)->GetInitialMomentum())
+                      << endreq;
+                  
+                  for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
+                       ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
+                  {
+                    log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
                         << endreq;
-                    
-                    for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
-                      {
-                        log << MSG::INFO << "trajectoryID " 
-                            << (*iT)->GetTrackID() << " motherID " 
-                            << (*iT)->GetParentID() <<
-                          "  pdgID " << (*iT)->GetPDGEncoding() 
-                            << " initial momentum " << 
-                          (HepPoint3D)((*iT)->GetInitialMomentum())
-                            << endreq;
-                        
-                        for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
-                             ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
-                          {
-                            log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
-                                << endreq;
-                          }
-                      }    
-                    return Error("'MotherParticle' is already set!"); 
                   }
+                }    
+                return Error("'MotherParticle' is already set!"); 
               }
+            }
           } // end loop over points 
       } // end loop over trajectories
     

@@ -1,24 +1,24 @@
-// $Id: GiGaDataStoreAlgorithm.h,v 1.2 2002-12-07 14:36:26 ibelyaev Exp $
+// $Id: GiGaDataStoreAlgorithm.h,v 1.3 2004-02-20 19:12:00 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-// 
 // ============================================================================
 #ifndef GIGACNV_GiGaDataStoreALGORITHM_H 
 #define GIGACNV_GiGaDataStoreALGORITHM_H 1
+// ============================================================================
 // Include files
-// from STD & STL
-#include <string>
-#include <vector>
-// from GaudiKernel
-#include "GaudiKernel/Algorithm.h"
+// ============================================================================
+// GaudiAlg
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
 /// forward declaration
+// ============================================================================
 template <class ALGORITHM> 
 class AlgFactory   ;              ///< from GaudiKernel
 class IGiGaCnvSvc  ;              ///< from GiGaCnv
+// ============================================================================
 
 
 /** @class GiGaDataStoreAlgorithm GiGaDataStoreAlgorithm.h
@@ -30,11 +30,12 @@ class IGiGaCnvSvc  ;              ///< from GiGaCnv
  *  @date   19/01/2002
  */
 
-class GiGaDataStoreAlgorithm : public Algorithm 
+class GiGaDataStoreAlgorithm : public GaudiAlgorithm 
 {
   
   /// friend factory for instantiation 
   friend class AlgFactory<GiGaDataStoreAlgorithm>;
+public:
   
   typedef std::vector<std::string>     Names    ;
   typedef std::vector<IGiGaCnvSvc*>    Services ;
@@ -45,8 +46,9 @@ protected:
    *  @param Name algorithm name 
    *  @param SvcLoc pointer to Service Locator
    */
-  GiGaDataStoreAlgorithm( const std::string& Name   , 
-                        ISvcLocator*       SvcLoc );
+  GiGaDataStoreAlgorithm 
+  ( const std::string& Name   , 
+    ISvcLocator*       SvcLoc );
   
   /// destructor
   virtual ~GiGaDataStoreAlgorithm();
@@ -62,11 +64,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute   ();    
-  
-  /** standard finalization method 
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();    
   
 private:
   

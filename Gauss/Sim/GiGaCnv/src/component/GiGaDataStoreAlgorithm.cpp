@@ -1,8 +1,11 @@
-// $Id: GiGaDataStoreAlgorithm.cpp,v 1.2 2002-12-07 14:36:26 ibelyaev Exp $
+// $Id: GiGaDataStoreAlgorithm.cpp,v 1.3 2004-02-20 19:12:00 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.1  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 // 
@@ -48,7 +51,7 @@ const        IAlgFactory&GiGaDataStoreAlgorithmFactory = s_Factory ;
 GiGaDataStoreAlgorithm::GiGaDataStoreAlgorithm
 ( const std::string& Name,
   ISvcLocator*       SvcLoc )
-  : Algorithm ( Name , SvcLoc ) 
+  : GaudiAlgorithm ( Name , SvcLoc ) 
   , m_names    () 
   , m_services () 
 {
@@ -61,31 +64,7 @@ GiGaDataStoreAlgorithm::GiGaDataStoreAlgorithm
 // ============================================================================
 /// destructor
 // ============================================================================
-GiGaDataStoreAlgorithm::~GiGaDataStoreAlgorithm() 
-{
-  m_names    .clear () ;
-  m_services .clear () ;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization method 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaDataStoreAlgorithm::finalize() 
-{
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  /// release all services 
-  std::for_each( m_services.begin () , 
-                 m_services.end   () , 
-                 std::mem_fun(&IGiGaCnvSvc::release) ) ;
-  /// clear the container 
-  m_services.clear() ;
-  return StatusCode::SUCCESS;
-};
+GiGaDataStoreAlgorithm::~GiGaDataStoreAlgorithm() {};
 // ============================================================================
 
 // ============================================================================
@@ -93,35 +72,23 @@ StatusCode GiGaDataStoreAlgorithm::finalize()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaDataStoreAlgorithm::initialize() 
+StatusCode GiGaDataStoreAlgorithm::initialize()
 {
+  // initialize the base class 
+  StatusCode sc = GaudiAlgorithm::initialize() ;
+  if( sc.isFailure() ) { return sc ; }
   
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialize" << endreq;
-  
+  m_services.clear() ;
   for( Names::const_iterator item = m_names.begin() ; 
        m_names.end() != item ; ++item ) 
-    {
-      IGiGaCnvSvc* svc = 0 ;
-      StatusCode sc =  serviceLocator()-> service( *item , svc , true );
-      if( sc.isFailure() || 0 == svc ) 
-        { 
-          log << MSG::ERROR 
-              << " Could not locate/create service '" + *item + "'" << endreq ;
-          /// release all services 
-          std::for_each( m_services.begin () , 
-                         m_services.end   () , 
-                         std::mem_fun(&IGiGaCnvSvc::release) ) ;
-          /// clear the container 
-          m_services.clear () ;
-          return StatusCode::FAILURE ;
-        }
-      m_services.push_back( svc );
-      log << MSG::DEBUG << "==> add the service '" + *item + "'" << endreq;
-    };
+  {
+    IGiGaCnvSvc* cnv = svc<IGiGaCnvSvc>( *item , true );
+    m_services.push_back( cnv );
+  };
   ///
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** standard execution method 
@@ -131,23 +98,14 @@ StatusCode GiGaDataStoreAlgorithm::initialize()
 StatusCode GiGaDataStoreAlgorithm::execute() 
 {
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
-
   for( Services::iterator svc = m_services.begin() ;
        m_services.end() != svc ; ++svc )
-    {
-      if( 0 == (*svc) ) { continue ; }
-      log << MSG::VERBOSE 
-          << " Register GiGa leaves for '" + 
-        (*svc)->name() + "' service " << endreq;
-      StatusCode sc = (*svc)->registerGiGaLeaves();
-      if( sc.isFailure() ) 
-        {
-          log << MSG::ERROR << " Could not register GiGa leaves!" << endreq ;
-          return sc ;
-        }
-    };
+  {
+    if( 0 == (*svc) ) { continue ; }
+    StatusCode sc = (*svc)->registerGiGaLeaves();
+    if (sc.isFailure() ) 
+    { return Error ( " Could not register GiGa leaves!", sc ) ; } 
+  }
   return StatusCode::SUCCESS;
 };
 // ============================================================================

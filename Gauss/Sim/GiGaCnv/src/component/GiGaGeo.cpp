@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.12 2003-12-08 16:16:00 ranjard Exp $ 
+// $Id: GiGaGeo.cpp,v 1.13 2004-02-20 19:12:00 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/12/08 16:16:00  ranjard
+// v13r6 - fix in GiGaGeo.cpp to cope with Geant4 5.2.ref06
+//
 // Revision 1.11  2003/10/09 15:44:39  witoldp
 // changed level of printouts
 //
@@ -561,8 +564,9 @@ StatusCode GiGaGeo::finalize()
   m_FMs.clear() ;
   
   // clear store of assemblies!
-  StatusCode sc = GiGaAssemblyStore::store()->clear();
-
+  /* StatusCode sc = */ 
+  GiGaAssemblyStore::store()->clear();
+  
   // delete of volume stores 
   if( m_clearStores ) 
     {
