@@ -1,8 +1,8 @@
-$Id: release.notes,v 1.29 2004-01-26 14:51:02 odescham Exp $
+$Id: release.notes,v 1.30 2004-01-26 15:05:56 odescham Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
-!========================== L0DU v6r6 2004-01-26 ==========================
+!========================== L0DU v6r7 2004-01-26 ==========================
 ! 2004-01-26 - Olivier Deschamps
  - New algorithm PrepareL0DUL1 to fill L1Buffer with Muon an PuVeto info 
    available in L0DU (use DAQEvent v4r* in requirements)
