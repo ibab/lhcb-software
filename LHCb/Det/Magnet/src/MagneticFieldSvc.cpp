@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.8 2003-10-06 07:45:51 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.9 2004-03-18 09:21:30 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -15,10 +15,8 @@
 #include <cstdlib>
 #include <fstream>
 
-/** @class MagneticFieldSvc MagneticFieldSvc.h
- *  A service for finding the magnetic field vector at a given
- *  point in space. Based on original implementation by I.Last and
- *  G.Gracia via Gaudi_gufld (modified from SICBMC)
+/** @file MagneticFieldSvc.cpp
+ *  Implementation of MagneticFieldSvc class
  *
  *  @author Edgar De Oliveira
  *  @date   2002-05-21

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.4 2002-05-31 13:47:13 ecorread Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.5 2004-03-18 09:21:30 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -50,7 +50,6 @@ public:
   virtual const IID& type() const;
 
   /** IMagneticFieldSvc interface.
-   * @param Get the magnetic field vector at a given point in space.
    * @param xyz(input) Point at which magnetic field vector will be given
    * @param fvec(output) Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
