@@ -1,4 +1,4 @@
-// $Id: MuonLogicalPadLayout.cpp,v 1.1 2001-07-09 19:02:16 atsareg Exp $
+// $Id: MuonLogicalPadLayout.cpp,v 1.2 2001-07-13 17:03:05 ranjard Exp $
 
 // Include files
 #include <strstream>
@@ -27,14 +27,14 @@ MuonLogicalPadLayout::MuonLogicalPadLayout(std::vector<double> zstation,
 
 // Crude constructor when the XML database is not available
 
-  Parameter* st;   
+  Parameter* p;   
   int i;
 
   for (i=0; i<5; i++) {
-      st = new Parameter();
-      st->addParameter(zstation[i],"Zposition");
-      st->addParameterVector(regions[i],"Regions");
-      m_layout.push_back(st);
+      p = new Parameter();
+      p->addParameter(zstation[i],"Zposition");
+      p->addParameterVector(regions[i],"Regions");
+      m_layout.push_back(p);
   }	
   
   for (int st=0; st<5; st++) {
