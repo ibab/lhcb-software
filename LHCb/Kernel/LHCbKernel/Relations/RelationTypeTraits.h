@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.3 2002-04-23 17:15:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:18  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -67,24 +70,24 @@ namespace Relations
       Entry( const From& f = From () , 
              const To&   t = To   () ): Pair( f , t ) {};
       /// accessor to the "FROM" object ( const     version )
-      inline From  from   () const { return first  ; }
+      inline From  from   () const { return first        ; }
       /// accessor to the "FROM" object ( non-const version )
-      inline From& from   ()       { return first  ; }
+      inline From& from   ()       { return first        ; }
       /// accessor to the "TO"   object ( const     version )
-      inline To    to     () const { return second ; }
+      inline To    to     () const { return this->second ; }
       /// accessor to the "TO"   object ( non-const version )
-      inline To&   to     ()       { return second ; }
+      inline To&   to     ()       { return this->second ; }
       /// the conversion operator       ( const     version )
-      inline operator To  () const { return second ; }
+      inline operator To  () const { return this->second ; }
       /// the conversion operator       ( non-const version )
-      inline operator To& ()       { return second ; }
+      inline operator To& ()       { return this->second ; }
       /// comparison operator 
       inline bool operator<( const Entry& entry ) const 
       {
         return 
-          LessF() (       first , entry.first  ) ? true  :
-          LessF() ( entry.first ,       first  ) ? false :
-          LessT() ( second      , entry.second )         ; }  
+          LessF() (       first  , entry.first  ) ? true  :
+          LessF() ( entry.first  ,       first  ) ? false :
+          LessT() ( this->second , entry.second )         ; }  
     };
     
     /// "less" function object for "From" objects 
@@ -150,10 +153,10 @@ namespace Relations
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {};
       /// the aliases for standard "first" and "second"
-      iterator& begin ()       { return first  ; }
-      iterator  begin () const { return first  ; }
-      iterator& end   ()       { return second ; }
-      iterator  end   () const { return second ; }
+      iterator& begin ()       { return first        ; }
+      iterator  begin () const { return first        ; }
+      iterator& end   ()       { return this->second ; }
+      iterator  end   () const { return this->second ; }
     };
     
     /** technical definitions, useful for  for implementation */

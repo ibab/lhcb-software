@@ -4,6 +4,12 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020423 Vanya Belyaev
+  - resolve the clash between CLHEP/Units/SystemOfUnits.h definition of 
+    "static const HepDouble second = ... " and 
+    std::pair::second for RelationTypeTraits 
+ 
+
 ! 20020523 M. Needham
   - add uniqueLayer/uniqueWafer members to OTChannelID.h
 
