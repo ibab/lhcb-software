@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.62 2004-10-27 12:50:18 pkoppenb Exp $
+! $Id: release.notes,v 1.63 2004-12-10 17:12:29 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,14 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-12-10 - Ivan BELYAEV
+ - add new algorithm: few more steps to 'Fast' (a'la HLT) Calorimeter 
+   reconstruction 
+     - CaloHypo2TrgTrackAlg.h,.cpp
+     - CaloTrgSelectNeutralCluster.h,.cpp
+ - cmt/requirements 
+    version increment to v2r7 
 
 !========================== CaloReco v2r6 2004-10-27 ===================
 ! 2004-10-27 - Vanya BELYAEV

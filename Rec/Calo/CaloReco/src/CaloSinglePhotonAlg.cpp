@@ -1,28 +1,47 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.4 2004-02-17 12:08:10 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.5 2004-12-10 17:12:29 ibelyaev Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
 #include <functional>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/Stat.h"
+// ============================================================================
 // CaloDet 
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 // Event/CaloEvent 
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
+#include "Event/CaloDataFunctor.h"
+#include "Event/CellID.h"
+// ============================================================================
 // CaloInterfaces
+// ============================================================================
 #include "CaloInterfaces/ICaloClusterSelector.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloSinglePhotonAlg.h"
+// ============================================================================
+// Boost 
+// ============================================================================
+#include "boost/lexical_cast.hpp"
+// ============================================================================
 
 // ============================================================================
 /** @file
@@ -56,6 +75,9 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
 ( const std::string& name ,
   ISvcLocator*       pSvc )
   : CaloAlgorithm ( name , pSvc )  
+  //
+  , m_eTcut ( -10 * GeV )
+  //
   , m_selectorsTypeNames    () 
   , m_selectors             ()
   , m_correctionsTypeNames  () 
@@ -72,6 +94,9 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   declareProperty ( "HypoTools"        , m_hypotoolsTypeNames    ) ;
   declareProperty ( "CorrectionTools2" , m_correctionsTypeNames2 ) ;
   declareProperty ( "HypoTools2"       , m_hypotoolsTypeNames2   ) ;
+  //
+  declareProperty ( "EtCut"            , m_eTcut                 ) ;
+  //
   // set the appropriate default values for input data
   setInputData    ( CaloClusterLocation::   Ecal                 ) ;
   // set the appropriate default values for output data
@@ -86,6 +111,7 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
 // ============================================================================
 CaloSinglePhotonAlg::~CaloSinglePhotonAlg() {}; 
 // ============================================================================
+
 
 // ============================================================================
 /**  standard Algorithm initialization
@@ -103,6 +129,12 @@ CaloSinglePhotonAlg::initialize()
   // check the geometry information 
   const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ;
   if( 0 == det ) { return Error("Detector information is not available!");}
+  
+  if ( 0 < m_eTcut ) 
+  { Warning ( " Et Cut of " + 
+              boost::lexical_cast<std::string>( m_eTcut / GeV )  +
+              " GeV is applied " ) ; }
+  
   { // locate selector tools
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
          m_selectorsTypeNames.end() != item ; ++item )
@@ -192,12 +224,18 @@ CaloSinglePhotonAlg::execute()
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
   put( hypos , outputData() );
-  
+
+  const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ; 
+  CaloDataFunctor::EnergyTransverse<const CaloCluster*,const DeCalorimeter*> eT ( det ) ;
+
   // loop over clusters 
   for( iterator cluster = clusters->begin() ; 
        clusters->end() != cluster ; ++cluster )
   {
+    if ( m_eTcut > 0 && eT( *cluster ) < m_eTcut ) { continue ; }
+
     bool select = true ;
+    
     // loop over all selectors 
     for( Selectors::const_iterator selector = m_selectors.begin() ;
          select && m_selectors.end() != selector ; ++selector )
@@ -269,8 +307,13 @@ CaloSinglePhotonAlg::execute()
     
   } // end of the loop over all clusters
   
-  debug() << " # of created Photon  Hypos is  " << hypos->size() << endreq ;
-  
+  if ( msgLevel( MSG::DEBUG ) ) 
+    { 
+      debug() << " # of created Photon  Hypos is  " 
+              << hypos->size()  << "/" << clusters->size()
+              << endreq ;
+    }
+
   return StatusCode::SUCCESS;
 };
 // ============================================================================

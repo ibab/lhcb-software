@@ -1,28 +1,27 @@
-// $Id: CaloSinglePhotonAlg.h,v 1.3 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.h,v 1.4 2004-12-10 17:12:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/12/09 17:43:09  cattanem
-// bug fixes
-//
-// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
-// new package 
-//
-// Revision 1.1.1.1  2002/05/21 14:18:21  ibelyaev
-// New package
-// 
 // ============================================================================
 #ifndef CALOALGS_CALOSINGLEPHOTONALG_H 
 #define CALOALGS_CALOSINGLEPHOTONALG_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 // from STL
+// ============================================================================
 #include <string>
+// ============================================================================
 // from CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloAlgorithm.h"
+// ============================================================================
 // forward delcarations 
+// ============================================================================
 class ICaloClusterSelector ;
 class ICaloHypoTool        ;
+// ============================================================================
 
 /** @class CaloSinglePhotonAlg CaloSinglePhotonAlg.h
  *  
@@ -90,6 +89,9 @@ protected:
   
 private:
   
+  // fast cut on transverse energy 
+  double       m_eTcut                     ;
+
   // cluster selectors 
   Names        m_selectorsTypeNames        ;
   Selectors    m_selectors                 ;

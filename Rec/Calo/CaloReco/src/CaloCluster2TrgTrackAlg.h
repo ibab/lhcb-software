@@ -1,8 +1,11 @@
-// $Id: CaloCluster2TrgTrackAlg.h,v 1.1 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloCluster2TrgTrackAlg.h,v 1.2 2004-12-10 17:12:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/10/26 17:51:42  ibelyaev
+//  add 'photon' matching for Trg Tracks
+//
 // ============================================================================
 #ifndef CALORECO_CALOCLUSTER2TRGTRACKALG_H 
 #define CALORECO_CALOCLUSTER2TRGTRACKALG_H 1
@@ -77,14 +80,6 @@ public:
    */
   virtual StatusCode execute   ();   
   
-  /** standard algorithm finalization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  //virtual StatusCode finalize  ();   
-
 protected:
   
   template <class TRACK>
@@ -102,7 +97,7 @@ protected:
       
       StatusCode sc = m_match -> 
         match ( &(cluster->position()) ,  track , chi2 ) ;
-      
+
       if ( sc.isFailure() ) 
       {
         Warning ( "Cluster/Track: matching failure, skip the pair" , sc );
@@ -147,7 +142,10 @@ private:
   
   // cut value 
   double             m_cut       ;
-  
+
+  //eT cut 
+  double             m_eTcut     ;
+
   // matching tool 
   std::string        m_matchType ;
   std::string        m_matchName ;

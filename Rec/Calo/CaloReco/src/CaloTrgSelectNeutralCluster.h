@@ -1,11 +1,11 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.2 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloTrgSelectNeutralCluster.h,v 1.1 2004-12-10 17:12:29 ibelyaev Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef CALOREC_CALOSELECTNeutralCLUSTER_H 
-#define CALOREC_CALOSELECTNeutralCLUSTER_H 1
+#ifndef CALOREC_CALOTRGSELECTNeutralCLUSTER_H 
+#define CALOREC_CALOTRGSELECTNeutralCLUSTER_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -31,12 +31,12 @@
 // ============================================================================
 #include "Event/CaloCluster.h"
 // ============================================================================
-// Event/TrEvent 
+// Event/TrgEvent 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/TrgTrack.h"
 // ============================================================================
 
-/** @class CaloSelectNeutralCluster CaloSelectNeutralCluster.h
+/** @class CaloTrgSelectNeutralCluster CaloTrgSelectNeutralCluster.h
  *  
  *  Concrete tool, which select the Neutral clusters 
  *  (photon candidates) looking through the relation table 
@@ -49,17 +49,17 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   26/04/2002
  */
-class CaloSelectNeutralCluster : 
+class CaloTrgSelectNeutralCluster : 
   public virtual ICaloClusterSelector ,
   public virtual IIncidentListener    ,
   public          CaloTool
 {
   /// friend factory for instantiation
-  friend class ToolFactory<CaloSelectNeutralCluster>;
+  friend class ToolFactory<CaloTrgSelectNeutralCluster>;
 public:
   
   /// associator used to extract the relations from transient store 
-  typedef IRelationWeighted<CaloCluster,TrStoredTrack,float> ITable;
+  typedef IRelationWeighted<CaloCluster,TrgTrack,float> ITable;
   
 public:
   
@@ -115,25 +115,25 @@ protected:
    *  @param name name of the concrete instance 
    *  @param parent pointer to the parent 
    */
-  CaloSelectNeutralCluster
+  CaloTrgSelectNeutralCluster
   ( const std::string& type   , 
     const std::string& name   ,
     const IInterface*  parent );
   
   /// destructor (virtual and protected)
-  virtual ~CaloSelectNeutralCluster(); 
+  virtual ~CaloTrgSelectNeutralCluster(); 
 
 private:
   
   ///  default  constructor   is  private 
-  CaloSelectNeutralCluster(); 
+  CaloTrgSelectNeutralCluster(); 
   ///  copy     constructor   is  private 
-  CaloSelectNeutralCluster
-  (const CaloSelectNeutralCluster& ); 
+  CaloTrgSelectNeutralCluster
+  ( const CaloTrgSelectNeutralCluster& ); 
   ///  assignement operator   is  private 
-  CaloSelectNeutralCluster& operator=
-  (const CaloSelectNeutralCluster& );
-
+  CaloTrgSelectNeutralCluster& operator=
+  ( const CaloTrgSelectNeutralCluster& );
+  
 private:
   
   std::string      m_tableLocation ;
@@ -147,5 +147,5 @@ private:
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // CALOREC_CALOSELECTNeutralCLUSTER_H
+#endif // CALOREC_CALOTRGSELECTNeutralCLUSTER_H
 // ============================================================================

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.32 2004-10-26 17:51:41 ibelyaev Exp $
+# $Id: requirements,v 1.33 2004-12-10 17:12:29 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloReco
-version            v2r6
+version            v2r7
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -25,9 +25,6 @@ apply_pattern      component_library library=CaloReco
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.31  2004/10/22 16:33:52  ibelyaev
-#  update CellularAutomaton and remove obsolete algs
-#
 # =============================================================================
 # The END
 # =============================================================================

@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.3 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloTrgSelectNeutralCluster.cpp,v 1.1 2004-12-10 17:12:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -21,13 +21,13 @@
 // ============================================================================
 // local 
 // ============================================================================
-#include "CaloSelectNeutralCluster.h"
+#include "CaloTrgSelectNeutralCluster.h"
 // ============================================================================
 
 // ============================================================================
 /** @file 
  *
- *  implementation file for class CaloSelectNeutralCluster
+ *  implementation file for class CaloTrgSelectNeutralCluster
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 26 Apr 2002 
@@ -39,8 +39,8 @@
  *  mandatory instantiation of tool factory
  */
 // ============================================================================
-static const ToolFactory<CaloSelectNeutralCluster>         s_Factory ;
-const       IToolFactory&CaloSelectNeutralClusterFactory = s_Factory ;
+static const ToolFactory<CaloTrgSelectNeutralCluster>         s_Factory ;
+const       IToolFactory&CaloTrgSelectNeutralClusterFactory = s_Factory ;
 // ============================================================================
 
 // ============================================================================
@@ -53,13 +53,13 @@ const       IToolFactory&CaloSelectNeutralClusterFactory = s_Factory ;
  *  @param parent pointer to the parent 
  */
 // ============================================================================
-CaloSelectNeutralCluster::CaloSelectNeutralCluster
+CaloTrgSelectNeutralCluster::CaloTrgSelectNeutralCluster
 ( const std::string& type   , 
   const std::string& name   ,
   const IInterface*  parent )
   : CaloTool ( type , name , parent )
-  , m_tableLocation ("Rec/Calo/PhotonMatch") 
-  , m_table              (    0 ) 
+  , m_tableLocation       ("Rec/Calo/PhotonTrgMatch") 
+  , m_table               (    0 ) 
   , m_chi2cut             ( -100 )
 {
   //
@@ -74,7 +74,7 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-CaloSelectNeutralCluster::~CaloSelectNeutralCluster() {};
+CaloTrgSelectNeutralCluster::~CaloTrgSelectNeutralCluster() {};
 // ============================================================================
 
 // ============================================================================
@@ -86,7 +86,7 @@ CaloSelectNeutralCluster::~CaloSelectNeutralCluster() {};
  */
 // ============================================================================
 StatusCode 
-CaloSelectNeutralCluster::initialize ()
+CaloTrgSelectNeutralCluster::initialize ()
 {  
   // initialize the base class 
   StatusCode sc = CaloTool::initialize () ;
@@ -108,7 +108,7 @@ CaloSelectNeutralCluster::initialize ()
  *  @param inc incident 
  */
 // ============================================================================
-void CaloSelectNeutralCluster::handle ( const Incident& /* inc */ ) 
+void CaloTrgSelectNeutralCluster::handle ( const Incident& /* inc */ ) 
 { m_table = 0 ; };
 // ============================================================================
 
@@ -124,7 +124,7 @@ void CaloSelectNeutralCluster::handle ( const Incident& /* inc */ )
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelectNeutralCluster::select     
+bool CaloTrgSelectNeutralCluster::select     
 ( const CaloCluster* cluster ) const 
 { return (*this) ( cluster ); };
 // ============================================================================
@@ -141,7 +141,7 @@ bool CaloSelectNeutralCluster::select
  *  @return true if cluster is selected
  */
 // ============================================================================
-bool CaloSelectNeutralCluster::operator() 
+bool CaloTrgSelectNeutralCluster::operator() 
   ( const CaloCluster* cluster   ) const 
 {
   // check the cluster 
@@ -151,6 +151,7 @@ bool CaloSelectNeutralCluster::operator()
   if ( 0 == m_table ) { m_table = get<ITable>( m_tableLocation ) ; }
   
   // get all relations with WEIGHT = 'chi2' under the threshold value 
+
   const ITable::Range range = m_table -> relations ( cluster , m_chi2cut , false ) ;
 
   return range.empty() ? true : false ;
