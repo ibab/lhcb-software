@@ -1,0 +1,36 @@
+//##############################################################
+#units "$STDOPTS/units.opts"
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+//                          "EventSelector" };
+
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs   += { "Magnet"};
+ApplicationMgr.TopAlg  = { "MagFieldReader" };
+
+//--------------------------------------------------------------
+// Ntuples 
+//--------------------------------------------------------------
+#include "$STDOPTS/Hbook.opts"
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
+
+//--------------------------------------------------------------
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+MessageSvc.OutputLevel        = 3;
+
+//--------------------------------------------------------------
+// Event related parameters
+//--------------------------------------------------------------
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
+
+//--------------------------------------------------------------
+// Algorithms Private Options
+//--------------------------------------------------------------
+MagFieldReader.OutputLevel = 2;
+MagneticFieldSvc.FieldMapFile = $FIELDMAP;
+
