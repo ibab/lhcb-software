@@ -5,6 +5,3 @@ L1TrackMonitor.Histograms = false;
 
 // Remove detailed Rich histos
 MoniRICHSeq.Members = { "RichDigitQC/RiDigitQC" }; // standard monitoring
-
-// Remove 2D histos (MCOTDepositMonitor)
-MoniOTSeq.Members = { "OTDigitMonitor" };

@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 /// Job options for Boole, for data produced by Gauss v12r5 or greater and ///
-///            with XmlDDDB geometry compatible with lhcb-200311           ///
+/// with XmlDDDB v19r0 or greater and geometry compatible with lhcb-200311 ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
-Digi.DetectorList = { "Spillover" };      // Comment to switch off spillover
-Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC background
+InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
+InitDataSeq.Members += { "MergeEventAlg/LHCbkgAlg" };    // Adds LHC background
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
 #include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
@@ -12,7 +12,6 @@ Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC backgroun
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
-#include "$RICHREADOUTOPTS/BooleDigi.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -23,17 +22,17 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/370000_0111.oosim' TYP='ROOT' OPT='READ'"
-}; // Gauss v12r6, evtype 370000
+  "DATAFILE='rfio:/castor/cern.ch/user/j/jonrob/data/oosim/Gauss-412400-500evts_1.oosim' TYP='ROOT' OPT='READ'"
+}; // Gauss v12r7, XmlDDDB v19r0, evtype 412400
 //EventSelector.FirstEvent = 7;
 SpilloverSelector.Input = {
-  "DATAFILE='/afs/cern.ch/user/w/witoldp/w0/Gaussjobs/0111.oosim' TYP='ROOT' OPT='READ'"
-}; // Gauss v12r6, evtype 61
+  "DATAFILE='rfio:/castor/cern.ch/user/j/jonrob/data/oosim/Gauss-61-1000evts_1.oosim' TYP='ROOT' OPT='READ'"
+}; // Gauss v12r7, XmlDDDB v19r0, evtype 61
 //SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
 LHCBkgSelector.Input = { 
   "DATAFILE='rfio:/castor/cern.ch/lhcb/background/LHC/oosim/00000310_00000004_5.oosim' TYP='ROOT' OPT='READ'" }; // Test file, "Maximal" LHC background 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
-DigiWriter.Output = "DATAFILE='370000_0111.oodigi' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "370000_0111.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 300;
+DigiWriter.Output = "DATAFILE='412400.oodigi' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 500;
 //////////////////////////////////////////////////////////////////////////////

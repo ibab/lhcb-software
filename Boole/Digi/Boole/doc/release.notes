@@ -3,6 +3,36 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v3r1>2003-11-28 Boole v3r1</A></H1><PRE>
+** Input data must be produced with:                               **
+**   SICBMC v264r2 or greater + SicbToOORAWH v3r0, v256r0 geometry **
+**   Gauss  v12r5  or greater, XmlDDDB v19r0,     v200311 geometry **
+** Output data must be reconstructed with Brunel v21r1 or greater  **
+
+- New features
+   - Populate RawBuffer with calorimeter digits (CaloDigit v1r4)
+   - Populate RawBuffer with rich digits (RichDAQ v1r0)
+   - Improved default OT monitoring, with possibility of switching on 
+     detailed histograms (OTAlgorithms v13r3)
+   - New "Init" ProcessPhase to add Spillover and LHC background and initialize
+     (Boole.opts etc.) 
+
+- oodigi changes (GaudiConf v7r3, EventSys v15r2)
+   - HltBuffer etc. event classes renamed RawBuffer etc.
+     (DAQEvent v3r0, DigiAlg v2r0)
+   - RawBuffer now contains encoded rich and calorimeter digits
+   - Rich and Calorimeter digits removed, can be rebuilt from RawBuffer
+   - Collisions saved also for Spillover events
+
+- New tuning
+   - Speed improvements to Rich geometry (RichDet v6r2)
+   - Small fixes to Rich (RiSicbGeom v3r6)
+   - Speed improvements to Relations (LHCbKernel v2r9)
+
+- Removed features
+   - Removed support for SICBMC optimization TDR geometry (v254r1)
+
+
 </PRE><H1><A NAME=v3r0p1>2003-11-10 Boole v3r0p1</A></H1><PRE>
 
 - Bug fix

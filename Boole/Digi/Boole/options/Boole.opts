@@ -26,16 +26,17 @@ EventDataSvc.RootCLID    =    1;
 //--------------------------------------------------------------
 // Phases to be executed
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += {
-                           "BooleInit",
+ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Digi",
-                           "ProcessPhase/Trigger" };
-ApplicationMgr.TopAlg += { "ProcessPhase/Relations" }; 
-ApplicationMgr.TopAlg += { "ProcessPhase/Moni" }; 
+                           "ProcessPhase/Trigger",
+                           "ProcessPhase/Relations", 
+                           "ProcessPhase/Moni" }; 
 #include "$BOOLEOPTS/BooleMoni.opts"
+
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
+Init.DetectorList += { "Data", "Boole" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0", "L1" };
 Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1" };
@@ -57,12 +58,11 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 DeVelo.Design = 1;
 
 //--------------------------------------------------------------
-// Spillover and LHC background (from DigiAlg DLL)
+// Spillover, LHC background, Initialization (from DigiAlg DLL)
 //--------------------------------------------------------------
-DigiSpilloverSeq.Members = { "MergeEventAlg/SpilloverAlg" };
 #include "$DIGIALGROOT/options/Spillover.opts"
-DigiBkgSeq.Members += { "MergeEventAlg/LHCbkgAlg" };
 #include "$DIGIALGROOT/options/LHCBackground.opts"
+InitBooleSeq.Members += { "BooleInit" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -103,8 +103,10 @@ DigiCALOSeq.Members = {
 };
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
-// Rich digitisation depends on dbase type, see dbase specific options
-ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout" };
+// Rich digitisation
+ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout", "RichDAQ"};
+#include "$RICHREADOUTOPTS/BooleDigi.opts"
+DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg" };
 
 // Muon digitisation
 ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
