@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.55 2003-12-05 16:18:24 witoldp Exp $ 
+# $Id: requirements,v 1.56 2003-12-10 13:59:34 ranjard Exp $ 
 # =============================================================================
 package  GiGa
-version  v14r8
+version  v15r0
 
 # ============== package structure ============================================ 
 branches         cmt src doc GiGa
 
 # ============== explicit dependencies ========================================
-use GaudiKernel  v13r* 
+use GaudiKernel  v* 
 use  G4readout   v* 	Geant4
 
 # ============== standard includes ============================================

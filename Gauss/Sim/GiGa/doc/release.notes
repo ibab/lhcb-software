@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.86 2003-12-05 16:18:24 witoldp Exp $
+! $Id: release.notes,v 1.87 2003-12-10 13:59:35 ranjard Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!========================== GiGa v15r0 ====================================
+! 2003-12-10 - Florence RANJARD
+ - requirements - remove explicit GaudiKernel version number to use v14r2 
+                  the version ava1lable from Gaudi v13r0
 
 !========================== GiGa v14r8 ======================================
 ! 2003-12-05 - Witek Pokorski
