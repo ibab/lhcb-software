@@ -18,8 +18,24 @@ micron = mm / 1000.0
 FALSE  = (1>2)
 TRUE   = (1<2)
 
-import sys
+# 'import' Vertex type enum 
+class _VertexType(object) :
+    """
+    $OHYSEVENTROOT/xml/Vertex.xml:
+    <enum
+    desc   = "Describe how a vertex was constructed"
+    name   = "VertexType"
+    value  = "Unknown=0, Primary, Decay, DecayWithMass, Interaction, Brem, Pair, Kink"
+    access = "PUBLIC"
+    />
+    """
+    __slots__ = ('Primary')
+    
+VertexType = _VertexType()
+VertexType.Primary = 1
 
+
+        
 g = gaudi.AppMgr()
 # load the minimal set of dictionaries
 g.loaddict('EventDict')
@@ -102,22 +118,25 @@ MCVNONE    = MCVBCONST ( 0 )
 MCVFALSE   = MCVNONE
 
 # functions 
-CL =  helper.loadFunP  ( gbl.LoKi.Particles.ConfidenceLevel    ) () 
-ID =  helper.loadFunID ( gbl.LoKi.Particles.Identifier         ) () 
-Q  =  helper.loadFunP  ( gbl.LoKi.Particles.Charge             ) ()      
-P  =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum           ) ()  
-P2 =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum2          ) ()  
-PT =  helper.loadFunP  ( gbl.LoKi.Particles.TransverseMomentum ) ()  
-PX =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumX          ) () 
-PY =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumY          ) ()  
-PZ =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumZ          ) () 
-E  =  helper.loadFunP  ( gbl.LoKi.Particles.Energy             ) () 
-M  =  helper.loadFunP  ( gbl.LoKi.Particles.Mass               ) () 
-MM =  helper.loadFunP  ( gbl.LoKi.Particles.MeasuredMass       ) ()
+CL    =  helper.loadFunP  ( gbl.LoKi.Particles.ConfidenceLevel    ) () 
+ID    =  helper.loadFunID ( gbl.LoKi.Particles.Identifier         ) () 
+ABSID =  helper.loadFunP  ( gbl.LoKi.Particles.AbsIdentifier      ) () 
+Q     =  helper.loadFunP  ( gbl.LoKi.Particles.Charge             ) ()      
+SUMQ  =  helper.loadFunP  ( gbl.LoKi.Particles.SumCharge          ) ()      
+P     =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum           ) ()  
+P2    =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum2          ) ()  
+PT    =  helper.loadFunP  ( gbl.LoKi.Particles.TransverseMomentum ) ()  
+PX    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumX          ) () 
+PY    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumY          ) ()  
+PZ    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumZ          ) () 
+E     =  helper.loadFunP  ( gbl.LoKi.Particles.Energy             ) () 
+M     =  helper.loadFunP  ( gbl.LoKi.Particles.Mass               ) () 
+MM    =  helper.loadFunP  ( gbl.LoKi.Particles.MeasuredMass       ) ()
 
 
 # functions 
 DMASS  =  helper.loadFunP ( gbl.LoKi.Particles.DeltaMass             ) 
+ADMASS =  helper.loadFunP ( gbl.LoKi.Particles.AbsDeltaMass          ) 
 DMMASS =  helper.loadFunP ( gbl.LoKi.Particles.DeltaMeasuredMass     )
 CHI2M  =  helper.loadFunP ( gbl.LoKi.Particles.DeltaMeasuredMassChi2 ) 
 
@@ -161,6 +180,7 @@ CHI2MIP  = MIPCHI2
 
 # funstions 
 VD       = helper.loadFunP ( gbl.LoKi.Vertices.VertexDistance     ) 
+VDDOT    = helper.loadFunP ( gbl.LoKi.Vertices.VertexDistanceDot  ) 
 VDCHI2   = helper.loadFunP ( gbl.LoKi.Vertices.VertexDistanceChi2 )
 # alias 
 CHI2VD   = VDCHI2
@@ -173,6 +193,7 @@ CHI2MVD  = MVDCHI2
 # functions 
 VDSIGN   = helper.loadFunP ( gbl.LoKi.Vertices.SignedVertexDistance ) 
 VDTIME   = helper.loadFunP ( gbl.LoKi.Vertices.SignedTimeDistance   ) 
+VDDTIME  = helper.loadFunP ( gbl.LoKi.Vertices.DotTimeDistance      ) 
 DTR      = helper.loadFunP ( gbl.LoKi.Vertices.ClosestApproach      ) 
 DTRCHI2  = helper.loadFunP ( gbl.LoKi.Vertices.ClosestApproachChi2  )
 

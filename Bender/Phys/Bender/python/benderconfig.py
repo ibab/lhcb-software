@@ -57,5 +57,4 @@ def config ( **args ) :
             if not SVC in appMgr.ExtSvc : appMgr.ExtSvc += [ SVC ]
     # add algorithms 
     TopAlg = extractProperty( 'TopAlg'  , appMgr.name() )
-    appMgr.TopAlg = TopAlg
-    
+    appMgr.topAlg = TopAlg 
