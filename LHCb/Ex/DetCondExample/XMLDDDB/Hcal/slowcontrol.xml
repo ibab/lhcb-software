@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: slowcontrol.xml,v 1.1 2001-12-17 16:52:41 andreav Exp $ -->
+<!-- $Id: slowcontrol.xml,v 1.2 2002-03-01 15:46:53 andreav Exp $ -->
 <DDDB>
   <catalog name="Hcal">
     <!-- Hcal slow control catalog -->
-    <conditionref href="conddb:/SlowControl/Hcal/scHcal#scHcal"/>
+    <conditionref href="conddb:/CONDDB/SlowControl/Hcal/scHcal#scHcal"/>
   </catalog>
 </DDDB>
