@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2001/08/21 13:05:09  ibelyaev
+// fix problems of user parameters on Win2K
+//
 // Revision 1.8  2001/08/21 11:03:57  ibelyaev
 // parameter fix on Win2K
 //
@@ -92,7 +95,7 @@ StatusCode DeSubCalorimeter::initialize()
 std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const
 {
   os << "\tDeSubCalorimeter"
-     << " fullname ='" << fullpath()
+     << " fullname ='"    << name ()
      << std::endl;
   os << "\t\t\tCellSize=" << std::setw(12) << m_size
      << std::endl;
@@ -105,7 +108,7 @@ std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const
 MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const
 {
   os << "\tDeSubCalorimeter"
-     << " fullname ='" << fullpath()
+     << " fullname ='"    << name ()
      << endreq   ;
   os << "\t\t\tCellSize=" << std::setw(12) << m_size
      << endreq   ;

@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.14 2001-11-25 15:08:46 ibelyaev Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.15 2001-12-09 14:16:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2001/11/25 15:08:46  ibelyaev
+//  update for newer CaloKernel Package
+//
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -13,7 +16,6 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/TransientStore.h"
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
@@ -154,9 +156,9 @@ StatusCode DeCalorimeter::buildCells( ) {
   if( isInitialized() ) { return StatusCode::SUCCESS; }
   int nbCells = 0;
 
-  MsgStream log( msgSvc(), "buildCells"+localPath() );
+  MsgStream log( msgSvc(), "buildCells"+ name () );
 
-  m_caloIndex = CaloCellCode::CaloNumFromName( localPath() );
+  m_caloIndex = CaloCellCode::CaloNumFromName( name() );
 
   std::vector<double> cellSize;
 
@@ -179,7 +181,7 @@ StatusCode DeCalorimeter::buildCells( ) {
 
     IGeometryInfo* geoData = subCalorimeter->geometry() ;
     Assert( 0 != geoData        , " Unable to extract IGeometryInfo* !"  );
-    ILVolume* lv = geoData->lvolume();
+    const ILVolume* lv = geoData->lvolume();
     Assert( 0 != lv             , " Unable to extract ILVolume* !"       );
 
     HepPoint3D pointLocal(0,0,0), pointGlobal(0,0,0);
@@ -372,7 +374,7 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   if( m_cardsInitialized ) { return StatusCode::SUCCESS; }
 
-  MsgStream log( msgSvc(), "buildCards"+localPath() );
+  MsgStream log( msgSvc(), "buildCards"+ name () );
 
   m_cards   = 0;
 
@@ -491,7 +493,7 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
      << std::setw(2)          << m_caloIndex
      << ", name from index ='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
-     << ", fullname ='"   << fullpath()  << "'"
+     << ", fullname ='"   << name ()  << "'"
      << "\tCellsInitialized=" ;
   if( m_initialized ) { os <<  "true" ; }
   else                { os << "false" ; }
@@ -551,7 +553,7 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
   os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex
      << ", name from index='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
-     << ", fullname ='"            << fullpath()  << "'"
+     << ", fullname ='"            << name ()  << "'"
      << "\tCellsInitialized=" ;
   if( m_initialized ) { os <<  "true" ; }
   else                { os << "false" ; }

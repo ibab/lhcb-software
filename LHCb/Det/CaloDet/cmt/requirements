@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.15  2001/11/25 15:08:46  ibelyaev
+#  update for newer CaloKernel Package
+#
 # Revision 1.14  2001/11/22 13:06:54  ibelyaev
 #  fix the package order (due to CLHEP problems)
 #
@@ -27,8 +30,8 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
-use CaloKernel   v1*  Calo 
-use DetDesc      v8*  Det 
+use CaloKernel   v1r*  Calo 
+use DetDesc      v9*  Det 
 
 # =============== own options ==========================================
 set CALODETOPTS  ${CALODETROOT}/options
