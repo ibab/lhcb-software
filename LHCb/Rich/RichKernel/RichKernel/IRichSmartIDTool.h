@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.6 2004-10-27 14:29:31 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.7 2005-01-07 12:42:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/27 14:29:31  jonrob
+ *  Update global position from RichSmartID method interface
+ *
  *  Revision 1.5  2004/07/29 09:30:32  jonrob
  *  Fix various typos + minor updates
  *
@@ -29,8 +32,8 @@
 class HepPoint3D;
 class HepVector3D;
 
-// Rich Kernel
-class RichSmartID;
+// Kernel
+#include "Kernel/RichSmartID.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
@@ -93,11 +96,11 @@ public:
    *
    *  @param readoutChannelList  Vector of RichSmartIDs to fill with the valid channels
    *
-   *  @return status of the return vector of channel identifiers
-   *  @retval StatusCode::SUCCESS Request was successful, RichSmartID vector is valid
-   *  @retval StatusCode::FAILURE Request was successful, RichSmartID vector is not valid
+   *  @return Vector of RichSmartIDs to fill with the valid channels
+   *  @retval Vector size > 0 : Request was successful, RichSmartID vector is valid
+   *  @retval Vector size = 0 : Request was UNsuccessful, RichSmartID vector is not valid
    */
-  virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const = 0;
+  virtual const RichSmartID::Collection & readoutChannelList( ) const = 0;
   
   /** Converts a position in global coordinates to the local coordinate system
    *  of the appropriate HPD panel
