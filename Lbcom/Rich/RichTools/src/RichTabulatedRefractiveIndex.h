@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRefractiveIndex.h,v 1.1.1.1 2004-06-17 12:04:09 cattanem Exp $
+// $Id: RichTabulatedRefractiveIndex.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
 #define RICHDETTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
 
@@ -33,7 +33,7 @@
 class RichTabulatedRefractiveIndex : public RichToolBase,
                                      virtual public IRichRefractiveIndex {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichTabulatedRefractiveIndex( const std::string& type,
@@ -43,23 +43,28 @@ public:
   /// Destructor
   virtual ~RichTabulatedRefractiveIndex() {};
 
-  /// Initialize method
+  // Initialization of the tool after creation
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalization of the tool before deletion
   StatusCode finalize();
 
-  /// Refractive index for a given energy
-  double refractiveIndex( const Rich::RadiatorType rad,
-                          const double energy );
+public: // methods (and doxygen comments) inherited from interface
 
-  /// Average refractive index for a given radiator between two photon energies
-  double refractiveIndex( const Rich::RadiatorType rad,
-                          const double energyBot,
-                          const double energyTop );
+  // Calculates the refractive index for a given radiator type at a
+  // given energy
+  double refractiveIndex ( const Rich::RadiatorType rad,
+                           const double energy );
 
-  /// Average refractive index for given radiator
-  double refractiveIndex( const Rich::RadiatorType rad );
+  // Calculates the average refractive index for a given radiator type
+  // for a given range of photon energies.
+  double refractiveIndex ( const Rich::RadiatorType rad,
+                           const double energyBot,     
+                           const double energyTop );
+
+  // Calculates the average refractive index for a given radiator type
+  // for a all visable photon energies.
+  double refractiveIndex ( const Rich::RadiatorType rad );
 
 private:  // Private data
 

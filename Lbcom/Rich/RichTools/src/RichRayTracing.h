@@ -1,10 +1,6 @@
-// $Id: RichRayTracing.h,v 1.4 2004-07-15 14:47:06 papanest Exp $
-#ifndef RICHDETTOOLS_RICHRAYTRACING_H
-#define RICHDETTOOLS_RICHRAYTRACING_H 1
-
-// Include files
-// from STL
-#include <string>
+// $Id: RichRayTracing.h,v 1.5 2004-07-15 15:44:40 jonrob Exp $
+#ifndef RICHTOOLS_RICHRAYTRACING_H
+#define RICHTOOLS_RICHRAYTRACING_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -50,7 +46,7 @@
 class RichRayTracing : public RichToolBase,
                        virtual public IRichRayTracing {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichRayTracing( const std::string& type,
@@ -59,47 +55,52 @@ public:
 
   virtual ~RichRayTracing( ); ///< Destructor
 
+  // Initialization of the tool after creation
   virtual StatusCode initialize();
+
+  // Finalization of the tool before deletion
   virtual StatusCode finalize  ();
 
-  /// For a given detector, raytraces a given direction from a given point to
-  /// the photo detectors. Returns the result in the form of a RichGeomPhoton
-  virtual StatusCode traceToDetector ( Rich::DetectorType rich,
-                                       const HepPoint3D& startPoint,
-                                       const HepVector3D& startDir,
-                                       RichGeomPhoton& photon,
-                                       const RichTraceMode mode = RichTraceMode(),
-                                       Rich::Side fSide = Rich::top
-                                       ) const;
+public: // methods (and doxygen comments) inherited from interface
 
-  virtual StatusCode traceToDetectorWithoutEff( Rich::DetectorType rich,
-                                                const HepPoint3D& position,
-                                                const HepVector3D& direction,
-                                                HepPoint3D& hiPosition,
-                                                const RichTraceMode mode = RichTraceMode(),
-                                                Rich::Side fSide = Rich::top ) const;
+  // For a given detector, raytraces a given direction from a given point to
+  // the photo detectors. Returns the result in the form of a RichGeomPhoton
+  StatusCode traceToDetector( Rich::DetectorType rich, 
+                              const HepPoint3D& startPoint,  
+                              const HepVector3D& startDir,    
+                              RichGeomPhoton& photon,         
+                              const RichTraceMode mode = RichTraceMode(), 
+                              Rich::Side fSide = Rich::top ) const;
 
+  // For a given detector, raytraces a given direction from a given point to
+  // the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
+  StatusCode
+  traceToDetectorWithoutEff( Rich::DetectorType rich,  
+                             const HepPoint3D& position,   
+                             const HepVector3D& direction, 
+                             HepPoint3D& hiPosition,  
+                             const RichTraceMode mode = RichTraceMode(),
+                             Rich::Side fSide = Rich::top ) const;
 
-  /// For a given detector, raytraces a given direction from a given point
-  /// to the average photo detector plane. Returns the result in the form
-  /// of a RichGeomPhoton
-  virtual StatusCode intersectPDPanel ( Rich::DetectorType,
-                                        const HepPoint3D&,
-                                        const HepVector3D&,
-                                        RichGeomPhoton& ) const;
+  // For a given detector, ray traces a given direction from a given point
+  // to the average photo detector plane. Returns the result in the form
+  // of a RichGeomPhoton
+  StatusCode intersectPDPanel( Rich::DetectorType rich,
+                               const HepPoint3D& point, 
+                               const HepVector3D& dir, 
+                               RichGeomPhoton& photon ) const;
 
-  virtual StatusCode intersectPlane (const HepPoint3D& position,
-                                     const HepVector3D& direction,
-                                     const HepPlane3D& plane,
-                                     HepPoint3D& intersection ) const;
+  // Intersection a given direction, from a given point with a given plane.
+  StatusCode intersectPlane( const HepPoint3D& position,  
+                             const HepVector3D& direction, 
+                             const HepPlane3D& plane,
+                             HepPoint3D& intersection ) const;
 
-  /// Reflect off a spherical mirror. Can be used for intersection
-  StatusCode reflectSpherical ( HepPoint3D& position,
-                                HepVector3D& direction,
-                                const HepPoint3D& CoC,
+  // Reflect a given direction off a spherical mirror. Can be used for intersection.
+  StatusCode reflectSpherical ( HepPoint3D& position, 
+                                HepVector3D& direction, 
+                                const HepPoint3D& CoC, 
                                 double radius ) const;
-  
-  IHistogramSvc* histoSvc() const;
 
 private: // methods
 
@@ -110,12 +111,13 @@ private: // methods
                                   const RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
-
   StatusCode reflectFlat ( HepPoint3D& position,
                            HepVector3D& direction,
                            const HepPlane3D& plane ) const;
 
   StatusCode bookHistos();
+
+  IHistogramSvc* histoSvc() const;
 
 private: // data
 
@@ -126,7 +128,10 @@ private: // data
   typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
   boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
 
+  /// Spherical mirror nominal center of curvature
   HepPoint3D m_nominalCoC[Rich::NRiches][2];
+
+  /// Flat mirror nominal planes
   HepPlane3D m_nominalFlatMirrorPlane[Rich::NRiches][2];
   double m_nomSphMirrorRadius[Rich::NRiches];
   int m_sphMirrorSegRows[Rich::NRiches];
@@ -134,6 +139,7 @@ private: // data
   int m_flatMirrorSegRows[Rich::NRiches];
   int m_flatMirrorSegCols[Rich::NRiches];
 
+  /// Mirror segment finder tool
   IRichMirrorSegFinder* m_mirrorSegFinder;
 
   mutable IHistogramSvc* m_HDS;
@@ -147,4 +153,5 @@ private: // data
   
 
 };
-#endif // RICHDETTOOLS_RICHRAYTRACING_H
+
+#endif // RICHTOOLS_RICHRAYTRACING_H

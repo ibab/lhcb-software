@@ -1,4 +1,4 @@
-// $Id: RichSmartIDTool.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichSmartIDTool.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHSMARTIDTOOL_H
 #define RICHDETTOOLS_RICHSMARTIDTOOL_H 1
 
@@ -23,7 +23,7 @@
 
 /** @class RichSmartIDTool RichSmartIDTool.h
  *
- *  A tool to preform the manipulation of RichSmartIDs channel identifiers
+ *  A tool to preform the manipulation of RichSmartID channel identifiers
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -31,7 +31,9 @@
 
 class RichSmartIDTool : public RichToolBase,
                         virtual public IRichSmartIDTool {
-public:
+
+public: // Methods for Gaudi Framework
+
   /// Standard constructor
   RichSmartIDTool( const std::string& type,
                    const std::string& name,
@@ -39,31 +41,32 @@ public:
 
   virtual ~RichSmartIDTool( ); ///< Destructor
 
+  // Initialization of the tool after creation
   virtual StatusCode initialize();
+
+  // Finalization of the tool before deletion
   virtual StatusCode finalize  ();
 
-  /// Returns the position of a SmartID in global coordinates
-  virtual StatusCode globalPosition ( const RichSmartID& inSmartID,
-                                      HepPoint3D& outPosition) const;
+public: // methods (and doxygen comments) inherited from interface
 
-  /// Returns the global position given a local position, rich and panel number
-  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint,
-                                      const Rich::DetectorType rich,
+  // Converts a RichSmartID channel indentification into a position in
+  virtual StatusCode globalPosition ( const RichSmartID& smartid, 
+                                      HepPoint3D& position ) const;
+
+  // Computes the global position coordinate for a given position in local
+  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 
+                                      const Rich::DetectorType rich, 
                                       const Rich::Side side ) const;
 
-  /// Returns the SmartID for a given global position
-  virtual StatusCode smartID ( const HepPoint3D& inPosition,
-                               RichSmartID& outSmartID) const;
+  // Converts a position in global coordinates to the corresponding
+  virtual StatusCode smartID( const HepPoint3D& inPosition,
+                              RichSmartID& outSmartID ) const;
 
-  /// Returns a list with all valid smartIDs
-  virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
-                                        readoutChannels ) const;
+  // Supplies a vector of all currently active and valid channels in the RICH detectors
+  virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const;
 
-  /// Converts a global position to the coordinate system of the
-  /// photodetector panel
-  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint ) const;
-
-protected:
+  // Converts a position in global coordinates to the local coordinate system
+  virtual HepPoint3D globalToPDPanel ( const HepPoint3D& globalPoint ) const;
 
 private:
 
@@ -72,5 +75,6 @@ private:
 
   typedef boost::array<double, 2> offsetPerRich;
   boost::array<offsetPerRich, 2> m_localOffset;
+
 };
 #endif // RICHDETTOOLS_RICHSMARTIDTOOL_H

@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
+// $Id: RichToolRegistry.cpp,v 1.3 2004-07-15 15:44:40 jonrob Exp $
 
 // Suppress "debug information truncated" warnings on Windows
 #include "GaudiKernel/Kernel.h"
@@ -57,9 +57,9 @@ StatusCode RichToolRegistry::finalize()
   return GaudiTool::finalize();
 }
 
-const std::string & RichToolRegistry::toolType( const std::string & tname ) const
+const std::string & RichToolRegistry::toolType( const std::string & nickname ) const
 {
-  if ( "" == tname ) Exception("Received request to retrieve a tool with no name !");
-  if ( "" == m_myTools[tname] ) addEntry( tname, tname );
-  return m_myTools[tname];
+  if ( "" == nickname ) Exception("Received request to retrieve a tool with no name !");
+  if ( "" == m_myTools[tname] ) addEntry( nickname, nickname );
+  return m_myTools[nickname];
 }

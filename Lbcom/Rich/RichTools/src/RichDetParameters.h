@@ -1,4 +1,4 @@
-// $Id: RichDetParameters.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichDetParameters.h,v 1.2 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHDETPARAMETERS_H 
 #define RICHDETPARAMETERS_H 1
 
@@ -26,37 +26,38 @@
 class RichDetParameters : public RichToolBase,
                           virtual public IRichDetParameters {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichDetParameters( const std::string& type, 
                      const std::string& name,
-                     const IInterface* parent);
+                     const IInterface* parent );
 
   /// Destructor
   virtual ~RichDetParameters( ) {};
 
-  /// Initialize method
+  // Initialization of the tool after creation
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalization of the tool before deletion
   StatusCode finalize();
 
-  /// Returns the maximum photon energy for a given radiator
-  double maxPhotonEnergy( const Rich::RadiatorType rad ) const;
+public: // methods (and doxygen comments) inherited from interface
 
-  /// Returns the minimum photon energy for a given radiator
-  double minPhotonEnergy( const Rich::RadiatorType rad ) const;
+  // Calculates the maximum observable photon energy for a given radiator medium
+  double maxPhotonEnergy ( const Rich::RadiatorType rad ) const;
 
-  /// Returns the mean photon energy for a given radiator
-  double meanPhotonEnergy( const Rich::RadiatorType rad ) const;
+  // Calculates the minimum observable photon energy for a given radiator medium
+  double minPhotonEnergy ( const Rich::RadiatorType rad ) const;
+
+  // Calculates the mean observable photon energy for a given radiator medium
+  double meanPhotonEnergy ( const Rich::RadiatorType rad ) const;
 
 private:
 
-  // Photon energy ranges
-  std::vector<double> m_maxPhotEn;
-  std::vector<double> m_minPhotEn;
-  std::vector<double> m_meanPhotEn;
+  std::vector<double> m_maxPhotEn;  ///< The maximum photon energies
+  std::vector<double> m_minPhotEn;  ///< The minimum photon energies
+  std::vector<double> m_meanPhotEn; ///< The mean photon energies
 
 };
 #endif // RICHDETPARAMETERS_H

@@ -1,4 +1,4 @@
-// $Id: RichPhotonReco.h,v 1.2 2004-06-18 09:43:23 jonesc Exp $
+// $Id: RichPhotonReco.h,v 1.3 2004-07-15 15:44:40 jonrob Exp $
 #ifndef RICHDETTOOLS_RICHPHOTONRECO_H
 #define RICHDETTOOLS_RICHPHOTONRECO_H 1
 
@@ -59,7 +59,7 @@
 class RichPhotonReco : public RichToolBase,
                        virtual public IRichPhotonReconstruction {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPhotonReco( const std::string& type,
@@ -68,32 +68,38 @@ public:
 
   virtual ~RichPhotonReco( ); ///< Destructor
 
+  // Initialization of the tool after creation
   virtual StatusCode initialize();
-  virtual StatusCode finalize  ();
 
-  /// Reconstructs the geometrical photon candidate for a given track segment
-  /// and pixel smart ID
-  virtual StatusCode reconstructPhoton( const RichTrackSegment& trSeg,
-                                        const RichSmartID& smartID,
-                                        RichGeomPhoton& gPhoton) const;
+  // Finalization of the tool before deletion
+  virtual StatusCode finalize();
 
-  /// Reconstructs the geometrical photon candidate for a given track segment
-  /// and pixel global position
-  virtual StatusCode reconstructPhoton( const RichTrackSegment& trSeg,
-                                        const HepPoint3D& detectionPoint,
+public: // methods (and doxygen comments) inherited from interface
+
+  // Reconstructs the geometrical photon candidate for a given RichTrackSegment
+  // and RichSmartID channel identifier.
+  virtual StatusCode reconstructPhoton( const RichTrackSegment& trSeg, 
+                                        const RichSmartID& smartID,   
                                         RichGeomPhoton& gPhoton ) const;
+
+  // Reconstructs the geometrical photon candidate for a given RichTrackSegment
+  // and hit position in global LHCb coordinates.
+  virtual StatusCode reconstructPhoton ( const RichTrackSegment& trSeg, 
+                                         const HepPoint3D& detectionPoint, 
+                                         RichGeomPhoton& gPhoton ) const;
 
 private: // methods
 
-  // Solve the quartic equation
+  /// Solve the quartic equation
   static int quarticEquation ( const double a[5], gsl_complex z[4] );
 
-  // Solve quartic equation for given mirror segments
-  bool solveQuarticEq (const HepPoint3D& emissionPoint,
+  /// Solve quartic equation for given mirror segments
+  bool solveQuarticEq( const HepPoint3D& emissionPoint,
                        const HepPoint3D& CoC,
                        const HepPoint3D& virtDetPoint,
                        const double radius,
-                       HepPoint3D& sphReflPoint) const;
+                       HepPoint3D& sphReflPoint
+                       ) const;
 
 private: // data
 

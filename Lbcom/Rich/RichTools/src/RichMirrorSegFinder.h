@@ -1,6 +1,6 @@
-// $Id: RichMirrorSegFinder.h,v 1.2 2004-06-21 13:34:40 jonesc Exp $
-#ifndef RICHDETTOOLS_RICHMIRRORSEGFINDER_H
-#define RICHDETTOOLS_RICHMIRRORSEGFINDER_H 1
+// $Id: RichMirrorSegFinder.h,v 1.3 2004-07-15 15:44:40 jonrob Exp $
+#ifndef RICHTOOLS_RICHMIRRORSEGFINDER_H
+#define RICHTOOLS_RICHMIRRORSEGFINDER_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -35,7 +35,9 @@
  */
 class RichMirrorSegFinder : public RichToolBase,
                             virtual public IRichMirrorSegFinder {
-public:
+
+public: // Methods for Gaudi Framework
+
   /// Standard constructor
   RichMirrorSegFinder( const std::string& type,
                        const std::string& name,
@@ -43,18 +45,25 @@ public:
 
   virtual ~RichMirrorSegFinder( ); ///< Destructor
 
+  // Initialization of the tool after creation
   virtual StatusCode initialize();
+
+  // Finalization of the tool before deletion
   virtual StatusCode finalize  ();
 
-  DeRichSphMirror* findSphMirror(const Rich::DetectorType rich,
-                                 const Rich::Side side,
-                                 const HepPoint3D& reflPoint) const;
+public: // methods (and doxygen comments) inherited from interface
 
-  DeRichFlatMirror* findFlatMirror(const Rich::DetectorType rich,
-                                   const Rich::Side side,
-                                   const HepPoint3D& reflPoint) const;
+  // Locates the spherical mirror Segment given a reflection point,
+  // RICH identifier and panel
+  DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
+                                  const Rich::Side side,
+                                  const HepPoint3D& reflPoint ) const;
 
-protected:
+  // Locates the flat mirror Segment given a reflection point,
+  // RICH identifier and panel
+  DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
+                                    const Rich::Side side,
+                                    const HepPoint3D& reflPoint ) const;
 
 private:
 
@@ -67,4 +76,4 @@ private:
   unsigned int m_lastMirror[2][2][2];
 
 };
-#endif // RICHDETTOOLS_RICHMIRRORSEGFINDER_H
+#endif // RICHTOOLS_RICHMIRRORSEGFINDER_H
