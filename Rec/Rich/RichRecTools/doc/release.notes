@@ -4,6 +4,9 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-04-11 - Chris Jones
+ - Add some extra parameters for robustness tests
+
 ! 2003-04-09 - Marco Cattaneo
  - Add some missing finalisations
 

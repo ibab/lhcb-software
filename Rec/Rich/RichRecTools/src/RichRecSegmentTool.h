@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.1 2003-04-01 14:33:22 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.2 2003-04-11 16:11:57 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -233,6 +233,10 @@ private:
 
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
   std::vector<double> m_thebin[Rich::NRadiatorTypes];
+
+  /// temporary parameters to take into acount degraded performance for robustness tests
+  double m_photonEffScale;
+  double m_emisPntErrScale;
 
 };
 

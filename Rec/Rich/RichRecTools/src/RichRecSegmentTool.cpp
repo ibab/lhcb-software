@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.6 2003-04-09 12:36:50 cattanem Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.7 2003-04-11 16:11:57 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -122,6 +122,10 @@ RichRecSegmentTool::RichRecSegmentTool ( const std::string& type,
   // randomn number distribution
   Rndm::Numbers m_uniDist;
 
+  // temporary parameters to take into acount degraded performance for robustness tests
+  declareProperty( "ScalePhotonEff", m_photonEffScale = 1 );
+  declareProperty( "ScaleEmisPntErr", m_emisPntErrScale = 1 );
+
 }
 
 StatusCode RichRecSegmentTool::initialize() {
@@ -155,7 +159,7 @@ StatusCode RichRecSegmentTool::initialize() {
     msg << MSG::ERROR << "IncidentSvc not found" << endreq;
     sc = StatusCode::FAILURE;
   } else {
-    incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+    incSvc->addListener( this, "BeginEvent" );   // Informed of a new event
     //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
   }
 
@@ -315,7 +319,7 @@ StatusCode RichRecSegmentTool::initialize() {
       // * loss under pedestal for each energy bin
       (m_binEfficiency[iRad]).push_back( (*m_referenceQE)[eBin*eV]/100 *
                                          m_quartzWinEff * m_detReflectorEff *
-                                         m_pedLoss );
+                                         m_pedLoss * m_photonEffScale );
 
       // Cached refractive index for each energy bin
       m_binRefIndex[iRad].push_back( refractiveIndex( rad, eBin ) );
@@ -337,7 +341,9 @@ StatusCode RichRecSegmentTool::initialize() {
   // Informational Printout
   msg << MSG::DEBUG << "Tool Parameters :-" << endreq
       << " Photon Energy Bins         = " << m_EnergyBins << endreq
-      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
+      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq
+      << " Robustness Smearing        = " << m_photonEffScale << " " << m_emisPntErrScale
+      << endreq;
   //<< " Particle masses (MeV)      = " << m_particleMass << endreq
   //<< " Average refractive indices = " << m_AvRefIndex << endreq;
   //for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
@@ -702,16 +708,20 @@ double RichRecSegmentTool::ckThetaResolution( RichRecSegment * segment,
 
   Rich::RadiatorType rad = segment->trackSegment().radiator();
   Rich::Track::Type type = segment->richRecTrack()->trackType();
+  double res = 0;
   if ( thetaExp > 0. &&  thetaExp < (m_thebin[rad])[0] ) {
-    return (m_theerr[rad][type])[0];
+    res = (m_theerr[rad][type])[0];
   } else if ( thetaExp > (m_thebin[rad])[0] &&
               thetaExp < (m_thebin[rad])[1] ) {
-    return (m_theerr[rad][type])[1];
+    res = (m_theerr[rad][type])[1];
   } else if ( thetaExp > (m_thebin[rad])[1] ) {
-    return (m_theerr[rad][type])[2];
+    res = (m_theerr[rad][type])[2];
   }
 
-  return 0;
+  // Scale for robustness tests
+  res *= m_emisPntErrScale;
+
+  return res;
 }
 
 double RichRecSegmentTool::beta( RichRecSegment * segment,

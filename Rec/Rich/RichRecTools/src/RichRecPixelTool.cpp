@@ -1,11 +1,8 @@
-// $Id: RichRecPixelTool.cpp,v 1.3 2003-04-01 14:33:21 jonrob Exp $
+// $Id: RichRecPixelTool.cpp,v 1.4 2003-04-11 16:11:57 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
-//#include "GaudiKernel/SmartDataPtr.h"
-//#include "GaudiKernel/IDataProviderSvc.h"
-//#include "GaudiKernel/GaudiException.h"
 
 // local
 #include "RichRecPixelTool.h"
