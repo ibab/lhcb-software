@@ -1,3 +1,4 @@
+// $Id: GaudiMain.cpp,v 1.2 2001-07-03 17:49:16 mato Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -6,14 +7,12 @@
 //               Sets up default job options path as ../options/job.opts
 //
 //------------------------------------------------------------------------------
-#define COMMON_MAIN_CPP
-
 // Include files
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/IProperty.h"
-#include "GaudiKernel/Property.h"
+#include <iostream>
 
 //--- Example main program
 int main ( int argc, char** argv ) {
@@ -23,22 +22,23 @@ int main ( int argc, char** argv ) {
   SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
   SmartIF<IAppMgrUI>     appMgr  ( IID_IAppMgrUI, iface );
 
-  // Set properties of algorithms and services
-  if ( propMgr == iface )    {
-    std:: string opts = (argc>1) ? argv[1] : "../options/job.opts";
-    status = propMgr->setProperty( StringProperty("JobOptionsPath", opts) );
+  if( !appMgr.isValid() || !propMgr.isValid() ) {
+    std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
+    return 1;
   }
-  else  {
-    exit(0);
+
+  // Get the input configuration file from arguments
+  std:: string opts = (argc>1) ? argv[1] :  "../options/job.opts";
+
+  propMgr->setProperty( "JobOptionsPath", opts );
+  if( opts.substr( opts.length() - 3, 3 ) == ".py" ) {
+    propMgr->setProperty( "JobOptionsType", "NONE" );
+    propMgr->setProperty( "DLLs",           "['SIPython']" );
+    propMgr->setProperty( "Runable",        "PythonScriptingSvc" );
   }
 
   // Run the application manager and process events
-  if ( appMgr )   {
-    status = appMgr->run();
-  }
-  else  {
-    return 0;
-  }
+  appMgr->run();
 
   // All done - exit
   return 0;

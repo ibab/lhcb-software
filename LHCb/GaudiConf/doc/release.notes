@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20010703 - GaudiConf v5 (Pere)
+  Remove LHCbEvent from standard DLLs
+  New version of GaudiMain that supports Python scripts instead of JobOptions files
+ 
 ! 20010319 - GaudiConf v4 (MC)
   options/Dlls.opts     - Remove HbookCnv from standard DLLs. This is because 
                           user should choose between Hbook and Root
