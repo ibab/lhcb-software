@@ -15,33 +15,49 @@ set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 
 # Next line to force static build to go into LinuxStatic directory
 ignore_pattern   package_tag
+
+# Next line to get around SICB/detdes version clashes. 
+# Makes order of package use important
 version_strategy first_choice
 
-# Gaudi Configuration options
-use GaudiConf    v6
+#---CMT and Gaudi policy
+use GaudiPolicy  v5r4
 
-# External libraries not in GaudiSys
-use CERNLIB      v2001
+# External libraries - Gaudi v9
+use ExternalLibs   v3r3
+use AIDA           v1r0
+use CLHEP          v17r10
+use HTL            v13r10
+use XERCES         v15r2
+use CERNLIB        v2001
 
-# Gaudi Framework 
-use GaudiSys     v9r0
-use HbookCnv     v11r0
+#---Gaudi libraries - Gaudi v9
+use GaudiKernel        v11r0
+use GaudiSvc           v7r1
+use GaudiAud           v5r0
+use GaudiNagC          v6r0
+use GaudiDb            v5r0
+#use GaudiIntrospection v2r0 -- Not needed, linked through LHCbEvent dependency
+use HbookCnv           v11r0
 
-# Brunel utilities
-use BrunelKernel v3r0   Rec
-use BrunelSicb   v2r0   Rec
+#---LHCb common libraries
+use GaudiConf    v6r2
+#use GaudiObjDesc v2r0 -- Not needed, linked through LHCbEvent dependency 
+use BookKeeping  v1r1   Tools
+use LHCbEvent    v12r1  Event
+use Finclude     v12r2  SICB
+use Futio        v11    SICB
 
 # Subdetector kernels
 use TrKernel     v6r0   Tr
 use CaloKernel   v1r0   Calo
 
 # Detector description
-use DetDesc      v9r0   Det
-use XmlDDDB      v7r0   Det
+use DetDesc      v9r2   Det
+use XmlDDDB      v7r2   Det
 use CaloDet      v3r0   Det
 
 # Event Model
-use LHCbEvent    v12r1  Event
 use L0Event      v4r0   Event
 use VeloEvent    v6r0   Event
 use ITEvent      v7r0   Event
@@ -50,7 +66,6 @@ use TrEvent      v7r0   Event
 use CaloEvent    v7r0   Event
 
 # SicB event data persistency
-use Futio        v11    SICB
 use SicbCnv      v15r0  SICB
 use CaloSicbCnv  v5r1   SICB
 use L0SicbCnv    v4r0   SICB
@@ -58,13 +73,19 @@ use MuonSicbCnv  v4r0   SICB
 use TrSicbCnv    v4r0   SICB
 use VSicbCnv     v6r0   SICB
 
+# Brunel utilities
+use BrunelKernel v3r0   Rec
+use BrunelSicb   v2r0   Rec
+
 # L0 trigger
 use L0Calo       v3r0   L0
 use L0Muon       v4r0   L0
 use L0DU         v3r0   L0
 
-# Calorimeter digitisation
-use CaloAlgs     v4r0   Calo
+# Calorimeter
+use CaloInterfaces v1r0 Calo
+use CaloUtils      v1r0 Calo
+use CaloAlgs       v4r0 Calo
 
 # Tracking
 use ITAlgorithms v7r0   IT
@@ -85,7 +106,7 @@ use rececal      v7     SICB
 use rechcal      v6r1   SICB
 use recrich      v5r4   SICB
 
-use axreclib     v4r2   SICB
+use axreclib     v4r3   SICB
 
 use trihadr      v4     SICB
 use trilvl2      v5r1   SICB
@@ -99,10 +120,7 @@ use trielec      v5r1   SICB
 #
 #===== build Brunel =========================
 application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
-                    $(BRUNELSICBROOT)/src/Objs/sicbvers.F \
-                    $(BRUNELSICBROOT)/src/Objs/recinit.F \
-                    $(BRUNELSICBROOT)/src/Objs/udinit.F \
-                    $(BRUNELSICBROOT)/src/Objs/GetZebraSize.F
+                   $(BRUNELSICBROOT)/src/Objs/*.F
 # ========================= set macros ============================
 
 macro Brunel_linkopts    "$(application_linkopts)"

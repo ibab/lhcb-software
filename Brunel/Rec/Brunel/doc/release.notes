@@ -4,13 +4,25 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9>20020115 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9>20020123 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
 
    Functionality changes
    ---------------------
    In options
    - Brunel.opts: suppress printout of options from included subdetector files
+                  add BrunelSicbInit to TopAlg list
+
+   In BrunelSicb
+   - BrunelSicbInit: new algorithm with SICB specific initialisation.
+   - BrunelInitialisation: moved to Brunel Kernel
+   - BrunelInit.F: Seeds of SICB random number engine (RanEcu) initialised 
+                   at every event with run number and event number.
+
+   In BrunelKernel
+   - BrunelInitialisation.cpp: Seed of Gaudi random number engine (RanLux)
+     initialised every event ( 100000*(event no. % 20000) + (Run no. % 100000) )
+
 
    Changes for Gaudi v9 
    --------------------
@@ -18,14 +30,14 @@ Purpose: LHCb reconstruction program
    - Brunel.job: pass job options path as argument to executable
 
    In requirements
-    use GaudiConf    v6    (was v6)
+    use GaudiConf    v6r2  (was v5)
     use GaudiSys     v9r0  (was v8)
     use HbookCnv     v11r0 (was v10r1)
     use BrunelKernel v3r0  (was v2)
     use BrunelSicb   v2r0  (was v1)
     use TrKernel     v6r0  (was v5r1)
     use CaloKernel   v1r0  (was CaloGen v2)
-    use DetDesc      v9r0  (was v7)
+    use DetDesc      v9r2  (was v7)
     use XmlDDDB      v7r0  (was v6r1)
     use CaloDet      v3r0  (was v3r0)
     use LHCbEvent    v12r1 (was v11)

@@ -25,7 +25,8 @@ ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "BrunelInitialisation/BrunelInit",
+ApplicationMgr.TopAlg += { "BrunelSicbInit",
+                           "BrunelInitialisation/BrunelInit",
                            "BrunelPhase/BrunelDigi",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
