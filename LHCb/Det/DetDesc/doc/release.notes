@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.126 2002-12-10 13:13:22 sponce Exp $ 
+! $Id: release.notes,v 1.127 2002-12-13 14:18:19 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-12-13 - Ivan Belyaev
+ - DetDesc::Services        fix a problem with resetting a static pointer 
+                            after the deletion of the object
+ - cmt/requirements         increase the version 
 
 !===================== DetDesc v11r7 2002-12-09 =============================
 ! 2002-12-09 - Sebastien Ponce

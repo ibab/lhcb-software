@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.1 2002-11-21 15:42:53 sponce Exp $
+// $Id: Services.h,v 1.2 2002-12-13 14:18:18 ibelyaev Exp $
 #ifndef DETDESC_SERVICES_H 
 #define DETDESC_SERVICES_H 1
 
@@ -7,6 +7,7 @@
 class ISvcLocator;
 class IDataProviderSvc;
 class IMessageSvc;
+
 
 /**
  * @namespace DetDesc DetDesc.h "DetDesc/DetDesc.h"
@@ -27,29 +28,15 @@ namespace DetDesc {
    * @author Sebastien Ponce
    */
   class Services {
-  public:
-    /** Default constructor */
-    Services();
 
-    /** Default destructor */
-    virtual ~Services();
-    
   public:
+
     /// Increment the reference count of this instance.
-    virtual unsigned long addRef() {
-      m_refCount++;
-      return m_refCount;
-    };
-
+    virtual unsigned long addRef() ;
+    
     /// Release this instance.
-    virtual unsigned long release() {
-      m_refCount--;
-      if (m_refCount <= 0) {
-        delete this;
-        return 0;
-      }
-      return m_refCount;
-    };
+    virtual unsigned long release() ;
+    
 
   public:
     /**
@@ -70,7 +57,26 @@ namespace DetDesc {
      * @return pointer to message service
      */
     IMessageSvc* msgSvc();
+    
+    /// reset the static pointer 
+    static void setServices ( DetDesc::Services* val );
 
+    // static acessor 
+    static Services* services();
+
+  protected:
+    
+    /** Default constructor */
+    Services();
+    
+    /** Default destructor */
+    virtual ~Services();
+
+  private:
+
+    /// copy constructor 
+    Services( const Services & );    
+    
   private:
     /// The service locator
     ISvcLocator* m_svcLocator;
@@ -80,7 +86,12 @@ namespace DetDesc {
     IMessageSvc* m_msgSvc;
     /// Reference count
     int m_refCount;
-  };
+    
+    
+    /// a static instance of the Services class
+    static DetDesc::Services* s_services ;
+    
+   };
   
 }
 

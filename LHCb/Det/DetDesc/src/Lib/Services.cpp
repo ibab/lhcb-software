@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.1 2002-11-21 15:42:54 sponce Exp $ 
+// $Id: Services.cpp,v 1.2 2002-12-13 14:18:20 ibelyaev Exp $ 
 
 // Include files
 #include "DetDesc/Services.h"
@@ -16,6 +16,16 @@ DetDesc::Services::Services() : m_svcLocator(0),
                                 m_msgSvc(0),
                                 m_refCount(0) {
 };
+
+/// a static instance of the Services class
+DetDesc::Services* DetDesc::Services::s_services = 0 ;
+
+/// reset the static pointer 
+void DetDesc::Services::setServices ( DetDesc::Services* val )
+{
+  s_services = val ;
+}
+
 
 /** Default destructor */
 DetDesc::Services::~Services() {
@@ -81,4 +91,33 @@ IMessageSvc* DetDesc::Services::msgSvc() {
     return m_msgSvc;
   }
   return m_msgSvc ;
+};
+
+/**
+ * Gets an instance of Services
+ */
+DetDesc::Services* DetDesc::Services::services() {
+  if (0 == s_services){ 
+    s_services = new DetDesc::Services();
+  }
+  s_services->addRef();
+  return s_services;
+}
+
+/// Release this instance.
+unsigned long DetDesc::Services::release() {
+  m_refCount--;
+  if (m_refCount <= 0) {
+    delete this;
+    setServices ( 0 ) ;
+    return 0;
+  }
+  return m_refCount;
+};
+
+/// Increment the reference count of this instance.
+unsigned long DetDesc::Services::addRef() 
+{
+  m_refCount++;
+  return m_refCount;
 };

@@ -1,4 +1,4 @@
-// $Id: DetDesc.cpp,v 1.3 2002-11-21 15:40:02 sponce Exp $ 
+// $Id: DetDesc.cpp,v 1.4 2002-12-13 14:18:20 ibelyaev Exp $ 
 
 // Include files
 #include <string> 
@@ -28,16 +28,9 @@ const std::string DetDesc::print (const long value, const char*  format) {
 };
 
 
-/// a static instance of the Services class
-static DetDesc::Services* s_services = 0;
-
 /**
  * Gets an instance of Services
  */
 DetDesc::Services* DetDesc::services() {
-  if (0 == s_services) {
-    s_services = new Services();
-  }
-  s_services->addRef();
-  return s_services;
+  return DetDesc::Services::services();
 }
