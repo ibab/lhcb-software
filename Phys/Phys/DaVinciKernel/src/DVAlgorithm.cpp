@@ -39,21 +39,22 @@ StatusCode DVAlgorithm::sysInitialize () {
     msg << MSG::WARNING << "Avoiding SelResult" << endreq ;
   }
   
-  // initialize Algorithm base class first -> calls initialize()
-  StatusCode sc = this->Algorithm::sysInitialize();
-  if (!sc ) return sc;
-  // initialize GaudiTupleAlg base class then
-  sc = this->GaudiTupleAlg::initialize();  
-  if (!sc ) return sc;
-
-  // Load tools
+  // Load tools very first
   StatusCode scLT = loadTools();
   if(scLT.isFailure()) {
     MsgStream msg( msgSvc(), name() ); // err() not yet initialized
     msg << MSG::ERROR << "Unable to load tools" << endreq;
     return scLT;
   }
-  
+
+  // initialize Algorithm base class first -> calls initialize()
+  StatusCode sc = this->Algorithm::sysInitialize();
+  if (!sc ) return sc;
+
+  // initialize GaudiTupleAlg base class then
+  sc = this->GaudiTupleAlg::initialize();  
+  if (!sc ) return sc;
+
   if (m_decayDescriptor == "not specified"){
     warning() << "Decay Descriptor string not specified" << endreq;
   }
@@ -72,14 +73,14 @@ StatusCode DVAlgorithm::loadTools() {
   MsgStream msg( msgSvc(), name() ); // err() not yet initialized
   msg << MSG::INFO << ">>> Retrieving tools" << endreq;
 
-  debug() << ">>> Retreiving PhysDesktop" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
   m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
   if( !m_pDesktop ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
     return StatusCode::FAILURE;
   }
 
-  debug() << ">>> Retreiving " << m_typeLagFit 
+  msg << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
   m_pLagFit = tool<IMassVertexFitter>(m_typeLagFit, this);
   if ( !m_pLagFit ) {
@@ -88,7 +89,7 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
      
-  debug() << ">>> Retreiving " << m_typeVertexFit 
+  msg << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
   m_pVertexFit = tool<IVertexFitter>(m_typeVertexFit, this);
   if ( !m_pVertexFit ) {
@@ -97,7 +98,7 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
   
-  debug() << ">>> Retreiving GeomDispCalculator" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
   m_pGeomDispCalc = tool<IGeomDispCalculator>("GeomDispCalculator", this);
   if ( !m_pGeomDispCalc ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
@@ -105,7 +106,7 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
   
-  debug() << ">>> Retreiving ParticleStuffer" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
   m_pStuffer = tool<IParticleStuffer>("ParticleStuffer", this);
   if ( !m_pStuffer  ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
@@ -113,7 +114,7 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
 
   }
-  debug() << ">>> Retreiving one ParticleFilter" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
   m_pFilter = tool<IParticleFilter>("ParticleFilter", this);
   if ( !m_pFilter ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" 
@@ -121,7 +122,7 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
 
-  debug() << ">>> Retrieving ParticlePropertySvc" << endreq;
+  msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
   if( !m_ppSvc ) {
     msg << MSG::ERROR << "    Unable to locate Particle Property Service" 
