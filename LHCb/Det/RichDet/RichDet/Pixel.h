@@ -1,4 +1,4 @@
-// $Id: Pixel.h,v 1.1.1.1 2001-10-17 11:42:03 jonrob Exp $
+// $Id: Pixel.h,v 1.2 2001-10-26 13:02:12 rihill Exp $
 #ifndef RICHDET_PIXEL_H
 #define RICHDET_PIXEL_H 1
 

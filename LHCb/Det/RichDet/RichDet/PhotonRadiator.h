@@ -55,6 +55,9 @@ public:
                                  const double distCherenkov, 
                                  TrackSegment &segment) const = 0;
 
+  virtual Photon reconstructPhoton (TrackSegment &segment, 
+                                    const ActivePixel &pixel) const = 0;
+
   virtual double momentumThreshold (const ParticleCode particle) const;
 
   virtual double maxThetaCherenkov () const;

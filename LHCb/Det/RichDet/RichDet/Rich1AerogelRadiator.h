@@ -1,4 +1,4 @@
-// $Id: Rich1AerogelRadiator.h,v 1.1.1.1 2001-10-17 11:42:03 jonrob Exp $
+// $Id: Rich1AerogelRadiator.h,v 1.2 2001-10-26 13:02:12 rihill Exp $
 #ifndef RICHDET_RICH1AEROGELRADIATOR_H
 #define RICHDET_RICH1AEROGELRADIATOR_H 1
 
@@ -41,6 +41,9 @@ public:
                          const double phiCherenkov,
                          const double distCherenkov,
                          TrackSegment &segment) const;
+
+  Photon reconstructPhoton (TrackSegment &segment,
+                            const ActivePixel &pixel) const;
 
   double scatterFraction (const ParticleCode particle,
                           const TrackSegment &segment,

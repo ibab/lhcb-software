@@ -269,6 +269,52 @@ double Rich1AerogelRadiator::randCos2 ()
   return theta;
 }
 
+Photon Rich1AerogelRadiator::reconstructPhoton (TrackSegment &segment,
+                                                const ActivePixel &pixel)
+  const
+{
+
+  if ( ! segment.active() ) {
+    Photon phot = Photon::notReconstructed(pixel.pixel(),segment);
+    return phot;
+  }
+
+  // Aerogel is thin. Full track segement is seen by pixel.
+
+  double distance = 0.5 * ( segment.enters() + segment.leaves() );
+  HepPoint3D emission  = segment.position(distance);
+  HepPoint3D detection = pixel.globalPosition();
+  HepPoint3D reflection;
+
+  if ( ! rich().reflector().reflectionPoint(emission,detection,reflection) ) {
+    return Photon::notReconstructed(pixel.pixel(),segment);
+  }
+
+  HepVector3D dir = reflection - emission;
+
+  if ( m_refraction ) {
+
+    // correct for refraction. Distance in Aergoel can be neglected
+    // again refraction plane is assumed to be normal to z axis
+
+    double sinTheta  = sin(dir.theta()) / this->refractiveIndex();
+    double theta = ( sinTheta > 1. ? 0.5 * M_PI : asin( sinTheta ) );
+    dir.setTheta(theta);
+
+  }
+
+  double theta, phi;
+  segment.angleToDirection(distance,dir,HepVector3D(1.,0.,0.),theta,phi);
+
+
+  //    if ( theta > maxThetaCherenkov()+0.02 ) {
+  //    return  Photon::notReconstructed(pixel.pixel(),segment);
+  // }
+
+  return Photon::reconstructed(distance,theta,phi,1.,pixel.pixel(),segment);
+
+}
+
 double Rich1AerogelRadiator::scatterFraction (const ParticleCode particle,
                                               const TrackSegment &segment,
                                               const double theta,

@@ -1,4 +1,4 @@
-// $Id: RichXLocalPosition.h,v 1.1.1.1 2001-10-17 11:42:03 jonrob Exp $
+// $Id: RichXLocalPosition.h,v 1.2 2001-10-26 13:02:13 rihill Exp $
 #ifndef RICHDET_RICHXLOCALPOSITION_H
 #define RICHDET_RICHXLOCALPOSITION_H 1
 

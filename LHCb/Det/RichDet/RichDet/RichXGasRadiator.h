@@ -41,6 +41,9 @@ public:
                          const double distCherenkov, 
                          TrackSegment &segment) const;
 
+  Photon reconstructPhoton (TrackSegment &segment,
+                            const ActivePixel &pixel) const;
+
   double scatterFraction (const ParticleCode particle, 
                           const TrackSegment &segment,
                           const double theta,

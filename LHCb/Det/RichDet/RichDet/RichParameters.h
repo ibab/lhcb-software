@@ -1,4 +1,4 @@
-// $Id: RichParameters.h,v 1.1.1.1 2001-10-17 11:42:03 jonrob Exp $
+// $Id: RichParameters.h,v 1.2 2001-10-26 13:02:12 rihill Exp $
 #ifndef RICHREC_RICHPARAMETERS_H
 #define RICHREC_RICHPARAMETERS_H 1
 
