@@ -572,8 +572,8 @@ L0Muon::Candidate* L0Muon::Tower::createCandidate(double p, double th,
 
 void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
 
-  double dx = 1.25;
-  double dy = 1.0;
+  double dx = 1.0;
+  double dy = 2.5;
   double l1 = m_ptparam[0]+m_ptparam[1];
   double l2 = l1 + m_ptparam[2];
   double l3 = l2 + 120.;
@@ -594,7 +594,7 @@ void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
   }
   
   double factor = 1.;
-  if ( ns == 0 ) factor = 2.;
+  if ( ns == 1 ) factor = 0.5;
   
   x = dx*(nx+0.5)*nreg*factor;
   y = dy*(ny+0.5)*nreg;
