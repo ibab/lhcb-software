@@ -64,3 +64,15 @@ use  MuonAssociators    v1r0      Muon
 use  TrAssociators      v3r2      Tr
 use  TrFitEvent         v3r4p1    Tr
 
+use SICBSys             v1r0    SICB
+use SicbCnv      v17r3p1 SICB
+use RiSicbGeom   v3r0    SICB
+use CaloSicbCnv  v7r2    SICB
+use MuonSicbCnv  v6r6    SICB
+use RiSicbCnv    v5r0p1  SICB
+use VSicbCnv     v8r0p1  SICB
+use Futio        v13r0   SICB
+use Finclude     v14r0   SICB
+use GDUMMY       v2r0    SICB
+use Futil        v12r0   SICB
+use detdes       v20r0   SICB
