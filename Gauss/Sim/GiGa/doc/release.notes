@@ -1,6 +1,11 @@
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!=========================== GiGa v16r1 ===================================
+! 2004-03-16 - Florence RANJARD
+ - DumpG4Track.cpp, DumpG4Step.cpp, GiGaTrajectory.cpp - fix printout in case
+   of tof NaN or infinite
+
 !============================ GiGa v16r0 ====================================
 ! 2004-02-20 - Vanya BELYAEV
  - GiGa/IGiGa*.h  

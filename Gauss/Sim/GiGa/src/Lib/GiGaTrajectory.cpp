@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.19 2004-02-23 08:12:54 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.20 2004-03-17 08:54:59 ranjard Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2004/02/23 08:12:54  ibelyaev
+//  urgent fix!
+//
 // Revision 1.18  2004/02/22 19:01:51  ibelyaev
 //  add new data fields to GiGaTrajectoryPoint
 //
@@ -131,11 +134,12 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
   double time = aTrack->GetGlobalTime() ;
   if( !lfin( time ) ) 
   {
-    std::cerr << " GiGaTrajectory  ERROR " 
-              << std::string( 65 , '*' )     << std::endl ;
+    std::cout << " GiGaTrajectory  GetGlobalTime ERROR " 
+              << std::string( 65 , '*' )     << std::endl << std::flush ;
     GiGaUtil::DumpG4Track( std::cout , aTrack ) ;
-    std::cerr << " GiGaTrajectory  ERROR "
-              << " action : time = 1000 ns " << std::endl ;
+    std::cout << " GiGaTrajectory  GeGlobalTime ERROR Time is not finite"
+              << " action : time = 1000 ns " << std::endl << std::flush ;
+    
     time = 1000 * ns ;
     // throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
   }
@@ -277,11 +281,11 @@ bool GiGaTrajectory::appendStep ( const G4Step* step )
   
   if( !lfin( time ) ) 
   {
-    std::cerr << " GiGaTrajectory  ERROR " 
+    std::cout << " GiGaTrajectory appendStep ERROR " 
               << std::string( 65 , '*' )     << std::endl ;
     GiGaUtil::DumpG4Step( std::cout , step ) ;
-    std::cerr << " GiGaTrajectory  ERROR "
-              << " action : skip the step "  << std::endl ;
+    std::cout << " GiGaTrajectory  appendStep ERROR Time is not finite"
+              << " action : skip the step "  << std::endl << std::flush ;
     return false ;                                             // RETURN
     // throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
   }

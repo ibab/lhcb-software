@@ -1,8 +1,11 @@
-// $Id: DumpG4Step.cpp,v 1.3 2004-02-22 16:51:09 ibelyaev Exp $
+// $Id: DumpG4Step.cpp,v 1.4 2004-03-17 08:54:59 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/22 16:51:09  ibelyaev
+//  add DumpG4Event
+//
 // Revision 1.2  2004/02/22 13:38:19  ibelyaev
 //  relocate DumpG4*.h files
 //
@@ -68,7 +71,7 @@ namespace GiGaUtil
     static const std::string s_name  = " GiGaUtil::DumpG4Step  " ;
     static const std::string s_stars = std::string ( 50 , '*' ) ;
     //
-    stream << s_name << (void*) step << " " << s_stars << std::endl ;
+    //    stream << s_name << (void*) step << " " << s_stars << std::endl ;
     
     if ( 0 == step  ) 
     { return stream << s_name << " G4Step*  points to NULL" << std::endl ; }
