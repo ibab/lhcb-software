@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r1>2005-03-08 Boole v8r1</A></H1><PRE>
+- Adapt requirements to Gaudi v16r2, Lbcom v1r1 and LHCb v18r1
+- Update ParamFiles version to v3r11 (for consistency with Gauss)
+
 </PRE><H1><A NAME=v8r0>2005-02-14 Boole v8r0</A></H1><PRE>
 - Adapt requirements to Gaudi v16r0, Lbcom v1r0 and LHCb v18r0
 - Change histogram persistency to Root

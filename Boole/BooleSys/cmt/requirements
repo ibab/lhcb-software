@@ -1,5 +1,5 @@
 package BooleSys
-version v8r0
+version v8r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v8r0	Digi
+use Boole		v8r1	Digi
 use DigiAlg		v3r0	Digi
 
 # Calorimeter
@@ -30,5 +30,5 @@ use MuonAlgs            v5r6	Muon
 use MuonBackground	v1r9	Muon
 
 # Rich
-use RichDigiQC		v2r0	Rich
-use RichReadout		v1r11	Rich
+use RichDigiQC		v2r1	Rich
+use RichReadout		v1r12	Rich

@@ -3,10 +3,32 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v8r1>2005-03-08 Boole v8r1</A></H1><PRE>
+This version uses Gaudi v16r2, LHCb v18r1 (also CLHEP 1.9, ROOT 4.0) 
+Requires input from Gauss v19r2 or greater. Cannot process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v26r1 or greater
+
+- Packages modified: RichReadout v1r12, RichDigiQC v1r2
+
+- Modified functionality
+  . Improved monitoring of Rich digitization performance (RichDigiQC v1r2)
+
+- Persistency changes:
+  . Backwards incompatible changes to RawBuffer (bank header now has 2 words)
+    and to L1Buffer bank types for L0Calo, L0DU, L0Muon (DAQEvent v5r0)
+  . Add DAQ bank to RawBuffer, replaces "Header" bank   (DAQEvent v5r0)
+  . Backwards incompatible changes to RichSmartID       (LHCbKernel v5r8)
+  . Add history bit fields to MCRichDigit (RichEvent v8r2, RichReadout v1r12)
+  . Remove unused photo-detector numbers from MCRichHit (RichEvent v8r2)
+
+- Bug fixes:   
+  . Small fix to isInside method (VeloDet v9r3)
+  . Fix problem with "Next" spillover event (RichReadout v1r12)
+
 </PRE><H1><A NAME=v8r0>2005-02-11 Boole v8r0</A></H1><PRE>
 This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0) 
-Requires input data from Gauss v19r* - Cannot process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v26r0 or greater
+Requires input data from Gauss v19r0 or v19r1 - Cannot process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v26r0
 
 - Packages removed:  AsctToLinker, L0mConf, L0MuonKernel (now in LHCbSys)
           L0Calo, L0DU, L0MuonTrigger, PuVeto, OTMonitor (now in LbcomSys)
