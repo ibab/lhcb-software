@@ -4,6 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v2r4 2003-10-17 ========================
+! 2003-10-17 - Florence RANJARD
+ - G4HadronQEDBuilder.cc - include G4Proton.hh and G4AntiProton.hh to please
+   geant4.5.2.ref04
+
 !======================= GaussPhysics v2r3 2003-08-07 ======================= 
 ! 2003-08-07 - Witek Pokorski
  - removed g4std
