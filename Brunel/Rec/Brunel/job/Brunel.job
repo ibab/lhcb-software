@@ -33,7 +33,7 @@ if ($#argv == 0 ) then
   exit 0
 else
   echo "using SICB/dbase version $1"
-  setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
+  setenv LHCBDBASE $LHCb_release_area/DBASE/SICB/dbase/$1
 endif
 #   
 
@@ -52,6 +52,10 @@ else
   set MYJOBROOT = $PWD
 endif
 
+setenv Bversion "v16r1"
+source $LHCBHOME/scripts/BrunelEnv.csh $Bversion
+
+setenv MYJOBROOT $LHCb_release_area/BRUNEL/BRUNEL_$Bversion/Rec/Brunel/$Bversion
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
