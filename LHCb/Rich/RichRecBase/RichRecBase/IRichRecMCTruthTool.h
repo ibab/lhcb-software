@@ -1,4 +1,4 @@
-// $Id: IRichRecMCTruthTool.h,v 1.2 2003-06-30 15:11:54 jonrob Exp $
+// $Id: IRichRecMCTruthTool.h,v 1.3 2003-07-02 15:37:27 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H 1
 
@@ -57,6 +57,10 @@ public:
   /// Do the associated track and pixel have the same MC parent AND was the pixel
   /// the result of Cherenkov radiation from the relevant radiator
   virtual const MCParticle * trueCherenkovPhoton( const RichRecPhoton * photon ) = 0;
+
+  /// Is the hit due to Cherenkov radiation for given radiator medium ?
+  virtual const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel, 
+                                                     Rich::RadiatorType rad  ) = 0;
 
   /// Returns a vector of true Cherenkov pixels for this segment
   virtual RichRecPixelVector* trueCkPixels( const RichRecSegment * segment ) = 0;
