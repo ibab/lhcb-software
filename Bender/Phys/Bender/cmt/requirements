@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2004-03-16 08:46:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2004-03-18 12:59:12 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -19,12 +19,12 @@ use               DaVinci     v11r* Phys
 # =============== consituents =================================================
 application       Bender      Bender.cpp
 
+
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
 path_prepend      PYTHONPATH "$(BENDERROOT)/python"
 path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
 path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
-
 
 macro PYSEAL "/afs/cern.ch/sw/lcg/app/releases/SEAL/$(SEAL_native_version)"
 path_append       PYTHONPATH $(PYSEAL)/src/Scripting/PyROOT/src
@@ -36,6 +36,8 @@ path_remove       LD_PRELOAD  GaudiKernel
 path_append       LD_PRELOAD  "" \
 	          Linux $(GAUDIKERNELROOT)/$(CMTCONFIG)/libGaudiKernel.so
 
+clean_script      cleanLDPRELOAD
+
 # =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"
 
@@ -46,10 +48,14 @@ macro_append      app_Bender_cppflags " -DBenderVersion=200000 " \
 # =============== standard patterns ===========================================
 apply_pattern     application_path 
 
+
 # ============================================================================
 # The END
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/03/16 08:46:22  ibelyaev
+#   fix a version
+#
 # Revision 1.3  2004/03/15 18:13:56  ibelyaev
 #  update in requirements
 #
