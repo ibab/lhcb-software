@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v9r1p1 2003-10-14 ===========================
+! 2003-10-14 - Gloria CORTI
+ - use Bd2D0Kstar          v2r1
+       PhysSelSys          v5r11
+       DaVinci             v9r1p1
+       DecayPresel         v2r1p1
+   (added to DaVinciSys v9r1 packages)
+
 !====================  DaVinciSys v9r1 2003-09-04 =============================
 ! 2003-09-04 - Gloria CORTI
  - use LoKi                v1r7
@@ -14,6 +22,7 @@
        PhysSelSys          v5r10
        DaVinci             v9r1 
        DecayPresel         v2r1
+   all other packages as for v9r0
 
 !====================  DaVinciSys v9r0 2003-08-07 =============================
 ! 2003-08-07 - Gloria CORTI
