@@ -1,7 +1,10 @@
 
 // Main RichDigit Monitor
 MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
-//RiDigitQC.HistoDir = "somewhereElse";
+RiDigitQC.NTupleProduce  = false; // turn off ntuples
+RiDigitQC.EvtColsProduce = false; // turn off event collections
+//RiDigitQC.HistoProduce   = false; // turn off histograms
+RiDigitQC.HistoDir = "RICH/DIGI/DIGITQC"; // set histo directory
 
 /*
 // DAQ decoding
