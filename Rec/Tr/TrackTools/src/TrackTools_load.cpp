@@ -13,5 +13,6 @@
 DECLARE_FACTORY_ENTRIES( TrackTools ) {
 
   DECLARE_TOOL( ClusterLHCbIDCnv );
+  DECLARE_TOOL( TrueStateCreator );
                                                  
 }

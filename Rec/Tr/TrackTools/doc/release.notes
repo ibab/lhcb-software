@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools
 !-----------------------------------------------------------------------------
 
+! 2005-04-06 - Eduardo Rodrigues
+ - TrueStateCreator tool added
+
+! 2005-04-04 - Eduardo Rodrigues
+ - IStateCreator interface added
+
 ! 2005-04-01 - Jose Hernando, Eduardo Rodrigues
  - first version of a help tool to convert from the LHCbID
    to a OTTime or XxxCluster, and vice-versa
