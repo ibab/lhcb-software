@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.22 2002-07-26 20:06:27 gcorti Exp $
+! $Id: release.notes,v 1.23 2002-07-29 08:50:42 cattanem Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+<H1><A NAME=v5r0> 
+!======================== DaVinci v5r0 2002-07-29 =================
+</A></H1>
+
+! 2002-07-29 - Marco Cattaneo
+ - Use LHCbKernel v1r4, CaloRec v2r3, CaloAssociators v2r2 to fix problem with
+   deletion of relations on Windows.
 
 ! 2002-07-26 - Gloria Corti
  - Use EventSys v12r1(PhysEvent v6r1) and use in release VeloKernel v1r1,

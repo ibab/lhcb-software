@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2002-07-26 20:00:12 gcorti Exp $
+# $Id: requirements,v 1.37 2002-07-29 08:50:41 cattanem Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -54,7 +54,7 @@ use RootHistCnv        v8r0
 #---LHCb common libraries
 use GaudiConf      v6r3
 use BookKeeping    v1r1   Tools
-use LHCbKernel     v1r3   Kernel
+use LHCbKernel     v1r4   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
 use VeloKernel   v1r1    Velo
@@ -81,8 +81,8 @@ use EventSys       v12r1  Event
 use  ITAssociators      v2r0    IT
 use  OTAssociators      v2r0    OT
 use  VeloAssociators    v1r1    Velo
-use  CaloAssociators    v2r1    Calo
-use  CaloRec   		v2r1    Calo
+use  CaloAssociators    v2r2    Calo
+use  CaloRec   		v2r3    Calo
 use  MuonAssociators    v1r0    Muon
 use  TrAssociators      v3r0    Tr
 use  L0Calo		v6r1	L0
