@@ -48,6 +48,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoR
 
 // Cherenkov Cone ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCone" };
+ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 20;
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };

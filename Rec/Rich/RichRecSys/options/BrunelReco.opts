@@ -2,6 +2,14 @@
 //=================== Brunel Rich Offline Reconstruction =====================
 //
 
+// Markov chain ring finder
+//BrunelRecoRICHSeq.Members += {
+  //"Rich1MarkovRingFinderAlg/Rich1P0RingFinder",   // Rich1 Upper panel
+  //"Rich1MarkovRingFinderAlg/Rich1P1RingFinder",   // Rich1 Lower panel
+  //"Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",  // Rich2 left panel 
+  //"Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"   // Rich2 right panel
+//};
+
 // Run the Local PID first
 BrunelRecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
@@ -33,24 +41,6 @@ BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 // Current uses for each track Global PID if it exists, 
 // otherwise local if that exists
 BrunelRecoRICHSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };
-
-// Under development
-//====================================================
-// Markov chain ring finder : RICH1
-/*
-BrunelRecoRICHSeq.Members += {
-  "Rich1MarkovRingFinderAlg/Rich1P0RingFinder",
-  "Rich1MarkovRingFinderAlg/Rich1P1RingFinder"
-*/
-/*
-// Markov chain ring finder : RICH2
-BrunelRecoRICHSeq.Members += {
-  "Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",
-  "Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"
-};
-*/
-
-//====================================================
 
 // Configuration of the reconstruction algorithms
 #include "$RICHRECSYSOPTS/RecoAlgPara.opts"

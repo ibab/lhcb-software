@@ -35,4 +35,4 @@ use RichRecMCTools  v1r5   Rich
 # =================================
 # Developmental algorithms..
 
-#use RichMarkovRingFinder v1r0 Rich
+use RichMarkovRingFinder v1r0 Rich

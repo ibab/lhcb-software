@@ -14,5 +14,4 @@ ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29,  0.075,  0.045  };
 ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15,  1e-15,  1e-15 };
 
 // geometrical photon reconstruction
-//ToolSvc.RichToolRegistry.Tools += { "CdfPhotonReco/RichDetPhotonReco" };
 ToolSvc.RichToolRegistry.Tools += { "RichPhotonReco/RichDetPhotonReco" };
