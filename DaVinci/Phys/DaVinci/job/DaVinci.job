@@ -24,15 +24,14 @@
 # in INTERACTIVE output files are written onto $WORKDIR
 # you have to set $WORKDIR to what you want
 #
-if ($#argv == 0 ) then
-  echo "\nUsage: DaVinci.job <dbase-version> [<mode>]"
-  echo " where:"
-  echo "  <dbase-version> (mandatory) is SICB/dbase version (e.g. v241)"
-  echo "  <mode>          (optional)  is execution mode (e.g. rh61_gcc2952dbx)"
-  exit 0
-else
-  echo "using SICB/dbase version $1"
-  setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
+echo "\nSICB/dbase version number no longer necessary"
+echo " Usage: DaVinci.job [<mode>]" 
+echo " where:"
+echo "  <mode>          (optional)  is execution mode (e.g. rh61_gcc2952dbx)"
+if ($#argv >= 1 ) then
+  if ("$1" != "rh61_gcc2952dbx") then
+    exit 0
+  endif
 endif
 #
 set MODE = $CMTCONFIG
@@ -42,9 +41,10 @@ if ($?LS_SUBCWD) then
 else
 # in interactive set WORKDIR to your output directory
   setenv WORKDIR $HOME/w1
-  if ($#argv == 2) set MODE = "$2" 
+  if ($#argv == 1) set MODE = "$1" 
 endif
 set current = $PWD
+exit 0
 #
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
