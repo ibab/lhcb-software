@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.15 2003-04-15 16:11:39 jonrob Exp $
+! $Id: release.notes,v 1.16 2003-04-16 06:21:48 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v3r0 2003-04-15 =======================
 ! 2003-04-15 - Chris Jones
  - fixes to keep windows happy
 
-!======================= RichKernel v3r0 2003-04-15 =======================
 ! 2003-03-13 - Chris Jones
  - Various updates for OO Reco
 
