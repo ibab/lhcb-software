@@ -92,7 +92,7 @@ use MuonDAQ             v1r1    Muon
 
 # Rich
 use RichRecSys		v1r11	Rich
-use RichRecQC		v1r7	Rich
+use RichRecQC		v1r8	Rich
 
 #
 #===== build Brunel =========================

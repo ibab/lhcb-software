@@ -23,7 +23,8 @@ Development version
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
     (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
-     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0, RichRecSys v1r11)
+     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0, RichRecSys v1r11,
+     RichRecQC v1r8)
   . Move ITrFitter interface to TrFitEvent package, thus removing dependencies
     on TrFitter package 
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
