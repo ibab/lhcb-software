@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.4 2004-09-07 14:05:55 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.5 2004-09-08 14:25:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_EDS(0),
-    m_pMaker(0){
+    m_pMaker(0),
+    m_locationWarned(false){
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -680,12 +681,15 @@ StatusCode PhysDesktop::getEventInput(){
 }
 
 //=============================================================================
-// Impose OutputLOcation.
+// Impose OutputLocation.
 //=============================================================================
 void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
   if (outputLocationString != m_outputLocn) {
-    warning() << "Non-standard output location imposed: "
-              << outputLocationString << endreq;
+    if (m_locationWarned) {
+      warning() << "Non-standard output location imposed: "
+                << outputLocationString << endreq;
+      m_locationWarned = true ;
+    }
     m_outputLocn = outputLocationString;
   }
   return;

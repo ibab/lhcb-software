@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.4 2004-09-08 14:25:55 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -124,6 +124,8 @@ private:
   /// Identify specific type of particle maker requested (Property)
   std::string m_pMakerType;  
 
+  bool m_locationWarned ;
+  
     
 };
 #endif // PHYSDESKTOP_H
