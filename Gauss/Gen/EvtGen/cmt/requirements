@@ -1,0 +1,35 @@
+# $Id: requirements,v 1.1.1.1 2002-04-11 11:08:47 witoldp Exp $
+# Created    : 03/04/2002
+# Maintainer : Witold Pokorski
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package          EvtGen
+version  v1r0 
+
+branches         cmt src doc EvtGen
+
+use CLHEP        v17r*
+use CERNLIB      v2001
+use GaudiPolicy  v5r*
+
+include_dirs     $(EVTGENROOT)
+
+library          EvtGen -no_share *.cpp *.F
+
+macro CERNLIB_link "`cernlib photos mathlib jetset74`" 
+
+macro_append CERNLIB_linkopts "" \
+             WIN32            " kernmd.lib photos.lib jetset74.lib"
+
+macro_append EvtGen_cppflags "-DEVTSTANDALONE"
+
+apply_pattern package_linkopts
+apply_pattern linker_path 
+
+private
+
+apply_pattern package_Cshlibflags
+macro_prepend EvtGen_shlibflags " $(EvtGen_linkopts)"
+

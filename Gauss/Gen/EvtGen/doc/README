@@ -1,0 +1,42 @@
+This is the README file for the EvtGen package
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Please send questions to:
+David Lange lange@slac.stanford.edu
+Anders Ryd ryd@hep.caltech.edu
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+This is release alpha-00-09-42
+It is supported on OSF, Linux, and SunOS. Other unix
+platforms should be straight forward, in the past we have 
+run his code on AIX and HP-UX also, but it is not tested for
+this release.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The package is documented on the WWW page:
+
+http://www.slac.stanford.edu/~lange/EvtGen/
+
+The documentation is maintained in the directory doc in this
+package. Please see doc/README for further information.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+To get started with EvtGen:
+
+  - Run the "configure" script in this directory.  
+
+  - "gmake" will compile the EvtGen source code and create
+    libEvtGen.a
+
+  - "gmake bin" will build the executable testEvtGen which
+    can be run from the "test" subdirectory with the command
+    "../testEvtGen test1 1000" this executable has a C++ driver.
+
+  - Additional information can be found in the documentation.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
