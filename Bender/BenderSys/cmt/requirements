@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.55 2005-03-22 18:23:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.56 2005-03-22 18:37:00 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,7 +10,7 @@ version       v4r7
 author        Vanya BELYAEV
 
 use           GaudiPython    v6r11
-use           KtJets         v1r0 
+use           KtJet          v1r0 
 
 # =========== Bender Application itself =======================================
 use           Bender         v4r7   Phys 
@@ -47,6 +47,9 @@ use           LoKiJets       v1r0   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.55  2005/03/22 18:23:13  ibelyaev
+#  add KtJets + LoKiJets
+#
 # Revision 1.54  2005/03/05 14:07:57  ibelyaev
 #  update Ex/LoKiExample
 #
