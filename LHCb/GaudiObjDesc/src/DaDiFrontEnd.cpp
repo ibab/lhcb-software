@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.13 2001-11-28 15:56:21 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.14 2001-12-07 10:01:52 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -621,6 +621,7 @@ void DDFE::parseClass(DOM_Node node,
                 gddMethArgument->setIsPointer(false);
               }
 			  
+      			  gddMethArgument->setConst_(false);
               for (std::vector<DOMString>::iterator iterW = argWords.begin();
               iterW != argWords.end(); ++iterW)
               {
@@ -638,10 +639,10 @@ void DDFE::parseClass(DOM_Node node,
               gddMethArgument->setType(argEType);
 
 
-			  if (!isSimp(argType.transcode()))
-			  {
-				  gddMethArgument->setConst_(true);
-			  }
+			        if (!isSimp(argType.transcode()))
+			        {
+				        gddMethArgument->setConst_(true);
+			        }
 //
 // handling of Input/Output arguments here !!!!
 //
@@ -663,7 +664,7 @@ void DDFE::parseClass(DOM_Node node,
             switch(met_child.getNodeType())    
             {      
             case DOM_Node::ELEMENT_NODE:
-              {
+            {
               if(met_child.getNodeName().equals("return"))
               {
                 DaDiMethReturn* gddMethReturn = new DaDiMethReturn();
@@ -736,14 +737,14 @@ void DDFE::parseClass(DOM_Node node,
                   getNamedItem(DOMString::transcode("inout")).
                   getNodeValue());
               }
-              }
+            }
             default:
-              {
+            {
                 met_child = met_child.getNextSibling();
-              }
             }
           }
         }
+      }
 
 //
 // Parse constructors
