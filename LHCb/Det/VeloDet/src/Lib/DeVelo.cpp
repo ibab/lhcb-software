@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.13 2002-04-25 15:34:28 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.14 2002-05-05 06:18:05 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -287,6 +287,7 @@ StatusCode DeVelo::initialize() {
   for ( int iR=0 ; 1024 > iR ; iR++ ) {
     radius = rOfStrip( center, dum );
     m_rStrip.push_back( radius );
+    center += 1.;
   }
 
   m_zVertex = 0;   // default value.
