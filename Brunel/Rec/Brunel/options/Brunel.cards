@@ -10,6 +10,7 @@ C
 C Do RICH extended tracking on all events (including L0 rejects)
 DIGI 'RICH' 2
 RECO 'RICH' 3
+C DEBG 'RICH' 1
 C
 STOP
 EOD

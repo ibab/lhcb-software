@@ -17,11 +17,9 @@ BrunelOutput.DetectorList = { "Filters" };
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/PrsFilter" };
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/SpdFilter" };
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/EcalFilter" };
-BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare" };
 
 // Recreate the Muon table after coordinate filtering
 ApplicationMgr.DLLs += { "MuonAssociators" };
-BrunelOutputFiltersSeq.Members += { "MuonDigit2MCParticleAlg" };
 BrunelOutputFiltersSeq.Members += { "MuonCoord2MCParticleAlg" };
 
 // Filter the MCParticles/MCVertices after everything else
@@ -71,8 +69,6 @@ BrunelDstWriter.ItemList =
 , "/Event/Raw/Prs/Digits#1"  // Kept only if related to CaloHypos
 , "/Event/Raw/Ecal#1"
 , "/Event/Raw/Ecal/Digits#1" // Kept only if "seeds" for stored clusters
-, "/Event/Raw/Muon#1"
-, "/Event/Raw/Muon/Digits#1"
 , "/Event/Rec#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
@@ -104,11 +100,11 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Muon/M3#1"
 , "/Event/Rec/Muon/M4#1"
 , "/Event/Rec/Muon/M5#1"
-, "/Event/Rec/Muon/M1/Coords#1" // Filtered (only if used by MuonID)
-, "/Event/Rec/Muon/M2/Coords#1" // Filtered (only if used by MuonID)
-, "/Event/Rec/Muon/M3/Coords#1" // Filtered (only if used by MuonID)
-, "/Event/Rec/Muon/M4/Coords#1" // Filtered (only if used by MuonID)
-, "/Event/Rec/Muon/M5/Coords#1" // Filtered (only if used by MuonID)
+, "/Event/Rec/Muon/M1/Coords#1"
+, "/Event/Rec/Muon/M2/Coords#1"
+, "/Event/Rec/Muon/M3/Coords#1"
+, "/Event/Rec/Muon/M4/Coords#1"
+, "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITClusters2MCParticles#1" // To be filtered
@@ -116,7 +112,6 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/CaloClusters2MCParticles#1"
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
-, "/Event/Rec/Relations/MuonDigits2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
 , "/Event/Rec/Relations/L1Track2d2MCP#1"

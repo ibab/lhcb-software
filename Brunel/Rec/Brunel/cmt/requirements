@@ -92,7 +92,7 @@ use CaloTrackTools	v1r4	Calo
 
 # Velo
 use VeloKernel		v1r1	Velo
-use VeloAlgorithms	v2r0	Velo
+use VeloAlgorithms	v2r1	Velo
 use VeloAssociators	v1r1	Velo
 
 # Inner Tracker
