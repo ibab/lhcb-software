@@ -15,7 +15,7 @@
 #define LHCBEVENT_FACTORIES_MCINSTANTIATION_CPP  1
 
 // RCS Id for identification of object version
-static const char* rcsid = "$Id: VeloEventInstantiation.cpp,v 1.2 2000-12-06 17:22:22 ranjard Exp $";
+static const char* rcsid = "$Id: VeloEventInstantiation.cpp,v 1.3 2000-12-12 16:40:19 ranjard Exp $";
 
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
@@ -57,7 +57,7 @@ IMPLEMENT_VELO_CONTAINED_FACTORIES(VeloCluster)
 #include "VeloEvent/RecVeloEvent.h"
 static DataObjectFactory< RecVeloEvent > s_RecVeloEventFactory;
 
-void VeloEventFactories_load()  {
+void VeloEvent_load()  {
   // Declaration of contained object factories
   DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( MCVeloHit );
   DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( RawVeloHit );
@@ -66,6 +66,6 @@ void VeloEventFactories_load()  {
   s_RecVeloEventFactory.addRef();
 }
 
-extern "C" void VeloEventFactories_loadRef()   {
-  VeloEventFactories_load();
+extern "C" void VeloEvent_loadRef()   {
+  VeloEvent_load();
 }

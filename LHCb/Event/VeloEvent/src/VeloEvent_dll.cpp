@@ -1,5 +1,5 @@
 //====================================================================
-//  LHCbEventFactories_dll.cpp
+//  VeloEvent_dll.cpp
 //--------------------------------------------------------------------
 //
 //  Package    : Gaudi
@@ -16,7 +16,7 @@
 
 // DllMain entry point
 #include "GaudiKernel/DllMain.icpp"
-extern void VeloEventFactories_load();
+extern void VeloEvent_load();
 
 void GaudiDll::initialize(void* hinstDLL)    {
 }
@@ -28,7 +28,7 @@ void GaudiDll::finalize(void* hinstDLL)    {
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
   static bool first = true;
   if ( first )    {
-    VeloEventFactories_load();
+    VeloEvent_load();
     first = false;
   }
   return FactoryTable::instance()->getEntries();
