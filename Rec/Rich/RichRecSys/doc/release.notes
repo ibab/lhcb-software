@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r15 2005-02-08 ======================
+! 2005-02-08 - Marco Cattaneo
+ - Use RichDAQ v2r1, RichRecCommon v1r11
+
 !====================== RichRecSys v1r14 2005-01-19 ======================
 ! 2005-01-19 - Marco Cattaneo
  - Use RichRecTools v2r13

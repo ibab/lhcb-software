@@ -5,11 +5,11 @@
 // ================================== Track Creators ==========================================
 
 // RichTrackCreator using full reconstructed information (Default)
-//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
+#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
 
 // RichTrackCreator using full reconstructed information
 // Uses new experimental optical extrapolators
-#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracksUsingOpticalExtrapolators.opts"
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracksUsingOpticalExtrapolators.opts"
 
 // RichTrackCreator using TrStoredTracks but cheating the tracking information by
 // using the associated MCRichTrack. In the include file below the cheating can be tuned
