@@ -3,8 +3,8 @@ version     v4r3
 
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 
-use         CLHEP        v2r1800p*
-use         PYTHIA       v2r6205p*  Gen
+use         CLHEP        v*
+use         PYTHIA       v*  Gen
 use         GaudiPolicy  v*
 
 include_dirs  $(EVTGENROOT)
