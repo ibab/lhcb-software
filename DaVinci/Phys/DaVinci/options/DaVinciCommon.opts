@@ -55,6 +55,7 @@ ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALOPIDSOPTS/CaloPIDs.opts"
+#include "$CALOEVENTOPTS/CaloEvent.opts"
 #include "$MUONIDROOT/options/MuonIDDLLTool.opts"
 
 // Physics packages and dependent packages
@@ -81,6 +82,10 @@ ApplicationMgr.DLLs += { "RecoTools" };
 // Generic Utility package
 ApplicationMgr.DLLs += { "Utilities" };
 
+// Configure the DataOnDemand Service (for Calo) 
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler  = true ;      
+
 // Profiling
 #pragma print on
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
@@ -98,7 +103,6 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 // Print Frequency
 EventSelector.PrintFreq  = 1;
-
 
 //--------------------------------------------------------------
 // Histogram persistency 

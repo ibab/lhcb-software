@@ -1,4 +1,4 @@
-// $Id: DaVinciElectrons.opts,v 1.4 2004-08-25 13:46:52 pkoppenb Exp $ 
+// $Id: DaVinciElectrons.opts,v 1.5 2004-09-14 07:05:31 pkoppenb Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -19,7 +19,8 @@
 ApplicationMgr.TopAlg        += { "Sequencer/Electrons" } ;
 
 // Re-create CaloDigits from raw buffer 
-Electrons.Members             = { "CaloDigitsFromRaw"    } ;  
+// Electrons.Members             = { "CaloDigitsFromRaw"    } ;  
+// -> Now on demand  
 
 // For Electrons 
 Electrons.Members            += { "CaloHypoAlg/ElectronCalibration"     } ;

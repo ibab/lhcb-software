@@ -1,5 +1,5 @@
 // Extra DLL for HLT
-ApplicationMgr.DLLs   += { "TrgPrimVertex" ,"TrgForward" };
+ApplicationMgr.DLLs   += { "TrgPrimVertex" ,"TrgForward", "TrgMuonID" };
 
 // Sequencer for HLT processing and checking
 ApplicationMgr.TopAlg += { "GaudiSequencer/HltWithTrg" };
@@ -17,14 +17,14 @@ HLTProcessing.Members =  { "DecodeRawVelo"
                            ,"TrgPrimVertexFinder"
                            ,"FwdHitFromRawBuffer"
                            ,"TrgForwardAlg"
-			   ,"TrgTrackToContainer/HltTrgTrackToContainer"
+//			   ,"TrgTrackToContainer/HltTrgTrackToContainer"
                            ,"TrgParticleMaker"
                          };
 
 #include "$TRGFORWARDROOT/options/Field045.opts"
 TrgVeloTTHlt.InputFromRawBuffer = true;
+TrgVeloTTHlt.AcceptInHole = true;
 
-//HltTrgTrackToContainer.prefix = "Hlt/";
-//HltTrgTrack2MCParticle.prefix = "Hlt/";
-//TrgParticleMaker.InputTracks = "Hlt/Rec/Trg/LongTracks";
+#include "$TRGMUONIDROOT/options/TrgMuonID.opts"
+
 

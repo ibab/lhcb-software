@@ -4,6 +4,70 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-09-14 - P. Koppenburg for Vanya Belyaev
+Vanya writes:
+    I've put few modifications into Event/CaloEvent package 
+    to provide the appropriate "loading-on-demand"  for 
+    Calorimeter digits
+
+    From now there is no nesessity to execute "CaloDigitsFromRaw" 
+    algorithm at all.
+    Algorithm itself is modified to produce only 1 
+    containerner per instance (thus one need to have 4 
+    instances for 4 calorimeters). The overall speed of 4 
+    instances is improved by 20% by replacement of "sort" 
+    with "stable_sort" algorithm and  with the proper 
+    "reserve" manipulations.
+
+    The corresponding instance will be invoked 
+    automatically by nice Markus' service  "DataOnDemand".
+
+    for new configuration one need to add the following
+    lines into the "main"-options file (e.g. Brunel.opts):
+
+    // add the service ito the list of external servcies 
+    ApplicationMgr.ExtSvc += { "DataOnDemandSvc" } ;
+    // enable "DataFault" incidents from Event Data Svc 
+    EventDataSvc.EnableFaultHandler  = true ;
+
+    The specific configuration is described into the file 
+    $CALOEVENTOPTS/options/CaloEvent.opts 
+    which needs to be included from the "main"-options file:
+
+    #include "$CALOEVENTOPTS/options/CaloEvent.opts"
+
+
+! 2004-09-13 - P. Koppenburg for Olivier Callot
+Olivier writes:
+    The head revision of the Trg packages is ready to be tagged and used with 
+    LHCb v16r2 (now in DEV). 
+    This means the following packages to be tagged 
+
+    Trg/L1Decision	v3r0
+    Trg/L1Reco		v5r0
+    Trg/TrgChecker	v5r0
+    Trg/TrgForward	v3r0
+    Trg/TrgMonitor	v3r0
+    Trg/TrgMuonID	v2r0
+    Trg/TrgPrimVertex	v3r0
+    Trg/TrgTools	v5r0
+    Trg/TrgVelo		v5r0
+    Trg/TrgVeloTT	v5r0
+
+    Some changes are also needed in DaVinci options, namely
+
+    - In L1Decision.opts replace algorithm L1Dimuon by L1Muon 
+    - in Hlt.opts, add TrgMuonID in the DLLs, and in the after TrgForward 
+      in the algorithm, 
+    Remove TrgTrackToContainer. Add the options 
+    TrgVeloTTHlt.AcceptInHole = true;  
+    #include "$TRGMUONIDROOT/options/TrgMuonID.opts"
+    - In L1Checking : remove the TrgTrackToConatiner.prefix option
+    - in HltChecking, add the options
+     HltTrgTrack2MCParticle.prefix = "Hlt/";
+     HltTrgChecker.prefix          = "Hlt/";
+    If not the monitoring of L1 and HLT can not be set together.
+
 ! 2004-09-07 - P. Koppenburg
   - doc/doxyFile.cfg
     . Update package list

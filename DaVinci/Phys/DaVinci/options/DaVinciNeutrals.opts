@@ -1,4 +1,4 @@
-// $Id: DaVinciNeutrals.opts,v 1.10 2004-08-25 13:46:52 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.11 2004-09-14 07:05:31 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -16,7 +16,8 @@
 ApplicationMgr.TopAlg += { "Sequencer/Neutrals" };
 
 // Re-create CaloDigits from raw buffer 
-Neutrals.Members  = { "CaloDigitsFromRaw" };  
+// Neutrals.Members  = { "CaloDigitsFromRaw" };
+// -> Now on demand  
 
 // correct 3x3 matrix 
 Neutrals.Members += {"CaloClusterCorrect3x3Position"};

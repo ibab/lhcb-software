@@ -8,5 +8,3 @@ L1Checking.Members = { "TrgTrackToContainer"
 
 TrgVertexMonit.Vertices3D = false;
 L1Processing.measureTime = true;
-
-TrgTrackToContainer.prefix = "L1/";  // fixes memory leak

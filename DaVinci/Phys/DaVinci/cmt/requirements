@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.171 2004-09-13 12:20:51 pkoppenb Exp $
+# $Id: requirements,v 1.172 2004-09-14 07:05:30 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -89,7 +89,7 @@ use  TrExtrapolator     	v2r13    Tr
 use  LoKi               	v3r4p2   Tools  
 
 # Reconstruction tools 
-### use  Utilities          	v1r10    Tools
+use  Utilities          	v1r10    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
@@ -107,8 +107,8 @@ use  VertexFit			v1r1     Phys
 # Physics MC packages
 use  DaVinciAssociators 	v5r1     Phys
 use  DaVinciEff         	v3r1     Phys
-use  DaVinciMCTools     	v5r4     Phys
-use  DaVinciTest        	v5r1     Phys
+use  DaVinciMCTools     	v5r5     Phys
+use  DaVinciTest        	v5r2     Phys
 
 # Stripping
 use  Stripping          	v1r4     Tools
