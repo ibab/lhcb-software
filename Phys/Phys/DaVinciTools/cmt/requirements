@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2004-07-29 06:39:37 pkoppenb Exp $
+# $Id: requirements,v 1.48 2004-08-12 12:33:52 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v10r1
+version           v10r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -19,6 +19,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 # Used packages. 
 #============================================================================
 use  PhysEvent      v*     Event
+use  TrgEvent       v*     Event
 use  CaloUtils      v*     Calo
 use  CaloInterfaces v*     Calo
 # use  Boost          v* LCG_Interfaces

@@ -1,6 +1,32 @@
-! $Id: release.notes,v 1.123 2004-08-11 09:04:22 graven Exp $
+! $Id: release.notes,v 1.124 2004-08-12 12:33:52 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-08-12 - P. KOppenburg
+  Many modifications to allow DaVinciTools to work with particles made
+  from TrgTracks for HLT:
+  - cmt/requirements
+    . Use TrgEvent
+  - src/FlightDistanceFilterCriterion.*
+  & src/Momentum2FlightAngleFilterCriterion.*
+    . Use PV from Trg when UseTrgPV option is switched on (OFF by default)
+  - src/PVIPFilterCriterion.*
+    . Use PV from Trg when UseTrgPV option is switched on (OFF by default)
+    . Use PV from Phys when UseOfflinePV option is switched on (OFF by default)
+    . Determine which PV to use from track origin when nothing is switched on.
+      This does not work as expected when composte particles made from Trg 
+      particles are used. To be revised...
+  - src/TrackTypeFilterCriterion.*
+    . Works with Trg tracks, but assumes they are all Long.      
+  Also a little cosmetics:
+  - src/MassDifferenceFilterCriterion.*
+  & src/MassFilterCriterion.*
+  & src/PIDCriterion.*
+  & src/PhysDesktop.*
+    . Make it a GaudiTool. Use message service shortcuts.
+  - src/PIDCriterion.*
+    . Use CL = 0 when the list of confidence levels is not given. This
+      makes sense for HLT and for composite particles where the CL is 1 anyway.
 
 ! 2004-08-04 - G. Raven
   - DaVinciTools/IDecodeSimpleDecayString.h
