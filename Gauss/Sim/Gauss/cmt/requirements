@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.7 2002-04-09 17:19:39 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2002-04-25 08:16:07 witoldp Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2002/04/09 17:19:39  ibelyaev
+#  fix problems with event-drawing and magnetic field
+#
 # Revision 1.6  2002/04/05 16:38:36  witoldp
 # uses restructured GeneratorModules
 #
@@ -12,38 +15,38 @@
 # =============================================================================
 
 package Gauss
-version v2r1
+version v2r2
 
 # =============================================================================
 # structure 
 # =============================================================================
-branches doc options cmt job
+branches doc options cmt job data
 
 # =============================================================================
 # dependencies 
 # =============================================================================
 # generator
-use GeneratorModules v2r0 Gen
+use GeneratorModules v2r* Gen
 
 # Main program and standard job options
 use GaudiConf     v6*     
 
 # GAUDI framework
-use GaudiSys      v9r0
+use GaudiSys      v10r*
 
 # ROOT event persistency
-use GaudiRootDb   v5*
+use GaudiRootDb   v6r*
 
 # Histogram persistency
-use HbookCnv      v11r*
+use HbookCnv      v12r*
 
 # SICB stuff (access to magnetic field service)
-use dbase         v240 SICB
-use SicbCnv       v15r* SICB
+#use dbase         v240 SICB
+#use SicbCnv       v15r* SICB
 
 #GiGa staff...
-use GiGaCnv       v4r2  Sim
-use EvGen         v2r*   Sim
+use GiGaCnv       v5r*  Sim
+#use EvGen         v2r*   Sim
 
 #geometry source 
 use XmlDDDB       v10r*   Det 
@@ -52,6 +55,7 @@ use XmlDDDB       v10r*   Det
 # Essential environment variables 
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
+set  GAUSSDATA "${GAUSSROOT}/data"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
