@@ -59,6 +59,9 @@ BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
 //BrunelDigiCALOSeq.Members = { "BrunelDigiECAL", "BrunelDigiHCAL" };
 //BrunelRecoTRACSeq.Members = { "BrunelRecoTRAC" };
 
+// Add muon background (default is true)
+BrunelDigiMUON.addBkg = true;
+
 //--------------------------------------------------------------
 // C++ subdetector algorithms
 //--------------------------------------------------------------

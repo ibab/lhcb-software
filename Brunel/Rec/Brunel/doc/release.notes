@@ -3,6 +3,27 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010625 Brunel v3r3 (MC)
+   Add possibility to add muon background (switched on by default)
+
+   In src/BrunelSicb/
+   ------------------
+   BrunelDigiMUON.cpp - add conditional calls to MURMBG, MUBACKGROUND, steered
+                        by addBkg job option (called by default)
+   BrunelDigiMUON.h   - add private member m_addBkg
+
+   In options/Brunel.opts - add BrunelDigiMUON.addBkg = true;
+   ----------------------
+
+   In cmt/requirements
+   -------------------
+     use dbase v239
+>  standard.stream - new MUGB and MUBC muon background parametrization files
+>                    (P.Colrain)
+
+     use simmubg v5
+>  package to generate muon background
+===============================================================================
 ! 20010620 Brunel v3r2 (MC)
    Same as v3r1, but using bug fixes from digvdet v2r3 and trivert v5r2
 
