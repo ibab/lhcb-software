@@ -3,18 +3,18 @@
 #define RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-// Detector geom
-#include "RichDetTools/IRichSmartIDTool.h"
+// interfaces
+#include "RichKernel/IRichSmartIDTool.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
+#include "Kernel/RichDetectorType.h"
 
 // local
 #include "RichPixel.h"
@@ -32,7 +32,7 @@
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichDigit.h"
 
-// CLHep
+// CLHEP
 #include "CLHEP/Random/Random.h"
 
 /** @class RichSimpleFrontEndResponse RichSimpleFrontEndResponse.h

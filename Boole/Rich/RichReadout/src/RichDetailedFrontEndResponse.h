@@ -3,18 +3,18 @@
 #define RICHREADOUT_RICHDETAILEDFRONTENDRESPONSE_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-// Detector tools
-#include "RichDetTools/IRichSmartIDTool.h"
+// Interfaces
+#include "RichKernel/IRichSmartIDTool.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
-#include "RichKernel/RichDetectorType.h"
+#include "Kernel/RichDetectorType.h"
 
 // local
 #include "RichPixel.h"

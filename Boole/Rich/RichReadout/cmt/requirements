@@ -9,9 +9,8 @@ include_path none
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use AIDA             v*                                 -no_auto_imports
-use ParamFiles       v*      $(LHCb_release_area)/PARAM -no_auto_imports
-use RichDetTools     v4r*    Rich
+use AIDA             v*      -no_auto_imports
+use RichEvent        v7r*    Event
 
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA

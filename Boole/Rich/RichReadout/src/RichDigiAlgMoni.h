@@ -1,9 +1,9 @@
-// $Id: RichDigiAlgMoni.h,v 1.9 2004-02-02 14:29:36 jonesc Exp $
+// $Id: RichDigiAlgMoni.h,v 1.10 2004-06-17 14:53:02 jonesc Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
@@ -17,8 +17,8 @@
 #include "Event/MCRichHit.h"
 
 // RichKernel
-#include "RichKernel/RichDetectorType.h"
-#include "RichKernel/RichRadiatorType.h"
+#include "Kernel/RichDetectorType.h"
+#include "Kernel/RichRadiatorType.h"
 #include "RichKernel/RichParticleIDType.h"
 
 // Histogramming
@@ -31,8 +31,8 @@
 // GSL
 #include "gsl/gsl_math.h"
 
-// Detector tools
-#include "RichDetTools/IRichSmartIDTool.h"
+// interfaces
+#include "RichKernel/IRichSmartIDTool.h"
 
 // temporary histogramming numbers
 #include "RichDetParams.h"

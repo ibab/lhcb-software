@@ -2,7 +2,7 @@
 #define RICHREADOUT_RICHSIGNAL_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
@@ -11,17 +11,18 @@
 
 // Event model
 #include "Event/MCParticle.h"
-#include "Kernel/ParticleID.h"
+#include "Event/MCRichHit.h"
+#include "Event/MCRichDeposit.h"
+#include "Event/MCRichSummedDeposit.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 
-// from RichDetTools
-#include "RichDetTools/IRichSmartIDTool.h"
+// interfaces
+#include "RichKernel/IRichSmartIDTool.h"
 
-#include "Event/MCRichHit.h"
-#include "Event/MCRichDeposit.h"
-#include "Event/MCRichSummedDeposit.h"
+// kernel
+#include "Kernel/ParticleID.h"
 
 /** @class RichSignal RichSignal.h
  *  
