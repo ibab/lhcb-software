@@ -1,8 +1,11 @@
-// $Id: CaloInterfaces.cpp,v 1.1 2004-02-17 11:42:29 ibelyaev Exp $
+// $Id: CaloInterfaces.cpp,v 1.2 2004-02-17 11:51:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name:R
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:42:29  ibelyaev
+//  fix in Likel(i,y)hoods
+// 
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================
@@ -21,6 +24,23 @@
 #include "CaloInterfaces/ICaloSubClusterTag.h"
 #include "CaloInterfaces/ICaloTrackIdEval.h"
 #include "CaloInterfaces/ICaloTrackMatch.h"
+// ============================================================================
+// Local 
+// ============================================================================
+#include "IIDICaloClusterSelector.h"
+#include "IIDICaloClusterTool.h"
+#include "IIDICaloCorrection.h"
+#include "IIDICaloDigitTool.h"
+#include "IIDICaloHypoLikelihood.h"
+#include "IIDICaloHypoTool.h"
+#include "IIDICaloLikelihood.h"
+#include "IIDICaloMomentumTool.h"
+#include "IIDICaloParticleTool.h"
+#include "IIDICaloPosition2MomentumTool.h"
+#include "IIDICaloSplitTool.h"
+#include "IIDICaloSubClusterTag.h"
+#include "IIDICaloTrackIdEval.h"
+#include "IIDICaloTrackMatch.h"
 // ============================================================================
 
 /** @file 

@@ -1,8 +1,11 @@
-// $Id: ICaloSplitTool.h,v 1.3 2004-02-17 11:42:28 ibelyaev Exp $
+// $Id: ICaloSplitTool.h,v 1.4 2004-02-17 11:51:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/17 11:42:28  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // Revision 1.2  2002/04/02 11:08:12  ibelyaev
 //  new interfaces
 //
@@ -17,9 +20,6 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// Local
-#include "CaloInterfaces/IIDICaloSplitTool.h"
-
 /** @class ICaloSplitTool ICaloSplitTool.h CaloInterfaces/ICaloSplitTool.h
  *
  *  An abstract interface for "cluster splitting tools", like 

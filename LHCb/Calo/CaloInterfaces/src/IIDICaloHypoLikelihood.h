@@ -1,8 +1,11 @@
-// $Id: IIDICaloHypoLikelihood.h,v 1.1 2004-02-17 11:42:29 ibelyaev Exp $ 
+// $Id: IIDICaloHypoLikelihood.h,v 1.1 2004-02-17 11:51:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:42:29  ibelyaev
+//  fix in Likel(i,y)hoods
+// 
 // ============================================================================
 #ifndef CALOINTERFACES_IIDICALOHYPOLIKELYHOOD_H 
 #define CALOINTERFACES_IIDICALOHYPOLIKELYHOOD_H 1

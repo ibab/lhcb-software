@@ -1,8 +1,11 @@
-// $Id: ICaloHypoLikelihood.h,v 1.1 2004-02-17 11:42:28 ibelyaev Exp $ 
+// $Id: ICaloHypoLikelihood.h,v 1.2 2004-02-17 11:51:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:42:28  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOHYPOLIKELIHOOD_H 
 #define CALOINTERFACES_ICALOHYPOLIKELIHOOD_H 1
@@ -13,8 +16,6 @@
 #include "GaudiKernel/IAlgTool.h"
 // LHCbKernel
 #include "Kernel/CaloHypotheses.h"
-// Local 
-#include "IIDICaloHypoLikelihood.h"
 // forward declaration
 class     CaloHypo     ;     // from CaloEvent/Event
 

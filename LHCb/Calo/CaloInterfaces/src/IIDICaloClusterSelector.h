@@ -1,8 +1,11 @@
-// $Id: IIDICaloClusterSelector.h,v 1.1 2002-04-02 11:08:12 ibelyaev Exp $
+// $Id: IIDICaloClusterSelector.h,v 1.1 2004-02-17 11:51:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/02 11:08:12  ibelyaev
+//  new interfaces
+//
 // ============================================================================
 #ifndef CALOINTERFACES_IIDICALOCLUSTERSELECTOR_H 
 #define CALOINTERFACES_IIDICALOCLUSTERSELECTOR_H 1

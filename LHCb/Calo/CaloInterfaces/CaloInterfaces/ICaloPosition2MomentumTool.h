@@ -1,4 +1,4 @@
-// $Id: ICaloPosition2MomentumTool.h,v 1.2 2004-02-17 11:42:28 ibelyaev Exp $
+// $Id: ICaloPosition2MomentumTool.h,v 1.3 2004-02-17 11:51:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -11,8 +11,6 @@
 #include <functional> 
 // GaudiKernel 
 #include "GaudiKernel/IAlgTool.h"
-// Local 
-#include "CaloInterfaces/IIDICaloPosition2MomentumTool.h"
 // forward declarations 
 class       CaloPosition;         // CaloEvent/Event 
 class       CaloMomentum;         // CaloEvent/Event 

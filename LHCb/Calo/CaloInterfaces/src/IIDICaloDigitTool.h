@@ -1,8 +1,11 @@
-// $Id: IIDICaloDigitTool.h,v 1.3 2002-04-02 11:08:13 ibelyaev Exp $
+// $Id: IIDICaloDigitTool.h,v 1.1 2004-02-17 11:51:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/02 11:08:13  ibelyaev
+//  new interfaces
+//
 // Revision 1.2  2001/12/09 14:09:13  ibelyaev
 //  update for newer version of Gaudi
 //

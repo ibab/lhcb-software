@@ -1,41 +1,41 @@
-// $Id: IIDICaloSubClusterTag.h,v 1.1 2002-04-02 11:08:13 ibelyaev Exp $
+// $Id: IIDICaloTrackMatch.h,v 1.1 2004-02-17 11:51:57 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/23 09:41:37  ibelyaev
+//  add 'state' method to ICaloTrackMatch interface
+//
 // ============================================================================
-#ifndef CALOINTERFACES_IIDICALOSUBCLUSTERTAG_H 
-#define CALOINTERFACES_IIDICALOSUBCLUSTERTAG_H 1
-// Include files
+#ifndef CALOINTERFACES_IIDICALOTRACKMATCH_H 
+#define CALOINTERFACES_IIDICALOTRACKMATCH_H 1
+// include 
+// GaudiKernel 
 #include "GaudiKernel/IInterface.h"
 
-/** @file IIDICaloSubClusterTag.h 
+/** @file IIDICaloTrackMatch.h
  *  
  *  The definition of unique interface identifier 
- *  for interface ICaloSubClusterTag
- *
- *  @see ICaloClusterTool
- *  @see ICaloSubClusterTag
+ *  for interface ICaloTrackMatch
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @author Dima  Rusinov Dmitri.Roussinov@cern.ch
  *  @date   30/10/2001
  */
 
-/** @var IID_ICaloSubClusterTag
+/** @var IID_ICaloTrackMatch
  *  
  *  The definition of unique interface identifier 
- *  for interface ICaloSubClusterTag
- *
- *  @see ICaloClusterTool
- *  @see ICaloSubClusterTag
+ *  for interface ICaloTrackMatch
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @author Dima  Rusinov Dmitri.Roussinov@cern.ch
  *  @date   30/10/2001
  */
-static const InterfaceID IID_ICaloSubClusterTag( "ICaloSubClusterTag" , 1 , 0 );
+static const InterfaceID IID_ICaloTrackMatch( "ICaloTrackMatch" , 3 , 0 );
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // CALOINTERFACES_IIDICALOSUBCLUSTERTAG_H
+#endif // CALOINTERFACES_IIDICALOTRACKMATCH_H
 // ============================================================================

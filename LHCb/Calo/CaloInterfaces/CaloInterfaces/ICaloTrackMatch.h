@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.6 2004-02-17 11:42:29 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.7 2004-02-17 11:51:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/02/17 11:42:29  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // Revision 1.5  2002/05/23 09:41:37  ibelyaev
 //  add 'state' method to ICaloTrackMatch interface
 //
@@ -15,8 +18,6 @@
 #include <utility>
 // GaudiKernel 
 #include "GaudiKernel/IAlgTool.h"
-// local 
-#include "CaloInterfaces/IIDICaloTrackMatch.h"
 
 class CaloPosition  ; // from CaloEvent package 
 class TrStoredTrack ; // from TrEvent   package

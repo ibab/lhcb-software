@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.2 2004-02-17 11:42:29 ibelyaev Exp $
+// $Id: ICaloTrackIdEval.h,v 1.3 2004-02-17 11:51:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 11:42:29  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // Revision 1.1  2002/11/13 20:32:30  ibelyaev
 //  version update + new interface
 // 
@@ -14,8 +17,6 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// local
-#include "CaloInterfaces/IIDICaloTrackIdEval.h"
 // forward declaration
 class TrStoredTrack;
 

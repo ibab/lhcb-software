@@ -1,8 +1,11 @@
-// $Id: IIDICaloLikelihood.h,v 1.1 2004-02-17 11:42:29 ibelyaev Exp $
+// $Id: IIDICaloLikelihood.h,v 1.1 2004-02-17 11:51:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:42:29  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // Revision 1.1  2002/04/02 11:08:13  ibelyaev
 //  new interfaces
 //

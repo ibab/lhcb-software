@@ -1,8 +1,11 @@
-// $Id: ICaloClusterTool.h,v 1.5 2004-02-17 11:42:27 ibelyaev Exp $
+// $Id: ICaloClusterTool.h,v 1.6 2004-02-17 11:51:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/02/17 11:42:27  ibelyaev
+//  fix in Likel(i,y)hoods
+//
 // ============================================================================ 
 #ifndef CALOINTERFACES_ICALOCLUSTERTOOL_H 
 #define CALOINTERFACES_ICALOCLUSTERTOOL_H 1
@@ -11,8 +14,6 @@
 #include <functional>
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
-// CaloInterfaces
-#include "CaloInterfaces/IIDICaloClusterTool.h"
 // forward declarations
 class     CaloCluster                ; ///< from CaloEvent 
 
