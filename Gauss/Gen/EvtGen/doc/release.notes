@@ -6,6 +6,7 @@ Package manager : Patrick Robbe and Witek Pokorski
  - EvtIncoherentMixing.cpp : fix for windows
  - EvtHQET2FF.hh, EvtHQETFF.hh : remove unnecessary EvtHQET2FF::,
       EvtHQETFF:: declarations
+ - increment version in requirements to v4r2
 
 ! 2003-11-05 - Patrick Robbe
  - EvtPartProp.hh : remove EvtPartProp:: declaration
