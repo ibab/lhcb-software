@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.10 2004-04-19 22:57:05 jonesc Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.11 2004-11-16 16:28:29 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -312,10 +312,7 @@ StatusCode RichDigiAlgMoni::execute() {
 
     RichSmartID id = (*iMcDigit)->key();
 
-    HepPoint3D point;
-    if ( !m_smartIDTool->globalPosition( id, point ) ) {
-      Warning("Position conversion error");
-    }
+    const HepPoint3D point = m_smartIDTool->globalPosition( id );
 
     // increment digit count
     ++digMult[id.rich()];
