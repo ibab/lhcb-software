@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.26 2002-07-18 19:35:07 cattanem Exp $
+! $Id: release.notes,v 1.27 2002-07-19 16:13:38 cattanem Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-07-19 - Marco Cattaneo
+ - Add CaloECorrection tool to CaloTools_dll
 
 !========================= CaloTools v4r1 2002-07-18 ==========================
 ! 2002-07-16 - Ivan Belyaev

@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.12 2002-07-15 18:50:15 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.13 2002-07-19 16:13:38 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/07/15 18:50:15  ibelyaev
+//  add new tool for combined Spd/Prs ID
+//
 // Revision 1.11  2002/06/21 11:29:33  beneyton
 // *** empty log message ***
 //
@@ -39,6 +42,7 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
 
   DECLARE_TOOL( CaloSShape                   ) ;
   DECLARE_TOOL( CaloLCorrection              ) ;
+  DECLARE_TOOL( CaloECorrection              ) ;
 
   DECLARE_TOOL( CaloPhotonMomentumTool       ) ;
 
