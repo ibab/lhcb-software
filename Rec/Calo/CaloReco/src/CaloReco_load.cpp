@@ -1,11 +1,8 @@
-// $Id: CaloReco_load.cpp,v 1.12 2004-09-08 15:08:22 cattanem Exp $
+// $Id: CaloReco_load.cpp,v 1.13 2004-10-22 16:33:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2004/09/05 15:25:19  ibelyaev
-//  add the new algorithm 'CaloCheckObjectsAlg'
-//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -23,8 +20,6 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   
   // From CaloAlgs package 
   
-  DECLARE_ALGORITHM   ( CaloDeleteObjectsAlg                ) ;
-  DECLARE_ALGORITHM   ( CaloCheckObjectsAlg                 ) ;
   DECLARE_ALGORITHM   ( CaloDigitsFilterAlg                 ) ;
   DECLARE_ALGORITHM   ( CaloHypoAlg                         ) ;
   DECLARE_ALGORITHM   ( CaloHyposMerge                      ) ;
@@ -106,7 +101,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( Calo04SCorrection                   ) ;
   DECLARE_TOOL        ( Calo04LCorrection                   ) ;
 
-  DECLARE_ALGORITHM   ( CaloClusterCorrect3x3Position );
+  DECLARE_ALGORITHM   ( CaloClusterCorrect3x3Position       ) ;
   
 };
 

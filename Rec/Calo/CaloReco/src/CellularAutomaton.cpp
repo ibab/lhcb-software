@@ -1,16 +1,24 @@
-// $Id: CellularAutomaton.cpp,v 1.4 2004-09-05 20:23:48 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.5 2004-10-22 16:33:53 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/09/05 20:23:48  ibelyaev
+//  trivial modification to obtain 20-25% CPU gain
+//
 // ============================================================================ 
 #define CALOCA_CELLULARAUTOMATON_CPP 1 
 // ============================================================================
 // STL
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // CLHEP 
+// ============================================================================
 #include "CLHEP/Units/SystemOfUnits.h"
+// ============================================================================
 // Gaudi 
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -18,21 +26,36 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/Chrono.h"
+// ============================================================================
 // DetDesc
+// ============================================================================
 #include "DetDesc/IGeometryInfo.h"
+// ============================================================================
 // CaloEvent
+// ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
 #include "Event/CaloDataFunctor.h"
+#include "Event/CellID.h"
+// ============================================================================
 // CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloUtil.h"
+// ============================================================================
 // CaloUtils
+// ============================================================================
 #include "CaloUtils/ClusterFunctors.h"
+// ============================================================================
 // Private              
+// ============================================================================
 #include "CellularAutomaton.h"
 #include "TaggedCellFunctor.h"
 
+// ============================================================================
+// Boost 
+// ============================================================================
 #include "boost/lexical_cast.hpp"
+// ============================================================================
 
 // ============================================================================
 /** @file CellularAutomaton.cpp
@@ -152,6 +175,8 @@ CellularAutomaton::CellularAutomaton
 ( const std::string& name,
   ISvcLocator* pSvcLocator )
   : CaloAlgorithm      ( name, pSvcLocator )
+  , m_sort             ( true  )
+  , m_sortByET         ( false )
 {
   // set the appropriate defaults for detector data 
   setInputData  ( CaloDigitLocation::     Ecal ) ;
@@ -159,6 +184,10 @@ CellularAutomaton::CellularAutomaton
   setOutputData ( CaloClusterLocation::   Ecal ) ;
   // set the appropriate defaults for detector data
   setDetData    ( DeCalorimeterLocation:: Ecal ) ;
+  // sort the clusters ? 
+  declareProperty ( "Sort"     , m_sort     ) ;
+  // using ET sort versus E sort 
+  declareProperty ( "SortByET" , m_sortByET ) ;
 };
 // ============================================================================
 
@@ -365,14 +394,34 @@ StatusCode CellularAutomaton::execute()
   /** sort the sequence to simplify the comparison 
    *  with other clusterisation techniques 
    */
-  
-  CaloDataFunctor::Less_by_Energy<const CaloCluster*> Cmp;
-  std::stable_sort
-    ( clustersSeq->begin()            ,
-      clustersSeq->end  ()            ,
-      CaloDataFunctor::inverse( Cmp ) ) ;
+  if ( m_sort )
+  { 
 
-  // clear local storaged 
+    if ( !m_sortByET ) 
+    {
+      // sorting criteria: Energy
+      CaloDataFunctor::Less_by_Energy<const CaloCluster*> Cmp;
+      // perform the sorting 
+      std::stable_sort
+        ( clustersSeq->begin()            ,
+          clustersSeq->end  ()            ,
+          CaloDataFunctor::inverse( Cmp ) ) ;
+    }
+    else 
+    {
+      // sorting criteria : Transverse Energy
+      CaloDataFunctor::Less_by_TransverseEnergy<const CaloCluster*,
+        const DeCalorimeter*> Cmp ( detector ) ;
+      // perform the sorting 
+      std::stable_sort
+        ( clustersSeq->begin()            ,
+          clustersSeq->end  ()            ,
+          CaloDataFunctor::inverse( Cmp ) ) ;    
+    }
+    
+  };
+  
+  // clear local storages 
   taggedCellsSeq    .clear () ;
   taggedCellsDirect .clear () ;
   local_cells       .clear () ;

@@ -3,27 +3,35 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/02/17 12:08:11  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
 // ============================================================================
 #ifndef CALOCA_CELLULARAUTOMATON_H
 #define CALOCA_CELLULARAUTOMATON_H 1
+// ============================================================================
 // STD and STL 
+// ============================================================================
 #include <string>
 #include <iostream>
+// ============================================================================
 /// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/StreamBuffer.h"
+// ============================================================================
 /// CaloKernel 
+// ============================================================================
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloAlgorithm.h"
+// ============================================================================
 /// CaloDet 
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ============================================================================
 /// local
+// ============================================================================
 #include "CelAutoTaggedCell.h"
+// ============================================================================
 
 /** @class CellularAutomaton CellularAutomaton.h 
  *
@@ -111,6 +119,11 @@ protected:
   inline void setEXYCluster
   ( CaloCluster*         cluster,
     const DeCalorimeter* detector );
+
+private :
+  
+  bool m_sort     ;
+  bool m_sortByET ;
   
 };
 

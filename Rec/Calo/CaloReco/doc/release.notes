@@ -1,11 +1,42 @@
-! $Id: release.notes,v 1.53 2004-09-08 15:08:21 cattanem Exp $
+! $Id: release.notes,v 1.54 2004-10-22 16:33:52 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
-! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-22 - Vanya BELYAEV
+
+   (requires the recent modifications in Event/CaloEvent  >= 13r6 ) 
+
+ - src/CellularAutomaton.h
+   src/CellularAutomaton.cpp
+   
+     The algorithm gas got 2 new properties 
+   "Sort"     (boolean, default = true ) - the flag which indicates wether 
+                                           the sorting of clusters should 
+                                           be performed
+   "SprtByET" (boolean, default = false) - the flag which indicates 
+                                           which sorting criteria (energy 
+                                           versus transverse energy) is used 
+                                           for sorting
+
+   The default settings corresponds to "backward-compatibility"
+
+  - src/CaloDeleteObject.h, src/CaloDeteleObject.cpp  
+    remove the obsolete algorithm
+      one should use TESFilter algorithm from  Kernel/LHCbAlgs package
+
+  - src/CaloCheckObjects.h, src/CaloCheckObjects.cpp  
+    remove obsolete algorithm
+      one should use TESCheck algorithm from  Kernel/LHCbAlgs package 
+  - src/CaloReco_load.cpp
+    remove the factory instantiations for removed obsolete algorithms 
+
+  - cmt/requirements 
+   version increment to v2r6 
 
 !======================= CaloReco v2r5 2004-09-08 ======================
 ! 2004-09-08 - Marco Cattaneo
