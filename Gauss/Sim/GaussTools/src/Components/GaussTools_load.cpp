@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.1 2002-12-12 15:19:30 witoldp Exp $
+// $Id: GaussTools_load.cpp,v 1.2 2002-12-17 14:55:45 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:30  witoldp
+// major repackaging
+//
 // Revision 1.5  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -28,6 +31,7 @@ void GaussTools_load()
   DECLARE_ALGORITHM       (    GetGiGaHitsAlg          );
   DECLARE_ALGORITHM       (    PrintEventAlg           );
   DECLARE_ALGORITHM       (    GiGaFlushAlgorithm      );
+  DECLARE_ALGORITHM       (    GaussInitialisation     );
 
   /// Magnetic Field  
   DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      );
