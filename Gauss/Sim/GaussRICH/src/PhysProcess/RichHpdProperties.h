@@ -43,11 +43,11 @@ class RichHpdProperties {
        double Rich1MaxZHitZCoord() {return m_Rich1MaxZHitCoord  ; }
        void setRich1MaxZHitZCoord( double RichMaximumZCoordHit ) ;      
 
-       string HpdQWLogVolName() {return m_HpdQWLogVolName; }
-       void setHpdQWLogVolName (string hpdqwLvolname );
+       std::string HpdQWLogVolName() {return m_HpdQWLogVolName; }
+       void setHpdQWLogVolName (std::string hpdqwLvolname );
 
-       string HpdPhCathodeLogVolName() {return  m_HpdPhCathodeLogVolName; }
-       void setHpdPhCathodeLogVolName (string hpdphCathLvolname ); 
+       std::string HpdPhCathodeLogVolName() {return  m_HpdPhCathodeLogVolName; }
+       void setHpdPhCathodeLogVolName (std::string hpdphCathLvolname ); 
 
        int numberOfRichDetectors() {return m_numberOfRichDetectors; }
        void setnumberOfRichDetectors (int numberOfRichdet);
@@ -65,8 +65,8 @@ class RichHpdProperties {
   double m_RichHpdHighVoltage;
   double m_RichHpdQWToSiDist;
   double  m_Rich1MaxZHitCoord;
-  string m_HpdQWLogVolName;
-  string m_HpdPhCathodeLogVolName;
+  std::string m_HpdQWLogVolName;
+  std::string m_HpdPhCathodeLogVolName;
   int m_numberOfRichDetectors;
   double m_HpdPhCathodeInnerRadius;
   int HpdVerboseLevel;

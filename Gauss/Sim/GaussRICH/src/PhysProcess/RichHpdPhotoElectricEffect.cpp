@@ -179,7 +179,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
         GetGlobalToLocalTransform().
         TransformPoint(GlobalElectronOrigin);
 
-      vector<double> CurDemagFactor=getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
+      std::vector<double> CurDemagFactor=getCurrentHpdDemag(currentHpdNumber,currentRichDetNumber);
       //  G4cout<<"Current demag factors "
       // <<CurDemagFactor[0]<<"  "<< CurDemagFactor[1]<<G4endl;
       // now get the Point Spread function.
@@ -223,7 +223,7 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
       // simulate the reflections at the Silicon surface.  For now the reflectivity of
       // silicon is 0. This may be changed in the future.
 
-      // for now for test the incident photon is killed SE 13-3-02
+// for now for test the incident photon is killed SE 13-3-02
       //  G4cout<<"Now  killing photon which is not converted"<<G4endl;
       aParticleChange.SetLocalEnergyDeposit(PhotonEnergy);
       // aParticleChange.SetEnergyChange(0.);  
@@ -254,7 +254,7 @@ double RichHpdPhotoElectricEffect::getCurrentHpdPSFSigma(int hpdnumb, int richde
   return m_HpdProperty->getRichHpdPSF(hpdnumb,richdetnumb)->hpdPointSpreadFunction();
 
 }
-vector<double>  RichHpdPhotoElectricEffect::getCurrentHpdDemag(int hpdnumber, int richdetnumber){
+std::vector<double>  RichHpdPhotoElectricEffect::getCurrentHpdDemag(int hpdnumber, int richdetnumber){
 
   return m_HpdProperty->getRichHpdDeMag(hpdnumber,richdetnumber)->HpdDemagVect();
 

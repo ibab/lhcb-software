@@ -39,11 +39,11 @@ class RichHpdQE {
   double getHpdQEffFromPhotWavelen(double photwavelen );
 
   void setCurrentHpdQEwl(int ihpdnum, int irichdetnum, int inumQEbins,
-		       vector<double>qeffvect, vector<double>qeffwavelen );
+		       std::vector<double>qeffvect, std::vector<double>qeffwavelen );
   void setCurrentHpdQEen(int jhpdnum, int jrichdetnum, int jnumQEbins,
-		       vector<double>jqeffvect, vector<double>qeffener );
-  void setAnHpdQEwl(int inumQEbins,vector<double>qeffvect, vector<double>qeffwavelen );
-  void setAnHpdQEen(int jnumQEbins,vector<double>jqeffvect, vector<double>qeffener );
+		       std::vector<double>jqeffvect, std::vector<double>qeffener );
+  void setAnHpdQEwl(int inumQEbins,std::vector<double>qeffvect, std::vector<double>qeffwavelen );
+  void setAnHpdQEen(int jnumQEbins,std::vector<double>jqeffvect, std::vector<double>qeffener );
 
   //  void getHpdQEDataFromDB();
 

@@ -269,8 +269,8 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   }
 
   // Now get the quartz window name and the photocathode name.
-  string hpdQWlvname;
-  string hpdPhCathlvname; 
+  std::string hpdQWlvname;
+  std::string hpdPhCathlvname; 
   double phcathRinn;
   SmartDataPtr<IDetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
   if(!RichHpdQWDE) {
@@ -390,13 +390,13 @@ void  RichHpdProperties::setRichHpdQWToSiDist( double HpdQWtoSiDist ){
 void  RichHpdProperties::setRich1MaxZHitZCoord( double RichMaximumZCoordHit ){
   m_Rich1MaxZHitCoord=RichMaximumZCoordHit;
 }
-void RichHpdProperties::setHpdQWLogVolName(string hpdqwLvolname ){
+void RichHpdProperties::setHpdQWLogVolName(std::string hpdqwLvolname ){
   m_HpdQWLogVolName=  hpdqwLvolname ;
 
 
 }
 
-void  RichHpdProperties::setHpdPhCathodeLogVolName(string  hpdphCathLvolname  ){
+void  RichHpdProperties::setHpdPhCathodeLogVolName(std::string  hpdphCathLvolname  ){
 
   m_HpdPhCathodeLogVolName=hpdphCathLvolname ;
 

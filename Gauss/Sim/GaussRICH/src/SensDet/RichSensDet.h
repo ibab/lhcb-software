@@ -77,10 +77,10 @@ public:
   G4double MaxZHitInRich1Detector() 
   {return m_RichGeomProperty->MaxZHitInRich1Det(); }
 
-  vector<G4double>PixelBoundaryInX() 
+  std::vector<G4double>PixelBoundaryInX() 
   {return m_RichGeomProperty->PixelXBoundary(); }
 
-  vector<G4double>PixelBoundaryInY() 
+  std::vector<G4double>PixelBoundaryInY() 
   {return m_RichGeomProperty->PixelYBoundary(); }
 
   G4double PixelBoundaryInXValue(int aPXNumber ) 

@@ -94,8 +94,11 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   //
   if(aKinEnergyInit < MinKineticEnergy ) {  Eloss=0.0 ; }
   else if( aKinEnergyInit <= PhElectronMaxEnergy ) {Eloss= aKinEnergyInit ;}
-  else { Eloss = min(aKinEnergyInit,MipEnergyHpdSiEloss); }
- 
+  else { 
+    // Eloss = min(aKinEnergyInit,MipEnergyHpdSiEloss) ; 
+    Eloss = aKinEnergyInit < MipEnergyHpdSiEloss ? aKinEnergyInit : MipEnergyHpdSiEloss ;
+  }
+  
   aKinEnergyFinal=aKinEnergyInit-Eloss;
 
   aParticleChange.SetLocalEnergyDeposit(Eloss);  

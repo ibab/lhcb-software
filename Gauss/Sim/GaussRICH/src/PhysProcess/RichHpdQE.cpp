@@ -12,8 +12,8 @@ RichHpdQE::RichHpdQE():m_curHpdNum(0), m_curRichDetNum(0),
 }
 
 RichHpdQE::RichHpdQE(int hpdnum, int richdetnum):
-  m_numHpdQEbins(20), m_HpdQEff(vector<double>(20)),
-  m_PhotEnergyHpdQE(vector<double>(20)), m_WaveEnerCnv(1243.125) {
+  m_numHpdQEbins(20), m_HpdQEff(std::vector<double>(20)),
+  m_PhotEnergyHpdQE(std::vector<double>(20)), m_WaveEnerCnv(1243.125) {
   m_curHpdNum=hpdnum;
   m_curRichDetNum=richdetnum;
   //  m_WaveEnerCnv=1243.125;
@@ -37,9 +37,9 @@ double RichHpdQE::getHpdPhotonWaveLengthFromBin(int curmbin)
   return photwa;
 }
 
-vector<double>RichHpdQE::PhotWavelengthHpdQE()
+std::vector<double>RichHpdQE::PhotWavelengthHpdQE()
 {
-  vector<double>photwVect(m_numHpdQEbins);
+  std::vector<double>photwVect(m_numHpdQEbins);
   for (int ii=0 ; ii<m_numHpdQEbins; ii++ ){
     photwVect[ii]=getHpdPhotonWaveLengthFromBin(ii);
   }
@@ -106,16 +106,16 @@ double RichHpdQE::getHpdQEffFromPhotEnergy(double  photonenergy ){
   return qeff;
 }
 void RichHpdQE::setCurrentHpdQEwl(int ihpdnum, int irichdetnum, 
-                                  int inumQEbins,vector<double> qeffvect, 
-                                  vector<double>qeffwavelen) {
+                                  int inumQEbins,std::vector<double> qeffvect, 
+                                  std::vector<double>qeffwavelen) {
 
   m_curHpdNum= ihpdnum;
   m_curRichDetNum=irichdetnum;
   setAnHpdQEwl(inumQEbins,qeffvect,qeffwavelen); 
 
 }
-void RichHpdQE::setAnHpdQEwl(int inumQEbins,vector<double>qeffvect, 
-                             vector<double>qeffwavelen) {
+void RichHpdQE::setAnHpdQEwl(int inumQEbins,std::vector<double>qeffvect, 
+                             std::vector<double>qeffwavelen) {
 
   m_numHpdQEbins= inumQEbins;
   if(m_numHpdQEbins != (int) m_HpdQEff.size())m_HpdQEff.resize(m_numHpdQEbins);
@@ -128,8 +128,8 @@ void RichHpdQE::setAnHpdQEwl(int inumQEbins,vector<double>qeffvect,
  
 }
 void RichHpdQE::setCurrentHpdQEen(int jhpdnum, int jrichdetnum, 
-                                  int jnumQEbins, vector<double>jqeffvect, 
-                                  vector<double>qeffener) {
+                                  int jnumQEbins, std::vector<double>jqeffvect, 
+                                  std::vector<double>qeffener) {
   //   RichHpdQElog << MSG::INFO
   //  <<"set hpd QEen: hpdnum detnum numbins "<<jhpdnum<<"  "<<jrichdetnum
   //    <<"   "<<jnumQEbins<<endreq;
@@ -138,8 +138,8 @@ void RichHpdQE::setCurrentHpdQEen(int jhpdnum, int jrichdetnum,
   setAnHpdQEen(jnumQEbins,jqeffvect,qeffener);
   
 }
-void RichHpdQE::setAnHpdQEen(int jnumQEbins, vector<double>jqeffvect, 
-                             vector<double>qeffener) {
+void RichHpdQE::setAnHpdQEen(int jnumQEbins, std::vector<double>jqeffvect, 
+                             std::vector<double>qeffener) {
 
   //   RichHpdQElog << MSG::INFO 
   //   <<"set hpd QEen: NumQEbins "<<jnumQEbins<<endreq;
