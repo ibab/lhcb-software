@@ -1,4 +1,4 @@
-	// $Id: MuonDigitToRawBuffer.cpp,v 1.3 2004-02-06 14:24:04 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.4 2004-02-10 17:08:25 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -170,9 +170,9 @@ StatusCode MuonDigitToRawBuffer::execute() {
   MuonDigits::iterator idigit;
   for(idigit=digit->begin();idigit<digit->end();idigit++){    
     MuonTileID digitTile=(*idigit)->key();
-    
+    //msg<<MSG::INFO<<digitTile<<endreq;	    
     unsigned int time=(*idigit)->TimeStamp();    
-    time=0;
+    //time=0;
     
     
     long L1Number=0;
@@ -494,45 +494,45 @@ long MuonDigitToRawBuffer::DAQaddress(MuonTileID digitTile, long& L1Number)
   //digitTile.printOut(msg<<MSG::INFO<<"digit tile ")<<endreq;
   
   bool print=false;
-  //   if(print)
-  //TilePrintOut(digitTile);
+     if(print)
+  TilePrintOut(digitTile);
   long station=digitTile.station();
   MuonTileID TS=findTS(digitTile);
-  if(print)msg<<MSG::INFO<<"digit is contained in TS "<<endreq;
+  if(print)msg<<MSG::DEBUG<<"digit is contained in TS "<<endreq;
   //TS.printOut(msg<<MSG::DEBUG)<<endreq;
   //  if(print) 
   //TilePrintOut(TS);
   
   std::string L1Path=findL1(TS);
-  if(print)msg<<MSG::INFO<<"the TS is contained in L1 "<<L1Path<<endreq;
+  if(print)msg<<MSG::DEBUG<<"the TS is contained in L1 "<<L1Path<<endreq;
   // return 1;
   SmartDataPtr<MuonL1Board>  l1(detSvc(),L1Path);
-  if(print)msg<<MSG::INFO<<"l1 "<<endreq;
+  if(print)msg<<MSG::DEBUG<<"l1 "<<endreq;
   //return 1;
   
-  if(print)msg<<MSG::INFO<<" station "<<l1->getStation()<<endreq;
+  if(print)msg<<MSG::DEBUG<<" station "<<l1->getStation()<<endreq;
   //long 
   L1Number=l1->L1Number();
   std::string ODEPath= findODEPath(TS);
 
   if(print)
-    msg<<MSG::INFO<<"the TS is contained in ODE "<<ODEPath<<endreq;      
+    msg<<MSG::DEBUG<<"the TS is contained in ODE "<<ODEPath<<endreq;      
   SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEPath);
   long ODENumber=findODENumber(ODEPath);
   long ODESerialNumber=findODEPosition(L1Path, ODENumber); 
-  if(print)msg<<MSG::INFO<<"ODE= "<<ODENumber<<" "<<ODESerialNumber<<endreq;
+  if(print)msg<<MSG::DEBUG<<"ODE= "<<ODENumber<<" "<<ODESerialNumber<<endreq;
   long TSSerialNumber=findTSPosition(ODEPath,TS);
   if(print)
-    msg<<MSG::INFO<<"the TS position is ODE is = "<<TSSerialNumber<<endreq;
+    msg<<MSG::DEBUG<<"the TS position is ODE is = "<<TSSerialNumber<<endreq;
   std::string TSPath= findTSPath(ODEPath,TSSerialNumber,station);  
   msg<<MSG::DEBUG<<"the TS map is located in  "<<TSPath<<endreq;
   msg<<MSG::DEBUG<<" station "<<l1->getStation()<<endreq;
       
   long DigitPosition=findDigitInTS(TSPath,TS,digitTile); 
   long addChannels=channelsInL1BeforeODE( L1Path,ODENumber);   
-  if(print)msg<<MSG::INFO
+  if(print)msg<<MSG::DEBUG
               <<" the digit position in TS is "<<DigitPosition<<endreq;
-  if(print)msg<<MSG::INFO<<" the channels in L1 before the ODE are "<<
+  if(print)msg<<MSG::DEBUG<<" the channels in L1 before the ODE are "<<
     addChannels<<endreq;
   SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);    
   long digitInODE=TSSerialNumber*TSMap->numberOfOutputSignal();
@@ -556,6 +556,7 @@ void MuonDigitToRawBuffer::TilePrintOut(MuonTileID digitTile)
        <<  digitTile.quarter() << ","
        <<  digitTile.nX() << ","
      <<  digitTile.nY() << "]" <<endreq;
-
+   msg<<MSG::INFO<< "["  << digitTile.layer()<< " "<<
+    digitTile.readout()<< " ] "<<endreq;
 };
 

@@ -1,4 +1,4 @@
-// $Id: MuonDAQ_load.cpp,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonDAQ_load.cpp,v 1.2 2004-02-10 17:08:25 asatta Exp $
 // Include files 
 
 
@@ -16,4 +16,6 @@
 DECLARE_FACTORY_ENTRIES(MuonDAQ) {
    DECLARE_ALGORITHM(MuonDigitToRawBuffer)
    DECLARE_ALGORITHM(MuonRawBuffer2Digit)
+//   DECLARE_ALGORITHM(MuonDAQTest)
+
 }

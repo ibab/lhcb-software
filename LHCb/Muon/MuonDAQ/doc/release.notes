@@ -4,6 +4,9 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-!========================== MuonDAQ v1r0 2004-02-05 =======================
+!========================== MuonDAQ v1r0 2004-02-10 =======================
+! 2004-02-10 - Alessia Satta
+ - Fix bug in readout type info and timeStamp storage 
+
 ! 2004-02-05 - Alessia Satta
  - First public version

@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.h,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonRawBuffer2Digit.h,v 1.2 2004-02-10 17:08:25 asatta Exp $
 #ifndef MUONRAWBUFFER2DIGIT_H 
 #define MUONRAWBUFFER2DIGIT_H 1
 
@@ -25,6 +25,8 @@
 #include "Event/DAQTypes.h"
 #include "Event/RawBuffer.h"
 #include "Event/RawEvent.h"
+#include "MuonTools/IMuonGetInfoTool.h"
+
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
 #include "MuonKernel/MuonTile.h"
@@ -54,6 +56,9 @@ protected:
 
 private:
 void TilePrintOut(MuonTileID digitTile);
+unsigned int readoutType(int partition, MuonLayout lay);
+  IMuonGetInfoTool* m_pGetInfo ;
+
   int m_TotL1Board;
   std::vector<int> m_L1Map[12];
   std::string getBasePath(int station);

@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.3 2004-02-09 14:14:29 cattanem Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.4 2004-02-10 17:08:25 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +48,9 @@ StatusCode MuonRawBuffer2Digit::initialize() {
   msg << MSG::DEBUG << "==> Initialise" << endreq;
   // initialize Look-up for the decoding //
   int addL1=0;
-  
+  StatusCode sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
+  if(sc.isFailure())return StatusCode::FAILURE;
+
    for(int station=0;station<5;station++){
     msg<<MSG::DEBUG<<"station number "<<station<<endreq;
     
@@ -105,7 +107,11 @@ StatusCode MuonRawBuffer2Digit::initialize() {
             unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
             unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
             MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            MuonTileID muontile(station,0,0,lay,region,quadrant,digitX,digitY);
+            unsigned int itype=readoutType(station*4+region, lay);
+            if(itype!=0&itype!=1)msg<<MSG::WARNING<<
+                                    "error in readout type "<<endreq;
+            MuonTileID muontile(station,0,itype,lay,region,
+                                quadrant,digitX,digitY);
             //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
             m_L1Map[addL1].push_back(muontile);
             //msg<<MSG::INFO<<" map "<<counterInL1<<" "<<endreq;
@@ -143,8 +149,10 @@ StatusCode MuonRawBuffer2Digit::execute() {
   RawEvent* rawEvent;
   SmartDataPtr<RawEvent> rawEvtPtr( eventSvc(), RawEventLocation::Default );
   if( 0 == rawEvtPtr ) {
-    SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
+    SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), 
+                                       RawBufferLocation::Default );
     if ( 0 == rawBuffer ) {
+      
       msg << MSG::ERROR << "Unable to retrieve RawBuffer" << endmsg;
       return StatusCode::FAILURE;
     }
@@ -231,7 +239,11 @@ StatusCode MuonRawBuffer2Digit::execute() {
     //}
   }
   
-  eventSvc()->registerObject( MuonDigitLocation::MuonDigit, MuonDigitsCon );
+   eventSvc()->registerObject( MuonDigitLocation::MuonDigit, MuonDigitsCon );
+  //StatusCode sc=
+//	eventSvc()->registerObject("Raw/Muon/DigitsTest", MuonDigitsCon );
+ // if(sc.isFailure())msg<<MSG::INFO<<"error "<<endreq;
+  
   return StatusCode::SUCCESS;
 };
 
@@ -242,7 +254,7 @@ StatusCode MuonRawBuffer2Digit::finalize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endreq;
-
+ if( m_pGetInfo ) toolSvc()->releaseTool( m_pGetInfo );
   return StatusCode::SUCCESS;
 }
 
@@ -266,3 +278,27 @@ void MuonRawBuffer2Digit::TilePrintOut(MuonTileID digitTile)
      <<  digitTile.nY() << "]" <<endreq;
 
 };
+
+unsigned int MuonRawBuffer2Digit::readoutType(int partition, MuonLayout lay)
+{
+  //  MsgStream  msg( msgSvc(), name() );
+  unsigned int itype=-1;
+  
+  for (int mapNumber=0;mapNumber<(int)m_pGetInfo->
+         getLogMapPerRegion(partition);mapNumber++){
+    unsigned int x=m_pGetInfo->getLayoutX(mapNumber,partition);
+    unsigned int y=m_pGetInfo->getLayoutY(mapNumber,partition);
+    //    msg<<MSG::INFO<<"layout "<<x<<" "<<y<<endreq;
+    
+    if(lay.xGrid()==x){      
+      if(lay.yGrid()==y){
+        itype=m_pGetInfo->getLogMapRType(mapNumber,partition);        
+        //return (m_pGetInfo->getLogMapRType(mapNumber,partition);
+      }      
+    }   
+  }
+  //  msg<<MSG::INFO<<itype<<endreq;
+  
+  return itype;  
+}
+
