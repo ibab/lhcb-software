@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.5 2002-07-12 15:25:36 phicharp Exp $
+! $Id: release.notes,v 1.6 2002-07-15 07:24:44 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-! 2002-07-12 - Philippe Charpentier
+!================= DaVinciAssociators v2r0 2002-06-15 ======================
+! 2002-07-15 - Philippe Charpentier
  - Property "InputData" of associators now a vector of strings, allowing
     more than one input location
  - Property "OutputData" changed to "OutputTable"
