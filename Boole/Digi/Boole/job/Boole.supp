@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v5r9, gcc 3.2, valgrind 2.0.0
+# Error suppression file Boole v6r0, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -18,8 +18,7 @@
 # All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp
 
 # Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v23r3 setup
-# GaudiPoolDb v1r5, POOL 1_5_0, Root 3.10.02
-
+# GaudiPoolDb v1r5-v1r8, POOL 1_5_0-POOL_1_7_0-gamma, Root 3.10.02
 {
   Root/longest_match
   Memcheck:Cond
@@ -52,15 +51,7 @@
   fun:R__Deflate_fast
 }
 
-# Error from L0mConf v2r2p1. Reported to L.Tocco 21/06/04
-{
-  L0mConf/DOMParser
-  Memcheck:Value4
-  fun:_ZN11xercesc_2_317AbstractDOMParser7cleanUpEv
-  fun:_ZN11xercesc_2_317AbstractDOMParserD2Ev
-  fun:_ZN11xercesc_2_314DOMBuilderImplD0Ev
-}
-
+# Leaks not be tested with Boole v6r0 (access violation in main()...)
 # Error from poolRootTreeContainer
 {
   POOL_1_6_3/RootTreeContainer
