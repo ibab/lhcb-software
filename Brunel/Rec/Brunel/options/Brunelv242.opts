@@ -6,7 +6,7 @@
 //#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
 //SpillOverSelector.Input = {"JOBID='86770'"}; // evtype 61 for spillover
 #pragma print on
-EventSelector.Input = {"JOBID='86769'"}; // Signal, evtype 61
+EventSelector.Input = {"JOBID='85475'"}; // Signal, evtype 61
 #pragma print off
 
 //--------------------------------------------------------------

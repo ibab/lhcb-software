@@ -4,9 +4,9 @@
 #pragma print off
 // --- Define input data. Spillover first (if required), then signal ---
 //#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
-//SpillOverSelector.Input = {"JOBID='86160'"}; // evtype 61 for spillover
+//SpillOverSelector.Input = {"JOBID='86161'"}; // evtype 61 for spillover
 #pragma print on
-EventSelector.Input = {"JOBID='86161'"}; // Signal, evtype 412100
+EventSelector.Input = {"JOBID='86160'"}; // Signal, evtype 412100
 #pragma print off
 
 //--------------------------------------------------------------

@@ -69,12 +69,11 @@ use TrEvent      v7r1   Event
 use CaloEvent    v7r0   Event
 
 # SicB event data persistency
-use SicbCnv      v15r0  SICB
+use SicbCnv      v15r1  SICB
 use CaloSicbCnv  v5r1   SICB
-use L0SicbCnv    v4r0   SICB
 use MuonSicbCnv  v4r0   SICB
 use TrSicbCnv    v4r0   SICB
-use VSicbCnv     v6r0   SICB
+use VSicbCnv     v6r1   SICB
 
 # Brunel utilities
 use BrunelKernel v3r0   Rec
@@ -96,7 +95,7 @@ use CaloCA         v3r1 Calo
 # Tracking
 use ITAlgorithms v8r0   IT
 use OTAlgorithms v7r0	OT
-use TrAlgorithms v7r0   Tr
+use TrAlgorithms v7r1   Tr
 
 # Forward Tracking
 use VeloDigit    v1r0   Velo
@@ -119,14 +118,10 @@ use recrich      v5r4   SICB
 
 use axreclib     v4r3   SICB
 
-use trihadr      v4     SICB
 use trilvl2      v5r1   SICB
-use trimuon      v5     SICB
-use trit0v       v5     SICB
 use triskel      v4     SICB
 use trit1tr      v3r3   SICB
 use trivert      v5r3   SICB
-use trielec      v5r1   SICB
 
 #
 #===== build Brunel =========================

@@ -4,9 +4,10 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9r0>20020131 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>20020212 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
+   Added L0 pileup veto. Removed Fortran L0 code.
    Added TT1 to IT reconstruction
    --> Use this version to reconstruct data produced with dbase v240 to v243r*
 
@@ -21,20 +22,30 @@ Purpose: LHCb reconstruction program
           version number, taken from $LHCBDBASE
  
    In options
+   - Restructuring of options files: one main file per supported database version
+     includes Brunel.opts, includes database specific files, and should be
+     modified for user definitions (including I/O specification)
    - Brunel.opts: suppress printout of options from included subdetector files
                   add BrunelSicbInit to TopAlg list
                   add Calo reconstruction
                   add Velo digitisation and tracking
                   add PuVeto to L0 trigger
                   Remove L0SicbCnv
-   - Brunelv240.opts, v240r1.opts, v241.opts: 
-                  database specific options for supported databases
+   - Brunel<dbver>.opts (dbver=v240, v240r1, v241, v242, v242r1, v243r1): 
+       Main options file for supported databases
+   - BrunelTrLight.opts, BrunelTrMinus.opts, BrunelOldTT1.opts:
+       Database specific options for tracking
+   - BrunelInputs.opts, BrunelUser.opts, BrunelStatic.opts
+       Obsolete files, removed.
 
    In BrunelSicb
    - BrunelSicbInit: new algorithm with SICB specific initialisation.
    - BrunelInitialisation: moved to Brunel Kernel
    - BrunelInit.F: Seeds of SICB random number engine (RanEcu) initialised 
                    at every event with run number and event number.
+   - btrigger.F: Remove L0 Fortran code.
+                 Removes dependency on trihadr,trimuon,trit0v,trielec
+   - richprod.F: Local version, to remove call to axtrigger
 
    In BrunelKernel
    - BrunelInitialisation.cpp: 
@@ -51,8 +62,6 @@ Purpose: LHCb reconstruction program
      use Tr/FwTrack     v1r0
    
    Added C++ PileUp Veto code, uses Velo TDR geometry from XmlDDDB. 
-   Runs in parallel to old (obsolete) t0vertex,t0pileup code. 
-   Does *NOT* update TVPI0 and TPIL0 banks used by axtrigger
      use L0/PuVeto      v1r0
 
    C++ L0 decision available in new event model (not yet persistent)
@@ -66,6 +75,14 @@ Purpose: LHCb reconstruction program
      use Calo/CaloTools   v1r1
      use Calo/CaloCA      v3r1
      use Calo/CaloAlgs    v4r1
+
+   All Silicon TT1
+    use ITEvent      v7r1
+    use ITAlgorithms v8r0
+
+   Create empty containers if corresponding SICB banks are missing
+     use SICB/SicbCnv   v15r1
+     use SICB/VSicbCnv  v6r1
 
    Additional changes for Gaudi v9 
    -------------------------------
@@ -85,19 +102,15 @@ Purpose: LHCb reconstruction program
     use CaloDet      v3r0  (was v3r0)
     use LHCbEvent    v12r1 (was v11)
     use VeloEvent    v6r0  (was v5)
-    use ITEvent      v7r0  (was v6r1)
     use OTEvent      v7r0  (was v6r1)
     use TrEvent      v7r1  (was v6r1)
     use CaloEvent    v7r0  (was v6)
-    use SicbCnv      v15r0 (was v13r1)
     use CaloSicbCnv  v5r1  (was v4)
     use MuonSicbCnv  v4r0  (was v3)
     use TrSicbCnv    v4r0  (was v3)
-    use VSicbCnv     v6r0  (was v5)
     use L0Muon       v4r0  (was v3r1)
-    use ITAlgorithms v7r0  (was v6)
     use OTAlgorithms v7r0	 (was v6)
-    use TrAlgorithms v7r0  (was v6r2)
+    use TrAlgorithms v7r1  (was v6r2)
      
 ! =================================================================
 </PRE><H1><A NAME=v8>20011017 Brunel v8</A></H1><PRE>

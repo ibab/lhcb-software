@@ -22,3 +22,4 @@ ChronoStatSvc.StatPrintLevel = 4;
 // Suppress excessive warnings from some algorithms
 TrFit.OutputLevel = 5;
 TrMonitor.OutputLevel = 5;
+//ITHitsCreator.OutputLevel = 5;

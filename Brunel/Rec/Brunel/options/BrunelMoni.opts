@@ -23,9 +23,6 @@ BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off
 
-// Temporary fix for missing containers on empty events
-TrMonitor.ErrorMax = 1000;
-
 //--------------------------------------------------------------
 // No IT monitoring by default (produces ntuple). Uncomment to switch on
 //--------------------------------------------------------------
