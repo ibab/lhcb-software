@@ -1,6 +1,0 @@
-------> (Makefile.header) Rebuilding constituents.make
-------> (constituents.make) Rebuilding setup.make slc3_ia32_gcc323.make
-CMTCONFIG=slc3_ia32_gcc323
-../slc3_ia32_gcc323/TrackIdealPRsetup.make untouched 
-setup.make ok
-gmake: `fdfdfdf' is up to date.
