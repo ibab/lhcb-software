@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ExHlt.py,v 1.2 2004-11-25 15:21:02 ibelyaev Exp $
+# $Id: ExHlt.py,v 1.3 2004-11-30 16:31:37 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -27,6 +27,11 @@ class ExHlt(Algo):
         # get kaons
         
         pions  = self.select( tag="pi+" , cuts = ( 'pi+' == ABSID ) & HASTRGTR )
+        muons  = self.select( tag="mu+" , cuts = ( 'mu+' == ABSID ) & HASTRGTR )
+
+        pions = muons
+        
+        print 'muons = ', muons.size()
         
         if pions.empty() : return SUCCESS
         
@@ -80,6 +85,7 @@ def configure() :
                     '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ,   # input data 
                     '$TRGSYSROOT/options/L1.opts'           ,   # L1 procession 
                     '$TRGSYSROOT/options/Hlt.opts'          ,   # HLT configuration
+                    '$BENDEREXAMPLEOPTS/TrgTracks.opts' ,   # HLT configuration
                     '$TRGSYSROOT/options/TrgChecking.opts'  ] , # HLT configuration
                   options =
                   [ 'EcalPIDmu.OutputLevel     =   5  ' ,
@@ -92,11 +98,13 @@ def configure() :
                     'Hadrons.OutputLevel       =   5  ' ,
                     'EventSelector.PrintFreq   = 100  ' ] )
     
+    
     #if not 'TrgTools'  in gaudi.DLLs : gaudi.DLLs += [ 'TrgTools'  ] 
     #if not 'TrgVelo'   in gaudi.DLLs : gaudi.DLLs += [ 'TrgVelo'   ] 
     #if not 'TrgVeloTT' in gaudi.DLLs : gaudi.DLLs += [ 'TrgVeloTT' ] 
     #if not 'STDAQ'     in gaudi.DLLs : gaudi.DLLs += [ 'STDAQ'     ] 
     if not 'TrgChecker'     in gaudi.DLLs : gaudi.DLLs += [ 'TrgChecker' ] 
+    if not 'PhysSelections'  in gaudi.DLLs : gaudi.DLLs += [ 'PhysSelections'  ] 
 
     # specific job configuration 
 
@@ -112,7 +120,11 @@ def configure() :
     ex.TRG2MC = [ 'Rec/Relations/TrgTracks2MCParticles' ]
     
     desktop = gaudi.tool('ExHlt.PhysDesktop')
-    desktop.InputLocations  = [ "/Event/Phys/Trg"]
+    desktop.InputLocations  = [
+        #"/Event/Phys/Trg"
+        #"Phys/HLTPions",
+        "Phys/HLTMuons"
+        ]
     
     return SUCCESS
 
@@ -125,12 +137,15 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 100  )
+    gaudi.run  ( 50  )
     # terminate the Application Manager 
     gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/11/25 15:21:02  ibelyaev
+#  some polishing of ExHLT.py example
+#
 # Revision 1.1  2004/11/25 14:55:05  ibelyaev
 #  add Trg -> MC example
 #
