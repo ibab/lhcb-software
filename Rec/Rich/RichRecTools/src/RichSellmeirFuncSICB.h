@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFuncSICB.h,v 1.1 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichSellmeirFuncSICB.h,v 1.2 2003-10-13 16:32:34 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNCSICB_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNCSICB_H 1
 
@@ -8,12 +8,14 @@
 // RichKernel
 #include "RichKernel/RichRadiatorType.h"
 #include "RichKernel/RichParticleIDType.h"
+#include "RichKernel/BoostArray.h"
 
 // Event model
 #include "Event/RichRecSegment.h"
 
 // interfaces
 #include "RichRecBase/IRichSellmeirFunc.h"
+#include "RichRecBase/IRichParticleProperties.h"
 
 /** @class RichSellmeirFuncSICB RichSellmeirFuncSICB.h
  *
@@ -63,11 +65,11 @@ private:  // Private data
   double m_molW[Rich::NRadiatorTypes];
   double m_rho[Rich::NRadiatorTypes];
 
-  /// Array containing particle masses
-  std::vector<double> m_particleMass;
+  // Aerogel specific parameters
+  double m_waveIndepTrans;
 
-  /// Array containing particle masses
-  std::vector<double> m_particleMassSq;
+  /// particle hypothesis masses squared
+  boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
 };
 

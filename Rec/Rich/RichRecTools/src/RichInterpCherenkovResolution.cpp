@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.cpp,v 1.1 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichInterpCherenkovResolution.cpp,v 1.2 2003-10-13 16:32:31 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -123,7 +123,7 @@ RichInterpCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
 
   // track and radiator type
   Rich::RadiatorType rad = segment->trackSegment().radiator();
-  Rich::Track::Type type = segment->richRecTrack()->trackType();
+  Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
 
   // compute the interpolated resolution
   double res = (m_ckRes[rad][type])->value(thetaExp);

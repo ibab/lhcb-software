@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.1 2003-08-26 14:40:18 jonrob Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.2 2003-10-13 16:32:31 jonrob Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -23,6 +23,9 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 
   declareInterface<IRichRayleighScatter>(this);
 
+  // Make job option for time being
+  declareProperty( "AeroClarity", m_AeroClarity = 0.0006 );
+
 }
 
 StatusCode RichFunctionalRayleighScatter::initialize() {
@@ -37,14 +40,17 @@ StatusCode RichFunctionalRayleighScatter::initialize() {
   SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
 
   // Rayleigh scattering parameters
-  m_eVToMicron = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
-  m_AeroClarity = Rich1DE->userParameterAsDouble("AerogelClarity")/cm;
+  //m_eVToMicron = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
+  //m_AeroClarity = Rich1DE->userParameterAsDouble("AerogelClarity")/cm;
+  m_eVToMicron = 1.24;
 
   // Informational Printout
   msg << MSG::DEBUG
       << " Using analytic implementation" << endreq
       << " eV to mm conversion factor   = " << m_eVToMicron << endreq
       << " Aerogel clarity              = " << m_AeroClarity << endreq;
+  msg << MSG::WARNING
+      << " Remove temporary hardcoded numbers" << endreq;
 
   return StatusCode::SUCCESS;
 }

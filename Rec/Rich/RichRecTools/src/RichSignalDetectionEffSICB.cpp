@@ -1,4 +1,4 @@
-// $Id: RichSignalDetectionEffSICB.cpp,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+// $Id: RichSignalDetectionEffSICB.cpp,v 1.2 2003-10-13 16:32:35 jonrob Exp $
 
 // local
 #include "RichSignalDetectionEffSICB.h"
@@ -23,6 +23,10 @@ RichSignalDetectionEffSICB::RichSignalDetectionEffSICB ( const std::string& type
 
   // Define job option parameters
 
+  // Quantum efficiency
+  declareProperty( "QETableLocation", m_qeTableLoc =
+                   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff" );
+
   // temporary parameters to take into acount degraded performance for robustness tests
   declareProperty( "ScalePhotonEff", m_photonEffScale = 1 );
 
@@ -36,9 +40,6 @@ StatusCode RichSignalDetectionEffSICB::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
-
   // Define mirror reflectivities and energy cutoff values.
   // Private implementation that should be removed at some later date and
   // RichDetInterface used instead
@@ -50,11 +51,12 @@ StatusCode RichSignalDetectionEffSICB::initialize() {
   // Digitisation pedestal loss
   m_pedLoss = 0.899999976;
 
-  // Get the Quantum Eff
-  // For time being assume only one reference curve for all HPDs
-  m_referenceQE = m_richDetInt->hpdQuantumEff();
-  if ( !m_referenceQE ) {
-    msg << MSG::ERROR << "Failed to acquire QE function" << endreq;
+ // Acquire QE Curve from XML
+  SmartDataPtr<TabulatedProperty> tabQE( detSvc(), m_qeTableLoc );
+  if ( tabQE ) {
+    m_QE = new Rich1DTabProperty( tabQE );
+  } else {
+    msg << MSG::ERROR << "Cannot retrieve QE from " + m_qeTableLoc  << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -63,7 +65,8 @@ StatusCode RichSignalDetectionEffSICB::initialize() {
       << " Using SICB hardcoded numbers" << endreq
       << " Applying average mirror reflectivity = " << m_detReflectorEff << endreq
       << " Applying quartz window efficiency    = " << m_quartzWinEff << endreq
-      << " Applying digitisation pedestal loss  = " << m_pedLoss << endreq;
+      << " Applying digitisation pedestal loss  = " << m_pedLoss << endreq
+      << " Quantum Efficiency           = " << m_qeTableLoc << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -73,8 +76,7 @@ StatusCode RichSignalDetectionEffSICB::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // release tools
-  releaseTool( m_richDetInt );
+  if ( m_QE ) { delete m_QE; m_QE = 0; }
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -83,7 +85,7 @@ StatusCode RichSignalDetectionEffSICB::finalize() {
 double RichSignalDetectionEffSICB::photonDetEfficiency( RichRecSegment *,
                                                         double energy ) {
 
-  return (*m_referenceQE)[energy*eV]/100 *
+  return (*m_QE)[energy*eV]/100 *
     m_quartzWinEff * m_detReflectorEff *
     m_pedLoss * m_photonEffScale;
 

@@ -1,6 +1,6 @@
-// $Id: RichTabulatedHPDSignalDetectionEff.h,v 1.2 2003-10-13 16:32:35 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHTABULATEDHPDSIGNALDETECTIONEFF_H
-#define RICHRECTOOLS_RICHTABULATEDHPDSIGNALDETECTIONEFF_H 1
+// $Id: RichTabulatedMaPMTSignalDetectionEff.h,v 1.1 2003-10-13 16:32:35 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H
+#define RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -28,7 +28,7 @@
 #include "RichKernel/RichDetectorType.h"
 #include "RichKernel/BoostArray.h"
 
-/** @class RichTabulatedHPDSignalDetectionEff RichTabulatedHPDSignalDetectionEff.h
+/** @class RichTabulatedMaPMTSignalDetectionEff RichTabulatedMaPMTSignalDetectionEff.h
  *
  *  Tool providing calculations for the photon detection efficiencies
  *
@@ -36,18 +36,18 @@
  *  @date   15/03/2002
  */
 
-class RichTabulatedHPDSignalDetectionEff : public RichRecToolBase,
-                                           virtual public IRichSignalDetectionEff {
+class RichTabulatedMaPMTSignalDetectionEff : public RichRecToolBase,
+                                             virtual public IRichSignalDetectionEff {
 
 public:
 
   /// Standard constructor
-  RichTabulatedHPDSignalDetectionEff( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent );
+  RichTabulatedMaPMTSignalDetectionEff( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent );
 
   /// Destructor
-  virtual ~RichTabulatedHPDSignalDetectionEff() {};
+  virtual ~RichTabulatedMaPMTSignalDetectionEff() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -77,16 +77,16 @@ private:  // Private data
   /// Digitisation pedestal loss
   double m_pedLoss;
 
-  /// Quantum Efficiency function. 
-  /// For time being assume only one reference curve for all HPDs
+  /// Quantum Efficiency function.
+  /// For time being assume only one reference curve for all MaPMTs
   Rich1DTabProperty * m_QE;
 
   /// Location of QE in XML
-  std::string m_qeTableLoc;   
+  std::string m_qeTableLoc;
 
   /// temporary parameters to take into acount degraded performance for robustness tests
   double m_photonEffScale;
 
 };
 
-#endif // RICHRECTOOLS_RICHTABULATEDHPDSIGNALDETECTIONEFF_H
+#endif // RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H

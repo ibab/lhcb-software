@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.5 2003-08-26 14:40:22 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.6 2003-10-13 16:32:36 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -25,6 +25,7 @@ RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const st
                    m_trTracksLocation = TrStoredTrackLocation::Default );
   declareProperty( "RichRecTrackLocation",
                    m_richRecTrackLocation = RichRecTrackLocation::Default );
+  declareProperty( "SkipNonUniqueTracks", m_skipNonUnique = true );
 
 }
 
@@ -123,14 +124,21 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident& incident ) {
 StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() {
 
   if ( ! m_allDone ) {
+    m_allDone = true;
 
     // Obtain smart data pointer to TrStoredTracks
     SmartDataPtr<TrStoredTracks> tracks( m_evtDataSvc, m_trTracksLocation );
     if ( !tracks ) {
       MsgStream msg( msgSvc(), name() );
-      msg << MSG::ERROR << "Failed to locate tracks at "
+      msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
           << m_trTracksLocation << endreq;
       return StatusCode::FAILURE;
+    } else {
+      if ( msgLevel(MSG::DEBUG) ) {
+        MsgStream msg( msgSvc(), name() );
+        msg << MSG::DEBUG << "located " << tracks->size() << " TrStoredTracks at "
+            << m_trTracksLocation << endreq;
+      }
     }
 
     // Iterate over all reco tracks, and create new RichRecTracks
@@ -138,7 +146,6 @@ StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() {
           track != tracks->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
 
-    m_allDone = true;
   }
 
   return StatusCode::SUCCESS;
@@ -146,10 +153,11 @@ StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() {
 
 // Forms a new RichRecTrack object from a TrStoredTrack
 RichRecTrack *
-RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
+RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) {
 
-  TrStoredTrack * trTrack = dynamic_cast<TrStoredTrack*>(obj);
+  const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack*>(obj);
   if ( !trTrack ) return NULL;
+  if ( m_skipNonUnique && !trTrack->unique() ) return NULL;
 
   int key = (int)trTrack->key();
 
@@ -173,18 +181,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
         // Form a new RichRecTrack
         newTrack = new RichRecTrack();
 
-        // Track type
-        if ( trTrack->forward() ) {
-          newTrack->setTrackType( Rich::Track::Forward );
-        } else if ( trTrack->match() ) {
-          newTrack->setTrackType( Rich::Track::Match );
-        } else if ( trTrack->upstream() ) {
-          newTrack->setTrackType( Rich::Track::UpStream );
-        } else if ( trTrack->seed() ) {
-          newTrack->setTrackType( Rich::Track::Seed );
-        } else if ( trTrack->veloTT() ) {
-          newTrack->setTrackType( Rich::Track::VeloTT );
-        }
+        // Configure TrackID for TrStoredTrack
+        newTrack->trackID().initTrStoredTrack( trTrack );
 
         bool keepTrack = false;
 
@@ -206,8 +204,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
             // Add to the SmartRefVector of RichSegments for this RichRecTrack
             newTrack->addToRichRecSegments( newSegment );
 
-            // Get HPD panel impact point
-            HepPoint3D & hitPoint = newSegment->hpdPanelHitPoint();
+            // Get PD panel impact point
+            HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
             HepVector3D trackDir = (*iSeg).bestMomentum();
             if ( !m_richDetInt->traceToDetectorWithoutEff( (*iSeg).rich(),
                                                            (*iSeg).bestPoint(),
@@ -215,7 +213,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
                                                            hitPoint ) ) {
               MsgStream msg( msgSvc(), name() );
               msg << MSG::WARNING << "Segment " << newSegment->key()
-                  << " has no HPD panel impact point !!" << endreq;
+                  << " has no PD panel impact point !!" << endreq;
             }
 
             // set radiator info
@@ -241,7 +239,6 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
 
           // Set parent information
           newTrack->setParentTrack( trTrack );
-          newTrack->setParentType( Rich::RecTrack::TrStoredTrack );
 
         } else {
           delete newTrack;
@@ -259,7 +256,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
 
 }
 
-RichRecTracks *& RichTrackCreatorFromTrStoredTracks::richTracks() {
+RichRecTracks *& RichTrackCreatorFromTrStoredTracks::richTracks()
+{
   return m_tracks;
 }
-

@@ -1,16 +1,16 @@
-// $Id: RichSignalDetectionEffSICB.h,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+// $Id: RichSignalDetectionEffSICB.h,v 1.2 2003-10-13 16:32:35 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H
 #define RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
 // interfaces
 #include "RichRecBase/IRichSignalDetectionEff.h"
-#include "RichDetTools/IRichDetInterface.h"
 
 // RichUtils
 #include "RichUtils/Rich1DTabProperty.h"
@@ -53,8 +53,8 @@ public:
 
 private:  // Private data
 
-  /// Tool pointers
-  IRichDetInterface * m_richDetInt;
+  /// Location of QE in XML
+  std::string m_qeTableLoc;     
 
   // Temporary variables
   double m_detReflectorEff;
@@ -67,7 +67,7 @@ private:  // Private data
 
   /// Quantum Efficiency function. For time being assume only one reference
   /// curve for all HPDs
-  Rich1DTabProperty * m_referenceQE;
+  Rich1DTabProperty * m_QE;
 
   /// temporary parameters to take into acount degraded performance for robustness tests
   double m_photonEffScale;

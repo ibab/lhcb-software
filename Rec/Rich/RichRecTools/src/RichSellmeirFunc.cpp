@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.2 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.3 2003-10-13 16:32:34 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -33,7 +33,9 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
 
   declareInterface<IRichSellmeirFunc>(this);
 
-  // Define job option parameters
+  // Aerogel specific parameters... SHould be in XML
+  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 ); 
+
 }
 
 StatusCode RichSellmeirFunc::initialize() {
@@ -62,25 +64,25 @@ StatusCode RichSellmeirFunc::initialize() {
   SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
 
   // Load radiator parameters from XML
-  m_selF1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF1");
-  m_selF1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F1");
-  m_selF1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F1");
-  m_selF2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF2");
-  m_selF2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F2");
-  m_selF2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F2");
-  m_selE1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE1");
-  m_selE1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E1");
-  m_selE1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E1");
-  m_selE2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE2");
-  m_selE2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E2");
-  m_selE2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E2");
+  m_selF1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF1Param");
+  m_selF1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F1Param");
+  m_selF1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F1Param");
+  m_selF2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF2Param");
+  m_selF2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F2Param");
+  m_selF2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F2Param");
+  m_selE1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE1Param");
+  m_selE1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E1Param");
+  m_selE1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E1Param");
+  m_selE2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE2Param");
+  m_selE2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E2Param");
+  m_selE2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E2Param");
   m_molW[Rich::Aerogel]  = 0;
-  m_molW[Rich::C4F10]    = Rich1DE->userParameterAsDouble("GasMolWeightC4F10");
-  m_molW[Rich::CF4]      = Rich1DE->userParameterAsDouble("GasMolWeightCF4");
+  m_molW[Rich::C4F10]    = Rich1DE->userParameterAsDouble("GasMolWeightC4F10Param");
+  m_molW[Rich::CF4]      = Rich1DE->userParameterAsDouble("GasMolWeightCF4Param");
   m_rho[Rich::Aerogel]   = 0;
-  m_rho[Rich::C4F10]     = Rich1DE->userParameterAsDouble("RhoEffectiveSellC4F10");
-  m_rho[Rich::CF4]       = Rich1DE->userParameterAsDouble("RhoEffectiveSellCF4");
-  double selLorGasFac    = Rich1DE->userParameterAsDouble("SellLorGasFac");
+  m_rho[Rich::C4F10]     = Rich1DE->userParameterAsDouble("RhoEffectiveSellC4F10Param");
+  m_rho[Rich::CF4]       = Rich1DE->userParameterAsDouble("RhoEffectiveSellCF4Param");
+  double selLorGasFac    = Rich1DE->userParameterAsDouble("SellLorGasFacParam");
 
   // Initialise the calculations and cache as much as possible for efficiency
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
@@ -133,9 +135,11 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
   double length = segment->trackSegment().pathLength();
   Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-  return ( 37.0 * length / betaSq ) * ( paraW(rad,topEn) -
-                                        paraW(rad,botEn) -
-                                        (topEn-botEn)/gammaSq );
+  double nPhot = ( 37.0 * length / betaSq ) * ( paraW(rad,topEn) -
+                                                paraW(rad,botEn) -
+                                                (topEn-botEn)/gammaSq );
+  if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
+  return nPhot;
 }
 
 double RichSellmeirFunc::paraW ( Rich::RadiatorType rad, double energy ) {

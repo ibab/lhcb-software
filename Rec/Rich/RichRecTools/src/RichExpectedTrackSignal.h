@@ -1,10 +1,9 @@
-// $Id: RichExpectedTrackSignal.h,v 1.3 2003-08-26 14:40:18 jonrob Exp $
+// $Id: RichExpectedTrackSignal.h,v 1.4 2003-10-13 16:32:30 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-//#include "GaudiKernel/SmartDataPtr.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -115,6 +114,14 @@ public:
   double nDetectablePhotons ( RichRecSegment * segment,
                               const Rich::ParticleIDType id );
 
+  /// The average energy of signal Cherenkov photons
+  double avgSignalPhotEnergy( RichRecSegment * segment,
+                              const Rich::ParticleIDType id );
+
+  /// The average energy of emitted Cherenkov photons
+  double avgEmitPhotEnergy( RichRecSegment * segment,
+                            const Rich::ParticleIDType id );
+  
   /// Is it possible for this track to give Rich information
   bool hasRichInfo( RichRecTrack * track );
 

@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.2 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.3 2003-10-13 16:32:30 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -78,12 +78,14 @@ double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
       // which radiator
       Rich::RadiatorType rad = segment->trackSegment().radiator();
 
+      // Beta for this segment
+      double beta = m_richPartProp->beta(segment, id);
+
       // loop over energy bins
       RichPhotonSpectra & sigSpectra = segment->signalPhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin ) {
-        double temp = 
-          m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) ) * 
-          m_richPartProp->beta(segment, id);
+        double temp = beta *
+          m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
         angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
       }
       

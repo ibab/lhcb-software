@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.2 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichSegmentCreator.cpp,v 1.3 2003-10-13 16:32:34 jonrob Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -35,7 +35,7 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
   m_binsEn[Rich::CF4]     = 5;
   declareProperty( "EnergyBins", m_binsEn );
 
-  m_maxPhotEn[Rich::Aerogel] = 3.5;
+  m_maxPhotEn[Rich::Aerogel] = 3.8;
   m_maxPhotEn[Rich::C4F10]   = 7.0;
   m_maxPhotEn[Rich::CF4]     = 7.0;
   declareProperty( "MaxPhotonEnergy", m_maxPhotEn );

@@ -1,4 +1,4 @@
-// $Id: RichRecTools_load.cpp,v 1.8 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichRecTools_load.cpp,v 1.9 2003-10-13 16:32:34 jonrob Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -8,7 +8,8 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichTrackCreatorFromTrStoredTracks );
   DECLARE_TOOL( RichSegmentCreator );
   DECLARE_TOOL( RichPixelCreatorFromRichDigits );
-  DECLARE_TOOL( RichPixelCreatorFromSICB ); // temporary
+  DECLARE_TOOL( RichPixelCreatorFromSICBHPD ); // temporary
+  DECLARE_TOOL( RichPixelCreatorFromSICBMaPMT ); // temporary
   DECLARE_TOOL( RichPhotonCreator );
   DECLARE_TOOL( RichPhotonPredictor );
   DECLARE_TOOL( RichStatusCreator );
@@ -22,14 +23,13 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichPhotonSignalHPD );
   DECLARE_TOOL( RichPhotonSignalMaPMT );
   DECLARE_TOOL( RichTabulatedHPDSignalDetectionEff );
-  DECLARE_TOOL( RichSignalDetectionEffSICB ); // temporary
-
-  // MC truth tools
-  DECLARE_TOOL( RichRecMCTruthTool );
+  DECLARE_TOOL( RichTabulatedHPDSignalDetectionEffSICB );  // temporary
+  DECLARE_TOOL( RichTabulatedMaPMTSignalDetectionEff );
+  DECLARE_TOOL( RichSignalDetectionEffSICB );
 
   // refractive index tools
   DECLARE_TOOL( RichTabulatedRefractiveIndex );
-  DECLARE_TOOL( RichRefractiveIndexSICB );   // temporary
+  DECLARE_TOOL( RichRefractiveIndexSICB );
 
   // Physical properties
   DECLARE_TOOL( RichSellmeirFunc );

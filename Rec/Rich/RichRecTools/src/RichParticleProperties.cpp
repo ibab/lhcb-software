@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.3 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichParticleProperties.cpp,v 1.4 2003-10-13 16:32:31 jonrob Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -85,13 +85,13 @@ StatusCode RichParticleProperties::finalize() {
   return RichRecToolBase::finalize();
 }
 
-
 double RichParticleProperties::beta( RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) 
 {
   double momentum = segment->trackSegment().bestMomentumMag();
   double Esquare = momentum*momentum + m_particleMassSq[id];
-  return (Esquare > 0.0 ? momentum/sqrt(Esquare) : 0.0);
+
+  return ( Esquare > 0 ? momentum/sqrt(Esquare) : 0 );
 }
 
 double RichParticleProperties::mass( const Rich::ParticleIDType id ) 

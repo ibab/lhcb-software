@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFuncSICB.cpp,v 1.1 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichSellmeirFuncSICB.cpp,v 1.2 2003-10-13 16:32:34 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -33,7 +33,9 @@ RichSellmeirFuncSICB::RichSellmeirFuncSICB ( const std::string& type,
 
   declareInterface<IRichSellmeirFunc>(this);
 
-  // Define job option parameters
+  // Aerogel specific parameters... SHould be in XML
+  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 ); 
+
 }
 
 StatusCode RichSellmeirFuncSICB::initialize() {
@@ -44,33 +46,19 @@ StatusCode RichSellmeirFuncSICB::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = 0;
-  if ( !serviceLocator()->service( "ParticlePropertySvc", ppSvc ) ) {
-    msg << MSG::ERROR << "ParticlePropertySvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
+  // Acquire instances of tools
+  IRichParticleProperties * partProp;
+  acquireTool( "RichParticleProperties", partProp );
 
-  // Retrieve particle masses
-  m_particleMass.push_back( ppSvc->find("e+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("mu+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("pi+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("K+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("p+" )->mass()/MeV );
-  // cache squares of masses
-  m_particleMassSq.push_back( m_particleMass[ Rich::Electron ] *
-                              m_particleMass[ Rich::Electron ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Muon ] *
-                              m_particleMass[ Rich::Muon ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Pion ] *
-                              m_particleMass[ Rich::Pion ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Kaon ] *
-                              m_particleMass[ Rich::Kaon ] );
-  m_particleMassSq.push_back( m_particleMass[ Rich::Proton ] *
-                              m_particleMass[ Rich::Proton ] );
+  // Retrieve square of particle masses
+  m_particleMassSq[Rich::Electron] = partProp->massSq( Rich::Electron );
+  m_particleMassSq[Rich::Muon]     = partProp->massSq( Rich::Muon );
+  m_particleMassSq[Rich::Pion]     = partProp->massSq( Rich::Pion );
+  m_particleMassSq[Rich::Kaon]     = partProp->massSq( Rich::Kaon );
+  m_particleMassSq[Rich::Proton]   = partProp->massSq( Rich::Proton );
 
-  // release particle property service
-  ppSvc->release();
+  // release particle properties tool
+  releaseTool( partProp );
 
   // should get from XML
   m_selF1[Rich::Aerogel] = 2.653;
@@ -94,7 +82,8 @@ StatusCode RichSellmeirFuncSICB::initialize() {
 
   // Informational Printout
   msg << MSG::DEBUG
-      << " Using SICB hardcoded version" << endreq;
+      << " Using SICB hardcoded version" << endreq
+      << " WaveIndpTrans = " <<  m_waveIndepTrans << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -112,9 +101,11 @@ double RichSellmeirFuncSICB::photonsInEnergyRange( RichRecSegment * segment,
   double length = segment->trackSegment().pathLength();
   Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-  return ( 37.0 * length / betaSq ) * ( paraWt(rad,topEn) -
-                                        paraWb(rad,botEn) -
-                                        (topEn-botEn)/gammaSq );
+  double nPhot = ( 37.0*length/betaSq ) * ( paraWt(rad,topEn) -
+                                            paraWb(rad,botEn) -
+                                            (topEn-botEn)/gammaSq );
+  if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
+  return nPhot;
 }
 
 double RichSellmeirFuncSICB::paraWb ( Rich::RadiatorType rad, double botEn ) {

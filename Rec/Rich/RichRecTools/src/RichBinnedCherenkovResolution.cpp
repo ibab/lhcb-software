@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.3 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.4 2003-10-13 16:32:30 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -170,7 +170,7 @@ RichBinnedCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
   if ( thetaExp < 0.000001 ) return 0;
 
   Rich::RadiatorType rad = segment->trackSegment().radiator();
-  Rich::Track::Type type = segment->richRecTrack()->trackType();
+  Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
   double res = 0;
   if ( thetaExp > 0. &&  thetaExp < (m_thebin[rad])[0] ) {
     res = (m_theerr[rad][type])[0];

@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.3 2003-08-26 14:40:18 jonrob Exp $
+// $Id: RichExpectedTrackSignal.cpp,v 1.4 2003-10-13 16:32:30 jonrob Exp $
 
 // local
 #include "RichExpectedTrackSignal.h"
@@ -40,7 +40,7 @@ StatusCode RichExpectedTrackSignal::initialize() {
   acquireTool( "RichGeomEff",            m_geomEff      );
   acquireTool( "RichSellmeirFunc",       m_sellmeir     );
   acquireTool( "RichSignalDetectionEff", m_sigDetEff    );
-  acquireTool( "RichParticleProperties", m_richPartProp ); 
+  acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichRayleighScatter",    m_rayScat      );
 
   // Informational Printout
@@ -75,7 +75,7 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
     RichPhotonSpectra & spectra = segment->emittedPhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
 
-      double phots = 
+      double phots =
         m_sellmeir->photonsInEnergyRange( segment,
                                           id,
                                           spectra.binEnergyLowerEdge(iEnBin),
@@ -104,7 +104,7 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
     RichPhotonSpectra & emitSpectra = segment->emittedPhotonSpectra();
     RichPhotonSpectra & detSpectra  = segment->detectablePhotonSpectra();
     for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) {
-      double sig = (emitSpectra.energyDist(id))[iEnBin] * 
+      double sig = (emitSpectra.energyDist(id))[iEnBin] *
         m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
       signal += ( (detSpectra.energyDist(id))[iEnBin] = sig );
     }
@@ -135,7 +135,7 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       RichPhotonSpectra & detSpectra = segment->detectablePhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) {
 
-        double scattProb = 
+        double scattProb =
           ( rad != Rich::Aerogel ? 0 :
             m_rayScat->photonScatteredProb( segment,
                                             detSpectra.binEnergy(iEnBin) ) );
@@ -155,6 +155,60 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
   }
 
   return segment->nSignalPhotons( id );
+}
+
+double
+RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
+                                              const Rich::ParticleIDType id )
+{
+
+  // NB : If used often this method should cache information in segment
+
+  // make sure signal photons are calculated
+  double nSig = nSignalPhotons ( segment, id );
+
+  double avgEnergy = 0;
+  if ( nSig> 0 ) {
+
+    // loop over energy bins
+    RichPhotonSpectra & spectra = segment->signalPhotonSpectra();
+    double totalEnergy = 0;
+    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
+      avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
+      totalEnergy += (spectra.energyDist(id))[iEnBin];
+    } // energy bin loop
+    avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
+
+  }
+
+  return avgEnergy;
+}
+
+double
+RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
+                                            const Rich::ParticleIDType id )
+{
+
+  // NB : If used often this method should cache information in segment
+
+  // make sure signal photons are calculated
+  double nSig = nEmittedPhotons ( segment, id );
+
+  double avgEnergy = 0;
+  if ( nSig> 0 ) {
+
+    // loop over energy bins
+    RichPhotonSpectra & spectra = segment->emittedPhotonSpectra();
+    double totalEnergy = 0;
+    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
+      avgEnergy   += (spectra.energyDist(id))[iEnBin] * spectra.binEnergy(iEnBin);
+      totalEnergy += (spectra.energyDist(id))[iEnBin];
+    } // energy bin loop
+    avgEnergy = ( totalEnergy>0 ? avgEnergy/totalEnergy : 0 );
+
+  }
+
+  return avgEnergy;
 }
 
 double
@@ -198,28 +252,6 @@ bool RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
                                               const Rich::ParticleIDType type ) {
   return ( segment->trackSegment().bestMomentumMag() >
            m_richPartProp->thresholdMomentum(type, segment->trackSegment().radiator()) );
-}
-
-// Set the threshold information in a RichPID object for given segment
-void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
-                                                RichPID * pid ) {
-
-  if ( aboveThreshold(segment,Rich::Electron) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Electron)>0 ) pid->setElectronHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Muon) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Muon)>0 ) pid->setMuonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Pion) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Pion)>0 ) pid->setPionHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Kaon) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Kaon)>0 ) pid->setKaonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Proton) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
-  } else { return; }
-
 }
 
 double RichExpectedTrackSignal::nSignalPhotons ( RichRecTrack * track,
@@ -364,7 +396,7 @@ bool RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
           track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment ) {
-    if ( aboveThreshold( *segment, type ) ) return true;
+    if ( aboveThreshold(*segment,type) ) return true;
   }
 
   return false;
@@ -404,6 +436,28 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track, RichPID * 
   } else { return; }
   if ( aboveThreshold(track,Rich::Proton) ) {
     if ( nTotalObservablePhotons(track,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
+  } else { return; }
+
+}
+
+// Set the threshold information in a RichPID object for given segment
+void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
+                                                RichPID * pid ) {
+
+  if ( aboveThreshold(segment,Rich::Electron) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Electron)>0 ) pid->setElectronHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Muon) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Muon)>0 ) pid->setMuonHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Pion) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Pion)>0 ) pid->setPionHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Kaon) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Kaon)>0 ) pid->setKaonHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Proton) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
   } else { return; }
 
 }

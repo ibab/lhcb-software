@@ -1,22 +1,22 @@
-// $Id: RichTabulatedHPDSignalDetectionEff.cpp,v 1.2 2003-10-13 16:32:35 jonrob Exp $
+// $Id: RichTabulatedHPDSignalDetectionEffSICB.cpp,v 1.1 2003-10-13 16:32:35 jonrob Exp $
 
 // local
-#include "RichTabulatedHPDSignalDetectionEff.h"
+#include "RichTabulatedHPDSignalDetectionEffSICB.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedHPDSignalDetectionEff
+// Implementation file for class : RichTabulatedHPDSignalDetectionEffSICB
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedHPDSignalDetectionEff>          s_factory ;
-const        IToolFactory& RichTabulatedHPDSignalDetectionEffFactory = s_factory ;
+static const  ToolFactory<RichTabulatedHPDSignalDetectionEffSICB>          s_factory ;
+const        IToolFactory& RichTabulatedHPDSignalDetectionEffSICBFactory = s_factory ;
 
 // Standard constructor
-RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const std::string& type,
-                                                                         const std::string& name,
-                                                                         const IInterface* parent )
+RichTabulatedHPDSignalDetectionEffSICB::RichTabulatedHPDSignalDetectionEffSICB ( const std::string& type,
+                                                                                 const std::string& name,
+                                                                                 const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
     m_flatMirReflLoc ( Rich::NRiches      ),
     m_sphMirReflLoc  ( Rich::NRiches      ) {
@@ -44,7 +44,7 @@ RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const s
 
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
+StatusCode RichTabulatedHPDSignalDetectionEffSICB::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -95,16 +95,20 @@ StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
 
   // Get Rich1 Detector element
   SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
-  
+
   // Quartz window eff
   m_quartzWinEff = Rich1DE->userParameterAsDouble( "HPDQuartzWindowEff" );
-  
+
   // Digitisation pedestal loss
   m_pedLoss = Rich1DE->userParameterAsDouble( "HPDPedestalDigiEff" );
-  
+
+  // fudge factor to account for unknown problem with SICB HPD data
+  // TO BE SORTED
+  m_fudge = 1.0;
+
   // Informational Printout
   msg << MSG::DEBUG
-      << " Using XML tabulated implementation for HPD" << endreq
+      << " Using XML tabulated implementation for SICB HPD" << endreq
       << " Rich1 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich1] << endreq
       << " Rich2 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich2] << endreq
       << " Rich1 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich1] << endreq
@@ -117,7 +121,7 @@ StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
+StatusCode RichTabulatedHPDSignalDetectionEffSICB::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -138,13 +142,13 @@ StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
 }
 
 double
-RichTabulatedHPDSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
-                                                         double energy )
+RichTabulatedHPDSignalDetectionEffSICB::photonDetEfficiency( RichRecSegment * segment,
+                                                             double energy )
 {
   // which detector
   Rich::DetectorType det = segment->trackSegment().rich();
 
-  return (*m_QE)[energy*eV]/100 *
+  return m_fudge * (*m_QE)[energy*eV]/100 *
     m_quartzWinEff * m_pedLoss * m_photonEffScale *
     (*m_flatMirRefl[det])[energy*eV] * (*m_sphMirRefl[det])[energy*eV];
 }

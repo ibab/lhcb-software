@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignalHPD.cpp,v 1.1 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichPhotonSignalHPD.cpp,v 1.2 2003-10-13 16:32:32 jonrob Exp $
 
 // local
 #include "RichPhotonSignalHPD.h"
@@ -47,7 +47,8 @@ StatusCode RichPhotonSignalHPD::initialize() {
   // area of pixel in mm^2
   double xSize      = Rich1DE->userParameterAsDouble("RichHpdPixelXsize"); // 0.5*mm
   double ySize      = Rich1DE->userParameterAsDouble("RichHpdPixelYsize"); // 0.5*mm
-  double demagScale = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor"); // 4.8
+  //double demagScale = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor"); // 4.8
+  double demagScale = 4.8;
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
   // Informational Printout

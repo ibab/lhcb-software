@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignalMaPMT.cpp,v 1.1 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichPhotonSignalMaPMT.cpp,v 1.2 2003-10-13 16:32:32 jonrob Exp $
 
 // local
 #include "RichPhotonSignalMaPMT.h"
@@ -48,12 +48,20 @@ StatusCode RichPhotonSignalMaPMT::initialize() {
   double pixXsize  = Rich1DE->userParameterAsDouble("RichMapmtPixelXsize");
   double pixYsize  = Rich1DE->userParameterAsDouble("RichMapmtPixelYsize");
   double nPix      = Rich1DE->userParameterAsDouble("RichMapmtTotNumPixel");
-  double pixXsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaX");
-  double pixYsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaY");
-  double QWxSize   = Rich1DE->userParameterAsDouble("RhMapmtQWXSize");
-  double QWySize   = Rich1DE->userParameterAsDouble("RhMapmtQWYSize");
+  //double pixXsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaX");
+  //double pixYsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaY");
+  //double QWxSize   = Rich1DE->userParameterAsDouble("RhMapmtQWXSize");
+  //double QWySize   = Rich1DE->userParameterAsDouble("RhMapmtQWYSize");
+  // hardcode for the moment
+  double pixXsep   = 2.3*mm;
+  double pixYsep   = 2.3*mm;
+  double QWxSize   = 25.7*mm;
+  double QWySize   = 25.7*mm;
   double activeF   = (pixXsize/pixXsep) * (pixYsize/pixYsep);
   m_pixelArea      = activeF * (QWxSize*QWySize)/nPix;
+
+  // For later
+  //m_pixelArea        = pow( Rich1DE->userParameterAsDouble("RhCdfMaPMTPixelSize"), 2 );
 
   // Informational Printout
   msg << MSG::DEBUG

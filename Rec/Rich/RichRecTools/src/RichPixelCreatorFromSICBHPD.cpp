@@ -1,22 +1,22 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.4 2003-10-13 16:32:32 jonrob Exp $
+// $Id: RichPixelCreatorFromSICBHPD.cpp,v 1.1 2003-10-13 16:32:33 jonrob Exp $
 
 // local
-#include "RichPixelCreatorFromRichDigits.h"
+#include "RichPixelCreatorFromSICBHPD.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromRichDigits
+// Implementation file for class : RichPixelCreatorFromSICBHPD
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromRichDigits>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
+static const  ToolFactory<RichPixelCreatorFromSICBHPD>          s_factory ;
+const        IToolFactory& RichPixelCreatorFromSICBHPDFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
-                                                                const std::string& name,
-                                                                const IInterface* parent )
+RichPixelCreatorFromSICBHPD::RichPixelCreatorFromSICBHPD( const std::string& type,
+                                                          const std::string& name,
+                                                          const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichPixelCreator>(this);
@@ -29,7 +29,7 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::initialize() {
+StatusCode RichPixelCreatorFromSICBHPD::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -44,7 +44,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   }
 
   // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
+  acquireTool("SICBPixelGeom", m_pixelFinder);
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -58,26 +58,26 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
   // Informational printout
   msg << MSG::DEBUG
-      << " Using OO RichDigits" << endreq;
+      << " Using SICB RichDigits" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::finalize() {
+StatusCode RichPixelCreatorFromSICBHPD::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-  releaseTool( m_richDetInt );
+  releaseTool( m_pixelFinder );
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
+void RichPixelCreatorFromSICBHPD::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
@@ -94,7 +94,7 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
       // Reinitialise the Pixel Container
       m_pixels = new RichRecPixels();
 
-      // Register new RichRecPhoton container to Gaudi data store
+      // Register new RichRecPixel container to Gaudi data store
       if ( !m_evtDataSvc->registerObject(m_richRecPixelLocation, m_pixels) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecPixels at "
@@ -121,7 +121,7 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) {
+RichRecPixel * RichPixelCreatorFromSICBHPD::newPixel( const ContainedObject * obj ) {
 
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
@@ -131,7 +131,6 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
     return NULL;
   }
 
-  // RichDigit key
   RichSmartID id = digit->key();
 
   // See if this RichRecPixel already exists
@@ -147,11 +146,12 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
       newPixel = new RichRecPixel();
       m_pixels->insert( newPixel );
 
-      // Positions
+      // position
       HepPoint3D & gPosition = newPixel->globalPosition();
-      m_richDetInt->globalPosition( id, gPosition );
-      // no method for local position as yet !
-      //HepPoint3D & lPosition = newPixel->localPosition();
+      HepPoint3D & lPosition = newPixel->localPosition();
+      gPosition = 10.0 * (m_pixelFinder->globalPosition(id));
+      lPosition = 10.0 * (m_pixelFinder->localPosition(id));
+      m_pixelFinder->convertSmartID( id ); // convert smartID to OO conventions
 
       // Set smartID
       newPixel->setSmartID( id );
@@ -170,7 +170,7 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() {
+StatusCode RichPixelCreatorFromSICBHPD::newPixels() {
 
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
@@ -186,8 +186,8 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() {
 
   // Loop over RichDigits and create working pixels
   for ( RichDigits::iterator digit = digits->begin();
-        digit != digits->end(); ++digit ) {
-    newPixel( *digit );
+        digit != digits->end(); ++digit ) { 
+    newPixel( *digit ); 
   }
 
   if ( msgLevel(MSG::DEBUG) ) {
@@ -209,7 +209,7 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() {
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels *& RichPixelCreatorFromRichDigits::richPixels()
+RichRecPixels *& RichPixelCreatorFromSICBHPD::richPixels()
 {
   return m_pixels;
 }

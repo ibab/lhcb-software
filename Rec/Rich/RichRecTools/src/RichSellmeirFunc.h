@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.h,v 1.2 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichSellmeirFunc.h,v 1.3 2003-10-13 16:32:34 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
@@ -71,6 +71,9 @@ private: // data
   double m_selE2[Rich::NRadiatorTypes];
   double m_molW[Rich::NRadiatorTypes];
   double m_rho[Rich::NRadiatorTypes];
+
+  // Aerogel specific parameters
+  double m_waveIndepTrans;
 
   // cached parameters for speed
   double m_RXSPscale[Rich::NRadiatorTypes];

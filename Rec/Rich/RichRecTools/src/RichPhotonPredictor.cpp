@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.cpp,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPhotonPredictor.cpp,v 1.2 2003-10-13 16:32:31 jonrob Exp $
 
 // local
 #include "RichPhotonPredictor.h"
@@ -85,24 +85,24 @@ double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
                                                const RichRecPixel * pixel ) {
 
   if ( Rich::Rich1 == segment->trackSegment().rich() ) {
-    if ( pixel->globalPosition().y() * segment->hpdPanelHitPoint().y() > 0 ) {
-      return pixel->globalPosition().distance2( segment->hpdPanelHitPoint() );
+    if ( pixel->globalPosition().y() * segment->pdPanelHitPoint().y() > 0 ) {
+      return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().y() > 0 && segment->photonsInYPlus() ) ||
                 ( pixel->globalPosition().y() < 0 && segment->photonsInYMinus() ) ) {
       HepPoint3D temp( pixel->globalPosition().x(),
                        -pixel->globalPosition().y(),
                        pixel->globalPosition().z() );
-      return temp.distance2( segment->hpdPanelHitPoint() );
+      return temp.distance2( segment->pdPanelHitPoint() );
     }
   } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
-    if ( pixel->globalPosition().x() * segment->hpdPanelHitPoint().x() > 0 ) {
-      return pixel->globalPosition().distance2( segment->hpdPanelHitPoint() );
+    if ( pixel->globalPosition().x() * segment->pdPanelHitPoint().x() > 0 ) {
+      return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().x() > 0 && segment->photonsInXPlus()  ) ||
                 ( pixel->globalPosition().x() < 0 && segment->photonsInXMinus() ) ) {
       HepPoint3D temp( -pixel->globalPosition().x(),
                        pixel->globalPosition().y(),
                        pixel->globalPosition().z() );
-      return temp.distance2( segment->hpdPanelHitPoint() );
+      return temp.distance2( segment->pdPanelHitPoint() );
     }
   }
 

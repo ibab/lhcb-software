@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.cpp,v 1.4 2003-08-12 13:35:43 jonrob Exp $
+// $Id: RichGeomEffDetailed.cpp,v 1.5 2003-10-13 16:32:31 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -34,7 +34,7 @@ RichGeomEffDetailed::RichGeomEffDetailed ( const std::string& type,
 
   // Define job option parameters
   declareProperty( "NPhotonsGeomEffCalc", m_nGeomEff = 100 );
-  declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20 ); 
+  declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20 );
 
   // randomn number distribution
   Rndm::Numbers m_uniDist;
@@ -46,13 +46,13 @@ StatusCode RichGeomEffDetailed::initialize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
 
-   // Sets up various tools and services
+  // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
   acquireTool( "RichDetInterface",   m_richDetInt );
   acquireTool( "RichCherenkovAngle", m_ckAngle    );
-  
+
   // randomn number service
   IRndmGenSvc * randSvc;
   if ( serviceLocator()->service( "RndmGenSvc", randSvc, true ) ) {
@@ -63,7 +63,7 @@ StatusCode RichGeomEffDetailed::initialize() {
   } else { return StatusCode::FAILURE; }
 
   // Set up cached parameters for geometrical efficiency calculation
-  m_hpdInc = 1.0 / ( (double)m_nGeomEff );
+  m_pdInc = 1.0 / ( (double)m_nGeomEff );
   m_incPhi = M_PI/2.0 + M_2PI/( (double)m_nGeomEff );
   double ckPhi = 0.0;
   m_sinCkPhi.clear();
@@ -100,7 +100,7 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
 
   if ( !segment->geomEfficiency().dataIsValid(id) ) {
     double eff = 0;
-    
+
     // Cherenkov theta for this segment/hypothesis combination
     double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
     if ( ckTheta > 0 ) {
@@ -137,9 +137,9 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
                                                  photDir,
                                                  photon ) ) {
           ++nDetect;
-          segment->addToGeomEfficiencyPerHPD( id,
-                                              (int)(photon.smartID().hpdID()),
-                                              m_hpdInc );
+          segment->addToGeomEfficiencyPerPD( id,
+                                             (int)(photon.smartID().pdID()),
+                                             m_pdInc );
           if ( photon.detectionPoint().x() > 0 ) {
             segment->setPhotonsInXPlus(1);
           } else {

@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.2 2003-08-06 11:08:14 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.3 2003-10-13 16:32:36 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -57,7 +57,7 @@ public:
 
   /// Returns a RichRecTrack object pointer for given ContainedObject.
   /// In this implementation the ContainedObject must be a TrStoredTrack.
-  RichRecTrack * newTrack ( ContainedObject * obj  );
+  RichRecTrack * newTrack ( const ContainedObject * obj  );
 
   /// Form all possible RichRecTracks from input TrStoredTracks
   StatusCode newTracks();
@@ -85,8 +85,11 @@ private:
   /// Input location of TrStoredTracks in TES
   std::string m_trTracksLocation;
 
-  /// Outpuit location for RichRecTracks in TES
+  /// Output location for RichRecTracks in TES
   std::string m_richRecTrackLocation;
+
+  /// Flag to signify whether to ignore non-unique tracks
+  bool m_skipNonUnique;
 
   // Flag to signify all tracks have been formed for current event
   bool m_allDone;

@@ -1,6 +1,6 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.2 2003-10-13 16:32:32 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
+// $Id: RichPixelCreatorFromSICBHPD.h,v 1.1 2003-10-13 16:32:33 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMSICBHPD_H
+#define RICHRECTOOLS_RICHPIXELCREATORFROMSICBHPD_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -11,35 +11,35 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
-// interfaces
+// interface
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RiSicbGeom/PixelFinder.h"
 
 // Event
 #include "Event/RichDigit.h"
 
-/** @class RichPixelCreatorFromRichDigits RichPixelCreatorFromRichDigits.h
+/** @class RichPixelCreatorFromSICBHPD RichPixelCreatorFromSICBHPD.h
  *
- *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the OO digitisation as the parent objects.
+ *  Tool for the creation and manipulation of RichRecPixel objects.
+ *  Uses RichDigits from the SICBHPD digitisation as the parent objects.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichPixelCreatorFromRichDigits : public RichRecToolBase,
-                                       virtual public IRichPixelCreator,
-                                       virtual public IIncidentListener {
+class RichPixelCreatorFromSICBHPD : public RichRecToolBase,
+                                    virtual public IRichPixelCreator,
+                                    virtual public IIncidentListener {
 
 public:
 
   /// Standard constructor
-  RichPixelCreatorFromRichDigits( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent );
+  RichPixelCreatorFromSICBHPD( const std::string& type,
+                               const std::string& name,
+                               const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromRichDigits(){}
+  virtual ~RichPixelCreatorFromSICBHPD(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -50,15 +50,15 @@ public:
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
-  
+
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj );
-  
+
   /// Form all possible RichRecPixels from input RichDigits.
   /// The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels();
-  
+
   /// Returns a pointer to the RichRecPixels
   RichRecPixels *& richPixels();
 
@@ -70,8 +70,8 @@ private:
   /// Pointer to event data service
   IDataProviderSvc* m_evtDataSvc;
 
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInt;
+  /// Pointer to PixelFinder tool
+  IPixelFinder* m_pixelFinder;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
@@ -88,4 +88,4 @@ private:
 
 };
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
+#endif // RICHRECTOOLS_RICHPIXELCREATORFROMSICBHPD_H

@@ -1,9 +1,10 @@
-// $Id: RichRefractiveIndexSICB.cpp,v 1.1 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichRefractiveIndexSICB.cpp,v 1.2 2003-10-13 16:32:34 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // local
 #include "RichRefractiveIndexSICB.h"
@@ -33,6 +34,10 @@ RichRefractiveIndexSICB::RichRefractiveIndexSICB ( const std::string& type,
 
   declareInterface<IRichRefractiveIndex>(this);
 
+  // Quantum efficiency
+  declareProperty( "QETableLocation", m_qeTableLoc =
+                   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff" );
+
   // Define job option parameters
 }
 
@@ -46,19 +51,14 @@ StatusCode RichRefractiveIndexSICB::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
-
-  // Get the Quantum Eff
-  // For time being assume only one reference curve for all HPDs
-  m_referenceQE = m_richDetInt->hpdQuantumEff();
-  if ( !m_referenceQE ) {
-    msg << MSG::ERROR << "Failed to acquire QE function" << endreq;
+  // Acquire QE Curve from XML
+  SmartDataPtr<TabulatedProperty> tabQE( detSvc(), m_qeTableLoc );
+  if ( tabQE ) {
+    m_QE = new Rich1DTabProperty( tabQE );
+  } else {
+    msg << MSG::ERROR << "Cannot retrieve QE from " + m_qeTableLoc  << endreq;
     return StatusCode::FAILURE;
   }
-
-  // release det interface
-  releaseTool( m_richDetInt );
 
   // Initialise W function for expected signal calculation
   // get from sellmeir tool !!!
@@ -82,7 +82,9 @@ StatusCode RichRefractiveIndexSICB::initialize() {
   m_rho[Rich::CF4]       = 0.00366;
 
   // Informational Printout
-  msg << MSG::DEBUG << " Using hardcoded SICB implementation" << endreq;
+  msg << MSG::DEBUG 
+      << " Using hardcoded SICB implementation" << endreq
+      << " Quantum Efficiency           = " << m_qeTableLoc << endreq;
 
   return sc;
 }
@@ -91,6 +93,8 @@ StatusCode RichRefractiveIndexSICB::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
+
+  if ( m_QE ) { delete m_QE; m_QE = 0; }
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -119,7 +123,7 @@ double RichRefractiveIndexSICB::refractiveIndex( RichRecSegment * segment ) {
 
 double RichRefractiveIndexSICB::refractiveIndex( const Rich::RadiatorType radiator ) {
 
-  double meanEnergy = m_referenceQE->meanX( m_referenceQE->minX(),
-                                            m_referenceQE->maxX() ) / eV;
+  double meanEnergy = m_QE->meanX( m_QE->minX(),
+                                   m_QE->maxX() ) / eV;
   return refractiveIndex( radiator, meanEnergy );
 }

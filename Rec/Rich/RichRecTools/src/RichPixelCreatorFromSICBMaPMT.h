@@ -1,6 +1,6 @@
-// $Id: RichPixelCreatorFromSICB.h,v 1.1 2003-06-30 15:47:05 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMSICB_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMSICB_H 1
+// $Id: RichPixelCreatorFromSICBMaPMT.h,v 1.1 2003-10-13 16:32:33 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMSICBMaPMT_H
+#define RICHRECTOOLS_RICHPIXELCREATORFROMSICBMaPMT_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -13,33 +13,33 @@
 
 // interface
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RiSicbGeom/PixelFinder.h"
+#include "RichDetTools/IMaPMTDetTool.h"
 
 // Event
 #include "Event/RichDigit.h"
 
-/** @class RichPixelCreatorFromSICB RichPixelCreatorFromSICB.h
+/** @class RichPixelCreatorFromSICBMaPMT RichPixelCreatorFromSICBMaPMT.h
  *
  *  Tool for the creation and manipulation of RichRecPixel objects.
- *  Uses RichDigits from the SICB digitisation as the parent objects.
+ *  Uses RichDigits from the SICBMaPMT digitisation as the parent objects.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichPixelCreatorFromSICB : public RichRecToolBase,
-                                 virtual public IRichPixelCreator,
-                                 virtual public IIncidentListener {
+class RichPixelCreatorFromSICBMaPMT : public RichRecToolBase,
+                                      virtual public IRichPixelCreator,
+                                      virtual public IIncidentListener {
 
 public:
 
   /// Standard constructor
-  RichPixelCreatorFromSICB( const std::string& type,
-                            const std::string& name,
-                            const IInterface* parent );
+  RichPixelCreatorFromSICBMaPMT( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromSICB(){}
+  virtual ~RichPixelCreatorFromSICBMaPMT(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -53,7 +53,7 @@ public:
 
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
-  RichRecPixel * newPixel( ContainedObject * obj );
+  RichRecPixel * newPixel( const ContainedObject * obj );
 
   /// Form all possible RichRecPixels from input RichDigits.
   /// The most efficient way to make all RichRecPixel objects in the event.
@@ -68,10 +68,10 @@ private:
   RichRecPixels * m_pixels;
 
   /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
+  IDataProviderSvc * m_evtDataSvc;
 
   /// Pointer to PixelFinder tool
-  IPixelFinder* m_pixelFinder;
+  IMaPMTDetTool * m_mapmtTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
@@ -83,9 +83,9 @@ private:
   bool m_allDone;
 
   /// Pointer to pixel map
-  std::map< int, RichRecPixel* > m_pixelExists;
-  std::map< int, bool > m_pixelDone;
+  std::map< long int, RichRecPixel* > m_pixelExists;
+  std::map< long int, bool > m_pixelDone;
 
 };
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMSICB_H
+#endif // RICHRECTOOLS_RICHPIXELCREATORFROMSICBMaPMT_H

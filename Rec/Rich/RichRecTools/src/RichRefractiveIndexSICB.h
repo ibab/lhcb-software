@@ -1,4 +1,4 @@
-// $Id: RichRefractiveIndexSICB.h,v 1.1 2003-08-26 14:40:20 jonrob Exp $
+// $Id: RichRefractiveIndexSICB.h,v 1.2 2003-10-13 16:32:34 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHREFRACTIVEINDEXSICB_H
 #define RICHRECTOOLS_RICHREFRACTIVEINDEXSICB_H 1
 
@@ -10,7 +10,6 @@
 
 // interfaces
 #include "RichRecBase/IRichRefractiveIndex.h"
-#include "RichDetTools/IRichDetInterface.h"
 
 // RichUtils
 #include "RichUtils/Rich1DTabProperty.h"
@@ -56,8 +55,8 @@ public:
 
 private:  // Private data
 
-  /// Pointers to tool instances
-  IRichDetInterface * m_richDetInt;
+  /// Location of QE in XML
+  std::string m_qeTableLoc;     
 
   // Sellmeir parameters
   double m_selF1[Rich::NRadiatorTypes];
@@ -69,7 +68,7 @@ private:  // Private data
 
   /// Quantum Efficiency function.
   /// For time being assume only one reference curve for all HPDs
-  Rich1DTabProperty * m_referenceQE;
+  Rich1DTabProperty * m_QE;
 
 };
 

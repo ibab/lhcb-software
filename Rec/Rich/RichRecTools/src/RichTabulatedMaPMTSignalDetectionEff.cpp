@@ -1,22 +1,22 @@
-// $Id: RichTabulatedHPDSignalDetectionEff.cpp,v 1.2 2003-10-13 16:32:35 jonrob Exp $
+// $Id: RichTabulatedMaPMTSignalDetectionEff.cpp,v 1.1 2003-10-13 16:32:35 jonrob Exp $
 
 // local
-#include "RichTabulatedHPDSignalDetectionEff.h"
+#include "RichTabulatedMaPMTSignalDetectionEff.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedHPDSignalDetectionEff
+// Implementation file for class : RichTabulatedMaPMTSignalDetectionEff
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedHPDSignalDetectionEff>          s_factory ;
-const        IToolFactory& RichTabulatedHPDSignalDetectionEffFactory = s_factory ;
+static const  ToolFactory<RichTabulatedMaPMTSignalDetectionEff>          s_factory ;
+const        IToolFactory& RichTabulatedMaPMTSignalDetectionEffFactory = s_factory ;
 
 // Standard constructor
-RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const std::string& type,
-                                                                         const std::string& name,
-                                                                         const IInterface* parent )
+RichTabulatedMaPMTSignalDetectionEff::RichTabulatedMaPMTSignalDetectionEff ( const std::string& type,
+                                                                             const std::string& name,
+                                                                             const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
     m_flatMirReflLoc ( Rich::NRiches      ),
     m_sphMirReflLoc  ( Rich::NRiches      ) {
@@ -44,7 +44,7 @@ RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const s
 
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
+StatusCode RichTabulatedMaPMTSignalDetectionEff::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -95,29 +95,29 @@ StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
 
   // Get Rich1 Detector element
   SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
-  
+
   // Quartz window eff
   m_quartzWinEff = Rich1DE->userParameterAsDouble( "HPDQuartzWindowEff" );
-  
+
   // Digitisation pedestal loss
   m_pedLoss = Rich1DE->userParameterAsDouble( "HPDPedestalDigiEff" );
-  
+
   // Informational Printout
   msg << MSG::DEBUG
-      << " Using XML tabulated implementation for HPD" << endreq
+      << " Using XML tabulated implementation for MaPMT" << endreq
       << " Rich1 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich1] << endreq
       << " Rich2 Sph. Mirror refl.      = " << m_sphMirReflLoc[Rich::Rich2] << endreq
       << " Rich1 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich1] << endreq
       << " Rich2 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich2] << endreq
       << " Quantum Efficiency           = " << m_qeTableLoc << endreq
-      << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
+      << " MaPMT quartz window efficiency = " << m_quartzWinEff << endreq
       << " Digitisation pedestal eff.   = " << m_pedLoss << endreq
       << " Robustness scaling           = " << m_photonEffScale << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
+StatusCode RichTabulatedMaPMTSignalDetectionEff::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -138,8 +138,8 @@ StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
 }
 
 double
-RichTabulatedHPDSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
-                                                         double energy )
+RichTabulatedMaPMTSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
+                                                           double energy )
 {
   // which detector
   Rich::DetectorType det = segment->trackSegment().rich();

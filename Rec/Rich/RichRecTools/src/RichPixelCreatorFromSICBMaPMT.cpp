@@ -1,22 +1,22 @@
-// $Id: RichPixelCreatorFromSICB.cpp,v 1.3 2003-07-06 09:25:23 jonesc Exp $
+// $Id: RichPixelCreatorFromSICBMaPMT.cpp,v 1.1 2003-10-13 16:32:33 jonrob Exp $
 
 // local
-#include "RichPixelCreatorFromSICB.h"
+#include "RichPixelCreatorFromSICBMaPMT.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromSICB
+// Implementation file for class : RichPixelCreatorFromSICBMaPMT
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromSICB>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromSICBFactory = s_factory ;
+static const  ToolFactory<RichPixelCreatorFromSICBMaPMT>          s_factory ;
+const        IToolFactory& RichPixelCreatorFromSICBMaPMTFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromSICB::RichPixelCreatorFromSICB( const std::string& type,
-                                                    const std::string& name,
-                                                    const IInterface* parent )
+RichPixelCreatorFromSICBMaPMT::RichPixelCreatorFromSICBMaPMT( const std::string& type,
+                                                              const std::string& name,
+                                                              const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichPixelCreator>(this);
@@ -29,7 +29,7 @@ RichPixelCreatorFromSICB::RichPixelCreatorFromSICB( const std::string& type,
 
 }
 
-StatusCode RichPixelCreatorFromSICB::initialize() {
+StatusCode RichPixelCreatorFromSICBMaPMT::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -44,7 +44,7 @@ StatusCode RichPixelCreatorFromSICB::initialize() {
   }
 
   // Acquire instances of tools
-  acquireTool("SICBPixelGeom", m_pixelFinder);
+  acquireTool( "MaPMTSICBTool", m_mapmtTool );
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -63,21 +63,21 @@ StatusCode RichPixelCreatorFromSICB::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromSICB::finalize() {
+StatusCode RichPixelCreatorFromSICBMaPMT::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-  releaseTool( m_pixelFinder );
+  releaseTool( m_mapmtTool );
 
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromSICB::handle ( const Incident& incident ) {
+void RichPixelCreatorFromSICBMaPMT::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
@@ -110,8 +110,8 @@ void RichPixelCreatorFromSICB::handle ( const Incident& incident ) {
       for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
             iPixel != tdsPixels->end();
             ++iPixel ) {
-        m_pixelExists[(int)(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(int)(*iPixel)->smartID()] = true;
+        m_pixelExists[(long int)(*iPixel)->smartID()] = *iPixel;
+        m_pixelDone[(long int)(*iPixel)->smartID()] = true;
       }
 
     }
@@ -121,10 +121,10 @@ void RichPixelCreatorFromSICB::handle ( const Incident& incident ) {
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * RichPixelCreatorFromSICB::newPixel( ContainedObject * obj ) {
+RichRecPixel * RichPixelCreatorFromSICBMaPMT::newPixel( const ContainedObject * obj ) {
 
   // Try to cast to RichDigit
-  RichDigit * digit = dynamic_cast<RichDigit*>(obj);
+  const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::WARNING << "Parent not of type RichDigit" << endreq;
@@ -134,8 +134,8 @@ RichRecPixel * RichPixelCreatorFromSICB::newPixel( ContainedObject * obj ) {
   RichSmartID id = digit->key();
 
   // See if this RichRecPixel already exists
-  if ( m_pixelDone[(int)id] ) {
-    return m_pixelExists[(int)id];
+  if ( m_pixelDone[(long int)id] ) {
+    return m_pixelExists[(long int)id];
   } else {
 
     RichRecPixel * newPixel = NULL;
@@ -148,10 +148,8 @@ RichRecPixel * RichPixelCreatorFromSICB::newPixel( ContainedObject * obj ) {
 
       // position
       HepPoint3D & gPosition = newPixel->globalPosition();
-      HepPoint3D & lPosition = newPixel->localPosition();
-      gPosition = 10.0 * (m_pixelFinder->globalPosition(id));
-      lPosition = 10.0 * (m_pixelFinder->localPosition(id));
-      m_pixelFinder->convertSmartID( id ); // convert smartID to OO conventions
+      //HepPoint3D & lPosition = newPixel->localPosition(); // not available
+      m_mapmtTool->cdfDetectionPoint( id, gPosition );
 
       // Set smartID
       newPixel->setSmartID( id );
@@ -162,40 +160,54 @@ RichRecPixel * RichPixelCreatorFromSICB::newPixel( ContainedObject * obj ) {
     }
 
     // Add to reference map
-    m_pixelExists[(int)(digit->key())] = newPixel;
-    m_pixelDone[(int)(digit->key())] = true;
+    m_pixelExists[ (long int)(digit->key()) ] = newPixel;
+    m_pixelDone  [ (long int)(digit->key()) ] = true;
 
     return newPixel;
   }
 
 }
 
-StatusCode RichPixelCreatorFromSICB::newPixels() {
+StatusCode RichPixelCreatorFromSICBMaPMT::newPixels() {
 
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
-  MsgStream msg( msgSvc(), name() );
-
   // Obtain smart data pointer to RichDigits
   SmartDataPtr<RichDigits> digits( m_evtDataSvc, m_recoDigitsLocation );
   if ( !digits ) {
+    MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to locate digits at "
         << m_recoDigitsLocation << endreq;
     return StatusCode::FAILURE;
-  } else {
-    msg << MSG::DEBUG << "located " << digits->size() << " RichDigits at "
-        <<  m_recoDigitsLocation << endreq;
   }
 
+  // Loop over RichDigits and create working pixels
   for ( RichDigits::iterator digit = digits->begin();
-        digit != digits->end();
-        ++digit ) { newPixel( *digit ); }
+        digit != digits->end(); ++digit ) {
+    newPixel( *digit );
+  }
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG
+        << "Located " << digits->size() << " RichDigits at "
+        << m_recoDigitsLocation << endreq
+        << "Created " << m_pixels->size() << " RichRecPixels at "
+        << m_richRecPixelLocation << endreq;
+  }
+
+  if ( digits->size() != m_pixels->size() ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING
+        << "Created " << m_pixels->size() << " RichRecPixels from "
+        << digits->size() << " RichDigits !!" << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels *& RichPixelCreatorFromSICB::richPixels()
+RichRecPixels *& RichPixelCreatorFromSICBMaPMT::richPixels()
 {
   return m_pixels;
 }

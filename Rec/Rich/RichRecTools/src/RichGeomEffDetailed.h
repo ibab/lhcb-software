@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.h,v 1.2 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichGeomEffDetailed.h,v 1.3 2003-10-13 16:32:31 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFDETAILED_H
 #define RICHRECTOOLS_RICHGEOMEFFDETAILED_H 1
 
@@ -57,7 +57,7 @@ private: // Private data
   // Pointers to tool instances
   IRichDetInterface * m_richDetInt;
   IRichCherenkovAngle * m_ckAngle;
- 
+
   /// Number of photons to use in geometrical efficiency calculation
   int m_nGeomEff;
 
@@ -65,8 +65,8 @@ private: // Private data
   /// if all so far have failed
   int m_nGeomEffBailout;
 
-  /// Increment parameter for HPD efficiencies
-  double m_hpdInc;
+  /// Increment parameter for PD efficiencies
+  double m_pdInc;
 
   /// Cherenkov phi incrementation
   double m_incPhi;

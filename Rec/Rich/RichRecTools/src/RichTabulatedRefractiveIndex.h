@@ -1,6 +1,10 @@
-// $Id: RichTabulatedRefractiveIndex.h,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+// $Id: RichTabulatedRefractiveIndex.h,v 1.2 2003-10-13 16:32:36 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDREFRACTIVEINDEX_H
 #define RICHRECTOOLS_RICHTABULATEDREFRACTIVEINDEX_H 1
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -16,7 +20,6 @@
 
 // interfaces
 #include "RichRecBase/IRichRefractiveIndex.h"
-#include "RichDetTools/IRichDetInterface.h"
 
 /** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
  *
@@ -59,11 +62,11 @@ public:
 
 private:  // Private data
 
-  /// Pointers to tool instances
-  IRichDetInterface * m_richDetInt;
-
   /// Quantum Efficiency function.
-  Rich1DTabProperty * m_referenceQE;
+  Rich1DTabProperty * m_QE;
+
+  /// Location of QE in XML
+  std::string m_qeTableLoc;     
 
   /// Pointers to refractive indices for each radiator type
   typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;

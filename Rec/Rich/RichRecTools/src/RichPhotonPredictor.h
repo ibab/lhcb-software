@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPhotonPredictor.h,v 1.2 2003-10-13 16:32:31 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -46,7 +46,7 @@ public:
   /// Finalize method
   StatusCode finalize();
 
-  /// Returns square of distance seperating pixel and track hits on HPDs
+  /// Returns square of distance seperating pixel and track hits on PDs
   double trackPixelHitSep2( const RichRecSegment * segment,
                             const RichRecPixel * pixel );
 

@@ -1,12 +1,13 @@
 !------------------------------------------------------------------------------
 ! Package     : Rich/RichRecTools
 ! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
-! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
+! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
 ! 2003-08-06 - Chris Jones
  - Continued re-organisation of tools
- - Support for MaPMTs
+ - Improved support for Gauss
+ - Support for HPDs and MaPMTs detector variations
 
 !====================== RichRecTools v2r1 2003-07-08 ======================
 ! 2003-07-08 - Marco Cattaneo
