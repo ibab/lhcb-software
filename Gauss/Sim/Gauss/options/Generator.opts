@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.13 2002-12-07 14:47:29 ibelyaev Exp $ 
+// $Id: Generator.opts,v 1.14 2002-12-13 17:02:56 ibelyaev Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -6,7 +6,7 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 //Generator.Members +={"SingleParticleGun"};
 Generator.Members += {"PythiaAlg"};
-//Generator.Members +={"SetDecayAlg","EvtDecayAlg"};
+//Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
 //Generator.Members +={"DumpMC"};
 /// to add one more generator into the chain of generators uncomment the lines below 
 //ApplicationMgr.DLLs += { "EvGen" };

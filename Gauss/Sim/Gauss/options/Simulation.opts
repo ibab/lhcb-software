@@ -1,8 +1,8 @@
-// $Id: Simulation.opts,v 1.22 2002-12-07 14:47:29 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.23 2002-12-13 17:02:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 /** @file 
@@ -14,6 +14,10 @@ ApplicationMgr.DLLs +=
 { "GiGa"          , 
   "GiGaCnv"       , 
   "GaussTools"    ,
+  "GaussPhysics"  ,
+  "GaussRICH"     ,
+  "GaussTracker"  ,
+  "GaussCalo"     ,
   "Magnet"        , 
   "CaloDetXmlCnv" } ;
 
@@ -28,13 +32,13 @@ EventPersistencySvc.CnvServices +=
 { "GiGaKine" , "GiGaHits" } ;
 
 Simulation.Members += 
-{	"GiGaDataStoreAlgorithm/GiGaStore" ,  /// Gaudi TES configuration/mapping
-  "GiGaInputStream/Geo"              ,  /// Load the geometry 
-  "GiGaInputStream/Kine"             ,  /// Load the kinematics 
-  "GiGaFlushAlgorithm/GiGaFlush"        /// Flush the event 
-  //"GiGaMiscGetEventAlg/GetEvent"     ,  /// convert MCParticles/MCVertices
-  //"GetGiGaHitsAlg/GetHits"           
-}; /// convert MCHits
+{	"GiGaDataStoreAlgorithm/GiGaStore" , /// Gaudi TES configuration/mapping
+  "GiGaInputStream/Geo"              , /// Load the geometry 
+  "GiGaInputStream/Kine"             , /// Load the kinematics 
+  "GiGaFlushAlgorithm/GiGaFlush"     , /// Flush the event 
+  "GiGaMiscGetEventAlg/GetEvent"     , /// force the conversion of MCParticles/MCVertices
+  "GetGiGaHitsAlg/GetHits"             /// force the conversion of (some) MCHits
+};
 
 /// configuration of kinematics event "Kine" data stream 
 Kine.ConversionSvcName      = "GiGaKine"     ; 
@@ -83,7 +87,7 @@ GiGa.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
 
 GiGa.TrackSeq.SimpleTrack.StoreAll           = false    ; 
 GiGa.TrackSeq.SimpleTrack.StorePrimaries     = true     ;
-GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks  = false    ;
+GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks  = true     ;
 GiGa.TrackSeq.SimpleTrack.StoreHitTracks     = false    ; 
 GiGa.TrackSeq.SimpleTrack.StoreByOwnEnergy   = true     ; 
 GiGa.TrackSeq.SimpleTrack.OwnEnergyThreshold = 1 * GeV  ;        
@@ -124,6 +128,8 @@ GiGaGeo.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 GiGaGeo.ITSDet.DetectorPath   = "/Tracker/IT";
 GiGaGeo.VeloSDet.DetectorPath = "/Velo";
 GiGaGeo.OTSDet.DetectorPath   = "/Tracker/OT";
+
+GetHits.CaloHits = { "MC/Ecal/Hits" } ;
 
 /// specific configuration of calorimeter stuff 
 #include "$GAUSSOPTS/Calo.opts"

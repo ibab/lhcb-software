@@ -4,7 +4,7 @@ version v7r0
 # =============================================================================
 # structure 
 # =============================================================================
-branches doc options cmt job data
+branches doc options cmt job data job
 
 # Main program and standard job options
 use GaudiConf           v6r5     
