@@ -4,9 +4,36 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
-!===================  DaVinciSys v11r13 2004-08-17 ============================
--use  DaVinci            v11r13 Phys   
+!===================  DaVinciSys v12r0 2004-08-24 ============================
+New packages:
+use  DaVinciFilter              v1r0     Phys
+use  DaVinciKernel              v1r0     Phys
+use  ParticleMaker              v1r0     Phys
+use  DaVinciTransporter         v1r0     Phys
+use  VertexFit                  v1r0     Phys
 
+Modified packages:
+use  DaVinci                    v12r0    Phys   
+use  L0Checker                  v2r2     L0
+use  L0mConf                    v2r2p3   L0
+use  L1Decision                 v2r2     Trg
+use  TrgForward                 v2r2     Trg
+use  TrgMonitor                 v2r0p1   Trg
+use  TrgPrimVertex              v2r0p1   Trg
+use  TrgTools                   v4r3     Trg
+use  TrgVeloTT                  v4r2     Trg
+use  STDAQ                      v1r3     IT
+use  TrExtrapolator             v2r13    Tr
+use  LoKi                       v3r4p1   Tools  
+use  Utilities                  v1r9     Tools
+use  DaVinciTools               v11r0    Phys
+use  DaVinciEff                 v3r1     Phys
+use  PhysSelSys                 v7r8     PhysSel
+use  Bd2DstarPi                 v2r6     PhysSel
+
+!===================  DaVinciSys v11r13 2004-08-17 ============================
+Modified packages:
+use  DaVinci            v11r13   Phys   
 use  L1Decision         v2r1     Trg
 use  TrgChecker         v4r1     Trg
 use  TrgTools           v4r2     Trg
