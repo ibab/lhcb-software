@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.6 2002-06-24 11:04:36 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.7 2002-06-24 11:43:43 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -54,7 +54,7 @@
 static const  AlgFactory<VeloSim>          Factory ;
 const         IAlgFactory& VeloSimFactory = Factory ;
 
-struct chargeThreshold : public unary_function<MCVeloFE*,  bool> {
+struct chargeThreshold : public std::unary_function<MCVeloFE*,  bool> {
   bool operator()(MCVeloFE* FE) { 
     return fabs(FE->charge()) < VeloSimParams::threshold; 
   }
@@ -354,7 +354,7 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
     double total=0.;
     for (int i=0; i<Npoints; i++){total+=Spoints[i];}
     double adjust=charge/total;
-    for (int i=0; i<Npoints; i++){Spoints[i]*=adjust;}
+    for (int j=0; j<Npoints; j++){Spoints[j]*=adjust;}
   }
 
   return;
@@ -380,7 +380,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // not truly correct
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
-    int ipt=int(round(m_uniformDist()*(Npoints-1)));
+    int ipt=int(std::round(m_uniformDist()*(Npoints-1)));
     log << MSG::VERBOSE << " delta ray charge added to point " << ipt 
         << "/" << Npoints << endreq;
     Spoints[ipt]+=charge;
@@ -393,7 +393,8 @@ void VeloSim::deltaRayCharge(double charge, double tol,
 //=========================================================================
 // allocate the charge to the collection strips
 //=========================================================================
-void VeloSim::diffusion(MCVeloHit* hit,int Npoints, std::vector<double>& Spoints){
+void VeloSim::diffusion( MCVeloHit* hit,int Npoints, 
+                         std::vector<double>& Spoints ) {
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "diffusion of charge from simulation points" 
       << endreq;
@@ -416,10 +417,12 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints, std::vector<double>& Spoints
     //          << fraction << " pitch " << pitch << " valid " << valid 
     //          << endreq;
     int neighbs=1; // only consider =/- this many neighbours
-    double chargeFraction[2*neighbs+1];
+    int chFracSize=2*neighbs+1;
+    double chargeFraction[chFracSize];
     double totalFraction=0.;
     // loop over neighbours per point
-    for  (int iNg=-neighbs; iNg<=+neighbs; iNg++){ 
+    int iNg;
+    for  (iNg=-neighbs; iNg<=+neighbs; iNg++){ 
       //double diffuseDist1=((iNg-0.5)-fraction)*pitch/micron;
       //double diffuseDist2=((iNg+0.5)-fraction)*pitch/micron;
       double diffuseDist1=((iNg)-fraction)*pitch/micron;
@@ -443,7 +446,7 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints, std::vector<double>& Spoints
     }
 
     // renormalise allocated fractions to 1., and update strip signals
-    for  (int iNg=-neighbs; iNg<=+neighbs; iNg++ ){
+    for  (iNg=-neighbs; iNg<=+neighbs; iNg++ ){
       int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
       // log << MSG::DEBUG << i << " iNg " << iNg << " ipt " << ipt 
       //      << " " << endreq;
