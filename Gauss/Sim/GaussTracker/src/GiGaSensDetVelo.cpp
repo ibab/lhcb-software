@@ -41,7 +41,6 @@ GiGaSensDetVelo::~GiGaSensDetVelo(){};
 
 void GiGaSensDetVelo::Initialize(G4HCofThisEvent*HCE)
 {
-  //static 
   int HCID;
   
   veloCol= new VeloHitsCollection
@@ -78,17 +77,6 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           G4VPhysicalVolume*  PV =   TT->GetVolume();
           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
           
-          // temp      
-//           G4TouchableHistory* postTT =  
-//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
-
-          //       MsgStream log( msgSvc() , name() );
-          
-          //       log << MSG::DEBUG << "Processing VeloHit:" << " edep="  
-          //       << edep << endreq;
-          
           std::string pvname=PV->GetName();
           G4TouchableHistory* MotherTT = TT;
           MotherTT ->MoveUpHistory(1);
@@ -97,16 +85,10 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           
           int numsens;      
           int puornot=0;
-      
-          // mod for new xml
           
           if(SensitiveDetectorName=="VeloPuSDet") puornot=1;
           
-          // old version:
-          //      if(stname.substr(25,1)=="P") puornot=1;
-          
           // to find the position of "Station" in vol name
-          
           int stpos=stname.rfind("Station")+7;
           
           if(puornot==0)
@@ -114,8 +96,8 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
               // normal sensor
               std::string stnumb=stname.substr(stpos,2);
               std::string lorr=stname.substr(stpos+2,1);
-              std::string phiorr=pvname.substr(36,2);
-              
+              std::string phiorr=pvname.substr(45,2);
+             
               int ishift1=0;
               int ishift2=0;
               
@@ -127,29 +109,13 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
             {
               // PuVeto sensor
               std::string stnumb=stname.substr(stpos,1);
-              std::string lorr=stname.substr(stpos,1);
+              std::string lorr=stname.substr(stpos+1,1);
               
               int ishift=0;
-          
+              
               if(lorr=="L") ishift=1;
               numsens=98+2*atoi(stnumb.c_str())+ishift;
             }
-          
-          //       log << MSG::DEBUG << "Mother: " << stname << " sensor number: " 
-          //           << numsens << endreq;      
-          
-          //       log << MSG::DEBUG
-          //       << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
-          //       << ")" 
-          //       << " PrePV="    << pvname  
-          //       << " PreLV="    << LV->GetName() << endreq;
-          
-          //       log << MSG::DEBUG
-          //       << " PostPos=("
-          //       << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
-          //       << " PostPV="    << postPV->GetName()  
-          //       << " PostLV="    << postLV->GetName() << endreq;
-          // end of temp
           
           ///
           VeloHit* newHit = new VeloHit();
@@ -161,13 +127,11 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           newHit->SetSensor(numsens);
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 
-          GaussTrackInformation*    gi = 
-            ( 0 == ui )  ? 0 : static_cast<GaussTrackInformation*> ( ui );
+          GaussTrackInformation*    gi = (GaussTrackInformation*) ui;
           gi->setCreatedHit(true);
           gi->setToBeStored(true);
           gi->addHit(newHit);
 
-          //  newHit->Print();
           veloCol->insert( newHit );
         }    
     }

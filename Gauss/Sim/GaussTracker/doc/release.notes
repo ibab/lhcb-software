@@ -5,6 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v2r7 ================================
+! 2003-10-10 - Witek Pokorski
+ - GiGaSensDetMuon - added storing of GapID and ChanelID (S. De Capua)
+ - GiGaSensDeVelo - fixed sensor numbers for the new Xml
+
 !=========================== GaussTracker v2r6 2003-07-31 =====================
 ! 2003-07-31 - Witek Pokorski
  - GiGaMuonHitCnv - fixed bug (incorrect number of pars)

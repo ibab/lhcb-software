@@ -74,42 +74,68 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
           HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
           int trid = step->GetTrack()->GetTrackID();
-          
+                   
           // temp  
-//           G4TouchableHistory* TT =  
-//             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-//           G4VPhysicalVolume*  PV =   TT->GetVolume();
-//           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-          
-//           G4TouchableHistory* postTT =  
-//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
-          
-//           MsgStream log( msgSvc() , name() );
-          
-//           log << MSG::DEBUG << "Processing MuonHit:" << " edep="  
-//               << edep << endreq;
+          G4TouchableHistory* TT =  
+            (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
+          G4VPhysicalVolume*  PV =   TT->GetVolume();
+          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
+          G4int CurrentGapNumber= PV -> GetMother() -> GetCopyNo() ;
+          G4int CurrentChamNumber= PV -> GetMother() -> 
+            GetMother() -> GetCopyNo() ;
 
-//           std::string pvname=PV->GetName();
-//           G4TouchableHistory* MotherTT = TT;
-//           MotherTT ->MoveUpHistory(1);
+          G4int GapNumber=CurrentGapNumber - 999;
 
-//           std::string stname=MotherTT -> GetVolume()->GetName();
+          G4int ChamNumber=0;
+          if(CurrentChamNumber<1012) {
+            ChamNumber=CurrentChamNumber - 999;
+          }
+          if(CurrentChamNumber>1011 && CurrentChamNumber<1036) {
+            ChamNumber=CurrentChamNumber - 1011;
+          }
+          if(CurrentChamNumber>1035 && CurrentChamNumber<1084) {
+            ChamNumber=CurrentChamNumber - 1035;
+          }
+          if(CurrentChamNumber>1083) {
+            ChamNumber=CurrentChamNumber - 1083;
+          }
+
           
-//           log << MSG::DEBUG << "Mother: " << stname <<  endreq;      
+          MsgStream log( msgSvc() , name() );
+            
+          //log << MSG::INFO << "************************" << endreq;
+          //log << MSG::INFO << "Cham =" << CurrentChamNumber << " , " <<
+          //  ChamNumber << "   Gap =" << CurrentGapNumber << " , " <<
+          //  GapNumber << endreq;
           
-//           log << MSG::DEBUG 
-//               << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
-//               << ")" 
-//               << " PrePV="    << pvname  
-//               << " PreLV="    << LV->GetName() << endreq;
+            
+         //           G4TouchableHistory* postTT =  
+          //   (G4TouchableHistory*)(step->GetPostStepPoint()
+          //          ->GetTouchable());
+          //           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+          //      G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
           
-//           log << MSG::DEBUG 
-//               << " PostPos=("
-//               << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
-//               << " PostPV="    << postPV->GetName()  
-//               << " PostLV="    << postLV->GetName() << endreq;
+          // std::string pvname=PV->GetName();
+          // G4TouchableHistory* MotherTT = TT;
+          // MotherTT ->MoveUpHistory(1);
+
+          //           std::string stname=MotherTT -> GetVolume()->GetName();
+          
+          // log << MSG::INFO << "Mother: " << stname <<  endreq;      
+          
+          // log << MSG::INFO 
+          //     << " PrePos=("  << prepos.x() << "," 
+          //     << prepos.y() << "," << prepos.z() 
+          //     << ")" 
+          //     << " PrePV="    << pvname  
+          //     << " PreLV="    << LV->GetName() << endreq;
+          
+          // log << MSG::INFO 
+          //     << " PostPos=("
+          //     << postpos.x() << "," << postpos.y() << "," 
+          // << postpos.z() << ")" 
+          //     << " PostPV="    << postPV->GetName()  
+          //    << " PostLV="    << postLV->GetName() << endreq;
           // end of temp
   
           ///
@@ -119,8 +145,8 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           newHit->SetExitPos( postpos );
           newHit->SetTimeOfFlight( timeof );  
           newHit->SetTrackID( trid );
-          newHit->SetChamberID(0);
-          newHit->SetGapID(0);
+          newHit->SetChamberID( ChamNumber );
+          newHit->SetGapID( GapNumber );
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 
           GaussTrackInformation*    gi = (GaussTrackInformation*)  ui;

@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussTracker
-version v2r6
+version v2r7
 
 # =============== package structure ===========================================
 branches          cmt src doc
