@@ -1,8 +1,10 @@
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.7 2001-03-24 12:23:02 ibelyaev Exp $ 
+
 package  CaloDet 
 version  v1
 
 # =============== structure ===============================================	
-branches         src cmt doc CaloDet
+branches         src cmt doc options CaloDet 
 
 # =============== own includes ============================================
 include_dirs      $(CALODETROOT)
@@ -10,6 +12,9 @@ include_dirs      $(CALODETROOT)
 # =============== used packages ===========================================
 use DetDesc      v6*  Det 
 use CaloGen      v1*  Calo 
+
+# =============== own options ==========================================
+set CALODETOPTS  ${CALODETROOT}/options
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 

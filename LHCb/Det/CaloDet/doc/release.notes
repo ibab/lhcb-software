@@ -2,6 +2,9 @@ Package         : CaloDet
 Package manager : Vanya Belyaev 
 
 ! =====================================================================
+! 2001/03/24  - Vanya Belyaev
+      final polishing before official release 
+! =====================================================================
 ! 2001/03/06  - Vanya Belyaev
       (1) remove extra printout in buildCells() method of DeCalorimeter
       (2) introduce printOut functions for DeCalorimeter and DeSubCalorimeter
