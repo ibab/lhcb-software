@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAlgorithms
-version           v2r9
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,8 +12,8 @@ include_dirs $(VELOALGORITHMSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v13r*   Event
-use  VeloDet    v8r*   	Det
+use  VeloEvent  v14r*   Event
+use  VeloDet    v9r*   	Det
 use  GSL 	v*
 use  AIDA 	v*	-no_auto_imports
 
