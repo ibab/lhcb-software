@@ -43,6 +43,9 @@ public:
    */
   virtual ~SimulationSvc();
 
+  inline void operator delete (void* p) throw()
+  { operator delete( const_cast<void*> (p)) ; }
+  
   /**
    * Initializes the service
    * @return status depending on the completion of the call
