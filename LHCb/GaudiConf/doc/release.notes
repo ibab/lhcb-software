@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================= GaudiConf v8r0p1 2004-09-23 =======================
+! 2004-09-23 - Marco Cattaneo
+ - Update Gaudi.supp for Gaudi v15r2 errors
+
 !======================== GaudiConf v8r0 2004-07-23 ========================
 ! 2004-07-23 - Marco Cattaneo
  - Update Gaudi.supp for Gaudi v15 errors

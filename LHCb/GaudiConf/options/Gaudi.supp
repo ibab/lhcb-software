@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Valgrind error suppression file for GAUDI_v15r1, gcc 3.2.3, valgrind 2.0.0
+# Valgrind error suppression file for GAUDI_v15r2, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,7 +15,7 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# Problem with gcc 3.2.3, seen with Gaudi v15r0 - v15r1
+# Problem with gcc 3.2.3, seen with Gaudi v15r0 - v15r2
 {
   gcc/16bytes
   Memcheck:Leak
@@ -57,7 +57,7 @@
   obj:/lib/i686/libc-2.2.5.so
 }
 
-# GaudiKernel v14r2 - v16r1 (Savannah bug 2066)
+# GaudiKernel v14r2 - v16r2 (Savannah bug 2066)
 {
   Gaudi/2066
   Memcheck:Cond
@@ -66,16 +66,7 @@
   fun:_IO_vsscanf
 }
 
-# HbookCnv v14r1 - v14r2
-{
-  HbookCnv/v14r1
-  Memcheck:Leak
-  fun:malloc
-  fun:memgetf_
-  fun:mzpaw_
-}
-
-# HbookCnv v14r0 - v14r2 (Reported to Grigori/Pere)
+# HbookCnv v14r0 - v14r2p1 (Reported to Grigori/Pere)
 {
   Gaudi/HbookCnv
   Memcheck:Cond
@@ -161,4 +152,15 @@
   fun:__builtin_vec_new
   fun:_Znaj
   fun:_ZN11xercesc_2_318IconvLCPTranscoder9transcodeEPKt
+}
+
+# Known problem with dictionary unloading, causes core dump on exit if fixed...
+# First seen in LHCB_v16r1
+{ 
+  SEAL_1_4_0/LHCbKernelDict
+  Memcheck:Leak
+  fun:__builtin_new
+  fun:_Znwj
+  fun:_ZN4seal7reflect12ClassBuilder8addFieldEPKcS3_S3_ii
+  fun:_ZN30SmartRef_ContainedObject__dictC1Ev
 }
