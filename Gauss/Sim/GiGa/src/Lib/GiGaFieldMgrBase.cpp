@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.1 2003-04-06 18:49:47 ibelyaev Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.2 2003-06-05 08:20:54 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:47  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 // Include files
 // Geant4//
@@ -65,9 +68,9 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
   const std::string& name   , 
   const IInterface*  parent )
   : GiGaBase        ( type , name , parent )
-  , m_global        ( 1 * mm               )
+  , m_global        ( false                )
   , m_manager       ( 0                    )
-  , m_minStep       ( false                )
+  , m_minStep       ( 0.01*mm              )
   , m_stepperType   ( "UNDEFINED"          )
   , m_stepper       ( 0                    )
 {
