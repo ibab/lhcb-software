@@ -13,7 +13,7 @@
                       TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5,
                       TrCleanEx v2r0, VeloTT v1r10, TrExtrapolator v2r12,
                       ITAlgorithms v14r3, ITCheckers v2r3, STDAQ v1r2,
-                      CaloReco v2r2, AsctToLinker v1r2
+                      CaloReco v2r2, AsctToLinker v1r2, BrunelAlgs v3r5
 
 !======================= BrunelSys v23r7 2004-04-23 =======================
 ! 2004-04-28 - Marco Cattaneo
