@@ -21,7 +21,7 @@ use ROOT 		v2r31001p1
 use PI			v1r100
 use PCRE		v1r44
 use UUID		v1r32
-use SEAL		v1r130p2
+use SEAL		v1r132p0
 use POOL		v1r140p1
 
 #-- Gaudi libraries (from GAUDI_v14r0)
@@ -33,7 +33,7 @@ use GaudiGSL		v5r0
 use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r2
-use GaudiObjDesc 	v6r2
+use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r0
 
 #-- Database
