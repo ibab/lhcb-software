@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.35 2002-12-15 17:17:45 ibelyaev Exp $
+! $Id: release.notes,v 1.36 2002-12-16 11:47:57 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= GiGaCnv v10r1 ================================
 
 ! 2002-12-15 - Ivan Belyaev
  - src/component/GiGaGeo.cpp           manualy clear Logical Volumes store and
@@ -10,9 +12,10 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
                                        Geometry is closed again to avoid 
                                        crash. It is a temporary fix.
                                        Warning message is issued. 
-                                       Need to be investigated in detals 
+                                       Need to be investigated in details 
                                        somewhen later.
 
+!========================= GiGaCnv v10r0 ================================
 
 ! 2002-12-13 - Ivan Belyaev
  - src/Lib/GiGaCnvBase.cpp           Trivial bug fixes 

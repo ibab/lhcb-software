@@ -6,9 +6,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 	
+!=========================== GaussCalo v1r1 2002-12-16 ========================
 
 ! 2002-12-15 - Ivan Belyaev
- - src/GiGaCaloHitCnv.cpp      change the names of colelction to suppress G4 
+ - src/GiGaCaloHitCnv.cpp      change the names of collection to suppress G4 
                                warning about the ambiguouse name of 
                                G4 collections 
 
