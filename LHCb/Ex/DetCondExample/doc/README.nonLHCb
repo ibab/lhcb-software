@@ -1,4 +1,4 @@
-# $Id: README.nonLHCb,v 1.4 2002-11-26 00:18:09 andreav Exp $
+# $Id: README.nonLHCb,v 1.5 2002-11-26 00:22:40 andreav Exp $
 
 ------------------------------------------------------------------------------
 How to install the code from a non-LHCb account
@@ -19,7 +19,7 @@ area (eg a scratch area for lack of quota...) change the first line!
    setenv PATH ${LHCBHOME}/bin:${LHCBHOME}/scripts:${PATH}
    setenv CMTPATH ${CDBCMT}
    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
-   setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/LHCB_v11r2
+   setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r2
    mkdir ${CDBCMT}
    cd ${CDBCMT}
    tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r1.tar.gz
