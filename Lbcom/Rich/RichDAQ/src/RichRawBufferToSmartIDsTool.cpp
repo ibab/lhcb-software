@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.1 2004-10-30 19:13:05 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.2 2004-10-30 21:45:57 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2004/10/30 19:13:05  jonrob
+ * Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -80,9 +83,9 @@ RawEvent * RichRawBufferToSmartIDsTool::rawEvent() const
 
       // make new RawEvent and put into TES
       m_rawEvent = new RawEvent( rawBuffer );
-      if ( !m_rawEvent ) { 
-        m_rawEvent = 0; 
-        Exception("Unable to allocate memory to RawEvent"); 
+      if ( !m_rawEvent ) {
+        m_rawEvent = 0;
+        Exception("Unable to allocate memory to RawEvent");
       }
       put( m_rawEvent, RawEventLocation::Default );
     }
@@ -130,14 +133,14 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   } // end loop over data banks
 
   if ( msgLevel(MSG::DEBUG) ) {
-    debug() << "Decoded " << m_smartIDs.size() 
+    debug() << "Decoded " << m_smartIDs.size()
             << " RichSmartIDs from " << richBanks.size() << " Raw banks" << endreq;
   }
 
 }
 
 void
-RichRawBufferToSmartIDsTool::decodeZeroSuppressedBank( const RawBank & bank ) const 
+RichRawBufferToSmartIDsTool::decodeZeroSuppressedBank( const RawBank & bank ) const
 {
 
   // Get the link identifier
@@ -156,34 +159,38 @@ RichRawBufferToSmartIDsTool::decodeZeroSuppressedBank( const RawBank & bank ) co
                << " Header : " << bankHeader << endreq;
   }
 
-  // Loop over data fields (Skip first header field)
-  unsigned int nDigitsMade = 0;
-  for ( int iEntry = 1; iEntry < bank.dataSize(); ++iEntry ) {
+  if ( digitCount > 0 ) {
 
-    // Get triplet data
-    const RichZSHitTriplet triplet( bank.data()[iEntry] );
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Decoding triplet " << triplet << endreq;
+    // Loop over data fields (Skip first header field)
+    RichDAQ::ShortType nDigitsMade = 0;
+    for ( int iEntry = 1; iEntry < bank.dataSize(); ++iEntry ) {
 
-    // Make first smartid from triplet
-    if ( nDigitsMade >= digitCount ) break;
-    m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                       linkN.pdRow(), linkN.pdCol(),
-                                       triplet.row0(), triplet.col0() ) );
-    ++nDigitsMade;
+      // Get triplet data
+      const RichZSHitTriplet triplet( bank.data()[iEntry] );
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " Decoding triplet " << triplet << endreq;
 
-    // Make second smartid from triplet
-    if ( nDigitsMade >= digitCount ) break;
-    m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                       linkN.pdRow(), linkN.pdCol(),
-                                       triplet.row1(), triplet.col1() ) );
-    ++nDigitsMade;
+      // Make first smartid from triplet
+      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
+                                         linkN.pdRow(), linkN.pdCol(),
+                                         triplet.row0(), triplet.col0() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
 
-    // Make third smartid from triplet
-    if ( nDigitsMade >= digitCount ) break;
-    m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
-                                       linkN.pdRow(), linkN.pdCol(),
-                                       triplet.row2(), triplet.col2() ) );
-    ++nDigitsMade;
+      // Make second smartid from triplet
+      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
+                                         linkN.pdRow(), linkN.pdCol(),
+                                         triplet.row1(), triplet.col1() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
+
+      // Make third smartid from triplet
+      m_smartIDs.push_back( RichSmartID( linkN.rich(), linkN.panel(),
+                                         linkN.pdRow(), linkN.pdCol(),
+                                         triplet.row2(), triplet.col2() ) );
+      ++nDigitsMade;
+      if ( nDigitsMade == digitCount ) break;
+
+    }
 
   }
 
@@ -200,7 +207,7 @@ RichRawBufferToSmartIDsTool::decodeNonZeroSuppressedBank( const RawBank & bank )
 
     // Get the bank header
     const RichDAQHeaderPD bankHeader( bank.data()[0] );
-    
+
     const RichSmartID pdID(linkN.rich(),linkN.panel(),linkN.pdRow(),linkN.pdCol(),0,0);
     verbose() << "Decoding " << bankHeader.hitCount() << " non-zero suppressed hits for PD "
               << pdID << endreq
