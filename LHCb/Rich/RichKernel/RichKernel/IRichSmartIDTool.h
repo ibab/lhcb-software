@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.7 2005-01-07 12:42:32 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.8 2005-01-13 12:16:02 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2005/01/07 12:42:32  jonrob
+ *  Change to interface
+ *
  *  Revision 1.6  2004/10/27 14:29:31  jonrob
  *  Update global position from RichSmartID method interface
  *
@@ -54,20 +57,28 @@ public:
    */
   static const InterfaceID& interfaceID() { return IID_IRichSmartIDTool; }
 
-  /** Converts a RichSmartID channel indentification into a position in
+  /** Converts a RichSmartID channel identification into a position in
    *  global LHCb coordinates
    *
-   *  @param smartid   The RichSmartID channel indentifier
-   *  @param position  The global position coordinates
+   *  @param smartid   The RichSmartID channel identifier
    *
-   *  @return The status of the conversion
-   *  @retval StatusCode::SUCCESS Conversion was successful (valid RichSmartID)
-   *  @retval StatusCode::FAILURE Conversion was not possible (in-valid RichSmartID)
+   *  @return The channel position in global LHCb coordinates
    */
-  virtual HepPoint3D globalPosition ( const RichSmartID& smartid ) const = 0;
+  virtual HepPoint3D globalPosition ( const RichSmartID smartid ) const = 0;
+
+  /** Converts an HPD RichSmartID identification into a position in
+   *  global LHCb coordinates. 
+   *
+   *  Return coordinate is the centre of the HPD wafer in global LHCb coordinates. 
+   *
+   *  @param hpdid   The RichSmartID HPD identifier
+   *
+   *  @return The HPD position in global LHCb coordinates
+   */
+  virtual HepPoint3D hpdPosition ( const RichSmartID hpdid ) const = 0;
 
   /** Computes the global position coordinate for a given position in local
-   *  HPD panel coordinates and RICH detector and panel indentifiers.
+   *  HPD panel coordinates and RICH detector and panel identifiers.
    *
    *  @param localPoint  The local coordinate position
    *  @param rich        The RICH detector 
@@ -80,7 +91,7 @@ public:
                                       const Rich::Side side ) const = 0;
 
   /** Converts a position in global coordinates to the corresponding 
-   *  RichSmartID indentifier.
+   *  RichSmartID identifier.
    *
    *  @param  globalPoint The global coordinate to convert
    *  @param  smartid     The RichSmartID channel identifier to fill
