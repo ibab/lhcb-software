@@ -1,5 +1,5 @@
 package GaussSys
-version v5r0
+version v6r0
 
 branches cmt doc
 
@@ -14,14 +14,14 @@ use EvtGen              v3r1    Gen
 use GeneratorModules    v4r0    Gen
 
 # GiGa stuff...
-use GiGa        	v10r0	Sim        
-use GiGaCnv     	v8r0    Sim
+use GiGa        	v11r0	Sim        
+use GiGaCnv     	v9r0    Sim
 
 # Gauss stuff...
-use GaussTools		v2r0	Sim
+use GaussTools		v3r0	Sim
 
 # Detector stuff...
-use VeloAlgorithms 	v2r3p1	Velo
+use VeloAlgorithms 	v2r4p1	Velo
 
 # OPACS stuff
 use OPACSLIB		v3	Vis

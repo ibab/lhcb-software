@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!============================ GaussSys v6r0 2002-11-11 ===================
+! 2002-11-11 - Florence Ranjard
+ - new Gauss version uses LHCb v11r1
+
 !============================ GaussSys v5r0 2002-10-17 ====================
 ! 2002-10-17 - Florence Ranjard
  - add GaussTools and VeloAlgorithms
