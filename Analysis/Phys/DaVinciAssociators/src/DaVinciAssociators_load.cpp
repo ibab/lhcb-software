@@ -1,4 +1,4 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.4 2002-07-12 15:26:15 phicharp Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.5 2002-09-12 12:16:12 gcorti Exp $
 // Include files 
 
 
@@ -9,6 +9,15 @@
 #include "DaVinciAssociators/Particle2MCAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
+
+// LHCbKernel
+#include "Relations/RelationMACROs.h"
+#include "Relations/AssociatorMACROs.h"
+
+IMPLEMENT_RelationW2D( ProtoParticle , MCParticle , float );
+IMPLEMENT_RelationW1D( ProtoParticle , MCParticle , float );
+IMPLEMENT_WAssociator( ProtoParticle , MCParticle , float );
+
 
 DECLARE_TOOL_FACTORY( Particle2MCAsct);
 
@@ -66,9 +75,16 @@ DECLARE_FACTORY_ENTRIES( PhysAssociators ) {
   DECLARE_OBJECT( Particle2MCTable );
   DECLARE_OBJECT( ProtoParticle2MCTable );
  
+  DECLARE_RelationW1D( ProtoParticle , MCParticle , float ) ;
+  DECLARE_RelationW2D( ProtoParticle , MCParticle , float ) ;
+  DECLARE_WAssociator( ProtoParticle , MCParticle , float ) ;
+  
+
   DECLARE_ALGORITHM( Particle2MCWithChi2 );
   DECLARE_ALGORITHM( Particle2MCChi2 );
   DECLARE_ALGORITHM( Particle2MCLinks );
   DECLARE_ALGORITHM( ProtoParticle2MCLinks );
+  
+  DECLARE_ALGORITHM( NeutralPP2MC ) ;
 
 }

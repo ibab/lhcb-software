@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.13 2002-09-09 13:49:23 gcorti Exp $
+! $Id: release.notes,v 1.14 2002-09-12 12:16:12 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-09-12 - Gloria Corti
+ - Introduce Neutral ProtoParticle Associator from I.Belyaev
 
 ! 2002-09-09 - Gloria Corti
  - Introdude additional location in ProtoParticle2MCLinks for Upstream
