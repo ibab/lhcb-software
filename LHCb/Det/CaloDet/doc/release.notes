@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2002-04-02 14:55:16 ibelyaev Exp $ 
+! $Id: release.notes,v 1.21 2002-04-22 08:09:35 cattanem Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
-! =============================================================================
+
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>>> CaloDet v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
+! 19/04/2002 - Marco Cattaneo
+  - Use DetDesc v10r* (for Gaudi v10)
   
 ! =============================================================================
 ! 02/04/2002 - v4r0 - Vanya Belyaev

@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2002/03/28 13:47:13  ibelyaev
+# new version of Kernel packages, move out all XMl-stuff
+#
 # Revision 1.17  2001/12/15 18:28:16  ibelyaev
 #  update for new policy of versions and new test algorithm
 #
@@ -36,8 +39,8 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
-use CaloKernel   v2r*  Calo 
-use DetDesc      v9r*  Det 
+use CaloKernel   v2r*   Calo 
+use DetDesc      v10r*  Det 
 
 # =============== own options ==========================================
 set CALODETOPTS  ${CALODETROOT}/options
