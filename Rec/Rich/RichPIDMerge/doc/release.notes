@@ -4,11 +4,15 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2003-11-25 - Chris Jones
+ - minior improvements
+
 !======================= RichPIDMerge v1r1 2003-11-05 =======================
 ! 2003-11-05 - Marco Cattaneo
  - Remove CERNLIB from shlib linkopts
 
 ! 2003-11-02 - Chris Jones
+ - Use RichLocalPID v2r0
  - Updates due to RichUtils
 
 !======================= RichPIDMerge v1r0 2003-07-07 =======================

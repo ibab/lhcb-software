@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2003-11-25 - Chris Jones
+ - Improved track selection
+
 !======================= RichGlobalPID v1r1 2003-10-17 =======================
 ! 2003-07-11 - Chris Jones
  - Replace CERNLIB calls with GSL functions

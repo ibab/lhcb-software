@@ -1,4 +1,4 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.2 2003-11-02 21:50:11 jonrob Exp $
+// $Id: RichPIDSimpleMerge.cpp,v 1.3 2003-11-25 13:56:16 jonesc Exp $
 // Include files
 
 // local
@@ -56,33 +56,37 @@ StatusCode RichPIDSimpleMerge::initialize() {
 StatusCode RichPIDSimpleMerge::execute() {
 
   //
-  // For the moment take global then local result in that order
+  // For the moment take global then local result in that order of preference
   // In the future need some kind of proper merging of results
   //
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Obtain Global PID results
   SmartDataPtr<RichGlobalPIDs> gPIDs( eventSvc(), m_richGlobalPIDLocation );
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::VERBOSE) ) {
+    MsgStream  msg( msgSvc(), name() );
     if ( !gPIDs ) {
-      msg << MSG::DEBUG << "Cannot locate RichGlobalPIDs at "
+      msg << MSG::VERBOSE << "Cannot locate RichGlobalPIDs at "
           << m_richGlobalPIDLocation << endreq;
     } else {
-      msg << MSG::DEBUG << "Successfully located " << gPIDs->size()
+      msg << MSG::VERBOSE << "Successfully located " << gPIDs->size()
           << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
     }
   }
 
   // Obtain Local PID results
   SmartDataPtr<RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
-  if ( msgLevel(MSG::DEBUG) ) {
+  if ( msgLevel(MSG::VERBOSE) ) {
+    MsgStream  msg( msgSvc(), name() );
     if ( !lPIDs ) {
-      msg << MSG::DEBUG << "Cannot locate RichLocalPIDs at "
+      msg << MSG::VERBOSE << "Cannot locate RichLocalPIDs at "
           << m_richLocalPIDLocation << endreq;
     } else {
-      msg << MSG::DEBUG << "Successfully located " << lPIDs->size()
+      msg << MSG::VERBOSE << "Successfully located " << lPIDs->size()
           << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
     }
   }
@@ -105,6 +109,7 @@ StatusCode RichPIDSimpleMerge::execute() {
   // Locate the processing status object
   SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
   if ( !procStat ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::WARNING
         << "Failed to locate ProcStatus at " << m_procStatLocation << endreq;
     return StatusCode::FAILURE;
@@ -162,34 +167,38 @@ StatusCode RichPIDSimpleMerge::execute() {
 
   }
 
+  // Update Rich status words
+  procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs", nUsedglobalPIDs );
+  procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",  nUsedlocalPIDs  );
+
   // register to Gaudi
   if ( !pidsExist ) {
     if ( !eventSvc()->registerObject(m_richPIDLocation, newPIDs) ) {
+      MsgStream  msg( msgSvc(), name() );
       msg << MSG::WARNING << "Unable to register RichPIDs at "
           << m_richPIDLocation << endreq;
       return StatusCode::FAILURE;
     } else {
       if ( msgLevel(MSG::DEBUG) ) {
+        MsgStream  msg( msgSvc(), name() );
         msg << MSG::DEBUG << "Successfully registered " << newPIDs->size()
-            << " RichPIDs at " << m_richPIDLocation << endreq;
+            << " RichPIDs at " << m_richPIDLocation 
+            << " : Global=" << nUsedglobalPIDs
+            << " Local=" << nUsedlocalPIDs
+            << endreq;
       }
     }
   } else {
     if ( msgLevel(MSG::DEBUG) ) {
+      MsgStream  msg( msgSvc(), name() );
       msg << MSG::DEBUG
           << "Replaced " << originalSize << " pre-existing RichPIDs at "
           << m_richPIDLocation << " with " << newPIDs->size()
-          << " new RichPIDs" << endreq;
+          << " new RichPIDs" 
+          << " : Global=" << nUsedglobalPIDs
+          << " Local=" << nUsedlocalPIDs
+          << endreq;
     }
-  }
-
-  // Update Rich status words
-  procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs", nUsedglobalPIDs );
-  procStat->addAlgorithmStatus( name()+":UsedLocalPIDs", nUsedlocalPIDs );
-
-  if ( msgLevel(MSG::DEBUG) ) {
-    msg << MSG::DEBUG << "Used " << nUsedglobalPIDs << " Global "
-        << nUsedlocalPIDs << " local RichPIDs" << endreq;
   }
 
   return StatusCode::SUCCESS;

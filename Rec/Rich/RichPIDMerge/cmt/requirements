@@ -2,7 +2,7 @@
 # Maintainer : Christopher Rob Jones
 
 package RichPIDMerge
-version v1r1
+version v1r2
 
 # ================ structure ================================================
 branches src cmt doc options

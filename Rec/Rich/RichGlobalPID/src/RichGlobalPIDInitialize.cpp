@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDInitialize.cpp,v 1.2 2003-07-02 10:44:04 jonrob Exp $
+// $Id: RichGlobalPIDInitialize.cpp,v 1.3 2003-11-25 13:51:23 jonesc Exp $
 // Include files
 
 // local
@@ -37,16 +37,19 @@ StatusCode RichGlobalPIDInitialize::initialize() {
 // Main execution
 StatusCode RichGlobalPIDInitialize::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Set event status to OK for start of GlobalPID processing
-  richStatus()->setEventOK(true);
+  richStatus()->setEventOK( true );
 
   // Summary object
   RichGlobalPIDSummary * GPIDsummary = new RichGlobalPIDSummary();
   if ( !eventSvc()->registerObject( m_richGPIDSummaryLocation,
                                     GPIDsummary ) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to register RichGlobalPIDSummary at "
         << m_richGPIDSummaryLocation << endreq;
     return StatusCode::FAILURE;
@@ -55,6 +58,7 @@ StatusCode RichGlobalPIDInitialize::execute() {
   // RichGlobalPIDTrack container
   RichGlobalPIDTracks * GPIDtracks = new RichGlobalPIDTracks();
   if ( !eventSvc()->registerObject( m_richGPIDTrackLocation, GPIDtracks ) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to register RichGlobalTracks at "
         << m_richGPIDTrackLocation << endreq;
     return StatusCode::FAILURE;
@@ -63,6 +67,7 @@ StatusCode RichGlobalPIDInitialize::execute() {
   // RichGlobalPID container
   RichGlobalPIDs * globalPIDs = new RichGlobalPIDs();
   if ( !eventSvc()->registerObject( m_richGPIDLocation, globalPIDs ) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to register RichGlobalPIDs at "
         << m_richGPIDLocation << endreq;
     return StatusCode::FAILURE;

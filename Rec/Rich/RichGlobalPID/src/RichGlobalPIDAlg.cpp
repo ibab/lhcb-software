@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.11 2003-10-13 16:13:34 jonrob Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.12 2003-11-25 13:51:23 jonesc Exp $
 // Include files
 
 // local
@@ -100,8 +100,10 @@ StatusCode RichGlobalPIDAlg::finalize() {
 // Main execution
 StatusCode RichGlobalPIDAlg::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Update RichRecEvent pointers
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -117,6 +119,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   if ( richPhotons()->empty() ) {
     m_photonCr->reconstructPhotons();
     if ( msgLevel(MSG::DEBUG) ) {
+      MsgStream  msg( msgSvc(), name() );
       msg << MSG::DEBUG << "Reconstructed " << richPhotons()->size()
           << " photon candidates" << endreq;
     }
@@ -144,6 +147,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   bool tryAgain = true;
   while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) {
     if ( m_trackIteration > m_maxTrackIterations ) {
+      MsgStream  msg( msgSvc(), name() );
       msg << MSG::WARNING << "Taken more than " << m_maxTrackIterations
           << " iterations, quitting." << endreq;
       break;
@@ -158,10 +162,12 @@ StatusCode RichGlobalPIDAlg::execute() {
       minTrList::iterator iTrack;
       for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack ) {
         if ( Rich::Unknown == iTrack->second ) {
+          MsgStream  msg( msgSvc(), name() );
           msg << MSG::ERROR << "Track " << (iTrack->first)->key()
               << " has been Id'ed as Unknown !!" << endreq;
         } else {
           if ( msgLevel(MSG::VERBOSE) ) {
+            MsgStream  msg( msgSvc(), name() );
             msg << MSG::VERBOSE << "Changing Track " << (iTrack->first)->key()
                 << " hypothesis to from "
                 << (iTrack->first)->richRecTrack()->currentHypothesis()
@@ -184,6 +190,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   }
 
   if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream  msg( msgSvc(), name() );
     msg << MSG::DEBUG << "Performed " << m_trackIteration
         << " track minimisation iteration(s). Final LogL = "
         << m_currentBestLL << endreq;

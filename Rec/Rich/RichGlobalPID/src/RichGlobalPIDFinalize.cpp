@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.5 2003-10-13 16:13:34 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.6 2003-11-25 13:51:23 jonesc Exp $
 // Include files
 
 // local
@@ -41,8 +41,10 @@ StatusCode RichGlobalPIDFinalize::initialize() {
 
 StatusCode RichGlobalPIDFinalize::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -57,6 +59,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
     RichRecTrack * rRTrack = (*track)->richRecTrack();
 
     if ( msgLevel(MSG::VERBOSE) ) {
+      MsgStream msg( msgSvc(), name() );
       msg << MSG::VERBOSE << "PID'ed Track "
           << (*track)->key() << " (" << (*track)->trQuality()
           << "), as " << rRTrack->currentHypothesis() << endreq;
@@ -76,6 +79,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
     // Finalise delta LL and probability values
     std::vector<float> & deltaLLs = pid->particleLLValues();
     if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
+      MsgStream msg( msgSvc(), name() );
       msg << MSG::WARNING << "PID " << pid->key() << " best ID " << pid->bestParticleID()
           << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
@@ -90,6 +94,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
   // All OK - Update ProcStatus with number of PIDs
   SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
   if ( !procStat ) {
+    MsgStream msg( msgSvc(), name() );
     msg << MSG::WARNING << "Failed to locate ProcStatus at "
         << m_procStatLocation << endreq;
     return StatusCode::FAILURE;

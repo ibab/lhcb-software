@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.6 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.7 2003-11-25 13:51:23 jonesc Exp $
 // Include files
 
 // local
@@ -49,25 +49,46 @@ StatusCode RichGlobalPIDDigitSel::initialize() {
 // Initialise pixels
 StatusCode RichGlobalPIDDigitSel::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Execute" << endreq;
+  }
 
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // Check if track processing was aborted.
+  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
+  if ( !procStat ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Failed to locate ProcStatus at "
+        << m_procStatLocation << endreq;
+    return StatusCode::FAILURE;
+  } else if ( procStat->aborted() ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::INFO
+        << "Processing aborted -> RICH Global PID aborted" << endreq;
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
+    richStatus()->setEventOK( false );
+    return StatusCode::SUCCESS;
+  }
 
   // Create all RichRecPixels
   if ( !m_pixelCr->newPixels() ) return StatusCode::FAILURE;
 
   if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
     msg << MSG::DEBUG 
         << "Selected " << richPixels()->size() << " RichDigits" << endreq;
   }
 
   if ( m_maxUsedPixels < richPixels()->size() ) {
-    msg << MSG::WARNING << "Found " << richPixels()->size()
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::INFO << "Found " << richPixels()->size()
         << " RichDigits -> RICH Global PID aborted" << endreq;
     SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
     if ( !procStat ) {
+      MsgStream msg( msgSvc(), name() );
       msg << MSG::WARNING << "Failed to locate ProcStatus at " 
           << m_procStatLocation << endreq;
       return StatusCode::FAILURE;

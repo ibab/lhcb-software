@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.4 2003-10-13 16:13:34 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.5 2003-11-25 13:51:24 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -74,6 +74,9 @@ private:
 
   /// Maximum number of Tracks with RICH information
   int m_maxUsedTracks;
+
+  /// Maximum total number of input TrStoredTracks
+  int m_maxInputTracks;
 
   /// Track selector
   RichTrackSelector m_trSelector;
