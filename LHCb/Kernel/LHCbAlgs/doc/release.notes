@@ -4,6 +4,18 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r2 2004-11-11 ========================
+! 2004-11-11 - Marco Cattaneo
+ - LbAppInit: 
+   . Remove use of timing tool at initilisation, as normalisation of timing is
+     now done in SequencerTimerTool
+   . Improve initialisation of random numbers: now the run and event number are
+     given as first and second seeds to setSeeds, as well as being used in the
+     hash algorithm to generate a third seed. The previous behaviour can be 
+     recovered by seting the "SingleSeed" option to true. In addition, one can
+     skip some random numbers before every event, set by the "SkipFactor" job
+     option (default value = 0)
+
 !======================= LHCbAlgs v1r1p1 2004-10-26 =======================
 ! 2004-10-26 - Marco Cattaneo
  - LbAppInit: bug fix, if creating the event header, it contained the run number

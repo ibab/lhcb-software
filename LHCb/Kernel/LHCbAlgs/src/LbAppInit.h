@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.1 2004-06-28 11:35:06 cattanem Exp $
+// $Id: LbAppInit.h,v 1.2 2004-11-15 15:07:18 cattanem Exp $
 #ifndef LHCBALGS_LBAPPINIT_H
 #define LHCBALGS_LPAPPINIT_H 1
 
@@ -30,12 +30,11 @@ public:
 
   StatusCode LbAppInit::createProcStatus(); ///< Creates an empty ProcStatus
 
-  /** Sets random number seed (hashed string made from name(), evt, run)
+  /** Sets random number seeds (hashed string made from name(), evt, run)
    *  @param evt first  number for hash string, usually event number
    *  @param run second number for hash string, usually run   number
-   *  @return    the seed used
    */
-  long LbAppInit::initRndmNum( unsigned long evt, unsigned long run); 
+  void LbAppInit::initRndmNum( unsigned long evt, unsigned long run); 
 
 private:
   /// Property to set the first event number, if event header is missing
@@ -46,6 +45,12 @@ private:
 
   /// Property to enable creation and filling of memory monitoring histogram
   bool m_doHistos;
+
+  /// Property to skip some random numbers (default is zero)
+  int  m_skipFactor;
+
+  /// Property to use only one seed (default is false)
+  bool m_singleSeed;
 
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine

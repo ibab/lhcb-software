@@ -1,14 +1,13 @@
-// $Id: LbAppInit.cpp,v 1.5 2004-10-26 13:08:19 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.6 2004-11-15 15:07:18 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
 #include "GaudiKernel/Memory.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Property.h"
-#include "GaudiKernel/DataObject.h"
 #include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
@@ -31,9 +30,11 @@ LbAppInit::LbAppInit( const std::string& name, ISvcLocator* pSvcLocator )
   m_engine       = 0;
   m_hMemVirtual  = 0;
   
-  declareProperty( "FirstEventNumber", m_firstEvent = 1    );
-  declareProperty( "RunNumber",        m_runNumber  = 1    );
-  declareProperty( "doHistos",         m_doHistos   = true );
+  declareProperty( "FirstEventNumber", m_firstEvent = 1     );
+  declareProperty( "RunNumber",        m_runNumber  = 1     );
+  declareProperty( "doHistos",         m_doHistos   = true  );
+  declareProperty( "SkipFactor",       m_skipFactor = 0     );
+  declareProperty( "SingleSeed",       m_singleSeed = false );
 }
 //-----------------------------------------------------------------------------
 
@@ -47,11 +48,6 @@ StatusCode LbAppInit::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
-  
-  // Get the timing normalisation
-  INormalizeTool* timingTool = tool<INormalizeTool>( "TimingTool" );
-  double timeNorm = timingTool->normalize() / 1.e+09;
-  release( timingTool );
   
   char* pver = getenv("APPVERSION");
   if( NULL == pver ) {
@@ -76,9 +72,6 @@ StatusCode LbAppInit::initialize() {
     << "                                "
     << "          running on " << System::hostName()
     << " on " << std::asctime( localt )
-    << "                                "
-    << "     CPU time normalisation = " << timeNorm
-    << " (c.f. 1GHz PIII, gcc 3.2 -o2)"
     << std::endl
     << "=================================================================="
     << "=================================================================="
@@ -92,7 +85,17 @@ StatusCode LbAppInit::initialize() {
   else {
     std::vector<long> seeds;
     seeds.push_back( 12345678 );
+    seeds.push_back( 0 );
     m_engine->setSeeds( seeds );
+  }
+
+  if( m_singleSeed ) {
+    warning() << "Using only one 24 bit random number seed" << endmsg;
+  }
+  
+  if( 0 != m_skipFactor ) {
+    info() << "Skipping " << m_skipFactor 
+           << " random numbers before each event" << endmsg;
   }
   
   // Book the monitoring histograms
@@ -126,8 +129,9 @@ StatusCode LbAppInit::execute() {
 
   // Retrieve the event header if it exists, otherwise create it
   unsigned int eventNumber;
-  SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
-  if( 0 != evt ) {
+  if( exist<EventHeader>( EventHeaderLocation::Default ) )
+  {
+    EventHeader* evt = get<EventHeader>( EventHeaderLocation::Default );
     eventNumber = evt->evtNum();
     m_runNumber = evt->runNum();
   }
@@ -141,12 +145,10 @@ StatusCode LbAppInit::execute() {
   ++m_eventCounter;
 
   info() << "Evt " << eventNumber << ",  Run " << m_runNumber 
-         << ",  Nr. in job = " << m_eventCounter;
+         << ",  Nr. in job = " << m_eventCounter << endmsg;
 
   // Initialise the random number seed  
-  long theSeed = initRndmNum( eventNumber, m_runNumber );
-  debug() << "  random seed = " << theSeed;
-  info() << endmsg;
+  initRndmNum( eventNumber, m_runNumber );
 
   // Create a ProcStatus object if it does not exist
   this->createProcStatus();
@@ -173,13 +175,19 @@ StatusCode LbAppInit::finalize() {
 }
 
 //-----------------------------------------------------------------------------
-long LbAppInit::initRndmNum( unsigned long evt, unsigned long run ) {
+void LbAppInit::initRndmNum( unsigned long evt, unsigned long run ) {
 //-----------------------------------------------------------------------------
 
-  // Set the random number seed either once per event or once per job
+  // Set the random number seeds
   std::vector<long> seeds;
 
-  // Get random number seed by hashing string containing event & run nos.
+  // First two seeds are run and event numbers. Skip if only one seed wanted
+  if( !m_singleSeed ) {
+    seeds.push_back( run );
+    seeds.push_back( evt );
+  }
+  
+  // Get last seed by hashing string containing event & run nos.
 
   std::string s = name() + boost::io::str( boost::format( "_evt_%1%_run_%2%" )
     % boost::io::group( std::setfill('0'), std::hex, std::setw(8), evt )
@@ -192,11 +200,24 @@ long LbAppInit::initRndmNum( unsigned long evt, unsigned long run ) {
   }
   hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
   //<--
-  long theSeed = abs(hash);  // CLHEP cannot cope with -ve seeds
-  seeds.push_back( theSeed );
+
+  // CLHEP uses the last seed as a seed (only 24 bits used) but also to generate
+  // more pseudorandom seeds to populate the "seeds" vector to its capacity of 24
+  // seeds. For this generation, 31 bits are used
+  seeds.push_back( abs(hash) );
+  seeds.push_back( 0 );
   m_engine->setSeeds( seeds );
 
-  return theSeed;
+  // Optionally skip some random numbers
+  if( 0 < m_skipFactor ) {
+    int shots  = m_skipFactor;
+    double sum = 0.;
+    Rndm::Numbers gauss;
+    gauss.initialize( randSvc() , Rndm::Gauss(0.,1.0) );
+    while( 0 < --shots ) { sum += gauss() * sum ; }
+  }
+  
+  return;
 }
 
 //-----------------------------------------------------------------------------
