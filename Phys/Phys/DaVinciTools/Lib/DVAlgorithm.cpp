@@ -243,6 +243,13 @@ StatusCode DVAlgorithm::sysInitialize () {
   if (m_avoidSelResult) msg << MSG::WARNING << 
                           "Avoiding SelResult" << endreq ;
 
+  // Load tools
+  StatusCode scLT = loadTools();
+  if(scLT.isFailure()) {
+    msg << MSG::ERROR << "Unable to load tools" << endreq;
+    return scLT;
+  }
+  
   StatusCode sc;
   // initialize Algorithm base class first -> calls initialize()
   sc = this->Algorithm::sysInitialize();
@@ -251,19 +258,14 @@ StatusCode DVAlgorithm::sysInitialize () {
   sc = this->GaudiAlgorithm::initialize();  
   if (!sc ) return sc;
 
-  // Load tools
-  StatusCode scLT = loadTools();
-  if(scLT.isFailure()) {
-    msg << MSG::ERROR << "Unable to load tools" << endreq;
-    return scLT;
-  }
-  
   if (m_decayDescriptor == "not specified"){
     msg << MSG::WARNING << "Decay Descriptor string not specified" << endreq;
   }
   else{
     msg << MSG::INFO << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
+  debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
+
   return sc;
 }
 //=============================================================================

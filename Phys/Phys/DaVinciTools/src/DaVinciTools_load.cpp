@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.35 2004-07-16 11:20:48 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.36 2004-07-16 16:12:11 pkoppenb Exp $
 // Include files 
 
 
@@ -44,14 +44,15 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( ParticleFilter );
 
   DECLARE_TOOL( BooleanFilterCriterion );
-  DECLARE_TOOL( PIDFilterCriterion );
+  DECLARE_TOOL( FlightDistanceFilterCriterion );
   DECLARE_TOOL( KinFilterCriterion );
+  DECLARE_TOOL( LifetimeSignificanceCriterion );
   DECLARE_TOOL( MassDifferenceFilterCriterion );
   DECLARE_TOOL( MassFilterCriterion );
-  DECLARE_TOOL( VtxFilterCriterion );
+  DECLARE_TOOL( PIDFilterCriterion );
   DECLARE_TOOL( PVIPFilterCriterion );
   DECLARE_TOOL( TrackTypeFilterCriterion );
-  DECLARE_TOOL( LifetimeSignificanceCriterion );
+  DECLARE_TOOL( VtxFilterCriterion );
 
   // Filter n particles
   DECLARE_TOOL( KinBestParticles );

@@ -1,0 +1,31 @@
+//
+// Test job options for FlightDistanceFilterCriterion
+//
+#include "$B2HHROOT/options/DVPreselB2hh.opts"
+ApplicationMgr.DLLs  += { "PhysSelections" };
+
+ApplicationMgr.TopAlg += { "Sequencer/SeqTestFilter" };
+SeqTestFilter.Members += { "RefineSelection/FilterLongB", 
+                             "PrintHeader/FoundLongB" };
+
+FilterLongB.PhysDesktop.InputLocations = { "/Event/Phys/PreselB2hh" };
+FilterLongB.ParticleNames = { "B0", "B~0" };
+FilterLongB.FilterNames = { "FlightFilter", "FlightFilter" };
+FilterLongB.FlightFilter.CriteriaNames = { "FlightDistanceFilterCriterion/Flight" };
+FilterLongB.FlightFilter.Flight.MinFSPV = 20.0 ;  // it's 11 in the B->hh code
+FilterLongB.FlightFilter.Flight.CutBestPV = 1;
+
+FilterLongB.OutPutLevel = 3;
+FoundLongB.OutPutLevel  = 2;
+
+// some B->pipi data. No guarantee that it still exits...
+EventSelector.Input   = {
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+ };
+
+ApplicationMgr.EvtMax    = 100;
+//MessageSvc.OutputLevel   = 1;

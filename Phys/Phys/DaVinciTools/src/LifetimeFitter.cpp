@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.2 2003-06-03 07:30:20 gcorti Exp $
+// $Id: LifetimeFitter.cpp,v 1.3 2004-07-16 16:12:11 pkoppenb Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -135,8 +135,12 @@ LifetimeFitter::setup(const Particle& part, const Vertex& vert,
   W.sub(7,vert.positionErr());
   // FIXME: why doesn't HepSymMatrix allow one to put a HepMatrix 
   //        'above' its diagonal???
-  for (unsigned i=0;i<3;++i) 
-  for (unsigned j=0;j<3;++j) W[i][3+j] = part.posMomCorr()[i][j];
+  //for (unsigned i=0;i<3;++i) 
+  //for (unsigned j=0;j<3;++j) W[i][3+j] = part.posMomCorr()[i][j];
+  
+  //fixed by Y.Xie: posMomCorr is the lower square. 
+  for (unsigned i=0;i<3;++i)
+  for (unsigned j=0;j<3;++j) W[3+i][j] = part.posMomCorr()[i][j];
 
   int ier=0;
   W.invert(ier);

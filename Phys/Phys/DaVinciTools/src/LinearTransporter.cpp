@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.cpp,v 1.5 2004-05-14 09:43:31 pkoppenb Exp $
+// $Id: LinearTransporter.cpp,v 1.6 2004-07-16 16:12:12 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -226,23 +226,44 @@ StatusCode LinearTransporter::linTransport(Particle *&workParticle,
   double sx = workParticle->slopeX();
   double sy = workParticle->slopeY();
 
+  //transform to the same z with err_z=0
+  HepMatrix JA(3,3);
+  JA(1,1)=1;
+  JA(1,2)=0;
+  JA(1,3)=-sx,
+  JA(2,1)=0;
+  JA(2,2)=1;
+  JA(2,3)=-sy;
+  JA(3,1)=0;
+  JA(3,2)=0;
+  JA(3,3)=0;
+  HepSymMatrix tmpPOTErr=oldPOTErr.similarity(JA);
+  HepMatrix tmpPosSlopesCorr=oldPosSlopesCorr*JA.T();
 
-  // linear transport
-  double dz2 = dz*dz;
+  // linear transport of state
+  //  double dz2 = dz*dz;
   double xnew = xold + sx*dz;
   double ynew = yold + sy*dz;
   newPOT.set(xnew, ynew, znew);
-  
-  newPOTErr(1,1) = oldPOTErr(1,1) + 2.*dz*oldPosSlopesCorr(1,1) + 
-    dz2*oldSlopesMomErr(1,1);    
-  newPOTErr(2,1) = oldPOTErr(2,1) + 
-    dz*( oldPosSlopesCorr(1,2) + oldPosSlopesCorr(2,1) ) + 
-    dz2*oldSlopesMomErr(2,1);
-  newPOTErr(2,2) = oldPOTErr(2,2) + 2.*dz*oldPosSlopesCorr(2,2) + 
-    dz2*oldSlopesMomErr(2,2);
-  newPosSlopesCorr(1,1) = oldPosSlopesCorr(1,1) + dz*oldSlopesMomErr(1,1);
-  newPosSlopesCorr(2,2) = oldPosSlopesCorr(2,2) + dz*oldSlopesMomErr(2,2);
-  
+
+  // transfromation of the 6x6 covariance matrix 
+  HepMatrix tF(6,6,1);
+  tF[0][3] = dz;  
+  tF[1][4] = dz;  
+  HepSymMatrix C0(6,0);
+  C0.sub(1,tmpPOTErr);
+  C0.sub(4,oldSlopesMomErr);
+  for (unsigned i=0;i<3;++i) {
+    for (unsigned j=0;j<3;++j) C0[3+i][j] = tmpPosSlopesCorr[i][j];
+  }  
+  HepSymMatrix C1=C0.similarity(tF);  
+
+  // extract the position matrix  and pos-slope correlation matrix
+  // notice the slope matrix is unchanged
+  newPOTErr=C1.sub(1,3);
+  HepMatrix C1Copy=C1;
+  newPosSlopesCorr=C1Copy.sub(4,6,1,3);  
+
   // a new "particle" is made with transported values
   transParticle.setPointOnTrack(newPOT);
   transParticle.setPointOnTrackErr(newPOTErr);

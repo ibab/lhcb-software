@@ -1,7 +1,46 @@
-! $Id: release.notes,v 1.109 2004-07-16 11:20:48 pkoppenb Exp $
+! $Id: release.notes,v 1.110 2004-07-16 16:12:11 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-07-16 - P. Koppenburg for Yuehong Xie
+  - src/LifetimeFitter.cpp
+    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp, 
+      and this is fixed.
+  - src/LinearTransporter.cpp
+    . A transfromation is introduced in  LinearTransporter.cpp to account 
+      for the z uncertainty of the initial state. It changes nothing when 
+      the initial state is not from a fitted vertex and thus has no error 
+      on z.
+      The code for the linear transport of the covariance is also rewritten 
+      to make it short and to fix the problem of two missing lines in the 
+      old version
+        newPosSlopesCorr(1,2) = oldPosSlopesCorr(1,2) + dz*oldSlopesMomErr(1,2);
+        newPosSlopesCorr(2,1) = oldPosSlopesCorr(2,1) + dz*oldSlopesMomErr(2,1);
+      This is not a complete fix to the initial covariance matrix problem.
+      There are two things to be solved:
+      *) charged particles like D+, Ds+
+      *) if one use CombinedTransporter which uses extrapolators in the 
+         Tr/TrExtrapolator package. 
+
+! 2004-07-16 - P. Koppenburg for Luis Fernandez
+  - src/FlightDistanceFilterCriterion.{h.cpp} (preliminary version)
+    . Returns a yes/no depending on flight distance / significance w.r.t either 
+       -> all PVs (for the min cuts)
+       -> Best PV, chosen as the one for which the IPS of the composite 
+          particle is the smallest (for the min and max cuts)
+       Cuts:
+        - on the minimum signed or unsigned flight distance or significance
+          w.r.t all PVs or the Best PV
+        - on the maximum signed or unsigned flight distance or significance
+          w.r.t the Best PV
+  - options/DVFlightDistanceFilterCriterion.opts
+    . Test options for the above
+  
+! 2004-07-16 - P. Koppenburg
+  - Lib/DVAlgorithm.cpp
+    . Swap order of initialization and Tools loading. Old order prvented
+      DVAlgorithms to use tools in their initalize method.
+      
 ! 2004-07-16 - P. Koppenburg
   - DaVinciTools/DVAlgorithm.h, Lib/DVAlgorithm.cpp
     . Make it inherit from GaudiAlgorithm. This allows for instance

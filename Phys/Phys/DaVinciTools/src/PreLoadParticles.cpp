@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.cpp,v 1.3 2004-07-16 11:20:48 pkoppenb Exp $
+// $Id: PreLoadParticles.cpp,v 1.4 2004-07-16 16:12:12 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,8 +45,7 @@ PreLoadParticles::~PreLoadParticles() {};
 //=============================================================================
 StatusCode PreLoadParticles::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
+  debug() << "==> Initialize" << endreq;
   return StatusCode::SUCCESS;
 };
 
@@ -63,7 +62,6 @@ StatusCode PreLoadParticles::execute() {
     msg << MSG::ERROR << "Not able to save desktop " << endreq;
     return StatusCode::FAILURE;
   }
-
   
   // Log number of vertices and particles
   msg << MSG::DEBUG << "Number of particles in desktop = " << 
