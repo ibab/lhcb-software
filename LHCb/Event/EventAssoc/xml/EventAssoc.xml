@@ -5,6 +5,7 @@
 
 <package name="EventAssoc">
 
+    <import name="Event/L1Track2d"/>
     <assoc from="ITDigit"   to="MCParticle"/>
     <assoc from="ITDigit"   to="MCHit"      weight="double"/>
     <assoc from="ITCluster" to="MCParticle" weight="double"/>
@@ -30,6 +31,7 @@
     <assoc from="VeloCluster" to="MCParticle" weight="double" type="2D"/>
     <assoc from="VeloCluster" to="MCVeloHit"  weight="double" type="2D"/>
 
+    <assoc from="ProtoParticle" to="MCParticle" weight="double"/>
 </package>
 
 </gdd>

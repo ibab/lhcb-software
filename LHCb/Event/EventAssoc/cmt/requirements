@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.1.1.1 2004-01-06 10:54:28 cattanem Exp $
+# $Id: requirements,v 1.2 2004-05-03 16:12:52 cattanem Exp $
 # Created    : 19/12/2003
 # Maintainer : Marco Cattaneo
 #
 package           EventAssoc
-version           v1r0
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -11,10 +11,9 @@ branches          cmt doc xml
 
 # Used packages. 
 #============================================================================
-use CaloEvent v* Event
 use L1Event   v* Event
 use L0Event   v* Event
-use MuonEvent v* Event
+use PhysEvent v* Event
 
 # Produce dictionary from XML description
 #============================================================================
