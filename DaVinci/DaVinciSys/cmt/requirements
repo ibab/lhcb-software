@@ -1,5 +1,5 @@
 package DaVinciSys
-version v6r0
+version v7r0
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use DaVinci              v6r0	Phys
+use DaVinci              v7r0	Phys
 
 #--- DaVinci packages
 use DaVinciTools         v6r0p1 Phys
