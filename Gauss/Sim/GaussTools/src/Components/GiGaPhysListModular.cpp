@@ -46,12 +46,9 @@ GiGaPhysListModular::GiGaPhysListModular
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList(), 
-    m_electronCut(10.0*km), m_gammaCut(20*mm)
+  : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList()
 {
   declareProperty( "PhysicsConstructors"  , m_physconstr);
-  declareProperty( "ElectronCut", m_electronCut);
-  declareProperty( "GammaCut", m_gammaCut);
 };
 // ============================================================================
 
@@ -99,18 +96,60 @@ StatusCode GiGaPhysListModular::initialize()
 // ============================================================================
 void GiGaPhysListModular::SetCuts()
 {
-  //G4VUserPhysicsList::SetCutsWithDefault method sets 
-  //the default cut value for all particle types 
-  //
-  
+  MsgStream log( msgSvc() , name() );
+
+  // set default cut
+  SetDefaultCutValue( defaultCut () );
   SetCutsWithDefault();
   
-  SetCutValue(m_gammaCut,"gamma");
-  SetCutValue(m_electronCut,"e-");
+  log << MSG::INFO 
+      << " The default cut          is set to \t" 
+      << defaultCut        () / mm << " mm " << endreq ;
+  
+  // set cut values for gamma
+  SetCutValue ( cutForGamma       () , "gamma"        ) ;
+  log << MSG::INFO 
+      << " The cut for gamma        is set to \t" 
+      << cutForGamma       () / mm << " mm " << endreq ;
+  
+  // set cut values for electron
+  SetCutValue ( cutForElectron    () , "e-"           ) ;
+  log << MSG::INFO 
+      << " The cut for electron     is set to \t" 
+      << cutForElectron    () / mm << " mm " << endreq ;
+  
+  // set cut values for positron
+  SetCutValue ( cutForPositron    () , "e+"           ) ;
+  log << MSG::INFO 
+      << " The cut for positron     is set to \t" 
+      << cutForPositron    () / mm << " mm " << endreq ;
+  
+  // set cut values for proton 
+  SetCutValue ( cutForProton      () , "proton"       ) ;
+  log << MSG::INFO 
+      << " The cut for proton       is set to \t" 
+      << cutForProton      () / mm << " mm " << endreq ;
+  
+  // set cut values for anti_proton
+  SetCutValue ( cutForAntiProton  () , "anti_proton"  ) ;
+  log << MSG::INFO 
+      << " The cut for anti_proton  is set to \t" 
+      << cutForAntiProton  () / mm << " mm " << endreq ;
+  
+  // set cut values for neutron 
+  SetCutValue ( cutForNeutron     () , "neutron"      ) ;
+  log << MSG::INFO 
+      << " The cut for neutron      is set to \t" 
+      << cutForNeutron     () / mm << " mm " << endreq ;
+  
+  // set cut values for anti_neutron 
+  SetCutValue ( cutForAntiNeutron () , "anti_neutron" ) ;
+  log << MSG::INFO 
+      << " The cut for anti_neutron is set to \t" 
+      << cutForAntiNeutron () / mm << " mm " << endreq ;
   
   if (verboseLevel>0) { DumpCutValuesTable(); }
 };
-
   
 
 // ============================================================================

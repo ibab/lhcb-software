@@ -16,7 +16,7 @@ template <class TYPE> class GiGaFactory;
 
 
 
-class GiGaPhysListModular : public GiGaPhysListBase, 
+class GiGaPhysListModular : public GiGaPhysListBase,
                             public virtual G4VModularPhysicsList
 {
   /// friend factory for instantiation 
@@ -48,8 +48,6 @@ public:
   ///
 private:
   std::vector<std::string> m_physconstr;
-  double m_electronCut;
-  double m_gammaCut;
 
   ///
   GiGaPhysListModular();
