@@ -10,8 +10,6 @@ use DetDesc     v* Det
 # build a component library
 library SimSvc     *.cpp
 
-apply_pattern linker_path
+apply_pattern component_library library=SimSvc
 
-#==================================================================
-private
-apply_pattern package_Cshlibflags
+

@@ -7,6 +7,9 @@
 
 !========================== SimSvc v1r0 ==============================
 
+! 2003-02-18 - Florence Ranjard
+ - replace all the patterns used with the component_library one.
+
 ! 2003-01-30 - Witek Pokorski
  - Added methods simAttribute and hasSimAttribute with name of the logical
    volume as argument
