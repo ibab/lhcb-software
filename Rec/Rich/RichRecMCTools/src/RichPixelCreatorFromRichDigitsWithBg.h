@@ -4,8 +4,12 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.1 2004-10-13 09:37:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.2 2004-10-13 10:32:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/13 09:37:27  jonrob
+ *  Add new pixel creator tool.
+ *  Add ability to make pixels for particular radiators.
+ *
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -124,8 +128,8 @@ private: // data
   /// Number of background tracks to add to each event
   size_t m_noBgTracksToAdd;
 
-  /// Flags for which radiators to create pixels for
-  std::vector<bool> m_usedRads;
+  /// Flags for which RICH detectors to create pixels for
+  std::vector<bool> m_usedDets;
 
 };
 

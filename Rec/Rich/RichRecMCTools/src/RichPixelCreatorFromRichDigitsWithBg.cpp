@@ -4,8 +4,12 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.1 2004-10-13 09:37:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.2 2004-10-13 10:32:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/13 09:37:27  jonrob
+ *  Add new pixel creator tool.
+ *  Add ability to make pixels for particular radiators.
+ *
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -30,7 +34,7 @@ RichPixelCreatorFromRichDigitsWithBg( const std::string& type,
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
     m_allDone     ( false ),
-    m_usedRads    ( Rich::NRadiatorTypes, true )
+    m_usedDets    ( Rich::NRiches, true )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -39,7 +43,7 @@ RichPixelCreatorFromRichDigitsWithBg( const std::string& type,
   declareProperty( "RichRecPixelLocation", m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation", m_recoDigitsLocation = RichDigitLocation::Default );
   declareProperty( "NumberBackgroundTracksToAdd",  m_noBgTracksToAdd = 10 );
-  declareProperty( "UseRadiators", m_usedRads );
+  declareProperty( "UseDetectors", m_usedDets );
 
 }
 
@@ -102,12 +106,11 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
     if (mcDigit) {
 
       // Get MC hits from the MC digit (can be >1 photon producing one digit in general)
-      const SmartRefVector<MCRichHit> mcHits( mcDigit->hits() );
-      if ( !mcHits.empty() ) {
+      if ( !mcDigit->hits().empty() ) {
 
         // For each hit, retrieve the MCParticle and add it to the stack if valid
-        for (SmartRefVector<MCRichHit>::const_iterator mcHit = mcHits.begin();
-             mcHit != mcHits.end(); ++mcHit) {
+        for (SmartRefVector<MCRichHit>::const_iterator mcHit = mcDigit->hits().begin();
+             mcHit != mcDigit->hits().end(); ++mcHit) {
           const MCParticle* mcParticle( (*mcHit)->mcParticle() );
           if (mcParticle) {
             //std::vector<RichDigit>& bgDigits = m_digitsForTrackBg[mcParticle];
@@ -171,10 +174,11 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
 
     RichRecPixel * newPixel = NULL;
 
-    // Check if we are using this radiator
-    if ( m_usedRads[hit->radiator()] ) {
+    // check smartid is valid
+    if ( id.pixelDataAreValid() ) {
 
-      if ( id.pixelDataAreValid() ) {
+      // Check if we are using this detector
+      if ( m_usedDets[id.rich()] ) {
 
         // Make a new RichRecPixel
         newPixel = new RichRecPixel();
@@ -188,10 +192,10 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
         // Set smartID
         newPixel->setSmartID( id );
 
-      } else {
-        Warning("RichSmartID does not contain valid pixel data !");
       }
 
+    } else {
+      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map
