@@ -14,6 +14,8 @@ Purpose: LHCb Digitization program
 - Bug fixes
   . Workaround for core dump on exit() (GaudiPoolDb v1r8p1)
   . Various fixes for memory leaks (GaudiSvc v12r2p1, GaudiPoolDb v1r8p1)
+  . Workaround for new CMT feature that setup.csh does not set xxROOT
+    enviroment variables if called with -tag option (Boole.job, valgrind.job)
 
 </PRE><H1><A NAME=v6r1>2004-07-26 Boole v6r1</A></H1><PRE>
 This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
