@@ -1,16 +1,16 @@
 #include "$STDOPTS/DetDesc.opts"
 
 ApplicationMgr.DLLs   += { "DetDescChecks" };
-ApplicationMgr.DLLs   += { "HbookCnv"};
+ApplicationMgr.DLLs   += { "RootHistCnv"};
 
-ApplicationMgr.HistogramPersistency = "HBOOK";
+ApplicationMgr.HistogramPersistency = "ROOT";
 
-HistogramPersistencySvc.OutputFile = "histo.hbook";
+HistogramPersistencySvc.OutputFile = "histo.root";
 
 ApplicationMgr.EvtSel     = "NONE" ;
 ApplicationMgr.EvtMax     = 1 ;
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 
 MessageSvc.OutputLevel = 3;
 

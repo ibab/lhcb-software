@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2004-06-30 08:08:02 cattanem Exp $
+# $Id: requirements,v 1.13 2005-01-20 17:03:15 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package           DetDescChecks
-version           v2r1
+version           v2r2
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -28,7 +28,7 @@ application DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 private
 use XmlDDDB v* Det
-use HbookCnv v*
+use RootHistCnv v*
 use GaudiConf v*
 use GaudiSvc v*
 use DetDescCnv v* Det
