@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r3>2004-03-16 Brunel v23r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r3>2004-03-18 Brunel v23r3</A></H1><PRE>
 
  Requires data produced by Boole v5r3 or later
  Tuned for XmlDDDB v22r0
@@ -24,6 +24,7 @@ Purpose: LHCb reconstruction program
    . Recalibration of Ecal ActiveToTotal (XmlDDDB v22r0)
    . New Rich2 HPD layout (XmlDDDB v22r0)
    . New Calo PID calibration histograms (CaloPIDs v2r0, ParamFiles v3r4)
+   . Adapt VeloTT tracking to new TT geometry (VeloTT v1r8)
 
  - Persistency changes:
    . POOL persistency is now the default

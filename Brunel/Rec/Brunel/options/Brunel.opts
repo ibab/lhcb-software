@@ -128,7 +128,6 @@ BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
 // VeloTT tracking
 ApplicationMgr.DLLs += { "VeloTT" };
 BrunelRecoTrSeq.Members += { "VeloTTFind" };
-#include "$VELOTTROOT/options/Brunel.opts"
 #include "$VELOTTROOT/options/BrunelField043.opts"
 BrunelRecoTrSeq.Members += { "TrPrepareVelo" };
 
