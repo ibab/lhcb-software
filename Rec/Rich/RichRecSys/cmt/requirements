@@ -14,6 +14,7 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 use RichRecBase    v1r3   Rich
 use RichRecTools   v2r2   Rich
+use RichRecMCTools v1r0   Rich
 use RichRecCommon  v1r1   Rich
 use RichRingRefit  v1r1   Rich
 use RichLocalPID   v1r1   Rich

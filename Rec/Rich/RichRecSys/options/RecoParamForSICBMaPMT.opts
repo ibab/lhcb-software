@@ -6,19 +6,21 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrac
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-ToolSvc.RichSegmentCreator.EnergyBins = { 5, 5, 5 };
+ToolSvc.RichSegmentCreator.MinPhotonEnergy = { 1.75, 1.75, 1.75 };
+ToolSvc.RichSegmentCreator.MaxPhotonEnergy = { 3.8,  7.00, 7.00 };
+ToolSvc.RichSegmentCreator.EnergyBins      = { 10,   10,   10   };
 
 // Status Creator
 ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
 
 // Pixel creator
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSICB/RichPixelCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSICBMaPMT/RichPixelCreator" };
 
 // Detector interface 
 ToolSvc.RichToolRegistry.Tools += { "RichDetInterface/RichDetInterface" };
 
 // SICB geometry (temporary)
-ToolSvc.RichToolRegistry.Tools += { "PixelFinder/SICBPixelGeom" };
+ToolSvc.RichToolRegistry.Tools += { "MaPMTDetTool/MaPMTSICBTool" };
 
 // Photon Creator
 ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator",
@@ -36,6 +38,8 @@ ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
 
 // Fast geometrical efficiency
 //ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
+//RichGeomEff.FixedSignalEfficiency = 0.6;
+//RichGeomEff.FixedScatterEfficiency = 0.6;
 
 // Track signals
 ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
@@ -55,12 +59,12 @@ ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
 // Interpolated cherenkov resolution function
 //#include "$RICHRECSYSOPTS/tools/InterpCherenkovRes.opts"
 
-// Photon detection efficiency SICB hardcodings (temporary)
 //ToolSvc.RichToolRegistry.Tools += { "RichSignalDetectionEffSICB/RichSignalDetectionEff" };
+//ToolSvc.RichSignalDetectionEff.QETableLocation =
+//  "/dd/Materials/RichMaterialTabProperties/MapmtQuantumEffSpecial";
 
 // Photon detection efficiency using XML tabulation
-// NEED TO MAKE MAPMT VERSION
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedHPDSignalDetectionEff/RichSignalDetectionEff" };
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedMaPMTSignalDetectionEff/RichSignalDetectionEff" };
 ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
   "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT",
   "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT"
@@ -69,9 +73,13 @@ ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
   "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT",
   "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT"
 };
+ToolSvc.RichSignalDetectionEff.QETableLocation = 
+  "/dd/Materials/RichMaterialTabProperties/MapmtQuantumEffSpecial";
 
 // Refractive index using SICB hardcodings (temporary)
 //ToolSvc.RichToolRegistry.Tools += { "RichRefractiveIndexSICB/RichRefractiveIndex" };
+//ToolSvc.RichRefractiveIndex.QETableLocation =
+//  "/dd/Materials/RichMaterialTabProperties/MapmtQuantumEffSpecial";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
@@ -80,6 +88,8 @@ ToolSvc.RichRefractiveIndex.RefIndexLocations = {
   "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
 };
+ToolSvc.RichRefractiveIndex.QETableLocation =
+  "/dd/Materials/RichMaterialTabProperties/MapmtQuantumEffSpecial";  
 
 // Rayleigh scattering using XML tabulation
 //ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
@@ -94,3 +104,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
+
+// temporary parameters
+//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.78;
+//ToolSvc.RichRayleighScatter.AeroClarity = 0.0006;

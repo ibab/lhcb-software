@@ -3,7 +3,6 @@
 // Local Algorithm parameters
 RichLocPID.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
-RichLocPID.MaxTrTracks                       = 500;
 RichLocPID.MaxUsedTracks                     = 230;
 ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
@@ -15,7 +14,6 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","seed","match","forward","upstream","veloTT" };
-RichGloPIDTrSel.MaxTrTracks               = 500;
 RichGloPIDTrSel.MaxUsedTracks             = 230;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
@@ -25,6 +23,8 @@ RichGloPIDTrSel.ResetTracksToPion         = false;
 //                                            Its      tracks    lowT    highT
 RichGloPIDIt1.TrackMinDeltaLLPara         = { 0,10,    30,150,   -1,-1,  -1, -0.2 };
 RichGloPIDIt1.FreezeOutPara               = { 0,10,    30,150,    3, 2,   1,  1   };
+//RichGloPIDIt1.TrackMinDeltaLLPara         = { 0,10,    30,150,   -1,-1,  -1, -1 };
+//RichGloPIDIt1.FreezeOutPara               = { 0,10,    30,150,    3, 3,   3,  3   };
 RichGloPIDIt1.LikelihoodThreshold         = -1e-2;
 RichGloPIDIt1.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
@@ -33,6 +33,9 @@ RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
 //                                            Its      tracks     lowT    highT
 RichGloPIDIt2.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
 RichGloPIDIt2.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
+//RichGloPIDIt2.TrackMinDeltaLLPara         = { 0,10,    30,150,   -5,-5,  -5, -5 };
+//RichGloPIDIt2.FreezeOutPara               = { 0,10,    30,150,    5, 5,   5,  5   };
+
 RichGloPIDIt2.LikelihoodThreshold         = -1e-3;
 RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;

@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-08-06 - Chris Jones
- - Various re-organisation and updates to reconstruction pacakges
+ - Various re-organisation and updates to reconstruction packages
+ - Support for MaPMTs
 
 !===================== RichRecSys v1r0p1 2003-07-1- =======================
 ! 2003-07-10 - Marco Cattaneo

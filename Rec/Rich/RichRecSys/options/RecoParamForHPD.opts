@@ -6,13 +6,15 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrac
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-ToolSvc.RichSegmentCreator.EnergyBins = { 5, 5, 5 };
+ToolSvc.RichSegmentCreator.MinPhotonEnergy = { 1.75, 1.75, 1.75 };
+ToolSvc.RichSegmentCreator.MaxPhotonEnergy = { 3.8,  7.00, 7.00 };
+ToolSvc.RichSegmentCreator.EnergyBins      = { 10,   10,   10   };
 
 // Status Creator
 ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
 
 // Pixel creator
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigit/RichPixelCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
 
 // Detector interface 
 ToolSvc.RichToolRegistry.Tools += { "RichDetInterface/RichDetInterface" };
@@ -33,6 +35,8 @@ ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
 
 // Fast geometrical efficiency
 //ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
+//RichGeomEff.FixedSignalEfficiency = 0.6;
+//RichGeomEff.FixedScatterEfficiency = 0.6;
 
 // Track signals
 ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
@@ -59,6 +63,8 @@ ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
   "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT",
   "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceReflectivityPT"
 };
+ToolSvc.RichSignalDetectionEff.QETableLocation =
+  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
@@ -67,6 +73,8 @@ ToolSvc.RichRefractiveIndex.RefIndexLocations = {
   "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
 };
+ToolSvc.RichRefractiveIndex.QETableLocation =
+  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Rayleigh scattering using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
@@ -81,3 +89,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
+
+// temporary parameters. To be got from XML eventually
+//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1;
+//ToolSvc.RichRayleighScatter.AeroClarity = 0.0008;
