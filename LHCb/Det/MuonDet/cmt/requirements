@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.14 2002-11-27 08:06:39 cattanem Exp $
+# $Id: requirements,v 1.15 2002-12-04 18:48:59 ranjard Exp $
 # =========================================================================
 
 package MuonDet
-version  v4r2
+version  v4r3
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet
@@ -12,7 +12,7 @@ branches         src cmt doc options MuonDet
 include_dirs      $(MUONDETROOT)
 
 # =============== used packages ===========================================
-use DetDesc      v10r*  Det
+use DetDesc      v11r*  Det
 
 # =============== own options ==========================================
 set MUONDETOPTS  ${MUONDETROOT}/options

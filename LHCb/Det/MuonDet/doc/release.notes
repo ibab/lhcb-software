@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.26 2002-11-27 08:06:40 cattanem Exp $
+! $Id: release.notes,v 1.27 2002-12-04 18:48:59 ranjard Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+!======================== MuonDet v4r3 2002-12-04 ========================
+! 2002-11-29 - Florence Ranjard
+ - requirements - use DetDesc v11r*
 
 !========================= MuonDet v4r2 2002-10-27 =========================
 ! 2002-11-26 - David Hutchcroft
