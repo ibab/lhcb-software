@@ -25,6 +25,9 @@
 	templateList (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT desc (#PCDATA)>
+<!ATTLIST desc
+	xml:space (default|preserve) #FIXED "preserve"
+>
 <!ELEMENT base EMPTY>
 <!ATTLIST base
 	name CDATA #REQUIRED
@@ -70,6 +73,9 @@
 	const (TRUE | FALSE) "FALSE"
 >
 <!ELEMENT code (#PCDATA)>
+<!ATTLIST code
+	xml:space (default|preserve) #FIXED "preserve"
+>
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute
 	type CDATA #REQUIRED
