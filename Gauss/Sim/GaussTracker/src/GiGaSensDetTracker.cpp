@@ -41,7 +41,7 @@ GiGaSensDetTracker::~GiGaSensDetTracker(){};
 
 void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE)
 {
-  static int HCID;
+  int HCID;
   
   trackerCol = new TrackerHitsCollection
     (SensitiveDetectorName,collectionName[0]);
@@ -71,39 +71,8 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
           double timeof = track-> GetGlobalTime();
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
           HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
-          int trid = track->GetTrackID();
-          
-          // temp
-//           G4TouchableHistory* TT =  
-//             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-//           G4VPhysicalVolume*  PV =   TT->GetVolume();
-//           G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-          
-//           G4TouchableHistory* postTT =  
-//             (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-//           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-//           G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
-          
-//           MsgStream log( msgSvc() , name() );
-          
-//           log << MSG::DEBUG << "Processing TrackerHit:" << " edep="  
-//               << edep << endreq;
-          
-//           log << MSG::DEBUG
-//               << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
-//               << ")" 
-//               << " PrePV="    << PV->GetName()  
-//               << " PreLV="    << LV->GetName() << endreq;
-          
-//           log << MSG::DEBUG
-//               << " PostPos=("
-//               << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
-//               << " PostPV="    << postPV->GetName()  
-//               << " PostLV="    << postLV->GetName() << endreq;
-          // end of temp
-          
+          int trid = track->GetTrackID();          
           ///
-
           TrackerHit* newHit = new TrackerHit();
           newHit->SetEdep( edep );
           newHit->SetEntryPos( prepos );
@@ -112,13 +81,11 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
           newHit->SetTrackID( trid );
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 
-          GaussTrackInformation*    gi = 
-            ( 0 == ui )  ? 0 : static_cast<GaussTrackInformation*> ( ui );
+          GaussTrackInformation* gi = (GaussTrackInformation*) ui;
           gi->setCreatedHit(true);
           gi->setToBeStored(true);
           gi->addHit(newHit);
           
-          //  newHit->Print();
           trackerCol->insert( newHit );
         }
     }
