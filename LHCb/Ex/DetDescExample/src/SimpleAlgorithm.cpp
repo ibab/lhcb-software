@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.3 2001-03-19 17:55:01 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.4 2001-03-22 13:31:07 mato Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -114,8 +114,8 @@ StatusCode SimpleAlgorithm::initialize()                                   {
   // Version with generic detector element is preferred in the case one wasnts to use
   // the generic conversion feature, otherwise the SmartDataPtr will crash.
   SmartDataPtr<IDetectorElement> ecalouter( detSvc(), "/dd/Structure/LHCb/Ecal/EcalOuter" );
-  if( !ecal )                                                            {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/EcalOuter" << endreq;
+  if( !ecalouter )                                                            {
+    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal/EcalOuter" << endreq;
     return StatusCode::FAILURE;
   }
   //--------------------------------------------------------------------------------
@@ -129,15 +129,13 @@ StatusCode SimpleAlgorithm::initialize()                                   {
 
   dumpPVs( msgSvc(), ecalo_vol, ecalouter->name() );
 
-  /// Now retrieve the custom, user defined detector element "Vertex" with
+  /// Now retrieve the custom, user defined detector element "Velo" with
   /// "specific" data defined in vertex.xml file.
   /// In our case the specific data holds information about number of stations
-  SmartDataPtr<IDetectorElement> vertex( cave, "Vertex" );
-  if( !vertex )                                                            {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Vertex" << endreq;
-    //    return StatusCode::FAILURE;
-    // Vertex is obsolete, must upgrade to use Velo
-    return StatusCode::SUCCESS;
+  SmartDataPtr<IDetectorElement> vertex( cave, "Velo" );
+  if( !vertex ) {
+    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Velo" << endreq;
+    return StatusCode::FAILURE;
   }
   
   ILVolume* ivol = vertex->geometry()->lvolume();
@@ -152,9 +150,10 @@ StatusCode SimpleAlgorithm::initialize()                                   {
   dumpPVs( msgSvc(), ivol, vertex->name() );
 
   
-  SmartDataPtr<IDetectorElement> vs( vertex, "VStation05" );
+/*
+  SmartDataPtr<IDetectorElement> vs( vertex, "Stations/Station05" );
   if( !vs )                                                                {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Vertex/VStation05!" << endreq;
+    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Velo/Stations/Station05!" << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -173,11 +172,11 @@ StatusCode SimpleAlgorithm::initialize()                                   {
       << " is made of "            << stvol5->materialName()
       << " with radiation length " << stvol5->material()->radiationLength()
       << endreq;
-
+*/
   
   SmartDataPtr<DetectorElement> stations( detSvc(),
 					  "/dd/Structure/LHCb/Muon/Stations" );
-  if( !vs )                                                                {
+  if( !stations )                                                                {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Muon/Stations!" << endreq;
     return StatusCode::FAILURE;
   }

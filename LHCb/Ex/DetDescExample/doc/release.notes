@@ -5,5 +5,8 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20010222 Pere Mato
+ - Changed SimpleAlgorithm.cpp to use Velo instead of Vertex.
+
 !20010308 DetDescExample v1
  - Initial version, extracted from old GaudiExamples package
