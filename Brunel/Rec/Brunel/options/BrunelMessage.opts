@@ -10,6 +10,7 @@ EventSelector.PrintFreq = -1;
 //--------------------------------------------------------------
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
+MessageSvc.OutputLevel = 3;
 
 // Conventions for Brunel:
 //  - INFO     allowed at initialisation/finalisation, not in event loop
@@ -17,7 +18,6 @@ EventSelector.PrintFreq = -1;
 //  - ERROR    if problem affecting only current event
 //  - FATAL    if processing should be stopped
 
-MessageSvc.OutputLevel = 3;
 
 // Suppress excessive messages from some algorithms/components
 ApplicationMgr.OutputLevel = 4;
@@ -26,3 +26,7 @@ BrunelDigi.OutputLevel = 4;
 BrunelTrigger.OutputLevel = 4;
 BrunelReco.OutputLevel = 4;
 BrunelMoni.OutputLevel = 4;
+
+// Add some debug messages
+//ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 2;
+//ToolSvc.TrKalmanFilter.OutputLevel = 2;

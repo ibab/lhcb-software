@@ -56,6 +56,8 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 #include "$L0DUROOT/options/Brunel.opts"
 #include "$MUONTOOLSROOT/options/MuonTools.opts"
 
+// L1 trigger not yet available
+
 // Calorimeter digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #include "$CALOTOOLSOPTS/Brunel.opts"
@@ -82,11 +84,22 @@ BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
 // Forward tracking
 ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
-BrunelRecoTRACKSeq.Members = { "FwtFind", "TrEventTracksFitter/FitFw", "StoreTracks" };
+BrunelRecoTRACKSeq.Members  = { "FwtFind" };
+// Track fit not yet working reliably
+BrunelRecoTRACKSeq.Members += { "TrEventTracksFitter/FitFw" };
 
-// Tracking and back conversion of tracks to AXTK
+// Upstream tracking
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
-//#include "$TRSICBCNVROOT/options/Brunel.opts"
+
+// Track selection for other detectors and for DST
+BrunelRecoTRACKSeq.Members += { "StoreTracks" };
+
+// Back conversion of tracks for RICH reconstruction
+BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
+#include "$TRSICBCNVROOT/options/BackCnv.opts"
+
+// Rich Fortran reconstruction and OO Pid creator 
+//BrunelRecoRICHSeq.Members = { "BrunelRecoRICH", "RichPidCreator" };
 
 // Muon Fortran digitisation, coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };

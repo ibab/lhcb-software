@@ -64,17 +64,18 @@ use Magnet        v1r0  Det
 use MuonTools    v2r0   Muon
 
 # Event Model
-use EventSys     v10r0  Event
+use EventSys     v10r1  Event
 
 # SicB event data persistency
-use SicbCnv      v16r1  SICB
+use SicbCnv      v16r2  SICB
 use ITSicbGeom   v1r1   SICB
 use OTSicbGeom   v1r0   SICB
 use RiSicbGeom   v1r0   SICB
 use CaloSicbCnv  v6r0   SICB
 use MuonSicbCnv  v5r0   SICB
-use RiSicbCnv    v2r0   SICB
+use RiSicbCnv    v2r1   SICB
 use VSicbCnv     v7r0   SICB
+use TrSicbCnv    v5r0   SICB
 
 # Brunel utilities
 use BrunelKernel v4r0   Rec
