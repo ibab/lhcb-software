@@ -4,6 +4,10 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020426 Vanya Belyaev
+  - Relations/TypeApply.h, Relations/ObjectTypeTraits.h
+    change the order of include files and forward declarations 
+
 ! 20020426 Philippe Charpentier
   - Add typedefs and two methods for delegating the retrieval of relations to
     the table without to explicitely getting a pointer to it.

@@ -1,23 +1,8 @@
-// $Id: ObjectTypeTraits.h,v 1.7 2002-04-25 15:13:15 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.8 2002-04-27 09:48:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/04/25 14:09:22  ibelyaev
-//  one more fix for Win2K
-//
-// Revision 1.5  2002/04/25 08:44:03  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.4  2002/04/25 08:02:02  ibelyaev
-//  bug fix on Win2K
-//
-// Revision 1.3  2002/04/24 21:16:39  ibelyaev
-//  fix one more problem for Win2K
-//
-// Revision 1.2  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
@@ -31,15 +16,10 @@
 #include "Relations/TypeApply.h"
 #include "Relations/RelationUtils.h"
 // forward declarations
-template <class TYPE>
-class     SmartRef        ; // from GaudiKernel package
-class     DataObject      ; // from GaudiKernel package
-class     ContainedObject ; // from GaudiKernel package
-class     StreamBuffer    ; // from GaudiKernel package
+template <class TYPE> class SmartRef ; // from GaudiKernel package
 
 namespace Relations
-{
-  
+{  
   /// forward declaration
   template <class OBJECT> struct TypeSerializer ;  
   /// forward declaration

@@ -1,8 +1,11 @@
-// $Id: TypeApply.h,v 1.2 2002-04-25 08:44:05 ibelyaev Exp $
+// $Id: TypeApply.h,v 1.3 2002-04-27 09:48:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:05  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/24 21:16:40  ibelyaev
 //  fix one more problem for Win2K
 //
@@ -11,6 +14,7 @@
 #define RELATIONS_TypeApply_H 1
 // Include files
 #include "Relations/PragmaWarnings.h"
+// GaudiKernel
 
 /** @file TypeApply.h Relations/TypeApply.h
  *  
@@ -25,6 +29,8 @@
 #ifdef WIN32 
 #include "Relations/TypeApply_WIN32.h"  // use another implementation for WIN32!
 #else
+/// forwarde declaration of SmartRef class 
+template <class TYPE> class SmartRef;
 namespace Relations
 {  
   /** @struct TypeApply TypeApply.h Relations/TypeApply.h
@@ -259,7 +265,7 @@ namespace Relations
    *  @date   24/03/2002
    */
   template <class OBJECT>
-  struct TypeApply<SmartRef<OBJECT> >
+  struct TypeApply< SmartRef<OBJECT> >
   { 
     /// true type (not used)
     typedef SmartRef<OBJECT> TYPE  ;
