@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.242 2005-02-22 09:30:33 pkoppenb Exp $
+# $Id: requirements,v 1.243 2005-02-24 09:51:40 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -81,14 +81,14 @@ use  RecoTools          	v1r1     Rec
 use  TrExtrapolator     	v2r14    Tr
 
 use  LoKi               	v3r9     Tools  
-use  LoKiHlt             	v2r0p1   Tools  
+use  LoKiHlt             	v2r1     Tools  
 
 # Reconstruction tools 
 use  Utilities          	v1r14    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r5     Phys
+use  DaVinciFilter      	v1r6     Phys
 use  DaVinciKernel      	v3r2     Phys
 use  DaVinciTools       	v11r6    Phys
 use  FlavourTagging     	v5r4     Phys
@@ -101,7 +101,7 @@ use  Tampering                  v1r0     Phys
 
 # Physics MC packages
 use  DaVinciAssociators 	v5r3     Phys
-use  DaVinciEff         	v3r2     Phys
+use  DaVinciEff         	v3r2p1   Phys
 use  DaVinciMCTools     	v5r8p1   Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
