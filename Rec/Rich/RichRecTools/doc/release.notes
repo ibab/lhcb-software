@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r12 2004-11-17 ======================
+! 2004-11-17 - Marco Cattaneo
+ - Set flag to create ParticlePropertySvc on demand if it does not exist
+
 ! 2004-10-30 - Chris Jones
  - Add RichRecPixel creator to for pixels directly from the RawBuffer.
    Saves a few ms for the HLT.

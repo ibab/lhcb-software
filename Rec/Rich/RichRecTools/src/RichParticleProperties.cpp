@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.9 2004-10-13 09:52:41 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.10 2004-11-18 08:03:46 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/10/13 09:52:41  jonrob
+ *  Speed improvements + various minor changes
+ *
  *  Revision 1.8  2004/07/27 20:15:30  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -44,7 +47,7 @@ StatusCode RichParticleProperties::initialize() {
   acquireTool( "RichRefractiveIndex", refIndex );
 
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" );
+  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
   // Retrieve particle masses
   m_particleMass[Rich::Electron] = ppSvc->find("e+" )->mass()/MeV;
