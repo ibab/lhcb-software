@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.53 2004-04-22 11:59:00 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.54 2004-05-04 16:11:08 gcorti Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -123,6 +123,7 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" };
 
 // specific RICH options
 #include "$GAUSSRICHROOT/options/Rich.opts"
+GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 
 // specific configuration of calorimeter stuff 
 #include "$GAUSSCALOROOT/options/Calo.opts"
