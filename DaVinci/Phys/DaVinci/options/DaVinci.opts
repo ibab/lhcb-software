@@ -49,7 +49,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
-//ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
+ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
 ApplicationMgr.TopAlg += { "SelectKs2pipi" };
 //ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
 // Bs->Ds(KKpi)K selection
@@ -106,7 +106,7 @@ ApplicationMgr.TopAlg += { "SelectKs2pipi" };
 // If a relative path is used you need to copy them to the batch
 // area when running.
 //-----------------------------------------------------------------
-//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
 #include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
 //#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
 //#include "$FLAVOURTAGGINGROOT/options/FlavourTagging.opts"
@@ -158,7 +158,7 @@ MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq = 1;
    
