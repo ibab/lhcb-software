@@ -8,3 +8,6 @@ DataOnDemandSvc.Algorithms += { "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferTo
 ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDIDTool/RichHPDIDTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };
+
+// Sort the decoded RichSmartIDs ?
+ToolSvc.RichSmartIDDecoder.SortRichSmartIDs = false;
