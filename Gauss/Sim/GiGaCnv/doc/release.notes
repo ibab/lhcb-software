@@ -1,6 +1,9 @@
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2004-03-10 - Patrick Robbe
+ - src/component/GiGaHepMCCnv.cpp : fix to accept also elastic scattering
+    events.
 
 !========================== GiGaCnv v15r0 ===============================
 ! 2004-03-09 - Patrick Robbe

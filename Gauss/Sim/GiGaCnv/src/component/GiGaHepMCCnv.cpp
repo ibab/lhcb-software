@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.15 2004-03-09 08:34:16 robbep Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.16 2004-03-09 23:37:13 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2004/03/09 08:34:16  robbep
+// Change particle types to be converted in G4PrimaryParticles
+//
 // Revision 1.14  2004/02/14 08:36:08  robbep
 // Propagate mixing information when converting from HepMC to G4PrimaryParticle
 // and from GiGaTrajectory to MCParticle.
@@ -225,7 +228,6 @@ StatusCode GiGaHepMCCnv::updateRep
               // -> the particle is hadron, a lepton or a nucleus and has
               //             several mother (in pratice a quark-gluon
               //             interaction)
-
               if ( ( (*pParticle) -> status ( ) == 1 ) ||
                    ( (*pParticle) -> status ( ) == 2 ) ||
                    ( (*pParticle) -> status ( ) == 888 ) ||
@@ -239,26 +241,33 @@ StatusCode GiGaHepMCCnv::updateRep
                                        -> particles_in_const_begin())
                                       ->pdg_id() ) ;
                     ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
-                    if ( ( ( ! pidM.isHadron( ) ) &&
-                           ( ! pidM.isLepton( ) ) &&
-                           ( ! pidM.isNucleus( ) ) ) && 
+                    if ( ( ( ( ! pidM.isHadron( ) ) &&
+                             ( ! pidM.isLepton( ) ) &&
+                             ( ! pidM.isNucleus( ) ) ) ||
+                           ( (*(*pParticle)->production_vertex()
+                              -> particles_in_const_begin()) -> status ()
+                             == 3 ) ) && 
                          ( ( pid.isHadron( ) ) ||
                            ( pid.isLepton( ) ) ||
                            ( pid.isNucleus( ) ) ) )
-                      outpart.push_back ( *pParticle ) ;
+                      {
+                        outpart.push_back ( *pParticle ) ;
+                      }
                   }
                   else {
                     ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
                     if ( ( pid.isHadron( ) ) ||
                          ( pid.isLepton( ) ) ||
                          ( pid.isNucleus( ) ) ) 
-                      outpart.push_back( *pParticle ) ;
+                      {
+                        outpart.push_back( *pParticle ) ;
+                      }
                   }
                 }                
               }
             }
         }
-  
+
       // sort the vector, so we always put them in the same order into G4
       std::sort(outpart.begin(), outpart.end(), comp_bar());
       
@@ -266,7 +275,6 @@ StatusCode GiGaHepMCCnv::updateRep
       // all particles produced by Pythia are coming from the same physical vertex
       // if that was not the case, one would need to implement a more sophisticated 
       // machinery to assign particles to different vertices on a case by case basis      
-      
       G4PrimaryVertex* OrigVertex = 
         new G4PrimaryVertex
         ((*(outpart.begin()))->production_vertex()->position().x(),
@@ -313,7 +321,6 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
       // assign decay time
       HepLorentzVector theLorentzV = (particle->end_vertex()->position()
                         - particle->production_vertex()->position());
-      
       Hep3Vector theBoost = particle->momentum().boostVector() ;
       
       Particle -> 
