@@ -6,8 +6,8 @@
 #include "$GLOBALRECOROOT/options/NeutralProtoPAlg.opts"
 
 // Tools for neutral and charge options
-#include "$CALORECOPTS/PhotonMatch.opts"
-#include "$CALORECOPTS/ElectronMatch.opts"
-#include "$CALORECOPTS/BremMatch.opts"
+//#include "$CALORECOPTS/PhotonMatch.opts"
+//#include "$CALORECOPTS/ElectronMatch.opts"
+//#include "$CALORECOPTS/BremMatch.opts"
 
 
