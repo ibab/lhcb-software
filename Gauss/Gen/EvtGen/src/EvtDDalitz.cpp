@@ -398,16 +398,6 @@ void EvtDDalitz::decay( EvtParticle *p){
     else {
       amp = amplDtoK0PiPi( p4_p , moms1 , moms2 , moms3 ) ;
     }
-    
-
-//know it's a D0 -> K0_bar pi+ pi- or charge conjugate
-
-    EvtResonance DK2piRes1(p4_p,moms1,moms2,2.31,109.0,0.0498,0.89610,1);
-    //K*(892)
-    EvtResonance DK2piRes2(p4_p,moms3,moms2,1.59,-123.0,0.1491,0.7683,1);
-    //RHO(770)
-    
-    amp = amp + DK2piRes1.resAmpl() + DK2piRes2.resAmpl();
   }
 
   

@@ -1,5 +1,5 @@
 package     EvtGen
-version     v4r3
+version     v4r4
 
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 
