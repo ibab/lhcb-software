@@ -1,6 +1,35 @@
-#$Id: release.notes,v 1.21 2002-07-25 15:53:09 andreav Exp $
+#$Id: release.notes,v 1.22 2002-11-25 21:51:01 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20021125 - Andrea Valassi
+Upgrade to CondDBOracle v4r16, Gaudi v11r1 and DetDesc v11r2.
+Upgrade to RedHat73 on lxplus7 (with LHCb infrastructure for RedHat7).
+Modify CMT requirements to allow for runtime choice between Oracle and MySQL.
+- Dependency on Det/DetCond changed from v4r0 to v4r1
+- No changes to the code, just test that everything is OK
+  > produce new reference log files
+- Updated documentation: treat RH73 in the same way as RH61
+  > the setup_RedHat72.csh script is not needed anymore:
+    /afs/cern.ch/lhcb/scripts/CMT.csh already sets the RH7 environment
+  > no need for a special README.RedHat72 file anymore
+  > no changes to GaudiPolicy are necessary anymore on RH7: 
+    in v5r7, the CMT tags rh73_gcc2952* are already defined
+  > no changes to ExternalLibs are necessary anymore on RH7:
+    in  v4r0p1, PLATARCH for rh73_gcc2952 is already defined
+  > no changes to HTL are necessary anymore on RH7:
+    GaudiSvc v10 already uses HTL 1.3.2.1 
+  > no changes to XERCES are necessary anymore on RH7:
+    release 1.6.0 already contains libraries for rh73_gcc2952
+    (although they are symblic links to rh61_gcc2952)
+- Remove reference to the Java browser until it's tested on Oracle
+- Updated sample job outputs
+  > reorganized them into job/CondDBObjy and job/CondDBOracle
+
+TO DO:
+- Test everything under Windows and update sample job outputs
+  > For the moment I removed all output from Windows
 
 ==============================================================================
 !20020725 - Andrea Valassi
