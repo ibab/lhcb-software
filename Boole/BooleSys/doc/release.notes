@@ -4,8 +4,8 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v6r0 2004-06-28 ========================
-! 2004-06-28 - Marco Cattaneo
+!======================== BooleSys v6r0 2004-07-16 ========================
+! 2004-07-16 - Marco Cattaneo
  - Packages added   : AsctToLinker (converts "Relations" to "Linker")
  - Packages removed : LHCbTools, RichDAQ (moved to LHCb)
                       RichDetTools (renamed RichTools, moved to LHCb)
@@ -13,7 +13,7 @@
                       Trg/* (no longer used in Boole)
  - Packages modified: STDAQ v1r2, ITAlgorithms v14r3, ITCheckers v2r3,
                       RichReadout v1r9, RichDigiQC v1r7, DigiAlg v3r0,
-                      L0mConf v2r2
+                      L0mConf v2r2p2, L0MuonKernel v2r1p1, L0MuonTrigger v2r1
 
 !======================== BooleSys v5r9 2004-05-24 ========================
 ! 2004-05-24 - Marco Cattaneo
