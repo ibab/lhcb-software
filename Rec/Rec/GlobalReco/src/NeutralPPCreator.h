@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.h,v 1.2 2002-07-27 19:24:05 gcorti Exp $
+// $Id: NeutralPPCreator.h,v 1.3 2004-03-11 10:35:46 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/27 19:24:05  gcorti
+// to compile on win
+//
 // Revision 1.1  2002/07/15 19:27:09  ibelyaev
 //  add new algorithm for creation on Neutral ProtoParticles
 // 
@@ -16,7 +19,7 @@
 // LHCbKernel
 #include "Relations/IAssociatorWeighted.h"
 // from CaloInterfaces
-#include "CaloInterfaces/ICaloHypoLikelyhood.h"
+#include "CaloInterfaces/ICaloHypoLikelihood.h"
 // from CaloEvent
 #include "Event/CaloHypo.h"
 // from CalUtils
@@ -43,7 +46,7 @@ private:
   typedef std::vector<std::string> Inputs   ;
   /// photon mathching associator type 
   typedef IAssociatorWeighted<CaloCluster,TrStoredTrack,float> Match    ;
-  typedef ICaloHypoLikelyhood                                  SpdPrsID ;
+  typedef ICaloHypoLikelihood                                  SpdPrsID ;
   typedef const CaloHypo           Hypo     ;
   typedef const CaloHypos          Hypos    ;
   typedef const CaloHypo::Clusters Clusters ;

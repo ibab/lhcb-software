@@ -96,7 +96,7 @@ private:
 
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
-  bool   m_upstream;       ///< Use or not unique upstream tracks
+  bool   m_downstream;     ///< Use or not unique downstream tracks
   bool   m_velott;         ///< Use or not unique velo-tt tracks
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
@@ -105,8 +105,6 @@ private:
   double m_chiSqUps;   ///< Max Chi2/NoF to make ProtoP from upstream Tracks
   double m_minTTx;    ///<  TT hole x cut
   double m_minTTy;    ///<  TT hole y cut
-  
-
  
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-

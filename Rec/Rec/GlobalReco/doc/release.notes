@@ -1,8 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rec/GlobalReco
-! Responsible : Gloria Corti
+! Responsible : P. Koppenburg
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
+
+!===================== GlobalReco v4r4 2004-03-11 ===========================
+! 2004-02-11 - P. Koppenburg
+ - options/ChargedProtoPAlg.opts, src/ChargedProtoPAlg.*
+   . upstream -> downstream
+ - src/NeutralPPCreator.*, src/NeutralPPsFromCPsAlg.*
+   . Likelyhood -> Likelihood in Calo/CaloInterfaces
+   . Changes in tool and get methods from CaloKernel
+ 
 
 !===================== GlobalReco v4r2 2004-02-11 ===========================
 ! 2004-02-11 - Gloria CORTI

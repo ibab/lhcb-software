@@ -47,7 +47,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_dLLeHcalName ( "HcalPIDe" )
   , m_dLLmuEcalName( "EcalPIDmu" )
   , m_dLLmuHcalName( "HcalPIDmu" )
-  , m_upstream( true )
+  , m_downstream( true )
   , m_velott( true )
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
@@ -92,7 +92,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                   m_protoPath = ProtoParticleLocation::Charged );
 
   // Selections
-  declareProperty("UpstreamsTracks",  m_upstream );
+  declareProperty("DownstreamTracks", m_downstream );
   declareProperty("VeloTTTracks",     m_velott );
   declareProperty("ITFracTrackClass", m_trackClassCut );
   declareProperty("Chi2NdFofITracks", m_chiSqITracks );
@@ -575,23 +575,25 @@ StatusCode ChargedProtoPAlg::finalize() {
 
 //=============================================================================
 // rejectTrack because of poor quality
-//   keep only Forward, Upstream and Matched tracks, no clones 
+//   keep only Long, Downstream and Upstream tracks, no clones 
 //   reject tracks with fit errors
 // Note that history does not accumulate:: it is only the original container
-// and then a track is classifed as a clone but not respect to what
+// and then a track is classified as a clone but not respect to what
 //=============================================================================
 int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
 
   int reject = NoTrack;
   if( NULL != track ) {
     if( 0 == track->errorFlag() ) {
-      if( track->unique() && (track->forward() || track->match()) ) {
+      //      if( track->unique() && (track->forward() || track->match()) ) {
+      if( track->unique() && track->isLong() ) {
         reject = KeepTrack;
       }
-      if( m_upstream && (track->unique() && track->upstream()) ) {
+          //      if( m_upstream && (track->unique() && track->upstream()) ) {
+      if( m_downstream && (track->unique() && track->isDownstream()) ) {
         reject = KeepTrack; 
       }
-      if( m_velott && (track->unique() && track->veloTT()) ) {
+      if( m_velott && (track->unique() && track->isUpstream()) ) {
         reject = KeepTrack;
       }
     }
@@ -600,7 +602,8 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
     }
   }
 
-  if( track->veloTT() ) {
+  //  if( track->veloTT() ) {
+  if( track->isUpstream() ) {
     int nTotMeas = track->measurements().size();
     double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
     if( chi2NoF >= m_chiSqVTT ) {
@@ -609,7 +612,7 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
     return reject;
   }  
 
-  if( track->upstream() ) {
+  if( track->isDownstream() ) {
     int nTotMeas = track->measurements().size();
     double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
     if( chi2NoF >= m_chiSqUps )  return Chi2Cut;

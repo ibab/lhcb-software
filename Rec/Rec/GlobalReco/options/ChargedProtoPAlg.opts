@@ -3,6 +3,7 @@
  *
  *  @author G.Corti
  *  @date 2003-02-07
+*/
 
 #pragma print off
 // Input data: default values
@@ -21,8 +22,8 @@
 // Track Selections
 //  Note that Uptream tracks with special cuts for Ks are made with
 //    UpstreamProtoPAlg: do not execute at the same time that algorithm
-//    and ChargedProtoPAlg with the UpstreamsTracks flag true
-//  ChargedProtoPAlg.UpstreamsTracks = true;  // default = false
+//    and ChargedProtoPAlg with the DownstreamTracks flag true
+//  ChargedProtoPAlg.DownstreamTracks = true;  // default = false
 //  ChargedProtoPAlg.VeloTTTracks = true;     // default = false
 ChargedProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
 ChargedProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0

@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.h,v 1.2 2003-01-19 11:41:20 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.h,v 1.3 2004-03-11 10:35:46 pkoppenb Exp $
 // ============================================================================
 // CVS ta $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/01/19 11:41:20  ibelyaev
+//  bug fix for neutral ProtoParticle creator
+//
 // Revision 1.1  2002/11/20 20:00:24  ibelyaev
 //  new algorithm for creation of Neutral ProtoParticles
 // 
@@ -15,7 +18,7 @@
 // from STL
 #include <string>
 // from CaloInterfaces
-#include "CaloInterfaces/ICaloHypoLikelyhood.h"
+#include "CaloInterfaces/ICaloHypoLikelihood.h"
 // from CaloKernel
 #include "CaloKernel/CaloAlgorithm.h"
 
@@ -144,7 +147,7 @@ private:
   
   std::string                              m_spdprsType        ;
   std::string                              m_spdprsName        ;
-  ICaloHypoLikelyhood*                     m_spdprs            ;
+  ICaloHypoLikelihood*                     m_spdprs            ;
 
   double                                   m_caloTrMatch_bad   ;
   double                                   m_caloDepositID_bad ;

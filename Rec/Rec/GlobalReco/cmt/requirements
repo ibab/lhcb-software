@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GlobalReco
-version           v4r3
+version           v4r4
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -22,7 +22,7 @@ set GLOBALRECOOPTS  ${GLOBALRECOROOT}/options
 # Used packages.
 #============================================================================
 use  PhysEvent       v*    Event
-use  CaloKernel      v2r*  Calo
+use  CaloKernel      v3r*  Calo
 use  CaloUtils       v4r*  Calo
 use  CaloInterfaces  v*    Calo
 use  MuonID          v3r*  Muon

@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.4 2003-04-08 08:49:12 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.5 2004-03-11 10:35:46 pkoppenb Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/04/08 08:49:12  ibelyaev
+//  NeutralPPsFromCPsAlg: reduce number of warnings for 0==CaloPosition*
+//
 // Revision 1.3  2003/04/08 08:37:03  ibelyaev
 //  NeutralPPsFromCPsAlg: add PhotonsFromMergedPi0 to the default list
 //
@@ -127,11 +130,11 @@ StatusCode NeutralPPsFromCPsAlg::initialize()
     };
   
   // locate match 
-  m_match  = tool( m_matchType  , m_matchName  , m_match  ) ;
+  m_match  = tool< IMatch >( m_matchType  , m_matchName ) ;
   if( 0 == m_match  ) { return StatusCode::FAILURE ; }
   
   // locate spdprs
-  m_spdprs = tool( m_spdprsType , m_spdprsName , m_spdprs ) ;
+  m_spdprs = tool< ICaloHypoLikelihood>( m_spdprsType , m_spdprsName ) ;
   if( 0 == m_spdprs ) { return StatusCode::FAILURE ; }
 
   // redefine the  detector 
@@ -177,7 +180,7 @@ StatusCode NeutralPPsFromCPsAlg::execute()
   if( sc.isFailure() ) { return StatusCode::FAILURE ; }           // RETURN 
   
   /// get input container of CaloParticles
-  const CPs* cprtcls = get( eventSvc() , inputData() , cprtcls );
+  const CPs* cprtcls = get< CPs >( inputData());
   if( 0 == cprtcls   ) { return StatusCode::FAILURE ; }           // RETURN 
   
   /// get the relation table 
@@ -401,7 +404,7 @@ double  NeutralPPsFromCPsAlg::caloDepositID ( const CaloHypo*  hypo  )  const
     }
   
   if( hypo->hypothesis() != CaloHypotheses::Pi0Merged ) 
-    { dep = m_spdprs -> likelyhood( hypo ) ; }
+    { dep = m_spdprs -> likelihood( hypo ) ; }
   
   return dep ;
 };

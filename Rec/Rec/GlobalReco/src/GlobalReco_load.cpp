@@ -1,8 +1,11 @@
-// $Id: GlobalReco_load.cpp,v 1.7 2004-01-14 18:12:38 gcorti Exp $
+// $Id: GlobalReco_load.cpp,v 1.8 2004-03-11 10:35:46 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/01/14 18:12:38  gcorti
+// remove obsolete files
+//
 // Revision 1.6  2003/02/07 16:54:42  gcorti
 // remove old primary vertex algorithm
 //

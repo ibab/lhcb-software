@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.cpp,v 1.5 2003-03-12 18:24:43 gcorti Exp $
+// $Id: NeutralPPCreator.cpp,v 1.6 2004-03-11 10:35:46 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/03/12 18:24:43  gcorti
+// remove cout
+//
 // Revision 1.4  2002/09/06 14:47:12  ibelyaev
 //  update NeutralPPCreator and its options
 //
@@ -97,11 +100,11 @@ StatusCode NeutralPPCreator::initialize()
     { return Error("Could not initialize the base class CaloAlgoriothm ",sc); }
   
   /// matching associatior 
-  m_match  = tool( m_matchName , m_match );
+  m_match  = tool< Match >( m_matchName );
   if( 0 == m_match ) { return StatusCode::FAILURE ; }
   
   /// Spd/Prs ID 
-  m_spdPrs = tool( m_spdPrsName , m_spdPrs );
+  m_spdPrs = tool< SpdPrsID > ( m_spdPrsName );
   if( 0 == m_match ) { return StatusCode::FAILURE ; }
   
   return StatusCode::SUCCESS;
@@ -145,7 +148,7 @@ StatusCode NeutralPPCreator::process
       }
   }
   //        // get Spd/Prs ID 
-  const double spdPrsID    = m_spdPrs->likelyhood( hypo ) ;
+  const double spdPrsID    = m_spdPrs->likelihood( hypo ) ;
   particle-> pIDDetectors().
     push_back( std::make_pair( ProtoParticle::CaloDepositID , spdPrsID   ) );
   
@@ -195,7 +198,7 @@ StatusCode NeutralPPCreator::execute()
   if( sc.isFailure() ) { return StatusCode::FAILURE ; }
   
   /// locate "main" input data 
-  const Hypos* hypos = get( eventSvc() , inputData() , hypos );
+  const Hypos* hypos = get< Hypos > ( inputData() );
   if( 0 == hypos     ) { return StatusCode::FAILURE ; }
 
   if( 0 == hypos->size() ) 
@@ -227,7 +230,7 @@ StatusCode NeutralPPCreator::execute()
        m_inputs.end() != input ; ++input ) 
     {
       /// get the input data
-      const Hypos* hypos = get( eventSvc() , *input , hypos );
+      const Hypos* hypos = get< Hypos >( *input );
       
       // loop over all 'new' hypos 
       for( Hypos::const_iterator hypo = hypos->begin() ; 
