@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.3 2002-07-18 19:28:55 gcorti Exp $
+// $Id: DaVinciMain.cpp,v 1.4 2002-12-19 21:10:13 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -28,8 +28,8 @@ int main ( int argc, char** argv ) {
   }
 
   // Print a program header ( name and version )
-#include "DaVinciTools/DaVinciHeader.icpp"
-
+#include "DaVinciHeader.icpp"
+  
   // Check existence of LHCBDBASE environment variable
   /*
   std::string dbase = "";
