@@ -1,23 +1,6 @@
-// $Id: Digit2ClustersConnector.cpp,v 1.1 2002-04-02 10:59:31 ibelyaev Exp $ 
+// $Id: Digit2ClustersConnector.cpp,v 1.2 2004-05-27 13:40:03 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2002/03/13 15:05:18  ibelyaev
-//  fix the problems with std::map on Win2K platform
-//
-// Revision 1.2  2001/11/25 14:40:59  ibelyaev
-//  update for new CaloKernel package
-//
-// Revision 1.1  2001/11/02 14:35:00  ibelyaev
-// 2 new classes are imported from CaloAlgs package
-//
-// Revision 1.2  2001/07/12 21:54:23  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.1  2001/07/02 17:42:36  ibelyaev
-// package restructurization
-//
 // ===========================================================================
 #define CALOUTILS_DIGIT2CLUSTERSCONNECTOR_CPP 1 
 // ===========================================================================
@@ -33,7 +16,7 @@
 #include "CaloUtils/Digit2ClustersConnector.h"
 
 // ============================================================================
-/** @file Digit2ClusterConnector.cpp 
+/** @file Digit2ClustersConnector.cpp 
  *
  * Implementation file for class : Digit2ClusterConnector
  * 

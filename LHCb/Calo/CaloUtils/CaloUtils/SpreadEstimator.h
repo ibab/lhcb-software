@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.h,v 1.2 2002-11-13 20:43:36 ibelyaev Exp $
+// $Id: SpreadEstimator.h,v 1.3 2004-05-27 13:40:03 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/13 20:43:36  ibelyaev
+//  few bugs are fixed
+//
 // Revision 1.1  2001/11/22 16:02:33  ibelyaev
 //  new utilities
 // 
@@ -47,14 +50,14 @@ class SpreadEstimator :
    *  Error codes:
    *   - 221 - invalid source of detector information  
    *
-   *  @param pointer to cluster object 
+   *  @param  cluster  pointer to cluster object 
    *  @return status code
    */
   StatusCode operator()
     ( CaloCluster* cluster ) const ;
   
   /** calculate spread for cluster
-   *  @param pointer to cluster
+   *  @param  cluster  pointer to cluster
    *  @return status code
    */
   inline StatusCode calculateSpread 

@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.h,v 1.4 2002-11-13 20:43:36 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.h,v 1.5 2004-05-27 13:40:03 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/11/13 20:43:36  ibelyaev
+//  few bugs are fixed
+//
 // Revision 1.3  2002/04/02 10:59:30  ibelyaev
 // ===========================================================================
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
@@ -154,7 +157,7 @@ public:
   
   /** standard constructor
    *   @param  Det      pointer to DeCalorimeter object
-   *  @param  ResA     intrinsic calo resolution
+   *  @param  A        intrinsic calo resolution
    *  @param  GainS    sigma relative error in gain
    *  @param  NoiseIn  sigma on incoherent noise
    *  @param  NoiseCo  sigma on coherent   noise
@@ -177,13 +180,13 @@ public:
    *   - 221 - invalid source of detector information  
    *   - 223 - accumulated energy <= 0 !
    *
-   *  @param pointer to cluster object 
+   *  @param cluster pointer to cluster object 
    *  @return status code
    */
   StatusCode operator()( CaloCluster* cluster ) const ;
 
   /** calculate covariance matrix for cluster
-   *  @param pointer to cluster
+   *  @param cluster pointer to cluster
    *   @return status code
    */
   inline StatusCode calculateCovarianceMatrix ( CaloCluster* cluster ) const

@@ -1,8 +1,11 @@
-// $Id: CellSwissCross.h,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $
+// $Id: CellSwissCross.h,v 1.3 2004-05-27 13:40:03 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:04:23  ibelyaev
+//  update and bug fix
+//
 // Revision 1.1  2001/11/07 17:24:48  ibelyaev
 //  new utilities for determination of relative positions of cells
 // 
@@ -79,6 +82,7 @@ protected:
   /** if cells belong to diffeent areas
    *  one need to treat them in a different way
    *  @exception CaloException if detector information is not available
+   *  @param seed  the seed cell
    *  @param cell  the cell to be tested
    *  @return fraction of area of the second cell which fits inside 
    *          3x3 matrix aroud the seed cell

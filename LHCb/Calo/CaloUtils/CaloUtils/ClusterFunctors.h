@@ -1,35 +1,6 @@
-// $Id: ClusterFunctors.h,v 1.5 2002-04-07 18:05:40 ibelyaev Exp $ 
+// $Id: ClusterFunctors.h,v 1.6 2004-05-27 13:40:03 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/02 14:49:29  ibelyaev
-//  bug fix in ClusterFunctors.h
-//
-// Revision 1.3  2002/04/02 10:59:30  ibelyaev
-//  update for new event model
-//
-// Revision 1.2  2001/12/02 14:59:49  ibelyaev
-//  add new functor for z-position of cluster
-//
-// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
-// New package: The first commit into CVS
-//
-// Revision 1.5  2001/10/28 19:14:09  ibelyaev
-// update for newer CaloEvent package
-//
-// Revision 1.4  2001/07/17 20:00:48  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.3  2001/07/12 21:54:22  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.2  2001/07/07 12:58:59  ibelyaev
-// new clusterisation algorithm
-//
-// Revision 1.1  2001/07/04 18:15:53  ibelyaev
-// Shared cell algorimth implementation
-//
 // ============================================================================
 #ifndef CALOUTILS_CLUSTERFUNCTORS_H
 #define CALOUTILS_CLUSTERFUNCTORS_H 1
@@ -68,10 +39,8 @@ namespace ClusterFunctors
    */
   StatusCode throwException( const std::string& message );
   
-  /** @function energy
-   * 
-   *  Calculate the "energy" of the cluster as a sum of
-   *  energies of its digits, weighted with energy fractions
+  /** Calculate the "energy" of the cluster 
+   *  as a sum of energies of its digits, weighted with energy fractions
    *  @param   cl  pointer to cluster
    *  @return      "energy" of cluster
    *
@@ -80,10 +49,8 @@ namespace ClusterFunctors
    */
   double  energy( const CaloCluster* cl );
 
-  /** @function energy
-   * 
-   *  Calculate the "energy" of the cluster as a sum of
-   *  energies of its digits, weighted with energy fractions
+  /** Calculate the "energy" of the cluster 
+   *  as a sum of energies of its digits, weighted with energy fractions
    *
    *  "IT" could be either iterator or const_iterator
    *
@@ -92,7 +59,6 @@ namespace ClusterFunctors
    *  @return      "energy" of sequence
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   xx/xx/xxxx
    */
   template <class IT>
   inline  double  energy( IT begin , IT end ) 
@@ -100,11 +66,8 @@ namespace ClusterFunctors
     return CaloDataFunctor::clusterEnergy( begin, end ); 
   }
 
-  /** @function calculateEXY 
-   * 
-   *  Calculate the "energy", X and Y position
-   *  of the cluster as a sum of energies/x/y of 
-   *  its digits, weighted with energy fractions
+  /** Calculate the "energy", X and Y position of the cluster
+   *  as a sum of energies/x/y of its digits, weighted with energy fractions
    *  @param   cl  pointer to cluster object
    *  @param   de  pointer to DeCalorimeter object
    *  @param   e   energy
@@ -113,7 +76,6 @@ namespace ClusterFunctors
    *  @return    status code
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   xx/xx/xxxx
    */
   StatusCode  calculateEXY( const  CaloCluster*   cl ,
                             const  DeCalorimeter* de ,
@@ -121,12 +83,8 @@ namespace ClusterFunctors
                             double& x                ,
                             double& y                );
   
-  /** @function calculateEXY 
-   * 
-   *  Calculate the "energy", X and Y position
-   *  of the cluster as a sum of
-   *  energies/x/y of its digits,
-   *  weighted with energy fractions
+  /** Calculate the "energy", X and Y position of the cluster 
+   *  as a sum of energies/x/y of its digits, weighted with energy fractions
    *
    *  "IT" could be either iterator or const_iterator
    *
@@ -139,7 +97,6 @@ namespace ClusterFunctors
    *  @return    status code
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   xx/xx/xxxx
    */
   template <class IT, class DE>
   inline StatusCode  calculateEXY( IT begin  , 
@@ -157,10 +114,7 @@ namespace ClusterFunctors
                                                  y     ) ;
   };
   
-  /** @function overlapped
-   * 
-   *  useful function to determine, if clusters have
-   *  at least one common cell.
+  /** Useful function to determine, if clusters have at least one common cell.
    *
    *  For invalid arguments return "false"
    *
@@ -174,10 +128,8 @@ namespace ClusterFunctors
   bool overlapped( const CaloCluster* cl1 ,
                    const CaloCluster* cl2 ) ;
 
-  /** @function commonDigit
-   *
-   *  useful function to find first common digit
-   *  from two sequences. It returns the pair of
+  /** Useful function to find first common digit from two sequences. 
+   *  It returns the pair of
    *  iterators (first one for first sequence and
    *  the secons one for second sequences).
    *
@@ -202,9 +154,7 @@ namespace ClusterFunctors
                                                 end2   );
   };
   
-  /** @function locateDigit
-   *  
-   *  useful function to locate the digit within the sequence
+  /** Useful function to locate the digit within the sequence
    *
    *  "IT" could be either iterator or const_iterator
    *
@@ -214,7 +164,6 @@ namespace ClusterFunctors
    *  @return location of digit within the sequence
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   xx/xx/xxxx
    */
   template<class IT>
   inline IT locateDigit( IT begin               ,  
@@ -224,10 +173,7 @@ namespace ClusterFunctors
     return CaloDataFunctor::clusterLocateDigit( begin , end , digit );
   };
 
-  /** @function locateDigit
-   * 
-   *  useful function to locate the digit with given status
-   *  from sequence of digits
+  /** Locate the digit with given status from sequence of digits
    *
    *  "IT" could be either iterator or const_iterator
    *
@@ -237,7 +183,6 @@ namespace ClusterFunctors
    *  @return location of digit within the sequence
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
-   *  @date   xx/xx/xxxx
    */
   template <class IT>
   inline IT locateDigit( IT begin                          , 
@@ -247,9 +192,7 @@ namespace ClusterFunctors
     return CaloDataFunctor::clusterLocateDigit( begin, end , st );
   };
   
-  /** @class ClusterArea 
-   * 
-   *  The simple class/function to get the index of area in Calo  
+  /** The simple class/function to get the index of area in Calo  
    *  "calo-area" of cluster is defined as "calo-area" index of seed cell
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -296,9 +239,7 @@ namespace ClusterFunctors
     };
   };
   
-  /** @fn clusterArea 
-   * 
-   *  The simple class/function to get the index of area in Calo  
+  /** The simple class/function to get the index of area in Calo  
    *  "calo-area" of cluster is defined as "calo-area" index of seed cell
    *
    *  @see ClusterArea 
@@ -361,9 +302,7 @@ namespace ClusterFunctors
     };
   };
   
-  /** @fn clusterCalo
-   * 
-   *  The simple class/function to get the index of calorimeter.
+  /** The simple class/function to get the index of calorimeter.
    *  Index of calorimeter for clusers 
    *  is defined as "calo" index of the seed cell
    *
@@ -408,7 +347,7 @@ namespace ClusterFunctors
     { return (int) m_evaluator( cluster ) == m_calo ; };
     /** set new calorimeter name 
      *  @exception   CaloException for invalid calorimeter name
-     *  @param value name of calorimeter (full or abbreviated)
+     *  @param calo  name of calorimeter (full or abbreviated)
      */
     void setCalo( const std::string& calo ) 
     {
@@ -524,9 +463,7 @@ namespace ClusterFunctors
     };    
   };
   
-  /** @fn onTheBoundary 
-   *
-   *  Simple utility to locate clusters, placed on the boundaries 
+  /** Simple utility to locate clusters, placed on the boundaries 
    *  between different calorimeter zones
    *  
    *  @see OnTheBoundary
@@ -609,9 +546,7 @@ namespace ClusterFunctors
     const DeCalorimeter* m_detector; ///< source of geometry information
   };
   
-  /** @fn tagTheCluster
-   *
-   *  Helpful function to tag the sub cluster according to the 
+  /** Helpful function to tag the sub cluster according to the 
    *  fractionc evaluated by "evaluator"
    * 
    *  Error codes 
@@ -679,9 +614,7 @@ namespace ClusterFunctors
     return StatusCode::SUCCESS;
   };
 
-  /** @fn untagTheSubCluster
-   *
-   *  Helpful function to untag the sub cluster according to the 
+  /** Helpful function to untag the sub cluster according to the 
    *  fractionc evaluated by "evaluator"
    * 
    *  Error codes 

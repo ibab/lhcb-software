@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.27 2004-05-27 01:42:11 ibelyaev Exp $
+! $Id: release.notes,v 1.28 2004-05-27 13:40:03 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! ============================= CaloUtils v4r7 2004-05-27 =====================
+! 2004-05-27 - Marco Cattaneo
+ - Fix many doxygen comments and warnings
 
 ! 2004-05-27 - Ivan Belyaev
  - CaloUtils/CellMatrix.h
