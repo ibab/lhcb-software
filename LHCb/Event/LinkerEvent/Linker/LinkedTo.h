@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
+// $Id: LinkedTo.h,v 1.3 2004-02-05 08:46:29 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -29,9 +29,11 @@ public:
     }
     SmartDataPtr<LinksByKey> links( eventSvc, name );
     if ( 0 == links ) {
-      MsgStream msg( msgSvc, "LinkedTo::"+containerName );
-      msg << MSG::ERROR << "*** Link container " << name
-          << " not found." << endreq;
+      if ( 0 != msgSvc ) {
+        MsgStream msg( msgSvc, "LinkedTo::"+containerName );
+        msg << MSG::ERROR << "*** Link container " << name
+            << " not found." << endreq;
+      }
     } else {
       links->resolveLinks( eventSvc );
     }
@@ -39,8 +41,10 @@ public:
     m_curReference.setNextIndex( -1 );
     m_curReference.setWeight( 0. );
   }; 
-
+            
   virtual ~LinkedTo( ) {}; ///< Destructor
+  
+  bool notFound() const { return (0 == m_links); }
 
   TARGET* first( const SOURCE* source ) {
     if ( NULL == m_links ) return NULL;

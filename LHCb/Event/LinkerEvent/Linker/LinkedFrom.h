@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.3 2004-02-05 08:46:29 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -28,9 +28,11 @@ public:
     }
     SmartDataPtr<LinksByKey> links( eventSvc, name );
     if ( 0 == links ) {
-      MsgStream msg( msgSvc, "LinkedFrom::"+containerName );
-      msg << MSG::ERROR << "*** Link container Link/" << name
-          << " not found." << endreq;
+      if ( 0 != msgSvc ) {
+        MsgStream msg( msgSvc, "LinkedFrom::"+containerName );
+        msg << MSG::ERROR << "*** Link container Link/" << name
+            << " not found." << endreq;
+      }
     } else {
       links->resolveLinks( eventSvc );
     }
@@ -40,6 +42,8 @@ public:
   };  
 
   virtual ~LinkedFrom( ) {}; ///< Destructor
+
+  bool notFound() const { return (0 == m_links); }
 
   SOURCE* first( const TARGET* target ) {
     if ( NULL == m_links ) return NULL;

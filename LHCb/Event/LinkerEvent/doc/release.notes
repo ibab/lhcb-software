@@ -4,6 +4,14 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2004-02-05 - Olivier Callot
+ - New method 'notFound()' in LinkedTo and LinkedFrom to indicate if the 
+   LinksByKey object was found or not.
+ - In LinkerWithKey, the LinksByKey is searched for, and if it exist the new
+   information is added to it.
+ - If the msgSvc is null, no message is printed in LinedTo / LinkedFrom in case
+   the LinksByKey is not found.
+
 !====================== LinkerEvent v1r1 2004-01-27 ==========================
 ! 2004-01-27 - Marco Cattaneo
  - Add magic lines to the xml to produce lcg dictionary

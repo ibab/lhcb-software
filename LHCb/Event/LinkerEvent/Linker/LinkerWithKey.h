@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.3 2004-01-26 14:04:48 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.4 2004-02-05 08:46:29 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -25,12 +25,20 @@ public:
     if ( "/Event/" == containerName.substr(0,7) ) {
       name = "Link/" + containerName.substr(7);
     }
-    m_links = new LinksByKey();
-    StatusCode sc = eventSvc->registerObject( name, m_links );
-    if ( !sc ) {
-      MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
-      msg << MSG::ERROR << "*** Link container " << name
-          << " not registered, Status " << sc << endreq;
+
+    //== If it exists, just append to it.
+
+    SmartDataPtr<LinksByKey> links( eventSvc, name );
+    if ( 0 != links ) {
+      m_links = links;
+    } else {
+      m_links = new LinksByKey();
+      StatusCode sc = eventSvc->registerObject( name, m_links );
+      if ( !sc ) {
+        MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
+        msg << MSG::ERROR << "*** Link container " << name
+            << " not registered, Status " << sc << endreq;
+      }
     }
   }; 
 
