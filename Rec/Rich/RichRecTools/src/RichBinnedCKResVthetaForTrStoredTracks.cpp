@@ -1,4 +1,4 @@
-// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.1 2004-04-19 23:06:07 jonesc Exp $
+// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:37 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -128,12 +128,12 @@ RichBinnedCKResVthetaForTrStoredTracks::RichBinnedCKResVthetaForTrStoredTracks (
 
 }
 
-StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() {
-
+StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() 
+{
   debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -143,7 +143,7 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() {
   debug() << " Using binned track resolutions for TrStoredTracks" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
     debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
-    for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
       debug() << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
               << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
     }
@@ -154,6 +154,8 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() {
 
 StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
 {
+  debug() << "Finalize" << endreq;
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }

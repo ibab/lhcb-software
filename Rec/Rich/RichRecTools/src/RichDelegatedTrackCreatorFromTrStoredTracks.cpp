@@ -1,4 +1,4 @@
-// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.1 2004-06-10 14:39:21 jonesc Exp $
+// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:37 jonesc Exp $
 
 // local
 #include "RichDelegatedTrackCreatorFromTrStoredTracks.h"
@@ -52,13 +52,9 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
   m_trackToTool.clear();
   for ( ToolList::iterator it = m_names.begin();
         it != m_names.end(); ++it ) {
-    std::string trackType = (*it);
-    std::string toolType  = (*it);
     const int slash = (*it).find_first_of( "/" );
-    if ( slash > 0 ) {
-      trackType = (*it).substr( 0, slash );
-      toolType  = (*it).substr( slash+1 );
-    }
+    const std::string trackType = ( slash>0 ? (*it).substr(0,slash) : *it );
+    const std::string toolType  = ( slash>0 ? (*it).substr(slash+1) : *it );
     debug() << " Tracktype '" << trackType
             << "' will use tool '" << toolType << "'" << endreq;
     m_trackToTool[trackType] = toolType;
@@ -88,13 +84,10 @@ const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const 
   if ( ! m_allDone ) {
     m_allDone = true;
 
-    // Load tracks
-    if ( !m_trTracks ) { if ( !loadTrStoredTracks() ) return StatusCode::FAILURE; }
-
     // Iterate over all reco tracks, and create new RichRecTracks
-    richTracks()->reserve( m_trTracks->size() );
-    for ( TrStoredTracks::const_iterator track = m_trTracks->begin();
-          track != m_trTracks->end();
+    richTracks()->reserve( trStoredTracks()->size() );
+    for ( TrStoredTracks::const_iterator track = trStoredTracks()->begin();
+          track != trStoredTracks()->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
 
   }
@@ -104,19 +97,20 @@ const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const 
 
 const long RichDelegatedTrackCreatorFromTrStoredTracks::nInputTracks() const
 {
-  if ( !m_trTracks ) { loadTrStoredTracks(); }
-  return ( m_trTracks ? m_trTracks->size() : 0 );
+  return ( trStoredTracks() ? trStoredTracks()->size() : 0 );
 }
 
-const bool RichDelegatedTrackCreatorFromTrStoredTracks::loadTrStoredTracks() const
+const TrStoredTracks *
+RichDelegatedTrackCreatorFromTrStoredTracks::trStoredTracks() const
 {
+  if ( !m_trTracks ) {
+    // Obtain smart data pointer to TrStoredTracks
+    m_trTracks = get<TrStoredTracks>( m_trTracksLocation );
+    debug() << "located " << m_trTracks->size() << " TrStoredTracks at "
+            << m_trTracksLocation << endreq;
+  }
 
-  // Obtain smart data pointer to TrStoredTracks
-  m_trTracks = get<TrStoredTracks>( m_trTracksLocation );
-  debug() << "located " << m_trTracks->size() << " TrStoredTracks at "
-          << m_trTracksLocation << endreq;
-
-  return StatusCode::SUCCESS;
+  return m_trTracks;
 }
 
 // Forms a new RichRecTrack object from a TrStoredTrack

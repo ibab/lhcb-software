@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.16 2004-06-10 14:39:22 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.17 2004-06-29 19:53:38 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -49,7 +49,7 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
 StatusCode RichPhotonCreator::initialize() {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -60,6 +60,7 @@ StatusCode RichPhotonCreator::initialize() {
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -67,7 +68,7 @@ StatusCode RichPhotonCreator::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonCreator::finalize() 
+StatusCode RichPhotonCreator::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -76,7 +77,13 @@ StatusCode RichPhotonCreator::finalize()
 // Method that handles various Gaudi "software events"
 void RichPhotonCreator::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  {
+    debug() << "Created " << richPhotons()->size() << " RichRecPhotons" << endreq;
+  }
 }
 
 RichRecPhoton*
@@ -158,7 +165,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
         }
 
       } else {
-        delete newPhoton; 
+        delete newPhoton;
         newPhoton = NULL;
       }
 
@@ -174,12 +181,12 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
 }
 
-void RichPhotonCreator::reconstructPhotons() const 
+void RichPhotonCreator::reconstructPhotons() const
 {
 
   const bool noPhots = richPhotons()->empty();
- 
- // make a rough guess at a size to reserve based on number of pixels
+
+  // make a rough guess at a size to reserve based on number of pixels
   if ( noPhots ) richPhotons()->reserve( 5 * pixelCreator()->richPixels()->size() );
 
   // Iterate over all tracks
@@ -211,7 +218,7 @@ void RichPhotonCreator::reconstructPhotons() const
             // If container was empty, skip checks for whether photon already exists
             if ( noPhots ) {
               if ( m_photonPredictor->photonPossible( segment, pixel ) ) {
-                buildPhoton( segment, pixel, 
+                buildPhoton( segment, pixel,
                              RichRecPhotonKey(pixel->key(),segment->key()) );
               }
             } else {
@@ -235,7 +242,7 @@ void RichPhotonCreator::reconstructPhotons() const
 }
 
 const RichRecTrack::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const 
+RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const
 {
   if ( !track->allPhotonsDone() ) {
 
@@ -253,7 +260,7 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const
 }
 
 const RichRecSegment::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const 
+RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const
 {
   if ( !segment->allPhotonsDone() ) {
 
@@ -270,7 +277,7 @@ RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const
 }
 
 const RichRecPixel::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const 
+RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const
 {
   // Iterate over tracks
   for ( RichRecTracks::iterator track =
@@ -287,7 +294,7 @@ RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const
 // Note to self. Need to review what this method passes back
 RichRecTrack::Photons
 RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
-                                       RichRecPixel * pixel ) const 
+                                       RichRecPixel * pixel ) const
 {
   RichRecTrack::Photons photons;
 

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.10 2004-06-10 14:39:23 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.11 2004-06-29 19:53:38 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -36,7 +36,7 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -45,6 +45,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -61,7 +62,13 @@ StatusCode RichPixelCreatorFromRichDigits::finalize()
 // Method that handles various Gaudi "software events"
 void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
 {
-  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  {
+    debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
+  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit
@@ -85,7 +92,7 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
 
     RichRecPixel * newPixel = NULL;
 
-    if ( id.isValid() ) {
+    if ( id.pixelDataAreValid() ) {
 
       // Make a new RichRecPixel
       newPixel = new RichRecPixel();
@@ -104,7 +111,7 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
       newPixel->setParentType( Rich::RecPixel::Digit );
 
     } else {
-      Warning("Invalid RichDigit SmartID !");
+      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map

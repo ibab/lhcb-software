@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.15 2004-06-10 14:39:25 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.16 2004-06-29 19:53:39 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -29,9 +29,7 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_trTracksLocation     ( TrStoredTrackLocation::Default ),
     m_richRecTrackLocation ( RichRecTrackLocation::Default  ),
     m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
-    m_skipNonUnique        ( true  ),
     m_allDone              ( false ),
-    m_tkPcut               ( Rich::Track::NTrTypes, 0 ),
     m_buildHypoRings       ( false ),
     m_nTracks              ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
 {
@@ -40,19 +38,20 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
   declareInterface<IRichTrackCreator>(this);
 
   // job options
-  declareProperty( "TrStoredTracksLocation",   m_trTracksLocation     );
-  declareProperty( "RichRecTrackLocation",     m_richRecTrackLocation );
-  declareProperty( "SkipNonUniqueTracks",      m_skipNonUnique        );
-  declareProperty( "TrackMinPtotPerClass",     m_tkPcut               );
-  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings       );
-  declareProperty( "TrackSegmentTool",         m_trSegToolNickName    );
+  declareProperty( "TrStoredTracksLocation",   m_trTracksLocation        );
+  declareProperty( "RichRecTrackLocation",     m_richRecTrackLocation    );
+  declareProperty( "TrackMinPtotPerClass",     m_trSelector.minMomenta() );
+  declareProperty( "TrackMaxPtotPerClass",     m_trSelector.maxMomenta() );
+  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings          );
+  declareProperty( "TrackSegmentTool",         m_trSegToolNickName       );
+  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes()   );
 
 }
 
 StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -62,10 +61,13 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   acquireTool( m_trSegToolNickName,       m_segMaker    );
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
 
+  // Configure track selector
+  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
-  incSvc->addListener( this, IncidentType::EndEvent   );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -82,23 +84,25 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 // Method that handles various Gaudi "software events"
 void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
 {
+  // Update prior to start of event. Used to re-initialise data containers
   if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
-  {
-    // Print out of track count
-    unsigned nTotTried(0), nTotSel(0);
-    {for ( TrackTypeCount::iterator i = m_nTracks.begin();
-           i != m_nTracks.end(); ++i ) {
-      nTotTried += (*i).first;
-      nTotSel   += (*i).second;
-    }}
-    debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
-    for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-      debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
-              << "/" << m_nTracks[iTk].first << ")";
+    {
+      // Print out of track count
+      unsigned nTotTried(0), nTotSel(0);
+      {for ( TrackTypeCount::iterator i = m_nTracks.begin();
+             i != m_nTracks.end(); ++i ) {
+        nTotTried += (*i).first;
+        nTotSel   += (*i).second;
+      }}
+      debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
+      for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+        debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
+                << "/" << m_nTracks[iTk].first << ")";
+      }
+      debug() << endreq;
     }
-    debug() << endreq;
-  }
 }
 
 const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
@@ -143,17 +147,15 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   // Is this a TrStoredTrack ?
   const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack*>(obj);
   if ( !trTrack ) return NULL;
-  if ( msgLevel(MSG::VERBOSE) ) {
-    verbose() << "Trying TrStoredTrack " << trTrack->key()
-              << " type " << Rich::Track::type(trTrack) << ", unique=" << trTrack->unique()
-              << endreq;
-  }
 
   // track type
   const Rich::Track::Type trType = Rich::Track::type(trTrack);
-  if ( Rich::Track::Unknown == trType ) {
-    Warning( "TrStoredTrack of unknown algorithm type");
-    return NULL;
+
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "Trying TrStoredTrack " << trTrack->key()
+              << " type " << trType << ", unique=" << trTrack->unique()
+              << ", charge=" << trTrack->charge()
+              << endreq;
   }
 
   // count tried tracks
@@ -162,8 +164,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   // Is track a usable type
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
-  // skip non-unique tracks if requested
-  if ( m_skipNonUnique && !trTrack->unique() ) return NULL;
+  // Track selection
+  if ( !m_trSelector.trackSelected(trTrack) ) return NULL;
 
   // See if this RichRecTrack already exists
   const unsigned long key = static_cast<unsigned long>(trTrack->key());
@@ -182,8 +184,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
       // Find TrStoredTrack current state and momentum
       SmartRef<TrState> trackState = trTrack->closestState(-999999.);
       TrStateP * trackPState = dynamic_cast<TrStateP*>( static_cast<TrState*>(trackState) );
-      if ( trackPState &&
-           trackPState->p()/GeV > m_tkPcut[trType] ) {
+      if ( trackPState ) {
         if ( msgLevel(MSG::VERBOSE) ) {
           verbose() << " Ptot = " << trackPState->p()/GeV << " passed cut" << endreq;
         }
@@ -191,7 +192,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
         // Form a new RichRecTrack
         newTrack = new RichRecTrack();
 
-        // Configure TrackID for TrStoredTrack
+        // Configure TrackID for this TrStoredTrack
         newTrack->trackID().initialiseFor( trTrack );
 
         bool keepTrack = false;
@@ -235,8 +236,10 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             // Get PD panel hit point in local coordinates
             newSegment->pdPanelHitPointLocal() = m_smartIDTool->globalToPDPanel(hitPoint);
 
-            // Set the average photon energy (for Pion hypothesis)
-            newSegment->trackSegment().setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,Rich::Pion) );
+            // Set the average photon energy (for default hypothesis)
+            newSegment->trackSegment()
+              .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
+                                                                newTrack->currentHypothesis()) );
 
             // make RichRecRings for the mass hypotheses if requested
             if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
@@ -272,7 +275,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           newTrack = NULL;
         }
 
-      } // end track state if
+      } // end track state and momentum if
+
     } // end segments if
 
     // Add to reference map

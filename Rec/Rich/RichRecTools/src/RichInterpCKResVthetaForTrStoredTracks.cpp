@@ -1,4 +1,4 @@
-// $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.1 2004-04-19 23:06:11 jonesc Exp $
+// $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.2 2004-06-29 19:53:38 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -57,7 +57,7 @@ RichInterpCKResVthetaForTrStoredTracks::RichInterpCKResVthetaForTrStoredTracks (
 
   // set interpolator pointers to NULL
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
   }
 
 }
@@ -65,7 +65,7 @@ RichInterpCKResVthetaForTrStoredTracks::RichInterpCKResVthetaForTrStoredTracks (
 StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -73,7 +73,7 @@ StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
 
   // initialise interpolators
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
       m_ckRes[iR][iT] = new Rich1DTabFunc( m_thebin[iR], m_theerr[iR][iT] );
       if ( !(m_ckRes[iR][iT])->valid() ) {
         err() << "Failed to initialise interpolator for "
@@ -88,9 +88,11 @@ StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
 
 StatusCode RichInterpCKResVthetaForTrStoredTracks::finalize()
 {
+  debug() << "Finalize" << endreq;
+
   // clean up interpolators
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( int iT = 0; iT < 5; ++iT ) {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
       if ( m_ckRes[iR][iT] ) { delete m_ckRes[iR][iT]; m_ckRes[iR][iT] = 0; }
     }
   }

@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.h,v 1.8 2004-06-18 11:21:31 jonesc Exp $
+// $Id: RichSegmentCreator.h,v 1.9 2004-06-29 19:53:39 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -80,6 +80,7 @@ private:  // Private data
   double m_maxPhotEn[Rich::NRadiatorTypes];
   double m_minPhotEn[Rich::NRadiatorTypes];
 
+  // debug segment counting
   mutable unsigned m_segCount[Rich::NRadiatorTypes];
 
 };

@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.13 2004-06-18 11:21:32 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.14 2004-06-29 19:53:39 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -8,8 +8,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
-// base class
+// base package
 #include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichTrackSelector.h"
 
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
@@ -75,7 +76,7 @@ public:
 
 private: // methods
 
-  /// Returns TrStoredTracks
+  /// Returns a pointer to the TrStoredTracks
   const TrStoredTracks * trStoredTracks() const;
 
   /// Initialise for a new event
@@ -113,20 +114,17 @@ private: // data
   /// Joboption "nickname" of the TrackSegment tool to use
   std::string m_trSegToolNickName;
 
-  /// Flag to signify whether to ignore non-unique tracks
-  bool m_skipNonUnique;
-
   // Flag to signify all tracks have been formed for current event
   mutable bool m_allDone;
 
   // Working object to keep track of formed objects
   mutable std::map<unsigned long, bool> m_trackDone;
 
-  // Momentum cut values for each track type
-  std::vector<double> m_tkPcut;
-
   /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
   bool m_buildHypoRings;
+
+  /// Track Selector
+  RichTrackSelector m_trSelector;
 
   // Track count
   typedef std::vector< std::pair<unsigned,unsigned> > TrackTypeCount;

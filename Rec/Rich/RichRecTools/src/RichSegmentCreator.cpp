@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.8 2004-05-31 22:02:06 jonrob Exp $
+// $Id: RichSegmentCreator.cpp,v 1.9 2004-06-29 19:53:39 jonesc Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -41,23 +41,23 @@ StatusCode RichSegmentCreator::initialize()
 {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
   incSvc->addListener( this, IncidentType::BeginEvent );
-  incSvc->addListener( this, IncidentType::EndEvent   );
+  if (msgLevel(MSG::DEBUG)) incSvc->addListener( this, IncidentType::EndEvent );
 
   // Get the max/min photon energies
   IRichDetParameters * detParams;
   acquireTool( "RichDetParameters", detParams );
   m_maxPhotEn[Rich::Aerogel] = detParams->maxPhotonEnergy( Rich::Aerogel );
-  m_maxPhotEn[Rich::C4F10]   = detParams->maxPhotonEnergy( Rich::C4F10 );
-  m_maxPhotEn[Rich::CF4]     = detParams->maxPhotonEnergy( Rich::CF4 );
+  m_maxPhotEn[Rich::C4F10]   = detParams->maxPhotonEnergy( Rich::C4F10   );
+  m_maxPhotEn[Rich::CF4]     = detParams->maxPhotonEnergy( Rich::CF4     );
   m_minPhotEn[Rich::Aerogel] = detParams->minPhotonEnergy( Rich::Aerogel );
-  m_minPhotEn[Rich::C4F10]   = detParams->minPhotonEnergy( Rich::C4F10 );
-  m_minPhotEn[Rich::CF4]     = detParams->minPhotonEnergy( Rich::CF4 );
+  m_minPhotEn[Rich::C4F10]   = detParams->minPhotonEnergy( Rich::C4F10   );
+  m_minPhotEn[Rich::CF4]     = detParams->minPhotonEnergy( Rich::CF4     );
   releaseTool(detParams);
 
   // Make sure we are ready for a new event
@@ -75,10 +75,13 @@ StatusCode RichSegmentCreator::finalize()
 // Method that handles various Gaudi "software events"
 void RichSegmentCreator::handle ( const Incident& incident )
 {
+  // Update prior to start of event. Used to re-initialise data containers
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
   {
-    debug() << "Saved RichRecSegments : Aerogel=" << m_segCount[Rich::Aerogel] 
+    debug() << "Saved " << richSegments()->size() 
+            << " RichRecSegments : Aerogel=" << m_segCount[Rich::Aerogel] 
             << " C4F10=" << m_segCount[Rich::C4F10] 
             << " CF4=" << m_segCount[Rich::CF4] << endreq;
   }

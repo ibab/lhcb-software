@@ -1,4 +1,4 @@
-// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.1 2004-06-10 14:39:22 jonesc Exp $
+// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.2 2004-06-29 19:53:37 jonesc Exp $
 #ifndef RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H 1
 
@@ -70,8 +70,8 @@ public:
 
 private: // methods
 
-  /// Load the TrStoredTracks
-  const bool loadTrStoredTracks() const;
+  /// Returns a pointer to the TrStoredTracks
+  const TrStoredTracks * trStoredTracks() const;
 
   /// Initialise for a new event
   void InitNewEvent();

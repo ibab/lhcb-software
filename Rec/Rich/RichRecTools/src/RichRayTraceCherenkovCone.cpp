@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.4 2004-06-18 11:21:31 jonesc Exp $
+// $Id: RichRayTraceCherenkovCone.cpp,v 1.5 2004-06-29 19:53:38 jonesc Exp $
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -23,18 +23,17 @@ RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
     m_smartIDTool  ( 0 ),
     m_nRayTrace    ( 0 )
 {
-
+  // Define interface for this tool
   declareInterface<IRichRayTraceCherenkovCone>(this);
 
   // Define job option parameters
   declareProperty( "NPhotonsRayTrace", m_nRayTrace = 100 );
-
 }
 
-StatusCode RichRayTraceCherenkovCone::initialize() {
-
+StatusCode RichRayTraceCherenkovCone::initialize() 
+{
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -44,7 +43,7 @@ StatusCode RichRayTraceCherenkovCone::initialize() {
 
   // Set up cached parameters for photon tracing
   m_incPhi = M_2PI/( static_cast<double>(m_nRayTrace) );
-  double ckPhi = 0.0;
+  double ckPhi = 0;
   m_sinCkPhi.clear();
   m_cosCkPhi.clear();
   for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ckPhi += m_incPhi ) {
@@ -157,7 +156,7 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
                                                           sinCkTheta*(*iSin),
                                                           cosCkTheta );
 
-      // Ray trace to detector plain
+      // Ray trace to detector plane
       HepPoint3D hitPoint;
       if ( m_rayTrace->traceToDetectorWithoutEff( rich,
                                                   emissionPoint,

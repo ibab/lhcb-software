@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.11 2004-04-19 23:06:13 jonesc Exp $
+// $Id: RichPhotonSignal.cpp,v 1.12 2004-06-29 19:53:38 jonesc Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -57,15 +57,16 @@ StatusCode RichPhotonSignal::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonSignal::finalize() 
+StatusCode RichPhotonSignal::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
-                                               const Rich::ParticleIDType id ) const {
-
+double
+RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
+                                        const Rich::ParticleIDType id ) const
+{
   if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
 
     // Which detector
@@ -90,11 +91,12 @@ double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
   return photon->expPixelSignalPhots( id );
 }
 
-double RichPhotonSignal::signalProb( RichRecPhoton * photon,
-                                     const Rich::ParticleIDType id ) const {
-
+double
+RichPhotonSignal::signalProb( RichRecPhoton * photon,
+                              const Rich::ParticleIDType id ) const
+{
   // Expected Cherenkov theta angle
-  const double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
+  const double thetaExp = m_ckAngle->avgCherenkovTheta(photon->richRecSegment(),id);
   if ( thetaExp < 0.000001 ) return 0.0;
 
   // Expected Cherenkov theta angle resolution
@@ -110,9 +112,10 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
            ( sqrt(2.*M_PI)*2.*M_PI*thetaExpRes ) );
 }
 
-double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
-                                      const Rich::ParticleIDType id ) const {
-
+double
+RichPhotonSignal::scatterProb( RichRecPhoton * photon,
+                               const Rich::ParticleIDType id ) const
+{
   if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() ) {
 
     // Expected Cherenkov theta angle
