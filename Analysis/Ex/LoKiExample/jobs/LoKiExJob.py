@@ -80,7 +80,7 @@ def setCMTenv ( ) :
     
     variables = ('CMTROOT','CMTBIN','CMTPATH','CMTCONFIG','CMTDEB')
     command   = '( . $LHCBHOME/scripts/lhcbenv.sh ; '
-    command  += '  . $LHCBHOME/scripts/oldCMT.sh  ; '
+    command  += '  . $LHCBHOME/scripts/newCMT.sh  ; '
     command  += ' env | grep CMT '
     command  += ' ) ' 
     cin,cout,cerr = os.popen3( command )
@@ -137,14 +137,14 @@ def setEnvironment() :
     import cmt
 
     # set the project environment 
-    print cmt.project( 'DaVinci'  , 'v11r13' )
+    print cmt.project( 'DaVinci'  , 'v12r0' , os.environ['LHCBDEV'] )
         
     # show CMT paths 
     for p in cmt.showpath() : print  ' CMT path: ' + `p`
         
     # configure the job     
     cmt.use( package = 'Ex/LoKiExample' )
-    cmt.use( package = 'Phys/DaVinci'   , version = 'v11r13' )
+    cmt.use( package = 'Phys/DaVinci'   , version = 'v12r0' )
 
     # show all used packages a
     for p in cmt.showuses() : print `p`
