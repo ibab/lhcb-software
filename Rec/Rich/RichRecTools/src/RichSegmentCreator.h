@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.11 2005-02-02 10:09:40 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.12 2005-02-17 09:54:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,6 +35,8 @@
 /** @class RichSegmentCreator RichSegmentCreator.h
  *
  *  Tool for the creation and manipulation of RichRecSegment objects
+ *
+ *  @attention
  *  This is a utility tool and should only used by the RichTrackCreator tools.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
