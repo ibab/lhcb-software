@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2002-12-20 16:41:10 gcorti Exp $
+# $Id: requirements,v 1.50 2002-12-20 17:07:19 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -107,13 +107,11 @@ use  TrExtrapolator     v2r3   Tr
 
 #--- DaVinci packages
 use  DaVinciTools       v7r1   Phys
-use  DaVinciTools       v7r0   Phys
 use  DaVinciAssociators v3r0   Phys
 use  DaVinciMCTools     v4r1   Phys
 use  DaVinciTest        v4r0   Phys
 use  PhysSelections     v4r1   Phys
 use  FlavourTagging     v4r1   Phys
-use  FlavourTagging     v4r0   Phys
 use  DaVinciEff         v2r1   Phys
 use  DaVinciUser        v4r0   Phys
 
