@@ -1,4 +1,4 @@
-// $Id: L0mTower.cpp,v 1.12 2002-11-06 15:51:39 atsareg Exp $
+// $Id: L0mTower.cpp,v 1.13 2002-11-11 10:36:23 cattanem Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -297,7 +297,6 @@ double L0mTower::ptcalc() {
       ista = p2.station();
       p2.setStation(ista-1);
     }
-    cout << "Pads in ptcalc: " << p1 << " " << p2 << endl;
     scode = m_iTileXYZTool->calcTilePos(p1,x1,dx,y1,dy,z,dz); 
     scode = m_iTileXYZTool->calcTilePos(p2,x2,dx,y,dy,z,dz); 
     d2 = d2+d3;
@@ -318,7 +317,6 @@ double L0mTower::ptcalc() {
   x1 /= 10.;
   y1 /= 10.;
   x2 /= 10.;
-  // cout << "ptcalc: pad(cm) " << pad(1) << " " << x1 << " " << y1 << " " << x2 << endl;
   // cout << d1 << " " << d2 << " " << d3 << " " << alpha << endl;
   
   double x0 = x1 - d2*(x2-x1)/d3;
