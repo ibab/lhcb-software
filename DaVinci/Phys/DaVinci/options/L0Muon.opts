@@ -8,11 +8,9 @@ ApplicationMgr.TopAlg  += { "L0mTriggerAlgorithm/L0MuonTrigger"};
 
 
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
-
-// Max integer to contain Pt
-L0MuonTrigger.PtMaxBins = 128;
-// Pt precision in MeV/c
-L0MuonTrigger.PtPrecision = 40;  
+// temporary patch pt kick = 1.21 GeV
+// should be 1.39, waiting for L0DU.
+L0MuonTrigger.PtParameters = {545.,665.5,309.5,1.21,120.};
 
 L0MuonTrigger.InputFromMuonCoords = true;
 L0MuonTrigger.OutputLevel = 3;

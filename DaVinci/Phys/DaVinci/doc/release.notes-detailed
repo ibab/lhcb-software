@@ -7,6 +7,8 @@
 ! 2004-09-15 - P. Koppenburg for Luisanna Tocco
   - options/L0Muon.opts
     . Use same options as Boole except for some details.
+    . Still se old Pt kick of 1.21 GeV (should be 1.39) until
+      L0Du is adapted accordingly.
     
 ! 2004-09-15 - P. Koppenburg for Vanya Belyaev
   - options/DVStripping.opts
