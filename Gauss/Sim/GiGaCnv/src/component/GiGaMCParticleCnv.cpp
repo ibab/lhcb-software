@@ -1,19 +1,23 @@
+// $Id: GiGaMCParticleCnv.cpp,v 1.8 2001-11-19 18:27:00 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/27 11:24:57  ibelyaev
-/// bug fix in MCParticles<->MCVertices relations
-///
-/// Revision 1.5  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.4  2001/07/24 11:13:56  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.3  2001/07/15 20:45:11  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.7  2001/08/12 17:24:53  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.6  2001/07/27 11:24:57  ibelyaev
+// bug fix in MCParticles<->MCVertices relations
+//
+// Revision 1.5  2001/07/25 17:19:32  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.4  2001/07/24 11:13:56  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.3  2001/07/15 20:45:11  ibelyaev
+// the package restructurisation
+// 
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -51,9 +55,14 @@
 #include "GiGaMCParticleCnv.h" 
 #include "Trajectory2Particle.h"
 
-/** implementation of class GiGaMCParticleCnv 
- *  @author Vanya Belyaev 
+// ======================================================================
+/** @file GiGaMcParticleCnv.cpp
+ *
+ *  implementation of class GiGaMCParticleCnv 
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  */
+// ======================================================================
 
 // ======================================================================
 /// Factory stuff 

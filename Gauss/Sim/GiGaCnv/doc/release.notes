@@ -1,12 +1,16 @@
+! $Id: release.notes,v 1.8 2001-11-19 18:26:59 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
-! =============================================================================
-! $Id: release.notes,v 1.7 2001-07-30 14:13:35 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev
 ! =============================================================================
 
+!==============================================================================
+! 20011119  Vanya Belyaev
+	AddTabulatedProperties.h - bug fix (thanks to Sajan!)
+	GiGaCatalogCnv.h/.cpp    - new converetr to converet the whole 
+                             contents of catalog to Geant4   
 !==============================================================================
 ! 20010730  Vanya Belyaev 
     GiGaMCVertexCnv.cpp  -  bug fix 

@@ -2,6 +2,9 @@
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2001/08/15 14:48:05  ibelyaev
+# update from DetDesc v7 to DetDesc v8
+#
 # Revision 1.10  2001/07/27 11:24:57  ibelyaev
 # bug fix in MCParticles<->MCVertices relations
 #
@@ -11,13 +14,13 @@
 # =============================================================================
 
 package  GiGaCnv 
-version v2
+version  v3
 
 branches cmt src doc options GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
 
-use GiGa          v6*   Sim 
+use GiGa          v7*   Sim 
 use LHCbEvent     v11*	Event
 use DetDesc       v8*	Det
 

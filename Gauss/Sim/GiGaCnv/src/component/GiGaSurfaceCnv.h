@@ -1,8 +1,12 @@
+// $Id: GiGaSurfaceCnv.h,v 1.4 2001-11-19 18:27:01 ibelyaev Exp $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/15 20:45:12  ibelyaev
-/// the package restructurisation
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2001/08/12 17:24:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.2  2001/07/15 20:45:12  ibelyaev
+// the package restructurisation
+//
 // ============================================================================
 #ifndef         GIGA_GIGASurfaceCnv_H
 #define         GIGA_GIGASurfaceCnv_H  1 
@@ -21,11 +25,11 @@ class G4LogicalSurface;
 
 
 /** @class GiGaSurfaceCnv GiGaSurfaceCnv.h GiGa/GiGaSurfaceCnv.h
-    
-    Converter of Surface class to Geant4 
-    
-    @author  Vanya Belyaev
-*/
+ *  
+ *  Converter of Surface class to Geant4 
+ *  
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 
 class GiGaSurfaceCnv: public GiGaCnvBase
 {
@@ -43,12 +47,17 @@ protected:
   virtual ~GiGaSurfaceCnv();
   ///
 public:
+
   /// Create representation 
-  virtual StatusCode createRep(DataObject*     Object  , 
-                               IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep
+  ( DataObject*      Object  , 
+    IOpaqueAddress*& Address ) ;
+
   /// Update representation 
-  virtual StatusCode updateRep(DataObject*     Object  , 
-                               IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep
+  ( DataObject*      Object  , 
+    IOpaqueAddress*  Address ) ;
+ 
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
@@ -72,8 +81,11 @@ private:
   ///
 };
 
-
+// ============================================================================
+// The End 
+// ============================================================================
 #endif   //     GIGA_GIGASurfaceCnv_H
+// ============================================================================
 
 
 

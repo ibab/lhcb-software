@@ -1,8 +1,12 @@
+// $Id: GiGaSurfaceCnv.cpp,v 1.5 2001-11-19 18:27:00 ibelyaev Exp $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/07/15 20:45:12  ibelyaev
-/// the package restructurisation
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/12 17:24:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.3  2001/07/15 20:45:12  ibelyaev
+// the package restructurisation
+//
 // ============================================================================
 #define GIGACNV_GIGASURFACECNV_CPP 1 
 // ============================================================================
@@ -28,6 +32,16 @@
 // local 
 #include "AddTabulatedProperties.h"
 #include "GiGaSurfaceCnv.h" 
+
+// ============================================================================
+/** @file GiGaSurface.cpp
+ * 
+ *  implementation of class GiGaSurfaceCnv 
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xxxx
+ */
+// ============================================================================
 
 static const  CnvFactory<GiGaSurfaceCnv> s_GiGaSurfaceCnvFactory ;
 const ICnvFactory& GiGaSurfaceCnvFactory = s_GiGaSurfaceCnvFactory ;
@@ -210,10 +224,11 @@ StatusCode GiGaSurfaceCnv::createBorderSurface( const Surface    *  surface ,
     { logsurf = surf ; }  
   ///  
   return StatusCode::SUCCESS;
-};  
+};
 
-
-
+// ============================================================================
+// The End 
+// ============================================================================
 
 
 
