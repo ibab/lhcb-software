@@ -4,7 +4,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //------------------------------------------------------------------------------
 // The offline selections
 //------------------------------------------------------------------------------
-//#include "$HLTSELCHECKERROOT/options/AllTDRSelections.opts"
+#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
 //------------------------------------------------------------------------------
 // correlations
 //------------------------------------------------------------------------------
@@ -38,9 +38,9 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 // in these options
 // Hence: re-initalize event selector
 //EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2MuMuKstar.opts"
 
-ApplicationMgr.EvtMax    = 5000 ;
+ApplicationMgr.EvtMax    = 100 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
