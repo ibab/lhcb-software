@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.29 2003-03-14 17:32:03 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.30 2003-04-29 12:29:12 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////
 // Services:
@@ -11,7 +11,7 @@ ApplicationMgr.DLLs  += { "SimSvc" };
 //"$GAUSSROOT/data/simulation.xml";
 
 #include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0G.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1G.xml";
  
 // declare external services needed MAGNETIC FIELD 
 ApplicationMgr.ExtSvc +=  
@@ -50,6 +50,7 @@ Simulation.Members +=
   "PrintEventAlg"                    ,   // get MCParticles/MCVertices
   "GetGiGaHitsAlg/GetHits"           };  // get MCHits
 
+
 // configuration of GiGa Data Store 
 GiGaStore.ConversionServices   = 
 { "GiGaKine" , 
@@ -76,6 +77,7 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Velo2Rich1"};
 Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
 Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
+Geo.StreamItems         += { "/dd/Geometry/Rich2/Rich2Surfaces" };
 Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
@@ -85,9 +87,11 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ;
 //Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
 //Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 
-// Physics List  to be used and its configuration  
-GiGa.PhysicsList            = "GiGaPhysListModular/ModularPL";
-GiGa.ModularPL.Cut           = 4.0 * mm;
+// physics list  and the production cuts  
+GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
+GiGa.ModularPL.Cut            = 4.0 * mm;
+GiGa.ModularPL.CutForElectron = 10000.0 * m;
+GiGa.ModularPL.CutForGamma    = 20.0 * mm;
 
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
@@ -96,34 +100,33 @@ GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP"};
 //GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsQGSP"};
 GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
 //GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
+//GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorHpd"};
 
-// Tracking action to be used and its configuration  
+// mandatory tracking action
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
-GiGa.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
+GiGa.TrackSeq.Members      += { "GaussTrackAction/GTrack" } ;
+GiGa.TrackSeq.GTrack.StoreAll  = false; 
+GiGa.TrackSeq.GTrack.StorePrimaries = true;
+GiGa.TrackSeq.GTrack.StoreMarkedTracks = true;
+GiGa.TrackSeq.GTrack.StoreByOwnEnergy   = true; 
+GiGa.TrackSeq.GTrack.OwnEnergyThreshold = 10.0 * MeV   ;        
+//GiGa.TrackSeq.GTrack.StoreByChildEnergy   = true ; 
+//GiGa.TrackSeq.GTrack.ChildEnergyThreshold = 50.0 ; 
+//GiGa.TrackSeq.GTrack.StoreByOwnType       = true; 
+//GiGa.TrackSeq.GTrack.StoredOwnTypes       = { "pi+" , "pi-" };
+//GiGa.TrackSeq.GTrack.StoreByChildType     = true;
+//GiGa.TrackSeq.GTrack.StoredChildTypes     = { "e+"};
 
-GiGa.TrackSeq.SimpleTrack.StoreAll  = false; 
-GiGa.TrackSeq.SimpleTrack.StorePrimaries = true;
-GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks = true;
-GiGa.TrackSeq.SimpleTrack.StoreByOwnEnergy   = true; 
-GiGa.TrackSeq.SimpleTrack.OwnEnergyThreshold = 10.0 * MeV   ;        
-// GiGa.TrackSeq.SimpleTrack.StoreByChildEnergy   = true ; 
-// GiGa.TrackSeq.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
-GiGa.TrackSeq.SimpleTrack.StoreByOwnType       = true; 
-GiGa.TrackSeq.SimpleTrack.StoredOwnTypes       = { "pi+" , "pi-" };
-
-// GiGa.TrackSeq.SimpleTrack.StoredChildTypes     = { "e+"};
-
-// Stepping action to be used and its configuration  
+// mandatory stepping action   
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
-// tracking cuts
-GiGa.StepSeq.Members             += { "CutsStepAction/GaussCuts" } ;
 
-// Event action to be used and its configuration  
+// mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 
-// Run Action to be used and its configurations  
+// mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
+GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
@@ -132,8 +135,26 @@ GiGa.RunSeq.RunCommand.BeginOfRunCommands     =
   "/tracking/storeTrajectory  1"    } ;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
-GiGaGeo.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-GiGaGeo.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+//GiGaGeo.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+//GiGaGeo.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+
+
+// "Global Field Manager " 
+GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
+GiGaGeo.FieldMgr.MinStep         = 1 * mm ;
+GiGaGeo.FieldMgr.Stepper       = "SimpleRunge" ; 
+GiGaGeo.FieldMgr.Global        = true            ;
+GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
+
+GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc" ;
+
+GiGa.GiGaMgr.RunTools += { "GiGaEraseFieldMgr" } ;
+//GiGa.GiGaMgr.GiGaEraseFieldMgr.Volumes = 
+//{ "/dd/Geometry/Tracker/lvAirVolume","World", "/dd/Geometry/Velo2Rich1/lvVelo2Rich1" };
+ 
+GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" } ;
+
+GiGaGeo.WorldMaterial = "/dd/Materials/Vacuum";
 
 // Material Budget  - optional tool
 
@@ -146,6 +167,9 @@ GiGaGeo.VeloSDet.DetectorPath  = "/Velo";
 GiGaGeo.OTSDet.DetectorPath    = "/Tracker/OT";
 
 GetHits.CaloHits   = { "MC/Ecal/Hits" };
+
+// specific RICH options
+#include "$GAUSSRICHROOT/options/Rich.opts"
 
 // specific configuration of calorimeter stuff 
 #include "$GAUSSOPTS/Calo.opts"
