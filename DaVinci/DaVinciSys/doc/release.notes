@@ -4,7 +4,16 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!====================  DaVinciSys v9r3 2004-01-14 =============================
+!====================  DaVinciSys v9r3 2004-01-28 =============================
+! 2004-01-28 - Gloria CORTI
+ - modified packages respect to v9r2 are
+   . Bs2DsH              v2r2
+   . Bs2JpsiPhi          v1r3
+   . Bd2PhiKs            v3r2
+   . Bs2JpsiEta          v2r1
+   . Bd2D0Kstar          v2r3
+   . B2DstarX2D02hh      v1r0  NEW
+
 ! 2004-01-14 - Gloria CORTI
  - modified packages respect to v9r2 are
    . DaVinciTools        v8r4
@@ -18,7 +27,6 @@
    . B2DD                v1r7
    . Bd2DstarPi          v1r5
    . Bd2KPiPiPi          v1r2
-   . Bd2PhiKs            v3r1p1
    . DecayPresel         v2r3
 
 !====================  DaVinciSys v9r2 2003-12-15 =============================
