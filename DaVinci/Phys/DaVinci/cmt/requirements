@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.79 2004-01-14 20:48:41 gcorti Exp $
+# $Id: requirements,v 1.80 2004-01-28 20:13:04 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -70,6 +70,8 @@ use AssociatorsSys      v1r4    Associators
 
 #--- Geometry Database
 use  XmlDDDB		v17r0	 Det
+use  ParamFiles		v2r1	 $(LHCb_release_area)/PARAM -no_auto_imports
+use  FieldMap           v4r3
 
 #--- DaVinciSys v8r0 packages 
 

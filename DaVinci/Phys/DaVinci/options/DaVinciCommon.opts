@@ -24,6 +24,9 @@ ApplicationMgr.DLLs   += { "Magnet" };
 ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet", "MuonDet" };
 ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 
+// Particle Properties
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
+
 // Persistency setup
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
@@ -46,11 +49,9 @@ ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
-#pragma print off
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALOPIDSOPTS/CaloPIDs.opts"
 #include "$MUONIDROOT/options/MuonIDDLLTool.opts"
-#pragma print on
 
 // Physics packages and dependent packages
 ApplicationMgr.DLLs += { "DaVinciTools" };
@@ -75,6 +76,7 @@ ApplicationMgr.DLLs      += { "Utilities" };
 ApplicationMgr.HistogramPersistency = "NONE";
 
 // Profiling
+#pragma print on
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = true;

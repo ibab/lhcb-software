@@ -3,7 +3,61 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v9r3>2004-01-29 DaVinci v9r3 - TDR and Development Version</A></H1><PRE>
 
+ - Use ParamFiles package for ParticleProperySvc input (particle.cdf) 
+   and FieldMap for magnetic field (field043.cdf)
+   . requirements
+   . DaVinci{v254r1,v256r0}.opts, DaVinciv256r0.opts, DaVinciCommon.opts
+
+ - Move from DaVinci{v254r1,v256r0}.opts to DaVinciCommon.opts what does
+   not depend on geometry setting
+
+ - Introduce new generic DaVinciDDDB.opts that includes the detector 
+   description database as compatible with a given DaVinci version,
+   do that specific version does not need to be changed in PhysSel or
+   private code to use with different versions of DaVinci.
+
+ - Introduce preselections for new channels (PhysSelSys v6r1)
+   . Bd2D0Kstar      v2r3    Bd->K*D0(KsK)
+   . B2DstarX2D02hh  v1r0    Bd,Bs,b-hadron->D*(D0(hh)pi)X
+   . Auxiliary application DecayPresel v2r3 modified to introduce new
+     options
+
+ - New tuning for sensitivity studies post-TDR
+   . Bs2JpsiEta    v2r1   
+
+ - Introduce TDR analysis for channels missing in DaVinci v9r2 
+   (PhysSelSys v6r1)
+   . Bs2JpsiPhi    v1r3   Bs->Jpsi(mumu)Phi
+   . Bs2DsH        v2r2   Bs->Ds(KKpi)K, Bs->Ds(KKpi)pi
+  
+ - Introduce algorithms and tools necessary for Bs->J/Psi(ee/mumu)Phi and
+   Bu -> J/Psi K selections (DaVinciTools v8r4, PhysSelections v6r1)
+
+ - New version of B tagging available in addition to what used for TDR and
+   to replace it.(FlavourTagging v4r7)
+   . Note that what used in TDR will be removed in a future version. 
+   . Examples of how to use the new flavour tagging with either a real
+     selection or a cheated selection if provided in
+       $FLAVOURTAGGINGROOT/options/DVBTagging_example.opts
+
+ - Remove obsolete classes for analysis of data prodcude with Brunel v13
+   no longer supporter ( GlobalReco v4r2 )
+ 
+ - Introduce small changes in requirements file to allow for compilation
+   against LHCb v12r1, LHCb v14r0 and LHCb v15r0 to prepare for release
+   of identical DaVinci packages against the three LHCb versions
+   (DaVinciAssociators v4r3, DaVinciMCTools v5r1, FlavourTagging v4r7) 
+
+ - Introduce small changes to allow compilation in code against LHCb v15r0
+   as well as LHCb v12r1 and v15r0 (B2DD v1r7, Bd2KPiPiPi v1r2, 
+   Bd2PhiKs v3r2, Bd2DstarPi v1r5)
+
+ - Remove use of NagC (Bd2DstarPi v1r5)
+
+ - New version of LoKi with few improvements and bug fixes (v1r9) 
+ 
 </PRE><H1><A NAME=v9r2>2003-12-15 DaVinci v9r2 - TDR Version</A></H1><PRE>
 
  Version with TDR analysis for decay selections ( PhysSelSys v6r0 ). 

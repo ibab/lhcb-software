@@ -1,0 +1,13 @@
+/** @file 
+ * 
+ *  Configuration file to run using the latest compatible 
+ *  Detector Description Data Base  
+ *  This is the file that should be included by default in
+ *  a "DaVinci.opts" file
+ * 
+ *  @author G.Corti
+ *  @date 2004-01-26
+ */
+
+//For TDR (Winter 2003) data produced with Brunel v17r4
+#include "$DAVINCIROOT/options/DaVinciv254r1.opts" 

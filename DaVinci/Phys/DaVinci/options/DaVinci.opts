@@ -1,24 +1,32 @@
-//##############################################################
-// Example DaVinci job Options for user configuration
-//
-// This file defines, sequences and configures the algorithms 
-// to be executed
-//==============================================================
+/** @file 
+ * 
+ *  Example file to run a DaVinci job.
+ *  This file defines, sequences and configures the algorithms 
+ *  to be executed
+ *  The algorithms to produce common final reconstruction objects
+ *  are executed (primary vertices, charged and neutral protoparticles) 
+ *  while example on how to run additional algorithm
+ *  of general interest are provided commented.
+ *
+ *  @author G.Corti
+ *  @date 2004-01-26
+ */
+
+//--------------------------------------------------------------
 // Standard Gaudi configuration and additional DLLs are in
 // DaVinciCommon. 
+#pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
 
-// Database dependent configurations are in DaVinciXXX.opts.
-// Choose the appropriate one.
-//     For TDR (Winter 2003) data produced with Brunel v17r4
-#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+// Default Database dependent configurations. The latest
+// compatible database is included from here (TDR 2003 data).
+// If you need something different choose from DaVinciXXX.opts.
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
 //--------------------------------------------------------------
-// Trigger 
-//--------------------------------------------------------------
-// Rerun L0 trigger decision - TDR tuning
+// Re-run L0 and L1 Trigger with TDR tuning 
 #include "$DAVINCIROOT/options/L0.opts"
-// Rerun L1 trigger decisions - TDR tuning
 #include "$DAVINCIROOT/options/L1Decision.opts"
 // Run Hlt triggers
 //#include "$DAVINCIROOT/options/Hlt.opts"
@@ -41,18 +49,20 @@
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
 //--- For merged and resolved pi0 the corresponding selection algorithm
-//    need to be executed
+//    need to be executed. 
+//    Note that DaVinciNeutrals MUST be executed
+//ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
 //ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 //#include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
 //ApplicationMgr.TopAlg += { "MergedPi0Alg" };
 //#include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
 
-//--- Ks->pi+pi- with all type of tracks loose selection
+//--- Ks->pi+pi- with all type of tracks loose selection + monitoring
 //#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
-//--- Ks->pi+pi- with all type of tracks tight selection
+//--- Ks->pi+pi- with all type of tracks tight selection + monitoring
 //#include "$DAVINCIROOT/options/DaVinciKshortTight.opts"
 
-//--- Particle with Assigned pID only for HLT studies
+//--- Example of Particle with Assigned pID only for HLT studies
 //#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts"
 
 //--- Example of use of CombinedParticleMaker
@@ -63,27 +73,24 @@
 //#include "$DAVINCIROOT/options/DaVinciPairPhotons.opts"
 
 //--------------------------------------------------------------
-// Other additional algorithms to be executed, from public 
-// or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
-//--------------------------------------------------------------
-
 //----------------------------------------------------------------
-// The various selections algorithms have each a DVDecayName.opts
-// file in their package that can be given as full options of the
-// DaVinci executable INSTEAD of DaVinci.opts
-//   ex.: $B2HHROOT/options/DVBd2PiPi.opts
-//        $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
+// Other additional algorithms to be executed, from public 
+// or private code and their options can be listed below or
+// included. 
+// REMEMBER: 
+//   Options for algorithms and tools can be added here to overwrite
+//   any of the default options
+// NOTE:
+//   The various selections algorithms have each a DVDecayName.opts
+//   file in their package that can be given as full options of the
+//   DaVinci executable INSTEAD of DaVinci.opts
+//   ex.: DaVinci.exe $B2HHROOT/options/DVBd2PiPi.opts
+//        DaVinci.exe $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
 //----------------------------------------------------------------
-
-// Private algorithm options can be listed here or included from
-// here. 
-// Options for algorithms and tools can be added here to overwrite
-// any of the default options
 
 //----------------------------------------------------------------
 // Switch on to produce a miniDST file
-//----------------------------------------------------------------
 //#include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
 
 //--------------------------------------------------------------
@@ -91,7 +98,6 @@
 // Hbook or Root are available, uncomment the one you want to use
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
-//--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
 HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 //#include "$STDOPTS/RootHist.opts"
@@ -99,14 +105,12 @@ HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
-//--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-//--------------------------------------------------------------
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
@@ -118,12 +122,12 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-//---------------------------------------------------------------
 ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
    
+//---------------------------------------------------------------
+// Sample input file
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-//################################################################
-
+//***************************************************************
