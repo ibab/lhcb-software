@@ -5,8 +5,11 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.2 2005-01-13 13:10:14 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.3 2005-01-14 16:57:12 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2005/01/13 13:10:14  jonrob
+ * Update mapping type
+ *
  * Revision 1.1  2005/01/07 12:35:59  jonrob
  * Complete rewrite
  *
@@ -28,11 +31,12 @@ const        IToolFactory& RichHPDToLevel1ToolFactory = s_factory ;
 RichHPDToLevel1Tool::RichHPDToLevel1Tool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : RichToolBase ( type, name , parent ),
-    m_hpdID      ( 0                   )
+  : RichToolBase ( type, name , parent )
 {
 
   declareInterface<IRichHPDToLevel1Tool>(this);
+
+  declareProperty( "L1Mapping", m_joData );
 
 }
 
@@ -46,45 +50,48 @@ StatusCode RichHPDToLevel1Tool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // If map from job options is empty, build a temporary one
+  // Used for old data base versions...
+  if ( m_joData.empty() ) { buildTempMapping(); return sc; }
+
   // acquire tools
-  acquireTool( "RichHPDIDTool",   m_hpdID  );
-  IRichSmartIDTool * smartIDs;
-  acquireTool( "RichSmartIDTool", smartIDs );
+  IRichHPDIDTool * hpdIDTool;
+  acquireTool( "RichHPDIDTool",   hpdIDTool  );
 
-  // Get list of all valid readout channels
-  const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
-
-  // number of HPDs per L1 board
-  // Probably fixed, but should still be in XML...
-  const unsigned int nHPDsPerL1 = 48;
-
-  // Create temporary mapping between RichSmartID/hardwareID and Level1 number
-  // Eventually, will need to come from some sort of data base
+  // Use data from job options...
+  JOData::const_iterator iD = m_joData.begin();
+  bool newL1Bank = true;
+  RichDAQ::Level1ID L1ID = 1;
   std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
-  for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID )
+  while ( iD != m_joData.end() )
   {
-    const RichSmartID hpdID = (*iID).pdID();
-    if ( m_smartid2L1.find(hpdID) == m_smartid2L1.end() )
-    {
-      // Get hardware ID for this RichSmartID
-      const RichDAQ::HPDHardwareID hardID = m_hpdID->hardwareID( hpdID );
-      // Create L1 ID : NB - Should be done better
-      const RichDAQ::Level1ID L1ID = 1 + hardID / nHPDsPerL1;
-
-      // Fill maps
-      m_smartid2L1[hpdID] = L1ID;
-      m_hardid2L1[hardID] = L1ID;
-      if ( m_l12smartids[L1ID].empty() ) ++nL1s[hpdID.rich()]; // temporary count
-      m_l12smartids[L1ID].push_back( hpdID );
-      m_l12hardids[L1ID].push_back( hardID );
-
-      verbose() << "RichSmartID " << hpdID << " HardID " << hardID
-                << " -> L1ID " << L1ID << endreq;
+    if ( newL1Bank ) {
+      // Data is L1 ID for the coming block...
+      L1ID = *iD;
+      newL1Bank = false;
+    } else {
+      if ( *iD > 0 ) { 
+        const RichDAQ::HPDHardwareID hardID = *iD;
+        // Get RichSmartID
+        const RichSmartID smartID = hpdIDTool->richSmartID( hardID );
+        // Fill maps
+        m_smartid2L1 [ smartID ] = L1ID;
+        m_hardid2L1  [ hardID  ] = L1ID;
+        if ( m_l12smartids[L1ID].empty() ) ++nL1s[smartID.rich()]; // temporary count
+        m_l12smartids[L1ID].push_back( smartID );
+        m_l12hardids[L1ID].push_back( hardID );
+        verbose() << "RichSmartID " << smartID << " HardID " << format("%3i",hardID)
+                  << " -> L1ID " << format("%2i",L1ID) << endreq;
+      } else {
+        newL1Bank = true;
+      }
     }
+    ++iD;
   }
+  m_joData.clear();
 
-  // release smartid tool
-  releaseTool( smartIDs );
+  // release tool
+  releaseTool( hpdIDTool );
 
   info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
          << " / " << nL1s[Rich::Rich2] << endreq;
@@ -166,4 +173,60 @@ const RichDAQ::L1ToSmartIDs & RichHPDToLevel1Tool::l1HPDSmartIDs() const
 const RichDAQ::L1ToHardIDs & RichHPDToLevel1Tool::l1HPDHardIDs() const
 {
   return m_l12hardids;
+}
+
+// Used for "old" geometries which don't have job option defined layouts
+// To be removed when no longer needed
+void RichHPDToLevel1Tool::buildTempMapping()
+{
+  // acquire tools
+  IRichHPDIDTool * hpdIDTool;
+  acquireTool( "RichHPDIDTool",   hpdIDTool  );
+  IRichSmartIDTool * smartIDs;
+  acquireTool( "RichSmartIDTool", smartIDs );
+
+  // Get list of all valid readout channels
+  const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
+
+  // number of HPDs per L1 board
+  // Probably fixed, but should still be in XML...
+  const unsigned int nHPDsPerL1 = 48;
+
+  // Create temporary mapping between RichSmartID/hardwareID and Level1 number
+  // Eventually, will need to come from some sort of data base
+  std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
+  RichDAQ::Level1ID L1ID = 1;
+  unsigned int iHPD = 0;
+  Rich::DetectorType rich = Rich::InvalidDetector;
+  for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID )
+  {
+    const RichSmartID hpdID = (*iID).pdID();
+    if ( m_smartid2L1.find(hpdID) == m_smartid2L1.end() )
+    {
+      // Get hardware ID for this RichSmartID
+      const RichDAQ::HPDHardwareID hardID = hpdIDTool->hardwareID( hpdID );
+      // Create L1 ID
+      if ( iHPD >= nHPDsPerL1 ||
+           ( rich != Rich::InvalidDetector && rich != hpdID.rich() ) ) { ++L1ID; iHPD = 0; }
+      rich = hpdID.rich();
+
+      // Fill maps
+      m_smartid2L1[hpdID] = L1ID;
+      m_hardid2L1[hardID] = L1ID;
+      if ( m_l12smartids[L1ID].empty() ) ++nL1s[hpdID.rich()]; // temporary count
+      m_l12smartids[L1ID].push_back( hpdID );
+      m_l12hardids[L1ID].push_back( hardID );
+      ++iHPD;
+
+      verbose() << "RichSmartID " << hpdID << " HardID " << hardID
+                << " -> L1ID " << L1ID << endreq;
+    }
+  }
+
+  // release tools
+  releaseTool( smartIDs  );
+  releaseTool( hpdIDTool );
+
+  info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
+         << " / " << nL1s[Rich::Rich2] << endreq;
 }

@@ -5,15 +5,18 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.2 2005-01-13 13:10:14 jonrob Exp $
+ *  $Id: RichHPDToLevel1Tool.h,v 1.3 2005-01-14 16:57:12 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:10:14  jonrob
+ *  Update mapping type
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  *
- *  @todo Implement a proper L1 numbering scheme
+ *  @todo Interface to database (when available) to get the L1 numbering scheme
  */
 //-----------------------------------------------------------------------------
 
@@ -48,7 +51,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  *
- *  @todo Finish implementation with true L1 numbering scheme
+ *  @todo Finish implementation with true L1 numbering scheme from database
  */
 
 class RichHPDToLevel1Tool : public RichToolBase,
@@ -90,10 +93,16 @@ public: // methods (and doxygen comments) inherited from interface
   // Access mapping between Level 1 IDs and HPD RichSmartIDs
   const RichDAQ::L1ToHardIDs & l1HPDHardIDs() const;
 
+private: //methods
+
+  /// Build a temporary mapping between HPD and L1 numbers
+  void buildTempMapping();
+
 private: // data
 
-  /// Pointer to Rich HPD ID tool
-  IRichHPDIDTool * m_hpdID;
+  /// L1 data from job options
+  typedef std::vector< int > JOData;
+  JOData m_joData;
 
   /// Typedef for mapping from RichSmartID to Level1 ID
   typedef RichHashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
