@@ -1,0 +1,17 @@
+package OTMonitor
+version v1r0
+
+branches OTMonitor cmt doc src options
+
+include_dirs $(OTMONITORROOT)
+
+use OTDet               v5r*    Det
+use OTAssociators       v2r9    OT
+use AIDA                v*  -no_auto_imports
+
+# ================= component library ====================
+library OTMonitor ../src/*.cpp -import=AIDA
+
+apply_pattern component_library library=OTMonitor
+
+

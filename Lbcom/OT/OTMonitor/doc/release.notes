@@ -1,0 +1,19 @@
+Package         : OTMonitor
+Package manager : J. Nardulli
+
+
+! 2004-08-30 - Jacopo Nardulli
+- The package OTMonitor consists of 3 algorithms:
+   OTTimeChecker - Checking the efficiencies with respect to MCHits.
+   OTTimeMonitor - Monitoring the OTTime 
+   MCOTDepositMonitor - Monitoring the MCOTDeposit    
+- Base class: 
+   OTMonitorAlgorithm 
+  
+  Beacause of backward incompatibility, 
+  in order to use this package it is necessary to:
+  Use LHCbKernel    upper than v5r1
+  Use OTEvent       upper than v13r0
+  Use OTDAQ         upper than v2r0
+  Use OTAssociators upper than v2r9
+  Use OTSimulation  instead of OTAlgorithms
