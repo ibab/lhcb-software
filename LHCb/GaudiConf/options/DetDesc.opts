@@ -9,7 +9,6 @@ ApplicationMgr.DLLs   += { "DetDesc" };
 // so never use "\" (Use only "/")
 //--------------------------------------------------------------
 DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
 

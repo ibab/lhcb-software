@@ -11,7 +11,6 @@ ApplicationMgr.DLLs.append('DetDesc')
 #--------------------------------------------------------------
 DetectorDataSvc = Service('DetectorDataSvc')
 DetectorDataSvc.UsePersistency = true
-DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 10;
 

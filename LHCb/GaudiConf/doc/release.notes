@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20020123 - v6r1 - Marco Cattaneo
+  options/DetDesc.opts, .py: removed DetectorDataSvc.DetDbLocation option.
+
 ! 20011128 - Pere Mato
   Changed GaudiMain.cpp to use the new GaudiPython service.
   Added some Python scripts
