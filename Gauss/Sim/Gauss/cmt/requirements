@@ -30,6 +30,7 @@ use GaussTools          v5r0    Sim
 use GaussTracker        v1r0    Sim
 use GaussRICH           v1r0    Sim
 use GaussCalo           v1r0    Sim
+use GaussPhysics        v1r0    Sim
 use CaloDetXmlCnv       v2r2    Det 
 
 #optional visualisation and UI
