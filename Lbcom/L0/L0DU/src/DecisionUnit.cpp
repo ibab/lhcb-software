@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.1.1.1 2001-06-15 11:58:17 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.2 2001-06-15 12:42:44 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -305,7 +305,7 @@ StatusCode DecisionUnit::execute() {
             << " )"
             << endreq;
         if ( L0Muon::OK == (*itCandMuon)->status() ) {
-          eMuons.push_back( std::fabs( (*itCandMuon)->pt() ) * GeV );
+          eMuons.push_back( fabs( (*itCandMuon)->pt() ) * GeV );
         }
         itCandMuon++;
       }
@@ -337,7 +337,7 @@ StatusCode DecisionUnit::execute() {
       if ( 1 <= eMuons.size() ) {
         itCandMuon = candMuon->begin();
         while ( itCandMuon != candMuon->end() ) {
-          if ( eMuons[ 0 ] == std::fabs( (*itCandMuon)->pt() ) * GeV ) {
+          if ( eMuons[ 0 ] == fabs( (*itCandMuon)->pt() ) * GeV ) {
             break;
           }
           itCandMuon++;   
@@ -435,8 +435,8 @@ StatusCode DecisionUnit::execute() {
     }
     
     if ( 0 != m_Muon1 ) {
-      setTrig( L0Trig::Mu1, std::fabs( m_Muon1->pt() ) * GeV, m_eMu1Cut1 ); 
-      setTrig_down( L0Trig::Mu1_down, std::fabs( m_Muon1->pt() ) * GeV,
+      setTrig( L0Trig::Mu1, fabs( m_Muon1->pt() ) * GeV, m_eMu1Cut1 ); 
+      setTrig_down( L0Trig::Mu1_down, fabs( m_Muon1->pt() ) * GeV,
                                       m_eMu1Cut2, m_scalMu1 );
     }
 
