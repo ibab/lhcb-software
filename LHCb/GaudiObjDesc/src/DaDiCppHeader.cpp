@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.49 2002-03-14 09:29:30 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.50 2002-03-14 10:01:13 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -177,7 +177,7 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
          gddMethodIsConst = gddMethod->const_(),
          gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
       
-    if (gddMethodAccess == accessor)
+    if (gddMethodAccess == accessor || accessor == "")
     {
       xmlOut << "  /// " << gddMethodDesc << std::endl << "  ";
       if (gddMethodIsFriend)
@@ -254,7 +254,8 @@ template <class T> void printMethodImpl(std::ofstream& xmlOut,
          gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
 
 
-    if (gddMethodAccess == accessor && gddMethodCode != "" && !gddMethodIsFriend)
+    if ((gddMethodAccess == accessor || accessor == "")
+        && gddMethodCode != "" && !gddMethodIsFriend)
     {
       xmlOut << "inline ";
       if(gddMethodVirtual == "TRUE" ||  gddMethodVirtual == "PURE")
@@ -2467,6 +2468,8 @@ int main(int argC,
          char* argV[])
 //-----------------------------------------------------------------------------
 {
+
+  test::test();
 
   #ifdef WIN32
     char* sep = "\\";

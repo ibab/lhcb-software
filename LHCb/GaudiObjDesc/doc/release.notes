@@ -2,8 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020314 - Stefan Roiser
+ - bugfix when using methods inside namespaces
+
 ! 20020313 - Stefan Roiser
  - attribute 'array' introduced in <attribute>-element
+ - element <method> inside <namespace> introduced
  - bugfix when using forward-declarations <import name='packname/classname' soft='TRUE'/>
  - bugfix no double includes of classes when specified in package- and class-scope
  - attribute noQuote for <location>-element introduced (when concatenating variables)
