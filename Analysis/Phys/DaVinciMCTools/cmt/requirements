@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-07-18 18:39:15 gcorti Exp $
+# $Id: requirements,v 1.5 2002-07-26 12:53:13 odie Exp $
 # Created    : 19/05/2002
 # Maintainer : Gloria Corti
 #
@@ -31,12 +31,12 @@ use  DaVinciAssociators  v2r*  Phys
 #macro yaccpp            "yacc $(yaccppflags)
 #make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
 #document yacc_to_icpp MCParser mcparser.ypp
+#macro mcparser_ypp_yaccpp_prefix "MCDecayFinder::"
 
 #macro lexppflags        " -L "
 #macro lexpp             "lex ${lexppflags}
 #make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
 #document lex_to_icpp MCLexer mclexer.lpp
-#macro mcparser_ypp_yaccpp_prefix "MCDecayFinder::"
 #macro mclexer_lpp_lexpp_prefix "MCDecayFinder::"
 
 # Component library building rule
