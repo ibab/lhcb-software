@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+# $Id: requirements,v 1.2 2004-08-25 12:24:18 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -18,15 +18,7 @@ include_dirs     $(DAVINCIKERNELROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent      v*     Event
-use  TrgEvent       v*     Event
-use  CaloUtils      v*     Calo
-use  CaloInterfaces v*     Calo
-
-# For DV v11r12
-macro_append BOOST_linkopts " -lboost_regex"\
-             Linux&debug " -lboost_regex_debug"\
-             WIN32 " boost_regex_debug.lib" 
+use PhysEvent  v* Event
 
 # Linker library building rule
 #============================================================================
@@ -35,10 +27,6 @@ library          DaVinciKernelLib    ../Lib/*.cpp
 # Component library building rule
 #============================================================================
 library          DaVinciKernel    ../src/*.cpp -import=AIDA
-# define link options
-#============================================================================
-#
-macro_append Boost_linkopts $(Boost_linkopts_regex)
 
 # standard patterns (order is essential!)
 #============================================================================

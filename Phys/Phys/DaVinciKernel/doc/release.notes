@@ -2,7 +2,11 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
-!========================== DaVinciKernel v1r0 2004-08-24 ===================
+!========================== DaVinciKernel v1r0 2004-08-25 ===================
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Remove unnecessary stuff
+   
 ! 2004-08-23 - P. Koppenburg
  - New package DaVinciKernel extracted from DaVinciTools,
    containing the DVAlgorithm baseclass, the PhysDesktop and
