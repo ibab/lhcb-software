@@ -215,9 +215,9 @@ class genClassDicts(importUtils.importUtils):
           s += self.genStubFunction('void',cl,metName,bfType)
         if bfAtt['getMeth'] == 'TRUE':
           s += self.genStubFunction(bool,cl,bfAtt['name'],'')
-#        if bfAtt['checkMeth'] == 'TRUE':
-#          metName = 'check' + self.tools.firstUp(bfAtt['name'])
-#          s += self.genStubFunction(bool,cl,metName,bfType)
+        if bfAtt['checkMeth'] == 'TRUE':
+          metName = 'check' + self.tools.firstUp(bfAtt['name'])
+          s += self.genStubFunction(bool,cl,metName,bfType)
       self.mNum += 1
     return s
 #--------------------------------------------------------------------------------
@@ -410,10 +410,9 @@ class genClassDicts(importUtils.importUtils):
           s += self.genMethod(metName,'set '+bfAtt['desc'],'void',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
         if bfAtt['getMeth'] == 'TRUE':
           s += self.genMethod(bfAtt['name'],'get '+bfAtt['desc'],bfType,'',bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
-# fixme
-#        if bfAtt['checkMeth'] == 'TRUE':
-#          metName = 'check'+self.tools.firtUp(bfAtt['name'])
-#          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
+        if bfAtt['checkMeth'] == 'TRUE':
+          metName = 'check'+self.tools.firtUp(bfAtt['name'])
+          s += self.genMethod(metName,'check '+bfAtt['desc'],'bool',bfType,bf_%s_%s_%d%(godClassName,bfAtt['name'],self.mNum))
       self.mNum += 1
     return s
 #--------------------------------------------------------------------------------

@@ -74,7 +74,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     classAtt = godClass['attrs']
     if classAtt.has_key('location'):                                             # add class attribute location
       s2 += '  static const std::string& Default = "%s";\n' % classAtt['location']
-    if godClass.has_key('location'):                                            # add elements location
+    if godClass.has_key('location'):                                             # add elements location
       for loc in godClass['location']:
         locAtt = loc['attrs']
         place = locAtt['place']
@@ -290,7 +290,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     return s
 #--------------------------------------------------------------------------------
   def genGetSetBitfieldMethod(self, bf, what, attAtt, scopeName):
-    desc = {'get':'Retrieve', 'set':'Upate'}
+    desc = {'get':'Retrieve', 'set':'Upate', 'check':'Check'}
     s = ''
     if not scopeName : s += '  /// %s %s\n  ' % (desc[what], bf['desc'])
     else :
@@ -310,6 +310,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       what = ''
       ret = self.tools.genReturnFromStrg(bfType,self.generatedTypes,scopeName) + ' '
       constF = ' const'
+    if what == 'check':
+      ret = 'bool '
+      metName = bf['name'][0].upper() + bf['name'][1:]
+      param = self.tools.genParamFromStrg(bfType) + ' value'
+      constF = ' const'
 # fixme, lowering getter names for bitfields was not done in old GOD
 # should be done now to be consistent
 #   metName = self.tools.lowerGetterName(bfAtt['name'])
@@ -324,6 +329,9 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '\n{\n  unsigned int val = (unsigned int)value;\n' 
         s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 
         s += '  m_%s |= ((((unsigned int)val) << %sBits) & %sMask);\n}\n\n' % (attAtt['name'],bits,bf['name'])
+      elif what == 'check':
+        s += '\n{\n  unsigned int val = (unsigned int)value;'
+        s += '  return 0 != ( m_%s & %sMask & val );\n}\n\n' % ( attAtt['name'], bf['name'] )
     return s
 #--------------------------------------------------------------------------------
   def genGetSetMethods(self,godClass,clname=''):
@@ -343,6 +351,8 @@ class genClasses(genSrcUtils.genSrcUtils):
               s += self.genGetSetBitfieldMethod(bfAtt,'get',attAtt,clname)
             if bfAtt['setMeth'] == 'TRUE':
               s += self.genGetSetBitfieldMethod(bfAtt,'set',attAtt,clname)
+            if bfAtt['checkMeth'] == 'TRUE':
+              s += self.genGetSetBitfieldMethod(bfAtt,'check',attAtt,clname)
     if godClass.has_key('relation'):
       for rel in godClass['relation']:
         relAtt = rel['attrs']

@@ -150,6 +150,7 @@
         startBit         CDATA                             #IMPLIED
         setMeth          (TRUE | FALSE)                    "TRUE"
         getMeth          (TRUE | FALSE)                    "TRUE"
+        checkMeth        (TRUE | FALSE)                    "FALSE"
 >
 <!ELEMENT template EMPTY>
 <!ATTLIST template
