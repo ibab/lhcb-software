@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.4 2002-03-27 15:06:42 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.5 2002-03-28 12:10:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/03/27 15:06:42  ibelyaev
+//  rename OutputStreamIterator to OS_iterator
+//
 // Revision 1.3  2002/03/26 18:37:06  ibelyaev
 //  some restructurisation and map wrappers
 //
@@ -158,7 +161,7 @@ int main()
     std::copy( vint.begin () ,
                vint.end   () , 
                OS_iterator<double,std::ostream> 
-               ( std::cout , " some text here !" , std::endl ) );
+               ( std::cout , " ljshfdalf" , std::endl ) );
     
     std::cout << std::endl ;
     std::cout << "end of Test #3 of output stream iterators " << std::endl ;

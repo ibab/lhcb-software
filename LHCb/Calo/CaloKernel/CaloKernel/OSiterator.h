@@ -1,8 +1,11 @@
-// $Id: OSiterator.h,v 1.1 2002-03-27 15:06:41 ibelyaev Exp $ 
+// $Id: OSiterator.h,v 1.2 2002-03-28 12:10:11 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Nane:$ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/27 15:06:41  ibelyaev
+//  rename OutputStreamIterator to OS_iterator
+//
 // Revision 1.2  2002/03/18 18:16:21  ibelyaev
 //  small update for LHCbKernel package
 //
@@ -11,6 +14,9 @@
 //
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/03/27 15:06:41  ibelyaev
+//  rename OutputStreamIterator to OS_iterator
+//
 // Revision 1.2  2002/03/18 18:16:21  ibelyaev
 //  small update for LHCbKernel package
 //
@@ -61,7 +67,7 @@ public:
   OS_iterator( OSTREAM & s                                  ) 
     : stream          ( &s    )  
     , terminator      (       ) 
-    , manipulator     (       )
+    , manipulator     ( 0     )
     , has_terminator  ( false )
     , has_manipulator ( false ){} ;  
   OS_iterator( OSTREAM & s                , Manipulator fun ) 
@@ -72,13 +78,13 @@ public:
     , has_manipulator ( true  ) {} ;  
   OS_iterator( OSTREAM & s , TERMINATOR c                   ) 
     : stream          ( &s    )
-    , terminator      ( &c    ) 
-    , manipulator     (       )
+    , terminator      ( c    ) 
+    , manipulator     ( 0     )
     , has_terminator  ( true  ) 
     , has_manipulator ( false ) {} ;
   OS_iterator( OSTREAM & s , TERMINATOR c , Manipulator fun ) 
     : stream          ( &s    )
-    , terminator      ( &c    ) 
+    , terminator      ( c    ) 
     , manipulator     ( fun   )
     , has_terminator  ( true  ) 
     , has_manipulator ( true  ) {} ;
@@ -86,8 +92,8 @@ public:
   MyType& operator=(const TYPE& value) 
   { 
     *stream << value;
-    if (has_terminator && 0 != terminator )  *stream << *terminator ;
-    if (has_manipulator                   )  *stream << manipulator ;
+    if (has_terminator                     )   *stream << terminator   ;
+    if (has_manipulator && 0 != manipulator)  (*manipulator)( *stream ) ;
     return *this; 
   }
   ///
@@ -98,11 +104,11 @@ public:
   ///
 protected:
   ///  
-  Stream*       stream          ;
-  Terminator*   terminator      ;
-  Manipulator   manipulator     ;
-  bool          has_terminator  ;
-  bool          has_manipulator ;
+  Stream*           stream          ;
+  Terminator        terminator      ;
+  Manipulator       manipulator     ;
+  bool              has_terminator  ;
+  bool              has_manipulator ;
   ///
 };
 
