@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRecGeomTool.cpp
  *
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.2 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecGeomTool.cpp,v 1.3 2005-02-02 10:09:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecGeomTool.h"
@@ -24,7 +25,9 @@ const        IToolFactory& RichRecGeomToolFactory = s_factory ;
 RichRecGeomTool::RichRecGeomTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) 
+  : RichRecToolBase ( type, name, parent ),
+    m_detParams     ( 0 ),
+    m_ckAngle       ( 0 )
 {
   declareInterface<IRichRecGeomTool>(this);
 }
@@ -32,10 +35,19 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
 StatusCode RichRecGeomTool::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  return StatusCode::SUCCESS;
+  // Acquire instances of tools
+  acquireTool( "RichDetParameters",  m_detParams );
+  acquireTool( "RichCherenkovAngle", m_ckAngle   );
+
+  // Cache the acceptance data
+  m_radOutLimLoc[Rich::Aerogel] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);
+  m_radOutLimLoc[Rich::C4F10]   = m_detParams->AvAcceptOuterLimitsLocal(Rich::C4F10);
+  m_radOutLimLoc[Rich::CF4]     = m_detParams->AvAcceptOuterLimitsLocal(Rich::CF4);
+
+  return sc;
 }
 
 StatusCode RichRecGeomTool::finalize()
@@ -106,4 +118,65 @@ double RichRecGeomTool::trackPixelHitSep2Local( const RichRecSegment * segment,
   }
 
   return 99999999.9;
+}
+
+double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
+                                            const Rich::ParticleIDType id ) const
+{
+
+  const double yMin1 = 180.;  // approximate edge of optical image from RICH1 gas
+  const double xMin2 = 690.;  // approximate edge along x of RICH2 HPD plane
+  const double yMin2 = 696.;  // approximate edge along y of RICH2 HPD plane
+
+  // The acceptance
+  double acc = 0;
+
+  // Cherenkov angle for this mass hypothsis
+  const double ckTheta = m_ckAngle->avgCherenkovTheta(segment,id);
+
+  if ( ckTheta > 0 ) {  // only for tracks above threshold
+
+    // radius of ring for given hypothesis
+    const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
+
+    // which radiator
+    const Rich::RadiatorType iRad = segment->trackSegment().radiator();
+
+    // Track impact point on HPD panel
+    const HepPoint3D & tkPoint = segment->pdPanelHitPointLocal();
+
+    acc = 1;
+
+    // Simple (too simple?) acceptance calculation
+    if ( iRad == Rich::C4F10 )  // RICH-1 gas
+    {
+      // Account for rings that are close to the edges of the detector plane
+      if ( fabs(tkPoint.y()) < yMin1-rSig ) {
+        acc = 0.;
+      } else {
+        if ( fabs(tkPoint.y()-yMin1) < rSig ) acc *= acos( -(tkPoint.y()-yMin1)/rSig )/M_PI;
+        if ( fabs(tkPoint.y()+yMin1) < rSig ) acc *= acos( (tkPoint.y()+yMin1)/rSig  )/M_PI;
+      }
+    } else if ( iRad == Rich::CF4 ) // RICH-2 gas
+    {
+      if ( fabs(tkPoint.x()) > xMin2+rSig ||
+           fabs(tkPoint.y()) > yMin2+rSig ) {
+        acc = 0.;
+      } else {
+        if ( fabs(tkPoint.x())       < rSig ) acc *= acos(  -fabs(tkPoint.x())/rSig  )/M_PI;
+        if ( fabs(tkPoint.x()-xMin2) < rSig ) acc *= acos(  (tkPoint.x()-xMin2)/rSig )/M_PI;
+        if ( fabs(tkPoint.x()+xMin2) < rSig ) acc *= acos( -(tkPoint.x()+xMin2)/rSig )/M_PI;
+        if ( fabs(tkPoint.y()-yMin2) < rSig ) acc *= acos(  (tkPoint.y()-yMin2)/rSig )/M_PI;
+        if ( fabs(tkPoint.y()+yMin2) < rSig ) acc *= acos( -(tkPoint.y()+yMin2)/rSig )/M_PI;
+      }
+    } else if ( iRad == Rich::Aerogel ) // Aerogel
+    {
+      // nothing here yet....
+    }
+
+    //info() << "Segment " << segment->key() << " " << iRad << " " << id << " " << acc << endreq;
+
+  }
+
+  return acc;
 }
