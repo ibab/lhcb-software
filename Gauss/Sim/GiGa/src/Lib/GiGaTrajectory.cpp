@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.18 2004-02-22 19:01:51 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.19 2004-02-23 08:12:54 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2004/02/22 19:01:51  ibelyaev
+//  add new data fields to GiGaTrajectoryPoint
+//
 // Revision 1.17  2004/02/22 13:38:19  ibelyaev
 //  relocate DumpG4*.h files
 //
@@ -284,8 +287,8 @@ bool GiGaTrajectory::appendStep ( const G4Step* step )
   }
   
   if ( empty() || 
-       fAlive != step->GetTrack()->GetTrackStatus()                  ||
-       point -> GetProcessDefinedStep () != back() -> GetProcess  () || 
+       // fAlive != step->GetTrack()->GetTrackStatus()                  ||
+       // point -> GetProcessDefinedStep () != back() -> GetProcess  () || 
        point -> GetGlobalTime         () != back() -> GetTime     () ||
        point -> GetPosition           () != back() -> GetPosition ()  ) 
   {
