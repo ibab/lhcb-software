@@ -3,6 +3,20 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v9r1>2003-09-04 DaVinci v9r1</A></H1><PRE>
+ This version is built to allow for a specific preselection production
+ 
+ - Introduce new preselection for Bd->PhiKs, this requires LoKi version v1r7
+   that is a development version.
+   . Some other packages using LoKi modified to compile with new version
+     (Bd2PhiKs v2r0, Bd2KstarGamma v1r2, Bs2DsH v2r1, Bs2PhiGamma v1r1,
+      PhysSelSys v5r9)    
+ 
+ - "Documentation"
+   . Introduce commented the options to use some particular types of
+     tracks in PreLoadCombinedParticles.opts. Note that by DEFAULT only
+     long tracks are used.
+
 </PRE><H1><A NAME=v9r0>2003-08-05 DaVinci v9r0</A></H1><PRE>
  This version is built against Gaudi v12 and introduces support for gcc 3.2
 

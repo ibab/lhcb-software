@@ -45,12 +45,12 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v9r0"
+set Dversion = "v9r1"
 setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
 
 
 # == set the program environment
-# set Dversion = "v9r0"
+# set Dversion = "v9r1"
 source $LHCb_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
