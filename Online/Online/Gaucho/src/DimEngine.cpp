@@ -1,10 +1,10 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.1.1.1 2003-06-05 09:34:45 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimEngine.cpp,v 1.2 2003-06-06 12:12:53 vanphil Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "DimH1D.h"
-#include "DimEngine.h"
+#include "Gaucho/DimH1D.h"
+#include "Gaucho/DimEngine.h"
 
 
 DimEngine::DimEngine(char* nodename, ISvcLocator* svclocator) : m_nodename(nodename),

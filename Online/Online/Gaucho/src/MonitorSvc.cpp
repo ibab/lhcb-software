@@ -2,9 +2,9 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "MonitorSvc.h"
-#include "DimEngine.h"
-#include "DimPropServer.h"
+#include "Gaucho/MonitorSvc.h"
+#include "Gaucho/DimEngine.h"
+#include "Gaucho/DimPropServer.h"
 #ifdef WIN32
 namespace wins {
 #include <Winsock.h>

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.1.1.1 2003-06-05 09:34:46 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.2 2003-06-06 12:12:53 vanphil Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -8,7 +8,7 @@
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/Property.h"
-#include "DimPropServer.h"
+#include "Gaucho/DimPropServer.h"
 
 DimPropServer::DimPropServer(char* thisnodename, ISvcLocator* svclocator) : 
     DimRpc(thisnodename,"C", "C") {
