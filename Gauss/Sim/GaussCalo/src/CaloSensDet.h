@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.4 2003-07-07 08:21:06 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.5 2003-07-07 15:40:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/07/07 08:21:06  ibelyaev
+//  split the general CaloSensDet class
+//
 // Revision 1.3  2003/05/14 08:43:42  robbep
 // Addition of specific calo corrections in CaloSensDet :
 // - Birk's law
@@ -351,7 +354,7 @@ private:
  */
 // ============================================================================
 inline double CaloSensDet::t0       ( const CaloCellID& cellID ) const 
-{ return calo()->cellTime( cellID ) + dT0 () ; }
+{ return calo()->cellTime( cellID ) - dT0 () ; }
 // ============================================================================
 
 
