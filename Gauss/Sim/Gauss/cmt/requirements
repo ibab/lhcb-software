@@ -49,7 +49,7 @@ use CaloDetXmlCnv       v2r3    Det
 use GeneratorModules    v10r1    Gen
 
 #get information from DBASE and PARAM 
-use XmlDDDB             v19r1   Det   -no_auto_imports
+use XmlDDDB             v20r0   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v3r0    Gen   -no_auto_imports
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM   -no_auto_imports
