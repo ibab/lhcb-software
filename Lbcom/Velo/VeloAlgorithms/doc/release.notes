@@ -1,0 +1,14 @@
+! Package     : VeloAlgoithms
+! Responsible : Chris Parkes
+
+!=============================================================================
+! 09/06/2002 - Chris Parkes  ** v1r0 **
+  First release of a test version.
+  Algorithms:
+       VeloSim - Silicon and FE chip simulation
+       VeloDataProcessor - makes VeloFullDigits from MCVeloFEs
+       VeloClusterMaker - makes VeloClusters from VeloFullDigits
+  also VeloEventFunctor - routines for sorting / comparisons of 
+                          Event model objects
+  These rely on my private detector element (based on Olivier's),
+  so you need to contact me if you want to try them.
