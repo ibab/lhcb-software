@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2002-02-08 18:58:18 gcorti Exp $
+# $Id: requirements,v 1.10 2002-02-11 10:51:40 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -13,9 +13,8 @@ version           v2r0
 branches          cmt doc src job options
 
 
-# Switch off automatic rebuild of application when a library is
-# modified
-# ignore_pattern package_stamps
+# In order to use packages build with cmt v1r6
+ignore_pattern package_stamps
 
 # Next line to get around SICB/detdes version clashes. 
 # Makes order of package use important
@@ -29,8 +28,6 @@ use GaudiPolicy  v5r4
 
 #--- To read data produced with Brunel >= v6 it is possible to 
 #    select the appropriate database version at running time
-#--- To read data produced with Brunel v5r* one MUST have a consistent
-#    SICB detdes package version and make a new executable
 #--- Reading of files produced with SICBDST is not supported in DaVinci v2r0
 #--- Uncomment and modify next line to select an appropriate database version
 use dbase v241 SICB
@@ -83,6 +80,7 @@ use L1Event        v6r*   Event
 use SicbCnv        v15r*  SICB
 use CaloSicbCnv    v5r*   SICB
 use MuonSicbCnv    v4r*   SICB
+use VSicbCnv       v6r*   SICB
 use L0SicbCnv      v4r*   SICB
 
 #--- L0 trigger
@@ -93,11 +91,9 @@ use PuVeto         v1r*   L0
 use L0DU           v4r*   L0
 
 #--- SICBDST necessary libraries
-#--- In order to read data produced with Brunel v5r* a consistent detdes
-#    package version has to be set
-#    == Brunel v5r* -> detdes v13
-#    == Brunel v8r* -> detdes v14
-#    == Brunel v9r* -> detdes v14
+#--- Please note that if it is necessary to process event with additional
+#    fortran packages a detdes package consistent with such packages has
+#    to be used
 use Futil          v10r3  SICB
 use detdes         v14    SICB
 use digvdet        v2r3   SICB
@@ -134,3 +130,5 @@ macro_append DaVinci_linkopts " "\
 macro_append fflags   " -DDaVinciVersion=200000 " \
              VisualC  " /DDaVinciVersion=200000 "
 
+macro_append cppflags " -DDaVinciVersion=200000 " \
+             VisualC  " /DDaVinciVersion=200000 "

@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.1 2002-02-08 19:07:41 gcorti Exp $
+// $Id: DaVinciMain.cpp,v 1.2 2002-02-11 10:49:08 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -26,6 +26,9 @@ int main ( int argc, char** argv ) {
     std::cout << "Fatal error while creating the ApplicationMgr " << std::endl;
     return 1;
   }
+
+  // Print a program header ( name and version )
+#include "DaVinciTools/DaVinciHeader.icpp"
 
   // Check existence of LHCBDBASE environment variable
   std::string dbase = "";

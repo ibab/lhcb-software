@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.6 2002-02-08 19:00:12 gcorti Exp $
+! $Id: release.notes,v 1.7 2002-02-11 10:49:19 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+
+! 11022002 - Gloria Corti
+  - introduce printing of version number in src/Main/DaVinciMain.cpp
 
 ! 08022002 - Gloria Corti
   - use packages compatibles with Gaudi v9r0
