@@ -30,6 +30,7 @@ use SicbCnv       v16r* SICB
 
 #GiGa staff...
 use GiGaCnv       v5r*  Sim
+use EvGen         v3r*  Sim 
 
 #geometry source 
 use XmlDDDB       v11r*   Det 
@@ -38,7 +39,7 @@ use XmlDDDB       v11r*   Det
 # Essential environment variables 
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
-set  GAUSSDATA "${GAUSSROOT}/data"
+set  GAUSSDATA "${GAUSSOPTS}"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"

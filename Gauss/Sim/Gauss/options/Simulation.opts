@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.4 2002-04-28 19:12:18 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.5 2002-05-01 18:45:47 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -40,8 +40,8 @@ Simulation.Members +=
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
-  "GiGaFlushAlgorithm/GiGaFlush"     };  // flush the event 
-//  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
+  "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
+  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
 
 // ============================================================================
 // configuration of GiGa Data Store 
@@ -50,6 +50,7 @@ GiGaStore.ConversionServices   =
 { "GiGaKineCnvSvc" , 
   "GiGaHitsCnvSvc" };
 
+GiGaSvc.OutputLevel = 1 ;
 // ============================================================================
 // configuration of kinematics event data stream 
 // ============================================================================
@@ -65,7 +66,8 @@ Geo.ExecuteOnce          = true ;
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+// Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"  } ; 
 
 // ============================================================================
 // Physics List  to be used and its configuration  
@@ -151,16 +153,15 @@ RunCommand.BeginOfRunCommands     =
 // ============================================================================
 // List of user interface sessions (with priorities)
 // ============================================================================
-GiGaSvc.UIsessions =  { "tcsh" };
-// , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
+GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
 
 // ============================================================================
 // Global(world) magnetic field 
 // ============================================================================
-//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-//GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
-GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
-UniformField.Bx =   0.005  ; 
+// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
+UniformField.Bx =   0.     ; 
 UniformField.By =   0.005  ; 
 UniformField.Bz =   0.     ; 
 UniformField.OutputLevel = 1 ;

@@ -1,8 +1,11 @@
-// $Id: Gauss.opts,v 1.3 2002-04-09 17:19:40 ibelyaev Exp $ 
+// $Id: Gauss.opts,v 1.4 2002-05-01 18:45:47 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/09 17:19:40  ibelyaev
+//  fix problems with event-drawing and magnetic field
+//
 // Revision 1.2  2002/04/05 16:41:28  witoldp
 // uses restructured GeneratorModules
 //
@@ -44,9 +47,9 @@ ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 // declare external services needed MAGNETIC FIELD (optional)
 // ATTENTION! to use MagneticFieldSvc ONE MUST to add also 'SicbEventCnvSvc'!
 // ============================================================================
-ApplicationMgr.ExtSvc +=  
-{ "SicbEventCnvSvc" , 
-  "MagneticFieldSvc"  };  
+// ApplicationMgr.ExtSvc +=  
+// { "SicbEventCnvSvc" , 
+//   "MagneticFieldSvc"  };  
 ParticlePropertySvc.ParticlePropertiesFile = "../options/particle.cdf" ;
 
 // ============================================================================
@@ -72,7 +75,7 @@ ApplicationMgr.TopAlg          =
 // ============================================================================
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 // ============================================================================
-MessageSvc.OutputLevel    = 2 ;
+MessageSvc.OutputLevel    = 3 ;
 XmlParserSvc.OutputLevel  = 5 ;
 
 ApplicationMgr.EvtSel    = "NONE" ;
