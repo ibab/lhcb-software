@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v20r1>2003-10-17 Brunel v20r1</A></H1><PRE>
 
 - New functionality
-   . Add Rich support for MaPMT and for Gauss data. Requires XmlDDDB > v18r0
+   . Add Rich support for MaPMT and for Gauss data. Requires XmlDDDB v18r2
      (RichDetTools v3r0, RichDet v6r0, RichKernel v3r3, RichRecSys v1r1)
    . Add histograms to monitor memory usage (BrunelAlgs v3r0)
    . Create HLTEvent from HLTBuffer at start of processing (BrunelAlgs v3r0)
