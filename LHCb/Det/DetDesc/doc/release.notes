@@ -1,6 +1,10 @@
 package DetDesc
 package manager : Vanya Belyaev
 
+! 20010131 - Gonzalo Gracia
+     SolidTrd.cpp: Bug fixed.
+
+!===========================================================================
 ! 20010129 - Vanya Belyaev 
    - LVolume:
       o remove IDataProvider, IMessageSvc* from constructor
