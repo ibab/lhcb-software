@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.7 2003-06-30 12:04:02 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.8 2003-07-01 09:30:40 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -280,7 +280,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       m_nL0L1Events++;
   }
   int comb = 0;
-  unsigned int key = (ts.mu?1:0)|(ts.e?2:0)|(ts.kos?10:0)|(ts.kss?100:0);
+  unsigned int key = (ts.mu?1:0)+(ts.e?2:0)+(ts.kos?10:0)+(ts.kss?100:0);
   switch( key ) {
     case 0: // no tag use vtx as a last resort
       theTag.setDecision(vtxCharge_tag.decision());
