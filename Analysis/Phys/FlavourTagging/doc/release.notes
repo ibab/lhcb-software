@@ -4,6 +4,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2004-12-06 - P. Koppenburg
+  - options/DVBTagging_example.opts
+    . Correct location of L1.opts. 
+    . Do not run Hlt.opts it does nothing useful (yet).
 !========================== FlavourTagging v5r3 2004-10-04 ===================
 ! 2004-09-13 - P. Koppenburg for Thomas Ruf
   - src/BTagging.cpp
