@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.6 2003-04-15 11:00:18 gcorti Exp $
+// $Id: ProtoParticle.cpp,v 1.7 2003-06-02 14:52:33 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -142,7 +142,7 @@ bool ProtoParticle::detPID(const ProtoParticle::detectorPID& det) const {
 //=============================================================================
 double ProtoParticle::detPIDvalue(const ProtoParticle::detectorPID& det) const{
  
-  double value = -1.0;
+  double value = -999.0;
   for( PIDDetVector::const_iterator id = pIDDetectors().begin();
        pIDDetectors().end() != id; ++id ) {
     if( det == (*id).first ) {

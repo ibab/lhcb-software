@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.31 2003-04-15 11:06:37 cattanem Exp $
+# $Id: requirements,v 1.32 2003-06-02 14:52:32 gcorti Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
 package           PhysEvent
-version           v7r4
+version           v7r4p1
 
 # Structure, i.e. directories to process. 
 #============================================================================

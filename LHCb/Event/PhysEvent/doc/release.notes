@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.35 2003-04-15 11:06:37 cattanem Exp $
+! $Id: release.notes,v 1.36 2003-06-02 14:52:33 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!========================= PhysEvent v7r4p1 2003-06-02 ===================
+! 2003-06-02 - Gloria CORTI
+ - src/ProtoParticle.cpp
+   . set value of method detPIDvalue to -999.0 (was -1.0) when PID technique
+     does not exist to adapt to delta log likelihood values
 
 !========================= PhysEvent v7r4 2003-04-15 =====================
 ! 2003-04-15 - Gloria Corti
