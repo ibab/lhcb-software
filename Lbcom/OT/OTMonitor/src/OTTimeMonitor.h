@@ -1,31 +1,13 @@
-// $Id: OTTimeMonitor.h,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: OTTimeMonitor.h,v 1.1 2004-09-10 13:13:50 cattanem Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
-// OTMonitor
-#include "OTMonitor/OTMonitorAlgorithm.h"
-
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-
-// OTDet
-#include "OTDet/DeOTDetector.h"
-
-// AIDA
-#include "AIDA/IHistogram1D.h"
-
-// Gaudi
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartIF.h"
-
-//Event
-#include "Event/OTTime.h"
+// local
+#include "OTMonitorAlgorithm.h"
 
 class OTTime;
+class DeOTDetector;
+
 
 /** @class OTTimeMonitor OTTimeMonitor.h "OTMonitor/OTTimeMonitor.h"
  *
@@ -40,8 +22,7 @@ class OTTimeMonitor : public OTMonitorAlgorithm {
 public:
  
   /// constructor
-  OTTimeMonitor(const std::string& name, 
-                 ISvcLocator *svcloc );
+  OTTimeMonitor( const std::string& name, ISvcLocator *svcloc );
 
   /// destructor
   virtual ~OTTimeMonitor();

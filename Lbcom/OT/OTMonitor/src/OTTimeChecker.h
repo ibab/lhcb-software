@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.h,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: OTTimeChecker.h,v 1.1 2004-09-10 13:13:49 cattanem Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
@@ -14,7 +14,7 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 
 // base class
-#include "OTMonitor/OTMonitorAlgorithm.h"
+#include "OTMonitorAlgorithm.h"
 
 // from Associators
 #include "OTAssociators/OTTime2MCHitAsct.h"

@@ -1,7 +1,24 @@
-// $Id: OTTimeMonitor.cpp,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: OTTimeMonitor.cpp,v 1.2 2004-09-10 13:13:50 cattanem Exp $
 
-// OTMonitor
-#include "OTMonitor/OTTimeMonitor.h"
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/AlgFactory.h"
+
+// CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
+
+// AIDA
+#include "AIDA/IHistogram1D.h"
+
+// Event
+#include "Event/OTTime.h"
+
+// OTDet
+#include "OTDet/DeOTDetector.h"
+
+// local
+#include "OTTimeMonitor.h"
 
 static const AlgFactory<OTTimeMonitor> s_Factory;
 const IAlgFactory& OTTimeMonitorFactory = s_Factory;
@@ -64,16 +81,20 @@ StatusCode OTTimeMonitor::initialize()
   }
   
   // Get the number of events to be processed. Needed for occupancy.
-  SmartIF<IProperty> appmgr(IID_IProperty, serviceLocator());
-  if( !appmgr.isValid() ) {
+  IProperty* appMgrP;
+  StatusCode sc = service("ApplicationMgr", appMgrP );
+  if ( !sc.isSuccess() )    {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Unable to locate the ApplicationMgr" << endmsg;
+    msg << MSG::ERROR
+        << "Unable to retrieve IProperty interface of ApplicationMgr"
+        << endmsg;
     m_evtMax = 1;
   }
   else {
     IntegerProperty numEvt;
-    numEvt.assign( appmgr->getProperty( "EvtMax" ) );
+    numEvt.assign( appMgrP->getProperty( "EvtMax" ) );
     m_evtMax = numEvt;
+    appMgrP->release();
   }
 
   return StatusCode::SUCCESS;

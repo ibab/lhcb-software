@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.2 2004-09-10 13:13:49 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -17,8 +17,8 @@
 //Event
 #include "Event/MCHit.h"
 
-// OTMonitor
-#include "OTMonitor/MCOTDepositMonitor.h"
+// local
+#include "MCOTDepositMonitor.h"
 
 static const AlgFactory<MCOTDepositMonitor> s_Factory;
 const IAlgFactory& MCOTDepositMonitorFactory = s_Factory;

@@ -1,7 +1,7 @@
-// $Id: OTTimeChecker.cpp,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: OTTimeChecker.cpp,v 1.2 2004-09-10 13:13:49 cattanem Exp $
 
-// OTAlgorithms
-#include "OTMonitor/OTTimeChecker.h"
+// local
+#include "OTTimeChecker.h"
 
 static const AlgFactory<OTTimeChecker> s_Factory;
 const IAlgFactory& OTTimeCheckerFactory = s_Factory;

@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.h,v 1.1.1.1 2004-09-03 13:30:48 jnardull Exp $
+// $Id: MCOTDepositMonitor.h,v 1.1 2004-09-10 13:13:49 cattanem Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
@@ -9,8 +9,8 @@
 // Event
 #include "Event/MCOTDeposit.h"
 
-// OTAlgorithms
-#include "OTMonitor/OTMonitorAlgorithm.h"
+// local
+#include "OTMonitorAlgorithm.h"
 
 class MCOTDeposit;
 
