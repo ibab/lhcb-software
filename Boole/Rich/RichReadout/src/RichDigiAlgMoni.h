@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.1 2003-09-20 15:12:53 jonesc Exp $
+// $Id: RichDigiAlgMoni.h,v 1.2 2003-09-26 16:00:03 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // Event model
 #include "Event/RichDigit.h"
@@ -14,9 +16,13 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichHit.h"
+#include "Event/MCTruth.h"
 
 // RichKernel
 #include "RichKernel/RichDetectorType.h"
+#include "RichKernel/RichRadiatorType.h"
+#include "RichKernel/RichParticleIDType.h"
+#include "RichKernel/MessageSvcStl.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -59,9 +65,23 @@ private: // methods
   /// Book histograms
   StatusCode bookHistograms();
 
+  /// Computes the position for a given SmartID
   bool getPosition( const RichSmartID & id, HepPoint3D & position );
 
+  /// Returns the mass hypothesis for a given MCParticle
+  Rich::ParticleIDType massHypothesis( const MCParticle * mcPart );
+
+  /// Particle mass
+  double mass( const MCParticle * mcPart );
+
+  /// Returns beta for a given MCParticle
+  double mcBeta( const MCParticle * mcPart );
+
 private: // data
+
+  // Map to count cherenkov photons for each radiator
+  typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
+  typedef std::map< PhotPair, int > PhotMap;
 
   IMaPMTDetTool *     m_mapmtDet;
   IPixelFinder *      m_sicbDet;
@@ -77,8 +97,13 @@ private: // data
   // temporary whilst we have different detector tools
   std::string m_detMode;
 
-  // Histograms
+  // Particle masses
+  std::map<Rich::ParticleIDType,double> m_particleMass;
 
+  // Mapping between PDG ID and Rich::ParticleIDType
+  std::map<int,Rich::ParticleIDType> m_localID;  
+
+  // Histograms
   IHistogram1D* m_digitMult[Rich::NRiches]; ///< MCRichDigit event multiplicity
   IHistogram1D* m_hitMult[Rich::NRiches]; ///< MCRichHit event multiplicity
 
@@ -111,5 +136,19 @@ private: // data
   IHistogram1D* m_digiErrZ[Rich::NRiches]; ///< Distance in z between hit and digit positions
   IHistogram1D* m_digiErrR[Rich::NRiches]; ///< Absolute distance between hit and digit positions
 
+  IHistogram1D* m_mchitNpes[Rich::NRadiatorTypes]; ///< Number of MCRichHit p.e.s. per radiator 
+  IHistogram1D* m_mcdigitNpes[Rich::NRadiatorTypes]; ///< Number of MCRichDigit p.e.s. per radiator 
+
 };
+
+inline double RichDigiAlgMoni::mass( const MCParticle * mcPart )
+{
+  return m_particleMass[ massHypothesis(mcPart) ];
+}
+
+inline Rich::ParticleIDType RichDigiAlgMoni::massHypothesis( const MCParticle * mcPart ) 
+{
+  return ( mcPart ? m_localID[abs(mcPart->particleID().pid())] : Rich::Unknown );
+}
+
 #endif // RICHMONITOR_RICHDIGIALGMONI_H

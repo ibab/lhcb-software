@@ -1,4 +1,4 @@
-// $Id: RichDigitCreator.cpp,v 1.2 2003-09-20 15:12:53 jonesc Exp $
+// $Id: RichDigitCreator.cpp,v 1.3 2003-09-26 16:00:03 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -68,23 +68,23 @@ StatusCode RichDigitCreator::execute() {
 
   // Iterate over all MCRichDigits and copy to RichDigits
   if ( mcDigits ) {
-    for (MCRichDigits::const_iterator mcRichDigit = mcDigits->begin();
-         mcRichDigit != mcDigits->end();
-         ++mcRichDigit) {
-
+    for ( MCRichDigits::const_iterator mcRichDigit = mcDigits->begin();
+          mcRichDigit != mcDigits->end();
+          ++mcRichDigit ) {
+      
       // Make a new RichDigit
       RichDigit * newDigit = new RichDigit();
       digits->insert( newDigit, (*mcRichDigit)->key() );
-
+      
       // Set MCTruth
       if ( setMCTruth(newDigit, *mcRichDigit).isFailure() ) {
         log << MSG::WARNING << "Failed to set MCTruth for RichDigit "
             << (*mcRichDigit)->key() << endreq;
       }
-
+      
     }
   }
-
+  
   // Register new container to Gaudi data store
   if ( !eventSvc()->registerObject(m_richDigitsLocation,digits) ) {
     log << MSG::ERROR << "Failed to register RichDigits at "
