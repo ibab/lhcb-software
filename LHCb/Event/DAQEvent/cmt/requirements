@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           DAQEvent
-version           v4r2
+version           v4r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -25,10 +25,16 @@ use LHCbKernel   v4r*	Kernel
 document obj2doth DAQEventObj2Doth ../xml/DAQEvent.xml
 document obj2dict DAQEventObj2Dict ../xml/DAQEvent.xml
 
+# Produce lcg dictionary for stl containers used in DAQEvent
+apply_pattern lcg_dictionary dictionary=DAQEvent                  \
+                             headerfiles=$(DAQEVENTROOT)/Event/lcgStl.h     \
+                             selectionfile=$(DAQEVENTROOT)/xml/lcg_selection.xml \
+                             options="--split"
+
 # Build libraries (including dictionary)
 #============================================================================
 library          DAQEvent      *.cpp
-library          DAQEventDict  ../dict/*.cpp
+library          DAQEventDict  ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
 
 # Standard patterns (order is important!)
 apply_pattern component_library library=DAQEventDict

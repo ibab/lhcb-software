@@ -13,6 +13,7 @@
         desc="Pointer to each data bank(Header+body)"
         name="data"
         type="raw_int *"
+        dictalias="RawBufferPtr"
         getMeth="FALSE"
         setMeth="FALSE"
      />

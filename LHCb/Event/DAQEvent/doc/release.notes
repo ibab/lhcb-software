@@ -1,9 +1,13 @@
 Package: DAQEvent
 Author: Jose' Helder Lopes
-Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
-         HLTBank classes.
+Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
+         RawBank classes.
 
-!=============== DAQEvent v4r1 2004-04-23 =============================
+!=============== DAQEvent v4r3 2004-06-10 =============================
+! 2004-06-10 - Marco Cattaneo
+ - Add missing lcg dictionaries for STL containers used in L1Event, RawEvent
+
+!=============== DAQEvent v4r2 2004-04-23 =============================
 ! 2004-04-23 - Jose Helder Lopes
  - Fix the L1Event bank type (savannah bug 3130)
 

@@ -43,7 +43,7 @@
         desc="Pointer to beggining of L1 buffer"
         name="buffer"
         type="l1_int*"
-        dictalias="RawBufferPtr"
+        dictalias="L1BufferPtr"
         setMeth="FALSE"
         getMeth="FALSE"
        />

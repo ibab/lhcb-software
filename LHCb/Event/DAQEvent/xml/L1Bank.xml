@@ -13,6 +13,7 @@
         desc="Pointer to each data bank(Header+body)"
         name="data"
         type="l1_int *"
+        dictalias="L1BufferPtr"
         getMeth="FALSE"
         setMeth="FALSE"
      />
