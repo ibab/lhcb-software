@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2002-03-19 08:13:09 cattanem Exp $
+# $Id: requirements,v 1.4 2002-03-27 17:37:31 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -11,10 +11,23 @@ version v1r0
 include_dirs $(LHCBKERNELROOT)
 
 # Main program and standard job options
-use GaudiKernel   v11r*
-use CLHEP         v17r*
+use GaudiKernel        v11r*
+use CLHEP              v17r*
+use GaudiObjDesc       v3r*
+
+# Produce Header-Files from XML description, overriding default destination
+#============================================================================
+macro GODflags " -o "
+set GODDOTHOUT "../Kernel/" \
+    WIN32      "..\Kernel\"
+
+document obj2doth LHCbKernelObj2Doth ../xml/*.xml
+
+# Dictionary not working on ITChannelID
+#document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
 library LHCbKernel *.cpp
+#                   ../dict/*.cpp
 
 apply_pattern package_linkopts
 apply_pattern package_stamps

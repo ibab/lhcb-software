@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name='LHCbKernel'>
+    <class name='ITChannelID' author='Matthew Needham' desc='ITChannelID is a class that describes a single channel of LHCb Inner tracker.'>
+      <desc> *  Now, only the station, layer, wafer and strip number can be retrieved.
+ *  All numbers start from 1.</desc>
+      <constructor argList='unsigned int station, unsigned int layer, unsigned int wafer, unsigned int strip' desc='constructor with station, layer, wafer, strip'>
+        <code> m_channelID = (((unsigned long)(station-1) &lt;&lt; stationBits) &amp;  stationMask) |
+               (((unsigned long)(layer-1)   &lt;&lt; layerBits) &amp; layerMask) |
+	       (((unsigned long)(wafer-1)   &lt;&lt; waferBits) &amp; waferMask) |
+	       (((unsigned long)(strip-1)   &lt;&lt; stripBits) &amp;  stripMask );
+        </code>
+      </constructor>
+      <constructor argList='int id' initList = 'm_channelID(id)' desc='constructor with channelID'>
+        <code></code>
+      </constructor>
+      <method type='unsigned int' name='station' const='TRUE' desc='get station number'>
+        <code>return ((m_channelID &amp; stationMask) &gt;&gt; stationBits)+1;</code>
+      </method>
+      <method type='unsigned int' name='layer' const='TRUE' desc='get layer number'>
+        <code>return ((m_channelID &amp; layerMask) &gt;&gt; layerBits)+1;</code>
+      </method>
+      <method type='unsigned int' name='wafer' const='TRUE' desc='get wafer number'>
+        <code>return ((m_channelID &amp; waferMask) &gt;&gt; waferBits)+1;</code>
+      </method>
+      <method type='unsigned int' name='strip' const='TRUE' desc='get strip number'>
+        <code>return  ((m_channelID &amp; stripMask) &gt;&gt; stripBits) +1;</code>
+      </method>
+      <method name='setStrip' argList='unsigned int strip' desc='set strip number'>
+        <code>m_channelID &amp;= stationMask | layerMask | waferMask;
+      m_channelID |= ((unsigned long)(strip-1) &lt;&lt; stripBits) &amp; stripMask;</code>
+      </method>
+      <method type='' name='operator int' const='TRUE'  desc='caste'>
+        <code>return m_channelID;</code>
+      </method> 
+      <enum access="PRIVATE" desc="Enumeration to store the bit packing offsets" name="bits" 
+      value=' stripBits = 0, waferBits=16,  layerBits=24, stationBits=28'/>
+      <enum access="PRIVATE" desc="Enumeration to store the bit packing masks" name="masks" 
+      value=' stationMask = 0xF0000000l , layerMask = 0x0F000000l , waferMask = 0x00FF0000l, stripMask = 0x0000FFFFl'/>
+      <attribute type='unsigned int' name='channelID' desc='IT Channel ID'/>
+      <enum access="PUBLIC" desc="general storage enum" name="general" 
+      value='nullStrip = 0xFFFF'/>
+    </class>
+  </package>
+</gdd>
