@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v7r0 2003-04-15 =========================
 ! 2003-04-03 - Marco Cattaneo
  - Move MC truth relations factories to Associators package, to avoid dependency
    on L0Calo when reading DSTs. To find the relations in an application:
