@@ -90,7 +90,7 @@ BrunelRecoVELOSeq.Members  = { "DecodeVeloRawBuffer" };
 BrunelRecoVELOSeq.Members += { "VeloTrackAlg" };
 VeloTrackAlg.AbortNumTrack = 300;
 
-// Forward tracking
+// Long (ex Forward) tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FindLongTrack" };
@@ -113,8 +113,9 @@ BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
 reFit.TrackContainer = "Rec/FitTrack/Match";
 
-// Upstream tracking
+// K Short tracking
 ApplicationMgr.DLLs += { "TrKShort" };
+#include "$TRKSHORTROOT/options/Brunel.opts"
 BrunelRecoTrSeq.Members += { "FindTrKShort"
                            , "TrEventTracksFitter/KShortFit" };
 KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";

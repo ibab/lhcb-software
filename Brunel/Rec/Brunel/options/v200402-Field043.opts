@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///   Job options for Brunel for data produced with Boole v5r4 or greater   ///
 /// and with XmlDDDB v22r0 or greater, geometry compatible with lhcb-200402 ///
-///                  and with magnetic field Field045                       ///
+///                  and with magnetic field Field043                       ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
@@ -9,12 +9,16 @@
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 
 //---------------------------------------------------------------------------
-// Geometry specific options
+// Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 #include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+
+// Old (Field043) tuning for tracking algorithms
+#include "$LONGTRACKROOT/options/BrunelField043.opts"
+#include "$TRKSHORTROOT/options/BrunelField043.opts"
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field043.cdf";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -43,7 +47,7 @@ HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 
 // POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field045.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 412400
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 412400
 PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // GaudiDb
