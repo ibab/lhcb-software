@@ -802,7 +802,8 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   }
   else{
     const HepPoint3D& x = v->position();
-    const Hep3Vector& dist = x - sPV;
+    const HepPoint3D& TMP = x - sPV;
+    const Hep3Vector& dist(TMP.x(),TMP.y(),TMP.z());
     const Hep3Vector& p(part.momentum().vect());
     double cosangle = p.dot(dist)/p.mag()/dist.mag();
     m_cospF[m_n] = cosangle;

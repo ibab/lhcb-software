@@ -1,4 +1,4 @@
-// $Id: TrackNTuple.cpp,v 1.3 2005-02-21 12:16:55 pkoppenb Exp $
+// $Id: TrackNTuple.cpp,v 1.4 2005-03-08 10:54:51 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -447,7 +447,8 @@ int TrackNTuple::trackType(const Particle* P){
 //  Some math
 //=============================================================================
 double TrackNTuple::mcIP(const Hep3Vector& d,const HepPoint3D& a,const HepPoint3D& pv){
-  Hep3Vector dist = a-pv;
+  HepPoint3D TMP = a-pv;
+  Hep3Vector dist(TMP.x(),TMP.y(),TMP.z());
   Hep3Vector Kross = dist.cross(d.unit());
   double ip = Kross.mag();
   verbose() << d << " " << a << " " << pv << " -> " << ip << endmsg ;

@@ -10,6 +10,8 @@
     . Apply L1 filter 
   - options/DVNtuple.opts
     . Do not include TrgDispCalculator, TrgVertexFitter a second time
+  - src/*
+    . Adapt for DV v13r0
     
 ! 2005-02-23 - P. Koppenburg
   - src/DecayChainNTuple.cpp
