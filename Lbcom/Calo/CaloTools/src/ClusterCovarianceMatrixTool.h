@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.h,v 1.3 2001-11-23 11:44:51 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.h,v 1.4 2001-11-25 15:50:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/23 11:44:51  ibelyaev
+//  new tool for calculation of cluster spread
+//
 // Revision 1.2  2001/11/08 10:58:34  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 //
@@ -17,8 +20,8 @@
 #include "GaudiKernel/Property.h"
 // CaloInterfaces
 #include  "CaloInterfaces/ICaloClusterTool.h"
-// CaloGen 
-#include  "CaloGen/CaloTool.h"
+// CaloKernel
+#include  "CaloKernel/CaloTool.h"
 // CaloUtil 
 #include  "CaloUtils/CovarianceEstimator.h"
 

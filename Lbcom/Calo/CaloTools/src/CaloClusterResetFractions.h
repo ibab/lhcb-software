@@ -1,16 +1,19 @@
-// $Id: CaloClusterResetFractions.h,v 1.1 2001-11-08 20:07:04 ibelyaev Exp $
+// $Id: CaloClusterResetFractions.h,v 1.2 2001-11-25 15:50:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 20:07:04  ibelyaev
+//  new tools are added into  the package
+// 
 // ============================================================================
 #ifndef CALOTOOLS_CALOCLUSTERRESETFRACTIONS_H 
 #define CALOTOOLS_CALOCLUSTERRESETFRACTIONS_H 1
 // Include files
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterTool.h"
-// CaloGen 
-#include "CaloGen/CaloTool.h"
+// CaloKernel
+#include "CaloKernel/CaloTool.h"
 
 /** @class CaloClusterResetFractions CaloClusterResetFractions.h
  *  

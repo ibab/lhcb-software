@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.2 2001-11-08 10:58:34 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.3 2001-11-25 15:50:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 10:58:34  ibelyaev
+//  new tools are added for selection of subclusters within the cluster
+//
 // Revision 1.1  2001/11/04 15:30:40  ibelyaev
 // add concrete tool
 // 
@@ -15,8 +18,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/Property.h"
-// CaloGen 
-#include "CaloGen/CaloPrint.h"     
+// CaloKernel
+#include "CaloKernel/CaloPrint.h"     
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // CaloUtil

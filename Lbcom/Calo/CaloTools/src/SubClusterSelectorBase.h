@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.3 2001-11-12 19:04:28 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.h,v 1.4 2001-11-25 15:50:41 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/12 19:04:28  ibelyaev
+//  update
+//
 // Revision 1.2  2001/11/08 20:07:05  ibelyaev
 //  new tools are added into  the package
 //
@@ -16,8 +19,8 @@
 // from STL
 // from CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterTool.h"
-// from CaloGen
-#include "CaloGen/CaloTool.h"
+// from CaloKernel
+#include "CaloKernel/CaloTool.h"
 // forwarde declaration 
 class    CaloCluster   ; ///< from CaloEvent package
 

@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.5 2001-11-12 21:16:14 ibelyaev Exp $
+! $Id: release.notes,v 1.6 2001-11-25 15:50:40 ibelyaev Exp $
 ! =============================================================================
-! CVS atg $Name: not supported by cvs2svn $ 
+! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!=============================================================================
+! 25/11/2001 - Ivan Belyaev
+  - update for newer version of CaloKernel package 
 
 ! =============================================================================
 ! 2001/11/12  v1 Vanya Belyaev 
