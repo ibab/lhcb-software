@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.101 2004-07-05 07:49:24 pkoppenb Exp $
+! $Id: release.notes,v 1.102 2004-07-06 08:48:14 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-07-06 - P. Koppenburg
+  - DaVinciTools/DVAlgorithm.h
+    . New getDecayString method
+    
 !========================== DaVinciTools v9r7 2004-07-05 ===================
 ! 2004-07-02 - P. Koppenburg
   - cmt/requirements

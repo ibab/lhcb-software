@@ -104,6 +104,9 @@ public:
   // Overridden from Gaudi Algorithm
   StatusCode sysFinalize ();  
 
+  // Overridden from Gaudi Algorithm
+  std::string getDecayDescriptor(){return m_decayDescriptor;};  
+
   /// Imposes an output location for desktop different from algo name
   /// Should be avoided!
   void imposeOutputLocation (std::string outputLocationString);  
