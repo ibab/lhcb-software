@@ -1,0 +1,19 @@
+
+LYP = $(${NAME}_ypp_yaccpp_prefix)
+
+$(src)${NAME}.${SUFFIX} : $(${NAME}_ypp_dependencies)
+	$(echo) $@
+	cd $(src); \
+	  $(yaccpp) -p'${LYP}y' ${FILENAME}; \
+	   sed -e 's/typedef union ./#if 0/g' \
+	       -e 's/. YYSTYPE;/#endif/g' \
+	       -e 's/#define YYSTYPE yystype/#define YYSTYPE ${LYP}YYSTYPE/g' \
+	       -e 's/YYCLASS/${LYP}/g' \
+	       y.tab.c >${NAME}.$(SUFFIX); \
+	   sed -e 's/typedef union/union YYSTYPE/g' \
+	       -e 's/YYSTYPE;/;/g' \
+	       -e 's/YYCLASS/${LYP}/g' \
+	       -e 's/extern YYSTYPE .*//g' y.tab.h >${NAME}.h; /bin/rm -f y.tab.[ch]
+
+$(CONSTITUENT)clean ::
+	cd $(src); /bin/rm -f $(NAME).$(SUFFIX) $(NAME).h
