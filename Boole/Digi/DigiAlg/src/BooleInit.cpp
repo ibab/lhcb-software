@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.6 2003-11-26 13:17:31 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.7 2004-06-23 12:39:12 cattanem Exp $
 
 // Include files
 #include "BooleInit.h"
@@ -25,9 +25,8 @@ static const AlgFactory<BooleInit>  s_factory;
 const IAlgFactory& BooleInitFactory = s_factory;
 
 //-----------------------------------------------------------------------------
-BooleInit::BooleInit( const std::string& name, 
-                                            ISvcLocator* pSvcLocator )
-                     : Algorithm( name, pSvcLocator ) { 
+BooleInit::BooleInit( const std::string& name, ISvcLocator* pSvcLocator )
+                                    : GaudiAlgorithm( name, pSvcLocator ) { 
   m_eventCounter = 0;
   m_engine = 0;
   m_hMemMapped = 0;
@@ -47,66 +46,49 @@ BooleInit::~BooleInit() { }
 StatusCode BooleInit::initialize() { 
 //-----------------------------------------------------------------------------
 
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
+  
+  // Get the timing normalisation
+  ITimingTool* timingTool = tool<ITimingTool>( "TimingTool" );
+  double timeNorm = timingTool->normalize() / 1.e+09;
+  release( timingTool );
   
   std::string version = (std::string)getenv("BOOLEVERS");
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::INFO
+  always() 
+      << std::endl
+      << "===================================================================="
+      << std::endl
+      << "                 Welcome to Boole version " << version 
+      << std::endl
+      << "===================================================================="
+      << std::endl
+      << "CPU time normalisation = " << timeNorm
+      << " (c.f. 1GHz PIII, gcc 3.2 -o2)"
+      << std::endl
       << "===================================================================="
       << endmsg;
-  msg << MSG::INFO
-      << "                 Welcome to Boole version " << version << endmsg;
-  msg << MSG::INFO
-      << "===================================================================="
-      << endmsg;
-
+  
   // Get the random number engine
   m_engine = randSvc()->engine();
   if( 0 == m_engine ) {
-    msg << MSG::ERROR << "Random number engine not found!" << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "Random number engine not found!" );
   } 
 
   // Book the monitoring histograms
   if( m_doHistos ) {
-    IProperty* appMgrP;
-    sc = service("ApplicationMgr", appMgrP );
-    if ( !sc.isSuccess() )    {
-      msg << MSG::ERROR
-          << "Unable to retrieve IProperty interface of ApplicationMgr"
-          << endmsg;
-      return sc;
-    }
+    IProperty* appMgrP = svc<IProperty>( "ApplicationMgr" );
     IntegerProperty numBins;
     numBins.assign( appMgrP->getProperty( "EvtMax" ) );
-    appMgrP->release();
+    release( appMgrP );
 
-    if( -1 == numBins ) numBins = 100;
+    if( -1 == numBins ) numBins = 500;
     m_hMemMapped  = histoSvc()->book( "Boole", 1, "Mapped memory (kB)",
                                       numBins, 0.5, numBins+0.5 );
     m_hMemVirtual = histoSvc()->book( "Boole", 2, "Virtual memory (kB)",
                                       numBins, 0.5, numBins+0.5 );
   }
 
-  // Print the timing normalisation
-  ITimingTool* timingTool;
-  sc = toolSvc()->retrieveTool( "TimingTool", timingTool );
-  if( sc.isFailure() ) {
-    msg << MSG::WARNING << "Unable to retrieve timing Tool" << endmsg;
-  }
-  else {
-    double timeNorm = timingTool->normalize() / 1.e+09;
-    msg << MSG::INFO
-      << "===================================================================="
-      << endmsg;
-    msg << MSG::INFO << "CPU time normalisation = "
-        << timeNorm  << " (c.f. 1GHz PIII, gcc 3.2 -o2)" << endmsg;
-    msg << MSG::INFO
-      << "===================================================================="
-      << endmsg;
-    // No need to release tool, it will be destroyed when it goes out of scope
-  }
-  
   return StatusCode::SUCCESS;
 }
 
@@ -114,8 +96,6 @@ StatusCode BooleInit::initialize() {
 StatusCode BooleInit::execute() {
 //-----------------------------------------------------------------------------
 
-  MsgStream msg( msgSvc(), name() );
-  
   // Fill the memory usage histograms before the next event is loaded
   if( m_doHistos ) {
     long mem = System::mappedMemory();
@@ -124,17 +104,10 @@ StatusCode BooleInit::execute() {
     m_hMemVirtual->fill( m_eventCounter+1, (double)mem );
   }
 
-  SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
-  if (0 == evt){
-    msg << MSG::ERROR << "Event header not found!" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  else {
-    ++m_eventCounter;
-    msg << MSG::INFO << "Evt " << evt->evtNum() 
-        << ",  Run " << evt->runNum() 
-        << ",  Nr. in job = " << m_eventCounter;
-  }
+  EventHeader* evt = get<EventHeader>( EventHeaderLocation::Default );
+  ++m_eventCounter;
+  info() << "Evt " << evt->evtNum() << ",  Run " << evt->runNum() 
+         << ",  Nr. in job = " << m_eventCounter;
   
   // Set the random number seed either once per event or once per job
   std::vector<long> seeds;
@@ -158,14 +131,14 @@ StatusCode BooleInit::execute() {
     seeds.push_back( m_theSeed );
     m_engine->setSeeds( seeds );
     if( m_initRndm ) {
-      msg << MSG::INFO << " Random number sequence initialised with seed "
+      info() << " Random number sequence initialised with seed "
           << m_theSeed;
     }
     else {
-      msg << MSG::INFO << ",  random seed = " << m_theSeed;
+      info() << ",  random seed = " << m_theSeed;
     }
   }
-  msg << MSG::INFO << endmsg;
+  info() << endmsg;
 
   StatusCode sc = this->createL1Buffer();
   if( sc.isFailure() ) return sc;
@@ -179,40 +152,31 @@ StatusCode BooleInit::execute() {
 //-----------------------------------------------------------------------------
 StatusCode BooleInit::finalize() { 
 //-----------------------------------------------------------------------------
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::INFO
+
+  always()
+      << std::endl
       << "===================================================================="
-      << endmsg;
-  msg << MSG::INFO
-      << "                 " << m_eventCounter << " events processed" << endmsg;
-  msg << MSG::INFO
+      << std::endl
+      << "                 " << m_eventCounter << " events processed"
+      << std::endl
       << "===================================================================="
       << endmsg;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 }
 
 //-----------------------------------------------------------------------------
 StatusCode BooleInit::createL1Buffer() {
 //-----------------------------------------------------------------------------
   
-  MsgStream  msg( msgSvc(), name() );
 
   // Create and register in the TES the L1Buffer:
   L1Buffer * l1Buffer = new L1Buffer();
   if (NULL == l1Buffer ) {
-    msg << MSG::ERROR << "Unable to allocate memory to L1Buffer" << endmsg;
-    return StatusCode::FAILURE;
+    return Error( "Unable to allocate memory to L1Buffer" );
   }
 
-  StatusCode sc =
-    eventSvc()->registerObject(L1BufferLocation::Default,l1Buffer);
-
-  if( sc.isFailure() ) {
-    delete l1Buffer;
-    msg << MSG::ERROR << "Unable to register L1Buffer in TES" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  put( l1Buffer, L1BufferLocation::Default );
 
   return StatusCode::SUCCESS;
 }
@@ -221,29 +185,15 @@ StatusCode BooleInit::createL1Buffer() {
 StatusCode BooleInit::createRawBuffer() {
 //-----------------------------------------------------------------------------
 
-  MsgStream msg(msgSvc(), name());
-
-  SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
-  if ( 0 == evt ) {
-    msg << MSG::ERROR << "Unable to retrieve event header" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  EventHeader* evt = get<EventHeader>( EventHeaderLocation::Default );
 
   // Create and register in the TES a new RawBuffer:
   RawBuffer * rawBuffer = new RawBuffer();
   if (NULL == rawBuffer ) {
-    msg << MSG::ERROR << " Unable to allocate memory to RawBuffer" << endmsg;
-    return StatusCode::FAILURE;
+    return Error( " Unable to allocate memory to RawBuffer" );
   }
 
-  StatusCode sc =
-    eventSvc()->registerObject(RawBufferLocation::Default,rawBuffer);
-
-  if( sc.isFailure() ) {
-    delete rawBuffer;
-    msg << MSG::ERROR << "Unable to register RawBuffer in TES" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  put( rawBuffer, RawBufferLocation::Default );
 
   // Add the event header to the RawBuffer (will this be done by the DAQ?)
   // Suppose this information is manipulated by class ID 101 and has Source

@@ -1,4 +1,4 @@
-// $Id: CreateL1Event.h,v 1.1 2003-10-06 16:16:39 cattanem Exp $
+// $Id: CreateL1Event.h,v 1.2 2004-06-23 12:39:12 cattanem Exp $
 #ifndef CREATEL1EVENT_H 
 #define CREATEL1EVENT_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 
 /** @class CreateL1Event CreateL1Event.h
@@ -18,16 +18,14 @@
  *  @author Marco Cattaneo
  *  @date   2003-10-03
  */
-class CreateL1Event : public Algorithm {
+class CreateL1Event : public GaudiAlgorithm {
 public:
   /// Standard constructor
   CreateL1Event( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~CreateL1Event( ); ///< Destructor
+  virtual ~CreateL1Event( ) {}; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

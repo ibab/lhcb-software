@@ -3,15 +3,15 @@
 # Maintainer : Marco CATTANEO
 #============================================================================
 package         DigiAlg
-version         v2r3
+version         v2r4
 
 branches        cmt doc src options
 include_dirs    "$(DIGIALGROOT)"
 
-use AIDA        v*	-no_auto_imports
 use Event       v*      Event
 use DAQEvent    v4r*	Event
 use LHCbTools   v1r*    Kernel
+use GaudiAlg    v7r*
 
 library         DigiAlg    ../src/*.cpp  -import=AIDA
 

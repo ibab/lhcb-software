@@ -3,7 +3,7 @@
 #define MERGEEVENTALG_H 1
 
 // Include files
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/IEvtSelector.h"
 #include "GaudiKernel/Service.h"
 
@@ -28,7 +28,7 @@ class ILumiTool;
  *  @date   2003-06-23  
  */
 
-class MergeEventAlg : public Algorithm {
+class MergeEventAlg : public GaudiAlgorithm {
 
 public:
 

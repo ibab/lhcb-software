@@ -1,9 +1,8 @@
-// $Id: LumiTool.cpp,v 1.2 2003-11-03 16:54:27 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.3 2004-06-23 12:39:12 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SmartIF.h"
@@ -36,11 +35,10 @@ const IToolFactory& LumiToolFactory = s_factory;
 LumiTool::LumiTool( const std::string& type, 
                     const std::string& name,
                     const IInterface* parent ) 
-  : AlgTool( type, name, parent ) {
+  : GaudiTool( type, name, parent ) {
 
   declareProperty( "BunchCrossRate",    m_bunchCrossRate = 29.49 );
   declareProperty( "TotalCrossSection", m_totalXSection  = 102.4 );
-  m_EDS = 0;
   m_randSvc = 0;
 
   // Declare the interface that is implemented
@@ -52,60 +50,34 @@ LumiTool::LumiTool( const std::string& type,
 LumiTool::~LumiTool() {
 }
 
-StatusCode LumiTool::finalize() 
-{
-  if( 0 != m_EDS )     { m_EDS->release();     m_EDS = 0; }
-  if( 0 != m_randSvc ) { m_randSvc->release(); m_randSvc = 0; }
-
-  return StatusCode::SUCCESS;
-}
-
-
 StatusCode LumiTool::initialize() 
 {
-  MsgStream log( msgSvc(), name() );
 
-  // Tool needs to use internally the event data and random numbers services
-  StatusCode sc = service("EventDataSvc", m_EDS, true);
-  if( sc.isFailure ()) {
-    log << MSG::ERROR << "EventDataSvc not found" << endmsg;
-    return sc;
-  }
+  GaudiTool::initialize();
 
-  sc = service("RndmGenSvc", m_randSvc, true);
-  if( sc.isFailure() ) {
-    log << MSG::ERROR << "RndmGenSvc not found" << endmsg;
-    return sc;
-  }
+  m_randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
 
   // Print the beam parameter data
-  log << MSG::INFO << "BunchCrossRate  " << m_bunchCrossRate << endmsg;
-  log << MSG::INFO << "Total X-section " << m_totalXSection  << endmsg;
+  info() << "BunchCrossRate  " << m_bunchCrossRate << endmsg;
+  info() << "Total X-section " << m_totalXSection  << endmsg;
   
   return StatusCode::SUCCESS;
 }
 
 
 StatusCode LumiTool::numInteractions( int& nEvents ) {
-  MsgStream log( msgSvc(), name() );
+
   nEvents = -1;
 
   // Get luminosity from generated event
-  float currentLumi = -1;  // in units of 1.0**32 /(cm2*s)
-  SmartDataPtr<GenHeader> pEvent( m_EDS, GenHeaderLocation::Default );
-  if( 0 != pEvent ) {
-    currentLumi = pEvent->luminosity() * cm2 * s / 1.e32;
-  }
-  else {
-    log << MSG::ERROR << "Unable to retrieve GenHeader" << endreq;
-    return StatusCode::FAILURE;
-  }
+  GenHeader* pEvent = get<GenHeader>( GenHeaderLocation::Default );
+  float currentLumi = pEvent->luminosity() * cm2 * s / 1.e32;
 
-  if( currentLumi > 0. ) {
-    log << MSG::DEBUG << " Luminosity of main event: " << currentLumi << endmsg;
+  if( 0. < currentLumi ) {
+    debug() << " Luminosity of main event: " << currentLumi << endmsg;
   } 
   else { 
-    log << MSG::ERROR << " Bad lumi in main event: " << currentLumi << endmsg;
+    err() << " Bad lumi in main event: " << currentLumi << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -125,15 +97,12 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
     else {
       nEvents = (int)(fltNEvents);
     }
-    log << MSG::DEBUG << " averageInter, fltNEvents, nEvents "
+    debug() << " averageInter, fltNEvents, nEvents "
         << averageInter  << " " << fltNEvents   << " " << nEvents << endmsg;
   }
   else {
-    log << MSG::ERROR << " failed to get Poisson random number" << endmsg;
+    return Error( "Failed to get Poisson random number" );
   }
   
   return sc;
 }
-
-        
-

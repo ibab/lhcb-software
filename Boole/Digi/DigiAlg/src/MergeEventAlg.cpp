@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.4 2003-11-26 13:17:31 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.5 2004-06-23 12:39:12 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -6,14 +6,11 @@
 #include <iostream>
 
 // from Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ISvcManager.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/LinkManager.h"
@@ -26,16 +23,11 @@
 #include "MergeEventAlg.h"
 #include "DigiAlg/ILumiTool.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : MergeEventAlg.
-// This algorithm (based on SpillOverAlg) reads additional
-// events into the Event Data store and puts them in other paths in the
-// TES. It uses an "other Event Selector".
-// Current known merging types are LHC background and Spillover
-//
-// 2003-06-23 : Gloria CORTI
-//
-//-----------------------------------------------------------------------------
+/** @file MergeEventAlg.cpp
+ *  Implementation file for class : MergeEventAlg
+ *  @date   2003-06-23
+ *  @author Gloria CORTI
+ */
 
 // Declaration of the Algorithm Factory
 static const AlgFactory<MergeEventAlg>  Factory;
@@ -47,7 +39,7 @@ const IAlgFactory& MergeEventAlgFactory = Factory;
 //=============================================================================
 MergeEventAlg::MergeEventAlg(const std::string& name, 
                              ISvcLocator* pSvcLocator)
-  : Algorithm(name, pSvcLocator)
+  : GaudiAlgorithm(name, pSvcLocator)
   , m_mergeType( "LHCBackground" )
   , m_mergeSelectorName( "LHCBkgSelector" )
   , m_mergeSelector(0)
@@ -73,44 +65,38 @@ MergeEventAlg::~MergeEventAlg( ) {}
 //=============================================================================
 StatusCode MergeEventAlg::initialize() {
 
-  MsgStream msg(msgSvc(), name());
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if( sc.isFailure() ) return Error( "Error initializing the base class", sc );
 
   // Check that the merging type is of supported type
   if( "LHCBackground" != m_mergeType && "Spillover" != m_mergeType ) {
-    msg << MSG::INFO << "Unknown merging type" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "Unknown merging type" );
   }
 
   // Print the fact that this background will be loaded
-  msg << MSG::INFO 
-      << m_mergeType << " events will be added to the main event in paths";
+  info() << m_mergeType << " events will be added to the main event in paths";
   
   ItemNames::const_iterator itSubPaths = m_subPaths.begin();
   while( itSubPaths != m_subPaths.end() ) {
-    msg << " " << *itSubPaths;
+    info() << " " << *itSubPaths;
     itSubPaths++;
   }
-  msg << endmsg;
-
+  info() << endmsg;
   
   // Get the service manager interface of the service locator
   SmartIF<ISvcManager> svcMgr  ( IID_ISvcManager, serviceLocator());
 
   // Create and initialize the Merge Event Selector
   IService* pISvc;
-  StatusCode sc = svcMgr->createService( "EventSelector",
-                                         m_mergeSelectorName, pISvc );
-  if( sc.isFailure() )  {
-    msg << MSG::FATAL << "Error creating mergeSelector" << endreq;
-    return sc;
-  }
+  sc = svcMgr->createService( "EventSelector", m_mergeSelectorName, pISvc );
+  if( sc.isFailure() ) return Error( "Error creating mergeSelector", sc );
 
   // Get the necessary base class and interface
   m_mergeSelector = dynamic_cast<Service*>(pISvc);
   m_mergeISelector = dynamic_cast<IEvtSelector*>(pISvc);
   sc = m_mergeSelector->initialize();
   if( sc.isFailure() )  {
-    msg << MSG::FATAL << "Error initializing " << m_mergeSelectorName << endreq;
+    err() << "Error initializing " << m_mergeSelectorName << endreq;
     return sc;
   }
  
@@ -124,13 +110,7 @@ StatusCode MergeEventAlg::initialize() {
   }
 
   // Get the luminosity tool
-  if( "Spillover" == m_mergeType ) {
-    sc = toolSvc()->retrieveTool( "LumiTool", m_lumiTool );
-    if( sc.isFailure() ) {
-      msg << MSG::ERROR << "Unable to locate LumiTool" << endmsg;
-      return sc;
-    }
-  }
+  if( "Spillover" == m_mergeType ) m_lumiTool = tool<ILumiTool>( "LumiTool" );
 
   return StatusCode::SUCCESS;
 }
@@ -150,7 +130,6 @@ void MergeEventAlg::clearItems(Items& itms)     {
 //=============================================================================
 void MergeEventAlg::addItem(Items& itms, const std::string& descriptor)   {
 
-	MsgStream msg(msgSvc(), name());
   int sep = descriptor.rfind("#");
   int level = 0;
   std::string obj_path (descriptor,0,sep);
@@ -165,9 +144,8 @@ void MergeEventAlg::addItem(Items& itms, const std::string& descriptor)   {
   std::string newPath = resetPath( obj_path );
 
   DataStoreItem* item = new DataStoreItem(newPath, level);
-  msg << MSG::DEBUG << "Will load and reset path for item " << item->path()
-      << " with " << item->depth() 
-      << " level(s)." << endreq;
+  debug() << "Will load and reset path for item " << item->path()
+          << " with " << item->depth() << " level(s)." << endmsg;
   itms.push_back( item );
 }
 
@@ -185,8 +163,7 @@ StatusCode MergeEventAlg::execute() {
     sc = readSpillover();
   }
   else {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::FATAL << "Unknown merge event type " << m_mergeType << endmsg;
+    err() << "Unknown merge event type " << m_mergeType << endmsg;
   }
 
   return sc;
@@ -197,16 +174,11 @@ StatusCode MergeEventAlg::execute() {
 //=============================================================================
 StatusCode MergeEventAlg::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "finalize" << endmsg;
-
   clearItems(m_itemList);
   m_mergeSelector->finalize();
   m_mergeSelector->release();
 
-  if( 0 != m_lumiTool ) { toolSvc()->releaseTool(m_lumiTool); m_lumiTool = 0; }
-
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 } 
 
 //=============================================================================
@@ -216,12 +188,7 @@ StatusCode MergeEventAlg::readLHCBackground( ) {
 
   // Get requested LHC background events
   std::string subPath = "LHCBackground";
-  StatusCode sc = readAndLoadEvent( subPath );
-  if( !sc.isSuccess() ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR << "Error in loading LHCBackground" << endmsg;
-  }
-  return sc;
+  return readAndLoadEvent( subPath );
 }
 
 //=============================================================================
@@ -231,25 +198,16 @@ StatusCode MergeEventAlg::readLHCBackground( ) {
 //=============================================================================
 StatusCode MergeEventAlg::readSpillover( ) {
 
-  MsgStream  msg( msgSvc(), name() );
-
   ItemNames::const_iterator itSubPaths = m_subPaths.begin();
   while( itSubPaths != m_subPaths.end() ) {
     int numInt = 0;
     StatusCode sc = m_lumiTool->numInteractions( numInt );
-    if( !sc.isSuccess() ) {
-      msg << MSG::ERROR << "Error getting the luminosity" << endmsg;
-      return sc;
-    }
+    if( !sc.isSuccess() ) return Error( "Error getting the luminosity", sc );
 
     if( 0 < numInt ) {
       std::string subPath = *itSubPaths;
-      msg << MSG::DEBUG << "Loading " << subPath;
       sc = readAndLoadEvent( subPath );
-      if( !sc.isSuccess() ) {
-        msg << MSG::ERROR << "Error in loading " << subPath << endmsg;
-        return sc;
-      }
+      if( !sc.isSuccess() ) return Error( "Error in loading " + subPath, sc );
     }
     itSubPaths++;
   }
@@ -263,8 +221,7 @@ StatusCode MergeEventAlg::readSpillover( ) {
 //=============================================================================
 StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
 
-  MsgStream msg( msgSvc(), name() ); 
-  msg << MSG::DEBUG << "readAndLoadEvent" << endmsg;
+  debug() << "Loading " << subPath << endmsg;
  
   if ( m_mergeIt == 0 ) {  // first event from this algorithm event selector
      m_mergeIt = m_mergeISelector->begin(); // Open file and read event
@@ -273,77 +230,42 @@ StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
     *(m_mergeIt) = m_mergeISelector->next(*m_mergeIt);
   }  
 
-  if(*(m_mergeIt) == *(m_mergeISelector->end())){
-     msg << MSG::ERROR << "Last event reached on " << m_mergeSelectorName 
-         << " input stream" << endreq;
-     return StatusCode::FAILURE;
+  if( *(m_mergeIt) == *(m_mergeISelector->end()) ) {
+    return Error("Last event reached on "+m_mergeSelectorName+" input stream");
   }
-
+  
   // Find the /Event directory node of the background event.
   std::string eventPath = "/Event/"+subPath; 
   IOpaqueAddress* iadd = *(*m_mergeIt);
   SmartIF<IDataManagerSvc> dataMgr( eventSvc() );
-  StatusCode scr = StatusCode::FAILURE;
-  scr = dataMgr->registerAddress( eventPath, iadd );
-  if( !scr.isSuccess() ) {
-    msg << MSG::ERROR << "Error setting event root to " << eventPath 
-        << endreq;
-    return scr;
+  StatusCode sc = dataMgr->registerAddress( eventPath, iadd );
+  if( !sc.isSuccess() ) {
+    return Error( "Error setting event root to " + eventPath, sc );
   }
 
-  DataObject *pEvent = 0;
-  StatusCode sc = eventSvc()->retrieveObject( eventPath, pEvent );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << eventPath << endreq;
-    return sc;
-  }
-  
   // Load Event Header
-  SmartDataPtr<EventHeader> evt( eventSvc(), 
-                                 eventPath+"/"+EventHeaderLocation::Default );
-  if( 0 == evt ) {
-    msg << MSG::ERROR << "Unable to retrieve " 
-        <<eventPath<< "/Header" << endreq;
-     return StatusCode::FAILURE;
-  }
-  else {
-    msg << MSG::INFO << "Loading " << eventPath << " event "
-        << evt->evtNum() << ",     Run " << evt->runNum() << endreq;
-  }
+  EventHeader* evt=get<EventHeader>(eventPath+"/"+EventHeaderLocation::Default);
+  info() << "Loading " << eventPath << " event " << evt->evtNum() 
+         << ",     Run " << evt->runNum() << endmsg;
   
   // Read and load list as in properties
-  StatusCode scLinks  = StatusCode::FAILURE;
-  StatusCode scLeaves = StatusCode::FAILURE;
-  Items::iterator i;
-  for ( i = m_itemList.begin(); i != m_itemList.end(); i++ )    {
+  for ( Items::iterator i = m_itemList.begin(); i != m_itemList.end(); i++ ) {
     std::string mcPath = eventPath + "/" + (*i)->path();
-    DataObject* pMC = NULL;
-    sc = eventSvc()->retrieveObject( mcPath, pMC );
-    if( sc.isSuccess() )  {
-      // Reset links for object
-      scLinks = resetLinks( subPath, pMC );
-      if( !scLinks.isSuccess() ) {
-        msg << MSG::ERROR << "Error in setting links for " 
-            << mcPath << endreq;
-        return scLinks;
-      }
-      // Read all leaves down to specified depth
-      scLeaves = readLeaves( subPath, pMC, (*i)->depth() );
-      if( !scLeaves.isSuccess() ) {
-        msg << MSG::ERROR << "Error in loading leaves"
-            << endreq;
-        return scLeaves;
-      }
+    DataObject* pMC = get<DataObject>( mcPath );
+
+    // Reset links for object
+    sc = resetLinks( subPath, pMC );
+    if( !sc.isSuccess() ) {
+      return Error( "Error in setting links for " + mcPath, sc );
     }
-    else {
-      msg << MSG::ERROR << "Required Item " << mcPath << " is missing " 
-          << endreq;
-      return sc;
+    // Read all leaves down to specified depth
+    sc = readLeaves( subPath, pMC, (*i)->depth() );
+    if( !sc.isSuccess() ) {
+      return Error( "Error in loading leaves of " + subPath, sc );
     }
   }
 
   return StatusCode::SUCCESS;
-
 }
 
 //=============================================================================
@@ -353,10 +275,8 @@ StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
 StatusCode MergeEventAlg::readLeaves( std::string& subPath,
                                       const DataObject* pObj, long depth ) {
   
-  MsgStream msg( msgSvc(), name() );
-  
   depth = depth-1;
-  if( depth <=0 ) return StatusCode::SUCCESS;
+  if( 0 >= depth ) return StatusCode::SUCCESS;
   
   // Find and load all the leafs out of the object
   std::vector<IRegistry*> leaves;
@@ -385,8 +305,6 @@ StatusCode MergeEventAlg::readLeaves( std::string& subPath,
 //=============================================================================
 StatusCode MergeEventAlg::resetLinks( std::string& subPath,
                                       const DataObject* pMCObj ) {
-
-  MsgStream msg( msgSvc(), name() );
 
   LinkManager::LinkVector oldlinks = pMCObj->linkMgr()->m_linkVector;
   if( oldlinks.empty() ) return StatusCode::SUCCESS;
@@ -433,5 +351,3 @@ std::string MergeEventAlg::resetPath( std::string& oldPath,
   
   return newPath;
 }
-
-//=============================================================================

@@ -1,9 +1,9 @@
-// $Id: BooleInit.h,v 1.4 2003-11-26 13:17:31 cattanem Exp $
+// $Id: BooleInit.h,v 1.5 2004-06-23 12:39:12 cattanem Exp $
 #ifndef DIGIALG_BOOLEINIT_H
 #define DIGIALG_BOOLEINIT_H 1
 
 // Include files
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
 class IRndmEngine;
@@ -18,15 +18,15 @@ class IHistogram1D;
  * Based on similar BrunelInitialisation class
  */
 
-class BooleInit : public Algorithm {
+class BooleInit : public GaudiAlgorithm {
 public:
 	BooleInit( const std::string& name, ISvcLocator *svcloc ); ///< Constructor
 	virtual ~BooleInit();                                      ///< Destructor
 
 	// Implement IAlgorithm
-	virtual StatusCode BooleInit::initialize();
-	virtual StatusCode BooleInit::execute();
-	virtual StatusCode BooleInit::finalize();
+	virtual StatusCode BooleInit::initialize(); ///< Initialization
+	virtual StatusCode BooleInit::execute();    ///< Event loop
+	virtual StatusCode BooleInit::finalize();   ///< Finalization
 
   StatusCode BooleInit::createL1Buffer();  ///< Creates an empty L1 buffer
   StatusCode BooleInit::createRawBuffer(); ///< Creates an empty Raw buffer

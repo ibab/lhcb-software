@@ -1,9 +1,9 @@
-// $Id: LumiTool.h,v 1.2 2003-11-03 16:54:27 cattanem Exp $ 
+// $Id: LumiTool.h,v 1.3 2004-06-23 12:39:12 cattanem Exp $ 
 #ifndef LUMITOOL_H
 #define LUMITOOL_H 1
 
 // Include files
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiTools/GaudiTool.h"
 #include "DigiAlg/ILumiTool.h"
 
 // Forward declarations
@@ -23,7 +23,7 @@ class IDataProviderSvc;
  *  @date   2003-09-29
  */
 
-class LumiTool : public AlgTool, 
+class LumiTool : public GaudiTool, 
                  virtual public ILumiTool {
 
 public:
@@ -38,7 +38,6 @@ public:
 
   /// standard methods
   StatusCode initialize();
-  StatusCode finalize();
 
   /// Return number of interactions for given luminosity 
   StatusCode numInteractions( int& number );
@@ -47,7 +46,6 @@ private:
   float             m_bunchCrossRate; ///< bunch crossing rate (MHz)
   float             m_totalXSection;  ///< total cross-section (mbarn)
 
-  IDataProviderSvc* m_EDS;            ///< pointer to event data service
   IRndmGenSvc*      m_randSvc;        ///< pointer to random numbers service
 };
 
