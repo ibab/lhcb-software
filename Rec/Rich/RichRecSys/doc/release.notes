@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r2 2003-11-05 =======================
 ! 2003-11-02 - Chris Jones
  - New versions for RichKernel v4r*
  - Updated job options for Ring Reftting from Maurice
