@@ -38,8 +38,6 @@ DstWriter.ItemList =
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/OT#1"        // To be removed when POOL crash is fixed
-, "/Event/Raw/OT/Digits#1" // To be removed when POOL crash is fixed
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"

@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Brunel v23r1, gcc 3.2, valgrind 2.0.0
+# Error suppression file Brunel v23r3, gcc 3.2, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,62 +15,4 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# POOL_1_5_0 (reported to Markus). Also in Boole
-{
-  Pool/1.5.0
-  Memcheck:Free
-  fun:__builtin_delete
-  fun:_ZdlPv
-  fun:_ZN4CINT4TypeD0Ev
-}
-
-# GaudiKernel v14r2 - v15r1 (Savannah bug 2066). Also in Boole
-{
-  Gaudi/2066
-  Memcheck:Cond
-  fun:strlen
-  fun:_IO_str_init_static_internal
-  fun:_IO_vsscanf
-}
-
-# Known DNS system library problems (Linux rh6.1 - rh7.3)
-{
-  dns/getanswer_r
-  Memcheck:Cond
-  fun:getanswer_r
-  obj:/lib/libnss_dns-2.2.5.so
-  obj:/lib/libnss_dns-2.2.5.so
-}
-
-{
-  dns2
-  Memcheck:Value4
-  obj:/lib/i686/libc-2.2.5.so
-  fun:gethostbyaddr
-  fun:rfio_open_ext
-}
-
-{
-  strcmp/libc-2.2.5.so
-  Memcheck:Value4
-  fun:strcmp
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
-}
-
-{
-  strlen/libc-2.2.5.so
-  Memcheck:Value4
-  fun:strlen
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
-}
-
-# Possible rfio problem (libshift.so.1.5.1.3 - 1.5.2.3)
-{
-  rfio
-  Memcheck:Param
-  socketcall.send(msg)
-  obj:/lib/i686/libc-2.2.5.so
-  fun:netwrite_timeout
-}
+# All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp

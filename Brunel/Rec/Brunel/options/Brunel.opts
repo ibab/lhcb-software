@@ -56,7 +56,6 @@ DeVelo.Design = 1;  // 45 degree Velo sectors
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
-ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -67,13 +66,15 @@ ApplicationMgr.DLLs += { "CaloReco"      ,
                          "CaloPIDs"     ,
                          "CaloEvent"     };
 BrunelRecoCALOSeq.Members += { "CaloDigitsFromRaw" };
+BrunelRecoCALOSeq.Members += { "CaloReCreateMCLinks" };
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
 #include "$CALOPIDSOPTS/Brunel.opts"
 
 // Inner tracker reconstruction (clustering)
-ApplicationMgr.DLLs   += { "ITAlgorithms" };
+ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ" };
+BrunelRecoITSeq.Members +={ "RawBufferToSTDigitAlg"};
 BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 #include "$ITALGORITHMSROOT/options/itRec.opts"
 ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
@@ -116,7 +117,7 @@ reFit.TrackContainer = "Rec/FitTrack/Match";
 ApplicationMgr.DLLs += { "TrKShort" };
 BrunelRecoTrSeq.Members += { "FindTrKShort"
                            , "TrEventTracksFitter/KShortFit" };
-KShortFit.TrackContainer = "Rec/FitTrack/Upstream";
+KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
 KShortFit.Fitter.stateAtBeamLine = false;
 
 // Clone killer and converter to TrStoredTrack

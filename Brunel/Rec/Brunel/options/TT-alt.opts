@@ -6,12 +6,13 @@
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
 #include "$BRUNELOPTS/BrunelMoniProd.opts"   // Comment to switch on all histos
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
-#pragma print on
 
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402-ITv2.xml";
+#include "$STDAQROOT/options/stDAQ-v2.opts"
+#pragma print on
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options

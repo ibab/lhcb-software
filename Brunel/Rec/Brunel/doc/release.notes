@@ -3,6 +3,48 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v23r3>2004-03-08 Brunel v23r3</A></H1><PRE>
+
+ Requires data produced by Boole v5r3 or later
+ Tuned for XmlDDDB v22r0
+
+ - New features:
+   . New base classes available for algorithms and tools 
+     (GaudiAlg v7r1, GaudiTools v8r0, CaloKernel v3r0)
+   . Use new version of ParticlePropertySvc (GaudiSvc v11r4, ParamFiles v3r3)
+   . Decode IT Digits from RawBuffer (ITAlgorithms v14r1, STDAQ v1r0)
+   . New naming convention for tracks: Upstream renamed Follow,  KsTrack added,
+     track type Long, Upstream, Downstream aded
+     (TrEvent v13r1, TrFitEvent v4r4, TrFitAssociators v1r1, TrCheck v2r4,
+      TrCleanEx v2r9, TrKShort v1r2, RichRecBase v1r9p1, MuonID v3r7p1, 
+      CaloReco v2r0, CaloMonitor v2r0)
+
+ - New tuning:
+   . Recalibration of Ecal ActiveToTotal (XmlDDDB v22r0)
+   . New Rich2 HPD layout (XmlDDDB v22r0)
+   . New Calo PID calibration histograms (CaloPIDs v2r0, ParamFiles v3r3)
+
+ - Persistency changes:
+   . Backwards incompatible change to internal encoding of VeloChannelID
+     (LHCbKernel v4r3)
+   . Removed OTDigits from DST following fix to relations problem
+     (OTDAQ v1r1)
+   . Fix relations to CaloDigits
+     (GaudiDb v9r2, CaloReCreateMCLinks algorithm from CaloEvent v13r1)
+
+ - Bug fixes:
+   . Fix TT beam hole size (XmlDDDB v22r0)
+   . Minor fix to IT clustering (ITAlgorithms v14r1)
+
+ - New packaging:
+   . Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
+     (LHCbKernel v4r3, VeloKernel v1r4, VeloDet v8r8p1, VeloAlgorithms v2r9p1)
+   . Adapted to new base classes for algorithms and tools
+     (CaloMonitor v2r0, CaloReco v2r0, CaloPIDs v2r0)
+   . Valgrind error suppression file for Gaudi and external package errors moved
+     to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
+
+
 </PRE><H1><A NAME=v23r2>2004-02-10 Brunel v23r2</A></H1><PRE>
 
 - New functionality

@@ -30,7 +30,8 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 //OTClusterChecker.fullDetail = true;
 
 // Tracking
-ApplicationMgr.DLLs += { "TrCheck" };
+ApplicationMgr.DLLs += { "TrCheck", "TrFitAssociators" };
+#include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 BrunelMoniTrSeq.Members += { "KShortMonitor" };
 BrunelMoniTrSeq.Members += { "TrChecker" };
