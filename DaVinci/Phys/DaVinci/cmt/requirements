@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.80 2004-01-28 20:13:04 gcorti Exp $
+# $Id: requirements,v 1.81 2004-02-06 16:59:21 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v9r3
+version           v10r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -21,76 +21,48 @@ apply_pattern DaVinciVersion
 #============================================================================
 
 #--- CMT and GaudiPolicy
-use  GaudiPolicy v5r11p2
-
-#--- External libraries (as defined in GAUDI_v12r0)
-use  ExternalLibs	v4r0p1
-use  AIDA		v3r22p2
-use  CLHEP		v2r1800p0
-use  HTL		v2r1321p0
-use  NAGC		v2r50p0		
-use  XERCES		v2r220p0
+use  GaudiPolicy 	v5r14
+ 
+#--- External libraries (as defined in GAUDI_v13r0)
+use  ExternalLibs	v4r4
+use  AIDA		v3r300		-no_auto_imports
+use  BOOST		v2r1302p0	-no_auto_imports
+use  CLHEP		v2r1810p0
+use  XERCES		v2r230p0
 use  CERNLIB 		v2r2002p0
-use  ROOT 		v2r30504p0
+use  ROOT 		v2r31001p1
+use  GSL		v2r14p0
+use  PI			v1r100
 
-#--- Gaudi libraries (from GAUDI_v12r0)
-use  GaudiKernel	v13r4p1
-use  GaudiSvc 		v10r2
+#--- Gaudi libraries (from GAUDI_v13r0)
+use  GaudiKernel	v14r2
+use  GaudiSvc 		v11r0
 use  GaudiAlg 		v6r4
-use  GaudiAud 		v6r2
-use  GaudiNagC 		v7r3
-use  GaudiDb 		v8r4
-use  GaudiRootDb 	v9r2
+use  GaudiAud 		v6r3
+use  GaudiDb 		v9r0
+use  GaudiRootDb 	v9r3
+use  GaudiIntrospection v4r7
+use  GaudiObjDesc       v5r2
 
 #--- Histogram persistency
-use  HbookCnv           v13r4
-use  RootHistCnv    	v8r2
-
-#--- LHCb libraries (from LHCB_v12r1)
-use GaudiConf           v6r10
-use BookKeeping         v1r2    Tools
-use KernelSys           v1r4	Kernel
-use DetSys              v2r1    Det
-use EventKernel		v2r3	Event
-use Event		v3r4	Event
-use VeloEvent		v12r1	Event
-use ITEvent		v12r1	Event
-use OTEvent		v12r1	Event
-use TrEvent		v12r1	Event
-use RichEvent		v5r0	Event
-use CaloEvent		v11r6	Event
-use MuonEvent		v2r4	Event
-use L0Event		v13r2	Event
-use L1Event		v11r7	Event
-use PhysEvent		v7r6	Event
-use HltEvent		v4r0    Event
-use DbCnv		v7r1	Event
-use AssociatorsSys      v1r4    Associators
-
+use  HbookCnv           v14r0
+use  RootHistCnv    	v9r0
 
 #--- Geometry Database
-use  XmlDDDB		v17r0	 Det
+use  XmlDDDB		v20r0	 Det
 use  ParamFiles		v2r1	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
-#--- DaVinciSys v8r0 packages 
+#--- LHCb libraries (from LHCB_v14r0)
+use  LHCb               v14r0	
 
-#    Enable L0 and L1 Trigger reprocessing and HLT 
-use  L0DU          	v6r5	 L0
-use  L1Decision         v2r1     L1
-use  HltTools           v4r0     Hlt
-use  HltVelo            v4r0     Hlt
-use  HltVeloTT          v4r0     Hlt
-use  HltLongTrack       v4r0     Hlt
-use  HltChecker         v4r0     Hlt
-use  HltMuonID          v2r0     Hlt
-use  HltPrimaryVertex   v2r0     Hlt
+#--- DaVinciSys v10r0 packages 
 
 #    Enable neutral ProtoParticles production and CaloPIDs
-use  CaloInterfaces     v2r4     Calo
-use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r6     Calo
-use  CaloPIDs           v1r1     Calo 
+use  CaloInterfaces     v3r0     Calo
+use  CaloUtils 	        v4r5     Calo
+use  CaloReco           v1r7     Calo
+use  CaloPIDs           v1r2     Calo 
 
 #    Muon PID
 use  MuonID             v3r6     Muon
@@ -100,7 +72,7 @@ use  GlobalReco         v4r2     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools
-use  TrExtrapolator     v2r6     Tr
+use  TrExtrapolator     v2r9     Tr
 
 #    Monte Carlo tools
 use  MCTools            v1r1p1   Phys

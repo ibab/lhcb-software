@@ -1,22 +1,13 @@
 /** @file 
  * 
- *  Configuration file to make all necessary fixes and run all
- *  necessary algorithms to produce Neutral ProtoParticles for
- *  Brunel v17r4 data  
+ *  Configuration file to produce Neutral ProtoParticles
  * 
  *  @author G.Corti
- *  @date 2003-06-03
+ *  @date   2004-06-03
  */
 
-// Fix bug in CaloMergedPi0Alg Brunel (bad cluster association to SplitPhotons)
-ApplicationMgr.TopAlg += { "CaloHypoReShuffleAlg/Fix" };
- 
-// Options to apply re-corrections to calorimeter in DaVinci
-#include "$DAVINCIROOT/options/CaloReCorrections.opts" 
-
-// CaloHyposMerge now handles SplitPhotons
-ApplicationMgr.TopAlg += { "CaloHyposMerge/CaloMerge" };
+// Re-create CaloDigits from raw event
+ApplicationMgr.TopAlg += { "CaloDigitsFromRaw" };
 
 // Make neutral ProtoParticles
 ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
-

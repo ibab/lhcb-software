@@ -1,13 +1,19 @@
-//-- GAUDI data cards generated on 11-FEB-2003
-//-- For Event Type = 370000 / Data type = ALL  
-//--     DST Program = Brunel v17r4
-//--     Database version = ALL
-//--     
-//-- Datasets replicated at CERN
-//-- 1 datasets(s) - NbEvents = 500
-//-- 
+/** @file 
+ * 
+ *  Options for data file(s) for tests. 
+ *  
+ *  @author G.Corti
+ *  @date   2004-02-03
+ */
+
+//-- TDR data
+// EventSelector.Input   = {
+//   "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000080_00000001_5.oodst' TYP='ROOT' OPT='READ'"
+// };
+// 
+//-- LHCb v14r0, Brunel v22r0
 EventSelector.Input   = {
-  "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000080_00000001_5.oodst' TYP='ROOT' OPT='READ'"
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v22r0/412400.dst' TYP='ROOT' OPT='READ'"
 };
 //-- End of Data cards
 

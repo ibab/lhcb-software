@@ -10,4 +10,4 @@
  */
 
 //For TDR (Winter 2003) data produced with Brunel v17r4
-#include "$DAVINCIROOT/options/DaVinciv254r1.opts" 
+#include "$DAVINCIROOT/options/lhcb-200311.opts" 

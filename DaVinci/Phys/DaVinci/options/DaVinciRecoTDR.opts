@@ -3,10 +3,13 @@
  *  and Primary Vertices.
  *  
  *  @author G.Corti
- *  @date 2004-02-03
+ *  @date 2003-05-24
  */
 
-// Charged ProtoParticles
+// Redo MuonID with new tuning - NECESSARY ONLY for TRD data
+#include "$DAVINCIROOT/options/MuonIDReTuning.opts"
+
+// Charged ProtoParticles using new MuonID
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
 // Primary vertex

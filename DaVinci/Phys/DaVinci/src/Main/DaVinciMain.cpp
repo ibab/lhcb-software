@@ -1,4 +1,4 @@
-// $Id: DaVinciMain.cpp,v 1.4 2002-12-19 21:10:13 gcorti Exp $
+// $Id: DaVinciMain.cpp,v 1.5 2004-02-06 16:59:22 gcorti Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : DaVinci
@@ -28,32 +28,17 @@ int main ( int argc, char** argv ) {
   }
 
   // Print a program header ( name and version )
-#include "DaVinciHeader.icpp"
-  
-  // Check existence of LHCBDBASE environment variable
-  /*
-  std::string dbase = "";
-  int posDbVers = 0;
-  
-  if(getenv("LHCBDBASE") != NULL) {
-    dbase = std::string(getenv( "LHCBDBASE" ));
-    posDbVers = dbase.find_last_of("/");
-    if( 0 > posDbVers ) {
-      // Could be the other way round (Windows)
-      posDbVers = dbase.find_last_of("\\");
-      if( 0 > posDbVers ) {
-        std::cout << "Fatal error: LHCBDBASE path " << dbase
-                  << " does not contain any / separator" << std::endl;
-        return 1;
-      }
-    }
-  }
-  else {
-    std::cout << "Fatal error: please set LHCBDBASE environment variable"
-              << std::endl;
-    return 1;
-  }
-  */
+  std::string version = (std::string)getenv("DAVINCIVERS");
+  std::cout << "**********************************************************" 
+            << std::endl;
+  std::cout << "*                                                        *" 
+            << std::endl;
+  std::cout << "                DaVinci version " << version << std::endl;
+  std::cout << std::endl;
+  std::cout << "*                                                        *"
+            << std::endl;
+  std::cout << "**********************************************************"
+            << std::endl;
 
   // Get the job options file name. Precedence is:
   //  1. argument

@@ -3,6 +3,61 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v10r0>2004-01-29 DaVinci v10r0 - Development Version</A></H1><PRE>
+
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details below.
+  
+ Note that the PhysSel packages DVxxx.opts have NOT been modified so will
+ not run out of the box. Refer to the points below to modify them accordingly
+ to run on TDR data or new data as needed.
+  
+ - Version based on Gaudi v13r0 and LHCb v14r0
+
+   . Given changes in OTDet and OTChannelID, algorithm that access this
+     information in the data will not work anymore for TRD data: this applies
+     for example to the TrReconstructible tool and hence to the efficiency
+     algorithm.
+
+ - Modify DaVinci.opts to remove inclusion of not supported features for new
+   data
+ 
+ - Remove Hlt that will be replaced by new implementation in future versions
+   and would not work on TRD data because of changes on OTChannelID respect
+   to what in the TDR. Packages used for Hlt as well as Hlt.opts are 
+   removed.
+
+ - Remove use of L0DU and L1Decision packages from DaVinci requirements.
+   It is not necessary to reprocess new data. Not garanteed to give same
+   rejection factor on TDR data
+   Options are kept for convenience if necessary in the future.   
+ 
+ - Adapt to new XmlDDDB geoemtry descriptions.
+   . Introduce new XmlDDDB dependent file lhcb-200311.opts and use this in 
+     generic DaVinciDDDB.opts
+   . Remove DaVinciv254r1.opts and DaVinciv256r0.opts that can cause crashes
+     when reading TDR data. 
+   . Note that DaVinciDDDB.opts can be used to read TDR data since 
+     lhcb-200311.opts is compatible
+
+ - Remove MuonID retuning from DaVinciReco.opts since not necessary on
+   new data. For convenience a DaVinciRecoTDR.opts is provided for running
+   on TDR data.
+
+ - Remove calorimeter corrections and special algorithms for split photons
+   from DaVinciNeutrals.opts since not necessary for new data. For convenience
+   a DaVinciNeutralsTDR.opts is provided for running on TDR data.
+
+ - Neutral particles cannot be produced currently for new data because not
+   enough information is present on the DST files
+
+ - Use file produced by Brunel v22r0 as test file instead of TDR data file
+
+ - Adapt DstContent.opts to what written by Brunel v22r0
+
+ - Move printing of DaVinci version directly into DaVinciMain 
+   
 </PRE><H1><A NAME=v9r3>2004-01-29 DaVinci v9r3 - TDR and Development Version</A></H1><PRE>
 
  - Use ParamFiles package for ParticleProperySvc input (particle.cdf) 
@@ -57,6 +112,14 @@ Purpose     : LHCb analysis program
  - Remove use of NagC (Bd2DstarPi v1r5)
 
  - New version of LoKi with few improvements and bug fixes (v1r9) 
+ 
+ - Possibility to skip intermediate resonances in CompositeParticleAssociator
+   via job options control (DaVinciAssociators v4r3)
+
+ - Bug fixes: 
+   . ParabolicTransporter fix of two swapped indeces in the error
+     matrix causing the Chi2 to become ill defined when using TTT tracks
+     (DaVinciTools v8r4)
  
 </PRE><H1><A NAME=v9r2>2003-12-15 DaVinci v9r2 - TDR Version</A></H1><PRE>
 

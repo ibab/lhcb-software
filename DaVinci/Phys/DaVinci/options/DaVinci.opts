@@ -20,16 +20,10 @@
 #pragma print on
 
 // Default Database dependent configurations. The latest
-// compatible database is included from here (TDR 2003 data).
-// If you need something different choose from DaVinciXXX.opts.
+// compatible database is included from here.
+// If you need something different choose from vXXXX.opts when
+// more than one is available
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-
-//--------------------------------------------------------------
-// Re-run L0 and L1 Trigger with TDR tuning 
-#include "$DAVINCIROOT/options/L0.opts"
-#include "$DAVINCIROOT/options/L1Decision.opts"
-// Run Hlt triggers
-//#include "$DAVINCIROOT/options/Hlt.opts"
 
 //--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms
@@ -46,16 +40,8 @@
 //--- Neutral ProtoParticles (gammas and pi0) for Brunel >= v17r4
 //    including bug fix for bad cluster association to SplitPhotons in 
 //    CaloMergedPi0Alg and Re-calibration for single gammas and merged pi0
-#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-
-//--- For merged and resolved pi0 the corresponding selection algorithm
-//    need to be executed. 
-//    Note that DaVinciNeutrals MUST be executed
-//ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
-//ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
-//#include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
-//ApplicationMgr.TopAlg += { "MergedPi0Alg" };
-//#include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
+// NOTE:: Not enough information in new DST files at the moment to 
+//        produce neutral protoparticles
 
 //--- Ks->pi+pi- with all type of tracks loose selection + monitoring
 //#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
@@ -67,10 +53,6 @@
 
 //--- Example of use of CombinedParticleMaker
 //#include "$DAVINCIROOT/options/PreLoadCombinedParticles.opts"
-
-//--- Example of use of Pair Production: Note that DaVinciNeutrals
-//    MUST be executed
-//#include "$DAVINCIROOT/options/DaVinciPairPhotons.opts"
 
 //--------------------------------------------------------------
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
@@ -115,7 +97,6 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 ChargedProtoPAlg.OutputLevel            = 3;
-//PreLoadParticles.OutputLevel             = 2;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
@@ -127,7 +108,7 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
    
 //---------------------------------------------------------------
-// Sample input file
+// Sample input file 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
 //***************************************************************

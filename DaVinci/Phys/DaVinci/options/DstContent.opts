@@ -9,10 +9,8 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/Rec/Rich/OOPIDs#1" // OORICH not yet in production
-, "/Event/Trig/L1/OTClusters#1" // For L1 trigger studies - Not on all files
-, "/Event/Trig/L1/ITClusters#1" // For L1 trigger studies - Not on all files
-, "/Event/Trig/L1/TTClusters#1" // For L1 trigger studies - Not on all files
+, "/Event/LHCBackground#1"
+, "/Event/LHCBackground/Header#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -36,20 +34,14 @@ DstWriter.ItemList =
 , "/Event/Trig/L1/Tracks2d#1"
 , "/Event/Trig/L1/Tracks3d#1"
 , "/Event/Trig/L1/Vertices2d#1"
-, "/Event/Trig/L1/Clusters#1"   // For L1 trigger studies
 , "/Event/Trig/L1/Summary#1"
 , "/Event/Trig/L1/Decision#1" 
+, "/Event/DAQ#1"
+, "/Event/DAQ/L1Buffer#1"
+, "/Event/DAQ/RawBuffer#1"
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/Rich#1"
-, "/Event/Raw/Rich/Digits#1"
-, "/Event/Raw/Spd#1"
-, "/Event/Raw/Spd/Digits#1"  // Kept only if related to CaloHypos
-, "/Event/Raw/Prs#1"
-, "/Event/Raw/Prs/Digits#1"  // Kept only if related to CaloHypos
-, "/Event/Raw/Ecal#1"
-, "/Event/Raw/Ecal/Digits#1" // Kept only if "seeds" for stored clusters
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
@@ -92,10 +84,6 @@ DstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1"
 , "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
-, "/Event/Rec/V0#1"
-, "/Event/Rec/V0/StatesP#1"
-, "/Event/Rec/V0/Vertices#1"
-, "/Event/Rec/V0/V0s#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITClusters2MCParticles#1"
 , "/Event/Rec/Relations/OTClusters2MCParticles#1"

@@ -7,6 +7,8 @@
 
 ApplicationMgr.TopAlg += { "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
+
 MuonIDFOI.IDLocation = "/Event/Rec/Muon/NewMuonID";
-MCPIDProtoPAlg.MuonPIDsInput = "/Event/Rec/Muon/NewMuonID";
+MCPIDProtoPAlg.MuonPIDsInput   = "/Event/Rec/Muon/NewMuonID";
+ChargedProtoPAlg.MuonPIDsInput = "/Event/Rec/Muon/NewMuonID";
 

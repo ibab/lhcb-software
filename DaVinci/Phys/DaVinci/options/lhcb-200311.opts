@@ -1,0 +1,10 @@
+//****************************************************************************
+/// Job options for DaVinci, for data produced by Gauss v12r5 or greater and
+/// with XmlDDDB v19r0 or greater and geometry compatible with lhcb-200311
+// ---------------------------------------------------------------------------
+
+// Database specific options
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
+
+// Velo 45 degrees sectors
+DeVelo.Design = 1;
