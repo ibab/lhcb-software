@@ -34,7 +34,7 @@ use GaudiSvc           v8r0
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
-use GaudiDb            v7r0
+use GaudiDb            v8r0
 use GaudiRootDb        v7r0
 use HbookCnv           v12r0
 #use RootHistCnv        v6r0
@@ -49,7 +49,7 @@ use Futio        v12r0  SICB
 # Subdetector kernels
 use CaloKernel   v2r0   Calo
 use MuonKernel   v2r1   Muon
-use RichKernel   v1r0   Rich
+use RichKernel   v1r1   Rich
 use TrKernel     v11r0  Tr
 
 # Detector description
@@ -59,7 +59,7 @@ use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r1  Det
 use OTDet         v2r0  Det
-use VeloDet       v5r0  Det
+use VeloDet       v6r0  Det
 use Magnet        v1r1  Det
 
 use MuonTools    v2r0   Muon
@@ -73,13 +73,14 @@ use ITSicbGeom   v2r0   SICB
 use RiSicbGeom   v2r0   SICB
 use CaloSicbCnv  v7r0   SICB
 use MuonSicbCnv  v6r0   SICB
-use RiSicbCnv    v3r0   SICB
+use RiSicbCnv    v3r1   SICB
 use VSicbCnv     v8r0   SICB
-use TrSicbCnv    v6r0   SICB
+use TrSicbCnv    v6r1   SICB
 
 # Brunel utilities
 use BrunelKernel v5r0   Rec
 use BrunelSicb   v4r0   Rec
+#use BrunelAlgs   v1r0   Rec
 
 # L0 trigger
 use L0Calo       v6r0   L0
@@ -94,7 +95,10 @@ use CaloTools      v3r0 Calo
 use CaloAlgs       v6r0 Calo
 
 # Velo
-use VeloDigit     v3r0   Velo
+use VeloKernel		v1r0	Velo
+use VeloAlgorithms	v1r0	Velo
+use VeloAssociators	v1r0	Velo
+use VeloDigit		v3r0	Velo
 
 # Inner Tracker
 use ITAlgorithms  v11r0  IT
@@ -106,17 +110,22 @@ use OTAssociators  v2r0  OT
 
 # Tracking
 use TrFitEvent     v2r0  Tr
-#use TrAlgorithms  v7r1  Tr
 
 use VeloTrack      v3r0  Velo
 use TrAssociators  v2r0  Tr
 use FwTrack        v3r0  Tr
 use TrFitter       v2r0  Tr
 use TrExtrapolator v2r0  Tr
+use TrTools        v1r0  Tr
+use Seeding	   v1r0  Tr
+use TrMatching     v1r0  Tr
 
 # Muon
 use MuonRec       v2r0   Muon
 use MuonID        v2r0   Muon
+
+# Rich
+use RichMonitor v1r0    Rich
 
 # SICBDST packages
 use Futil        v11r0  SICB
@@ -124,7 +133,7 @@ use detdes       v17r0  SICB
 use recevt       v3r4   SICB
 
 use digmuon      v4     SICB
-use recrich      v5r4   SICB
+use recrich      v6r0   SICB
 
 #
 #===== build Brunel =========================

@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-06-18 - Marco Cattaneo
+ - Add Track seeding and Velo Matching (without persistency for now)
+
+! 2002-06-11 - Marco Cattaneo
+ - Add a new BrunelOutput phase, in which to run algorithms that prepare the
+   data store for DST output (filters, relations etc.)
+
 ! 2002-06-07 - Marco Cattaneo
  - Change version to v11r0 to use new versions of Event Model, OTDet etc.
  - Remove obsolete options files BrunelTrSiTT12.opts, BrunelTrOtItTT1.opts
