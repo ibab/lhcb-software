@@ -2,7 +2,7 @@ package		L0Calo
 version 	v4r0
 
 # ================ structure =============================================
-branches	L0Calo src cmt doc options
+branches	src cmt doc options
 
 # ================ own includes ==========================================
 include_dirs	$(L0CALOROOT)

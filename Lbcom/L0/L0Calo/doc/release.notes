@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.11 2002-01-30 15:58:20 ocallot Exp $
+! $Id: release.notes,v 1.12 2002-01-30 16:05:18 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
@@ -11,6 +11,8 @@ Package Manager : Olivier Callot
     o L0CaloAlg uses these classes to perfrom the same job as before.
   - Updated options/Brunel.opts for this new algorithm
   - Added options/DaVinci.opts to hold the DaVinci options.
+  - Removed the L0Calo directory and its include L0CaloCandidate.h, which is
+    now in Event/L0Event.
 
 !=============================================================================
 ! 2002/01/08 - Marco Cattaneo ** v3r0 **
