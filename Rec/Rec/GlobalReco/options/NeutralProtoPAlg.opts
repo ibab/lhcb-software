@@ -1,0 +1,15 @@
+//##############################################################
+// NeutralProtoPAlg options
+
+#pragma print off
+// Input data
+//NeutralProtoPAlg.Detector    = "/dd/Structure/LHCb/Ecal" ; ??? necessary ???
+NeutralProtoPAlg.Input       = "/Event/Rec/Calo/Photons" ;
+//NeutralProtoPAlg.OtherInputs = "";
+//NeutralProtoPAlg.Matching = "AssociatorWeighted<CaloCluster,TrStoredTrack,float>/PhotonMatch"
+//NeutralProtoPAlg.SpdPrs = "CaloSingleGammaTool/SpdPrsID";
+
+// Output data
+//NeutralProtoPAlg.OutputData = "Rec/ProtoP/Neutrals";
+#pragma print on
+
