@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.24 2002-10-02 07:59:58 ranjard Exp $ 
+# $Id: requirements,v 1.25 2002-11-13 20:39:15 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 package  CaloDet 
-version  v6r0
+version  v5r2
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
@@ -13,7 +13,7 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
 use CaloKernel   v2r*   Calo 
-use DetDesc      v11r*  Det 
+use DetDesc      v10r*  Det 
 
 # =============== own options =================================================
 set CALODETOPTS  ${CALODETROOT}/options
