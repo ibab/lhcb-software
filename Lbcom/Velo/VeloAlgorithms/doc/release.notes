@@ -1,6 +1,13 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-09-24 - Chris Parkes
+ -  VeloClusterMaker, solve bug to allow setting of S/N cuts, 
+    modify defaults to 3.0
+ - VeloDataProcessor, saturate ADC at full scale
+ - Velo Sim fill FEs with list of MChits contributing 
+   i.e. solve ambiguity for multiple hits contributing to a single strip
+
 !========================  VeloAlgorithms v2r1 2002-07-25 =====================
 ! 2002-07-23 - Chris Parkes
  - solve bug due to sensor number problems
