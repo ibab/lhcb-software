@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.4 2002-05-10 12:47:09 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.5 2002-06-13 11:39:54 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -107,6 +107,8 @@ private:
   /// fill the array of the size and extent of the twelfths of each region
   StatusCode fillTwelfthsExtent();
 
+  /// fill the array with the number of gaps per region
+  StatusCode fillNGaps();
 
   /// get the chamber number (counts from 1) for the tile
   int getChamberNumber(const MuonTileID& tile);
@@ -204,6 +206,9 @@ private:
   };
 
   // R1, R2 all 4 gap MWPCs, R3 and R4 in M4 and M5 are 2 gap RPCs
+
+  int m_nGap[5][4];
+
   gapExtent_ m_gapR1[5][12][4];
   gapExtent_ m_gapR2[5][24][4]; 
   gapExtent_ m_gapR3MWPC[3][48][4];

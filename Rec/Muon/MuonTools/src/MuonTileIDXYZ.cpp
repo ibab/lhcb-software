@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.11 2002-05-10 12:47:09 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.12 2002-06-13 11:39:54 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -91,6 +91,8 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
   }
 
   m_twelfthExtent[0][0][0].z = -1000.;
+
+  m_nGap[0][0] = 0;
 
   // make the chamber layout 
 
@@ -413,30 +415,33 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
   // I probably should use some stl stuff here somewhere
   // this pointer arimetic is just asking for trouble
 
+  if(m_nGap[0][0] == 0){
+    StatusCode sc = fillNGaps();
+    if(!sc){
+      return sc;
+    }
+  }
+
+  nGap = m_nGap[station][region];
+
   if( 0 == region ){
     currCham = &(m_chamR1[station][chamberNum-1]);
-    nGap = 4;
     currGapArray = m_gapR1[station][chamberNum-1];
   }else if( 1 == region ){
     currCham = &(m_chamR2[station][chamberNum-1]);
-    nGap = 4;
     currGapArray = m_gapR2[station][chamberNum-1];
   }else if( 2 == region ){
     currCham = &(m_chamR3[station][chamberNum-1]);
     if(station < 3){
-      nGap = 4;
       currGapArray = m_gapR3MWPC[station][chamberNum-1];
     }else{
-      nGap = 2;
       currGapArray = m_gapR3RPC[station-3][chamberNum-1];
     }
   }else {
     currCham = &(m_chamR4[station][chamberNum-1]);
     if(station < 3){
-      nGap = 4;
       currGapArray = m_gapR4MWPC[station][chamberNum-1];
     }else{
-      nGap = 2;
       currGapArray = m_gapR4RPC[station-3][chamberNum-1];
     }
   }
@@ -541,6 +546,58 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
   
   return StatusCode::SUCCESS;
 }
+
+StatusCode MuonTileIDXYZ::fillNGaps(){
+  MsgStream log(msgSvc(), name());
+  
+  // TDS path to the Muon system  is of the form /dd/Structure/LHCb/Muon
+  SmartDataPtr<DetectorElement> muonSystem(m_DDS,"/dd/Structure/LHCb/Muon");
+  if(!muonSystem){
+    log << MSG::ERROR << "Could not read /dd/Structure/LHCb/Muon from TDS" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // Childern of the Muon system detector element are the stations
+  std::vector<IDetectorElement*> muonStations = 
+    muonSystem->childIDetectorElements();
+  
+  // loop over the stations
+  std::vector<IDetectorElement*>::const_iterator iIDE;
+  int station;
+  for(iIDE = muonStations.begin(), station = 0 ; 
+      iIDE != muonStations.end() ; 
+      iIDE++, station++){
+
+    // now get the regions for this station
+    std::vector<IDetectorElement*> muonRegions = 
+      (*iIDE)->childIDetectorElements();
+    
+    // loop over the regions
+    std::vector<IDetectorElement*>::const_iterator iIDER;
+    int region;
+    for(iIDER = muonRegions.begin(), region = 0 ; 
+        iIDER != muonRegions.end() ; 
+        iIDER++, region++ ){
+
+      // now get the first chamber of this region
+      std::vector<IDetectorElement*> muonChambers = 
+        (*iIDER)->childIDetectorElements();
+
+      // muonGaps array from chamber
+      std::vector<IDetectorElement*> muonGaps = 
+        muonChambers[0]->childIDetectorElements();      
+
+      log << MSG::DEBUG << "Number of gaps from chamber " 
+          << muonChambers[0]->name() << " is " << muonGaps.size() << endreq;
+
+      m_nGap[station][region] = muonGaps.size();
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+      
+
 
 StatusCode MuonTileIDXYZ::fillStationExtent(){
 
@@ -1170,15 +1227,13 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
 
         // locate the correct GasGap object
         int nGap;
-        if( 2 > region ){
-          nGap = 4;
-        }else {
-          if(station < 3){
-            nGap = 4;
-          }else{
-            nGap = 2;
+        if(m_nGap[0][0] == 0){
+          StatusCode sc = fillNGaps();
+          if(!sc){
+            return sc;
           }
         }
+        nGap = m_nGap[station][region];
         int iGap;
         for(iGap = 0 ; iGap < nGap ; iGap++){
 
