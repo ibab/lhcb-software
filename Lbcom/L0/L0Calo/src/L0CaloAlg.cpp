@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.7 2001-06-12 15:05:55 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.8 2001-07-12 16:15:14 ocallot Exp $
 
 /// STL
 #include <string>
@@ -112,6 +112,7 @@ StatusCode L0CaloAlg::initialize() {
 
   // Retrieve the ECAL detector element, build cards
 
+
   SmartDataPtr<DeCalorimeter> detEcal( detDataService() ,
 				       m_nameOfGeometryRoot + "Ecal" ) ;
   if( 0 == detEcal ) {
@@ -121,8 +122,6 @@ StatusCode L0CaloAlg::initialize() {
   }
 
   m_ecal = (DeCalorimeter*) detEcal;
-  m_ecal->buildCells();
-  m_ecal->buildCards();
   int eCard;
   int hCard;
   for  ( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
@@ -140,8 +139,6 @@ StatusCode L0CaloAlg::initialize() {
     return StatusCode::FAILURE ;
   }
   m_hcal = (DeCalorimeter*) detHcal;
-  m_hcal->buildCells();
-  m_hcal->buildCards();
   for  ( hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
     hcalFe.push_back( TriggerCard( hCard, m_hcal ) );
   }

@@ -1,5 +1,5 @@
 package		L0Calo
-version 	v1
+version 	v2
 
 # ================ structure =============================================
 branches	L0Calo src cmt doc options
@@ -11,8 +11,9 @@ include_dirs	$(L0CALOROOT)
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
-use CaloEvent	v5*	Event
-use CaloDet	v1*	Det
+use CaloEvent	v6*	Event
+use CaloDet	v2*	Det
+use AIDA        v*
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp

@@ -1,6 +1,11 @@
-! $ Header: $
+! $Id: release.notes,v 1.9 2001-07-12 16:15:14 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+!=============================================================================
+! 12/07/2001 - Olivier Callot ** v2 **
+  - Adapt to the new Gaudi/LHCb/Calo release: Increase version numbers and 
+    remove buildCells / buildCards calls as this is now done automatically
 
 !=============================================================================
 ! 12/06/2001 - Olivier Callot
