@@ -1,9 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.4 2001-05-18 16:48:46 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.5 2001-05-21 15:25:19 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
 
+#include "GaudiKernel/AddrFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/CnvFactory.h"
@@ -13,6 +14,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "XmlCnvSvc.h"
+#include "DetDesc/XmlAddress.h"
 #include "XmlParserSvc.h"
 
 // Forward and external declarations
@@ -32,7 +34,7 @@ const ISvcFactory& XmlCnvSvcFactory = xmlcnvsvc_factory;
 // -----------------------------------------------------------------------
 XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
   ConversionSvc(name, svc, XML_StorageType) {
-  setAddressFactory(&XmlAddressFactory);
+  setAddressFactory(new AddrFactory<XmlAddress> (XML_StorageType));
   
   // gets the AllowGenericConversion property value
   declareProperty ("AllowGenericConversion", m_genericConversion = false);
