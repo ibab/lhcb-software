@@ -42,17 +42,18 @@ else
 # in interactive set WORKDIR to your output directory
   setenv WORKDIR $HOME/w1
   if ($#argv == 1) set MODE = "$1" 
+  cd `dirname $0`
 endif
 set current = $PWD
 #
-if ($?LS_SUBCWD) then 
+#if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v5r0
-else
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v6r0
+#else
 # in interactive, executable is under same root directory as this job
-  cd `dirname $0` 
-  set MYJOBROOT = $PWD
-endif
+#  cd `dirname $0` 
+#  set MYJOBROOT = $PWD
+#endif
 
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE

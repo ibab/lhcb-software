@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2002-07-29 08:50:41 cattanem Exp $
+# $Id: requirements,v 1.38 2002-09-13 10:28:26 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,99 +8,113 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v5r0
+version           v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src job options
 
-# In order to use packages build with cmt v1r6
-#============================================================================
-#ignore_pattern package_stamps
-
-# Next line to get around SICB/detdes version clashes. 
-# Makes order of package use important
-#============================================================================
-#version_strategy first_choice
-
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 #--- CMT and Gaudi policy
-use GaudiPolicy  v5r5
+use  GaudiPolicy    v5r5
 
 #--- External libraries - Gaudi v10r4
-use ExternalLibs   v3r6
-use AIDA           v2r2
-use CLHEP          v17r10p1
-use HTL            v13r10p1
-use NAGC           v5r0
-use XERCES         v16r0p1
-use CERNLIB        v2001
-use ROOT           v2r303p0
+use  ExternalLibs   v3r6
+use  AIDA           v2r2
+use  CLHEP          v17r10p1
+use  HTL            v13r10p1
+use  NAGC           v5r0
+use  XERCES         v16r0p1
+use  CERNLIB        v2001
+use  ROOT           v2r303p0
 
 #--- Gaudi libraries - Gaudi v10r1
-use GaudiKernel        v12r3
-use GaudiSvc           v8r3
-use GaudiAlg           v6r1
-use GaudiAud           v6r0
-use GaudiNagC          v7r0
-use GaudiDb            v8r1
-use GaudiRootDb        v9r0
+use  GaudiKernel        v12r3
+use  GaudiSvc           v8r3
+use  GaudiAlg           v6r1
+use  GaudiAud           v6r0
+use  GaudiNagC          v7r0
+use  GaudiDb            v8r1
+use  GaudiRootDb        v9r0
 
 #--- Histogram persistency ( choose the one you prefer )
-use HbookCnv           v12r0
-use RootHistCnv        v8r0
+use  HbookCnv           v12r0
+use  RootHistCnv        v8r0
 
 #---LHCb common libraries
-use GaudiConf      v6r3
-use BookKeeping    v1r1   Tools
-use LHCbKernel     v1r4   Kernel
+use  GaudiConf      v6r3
+use  BookKeeping    v1r1   Tools
+use  LHCbKernel     v1r4   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
-use VeloKernel   v1r1    Velo
-use RichKernel   v1r2   Rich
-use TrKernel     v11r0  Tr
-use CaloKernel   v2r0   Calo
-use MuonKernel   v2r1   Muon
+use  VeloKernel   v1r1    Velo
+use  RichKernel   v1r2   Rich
+use  TrKernel     v11r0  Tr
+use  CaloKernel   v2r0   Calo
+use  MuonKernel   v2r1   Muon
 
 #--- Detector description ( add any other Det package you need )
-use DetDesc        v10r3   Det
-use XmlDDDB        v12r3   Det
-use VeloDet        v7r0    Det
-use ITDet          v1r0    Det
-use OTDet          v2r1    Det
-use CaloDet        v5r0    Det
-use CaloDetXmlCnv  v2r0    Det
-use Magnet         v1r1    Det
+use  DetDesc        v10r3   Det
+use  XmlDDDB        v12r3   Det
+use  VeloDet        v7r0    Det
+use  ITDet          v1r0    Det
+use  OTDet          v2r1    Det
+use  CaloDet        v5r0    Det
+use  CaloDetXmlCnv  v2r0    Det
+use  Magnet         v1r1    Det
+use  MuonDet        v3r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 #    explicit packages now becuase of DEV development
-use EventSys       v12r1  Event
+#use  EventSys       v13r0  Event
+use EventKernel  v2r0    Event
+use Event        v2r0    Event
+use VeloEvent    v11r0   Event
+use ITEvent      v11r0   Event
+use OTEvent      v11r0   Event
+use TrEvent      v11r1   Event
+use RichEvent    v3r2    Event
+use CaloEvent    v11r1   Event
+use MuonEvent    v2r1    Event
+use L0Event      v12r1   Event
+use L1Event      v11r0   Event
+use PhysEvent    v7r0    Event
+use DbCnv        v7r0    Event
+
 
 #--- Associators
 use  ITAssociators      v2r0    IT
 use  OTAssociators      v2r0    OT
 use  VeloAssociators    v1r1    Velo
-use  CaloAssociators    v2r2    Calo
+use  CaloAssociators    v3r0    Calo
 use  CaloRec   		v2r3    Calo
 use  MuonAssociators    v1r0    Muon
-use  TrAssociators      v3r0    Tr
+use  TrAssociators      v3r1    Tr
 use  L0Calo		v6r1	L0
 use  L1VeloTrack 	v2r1	L1
 
+#--- Trigger
+use  L0DU        v6r1	L0
+
 #--- ProtoParticles 
-use CaloUtils 	    v4r1   Calo
-use CaloInterfaces  v2r2   Calo
-use GlobalReco      v1r0   Rec
+use  CaloUtils 	     v4r1   Calo
+use  CaloInterfaces  v2r2   Calo
+use  CaloTools       v4r3   Calo
+use  GlobalReco      v2r0   Rec
+
+#--- Reprocessing
+use  CaloAlgs        v7r2   Calo  
 
 #--- DaVinci packages
-use DaVinciTools         v5r0   Phys
-use DaVinciAssociators   v2r0   Phys
-use DaVinciMCTools       v2r0   Phys
-use DaVinciTest          v2r0   Phys
-use PhysSelections       v2r0   Phys
-#use FlavourTagging       v2r0   Phys
-use DaVinciUser          v2r0   Phys
+use DaVinciTools         v6r0   Phys
+use DaVinciAssociators   v3r0   Phys
+use DaVinciMCTools       v3r0   Phys
+use DaVinciTest          v3r0   Phys
+use PhysSelections       v3r0   Phys
+#use FlavourTagging       v3r0   Phys
+#use DaVinciChecks        v1r0   Phys
+use DaVinciUser          v3r0   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
@@ -116,5 +130,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=500000 " \
-             VisualC  " /DDaVinciVersion=500000 "
+macro_append cppflags " -DDaVinciVersion=600000 " \
+             VisualC  " /DDaVinciVersion=600000 "
