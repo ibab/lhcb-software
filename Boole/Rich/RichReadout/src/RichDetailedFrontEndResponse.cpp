@@ -34,7 +34,6 @@ RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse() {}
 
 StatusCode RichDetailedFrontEndResponse::initialize()
 {
-
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -43,9 +42,10 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs );
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
-  releaseTool( smartIDs );
   actual_base = theRegistry.GetNewBase( pixels );
+  releaseTool( smartIDs );
 
+  // initialise random number generators
   m_gaussNoise.initialize     ( randSvc(), Rndm::Gauss(0., m_Noise)                  );
   m_gaussThreshold.initialize ( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma) );
 
@@ -54,8 +54,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
 
 StatusCode RichDetailedFrontEndResponse::finalize()
 {
-
-  // finalise randomn number generators
+  // finalise random number generators
   m_gaussNoise.finalize();
   m_gaussThreshold.finalize();
 
@@ -76,7 +75,7 @@ StatusCode RichDetailedFrontEndResponse::execute()
 
   // Clear time sample cache
   tscache.clear();
-  tscache.reserve( m_summedDeposits->size() );
+  //tscache.reserve( m_summedDeposits->size() );
 
   // Run analog sim
   const StatusCode sc = Analog();
@@ -91,7 +90,8 @@ StatusCode RichDetailedFrontEndResponse::Analog()
   debug() << "Analogue Simulation" << endreq;
 
   for ( MCRichSummedDeposits::const_iterator iSumDep = m_summedDeposits->begin();
-        iSumDep != m_summedDeposits->end(); ++iSumDep ) {
+        iSumDep != m_summedDeposits->end(); ++iSumDep ) 
+  {
 
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -109,17 +109,18 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     {
 
       // Create time sample for this summed deposit
-      //RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
-      tscache.push_back( TimeData( *iSumDep, 
-                                   RichTimeSample( readOut->FrameSize(),
-                                                   readOut->BaseLine() ) ) );
-      RichTimeSample & ts = tscache.back().second;
+      RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
+      //tscache.push_back( TimeData( *iSumDep, 
+      //                             RichTimeSample( readOut->FrameSize(),
+      //                                             readOut->BaseLine() ) ) );
+      //RichTimeSample & ts = tscache.back().second;
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
 
-      for( SmartRefVector<MCRichDeposit>::const_iterator iDep
-             = deposits.begin(); iDep != deposits.end(); ++iDep ) {
+      for ( SmartRefVector<MCRichDeposit>::const_iterator iDep
+             = deposits.begin(); iDep != deposits.end(); ++iDep ) 
+      {
 
         if ( msgLevel(MSG::VERBOSE) )
         {
@@ -129,8 +130,9 @@ StatusCode RichDetailedFrontEndResponse::Analog()
                     << "  -> Energy  = " << (*iDep)->energy() << endreq;
         }
 
-        // Course cut on deposit TOF ( -100ns to 100ns )
-        if ( fabs((*iDep)->time()) < 100 ) {
+        // Course cut on deposit TOF ( -50ns to 50ns )
+        if ( fabs((*iDep)->time()) < 50 ) 
+        {
 
           // Bin zero
           const int binZero = (int)(*iDep)->time();
@@ -158,7 +160,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
 
       } // MCRichDeposit loop
 
-      //tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
+      tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
 
     } // if shape
 
@@ -175,7 +177,8 @@ StatusCode RichDetailedFrontEndResponse::Digital()
   MCRichDigits * mcRichDigits = new MCRichDigits();
 
   for ( samplecache_t::iterator tsc_it = tscache.begin();
-        tsc_it != tscache.end(); ++tsc_it ) {
+        tsc_it != tscache.end(); ++tsc_it ) 
+  {
 
     RichPixelProperties* props = actual_base->DecodeUniqueID( ((*tsc_it).first)->key() );
     const RichPixelReadout* readOut = props->Readout();
@@ -183,8 +186,9 @@ StatusCode RichDetailedFrontEndResponse::Digital()
     {
 
       const double temp_threshold = m_gaussThreshold()/el_per_adc + readOut->BaseLine();
-      if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) {
-
+      if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) 
+      {      
+        
         MCRichDigit* newDigit = new MCRichDigit();
         mcRichDigits->insert( newDigit, ((*tsc_it).first)->key().pixelID() );
 
