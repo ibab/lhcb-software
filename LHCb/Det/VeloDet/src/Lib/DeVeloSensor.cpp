@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.3 2004-02-17 21:37:13 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.4 2004-02-27 16:56:24 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -126,4 +126,7 @@ void DeVeloSensor::initSensor()
     m_xSide = 1;
     m_isLeft = true;
   }
+  // Set the stereo angle for phi sensors
+  m_isDownstream=false;
+  if(m_type == "PhiDL" || m_type == "PhiDR") m_isDownstream=true;
 }
