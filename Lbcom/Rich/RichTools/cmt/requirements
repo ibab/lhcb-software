@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2004-07-01 13:50:11 papanest Exp $
+# $Id: requirements,v 1.5 2004-07-15 14:47:06 papanest Exp $
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 
@@ -8,7 +8,9 @@ version v1r0
 # ================ structure ================================================
 branches src cmt doc
 
-# ================ dependencies =============================================
+# ================ dependencies =============================================    
+use AIDA        v*   
+
 use RichEvent   v7r*  Event
 use RichDet     v8r*  Det
 

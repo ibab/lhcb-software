@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.3 2004-07-02 14:36:08 jonrob Exp $
+// $Id: RichRayTracing.h,v 1.4 2004-07-15 14:47:06 papanest Exp $
 #ifndef RICHDETTOOLS_RICHRAYTRACING_H
 #define RICHDETTOOLS_RICHRAYTRACING_H 1
 
@@ -28,6 +28,10 @@
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
+
+#include "GaudiKernel/IHistogramSvc.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 // RichDet
 #include "RichDet/DeRichSphMirror.h"
@@ -93,8 +97,10 @@ public:
   StatusCode reflectSpherical ( HepPoint3D& position,
                                 HepVector3D& direction,
                                 const HepPoint3D& CoC,
-                                double radius,
-                                const RichTraceMode mode = RichTraceMode() ) const;
+                                double radius ) const;
+  
+  IHistogramSvc* histoSvc() const;
+
 private: // methods
 
   StatusCode reflectBothMirrors ( Rich::DetectorType rich,
@@ -109,11 +115,13 @@ private: // methods
                            HepVector3D& direction,
                            const HepPlane3D& plane ) const;
 
+  StatusCode bookHistos();
+
 private: // data
 
   /// Rich1 and Rich2
   DeRich* m_rich[Rich::NRiches];
-
+  
   // photodetector panels
   typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
   boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
@@ -121,8 +129,22 @@ private: // data
   HepPoint3D m_nominalCoC[Rich::NRiches][2];
   HepPlane3D m_nominalFlatMirrorPlane[Rich::NRiches][2];
   double m_nomSphMirrorRadius[Rich::NRiches];
+  int m_sphMirrorSegRows[Rich::NRiches];
+  int m_sphMirrorSegCols[Rich::NRiches];
+  int m_flatMirrorSegRows[Rich::NRiches];
+  int m_flatMirrorSegCols[Rich::NRiches];
 
   IRichMirrorSegFinder* m_mirrorSegFinder;
+
+  mutable IHistogramSvc* m_HDS;
+
+  bool m_moni;
+  std::string m_histPth;
+  IHistogram2D* m_sphMirMissedOut[2];
+  IHistogram2D* m_flatMirMissedOut[2];
+  IHistogram2D* m_sphMirMissedGap[2];
+  IHistogram2D* m_flatMirMissedGap[2];
+  
 
 };
 #endif // RICHDETTOOLS_RICHRAYTRACING_H
