@@ -77,7 +77,7 @@ use PuVeto              v4r0    L0
 use L0DU                v6r1    L0
 
 # L1 trigger
-use L1VeloTrack         v2r3    L1
+use L1VeloTrack         v3r0    L1
 
 # Calorimeter
 use CaloKernel          v2r0    Calo
@@ -97,7 +97,7 @@ use VeloAssociators	v1r2	Velo
 
 # Inner Tracker
 use ITAlgorithms	v12r1  	IT
-use ITAssociators	v2r0	IT
+use ITAssociators	v2r1	IT
 
 # Outer Tracker
 use OTAlgorithms  	v11r1  	OT

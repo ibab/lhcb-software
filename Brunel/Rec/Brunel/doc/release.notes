@@ -11,9 +11,11 @@ Purpose: LHCb reconstruction program
      (VeloKernel v1r2, VeloAlgorithms v2r2, VeloTrack v4r1)
    . Improvements in Upstream tracking 
      (TrTools v2r1, TrIntraPR v2r1, UpstreamPR v2r2)
+   . Improved L1 Velo tracking algorithm (L1VeloTrack v3r0)
+   . ITAssociators allow MCParticles to share ITClusters (ITAssociators v2r1)
 
  - New features:
-   . Add support for Muon with MWPC, with/without M1
+   . Add geometry support for Muon with MWPC, with/without M1
      (XmlDDDB v13r0, MuonDet v4r0)
    . Use latest versions of packages (changes not affecting Brunel)
      (CaloAssociators v3r0)
