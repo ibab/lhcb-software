@@ -116,7 +116,7 @@ std::string mess = &quot;&quot;;
       <enum desc="Trigger bits" name="Trig" value="Decis=0, Electron, Electron_down,Photon, Photon_down, Pi0Local, Pi0Local_down, Pi0Global, Pi0Global_down, Hadron,Hadron_down, Mu1, Mu1_down, SumMu, SumMu_down"/>
       <enum desc="Number of bits" name="MaxTrig" value="numberTrig = 32"/>
     </namespace>
-    <class author="Olivier Callot" desc="Result of the PileUp Veto" location="/Event/Trig/L0/PuVeto" name="L0PuVeto" templateList="FALSE" templateVector="FALSE">
+    <class author="Olivier Callot" desc="Result of the PileUp Veto" location="/Event/Trig/L0/PuVeto" id="6008" name="L0PuVeto" templateList="FALSE" templateVector="FALSE">
       <base name="DataObject"/>
       <attribute desc="Pile-Up decision" name="decision" type="int"/>
       <attribute desc="Height of the first peak" name="heightPeak1" type="double"/>
