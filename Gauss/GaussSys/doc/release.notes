@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v12r6 2003-10-15 =================
+! 2003-10-15 - Florence RANJARD
+ - Gauss v12r6 uses Geant4 v52r4
+
 !=========================== GaussSys v12r5 2003-10-10 ==================
 ! 2003-10-10 - Florence RANJARD
  - Gauss v12r5 uses LHCb v13r1 and EvtGen v4r0
