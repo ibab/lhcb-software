@@ -1,17 +1,8 @@
-// $Id: ICaloTrackMatch.h,v 1.4 2002-04-27 19:22:31 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.5 2002-05-23 09:41:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2001/11/29 17:11:17  ibelyaev
-//  improvement in CaloMatch interface
-//
-// Revision 1.2  2001/11/09 14:30:04  ibelyaev
-//  update in ICaloTrackMatch interface
-//
-// Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
-// New Package: the first release
-//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKMATCH_H 
 #define CALOINTERFACES_ICALOTRACKMATCH_H 1
@@ -24,9 +15,10 @@
 // local 
 #include "CaloInterfaces/IIDICaloTrackMatch.h"
 
-class CaloPosition  ; ///< from CaloEvent package 
-class TrStoredTrack ; ///< from TrEvent  package
-
+class CaloPosition  ; // from CaloEvent package 
+class TrStoredTrack ; // from TrEvent   package
+class TrState       ; // from TrEvent   package
+ 
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  
  *  The generic interface for matching of 
@@ -47,6 +39,7 @@ class TrStoredTrack ; ///< from TrEvent  package
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @author Dima  Rusinov Dmitri.Roussinov@cern.ch
+ *  @author Konstantin Beloous Konstantin.Beloous@cern.ch
  *  @date   30/10/2001
  */
 
@@ -75,9 +68,9 @@ class ICaloTrackMatch:
    *  @return status code for matching procedure 
    */
   virtual StatusCode match 
-    ( const CaloPosition*   caloObj  , 
-      const TrStoredTrack*  trObj    ,
-      double&               chi2     ) = 0 ;
+  ( const CaloPosition*   caloObj  , 
+    const TrStoredTrack*  trObj    ,
+    double&               chi2     ) = 0 ;
   
   /** The main matching method (Stl interface) 
    *  @param caloObj  pointer to "calorimeter" object (position)
@@ -88,12 +81,21 @@ class ICaloTrackMatch:
     ( const CaloPosition*   caloObj  , 
       const TrStoredTrack*  trObj    ) = 0 ;
   
+  /** extract the TrState which was actually used for last matching
+   *  @attention TrState is owned by the tool itself 
+   *  The better solution could be to return the pointer 
+   *  to TrStateP 
+   *  @return pointer to the state actually used for last matching
+   */
+  virtual const TrState* state   () const = 0 ;
+  
  protected:
   
   /// destructor
   virtual ~ICaloTrackMatch(){}; 
   
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2002-04-27 19:22:32 ibelyaev Exp $
+! $Id: release.notes,v 1.8 2002-05-23 09:41:37 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -6,9 +6,15 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+
+! 2002-05-23 - Vanya Belyaev
+ - cmt/requirements                    : increase the version to v2r1  
+ - CaloInterfaces/ICaloTrackMatch.h    : add new method "state"
+ - CaloInterfaces/IIDICaloTrackMatch.h : increase the interface major ID
+
 ! =============================================================================
 ! 27/04/2002 Vanya Belyaev  
-! - update "Track"-interafces 
+! - update "Track"-interfaces 
 ! =============================================================================
 
 ! =============================================================================
