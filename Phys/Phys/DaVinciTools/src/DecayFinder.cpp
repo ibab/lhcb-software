@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.5 2002-07-26 12:59:58 odie Exp $
+// $Id: DecayFinder.cpp,v 1.6 2002-09-18 08:59:13 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -70,7 +70,7 @@ StatusCode DecayFinder::initialize()
   log << MSG::DEBUG << "==> Initializing" << endreq;
   if( compile(m_source) )
   {
-    log << MSG::DEBUG << "The compilation of the decay successfull" << endreq;
+    log << MSG::DEBUG << "The compilation of the decay was successfull" << endreq;
     return StatusCode::SUCCESS;
   }
   log << MSG::DEBUG << "Could not compile the decay description" << endreq;
@@ -472,6 +472,7 @@ bool DecayFinder::ParticleMatcher::test( const Particle *part )
   case id:
     {
       bool result = false;
+      result = (parms.stdHepID == part->particleID().pid());
       if( conjugate )
       {
         int cc_id = conjugatedID( parms.stdHepID );
@@ -541,7 +542,7 @@ bool DecayFinder::ParticleMatcher::test( const Particle *part )
 
       // Should we check for the charge conjugated particle ?
       if( !conjugate )
-    return false;
+        return false;
       // cq1, cq2, cq3
       if( (pq1 == cq1 || pq1 == empty) && (pq2 == cq2 || pq2 == empty) &&
           (pq3 == cq3 || pq3 == empty) )
