@@ -2,8 +2,6 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
   <import name="MuonKernel/MuonTileID"/>
-  <import name="Kernel/SerializeStl"/>
-  <import name="Kernel/CLHEPStreams"/>
   <package name='L0Muon' >
 
     <namespace desc="L0Muon specific namespace" name="L0Muon" author='A. Tsaregorodtsev'>
