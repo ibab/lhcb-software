@@ -62,7 +62,7 @@ use OTDet         v2r0  Det
 use VeloDet       v6r0  Det
 use Magnet        v1r1  Det
 
-use MuonTools    v2r0   Muon
+use MuonTools    v2r1   Muon
 
 # Event Model
 use EventSys     v11r0  Event
