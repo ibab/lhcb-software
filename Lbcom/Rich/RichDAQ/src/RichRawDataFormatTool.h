@@ -5,8 +5,11 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.2 2005-01-13 13:11:57 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.3 2005-01-18 09:07:18 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:11:57  jonrob
+ *  Add version 2 of data format
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -36,6 +39,7 @@
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
 #include "RichKernel/IRichHPDIDTool.h"
+#include "RichKernel/IRichHPDToLevel1Tool.h"
 
 // local
 #include "RichNonZeroSuppData.h"
@@ -141,6 +145,9 @@ private: // data
 
   /// Pointer to Rich HPD ID tool
   IRichHPDIDTool * m_hpdID;
+
+  /// Pointer to L1 tool
+  IRichHPDToLevel1Tool * m_l1Tool;
 
   /// Pointer to Raw Event
   mutable RawEvent * m_rawEvent;

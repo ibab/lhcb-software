@@ -5,8 +5,11 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.3 2005-01-14 16:57:43 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.4 2005-01-18 09:07:18 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2005/01/14 16:57:43  jonrob
+ *  update printout
+ *
  *  Revision 1.2  2005/01/13 13:11:57  jonrob
  *  Add version 2 of data format
  *
@@ -33,6 +36,7 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                                               const IInterface* parent )
   : RichToolBase ( type, name , parent ),
     m_hpdID      ( 0                   ),
+    m_l1Tool     ( 0                   ),
     m_rawEvent   ( 0                   ),
     m_evtCount   ( 0                   )
 {
@@ -58,7 +62,8 @@ StatusCode RichRawDataFormatTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichHPDIDTool", m_hpdID  );
+  acquireTool( "RichHPDIDTool",       m_hpdID  );
+  acquireTool( "RichHPDToLevel1Tool", m_l1Tool );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -105,34 +110,39 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
 
     // Printout
     info() << "=========================================================================================================" << endreq
-           << "                                      " << title << endreq
-           << "---------------------------------------------------------------------------------------------------------" << endreq;
+           << "                                      " << title << endreq;
+    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
 
-    unsigned long totWordSize(0), totBanks(0), totHits(0);
+    std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
       const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
       const RichDAQ::BankVersion version  = (*iL1C).first.first;
+      const Rich::DetectorType rich       = m_l1Tool->richDetector( L1ID );
       const unsigned long nBanks          = (*iL1C).second.first;
-      totBanks                           += nBanks;
+      totBanks[rich]                     += nBanks;
       const unsigned long words           = (*iL1C).second.second.first;
-      totWordSize                        += words;
+      totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
-      totHits                            += hits;
+      totHits[rich]                      += hits;
       // Hack for DC04 - Printout makes no sense so abort if this version has been used
       if ( version != RichDAQ::LHCb0 ) {
-        info() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
-               << occ1(nBanks,m_evtCount) << " hpds :"
-               << occ2(words,m_evtCount) << " words :"
-               << occ2(hits,m_evtCount) << " hits / event" << endreq;
+        debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
+                << occ1(nBanks,m_evtCount) << " hpds :"
+                << occ2(words,m_evtCount) << " words :"
+                << occ2(hits,m_evtCount) << " hits / event" << endreq;
       }
     }
-    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
-    info() << "  Av. Overall    | L1 size =" << occ1(totBanks,m_evtCount) << " hpds :"
-           << occ2(totWordSize,m_evtCount) << " words :"
-           << occ2(totHits,m_evtCount) << " hits / event" << endreq;
 
-    info() << "=========================================================================================================" << endreq;
+    debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
+    info()  << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+            << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
+            << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
+    info()  << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+            << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
+            << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
+    
+    info()  << "=========================================================================================================" << endreq;
 
   }
 
@@ -491,7 +501,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   }
 
   // Print out decoded smartIDs
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << " Decoded RichSmartIDs :-" << endreq;
     for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
@@ -500,7 +510,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       verbose() << "   " << *iID << endreq;
     }
   }
-  
+
 }
 
 void
