@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.15 2004-02-03 14:15:57 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.16 2004-02-04 19:11:29 jonesc Exp $
 // Include files
 
 // local
@@ -17,7 +17,10 @@ const        IAlgFactory& RichGlobalPIDAlgFactory = s_factory ;
 // Standard constructor, initializes variables
 RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
+  : RichGlobalPIDAlgBase ( name, pSvcLocator ),
+    m_tkSignal  ( 0 ),
+    m_photonSig ( 0 )
+{
 
   // Threshold for likelihood maximisation
   declareProperty( "LikelihoodThreshold", m_epsilon = -1e-3 );
@@ -28,7 +31,7 @@ RichGlobalPIDAlg::RichGlobalPIDAlg( const std::string& name,
   // Minimum signal value for full calculation of log(exp(signal)-1)
   declareProperty( "MinSignalForNoLLCalc", m_minSig = 1e-50 );
 
-  // Signal value below which to approximate  log(exp(signal)-1) with log(signal)
+  // Signal value below which to approximate log(exp(signal)-1) with log(signal)
   declareProperty( "MinSignalForAproxLLCalc", m_apxSig = 1e-5 );
 
   m_fP.push_back(0);
@@ -415,8 +418,7 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
                                              const Rich::ParticleIDType newHypo ) {
 
   // Change due to track expectation
-  double deltaLL =
-    m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
+  double deltaLL = m_tkSignal->nTotalObservablePhotons( track, newHypo ) -
     ( track->nObservableSignalPhotons(track->currentHypothesis()) +
       track->nObservableScatteredPhotons(track->currentHypothesis()) );
 
