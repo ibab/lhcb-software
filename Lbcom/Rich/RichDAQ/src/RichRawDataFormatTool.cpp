@@ -5,8 +5,11 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.4 2005-01-18 09:07:18 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.5 2005-01-21 18:10:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2005/01/18 09:07:18  jonrob
+ *  update printout
+ *
  *  Revision 1.3  2005/01/14 16:57:43  jonrob
  *  update printout
  *
@@ -353,7 +356,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         // Count the number of banks and size
         L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
         // Increment bank size
-        cands.second.first += 1+dataBank.size(); // header + data words
+        cands.second.first += 3+dataBank.size(); // 3 L1 headers + data words
         // Increment hit occupancy
         cands.second.second += nHits;
         // Count number of HPD banks
@@ -487,7 +490,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     // Count the number of banks and size
     L1CountAndSize & cands = m_l1decodeSummary[ L1IDandV(version,L1ID) ];
     // Increment bank size
-    cands.second.first += 1+bank.dataSize(); // header + data words
+    cands.second.first += 3+bank.dataSize(); // 3 L1 headers + data words
     // Increment hit occupancy
     cands.second.second += smartIDs.size()-startSize;
     // Count number of HPD banks

@@ -5,8 +5,11 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.2 2005-01-13 13:09:34 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.3 2005-01-21 18:10:04 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:09:34  jonrob
+ *  Add new methods to base class
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -94,7 +97,16 @@ public:
    *
    *  @param rawData The raw data bank to fill
    */
-  void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
+  inline void fillRAWBank( RichDAQ::RAWBank & rawData ) const
+  {
+    // fill with header word
+    rawData.push_back( header() );
+    // ... then data words
+    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData )
+    { 
+      rawData.push_back( m_data[iData] ); 
+    } 
+  }
 
   /** Overloaded output to message stream
    *
@@ -109,7 +121,7 @@ public:
 
 private: // methods
 
-  /// Ass-allow Default constructor
+  /// Dis-allow Default constructor
   RichHPDDataBank() { }
 
   /// Clean up data representation
