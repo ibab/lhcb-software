@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.45 2003-06-17 09:16:04 cattanem Exp $
+! $Id: release.notes,v 1.46 2003-10-06 09:18:56 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v8r6 2003-10-06 =========================
+! 2003-10-06 - Marco Cattaneo
+ - Remove explicit dependency on DetDesc, implicit through DetDescCnv
 
 !========================= VeloDet v8r5 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce

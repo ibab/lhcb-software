@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.22 2003-06-16 15:10:31 cattanem Exp $
+# $Id: requirements,v 1.23 2003-10-06 09:18:56 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v8r5
+version  v8r6
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -11,9 +11,7 @@ branches         src cmt doc VeloDet
 include_dirs      $(VELODETROOT)
 
 # =============== used packages ===========================================
-use DetDesc      v12r*  Det 
 use DetDescCnv   v2r*   Det 
-use LHCbKernel   v2r*   Kernel
 use VeloKernel   v1r*   Velo
 
 # =============== own options ==========================================
