@@ -14,7 +14,7 @@ use Gauss		v19r0	  Sim
 use GENSER		v1r030p0  Gen
 use PYTHIA              v2r6226p0 Gen    
 use HepEvt              v2r121p0  Gen
-use EvtGen              v8r0      Gen
+use EvtGen              v8r1      Gen
 use GeneratorModules    v14r0     Gen
 
 # GiGa stuff...
