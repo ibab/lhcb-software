@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.5 2001-07-10 10:21:33 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.6 2001-07-12 20:27:38 atsareg Exp $
 
 #include <vector>
 #include <algorithm>
@@ -83,7 +83,9 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
       }
     }
   }  
-  // cout << "Crate: PU execution done" << m_status << endl;
+  log << MSG::DEBUG << "Crate: PU execution done, " 
+      << m_candidates.size() << " candidates found" << endreq;
+      
   // Sort candidates if the status is OK
   if(m_status == L0Muon::OK) {
     if (m_candidates.size() > 2) {    

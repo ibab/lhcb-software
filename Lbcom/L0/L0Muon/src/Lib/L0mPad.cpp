@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mPad.cpp,v 1.2 2001-06-11 20:00:34 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mPad.cpp,v 1.3 2001-07-12 20:28:12 atsareg Exp $
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -19,6 +19,7 @@ void L0mPad::print(MsgStream log ) {
 
    log << MSG::DEBUG << " # Pad station/quarter/region/nX/nY " 
        << station() << "/" << quarter() << "/" << region() << "/" 
-       << nX() << "/" << nY() << endreq;
+       << nX() << "/" << nY() 
+       << " x=" << x() << " y=" << y() << endreq;
 
 }	   

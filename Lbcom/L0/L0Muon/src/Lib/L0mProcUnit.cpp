@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.4 2001-07-10 10:21:33 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.5 2001-07-12 20:29:29 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mProcUnit.h"
@@ -52,10 +52,14 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
         (*it)->pad(0)->print(log );
         log << MSG::DEBUG << " Pt= "    << lcd->pt()
                           << " Theta= " << lcd->theta()
-                          << " Phi= "   << lcd->phi() << endreq;
+                          << " Phi= "   << lcd->phi() 
+			  << " xM1= " << (*it)->pad(0)->x() 
+			  << " yM1= " << (*it)->pad(0)->y() << endreq;
         m_candidates.push_back(lcd);
 	nCandidate++;
       } 
+      // draw all the towers
+      // (*it)->draw(log << MSG::DEBUG);
     }
     
     if(nCandidate>2) {
@@ -64,7 +68,8 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
         delete *ilmc;
       }
       m_candidates.clear();
-      m_status = L0Muon::PU_OVERFLOW;      
+      m_status = L0Muon::PU_OVERFLOW;  
+      log << MSG::DEBUG << "PU overflow detected !" << endreq;    
     } else if ( nCandidate == 0 ) {
       m_status = L0Muon::PU_EMPTY;
     } else {
