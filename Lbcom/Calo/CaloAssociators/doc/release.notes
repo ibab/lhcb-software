@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.28 2004-03-17 16:36:37 ibelyaev Exp $
+! $Id: release.notes,v 1.29 2004-03-18 13:07:33 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!===================== CaloAssociators v4r1 2004-03-18 =====================
 ! 2004-03-17 - Vanya BELYAEV
 
  - src/CaloClustersMCTruth5Alg.cpp 
@@ -13,7 +14,6 @@
    which could be a signature of NULL MC links
    (one need to run CaloReCreateMCLinks algorithm for 
     the data with "RawBuffer")
-
 
 !===================== CaloAssociators v4r0 2004-02-26 =====================
 ! 2004-02-17 - Vanya BELYAEV
