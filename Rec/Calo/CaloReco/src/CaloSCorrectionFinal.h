@@ -78,5 +78,19 @@ private:
   std::vector<double> m_Coeff_area_1_Y;
   std::vector<double> m_Coeff_area_2_X;
   std::vector<double> m_Coeff_area_2_Y;
+  
+  // covariance parameters
+  double m_a2GeV                  ; ///< calorimeter resolution ((A**2)*GeV)
+  double m_b2                     ; ///< calorimeter resolution ((B**2))
+  double m_s2gain                 ; ///< relative gain dispersion
+  double m_s2incoherent           ; ///< incoherent noise dispersion
+  double m_s2coherent             ; ///< coherent noise dispersion
+
+  static const double         ResA    = 0.10 ;
+  static const double         GainS   = 0.01 ;
+  static const double         NoiseIn = 0.0  ;
+  static const double         NoiseCo = 0.0  ;
+  static const double         ResB    = 0.01 ;
+
 };
 #endif // CALOTOOLS_CALOSCORRECTIONSEQUENCE_H

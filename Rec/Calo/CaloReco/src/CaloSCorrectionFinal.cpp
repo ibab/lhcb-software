@@ -70,14 +70,24 @@ CaloSCorrectionFinal::CaloSCorrectionFinal(const std::string& type,
   , m_Coeff_area_1_X()
   , m_Coeff_area_1_Y()
   , m_Coeff_area_2_X()
-  , m_Coeff_area_2_Y() {
+  , m_Coeff_area_2_Y() 
+  , m_a2GeV(ResA * ResA * GeV)
+  , m_b2(ResB * ResB)
+  , m_s2gain(GainS * GainS )
+  , m_s2incoherent(NoiseIn * NoiseIn)
+  , m_s2coherent(NoiseCo * NoiseCo) {
   declareInterface<ICaloHypoTool>(this);
-  declareProperty("Coeff0X",m_Coeff_area_0_X);
-  declareProperty("Coeff0Y",m_Coeff_area_0_Y);
-  declareProperty("Coeff1X",m_Coeff_area_1_X);
-  declareProperty("Coeff1Y",m_Coeff_area_1_Y);
-  declareProperty("Coeff2X",m_Coeff_area_2_X);
-  declareProperty("Coeff2Y",m_Coeff_area_2_Y);
+  declareProperty("Coeff0X"     ,m_Coeff_area_0_X);
+  declareProperty("Coeff0Y"     ,m_Coeff_area_0_Y);
+  declareProperty("Coeff1X"     ,m_Coeff_area_1_X);
+  declareProperty("Coeff1Y"     ,m_Coeff_area_1_Y);
+  declareProperty("Coeff2X"     ,m_Coeff_area_2_X);
+  declareProperty("Coeff2Y"     ,m_Coeff_area_2_Y);
+  declareProperty("a2GeV"       ,m_a2GeV         );
+  declareProperty("b2"          ,m_b2            );
+  declareProperty("s2gain"      ,m_s2gain        );
+  declareProperty("s2incoherent",m_s2incoherent  );
+  declareProperty("s2coherent"  ,m_s2coherent    );
 }
 // ============================================================================
 
@@ -227,6 +237,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   if (hypo==0) {return StatusCode::FAILURE;}
   if (hypo->hypothesis()!=CaloHypotheses::Photon) {return StatusCode::FAILURE;}
   SmartRefVector<CaloCluster> clusters = hypo->clusters();
+  double oldenergy = hypo->e();
+  logmsg << MSG::VERBOSE << "old_energy="
+         << oldenergy << endreq;
   if (clusters.size()!=1) {return StatusCode::FAILURE;}
   CaloCluster *cluster;
   for (SmartRef<CaloCluster> *clusterloop = clusters.begin();
@@ -282,9 +295,15 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   if (numberofneighbor!=8) {border=true;}
 
   double E[3][3];
+  double cov_ii[3][3];
+  double gain[3][3];
   {
     for (int i=0;i<3;i++) {
-      for (int j=0;j<3;j++) {E[i][j]=0.0;}
+      for (int j=0;j<3;j++) {
+        E[i][j]=0.0;
+        cov_ii[i][j]=0.0;
+        gain[i][j]=0.0;
+      }
     }
   }
   { 
@@ -295,10 +314,55 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
       int row=j->cellID().row()-rowseed+1;
       int col=j->cellID().col()-colseed+1;
       if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
-        E[col][row]=j->e()*i->fraction();
+        E[col][row]=j->e()*i->fraction();        
+        // intrinsic resolution 
+        cov_ii[col][row] = fabs(j->e()*i->fraction())*m_a2GeV; 
+        if( 0 != m_b2 ) {
+          cov_ii[col][row]+=j->e()*i->fraction()*j->e()*i->fraction()*m_b2;
+        }  
+        //  gain fluctuation
+        if( 0 != m_s2gain) {
+          cov_ii[col][row]+=j->e()*i->fraction()*j->e()*i->fraction()*m_s2gain;
+        }
+        //  noise (both coherent and incoherent) 
+        if( 0 != (m_s2coherent + m_s2incoherent) ) { 
+          gain[col][row]   = det()->cellGain(j->cellID()); 
+          cov_ii[col][row] += (m_s2coherent + m_s2incoherent) 
+            * gain[col][row] * gain[col][row] ; 
+        }
       }
     }
   }
+  double cov_ij[3][3][3][3];
+  { 
+    for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
+      if (i==0) {continue;}
+      SmartRef<CaloDigit> j=i->digit();
+      if (j==0) {continue;}
+      int row=j->cellID().row()-rowseed+1;
+      int col=j->cellID().col()-colseed+1;
+      if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
+        E[col][row]=j->e()*i->fraction();
+        if( 0 == m_s2coherent ) { continue ; } 
+        {
+          for (CaloClusterEntry* k=sac.begin();k!=sac.end();++k) {
+            if (k==0) {continue;}
+            SmartRef<CaloDigit> l=k->digit();
+            if (l==0) {continue;}
+            int row_l=l->cellID().row()-rowseed+1;
+            int col_l=l->cellID().col()-colseed+1;
+            if ((row_l>=0)&&(row_l<=2)&&(col_l>=0)&&(col_l<=2)) {
+              if ((row_l!=row)&&(col_l!=col)) {
+                cov_ij[col][row][col_l][row_l] = m_s2coherent 
+                  * gain[col][row] * gain[col_l][row_l] ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   {
     for (int i=0;i<3;i++) {
       logmsg << MSG::DEBUG << "|" << E[2][i]
@@ -306,20 +370,63 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
     }
   }
   double energy=0.;
+  double Eleft[3][3],Evert[3][3],Eright[3][3];
+  double Ebottom[3][3],Ehori[3][3],Etop[3][3];
+  {
+    for (int i=0;i<3;i++) {
+      for (int j=0;j<3;j++) {
+        Eleft[i][j]=Evert[i][j]=Eright[i][j]=0.;
+        Ebottom[i][j]=Ehori[i][j]=Etop[i][j]=0.;
+      }
+    }
+  }
+  //Eleft
+  if (std::min(E[0][0],std::min(E[0][1],E[0][1]))==E[0][0])
+    {Eleft[0][1]=Eleft[0][2]=1.;}
+  if (std::min(E[0][0],std::min(E[0][1],E[0][1]))==E[0][1])
+    {Eleft[0][0]=Eleft[0][2]=1.;}
+  if (std::min(E[0][0],std::min(E[0][1],E[0][1]))==E[0][2])
+    {Eleft[0][0]=Eleft[0][1]=1.;}
+  //Evert
+  Evert[1][0]=Evert[1][1]=Evert[1][1]=1.;
+  //Eright
+  if (std::min(E[2][0],std::min(E[2][1],E[2][1]))==E[2][0])
+    {Eright[2][1]=Eright[2][2]=1.;}
+  if (std::min(E[2][0],std::min(E[2][1],E[2][1]))==E[2][1])
+    {Eright[2][0]=Eright[2][2]=1.;}
+  if (std::min(E[2][0],std::min(E[2][1],E[2][1]))==E[2][2])
+    {Eright[2][0]=Eright[2][1]=1.;}
+  //Ebottom
+  if (std::max(E[0][0],std::max(E[1][0],E[2][0]))==E[0][0])
+    {Ebottom[1][0]=Ebottom[2][0]=1.;}
+  if (std::max(E[0][0],std::max(E[1][0],E[2][0]))==E[1][0])
+    {Ebottom[0][0]=Ebottom[2][0]=1.;}
+  if (std::max(E[0][0],std::max(E[1][0],E[2][0]))==E[2][0])
+    {Ebottom[0][0]=Ebottom[1][0]=1.;}
+  //Ehori
+  Ehori[0][1]=Ehori[1][1]=Ehori[2][1]=1.;
+  //Etop
+  if (std::max(E[0][2],std::max(E[1][2],E[2][2]))==E[0][2])
+    {Etop[1][2]=Etop[2][2]=1.;}
+  if (std::max(E[0][2],std::max(E[1][2],E[2][2]))==E[1][2])
+    {Etop[0][2]=Etop[2][2]=1.;}
+  if (std::max(E[0][2],std::max(E[1][2],E[2][2]))==E[2][2])
+    {Etop[0][2]=Etop[1][2]=1.;}
+
   double eleft=0.,evert=0.,eright=0.;
   double ebottom=0.,ehori=0.,etop=0.;
   {
     for (int i=0;i<3;i++) {
       for (int j=0;j<3;j++) {
-        energy+=E[i][j];
+        energy +=           1.*E[i][j];
+        eleft  +=  Eleft[i][j]*E[i][j];
+        evert  +=  Evert[i][j]*E[i][j];
+        eright += Eright[i][j]*E[i][j];
+        ebottom+=Ebottom[i][j]*E[i][j];
+        ehori  +=  Ehori[i][j]*E[i][j];
+        etop   +=   Etop[i][j]*E[i][j];
       }
     }
-    eleft  =E[0][0]+E[0][1]+E[0][1]-std::max(E[0][0],std::max(E[0][1],E[0][1]));
-    evert  =E[1][0]+E[1][1]+E[1][1];
-    eright =E[2][0]+E[2][1]+E[2][1]-std::max(E[2][0],std::max(E[2][1],E[2][1]));
-    ebottom=E[0][0]+E[1][0]+E[2][0]-std::max(E[0][0],std::max(E[1][0],E[2][0]));
-    ehori  =E[0][1]+E[1][1]+E[2][1];
-    etop   =E[0][2]+E[1][2]+E[2][2]-std::max(E[0][2],std::max(E[1][2],E[2][2]));
   }
   logmsg << MSG::VERBOSE << "energy: " << energy << endreq;
 
@@ -366,7 +473,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   HepVector localposition(3);
   localposition(CaloPosition::X)=x;
   localposition(CaloPosition::Y)=y;
-  localposition(CaloPosition::E)=energy;
+  // keep previous energy correction from ECorr
+  localposition(CaloPosition::E)=oldenergy;
   position->setParameters(localposition);
   logmsg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
 
