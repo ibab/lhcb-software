@@ -1,6 +1,9 @@
 Package         : CaloDet 
 Package manager : Vanya Belyaev 
 
+! 20010625 - CaloDet v2 (Flr)
+  requirements - use DetDesc v7, CaloGen v2
+                 updated for GaudiSys v8 and CMT v1r8
 ! =====================================================================
 ! 2001/06/14  - Sebastien Ponce
       new implementation of the converters. Use of DOM instead of SAX.

@@ -1,7 +1,7 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.8 2001-06-14 16:09:41 sponce Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/CaloDet/cmt/requirements,v 1.9 2001-06-25 09:30:25 ranjard Exp $ 
 
 package  CaloDet 
-version  v1
+version  v2
 
 # =============== structure ===============================================	
 branches         src cmt doc options CaloDet 
@@ -11,24 +11,22 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
 use DetDesc      v7*  Det 
-use CaloGen      v1*  Calo 
+use CaloGen      v2*  Calo 
 
 # =============== own options ==========================================
 set CALODETOPTS  ${CALODETROOT}/options
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 
-macro            CaloDet_stamps   "$(CaloDetDir)/CaloDetLib.stamp"
+apply_pattern    package_Lstamps
+apply_pattern    package_Llinkopts 
+apply_pattern    linker_path
 
 # =============== component library =======================================
 library          CaloDet           component/*.cpp
 
-apply_pattern    package_Llinkopts    
-apply_pattern    ld_library_path
-
 #================ private stuff ===========================================
 private
-ignore_pattern   package_stamps 
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
 macro_append CaloDetLib_shlibflags " $(DetDesc_linkopts) $(GaudiKernel_linkopts) $(CLHEP_linkopts)"
