@@ -19,7 +19,11 @@ package manager : Vanya Belyaev
   - Modified to use the CLHEP expression evaluator function
   - New functionality: use of <parameter \> tag for defining XML parameters instead
     of using XML entyties. The XML files in XMLDDDB package have been changed to 
-    exploit that new functionality.
+    exploit that new functionality
+  - Changes is the DTD required some changes in the XML converters. These changes are:
+    - element geometryinfo has now only attributes
+    - default class ID for detelem
+    - elementref can now have a fractionmass in addition to natoms attribute
 
 ! 20010122 - DetDesc 
  Vanya Belyaev 
