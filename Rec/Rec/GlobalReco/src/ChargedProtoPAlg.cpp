@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.9 2002-11-11 19:27:37 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.10 2002-12-19 21:01:54 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -183,7 +183,7 @@ StatusCode ChargedProtoPAlg::execute() {
   }
 
   // Load richPid results
-  bool richData;
+  bool richData = false;
   SmartDataPtr<RichPIDs> richpids ( eventSvc(), m_richPath );
   if( !richpids || 0 == richpids->size() ) {
     log << MSG::INFO  << "Failed to locate RichPIDs at "
@@ -197,7 +197,7 @@ StatusCode ChargedProtoPAlg::execute() {
   }
   
   // Load muonPid results
-  bool muonData;
+  bool muonData = false;
   SmartDataPtr<MuonIDs> muonpids ( eventSvc(), m_muonPath );
   if( !muonpids || 0 == muonpids->size() ) {
     log << MSG::INFO << "Failed to locate MuonIDs at "
@@ -224,7 +224,7 @@ StatusCode ChargedProtoPAlg::execute() {
     caloData = true;
   }
 
-  /// Check the tables for electronID
+  /// Check the tables for electronID exist
   const PhotonTable* phtable = m_photonMatch->inverse();
   if( 0 == phtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
@@ -233,14 +233,13 @@ StatusCode ChargedProtoPAlg::execute() {
   }
   const ElectronTable* etable = m_electronMatch->inverse();
   if( 0 == etable ) { 
-    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    log << MSG::DEBUG << "Table from ElectronMatch points to NULL";
     caloData = false;
     m_errorCount["6. No electron table    "] += 1;
   }
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
-    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
-    caloData = false;
+    log << MSG::DEBUG << "Table from BremMatch points to NULL";
     m_errorCount["7. No brems table       "] += 1;
   }
 
@@ -278,7 +277,7 @@ StatusCode ChargedProtoPAlg::execute() {
 
     // Add RichPID to this ProtoParticle
     if( richData ) {
-//        StatusCode sc = addRich( richpids, proto->get() );
+//        StatusCode sc = addRich( richpids, proto.get() );
       StatusCode sc = addRich( richpids, proto );
       if( !sc.isFailure() ) {
         countProto[RichProto]++;
@@ -341,28 +340,24 @@ StatusCode ChargedProtoPAlg::execute() {
       }
     }
 
-    // Check is at least one particleID is beeing added otherwise set NoPID
-    // and assume it is a pion
-    if( (0 == proto->richBit()) && (0 == proto->muonBit()) &&
-        (0 == proto->caloeBit()) ) {
-      proto->pIDDetectors().
-        push_back( std::make_pair(ProtoParticle::NoPID, 1.0) );
-      int idpion = m_idPion * (int)proto->charge();
-      proto->pIDInfo().push_back( std::make_pair( idpion, 1.0 ) );
-      proto->setNoneBit(1);
-    }
 
     // If RichPID is not available since it is takes as combined, set NoneBit
-    // and assume pion (keep it separate because it could change and we could
-    // decide to use muon or calorimeter alone)
+    // and assume pion for the moment: once real combined particle ID is
+    // available it will be different
     if( 0 == proto->richBit() ) {
       int idpion = m_idPion * (int)proto->charge();
       proto->pIDInfo().push_back( std::make_pair( idpion, 1.0 ) );
       proto->setNoneBit(1);
+      // If no particleID is beeing added also set that that in 
+      // detector flag
+      if( (0 == proto->muonBit()) && (0 == proto->caloeBit()) ) {
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::NoPID, 1.0) );
+      }
     }
     
     chprotos->insert(proto);
-//        chprotos->insert(proto->release());
+    //        chprotos->insert(proto->release());
     
   }
   
