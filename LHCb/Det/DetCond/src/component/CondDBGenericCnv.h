@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.1 2004-12-08 17:19:17 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.2 2005-02-09 08:30:54 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -12,7 +12,7 @@
 // Forward and external declarations
 class ISvcLocator;
 class IConditionsDBCnvSvc;
-class IConditionsDBGate;
+class ICondDBAccessSvc;
 class IDetDataSvc;
 class DataObject;
 
@@ -85,27 +85,6 @@ protected:
   const std::string &globalTag();
 
   /**
-   * Retrieve an object from the database.
-   * @input folderName the full folder path to the object.
-   * @output since the time since the CondDB object is valid
-   * @output till the time until the CondDB object is valid
-   * @output data CondDB object string representation
-   * @return status depending on the completion of the call
-   */
-  StatusCode getCondDBObject(TimePoint &   	 since,
-                             TimePoint &  	 till,
-                             std::string &  	data,
-                             const std::string &  	folderName);
-  /**
-   * Retrieve a floder description from the database.
-   * @input folderName the full folder path.
-   * @output description the description string 
-   * @return status depending on the completion of the call
-   */
-  StatusCode getCondDBFolder(std::string &   	 description,
-                             const std::string &  	folderName);
-
-  /**
    * Set the validity of the DataObject if it inherits from IValidity.
    */
   void setObjValidity(TimePoint &since,
@@ -118,11 +97,13 @@ protected:
    */
   Object_Updatability_t checkUpdatability(DataObject* pObject);
 
-  /// Pointer the ConditionsDBCnvSvc.
+  /// Pointer to the ConditionsDBCnvSvc.
   IConditionsDBCnvSvc *m_condDBCnvSvc;
-  /// Pointer the DetectorDataService.
+  /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
-
+  /// Pointer to the CondDBAccessSvc;
+  ICondDBAccessSvc    *m_dbAccSvc;
+  
 private:
 
 };

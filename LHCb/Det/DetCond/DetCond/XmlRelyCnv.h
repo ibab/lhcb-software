@@ -1,4 +1,4 @@
-// $Id: XmlRelyCnv.h,v 1.1 2004-12-08 17:19:16 marcocle Exp $
+// $Id: XmlRelyCnv.h,v 1.2 2005-02-09 08:30:53 marcocle Exp $
 #ifndef COMPONENT_XMLRELYCNV_H 
 #define COMPONENT_XMLRELYCNV_H 1
 
@@ -6,6 +6,9 @@
 #include "CondDBGenericCnv.h"
 #include "GaudiKernel/CnvFactory.h"
 #include <string>
+
+// from POOL
+#include "AttributeList/AttributeListSpecification.h"
 
 // Forward and external declarations
 class ISvcLocator;
@@ -80,6 +83,9 @@ public:
    */  
   static const CLID& classID () { return s_CLID_any; }  
   
+  /** Routine used to easily obtain the AttributeListSpecification
+      for this kind of objects. */
+  static const pool::AttributeListSpecification& attrListSpec();
 
 protected:
   /// Standard constructor
@@ -90,6 +96,9 @@ private:
 
   /// needed to implement classID()
   static const CLID s_CLID_any;
+
+  /// Storage space for the default AttributeListSpecification.
+  static pool::AttributeListSpecification m_attlist;
 
   /**
    * Do the needed steps to perform a creation by delegation.

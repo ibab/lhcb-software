@@ -1,15 +1,19 @@
-// $Id: CondDBGenericCnv.cpp,v 1.1 2004-12-08 17:19:17 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.2 2005-02-09 08:30:54 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
-#include "CondDBGenericCnv.h"
-#include "DetCond/IConditionsDBGate.h"
+#include "DetCond/ICondDBAccessSvc.h"
 #include "DetCond/IConditionsDBCnvSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/DataObject.h"
 
+#include "CoolKernel/IValidityKey.h"
+#include "CoolKernel/IFolder.h"
+#include "CoolKernel/IObject.h"
+
 // local
+#include "CondDBGenericCnv.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBGenericCnv
@@ -58,7 +62,17 @@ StatusCode CondDBGenericCnv::initialize() {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endreq;
   }
-
+  // Query the ICondDBAccessSvc interface of the detector data service
+  sc = serviceLocator()->service 
+    ("CondDBAccessSvc",m_dbAccSvc);
+  if( !sc.isSuccess() ) {
+    MsgStream log(msgSvc(),"CondDBGenericCnv");
+    log << MSG::ERROR << "Can't locate CondDBAccessSvc" << endreq;
+    return sc;
+  } else {
+    MsgStream log(msgSvc(),"CondDBGenericCnv");
+    log << MSG::DEBUG << "Succesfully located CondDBAccessSvc" << endreq;
+  }
   return sc;
 }
 
@@ -90,39 +104,6 @@ StatusCode CondDBGenericCnv::eventTime(TimePoint &time) const {
 //const std::string &CondDBGenericCnv::globalTag() const {
 const std::string &CondDBGenericCnv::globalTag() {
  return m_condDBCnvSvc->globalTag();
-}
-  
-//=========================================================================
-// Retrieve from the Conditions DB the object
-//=========================================================================
-StatusCode CondDBGenericCnv::getCondDBObject(TimePoint &refValidSince,
-                                             TimePoint &refValidTill,
-                                             std::string &data,
-                                             const std::string &folderName){
-
-  TimePoint time;
-  if (eventTime(time).isFailure()){
-    MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR
-        << "Cannot create DataObject: event time undefined"
-        << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  return m_condDBCnvSvc->conditionsDBGate()->readCondDBObject(refValidSince,
-                                                              refValidTill,
-                                                              data,
-                                                              folderName,
-                                                              globalTag(),
-                                                              time);
-}
-//=========================================================================
-// Retrieve from the Conditions DB the folder description
-//=========================================================================
-StatusCode CondDBGenericCnv::getCondDBFolder(std::string &description,
-                                             const std::string &folderName){
-  return m_condDBCnvSvc->conditionsDBGate()->readCondDBFolder(description,
-                                                              folderName);
 }
 
 //=========================================================================

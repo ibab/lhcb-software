@@ -1,6 +1,7 @@
-// $Id: XmlRelyCnv.cpp,v 1.1 2004-12-08 17:19:17 marcocle Exp $
+// $Id: XmlRelyCnv.cpp,v 1.2 2005-02-09 08:30:54 marcocle Exp $
 // Include files 
 #include "DetCond/XmlRelyCnv.h"
+
 #include "DetDesc/ValidDataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -8,8 +9,17 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
+
 #include "DetCond/IConditionsDBCnvSvc.h"
+#include "DetCond/ICondDBAccessSvc.h"
+
 #include "GaudiKernel/TimePoint.h"
+//#include "CoolKernel/IValidityKey.h"
+
+#include "CoolKernel/IFolder.h"
+#include "CoolKernel/IObject.h"
+#include "CoolKernel/IDatabase.h"
+#include "RelationalCool/RelationalException.h"
 
 // local
 
@@ -92,7 +102,7 @@ StatusCode XmlRelyCnv::createObj (IOpaqueAddress* pAddress,
 
   log << MSG::DEBUG << "Setting object validity" << endreq;
   setObjValidity(since,till,pObject);
-
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -136,7 +146,7 @@ StatusCode XmlRelyCnv::updateObj (IOpaqueAddress* pAddress,
         return StatusCode::FAILURE;
       }
       // Deep copy the new Condition into the old DataObject
-      log << MSG::INFO << "Be careful, because ValidDataObject::update() ins not really implemented" << endmsg;
+      log << MSG::INFO << "Be careful, because ValidDataObject::update() is not really implemented" << endmsg;
       pVDO->update( *pNewVDO );  
       // Delete the useless Condition
       delete pNewVDO;
@@ -178,68 +188,93 @@ StatusCode XmlRelyCnv::i_delegatedCreation(IOpaqueAddress* pAddress,
                                            DataObject *&pObject,TimePoint &since,TimePoint &till){
   StatusCode sc;
 
-  // first try to get the object (it fails if the event time is not defined)
-  std::string stringData;
-  sc = getCondDBObject(since,till,stringData,pAddress->par()[0]);
-  if (sc.isFailure()){
-    return sc;
-  }
-  
   MsgStream log(msgSvc(),"XmlRelyCnv");
 
-  std::string description;
-  sc = getCondDBFolder(description,pAddress->par()[0]);
-  if (sc.isFailure()){
-    log << MSG::ERROR << "Could not get folder description for '" <<
-      pAddress->par()[0] << "'" << endmsg;
-    return sc;
-  }
-
-  long storage_type;
-  sc  = m_condDBCnvSvc->decodeDescription( description,storage_type);
+  TimePoint now;
+  sc = eventTime(now);
   if (sc.isFailure()) {
-    log << MSG::ERROR << "Could not decode folder description" << endreq;
+    log << MSG::ERROR
+        << "Cannot create DataObject: event time undefined"
+        << endmsg;
     return sc;
   }
 
-  log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
-  // Create temporary address for the relevant type and classID 
-  IOpaqueAddress *tmpAddress;
-  const std::string par[2] = { stringData, 
-                               pAddress->par()[1]};
-  sc = dynamic_cast<IConversionSvc*>(m_condDBCnvSvc)->
-    addressCreator()->createAddress
-    ( storage_type,pAddress->clID() , par, 0, tmpAddress );
-  if (sc.isFailure()){
-     log << MSG::ERROR 
-         << "Persistency service could not create a new address" << endreq;
-    return sc;
+  try {
+
+    cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(pAddress->par()[0]);    
+    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now));
+
+    long storage_type = object->payloadValue<long>("storage_type");
+
+    since = m_condDBCnvSvc->valKeyToTime(object->since());
+    till  = m_condDBCnvSvc->valKeyToTime(object->till());
+
+    log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
+
+    // Create temporary address for the relevant type and classID 
+    IOpaqueAddress *tmpAddress;
+    const std::string par[2] = { object->payloadValue<std::string>("data"), 
+                                 pAddress->par()[1]};
+    sc = dynamic_cast<IConversionSvc*>(m_condDBCnvSvc)->
+      addressCreator()->createAddress
+      ( storage_type,pAddress->clID() , par, 0, tmpAddress );
+    if (sc.isFailure()){
+      log << MSG::ERROR 
+          << "Persistency service could not create a new address" << endreq;
+      return sc;
+    }
+
+    if (sc.isFailure()) return sc;
+    tmpAddress->addRef();
+    if ( pAddress->registry() ){
+      log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier() << endmsg;
+    } else {
+      log << MSG::WARNING << "the address does not have a registry" << endmsg;
+    }
+    tmpAddress->setRegistry(pAddress->registry());
+    if (tmpAddress->registry()) {
+      log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier() << endmsg;
+    } else {
+      log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
+    }
+    
+    sc = m_detPersSvc->createObj ( tmpAddress, pObject );
+    tmpAddress->release();
+    if ( sc.isFailure() ) {
+      log << MSG::ERROR 
+          << "Persistency service could not create a new object" << endreq;
+      return sc;
+    }
+    
+  } catch ( cool::RelationalFolderNotFound &e) {
+    log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  } catch (cool::RelationalObjectNotFound &e) {
+    log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
   }
 
-  if (sc.isFailure()) return sc;
-  tmpAddress->addRef();
-  if ( pAddress->registry() ){
-    log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier() << endmsg;
-  } else {
-    log << MSG::WARNING << "the address does not have a registry" << endmsg;
-  }
-  tmpAddress->setRegistry(pAddress->registry());
-  if (tmpAddress->registry()) {
-    log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier() << endmsg;
-  } else {
-    log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
-  }
   
-  sc = m_detPersSvc->createObj ( tmpAddress, pObject );
-  tmpAddress->release();
-  if ( sc.isFailure() ) {
-    log << MSG::ERROR 
-        << "Persistency service could not create a new object" << endreq;
-    return sc;
-  }
-
   log << MSG::DEBUG << "New object successfully created" << endreq;
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+
+
+pool::AttributeListSpecification XmlRelyCnv::m_attlist;
+
+const pool::AttributeListSpecification & XmlRelyCnv::attrListSpec() {
+  static bool first = true;
+  if (first) {
+    //    MsgStream log(msgSvc(),"XmlRelyCnv");
+    //    log << MSG::DEBUG << "Preparing the AttributeListSpecification" << endmsg;
+    std::cout << "Preparing the AttributeListSpecification" << std::endl;
+    m_attlist.push_back<long>("storage_type");
+    m_attlist.push_back<std::string>("data");
+    first = false;
+  }
+  return m_attlist;
 }
 
 //=============================================================================

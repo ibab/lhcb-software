@@ -1,7 +1,12 @@
-# $Id: release.notes,v 1.27 2004-12-08 16:47:53 marcocle Exp $
+# $Id: release.notes,v 1.28 2005-02-09 08:30:54 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+! 2005-01-27 - Marco CLEMENCIC
+ - Upgrade to first preliminary version of the Conditions Database API:
+	 COOL_0_0_1
+
+==============================================================================
 ! 2004-12-08 - Marco Clemencic
  - Upgrade to latest stable version of CondDB (CONDDB_0_2_0) and fixed for the
 changes in Gaudi/LHCb

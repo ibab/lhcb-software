@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.9 2004-12-08 17:19:17 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.10 2005-02-09 08:30:54 marcocle Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiKernel/ConversionSvc.h"
 
 /// Forward and external declarations
-class ConditionsDBGate;
 template <class TYPE> class SvcFactory;
 class IDetDataSvc;
 class IOpaqueAddress;
@@ -15,18 +14,16 @@ class IOpaqueAddress;
 ///---------------------------------------------------------------------------
 /** @class ConditionsDBCnvSvc ConditionsDBCnvSvc.h Det/DetCond/ConditionsDBCnvSvc.h
 
-    A conversion service for CERN-IT CondDB persistency.
+    A conversion service for CERN-IT COOL (ex. CondDB) persistency.
     Allows to create and update condition data objects (i.e. DataObjects
     implementing IValidity).
 
-    @author Andrea Valassi 
-    @date February 2001
     @author Marco Clemencic 
     @date November 2004
 *///--------------------------------------------------------------------------
 
 class ConditionsDBCnvSvc : public ConversionSvc, 
-			   virtual public IConditionsDBCnvSvc
+                           virtual public IConditionsDBCnvSvc
 {
   
   /// Only factories can access protected constructors
@@ -84,49 +81,15 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
  public:
 
-  // Implementation of IConditionsDBCnvSvc.
-  // Create/update condition DataObject not necessarily registered in the TDS.
-  
-  /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
-  /// The string storage type is discovered at runtime in the CondDB.
-  /// The entry name identifies a condition amongst the many in the string.
-  StatusCode createConditionData   ( DataObject*&         refpObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const std::string&   entryName,
-				     const ITime&         time,
-				     const CLID&          classID,
-				     IRegistry*           entry = 0);
-
-  /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
-  /// The string storage type is discovered at runtime in the CondDB.
-  /// The entry name identifies a condition amongst the many in the string.
-  StatusCode updateConditionData   ( DataObject*          pObject,
-				     const std::string&   folderName,
-				     const std::string&   tagName,
-				     const std::string&   entryName,
-				     const ITime&         time,
-				     const CLID&          classID,
-				     IRegistry*           entry = 0);
-  
-  /// Decode the string storage type from the folder description string
-  StatusCode decodeDescription     ( const std::string&   description,
-				     long&       type);
-
-  /// Encode the string storage type into the folder description string
-  StatusCode encodeDescription     ( const long& type,
-				     std::string&         description);
-  
   /// Get the global tag name
   /// The global tag can only be set from the job options
   virtual const std::string& globalTag ( );
 
-  /// Handle to the ConditionsDBGate
-  IConditionsDBGate* conditionsDBGate ( );
+  /// Convert from TimePoint class to cool::ValidityKey.
+  virtual cool::IValidityKey timeToValKey(const TimePoint &time);
+   
+  /// Convert from cool::ValidityKey to TimePoint class.
+  virtual TimePoint valKeyToTime(const cool::IValidityKey &key);
 
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
@@ -136,8 +99,8 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   /// Global tag name (can be set using the JobOptionsSvc)
   std::string          m_globalTag;
 
-  /// Handle to the low-level gate to the ConditionsDB
-  ConditionsDBGate*    m_conditionsDBGate;
+  /// Handle to the databas Access service
+  ICondDBAccessSvc*    m_dbAccSvc;
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;

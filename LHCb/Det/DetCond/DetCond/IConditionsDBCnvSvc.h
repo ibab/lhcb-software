@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.8 2004-12-08 17:19:16 marcocle Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.9 2005-02-09 08:30:53 marcocle Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -9,16 +9,17 @@
 #include "GaudiKernel/ClassID.h"
 
 // Type definition
-#include "ConditionsDB/CondDBKey.h"
+#include "CoolKernel/IValidityKey.h"
 
 // IConditionsDBCnvSvc service ID (interface id, major version, minor version) 
-static const InterfaceID IID_IConditionsDBCnvSvc ("IConditionsDBCnvSvc", 1, 0);
+static const InterfaceID IID_IConditionsDBCnvSvc ("IConditionsDBCnvSvc", 2, 0);
 
 // Forward declarations
 class DataObject;
-class IConditionsDBGate;
+class ICondDBAccessSvc;
 class IRegistry;
 class ITime;
+class TimePoint;
 
 ///---------------------------------------------------------------------------
 /** @class IConditionsDBCnvSvc IConditionsDBCnvSvc.h Det/DetCond/IConditionsDBCnvSvc.h
@@ -46,51 +47,14 @@ class IConditionsDBCnvSvc : virtual public IInterface
 
  public:
   
-  // Create/update condition DataObject not necessarily registered in the TDS.
-
-  /// Create a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
-  /// The string storage type is discovered at runtime in the CondDB.
-  /// The entry name identifies a condition amongst the many in the string.
- virtual
-    StatusCode createConditionData( DataObject*&         refpObject,
-				    const std::string&   folderName,
-				    const std::string&   tagName,
-				    const std::string&   entryName,
-				    const ITime&         time,
-				    const CLID&          classID,
-				    IRegistry*           entry=0 ) = 0;
-  
-  /// Update a condition DataObject by folder name, tag and time.
-  /// This method does not register DataObject in the transient data store,
-  /// but may register TDS addresses for its children if needed (e.g. Catalog).
-  /// The string storage type is discovered at runtime in the CondDB.
- /// The entry name identifies a condition amongst the many in the string.
-  virtual
-    StatusCode updateConditionData( DataObject*          pObject,
-				    const std::string&   folderName,
-				    const std::string&   tagName,
-				    const std::string&   entryName,
-				    const ITime&         time,
-				    const CLID&          classID,
-				    IRegistry*           entry=0 ) = 0;
-  
-  /// Decode the string storage type from the folder description string
-  virtual 
-    StatusCode decodeDescription( const std::string&   description,
-				  long&       type ) = 0;
-  
-  /// Encode the string storage type into the folder description string
-  virtual 
-    StatusCode encodeDescription( const long& type,
-				  std::string&         description ) = 0;
-  
   /// Get the global tag name
   virtual const std::string& globalTag ( ) = 0;
 
-  /// Get a handle to the ConditionsDBGate
-  virtual IConditionsDBGate* conditionsDBGate ( ) = 0;
+  /// Convert from TimePoint class to cool::ValidityKey.
+  virtual cool::IValidityKey timeToValKey(const TimePoint &) = 0;
+   
+  /// Convert from cool::ValidityKey to TimePoint class.
+  virtual TimePoint valKeyToTime(const cool::IValidityKey &) = 0;
 
 };
 
