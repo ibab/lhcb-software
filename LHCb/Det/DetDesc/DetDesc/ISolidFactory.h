@@ -1,8 +1,6 @@
-// $Id: ISolidFactory.h,v 1.3 2002-05-04 13:13:24 ibelyaev Exp $
+// $Id: ISolidFactory.h,v 1.4 2003-11-24 14:43:44 cattanem Exp $
 // ==========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ==========================================================================
-// $Log: not supported by cvs2svn $
 // ==========================================================================
 #ifndef DETDESC_ISOLIDFACTORY_H 
 #define DETDESC_ISOLIDFACTORY_H 1
@@ -11,9 +9,7 @@
 // forward declarations 
 class ISolid;   // DetDesc
 
-/** @var IID_ISolidFactory
- *  Declaration of the interface ID ( interface id, major & minor versions) 
- */
+/// Declaration of the interface ID ( interface id, major & minor versions) 
 static const InterfaceID IID_ISolidFactory( "ISolidFactory" , 2 , 0 ); 
 
 /** @class ISolidFactory ISolidFactory.h DetDesc/ISolidFactory.h

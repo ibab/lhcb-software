@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.2 2002-12-13 14:18:18 ibelyaev Exp $
+// $Id: Services.h,v 1.3 2003-11-24 14:43:44 cattanem Exp $
 #ifndef DETDESC_SERVICES_H 
 #define DETDESC_SERVICES_H 1
 
@@ -9,20 +9,17 @@ class IDataProviderSvc;
 class IMessageSvc;
 
 
-/**
- * @namespace DetDesc DetDesc.h "DetDesc/DetDesc.h"
- *  
- * single access point to several usefull methods and accessor.
- * The main goal here is to cache references to very usefull services
- * to avoid a call to Service::service from each small component or
- * object.
+/** @file Services.h
+ *   This namespace is already documented in the file DetDesc.h
  *
- * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @author Sebastien Ponce
  */
+
 namespace DetDesc {
 
-  /**
+  /** @class Services Services.h DetDesc/Services.h
+   *
    * This class is a container for accessors to different usefull services,
    * namely the service locator, message service and the detector data provider.
    * @author Sebastien Ponce

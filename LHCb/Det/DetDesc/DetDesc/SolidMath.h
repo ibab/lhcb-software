@@ -1,8 +1,11 @@
-// $Id: SolidMath.h,v 1.3 2002-10-30 15:02:44 ibelyaev Exp $
+// $Id: SolidMath.h,v 1.4 2003-11-24 14:43:44 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/10/30 15:02:44  ibelyaev
+//  fix a bug in DetDesc/SolidMath.h
+//
 // Revision 1.2  2002/05/13 18:29:53  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 13 May 2002
 //
@@ -16,7 +19,7 @@
 #include "DetDesc/ISolid.h" 
 #include "DetDesc/SolidTicks.h"
 
-/** @file 
+/** @file SolidMath.h
  *  
  *  collection of mathematical utilities for dealing with SoolidTicks 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -26,8 +29,7 @@
 namespace SolidTicks
 {
 
-  /** @fn SolveQuadraticEquation
-   *  solving the quadratic equation:  a*x*x + b*x + c = 0; 
+  /**  Solve the quadratic equation:  a*x*x + b*x + c = 0; 
    *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
    *  @date        10.02.2000 
    *  @param a  equation parameter

@@ -1,4 +1,4 @@
-// $Id: PVolume.h,v 1.11 2003-10-09 13:43:07 cattanem Exp $ 
+// $Id: PVolume.h,v 1.12 2003-11-24 14:43:44 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 /// STD & STL 
@@ -247,7 +247,6 @@ public:
    *  @return reference to stream buffer 
    */ 
   virtual StreamBuffer& serialize(StreamBuffer& s )  const;
-  /** @} end of group Serialize */ 
 
 
 protected:
