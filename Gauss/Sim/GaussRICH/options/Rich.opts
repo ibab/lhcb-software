@@ -1,0 +1,13 @@
+// Rich specific job options
+
+GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
+GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
+
+//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFill=false;
+
+///GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
+
+
