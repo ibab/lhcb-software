@@ -8,6 +8,7 @@
  - Update RichTrackID and RichTrackSelector to no longer require knowledge of 
    the bit structure in the TrStoredTrack "history" code. 
    Add track charge and momentum selection criteria to RichTrackSelector.
+ - Remove debugging safety check from RichRecPhotonKey constructor
 
 !====================== RichRecBase v1r12 2004-06-18 =======================
 

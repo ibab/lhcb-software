@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.15 2004-06-18 09:44:11 jonesc Exp $
+// $Id: RichRecAlgBase.cpp,v 1.16 2004-06-29 19:35:42 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -33,6 +33,12 @@ StatusCode RichRecAlgBase::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Cache creator tools
+  // ================================================================
+  // To be removed at a later date since the tools are now acquire on
+  // in the accessor methods (see RichRecAlgBase.h). However, these
+  // calls are kept for a while to allow the new inline functions to
+  // get used everywhere first
+  // ================================================================
   acquireTool( "RichPixelCreator",   m_pixTool  );
   acquireTool( "RichTrackCreator",   m_tkTool   );
   acquireTool( "RichSegmentCreator", m_segTool  );
