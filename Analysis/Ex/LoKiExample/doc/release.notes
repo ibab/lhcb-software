@@ -1,11 +1,45 @@
-! $Id: release.notes,v 1.13 2005-03-24 11:18:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.14 2005-03-29 16:47:37 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-03-29 - Vanya BELYAEV
+
+ - no new code, just add code metrics report from SLOCCount 
+
+Categorizing files.
+Computing results.
+
+SLOC    Directory       SLOC-by-Language (Sorted)
+1435    src_top_dir     cpp=1435
+229     jobs            python=210,sh=19
+36      cmt             csh=20,sh=16
+0       CVS             (none)
+0       doc             (none)
+0       options         (none)
+0       src_CVS         (none)
+
+Totals grouped by language (dominant language first):
+cpp:           1435 (84.41%)
+python:         210 (12.35%)
+sh:              35 (2.06%)
+csh:             20 (1.18%)
+
+Total Physical Source Lines of Code (SLOC)                = 1,700
+Development Effort Estimate, Person-Years (Person-Months) = 0.35 (4.19)
+ (Basic COCOMO model, Person-Months = 2.4 * (KSLOC**1.05))
+Schedule Estimate, Years (Months)                         = 0.36 (4.31)
+ (Basic COCOMO model, Months = 2.5 * (person-months**0.38))
+Estimated Average Number of Developers (Effort/Schedule)  = 0.97
+Total Estimated Cost to Develop                           = $ 47,164
+ (average salary = $56,286/year, overhead = 2.40).
+SLOCCount is Open Source Software/Free Software, licensed under the FSF GPL.
+Please credit this data as "generated using 'SLOCCount' by David A. Wheeler."
+
 
 ! 2005-03-24 - Vanya BELYAEV
  - src/LoKi_Higgs1.cpp 
