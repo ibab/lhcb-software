@@ -10,7 +10,7 @@ apply_pattern BrunelVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r14
 
-#-- External libraries (as defined in GAUDI_v13r0)
+#-- External libraries (as defined in GAUDI_v14r0)
 use ExternalLibs	v4r4
 use AIDA		v3r300
 use CLHEP		v2r1810p0
@@ -22,13 +22,13 @@ use PI			v1r112
 use PCRE		v1r44
 use UUID		v1r32
 use SEAL		v1r133p0
-use POOL		v1r150p1
+use POOL		v1r150p0
 
 #-- Gaudi libraries (from GAUDI_v14r0)
 use GaudiKernel		v15r0
 use GaudiSvc 		v11r1
-use GaudiAlg 		v6r4
-use GaudiAud 		v6r3
+use GaudiAlg 		v6r5
+use GaudiAud 		v6r4
 use GaudiGSL		v5r0
 use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4

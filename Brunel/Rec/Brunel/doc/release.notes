@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r0>2004-01-12 Brunel v23r0</A></H1><PRE>
+</PRE><H1><A NAME=v23r0>2004-01-22 Brunel v23r0</A></H1><PRE>
 - Built against GAUDI v14r0
 
 - New functionality
@@ -21,6 +21,8 @@ Purpose: LHCb reconstruction program
   . Backwards incompatible update of CaloCluster - new seed attribute
     (CaloEvent v13r0, CaloReco v1r8)
   . Add HepMCEvents (written if present on Sim+Digi files)
+  . Add Link objects (MC truth of tracking digits used by Trg tracking)
+  . Add MCTrackInfo (Trg definition of "reconstructible")
 
 
 </PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>
