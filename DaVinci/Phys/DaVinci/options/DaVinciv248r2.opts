@@ -1,0 +1,9 @@
+//***********************************************************************
+// Database specific options for DaVinci when using dbase version v248r2
+// ---------- "LHCb light detector for Summer 2002 production -----------
+
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
+MagneticFieldSvc.FieldMapFile = "$LHCBSOFT/SICB/dbase/v248r2/cdf/field044.cdf";
+ParticlePropertySvc.ParticlePropertiesFile = "$LHCBSOFT/SICB/dbase/v248r2/cdf/particle.cdf";
+
+

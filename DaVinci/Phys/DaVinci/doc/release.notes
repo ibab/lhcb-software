@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.17 2002-07-10 16:58:11 gcorti Exp $
+! $Id: release.notes,v 1.18 2002-07-18 20:20:54 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+! 2002-07-18 - Gloria Corti
+ - Remove the use of the LHCBDBASE environment (dbase in no longer
+   necessary) and modify DaVinci.job accordingly
+ - All jobOptions dependecy from xml-dbase version are in DaVinciv248r2.opts
+ - Remove suanal.F (no longer support of SICB-like user analysis) 
+ - Add detectors Dlls (VeloDet, ITDet, OTDet, CaloDet) in DaVinciCommon.opts
+ - use new Gaudi packages (equivalent to GaudiSys v10r4)
+ - use PhysEvent v6r*
+
+! 2002-07-11 - Gloria Corti
+ - use ChargeProtoPAlg and PrimVertex
 
 ! 2002-07-10 - Gloria Corti
  - Prepare requirements file for OODST version

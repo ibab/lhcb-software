@@ -2,6 +2,7 @@
 // job Options for DaVinci Testing suite
 //==============================================================
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciv248r2.opts"
 
 //--------------------------------------------------------------
 // Histograms are filled in some of the testing algorithms
@@ -34,19 +35,37 @@ MemoryAuditor.Enable = false;
 //#include "$DAVINCITESTROOT/options/TestParticleStuffer.opts"
 //#include "$DAVINCITESTROOT/options/TestGeomDispCalculator.opts"
 //#include "$DAVINCITESTROOT/options/TestMassVertexFitter.opts"
-//#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
-#include "$DAVINCITESTROOT/options/TestDebugTool.opts"
+#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
+//#include "$DAVINCITESTROOT/options/TestDebugTool.opts"
 //#include "$DAVINCITESTROOT/options/TestDecayFinder.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 1;
+ApplicationMgr.EvtMax = 50;
 EventSelector.FirstEvent = 1;
    
 //---------------------------------------------------------------
 // Input data for test
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
+//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
+//EventSelector.Input = {"DATAFILE='rfio:/shift/lhcb003d/data01/z5/stage/D278590.757105' TYP='ROOT' OPT='READ'" };
+//---------------------------------------------------------------
+//-- GAUDI data cards generated on 15-JUL-2002
+//-- For Event Type = 411300 / Data type = ALL 
+//--     DST Program = Brunel v11r0
+//--     Database version = v248r2
+//--     
+//-- 5 dataset(s) found - NbEvents = 2500
+//-- 
+EventSelector.Input   = {
+//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278581' TYP='ROOT' OPT='READ'",  // JobID = 100122
+//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278587' TYP='ROOT' OPT='READ'",  // JobID = 100135
+//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278583' TYP='ROOT' OPT='READ'",  // JobID = 100136
+//"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278585' TYP='ROOT' OPT='READ'",  // JobID = 100153
+"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
+};
+//-- End of Data cards 
+
 //################################################################
 

@@ -9,10 +9,9 @@ ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 
 // Detector Description & Magnetic Field
 #include "$STDOPTS/DetDesc.opts"
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.DLLs   += { "Magnet" };
-MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
+ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet", "CaloDet" };
 
 // Persistency setup
 EventDataSvc.ForceLeaves = true;

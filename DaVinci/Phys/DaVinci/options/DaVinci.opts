@@ -8,6 +8,7 @@
 // DaVinciCommon.opts
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciv248r2.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -38,7 +39,8 @@ MemoryAuditor.Enable = false;
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed at the beginning
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
+//ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
+ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 
 //--------------------------------------------------------------
@@ -68,6 +70,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // you can overwrite any of the default options
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
+#include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
 
 //-----------------------------------------------------------------
 // Private algorithms options
@@ -93,7 +96,7 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 ChargedProtoPAlg.OutputLevel            = 2;
- 
+
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
@@ -105,7 +108,19 @@ EventSelector.PrintFreq = 1;
 // Input data
 //---------------------------------------------------------------
 //EventSelector.Input = {"DATAFILE='$LHCBDEV/Rec/Brunel/v11r1/job/dst_v248r2.root' TYP='ROOT' OPT='READ'" };
-EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
-
+//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
+//EventSelector.Input = {"DATAFILE='rfio:/shift/lhcb003d/data01/z5/stage/D278590.757105' TYP='ROOT' OPT='READ'" };
+//---------------------------------------------------------------
+//-- GAUDI data cards generated on 15-JUL-2002
+//-- For Event Type = 411300 / Data type = ALL 
+//--     DST Program = Brunel v11r0
+//--     Database version = v248r2
+//--     
+//-- 1 dataset(s) found - NbEvents = 500
+//-- 
+EventSelector.Input   = {
+"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
+};
+//-- End of Data cards 
 //################################################################
 
