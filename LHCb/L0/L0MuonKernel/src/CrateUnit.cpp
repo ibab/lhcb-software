@@ -48,7 +48,9 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
 	   break;
 	 }
        }
-     }  
+     } else {
+       ok = true;
+     } 
      
      // We do not need this board  
      if ( ! ok ) continue; 
@@ -71,6 +73,8 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
 	 if ( ipu != config_pus.end() ) {
 	   ok = true;
 	 }
+       } else {
+         ok = true;
        }	 
 	        
        if ( ok ) {
