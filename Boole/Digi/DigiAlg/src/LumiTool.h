@@ -1,9 +1,9 @@
-// $Id: LumiTool.h,v 1.3 2004-06-23 12:39:12 cattanem Exp $ 
+// $Id: LumiTool.h,v 1.4 2004-07-22 09:00:03 cattanem Exp $ 
 #ifndef LUMITOOL_H
 #define LUMITOOL_H 1
 
 // Include files
-#include "GaudiTools/GaudiTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "DigiAlg/ILumiTool.h"
 
 // Forward declarations
