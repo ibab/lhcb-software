@@ -1,38 +1,38 @@
-// $Id: DeRich2.cpp,v 1.2 2002-10-30 11:36:56 papanest Exp $
-#define DERICH2_CPP
+// $Id: DeRich1.cpp,v 1.1 2002-10-30 11:36:56 papanest Exp $
+#define DERICH1_CPP
 
 // Include files
-#include "RichDet/DeRich2.h"
+#include "RichDet/DeRich1.h"
 #include "RichDet/DeRichFlatMirror.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 //------------------------------------------------------------------------------
 //
-// Implementation of class :  DeRich2
+// Implementation of class :  DeRich1
 //
 //------------------------------------------------------------------------------
 
-const CLID& CLID_DERich2 = 12002;  // User defined
+const CLID& CLID_DERich1 = 12001;  // User defined
 
 // Standard Constructors
-DeRich2::DeRich2() {}
+DeRich1::DeRich1() {}
   
 // Standard Destructor
-DeRich2::~DeRich2() {}
+DeRich1::~DeRich1() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich2::classID() {
-  return CLID_DERich2;
+const CLID& DeRich1::classID() {
+  return CLID_DERich1;
 }
 
 //===========================================================================
 
-StatusCode DeRich2::initialize() {
+StatusCode DeRich1::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
-  MsgStream log(msgSvc(), "DeRich2" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;
+  MsgStream log(msgSvc(), "DeRich1" );
+  log << MSG::DEBUG <<"Starting initialisation for DeRich1"<< endreq;
   
   double nominalCoCX = userParameterAsDouble("NominalCoCX");
   double nominalCoCY = userParameterAsDouble("NominalCoCY");
@@ -53,21 +53,21 @@ StatusCode DeRich2::initialize() {
 
   double d = userParameterAsDouble("D");
   
-  m_nominalPlaneLeft = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
-  m_nominalPlaneRight = HepPlane3D(-nominalNorX, nominalNorY, nominalNorZ, d);
+  m_nominalPlaneTop = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
+  m_nominalPlaneBottom = HepPlane3D(nominalNorX, -nominalNorY, nominalNorZ, d);
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endreq;
+  log << MSG::DEBUG <<"Finished initialisation for DeRich1"<< endreq;
   return sc;
 }
 
 //============================================================================
 
-HepPoint3D DeRich2::nominalCentreOfCurvature(Rich::Side side) const
+HepPoint3D DeRich1::nominalCentreOfCurvature(Rich::Side side) const
 {
   HepPoint3D  myPoint = m_nominalCentreOfCurvature;
   
-  if (Rich::right == side) {
-    myPoint.setX(-m_nominalCentreOfCurvature.x());
+  if (Rich::bottom == side) {
+    myPoint.setY(-m_nominalCentreOfCurvature.y());
   }
   
   return myPoint;
@@ -75,12 +75,12 @@ HepPoint3D DeRich2::nominalCentreOfCurvature(Rich::Side side) const
 
 //============================================================================
 
-HepNormal3D DeRich2::nominalNormal(Rich::Side side) const
+HepNormal3D DeRich1::nominalNormal(Rich::Side side) const
 {
   HepNormal3D  myNormal = m_nominalNormal;
   
-  if (Rich::right == side) {
-    myNormal.setX(-m_nominalNormal.x());
+  if (Rich::bottom == side) {
+    myNormal.setY(-m_nominalNormal.y());
   }
   
   return myNormal;
@@ -88,13 +88,13 @@ HepNormal3D DeRich2::nominalNormal(Rich::Side side) const
 
 //============================================================================
 
-HepPlane3D DeRich2::nominalPlane(Rich::Side side) const
+HepPlane3D DeRich1::nominalPlane(Rich::Side side) const
 {
   
-  if (Rich::left == side) {
-    return m_nominalPlaneLeft;
+  if (Rich::top == side) {
+    return m_nominalPlaneTop;
   } else {
-    return m_nominalPlaneRight;
+    return m_nominalPlaneBottom;
   }
   
 }

@@ -6,3 +6,6 @@
 
 ! 2002-07-16 - Antonis Papanestis
  - the package has now a completely new structure.
+
+! 2002-10-30 - Antonis Papanestis
+  added class for Rich1, made a lot of bug fixes

@@ -1,6 +1,6 @@
-// $Id: DeRich2.h,v 1.2 2002-10-30 11:36:56 papanest Exp $
-#ifndef DERICH2_H
-#define DERICH2_H 1
+// $Id: DeRich1.h,v 1.1 2002-10-30 11:36:55 papanest Exp $
+#ifndef DERICH1_H
+#define DERICH1_H 1
 
 
 // Include files
@@ -13,27 +13,27 @@
 #include "RichKernel/RichDefinitions.h"
 
 // External declarations
-extern const CLID& CLID_DERich2;
+extern const CLID& CLID_DERich1;
 
 
-/** @class DeRich2 DeRich2.h
+/** @class DeRich1 DeRich1.h
  *
- * This is the definition of the Rich2 detector class
+ * This is the definition of the Rich1 detector class
  *
  * @author Antonis Papanestis
  */
-class DeRich2: public DetectorElement {
+class DeRich1: public DetectorElement {
 
 public:
   /**
    * Constructor for this class
    */
-  DeRich2();
+  DeRich1();
 
   /**
    * Default destructor
    */
-  ~DeRich2();
+  ~DeRich1();
 
   /**
    * Retrieves reference to class identifier
@@ -83,9 +83,9 @@ private:
 
   HepPoint3D  m_nominalCentreOfCurvature;
   HepNormal3D m_nominalNormal;
-  HepPlane3D m_nominalPlaneLeft;
-  HepPlane3D m_nominalPlaneRight;
+  HepPlane3D m_nominalPlaneTop;
+  HepPlane3D m_nominalPlaneBottom;
 
 };
-
-#endif    // DERICH2_H
+ 
+#endif    // DERICH1_H

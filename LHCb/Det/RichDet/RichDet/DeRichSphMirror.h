@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.1 2002-07-16 16:02:36 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.2 2002-10-30 11:36:56 papanest Exp $
 #ifndef DERICHSPHMIRROR_H
 #define DERICHSPHMIRROR_H 1
 
@@ -7,6 +7,7 @@
 #include "CLHEP/Geometry/Point3D.h"
 
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/ISolid.h"
 
 
 // External declarations
@@ -64,9 +65,9 @@ public:
    * Retrieves the centre of this spherical mirror
    * @return the centre of this sperical mirror as a HepPoint3D
    */
-  inline HepPoint3D mirrorCentre(){
-    return m_mirrorCentre;
-  }
+  //inline HepPoint3D mirrorCentre(){
+  //  return m_mirrorCentre;
+  //}
   
   /**
    * Retrieves the number of this spherical mirror
@@ -76,7 +77,24 @@ public:
     return m_mirrorNumber;
   }
 
+  /**
+   * Checks if the direction intersects with the mirror
+   * @return StatusCode
+   */
+  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
+
+  /**
+   * Checks if the direction intersects with the mirror and returns the
+   * intersction point
+   * @return StatusCode
+   */
+  StatusCode intersects(const HepPoint3D& globalP, 
+                        const HepVector3D& globalV,
+                        HepPoint3D& intersectionPoint);
+
 private:
+
+  const ISolid* m_solid;
 
   HepPoint3D m_centreOfCurvature;
   HepPoint3D m_mirrorCentre;
