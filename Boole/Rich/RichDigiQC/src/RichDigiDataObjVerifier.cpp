@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.6 2005-01-07 12:38:09 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.7 2005-01-14 17:29:58 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -162,9 +162,9 @@ StatusCode RichDigiDataObjVerifier::execute() {
         // locate associated MCRichDigit
         MCRichDigit * mcDig = ( richMcDigits ? richMcDigits->object( (*iDigit)->key() ) : 0 );
         if ( !mcDig ) { 
-          warning() << " -> Failed to locate associated MCRichDigit" << endreq; 
+          warning() << " -> Failed to locate associated MCRichDigit for RichDigit " << (*iDigit)->key() << endreq; 
         } else {
-          debug() << " -> Found MCRichDigit " << (long)mcDig->key() << endreq;
+          debug() << " -> Found MCRichDigit " << mcDig->key() << endreq;
         }
 
       }
