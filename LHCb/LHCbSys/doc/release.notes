@@ -9,15 +9,18 @@
 
  - New packages: GaudiTools v8r1 (added temporarily to pick up latest fixes)
 
- - Modified packages: KernelSys v3r4, LHCbKernel v4r4,
-                      EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1,
-                      DetSys v5r2, Magnet v2r5, AssociatorsSys v1r12, 
-                      ITAssociators v2r8, CaloAssociators v4r1
+ - Modified packages: KernelSys v3r4, LHCbKernel v4r4, RichKernel v4r5,
+                EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1, RichEvent v7r2,
+                DetSys v5r2, Magnet v2r5, RichDet v7r0,
+                AssociatorsSys v1r12, ITAssociators v2r8, CaloAssociators v4r1
 
  - In LHCbKernel v4r4:
    . Associator tools now inherit from GaudiTools
    . Relations do not return failure in case of unresolved SmartRefs when
      rebuilt from persistency. 
+
+ - In RichKernel v4r5:
+   . Improvements to RichHypoData
 
  - In DAQEvent v4r1:
    . Add L0PU to RawBuffer::BankType enum
@@ -26,9 +29,17 @@
    . This version is built on CVS branch v13r0b
    . Use VeloChannelID as key of VeloCluster ** not backwards compatible ** 
 
+ - In RichEvent v7r2:
+   . Various cleanups
+
  - In Magnet v2r5:
    . Remove dependency on FieldMap package. Required version must be used 
      explicitly in application requirements
+
+ - In RichDet v7r0:
+   . Added standard TDS locations
+   . Removed DeRichPDPanel
+   . Added local to global conversion for HPDPanel 
 
  - In ITAssociators v2r8:
    . Add tool to associate only digits selected for the RawBuffer
