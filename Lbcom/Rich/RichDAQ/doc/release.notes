@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v1r2 2004-02-05 =========================
 ! 2004-01-29 - Chris Jones
  - replacement of #define with static variables
 
