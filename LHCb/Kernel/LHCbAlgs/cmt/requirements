@@ -16,12 +16,13 @@ include_path    none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use GaudiAlg    v7r*
+use LHCbTools	v1r*	Kernel
 use GenEvent    v3r*    Event
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library         LHCbAlgs    ../src/*.cpp
+library         LHCbAlgs    ../src/*.cpp -import=AIDA
 
 #============================================================================
 # define component library link options
