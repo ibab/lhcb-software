@@ -1,0 +1,9 @@
+$ Header: $
+Package: DetDescExample
+Package Manager: I.Belyaev
+
+Purpose: Demonstrate how to access detector elements, their geometry 
+         parameters and materials from detector description XML database.
+
+!20010308 DetDescExample v1
+ - Initial version, extracted from old GaudiExamples package

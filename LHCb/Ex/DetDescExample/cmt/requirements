@@ -1,0 +1,31 @@
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/cmt/requirements,v 1.1.1.1 2001-03-13 15:11:13 cattaneb Exp $
+package DetDescExample
+version v1
+
+branches doc src job options cmt
+
+# Main program and standard job options
+use GaudiConf     v4*     
+
+# GAUDI framework
+use GaudiSys      v7*
+
+# SicB event data persistency and database
+use SicbCnv       v11*  SICB
+use dbase         v234* SICB
+
+# LHCb event model
+use LHCbEvent     v9*   Event
+
+# Detector Description package and database
+use DetDesc       v6*   Det
+use XmlDDDB       v5*   Det
+
+#==> DetDesc example
+application DetDescExample *.cpp \
+            "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+
+# ========================= set macros ============================
+
+ignore_pattern package_stamps 
+macro DetDescExample_linkopts  "$(application_linkopts)"
