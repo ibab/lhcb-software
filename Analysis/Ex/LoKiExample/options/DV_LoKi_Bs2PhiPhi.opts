@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Bs2PhiPhi.opts,v 1.5 2005-02-17 10:22:43 ibelyaev Exp $
+// $Id: DV_LoKi_Bs2PhiPhi.opts,v 1.6 2005-02-18 09:33:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/02/17 10:22:43  ibelyaev
+//  update Bs-> Phi Phi example
+//
 // ============================================================================
 // include files 
 // ============================================================================
@@ -76,7 +79,7 @@ PoolDbCacheSvc.Catalog =
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 500 ;
+ApplicationMgr.EvtMax  = 50 ;
 
 // ============================================================================
 // The END 
