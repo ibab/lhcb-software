@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2004-02-13 08:50:15 ibelyaev Exp $ 
+# $Id: requirements,v 1.7 2004-03-15 16:43:29 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -10,10 +10,11 @@ author           Vanya BELYAEV
 version          v2r0
 
 # ============== structure ===================================================
-branches         cmt doc src python 
+branches         cmt doc src python options
 
 # ============== environment =================================================
 set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
+set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
 
 # ============== dependencies ================================================
 use              Bender      v*   Phys 
@@ -32,6 +33,9 @@ apply_pattern    application_path
 # The END 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/02/13 08:50:15  ibelyaev
+#  add few 'plotters'
+#
 # Revision 1.5  2004/02/10 12:37:34  ibelyaev
 #  update
 #

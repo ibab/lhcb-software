@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.6 2004-02-13 08:50:16 ibelyaev Exp $
+# $Id: Dstar.py,v 1.7 2004-03-15 16:43:30 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -40,7 +40,7 @@ class Dstar(Algo):
         kaons = self.select( tag = "K"  , cuts = 321 == ABSID )
 
         # Monte-Carlo truth 
-        tup1    = self.ntuple ( title = "D0 Tuple" )
+        tup1    = self.nTuple ( title = "D0 Tuple" )
         dm      = ADMASS("D0") < 30 * MeV   # create Delta Mass cut
         
         # Loop over all (K pi)  combinations 
@@ -64,7 +64,7 @@ class Dstar(Algo):
         D0s = self.selected( "D0" )
         if D0s.empty() : return SUCCESS                            # RETURN
         
-        tup2    = self.ntuple ( title = "D* Tuple" )
+        tup2    = self.nTuple ( title = "D* Tuple" )
         for Dpi in self.loop( formula = "D0 pi" , pid='D*(2010)-' ) :            
             # use delta mass trick instead of mass-constrained fit
             dm = Dpi.mass(1,2) - Dpi.mass(1)
@@ -105,7 +105,7 @@ class Dstar(Algo):
 # Generic job configuration 
 # =============================================================================
 
-bender.config( files   = [ '$DAVINCIROOT/options/DaVinci.opts' ] ,
+bender.config( files   = [ '$BENDEREXAMPLEOPTS/Dstar.opts' ] ,
                options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                            'HcalPIDmu.OutputLevel     =   5  ' ,
                            'EcalPIDe.OutputLevel      =   5  ' ,
@@ -132,7 +132,6 @@ preload.OutputLevel = 4
 
 desktop                   = g.property('Charged.PhysDesktop')
 desktop.ParticleMakerType = "CombinedParticleMaker"
-desktop.OutputLocation    = "/Event/Phys/Charged"
 
 maker                    = g.property('Charged.PhysDesktop.CombinedParticleMaker')
 maker.ExclusiveSelection = FALSE
@@ -147,11 +146,11 @@ g.topAlg += [ 'Dstar' ]
 
 alg = gaudi.iProperty('Dstar')
 alg.OutputLevel = 5
-alg.TupleLUN    = 'DSTAR'
+alg.NTupleLUN    = 'DSTAR'
+alg.OutputLocation = '/Event/Phys/Dstar2HH'
 
 desktop                 = g.property('Dstar.PhysDesktop')
 desktop.InputLocations  = [ "/Event/Phys/Charged"]
-desktop.OutputLocation  =   "/Event/Phys/Dstar"
 
 # output histogram file 
 hsvc = g.property( 'HistogramPersistencySvc' )
@@ -171,10 +170,13 @@ g.initialize()
 ## g.run(100)  ## crash !!
 g._evtpro.executeRun(500)
 
-#g.exit()
+g.exit()
 
 # =============================================================================
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/02/13 08:50:16  ibelyaev
+#  add few 'plotters'
+#
 # =============================================================================
