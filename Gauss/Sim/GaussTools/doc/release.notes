@@ -4,7 +4,13 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
-! 2003-05-30 - Ivan BELYAEV
+! 2003-05-30 - Vanya BELYAEV
+ - src/Components/GiGaRegionTool.h 
+   src/Components/GiGaRegionTool.cpp  new tool to create the "region"
+ - src/Components/GaussTools_load.cpp declare new tool
+
+
+! 2003-05-30 - Vanya BELYAEV
  - GiGaSetSimAttributes. add the recursive propagation of simulation attributes 
                          from mother to daughter volumes. 
  - cmt/requirements      increase the version 
