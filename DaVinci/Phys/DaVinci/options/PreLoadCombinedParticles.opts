@@ -55,3 +55,7 @@ PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 // Default value for output of PhysDesktop
 //  PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/User";
 
+// Default value for which type of tracks to use
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseLongTracks     = true;
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseUpstreamTracks = false;
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseVTTTracks      = false;
