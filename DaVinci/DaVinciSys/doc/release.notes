@@ -4,12 +4,24 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
-!====================  DaVinciSys v11r4 2004-03-17 ============================
+!====================  DaVinciSys v11r4 2004-03-23 ============================
+! 2004-03-23 -P. Koppenburg
+ - Changes in Calo software
+   . CaloPIDs           v2r1     Calo 
+   . CaloReco           v2r1     Calo
+   . GlobalReco         v4r5     Rec
+ - New package 
+   . B2XGamma        v1r0    PhysSel
+ - replaces 
+   # Bd2KstarGamma   v3r0    PhysSel
+   # Bd2OmegaGamma   v3r0    PhysSel
+   # Bs2PhiGamma     v3r0    PhysSel
+    
 ! 2004-03-16 -P. Koppenburg
  - Bug fixes in PreLoadParticles, *DecayFinder
    . DaVinciTools        v9r1     Phys
    . DaVinciMCTools      v5r3     Phys
-   
+
 !====================  DaVinciSys v11r3 2004-03-11 ============================
 ! 2004-03-11 -P. Koppenburg
  - New DVAlgorithm, new Calo packages, new LoKi, new track nomenclature
