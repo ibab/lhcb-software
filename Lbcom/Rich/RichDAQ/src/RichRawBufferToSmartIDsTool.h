@@ -4,16 +4,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.4 2005-01-13 13:11:33 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
- *
- *  Revision 1.2  2004/11/03 09:30:16  jonrob
- *  Update RichSmartID + add functionality to sort the data
- *
- *  Revision 1.1  2004/10/30 19:13:05  jonrob
- *  Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.5 2005-01-26 09:59:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,7 +35,7 @@
 /** @class RichRawBufferToSmartIDsTool RichRawBufferToSmartIDsTool.h
  *
  *  Tool to create RichSmartIDs from the raw buffer.
- *  Uses the raw decoding tool abd performs verious post processing tasks,
+ *  Uses the raw decoding tool and performs verious post processing tasks,
  *  such as sorting.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch

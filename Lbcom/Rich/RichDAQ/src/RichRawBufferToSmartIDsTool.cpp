@@ -5,28 +5,7 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.8 2005-01-14 16:58:22 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.7  2005/01/13 13:11:33  jonrob
- * Use new RichSmartID sorting utility class
- *
- * Revision 1.6  2005/01/07 12:35:59  jonrob
- * Complete rewrite
- *
- * Revision 1.5  2004/11/05 20:05:00  jonrob
- * update functor
- *
- * Revision 1.4  2004/11/03 09:30:16  jonrob
- * Update RichSmartID + add functionality to sort the data
- *
- * Revision 1.3  2004/11/02 13:13:38  jonrob
- * minro update - add constness
- *
- * Revision 1.2  2004/10/30 21:45:57  jonrob
- * update decoding tool
- *
- * Revision 1.1  2004/10/30 19:13:05  jonrob
- * Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.9 2005-01-26 09:59:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
