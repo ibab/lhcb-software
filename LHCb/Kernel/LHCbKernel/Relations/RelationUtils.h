@@ -1,8 +1,11 @@
-// $Id: RelationUtils.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.3 2002-04-24 21:16:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:18  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
@@ -53,8 +56,8 @@ namespace Relations
    *  @param minor    minor version 
    */
   CLID        clid        ( const std::string&  id           ,
-                            const unsigned long idFrom       ,
-                            const unsigned long idTo         ,
+                            const unsigned long idFrom   = 0 ,
+                            const unsigned long idTo     = 0 ,
                             const unsigned long weight   = 0 , 
                             const unsigned long major    = 0 ,
                             const unsigned long minor    = 0 ) ;

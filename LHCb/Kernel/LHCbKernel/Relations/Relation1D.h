@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.3 2002-04-09 07:58:53 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.4 2002-04-24 21:16:40 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/09 07:58:53  ibelyaev
+// *** empty log message ***
+//
 // Revision 1.2  2002/04/03 15:35:17  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
@@ -122,10 +125,10 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s ) const
   {
-    typedef typename FromTypeTraits::SERIALIZER FS;
-    typedef typename FromTypeTraits::APPLY      FA;
-    typedef typename ToTypeTraits::SERIALIZER   TS;
-    typedef typename ToTypeTraits::APPLY        TA;
+    typedef typename FromTypeTraits::Serializer FS;
+    typedef typename FromTypeTraits::Apply      FA;
+    typedef typename ToTypeTraits::Serializer   TS;
+    typedef typename ToTypeTraits::Apply        TA;
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
@@ -151,10 +154,10 @@ public:
    */
   virtual StreamBuffer& serialize ( StreamBuffer& s )
   {
-    typedef typename FromTypeTraits::SERIALIZER FS;
-    typedef typename FromTypeTraits::APPLY      FA;
-    typedef typename ToTypeTraits::SERIALIZER   TS;
-    typedef typename ToTypeTraits::APPLY        TA;
+    typedef typename FromTypeTraits::Serializer FS;
+    typedef typename FromTypeTraits::Apply      FA;
+    typedef typename ToTypeTraits::Serializer   TS;
+    typedef typename ToTypeTraits::Apply        TA;
     // clear all existing relations 
     clear();
     // serialize the base class

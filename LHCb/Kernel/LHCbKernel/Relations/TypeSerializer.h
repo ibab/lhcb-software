@@ -1,16 +1,16 @@
-// $Id: Serializer.h,v 1.1 2002-04-03 15:35:19 ibelyaev Exp $
+// $Id: TypeSerializer.h,v 1.1 2002-04-24 21:16:41 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
-#ifndef RELATIONS_SERIALIZER_H 
-#define RELATIONS_SERIALIZER_H 1
+#ifndef RELATIONS_TYPESERIALIZER_H 
+#define RELATIONS_TYPESERIALIZER_H 1
 // Include files
 // forward declarations 
-class StreamBuffer;    // from GaudiKernel Package
+class StreamBuffer    ;    // from GaudiKernel Package
 
-/** @file Serializer.h
+/** @file TypeSerializer.h
  *  
  *  definition and specializations of serliazations methods 
  *
@@ -20,18 +20,23 @@ class StreamBuffer;    // from GaudiKernel Package
 
 namespace Relations
 {
+
+  /// forward declaration
+  template <class OBJECT> struct ObjectTypeTraits;
   
-  /** @struct Serializer 
+  /** @struct TypeSerializer 
    * 
    *  A helper structure to control the serialization of objects
-   *  
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   06/02/2002
    */
   template<class OBJECT>
-  struct Serializer
+  struct TypeSerializer
   {
+    /// object type 
+    typedef OBJECT          TYPE  ;
+    
     /** object serialization to Gaudi output stream (write)
      *  @see StreamBuffer 
      *  @param buffer reference to Gaudi output stream 
@@ -39,7 +44,8 @@ namespace Relations
      *  @return       reference to Gaudi output stream 
      */
     static 
-    StreamBuffer& serialize( StreamBuffer& buffer , const OBJECT& object )
+    StreamBuffer& serialize
+    ( StreamBuffer& buffer , const TYPE& object )
     { return buffer << object ; }
     
     /** object serialization from Gaudi input stream  (read) 
@@ -49,16 +55,17 @@ namespace Relations
      *  @return       reference to Gaudi input stream 
      */
     static 
-    StreamBuffer& serialize( StreamBuffer& buffer ,       OBJECT& object )
+    StreamBuffer& serialize
+    ( StreamBuffer& buffer ,       TYPE& object )
     { return buffer >> object ; }
     
   };
- 
+  
 }; // end of namespace Serializer
 
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // RELATIONS_SERIALIZER_H
+#endif // RELATIONS_TYPESERIALIZER_H
 // ============================================================================

@@ -4,6 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020424 Vanya Belyaev
+  - fix one more problem for Relations at Win2K 
+
 ! 20020423 Vanya Belyaev
   - resolve the clash between CLHEP/Units/SystemOfUnits.h definition of 
     "static const HepDouble second = ... " and 

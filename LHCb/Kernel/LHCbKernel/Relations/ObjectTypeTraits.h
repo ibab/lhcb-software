@@ -1,8 +1,11 @@
-// $Id: ObjectTypeTraits.h,v 1.2 2002-04-03 15:35:17 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.3 2002-04-24 21:16:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:17  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
@@ -11,8 +14,9 @@
 #include <functional>
 #include <algorithm>
 // Relations 
-#include "Relations/Serializer.h"
-#include "Relations/Apply.h"
+#include "Relations/TypeSerializer.h"
+#include "Relations/TypeApply.h"
+#include "Relations/RelationUtils.h"
 // forward declarations
 template <class TYPE>
 class     SmartRef        ; // from GaudiKernel package
@@ -22,7 +26,12 @@ class     StreamBuffer    ; // from GaudiKernel package
 
 namespace Relations
 {
-
+  
+  /// forward declaration
+  template <class OBJECT> struct TypeSerializer ;  
+  /// forward declaration
+  template <class OBJECT> struct TypeApply      ;
+  
   /** @struct ObjectTypeTraits
    *
    *  A helper structure to define the Object types
@@ -36,279 +45,568 @@ namespace Relations
   template <class OBJECT>
   struct ObjectTypeTraits
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef OBJECT                   TYPE       ;
-    typedef SmartRef<TYPE>           Type       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-    typedef std::less<const OBJECT*> Less       ;
-    
-    /** the unique class identification
-     *  @return unique class identifier
-     */
-    static  int id() { return  OBJECT::classID() ;} ;
+    /// true type (never used)
+    typedef OBJECT                                TYPE       ;
+    /// "traits'-provider, own type  
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef SmartRef<TYPE>                        Type       ;
+    /// serializer 
+    // typedef TypeSerializer<ContainedObject>       Serializer ;
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<const OBJECT*>              Less       ;
+    /// the unique class identification
+    static  int id() { return  OBJECT::classID() ;}          ;
   };
   
 #ifndef WIN32
-
+  
+  /** @struct ObjectTypeTraits<const OBJECT>
+   *  partial specialisation for "const" types
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<const OBJECT>
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef Traits::TYPE             TYPE       ;
-    typedef Traits::Type             Type       ;
-    typedef Traits::Less             Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-    
-    static  int id() { return  ObjectTypeTraits<OBJECT>::id() ;} ;
+    /// true type (never used)
+    typedef const OBJECT                          TYPE       ;
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef typename Traits::Less                 Less       ;
+    /// the unique class identification
+    static  int id() { return  Traits::id() ;}               ;
   };
-
+  
+  /** @struct ObjectTypeTraits<OBJECT*>
+   *  partial specialisation for pointers
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<OBJECT*>
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef Traits::TYPE             TYPE       ;
-    typedef Traits::Type             Type       ;
-    typedef Traits::Less             Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-    
-    static  int id() { return  Traits::id() ;} ;
+    /// true type (never used)
+    typedef OBJECT*                               TYPE       ;
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef Traits::Less                          Less       ;
+    /// the unique class identification
+    static  int id() { return  Traits::id() ;}               ;
   };
-
+  
+  /** @struct ObjectTypeTraits<OBJECT&>
+   *  partial specialisation for references
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<OBJECT&>
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef Traits::TYPE             TYPE       ;
-    typedef Traits::Type             Type       ;
-    typedef Traits::Less             Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static  int id() { return  Traits::id() ;} ;
+    /// true type (never used)
+    typedef OBJECT&                               TYPE       ;    
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef typename Traits::Less                 Less       ;
+    /// the unique class identification
+    static  int id() { return  Traits::id() ;}               ;
   };
-
+  
+  /** @struct ObjectTypeTraits<const OBJECT*>
+   *  partial specialisation for pointers to const
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<const OBJECT*>
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef Traits::TYPE             TYPE       ;
-    typedef Traits::Type             Type       ;
-    typedef Traits::Less             Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static  int id() { return  Traits::id() ;} ;
+    /// true type (never used)
+    typedef const OBJECT*                         TYPE       ;    
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef typename Traits::Less                 Less       ;
+    /// the unique class identification
+    static  int id() { return  Traits::id() ;}               ;
   };
-
+  
+  /** @struct ObjectTypeTraits<const OBJECT&>
+   *  partial specialisation for const references
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<const OBJECT&>
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef Traits::TYPE             TYPE       ;
-    typedef Traits::Type             Type       ;
-    typedef Traits::Less             Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
+    /// true type (never used)
+    typedef const OBJECT&                         TYPE       ;    
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef typename Traits::Less                 Less       ;
+    /// the unique class identification
     static  int id() { return  Traits::id() ;} ;
   };
-
+  
+  /** @struct ObjectTypeTraits<SmartRef<OBJECT>>
+   *  partial specialisation for smart references
+   *  @see ObjectTypeTraits
+   *  @warning not for MicroSoft compiler! 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <class OBJECT>
   struct ObjectTypeTraits<SmartRef<OBJECT> >
   {
-    typedef ObjectTypeTraits<OBJECT> Traits     ;
-    typedef SmartRef<OBJECT>         TYPE       ;
-    typedef SmartRef<OBJECT>         Type       ;
-    typedef std::less<const OBJECT*> Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-    
-    static int id() { return  Traits::id() ;} ;
+    /// true type (never used)
+    typedef SmartRef<OBJECT>                      TYPE       ;
+    /// "traits'-provider 
+    typedef ObjectTypeTraits<OBJECT>              Traits     ;
+    /// actual "stored" type 
+    typedef SmartRef<OBJECT>                      Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<const OBJECT*>              Less       ;
+    /// the unique class identification
+    static int id() { return  Traits::id() ;}                ;
   };
 
 #endif
-
+  
+  /** @struct ObjectTypeTraits<bool>
+   *  full specialisation for type 'bool'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<bool>
   {
-    typedef ObjectTypeTraits<bool>   Traits     ;
-    typedef        bool              TYPE       ;
-    typedef        TYPE              Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static int id() { return 1000000 + 0 ; } ;
+    /// true type (never used)
+    typedef        bool                          TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<bool>               Traits     ;
+    /// actual "stored" type 
+    typedef        TYPE                          Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                 Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                      Less       ;
+    /// the unique class identification
+    static int id() 
+    { 
+      static int s_id = clid( "bool" );
+      return     s_id ;
+    } ;
   };
 
-
+  /** @struct ObjectTypeTraits<char>
+   *  full specialisation for type 'char'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<char>
   {
-    typedef ObjectTypeTraits<char>   Traits     ;
-    typedef        char              TYPE       ;
-    typedef        TYPE              Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static int id() { return 1000000 + 1 ; } ;
+    /// true type (never used)
+    typedef        char                           TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<char>                Traits     ;
+    /// actual "stored" type 
+    typedef        TYPE                           Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static int id() 
+    { 
+      static int s_id = clid( "char" );
+      return     s_id ;
+    } ;    
   };
 
+  /** @struct ObjectTypeTraits<unsigned char>
+   *  full specialisation for type 'unsigned char'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<unsigned char>
   {
-    typedef ObjectTypeTraits<unsigned char> Traits     ;
-    typedef unsigned char                   TYPE       ;
-    typedef          TYPE                   Type       ;
-    typedef std::less<Type>                 Less       ;
-    typedef Serializer<Type>                SERIALIZER ;
-    typedef Apply<Type>                     APPLY      ;
-
-    static  int id() { return 1000000 + 2 ; } ;
+    /// true type (never used)
+    typedef unsigned char                         TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<unsigned char>       Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id()
+    { 
+      static int s_id = clid( "unsigned char" );
+      return     s_id ;
+    } ;
   };
-
+  
+  /** @struct ObjectTypeTraits<short>
+   *  full specialisation for type 'short'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<short>
   {
-    typedef ObjectTypeTraits<short>  Traits     ;
-    typedef        short             TYPE       ;
-    typedef        TYPE              Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static int id() { return 1000000 + 3 ; } ;
+    /// true type (never used)
+    typedef        short                          TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<short>               Traits     ;
+    /// actual "stored" type 
+    typedef        TYPE                           Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static int id()
+    { 
+      static int s_id = clid( "short" );
+      return     s_id ;
+    } ;
   };
-
+  
+  /** @struct ObjectTypeTraits<unsigned short>
+   *  full specialisation for type 'unsigned short'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<unsigned short>
   {
-    typedef ObjectTypeTraits<unsigned short> Traits     ;
-    typedef unsigned short                   TYPE       ;
-    typedef          TYPE                    Type       ;
-    typedef std::less<Type>                  Less       ;
-    typedef Serializer<Type>                 SERIALIZER ;
-    typedef Apply<Type>                      APPLY      ;
-
-    static  int id() { return 1000000 + 4 ; } ;
+    /// true type (never used)
+    typedef unsigned short                        TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<unsigned short>      Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id()
+    { 
+      static int s_id = clid( "unsigned short" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<int>
+   *  full specialisation for type 'int'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<int>
   {
-    typedef ObjectTypeTraits<int>           Traits     ;
-    typedef          int                     TYPE       ;
-    typedef          TYPE                    Type       ;
-    typedef std::less<Type>                  Less       ;
-    typedef Serializer<Type>                 SERIALIZER ;
-    typedef Apply<Type>                      APPLY      ;
-
-    static  int id() { return 1000000 + 5 ; } ;
+    /// true type (never used)
+    typedef int                                   TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<int>                 Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id()
+    { 
+      static int s_id = clid( "int" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<unsigned int>
+   *  full specialisation for type 'unsigned int'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<unsigned int>
   {
-    typedef ObjectTypeTraits<unsigned int>   Traits     ;
-    typedef unsigned int                     TYPE       ;
-    typedef          TYPE                    Type       ;
-    typedef std::less<Type>                  Less       ;
-    typedef Serializer<Type>                 SERIALIZER ;
-    typedef Apply<Type>                      APPLY      ;
-
-    static  int id() { return 1000000 + 6 ; } ;
+    /// true type (never used)
+    typedef unsigned int                          TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<unsigned int>        Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id()
+    { 
+      static int s_id = clid( "unsigned int" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<long>
+   *  full specialisation for type 'long'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<long>
   {
-    typedef ObjectTypeTraits<long>   Traits     ;
-    typedef        long              TYPE       ;
-    typedef        TYPE              Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static  int id() { return 1000000 + 7 ; } ;
+    /// true type (never used)
+    typedef long                                  TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<long>                Traits     ;
+    /// actual "stored" type 
+    typedef        TYPE                           Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "long" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<unsigned long>
+   *  full specialisation for type 'unsigned long'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<unsigned long>
   {
-    typedef ObjectTypeTraits<unsigned long> Traits     ;
-    typedef unsigned long                   TYPE       ;
-    typedef          TYPE                   Type       ;
-    typedef std::less<Type>                 Less       ;
-    typedef Serializer<Type>                SERIALIZER ;
-    typedef Apply<Type>                     APPLY      ;
-
-    static  int id() { return 1000000 + 8 ; } ;
+    /// true type (never used)
+    typedef unsigned long                         TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<unsigned long>       Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "unsigned long" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<float>
+   *  full specialisation for type 'float'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<float>
   {
-    typedef ObjectTypeTraits<float>  Traits     ;
-    typedef        float             TYPE       ;
-    typedef        TYPE              Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-
-    static  int id() { return 1000000 + 9 ; } ;
+    /// true type (never used)
+    typedef        float                          TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<float>               Traits     ;
+    /// actual "stored" type 
+    typedef        TYPE                           Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "float" );
+      return     s_id ;
+    } ;
   };
 
+  /** @struct ObjectTypeTraits<double>
+   *  full specialisation for type 'double'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<double>
   {
-    typedef ObjectTypeTraits<double> Traits     ;
-    typedef          double          TYPE       ;
-    typedef          TYPE            Type       ;
-    typedef std::less<Type>          Less       ;
-    typedef Serializer<Type>         SERIALIZER ;
-    typedef Apply<Type>              APPLY      ;
-    
-    static  int id() { return 1000000 + 10 ; } ;
+    /// true type (never used)
+    typedef          double                       TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<double>              Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;    
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "double" );
+      return     s_id ;
+    } ;
 
   };
   
+  /** @struct ObjectTypeTraits<long double>
+   *  full specialisation for type 'long double'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<long double>
   {
-    typedef ObjectTypeTraits<long double> Traits     ;
-    typedef long     double               TYPE       ;
-    typedef          TYPE                 Type       ;
-    typedef std::less<Type>               Less       ;
-    typedef Serializer<Type>              SERIALIZER ;
-    typedef Apply<Type>                   APPLY      ;
-    
-    static  int id() { return 1000000 + 11 ; } ;
+    /// true type (never used)
+    typedef long double                           TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<long double>         Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    typedef std::less<Type>                       Less       ;
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "long double" );
+      return     s_id ;
+    } ;
   };
-
+  
+  /** @struct ObjectTypeTraits<std::string>
+   *  full specialisation for type 'std::string'
+   *  @see ObjectTypeTraits
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date   06/02/2002
+   */   
   template <>
   struct ObjectTypeTraits<std::string>
   {
-    typedef ObjectTypeTraits<std::string> Traits     ;
-    typedef          std::string          TYPE       ;
-    typedef          TYPE                 Type       ;
-    typedef Serializer<Type>              SERIALIZER ;
-    typedef Apply<Type>                   APPLY      ;
-    
-    struct Less
-      : public std::binary_function<Type,Type,bool>
+    /// true type (never used)
+    typedef          std::string                  TYPE       ;
+    /// "traits'-provider == own type 
+    typedef ObjectTypeTraits<std::string>         Traits     ;
+    /// actual "stored" type 
+    typedef          TYPE                         Type       ;
+    /// serializer 
+    typedef TypeSerializer<Type>                  Serializer ;
+    /// "apply"
+    typedef TypeApply<Type>                       Apply      ;
+    /// comparison
+    struct Less : public std::binary_function<Type,Type,bool>
     {
-      inline bool operator() ( const Type& s1 , const Type& s2 ) const
+      inline bool operator() 
+        ( const Type& s1 , const Type& s2 ) const
       {
-        return std::lexicographical_compare( s1.begin() , s1.end() , 
-                                             s2.begin() , s2.end() );
+        return 
+          std::lexicographical_compare( s1.begin() , s1.end() , 
+                                        s2.begin() , s2.end() );
       };
-    };
-    
-    static  int id() { return 1000000 + 12 ; } ;
+    };    
+    /// the unique class identification
+    static  int id() 
+    { 
+      static int s_id = clid( "std::string" );
+      return     s_id ;
+    } ;
   };
 
 }; // end of namespace Relations

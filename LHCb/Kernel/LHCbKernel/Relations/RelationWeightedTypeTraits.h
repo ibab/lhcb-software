@@ -1,11 +1,8 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.3 2002-04-23 17:15:35 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.4 2002-04-24 21:16:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWEIGTEDTYPETRAITS_H
 #define RELATIONS_RELATIONWEIGTEDTYPETRAITS_H 1
@@ -37,18 +34,17 @@ namespace Relations
     /// type traits for "WEIGHT" object 
     typedef Relations::ObjectTypeTraits<WEIGHT> WeightTypeTraits ;
     /// actual type of "FROM" object 
-    typedef FromTypeTraits::Type                From             ;
+    typedef typename FromTypeTraits::Type       From             ;
     /// actual type of "TO" object 
-    typedef ToTypeTraits::Type                  To               ;
+    typedef typename ToTypeTraits::Type         To               ;
     /// actual type of "WEIGHT" object 
-    typedef WeightTypeTraits::Type              Weight           ;
-    
+    typedef typename WeightTypeTraits::Type     Weight           ;
     /// "less" function object for "From" objects 
-    typedef FromTypeTraits::Less                LessF            ;
+    typedef typename FromTypeTraits::Less       LessF            ;
     /// "less" function object for "To" objects 
-    typedef ToTypeTraits::Less                  LessT            ;
+    typedef typename ToTypeTraits::Less         LessT            ;
     /// "less" function object for "Weight" objects 
-    typedef WeightTypeTraits::Less              LessW            ;
+    typedef typename WeightTypeTraits::Less     LessW            ;
     /// "equality" function object for "To" objects 
     typedef std::equal_to<To>                   EqualT           ;
     
@@ -75,30 +71,30 @@ namespace Relations
              const Weight& w = Weight () )
         : Triplet( Pair( f , w ) , t )  {};
       /// accessor to the "FROM" object     (     const version )
-      inline From     from   () const { return first.first  ; }
+      inline From     from   () const { return Triplet::first.first  ; }
       /// accessor to the "FROM" object     ( non-const version )
-      inline From&    from   ()       { return first.first  ; }
+      inline From&    from   ()       { return Triplet::first.first  ; }
       /// accessor to the "WEIGHT"   object (     const version )
-      inline Weight   weight () const { return first.second ; }
+      inline Weight   weight () const { return Triplet::first.second ; }
       /// accessor to the "WEIGHT"   object ( non-const version )
-      inline Weight&  weight ()       { return first.second ; }
+      inline Weight&  weight ()       { return Triplet::first.second ; }
       /// accessor to the "TO"   object     (     const version ) 
-      inline To       to     () const { return this->second ; }
+      inline To       to     () const { return Triplet::second       ; }
       /// accessor to the "TO"   object     ( non-const version ) 
-      inline To&      to     ()       { return this->second ; }      
+      inline To&      to     ()       { return Triplet::second       ; }      
       /// the conversion operator           (     const version ) 
-      inline operator To     () const { return this->second ; }
+      inline operator To     () const { return Triplet::second       ; }
       /// the conversion operator           ( non-const version ) 
-      inline operator To&    ()       { return this->second ; }
+      inline operator To&    ()       { return Triplet::second       ; }
       /// comparison operator 
       inline bool operator<( const Entry& entry ) const 
       { 
         return 
-          LessF() (       first.first  , entry.first.first  ) ? true  :
-          LessF() ( entry.first.first  ,       first.first  ) ? false :
-          LessW() (       first.second , entry.first.second ) ? true  : 
-          LessW() ( entry.first.second ,       first.second ) ? false :
-          LessT() (       this->second ,       entry.second )         ; }
+          LessF() ( Triplet::first.first  ,    entry.first.first  ) ? true  :
+          LessF() ( entry.first.first     , Triplet::first.first  ) ? false :
+          LessW() ( Triplet::first.second ,    entry.first.second ) ? true  : 
+          LessW() ( entry.first.second    , Triplet::first.second ) ? false :
+          LessT() (       Triplet::second ,          entry.second )         ; }
     };
     
     /// "less" function object for "Entry" objects 
@@ -182,10 +178,10 @@ namespace Relations
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {};
       /// the aliases for standard "first" and "second"
-      iterator& begin ()       { return first        ; }
-      iterator  begin () const { return first        ; }
-      iterator& end   ()       { return this->second ; }
-      iterator  end   () const { return this->second ; }
+      iterator& begin ()       { return Base::first  ; }
+      iterator  begin () const { return Base::first  ; }
+      iterator& end   ()       { return Base::second ; }
+      iterator  end   () const { return Base::second ; }
     };
     
     /** technical definitions, useful and needed for implementation 

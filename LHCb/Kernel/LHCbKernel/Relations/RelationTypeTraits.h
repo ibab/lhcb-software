@@ -1,11 +1,8 @@
-// $Id: RelationTypeTraits.h,v 1.3 2002-04-23 17:15:34 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.4 2002-04-24 21:16:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -34,21 +31,20 @@ namespace Relations
     /// type traits version  
     enum { version = 1 };
     /// type traits for "FROM" object 
-    typedef Relations::ObjectTypeTraits<FROM> FromTypeTraits ;
+    typedef Relations::ObjectTypeTraits<FROM>  FromTypeTraits ;
     /// type traits for "TO" object 
-    typedef Relations::ObjectTypeTraits<TO>   ToTypeTraits   ;
+    typedef Relations::ObjectTypeTraits<TO>    ToTypeTraits   ;
     /// actual type of "FROM" object 
-    typedef FromTypeTraits::Type              From           ;
+    typedef typename FromTypeTraits::Type      From           ;
     /// actual type of "TO" object 
-    typedef ToTypeTraits::Type                To             ;
-    
+    typedef typename ToTypeTraits::Type        To             ;    
     /// "less" function object for "From" objects 
-    typedef FromTypeTraits::Less               LessF         ;
+    typedef typename FromTypeTraits::Less      LessF          ;
     /// "less" function object for "To" objects 
-    typedef ToTypeTraits::Less                 LessT         ;
+    typedef typename ToTypeTraits::Less        LessT          ;
     /// "equality" function object for "To" objects 
-    typedef std::equal_to<To>                  EqualT        ;
-
+    typedef typename std::equal_to<To>         EqualT         ;
+    
     /** @struct Entry
      *  @brief An auxillary class to implement the relations
      *
@@ -70,24 +66,24 @@ namespace Relations
       Entry( const From& f = From () , 
              const To&   t = To   () ): Pair( f , t ) {};
       /// accessor to the "FROM" object ( const     version )
-      inline From  from   () const { return first        ; }
+      inline From  from   () const { return Pair::first   ; }
       /// accessor to the "FROM" object ( non-const version )
-      inline From& from   ()       { return first        ; }
+      inline From& from   ()       { return Pair::first   ; }
       /// accessor to the "TO"   object ( const     version )
-      inline To    to     () const { return this->second ; }
+      inline To    to     () const { return Pair::second  ; }
       /// accessor to the "TO"   object ( non-const version )
-      inline To&   to     ()       { return this->second ; }
+      inline To&   to     ()       { return Pair::second  ; }
       /// the conversion operator       ( const     version )
-      inline operator To  () const { return this->second ; }
+      inline operator To  () const { return Pair::second  ; }
       /// the conversion operator       ( non-const version )
-      inline operator To& ()       { return this->second ; }
+      inline operator To& ()       { return Pair::second  ; }
       /// comparison operator 
       inline bool operator<( const Entry& entry ) const 
       {
         return 
-          LessF() (       first  , entry.first  ) ? true  :
-          LessF() ( entry.first  ,       first  ) ? false :
-          LessT() ( this->second , entry.second )         ; }  
+          LessF() ( Pair::first  , entry.first  ) ? true  :
+          LessF() ( entry.first  , Pair::first  ) ? false :
+          LessT() ( Pair::second , entry.second )         ; }  
     };
     
     /// "less" function object for "From" objects 
@@ -153,10 +149,10 @@ namespace Relations
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {};
       /// the aliases for standard "first" and "second"
-      iterator& begin ()       { return first        ; }
-      iterator  begin () const { return first        ; }
-      iterator& end   ()       { return this->second ; }
-      iterator  end   () const { return this->second ; }
+      iterator& begin ()       { return Base::first  ; }
+      iterator  begin () const { return Base::first  ; }
+      iterator& end   ()       { return Base::second ; }
+      iterator  end   () const { return Base::second ; }
     };
     
     /** technical definitions, useful for  for implementation */
