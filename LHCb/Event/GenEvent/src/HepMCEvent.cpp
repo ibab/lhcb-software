@@ -70,7 +70,7 @@ HepMCEvent::serialize( StreamBuffer& s ) const           // write out
       s << *rs;
     }
 
-    s << (uint)m_pGenEvt->weights().size();
+    s << (unsigned int)m_pGenEvt->weights().size();
     for ( HepMC::WeightContainer::const_iterator w = m_pGenEvt->weights().begin(); 
 	  w != m_pGenEvt->weights().end(); ++w ) {
       s << *w ;
