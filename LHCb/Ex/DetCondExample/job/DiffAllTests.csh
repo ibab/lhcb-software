@@ -1,5 +1,5 @@
 #!/usr/local/bin/tcsh -f 
-# $Id: DiffAllTests.csh,v 1.3 2002-12-04 14:07:49 andreav Exp $
+# $Id: DiffAllTests.csh,v 1.4 2002-12-06 11:57:17 andreav Exp $
 if ( 1 != ${?DETCONDEXAMPLEROOT} ) then
   echo "ERROR! You must 'source ../cmt/setup.csh -tag=$CMTDEB' first"
   exit 1
@@ -75,3 +75,19 @@ foreach theImpl ( CondDBMySQL CondDBOracle )
   unset theLinDir
   unset theDiff
 end
+
+# Oracle vs MySQL on the new logfiles
+foreach theArch ( rh73_gcc2952 Win32Debug )
+  set theDiff = diff.$theArch.Oracle-vs-MySQL
+  set theOraDir = ../job/NEWlog.$theArch.CondDBMySQL
+  set theMySDir = ../job/NEWlog.$theArch.CondDBOracle
+  if ( -d $theOraDir && -d $theMySDir ) then
+    rm -f $theDiff 
+    touch $theDiff
+    diff $theOraDir $theMySDir >> $theDiff
+  endif
+  unset theMySDir
+  unset theOraDir
+  unset theDiff
+end
+
