@@ -1,6 +1,6 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.6 2004-06-10 14:39:23 jonesc Exp $
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
+// $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.1 2004-06-10 14:40:51 jonesc Exp $
+#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H
+#define RICHRECTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -13,33 +13,36 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichDetTools/IRichSmartIDTool.h"
+#include "RichMCTools/IRichMCTruthTool.h"
 
 // Event
 #include "Event/RichDigit.h"
+#include "Event/MCRichDigit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
-/** @class RichPixelCreatorFromRichDigits RichPixelCreatorFromRichDigits.h
+/** @class RichPixelCreatorFromSignalRichDigits RichPixelCreatorFromSignalRichDigits.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the digitisation as the parent objects.
+ *  Uses RichDigits from the digitisation but then refers to the
+ *  MCRichOpticalPhoton objects select on the true Cherenkov hits.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   15/09/2003
  */
 
-class RichPixelCreatorFromRichDigits : public RichRecToolBase,
-                                       virtual public IRichPixelCreator,
-                                       virtual public IIncidentListener {
+class RichPixelCreatorFromSignalRichDigits : public RichRecToolBase,
+                                             virtual public IRichPixelCreator,
+                                             virtual public IIncidentListener {
 
 public:
 
   /// Standard constructor
-  RichPixelCreatorFromRichDigits( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent );
+  RichPixelCreatorFromSignalRichDigits( const std::string& type,
+                                        const std::string& name,
+                                        const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromRichDigits(){}
+  virtual ~RichPixelCreatorFromSignalRichDigits(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -72,8 +75,14 @@ private: // data
   /// Pointer to RichRecPixels
   mutable RichRecPixels * m_pixels;
 
-  /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  /// MC Truth tool
+  IRichMCTruthTool * m_mcTool;
+
+  /// Pointer to delegated pixel maker
+  IRichPixelCreator * m_pixMaker;
+
+  /// Nickname of RichPixel Creator to use
+  std::string m_subPixelCreatorName;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
@@ -84,19 +93,13 @@ private: // data
   /// Flag to signify all pixels have been formed
   mutable bool m_allDone;
 
-  /// Pointer to pixel map
-  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
-
 };
 
-inline void RichPixelCreatorFromRichDigits::InitNewEvent()
+inline void RichPixelCreatorFromSignalRichDigits::InitNewEvent()
 {
-  // Initialise navigation data
+  // Initialise data for new event
   m_allDone = false;
-  m_pixelExists.clear();
-  m_pixelDone.clear();
-  m_pixels = 0;
+  m_pixels  = 0;
 }
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
+#endif // RICHRECTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H

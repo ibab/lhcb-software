@@ -1,6 +1,6 @@
-// $Id: RichPhotonCreator.h,v 1.13 2004-06-10 14:39:23 jonesc Exp $
-#ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
-#define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
+// $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.1 2004-06-10 14:40:49 jonesc Exp $
+#ifndef RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H
+#define RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -13,32 +13,36 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
-#include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
-#include "RichDetTools/IRichPhotonReconstruction.h"
+#include "RichRecBase/IRichRecMCTruthTool.h"
 
-/** @class RichPhotonCreator RichPhotonCreator.h
+// Event model
+#include "Event/MCRichOpticalPhoton.h"
+
+/** @class RichPhotonCreatorFromMCRichOpticalPhotons RichPhotonCreatorFromMCRichOpticalPhotons.h
  *
  *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  RichRecPixels to form RichRecPhotons. MC cheating is performed
+ *  by only creating true cherenkov photons using MCRichOpticalPhoton
+ *  information and also by using the MC geometrical information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichPhotonCreator : public RichRecToolBase,
-                          virtual public IRichPhotonCreator,
-                          virtual public IIncidentListener {
+class RichPhotonCreatorFromMCRichOpticalPhotons : public RichRecToolBase,
+                                                  virtual public IRichPhotonCreator,
+                                                  virtual public IIncidentListener {
 
 public:
 
   /// Standard constructor
-  RichPhotonCreator( const std::string& type,
-                     const std::string& name,
-                     const IInterface* parent );
+  RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
+                                             const std::string& name,
+                                             const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPhotonCreator(){}
+  virtual ~RichPhotonCreatorFromMCRichOpticalPhotons(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -85,9 +89,8 @@ private: // private methods
 private: // private data
 
   // Pointers to tool instances
-  IRichPhotonPredictor * m_photonPredictor; ///< Pointer to RichPhotonPredictor
   IRichPhotonSignal * m_photonSignal; ///< Pointer to RichPhotonSignal
-  IRichPhotonReconstruction * m_photonReco; ///< Pointer to photon reconstruction tool
+  IRichRecMCTruthTool * m_mcRecTool;  ///< MC Truth tool
 
   /// Pointer to RichRecPhotons
   mutable RichRecPhotons * m_photons;
@@ -101,7 +104,7 @@ private: // private data
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;
 
-  /// Min Cherenkov theta angle
+  /// Max Cherenkov theta angle
   std::vector<double> m_minCKtheta;
 
   /// minimum cut value for photon probability
@@ -109,7 +112,7 @@ private: // private data
 
 };
 
-inline void RichPhotonCreator::InitNewEvent()
+inline void RichPhotonCreatorFromMCRichOpticalPhotons::InitNewEvent()
 {
   // Initialise navigation data
   m_photonDone.clear();
@@ -117,4 +120,4 @@ inline void RichPhotonCreator::InitNewEvent()
 }
 
 
-#endif // RICHRECTOOLS_RICHPHOTONCREATOR_H
+#endif // RICHRECMCTOOLS_RICHPHOTONCREATORFROMMCRICHOPTICALPHOTONS_H

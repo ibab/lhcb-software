@@ -1,4 +1,4 @@
-// $Id: RichMassHypothesisRingCreator.cpp,v 1.2 2004-05-31 22:02:06 jonrob Exp $
+// $Id: RichMassHypothesisRingCreator.cpp,v 1.3 2004-06-10 14:39:22 jonesc Exp $
 
 // local
 #include "RichMassHypothesisRingCreator.h"
@@ -98,9 +98,8 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
                 << endreq;
     }
 
-    // Make a new ring and give to container
-    newRing = new RichRecRing();
-    massHypoRings()->insert( newRing );
+    // Get a new ring and save it
+    newRing = newMassHypoRing();
 
     // set the segment information
     newRing->setRichRecSegment( segment );
@@ -115,8 +114,11 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
     // set the PID for this segment
     newRing->setMassHypo( id );
 
-    // detector inforamtion
+    // detector information
     newRing->setRich( segment->trackSegment().rich() );
+
+    // save to container
+    saveMassHypoRing(newRing);
 
   }
 
@@ -125,6 +127,18 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
 
   // return final pointer
   return newRing;
+}
+
+RichRecRing * RichMassHypothesisRingCreator::newMassHypoRing() const 
+{
+  // Make a new ring and give to container
+  RichRecRing * newRing = new RichRecRing();
+  return newRing;
+}
+
+void RichMassHypothesisRingCreator::saveMassHypoRing( RichRecRing * ring ) const
+{
+  massHypoRings()->insert( ring );
 }
 
 RichRecRings * RichMassHypothesisRingCreator::massHypoRings() const

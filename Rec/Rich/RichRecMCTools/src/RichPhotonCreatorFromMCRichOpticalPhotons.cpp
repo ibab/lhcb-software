@@ -1,26 +1,26 @@
-// $Id: RichPhotonCreator.cpp,v 1.16 2004-06-10 14:39:22 jonesc Exp $
+// $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.1 2004-06-10 14:40:49 jonesc Exp $
 
 // local
-#include "RichPhotonCreator.h"
+#include "RichPhotonCreatorFromMCRichOpticalPhotons.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonCreator
+// Implementation file for class : RichPhotonCreatorFromMCRichOpticalPhotons
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonCreator>          s_factory ;
-const        IToolFactory& RichPhotonCreatorFactory = s_factory ;
+static const  ToolFactory<RichPhotonCreatorFromMCRichOpticalPhotons>          s_factory ;
+const        IToolFactory& RichPhotonCreatorFromMCRichOpticalPhotonsFactory = s_factory ;
 
 // Standard constructor
-RichPhotonCreator::RichPhotonCreator( const std::string& type,
-                                      const std::string& name,
-                                      const IInterface* parent )
+RichPhotonCreatorFromMCRichOpticalPhotons::
+RichPhotonCreatorFromMCRichOpticalPhotons( const std::string& type,
+                                           const std::string& name,
+                                           const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
-    m_photonPredictor ( 0 ),
     m_photonSignal    ( 0 ),
-    m_photonReco      ( 0 ),
+    m_mcRecTool       ( 0 ),
     m_photons         ( 0 )
 {
 
@@ -46,16 +46,15 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
 
 }
 
-StatusCode RichPhotonCreator::initialize() {
+StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::initialize() {
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichDetPhotonReco",     m_photonReco      );
   acquireTool( "RichPhotonSignal",      m_photonSignal    );
-  acquireTool( "RichPhotonPredictor",   m_photonPredictor );
+  acquireTool( "RichRecMCTruthTool",    m_mcRecTool       );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -67,25 +66,22 @@ StatusCode RichPhotonCreator::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonCreator::finalize() 
+StatusCode RichPhotonCreatorFromMCRichOpticalPhotons::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPhotonCreator::handle ( const Incident& incident )
+void RichPhotonCreatorFromMCRichOpticalPhotons::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 RichRecPhoton*
-RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
-                                      RichRecPixel * pixel ) const {
-
-  // check photon is possible before proceeding
-  if ( !m_photonPredictor->photonPossible(segment, pixel) ) return NULL;
-
+RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhoton( RichRecSegment * segment,
+                                                              RichRecPixel * pixel ) const
+{
   // Form the key for this photon
   const RichRecPhotonKey photonKey(pixel->key(),segment->key());
 
@@ -98,30 +94,39 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
 
 }
 
-RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
-                                                RichRecPixel * pixel,
-                                                const RichRecPhotonKey key ) const {
+RichRecPhoton *
+RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment,
+                                                        RichRecPixel * pixel,
+                                                        const RichRecPhotonKey key ) const
+{
 
   RichRecPhoton * newPhoton = NULL;
 
-  // Reconstruct the geometrical photon
-  RichGeomPhoton geomPhoton;
-  if ( m_photonReco->reconstructPhoton( segment->trackSegment(),
-                                        pixel->globalPosition(),
-                                        geomPhoton ) != 0 ) {
+  // See if there is a true cherenkov photon for this segment/pixel pair
+  const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
+  if ( mcPhoton ) {
 
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    if ( ( geomPhoton.CherenkovTheta() > 0. ||
-           geomPhoton.CherenkovPhi() > 0. ) &&
-         geomPhoton.CherenkovTheta() < m_maxCKtheta[rad] &&
-         geomPhoton.CherenkovTheta() > m_minCKtheta[rad] ) {
+    if ( ( mcPhoton->cherenkovTheta() > 0. ||
+           mcPhoton->cherenkovPhi() > 0. ) &&
+         mcPhoton->cherenkovTheta() < m_maxCKtheta[rad] &&
+         mcPhoton->cherenkovTheta() > m_minCKtheta[rad] ) {
 
-      // give photon same smart ID as pixel
-      geomPhoton.setSmartID( pixel->smartID() );
+      // construct a photon from the MC information
+      RichGeomPhoton geomPhoton( mcPhoton->cherenkovTheta(),
+                                 mcPhoton->cherenkovPhi(),
+                                 mcPhoton->emissionPoint(),
+                                 mcPhoton->pdIncidencePoint(),
+                                 mcPhoton->sphericalMirrorReflectPoint(),
+                                 mcPhoton->flatMirrorReflectPoint(),
+                                 pixel->smartID(),
+                                 1 );
 
       // make new RichRecPhoton
-      newPhoton = new RichRecPhoton( geomPhoton, segment,
-                                     segment->richRecTrack(), pixel );
+      newPhoton = new RichRecPhoton( geomPhoton,
+                                     segment,
+                                     segment->richRecTrack(),
+                                     pixel );
 
       // check photon has significant probability to be signal for any
       // hypothesis. If not then reject and delete
@@ -158,7 +163,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
         }
 
       } else {
-        delete newPhoton; 
+        delete newPhoton;
         newPhoton = NULL;
       }
 
@@ -174,12 +179,11 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
 }
 
-void RichPhotonCreator::reconstructPhotons() const 
+void RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhotons() const
 {
-
   const bool noPhots = richPhotons()->empty();
- 
- // make a rough guess at a size to reserve based on number of pixels
+
+  // make a rough guess at a size to reserve based on number of pixels
   if ( noPhots ) richPhotons()->reserve( 5 * pixelCreator()->richPixels()->size() );
 
   // Iterate over all tracks
@@ -210,10 +214,8 @@ void RichPhotonCreator::reconstructPhotons() const
 
             // If container was empty, skip checks for whether photon already exists
             if ( noPhots ) {
-              if ( m_photonPredictor->photonPossible( segment, pixel ) ) {
-                buildPhoton( segment, pixel, 
-                             RichRecPhotonKey(pixel->key(),segment->key()) );
-              }
+              buildPhoton( segment, pixel,
+                           RichRecPhotonKey(pixel->key(),segment->key()) );
             } else {
               reconstructPhoton( segment, pixel );
             }
@@ -235,7 +237,7 @@ void RichPhotonCreator::reconstructPhotons() const
 }
 
 const RichRecTrack::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const 
+RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhotons( RichRecTrack * track ) const
 {
   if ( !track->allPhotonsDone() ) {
 
@@ -253,7 +255,7 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const
 }
 
 const RichRecSegment::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const 
+RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhotons( RichRecSegment * segment ) const
 {
   if ( !segment->allPhotonsDone() ) {
 
@@ -270,7 +272,7 @@ RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const
 }
 
 const RichRecPixel::Photons &
-RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const 
+RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhotons( RichRecPixel * pixel ) const
 {
   // Iterate over tracks
   for ( RichRecTracks::iterator track =
@@ -286,8 +288,8 @@ RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const
 
 // Note to self. Need to review what this method passes back
 RichRecTrack::Photons
-RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
-                                       RichRecPixel * pixel ) const 
+RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhotons( RichRecTrack * track,
+                                                               RichRecPixel * pixel ) const
 {
   RichRecTrack::Photons photons;
 
@@ -305,7 +307,7 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
   return photons;
 }
 
-RichRecPhotons * RichPhotonCreator::richPhotons() const
+RichRecPhotons * RichPhotonCreatorFromMCRichOpticalPhotons::richPhotons() const
 {
   if ( !m_photons ) {
     SmartDataPtr<RichRecPhotons> tdsPhotons( evtSvc(),

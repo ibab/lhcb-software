@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.6 2004-05-31 22:04:53 jonrob Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.7 2004-06-10 14:40:50 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -14,9 +14,10 @@ static const  ToolFactory<RichPixelCreatorFromCheatedRichDigits>          s_fact
 const        IToolFactory& RichPixelCreatorFromCheatedRichDigitsFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromCheatedRichDigits::RichPixelCreatorFromCheatedRichDigits( const std::string& type,
-                                                                              const std::string& name,
-                                                                              const IInterface* parent )
+RichPixelCreatorFromCheatedRichDigits::
+RichPixelCreatorFromCheatedRichDigits( const std::string& type,
+                                       const std::string& name,
+                                       const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
@@ -43,7 +44,7 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_smartIDTool );
-  acquireTool( "RichRecMCTruthTool", m_mcTool     );
+  acquireTool( "RichMCTruthTool", m_mcTool      );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -69,8 +70,8 @@ void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident )
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
-RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) const {
-
+RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) const
+{
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
@@ -78,14 +79,18 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
     return NULL;
   }
 
-  // Find MCRichDigit
+  // Find the MCRichDigit for this RichDigit
   const MCRichDigit * mcDigit = m_mcTool->mcRichDigit( digit );
-  if ( !mcDigit ) return NULL;
+  if ( !mcDigit ) {
+    Warning("Failed to find MCRichDigit for given RichDigit"); return NULL;
+  }
 
   // Loop over all MCRichHits for this MCRichDigit and make RichRecPixels
   RichRecPixel * returnPix = NULL;
   for ( SmartRefVector<MCRichHit>::const_iterator hit = mcDigit->hits().begin();
-        hit != mcDigit->hits().end(); ++hit ) { returnPix = newPixelFromHit( digit, *hit ); }
+        hit != mcDigit->hits().end(); ++hit ) {
+    returnPix = newPixelFromHit( digit, *hit );
+  }
 
   // Return the RichRecPixel related to the last Hit
   return returnPix;
@@ -93,9 +98,11 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
 
 RichRecPixel *
 RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
-                                                        const MCRichHit * hit ) const {
+                                                        const MCRichHit * hit ) const
+{
 
-  RichSmartID::KeyType hitKey = hit->key();
+  // key for this MCRichHit
+  const RichSmartID hitKey = hit->key();
 
   // See if this RichRecPixel already exists
   if ( m_pixelDone[hitKey] ) {
@@ -104,23 +111,23 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
     RichRecPixel * newPixel = NULL;
 
-    if ( 0 != hitKey ) {
+    if ( digit->key().isValid() ) {
 
-      RichSmartID id(0);
-      StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
-      if ( sc.isSuccess() && id.isValid() ) {
+      // Find associated MCRichOpticalPhoton
+      const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+      if ( mcPhot ) {
 
         // Make a new RichRecPixel
         newPixel = new RichRecPixel();
         richPixels()->insert( newPixel );
 
         // Positions
-        newPixel->setGlobalPosition( hit->entry() );
-        // no method for local position as yet !
-        //HepPoint3D & lPosition = newPixel->localPosition();
+        newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+        newPixel->localPosition() =
+          m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
 
         // Set smartID
-        newPixel->setSmartID( id );
+        newPixel->setSmartID( digit->key() );
 
         // Set parent information
         // Note - we are pretending to be RichDigits here...
@@ -128,6 +135,9 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
         newPixel->setParentType( Rich::RecPixel::Digit );
 
       }
+
+    } else {
+      Warning("Invalid RichDigit SmartID !");
     }
 
     // Add to reference map
@@ -139,23 +149,25 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
 }
 
-StatusCode RichPixelCreatorFromCheatedRichDigits::newPixels() const {
-
+StatusCode RichPixelCreatorFromCheatedRichDigits::newPixels() const
+{
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<RichDigits> digits( evtSvc(), m_recoDigitsLocation );
-  if ( !digits ) {
-    return Error( "Failed to locate RichDigits at " + m_recoDigitsLocation );
-  } else {
-    debug() << "located " << digits->size() << " RichDigits at "
-            <<  m_recoDigitsLocation << endreq;
-  }
+  const RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
 
-  for ( RichDigits::iterator digit = digits->begin();
-        digit != digits->end();
-        ++digit ) { newPixel( *digit ); }
+  // Loop over RichDigits and create working pixels
+  richPixels()->reserve( digits->size() );
+  for ( RichDigits::const_iterator digit = digits->begin();
+        digit != digits->end(); ++digit ) { newPixel( *digit ); }
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Located " << digits->size() << " RichDigits at "
+            << m_recoDigitsLocation << endreq
+            << "Created " << richPixels()->size() << " RichRecPixels at "
+            << m_richRecPixelLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }

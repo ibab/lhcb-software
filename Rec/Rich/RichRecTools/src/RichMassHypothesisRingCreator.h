@@ -1,4 +1,4 @@
-// $Id: RichMassHypothesisRingCreator.h,v 1.1 2004-05-31 21:30:50 jonrob Exp $
+// $Id: RichMassHypothesisRingCreator.h,v 1.2 2004-06-10 14:39:22 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H
 #define RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H 1
 
@@ -56,6 +56,13 @@ public:
   /// Returns the mas hypothesis ring for a given segment and mass hypothesis
   RichRecRing * newMassHypoRing( RichRecSegment * segment,
                                  const Rich::ParticleIDType id ) const;
+
+  /// Returns a new default RichRecRing object
+  /// It is the reponsibility of the user to save or delete the ring
+  RichRecRing * newMassHypoRing() const;
+
+  /// Save the RichRecRing in the container
+  void saveMassHypoRing( RichRecRing * ring ) const;
 
   /// Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
   void newMassHypoRings( RichRecSegment * segment ) const;

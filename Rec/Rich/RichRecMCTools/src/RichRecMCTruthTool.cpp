@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.4 2004-04-19 23:01:24 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.5 2004-06-10 14:40:52 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -17,137 +17,40 @@ const        IToolFactory& RichRecMCTruthToolFactory = s_factory ;
 RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_mcRichDigitsDone ( false ),
-    m_mcRichDigits     ( 0     ),
-    m_mcTrackLinks     ( 0     ),
-    m_mcPhotonLinks    ( 0     )
+  : RichRecToolBase ( type, name, parent ),
+    m_truth         ( 0     )
 {
-
   declareInterface<IRichRecMCTruthTool>(this);
-
-  declareProperty( "MCRichDigitsLocation",
-                   m_mcRichDigitsLocation = MCRichDigitLocation::Default );
-
-  declareProperty( "TrackAsctName", m_trAsctName = "TrackToMCP" );
-  declareProperty( "TrackAsctType",
-                   m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
-
 }
 
 
 StatusCode RichRecMCTruthTool::initialize()
 {
-
   // Sets up various tools and services
-  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichRecToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  // Get pointer to Track MC truth
-  m_trackToMCP = tool<TrackAsct>( m_trAsctType,m_trAsctName );
-
-  // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" );
-
-  // Setup the PDG code mappings
-  m_localID[ 0 ]                                   = Rich::Unknown;
-  m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
-  m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
-  m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
-  m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
-  m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
-  release(ppSvc);
-
-  // Setup incident services
-  IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, IncidentType::BeginEvent );
-  release(incSvc);
+  // Acquire instances of tools
+  acquireTool( "RichMCTruthTool", m_truth );
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichRecMCTruthTool::finalize() 
+StatusCode RichRecMCTruthTool::finalize()
 {
-  // clean up linkers
-  cleanUpLinkers();
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
-// Method that handles various Gaudi "software events"
-void RichRecMCTruthTool::handle ( const Incident& incident ) {
-
-  if ( IncidentType::BeginEvent == incident.type() ) {
-
-    // New event
-    m_mcRichDigitsDone   = false;
-
-    // Get new linkers for this event
-    cleanUpLinkers();
-
-  }
-
-}
-
-RichRecMCTruthTool::MCRichHitToPhoton * RichRecMCTruthTool::mcPhotonLinks() const
-{
-  if ( !m_mcPhotonLinks ) {
-    m_mcPhotonLinks =
-      new MCRichHitToPhoton( evtSvc(), msgSvc(),
-                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
-    //if ( m_mcPhotonLinks->notFound() ) {
-    //  delete m_mcPhotonLinks; 
-    //  m_mcPhotonLinks = 0;
-    //}
-  }
-  return m_mcPhotonLinks;
-}
-
-RichRecMCTruthTool::MCPartToRichTracks * RichRecMCTruthTool::mcTrackLinks() const
-{
-  if ( !m_mcTrackLinks ) {
-    m_mcTrackLinks =
-      new MCPartToRichTracks( evtSvc(), msgSvc(),
-                              MCRichTrackLocation::LinksFromMCParticles );
-    //if ( m_mcTrackLinks->notFound() ) {
-    //  delete m_mcTrackLinks;
-    //  m_mcTrackLinks = 0;
-    //}
-  }
-  return m_mcTrackLinks;
-}
-
-const MCRichDigits * RichRecMCTruthTool::mcRichDigits() {
-
-  if ( !m_mcRichDigitsDone ) {
-    m_mcRichDigitsDone = true;
-
-    SmartDataPtr<MCRichDigits> tdsMCDigits( evtSvc(),
-                                            m_mcRichDigitsLocation );
-    if ( tdsMCDigits ) {
-      m_mcRichDigits = tdsMCDigits;
-      debug() << "Successfully located " << m_mcRichDigits->size()
-              << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
-    } else {
-      m_mcRichDigits = NULL;
-      debug() << "Failed to locate MCRichDigits at "
-              << m_mcRichDigitsLocation << endreq;
-    }
-
-  }
-
-  return m_mcRichDigits;
-}
-
 const MCParticle *
-RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const {
-
+RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
+{
   const ContainedObject * obj = richTrack->parentTrack();
   if ( !obj ) return NULL;
 
   // Try TrStoredTrack
   const TrStoredTrack * track = dynamic_cast<const TrStoredTrack*>(obj);
-  if ( track ) return mcParticle( track );
+  if ( track ) return m_truth->mcParticle( track );
 
   // else Try MCParticle
   const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj);
@@ -156,42 +59,14 @@ RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const {
   return NULL;
 }
 
-const MCParticle *
-RichRecMCTruthTool::mcParticle( const TrStoredTrack * track ) const
-{
-  if ( track ) {
-    const MCParticle* mcPart = m_trackToMCP->associatedFrom(track);
-    return mcPart;
-  } else { return NULL; }
-}
-
 const SmartRefVector<MCRichHit> &
-RichRecMCTruthTool::mcRichHits( const RichRecPixel * richPixel )
+RichRecMCTruthTool::mcRichHits( const RichRecPixel * richPixel ) const
 {
-  return mcRichHits( mcRichDigit(richPixel) );
-}
-
-const SmartRefVector<MCRichHit> &
-RichRecMCTruthTool::mcRichHits( const MCRichDigit * mcDigit )
-{
-  return ( mcDigit ? mcDigit->hits() : m_emptyContainer );
-}
-
-const MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichDigit * digit ) {
-
-  // Try fast method
-  MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
-
-  // If failed, try accessing MCRichDigit container directly
-  if ( !mcDigit && mcRichDigits() ) mcDigit = m_mcRichDigits->object(digit->key());
-
-  if ( !mcDigit ) Warning("Failed to find MCRichDigit for RichDigit");
-
-  return mcDigit;
+  return m_truth->mcRichHits( mcRichDigit(richPixel) );
 }
 
 const MCRichDigit *
-RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
+RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
 {
   const RichDigit * digit =
     dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
@@ -200,11 +75,11 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
     return NULL;
   }
 
-  return mcRichDigit( digit );
+  return m_truth->mcRichDigit( digit );
 }
 
 bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
-                                     std::vector<const MCParticle*> & mcParts )
+                                     std::vector<const MCParticle*> & mcParts ) const
 {
 
   // Clean vector
@@ -227,14 +102,14 @@ bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
 }
 
 const MCParticle *
-RichRecMCTruthTool::trueRecPhoton( const RichRecPhoton * photon )
+RichRecMCTruthTool::trueRecPhoton( const RichRecPhoton * photon ) const
 {
   return ( !photon ? NULL :
            trueRecPhoton( photon->richRecSegment(), photon->richRecPixel() ) );
 }
 
 const MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecSegment * segment,
-                                                      const RichRecPixel * pixel )
+                                                      const RichRecPixel * pixel ) const
 {
   const RichRecTrack * track = segment->richRecTrack();
   const MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
@@ -251,7 +126,7 @@ const MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecSegment * seg
 }
 
 const MCParticle *
-RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton * photon )
+RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton * photon ) const
 {
   return ( !photon ? NULL :
            trueCherenkovPhoton( photon->richRecSegment(), photon->richRecPixel() ) );
@@ -259,7 +134,7 @@ RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton * photon )
 
 const MCParticle *
 RichRecMCTruthTool::trueCherenkovPhoton( const RichRecSegment * segment,
-                                         const RichRecPixel * pixel )
+                                         const RichRecPixel * pixel ) const
 {
   if ( !segment || !pixel ) return NULL;
   const MCParticle * mcPart = trueRecPhoton( segment, pixel );
@@ -269,7 +144,7 @@ RichRecMCTruthTool::trueCherenkovPhoton( const RichRecSegment * segment,
 
 const MCParticle *
 RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
-                                            const Rich::RadiatorType rad )
+                                            const Rich::RadiatorType rad ) const
 {
 
   // Loop over all MCRichHits for this pixel
@@ -277,36 +152,25 @@ RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
     if ( !(*iHit) ) continue; // protect against bad hits
-    // Experiment with different criteria.....
-    //if ( rad == (*iHit)->radiator() ) return (*iHit)->mcParticle();
     if ( rad == (*iHit)->radiator() &&
          !(*iHit)->scatteredPhoton() &&
+         //!(*iHit)->chargedTrack() &&
          !(*iHit)->backgroundHit() ) return (*iHit)->mcParticle();
-    //if ( rad == (*iHit)->radiator() &&
-    //     !(*iHit)->scatteredPhoton() &&
-    //     !(*iHit)->chargedTrack() &&
-    //     !(*iHit)->backgroundHit() ) return (*iHit)->mcParticle();
   }
 
   return NULL;
 }
 
 Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const MCParticle * mcPart )
+RichRecMCTruthTool::mcParticleType( const RichRecTrack * richTrack ) const
 {
-  return (mcPart ? m_localID[abs(mcPart->particleID().pid())] : Rich::Unknown);
+  return m_truth->mcParticleType( mcParticle(richTrack) );
 }
 
 Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const RichRecTrack * richTrack )
+RichRecMCTruthTool::mcParticleType( const RichRecSegment * richSegment ) const
 {
-  return mcParticleType( mcParticle(richTrack) );
-}
-
-Rich::ParticleIDType
-RichRecMCTruthTool::mcParticleType( const RichRecSegment * richSegment )
-{
-  return ( richSegment ? mcParticleType( richSegment->richRecTrack() ) : Rich::Unknown );
+  return ( richSegment ? mcParticleType(richSegment->richRecTrack()) : Rich::Unknown );
 }
 
 const MCParticle *
@@ -317,25 +181,22 @@ RichRecMCTruthTool::mcParticle( const RichRecSegment * richSegment ) const
 
 bool
 RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel,
-                                         SmartRefVector<MCRichOpticalPhoton> & phots ) {
-
+                                         SmartRefVector<MCRichOpticalPhoton> & phots ) const
+{
   phots.clear();
-  if ( mcPhotonLinks() ) {
-    const SmartRefVector<MCRichHit> & hits = mcRichHits(richPixel);
-    for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-          iHit != hits.end(); ++iHit ) {
-      if ( !(*iHit) ) continue; // protect against bad hits
-      MCRichOpticalPhoton * phot = mcPhotonLinks()->first( *iHit );
-      if ( phot ) phots.push_back( phot );
-    }
-    return true;
+  const SmartRefVector<MCRichHit> & hits = mcRichHits(richPixel);
+  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
+        iHit != hits.end(); ++iHit ) {
+    if ( !(*iHit) ) continue; // protect against bad hits
+    const MCRichOpticalPhoton * phot = m_truth->mcOpticalPhoton( *iHit );
+    if ( phot ) phots.push_back( phot );
   }
-
-  return false;
+  if ( phots.empty() ) return false;
+  return true;
 }
 
 const MCRichSegment *
-RichRecMCTruthTool::mcRichSegment( const RichRecSegment * segment )
+RichRecMCTruthTool::mcRichSegment( const RichRecSegment * segment ) const
 {
   if ( !segment ) return NULL;
   const MCRichTrack * mcTrack = mcRichTrack( segment );
@@ -344,49 +205,31 @@ RichRecMCTruthTool::mcRichSegment( const RichRecSegment * segment )
 }
 
 const SmartRefVector<MCRichSegment> *
-RichRecMCTruthTool::mcRichSegments( const RichRecTrack * track )
+RichRecMCTruthTool::mcRichSegments( const RichRecTrack * track ) const
 {
   const MCRichTrack * mcTrack = mcRichTrack( track );
   return ( mcTrack ? &(mcTrack->mcSegments()) : 0 );
 }
 
 const MCRichTrack *
-RichRecMCTruthTool::mcRichTrack( const RichRecSegment * segment )
+RichRecMCTruthTool::mcRichTrack( const RichRecSegment * segment ) const
 {
   return ( segment ? mcRichTrack( segment->richRecTrack() ) : 0 );
 }
 
 const MCRichTrack *
-RichRecMCTruthTool::mcRichTrack( const RichRecTrack * track )
+RichRecMCTruthTool::mcRichTrack( const RichRecTrack * track ) const
 {
-  return mcRichTrack( mcParticle(track) );
+  return m_truth->mcRichTrack( mcParticle(track) );
 }
 
-const MCRichTrack *
-RichRecMCTruthTool::mcRichTrack( const TrStoredTrack * track )
+bool RichRecMCTruthTool::isBackground( const RichRecPixel * pixel ) const
 {
-  return mcRichTrack( mcParticle(track) );
-}
-
-const MCRichTrack *
-RichRecMCTruthTool::mcRichTrack( const MCParticle * mcPart )
-{
-  return ( mcPart ? mcTrackLinks()->first( mcPart ) : 0 );
-}
-
-bool RichRecMCTruthTool::isBackground( const RichRecPixel * pixel )
-{
-  const SmartRefVector<MCRichHit> & hits = mcRichHits(pixel);
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-        iHit != hits.end(); ++iHit ) {
-    if ( *iHit && !(*iHit)->backgroundHit() ) return false;
-  }
-
-  return true;
+  return m_truth->isBackground( mcRichDigit(pixel) );
 }
 
 const MCRichHit *
-RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon )
+RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon ) const
 {
 
   // Track MCParticle
@@ -408,16 +251,34 @@ RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon )
 }
 
 const MCRichOpticalPhoton *
-RichRecMCTruthTool::trueOpticalPhoton( const RichRecPhoton * photon )
+RichRecMCTruthTool::trueOpticalPhoton( const RichRecPhoton * photon ) const
 {
+  // get true MCRichHit
+  const MCRichHit * mchit = trueCherenkovHit( photon );
+  if ( !mchit ) return NULL;
+  // return associated MCRichOpticalPhoton
+  return m_truth->mcOpticalPhoton( mchit );
+}
 
-  if ( mcPhotonLinks() ) {
-    // get true MCRichHit
-    const MCRichHit * mchit = trueCherenkovHit( photon );
-    if ( !mchit ) return NULL;
-    // return associated MCRichOpticalPhoton
-    return mcPhotonLinks()->first( mchit );
+const MCRichOpticalPhoton *
+RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
+                                       const RichRecPixel * pixel ) const
+{
+  // Is this a true cherenkov combination
+  const MCParticle * mcPart = trueCherenkovPhoton(segment,pixel);
+  if ( mcPart ) {
+
+    // Now find associated MCRichOpticalPhoton
+    const SmartRefVector<MCRichHit> & hits = mcRichHits(pixel);
+    for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
+          iHit != hits.end(); ++iHit ) {
+      if ( !(*iHit) ) continue; // protect against bad hits
+      if ( (*iHit)->mcParticle() == mcPart ) { return m_truth->mcOpticalPhoton(*iHit); }
+    }
+
   }
 
+  // Not a true combination...
   return NULL;
 }
+

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.3 2004-03-16 13:41:44 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.4 2004-06-10 14:40:50 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
 
@@ -14,18 +14,18 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichDetTools/IRichSmartIDTool.h"
-#include "RichRecBase/IRichRecMCTruthTool.h"
+#include "RichMCTools/IRichMCTruthTool.h"
 
 // Event
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
-#include "Event/MCRichHit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
 /** @class RichPixelCreatorFromCheatedRichDigits RichPixelCreatorFromCheatedRichDigits.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the OO digitisation but then refers to the
- *  MCRichHits objects to use the True MC hit positions
+ *  Uses RichDigits from the digitisation but then refers to the
+ *  MCRichOpticalPhoton objects to use the true MC hit positions.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -83,7 +83,7 @@ private: // data
   IRichSmartIDTool * m_smartIDTool;
 
   /// MC Truth tool
-  IRichRecMCTruthTool * m_mcTool;
+  IRichMCTruthTool * m_mcTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;

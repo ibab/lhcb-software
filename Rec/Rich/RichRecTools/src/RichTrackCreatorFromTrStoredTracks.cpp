@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.14 2004-05-31 22:02:06 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.15 2004-06-10 14:39:25 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -14,35 +14,38 @@ static const  ToolFactory<RichTrackCreatorFromTrStoredTracks>          s_factory
 const        IToolFactory& RichTrackCreatorFromTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const std::string& type,
-                                                                        const std::string& name,
-                                                                        const IInterface* parent )
-  : RichRecToolBase  ( type, name, parent ),
-    m_tracks         ( 0 ),
-    m_trTracks       ( 0 ),
-    m_rayTrace       ( 0 ),
-    m_smartIDTool    ( 0 ),
-    m_massHypoRings  ( 0 ),
-    m_segMaker       ( 0 ),
-    m_signal         ( 0 ),
-    m_skipNonUnique  ( true ),
-    m_allDone        ( false ),
-    m_tkPcut         ( Rich::Track::NTrTypes, 0 ),
-    m_buildHypoRings ( false ),
-    m_nTracks        ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
+RichTrackCreatorFromTrStoredTracks::
+RichTrackCreatorFromTrStoredTracks( const std::string& type,
+                                    const std::string& name,
+                                    const IInterface* parent )
+  : RichRecToolBase        ( type, name, parent ),
+    m_tracks               ( 0 ),
+    m_trTracks             ( 0 ),
+    m_rayTrace             ( 0 ),
+    m_smartIDTool          ( 0 ),
+    m_massHypoRings        ( 0 ),
+    m_segMaker             ( 0 ),
+    m_signal               ( 0 ),
+    m_trTracksLocation     ( TrStoredTrackLocation::Default ),
+    m_richRecTrackLocation ( RichRecTrackLocation::Default  ),
+    m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
+    m_skipNonUnique        ( true  ),
+    m_allDone              ( false ),
+    m_tkPcut               ( Rich::Track::NTrTypes, 0 ),
+    m_buildHypoRings       ( false ),
+    m_nTracks              ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
 {
 
   // declare interface for this tool
   declareInterface<IRichTrackCreator>(this);
 
   // job options
-  declareProperty( "TrStoredTracksLocation",
-                   m_trTracksLocation = TrStoredTrackLocation::Default );
-  declareProperty( "RichRecTrackLocation",
-                   m_richRecTrackLocation = RichRecTrackLocation::Default );
-  declareProperty( "SkipNonUniqueTracks", m_skipNonUnique );
-  declareProperty( "TrackMinPtotPerClass", m_tkPcut );
-  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings );
+  declareProperty( "TrStoredTracksLocation",   m_trTracksLocation     );
+  declareProperty( "RichRecTrackLocation",     m_richRecTrackLocation );
+  declareProperty( "SkipNonUniqueTracks",      m_skipNonUnique        );
+  declareProperty( "TrackMinPtotPerClass",     m_tkPcut               );
+  declareProperty( "BuildMassHypothesisRings", m_buildHypoRings       );
+  declareProperty( "TrackSegmentTool",         m_trSegToolNickName    );
 
 }
 
@@ -56,7 +59,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   acquireTool( "RichRayTracing",          m_rayTrace    );
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool );
-  acquireTool( "RichDetTrSegMaker",       m_segMaker    );
+  acquireTool( m_trSegToolNickName,       m_segMaker    );
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
 
   // Setup incident services
@@ -81,14 +84,21 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
 {
   if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
-    {
-      debug() << "Selected " << richTracks()->size() << " TrStoredTracks :";
-      for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-        debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
-                << "/" << m_nTracks[iTk].first << ")";
-      }
-      debug() << endreq;
+  {
+    // Print out of track count
+    unsigned nTotTried(0), nTotSel(0);
+    {for ( TrackTypeCount::iterator i = m_nTracks.begin();
+           i != m_nTracks.end(); ++i ) {
+      nTotTried += (*i).first;
+      nTotSel   += (*i).second;
+    }}
+    debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
+    for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+      debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
+              << "/" << m_nTracks[iTk].first << ")";
     }
+    debug() << endreq;
+  }
 }
 
 const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
@@ -96,13 +106,10 @@ const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
   if ( ! m_allDone ) {
     m_allDone = true;
 
-    // Load tracks
-    if ( !m_trTracks ) { if ( !loadTrStoredTracks() ) return StatusCode::FAILURE; }
-
     // Iterate over all reco tracks, and create new RichRecTracks
-    richTracks()->reserve( m_trTracks->size() );
-    for ( TrStoredTracks::const_iterator track = m_trTracks->begin();
-          track != m_trTracks->end();
+    richTracks()->reserve( trStoredTracks()->size() );
+    for ( TrStoredTracks::const_iterator track = trStoredTracks()->begin();
+          track != trStoredTracks()->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
 
   }
@@ -112,19 +119,20 @@ const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
 
 const long RichTrackCreatorFromTrStoredTracks::nInputTracks() const
 {
-  if ( !m_trTracks ) { loadTrStoredTracks(); }
-  return ( m_trTracks ? m_trTracks->size() : 0 );
+  return ( trStoredTracks() ? trStoredTracks()->size() : 0 );
 }
 
-const bool RichTrackCreatorFromTrStoredTracks::loadTrStoredTracks() const
+const TrStoredTracks *
+RichTrackCreatorFromTrStoredTracks::trStoredTracks() const
 {
+  if ( !m_trTracks ) {
+    // Obtain smart data pointer to TrStoredTracks
+    m_trTracks = get<TrStoredTracks>( m_trTracksLocation );
+    debug() << "located " << m_trTracks->size() << " TrStoredTracks at "
+            << m_trTracksLocation << endreq;
+  }
 
-  // Obtain smart data pointer to TrStoredTracks
-  m_trTracks = get<TrStoredTracks>( m_trTracksLocation );
-  debug() << "located " << m_trTracks->size() << " TrStoredTracks at "
-          << m_trTracksLocation << endreq;
-
-  return StatusCode::SUCCESS;
+  return m_trTracks;
 }
 
 // Forms a new RichRecTrack object from a TrStoredTrack
@@ -160,7 +168,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   // See if this RichRecTrack already exists
   const unsigned long key = static_cast<unsigned long>(trTrack->key());
   if ( m_trackDone[key] ) {
-    return static_cast<RichRecTrack*>( richTracks()->object(key) );
+    return richTracks()->object(key);
   } else {
 
     RichRecTrack * newTrack = NULL;
@@ -195,7 +203,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
 
           // Get PD panel impact point
           HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
-          HepVector3D trackDir = (*iSeg).bestMomentum();
+          const HepVector3D & trackDir = (*iSeg).bestMomentum();
           if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg).rich(),
                                                       (*iSeg).bestPoint(),
                                                       trackDir,
@@ -278,6 +286,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
 RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
 {
   if ( !m_tracks ) {
+
     SmartDataPtr<RichRecTracks> tdsTracks( evtSvc(), m_richRecTrackLocation );
     if ( !tdsTracks ) {
 
@@ -289,7 +298,7 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
 
     } else {
 
-      debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTrackss in TES at "
+      debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
               << m_richRecTrackLocation << endreq;
 
       // Set smartref to TES track container
@@ -303,6 +312,8 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
       }
 
     }
+
   }
+
   return m_tracks;
 }

@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.2 2004-05-31 22:02:06 jonrob Exp $
+// $Id: RichRayTraceCherenkovCone.cpp,v 1.3 2004-06-10 14:39:23 jonesc Exp $
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -59,14 +59,15 @@ StatusCode RichRayTraceCherenkovCone::finalize()
   return RichRecToolBase::finalize();
 }
 
-std::vector<HepPoint3D> & 
-RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring ) const
+std::vector<HepPoint3D> &
+RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring,
+                                      const DeRichHPDPanel::traceMode mode ) const
 {
   if ( !ring ) Exception( "Null RichRecRing pointer!" );
 
   // cache points in each ring
   if ( ring->ringPoints().empty() ) {
-    rayTrace( ring->richRecSegment(), ring->radius(), ring->ringPoints() );
+    rayTrace( ring->richRecSegment(), ring->radius(), ring->ringPoints(), mode );
   }
 
   return ring->ringPoints();
@@ -75,29 +76,43 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring ) const
 StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const Rich::ParticleIDType id,
-                                      std::vector<HepPoint3D> & points ) const
+                                      std::vector<HepPoint3D> & points,
+                                      const DeRichHPDPanel::traceMode mode ) const
 {
   return rayTrace( segment,
                    m_ckAngle->avgCherenkovTheta(segment, id),
-                   points );
+                   points, mode );
 }
 
 StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const double ckTheta,
-                                      std::vector<HepPoint3D> & points ) const
+                                      std::vector<HepPoint3D> & points,
+                                      const DeRichHPDPanel::traceMode mode ) const
 {
-
   // make sure segment is valid
   if ( !segment ) Exception( "Null RichRecSegment pointer!" );
 
+  // Do the ray-tracing
+  return rayTrace ( segment->trackSegment().rich(),
+                    segment->trackSegment().bestPoint(),
+                    segment->trackSegment().bestMomentum(),
+                    ckTheta, points, mode );
+}
+
+StatusCode
+RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
+                                      const HepPoint3D & emissionPoint,
+                                      const HepVector3D & direction,
+                                      const double ckTheta,
+                                      std::vector<HepPoint3D> & points,
+                                      const DeRichHPDPanel::traceMode mode ) const
+{
+
   if ( ckTheta > 0 ) {
 
-    // track information
-    const RichTrackSegment & trackSeg = segment->trackSegment();
-
     // Define rotation matrix
-    const HepVector3D z = trackSeg.bestMomentum().unit();
+    const HepVector3D z = direction.unit();
     HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
                       z.cross( HepVector3D(0.,1.,0.) ) :
                       z.cross( HepVector3D(1.,0.,0.) ) );
@@ -113,9 +128,6 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
     AngleVector::const_iterator iSin = m_sinCkPhi.begin();
     for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ++iCos, ++iSin ) {
 
-      // Photon emission point is half-way between segment start and end points
-      const HepPoint3D & emissionPt = trackSeg.bestPoint();
-
       // Photon direction around loop
       const HepVector3D photDir = rotation * HepVector3D( sinCkTheta*(*iCos),
                                                           sinCkTheta*(*iSin),
@@ -123,19 +135,14 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 
       // Ray trace to detector plain
       HepPoint3D hitPoint;
-      if ( m_rayTrace->traceToDetectorWithoutEff( trackSeg.rich(),
-                                                  emissionPt,
+      if ( m_rayTrace->traceToDetectorWithoutEff( rich,
+                                                  emissionPoint,
                                                   photDir,
                                                   hitPoint,
-                                                  DeRichHPDPanel::loose ) ) {
+                                                  mode ) ) {
         points.push_back( hitPoint );
       }
 
-    }
-
-    if ( msgLevel(MSG::VERBOSE) ) {
-      verbose() << "Successfully traced " << points.size() 
-                << " points to detector plane for segment " << segment->key() << endreq;
     }
 
     return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: RichRayTraceCherenkovCone.h,v 1.1 2004-05-31 21:30:50 jonrob Exp $
+// $Id: RichRayTraceCherenkovCone.h,v 1.2 2004-06-10 14:39:24 jonesc Exp $
 #ifndef RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H 1
 
@@ -48,15 +48,26 @@ public:
   /// Ray trace the Cherenkov cone for the given segment and mass hypothesis to the detector plane
   StatusCode rayTrace ( RichRecSegment * segment,
                         const Rich::ParticleIDType id,
-                        std::vector<HepPoint3D> & points ) const;
+                        std::vector<HepPoint3D> & points,
+                        const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
 
   /// Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
   StatusCode rayTrace ( RichRecSegment * segment,
                         const double ckTheta,
-                        std::vector<HepPoint3D> & points ) const;
+                        std::vector<HepPoint3D> & points,
+                        const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
+
+  /// Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
+  StatusCode rayTrace ( const Rich::DetectorType rich,
+                        const HepPoint3D & emissionPoint,
+                        const HepVector3D & direction,
+                        const double ckTheta,
+                        std::vector<HepPoint3D> & points,
+                        const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
 
   /// Ray trace the Cherenkov cone for the given ring to the detector plane
-  std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring ) const;
+  std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
+                                       const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const;
 
 private: // methods
 

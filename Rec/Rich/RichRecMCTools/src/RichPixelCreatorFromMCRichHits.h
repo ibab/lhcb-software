@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.h,v 1.3 2004-03-16 13:41:44 jonesc Exp $
+// $Id: RichPixelCreatorFromMCRichHits.h,v 1.4 2004-06-10 14:40:51 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H 1
 
@@ -14,9 +14,11 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichDetTools/IRichSmartIDTool.h"
+#include "RichMCTools/IRichMCTruthTool.h"
 
 // Event
 #include "Event/MCRichHit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
 /** @class RichPixelCreatorFromMCRichHits RichPixelCreatorFromMCRichHits.h
  *
@@ -74,6 +76,9 @@ private: // data
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
+
+  /// MC Truth tool
+  IRichMCTruthTool * m_mcTool;
 
   /// String containing input MCRichHits location in TES
   std::string m_mcHitsLocation;

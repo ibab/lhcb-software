@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.6 2004-05-31 22:04:53 jonrob Exp $
+// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.7 2004-06-10 14:40:50 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -20,6 +20,7 @@ RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::strin
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
+    m_mcTool      ( 0 ),
     m_allDone     ( false )
 {
 
@@ -33,7 +34,7 @@ RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::strin
 
 }
 
-StatusCode RichPixelCreatorFromMCRichHits::initialize() 
+StatusCode RichPixelCreatorFromMCRichHits::initialize()
 {
 
   // Sets up various tools and services
@@ -42,6 +43,7 @@ StatusCode RichPixelCreatorFromMCRichHits::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichMCTruthTool", m_mcTool      );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -85,20 +87,22 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
     RichRecPixel * newPixel = NULL;
 
-    if ( 0 != hitKey ) {
+    RichSmartID id(0);
+    StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
+    if ( sc.isSuccess() && id.isValid() ) {
 
-      RichSmartID id(0);
-      StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
-      if ( sc.isSuccess() && id.isValid() ) {
+      // Find associated MCRichOpticalPhoton
+      const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+      if ( mcPhot ) {
 
         // Make a new RichRecPixel
         newPixel = new RichRecPixel();
         richPixels()->insert( newPixel );
 
         // Positions
-        newPixel->setGlobalPosition( hit->entry() );
-        // no method for local position as yet !
-        //HepPoint3D & lPosition = newPixel->localPosition();
+        newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+        newPixel->localPosition() =
+          m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
 
         // Set smartID
         newPixel->setSmartID( id );
@@ -108,6 +112,7 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
         newPixel->setParentType( Rich::RecPixel::MCHit );
 
       }
+
     }
 
     // Add to reference map
@@ -125,17 +130,19 @@ StatusCode RichPixelCreatorFromMCRichHits::newPixels() const {
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<MCRichHits> hits( evtSvc(), m_mcHitsLocation );
-  if ( !hits ) {
-    return Error( "Failed to locate MCRichHits at " + m_mcHitsLocation );
-  } else {
-    debug() << "located " << hits->size() << " MCRichHits at "
-            << m_mcHitsLocation << endreq;
-  }
+  const MCRichHits * hits = get<MCRichHits>( m_mcHitsLocation );
 
-  for ( MCRichHits::iterator hit = hits->begin();
+  // Loop over hits and create working pixels
+  for ( MCRichHits::const_iterator hit = hits->begin();
         hit != hits->end();
         ++hit ) { newPixel( *hit ); }
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Located " << hits->size() << " MCRichHits at "
+            << m_mcHitsLocation << endreq
+            << "Created " << richPixels()->size() << " RichRecPixels at "
+            << m_richRecPixelLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }

@@ -4,6 +4,17 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-06-04 - Chris Jones
+ - Rework the MC reconstruction tools so they now work + add a few new versions
+ - Possible usage of the new tools is outlined in the file 
+   options/RecoToolPara.opts in the RichRecSys package
+
+! 2004-06-03 - Chris Jones
+ - Port non-reconstruction specific methods from RichRecMCTruthTool into
+   RichMCTruthTool in Rich/RichMCTools
+ - Remove the tool RichTrackCreatorFromCheatedTrStoredTracks since functionality
+   can now be done by configuring RichTrackCreatorFromTrStoredTracks
+
 !====================== RichRecMCTools v1r4 2004-04-21 =====================
 ! 2004-04-18 - Chris Jones
  - Improvements to MC truth tool

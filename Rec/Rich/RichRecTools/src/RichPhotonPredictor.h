@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.5 2004-04-19 23:06:13 jonesc Exp $
+// $Id: RichPhotonPredictor.h,v 1.6 2004-06-10 14:39:23 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -14,6 +14,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonPredictor.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 
 /** @class RichPhotonPredictor RichPhotonPredictor.h
  *
@@ -43,21 +44,14 @@ public:
   /// Finalize method
   StatusCode finalize();
 
-  /// Returns square of distance seperating the pixel hit and hit position extrapolated
-  /// using the RichRecSegment direction in global corrdinates
-  double trackPixelHitSep2Global( const RichRecSegment * segment,
-                                  const RichRecPixel * pixel ) const;
-
-  /// Returns square of distance seperating the pixel hit and hit position extrapolated
-  /// using the RichRecSegment direction in local corrdinates
-  double trackPixelHitSep2Local( const RichRecSegment * segment,
-                                 const RichRecPixel * pixel ) const;
-
   /// Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,
                        RichRecPixel * pixel ) const;
 
 private: // private data
+
+  /// Geometry tool
+  IRichRecGeomTool * m_geomTool;
 
   std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
   std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres

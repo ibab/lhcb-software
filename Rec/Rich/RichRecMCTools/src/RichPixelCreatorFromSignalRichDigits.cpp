@@ -1,26 +1,29 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.10 2004-06-10 14:39:23 jonesc Exp $
+// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.1 2004-06-10 14:40:51 jonesc Exp $
 
 // local
-#include "RichPixelCreatorFromRichDigits.h"
+#include "RichPixelCreatorFromSignalRichDigits.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromRichDigits
+// Implementation file for class : RichPixelCreatorFromSignalRichDigits
 //
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
+// 15/09/2003 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromRichDigits>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
+static const  ToolFactory<RichPixelCreatorFromSignalRichDigits>          s_factory ;
+const        IToolFactory& RichPixelCreatorFromSignalRichDigitsFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
-                                                                const std::string& name,
-                                                                const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_pixels      ( 0 ),
-    m_smartIDTool ( 0 ),
-    m_allDone     ( false )
+RichPixelCreatorFromSignalRichDigits::
+RichPixelCreatorFromSignalRichDigits( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
+  : RichRecToolBase       ( type, name, parent ),
+    m_pixels              ( 0 ),
+    m_mcTool              ( 0 ),
+    m_pixMaker            ( 0 ),
+    m_subPixelCreatorName ( "RichPixelCreatorReco" ),
+    m_allDone             ( false )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -30,17 +33,20 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation",
                    m_recoDigitsLocation = RichDigitLocation::Default );
+  declareProperty( "DelegatedPixelCreator", m_subPixelCreatorName );
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::initialize() {
+StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichMCTruthTool",     m_mcTool   );
+  acquireTool( m_subPixelCreatorName, m_pixMaker );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -52,22 +58,22 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::finalize() 
+StatusCode RichPixelCreatorFromSignalRichDigits::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
+void RichPixelCreatorFromSignalRichDigits::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
-RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
-
+RichPixelCreatorFromSignalRichDigits::newPixel( const ContainedObject * obj ) const
+{
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
@@ -75,49 +81,15 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
     return NULL;
   }
 
-  // RichDigit key
-  const RichSmartID id = digit->key();
+  // Test if this is a background hit
+  if ( m_mcTool->isBackground( m_mcTool->mcRichDigit(digit) ) ) return NULL;
 
-  // See if this RichRecPixel already exists
-  if ( m_pixelDone[id] ) {
-    return m_pixelExists[id];
-  } else {
-
-    RichRecPixel * newPixel = NULL;
-
-    if ( id.isValid() ) {
-
-      // Make a new RichRecPixel
-      newPixel = new RichRecPixel();
-      richPixels()->insert( newPixel );
-
-      // Positions
-      HepPoint3D & gPosition = newPixel->globalPosition();
-      m_smartIDTool->globalPosition( id, gPosition );
-      newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition);
-
-      // Set smartID
-      newPixel->setSmartID( id );
-
-      // Set parent information
-      newPixel->setParentPixel( digit );
-      newPixel->setParentType( Rich::RecPixel::Digit );
-
-    } else {
-      Warning("Invalid RichDigit SmartID !");
-    }
-
-    // Add to reference map
-    m_pixelExists[ id ] = newPixel;
-    m_pixelDone  [ id ] = true;
-
-    return newPixel;
-  }
-
+  // Finally, delegate work to pixel creator
+  return m_pixMaker->newPixel( obj );
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
-
+StatusCode RichPixelCreatorFromSignalRichDigits::newPixels() const
+{
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
@@ -139,10 +111,9 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
+RichRecPixels * RichPixelCreatorFromSignalRichDigits::richPixels() const
 {
   if ( !m_pixels ) {
-
     SmartDataPtr<RichRecPixels> tdsPixels( evtSvc(),
                                            m_richRecPixelLocation );
     if ( !tdsPixels ) {
@@ -161,15 +132,7 @@ RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
       // Set smartref to TES pixel container
       m_pixels = tdsPixels;
 
-      // Remake local pixel reference map
-      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
-            iPixel != tdsPixels->end(); ++iPixel ) {
-        m_pixelExists [ (*iPixel)->smartID() ] = *iPixel;
-        m_pixelDone   [ (*iPixel)->smartID() ] = true;
-      }
-
     }
   }
-
   return m_pixels;
 }

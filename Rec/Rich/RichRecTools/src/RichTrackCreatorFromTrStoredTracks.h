@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.11 2004-05-31 21:30:51 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.12 2004-06-10 14:39:26 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -75,8 +75,8 @@ public:
 
 private: // methods
 
-  /// Load the TrStoredTracks
-  const bool loadTrStoredTracks() const;
+  /// Returns TrStoredTracks
+  const TrStoredTracks * trStoredTracks() const;
 
   /// Initialise for a new event
   void InitNewEvent();
@@ -109,6 +109,9 @@ private: // data
 
   /// Output location for RichRecTracks in TES
   std::string m_richRecTrackLocation;
+
+  /// Joboption "nickname" of the TrackSegment tool to use
+  std::string m_trSegToolNickName;
 
   /// Flag to signify whether to ignore non-unique tracks
   bool m_skipNonUnique;
