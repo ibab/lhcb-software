@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2001-10-29 12:41:51 andreav Exp $
+# $Id: requirements,v 1.5 2001-10-29 17:05:46 andreav Exp $
 package DetCond
 version v1
 
@@ -7,9 +7,7 @@ branches DetCond cmt src doc
 # GAUDI framework dependencies
 # GaudiKernel and GaudiSvc are needed at compile time
 # GaudiAlg components are needed at runtime (as shared library $GaudiAlgShr)
-use GaudiKernel  v10*
-use GaudiSvc     v6*
-use GaudiAlg     v4*
+use GaudiSys v8*
 
 # ConditionsDB package
 use CONDDB       v3r01*
