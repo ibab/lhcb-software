@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.35 2004-12-14 14:58:15 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.36 2004-12-14 15:11:12 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.35  2004/12/14 14:58:15  jonrob
+ *  change cut value back to default
+ *
  *  Revision 1.34  2004/12/13 17:27:13  jonrob
  *  various improvements
  *
@@ -78,7 +81,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "ExtraHistos",   m_extraHistos = false );
   declareProperty( "IgnoreThresholds", m_ignoreThres = true );
   declareProperty( "KaonDLLCut", m_dllKaonCut = -9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
