@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.8 2004-03-19 16:03:20 cattanem Exp $
+// $Id: CaloReco_load.cpp,v 1.9 2004-06-03 06:33:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2004/03/19 16:03:20  cattanem
+// add missing factories...
+//
 // Revision 1.7  2003/04/11 09:33:42  ibelyaev
 //  add new E-,S- and L-corrections from Olivier Deschamps
 //
@@ -125,6 +128,8 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( Calo04SCorrection                   ) ;
   DECLARE_TOOL        ( Calo04LCorrection                   ) ;
 
+  DECLARE_TOOL ( CaloClusterCorrect3x3Position );
+  
 };
 
 
