@@ -2,7 +2,20 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
-! 2004-12-01 - P. Koppenburg
+! 2004-12-16 - P. Koppenburg
+ - DaVinciTools/IParticleFilter.h
+   . Added filterByPID methods
+     These two methods allow to get a subset of particles
+     with the same PID without having to use the PIDFilterCriterion
+     -> The same instance of ParticleFilter can be used for all
+      Particles.
+      ParticleVector myKaons, myPiPlus, myPiMinus;
+      sc = particleFilter()->filterByPID(parts, myKaons,   "K+");
+      sc = particleFilter()->filterByPID(parts, myPiPlus,  "pi+", false);
+      sc = particleFilter()->filterByPID(parts, myPiMinus, "pi-", false);
+      would return a vector of kaons (both sign) and pions.
+  
+! 2004-12-16 - P. Koppenburg
  - DaVinciTools/IParticleTransporter.h
    . Add const wherever necessary
    . Remove useless non-const method
