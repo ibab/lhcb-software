@@ -4,6 +4,8 @@ Package manager : Patrick Robbe and Witek Pokorski
 ! 2003-11-06 - Patrick Robbe
  - EvtHelAmp.cpp : fix for windows
  - EvtIncoherentMixing.cpp : fix for windows
+ - EvtHQET2FF.hh, EvtHQETFF.hh : remove unnecessary EvtHQET2FF::,
+      EvtHQETFF:: declarations
 
 ! 2003-11-05 - Patrick Robbe
  - EvtPartProp.hh : remove EvtPartProp:: declaration

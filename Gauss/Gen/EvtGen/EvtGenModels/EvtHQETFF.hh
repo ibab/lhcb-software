@@ -34,9 +34,9 @@ public:
                        double t, double mass, double *a1f,
                        double *a2f, double *vf, double *a0f );
 
-  void EvtHQETFF::getscalarff(EvtId parent,EvtId daught,
-			      double t, double mass, double *f0p, double *f0m);
-
+  void getscalarff(EvtId parent,EvtId daught,
+                   double t, double mass, double *f0p, double *f0m);
+  
 
 private:
   double r1;
