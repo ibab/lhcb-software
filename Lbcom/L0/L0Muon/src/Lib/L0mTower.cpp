@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.2 2001-06-07 19:33:02 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.3 2001-06-08 08:24:22 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mTower.h"
@@ -238,12 +238,12 @@ int L0mTower::nearest(int sta, int foiX, int yindex) {
   
   for (int inx=0; inx <= foiX; inx++ ) {
   
-    HitIndex iplus(xoff+inx,0);
+    HitIndex iplus(xoff+inx,yindex);
     if( stmap.find(iplus) != stmap.end() ) {
       return iplus.first;
     }
     
-    HitIndex iminus(xoff-inx,0);
+    HitIndex iminus(xoff-inx,yindex);
     if( stmap.find(iminus) != stmap.end() ) {
       return iminus.first;
     }
