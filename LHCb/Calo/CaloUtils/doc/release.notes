@@ -1,9 +1,27 @@
-! $Id: release.notes,v 1.1.1.1 2001-11-02 14:39:53 ibelyaev Exp $
+! $Id: release.notes,v 1.2 2001-11-07 17:24:49 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+
+! =============================================================================
+  20011107    Vanya Belyaev 
+
+  CaloUtils/CellMatrix.h
+  CaloUtils/CellMatrix3x3.h
+  CaloUtils/CellMatrix2x2.h
+  CaloUtils/CellSwissCross.h
+  3 new useful utilities to determinet the relative position 
+   of calorimeter with respect to some reference ("seed") cell.
+  Utilities are able to determite what fraction of the area of 
+  the given cell belongs to certain topological configuration 
+  around referenced "seed" cell. 
+  5 possible configurations are considered:
+    3x3 matrix          ( area of 9 seed cells )
+    swiss-cross matrix  ( area of 5 seed cells )
+    4 types of 2x2 submatrices -
+    UpperLeft,UpperRight, LowerLeft and LowerRight  (area of 4 seed cells)
 
 ! =============================================================================
   20011102    v1  Vanya Belyaev 
