@@ -3,6 +3,71 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v9r0>2003-08-05 DaVinci v9r0</A></H1><PRE>
+ This version is built against Gaudi v12 and introduces support for gcc 3.2
+
+ - Removed features
+   . Drop support of data produced before TDR and reprocessing of 
+     global robustness test
+     .. remove DaVinciv248r4.opts, DaVinciv253r0.opts and 
+        DaVinciv254r1-Apr03.opts
+     .. remove CaloReCalibration.opts for recalibration of Brunel v13 data
+   . Remove possibility to remake Kshorts as made in Brunel for TDR production
+     .. remove example from DaVinci.opts
+     .. remove use of Rec/KsReco package 
+     .. remove loading of DLL from DaVinciCommon.opts
+
+ - New features
+   . Introduce choice of tracks to be used in CombinedParticleMaker controlled
+     by options. 
+     In the default configuration only long tracks are used.
+   . New way of making Ks with all type of tracks:
+     Long-Long, Upstream-Upstream, Long-VTT, Long-Upstream
+     .. use new package Phys/Ks2PiPiSel (v1r0)
+     .. include DLL in DaVinciCommon.opts
+     .. two options to run tight (DaVinciKshortTight.opts) and loose
+        selection (DaVinciKshortLoose.opts), introduced as example
+        in DaVinci.opts
+   . Support data produced with more recent version of simulation and
+     recontruction (v256r0.xml) and produced for TDR (v254r1)
+     .. XmlDDDB v17r0 to support changes to OTDet in backward compatible way
+     .. new options DaVinciv256r0.opts
+   . Introduce simplified muon particleID in Hlt, improve tracking in Velo
+     and adapt to new OTDet (HltTools v3r0, HltVelo v3r0, HltVeloTT v3r0,
+     HltLongTrack v3r0, HltChecker v3r0, new package HltMuonID v1r0)
+   . ParticleStuffer is now a private tool of DVAlgorithm hence its 
+     transporter type can be controlled by each algorithm separately
+   . Introduce cuts for TIGHT selection for Bd->D*Pi exclusive channel
+     (Bd2DstarPi v1r3, PhysSelSys v5r9)
+   . Introduce new selection for Bs->DsH (Bs2DsH v2r0, PhysSelSys v5r9)
+
+ - Modified features and tuning
+   . Modifications in ChargedProtoPAlg to add Chi2/NdF for VTT and
+     upstream tracks and beampipe cuts for VTT tracks (GlobalReco v4r1)   
+   . Modification in Efficiency algorithm to print in summary table the
+     reconstructibility and reconstruction when considering ONLY LONG tracks
+     in addition to consider all type of tracks. The full break down table
+     works ONLY for some decays and if off by default (DaVinciEff v2r8,
+     DaVinciEff v8r2p1 for win32 compilation)
+   . Fix version of LoKi used (PhysSelSys v5r9)
+
+ - Gaudi v12 and gcc 3.2 support
+   . Introduce explicit dependency of used Gaudi packages
+   . Use LHCb compatible with Gaudi v12r0 and gcc32 (LHCb v12r1)
+   . Please gcc 3.2 compilation (CaloReco v1r6, L1Decision v1r2, PrimVtx v2r1,
+     DaVinciAssociators v4r2p1, DaVinciTool v8r2, DaVinciTest v4r1p2,
+     DaVinciUser v4r1p1, PhysSelections v6r0p2, FlavourTagging v4r6p1,
+     B2DD v1r4p1, Bd2D0Kstar v2r0p1, Bd2DstarPi v1r3, Bd2JpsiKs v1r2p1,
+     Bd2JpsiKstar v1r2p1, Bd2KPiPiPi v1r1p1, Bd2MuMuKstar v1r2p1, 
+     Bd2PhiKs v1r1p1, Bd2Pi0Pi0 v1r0p1, Bd2PiPiPi0 v1r2p1, Bs2DsH v2r0,
+     Bs2JpsiEta v1r1p1, Bs2PhiEtac v1r3p1, Bu2KsPi v1r1, PhysSelSys v5r9)
+
+ - Bug fixes
+   . Fix for HCalE estimator (CaloPIDs v1r1)
+   . Fix bug introduced in DaVinciEff v2r6 when full break down was introduced
+     and considering only one of the charged conjugate final state for 
+     some decays for rec'tible/rec'ted numbers (DaVinciEff v2r8)
+
 </PRE><H1><A NAME=v8r3p4>2003-07-23 DaVinci v8r3p4</A></H1><PRE>
   - Modifications in (Pre)Selections ( PhysSelSys v5r8)
     . Bs -> mu mu

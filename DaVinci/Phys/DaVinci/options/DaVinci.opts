@@ -31,7 +31,7 @@
 // REMEMBER:
 //   to make Neutral ProtoParticles for channels with neutrals
 // REMEMBER:
-//   to read from DST or to make Kshorts with upstream tracks
+//   to make Kshorts with all type of tracks
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
@@ -47,13 +47,10 @@
 //ApplicationMgr.TopAlg += { "MergedPi0Alg" };
 //#include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
 
-//--- Ks->pi+pi- with Upstream tracks
-//    Read V0 as produced by Brunel and transform them into Particles
-//ApplicationMgr.TopAlg += { "V0MakerAlg" };
-//#include "$DAVINCITOOLSROOT/options/V0MakerAlg.opts"
-//    Redo Ks in DaVinci as done in Brunel
-//ApplicationMgr.TopAlg += { "UpstreamProtoPAlg", "SelectKs2pipi" };
-//#include "$KSRECOROOT/options/KsReco.opts"
+//--- Ks->pi+pi- with all type of tracks loose selection
+//#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
+//--- Ks->pi+pi- with all type of tracks tight selection
+//#include "$DAVINCIROOT/options/DaVinciKshortTight.opts"
 
 //--- Particle with Assigned pID only for HLT studies
 //#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts"
@@ -73,7 +70,7 @@
 //----------------------------------------------------------------
 // The various selections algorithms have each a DVDecayName.opts
 // file in their package that can be given as full options of the
-// DaVinci executable:
+// DaVinci executable INSTEAD of DaVinci.opts
 //   ex.: $B2HHROOT/options/DVBd2PiPi.opts
 //        $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
 //----------------------------------------------------------------

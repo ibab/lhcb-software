@@ -1,0 +1,13 @@
+//****************************************************************************
+// Specific options for DaVinci when reading data produced with 
+// Brunel v19r0  (dbase v256r0)
+// Also Compatible for reading LHCb light detector for Spring 2003 production
+// ---------------------------------------------------------------------------
+
+// DataBase specific configurations
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
+MagneticFieldSvc.FieldMapFile = "$LHCb_release_area/DBASE/SICB/dbase/v256r0/cdf/field043.cdf";
+ParticlePropertySvc.ParticlePropertiesFile = "$LHCb_release_area/DBASE/SICB/dbase/v256r0/cdf/particle.cdf";
+
+// Velo 45 degrees sectors
+DeVelo.Design = 1;

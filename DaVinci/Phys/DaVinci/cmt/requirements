@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.69 2003-07-23 13:00:30 gcorti Exp $
+# $Id: requirements,v 1.70 2003-08-07 15:02:21 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v8r3p4
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,73 +14,87 @@ branches          cmt doc src job options
 
 # Used packages. 
 #============================================================================
-#--- Minimal Gaudi libraries (from GAUDI_v11r5)
-use  GaudiSys           v11r0
 
-#--- Additional Gaudi libraries (from GAUDI_v11r5)
-use  GaudiNagC      	v*
-use  GaudiRootDb        v*
+#--- CMT and GaudiPolicy
+use  GaudiPolicy v5r11p2
+
+#--- External libraries (as defined in GAUDI_v12r0)
+use  ExternalLibs	v4r0p1
+use  AIDA		v3r22p2
+use  CLHEP		v2r1800p0
+use  HTL		v2r1321p0
+use  NAGC		v2r50p0		
+use  XERCES		v2r220p0
+use  CERNLIB 		v2r2002p0
+use  ROOT 		v2r30504p0
+
+#--- Gaudi libraries (from GAUDI_v12r0)
+use  GaudiKernel	v13r4p1
+use  GaudiSvc 		v10r2
+use  GaudiAlg 		v6r4
+use  GaudiAud 		v6r2
+use  GaudiNagC 		v7r3
+use  GaudiDb 		v8r4
+use  GaudiRootDb 	v9r2
 
 #--- Histogram persistency
-use  HbookCnv           v*
-use  RootHistCnv    	v*
+use  HbookCnv           v13r4
+use  RootHistCnv    	v8r2
 
-#--- LHCb libraries (from LHCB_v11r13)
-use  LHCb               v11r13	
+#--- LHCb libraries (from LHCB_v12r1)
+use  LHCb               v12r1	
 
-#--- Geometry description (from DBASE)
-use  XmlDDDB		v15r5	 Det
+#--- Geometry Database
+use  XmlDDDB		v17r0	 Det
 
 #--- DaVinciSys v8r0 packages 
 
 #    Enable L0 and L1 Trigger reprocessing and HLT 
 use  L0DU          	v6r5	 L0
-use  L1Decision         v2r0     L1
-use  HltTools           v2r1     Hlt
-use  HltVelo            v2r0     Hlt
-use  HltVeloTT          v2r0     Hlt
-use  HltLongTrack       v2r1     Hlt
-use  HltChecker         v2r0     Hlt
+use  L1Decision         v2r1     L1
+use  HltTools           v3r0     Hlt
+use  HltVelo            v3r0     Hlt
+use  HltVeloTT          v3r0     Hlt
+use  HltLongTrack       v3r0     Hlt
+use  HltChecker         v3r0     Hlt
+use  HltMuonID          v1r0     Hlt
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v2r4     Calo
 use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r5     Calo
-use  CaloPIDs           v1r0     Calo 
+use  CaloReco           v1r6     Calo
+use  CaloPIDs           v1r1     Calo 
 
 #    Muon PID
 use  MuonID             v3r6     Muon
 
 #    Final Reconstruction
-use  GlobalReco         v4r0p2   Rec
-use  KsReco		v1r4p1	 Rec
-use  PrimVtx            v2r0p1   Rec
+use  GlobalReco         v4r1     Rec
+use  PrimVtx            v2r1     Rec
 
 #    Utility tools
-use  TrExtrapolator     v2r5     Tr
+use  TrExtrapolator     v2r6     Tr
 
 #    Monte Carlo tools
-use  MCTools            v1r1     Phys
+use  MCTools            v1r1p1   Phys
 
 #    Reconstruction tools 
 use  RecoTools          v1r0p1   Rec
 
 #    Physics packages
-use  DaVinciTools       v8r1p2   Phys
-use  DaVinciAssociators v4r2     Phys
+use  DaVinciTools       v8r2     Phys
+use  DaVinciAssociators v4r2p1   Phys
 use  DaVinciMCTools     v5r0     Phys
-use  DaVinciTest        v4r1p1   Phys
-use  PhysSelections	v6r0p1   Phys
-use  FlavourTagging     v4r6     Phys
-use  DaVinciEff         v2r7     Phys
-use  DaVinciUser        v4r1     Phys
-use  PhysSelSys		v5r8     PhysSel
+use  DaVinciTest        v4r1p2   Phys
+use  Ks2PiPiSel         v1r0     Phys
+use  PhysSelections	v6r0p2   Phys
+use  FlavourTagging     v4r6p1   Phys
+use  DaVinciEff         v2r8p1   Phys
+use  DaVinciUser        v4r1p1   Phys
+use  PhysSelSys		v5r9     PhysSel
 
 #    Generic utilities
 use  Utilities          v1r0     Tools
-
-#    Analysis Tools
-use  LoKi               v1r2     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
@@ -96,5 +110,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=800304 " \
-             VisualC  " /DDaVinciVersion=800304 "
+macro_append cppflags " -DDaVinciVersion=900000 " \
+             VisualC  " /DDaVinciVersion=900000 "

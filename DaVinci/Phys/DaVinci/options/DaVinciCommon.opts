@@ -42,7 +42,6 @@ ApplicationMgr.DLLs += { "DaVinciAssociators" };
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
 // ProtoParticles creation: charged and neutrals
-ApplicationMgr.DLLs += { "KsReco" };
 ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
@@ -60,8 +59,9 @@ ApplicationMgr.DLLs += { "MCTools" };
 ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
-//    ... generic algorithm for selection of decays
+//    ... generic algorithms for selection of decays
 ApplicationMgr.DLLs += { "PhysSelections" };
+ApplicationMgr.DLLs += { "Ks2PiPiSel" };
 //    ... specific algorithms for selection of decays
 #include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
 //    ... flavour tagging
