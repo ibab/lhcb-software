@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.h,v 1.3 2003-11-22 18:40:50 jonesc Exp $
+// $Id: DeRichRadiator.h,v 1.4 2003-12-03 17:46:47 papanest Exp $
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
@@ -6,18 +6,20 @@
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
 
+// DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
+#include "DetDesc/TabulatedProperty.h"
+#include "DetDesc/Material.h"
 
 #include "RichKernel/RichRadiatorType.h"
-
-// External declarations
-extern const CLID& CLID_DeRichRadiator;
+#include "RichKernel/RichDetectorType.h"
 
 
 /** @class DeRichRadiator DeRichRadiator.h
  *
- * This is the definition of the Rich Radiator detector class
+ * This is the common base class of the Rich Single/Multi Solid Radiator 
+ * detector classes
  *
  * @author Antonis Papanestis
  */
@@ -26,64 +28,55 @@ class DeRichRadiator: public DetectorElement {
 
 public:
 
-  /**
-   * Constructor for this class
-   */
-  DeRichRadiator();
-
-  /**
-   * Default destructor
-   */
-  virtual ~DeRichRadiator();
-
-  /**
-   * Retrieves reference to class identifier
-   * @return the class identifier for this class
-   */
-  const CLID& clID() const {
-    return classID();
-  }
-
-  /**
-   * Retrieves reference to class identifier
-   * @return the class identifier for this class
-   */
-  static const CLID& classID();
-
   virtual StatusCode initialize();
   
   /**
    * Retrieves the id of this radiator
    * @return the id of this radiator (Aerogel, C4F10, CF4)
    */
-  inline  Rich::RadiatorType radiatorID(){
+  inline virtual Rich::RadiatorType radiatorID() {
     return m_radiatorID;
   }
+  
+  /**
+   * Retrieves the rich of this radiator
+   * @return the rich of this radiator (Rich1/2)
+   */
+  inline virtual Rich::DetectorType rich() {
+    return m_rich;
+  }
+  
 
   /**
    * Finds the next intersection point with radiator.
    * @return FAILURE if there is no intersection
    */
-  StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
+  virtual StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
                                    const HepVector3D& vGlobal,
-                                   HepPoint3D& returnPoint);
+                                   HepPoint3D& returnPoint) = 0;
+  /**
+   * Finds the entry and exit points of the radiator.
+   * @return FAILURE if there is no intersection
+   */
+  virtual StatusCode intersectionPoints(const HepPoint3D& pGlobal,
+                                        const HepVector3D& vGlobal,
+                                        HepPoint3D& entryPoint,
+                                        HepPoint3D& exitPoint ) = 0;
   
   /**
    * Finds the intersection points with radiator.
    * @return the number of intersection points. Zero if there is no
    * intersction.
    */
-  unsigned int intersectionPoints(const HepPoint3D& pGlobal,
-                                  const HepVector3D& vGlobal,
-                                  std::vector<HepPoint3D>& points);
+  virtual unsigned int intersectionPoints(const HepPoint3D& pGlobal,
+                                          const HepVector3D& vGlobal,
+                                          std::vector<HepPoint3D>& points) = 0;
   
 
-private:
-
-  /// topmost solid of the radiator
-  const ISolid* m_solid;
+protected:
   
   Rich::RadiatorType m_radiatorID;
+  Rich::DetectorType m_rich;
   
 };
 
