@@ -1,6 +1,6 @@
 // Rich digitisation for Gauss data
 
-// Process the raw hit signals
+// Process the raw hit signals.
 DigiRICHSeq.Members += { "RichSignal/RichPDSignal" };
 RichPDSignal.UseSpillover = true;
 

@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.4 2003-11-01 16:32:00 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.5 2003-11-04 14:25:38 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -109,13 +109,13 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
 
   for ( int iRich = 0; iRich<Rich::NRiches; ++iRich ) { // loop over rich detectors
 
-    title = rich[iRich]+" MCRichDigit Occupancy";
-    id = (1+iRich)*richOffset + 1;
-    m_digitMult[iRich] = histoSvc()->book(m_histPth, id, title, nBins, 0, maxMult[iRich] );
-
     title = rich[iRich]+" MCRichHit Occupancy";
-    id = (1+iRich)*richOffset + 2;
+    id = (1+iRich)*richOffset + 1;
     m_hitMult[iRich] = histoSvc()->book(m_histPth, id, title, nBins, 0, maxMult[iRich] );
+
+    title = rich[iRich]+" MCRichDigit Occupancy";
+    id = (1+iRich)*richOffset + 2;
+    m_digitMult[iRich] = histoSvc()->book(m_histPth, id, title, nBins, 0, maxMult[iRich] );
 
     title = rich[iRich] + " Hit mult. per Digit";
     id = richOffset*(iRich+1) + 3;
@@ -215,21 +215,29 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
     id = (1+iRich)*richOffset+34;
     m_digiErrR[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,5);
 
-    title = rich[iRich] + " MCRichDeposit TOF";
+    title = rich[iRich] + " signal MCRichHit TOF";
     id = richOffset*(iRich+1) + 41;
+    m_tofHit[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-100,100);
+
+    title = rich[iRich] + " background MCRichHit TOF";
+    id = richOffset*(iRich+1) + 42;
+    m_tofHitB[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-100,100);
+
+    title = rich[iRich] + " signal MCRichHit Energy";
+    id = richOffset*(iRich+1) + 43;
+    m_depEnHit[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,100);
+
+    title = rich[iRich] + " background MCRichHit Energy";
+    id = richOffset*(iRich+1) + 44;
+    m_depEnHitB[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,100);
+
+    title = rich[iRich] + " MCRichDeposit TOF";
+    id = richOffset*(iRich+1) + 45;
     m_tofDep[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-0,50);
 
     title = rich[iRich] + " MCRichDeposit Energy";
-    id = richOffset*(iRich+1) + 42;
+    id = richOffset*(iRich+1) + 46;
     m_depEnDep[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,100);
-
-    title = rich[iRich] + " MCRichHit TOF";
-    id = richOffset*(iRich+1) + 43;
-    m_tofHit[iRich] = histoSvc()->book(m_histPth,id,title,nBins,-100,100);
-
-    title = rich[iRich] + " MCRichHit Energy";
-    id = richOffset*(iRich+1) + 44;
-    m_depEnHit[iRich] = histoSvc()->book(m_histPth,id,title,nBins,0,100);
 
   }
 
@@ -488,12 +496,14 @@ StatusCode RichDigiAlgMoni::execute() {
       // Which RICH ?
       int rich = (*iHit)->rich();
 
-      // TOF for this hit
-      m_tofHit[rich]->fill( (*iHit)->timeOfFlight() );
-
-      // hit energy
-      m_depEnHit[rich]->fill( (*iHit)->energy() );
-
+      if ( trueCKHit(*iHit) ) {
+        m_tofHit[rich]->fill( (*iHit)->timeOfFlight() );  // signal TOF
+        m_depEnHit[rich]->fill( (*iHit)->energy() );      // signal energy
+      } else {
+        m_tofHitB[rich]->fill( (*iHit)->timeOfFlight() ); // background TOF
+        m_depEnHit[rich]->fill( (*iHit)->energy() );      // background energy
+      }
+ 
       // increment hit count
       ++hitMult[rich];
 
@@ -603,6 +613,19 @@ void RichDigiAlgMoni::countNPE( PhotMap & photMap,
     ++photMap[ pairC ];
   }
 
+}
+
+bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) {
+
+  // Which radiator
+  Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+
+  // Is this a true hit
+  return ( !hit->scatteredPhoton() &&
+           !hit->chargedTrack()
+           && ( rad == Rich::Aerogel ||
+                rad == Rich::Rich1Gas ||
+                rad == Rich::Rich2Gas ) ); 
 }
 
 //  Finalize

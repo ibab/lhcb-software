@@ -50,7 +50,7 @@ StatusCode RichSignal::initialize() {
   msg << MSG::DEBUG
       << " Using HPD signal algorithm" << endreq;
   msg << MSG::WARNING
-      << " Dividing energy by 10 to fix problem in GaussRICH. Remove when fixed."
+      << "Dividing energy by 10 to fix problem in GaussRICH. Remove when fixed."
       << endreq;
 
   return StatusCode::SUCCESS;
@@ -82,7 +82,7 @@ StatusCode RichSignal::execute() {
     ProcessEvent( m_RichPrevPrevLocation, -50 );
     ProcessEvent( m_RichNextLocation,      25 );
     // not needed yet
-    //ProcessEvent( m_RichNextNextLocation,  50 ); 
+    //ProcessEvent( m_RichNextNextLocation,  50 );
   }
 
   // Debug Printout
@@ -117,47 +117,45 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
   for ( MCRichHits::const_iterator iHit = hits->begin();
         iHit != hits->end(); ++iHit ) {
 
-    // Select hits
-    if ( !(*iHit)->chargedTrack() ) {
+    RichSmartID id;
+    // Is hit in active pixel
+    if ( (m_DetInterface->smartID((*iHit)->entry(),id)).isSuccess() 
+         && id.isValid() ) {
+      
+      // Find out if we already have a hit for this super-pixel
+      MCRichSummedDeposit * dep = mcSummedDeposits->object(id);
+      if ( tofOffset < -1 && dep ) {
+        // Toss a coin to see if we add this hit to the existing deposits
+        // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
+        // already existing hit
+        int iRan = (int)(m_rndm()*8.);
+        if ( iRan != 0 ) continue;
+      }
 
-      RichSmartID id(0);
-      // Is hit in active pixel
-      StatusCode sc = m_DetInterface->smartID( (*iHit)->entry(), id );
-      if ( sc.isSuccess() && 0 != id.index() ) {
+      // Then create a new deposit
+      MCRichDeposit* newDeposit = new MCRichDeposit();
+      mcDeposits->insert( newDeposit );
+      newDeposit->setParentHit( *iHit );
 
-        // Find out if we already have a hit for this super-pixel
-        MCRichSummedDeposit * dep = mcSummedDeposits->object(id);
-        if ( tofOffset < -1 && dep ) {
-          // Toss a coin to see if we add this hit to the existing deposits
-          // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
-          // already existing hit
-          int iRan = (int)(m_rndm()*8.);
-          if ( iRan != 0 ) continue;
-        }
+      // Fix for energy problem. Remove when fixed
+      double energy = (*iHit)->energy();
+      if ( energy > 0.02 ) energy /= 10;
+      newDeposit->setEnergy( energy );
 
-        // Then create a new deposit
-        MCRichDeposit* newDeposit = new MCRichDeposit();
-        mcDeposits->insert( newDeposit );
-        newDeposit->setParentHit( *iHit );
+      // TOF
+      double tof = tofOffset + (*iHit)->timeOfFlight();
+      // Global shift for Rich2.
+      if ( (*iHit)->rich() == Rich::Rich2 ) tof -= 40;
+      newDeposit->setTime( tof );
 
-        // Fix for energy problem. Remove when fixed
-        double energy = (*iHit)->energy();
-        if ( energy > 0.02 ) energy /= 10;
-        newDeposit->setEnergy( energy );
+      // Add to the set of other deposits in the pixel
+      if ( !dep ) {
+        dep = new MCRichSummedDeposit();
+        mcSummedDeposits->insert( dep, id );
+      }
+      dep->addToDeposits(newDeposit);
 
-        // TOF
-        newDeposit->setTime( tofOffset + (*iHit)->timeOfFlight() );
-
-        // Add to the set of other deposits in the pixel
-        if ( !dep ) {
-          dep = new MCRichSummedDeposit();
-          mcSummedDeposits->insert( dep, id );
-        }
-        dep->addToDeposits(newDeposit);
-
-      } // active hit if
-
-    } // hit selection
+    } // active hit if
 
   } // hit loop
 

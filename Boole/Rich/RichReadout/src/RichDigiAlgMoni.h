@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.4 2003-11-01 16:32:00 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.5 2003-11-04 14:25:38 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -64,7 +64,7 @@ private: // methods
 
   // Map to count cherenkov photons for each radiator
   typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
-  typedef std::map< PhotPair, int > PhotMap;
+  typedef std::map< PhotPair, int >                       PhotMap;
 
   // PD occupancies
   typedef std::map<RichSmartID,int> PDMulti;
@@ -87,8 +87,12 @@ private: // methods
   /// Returns the momentum for a given MCParticle
   double momentum( const MCParticle * mcPart );
 
+  /// Count the number of photo electrons
   void countNPE( PhotMap & photMap,
                  const MCRichHit * hit );
+
+  /// IS this a true cherenkov signal hit ?
+  bool trueCKHit(  const MCRichHit * hit );
 
 private: // data
 
@@ -116,11 +120,14 @@ private: // data
   IHistogram1D* m_digitMult[Rich::NRiches]; ///< MCRichDigit event multiplicity
   IHistogram1D* m_hitMult[Rich::NRiches]; ///< MCRichHit event multiplicity
 
-  IHistogram1D* m_tofDep[Rich::NRiches];   ///< TOF Information for MCRichDeposit
-  IHistogram1D* m_depEnDep[Rich::NRiches]; ///< Deposit Energy for MCRichDeposit
+  IHistogram1D* m_tofDep[Rich::NRiches];   ///< TOF information for MCRichDeposit
+  IHistogram1D* m_depEnDep[Rich::NRiches]; ///< Deposit energy for MCRichDeposit
 
-  IHistogram1D* m_tofHit[Rich::NRiches];   ///< TOF Information for MCRichDeposit
-  IHistogram1D* m_depEnHit[Rich::NRiches]; ///< Deposit Energy for MCRichDeposit
+  IHistogram1D* m_tofHit[Rich::NRiches];   ///< TOF information for signal MCRichHit
+  IHistogram1D* m_depEnHit[Rich::NRiches]; ///< Deposit energy for signal MCRichHit
+
+  IHistogram1D* m_tofHitB[Rich::NRiches];   ///< TOF information for background MCRichHit
+  IHistogram1D* m_depEnHitB[Rich::NRiches]; ///< Deposit energy for background MCRichHit
 
   IHistogram1D* m_pdDigsXGlobal[Rich::NRiches];     ///< Observed PD digits x global
   IHistogram1D* m_pdDigsYGlobal[Rich::NRiches];     ///< Observed PD digits y global
