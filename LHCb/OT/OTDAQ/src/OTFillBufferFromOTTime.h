@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.h,v 1.1 2004-09-03 12:12:25 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.h,v 1.1 2004-09-10 13:14:58 cattanem Exp $
 #ifndef OTDAQ_OTFILLBUFFERFROMOTTIME_H 
 #define OTDAQ_OTFILLBUFFERFROMOTTIME_H 1
 
@@ -28,8 +28,7 @@
 #include "Event/RawEvent.h"
 #include "Event/DAQTypes.h"
 
-/** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h 
- *   OTDAQ/OTFillBufferFromOTTime.h
+/** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h OTDAQ/OTFillBufferFromOTTime.h
  *  
  *
  *  @author Jacopo Nardulli

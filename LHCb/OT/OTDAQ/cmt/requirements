@@ -1,12 +1,13 @@
 package OTDAQ
-version v2r0
+version v3r0
 
 branches OTDAQ cmt doc src options xml Event
 
 include_dirs $(OTDAQROOT)
 
-use DAQEvent	        v4r*    Event
-use OTSimulation	v1r*	OT
+use DAQEvent	v4r*    Event
+use OTEvent	v14r*	Event
+use OTDet	v5r*	Det
 
 #---- Produce Header-Files from XML description
 document obj2doth OTDAQObj2Doth ../xml/OTDAQ.xml

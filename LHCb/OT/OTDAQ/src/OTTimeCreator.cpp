@@ -1,8 +1,11 @@
-// $Id: OTTimeCreator.cpp,v 1.1 2004-09-03 12:12:25 jnardull Exp $
+// $Id: OTTimeCreator.cpp,v 1.2 2004-09-10 13:14:59 cattanem Exp $
 // Include files
 
 // local
-#include "OTDAQ/OTTimeCreator.h"
+#include "OTTimeCreator.h"
+
+// Tool interface
+#include "OTDAQ/IOTReadOutWindow.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTTimeCreator

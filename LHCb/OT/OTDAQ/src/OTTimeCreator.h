@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.1 2004-09-03 12:12:25 jnardull Exp $
+// $Id: OTTimeCreator.h,v 1.1 2004-09-10 13:14:59 cattanem Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -20,9 +20,6 @@
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
 #include "Event/DAQTypes.h"
-
-// OTSimulation
-#include "OTSimulation/OTReadOutWindow.h"
 
 // from Detector
 #include "OTDet/DeOTDetector.h"

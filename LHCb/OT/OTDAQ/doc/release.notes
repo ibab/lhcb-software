@@ -1,6 +1,12 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!====================== OTDAQ v3r0 2004-09-10 ======================
+! 2004-09-10 - Marco Cattaneo
+ - Add OTReadoutWindow tool (moved here to remove circular dependency on 
+   OTSimulation)
+ - Leave in OTDAQ subdirectory only .h files of interfaces
+
 ! 2004-08-30 - Jacopo Nardulli
   Modification of the package according to the New OT Event Model 
   and to the new OTChannelID.
@@ -8,16 +14,11 @@ Package manager : J. Nardulli
   Raw Buffer and creates the object OTTime. It replaces both OTRetrieveBuffer 
   and OTClusterCreator.
   OTCheckOTDigit do not exist any more.
-  An xml branch has been created containing the file OTDAQ.xml. 
+  An xml subdirectory has been created containing the file OTDAQ.xml. 
   This automatically generates the headers files GolHeader.h and DataWord.h
   The Algorithm OTFillRawBuffer has been moved in the package OT/OTSimulation
   The Algorithm OTFillBufferFromOTTime recreates the Buffer using the OTTime, 
   this is useful for the buffer tampering.
-  !!! Modifications are backwards incompatible.
-  Use LHCbKernel    upper than v5r1
-  Use OTEvent       upper than v13r0
-  Use OTAssociators upper than v2r9
-  Use OTSimulation  instead of OTAlgorithms
 
 !====================== OTDAQ v2r0 2004-03-30 ======================
 ! 2004-03-30 - Jacopo Nardulli

@@ -1,8 +1,8 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.1 2004-09-03 12:12:25 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.2 2004-09-10 13:14:58 cattanem Exp $
 // Include files
 
 // local
-#include "OTDAQ/OTFillBufferFromOTTime.h"
+#include "OTFillBufferFromOTTime.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillBufferFromOTTime
