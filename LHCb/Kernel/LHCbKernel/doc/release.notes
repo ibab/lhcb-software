@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v5r4 2004-11-19 ========================
 ! 2004-11-03 - Chris Jones
  - Update RichSmartID (backwards compatible)
 
