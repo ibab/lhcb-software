@@ -3,6 +3,88 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+
+</PRE><H1><A NAME=v9r2>2003-12-15 DaVinci v9r2 - TDR Version</A></H1><PRE>
+
+ Version with TDR analysis for decay selections ( PhysSelSys v6r0 ). 
+
+ - Remove of loading of dll of decay selection packages from DaVinciCommon.opts
+   All PhysSelSys packages have been modified so that their DVxxx.opts
+   load their own pacakge dll explicitely.
+   For convenience PhysSelSys.opts provide the loading of all decay selections
+   packages. An example of how whoever needs all selections can make
+   use of this options files is provided in DaVinci.opts
+
+ - For the following channels involving J/Psi the stripping has been 
+   perfomed based on a generic J/Psi->ee or J/Psi->mu mu preselection and
+   the packages contains the code and configuration for the final
+   analysis.
+   . Bd2JpsiKs     v1r5   Bd->J/Psi(mumu)Ks and Bd->J/Psi(ee)Ks
+   . Bd2JpsiKstar  v1r2p2 Bd->J/Psi(mumu)K* 
+   . Bs2JpsiEta    v2r0   Bs->Jpsi(mumu)Eta
+                          .. a loose selection can also be run in this case
+   . Bc2JpsiPi     v1r0   Bc->J/Psi(mumu)pi
+ - For the following channels the packages contains code and configuration
+   for both the final analysis and a specific preselection. The specific
+   preselection code is the latest used for production as of 2003-12-12
+   . Bd2DstarPi    v1r4   exclusive Bd->D*(D(Kpi)pi)pi
+   . Bs2PhiEtac    v1r4   Bs->Phi Etac(KKKK/KKpipi/pipipipi) 
+   . Bd2MuMuKstar  v1r3p1 Bd->mu mu K*
+   . B2HH          v1r5   Bd->pipi, Bd->Kpi, Bs->KK, Bs->piK
+   . Bd2D0Kstar    v2r2   Bd->D0(Kpi)K*, Bd->D1(KK)K*
+   . Bd2PiPiPi0    v1r3   Bd->pi+pi-pi0
+                          .. loose selection with macros to perform final
+                             studies
+   . Bs2MuMu       v1r4   Bs->mu mu                       
+   . Bd2PhiKs      v3r1   Bs->Phi(KK)Ks
+                          .. loose selection with macros to perform final
+                             studies
+   . Bs2PhiPhi     v1r2   Bs->Phi(KK)Phi(KK)
+                          .. loose selection with macros to perform final
+                             studies
+ - For the following channels the packages contains code and configuration
+   only for the TDR loose selection.
+   . Bd2KstarGamma v1r3   Bd->K*(Kpi) gamma
+   . Bs2PhiGamma   v1r2   Bs->Phi(KK) gamma
+ - The following packages do not contain the TDR analysis but previous
+   iterations
+   . Bs2JpsiPhi    v1r2   Bs->Jpsi(mumu)Phi, Bs->Jpsi(ee)Phi,
+   . Bs2DsH        v2r1p1 Bs->Ds(KKpi)K, Bs->Ds(KKpi)pi
+     
+ - Remarks:
+   For consistency with version used for TDR results it uses LHCb v12r1.
+   In order to include new HLT version LHCb packages are listed explicitely
+   in requirents file
+
+ - Other New Features:
+   . New preselection configuration for stripping of Bc->Ds D ( B2DD v1r6 )
+   . Introduce algorithm to recontruct Pair Production in silicon.
+     Gammas and e+/e- Particles are stored in TES ( CommonParticles v1r0,
+     RecoTools v1r1 )
+     Example of execution is in $DAVINCIROOT/options/DaVinciPairPhotons.opts
+   . Introduce new interface method in GeomDispCalculator to have errors
+     on all components of IP vector ( DaVinciTools v8r3 )
+   . New version of High Level Triggers with Primary Vertices and 
+     MuonPID.
+     A decay selection can use Particles and Primary Vertices from HLT
+     by setting: 
+	      XXX.PhysDesktop.ParticleMakerType = "";
+        XXX.PhysDesktop.InputPrimaryVertices = "None";
+        XXX.PhysDesktop.InputLocations = {"/Event/Phys/Hlt"}         
+     ( HltEvent v4r0 [in DAVINCI_v9r2], HltTools v4r0, HltVelo v4r0,
+       HltVeloTT v4r0, HltLongTrack v4r0, HltMuonID v2r0, 
+       HltPrimatyVertex v2r0, HltChecher v4r0 )
+     Hlt trigger sequence now include reconstruction of primary vertices
+     in Hlt.opts
+   . Control printing of file name via options in PrintHeader algorithm
+     ( Utilities v1r2 )
+   . Example options for MCParticleMaker to make a Particle starting
+     from an MCParticle ( DaVinciMCTools v5r0p1 )
+   . Auxiliary application TriggerFilter modified to list explicit use
+     of LHCb packages ( TriggerFilter v2r2 )
+   . Auxiliary application DecayPresel modified to follow changes in 
+     loading of dll for PhysSelSys packages ( DecayPresel v2r2 )    
+
 </PRE><H1><A NAME=v9r1p5>2003-12-04 DaVinci v9r1p5</A></H1><PRE>
  "Patch" version for a preselection production
  
