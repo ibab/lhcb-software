@@ -36,9 +36,9 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
 : Algorithm ( name , pSvcLocator )
   , m_inputContainer                 ( VeloFullDigitLocation::Default )
-  , m_outputContainer               ( VeloClusterLocation::Default )
-  , m_defaultSignalToNoiseCut        (5.0)
-  , m_defaultClusterSignalToNoiseCut (5.0)
+  , m_outputContainer                ( VeloClusterLocation::Default )
+  , m_defaultSignalToNoiseCut        (3.0)
+  , m_defaultClusterSignalToNoiseCut (3.0)
   , m_maxClusters                    (10000)   
   , m_inclusionThreshold             (0.1)
 {
@@ -50,12 +50,6 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
   declareProperty( "DefaultClusterSignalToNoiseCut", 
                    m_defaultClusterSignalToNoiseCut );
 
-
-  // Just blank the arrays:
-  for (int idet=0; idet<maxVeloSensors; idet++) {
-    m_signalToNoiseCut[idet]=m_defaultSignalToNoiseCut;
-    m_clusterSignalToNoiseCut[idet]=m_defaultClusterSignalToNoiseCut;
-  }
 }
 
 //=============================================================================
@@ -69,6 +63,12 @@ VeloClusterMaker::~VeloClusterMaker(){};
 StatusCode VeloClusterMaker::initialize() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Initialise" << endreq;
+
+  // set default signal to noise cuts:
+  for (int idet=0; idet<maxVeloSensors; idet++) {
+    m_signalToNoiseCut[idet]=m_defaultSignalToNoiseCut;
+    m_clusterSignalToNoiseCut[idet]=m_defaultClusterSignalToNoiseCut;
+  }
 
   // get DetectorElement
   SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
@@ -112,27 +112,27 @@ float VeloClusterMaker::signalToNoiseCut(int detID) const
   return detIndex>=0 ? m_signalToNoiseCut[detIndex] : -999;
 }
 
-void VeloClusterMaker::setSignalToNoiseCut(int detID, float newSN)
-{
-  // set Signal to Noise cut of this detector
-  int detIndex=m_velo->sensorArrayIndex(detID);
-  if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
-}
+//  void VeloClusterMaker::setSignalToNoiseCut(int detID, float newSN)
+//  {
+//    // set Signal to Noise cut of this detector
+//    int detIndex=m_velo->sensorArrayIndex(detID);
+//    if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
+//  }
 
 float VeloClusterMaker::clusterSignalToNoiseCut(int detID) const
 {
-   // set Signal to Noise cut of this detector
+  // set Signal to Noise cut of this detector
   int detIndex=m_velo->sensorArrayIndex(detID);
   return detIndex>=0 ? m_clusterSignalToNoiseCut[detIndex] : -999;
 }
 
 
-void VeloClusterMaker::setClusterSignalToNoiseCut(int detID, float newSN)
-{
-  // Accessor for cluster S/N cut (set)
-  int detIndex=m_velo->sensorArrayIndex(detID);
-  if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
-}
+//  void VeloClusterMaker::setClusterSignalToNoiseCut(int detID, float newSN)
+//  {
+//    // Accessor for cluster S/N cut (set)
+//    int detIndex=m_velo->sensorArrayIndex(detID);
+//    if (detIndex>=0) {m_signalToNoiseCut[detIndex] = newSN;}
+//  }
 //=========================================================================
 //  
 //=========================================================================

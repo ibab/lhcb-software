@@ -38,11 +38,11 @@ class VeloClusterMaker : public Algorithm {
   /// get S/N cut of individual hits in a detector
   float  signalToNoiseCut(int detID) const;
   /// set S/N cut of individual hits in a detector
-  void   setSignalToNoiseCut(int detID, float newSN);
+/*    void   setSignalToNoiseCut(int detID, float newSN); */
   // get cluster S/N cut in a detector
   float  clusterSignalToNoiseCut(int detID) const;
   // get cluster S/N cut in a detector
-  void   setClusterSignalToNoiseCut(int detID, float newSN);
+/*    void   setClusterSignalToNoiseCut(int detID, float newSN); */
 
 //////////////////////////////////////////////////////////////////////////////
 // Private member functions
