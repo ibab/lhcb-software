@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================= CaloDigit v1r4p1 2003-12-02 =======================
+! 2003-12-02 - Marco Cattaneo
+ - Initialize m_energyScale in SpdZSup case, to please valgrind.
+
 !======================== CaloDigit v1r4 2003-11-25 ========================
 ! 2003-11-18 - Olivier Callot
  - CaloZSup produces the RawBuffer for the CaloDigit. New options 

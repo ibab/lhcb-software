@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.6 2003-11-26 13:17:02 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.7 2003-12-02 13:27:43 cattanem Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -76,6 +76,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     setOutputData(     CaloDigitLocation::Spd     );
     m_inputMCData    = MCCaloDigitLocation::Spd;
     m_zsupThreshold  = 1;
+    m_energyScale    = 0.;
     m_numberOfBanks  = 0;
     m_triggerEtScale   = 0.;
 
