@@ -43,7 +43,7 @@ use HbookCnv 		v14r1
 #-- Databases
 use XmlDDDB	v22r1	Det
 use ParamFiles	v3r5	-no_auto_imports
-use FieldMap	v4r5
+use FieldMap	v4r6
 
 #-- LHCb libraries (from LHCB_v15r8)
 use LHCb	v15r8
