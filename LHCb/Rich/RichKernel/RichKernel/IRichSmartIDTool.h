@@ -1,10 +1,6 @@
-// $Id: IRichSmartIDTool.h,v 1.1 2004-06-17 12:00:46 cattanem Exp $
-#ifndef RICHDETTOOLS_IRICHSMARTIDTOOL_H
-#define RICHDETTOOLS_IRICHSMARTIDTOOL_H 1
-
-// Include files
-// from STL
-#include <string>
+// $Id: IRichSmartIDTool.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+#ifndef RICHKERNEL_IRICHSMARTIDTOOL_H
+#define RICHKERNEL_IRICHSMARTIDTOOL_H 1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -19,7 +15,6 @@ class HepVector3D;
 
 // Rich Kernel
 class RichSmartID;
-
 
 /** @class IRichSmartIDTool IRichSmartIDTool.h RichDetTools/IRichSmartIDTool.h
  *
@@ -39,8 +34,8 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichSmartIDTool; }
 
   /// Returns the position of a SmartID in global coordinates
-  virtual StatusCode globalPosition ( const RichSmartID&,
-                                      HepPoint3D& ) const = 0;
+  virtual StatusCode globalPosition ( const RichSmartID& smartid,
+                                      HepPoint3D& position ) const = 0;
 
   /// Returns the global position given a local position, rich and
   /// panel number
@@ -53,11 +48,11 @@ public:
                                RichSmartID& ) const = 0;
 
   /// Returns a list with all valid smartIDs
-  virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
-                                        readoutChannels ) const = 0;
+  virtual StatusCode
+  readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const = 0;
 
   /// Converts a global position to the coordinate system of the
   /// photodetector panel
   virtual HepPoint3D globalToPDPanel(const HepPoint3D& globalPoint) const = 0;
 };
-#endif // RICHDETTOOLS_IRICHSMARTIDTOOL_H
+#endif // RICHKERNEL_IRICHSMARTIDTOOL_H

@@ -1,6 +1,6 @@
-// $Id: IRichToolRegistry.h,v 1.1 2004-06-17 12:00:46 cattanem Exp $
-#ifndef RICHUTILS_IRICHTOOLREGISTRY_H
-#define RICHUTILS_IRICHTOOLREGISTRY_H 1
+// $Id: IRichToolRegistry.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+#ifndef RICHKERNEL_IRICHTOOLREGISTRY_H
+#define RICHKERNEL_IRICHTOOLREGISTRY_H 1
 
 /** @class IRichToolRegistry IRichToolRegistry.h
  *
@@ -26,4 +26,4 @@ public:
 
 };
 
-#endif // RICHUTILS_IRICHTOOLREGISTRY_H
+#endif // RICHKERNEL_IRICHTOOLREGISTRY_H

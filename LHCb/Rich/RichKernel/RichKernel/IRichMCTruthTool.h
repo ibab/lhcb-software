@@ -1,6 +1,6 @@
-// $Id: IRichMCTruthTool.h,v 1.1 2004-06-17 12:00:46 cattanem Exp $
-#ifndef RICHMCTOOLS_IRICHMCTRUTHTOOL_H
-#define RICHMCTOOLS_IRICHMCTRUTHTOOL_H 1
+// $Id: IRichMCTruthTool.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+#ifndef RICHKERNEL_IRICHMCTRUTHTOOL_H
+#define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
 
 // RichKernel
 #include "RichKernel/RichParticleIDType.h"
@@ -13,10 +13,9 @@ class MCRichDigit;
 class MCParticle;
 class RichDigit;
 class TrStoredTrack;
-#include "Event/MCRichHit.h"
+class MCRichHit;
 
-
-/** @class IRichMCTruthTool IRichMCTruthTool.h
+/** @class IRichMCTruthTool IRichMCTruthTool.h RichKernel/IRichMCTruthTool.h
  *
  *  Interface for tool performing MC truth associations between Rich event objects
  *
@@ -43,7 +42,7 @@ public:
   virtual const MCRichDigit * mcRichDigit( const RichDigit * digit ) const = 0;
 
   /// Finds parent MCRichHits for given MCRichDigit
-  virtual const SmartRefVector<MCRichHit> & mcRichHits( const MCRichDigit * mcDigit ) const = 0;
+  //virtual const SmartRefVector<MCRichHit> & mcRichHits( const MCRichDigit * mcDigit ) const = 0;
 
   /// Returns the MCRichTrack associated to a given TrStoredTrack
   virtual const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const = 0;
@@ -62,4 +61,4 @@ public:
 
 };
 
-#endif // RICHMCTOOLS_IRICHMCTRUTHTOOL_H
+#endif // RICHKERNEL_IRICHMCTRUTHTOOL_H

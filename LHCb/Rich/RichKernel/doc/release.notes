@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.40 2004-06-17 12:00:48 cattanem Exp $
+! $Id: release.notes,v 1.41 2004-06-18 09:39:03 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 !======================= RichKernel v5r0 2004-06-16 =======================
+
+! 2004-06-18 - Chris Jones
+ - Clean up interfaces to remove the need for explicit includes from
+   RichEvent or RichDet. (One RichDet include remains in IRichRayTracing.h, 
+   which will be removed in an upcoming update)
+
 ! 2004-06-16 - Marco Cattaneo
  - Add interfaces previously in RichDetTools and RichMCTools
  - Add base classes previously in RichUtils

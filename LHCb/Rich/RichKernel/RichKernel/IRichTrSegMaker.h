@@ -1,10 +1,6 @@
-// $Id: IRichTrSegMaker.h,v 1.1 2004-06-17 12:00:47 cattanem Exp $
-#ifndef RICHDETTOOLS_IRICHTRSEGMAKER_H
-#define RICHDETTOOLS_IRICHTRSEGMAKER_H 1
-
-// Include files
-// from STL
-#include <string>
+// $Id: IRichTrSegMaker.h,v 1.2 2004-06-18 09:39:03 jonrob Exp $
+#ifndef RICHKERNEL_IRICHTRSEGMAKER_H
+#define RICHKERNEL_IRICHTRSEGMAKER_H 1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -16,9 +12,8 @@ class HepVector3D;
 // Event model
 class ContainedObject;
 
-// Rich Utils
+// Rich Kernel
 class RichTrackSegment;
-class RichGeomPhoton;
 
 /** @class IRichTrSegMaker IRichTrSegMaker.h RichDetTools/IRichTrSegMaker.h
  *  A tool to create RichTrackSegments from reconstructed tracks
@@ -41,4 +36,4 @@ public:
                                  std::vector<RichTrackSegment>& segments ) const = 0;
 
 };
-#endif // RICHDETTOOLS_IRICHTRSEGMAKER_H
+#endif // RICHKERNEL_IRICHTRSEGMAKER_H

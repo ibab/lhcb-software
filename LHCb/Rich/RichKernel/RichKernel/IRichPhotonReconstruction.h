@@ -1,10 +1,6 @@
-// $Id: IRichPhotonReconstruction.h,v 1.1 2004-06-17 12:00:46 cattanem Exp $
-#ifndef RICHDETTOOLS_IRICHPHOTONRECONSTRUCTION_H 
-#define RICHDETTOOLS_IRICHPHOTONRECONSTRUCTION_H 1
-
-// Include files
-// from STL
-#include <string>
+// $Id: IRichPhotonReconstruction.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+#ifndef RICHKERNEL_IRICHPHOTONRECONSTRUCTION_H 
+#define RICHKERNEL_IRICHPHOTONRECONSTRUCTION_H 1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -20,9 +16,9 @@ class RichSmartID;
 class RichGeomPhoton;
 class RichTrackSegment;
 
-/** @class IRichPhotonReconstruction IRichPhotonReconstruction.h RichDetTools/IRichPhotonReconstruction.h
+/** @class IRichPhotonReconstruction IRichPhotonReconstruction.h RichKernel/IRichPhotonReconstruction.h
  *  A tool to reconstruct photons given a RichTrackSegment and a detection 
- *  point.  The result is returned as a GeomPhoton.  
+ *  point.  The result is returned as a RichGeomPhoton.  
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -49,4 +45,4 @@ public:
                                         RichGeomPhoton& ) const = 0;
 
 };
-#endif // RICHDETTOOLS_IRICHPHOTONRECONSTRUCTION_H
+#endif // RICHKERNEL_IRICHPHOTONRECONSTRUCTION_H

@@ -1,6 +1,6 @@
-// $Id: IRichDetParameters.h,v 1.1 2004-06-17 12:00:45 cattanem Exp $
-#ifndef RICHDETTOOLS_IRICHDETPARAMETERS_H
-#define RICHDETTOOLS_IRICHDETPARAMETERS_H 1
+// $Id: IRichDetParameters.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+#ifndef RICHKERNEL_IRICHDETPARAMETERS_H
+#define RICHKERNEL_IRICHDETPARAMETERS_H 1
 
 // Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -12,7 +12,7 @@
  *
  * Interface to Tool to provide access to useful detector parameters
  *
- *  @author Chris Jones
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
 
@@ -36,4 +36,4 @@ public:
 
 };
 
-#endif // RICHDETTOOLS_IRICHDETPARAMETERS_H
+#endif // RICHKERNEL_IRICHDETPARAMETERS_H
