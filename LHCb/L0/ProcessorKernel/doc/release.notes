@@ -1,7 +1,10 @@
-ProcessorKernel package
+!-----------------------------------------------------------------------------
+! Package     : L0/ProcessorKernel
+! Responsible : A. Tsaregorodtsev
+! Purpose     : Base classes for a generic processor simulation
+!-----------------------------------------------------------------------------
 
-author : A.Tsaregorodtsev
-version v1r0
+!========================== ProcessorKernel v1r0 2005-04-04 ===================
+! 2005-04-04 A. Tsaregorodtsev
+ - First release of the package  
 
-The package contains base classes for a generic processor 
-simulation
