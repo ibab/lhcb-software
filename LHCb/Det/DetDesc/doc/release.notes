@@ -1,7 +1,7 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.58 2001-12-11 10:02:28 sponce Exp $ 
+! $Id: release.notes,v 1.59 2001-12-11 10:11:39 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
@@ -13,6 +13,9 @@ package manager : N.N
    The condition object is extensible, as was detectorElement. Thus, there
    is a templated XmlUserConditionCnv that could be extended by users as it
    was the case for detector elements.
+   - the names for parameter and userParameter(Vector) changed. It is now
+   macro and param(Vector). For backward compatibility, old names are still
+   understood at this time.
 
 ! =============================================================================
 ! 20011126 - Sebastien Ponce
