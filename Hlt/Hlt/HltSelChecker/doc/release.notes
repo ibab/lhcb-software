@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-02-11- P. Koppenburg
+  - options/Plots.opts
+    . Plot detachd pions
+  - options/TruthInput.opts
+  - options/DVNtuple.opts
+    . Use detached pions
+    
   - src/TrackNTuple.*
     . Yet another ntuple algorithm. This one looks only at the tracks that 
       make the saved B.

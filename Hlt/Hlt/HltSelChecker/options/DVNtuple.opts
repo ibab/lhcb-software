@@ -64,7 +64,7 @@ ApplicationMgr.ExtSvc += { "NTupleSvc" };
 TrackNTuple.Particle2MCLinksAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2D0Kstar";
 TrackNTuple.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 TrackNTuple.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksHLTBd2D0Kstar";
-Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", "Phys/HLTPreselPhotons/Particles"};
+Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTDetachedPions/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", "Phys/HLTPreselPhotons/Particles"};
 
 TrackNTuple.OutputLevel = 4 ;
 

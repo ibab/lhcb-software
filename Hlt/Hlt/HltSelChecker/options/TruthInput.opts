@@ -1,7 +1,7 @@
 //==============================================================================
 // MC truth again - overwrite input to take only MC truth
 //==============================================================================
-HLTPreselPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
+HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
                                               ,"Phys/SelectBs2PhiPhi"
                                               ,"Phys/SelectBd2D0Kstar"
                                               ,"Phys/SelectBd2DstarPi"

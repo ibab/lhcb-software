@@ -3,11 +3,18 @@
 //-----------------------------------------------------------------
 
 // All Pions
+HLTDetachedPions.MakePlots = true ;
+HLTDetachedPions.InputPlots.Variables =  { "Pt", "IPs" } ;
+HLTDetachedPions.OutputPlots.Variables = { "Pt", "IPs" } ;
+HLTDetachedPions.InputPlotsPath  = "PionIn" ;
+HLTDetachedPions.OutputPlotsPath = "PionOut";
+
+// All Pions
 HLTPreselPions.MakePlots = true ;
 HLTPreselPions.InputPlots.Variables =  { "Pt", "IPs" } ;
 HLTPreselPions.OutputPlots.Variables = { "Pt", "IPs" } ;
-HLTPreselPions.InputPlotsPath  = "PionIn" ;
-HLTPreselPions.OutputPlotsPath = "PionOut";
+HLTPreselPions.InputPlotsPath  = "IPPionIn" ;
+HLTPreselPions.OutputPlotsPath = "IPPionOut";
 
 // All Kaons
 HLTPreselKaons.MakePlots = true ;

@@ -1,4 +1,4 @@
-// $Id: TrackNTuple.cpp,v 1.1 2005-02-11 13:24:38 pkoppenb Exp $
+// $Id: TrackNTuple.cpp,v 1.2 2005-02-11 14:45:26 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -240,7 +240,7 @@ StatusCode TrackNTuple::fillTuple(const Particle* S,Tuple& tuple){
     if (ip/ipe<minr){
       minr = ip/ipe;
       ips.insert(ips.begin(),ip); // first!
-      ipes.insert(ipes.begin(),ipe); // first!      
+      ipes.insert(ipes.begin(),ipe); // first!     
     } else {
       ips.push_back(ip);
       ipes.push_back(ipe);
@@ -257,7 +257,6 @@ StatusCode TrackNTuple::fillTuple(const Particle* S,Tuple& tuple){
   if (passed) tuple->column( "Generic"  , 1. );
   else tuple->column( "Generic"  , 0. );
   tuple->column("BitPattern", (double)m_pattern );
-  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
