@@ -1,0 +1,25 @@
+!-----------------------------------------------------------------------------
+! Package     : Calo/CaloDigit
+! Responsible : Olivier Callot
+! Purpose     : Digitisation and Zero-suppression of the Calorimeters
+!-----------------------------------------------------------------------------
+
+! 2002-10-10 - Olivier Callot
+ - Based on the old algorithms, restructuration in 3 phases, conversion to 
+   CaloAlgorithms
+
+  o CaloSignalAlg transform the MCHits into MCCaloDigit, taking into account
+    the TIME information from SICBMC v255, i.e. given by BX number. The 
+    previous BX is also converted to MCCaloDigit as this is neede for the
+    spill over processing of Prs/Spd.
+
+  o CaloDigitAlg transforms the MCCaloDigits to CaloDigits for all cells, 
+    adding noise, gain fluctuations, photo-electron statistics, correcting for
+    the 15% (option) of the previous signal (with photo-electron fluctuation) 
+    for Prs and Spd, ...
+
+  o CaloZSupAlg peforms the 1D or 2D zero suppression, producing the final
+    container for calorimeter reconstruction. This is as close as possible
+    to the output of the CROP.
+  
+   Monitoring and algorithm to produce pseudo-raw-data should be added...
