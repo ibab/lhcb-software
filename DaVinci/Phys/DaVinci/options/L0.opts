@@ -17,6 +17,8 @@ ApplicationMgr.DLLs    += { "VeloDet", "VeloDigit" };
 ApplicationMgr.DLLs    += { "PuVeto" };
 ApplicationMgr.TopAlg  += { "PuVetoDigitAlg" };
 ApplicationMgr.TopAlg  += { "PuVetoAlg" };
+PuVetoDigitAlg.ErrorMax = 10;
+PuVetoAlg.ErrorMax      = 10;
 
 // Decison Unit, needs Sicb converter
 ApplicationMgr.DLLs    += { "L0DU" };
