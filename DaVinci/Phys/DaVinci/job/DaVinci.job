@@ -44,7 +44,6 @@ else
   if ($#argv == 1) set MODE = "$1" 
 endif
 set current = $PWD
-exit 0
 #
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
