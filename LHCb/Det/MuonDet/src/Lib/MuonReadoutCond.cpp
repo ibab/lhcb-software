@@ -1,17 +1,6 @@
-// $Id: MuonReadoutCond.cpp,v 1.5 2002-11-26 18:07:39 dhcroft Exp $
+// $Id: MuonReadoutCond.cpp,v 1.6 2003-11-24 12:28:59 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2002/08/05 18:14:08  asatta
-// few bug fixes for pad edge effect x-talk calculation
-//
-// Revision 1.3  2002/06/04 16:08:37  dhcroft
-// Added time jitter pdfs to the readouts
-//
-// Revision 1.2  2002/01/31 10:00:10  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
 // ============================================================================
 #define MUONDET_MUONREADOUTCOND_CPP
 
@@ -167,7 +156,7 @@ StatusCode MuonReadoutCond::addReadout(const std::string &rType, int &index){
 int MuonReadoutCond::maxCluster(const _readoutParameter &readout,
                                 const char &xy){
 
-  const std::vector<_clus> *cluster;
+  const std::vector<_clus> *cluster=0;
   if('X' == xy || 'x' == xy){
     cluster = &readout.ClusterX;
   }else if('Y' == xy || 'y' == xy){

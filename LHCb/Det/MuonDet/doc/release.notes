@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.30 2003-06-17 09:16:10 cattanem Exp $
+! $Id: release.notes,v 1.31 2003-11-24 12:28:59 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+!======================== MuonDet v4r4p1 2003-11-24 ========================
+! 2003-11-24 - Marco Cattaneo
+ - Fix a compiler warning
+
+! 2003-11-24 - Guy Barrand
+ - Use macro in MuonDet_dll.cpp, to compile on Mac OS X
 
 !========================= MuonDet v4r4 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
