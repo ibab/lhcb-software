@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.174 2004-09-16 15:57:30 pkoppenb Exp $
+# $Id: requirements,v 1.175 2004-09-22 07:42:41 ranjard Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -19,8 +19,6 @@ apply_pattern DaVinciVersion
 
 # Used packages. 
 #============================================================================
-#-- CMT and GaudiPolicy
-use GaudiPolicy v5r18
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
