@@ -5,6 +5,11 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20010628 Sebastien Ponce
+ - added a new converter for DeCalorimeter in order to illustrate the
+ use of the initialize method in the DetectorElement class and its
+ descendants.
+
 !20010622 Sebastien Ponce
  - added a test of the TabulatedProperty xml tag.
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.9 2001-06-25 08:59:30 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.10 2001-06-28 09:50:08 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -24,6 +24,7 @@
 
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
+#include "DeCalorimeter.h"
 #include "DeMuonStation.h"
 #include "DetDataAgent.h"
 
@@ -113,7 +114,7 @@ StatusCode SimpleAlgorithm::initialize() {
 
   //---------------------------------------------------------------------------
   // This is an example of usage of userParameter tag
-  SmartDataPtr<IDetectorElement> ecal( detSvc(), "/dd/Structure/LHCb/Ecal" );
+  SmartDataPtr<IDetectorElement> ecal (detSvc(), "/dd/Structure/LHCb/Ecal");
   if( !ecal )                                                            {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal" << endreq;
     return StatusCode::FAILURE;
@@ -124,12 +125,21 @@ StatusCode SimpleAlgorithm::initialize() {
        it != parameterList.end();
        it++) {
     log << MSG::INFO << "ECAL " << *it << " = "
-        << ecal->userParameterValue(*it)
+        << ecal->userParameterAsString(*it)
         << endreq;
   }
-  
+
   dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->name() );
   
+  // however, we can also use a specific converter
+  SmartDataPtr<DeCalorimeter> ecal2 (detSvc(), "/dd/Structure/LHCb/Ecal");
+  if (!ecal2)                                                            {
+    log << MSG::ERROR
+        << "Can't retrieve /dd/Structure/LHCb/Ecal as DeCalorimeter" << endreq;
+    return StatusCode::FAILURE;
+  }
+  log << MSG::INFO << "ECAL coding = " << ecal2->coding() << endreq;
+
   //---------------------------------------------------------------------------
   SmartDataPtr<IDetectorElement> ecalouter
     (detSvc(), "/dd/Structure/LHCb/Ecal/EcalOuter");
