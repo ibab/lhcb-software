@@ -4,6 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r2 2004-02-11 ===========================
+! 2004-02-11 - Gloria CORTI
+ - src/ChargedProtoPAlg.cpp
+   . Set as default to make ProtoParticles using all type of "physics" track:
+     TTT and VeloTT in addition to long tracks. 
+     Their use can be switched off by default. Note that the properties
+     still use the old nomenclature. This will be changed in a future version.
+
 !===================== GlobalReco v4r1 2004-01-14 ===========================
 ! 2004-01-14 - Gloria CORTI
  - src/CaloE1Correction.{h,cpp}
