@@ -4,6 +4,17 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020422 Vanya Belyaev
+  new files: 
+  Kernel/CaloPrint.h
+  src/CaloProint.cpp  
+  Kernel/OSiterator.h
+  Kernel/CaloMap.h 
+  Kernel/CaloHashMap.h 
+  files are moved from Calo/CaloKernel package to eliminate the 
+  dependency of Event/CaloEvent package from Calo/CaloKernal package.
+
+
 ! 20020418 M.Cattaneo
   - Make separate library for dictionaries
 
