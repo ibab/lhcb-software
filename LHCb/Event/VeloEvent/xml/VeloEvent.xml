@@ -4,13 +4,14 @@
   <package name="VeloEvent">
     <import name="Kernel/CLHEPStreams"/>
     <class name="MCVeloHit" 
-           id="4001"
            author="Chris Parkes" 
            desc="Raw GEANT hit information for VELO silicon sensors. 
 It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) 
-and VPRW (pile-up) classes."
-	   location="/Event/MC/Velo/Hit">
-      <location name="PuVeto" place="/Event/MC/Velo/PuHit" />
+and VPRW (pile-up) classes." 
+           id="4001" 
+           location="MC/Velo/Hit" 
+           keyedContTypeDef="TRUE" >
+      <location name="PuVeto" place="MC/Velo/PuHit" />
       <base name="MCHit"/>
       <import name="Event/MCHit"/>
       <attribute name="sensor" type="long" desc="Sensor Number"/>
@@ -24,8 +25,8 @@ contains information about the simulation of the silicon and FE chip response
 stored for a single silicon/output channel. Constructed from MCVeloHits 
 (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise 
 (above a threshold)"
-           location="/Event/MC/Velo/FE">
-      <location name="PuVeto" place="/Event/MC/Velo/PuFE" />
+           location="MC/Velo/FE">
+      <location name="PuVeto" place="MC/Velo/PuFE" />
       <base name="KeyedObject&lt;VeloChannelID&gt;"/>
       <import name="Kernel/VeloChannelID"/>
       <constructor desc="Constructor with key" 
@@ -66,7 +67,7 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
 channel. This info. is available inside the data processor but is not normally 
 output on DAQ stream for all channels. It does not contain any simulation 
 information"
-	   location="/Event/Raw/Velo/FullDigit">
+	   location="Raw/Velo/FullDigit">
            <base name="KeyedObject&lt;VeloChannelID&gt;"/>
            <constructor desc="Constructor with key" 
                         initList="KeyedObject&lt;VeloChannelID&gt;(key),
@@ -105,7 +106,7 @@ information"
            author="Chris Parkes" 
            desc="A cluster as on the DAQ output, after the data processor and 
 without applying any additional processing. It contains no simulation info."
-	   location="/Event/Raw/Velo/Cluster">
+	   location="Raw/Velo/Cluster">
            <import name="Kernel/SerializeStl"/>
            <base name="KeyedObject&lt;int&gt;"/>
            <attribute name="sensor" type="long" desc="Sensor Number"/>
