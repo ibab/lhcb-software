@@ -26,18 +26,18 @@ use PI			v1r112
 use PCRE                v1r44
 use UUID		v1r32
 use SEAL		v1r133p0
-use POOL		v1r150p1
+use POOL		v1r150p0
 
 #-- Gaudi libraries (from GAUDI_v14r0)
 use GaudiKernel		v15r0
 use GaudiSvc 		v11r1
-use GaudiAlg 		v6r4
-use GaudiAud 		v6r3
+use GaudiAlg 		v6r5
+use GaudiAud 		v6r4
 use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r2
 use GaudiObjDesc 	v6r2p1
-use HbookCnv 		v14r0
+use HbookCnv 		v14r1
 
 #-- Databases
 use XmlDDDB	v20r1	Det
