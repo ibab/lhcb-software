@@ -46,7 +46,7 @@ BrunelRecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
 // ========================================================================================
 
 // Local Algorithm parameters
-RichLocPID.TrackSelection = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
+RichLocPID.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
 RichLocPID.MinimumPtot                       = 0.0*GeV;
 RichLocPID.MaxUsedTracks                     = 300;
 RichLocPID.MaxInputTracks                    = 700;
@@ -63,7 +63,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" 
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
-RichGloPIDTrSel.TrackSelection = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
+RichGloPIDTrSel.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
 RichGloPIDTrSel.MaxUsedTracks             = 200;
 RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
