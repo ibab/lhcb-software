@@ -35,6 +35,7 @@ public:
 
 private:
 
+  void ConstructAllShortLiveds();
   void ConstructGeneral       ();
   ///
 

@@ -12,7 +12,8 @@
 #include "G4ParticleTable.hh"
 #include "G4Material.hh"
 #include "G4ios.hh"
-#include "g4std/iomanip"                
+#include "g4std/iomanip"   
+#include "G4ShortLivedConstructor.hh" 
 // local
 #include "GiGaPhysConstructorGen.h"
 
@@ -41,7 +42,16 @@ GiGaPhysConstructorGen::~GiGaPhysConstructorGen(){};
 // ============================================================================
 void GiGaPhysConstructorGen::ConstructParticle()
 {
- 
+  ConstructAllShortLiveds();
+};
+
+// ============================================================================
+// ============================================================================
+void GiGaPhysConstructorGen::ConstructAllShortLiveds()
+{
+  //  Construct  resonaces and quarks
+  G4ShortLivedConstructor pConstructor;
+  pConstructor.ConstructParticle();  
 };
 
 // ============================================================================
