@@ -1,13 +1,8 @@
-// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.5 2004-08-11 12:12:20 ibelyaev Exp $
+// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.6 2005-02-05 19:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.6 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2004/08/05 09:54:11  ibelyaev
-//  version updated for LoKi v3r* and DC04 data
-//
-// ============================================================================
-// include files 
 // ============================================================================
 // Standard Gaudi configuration and additional DLLs
 // ============================================================================
@@ -83,11 +78,15 @@ PoolDbCacheSvc.Catalog =
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 500 ;
+ApplicationMgr.EvtMax  = 5000 ;
 
 // ApplicationMgr.HistogramPersistency = "ROOT";
-ApplicationMgr.HistogramPersistency = "HBOOK";
+ApplicationMgr.HistogramPersistency = "HBOOK" ;
+HbookHistSvc.PrintHistos            = true    ;
+HistogramPersistencySvc.OutputFile  = "BdKStarGamma_hist.hbook" ;
 
+DaVinci.doHistos = false ;
+ 
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,11 +1,8 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.6 2004-08-17 15:43:36 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.7 2005-02-05 19:13:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2004/08/11 12:12:20  ibelyaev
-//  fix a typo (thanks to Andreas Wenger)
-//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -29,7 +26,7 @@
  *  
  *  (Pre)-Selection algorithm for Bd -> K*(892) gamma selection 
  *
- *    - Analysis N-Tuple is filled 
+ *    - N-Tuple for analysis filled 
  * 
  *   @date   2003-03-26 
  *
@@ -222,11 +219,17 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       // save B0 as a particle 
       B0->save( "B0" ) ;
     }
+
   // get the all saved B0s
-  Range B0s = selected( "B0" ) ;
-  if( B0s.empty() ) { return StatusCode::SUCCESS ; }                // RETURN 
+  Range B0s = selected( "B0" ) ;  
+  plot ( M / GeV     , 
+         B0s.begin() , 
+         B0s.end()   ,
+         "B0s candidate mass " , 4.0 , 6.0  ) ;
   
-  setFilterPassed ( true ) ;
+  
+  // filter ? 
+  setFilterPassed ( !B0s.empty() ) ;
   
   return StatusCode::SUCCESS ;
   
