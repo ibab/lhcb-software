@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v23r0>2004-01-07 Brunel v23r0</A></H1><PRE>
+- Built against GAUDI v14r0
+
+- New tuning
+  . New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
+
+
 </PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>
 - Built against GAUDI v13r0
 
