@@ -5,15 +5,18 @@
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
  *  CVS Log :-
- *  $Id: RichSmartIDSorter.h,v 1.1 2005-01-13 12:21:18 jonrob Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.2 2005-01-13 17:45:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/13 12:21:18  jonrob
+ *  Add new files to CVS
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHKERNEL_RICHSMARTIDSORTER_H 
+#ifndef RICHKERNEL_RICHSMARTIDSORTER_H
 #define RICHKERNEL_RICHSMARTIDSORTER_H 1
 
 // STL
@@ -23,9 +26,9 @@
 #include "Kernel/RichSmartID.h"
 
 /** @class RichSmartIDSorter RichSmartIDSorter.h RichKernel/RichSmartIDSorter.h
- *  
+ *
  *  Utility class to sort RichSmartIDs according to various criteria
- * 
+ *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
  */
@@ -34,11 +37,11 @@ class RichSmartIDSorter {
 private: // utility classes
 
   /// Functor to sort RichSmartIDs by Rich then panel numbers
-  class SortByRegion 
-    : std::binary_function<const RichSmartID,const RichSmartID,bool> 
+  class SortByRegion
+    : std::binary_function<const RichSmartID,const RichSmartID,bool>
   {
 
-  public:    
+  public:
 
     /** Sort operator
      *
@@ -53,7 +56,7 @@ private: // utility classes
     {
       return ( 100000000*p1.rich() + 10000000*p1.panel() +
                1000000*p1.PDRow() + 10000*p1.PDCol() +
-               100*p1.pixelRow() + p1.pixelCol()  < 
+               100*p1.pixelRow() + p1.pixelCol()  <
                100000000*p2.rich() + 10000000*p2.panel() +
                1000000*p2.PDRow() + 10000*p2.PDCol() +
                100*p2.pixelRow() + p2.pixelCol() );
@@ -61,10 +64,16 @@ private: // utility classes
 
   };
 
-public: 
+public:
+
+  /// Constructor
+  RichSmartIDSorter() {};
+
+  /// Destructor
+  ~RichSmartIDSorter() {};
 
   /// Sort the list by detector region
-  inline void sortByRegion( RichSmartID::Collection & smartIDs ) 
+  inline void sortByRegion( RichSmartID::Collection & smartIDs ) const
   {
     std::sort( smartIDs.begin(), smartIDs.end(), RichSmartIDSorter::SortByRegion() );
   }
