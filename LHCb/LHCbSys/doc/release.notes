@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-07-01 =======================
-! 2004-07-01 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-07-09 =======================
+! 2004-07-09 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
                  RichTools v1r0 (previously RichDetTools, 
@@ -21,8 +21,8 @@
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
-                      DAQEvent v5r0, HepMC v4r121p0, 
-                      DetSys v5r7, STDet v1r2, RichDet v7r2, OTDet v5r3, 
+                      DAQEvent v5r0, HepMC v4r121p0, DetSys v5r7,
+                      DetDesc v14r1p1, STDet v1r2, RichDet v7r2, OTDet v5r3, 
                       Magnet v2r1, AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, IOExample v1r2
 
