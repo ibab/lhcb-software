@@ -70,7 +70,7 @@ use Futio        v11    SICB
 use GDUMMY       v1r4   SICB
 
 # SICBDST packages
-use Futil        v10r1  SICB
+use Futil        v10r3  SICB
 use detdes       v13    SICB
 use recevt       v3r4   SICB
 

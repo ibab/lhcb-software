@@ -7,11 +7,6 @@ Purupose: LHCb reconstruction program
    Add C++ L0 trigger simulation
    Remove old L0_2x2 simulation
 
-   In cmt/requirements
-   -------------------
-   add  use of L0Calo (v1), L0Muon (v2), L0DU (v1), L0Event (v2)
-               L0SicbCnv (v2), MuonSicbCnv (v2)
-
    In options/
    -----------
    Brunel.opts     - include Brunel.opts from L0CALO, L0MUON, L0DU
@@ -21,6 +16,14 @@ Purupose: LHCb reconstruction program
    In src/BrunelSicb/
    ------------------
    trigger.F - remove call to L0_2X2
+
+   In cmt/requirements
+   -------------------
+   add  use of L0Calo (v1), L0Muon (v2), L0DU (v1), L0Event (v2)
+               L0SicbCnv (v2), MuonSicbCnv (v2)
+
+   use Futil v10r3
+>   ubdropobj - new routine to drop the LAST object in a given partition
 
 ===============================================================================
 ! 20010625 Brunel v3r3 (MC)
