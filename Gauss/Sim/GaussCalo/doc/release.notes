@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package          : Sim/GaussCalo
+! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine
+! Responsible	   : Vanya Belyaev
+! Purpose          : collection of sensitive detectors, converters, G4 actions, etc 
+!                    for calorimeters
+!-----------------------------------------------------------------------------
+	
+
+
+!=========================== GaussCalo v1r0 2002-12-11 ========================
+! 2002-12-11 - Witek Pokorski
+  - New package: contains all calorimeter specific implementations of sensitive
+                  detectors and converters 
+
+!==============================================================================
