@@ -4,18 +4,19 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v6r1 2003-11-03 =========================
 ! 2003-11-02 - Chris Jones
  - A few speed improvements for digitisation
  - Switch to new RichKernel v4r0
 
-! 2003-08-14 - Antonis Papanestis
- - added a new function to the DeRichPDPanel and moved some of the 
- - functionality of the traceToDetectorWithoutEff from RichDetTools to RichDet.
- - improved the algorith the finds the photoDetector withing the Panel
- - added some more debug information.
-
 ! 2003-31-10 - Antonis Papanestis
  - minor improvements.
+
+! 2003-10-14 - Antonis Papanestis
+ - added a new function to the DeRichPDPanel and moved some of the 
+   functionality of the traceToDetectorWithoutEff from RichDetTools to RichDet.
+ - improved the algorithm that finds the photoDetector within the Panel
+ - added some more debug information.
 
 !========================= RichDet v6r0 2003-08-29 =========================
 ! 2003-08-29 - Antonis Papanestis
