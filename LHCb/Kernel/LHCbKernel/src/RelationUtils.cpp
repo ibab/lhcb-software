@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.7 2004-01-14 15:13:04 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.8 2004-01-14 21:05:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -95,8 +95,6 @@ CLID        Relations::clid
   cl = ~CLID_ObjectVector & cl ;
   // set ObjectList   bit to NULL 
   cl = ~CLID_ObjectList   & cl ;
-  // set the leadind bit to 1    NB! Important              // NB!
-  cl = cl | ( 1 << 31 ) ;                                   // NB!
   return cl ;
 };
 // ============================================================================

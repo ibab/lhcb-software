@@ -3,6 +3,12 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 ! 2004-01-14 - Vanya BELYAEV
+ - src/RelationUtils.cpp 
+   according to the modifications done by Markus, we can use the 
+   'old' technique to constuct classID for relation tables.
+
+
+! 2004-01-14 - Vanya BELYAEV
  - Relations/IRelationBase.h
    Relations/Relation.h
    Relations/Relation1D.h
