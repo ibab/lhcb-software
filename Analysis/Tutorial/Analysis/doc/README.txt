@@ -23,7 +23,7 @@
   4) A solution of the "exercise" that extends the
      TutorialAlgorithm to also accept phi's can be used with
 
-    > cp ../solutio2n/TutorialAlgorithm.* ../src/
+    > cp ../solution2/TutorialAlgorithm.* ../src/
     > make
     > DaVinci ../options/DVTutorial_3.opts
 

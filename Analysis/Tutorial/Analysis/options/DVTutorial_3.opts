@@ -1,0 +1,79 @@
+/** @file 
+ * 
+ *  Example from the tutorial 
+ *
+ *  @author P. Koppenburg
+ *  @date 2004-11-04
+ */
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+//
+// Don't forget the DLL
+ApplicationMgr.DLLs   += { "Analysis" };
+
+// 2. Charged
+// VERY IMPORTANT:
+//   ChargedProtoPAlg and PrimVtxFinder are executed in
+//   DaVinciReco and MUST not be executed again
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+//
+// Let's make it a sequence
+//
+ApplicationMgr.TopAlg += { "GaudiSequencer/Tutorial" };
+//
+// Preload particles
+//
+Tutorial.Members += { "PreLoadParticles" };
+PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+PreLoadParticles.PhysDesktop.CombinedParticleMaker.Particles = { "muon", "kaon" } ;
+PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = { "det='RICH' k-pi='2.0' k-p='-2.0'" };
+PreLoadParticles.PhysDesktop.CombinedParticleMaker.MuonSelection = { "det='MUON' mu-pi='-10.0'" }; 
+PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection  = false ; 
+//
+Tutorial.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+Jpsi2MuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Muons" } ;
+Jpsi2MuMu.ParticleFilter.Muons.ParticleNames = {"mu+", "mu-"} ;
+Jpsi2MuMu.MassWindow = 50*MeV ;
+Jpsi2MuMu.MaxChi2 = 100 ;
+Jpsi2MuMu.OutputLevel = 3 ;
+Jpsi2MuMu.HistoProduce = true ;
+Jpsi2MuMu.Particle = "J/psi(1S)" ;
+//
+Tutorial.Members += { "TutorialAlgorithm/Phi2KK" };
+Phi2KK.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+Phi2KK.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Kaons" } ;
+Phi2KK.ParticleFilter.Kaons.ParticleNames = {"K+", "K-"} ;
+Phi2KK.MassWindow = 50*MeV ;
+Phi2KK.MaxChi2 = 100 ;
+Phi2KK.OutputLevel = 3 ;
+Phi2KK.Particle = "phi(1020)" ;
+Phi2KK.HistoProduce = true ;
+
+ApplicationMgr.HistogramPersistency = "HBOOK";
+HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+
+ApplicationMgr.EvtMax = 500 ;
+
+//-- GAUDI data cards generated on Nov 4, 2004 5:34:03 PM
+//-- For Event Type = 13144000 / Data type = DST 1
+//--     Configuration = DC04 - v1
+//--     DST 1 datasets produced by Brunel - v23r7
+//--     From DIGI 1 datasets produced by ANY
+//--     From SIM 1 datasets produced by ANY
+//--     Database version = v22r2
+//--     Cards content = physical
+//--     
+//-- Datasets replicated at CERN
+//-- 200 dataset(s) - NbEvents = 100000
+//-- 
+EventSelector.Input   = {
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+};
+

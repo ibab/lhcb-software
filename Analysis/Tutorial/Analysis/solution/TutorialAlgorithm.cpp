@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.1 2004-11-08 14:52:52 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.2 2004-11-09 14:42:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,10 @@ StatusCode TutorialAlgorithm::initialize() {
   debug() << "==> Initialize" << endmsg;
   // particle property service
   ParticleProperty* m_psi = ppSvc()->find( "J/psi(1S)" );
+  if ( !m_psi ) { // 
+    err() << "Cannot find particle property for J/psi(1S)" << endreq ; 
+    return StatusCode::FAILURE;
+  }
   m_JPsiID = m_psi->pdgID();
   m_JPsiMass = m_psi->mass();
   info() << "Will reconstruct " << m_psi->particle() << " (ID=" << m_JPsiID
