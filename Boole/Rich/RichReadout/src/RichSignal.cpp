@@ -109,7 +109,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
     RichSmartID tempID;
     // Is hit in active pixel
     if ( (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess() 
-         && tempID.isValid() ) {
+         && tempID.pixelDataAreValid() ) {
 
       // For the time being strip sub-pixel information
       RichSmartID id = tempID.pixelID();

@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Minor change to RichSignal algorithm
+
 !========================= RichReadout v1r9 2004-06-17 =======================
 ! 2004-06-17 - Chris Jones
  - Updated includes for new package structure
