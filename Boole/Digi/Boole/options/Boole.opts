@@ -53,6 +53,7 @@ ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 // 45 degree Velo sectors
 DeVelo.Design = 1;
 
