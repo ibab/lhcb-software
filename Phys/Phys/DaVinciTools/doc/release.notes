@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.119 2004-07-29 14:32:15 pkoppenb Exp $
+! $Id: release.notes,v 1.120 2004-07-29 16:21:11 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-07-29 - P. Koppenburg
+ - src/ChangeDecayChain.*
+ - src/ChangePID.*
+   . Moved to new Hlt/HltSelections package
 
 ! 2004-07-29 - P. Koppenburg for Luis Fernandez
  - src/DecayFinder.*

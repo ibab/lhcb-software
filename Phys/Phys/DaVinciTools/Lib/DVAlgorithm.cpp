@@ -3,6 +3,11 @@
   /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
   : GaudiAlgorithm ( name , pSvcLocator )
+  , m_typeVertexFit("UnconstVertexFitter")
+  , m_typeLagFit("LagrangeMassVertexFitter")
+  , m_decayDescriptor("not specified")
+  , m_avoidSelResult(false)
+  , m_printSelResult(true)
   , m_pDesktop(0)
   , m_pLagFit(0)
   , m_pVertexFit(0)
@@ -16,12 +21,11 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_countFilterPassed(0)
 {  
     
-  declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
-  declareProperty("MassVertexFitter", 
-                  m_typeLagFit="LagrangeMassVertexFitter");
-  declareProperty("DecayDescriptor", m_decayDescriptor="not specified");
-  declareProperty("AvoidSelResult", m_avoidSelResult = false);
-  declareProperty("PrintSelResult", m_printSelResult = true);
+  declareProperty("VertexFitter", m_typeVertexFit);
+  declareProperty("MassVertexFitter",m_typeLagFit);
+  declareProperty("DecayDescriptor", m_decayDescriptor);
+  declareProperty("AvoidSelResult", m_avoidSelResult);
+  declareProperty("PrintSelResult", m_printSelResult);
 
 };
 //=============================================================================
@@ -184,7 +188,6 @@ StatusCode DVAlgorithm::sysExecute () {
     warning() << "SetFilterPassed not called for this event!"
         << endreq;
   }
-  
 
   if (!m_avoidSelResult){
     
