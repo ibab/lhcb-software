@@ -7,15 +7,16 @@ class RichFrontEndDigitiser {
 
 public:
 
-  RichFrontEndDigitiser(double threshold, double calib )
-    :  m_adc_cut   ( threshold * calib )
-  {
-    m_adc_cut = 85; // temporary hack
-  }
+  RichFrontEndDigitiser( const double /*threshold*/, 
+                         const double /*calib*/ )
+    // :  m_adc_cut   ( threshold * calib )
+    : m_adc_cut   ( 85 ) // temporary hack
+  { }
   
   ~RichFrontEndDigitiser() { }
   
-  bool process ( RichTimeSample & sample, double new_threshold ) const;
+  bool process ( const RichTimeSample & sample, 
+                 const double new_threshold ) const;
   
 private:
   
@@ -23,8 +24,8 @@ private:
 
 };
 
-inline bool RichFrontEndDigitiser::process ( RichTimeSample & sample, 
-                                             double new_threshold ) const
+inline bool RichFrontEndDigitiser::process ( const RichTimeSample & sample, 
+                                             const double new_threshold ) const
 {
   for ( unsigned int bin = 0; bin < sample.size(); ++bin ) {
     if ( sample[bin] >= new_threshold ) { return true; }

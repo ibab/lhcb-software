@@ -1,6 +1,6 @@
 
 #include "RichRegistry.h"
-#include "RichBase.h"
+
 
 // Static data members
 RichRegistry::RegisterMap RichRegistry::theRegister;
@@ -14,23 +14,7 @@ void RichRegistry::cleanUp()
   }
 }
 
-const RichBase * RichRegistry::GetNewBase( std::vector<RichSmartID> & pixels )
-{
-  RichBase* theBase = new RichBase();
-  theBase->upDate(pixels);
-  return theBase;
-}
 
-const RichBase * RichRegistry::GetBase( )
-{
-  RegisterMap::iterator f = theRegister.begin();
-  return (*f);
-}
-
-void RichRegistry::RegisterMe(RichBase*b)
-{
-  theRegister.insert(b);
-}
 
 
 

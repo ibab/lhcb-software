@@ -5,7 +5,8 @@
 #include <string>
 #include <vector>
 
-class RichBase;
+#include "RichBase.h"
+
 class RichSmartID;
 
 class RichRegistry {
@@ -32,5 +33,22 @@ private: // data
   static RegisterMap theRegister;
 
 };
+
+inline const RichBase * RichRegistry::GetNewBase( std::vector<RichSmartID> & pixels )
+{
+  RichBase * theBase = new RichBase();
+  theBase->upDate(pixels);
+  return theBase;
+}
+
+inline const RichBase * RichRegistry::GetBase( )
+{
+  return *(theRegister.begin());
+}
+
+inline void RichRegistry::RegisterMe(RichBase*b)
+{
+  theRegister.insert(b);
+}
 
 #endif

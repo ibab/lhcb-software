@@ -1,4 +1,4 @@
-// $Id: RichDigitQC.cpp,v 1.3 2003-11-25 15:02:32 jonrob Exp $
+// $Id: RichDigitQC.cpp,v 1.4 2004-03-16 13:52:46 jonesc Exp $
 
 // local
 #include "RichDigitQC.h"
@@ -30,11 +30,11 @@ RichDigitQC::~RichDigitQC() {};
 // Initialisation
 StatusCode RichDigitQC::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Initialize base class
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -44,8 +44,7 @@ StatusCode RichDigitQC::initialize() {
   m_hitMult[Rich::Rich2] = 0;
   m_eventCount = 0;
 
-  msg << MSG::DEBUG
-      << " Histogram location   = " << m_histPth << endreq;
+  debug() << " Histogram location   = " << m_histPth << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -53,18 +52,10 @@ StatusCode RichDigitQC::initialize() {
 // Main execution
 StatusCode RichDigitQC::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   // Locate MCRichDigits
-  SmartDataPtr<MCRichDigits> richDigits( eventSvc(), m_digitTDS );
-  if ( !richDigits ) {
-    msg << MSG::WARNING << "Cannot locate MCRichDigits at " << m_digitTDS << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    msg << MSG::DEBUG << "Successfully located " << richDigits->size()
-        << " RichDigits at " << m_digitTDS << endreq;
-  }
+  MCRichDigits * richDigits = get<MCRichDigits>( m_digitTDS );
 
   // Loop over all digits
   int nR1 = 0; int nR2 =0;
@@ -92,16 +83,14 @@ StatusCode RichDigitQC::execute() {
 //  Finalize
 StatusCode RichDigitQC::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
-  double avR1    = ( m_eventCount > 0 ? m_hitMult[Rich::Rich1]/m_eventCount : 0 );
-  double avR2    = ( m_eventCount > 0 ? m_hitMult[Rich::Rich2]/m_eventCount : 0 );
-  double avR1Err = ( m_eventCount > 0 ? sqrt(m_hitMult[Rich::Rich1])/m_eventCount : 0 );
-  double avR2Err = ( m_eventCount > 0 ? sqrt(m_hitMult[Rich::Rich2])/m_eventCount : 0 );  
-  msg << MSG::INFO 
-      << "RICH1 digit multiplicity = " << avR1 <<" +- " << avR1Err << endreq
-      << "RICH2 digit multiplicity = " << avR2 <<" +- " << avR2Err << endreq;
+  const double avR1    = ( m_eventCount > 0 ? m_hitMult[Rich::Rich1]/m_eventCount : 0 );
+  const double avR2    = ( m_eventCount > 0 ? m_hitMult[Rich::Rich2]/m_eventCount : 0 );
+  const double avR1Err = ( m_eventCount > 0 ? sqrt(m_hitMult[Rich::Rich1])/m_eventCount : 0 );
+  const double avR2Err = ( m_eventCount > 0 ? sqrt(m_hitMult[Rich::Rich2])/m_eventCount : 0 );  
+  info() << "RICH1 digit multiplicity = " << avR1 <<" +- " << avR1Err << endreq
+         << "RICH2 digit multiplicity = " << avR2 <<" +- " << avR2Err << endreq;
 
   // finalize base class
   return RichAlgBase::finalize();
@@ -111,7 +100,7 @@ StatusCode RichDigitQC::finalize() {
 StatusCode RichDigitQC::bookHistograms() {
 
   std::string title;
-  int nBins = 100;
+  const int nBins = 100;
 
   title = "RICH1 Occupancy";
   m_rich1 = histoSvc()->book( m_histPth, 1, title, nBins, 0, 5000 );

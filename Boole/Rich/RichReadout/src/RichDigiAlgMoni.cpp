@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.8 2004-02-02 14:29:36 jonesc Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.9 2004-03-16 13:51:42 jonesc Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -33,8 +33,7 @@ RichDigiAlgMoni::~RichDigiAlgMoni() {};
 // Initialisation
 StatusCode RichDigiAlgMoni::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Initialize base class
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
@@ -46,11 +45,7 @@ StatusCode RichDigiAlgMoni::initialize() {
   if ( !bookHistograms() ) return StatusCode::FAILURE;
 
   // Retrieve particle property service
-  IParticlePropertySvc* ppSvc;
-  if ( !service( "ParticlePropertySvc", ppSvc, true ) ) {
-    msg << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
-    return StatusCode::FAILURE;
-  }
+  IParticlePropertySvc * ppSvc = get<IParticlePropertySvc>( "ParticlePropertySvc" );
 
   // Setup the PDG code mappings
   m_localID[ 0 ] = Rich::Unknown;
@@ -71,8 +66,7 @@ StatusCode RichDigiAlgMoni::initialize() {
   // release particle property service
   ppSvc->release();
 
-  msg << MSG::DEBUG
-      << " Histogram location   = " << m_histPth << endreq;
+  debug() << " Histogram location   = " << m_histPth << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -287,8 +281,7 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
 // Main execution
 StatusCode RichDigiAlgMoni::execute() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   // Maps for number of pe's
   PhotMap ckPhotMapHit;
@@ -297,109 +290,105 @@ StatusCode RichDigiAlgMoni::execute() {
 
   // Locate MCRichDigits
   // ================================================================================
-  SmartDataPtr<MCRichDigits> mcRichDigits( eventSvc(), m_mcdigitTES );
-  if ( !mcRichDigits ) {
-    msg << MSG::WARNING << "Cannot locate MCRichDigits at " << m_mcdigitTES << endreq;
-  } else {
-    msg << MSG::DEBUG << "Successfully located " << mcRichDigits->size()
-        << " MCRichDigits at " << m_mcdigitTES << endreq;
+  MCRichDigits * mcRichDigits = get<MCRichDigits>( m_mcdigitTES );
+  debug() << "Successfully located " << mcRichDigits->size()
+          << " MCRichDigits at " << m_mcdigitTES << endreq;
 
-    int nChargedTracks[Rich::NRiches];
-    nChargedTracks[Rich::Rich1] = 0;
-    nChargedTracks[Rich::Rich2] = 0;
+  int nChargedTracks[Rich::NRiches];
+  nChargedTracks[Rich::Rich1] = 0;
+  nChargedTracks[Rich::Rich2] = 0;
 
-    // PD occupancy
-    PDMulti pdMult;
+  // PD occupancy
+  PDMulti pdMult;
 
-    // Initialise mult counts
-    double digMult[Rich::NRiches];
-    digMult[Rich::Rich1] = 0;
-    digMult[Rich::Rich2] = 0;
+  // Initialise mult counts
+  double digMult[Rich::NRiches];
+  digMult[Rich::Rich1] = 0;
+  digMult[Rich::Rich2] = 0;
 
-    // Loop over all MCRichDigits
-    for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
-          iMcDigit != mcRichDigits->end(); ++iMcDigit ) {
+  // Loop over all MCRichDigits
+  for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
+        iMcDigit != mcRichDigits->end(); ++iMcDigit ) {
 
-      RichSmartID id = (*iMcDigit)->key();
+    RichSmartID id = (*iMcDigit)->key();
 
-      HepPoint3D point;
-      if ( !m_smartIDTool->globalPosition( id, point ) ) {
-        msg << MSG::WARNING << "Position conversion error : ID = " << id << endreq;
-      }
-
-      // increment digit count
-      ++digMult[id.rich()];
-
-      // increment PD multiplicity count
-      ++pdMult[id.pdID()];
-
-      // Position plots
-      m_pdDigsXGlobal[id.rich()]->fill( point.x() );
-      m_pdDigsYGlobal[id.rich()]->fill( point.y() );
-      m_pdDigsZGlobal[id.rich()]->fill( point.z() );
-      m_pdDigsXYGlobal[id.rich()]->fill( point.x(), point.y() );
-      m_pdDigsXZGlobal[id.rich()]->fill( point.z(), point.x() );
-      m_pdDigsYZGlobal[id.rich()]->fill( point.z(), point.y() );
-      m_pdCloseUpXZ[id.rich()]->fill( point.z(), point.x() );
-      m_pdCloseUpYZ[id.rich()]->fill( point.z(), point.y() );
-
-      // loop over all hits associated to the digit
-      SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
-      if ( mcHits.empty() ) {
-        msg << MSG::WARNING << "MCRichDigit " << (int)(*iMcDigit)->key()
-            << " has no MCRichHits..." << endreq;
-      }
-
-      // hit mult per digit
-      m_hitsPerDigi[id.rich()]->fill( mcHits.size() );
-
-      bool thisDigCounted = false;
-      for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
-            iHit != mcHits.end(); ++iHit ) {
-
-        // Compare digit/hit
-        m_digiErrX[id.rich()]->fill( point.x() - (*iHit)->entry().x() );
-        m_digiErrY[id.rich()]->fill( point.y() - (*iHit)->entry().y() );
-        m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
-        m_digiErrR[id.rich()]->fill( point.distance( (*iHit)->entry() ) );
-
-        // Count beta=1 PEs
-        countNPE( ckPhotMapDig, *iHit );
-
-        // count digits from charged tracks
-        if ( !thisDigCounted && (*iHit)->chargedTrack() ) {
-          thisDigCounted = true;
-          ++nChargedTracks[id.rich()];
-        }
-
-      } // end hits loop
-
-    } // MCRichDigits Loop
-
-      // Fill multiplicity plots
-    m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
-    m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
-
-    // Fill PD occupancy plots
-    for ( PDMulti::const_iterator iOcc = pdMult.begin();
-          iOcc != pdMult.end(); ++iOcc ) {
-      m_pdOcc[ ((*iOcc).first).rich() ]->fill( (*iOcc).second );
+    HepPoint3D point;
+    if ( !m_smartIDTool->globalPosition( id, point ) ) {
+      warning() << "Position conversion error : ID = " << id << endreq;
     }
 
-    m_chargedTkDigs[Rich::Rich1]->fill( nChargedTracks[Rich::Rich1] );
-    m_chargedTkDigs[Rich::Rich2]->fill( nChargedTracks[Rich::Rich2] );
+    // increment digit count
+    ++digMult[id.rich()];
 
-  } // MCRichDigits exist
+    // increment PD multiplicity count
+    ++pdMult[id.pdID()];
 
-    // Locate MCRichDeposits
-    // ================================================================================
+    // Position plots
+    m_pdDigsXGlobal[id.rich()]->fill( point.x() );
+    m_pdDigsYGlobal[id.rich()]->fill( point.y() );
+    m_pdDigsZGlobal[id.rich()]->fill( point.z() );
+    m_pdDigsXYGlobal[id.rich()]->fill( point.x(), point.y() );
+    m_pdDigsXZGlobal[id.rich()]->fill( point.z(), point.x() );
+    m_pdDigsYZGlobal[id.rich()]->fill( point.z(), point.y() );
+    m_pdCloseUpXZ[id.rich()]->fill( point.z(), point.x() );
+    m_pdCloseUpYZ[id.rich()]->fill( point.z(), point.y() );
+
+    // loop over all hits associated to the digit
+    SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
+    if ( mcHits.empty() ) {
+      warning() << "MCRichDigit " << (int)(*iMcDigit)->key()
+                << " has no MCRichHits..." << endreq;
+    }
+
+    // hit mult per digit
+    m_hitsPerDigi[id.rich()]->fill( mcHits.size() );
+
+    bool thisDigCounted = false;
+    for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
+          iHit != mcHits.end(); ++iHit ) {
+
+      // Compare digit/hit
+      m_digiErrX[id.rich()]->fill( point.x() - (*iHit)->entry().x() );
+      m_digiErrY[id.rich()]->fill( point.y() - (*iHit)->entry().y() );
+      m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
+      m_digiErrR[id.rich()]->fill( point.distance( (*iHit)->entry() ) );
+
+      // Count beta=1 PEs
+      countNPE( ckPhotMapDig, *iHit );
+
+      // count digits from charged tracks
+      if ( !thisDigCounted && (*iHit)->chargedTrack() ) {
+        thisDigCounted = true;
+        ++nChargedTracks[id.rich()];
+      }
+
+    } // end hits loop
+
+  } // MCRichDigits Loop
+
+  // Fill multiplicity plots
+  m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
+  m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
+
+  // Fill PD occupancy plots
+  for ( PDMulti::const_iterator iOcc = pdMult.begin();
+        iOcc != pdMult.end(); ++iOcc ) {
+    m_pdOcc[ ((*iOcc).first).rich() ]->fill( (*iOcc).second );
+  }
+
+  m_chargedTkDigs[Rich::Rich1]->fill( nChargedTracks[Rich::Rich1] );
+  m_chargedTkDigs[Rich::Rich2]->fill( nChargedTracks[Rich::Rich2] );
+
+
+  // Locate MCRichDeposits
+  // ================================================================================
   SmartDataPtr<MCRichDeposits> deps( eventSvc(), m_mcdepTES );
   if ( !deps ) {
-    msg << MSG::DEBUG << "Cannot locate MCRichDeposits at "
-        << MCRichDepositLocation::Default << endreq;
+    debug() << "Cannot locate MCRichDeposits at "
+            << MCRichDepositLocation::Default << endreq;
   } else {
-    msg << MSG::DEBUG << "Successfully located " << deps->size()
-        << " MCRichDeposits at " << MCRichDepositLocation::Default << endreq;
+    debug() << "Successfully located " << deps->size()
+            << " MCRichDeposits at " << MCRichDepositLocation::Default << endreq;
 
     int nChargedTracks[Rich::NRiches];
     nChargedTracks[Rich::Rich1] = 0;
@@ -436,8 +425,8 @@ StatusCode RichDigiAlgMoni::execute() {
   // ================================================================================
   SmartDataPtr<MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
-    msg << MSG::DEBUG << "Cannot locate MCRichHits at "
-        << MCRichDepositLocation::Default << endreq;
+    debug() << "Cannot locate MCRichHits at "
+            << MCRichDepositLocation::Default << endreq;
   } else {
 
     // Hit mult counters
@@ -559,11 +548,7 @@ bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) {
 //  Finalize
 StatusCode RichDigiAlgMoni::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool(m_smartIDTool);
+  debug() << "Finalize" << endreq;
 
   // finalize base class
   return RichAlgBase::finalize();

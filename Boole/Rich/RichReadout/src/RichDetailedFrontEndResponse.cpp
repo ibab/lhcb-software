@@ -35,10 +35,9 @@ RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse() {}
 
 StatusCode RichDetailedFrontEndResponse::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
   // Initialize base class
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
   std::vector<RichSmartID> pixels;
@@ -52,17 +51,16 @@ StatusCode RichDetailedFrontEndResponse::initialize() {
   //m_GaussThreshold.initialize( randSvc(), Rndm::Gauss(m_adc_cut,200./20.)));
   m_gaussThreshold.initialize( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma));
 
-  msg << MSG::DEBUG
-      << " Using detailed HPD frontend response algorithm" << endreq;
+  debug() << " Using detailed HPD frontend response algorithm" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichDetailedFrontEndResponse::finalize()
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "finalize" << endreq;
+  debug() << "finalize" << endreq;
 
+  // finalise randomn number generators
   m_gaussNoise.finalize();
   m_gaussThreshold.finalize();
 
@@ -72,20 +70,11 @@ StatusCode RichDetailedFrontEndResponse::finalize()
 
 StatusCode RichDetailedFrontEndResponse::execute() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
-  SmartDataPtr<MCRichSummedDeposits> DepPtr( eventSvc(),
-                                             m_mcRichSummedDepositsLocation );
-  SummedDeposits = DepPtr;
-  if ( !SummedDeposits ) {
-    msg << MSG::WARNING << "Cannot locate MCRichSummedDeposits at "
-        << m_mcRichSummedDepositsLocation << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    msg << MSG::DEBUG << "Successfully located " << SummedDeposits->size()
-        << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
-  }
+  SummedDeposits = get<MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
+  debug() << "Successfully located " << SummedDeposits->size()
+          << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
 
   tscache.clear();
 
@@ -117,17 +106,6 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
       RichTimeSample ts(pid,readOut->FrameSize(),readOut->BaseLine());
 
       // Evolve shape --------------------------------------------------
-
-      // Inject gaussian noise
-      // CRJ Disable this feature since it is horribily implemented, very slow 
-      // and doesn't actually do anything yet.....
-      //if ( readOut->Noisifier() ) {
-      //  ts += readOut->Noisifier()->noisify( ts.MyPixel() );
-      //} else {
-      //  MsgStream msg(msgSvc(), name());
-      //  msg << MSG::ERROR << " No Noisifier " << endreq;
-      //  return StatusCode::FAILURE;
-      // }
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
@@ -166,7 +144,6 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
   }
 
   return StatusCode::SUCCESS;
-
 }
 
 StatusCode RichDetailedFrontEndResponse::Digital() {
@@ -201,17 +178,9 @@ StatusCode RichDetailedFrontEndResponse::Digital() {
     } // readout exits
   }
 
-  if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to register RichDigits at "
-        << m_mcRichDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Registered " << mcRichDigits->size() 
-        << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
-  }
+  put( mcRichDigits, m_mcRichDigitsLocation );
+  debug() << "Registered " << mcRichDigits->size() 
+          << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
 
   return StatusCode::SUCCESS;
 }

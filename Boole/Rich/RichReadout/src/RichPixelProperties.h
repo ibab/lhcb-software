@@ -1,7 +1,7 @@
 #ifndef RichPixelProperties_h
 #define RichPixelProperties_h 1
 
-#include "Kernel/RichSmartID.h"
+//#include "Kernel/RichSmartID.h"
 #include "RichPixelReadout.h"
 
 class RichPixel;
@@ -10,47 +10,28 @@ class RichPixelProperties {
 
 public:
 
-  RichPixelProperties( RichSmartID i )
-    : index(i)
-  {
-    readout = new RichPixelReadout();
-  }
-
-  RichPixelProperties( RichPixelProperties & p )
-  {
-    index = p.index;
-    readout = new RichPixelReadout();
-  }
+  RichPixelProperties( /*const RichSmartID i*/ )
+    : readout ( new RichPixelReadout() ) 
+  { }
 
   ~RichPixelProperties()
   {
-    delete readout;
+    cleanUp();
   }
 
-  const RichPixelReadout* Readout() const
+  inline const RichPixelReadout* Readout() const
   {
     return readout;
   }
 
-  void SetReadout( RichPixelReadout * r )
+  inline void cleanUp()
   {
-    readout = r;
-  }
-
-  const RichSmartID::KeyType getNum() const
-  {
-    return index.key();
-  }
-
-  const RichSmartID * Index() const
-  {
-    return &index;
+    if (readout) { delete readout; readout = 0; }
   }
 
 private:
 
   RichPixelReadout * readout;
-  RichSmartID index;
 
   friend class RichPixel;
 

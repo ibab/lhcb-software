@@ -6,7 +6,6 @@
 #include "RichUtils/RichAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 
@@ -36,6 +35,15 @@
 // CLHEP
 #include "CLHEP/Random/Random.h"
 
+/** @class RichDetailedFrontEndResponse RichDetailedFrontEndResponse.h
+ *  
+ *  Performs a detailed simulation of the RICH HPD pixel response
+ * 
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Alex Howard   a.s.howard@ic.ac.uk
+ *  @date   2003-11-06
+ */
+
 class RichDetailedFrontEndResponse : public RichAlgBase {
 
 public:
@@ -58,7 +66,7 @@ private: // methods
 
 private: // data
 
-  const RichBase* actual_base;
+  const RichBase * actual_base;
   RichRegistry theRegistry;
 
   samplecache_t tscache;

@@ -35,6 +35,15 @@
 // CLHep
 #include "CLHEP/Random/Random.h"
 
+/** @class RichSimpleFrontEndResponse RichSimpleFrontEndResponse.h
+ *  
+ *  Performs a simple simulation of the RICH HPD pixel response
+ * 
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Alex Howard   a.s.howard@ic.ac.uk
+ *  @date   2003-11-06
+ */
+
 class RichSimpleFrontEndResponse : public RichAlgBase {
 
 public:

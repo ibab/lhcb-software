@@ -19,11 +19,15 @@ class RichBase {
 
 public:
 
-  RichBase( ) : m_MyState ( OPEN ) { }
+  RichBase( ) 
+    : m_MyState ( OPEN )
+  { }
   
-  RichBase( RichBase & base ) : m_MyState ( base.m_MyState ) { }
+  RichBase( RichBase & base ) :
+    m_MyState ( base.m_MyState )
+  { }
 
-  ~RichBase();
+  ~RichBase() { cleanUp(); }
 
   enum BaseState
     {
@@ -88,6 +92,9 @@ private: // data
 
   activemap m_activePixels;
 
+  // crj : temporary single properties object whilst all pixels are treated the same
+  RichPixelProperties m_pixProps;
+
   friend class RichRegistry;
 
 };
@@ -102,7 +109,7 @@ inline RichBase::activemap::const_iterator RichBase::end() const
   return m_activePixels.end();
 }
 
-inline RichBase& RichBase::operator=( const RichBase& b )
+inline RichBase& RichBase::operator=( const RichBase & b )
 {
   m_MyState = b.m_MyState;
   return *this;

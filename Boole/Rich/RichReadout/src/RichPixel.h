@@ -20,6 +20,7 @@ public:
   RichPixel(const RichPixelProperties* p) : property(p){}
 
   RichPixel( const RichSmartID sid )
+    : property ( 0 )
   {
     const RichBase* MyBase = NULL;
     if ( sid.rich() == 0 ) MyBase = RichRegistry::GetBase();
@@ -28,24 +29,15 @@ public:
 
   RichPixel( const RichBase * b,
              const RichSmartID sid )
-  {
-    property = b->DecodeUniqueID( sid );
-    //unsigned int num = property->getNum();
-  }
-
+    : property ( b->DecodeUniqueID( sid ) )
+  { }
+  
   const RichPixelReadout* Readout() const
   {
     return property->Readout();
   }
 
-  RichSmartID::KeyType GetUniqueNum()
-  {
-    return property->getNum();
-  }
-
 private: // methods
-
-  const RichSmartID* TheIndex() const { return property->Index(); }
 
   const RichPixelProperties* Property() const { return property; }
 

@@ -9,15 +9,16 @@ class RichShape {
 
 public:
 
-  RichShape::RichShape (double tpeak, double alpha)
+  RichShape::RichShape (const double tpeak, 
+                        const double alpha)
     :  m_alpha(alpha),
        m_tpeak(tpeak)  { }
 
-  double operator[] (double time) const;
+  double operator[] (const double time) const;
 
   double getTpeak () const;
 
-  void setTpeak (double value);
+  void setTpeak (const double value);
 
 private:
 
@@ -31,12 +32,12 @@ inline double RichShape::getTpeak () const
   return m_tpeak;
 }
 
-inline void RichShape::setTpeak (double value)
+inline void RichShape::setTpeak (const double value)
 {
   m_tpeak = value;
 }
 
-inline double RichShape::operator[] (double time) const
+inline double RichShape::operator[] (const double time) const
 {
   if ( time <= 0 ) return 0;
   return ( pow(time/getTpeak(),m_alpha) *

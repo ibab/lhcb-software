@@ -4,7 +4,6 @@
 
 class RichShape;
 class RichShape_flat;
-class RichNoisifier;
 class RichFrontEndDigitiser;
 
 class RichPixelReadout {
@@ -12,11 +11,10 @@ class RichPixelReadout {
 public:
 
   RichPixelReadout();
-  ~RichPixelReadout();
+  ~RichPixelReadout() { cleanUp(); }
 
   const RichShape* Shape() const;
   const RichShape_flat* Shape_flat() const;
-  const RichNoisifier* Noisifier() const;
   const RichFrontEndDigitiser* ADC() const;
 
   double BaseLine() const;
@@ -24,10 +22,6 @@ public:
   int BinOfMaximum() const;  
   int FrameSize() const;
 
-  void setShape ( RichShape * ) ;
-  void setShape_flat ( RichShape_flat * ) ;
-  void setNoisifier( RichNoisifier * ) ;
-  void setADC( RichFrontEndDigitiser *) ;
   void setBaseLine ( unsigned long index, double ) ;
   void setBaseLine ( double ) ;  //! same value for all index
   void setSigmaElecNoise ( double ) ;
@@ -40,10 +34,9 @@ private: // methods
 
 private: // data
 
-  RichShape* m_shape;
-  RichShape_flat* m_shape_flat;
-  RichNoisifier * m_noisifier;
-  RichFrontEndDigitiser* m_frontEnd;
+  RichShape * m_shape;
+  RichShape_flat * m_shape_flat;
+  RichFrontEndDigitiser * m_frontEnd;
 
   int m_frameSize;
   double m_baseline;
@@ -61,11 +54,6 @@ inline const RichShape* RichPixelReadout::Shape() const
 inline const RichShape_flat* RichPixelReadout::Shape_flat() const
 {
   return m_shape_flat;
-}
-
-inline const RichNoisifier* RichPixelReadout::Noisifier() const
-{
-  return m_noisifier;
 }
 
 inline const RichFrontEndDigitiser* RichPixelReadout::ADC() const
@@ -89,26 +77,6 @@ inline double RichPixelReadout::SigmaElecNoise() const
 }
 
 // Setters
-
-inline void RichPixelReadout::setShape ( RichShape* p)
-{
-  m_shape = p;
-}
-
-inline void RichPixelReadout::setShape_flat ( RichShape_flat* p)
-{
-  m_shape_flat = p;
-}
-
-inline void RichPixelReadout::setNoisifier (RichNoisifier* p)
-{
-  m_noisifier = p;
-}
-inline
-void RichPixelReadout::setADC (RichFrontEndDigitiser* p )
-{
-  m_frontEnd = p;
-}
 
 inline void RichPixelReadout::setBaseLine (unsigned long, double d)
 {

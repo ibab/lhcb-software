@@ -9,18 +9,19 @@ class RichShape_flat {
 
 public:
 
-  RichShape_flat::RichShape_flat (double tpeak, double alpha)
+  RichShape_flat::RichShape_flat (const double tpeak, 
+                                  const double alpha)
     :  m_alpha(alpha), 
        m_tpeak(tpeak)  { }
   
-  double operator() (double time) const;
+  double operator() (const double time) const;
 
   double getTpeak () const 
   {
     return m_tpeak;
   }
   
-  void setTpeak (double value) 
+  void setTpeak (const double value) 
   {
     m_tpeak = value;
   }
@@ -32,7 +33,7 @@ private:
 
 };
 
-inline double RichShape_flat::operator() (double time) const
+inline double RichShape_flat::operator() (const double time) const
 {
   if ( time <= 0 ) return 0;
   double voltage = pow(time/getTpeak(),m_alpha) * 

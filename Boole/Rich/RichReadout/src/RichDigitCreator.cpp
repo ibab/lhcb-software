@@ -1,4 +1,4 @@
-// $Id: RichDigitCreator.cpp,v 1.6 2003-11-25 15:01:08 jonrob Exp $
+// $Id: RichDigitCreator.cpp,v 1.7 2004-03-16 13:51:42 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -39,8 +39,7 @@ RichDigitCreator::~RichDigitCreator() {};
 // Initialisation.
 StatusCode RichDigitCreator::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Initialize base class
   if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
@@ -51,20 +50,10 @@ StatusCode RichDigitCreator::initialize() {
 // Main execution
 StatusCode RichDigitCreator::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "Execute" << endreq;
+  debug() << "Execute" << endreq;
 
   // locate MCRichDigits
-  SmartDataPtr<MCRichDigits> mcDigits( eventSvc(),
-                                       m_mcRichDigitsLocation );
-  if ( !mcDigits ) {
-    log << MSG::WARNING << "Cannot locate MCRichDigits at "
-        << m_mcRichDigitsLocation << endreq;
-  } else {
-    log << MSG::DEBUG << "Successfully located " << mcDigits->size()
-        << " MCRichDigits at "
-        << m_mcRichDigitsLocation << endreq;
-  }
+  MCRichDigits * mcDigits = get<MCRichDigits>( m_mcRichDigitsLocation );
 
   // Form a new container of RichDigits
   RichDigits * digits = new RichDigits();
@@ -81,22 +70,15 @@ StatusCode RichDigitCreator::execute() {
 
       // Set MCTruth
       if ( setMCTruth(newDigit, *mcRichDigit).isFailure() ) {
-        log << MSG::WARNING << "Failed to set MCTruth for RichDigit "
-            << (*mcRichDigit)->key() << endreq;
+        warning() << "Failed to set MCTruth for RichDigit "
+                  << (*mcRichDigit)->key() << endreq;
       }
 
     }
   }
 
   // Register new container to Gaudi data store
-  if ( !eventSvc()->registerObject(m_richDigitsLocation,digits) ) {
-    log << MSG::ERROR << "Failed to register RichDigits at "
-        << m_richDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    log << MSG::DEBUG << "Successfully registered " << digits->size()
-        << " RichDigits at " << m_richDigitsLocation << endreq;
-  }
+  put( digits, m_richDigitsLocation );
 
   return StatusCode::SUCCESS;
 };
@@ -105,8 +87,7 @@ StatusCode RichDigitCreator::execute() {
 //  Finalize
 StatusCode RichDigitCreator::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Finalize" << endreq;
+  debug() << "Finalize" << endreq;
 
   // finalize base class
   return RichAlgBase::finalize();
