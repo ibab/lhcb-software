@@ -220,13 +220,13 @@ StatusCode GiGaRunManager::processTheEvent()
   if( G4RunManager::verboseLevel > 0 )
     {
       (G4RunManager::timer)->Stop();
-      G4cout << "Run terminated." << endl;
-      G4cout << "Run Summary"     << endl;
-      if( G4RunManager::runAborted ) { G4cout << "  Run Aborted after " << 1 << " events processed." << endl; }
-      else                           { G4cout << "  Number of events processed : " << 1 << endl; }
-      G4cout << "  "  << *(G4RunManager::timer) << endl;
+      G4cout << "Run terminated." << G4endl;
+      G4cout << "Run Summary"     << G4endl;
+      if( G4RunManager::runAborted ) { G4cout << "  Run Aborted after " << 1 << " events processed." << G4endl; }
+      else                           { G4cout << "  Number of events processed : " << 1 << G4endl; }
+      G4cout << "  "  << *(G4RunManager::timer) << G4endl;
     }
-  ///
+   ///
   set_evt_Is_Processed( true  ); 
   set_evt_Is_Prepared ( false ); 
   ///
