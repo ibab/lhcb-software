@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.4 2003-06-16 11:44:31 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.5 2003-06-16 16:30:51 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -213,7 +213,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 	
 	msg << MSG::INFO << "TAGGING SUMMARY "
 		  << evtHead->runNum() << ' '
-			<< setw(3) << evtHead->evtNum() << " : ";
+			<< std::setw(3) << evtHead->evtNum() << " : ";
 	if( l0 )
 		msg << (l0->decision() ? '1' : '0');
 	else
@@ -236,11 +236,11 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
     msg << '-';
 
 	msg << " : ";
-	msg << setw(2) << int(muon_tag.decision()) << ' '
-			<< setw(2) << int(electron_tag.decision()) << ' '
-			<< setw(2) << int(kaonOS_tag.decision()) << ' '
-			<< setw(2) << int(kaonSS_tag.decision()) << ' '
-			<< setw(2) << int(vtxCharge_tag.decision()) << " : ";
+	msg << std::setw(2) << int(muon_tag.decision()) << ' '
+			<< std::setw(2) << int(electron_tag.decision()) << ' '
+			<< std::setw(2) << int(kaonOS_tag.decision()) << ' '
+			<< std::setw(2) << int(kaonSS_tag.decision()) << ' '
+			<< std::setw(2) << int(vtxCharge_tag.decision()) << " : ";
 
 	struct TagSet {
 		bool mu;
@@ -430,7 +430,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       theTag.setTaggedB(muon_tag.taggedB());
 			break;
 	}
-	msg << setw(2) << int(theTag.decision()) << endreq;
+	msg << std::setw(2) << int(theTag.decision()) << endreq;
 }
 
 void CategoryTaggingTool::fillCategory( std::string categ,
@@ -454,7 +454,6 @@ StatusCode CategoryTaggingTool::finalize()
 	std::map<std::string,Category>::iterator ci;
 	double teff, tseff;
 
-  char buffer[256];
 	msg << MSG::INFO << "Results per categories (no trigger applied) "
       << m_nUntrigEvents << " events:\n"
 //        12345678901234567890 123456 +/- 123456   123456 +/- 123456   123456 +/- 123456   1234  1234  1234 
@@ -463,20 +462,16 @@ StatusCode CategoryTaggingTool::finalize()
 	for( ci=m_untrigCateg.begin(); ci!=m_untrigCateg.end(); ci++ ) {
 		double e, se, w, sw, eff, seff;
 		ci->second.results(m_nUntrigEvents, e, se, w, sw, eff, seff);
-    snprintf(buffer, sizeof(buffer),
-      "%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
+    msg << format("%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
-    msg << buffer;
     if( e != 0.0 && eff != 0.0 ) {
   		teff += eff;
 	  	tseff += seff*seff;
     }
 	}
 	tseff = sqrt(tseff);
-  snprintf(buffer, sizeof(buffer), "%60s %-6.4f +/- %-6.4f\n", "Total:",
-           teff, tseff);
-  msg << buffer << endreq;;
+  msg << format( "%60s %-6.4f +/- %-6.4f\n", "Total:", teff, tseff) << endreq;
 
 	msg << MSG::INFO << "Results per categories (L0 trigger applied) "
       << m_nL0Events << " events:\n"
@@ -485,20 +480,16 @@ StatusCode CategoryTaggingTool::finalize()
 	for( ci=m_L0Categ.begin(); ci!=m_L0Categ.end(); ci++ ) {
 		double e, se, w, sw, eff, seff;
 		ci->second.results(m_nL0Events, e, se, w, sw, eff, seff);
-    snprintf(buffer, sizeof(buffer),
-      "%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
+    msg << format("%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
-    msg << buffer;
     if( e != 0.0 && eff != 0.0 ) {
       teff += eff;
       tseff += seff*seff;
     }
 	}
 	tseff = sqrt(tseff);
-  snprintf(buffer, sizeof(buffer), "%60s %-6.4f +/- %-6.4f\n", "Total:",
-           teff, tseff);
-  msg << buffer << endreq;;
+  msg << format("%60s %-6.4f +/- %-6.4f\n", "Total:", teff, tseff) << endreq;
 
 	msg << MSG::INFO << "Results per categories (L0*L1 trigger applied) "
       << m_nL0L1Events << " events:\n"
@@ -507,20 +498,16 @@ StatusCode CategoryTaggingTool::finalize()
 	for( ci=m_L0L1Categ.begin(); ci!=m_L0L1Categ.end(); ci++ ) {
 		double e, se, w, sw, eff, seff;
 		ci->second.results(m_nL0L1Events, e, se, w, sw, eff, seff);
-    snprintf(buffer, sizeof(buffer),
-      "%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
+    msg << format("%20s %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %-6.4f +/- %-6.4f   %4d  %4d  %4d\n",
       ci->first.c_str(), e, se, w, sw, eff, seff, ci->second.count(FlavourTag::b),
       ci->second.count(FlavourTag::bbar), ci->second.count(FlavourTag::none));
-    msg << buffer;
     if( e != 0.0 && eff != 0.0 ) {
       teff += eff;
       tseff += seff*seff;
     }
 	}
 	tseff = sqrt(tseff);
-  snprintf(buffer, sizeof(buffer), "%60s %-6.4f +/- %-6.4f\n", "Total:",
-           teff, tseff);
-  msg << buffer << endreq;;
+  msg << format("%60s %-6.4f +/- %-6.4f\n", "Total:", teff, tseff) << endreq;;
 
 	return StatusCode::SUCCESS;
 }

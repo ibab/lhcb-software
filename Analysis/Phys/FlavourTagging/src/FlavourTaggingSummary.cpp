@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingSummary.cpp,v 1.2 2003-06-13 08:41:46 odie Exp $
+// $Id: FlavourTaggingSummary.cpp,v 1.3 2003-06-16 16:30:51 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -148,7 +148,7 @@ StatusCode FlavourTaggingSummary::execute() {
       msg << "N/A V N/A [N/A]";
     msg << " :";
     for( int l=0; l<nloc; l++ )
-      msg << ' ' << setw(2) << (*s_i)[l];
+      msg << ' ' << std::setw(2) << (*s_i)[l];
     msg << endreq;
   }
 
