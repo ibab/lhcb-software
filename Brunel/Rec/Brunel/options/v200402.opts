@@ -20,11 +20,11 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 //---------------------------------------------------------------------------
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "412400.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "411300.root";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
 
 // GaudiDb input. Comment next line if POOL input
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/61.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/411300.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
 
 // Uncomment next 2 lines for POOL input. Input file must exist in MyCatalog.xml.
 //EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
@@ -33,7 +33,7 @@ EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5
 // Define output file - choose either GaudiDb or POOL
 
 // GaudiDb output (possible only with GaudiDb input)
-DstWriter.Output = "DATAFILE='412400.oodst' TYP='ROOT' OPT='NEW'";
+DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
 
 // POOL output
 //DstWriter.Output = "DATAFILE='PFN:412400.dst' TYP='POOL_ROOTTREE' OPT='REC'";

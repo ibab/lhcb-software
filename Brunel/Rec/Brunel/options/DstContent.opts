@@ -99,7 +99,7 @@ DstWriter.ItemList =
 , "/Event/Link/Rec#1"
 , "/Event/Link/Rec/IT#1"
 , "/Event/Link/Rec/IT/Clusters#1"
-, "/Event/Link/Rec/OT/#1"
+, "/Event/Link/Rec/OT#1"
 , "/Event/Link/Rec/OT/Clusters#1"
 , "/Event/Link/Rec/Muon#1"
 , "/Event/Link/Rec/Muon/Coords#1"
