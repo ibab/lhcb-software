@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== Gauss v19r0 ==================================
+! 2005-02-02 - Florence RANJARD
+ - use GaussTracker v3r2 to fix Muon hits out of chambers
+
 ! 2005-01-26 - Florence Ranjard
  - use Geant4Files v52r0 , remove it from Geant4/G4config
 

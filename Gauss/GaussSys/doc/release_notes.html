@@ -7,6 +7,15 @@ Package manager : Gloria Corti
     is built with LHCb v17r2, Geant4 v70r0, GENSER_0_3_0, Pythia 6.226.2
     it uses XmlDDDB v23r1
 
+!=========================== GaussTracker v3r2 ================================
+! 2005-01-27 - Gloria Corti
+ - cmt/requirements
+   . increase version number
+ - src/GiGaSensDetMuon.{h,cpp}
+   . introduce protection for illegal chamber number in the different regions
+     (R1: 1-12, R2: 1-24, R3: 1-48, R4: 1-192). If a hit has numbers greater
+     than allowed value do not store it in collection
+
 !====================== GiGaCnv v15r10 2005-01-25 ===========================
 ! 2005-01-25 - Gloria CORTI
  - cmt/requirements
