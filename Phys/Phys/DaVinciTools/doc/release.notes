@@ -1,15 +1,20 @@
-! $Id: release.notes,v 1.9 2002-05-15 23:48:09 gcorti Exp $
+! $Id: release.notes,v 1.10 2002-05-17 11:43:30 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20021506 Gloria Corti
+! 20021705 Gloria Corti
+  - DVAlgorithm: remove cpp and do inline implementation. Introduce method
+    to load an instance of all tools loadTools() to be called at initialization
+  - Similar format for messages in finalize of tools
+
+! 20020515 Gloria Corti
   - PhysDesktop: implementation of IListner to clean up at end of events (GC)
   - FillParticleAlgorithm: adapt to new ParticleID and move check of
     AxPartCandidate before creating a Particle
 
-! 20021006 Gloria Corti
+! 20020510 Gloria Corti
   - New tool category of tool IParticleMaker to which PhysDesktop 
     delegates creations of Particles from different type of objects:
     one implementation AxParticleMaker making Particles from
