@@ -1,5 +1,5 @@
 package BrunelSys
-version v20r0
+version v20r1
 
 branches cmt doc
  
@@ -8,10 +8,10 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v20r0   Rec
+use Brunel              v20r1   Rec
 
 # Brunel utilities
-use BrunelAlgs          v2r2	Rec
+use BrunelAlgs          v3r0	Rec
 use MCTools		v1r1p1	Phys
 
 # Calorimeter
@@ -22,47 +22,47 @@ use CaloReco            v1r6    Calo
 use CaloPIDs		v1r1	Calo
 
 # Velo
-use VeloAlgorithms      v2r7  	Velo
+use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r10	IT
-use ITCheckers          v1r3  	IT
+use ITCheckers          v1r3p1	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r1	OT
+use OTAlgorithms        v13r2	OT
 
 # Tracking
-use VeloTrack           v5r0  	Velo
-use TrCheck             v1r4  	Tr
-use LongTrack           v1r7  	Tr
-use TrFitter            v3r5  	Tr
-use TrExtrapolator      v2r6  	Tr
-use TrTools             v2r4p2	Tr
+use VeloTrack           v5r1  	Velo
+use TrCheck             v2r0	Tr
+use LongTrack           v1r8	Tr
+use TrFitter            v3r6  	Tr
+use TrExtrapolator      v2r7  	Tr
+use TrTools             v2r5	Tr
 use Seeding             v2r5  	Tr 
-use TrMatching          v2r6  	Tr
+use TrMatching          v2r7	Tr
 use TrCleanEx           v2r6p1	Tr
-use TrIntraPR           v2r5  	Tr
-use UpstreamPR          v2r7  	Tr
-use VeloTT              v1r5  	Tr
+use TrIntraPR           v2r6	Tr
+use UpstreamPR          v2r8	Tr
+use VeloTT              v1r6	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
-use MuonAlgs            v4r1    Muon
 use MuonRec             v2r3    Muon
 use MuonID              v3r6    Muon
 
 # Rich
-use RichRecSys		v1r0p1	Rich
-use RichRecBase		v1r2	Rich
-use RichRecTools	v2r1	Rich
-use RichRecCommon	v1r0	Rich
-use RichRingRefit	v1r0	Rich
-use RichLocalPID	v1r0p1	Rich
-use RichGlobalPID	v1r0	Rich
+use RichRecSys		v1r1	Rich
+use RichRecBase		v1r3	Rich
+use RichRecTools	v2r2	Rich
+use RichRecCommon	v1r1	Rich
+use RichRingRefit	v1r1	Rich
+use RichLocalPID	v1r1	Rich
+use RichGlobalPID	v1r1	Rich
 use RichPIDMerge	v1r0	Rich
-use RichUtils		v3r2  	Rich
-use RichDetTools	v2r2  	Rich
-use RichRecQC		v1r0	Rich
+use RichUtils		v3r3  	Rich
+use RichDetTools	v3r0  	Rich
+use RichRecQC		v1r1	Rich
+use RichRecMCTools	v1r0	Rich
 
 # SICB package still needed by RichDetTools
-use RiSicbGeom		v3r3	SICB
+use RiSicbGeom		v3r4	SICB

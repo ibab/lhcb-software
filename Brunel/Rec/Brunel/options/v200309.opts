@@ -1,0 +1,35 @@
+///////////////////////////////////////////////////////////////////////////////
+/// Job options for Brunel for data produced with Boole v2r0 or greater and ///
+///  and with XmlDDDB geometry compatible with lhcb-200309 (MaPMT version)  ///
+///////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
+#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
+
+//---------------------------------------------------------------------------
+// Database specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200309-hpd.xml";
+#include "$RICHRECSYSOPTS/BrunelRecoMaPMT.opts"
+#include "$RICHRECSYSOPTS/RecoParamForMaPMT.opts"
+#include "$VELOTTROOT/options/BrunelField043.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Finally, define input and output files, first event, number of events
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  // Put here an oodigi file produced with Gauss and lhcb-200309.xml geometry
+
+  //  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v2r1/360000_1310.oodigi' TYP='ROOT' opt='READ'"
+}; // evtype 360000
+
+DstWriter.Output = "DATAFILE='v200309.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v200309.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 100;
+//////////////////////////////////////////////////////////////////////////////

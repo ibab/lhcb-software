@@ -3,6 +3,35 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v20r1>2003-10-17 Brunel v20r1</A></H1><PRE>
+
+- New functionality
+   . Add Rich support for MaPMT and for Gauss data. Requires XmlDDDB > v18r0
+     (RichDetTools v3r0, RichDet v6r0, RichKernel v3r3, RichRecSys v1r1)
+   . Add histograms to monitor memory usage (BrunelAlgs v3r0)
+   . Create HLTEvent from HLTBuffer at start of processing (BrunelAlgs v3r0)
+
+- New tuning
+   . Improved handling of Rich tabulated properties (RichUtils v3r3)
+   . Improved ring refit algorithm (RichRingRefit v1r1)
+   . Use reference trajectory instead of dummy point on track to propagate
+     tracks between Velo and T stations
+     (TrFitEvent v4r0, LongTrack v1r8, VeloTrack v5r1)
+   . Increase TT signal to noise cut from 4. to 6. for VTT tracks (VeloTT v1r6)
+   . Add TT hits to "Matched" tracks (TrMatching v2r7, Brunel.opts)
+
+- New packaging
+   . Remove dependency on NAGC, use equivalent gsl functions instead
+     (VeloAlgorithms v2r8, ITCheckers v1r3p1, TrExtrapolator v2r7,
+      TrIntraPR v2r6, UpstreamPR v2r8)
+   . Remove dependency on MuonAlgs (contains only Muon digitization)
+   . Remove dependency on LHCBDBASE environment variable. Parameters are taken
+     from ParamFiles package. 
+   . Specialised BrunelMain.cpp no longer needed, use GaudiMain instead
+   . Introduce dependency on GaudiGSL and GSL
+   . Rename top level options files for consistency with new XmlDDDB scheme
+   . Update Brunel.job and valgrind.job for above changes
+
 </PRE><H1><A NAME=v20r0p1>2003-07-18 Brunel v20r0p1</A></H1><PRE>
 
 - Bug fix:

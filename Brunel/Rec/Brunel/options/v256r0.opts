@@ -1,0 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////
+///  Job options for Brunel for data produced with Boole v2r0 or greater   ///
+///   and with dbase geometry compatible with v256r0 (HPD versions only)   ///
+//////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
+#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
+
+//---------------------------------------------------------------------------
+// Database specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
+#include "$RICHRECSYSOPTS/BrunelRecoHPD.opts"
+#include "$RICHRECSYSOPTS/RecoParamForSICBHPD.opts"
+#include "$VELOTTROOT/options/BrunelField043.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// Finally, define input and output files, first event, number of events
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v2r1/00000335_00000001_4.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+//EventSelector.FirstEvent = 11;
+DstWriter.Output = "DATAFILE='00000335_00000001_5.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "00000335_00000001-5.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 100;
+//////////////////////////////////////////////////////////////////////////////

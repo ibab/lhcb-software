@@ -53,6 +53,7 @@ DeVelo.Design = 1;  // 45 degree Velo sectors
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -105,7 +106,6 @@ ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
 ApplicationMgr.DLLs += { "TrMatching" }; 
 BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
-matchVeloSeed.addTTClusters = false;
 reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // Upstream tracking
@@ -126,10 +126,9 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
-// Rich Reconstruction
+// Rich Reconstruction algorithms defined in database specific file
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
         "RichGlobalPID", "RichLocalPID", "RichRingRefit", "RichPIDMerge" };
-#include "$RICHRECSYSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };

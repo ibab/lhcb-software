@@ -4,6 +4,21 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v20r1 2003-10-17 =======================
+! 2003-10-14 - Marco Cattaneo
+ - Modified requirements for Brunel v20r1
+
+   Packages modified: VeloAlgorithms v2r8, ITCheckers v1r3p1, OTAlgorithms v13r2,
+     RichUtils v3r3, RichDetTools v3r0, RiSicbGeom v3r4, RichRecBase v1r3,
+     RichRecQC v1r1, RichGlobalPID v1r1, RichLocalPID v1r1, RichRingRefit v1r1,
+     RichRecCommon v1r1, RichRecTools v2r2, RichRecSys v1r1, TrExtrapolator v2r7,
+     LongTrack v1r8, TrFitter v3r6, TrTools v2r5, VeloTrack v5r1, VeloTT v1r6,
+     TrIntraPR v2r6, TrUpstreamPR v2r8, TrMatching v2r7, trCheck v2r0, 
+     BrunelAlgs v3r0
+ 
+   Packages added:    RichRecMCTools
+   Packages removed:  MuonAlgs
+
 !======================= BrunelSys v20r0 2003-07-17 =======================
 ! 2003-07-17 - Marco Cattaneo
  - Modified requirements for Brunel v20r0 (removal of digitization to Boole)
