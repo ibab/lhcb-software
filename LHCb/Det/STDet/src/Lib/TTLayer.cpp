@@ -16,7 +16,7 @@
 #include "STDet/STWafer.h"
 
 #include <iterator>
-
+#include "gsl/gsl_math.h"
 
 TTLayer::TTLayer(int stationID, int layerID, double z, 
                     double stereoAngle, double pitch, double waferWidth, 
@@ -94,28 +94,37 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
   m_Wafers.resize(m_WafersNum);
 
   // layout top and bottom boxes...
-  double yLad = holeY + 0.5*((nSensorHigh*waferHeight*cosAngle())
-                             + (waferWidth*fabs(sinAngle())));
-  double xLad = -yLad*sinAngle()/cosAngle();
-  // go to u,v
-  double uLad = xLad*cosAngle() + yLad*sinAngle();
-  double vLad = yLad*cosAngle() - xLad*sinAngle();
-  double vMax = vLad + (0.5*(double)nSensorHigh*waferHeight);
 
   // bottom box
   int currStrip = 0;
   double v = 0.;
 
+  double yLad = holeY + 0.5*((nSensorHigh*waferHeight*cosAngle())
+                             + (waferWidth*fabs(sinAngle())));
+  double xLad = yLad*fabs(sinAngle())/cosAngle();
+
+   
   unsigned int iWafer = 0;
   for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
+
+
+    // go to u,v
+    double xB = GSL_SIGN(stereoAngle)*xLad;
+    double yB = -yLad;
+
+    double uLad = xB*cosAngle() + yB*sinAngle();
+    double vLad = yB*cosAngle() - xB*sinAngle();
+    double vStart = vLad - (0.5*(double)nSensorHigh*waferHeight);
     
     double dz = -(1.-(2.*(iWafer%2)))*0.5*ladderDist;
     unsigned int waferOffset = m_firstInColumn[wafersX2+iWafer-1];
-    v = -vMax;  
+    v = vStart;  
+   
 
     for (unsigned int iBWafer=1; iBWafer<=ladderSize1.size();iBWafer++){
 
       v += (waferHeight*(double)ladderSize1[iBWafer-1])/2.0; 
+    
       double ladderHeight = (ladderSize1[iBWafer-1]*waferHeight)
                             -2.0*vertGuardRing;
 
@@ -135,19 +144,28 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
     }  // iBWafer
   } // iWafer
 
-  v = vMax - ((double)nSensorHigh*waferHeight);
-
   for (iWafer=1;iWafer<=wafersX1;iWafer++){
+
+    double xT = -GSL_SIGN(stereoAngle)*xLad;
+    double yT = yLad;
+
+    double uLad = xT*cosAngle() + yT*sinAngle();
+    double vLad = yT*cosAngle() - xT*sinAngle();
+    double vStart = vLad - (0.5*(double)nSensorHigh*waferHeight);
 
     unsigned int waferOffset = m_firstInColumn[wafersX2+iWafer-1]+(ladderSize1.size());
     double dz = -(1.-(2.*(iWafer%2)))*0.5*ladderDist;
-
+    v = vStart;
+   
     for (unsigned int iTWafer=1; iTWafer<=ladderSize1.size();iTWafer++){
 
-        v += (waferHeight*(double)ladderSize1[ladderSize1.size()-iTWafer])/2.0;
-        double ladderHeight = (ladderSize1[iTWafer-1]*waferHeight)
-                            -2.0*vertGuardRing;
 
+    
+
+        v += (waferHeight*(double)ladderSize1[ladderSize1.size()-iTWafer])/2.0;
+   
+        double ladderHeight = (ladderSize1[ladderSize1.size()-iTWafer]*waferHeight)
+                            -2.0*vertGuardRing;
 
         STWafer* aWafer = new STWafer(pitch, 1,ladderSize1[iTWafer-1],
 				    stationID,layerID,waferOffset+iTWafer,
