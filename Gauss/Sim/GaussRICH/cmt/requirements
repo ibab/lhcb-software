@@ -7,7 +7,7 @@ branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
 use GaussTools    v5r*     Sim
-
+use AIDA          v*
 # =============== Event =======================================================
 use RichEvent     v4r*      Event
 
