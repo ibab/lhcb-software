@@ -4,6 +4,12 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v11r13 2004-08-17 ===================
+! 2004-08-17 - P. Koppenburg
+  - options/L1Checking.opts, options/HltChecking.opts
+    . Some minor changes to avoid a memory leak and allow to make particles
+      with Trg tracks.
+  
 !========================== DaVinci v11r12 2004-08-03 ===================
 ! 2004-08-04 - P. Koppenburg
   - Changed all trigger options

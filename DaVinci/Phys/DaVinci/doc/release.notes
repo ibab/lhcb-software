@@ -3,6 +3,19 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r13>2004-08-17 DaVinci v11r13 - temptative DC'04 version</A></H1><PRE>
+
+ - Many modifications related to HLT. No change in behaviour for offline
+   particles.
+      
+ - New Bd2DstarPi TDR selection. 
+ 
+ - New Muon preselection for high Pt, IP muons.
+ 
+ - based on LHCB v15r14
+ 
+ - LoKi v3r2
+ 
 </PRE><H1><A NAME=v11r12>2004-08-03 DaVinci v11r12 - DC'04 tests version</A></H1><PRE>
 
  - Intermediate steps towards v12r0. New syntaxes required by the new CVS/Gaudi
