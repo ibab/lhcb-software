@@ -213,8 +213,8 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // Resolved pi0
 //  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 //  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
-// Data sets for this channel (Brunel v16r4 - Xmas production)
-#include "$LHCBHOME/project/web/cards/412800.opts"
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/412800.opts"
 //  // Data sets for this channel (Brunel v13r1 - Summer production)
 //  #include "$LHCBHOME/project/web/cards/summer_412800.opts"
 
@@ -242,6 +242,8 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // Switch on to produce a miniDST file
 //  #include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
 
+// Test data on disk
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 //-----------------------------------------------------------------
 // Options for algorithms and tools in DaVinciTools library
 // can be added here to overwrite any of the default options

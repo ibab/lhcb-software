@@ -3,7 +3,13 @@ Package     : DaVinci
 Responsible : Gloria Corti
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v7r2>2003-01-06 DaVinci v7r2</A></H1><PRE>
+</PRE><H1><A NAME=v7r2>2003-01-14 DaVinci v7r2</A></H1><PRE>
+ 2003-01-13 - Gloria Corti
+ - Modify database dependent options to take them from new release area
+ - Modify DaVinciTestData.opts to takle disk file (produce with Brunel v16r4)
+ - Modify example DaVinciMiniDst.opts to include L1 results (for Brunel
+   v16r4 data)
+
  2003-01-06 - Florence Ranjard
  - DAVINCI project based on DaVinci v6r2, LHCb v11r5, XmlDDDB v14r4
   

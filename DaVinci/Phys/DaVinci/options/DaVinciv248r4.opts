@@ -5,6 +5,8 @@
 
 // DataBase specific configurations
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
-MagneticFieldSvc.FieldMapFile = "$LHCBSOFT/SICB/dbase/v248r4/cdf/field044.cdf";
-ParticlePropertySvc.ParticlePropertiesFile = "$LHCBSOFT/SICB/dbase/v248r2/cdf/particle.cdf";
+MagneticFieldSvc.FieldMapFile = "$LHCb_release_area/DBASE/SICB/dbase/v248r4/cdf/field044.cdf";
+ParticlePropertySvc.ParticlePropertiesFile = "$LHCb_release_area//DBASE/SICB/dbase/v248r4/cdf/particle.cdf";
 
+// Velo 90 degrees sectors
+DeVelo.Design = 0;

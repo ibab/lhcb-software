@@ -25,7 +25,7 @@ DaVinciDstWriter.ItemList =  {
   , "/Event/Trig/L1/Vertices2d#1"
 //    , "/Event/Trig/L1/Clusters#1" // For L1 trigger studies
   , "/Event/Trig/L1/Summary#1"
-  , "/Event/Trig/L1/Decision#1" 
+//    , "/Event/Trig/L1/Decision#1"  // This exist only for OODST >= v16r4 
   , "/Event/Rec#1"
   , "/Event/Rec/ProtoP#*"
 //    , "/Event/Rec/Relations#*"

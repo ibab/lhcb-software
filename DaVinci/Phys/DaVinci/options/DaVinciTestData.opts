@@ -1,15 +1,11 @@
 //---------------------------------------------------------------
 // Input data for test
 //---------------------------------------------------------------
-//-- GAUDI data cards generated on 10-SEP-2002
 //-- For Event Type = 611300 / Data type = ALL 
-//--     DST Program = Brunel v13r1
-//--     Database version = ALL 
-//--     
-//-- Datasets located at CERN
+//--     DST Program = Brunel v16r1
 //-- 1 dataset(s) - NbEvents = 500
 //-- 
 EventSelector.Input   = {
-"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D285672' TYP='ROOT' OPT='READ'",  // JobID = 106265
+"DATAFILE='$LHCBHOME/group/davinci/vol1/testdata/611300_v16r4.oodst' TYP='ROOT' OPT='READ'"
 };
 //-- End of Data cards 
