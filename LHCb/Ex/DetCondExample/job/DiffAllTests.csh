@@ -1,7 +1,7 @@
 #!/usr/local/bin/tcsh -f 
-# $Id: DiffAllTests.csh,v 1.1 2002-12-03 17:18:29 andreav Exp $
+# $Id: DiffAllTests.csh,v 1.2 2002-12-04 10:17:01 andreav Exp $
 if ( 1 != ${?DETCONDEXAMPLEROOT} ) then
-  echo "ERROR! Must 'source setup.csh -tag=$CMTDEB' before running this script"
+  echo "ERROR! You must 'source ../cmt/setup.csh -tag=$CMTDEB' first"
   exit 1
 endif
 cd ${DETCONDEXAMPLEROOT}/options
