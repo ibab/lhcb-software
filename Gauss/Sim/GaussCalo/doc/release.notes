@@ -7,12 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
-!========================== GaussCalo v4r4 ===============================
+!========================== GaussCalo v4r3 ===============================
 ! 2003-12-09 - Ivan BELYAEV
  - src/CaloSubHit.h   fix for new LHCbKernel 
    (new xml description of CalocellID class and the absence of != operator)
 
-!=========================== GaussCalo v4r3 ==============================
 ! 2003-12-05 - Patrick Robbe
   - put fonctions and constants for the non-uniformity. The local
     non-uniformity amplitude (for the sin-like term) is put equal
