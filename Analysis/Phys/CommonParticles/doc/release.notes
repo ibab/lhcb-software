@@ -4,6 +4,10 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2004-07-08 - P. Koppenburg
+ - options/ProducePairPhotons.opts
+    . Use CombinedParticleMaker
+
 !==================== CommonParticle v1r5 2004-06-04 ========================
 ! 2004-06-03 - P. Koppenburg for O. Deschamps
  - MergedPi0Alg.opts
