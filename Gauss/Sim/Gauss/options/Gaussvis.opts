@@ -1,0 +1,64 @@
+// $Id: Gaussvis.opts,v 1.1 2002-11-12 16:28:09 witoldp Exp $ 
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.ExtSvc            = 
+{ "ParticlePropertySvc" ,
+  "EventSelector"       };
+EventPersistencySvc.CnvServices  = {};  
+
+ApplicationMgr.DLLs = { "GaudiAud"};
+ApplicationMgr.DLLs += { "GaudiAlg"} ;
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
+#include "$STDOPTS/DetDesc.opts"
+
+// allow automatic creation of subdirectories in Event Transient Store 
+EventDataSvc.ForceLeaves = true ;
+
+// declare external services needed MAGNETIC FIELD 
+ApplicationMgr.ExtSvc +=  
+{ "MagneticFieldSvc"  };  
+MagneticFieldSvc.FieldMapFile = 
+"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
+
+ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
+
+// 3 steps
+ApplicationMgr.TopAlg          =  
+{ "Sequencer/Generator"    , 
+  "Sequencer/Simulation"   ,
+  "Sequencer/Digitisation" 
+} ;
+
+// read job options for various steps
+#include "$GAUSSOPTS/Generator.opts"
+#include "$GAUSSOPTS/Simulation.opts"
+#include "$GAUSSOPTS/Visualisation.opts"
+//#include "$GAUSSOPTS/Digitisation.opts"
+
+// write an output file
+//#include "$GAUSSOPTS/GaussRootIO.opts"
+//#include "$GAUSSOPTS/GaussTape.opts"
+//GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+
+// General global options  
+MessageSvc.OutputLevel    = 3 ;
+//GiGaSvc.OutputLevel = 2 ;
+GiGaSvc.EmptyStack.OutputLevel = 2 ;
+//EventDraw.OutputLevel = 1 ;
+GiGaGeomCnvSvc.OutputLevel = 3;
+
+ApplicationMgr.EvtSel     = "NONE" ;
+ApplicationMgr.EvtMax     = 3;
+
+
+
+
+
+
+
+
+
+

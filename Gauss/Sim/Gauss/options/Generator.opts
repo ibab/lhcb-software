@@ -1,11 +1,11 @@
-// $Id: Generator.opts,v 1.11 2002-11-08 11:26:42 witoldp Exp $ 
+// $Id: Generator.opts,v 1.12 2002-11-12 16:28:09 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 // Event Generator Phase 
 
-Generator.Members +={"SingleParticleGun"};
-//Generator.Members += {"PythiaAlg"};
+//Generator.Members +={"SingleParticleGun"};
+Generator.Members += {"PythiaAlg"};
 //Generator.Members +={"SetDecayAlg","EvtDecayAlg"};
 Generator.Members +={"DumpMC"};
 /// to add one more generator into the chain of generators uncomment the lines below 
@@ -26,6 +26,8 @@ SingleParticleGun.ModePhi =   1 ;
 SingleParticleGun.PdgCode =  211 ;
 
 PythiaAlg.MDCYFile="$GAUSSROOT/data/particle.cdf";
+//PythiaAlg.FixedMode=0;
+//PythiaAlg.MeanInt=1.5;
 
 PythiaAlg.PythiaCommand = { "pypars mstp 82 3", "pypars parp 82 3.47", 
                             "pypars parp 89 14000", "pypars parp 90 0.174",

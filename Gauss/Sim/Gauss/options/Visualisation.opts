@@ -1,0 +1,31 @@
+// Geant4 visualisation options
+
+// flag for instantiation and usage of visual manager 
+GiGaSvc.UseVisManager          = true;
+
+//GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
+
+GiGaSvc.EventSeq.Members     += { "GiGaEventActionDraw/EventDraw" } ;
+
+GiGaSvc.EventCommand.EndOfEventCommands = 
+{ "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/viewer/update"                  } ;
+#ifdef WIN32
+GiGaSvc.EventCommand.BeginOfEventCommands = 
+{ "/vis/scene/create"                   , 
+  "/vis/sceneHandler/create OIWIN32"    ,
+  "/vis/viewer/create"                  ,
+  "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/scene/notifyHandlers   "        } ;
+#else 
+GiGaSvc.EventCommand.BeginOfEventCommands = 
+{ "/vis/scene/create"                   , 
+  "/vis/sceneHandler/create DAWNFILE"   ,
+  "/vis/viewer/create"                  ,
+  "/vis/viewer/viewpointThetaPhi -90 -90",
+  "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/scene/notifyHandlers   "        } ;
+#endif 
