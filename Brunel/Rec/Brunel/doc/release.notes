@@ -14,11 +14,13 @@ Purpose: LHCb reconstruction program
    . Use circle method everywhere for ray tracing, gives further improvement in
      Rich time performance without loss of efficiency 
      (RichDetTools v3r3, RichRecSys v1r4)
-   . Introduction of OTQuarters in OT geometry (OTAlgorithms v13r4, OTDet v5r0
-     XmlDDDB v20r0, LongTrack v1r8p1, TrCheck v2r2)
+   . Backwards incompatible change to OT geometry: introduction of OTQuarters,
+     new numbering for OT stations, layers, modules 
+     (XmlDDDB v20r0, OTDet v5r0, OTAlgorithms v13r4, TrAssociators v3r7,
+      LongTrack v1r9, TrCheck v2r2, TrIntraPR v2r7, Seeding v2r6)
 
 - Dst changes
-   . Backward incompatible change to bit definitions in OTChennelID
+   . Backwards incompatible change to bit definitions in OTChannelID
      (LHCbKernel v12r10)
 
 - Bug fixes
@@ -26,10 +28,10 @@ Purpose: LHCb reconstruction program
 
 - New packaging
    . Changes to IT geometry tree structure 
-     (XmlDDDB v19r1, ITDet v1r7, Seeding v2r5p1,LongTrack v1r8p1, TrCheck v2r2,
-      TrCleanEx v2r7p1, TrIntraPR v2r6p1)
+     (XmlDDDB v19r1, ITDet v1r7, Seeding v2r6, LongTrack v1r8p1, TrCheck v2r2,
+      TrCleanEx v2r7p1, TrIntraPR v2r7)
    . Changes to ITSignalToNoise tools ---> noise in e- or ADC 
-     (ITAlgorithms v13r0, LongTrack v1r8p1, TrIntraPR v2r6p1, VeloTT v1r6p1)
+     (ITAlgorithms v13r0, LongTrack v1r8p1, TrIntraPR v2r7, VeloTT v1r6p1)
 
 - Removed features
    . Remove support for v256r0 geometry (not supported by OTDet v5r0)

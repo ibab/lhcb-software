@@ -8,10 +8,10 @@
 ! 2003-12-03 - Marco Cattaneo
  - Modified requirements for Brunel v21r2. Uses LHCB v13r5
 
-   Packages modified: ITAlgorithms v13r0, ITCheckers v1r4, Seeding v2r5p1,
-     LongTrack v1r8p1, TrCheck v2r2, TrCleanEx v2r7p1, TrIntraPR v2r6p1,
+   Packages modified: ITAlgorithms v13r0, ITCheckers v1r4, Seeding v2r6,
+     LongTrack v1r9, TrCheck v2r2, TrCleanEx v2r7p1, TrIntraPR v2r7,
      VeloTT v1r6p1, RichDetTools v3r3, RichRecSys v1r4, RichRecBase v1r6,
-     RichRecTools v2r5
+     RichRecTools v2r5, OTAlgorithms v13r4
 
 !======================= BrunelSys v21r1 2003-11-27 =======================
 ! 2003-11-27 - Marco Cattaneo
