@@ -42,7 +42,7 @@ use HbookCnv 		v14r1
 
 #-- Databases
 use XmlDDDB	v22r0	Det
-use ParamFiles	v3r2	$(LHCb_release_area)/PARAM -no_auto_imports
+use ParamFiles	v3r3	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
 #-- LHCb libraries (from LHCB_v15r3)
@@ -63,7 +63,7 @@ use L0DU                v6r7	L0
 use TrgTools		v2r2	Trg
 use TrgChecker		v2r0	Trg
 use TrgVelo		v2r0	Trg
-#use TrgVeloTT		v2r0	Trg
+use TrgVeloTT		v2r0	Trg
 use L1Reco		v2r1	Trg
 
 # Calorimeter

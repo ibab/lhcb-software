@@ -12,9 +12,6 @@
                       CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
                       TrgTools v2r2
 
- - Packages temporarily disabled due to commissioning of STDAQ:
-   TrgVeloTT
-
 !======================== BooleSys v5r2 2004-02-05 ========================
 ! 2004-02-05 - Marco Cattaneo
 

@@ -11,7 +11,8 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
+//Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
+Moni.DetectorList = { "IT", "OT", "RICH", "CALO", "L0", "Trg" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -40,7 +41,6 @@ ApplicationMgr.DLLs += { "RichDigiQC" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
 // Particle properties service needed by Rich detailed monitoring
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
-ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf";
 #include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 
 // Calorimeters
