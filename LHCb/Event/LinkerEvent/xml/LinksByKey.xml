@@ -21,13 +21,13 @@ m_weight    = weight;
       </constructor>
 
       <attribute
-        type   = "int"
+        type   = "short"
         name   = "srcLinkID"
         desc   = "index of the source sontainer in the LinkManager" />
       <attribute
-        type   = "int"
+        type   = "short"
         name   = "linkID"
-        desc   = "index of teh target container in the LinkManager" />
+        desc   = "index of the target container in the LinkManager" />
       <attribute
         type   = "int"
         name   = "objectKey"
@@ -37,22 +37,24 @@ m_weight    = weight;
         name   = "nextIndex"
         desc   = "index of the next entry" />
       <attribute
-        type   = "double"
+        type   = "float"
         name   = "weight"
         desc   = "weight of the reference" />
     </class>
 
+    <import name="GaudiKernel/SmartDataPtr"/>
     <import name="Kernel/LHCbStreams"/>
-    <import name="Linker/StreamMap"/>  <!--- Temporary, to stream std::map -->
 
     <class 
       name        = "LinksByKey" 
       author      = "OlivierCallot" 
       desc        = "Link of an object to Keyed objects" 
-      id          = "1234">
+      id          = "400">
 
-      <base name="DataObject"/>
-      <import name="Event/LinkReference"/>
+      <base   name = "DataObject"/>
+      <import name = "Event/LinkReference"/>
+      <import name = "GaudiKernel/IDataProviderSvc" />
+
 
       <constructor 
         desc      = "Default constructor, reserve space" >
@@ -97,6 +99,12 @@ m_increasing = false;
         desc      = "Define the decreasing order for the references" >
         <code> m_increasing = false; </code>
       </method>
+
+      <method
+        type      = "void"
+        name      = "resolveLinks"
+        argList   = "IDataProviderSvc* eventSvc"
+ 	desc      = "Get the pointers to the linked containers" />
 
       <method
         type      = "void"

@@ -19,9 +19,9 @@ include_dirs $(LINKEREVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   EventSys	v15r*	Event
+use   EventSys	v17r*	Event
 
-use 	GaudiObjDesc	v5r*    -no_auto_imports
+use 	GaudiObjDesc	v6r*    -no_auto_imports
 
 #============================================================================
 #---- Produce Header-Files and from XML description

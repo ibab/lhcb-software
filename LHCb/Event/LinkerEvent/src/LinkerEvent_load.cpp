@@ -1,8 +1,8 @@
-// $Id: LinkerEvent_load.cpp,v 1.1.1.1 2004-01-08 12:24:33 ocallot Exp $
+// $Id: LinkerEvent_load.cpp,v 1.2 2004-01-15 14:24:49 ocallot Exp $
 // Include files 
 
 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 #include "Event/LinksByKey.h"
 _ImplementDataObjectFactory( LinksByKey )

@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.1.1.1 2004-01-08 12:24:33 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.2 2004-01-15 14:24:49 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -13,6 +13,21 @@
 // 2004-01-06 : Olivier Callot
 //-----------------------------------------------------------------------------
 
+//=========================================================================
+// Resolve the links, loading the containers if needed
+//=========================================================================
+void LinksByKey::resolveLinks ( IDataProviderSvc* eventSvc ) {
+  int linkID = 0;
+  LinkManager::Link* link;
+  while ( 0 != (link = linkMgr()->link( linkID ) ) ) {
+    if ( 0 == link->object() ) {
+      SmartDataPtr<DataObject> tmp( eventSvc, link->path() );
+      //const DataObject* tmp2 = tmp;
+      link->setObject( tmp );
+    }
+    linkID++;
+  }
+}
 //=========================================================================
 //  Add a reference for a given key and container link.
 //=========================================================================
@@ -100,7 +115,7 @@ bool LinksByKey::firstReference ( int key,
     }
     return true;
   }
-  return false;
+ return false;
 }
 
 

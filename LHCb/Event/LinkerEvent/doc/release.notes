@@ -4,6 +4,22 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2004-01-15 - Olivier Callot
+ - Fix several problems:
+	  o Update the LinkMgr when reading the DataObject. New method resolveLinks
+      of the LinksByKey object.
+    o Use short for LinkMgr indices and float for the weight, to decrease the
+      event size.
+    o Use ClassID 400.
+    o Accept names with the "/Event/" prefix in LinkerWithKey, LinedFrom and 
+      LinkedTo. This is locally removed to create the DataObject name at 
+      location "Link/"+argument.
+	  o Add protection if the DataObject is not found in LinkedFrom/To
+    o Remove private streamer for std::map    
+
+! 2004-01-09 - Olivier Callot
+ - Adapted to GaudiObjeDesc v6r* with January 2004's Gaudi/LHCb/...
+
 ! 2004-01-08 - Olivier Callot
  - Initial release of the package.
 

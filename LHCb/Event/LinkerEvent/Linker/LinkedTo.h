@@ -1,10 +1,11 @@
-// $Id: LinkedTo.h,v 1.1.1.1 2004-01-08 12:24:33 ocallot Exp $
+// $Id: LinkedTo.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/KeyedObject.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedTo LinkedTo.h Linker/LinkedTo.h
@@ -20,22 +21,29 @@ template <class TARGET,
 public: 
   /// Standard constructor
   LinkedTo( IDataProviderSvc* eventSvc,
-                IMessageSvc* msgSvc,
-                std::string containerName ) {
-    m_containerName = containerName;
-    SmartDataPtr<LinksByKey> links( eventSvc, "MC/"+containerName );
+            IMessageSvc* msgSvc,
+            std::string containerName ) {
+    std::string name = "Link/" + containerName;
+    if ( "/Event/" == containerName.substr(0,7) ) {
+      name = "Link/" + containerName.substr(7);
+    }
+    SmartDataPtr<LinksByKey> links( eventSvc, name );
     if ( 0 == links ) {
       MsgStream msg( msgSvc, "LinkedTo::"+containerName );
-      msg << MSG::ERROR << "*** Link container MC/" << containerName 
+      msg << MSG::ERROR << "*** Link container " << name
           << " not found." << endreq;
+    } else {
+      links->resolveLinks( eventSvc );
     }
     m_links = links;
     m_curReference.setNextIndex( -1 );
+    m_curReference.setWeight( 0. );
   }; 
 
   virtual ~LinkedTo( ) {}; ///< Destructor
 
   TARGET* first( const SOURCE* source ) {
+    if ( NULL == m_links ) return NULL;
     bool status = m_links->firstReference( source->key(), 
                                            source->parent(),
                                            m_curReference   );
@@ -47,6 +55,7 @@ public:
   }
   
   TARGET* first( int key ) {
+    if ( NULL == m_links ) return NULL;
     bool status = m_links->firstReference( key, NULL, m_curReference );
     if ( !status ) {
       m_curReference.setNextIndex( -1 );
@@ -56,6 +65,7 @@ public:
   }
   
   TARGET* next( ) {
+    if ( NULL == m_links ) return NULL;
     bool status = m_links->nextReference( m_curReference );
     if ( !status ) {
       m_curReference.setNextIndex( -1 );
@@ -69,6 +79,7 @@ public:
 protected:
 
   TARGET* currentTarget() {
+    if ( NULL == m_links ) return NULL;
     int myLinkID = m_curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
@@ -80,7 +91,6 @@ protected:
   }  
 
 private:
-  std::string      m_containerName;
   LinksByKey*      m_links;
   LinkReference    m_curReference;
 };

@@ -1,9 +1,11 @@
-// $Id: LinkedFrom.h,v 1.1.1.1 2004-01-08 12:24:33 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/KeyedObject.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedFrom LinkedFrom.h Linker/LinkedFrom.h
@@ -20,20 +22,27 @@ public:
   LinkedFrom(  IDataProviderSvc* eventSvc,
                    IMessageSvc* msgSvc,
                    std::string containerName ) {
-    m_containerName = containerName;
-    SmartDataPtr<LinksByKey> links( eventSvc, "MC/"+containerName );
+    std::string name = "Link/" + containerName;
+    if ( "/Event/" == containerName.substr(0,7) ) {
+      name = "Link/" + containerName.substr(7);
+    }
+    SmartDataPtr<LinksByKey> links( eventSvc, name );
     if ( 0 == links ) {
       MsgStream msg( msgSvc, "LinkedFrom::"+containerName );
-      msg << MSG::ERROR << "*** Link container MC/" << containerName 
+      msg << MSG::ERROR << "*** Link container Link/" << name
           << " not found." << endreq;
+    } else {
+      links->resolveLinks( eventSvc );
     }
     m_links = links;
     m_curReference.setNextIndex( -1 );
+    m_curReference.setWeight( 0. );
   };  
 
   virtual ~LinkedFrom( ) {}; ///< Destructor
 
   SOURCE* first( const TARGET* target ) {
+    if ( NULL == m_links ) return NULL;
     m_curReference.setLinkID( -1 );
     m_wantedKey = target->key();
     //== check that the target's container is known.
@@ -49,6 +58,7 @@ public:
   };
 
   SOURCE* next( ) {
+    if ( NULL == m_links ) return NULL;
     int key = m_links->nextSource( m_curReference, m_srcIterator );
     if ( m_wantedKey != m_curReference.objectKey() ) return NULL;
     return currentSource( key );
@@ -58,6 +68,7 @@ public:
 
 protected:
   SOURCE* currentSource( int key ) {
+    if ( NULL == m_links ) return NULL;
     int myLinkID = m_curReference.srcLinkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
@@ -68,7 +79,6 @@ protected:
   }  
 
 private:
-  std::string                        m_containerName;
   LinksByKey*                        m_links;
   LinkReference                      m_curReference;
   std::map<int,int>::const_iterator m_srcIterator;

@@ -1,11 +1,11 @@
-// $Id: LinkerWithKey.h,v 1.1.1.1 2004-01-08 12:24:33 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "Event/LinksByKey.h"
-#include "Event/KeyedObject.h"
+#include "GaudiKernel/KeyedObject.h"
 
 /** @class LinkerWithKey LinkerWithKey.h Linker/LinkerWithKey.h
  *  This is a helper for the new type of keyed relations
@@ -21,12 +21,15 @@ public:
                 IMessageSvc* msgSvc,
                 std::string containerName ) {
     m_msgSvc        = msgSvc;
-    m_containerName = containerName;
+    std::string name = "Link/" + containerName;
+    if ( "/Event/" == containerName.substr(0,7) ) {
+      name = "Link/" + containerName.substr(7);
+    }
     m_links = new LinksByKey();
-    StatusCode sc = eventSvc->registerObject( "MC/"+containerName, m_links );
+    StatusCode sc = eventSvc->registerObject( name, m_links );
     if ( !sc ) {
-      MsgStream msg( msgSvc, "LinkerToMCP::"+containerName );
-      msg << MSG::ERROR << "*** Link container MC/" << containerName 
+      MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
+      msg << MSG::ERROR << "*** Link container " << name
           << " not registered, Status " << sc << endreq;
     }
   }; 
@@ -36,6 +39,8 @@ public:
   void link( const SOURCE* source,
              const TARGET* dest, 
              double weight = 1. ) {
+    if ( NULL == source ) return;
+    if ( NULL == dest   ) return;
     int srcKey     = source->key();
     int srcLinkID  = m_links->linkID( source->parent() );
     int destKey    = dest->key();
@@ -47,6 +52,7 @@ public:
   void link( int key,
              const TARGET* dest, 
              double weight = 1. ) {
+    if ( NULL == dest   ) return;
     int destKey    = dest->key();
     int destLinkID = m_links->linkID( dest->parent() );
     m_links->addReference( key, -1, destKey, destLinkID, weight );
@@ -58,7 +64,6 @@ public:
 protected:
 
 private:
-  std::string    m_containerName;
   LinksByKey*    m_links;
   IMessageSvc*   m_msgSvc;
 };
