@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2005-02-21 - Patrick Robbe
+ - src/Pythia.F : suppress some printout
+
 !=================== EvtGen v8r2 ===============================
 ! 2005-02-01 - Florence RANJARD
  - requirements - move photos link options to GENSER

@@ -24,11 +24,11 @@ C------------------------------------------------------------------------
       
       CHARACTER*(*) FNAME
       
-      PRINT *,'PYUPDA : : ',FNAME
+CC      PRINT *,'PYUPDA : : ',FNAME
       OPEN(54,STATUS='OLD',FILE=FNAME)
       CALL PYUPDA(3,54)
       CLOSE(54)      
-      WRITE (*,*) 'PYUPDA DONE'
+CC      WRITE (*,*) 'PYUPDA DONE'
       RETURN
       END
 ccc      SUBROUTINE INITPYTHIA(GAGA)
