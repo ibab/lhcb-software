@@ -105,7 +105,7 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
 
    
   unsigned int iWafer = 0;
-  for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
+  for (iWafer=1;iWafer<=wafersX1;iWafer++){
 
 
     // go to u,v
