@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.17 2003-02-13 15:54:19 gcorti Exp $
+! $Id: release.notes,v 1.18 2003-06-19 13:04:40 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
+!========================= PuVeto v5r4 2003-06-19 =========================
 ! 2003-02-13 - Gloria Corti
  - Remove DVPuVetoAlg since it is possible to tun the pileup trigger
    in the L0Decision. 
