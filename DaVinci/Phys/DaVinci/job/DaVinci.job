@@ -13,9 +13,9 @@
 #
 #
 #  define the job name
-#BSUB -J brunel
+#BSUB -J davinci
 #  define the queue
-#BSUB -q z5_8nh
+#BSUB -q z5_1nh
 #
 ###########################################################
 #
@@ -40,6 +40,8 @@ unsetenv LD_LIBRARY_PATH
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh
 #
+# == reset jobOptions if different from what set in requirements file
+# setenv JOBOPTPATH $DAVINCIROOT/options/DaVinci.opts
 # == set the name of the executable
 setenv EXEC DaVinci
 #
@@ -48,8 +50,7 @@ setenv EXEC DaVinci
 #
 if ($?LS_SUBCWD) then
   cp $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
-  cp $MYJOBROOT/options/*.opts .
-  setenv BRUNELOPTS .
+  cp $JOBOPTPATH DaVinci.opts
   setenv JOBOPTPATH DaVinci.opts
 else
   ln -fs $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
