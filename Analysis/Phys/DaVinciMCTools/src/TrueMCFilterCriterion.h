@@ -1,11 +1,11 @@
-// $Id: TrueMCFilterCriterion.h,v 1.1 2004-09-13 18:14:49 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "DaVinciTools/IFilterCriterion.h"            // Interface
+#include "Kernel/IFilterCriterion.h"            // Interface
 class IMCDecayFinder;
 
 /** @class TrueMCFilterCriterion TrueMCFilterCriterion.h

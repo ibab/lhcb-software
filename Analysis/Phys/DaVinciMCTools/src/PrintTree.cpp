@@ -1,4 +1,4 @@
-// $Id: PrintTree.cpp,v 1.1 2004-09-14 11:59:07 pkoppenb Exp $
+// $Id: PrintTree.cpp,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -40,11 +40,14 @@ PrintTree::~PrintTree() {};
 //=============================================================================
 StatusCode PrintTree::initialize() {
 
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (!sc) return sc;
+  
   debug() << "==> Initialize" << endmsg;
-  StatusCode sc = toolSvc()->retrieveTool( "DebugTool", m_debug, this );
-  if( sc.isFailure() ) {
+  m_debug = tool<IDebugTool>( "DebugTool", this );
+  if( !m_debug ) {
     fatal() << "Unable to retrieve Debug tool" << endreq;
-    return sc;
+    return StatusCode::FAILURE;
   }  
 
   return StatusCode::SUCCESS;
@@ -66,20 +69,11 @@ StatusCode PrintTree::execute() {
   if (!parts.empty()) setFilterPassed(true); 
   else {
     setFilterPassed(false);  
-    info() << "No particles found to print in a tree" << endreq;
+    debug() << "No particles found to print in a tree" << endreq;
   }
   
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode PrintTree::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return  StatusCode::SUCCESS;
-}
 
 //=============================================================================

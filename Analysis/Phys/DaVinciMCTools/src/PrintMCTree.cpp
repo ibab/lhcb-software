@@ -1,4 +1,4 @@
-// $Id: PrintMCTree.cpp,v 1.1 2004-09-14 11:59:07 pkoppenb Exp $
+// $Id: PrintMCTree.cpp,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,15 +54,14 @@ StatusCode PrintMCTree::initialize() {
     return StatusCode::FAILURE ;
   }
   
-  sc = toolSvc()->retrieveTool( "DebugTool", m_debug, this );
-  if( sc.isFailure() ) {
+  m_debug = tool<IDebugTool>( "DebugTool", this );
+  if( !m_debug ) {
     fatal() << "Unable to retrieve Debug tool" << endreq;
     return sc;
   }  
 
-  IParticlePropertySvc *ppSvc;
-  sc = service("ParticlePropertySvc", ppSvc);
-  if( sc.isFailure() ) {
+  IParticlePropertySvc *ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  if( !ppSvc ) {
     fatal() << "Unable to locate Particle Property Service" << endmsg;
     return sc;
   }
@@ -70,7 +69,7 @@ StatusCode PrintMCTree::initialize() {
   std::vector<std::string>::iterator PN;
   for (PN=m_particleNames.begin() ; PN!=m_particleNames.end() ; ++PN ){
     ParticleProperty *pp = ppSvc->find(*PN);
-    if (pp==0) {
+    if (!pp) {
       fatal() << " Unable to retrieve particle property for " 
               << *PN << endmsg;
       return StatusCode::FAILURE;
@@ -91,7 +90,7 @@ StatusCode PrintMCTree::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  SmartDataPtr<MCParticles> kmcparts(eventSvc(), MCParticleLocation::Default );
+  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default );
   if( !kmcparts ) {
     fatal() << "Unable to find MC particles at '" 
             << MCParticleLocation::Default << "'" << endreq;
@@ -115,8 +114,10 @@ StatusCode PrintMCTree::execute() {
       }  
     }
   }
-  if (!printed) info() << "No MC particles found to print in a tree" << endreq;
+  if (!printed) debug() << "No MC particles found to print in a tree" << endreq;
   
+  setFilterPassed(printed);
+
   return StatusCode::SUCCESS;
 };
 

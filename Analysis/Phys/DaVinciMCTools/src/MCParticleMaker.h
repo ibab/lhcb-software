@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.1 2002-11-13 16:29:36 gcorti Exp $
+// $Id: MCParticleMaker.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -9,12 +9,12 @@
 #include <utility>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IParticleMaker.h"
+#include "Kernel/IParticleMaker.h"
 
 // Forward declarations
 class IParticlePropertySvc;
@@ -31,7 +31,7 @@ class HepSymMatrix;
  *  @author Gerhard Raven
  *  @date   2002-10-08
  */
-class MCParticleMaker : public AlgTool,
+class MCParticleMaker : public GaudiTool,
                         virtual public IParticleMaker {
 public:
   /// Standard constructor

@@ -1,33 +1,45 @@
-! $Id: release.notes,v 1.40 2004-12-01 07:45:40 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2005-01-11 12:36:08 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+!=============================================================================
+
+! 2005-01-11 - P. Koppenburg
+  - src/MCParticleMaker.*
+    . Make it a GaudiTool. 
+    . Correct compilation warnings
+  - src/Print(MC)Tree.*
+    . Issue setFilterPassed depending on presence of requseted particles.
+  - src/MCPIDProtoPAlg.*
+    . Make it a GaudiTool. 
+  - src/TrueMCFilterCriterion.h
+    . Get IFilterCriterion.h from Kernel/
 
 !========================== DaVinciMCTools v5r7 2004-12-01 ===================
 ! 2004-11-24 - P. Koppenburg
- - src/DebugTool.cpp
-   . Use MeV, mm as default units, not GeV, cm
-   . Allow the user to change that with 
-     MyAlg.DebugTool.EnergyUnit = 1*GeV ;
-     MyAlg.DebugTool.LengthUnit = 1*cm ;
-   . Make it a GaudiTool
+  - src/DebugTool.cpp
+    . Use MeV, mm as default units, not GeV, cm
+    . Allow the user to change that with 
+      MyAlg.DebugTool.EnergyUnit = 1*GeV ;
+      MyAlg.DebugTool.LengthUnit = 1*cm ;
+    . Make it a GaudiTool
    
 ! 2004-11-16 - P. Koppenburg
- - src/FilterGoodDecay.*
-   . New algorithm that checks if a given decay is present in the MC truth
-     Example options:
+  - src/FilterGoodDecay.*
+    . New algorithm that checks if a given decay is present in the MC truth
+      Example options:
         ApplicationMgr.TopAlg += { "FilterGoodDecay" } ;
         FilterGoodDecay.MCDecayFinder.Decay =  "[D*(2010)- -> ^pi- (D~0 => ^K+ ^pi-)]cc" ;
 
 !========================== DaVinciMCTools v5r6 2004-10-13 ===================
 ! 2004-09-26 - Luis Fernandez
- - src/TrueMCFilterCriterion.cpp
-   .  Temporary fix to filter only the head (e.g the B) decay final states. 
-      Final states to consider must flagged in the decay string.
+  - src/TrueMCFilterCriterion.cpp
+    .  Temporary fix to filter only the head (e.g the B) decay final states. 
+       Final states to consider must flagged in the decay string.
 
 !========================== DaVinciMCTools v5r5 2004-09-16 ===================
 ! 2004-09-14 - P. Koppenburg
- - src/DumpEvent.cpp
-   .  Algorithm that runs the debug tool, moved from DaVinciTest
+  - src/DumpEvent.cpp
+    .  Algorithm that runs the debug tool, moved from DaVinciTest
   - src/PrintTree.* NEW
     . Prints content of PhysDesktop.InputLocation as tree
   - src/PrintMCTree.* NEW

@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.4 2004-03-25 16:44:43 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.5 2005-01-11 12:36:08 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -46,7 +46,7 @@ const        IToolFactory& MCParticleMakerFactory = s_factory ;
 MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : AlgTool ( type, name , parent ), 
+  : GaudiTool ( type, name , parent ), 
     m_ppSvc(0), 
     m_EDS(0),
     m_pMCDecFinder(0)
@@ -79,25 +79,25 @@ MCParticleMaker::~MCParticleMaker( ) { };
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode MCParticleMaker::initialize() {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> MCParticleMaker:Initialising" << endreq;
+  
+  debug() << "==> MCParticleMaker:Initialising" << endreq;
   
   StatusCode sc;
   
   // Retrieve the data service
   sc = service("EventDataSvc", m_EDS, true);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Event Data Service"
+    fatal() << "    Unable to locate Event Data Service"
         << endreq;
     return sc;
   }
   
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
-  log << MSG::DEBUG << "    Looking for Particle Property Service." << endreq;
+  debug() << "    Looking for Particle Property Service." << endreq;
   
   sc = service("ParticlePropertySvc", m_ppSvc, true);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service"
+    fatal() << "    Unable to locate Particle Property Service"
         << endreq;
     return sc;
   }  
@@ -105,27 +105,27 @@ StatusCode MCParticleMaker::initialize() {
   IRndmGenSvc* r;
   sc = service("RndmGenSvc", r, true);
   if( sc.isFailure() || m_ranGauss.initialize(r,Rndm::Gauss(0,1)).isFailure()){
-    log << MSG::FATAL << "    Unable to locate RndmGenSvc "
+    fatal() << "    Unable to locate RndmGenSvc "
         << endreq;
     return sc;
   }  
 
   sc = toolSvc()->retrieveTool("MCDecayFinder", m_pMCDecFinder, this);
   if(sc.isFailure()){
-    log << MSG::FATAL << " Unable to retrieve MCDecayFinder tool" << endreq;
+    fatal() << " Unable to retrieve MCDecayFinder tool" << endreq;
     return sc;
   }
 
   // check for consistentcy of options
   if (m_useReconstructedCovariance && !m_onlyReconstructed ) {
-    log << MSG::FATAL << " instructed to use covariance matrix of"
+    fatal() << " instructed to use covariance matrix of"
         << " reconstructed protoParticle"
         << " but told to also make particles wich are not reconstructed "
         << " please fix you configuration " << endmsg;
     return StatusCode::FAILURE;
   }
   if (m_particleNames.size() == 0) {
-    log << MSG::ERROR << " ParticleNames is empty. "  
+    err() << " ParticleNames is empty. "  
         << "Please, initialize it in your job options file" <<  endreq;
     return StatusCode::FAILURE;
   }
@@ -135,13 +135,13 @@ StatusCode MCParticleMaker::initialize() {
         iName != m_particleNames.end(); ++iName ) {
     ParticleProperty* partProp = m_ppSvc->find( *iName );
     if ( 0 == partProp )   {
-      log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
+      err() << "Cannot retrieve properties for particle \"" 
           << *iName << "\" " << endreq;
       return StatusCode::FAILURE;
     }
     m_ids.push_back(partProp->jetsetID());
     // Print Debug message:
-    log << MSG::DEBUG << " Particle Requested: Name = " << (*iName) 
+    debug() << " Particle Requested: Name = " << (*iName) 
         << " PID = " << partProp->jetsetID() << endreq;
   }
   
@@ -163,21 +163,19 @@ IDataProviderSvc* MCParticleMaker::eventSvc() const
 //=============================================================================
 StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
   
-  MsgStream  log( msgSvc(), name() );
-  
-  log << MSG::DEBUG 
+  debug() 
       << "==> MCParticleMaker::makeParticles() is running." 
       << endreq;
   
   SmartDataPtr<MCParticles> candidates ( eventSvc(),m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
-    log << MSG::INFO << "    No MCParticles retrieved from"  
+    debug() << "    No MCParticles retrieved from"  
         << m_input << endreq;
     return StatusCode::SUCCESS;
   }
   
   // Log number of MCPartCandidates retrieved
-  log << MSG::INFO << "    Number of MCParticles retrieved   = "
+  debug() << "    Number of MCParticles retrieved   = "
       << candidates->size() << endreq;
 
   std::vector<const MCParticle*> list;
@@ -219,7 +217,7 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
     StatusCode sc = fillParticle( **icand, *particle, *covariance);
     if(sc.isFailure()) continue;
     parts.push_back(particle.release());
-    log << MSG::DEBUG << "==> MCParticleMaker::added a particle" 
+    debug() << "==> MCParticleMaker::added a particle" 
         << endmsg;
   }
   return StatusCode::SUCCESS;
@@ -233,7 +231,6 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
                                        Particle& particle,
                                        const HepSymMatrix& cov)
 {
-  MsgStream  log( msgSvc(), name() );
 
   // Start filling the particle:     
   particle.setOrigin(&mc);
@@ -270,7 +267,7 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
 
   particle.setPointOnTrackErr(cov.sub(1,3));
   particle.setSlopesMomErr(cov.sub(4,6));
-  HepMatrix c(3,3,0.0);
+  HepMatrix c(3,3);
   for (int i=0;i<c.num_row();++i) {
     for (int j=0;j<c.num_col();++j) {
       c(1+i,1+j) = cov(1+i,4+j);
@@ -310,7 +307,7 @@ MCParticleMaker::reconstructed(const MCParticle& icand) const
 HepSymMatrix *
 MCParticleMaker::fetchCovariance(const Particle& p ) const
 {
-  HepSymMatrix *c = new HepSymMatrix(6,0.0);
+  HepSymMatrix *c = new HepSymMatrix(6);
   c->sub(1,p.pointOnTrackErr());
   c->sub(4,p.momentumErr());
   HepMatrix m = p.posSlopesCorr();
@@ -321,14 +318,13 @@ MCParticleMaker::fetchCovariance(const Particle& p ) const
   }
   return c;
 }
-
 //=====================================================================
 // generateCovariance
 //=====================================================================
 HepSymMatrix *
 MCParticleMaker::generateCovariance(const HepLorentzVector& p) const
 {
-  HepSymMatrix *c = new HepSymMatrix(6,0.0);
+  HepSymMatrix *c = new HepSymMatrix(6);
 
   double sip = m_ipErrorC0 + m_ipErrorC1/(p.perp()/GeV); 
   (*c)(1,1) = sip*sip/2;

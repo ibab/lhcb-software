@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.h,v 1.6 2004-03-11 10:53:00 pkoppenb Exp $
+// $Id: MCPIDProtoPAlg.h,v 1.7 2005-01-11 12:36:08 pkoppenb Exp $
 #ifndef MCPIDPROTOPALG_H 
 #define MCPIDPROTOPALG_H 1
 
@@ -8,7 +8,7 @@
 #include <map>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/NTuple.h"
 
 // from Relations
@@ -26,7 +26,7 @@
  *  @author Gloria Corti
  *  @date   2002-07-08
  */
-class MCPIDProtoPAlg : public Algorithm {
+class MCPIDProtoPAlg : public GaudiAlgorithm {
 public:
 
   enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut };

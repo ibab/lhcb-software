@@ -1,10 +1,10 @@
-// $Id: PrintTree.h,v 1.1 2004-09-14 11:59:07 pkoppenb Exp $
+// $Id: PrintTree.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
 #ifndef PRINTTREE_H 
 #define PRINTTREE_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
-#include "DaVinciTools/DVAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 
 class IDebugTool;
 
@@ -25,7 +25,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,11 +1,9 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.10 2004-03-11 10:53:00 pkoppenb Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.11 2005-01-11 12:36:08 pkoppenb Exp $
 // Include files 
 #include <memory>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -36,7 +34,7 @@ const        IAlgFactory& MCPIDProtoPAlgFactory = s_factory ;
 //=============================================================================
 MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_electronPath( "Rec/Calo/Electrons" )
   , m_photonMatchName( "PhotonMatch" )
   , m_electronMatchName( "ElectronMatch" )
@@ -92,16 +90,16 @@ MCPIDProtoPAlg::~MCPIDProtoPAlg() {};
 //=============================================================================
 StatusCode MCPIDProtoPAlg::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialize" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (!sc) return sc;
 
-  StatusCode sc;
-  IParticlePropertySvc* ppSvc;
-  sc = service("ParticlePropertySvc", ppSvc);
-  if( sc.isFailure() ) {
-    log << MSG::ERROR << "Unable to locate Particle Property Service" 
+  debug() << "==> Initialize" << endreq;
+
+  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  if( ppSvc ) {
+    err() << "Unable to locate Particle Property Service" 
         << endreq;
-    return sc;
+    return StatusCode::FAILURE;
   }
   ParticleProperty* partProp;
 
@@ -121,32 +119,31 @@ StatusCode MCPIDProtoPAlg::initialize() {
   m_idProton = partProp->jetsetID();
 
   // Retrieve track associator
-  sc = toolSvc()->retrieveTool(
-       "AssociatorWeighted<TrStoredTrack,MCParticle,double>", 
-       m_trackAsctName, m_track2MCParticleAsct);
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Tracks associator not found" << endreq;
-    return sc;
+  m_track2MCParticleAsct = tool<IAssociatorWeighted<TrStoredTrack,MCParticle,double> >
+       ("AssociatorWeighted<TrStoredTrack,MCParticle,double>",m_trackAsctName);
+  if( !m_track2MCParticleAsct ) {
+    err() << "Tracks associator not found" << endreq;
+    return StatusCode::FAILURE;
   }
 
   // Associators for CaloTables
   std::string matchType="AssociatorWeighted<CaloCluster,TrStoredTrack,float>";
   sc = toolSvc()->retrieveTool( matchType, m_photonMatchName, m_photonMatch );
   if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    err() << "Unable to retrieve " << matchType << endreq;
     return sc;
   }
   matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
   sc = toolSvc()->retrieveTool( matchType, m_electronMatchName,
                                 m_electronMatch );
   if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    err() << "Unable to retrieve " << matchType << endreq;
     return sc;
   }
   matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
   sc = toolSvc()->retrieveTool( matchType, m_bremMatchName, m_bremMatch );
   if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Unable to retrieve " << matchType << endreq;
+    err() << "Unable to retrieve " << matchType << endreq;
     return sc;
   }
 
@@ -177,25 +174,25 @@ StatusCode MCPIDProtoPAlg::initialize() {
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nprasc", m_naspro);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nproto", m_nproto);
           if( !scnt.isSuccess() ) {
-            log << MSG::ERROR << "Not able to add items to ntuple" << endreq;
+            err() << "Not able to add items to ntuple" << endreq;
             return StatusCode::FAILURE;
           }
           m_ntuple = ntmoni;
         }
         else { 
-          log << MSG::ERROR << "Not able to book ntuple " << ntname 
+          err() << "Not able to book ntuple " << ntname 
               << endreq;
           return StatusCode::FAILURE;
         }
       }
       else {
-        log << MSG::ERROR << "Ntuple " << ntname << " already exists"
+        err() << "Ntuple " << ntname << " already exists"
             << endreq;
         return StatusCode::FAILURE;
       }  
     }
     else {
-      log << MSG::ERROR << "Monitor requested by ntuple file not set" 
+      err() << "Monitor requested by ntuple file not set" 
           << endreq;
       return StatusCode::FAILURE;
     }
@@ -221,14 +218,12 @@ StatusCode MCPIDProtoPAlg::initialize() {
 //=============================================================================
 StatusCode MCPIDProtoPAlg::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-
   // Prepare output container
   ProtoParticles* chprotos = new ProtoParticles();
   StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
   if( !sc.isSuccess() ) {
     delete chprotos; 
-    log << MSG::ERROR  
+    err()  
         << "Unable to register ProtoParticles container in " 
         << m_protoPath << endreq;
     return sc;
@@ -237,13 +232,13 @@ StatusCode MCPIDProtoPAlg::execute() {
   // Load stored tracks
   SmartDataPtr<TrStoredTracks> tracks ( eventSvc(), m_tracksPath );
   if( !tracks || 0 == tracks->size() ) {
-    log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
+    info() << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
     m_errorCount["1. No Tracks            "] += 1;
     return StatusCode::SUCCESS;
   }
   else {   
-    log << MSG::DEBUG << "Successfully retrieved " << tracks->size()
+    debug() << "Successfully retrieved " << tracks->size()
         << " TrStoredTracks at " << m_tracksPath << endreq;
   }
 
@@ -251,12 +246,12 @@ StatusCode MCPIDProtoPAlg::execute() {
   bool richData = false;
   SmartDataPtr<RichPIDs> richpids ( eventSvc(), m_richPath );
   if( !richpids || 0 == richpids->size() ) {
-    log << MSG::INFO  << "Failed to locate RichPIDs at "
+    info()  << "Failed to locate RichPIDs at "
         << m_richPath << endreq;
     m_errorCount["2. No Rich pID          "] += 1;
   }
   else {   
-    log << MSG::DEBUG << "Successfully located " << richpids->size()
+    debug() << "Successfully located " << richpids->size()
         << " RichPIDs at " << m_richPath << endreq;
     richData = true;
   }
@@ -265,12 +260,12 @@ StatusCode MCPIDProtoPAlg::execute() {
   bool muonData = false;
   SmartDataPtr<MuonIDs> muonpids ( eventSvc(), m_muonPath );
   if( !muonpids || 0 == muonpids->size() ) {
-    log << MSG::INFO << "Failed to locate MuonIDs at "
+    info() << "Failed to locate MuonIDs at "
         << m_muonPath << endreq;
     m_errorCount["3. No Muon pID          "] += 1;
   }
   else {
-    log << MSG::DEBUG << "Successfully located " << muonpids->size()
+    debug() << "Successfully located " << muonpids->size()
         << " MuonIDs at " << m_muonPath << endreq;
     muonData = true;
   }
@@ -279,12 +274,12 @@ StatusCode MCPIDProtoPAlg::execute() {
   bool caloData = false;
   SmartDataPtr<CaloHypos> electrons ( eventSvc(), m_electronPath );
   if( !electrons || 0 == electrons->size() ) {
-    log << MSG::INFO << "Failed to locate CaloHypos at "
+    info() << "Failed to locate CaloHypos at "
         << m_electronPath << endreq;
     m_errorCount["4. No Electron pID      "] += 1;
   }
   else {
-    log << MSG::DEBUG << "Successfully located " << electrons->size()
+    debug() << "Successfully located " << electrons->size()
         << " CaloHypo at " << m_electronPath << endreq;
     caloData = true;
   }
@@ -292,19 +287,19 @@ StatusCode MCPIDProtoPAlg::execute() {
   /// Check the tables for electronID
   const PhotonTable* phtable = m_photonMatch->inverse();
   if( 0 == phtable ) { 
-    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    debug() << "Table from PhotonMatch points to NULL";
     caloData = false;
     m_errorCount["5. No photon table      "] += 1;
   }
   const ElectronTable* etable = m_electronMatch->inverse();
   if( 0 == etable ) { 
-    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    debug() << "Table from PhotonMatch points to NULL";
     caloData = false;
     m_errorCount["6. No electron table    "] += 1;
   }
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
-    log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
+    debug() << "Table from PhotonMatch points to NULL";
     m_errorCount["7. No brems table       "] += 1;
   }
 
@@ -350,7 +345,7 @@ StatusCode MCPIDProtoPAlg::execute() {
       }
     }
     if( 0 == tkcharge ) {
-      log << MSG::DEBUG << "track charge = " << tkcharge << endreq;
+      debug() << "track charge = " << tkcharge << endreq;
       delete proto;
       continue;
     }
@@ -446,15 +441,15 @@ StatusCode MCPIDProtoPAlg::execute() {
     
   }
 
-  log << MSG::DEBUG << "Found " << countProto[TrackProto]
+  debug() << "Found " << countProto[TrackProto]
       << " tracks of quality to produce ProtoParticles" << endreq;
-  log << MSG::DEBUG << "Made " << countProto[RichProto] 
+  debug() << "Made " << countProto[RichProto] 
       << " ProtoParticle with RichPID " << endreq;
-  log << MSG::DEBUG << "Made " << countProto[MuonProto]
+  debug() << "Made " << countProto[MuonProto]
       << " ProtoParticle with MuonID " << endreq;
-  log << MSG::DEBUG << "Made " << countProto[ElectronProto]
+  debug() << "Made " << countProto[ElectronProto]
       << " ProtoParticle with ElectronHypo " << endreq;
-  log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
+  debug() << "Number of ProtoParticles in TES is " 
       << chprotos->size() << endreq;
 
   if( 0 == countProto[TrackProto] ) {
@@ -489,22 +484,22 @@ StatusCode MCPIDProtoPAlg::execute() {
 
     for( ProtoParticles::iterator ip = chprotos->begin();
          chprotos->end() != ip; ++ip ) {
-      log << MSG::VERBOSE << "track = " << (*ip)->track() << endreq;
-      log << MSG::VERBOSE << "charge = " << (*ip)->charge() << endreq;
-      log << MSG::VERBOSE << "richid = " << (*ip)->richPID() << endreq;
-      log << MSG::VERBOSE << "muonid = " << (*ip)->muonPID() << endreq;
-      log << MSG::VERBOSE << "richhistory = " << (*ip)->richBit() << endreq;
-      log << MSG::VERBOSE << "muonhistory = " << (*ip)->muonBit() << endreq;
-      log << MSG::VERBOSE << "bestPID = " << (*ip)->bestPID() << endreq;
+      verbose() << "track = " << (*ip)->track() << endreq;
+      verbose() << "charge = " << (*ip)->charge() << endreq;
+      verbose() << "richid = " << (*ip)->richPID() << endreq;
+      verbose() << "muonid = " << (*ip)->muonPID() << endreq;
+      verbose() << "richhistory = " << (*ip)->richBit() << endreq;
+      verbose() << "muonhistory = " << (*ip)->muonBit() << endreq;
+      verbose() << "bestPID = " << (*ip)->bestPID() << endreq;
       for(ProtoParticle::PIDInfoVector::iterator id = (*ip)->pIDInfo().begin();
           (*ip)->pIDInfo().end()!=id; ++id ) {
-        log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
+        verbose() << "id = " << (*id).first << " , prob = " 
             << (*id).second  << endreq;
       }
       for( ProtoParticle::PIDDetVector::iterator 
              idd = (*ip)->pIDDetectors().begin(); 
            (*ip)->pIDDetectors().end()!=idd; ++idd ) {
-        log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
+        verbose() << "det = " << (*idd).first << " , value = " 
             << (*idd).second  << endreq;
       }
     }
@@ -519,20 +514,20 @@ StatusCode MCPIDProtoPAlg::execute() {
 StatusCode MCPIDProtoPAlg::finalize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "********* ProtoParticles production Summary ******"
+  info() << "********* ProtoParticles production Summary ******"
       << endreq;
-  log << MSG::INFO << "Number of events with :" << endreq;
+  info() << "Number of events with :" << endreq;
 
   for( ErrorTable::iterator ierr = m_errorCount.begin();
        ierr != m_errorCount.end(); ierr++ ) { 
-    log << MSG::INFO << "   " << (*ierr).first 
+    info() << "   " << (*ierr).first 
         << "  " << format("%9u", (*ierr).second ) 
         << endreq;
   }
-  log << MSG::INFO << "**************************************************"
+  info() << "**************************************************"
       << endreq;
   
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 }; 
 
 //=============================================================================
@@ -603,7 +598,6 @@ int MCPIDProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
 StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids, 
                                     ProtoParticle* proto) {
  
-  MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
 
   RichPIDs::const_iterator iRich;
@@ -618,7 +612,7 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       iddet.first = ProtoParticle::RichElectron;
       iddet.second = (*iRich)->particleRawProb(Rich::Electron);
       proto->pIDDetectors().push_back(iddet);
-      log << MSG::VERBOSE
+      verbose()
           << "Rich " << Rich::Electron << " = " 
           << (*iRich)->particleRawProb(Rich::Electron)
           << endreq;
@@ -626,7 +620,7 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       iddet.first = ProtoParticle::RichMuon;
       iddet.second = (*iRich)->particleRawProb(Rich::Muon);
       proto->pIDDetectors().push_back(iddet);
-      log << MSG:: VERBOSE 
+      verbose()
           << "Rich " << Rich::Muon << " = " 
           << (*iRich)->particleRawProb(Rich::Muon)
           << endreq;
@@ -634,7 +628,7 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       iddet.first = ProtoParticle::RichPion;
       iddet.second = (*iRich)->particleRawProb(Rich::Pion);
       proto->pIDDetectors().push_back(iddet);
-      log << MSG::VERBOSE
+      verbose()
           << "Rich " << Rich::Pion << " = "
           << (*iRich)->particleRawProb(Rich::Pion)
           << endreq;
@@ -642,7 +636,7 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       iddet.first = ProtoParticle::RichKaon;
       iddet.second = (*iRich)->particleRawProb(Rich::Kaon);
       proto->pIDDetectors().push_back(iddet);
-      log << MSG::VERBOSE
+      verbose()
           << "Rich " << Rich::Kaon << " = "
           << (*iRich)->particleRawProb(Rich::Kaon)
           << endreq;
@@ -651,7 +645,7 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
       iddet.first = ProtoParticle::RichProton;
       iddet.second = (*iRich)->particleRawProb(Rich::Proton);
       proto->pIDDetectors().push_back(iddet);
-      log << MSG::VERBOSE 
+      verbose() 
           << "Rich " << Rich::Proton << " = "
           << (*iRich)->particleRawProb(Rich::Proton)
           << endreq;
