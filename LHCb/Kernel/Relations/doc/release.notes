@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.12 2005-02-16 17:00:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2005-02-16 19:59:35 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,26 @@
 ! Responsible : Vanya BELYAEV ibelyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2005-02-16 - Vanya BELYAEV
+   
+ - few minor fixes to enable the generation of "standard" 
+   LCG dictionaries using "lcgdict" tool 
+
+ - more uniform treatment of constructors.
+    now each table-like class has: 
+      a) default constructor with optional "reserve" argument 
+      b) constructor from *ANY* "direct"  interface 
+      c) constructor from *ANY* "inverse" interface 
+        (useful for "on-flight" inversion of relation tables)
+      d) copy constructor
+
+ - add more optimization   into constructors 
+      extensive usage of i_push/i_sort in the *SAFE* environment  
+
+ - cmt/requirements 
+   version increment to v2r4 
+
 
 ! 2005-02-16 - Vanya Belyaev
 

@@ -1,28 +1,32 @@
-// $Id: RelationWeightedBase.h,v 1.4 2005-01-27 14:48:48 cattanem Exp $
+// $Id: RelationWeightedBase.h,v 1.5 2005-02-16 19:59:35 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2005/01/27 06:54:03  ibelyaev
-//  std::sort -> std::table_sort
-//
-// Revision 1.2  2005/01/26 16:27:29  ibelyaev
-//  add 'power input' option to speed-up the filling
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL
+// ============================================================================
 #include <vector>
 #include <functional>
 #include <algorithm>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StatusCode.h"
+// ============================================================================
 // Relations
+// ============================================================================
 #include "Relations/Relations.h"
+#include "Relations/IRelationWeighted.h"
+// ============================================================================
 
 namespace Relations
 {
@@ -50,6 +54,10 @@ namespace Relations
     typedef RelationWeightedBase<TO,FROM,WEIGHT>                  InvType    ;
     /// short cut for type traits
     typedef Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT> TypeTraits ;
+    /// shortcut for "direct" interface 
+    typedef IRelationWeighted<FROM,TO,WEIGHT>                     IDirect    ;
+    /// shortcut for "inverse" interface 
+    typedef IRelationWeighted<TO,FROM,WEIGHT>                     IInverse   ;    
     /// actual "FROM" type
     typedef typename TypeTraits::From                             From;
     /// actual "TO" type
@@ -455,6 +463,50 @@ namespace Relations
     
     /// destructor (virtual)
     virtual ~RelationWeightedBase() {} ;
+
+    /** constructor from any "direct" interface 
+     *  @param copy object to be copied 
+     */
+    RelationWeightedBase
+    ( const IDirect& copy )
+      : m_entries () 
+      , m_less    () 
+      , m_less1   () 
+      , m_less2   () 
+      , m_equal   () 
+      , m_comp1   () 
+      , m_comp2   () 
+    {
+      typename IDirect::Range r = copy.relations() ;
+      m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
+    } ;
+    
+    /** constructor from any inverse interface
+     *  @param inv relations to be inverted
+     *  @param int artificial agument to make the difference 
+     *         for stupid MicroSoft compiler
+     */
+    RelationWeightedBase
+    ( const IInverse&    inv    ,
+      const int       /* flag*/ )
+      : m_entries ()
+      , m_less    () 
+      , m_less1   () 
+      , m_less2   () 
+      , m_equal   () 
+      , m_comp1   () 
+      , m_comp2   () 
+    {
+      // get all relations from "inv"
+      typename IInverse::Range r = inv.relations() ;
+      // reserve the space for relations
+      i_reserve ( r.size() );
+      // invert all relations    
+      for ( typename IInverse::iterator entry = r.begin() ; r.end() != entry ; ++entry )
+      { i_push ( entry->to() , entry->from() , entry->weight() ) ;  }
+      // final sort 
+      i_sort() ;      
+    };
     
     /** copy constructor 
      *  @param copy object to be copied 
@@ -469,31 +521,6 @@ namespace Relations
       , m_comp1   () 
       , m_comp2   () 
     {};
-    
-    /** constructor from inverse relation table
-     *  @attention it is indeed the most effective way to 
-     *              get the inverse relations!
-     *  @param inv relations to be inverted
-     *  @param int artificial agument to make the difference 
-     *         for stupid MicroSoft compiler
-     */
-    RelationWeightedBase
-    ( const InvType&    inv    ,
-      const int      /* flag*/ )
-      : m_entries ()
-      , m_less    () 
-      , m_less1   () 
-      , m_less2   () 
-      , m_equal   () 
-      , m_comp1   () 
-      , m_comp2   () 
-    {
-      // reserve the container size to avoid the relocations
-      m_entries.reserve( inv.i_entries().size() );
-      // invert the relations
-      for( typename InvType::CIT it = inv.begin() ; inv.end() != it ; ++it )
-        { i_relate( it->to() , it->from() , it->weight() ) ;  }
-    };
     
   private:
     

@@ -1,26 +1,35 @@
-// $Id: Relation2D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
+// ============================================================================
 // From Relations
+// ============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelation.h"
 #include "Relations/IRelation2D.h"
 #include "Relations/Relation2.h"
+// ============================================================================
 
 /** @class Relation2D Relation2D.h Relations/Relation2D.h
  *  
@@ -59,33 +68,72 @@ public:
   typedef typename IBase::To               To         ;
   /// shortcut for actual implementation  
   typedef Relations::Relation2<FROM,TO>    Base       ;  
+  // shortcut for "direct" interface 
+  typedef typename IBase::DirectType       IDirect        ;
+  // shortcut for "inverse" interface 
+  typedef typename IBase::InverseType      IInverse       ;
 
 public:
   
   /** Standard/default  constructor
    *  @param reserve the map-size to be preallocated
    */
-  Relation2D ( const size_t reserve  = 0 ) 
-    : DataObject() , m_base ( reserve ) 
-  {
-#ifdef COUNT_INSTANCES 
-    Relations::InstanceCounter::instance().increment( type() ) ;
-#endif // COUNT_INSTANCES
-  };
-
-  /** constructor from the inverse type!
-   *  @attention it is the way to "invert" all relations!
-   *  @param inv the inverse relation object
-   *  @param flag artificial argument to invert the relations 
-   */
-  Relation2D ( const InvType& inv , int flag ) 
-    : DataObject( inv ) , m_base( inv , flag )
+  Relation2D 
+  ( const size_t reserve  = 0 ) 
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( reserve ) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
   
+  /** constructor from any direct interface
+   *  @param copy object to be copied 
+   */
+  Relation2D 
+  ( const IDirect& copy  )
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( copy )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /** constructor from "inverted interface"
+   *  @param inv object to be inverted
+   *  @param flag artificial argument to distinguisch from 
+   *  copy constructor
+   */
+  Relation2D 
+  ( const IInverse& inv  , 
+    const int       flag ) 
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( inv  , flag )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /** copy constructor 
+   *  @param copy object to be copied 
+   */
+  Relation2D 
+  ( const OwnType& copy  )
+    : DataObject ( copy         ) 
+    , IBase      ( copy         ) 
+    , m_base     ( copy.m_base  )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+
   /// destructor (virtual) 
   virtual ~Relation2D()
   {

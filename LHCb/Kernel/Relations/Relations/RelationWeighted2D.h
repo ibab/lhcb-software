@@ -1,24 +1,37 @@
-// $Id: RelationWeighted2D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
+// ============================================================================
 // From Relations
+// ============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeightedBase.h"
 #include "Relations/Relation2Weighted.h"
+// ============================================================================
 // Forward declaration
+// ============================================================================
 class StreamBuffer;
+// ============================================================================
 
 /** @class RelationWeighted2D RelationWeighted2D.h 
  *  
@@ -46,9 +59,9 @@ public:
   /// shortcut for "inverse interface  interface
   typedef IRelationWeighted<TO,FROM,WEIGHT>               IBase2     ;
   /// shortcut for direct subinterface 
-  typedef typename IBase::DirectType       DirectType     ;
+  typedef typename IBase::DirectType                      DirectType     ;
   /// shortcut for inverse subinterface 
-  typedef typename IBase::InverseType      InverseType    ;
+  typedef typename IBase::InverseType                     InverseType    ;
   /// import "Range" type from the base 
   typedef typename IBase::Range                           Range   ;
   /// import "From"  type from the base 
@@ -59,46 +72,72 @@ public:
   typedef typename IBase::Weight                          Weight  ;
   /// shortcut for actual implementation  
   typedef Relations::Relation2Weighted<FROM,TO,WEIGHT>    Base       ;
-  
+  // shortcut for "direct" interface 
+  typedef typename IBase::DirectType                      IDirect        ;
+  // shortcut for "inverse" interface 
+  typedef typename IBase::InverseType                     IInverse       ;
+
 public:
   
   /** Standard/default  constructor
    *  @param reserve the map-size to be preallocated
    */
-  RelationWeighted2D ( const size_t reserve  = 0 ) 
-    : DataObject() , m_base ( reserve )
-  {
-#ifdef COUNT_INSTANCES 
-    Relations::InstanceCounter::instance().increment( type() ) ;
-#endif // COUNT_INSTANCES
-  };
- 
-  /** constructor from the inverse type!
-   *  @attention it is the way to "invert" all relations!
-   *  @param inv the inverse relation object
-   *  @param flag artificial argument to invert the relations 
-   */
-  RelationWeighted2D ( const InvType& inv , int flag ) 
-    : DataObject( inv ) , m_base( inv , flag )
+  RelationWeighted2D 
+  ( const size_t reserve  = 0 ) 
+    : DataObject () 
+    , IBase      ()
+    , m_base     ( reserve )
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
   
-  /** constructor from inverse interface
-   *  @param inv relation object to be inverted 
-   *  @param flag artificial argument to distinguish from copy constructor 
+  /** constructor from any direct interface
+   *  @param copy object to be copied 
    */
-  RelationWeighted2D( const InverseType & inv , int flag ) 
-    : DataObject() , m_base( inv , flag ) 
+  RelationWeighted2D 
+  ( const IDirect& copy  )
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( copy )
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
   
- 
+  /** constructor from "inverted interface"
+   *  @param inv object to be inverted
+   *  @param flag artificial argument to distinguisch from 
+   *  copy constructor
+   */
+  RelationWeighted2D 
+  ( const IInverse& inv  , 
+    const int       flag ) 
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( inv  , flag )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /** copy constructor 
+   *  @param copy object to be copied 
+   */
+  RelationWeighted2D 
+  ( const OwnType& copy  )
+    : DataObject ( copy         ) 
+    , IBase      ( copy         ) 
+    , m_base     ( copy.m_base  )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
   /// destructor (virtual) 
   virtual ~RelationWeighted2D()
   {

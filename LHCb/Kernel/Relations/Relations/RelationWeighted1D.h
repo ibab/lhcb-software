@@ -1,20 +1,33 @@
-// $Id: RelationWeighted1D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
+// ============================================================================
 // From Relation
+// ============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeighted.h"
+// ============================================================================
 
 /** @class RelationWeighted1D RelationWeighted1D.h 
  * 
@@ -47,36 +60,64 @@ public:
   typedef typename IBase::Weight                          Weight  ;
   /// short cut for the actual implementation type 
   typedef typename Relations::RelationWeighted<FROM,TO,WEIGHT>     Base    ;
+  // shortcut for "direct" interface 
+  typedef typename IBase::DirectType                      IDirect        ;
+  // shortcut for "inverse" interface 
+  typedef typename IBase::InverseType                     IInverse       ;
   
 public:
   
   /// the standard/default constructor
-  RelationWeighted1D ( const size_t reserve = 0 ) 
-    : DataObject() , m_base (reserve) 
+  RelationWeighted1D 
+  ( const size_t reserve = 0 ) 
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( reserve ) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
   
-  /** constructor from inverse object 
-   *  @param inv relation object to be inverted 
-   *  @param flag artificial argument to distinguish from copy constructor 
+  /** constructor from any direct interface
+   *  @param copy object to be copied 
    */
-  RelationWeighted1D( const InvType& inv , int flag ) 
-    : DataObject( inv ) , m_base( inv , flag ) 
+  RelationWeighted1D 
+  ( const IDirect& copy  )
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( copy )
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
   
-  /** constructor from inverse interface
-   *  @param inv relation object to be inverted 
-   *  @param flag artificial argument to distinguish from copy constructor 
+  /** constructor from "inverted interface"
+   *  @param inv object to be inverted
+   *  @param flag artificial argument to distinguisch from 
+   *  copy constructor
    */
-  RelationWeighted1D( const typename IBase::InverseType & inv , int flag ) 
-    : DataObject() , m_base( inv , flag ) 
+  RelationWeighted1D 
+  ( const IInverse& inv  , 
+    const int       flag ) 
+    : DataObject () 
+    , IBase      () 
+    , m_base     ( inv  , flag )
+  {
+#ifdef COUNT_INSTANCES 
+    Relations::InstanceCounter::instance().increment( type() ) ;
+#endif // COUNT_INSTANCES
+  };
+  
+  /** copy constructor 
+   *  @param copy object to be copied 
+   */
+  RelationWeighted1D 
+  ( const OwnType& copy  )
+    : DataObject ( copy         ) 
+    , IBase      ( copy         ) 
+    , m_base     ( copy.m_base  )
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;

@@ -1,28 +1,32 @@
-// $Id: RelationBase.h,v 1.4 2005-01-27 14:48:48 cattanem Exp $
+// $Id: RelationBase.h,v 1.5 2005-02-16 19:59:35 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2005/01/27 06:54:03  ibelyaev
-//  std::sort -> std::table_sort
-//
-// Revision 1.2  2005/01/26 16:27:29  ibelyaev
-//  add 'power input' option to speed-up the filling
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
 #include <functional>
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StatusCode.h"
+// ============================================================================
 // Relation
+// ============================================================================
 #include "Relations/RelationTypeTraits.h"
+#include "Relations/IRelation.h"
 #include "Relations/Reserve.h"
+// ============================================================================
 
 namespace Relations
 {
@@ -44,11 +48,15 @@ namespace Relations
   public:
     
     /// short cut to own type 
-    typedef RelationBase<FROM,TO>                  OwnType     ;
+    typedef RelationBase<FROM,TO>                           OwnType     ;
     /// short cut to type of inverse relations 
-    typedef RelationBase<TO,FROM>                  InvType     ;
+    typedef RelationBase<TO,FROM>                           InvType     ;
     /// shortcut to type traits structure 
-    typedef Relations::RelationTypeTraits<FROM,TO> TypeTraits  ;
+    typedef Relations::RelationTypeTraits<FROM,TO>          TypeTraits  ;
+    /// shortcut for "direct" interface 
+    typedef IRelation<FROM,TO>                              IDirect     ;
+    /// shortcut for "inverse" interface 
+    typedef IRelation<TO,FROM>                              IInverse    ;    
     /// actual "FROM" type 
     typedef typename TypeTraits::From                       From        ;
     /// actual "TO"   type 
@@ -283,7 +291,45 @@ namespace Relations
       , m_less    ()
       , m_less1   ()
       , m_equal   ()
-    { if( 0 < reserve ) { i_reserve( reserve ) ; } ; };
+    { if ( 0 < reserve ) { i_reserve( reserve ) ; } ; };
+    
+    /** constructor from any "direct" interface 
+     *  @param copy object to be copied  
+     */
+    RelationBase
+    ( const IDirect& copy ) 
+      : m_entries () 
+      , m_less    ()
+      , m_less1   ()
+      , m_equal   ()
+    {
+      typename IDirect::Range r = copy.relations() ;
+      m_entries.insert ( m_entries.end() , r.begin() , r.end() ) ;
+    } ;
+    
+    /** constructor from any "inverse" interface  
+     *  @param inv object to be inverted
+     *  @param int artificial agument to make the difference 
+     *         for stupid MicroSoft compiler
+     */
+    RelationBase
+    (  const IInverse&   inv     , 
+       const int      /* flag */ ) 
+      : m_entries ()
+      , m_less    ()
+      , m_less1   ()
+      , m_equal   ()
+    {
+      // get all relations from "inv"
+      typename IInverse::Range r = inv.relations() ;
+      // reserve the space for relations
+      i_reserve ( r.size() );
+      // invert all relations    
+      for ( typename IInverse::iterator entry = r.begin() ; r.end() != entry ; ++entry )
+      { i_push ( entry->to() , entry->from() ) ;  }
+      // final sort 
+      i_sort() ;      
+    };
     
     /** copy constructor
      *  @param copy object to be copied  
@@ -295,30 +341,6 @@ namespace Relations
       , m_less1   ()
       , m_equal   ()
     {} ;
-    
-    /** constructor from the inverse type! 
-     *  @attention it is indeed the most effective way to 
-     *             get the inverse relations!
-     *  @param inv object to be inverted
-     *  @param int artificial agument to make the difference 
-     *         for stupid MicroSoft compiler
-     */
-    RelationBase
-    (  const InvType&    inv     , 
-       const int      /* flag */ ) 
-      : m_entries ()
-      , m_less    ()
-      , m_less1   ()
-      , m_equal   ()
-    {
-      // get all relations from "inv"
-      typename InvType::IP ip = inv.i_relations() ;
-      // reserve the space for relations
-      m_entries.reserve( ip.second - ip.first  );
-      // invert all relations    
-      for( typename InvType::CIT it = ip.first ; ip.second != it ; ++it ) 
-        { i_relate( it->to() , it->from() ) ;  }
-    };
     
   private:
     

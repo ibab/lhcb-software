@@ -1,40 +1,34 @@
-// $Id: Relation2Weighted.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2004/07/21 07:57:26  cattanem
-// first import of Kernel/Relations
-//
-// Revision 1.8  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.7  2004/01/14 16:30:26  ibelyaev
-//  update for new interface IUpdateable
-//
-// Revision 1.6  2004/01/14 15:13:03  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.5  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // =============================================================================
 #ifndef RELATIONS_Relation2Weighted_H 
 #define RELATIONS_Relation2Weighted_H 1
+// =============================================================================
 // Include files
+// =============================================================================
 #include "Relations/PragmaWarnings.h"
+// =============================================================================
 // STD & STL
+// =============================================================================
 #include <algorithm>
+// =============================================================================
 // from Gaudi
+// =============================================================================
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
+// =============================================================================
 // From Relations
+// =============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelationWeighted2D.h"
 #include "Relations/RelationWeighted.h"
+// =============================================================================
 
 namespace Relations
 {
@@ -71,53 +65,87 @@ namespace Relations
   {  
   public:
     /// short cut for own     type
-    typedef Relation2Weighted<FROM,TO,FROM>      OwnType        ;
+    typedef Relation2Weighted<FROM,TO,WEIGHT>               OwnType     ;
     /// short cut for inverse type
-    typedef Relation2Weighted<TO,FROM,FROM>      InvType        ;
+    typedef Relation2Weighted<TO,FROM,WEIGHT>               InvType     ;
     /// short cut for interface 
-    typedef IRelationWeighted2D<FROM,TO,WEIGHT>  IBase          ;
+    typedef IRelationWeighted2D<FROM,TO,WEIGHT>             IBase       ;
     /// actual implementations of direct  type 
-    typedef RelationWeighted<FROM,TO,WEIGHT>     Base           ;
+    typedef RelationWeighted<FROM,TO,WEIGHT>                Base        ;
     /// actual implementations of inverse type 
-    typedef RelationWeighted<TO,FROM,WEIGHT>     InvBase        ;
+    typedef RelationWeighted<TO,FROM,WEIGHT>                InvBase     ;
     /// shortcut for direct base type 
-    typedef Base                                 Direct         ;
+    typedef Base                                            Direct      ;
     /// shortcut for inverse base type 
-    typedef InvBase                              Inverse        ;
+    typedef InvBase                                         Inverse     ;
     /// shortcut for direct subinterface 
-    typedef typename IBase::DirectType                    DirectType     ;
+    typedef typename IBase::DirectType                      DirectType  ;
     /// shortcut for inverse subinterface 
-    typedef typename IBase::InverseType                   InverseType     ;
+    typedef typename IBase::InverseType                     InverseType ;
     
     /// import basic types from Interface 
-    typedef typename IBase::Range                           Range   ;
+    typedef typename IBase::Range                           Range       ;
     /// import basic types from Interface 
-    typedef typename IBase::From                            From    ;
+    typedef typename IBase::From                            From        ;
     /// import basic types from Interface 
-    typedef typename IBase::To                              To      ;
+    typedef typename IBase::To                              To          ;
     /// import basic types from Interface 
-    typedef typename IBase::Weight                          Weight  ;    
-
+    typedef typename IBase::Weight                          Weight      ;    
+    
     /// the default constructor
-    Relation2Weighted( const size_t reserve = 0  )
-      :  m_direct( reserve ) , m_inverse( reserve ) 
+    Relation2Weighted
+    ( const size_t reserve = 0  )
+      : IBase     (         )   
+      , m_direct  ( reserve ) 
+      , m_inverse ( reserve ) 
     {
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     };
-
-    /** constructor from "inverted object"
-     *  @param inv object to be inverted
-     *  @param flag artificial argument to distinguish from copy constructor
+    
+    /** constructor from any "direct" interface 
+     *  @param copy object to be copied
      */
-    Relation2Weighted ( const InvType& inv   , int flag ) 
-      : m_direct  ( inv.m_inverse , flag )
-      , m_inverse ( inv           ) 
+    Relation2Weighted 
+    ( const DirectType& copy ) 
+      : IBase     (          ) 
+      , m_direct  ( copy     ) 
+      , m_inverse ( copy , 1 ) 
     {
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
+    }
+    
+    /** constructor from any "inverse" interface 
+     *  @param copy object to be copied
+     */
+    Relation2Weighted
+    ( const InverseType& copy , 
+      const int          flag ) 
+      : IBase     (             ) 
+      , m_direct  ( copy , flag ) 
+      , m_inverse ( copy        ) 
+    {
+      /// set cross-links 
+      m_direct  .setInverseBase ( m_inverse .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct  .directBase () ) ;
+    }
+    
+    /** copy constructor is publc, 
+     *  @attention it is not recommended for normal usage 
+     *  @param copy object to be copied 
+     */
+    Relation2Weighted 
+    ( const OwnType& copy ) 
+      : IBase     ( copy           ) 
+      , m_direct  ( copy.m_direct  )
+      , m_inverse ( copy.m_inverse ) 
+    {
+      /// set cross-links 
+      m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct   .directBase () );
     };
     
     /// destructor (virtual)
@@ -430,23 +458,7 @@ namespace Relations
      */
     inline StatusCode reserve ( const size_t num ) 
     { return m_direct.reserve( num ) ; };
-    
 
-  public:
-    
-    /** copy constructor is public
-     *  @attention it is not for normal usage!
-     *  @param own object to be copied 
-     */
-    Relation2Weighted ( const OwnType& own     ) 
-      : m_direct  ( copy.m_direct  )
-      , m_inverse ( copy.m_inverse ) 
-    {
-      /// set cross-links 
-      m_direct  .setInverseBase ( m_inverse .directBase () ) ;
-      m_inverse .setInverseBase ( m_direct  .directBase () ) ;
-    };
-    
   private:
     
     /** assignement operator is private!

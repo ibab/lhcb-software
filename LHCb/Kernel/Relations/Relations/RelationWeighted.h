@@ -1,45 +1,33 @@
-// $Id: RelationWeighted.h,v 1.3 2005-01-27 14:48:48 cattanem Exp $
+// $Id: RelationWeighted.h,v 1.4 2005-02-16 19:59:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2005/01/26 16:27:29  ibelyaev
-//  add 'power input' option to speed-up the filling
-//
-// Revision 1.1.1.1  2004/07/21 07:57:26  cattanem
-// first import of Kernel/Relations
-//
-// Revision 1.11  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.10  2004/03/17 20:17:49  ibelyaev
-//  update Relations
-//
-// Revision 1.9  2004/01/14 16:30:26  ibelyaev
-//  update for new interface IUpdateable
-//
-// Revision 1.8  2004/01/14 15:13:03  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.7  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted_H 
 #define RELATIONS_RelationWeighted_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
+// ============================================================================
 // From Relation
+// ============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelationWeighted.h"
 #include "Relations/RelationWeightedBase.h"
+// ============================================================================
 
 namespace Relations
 {
@@ -89,39 +77,46 @@ namespace Relations
   public:
     
     /// the standard/default constructor
-    RelationWeighted ( const size_t reserve = 0 ) 
-      : m_direct  ( reserve ) 
+    RelationWeighted 
+    ( const size_t reserve = 0 ) 
+      : IBase     (         ) 
+      , m_direct  ( reserve ) 
       , m_inverse ( 0       ) 
     {};
     
-    /** constructor from inverse object 
-     *  @param inv  relation object to be inverted 
-     *  @param flag artificial parameter to distinguisch 
-     *              fromcopy constructor 
+    /** constructor from arbitrary "direct" interface 
+     *  @param copy object to be copied
      */
-    RelationWeighted( const InvType& inv , int flag ) 
-      : m_direct  ( inv.m_direct , flag ) 
-      , m_inverse ( 0 ) 
+    RelationWeighted 
+    ( const IDirect& copy ) 
+      : IBase() 
+      , m_direct  ( copy ) 
+      , m_inverse ( 0    ) 
+    {} ;
+    
+    /** constructor from "inverse interface"
+     *  It is an efficient way to "invert" relation 
+     *  @param inv interface to be inverted 
+     *  Second argument is artificial, to distinguish from copy constructor
+     */
+    RelationWeighted
+    ( const IInverse&    inv     , 
+      const int          flag  ) 
+      : IBase     (   ) 
+      , m_direct  ( inv , flag ) 
+      , m_inverse ( 0 )  
     {};
-
-    /** constructor from inverse interface
-     *  @param inv  relation object to be inverted 
-     *  Second argument is artificial parameter to distinguish 
-     *              fromcopy constructor 
+    
+    /** copy constructor is publc, 
+     *  but it is not recommended for direct usage 
+     *  @param copy object to be copied 
      */
-    RelationWeighted( const IInverse & inv , int /* flag */ ) 
-      : m_direct  (   ) 
-      , m_inverse ( 0 ) 
-    {
-      // get all relations 
-      typename IInverse::Range range = inv.relations() ;
-      // reserve for efficiency 
-      reserve ( range.size() );
-      // invert all relations 
-      for( typename IInverse::iterator entry = range.begin() ;
-           range.end() != entry ; ++entry )
-        { i_relate( entry->to() , entry->from() , entry->weight() ); }
-    };
+    RelationWeighted 
+    ( const OwnType& copy   ) 
+      : IBase     ( copy          ) 
+      , m_direct  ( copy.m_direct )
+      , m_inverse ( 0             ) 
+    {};
     
     /// destructor (virtual)
     virtual ~RelationWeighted () {} ;
@@ -240,15 +235,14 @@ namespace Relations
       // 1) get all relations
       Range r = i_relations();
       // 2) copy them into temporary storage 
-      _Entries entries( r.begin() , r.end() );
+      _Entries _e ( r.begin() , r.end() );
       // 3) clear all existing rleations 
-      StatusCode sc =  i_clear()       ; if( sc.isFailure() ) { return sc ; }
+      StatusCode sc =  i_clear()  ; if( sc.isFailure() ) { return sc ; }
       // 4) reserve space for new relations 
-      sc = reserve( entries.size() )   ; if( sc.isFailure() ) { return sc ; }
+      sc = reserve( _e.size() )   ; if( sc.isFailure() ) { return sc ; }
       // 5) build new relations 
-      for( typename _Entries::const_iterator it = entries.begin() ; 
-           entries.end() != it ; ++it )
-      { i_push( it->from() , it->to() , it->weight() )  ; }
+      for ( typename _Entries::const_iterator entry = _e.begin() ; _e.end() != entry ; ++entry )
+      { i_push( entry->from() , entry->to() , entry->weight() )  ; }
       // (re)sort
       i_sort() ;
       //
@@ -464,6 +458,12 @@ namespace Relations
      *  @return pointer to direct base 
      */
     inline Direct*      directBase () { return &m_direct ; }
+
+    /** get the reference to direct table 
+     *  @attention the method is not for public usage !!!
+     *  @return reference to direct base 
+     */
+    const  Direct&     _direct     () const { return m_direct ; }
     
     /** set new inverse table 
      *  @attention the method is not for public usage !!!
@@ -479,17 +479,6 @@ namespace Relations
       if( 0 != m_inverse ) { m_inverse->i_reserve( num ) ; }
       return m_direct.i_reserve( num ) ;
     };
-    
-  public:
-    
-    /** copy constructor is public
-     *  @attention it is not for normal usage!
-     *  @param copy object to be copied 
-     */
-    RelationWeighted ( const OwnType& copy   ) 
-      : m_direct  ( copy.m_direct )
-      , m_inverse ( 0             ) 
-    {}
     
   private:
     

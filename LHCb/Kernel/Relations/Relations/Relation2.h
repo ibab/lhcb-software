@@ -1,25 +1,34 @@
-// $Id: Relation2.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: Relation2.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
 // =============================================================================
 #ifndef RELATIONS_Relation2_H 
 #define RELATIONS_Relation2_H 1
+// =============================================================================
 // Include files
+// =============================================================================
 #include "Relations/PragmaWarnings.h"
+// =============================================================================
 // STD & STL
+// =============================================================================
 #include <algorithm>
+// =============================================================================
 // from Gaudi
+// =============================================================================
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
+// =============================================================================
 // From Relations
+// =============================================================================
 #include "Relations/RelationUtils.h"
 #include "Relations/IRelation2D.h"
 #include "Relations/Relation.h"
+// =============================================================================
 
 namespace Relations
 {
@@ -82,26 +91,61 @@ namespace Relations
     
 
     /// the default constructor
-    Relation2( const size_t reserve = 0  )
-      :  m_direct ( reserve ) , m_inverse( reserve ) 
+    Relation2
+    ( const size_t reserve = 0  )
+      : IBase    (         ) 
+      , m_direct ( reserve ) 
+      , m_inverse( reserve ) 
     {
       /// set cross-links 
       m_direct  .setInverseBase ( m_inverse .directBase () ) ;
       m_inverse .setInverseBase ( m_direct  .directBase () ) ;
     };
-    
-    /** constructor from "inverted object"
-     *  @param inv object to be inverted
-     *  @param flag artificial argument to distinguish from copy constructor
+
+    /** constructor from any "direct" interface 
+     *  @param copy object to be copied
      */
-    Relation2 ( const InvType& inv   , int flag ) 
-      : m_direct  ( inv.m_inverse )
-      , m_inverse ( inv.m_direct  ) 
+    Relation2 
+    ( const DirectType& copy ) 
+      : IBase     (          ) 
+      , m_direct  ( copy     ) 
+      , m_inverse ( copy , 1 ) 
     {
-      m_direct  .setInverseBase( m_inverse .directBase () ) ;
-      m_inverse .setInverseBase( m_direct  .directBase () );
-    };
+      /// set cross-links 
+      m_direct  .setInverseBase ( m_inverse .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct  .directBase () ) ;
+    }
     
+    /** constructor from any "inverse" interface 
+     *  @param copy object to be copied
+     */
+    Relation2 
+    ( const InverseType& copy , 
+      const int          flag ) 
+      : IBase     (             ) 
+      , m_direct  ( copy , flag ) 
+      , m_inverse ( copy        ) 
+    {
+      /// set cross-links 
+      m_direct  .setInverseBase ( m_inverse .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct  .directBase () ) ;
+    }
+    
+    /** copy constructor is publc, 
+     *  @attention it is not recommended for normal usage 
+     *  @param copy object to be copied 
+     */
+    Relation2 
+    ( const OwnType& copy ) 
+      : IBase     ( copy           ) 
+      , m_direct  ( copy.m_direct  )
+      , m_inverse ( copy.m_inverse ) 
+    {
+      /// set cross-links 
+      m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
+      m_inverse .setInverseBase ( m_direct   .directBase () );
+    };
+
     /// destructor (virtual)
     virtual ~Relation2() {} ;
     
@@ -369,21 +413,6 @@ namespace Relations
      */
     inline StatusCode reserve ( const size_t num ) 
     { return m_direct.reserve( num ) ; };
-    
-  public:
-    
-    /** copy constructor is publc, 
-     *  @attention it is not recommended for normal usage 
-     *  @param copy object to be copied 
-     */
-    Relation2 ( const OwnType& copy ) 
-      : m_direct  ( copy.m_direct  )
-      , m_inverse ( copy.m_inverse ) 
-    {
-      /// set cross-links 
-      m_direct  .setInverseBase ( m_inverse  .directBase () ) ;
-      m_inverse .setInverseBase ( m_direct   .directBase () );
-    };
     
   private:
     
