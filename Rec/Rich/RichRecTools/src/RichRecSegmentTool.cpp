@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.3 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.4 2002-12-19 09:32:44 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -153,6 +153,16 @@ StatusCode RichRecSegmentTool::initialize() {
 
   return sc;
 }
+
+StatusCode RichRecSegmentTool::finalize() {
+
+  // Release tools
+  if( m_pixelFinder )      toolSvc()->releaseTool( m_pixelFinder );
+  if( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
+
+  return StatusCode::SUCCESS;
+}
+
 
 // Method that handles various Gaudi "software events"
 void RichRecSegmentTool::handle ( const Incident& incident ) {

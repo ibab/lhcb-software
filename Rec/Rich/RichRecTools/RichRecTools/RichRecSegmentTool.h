@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.4 2002-12-02 09:42:21 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.5 2002-12-19 09:32:44 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -53,8 +53,9 @@ public:
   /// Destructor
   virtual ~RichRecSegmentTool() {};
 
-  /// Initialize method
+  /// Initialize and finalize methods
   StatusCode initialize();
+  StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
