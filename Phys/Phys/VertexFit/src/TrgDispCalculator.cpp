@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.2 2005-02-09 17:18:48 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.3 2005-02-28 17:45:56 hruiz Exp $
 
 // Include files
 // from Gaudi
@@ -19,6 +19,14 @@
 // 
 //  Description: Calculation of impact parameter, distance between 
 //  two vertices and distance of closest approach of two particles
+//
+//  THIS TOOL IS MEANT FOR HLT, WHERE TRACKS ARE ASSUMED TO HAVE A
+//  'CYLINDRICAL' ERROR, THAT IS, THE COVARIANCE MATRIX HAS
+//  COV(1,1)=COV(2,2)!=0 AND ZERO IN ANY OTHER ELEMENT
+//  Could give reasonable approximations in other situations?
+//
+//  The closest thing to a documentation available by now is a talk at
+//  http://agenda.cern.ch/fullAgenda.php?ida=a05940#2005-02-07
 //
 //  Author     : Hugo Ruiz 
 //
@@ -61,6 +69,9 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
 
   warning() << "The error matrix of the IP vector is a bit dummy" << endreq;
 
+  // A diagonal matrix assuming no correlation between coordinates is computed
+  // Very dummy
+
   errMatrix(1,1) = errVector(1) * errVector(1);
   errMatrix(2,2) = errVector(2) * errVector(2);
   errMatrix(3,3) = errVector(3) * errVector(3);
@@ -102,8 +113,8 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
   ipUniVector(3) = ipVector.z()/ip;
 
   // Error on impact parameter
-  double projTrackErrIp = dot(ipUniVector,trackPointErr*ipUniVector);
-  double projVertexErrIp = dot(ipUniVector,vertexPositionErr*ipUniVector);
+  double projTrackErrIp = fabs(dot(ipUniVector,trackPointErr*ipUniVector));
+  double projVertexErrIp = fabs(dot(ipUniVector,vertexPositionErr*ipUniVector));
   ipErr = sqrt( projTrackErrIp + projVertexErrIp );
 
   return StatusCode::SUCCESS;
@@ -116,7 +127,7 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
 
 ///////////////////////////////////////////////////////////////////////
 // CODE DUPLICATED IN ORDER TO MAKE THE METHOD THAT RETURNS IP
-// AS SCALAR MORE TIME-EFFICIENT
+// AS SCALAR MORE TIME-EFFICIENT, as this is meant for HLT!
 ///////////////////////////////////////////////////////////////////////
 
 StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
@@ -147,8 +158,8 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
   ipUniVector(3) = ipVector.z()/ip;
 
   // Error on impact parameter
-  double projTrackErrIp = dot(ipUniVector,trackPointErr*ipUniVector);
-  double projVertexErrIp = dot(ipUniVector,vertexPositionErr*ipUniVector);
+  double projTrackErrIp = fabs(dot(ipUniVector,trackPointErr*ipUniVector));
+  double projVertexErrIp = fabs(dot(ipUniVector,vertexPositionErr*ipUniVector));
   ipErr = sqrt( projTrackErrIp + projVertexErrIp );
 
 
@@ -211,8 +222,44 @@ StatusCode TrgDispCalculator::calcImpactPar( const Particle& part,
 StatusCode TrgDispCalculator::calcCloseAppr( const Particle& part1,
                                              const Particle& part2, 
                                              double& dist, double& distErr ) {
+ 
+  //Flag to indicate parallel tracks
+  int aux = 0;
+
+  // Get the direction perpendicular to both particle tracks:
+  Hep3Vector mom1(part1.momentum().v()); 
+  Hep3Vector mom2(part2.momentum().v()); 
+  Hep3Vector perpDirection = mom1.cross(mom2);
+
+  // Get points on particles and the displacement vector between the two particles
+  const Hep3Vector& trackPoint1 = part1.pointOnTrack();
+  const Hep3Vector& trackPoint2 = part2.pointOnTrack();
+  Hep3Vector disp = trackPoint1 - trackPoint2;
+
+  // Calculate the perpendicular direction when the tracks are parallel:
+  if (perpDirection == 0) {
+     aux = 1;
+     perpDirection = (disp.cross(mom1)).cross(mom1);
+  }
+  Hep3Vector tempPerpUnit = perpDirection/perpDirection.mag();       
+  HepVector perpUnit(3);
+  perpUnit(1) = tempPerpUnit.x(); // 
+  perpUnit(2) = tempPerpUnit.y(); // >:-(
+  perpUnit(3) = tempPerpUnit.z(); // 
+  
+  // Calculate the distance of closest approach as the projection
+  // of this vector in the perpendicular direction:
+  dist = fabs(disp.dot(tempPerpUnit)); 
+  
+  // Calculate error on distance
+  const HepSymMatrix& trackErr1 = part1.pointOnTrackErr();
+  const HepSymMatrix& trackErr2 = part2.pointOnTrackErr();
+  double projTrackErr1 = fabs(dot(perpUnit,trackErr1*perpUnit));
+  double projTrackErr2 = fabs(dot(perpUnit,trackErr2*perpUnit));
+  distErr = sqrt( projTrackErr1 + projTrackErr2 );
 
   return StatusCode::SUCCESS;
+
 }
 
 //==================================================================
@@ -222,6 +269,8 @@ StatusCode TrgDispCalculator::calcCloseAppr( const Particle& part1,
 StatusCode TrgDispCalculator::calcVertexDis( const Vertex& vertex1,
                              const Vertex& vertex2, double& dist, 
                              double& distErr ) {
+
+  // Code copied from that of Sandra Amato in GeomDispCalculator
  
   //Calculate the distance between two vectors:
   HepPoint3D d3D = vertex1.position() - vertex2.position();
