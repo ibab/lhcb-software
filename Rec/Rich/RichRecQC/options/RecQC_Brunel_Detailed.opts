@@ -14,6 +14,14 @@
 #include "$RICHRECQCOPTS/pid/BrunelMoni_VeloTTTracks.opts"
 #include "$RICHRECQCOPTS/pid/VeloTTTracks_Para.opts"
 
+// positive tracks only
+#include "$RICHRECQCOPTS/pid/BrunelMoni_AllPositiveTracks.opts"
+#include "$RICHRECQCOPTS/pid/AllPositiveTracks_Para.opts"
+
+// negative tracks only
+#include "$RICHRECQCOPTS/pid/BrunelMoni_AllNegativeTracks.opts"
+#include "$RICHRECQCOPTS/pid/AllNegativeTracks_Para.opts"
+
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                          "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };

@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.20 2004-05-31 21:32:34 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.21 2004-06-29 19:39:54 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -46,8 +46,8 @@ RichPIDQC::RichPIDQC( const std::string& name,
 RichPIDQC::~RichPIDQC() {};
 
 // Initialisation
-StatusCode RichPIDQC::initialize() {
-
+StatusCode RichPIDQC::initialize() 
+{
   debug() << "Initialize" << endreq;
 
   // Initialize base class
@@ -61,15 +61,14 @@ StatusCode RichPIDQC::initialize() {
     return StatusCode::FAILURE;
   }
 
+  // If MC information is to be used
   if ( m_truth ) {
 
     // Retrieve tracking association tool
     m_trackToMCP = tool<TrackFitAsct>( m_tkMCTruthType, m_tkMCTruthName );
-    debug() << " Successfully retrieved " << m_tkMCTruthType
-            << " as " << m_tkMCTruthName << endreq;
 
     // Retrieve particle property service
-    IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
+    IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
     // Setup the PDG code mappings
     m_localID[ 0 ] = Rich::Unknown;
@@ -89,31 +88,29 @@ StatusCode RichPIDQC::initialize() {
   if ( m_truth && !bookMCHistograms() ) return StatusCode::FAILURE;
 
   // Initialise summary information
-  for ( int i = 0; i<6; ++i ) {
+  for ( int i = 0; i<6; ++i ) { 
     for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
   }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
-  {for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk )
-  { m_trackCount[0][iTk] = 0; m_trackCount[1][iTk] = 0; }}
-
+  for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) { 
+    m_trackCount[0][iTk] = 0; 
+    m_trackCount[1][iTk] = 0; 
+  }
+  
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
-  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes() << endreq
-          << " RichPIDs location      = " << m_pidTDS << endreq
-          << " Histogram location     = " << m_hstPth << endreq;
-  if ( m_truth ) {
-    debug() << " MC Histogram location  = " << m_mcHstPth << endreq;
-  }
+  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes() 
+          << endreq;
 
   return StatusCode::SUCCESS;
 };
 
-StatusCode RichPIDQC::bookHistograms() {
-
+StatusCode RichPIDQC::bookHistograms() 
+{
   std::string title;
   HYPOTHESIS_NAMES;
 
@@ -142,8 +139,8 @@ StatusCode RichPIDQC::bookHistograms() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPIDQC::bookMCHistograms() {
-
+StatusCode RichPIDQC::bookMCHistograms() 
+{
   std::string title;
   int id;
   HYPOTHESIS_NAMES;
@@ -188,11 +185,11 @@ StatusCode RichPIDQC::bookMCHistograms() {
   } // extra histos if
 
   return StatusCode::SUCCESS;
-};
+}
 
 // Main execution
-StatusCode RichPIDQC::execute() {
-
+StatusCode RichPIDQC::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Load data
@@ -205,7 +202,7 @@ StatusCode RichPIDQC::execute() {
         iTrk != m_tracks->end(); ++iTrk ) {
     if ( (*iTrk)->unique() ) ++multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    TrStateP* pState = getTrStateP( *iTrk );
+    const TrStateP* pState = getTrStateP( *iTrk );
     const double tkPtot = ( pState ? pState->p()/GeV : 0 );
     if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
     ++totalSelTracks;
@@ -340,8 +337,8 @@ StatusCode RichPIDQC::execute() {
 };
 
 //  Finalize
-StatusCode RichPIDQC::finalize() {
-
+StatusCode RichPIDQC::finalize() 
+{
   debug() << "Finalize" << endreq;
 
   if ( m_truth && m_finalPrintOut ) {
@@ -425,7 +422,7 @@ StatusCode RichPIDQC::finalize() {
            << endreq << "  Tk Sel   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
     info() << " #Tks(+MC) |";
     unsigned tkCount = 0;
-    for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+    for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
       if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "           |"; }
       if ( m_trSelector.typeSelected((Rich::Track::Type)iTk) ) {
         info() << " " << (Rich::Track::Type)iTk << " " << m_trackCount[0][iTk]
@@ -472,13 +469,13 @@ StatusCode RichPIDQC::finalize() {
   return RichAlgBase::finalize();
 }
 
-StatusCode RichPIDQC::loadPIDData() {
-
+StatusCode RichPIDQC::loadPIDData() 
+{
   // Load PIDs
   DataObject *pObject;
   if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) ) {
     if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
-         static_cast<KeyedContainer<RichPID, Containers::HashMap>*> (pObject) ) {
+         static_cast<KeyedContainer<RichPID, Containers::HashMap>*>(pObject) ) {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
       return StatusCode::SUCCESS;
@@ -487,26 +484,4 @@ StatusCode RichPIDQC::loadPIDData() {
 
   // If we get here, things went wrong
   return Warning( "Failed to located RichPIDs at " + m_pidTDS );
-}
-
-StatusCode RichPIDQC::loadTrackData() {
-
-  // Locate tracks
-  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trackTDS );
-  if ( !tracks ) { return Warning( "Cannot locate TrStoredTracks at " + m_trackTDS ); }
-  m_tracks = tracks;
-
-  return StatusCode::SUCCESS;
-}
-
-TrStateP * RichPIDQC::getTrStateP( const TrStoredTrack * track,
-                                   const double zPos ) {
-
-  TrStateP* pState = 0;
-  if ( track ) {
-    SmartRef<TrState> trState = track->closestState( zPos );
-    pState = dynamic_cast<TrStateP*>( (TrState*)trState );
-  }
-
-  return pState;
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-06-29 - Chris Jones
+ - Add detailed monitor options for +ve and -ve tracks
+ - minor improvements to PID monitor
+
 !======================== RichRecQC v1r8 2004-06-18 ========================
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure

@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.h,v 1.8 2004-06-18 09:58:57 jonesc Exp $
+// $Id: RichPIDQC.h,v 1.9 2004-06-29 19:39:54 jonesc Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -73,8 +73,8 @@ private: // methods
   StatusCode bookMCHistograms();
 
   /// perform c++ gymnastics to get momentum state
-  TrStateP * getTrStateP( const TrStoredTrack * track,
-                          const double zPos = -999999 );
+  const TrStateP * getTrStateP( const TrStoredTrack * track,
+                                const double zPos = -999999 ) const;
 
 private: // data
 
@@ -101,8 +101,10 @@ private: // data
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
   RichTrackSelector m_trSelector;  ///< Track selector
-  TrackFitAsct* m_trackToMCP;    ///< Track MCTruth
-  std::map<int,Rich::ParticleIDType> m_localID;   ///< Local PID mapping
+  TrackFitAsct* m_trackToMCP;      ///< Track MCTruth
+
+  // Local PID mapping
+  std::map<int,Rich::ParticleIDType> m_localID;
 
   // Summary information
   double m_sumTab[6][6];
@@ -136,4 +138,20 @@ private: // data
   IHistogram1D* m_eventRate;        ///< Events with/without PID results
 
 };
+
+inline const TrStateP * RichPIDQC::getTrStateP( const TrStoredTrack * track,
+                                                const double zPos ) const
+{
+  return ( track ? dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
+}
+
+inline StatusCode RichPIDQC::loadTrackData() 
+{
+  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trackTDS );
+  m_tracks = tracks;
+  return ( tracks ? StatusCode::SUCCESS : 
+           Warning( "Cannot locate TrStoredTracks at " + m_trackTDS ) );
+}
+
+
 #endif // RICHRECQC_RICHPIDQC_H
