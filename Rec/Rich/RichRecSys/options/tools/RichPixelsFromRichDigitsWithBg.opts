@@ -6,7 +6,7 @@
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigitsWithBg/RichPixelCreator" };
 
 // number of particles to add each event
-ToolSvc.RichPixelCreator.NumBgRingsToAdd = 5;
+ToolSvc.RichPixelCreator.NumberBackgroundTracksToAdd = 100;
 
 // Which RICH detectors to use             RICH1   RICH2
 ToolSvc.RichPixelCreator.UseDetectors = {  true,   true   };

@@ -1,5 +1,5 @@
 
-// use the tool that uses RichDigits
+// use the tool that decodes directly from RawBuffer
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRawBuffer/RichPixelCreator" };
 
 // Which RICH detectors to use             RICH1   RICH2
