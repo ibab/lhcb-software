@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.33 2002-03-19 13:53:18 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.34 2002-03-25 10:20:34 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -45,31 +45,6 @@ DOMString remSpaces(DOMString value)
     value.deleteData(value.length()-1,1);
   }
   return value;
-}
-
-
-//-----------------------------------------------------------------------------
-std::vector<std::string> findWords(std::string value, 
-                                   std::string delim)
-//-----------------------------------------------------------------------------
-{
-  std::vector<std::string> words;
-  unsigned int i = 0;
-
-  while ((i = value.find(delim)) != std::string::npos)
-  {
-    while((i = value.find(" ")) == 0)
-    {
-      value = value.substr(1, value.size()-1);
-    }
-    words.push_back(value.substr(0,i));
-    value = value.substr(i+1,value.size()-i);
-  }
-  if (value.size() != 0)
-  {
-    words.push_back(value.substr(0,value.size()));
-  }
-  return words;
 }
 
 

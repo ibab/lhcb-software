@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.7 2002-02-27 13:25:35 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.8 2002-03-25 10:20:35 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
@@ -45,9 +45,11 @@ public:
   void fatalError(const SAXParseException& toCatch);
   void resetErrors();
 
-    
+  static void remSpaces(std::string& word);
+  static std::vector<std::string> findWords(std::string,
+                                            std::string delim);
   static std::string chooseAccess(const std::string& str);
-  static bool isSimple(std::string value);
+  static bool isSimple(const std::string& value);
   static bool isFundamental(std::string value);
   static bool isPointer(std::string value);
   static bool isRef(std::string value);
@@ -57,7 +59,7 @@ public:
   static std::string firstUp(const std::string& s);
   static std::string retGetName(const std::string& s);
 
-  static void pushAddImport(std::string value);
+  static void pushAddImport(const std::string& value);
   static const std::vector<std::string>& addImport();
 
 private:

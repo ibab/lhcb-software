@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020325 - Stefan Roiser
+ - bugfix no reference for arguments which are fundamental types of more then one word (e.g. signed int)
+
 ! 20020319 - Stefan Roiser
  - bugfix when using stdVectorTypeDef to create type std::vector<classname*>
 

@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.11 2002-03-04 21:51:00 mato Exp $
+// $Id: DaDiTools.cpp,v 1.12 2002-03-25 10:20:35 mato Exp $
 
 
 // Include files
@@ -22,6 +22,47 @@
 
 std::vector<std::string> DaDiTools::additionalImports;
 
+
+//-----------------------------------------------------------------------------
+void DaDiTools::remSpaces(std::string& word)
+//-----------------------------------------------------------------------------
+{
+  while (word[0] == ' ')
+  {
+    word = word.substr(1, word.length()-1);
+  }
+  while (word[word.length()-1] == ' ')
+  {
+    word = word.substr(0, word.length()-1);
+  }
+}
+  
+
+//-----------------------------------------------------------------------------
+std::vector<std::string> DaDiTools::findWords(std::string value, 
+                                   std::string delim)
+//-----------------------------------------------------------------------------
+{
+  std::vector<std::string> words;
+  unsigned int i = 0;
+
+  while ((i = value.find(delim)) != std::string::npos)
+  {
+    while((i = value.find(" ")) == 0)
+    {
+      value = value.substr(1, value.size()-1);
+    }
+    words.push_back(value.substr(0,i));
+    value = value.substr(i+1,value.size()-i);
+  }
+  if (value.size() != 0)
+  {
+    words.push_back(value.substr(0,value.size()));
+  }
+  return words;
+}
+
+
 //-----------------------------------------------------------------------------
 std::string DaDiTools::chooseAccess(const std::string& str)
 //-----------------------------------------------------------------------------
@@ -33,7 +74,7 @@ std::string DaDiTools::chooseAccess(const std::string& str)
 }
 
 //-----------------------------------------------------------------------------
-bool DaDiTools::isSimple(std::string value)
+bool DaDiTools::isSimple(const std::string& value)
 //-----------------------------------------------------------------------------
 {
   if (isPointer(value) || isFundamental(value))
@@ -50,26 +91,31 @@ bool DaDiTools::isSimple(std::string value)
 bool DaDiTools::isFundamental(std::string value)
 //-----------------------------------------------------------------------------
 {
-  if ((value == "bool")  || (value == "short")    ||
-      (value == "long")  || (value == "int")      || 
-      (value == "float") || (value == "double")   || 
-      (value == "char")  || (value == "unsigned") ||
-      (value == "signed"))
+  remSpaces(value);
+  std::vector<std::string> types = findWords(value, " ");
+  for (std::vector<std::string>::iterator iter = types.begin();
+       iter != types.end(); ++iter)
   {
-    return true;
+        
+    if ((*iter == "bool")  || (*iter == "short")    ||
+        (*iter == "long")  || (*iter == "int")      || 
+        (*iter == "float") || (*iter == "double")   || 
+        (*iter == "char")  || (*iter == "unsigned") ||
+        (*iter == "signed"))
+    {
+      return true;
+    }
   }
-  else
-  {
-    return false;
-  }
+  return false;
 }
 
 //-----------------------------------------------------------------------------
 bool DaDiTools::isPointer(std::string value)
 //-----------------------------------------------------------------------------
 {
-  int i = value.find_last_of(" ");
-  value = value.substr(i+1, value.size()-i);
+  remSpaces(value);
+  //  int i = value.find_last_of(" ");
+  //  value = value.substr(i+1, value.size()-i);
   if (value.substr(value.size()-1, value.size()).compare("*") == 0)
   {
     return true;
@@ -81,8 +127,9 @@ bool DaDiTools::isPointer(std::string value)
 bool DaDiTools::isRef(std::string value)
 //-----------------------------------------------------------------------------
 {
-  int i = value.find_last_of(" ");
-  value = value.substr(i+1, value.size()-i);
+  remSpaces(value);
+  //  int i = value.find_last_of(" ");
+  //  value = value.substr(i+1, value.size()-i);
   if (value.substr(value.size()-1, value.size()).compare("&") == 0)
   {
     return true;
@@ -94,6 +141,7 @@ bool DaDiTools::isRef(std::string value)
 bool DaDiTools::isArray(std::string value)
 //-----------------------------------------------------------------------------
 {
+  remSpaces(value);
   if (value.substr(value.size()-1, value.size()).compare("]") == 0)
   {
     return true;
@@ -226,7 +274,7 @@ void DaDiTools::resetErrors()
 }
 
 //-----------------------------------------------------------------------------
-void DaDiTools::pushAddImport(std::string value)
+void DaDiTools::pushAddImport(const std::string& value)
 //-----------------------------------------------------------------------------
 {
   additionalImports.push_back(value);
