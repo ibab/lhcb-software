@@ -89,17 +89,17 @@ public:
   /// Test if the RichSmartID is valid
   inline bool isValid() const
   {
-    return (key() & (RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK +
-                     RichSmartCode::MaskPDRowOK + RichSmartCode::MaskPDColOK +
-                     RichSmartCode::MaskPixelRowOK + RichSmartCode::MaskPixelColOK +
-                     RichSmartCode::MaskSubPixelOK) );
+    return ((key() & (RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK +
+                      RichSmartCode::MaskPDRowOK + RichSmartCode::MaskPDColOK +
+                      RichSmartCode::MaskPixelRowOK + RichSmartCode::MaskPixelColOK +
+                      RichSmartCode::MaskSubPixelOK)) !=0 );
   }
 
   /// Test if the RICH detector field is set.
   inline bool richIsSet() const
   {
     // Disable until SICB retires due to lack of bits
-    // return (key() & RichSmartCode::MaskRichOK) >> RichSmartCode::ShiftRichOK;
+    // return (((key() & RichSmartCode::MaskRichOK) >> RichSmartCode::ShiftRichOK) != 0 );
     return true;
   }
 
@@ -107,38 +107,38 @@ public:
   inline bool panelIsSet() const
   {
     // Disable until SICB retires due to lack of bits
-    // return (key() & RichSmartCode::MaskPanelOK) >> RichSmartCode::ShiftPanelOK;
+    // return (((key() & RichSmartCode::MaskPanelOK) >> RichSmartCode::ShiftPanelOK) != 0 );
     return true;
   }
 
   /// Test if the RICH photon detector row field is set.
   inline bool pdRowIsSet() const
   {
-    return (key() & RichSmartCode::MaskPDRowOK) >> RichSmartCode::ShiftPDRowOK;
+    return (((key() & RichSmartCode::MaskPDRowOK) >> RichSmartCode::ShiftPDRowOK) != 0 );
   }
 
   /// Test if the RICH photon detector column field is set.
   inline bool pdColIsSet() const
   {
-    return (key() & RichSmartCode::MaskPDColOK) >> RichSmartCode::ShiftPDColOK;
+    return (((key() & RichSmartCode::MaskPDColOK) >> RichSmartCode::ShiftPDColOK) != 0 );
   }
 
   /// Test if the RICH pixel row field is set.
   inline bool pixelRowIsSet() const
   {
-    return (key() & RichSmartCode::MaskPixelRowOK) >> RichSmartCode::ShiftPixelRowOK;
+    return (((key() & RichSmartCode::MaskPixelRowOK) >> RichSmartCode::ShiftPixelRowOK) != 0 );
   }
 
   /// Test if the RICH pixel column field is set.
   inline bool pixelColIsSet() const
   {
-    return (key() & RichSmartCode::MaskPixelColOK) >> RichSmartCode::ShiftPixelColOK;
+    return (((key() & RichSmartCode::MaskPixelColOK) >> RichSmartCode::ShiftPixelColOK) != 0 );
   }
 
   /// Test if the RICH sub-pixel field is set.
   inline bool subPixelIsSet() const
   {
-    return (key() & RichSmartCode::MaskSubPixelOK) >> RichSmartCode::ShiftSubPixelOK;
+    return (((key() & RichSmartCode::MaskSubPixelOK) >> RichSmartCode::ShiftSubPixelOK) != 0 );
   }
 
   /// Decoding function to extract RICH detector identifier
