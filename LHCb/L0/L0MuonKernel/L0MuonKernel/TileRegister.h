@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.3 2004-07-12 16:09:00 ltocco Exp $
+// $Id: TileRegister.h,v 1.4 2004-11-03 13:31:48 ltocco Exp $
 
 #ifndef L0MUONKERNEL_TILEREGISTER_H
 #define L0MUONKERNEL_TILEREGISTER_H     1
@@ -23,7 +23,6 @@
 
 namespace L0Muon {
 
-enum RegisterType { STRIP, PAD } ;
 
 class TileRegister : public L0Muon::Register {
 
@@ -38,23 +37,17 @@ public:
   std::vector<MuonTileID> getTileVector() { return m_ids; }
   MuonTileID tile(int ind) { return m_ids[ind]; }
   std::vector<MuonTileID> firedTiles();
-  RegisterType type() { return m_type; }
+
 
   void setType( std::string str){ m_fieldtype = str ;}
-  void setTypeMT (int sta) { m_type = PAD ;}
+
   
   std::string Type() { return m_fieldtype;}
 
-  void setType(int sta, int nreg);
-
-  void setTypePad (int sta) {  m_type = PAD ; }
-  void setTypeStrip (int sta){ m_type = STRIP ;
-  }
-  
   
 
   void setTile(MuonTileID & id);
-  void setTile(MuonTileID & id, MsgStream * log);
+  void setTile(MuonTileID & id, MsgStream & log);
   
 
   std::vector<MuonTileID> Pads() { return m_pads; }
@@ -73,7 +66,7 @@ private:
 
   std::vector<MuonTileID> m_ids ;  // MuonTileIDs mapping
   std::vector<MuonTileID> m_pads;
-  RegisterType m_type;
+
   std::string m_fieldtype ;
   boost::dynamic_bitset<> m_tilestag ;
   boost::dynamic_bitset<> m_stripstag ;

@@ -46,7 +46,7 @@ class CandidateTower {
   boost::dynamic_bitset<> getBit();
   //void reset(int sta);
   void reset();
-  void drawBits(int sta, MsgStream * log);
+  void drawBits(int sta, MsgStream & log);
 
   
 
@@ -55,8 +55,7 @@ class CandidateTower {
 
   void setPadIndex(int sta, int maxXfoi, int maxYFoi, int offset, int ind);
   void setOrderedPadIndex(int sta, 
-                          int maxXfoi, int maxYFoi, int offset, int ind, 
-                          MsgStream * log);
+                          int maxXfoi, int maxYFoi, int offset, int ind);
   seedind getPadIndex(int sta) { return m_xyindex[sta];}
   
   

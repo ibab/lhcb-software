@@ -15,7 +15,12 @@ void L0Muon::Unit::setParent(L0Muon::Unit * unit)
   m_parent = unit;
 }
 
-
+//Unit * L0Muon::Unit::subUnit(std::string name)
+//{  
+//std::map<std::string,L0Muon::Unit*>::iterator iunit; 
+//iunit = m_units.find(name);
+//return (*iunit).second;  
+//}
 
 void L0Muon::Unit::addInputRegister(L0Muon::Register* in, std::string rname) {
 
@@ -70,30 +75,31 @@ void L0Muon::Unit::releaseRegisters() {
   
 }  
 
-void L0Muon::Unit::dumpRegisters(MsgStream * log) {
+void L0Muon::Unit::dumpRegisters(MsgStream & log) {
 
   std::map<std::string,L0Muon::Register*>::iterator ir;
   
   
   int ic = 1;
+  log << MSG::DEBUG << "Input Registers" << endreq;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
-   
     boost::dynamic_bitset<> bits = (*ir).second->getBitset();
     for (boost::dynamic_bitset<>::size_type i =0; i < bits.size();i++){
-     
+      log << MSG::DEBUG << bits[i] << endreq;
     }
-    //*log << MSG::DEBUG << endreq;
+    log << MSG::DEBUG << endreq;
     ic++;
   }
  
   ic = 1;
+  log << MSG::DEBUG << "Output Registers" << endreq;
   for ( ir = m_outputs.begin(); ir != m_outputs.end(); ir++) {
    
     boost::dynamic_bitset<> bits = (*ir).second->getBitset();
     for (boost::dynamic_bitset<>::size_type i =0; i < bits.size();i++){
-     
+      log << MSG::DEBUG << bits[i] << endreq;    
     }
-  
+    log << MSG::DEBUG << endreq; 
     ic++; 
   }
 }
@@ -110,6 +116,17 @@ void L0Muon::Unit::execute() {
   }  
 
 }
+void L0Muon::Unit::execute(MsgStream & log) {
+  // execute the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->execute(log);
+
+    }
+  }  
+
+}
 
 void L0Muon::Unit::initialize() {
 
@@ -121,6 +138,18 @@ void L0Muon::Unit::initialize() {
     }
   } 
 }
+
+void L0Muon::Unit::initialize(MsgStream & log) {
+
+  // initialize the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->initialize(log);
+    }
+  } 
+}
+
 
 void L0Muon::Unit::finalize() {
   

@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= L0MuonKernel v2r2 2004-09-28 ========================
+! 2004-09-28 - Luisanna Tocco
+ - bug fixed in getPadIndex for stations 4 and 5
+ - add methods and flag to search candidates without M1 (for trigger studies)
+ - add methods and flag to write L0 Buffers (files ascii)
+ - modified classes BuildL0BufferUnit and BestCandidateSelectionUnit
+ - delete some obsolete methods
+
 !======================= L0MuonKernel v2r1p1 2004-07-12 ========================
 ! 2004-03-24 - Luisanna Tocco
  - bug fixed in data flow management (XBan, YCorner, YBand):

@@ -7,12 +7,10 @@
    date 2 September 2003
 
 */
-
+#include <stdio.h>
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0MuonKernel/Unit.h"
-//#include "MuonKernel/MuonTileID.h"
-//#include "L0MuonKernel/L0mProcUnit.h"
 #include "L0mConf/L0MPuNodeBase.h"
 #include "GaudiKernel/MsgStream.h"
 namespace L0Muon {
@@ -21,7 +19,7 @@ namespace L0Muon {
 
   public:
     BuildL0BufferUnit();
-    virtual ~BuildL0BufferUnit();
+    ~BuildL0BufferUnit();
     
     void setPU( MuonTileID pu){ m_pu = pu;}     
     void setIdField();    
@@ -29,6 +27,7 @@ namespace L0Muon {
     void setOutputField();  
     void setL0buf();
 
+    
 
     boost::dynamic_bitset<> getIdField();
     boost::dynamic_bitset<> getInputField(); 
@@ -36,16 +35,26 @@ namespace L0Muon {
 
     void initialize();
     void execute();
+    void initialize(MsgStream & log);
+    void execute(MsgStream & log);
     void finalize();
+
+    void dump(FILE *l0bufferFile);
   
+    void setOutputFile(MuonTileID puid);
 
   private:
+
     MuonTileID m_pu;
     std::map<std::string, Register*> m_addrfield;
     boost::dynamic_bitset<> m_l0buf;
     boost::dynamic_bitset<> m_idfield;
     boost::dynamic_bitset<> m_inpfield;
     boost::dynamic_bitset<> m_outfield;
+
+
+    FILE *m_l0bufferFile;
+    unsigned long int m_l0EventNumber;
 
   };
 }; // namespace L0Muon

@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.4 2004-07-12 16:09:00 ltocco Exp $
+// $Id: Tower.h,v 1.5 2004-11-03 13:31:48 ltocco Exp $
 
 #ifndef L0MUONKERNEL_TOWER_H
 #define L0MUONKERNEL_TOWER_H     1
@@ -42,19 +42,19 @@ namespace L0Muon {
   
     typedef std::pair<int,int> HitIndex;
     typedef std::vector<boost::dynamic_bitset<> > StationMap;    
-    //===============================================
     typedef std::map< HitIndex, MuonTileID> IDMap;
     
 
     void reset();
-    void setBit(MsgStream * log, int sta, int row, int col);  
+  
+    void setBit(int sta, int row, int col, MsgStream & log);  
     void setPadIdMap(int sta, std::pair<int, int> XY, MuonTileID mid); 
     MuonTileID getPadIdMap(int sta, std::pair<int,int> XY);
     
     boost::dynamic_bitset<> getBits(int sta, HitIndex seed, int xfoi);
     boost::dynamic_bitset<> getBits(int sta, int x, int y, int xfoi);
-    //std::vector<HitIndex>& getSeeds() { return m_seeds; } 
-    void drawStation(int sta, MsgStream * log);
+    
+    void drawStation(int sta, MsgStream & log);
     int maxXFoi(int sta){ return m_maxXFoI[sta] ; }
     int maxYFoi(int sta){ return m_maxYFoI[sta] ; }
 
@@ -63,31 +63,28 @@ namespace L0Muon {
     
     void setPtparam(std::vector<double> ptparam) { m_ptparam= ptparam;}
     
+    void setIgnoreM1(bool ignoreM1){ m_ignoreM1 = ignoreM1; }
     
       
+      
     
-    void draw(MsgStream * log);
+    void draw(MsgStream & log);
     StationMap getTable(int sta){ return m_bittable[sta] ; }
     
-    void processTower(MuonTileID & puID, MsgStream * log);
+    void processTower(MuonTileID & puID, MsgStream & log);
 
-    // void setStatus(unsigned long int &);
-    //boost::dynamic_bitset<> status(){ return m_status;}
-  
-    //boost::dynamic_bitset<> getAddr1(){return m_addr1;}
-    //boost::dynamic_bitset<> getAddr2(){return m_addr2;}
+    // added for L0Buffer
+    boost::dynamic_bitset<> addr(int i){ return m_addr[i];}
+    
+
 
     // Processing with creating L0MuonCandidate
     L0MuonCandidate* createCandidate(double p, double th, double phi,int flag);
     std::vector<L0MuonCandidate*> puCandidates(){ return m_puCandidates;}
     
     //for offsets in ntuple
-    std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffset(){ return m_offForCand;}
-    // std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffypset(){ return m_offypForCand;}
-    //std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffymset(){ return m_offymForCand;}
-      
-    //std::vector<Register*> puRegisters(){ return m_puRegisters;}
-    
+    std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > 
+    candOffset(){ return m_offForCand;}
       
 
     //functions to extract calculated track parameters
@@ -101,15 +98,11 @@ namespace L0Muon {
 
     int numberOfCand(){ return m_ncand ;}
 
-    bool usefulEvent() {return m_usefulevent;}
-    
-    
-    //std::vector<boost::dynamic_bitset<> > pts() { return m_pts;}
-    //std::vector<boost::dynamic_bitset<> > addrs() {return m_addrs;}
-    
+        
     
   private:
 
+        
     Cleaning m_clean;
     CandidateTower m_ctower ;
     int m_maxXFoI[5];
@@ -117,11 +110,11 @@ namespace L0Muon {
     int m_xfoi[5];
     int m_yfoi[5];
     std::vector<double> m_ptparam;
-    
+    bool m_ignoreM1;
+   
     StationMap m_bittable[5];
     
     unsigned long int m_ncand ;
-    //boost::dynamic_bitset<> m_status, addr1, addr2, pt1, pt2;
     
 
     //Calculated track parameters
@@ -129,35 +122,25 @@ namespace L0Muon {
     double m_theta;
     double m_phi;
     
+    boost::dynamic_bitset<> m_addr[2];
+
     IDMap m_idmap[5];
-    
 
     MuonTileID pad;
     
     
-    double ptcalc(MsgStream * log);
+    double ptcalc();
+    double ptcalcIgnoreM1();
     
   // Muon geometry tool
     IMuonTileXYZTool *m_iTileXYZTool;
 
     std::vector<L0MuonCandidate*> m_puCandidates;
     
-    //std::vector< double > m_pts;
-    //std::vector<boost::dynamic_bitset<> > m_addrs, m_pts;
-    
     // for offset in ntuple
-    //std::pair<L0MuonCandidate*, int[5]> m_offsetx;
-    std::pair<L0MuonCandidate*, std::vector<int> > m_offsetx;
-    //std::pair<L0MuonCandidate*, std::vector<int> > m_offsetyp;
-    //std::pair<L0MuonCandidate*, std::vector<int> > m_offsetym;
-
-    //std::vector<std::pair<L0MuonCandidate*, int[5]> > m_offForCand;
-    std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
-    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offypForCand;
-    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offymForCand;   
- //
     
-    bool m_usefulevent;
+    std::pair<L0MuonCandidate*, std::vector<int> > m_offsetx;
+    std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
     
 
 };

@@ -1,10 +1,13 @@
+
 #include "L0MuonKernel/BuildL0BufferUnit.h"
 #include "L0MuonKernel/L0mProcUnit.h"
 
 L0Muon::BuildL0BufferUnit::BuildL0BufferUnit(){
   
+   
   boost::dynamic_bitset<> tmpl0(512);
   m_l0buf = tmpl0;
+
   boost::dynamic_bitset<> tmpoutfield(48);
   m_outfield = tmpoutfield ;
   
@@ -14,96 +17,138 @@ L0Muon::BuildL0BufferUnit::BuildL0BufferUnit(){
   boost::dynamic_bitset<> tmpidfield(32);
   m_idfield = tmpidfield ; 
 
+  m_l0bufferFile = NULL;
+
+  m_l0EventNumber=0;
+
+  
 };
 
-L0Muon::BuildL0BufferUnit::~BuildL0BufferUnit(){}
+void L0Muon::BuildL0BufferUnit::setOutputFile(MuonTileID puid){
+  char * name = "/afs/cern.ch/user/l/ltocco/scratch0/L0Buffers/l0buf_PUQ%dR%d%d%d.txt";
+  char buf[4096];
+  sprintf(buf,name,puid.quarter()+1,puid.region()+1,puid.nX(),puid.nY());
+  m_l0bufferFile = fopen(buf,"w");
+}
+
+L0Muon::BuildL0BufferUnit::~BuildL0BufferUnit(){
+  if (m_l0bufferFile!=NULL) fclose(m_l0bufferFile);
+}
 
 void L0Muon::BuildL0BufferUnit::setIdField(){
+
+  m_idfield.resize(0);
+
+  boost::dynamic_bitset<> l0EventNumber(12,m_l0EventNumber);
+  boost::dynamic_bitset<> l0BId(12,0ul);
+  
+  for (boost::dynamic_bitset<>::size_type i=0; i<l0EventNumber.size();i++){
+    bool val = l0EventNumber[i];
+    m_idfield.push_back(val) ;
+  }
+
+  m_idfield.push_back(0) ; 
+  m_idfield.push_back(0) ; 
+  m_idfield.push_back(0) ; 
+  m_idfield.push_back(1) ; 
+
+  for (boost::dynamic_bitset<>::size_type i=0; i<l0BId.size();i++){
+    //bool val = l0EventNumber[i];
+    bool val = l0BId[i];
+    m_idfield.push_back(val) ;
+  }
+
+
+  
 }
 
 void L0Muon::BuildL0BufferUnit::setInputField(){
   std::map<std::string,Register*>::iterator ir ;
 
+
   boost::dynamic_bitset<>::size_type j = 0;
-  
   for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
     
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-  
+    
     if (itr->Type()== "InputfieldNeigh"){
+    
       boost::dynamic_bitset<> ifield = itr->getBitset();
       for (boost::dynamic_bitset<>::size_type i=0; i<ifield.size();i++){
         if (j < 224){
           m_inpfield[j]=ifield[i];
           j++;        
-        }
+        }else {         
+	  
+	}
         
       }      
     }
     
   }
+ 
   
-  j = 224;
+
+  int countOL=0;
+
   for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
+
     if (itr->Type()== "InputfieldOL"){
+
+      std::string olname  = ir->first;
+      std::string refname = "OL_2_Qq_(R1,x,y)_i";
+      if(  olname[3]==refname[3] && olname[10]==refname[10] ) continue;
           
-      if (j> 271 && j< 303)  j=304;
-      if (j> 304 && j< 335)  j=336;
-      if (j> 336 && j< 359)  j=360;
-      
-        boost::dynamic_bitset<> ifield = itr->getBitset();
-        for (boost::dynamic_bitset<>::size_type i=0; i<ifield.size();i++){
-          if (j < 392){           
-            m_inpfield[j]=ifield[i];
-            j++;
-          }          
+      j=240+countOL*32;
+
+      boost::dynamic_bitset<> ifield = itr->getBitset();
+
+      for (boost::dynamic_bitset<>::size_type i=0; i<ifield.size();i++){ 
+        if (j < 432){            
+          m_inpfield[j]=ifield[i];
+          j++;
+        } else {          
+          return;
+          
         }
+      }
+     
+      countOL++;
+
     }
     
   }  
+
 }
 
 
 void L0Muon::BuildL0BufferUnit::setOutputField()
 {
   
-  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-  std::map<std::string,L0Muon::Register*>::iterator ind;
-  std::map<std::string,L0Muon::Register*> reg = rfactory->getRegisters();
-  char buf[4096] , buf1[4096], buf2[4096];
-  char * nameaddr1 ="(R%d,%d,%d)_addr_candidate1";
-  sprintf(buf, nameaddr1 ,m_pu.region(),m_pu.nX(),m_pu.nY());
-  char * nameaddr2 ="(R%d,%d,%d)_addr_candidate2";
-  sprintf(buf1, nameaddr2 ,m_pu.region(),m_pu.nX(),m_pu.nY());
-  char * namestatus ="(R%d,%d,%d)_status";
-  sprintf(buf2, namestatus ,m_pu.region(),m_pu.nX(),m_pu.nY());
 
-  boost::dynamic_bitset<>::size_type j =0;
-  boost::dynamic_bitset<> ifield ;
-  int count =0;
-  for (ind = reg.begin(); ind != reg.end(); ind ++){
-    if ((*ind).first == buf ||(*ind).first == buf1 || (*ind).first == buf2 ){
-           
-      Register * reg = dynamic_cast<Register*>((*ind).second);
-      boost::dynamic_bitset<> ifield = reg->getBitset();
+  std::map<std::string,Register*>::iterator ir ;
+
+  boost::dynamic_bitset<>::size_type j = 0;
+  for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
+    TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
+
+    if (itr->Type()== "Outputfield"){  
+      boost::dynamic_bitset<> ifield = itr->getBitset();
       for (boost::dynamic_bitset<>::size_type i=0; i<ifield.size();i++){
-        m_outfield[j+ count]= ifield[i];
+        m_outfield[j]=ifield[i];
         j++;
-        addInputRegister(reg);      
       }
+      m_outfield[j]=0;
+      j++;
+    }
+  }
 
-      count ++;
-    }
-    }
-  
+
 }
 
 boost::dynamic_bitset<> L0Muon::BuildL0BufferUnit::getIdField(){
 
-  for (boost::dynamic_bitset<>::size_type i=0; i< m_idfield.size();i++){
-    //std::cout << m_idfield[i];
-  }
   return m_idfield;
 }
 
@@ -117,18 +162,23 @@ boost::dynamic_bitset<> L0Muon::BuildL0BufferUnit::getOutputField(){
 }
 
 void L0Muon::BuildL0BufferUnit::setL0buf(){
-  boost::dynamic_bitset<>::size_type j =0;
-  
+
+  boost::dynamic_bitset<>::size_type j ;
+
+  j=0;  
   for (boost::dynamic_bitset<>::size_type i =0; i < m_idfield.size();i++){
     m_l0buf[j] = m_idfield[i];
     j++;
   }
+
+
   j=32;
   for (boost::dynamic_bitset<>::size_type i =0; i < m_outfield.size();i++){
+
     m_l0buf[j]= m_outfield[i];
-    j++;
-    
+    j++; 
   }
+
 
   j=80;  
   for (boost::dynamic_bitset<>::size_type i =0; i < m_inpfield.size();i++){
@@ -150,19 +200,77 @@ void L0Muon::BuildL0BufferUnit::setL0buf(){
 
 
 
-
 void L0Muon::BuildL0BufferUnit::initialize(){
 }
 
+void L0Muon::BuildL0BufferUnit::initialize(MsgStream & log){
+
+}
+
 void L0Muon::BuildL0BufferUnit::execute(){
+}
+
+void L0Muon::BuildL0BufferUnit::execute(MsgStream & log){
+  
+  
   setIdField();
   setInputField();
   setOutputField();
-  getIdField();
-  getInputField();
-  getOutputField();
   setL0buf();
+
+  
+
+  if (m_l0bufferFile!=NULL) dump(m_l0bufferFile);
+
+
+  m_l0EventNumber++;
+
 }
 
 void L0Muon::BuildL0BufferUnit::finalize(){
 }
+
+void L0Muon::BuildL0BufferUnit::dump(FILE *l0bufferFile){
+  int ib=0;
+
+
+  for (std::map<std::string,L0Muon::Register*>::iterator ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
+
+    boost::dynamic_bitset<> bits = (*ir).second->getBitset();
+  }
+  ib=0;
+  
+  for (std::map<std::string,L0Muon::Register*>::iterator ir = m_outputs.begin(); ir != m_outputs.end(); ir++) {
+    boost::dynamic_bitset<> bits = (*ir).second->getBitset();
+
+    ib=0;
+    int iword=0;
+    for (boost::dynamic_bitset<>::size_type i =0; i < bits.size();i++){
+
+      int val=bits[i] ;
+      if (val>0) {
+        iword+= pow(2,ib);
+
+      }
+
+      ib++;
+      if ((ib%16)==0) {
+        ib=0;
+        fprintf(l0bufferFile,"%04x\n",iword);
+        iword=0;
+        i++;
+        //if (i != bits.size()) {
+          //std::cout <<"<BuildL0BufferUnit::dump>\t\t";
+        //}
+        i--;
+      }
+    }
+    if(ib!=0) {
+      fprintf(l0bufferFile,"!!!\n");
+    }
+  }
+  fprintf(l0bufferFile,"----\n");
+
+  
+}
+

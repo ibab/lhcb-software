@@ -317,15 +317,15 @@ void L0Muon::CandidateTower::reset(){
 }
 
 
-void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
+void L0Muon::CandidateTower::drawBits(int sta, MsgStream & log) {
 
-  *log << MSG::DEBUG << "Bitset size in sta"<< " " << sta 
+  log << MSG::DEBUG << "Bitset size in sta"<< " " << sta 
        << " " << m_bits.size() << endreq;
   
   for ( boost::dynamic_bitset<>::size_type ir = 0; ir < m_bits.size(); ir++) {
-    *log << MSG::DEBUG << " " << m_bits[ir] ;
+    log << MSG::DEBUG << " " << m_bits[ir] ;
   }
-  *log << MSG::DEBUG << endreq ;
+  log << MSG::DEBUG << endreq ;
   
 
 }
@@ -403,12 +403,11 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
 void L0Muon::CandidateTower::setOrderedPadIndex(int sta, 
                                                 int maxXFoi, 
                                                 int maxYFoi,   
-                                                int offset, int ind,
-                                                MsgStream * log)
+                                                int offset, int ind)
 {
   
 
-  *log << MSG::DEBUG << "SetOrderedPadIndex" << endreq;
+ 
   int xfoi = maxXFoi;
   int yfoi = maxYFoi;
   
@@ -418,28 +417,31 @@ void L0Muon::CandidateTower::setOrderedPadIndex(int sta,
   int index = ind;
   
   
- 
   if (sta ==2){
+    
     m_xyindex[sta]= std::make_pair(m_seed.second, m_seed.first);
+
   } 
   else {
     if (m_yFoi[sta] == 0){   
       if (index ==0) {
         m_xyindex[sta] = std::make_pair(y-yfoi,x);
-       
-      }
+
+  }
+  
+  
       
       if (index >0){
         if (index %2 ==0){
           int xtmp = x -(index/2);
           m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
-         
+
         }
         if (index %2 !=0){
           int xtmp = x+ (index+1)/2;
           
           m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
-         
+
         }
         
       }
@@ -461,12 +463,11 @@ void L0Muon::CandidateTower::setOrderedPadIndex(int sta,
         if (index %2 ==0){
           int xtmp = x -(index/2);
           m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
-          
+
         }
         if (index %2 !=0){
           int xtmp = x+ (index+1)/2;
           m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
-
           
         }
         
@@ -475,19 +476,16 @@ void L0Muon::CandidateTower::setOrderedPadIndex(int sta,
       else if (index == (2*m_xFoi[sta]+1)){
 
         m_xyindex[sta] = std::make_pair(y-yfoi-1,x);
-
       }
       else if (index >(2*m_xFoi[sta]+1) && index<2*(2*m_xFoi[sta]+1)){
 
         if ((index-2*m_xFoi[sta]+1) %2 ==0){
           int xtmp = x -((index-2*m_xFoi[sta]+1))/2;
           m_xyindex[sta] = std::make_pair(y-yfoi-1,xtmp);
-         
         }
         if ((index-2*m_xFoi[sta]+1) %2 !=0){
           int xtmp = x+ (index-(2*m_xFoi[sta]+1)+1)/2;
           m_xyindex[sta] = std::make_pair(y-yfoi-1,xtmp);
-  
          
         }
       }
@@ -495,19 +493,16 @@ void L0Muon::CandidateTower::setOrderedPadIndex(int sta,
       else if (index == 2*(2*m_xFoi[sta]+1)){
   
         m_xyindex[sta] = std::make_pair(y,x);
-  
       }
       else if (index >2*(2*m_xFoi[sta]+1) && index<3*(2*m_xFoi[sta]+1)){
   
         if ((index-2*(2*m_xFoi[sta]+1)) %2 ==0){
           int xtmp = x -((index-(2*(2*m_xFoi[sta]+1)))/2);
           m_xyindex[sta] = std::make_pair(y,xtmp);
-    
         }
         if ((index-2*(2*m_xFoi[sta]+1)) %2 !=0){
           int xtmp = x+ (index-2*(2*m_xFoi[sta]+1)+1)/2;
           m_xyindex[sta] = std::make_pair(y,xtmp);
-            
         }
         
       }
@@ -524,5 +519,7 @@ void L0Muon::CandidateTower::setOrderedPadIndex(int sta,
   
   
 }
+
+
 
 

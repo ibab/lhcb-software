@@ -16,7 +16,7 @@
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/L0mProcUnit.h"
 #include "L0MuonKernel/Unit.h"
-#include "L0MuonKernel/BestCandidateSelectionUnit.h"
+//#include "L0MuonKernel/BestCandidateSelectionUnit.h"
 #include "MuonTools/IMuonTileXYZTool.h"
 #include "GaudiKernel/MsgStream.h"
 
@@ -30,13 +30,15 @@ namespace L0Muon {
     ~BoardUnit();
 
      void initialize();
+     void initialize(MsgStream & log);
      void execute();
+     void execute(MsgStream & log);
      void finalize();
 
   private:
      
      int m_imax ;
-     BestCandidateSelectionUnit m_Bcsu;
+     
      
 
   };

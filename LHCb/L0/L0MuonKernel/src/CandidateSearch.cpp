@@ -38,7 +38,7 @@ L0Muon::CandidateSearch::CandidateSearch(){
     
   }
   
-  m_useful = false;
+  m_ignoreM1 = false;
   
 }
 
@@ -134,11 +134,11 @@ void L0Muon::CandidateSearch::anyBitsInSta(int sta,
 
 
 
-int L0Muon::CandidateSearch::makeExtrapolation(MsgStream * log ){
+int L0Muon::CandidateSearch::makeExtrapolation( ){
   //m_extraM1[m_offset] ;
-  *log << MSG::DEBUG << "parameter for extrapolation in M1" << " " 
-       << m_extraM1[m_offset] << " " << "m_offset" << " " << m_offset
-       << endreq ;
+  //*log << MSG::DEBUG << "parameter for extrapolation in M1" << " " 
+  //   << m_extraM1[m_offset] << " " << "m_offset" << " " << m_offset
+  //   << endreq ;
   return m_extraM1[m_offset];
 }
 
@@ -146,12 +146,24 @@ int L0Muon::CandidateSearch::makeExtrapolation(MsgStream * log ){
 
 
 bool L0Muon::CandidateSearch::CandidateFound(){
-  if (m_found[0]==true && m_found[1]==true && m_found[3]==true&& 
-      m_found[4]==true){
-    m_isFull=true;
-  } else {
-    m_isFull = false;
+  if (m_ignoreM1 ){
+    if (m_found[1]==true && m_found[3]==true&& 
+        m_found[4]==true){
+      m_isFull=true;
+    } else {
+      m_isFull = false;
+    }
+  } else if (!m_ignoreM1){
+    if (m_found[0]==true && m_found[1]==true && m_found[3]==true&& 
+        m_found[4]==true){
+      m_isFull=true;
+    }  else {
+      m_isFull = false;
+    }
+    
   }
+  
+
   
   return m_isFull;
 }

@@ -1,14 +1,14 @@
 #include "L0MuonKernel/TileRegister.h"
 
 L0Muon::TileRegister::TileRegister() {
- m_type= STRIP ;
+
 }
 
 
   
 
 L0Muon::TileRegister::TileRegister(int bits) : L0Muon::Register(bits) {
- m_type= STRIP ;
+
 }
 
 L0Muon::TileRegister::TileRegister(int bits, unsigned long pattern) : 
@@ -43,38 +43,6 @@ void L0Muon::TileRegister::setTileVector(const std::vector<MuonTileID>& ids) {
   m_ids = ids;
 }
 
-void L0Muon::TileRegister::setType(int sta, int reg){
-  MuonSystemLayout slulayout =
-    MuonSystemLayout(MuonStationLayout(MuonLayout(0,0)),
-                     MuonStationLayout(MuonLayout(8,1),
-                                       MuonLayout(4,2),
-                                       MuonLayout(2,2),
-                                       MuonLayout(2,2)),
-                     MuonStationLayout(MuonLayout(8,1),
-                                       MuonLayout(4,2),
-                                       MuonLayout(2,2),
-                                       MuonLayout(2,2)),
-                     MuonStationLayout(MuonLayout(0,0),
-                                       MuonLayout(4,2),
-                                       MuonLayout(2,2),
-                                       MuonLayout(2,2)),
-                     MuonStationLayout(MuonLayout(0,0),
-                                       MuonLayout(4,2),
-                                       MuonLayout(2,2),
-                                       MuonLayout(2,2)));
-  
-
-
-  
-  if( slulayout.regionLayout(sta,reg).isDefined() ) {
-    m_type= STRIP ;
-  } else {
-    m_type =PAD ;
-  }
-  
-  }
-
-
 
 void L0Muon::TileRegister::setTile(MuonTileID & id){
   unsigned int index =0;  
@@ -90,7 +58,7 @@ void L0Muon::TileRegister::setTile(MuonTileID & id){
   
 }
 
-void L0Muon::TileRegister::setTile(MuonTileID & id, MsgStream * log)
+void L0Muon::TileRegister::setTile(MuonTileID & id, MsgStream & log)
 {
   
   unsigned int index =0;
@@ -99,7 +67,7 @@ void L0Muon::TileRegister::setTile(MuonTileID & id, MsgStream * log)
     
     if ( m_ids[ind]== id){
       
-      *log<< MSG::DEBUG << "set tile:" << " " << id.quarter()
+      log<< MSG::DEBUG << "set tile:" << " " << id.quarter()
           << " " << id.region()
           << " " <<id.nX()
           << " " << id.nY() << endreq;
@@ -248,6 +216,7 @@ void L0Muon::TileRegister::makePads(){
     
   
 }
+
 
 
 

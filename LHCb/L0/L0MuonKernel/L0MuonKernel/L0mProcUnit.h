@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: L0mProcUnit.h,v 1.3 2004-11-03 13:31:48 ltocco Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
@@ -12,18 +12,24 @@
    date  12 January 2002
 */
 
+
+
 #include <vector>
 #include "L0MuonKernel/Unit.h"
 #include "L0mConf/L0MPuNodeBase.h"
+
+
 #include "L0mConf/L0MTile.h"
 #include "L0mConf/L0MFoi.h"
 #include "L0MuonKernel/RegisterFactory.h"
 #include "L0MuonKernel/Tower.h"
 #include "L0MuonKernel/CablingUnit.h"
-//#include "L0MuonKernel/BuildL0BufferUnit.h"
-//#include "L0MuonKernel/LUT.h"
+#include "L0MuonKernel/BuildL0BufferUnit.h"
+
 #include "L0MuonKernel/FormattingUnit.h"
 #include "GaudiKernel/MsgStream.h"
+
+
 
 namespace L0Muon {
 
@@ -33,10 +39,12 @@ class L0mProcUnit : public L0Muon::Unit {
   L0mProcUnit();
   L0mProcUnit(L0MPuNodeBase& puNode,
               std::vector<double> & ptpara,
+              bool & ignoreM1,
               std::vector<int> & foix,
               std::vector<int> & foiy,
               double & precision,
               int & bits,
+              bool & writeL0buffer,
               MsgStream & log);
   ~L0mProcUnit();
 
@@ -46,6 +54,8 @@ class L0mProcUnit : public L0Muon::Unit {
   L0MFoi foi() {return m_maxFoi; }
   
   std::vector<double> ptParameters(){ return m_ptparameters;}
+  bool ignoreM1(){ return m_ignoreM1;}
+  bool writeL0Buffer(){ return m_writeL0buffer;}
   double precision(){ return m_precision;}
   int bits(){ return m_bits;}
 
@@ -55,14 +65,17 @@ class L0mProcUnit : public L0Muon::Unit {
 
 
   void execute();
+  void execute(MsgStream & log);
   void initialize();
+  void initialize(MsgStream & log);
   void finalize();
   
 
  private:
-  
+
+    
   CablingUnit * m_cu;
-  //BuildL0BufferUnit * m_l0b;
+  BuildL0BufferUnit * m_l0b;
   FormattingUnit * m_formatting;
   MuonTileID m_puID;
   MuonTileID m_boardID;
@@ -73,6 +86,9 @@ class L0mProcUnit : public L0Muon::Unit {
   std::vector<int> m_yfoi;
   double m_precision;
   int m_bits;
+  bool m_ignoreM1;
+
+  bool m_writeL0buffer;
   
   
 };

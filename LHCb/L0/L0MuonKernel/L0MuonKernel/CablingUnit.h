@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.3 2004-07-12 16:09:00 ltocco Exp $
+// $Id: CablingUnit.h,v 1.4 2004-11-03 13:31:48 ltocco Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -36,10 +36,10 @@ public:
   MuonTileID getPU() { return m_pu ; }
     
 
-  void makePads(MsgStream * log);
-  void makeTower(MsgStream * log);
+  void makePads(MsgStream & log);
+  void makeTower(MsgStream & log);
 
-  void drawTower(MsgStream * log) {m_tower.draw(log);}
+  void drawTower(MsgStream & log) {m_tower.draw(log);}
   //boost::dynamic_bitset<> getStatus(); 
   //boost::dynamic_bitset<> getCand1(); 
   //boost::dynamic_bitset<> getCand2();
@@ -47,7 +47,9 @@ public:
 
   // Overloads from Unit
   void execute();
+  void execute(MsgStream & log);
   void initialize();
+  void initialize(MsgStream & log);
   void finalize();
 
 private:
@@ -57,12 +59,8 @@ private:
   std::vector<MuonTileID> m_pads;
   std::vector<L0MuonCandidate*> m_cand;
   int m_status;
-  //for offsets in ntuple
-  //std::vector<std::pair<L0MuonCandidate*, int[5]> > m_offForCand;
   std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
-  //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offypForCand;
-  //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offymForCand;
- //
+
   
 };
 

@@ -28,7 +28,7 @@ class CandidateSearch {
   typedef boost::dynamic_bitset<> nbitset ; 
   void searchInSta(int sta, boost::dynamic_bitset<> & bits);
   void anyBitsInSta(int sta, boost::dynamic_bitset<> & bits);
-  int makeExtrapolation(MsgStream * log );
+  int makeExtrapolation();
   bool CandidateFound();
   bool usefulEvent();
   bool hitFoundInSta(int sta) { return m_found[sta];}
@@ -40,10 +40,13 @@ class CandidateSearch {
   
   void resetBits();
   
+  void ignoreM1(bool & ignoreM1) { m_ignoreM1 = ignoreM1; }
   
+    
+
  private: 
   int m_extraM1[11];
-  bool m_found[5], m_isFull, m_useful;
+  bool m_found[5], m_isFull, m_ignoreM1;
   int m_hitpos[5];
   int m_offset, m_offsetM1 ;
   nbitset m_addrM3, m_addrM2, m_addrM1, m_addr;

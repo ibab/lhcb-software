@@ -26,14 +26,15 @@ namespace L0Muon {
      ~FormattingUnit();
 
      void initialize();
+     void initialize(MsgStream & log);
      void execute();
+     void execute(MsgStream & log);
      void finalize();
-     void makePads();
+     void makePads(MsgStream & log);
 
    private:
 
      std::vector<MuonTileID> m_pads;
-
      
 
    };

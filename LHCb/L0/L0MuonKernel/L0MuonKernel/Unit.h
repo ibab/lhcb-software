@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: Unit.h,v 1.3 2004-11-03 13:31:48 ltocco Exp $
 
 #ifndef L0MUONKERNEL_UNIT_H
 #define L0MUONKERNEL_UNIT_H     1
@@ -26,9 +26,16 @@ public:
   virtual ~Unit();
   
   void releaseRegisters();
-  void dumpRegisters(MsgStream *log);
+  void dumpRegisters(MsgStream & log);
   virtual void setParent(L0Muon::Unit * unit);
   Unit * parent(){ return m_parent;}
+  
+  Unit * subUnit(std::string name){
+    std::map<std::string,L0Muon::Unit*>::iterator iunit;
+    iunit = m_units.find(name);
+    return (*iunit).second;
+  };
+  
   
     
   virtual void addInputRegister(L0Muon::Register* in);
@@ -38,11 +45,18 @@ public:
   void addUnit(L0Muon::Unit* unit);
   void addUnit(L0Muon::Unit* unit, std::string uname);
  
-  //void setParent(Unit * pu){m_parent = pu ;} 
+  
 
   virtual void initialize() =0;
   virtual void execute()    =0;
   virtual void finalize()   =0;
+
+  virtual void initialize(MsgStream & log) =0;
+  virtual void execute(MsgStream & log)    =0;
+  //virtual void finalize(MsgStream & log)   =0;
+
+
+
 
 protected:
 
