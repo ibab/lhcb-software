@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.9 2002-07-18 18:26:26 gcorti Exp $
+! $Id: release.notes,v 1.10 2002-07-27 20:17:43 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-07-27 - Gloria Corti
+ - add some std:: adn move template in body of class to compile on window
+ - move template implementation in body of AsctAlgorithm to compile on 
+   window
 
 ! 2002-07-18 - Gloria Corti
  - Use PhysEvent v6r* and remove use of EventSys
