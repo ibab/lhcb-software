@@ -59,7 +59,7 @@ use SicbCnv      v13*  SICB
 use DaVinciTools  v1*  Phys
 #
 #===== build DaVinci =========================
-set EXEC DaVinci
+
 application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
                     ../src/*.cpp \
                     ../src/*.F 

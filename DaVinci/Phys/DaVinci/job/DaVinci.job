@@ -33,25 +33,32 @@ else
   setenv WORKDIR $HOME/w1
   if ($#argv == 1) set MODE = "$1" 
 endif
+set current = $PWD
 #
 # == set the root directory of your job
-setenv MYJOBROOT $LHCBNEW/Phys/DaVinci/v1r1
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v1r1
 # == reset the dynamic library search path
 unsetenv LD_LIBRARY_PATH
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
-# == set soft_links to use packages
-$CMTROOT/mgr/cmt build library_links
-# == to run another executable
-# setenv EXEC anotherexec
-#
+
+# == if not linked in Static mode set soft_links to use packages
+if ($MODE != "LinuxStatic") then
+  cd $MYJOBROOT/cmt
+  $CMTROOT/mgr/cmt build library_links
+  cd $current
+endif
+
+# == executable 
+setenv EXEC DaVinci
+
 # == in batch copy the executable,======================================= 
 #    in interactive create a link to the executable you want to run =======
 #
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$DAVINCICONFIG/$EXEC.exe tmpjob.exe
+  cp $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
 else
-  ln -fs $MYJOBROOT/$DAVINCICONFIG/$EXEC.exe tmpjob.exe
+  ln -fs $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
 endif
 #
 #==  create temporary joboptions file ==================
