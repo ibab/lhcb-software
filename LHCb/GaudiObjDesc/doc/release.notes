@@ -5,7 +5,12 @@ Package manager : Stefan Roiser
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r3<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-!20020422 - Stefan
+!20020514 - Stefan
+ - Implementations of friend-functions will be done inside the class-body again, because of link-problems
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r3<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+!20020513 - Stefan
  - Added <attribute>- and <relation>-attribute 'serialize' to specify whether to persistify an object
  - Added <attribute>-attribute 'compression' to enable conversion double<->float 
    while serializing to compress the resulting size
