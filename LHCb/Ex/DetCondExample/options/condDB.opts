@@ -1,4 +1,4 @@
-//$Id: condDB.opts,v 1.4 2002-12-03 17:12:47 andreav Exp $
+//$Id: condDB.opts,v 1.5 2004-12-08 17:24:36 marcocle Exp $
 //==============================================================
 // Common job options to use a CondDB in DetCondExample
 //==============================================================
@@ -21,6 +21,9 @@ DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
 //--------------------------------------------------------------
 // Access to the ConditionsDB
 //--------------------------------------------------------------
+
+// The default global TAG is "HEAD" but it is not working
+ConditionsDBCnvSvc.condDBGlobalTag = "";
 
 // Database implementation (one of CondDBObjy, CondDBOracle, CondDBMySQL)
 ConditionsDBGate.condDBImpl = "$CONDDB_implementation";
