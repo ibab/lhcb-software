@@ -4,6 +4,12 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-11-21 - Luis Fernandez
+ - options/DVHLTExSelections.opts, CorrBs2PhiGamma.opts
+   . Modifications for Bs2PhiGamma
+ - options/DVHLTCheck.opts
+   . Imported from HltSelections, needs to be updated
+
 ! 2004-11-19 - P. Koppenburg
   Updated version to incorporate the RICH
 !========================== HltSelChecker v1r0 2004-11-18 ====================

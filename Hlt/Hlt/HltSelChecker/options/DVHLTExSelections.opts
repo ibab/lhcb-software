@@ -1,5 +1,5 @@
 //==============================================================================
-// HLT exclusive hadronic selections
+// HLT exclusive selections
 //==============================================================================
 // Author: Luis Fernandez, 13/08/2004
 
@@ -46,6 +46,8 @@ MessageSvc.OutputLevel  = 3;
 // #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsPi.opts"
 // #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsK.opts"
 
+// #include "$HLTSELECTIONSROOT/options/DC04Bs_PhiGamma.opts"
+
 // sums of the above
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Signals.opts"
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_B2HH.opts"
@@ -54,7 +56,7 @@ MessageSvc.OutputLevel  = 3;
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 //------------------------------------------------------------------------------
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 100;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 //------------------------------------------------------------------------------
