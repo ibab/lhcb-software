@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mPadBuilder.cpp,v 1.1.1.1 2001-04-06 14:26:02 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mPadBuilder.cpp,v 1.2 2001-05-03 09:12:21 atsareg Exp $
 
 /// Include files
 
@@ -59,14 +59,15 @@ StatusCode L0mPadBuilder::initialize()   {
   log << MSG::INFO << "Retrieving Muon Pad Layout" << endreq;
    
   if(m_layout_xml) {
-      m_layout = new MuonPadLayout(detSvc());
+      m_layout = new MuonPadLayout(detSvc(), log);
   } else {
       m_layout = new MuonPadLayout(m_zStation,
                                    m_basicCellX,
 				   m_basicCellY,
 				   m_regions);    
-  }    
-  m_layout->print(log);
+  }   
+  
+  log << MSG::DEBUG << *m_layout << endreq; 
   
   return StatusCode::SUCCESS;
 }
@@ -76,59 +77,64 @@ StatusCode L0mPadBuilder::execute() {
   MsgStream log(msgSvc(), name());
   
   log << MSG::DEBUG << "execute" << endreq;
-  
-// create the collection of L0mPads
-
-  StatusCode sc;
-  
+   
+//=============================
+// get Muon digitisations
+//=============================
     
+  log << MSG::DEBUG << "Retrieving pObject MUPD...  " ;  
+  
+  std::string mcdigi = "/Event/MC/MuonDigits";
+  SmartDataPtr< ObjectVector<MuonDigit> > mupdpc(eventSvc(),mcdigi);
+  if(!mupdpc) {
+    log << MSG::ERROR << " Can not retrieve MuonDigits from " 
+        << mcdigi << endreq;
+    return StatusCode::SUCCESS;
+  }  
+  
+  log << MSG::DEBUG << " MUPD size " << mupdpc->size() << endreq; 
+  
+//=======================================  
+// create the collection of L0mPads
+//=======================================
+
+  StatusCode sc;    
   ObjectVector<L0mPad>* pc = new ObjectVector<L0mPad>;
   log << MSG::DEBUG << "Registering pc ...  "  ;  
   sc = eventSvc()->registerObject(m_outputPads,pc);
   log << MSG::DEBUG << "done, status " << sc << endreq;  
-    
-// get Muon digitisation
-    
-  log << MSG::DEBUG << "Retrieving pObject MUPD...  " ;  
-  
-  DataObject* pObject;  
-  sc = eventSvc()->retrieveObject("/Event/MC/MuonDigits",pObject);
-  log << MSG::DEBUG << "done, status " << (int)sc.isSuccess() << endreq;  
-    
-  ObjectVector<MuonDigit>* mupdpc;
-  mupdpc = dynamic_cast<ObjectVector<MuonDigit>* >(pObject);
-  
-  log << MSG::DEBUG << " MUPD size " << mupdpc->size() << endreq; 
+  if( sc.isFailure() ) {
+    if( 0 != pc ) { delete pc; }
+    log << MSG::ERROR << "Unable to register the output container="
+        << m_outputPads << endreq;
+    return sc ;
+  } 
+   
+//====================================
+// Fill in the L0mPad's now
+//====================================  
   
   MuonDigit* pad;
-  L0mPad* l0mpad;   
-  
+  L0mPad* l0mpad;     
   ObjectVector<MuonDigit>::iterator impc;
+
 //  SmartRefVector<MCParticle> vmc;
 //  SmartRefVector<MCParticle>::iterator ivmc;
   
   for(impc = mupdpc->begin(); impc != mupdpc->end(); impc++) {
 
-//      cout << "Muon Hit Z " << (*impc)->getZ() << endl;
+//      log << MSG::DEBUG << "Muon Hit Z " << (*impc)->getZ() << endreq;
 //      vmc = (*impc)->mcParticles();
 //      int ic = 1;
 //      for(ivmc = vmc.begin(); ivmc != vmc.end(); ivmc++, ic++) {
-//          cout << "MC track " << ic << " id: " 
-//	       << (*ivmc)->particleID().id() << "\n" << endreq; 
+//          log << MSG::DEBUG  << "MC track " << ic << " id: " 
+//	        << (*ivmc)->particleID().id() << "\n" << endreq; 
 //      }
 
-      pad = *impc;
-      l0mpad = m_layout->createPad(pad);
-      l0mpad->setMCParticles(pad->mcParticles());
-      pc->push_back(l0mpad);
-/*      
-      log << MSG::INFO << "Muon digit X/Y/Z: " 
-                       << (*impc)->getX() << "/"
-                       << (*impc)->getY() << "/"
-		       << (*impc)->getZ() << endreq;
-      l0mpad->print();                                   
-*/    
-     
+    pad = *impc;
+    l0mpad = m_layout->createPad(pad);
+    l0mpad->setMCParticles(pad->mcParticles());
+    pc->push_back(l0mpad);     
   }
   
 

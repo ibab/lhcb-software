@@ -1,4 +1,4 @@
-// $Header:
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mTrigger.h,v 1.2 2001-05-03 09:12:24 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGER_H
 #define L0MUON_L0MTRIGGER_H 1
@@ -29,7 +29,6 @@ public:
     
 private:
   Algorithm* m_padBuilder;
-  Algorithm* m_towerBuilder;
   Algorithm* m_triggerProc;
 };
 

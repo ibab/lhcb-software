@@ -1,3 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mTrigger.cpp,v 1.2 2001-05-03 09:12:24 atsareg Exp $
+
 /// Gaudi factories for algorithms and converters
 #include "GaudiKernel/AlgFactory.h"
 
@@ -44,7 +46,6 @@ StatusCode L0mTrigger::initialize()   {
   StatusCode sc;
   
   sc = createSubAlgorithm("L0mPadBuilder","L0mPadBuilder",m_padBuilder);
-  sc = createSubAlgorithm("L0mTowerBuilder","L0mTowerBuilder",m_towerBuilder);
   sc = createSubAlgorithm("L0mTriggerProc","L0mTriggerProc",m_triggerProc);
   
   return StatusCode::SUCCESS;
@@ -65,15 +66,6 @@ StatusCode L0mTrigger::execute() {
     log << MSG::ERROR << "Pad creation failed !" << endreq;
     return sc;
   }
-
-// create L0mTowers  
-
-  sc = m_towerBuilder->execute();  
-  
-  if( sc != StatusCode::SUCCESS ) {
-    log << MSG::ERROR << "Towers creation failed !" << endreq;
-    return sc;
-  }
   
 // Do the trigger now
 
@@ -90,31 +82,31 @@ StatusCode L0mTrigger::execute() {
   SmartDataPtr< ObjectVector<L0MuonCandidate> > lcd(eventSvc(),"/Event/MC/L0MuonCandidates");
   
   if( !lcd ) {
-      log << MSG::DEBUG << " No triggers, sorry..." << endreq;
+    log << MSG::DEBUG << " No triggers, sorry..." << endreq;
   } else {
-      ObjectVector<L0MuonCandidate>::iterator ilcd;
-      for (ilcd=lcd->begin(); ilcd != lcd->end(); ilcd++) {
-          log << MSG::DEBUG << " Trigger: Pt/x/y/theta/phi " 
-			    << (*ilcd)->pt() <<  "/"
-			    << (*ilcd)->x() <<  "/"
-			    << (*ilcd)->y() <<  "/"
-			    << (*ilcd)->theta() <<  "/"
-			    << (*ilcd)->phi()  << endreq;
-          
-          log << MSG::DEBUG << " Pads used:  " << endreq;
-	  log << MSG::DEBUG << "    Pad M1: x/y/z: " 
-	                    << (*ilcd)->padM1()->x() << "/"
-			    << (*ilcd)->padM1()->y() << "/"
-			    << (*ilcd)->padM1()->z() <<endreq; 
-	  log << MSG::DEBUG << "    Pad M2: x/y/z: " 
-	                    << (*ilcd)->padM2()->x() << "/"
-			    << (*ilcd)->padM2()->y() << "/"
-			    << (*ilcd)->padM2()->z() <<endreq; 	
-	  log << MSG::DEBUG << "    Pad M3: x/y/z: " 
-	                    << (*ilcd)->padM3()->x() << "/"
-			    << (*ilcd)->padM3()->y() << "/"
-			    << (*ilcd)->padM3()->z() <<endreq; 		    	    			    
-      }
+    ObjectVector<L0MuonCandidate>::iterator ilcd;
+    for (ilcd=lcd->begin(); ilcd != lcd->end(); ilcd++) {
+      log << MSG::DEBUG << " Trigger: Pt/x/y/theta/phi " 
+			<< (*ilcd)->pt() <<  "/"
+			<< (*ilcd)->x() <<  "/"
+			<< (*ilcd)->y() <<  "/"
+			<< (*ilcd)->theta() <<  "/"
+			<< (*ilcd)->phi()  << endreq;
+
+      log << MSG::DEBUG << " Pads used:  " << endreq;
+      log << MSG::DEBUG << "    Pad M1: x/y/z: " 
+	                << (*ilcd)->padM1()->x() << "/"
+			<< (*ilcd)->padM1()->y() << "/"
+			<< (*ilcd)->padM1()->z() <<endreq; 
+      log << MSG::DEBUG << "    Pad M2: x/y/z: " 
+	                << (*ilcd)->padM2()->x() << "/"
+			<< (*ilcd)->padM2()->y() << "/"
+			<< (*ilcd)->padM2()->z() <<endreq; 	
+      log << MSG::DEBUG << "    Pad M3: x/y/z: " 
+	                << (*ilcd)->padM3()->x() << "/"
+			<< (*ilcd)->padM3()->y() << "/"
+			<< (*ilcd)->padM3()->z() <<endreq; 		    	    			    
+    }
   }    
  
 // Return 

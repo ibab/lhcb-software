@@ -1,4 +1,4 @@
-// $Header:
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonPadLayout.h,v 1.2 2001-05-03 09:12:29 atsareg Exp $
 
 #ifndef L0MUON_MUONPADLAYOUT_H
 #define L0MUON_MUONPADLAYOUT_H 1   
@@ -6,7 +6,6 @@
 // Include files
 #include <vector>
 #include "Parameter.h" 
-#include "L0mFoI.h" 
 #include "GaudiKernel/SmartDataPtr.h"  
 #include "GaudiKernel/Property.h"  
 
@@ -30,27 +29,27 @@ class MuonPadLayout {
 
 public:
   /// Constructor to build from XML description 
-  MuonPadLayout(IDataProviderSvc* detSvc);
+  MuonPadLayout(IDataProviderSvc* detSvc, MsgStream& log);
   /// Constructor to build from explicit  arguments
-  MuonPadLayout(DoubleArrayProperty zstation,
-        	DoubleArrayProperty bcellX,
-		DoubleArrayProperty bcellY, 
-		IntegerArrayProperty* regions);
+  MuonPadLayout(std::vector<double> zstation,
+        	std::vector<double> bcellX,
+		std::vector<double> bcellY, 
+		std::vector<int>* regions);
   
   // Destructor
   ~MuonPadLayout();
   
+  /// Layout accessor function
+  Parameter* layout(int st) const { return m_layout[st-1]; };
   // Utility functions
   /// Create pad given its physical coordinates
   L0mPad* createPad(int st, double x, double y);
   /// Create pad given from MuonDigit
   L0mPad* createPad(MuonDigit* md);
   /// Find region determined by pad indices in possibly other region 
-  int region(int nx, int ny, int nr);
+  // int region(int nx, int ny, int nr);
   /// Find pad magnification factor for the given region
   int rfactor(int nr);
-  /// Dump contents to log stream
-  void print(MsgStream log);
   
 private:
 
@@ -59,5 +58,8 @@ private:
 };   
 
 std::string operator+(const std::string& st, int ii);
+
+// Dumping the contents to the MsgStream
+MsgStream& operator<<(MsgStream& log, const MuonPadLayout& mpl);
 
 #endif    // L0MUON_MUONPADLAYOUT_H

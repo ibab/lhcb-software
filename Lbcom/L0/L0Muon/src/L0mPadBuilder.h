@@ -1,4 +1,4 @@
-// $Header:
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mPadBuilder.h,v 1.2 2001-05-03 09:12:22 atsareg Exp $
 
 #ifndef L0MUON_L0MPADBUILDER_H
 #define L0MUON_L0MPADBUILDER_H 1
@@ -6,6 +6,7 @@
 
 // Include files
 #include <vector>
+#include <string>
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/Property.h"
 
@@ -31,12 +32,12 @@ public:
 private:
 
   MuonPadLayout* m_layout;
-  BooleanProperty m_layout_xml;
-  DoubleArrayProperty m_zStation;
-  DoubleArrayProperty m_basicCellX;
-  DoubleArrayProperty m_basicCellY;
-  IntegerArrayProperty m_regions[5];
-  StringProperty m_outputPads;
+  bool m_layout_xml;
+  std::vector<double> m_zStation;
+  std::vector<double> m_basicCellX;
+  std::vector<double> m_basicCellY;
+  std::vector<int> m_regions[5];
+  std::string m_outputPads;
   
 };
 

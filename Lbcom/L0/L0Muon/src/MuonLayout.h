@@ -1,4 +1,4 @@
-// $Header:
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonLayout.h,v 1.2 2001-05-03 09:12:28 atsareg Exp $
 
 #ifndef L0MUON_MUONLAYOUT_H
 #define L0MUON_MUONLAYOUT_H 1   
@@ -6,6 +6,7 @@
 // Include files
 #include <vector>
 #include "GaudiKernel/SmartDataPtr.h"  
+#include "GaudiKernel/MsgStream.h"  
 
 /** @class MuonLayout MuonLayout.h MuonLayout.h 
    
@@ -44,12 +45,10 @@ public:
       @param areaY : limits of the search area in Y
   */          
   std::vector<MuonTile> tiles(const MuonTile& pad, 
-                              const MuonLayout& layout,
 			      int areaX = 0,
 			      int areaY = 0);
-
-  /// Dump the contents to cout
-  void print();
+  /// find a tile containing the argument tile
+  MuonTile contains(const MuonTile& pad);
   /// find magnification factor of pads in the given region
   int rfactor (int nr) const ;
   /// find region for the given pad indices
@@ -61,5 +60,7 @@ private:
   int m_ygrid;
     
 };   
+
+MsgStream& operator<<(MsgStream& log, const MuonLayout& ml);
 
 #endif    // L0MUON_MUONLAYOUT_H

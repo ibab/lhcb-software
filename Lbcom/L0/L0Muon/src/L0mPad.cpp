@@ -1,13 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mPad.cpp,v 1.2 2001-05-03 09:12:21 atsareg Exp $
+
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mPad.h"
 
-const CLID& CLID_L0mPad = 99996;  // User defined  
+const CLID& CLID_L0mPad = 6003;  // User defined  
 
 L0mPad::L0mPad() : m_station(0) {}
 
-L0mPad::L0mPad(int st, int iq, int ir, int nx, int ny) :
-              MuonTile(iq, ir, nx, ny),
+L0mPad::L0mPad(int st, int iq, int ir, int nx, int ny, MuonLayout ml) :
+              MuonTile(iq, ir, nx, ny, ml),
 	      m_station(st) {}
 
 L0mPad::~L0mPad() {

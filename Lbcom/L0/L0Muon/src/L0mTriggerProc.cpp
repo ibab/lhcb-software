@@ -1,4 +1,4 @@
-// $Header: 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mTriggerProc.cpp,v 1.2 2001-05-03 09:12:25 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -39,14 +39,7 @@ L0mTriggerProc::L0mTriggerProc(const std::string& name, ISvcLocator* pSvcLocator
 {
    declareProperty("FoiXSize", m_foiXSize);
    declareProperty("FoiYSize", m_foiYSize);
-   m_d1 = 545. ;
-   m_d2 = 665. ;
-   m_d3 = 309.5 ;
-   m_alpha = 1.21 ;
-   declareProperty("D1", m_d1);
-   declareProperty("D2", m_d2);
-   declareProperty("D3", m_d3);
-   declareProperty("Alpha", m_alpha);
+   declareProperty("PtParameters", m_ptParameters);
    m_outputCandidates = "/Event/MC/L0MuonCandidates";
    declareProperty("outputCandidates", m_outputCandidates);
 }
@@ -58,10 +51,12 @@ StatusCode L0mTriggerProc::initialize()   {
 
     log << MSG::INFO << "Initialization starting..." << endreq;
     
-    m_foi = new L0mFoI(m_foiXSize,m_foiYSize);
+    m_layout.push_back(MuonLayout(24,8));
+    m_layout.push_back(MuonLayout(48,8));
+    m_layout.push_back(MuonLayout(48,8));
+    m_layout.push_back(MuonLayout(12,8));
+    m_layout.push_back(MuonLayout(12,8));
     
-    // cout << "Dumping FoI's: " << endl;
-    // m_foi->dump();
     return StatusCode::SUCCESS;
 }
 
@@ -71,50 +66,87 @@ StatusCode L0mTriggerProc::execute() {
   
   log << MSG::DEBUG << "execute" << endreq;
   
-// create the collection of L0mTowers
+  //===============================
+  // get Muon digitisations
+  //===============================  
   
-  SmartDataPtr<L0mTowers>  towers(eventSvc(),"/Event/MC/L0mTowers");
-  L0mTowers::iterator it;
+  log << MSG::DEBUG << "Retrieving L0mPads...  " << endreq;  
   
-// register the trigger candidates  
+  SmartDataPtr< ObjectVector<L0mPad> > pads(eventSvc(),"/Event/MC/L0mPads");
+  if(!pads) {
+    return StatusCode::FAILURE;
+  }
+  ObjectVector<L0mPad>::const_iterator ip;
+  
+  //======================================
+  // create the collection of L0mTowers
+  //======================================
+  
+  log << MSG::DEBUG << "Creating towers...  " << endreq;  
+  
+  L0mTower* lt; 
+  
+  for(ip=pads->begin(); ip != pads->end(); ip++ ) {
+    if((*ip)->station() == 2) {
+      lt = createTower(*ip, pads);
+      m_towers.push_back(lt);
+    }       
+  }
+  
+  //======================================
+  // register trigger candidates  
+  //======================================
 
   StatusCode sc;
 
   ObjectVector<L0MuonCandidate>* cand = new ObjectVector<L0MuonCandidate>;
+  if( cand == 0 ) {
+      log << MSG::ERROR << "Unable to create L0MuonCandidates" << endreq;
+      return StatusCode::FAILURE ;
+  }
   log << MSG::DEBUG << "Registering candidates ...  "  ;  
   sc = eventSvc()->registerObject(m_outputCandidates,cand);
-  log << MSG::DEBUG << "done, status " << sc << endreq;  
-  L0MuonCandidate* lcd;
- 
-  
-  int i=1;
-  for ( it=towers->begin(); it != towers->end(); it++,i++ ) {
-      if ((*it)->isFull()) {
-          L0mPad* lpd1 = (*it)->findTrack(m_foi);
-	  if(lpd1) {
-	      
-	      //  Track found ! 
-	        
-	      log << MSG::DEBUG << "Track found; Tower # " << i << endreq;
-	      (*it)->draw(log);
-	      (*it)->padM3()->print(log );
-	      (*it)->padM2()->print(log );
-	      (*it)->padM1()->print(log );
-	      double ptm = pt((*it)->padM1(), (*it)->padM2());
-	      double thetam = theta((*it)->padM1(), (*it)->padM2());
-	      double phim = phi((*it)->padM1(), (*it)->padM2());
-	      log << MSG::DEBUG << " Pt= " << ptm 
-	                        << " Theta= " << thetam 
-				<< " Phi= " << phim << endreq; 
-	      lcd = new L0MuonCandidate(ptm,lpd1->x(),lpd1->y(),
-	                                thetam,phim,
-					(*it)->padM1(),
-					(*it)->padM2(),
-					(*it)->padM3()); 
-	      cand->push_back(lcd); 
-          }
-      }	  
+  if(sc.isFailure() ) {
+      log << MSG::ERROR << "Unable register L0MuonCandidates in " 
+                        << m_outputCandidates << endreq;
+      delete cand;
+      return StatusCode::FAILURE ;
   }
+  log << MSG::DEBUG << "done, status " << sc << endreq;  
+  
+  //===============================
+  // Find trigger candidates
+  //===============================
+  
+  L0MuonCandidate* lcd;
+  std::vector<L0mTower*>::iterator it;
+ 
+  for ( it=m_towers.begin(); it != m_towers.end(); it++ ) {
+    if ((*it)->isFull()) {
+      lcd = (*it)->createCandidate(m_ptParameters,
+	                           m_foiXSize,
+				   m_foiYSize);
+      if(lcd) {
+
+	//  Track found ! 
+
+	log << MSG::DEBUG << "Track found" << endreq;
+	(*it)->draw(log << MSG::DEBUG);
+	(*it)->padM3()->print(log );
+	(*it)->padM2()->print(log );
+	(*it)->padM1()->print(log );
+	log << MSG::DEBUG << " Pt= "    << lcd->pt() 
+	                  << " Theta= " << lcd->theta() 
+			  << " Phi= "   << lcd->phi() << endreq; 	      
+	cand->push_back(lcd); 	
+      }
+    }
+    // This tower is no more needed. All the towers should be deleted
+    delete *it;	  
+  }
+  
+  // Make the final clean-up
+  m_towers.clear();
   
   return StatusCode::SUCCESS;
 }
@@ -123,57 +155,56 @@ StatusCode L0mTriggerProc::finalize()  {
   return StatusCode::SUCCESS;
 }
 
-double L0mTriggerProc::pt( L0mPad* pm1, L0mPad* pm2 ) {
+L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
 
-    double d1 = m_d1 ;
-    double d2 = m_d2 ;
-    double d3 = m_d3 ;
-    double alpha = m_alpha ;
-    
-    double x1 = pm1->x();
-    double y1 = pm1->y();
-    double x2 = pm2->x();
-    double x0 = x1 - d2*(x2-x1)/d3;
-    double y0 = y1*d1/(d1+d2);
+  MsgStream log(msgSvc(), name());
         
-    double sq = (d1+d2)*x2-(d1+d2+d3)*x1;
-    if(sq == 0.) {
-        sq = 0.0001;
-    } else {
-        sq = 1./((d1+d2)*x2-(d1+d2+d3)*x1);
+  int st = pad->station();
+  if ( st != 2 ) {
+      log << MSG::DEBUG << "!!! Wrong station in createTower " 
+	                << st << endreq;
+      return 0;
+  } 
+  
+  int nx = pad->nX();
+  int ny = pad->nY();
+  L0mTower* lt = new L0mTower(pad); 
+  
+  std::vector<std::vector<MuonTile> > vtiles(5);
+  std::vector<MuonTile> vmt3;
+  std::vector<MuonTile>::iterator ivmt;
+  std::vector<MuonTile>::iterator ivmt3;
+  ObjectVector<L0mPad>::const_iterator ind;
+    
+  // Find all the tiles touched by the tower
+  vtiles[0] = m_layout[0].tiles( *pad , 16 );
+  vtiles[1] = m_layout[1].tiles( *pad , 8 );
+  vtiles[3] = m_layout[3].tiles( *pad , 8 );
+  vtiles[4] = m_layout[4].tiles( *pad , 10 );
+    
+  // look through all the pads
+  int nbit = 0;
+  for ( ind = pads->begin(); ind != pads->end(); ind++ ) {
+    int st = (*ind)->station();
+    if(st !=2 ) {   // for all the pads except those in M3
+      // Check if the pad coinsides with some tile
+      for (ivmt = vtiles[st].begin(); ivmt != vtiles[st].end(); ivmt++ ) {
+	if (**ind == *ivmt  ) {
+	  // Check how many M3 pads covers the touched pad in other station
+	  vmt3 = m_layout[2].tiles( *ivmt );
+	  
+	  // cout << " After vmt3 " << endl;
+	  
+	  for (ivmt3 = vmt3.begin(); ivmt3 != vmt3.end(); ivmt3++ ) {
+	    if( (*ivmt3).nY() == ny) {
+	      int inx = (*ivmt3).nX();
+    	      lt->addBit(inx-nx, 0, st, *ind);	      
+	    }
+          }
+	}
+      }
     }
-    
-    double sr = sqrt(((d2+d3)*x1 - d2*x2)*((d2+d3)*x1 - d2*x2) +
-                     (d1*d3*y1/(d1+d2))*(d1*d3*y1/(d1+d2))   );
-    double sc = sqrt((d1+d2)*(d1+d2)+y1*y1)/(d1+d2);
-    double st = (d1*d3*d3+2.*(x1*(d3+d2)-x2*d2)*(x2-x1))/(d1*d3*d3);
-    double pt = fabs(alpha*sq*sr*sc*st);		     
-    
-    return pt; 
-}
+  }
+  return lt;
+}    
 
-double L0mTriggerProc::theta( L0mPad* pm1, L0mPad* pm2 ) {
-    
-    double x1 = pm1->x();
-    double y1 = pm1->y();
-    double x2 = pm2->x();
-    double x0 = x1 - m_d2*(x2-x1)/m_d3;
-    double y0 = y1*m_d1/(m_d1+m_d2);
-        
-    HepVector3D v(x0,y0,m_d1);	
-	
-    return v.theta(); 
-}
-
-double L0mTriggerProc::phi( L0mPad* pm1, L0mPad* pm2 ) {
-    
-    double x1 = pm1->x();
-    double y1 = pm1->y();
-    double x2 = pm2->x();
-    double x0 = x1 - m_d2*(x2-x1)/m_d3;
-    double y0 = y1*m_d1/(m_d1+m_d2);
-    
-    HepVector3D v(x0,y0,m_d1);
-    return v.phi(); 
-    
-}

@@ -1,4 +1,4 @@
-// $Header:
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/L0mTriggerProc.h,v 1.2 2001-05-03 09:12:26 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGERPROC_H
 #define L0MUON_L0MTRIGGERPROC_H 1
@@ -9,7 +9,7 @@
 #include "GaudiKernel/Property.h"
 
 // Private include files
-#include "L0mFoI.h"
+#include "L0mTower.h"
 
 /** @class L0mTrigger L0mTrigger.h L0mTrigger.h 
 
@@ -30,20 +30,18 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-  double pt (L0mPad* mp1, L0mPad* mp2 );
-  double theta (L0mPad* mp1, L0mPad* mp2 );
-  double phi (L0mPad* mp1, L0mPad* mp2 );
+  /// Create a tower starting from a pad in M3
+  L0mTower* createTower(L0mPad* pad, ObjectVector<L0mPad>* pads); 
   
 private: 
 
-  L0mFoI* m_foi;
-  IntegerArrayProperty m_foiXSize;  
-  IntegerArrayProperty m_foiYSize;  
-  DoubleProperty m_d1;
-  DoubleProperty m_d2;
-  DoubleProperty m_d3;
-  DoubleProperty m_alpha;
-  StringProperty m_outputCandidates;
+  std::vector<int> m_foiXSize;  
+  std::vector<int> m_foiYSize;  
+  std::vector<double> m_ptParameters;  
+  std::string m_outputCandidates;
+  
+  std::vector<L0mTower*> m_towers;
+  std::vector<MuonLayout> m_layout;
 
 };
 
