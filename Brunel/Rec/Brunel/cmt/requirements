@@ -48,6 +48,9 @@ use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r0	Rec
 use KsReco              v1r5	Rec
 
+# LHC background
+use DigiAlg		v1r0	Digi
+
 # L0 trigger
 use L0Calo              v7r0p1	L0
 use L0Muon              v6r5p1	L0

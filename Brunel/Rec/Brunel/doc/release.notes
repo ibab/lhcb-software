@@ -36,8 +36,10 @@ Purpose: LHCb reconstruction program
 - Bug fixes:
    . Release application manager in BrunelMain.cpp, to please valgrind
 
-</PRE><H1><A NAME=v18r1>2003-06-?? Brunel v18r1</A></H1><PRE>
+</PRE><H1><A NAME=v18r1>2003-06-24 Brunel v18r1</A></H1><PRE>
 - New features:
+   . Support addition of LHC background. Switched on by default
+     (Digi/DigiAlg v1r0, Muon/MuonAlgs v4r1, Muon/MuonTools v3r5)
    . New algorithm MCEvTypeFilter to allow different DST definitions depending
      on event type (BrunelAlgs v2r0)
    . Enable default IT monitoring (ITCheckers v1r3)
@@ -58,7 +60,7 @@ Purpose: LHCb reconstruction program
    . Fix uninitialised bin in IT charge sharing function (ITAlgorithms v12r9p1)
 
 - Packaging changes:
-	 . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
+   . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
      package, making BrunelKernel package obsolete (BrunelAlgs v2r0)
 
 </PRE><H1><A NAME=v18r0p3>2003-06-06 Brunel v18r0p3</A></H1><PRE>

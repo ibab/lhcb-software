@@ -28,6 +28,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
 BrunelDigi.DetectorList  = { "SpillOver" };
+BrunelDigi.DetectorList += { "Bkg" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
@@ -54,6 +55,11 @@ ApplicationMgr.DLLs += { "CaloSicbCnv" };
 ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
 ApplicationMgr.DLLs += { "MuonSicbCnv" };
 ApplicationMgr.DLLs += { "VSicbCnv" };
+
+// LHC background
+ApplicationMgr.DLLs += { "DigiAlg" };
+BrunelDigiBkgSeq.Members += { "MergeEventAlg/LHCbkgAlg" };
+#include "$DIGIALGROOT/options/LHCBackground.opts"
 
 //--------------------------------------------------------------
 // Subdetector algorithms

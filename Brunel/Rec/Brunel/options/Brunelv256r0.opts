@@ -7,6 +7,7 @@
 #include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
 #include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
 #include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
+// BrunelDigiBkgSeq.Members = {};     // Uncomment to switch off LHC background
 
 //---------------------------------------------------------------------------
 // Database specific options
@@ -33,6 +34,11 @@ SpillOverSelector.Input = {
  ,"FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_2.rawh'" 
 }; // evtype 61 RAWH2
 //SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
+LHCBkgSelector.Input = {
+  "DATAFILE='$LHCBHOME/group/davinci/vol1/testdata/OORawhProva.root' TYP='ROOT' OPT='READ'"
+}; // Test file for LHC background
+//LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events
+
 DstWriter.Output = "DATAFILE='v256r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v256r0.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 10;
