@@ -21,7 +21,7 @@ namespace RichMarkov {
     //const double viewRangeParameterRich1( 6 * characteristicCircleRadiusRich1 ); // lets aim to see a width and height of about 6 circles ...
     //const double viewRangeParameterRich2( 6 * characteristicCircleRadiusRich2 ); // lets aim to see a width and height of about 6 circles ...
     const double circleProbabilityDistributionAlphaParameter( 2 );
-    const double circleProbabilityDistributionEpsilonParameter( 0.05 );
+    const double circleProbabilityDistributionEpsilonParameter( 0.05 ); // hits distributed within about 5% of radius cf. distortion
     const unsigned int DefaultNumberOfIterations( 1500 );
     const double circleDeletionProb( 0.4 );
 

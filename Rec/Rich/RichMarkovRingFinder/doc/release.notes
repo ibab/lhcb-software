@@ -5,6 +5,11 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2004-12-01 - Andy Buckley
+ - src/component/*, src/finder/*
+   . Added weighting of the RecPixels using the Markov probabilities
+   . Added a stretching correction to RICH2 to correct for circle distortions
+
 ! 2004-11-10 - Andy Buckley
  - src/component/*
    . Changed the FinderAlg to either associate pixels to the best-match rings

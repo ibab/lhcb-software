@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.13 2004-11-22 16:24:39 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.14 2004-12-01 17:04:24 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -12,7 +12,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// rich base
+// Rich base
 #include "RichRecBase/RichRecAlgBase.h"
 #include "RichRecBase/RichRecProcCode.h"
 
@@ -147,6 +147,11 @@ private: // data
   /// Do the matching of pixs to rings purely by distance from the ring
   bool m_pixToRingMatchByProximity;
 
+  /// Apply a scaling to the PD planes to make the rings more circular for the finder
+  bool m_useDistortedRings;
+
+  /// Include pixels from untracked rings when calculating the background probabilities for pixels
+  bool m_CountUntrackedRingsAsBg;
 };
 
 

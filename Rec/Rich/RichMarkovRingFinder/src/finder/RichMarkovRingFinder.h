@@ -126,6 +126,7 @@ namespace RichMarkov {
       void addCircleSuggestion(const CircleParamsT & circle);
 
       inline const DataT & data() const { return *m_dataPtr; };
+      inline DataT & data() { return *m_dataPtr; };
 
     };
 
