@@ -4,10 +4,19 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
-!=========================== GaussSys v8r1 2003-02-03 =================
-! 2003-02-03 - Florence RANJARD
- - requirements - use LHCb v11r8,
+!=========================== GaussSys v9r0 2003-02-17 =================
+! 2003-02-17 - Florence RANJARD
+ - requirements - use LHCb v11r10,
                   use GEANT4 v2r5010p0 (1st release of cut per region)
+                      G4VisUI v1r1
+                  use GeneratorModules v5r0
+                      GaussTools v6r1
+                      GiGaCnv v11r1
+                      GaussTracker v2r1
+                      GiGaVisUI v1r2
+                  use ITAlgorithms v12r8
+                      OTAlgorithms v12r3
+                      VeloAlgorithms v2r6
 
 !============================ GaussSys v8r0 2002-12-18 ==================
                          new version using just released Geant4 5.0

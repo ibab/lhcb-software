@@ -1,5 +1,5 @@
 package GaussSys
-version v8r1
+version v9r0
 
 branches cmt doc
 
@@ -7,32 +7,33 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 # Gauss application
-use Gauss		v8r1	Sim
+use Gauss		v9r0	Sim
 
 # GEANT4 libraries
 use GEANT4		v2r5010p0 Sim
 
 # Generator stuff ...
 use EvtGen              v3r1    Gen
-use GeneratorModules    v4r2    Gen
+use GeneratorModules    v5r0    Gen
 
 # GiGa stuff...
 use GiGa        	v13r0	Sim        
-use GiGaCnv     	v11r0   Sim
-#use GiGaVisUI		v1r0	Sim
+use GiGaCnv     	v11r1   Sim
+use GiGaVisUI		v1r2	Sim
 
 # Gauss stuff...
-use GaussTools		v6r0	Sim
+use SimSvc              v1r0    Sim
+use GaussTools		v6r1	Sim
 use GaussRICH		v2r0	Sim
-use GaussTracker	v2r0p1	Sim
+use GaussTracker	v2r1	Sim
 use GaussCalo		v2r0	Sim
 use GaussPhysics	v2r0	Sim
 #use GaussImports        v4r0    Sim
 
 # Detector stuff...
-use VeloAlgorithms 	v2r5	Velo
-use OTAlgorithms	v12r2	OT
-use ITAlgorithms        v12r6   IT
+use VeloAlgorithms 	v2r6	Velo
+use OTAlgorithms	v12r3	OT
+use ITAlgorithms        v12r8   IT
 use ITCheckers		v1r2	IT
 
 # OPACS stuff
