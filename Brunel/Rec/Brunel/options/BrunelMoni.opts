@@ -1,7 +1,5 @@
 // Modify this file to change the default Brunel monitoring. 
-// Provide a dummy file to switch off Brunel monitoring. 
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 
 //--------------------------------------------------------------
 // Choice of persistency technology. Default is Hbook, move comments for ROOT
@@ -13,7 +11,7 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","RICH","CALO","TRIGGER" };
+BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO","TRIGGER" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -21,9 +19,6 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","RICH","CALO","TRIGGER" };
 
 // Trigger
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
-BrunelMoniTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
-BrunelMoniTRIGGERSeq.Members += { "L1Track2dTruth" };
-BrunelMoniTRIGGERSeq.Members += { "L1Track3dTruth" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
 
 // IT digitisation and clustering
@@ -44,7 +39,7 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 #pragma print on
 ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
-BrunelMoniTRACKSeq.Members += { "TrAnalyse" };
+BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };

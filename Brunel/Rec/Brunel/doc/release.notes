@@ -3,6 +3,33 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v15r0>2002-11-11 Brunel v15r0</A></H1><PRE>
+ - New tuning:
+   . Change Silicon Tracker strip pitch from 238 to 198 microns
+     (XmlDDDB v14r0, ITAlgorithms v12r3)
+   . Add 0.135% random noise to ITDigits (ITAlgorithms v12r3)
+   . Cut on both strip threshold and total charge in cluster in ST clustering
+     (ITAlgorithms v12r3)
+   . Use sensible OT gas drift parameters in seed search (Seeding v2r2)
+
+ - New features:
+   . Prepare geometry support for C++ Rich reconstruction
+     (XmlDDDB v14r0, RichKernel v1r3, RichDet v3r0)
+   . New tool to get S/N of an ST cluster (can be used by tracking algorithms
+     to cut on S/N) (ITAlgorithms v12r3)
+   . Add support for variable number of Muon stations
+     (L0Muon v6r2, MuonSicbCnv v6r5, MuonAlgs v3r0, Brunel.opts)
+   . Add support for dbase v249r0 and v249r1
+   . Restructure options files to simplify switching on/off of monitoring and/or
+     DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
+
+ - Bug fixes:
+   . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
+
+ - Code cleanup:
+   . Release all tools (ITAlgorithms v12r3)
+   . Remove obsolete code and unneccessary calls to msgSvc (TrExtrapolator v2r3)
+
 </PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
  - New tuning:
    . Add dummy Velo state to Match track fit to fix bad chi2 (TrMatch v2r2)

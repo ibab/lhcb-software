@@ -23,6 +23,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
                            "BrunelFinalisation/BrunelFinish" };
+ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" }; 
 #include "$BRUNELOPTS/BrunelMoni.opts"
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
@@ -48,6 +49,11 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON","Timing"};
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 
+// Trigger truth relation tables (used by monitoring and for DST)
+BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
+BrunelTriggerTRIGGERSeq.Members += { "L1Track2dTruth" };
+BrunelTriggerTRIGGERSeq.Members += { "L1Track3dTruth" };
+
 // Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #pragma print off
@@ -65,7 +71,7 @@ ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #pragma print on
 
 // Rich Fortran digitisation and OO digits creator 
-ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
+ApplicationMgr.DLLs += { "RichDet", "RiSicbGeom", "RiSicbCnv" };
 BrunelDigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
@@ -179,3 +185,10 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 
 // Intialise random number at every event
 BrunelInit.InitRndmOnce = false;
+
+// Use a spillover container for Muon that also works without M1
+// (this option can be removed when we move to SicbCnv > v17r3)
+SpillOverAlg.SpillOverData = { 
+  "IT/Hits", "OT/Hits" , "Velo/Hits", 
+  "Rich/RadiatorHits", "Rich/PhotodetectorHits",
+  "Spd/Hits", "Prs/Hits", "Ecal/Hits", "Hcal/Hits", "Muon/M3/R1/Hits" };

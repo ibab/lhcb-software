@@ -33,13 +33,12 @@ else
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
-setenv PATH ${PATH}:/afs/cern.ch/user/c/cattanem/public/bin
 
 set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v14r2
+  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v15r0
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD

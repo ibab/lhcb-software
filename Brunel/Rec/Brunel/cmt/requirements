@@ -1,5 +1,5 @@
 package Brunel
-version v14r2
+version v15r0
 
 branches doc cmt job options
 
@@ -44,15 +44,16 @@ use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
 
 # Detector description
-use DetDesc      v10r5  Det
-use XmlDDDB      v13r1  Det
-use CaloDet       v5r1  Det
-use CaloDetXmlCnv v2r0  Det
-use ITDet         v1r1  Det
-use MuonDet       v4r1  Det
-use OTDet         v3r0  Det
-use VeloDet       v7r1  Det
-use Magnet        v1r1  Det
+use DetDesc		v10r5	Det
+use XmlDDDB      	v14r0  	Det
+use CaloDet       	v5r1  	Det
+use CaloDetXmlCnv	v2r0  	Det
+use ITDet         	v1r1  	Det
+use MuonDet       	v4r1  	Det
+use OTDet         	v3r0  	Det
+use RichDet		v3r0	Det
+use VeloDet       	v7r1  	Det
+use Magnet        	v1r1  	Det
 
 # Event Model
 use EventSys     v12r7  Event
@@ -61,18 +62,18 @@ use EventSys     v12r7  Event
 use SicbCnv      v17r3  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
-use MuonSicbCnv  v6r4   SICB
+use MuonSicbCnv  v6r5   SICB
 use RiSicbCnv    v4r6   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
 use BrunelKernel v5r1   Rec
 use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r4   Rec
+use BrunelAlgs   v1r5   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
-use L0Muon              v6r1    L0
+use L0Muon              v6r2    L0
 use PuVeto              v4r0    L0
 use L0DU                v6r1    L0
 
@@ -96,7 +97,7 @@ use VeloAlgorithms	v2r3	Velo
 use VeloAssociators	v1r2	Velo
 
 # Inner Tracker
-use ITAlgorithms	v12r2  	IT
+use ITAlgorithms	v12r3  	IT
 use ITAssociators	v2r1	IT
 use ITCheckers		v1r0	IT
 
@@ -111,9 +112,9 @@ use VeloTrack           v4r1    Velo
 use TrAssociators       v3r2    Tr
 use LongTrack           v1r2    Tr
 use TrFitter            v3r4    Tr
-use TrExtrapolator      v2r2    Tr
-use TrTools             v2r1    Tr
-use Seeding	        v2r1    Tr
+use TrExtrapolator      v2r3    Tr
+use TrTools             v2r2    Tr
+use Seeding	        v2r2    Tr
 use TrMatching          v2r2    Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
@@ -124,13 +125,13 @@ use TrCheck             v1r0    Tr
 # Muon
 use MuonKernel          v2r1    Muon
 use MuonTools           v3r1    Muon
-use MuonAlgs		v2r2	Muon
+use MuonAlgs		v3r0	Muon
 use MuonRec     	v2r2	Muon
 use MuonID      	v3r3	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
-use RichKernel          v1r2    Rich
+use RichKernel          v1r3    Rich
 use RichMonitor         v1r2    Rich
 
 # SICBDST packages
@@ -152,7 +153,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=140200 " \
-           VisualC  " /DBrunelVersion=140200 "
+macro_append fflags " -DBrunelVersion=150000 " \
+           VisualC  " /DBrunelVersion=150000 "
 
 apply_pattern application_path

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-/////    Job options for Brunel when using $LHCBDBASE version v248r4     /////
-/////    ----- "LHCb light detector for Summer 2002 production -----     /////
+/////    Job options for Brunel when using $LHCBDBASE version v249r1     /////
+/////    - "LHCb light detector for winter production, without M1" -     /////
 //////////////////////////////////////////////////////////////////////////////
 
 #include "$SICBCNVROOT/options/Brunel.opts"   // Comment to switch off spillover
@@ -11,8 +11,12 @@ BrunelMoni.DetectorList = { "Tr","TRIGGER" }; // Comment to add histograms
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r1.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
+#pragma print off
+#include "$MUONIDROOT/options/MuonIDFOI-v249r1.opts"
+#include "$L0MUONROOT/options/Brunelv249r1.opts"
+#pragma print on
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -23,15 +27,15 @@ MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "FILE='/castor/cern.ch/lhcb/mc/L280705'" // JobID=102073 evtype 411300 RAWH2
+  "FILE='/castor/cern.ch/lhcb/prod/L299363'"  // JobID 131576 RAWH2 evtype 411300
 };
-//EventSelector.FirstEvent = 5; // Skip busy event 4...
+//EventSelector.FirstEvent = 5; // Skip 4 events
 SpillOverSelector.Input = {
-  "FILE='/castor/cern.ch/lhcb/mc/L280106'",  // JobID = 100818
-  "FILE='/castor/cern.ch/lhcb/mc/L280115'"   // JobID = 100820
+  "FILE='/castor/cern.ch/lhcb/prod/L299295'", // JobID 130932 RAWH2 evtype 61
+  "FILE='/castor/cern.ch/lhcb/prod/L299296'"  // JobID 131024 RAWH2 evtype 61
  }; // evtype 61 RAWH2
-//SpillOverSelector.FirstEvent = 6; // Skip busy event 4...
-BrunelDstWriter.Output = "DATAFILE='v248r4.dst' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "v248r4.hbook";  // Monitoring histos
+//SpillOverSelector.FirstEvent = 6; // Skip corresponding spillover events
+BrunelDstWriter.Output = "DATAFILE='v249r1.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v249r1.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 10;
 //////////////////////////////////////////////////////////////////////////////
