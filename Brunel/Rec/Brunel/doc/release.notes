@@ -6,14 +6,18 @@ Purpose: LHCb reconstruction program
 ! 2002-10-15 - Marco Cattaneo
  - New tuning:
    . Add 1% inefficiency in IT, due to dead strips (ITAlgorithms v12r2)
+   . Small changes to Velo noise processing (VeloAlgorithms v2r3)
+   . Allow association of OTCluster to many MCParticles (OTAssociators v2r2)
 
  - New features:
+   . Prepare for dbase v249r* support (MuonID v3r3)
    . Add support for getting OT digitization parameters from Xml (XmlDDDB v13r1)
    . Possibility to add Xtalk and Random noise to IT. Switched off by default
      (ITAlgorithms v12r2)
 
  - Bug fixes:
    . Fix usage of uninitialised variables (L1VeloTrack v3r1)
+   . Fix a memory leak (LongTrack v1r1)
 
  - Packaging changes:
    . IT monitoring moved to a new package (ITCheckers v1r0, BrunelMoni.opts)

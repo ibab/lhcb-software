@@ -92,7 +92,7 @@ use CaloTrackTools	v1r4	Calo
 
 # Velo
 use VeloKernel		v1r2	Velo
-use VeloAlgorithms	v2r2	Velo
+use VeloAlgorithms	v2r3	Velo
 use VeloAssociators	v1r2	Velo
 
 # Inner Tracker
@@ -102,7 +102,7 @@ use ITCheckers		v1r0	IT
 
 # Outer Tracker
 use OTAlgorithms  	v11r1  	OT
-use OTAssociators  	v2r1  	OT
+use OTAssociators  	v2r2  	OT
 
 # Tracking
 use TrKernel            v11r0   Tr
@@ -110,7 +110,7 @@ use TrFitEvent          v3r0    Tr
 use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
-use LongTrack           v1r0    Tr
+use LongTrack           v1r1    Tr
 use TrFitter            v3r1    Tr
 use TrExtrapolator      v2r1    Tr
 use TrTools             v2r1    Tr
@@ -125,7 +125,7 @@ use MuonKernel          v2r1    Muon
 use MuonTools           v3r0    Muon
 use MuonAlgs		v2r2	Muon
 use MuonRec     	v2r2	Muon
-use MuonID      	v3r2	Muon
+use MuonID      	v3r3	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
