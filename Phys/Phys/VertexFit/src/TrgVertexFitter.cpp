@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.6 2005-02-24 12:52:49 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.7 2005-03-09 16:29:27 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -275,7 +275,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
   debug() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
   
   // Check wether enough particles
-  if ( nPartsToFit == 0 or nPartsToFit == 1){
+  if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
     fatal() << "Not enough particles to fit!" << endreq;
     return StatusCode::FAILURE;
   }
