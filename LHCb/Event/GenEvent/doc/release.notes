@@ -1,7 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
-!================= GenEvent v2r4 2003-08-14 ===========================
+!================= GenEvent v2r4 2003-10-09 ===========================
+! 2003-10-09 - Witek Pokorski
+ - requirements and GenEven_load - final (hopefully..) fix for loading the factories
+
 ! 2003-08-14 - Witek Pokorski
  - fixed loading of factories
 

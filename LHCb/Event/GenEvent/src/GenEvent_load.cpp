@@ -4,11 +4,11 @@
 _ImplementContainedObjectFactory( HepMCEvent  ) ;
 _ImplementDataObjectFactory(      HepMCEvents ) ;
 
-void Event_load() {  
-  DLL_DECL_OBJECTFACTORY( HepMCEvent );
-  DLL_DECL_OBJECTFACTORY( HepMCEvents ); 
+void GenEvent_load() {  
+    DLL_DECL_OBJECTFACTORY( HepMCEvent );
+    DLL_DECL_OBJECTFACTORY( HepMCEvents ); 
 }
 
-extern "C" void Event_loadRef()  {
-  Event_load();
+extern "C" void GenEvent_loadRef()  {
+    GenEvent_load();
 }

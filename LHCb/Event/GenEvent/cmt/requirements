@@ -14,10 +14,25 @@ include_dirs $(GENEVENTROOT)
 document obj2doth GenEventObj2Doth ../xml/GenEvent.xml
 document obj2dict GenEventObj2Dict ../xml/GenEvent.xml
 
-library GenEvent -no_share ../src/*.cpp ../dict/*.cpp
+library GenEvent      ../src/*.cpp ../dict/*.cpp
+library GenEventDict  ../dict/*.cpp -import=GaudiIntrospection
 
 apply_pattern package_linkopts
+apply_pattern package_stamps
+macro_append GenEvent_linkopts "" WIN32 "/include:_GenEvent_loadRef"
 
-macro_append GenEvent_linkopts "-u GenEvent_loadRef" \
- WIN32                         "/include:_GenEvent_loadRef"
+# Pattern linker_path does not work when package name is the same as the hat
+#apply_pattern    linker_path
+
+path_remove LD_LIBRARY_PATH "/GenEvent/GenEvent/"\
+            WIN32           "\GenEvent\GenEvent\"
+path_append LD_LIBRARY_PATH ""\
+            WIN32           "${GENEVENTROOT}/${BINDIR}"
+macro GenEvent_libraries   "GenEvent GenEventLib GenEventDict"\
+            WIN32           ""
+
+apply_pattern package_shlibflags
+#============================================================================
+private
+macro GenEventDict_shlibflags  "$(GenEvent_linkopts) $(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
 
