@@ -1,22 +1,20 @@
-#ifndef   GIGA_GIGAPHYSLISTBASE_ICPP 
-#define   GIGA_GIGAPHYSLISTBASE_ICPP 1  
-
-
+/// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-
+#include "GaudiKernel/PropertyMgr.h"
+/// GiGa
 #include "GiGa/GiGaPhysListBase.h"
 
-////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
+///////////////////////////////////////////////////////////////////////////////////////
+GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
   : GiGaBase          ( nick , loc  )
   , m_DefaultCutValue ( 2.0 * mm    )
 { 
   declareProperty( "Cut" , m_DefaultCutValue ); 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-inline GiGaPhysListBase::~GiGaPhysListBase(){};
+GiGaPhysListBase::~GiGaPhysListBase(){};
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI) 
+StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
@@ -26,7 +24,7 @@ inline StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void
   return StatusCode::SUCCESS; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaPhysListBase::initialize ()  
+StatusCode GiGaPhysListBase::initialize ()  
 {
   /// initialize base class
   StatusCode sc = GiGaBase::initialize (); 
@@ -45,8 +43,7 @@ inline StatusCode GiGaPhysListBase::initialize ()
   return StatusCode::SUCCESS;
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
+StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
 ///////////////////////////////////////////////////////////////////////////////////////
 
-#endif // GIGA_GIGAPHYSLISTBASE_ICPP 
 

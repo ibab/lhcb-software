@@ -40,31 +40,25 @@ class GiGaCnvSvcBase: virtual public  IGiGaCnvSvc       ,
   ///
 protected:
   ///
-  class Leaf;
-  typedef std::vector<Leaf>  Leaves; 
-  ///
 public:
   /// constructor 
-  inline GiGaCnvSvcBase( const std::string&   ServiceName       , 
-			 ISvcLocator*         ServiceLocator    ,
-			 const unsigned int   StorageType       ) ;
+  GiGaCnvSvcBase( const std::string&   ServiceName       , 
+		  ISvcLocator*         ServiceLocator    ,
+		  const unsigned int   StorageType       ) ;
   /// virtual destructor
-  virtual inline ~GiGaCnvSvcBase();
+  virtual ~GiGaCnvSvcBase();
   ///
 public: 
   ///  
-  virtual inline StatusCode initialize     (); 
+  virtual StatusCode initialize     (); 
   ///
-  virtual inline StatusCode finalize       ();
+  virtual StatusCode finalize       ();
   ///
-  virtual inline StatusCode queryInterface ( const IID& , void**  );
+  virtual StatusCode queryInterface ( const IID& , void**  );
   ///
-  virtual inline StatusCode declareObject  ( const std::string& Path        ,
-					     const CLID       & Clid        ,
-					     const std::string& Addr1 = ""  ,
-					     const std::string& Addr2 = ""  );
+  virtual StatusCode              declareObject ( const IGiGaCnvSvc::Leaf& Leaf );
   ///
-  virtual inline void       handle         ( const Incident& );
+  virtual void       handle         ( const Incident& );
   ///
 protected:
   ///
@@ -91,24 +85,24 @@ protected:
   ///
   StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; } 
   ///
-  inline StatusCode Error     ( const std::string & msg                       ,  
-				const StatusCode  & sc  = StatusCode::FAILURE );
-  inline StatusCode Warning   ( const std::string & msg                       ,  
-				const StatusCode  & sc  = StatusCode::FAILURE );
-  inline StatusCode Print     ( const std::string & msg                       ,  
-				const MSG::Level  & lvl = MSG::INFO           ,
-				const StatusCode  & sc  = StatusCode::FAILURE );
-  inline StatusCode Exception ( const std::string    & msg                        ,  
-                                const GaudiException & exc                        , 
-                                const MSG::Level     & lvl = MSG::FATAL           ,
-                                const StatusCode     & sc  = StatusCode::FAILURE );
-  inline StatusCode Exception ( const std::string    & msg                        ,  
-                                const std::exception & exc                        , 
-                                const MSG::Level     & lvl = MSG::FATAL           ,
-                                const StatusCode     & sc  = StatusCode::FAILURE );
-  inline StatusCode Exception ( const std::string    & msg                        ,  
-                                const MSG::Level     & lvl = MSG::FATAL           ,
-                                const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Error     ( const std::string & msg                       ,  
+			 const StatusCode  & sc  = StatusCode::FAILURE );
+  StatusCode Warning   ( const std::string & msg                       ,  
+			 const StatusCode  & sc  = StatusCode::FAILURE );
+  StatusCode Print     ( const std::string & msg                       ,  
+			 const MSG::Level  & lvl = MSG::INFO           ,
+			 const StatusCode  & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,  
+			 const GaudiException & exc                        , 
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,  
+			 const std::exception & exc                        , 
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,  
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
   ///
 private: 
   ///
@@ -116,11 +110,9 @@ private:
   GiGaCnvSvcBase           ( const GiGaCnvSvcBase& ) ; // no copy
   GiGaCnvSvcBase& operator=( const GiGaCnvSvcBase& ) ; // no assignment 
   ///
-  virtual StatusCode              declareObject ( const Leaf& Leaf );
-  ///
 protected:
   ///
-  Leaves                               m_leaves     ; 
+  IGiGaCnvSvc::Leaves                  m_leaves     ; 
   ///
 private: 
   ///
@@ -155,8 +147,6 @@ private:
   IIncidentSvc*                        m_incSvc     ;
   ///
 };        
-///
-#include "GiGa/GiGaCnvSvcBase.icpp"
 ///
  
 #endif  //   GIGA_GIGACNVSVCBASE_H 

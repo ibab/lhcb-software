@@ -1,7 +1,7 @@
+/// STL
 #include <string>
 #include <vector>
-
-/// from Gaudi 
+/// Gaudi 
 #include "GaudiKernel/IDetectorElement.h"
 #include "GaudiKernel/IGeometryInfo.h"
 #include "GaudiKernel/ILVolume.h"
@@ -10,17 +10,16 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataSelector.h" 
 #include "GaudiKernel/IAddressCreator.h" 
-
-/// from DetDesc 
+/// DetDesc 
 #include "DetDesc/CLIDDetectorElement.h" 
-
-
+/// Geant4
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
 #include "G4PhysicalVolumeStore.hh"
-
-
+/// GiGa
+#include "GiGa/IGiGaCnvSvc.h"
+#include "GiGa/IGiGaGeomCnvSvc.h"
 /// local 
 #include "GiGaDetectorElementCnv.h"
 

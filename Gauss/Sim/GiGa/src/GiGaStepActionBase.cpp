@@ -1,19 +1,16 @@
-#ifndef     GIGA_GIGASTEPACTIONBASE_ICPP
-#define     GIGA_GIGASTEPACTIONBASE_ICPP 1 
-///
+/// GiGa
 #include "GiGa/GiGaStepActionBase.h"
 ///
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaStepActionBase::GiGaStepActionBase( const std::string& nick , ISvcLocator* svc ) 
+GiGaStepActionBase::GiGaStepActionBase( const std::string& nick , ISvcLocator* svc ) 
   : G4UserSteppingAction() 
   , GiGaBase            ( nick     ,   svc     ) 
 { };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaStepActionBase::~GiGaStepActionBase(){};
+GiGaStepActionBase::~GiGaStepActionBase(){};
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStepActionBase::initialize() 
+StatusCode GiGaStepActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
@@ -21,9 +18,9 @@ inline StatusCode GiGaStepActionBase::initialize()
   return StatusCode::SUCCESS;
 }; 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStepActionBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaStepActionBase::finalize() { return GiGaBase::finalize();  };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , void** ppI)
+StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0; 
@@ -34,5 +31,4 @@ inline StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , v
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#endif  //  GIGA_GIGASTEPACTIONBASE_ICPP
 

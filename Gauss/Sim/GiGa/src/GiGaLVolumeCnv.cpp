@@ -10,6 +10,9 @@
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
+/// GiGa 
+#include "GiGa/IGiGaCnvSvc.h"
+#include "GiGa/IGiGaGeomCnvSvc.h"
 /// local
 #include "GiGaLVolumeCnv.h" 
 

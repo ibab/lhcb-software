@@ -2,12 +2,15 @@
 #define     GIGA_GIGABASE_H 1 
 /// STL
 #include <string>
+#include <exception>
 /// GaudiKernel 
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/MsgStream.h"
 ///
 class IMessageSvc          ;
+class ISvcLocator          ;
 class IChronoStatSvc       ;
 class IDataProviderSvc     ;
 class IParticlePropertySvc ;  
@@ -19,6 +22,7 @@ class IGiGaSetUpSvc        ;
 class PropertyMgr          ;
 class MsgStream            ;
 class StreamBuffer         ;
+class GaudiException       ;
 ///
 
 /** @class GiGaBase GiGaBase.h GiGa/GiGaBase.h
@@ -39,8 +43,8 @@ class  GiGaBase: virtual public IProperty         ,
 protected:
   ///
   /// Constructor and (virtual) Destructor 
-  inline GiGaBase( const std::string& , ISvcLocator* );
-  virtual inline ~GiGaBase();
+  GiGaBase( const std::string& , ISvcLocator* );
+  virtual ~GiGaBase();
   ///
 public:
   ///
@@ -51,25 +55,25 @@ public:
   /// Release Interface instance
   virtual unsigned long          release ()        { return 0 < m_count ? --m_count : 0 ; };
   /// query interface 
-  virtual inline StatusCode queryInterface(const InterfaceID& , void** );
+  virtual StatusCode queryInterface(const InterfaceID& , void** );
   /// initialize object 
-  virtual inline StatusCode initialize() ;
+  virtual StatusCode initialize() ;
   /// finalize the obkject 
-  virtual inline StatusCode finalize  () ;
+  virtual StatusCode finalize  () ;
   /// serialize object for reading 
-  virtual inline StreamBuffer& serialize( StreamBuffer& S )       ;
+  virtual StreamBuffer& serialize( StreamBuffer& S )       ;
   /// serialize object for writing 
-  virtual inline StreamBuffer& serialize( StreamBuffer& S ) const ; 
+  virtual StreamBuffer& serialize( StreamBuffer& S ) const ; 
   /// Set the property by property
-  virtual inline StatusCode                    setProperty   ( const Property& p       )       ;
+  virtual StatusCode                    setProperty   ( const Property& p       )       ;
   /// Get the property by property
-  virtual inline StatusCode                    getProperty   ( Property* p             ) const ;
+  virtual StatusCode                    getProperty   ( Property* p             ) const ;
   /// Get the property by name
-  virtual inline const Property&               getProperty   ( const std::string& name ) const ; 
+  virtual const Property&               getProperty   ( const std::string& name ) const ; 
   /// Get list of properties
-  virtual inline const std::vector<Property*>& getProperties ( )                         const ;
+  virtual const std::vector<Property*>& getProperties ( )                         const ;
   ///  handle the incident 
-  virtual inline void handle( const Incident& ) ;
+  virtual void handle( const Incident& ) ;
   /// 
  protected:
   ///
@@ -96,15 +100,29 @@ protected:
     if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
     return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
   };
-  inline StatusCode setProperties  () ; 
+  StatusCode setProperties  () ; 
   ///
 protected:
   ///  Print the error    message and return status code 
-  inline StatusCode Error   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Error     ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  inline StatusCode Warning ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Warning   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
   ///  Print the warning  message and return status code 
-  inline StatusCode Print   ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  StatusCode Print     ( const std::string& Message , const StatusCode & Status  = StatusCode::FAILURE ) const ;  
+  ///
+  StatusCode Exception ( const std::string    & msg                        ,  
+                         const GaudiException & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
+  ///
+  StatusCode Exception ( const std::string    & msg                        ,  
+                         const std::exception & exc                        , 
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
+  ///
+  StatusCode Exception ( const std::string    & msg                        ,  
+                         const MSG::Level     & lvl = MSG::FATAL           ,
+                         const StatusCode     & sc  = StatusCode::FAILURE );
   ///
 private: 
   ///
@@ -143,8 +161,6 @@ private:
   IMagneticFieldSvc*    m_mfSvc      ;
   ///
 };
-///
-#include "GiGa/GiGaBase.icpp"
 ///
 
 #endif //   GIGA_GIGABASE_H

@@ -1,6 +1,5 @@
 #ifndef     GIGA_GiGaSensDetBase_H
 #define     GIGA_GiGaSensDetBase_H 1 
-
 /// GiGa
 #include "GiGa/IGiGaSensDet.h" 
 #include "GiGa/GiGaBase.h" 
@@ -21,23 +20,23 @@ class GiGaSensDetBase: virtual public IGiGaSensDet   ,
   ///
 protected:
   /// constructor 
-  inline GiGaSensDetBase( const std::string& , ISvcLocator* );
+  GiGaSensDetBase( const std::string& , ISvcLocator* );
   /// virtual destructor 
-  virtual inline ~GiGaSensDetBase();
+  virtual ~GiGaSensDetBase();
   ///
 public:
   /// ident 
   virtual const std::string&    name      () const { return GiGaBase::name() ; }; 
   /// initialize 
-  virtual inline StatusCode    initialize () ; 
+  virtual StatusCode    initialize () ; 
   /// finalize 
-  virtual inline StatusCode    finalize   () ; 
+  virtual StatusCode    finalize   () ; 
   /// Query Interface
-  virtual inline StatusCode    queryInterface ( const InterfaceID& , void** ) ;
+  virtual StatusCode    queryInterface ( const InterfaceID& , void** ) ;
   /// serialization for reading
-  virtual inline StreamBuffer& serialize( StreamBuffer& )       ;
+  virtual StreamBuffer& serialize( StreamBuffer& )       ;
   /// serialization for writing
-  virtual inline StreamBuffer& serialize( StreamBuffer& ) const ;
+  virtual StreamBuffer& serialize( StreamBuffer& ) const ;
   ///
 protected:
   ///
@@ -57,11 +56,6 @@ private:
   ///
 };
 ///
-#include "GiGa/GiGaSensDetBase.icpp"
-///
-
-
-
 
 #endif   // GIGA_GiGaSensDet_H
 

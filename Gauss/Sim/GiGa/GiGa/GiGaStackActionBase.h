@@ -20,19 +20,19 @@ class GiGaStackActionBase: virtual public IGiGaStackAction   ,
   ///
 protected:
   /// constructor 
-  inline GiGaStackActionBase( const std::string& , ISvcLocator* );
+  GiGaStackActionBase( const std::string& , ISvcLocator* );
   /// virtual destructor 
-  virtual inline ~GiGaStackActionBase();
+  virtual ~GiGaStackActionBase();
   ///
 public:
   /// ident 
   virtual const std::string& name       () const { return GiGaBase::name() ; }; 
   /// initialize 
-  virtual inline StatusCode  initialize () ; 
+  virtual StatusCode  initialize () ; 
   /// finalize 
-  virtual inline StatusCode  finalize   () ; 
+  virtual StatusCode  finalize   () ; 
   /// Query Interface
-  virtual inline StatusCode  queryInterface ( const InterfaceID& , void** ) ;
+  virtual StatusCode  queryInterface ( const InterfaceID& , void** ) ;
   ///
 private:
   ///
@@ -43,8 +43,6 @@ private:
 private:
   ///
 };
-///
-#include "GiGa/GiGaStackActionBase.icpp"
 ///
 
 #endif   // GIGA_GiGaStackActionBase_H

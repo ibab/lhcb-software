@@ -22,18 +22,18 @@ class GiGaTrackActionBase: virtual public IGiGaTrackAction   ,
   ///
 protected:
   /// constructor 
-  inline GiGaTrackActionBase( const std::string& , ISvcLocator* );
-  virtual inline ~GiGaTrackActionBase();
+  GiGaTrackActionBase( const std::string& , ISvcLocator* );
+  virtual ~GiGaTrackActionBase();
   ///
 public:
   /// ident 
   virtual const std::string&  name       () const { return GiGaBase::name() ; }; 
   /// initialize 
-  virtual inline StatusCode   initialize () ; 
+  virtual StatusCode   initialize () ; 
   /// finalize 
-  virtual inline StatusCode   finalize   () ; 
+  virtual StatusCode   finalize   () ; 
   /// Query Interface
-  virtual inline StatusCode   queryInterface ( const InterfaceID& , void** ) ;
+  virtual StatusCode   queryInterface ( const InterfaceID& , void** ) ;
   ///
 private:
   ///
@@ -44,8 +44,6 @@ private:
 private:
   ///
 };
-///
-#include "GiGa/GiGaTrackActionBase.icpp"
 ///
  
 #endif   // GIGA_GiGaTrackActionBase_H 

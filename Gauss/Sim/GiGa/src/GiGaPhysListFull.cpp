@@ -1,9 +1,8 @@
-
+// GaudiKernel
+#include "GaudiKernel/PropertyMgr.h"
 // GiGa
 #include "GiGa/GiGaPhysListFactory.h"
-
 // G4 
-/////////////////////////////////////////////
 #include "G4ParticleTypes.hh"
 #include "globals.hh"
 #include "G4ParticleDefinition.hh"
@@ -23,10 +22,6 @@
 #include "G4ios.hh"
 #include "g4std/iomanip" 
 #include "G4FastSimulationManagerProcess.hh"  
-/////////////////////////////////////////////
-
-
-
 // local
 #include "GiGaPhysListFull.h"
 

@@ -1,13 +1,8 @@
 #ifndef       GIGA_GiGaPhysListBase_H
 #define       GIGA_GiGaPhysListBase_H 1 
-
-
-
-
 /// base classes 
 #include "GiGa/IGiGaPhysList.h"
 #include "GiGa/GiGaBase.h"
-
 
 /** @class  GiGaPhysListBase             GiGaPhysListBase.h GiGa/GiGaPhysListBase.h
     
@@ -17,25 +12,24 @@
     @author Vanya Belyaev
 */
 
-
 class GiGaPhysListBase: virtual public IGiGaPhysList   , 
 			public          GiGaBase
 {
   ///
 protected:
   ///
-  inline GiGaPhysListBase( const std::string& , ISvcLocator* );
+  GiGaPhysListBase( const std::string& , ISvcLocator* );
   ///
-  virtual inline ~GiGaPhysListBase();
+  virtual ~GiGaPhysListBase();
   ///
 public:
   ///
   virtual const  std::string& name       () const { return GiGaBase::name() ; }
   /// 
-  virtual inline StatusCode   queryInterface( const InterfaceID&  , void** ); 
+  virtual StatusCode   queryInterface( const InterfaceID&  , void** ); 
   ///
-  virtual inline StatusCode   initialize () ; 
-  virtual inline StatusCode   finalize   () ; 
+  virtual StatusCode   initialize () ; 
+  virtual StatusCode   finalize   () ; 
   ///
 protected:
   ///
@@ -52,8 +46,6 @@ private:
   double    m_DefaultCutValue  ; //default cut value
   ///
 };
-///
-#include "GiGa/GiGaPhysListBase.icpp"
 ///
  
 #endif    //  GIGA_GiGaPhysListBase_H

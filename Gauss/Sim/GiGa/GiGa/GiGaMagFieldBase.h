@@ -19,19 +19,19 @@ class GiGaMagFieldBase: public virtual IGiGaMagField ,
   ///
   protected:
   /// constructor 
-  inline GiGaMagFieldBase( const std::string& , ISvcLocator* ) ; 
+  GiGaMagFieldBase( const std::string& , ISvcLocator* ) ; 
   /// virtual destructor 
-  virtual inline ~GiGaMagFieldBase();
+  virtual ~GiGaMagFieldBase();
   ///
 public:
   /// ident 
   virtual const std::string&  name           () const { return GiGaBase::name() ; }; 
   /// initialize 
-  virtual inline StatusCode   initialize     () ; 
+  virtual StatusCode   initialize     () ; 
   /// finalize 
-  virtual inline StatusCode   finalize       () ; 
+  virtual StatusCode   finalize       () ; 
   /// Query Interface
-  virtual inline StatusCode   queryInterface ( const InterfaceID& , void** ) ;
+  virtual StatusCode   queryInterface ( const InterfaceID& , void** ) ;
   ///
 private:
   ///
@@ -42,8 +42,6 @@ private:
 private:
   ///
 };
-///
-#include "GiGa/GiGaMagFieldBase.icpp"
 ///
 
 #endif  // GIGA_GIGAMagFieldBase_H

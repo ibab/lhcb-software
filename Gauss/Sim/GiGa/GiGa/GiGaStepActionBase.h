@@ -21,8 +21,8 @@ class GiGaStepActionBase: virtual public IGiGaStepAction   ,
   ///
 protected:
   /// constructor 
-  inline GiGaStepActionBase( const std::string& , ISvcLocator* ) ;
-  virtual inline ~GiGaStepActionBase();
+  GiGaStepActionBase( const std::string& , ISvcLocator* ) ;
+  virtual ~GiGaStepActionBase();
   ///
 public:
   /// ident 
@@ -43,8 +43,6 @@ protected:
 private:
   ///
 };
-///
-#include "GiGa/GiGaStepActionBase.icpp"
 ///
 
 #endif   // GIGA_GiGaStepActionBase_H

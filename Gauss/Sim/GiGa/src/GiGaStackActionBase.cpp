@@ -1,19 +1,16 @@
-#ifndef     GIGA_GiGaStackActionBase_ICPP
-#define     GIGA_GiGaStackActionBase_ICPP 1 
-
 /// GiGa 
 #include "GiGa/GiGaStackActionBase.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaStackActionBase::GiGaStackActionBase( const std::string& nick , ISvcLocator* svc )
+GiGaStackActionBase::GiGaStackActionBase( const std::string& nick , ISvcLocator* svc )
   : G4UserStackingAction () 
   , GiGaBase             ( nick , svc ) 
 {};
 /// virtual destructor ///////////////////////////////////////////////////////////////////
-inline GiGaStackActionBase::~GiGaStackActionBase(){};
+GiGaStackActionBase::~GiGaStackActionBase(){};
 //////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStackActionBase::initialize() 
+StatusCode GiGaStackActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
@@ -21,9 +18,9 @@ inline StatusCode GiGaStackActionBase::initialize()
   return StatusCode::SUCCESS;
 }; 
 /////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStackActionBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaStackActionBase::finalize() { return GiGaBase::finalize();  };
 /////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaStackActionBase::queryInterface( const InterfaceID& iid , void** ppI)
+StatusCode GiGaStackActionBase::queryInterface( const InterfaceID& iid , void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0; 
@@ -33,9 +30,6 @@ inline StatusCode GiGaStackActionBase::queryInterface( const InterfaceID& iid , 
   return StatusCode::SUCCESS;
 };
 //////////////////////////////////////////////////////////////////////////////////////////
-
-
-#endif   // GIGA_GiGaStackActionBase_ICPP
 
 
 

@@ -1,7 +1,7 @@
-
+// GaudiKernel
+#include "GaudiKernel/PropertyMgr.h"
 // GiGa
 #include "GiGa/GiGaPhysListFactory.h"
-
 // G4 
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
@@ -13,8 +13,6 @@
 #include "G4Material.hh"
 #include "G4ios.hh"
 #include "g4std/iomanip"                
-
-
 // local
 #include "GiGaPhysListEm.h"
 

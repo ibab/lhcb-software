@@ -1,6 +1,7 @@
 /// GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/PropertyMgr.h"
 /// GiGa
 #include "GiGa/GiGaMagFieldFactory.h"
 /// local 

@@ -37,15 +37,15 @@ class GiGaCnvBase: public Converter
   ///  
 protected: 
   ///
-  inline GiGaCnvBase( const unsigned char  StorageType , 
+  GiGaCnvBase( const unsigned char  StorageType , 
 		      const CLID&          ClassType   , 
-		      ISvcLocator*         Locator     );
-  inline virtual ~GiGaCnvBase();
+	       ISvcLocator*         Locator     );
+  virtual ~GiGaCnvBase();
   ///
 public: 
   ///
-  virtual inline StatusCode initialize () ; 
-  virtual inline StatusCode finalize   () ;
+  virtual StatusCode initialize () ; 
+  virtual StatusCode finalize   () ;
   ///  
 protected: 
   ///
@@ -60,19 +60,19 @@ protected:
   IGiGaSetUpSvc*        setupSvc  () { return 0 != cnvSvc () ? cnvSvc ()->setupSvc() : 0 ; } 
   IParticlePropertySvc* ppSvc     () { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; } 
   ///  
-  inline StatusCode Error     ( const std::string& Message , const StatusCode& status = StatusCode::FAILURE );
+  StatusCode Error     ( const std::string& Message , const StatusCode& status = StatusCode::FAILURE );
   ///
-  inline StatusCode Exception ( const std::string    & msg                        ,   
-				const GaudiException & exc                        , 
-				const MSG::Level     & lvl = MSG::FATAL           ,
-				const StatusCode     & sc  = StatusCode::FAILURE );
-  inline StatusCode Exception ( const std::string    & msg                        ,  
-                                const std::exception & exc                        , 
-                                const MSG::Level     & lvl = MSG::FATAL           ,
-                                const StatusCode     & sc  = StatusCode::FAILURE );
-  inline StatusCode Exception ( const std::string    & msg                        ,  
-                                const MSG::Level     & lvl = MSG::FATAL           ,
-                                const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,   
+			 const GaudiException & exc                        , 
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,  
+			 const std::exception & exc                        , 
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception ( const std::string    & msg                        ,  
+			 const MSG::Level     & lvl = MSG::FATAL           ,
+			 const StatusCode     & sc  = StatusCode::FAILURE );
   ///
   inline const std::string&  name     () { return m_ConverterName; } 
   ///
@@ -92,6 +92,8 @@ protected:
   std::string           m_NameOfGiGaConversionService ; 
   std::string           m_ConverterName               ;
   ///
+  IGiGaCnvSvc::Leaves   m_leaves                      ;
+  ///
 private:
   ///
   IGiGaCnvSvc*          m_GiGaCnvSvc                  ; 
@@ -104,8 +106,6 @@ private:
   IChronoStatSvc*       m_chronoSvc                   ; 
   ///
 };
-///
-#include "GiGa/GiGaCnvBase.icpp"
 ///
 
  

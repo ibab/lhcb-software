@@ -1,5 +1,3 @@
-#ifndef     GIGA_GIGABASE_ICPP
-#define     GIGA_GIGABASE_ICPP 1 
 /// STL
 #include <string>
 /// GaudiKernel
@@ -27,7 +25,7 @@
 #include "GiGa/GiGaBase.h" 
 
 /////////////////////////////////////////////////////////////////////////////////////
-inline GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
+GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   /// reference count
   : m_count      ( 0                     ) 
   /// name 
@@ -77,9 +75,9 @@ inline GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaBase::~GiGaBase() { if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } } 
+GiGaBase::~GiGaBase() { if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } } 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
+StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
 {
   if ( 0 == ppI ) { return StatusCode::FAILURE; }
   *ppI = 0 ;
@@ -92,7 +90,7 @@ inline StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI 
   return StatusCode::SUCCESS;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaBase::initialize() 
+StatusCode GiGaBase::initialize() 
 {
   ///
   if( 0 != msgSvc    () ) { msgSvc    ()->release() ; m_msgSvc    = 0 ; } 
@@ -200,7 +198,7 @@ inline StatusCode GiGaBase::initialize()
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaBase::finalize()
+StatusCode GiGaBase::finalize()
 {
   /// reverse order !!!
   if( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
@@ -217,7 +215,7 @@ inline StatusCode GiGaBase::finalize()
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaBase::setProperties() 
+StatusCode GiGaBase::setProperties() 
 {
   ///
   if( 0 == svcLoc()    ) { throw GiGaException("GiGaBase::setProperties() ICvsLocatort* point to NULL!") ; } 
@@ -237,7 +235,7 @@ inline StatusCode GiGaBase::setProperties()
   return StatusCode::SUCCESS;
 };
 /// Print message and return status code //////////////////////////////////////////////////////
-inline StatusCode GiGaBase::Error( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Error( const std::string& Message , const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
   MsgStream log( msgSvc() , name() ); 
@@ -245,7 +243,7 @@ inline StatusCode GiGaBase::Error( const std::string& Message , const StatusCode
   return  Status;
 };  
 /// Print message and return status code ///////////////////////////////////////////////////////
-inline StatusCode GiGaBase::Warning( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Warning( const std::string& Message , const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
   MsgStream log( msgSvc() , name() ); 
@@ -253,22 +251,22 @@ inline StatusCode GiGaBase::Warning( const std::string& Message , const StatusCo
   return  Status;
 };  
 /// Print message and return status code /////////////////////////////////////////////////////////
-inline StatusCode GiGaBase::Print( const std::string& Message , const StatusCode & Status ) const 
+StatusCode GiGaBase::Print( const std::string& Message , const StatusCode & Status ) const 
 {
   MsgStream log( msgSvc() , name() ); 
   log << MSG::INFO << System::typeinfoName( typeid( *this ) ) << " " <<Message << endreq ; 
   return  Status;
 };  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode                    GiGaBase::setProperty  ( const Property    & p )       { return m_propMgr->setProperty( p ) ; };
+StatusCode                    GiGaBase::setProperty  ( const Property    & p )       { return m_propMgr->setProperty( p ) ; };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode                    GiGaBase::getProperty  (       Property    * p ) const { return m_propMgr->getProperty( p ) ; };
+StatusCode                    GiGaBase::getProperty  (       Property    * p ) const { return m_propMgr->getProperty( p ) ; };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline const Property&               GiGaBase::getProperty  ( const std::string & N ) const { return m_propMgr->getProperty( N ) ; };
+const Property&               GiGaBase::getProperty  ( const std::string & N ) const { return m_propMgr->getProperty( N ) ; };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline const std::vector<Property*>& GiGaBase::getProperties()                        const { return m_propMgr->getProperties()  ; };   
+const std::vector<Property*>& GiGaBase::getProperties()                        const { return m_propMgr->getProperties()  ; };   
 ///////////////////////// serialize object for reading ///////////////////////////////////////////////////////////////////////////////
-inline StreamBuffer& GiGaBase::serialize( StreamBuffer& S )       
+StreamBuffer& GiGaBase::serialize( StreamBuffer& S )       
 { 
   ///
   if( 0 == m_propMgr ) { m_propMgr = new PropertyMgr() ;} 
@@ -289,7 +287,7 @@ inline StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
   return S;       
 };  
 //////////////////// serialize object for writing ///////////////////////
-inline StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const 
+StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const 
 {
   return S << m_name  
 	   << m_gigaName 
@@ -303,11 +301,9 @@ inline StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const
 	   << m_output ;   
 }; 
 ///////////////////////////////////////////////////////////////////////////
-inline void  GiGaBase::handle( const Incident& incident ) 
+void  GiGaBase::handle( const Incident& incident ) 
 { Print("Incident='"+incident.type()+"'"+" \tsource='"+incident.source()+"'" ); };
 ///////////////////////////////////////////////////////////////////////////
-
-#endif //   GIGA_GIGABASE_ICPP
 
 
 

@@ -1,17 +1,18 @@
-#ifndef     GIGA_GiGaSensDetBase_ICPP
-#define     GIGA_GiGaSensDetBase_ICPP 1 
 /// from STL
 #include <vector>
 /// GaudiKernel 
 #include "GaudiKernel/IDetectorElement.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/System.h"
+#include "GaudiKernel/StreamBuffer.h"
 /// GiGa
 #include "GiGa/GiGaSensDetBase.h" 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , ISvcLocator* svc )
+GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , ISvcLocator* svc )
   : G4VSensitiveDetector( nick                 ) /// ATTENTION !!! this name ill be overwritten later!!!!
   ///
   , GiGaBase            ( nick     ,   svc     ) 
@@ -28,9 +29,9 @@ inline GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , ISvcLocator* 
   declareProperty( "Active"                , m_active   );
 };
 /// virtual destructor /////////////////////////////////////////////////////////////////////////
-inline GiGaSensDetBase::~GiGaSensDetBase(){};
+GiGaSensDetBase::~GiGaSensDetBase(){};
 ////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaSensDetBase::initialize() 
+StatusCode GiGaSensDetBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
@@ -91,7 +92,7 @@ inline StatusCode GiGaSensDetBase::initialize()
   return StatusCode::SUCCESS;
 }; 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaSensDetBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaSensDetBase::finalize() { return GiGaBase::finalize();  };
 ///////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSensDetBase::queryInterface( const InterfaceID& iid , void** ppI)
 {
@@ -103,7 +104,7 @@ StatusCode GiGaSensDetBase::queryInterface( const InterfaceID& iid , void** ppI)
   return StatusCode::SUCCESS;
 };
 /// serialize object for reading ///////////////////////////////////////////////////////////////
-inline StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )       
+StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )       
 {
   GiGaBase::serialize( S ) ; 
   m_init = false ; 
@@ -116,23 +117,12 @@ inline StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )
   return S;       
 };  
 /// serialize object for writing /////////////////////////////////////////////////////////////////
-inline StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S ) const 
+StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S ) const 
 {
   GiGaBase::serialize( S ) ; 
   return S << m_detName << (int) m_active ;
 }; 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-#endif   // GIGA_GiGaSensDetBase_ICPP
-
-
-
-
-
 
 
 

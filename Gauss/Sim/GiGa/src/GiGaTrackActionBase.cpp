@@ -1,18 +1,16 @@
-#ifndef      GIGA_GIGATRACKACTIONBASE_ICPP
-#define      GIGA_GIGATRACKACTIONBASE_ICPP 1 
 /// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaTrackActionBase::GiGaTrackActionBase( const std::string& nick , ISvcLocator* svc )
+GiGaTrackActionBase::GiGaTrackActionBase( const std::string& nick , ISvcLocator* svc )
   : G4UserTrackingAction() 
   , GiGaBase            ( nick     ,   svc     ) 
 { };
 //////////////////////////////////////////////////////////////////////////////////////////
-inline GiGaTrackActionBase::~GiGaTrackActionBase(){};
+GiGaTrackActionBase::~GiGaTrackActionBase(){};
 //////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaTrackActionBase::initialize() 
+StatusCode GiGaTrackActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
@@ -20,7 +18,7 @@ inline StatusCode GiGaTrackActionBase::initialize()
   return StatusCode::SUCCESS;
 }; 
 ///////////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaTrackActionBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaTrackActionBase::finalize() { return GiGaBase::finalize();  };
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaTrackActionBase::queryInterface( const InterfaceID& iid , void** ppI)
 {
@@ -33,8 +31,6 @@ inline StatusCode GiGaTrackActionBase::queryInterface( const InterfaceID& iid , 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-
-#endif  //   GIGA_GIGATRACKACTIONBASE_ICPP
 
 
 

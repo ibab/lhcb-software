@@ -1,16 +1,13 @@
-#ifndef    GIGA_GIGAMagFieldBase_ICPP
-#define    GIGA_GIGAMagFieldBase_ICPP 1 
-
 ///
 #include "GiGa/GiGaMagFieldBase.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
-inline GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , ISvcLocator* loc ) 
+GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , ISvcLocator* loc ) 
   : GiGaBase( nick , loc ) {};
 /// virtual destructor ////////////////////////////////////////////////////////////////
-inline GiGaMagFieldBase::~GiGaMagFieldBase() {};
+GiGaMagFieldBase::~GiGaMagFieldBase() {};
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , void** ppI) 
+StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
@@ -20,7 +17,7 @@ inline StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , void
   return StatusCode::SUCCESS; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaMagFieldBase::initialize ()  
+StatusCode GiGaMagFieldBase::initialize ()  
 {
   /// initialize base class 
   StatusCode sc = GiGaBase::initialize (); 
@@ -30,10 +27,9 @@ inline StatusCode GiGaMagFieldBase::initialize ()
   return StatusCode::SUCCESS;
 };
 ///////////////////////////////////////////////////////////////////////////////////////
-inline StatusCode GiGaMagFieldBase::finalize   ()  { return GiGaBase::finalize   (); };
+StatusCode GiGaMagFieldBase::finalize   ()  { return GiGaBase::finalize   (); };
 ///////////////////////////////////////////////////////////////////////////////////////
 
-#endif  // GIGA_GIGAMagFieldBase_ICPP
 
 
 
