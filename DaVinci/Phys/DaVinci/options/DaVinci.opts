@@ -58,14 +58,15 @@
 //--- Example of use of CombinedParticleMaker
 //#include "$DAVINCIROOT/options/PreLoadCombinedParticles.opts"
 
+//--- Example of use of Pair Production: Note that DaVinciNeutrals
+//    MUST be executed
+//#include "$DAVINCIROOT/options/DaVinciPairPhotons.opts"
+
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-
-//--- Uncomment the following line to run the example UserAlgorithm
-//ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
 
 //----------------------------------------------------------------
 // The various selections algorithms have each a DVDecayName.opts
@@ -123,5 +124,6 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
    
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
 //################################################################
 

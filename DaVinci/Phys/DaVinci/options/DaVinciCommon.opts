@@ -62,8 +62,6 @@ ApplicationMgr.DLLs += { "DaVinciUser" };
 //    ... generic algorithms for selection of decays
 ApplicationMgr.DLLs += { "PhysSelections" };
 ApplicationMgr.DLLs += { "Ks2PiPiSel" };
-//    ... specific algorithms for selection of decays
-#include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
 //    ... flavour tagging
 ApplicationMgr.DLLs += { "FlavourTagging" };
 ApplicationMgr.DLLs += { "RecoTools" };

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.77 2003-12-05 09:30:46 gcorti Exp $
+# $Id: requirements,v 1.78 2003-12-12 19:20:55 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v9r1p5
+version           v9r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -42,7 +42,26 @@ use  HbookCnv           v13r4
 use  RootHistCnv    	v8r2
 
 #--- LHCb libraries (from LHCB_v12r1)
-use  LHCb               v12r1	
+use GaudiConf           v6r10
+use BookKeeping         v1r2    Tools
+use KernelSys           v1r4	Kernel
+use DetSys              v2r1    Det
+use EventKernel		v2r3	Event
+use Event		v3r4	Event
+use VeloEvent		v12r1	Event
+use ITEvent		v12r1	Event
+use OTEvent		v12r1	Event
+use TrEvent		v12r1	Event
+use RichEvent		v5r0	Event
+use CaloEvent		v11r6	Event
+use MuonEvent		v2r4	Event
+use L0Event		v13r2	Event
+use L1Event		v11r7	Event
+use PhysEvent		v7r6	Event
+use HltEvent		v4r0    Event
+use DbCnv		v7r1	Event
+use AssociatorsSys      v1r4    Associators
+
 
 #--- Geometry Database
 use  XmlDDDB		v17r0	 Det
@@ -52,12 +71,13 @@ use  XmlDDDB		v17r0	 Det
 #    Enable L0 and L1 Trigger reprocessing and HLT 
 use  L0DU          	v6r5	 L0
 use  L1Decision         v2r1     L1
-use  HltTools           v3r0     Hlt
-use  HltVelo            v3r0     Hlt
-use  HltVeloTT          v3r0     Hlt
-use  HltLongTrack       v3r0     Hlt
-use  HltChecker         v3r0     Hlt
-use  HltMuonID          v1r0     Hlt
+use  HltTools           v4r0     Hlt
+use  HltVelo            v4r0     Hlt
+use  HltVeloTT          v4r0     Hlt
+use  HltLongTrack       v4r0     Hlt
+use  HltChecker         v4r0     Hlt
+use  HltMuonID          v2r0     Hlt
+use  HltPrimaryVertex   v2r0     Hlt
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v2r4     Calo
@@ -79,22 +99,23 @@ use  TrExtrapolator     v2r6     Tr
 use  MCTools            v1r1p1   Phys
 
 #    Reconstruction tools 
-use  RecoTools          v1r0p1   Rec
+use  RecoTools          v1r1     Rec
 
 #    Physics packages
-use  DaVinciTools       v8r2     Phys
+use  DaVinciTools       v8r3     Phys
 use  DaVinciAssociators v4r2p1   Phys
-use  DaVinciMCTools     v5r0     Phys
+use  DaVinciMCTools     v5r0p1   Phys
 use  DaVinciTest        v4r1p2   Phys
 use  Ks2PiPiSel         v1r0     Phys
+use  CommonParticles    v1r0     Phys
 use  PhysSelections	v6r0p2   Phys
 use  FlavourTagging     v4r6p1   Phys
 use  DaVinciEff         v2r8p1   Phys
-use  DaVinciUser        v4r1p1   Phys
-use  PhysSelSys		v5r15    PhysSel
+use  DaVinciUser        v4r2     Phys
+use  PhysSelSys		v6r0     PhysSel
 
 #    Generic utilities
-use  Utilities          v1r1     Tools
+use  Utilities          v1r2     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
@@ -110,5 +131,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=900105 " \
-             VisualC  " /DDaVinciVersion=900105 "
+macro_append cppflags " -DDaVinciVersion=900200 " \
+             VisualC  " /DDaVinciVersion=900200 "
