@@ -3,14 +3,82 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v12r6>2005-01-18 DaVinci v12r6 - Hlt development version</A></H1><PRE>
+</PRE><H1><A NAME=v12r6>2005-01-19 DaVinci v12r6 - Hlt development version</A></H1><PRE>
 
+  Major Modifications:
+  --------------------
+  - CombinedParticleMaker:  Set ExclusiveSelection to false by default
+     !!! WARNING !!! This is a major change that will change the result
+                     of all selections using the CombinedParticleMaker without
+		     resetting this options. In particular most stripping
+		     preselections use ExclusiveSelection = true ; 
 
-bla bla
+  - All Interfaces are moved from $DAVINCIKERNELROOT/DaVinciTools/
+    to $DAVINCIKERNELROOT/Kernel/ for compatibility with LHCb.
+    -> Replace all ``DaVinciTools/'' by ``Kernel/'' in all code.
+    The DaVinciTools/ directory is still there as long as there is some code
+    not yet adapted and contains dummy files including the proper file.
+    
+  - New doxygen style using dogygen 1.5. The main "feature" is that now
+    classes taken from LHCb and Gaudi are linked to and not included.
+    A disadvantage is that they do not appear in the alphabetical list
+    anymore. If you want to look at the "GaudiTool" doc, either go to
+    Gaudi under "See also:" or follow a link from any tool.
+    
+  More new features:
+  ------------------
+  - First full pre-release of the HLT
+    . New version of HltGeneric
+    . Use of TrgMuon that allows to skip TT for muons
+    . First release of HltSelections
+    . First release of HltSelChecker
+    -> All this is for experts. Contact Patrick.Koppenburg@cern.ch
+       if you need to run the HLT prototype.
+    
+  - On popular demand, the IParticleFilter now includes methods
+    StatusCode filterByPID (const ParticleVector &, ParticleVector &, const std::string &, const bool alsoCC=true)=0
+    StatusCode filterByPID (const ParticleVector &, ParticleVector &, const int &pid, const bool alsoCC=true)=0
+    
+      ParticleVector myKaons, myPiPlus, myPiMinus;
+      sc = particleFilter()->filterByPID(parts, myKaons,   "K+");
+      sc = particleFilter()->filterByPID(parts, myPiPlus,  "pi+", false);
+      sc = particleFilter()->filterByPID(parts, myPiMinus, "pi-", false);
+    
+    would return a vector of kaons (both sign) and pions.
+    
+  - New algorithm IsBEvent in DaVinciMCTools that easily allows to select 
+    events containing a b quark in any sequencer. Actually works for
+    any quark or particle(s)
+  
+  - New tool family "IPlotTool" with implementations SimplePlotTool and
+    RecursivePlotTool. Make plots for a given Particle or ParticleVector.
+    The plots have to be configured by options. The algorithm
+    SimplePlots does nothing more than calling such tools:    
+      HLTPlots.Members += { "SimplePlots/HLTB2HHPlots" };
+      HLTB2HHPlots.PhysDesktop.InputLocations = { "Phys/HLTFilterB2HH" } ;
+      HLTB2HHPlots.Plots.Variables = { "M", "Chi2", "Pt" } ;    
+    plots the mass, chi2 and Pt of all particles in "Phys/HLTFilterB2HH"
+    
+  - Small changes in FlavourTagging. No need to run L1 anymore
+  
+  - The Tampering is released. Ask Mariusz Witek for help in you want to run it.
+  
+  - New preselections DsSelector and Bc2RhoPi
+  
+  - Few modification in LoKi
+  
 
 ################################################################################
 #                               DAVINCI v12r6                                  #
 ################################################################################
+!========================== DaVinciSys v12r6 2005-01-19 ===================
+! 2004-01-19 - P. Koppenburg
+  - doc/*
+    . DoxyGen stuff moved from DaVinci/
+    . New DoxyGen style with tag files (i.e. LHCB and Gaudi stuff is linked, 
+      not included)
+    . Full release.notes (this file) also moved here.
+
 ##################################### CALO #####################################
 !========================== CaloReco v2r7 2004-12-13 ===================
 ! 2004-12-13 - Marco Cattaneo
@@ -32,11 +100,9 @@ bla bla
 ! 2004-12-06 - Alessia Satta
  - Add muon hits as track hit.
 
-!========================== TrgEvent v5r2 2004-11-29 ===================
 ! 2004-11-29 - Marco Cattaneo
  - Add missing dictalias to TrgCaloCluster.xml
 
-!========================== TrgEvent v5r1 2004-11-25 ===================
 ! 2004-11-25 - Olivier Callot
  - Make the TrgDecision "hasTriggered" method const.
 
@@ -65,6 +131,726 @@ bla bla
     . Modify options so that HltGeneric can be run by including
       $HLTGENERICROOT/options/HltGeneric.opts
       *after* Hlt.opts rather than instead of.
+
+!========================= HltSelections v2r0 2005-01-19 =====================
+New Package that contains the necessary code and options to run the HLT
+physics selections.
+
+! 2005-01-19 - P. Koppenburg
+  - options/HLTMuonHighway.opts
+    . Apply 2.5 GeV Minimum Mass cut on J/psi
+  - options/HLTselDstar.opts
+    . Cut at a flight distance of 3sigma, not 5mm (too hard)
+
+! 2005-01-18 - P. Koppenburg
+  - options/HLTselBd2D0Kstar.opts
+    . Don't cut on B Pt
+    
+! 2005-01-18 - P. Koppenburg
+  - src/MakeResonances.{cpp,h}
+    . Add MinMomentum and MinPt options to apply to sum 4-momentum
+      *before* mother particle is made
+  - options/HLTMakeDs.opts
+  - options/HLTselB2HH.opts
+  - options/HLTselBd2D0Kstar.opts
+  - options/HLTselBd2DstarPi.opts
+  - options/HLTselBs2DsH.opts
+  - options/HLTselBs2PhiGamma.opts
+  - options/HLTselBs2PhiPhi.opts
+    . Move MinPt cuts for mother to MakeResonances
+  - options/HLTSharedD0.opts
+    . Split into two streams: D0->pipi with no mass cut for D* stream
+      and D0->Kpi,piK and KK with mass cut.
+  - options/HLTselBd2D0Kstar.opts
+  - options/HLTselBd2DstarPi.opts
+    . Adapt inputLocations to use both D0
+  - options/HLTselDstar.opts
+    . Adapt inputLocations to use only Loose D0->pipi
+
+! 2005-01-17 - P. Koppenburg
+  - options/HLTMuonHighway.opts
+    New cuts according to Hugo's talk:
+    . Single Muon: Pt>3GeV, IP>3sigma
+    . Dimuons: from 0 < m < 14 TeV
+    . Unbiased J/psi: chi2<5. No Pt cut.
+    
+! 2005-01-17 - P. Koppenburg
+  - options/HLTselBd2DstarPi.opts
+    . Mass window = 50 MeV,not to be thighter than D0
+    
+! 2005-01-14 - P. Koppenburg
+  More retuning
+    . Don't cut on Pt and IP of pi and K. It's already done in Presel*
+  - options/HLTMakeDs.opts
+    . Ds chi < 80, Pt>1500, IP>1 sigma
+  - options/HLTMuonHighway.opts
+    . Hot J/psi muons Pt>500 MeV (not 300 keV). IP > 1 sigma
+  - options/HLTSharedD0.opts
+    . Pt > 1.5 GeV
+  - options/HLTselB2HH.opts
+    . chi2 <> 20, FS > 10.
+  - options/HLTselB2MuMu.opts
+    . Mu IP>1, Pt>3 GeV
+  - options/HLTselBd2D0Kstar.opts
+    . D0 Pt>2GeV, chi2<30
+    . K* Chi2 < 20, Pt>1GeV, FS>1
+    . B FS>8, IP<4, Pt>2GeV, chi2<30
+  - options/HLTselBd2DstarPi.opts
+    . D0 chi2<40, D* Pt>800 MeV
+    . Pi IP > 2, B chi2<30, IP<5
+  - options/HLTselBd2MuMuKstar.opts
+    . mumu chi2<50, FS>1, K* chi2<30, B chi2<30, FS>6, 
+  - options/HLTselBs2DsH.opts
+    . B0 chi2<50, IP<4, FS>4
+  - options/HLTselBs2PhiPhi.opts
+    . Chi2<80, FS>6, IP<4
+  
+! 2005-01-14 - P. Koppenburg
+  Rename Bs2JPsiPhi data cards file to Bs2JpsiPhi
+  
+! 2005-01-13 - P. Koppenburg
+  - options/HLTFilterParticles.opts
+    . Exclusive Selection... for the sake of TruthInput.opts
+      
+! 2005-01-13 - P. Koppenburg
+  - src/MakeResonances.*
+    . Override produceHitsos variable from GaudiHistoAlg so that it is off
+      by default
+      
+! 2005-01-13 - P. Koppenburg
+  Change all error-dependent cuts by a factor 2 or less to take into account 
+  the new errors. Retuned looking at generic output plots.
+  - options/HLTFilterParticles.opts
+    . Apply 1sigma IP cut to pions and kaons, not 0.5
+  - options/HLTMakeDs.opts
+    . Apply 2sigma IP cut to pions and kaons from Ds, not 1.0
+  - options/HLTSharedD0.opts
+  - options/HLTSharedKstar.opts
+  - options/HLTSharedPhi.opts
+    . Remove not used Kin- and PVIP filter criteria 
+  - options/HLTselB2HH.opts
+    . Pi PVIP > 4 sigma (was 2), B Flight distance > 8 sigma (4), B IP < 4 sigma (5)
+  - options/HLTselB2MuMu.opts
+    . B Flight distance > 6 (3)
+  - options/HLTselBd2D0Kstar.opts
+    . B IP < 4 sigma (5)
+  - options/HLTselBd2DstarPi.opts
+    . B IP < 5 sigma (10)
+  - options/HLTselBd2MuMuKstar.opts
+    . B IP < 5 sigma (7), chi2 < 50 (200)
+  - options/HLTselBs2DsH.opts
+    . B IP < 5 sigma (8)
+  - options/HLTselBs2JpsiPhi.opts
+    . Comment out Flight distance
+  - options/HLTselBs2PhiGamma.opts
+    . K IP > 2 sigma (1), B IP > 3 sigma (6)
+  - options/HLTselBs2PhiPhi.opts
+    . K IP > 1.5 sigma (1), Phi IP >2 (0), B IP > 5 sigma (10)
+
+! 2005-01-12 - P. Koppenburg for Hugo Ruiz
+  - src/TrgInsertIPErrParam.*
+    . Algorithm by Hugo that corrects track errors. Temporary.
+  - options/TrgInsertIPErrParam.opts
+    . Relevant options
+  - src/HltSelections_load.cpp
+  - options/TrgTracks.opts
+    . Modified accordingly
+
+! 2005-01-12 - P. Koppenburg
+  - options/HLTSharedD0.opts
+  - options/HLTSharedKstar.opts
+  - options/HLTSharedPhi.opts
+    . Options for the shared basic resonances. 
+      IMPORTANT: There is no D~0 in HLT. Every decay to h+h- with h=K,pi
+      and a mass compatible with D0 is a D0. Never a D~0!
+      Consequently D*- -> D0 pi- and D*+ -> D0 pi+!
+      Same for B0->K*D0.
+  - options/HLTselB2HH.opts
+  - options/HLTselBd2D0Kstar.opts
+  - options/HLTselBd2DstarPi.opts
+  - options/HLTselBd2MuMuKstar.opts
+  - options/HLTselBs2JpsiPhi.opts
+  - options/HLTselBs2PhiGamma.opts
+  - options/HLTselBs2PhiPhi.opts
+  - options/HLTselDstar.opts
+    . Refelect the new locations
+  - options/HLTSelections.opts
+    . Use the new options
+  - src/MakeResonances.{cpp,h}
+    . New option "DecayDescriptors", a vector of strings that *supercedes*
+      the DecayDescriptor for the initialisation of the 
+      DecodeSimpleDecayDescriptor tool. This allows the same algorithm to
+      find several decays. 
+      Example:
+    HLTSharedD02HH.DecayDescriptors = { "D0 -> pi+ pi-", "D0 -> K+ pi-", "D0 -> pi+ K-", "D0 -> K+ K-" } ;
+
+! 2005-01-11 - P. Koppenburg
+  - options/HltMuonHighway.opts
+    . Upper mass in dimuons set to 14 TeV
+    (tag as pk20050112)
+
+! 2005-01-11 - P. Koppenburg
+  - options/HLTSelections.opts
+  - options/DVHLTExSelections.opts
+    . Include HltGeneric.opts *after* Hlt.opts. This can also be done in
+      DVHLTCorr.opts. Needs HltGeneric v2r1 and TrgSys v1r1p1
+  
+! 2005-01-10 - P. Koppenburg
+  - options/HLTSelections.opts
+    . Add a sequencer HLTExclusive
+    . Add an empty sequencer TrueSignals. It can be filled in HltSelChecker
+  - options/HltselB*.opts
+    . Add them to HLTExclusive sequence
+    
+! 2005-01-10 - P. Koppenburg
+  - options/HLTselBd2DstarPi.opts
+    . rename "HLTDstar2D0Pi" to "HLTDstarForBd2DstarPi"
+  - options/HLTselBd2JpsiKs.opts
+    . Removed. High-IP J/psis are in MuonHighway
+  - src/MakeResonances.*
+    . Use IPlotTools to make recursive plots.
+      Example:
+// D* stream
+HLTselDstar.Members += {"MakeResonances/HLTFilterDstar"};
+[...]
+HLTFilterDstar.HistoProduce = true ;
+HLTFilterDstar.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+HLTFilterDstar.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
+HLTFilterDstar.DaughterPlotsPath = "DstarIn" ;
+HLTFilterDstar.MotherPlotsPath   = "DstarOut";
+
+! 2005-01-06 - P. Koppenburg
+  - options/HLTselB2HH.opts
+  - options/HLTselB2MuMu.opts
+    . Typo fix.
+    
+! 2005-01-06 - P. Koppenburg for Guy Wilkinson
+  - options/TrgTracks.opts
+    . The copying of pi, K, mu, gamma should not be in the main HLT sequence 
+      or hadronic channels would need a muon to be there to be found.
+    
+! 2005-01-06 - P. Koppenburg
+  # Complete rewriting of the options using the new MakeResonances and 
+  # FilterDesktop algorithms. Wherever it is possible a single algorithm
+  # is used instead of two or even three, in order to avoid unnecessary 
+  # access to the TES.
+  - src/*.*
+    . DaVinciTools/ becomes Kernel/
+  - options/DVHLTExSelections.opts
+    . Do *not* re-run L0 as L0Muon has a memory leak. 
+  - options/HLTDecision.opts
+    . Renamed some dimuon algorithms
+  - options/HLTFilterParticles.opts
+  - options/HLTMakeDs.opts
+  - options/HLTMakePIDSeedingVertices.opts
+  - options/HLTMakeResonances.opts
+  - options/HLTMuonHighway.opts
+  - options/HLTNeutrals.opts
+  - options/HLTRhoVertices.opts
+  - options/HLTselB2HH.opts
+  - options/HLTselB2MuMu.opts
+  - options/HLTselBd2DstarPi.opts
+  - options/HLTselBd2JpsiKs.opts
+  - options/HLTselBd2MuMuKstar.opts
+  - options/HLTselBs2DsH.opts
+  - options/HLTselBs2JpsiPhi.opts
+  - options/HLTselBs2PhiGamma.opts
+  - options/HLTselBs2PhiPhi.opts
+  - options/HLTselDstar.opts
+    . Rewritten using MakeResonances and FilterDesktop
+  - options/HLTSelections.opts
+    . Do not run truth by default.
+    . Run HLTMakeDs from here
+  - options/L0L1TDR-AllSignals.opts
+  - options/L0L1TDR-Bd2MuMuKstar.opts
+    . New Bd2MuMuKstar data cards
+  - options/TrgTracks.opts
+    . Added PhysSelections DLL here for PIDFilter
+    
+! 2005-01-14 - P. Koppenburg
+  - options/HLTselBs2DsH.opts
+    . IgnoreFilterPassed to allow both cases to be treated each time.
+ 
+! 2004-12-11 - Luis Fernandez
+  - options/HLTselBs2DsH.opts
+    . Combine Ds pi and Ds K separately to test Rich PID
+
+! 2004-12-10 - Luis Fernandez
+  - options/L0L1TDR-Bs2PhiGamma.opts
+    . New: some data by Patrick
+  - options/L0L1TDR-AllSignals.opts
+    . Added PhiGamma
+  - options/L0L1TDR-B*.opts
+    . Remove last comma to be able to run on all L0L1TDR-AllSignals.opts
+  - options/HLTMakeDs.opts
+    . Make 3-prong to test effect of RichPID
+  - options/*.opts
+    . Some other small changes
+
+! 2004-12-02 - P. Koppenburg
+  - src/MakeResonances.{h,cpp}
+    . Replacement algorithm for CombineParticles. Will obviosuly not stay 
+      in this package forever.
+    . Uses the ByPIDFilterCriterion to have the same syntax as 
+      FilterDesktop (replacing RefineSelection), in Phys/DaVinciFilter
+    . Allows to apply a mass window *before* the vertex cut that can 
+      save orders of magnitude in CPU time for a three-body decay 
+      for instance.
+    . Allows to kill overlapping combination of particles (can be switched off
+      by options)  
+    . Practical Example:
+         MakeResonances.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
+
+         MakeResonances.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+         //MakeResonances.DaughterFilter.Selections = {"K- : BooleanFilterCriterion",
+         //                                           "pi+ : BooleanFilterCriterion"};
+         MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
+         MakeResonances.Window = 50*MeV ;
+         MakeResonances.KillOverlap = true ;
+         MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
+
+! 2004-11-25 - P. Koppenburg
+  Switched to data sets that take into account the VeloTT-bug-corrected L1.
+  Many files are removed, many others are new.
+  - options/L0L1-MB.opts
+    . L0xL1 accepted MB data
+  - options/L0L1TDR-AllSignals.opts
+    . L0xL1xTDR accepted signal data
+  - options/L0L1TDR-B*.opts
+    . Detail of the signal samples. WARNING: These options contain
+      EventSelector.Input  += {... 
+      Hence they are added to the list of already included files. To run
+      only on one sample, add EventSelector.Input   = {};
+      To empty the string vector.
+  - options/B*01.opts
+    . Some option files used to generate the  above 
+      L0xL1xTDR accepted signal data
+    
+! 2004-11-24 - P. Koppenburg
+   Reorganized to allow easy switch on and off of RICH: 
+  - options/HLTMakeResonances.opts
+    . Remove filtering and seeding. Keep only D0, D*...
+  - options/HLTFilterParticles.opts
+    . NEW options to filter particles
+  - options/HLTRhoVertices.opts
+    . Seeding vertices are here now
+  - options/TrgTracks.opts
+    . Remove generic stuff
+  - options/UseRich.opts
+    . Correct some bugs
+ - options/HLTDecision.opts
+    . Correct typo
+  - options/DVHLTExSelections.opts
+    . Moved from HltSelChecker
+    
+! 2004-11-21 - Luis Fernandez
+ Adapt for photons and Bs2PhiGamma: needs investigation since CombineParticles
+ is unable to stuff the newly formed Bs when using photons
+  - options/TrgTracks.opts
+    . Make neutrals with TrgParticleMaker, adapt input location for HLTPhotons
+  - options/HLTNeutrals.opts
+    . NEW photons pre-selection
+  - options/HLTSelections.opts
+    . Add HLTNeutrals.opts
+  - options/HLTselBs2PhiGamma.opts
+    . NEW Add Gamma
+  - options/DC04Bs_PhiGamma.opts
+    . NEW Some data for Bs2PhiGamma (without L0L1 stripping)
+  - options/DVHLTCheck.opts
+    . Obsolete, moved to Hlt/HltSelChecker
+
+! 2004-11-19 - P. Koppenburg
+  Version including RICH PID and using it *by default*
+  - options/HLTMakePIDSeedingVertices.opts
+    . NEW: Make KPi and KK vertices using kaons from RICH
+  - options/HLTTransformSeedingVertices.opts
+    . NEW: Copy PiPi vertices into KPi and KK vertices using ChangeDecayChain 
+  (one cans switch between these two options in HLTMakeResonances.opts)
+  - options/HLTMakeResonances.opts
+    . Allow this switching
+  - options/HLTMakeDs.opts
+    . Do not make Kaons here anymore
+  - options/UseRich.opts
+    . Use RICH to make kaons 
+  - src/ChangeDecayChain.cpp
+    . Some more printout in debug mode.
+
+! 2004-11-18 - P. Koppenburg
+  - options/HLTselDstar.opts
+    . New Dstar selection
+  - options/HLTDecision.opts
+    . Add Dstar stream
+  - options/HLTMakeResonances.opts
+    . Make a 'shared' D02HH 
+  - options/TrgTracks.opts
+    . Check that a PV is there.
+  - options/UseRich.opts
+    . Temporary file for all RICH-related options. See next version.
+
+  Splitting into HltSelections and HltSelChecker. The latter contains
+  all checkers and monitors.
+  - src/DecayChainNTuple.{cpp,h}
+  - src/SimplePlots.{cpp,h}
+    . Moved to HltSelChecker
+  - src/HltSelections_load.cpp
+    . Reflect removed algorithms
+  - options/{CorrB2HH.opts,CorrB2MuMu.opts,CorrBd2D02KPiKstar.opts,
+    CorrBd2DstarPi.opts,CorrBd2JpsiKs.opts,CorrBd2MuMuKstar.opts,
+    CorrBs2DsH.opts,CorrBs2JpsiPhi.opts,CorrBs2PhiGamma.opts,CorrBs2PhiPhi.opts,
+    CorrHLTsels.opts,DVHLTCorr.opts,DVHLTExSelections.opts,Dstars.opts,
+    HLTExSelectionsNTuples.opts,OfflineTracks.opts,Plots.opts,TrueB2HH.opts,
+    TrueB2MuMu.opts,TrueBd2D02KPiKstar.opts,TrueBd2DstarPi.opts,
+    TrueBd2JpsiKs.opts,TrueBd2MuMuKstar.opts,TrueBs2DsH.opts,
+    TrueBs2JpsiPhi.opts,TrueBs2PhiGamma.opts,TrueBs2PhiPhi.opts,TrueDstar.opts,
+    Truth.opts,TruthCommon.opts,TruthInput.opts
+    . Moved to HltSelChecker
+  - options/HLTSelections.opts
+    . New main option file.
+
+! 2004-11-12 - P. Koppenburg
+  - src/ChangePIDByMass.cpp
+    . setFilterPassed(true) only when there is something found!
+    
+! 2004-11-03 - P. Koppenburg
+  Warning: requires Trg/TrgSys >=v1r0 (i.e. DaVinci >=v12r4)
+  - options/*
+    . Added a lot of channels.
+      Are still missing: PhiGamma (because of Gamma) and generic Dstar
+  - src/ChangeDecayChain.cpp
+    . Exit when no daughter is changed. This cases an unexpected behaviour.
+  - src/ChangePIDByMass.{h,cpp}
+    . New DVAlgorithm that clones particles to other particles according 
+      to their mass. Example:
+         HLTMakeResonances.Members += {"ChangePIDByMass/HLTKPiFrom"};   
+         HLTKPiFrom.PhysDesktop.InputLocations = {"Phys/HLTSeedingKPiMother"};
+         HLTKPiFrom.InputParticle = "K*(892)0" ;                // input K*
+         HLTKPiFrom.OutputParticles = { "K*(892)0", "D~0" } ;   // make K* and D~0
+         HLTKPiFrom.KeepCC = true ;                             // consider cc, i.e K~* -> D0
+         HLTKPiFrom.Windows = { 120.0 , 50.0 } ;                // mass windows around nominal
+         HLTKPiFrom.Locations = { "Kstar", "D0" } ;             // tralers of output localtions
+      Here all K~*(892)0 will be made as D0 if their mass is within 50 MeV of the D0 mass
+      and they will be saved in the outputlocation Phys/HLTKPiFromD0 
+    
+! 2004-10-27 - P. Koppenburg
+  - options/{Rec,Trg}PV.opts
+    . Removed because now the PVLocator tool is used.
+
+! 2004-10-24 - Luis Fernandez
+  - src/DecayChainNtuple.{h,cpp}
+    . Modify such that the MC primary vertex is no longer the origin vertex
+      of the head of the decay (works for B decays), but is taken as the 
+      primary collision (needed e.g. for prompt J/Psi)
+
+! 2004-10-22 - P. Koppenburg
+  - options/*.opts
+    . Put everythingin sequencers
+    . Added an HLTDecision sequence (to be revised) 
+    . Removed all "*.OutputLevel = 4;" lines so that the verbosity can be fixed 
+      by the message service options.
+  - options/src/SimplePlots.*
+    . Added SimplePlots
+    
+! 2004-10-15 - P. Koppenburg
+  - options/*.opts
+    . Merged some algorithms
+    . Split Ds->KKpi into Ds->K*K and Ds->Phipi by default 
+      (other possibility still possible)
+    . Added a muons stream
+    . Execute HltChecking by default.  
+    
+! 2004-10-14 - P. Koppenburg
+  - options/*.opts
+    . All options are there and working on all hadronic channels. 
+      Now need a big reshuffling to improve time.
+
+! 2004-10-12 - Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Add MCTruth
+
+! 2004-09-23 - Luis Fernandez
+  - options/*.opts
+    . Added True*.opts files to run use only Trg tracks that have a corresponding
+      MCParticle associated. For each specific hadronic channel:
+       - Prints the MCTree of B-meson in the event
+       - Filter the tracks that have an associated MCParticle belonging to the 
+         decay of interest
+       - Prints the tracks used
+    . Updated cut values to tuned ones to reject minimum bias while keeping the 
+      maximum of offline selected and triggered events ("Chia LHCb week tuning")
+    . Added the MassFilterCriterion and VtxFilterCriterion in the criteria names
+      of the B2HH selection
+    . Added new cuts
+
+! 2004-09-15 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Simply label daughters as 0, 1... 
+    
+! 2004-09-13 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Take cc into account (preliminary)
+  - options/*
+    . Open all cuts to check that TDR events pass (preliminary)
+  - cmt/requirements
+    . Do not depend on DaVinciTools anymore but DaVinciKernel and TrgEvent
+    
+! 2004-09-10 - P. Koppenburg
+  - src/ChangeDecayChain.cpp
+    . Complete revision. Correct bug in masses of mothers.
+  - src/ChangePID.cpp
+    . For composite particles, use the vertex of the first origin and not
+      the one of the oldest ancestor, to avoid loosing the PID of the
+      new daughters 
+      (affects only the chain CombinedParticles -> ChangeDecayChain -> ChangePID )
+    
+! 2004-09-07 - P. Koppenburg
+  - src/ChangeDecayChain.cpp
+    . Accept four more options
+      - SeparateOutputs = true ;
+        allows to put the mother in ChangeDecayChainMother and 
+        the daughters in ChangeDecayChainDaughter.
+      - MotherLocation = "blabla" ;
+      - DaughterLocation = "blablabla" ;
+        Changes these locations to "blabla"
+      - MoreReplacements: Allows to provide two replacements for the same decay 
+        chain. For instance
+        ChangeDecayChain.Particles = {"rho(770)0", "pi+", "pi-"};
+        ChangeDecayChain.Replacements = {"K*(892)0", "K+", "pi-"};
+        ChangeDecayChain.MoreReplacements = {"K*(892)~0", "pi+", "K-"};
+        replaces all rho's by K* and K*~.
+
+! 2004-09-01 - P. Koppenburg
+  - options/*.opts
+    . Added Luis' options for HLT
+  - src/DecayChainNTuple.*
+    . New Algorithm to make ntuples. Preliminary.
+
+! 2004-08-11 - P. Koppenburg
+  - src/ChangeDecayChain.*
+  - src/ChangePID.*
+    . Accept also particles made from Trg Tracks
+    
+! 2004-08-05 - P. Koppenburg
+  - src/HltSelections_dll.cpp
+    . HLTSelections, not HLT! Thanks to Luis.
+    
+! 2004-07-29 - P. Koppenburg for Luis Fernandez
+  - src/ChangeDecayChain.*
+    . Takes a composite particle and it's daughters and clones them to
+      particles with different ID's. For HLT experts.
+         ChangeDecayChain.PhysDesktop.InputLocations = {"Phys/MyRhos"};
+         ChangeDecayChain.Decay = "rho(770)0 -> ^pi+ ^pi-";
+         ChangeDecayChain.Particles = {"rho(770)0", "pi+", "pi-"};
+         ChangeDecayChain.Replacements = {"phi(1020)", "K+", "K-"};
+
+! 2004-07-09 - P. Koppenburg
+   - src/ChangePID.*
+     . DVAlgorithm that copies a particle into
+       another location and changes its PID. Works for single (from protoparticle)
+       and composite particles (from vertex). In the former case 
+       the energy is recalculated. Never apply this algorithm on particles
+       created by a mass-constrained vertex fitter (obviously).
+
+!========================== HltSelChecker v2r0 2005-01-19 ===========================
+New package Hlt/HltSelChecker that contains all monitors and checkers
+
+! 2005-01-19 - P. Koppenburg
+  - options/TrueJpsi.opts
+    . New truth file looking for J/psi->mumu
+  - options/Truth.opts
+  - options/CorrDiMuons.opts
+    . Use this new truth information
+  - options/TrueBs2JpsiPhi.opts
+    . Bug fix: also look for association of pions
+    
+! 2005-01-18 - P. Koppenburg
+  - options/Plots.opts
+    . Add more wide-mass plots 
+
+! 2005-01-17 - Luis Fernandez
+  - src/DecayChainNTuple{h,cpp}
+    . Modified properties, MC true decay in the same tree as the reconstructed
+      one.
+  - options/NT*, DVHLTNTuplesCheck.opts, HLTExSelectionsNTuples.opts
+    . Adapted options for ntuples
+
+! 2005-01-13 - P. Koppenburg
+  - options/Plots.opts
+    . New variable "WM": wide mass window for B
+  - options/Plots.opts
+    . MakePlots = true ;
+    
+! 2005-01-12 - P. Koppenburg
+  - options/CorrB2HH.opts
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - options/CorrDstar.opts
+  - options/DVHLTCorr.opts
+  - options/Plots.opts
+    . Reflect new locations of K*, D0 and Phi
+
+! 2005-01-12 - P. Koppenburg
+  - options/Correlations.opts
+    . New file that conatins all correlatins stuff
+
+! 2005-01-10 - P. Koppenburg
+  - options/Corr*.opts
+  - options/Truth.opts
+    . Control all truth options from here.
+  - options/Corr*.opts
+    . Restore MC-truth check in XXXAndTDR algorithms. They are OK if
+      the TDR selection is happy and all tracks are found by HLT.
+  - options/True*.opts
+    . Don't use PID to normalize efficiencies. Hence do
+      B_s -> pi pi pi pi for Bs->phiphi, assuming that the track -> pi
+      efficiency is always 100%
+    
+! 2005-01-10 - P. Koppenburg
+  - options/Plots.opts
+    . Use built-in plots from MakeResonances and FilterDesktop
+  - options/options/DVHLTCorr.opts
+    . rename "HLTDstar2D0Pi" to "HLTDstarForBd2DstarPi"
+
+! 2005-01-06 - P. Koppenburg
+  # Complete rewriting of the options using the new MakeResonances and 
+  # FilterDesktop algorithms. Wherever it is possible a single algorithm
+  # is used instead of two or even three, in order to avoid unnecessary 
+  # access to the TES.
+  - src/*.*
+     . DaVinciTools/ becomes Kernel/
+  - src/SimplePlots.*
+     . Moved to DaVinciTools.
+  - New options/AllTDRselections.opts
+    . Contains all options to run TDR selections
+  - Removed options/CorrBd2D02KPiKstar.opts    
+  - New options/CorrBd2D0Kstar.opts
+  - Removed options/NTBd2D02KPiKstar.opts
+  - New options/NTBd2D0Kstar.opts
+  - Removed options/TrueBd2D02KPiKstar.opts
+  - New options/TrueBd2D0Kstar.opts
+  - options/DVHLTNTuplesCheck.opts
+  - options/HLTExSelectionsNTuples.opts
+  - options/NTBd2DstarPi.opts
+    . All D02Kpi become D0
+  - options/CorrB2HH.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2DsH.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - New options/CorrDiMuons.opts
+  - options/CorrDstar.opts
+  - options/CorrHLTsels.opts
+  - options/DVHLTCorr.opts
+    . Removed obsolete algorithms due to merging
+  - New options/MeasureTimes.opts
+    . Suggested by Chris
+  - options/Plots.opts
+    . Removed obsolete locations due to merging
+  - options/TrueB2HH.opts
+  - options/TrueB2MuMu.opts
+  - options/TrueBd2DstarPi.opts
+  - options/TrueBd2JpsiKs.opts
+  - options/TrueBd2MuMuKstar.opts
+  - options/TrueBs2DsH.opts
+  - options/TrueBs2JpsiPhi.opts
+  - options/TrueBs2PhiGamma.opts
+  - options/TrueBs2PhiPhi.opts
+  - options/TrueDstar.opts
+  - options/Truth.opts
+  - options/TruthInput.opts
+    . Rewritten using MakeResonances and FilterDesktop
+   
+! 2004-12-11 - Luis Fernandez
+  - src/DecayChainNTuple{h,cpp}
+    . Add global Rich PIDs
+
+! 2004-12-10 - Luis Fernandez
+  - src/DecayChainNTuple{h,cpp}
+    . The primaries are retrieved with the PVLocator tool, default is offline
+  - options/DVHLTCheck.opts
+    . Removed
+  - options/NT*.opts
+    . New: Options to produce Trees with all kind of information and MC truth association
+    . The input locations for the Particle2MCLinks depends on the HLT strategy (with/without PID)
+      since HLT algorithms break the links: depends on ChangeDecayChain or ChangePIDByMass
+  - options/DVHLTNTuplesCheck.opts
+    . New: calls all the NT*.opts for offline selection and HLT selection with trigger filters
+
+! 2004-12-06 - Luis Fernandez
+  - options/OfflineTracks.opts
+    . Add include of option file to allow the PhotonParticleMaker to produce neutrals
+
+! 2004-11-25 - P. Koppenburg
+  - options/DV*.opts
+    . Adapt input data to new data in HltSelections.
+! 2004-11-24 - P. Koppenburg
+ - options/DVHLTExSelections.opts
+   . Moved to HLtSelections as there is no dependency on HltSelChecker
+ - options/DVHLTCorr.opts
+   . Adapt accordingly
+ - options/OfflineTracks.opts
+   . Adapted to use NoPIDsParticleMaker
+ - options/Plots.opts
+   . Plots for signal tracks
+ - options/PrintTDR.opts
+   . New option file: Allows to rpint reconstructed decay tree from TDR
+ - options/Truth.opts
+   . Add all generic truth stuff in here
+ - options/TruthCommon.opts
+   . Removed
+   
+! 2004-11-21 - Luis Fernandez
+ - options/DVHLTExSelections.opts, CorrBs2PhiGamma.opts
+   . Modifications for Bs2PhiGamma
+ - options/DVHLTCheck.opts
+   . Imported from HltSelections, needs to be updated
+
+! 2004-11-19 - P. Koppenburg
+  Updated version to incorporate the RICH
+
+! 2004-11-18 - P. Koppenburg
+  - options/CorrB2HH.opts,CorrB2MuMu.opts,CorrBd2D02KPiKstar.opts,
+    CorrBd2DstarPi.opts,CorrBd2JpsiKs.opts,CorrBd2MuMuKstar.opts,CorrBs2DsH.opts,
+    CorrBs2JpsiPhi.opts,CorrBs2PhiGamma.opts,CorrBs2PhiPhi.opts,CorrDstar.opts,
+    CorrHLTsels.opts,DVHLTCorr.opts,DVHLTExSelections.opts,
+    HLTExSelectionsNTuples.opts,OfflineTracks.opts,Plots.opts,TrueB2HH.opts,
+    TrueB2MuMu.opts,TrueBd2D02KPiKstar.opts,TrueBd2DstarPi.opts,
+    TrueBd2JpsiKs.opts,TrueBd2MuMuKstar.opts,TrueBs2DsH.opts,TrueBs2JpsiPhi.opts,
+    TrueBs2PhiGamma.opts,TrueBs2PhiPhi.opts,TrueDstar.opts,Truth.opts,
+    TruthCommon.opts,TruthInput.opts
+    . Moved from HltSelections
+  - src/DecayChainNTuple.cpp,DecayChainNTuple.h,SimplePlots.cpp,SimplePlots.h
+    . Moved from HltSelections  
+
+! 2004-10-24 - Luis Fernandez
+  - src/DecayChainNtuple.{h,cpp}
+    . Modify such that the MC primary vertex is no longer the origin vertex
+      of the head of the decay (works for B decays), but is taken as the 
+      primary collision (needed e.g. for prompt J/Psi)
+
+! 2004-10-12 - Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Add MCTruth
+
+! 2004-09-15 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Simply label daughters as 0, 1... 
+    
+! 2004-09-13 - P. Koppenburg for Luis Fernandez
+  - src/DecayChainNtuple.cpp
+    . Take cc into account (preliminary)
+  - options/*
+    . Open all cuts to check that TDR events pass (preliminary)
+  - cmt/requirements
+    . Do not depend on DaVinciTools anymore but DaVinciKernel and TrgEvent
+    
 ###################################### L0 ######################################
 !========================== L0MuonKernel v2r4 2005-01-18 ===================
 ! 2005-01-03 - P. Koppenburg
@@ -2973,26 +3759,6 @@ Trg/TrgVeloTT		v4r1	Committed
  
 ##################################### CALO #####################################
 ###################################### HLT #####################################
-================================================================================
-Hlt/HltSelections	v1r0	
-New Package that contains the necessary code and options to run the HLT
-physics selections.
-! 2004-07-29 - P. Koppenburg for Luis Fernandez
- - src/ChangeDecayChain.*
-   . Takes a composite particle and it's daughters and clones them to
-     particles with different ID's. For HLT experts.
-        ChangeDecayChain.PhysDesktop.InputLocations = {"Phys/MyRhos"};
-        ChangeDecayChain.Decay = "rho(770)0 -> ^pi+ ^pi-";
-        ChangeDecayChain.Particles = {"rho(770)0", "pi+", "pi-"};
-        ChangeDecayChain.Replacements = {"phi(1020)", "K+", "K-"};
-! 2004-07-09 - P. Koppenburg
-  - src/ChangePID.*
-    . DVAlgorithm that copies a particle into
-      another location and changes its PID. Works for single (from protoparticle)
-      and composite particles (from vertex). In the former case 
-      the energy is recalculated. Never apply this algorithm on particles
-      created by a mass-constrained vertex fitter (obviously).
-
 ###################################### IT ######################################
 ###################################### L0 ######################################
 ================================================================================
