@@ -1,7 +1,7 @@
 // Plot TDR selections
 //
 ApplicationMgr.TopAlg += { "SimplePlots/TDRPlots" };
-TDRPlots.PhysDesktop.InputLocation = { "Phys/TDRselBs2PhiPhi"
+TDRPlots.PhysDesktop.InputLocations = { "Phys/TDRselBs2PhiPhi"
                                         , "Phys/TDRselBd2PiPi"
                                         , "Phys/TDRselBd2KPi"
                                         , "Phys/TDRselBs2PiK"
