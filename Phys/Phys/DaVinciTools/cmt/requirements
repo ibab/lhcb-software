@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2002-09-11 16:48:02 gcorti Exp $
+# $Id: requirements,v 1.17 2002-10-21 17:59:04 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -18,9 +18,11 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent     v7r*   Event
-use  DetDesc       v10r*  Det
-use  AIDA          v2r*
+use  PhysEvent      v7r*   Event
+use  DetDesc        v10r*  Det
+use  AIDA           v2r*
+use  CaloUtils      v4r*   Calo
+use  CaloInterfaces v2r*   Calo
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
