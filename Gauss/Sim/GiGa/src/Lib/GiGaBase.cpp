@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:11  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.3  2001/07/15 20:54:25  ibelyaev
 /// package restructurisation
 ///
@@ -47,11 +50,9 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   : m_count      ( 0                     ) 
   /// name 
   , m_name       ( Name                  ) 
+  /// type 
+  , m_myType     (""                     )
   ///
-  , m_propMgr    ( 0                     )  
-  ///
-  , m_svcLoc     ( svc                   )   
-  , m_init       ( false                 ) 
   , m_gigaName   ( "GiGaSvc"             ) 
   , m_setupName  ( "GiGaSvc"             ) 
   , m_msgName    ( "MessageSvc"          ) 
@@ -62,6 +63,8 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   , m_omName     ( "ApplicationMgr"      ) 
   , m_output     ( MSG::NIL              ) 
   ///
+  , m_svcLoc     ( svc                   )   
+  , m_propMgr    ( 0                     )  
   , m_gigaSvc    ( 0                     ) 
   , m_setupSvc   ( 0                     ) 
   , m_msgSvc     ( 0                     ) 
@@ -71,6 +74,7 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   , m_incSvc     ( 0                     ) 
   , m_objMgr     ( 0                     ) 
   ///
+  , m_init       ( false                 ) 
 {
   ///
   if( 0 == svcLoc() ) 
@@ -87,6 +91,8 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   declareProperty( "DetectorDataProvider"      ,  m_detName     );
   declareProperty( "IncidentService"           ,  m_incName     );
   declareProperty( "ObjectManager"             ,  m_omName      );
+  /// set own type 
+  m_myType = System::typeinfoName( typeid( *this ) ) ;
   ///
 };
 
@@ -95,9 +101,11 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
 /// ===========================================================================
 GiGaBase::~GiGaBase() 
 { 
-  if( m_init         ) { finalize() ; } 
+  if( init()         ) { finalize() ; } 
   if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } 
 } 
+
+
 
 /// ===========================================================================
 /** query the interface
@@ -252,7 +260,10 @@ StatusCode GiGaBase::initialize()
     }
   else { Print("IObjManager is not required to be located"); }
   ///
-  return StatusCode::SUCCESS ; 
+  Print("GiGaBase initialized successfully" , 
+        StatusCode::SUCCESS , MSG::VERBOSE ) ;
+  ///
+  return StatusCode::SUCCESS;  
 };
 
 /// ===========================================================================
@@ -263,7 +274,10 @@ StatusCode GiGaBase::initialize()
 StatusCode GiGaBase::finalize()
 {
   ///
-  if ( m_init )
+  Print("GiGaBase finalization" , 
+        StatusCode::SUCCESS , MSG::VERBOSE ) ;
+  ///
+  if ( init() )
     {
       /// reverse order !!!
       if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; }
@@ -340,24 +354,6 @@ StatusCode GiGaBase::Warning( const std::string& Message ,
   return  Print( Message , Status , MSG::WARNING );
 };
   
-/// ===========================================================================
-/** Print the message and return status code 
- *  @param mgs message to be printed 
- *  @param sc  status code 
- *  @param lvl print level  
- *  @return status code 
- */
-/// ===========================================================================
-StatusCode GiGaBase::Print( const std::string& Message , 
-			    const StatusCode & Status  , 
-			    const MSG::Level & level   ) const 
-{
-  MsgStream log( msgSvc() , name() ); 
-  log << level << System::typeinfoName( typeid( *this ) ) 
-      << " " <<Message << endreq ; 
-  return  Status;
-};  
-
 /// ===========================================================================
 /** re-throw the exception and print 
  *  @param msg exception message  

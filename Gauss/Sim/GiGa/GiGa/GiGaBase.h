@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.10  2001/07/23 13:11:41  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
@@ -56,9 +59,12 @@ protected:
   virtual ~GiGaBase();
   ///
 public:
-  ///
-  virtual const std::string&     name    () const { return m_name     ; };
-  ///
+
+  /** object name 
+   *  @return object name 
+   */
+  inline virtual const std::string& name   () const ;
+  
   /// Increment the reference count of Interface instance
   virtual unsigned long          addRef  () ;
   /// Release Interface instance
@@ -139,6 +145,12 @@ public:
   /// 
 protected:
   ///
+  
+  /** object type 
+   *  @return object type 
+   */
+  inline const std::string& myType   () const { return m_myType ; }
+  
   
   /** is the base is initialized properly?
    *  @return true if it is initialized 
@@ -223,7 +235,7 @@ protected:
    */
   StatusCode Error   ( const std::string& msg , 
                        const StatusCode & sc  = StatusCode::FAILURE ) const ;  
-
+  
   /** Print the warning  message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
@@ -231,16 +243,17 @@ protected:
    */
   StatusCode Warning ( const std::string& msg , 
                        const StatusCode & sc  = StatusCode::FAILURE ) const ;
- 
+  
   /** Print the message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
    *  @param lvl print level  
    *  @return status code 
    */
-  StatusCode Print   ( const std::string& msg , 
-                       const StatusCode & sc  = StatusCode::FAILURE ,
-                       const MSG::Level & lvl = MSG::INFO           ) const ;  
+  inline StatusCode 
+  Print   ( const std::string& msg , 
+            const StatusCode & sc  = StatusCode::SUCCESS ,
+            const MSG::Level & lvl = MSG::INFO           ) const ;
   
   /** re-throw the exception and print 
    *  @param msg exception message  
@@ -284,36 +297,89 @@ private:
   ///
 private:
   ///
-  unsigned long         m_count      ; 
+  /// the reference count 
+  unsigned long         m_count      ;
+  /// name of the object 
   std::string           m_name       ; 
-  PropertyMgr*          m_propMgr    ; 
-  ISvcLocator*          m_svcLoc     ; 
-  bool                  m_init       ;
-  /// standard "properties"
+  /// type of the object 
+  std::string           m_myType     ;
+  /// name of GiGa Service   
   std::string           m_gigaName   ; 
+  /// name of GiGa SetUp Service   
   std::string           m_setupName  ; 
+  /// name of Message Service 
   std::string           m_msgName    ; 
-  std::string           m_chronoName ; 
+  /// name of Chrono & Stat service
+  std::string           m_chronoName ;
+  /// name of Event Data Provider Service  
   std::string           m_evtName    ; 
+  /// name of Detector Data Provider Service  
   std::string           m_detName    ; 
+  /// name of Incident Service 
   std::string           m_incName    ; 
+  /// name of Object Manager 
   std::string           m_omName     ; 
-  ///
+  /// output level 
   int                   m_output     ; 
-  ///
+  //// pointer to Service Locator 
+  ISvcLocator*          m_svcLoc     ; 
+  /// pointer to Property Manager 
+  PropertyMgr*          m_propMgr    ; 
+  /// pointer to GiGa Service 
   IGiGaSvc*             m_gigaSvc    ;
+  /// pointer to GiGa SetUp Service 
   IGiGaSetUpSvc*        m_setupSvc   ;
+  /// pointer to Message  Service 
   IMessageSvc*          m_msgSvc     ; 
+  /// pointer to Chrono& Stat  Service 
   IChronoStatSvc*       m_chronoSvc  ; 
+  /// pointer to Event Data  Service 
   IDataProviderSvc*     m_evtSvc     ; 
+  /// pointer to Detector Data  Service 
   IDataProviderSvc*     m_detSvc     ; 
+  /// pointer to Incident  Service 
   IIncidentSvc*         m_incSvc     ; 
+  /// pointer to Object Manager  
   IObjManager*          m_objMgr     ;
-  ///
+  /// "init" flag 
+  bool                  m_init       ;
 };
 ///
 
-#endif //   GIGA_GIGABASE_H
+/// ===========================================================================
+/** Print the message and return status code 
+ *  @param mgs message to be printed 
+ *  @param sc  status code 
+ *  @param lvl print level  
+ *  @return status code 
+ */
+/// ===========================================================================
+inline StatusCode GiGaBase::Print( const std::string& Message , 
+                                   const StatusCode & Status  , 
+                                   const MSG::Level & level   ) const 
+{
+  ///
+  MsgStream log( msgSvc() , name() ); 
+  log << level 
+      << myType() 
+      << " "   
+      << Message 
+      << endreq  ; 
+  ///
+  return  Status;
+  ///
+};
+
+/// ===========================================================================
+/** object name 
+ *  @return object name 
+ */
+/// ===========================================================================
+inline const std::string& GiGaBase::name () const { return m_name ; };
+
+/// ===========================================================================
+#endif ///<   GIGA_GIGABASE_H
+/// ===========================================================================
 
 
 
