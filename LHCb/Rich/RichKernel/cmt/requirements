@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.20 2003-12-09 10:14:35 cattanem Exp $
+# $Id: requirements,v 1.21 2003-12-18 15:31:48 cattanem Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
-version v4r2
+version v4r3
 
 # ================ structure =================================================
 branches RichKernel cmt doc src
@@ -11,7 +11,7 @@ branches RichKernel cmt doc src
 include_dirs $(RICHKERNELROOT)
 
 # ================ dependencies ==============================================
-use LHCbKernel	v3r*  Kernel
+use LHCbKernel	v4r*  Kernel
 use   BOOST     v*    -no_auto_imports
 
 # ================ linker library ============================================
