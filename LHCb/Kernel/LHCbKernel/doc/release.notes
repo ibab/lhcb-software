@@ -2,12 +2,6 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-! 2004-01-14 - Vanya BELYAEV
- - src/RelationUtils.cpp 
-   according to the modifications done by Markus, we can use the 
-   'old' technique to constuct classID for relation tables.
-
-
 !====================== LHCbKernel v4r0 2004-01-15 ========================
 ! 2004-01-14 - Vanya BELYAEV
  - Relations/IRelationBase.h
