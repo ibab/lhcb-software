@@ -21,4 +21,4 @@ use DAQEvent	v4r2	Event
 use GenEvent	v3r2	Event
 use EventAssoc	v1r1	Event
 use LinkerEvent v1r2    Event
-use TrgEvent    v2r1    Event
+use TrgEvent    v2r2    Event
