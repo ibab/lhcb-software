@@ -1,5 +1,5 @@
-// $Id: RichTraceMode.h,v 1.1 2004-07-01 11:12:09 papanest Exp $
-#ifndef RICHKERNEL_RICHTRACEMODE_H 
+// $Id: RichTraceMode.h,v 1.2 2004-07-02 14:09:27 jonrob Exp $
+#ifndef RICHKERNEL_RICHTRACEMODE_H
 #define RICHKERNEL_RICHTRACEMODE_H 1
 
 // Include files
@@ -7,15 +7,17 @@
 #include "GaudiKernel/MsgStream.h"
 
 /** @class RichTraceMode RichTraceMode.h RichKernel/RichTraceMode.h
- *  
  *
+ *  Helper class used to configure the ray tracing options in 
+ *  the IRichRayTracing tools
+ * 
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
 
 // Namespace for definitions related to RichTraceMode
 namespace RichTraceModeNames {
-  
+
   // Type for dataword
   typedef unsigned int ShortType;
 
@@ -42,7 +44,8 @@ namespace RichTraceModeNames {
 }
 
 class RichTraceMode {
-public: 
+
+public:
 
   enum detectPrecision {
     circle = 0,
@@ -53,121 +56,134 @@ public:
     loose = 0,
     tight
   };
-    
+
 
   /// Standard constructor
-  RichTraceMode() : m_data(0) {}
-
-  RichTraceMode( detectPrecision detPrec ) : m_data( 0 ) {
-    setDetPrecision( detPrec );
+  RichTraceMode( const detectPrecision  detPrec = circle,
+                 const detPlaneBoundary bound   = loose,
+                 const bool             forcedSide = false,
+                 const bool             respectOuter = false,
+                 const bool             respectMirrSegs = false ) 
+    : m_data( 0 ) 
+  {
+    setDetPrecision      ( detPrec         );
+    setDetPlaneBound     ( bound           );
+    setForcedSide        ( forcedSide      );
+    setOutMirrorBoundary ( respectOuter    );
+    setMirrorSegBoundary ( respectMirrSegs );
   }
-  
-  RichTraceMode( detPlaneBoundary bound ) : m_data( 0 ) {
-    setDetPlaneBound( bound );
-  }
-  
 
-  virtual ~RichTraceMode() {} ///< Destructor
+  /// Copy Constructor
+  RichTraceMode ( const RichTraceMode & mode ) : m_data( mode.data() ) { }
+
+  /// Destructor
+  ~RichTraceMode() {} /// Destructor
 
   /// Retrieve the full value
-  inline RichTraceModeNames::ShortType data() const { return m_data; }
+  inline RichTraceModeNames::ShortType data() const 
+  { 
+    return m_data; 
+  }
 
   /// Update the internal data
-  inline void setData( const RichTraceModeNames::ShortType data ) { m_data = data; }
+  inline void setData( const RichTraceModeNames::ShortType data ) 
+  { 
+    m_data = data; 
+  }
 
   /// Set the ForcedSide flag
-  inline void setForcedSide( const bool forced ) {
-    RichTraceModeNames::ShortType i = ( forced ? 1 : 0 );
-    set( i, 
-         RichTraceModeNames::ShiftForcedSide, 
+  inline void setForcedSide( const bool forced ) 
+  {
+    const RichTraceModeNames::ShortType i = ( forced ? 1 : 0 );
+    set( i,
+         RichTraceModeNames::ShiftForcedSide,
          RichTraceModeNames::MaskForcedSide );
     return;
   }
 
   /// Retrieve the ForcedSide flag
-  inline bool forcedSide() const {
-    return ( 0 != ( (data() & RichTraceModeNames::MaskForcedSide) 
+  inline bool forcedSide() const 
+  {
+    return ( 0 != ( (data() & RichTraceModeNames::MaskForcedSide)
                     >> RichTraceModeNames::ShiftForcedSide ) );
   }
 
-  /// Set the flag for respecting the outter boundaries of the mirrors
-  inline void setOutMirrorBoundary( const bool outMirBound ) {
-    RichTraceModeNames::ShortType i = ( outMirBound ? 1 : 0 );
-    set( i, 
-         RichTraceModeNames::ShiftOutMirBound, 
+  /// Set the flag for respecting the outer boundaries of the mirrors
+  inline void setOutMirrorBoundary( const bool outMirBound ) 
+  {
+    const RichTraceModeNames::ShortType i = ( outMirBound ? 1 : 0 );
+    set( i,
+         RichTraceModeNames::ShiftOutMirBound,
          RichTraceModeNames::MaskOutMirBound );
-    return;
   }
 
   /// Retrieve the flag for respecting the outter boundaries of the mirrors
-  inline bool outMirrorBoundary() const {
-    return ( 0 != ( (data() & RichTraceModeNames::MaskOutMirBound) 
+  inline bool outMirrorBoundary() const 
+  {
+    return ( 0 != ( (data() & RichTraceModeNames::MaskOutMirBound)
                     >> RichTraceModeNames::ShiftOutMirBound ) );
   }
 
   /// Set the flag for detection precision
-  inline void setDetPrecision( const detectPrecision precision ) {
-    set( precision, 
-         RichTraceModeNames::ShiftDetPrecision, 
+  inline void setDetPrecision( const detectPrecision precision ) 
+  {
+    set( precision,
+         RichTraceModeNames::ShiftDetPrecision,
          RichTraceModeNames::MaskDetPrecision );
-    return;
   }
 
   /// Retrieve the flag for detection precision
-  inline detectPrecision detPrecision() const {
-    if ( 0 == ((data() & RichTraceModeNames::MaskDetPrecision) 
-               >> RichTraceModeNames::ShiftDetPrecision) )
-      return circle;
-    else
-      return window;
-    
+  inline detectPrecision detPrecision() const 
+  {
+    return ( ( 0 == ((data() & RichTraceModeNames::MaskDetPrecision)
+                     >> RichTraceModeNames::ShiftDetPrecision) ) ?
+             circle : window );
   }
 
   /// Set the flag for respecting the detection plane boundary
-  inline void setDetPlaneBound( const detPlaneBoundary boundary ) {
-    set( boundary, 
-         RichTraceModeNames::ShiftDetPlaneBound, 
+  inline void setDetPlaneBound( const detPlaneBoundary boundary )
+  {
+    set( boundary,
+         RichTraceModeNames::ShiftDetPlaneBound,
          RichTraceModeNames::MaskDetPlaneBound );
-    return;
   }
 
   /// Retrieve the flag for respecting the detection plane boundary
-  inline detPlaneBoundary detPlaneBound() const {
-    if ( 0 == ((data() & RichTraceModeNames::MaskDetPlaneBound) 
-               >> RichTraceModeNames::ShiftDetPlaneBound) )
-      return loose;
-    else
-      return tight;
-    
+  inline detPlaneBoundary detPlaneBound() const 
+  {
+    return ( ( 0 == ((data() & RichTraceModeNames::MaskDetPlaneBound)
+                     >> RichTraceModeNames::ShiftDetPlaneBound) ) ?
+             loose : tight );
   }
 
   /// Set the flag for respecting the mirror segment boundaries
-  inline void setMirrorSegBoundary( const bool mirrorBound ) {
-    RichTraceModeNames::ShortType i = ( mirrorBound ? 1 : 0 );
-    set( i, 
-         RichTraceModeNames::ShiftMirrorSegBound, 
+  inline void setMirrorSegBoundary( const bool mirrorBound ) 
+  {
+    const RichTraceModeNames::ShortType i = ( mirrorBound ? 1 : 0 );
+    set( i,
+         RichTraceModeNames::ShiftMirrorSegBound,
          RichTraceModeNames::MaskMirrorSegBound );
-    return;
   }
 
   /// Retrieve the flag for respecting the mirror segment boundaries
-  inline bool mirrorSegBoundary() const {
-    return ( 0 != ( (data() & RichTraceModeNames::MaskMirrorSegBound) 
+  inline bool mirrorSegBoundary() const 
+  {
+    return ( 0 != ( (data() & RichTraceModeNames::MaskMirrorSegBound)
                     >> RichTraceModeNames::ShiftMirrorSegBound ) );
   }
 
-protected:
+private: // methods
 
-private:
+  inline void set( const RichTraceModeNames::ShortType value,
+                   const RichTraceModeNames::ShortType shift,
+                   const RichTraceModeNames::ShortType mask ) 
+  {
+    setData( ((value << shift) & mask) | (data() & ~mask) );
+  }
+  
+private: // data
 
   RichTraceModeNames::ShortType m_data;
-  
-  inline bool set( const RichTraceModeNames::ShortType value,
-                   const RichTraceModeNames::ShortType shift,
-                   const RichTraceModeNames::ShortType mask ) {
-    setData( ((value << shift) & mask) | (data() & ~mask) );
-    return true;
-  }
 
 };
 
@@ -175,18 +191,8 @@ private:
 inline MsgStream& operator << ( MsgStream& os,
                                 const RichTraceMode& mode )
 {
-  std::string prec;
-  if ( mode.detPrecision() == RichTraceMode::window )
-    prec = "window";
-  else
-    prec = "circle";
-
-  std::string bound;
-  if ( mode.detPlaneBound() == RichTraceMode::loose )
-    bound = "loose";
-  else
-    bound = "tight";
-  
+  const std::string prec = ( mode.detPrecision() == RichTraceMode::window ? "window" : "circle" );
+  const std::string bound = ( mode.detPlaneBound() == RichTraceMode::loose ? "loose" : "tight" );
   os << "ForcedSide = " << mode.forcedSide()
      << ", Respect Outside Mirror Boundaries = " << mode.outMirrorBoundary()
      << ", Respect Mirror Seg Boundaries = " << mode.mirrorSegBoundary()
@@ -194,4 +200,5 @@ inline MsgStream& operator << ( MsgStream& os,
      << ", Detection Plane Boundary: " << bound;
   return os;
 }
+
 #endif // RICHKERNEL_RICHTRACEMODE_H

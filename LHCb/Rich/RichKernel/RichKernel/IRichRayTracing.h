@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.3 2004-07-01 11:12:09 papanest Exp $
+// $Id: IRichRayTracing.h,v 1.4 2004-07-02 14:09:27 jonrob Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -22,6 +22,7 @@ class RichGeomPhoton;
 
 
 /** @class IRichRayTracing IRichRayTracing.h RichDetTools/IRichRayTracing.h
+ *
  *  A tool to trace photons (or similar) from a point all the way to
  *  the photo detectors.
  *
@@ -42,8 +43,8 @@ public:
   virtual StatusCode traceToDetector ( Rich::DetectorType rich,
                                        const HepPoint3D& startPoint,
                                        const HepVector3D& startDir,
-                                       RichGeomPhoton& photon, 
-                                       RichTraceMode mode = RichTraceMode(),
+                                       RichGeomPhoton& photon,
+                                       const RichTraceMode mode = RichTraceMode(),
                                        Rich::Side forcedSide = Rich::top
                                        ) const = 0;
 
@@ -53,9 +54,8 @@ public:
                                                 const HepPoint3D& startPoint,
                                                 const HepVector3D& startDir,
                                                 HepPoint3D& hitPosition,
-                                                RichTraceMode mode = RichTraceMode(),
-                                                Rich::Side forcedSide = Rich::top
-                                                ) const = 0;
+                                                const RichTraceMode mode = RichTraceMode(),
+                                                Rich::Side forcedSide = Rich::top ) const = 0;
 
   /// For a given detector, ray traces a given direction from a given point
   /// to the average photo detector plane. Returns the result in the form
@@ -77,7 +77,7 @@ public:
                                         HepVector3D& direction,
                                         const HepPoint3D& CoC,
                                         double radius,
-                                        RichTraceMode mode = RichTraceMode() ) const = 0;
+                                        const RichTraceMode mode = RichTraceMode() ) const = 0;
 };
 
 #endif // RICHKERNEL_IRICHRAYTRACING_H
