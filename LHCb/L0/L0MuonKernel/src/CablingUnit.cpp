@@ -69,7 +69,7 @@ void L0Muon::CablingUnit::makePads(MsgStream * log) {
              iv != tmp.end();iv++){
           
           m_pads.push_back(*iv);
-          *log << MSG::INFO << "insert in pad the pad " << *iv << endreq;
+          *log << MSG::DEBUG << "insert in pad the pad " << *iv << endreq;
     
         }
       }
