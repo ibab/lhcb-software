@@ -4,6 +4,11 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r7 2004-01-14 ===================
+! 2004-01-14 - Gloria CORTI
+ - cmt/requirements
+   . use v* to allow compilation against different versions of LHCb
+
 !==================== FlavourTagging v4r6p1 2003-08-06 =================
 ! 2003-07-24 - Gloria CORTI
  - src/FTCombinedParticleMaker.cpp

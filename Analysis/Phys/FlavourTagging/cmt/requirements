@@ -5,40 +5,30 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v4r6p1
+version           v4r7
 
-#============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src options FlavourTagging 
 
-#============================================================================
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
 include_dirs           $(FLAVOURTAGGINGROOT)
 
-#============================================================================
 # Used packages. 
 #============================================================================
-use DaVinciTools    v8r*  Phys
-use DaVinciMCTools  v5r*  Phys
-use MCTools         v1r*  Phys
-use L0Event	    v13r* Event
-use L1Event         v11r* Event
+use DaVinciTools    v*  Phys
+use DaVinciMCTools  v*  Phys
+use MCTools         v*  Phys
+use L0Event	    v*  Event
+use L1Event         v*  Event
 
-#============================================================================
 # Component library building rule
 #============================================================================
 library          FlavourTagging    ../src/*.cpp
 
-#============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=FlavourTagging
 
