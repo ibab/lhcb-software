@@ -53,6 +53,9 @@
  - In CaloEvent v13r1, CaloDet v6r8, CaloAssociators v4r0
    . Adapt to changes in CaloInterfaces and CaloKernel
 
+ - In ITAssociators v2r7
+   . Use the same algorithm also when using the tool. 
+
  - In IOExample v1r1
    . Update output file definitions to latest versions of Boole/Brunel
 
