@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-10-15 - Marco Cattaneo
+ - New features:
+   . Add support for getting OT digitization parameters from Xml (XmlDDDB v13r1)
+
 </PRE><H1><A NAME=v14r0>2002-10-14 Brunel v14r0</A></H1><PRE>
  - New tuning:
    . Improvements to Forward tracking (LongTrack v1r0, Brunel.opts)

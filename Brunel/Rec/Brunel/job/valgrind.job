@@ -39,8 +39,8 @@ set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-#  setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v14r0
-  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v14r0
+#  setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v14r1
+  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v14r1
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD

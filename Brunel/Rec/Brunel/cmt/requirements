@@ -1,5 +1,5 @@
 package Brunel
-version v14r0
+version v14r1
 
 branches doc cmt job options
 
@@ -45,7 +45,7 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc      v10r4  Det
-use XmlDDDB      v13r0  Det
+use XmlDDDB      v13r1  Det
 use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
@@ -150,7 +150,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=140000 " \
-           VisualC  " /DBrunelVersion=140000 "
+macro_append fflags " -DBrunelVersion=140100 " \
+           VisualC  " /DBrunelVersion=140100 "
 
 apply_pattern application_path
