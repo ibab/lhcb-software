@@ -10,7 +10,8 @@
 
  - Removed packages:  GaudiTools (was added temporarily in v15r4)
 
- - Modified packages: EventSys v17r6, GenEvent v3r2
+ - Modified packages: EventSys v17r6, GenEvent v3r2,
+                      DetSys v5r4, Magnet v2r6
 
  - In GenEvent v3r2:
    . Introduce xml for new classes:
@@ -19,6 +20,10 @@
      HardInfo.xml  - holds info relative to hard process for each pp-collision
      GenCollision.xml - extend class Collision to add refernce to HardInfo
 
+ - In Magnet v2r6:
+   . Use fieldMap045 by default
+   . Use CLHEP units internally, to avoid conversion on each call
+   . Add test application  
 
 !======================= LHCbSys v15r5 2004-04-01 =======================
 ! 2004-04-01 - Marco Cattaneo
