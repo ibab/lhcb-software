@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r7 2005-03-29 ==========================
 ! 2005-03-29 - Olivier Callot
  - Fixed a major bug in LinkedFrom, as the containers are not loaded by default.
    An explicit resolution of the links is performed whenever needed. This affects
@@ -14,7 +15,6 @@
    access by key gives access to all objects with that key, while before it was
    giving access only to associations established with a key.
 
-!====================== LinkerEvent v1r7 2005-03-22 ==========================
 ! 2005-03-22 - Olivier Callot
  - Make non const the methods direct() and inverse() to LinkerTool
  - Add the 'bool empty()' method to LinkerRange.
