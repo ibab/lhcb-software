@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.52 2003-04-30 17:01:04 gcorti Exp $
+! $Id: release.notes,v 1.53 2003-05-01 17:15:25 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-05-01 - Gloria Corti
+ - src/ElectronParticleMaker_bbincl.cpp
+   . remove std from std::log becuase for making it compile on windows
 
 ! 2003-04-30 - Gloria Corti
  - src/DecayFinder.cpp
