@@ -47,10 +47,9 @@ GiGaPhysListModular::GiGaPhysListModular
   const std::string& name   ,
   const IInterface*  parent )
   : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList(), 
-    m_nuCut(5*m), m_electronCut(10.0*km), m_gammaCut(20*mm)
+    m_electronCut(10.0*km), m_gammaCut(20*mm)
 {
   declareProperty( "PhysicsConstructors"  , m_physconstr);
-  declareProperty( "NuCut", m_nuCut);
   declareProperty( "ElectronCut", m_electronCut);
   declareProperty( "GammaCut", m_gammaCut);
 };
@@ -109,16 +108,10 @@ void GiGaPhysListModular::SetCuts()
   //the default cut value for all particle types 
   //
   
-  SetCutValue(m_nuCut,"nu_e");
-  SetCutValue(m_nuCut,"nu_tau");
-  SetCutValue(m_nuCut,"nu_mu");
-  SetCutValue(m_nuCut,"anti_nu_e");
-  SetCutValue(m_nuCut,"anti_nu_tau");
-  SetCutValue(m_nuCut,"anti_nu_mu");
+  SetCutsWithDefault();
+  
   SetCutValue(m_gammaCut,"gamma");
   SetCutValue(m_electronCut,"e-");
-
-  SetCutsWithDefault();
   
   if (verboseLevel>0) { DumpCutValuesTable(); }
 };
