@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2004-08-25 13:40:16 pkoppenb Exp $
+# $Id: requirements,v 1.4 2004-08-25 16:40:39 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,11 +6,11 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciKernel
-version           v1r0
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src Lib DaVinciTools
+branches          cmt doc src DaVinciTools
 
 # Exported header files
 #============================================================================
@@ -22,11 +22,11 @@ use PhysEvent  v* Event
 
 # Linker library building rule
 #============================================================================
-library          DaVinciKernelLib    ../Lib/*.cpp
+library          DaVinciKernelLib    ../src/*.cpp
 
 # Component library building rule
 #============================================================================
-library          DaVinciKernel    ../src/*.cpp
+library          DaVinciKernel    ../src/component/*.cpp
 
 # standard patterns (order is essential!)
 #============================================================================

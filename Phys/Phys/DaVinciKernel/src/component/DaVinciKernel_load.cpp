@@ -1,4 +1,4 @@
-// $Id: DaVinciKernel_load.cpp,v 1.1 2004-08-25 13:40:16 pkoppenb Exp $
+// $Id: DaVinciKernel_load.cpp,v 1.1 2004-08-25 16:40:40 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
