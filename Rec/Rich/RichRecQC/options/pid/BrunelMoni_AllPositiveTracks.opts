@@ -1,0 +1,18 @@
+
+// Default PID monitor : 2-100 GeV/c
+BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To100Positive" };
+
+// Very Low Momentum PID monitor : 0-2 GeV/c
+//BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll0To2Positive" };
+
+// Low Momentum PID monitor : 2-10 GeV/c
+BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll2To10Positive" };
+
+// Mid Momentum PID monitor : 10-70 GeV/c
+BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll10To70Positive" };
+
+// High Momentum PID monitor : 70-100 GeV/c
+BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll70To100Positive" };
+
+// Very High Momentum PID monitor : 100+ GeV/c
+//BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAll100PlusPositive" };
