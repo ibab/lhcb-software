@@ -18,7 +18,11 @@ branches          cmt doc src
 #============================================================================
 # Used packages.
 #============================================================================
-use  PhysEvent   v5r*  Event
+use  PhysEvent       v5r*  Event
+
+use  CaloKernel      v2r*  Calo
+use  CaloUtils       v4r*  Calo
+use  CaloInterfaces  v2r*  Calo
 
 #============================================================================
 # Component library building rule
@@ -28,9 +32,4 @@ library          GlobalReco    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern    component_library library=GlobalReco

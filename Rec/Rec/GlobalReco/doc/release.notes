@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruciton code
 !-----------------------------------------------------------------------------
 
+! 2002-07-15 - Vanya Belyaev
+ - src/NeutralPPcrator.h,.cpp - new files
+   new algoroithm for creationof neutral protoparticles.
+   It is temporary preliminary version
+   Need to fix a.s.a.p. : 
+   hardcoded values for ID techniques from 100 to 103 beed to be  
+   replaced with enums from ProtoParticle class (as soon as they defined)
+
+
 ! 2002-07-11 - Gloria Corti
  - Introduce first version of algorithm to make ChargeProtoParticles
    (only rich and muonpid at the moment)
