@@ -1,6 +1,11 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+
+! 2002-11-05 - Chris Parkes
+ -explicit initialisation of variables added to remove compiler warning at 
+  line 400.
+
 !===================== VeloAlgorithms v2r3 2002-10-21 =====================
 
 ! 2002-10-16 - Chris Parkes
