@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.43 2003-01-22 16:43:22 ibelyaev Exp $
+! $Id: release.notes,v 1.44 2003-02-07 18:41:25 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
+! 2003-02-07 - Gloria Corti
+ - Add new algorithm for transforming V0 (Kshort of OODST for example) in
+   decay trees of Kshort->pi+pi- with all related particles, vertices and
+   protoparticles. All objects produced are put in "Phys/UpstreamKs"
+   . algorithm is V0MakerAlg.h/.cpp
+   . default possible options are in V0MakerAlg.opts
 
 ! 2003-01-22 - Ivan BELYAEV
  - DaVinciTools/IPhotonParams.h   new abstract interface for the 

@@ -1,0 +1,14 @@
+/** @file 
+ *  Configuration option for algorithm V0Maker, that transforms V0 objects
+ *  in Particles, Vertices and ProtoParticles for V0->pi+pi-
+ *
+ *  @author G.Corti
+ *  @date 2003-10-31
+ */
+
+// Default value
+// V0MakerAlg.InputLocation  = "Rec/V0/V0s";
+// Default value, /Particles , /Vertices, /Protos are added
+// V0MakerAlg.OutputLocation = "/Event/Phys/UpstreamKs";
+// Default value
+// V0MakerAlg.V0Name         = "KS0";
