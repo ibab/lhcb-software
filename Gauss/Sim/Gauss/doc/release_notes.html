@@ -148,10 +148,45 @@ It uses geant4 6.2.p01
 ! 2004-08-02 - Gloria CORTI
  - SimulationSvc.{h,cpp}
    . use InterfaceID instead of IID to adapt to Gaudi v16
+#set vbase = `echo ${version} | tr 'r0' 'r*'`
 
 !==========================================================================
 <H1><A NAME="v16r0">2004-06-28 - Gauss v16r0</A></H1><PRE>
 this version is the same as v15r11 but it uses Geant4 6.2
+
+!=========================================================================
+<H1><A NAME="v15r12">2004-10-11 - Gauss v15r12</A></H1><PRE>
+                   is a branch built on v15r11
+!================= EvtGen v5r5p1 =================================
+                  is a branch on v5r5
+       by default it uses ParamFiles v3r8 and DecFiles v6r3
+! 2004-10-08 - Patrick Robbe
+ - EvtDDalitz : update resonance parameters for D0-> K0 K+ K-
+
+! 2004-09-07 - Patrick Robbe
+ - EvtDDalitz: add D0 -> K0s K+ K- decay mode and measured resonances
+
+!================= EvtGen v5r5 ====================================
+! 2004-07-29 - Patrick Robbe
+ - add photos subdirectory to contain PHOTOS fixes.
+ - photos/phoene.F: temporary fix to deal with Bs0 -> phi e+ e- decays
+   in PHOTOS
+ - requirements: remove phoene symbol from PHOTOS link statement
+
+! 2004-07-15 - Patrick Robbe
+ - requirements: fix for PHOTOS link for windows
+
+! 2004-07-12 - Patrick Robbe
+ - *.cpp : remove #pragma warning( disable : 4786 ) for windows compilation
+   (VC++ 7.1 does not need it anymore)
+ - EvtGenModels/common_hepevt.inc: add a <CR> at the end of the file for
+   windows compilation
+
+! 2004-07-09 - Patrick Robbe
+ - EvtLambdaP_BarGamma.cpp : use sqrt(2.) instead of sqrt(2) for windows
+   compilation.
+ - EvtVub.cpp : use pow(10., ...) instead of pow(10, ...) for Windows
+   compilation.
 
 !==========================================================================
 <H1><A NAME="v15r11">2004-06-17 - Gauss v15r11</A></H1><PRE>
