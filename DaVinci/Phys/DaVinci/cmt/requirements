@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.137 2004-07-08 13:14:49 pkoppenb Exp $
+# $Id: requirements,v 1.138 2004-07-08 13:53:02 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -88,12 +88,12 @@ use  MuonID             v3r7p1   Muon
 # Final Reconstruction
 use  GlobalReco         v4r7     Rec
 use  PrimVtx            v2r1     Rec
+use  RecoTools          v1r1     Rec
 
 # Utility tools
 use  TrExtrapolator     v2r12    Tr
 
 # Reconstruction tools 
-use  RecoTools          v1r1     Rec
 use  Utilities          v1r6     Tools
 
 use  LoKi               v2r7     Tools  
@@ -103,7 +103,7 @@ use  DaVinciAssociators v5r0     Phys
 use  CommonParticles    v1r5     Phys
 use  DaVinciTools       v9r8     Phys
 use  DaVinciUser        v5r1     Phys
-use  FlavourTagging     v5r0     Phys
+use  FlavourTagging     v5r1     Phys
 use  Ks2PiPiSel         v1r4     Phys
 use  PhysSelections	v6r8     Phys
 
