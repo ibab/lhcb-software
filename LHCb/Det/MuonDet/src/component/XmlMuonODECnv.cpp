@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.3 2004-02-06 14:28:22 cattanem Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.4 2004-04-23 12:08:00 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -44,7 +44,8 @@ protected:
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
-   * @param refpObject the object to be filled
+   * @param dataObj the object to be filled
+   * @param address ??
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,

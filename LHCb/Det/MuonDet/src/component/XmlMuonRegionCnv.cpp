@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.11 2004-02-04 14:38:10 cattanem Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.12 2004-04-23 12:08:00 cattanem Exp $
 
 // Include files
 #include <cstdio>
@@ -54,6 +54,7 @@ protected:
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
    * @param dataObj the object to be filled
+   * @param address ??
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,

@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.2 2004-02-04 14:38:10 cattanem Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.3 2004-04-23 12:08:00 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -51,7 +51,8 @@ protected:
   /** This fills the current object for specific child.
    * Overrides the default implementation in XmlUserDetElemCnv.
    * @param childElement the specific child processed here
-   * @param refpObject the object to be filled
+   * @param dataObj the object to be filled
+   * @param address ??
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,
@@ -259,14 +260,14 @@ XmlMuonCablingCnv::L1BoardReadAndCreate( xercesc::DOMNode* L1Board,
         getNamedItem(ODEConditionString);
       std::string  OdeReference = dom2Std (odeNode->getNodeValue());  
       unsigned int poundPosition = OdeReference.find_last_of('#');
-      std::string entryName = "/" + OdeReference.substr(poundPosition + 1);
-      std::string location = address->par()[0];
-      std::string location1 = address->par()[1];
-      IOpaqueAddress* xmlAddr = 0;      
-      xmlAddr = createAddressForHref (OdeReference, 5, address);
-      msg << MSG::VERBOSE << " location : " << xmlAddr->par()[0]
-          << " entryName : " << xmlAddr->par()[1]
-          << " isString : " << xmlAddr->ipar()[0] << endreq;      
+      // std::string entryName = "/" + OdeReference.substr(poundPosition + 1);
+      //      std::string location = address->par()[0];
+      //      std::string location1 = address->par()[1];
+      //      IOpaqueAddress* xmlAddr = 0;      
+      //      xmlAddr = createAddressForHref (OdeReference, 5, address);
+      //      msg << MSG::VERBOSE << " location : " << xmlAddr->par()[0]
+      //          << " entryName : " << xmlAddr->par()[1]
+      //          << " isString : " << xmlAddr->ipar()[0] << endreq;      
       //      msg << MSG::DEBUG << "Processing element "
       //   << OdeReference << " "<<entryName<< " "<<location 
       //   <<" "<<location1<<" "<<dataObj->name()<<endreq;
