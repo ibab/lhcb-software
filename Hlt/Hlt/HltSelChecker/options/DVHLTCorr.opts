@@ -4,8 +4,8 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // The offline selections
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
-//#include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
+#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+#include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
 
 //==============================================================================
 // MC truth
@@ -80,4 +80,9 @@ DaVinci.OutputLevel = 2 ;
 //----------------------------------------------------------
 // uncomment to get HLT generic
 #include "$HLTGENERICROOT/options/HltGeneric.opts"
-HltGenericDecision.Filter = false ; // true: really filter events
+HltGenericDecision.Filter = false ; // false is default
+
+HLTExclusiveSelectionsFlag.OutputLevel = 4 ;
+HLTDstarFlag.OutputLevel = 4 ;
+HLTJpsi2MuMuFlag.OutputLevel = 4 ;
+HLTHotMuonFlag.OutputLevel = 4 ;
