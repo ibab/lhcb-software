@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2004-07-11 15:57:52 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2004-07-23 14:08:33 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -9,30 +9,30 @@ package       BenderSys
 version       v3r5
 author        Vanya BELYAEV
 
-use HIPPODRAW   v1r133 
-
 # =========== Bender Application itself =======================================
 use           Bender         v3r5 Phys 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v3r0 Tools 
+use           BenderLibs     v3r5 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v1r0 Det 
 # =========== Detector Geometry Checks ========================================
 use           DetDescChecks  v2r1 Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v3r1 Tools 
+use           BenderDict     v3r5 Tools 
 # =========== Bender & LoKi documentation =====================================
-use           BenderDoc      v3r0 Doc 
-use           LoKiDoc        v2r7 Doc 
+use           BenderDoc      v3r5 Doc 
+use           LoKiDoc        v2r8 Doc 
 # =========== Test suit for Bender ============================================
-use           BenderTest     v3r0 Tests 
+use           BenderTest     v3r5 Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v3r5 Ex  
-use           LoKiExample    v2r7 Ex 
+use           LoKiExample    v2r8 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v1r0 Vis 
-# =========== Detector description related stuff ==============================
+# =========== empty 'user' package ============================================
 use           BenderUser     v3r0 Phys  
+# =========== needed for visualization ========================================
+use           HIPPODRAW      v1r133 
 # =============================================================================
 
 # =============================================================================
