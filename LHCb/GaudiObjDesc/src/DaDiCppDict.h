@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.4 2002-03-27 16:56:36 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.5 2002-04-08 13:03:43 mato Exp $
 #ifndef DADICPPDICT_H 
 #define DADICPPDICT_H 1
 
@@ -20,12 +20,12 @@ public:
   DDBEdict() {};
   ~DDBEdict() {};
   
-  static void printCppDictionary(DaDiPackage* gddPackage, 
+  /*  static void printCppDictionary(DaDiPackage* gddPackage, 
                                  char* envXmlDB, 
                                  const char* envOut, 
                                  bool additionalImports,
                                  std::string dothDir);
-
+  */
 };
 
 #endif // DADICPPHEADER_H

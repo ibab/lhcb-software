@@ -3,6 +3,5 @@ $(dest)${NAME}.obj2doth : ${FULLNAME}
 	@echo Producing Header files from ${FULLNAME}
     	@if not exist $(dest) mkdir $(dest)
 	@cd $(dest)
-	@echo $(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) ${FULLNAME} bla
 	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) ${FULLNAME}
-	@echo "" > $@
+	@echo "" > ${NAME}.obj2doth

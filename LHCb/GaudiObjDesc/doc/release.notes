@@ -22,6 +22,21 @@ Package manager : Stefan Roiser
 ! 20020319 - Stefan Roiser
  - bugfix when using stdVectorTypeDef to create type std::vector<classname*>
 
+==================v3r3p1=================================
+! 20020404
+ - automatic include of <utility> when using std::pair
+ - automatic include of GaudiKernel/StreamBuffer.h for every class
+ - bugfix for dict-fragment when processing more than one xml-file
+
+==================v3r3===================================
+! 20020403
+ - added command-line option '-l <path>' for GODWriteCppDict.exe to define the location of the .h-files
+
+! 20020402
+ - branch created 
+ - bugfix when compiling dictionary-information with unary operators
+ - bugfix when using virtual selfdefined methods
+
 ================v3r2=====================================
 ! 20020319 - Stefan Roiser
  - introduced new <class>-attribute 'stdVectorTypeDef' for typedef of a std::vector of class-pointer

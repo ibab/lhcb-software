@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.22 2002-03-19 13:53:18 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.23 2002-04-08 13:03:42 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -423,6 +423,10 @@ inline void DaDiClass::pushImportList(std::string value)
 				(import == "set")      || (import == "bitset") ||
         (import == "pair"))
 			{
+        if (import == "pair")
+        {
+          import = "utility";
+        }
 				pushImpStdList(import);
 			}
 			else

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.8 2002-03-25 10:20:35 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.9 2002-04-08 13:03:44 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 

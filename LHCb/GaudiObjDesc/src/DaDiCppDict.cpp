@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.23 2002-03-28 15:08:18 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.24 2002-04-08 13:03:42 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -76,13 +76,13 @@ std::string checkType(std::string type, std::string prefix)
   std::vector<std::string>::iterator iter = 
     std::find(classTypes.begin(), classTypes.end(), type);
   if (iter != classTypes.end())
-    {
-      return prefix + "::" + type;
-    }
+  {
+    return prefix + "::" + type;
+  }
   else
-    {
-      return type;
-    }
+  {
+    return type;
+  }
 }
 
 /*/-----------------------------------------------------------------------------
@@ -162,143 +162,16 @@ std::string constructTypes(std::string type)
 
 
 //-----------------------------------------------------------------------------
-int main(int argC, char* argV[])
-//-----------------------------------------------------------------------------
-{
-
-  #ifdef WIN32
-    const char* sep = "\\";
-  #else
-    const char* sep = "/";
-  #endif
-
-  std::vector<char*> files;
-  const char *envOut = "";
-  char *envXmlDB;
-  std::string nextArg;
-  bool additionalImports = false;
-  std::string dothDir = "Event";
-
-  argV0 = std::string(argV[0]);
-  argV0.erase(0,argV0.find_last_of("\\")+1);
-  argV0.erase(0,argV0.find_last_of("/")+1);
-  
-  if (getenv("GAUDIOBJDESCROOT") == NULL)
-  {
-    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'" 
-      << std::endl;
-    exit(1);
-  }
-  else
-  {
-    envXmlDB = getenv("GAUDIOBJDESCROOT");
-    strcat(envXmlDB, sep);
-    strcat(envXmlDB, "xml_files");
-    strcat(envXmlDB, sep);
-  }
-
-  if (argC==1) { usage(argV0); }
-  else
-  {
-    for (int i=1; i<argC; ++i)
-    {
-      if (strcmp(argV[i],"-o") == 0)
-      {
-        if (getenv("GODDOTHOUT") != NULL)
-        {
-          dothDir = getenv("GODDOTHOUT");
-          int pos1 = dothDir.find(sep),
-              pos2 = dothDir.rfind(sep);
-          dothDir = dothDir.substr(pos1+1,pos2-pos1-1);
-        }
-        nextArg = std::string(argV[i+1]);
-        if (((argC-1) == i) || (strcmp(argV[i+1],"-x") == 0) ||
-          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
-        {
-          if (getenv("GODDICTOUT") != NULL)
-          {
-            envOut = getenv("GODDICTOUT");
-          }
-          else
-          {
-            std::cerr << "Environment variable 'GODDICTOUT' not set, "
-              << "using local directory" << std::endl;
-          }
-        }
-        else
-        {
-          envOut = argV[i+1];
-          ++i;
-        }
-      }
-      else if (strcmp(argV[i], "-x") == 0)
-      {
-        nextArg = std::string(argV[i+1]);
-        if (((argC-1) == i) || (strcmp(argV[i+1], "-o") == 0) ||
-          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
-        {
-          if (getenv("GODXMLDB") != NULL)
-          {
-            envXmlDB = getenv("GODXMLDB");
-          }
-          else
-          {
-            std::cerr << "Environment variable 'GODXMLDB' not set, " 
-              << "using '$(GAUDIOBJDESCROOT)/xml_files'" << std::endl;
-          }
-        }
-        else
-        {
-          envXmlDB = argV[i+1];
-          ++i;
-        }
-      }
-      else if (strcmp(argV[i], "-i") == 0)
-      {
-        additionalImports = true;
-      }
-      else if (strcmp(argV[i], "-h") == 0)
-      {
-        usage(argV0);
-      }
-      else if (strcmp(argV[i], "-v") == 0)
-      {
-        version(argV0);
-      }
-      else
-      {
-
-        files.push_back(argV[i]);
-      }
-    }
-  }
-
-  for (std::vector<char*>::iterator iter = files.begin(); 
-       iter != files.end(); ++iter)
-  {
-    DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
-
-    DDBEdict::printCppDictionary(gddPackage,
-                                 envXmlDB,
-                                 envOut,
-                                 additionalImports,
-                                 dothDir);
-  }
-
-  return 0;
-}
-
-
-//-----------------------------------------------------------------------------
-void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, 
-                                  char* envXmlDB, 
-                                  const char* envOut, 
-                                  bool additionalImports,
-                                  std::string dothDir)
+void printCppDictionary(DaDiPackage* gddPackage,
+                        char* envXmlDB,
+                        const char* envOut,
+                        bool additionalImports,
+                        std::string dothDir)
 //-----------------------------------------------------------------------------
 {
   int i=0, j=0 ,k=0;
   std::map<std::string,std::string> dbExportClass;
+  unsigned int methodCounter = 0;
 
 //
 // Parser initialization
@@ -439,6 +312,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   {
   
   DaDiClass* gddClass = gddPackage->popDaDiClass();
+  methodCounter = 0;
 
   std::string gddClassName = gddClass->name().transcode(),
               gddClassDesc = gddClass->desc().transcode(),
@@ -532,7 +406,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     bool toReturn = (gddMethRetType == "void") ? false : true,
          gddMethIsConst = gddMethod->const_();
 
-    if (gddMethName != "serialize")
+    if (gddMethName != "serialize" && gddMethRetType != "")
     {
       metaOut << remLine << std::endl
         << "static void";
@@ -540,7 +414,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << "*";
       }
-      metaOut << " " << gddClassName << "_" << checkSymb(gddMethName);
+      metaOut << " " << gddClassName << "_" << checkSymb(gddMethName)
+        << "_" << methodCounter++;
       if (gddMethIsConst)
       {
         metaOut << "const";
@@ -621,7 +496,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddAttName 
-          << "(void* v)" << std::endl
+          << "_" << methodCounter++ << "(void* v)" << std::endl
         << remLine << std::endl
         << "{" << std::endl
         << "  static " << gddAttType << " ret;" << std::endl
@@ -636,7 +511,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void " << gddClassName << "_set" 
-          << DaDiTools::firstUp(gddAttName) 
+          << DaDiTools::firstUp(gddAttName) << "_" << methodCounter++ 
           << "(void* v, std::vector<void*> argList)" << std::endl
         << remLine << std::endl
         << "{" << std::endl
@@ -670,7 +545,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddRelName
-          << "(void* v)" << std::endl
+          << "_" << methodCounter++ << "(void* v)" << std::endl
         << remLine << std::endl 
         << "{" << std::endl
         << "  static " << gddRealRelType << " ret;" << std::endl
@@ -685,7 +560,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void " << gddClassName << "_set"
-          << DaDiTools::firstUp(gddRelName)
+          << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
           << "(void* v, std::vector<void*> argList)" << std::endl
         << remLine << std::endl
         << "{" << std::endl
@@ -702,7 +577,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << remLine << std::endl
           << "static void " << gddClassName << "_clear"
-            << DaDiTools::firstUp(gddRelName)
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
             << "(void* v)" << std::endl
           << remLine << std::endl
           << "{" << std::endl
@@ -716,7 +591,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << remLine << std::endl
           << "static void " << gddClassName << "_addTo"
-            << DaDiTools::firstUp(gddRelName)
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
             << "(void* v, std::vector<void*> argList)" << std::endl
           << remLine << std::endl
           << "{" << std::endl
@@ -731,7 +606,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       {
         metaOut << remLine << std::endl
           << "static void " << gddClassName << "_removeFrom"
-            << DaDiTools::firstUp(gddRelName)
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
             << "(void* v, std::vector<void*> argList)" << std::endl
           << remLine << std::endl
           << "{" << std::endl
@@ -744,6 +619,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     }
   }
 
+
+  methodCounter = 0;
 
 //
 // Instance of class
@@ -764,8 +641,9 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   if (gddClass->sizeDaDiMethod() || gddClass->sizeDaDiAttribute() || 
       gddClass->sizeDaDiRelation())
   {
-    metaOut << "  std::vector<std::string> argTypes = std::vector<std::string>();"
-        << std::endl;
+    metaOut << "  std::vector<MetaClass*> argTypes = std::vector<MetaClass*>();"
+        << std::endl
+      << "  MetaClass* retType;" << std::endl;
   }
 
 //
@@ -817,9 +695,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     metaOut << "  metaC->addField(\"" << gddAttName << "\"," << std::endl
       << indent << "\"" << gddAttType << "\"," << std::endl
       << indent << "\"" << gddAttDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName << "," 
-        << std::endl
-      << indent << printAccessor(gddAttAccess) << ");" << std::endl
+      << indent << "&((" << gddClassName << "*)0)->m_" << gddAttName 
+        << ");" << std::endl
       << std::endl;
   }
 
@@ -843,9 +720,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     metaOut << "  metaC->addField(\"" << gddRelName << "\"," << std::endl
       << indent << "\"" << gddRelType << "\"," << std::endl
       << indent << "\"" << gddRelDesc << "\"," << std::endl
-      << indent << "&((" << gddClassName << "*)0)->m_" << gddRelName << "," 
-        << std::endl
-      << indent << printAccessor(gddRelAccess) << ");" << std::endl 
+      << indent << "&((" << gddClassName << "*)0)->m_" << gddRelName
+        << ");" << std::endl 
       << std::endl;
   }
 
@@ -860,11 +736,13 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
                 gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
     bool gddMethIsConst = gddMethod->const_();
     
-    if (gddMethName != "serialize")
+    if (gddMethName != "serialize" && gddMethRetType != "")
     {
       metaOut << constructTypes(gddMethRetType);
 
-      metaOut << "  argTypes.clear();" << std::endl;
+      metaOut << "  retType = MetaClass::forName(\"" << gddMethRetType << "\");"
+          << std::endl
+        << "  argTypes.clear();" << std::endl;
     
       for (j=0; j<gddMethod->sizeDaDiMethArgument(); ++j)
       { 
@@ -872,21 +750,16 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         std::string gddMethArgType = gddMethArgument->type().transcode();
 
         metaOut << constructTypes(gddMethArgType);
-        metaOut << "  argTypes.push_back(\"" << gddMethArgType << "\");" 
-            << std::endl;
+        metaOut << "  argTypes.push_back(MetaClass::forName(\"" 
+                  << gddMethArgType << "\"));" << std::endl;
       }
 
       metaOut << "  metaC->addMethod(\"" << gddMethName << "\"," << std::endl
-        << indent << "\"" << gddMethDesc << "\"," << std::endl;
-      if (gddMethRetType != "void")
-      {
-        metaOut << indent << "\"" << gddMethRetType << "\"," << std::endl;
-      }
-      if (gddMethod->sizeDaDiMethArgument())
-      {
-        metaOut << indent << "argTypes," << std::endl;
-      }
-      metaOut << indent << gddClassName << "_" << checkSymb(gddMethName);
+        << indent << "\"" << gddMethDesc << "\"," << std::endl
+        << indent << "retType," << std::endl
+        << indent << "argTypes," << std::endl
+        << indent << gddClassName << "_" << checkSymb(gddMethName)
+          << "_" << methodCounter++ ;
       if (gddMethIsConst)
       {
         metaOut << "const";
@@ -911,23 +784,31 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     if (getMeth)
     {
       metaOut << constructTypes(gddAttType)
+        << "  retType = MetaClass::forName(\"" << gddAttType << "\");" 
+          << std::endl
+        << "  argTypes.clear();" << std::endl
         << "  metaC->addMethod(\"" << gddAttName << "\"," << std::endl
         << indent << "\"" << gddAttDesc << "\"," << std::endl
-        << indent << "\"" << gddAttType << "\"," << std::endl
-        << indent << gddClassName << "_" << gddAttName << ");" << std::endl
+        << indent << "retType," << std::endl
+        << indent << "argTypes," << std::endl
+        << indent << gddClassName << "_" << gddAttName << "_" << methodCounter++ 
+          << ");" << std::endl
         << std::endl;
     }
 
     if (setMeth)
     {
-      metaOut << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(\"" << gddAttType << "\");" << std::endl
+      metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
+        << "  argTypes.clear();" << std::endl
+        << "  argTypes.push_back(MetaClass::forName(\"" << gddAttType << "\"));"
+          << std::endl
         << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddAttName) << "\","
           << std::endl
         << indent << "\"" << gddAttDesc << "\"," << std::endl
+        << indent << "retType," << std::endl
         << indent << "argTypes," << std::endl
         << indent << gddClassName << "_set" << DaDiTools::firstUp(gddAttName) 
-          << ");" << std::endl
+          << "_" << methodCounter++ << ");" << std::endl
         << std::endl;
     }
   }
@@ -950,23 +831,31 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
 
     if (getMeth)
     {
-      metaOut << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
+      metaOut << "  retType = MetaClass::forName(\"" << gddRelType << "\");" 
+          << std::endl
+        << "  argTypes.clear();" << std::endl
+        << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
         << indent << "\"" << gddRelDesc << "\"," << std::endl
-        << indent << "\"" << gddRelType << "\"," << std::endl
-        << indent << gddClassName << "_" << gddRelName << ");" << std::endl
+        << indent << "retType," << std::endl
+        << indent << "argTypes," << std::endl
+        << indent << gddClassName << "_" << gddRelName << "_" << methodCounter++
+          << ");" << std::endl
         << std::endl;
     }
 
     if (setMeth)
     {
-      metaOut << "  argTypes.clear();" << std::endl
-        << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
+      metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
+        << "  argTypes.clear();" << std::endl
+        << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType << "\"));"
+          << std::endl
         << "  metaC->addMethod(\"set" << DaDiTools::firstUp(gddRelName) << "\","
           << std::endl
         << indent << "\"" << gddRelDesc << "\"," << std::endl
+        << indent << "retType," << std::endl
         << indent << "argTypes," << std::endl
         << indent << gddClassName << "_set" << DaDiTools::firstUp(gddRelName) 
-          << ");" << std::endl
+          << "_" << methodCounter++ << ");" << std::endl
         << std::endl;
     }
 
@@ -974,37 +863,50 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     {
       if (clrMeth)
       {
-        metaOut << "  metaC->addMethod(\"clear" << DaDiTools::firstUp(gddRelName)
+        metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
+          << "  argTypes.clear();" << std::endl
+          << "  metaC->addMethod(\"clear" << DaDiTools::firstUp(gddRelName)
             << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
+          << indent << "retType," << std::endl
+          << indent << "argTypes," << std::endl
           << indent << gddClassName << "_clear" 
-            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+            << ");" << std::endl
           << std::endl;
       } 
 
       if (addMeth)
       {
-        metaOut << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
+        metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
+          << "  argTypes.clear();" << std::endl
+          << "  argTypes.push_back(MetaClass::forName(\"" << gddRelType 
+            << "\"));" << std::endl
           << "  metaC->addMethod(\"addTo" << DaDiTools::firstUp(gddRelName) 
             << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
+          << indent << "retType," << std::endl
           << indent << "argTypes," << std::endl
           << indent << gddClassName << "_addTo" 
-            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
+            << ");" << std::endl
           << std::endl;
       }
 
       if (remMeth)
       {
-        metaOut << "  argTypes.clear();" << std::endl
-          << "  argTypes.push_back(\"" << gddRelType << "\");" << std::endl
+        metaOut << "  retType = MetaClass::forName(\"void\");" << std::endl
+          << "  argTypes.clear();" << std::endl
+          << "  argTypes.push_back(MetaClass::forName(\"" 
+            << gddRelType << "\"));" << std::endl
           << "  metaC->addMethod(\"removeFrom" << DaDiTools::firstUp(gddRelName)
             << "\"," << std::endl
           << indent << "\"" << gddRelDesc << "\"," << std::endl
+          << indent << "retType," << std::endl
           << indent << "argTypes," << std::endl
           << indent << gddClassName << "_removeFrom" 
-            << DaDiTools::firstUp(gddRelName) << ");" << std::endl
+            << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++ 
+            << ");" << std::endl
           << std::endl;
       }
     }
@@ -1033,5 +935,147 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   std::cout << " - OK" << std::endl;
 
   }
+}
+
+//-----------------------------------------------------------------------------
+int main(int argC, char* argV[])
+//-----------------------------------------------------------------------------
+{
+
+  #ifdef WIN32
+    const char* sep = "\\";
+  #else
+    const char* sep = "/";
+  #endif
+
+  std::vector<char*> files;
+  const char *envOut = "";
+  char *envXmlDB;
+  std::string nextArg;
+  bool additionalImports = false;
+  std::string dothDir = "Event";
+
+  argV0 = std::string(argV[0]);
+  argV0.erase(0,argV0.find_last_of("\\")+1);
+  argV0.erase(0,argV0.find_last_of("/")+1);
+  
+  if (getenv("GAUDIOBJDESCROOT") == NULL)
+  {
+    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'" 
+      << std::endl;
+    exit(1);
+  }
+  else
+  {
+    envXmlDB = getenv("GAUDIOBJDESCROOT");
+    strcat(envXmlDB, sep);
+    strcat(envXmlDB, "xml_files");
+    strcat(envXmlDB, sep);
+  }
+
+  if (argC==1) { usage(argV0); }
+  else
+  {
+    for (int i=1; i<argC; ++i)
+    {
+      if (strcmp(argV[i],"-o") == 0)
+      {
+        if (getenv("GODDOTHOUT") != NULL)
+        {
+          dothDir = getenv("GODDOTHOUT");
+          int pos1 = dothDir.find(sep),
+              pos2 = dothDir.rfind(sep);
+          dothDir = dothDir.substr(pos1+1,pos2-pos1-1);
+        }
+        nextArg = std::string(argV[i+1]);
+        if (((argC-1) == i) || (strcmp(argV[i+1],"-x") == 0) ||
+          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+        {
+          if (getenv("GODDICTOUT") != NULL)
+          {
+            envOut = getenv("GODDICTOUT");
+          }
+          else
+          {
+            std::cerr << "Environment variable 'GODDICTOUT' not set, "
+              << "using local directory" << std::endl;
+          }
+        }
+        else
+        {
+          envOut = argV[i+1];
+          ++i;
+        }
+      }
+      else if (strcmp(argV[i], "-x") == 0)
+      {
+        nextArg = std::string(argV[i+1]);
+        if (((argC-1) == i) || (strcmp(argV[i+1], "-o") == 0) ||
+          (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+        {
+          if (getenv("GODXMLDB") != NULL)
+          {
+            envXmlDB = getenv("GODXMLDB");
+          }
+          else
+          {
+            std::cerr << "Environment variable 'GODXMLDB' not set, " 
+              << "using '$(GAUDIOBJDESCROOT)/xml_files'" << std::endl;
+          }
+        }
+        else
+        {
+          envXmlDB = argV[i+1];
+          ++i;
+        }
+      }
+      else if (strcmp(argV[i], "-l") == 0)
+      {
+        nextArg = std::string(argV[i+1]);
+        if (((argC-1) == i) || (nextArg.find_last_of(sep) != (nextArg.length()-1)))
+        {
+          std::cerr << "No path given for argument '-l' or not ended with (back)slash"
+            << std::endl;
+          exit(1);
+        }
+        else
+        {
+          dothDir = nextArg.substr(0, nextArg.length()-1);
+          ++i;
+        }
+      }
+      else if (strcmp(argV[i], "-i") == 0)
+      {
+        additionalImports = true;
+      }
+      else if (strcmp(argV[i], "-h") == 0)
+      {
+        usage(argV0);
+      }
+      else if (strcmp(argV[i], "-v") == 0)
+      {
+        version(argV0);
+      }
+      else
+      {
+
+        files.push_back(argV[i]);
+      }
+    }
+  }
+
+  for (std::vector<char*>::iterator iter = files.begin(); 
+       iter != files.end(); ++iter)
+  {
+    DaDiPackage* gddPackage = DDFE::DaDiFrontEnd(*iter);
+
+    printCppDictionary(gddPackage,
+                       envXmlDB,
+                       envOut,
+                       additionalImports,
+                       dothDir);
+  }
+
+  return 0;
 }
 

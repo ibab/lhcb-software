@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.56 2002-03-27 16:56:36 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.57 2002-04-08 13:03:43 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -15,11 +15,13 @@
 #include <vector>
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 #include <list>
 #include <fstream>
 #include <string>
 #include <map>
 #include <algorithm>
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader
@@ -87,6 +89,7 @@ std::string printPlural(const std::string& singular)
 void usage(std::string argV0)
 //-----------------------------------------------------------------------------
 {
+
   std::cout << std::endl << std::endl
     << "Usage: " << argV0 << " [-h] [-v] [-i] [-o [path]] [-x [path]] xml-file(s)"        << std::endl
     << "Produce .h-files out of xml-files"                                   << std::endl << std::endl
@@ -216,6 +219,10 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
     if (gddMethodAccess == accessor || accessor == "")
     {
       xmlOut << "  /// " << gddMethodDesc << std::endl << "  ";
+      if ((accessor == "" ) && (gddMethodCode != ""))
+      {
+        xmlOut << "inline ";
+      }
       if (gddMethodIsFriend)
       {
         xmlOut << "friend ";
@@ -287,17 +294,15 @@ template <class T> void printMethodImpl(std::ofstream& xmlOut,
     bool gddMethodIsConst = gddMethod->const_(),
          gddMethodIsStatic = gddMethod->static_(),
          gddMethodIsFriend = gddMethod->friend_(),
-         gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
+         gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_(),
+         gddMethodIsVirtual = (gddMethodVirtual == "TRUE" || 
+                               gddMethodVirtual == "PURE") ? true : false;
 
 
     if ((gddMethodAccess == accessor || accessor == "")
-        && gddMethodCode != "" && !gddMethodIsFriend)
+        && gddMethodCode != "" && !gddMethodIsFriend && !gddMethodIsVirtual)
     {
       xmlOut << "inline ";
-      if(gddMethodVirtual == "TRUE" ||  gddMethodVirtual == "PURE")
-      {
-        xmlOut << "virtual ";
-      }
       if (gddMethodIsStatic)
       {
         xmlOut << "static ";
@@ -858,7 +863,7 @@ void printMembers(std::ofstream& xmlOut,
 
   maxLengthName = maxLengthName + 4;
 
-  xmlOut.setf(std::ios::left, std::ios::adjustfield);
+  //  xmlOut.setf(std::ios::left, std::ios::adjustfield);
 
   //
   // Private members (attributes)
@@ -882,11 +887,14 @@ void printMembers(std::ofstream& xmlOut,
         fullAttName = fullAttName + "[" + gddAttArray + "]";
       }
       fullAttName += ";";
+      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut << gddAttType; 
       xmlOut.width(maxLengthName);
-      xmlOut << fullAttName << " ///< " << gddAttDesc << std::endl;
+      xmlOut << fullAttName;
+      xmlOut.width(0);
+      xmlOut << " ///< " << gddAttDesc << std::endl;
     }
   }
 
@@ -915,11 +923,14 @@ void printMembers(std::ofstream& xmlOut,
       }
       std::string relType = rel_type + gddRelType + '>';
       std::string relName = " m_" + gddRelName + ";";
+      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut << relType; 
       xmlOut.width(maxLengthName);
-      xmlOut << relName << " ///< " << gddRelDesc << std::endl;
+      xmlOut << relName;
+      xmlOut.width(0);
+      xmlOut << " ///< " << gddRelDesc << std::endl;
     }
   }
   xmlOut.unsetf(std::ios::adjustfield);                  
@@ -2467,6 +2478,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     //
     // Includes
     //
+    gddClass->pushImportList("StreamBuffer");
+    
 
     std::list<std::string> stdImports, normImports, softImports, tmpList;
 
@@ -2558,12 +2571,12 @@ int main(int argC,
 
   #ifdef WIN32
     const char* sep = "\\";
-  #else
+  #elif defined(__linux)
     const char* sep = "/";
   #endif
 
   std::vector<char*> files;
-  const char *envOut = "";
+  const char* envOut = "";
   char* envXmlDB;
   std::string nextArg;
   bool additionalImports = false;
