@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.13 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.14 2002-05-02 11:57:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2002/05/01 18:33:18  ibelyaev
+//  import error/warning/exception counter technique from LHCb Calo
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -271,7 +274,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
     { return Exception("UpdateObjRefs: "         ) ; }  
   if( 0 == trajectories      ) 
     { return Error("No G4TrajectoryContainer* object is found!"); } 
-  if( trajectories->size() != particles->size() ) 
+  if( (size_t) trajectories->size() != (size_t) particles->size() ) 
     { return Error(" 'Particles' and G4Tajectories have different sizes!"); }
   /// get the vertices:
   IRegistry* parent  = 

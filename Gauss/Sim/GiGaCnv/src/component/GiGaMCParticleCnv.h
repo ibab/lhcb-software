@@ -1,20 +1,8 @@
-// $Id: GiGaMCParticleCnv.h,v 1.6 2002-04-23 11:23:40 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.h,v 1.7 2002-05-02 11:57:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.4  2001/08/12 17:24:53  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/24 11:13:56  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.2  2001/07/15 20:45:11  ibelyaev
-// the package restructurisation
-//
 // ============================================================================
 #ifndef GIGACNV_GIGAMCPARTICLECNV_H
 #define GIGACNV_GIGAMCPARTICLECNV_H  1 
@@ -24,7 +12,6 @@
 /// GaudiKernel
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/ObjectVector.h"
 /// LHCbEvent 
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
@@ -55,11 +42,6 @@ class GiGaMCParticleCnv: public GiGaCnvBase
   ///
   friend class CnvFactory<GiGaMCParticleCnv>; 
   /// 
-protected: 
-  
-  typedef ObjectVector<MCParticle>   Particles ;
-  typedef ObjectVector<MCVertex>     Vertices  ;
-  
 protected:
 
   /** Standard Constructor

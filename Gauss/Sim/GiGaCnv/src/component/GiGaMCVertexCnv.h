@@ -1,17 +1,8 @@
-// $Id: GiGaMCVertexCnv.h,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.h,v 1.6 2002-05-02 11:57:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2001/08/12 17:24:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/24 11:13:56  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.2  2001/07/15 20:45:12  ibelyaev
-// the package restructurisation
-// 
 // ============================================================================
 #ifndef GIGACNV_GIGAMCVERTEXCNV_H
 #define GIGACNV_GIGAMCVERTEXCNV_H 1 
@@ -44,11 +35,6 @@ class GiGaMCVertexCnv: public GiGaCnvBase
   ///
   friend class CnvFactory<GiGaMCVertexCnv>; 
   /// 
-protected:
-  
-  typedef ObjectVector<MCVertex>   Vertices  ;
-  typedef ObjectVector<MCParticle> Particles ;
-  
 protected:
   
   /** standard constructor

@@ -1,8 +1,11 @@
-// $Id: GiGaMiscGetEventAlg.cpp,v 1.9 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaMiscGetEventAlg.cpp,v 1.10 2002-05-02 11:57:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/01 18:33:18  ibelyaev
+//  import error/warning/exception counter technique from LHCb Calo
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMISCGETEVENTALG_CPP
 // ============================================================================
@@ -16,7 +19,6 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/MsgStream.h"
 // GiGa 
