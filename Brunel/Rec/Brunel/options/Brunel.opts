@@ -11,7 +11,7 @@
 #units "$STDOPTS/units.opts"
 
 // Framework
-ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg", "LHCbTools" };
+ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg", "LHCbTools", "LHCbAlgs" };
 
 // POOL Persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
@@ -39,7 +39,6 @@ ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" };
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
-BrunelReco.DetectorList += { "Timing" };
 Relations.DetectorList   = { "Tr", "Calo", "Links" };
 
 //--------------------------------------------------------------
@@ -148,10 +147,6 @@ BrunelRecoMUONSeq.Members  = { "MuonRawBuffer2Digit" };
 BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
-// Algorithm timing
-BrunelRecoTimingSeq.Members += { "TimingAlg" };
-#include "$BRUNELALGSROOT/options/Timing.opts"
-
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"
 
@@ -164,7 +159,7 @@ ApplicationMgr.DLLs += { "ITAssociators" };
 ApplicationMgr.DLLs += { "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators" };
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
-ApplicationMgr.DLLs += { "CaloAssociators" };
+#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
 RelationsCaloSeq.Members += { "CaloClustersMCTruth5Alg/CCs2MCPs" };
 ApplicationMgr.DLLs += { "MuonAssociators" };
 ApplicationMgr.DLLs += { "AsctToLinker" };

@@ -18,7 +18,7 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO" };
 //--------------------------------------------------------------
 
 // IT clustering and efficiency
-ApplicationMgr.DLLs     += { "ITCheckers" };
+ApplicationMgr.DLLs     += { "ITCheckers", "MCTools" };
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 BrunelMoniITSeq.Members += { "ITEffMonitor" };
 ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
@@ -76,13 +76,12 @@ BrunelMoniCALOSeq.Members +=
   "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
 };
 #include "$CALOMONITOROPTS/Moni.opts"
-#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "GaudiAud" };
-AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = false;
+//ApplicationMgr.DLLs += { "GaudiAud" };
+//AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+//NameAuditor.Enable   = false;
+//ChronoAuditor.Enable = true;
+//MemoryAuditor.Enable = false;

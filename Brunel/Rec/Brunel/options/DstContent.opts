@@ -24,7 +24,6 @@ DstWriter.ItemList =
 , "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
-, "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"

@@ -10,7 +10,7 @@ apply_pattern BrunelVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r15
 
-#-- External libraries (as defined in GAUDI_v14r5)
+#-- External libraries (as defined in GAUDI_v14r6)
 use ExternalLibs	v4r5
 use AIDA		v3r300		-no_auto_imports
 use CLHEP		v2r1810p0	-no_auto_imports
@@ -24,17 +24,17 @@ use UUID		v1r32		-no_auto_imports
 use SEAL		v1r134p0	-no_auto_imports
 use POOL		v1r163p0	-no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v14r5)
-use GaudiKernel		v15r3
-use GaudiSvc 		v11r6p1
+#-- Gaudi libraries (from GAUDI_v14r6)
+use GaudiKernel		v15r4
+use GaudiSvc 		v11r7
+use GaudiAlg 		v7r3
 use GaudiTools          v8r1
-use GaudiAud 		v6r4
 use GaudiGSL		v6r0
 use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r6p1
 use GaudiObjDesc 	v6r2p1
-use RootHistCnv         v9r1
+use RootHistCnv         v9r1p1
 
 #-- Database
 use XmlDDDB		v22r2	Det
@@ -43,16 +43,14 @@ use ParamFiles          v3r6    -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v16r0)
 use LHCb	v16r0
-use GaudiAlg 		v7r3
 
 #-- BrunelSys v24r0 packages
 
 # Tools
-use LHCbTools		v1r1	Kernel
-use AsctToLinker        v1r1    Rec
+use AsctToLinker        v1r2    Rec
 
 # Brunel utilities
-use BrunelAlgs          v3r4p1	Rec
+use BrunelAlgs          v3r5	Rec
 
 # Calorimeter
 use CaloMonitor         v2r2  	Calo
