@@ -1,6 +1,12 @@
-// $Id: Digitisation.opts,v 1.6 2002-12-18 12:46:02 witoldp Exp $ 
- 
-ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms" };
+// $Id: Digitisation.opts,v 1.7 2003-02-17 15:19:12 witoldp Exp $ 
+
+
+HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
+#include "$STDOPTS/Hbook.opts"
+
+/////////////////////////////////////////////////////////////////
+//OT 
+ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms"};
 
 Digitisation.Members += { "MCOTDepositCreator" ,
                           "MCOTDigitCreator",
@@ -8,25 +14,44 @@ Digitisation.Members += { "MCOTDepositCreator" ,
 
 MCOTDepositCreator.OutputLevel = 1;
 
-
 // Not really digitization, but just to check... 
 Digitisation.Members += { "OTClusterCreator"};
 
 // Monitoring
-HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
-#include "$STDOPTS/Hbook.opts"
 ApplicationMgr.DLLs += { "OTAssociators" };
 Digitisation.Members += { "MCOTDepositMonitor",
                           "OTDigitMonitor",
                           "OTClusterMonitor",
-                          "OTClusterChecker"
-};
-
+                          "OTClusterChecker"};
 
 MCOTDigitCreator.OutputLevel = 1;
 OTDigitCreator.OutputLevel = 1;
 OTClusterCreator.OutputLevel = 1;
 
+
+//////////////////////////////////////////////////////////////////
+// IT
+
+ApplicationMgr.DLLs   += { "ITDet","ITCheckers" ,"ITAlgorithms" };
+
+//Digitisation.Members += { "MCITDepositCreator",
+//                          "MCITDigitCreator",
+//                          "ITDigitCreator"
+//};
+#include "$ITALGORITHMSROOT/options/itDigi.opts"
+
+// Not really digitization, but just to check... 
+//Digitisation.Members += { "ITClusterCreator","ITSummaryCreator"};
+#include "$ITALGORITHMSROOT/options/itRec.opts"
+
+ApplicationMgr.DLLs += { "ITAssociators" };
+//Digitisation.Members += { "MCITDepositChecker",
+//                          "ITDigitChecker",
+//                          "ITClusterChecker"
+//};
+
+
+/////////////////////////////////////////////////////////////////
 // Velo 
 
 ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;

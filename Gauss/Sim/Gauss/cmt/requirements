@@ -1,5 +1,5 @@
 package Gauss
-version v8r1
+version v9r0
 
 # =============================================================================
 # structure 
@@ -25,22 +25,22 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v11r0   Sim
-use GaussTools          v6r0    Sim
-use GaussTracker        v2r0p1  Sim
+use GiGaCnv             v11r1   Sim
+use GaussTools          v6r1    Sim
+use GaussTracker        v2r1  Sim
 use GaussRICH           v2r0    Sim
 use GaussCalo           v2r0    Sim
 use GaussPhysics        v2r0    Sim
 use CaloDetXmlCnv       v2r2    Det 
 
 #optional visualisation and UI
-#use GiGaVisUI           v1r0    Sim
+use GiGaVisUI           v1r2    Sim
 
 #optional GaussImports
 #use GaussImports       v4r0    Sim
 
 # generator
-use GeneratorModules    v4r2    Gen
+use GeneratorModules    v5r0    Gen
 
 # optional generator: 
 #use EvGen              v4r0    Sim 
@@ -80,4 +80,4 @@ path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
 # =============== alias =======================================================
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
-alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gaussvis.opts "
+alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "

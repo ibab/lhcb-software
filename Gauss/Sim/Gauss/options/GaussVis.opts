@@ -1,0 +1,56 @@
+// $Id: GaussVis.opts,v 1.1 2003-02-17 15:19:12 witoldp Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *  The base configuration file to run Gauss exceutable with 
+ *  visualiation stuff
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2003-02-11
+ */
+
+#include "$GAUSSOPTS/Gauss.opts"
+
+ApplicationMgr.DLLs += { "GiGaVisUI" } ;
+
+GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
+//GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
+
+//GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
+
+GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
+GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
+GiGa.EventSeq.OutputLevel = 1 ;
+
+GiGa.EventSeq.VisEvtCmd.EndOfEventCommands = 
+  { "/vis/scene/add/volume"               , 
+    "/vis/scene/add/trajectories"         ,
+    "/vis/viewer/update"                  } ;
+#ifdef WIN32
+GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands = 
+  { "/vis/scene/create"                   , 
+    "/vis/sceneHandler/create OIWIN32"    ,
+    "/vis/viewer/create"                  ,
+    "/vis/scene/add/volume"               , 
+    "/vis/scene/add/trajectories"         ,
+    "/vis/scene/notifyHandlers   "        } ;
+#else 
+GiGa.EventSeq.VisEvtCmd.BeginOfEventCommands = 
+  { "/vis/scene/create"                   , 
+    "/vis/sceneHandler/create DAWNFILE"   ,
+    "/vis/viewer/create"                  ,
+    "/vis/viewer/viewpointThetaPhi -90 -90",
+    "/vis/scene/add/volume"               , 
+    "/vis/scene/add/trajectories"         ,
+    "/vis/scene/notifyHandlers   "        } ;
+#endif 
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+

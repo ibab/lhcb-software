@@ -1,12 +1,25 @@
-// $Id: Simulation.opts,v 1.27 2003-01-09 12:59:11 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.28 2003-02-17 15:19:13 witoldp Exp $ 
+
+////////////////////////////////////////////////////////
+// Services:
+
+ApplicationMgr.DLLs  += { "SimSvc" };
+//SimulationSvc.SimulationDbLocation =
+//"$XMLDDDBROOT/DDDB/Simulation/simulation.xml";
+// below is the temporary location of the xml file 
+//SimulationSvc.SimulationDbLocation =
+//"$GAUSSROOT/data/simulation.xml";
 
 #include "$STDOPTS/DetDesc.opts"
-
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0G.xml";
+ 
 // declare external services needed MAGNETIC FIELD 
 ApplicationMgr.ExtSvc +=  
 { "MagneticFieldSvc"  };  
 MagneticFieldSvc.FieldMapFile = 
 "/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
+
+///////////////////////////////////////////////////////
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
@@ -53,8 +66,6 @@ Kine.StreamItems              +=
 
 // configuration of geometry "Geo" data stream
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0G.xml";
- 
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeo"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
@@ -68,27 +79,23 @@ Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
 Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 
 // Physics List  to be used and its configuration  
 GiGa.PhysicsList            = "GiGaPhysListModular/ModularPL";
 GiGa.ModularPL.Cut           = 4.0 * mm;
 
-
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"EM_GNPhysics"};
+GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"MuonPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP_GN"};
+GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP"};
 //GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsQGSP"};
 GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
 //GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
-
-// Stacking action to be used and its configuration  
-//GiGa.StackingAction         = "GaussStackAction/GaussStack" ;
 
 // Tracking action to be used and its configuration  
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
@@ -96,20 +103,21 @@ GiGa.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
 
 GiGa.TrackSeq.SimpleTrack.StoreAll  = false; 
 GiGa.TrackSeq.SimpleTrack.StorePrimaries = true;
-GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks = false;
-GiGa.TrackSeq.SimpleTrack.StoreHitTracks = false; 
+GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks = true;
 GiGa.TrackSeq.SimpleTrack.StoreByOwnEnergy   = true; 
 GiGa.TrackSeq.SimpleTrack.OwnEnergyThreshold = 10.0 * MeV   ;        
 // GiGa.TrackSeq.SimpleTrack.StoreByChildEnergy   = true ; 
 // GiGa.TrackSeq.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
-// GiGa.TrackSeq.SimpleTrack.StoreByOwnType       = true; 
-// GiGa.TrackSeq.SimpleTrack.StoredOwnTypes       = { "e+" , "e-" };
+GiGa.TrackSeq.SimpleTrack.StoreByOwnType       = true; 
+GiGa.TrackSeq.SimpleTrack.StoredOwnTypes       = { "pi+" , "pi-" };
 // GiGa.TrackSeq.SimpleTrack.StoreByChildType     = true; 
 // GiGa.TrackSeq.SimpleTrack.StoredChildTypes     = { "e+"};
 
 // Stepping action to be used and its configuration  
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
+// tracking cuts
+GiGa.StepSeq.Members             += { "CutsStepAction/GaussCuts" } ;
 
 // Event action to be used and its configuration  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
@@ -143,14 +151,8 @@ GiGaGeo.OTSDet.DetectorPath    = "/Tracker/OT";
 
 GetHits.CaloHits   = { "MC/Ecal/Hits" };
 
-/// specific configuration of calorimeter stuff 
+// specific configuration of calorimeter stuff 
 #include "$GAUSSOPTS/Calo.opts"
-
-/// Optional: Interactive session
-// GiGa.UIsession  =  "GiGaUIsession/UISession" ;
-
-/// Optional: Visualization
-// GiGa.VisManager =  "GiGaVisManager/VisMgr"   ;
 
 // ============================================================================
 // The END 

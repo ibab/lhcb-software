@@ -2,13 +2,15 @@
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
-MessageSvc.OutputLevel     = 1;
+MessageSvc.OutputLevel     = 3;
 
 ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 
 ApplicationMgr.DLLs       += {"GaudiRootDb","DbCnv"};
 ApplicationMgr.DLLs       += {"GiGaCnv"};
+ApplicationMgr.DLLs       += {"GaussTools"};
+
 
 
 ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
@@ -27,17 +29,71 @@ EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"};
 
 
 ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
-ApplicationMgr.TobAlg += {"GetGiGaHitsAlg/GetHits"};
-ApplicationMgr.TopAlg += {"DumpMC"};
+ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
+//ApplicationMgr.TopAlg += {"DumpMC"};
 
 ApplicationMgr.EvtSel      ="'Gauss.root'";
+
+HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
+#include "$STDOPTS/Hbook.opts"
+#include "$STDOPTS/DetDesc.opts"
+/////////////////////////////////////////////////////////////////
+// Velo 
+
+// ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;
+// ApplicationMgr.TopAlg += {"VeloSim"};
+
+// // JP Palacios Options file for VeloSim algorithm
+// VeloSim.NoiseSim = true;
+// VeloSim.coupling = true;
+// VeloSim.SpillOver = false;
+// VeloSim.InhomogeneousCharge = true;
+// VeloSim.TestSimulation =  false;
+// VeloSim.PileUp= true;
+// VeloSim.OutputLevel=2;
+
+// // JP Palacios Options file for VeloMonitor algorithm
+// ApplicationMgr.DLLs += { "VeloAssociators" };
+// ApplicationMgr.TopAlg += { "VeloMonitor"};
+
+// VeloMonitor.TestMCVeloHit       = true;
+// VeloMonitor.TestMCVeloFE        = true;
+// VeloMonitor.TestVeloFullDigit = false;
+// VeloMonitor.TestVeloCluster   = false;
+// VeloMonitor.Resolution          = false;
+// VeloMonitor.Printout            = 5;
+// VeloMonitor.OutputLevel = 6;
+
+//////////////////////////////////////////////////////////////////
+// IT
+
+ApplicationMgr.DLLs   += { "ITDet","ITCheckers" ,"ITAlgorithms" };
+
+ApplicationMgr.TopAlg += { "MCITDepositCreator",
+                          "MCITDigitCreator",
+                          "ITDigitCreator"
+};
+#include "$ITALGORITHMSROOT/options/itDigi.opts"
+
+// Not really digitization, but just to check... 
+ApplicationMgr.TopAlg += { "ITClusterCreator","ITSummaryCreator"};
+#include "$ITALGORITHMSROOT/options/itRec.opts"
+
+ApplicationMgr.DLLs += { "ITAssociators" };
+ApplicationMgr.TopAlg += { "MCITDepositChecker",
+                          "ITDigitChecker",
+                          "ITClusterChecker"
+};
+
 
 //--------------------------------------------------------------
 // Event related parameters
 //--------------------------------------------------------------
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 500;
+
+//EventSelector.FirstEvent = 418;
 
 EventDataSvc.ForceLeaves = 1;
 

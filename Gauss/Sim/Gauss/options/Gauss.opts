@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.21 2003-01-09 12:59:11 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.22 2003-02-17 15:19:12 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -13,13 +13,14 @@ ApplicationMgr.DLLs  = { "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg"} ;
 ApplicationMgr.DLLs += { "GaussTools"} ;
 
+RndmGenSvc.Engine.SetSingleton = true;
+
 ApplicationMgr.HistogramPersistency = "NONE";
 
 // allow automatic creation of subdirectories in Event Transient Store 
 EventDataSvc.ForceLeaves = true ;
 
 ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
@@ -45,9 +46,9 @@ MessageSvc.OutputLevel    = 3 ;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 10 ;
+ApplicationMgr.EvtMax     = 100;
 
-//GaussInit.FirstEventNumber =23;
+GaussInit.FirstEventNumber =9113;
 
 // Modify Message Format to print algorithm name with 40 characters
 // MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.7 2002-09-16 12:17:41 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.8 2003-02-17 15:19:12 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -7,13 +7,11 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 GaussTape.ItemList = 
 {  
   // event Header
-  "/Event#1"      
+  "/Event#1",      
+  "/Event/Header#1"
   // Generator information
   ,"/Event/Gen#1"
   ,"/Event/Gen/HepMCEvents#1"
-// serialization of EvGen output - if needed, uncomment
-//  ,"/Event/Gen/Vertices"
-//  ,"/Event/Gen/Particles"
 };
 
 GaussTape.OptItemList =
@@ -29,7 +27,7 @@ GaussTape.OptItemList =
   ,"/Event/MC/IT/Hits#1"
   ,"/Event/MC/Velo#1"
   ,"/Event/MC/Velo/Hits#1"
-  ,"/Event/MC/Velo/PuVeto#1"
+  ,"/Event/MC/Velo/PuHits#1"
   ,"/Event/MC/Rich#1"
   ,"/Event/MC/Rich/PhotodetectorHits#1"
   ,"/Event/MC/Muon#1"

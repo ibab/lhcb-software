@@ -1,32 +1,45 @@
-// $Id: Generator.opts,v 1.16 2002-12-16 11:29:10 witoldp Exp $ 
+// $Id: Generator.opts,v 1.17 2003-02-17 15:19:13 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 // Event Generator Phase 
 
-//Generator.Members +={"SingleParticleGun"};
-Generator.Members += {"PythiaAlg"};
-//Generator.Members +={"SetDecayAlg","EvtDecayAlg"};
-Generator.Members +={"DumpMC"};
+//Generator.Members += {"SingleParticleGun"};
+//Generator.Members += {"ParticleGun"};
 
-/// to add one more generator into the chain of generators uncomment the lines below 
-//ApplicationMgr.DLLs += { "EvGen" };
-//Generator.Members   += { "MCParticleGun" };
-//#include "$EVGENOPTS/MCParticleGun.opts"
-//MCParticleGun.OutputLevel = 1;
+Generator.Members += {"PythiaAlg"};
+Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
+Generator.Members += {"SmearVertexAlg"};
+Generator.Members += {"DumpMC"};
 
 // Generator's options
 
 SingleParticleGun.Pt      = 30.0 ;
 SingleParticleGun.Phi     =  2.0 ;
 SingleParticleGun.Eta     =  3.0 ;
+SingleParticleGun.ModePt  =   1  ;
+SingleParticleGun.ModeEta =   1  ; 
+SingleParticleGun.ModePhi =   1  ;
+SingleParticleGun.PdgCode = 211  ;
+SingleParticleGun.Mode    = 0    ;
 
-SingleParticleGun.ModePt  =   1 ;
-SingleParticleGun.ModeEta =   1 ; 
-SingleParticleGun.ModePhi =   1 ;
-SingleParticleGun.PdgCode =  211 ;
+ParticleGun.xVertex = 6.15949;	
+ParticleGun.yVertex = 37.4604;	
+ParticleGun.zVertex = 228.484;	
+ParticleGun.ThetaMin = 0.16;
+ParticleGun.ThetaMax = 0.16;
+ParticleGun.PhiMin = 0.0;
+ParticleGun.PhiMax = 0.0;
+ParticleGun.px = -0.156017;
+ParticleGun.py = -0.0303413;
+ParticleGun.pz = 0.515;
+ParticleGun.PdgCode = 11;
+ParticleGun.Mode=0;
 
+//EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.evt";
 PythiaAlg.MDCYFile="$GAUSSROOT/data/PythiaStablePart.cdf";
-PythiaAlg.PythiaCommand = {"pyinit pylisti 1"};
-//PythiaAlg.FixedMode=0;
-//PythiaAlg.MeanInt=1.5;
+//PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
+//PythiaAlg.ForceFragmentation = true;
+//PythiaAlg.BhadronID = 531;
+
+//PythiaAlg.Mode=0;

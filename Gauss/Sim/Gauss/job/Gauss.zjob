@@ -23,7 +23,7 @@ limit   coredumpsize   500000
 typeset NUMEVENTS=$1
 typeset OUTPUTFILE=$2
   
-typeset  VERS=v8r0 
+typeset  VERS=v9r0 
 
 ###############################################################################
 # set the environment 
@@ -31,7 +31,7 @@ typeset  VERS=v8r0
 . $LHCb_release_area/GaussEnv/$VERS/cmt/setup.sh
 ###############################################################################
 
-typeset  JDIR=~/newmycmt/Sim/Gauss/v8r0
+typeset  JDIR=~/newmycmt/Sim/Gauss/v9r0
 typeset  MODE=$CMTCONFIG
 typeset  SELF=Gauss.zjob 
 
