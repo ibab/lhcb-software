@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2004-09-02 18:55:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2004-09-06 07:25:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -11,6 +11,7 @@ branches           cmt doc src options
 # ================ dependencies ===============================================
 use CaloInterfaces v4r*  Calo 
 use CaloUtils      v4r*  Calo 
+use Relations      v*    Kernel 
  
 # ================ environment ================================================
 set CALOPIDSOPTS   $(CALOPIDSROOT)/options
@@ -23,6 +24,9 @@ apply_pattern      component_library library=CaloPIDs
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2004/09/02 18:55:36  ibelyaev
+#  prepare for HLT/Trigger development
+#
 # =============================================================================
 # The END 
 # =============================================================================
