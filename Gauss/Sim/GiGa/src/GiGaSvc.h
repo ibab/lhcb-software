@@ -207,18 +207,21 @@ inline void GiGaSvc::Assert( bool               assertion ,
 { if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Error( const std::string& Message , const StatusCode & Status )
-{ return  Print( Message , MSG::ERROR  , Status  ) ; };  
+{ 
+  Stat stat( chronoSvc() , name() + ":Error" ); 
+  return  Print( Message , MSG::ERROR  , Status  ) ; 
+};  
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Warning( const std::string& Message , const StatusCode & Status )
-{ return  Print( Message , MSG::WARNING , Status ) ; };  
+{ 
+  Stat stat( chronoSvc() , name() + ":Warning" ); 
+  return  Print( Message , MSG::WARNING , Status ) ; 
+};  
 ///////////////////////////////////////////////////////////////////////////////////
 inline StatusCode GiGaSvc::Print( const std::string& Message , 
 				  const MSG::Level & level   , 
 				  const StatusCode & Status )
-{
-  MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; 
-  return  Status;
-};  
+{ MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; return  Status; };  
 /////////////////////////////////////////////////////////////////////////////////// 
 inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
                                       const GaudiException & Excp    ,
@@ -236,7 +239,7 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
 				      const MSG::Level     & level   , 
 				      const StatusCode     & Status )
 {
-  Stat stat( chronoSvc() , "std::exception" );
+  Stat stat( chronoSvc() , ":std::exception" );
   MsgStream log( msgSvc() , name() + ":std::exception" ); 
   log << level << Message << ":" << Excp.what() << endreq ; 
   return  Status;
@@ -246,7 +249,7 @@ inline StatusCode GiGaSvc::Exception( const std::string    & Message ,
 				      const MSG::Level     & level   , 
 				      const StatusCode     & Status )
 {
-  Stat stat( chronoSvc() , "*UNKNOWN* exception" );
+  Stat stat( chronoSvc() , ":*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() + ":UNKNOWN exception" ); 
   log << level << Message << ": UNKNOWN exception"  << endreq ; 
   return  Status;

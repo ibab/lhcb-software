@@ -1,10 +1,19 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!===========================================================================
+! 20010222 - Vanya Belyaev
+     New classes: 
+     GiGaTrajectoryPoint and GiGaTrajectory - customisation of "standard"
+     trajectory point and "standard" trajectroery to take into account 
+     the tome information 
+     Converters for trakectrories into MCParticles and MCVertices structures
+     Conversion services for Trajectories and for Hits. 
+!===========================================================================
 ! 20010222 - Gonzalo Gracia
     Fixed rotations in Detector element conversion
     Changed file 
-===========================================================================
+!===========================================================================
 ! 20010221 - Vanya Belyaev
    (1) New "pseudo-interfaces" for "Stacking Action","Tracking Action" and "Stepping Action".
        Classes inherit from G4UserStackingAction, G4UserTrackingAction and G4UserSteppingAction. 

@@ -63,6 +63,9 @@ void GiGa_load()
   DLL_DECL_CONVERTER    (    GiGaLVolumeCnv          );
   DLL_DECL_CONVERTER    (    GiGaDetectorElementCnv  );
 
+  DLL_DECL_SERVICE      (    GiGaTrajCnvSvc          );  /// service 
+  DLL_DECL_SERVICE      (    GiGaHitsCnvSvc          );  /// service 
+
   ///
   /// Algorithms 
   DLL_DECL_ALGORITHM    (    ParticleGunAlgorithm    );

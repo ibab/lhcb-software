@@ -140,7 +140,7 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , IOpaqueA
   if( 0 == PV ) { return Error("updateRep:: G4WorldPV is not available!" ) ; }
   /// create the placement of Detector Element
   G4VPhysicalVolume*   pv = 
-    new G4PVPlacement( gi->matrix().inverse() , LV , de->name() , PV->GetLogicalVolume() , false , 0 ) ;
+    new G4PVPlacement( gi->matrix() , LV , de->name() , PV->GetLogicalVolume() , false , 0 ) ;
   /// look again in the store 
   {
     G4VPhysicalVolume* PV = 0; 

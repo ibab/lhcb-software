@@ -71,7 +71,7 @@ class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc ,
   ///
   virtual StatusCode queryInterface( const InterfaceID& , void** ) ;
   ///
-  
+
   /**
      Get Physical Volume World (top Logical volume in the G4 structure)
   */
@@ -108,7 +108,8 @@ class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc ,
       retrieve pointer to Magnetic Field Object 
   */
   virtual StatusCode magField  ( const std::string& , IGiGaMagField*& ) ;
-  
+
+   
  protected:
   ///
   G4VSolid*     g4BoolSolid( const SolidBoolean * );

@@ -19,11 +19,14 @@ GiGaCnv::GiGaCnv( const unsigned char  StorageType ,
 			      Locator     ) 
   ///
   , m_NameOfGiGaConversionService   ( "NotDefined"       ) 
+  , m_ConverterName                 ( "NotDefined"       )
+  ///
   , m_GiGaCnvSvc                    (  0                 ) 
   , m_GiGaGeomCnvSvc                (  0                 ) 
   , m_GiGaKineCnvSvc                (  0                 ) 
   , m_evtSvc                        (  0                 ) 
   , m_detSvc                        (  0                 ) 
+  , m_chronoSvc                     (  0                 ) 
   ///
 {};   
 ///  
@@ -65,22 +68,41 @@ StatusCode GiGaCnv::initialize ()
     detSvc()->addRef(); 
   }
   ///
+  {
+    const std::string chronoName("ChronoStatSvc");
+    StatusCode sc = serviceLocator()->service( chronoName , m_chronoSvc ) ;
+    if ( st.isFailure()    ) { return Error("Initialize::unable to locate IChronoStatSvs="+chronoName, sc );} 
+    if ( 0 == chronoSvc()  ) { return Error("Initialize::unable to locate IChronoStatSvs="+chronoName  );}
+    chronoSvc()->addRef(); 
+  }
+  ///
   return StatusCode::SUCCESS ; 
 };
 ///
 StatusCode GiGaCnv::finalize () 
 {
   /// release (in reverse order)
-  if( 0 != detSvc () ) { detSvc ()->release() ; m_detSvc         = 0 ; } 
-  if( 0 != evtSvc () ) { evtSvc ()->release() ; m_evtSvc         = 0 ; } 
-  if( 0 != kineSvc() ) { kineSvc()->release() ; m_GiGaKineCnvSvc = 0 ; } 
-  if( 0 != geoSvc () ) { geoSvc ()->release() ; m_GiGaGeomCnvSvc = 0 ; } 
-  if( 0 != cnvSvc () ) { cnvSvc ()->release() ; m_GiGaCnvSvc     = 0 ; } 
+  if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc      = 0 ; } 
+  if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc         = 0 ; } 
+  if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc         = 0 ; } 
+  if( 0 != kineSvc   () ) { kineSvc   ()->release() ; m_GiGaKineCnvSvc = 0 ; } 
+  if( 0 != geoSvc    () ) { geoSvc    ()->release() ; m_GiGaGeomCnvSvc = 0 ; } 
+  if( 0 != cnvSvc    () ) { cnvSvc    ()->release() ; m_GiGaCnvSvc     = 0 ; } 
   ///
   return Converter::finalize() ; 
   ///
 };
 ///
+StatusCode GiGaCnv::declareObject( const std::string & Path  ,
+				   const CLID        & Clid  ,
+				   const std::string & Addr1 ,
+				   const std::string & Addr2 )
+{ return cnvSvc()->declareObject( Path ,  Clid , Addr1 , Addr2 );  };
+/// 
+
+
+
+
 
 
 

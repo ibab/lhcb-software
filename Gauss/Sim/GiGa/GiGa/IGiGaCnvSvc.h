@@ -2,8 +2,9 @@
 #define           __GIGA_CONVERSION_IGIGACNVSVC_H__  1 
 
 
-
+#include <vector> 
 #include "GaudiKernel/IConversionSvc.h" 
+
 
 class IGiGaSvc;
 class IGiGaSetUpSvc;
@@ -20,12 +21,10 @@ class IParticlePropertySvc;
     @author Vanya Belyaev
 */
 
-
 class IGiGaCnvSvc: virtual public IConversionSvc
-{
-  
+{  
   ///
- public: 
+public: 
   ///  
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IGiGaCnvSvc; }
@@ -36,12 +35,18 @@ class IGiGaCnvSvc: virtual public IConversionSvc
   ///
   virtual IParticlePropertySvc*  ppSvc    ()  = 0 ;  
   ///
-
+  virtual StatusCode              declareObject( const std::string& Path  ,
+						 const CLID       & Clid  ,
+						 const std::string& Addr1 , 
+						 const std::string& Addr2 ) = 0 ;
   ///
   virtual ~IGiGaCnvSvc(){}; 
   ///
-
 };
-
+///
 
 #endif     //     __GIGA_CONVERSION_IGIGACNVSVC_H__ 
+
+
+
+
