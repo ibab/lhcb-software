@@ -3,6 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
+ - New features:
+   . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1)
+   . Fix OORich to also run on Windows 
+     (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
+
+ - Code cleanup:
+   . Repackaging of OO Rich software to fix building of component libraries
+     (RichRecInterfaces v1r0, RichRecTools v1r1, RichRecAlgs v1r1, 
+      RichMonitor v2r1, Brunel.opts)
+
 </PRE><H1><A NAME=v15r1>2002-11-19 Brunel v15r1</A></H1><PRE>
 
  - New tuning:
@@ -10,8 +21,8 @@ Purpose: LHCb reconstruction program
    . Reoptimisation of Velo tracking (VeloTrack v4r3)
    . New package for the whole chain of Calorimeter digitization, 
      signal processing and zero suppression (CaloDigit v1r0)
-   . Use 4th TT hit when possible in VTT tracks (VeloTrack v1r2)
-   . Improvements in calorimeter S&L corrections (VeloRec v1r0)
+   . Use 4th TT hit when possible in VTT tracks (VeloTT v1r2)
+   . Improvements in calorimeter S&L corrections (CaloRec v1r0)
    . New calorimeter energy calibration (VeloRec v1r0)
    . Don't digitize unnecessarily 'Next' hits (ITAlgorithms v12r4)
    . Changes in definitions for entries in efficiency table (TrCheck v1r2)

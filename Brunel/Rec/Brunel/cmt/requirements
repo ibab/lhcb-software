@@ -1,5 +1,5 @@
 package Brunel
-version v15r1
+version v15r2
 
 branches doc cmt job options
 
@@ -45,7 +45,7 @@ use Futio        v12r0  SICB
 
 # Detector description
 use DetDesc		v10r5	Det
-use XmlDDDB      	v14r0  	Det
+use XmlDDDB      	v14r1  	Det
 use CaloDet       	v5r2  	Det
 use CaloDetXmlCnv	v2r1  	Det
 use ITDet         	v1r2  	Det
@@ -131,12 +131,13 @@ use MuonAssociators	v1r0	Muon
 
 # Rich
 use RichKernel          v2r0    Rich
-use RichMonitor         v2r0    Rich
-use RichRecAlgs         v1r0    Rich
-use RichRecTools        v1r0    Rich
+use RichMonitor         v2r1    Rich
+use RichRecAlgs         v1r1    Rich
+use RichRecTools        v1r1    Rich
 use RichDetTools        v1r0    Rich
-use RichRecKernel       v1r0    Rich
-use RichRecEvent        v1r0    Rich
+use RichRecKernel       v1r1    Rich
+use RichRecEvent        v1r1    Rich
+use RichRecInterfaces	v1r0	Rich
 
 # SICBDST packages
 use Futil        v11r0  SICB
@@ -157,7 +158,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=150100 " \
-           VisualC  " /DBrunelVersion=150100 "
+macro_append fflags " -DBrunelVersion=150200 " \
+           VisualC  " /DBrunelVersion=150200 "
 
 apply_pattern application_path
