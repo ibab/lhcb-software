@@ -5,8 +5,11 @@
  *  Implementation file for class : RichHPDIDTool
  *
  *  CVS Log :-
- *  $Id: RichHPDIDTool.cpp,v 1.2 2005-01-13 13:10:14 jonrob Exp $
+ *  $Id: RichHPDIDTool.cpp,v 1.3 2005-01-14 16:56:45 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:10:14  jonrob
+ *  Update mapping type
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -104,7 +107,7 @@ const RichSmartID RichHPDIDTool::richSmartID( const RichDAQ::HPDHardwareID hID )
   HardToSoft::const_iterator id = m_hard2soft.find( hID );
   if ( m_hard2soft.end() == id ) 
   {
-    Exception ( "Unknown HPD hardware ID" + boost::lexical_cast<std::string>(hID) );
+    Exception ( "Unknown HPD hardware ID " + boost::lexical_cast<std::string>(hID) );
   }
 
   // Found, so return RichSmartID

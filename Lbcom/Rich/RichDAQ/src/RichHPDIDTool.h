@@ -5,8 +5,11 @@
  *  Header file for tool : RichHPDIDTool
  *
  *  CVS Log :-
- *  $Id: RichHPDIDTool.h,v 1.2 2005-01-13 13:10:14 jonrob Exp $
+ *  $Id: RichHPDIDTool.h,v 1.3 2005-01-14 16:56:45 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:10:14  jonrob
+ *  Update mapping type
+ *
  *  Revision 1.1  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -46,7 +49,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  *
- *  @todo Finish implementation with true hardware numbering scheme from database
+ *  @todo Finish implementation with true HPD hardware numbering scheme from database
  *  @todo Find a better way to get all valid HPD RichSmartIDs
  */
 
