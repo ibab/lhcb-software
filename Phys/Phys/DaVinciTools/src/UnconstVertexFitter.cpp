@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.4 2002-05-15 23:31:16 gcorti Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.5 2002-05-17 22:29:02 gcorti Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -218,7 +218,7 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   
   //offset with  initally estimated z: all calculated relative to that
   vertex(3)+=zEstimate;
-  log << MSG::DEBUG << "vertex position" <<vertex(1) << "  " << vertex(2) 
+  log << MSG::DEBUG << "vertex position " << vertex(1) << "  " << vertex(2) 
       <<  " "   <<vertex(3) << endreq;
   
   // update tracks : x,y from vertex, extrapolate to z, I hope
