@@ -42,7 +42,7 @@ use MuonTools      	v3r6	Muon
 use RichDet		v5r0	Det
 
 # Event data model
-use EventSys		v14r2	Event
+use EventSys		v14r3	Event
 use EventKernel  	v2r3    Event
 use Event        	v3r4    Event
 use VeloEvent    	v12r1   Event
@@ -56,6 +56,7 @@ use L0Event      	v13r2   Event
 use L1Event      	v11r7   Event
 use PhysEvent    	v7r7	Event
 use HltEvent		v3r0	Event
+use DAQEvent		v1r0	Event
 use DbCnv        	v7r1    Event
 
 # Associators
