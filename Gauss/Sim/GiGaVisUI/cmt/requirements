@@ -6,7 +6,7 @@ version v2r2
 branches         cmt src doc
 
 # =============== explicit dependencies ======================================
-use GiGa         v14r*     Sim
+use GiGa         v*        Sim
 use G4useVisUI   v*        Geant4
 use VisSvc       v*        Vis 
 

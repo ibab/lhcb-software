@@ -4,6 +4,10 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================= GiGaVisUI v3r0 2003-12-10 =====================
+! 2003-12-10 - Florence RANJARD
+ - requirements - remove explicit version numbers
+
 !========================= GiGaVisUI v2r2 2003-09-25 ======================
 ! 2003-09-25 - Florence RANJARD
  - requirements - use G4useVisUI instead of G4VisUI
