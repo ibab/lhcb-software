@@ -56,13 +56,6 @@
   fun:track__14SicbRefTrackerRCt6vector2Z10SicbRefHopZt9allocator1Z10SicbRefHopRt6vector2ZQ211SicbTracker4StubZt9allocator1ZQ211SicbTracker4StubT2
 }
 
-# L1VeloTrack use of uninitialised variable - reported to OC
-{
-  L1VeloTrack/dataStructures.h:80
-  Value8
-  fun:__4._52RC4._52
-}
-
 # Mismatched delete in DbObject.cpp line 80. - reported to Markus
 {
   DbObject/delete
