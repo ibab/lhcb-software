@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! =================== FlavourTagging v3r0 2002-10-30 ======================
 ! 2002-10-21 - Gloria Corti
  - Introduce some missing std:: to compile on windows
 
@@ -31,6 +32,7 @@
  - Remove use of PhysEvent, update version of use used packages to be
    consistent with DaVinci v6r0 and set version to v3r0
 
+! =================== FlavourTagging v2r0 2002-09-10 ======================
 ! 2002-09-10 - Olivier Dormond
  - Monitor: Divided the statistics based on how well the B has been 
             reconstructed.
