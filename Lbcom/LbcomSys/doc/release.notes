@@ -5,6 +5,10 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
+!========================== LbCom v1r1 2005-03-02 ============================
+! 2005-03-02 - Marco Cattaneo
+ - Move to Gaudi v16r2, LHCb v18r1
+
 !========================== LbCom v1r0 2005-02-16 ============================
 ! 2005-02-08 - Marco Cattaneo
  - First version. This project contains component libraries that are shared by
