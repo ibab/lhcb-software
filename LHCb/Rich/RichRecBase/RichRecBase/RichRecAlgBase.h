@@ -5,8 +5,11 @@
  *  Header file for reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.16 2004-07-26 18:00:58 jonrob Exp $
+ *  $Id: RichRecAlgBase.h,v 1.17 2004-11-09 10:53:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/07/26 18:00:58  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -174,7 +177,6 @@ protected:  // Protected methods
    */
   inline const IRichPixelCreator * pixelCreator() const
   {
-    if ( !m_pixTool ) acquireTool( "RichPixelCreator", m_pixTool );
     return m_pixTool;
   }
 
@@ -184,7 +186,6 @@ protected:  // Protected methods
    */
   inline const IRichTrackCreator * trackCreator() const
   {
-    if ( !m_tkTool ) acquireTool( "RichTrackCreator", m_tkTool );
     return m_tkTool;
   }
 
@@ -194,7 +195,6 @@ protected:  // Protected methods
    */
   inline const IRichSegmentCreator * segmentCreator() const
   {
-    if ( !m_segTool ) acquireTool( "RichSegmentCreator", m_segTool );
     return m_segTool;
   }
 
@@ -204,7 +204,6 @@ protected:  // Protected methods
    */
   inline const IRichPhotonCreator * photonCreator() const
   {
-    if ( !m_photTool ) acquireTool( "RichPhotonCreator", m_photTool );
     return m_photTool;
   }
 
@@ -214,7 +213,6 @@ protected:  // Protected methods
    */
   inline const IRichStatusCreator * statusCreator() const
   {
-    if ( !m_statTool ) acquireTool( "RichStatusCreator", m_statTool );
     return m_statTool;
   }
 

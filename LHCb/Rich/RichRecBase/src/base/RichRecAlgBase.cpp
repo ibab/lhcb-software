@@ -5,8 +5,11 @@
  *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.cpp,v 1.18 2004-10-30 19:24:19 jonrob Exp $
+ *  $Id: RichRecAlgBase.cpp,v 1.19 2004-11-09 10:53:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.18  2004/10/30 19:24:19  jonrob
+ *  minor update
+ *
  *  Revision 1.17  2004/07/26 18:00:58  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -43,12 +46,6 @@ StatusCode RichRecAlgBase::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Cache creator tools
-  // ================================================================
-  // To be removed at a later date since the tools are now acquire on
-  // in the accessor methods (see RichRecAlgBase.h). However, these
-  // calls are kept for a while to allow the new inline functions to
-  // get used everywhere first
-  // ================================================================
   acquireTool( "RichPixelCreator",   m_pixTool  );
   acquireTool( "RichTrackCreator",   m_tkTool   );
   acquireTool( "RichSegmentCreator", m_segTool  );
