@@ -1,8 +1,11 @@
-// $Id: LogVolBase.cpp,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $
+// $Id: LogVolBase.cpp,v 1.11 2003-10-08 20:36:54 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/PropertyMgr.h"
 // DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
@@ -387,6 +390,16 @@ size_t LogVolBase::copyNumber( const std::string& pvName ) const
   
   if ( copy_read  < 100000 ) 
     {
+      //========== hack to set the output level =================
+      PropertyMgr* pmgr = new PropertyMgr();
+      int outputLevel = -1;
+      pmgr->declareProperty( "OutputLevel", outputLevel );
+      IJobOptionsSvc* jobSvc;
+      m_services->svcLocator()->service("JobOptionsSvc", jobSvc );
+      jobSvc->setMyProperties( "LOGVOL", pmgr );
+      if( -1 != outputLevel ) msgSvc()->setOutputLevel( "LOGVOL", outputLevel );
+      delete pmgr;
+      //=========================================================
       MsgStream log( msgSvc() , "LOGVOL" ) ;
       log << MSG::WARNING
           << " LogVolBase: copy number ' " 
