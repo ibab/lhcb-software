@@ -4,6 +4,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v12r0 2003-07-01 =============================
 ! 2003-06-17 - Marco Cattaneo
  - Update all package versions for v12r0 release
  - Main changes:
