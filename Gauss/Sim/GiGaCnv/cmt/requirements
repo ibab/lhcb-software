@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2002-06-18 15:40:08 ranjard Exp $ 
+# $Id: requirements,v 1.22 2002-07-01 17:50:28 witoldp Exp $ 
 # =============================================================================
 
 package  GiGaCnv 
@@ -12,7 +12,7 @@ use HepMC         v1r2*  Sim
 use GenEvent      v1r*   Event
 
 use GiGa          v8r*  Sim 
-use Event         v1r*	Event
+use Event         v2r*	Event
 use DetDesc       v10r*	Det
 
 # ============== linker library (base classes) ================================
