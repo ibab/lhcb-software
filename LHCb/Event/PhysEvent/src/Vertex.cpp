@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.4 2002-08-16 07:37:37 graven Exp $
+// $Id: Vertex.cpp,v 1.5 2003-04-15 11:00:18 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -24,15 +24,10 @@ Vertex::Vertex(const Vertex& vert)
   , m_position( vert.position() )
   , m_positionErr( vert.positionErr() )
   , m_chi2( vert.chi2() )
+  , m_nDoF( vert.nDoF() )
   , m_type( vert.type() )
-
+  , m_products( vert.products() )  
 {
-  // clone the end particles
-  SmartRefVector<Particle>::const_iterator ip = vert.products().begin();
-  while( ip != vert.products().end() ) {
-    m_products.push_back((*ip)->clone());
-    ip++;
-  }
 }
 
 //=============================================================================
@@ -40,6 +35,14 @@ Vertex::Vertex(const Vertex& vert)
 //=============================================================================
 Vertex* Vertex::clone() const
 {
+//    Vertex* newVtx = new Vertex(*this);
+//    // clone the end particles
+//    SmartRefVector<Particle>::const_iterator ip = vert.products().begin();
+//    while( ip != vert.products().end() ) {
+//      m_products.push_back((*ip)->clone());
+//      ip++;
+//    }  
+//    return newVtx;
   return new Vertex(*this);
 }
 
@@ -53,6 +56,7 @@ Vertex& Vertex::operator=(const Vertex& orig) {
     m_position = orig.position();
     m_positionErr = orig.positionErr();
     m_chi2 = orig.chi2();
+    m_nDoF = orig.nDoF();
     m_type = orig.type();
     m_desktop = 0;
     // Keep the same reference to particle products

@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.33 2002-12-04 15:28:24 ranjard Exp $
+! $Id: release.notes,v 1.34 2003-04-15 11:00:17 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2003-04-15 - Gloria Corti
+ - Introduce serializer in FlavourTag.xml and .cpp
+ - Introduce new enum in ProtoParticle.xml for detectorsPID
+ - Remove repeated line in ProtoParticle.cpp
+
+! 2003-01-15 - Gloria Corti
+ - In Vertex.cpp and Particle.cpp modify copy contructor not to do deep
+    copy but keep original SmartRefs
+ - In Vertex.cpp fix bug in copy constructor and assignment operator where 
+   the NDoF was not copied
 
 !========================= PhysEvent v7r3 2002-1204 =====================
 ! 2002-11-28 - Florence Ranjard

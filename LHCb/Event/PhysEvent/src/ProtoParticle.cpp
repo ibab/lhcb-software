@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.5 2002-07-25 18:12:00 gcorti Exp $
+// $Id: ProtoParticle.cpp,v 1.6 2003-04-15 11:00:18 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -168,11 +168,8 @@ TrStateP* ProtoParticle::trStateP() {
         states.end() != it; it++ ) {
     TrState* temp = *it;
     if ( firstZ > temp->z() )  {
-      TrState* temp = *it;
-      if ( firstZ > temp->z() )  {
-        firstZ = temp->z();
-        trackState = dynamic_cast<TrStateP*>(temp);
-      }
+      firstZ = temp->z();
+      trackState = dynamic_cast<TrStateP*>(temp);
     }
   }
   return trackState;
@@ -193,11 +190,8 @@ const TrStateP* ProtoParticle::trStateP() const {
         states.end() != it; it++ ) {
     const TrState* temp = *it;
     if ( firstZ > temp->z() )  {
-      const TrState* temp = *it;
-      if ( firstZ > temp->z() )  {
-        firstZ = temp->z();
-        trackState = dynamic_cast<const TrStateP*>(temp);
-      }
+      firstZ = temp->z();
+      trackState = dynamic_cast<const TrStateP*>(temp);
     }
   }
   return trackState;

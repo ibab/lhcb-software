@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.9 2002-10-03 12:52:30 gcorti Exp $
+// $Id: Particle.cpp,v 1.10 2003-04-15 11:00:17 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -28,11 +28,9 @@ Particle::Particle(const Particle& part)
   , m_posMomCorr( part.posMomCorr() ), m_isResonance( part.isResonance() )
   , m_slopesMomErr( part.slopesMomErr() )
   , m_posSlopesCorr( part.posSlopesCorr() ), m_desktop( 0 )
+  , m_endVertex( part.endVertex() )
   , m_origin( part.origin() )
 {
-  if( part.endVertex() != NULL ) {
-    m_endVertex = part.endVertex()->clone();
-  }
 }
 
 //=============================================================================
@@ -40,6 +38,11 @@ Particle::Particle(const Particle& part)
 //=============================================================================
 Particle* Particle::clone() const
 {
+//    Particle* newPart = new Particle(*this);
+//    if( part.endVertex() != NULL ) {
+//      m_endVertex = part.endVertex()->clone();
+//    }    
+//    return newPart;
   return new Particle(*this);
 }
 
@@ -63,7 +66,7 @@ Particle& Particle::operator=(const Particle& orig) {
     m_slopesMomErr = orig.slopesMomErr();
     m_posSlopesCorr = orig.posSlopesCorr();
     m_desktop = 0;
-    // Keep the same reference to end vertex ???
+    // Keep the same reference to end vertex
     m_endVertex = orig.endVertex();
     // Keep the same reference to origination object
     m_origin = orig.origin();

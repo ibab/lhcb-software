@@ -1,4 +1,4 @@
-// $Id: FlavourTag.cpp,v 1.2 2002-11-27 14:27:22 gcorti Exp $
+// $Id: FlavourTag.cpp,v 1.3 2003-04-15 11:00:17 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -12,7 +12,8 @@
 // Implementation file for class : FlavourTag
 //                                 derived from class KeyedObject
 //
-// 2002-05-22 : Gloria Corti: necessary for return type of enum 
+// 2002-05-22 : Gloria Corti: necessary for return type of enum
+// 2003-04-15 : Gloria Corti: serializer for reading
 //-----------------------------------------------------------------------------
 
 //=============================================================================
@@ -79,3 +80,24 @@ FlavourTag::TagType FlavourTag::type()
 {
   return m_type;
 }
+
+//=============================================================================
+// Serialization for reading
+//=============================================================================
+StreamBuffer& FlavourTag::serialize( StreamBuffer& s ) {
+
+  unsigned l_decision;
+  unsigned l_type;  
+  KeyedObject<int>::serialize(s);
+  s >> l_decision
+    >> l_type
+    >> m_taggedB(this)
+    >> m_tagger(this);
+  m_decision = TagResult(l_decision);
+  m_type = TagType(l_type);  
+  return s;
+
+};
+
+
+//=============================================================================

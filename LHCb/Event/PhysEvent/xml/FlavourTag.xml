@@ -7,7 +7,7 @@
       author="Olivier Dormond"
       desc="The result of any tagging algorithm" 
       stdVectorTypeDef="TRUE"
-      serializers="FALSE"
+      id="805" 
       >
 
       <base name="KeyedObject&lt;int&gt;"/>
@@ -112,4 +112,11 @@
         desc="The wrong tag fraction associated to the kind tagging used"
         init="0.5"
         /> -->
+       <method
+        name="serialize"
+        desc="Serialize the object for reading"
+        type="StreamBuffer&amp;"
+       >
+         <arg name="s" type="StreamBuffer"/>
+       </method>
     </class>
