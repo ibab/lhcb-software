@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.99 2002-05-30 17:03:12 sponce Exp $ 
+! $Id: release.notes,v 1.100 2002-05-30 17:12:53 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -7,6 +7,9 @@
 
 ! 2002-05-30 - Sebastien Ponce
  - yet another bugfix on the unit checker : number may start with a dot.
+ - angles are no more tested for units since a angle has no dimension.
+   For those who don't believe it, think that pi*rad is the division of
+   a length (the length of a circle) by another length (its diameter).
 
 ! 2002-05-29 - Sebastien Ponce
  - bugfix on the unit checker : floats with exponents were not correctly

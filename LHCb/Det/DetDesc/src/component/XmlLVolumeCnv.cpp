@@ -1,8 +1,11 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.22 2002-01-18 18:23:10 ibelyaev Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.23 2002-05-30 17:12:53 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.22  2002/01/18 18:23:10  ibelyaev
+//  bug fixes(materials), warning reduced, printout improved
+// 
 // ============================================================================
 
 // Include files
@@ -1156,10 +1159,10 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
     sizeZ = xmlSvc()->eval(sizeZAttribute);
   }
   if (!thetaAttribute.empty()) {
-    theta = xmlSvc()->eval(thetaAttribute);
+    theta = xmlSvc()->eval(thetaAttribute, false);
   }
   if (!phiAttribute.empty()) {
-    phi = xmlSvc()->eval(phiAttribute);
+    phi = xmlSvc()->eval(phiAttribute, false);
   }
   if (!sizeY1Attribute.empty()) {
     sizeY1 = xmlSvc()->eval(sizeY1Attribute);
@@ -1171,7 +1174,7 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
     sizeX2 = xmlSvc()->eval(sizeX2Attribute);
   }
   if (!alp1Attribute.empty()) {
-    alp1 = xmlSvc()->eval(alp1Attribute);
+    alp1 = xmlSvc()->eval(alp1Attribute, false);
   }
   if (!sizeY2Attribute.empty()) {
     sizeY2 = xmlSvc()->eval(sizeY2Attribute);
@@ -1183,7 +1186,7 @@ SolidTrap* XmlLVolumeCnv::dealWithTrap (DOM_Element element) {
     sizeX4 = xmlSvc()->eval(sizeX4Attribute);
   }
   if (!alp2Attribute.empty()) {
-    alp2 = xmlSvc()->eval(alp2Attribute);
+    alp2 = xmlSvc()->eval(alp2Attribute, false);
   }
 
   // builds solid
@@ -1249,10 +1252,10 @@ SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
     innerRadiusMZ = xmlSvc()->eval(innerRadiusMZAttribute);
   }
   if (!startPhiAngleAttribute.empty()) {
-    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute);
+    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute, false);
   }
   if (!deltaPhiAngleAttribute.empty()) {
-    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute);
+    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute, false);
   }
 
   // builds solid
@@ -1288,10 +1291,10 @@ SolidPolycone* XmlLVolumeCnv::dealWithPolycone (DOM_Element element) {
   double startPhiAngle = 0.0;
   double deltaPhiAngle = 360.0 * degree;
   if (!startPhiAngleAttribute.empty()) {
-    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute);
+    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute, false);
   }
   if (!deltaPhiAngleAttribute.empty()) {
-    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute);
+    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute, false);
   }
 
   // this are the zplanes contained by this node
@@ -1390,10 +1393,10 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (DOM_Element element) {
     innerRadius = xmlSvc()->eval(innerRadiusAttribute);
   }
   if (!startPhiAngleAttribute.empty()) {
-    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute);
+    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute, false);
   }
   if (!deltaPhiAngleAttribute.empty()) {
-    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute);
+    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute, false);
   }
 
   // builds solid
@@ -1446,16 +1449,16 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
     innerRadius = xmlSvc()->eval(innerRadiusAttribute);
   }
   if (!startPhiAngleAttribute.empty()) {
-    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute);
+    startPhiAngle = xmlSvc()->eval(startPhiAngleAttribute, false);
   }
   if (!deltaPhiAngleAttribute.empty()) {
-    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute);
+    deltaPhiAngle = xmlSvc()->eval(deltaPhiAngleAttribute, false);
   }
   if (!startThetaAngleAttribute.empty()) {
-    startThetaAngle = xmlSvc()->eval(startThetaAngleAttribute);
+    startThetaAngle = xmlSvc()->eval(startThetaAngleAttribute, false);
   }
   if (!deltaThetaAngleAttribute.empty()) {
-    deltaThetaAngle = xmlSvc()->eval(deltaThetaAngleAttribute);
+    deltaThetaAngle = xmlSvc()->eval(deltaThetaAngleAttribute, false);
   }
 
   // take care that if startThetaAngle+deltaThetaAngle = 180 degree,
@@ -1670,7 +1673,7 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (DOM_Element element) {
     r = xmlSvc()->eval(rAttribute);
   }
   if (!phiAttribute.empty()) {
-    phi = xmlSvc()->eval(phiAttribute);
+    phi = xmlSvc()->eval(phiAttribute, false);
   }
   if (!zAttribute.empty()) {
     z = xmlSvc()->eval(zAttribute);
@@ -1707,10 +1710,10 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRThPhi (DOM_Element element) {
     r = xmlSvc()->eval(rAttribute);
   }
   if (!thetaAttribute.empty()) {
-    theta = xmlSvc()->eval(thetaAttribute);
+    theta = xmlSvc()->eval(thetaAttribute, false);
   }
   if (!phiAttribute.empty()) {
-    phi = xmlSvc()->eval(phiAttribute);
+    phi = xmlSvc()->eval(phiAttribute, false);
   }
   // checks the validity of the value of r
   if (0.0 > r) {
@@ -1741,13 +1744,13 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (DOM_Element element) {
   double ry = 0.0;
   double rz = 0.0;
   if (!rotXAttribute.empty()) {
-    rx = xmlSvc()->eval(rotXAttribute);
+    rx = xmlSvc()->eval(rotXAttribute, false);
   }
   if (!rotYAttribute.empty()) {
-    ry = xmlSvc()->eval(rotYAttribute);
+    ry = xmlSvc()->eval(rotYAttribute, false);
   }
   if (!rotZAttribute.empty()) {
-    rz = xmlSvc()->eval(rotZAttribute);
+    rz = xmlSvc()->eval(rotZAttribute, false);
   }
 
   // computes the rotation
@@ -1775,13 +1778,13 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (DOM_Element element) {
   double axPhi = 0.0;
   double angle = 0.0;
   if (!axThetaAttribute.empty()) {
-    axTheta = xmlSvc()->eval (axThetaAttribute);
+    axTheta = xmlSvc()->eval (axThetaAttribute, false);
   }
   if (!axPhiAttribute.empty()) {
-    axPhi = xmlSvc()->eval (axPhiAttribute);
+    axPhi = xmlSvc()->eval (axPhiAttribute, false);
   }
   if (!angleAttribute.empty()) {
-    angle = xmlSvc()->eval (angleAttribute);
+    angle = xmlSvc()->eval (angleAttribute, false);
   }
   // checks the validity of the theta angle
   if (axTheta < 0 || axTheta > 180 * degree) {
