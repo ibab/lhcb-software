@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.17 2002-06-11 08:57:37 ocallot Exp $
+! $Id: release.notes,v 1.18 2002-06-18 06:55:01 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-06-18 - Olivier Callot
+ - Fix some bugs in the new method, implemented the methods used by the
+   VeloAlgorithms properly.
 
 ! 2002-06-10 - Olivier Callot
  - Adaptation to the 21 station velo, with dog-leg Phi sensors

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.8 2002-06-11 08:57:37 ocallot Exp $
+// $Id: DeVelo.h,v 1.9 2002-06-18 06:55:01 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -230,7 +230,7 @@ public:
   
   /// returns the silicon thickness
   double siliconThickness ( unsigned int num ) {
-    if ( m_puSensor.size() > num ) {
+    if ( m_sensor.size() > num ) {
       return m_siliconThickness;
     }
     return -1.;

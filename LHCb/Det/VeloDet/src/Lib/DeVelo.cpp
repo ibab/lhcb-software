@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.15 2002-06-11 08:57:38 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.16 2002-06-18 06:55:01 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -695,7 +695,7 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
       } else if ( ( 1024 <= strip ) && (1024 > newStrip ) ) {
         valid = false;
       } else if ( (m_nbRInner+1024 < strip) && 
-                  (m_nbRInner+1024 <= newStrip) ) {
+                  (m_nbRInner+1024 >= newStrip) ) {
         valid = false;
       }
     }
@@ -760,6 +760,48 @@ int DeVelo::neighbour ( const VeloChannelID& entryChan,
     }
   }
   if ( valid ) return dist;
-  return -1;  
+  return -9999;  
+}
+
+//=========================================================================
+//  Return an index of the strip.
+//=========================================================================
+int DeVelo::stripArrayIndex ( int sensorId, int stripId ) {
+  if ( m_sensor.size() > (unsigned int) sensorId ) {
+    return stripId;
+  } else {
+    return -1;
+  }
+}
+
+//=========================================================================
+//  
+//=========================================================================
+int DeVelo::stripNumber ( int sensorId, int stripIndex ) {
+  if ( m_sensor.size() > (unsigned int) sensorId ) {
+    return stripIndex;
+  } else {
+    return -1;
+  }
+}
+
+//=========================================================================
+//  
+//=========================================================================
+VeloChannelID DeVelo::channelID (const HepPoint3D& point, 
+                                 double& fraction, 
+                                 double& pitch,
+                                 bool& valid ) {
+  valid = true;
+  int sensor    = sensorNumber( point );
+  double strip  = stripNumber( sensor, point, pitch );
+  if ( 0 <= strip ) {
+    int iStrip = (int) strip;
+    fraction = strip - (double) iStrip;
+    return VeloChannelID( sensor, iStrip );
+  } else {
+    valid = false;
+    return VeloChannelID( 0, 0 );
+  }  
 }
 //=========================================================================
