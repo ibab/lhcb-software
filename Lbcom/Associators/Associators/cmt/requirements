@@ -10,8 +10,7 @@ include_dirs $(ASSOCIATORSROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use TrEvent  	v11r* Event
-
+use VeloEvent   v11r* Event
 
 # default library
 #============================================================================
