@@ -6,7 +6,7 @@ branches src cmt doc
 # add "use" statements
 use GaudiKernel v18r0
 use AIDA v* LCG_Interfaces
-use DIM v*  Online
+use DIM v* Online
 
 # build a component library
 library Gaucho ../src/*.cpp
@@ -21,8 +21,3 @@ private
 include_dirs $(GAUCHOROOT)
 apply_pattern package_Cshlibflags
 
-#macro+ Gaucho_cppflags "-I c:/vanphil/dim/dim"
-#macro+ Gaucho_shlibflags "c:/vanphil/dim/bin/dim.lib"
-
-#macro+ Gaucho_cppflags "-I /afs/cern.ch/user/v/vanphil/dim/dim"
-#macro+ Gaucho_shlibflags "/afs/cern.ch/user/v/vanphil/dim/linux/libdim.a"

@@ -8,6 +8,7 @@
 #include "Gaucho/DimEngine.h"
 #include "Gaucho/DimPropServer.h"
 #include "Gaucho/DimCmdServer.h"
+
 #ifdef WIN32
 namespace wins {
 #include <Winsock.h>
@@ -234,9 +235,10 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner
   bool undeclared = false;
   std::set<std::string>::iterator infoNamesIt = (*infoNamesSet).begin();
   while( infoNamesIt!=(*infoNamesSet).end() ){
-  // Look for the info name in string dimName sent to Dim
+  // Look for the info name in string dimName sent to Dim. Ensure it is the last substring of dimName, not a casual occurence.
     std::string::size_type pos = (*infoNamesIt).find( "/"+name);
-    if( pos != std::string::npos ) {
+    if( pos != std::string::npos && 
+       ( (*infoNamesIt).begin()+pos+name.size()+1) == (*infoNamesIt).end() ) {
       m_dimeng->undeclSvc( (*infoNamesIt) ) ;
       m_dimeng->undeclSvc( (*infoNamesIt)+"/gauchocomment" ) ;
       // Iterate before erasing in order to keep the iterator valid
