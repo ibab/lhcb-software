@@ -4,22 +4,29 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r7 2004-04-19 =======================
-! 2004-04-19 - Marco Cattaneo
- - Modified packages: GaudiConf v7r7, AssociatorsSys v1r13,
+!======================= LHCbSys v15r7 2004-04-20 =======================
+! 2004-04-20 - Marco Cattaneo
+ - Modified packages: GaudiConf v7r7, EventSys v17r7, RichEvent v7r3,
+     DetSys v5r5, RichDet v7r1, AssociatorsSys v1r13,
      OTAssociators v2r8, MuonAssociators v1r3, VeloAssociators v1r10
 
  - In GaudiConf v7r7:
    . Update Gaudi.supp valgrind suppression file for Gaudi v14r4
 
  - In OTAssociators v2r8:
-   . Bug fix to not use Spillover hits in default associations
+   . Bug fix to an if statement
 
  - In MuonAssociators v1r3:
    . Do not use Spillover hits in MuonCoord2MCParticleAlg
 
  - In VeloAssociators v1r10:
    . Retrieve VeloCluster2MCHitAsct tool only once at initialize
+
+ - In RichEvent v7r3:
+   . Better handling of MCRichSegment trajectory
+
+ - In RichDet v7r1:
+   . Remove a cout
 
 !======================= LHCbSys v15r6 2004-04-07 =======================
 ! 2004-04-07 - Marco Cattaneo
