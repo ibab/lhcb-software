@@ -40,6 +40,7 @@ private:
   double SimpleEnergy();
 
   MCRichSummedDeposits* mcSummedDeposits;
+  MCRichDeposits* mcDeposits;
 
   /// String containing MCRichDeposits location in TDS
   std::string m_RichHitLocation;
@@ -47,6 +48,7 @@ private:
   std::string m_RichPrevPrevLocation;
   std::string m_RichNextLocation;
   std::string m_RichSummedDepositLocation;
+  std::string m_RichDepositLocation;
 
   double m_BunchSpace;
 

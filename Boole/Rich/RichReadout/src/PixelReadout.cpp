@@ -118,7 +118,6 @@ void PixelReadout::setBaseLine (unsigned int, double d)
   baseline_ = d ;
 }
 
-
 void PixelReadout::setBaseLine (double d)
 {
   baseline_ = d ;

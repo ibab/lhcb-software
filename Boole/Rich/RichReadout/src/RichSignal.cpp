@@ -34,6 +34,9 @@ RichSignal::RichSignal( const std::string& name,
   declareProperty( "SummedDepositLocation",
                    m_RichSummedDepositLocation = MCRichSummedDepositLocation::Default );
 
+  declareProperty( "DepositLocation",
+                   m_RichDepositLocation = MCRichDepositLocation::Default );
+
 }
 
 RichSignal::~RichSignal() {};
@@ -66,9 +69,11 @@ StatusCode RichSignal::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Execute" << endreq;
 
-
-  // Form a new container of MCDeposits
+  // Form a new container of MCSummedDeposits
   mcSummedDeposits = new MCRichSummedDeposits();
+
+  // Form a new container of MCRichDeposits
+  mcDeposits = new MCRichDeposits();
 
   SmartDataPtr<MCHits> hits( eventSvc(), m_RichHitLocation );
   if ( !hits ) {
@@ -107,7 +112,7 @@ StatusCode RichSignal::execute() {
     this->SimpleTreatment( next ) ;
   }
 
-  // Register new container to Gaudi data store
+  // Register new containers to Gaudi data store
   if ( !eventSvc()->registerObject(m_RichSummedDepositLocation,mcSummedDeposits) ) {
     log << MSG::ERROR << "Failed to register MCRichSummedDeposits at "
         << m_RichSummedDepositLocation << endreq;
@@ -116,9 +121,16 @@ StatusCode RichSignal::execute() {
     log << MSG::DEBUG << "Successfully registered " << mcSummedDeposits->size()
         << " MCRichSummedDeposits at " << m_RichSummedDepositLocation << endreq;
   }
+  if ( !eventSvc()->registerObject(m_RichDepositLocation,mcDeposits) ) {
+    log << MSG::ERROR << "Failed to register MCRichDeposits at "
+        << m_RichDepositLocation << endreq;
+    return StatusCode::FAILURE;
+  } else {
+    log << MSG::DEBUG << "Successfully registered " << mcDeposits->size()
+        << " MCRichDeposits at " << m_RichDepositLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
-
 }
 
 StatusCode RichSignal::SimpleTreatment( SmartDataPtr<MCHits> hits )
@@ -141,6 +153,7 @@ StatusCode RichSignal::SimpleTreatment( SmartDataPtr<MCHits> hits )
 
       // Then create a new deposit
       MCRichDeposit* newDeposit = new MCRichDeposit();
+      mcDeposits->insert( newDeposit );
       newDeposit->setParentHit( *iHit );
       newDeposit->setEnergy( this->SimpleEnergy() );
       newDeposit->setTime( (*iHit)->timeOfFlight()/pow(10,9) );
