@@ -1,4 +1,4 @@
-// $Id: MuonGetInfoTool.cpp,v 1.2 2003-06-19 07:28:35 cattanem Exp $
+// $Id: MuonGetInfoTool.cpp,v 1.3 2004-05-28 13:55:18 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -121,8 +121,8 @@ MuonGetInfoTool::MuonGetInfoTool( const std::string& type,
       float chamberXHalfLength;
       float chamberYHalfLength;
       float chamberZHalfLength;
-      float chamberXlength;
-      float chamberYlength;
+      float chamberXlength=0.;
+      float chamberYlength=0.;
       //    float chamberZlength;				
       for(itChamber=detRegionPointer->childBegin();
           itChamber<detRegionPointer->childEnd(); itChamber++){
@@ -205,12 +205,14 @@ MuonGetInfoTool::MuonGetInfoTool( const std::string& type,
                          detRegionPointer->FEAnodeX());
           setPhChannelNY(getReadoutNumber(indexRegion),indexRegion,
                          detRegionPointer->FEAnodeY());
-          
+          if( ( 0==chamberXlength ) || ( 0==chamberYlength ) ) {
+            log << MSG::WARNING << "chamber X or Y length not initialised!!"
+                << endmsg;
+          }
           setPhChannelSizeX(getReadoutNumber(indexRegion),indexRegion,
                             chamberXlength/
                             getPhChannelNX(getReadoutNumber(indexRegion),
                                            indexRegion));
-          
           setPhChannelSizeY(getReadoutNumber(indexRegion),indexRegion,
                             chamberYlength/
                             getPhChannelNY(getReadoutNumber(indexRegion),

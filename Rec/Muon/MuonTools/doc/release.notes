@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.37 2004-05-04 16:01:59 ranjard Exp $
+! $Id: release.notes,v 1.38 2004-05-28 13:55:18 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
-!
 
+!======================== MuonTools v3r7 2004-05-26 ========================
 ! 2004-05-04 - Florence RANJARD
  - replace all apply_pattern with apply_pattern component_library to please
    CMT v1r16

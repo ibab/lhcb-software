@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2004-05-04 16:01:59 ranjard Exp $
+# $Id: requirements,v 1.16 2004-05-28 13:55:18 cattanem Exp $
 # ==========================================================================
 package            MuonTools
 version            v3r7
@@ -13,7 +13,6 @@ set MUONTOOLSOPTS  $(MUONTOOLSROOT)/options
 
 # ================ dependencies ==============================================
 use MuonDet        v4r*    Det 
-use MuonKernel     v2r*    Muon
 
 # ================ component library =========================================
 library            MuonTools   *.cpp
