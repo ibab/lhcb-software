@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.4 2002-04-24 13:00:19 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.5 2002-07-11 18:10:57 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -143,11 +143,17 @@ StatusCode PuVetoAlg::execute() {
         fes->end() != itFe ; itFe++  ) {
     if ( m_threshold < (*itFe)->charge() ) {
       unsigned int sensor = (*itFe)->sensor();
+      if ( 100 > sensor || 103 < sensor ) {
+        log << MSG::INFO << "Unexpected sensor " << sensor 
+            << " in " << m_inputContainer << endreq;
+        continue;
+      }
+      sensor -= 100;
       int fired           = 4 * ( (*itFe)->strip()/4 ) + 2;
       std::vector<int>* strips = m_input[sensor].strips();
       bool toAdd = true;
 
-      log << MSG::VERBOSE << "Sens " << sensor << " strip " << fired;
+      log << MSG::VERBOSE << "PU Sensor " << sensor << " strip " << fired;
       
       for ( std::vector<int>::const_iterator itS = strips->begin();
             strips->end() != itS; itS++) {
@@ -277,8 +283,8 @@ void PuVetoAlg::fillHisto ( ) {
     sensA = &(*itSens);
     sensB = &(*(itSens+2));
 
-    zA = m_velo->zPuSensor( sensA->sensor() );
-    zB = m_velo->zPuSensor( sensB->sensor() );
+    zA = m_velo->zSensor( sensA->sensor() );
+    zB = m_velo->zSensor( sensB->sensor() );
 
     std::vector<int>* digsA = sensA->strips();
     std::vector<int>* digsB = sensB->strips() ;
@@ -335,8 +341,8 @@ void PuVetoAlg::maskHits ( double zVertex,
   for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itSens++ ) {
     sensA = &(*itSens);
     sensB = &(*(itSens+2));
-    zA = m_velo->zPuSensor( sensA->sensor() );
-    zB = m_velo->zPuSensor( sensB->sensor() );
+    zA = m_velo->zSensor( sensA->sensor() );
+    zB = m_velo->zSensor( sensB->sensor() );
 
     std::vector<int>* digsA = sensA->strips();
     std::vector<int>* digsB = sensB->strips() ;
