@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.h,v 1.12 2003-12-10 14:04:24 ranjard Exp $ 
+// $Id: GiGaCnvBase.h,v 1.13 2004-03-20 20:16:13 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/12/10 14:04:24  ranjard
+// v14r0 - fix for Gaudi v13r0
+//
 // Revision 1.11  2003/04/06 18:55:31  ibelyaev
 //  remove unnesessary dependencies and adapt for newer GiGa
 //
@@ -72,19 +75,16 @@ protected:
    *  @param Locatopr       pointer to service locator 
    */
   GiGaCnvBase
-  //( const unsigned char  StorageType , 
   ( const long  StorageType , 
     const CLID&          ClassType   , 
     ISvcLocator*         Locator     );
-
+  
   /// virtual destructor 
   virtual ~GiGaCnvBase();
   ///
 public: 
   long repSvcType() const
   { return i_repSvcType(); }
-  
-  ///
   
   /** initialization
    *  @see  Converter 
@@ -220,11 +220,11 @@ protected:
     // debug printout 
     // return located valid data 
     Print( " The data from address '"     + location + 
-           "' are retrieved from TS "     , 
-           MSG::DEBUG     ,     StatusCode::SUCCESS  ) ;
+           "' are retrieved from TS "     ,
+           StatusCode::SUCCESS ,  MSG::DEBUG ) ;
     Print( " [ The actual data type is '" + type     + 
            "' ] "                         ,
-           MSG::VERBOSE   ,     StatusCode::SUCCESS  ) ;
+           StatusCode::SUCCESS  , MSG::DEBUG ) ;
     return aux ;
   };
   
@@ -319,15 +319,15 @@ protected:
     return Tool ;
   };
 
-
   /** print and return the error
    *  @param Message message to be printed 
    *  @param status  status code to be returned 
    *  @return status code 
    */
   StatusCode Error     
-  ( const std::string& Message , 
-    const StatusCode& status = StatusCode::FAILURE ) const ;
+  ( const std::string& Message                       , 
+    const StatusCode& status   = StatusCode::FAILURE , 
+    const size_t      mx       = 10                  ) const ;
   
   /** print and return warning
    *  @param Message message to be printed 
@@ -335,8 +335,9 @@ protected:
    *  @return status code 
    */
   StatusCode Warning     
-  ( const std::string& Message , 
-    const StatusCode& status = StatusCode::FAILURE ) const ;
+  ( const std::string& Message                       , 
+    const StatusCode&  status  = StatusCode::FAILURE , 
+    const size_t       mx      = 10                  ) const ;
   
   /** print the  message and return status code
    *  @param msg error message 
@@ -345,10 +346,10 @@ protected:
    *  @return statsu code 
    */
   StatusCode Print
-  ( const std::string& Message , 
-    const MSG::Level & level   , 
-    const StatusCode & Status  ) const ;
-  
+  ( const std::string& Message                       , 
+    const StatusCode & Status  = StatusCode::SUCCESS ,
+    const MSG::Level & level   = MSG::INFO           ) const  ;
+    
   /** (re)-throw exception and print error message 
    *  @param msg  error message 
    *  @param exc  previous exception 
@@ -449,6 +450,8 @@ private:
   IChronoStatSvc*       m_chronoSvc                   ; 
   IToolSvc*             m_toolSvc                     ; 
   ///
+  CLID                  m_local ;
+  ///
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
   mutable Counter m_errors     ;
@@ -456,7 +459,8 @@ private:
   mutable Counter m_warnings   ; 
   /// counter of exceptions
   mutable Counter m_exceptions ;
-
+  
+  
 };
 
 // ============================================================================

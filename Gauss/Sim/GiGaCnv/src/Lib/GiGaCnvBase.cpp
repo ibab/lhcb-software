@@ -1,20 +1,8 @@
-// $Id: GiGaCnvBase.cpp,v 1.12 2003-12-10 14:04:24 ranjard Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.13 2004-03-20 20:16:13 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2002/12/13 14:25:21  ibelyaev
-//  few trivial bug fixes
-//
-// Revision 1.10  2002/12/07 14:36:25  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
-// Revision 1.9  2002/12/04 16:25:18  ibelyaev
-//  remove extra calls for 'addRef'
-//
-// Revision 1.8  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
 // ============================================================================
 #define GIGACNV_GIGACNVBASE_CPP 1 
 // ============================================================================
@@ -54,12 +42,61 @@
 
 namespace GiGaCnvBaseLocal
 {
-#ifdef GIGA_DEBUG
+
+ class Counter
+  {
+  public:
+    // constructor 
+    Counter ( const std::string& msg = " Misbalance ")
+      : m_map     ()
+      , m_message ( msg ) 
+    {};
+    // destructor 
+    ~Counter() { report() ; m_map.clear() ;}
+    // make the increment 
+    long increment ( const CLID& object ) { return ++m_map[object] ; }
+    // make the decrement 
+    long decrement ( const CLID& object ) { return --m_map[object] ; }
+    // current count 
+    long counts    ( const CLID& object ) { return   m_map[object] ; }
+    // make a report
+    void report() const 
+    {
+      for ( Map::const_iterator entry = m_map.begin() ;
+            m_map.end() != entry ; ++entry )
+      {
+        if( 0 == entry->second ) { continue ; }
+        std::cout << "GiGaCnvBase     WARNING  "          << m_message 
+                  << "'" << entry->first << "' Counts = " << entry->second  
+                  << std::endl ;
+      }
+    };
+    
+  private:
+    typedef std::map<CLID,long> Map;
+    Map         m_map     ;
+    std::string m_message ;
+  };
+  
   /** @var   s_Counter
    *  static instance counter 
    */
   static GiGaUtil::InstanceCounter<GiGaCnvBase> s_Counter ;
-#endif   
+  
+  /** @var s_InstanceCounter 
+   *  The instance counter for all 'GaudiTool' based classes
+   *  @author Vanya BELYAEV Ivan.Belyaev@Ivan.Belyaev@itep.ru
+   *  @date   2004-01-19
+   */
+  static Counter s_InstanceCounter ( " Create/Destroy      (mis)balance " ) ;
+  
+  /** @var s_FinalizeCounter
+   *  The initialize/finalize mismatch counter for all 'GaudiTool' based classes
+   *  @author Vanya BELYAEV Ivan.Belyaev@Ivan.Belyaev@itep.ru
+   *  @date   2004-01-19
+   */
+  static Counter s_FinalizeCounter ( " Initialize/Finalize (mis)balance " ) ;
+
 };
 
 // ============================================================================
@@ -85,14 +122,16 @@ GiGaCnvBase::GiGaCnvBase
   , m_detSvc                        (  0              ) 
   , m_chronoSvc                     (  0              ) 
   , m_toolSvc                       (  0              )
+  //
+  , m_local                         ( ClassType       )
+  //
   , m_errors     ()
   , m_warnings   ()
   , m_exceptions ()
   ///
 {
-#ifdef GIGA_DEBUG
   GiGaCnvBaseLocal::s_Counter.increment () ;
-#endif 
+  GiGaCnvBaseLocal::s_InstanceCounter.increment ( m_local ) ;
 };
 
 // ============================================================================
@@ -100,9 +139,8 @@ GiGaCnvBase::GiGaCnvBase
 // ============================================================================
 GiGaCnvBase::~GiGaCnvBase()
 {
-#ifdef GIGA_DEBUG
   GiGaCnvBaseLocal::s_Counter.decrement () ;
-#endif
+  GiGaCnvBaseLocal::s_InstanceCounter.decrement ( m_local ) ;
 };
 
 // ============================================================================
@@ -120,8 +158,7 @@ StatusCode GiGaCnvBase::Exception
   const MSG::Level     & level   , 
   const StatusCode     & Status  ) const 
 {
-  Stat stat( chronoSvc() , Excp.tag() );
-  Print( "GaudiExceptions: catch and re-throw " + Message ,  level , Status );
+  Print( "GaudiExceptions: catch and re-throw " + Message , Status , level  );
   // increase counter of errrors 
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Excp , Status );
@@ -143,8 +180,7 @@ StatusCode GiGaCnvBase::Exception
   const MSG::Level     & level   , 
   const StatusCode     & Status  ) const 
 {
-  Stat stat( chronoSvc() , "std::exception" );
-  Print( "std::exception: catch and re-thrwo " + Message ,  level , Status );
+  Print( "std::exception: catch and re-thrwo " + Message , Status , level );
   // increase counter of errrors 
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message + " (" + 
@@ -165,8 +201,7 @@ StatusCode GiGaCnvBase::Exception
   const MSG::Level     & level   , 
   const StatusCode     & Status  ) const 
 {
-  Stat stat( chronoSvc() , "*UNKNOWN Exception*" );
-  Print( "GiGaException throw " + Message ,  level , Status );
+  Print( "GiGaException throw " + Message ,  Status , level );
   // increase counter of errrors 
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Status );
@@ -181,13 +216,12 @@ StatusCode GiGaCnvBase::Exception
  */
 // ============================================================================
 StatusCode GiGaCnvBase::Error
-( const std::string& Message , 
-  const StatusCode&  status  ) const 
+( const std::string& msg   , 
+  const StatusCode&  st    , 
+  const size_t       mx   ) const 
 {  
-  Stat stat( chronoSvc() ,  name() + ":Error" );
-  // increase counter of errrors 
-  m_errors [ Message ] += 1 ;
-  return  Print( Message , MSG::ERROR  , status  ) ; 
+  // increase local counter of errors  
+  return ( ++m_errors[msg] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
 };  
 
 // ============================================================================
@@ -198,13 +232,12 @@ StatusCode GiGaCnvBase::Error
  */
 // ============================================================================
 StatusCode GiGaCnvBase::Warning
-( const std::string& Message , 
-  const StatusCode & Status  ) const 
+( const std::string& msg  , 
+  const StatusCode & st   ,
+  const size_t       mx   ) const 
 {
-  Stat stat( chronoSvc() ,  name() + ":Warning" );
-  // increase counter of errrors 
-  m_warnings [ Message ] += 1 ;
-  return  Print( Message , MSG::WARNING , Status ) ; 
+  // increase local counter of errors  
+  return ( ++m_warnings[msg] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
 };
 
 // ============================================================================
@@ -217,9 +250,9 @@ StatusCode GiGaCnvBase::Warning
 // ============================================================================
 StatusCode GiGaCnvBase::Print
 ( const std::string& Message , 
-  const MSG::Level & level   , 
-  const StatusCode & Status  ) const 
-{ 
+  const StatusCode & Status  ,  
+  const MSG::Level & level   ) const
+{
   MsgStream log( msgSvc() , name() ); 
   log << level << Message << endreq   ; 
   return  Status; 
@@ -313,6 +346,8 @@ StatusCode GiGaCnvBase::initialize ()
       { cnvSvc()->declareObject( *it ); }
   }
   ///
+  GiGaCnvBaseLocal::s_FinalizeCounter.increment ( m_local ) ;
+  
   return StatusCode::SUCCESS ; 
 };
 
@@ -343,7 +378,7 @@ StatusCode GiGaCnvBase::finalize ()
   if( 0 != m_errors     .size() || 
       0 != m_warnings   .size() || 
       0 != m_exceptions .size()   ) 
-    {      
+  {      
       MsgStream log( msgSvc() , name() );
       // format printout 
       log << MSG::ALWAYS 
@@ -381,6 +416,8 @@ StatusCode GiGaCnvBase::finalize ()
   m_warnings    .clear();
   m_exceptions  .clear();
   ///
+  GiGaCnvBaseLocal::s_FinalizeCounter.decrement ( m_local ) ;
+  //
   return Converter::finalize() ; 
   ///
 };

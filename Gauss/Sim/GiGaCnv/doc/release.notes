@@ -1,6 +1,16 @@
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+! 2004-03-20 - Ivan BELYAEV
+ - src/component/GiGaMCVertexCnv.h,.cpp 
+   fix with definition of MCVertex type 
+   add a warning printout for MCVertex::Unknown (hope it helps to 
+   fix the problem)
+ - GiGaCnv/GiGaCnvBase.h , src/Lib/GiGaCnvBase.cpp 
+    improve Error/Warning printout 
+ - cmt/requirements    - increase the version 
+
+
 !========================== GiGaCnv v15r0 ===============================
 ! 2004-03-10 - Patrick Robbe
  - src/component/GiGaHepMCCnv.cpp : fix to accept also elastic scattering

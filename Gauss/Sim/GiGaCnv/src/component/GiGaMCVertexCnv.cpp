@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.27 2004-02-20 19:12:00 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.28 2004-03-20 20:16:13 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.27  2004/02/20 19:12:00  ibelyaev
+//  upgrade for newer GiGa
+//
 // Revision 1.26  2003/10/31 12:40:06  witoldp
 // fixed units in GiGaHepMCCnv
 //
@@ -92,6 +95,9 @@ const        ICnvFactory&GiGaMCVertexCnvFactory = s_Factory ;
 GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf( "" , classID() )
+  //
+  , m_onepointIDs       () 
+  , m_hadronicProcesses ()
 {
   //
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Kine ) ; 
@@ -100,6 +106,30 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   //  declare object name for G4->Gaudi conversion 
   declareObject( GiGaLeaf( MCVertexLocation::Default , objType() ) ); 
   //
+  m_hadronicProcesses.push_back ( "KaonPlusInelastic"             ) ;
+  m_hadronicProcesses.push_back ( "PionMinusInelastic"            ) ;
+  m_hadronicProcesses.push_back ( "PionPlusInelastic"             ) ;
+  m_hadronicProcesses.push_back ( "NeutronInelastic"              ) ;
+  m_hadronicProcesses.push_back ( "LElastic"           ) ; // Is it correct ?
+  m_hadronicProcesses.push_back ( "PionMinusAbsorptionAtRest"     ) ;
+  m_hadronicProcesses.push_back ( "ProtonInelastic"               ) ;
+  m_hadronicProcesses.push_back ( "KaonZeroLInelastic"            ) ;
+  m_hadronicProcesses.push_back ( "KaonZeroSInelastic"            ) ;
+  m_hadronicProcesses.push_back ( "DeuteronInelastic"             ) ;
+  m_hadronicProcesses.push_back ( "AntiProtonInelastic"           ) ;
+  m_hadronicProcesses.push_back ( "AntiNeutronInelastic"          ) ;
+  m_hadronicProcesses.push_back ( "KaonMinusInelastic"            ) ; 
+  m_hadronicProcesses.push_back ( "MuonMinusCaptureAtRest"        ) ; 
+  m_hadronicProcesses.push_back ( "TritonInelastic"               ) ;
+  m_hadronicProcesses.push_back ( "KaonMinusAbsorption"           ) ;
+  m_hadronicProcesses.push_back ( "LambdaInelastic"               ) ;
+  m_hadronicProcesses.push_back ( "SigmaMinusInelastic"           ) ;
+  m_hadronicProcesses.push_back ( "LCapture"                      ) ;
+  m_hadronicProcesses.push_back ( "AntiNeutronAnnihilationAtRest" ) ;
+  m_hadronicProcesses.push_back ( "AntiProtonAnnihilationAtRest"  ) ;  
+  
+  std::sort ( m_hadronicProcesses.begin () ,
+              m_hadronicProcesses.end   () ) ;
 }; 
 
 // ============================================================================
@@ -436,77 +466,56 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             
             // no vertex is found? 
             if( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) )
-              {
-//                 MsgStream log( msgSvc(),  name() ) ; 
-//                 std::cout.precision(64);
-//                 std::cout << "While looking at trajectory point "
-//                     << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
-//                           << trajectory->trackID() << std::endl;
-                
-//                 for( ITG iP = trajectory->begin(); 
-//                      trajectory->end() != iP; ++iP)
-//                   std::cout << (HepPoint3D)((*iP)->GetPosition()) << " ToF " 
-//                             << (*iP)->GetTime()
-//                             << std::endl; 
-                
-//                 log << MSG::INFO << "with the complete list of vertices being"
-//                     << endreq;
-//                 for(ITV tempvit=vertices->begin (); vertices->end()!=tempvit; 
-//                     tempvit++) std::cout << (*tempvit)->position() 
-//                                          << " ToF " << (*tempvit)->timeOfFlight() 
-//                                          << std::endl;
-
-                
-//                 log << MSG::INFO << "and the complete collection of trajectories being"
-//                     << endreq;
-                
-//                 for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
-//                   {
-//                     std::cout << "trajectoryID " 
-//                         << (*iT)->GetTrackID() << " motherID " 
-//                         << (*iT)->GetParentID() <<
-//                       "  pdgID " << (*iT)->GetPDGEncoding() 
-//                         << " initial momentum " << 
-//                       (HepPoint3D)((*iT)->GetInitialMomentum()) 
-//                               << " process " << ((GiGaTrajectory*)(*iT))->processName()
-//                         << std::endl;
-                    
-//                     for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
-//                          ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
-//                       {
-//                         std::cout << (HepPoint3D)((*iP)->GetPosition())
-//                                   << " ToF " << (*iP)->GetTime()
-//                                   << std::endl;
-//                       }
-//                   }
-                return Error("appropriate MCVertex is not found !"); 
-              }
+            {
+              return Error("appropriate MCVertex is not found !"); 
+            }
             MCVertex* vertex = *iVertex ;
             if( 0 == vertex ) { return Error("MCVertex* points to NULL!") ; }
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
             {
-              
               // the creator of the trajectory
-              const G4VProcess* creator = trajectory->creator() ;
-              if      ( 0 == creator ) 
-              { vertex -> setType ( MCVertex::Unknown  ) ; }
-              else if ( fDecay    == creator->GetProcessType() )
-              { vertex -> setType ( MCVertex::Decay    ) ; }
-              else if ( fHadronic == creator->GetProcessType() )
-              { vertex -> setType ( MCVertex::Hadronic ) ; }
-              else 
+              
+              if ( MCVertex::Unknown == vertex->type() ) 
               {
-                const std::string& pname = creator->GetProcessName() ;
-                if      ( "conv"  == pname                      ) 
-                { vertex->setType( MCVertex::Pair    ) ; }
-                else if ( "compt" == pname                      ) 
-                { vertex->setType( MCVertex::Compton ) ; }
-                else if ( "eBrem" == pname || "muBrem" == pname )    
-                { vertex->setType( MCVertex::Brem    ) ; }
+                const G4VProcess* creator = trajectory->creator() ;
+                if      ( 0 == creator ) {} 
+                else if ( fDecay    == creator->GetProcessType () )
+                { vertex -> setType ( MCVertex::Decay    ) ; }
+                else if ( fHadronic == creator->GetProcessType () )
+                { vertex -> setType ( MCVertex::Hadronic ) ; }
+                else  
+                {
+                  const std::string& pname = creator->GetProcessName() ;
+                  if      ( "conv"  == pname                      ) 
+                  { vertex->setType ( MCVertex::Pair    ) ; }
+                  else if ( "compt" == pname                      ) 
+                  { vertex->setType ( MCVertex::Compton ) ; }
+                  else if ( "eBrem" == pname || "muBrem" == pname )    
+                  { vertex->setType ( MCVertex::Brem    ) ; }
+                  else 
+                  {
+                    const bool found = std::binary_search 
+                      ( m_hadronicProcesses.begin () , 
+                        m_hadronicProcesses.end   () , pname ) ;
+                    if ( found ) { vertex -> setType ( MCVertex::Hadronic ) ; }
+                  }
+                  if ( MCVertex::Unknown == vertex -> type() ) 
+                  {
+                    // here we have an intertsting situation
+                    // the process is *KNOWN*, but the vertex type 
+                    // is still 'Unknown' . What one should do?
+                    Warning ( "GiGaMcVertexCnv: The process is known '" 
+                              + pname + 
+                              "', but vertex type is still 'Unknown'");
+                  } 
+                }
               }
               
-              // deternining the vertex type from the creator process                
+              if ( MCVertex::Unknown == vertex -> type () ) 
+              { Warning ( " GiGaMCVertexCnv: VertexType is still unknown" ) ; };
+              
+              // deternining the vertex type from the creator process
               
               // is the parent a trajectory with only one point?
               // if yes do not attach the particle to the vertex
@@ -541,7 +550,8 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               {
                 MsgStream log( msgSvc(),  name() ) ; 
                 log << MSG::INFO << "While looking at trajectory point "
-                    << (HepPoint3D)((*iPoint)->GetPosition()) << " from the following trajectory: "
+                    << (HepPoint3D)((*iPoint)->GetPosition()) 
+                    << " from the following trajectory: "
                     << trajectory->trackID() << endreq;
                 
                 for( ITG iP = trajectory->begin(); 
@@ -549,10 +559,12 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
                       << endreq;
                 
-                log << MSG::INFO << "with momentum of mother of the vertex being " 
+                log << MSG::INFO 
+                    << "with momentum of mother of the vertex being " 
                     << vertex->mother()->momentum() << endreq;
                 
-                log << MSG::INFO << "and the complete collection of trajectories being"
+                log << MSG::INFO 
+                    << "and the complete collection of trajectories being"
                     << endreq;
                 
                 for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
@@ -619,9 +631,9 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               {
                 MCParticle* outpart=table((*itra)->
                                           GetTrackID() ).particle();
-                
-                //                Ref dau( endvtx , refID , outpart->key() , outpart );                
-                //                endvtx->addToProducts(dau);                
+
+                // Ref dau( endvtx , refID , outpart->key() , outpart );
+                //   endvtx->addToProducts(dau);                
                 endvtx->addToProducts(outpart);                
               }
           }
