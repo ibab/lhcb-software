@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.5 2002-03-04 16:51:03 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.6 2002-03-21 15:30:34 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -126,6 +126,22 @@ public:
                                              int dirX,
 					     int dirY,
 					     int depth) const;
+
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. This flavour of the neighbours function
+      is only needed when looking for neighbours on the corners, since it
+      takes two parameters for the depth of the search.
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+      @param   depthX  depth of the band in X in which to look for neighbours
+      @param   depthY  depth of the band in Y in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighboursInArea(const MuonTileID& pad,
+                                        	   int dirX,
+						   int dirY,
+						   int depthX,
+						   int depthY) const;	
 
   /// check if the given MuonTileID is valid for this layout
   virtual bool isValidID(const MuonTileID& mt) const ;
