@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-09-26 18:10:50 ibelyaev Exp $
+# $Id: requirements,v 1.5 2002-10-11 09:10:52 ranjard Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -13,7 +13,7 @@ use AIDA         v3r*
 use GiGaCnv      v8r*      Sim
 
 # ============== Event ========================================================
-use VeloEvent    v11r*     Event
+use VeloEvent    v12r*     Event
 use MuonEvent    v2r*      Event
 use RichEvent    v3r*      Event
 
