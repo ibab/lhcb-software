@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.23 2003-02-03 11:16:10 ocallot Exp $
+$Id: release.notes,v 1.24 2003-02-04 16:03:04 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
+!========================== L0DU v6r4 2003-02-04 ==========================
 ! 2003-02-03 - Olivier Callot
  - L0Monitor get the PuVeto peak2 threshold from DecisionUnit, to allow 
    consistent monitoring.
