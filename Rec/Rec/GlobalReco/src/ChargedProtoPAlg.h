@@ -29,7 +29,8 @@
 class ChargedProtoPAlg : public Algorithm {
 public:
 
-  enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut, Other };
+  enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut, Other,
+                       NoTrState };
   enum ProtoType { TrackProto=0, RichProto, MuonProto, ElectronProto };
   
   /// Standard constructor

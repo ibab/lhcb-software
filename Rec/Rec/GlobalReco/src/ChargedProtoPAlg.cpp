@@ -158,7 +158,7 @@ StatusCode ChargedProtoPAlg::initialize() {
     return sc;
   }
 
-  // Set up monitoring Counters 
+  // Set up monitoring Counters
   m_errorCount["1. No Tracks            "] = 0;
   m_errorCount["2. No Rich pID          "] = 0;
   m_errorCount["3. No Muon pID          "] = 0;
@@ -174,6 +174,8 @@ StatusCode ChargedProtoPAlg::initialize() {
   m_errorCount["7f.No HcalPIDmu table   "] = 0;
   m_errorCount["8. No Tracks for physics"] = 0;
   m_errorCount["9. No ProtoParticles    "] = 0;
+  // If adding new counters do it here before the FATAL one
+  m_errorCount["FATAL: TrStoredTracks with no TrState found"] = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -322,6 +324,12 @@ StatusCode ChargedProtoPAlg::execute() {
     int reject = rejectTrack( (*iTrack) );
     if( 0 != reject ) {
       countRejTracks[reject] += 1;
+      if( NoTrState == reject ) { 
+        msg << MSG::FATAL << "Found TrStoredTrack with no TrStates!"
+            << endreq;
+        m_errorCount["FATAL: TrStoredTracks with no TrState found"] += 1;
+        return StatusCode::FAILURE; 
+      }
       continue;
     }
     
@@ -554,15 +562,17 @@ StatusCode ChargedProtoPAlg::finalize() {
   if( m_muonIDdll )     toolSvc()->releaseTool( m_muonIDdll );
 
 
-  msg << MSG::INFO << "********* ProtoParticles production Summary ******"
+  msg << MSG::INFO << "********* ProtoParticles error Summary ***********"
       << endreq;
   msg << MSG::INFO << "Number of events with :" << endreq;
-
+  
   for( ErrorTable::iterator ierr = m_errorCount.begin();
-       ierr != m_errorCount.end(); ierr++ ) { 
-    msg << MSG::INFO << "   " << (*ierr).first 
-        << "  " << format("%9u", (*ierr).second ) 
-        << endreq;
+       ierr != m_errorCount.end() ; ierr++ ) {
+    if( 0 != (*ierr).second ) {
+      msg << MSG::INFO << "   " << (*ierr).first 
+          << "  " << format("%9u", (*ierr).second ) 
+          << endreq;
+    }
   }
   msg << MSG::INFO << "**************************************************"
       << endreq;
@@ -580,25 +590,24 @@ StatusCode ChargedProtoPAlg::finalize() {
 int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
 
   int reject = NoTrack;
-  if( NULL != track ) {
-    if( 0 == track->errorFlag() ) {
-      //      if( track->unique() && (track->forward() || track->match()) ) {
-      if( track->unique() && track->isLong() ) {
-        reject = KeepTrack;
-      }
-          //      if( m_upstream && (track->unique() && track->upstream()) ) {
-      if( m_downstream && (track->unique() && track->isDownstream()) ) {
-        reject = KeepTrack; 
-      }
-      if( m_velott && (track->unique() && track->isUpstream()) ) {
-        reject = KeepTrack;
-      }
+  if( NULL == track ) return reject;
+  if( 0 == track->errorFlag() ) {
+    //      if( track->unique() && (track->forward() || track->match()) ) {
+    if( track->unique() && track->isLong() ) {
+      reject = KeepTrack;
     }
-    else {
-      reject = NoTrackType;
+    //      if( m_upstream && (track->unique() && track->upstream()) ) {
+    if( m_downstream && (track->unique() && track->isDownstream()) ) {
+      reject = KeepTrack; 
+    }
+    if( m_velott && (track->unique() && track->isUpstream()) ) {
+      reject = KeepTrack;
     }
   }
-
+  else {
+    reject = NoTrackType;
+  }
+  
   //  if( track->veloTT() ) {
   if( track->isUpstream() ) {
     int nTotMeas = track->measurements().size();
@@ -607,6 +616,11 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
       reject = Chi2Cut;
     }
     const TrState* trackState=track->closestState(0.0);
+    // This should never happens but it seems to with unpacking problems
+    if( NULL == trackState ) {
+      reject = NoTrState;
+      return reject;
+    }    
     TrState* trackStateClone = trackState->clone();
     TrStateP* firstStateP=dynamic_cast<TrStateP*>(trackStateClone);
     if(firstStateP) {
