@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.122 2004-06-18 15:03:32 pkoppenb Exp $
+# $Id: requirements,v 1.123 2004-06-21 15:01:14 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -59,11 +59,6 @@ use LHCb        v15r12
 # DaVinciSys v11r9
 #=======================================================
 
-# Eff -> LHCb
-use MCTools 	       v1r7     Phys
-use Event 	       v4r5     Event
-use PhysEvent 	       v8r4     Event
-
 # Trigger packages
 use  L0DU               v6r7     L0
 use  L0Calo             v7r6     L0
@@ -117,7 +112,7 @@ use  DaVinciChecks      v2r3p2   Phys
 use  DaVinciAssociators v5r0     Phys
 use  DaVinciEff         v3r0     Phys
 use  DaVinciMCTools     v5r4     Phys
-use  DaVinciTest        v4r4     Phys
+use  DaVinciTest        v4r5     Phys
 
 # Physics selections
 use  PhysSelSys		v7r3     PhysSel
