@@ -2,6 +2,10 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-12-17 - P. Koppenburg
+ - DaVinciTools/IPhysDesktop.h
+   . Correct comments so that they are understyood by doxygen.
+   
 ! 2004-12-16 - P. Koppenburg
  - DaVinciTools/IParticleFilter.h
    . Added filterByPID methods
