@@ -1,13 +1,16 @@
-# $Id: requirements,v 1.1.1.1 2002-03-28 13:32:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2002-06-15 09:38:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/03/28 13:32:34  ibelyaev
+# Det/CaloDetXmlCnv: new package
+#
 # =============================================================================
 # The package with XML-converters gfor Caloriometer Detector Model 
 # =============================================================================
 package   CaloDetXmlCnv
-version   v1r0
+version   v1r1
 
 # =============== structure ===================================================	
 branches         src cmt doc options 
