@@ -48,6 +48,7 @@ set current = $PWD
 # set location of DaVinci executable
 set Dversion = "v7r2"
 setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
+#setenv MYJOBROOT $LHCb_release_area/DAVINCI/DAVINCI_$Dversion/Phys/DaVinci/$Dversion
 
 # == set the program environment
 source $LHCb_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
