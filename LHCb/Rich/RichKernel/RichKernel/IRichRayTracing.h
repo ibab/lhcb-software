@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.8 2004-07-15 17:07:09 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.9 2004-07-15 17:10:51 jonrob Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -61,7 +61,7 @@ public:
                     const HepVector3D& startDir,
                     RichGeomPhoton& photon,
                     const RichTraceMode mode = RichTraceMode(),
-                    Rich::Side forcedSide = Rich::top ) const = 0;
+                    const Rich::Side forcedSide = Rich::top ) const = 0;
 
   /** For a given detector, raytraces a given direction from a given point to
    *  the average photon detector plane (no HPD acceptance).
@@ -83,7 +83,7 @@ public:
                               const HepVector3D& startDir,            
                               HepPoint3D& hitPosition,                 
                               const RichTraceMode mode = RichTraceMode(),
-                              Rich::Side forcedSide = Rich::top ) const = 0;
+                              const Rich::Side forcedSide = Rich::top ) const = 0;
 
   /** For a given detector, ray traces a given direction from a given point
    *  to the average photo detector plane. Returns the result in the form
