@@ -5,7 +5,9 @@
 
 //=============================================================
 // re-run L0Muon
-#include "$DAVINCIROOT/options/L0Muon.opts"
+// Not included by default! There is a 26 KB/event memory leak
+// in L0Muon. Include it at your own risk.
+//#include "$DAVINCIROOT/options/L0Muon.opts"
 //=============================================================
 // Make L0 calo candidates
 #include "$DAVINCIROOT/options/L0Calo.opts"
