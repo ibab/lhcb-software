@@ -17,9 +17,7 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichEvent      v5r*  Event
-use   RichKernel     v4r*  Rich
-use   RichUtils      v3r*  Rich
+use   RichEvent      v6r*  Event
 use   RichDetTools   v3r*  Rich
 use   GaudiObjDesc   v5r*  -no_auto_imports
 

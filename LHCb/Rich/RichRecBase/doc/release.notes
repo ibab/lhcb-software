@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecBase v1r4 2003-11-05 =======================
+! 2003-11-05 - Marco Cattaneo
+ - Use RichEvent v6r* and clean up requirements
+
 ! 2003-11-02 - Chris Jones
  - Update due to changes to RichHypoData format
  - Move some tool interfaces to detector package due to dependencies
