@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2002-04-03 17:25:43 gcorti Exp $
+# $Id: requirements,v 1.16 2002-04-03 17:29:44 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -32,6 +32,7 @@ use GaudiPolicy  v5r4
 
 #--- It is possible to select the appropriate database version in DaVinci.job
 #--- Uncomment and modify next line to select an appropriate database version
+#--- It must be consistent with the file you are reading
 #use dbase v241 SICB
 
 #--- External libraries - Gaudi v9
@@ -51,7 +52,7 @@ use GaudiTools         v5r0
 use GaudiNagC          v6r0
 use GaudiDb            v5r0
 use GaudiIntrospection v3r0
-use GaudiObjDesc       v3r2   
+use GaudiObjDesc       v3r3   
 
 #--- Histogram persistency ( choose the one you prefer )
 use HbookCnv           v11r0
