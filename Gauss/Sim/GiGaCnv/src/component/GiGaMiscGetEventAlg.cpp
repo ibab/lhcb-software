@@ -1,8 +1,11 @@
-// $Id: GiGaMiscGetEventAlg.cpp,v 1.11 2002-05-24 15:57:59 witoldp Exp $ 
+// $Id: GiGaMiscGetEventAlg.cpp,v 1.12 2002-07-03 08:02:04 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/24 15:57:59  witoldp
+// added hits
+//
 // Revision 1.10  2002/05/02 11:57:03  ibelyaev
 //  cleanup of header files
 //
@@ -143,28 +146,28 @@ StatusCode GiGaMiscGetEventAlg::execute()
         } 
     }
   ///
-  if( !m_hits.empty() )
-    {
-      SmartDataPtr<MCHits> obj( eventSvc() , m_hits ) ;
-      if( obj ) 
-        { 
-          log << MSG::INFO
-              << "Number of extracted hits  '"
-              << m_hits << "'  \t" 
-              << obj->size() 
-              << endreq ;
-          Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
-        } 
-      else 
-        { 
-          log << MSG::INFO 
-              << " Could not extract 'MCHits' from '"
-              << m_hits << "' \t" 
-              << endreq ;
-          ///
-          return StatusCode::FAILURE;
-        } 
-    }
+//    if( !m_hits.empty() )
+//      {
+//        SmartDataPtr<MCHits> obj( eventSvc() , m_hits ) ;
+//        if( obj ) 
+//          { 
+//            log << MSG::INFO
+//                << "Number of extracted hits  '"
+//                << m_hits << "'  \t" 
+//                << obj->size() 
+//                << endreq ;
+//            Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
+//          } 
+//        else 
+//          { 
+//            log << MSG::INFO 
+//                << " Could not extract 'MCHits' from '"
+//                << m_hits << "' \t" 
+//                << endreq ;
+//            ///
+//            return StatusCode::FAILURE;
+//          } 
+//      }
   ///
   return StatusCode::SUCCESS;
 };

@@ -1,14 +1,20 @@
-! $Id: release.notes,v 1.22 2002-07-02 15:15:44 ibelyaev Exp $
+! $Id: release.notes,v 1.23 2002-07-03 08:02:04 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= GiGaCnv v6r0 =================================
+! 2002-07-03 - W.Pokorski
+  GiGaMiscGetEvent - commented lines for retrieving hits
+ 
+! 2002-07-02 - W.Pokorski
+  requirements - use Event v2r*
 
 ! 2002-07-02 - Ivan Belyaev
  - src/component/GiGaMCParticleCnv.cpp, 
    src/component/GiGaMCVertexCnv.cpp    - remove 2 stupid bugs
                                           (infinite loop and wrong 
                                            index for keyed container) 
-                                          
 
 !========================= GiGaCnv v5r1 =================================
 ! 2002-06-18 - W.Pokorski
