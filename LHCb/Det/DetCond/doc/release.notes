@@ -1,6 +1,10 @@
-# $Id: release.notes,v 1.10 2001-12-17 15:56:09 andreav Exp $
+# $Id: release.notes,v 1.11 2001-12-20 15:04:41 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20011220 - Andrea Valassi
+Simplify dependencies on the Gaudi framework.
 
 ==============================================================================
 !20011216 - Andrea Valassi

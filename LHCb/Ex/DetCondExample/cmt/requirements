@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2001-12-17 20:14:40 andreav Exp $
+# $Id: requirements,v 1.8 2001-12-20 15:06:27 andreav Exp $
 package DetCondExample
 version v2r0
 
@@ -9,7 +9,9 @@ ignore_pattern package_stamps
 use GaudiConf v6*
 
 # GAUDI framework dependencies
-use GaudiSys v9*
+use GaudiKernel v11r*
+use GaudiSvc v7r*
+use GaudiAlg v5r*
 
 # Detector Description
 use DetDesc v9* Det
@@ -37,5 +39,4 @@ macro DetCondExample_sources "*.cpp" \
 application DetCondExample \
 	$(DetCondExample_sources) "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 macro DetCondExample_linkopts "$(application_linkopts)"
-
 
