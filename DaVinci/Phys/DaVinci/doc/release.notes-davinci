@@ -4,6 +4,11 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r4 2004-11-16 ===================
+! 2004-11-16 - P. Koppenburg
+  Increment DaVinciKernel v2r0p1 and DaVinciTools v11r2 in requirements
+  to be able to use PVLocator (for HLT)
+  
 ! 2004-11-11 - P. Koppenburg
   Adapt requirements to version that will be released.
   

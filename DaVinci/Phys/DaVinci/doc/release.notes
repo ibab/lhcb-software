@@ -5,8 +5,10 @@ Purpose     : LHCb analysis program
 
 </PRE><H1><A NAME=v12r4>2004-11-12 DaVinci v12r4 - updated version for DC04 stripping</A></H1><PRE>
 
- Release for stripping production with updated trigger
-
+ Release for stripping production with updated trigger. All
+ Trg packages come from Trg/TrgSys v1r0. This overrides Event/TrgEvent that is 
+ also in LHCb (v5r0 instead of v4r0). It may cause a CMT warning,
+ but is not a problem.
 
 ################################################################################
 #                               DAVINCI v12r4                                  #
@@ -27,6 +29,13 @@ Purpose     : LHCb analysis program
  - Add new TrgTrack container names to separate L1 and Hlt tracks.
 ###################################### L0 ######################################
 ##################################### PHYS #####################################
+!========================= DaVinciKernel v2r0p1 2004-11-15 ==================
+! 2004-11-15 - P. Koppenburg
+ Tag this version as a branch on v2r0. 
+
+! 2004-09-27 - P. Koppenburg
+ - DaVinciTools/IPVLocator.h
+   . Interface to PVLocator (in DaVinciTools)
 !========================== DaVinciTest v5r3 2004-11-12 ===================
 ! 2004-11-11 - P. Koppenburg
   - options/DVTestPhysDesktop.opts
@@ -49,6 +58,27 @@ Purpose     : LHCb analysis program
     . Make DVAlgorithms or GaudiAlgorithms    
     . Adapt to get<> tool<> methods
     . Use info(), debug()
+!========================== DaVinciTools v11r2 2004-11-15 ===================
+! 2004-11-11 - P. Koppenburg
+  - PreDV.{h,cpp}
+    . Make it a GaudiAlgorithm.     
+! 2004-10-27 - P. Koppenburg
+  - src/PVLocator.{cpp,h}
+    . New Tool that stores location of primary vertex. This tool is
+      used by all filtercriteria that use the PV. It allows to switch
+      between offline and HLT PV.
+  - src/ResetPVLocation.{cpp,h}
+    . Algorithm that sets the PVLocator tool. 
+      Options:
+          PVLocation ( = VertexLocation::Primary by default ) : PV location
+          ResetToOffline ( = false ) : Restore default
+      Example:
+    
+          HLTSelections.Members += { "ResetPVLocation/SetHLTPV" };
+          SetHLTPV.PVLocation = "/Event/Phys/Trg/Vertices" ;
+          < do rest of HLT >
+          HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
+          SetOfflinePV.ResetToOffline = true ;
 !========================== DaVinciUser v5r2 2004-11-12 ===================
 ! 2004-11-08- P. Koppenburg
  - UserAlgorithm.cpp

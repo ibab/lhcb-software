@@ -3,6 +3,6 @@
 // directory
 #include "$STRIPPINGROOT/options/DVComb.opts" 
 
-ApplicationMgr.EvtMax    = 1000 ;
+ApplicationMgr.EvtMax    = 10000 ;
 EventSelector.PrintFreq  = 1;
 
