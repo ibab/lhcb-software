@@ -1,8 +1,11 @@
-// $Id: GaussCalo_load.cpp,v 1.4 2003-07-08 19:40:57 ibelyaev Exp $ 
+// $Id: GaussCalo_load.cpp,v 1.5 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/07/08 19:40:57  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // Revision 1.3  2003/07/07 16:09:39  ibelyaev
 //  add Calorimeter Sensitive Palne hits and the converter
 // 

@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.9 2003-12-10 13:49:30 ranjard Exp $ 
+// $Id: CaloSensDet.h,v 1.10 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/12/10 13:49:30  ranjard
+// v5r0 - fix code for Gaudi v13r0
+//
 // Revision 1.8  2003/07/08 19:40:57  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //

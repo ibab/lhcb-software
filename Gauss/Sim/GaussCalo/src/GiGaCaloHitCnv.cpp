@@ -1,8 +1,11 @@
-// $Id: GiGaCaloHitCnv.cpp,v 1.3 2002-12-15 17:19:59 ibelyaev Exp $
+// $Id: GiGaCaloHitCnv.cpp,v 1.4 2004-01-14 13:38:10 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/15 17:19:59  ibelyaev
+//  change names of collections
+//
 // Revision 1.2  2002/12/13 16:52:57  ibelyaev
 //  put updated versions of the packages
 //

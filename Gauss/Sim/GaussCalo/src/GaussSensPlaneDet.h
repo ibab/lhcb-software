@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneDet.h,v 1.1 2003-07-08 19:40:58 ibelyaev Exp $ 
+// $Id: GaussSensPlaneDet.h,v 1.2 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/08 19:40:58  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // ============================================================================
 #ifndef       GAUSS_GaussSensPlaneDet_H
 #define       GAUSS_GaussSensPlaneDet_H 1 

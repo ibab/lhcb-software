@@ -1,8 +1,11 @@
-// $Id: CaloSimHash.h,v 1.3 2003-07-10 11:27:56 ibelyaev Exp $
+// $Id: CaloSimHash.h,v 1.4 2004-01-14 13:38:10 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/10 11:27:56  ibelyaev
+//  fixes to please the gcc3.2 compiler
+//
 // Revision 1.2.2.1  2003/07/07 16:54:41  ranjard
 // v3r1 is a branch on v3r0 - fix for gcc3.2
 //

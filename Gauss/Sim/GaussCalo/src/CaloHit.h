@@ -1,8 +1,11 @@
-// $Id: CaloHit.h,v 1.5 2003-07-22 19:05:29 ibelyaev Exp $
+// $Id: CaloHit.h,v 1.6 2004-01-14 13:38:10 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/07/22 19:05:29  ibelyaev
+//  improve doxygen documentation
+//
 // Revision 1.4  2003/07/10 11:27:56  ibelyaev
 //  fixes to please the gcc3.2 compiler
 //

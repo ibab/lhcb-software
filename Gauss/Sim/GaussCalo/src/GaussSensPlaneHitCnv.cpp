@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHitCnv.cpp,v 1.2 2003-07-08 19:40:58 ibelyaev Exp $
+// $Id: GaussSensPlaneHitCnv.cpp,v 1.3 2004-01-14 13:38:10 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/08 19:40:58  ibelyaev
+//  Sensitive Plane Detector + improved printout
+//
 // Revision 1.1  2003/07/07 16:09:39  ibelyaev
 //  add Calorimeter Sensitive Palne hits and the converter
 //

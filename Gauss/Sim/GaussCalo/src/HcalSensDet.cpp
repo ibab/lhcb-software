@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.3 2003-07-07 16:27:46 ibelyaev Exp $ 
+// $Id: HcalSensDet.cpp,v 1.4 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/07 16:27:46  ibelyaev
+//  substitupe G4Material with G4MaterialCutsCouple
+//
 // Revision 1.2  2003/07/07 15:43:00  ibelyaev
 //  fix a bug with error slot counter
 //

@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!========================= GaussCalo v6r0 =================================
+! 2004-01-09 - Florence RANJARD
+ - src/CaloSensPlaneHit.h - fix for new LHCb v15r0: PartivleID.h has been moved
+   from Event/Event to Kernel/LHCbKernel
+
 !========================== GaussCalo v5r0 =================================
 ! 2003-12-10 - Patrick Robbe
  - src/CaloSensDet.h, EHCalSensDet.cpp - fix for new LHCb v14r0, Gaudi v13r0

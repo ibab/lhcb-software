@@ -1,8 +1,11 @@
-// $Id: EHCalSensDet.cpp,v 1.2 2003-12-10 13:49:30 ranjard Exp $ 
+// $Id: EHCalSensDet.cpp,v 1.3 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/12/10 13:49:30  ranjard
+// v5r0 - fix code for Gaudi v13r0
+//
 // Revision 1.1  2003/07/07 08:21:07  ibelyaev
 //  split the general CaloSensDet class
 //

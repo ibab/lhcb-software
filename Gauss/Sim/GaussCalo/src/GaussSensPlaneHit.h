@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHit.h,v 1.1 2003-07-07 16:09:39 ibelyaev Exp $
+// $Id: GaussSensPlaneHit.h,v 1.2 2004-01-14 13:38:10 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 16:09:39  ibelyaev
+//  add Calorimeter Sensitive Palne hits and the converter
+// 
 // ============================================================================
 #ifndef GAUSSTOOLS_GAUSSSENSITIVEPLANEHIT_H 
 #define GAUSSTOOLS_GAUSSSENSITIVEPLANEHIT_H 1
@@ -12,7 +15,7 @@
 // CLHEP
 #include "CLHEP/Vector/LorentzVector.h"
 // Event
-#include "Event/ParticleID.h"
+#include "Kernel/ParticleID.h"
 // GaussTools 
 #include "GaussTools/GaussHitBase.h"
 // Geant4

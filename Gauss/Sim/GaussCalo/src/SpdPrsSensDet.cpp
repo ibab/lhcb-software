@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.cpp,v 1.6 2003-10-17 13:59:34 ranjard Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.7 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/10/17 13:59:34  ranjard
+// v4r2 - fix for geant4.5.2.ref04
+//
 // Revision 1.5  2003/07/17 11:56:32  rybkine
 //  minor fix for Spd/Prs timing
 //

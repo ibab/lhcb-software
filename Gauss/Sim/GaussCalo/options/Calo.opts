@@ -1,8 +1,11 @@
-// $Id: Calo.opts,v 1.10 2003-08-14 09:05:09 ranjard Exp $ 
+// $Id: Calo.opts,v 1.11 2004-01-14 13:38:08 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/08/14 09:05:09  ranjard
+// v4r0 - read gausscalo.hbook from ParamFiles
+//
 // Revision 1.9  2003/07/15 16:30:13  witoldp
 // added hbook.opts
 //

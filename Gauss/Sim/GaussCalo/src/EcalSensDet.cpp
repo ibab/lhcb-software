@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.cpp,v 1.5 2003-12-06 16:16:54 robbep Exp $ 
+// $Id: EcalSensDet.cpp,v 1.6 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/12/06 16:16:54  robbep
+// Put the correct default parameters for non uniformity correction
+//
 // Revision 1.4  2003/12/05 08:59:58  robbep
 // Put fonctions and constants for the non-uniformity. The local
 // non-uniformity (sin-like amplitude) is set to 0 for the moment.

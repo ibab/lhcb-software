@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.14 2003-10-17 13:59:34 ranjard Exp $ 
+// $Id: CaloSensDet.cpp,v 1.15 2004-01-14 13:38:10 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2003/10/17 13:59:34  ranjard
+// v4r2 - fix for geant4.5.2.ref04
+//
 // Revision 1.13  2003/10/10 16:17:44  witoldp
 // changed version number
 //
