@@ -1,4 +1,4 @@
-// $Id: L0mTower.h,v 1.4 2001-07-26 13:05:35 cattanem Exp $
+// $Id: L0mTower.h,v 1.5 2001-10-04 16:23:33 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -62,6 +62,8 @@ public:
     double theta() { return m_theta; }
     /// Phi at IP
     double phi() { return m_phi; }
+    /// Associated Processing unit
+    L0mProcUnit* procUnit() { return m_procUnit; };
     /// Nearest pad
     int nearest(int sta, int foiX, int yindex);
     /// Get M1 extrapolation offset
