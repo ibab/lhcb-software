@@ -1,8 +1,11 @@
-// $Id: CaloPrint.h,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $
+// $Id: CaloPrint.h,v 1.2 2001-12-13 11:14:34 ibelyaev Exp $
 // ============================================================================
 // CV stag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // Revision 1.1  2001/11/04 15:05:10  ibelyaev
 //  modifications into base classes and new class CaloPrint
 //
@@ -152,12 +155,12 @@ public:
   /** accessor to format for integers 
    *  @return format for integers 
    */
-  static const char* formatInteger    () { return s_formatInteger.c_str() ; }
+  static const char* formatInteger    () ;
   
   /** accessor to format for doubles 
    *  @return format for doubles 
    */
-  static const char* formatDouble     () { return s_formatDouble.c_str()  ; }
+  static const char* formatDouble     () ;
   
 private:
   
