@@ -5,15 +5,16 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v17r1 2004-11-22 =======================
-! 2004-11-22 - Marco Cattaneo
+!======================= LHCbSys v17r1 2004-11-25 =======================
+! 2004-11-25 - Marco Cattaneo
  - Modified packages: KernelSys v4r4, LHCbKernel v5r4, RichKernel v5r1,
-                   EventSys v19r1, RichEvent v8r0, TrgEvent v5r0, PhysEvent v8r6,
+                   EventSys v19r1, RichEvent v8r0, TrgEvent v5r1, PhysEvent v8r6,
+                   LinkerEvent v1r5, Relations v2r0,
                    DetSys v5r9, RichDet v8r1, GaudiConf v8r1, LHCbAlgs v1r2,
                    RichDAQ v1r6, RichMCTools v2r3, RichTools v1r2, MCTools v1r9,
-                   Relations v2r0, AssociatorsSys v2r1,  Associators v2r4,
-                   ITAssociators v2r10, OTAssociators v3r1, VeloAssociators v1r12,
-                   TrAssociators v5r1, CaloAssociators v4r4, MuonAssociators v1r5
+                   AssociatorsSys v2r1,  Associators v2r4, VeloAssociators v1r12,
+                   ITAssociators v2r10, OTAssociators v3r1, MuonAssociators v1r5,
+                   TrAssociators v5r1, CaloAssociators v4r4
 
  - In GaudiConf v8r1
    . For rh73_gcc323 and slc_ia32_gcc323, append "_0411" to ROOT_native_version,
@@ -29,11 +30,15 @@
    . New format for RichPID class, incompatible with DC04 data
    . Add support for TrgTracks in RichPID and TrgStates in RichTrckSegment
 
- - In TrgEvent v5r0
+ - In TrgEvent v5r1
    . Remove inheritance from TrgVertex to Vertex
      (circular dependency with PhysEvent package)
    . Add new bitfields and container names to TrgTrack
    . Add TrgCaloCluster
+   . Make the TrgDecision "hasTriggered" method const.
+
+ - In LinkerEvent v1r5
+   . Add typedefs and new LinkedTo methods to access relations with STL flavour
 
  - In RichDet v8r1
    . Add access to tabulated properties to DeRich and DeRichRadiator
