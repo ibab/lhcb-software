@@ -9,7 +9,7 @@ branches src cmt doc options
 
 # ================ environment ==============================================
 set RICHPIDMERGEOPTS $(RICHPIDMERGEROOT)/options
-include_dirs $(RICHPIDMERGEROOT)
+include_path none
 
 # ================ dependencies =============================================
 use RichGlobalPID     v1r*  Rich
@@ -19,11 +19,4 @@ use RichRingRefit     v1r*  Rich
 # ================ component library=========================================
 library           RichPIDMerge   ../src/*.cpp
 
-# define component library link options
-#============================================================================
-apply_pattern     package_Clinkopts
-apply_pattern     packageShr
-
-#============================================================================
-private
-apply_pattern     package_Cshlibflags
+apply_pattern component_library library=RichPIDMerge
