@@ -14,8 +14,10 @@ It can process DC04 data
   . Use new Pt kick value in L0 Muon trigger (L0MuonTrigger v2r2, L0DU v6r7p2)
 
 - Bug fixes
-  . Workaround for core dump on exit() (GaudiPoolDb v1r8p1)
-  . Various fixes for memory leaks (GaudiSvc v12r2p1, GaudiPoolDb v1r8p1)
+  . Workaround for core dump on exit() (GaudiPoolDb v1r9)
+  . Various fixes for memory leaks (GaudiSvc v12r3, GaudiPoolDb v1r9)
+  . Increase default size of PAWC common block to 250000 words, as workaround 
+    to problems seen when extending its size (HbookCnv v14r2p1)
 
 </PRE><H1><A NAME=v6r1>2004-07-26 Boole v6r1</A></H1><PRE>
 This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
