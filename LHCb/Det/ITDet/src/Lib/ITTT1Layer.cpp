@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.2 2002-07-08 12:47:25 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.3 2002-08-09 12:14:36 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -64,7 +64,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
       ITWafer* aWafer = new ITWafer(pitch, 1,
                           -0.5*sensWaferWidth, 0.5*sensWaferWidth, 
 	   		  v - 0.5*ladderHeight, 
-		 	  v + 0.5*ladderHeight, pow(-1.,iWafer-1)*ladderDist);
+		 	  v + 0.5*ladderHeight, 0.5*pow(-1.,iWafer-1)*ladderDist);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
@@ -91,7 +91,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
       ITWafer* aWafer = new ITWafer(pitch, 1,  
                         -0.5*sensWaferWidth,0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight,pow(-1.,iWafer-1)*ladderDist);
+			v + 0.5*ladderHeight,0.5*pow(-1.,iWafer-1)*ladderDist);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
