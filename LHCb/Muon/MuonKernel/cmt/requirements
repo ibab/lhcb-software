@@ -6,7 +6,7 @@ branches cmt src MuonKernel doc Test
 
 include_dirs $(MUONKERNELROOT)
 
-use Gaudi v9* Gaudi
+use GaudiSys v9* 
 
 #----------------------------------------------
 library MuonKernelLib ../src/*.cpp
