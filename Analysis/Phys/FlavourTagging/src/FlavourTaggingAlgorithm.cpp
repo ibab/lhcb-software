@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.4 2002-09-05 08:16:48 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.5 2002-09-06 07:06:04 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -134,10 +134,17 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   else
     thePrimVtx = new Vertex;
 
-  log << MSG::DEBUG << "Event initialization successful" << endreq;
-
   FlavourTags *tags = new FlavourTags;
   const ParticleVector& parts = m_pDesktop->particles();
+  if( parts.size() == 0 )
+  {
+    log << MSG::ERROR << "The PhysDesktop is empty. Giving up!" << endreq;
+    return StatusCode::SUCCESS;
+  }
+
+  log << MSG::DEBUG << "Event initialization successful" << endreq;
+
+  m_n_events++;
   log << MSG::DEBUG << "About to tag " << hypothesis.size() << " B s" << endreq;
   ParticleVector::const_iterator hi;
   for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )
@@ -172,8 +179,6 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     log << endreq;
     tags->insert(theTag);
   }
-  if( parts.size() )
-    m_n_events++;
   sc = eventSvc()->registerObject(m_tags_location,tags);
   if (sc.isFailure())
     log << MSG::ERROR << "Unable to register the tags under '"

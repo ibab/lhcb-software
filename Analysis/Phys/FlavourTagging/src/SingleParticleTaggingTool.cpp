@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.3 2002-09-05 08:16:48 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.4 2002-09-06 07:06:04 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -166,7 +166,7 @@ StatusCode SingleParticleTaggingTool::initialize()
   else
   {  // Just reconnect to existing items
     status = nt->item ("nCands", m_n_cands );
-    if ( status.isSuccess() ) status = nt->item ("nVtx", m_n_vtxs );
+    if ( status.isSuccess() ) status = nt->item ("nVtxs", m_n_vtxs );
     if ( status.isSuccess() ) status = nt->item ("iTagger", m_i_selected );
     if ( status.isSuccess() ) status = nt->item ("Tag",  m_tag);
     if ( status.isSuccess() ) status = nt->item ("px", m_px );
@@ -280,25 +280,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   m_Filter->filter(theParts, candidates);
 
   // All the primary vertices in the event.
-  int size = 0;
-  if( m_AllVertices )
-  {
-    log << MSG::DEBUG << "Using all vertices (";
-    std::vector<std::string>::const_iterator loc;
-    for( loc = m_PrimVerticesLocations.begin();
-         loc != m_PrimVerticesLocations.end();
-         loc++ )
-    {
-      SmartDataPtr<VertexVector> prim_vtxs( m_EventSvc, *loc );
-      if( prim_vtxs )
-        size += prim_vtxs->size();
-    }
-    log << size << ")." << endreq;
-  }
-  else
-    size = 1;
-
-  std::vector<const Vertex *> vtxs(size);
+  std::vector<const Vertex *> vtxs(0);
   if( m_AllVertices )
   {
     std::vector<std::string>::const_iterator loc;
@@ -306,10 +288,10 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
          loc != m_PrimVerticesLocations.end();
          loc++ )
     {
-      SmartDataPtr<VertexVector> prim_vtxs( m_EventSvc, *loc );
+      SmartDataPtr<Vertices> prim_vtxs( m_EventSvc, *loc );
       if( !prim_vtxs )
         continue;
-      VertexVector::iterator i;
+      Vertices::iterator i;
       for( i = prim_vtxs->begin(); i != prim_vtxs->end(); i++ )
         vtxs.push_back(*i);
     }
@@ -341,7 +323,7 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
     {
       double impact, error;
       m_GeomDisp->calcImpactPar( **c, **v, impact, error );
-      if( m_DoNTuple )
+      if( m_DoNTuple && vi<5 )
       {
         m_ip[i][vi] = impact;
         m_iperr[i][vi] = error;
