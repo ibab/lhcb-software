@@ -73,9 +73,6 @@
 //--- Uncomment the following line to run the example UserAlgorithm
 //ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
 
-ApplicationMgr.DLLs   += { "DaVinciChecks" };
-ApplicationMgr.TopAlg += { "ChargedProtoPAnalysis" };
-
 //----------------------------------------------------------------
 // The various selections algorithms have each a DVDecayName.opts
 // file in their package that can be given as full options of the
