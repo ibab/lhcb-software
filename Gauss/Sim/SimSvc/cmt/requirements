@@ -1,0 +1,17 @@
+package SimSvc
+version v1r0
+
+branches SimSvc doc cmt src
+
+include_dirs $(SIMSVCROOT)
+
+use DetDesc     v* Det
+
+# build a component library
+library SimSvc     *.cpp
+
+apply_pattern linker_path
+
+#==================================================================
+private
+apply_pattern package_Cshlibflags
