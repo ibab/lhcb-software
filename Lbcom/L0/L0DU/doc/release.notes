@@ -1,6 +1,12 @@
-$Id: release.notes,v 1.6 2002-01-14 11:10:16 cattanem Exp $
+$Id: release.notes,v 1.7 2002-02-01 14:32:33 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!=============================================================================
+! 01/02/2002 - Olivier Callot ** v4r0
+  - Adapt to the new Event Model L0Event v10. Remove the directory L0DU, the
+    L0DUReport class is now in L0Event. 
+  - Use the new PuVeto decision from L0/PuVeto.
 
 !=============================================================================
 ! 2002/01/14 - Marco Cattaneo  ** v3r0

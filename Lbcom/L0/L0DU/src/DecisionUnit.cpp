@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.5 2001-08-31 11:05:45 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.6 2002-02-01 14:32:33 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -15,7 +15,8 @@
 
 #include "CLHEP/Units/SystemOfUnits.h"
 
-#include "L0Event/Level0PileUpVeto.h"
+// L0Event
+#include "Event/L0PuVeto.h"
 
 // Private
 
@@ -37,7 +38,6 @@ const IAlgFactory& DecisionUnitFactory = Factory;
 
 // Useful local type definitions
 
-typedef ObjectVector<L0CaloCandidate> InputSeqCalo;
 typedef ObjectVector<L0MuonCandidate> InputSeqMuon; 
 
 
@@ -47,15 +47,16 @@ typedef ObjectVector<L0MuonCandidate> InputSeqMuon;
 DecisionUnit::DecisionUnit( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : Algorithm      ( name, pSvcLocator )
-  , m_nameOfInputL0CaloCandidate  ( "/Event/FE/L0/Calo" )
+  , m_nameOfInputL0CaloCandidate  ( L0CaloCandidateLocation::Default )
   , m_nameOfInputL0MuonCandidate  ( "/Event/MC/L0MuonCandidates" )
-  , m_nameOfOutputDecisionUnit    ( "/Event/FE/L0/L0Decis" ) 
-  , m_nameOfOutputDirectory       ( "" )
+  , m_nameOfInputPileUpVeto       ( L0PuVetoLocation::Default    )
+  , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default  ) 
 {  
 
   declareProperty( "L0CaloCandidateData" , m_nameOfInputL0CaloCandidate );
   declareProperty( "L0MuonCandidateData" , m_nameOfInputL0MuonCandidate );
-  declareProperty( "AcceptedData"        , m_nameOfOutputDecisionUnit );
+  declareProperty( "PuVetoData"          , m_nameOfInputPileUpVeto      );
+  declareProperty( "AcceptedData"        , m_nameOfOutputDecisionUnit   );
 
   declareProperty( "EElCut1"             , m_eElCut1    = 2.65 * GeV );
   declareProperty( "EElCut2"             , m_eElCut2    = 2.65 * GeV );
@@ -99,7 +100,7 @@ DecisionUnit::DecisionUnit( const std::string& name,
 
 StatusCode DecisionUnit::initialize() {
   
-  MsgStream log(messageService(),name());
+  MsgStream log(msgSvc(),name());
 
   log << MSG::INFO 
       << "Initialization" 
@@ -126,11 +127,6 @@ StatusCode DecisionUnit::initialize() {
     return StatusCode::FAILURE; 
   }
 
-  m_nameOfOutputDirectory = m_nameOfOutputDecisionUnit;
-  std::string::size_type pos = m_nameOfOutputDirectory.find_last_of('/');
-  if ( std::string::npos != pos ) {
-    m_nameOfOutputDirectory.erase(pos);
-  }
   // Raz for scaling
 
   int indexCand = 0;
@@ -152,7 +148,7 @@ StatusCode DecisionUnit::initialize() {
 
 StatusCode DecisionUnit::execute() {
 
-  MsgStream log(messageService(),name());
+  MsgStream log(msgSvc(),name());
 
   log << MSG::DEBUG
       << "Execution"
@@ -167,25 +163,13 @@ StatusCode DecisionUnit::execute() {
   m_Pi0Global = 0;
   m_Muon1 = 0;
 
-  
-  // Search if the output directory exists, creates if needed
-
-  SmartDataPtr<DataObject> outDir( eventDataService(), 
-                                   m_nameOfOutputDirectory );
-  if ( 0 == outDir ) {
-    log << MSG::ERROR 
-        << "Unknow OutputDirectory = "
-        << m_nameOfOutputDirectory 
-        << endreq;
-  }
-
   // Find candidates calo
 
-  SmartDataPtr<InputSeqCalo> smartCandCalo ( eventDataService() , 
-  				             m_nameOfInputL0CaloCandidate ); 
+  SmartDataPtr<L0CaloCandidates> smartCandCalo ( eventSvc() , 
+                                                 m_nameOfInputL0CaloCandidate);
   if ( 0 != smartCandCalo ) { 
-    InputSeqCalo* candCalo = (InputSeqCalo*) smartCandCalo; 
-    InputSeqCalo::const_iterator itCandCalo = candCalo->begin();
+    L0CaloCandidates* candCalo = (L0CaloCandidates*) smartCandCalo; 
+    L0CaloCandidates::const_iterator itCandCalo = candCalo->begin();
     if ( candCalo->end() == candCalo->begin() ) {
       log << MSG::DEBUG
           << "No Calo candidates"
@@ -274,14 +258,14 @@ StatusCode DecisionUnit::execute() {
   else { 
     log << MSG::DEBUG
         << "Unable to retrieve L0CaloCandidate data container = "
- 	<< m_nameOfInputL0CaloCandidate
+        << m_nameOfInputL0CaloCandidate
         << endreq; 
   }
 
   // Find candidates muon
 
   double eSumMuons = 0.0;
-  SmartDataPtr<InputSeqMuon> smartCandMuon ( eventDataService() ,
+  SmartDataPtr<InputSeqMuon> smartCandMuon ( eventSvc() ,
                                              m_nameOfInputL0MuonCandidate ); 
   if ( 0 != smartCandMuon ) {
     InputSeqMuon* candMuon = (InputSeqMuon*) smartCandMuon;
@@ -325,8 +309,8 @@ StatusCode DecisionUnit::execute() {
             << endreq;
         eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
                       eMuons.end() );
-        log << MSG::DEBUG
-	    << "Data eCut1, eCut2, scal for the greater muon"
+        log << MSG::DEBUG 
+            << "Data eCut1, eCut2, scal for the greater muon"
             << endreq;
       }
       else {
@@ -405,15 +389,15 @@ StatusCode DecisionUnit::execute() {
 
   bool L0NotVeto = true;
 
-  SmartDataPtr<Level0PileUpVeto>  L0PileUp ( eventDataService(),
-                                             "/Event/FE/L0/PileUpVeto" );
+  SmartDataPtr<L0PuVeto>  L0PileUp ( eventSvc(), m_nameOfInputPileUpVeto );
   if ( 0 != L0PileUp ) {
     log << MSG::DEBUG << "Pile Up VETO : " << L0PileUp->decision() << endreq;
     if ( 0 != L0PileUp->decision() ) {
       L0NotVeto = false;
     }
   } else {
-    log << MSG::DEBUG << "Pile Up VETO not found " << endreq;
+    log << MSG::DEBUG << "Pile Up VETO not found on " 
+        <<  m_nameOfInputPileUpVeto << endreq;
   }
   
   if ( L0SumEt && L0NotVeto ) {
@@ -468,9 +452,8 @@ StatusCode DecisionUnit::execute() {
   L0DUReport* decisUnit = new L0DUReport( m_typeL0Trig );
   // Registering of DecisUnit container object into the event data store
  
-  StatusCode sc = 
-    eventDataService()->registerObject( m_nameOfOutputDecisionUnit, 
-                                        decisUnit );
+  StatusCode sc = eventSvc()->registerObject( m_nameOfOutputDecisionUnit, 
+                                              decisUnit );
   if ( sc.isFailure() ) {
     delete decisUnit;
     log << MSG::ERROR
@@ -496,7 +479,7 @@ StatusCode DecisionUnit::execute() {
 
 StatusCode DecisionUnit::finalize() {
   
-  MsgStream log(messageService(),name());
+  MsgStream log(msgSvc(),name());
     
   log << MSG::DEBUG << "finalize" << endreq;
   

@@ -1,14 +1,15 @@
+// $Id: DecisionUnit.h,v 1.3 2002-02-01 14:32:33 ocallot Exp $
 #ifndef L0DU_DECISIONUNIT_H
 #define L0DU_DECISIONUNIT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.h,v 1.2 2001-08-31 11:05:45 ocallot Exp $
 
 // Include files
 #include <string>
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "L0Calo/L0CaloCandidate.h"
 #include "L0Muon/L0MuonCandidate.h"
-#include "L0DU/L0DUReport.h"
+
+#include "Event/L0CaloCandidate.h"
+#include "Event/L0DUReport.h"
   
 /** @class DecisionUnit DecisionUnit.h
  *
@@ -49,8 +50,8 @@ private:
 
   std::string m_nameOfInputL0CaloCandidate;
   std::string m_nameOfInputL0MuonCandidate;
+  std::string m_nameOfInputPileUpVeto;
   std::string m_nameOfOutputDecisionUnit;
-  std::string m_nameOfOutputDirectory;
  
   int              m_typeL0Trig;
   std::vector<int> m_nEtSupCut2;
