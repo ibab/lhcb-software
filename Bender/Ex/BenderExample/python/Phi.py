@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.5 2004-02-13 08:50:16 ibelyaev Exp $
+# $Id: Phi.py,v 1.6 2004-03-16 09:42:23 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -28,9 +28,6 @@ global h1
 
 class Phi(Algo):
     " My own analysis algorithm for selection of phi -> K+ K- "
-    def __init__(self, name = 'Phi' ) :
-        Algo.__init__( self, name )
-        
     def analyse ( self ) :
         # get kaons 
         kplus  = self.select( tag="K+" , cuts =  321 == ID )
@@ -54,7 +51,7 @@ class Phi(Algo):
 # Generic job configuration & input data 
 # =============================================================================
 
-bender.config( files   = [ '$DAVINCIROOT/options/DaVinci.opts' ] ,
+bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
                options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                            'HcalPIDmu.OutputLevel     =   5  ' ,
                            'EcalPIDe.OutputLevel      =   5  ' ,
@@ -115,12 +112,15 @@ g.initialize()
 ## g.run(100)  ## crash !!
 g._evtpro.executeRun(100)
 
-#g.exit()
+g.exit()
 
 # =============================================================================
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/02/13 08:50:16  ibelyaev
+#  add few 'plotters'
+#
 # Revision 1.4  2004/02/10 12:37:35  ibelyaev
 #  update
 #

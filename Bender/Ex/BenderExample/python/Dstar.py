@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.7 2004-03-15 16:43:30 ibelyaev Exp $
+# $Id: Dstar.py,v 1.8 2004-03-16 09:42:23 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -105,7 +105,7 @@ class Dstar(Algo):
 # Generic job configuration 
 # =============================================================================
 
-bender.config( files   = [ '$BENDEREXAMPLEOPTS/Dstar.opts' ] ,
+bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
                options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
                            'HcalPIDmu.OutputLevel     =   5  ' ,
                            'EcalPIDe.OutputLevel      =   5  ' ,
@@ -176,6 +176,9 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2004/03/15 16:43:30  ibelyaev
+#  add options/Dstar.opts
+#
 # Revision 1.6  2004/02/13 08:50:16  ibelyaev
 #  add few 'plotters'
 #

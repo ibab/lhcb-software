@@ -1,0 +1,58 @@
+// $Id: BenderExample.opts,v 1.1 2004-03-16 09:42:22 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ * 
+ *  Example file to run BenderExample package for Bender v3r0 
+ *
+ *  Indeed it ia just an "extra-light"-version of DaVinci.opts
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-03-15
+ */
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+// Histogram persistency 
+ApplicationMgr.HistogramPersistency = "HBOOK";
+HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+
+// Ntuples available by default. Comment to switch off
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+// NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+ChargedProtoPAlg.OutputLevel            = 3;
+
+// Modify Message Format to print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    = 500;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+
+// Sample input file 
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
+#pragma print on
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
+
