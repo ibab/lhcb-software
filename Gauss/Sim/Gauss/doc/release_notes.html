@@ -3,6 +3,63 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+<H1><A NAME="v15r6">2004-04-30 - Gauss v15r6</A></H1><PRE>
+This version is a bug fix and clean up version of Gauss v15r5,
+It uses LHCb v15r8.
+
+!===================== GaussAlgs v1r1 2004-04-29 ===================
+! 2004-04-29 - Gloria CORTI
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . introduce new feature to print only sum of muon hits instead of
+     line for each container. The behaviour can cbe controlled via a
+     if necessary to print all container contents (MuonSummaryOnly, 
+
+!====================== GaussPhysics v3r1 ===============================
+! 2004-04-29 - Patrick ROBBE
+ - introduce new particles definitions for particles involved in B decays 
+   and normally unknown to Geant4, so that they are propagated to MCParticle
+   and the decays tree are complete.
+
+!==================== GaussTools v10r5 2004-04-29 ============================
+! 2004-04-29 - Gloria CORTI
+ - src/Components/TrCutsRunAction.{h,cpp}
+   . introduce option to control cut on energy of neutrino for tracking
+     (NeutrinoTrCut). Default now set to zero to prevent neutrino to
+     deposit their energy where produced.
+ - src/Components/GaussPostTrackAction.cpp
+   . remove error counting when G4VProcess points to null that is legitimate
+     in a step
+   . set number of lines to print to zero in log file for warning about
+     particle produced by RichHpdPhotoelectricProcess not beeing kept, in
+     order to only have summary at the end of the job
+
+!======================= GaussMonitor v1r1 2004-04-29 ========================
+! 2004-04-29 - Gloria CORTI
+ - src/GeneratorFullMonitor.{h,cpp}
+   . introduce location where to read data from as option (Input). Default
+     set to HepMCEventLocation::Default
+ - src/MCTruthFullMonitor.cpp
+   . some clean up
+ - src/src/MCDecayCounter.{h,cpp}
+   . new algorithm that provided an asci decay descriptor (via option
+     ) will count the number of decays of this type. If printout level
+     in DEBUG it also print the signal info as found in "/Event/MC/Signal"
+     for HepMC and the pointer to MCParticle and what found by the 
+     MCDecayFinder in the whole "/Event/MC/Particles".
+ - cmt/requirements
+   . use MCTools
+
+!=============== GeneratorModules v11r5 2004-04-29 ======================
+! 2004-04-29 - Gloria CORTI
+ - src/Algorithms/PythiaAlg.cxx
+   . swith printout of block entries from INFO to DEBUG
+ - src/Algorithms/GenMonitorAlg.cxx
+   . introduce option to fill histograms only if histogram path 
+     (option HistoPath) is not "". Otherwise number of entries in HepMC 
+     moved from DEBUG to INFO is printed. This is to use this algorithm
+     in production to monitor generator phase.
+
+!=========================================================================
 <H1><A NAME="v15r5">2004-04-22 - Gauss v15r5</A></H1><PRE>
 This version is built on LHCb v15r7, Gaudi v14r5, Geant4 6.1.0
 - options/Common.opts    - new option file, contains common options to all
