@@ -6,8 +6,7 @@ branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use MuonKernel v2r* Muon
-use MuonTools  v2r* Muon
+use MuonTools  v3r* Muon
 use MuonEvent  v2r* Event
 use L0Event   v12r* Event
 
