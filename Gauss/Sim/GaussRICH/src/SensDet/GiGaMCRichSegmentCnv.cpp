@@ -12,7 +12,7 @@ const        ICnvFactory&GiGaRichSegmentCnvFactory = s_Factory ;
 
 // ========================================================================
 
-// Containers and orting functions
+// Containers and sorting functions
 namespace GiGaRich {
 
   struct HepPoint3DSortByZ
