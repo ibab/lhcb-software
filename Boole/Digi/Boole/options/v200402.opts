@@ -61,8 +61,7 @@ LHCBkgSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00
 //---------------------------------------------------------------------------
 
 // GaudiRootDb file
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000422_00000004_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 411300
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00005295_00000003_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v22r0, evtype 61
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00005296_00000002_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v22r0, evtype 411300
 
 // POOL file
 //EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/POOL/00000422_00000004_1.sim' TYP='POOL_ROOTTREE' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 411300
