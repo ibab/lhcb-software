@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.5 2001-03-04 14:56:04 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Isotope.h,v 1.6 2001-03-05 14:57:10 ibelyaev Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -35,17 +35,17 @@ public:
   virtual ~Isotope();
   
   //	Atomic mass [g/mole]
-  const double A() const;
-  void setA ( double value );
+  virtual inline const double   A() const;
+  virtual inline void        setA(  const double value );
   
   //	Atomic number
-  const double Z() const;
-  void setZ( double value );
+  virtual inline const double   Z() const;
+  virtual inline void        setZ(  const double value );
   
   //	Number of nucleons
-  const double N() const;
-  void setN( double value );
-   
+  virtual inline const double   N() const;
+  virtual inline void        setN(  const double value );
+  
   inline const CLID& clID    () const { return Isotope::classID(); } 
   static const CLID& classID ()       { return CLID_Isotope; } 
   

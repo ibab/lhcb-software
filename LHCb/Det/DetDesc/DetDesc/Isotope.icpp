@@ -7,13 +7,13 @@
 
 ///////////////////////////////////////////////////////////////////////////
 inline const double Isotope::A() const { return m_A; }
-inline void         Isotope::setA( double value ) { m_A = value; }
+inline void         Isotope::setA( const double value ) { m_A = value; }
 ///////////////////////////////////////////////////////////////////////////
 inline const double Isotope::Z() const { return m_Z; }
-inline void         Isotope::setZ( double value ) { m_Z = value; }
+inline void         Isotope::setZ( const double value ) { m_Z = value; }
 ///////////////////////////////////////////////////////////////////////////
 inline const double Isotope::N() const { return m_N; }
-inline void         Isotope::setN( double value ) { m_N = value; }
+inline void         Isotope::setN( const double value ) { m_N = value; }
 ///////////////////////////////////////////////////////////////////////////
 
 

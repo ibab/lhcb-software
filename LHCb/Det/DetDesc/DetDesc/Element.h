@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.5 2001-03-04 14:56:04 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.6 2001-03-05 14:57:10 ibelyaev Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -75,13 +75,13 @@ public:
 
   ///	Atomic mass [g/mole]
   virtual inline const double    A() const                ;
-  inline void                 setA( const double value ) ;
+  virtual inline void         setA( const double value ) ;
   ///	Atomic number
   virtual inline const double    Z() const;
-  inline void                 setZ( const double value );
+  virtual inline void         setZ( const double value );
   ///	Number of nucleons
   virtual inline const double    N() const;
-  inline void                 setN( const double value );
+  virtual inline void         setN( const double value );
   ///  Coulomb factor 
   inline const double  coulombFactor() const ;
   ///  Tsai    factor 
