@@ -1,23 +1,8 @@
-// $Id: RelationWeighted1D.h,v 1.11 2003-06-25 14:59:01 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.12 2003-11-23 12:42:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2003/06/16 13:27:54  sponce
-// fixes for gcc 3.2 and 3.3
-//
-// Revision 1.9  2003/01/17 14:07:02  sponce
-// support for gcc 3.2
-//
-// Revision 1.8  2002/07/25 15:32:15  ibelyaev
-//  bug fix in destructors of relation objects
-//
-// Revision 1.7  2002/04/25 15:30:18  ibelyaev
-//  one more attempt to make Bill Gates happy
-//
-// Revision 1.6  2002/04/25 14:10:19  ibelyaev
-//  one more fix for Win2K
-//
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted1D_H 
 #define RELATIONS_RelationWeighted1D_H 1
@@ -44,9 +29,8 @@
  */
 template<class FROM, class TO, class WEIGHT>
 class RelationWeighted1D :
-  public         DataObject                                  ,    
-  public virtual IRelationWeighted<FROM,TO,WEIGHT>           ,
-  public virtual  Relations::RelationWeighted<FROM,TO,WEIGHT> 
+  public IRelationWeighted<FROM,TO,WEIGHT> ,
+  public DataObject                                      
 {
   
 public:
@@ -57,26 +41,34 @@ public:
   typedef RelationWeighted1D<TO,FROM,WEIGHT>              InvType ;
   /// short cut for interface
   typedef IRelationWeighted<FROM,TO,WEIGHT>               IBase   ;
-  /// short cut for teh actual implementation type 
+  /// import "Range" type from the base 
+  typedef typename IBase::Range                           Range   ;
+  /// import "From"  type from the base 
+  typedef typename IBase::From                            From    ;
+  /// import "To"    type from the base 
+  typedef typename IBase::To                              To      ;
+  /// import "Weight" type from the base 
+  typedef typename IBase::Weight                          Weight  ;
+  /// short cut for the actual implementation type 
   typedef typename Relations::RelationWeighted<FROM,TO,WEIGHT>     Base    ;
   
 public:
   
   /// the standard/default constructor
   RelationWeighted1D ( const size_t reserve = 0 ) 
-    : IBase(), Base (reserve), DataObject() 
+    : DataObject() , m_base (reserve) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
-
+  
   /** constructor from inverse object 
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const InvType& inv , int flag ) 
-    : IBase(), Base( inv , flag ), DataObject( inv )
+    : DataObject( inv ) , m_base( inv , flag ) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
@@ -88,13 +80,13 @@ public:
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const typename IBase::InverseType & inv , int flag ) 
-    : IBase(), Base( inv , flag ), DataObject() 
+    : DataObject() , m_base( inv , flag ) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
-
+  
   /// destructor (virtual)
   virtual ~RelationWeighted1D ()
   {
@@ -149,9 +141,10 @@ public:
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
-    typename RelationWeighted1D<FROM, TO, WEIGHT>::Range range = relations() ;
+    typename RelationWeighted1D<FROM, TO, WEIGHT>::Range range =
+      i_relations() ;
     // serialize the number of relations 
-    unsigned long _size = range.end() - range.begin() ;
+    unsigned long _size = range.size() ;
     s << _size ;
     // serialise all relations
     for (typename RelationWeighted1D<FROM, TO, WEIGHT>::iterator
@@ -182,11 +175,12 @@ public:
     typedef typename WeightTypeTraits::Serializer SerializeW ;
     typedef typename ToTypeTraits::Serializer     SerializeT ;
     // clear all existing relations 
-    clear();
+    i_clear();
     // serialize the base class
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
+    m_base.reserve( _size ) ;
     typename IBase::From   from   ;
     typename IBase::Weight weight ;
     typename IBase::To     to     ;
@@ -197,9 +191,230 @@ public:
         SerializeW::serialize ( s , ApplyW::apply ( weight , this ) ) ;
         SerializeT::serialize ( s , ApplyT::apply ( to     , this ) ) ;
         //
-        relate( from , to , weight ) ;
+        i_relate( from , to , weight ) ;
       }
     return s ;
+  };
+  
+public:  // major functional methods (fast, 100% inline)
+  
+  /// retrive all relations from the object (fast,100% inline)
+  inline   Range i_relations
+  ( const  From& object) const 
+  { return m_base.i_relations ( object ) ;} 
+  
+  /// retrive ALL relations from ALL objects (fast,100% inline)
+  inline   Range i_relations() const
+  { return m_base.i_relations (        ) ;}
+  
+  /// retrive all relations from the object (fast,100% inline)
+  inline   Range      i_relations
+  ( const  From&      object,
+    const  Weight&    threshold ,
+    const  bool       flag      ) const 
+  { return m_base.i_relations ( object , threshold , flag ) ;}
+  
+  /// make the relation between 2 objects (fast,100% inline)
+  inline   StatusCode i_relate 
+  ( const  From&      object1 , 
+    const  To&        object2 ,
+    const  Weight&    weight  ) 
+  { return m_base.i_relate ( object1 , object2 , weight ) ;}
+  
+  /// remove the concrete relation between objects (fast,100% inline)
+  inline   StatusCode i_remove 
+  ( const  From&      object1 , 
+    const  To&        object2 ) 
+  { return m_base.i_remove ( object1 , object2 ) ; }
+  
+  /// remove all relations FROM the defined object (fast,100% inline)
+  inline   StatusCode i_removeFrom 
+  ( const  From&      object )
+  { return m_base.i_removeFrom ( object ) ; }
+  
+  /// remove all relations TO the defined object (fast,100% inline)
+  inline   StatusCode i_removeTo 
+  ( const  To&        object )
+  { return m_base.i_removeTo ( object ) ; }
+  
+  /// filter out the relations FROM the defined object (fast,100% inline)
+  inline   StatusCode i_filterFrom 
+  ( const  From&      object    ,
+    const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return m_base.i_filterFrom ( object , threshold , flag ) ; }
+  
+  /// filter out the relations TO the defined object (fast,100% inline)
+  inline   StatusCode i_filterTo 
+  ( const  To&        object    ,
+    const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return m_base.i_filterTo ( object , threshold , flag ) ; }
+  
+  /// filter out all relations (fast,100% inline)
+  inline   StatusCode i_filter 
+  ( const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return m_base.i_filter ( threshold , flag ) ; }
+  
+  /// remove ALL relations from ALL objects to ALL objects (fast,100% inline)
+  inline   StatusCode i_clear () { return m_base.i_clear ( ) ; }
+  
+public:  // abstract methods from interface
+  
+  /** retrive all relations from the object
+   *  
+   *  - relations are returned in the form of iterator pair:
+   *     \n IRelation<FROM,TO,WEIGHT>* irel   = ... ;
+   *     \n From                       object = ... ; 
+   *     \n Range r = irel->relations( object );
+   *  
+   *  - the number of related object is:
+   *     \n    const unsigned nRel = r.end()  - r.begin() ;
+   *     \n // const unsigned nRel = r.second - r.first   ; // the same!
+   *
+   *  - the related elements could be retrieved using the iterations:
+   *     \n for( iterator it = r.begin() ; r.end() != it ; ++it ){
+   *     \n /// extract and use the relation
+   *     \n To     to     = it->to()     ; // get the "to" object  
+   *     \n // To  to     = *it          ; // the same   
+   *     \n Weight weight = it->weight() ; // get the weight 
+   *     \n From   from   = it->weight() ; // again get the "from" object
+   *     \n };
+   *
+   *  @see    IRelationWeighted1D 
+   *  @see    RelationWeighted1DBase
+   *  @see    RelationWeighted1DTypeTraits
+   *  @param  object  the object
+   *  @return pair of iterators for output relations   
+   */
+  virtual Range relations
+  ( const From& object) const { return i_relations ( object ) ; }
+  
+  /** retrive ALL relations from ALL objects
+   *  
+   *  @see    IRelationWeighted1D 
+   *  @see    RelationWeighted1DBase
+   *  @see    RelationWeighted1DTypeTraits
+   *  @param  object  the object
+   *  @return pair of iterators for output relations   
+   */
+  virtual Range relations() const { return i_relations () ; }
+  
+  /** retrive all relations from the object which has weigth 
+   *  larger/smaller than the threshold value 
+   *  @param  object    the object
+   *  @param  threshold threshold value for the weight 
+   *  @param  flag      flag for larger/smaller
+   *  @return pair of iterators for output relations   
+   */
+  virtual  Range      relations
+  ( const  From&      object,
+    const  Weight&    threshold ,
+    const  bool       flag      ) const 
+  { return i_relations ( object , threshold , flag ) ; }
+  
+  /** make the relation between 2 objects 
+   *  @param  object1 the first object
+   *  @param  object2 the second object 
+   *  @param  weight  the weigth for the relation 
+   *  @return status  code 
+   */
+  virtual  StatusCode relate 
+  ( const  From&      object1 , 
+    const  To&        object2 ,
+    const  Weight&    weight  ) 
+  { return i_relate( object1 , object2 , weight ) ; }
+  
+  /** remove the concrete relation between objects
+   *  @param  object1 the first object
+   *  @param  object2 the second object 
+   *  @return status  code 
+   */
+  virtual  StatusCode remove 
+  ( const  From&      object1 , 
+    const  To&        object2 ) 
+  { return i_remove ( object1 , object2 ) ; }
+  
+  /** remove all relations FROM the defined object
+   *  @param  object  smart reference to the object
+   *  @return status code 
+   */
+  virtual  StatusCode removeFrom 
+  ( const  From&      object )
+  { return i_removeFrom ( object ) ; }
+  
+  /** remove all relations TO the defined object
+   *  @param object  smart reference to the object
+   *  @return status code 
+   */
+  virtual  StatusCode removeTo 
+  ( const  To&        object )
+  { return i_removeTo( object ) ; }
+  
+  /** filter out the relations FROM the defined object, which
+   *  have a weight larger(smaller)than the threshold weight 
+   *  @param  object    the object
+   *  @param  threshold threshold value for the weight 
+   *  @param  flag      flag for larger/smaller
+   *  @return status code 
+   */
+  virtual  StatusCode filterFrom 
+  ( const  From&      object    ,
+    const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return i_filterFrom ( object , threshold , flag ) ; }
+  
+  /** filter out the relations TO the defined object, which
+   *  have a weight larger/smaller than the threshold weight 
+   *  @param  object    the object
+   *  @param  threshold threshold value for the weight 
+   *  @param  flag      flag for larger/smaller
+   *  @return status code 
+   */
+  virtual  StatusCode filterTo 
+  ( const  To&        object    ,
+    const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return i_filterTo ( object , threshold , flag ) ; }
+  
+  /** filter out all relations which
+   *  have a weight larger/smaller than the threshold weight 
+   *  @param  threshold  threshold value for the weight 
+   *  @param  flag       flag for larger/smaller
+   *  @return status code 
+   */
+  virtual  StatusCode filter 
+  ( const  Weight&    threshold ,
+    const  bool       flag      )  
+  { return i_filter ( threshold , flag ) ; }
+  
+  /** remove ALL relations from ALL objects to ALL objects 
+   *  @return status code 
+   */
+  virtual  StatusCode clear () { return i_clear () ; }
+
+public:
+  
+  /** query the interface
+   *  @see    IRelation
+   *  @see    IInterface
+   *  @param  id  interface identifier
+   *  @param  ret placeholder for returned interface 
+   *  @return status code
+   */
+  virtual StatusCode queryInterface
+  ( const InterfaceID& id , void** ret )
+  {
+    if( 0 == ret  )          { return StatusCode::FAILURE ; } // RETURN !!!
+    if( IInterface::interfaceID() == id )
+      { *ret = static_cast<IInterface*> ( this ); }
+    else if( IBase::interfaceID() == id )
+      { *ret = static_cast<IBase*>      ( this ); }
+    else                     { return StatusCode::FAILURE ; } //  RETURN !!!
+    ///
+    addRef() ;
+    return StatusCode::SUCCESS ;
   };
   
   /** increase the reference counter
@@ -215,6 +430,10 @@ public:
    *  @return current number of references 
    */
   virtual unsigned long release () { return  DataObject::release () ; }
+  
+private:
+  
+  Base m_base ;
 
 };
 

@@ -1,26 +1,8 @@
-// $Id: Relation.h,v 1.7 2003-06-25 14:59:01 ibelyaev Exp $
+// $Id: Relation.h,v 1.8 2003-11-23 12:42:58 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2003/01/22 11:29:16  sponce
-// makes gcc 3.2 modifications compile under windows
-//
-// Revision 1.5  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.4  2002/07/25 15:32:13  ibelyaev
-//  bug fix in destructors of relation objects
-//
-// Revision 1.3  2002/06/18 16:46:40  ibelyaev
-//  bug fix in Relations/Relation.h file
-//
-// Revision 1.2  2002/04/25 08:44:03  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2002/04/03 15:35:17  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -67,8 +49,7 @@ namespace Relations
    */
   
   template<class FROM,class TO>
-  class Relation :
-    public virtual IRelation<FROM,TO>
+  class Relation : public IRelation<FROM,TO>
   {  
   public:
   
@@ -107,6 +88,7 @@ namespace Relations
     {};
     
     /** constructor from "inverted object"
+     *  It is an efficient way to "invert" relation 
      *  @param copy object to be inverted
      *  @param int artificial argument to distinguish from copy constructor
      */
@@ -114,25 +96,93 @@ namespace Relations
       : m_direct  ( inv.m_direct , flag ) 
       , m_inverse ( 0 )  
     {};
-
+    
     /** constructor from "inverse interface"
+     *  It is an efficient way to "invert" relation 
      *  @param copy interafce to be inverted 
      *  @param int artificial argument to distinguish from copy constructor
      */
-    Relation ( const IInverse & inv   , int /* flag */ ) 
+    Relation ( const IInverse& inv   , int /* flag */ ) 
       : m_direct  (   ) 
       , m_inverse ( 0 )  
     {
       // get all relations 
       typename IInverse::Range range = inv.relations() ;
+      // reserve the number of relation  
+      reserve( range.size() ) ;
       // invert all relations 
       for( typename IInverse::iterator entry = range.begin() ;
            range.end() != entry ; ++entry )
-        { relate( entry->second , entry->first ); }
+        { i_relate( entry->second , entry->first ); }
     };
     
     /// destructor (virtual)
     virtual ~Relation(){};
+    
+  public:  // major functional methods (fast, 100% inline)
+    
+    /// retrive all relations from the object (fast,100% inline)
+    inline   Range       i_relations
+    ( const  From&       object    ) const
+    {
+      typename Base::IP ip = m_direct.i_relations( object );
+      return Range( ip.first , ip.second );
+    };
+    
+    /// retrive all relations from ALL objects (fast,100% inline)
+    inline   Range        i_relations () const
+    {
+      typename Base::IP ip = m_direct.i_relations();
+      return Range( ip.first , ip.second );
+    };
+    
+    /// make the relation between 2 objects (fast,100% inline method) 
+    inline   StatusCode i_relate
+    ( const  From&      object1 ,
+      const  To&        object2 )
+    {
+      StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
+      return          m_inverse -> i_relate( object2 , object1 ); 
+    } ;
+    
+    /// remove the concrete relation between objects (fast,100% inline method)
+    inline   StatusCode i_remove 
+    ( const  From&      object1 ,
+      const  To&        object2 )
+    { 
+      StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
+      return          m_inverse -> i_remove( object2 , object1 );
+    };
+    
+    /// remove all relations FROM the defined object (fast,100% inline method)
+    inline   StatusCode i_removeFrom 
+    ( const  From&      object )
+    { 
+      StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
+      return          m_inverse-> i_removeTo   ( object ) ; 
+    };
+    
+    /// remove all relations TO the defined object (fast,100% inline method) 
+    inline   StatusCode i_removeTo
+    ( const  To&        object )
+    { 
+      StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
+      return          m_inverse -> i_removeFrom ( object ) ; 
+    };
+    
+    /// remove ALL relations form ALL  object to ALL objects (fast,100% inline)
+    inline  StatusCode i_clear() 
+    { 
+      StatusCode sc = m_direct.    i_clear () ; 
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
+      return          m_inverse -> i_clear () ; 
+    };
+    
+  public:  // abstract methods from interface
     
     /** retrive all relations from the object
      *
@@ -144,14 +194,8 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    //    virtual typename IRelation<FROM, TO>::Range       relations
-    // ( const typename IRelation<FROM, TO>::From&       object    ) const
     virtual Range       relations
-    ( const From&       object    ) const
-    {
-      typename Base::IP ip = m_direct.i_relations( object );
-      return   Range( ip.first , ip.second );
-    };
+    ( const From&       object    ) const { return i_relations( object ) ; }
     
     /** retrive all relations from ALL objects 
      *
@@ -160,11 +204,7 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    virtual Range       relations () const
-    {
-      typename Base::IP ip = m_direct.i_relations();
-      return Range( ip.first , ip.second );
-    };
+    virtual Range        relations () const { return i_relations () ; }
     
     /** make the relation between 2 objects
      *
@@ -187,12 +227,7 @@ namespace Relations
      */
     virtual  StatusCode relate
     ( const  From&      object1 ,
-      const  To&        object2 )
-    {
-      StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_relate( object2 , object1 ); 
-    } ;
+      const  To&        object2 ) { return i_relate( object1 , object2 ) ; }
     
     /** remove the concrete relation between objects
      *
@@ -213,15 +248,10 @@ namespace Relations
      *  @param object2  smart reference to the second object
      *  @return status code
      */
-    virtual  StatusCode remove
+    virtual  StatusCode remove 
     ( const  From&      object1 ,
-      const  To&        object2 )
-    { 
-      StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_remove( object2 , object1 );
-    };
-
+      const  To&        object2 ) { return i_remove ( object1 , object2 ) ; }
+    
     /** remove all relations FROM the defined object
      *
      *   - StatusCode::FAILURE is returned if there are no relations
@@ -240,15 +270,11 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return status code
      */
-    virtual  StatusCode removeFrom
-    ( const  From&      object )
-    { 
-      StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse-> i_removeTo   ( object ) ; 
-    };
+    virtual  StatusCode removeFrom 
+    ( const  From&      object     ) { return i_removeFrom ( object ) ; }
     
     /** remove all relations TO the defined object
+     *  ("fast", 100% inline method) 
      *
      *   - StatusCode::FAILURE is returned if there are no relations
      *     from the given object
@@ -262,12 +288,7 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode removeTo
-    ( const  To&        object )
-    { 
-      StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_removeFrom ( object ) ; 
-    };
+    ( const  To&        object ) { return i_removeTo( object ) ; }
     
     /** remove ALL relations form ALL  object to ALL objects 
      *
@@ -276,13 +297,10 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return status code
      */
-    virtual  StatusCode clear() 
-    { 
-      StatusCode sc = m_direct.    i_clear () ; 
-      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
-      return          m_inverse -> i_clear () ; 
-    };
+    virtual  StatusCode clear()  { return i_clear() ; }
 
+  public:
+    
     /** query the interface
      *  @see    IRelation
      *  @see    IInterface
@@ -303,15 +321,15 @@ namespace Relations
       addRef() ;
       return StatusCode::SUCCESS ;
     };
-
-    /** increase the reference counter
+    
+    /** increase the reference counter (artificial)
      *  @see    IInterface
      *  @see    DataObject
      *  @return current number of references
      */
     virtual unsigned long addRef  () { return 1 ; }
     
-    /** release the reference counter
+    /** release the reference counter (artificial)
      *  @see    IInterface
      *  @see    DataObject
      *  @return current number of references
@@ -329,15 +347,28 @@ namespace Relations
      */
     inline void    setInverseBase( Inverse* inverse ) { m_inverse = inverse ; }
     
-  private:
+    /** reserve the relations (for efficiency reasons)
+     *  @param num number of relations to be reserved
+     *  @return status code
+     */
+    inline StatusCode reserve ( const size_t num ) 
+    {
+      if( 0 != m_inverse ) { m_inverse->i_reserve( num ) ; }
+      return m_direct.i_reserve( num ) ;
+    };
     
-    /** copy constructor is private! 
+  public:
+    
+    /** copy constructor is publc, 
+     *  but it is not recommended for direct usage 
      *  @param copy object to be copied 
      */
     Relation ( const OwnType& copy   ) 
       : m_direct  ( copy.m_direct )
       , m_inverse ( 0             ) 
     {}
+    
+  private:
     
     /** assignement operator is private!
      *  @param copy object to be copied 

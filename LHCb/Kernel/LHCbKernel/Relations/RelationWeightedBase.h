@@ -1,20 +1,8 @@
-// $Id: RelationWeightedBase.h,v 1.6 2003-01-17 14:07:02 sponce Exp $
+// $Id: RelationWeightedBase.h,v 1.7 2003-11-23 12:42:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2002/07/25 15:32:15  ibelyaev
-//  bug fix in destructors of relation objects
-//
-// Revision 1.4  2002/04/26 09:42:39  ibelyaev
-//  reduce number of warnings for Microsoft  compiler
-//
-// Revision 1.3  2002/04/25 08:44:04  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.2  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -415,6 +403,13 @@ namespace Relations
       m_entries.clear() ;
       return StatusCode::SUCCESS ;
     };
+    
+    /** reserve the space for relations 
+     *  @param   numbe rof relation to be reserved 
+     *  @return  status code 
+     */
+    inline StatusCode i_reserve ( const size_t num  )
+    { m_entries.reserve( num ) ; return StatusCode::SUCCESS ; }
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space

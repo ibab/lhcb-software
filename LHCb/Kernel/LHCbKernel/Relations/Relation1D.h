@@ -1,23 +1,8 @@
-// $Id: Relation1D.h,v 1.11 2003-06-25 14:59:01 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.12 2003-11-23 12:42:59 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2003/06/16 13:27:54  sponce
-// fixes for gcc 3.2 and 3.3
-//
-// Revision 1.9  2003/01/17 14:07:01  sponce
-// support for gcc 3.2
-//
-// Revision 1.8  2002/07/25 15:32:14  ibelyaev
-//  bug fix in destructors of relation objects
-//
-// Revision 1.7  2002/04/25 15:30:18  ibelyaev
-//  one more attempt to make Bill Gates happy
-//
-// Revision 1.6  2002/04/25 14:10:13  ibelyaev
-//  one more fix for Win2K
-//
 // =============================================================================
 #ifndef RELATIONS_Relation1D_H
 #define RELATIONS_Relation1D_H 1
@@ -64,9 +49,8 @@
 
 template<class FROM,class TO>
 class Relation1D :
-  public         DataObject                   ,
-  public virtual IRelation <FROM,TO>          ,
-  public virtual  Relations::Relation<FROM,TO>   
+  public  IRelation<FROM,TO> ,
+  public  DataObject                   
 {
   
 public:
@@ -77,14 +61,21 @@ public:
   typedef Relation1D<TO,FROM>              InvType        ;
   /// short cut for interface 
   typedef IRelation<FROM,TO>               IBase          ;
+  /// import "Range" type from the base 
+  typedef typename IBase::Range            Range          ;
+  /// import "From"  type from the base 
+  typedef typename IBase::From             From           ;
+  /// import "To"    type from the base 
+  typedef typename IBase::To               To             ;
   /// short cut for the actual implementation type 
-  typedef typename Relations::Relation<FROM,TO>     Base           ;
+  typedef typename Relations::Relation<FROM,TO> Base      ;
+
   
 public:
   
   /// the default constructor
   Relation1D ( const size_t reserve = 0 ) 
-    : IBase(), Base(reserve), DataObject() 
+    : DataObject() , m_base ( reserve )  
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
@@ -97,20 +88,20 @@ public:
    *  copy constructor
    */
   Relation1D ( const InvType& inv , int flag ) 
-    : IBase(), Base( inv  , flag ), DataObject ( inv ) 
+    : DataObject( inv ) , m_base( inv  , flag ) 
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
 #endif // COUNT_INSTANCES
   };
-
+  
   /** constructor from "inverted interface"
    *  @param inv object to be inverted
    *  @param flag artificial argument to distinguisch from 
    *  copy constructor
    */
   Relation1D ( const typename IBase::InverseType& inv , int flag ) 
-    : IBase(), Base( inv  , flag ), DataObject ()
+    : DataObject() , m_base( inv  , flag )
   {
 #ifdef COUNT_INSTANCES 
     Relations::InstanceCounter::instance().increment( type() ) ;
@@ -154,7 +145,7 @@ public:
    *  @return the unique class identifier
    */
   virtual const CLID& clID()     const { return classID() ; }
-
+  
   /** object serialization for writing
    *  @see DataObject
    *  @param  s reference to the output stream
@@ -169,9 +160,10 @@ public:
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
-    typename IRelation<FROM, TO>::Range range = relations() ;
+    typename IRelation<FROM, TO>::Range range = 
+      i_relations() ;
     // serialize the number of relations 
-    unsigned long _size = range.end() - range.begin() ;
+    unsigned long _size = range.size();
     s << _size ;
     // serialise all relations
     for( typename Relation1D<FROM, TO>::iterator entry = range.begin() ;
@@ -198,11 +190,12 @@ public:
     typedef typename FromTypeTraits::Serializer SerializeF ;
     typedef typename ToTypeTraits::Serializer   SerializeT ;
     // clear all existing relations 
-    clear();
+    i_clear();
     // serialize the base class
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
+    m_base.reserve( _size ) ;
     typename IBase::From from ;
     typename IBase::To   to ;
     while( _size-- > 0 )
@@ -211,11 +204,157 @@ public:
         SerializeF::serialize ( s , ApplyF::apply ( from   , this ) ) ;
         SerializeT::serialize ( s , ApplyT::apply ( to     , this ) ) ;
         //
-        relate( from , to ) ;
+        i_relate( from , to ) ;
       }
     return s ;
   };
   
+public:  // major functional methods (fast, 100% inline)
+  
+  /// retrive all relations from the object (fast,100% inline)
+  inline   Range       i_relations
+  ( const  From&       object    ) const
+  { return m_base.i_relations ( object ) ; }
+  
+  /// retrive all relations from ALL objects (fast,100% inline)
+  inline   Range        i_relations () const
+  { return m_base.i_relations () ; }
+  
+  /// make the relation between 2 objects (fast,100% inline method) 
+  inline   StatusCode i_relate
+  ( const  From&      object1 ,
+    const  To&        object2 )
+  { return m_base.i_relate   ( object1 , object2 ) ; }
+  
+  /// remove the concrete relation between objects (fast,100% inline method)
+  inline   StatusCode i_remove 
+  ( const  From&      object1 ,
+    const  To&        object2 )
+  { return m_base.i_remove ( object1 , object2 ) ; }
+  
+  /// remove all relations FROM the defined object (fast,100% inline method)
+  inline   StatusCode i_removeFrom 
+  ( const  From&      object )
+  { return m_base.i_removeFrom ( object ) ; }    
+  
+  /// remove all relations TO the defined object (fast,100% inline method)
+  inline   StatusCode i_removeTo
+  ( const  To&        object )
+  { return m_base.i_removeTo( object ) ; }
+  
+  /// remove ALL relations form ALL  object to ALL objects  (fast,100% inline)
+  inline  StatusCode i_clear() 
+  { return m_base.i_clear() ; };
+  
+public: // abstract methods from interface 
+  
+  /** retrive all relations from the given object object
+   *  @param  object  the object
+   *  @return pair of iterators for output relations
+   */
+  virtual Range      relations
+  ( const From&      object    ) const { return i_relations( object ) ; }
+  
+  /** retrive ALL relations from ALL objects  
+   *  @param  object  the object
+   *  @return pair of iterators for output relations
+   */
+  virtual Range      relations () const { return i_relations() ; }
+  
+  /** make the relation between 2 objects
+   *  @param  object1 the first object
+   *  @param  object2 the second object
+   *  @return status  code
+   */
+  virtual StatusCode relate
+  ( const From&      object1 ,
+    const To&        object2 ) { return i_relate( object1 , object2 ) ; }
+
+  /** remove the concrete relation between objects
+   *
+   *   - if there are no relations between the given object
+   *     the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    From object1 = ... ;
+   *    To   object2 = ... ;
+   *    irel->remove( object1 , object2 );
+   *  @endcode
+   *
+   *  @param  object1 the first object
+   *  @param  object2 the second object
+   *  @return status  code
+   */
+  virtual StatusCode   remove
+  ( const From&        object1 ,
+    const To&          object2 ) { return i_remove( object1 , object2 ) ; }
+  
+  /** remove all relations FROM the defined object
+   *
+   *   - if there are no relations from the given onject
+   *     the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    From object1 = ... ;
+   *    irel->removeFrom( object1 );
+   *  @endcode
+   *
+   *
+   *  @param  object the object
+   *  @return status code
+   */
+  virtual StatusCode   removeFrom
+  ( const From&        object ) { return i_removeFrom( object ) ; }
+  
+  /** remove all relations TO the defined object
+   *
+   *   - if there are no relations to the given object
+   *     the error code will be returned
+   *
+   *  Example:
+   *  @code
+   *    To object1 = ... ;
+   *    irel->removeTo( object1 );
+   *  @endcode
+   *
+   *  @param  object the object
+   *  @return status code
+   */
+  virtual StatusCode   removeTo
+  ( const To&          object ) { return i_removeTo( object ) ; }
+  
+  /** remove ALL relations from ALL to ALL objects
+   *
+   *  @param  object the object
+   *  @return status code
+   */
+  virtual StatusCode   clear () { return i_clear() ; }
+  
+public:
+  
+  /** query the interface
+   *  @see    IRelation
+   *  @see    IInterface
+   *  @param  id  interface identifier
+   *  @param  ret placeholder for returned interface 
+   *  @return status code
+   */
+  virtual StatusCode queryInterface
+  ( const InterfaceID& id , void** ret )
+  {
+    if( 0 == ret  )          { return StatusCode::FAILURE ; } // RETURN !!!
+    if( IInterface::interfaceID() == id )
+      { *ret = static_cast<IInterface*> ( this ); }
+    else if( IBase::interfaceID() == id )
+      { *ret = static_cast<IBase*>      ( this ); }
+    else                     { return StatusCode::FAILURE ; } //  RETURN !!!
+    ///
+    addRef() ;
+    return StatusCode::SUCCESS ;
+  };
+
   /** increase the reference counter
    *  @see    IInterface
    *  @see    DataObject
@@ -229,6 +368,10 @@ public:
    *  @return current number of references
    */
   virtual unsigned long release () { return  DataObject::release () ; }
+  
+private:
+  
+  Base m_base ;
   
 };
 
