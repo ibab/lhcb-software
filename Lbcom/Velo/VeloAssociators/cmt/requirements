@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAssociators
-version           v1r9
+version           v1r10
 
 # Structure, i.e. directories to process. 
 #============================================================================

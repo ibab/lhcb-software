@@ -1,7 +1,6 @@
 // Include files 
 
 #include "Event/VeloCluster.h"
-#include "Event/MCVeloFE.h"
 #include "Event/MCParticle.h"
 
 #include "VeloDet/DeVelo.h"
@@ -9,7 +8,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
@@ -46,37 +44,27 @@ StatusCode VeloCluster2MCParticleAlg::initialize() {
   log << MSG::DEBUG << "==> Initialise" << endreq;
 
   SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
-   
   if ( 0 == velo ) {
     log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
     return StatusCode::FAILURE;
-   }
-
+  }
   m_velo = velo;
+
+  StatusCode sc = toolSvc()->retrieveTool("VeloCluster2MCHitAsct", m_pV2MCHit);
+  if ( sc.isFailure() || (0 == m_pV2MCHit) ) {
+    log << MSG::ERROR << "Could not retrieve VeloCluster2MCHitAsct tool"
+        << endmsg;
+    return sc;
+  }
  
   return StatusCode::SUCCESS;
 };
 
 
 StatusCode VeloCluster2MCParticleAlg::execute() {
-   MsgStream log(msgSvc(), name());
-   log << MSG::DEBUG << "--- execute---" << endreq;
 
-  // DEH try and get the /Event/Rec/Relations/VeloClusters2MCHits 
-  // if this exists use that to build the table
-  const std::string Type = "VeloCluster2MCHitAsct";
-  StatusCode sc = toolSvc()->retrieveTool (Type, m_pV2MCHit);
-
-  if ( sc.isFailure() || 0==m_pV2MCHit ) {
-    log << MSG::ERROR
-        << "No table of VeloCluster2MCHit available"
-        << endmsg;
-    return StatusCode::FAILURE;
-  } 
-
-  log << MSG::DEBUG 
-      << " Using VeloCluster2MCHit to build table" 
-      << endmsg;
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << "--- execute---" << endreq;
 
   // get VeloClusters
   SmartDataPtr<VeloClusters> clusterCont(eventSvc(),
@@ -100,7 +88,10 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
     typedef Table::iterator iterator;
     
     const Table* table = m_pV2MCHit->direct();
-    if (0==table){ 
+    if (0==table){
+      log << MSG::ERROR << "Could not retrieve VeloCluster2MCHit table"
+          << endmsg;
+      delete aTable;
       return StatusCode::FAILURE;
     }
     
@@ -124,13 +115,13 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
   } // loop iterClus
   
   // register table in store
-  sc = eventSvc()->registerObject(outputData(), aTable);
+  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
     MsgStream log(msgSvc(), name());
-    log << MSG::FATAL << "     *** Could not register " << outputData()
+    log << MSG::ERROR << "     *** Could not register " << outputData()
         << endreq;
     delete aTable;
-    return StatusCode::FAILURE;
+    return sc;
   }
  
   return StatusCode::SUCCESS;
@@ -141,17 +132,13 @@ StatusCode VeloCluster2MCParticleAlg::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
+  if( 0 == m_pV2MCHit ) {
+    toolSvc()->releaseTool( m_pV2MCHit );
+    m_pV2MCHit = 0;
+  }
+  
   return StatusCode::SUCCESS;
 }
-
-
-
-
-
-
-
-
-
 
 
 
