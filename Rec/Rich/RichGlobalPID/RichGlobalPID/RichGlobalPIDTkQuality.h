@@ -4,8 +4,11 @@
  *  Header file for track quality enumeration for the Global PID algorithm
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTkQuality.h,v 1.3 2004-07-27 10:56:36 jonrob Exp $
+ *  $Id: RichGlobalPIDTkQuality.h,v 1.4 2004-08-17 13:31:26 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 10:56:36  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -66,7 +69,7 @@ namespace Rich {
     case Rich::GlobalPID::Unusable:        return "unusable";
     case Rich::GlobalPID::LikelihoodOnly:  return "likelihood only";
     case Rich::GlobalPID::Physics:         return "physics";
-    default:                               return "?"; // should never happen
+    default:                               return "SHOULD NEVER SEE THIS";
     }
   }
 

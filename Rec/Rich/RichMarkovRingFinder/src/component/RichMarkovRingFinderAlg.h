@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.6 2004-06-29 19:42:45 jonesc Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.7 2004-08-17 13:33:49 jonrob Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -39,7 +39,7 @@
 /// @class  RichMarkovRingFinderAlg
 /// @brief  Templated base class for concrete Markov Ring Finder Algorithms
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 
@@ -127,7 +127,7 @@ private: // data
 /// @brief  Standalone ring finder for RICH1 lower panel using Markov Chain
 ///
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 typedef Lester::RichMarkovRingFinder<Lester::Rich1Configuration, Lester::globalRich1LConfiguration> Rich1LMarkovRingFinder;
@@ -148,7 +148,7 @@ public:
 /// @brief  Standalone ring finder for RICH1 upper panel using Markov Chain
 ///
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 typedef Lester::RichMarkovRingFinder<Lester::Rich1Configuration, Lester::globalRich1UConfiguration> Rich1UMarkovRingFinder;
@@ -169,7 +169,7 @@ public:
 /// @brief  Standalone ring finder for RICH2 left panel using Markov Chain
 ///
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 
@@ -191,7 +191,7 @@ public:
 /// @brief  Standalone ring finder for RICH2 right panel using Markov Chain
 ///
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 

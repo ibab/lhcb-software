@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.5 2004-06-29 19:42:45 jonesc Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.6 2004-08-17 13:33:49 jonrob Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -38,7 +38,7 @@ void printMap(pair<string,double> element);
 /// @brief Monitor class for Markov chain ring finder
 ///
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
+/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @author Andy Buckley  buckley@hep.phy.cam.ac.uk
 /// @date   2003-12-04
 ///
