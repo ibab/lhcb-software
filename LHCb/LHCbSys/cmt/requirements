@@ -21,10 +21,10 @@ use GenEvent     	v2r3    	Event
 use KernelSys   	v1r0    Kernel
 
 # Detector description
-use DetSys		v1r1	Det
+use DetSys		v1r2	Det
 
 # Event data model
-use EventSys		v13r0	Event
+use EventSys		v13r1	Event
 
 # Associators
 use AssociatorsSys	v1r1	Associators

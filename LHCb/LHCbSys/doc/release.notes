@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2002-12-20 - Marco Cattaneo
- - requirements	- use SICBSys v1r1 and AssociatorsSys v1r1
+ - requirements:
+   use SICBSys v1r1, AssociatorsSys v1r1, EventSys v13r1, DetSys v1r2
 
 !====================== LHCbSys v11r5 ================================
 ! 2002-12-13 - Florence Ranjard
