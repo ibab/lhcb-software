@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.15 2002-04-30 16:50:25 mato Exp $
+// $Id: DaDiTools.cpp,v 1.16 2002-04-30 17:04:45 mato Exp $
 
 
 // Include files
@@ -180,7 +180,7 @@ bool DaDiTools::isStdContainer(std::string value)
 bool DaDiTools::isEmpty(const std::string& value)
 //-----------------------------------------------------------------------------
 {
-  for (int i = 0; i < value.length(); ++i)
+  for (unsigned int i = 0; i < value.length(); ++i)
   {
     if (value[i] != ' ') { return false; }
   }

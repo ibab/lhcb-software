@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.59 2002-04-30 16:50:24 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.60 2002-04-30 17:04:44 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1035,7 +1035,7 @@ void printMembers(std::ofstream& xmlOut,
         }
       }
       xmlOut << "}; ///< Offsets of bitfield " << gddAttName << std::endl;
-      if (offset > (sizeof(unsigned int)*8))
+      if (offset > (signed)(sizeof(unsigned int)*8))
       {
         std::cerr << std::endl << "GOD says: WARNING: Bitset " 
           << gddAttName << " has more than " << (sizeof(unsigned long)*8) 
@@ -1055,10 +1055,10 @@ void printMembers(std::ofstream& xmlOut,
 
         if (gddBfLength != 0)
         {
-          int mask = pow(2,gddBfLength)-1;
+          int mask = (int)pow(2,gddBfLength)-1;
           mask = mask << offset;
           xmlOut << "0x";
-          xmlOut.setf(std::ios_base::hex, std::ios_base::basefield);
+          xmlOut.setf(std::ios::hex, std::ios::basefield);
           xmlOut.width(8);
           xmlOut.fill('0');
           xmlOut << mask;
