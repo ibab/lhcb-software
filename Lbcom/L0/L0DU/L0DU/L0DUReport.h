@@ -1,6 +1,6 @@
 #ifndef L0DU_L0DUREPORT_H
 #define L0DU_L0DUREPORT_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.4 2001-10-01 08:32:02 nbrun Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.5 2002-01-14 11:10:16 cattanem Exp $
 
 // Include files
 #include <iostream>
@@ -35,7 +35,7 @@ namespace L0Trig
   };
 };
 
-const CLID& CLID_L0DUReport = 6004;
+static const CLID& CLID_L0DUReport = 6004;
 
 /** @class L0DUReport L0DUReport L0DU/L0DUReport.h
  *

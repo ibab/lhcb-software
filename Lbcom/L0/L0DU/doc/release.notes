@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.5 2002-01-14 10:06:38 cattanem Exp $
+$Id: release.notes,v 1.6 2002-01-14 11:10:16 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
 !=============================================================================
+! 2002/01/14 - Marco Cattaneo  ** v3r0
+  L0DUReport.h - declare CLID_L0DUReport as static
+
 ! 2002/01/08 - Marco Cattaneo  ** v3r0
   Changes for Gaudi v9:
   requirements - use L0Calo v3r*, L0Muon v4r*, L0Event v4r*
