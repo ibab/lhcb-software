@@ -3,7 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r2>2004-09-08 Brunel v24r2</A></H1><PRE>
+</PRE><H1><A NAME=v24r2>2004-09-22 Brunel v24r2</A></H1><PRE>
+This version uses Gaudi v15r2, needs CMT v1r16. It can process DC04 data
 
 - New or modified functionality
   . New test input data file taken from DC04 (v200402.opts)
