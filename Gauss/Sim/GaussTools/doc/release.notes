@@ -5,10 +5,11 @@
 !-----------------------------------------------------------------------------
 
 
-!=========================== GaussTools v10r8 =============================
+!=========================== GaussTools v10r9 =============================
 ! 2005-03-01 - Gloria Corti
  - remove GDMLRunAction.{h,cpp} waiting for official release of GDML
 
+!=========================== GaussTools v10r8 =============================
 ! 2005-02-28 - Gloria Corti
  - src/Lib/GDMLRunAction.{h,cpp}
    . introduce name of file where to write GDML geometry and schema to
