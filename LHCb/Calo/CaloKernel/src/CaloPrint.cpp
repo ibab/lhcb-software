@@ -1,8 +1,11 @@
-// $Id: CaloPrint.cpp,v 1.3 2002-03-20 15:49:09 ibelyaev Exp $
+// $Id: CaloPrint.cpp,v 1.4 2002-03-20 18:12:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/03/20 15:49:09  ibelyaev
+//  add simple adaptor for std::map/HashTable classes
+//
 // Revision 1.2  2001/12/13 11:14:34  ibelyaev
 //  update for Win2K
 //
@@ -50,7 +53,7 @@ char* CaloPrint::storage()
 /** initialize static members 
  */
 // ============================================================================
-std::string CaloPrint::s_formatDouble  = "%-8.3g" ;
+std::string CaloPrint::s_formatDouble  = "%9.3g" ;
 std::string CaloPrint::s_formatInteger = "%d"     ;
 	
 // ============================================================================

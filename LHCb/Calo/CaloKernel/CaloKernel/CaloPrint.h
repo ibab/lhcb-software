@@ -1,8 +1,11 @@
-// $Id: CaloPrint.h,v 1.4 2002-03-20 15:49:09 ibelyaev Exp $
+// $Id: CaloPrint.h,v 1.5 2002-03-20 18:12:25 ibelyaev Exp $
 // ============================================================================
 // CV stag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/03/20 15:49:09  ibelyaev
+//  add simple adaptor for std::map/HashTable classes
+//
 // Revision 1.3  2002/03/19 19:42:16  ibelyaev
 //  fix conversion problems with CaloPrint object
 //
@@ -156,7 +159,7 @@ public:
    *  @param format new default format for doubles 
    *  @return value of  default format for doubles 
    */
-  static const char* setFormatDouble  ( const std::string& format = "%-8.3g" ) ;
+  static const char* setFormatDouble  ( const std::string& format = "%9.3g" ) ;
   
   /** accessor to format for integers 
    *  @return format for integers 
