@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.2 2002-03-20 18:09:33 dhcroft Exp $
+! $Id: release.notes,v 1.3 2002-03-21 17:48:16 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! =============================================================================
+! 21/3/2002  David Hutchcroft
+  Moved MuonGeometry.h into MuonTools, this is the look up table for chambers,
+  logical strips and pads to MuonTileIDs.
 
 ! =============================================================================
 ! 20/3/2002  David Hutchcroft
