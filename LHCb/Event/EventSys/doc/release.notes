@@ -1,8 +1,8 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!========================= EventSys v13r0 2002-10-01 =========================
-! 2002-10-01 - Florence Ranjard
+!========================= EventSys v13r0 2002-10-11 =========================
+! 2002-10-11 - Florence Ranjard
  - Use new versions based on new Gaudi
 
 !========================= EventSys v12r4 2002-09-24 ========================
