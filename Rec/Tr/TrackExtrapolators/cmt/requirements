@@ -22,9 +22,9 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   GaudiAlg       v*
-use   LHCbInterfaces v*     Kernel
-use   TrackEvent     v1r0   Event
+use   GaudiAlg       v8r2
+use   LHCbInterfaces v1r1   Kernel
+use   TrackEvent     v1r1   Event
 
 #============================================================================
 # Component library building rule

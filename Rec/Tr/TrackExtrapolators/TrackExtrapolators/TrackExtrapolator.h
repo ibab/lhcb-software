@@ -1,4 +1,4 @@
-// $Id: TrExtrapolator.h,v 1.1.1.1 2005-02-10 19:04:30 erodrigu Exp $
+// $Id: TrackExtrapolator.h,v 1.1 2005-03-10 14:41:03 hernando Exp $
 #ifndef TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 1
 
@@ -6,21 +6,21 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Tools/ITrExtrapolator.h"
+#include "Tools/ITrackExtrapolator.h"
 
 class Track;
 class State;
 
-/** @class TrExtrapolator TrExtrapolator.h TrackExtrapolator/TrExtrapolator.h
+/** @class TrackExtrapolator TrackExtrapolator.h TrackExtrapolator/TrackExtrapolator.h
  *  
- *  A TrExtrapolator is a base class implementing methods
- *  from the ITrExtrapolator interface.
+ *  A TrackExtrapolator is a base class implementing methods
+ *  from the ITrackExtrapolator interface.
  *
  *  @author Eduardo Rodrigues
  *  @date   2004-12-17
  */
-class TrExtrapolator : public GaudiTool,
-                       virtual public ITrExtrapolator {
+class TrackExtrapolator : public GaudiTool,
+                       virtual public ITrackExtrapolator {
 public: 
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const Track& track,
@@ -189,12 +189,12 @@ public:
   virtual const HepMatrix& transportMatrix() const;
 
   /// Standard constructor
-  TrExtrapolator( const std::string& type, 
+  TrackExtrapolator( const std::string& type, 
                   const std::string& name,
                   const IInterface* parent );
 
   /// Destructor
-  virtual ~TrExtrapolator( );
+  virtual ~TrackExtrapolator( );
 
 protected:
   /// Transport matrix

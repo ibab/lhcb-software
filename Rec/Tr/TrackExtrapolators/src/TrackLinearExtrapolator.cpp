@@ -1,4 +1,4 @@
-// $Id: TrLinearExtrapolator.cpp,v 1.1.1.1 2005-02-10 19:04:30 erodrigu Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.1 2005-03-10 14:41:03 hernando Exp $
 // Include files
 
 // from Gaudi
@@ -10,24 +10,24 @@
 #include "Event/TrGeneral.h"
 
 // local
-#include "TrLinearExtrapolator.h"
+#include "TrackLinearExtrapolator.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrLinearExtrapolator
+// Implementation file for class : TrackLinearExtrapolator
 //
 // 2004-12-17 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrLinearExtrapolator>          s_factory ;
-const        IToolFactory& TrLinearExtrapolatorFactory = s_factory ;
+static const  ToolFactory<TrackLinearExtrapolator>          s_factory ;
+const        IToolFactory& TrackLinearExtrapolatorFactory = s_factory ;
 
 //=============================================================================
 // Extrapolate the State to z=zNew using the transport matrix  m_F
 // (i.e. it performs the mathematical calculation)
 //=============================================================================
 /*
-void TrLinearExtrapolator::extrapolate( State* state ) const
+void TrackLinearExtrapolator::extrapolate( State* state ) const
 {
   // get reference to the State vector and covariance
   HepVector& tX = state -> state();
@@ -42,7 +42,7 @@ void TrLinearExtrapolator::extrapolate( State* state ) const
 //=============================================================================
 // Propagate a State to a given z-position
 //=============================================================================
-StatusCode TrLinearExtrapolator::propagate( State& state,
+StatusCode TrackLinearExtrapolator::propagate( State& state,
                                             double zNew,
                                             ParticleID pid )
 {
@@ -71,7 +71,7 @@ StatusCode TrLinearExtrapolator::propagate( State& state,
 //=============================================================================
 // Propagate a State to the intersection point with a given plane
 //=============================================================================
-StatusCode TrLinearExtrapolator::propagate( State& state,
+StatusCode TrackLinearExtrapolator::propagate( State& state,
                                             HepPlane3D& plane,
                                             ParticleID pid )
 {
@@ -107,13 +107,13 @@ StatusCode TrLinearExtrapolator::propagate( State& state,
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrLinearExtrapolator::TrLinearExtrapolator(const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
-  : TrExtrapolator ( type, name, parent )
+TrackLinearExtrapolator::TrackLinearExtrapolator(const std::string& type,
+                                                 const std::string& name,
+                                                 const IInterface* parent )
+  : TrackExtrapolator ( type, name, parent )
   , m_F()
 {
-  //declareInterface<ITrExtrapolator>( this );
+  //declareInterface<ITrackExtrapolator>( this );
 
   // create transport matrix
   m_F = HepMatrix(5, 5, 1);
@@ -122,4 +122,4 @@ TrLinearExtrapolator::TrLinearExtrapolator(const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrLinearExtrapolator::~TrLinearExtrapolator() {};
+TrackLinearExtrapolator::~TrackLinearExtrapolator() {};

@@ -1,33 +1,33 @@
-// $Id: TrExtrapolator.cpp,v 1.1.1.1 2005-02-10 19:04:30 erodrigu Exp $
+// $Id: TrackExtrapolator.cpp,v 1.1 2005-03-10 14:41:03 hernando Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-// from TrEvent
+// from TrackEvent
 #include "Event/Track.h"
 #include "Event/State.h"
 
 // local
-#include "TrackExtrapolators/TrExtrapolator.h"
+#include "TrackExtrapolators/TrackExtrapolator.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrExtrapolator
+// Implementation file for class : TrackExtrapolator
 //
 // 2004-12-17 : Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrExtrapolator>          s_factory ;
-const        IToolFactory& TrExtrapolatorFactory = s_factory ; 
+static const  ToolFactory<TrackExtrapolator>          s_factory ;
+const        IToolFactory& TrackExtrapolatorFactory = s_factory ; 
 
 //=============================================================================
 // Propagate a track to a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::propagate( const Track& track,
-                                      double z,
-       	                              State& state,
-                                      ParticleID pid )
+StatusCode TrackExtrapolator::propagate( const Track& track,
+                                         double z,
+                                         State& state,
+                                         ParticleID pid )
 {
   // get state closest to z
   const State& closest = track.closestState( z );
@@ -42,7 +42,7 @@ StatusCode TrExtrapolator::propagate( const Track& track,
 //=============================================================================
 // Propagate a track to the intersection point with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::propagate( const Track& track,
+StatusCode TrackExtrapolator::propagate( const Track& track,
                                       const HepPlane3D& plane,
                                       State& state,
                                       ParticleID pid )
@@ -61,7 +61,7 @@ StatusCode TrExtrapolator::propagate( const Track& track,
 // Retrieve the position and momentum vectors and the corresponding
 // 6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
+StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                 double z,
                                                 HepPoint3D& pos,
                                                 HepVector3D& mom,
@@ -83,7 +83,7 @@ StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
 // 6D covariance matrix (pos:1->3,mom:4-6) at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
+StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                 const HepPlane3D& plane,
                                                 HepPoint3D& pos,
                                                 HepVector3D& mom,
@@ -103,7 +103,7 @@ StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
 //=============================================================================
 // Retrieve the position and momentum vectors of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
+StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                 double z,
                                                 HepPoint3D& pos,
                                                 HepVector3D& mom,
@@ -126,7 +126,7 @@ StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
 // Retrieve the position and momentum vectors at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
+StatusCode TrackExtrapolator::positionAndMomentum( const Track& track,
                                                 const HepPlane3D& plane,
                                                 HepPoint3D& pos,
                                                 HepVector3D& mom,
@@ -149,7 +149,7 @@ StatusCode TrExtrapolator::positionAndMomentum( const Track& track,
 // Retrieve the 3D-position vector and error matrix of a track
 // at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::position( const Track& track,
+StatusCode TrackExtrapolator::position( const Track& track,
                                      double z,
                                      HepPoint3D& pos,
                                      HepSymMatrix& errPos,
@@ -172,7 +172,7 @@ StatusCode TrExtrapolator::position( const Track& track,
 // Retrieve the 3D-position vector and error matrix at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::position( const Track& track,
+StatusCode TrackExtrapolator::position( const Track& track,
                                      const HepPlane3D& plane,
                                      HepPoint3D& pos,
                                      HepSymMatrix& errPos,
@@ -192,7 +192,7 @@ StatusCode TrExtrapolator::position( const Track& track,
 //=============================================================================
 // Retrieve the 3D-position vector of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::position( const Track& track,
+StatusCode TrackExtrapolator::position( const Track& track,
                                      double z,
                                      HepPoint3D& pos,
                                      ParticleID pid )
@@ -213,7 +213,7 @@ StatusCode TrExtrapolator::position( const Track& track,
 // Retrieve the 3D-position vector at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::position( const Track& track,
+StatusCode TrackExtrapolator::position( const Track& track,
                                      const HepPlane3D& plane,
                                      HepPoint3D& pos,
                                      ParticleID pid )
@@ -233,7 +233,7 @@ StatusCode TrExtrapolator::position( const Track& track,
 // Retrieve the slopes (dx/dz,dy/dz,1) and error matrix of a
 // track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::slopes( const Track& track,
+StatusCode TrackExtrapolator::slopes( const Track& track,
                                    double z,
                                    HepVector3D& slopes,
                                    HepSymMatrix& errSlopes,
@@ -255,7 +255,7 @@ StatusCode TrExtrapolator::slopes( const Track& track,
 // Retrieve the slopes (dx/dz,dy/dz,1) and error matrix at the intersection
 // of a track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::slopes( const Track& track,
+StatusCode TrackExtrapolator::slopes( const Track& track,
                                    const HepPlane3D& plane,
                                    HepVector3D& slopes,
                                    HepSymMatrix& errSlopes,
@@ -276,7 +276,7 @@ StatusCode TrExtrapolator::slopes( const Track& track,
 //=============================================================================
 // Retrieve the slopes (dx/dz,dy/dz,1) of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::slopes( const Track& track,
+StatusCode TrackExtrapolator::slopes( const Track& track,
                                    double z,
                                    HepVector3D& slopes,
                                    ParticleID pid )
@@ -295,7 +295,7 @@ StatusCode TrExtrapolator::slopes( const Track& track,
 // Retrieve the slopes (dx/dz,dy/dz,1) at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::slopes( const Track& track,
+StatusCode TrackExtrapolator::slopes( const Track& track,
                                    const HepPlane3D& plane,
                                    HepVector3D& slopes,
                                    ParticleID pid )
@@ -313,7 +313,7 @@ StatusCode TrExtrapolator::slopes( const Track& track,
 //=============================================================================
 // Retrieve the momentum of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::p( const Track& track,
+StatusCode TrackExtrapolator::p( const Track& track,
                               double z,
                               double& p,
                               ParticleID pid )
@@ -331,7 +331,7 @@ StatusCode TrExtrapolator::p( const Track& track,
 //=============================================================================
 // Retrieve the momentum at the intersection of a track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::p( const Track& track,
+StatusCode TrackExtrapolator::p( const Track& track,
                               const HepPlane3D& plane,
                               double& p,
                               ParticleID pid )
@@ -350,7 +350,7 @@ StatusCode TrExtrapolator::p( const Track& track,
 //=============================================================================
 // Retrieve the transverse momentum of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::pt( const Track& track,
+StatusCode TrackExtrapolator::pt( const Track& track,
                                double z,
                                double& pt,
                                ParticleID pid )
@@ -369,7 +369,7 @@ StatusCode TrExtrapolator::pt( const Track& track,
 // Retrieve the transverse momentum at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::pt( const Track& track,
+StatusCode TrackExtrapolator::pt( const Track& track,
                                const HepPlane3D& plane,
                                double& pt,
                                ParticleID pid )
@@ -389,7 +389,7 @@ StatusCode TrExtrapolator::pt( const Track& track,
 // Retrieve the momentum vector and error matrix of a
 // track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::momentum( const Track& track,
+StatusCode TrackExtrapolator::momentum( const Track& track,
                                      double z,
                                      HepVector3D& mom,
                                      HepSymMatrix& errMom,
@@ -410,7 +410,7 @@ StatusCode TrExtrapolator::momentum( const Track& track,
 // Retrieve the momentum vector and error matrix at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::momentum( const Track& track,
+StatusCode TrackExtrapolator::momentum( const Track& track,
                                      const HepPlane3D& plane,
                                      HepVector3D& mom,
                                      HepSymMatrix& errMom,
@@ -431,7 +431,7 @@ StatusCode TrExtrapolator::momentum( const Track& track,
 //=============================================================================
 // Retrieve the momentum vector of a track at a given z-position
 //=============================================================================
-StatusCode TrExtrapolator::momentum( const Track& track,
+StatusCode TrackExtrapolator::momentum( const Track& track,
                                      double z,
                                      HepVector3D& mom,
                                      ParticleID pid )
@@ -450,7 +450,7 @@ StatusCode TrExtrapolator::momentum( const Track& track,
 // Retrieve the momentum vector at the intersection of a
 // track with a given plane
 //=============================================================================
-StatusCode TrExtrapolator::momentum( const Track& track,
+StatusCode TrackExtrapolator::momentum( const Track& track,
                                      const HepPlane3D& plane,
                                      HepVector3D& mom,
                                      ParticleID pid )
@@ -468,7 +468,7 @@ StatusCode TrExtrapolator::momentum( const Track& track,
 //=============================================================================
 // Get reference to last used transport matrix
 //=============================================================================
-const HepMatrix& TrExtrapolator::transportMatrix() const
+const HepMatrix& TrackExtrapolator::transportMatrix() const
 {
   return m_F;
 };
@@ -476,13 +476,13 @@ const HepMatrix& TrExtrapolator::transportMatrix() const
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrExtrapolator::TrExtrapolator( const std::string& type,
+TrackExtrapolator::TrackExtrapolator( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_F()
 {
-  declareInterface<ITrExtrapolator>( this );
+  declareInterface<ITrackExtrapolator>( this );
 
   // create transport matrix
   m_F = HepMatrix(5, 5, 1);
@@ -491,12 +491,12 @@ TrExtrapolator::TrExtrapolator( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrExtrapolator::~TrExtrapolator() {}; 
+TrackExtrapolator::~TrackExtrapolator() {}; 
 
 //=============================================================================
 // Update the properties of the state
 //=============================================================================
-void TrExtrapolator::updateState( State& state, double z ) const
+void TrackExtrapolator::updateState( State& state, double z ) const
 {
   // get reference to the State vector and covariance
   HepVector& tX = state.state();

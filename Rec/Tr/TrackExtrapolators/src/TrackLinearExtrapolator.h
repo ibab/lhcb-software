@@ -1,19 +1,19 @@
-// $Id: TrLinearExtrapolator.h,v 1.1.1.1 2005-02-10 19:04:30 erodrigu Exp $
+// $Id: TrackLinearExtrapolator.h,v 1.1 2005-03-10 14:41:03 hernando Exp $
 #ifndef TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 1
 
 // Include files
 
-// from TrExtrapolators
-#include "TrackExtrapolators/TrExtrapolator.h"
+// from TrackExtrapolators
+#include "TrackExtrapolators/TrackExtrapolator.h"
 
 // Forward declaration
 class Track;
 class State;
 
-/** @class TrLinearExtrapolator TrLinearExtrapolator.h TrExtrapolators/TrLinearExtrapolator.h
+/** @class TrackLinearExtrapolator TrackLinearExtrapolator.h TrackExtrapolators/TrackLinearExtrapolator.h
  *
- *  A TrLinearExtrapolator is a ITrExtrapolator which does a 'linear'
+ *  A TrackLinearExtrapolator is a ITrackExtrapolator which does a 'linear'
  *  (i.e. straight line) extrapolation of a State. It doesn't take into
  *  account MS.
  *
@@ -24,16 +24,16 @@ class State;
  *  @date   07-04-1999
  */
 
-class TrLinearExtrapolator: public TrExtrapolator {
+class TrackLinearExtrapolator: public TrackExtrapolator {
 
 public:
   /// constructor
-  TrLinearExtrapolator( const std::string& type, 
+  TrackLinearExtrapolator( const std::string& type, 
                         const std::string& name, 
                         const IInterface* parent );
 
   /// destructor
-  virtual ~TrLinearExtrapolator();
+  virtual ~TrackLinearExtrapolator();
 
   /// Propagate a State to a given z-position
   StatusCode propagate( State& state,

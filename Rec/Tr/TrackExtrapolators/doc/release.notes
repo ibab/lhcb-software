@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-03-10 - Jose A. Hernando
+	- rename of the classes. 
+		The extrapolator using Track are named XXXTrackExtrapolator
+
 ! 2005-02-09 - Eduardo Rodrigues
  - creation of the package. It will contain the extrapolators now in the
    package Tr/TrExtrapolator that use the present event model. These tools
