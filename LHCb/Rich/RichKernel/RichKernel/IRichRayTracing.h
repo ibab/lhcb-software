@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.6 2004-07-15 15:36:53 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.7 2004-07-15 15:47:19 jonrob Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -134,7 +134,7 @@ public:
   reflectSpherical ( HepPoint3D& position,        
                      HepVector3D& direction,            
                      const HepPoint3D& CoC,                  
-                     double radius ) const = 0;
+                     const double radius ) const = 0;
 
 };
 
