@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.7 2004-06-03 16:18:12 jonrob Exp $
+// $Id: RichHypoData.h,v 1.8 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -24,64 +24,95 @@
 template <class TYPE>
 class RichHypoData {
 
-public:
+public: // definitions
 
-  /// Definition of internal array types
+  /// Definition of internal data array type
   typedef boost::array<TYPE,Rich::NParticleTypes> DataArray;
+
+  /// Definition of internal validity array type
   typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
 
-  /// Constructor with initialisation value
-  RichHypoData( const TYPE value ) { resetData(value); }
+public: // methods
+
+  /** Constructor with initialisation value
+   *
+   * @param value the value use to initialise the data for each mass hypothesis
+   */
+  RichHypoData( const TYPE & value ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
 
   /// Read access operator
-  const TYPE operator[] ( const Rich::ParticleIDType type ) const;
+  const TYPE & operator[] ( const Rich::ParticleIDType type ) const;
 
-  /// Set the data value for a given particle hypothesis
-  void setData( const Rich::ParticleIDType type, const TYPE value );
+  /** Set the data value for a given particle hypothesis
+   *
+   *  @param type  The mass hypothesis for which the data is for
+   *  @param value The data value
+   */
+  void setData( const Rich::ParticleIDType type, const TYPE & value );
 
-  /// Reset all data
-  void resetData( const TYPE value );
+  /** Reset the data for all mass hypotheses. Following this call all data
+   *  fields will be flagged as invalid (i.e. unset)
+   *
+   *  @param value The reset value
+   */
+  void resetData( const TYPE & value );
 
-  /// Reset data for given particle hypothesis
-  void resetData( const Rich::ParticleIDType type, const TYPE value );
+  /** Reset data for given particle hypothesis. Following this call the
+   *  data for the given mas hypothesis will be flagged as invalid (i.e. unset)
+   *
+   *  @param type  The mass hypothesis to reset
+   *  @param value The reset value
+   */
+  void resetData( const Rich::ParticleIDType type, const TYPE & value );
 
   /// Const Accessor to data array
   const DataArray & dataArray() const;
 
-  /// Check whether a piece of data has been initialised
+  /** Check whether a piece of data has been initialised
+   *
+   *  @param type The mass hypothesis to test
+   *  
+   *  @return boolean indicating the status of the data
+   *  @retval true  Data field has been explicitly set
+   *  @retval false Data field has not been set. Value will be the initialisation (or reset) value
+   */
   bool dataIsValid( const Rich::ParticleIDType type );
 
 private: // methods
 
-  /// Dis-allow default constructor
+  /** Dis-allow the default constructor. 
+   *  Users must specify a default initialization value.
+   */
   RichHypoData() {}
 
 private: // data
 
   /// The internal representation of the data
   DataArray     m_data;
+
+  /// The validity flags
   ValidityArray m_valid;
 
 };
 
 template <class TYPE>
-inline const TYPE RichHypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
+inline const TYPE & RichHypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
 {
   return m_data[type];
 }
 
 template <class TYPE>
 inline void RichHypoData<TYPE>::setData( const Rich::ParticleIDType type,
-                                         const TYPE value )
+                                         const TYPE & value )
 {
   m_valid[type] = true; m_data[type]  = value;
 }
 
 template <class TYPE>
-inline void RichHypoData<TYPE>::resetData( const TYPE value )
+inline void RichHypoData<TYPE>::resetData( const TYPE & value )
 {
   resetData( Rich::Electron, value );
   resetData( Rich::Muon,     value );
@@ -92,7 +123,7 @@ inline void RichHypoData<TYPE>::resetData( const TYPE value )
 
 template <class TYPE>
 inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type,
-                                           const TYPE value )
+                                           const TYPE & value )
 {
   m_valid[type] = false; m_data[type]  = value;
 }

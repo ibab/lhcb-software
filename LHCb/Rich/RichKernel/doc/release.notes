@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.47 2004-07-12 14:51:18 jonrob Exp $
+! $Id: release.notes,v 1.48 2004-07-15 15:36:53 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-07-15 - Chris Jones
+ - More improvements to doxygen comments
 
 ! 2004-07-12 - Chris Jones
  - Doxygen improvements + add debug printout to base classes

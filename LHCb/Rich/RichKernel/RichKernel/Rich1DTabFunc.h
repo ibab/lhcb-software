@@ -1,4 +1,4 @@
-// $Id: Rich1DTabFunc.h,v 1.2 2004-06-29 19:27:30 jonrob Exp $
+// $Id: Rich1DTabFunc.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHUTILS_RICH1DTABFUNC_H
 #define RICHUTILS_RICH1DTABFUNC_H 1
 
@@ -29,61 +29,138 @@ public:
   /// Default Constructor
   Rich1DTabFunc::Rich1DTabFunc();
 
-  /// Constructor from array
-  Rich1DTabFunc::Rich1DTabFunc( const double x[],
+  /** Constructor from arrays containing x and y values
+   *  Arrays must be of the same size, and ordered such that entry i in each
+   *  correspond to each other.
+   *
+   *  @param x         Array of x values
+   *  @param y         Array of y values
+   *  @param size      Number of data points
+   *  @param interType GSL Interpolator type
+   */
+  Rich1DTabFunc::Rich1DTabFunc( const double x[], 
                                 const double y[],
-                                const int size,
+                                const int size, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
-  /// Constructor from std::vector
-  Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,
-                                const std::vector<double> & y,
+  /** Constructor from std::vectors containing x and y values
+   *  Vectors must be of the same size, and ordered such that entry i in each
+   *  correspond to each other.
+   *
+   *  @param x         Vector of x values
+   *  @param y         Vector of y values
+   *  @param interType GSL Interpolator type
+   */
+  Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x, 
+                                const std::vector<double> & y, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
-  /// Constructor from std::map
-  Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data,
+  /** Constructor from std::map of x,y values
+   *
+   *  @param data     map contain x(key) and y(data) values
+   *  @param interType GSL Interpolator type
+   */
+  Rich1DTabFunc::Rich1DTabFunc( const std::map<double,double> & data, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
   virtual ~Rich1DTabFunc( ) { clearInterpolator(); }
 
-  /// Returns the property value for a given parameter value
+  /** Computes the function value (y) for the given parameter (x) value
+   *
+   *  @param x The parameter value
+   *
+   *  @return The value of the function at the given parameter value
+   */
   double value( const double x ) const;
 
-  /// Returns the property value for a given parameter value
+  /**  Returns the function value (y) for the given parameter (x) value
+   *
+   *  @param x The parameter value
+   *
+   *   @return The value of the function at the given parameter value
+   */
   double operator [] ( const double x ) const;
 
-  /// Returns the mean property value between limits
-  double meanX ( const double from, const double to) const;
+  /** Computes the mean function value between the given parameter limits
+   *
+   *  @param from  The lower parameter limit
+   *  @param to    The upper parameter limit
+   *
+   *  @return the mean function value
+   */
+  double meanX ( const double from, const double to ) const;
 
-  /// Returns the intergral of the property between limits
-  double integral ( const double from, const double to) const;
+  /** Computes the definite integral of the function between limits
+   *
+   *  @return the definite function integral
+   */
+  double integral ( const double from,   ///< The lower parameter limit
+                    const double to      ///< The upper parameter limit
+                    ) const;
 
-  /// Returns the first derivative at the given x point
+  /** Computes the first derivative of the function at the given parameter point
+   *
+   *  @param x The parameter value
+   *
+   *  @return the first derivative
+   */
   double firstDerivative( const double x ) const;
 
-  /// Returns the second derivative at the given x point
+  /** Computes the second derivative of the function at the given parameter point
+   *
+   *  @param x The parameter value
+   *
+   *  @return the second derivative
+   */
   double secondDerivative( const double x ) const;
 
-  /// Returns the minimum parameter value for which the property is defined
+  /** The minimum parameter value for which the function is defined
+   *
+   *  @return The minimum valid paramter value
+   */
   double minX() const;
 
-  /// Returns the property value at the minimum point
+  /** The function value for the minimum valid parameter
+   *
+   *  @return The function value at the minimum valid parameter
+   */
   double minY() const;
 
-  /// Returns the minimum parameter value for which the property is defined
+  /** The maximum parameter value for which the function is defined
+   *
+   *  @return The minimum valid paramter value
+   */
   double maxX() const;
 
-  /// Returns the property value at the maximum point
+  /** The function value for the minimum valid parameter
+   *
+   *  @return The function value at the minimum valid parameter
+   */
   double maxY() const;
 
-  /// Returns the status of the interpolator
+  /** The status of the interpolator.
+   *  
+   *  @return boolean indicating whether the interpolator was correctly initialised
+   */
   bool valid() const;
 
-  /// Check whether a given x point is within the input data range
+  /** Check whether a given x parameter is within the valid input data range
+   *
+   *  @param x The parameter value
+   *
+   *  @return boolean indicating if the parameter is in range
+   */
   bool withinInputRange( const double x ) const;
 
-  /// initialise the interpolator
+  /** initialise the GSL interpolator
+   *  
+   *  @param interType GSL Interpolator type
+   *
+   *  @return the status of the initialisation
+   *  @retval true  The interpolator initialised correctly and is ready for use
+   *  @retval false The interpolator failed to initialise correctly
+   */
   bool initInterpolator( const gsl_interp_type * interType );
 
   /// clear the interpolator
@@ -91,19 +168,19 @@ public:
 
 protected: // data
 
-  // the data points
+  /// the data points
   std::map<double,double> m_data;
 
-  // Status flag
+  /// Status flag
   bool m_OK;
 
 private: // data
 
-  // GSL data
-  gsl_interp_accel * m_mainDistAcc;
-  gsl_spline       * m_mainDistSpline;
-  gsl_interp_accel * m_weightedDistAcc;
-  gsl_spline       * m_weightedDistSpline;
+  // GSL interpolator objects
+  gsl_interp_accel * m_mainDistAcc;        ///< The accelerator for the main y(x) distribution
+  gsl_spline       * m_mainDistSpline;     ///< The spline for the main y(x) distribution
+  gsl_interp_accel * m_weightedDistAcc;    ///< The accelerator for the weighted x.y(x) distribution
+  gsl_spline       * m_weightedDistSpline; ///< The spline for the weighted x.y(x) distribution
 
 };
 

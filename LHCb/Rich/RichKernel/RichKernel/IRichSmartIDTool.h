@@ -1,4 +1,4 @@
-// $Id: IRichSmartIDTool.h,v 1.2 2004-06-18 09:39:02 jonrob Exp $
+// $Id: IRichSmartIDTool.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_IRICHSMARTIDTOOL_H
 #define RICHKERNEL_IRICHSMARTIDTOOL_H 1
 
@@ -18,10 +18,9 @@ class RichSmartID;
 
 /** @class IRichSmartIDTool IRichSmartIDTool.h RichDetTools/IRichSmartIDTool.h
  *
- *  A tool to convert between smartID and detection points.  Also provides
- *  a list with all valid smartIDs.
+ *  Interface to tools providing manipulation of RichSmartID channel identifiers
  *
- *  @author Antonis Papanestis
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
 
@@ -31,28 +30,69 @@ class IRichSmartIDTool : virtual public IAlgTool {
 
 public:
 
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() { return IID_IRichSmartIDTool; }
 
-  /// Returns the position of a SmartID in global coordinates
+  /** Converts a RichSmartID channel indentification into a position in
+   *  global LHCb coordinates
+   *
+   *  @param smartid   The RichSmartID channel indentifier
+   *  @param position  The global position coordinates
+   *
+   *  @return The status of the conversion
+   *  @retval StatusCode::SUCCESS Conversion was successful (valid RichSmartID)
+   *  @retval StatusCode::FAILURE Conversion was not possible (in-valid RichSmartID)
+   */
   virtual StatusCode globalPosition ( const RichSmartID& smartid,
                                       HepPoint3D& position ) const = 0;
 
-  /// Returns the global position given a local position, rich and
-  /// panel number
-  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint,
+  /** Computes the global position coordinate for a given position in local
+   *  HPD panel coordinates and RICH detector and panel indentifiers.
+   *
+   *  @param localPoint  The local coordinate position
+   *  @param rich        The RICH detector 
+   *  @param side        The RICH HPD panel
+   *
+   *  @return The global coordinate
+   */
+  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 
                                       const Rich::DetectorType rich,
                                       const Rich::Side side ) const = 0;
 
-  /// Returns the SmartID for a given global position
-  virtual StatusCode smartID ( const HepPoint3D&,
-                               RichSmartID& ) const = 0;
+  /** Converts a position in global coordinates to the corresponding 
+   *  RichSmartID indentifier.
+   *
+   *  @param  globalPoint The global coordinate to convert
+   *  @param  smartid     The RichSmartID channel identifier to fill
+   *
+   *  @return The status of the conversion
+   *  @retval StatusCode::SUCCESS Conversion was successful (position in HPD acceptance)
+   *  @retval StatusCode::FAILURE Conversion was not successful (position not in HPD acceptance)
+   */
+  virtual StatusCode smartID ( const HepPoint3D& globalPoint, 
+                               RichSmartID& smartid ) const = 0;
 
-  /// Returns a list with all valid smartIDs
-  virtual StatusCode
-  readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const = 0;
+  /** Supplies a vector of all currently active and valid channels in the RICH detectors
+   *
+   *  @param readoutChannelList  Vector of RichSmartIDs to fill with the valid channels
+   *
+   *  @return status of the return vector of channel identifiers
+   *  @retval StatusCode::SUCCESS Request was successful, RichSmartID vector is valid
+   *  @retval StatusCode::FAILURE Request was successful, RichSmartID vector is not valid
+   */
+  virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const = 0;
+  
+  /** Converts a position in global coordinates to the local coordinate system
+   *  of the appropriate HPD panel
+   *
+   *  @param globalPoint The global coordinate to convert
+   *
+   *  @return The coordinate in local HPD panel coordinates
+   */
+  virtual HepPoint3D globalToPDPanel ( const HepPoint3D& globalPoint ) const = 0;
 
-  /// Converts a global position to the coordinate system of the
-  /// photodetector panel
-  virtual HepPoint3D globalToPDPanel(const HepPoint3D& globalPoint) const = 0;
 };
+
 #endif // RICHKERNEL_IRICHSMARTIDTOOL_H

@@ -1,8 +1,8 @@
-// $Id: RichException.h,v 1.3 2004-05-13 09:21:17 jonrob Exp $
+// $Id: RichException.h,v 1.4 2004-07-15 15:36:53 jonrob Exp $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-//
-// ===========================================================================
+// Revision 1.3  2004/05/13 09:21:17  jonrob
+// add RichException
 #ifndef      RICHKERNEL_RICHEXCEPTION_H
 #define      RICHKERNEL_RICHEXCEPTION_H 1
 
@@ -23,22 +23,24 @@ class RichException : public GaudiException {
 
 public:
 
-  /** constructor
+  /** Default Constructor
+   *
    *  @param ex  exception message
-   *  @param sc  status code assiciated with exception
+   *  @param sc  status code associated with the exception
    */
   RichException( const std::string& ex   = "unspecified exception",
                  const StatusCode&  sc   =  StatusCode::FAILURE )
     : GaudiException( ex , "*RichException*" , sc )  {};
 
-  /** constructor
+  /** Constructor from another GaudiException
+   *
    *  @param ex          exception message
    *  @param Exception   previous exception
    *  @param sc          status code associated with the exception
    */
-  RichException( const std::string   & ex                        ,
-                 const GaudiException& Ex                        ,
-                 const StatusCode&     sc =  StatusCode::FAILURE )
+  RichException( const std::string    & ex                        ,
+                 const GaudiException & Ex                        ,
+                 const StatusCode&      sc =  StatusCode::FAILURE )
     : GaudiException( ex, "*RichException*" , sc , Ex ) {};
 
   /** destructor
@@ -51,9 +53,6 @@ public:
 
 };
 
-// ===========================================================================
-// The End
-// ===========================================================================
 #endif  ///<   RICHKERNEL_RICHEXCEPTION_H
-// ===========================================================================
+
 

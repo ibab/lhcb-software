@@ -1,4 +1,4 @@
-// $Id: IRichTrSegMaker.h,v 1.2 2004-06-18 09:39:03 jonrob Exp $
+// $Id: IRichTrSegMaker.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_IRICHTRSEGMAKER_H
 #define RICHKERNEL_IRICHTRSEGMAKER_H 1
 
@@ -16,10 +16,11 @@ class ContainedObject;
 class RichTrackSegment;
 
 /** @class IRichTrSegMaker IRichTrSegMaker.h RichDetTools/IRichTrSegMaker.h
- *  A tool to create RichTrackSegments from reconstructed tracks
- *  or MCParticles.
  *
- *  @author Antonis Papanestis
+ *  Interface for tools to create RichTrackSegments from various tracking objects.
+ *
+ *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
 
@@ -29,11 +30,25 @@ class IRichTrSegMaker : public virtual IAlgTool {
 
 public:
 
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() { return IID_IRichTrSegMaker; }
 
-  /// Create RichTrackSegments from a track object
-  virtual int constructSegments( const ContainedObject * track,
-                                 std::vector<RichTrackSegment>& segments ) const = 0;
-
+  /** Create RichTrackSegments for a given tracking object. Using tracking information
+   *  to find intersection points, and directions at those points, with the three
+   *  radiator media.
+   *
+   *  @param track    Pointer to tracking object to create RichTrackSegments from
+   *  @param segments Returned vector of RichTrackSegment objects
+   *
+   *  @return Number of RichTrackSegment objects created
+   *  @retval 0   Unable to create any segments - Track did not traverse any radiator
+   *  @retval 1-3 Track traversed at least one radiator
+   */
+  virtual int constructSegments ( const ContainedObject * track,
+                                  std::vector<RichTrackSegment>& segments ) const = 0;
+  
 };
+
 #endif // RICHKERNEL_IRICHTRSEGMAKER_H

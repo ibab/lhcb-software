@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.11 2004-07-12 14:51:18 jonrob Exp $
+// $Id: RichParticleIDType.h,v 1.12 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -15,7 +15,7 @@
  *  
  *  General namespace for RICH specific definitions
  *
- *  @author Chris Jones  Christoper.Rob.Jones@cern.ch
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
 namespace Rich {
@@ -27,20 +27,21 @@ namespace Rich {
   static const int NRichParticleTypes = 5;
  
   /**  
-   *  RICH particle ID mass hypotheses
+   *  Enumeration for the RICH particle ID mass hypotheses.
    *
-   *  @author Chris Jones  Christoper.Rob.Jones@cern.ch
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   08/07/2004
    */
-  enum ParticleIDType {
-    Unknown = -1,
-    Electron,
-    Muon,
-    Pion,
-    Kaon,
-    Proton,
-    BelowThreshold
-  };
+  enum ParticleIDType 
+    {
+      Unknown = -1,   ///< Unknown particle type
+      Electron,       ///< Represents e+ or e-
+      Muon,           ///< Represents mu+ or mu-
+      Pion,           ///< Represents pi+ or pi-
+      Kaon,           ///< Represents K+ or K-
+      Proton,         ///< Represents Pr+ or Pr-
+      BelowThreshold  ///< Particle type is below threshold
+    };
 
   /// Text conversion for Rich::ParticleIDType enumeration
   std::string text( const Rich::ParticleIDType& particle );

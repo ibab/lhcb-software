@@ -1,31 +1,28 @@
-// $Id: RichTraceMode.h,v 1.2 2004-07-02 14:09:27 jonrob Exp $
+// $Id: RichTraceMode.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_RICHTRACEMODE_H
 #define RICHKERNEL_RICHTRACEMODE_H 1
 
-// Include files
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichTraceMode RichTraceMode.h RichKernel/RichTraceMode.h
+/** @namespace RichTraceModeNames
  *
- *  Helper class used to configure the ray tracing options in 
- *  the IRichRayTracing tools
- * 
+ *  Namespace for bit-packing parameters used by the utility class RichTraceMode
+ *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-
-// Namespace for definitions related to RichTraceMode
 namespace RichTraceModeNames {
 
   // Type for dataword
   typedef unsigned int ShortType;
 
-  static const ShortType BitsForcedSide   = 1; ///< number of bits for this flag
-  static const ShortType BitsOutMirBound  = 1; ///< number of bits outside mirror boundary
-  static const ShortType BitsDetPrecision = 1; ///< number of bits for detection precision
-  static const ShortType BitsDetPlaneBound = 1; ///< number of bits for detection plane boundary
-  static const ShortType BitsMirrorSegBound = 1; ///< number of bits mirror segment boundary
+  // Number of bits for each field
+  static const ShortType BitsForcedSide   = 1; ///< number of bits for the forced side flag
+  static const ShortType BitsOutMirBound  = 1; ///< number of bits for outside mirror boundary flag
+  static const ShortType BitsDetPrecision = 1; ///< number of bits for detection precision flag
+  static const ShortType BitsDetPlaneBound = 1; ///< number of bits for detection plane boundary flag
+  static const ShortType BitsMirrorSegBound = 1; ///< number of bits mirror segment boundary flag
 
   // Shifts
   static const ShortType ShiftForcedSide   = 0;
@@ -43,28 +40,51 @@ namespace RichTraceModeNames {
 
 }
 
+/** @class RichTraceMode RichTraceMode.h RichKernel/RichTraceMode.h
+ *
+ *  Helper class used to configure the ray tracing options in
+ *  the IRichRayTracing tools
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 class RichTraceMode {
 
 public:
 
-  enum detectPrecision {
-    circle = 0,
-    window
-  };
+  /** @enum Enumeration for the RichTraceMode to flag the precision mode to use
+   *  when calculating the acceptance on the HPD panels
+   *
+   *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+   *  @date   2004-06-18
+   */
+  enum detectPrecision
+    {
+      circle = 0,   ///< Approximate the HPD window acceptance by circles (fast)
+      window        ///< Use the full detector description for the HPDs (slower)
+    };
 
-  enum detPlaneBoundary {
-    loose = 0,
-    tight
-  };
+  /** @enum Enumeration for the RichTraceMode to flag how to treat the HPD
+   *  panel boundaries
+   *
+   *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+   *  @date   2004-06-18
+   */
+  enum detPlaneBoundary
+    {
+      loose = 0,    ///< Dis-regard the physical HPD boundaries (assume infinite plane)
+      tight         ///< Respect the average physical boundaries of the HPDs on the panel plane
+    };
 
 
-  /// Standard constructor
-  RichTraceMode( const detectPrecision  detPrec = circle,
-                 const detPlaneBoundary bound   = loose,
-                 const bool             forcedSide = false,
-                 const bool             respectOuter = false,
-                 const bool             respectMirrSegs = false ) 
-    : m_data( 0 ) 
+  /// Constructor from explicit mode information
+  RichTraceMode
+  ( const detectPrecision  detPrec         = circle, ///< Precision to use on HPD panel
+    const detPlaneBoundary bound           = loose,  ///< HPD panel boundary mode
+    const bool             forcedSide      = false,  ///< Force the ray-tracing to follow the given RICH side
+    const bool             respectOuter    = false,  ///< Respect the outer boundaries of the mirrors
+    const bool             respectMirrSegs = false   ///< Respect the gaps between the individual mirror segments
+    ) : m_data( 0 )
   {
     setDetPrecision      ( detPrec         );
     setDetPlaneBound     ( bound           );
@@ -74,42 +94,52 @@ public:
   }
 
   /// Copy Constructor
-  RichTraceMode ( const RichTraceMode & mode ) : m_data( mode.data() ) { }
+  RichTraceMode ( const RichTraceMode & mode    ///< Source mode object to copy properties from
+                  ) : m_data( mode.data() ) { }
 
   /// Destructor
-  ~RichTraceMode() {} /// Destructor
+  ~RichTraceMode() {}
 
-  /// Retrieve the full value
-  inline RichTraceModeNames::ShortType data() const 
-  { 
-    return m_data; 
+  /** Access to the full bit-packed data word
+   *
+   *  @return the bit-packed data word
+   */
+  inline RichTraceModeNames::ShortType data() const
+  {
+    return m_data;
   }
 
-  /// Update the internal data
-  inline void setData( const RichTraceModeNames::ShortType data ) 
-  { 
-    m_data = data; 
+  /** Set the full bit-packed data word
+   */
+  inline void setData ( const RichTraceModeNames::ShortType data )
+  {
+    m_data = data;
   }
 
-  /// Set the ForcedSide flag
-  inline void setForcedSide( const bool forced ) 
+  /** Set the flag to force the side to use in the ray-tracing
+   */
+  inline void setForcedSide( const bool forced )
   {
     const RichTraceModeNames::ShortType i = ( forced ? 1 : 0 );
     set( i,
          RichTraceModeNames::ShiftForcedSide,
          RichTraceModeNames::MaskForcedSide );
-    return;
   }
 
-  /// Retrieve the ForcedSide flag
-  inline bool forcedSide() const 
+  /** Retrieve the ForcedSide flag
+   *
+   * @return the forced side flag
+   * @retval true  The side of the detector will be forced
+   * @retval false The side will not be forced, but allow to follow the true detector optics
+   */
+  inline bool forcedSide() const
   {
     return ( 0 != ( (data() & RichTraceModeNames::MaskForcedSide)
                     >> RichTraceModeNames::ShiftForcedSide ) );
   }
 
   /// Set the flag for respecting the outer boundaries of the mirrors
-  inline void setOutMirrorBoundary( const bool outMirBound ) 
+  inline void setOutMirrorBoundary( const bool outMirBound )
   {
     const RichTraceModeNames::ShortType i = ( outMirBound ? 1 : 0 );
     set( i,
@@ -117,23 +147,28 @@ public:
          RichTraceModeNames::MaskOutMirBound );
   }
 
-  /// Retrieve the flag for respecting the outter boundaries of the mirrors
-  inline bool outMirrorBoundary() const 
+  /** Retrieve the flag for respecting the outer boundaries of the mirrors
+   *
+   * @return the outer mirror boundary flag
+   * @retval true  The outer physical boundaries will be respected
+   * @retval false The mirror will be assumed to have infinite extent
+   */
+  inline bool outMirrorBoundary() const
   {
     return ( 0 != ( (data() & RichTraceModeNames::MaskOutMirBound)
                     >> RichTraceModeNames::ShiftOutMirBound ) );
   }
 
   /// Set the flag for detection precision
-  inline void setDetPrecision( const detectPrecision precision ) 
+  inline void setDetPrecision( const detectPrecision precision )
   {
     set( precision,
          RichTraceModeNames::ShiftDetPrecision,
          RichTraceModeNames::MaskDetPrecision );
   }
 
-  /// Retrieve the flag for detection precision
-  inline detectPrecision detPrecision() const 
+  /// Retrieve the detection precision mode
+  inline detectPrecision detPrecision() const
   {
     return ( ( 0 == ((data() & RichTraceModeNames::MaskDetPrecision)
                      >> RichTraceModeNames::ShiftDetPrecision) ) ?
@@ -148,8 +183,8 @@ public:
          RichTraceModeNames::MaskDetPlaneBound );
   }
 
-  /// Retrieve the flag for respecting the detection plane boundary
-  inline detPlaneBoundary detPlaneBound() const 
+  /// Retrieve the detection plane boundary mode
+  inline detPlaneBoundary detPlaneBound() const
   {
     return ( ( 0 == ((data() & RichTraceModeNames::MaskDetPlaneBound)
                      >> RichTraceModeNames::ShiftDetPlaneBound) ) ?
@@ -157,7 +192,7 @@ public:
   }
 
   /// Set the flag for respecting the mirror segment boundaries
-  inline void setMirrorSegBoundary( const bool mirrorBound ) 
+  inline void setMirrorSegBoundary( const bool mirrorBound )
   {
     const RichTraceModeNames::ShortType i = ( mirrorBound ? 1 : 0 );
     set( i,
@@ -165,8 +200,13 @@ public:
          RichTraceModeNames::MaskMirrorSegBound );
   }
 
-  /// Retrieve the flag for respecting the mirror segment boundaries
-  inline bool mirrorSegBoundary() const 
+  /** Retrieve the flag for respecting the mirror segment boundaries
+   *
+   * @return the mirror segment boundary flag
+   * @retval true  The mirror segment boundaries will be respected
+   * @retval false The mirror will be treated as a single continuous object
+   */
+  inline bool mirrorSegBoundary() const
   {
     return ( 0 != ( (data() & RichTraceModeNames::MaskMirrorSegBound)
                     >> RichTraceModeNames::ShiftMirrorSegBound ) );
@@ -176,13 +216,14 @@ private: // methods
 
   inline void set( const RichTraceModeNames::ShortType value,
                    const RichTraceModeNames::ShortType shift,
-                   const RichTraceModeNames::ShortType mask ) 
+                   const RichTraceModeNames::ShortType mask )
   {
     setData( ((value << shift) & mask) | (data() & ~mask) );
   }
-  
+
 private: // data
 
+  /// The bit-pack data word
   RichTraceModeNames::ShortType m_data;
 
 };

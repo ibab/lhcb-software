@@ -1,6 +1,6 @@
-// $Id: RichToolBase.h,v 1.1 2004-06-17 12:00:47 cattanem Exp $
-#ifndef RICHUTILS_RICHTOOLBASE_H
-#define RICHUTILS_RICHTOOLBASE_H 1
+// $Id: RichToolBase.h,v 1.2 2004-07-15 15:36:53 jonrob Exp $
+#ifndef RICHKERNEL_RICHTOOLBASE_H
+#define RICHKERNEL_RICHTOOLBASE_H 1
 
 // GaudiTools
 #include "GaudiTools/GaudiTool.h"
@@ -29,36 +29,69 @@ public:
   /// Destructor
   virtual ~RichToolBase() {};
 
-  /// Initialize method
+  /** Initialization of the tool after creation
+   *
+   * @return The status of the initialization
+   * @retval StatusCode::SUCCESS Initialization was successful
+   * @retval StatusCode::FAILURE Initialization failed
+   */
   virtual StatusCode initialize();
 
-  /// Finalize method
+  /** Finalization of the tool before deletion
+   *
+   * @return The status of the finalization
+   * @retval StatusCode::SUCCESS Finalization was successful
+   * @retval StatusCode::FAILURE Finalization failed
+   */
   virtual StatusCode finalize();
 
-protected:   // Protected methods
+private:   // private methods
 
-  /// Returns pointer to RICH tool registry tool
+  /** Returns pointer to RICH tool registry tool
+   *  Used internally by base class to convert tool nicknames
+   *  in the appropriate class name
+   *
+   *  @return Pointer to the IRichToolRegistry interface
+   */
   inline const IRichToolRegistry * toolRegistry() const
   {
     if (!m_toolReg) m_toolReg = tool<IRichToolRegistry>("RichToolRegistry",m_regName);
     return m_toolReg;
   }
 
-  /// Acquires a tool of the correct type from the RichToolRegistry for a given name
+protected:   // Protected methods
+
+  /** Returns a pointer to the tool associated to a given nickname
+   *  Uses the RichToolRegistry tool to convert tool nicknames
+   *  in the appropriate class name
+   *
+   *  @param tName   The nickname of the requested tool
+   *  @param pTool   Returned pointer to the requested tool
+   *  @param parent  Pointer to parent (used to access private tools)
+   *
+   *  @return Pointer to the tool associated to the given nickname
+   */
   template <typename TOOL> inline
-  TOOL* acquireTool( const std::string & tName, 
-                     TOOL*& pTool,
-                     const IInterface * parent = 0 ) const {
+  TOOL* acquireTool( const std::string & tName,
+                     TOOL*& pTool, 
+                     const IInterface * parent = 0 ) const
+  {
     if ( msgLevel(MSG::DEBUG) ) {
-      debug() << " Acquiring tool '" << tName 
+      debug() << " Acquiring tool '" << tName
               << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
     }
     return pTool = tool<TOOL>( toolRegistry()->toolType(tName),tName,parent );
   }
 
-  /// Release a tool
+  /** Forced release of a particular tool
+   *  Tools are automatically released during finalisation, so this method
+   *  only need be used to release a tool early, before finalisation.
+   *
+   *  @param pTool  Pointer to the tool to be released
+   */
   template <typename TOOL> inline
-  void releaseTool( TOOL *& pTool ) const {
+  void releaseTool( TOOL *& pTool ) const
+  {
     if ( pTool ) {
       debug() << " Forced release for tool '" << pTool->name() << "'" << endreq;
       release( pTool );
@@ -76,4 +109,4 @@ private:   // Private data
 
 };
 
-#endif // RICHUTILS_RICHTOOLBASE_H
+#endif // RICHKERNEL_RICHTOOLBASE_H

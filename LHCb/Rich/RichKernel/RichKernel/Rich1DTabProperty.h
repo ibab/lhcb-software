@@ -1,6 +1,6 @@
-// $Id: Rich1DTabProperty.h,v 1.1 2004-06-17 12:00:47 cattanem Exp $
-#ifndef RICHUTILS_RICH1DTABPROPERTY_H
-#define RICHUTILS_RICH1DTABPROPERTY_H 1
+// $Id: Rich1DTabProperty.h,v 1.2 2004-07-15 15:36:53 jonrob Exp $
+#ifndef RICHKERNEL_RICH1DTABPROPERTY_H
+#define RICHKERNEL_RICH1DTABPROPERTY_H 1
 
 // Base class
 #include "RichKernel/Rich1DTabFunc.h"
@@ -22,15 +22,25 @@ class Rich1DTabProperty : public Rich1DTabFunc {
 
 public:
 
-  /// Constructor from tabulated property and gsl interpolator type
-  explicit Rich1DTabProperty( const TabulatedProperty * tab,
+  /** Constructor from tabulated property and gsl interpolator type
+   * 
+   *  @param tab        Pointer to a tabulated proper
+   *  @param interType  GSL Interpolator type
+   */
+  explicit Rich1DTabProperty( const TabulatedProperty * tab, 
                               const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
   virtual ~Rich1DTabProperty( ) { clearInterpolator(); }
 
-  /// Returns a pointer to the underlying tabulated property
-  const TabulatedProperty * tabProperty() const;
+  /** The underlying tabulated property used to initialise the interpolator
+   *
+   *  @return Pointer to the tabulated property
+   */
+  inline const TabulatedProperty * tabProperty() const
+  {
+    return m_tabProp;
+  }
 
 private: // data
 
@@ -39,10 +49,4 @@ private: // data
 
 };
 
-inline const TabulatedProperty * Rich1DTabProperty::tabProperty() const
-{
-  return m_tabProp;
-}
-
-
-#endif // RICHUTILS_RICH1DTABPROPERTY_H
+#endif // RICHKERNEL_RICH1DTABPROPERTY_H

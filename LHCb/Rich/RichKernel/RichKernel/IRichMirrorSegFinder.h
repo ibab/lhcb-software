@@ -1,4 +1,4 @@
-// $Id: IRichMirrorSegFinder.h,v 1.3 2004-06-29 19:27:30 jonrob Exp $
+// $Id: IRichMirrorSegFinder.h,v 1.4 2004-07-15 15:36:53 jonrob Exp $
 #ifndef RICHKERNEL_IRICHMIRRORSEGFINDER_H
 #define RICHKERNEL_IRICHMIRRORSEGFINDER_H 1
 
@@ -31,15 +31,39 @@ class IRichMirrorSegFinder : public virtual IAlgTool {
 
 public:
 
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() { return IID_IRichMirrorSegFinder; }
 
-  /// Finds the spherical mirror
-  virtual DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
-                                          const Rich::Side side,
-                                          const HepPoint3D & reflPoint ) const = 0;
-  /// Finds the flat mirror
-  virtual DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
-                                            const Rich::Side side,
-                                            const HepPoint3D & reflPoint ) const = 0;
+  /** Locates the spherical mirror Segment given a reflection point,
+   *  RICH identifier and panel
+   *
+   *  @param rich       The RICH detector
+   *  @param side       The RICH HPD panel side
+   *  @param reflPoint  The reflection point on the spherical mirror
+   *
+   *  @return  Pointer to DeRichSphMirror object for the associated mirror segment
+   */
+  virtual DeRichSphMirror* 
+  findSphMirror( const Rich::DetectorType rich,
+                 const Rich::Side side,
+                 const HepPoint3D & reflPoint ) const = 0;
+  
+  /** Locates the flat mirror Segment given a reflection point,
+   *  RICH identifier and panel
+   *
+   *  @param rich       The RICH detector
+   *  @param side       The RICH HPD panel side
+   *  @param reflPoint  The reflection point on the flat mirror
+   *
+   *  @return Pointer to DeRichSphMirror object for the associated mirror segment
+   */
+  virtual DeRichFlatMirror*
+  findFlatMirror( const Rich::DetectorType rich,
+                  const Rich::Side side,        
+                  const HepPoint3D & reflPoint ) const = 0;
+
 };
+
 #endif // RICHKERNEL_IRICHMIRRORSEGFINDER_H
