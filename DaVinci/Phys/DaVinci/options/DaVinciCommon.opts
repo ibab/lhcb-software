@@ -1,6 +1,7 @@
-//**************************************************************
-// DaVinci standard services and DLLs
-//==============================================================
+//*****************************************************************
+// DaVinci standard services and DLLs + algorithms for reprocessing
+// and default properties for common algorithms/tools
+//=================================================================
 
 // Framework
 ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
@@ -24,26 +25,32 @@ RootEvtCnvSvc.DbType  = "ROOT";
 
 // Associators
 ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
-ApplicationMgr.DLLs += { "VeloAssociators", "CaloEvent","MuonAssociators" };
-ApplicationMgr.DLLs += { "CaloAssociators", "CaloRec" };
+ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
+ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators", "CaloRec" };
 ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
+ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
-// L0 trigger
+// Trigger
 ApplicationMgr.DLLs += { "L0DU" };
 
-// Physics packages
+// Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
-ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
-ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "PhysSelections" };
 ApplicationMgr.DLLs += { "FlavourTagging" };
+//    ... for physics check on MC data
+ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
+ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
-ApplicationMgr.DLLs += { "DaVinciEff" };
+
+// Reprocessing
 
 // Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
+
+// Options for Associators
+#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
