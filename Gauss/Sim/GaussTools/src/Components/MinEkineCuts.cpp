@@ -52,9 +52,9 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
   // if not use the default cuts
   if (pUserLimits)
     {      
-      G4double eMin = pUserLimits->GetUserMinEkine(aTrack);
+      eMin = pUserLimits->GetUserMinEkine(aTrack);
     }
-
+  
   if (eKine < eMin ) 
     {          
       proposedStep = 0.;
