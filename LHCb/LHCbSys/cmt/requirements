@@ -71,7 +71,7 @@ use TrFitEvent         	v3r6    Tr
 
 # SICB Converters
 use SICBSys             v1r5	SICB
-use SicbCnv      	v18r0	SICB
+use SicbCnv      	v17r7	SICB
 use RiSicbGeom   	v3r3	SICB
 use CaloSicbCnv  	v7r4    SICB
 use MuonSicbCnv  	v7r1    SICB
