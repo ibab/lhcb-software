@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.19 2003-12-15 09:18:14 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.20 2003-12-15 14:42:33 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -559,9 +559,7 @@ StatusCode L0CaloAlg::execute() {
                                                   dummy,
                                                   0. );
     L0Calo->add( hsum );
-
     int word = ( L0Calo::SumEt << 24 ) + sumEt;
-    m_rawOutput.push_back( word );
     m_l1Output.push_back( word );
 
   }
@@ -574,9 +572,7 @@ StatusCode L0CaloAlg::execute() {
                                                    dummy,
                                                    0. );
   L0Calo->add( spdMult);
-
   int word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
-  m_rawOutput.push_back( word );
   m_l1Output.push_back( word );
 
   // Debug now the L0 candidates
@@ -624,6 +620,13 @@ StatusCode L0CaloAlg::execute() {
     allPi0Global[kk].saveCandidate( L0Calo::Pi0Global, L0FullCalo );
     saveCandidate(  L0Calo::Pi0Global, allPi0Global[kk], m_l1Pi0GlobalThr );
   }
+
+  if ( 0 < sumEt ) {
+    int word = ( L0Calo::SumEt << 24 ) + sumEt;
+    m_rawOutput.push_back( word );
+  }
+  word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
+  m_rawOutput.push_back( word );
 
   msg << MSG::DEBUG <<"== L0CaloFullCandidate Summary: "
       << L0FullCalo->size() << " entries." << endreq;

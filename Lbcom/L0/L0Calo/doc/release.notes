@@ -1,7 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
-! 2003-11-18 - Olivier Callot
+! 2003-12-15 - Olivier Callot
  - Process the L0CaloAlg from the Hlt buffer. No longer need for L0CaloDigit
  - L0CaloCandidates are saved in the L1 and HLT buffers. No threshold for
    HLT buffer (non zero candidates only !) but individual threshold for
@@ -11,6 +11,9 @@ Package Manager : Olivier Callot
 
    Writing to L1 and HLT buffer can be switched off by setting the option
    'StoreInBuffer = false;'
+ - New algorithm L0CaloCandidateFromRaw to restore the L0CaloCandidate (full). 
+   Note that the restored full container includes also SPD multiplicity and 
+   SumEt which are not available in the usual container.
 
 !========================= L0Calo v7r1 2003-07-16 =========================
 ! 2003-07-16 - Marco Cattaneo
