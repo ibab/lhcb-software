@@ -1,8 +1,11 @@
-// $Id: CellMatrix2x2.h,v 1.1 2001-11-07 17:24:48 ibelyaev Exp $
+// $Id: CellMatrix2x2.h,v 1.2 2001-11-08 20:04:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/07 17:24:48  ibelyaev
+//  new utilities for determination of relative positions of cells
+// 
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX2X2_H 
 #define CALOUTILS_CELLMATRIX2X2_H 1
@@ -25,10 +28,11 @@ public:
   
   enum SubMatrixType
   { 
-    UpperLeft   ,
-    UpperRight  ,
-    LowerLeft   , 
-    LowerRight  
+    UpperLeft        = 0 ,
+    UpperRight       = 1 ,
+    LowerLeft        = 2 , 
+    LowerRight       = 3 ,
+    Max              = 4
   };
   
 public:
@@ -37,8 +41,8 @@ public:
    *  @param Det  pointer to calorimeter 
    *  @param Type sub-matrix type 
    */
-  CellMatrix2x2( const DeCalorimeter* Det  ,
-                 const SubMatrixType  Type )
+  CellMatrix2x2( const DeCalorimeter* Det  = 0         ,
+                 const SubMatrixType  Type = UpperLeft )
     : CellMatrix( Det  ) 
     , m_type    ( Type )
   {};
@@ -53,7 +57,8 @@ public:
   /** set new  submatrix type 
    *  @param newT new value for sub-matrix type 
    */
-  inline void setType ( const SubMatrixType & newT ) { m_type = newT ; }
+  inline void setType ( const SubMatrixType & newT ) const 
+  { m_type = newT ; }
   
   /** the major method. It returns "true" if the cell 
    *  belongs to 2x2 sub-matrix of given type around the seed 
@@ -119,6 +124,7 @@ protected:
   
   /** if cells belong to diffeent areas
    *  one need to treat them in a different way
+   *  @exception CaloException if detector information is not available
    *  @param cell  the cell to be tested
    *  @return fraction of area of the second cell which fits inside 
    *          2x2 sub-matrix of given type aroud the seed cell
@@ -128,7 +134,7 @@ protected:
   
 private:
   
-  SubMatrixType   m_type ;
+  mutable SubMatrixType   m_type ;
   
 };
 

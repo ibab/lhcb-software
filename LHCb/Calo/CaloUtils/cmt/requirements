@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.1.1.1 2001-11-02 14:39:52 ibelyaev Exp $
+# $Id: requirements,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2001/11/02 14:39:52  ibelyaev
+# New package: The first commit into CVS
+# 
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -28,6 +31,7 @@ library             CaloUtils    *.cpp
 
 # ================= mandatory patterns ========================================
 apply_pattern       package_linkopts
+apply_pattern       package_stamps
 apply_pattern       package_libraries 
 apply_pattern       ld_library_path 
 

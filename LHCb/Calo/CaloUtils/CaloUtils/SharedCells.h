@@ -1,11 +1,17 @@
-/// =========================================================================== 
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/04 18:15:54  ibelyaev
-/// Shared cell algorimth implementation
-///
-/// =========================================================================== 
-#ifndef COMPONENT_SHAREDCELLS_H 
-#define COMPONENT_SHAREDCELLS_H 1
+// $Id: SharedCells.h,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
+// =========================================================================== 
+// CVS tag $Name: not supported by cvs2svn $
+// =========================================================================== 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
+// New package: The first commit into CVS
+//
+// Revision 1.1  2001/07/04 18:15:54  ibelyaev
+// Shared cell algorimth implementation
+//
+// =========================================================================== 
+#ifndef CALOUTILS_SHAREDCELLS_H 
+#define CALOUTILS_SHAREDCELLS_H 1
 /// =========================================================================== 
 #include <cmath>
 // Include files
@@ -96,6 +102,11 @@ namespace SharedCells
    *  It redistributes the energy proportionally to energies of seed cells  
    *  the method is artificially templated to avoid 
    *  a lot of explicit class specifications
+   *
+   *  Error codes:
+   *   - 220  - no digit of given type is found !
+   *   - 221  - digit pointer equals to NULL!
+   * 
    *  @param   List   a "list" of clusters for given cell 
    *  @param   type   "type" of seed cell 
    *  @return  status code 
@@ -121,9 +132,9 @@ namespace SharedCells
                                         cluster->digits().end  () ,
                                         type                      );
         /// success ???
-        if( cluster->digits().end() == iSeed ) { return StatusCode::FAILURE ; }
+        if( cluster->digits().end() == iSeed ) { return StatusCode(220) ; }
         const CaloDigit* seed = iSeed->first;
-        if( 0 == seed )                        { return StatusCode::FAILURE ; }
+        if( 0 == seed )                        { return StatusCode(221) ; }
         /// get the energy of the seed cell 
         const double     e  = seed->e() ;
         /// set the weight 
@@ -141,6 +152,12 @@ namespace SharedCells
    *  the given cell center
    *  the method is artificially templated to avoid 
    *  a lot of explicit class specifications
+   *
+   *  Error codes:
+   *   - 220  - no digit of given type is found !
+   *   - 221  - digit pointer equals to NULL!
+   *   - 222  - detector information is invalid (no detector)
+   *
    *  @param   List   a "list" of clusters for given cell 
    *  @param   Det    source of geometry information 
    *  @param   type   "type" of seed cell 
@@ -157,7 +174,7 @@ namespace SharedCells
                                            const SIZE&       size )
   {
     /// valid detector information ??
-    if( !Det                 ) { return StatusCode::FAILURE ; }
+    if( !Det                 ) { return StatusCode(222)     ; }
     /// empty cluster list 
     if( 0 == List.size()     ) { return StatusCode::SUCCESS ; }
     /// prepare container of weights 
@@ -176,9 +193,9 @@ namespace SharedCells
                                         cluster->digits().end  () ,
                                         type                      );
         /// success ???
-        if( cluster->digits().end() == iSeed ) { return StatusCode::FAILURE ; }
+        if( cluster->digits().end() == iSeed ) { return StatusCode(220) ; }
         const CaloDigit* seed = iSeed->first ;
-        if( 0 == seed                        ) { return StatusCode::FAILURE ; }
+        if( 0 == seed                        ) { return StatusCode(221) ; }
         /// get the energy of the seed cell
         const double     e  = seed->e() ;
         /// calculate the distance between seed cell and give cell 
@@ -203,6 +220,11 @@ namespace SharedCells
    *  method is iterative(recursive) 
    *  the method is artificially templated to avoid 
    *  a lot of explicit class specifications
+   *
+   *  Error codes:
+   *   - 222  - detector information is invalid (no detector)
+   *   - error codes from calculateEXY method 
+   *
    *  @param   List   a "list" of clusters for given cell 
    *  @param   Det    source of geometry information 
    *  @param   ID     cell ID of given cell 
@@ -219,9 +241,9 @@ namespace SharedCells
                                              int               NiT  )
   {
     /// does one need more iterations ?
-    if( 0 >= NiT             ) { return StatusCode::SUCCESS; }
+    if( 0 >= NiT             ) { return StatusCode::SUCCESS ; }
     /// valid detector information ??
-    if( !Det                 ) { return StatusCode::FAILURE ; }
+    if( !Det                 ) { return StatusCode(222)     ; }
     /// empty cluster list 
     if( 0 == List.size()     ) { return StatusCode::SUCCESS ; }
     /// prepare container of weights 

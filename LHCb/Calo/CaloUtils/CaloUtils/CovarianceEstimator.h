@@ -1,7 +1,11 @@
+// $Id: CovarianceEstimator.h,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
+// New package: The first commit into CVS
+//
 // Revision 1.2  2001/07/17 20:00:49  ibelyaev
 // modifications to improve Doxygen documentation
 //
@@ -12,10 +16,11 @@
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
 // ===========================================================================
-
 // Include files
 // STD & STL
 #include <functional>
+// CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 // forward declaration
@@ -161,8 +166,8 @@ public:
       @param  NoiseIn  sigma on incoherent noise
       @param  NoiseCo  sigma on coherent   noise
   */
-  CovarianceEstimator( const DeCalorimeter* Det            ,
-                       const double         A       = 0.15 ,
+  CovarianceEstimator( const DeCalorimeter* Det     = 0    ,
+                       const double         A       = 0.10 ,
                        const double         GainS   = 0.0  ,
                        const double         NoiseIn = 0.0  ,
                        const double         NoiseCo = 0.0  );
@@ -171,36 +176,87 @@ public:
   virtual ~CovarianceEstimator();
 
   /** calculation of covariance matrix for cluster 
-      @param pointer to cluster object 
-      @return status code
-  */
+   *
+   *  Error codes:
+   *   - 221 - invalid source of detector information  
+   *   - 223 - accumulated energy <= 0 !
+   *
+   *  @param pointer to cluster object 
+   *  @return status code
+   */
   StatusCode operator()( CaloCluster* cluster ) const ;
 
   /** calculate covariance matrix for cluster
-      @param pointer to cluster
-      @return status code
-  */
+   *  @param pointer to cluster
+   *   @return status code
+   */
   inline StatusCode calculateCovarianceMatrix ( CaloCluster* cluster ) const
   { return (*this)( cluster ); }
-
-protected:
-
-  /// simple accessor to DeCalorimeter object
+  
+  
+  /** set new value for calorimeter 
+   *  @param Det pointer to calorimeter detector 
+   */
+  inline void setDetector( const DeCalorimeter* Det ) 
+  { m_detector = Det ; }
+  
+  /** simple accessor to DeCalorimeter object
+   *  @return pointer to detector 
+   */
   inline const DeCalorimeter* detector    () const
   { return m_detector    ; }
-  /// calorimeter resolution (A*A*GeV)
+  
+  /** set new resolution parameter 
+   *  @param A calorimeter resolution 
+   */
+  inline void setA ( const double A ) 
+  { m_a2GeV = A * A * GeV ; }
+  
+  /** calorimeter resolution (A*A*GeV)
+   *  @return A*A*GeV resolution parameter 
+   */
   inline double a2GeV        () const
   { return m_a2GeV  ; }
-  /// dispersion  of relative gain error
+
+  /** set error in gain 
+   *  @param GainS error in relative gain 
+   */
+  inline void  setGainS( const double GainS ) 
+  { m_s2gain = GainS * GainS ; }
+
+  /** get dispersion  of relative gain error
+   *  @return dispersion of relative gain error 
+   */
   inline double s2gain       () const
   { return m_s2gain ; }
-  /// dispersion of noise (both coherent and incoherent
+
+  /** get  dispersion of noise (both coherent and incoherent
+   *  @return overall noise dispersion 
+   */
   inline double s2noise      () const
   { return ( m_s2coherent + m_s2incoherent ) ; }
-  /// dispersion of incoherent noise
+  
+  /** set new error in incoherent noise 
+   *  @param NoiseIn error in incoherent noise 
+   */
+  inline void setNoiseIn( const double NoiseIn ) 
+  { m_s2incoherent = NoiseIn * NoiseIn ;}
+  
+  /** get the dispersion of incoherent noise
+   *  @return dispersion of incoherent noise
+   */ 
   inline double s2incoherent () const
   { return m_s2incoherent ; }
-  /// dispersion of coherent   noise
+
+  /** set new error in coherent noise 
+   *  @param NoiseCo error in incoherent noise 
+   */
+  inline void setNoiseCo( const double NoiseCo ) 
+  { m_s2coherent = NoiseCo * NoiseCo ;}
+  
+  /**  dispersion of coherent  noise
+   *  @return dispersion of coherent noise
+   */   
   inline double s2coherent   () const
   { return m_s2coherent   ; }
 

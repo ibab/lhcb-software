@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.h,v 1.1 2001-11-07 17:24:48 ibelyaev Exp $
+// $Id: CellMatrix3x3.h,v 1.2 2001-11-08 20:04:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/07 17:24:48  ibelyaev
+//  new utilities for determination of relative positions of cells
+//
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX3X3_H 
 #define CALOUTILS_CELLMATRIX3X3_H 1
@@ -28,7 +31,7 @@ public:
   /** the standard constructor
    *  @param Det pointer to calorimeter detector 
    */
-  CellMatrix3x3( const DeCalorimeter* Det )
+  CellMatrix3x3( const DeCalorimeter* Det = 0 )
     : CellMatrix( Det ){};
   
   virtual ~CellMatrix3x3( ); ///< Destructor
@@ -64,7 +67,8 @@ protected:
   
   /** if cells belong to diffeent areas
    *  one need to treat them in a different way
-   *  @param cell  the cell to be tested
+   *  @exeption CaloException if detector information is not available
+   *  @param  cell  the cell to be tested
    *  @return fraction of area of the second cell which fits inside 
    *          3x3 matrix aroud the seed cell
    */

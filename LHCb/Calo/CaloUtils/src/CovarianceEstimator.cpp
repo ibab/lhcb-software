@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.1.1.1 2001-11-02 14:39:53 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
+// New package: The first commit into CVS
+//
 // Revision 1.3  2001/10/28 19:14:10  ibelyaev
 // update for newer CaloEvent package
 //
@@ -19,7 +22,6 @@
 /// STD & STL
 #include<cmath>
 /// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 /// GaudiKernel
@@ -32,9 +34,13 @@
 #include "CaloUtils/CovarianceEstimator.h"
 
 // ============================================================================
-// Implementation file for class : CovarianceEstimator
-//
-// 06/07/2001 : Ivan Belyaev
+/** @file CovarianceEstimator.cpp
+ * 
+ *  Implementation file for class : CovarianceEstimator
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 06/07/2001 
+ */
 // ============================================================================
 
 // ============================================================================
@@ -76,19 +82,20 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   if( 0 == cluster              ) { return StatusCode::SUCCESS ; }
   if( cluster->digits().empty() ) { return StatusCode::SUCCESS ; }
   // the detector information is not available
-  if( 0 == detector()           ) { return StatusCode::FAILURE ; }
-
+  if( 0 == detector()           ) { return StatusCode(221)     ; }
+  
   typedef CaloCluster::Digits::iterator       iterator;
   typedef CaloCluster::Digits::const_iterator const_iterator;
-
-  const CaloCluster::Digits& digits = cluster->digits();
+  
+  CaloCluster::Digits& digits = cluster->digits();
   const unsigned int size = digits.size() ;
   // auxillary arrays 
-  std::vector<double> x    ( size , 0 ); ///< x-position of cell [i]
-  std::vector<double> y    ( size , 0 ); ///< y-position of cell [i]
-  std::vector<double> e    ( size , 0 ); ///< energy     of cell [i]
-  std::vector<double> gain ( size , 0 ); ///< gain of cell[i]
-  std::vector<double> s2e  ( size , 0 ); ///< e-dispersion of cell [i]
+  std::vector<bool>   use  ( size , false ); ///< use this cell?
+  std::vector<double> x    ( size , 0     ); ///< x-position of cell [i]
+  std::vector<double> y    ( size , 0     ); ///< y-position of cell [i]
+  std::vector<double> e    ( size , 0     ); ///< energy     of cell [i]
+  std::vector<double> gain ( size , 0     ); ///< gain of cell[i]
+  std::vector<double> s2e  ( size , 0     ); ///< e-dispersion of cell [i]
   // calculate intermediate values 
   //    eT = sum_i { 1.0  * e(i) }
   //    eX = sum_i { x(i) * e(i) }
@@ -105,12 +112,31 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   for( unsigned int i = 0 ; i < size ; ++i )
     {
       const CaloDigit* digit = digits[i].first ;
-      // ignore artificial zeroes 
-      if( 0 == digit ) { continue ; } 
-      const double       fraction = digits[i].second.fraction()  ;
-      const double       energy   = digit->e() * fraction ;
+      /// get the status 
+      CaloDigitStatus& digitStatus = digits[i].second ;
+      if( 0 != digit && 
+          ( digitStatus.status() & DigitStatus::UseForCovariance ) ) 
+        {
+          use[i] = true ; ///< use this cell!
+          digitStatus.setStatus    ( DigitStatus::UseForEnergy   );
+          digitStatus.setStatus    ( DigitStatus::UseForPosition );
+        }
+      else 
+        {    
+          digitStatus.removeStatus ( DigitStatus::UseForEnergy   );
+          digitStatus.removeStatus ( DigitStatus::UseForPosition );
+        }
+      if( !use[i] )                   { continue; } ///< CONTINUE !
+      /// 
+      const double       fraction = digitStatus.fraction()  ;
+      const double       energy   = digit->e() * fraction   ;
+      ///
+      const double e_i  =   energy  ;
       // get cell position 
-      const HepPoint3D pos( detector()->cellCenter( digit->cellID() ) );
+      const HepPoint3D& pos = detector()->cellCenter( digit->cellID() ) ;
+      ///
+      const double x_i  =   pos.x() ;
+      const double y_i  =   pos.y() ;
       // intrinsic resolution 
       double s2 = abs( energy )  * a2GeV() ; 
       //  gain fluctuation
@@ -123,9 +149,6 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
           s2 += s2noise() * g * g ; 
         }
       //
-      const double e_i  =   energy  ;
-      const double x_i  =   pos.x() ;
-      const double y_i  =   pos.y() ;
       //
       eT +=       e_i ;               
       eX += x_i * e_i ;
@@ -151,6 +174,8 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
       // non-diagonal elements 
       for( unsigned int j = 0 ; j < i  ; ++j )
         {
+          /// skip unused digits 
+          if( !use[j] ) { continue ; }              ///< CONTINUE !!!
           // position of cell "j"
           const double x_j  =   x[j] ;
           const double y_j  =   y[j] ;
@@ -169,7 +194,13 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
     } // end of loop over all digits/diagonal elements 
   
   // does energy have a reasonable value? 
-  if( 0 >= eT ) {  return StatusCode::FAILURE ; }
+  if( 0 >= eT ) 
+    {
+      cluster->setE( -1 * TeV )  ;
+      cluster->setX( -1 * km  )  ;
+      cluster->setY( -1 * km  )  ;
+      return StatusCode(223)     ; 
+    }
   
   // The last step: calculate final quantities
   //   Ecl  =  eT 
@@ -208,7 +239,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   cluster->cov().fast( 3 , 1 ) = CovEY ;
   cluster->cov().fast( 3 , 2 ) = CovXY ;
   cluster->cov().fast( 3 , 3 ) = CovYY ;
-  
+
   return StatusCode::SUCCESS;
   
 };

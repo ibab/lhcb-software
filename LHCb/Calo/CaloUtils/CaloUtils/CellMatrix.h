@@ -1,8 +1,11 @@
-// $Id: CellMatrix.h,v 1.1 2001-11-07 17:24:48 ibelyaev Exp $
+// $Id: CellMatrix.h,v 1.2 2001-11-08 20:04:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/07 17:24:48  ibelyaev
+//  new utilities for determination of relative positions of cells
+// 
 // ============================================================================
 #ifndef CALOUTILS_CELLMATRIX_H 
 #define CALOUTILS_CELLMATRIX_H 1
@@ -28,12 +31,21 @@ class DeCalorimeter ;   ///< from CaloDet package
 class CellMatrix : 
   public std::binary_function<CaloCellID,CaloCellID,double>
 {
+
+ public:
+  
+  /** set detector
+   *  @param Det  new pointer to detector element
+   */
+  inline void setDet( const DeCalorimeter* Det ) 
+    { m_det = Det; }
+  
  protected:
   
   /** Standard constructor
    *  @param Det pointer to calorimeter detector 
    */
-  CellMatrix( const DeCalorimeter* Det )
+  CellMatrix( const DeCalorimeter* Det = 0 )
     : m_det ( Det )
     {};
   
@@ -91,10 +103,6 @@ class CellMatrix :
     };
 
  private:
-
-  /** default constructor is private!
-   */
-  CellMatrix();
   
   /** copy constructor is private!
    */
