@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.11 2003-05-30 09:34:00 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.12 2003-06-02 11:12:43 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -205,11 +205,11 @@ StatusCode ChargedProtoPAlg::execute() {
     m_errorCount["2. No Rich pID          "] += 1;
   }
   else {   
+    richData = true;
     if( m_monitor ) {
       msg << MSG::DEBUG << "Successfully retrieved " << richpids->size()
           << " RichPIDs at " << m_richPath << endreq;
     }
-    richData = true;
   }
   
   // Load muonPid results
@@ -221,10 +221,10 @@ StatusCode ChargedProtoPAlg::execute() {
     m_errorCount["3. No Muon pID          "] += 1;
   }
   else {
+   muonData = true;
     if ( m_monitor ){
       msg << MSG::DEBUG << "Successfully retrieved " << muonpids->size()
           << " MuonIDs at " << m_muonPath << endreq;
-    muonData = true;
     }
   }  
 
@@ -237,11 +237,11 @@ StatusCode ChargedProtoPAlg::execute() {
     m_errorCount["4. No Electron pID      "] += 1;
   }
   else {
+    caloData = true;
     if ( m_monitor ) {
       msg << MSG::DEBUG << "Successfully retrieved " << electrons->size()
           << " CaloHypo at " << m_electronPath << endreq;
     } 
-    caloData = true;
   }
 
   /// Check the tables for electronID exist
@@ -336,8 +336,8 @@ StatusCode ChargedProtoPAlg::execute() {
     
     // Add MuonID to this ProtoParticle
     if( muonData ) {
-      double muonProb = -999.;
       double muonDLL = -999.;
+      double muonProb = -999.;
       MuonIDs::const_iterator iMuon;
       for( iMuon = muonpids->begin(); muonpids->end() != iMuon; ++iMuon ) {
         const TrStoredTrack* track = (*iMuon)->idTrack();
@@ -457,7 +457,7 @@ StatusCode ChargedProtoPAlg::execute() {
         push_back( std::make_pair( ProtoParticle::LkhPIDK, dk ) );
       double dp = (combDLL->m_pDLL) - (combDLL->m_piDLL);
       proto->pIDDetectors().
-        push_back( std::make_pair( ProtoParticle::LkhPIDp, combDLL->m_pDLL ) );
+        push_back( std::make_pair( ProtoParticle::LkhPIDp, dp ) );
       proto->pIDDetectors().
         push_back( std::make_pair( ProtoParticle::LkhPIDpi, 0.0 ) );
     } 
