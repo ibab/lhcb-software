@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.138 2004-11-17 13:50:18 pkoppenb Exp $
+! $Id: release.notes,v 1.139 2004-11-17 13:52:27 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-11-15 - P. Koppenburg
+  - PreDV.{h,cpp}
+   . Remove it as it is not necessary anymore.
 
 !========================== DaVinciTools v11r2 2004-11-15 ===================
 ! 2004-11-17 - P. Koppenburg
