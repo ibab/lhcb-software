@@ -8,7 +8,7 @@ branches doc cmt
 #===============================================================
 use LHCb		v13r5
 
-use GaudiConf		v7r3
+use GaudiConf		v7r4
 
 # External packages used by GenEvent
 use PYTHIA		v2r6205p2 Gen
@@ -16,8 +16,8 @@ use HepMC		v3r121p1  Sim
 use GenEvent     	v2r4	Event
 
 # Kernel packages
-use KernelSys   	v1r8	Kernel
-use LHCbKernel  	v2r9	Kernel
+use KernelSys   	v1r9	Kernel
+use LHCbKernel  	v2r10	Kernel
 use CaloKernel  	v2r3p1	Calo
 use MuonKernel  	v2r3    Muon
 use TrKernel    	v11r2p1 Tr
@@ -31,7 +31,7 @@ use DetDesc        	v13r0p1	Det
 use DetDescCnv        	v2r1p1	Det
 use XmlTools        	v2r0p1	Tools
 use ITDet          	v1r7	Det
-use OTDet          	v4r1	Det
+use OTDet          	v5r0	Det
 use CaloDet        	v6r6p1	Det
 use CaloDetXmlCnv	v2r3p1	Det
 use MuonDet        	v4r4p1	Det
@@ -58,7 +58,7 @@ use DAQEvent		v3r0	Event
 use DbCnv        	v7r2p1	Event
 
 # Associators
-use AssociatorsSys	v1r7	Associators
+use AssociatorsSys	v1r7p1	Associators
 use Associators		v2r1	Associators
 use ITAssociators      	v2r5	IT
 use OTAssociators      	v2r6	OT
@@ -66,7 +66,7 @@ use VeloAssociators    	v1r6	Velo
 use CaloAssociators    	v3r4	Calo
 use MuonAssociators    	v1r1    Muon
 use TrAssociators      	v3r6    Tr
-use TrFitEvent         	v4r1	Tr
+use TrFitEvent         	v4r1p1	Tr
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex

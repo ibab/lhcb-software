@@ -4,10 +4,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v13r5 2003-12-02 =======================
-! 2003-12-02 - Marco Cattaneo
- - Modified packages: EventSys v15r3, Event v3r6,
-                      DetSys v3r3, ITDet v1r7, RichDet v6r3
+!======================= LHCbSys v13r5 2003-12-04 =======================
+! 2003-12-04 - Marco Cattaneo
+ - Modified packages: GaudiConf v7r4,
+                      KernelSys v1r9, LHCbKernel v2r10,
+                      EventSys v15r3, Event v3r6,
+                      DetSys v3r3, ITDet v1r7, RichDet v6r3, OTDet v5r0,
+                      AssociatorsSys v1r7p1, TrFitEvent v4r1p1
+
+ - In GaudiConf v7r4:
+   . Remove L1/OT/Clusters from DigiContent.opts
+
+ - In LHCbKernel
+   . Modification of bits in OTChannelID - backwards incompatible
 
  - In Event v3r6:
    . MCParticle: add methods beta(), gamma(), pseudoRapidity()
@@ -20,6 +29,9 @@
 
  - In RichDet v6r3:
    . Restructuring of DeRichRadiator. Backwards compatible, needs recompilation
+
+ - In OTDet v5r0:
+   . Introduction of DeOTQuarters
 
 !======================= LHCbSys v13r4 2003-11-27 =======================
 ! 2003-11-25 - Marco Cattaneo
