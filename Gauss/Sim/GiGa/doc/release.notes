@@ -1,6 +1,10 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+! 2002-08-26 - Witek Pokorski
+  GiGaSensDetBase - modified handling of SensitiveDetectorName (removed
+                    the name of the parent service)
+
 ! 2002-08-23 - Witek Pokorski
   removed SensitiveDetectors and G4Hits from GiGa package (and moved to 
   GaussTools)

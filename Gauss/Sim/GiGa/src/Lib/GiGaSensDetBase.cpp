@@ -1,8 +1,11 @@
-// $Id: GiGaSensDetBase.cpp,v 1.4 2002-05-07 12:21:34 ibelyaev Exp $ 
+// $Id: GiGaSensDetBase.cpp,v 1.5 2002-08-26 12:27:58 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/07 12:21:34  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 // from STL
 #include <vector>
@@ -70,7 +73,12 @@ StatusCode GiGaSensDetBase::initialize()
   // Correct the names!
   {
     ///
-    std::string tmp( m_detPath + "/" + name() ); 
+
+    std::string detname(name());
+    std::string::size_type posdot = detname.find(".");
+    detname.erase(0,posdot+1);
+
+    std::string tmp( m_detPath + "/" + detname ); 
     std::string::size_type pos = tmp.find("//") ; 
     while( std::string::npos != pos ) 
       { tmp.erase( pos , 1 ) ; pos = tmp.find("//") ; }
