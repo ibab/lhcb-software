@@ -1,8 +1,11 @@
-// $Id: GaussTrackInformation.h,v 1.3 2003-04-09 12:07:37 witoldp Exp $ 
+// $Id: GaussTrackInformation.h,v 1.4 2003-04-24 13:07:23 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/09 12:07:37  witoldp
+// added pointer to RICHInfo
+//
 // Revision 1.2  2002/12/07 21:19:13  ibelyaev
 //  few optimization updates
 //
@@ -21,7 +24,7 @@
 #include "GaussTools/GaussHitBase.h"
 
 // forward declaration
-class RICHInfo;
+class RichInfo;
 
 /** @class GaussTrackInformation GaussTrackInformation.h 
  *
@@ -102,7 +105,7 @@ public:
   
   /** update Tracks IDs in hits
    *  (set the new track ID for all connected hits)
-   *  @param trackID neew valeu of trackID 
+   *  @param trackID new value of trackID 
    */
   GaussTrackInformation& updateHitsTrackID( G4int trackID )
   {
@@ -112,7 +115,25 @@ public:
         if( 0 != hit ) { hit->setTrackID( trackID ); }
       }
     return *this ;
-  };
+  }
+
+  /** get the pointer to the richInfo
+   */
+
+  RichInfo* richInfo() 
+  {
+    return  m_richInfo;
+  }
+  
+  /** set the pointer to the richInfo
+   *  @param aRichInfo pointer to RichInfo
+   */
+  
+  void setRichInfo ( RichInfo* aRichInfo ) 
+  {
+    m_richInfo = aRichInfo;
+  }
+
   
 private:
   
@@ -129,7 +150,7 @@ private:
 
   /// pointer to a specialised RICHInfo object containing RICH-specific
   /// track information
-  RICHInfo* m_richInfo;
+  RichInfo* m_richInfo;
   
 };
 // ===========================================================================
