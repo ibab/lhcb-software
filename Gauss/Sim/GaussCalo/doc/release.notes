@@ -7,6 +7,8 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!============================ GaussCalo v4r0 ==============================
+
 ! 2003-07-10 - Ivan BELYAEV
  - few minor fixes for gcc3.2  + copy of CaloSimHash.h from the branch 
 
