@@ -4,9 +4,9 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v5r3 2004-03-15 ========================
-! 2004-03-15 - Marco Cattaneo
- - Packages added:    STDAQ v1r0
+!======================== BooleSys v5r3 2004-03-16 ========================
+! 2004-03-16 - Marco Cattaneo
+ - Packages added:    STDAQ v1r0, VeloDAQ v1r0
 
  - Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
                       CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
