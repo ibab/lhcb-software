@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.14 2001-04-24 08:54:08 ibelyaev Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.15 2001-04-24 09:24:15 ibelyaev Exp $ 
 
 package  GiGa 
 version  v4
@@ -26,6 +26,11 @@ library        GiGa      component/*.cpp Lib/*.cpp
 
 apply_pattern package_Clinkopts
 apply_pattern packageShr  
+
+################ macro to link dependent packages - not to beused for applications! 
+macro GiGaLinkOpts "-L$(GiGaDir) -lGiGa " \
+       WIN32       "$(GiGaDir)/GiGa.lib " \
+       LinuxStatic "$(GiGaDir)/libGiGa.a "
 
 ################ private stuff ###########################################
 private
