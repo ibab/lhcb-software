@@ -40,8 +40,8 @@ use CaloDetXmlCnv       v2r3    Det
 use GeneratorModules    v7r0    Gen
 
 #geometry source 
-use XmlDDDB             v16r1   Det 
-
+use XmlDDDB             v16r1   Det   -no_auto_imports
+use FieldMap            v4r3          -no_auto_imports
 # =============================================================================
 # Essential environment variables 
 # =============================================================================
