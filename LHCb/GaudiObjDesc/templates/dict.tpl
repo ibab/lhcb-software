@@ -14,6 +14,7 @@
 
 // Include files
 #include "ReflectionBuilder/ReflectionBuilder.h"
+#include "GaudiKernel/System.h"
 @@@includes@@@
 
 #include <string>
