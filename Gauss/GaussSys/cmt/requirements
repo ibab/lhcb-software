@@ -22,6 +22,7 @@ use GaussTools		v3r0	Sim
 
 # Detector stuff...
 use VeloAlgorithms 	v2r4p1	Velo
+use OTAlgorithms	v12r1p1	OT
 
 # OPACS stuff
 use OPACSLIB		v3	Vis
