@@ -1,13 +1,11 @@
     <class name='VeloChannelID' 
       author='Chris Parkes, modified by David Hutchcroft' 
       desc='VeloChannelID is a class that describes a single channel of LHCb VELO.'>
-      <desc> Fully qualified constructor: sets strip and sensor numbers and
-        sensor type</desc>
       <constructor 
         argList='unsigned int sensor, unsigned int strip,
         VeloChannelID::sensorType type' 
         initList = 'm_channelID(0)'
-        desc='constructor with sensor, strip, and sensor type'>
+        desc='constructor with sensor, strip, and sensor type. Do not use with VeloDet v8r*'>
         <code>
           setSensor(sensor);
           setStrip(strip);
@@ -65,24 +63,24 @@
       </method>
 
      <method type='VeloChannelID::sensorType' name='type' 
-       desc="Get sensor type" const='TRUE'> 
+       desc="Get sensor type. Do not use with VeloDet v8r*" const='TRUE'> 
         <code>
           return sensorType((m_channelID &amp; typeMask) &gt;&gt; typeBits);
         </code>
       </method> 
 
       <method type='bool' name='isPileUp' const='TRUE'
-        desc="Is the channel in a pile up sensor">
+        desc="Is the channel in a pile up sensor. Do not use with VeloDet v8r*">
         <code> return (VeloChannelID::PileUpType == type());</code>
       </method>
 
       <method type='bool' name='isRType' const='TRUE'
-        desc="Is the channel in an R type sensor">
+        desc="Is the channel in an R type sensor. Do not use with VeloDet v8r*">
         <code> return (VeloChannelID::RType == type());</code>
       </method>
 
       <method type='bool' name='isPhiType' const='TRUE'
-        desc="Is the channel in a phi type sensor">
+        desc="Is the channel in a phi type sensor. Do not use with VeloDet v8r*">
         <code> return (VeloChannelID::PhiType == type());</code>
       </method>
 
