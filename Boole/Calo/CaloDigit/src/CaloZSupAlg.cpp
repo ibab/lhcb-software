@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.9 2005-01-12 09:14:33 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.10 2005-01-14 15:45:51 cattanem Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -24,7 +24,7 @@
  *    Calorimeter Zero suppression.
  *
  *    @author: Olivier Callot
- *    @Date:   10 October 2002
+ *    @date:   10 October 2002
  */
 // ============================================================================
 

@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v1r8 2005-01-14 ========================
+! 2005-01-14 - Marco Cattaneo
+ - Fix some trivial doxygen warnings
+
 ! 2005-01-12 - Olivier Callot
  - Remove the production of the RawBuffer for Calo digits and trigger
    This is now done in the (new) Calo/CaloDAQ package by dedicated

@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.7 2005-01-12 09:14:33 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.8 2005-01-14 15:45:51 cattanem Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -8,8 +8,6 @@
 
 // Event 
 #include "Event/MCTruth.h"
-// Calo/CaloKernel
-#include "CaloKernel/CaloVector.h"
 
 // CaloEvent
 #include "Event/MCCaloDigit.h"
@@ -24,7 +22,7 @@
  *    Calorimeter Digitisation, including noise, and Zero suppression.
  *
  *    @author: Olivier Callot
- *    @Date:   5 June 2000
+ *    @date:   5 June 2000
  */
 // ============================================================================
 
