@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.123 2002-12-03 16:59:22 ranjard Exp $ 
+! $Id: release.notes,v 1.124 2002-12-09 17:38:59 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-12-09 - Sebastien Ponce
+ - Bug fix on DetectorElement in the destructor : reset() should not be called
+   there. This bug was actually there for long and was hidden by memory leaks
 
 !===================== DetDesc v11r6 2002-12-03 =============================
                 version v11r5 was built on v10r5b branch

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.18 2002-11-21 15:40:02 sponce Exp $ 
+// $Id: DetectorElement.cpp,v 1.19 2002-12-09 17:38:59 sponce Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -76,7 +76,6 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
 ////
 DetectorElement::~DetectorElement()
 {
-  reset();
   // release geometry
   if ( 0 != m_de_iGeometry ) 
     { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
