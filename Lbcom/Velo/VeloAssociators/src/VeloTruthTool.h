@@ -23,12 +23,12 @@ namespace VeloTruthTool{
 
   /// make link between VeloCluster and MCVeloHit
   StatusCode associateToTruth(const VeloCluster* aCluster,
-                              std::map<SmartRef<MCVeloHit>,double>& hitMap,
+                              std::map<MCVeloHit*,double>& hitMap,
                               SmartDataPtr<MCVeloFEs> mcfes);
 
   /// make link between VeloCluster and MCParticle
   StatusCode associateToTruth(const VeloCluster* aCluster,
-                              std::map<SmartRef<MCParticle>,double>& particleMap,
+                              std::map<MCParticle*,double>& particleMap,
                               SmartDataPtr<MCVeloFEs> mcfes);
 }; // VELOTRUTHTOOL_H
 

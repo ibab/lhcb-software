@@ -82,10 +82,10 @@ StatusCode VeloCluster2MCHitAlg::execute() {
   VeloClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-      std::map<SmartRef<MCVeloHit>,double> hitMap;
+      std::map<MCVeloHit*,double> hitMap;
       StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,hitMap,feCont);
     if (sc){
-      std::map<SmartRef<MCVeloHit>,double>::const_iterator iterMap;
+      std::map<MCVeloHit*,double>::const_iterator iterMap;
       for (iterMap = hitMap.begin(); iterMap !=  hitMap.end(); iterMap++){
         SmartRef<MCVeloHit> aHit = (*iterMap).first;
         double charge = (*iterMap).second;

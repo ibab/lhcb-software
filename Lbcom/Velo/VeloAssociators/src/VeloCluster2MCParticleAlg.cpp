@@ -82,10 +82,10 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
   VeloClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-      std::map<SmartRef<MCParticle>,double> particleMap;
+      std::map<MCParticle*,double> particleMap;
       StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,particleMap,feCont);
     if (sc){
-      std::map<SmartRef<MCParticle>,double>::const_iterator iterMap;
+      std::map<MCParticle*,double>::const_iterator iterMap;
       for (iterMap = particleMap.begin(); iterMap !=  particleMap.end(); iterMap++){
         SmartRef<MCParticle> aParticle = (*iterMap).first;
         double charge = (*iterMap).second;

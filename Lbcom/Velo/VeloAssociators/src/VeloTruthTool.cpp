@@ -16,7 +16,7 @@
 // 21/05/2002 : Chris Parkes
 //-----------------------------------------------------------------------------
 StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                                           std::map<SmartRef<MCVeloHit>,double>& hitMap,
+                                           std::map<MCVeloHit*,double>& hitMap,
                                            SmartDataPtr<MCVeloFEs> mcfes){
   // make link to truth to MCHit
 
@@ -48,18 +48,18 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
 }
 
 StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                          std::map<SmartRef<MCParticle>,double>& particleMap,
+                          std::map<MCParticle*,double>& particleMap,
                                          SmartDataPtr<MCVeloFEs> mcfes){
   // make truth link to MCParticle
   StatusCode sc = StatusCode::SUCCESS;
 
   // first to hits
-  std::map<SmartRef<MCVeloHit>,double> hitMap;
+  std::map<MCVeloHit*,double> hitMap;
   sc = VeloTruthTool::associateToTruth(aCluster,hitMap,mcfes);
 
   // now to particles
   if (sc.isSuccess()&&(!hitMap.empty())){
-    std::map<SmartRef<MCVeloHit>,double>::iterator iterMap;
+    std::map<MCVeloHit*,double>::iterator iterMap;
     for (iterMap = hitMap.begin(); iterMap != hitMap.end(); iterMap++){
       SmartRef<MCVeloHit> aHit = (*iterMap).first;
       double charge = (*iterMap).second;
