@@ -3,12 +3,16 @@
 ! Responsible	   : Witold Pokorski
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
+
+!======================= GaussPhysics v2r1 2003-03-07 =======================
+! 2003-03-07 - Florence RANJARD
+ - GaussPhysics_load.cpp - DECLARE GeneralPhysics
 	
-!=========================== GaussPhysics v2r0 2002-12-17 ========================
+!======================= GaussPhysics v2r0 2002-12-17 ========================
 ! 2002-12-17 - Witek Pokorski
  - use new GaussTools (new G4) 
 
-!=========================== GaussPhysics v1r0 2002-12-11 ========================
+!======================= GaussPhysics v1r0 2002-12-11 ========================
 ! 2002-12-11 - Witek Pokorski
   - New package: contains physics constructors for Gauss 
 

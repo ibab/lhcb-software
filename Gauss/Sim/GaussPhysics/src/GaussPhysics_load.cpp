@@ -17,6 +17,7 @@
 void GaussPhysics_load() 
 { 
   /// Physics Lists 
+  DECLARE_GiGaFactory     (    GeneralPhysics          );
   DECLARE_GiGaFactory     (    EMPhysics               );
   DECLARE_GiGaFactory     (    EM_GNPhysics            );
   DECLARE_GiGaFactory     (    IonPhysics              );
