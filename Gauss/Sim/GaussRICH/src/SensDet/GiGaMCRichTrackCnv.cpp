@@ -4,14 +4,17 @@
  *  Implementation file for GiGa converter : GiGaRichTrackCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichTrackCnv.cpp,v 1.3 2004-07-30 13:42:14 jonrob Exp $
+ *  $Id: GiGaMCRichTrackCnv.cpp,v 1.4 2004-07-30 14:18:23 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
 
-//  ===========================================================================
+// ============================================================================
 #define GIGACNV_GiGaRichTrackCnv_CPP 1
 // ============================================================================
 
@@ -210,7 +213,6 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
             << point << endreq;
 
       }
-
 
     }
 

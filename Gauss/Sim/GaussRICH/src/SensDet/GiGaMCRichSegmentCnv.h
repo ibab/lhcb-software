@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.h,v 1.2 2004-07-30 13:42:14 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.h,v 1.3 2004-07-30 14:18:23 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/30 13:42:14  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -151,7 +154,7 @@ private: // data
 };
 
 // ============================================================================
-#endif   ///< GIGACNV_GiGaRichSegmentCnv_H
+#endif   // GIGACNV_GiGaRichSegmentCnv_H
 // ============================================================================
 
 
