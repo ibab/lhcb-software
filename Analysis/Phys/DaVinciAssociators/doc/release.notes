@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.18 2002-10-11 10:47:13 gcorti Exp $
+! $Id: release.notes,v 1.19 2002-10-14 14:43:09 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-10-14 - Gloria Corti
+ - Use PreLoadParticles in TestAssociator and make it self-contained.
 
 ! 2002-10-11 - Gloria Corti
  - Uncomment options for a generic ChargedPP2MC associator 

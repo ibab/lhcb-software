@@ -1,12 +1,24 @@
 //##############################################################
 // Property file for TestAssociators
+// Default options for any DaVinci jobs
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciv248r2.opts"
+
+// The test associator can fill histograms
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "TestDVAssociators.hbook";
 
 //
 // This is the default parameters
 //
 // List of necessary algorithms for the test
-#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
-ApplicationMgr.TopAlg += { "TestAssociators" };
+ApplicationMgr.TopAlg = { "MCPIDProtoPAlg",
+                          "PrimaryVertexFinderAlg",
+                          "PreLoadParticles",
+                          "TestAssociators" };
+
+// Include properties of PreLoadParticles
+#include "$DAVINCITOOLSROOT/options/PreLoadParticles.opts"
 
 // Include properties of specific Associator to test
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
@@ -48,6 +60,14 @@ Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 4;
 Particle2MCLinks.ProtoParticle2MCLinks.OutputLevel = 4;
 
 // Make others mute
-TestPhysDesktop.PhysDesktop.OutputLevel = 4;
-TestPhysDesktop.PhysDesktop.ChargedParticlemaker.OutputLevel = 4;
+//  TestPhysDesktop.PhysDesktop.OutputLevel = 4;
+//  TestPhysDesktop.PhysDesktop.ChargedParticlemaker.OutputLevel = 4;
 MCPIDProtoAlg.OutputLevel = 4;
+//  PreLoadParticles.OutputLevel = 4;
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax = 100;
+EventSelector.FirstEvent = 1;
+   
+// Data to use for the test
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
