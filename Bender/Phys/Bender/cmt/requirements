@@ -1,0 +1,41 @@
+# $Id: requirements,v 1.1.1.1 2004-01-22 22:29:45 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $     
+# =============================================================================
+# Created    : 2002-11-02
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
+# =============================================================================
+package           Bender
+version           v2r0
+
+#============================================================================
+branches          cmt doc src python
+
+# =============== dependencies ================================================
+use               BenderDict  v2r*  Tools 
+use               DaVinci     v11r* Phys 
+	
+# =============== consituents =================================================
+application       Bender      Bender.cpp
+
+# =============== paths =======================================================
+path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
+path_prepend      PYTHONPATH "$(BENDERROOT)/python"
+path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
+path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
+
+# =============== application macro ===========================================
+macro             Bender_linkopts    "${application_linkopts}"
+
+# =============== set the Bender version = v * 100000 + r * 100 + p ==========
+macro_append      app_Bender_cppflags " -DBenderVersion=200000 " \
+                  VisualC             " /DBenderVersion=200000 "
+
+# =============== standard patterns ===========================================
+apply_pattern     application_path 
+
+# ============================================================================
+# The END
+# ============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================

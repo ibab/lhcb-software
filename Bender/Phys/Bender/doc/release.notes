@@ -1,0 +1,17 @@
+! $Id: release.notes,v 1.1.1.1 2004-01-22 22:29:45 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $
+! -----------------------------------------------------------------------------
+! Package     : newmycmt/Bender
+! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Purpose     : The package is a result of "pythonization procedure" 
+!                of the LoKi package 
+! -----------------------------------------------------------------------------
+
+! 2003-04-15 - Vanya BELYAEV
+ - the second commit into CVS :-)
+	too many changes to be described here, consider it 'the first commit'
+
+! 2002-11-02 - Vanya Belyaev
+ - new package 
+
