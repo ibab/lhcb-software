@@ -3,6 +3,21 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+ - New features:
+   . Add support for data produced for robustness test (XmlDDB v15r3,
+     DaVinciv254r1-Apr03.opts)
+   . New DaVinciReco.opts where execution of algorithms to produce
+     charged ProtoParticles and Primary Vertices is set.
+   . Remove execution of above algorithms from DaVinciCommon.opts
+   . Introduce use of DaVinciReco.opts in DaVinci.opts to allow easy
+     switching off when reading a MiniDST file where these objects
+     are already present.
+   . Add CaloReCorrections.opts for new S/L/E correction, necessary for
+     merged pi0
+   . Use LHCb v11r11
+   . Use Associators v2r0 and add its dll loading in DaVinciCommon.opts
+  
+
 </PRE><H1><A NAME=v7r3>2003-03-21 DaVinci v7r4</A></H1><PRE>
  - New version:
 	 . Split of physics selections in small packages

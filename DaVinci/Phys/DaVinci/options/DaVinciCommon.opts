@@ -37,6 +37,7 @@ ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
 ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators" };
 ApplicationMgr.DLLs += { "TrAssociators" };
+ApplicationMgr.DLLs += { "Associators" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
