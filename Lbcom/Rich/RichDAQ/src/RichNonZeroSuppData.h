@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.2 2003-11-08 15:20:51 jonrob Exp $
+// $Id: RichNonZeroSuppData.h,v 1.3 2003-11-08 15:28:27 jonrob Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H 
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -93,6 +93,22 @@ public:
   inline LongType * data()
   {
     return &m_data[0];
+  }
+
+  /// Fill a vector with RichSMartIDs for hit pixels
+  void fillSmartIDs( const ShortType rich,
+                     const ShortType panel,
+                     const ShortType pdRow,
+                     const ShortType pdCol,
+                     std::vector<RichSmartID> & ids )
+  {
+    for ( iRow = 0; iRow < MaxBits; ++iRow ) {
+      for ( iCol = 0; iCol < MaxBits; ++iCol ) {
+        if ( isPixelActive(iRow,iCol) ) {
+          ids.push_back( RichSmartID( rich,panel,pdRow,pdCol,iRow,iCol ) );
+        }
+      }
+    }
   }
   
 private: // definitions

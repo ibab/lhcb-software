@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.2 2003-11-08 15:20:50 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.3 2003-11-08 15:28:27 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -199,6 +199,10 @@ HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
   // Create a block of non-zero suppressed data from HltBank
   RichNonZeroSuppData nonZSdata( bank );
 
+  // Get new SmartIDs
+  std::vector<RichSmartID> IDs;
+  nonZSdata.fillSmartIDs(ids);
+  
 
   return digitCount;
 }
