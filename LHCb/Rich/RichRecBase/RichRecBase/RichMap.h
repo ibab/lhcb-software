@@ -125,7 +125,6 @@ public:
   /** erase the sequence from the map
    *  @warning implementation  is platform-dependent
    *  @param it the "begin" iterator for the sequence
-   *  @param last  the "end"   iterator for the sequence
    */
   void erase( iterator it )
   {

@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v1r11 2004-04-20 =======================
 ! 2004-04-20 - Chris Jones
  - Improvements to RichTrackSelector
 
