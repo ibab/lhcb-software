@@ -1,8 +1,11 @@
-// $Id: GiGaStackActionBase.cpp,v 1.8 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaStackActionBase.cpp,v 1.9 2004-02-22 13:28:38 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.7  2002/05/07 12:21:34  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -16,16 +19,6 @@
  *
  *  @author Vanya Belyaev 
  */
-
-namespace GiGaStackActionBaseLocal
-{
-#ifdef GIGA_DEBUG
-  /** @var   s_Counter
-   *  static instance counter 
-   */
-  static GiGaUtil::InstanceCounter<GiGaStackActionBase> s_Counter ;
-#endif   
-};
 
 // ============================================================================
 /** standard constructor 
@@ -44,21 +37,13 @@ GiGaStackActionBase::GiGaStackActionBase
   , GiGaBase             ( type , name , parent ) 
 { 
   declareInterface<IGiGaStackAction> (this) ; 
-#ifdef GIGA_DEBUG
-  GiGaStackActionBaseLocal::s_Counter.increment () ;
-#endif
 };
 // ============================================================================
 
 // ============================================================================
 // Destructor 
 // ============================================================================
-GiGaStackActionBase::~GiGaStackActionBase()
-{
-#ifdef GIGA_DEBUG
-  GiGaStackActionBaseLocal::s_Counter.decrement () ;
-#endif 
-};
+GiGaStackActionBase::~GiGaStackActionBase() {};
 // ============================================================================
 
 // ============================================================================
@@ -70,14 +55,7 @@ GiGaStackActionBase::~GiGaStackActionBase()
  */
 // ============================================================================
 StatusCode GiGaStackActionBase::initialize() 
-{
-  StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize base class GiGaBase"); } 
-  ///
-  return Print("GiGaStackActionBase initialized successfully",
-               StatusCode::SUCCESS                           , MSG::VERBOSE );  
-}; 
+{ return GiGaBase::initialize () ; }; 
 // ============================================================================
 
 // ============================================================================
@@ -89,12 +67,7 @@ StatusCode GiGaStackActionBase::initialize()
  */
 // ============================================================================
 StatusCode GiGaStackActionBase::finalize() 
-{ 
-  Print("GiGaStackActionBase finalization" ,
-        StatusCode::SUCCESS                , MSG::VERBOSE ) ;
-  // finalize the base class 
-  return GiGaBase::finalize();  
-};
+{ return GiGaBase::finalize(); };
 // ============================================================================
 
 // ============================================================================
@@ -155,25 +128,24 @@ GiGaStackActionBase::ClassifyNewTrack ( const G4Track* /* track */ )
     UImanager->ApplyCommand("/event/abort");
 */
 // ============================================================================
-void GiGaStackActionBase::NewStage         ()
-{ Print("'NewStage' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+void GiGaStackActionBase::NewStage         () {};
 // ============================================================================
 
 // ============================================================================
 /** From G4:
-    
-    This method is called by G4StackManager at the begining of
-    each event.
-    
-    Be careful that the urgentStack and the waitingStack of 
-    G4StackManager are empty at this moment, because this method
-    is called before accepting primary particles. Also, note that
-    the postponeStack of G4StackManager may have some postponed
-    tracks.
-*/ 
+ *     
+ * This method is called by G4StackManager at the begining of
+ * each event.
+ *
+ * Be careful that the urgentStack and the waitingStack of 
+ * G4StackManager are empty at this moment, because this method
+ * is called before accepting primary particles. Also, note that
+ * the postponeStack of G4StackManager may have some postponed
+ * tracks.
+ *
+ */ 
 // ============================================================================
-void GiGaStackActionBase::PrepareNewEvent  ()
-{ Print("'PrepareNewEvent' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+void GiGaStackActionBase::PrepareNewEvent  () {};
 // ============================================================================
 
 // ============================================================================

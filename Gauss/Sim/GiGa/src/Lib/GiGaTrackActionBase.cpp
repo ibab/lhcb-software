@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionBase.cpp,v 1.8 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaTrackActionBase.cpp,v 1.9 2004-02-22 13:28:38 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.7  2002/05/07 12:21:34  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -16,16 +19,6 @@
  * 
  *  @author Vanya Belyaev 
  */
-
-namespace GiGaTrackActionBaseLocal
-{
-#ifdef GIGA_DEBUG
-  /** @var   s_Counter
-   *  static instance counter 
-   */
-  static GiGaUtil::InstanceCounter<GiGaTrackActionBase> s_Counter ;
-#endif   
-};
 
 // ============================================================================
 /** standard constructor 
@@ -43,21 +36,13 @@ GiGaTrackActionBase::GiGaTrackActionBase
   : GiGaBase( type , name , parent )
 { 
   declareInterface<IGiGaTrackAction> (this); 
-#ifdef GIGA_DEBUG
-  GiGaTrackActionBaseLocal::s_Counter.increment () ;
-#endif 
 }
 // ============================================================================
 
 // ============================================================================
 // destructor
 // ============================================================================
-GiGaTrackActionBase::~GiGaTrackActionBase()
-{
-#ifdef GIGA_DEBUG
-  GiGaTrackActionBaseLocal::s_Counter.decrement () ;
-#endif 
-};
+GiGaTrackActionBase::~GiGaTrackActionBase() {};
 // ============================================================================
 
 // ============================================================================
@@ -69,13 +54,7 @@ GiGaTrackActionBase::~GiGaTrackActionBase()
  */
 // ============================================================================
 StatusCode GiGaTrackActionBase::initialize() 
-{
-  StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
-  ///
-  return Print("GiGaTrackActionBase initialized successfully" ,
-               StatusCode::SUCCESS                            , MSG::VERBOSE) ;
-}; 
+{ return GiGaBase::initialize() ; }; 
 // ============================================================================
 
 // ============================================================================
@@ -87,22 +66,17 @@ StatusCode GiGaTrackActionBase::initialize()
  */
 // ============================================================================
 StatusCode GiGaTrackActionBase::finalize() 
-{ 
-  Print("GiGaTrackActionBase finalization" ,
-        StatusCode::SUCCESS                , MSG::VERBOSE ) ;
-  // finalize the base class 
-  return GiGaBase::finalize();  
-};
+{ return GiGaBase::finalize() ; } ;
 
 // ============================================================================
 // ============================================================================
 void GiGaTrackActionBase::PreUserTrackingAction  ( const G4Track* /* track */ ) 
-{ Print("'PreAction' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+{};
 
 // ============================================================================
 // ============================================================================
 void GiGaTrackActionBase::PostUserTrackingAction ( const G4Track* /* track */ ) 
-{ Print("'PostAction' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+{};
 
 // ============================================================================
 // The END 
