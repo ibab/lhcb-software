@@ -71,10 +71,10 @@ use  TrExtrapolator      v2r10  Tr
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-use  TriggerFilter       v4r1   Tools
+use  TriggerFilter       v4r2   Tools
 
 #--- DecayPreselections
-use  DecayPresel         v4r1   Tools
+use  DecayPresel         v4r2   Tools
 
 #--- Tools
 use  LoKi                v1r10  Tools
