@@ -5,8 +5,11 @@
  * Header file for utility class : RichTrackID
  *
  * CVS Log :-
- * $Id: RichTrackID.h,v 1.9 2004-10-13 09:29:43 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.10 2004-10-27 14:34:16 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2004/10/13 09:29:43  jonrob
+ * Improvements to RichTrackID and RichTrackSelector
+ *
  * Revision 1.8  2004/07/26 18:00:58  jonrob
  * Various improvements to the doxygen comments
  *
@@ -18,16 +21,6 @@
 
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
-
-// Include files
-#include <string>
-#include <iostream>
-#include <sstream>
-
-// from Gaudi
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/GaudiException.h"
 
 // Event
 #include "Event/TrStoredTrack.h"

@@ -5,8 +5,11 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.6 2004-10-13 09:29:43 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.7 2004-10-27 14:34:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/13 09:29:43  jonrob
+ *  Improvements to RichTrackID and RichTrackSelector
+ *
  *  Revision 1.5  2004/07/26 18:00:58  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -18,6 +21,16 @@
 
 // local
 #include "RichRecBase/RichTrackID.h"
+
+// Include files
+#include <string>
+#include <iostream>
+#include <sstream>
+
+// from Gaudi
+#include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Text conversion for Rich::RecTrack::ParentType enumeration
 std::string Rich::text( const Rich::TrackParent::Type parent )

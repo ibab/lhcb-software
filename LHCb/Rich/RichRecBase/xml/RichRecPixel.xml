@@ -1,11 +1,14 @@
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.4 2004-10-13 09:29:43 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.5 2004-10-27 14:34:16 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.4  2004/10/13 09:29:43  jonrob
+  * Improvements to RichTrackID and RichTrackSelector
+  *
   * Revision 1.3  2004/07/29 09:03:12  jonesc
   * Add CVS Log history information to XML files
   *
@@ -42,10 +45,12 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::PixelParent::Unknown)">
-                <arg  const="TRUE" name="smartID" type="RichSmartID" inout="BYVALUE" />
-                <arg  const="TRUE" name="gPos"    type="HepPoint3D"  />
-                <arg  const="TRUE" name="lPos"    type="HepPoint3D"  />
+                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
+                <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="RichSmartID"               />
+                <arg                  const="TRUE" name="gPos"       type="HepPoint3D"                />
+                <arg                  const="TRUE" name="lPos"       type="HepPoint3D"                />
+                <arg inout="BYVALUE"  const="TRUE" name="parentType" type="Rich::PixelParent::Type"   />
+                <arg                  const="TRUE" name="parent"     type="ContainedObject*"          />
                 <code/>
         </constructor>
 
@@ -189,5 +194,5 @@
                 name         = "richRecPhotonsSmartRefs" 
                 type         = "RichRecPhoton"
         />
-    
+
 </class>
