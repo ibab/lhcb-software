@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2004-08-08 13:41:11 ibelyaev Exp $ 
+# $Id: requirements,v 1.14 2004-08-21 16:25:45 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           Bender
-version           v3r7
+version           v4r0
 
 #============================================================================
 branches          cmt doc src python
@@ -15,10 +15,9 @@ branches          cmt doc src python
 use               BenderDict  v*  Tools 
 use               BenderDet   v*  Det  
 use               LoKiHybrid  v*  Tools 
-use               DaVinci     v*  Phys 
-	
+use               DaVinci     v*  Phys 	
 # =============== consituents =================================================
-application       Bender      Bender.cpp
+application       Bender      -import=Boost Bender.cpp
 
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
@@ -42,8 +41,8 @@ path_append       LD_PRELOAD  "" \
 macro             Bender_linkopts    "${application_linkopts}"
 
 # =============== set the Bender version = v * 100000 + r * 100 + p ==========
-macro_append      app_Bender_cppflags " -DBenderVersion=200000 " \
-                  VisualC             " /DBenderVersion=200000 "
+macro_append      app_Bender_cppflags " -DBenderVersion=400000 " \
+                  VisualC             " /DBenderVersion=400000 "
 
 # =============== standard patterns ===========================================
 apply_pattern     application_path 
@@ -51,9 +50,6 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.12  2004/08/06 12:07:06  ibelyaev
-#  minor improvements
-#
 # =============================================================================
 # The END
 # ============================================================================
