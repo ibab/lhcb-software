@@ -29,13 +29,12 @@
   MuonDigitizationParameters::Parameters::Parameters(IToolSvc* toolSvc, IDataProviderSvc* detSvc, IMessageSvc * msgSvc)
 {
    IMuonTileXYZTool* m_pMuonTileXYZ ; 
-static std::string spill[] = {"","/Prev","/PrevPrev","/Next","/NextNext"};
 static std::string numreg[] = {"1","2","3","4"};
 static std::string numsta[] = {"1","2","3","4","5"};
 
 static std::string geoBase="/dd/Structure/LHCb/Muon/";
 
-  MsgStream log(msgSvc, "stringa"); 
+  MsgStream log(msgSvc, "MuonDigitizationParameters"); 
   StatusCode sc=toolSvc->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ);
 	if(sc.isFailure()){
 	  log<<MSG::ERROR<<"could not retrieve the tool"<<endreq ;
@@ -46,8 +45,7 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
   for(int i=0;i<5;i++){
     for (int k=0;k<4;k++){
       regionName[i*4+k]=geoBase+"M"+numsta[i]+"/R"+numreg[k];
-      log<<MSG::DEBUG<<"region name "<<regionName[i*4+k]<<endreq;
-    }
+     }
   }
   int chamberCounter=0;
 	bool firstChamber=true;
@@ -59,7 +57,7 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
     SmartDataPtr<DeMuonRegion>  detRegionPointer(detSvc,regionName[indexRegion]);
     setLogMapPerRegion(indexRegion,detRegionPointer-> numberLogicalMap());
 
-    log<<MSG::DEBUG<<"log map per region "<<regionName[indexRegion]<< " " << getLogMapPerRegion(indexRegion) <<endreq;
+//    log<<MSG::DEBUG<<"log map per region "<<regionName[indexRegion]<< " " << getLogMapPerRegion(indexRegion) <<endreq;
     //
     // --------- logical map ------------------------
     //
@@ -67,26 +65,26 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
     int xMap[maxReadoutType],yMap[maxReadoutType];
     StatusCode sc = detRegionPointer->logicalMap(0,rType[0], xMap[0], yMap[0]);
     if(sc.isFailure()){
-      log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<"not 1 readout"<<endreq;
+//      log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<"not 1 readout"<<endreq;
       //      return sc;
     }else{
-      log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has "<<rType[0]<<" "<<xMap[0]<<" "<<yMap[0]<<endreq;
+//      log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has "<<rType[0]<<" "<<xMap[0]<<" "<<yMap[0]<<endreq;
     }
 
     if(getLogMapPerRegion(indexRegion)==2){
       StatusCode sc = detRegionPointer->logicalMap(1,rType[1], xMap[1], yMap[1]);
       if(sc.isFailure()){
-        log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has not 2 readout"<<endreq;
+//        log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has not 2 readout"<<endreq;
       //      return sc;
       }else{
-        log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has "<<rType[1]<<" "<<xMap[1]<<" "<<yMap[1]<<endreq;
+//        log<<MSG::DEBUG<<"Region "<<regionName[indexRegion]<<" has "<<rType[1]<<" "<<xMap[1]<<" "<<yMap[1]<<endreq;
       }
     }   
     for(int i=0;i<2;i++){   
       setLogMapRType(i,indexRegion,rType[i]);
       setLogMapMergex(i,indexRegion,xMap[i]);
       setLogMapMergey(i,indexRegion,yMap[i]);
-      log<<MSG::DEBUG<<"Verifica "<<getLogMapRType(i,indexRegion)<<" "<<getLogMapMergex(i,indexRegion)<<" "<<getLogMapMergey(i,indexRegion)<<endreq;
+//      log<<MSG::DEBUG<<"Verifica "<<getLogMapRType(i,indexRegion)<<" "<<getLogMapMergex(i,indexRegion)<<" "<<getLogMapMergey(i,indexRegion)<<endreq;
     }
     setChamberPerRegion(indexRegion,detRegionPointer->chamberNum());		 
     setReadoutNumber(indexRegion,-1) ;
