@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.13 2004-10-13 09:39:01 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.14 2004-10-27 14:36:30 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/10/13 09:39:01  jonrob
+ *  Update for new RichPID object
+ *
  *  Revision 1.12  2004/08/20 16:08:30  jonrob
  *  Add tally for each type of PID result to final results table
  *
@@ -151,7 +154,9 @@ private: // data
   int m_multiplicity;
   int m_totalSelTracks;
 
-  unsigned m_trackCount[2][Rich::Track::NTrTypes];
+  //unsigned m_trackCount[2][Rich::Track::NTrTypes];
+  typedef std::map<Rich::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
+  TkCount m_trackCount;
 
   typedef std::map<std::string,unsigned> PIDsByType;
   /// Count the number of PID objects by PID type

@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.27 2004-10-21 09:11:19 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.28 2004-10-27 14:36:30 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.27  2004/10/21 09:11:19  jonrob
+ *  minor update
+ *
  *  Revision 1.26  2004/10/13 09:39:01  jonrob
  *  Update for new RichPID object
  *
@@ -93,10 +96,10 @@ StatusCode RichPIDQC::initialize()
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
-  for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-    m_trackCount[0][iTk] = 0;
-    m_trackCount[1][iTk] = 0;
-  }
+  //for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+  //  m_trackCount[0][iTk] = 0;
+  //  m_trackCount[1][iTk] = 0;
+  //}
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
@@ -204,39 +207,6 @@ StatusCode RichPIDQC::bookMCHistograms()
   return StatusCode::SUCCESS;
 }
 
-void RichPIDQC::countTrStoredTracks()
-{
-  m_multiplicity = 0;
-  m_totalSelTracks = 0;
-  TrStoredTracks * tracks = get<TrStoredTracks>( m_trackTDS );
-  debug() << "Found " << tracks->size() << " TrStoredTracks at " << m_trackTDS << endreq;
-  for ( TrStoredTracks::const_iterator iTrk = tracks->begin();
-        iTrk != tracks->end(); ++iTrk ) {
-    if ( (*iTrk)->unique() ) ++m_multiplicity;
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const TrStateP* pState = getTrStateP( *iTrk );
-    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
-    ++m_totalSelTracks;
-  }
-}
-
-void RichPIDQC::countTrgTracks()
-{
-  m_multiplicity = 0;
-  m_totalSelTracks = 0;
-  TrgTracks * tracks = get<TrgTracks>( TrgTrackLocation::Long );
-  debug() << "Found " << tracks->size() << " TrgTracks at " << TrgTrackLocation::Long << endreq;
-  m_multiplicity = tracks->size();
-  for ( TrgTracks::const_iterator iTrk = tracks->begin();
-        iTrk != tracks->end(); ++iTrk ) {
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const double tkPtot = fabs((*iTrk)->firstState().momentum());
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
-    ++m_totalSelTracks;
-  }
-}
-
 // Main execution
 StatusCode RichPIDQC::execute()
 {
@@ -280,7 +250,7 @@ StatusCode RichPIDQC::execute()
       Rich::Track::Type tkType = trackType(iPID);
 
       // Count PIDs and tracks
-      ++m_trackCount[0][tkType];
+      ++m_trackCount[tkType].first;
       ++pidCount;
       ++m_pidPerTypeCount[iPID->pidType()];
 
@@ -300,20 +270,20 @@ StatusCode RichPIDQC::execute()
       // Check for threshold
       if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
 
-      // some debug printout
-      if ( msgLevel(MSG::DEBUG) ) {
-        debug() << "RichPID " << iPID->key() << " ("
-                << iPID->pidType() << "), Track type "
-                << tkType << tkPtot << " GeV/c,"
-                << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
-                << endreq
-                << "  Dlls      = " << iPID->particleLLValues() << endreq
-                << "  Prob(r/n) = ";
+      // some verbose printout
+      if ( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "RichPID " << iPID->key() << " ("
+                  << iPID->pidType() << "), Track type "
+                  << tkType << tkPtot << " GeV/c,"
+                  << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
+                  << endreq
+                  << "  Dlls      = " << iPID->particleLLValues() << endreq
+                  << "  Prob(r/n) = ";
         for ( int ipid = 0; ipid < Rich::NParticleTypes; ++ipid ) {
           const Rich::ParticleIDType pid = static_cast<Rich::ParticleIDType>(ipid);
-          debug() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
+          verbose() << iPID->particleRawProb(pid) << "/" << iPID->particleNormProb(pid) << " ";
         }
-        debug() << endreq << "  RecoPID   = " << pid;
+        verbose() << endreq << "  RecoPID   = " << pid;
       }
 
       // Fill histos for deltaLLs and probabilities
@@ -335,10 +305,10 @@ StatusCode RichPIDQC::execute()
         Rich::ParticleIDType mcpid = trueMCType( iPID );
         if ( mcpid != Rich::Unknown &&
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
-        if ( msgLevel(MSG::DEBUG) ) debug() << ", MCID = " << mcpid << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
 
         // Count track types
-        if ( Rich::Unknown != mcpid ) ++m_trackCount[1][tkType];
+        if ( Rich::Unknown != mcpid ) ++m_trackCount[tkType].second;
 
         // Fill performance tables
         m_perfTable->fill( mcpid+1, pid+1 );
@@ -382,7 +352,7 @@ StatusCode RichPIDQC::execute()
         } // extra histos
 
       } else {
-        debug() << endreq;
+        verbose() << endreq;
       }
 
     } // end PID loop
@@ -397,6 +367,10 @@ StatusCode RichPIDQC::execute()
   m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
   if ( m_totalSelTracks>0 ) {
     m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks) );
+  }
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Total Tracks = " << m_totalSelTracks << " : tracks PIDed = " << pidCount << endreq;
   }
 
   return StatusCode::SUCCESS;
@@ -482,54 +456,52 @@ StatusCode RichPIDQC::finalize()
     trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
     trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-    info() << "-----------+-----------------------------------------------+-----------"
-           << endreq << "  Tk Sel   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
-    info() << " #Tks(+MC) |";
-    unsigned tkCount = 0;
-    for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "           |"; }
-      if ( m_trSelector.typeSelected((Rich::Track::Type)iTk) ) {
-        info() << " " << (Rich::Track::Type)iTk << " " << m_trackCount[0][iTk]
-               << "(" << m_trackCount[1][iTk] << ")";
-        ++tkCount;
-      }
+    info() << "------------+-------------------------------------------------+------------"
+           << endreq << "  Tk Sel    | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
+    info() << " #Tks(+MC)  |";
+    unsigned int tkCount = 0;
+    for ( TkCount::const_iterator iTk = m_trackCount.begin();
+          iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
+      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "            |"; }
+      info() << " " << (*iTk).first << "=" << (*iTk).second.first
+             << "(" << (*iTk).second.second << ")";
     }
-    info() << endreq << " #RichPIDs |";
+    info() << endreq << " #RichPIDs  |";
     for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
           iPC != m_pidPerTypeCount.end(); ++iPC ) {
       info() << " " << (*iPC).first << "=" << (*iPC).second;
     }
     info() << endreq
-           << "-----------+-----------------------------------------------+-----------"
+           << "------------+-------------------------------------------------+------------"
            << endreq
-           << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"
+           << "  %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
            << endreq
-           << "-----------+-----------------------------------------------+-----------"
+           << "------------+-------------------------------------------------+------------"
            << endreq
-           << "           |                                               |" << endreq;
-    std::string type[6] = { " Electron  |", " Muon      |", " Pion      |",
-                            " Kaon      |", " Proton    |", " X         |" };
+           << "            |                                                 |" << endreq;
+    const std::string type[6] = { " Electron   |", " Muon       |", " Pion       |",
+                                  " Kaon       |", " Proton     |", " X          |" };
     for ( iRec = 0; iRec < 6; ++iRec ) {
-      info() << type[iRec] << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f     |%7.2f",
+      info() << type[iRec] << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f",
                                       m_sumTab[0][iRec], m_sumTab[1][iRec],
                                       m_sumTab[2][iRec], m_sumTab[3][iRec],
                                       m_sumTab[4][iRec], m_sumTab[5][iRec],
                                       purity[iRec] ) << endreq;
     }
-    info() << "  (reco)   |                                               |" << endreq
-           << "-----------+-----------------------------------------------+-----------"
+    info() << "   (reco)   |                                                 |" << endreq
+           << "------------+-------------------------------------------------+------------"
            << endreq
-           << " %Eff.     |" << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f",
+           << " %Eff.      |" << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f ",
                                         eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
            << "     |" << endreq
-           << "-----------+-----------------------------------------------+-----------" << endreq;
-    info() << format( "  %ID      |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
+           << "------------+-------------------------------------------------+------------" << endreq;
+    info() << format( " % ID       |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
                       kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    info() << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
+    info() << format( " % MisID    |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
                       kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    info() << " PID rate  |    events " << evPIDRate[0] << " +- " << evPIDRate[1]
-           << "%,  tracks " << trPIDRate[0] << " +- " << trPIDRate[1] << "%" << endreq
-           << "-----------+-----------------------------------------------+-----------"
+    info() << format( " % PID rate |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
+                      evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq
+           << "------------+-------------------------------------------------+------------"
            << endreq;
 
   } // final printout
@@ -554,4 +526,36 @@ StatusCode RichPIDQC::loadPIDData()
 
   // If we get here, things went wrong
   return Warning( "Failed to located RichPIDs at " + m_pidTDS );
+}
+
+void RichPIDQC::countTrStoredTracks()
+{
+  m_multiplicity = 0;
+  m_totalSelTracks = 0;
+  TrStoredTracks * tracks = get<TrStoredTracks>( m_trackTDS );
+  debug() << "Found " << tracks->size() << " TrStoredTracks at " << m_trackTDS << endreq;
+  for ( TrStoredTracks::const_iterator iTrk = tracks->begin();
+        iTrk != tracks->end(); ++iTrk ) {
+    if ( (*iTrk)->unique() ) ++m_multiplicity;
+    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
+    const TrStateP* pState = getTrStateP( *iTrk );
+    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
+    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
+    ++m_totalSelTracks;
+  }
+}
+
+void RichPIDQC::countTrgTracks()
+{
+  m_totalSelTracks = 0;
+  TrgTracks * tracks = get<TrgTracks>( TrgTrackLocation::Long );
+  debug() << "Found " << tracks->size() << " TrgTracks at " << TrgTrackLocation::Long << endreq;
+  m_multiplicity = tracks->size();
+  for ( TrgTracks::const_iterator iTrk = tracks->begin();
+        iTrk != tracks->end(); ++iTrk ) {
+    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
+    const double tkPtot = fabs((*iTrk)->firstState().momentum())/GeV;
+    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
+    ++m_totalSelTracks;
+  }
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-10-27 - Chris Jones
+ - Improvements to the RichPIDQC finalisation printout, to hopefully clarify
+   the meaning of the various efficiencies.
+
 ! 2004-10-13 - Chris Jones
  - Updates for new RichPID object
 
