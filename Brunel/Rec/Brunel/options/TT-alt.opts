@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //  Job options for Brunel for data produced with Boole v5r4 or greater and   //
 // XmlDDDB v22r0, geometry lhcb-200402-ITv2 (TT layout 4-2-1-1-2-4 in centre) //
-//                   and with magnetic field Field045                         //
+//                and with default magnetic field (Field045)                  //
 ////////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
@@ -14,25 +14,53 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402-ITv2.xml";
 #include "$STDAQROOT/options/stDAQ-v2.opts"
 #pragma print on
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-// Finally, define input and output files, first event, number of events
+// Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "TT-alt-histos.root";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
+//EventSelector.FirstEvent = 7;  // To skip some events 
 
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
+//---------------------------------------------------------------------------
+// Input and output files.
+// For event data, choose either POOL or GaudiDb following these rules:
+// - If the input files is POOL:
+//   . The output file must be POOL
+//   . The POOL input file should be described in PoolDbCacheSvc.Catalog
+//     (If not, it will not be possible to follow links to it from the DST)
+// - If the input files is GaudiDb, output file can be GaudiDb or POOL
+//---------------------------------------------------------------------------
 
-// Following input file must be replaced with file of correct geometry!!
+HistogramPersistencySvc.OutputFile = "TT-alt.root";  // Monitoring histos
 
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
+// POOL file catalogs. First one is read-write, others are read only
+PoolDbCacheSvc.Catalog = {
+  "xmlcatalog_file:NewCatalog.xml",
+  "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+};
 
-// POOL output
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+
+// Format for GaudiRootDb input (no Boole v5r6 files available for TT-alt geometry)
+//EventSelector.Input = { "DATAFILE='TT-alt.oodigi' TYP='ROOT' OPT='READ'" };
+
+// Format for POOL input (no Boole v5r6 files available for TT-alt geometry)
+//EventSelector.Input = { "DATAFILE='PFN:TT-alt.digi' TYP='POOL_ROOT' OPT='READ'" };
+
+//---------------------------------------------------------------------------
+// Event output
+//---------------------------------------------------------------------------
+
+// POOL
 DstWriter.Output = "DATAFILE='PFN:TT-alt.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// GaudiDb
+//DstWriter.Output = "DATAFILE='TT-alt.oodst' TYP='ROOT' OPT='NEW'";
 
 //////////////////////////////////////////////////////////////////////////////

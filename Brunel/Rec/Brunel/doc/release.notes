@@ -4,6 +4,7 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v23r6>2004-04-21 Brunel v23r6</A></H1><PRE>
+Requires data produced by Boole v5r6 or later
 
 - Functionality changes
   . Disabled RichRecoQC, because it accesses Spillover hits, no longer available
@@ -16,8 +17,11 @@ Purpose: LHCb reconstruction program
   . Change match Chi2 cut to 500. (from 200.) (Matching v2r10)
   . Remove multiple scattering fudge factor from extrapolation errors
     (TrExtrapolator v2r11)
+  . Retune KShort tracking for higher efficiency (TrKShort v1r4)
 
 - Persistency changes
+  . Added Gen/HepMCEvents, Gen/HardProcesses, MC/Signal
+    (produced by Gauss v15r4, propagated by Boole v5r6)
   . Removed Velo,IT,OT clusters and Muon coordinates from DST. If needed they 
     can be recreated from RawBuffer by rerunning the clustering
   . Added intermediate directories of Digits paths, to avoid opening .digi

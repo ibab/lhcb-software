@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v5r4 or greater   ///
+///   Job options for Brunel for data produced with Boole v5r6 or greater   ///
 /// and with XmlDDDB v22r0 or greater, geometry compatible with lhcb-200402 ///
-///                  and with magnetic field Field045                       ///
+///             and with default magnetic field (Field045)                  ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
@@ -14,7 +14,6 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 #include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
-MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
 
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
@@ -40,8 +39,9 @@ HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:Pool411300_catalog.xml",
-  "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+  "xmlcatalog_file:NewCatalog.xml"
+ ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+ ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
 
 //---------------------------------------------------------------------------
@@ -51,8 +51,8 @@ PoolDbCacheSvc.Catalog = {
 // POOL
 EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r6/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
 
-// GaudiDb
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/411300-Field045.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
+// Format for GaudiRootDb input (no Boole v5r6 files available)
+//EventSelector.Input = { "DATAFILE='411300.oodigi' TYP='ROOT' OPT='READ'" };
 
 //---------------------------------------------------------------------------
 // Event output

@@ -8,8 +8,7 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-  //, "/Event/Gen/HepMCEvents#1"   needs Gauss v15r4
-  //, "/Event/Gen/HardProcesses#1" needs Gauss v15r4
+, "/Event/Gen/HardProcesses#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -18,10 +17,11 @@ DstWriter.ItemList =
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
 , "/Event/MC#1"
 , "/Event/MC/Particles#1"
 , "/Event/MC/Vertices#1"
-  //, "/Event/MC/Signal#1" needs Gauss v15r4
+, "/Event/MC/Signal#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
 , "/Event/Trig/AlgUsedTimes#1"
@@ -29,21 +29,15 @@ DstWriter.ItemList =
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
-  //, "/Event/Trig/L1#1"
-  //, "/Event/Trig/L1/Summary#1"   To be replaced by new L1 trigger
-  //, "/Event/Trig/L1/Decision#1"  To be replaced by new L1 trigger
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
 , "/Event/Raw#2"
-  //, "/Event/Raw/Velo/Clusters#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
-  //, "/Event/Rec/IT/Clusters#1"
 , "/Event/Rec/OT#1"
-  //, "/Event/Rec/OT/Clusters#1"
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/ITClusters#1"
@@ -73,11 +67,6 @@ DstWriter.ItemList =
 , "/Event/Rec/Muon/M3#1"
 , "/Event/Rec/Muon/M4#1"
 , "/Event/Rec/Muon/M5#1"
-  //, "/Event/Rec/Muon/M1/Coords#1"
-  //, "/Event/Rec/Muon/M2/Coords#1"
-  //, "/Event/Rec/Muon/M3/Coords#1"
-  //, "/Event/Rec/Muon/M4/Coords#1"
-  //, "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
   // "Relations" MC truth
 , "/Event/Rec/Relations#1"

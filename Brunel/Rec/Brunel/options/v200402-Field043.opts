@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v5r4 or greater   ///
+///   Job options for Brunel for data produced with Boole v5r6 or greater   ///
 /// and with XmlDDDB v22r0 or greater, geometry compatible with lhcb-200402 ///
 ///                  and with magnetic field Field043                       ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,11 +41,11 @@ ApplicationMgr.EvtMax = 100;
 // - If the input files is GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "Field043.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:Pool411300_catalog.xml",
+  "xmlcatalog_file:NewCatalog.xml",
   "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 };
 
@@ -53,20 +53,20 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 
-// POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/Pool411300-Field043.digi' TYP='POOL_ROOTTREE' OPT='READ'" }; // evtype 411300
+// Format for GaudiRootDb input (no Boole v5r6 files available for Field043)
+//EventSelector.Input = { "DATAFILE='Field043.oodigi' TYP='ROOT' OPT='READ'" };
 
-// GaudiDb
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r3/411300-Field043.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
+// Format for POOL input (no Boole v5r6 files available for Field043)
+//EventSelector.Input = { "DATAFILE='PFN:Field043.digi' TYP='POOL_ROOT' OPT='READ'" };
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
 
 // POOL
-DstWriter.Output = "DATAFILE='PFN:Pool411300-Field043.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Field043.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 // GaudiDb
-//DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
+//DstWriter.Output = "DATAFILE='Field043.oodst' TYP='ROOT' OPT='NEW'";
 
 //////////////////////////////////////////////////////////////////////////////

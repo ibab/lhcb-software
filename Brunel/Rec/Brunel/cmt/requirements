@@ -84,7 +84,7 @@ use Seeding             v2r8	Tr
 use TrMatching          v2r10	Tr
 use TrCleanEx           v2r9	Tr
 use VeloTT              v1r9	Tr
-use TrKShort		v1r3	Tr
+use TrKShort		v1r4	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
