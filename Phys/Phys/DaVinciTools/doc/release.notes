@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.69 2004-03-11 16:12:34 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2004-03-16 18:49:45 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+!========================== DaVinciTools v9r1 2004-03-16 ==================
+! 2004-03-16 - P. Koppenburg for Hugo Ruiz
+ - src/DecayFinder.cpp
+   . K0L is NOT the antiparticle of K0S!
+ - src/PreDV.cpp
+   . keepSelHistory becomes KeepSelHistory
+ - src/PreLoadParticles.{cpp,h}
+   . becomes a DVAlgorithm
+   
 !========================== DaVinciTools v9r0 2004-03-11 ==================
 ! 2004-02-11 - P. Koppenburg for Hugo Ruiz
  - src/CombinedParticleMaker.*
@@ -20,7 +29,6 @@
    . Correct eta_prime bug
  - DaVinciHeader.cpp
    . moved to src
- - created directory Lib and linker library DaVinciAlgLib
    
 !========================== DaVinciTools v8r5 2004-02-11 ==================
 ! 2004-02-11 - Gloria CORTI for Vincenzo VAGNONI

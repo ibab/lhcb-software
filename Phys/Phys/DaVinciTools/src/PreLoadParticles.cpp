@@ -1,10 +1,11 @@
-// $Id: PreLoadParticles.cpp,v 1.1 2002-10-13 21:24:16 gcorti Exp $
+// $Id: PreLoadParticles.cpp,v 1.2 2004-03-16 18:49:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IToolSvc.h"
+
 
 // from EventSys
 #include "Event/Particle.h"
@@ -29,8 +30,9 @@ const        IAlgFactory& PreLoadParticlesFactory = s_factory ;
 //=============================================================================
 PreLoadParticles::PreLoadParticles( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) {
-  
+  : DVAlgorithm ( name , pSvcLocator ) {
+  setProperty( "AvoidSelResult", "true");
+  setProperty( "DecayDescriptor", "\"null\"");
 }
 
 //=============================================================================
@@ -43,12 +45,12 @@ PreLoadParticles::~PreLoadParticles() {};
 //=============================================================================
 StatusCode PreLoadParticles::initialize() {
 
-  MsgStream log(msgSvc(), name());
+  MsgStream msg(msgSvc(), name());
 
   // Retrieve PhysDesktop
   StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << "PhysDesktop not found" << endreq;
+    msg << MSG::ERROR << "PhysDesktop not found" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -60,22 +62,31 @@ StatusCode PreLoadParticles::initialize() {
 //=============================================================================
 StatusCode PreLoadParticles::execute() {
 
-  MsgStream  log( msgSvc(), name() );
+  MsgStream  msg( msgSvc(), name() );
 
   // Produce particles via desktop configuration
-  StatusCode scDesktop = desktop()->getInput();
-  if( !scDesktop.isSuccess() ) {
-    log << MSG::ERROR << "Not able to fill desktop " << endreq;
-    return StatusCode::FAILURE;
-  }
+  //  StatusCode scDesktop = desktop()->getInput();
+  //  if( !scDesktop.isSuccess() ) {
+  //    msg << MSG::ERROR << "Not able to fill desktop " << endreq;
+  //    return StatusCode::FAILURE;
+  //  }
   
   // Save all of them
-  scDesktop = desktop()->saveDesktop();
+  StatusCode scDesktop = desktop()->saveDesktop();
   if( !scDesktop.isSuccess() ) {
-    log << MSG::ERROR << "Not able to save desktop " << endreq;
+    msg << MSG::ERROR << "Not able to save desktop " << endreq;
     return StatusCode::FAILURE;
   }
 
+  
+  // Log number of vertices and particles
+  msg << MSG::DEBUG << "  Number of particles in desktop = " << 
+    desktop()->particles().size() << endreq;
+  msg << MSG::DEBUG << "  Number of vertices in desktop = " << 
+      desktop()->vertices().size() << endreq;
+
+  setFilterPassed(true);
+  
   return StatusCode::SUCCESS;
 };
 
@@ -84,8 +95,8 @@ StatusCode PreLoadParticles::execute() {
 //=============================================================================
 StatusCode PreLoadParticles::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }

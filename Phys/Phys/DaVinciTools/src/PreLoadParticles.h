@@ -1,4 +1,4 @@
-// $Id: PreLoadParticles.h,v 1.1 2002-10-13 21:24:13 gcorti Exp $
+// $Id: PreLoadParticles.h,v 1.2 2004-03-16 18:49:45 pkoppenb Exp $
 #ifndef PRELOADPARTICLES_H 
 #define PRELOADPARTICLES_H 1
 
@@ -6,11 +6,9 @@
 // from STL
 #include <string>
 
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-
 // from DaVinci
 #include "DaVinciTools/IPhysDesktop.h"
+#include "DaVinciTools/DVAlgorithm.h"
 
 
 /** @class PreLoadParticles PreLoadParticles.h
@@ -20,7 +18,8 @@
  *  @author Gloria Corti
  *  @date   2002-08-22
  */
-class PreLoadParticles : public Algorithm {
+
+class PreLoadParticles : public DVAlgorithm {
 public:
   /// Standard constructor
   PreLoadParticles( const std::string& name, ISvcLocator* pSvcLocator );

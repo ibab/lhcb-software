@@ -1,4 +1,4 @@
-// $Id: PreDV.cpp,v 1.1 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PreDV.cpp,v 1.2 2004-03-16 18:49:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,7 @@ PreDV::PreDV( const std::string& name,
   : Algorithm ( name , pSvcLocator )
   , m_warned(false)
 {
-  declareProperty( "keepSelHistory", m_keepSelHistory = true);
+  declareProperty( "KeepSelHistory", m_keepSelHistory = true);
 }
 //=============================================================================
 // Destructor
@@ -74,8 +74,8 @@ StatusCode PreDV::execute() {
     }
     else      {
       if (!m_warned){
-        msg << MSG::INFO << "SelResult container not there yet" << endreq;
-        msg << MSG::INFO << "Creating it" << endreq;
+        msg << MSG::INFO << "SelResult container not there yet."
+            << "Creating it" << endreq;
         m_warned = true;
       }
       needToRegister = true;
