@@ -15,7 +15,7 @@ use CaloEvent    v11r0   Event
 use MuonEvent    v2r0    Event
 use L0Event      v12r0   Event
 use L1Event      v11r0   Event
-use PhysEvent    v5r0    Event
+use PhysEvent    v5r1    Event
 use DbCnv        v7r0    Event
 
 

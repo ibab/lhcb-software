@@ -1,6 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2002-07-10 - Gloria Corti
+ - Use PhysEvent v5r1
+
 !========================= EventSys v11r0 2002-07-09 =========================
 ! 2002-06-19 - Marco Cattaneo
  - Use RichEvent v3r1
