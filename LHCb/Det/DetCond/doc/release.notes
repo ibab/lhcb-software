@@ -1,5 +1,15 @@
+# $Id: release.notes,v 1.2 2001-11-23 17:48:18 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+!20011123 - Andrea Valassi (v2)
+- Upgrade to Gaudi v9
+-> addresses now inherit from GenericAddress (which has been simplified a lot)
+-> there are no address factories any more
+-> adapt to changes in RegistryEntry (which now implements IRegistry)
+-> add dummy methods fillObjRefs and updateObjRefs in ConditionsDbCnvSvc
+-> do not overload methods createObj and updateObj in XmlStringCnvSvc
+-> notify (by flag "true") ServiceLocator to create services not existing yet
 
 !20010914 - Andrea Valassi (v1)
 - New package
