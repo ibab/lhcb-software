@@ -1,8 +1,11 @@
-// $Id: Simulation.opts,v 1.3 2002-04-09 17:19:40 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.4 2002-04-28 19:12:18 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/09 17:19:40  ibelyaev
+//  fix problems with event-drawing and magnetic field
+//
 // Revision 1.2  2002/04/05 16:41:29  witoldp
 // uses restructured GeneratorModules
 //
@@ -37,8 +40,8 @@ Simulation.Members +=
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
-  "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
-  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
+  "GiGaFlushAlgorithm/GiGaFlush"     };  // flush the event 
+//  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
 
 // ============================================================================
 // configuration of GiGa Data Store 
@@ -62,7 +65,7 @@ Geo.ExecuteOnce          = true ;
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 
 // ============================================================================
 // Physics List  to be used and its configuration  
@@ -154,10 +157,10 @@ GiGaSvc.UIsessions =  { "tcsh" };
 // ============================================================================
 // Global(world) magnetic field 
 // ============================================================================
-GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
-// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
-UniformField.Bx =   0.     ; 
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+//GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
+UniformField.Bx =   0.005  ; 
 UniformField.By =   0.005  ; 
 UniformField.Bz =   0.     ; 
 UniformField.OutputLevel = 1 ;
