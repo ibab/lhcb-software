@@ -3,7 +3,8 @@
 //=============================================================
 // Reimplemented by O.Callot for DC04
 
-ApplicationMgr.DLLs    += { "L0DU", "L0Calo" };
+ApplicationMgr.DLLs    += { "L0DU", "L0Calo", "L0Checker" };
 ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw",
                             "DecisionUnit", 
-                            "L0Monitor" };
+                            "L0Check"};
+L0Check.HistogramFlag = false;

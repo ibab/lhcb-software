@@ -17,13 +17,17 @@ ApplicationMgr.DLLs += { "TrgTools"
 
 //=== Add the L1 processing
 
-ApplicationMgr.TopAlg += { "Sequencer/L1WithTrg" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/L1WithTrg" };
 
-L1WithTrg.Members += { "Sequencer/L1Processing",
-                       "Sequencer/L1Checking" };
+L1WithTrg.Members += { //"TrgL0Filter",
+                       "TrgInitEvent",
+                       "GaudiSequencer/L1Processing"
+                       ,"GaudiSequencer/L1Checking"
+};
 
 
-L1Processing.Members =  { "DecodeL1VeloR"
+L1Processing.Members =  { "L1InitEvent"
+                          ,"DecodeL1VeloR"
                           ,"VeloRTracking"
                           ,"L1PrimaryVtx2d"
                           ,"L1Select2dIP"
@@ -49,3 +53,5 @@ L1Checking.Members = { "TrgTrackToContainer"
                      };
 
 TrgVertexMonit.Vertices3D = false;
+
+L1Processing.measureTime = true;
