@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/06/21 11:02:45  ibelyaev
+//  update in S-,L- and E-corrections
+//
 // ============================================================================
 
 // ============================================================================
@@ -15,51 +18,48 @@
  *  Area2 --    inner part
  *
  *  Parameters for that correction was obtained for photons going from
- *  interaction point.
+ *  interaction point. But it is valid for both e- and e+ from interaction
+ *  point.
  *
  *  That correction gives new coordinates at the reference plane
- *  with Z = 12300.0 mm rather than at shower maximum. For that it is
- *  assumed that the particle is neutral (photon) and it goes from interaction
- *  point. So using that parameters would give some displasement for electrons
- *  depending of it's charge and momentum.
+ *  with Z = 12660.0 mm. It supposed to be a shower maximum.
  *  
  *  @see CaloCorr2TANH
  *  @author Konstantin Beloous Konstantin.Beloous@cern.ch
- *  @date   14 Jun 2002
+ *  @date   4 Jul 2002
  */
 // ============================================================================
-
 ToolSvc.SShape2Tanh.AreaCorrections = 
-{ 
-  "CaloCorr2TANH/Calo2TANH0" ,
+{ "CaloCorr2TANH/Calo2TANH0" ,
   "CaloCorr2TANH/Calo2TANH1" ,
   "CaloCorr2TANH/Calo2TANH2"
 };
 
-
 ToolSvc.SShape2Tanh.Detector = "/dd/Structure/LHCb/Ecal" ;
 
 ToolSvc.Calo2TANH0.XParameters =
-{ 0.67123, 19.04999, 43.125, 0.017255, 0.9715,  0.040037 };
+{ 0.26913, 21.164, 0.78194, 2.9447, 1.0, 0.0 };
 ToolSvc.Calo2TANH0.YParameters =
-{ 0.70742, 17.11327,  2.884, 0.231117, 0.9712, -0.020633 };
-ToolSvc.Calo2TANH0.CellSize    =   121.5;
-ToolSvc.Calo2TANH0.NewZ        = 12300.0;
+{ 0.26913, 21.164, 0.78194, 2.9447, 1.0, 0.0 };
+ToolSvc.Calo2TANH0.CellSize    =   121.7;
+ToolSvc.Calo2TANH0.NewZ        = 12660.0;
 ToolSvc.Calo2TANH0.UpdateZ     =   true;
 
 ToolSvc.Calo2TANH1.XParameters =
-{ 0.69120,  8.71398,  3.606, 0.185628, 0.9706,  0.003734 };
+{ 0.60196, 6.4796, 225.52, 0.0029686, 1.0, 0.0 };
 ToolSvc.Calo2TANH1.YParameters =
-{ 0.69120,  8.71398,  3.606, 0.185628, 0.9706,  0.003734 };
-ToolSvc.Calo2TANH1.CellSize    =    60.75;
-ToolSvc.Calo2TANH1.NewZ        = 12300.0;
+{ 0.60196, 6.4796, 225.52, 0.0029686, 1.0, 0.0 };
+ToolSvc.Calo2TANH1.CellSize    =    60.85;
+ToolSvc.Calo2TANH1.NewZ        = 12660.0;
 ToolSvc.Calo2TANH1.UpdateZ     =   true;
 
 ToolSvc.Calo2TANH2.XParameters =
-{ 0.69585, 6.20825, 12.986, 0.049985, 0.97070, 0.014918 };
+{ 0.70013, 4.9640, 57.158, 0.0093474, 1.0, 0.0 };
 ToolSvc.Calo2TANH2.YParameters =
-{ 0.73606,  6.08350, 13.592, 0.040978, 0.9707, -0.001760 };
-ToolSvc.Calo2TANH2.CellSize    =    40.5;
-ToolSvc.Calo2TANH2.NewZ        = 12300.0;
+{ 0.70013, 4.9640, 57.158, 0.0093474, 1.0, 0.0 };
+ToolSvc.Calo2TANH2.CellSize    =    40.5667;
+ToolSvc.Calo2TANH2.NewZ        = 12660.0;
 ToolSvc.Calo2TANH2.UpdateZ     =   true;
-
+// ============================================================================
+// The End 
+// ============================================================================
