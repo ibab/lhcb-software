@@ -8,7 +8,7 @@
       author="W. Pokorski"
       desc="Gaudi wrapper for HepMC events"
       location="Gen/HepMCEvents"
-      id="2201" >
+      id="202" >
       <base name="KeyedObject&lt;int&gt;"/>
       <import name="HepMC" ignore="TRUE"/>
       <import name="CLHEPStreams" ignore="TRUE"/>
