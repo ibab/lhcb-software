@@ -1,5 +1,9 @@
-\Package         : ITDet
-Package manager : M. Needham 
+!Package         : ITDet
+!Package manager : M. Needham
+
+!========================== ITDet v1r7 2003-12-02 ==========================
+! 2003-12-02 - Marco Cattaneo
+ - Clean up requirements
  
 ! 2003-12-01 - M. Needham
  - Add methods to return type of ladder (LR,TB ,TT, )
