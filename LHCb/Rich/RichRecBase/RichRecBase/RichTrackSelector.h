@@ -5,8 +5,11 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.6 2004-07-26 18:00:58 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.7 2004-10-13 09:29:43 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2004/07/26 18:00:58  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -21,6 +24,7 @@
 
 // Event model
 #include "Event/TrStoredTrack.h"
+#include "Event/TrgTrack.h"
 #include "Event/RichRecTrack.h"
 
 // Kernel
@@ -32,11 +36,13 @@
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20
- *
- *  @todo   Review the momentum cut implementation
  */
 
 class RichTrackSelector {
+
+public: // definitions
+
+  typedef std::vector<std::string> MomentumCutData;
 
 public:
 
@@ -46,21 +52,10 @@ public:
   /// Destructor
   ~RichTrackSelector() {}
 
-  /** Returns the minimum track momentum cuts vector.
-   *  Recommended for job options use only -  Users should use
-   *  RichTrackSelector::minMomentum instead.
-   *
-   *  @return Reference to the vector of minimum momentum cut values
+  /** Method used to set the momentum cut data
+   *  @return Write access to the momentum cut data
    */
-  std::vector<double> & minMomenta();
-
-  /** Returns the maximum track momentum cuts vector.
-   *  Recommended for job options use only -  Users should use
-   *  RichTrackSelector::maxMomentum instead.
-   *
-   *  @return Reference to the vector of maximum momentum cut values
-   */
-  std::vector<double> & maxMomenta();
+  MomentumCutData & setMomentumCuts();
 
   /** Returns the minimum momentum cut value for given track type
    *
@@ -80,6 +75,9 @@ public:
 
   /// Test it the given TrStoredTrack is selected
   bool trackSelected( const TrStoredTrack * track ) const;
+
+  /// Test it the given TrgTrack is selected
+  bool trackSelected( const TrgTrack * track ) const;
 
   /// Test it the given RichRecTrack is selected
   bool trackSelected( const RichRecTrack * track ) const;
@@ -101,8 +99,12 @@ public:
 
 private: // methods
 
+  /// Finds the TrStateP for a given track and z position 
   const TrStateP * trStateP( const TrStoredTrack * track,
                              const double zPos = -999999 ) const;
+
+  /// Configure the momentum cuts
+  bool configureMomentumCuts();
 
 private: // private data
 
@@ -126,23 +128,21 @@ private: // private data
   /// Maximum momentum cut
   std::vector<double> m_maxP;
 
+  /// Momentum cut data. Set externally and used to configure the momentum cuts
+  MomentumCutData m_pCutData;
+
 };
+
+inline RichTrackSelector::MomentumCutData & RichTrackSelector::setMomentumCuts()
+{
+  return m_pCutData;
+}
 
 inline const TrStateP * RichTrackSelector::trStateP( const TrStoredTrack * track,
                                                      const double zPos ) const
 {
   return ( track ?
            dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
-}
-
-inline std::vector<double> & RichTrackSelector::minMomenta()
-{
-  return m_minP;
-}
-
-inline std::vector<double> & RichTrackSelector::maxMomenta()
-{
-  return m_maxP;
 }
 
 inline const double RichTrackSelector::minMomentum( const Rich::Track::Type type ) const
@@ -168,6 +168,17 @@ inline bool RichTrackSelector::trackSelected( const TrStoredTrack * track ) cons
            );
 }
 
+inline bool RichTrackSelector::trackSelected( const TrgTrack * track ) const
+{
+  const Rich::Track::Type type = Rich::Track::type(track);
+  return ( track &&                                           // Track pointer OK
+           m_tkTypeSel[type] &&                               // tracking algorithm type
+           ( m_chargeSel*track->firstState().momentum() >= 0 )  &&       // track charge
+           ( track->firstState().momentum() > minMomentum(type) ) &&     // Momentum cut
+           ( track->firstState().momentum() < maxMomentum(type) )        // Momentum cut
+           );
+}
+
 inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
 {
   const Rich::Track::Type type = track->trackID().trackType();
@@ -178,6 +189,7 @@ inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
            ( track->vertexMomentum() > minMomentum(type) ) &&     // Momentum cut
            ( track->vertexMomentum() < maxMomentum(type) )        // Momentum cut
            );
+
 }
 
 inline std::vector<std::string> & RichTrackSelector::selectedTrackTypes()

@@ -5,8 +5,11 @@
  *  Header file for RICH reconstruction tool interface : IRichParticleProperties
  *
  *  CVS Log :-
- *  $Id: IRichParticleProperties.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
+ *  $Id: IRichParticleProperties.h,v 1.5 2004-10-13 09:29:43 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 18:00:57  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,7 +49,7 @@ public:
 
   /** Calculates 'beta' for given particle hypothesis
    *
-   *  @param segment Pointer to the RichrecSegment for which to calculate beta
+   *  @param segment Pointer to the RichRecSegment for which to calculate beta
    *  @para  id      The mass hypothesis to assume whilst calculating beta
    *
    *  @return The value of beta
