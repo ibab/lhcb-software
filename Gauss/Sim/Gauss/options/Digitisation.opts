@@ -1,8 +1,6 @@
-// $Id: Digitisation.opts,v 1.9 2003-07-18 07:00:40 witoldp Exp $ 
-
+// $Id: Digitisation.opts,v 1.10 2003-08-13 14:46:03 witoldp Exp $ 
 
 HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
-#include "$STDOPTS/Hbook.opts"
 
 /////////////////////////////////////////////////////////////////
 //OT 

@@ -23,7 +23,7 @@ RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
 
-EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"}; 
+EventSelector.Input = {"DATAFILE='Gauss.oosim' TYP='ROOT' OPT='READ'"}; 
 
 
 //--------------------------------------------------------------
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg  = {"PrintEventAlg/PrintEvt"};
 ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 //ApplicationMgr.TopAlg += {"DumpMC"};
 
-ApplicationMgr.EvtSel      ="'Gauss.root'";
+ApplicationMgr.EvtSel      ="'Gauss.oosim'";
 
 HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
 #include "$STDOPTS/Hbook.opts"
@@ -44,50 +44,51 @@ HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
 /////////////////////////////////////////////////////////////////
 // Velo 
 
-// ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;
-// ApplicationMgr.TopAlg += {"VeloSim"};
+ApplicationMgr.DLLs += { "VeloDet","VeloAlgorithms" } ;
+ApplicationMgr.TopAlg += {"VeloSim"};
 
 // // JP Palacios Options file for VeloSim algorithm
-// VeloSim.NoiseSim = true;
-// VeloSim.coupling = true;
-// VeloSim.SpillOver = false;
-// VeloSim.InhomogeneousCharge = true;
-// VeloSim.TestSimulation =  false;
-// VeloSim.PileUp= true;
-// VeloSim.OutputLevel=2;
+VeloSim.NoiseSim = true;
+VeloSim.coupling = true;
+VeloSim.SpillOver = false;
+VeloSim.InhomogeneousCharge = true;
+VeloSim.TestSimulation =  false;
+VeloSim.PileUp= true;
+VeloSim.OutputLevel=2;
 
 // // JP Palacios Options file for VeloMonitor algorithm
-// ApplicationMgr.DLLs += { "VeloAssociators" };
-// ApplicationMgr.TopAlg += { "VeloMonitor"};
+ApplicationMgr.DLLs += { "VeloAssociators" };
+ApplicationMgr.TopAlg += { "VeloMonitor"};
 
-// VeloMonitor.TestMCVeloHit       = true;
-// VeloMonitor.TestMCVeloFE        = true;
-// VeloMonitor.TestVeloFullDigit = false;
-// VeloMonitor.TestVeloCluster   = false;
-// VeloMonitor.Resolution          = false;
-// VeloMonitor.Printout            = 5;
-// VeloMonitor.OutputLevel = 6;
+VeloMonitor.TestMCVeloHit       = true;
+VeloMonitor.TestMCVeloFE        = true;
+VeloMonitor.TestVeloFullDigit = false;
+VeloMonitor.TestVeloCluster   = false;
+VeloMonitor.Resolution          = false;
+VeloMonitor.Printout            = 5;
+VeloMonitor.OutputLevel = 6;
+VeloMonitor.DetailedMonitor = true;
 
 //////////////////////////////////////////////////////////////////
 // IT
 
-ApplicationMgr.DLLs   += { "ITDet","ITCheckers" ,"ITAlgorithms" };
+//ApplicationMgr.DLLs   += { "ITDet","ITCheckers" ,"ITAlgorithms" };
 
-ApplicationMgr.TopAlg += { "MCITDepositCreator",
-                          "MCITDigitCreator",
-                          "ITDigitCreator"
-};
-#include "$ITALGORITHMSROOT/options/itDigi.opts"
+//ApplicationMgr.TopAlg += { "MCITDepositCreator",
+//                          "MCITDigitCreator",
+//                          "ITDigitCreator"
+//};
+//#include "$ITALGORITHMSROOT/options/itDigi.opts"
 
 // Not really digitization, but just to check... 
-ApplicationMgr.TopAlg += { "ITClusterCreator","ITSummaryCreator"};
-#include "$ITALGORITHMSROOT/options/itRec.opts"
+//ApplicationMgr.TopAlg += { "ITClusterCreator","ITSummaryCreator"};
+//#include "$ITALGORITHMSROOT/options/itRec.opts"
 
-ApplicationMgr.DLLs += { "ITAssociators" };
-ApplicationMgr.TopAlg += { "MCITDepositChecker",
-                          "ITDigitChecker",
-                          "ITClusterChecker"
-};
+//ApplicationMgr.DLLs += { "ITAssociators" };
+//ApplicationMgr.TopAlg += { "MCITDepositChecker",
+//                          "ITDigitChecker",
+//                          "ITClusterChecker"
+//};
 
 
 //--------------------------------------------------------------

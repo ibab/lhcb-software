@@ -1,5 +1,5 @@
 package Gauss
-version v12r0
+version v12r1
 
 # =============================================================================
 # structure 
@@ -26,22 +26,22 @@ use Magnet              v2r*    Det
 
 #GiGa staff...
 use GiGaCnv             v13r0   Sim
-use GaussTools          v8r2    Sim
-use GaussTracker        v2r5    Sim
-use GaussRICH           v4r0    Sim
+use GaussTools          v8r3    Sim
+use GaussTracker        v2r6    Sim
+use GaussRICH           v4r1    Sim
 use GaussCalo           v4r0    Sim
-use GaussPhysics        v2r2    Sim
+use GaussPhysics        v2r3    Sim
 use CaloDetXmlCnv       v2r3    Det 
 
 #optional visualisation and UI
 #use GiGaVisUI           v2r1    Sim
 
 # generator
-use GeneratorModules    v8r0    Gen
+use GeneratorModules    v8r1    Gen
 use DecFiles            v1r0    Gen
 
 #geometry source 
-use XmlDDDB             v17r0   Det   -no_auto_imports
+use XmlDDDB             v17r1   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 # =============================================================================
 # Essential environment variables 
