@@ -191,6 +191,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4double CurPhiCkvAtProd;
   G4double CurChTrackTotMom;
   G4ThreeVector CurChTrackMomVect;
+  G4double CurChTrackPDGMass=0;
 
   if((aTrack->GetDefinition() == G4Electron::Electron()) &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
@@ -218,6 +219,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
        CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
        CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
        CurChTrackMomVect    =   aPEInfo->  MotherofPhotonMomVectAtProd();
+       CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
 
 
        
@@ -263,6 +265,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> SetPETrackID(CurPETrackID);
   newHit -> SetPETrackPDG(CurPETrackPDG);
   newHit -> SetRichHitGlobalTime(CurGlobalTime);
+  newHit -> SetRichChTrackMass ( CurChTrackPDGMass);
 
   // now for the trackID from the Gausshit base class.
   newHit ->setTrackID(CurOptPhotMotherChTrackID);

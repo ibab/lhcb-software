@@ -58,7 +58,12 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
           CurRichPEInfo->
             setMotherofPhotonMomVectAtProd
             (aPhotInfo->ChTrackMomentumVector() );
-                   
+                    CurRichPEInfo->
+                      setMotherofPhotonPDGMass(aPhotInfo->
+                                       MotherChTrackPDGMass());
+                    
+ 
+                  
         } 
       } 
     }  
@@ -82,6 +87,7 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   else
     {
       aRichPETrackInfo = new GaussTrackInformation(); 
+      aRichPETrackInfo->setRichInfo(aPETypeRichInfo);
       aPETk->SetUserInformation(aRichPETrackInfo);
     }    
   //
@@ -90,7 +96,7 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   //    new  GaussTrackInformation();
   //  aPETk->SetUserInformation(aRichPETrackInfo);
   
-  aRichPETrackInfo->setRichInfo(aPETypeRichInfo);
+  //  aRichPETrackInfo->setRichInfo(aPETypeRichInfo);
   return aPETk;
 }
 

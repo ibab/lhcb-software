@@ -53,6 +53,7 @@ class RichG4Hit : public  GaussHitBase
       G4double m_ChTrackTotMom;   //Total momentum (MeV) of the mother of Photon at Ckv Production.
       G4ThreeVector m_ChTrackMomVect; // Three Momentum of the mother of Photon at Ckv Production.
       G4double m_RichHitGlobalTime;    //Global time for RichHit.
+      G4double m_RichChTrackMass;          //PDG mass of the Mother of the optical photon. 
   
   public:
   inline void SetEdep(G4double de)      
@@ -163,6 +164,16 @@ class RichG4Hit : public  GaussHitBase
     return  m_RichHitGlobalTime ;
   }
   
+  inline void SetRichChTrackMass (G4double aRichTrackMass ) 
+  {
+    
+    m_RichChTrackMass=aRichTrackMass;
+  }
+
+  inline G4double  RichChTrackMass()
+  {
+    return  m_RichChTrackMass;
+  }
     
 
 };

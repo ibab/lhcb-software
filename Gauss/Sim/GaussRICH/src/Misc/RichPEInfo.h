@@ -44,6 +44,14 @@ class RichPEInfo {
                 {return m_MotherofPhotonMomVectAtProd; }
   void setMotherofPhotonMomVectAtProd( G4ThreeVector aChMomVect )
                 { m_MotherofPhotonMomVectAtProd=aChMomVect;}
+  G4double MotherofPhotonPDGMass()
+  {
+    return m_MotherofPhotonPDGMass;
+  }
+  void setMotherofPhotonPDGMass(G4double aMotherPDGMass )
+  {
+    m_MotherofPhotonPDGMass = aMotherPDGMass;
+  }
 
  private:
 
@@ -56,6 +64,7 @@ class RichPEInfo {
   G4double m_CherenkovPhiAtProd;
   G4double m_MotherofPhotonMomAtProd;
   G4ThreeVector m_MotherofPhotonMomVectAtProd;
+  G4double m_MotherofPhotonPDGMass;
  
   
 };

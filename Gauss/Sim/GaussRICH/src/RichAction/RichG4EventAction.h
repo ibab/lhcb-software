@@ -9,6 +9,7 @@
 #include "../RichAnalysis/RichG4HistoFillSet1.h"
 #include "../RichAnalysis/RichG4HistoFillTimer.h"
 
+
 // forward declaration
 template <class TYPE> class GiGaFactory;
 
@@ -51,6 +52,7 @@ public:
   {
     return m_RichG4HistoFillSet1;
   }
+
   RichG4HistoFillTimer* GetRichG4HistoFillTimer() 
   {
     return m_RichG4HistoFillTimer;
@@ -60,11 +62,15 @@ public:
   {
     return  m_RichEventActionVerboseLevel;
   }
+
+
+  void   PrintRichG4HitCounters();
   
   bool RichEventActionHistoFillActivateSet1()
   {
     return  m_RichEventActionHistoFillActivateSet1;
   }
+
   bool RichEventActionHistoFillActivateTimer()
   {
     return  m_RichEventActionHistoFillActivateTimer;
@@ -82,10 +88,12 @@ private:
   RichG4HitCollName* m_RichHitCName;
   RichG4HistoFillSet1* m_RichG4HistoFillSet1;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
+
   
   int m_RichEventActionVerboseLevel;
   bool m_RichEventActionHistoFillActivateSet1;
   bool m_RichEventActionHistoFillActivateTimer;
+  bool m_RichG4EventHitActivateCount;
   
    
   

@@ -51,15 +51,18 @@ protected:
 
   RichG4HistoDefineSet1* aRichG4HistoDefineSet1() 
    {return  m_aRichG4HistoSet1; }
+
   bool defineRichG4HistoSet1() 
   {
     return  m_defineRichG4HistoSet1;
     
   }
+
   void setdefineRichG4HistoSet1(bool aboolValue) 
   {
     m_defineRichG4HistoSet1= aboolValue;
   }
+
   
 private:
   

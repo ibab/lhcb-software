@@ -4,6 +4,7 @@
 // local
 #include "RichG4EventAction.h"
 #include "../SensDet/RichG4Hit.h"
+#include "RichG4Counters.h"
 //GEANT4
 #include "G4Event.hh"
 #include "G4EventManager.hh"
@@ -53,7 +54,8 @@ RichG4EventAction::RichG4EventAction
     m_RichG4HistoFillTimer(0),
   m_RichEventActionVerboseLevel(0), 
     m_RichEventActionHistoFillActivateSet1(false),
-    m_RichEventActionHistoFillActivateTimer(false)
+    m_RichEventActionHistoFillActivateTimer(false),
+    m_RichG4EventHitActivateCount(false)
 {
   declareProperty( "RichEventActionVerbose",  
                    m_RichEventActionVerboseLevel );
@@ -61,8 +63,9 @@ RichG4EventAction::RichG4EventAction
   declareProperty( "RichEventActionHistoFillSet1",
                      m_RichEventActionHistoFillActivateSet1);
   declareProperty( "RichEventActionHistoFillTimer",
-                     m_RichEventActionHistoFillActivateTimer);
-  
+                     m_RichEventActionHistoFillActivateTimer);  
+  declareProperty("RichG4EventActivateCounting" ,
+                  m_RichG4EventHitActivateCount);
 
   m_RichHitCName= new RichG4HitCollName();
   m_NumRichColl=m_RichHitCName->RichHCSize();
@@ -80,7 +83,7 @@ RichG4EventAction::RichG4EventAction
      m_RichG4HistoFillTimer = new RichG4HistoFillTimer();
   
      //  }
-  
+ 
 
 };
 // ============================================================================
@@ -88,7 +91,13 @@ RichG4EventAction::RichG4EventAction
 // ============================================================================
 /// Desctructor 
 // ============================================================================
-RichG4EventAction::~RichG4EventAction(){};
+RichG4EventAction::~RichG4EventAction(){
+  delete  m_RichG4HistoFillSet1;
+  
+  delete m_RichG4HistoFillTimer;
+  
+
+};
 // ============================================================================
 
 // ============================================================================
@@ -110,6 +119,11 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ )
     }
   }
 
+  // Now to initialize the Rich Counters
+
+  RichG4Counters* aRichCounter=RichG4Counters::getInstance();
+  aRichCounter->InitRichEventCounters();
+  
 
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction"); 
 };
@@ -139,7 +153,22 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
                      m_NumRichColl,m_RichG4CollectionID);
   
   }
+
+  //   if( m_RichG4EventHitActivateCount) {
   
+     //    m_RichG4EventHitCounter-> RichG4CountAndClassifyHits(
+     //    anEvent, m_NumRichColl,m_RichG4CollectionID);
+
+     //    if( m_RichEventActionVerboseLevel >= 2 ) {
+        
+     //  PrintRichG4HitCounters();
+      
+  //    }
+    
+    
+  // }
+   
+
      //get the trajectories
   G4TrajectoryContainer* trajectoryContainer=anEvent->GetTrajectoryContainer();
   G4int n_trajectories=0;
@@ -223,6 +252,106 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
   // Print("'EndOfEventAction' method is invoked by RichG4EventAction");
 
 };
+void RichG4EventAction::PrintRichG4HitCounters() 
+{
+
+  RichG4Counters* aRichG4Counter =  RichG4Counters::getInstance();
+
+  int NumTotHitRich1 = aRichG4Counter-> NumHitTotRich1All();
+  int NumHitGasRich1 = aRichG4Counter-> NumHitTotRich1Gas();
+  int NumHitAgelRich1= aRichG4Counter->  NumHitTotRich1Agel();
+  int NumHitSatGasRich1 =
+                    aRichG4Counter-> NumHitSaturatedRich1Gas();
+  int NumHitSatAgelRich1 = 
+                    aRichG4Counter->  NumHitSaturatedRich1Agel();
+  
+  int NumHitSinglePartGunPrimaryGasRich1 =
+    aRichG4Counter->  NumHitPartGunPrimaryPartRich1Gas();
+  
+  int NumHitSinglePartGunPrimaryAgelRich1=
+    aRichG4Counter-> NumHitPartGunPrimaryPartRich1Agel();
+  
+
+  cout<<" Rich1 Hits : Total Overall FromGas FromAgel "
+      <<  NumTotHitRich1<<"   "<<  NumHitGasRich1
+      << "    "<<  NumHitAgelRich1<<endl;
+  
+  cout<<"Rich1 Hits: SaturatedFromGas SaturatedFromAgel  "
+      <<NumHitSatGasRich1<<"   "<<NumHitSatAgelRich1
+      <<endl;
+  
+  cout<<"Rich1Hits: SinglePartGun FromPrimaryPartFromGas "
+      <<"   FromPrimaryPartFromAerogel   "
+      << NumHitSinglePartGunPrimaryGasRich1<<"     "
+      << NumHitSinglePartGunPrimaryAgelRich1<<endl;
+
+  
+  int aNumPhotProdRich1Gas = aRichG4Counter->NumPhotProdRich1Gas() ;
+  int aNumPhotGasOnRich1Mirror1 = 
+    aRichG4Counter->NumPhotGasOnRich1Mirror1();
+  int aNumPhotGasOnRich1Mirror2 =
+     aRichG4Counter->NumPhotGasOnRich1Mirror2();
+   int  aNumPhotGasOnGasQW =
+      aRichG4Counter-> NumPhotGasOnRich1GasQW();
+    int aNumPhotGasOnHpdQW  =
+      aRichG4Counter-> NumPhotGasOnRich1HpdQW();
+    
+    int aNumPhotGasBeforeQE =
+      aRichG4Counter-> NumPhotGasRich1BeforeQE();
+    int aNumPhotGasAfterQE =
+      aRichG4Counter->  NumPhotGasRich1AfterQE();
+
+    int aNumPeGasSiDet = aRichG4Counter->NumPhotGasRich1SiDet();
+
+    cout<<"Rich1Hits: FromC4F10 NumPhot at Prod Mirror1 Mirror2 "
+        <<"  GasQW HpdQW BefQE AftQE elnSiDet "
+        <<aNumPhotProdRich1Gas<<"   " <<aNumPhotGasOnRich1Mirror1
+        <<"   "<<aNumPhotGasOnRich1Mirror2<<"   "
+        <<aNumPhotGasOnGasQW<<"    "<< aNumPhotGasOnHpdQW<<"   "
+        <<aNumPhotGasBeforeQE <<"   "<< aNumPhotGasAfterQE
+        <<"  "<< aNumPeGasSiDet <<endl;
+
+
+
+    int aNumPhotProdRich1Agel = 
+       aRichG4Counter->NumPhotProdRich1Agel();
+
+    int aNumPhotDownstrAgel =
+      aRichG4Counter->NumPhotAgelAtAgelDownstrZ();
+    
+    int aNumPhotAgelOnRich1Mirror1 = 
+         aRichG4Counter->NumPhotAgelOnRich1Mirror1();
+    int aNumPhotAgelOnRich1Mirror2 =
+         aRichG4Counter->NumPhotAgelOnRich1Mirror2();
+   
+    int aNumPhotAgelOnGasQW =
+         aRichG4Counter-> NumPhotAgelOnRich1GasQW();
+    int aNumPhotAgelOnHpdQW  =
+        aRichG4Counter-> NumPhotAgelOnRich1HpdQW();
+    
+    int aNumPhotAgelBeforeQE =
+        aRichG4Counter-> NumPhotAgelRich1BeforeQE();
+    int aNumPhotAgelAfterQE =
+        aRichG4Counter->  NumPhotAgelRich1AfterQE();
+
+    int aNumPeAgelSiDet = 
+       aRichG4Counter->NumPhotAgelRich1SiDet();
+
+   
+    cout<<"Rich1 Hits: fromAerogel NumPhot at Prod AgelDownstrZ "
+        <<"   Mirror1 Mirror2 "
+        <<"   GasQW HpdQW BefQE AftQE elnSiDet "
+        <<aNumPhotProdRich1Agel<<"    "
+        <<  aNumPhotDownstrAgel<<"    "
+        <<aNumPhotAgelOnRich1Mirror1
+        <<"   "<<aNumPhotAgelOnRich1Mirror2<<"   "
+        <<aNumPhotAgelOnGasQW<<"    "<< aNumPhotAgelOnHpdQW<<"   "
+        <<aNumPhotAgelBeforeQE <<"   "<< aNumPhotAgelAfterQE
+        <<"  "<< aNumPeAgelSiDet <<endl;
+
+  
+}
+
 // ============================================================================
 
 // ============================================================================

@@ -35,6 +35,9 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   aPhotInfo->setCkvPhotonEnergyAtProd(CkvPhotEnergy);
   aPhotInfo->setCkvAngleThetaAtProd(acos(CkvCosTheta));
   aPhotInfo->setCkvAnglePhiAtProd(CkvPhi);
+  aPhotInfo->setMotherChTrackPDGMass(aChTrackParticle->
+             GetDefinition()->GetPDGMass());
+
   // G4double CurChTrakMom = 
   //       aChTrackParticle->GetTotalMomentum();
   // aPhotInfo->setChTrackMomAtProd( CurChTrakMom);
@@ -58,6 +61,7 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   else
     {
       aRichPhotTrackInfo = new GaussTrackInformation(); 
+     aRichPhotTrackInfo->setRichInfo(aCkvPhotonTypeRichInfo);
       aCkvPhotTrack->SetUserInformation(aRichPhotTrackInfo);
     }    
   //
@@ -66,7 +70,7 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   //aCkvPhotTrack -> SetUserInformation(aRichPhotTrackInfo);
 
   // set pointer to RichInfo in GaussTrackInformation
-  aRichPhotTrackInfo->setRichInfo(aCkvPhotonTypeRichInfo);
+  //  aRichPhotTrackInfo->setRichInfo(aCkvPhotonTypeRichInfo);
   
   return aCkvPhotTrack; 
 }

@@ -29,6 +29,15 @@ class RichPhotInfo {
   void setChTrackMomentumVector(G4ThreeVector aMomemtumVector) 
                            {m_ChTrackMomentumVector=aMomemtumVector;}
 
+  G4double MotherChTrackPDGMass() 
+  {
+    return m_MotherChTrackPDGMass;
+  }
+  void setMotherChTrackPDGMass( G4double aTrackPDGMass) 
+  {
+    m_MotherChTrackPDGMass= aTrackPDGMass;
+  }
+
  private:
 
   G4int m_MotherChTrackPDGcode;   
@@ -37,6 +46,8 @@ class RichPhotInfo {
   G4double m_CkvAnglePhiAtProd;
   G4double m_ChTrackMomAtProd;
   G4ThreeVector m_ChTrackMomentumVector;
+  G4double m_MotherChTrackPDGMass;
+
 
 };
 

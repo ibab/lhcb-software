@@ -5,8 +5,13 @@ static const G4double ZUpsRich1Analysis =975.0*mm;
 static const G4double ZDnsRich1Analysis =2200.0*mm;
 static const G4double AgelZBeginAnalysis=1110.0*mm;
 static const G4double AgelZEndAnalysis=AgelZBeginAnalysis+50.0*mm;
-static const G4double C4F10ZBeginAnalysis=990.0*mm;
+static const G4double C4F10AllZBeginAnalysis=990.0*mm;
+static const G4double C4F10ZBeginAnalysis=AgelZEndAnalysis;
 static const G4double C4F10ZEndAnalysis=2065.0*mm;
+static const G4double AgelXBeginAnalysis=-398.0*mm;
+static const G4double AgelXEndAnalysis=398.0*mm;
+static const G4double AgelYBeginAnalysis=-281.0*mm;
+static const G4double AgelYEndAnalysis=281.0*mm;
 static const G4double HpdSupPlaneTiltcosy=500;
 static const G4double HpdSupPlaneTiltcosz=260;
 static const G4double HpdSupPlaneYMid=1190.0*mm;
@@ -31,6 +36,12 @@ static const G4String LogColRich1GasQWNameAnalysis=
                              "/dd/Geometry/Rich1/lvRich1GQuartzW";
 static const G4String LogVolCF4NameAnalysis=
                              "/dd/Geometry/Rich2/lvRich2Gas";
+static const G4String LogVolHpdSMasterNameAnalysis =
+                     "/dd/Geometry/Rich1/lvRichHPDSMaster";
+static const G4String LogVolHpdQWindowNameAnalysis =
+                     "/dd/Geometry/Rich1/lvRichHPDQuartzWindow";
+static const G4String LogVolSiDetNameAnalysis =
+                     "/dd/Geometry/Rich1/lvRichHPDSiDet";
 static const G4String Rich1QuartzMatName=
                              "/dd/Materials/RichMaterials/GasWindowQuartz" ;
 static const G4String RichHpdQWMatName=

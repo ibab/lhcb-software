@@ -59,7 +59,10 @@ RichHpdSiEnergyLoss::~RichHpdSiEnergyLoss() {; }
 
 G4bool RichHpdSiEnergyLoss::IsApplicable(const G4ParticleDefinition& 
                                          aParticleType) {
-  return(aParticleType.GetPDGCharge()!= 0.);
+
+  //  return(aParticleType.GetPDGCharge()!= 0.);
+  return(( aParticleType.GetPDGCharge()!= 0.) && 
+         (aParticleType.GetParticleName() == "e-"));
 
 }
 
@@ -141,7 +144,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
      
      if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-       //    if(aKinEnergyInit > 15000 ) aKinEnergyInit= aKinEnergyInit/1000000;
+          if(aKinEnergyInit > 15000 ) aKinEnergyInit= aKinEnergyInit/1000000;
     }
       //end of temporary fix.
 

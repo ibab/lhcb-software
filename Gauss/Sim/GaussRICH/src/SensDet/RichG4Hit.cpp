@@ -37,6 +37,7 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right):GaussHitBase(right)
   m_ChTrackTotMom=right.m_ChTrackTotMom;
   m_ChTrackMomVect=right.m_ChTrackMomVect;
   m_RichHitGlobalTime = right.m_RichHitGlobalTime;
+  m_RichChTrackMass = right.m_RichChTrackMass;
   
 }
 
@@ -65,6 +66,7 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_ChTrackTotMom=right.m_ChTrackTotMom;
   m_ChTrackMomVect=right.m_ChTrackMomVect;
   m_RichHitGlobalTime = right.m_RichHitGlobalTime;
+  m_RichChTrackMass = right.m_RichChTrackMass;
 
   return *this;
 }
@@ -143,9 +145,12 @@ void RichG4Hit::Print()
         << m_ChTrackMomVect.x()<<"   "<<m_ChTrackMomVect.y()
         << "    "<<m_ChTrackMomVect.z()
         <<"    "<<  m_ChTrackPDG <<G4endl;
+
   G4cout<<"RichG4Hit: "<<"TrackID: MotherCh OptPhot PE: "
         << m_ChTrackID<<"     "<< m_OptPhotID<<"   "
-        << m_PETrackID<<G4endl;
+        << m_PETrackID<< "   MotherChTrackMass =   "
+        <<  m_RichChTrackMass<< G4endl;
+
   
   G4cout<<"RichHit Global Time = " 
         <<m_RichHitGlobalTime<<G4endl;

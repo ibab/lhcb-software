@@ -7,6 +7,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "RichPhotoElectron.h"
 #include "RichPEInfoAttach.h"
+// #include "RichG4AnalysisPhotElec.h"
 
 RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect
 ( const GiGaBase* gigabase, 
@@ -170,12 +171,24 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
   }
 
+
+  // Now for histogram Analysis stuff
+
+  //  RichG4AnalysisPhotElecA (aStep, currentRichDetNumber, 
+  //                         currentHpdNumber, PhotonEnergy);
+
   double CurPhCathodeQE = getCurrentHpdQE(currentHpdNumber, currentRichDetNumber,  
                                           PhotonEnergy);
   G4double randomnum = G4UniformRand();
 
   if( randomnum* m_MaxAnyHpdQEff <  CurPhCathodeQE )
     {
+
+     //Now for histogram Analysis stuff.
+
+      //       RichG4AnalysisPhotElecB (aStep, currentRichDetNumber, 
+      //                     currentHpdNumber, PhotonEnergy);
+
       G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
 
       G4ThreeVector GlobalElectronOrigin= pPostStepPoint->GetPosition();
@@ -223,10 +236,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
       // temporay fix for not having the shielding of hpds in Gauss. SE 14-3-2003.
      
-      G4double ElecKineEnergy= m_HpdPhElectronKE;
+      // G4double ElecKineEnergy= m_HpdPhElectronKE;
   
       //create the photoelectron
-      //      G4double ElecKineEnergy= 1000000*m_HpdPhElectronKE;
+            G4double ElecKineEnergy= 1000000*m_HpdPhElectronKE;
              G4DynamicParticle* aElectron= 
                      new G4DynamicParticle (G4Electron::Electron(),
                            GlobalElectronDirection, ElecKineEnergy) ;

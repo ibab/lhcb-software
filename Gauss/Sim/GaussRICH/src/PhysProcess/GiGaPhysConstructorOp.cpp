@@ -56,7 +56,7 @@ void GiGaPhysConstructorOp::ConstructParticle()
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructProcess()
 {
-  ConstructPeProcess();
+  // ConstructPeProcess();
   ConstructOp();
 
 };

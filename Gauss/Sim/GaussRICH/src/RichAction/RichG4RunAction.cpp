@@ -8,6 +8,7 @@
 #include "RichG4RunAction.h"
 #include "RichG4HistoDefineSet1.h"
 #include "RichG4HistoDefineTimer.h"
+#include "RichG4Counters.h"
 
 // ============================================================================
 // SE 21-8-2002
@@ -39,7 +40,7 @@ RichG4RunAction::RichG4RunAction
   , m_defineRichG4HistoSet1(false)
     , m_defineRichG4HistoTimer(false)
     , m_aRichG4HistoSet1(0)
-    ,  m_aRichG4HistoTimer(0)
+     ,  m_aRichG4HistoTimer(0)
 {  
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
@@ -94,7 +95,12 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
     m_aRichG4HistoTimer = new  RichG4HistoDefineTimer();
     
   }
-  
+ 
+ 
+  // Now to create the RichCounters.
+ 
+  RichG4Counters* aRichCounter=  RichG4Counters::getInstance();
+
 };
 // ============================================================================
 
