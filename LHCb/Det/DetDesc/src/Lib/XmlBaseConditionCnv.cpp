@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.6 2002-04-24 12:41:27 mato Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.7 2002-05-22 06:21:38 cattanem Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -44,7 +44,7 @@ StatusCode XmlBaseConditionCnv::initialize() {
     log << MSG::VERBOSE << "Initializing" << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
-      log << MSG::INFO << "Generic conversion status: "
+      log << MSG::DEBUG << "Generic conversion status: "
           << (unsigned int)m_doGenericCnv << endreq;
     }
   }

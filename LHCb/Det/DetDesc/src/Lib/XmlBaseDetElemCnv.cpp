@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.17 2002-04-24 13:50:06 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.18 2002-05-22 06:21:38 cattanem Exp $
 
 // include files
 
@@ -49,7 +49,7 @@ StatusCode XmlBaseDetElemCnv::initialize() {
     log << MSG::VERBOSE << "Initializing" << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
-      log << MSG::INFO << "Generic conversion status: "
+      log << MSG::DEBUG << "Generic conversion status: "
           << (unsigned int)m_doGenericCnv << endreq;
     }
   }

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.91 2002-05-21 17:25:15 cattanem Exp $ 
+! $Id: release.notes,v 1.92 2002-05-22 06:21:38 cattanem Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -6,6 +6,10 @@ package DetDesc
 package manager : N.N 
 
 >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-22 - Marco Cattaneo
+ - XmlBaseConditionCnv.cpp, XmlBaseDetElemCnv.cpp:
+   change severity of initialisation status message to MSG::DEBUG
+
 ! 2002-05-21 - Ivan Belyaev
  - DetDesc/SolidSphrere.h
  - src/Lib/SolidSphere.cpp 
@@ -18,7 +22,6 @@ package manager : N.N
  DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
  DetDesc/VolumeInytersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
 
-!=============================================================================
 !20020513 - Vanya Belyaev
  DetDesc/SolidMath.h 
         fix trivial bug in finding the intersection of the 
@@ -32,14 +35,11 @@ package manager : N.N
  cmt/requirements 
         add the test application  
 
-!=============================================================================
 ! 12/05/2002 - Vanya Belyaev
   - DetDesc/SolidBase.h
     improduce tolerance parameter for bounding box, 
     bounding sphere and bounding cylinder - preparation for future tolerance 
-!=============================================================================
 
-!=============================================================================
 ! 11/05/2002 - Vanya Belyaev
 modified files:
   DetDesc/DetDesc.h
@@ -87,11 +87,6 @@ new file:
       calculationof interection ticks with primitives - 
       planes , spheres, cylinders and cones  
 
-! =============================================================================
-
-! =============================================================================
-! 11 May 2002  Vanya Belyaev
-! =============================================================================
 ! 4 May 2002  Vanya Belyaev
   - src/Lib/LVolume.cpp  
     Implement a bright idea of O.Callot for major optimization 
@@ -115,7 +110,6 @@ new file:
     add the MACRO IMPLEMENT_SOLID for implementation of Solid Factories
   - src/component/SolidFactories.cpp
     rewrite using new MACROs
-! =============================================================================
 
 ! 20020502 Sebastien Ponce
   - Bug fix concerning the checking for units when calling the expression
@@ -131,12 +125,9 @@ new file:
 ! 20020424 Pere Mato
   - Removed warnings in Windows (added base class IInterface in IConditionInfo)
 
-! =============================================================================
 ! 20020424 Vanya Belyaev 
-! Fix problems with Transport Service 
-! =============================================================================
+  Fix problems with Transport Service 
 
-! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020419 (M.Cattaneo)
   Use GaudiKernel v12r*, XERCES v16r* (for Gaudi v10)
 
@@ -152,7 +143,7 @@ new file:
   - Handle exceptions of the xerces parser in the XmlParserSvc in order that
   they don't go out of it
 
-! ============================================================================
+! >>>>>>>>>>>>>>>>>>>>>>> DetDesc v9r2 <<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020122 - v9r2 - Sebastien Ponce
   - Bug fix on the Condition converters, thanks to David
   - Better handle of the DTD version : minor version was considered as a major
