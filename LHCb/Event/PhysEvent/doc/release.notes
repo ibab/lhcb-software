@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.26 2002-09-09 13:22:53 gcorti Exp $
+! $Id: release.notes,v 1.27 2002-10-01 14:13:44 ranjard Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
+!======================= PhysEvent v8r0 2002-09-25 ======================
+! 2002-09-26 - Florence Ranjard
+ - requirements - use TrEvent v12r*, RichEvent v4r*,...
+
+!======================= PhysEvent v7r0 2002-09-08 =======================
 ! 2002-09-08 - Gloria Corti
  - Fix in Particle to extend correlation error between position and momentum
    to include energy elements
