@@ -1,7 +1,17 @@
 Package LHCbKernel
 Package manager: M.Cattaneo
-
 Purpose: LHCb specific Kernel classes 
+
+
+!==============================================================================
+! 18/03/2002 - Vanya Belyaev  Ivan.Belyaev@itep.ru
+! moved from CaloKernel package 
+! - CaloCellCode.h   the coding schema for CaloCellID 
+! - CaloCellID.h     the uniqie identifier of calorimeter cell 
+! - CaloHypotheses.h the list of avaialble calorimeter hyportheses 
+! - CaloHypoPrint.h  the printout of available calorimeter hypotheses 
+!                    in a "readable" format
+! =============================================================================
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020318 (M.Cattaneo) - New package
