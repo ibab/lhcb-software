@@ -14,11 +14,14 @@
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure
 
+! 2004-06-10 - Chris Jones
+ - Add new tool for delegating RichRecTrack creation depending on type etc.
+ - Add simple geometry tool RichRecGeomTool
+
+!===================== RichRecTools v2r9p1 2004-06-30 =====================
 ! 2004-05-30 - Chris Jones
  - Add creator tool for mass hypothesis RichRecRings
  - Add new tool for ray tracing Cherenkov Cones to detector plane
- - Add new tool for delegating RichRecTrack creation depending on type etc.
- - Add simple geometry tool RichRecGeomTool
 
 !====================== RichRecTools v2r9 2004-04-21 ======================
 ! 2004-04-07 - Chris Jones
