@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.9 2004-12-03 12:53:58 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.10 2005-01-21 09:33:06 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -10,7 +10,7 @@ Helper module  to define the auxilalry 'enums' and constants
 
 # =============================================================================
 # @file
-# Helper file to define the auxilalry 'enums' and constants 
+# Helper file to define the auxillary 'enums' and constants 
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
@@ -134,9 +134,6 @@ trgFromParticle        = gbl.Bender.Extract.trgFromParticle
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.8  2004/11/23 17:13:23  ibelyaev
-#  v4r4
-#
 # =============================================================================
 # The END 
 # =============================================================================
