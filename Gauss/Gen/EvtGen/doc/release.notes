@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-07-15 - Patrick Robbe
+ - requirements: fix for PHOTOS link for windows
+
 ! 2004-07-12 - Patrick Robbe
  - *.cpp : remove #pragma warning( disable : 4786 ) for windows compilation
    (VC++ 7.1 does not need it anymore)
