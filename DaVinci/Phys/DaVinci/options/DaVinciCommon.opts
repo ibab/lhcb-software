@@ -9,7 +9,7 @@
  *  @date 2003-03-14
  */
 
-// Allow units to be used in jobOptions
+// Allow units to be used in jobOptions 
 #units "$GAUDICONFROOT/options/units.opts"
 
 // Framework
