@@ -1,10 +1,16 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.78 2002-02-21 15:57:54 sponce Exp $ 
+! $Id: release.notes,v 1.79 2002-04-03 11:01:44 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! ============================================================================
+! 20020403 - Vanya Belyaev
+  - change the layout of TransportSvc-files 
+  - fix the problems with uage of Assemblies for TransportSvc 
+    (infinite loops observed by O.Callot for Rich geometry)
 
 ! ============================================================================
 ! 20020221 - Sebastien Ponce

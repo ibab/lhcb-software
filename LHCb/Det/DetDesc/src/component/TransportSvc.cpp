@@ -1,8 +1,11 @@
-// $Id: TransportSvc.cpp,v 1.5 2001-11-18 15:32:45 ibelyaev Exp $
+// $Id: TransportSvc.cpp,v 1.6 2002-04-03 11:01:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 /// from Gaudi 
 #include "GaudiKernel/Kernel.h" 
@@ -31,24 +34,22 @@
 #include "CLHEP/Geometry/Transform3D.h"
 
 
-#include "DetDesc/TransportSvc.h" 
 #include "DetDesc/VolumeIntersectionIntervals.h" 
 
 
 /// local 
+#include "TransportSvc.h" 
 #include "TransportSvcDistanceInRadUnits.h" 
 #include "TransportSvcFindLocalGI.h" 
 #include "TransportSvcGoodLocalGI.h" 
-#include "TransportSvcIntersections.h" 
+#include "TransportSvcIntersections.h"
 
-
-///
-///
-///  TransportSvc.cpp implementation of class TransportSvc  
-///
-///  Author: Vanya Belyaev
-///
-///
+/** @file TransportSvc.cpp
+ *
+ *  implementation of class TransportSvc  
+ *
+ *  @author Author: Vanya Belyaev
+ */
 
 
 /// Instantiation of a static factory class used by clients to create
@@ -56,7 +57,8 @@
 static const  SvcFactory<TransportSvc>                       s_factory ;
 extern const ISvcFactory&              TransportSvcFactory = s_factory ;
 /// Constructor 
-TransportSvc::TransportSvc( const std::string& name, ISvcLocator* ServiceLocator )
+TransportSvc::TransportSvc( const std::string& name, 
+                            ISvcLocator* ServiceLocator )
   : Service                       ( name , ServiceLocator ) 
   /// names of "standard" services
   , m_chronoStatSvc_name          (  "ChronoStatSvc"      )
@@ -91,11 +93,14 @@ TransportSvc::TransportSvc( const std::string& name, ISvcLocator* ServiceLocator
 /// Destructor:  
 TransportSvc::~TransportSvc(){};
 /// Implementation of IInterface::queryInterface()
-StatusCode    TransportSvc::queryInterface(const IID& riid, void** ppvInterface)
+StatusCode    TransportSvc::queryInterface
+( const IID& riid, void** ppvInterface)
 {
   ///
-  if ( IID_ITransportSvc == riid ) { *ppvInterface = (ITransportSvc*) this                 ; }
-  else                             { return Service::queryInterface( riid , ppvInterface ) ; }
+  if ( IID_ITransportSvc == riid ) 
+    { *ppvInterface = static_cast<ITransportSvc*>( this ) ; }
+  else                             
+    { return Service::queryInterface( riid , ppvInterface ) ; }
   ///
   addRef();
   ///
@@ -110,42 +115,59 @@ StatusCode TransportSvc::initialize()
     /// initialise the base class 
     StatusCode statusCode = Service::initialize() ;  
     if( statusCode.isFailure() ) 
-      { log << MSG::ERROR << " Unable to initialize base class! " << endreq; return statusCode ; }              /// RETURN !!!
+      { log << MSG::ERROR 
+            << " Unable to initialize base class! " << endreq; 
+      return statusCode ; }              /// RETURN !!!
   }
   /// Set my own properties
   setProperties();  
   /// locate services to be used:
   { 
     /// 1) locate Chrono & Stat Service: 
-    StatusCode statusCode = serviceLocator()->service( m_chronoStatSvc_name , m_chronoStatSvc ) ;    
+    StatusCode statusCode = 
+      serviceLocator()->
+      service( m_chronoStatSvc_name , m_chronoStatSvc , true ) ;    
     /// it is not a fatal error!!!
-    if( statusCode.isSuccess() && 0 != m_chronoStatSvc ) { chronoSvc()->addRef(); } 
-    else { log << MSG::WARNING << " Unable to locate  Chrono & Stat Service=" << m_chronoStatSvc_name << endreq; m_chronoStatSvc = 0 ; }  
+    if( statusCode.isSuccess() && 0 != m_chronoStatSvc ) 
+      { chronoSvc()->addRef(); } 
+    else { log << MSG::WARNING 
+               << " Unable to locate  Chrono & Stat Service=" 
+               << m_chronoStatSvc_name << endreq; m_chronoStatSvc = 0 ; }  
   }
   ///
   { 
     /// 2) locate MagneticField Service: 
-    StatusCode statusCode = serviceLocator()->service( m_magFieldSvc_name , m_magFieldSvc ) ;    
+    StatusCode statusCode = 
+      serviceLocator()->
+      service( m_magFieldSvc_name , m_magFieldSvc , true ) ;    
     /// it is a fatal error!!!
-    if( statusCode.isSuccess() && 0 != m_magFieldSvc ) { magFieldSvc()->addRef(); } 
+    if( statusCode.isSuccess() && 0 != m_magFieldSvc ) 
+      { magFieldSvc()->addRef(); } 
     else 
       { 
-        log << MSG::FATAL << " Unable to locate  Magnetic Field Service=" << m_magFieldSvc_name << endreq; 
+        log << MSG::FATAL 
+            << " Unable to locate  Magnetic Field Service=" 
+            << m_magFieldSvc_name << endreq; 
         m_magFieldSvc = 0 ;  
-        return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
+        return StatusCode::FAILURE ; /// RETURN !!! 
       } 
   }
   ///
   { 
     /// 3) locate Detector Data  Service: 
-    StatusCode statusCode = serviceLocator()->service( m_detDataSvc_name , m_detDataSvc ) ;
+    StatusCode statusCode = 
+      serviceLocator()->
+      service( m_detDataSvc_name , m_detDataSvc , true ) ;
     /// it is a fatal error!!!
-    if( statusCode.isSuccess() && 0 != m_detDataSvc ) { detSvc()->addRef(); } 
+    if( statusCode.isSuccess() && 0 != m_detDataSvc ) 
+      { detSvc()->addRef(); } 
     else 
       { 
-        log << MSG::FATAL << " Unable to locate  Detector Data Service=" << m_detDataSvc_name << endreq; 
+        log << MSG::FATAL 
+            << " Unable to locate  Detector Data Service=" 
+            << m_detDataSvc_name << endreq; 
         m_magFieldSvc = 0 ;  
-        return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
+        return StatusCode::FAILURE ;
       } 
   }
   /// locate other services: 
@@ -161,14 +183,17 @@ StatusCode TransportSvc::finalize()
     /// release all services 
     MsgStream log  ( msgSvc() , name() + ".finalize()" ); 
     /// release Chrono & Stat Service 
-    if( 0 != chronoSvc   () ) { chronoSvc()->release()    ; m_chronoStatSvc    = 0 ; } 
+    if( 0 != chronoSvc   () ) 
+      { chronoSvc()->release()    ; m_chronoStatSvc    = 0 ; } 
     /// release Magnetic Field Service 
-    if( 0 != magFieldSvc () ) { magFieldSvc()->release()  ; m_magFieldSvc      = 0 ; } 
+    if( 0 != magFieldSvc () ) 
+      { magFieldSvc()->release()  ; m_magFieldSvc      = 0 ; } 
     /// release Detector Data  Service 
-    if( 0 != detSvc      () ) { detSvc()->release()       ; m_detDataSvc       = 0 ; } 
+    if( 0 != detSvc      () ) 
+      { detSvc()->release()       ; m_detDataSvc       = 0 ; } 
     /// finalize the base class 
     StatusCode statusCode  = Service::finalize(); 
-    if( statusCode.isFailure() ) { return statusCode; }                                                 /// RETURN !!!
+    if( statusCode.isFailure() ) { return statusCode; } /// RETURN !!!
   }  
   ///
   log << MSG::DEBUG << "Service finalised successfully" << endreq;
@@ -177,7 +202,8 @@ StatusCode TransportSvc::finalize()
   ///
 };
 ///
-IGeometryInfo*       TransportSvc::findGeometry( const std::string& address ) const 
+IGeometryInfo*       TransportSvc::findGeometry
+( const std::string& address ) const 
 {
   ///
   IGeometryInfo* gi = 0 ; 
@@ -187,12 +213,19 @@ IGeometryInfo*       TransportSvc::findGeometry( const std::string& address ) co
       SmartDataPtr<IDetectorElement> detelem( detSvc() , address ); 
       if( 0 != detelem ) { gi = detelem->geometry() ; } 
     }
-  catch(...) { Assert( false , "TransportSvc::findGeometry(), unknown exception caught!" ); }  
+  catch(...) 
+    { Assert( false , 
+              "TransportSvc::findGeometry(), unknown exception caught!" ); }  
   ///
-  Assert( 0 != gi , "TransportSvc::unable to locate geometry address="+address );
+  Assert( 0 != gi , 
+          "TransportSvc::unable to locate geometry address="+address );
   ///
   return gi;
 };
 
+
+// ============================================================================
+// The END 
+// ============================================================================
 
 
