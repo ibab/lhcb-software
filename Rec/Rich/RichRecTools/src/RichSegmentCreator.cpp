@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.14 2005-02-24 16:31:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.15 2005-03-02 14:54:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,9 +75,9 @@ StatusCode RichSegmentCreator::finalize()
 
   // Print out final stats
   info() << "------------------------------------------------------------------------------" << endreq
-         << "Created " << occ(m_segCount[Rich::Aerogel],m_Nevts) << " Aerogel segments / event" << endreq
-         << "Created " << occ(m_segCount[Rich::C4F10],m_Nevts)   << " C4F10   segments / event" << endreq
-         << "Created " << occ(m_segCount[Rich::CF4],m_Nevts)     << " CF4     segments / event" << endreq
+         << "Created " << occ(m_segCount[Rich::Aerogel],m_Nevts) << "  Aerogel segments / event" << endreq
+         << "Created " << occ(m_segCount[Rich::C4F10],m_Nevts)   << "  C4F10   segments / event" << endreq
+         << "Created " << occ(m_segCount[Rich::CF4],m_Nevts)     << "  CF4     segments / event" << endreq
          << "------------------------------------------------------------------------------" << endreq;
 
   // Execute base class method
@@ -96,7 +96,7 @@ void RichSegmentCreator::handle ( const Incident& incident )
             << " RichRecSegments : Aerogel=" 
             << m_segCount[Rich::Aerogel]-m_segCountLast[Rich::Aerogel]
             << " C4F10=" << m_segCount[Rich::C4F10]-m_segCountLast[Rich::C4F10]
-            << " CF4=" << m_segCount[Rich::CF4]-m_segCount[Rich::CF4] << endreq;
+            << " CF4=" << m_segCount[Rich::CF4]-m_segCountLast[Rich::CF4] << endreq;
   }
 }
 

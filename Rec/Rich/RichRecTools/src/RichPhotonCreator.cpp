@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.21 2005-02-24 16:30:59 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.22 2005-03-02 14:52:08 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,7 +25,7 @@ const        IToolFactory& RichPhotonCreatorFactory = s_factory ;
 RichPhotonCreator::RichPhotonCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
+  : RichRecToolBase   ( type, name, parent ),
     m_photonPredictor ( 0 ),
     m_photonSignal    ( 0 ),
     m_photonReco      ( 0 ),
@@ -108,13 +108,14 @@ void RichPhotonCreator::handle ( const Incident& incident )
     debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel=" 
             << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
             << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
-            << " CF4=" << m_photCount[Rich::CF4]-m_photCount[Rich::CF4] << endreq;
+            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
   }
 }
 
 RichRecPhoton*
 RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
-                                      RichRecPixel * pixel ) const {
+                                      RichRecPixel * pixel ) const 
+{
 
   // check photon is possible before proceeding
   if ( !m_photonPredictor->photonPossible(segment, pixel) ) return NULL;
@@ -133,7 +134,8 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
 
 RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
                                                 RichRecPixel * pixel,
-                                                const RichRecPhotonKey key ) const {
+                                                const RichRecPhotonKey key ) const 
+{
 
   RichRecPhoton * newPhoton = NULL;
 
@@ -266,8 +268,6 @@ void RichPhotonCreator::reconstructPhotons() const
 
   } // track loop
 
-  debug() << "Created " << richPhotons()->size() << " RichRecPhotons" << endreq;
-
 }
 
 const RichRecTrack::Photons &
@@ -343,7 +343,8 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
 
 RichRecPhotons * RichPhotonCreator::richPhotons() const
 {
-  if ( !m_photons ) {
+  if ( !m_photons ) 
+  {
     SmartDataPtr<RichRecPhotons> tdsPhotons( evtSvc(),
                                              m_richRecPhotonLocation );
     if ( !tdsPhotons ) {
@@ -366,10 +367,11 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
       for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
             iPhoton != tdsPhotons->end();
             ++iPhoton ) {
-        m_photonDone[ (*iPhoton)->key() ] = true;
+        if ( m_bookKeep ) m_photonDone[ (*iPhoton)->key() ] = true;
       }
 
     }
   }
+  
   return m_photons;
 }

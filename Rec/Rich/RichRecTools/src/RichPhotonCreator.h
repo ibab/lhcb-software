@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.17 2005-02-24 16:30:59 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.18 2005-03-02 14:52:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -148,6 +148,5 @@ inline void RichPhotonCreator::InitNewEvent()
   m_photCountLast = m_photCount;
   ++m_Nevts;
 }
-
 
 #endif // RICHRECTOOLS_RICHPHOTONCREATOR_H
