@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.h,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.h,v 1.2 2002-07-05 10:25:37 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
+// New package: collection of components for checks of Detector Description
+//
 // ============================================================================
 #ifndef DETDESCCHECKS_MaterialBudgetALG_H 
 #define DETDESCCHECKS_MaterialBudgetALG_H 1
@@ -58,7 +61,14 @@ class IHistogram2D;
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   23/04/2002
+ *
+ *  added by W. Pokorski:
+ *  Grid                   flag to switch between random shooting (0) and 
+ *                         grid (1)
+ *  dxgrid                 step in x coordinate (for grid)
+ *  dygrid                 step in y coordinate (for grid)
  */
+
 
 class MaterialBudgetAlg : 
   public Algorithm 
@@ -135,6 +145,9 @@ private:
   double              m_yMin          ;
   int                 m_nbx           ;
   int                 m_nby           ;
+  int                 m_grid          ;
+  double              m_dxgrid        ;
+  double              m_dygrid        ;
   // material budget histogram itself 
   IHistogram2D*       m_budget        ;
   // Normalization histogram  

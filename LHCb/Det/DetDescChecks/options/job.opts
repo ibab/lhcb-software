@@ -3,17 +3,17 @@
 ApplicationMgr.DLLs   += { "DetDescChecks" };
 ApplicationMgr.DLLs   += { "HbookCnv"};
 
-//ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
-ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
+ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
+//ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 
 HistogramPersistencySvc.OutputFile = "histo.hbook";
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 4 ;
+ApplicationMgr.EvtMax     = 1 ;
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
 
 
 // VolumeCheckAlg options:
@@ -57,14 +57,16 @@ VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
 ////////////////////////////////////////////////////////////////////
 // MaterialBudgetAlg options: 
 
-//MaterialBudgetAlg.Shoots   = 10000;
+MaterialBudgetAlg.Shoots   = 4000;
 
-//MaterialBudgetAlg.ZPlane   = 8000.0;
+MaterialBudgetAlg.ZPlane   = 940.0;
 
-//MaterialBudgetAlg.xMax     = 1000.0;
-//MaterialBudgetAlg.yMax     = 1000.0;
-//MaterialBudgetAlg.xMin     = -4000.0;
-//MaterialBudgetAlg.yMin     = -3000.0;
-
+MaterialBudgetAlg.xMax     = 250.0;
+MaterialBudgetAlg.yMax     = 250.0;
+MaterialBudgetAlg.xMin     = -250.0;
+MaterialBudgetAlg.yMin     = -250.0;
+MaterialBudgetAlg.Grid     = 1;
+MaterialBudgetAlg.dxgrid   = 50.0;
+MaterialBudgetAlg.dygrid   = 50.0;
 
 MessageSvc.OutputLevel = 1;

@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2002-07-05 10:25:37 witoldp Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -8,6 +8,10 @@
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2002-07-05 - Witek Pokorski
+  - added a possibility of grid-like shooting
+  - added application to requirements
 
 ! 2002-05-26 - Vanya Belyaev
  - new package 

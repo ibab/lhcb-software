@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.2 2002-07-03 08:53:27 witoldp Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.3 2002-07-05 10:25:37 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/03 08:53:27  witoldp
+// added application CheckApp
+//
 // Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
 // New package: collection of components for checks of Detector Description
 //
@@ -73,6 +76,9 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_nby           ( 50             )
   , m_budget        (  0             )
   , m_normalization (  0             )
+  , m_grid          (  0             )
+  , m_dxgrid        ( 10.0           )
+  , m_dygrid        ( 10.0           )
 {  
   declareProperty( "TransportService" , m_trSvcName   ) ;
   declareProperty( "RndmService"      , m_rndmSvcName ) ;
@@ -85,6 +91,9 @@ MaterialBudgetAlg::MaterialBudgetAlg
   declareProperty( "yMin"             , m_yMin        ) ;
   declareProperty( "nBx"              , m_nbx         ) ;
   declareProperty( "nBy"              , m_nby         ) ;
+  declareProperty( "Grid"             , m_grid        ) ;
+  declareProperty( "dxgrid"           , m_dxgrid      ) ;
+  declareProperty( "dygrid"           , m_dygrid      ) ;
 };
 // ============================================================================
 
@@ -251,28 +260,60 @@ StatusCode MaterialBudgetAlg::execute()
 {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
-  
-  // get random number generator 
-  Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( 0. , 1. ) );
-  
-  const double dx = m_xMax - m_xMin ;
-  const double dy = m_yMax - m_yMin ;
 
-  // make 'shoots'
-  for( int shoot = 0 ; shoot < m_shoots ; ++shoot ) 
+  if(m_grid)
     {
-      // point at reference plane  
-      const HepPoint3D point( m_xMin + dx * flat.shoot() ,
-                              m_yMin + dy * flat.shoot() ,
-                              m_z                        );      
-      // evaluate the distance 
-      const double dist = 
-        m_trSvc -> distanceInRadUnits( m_vertex , point );
+      double x=m_xMin;
+      double y=m_yMin;
       
-      // fill material budget histogram 
-      m_budget        -> fill( point.x() , point.y() , dist ) ;
-      // fill the normalization histogram  
-      m_normalization -> fill( point.x() , point.y()        ) ; 
+      while(y<=m_yMax) 
+        {
+          while(x<=m_xMax)
+            {
+              // "shooting" point at the reference plane
+              const HepPoint3D point( x, y, m_z);       
+              
+              // evaluate the distance 
+              const double dist = 
+                m_trSvc -> distanceInRadUnits( m_vertex , point );
+              
+              // fill material budget histogram 
+              m_budget        -> fill( point.x() , point.y() , dist ) ;
+              
+              // fill the normalization histogram  
+              m_normalization -> fill( point.x() , point.y()        ) ;
+              
+              //move to the next point on the grid
+              x=x+m_dxgrid;
+            }
+          x=m_xMin;
+          y=y+m_dygrid;
+        }
+    }
+  else
+    {
+      // get random number generator 
+      Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( 0. , 1. ) );
+      
+      const double dx = m_xMax - m_xMin ;
+      const double dy = m_yMax - m_yMin ;
+      
+      // make 'shoots'
+      for( int shoot = 0 ; shoot < m_shoots ; ++shoot ) 
+        {
+          // point at reference plane  
+          const HepPoint3D point( m_xMin + dx * flat.shoot() ,
+                                  m_yMin + dy * flat.shoot() ,
+                                  m_z                        );      
+          // evaluate the distance 
+          const double dist = 
+            m_trSvc -> distanceInRadUnits( m_vertex , point );
+          
+          // fill material budget histogram 
+          m_budget        -> fill( point.x() , point.y() , dist ) ;
+          // fill the normalization histogram  
+          m_normalization -> fill( point.x() , point.y()        ) ; 
+        }
     }
   // 
   return StatusCode::SUCCESS;
