@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.30 2004-10-26 14:58:31 dhcroft Exp $
+# $Id: requirements,v 1.31 2004-11-29 13:56:08 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v9r0
+version  v9r1
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -12,7 +12,7 @@ include_dirs      $(VELODETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv  v2r*    Det 
-use LHCbKernel	v5r*	Kernel
+use LHCbKernel	v*	Kernel
 
 # =============== link library (base classes) =============================
 library          VeloDetLib        Lib/*.cpp

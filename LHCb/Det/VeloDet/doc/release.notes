@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.62 2004-10-26 14:58:31 dhcroft Exp $
+! $Id: release.notes,v 1.63 2004-11-29 13:56:08 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v9r1 2004-11-29 =========================
+   >> Requires XmlDDDB v23r1 or greater <<
 
 ! 2004-10-26 - David Hutchcroft
  - Final changes to work with Boole
