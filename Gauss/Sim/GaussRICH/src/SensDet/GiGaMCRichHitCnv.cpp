@@ -251,7 +251,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           if ( mcPart ) {
             mchit->setMCParticle( mcPart );
           } else {
-            msg << MSG::INFO
+            msg << MSG::WARNING
                 << "MCRichHit " << mchit->key() 
                 << " has no parent MCParticle !, RichG4HitCollection " << iii 
                 << " TrackID " << traid << endreq;
