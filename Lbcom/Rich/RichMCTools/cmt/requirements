@@ -21,7 +21,6 @@ include_dirs $(RICHMCTOOLSROOT)
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichUtils      v3r*    Rich
 use   RichDetTools   v3r*    Rich
 use   RichEvent      v7r*    Event
 
