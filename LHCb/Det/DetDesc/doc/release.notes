@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.111 2002-07-11 11:25:06 sponce Exp $ 
+! $Id: release.notes,v 1.112 2002-07-13 17:09:35 ocallot Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-07-13 - Olivier Callot
+ - Change the LAssembly cover creation message from INFO to DEBUG.
 
 ! 2002-07-11 - Sebastien Ponce
  - implementation of reinitialize method for XmlCnvSvc

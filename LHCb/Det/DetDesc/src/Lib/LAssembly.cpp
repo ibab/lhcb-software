@@ -1,8 +1,11 @@
-// $Id: LAssembly.cpp,v 1.2 2002-07-03 08:15:37 ocallot Exp $
+// $Id: LAssembly.cpp,v 1.3 2002-07-13 17:09:35 ocallot Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/03 08:15:37  ocallot
+// Add a cover to the LAssembly
+//
 // Revision 1.1  2001/11/18 15:32:44  ibelyaev
 //  update for Logical Assemblies
 // 
@@ -423,7 +426,7 @@ void LAssembly::computeCover() {
       }  
     }
   }
-  log << MSG::INFO << "Assembly " << name() 
+  log << MSG::DEBUG << "Assembly " << name() 
       << " x [" << m_xMin << "," << m_xMax
       << "], y [" << m_yMin << "," << m_yMax
       << "], z [" << m_zMin << "," << m_zMax
