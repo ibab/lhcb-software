@@ -5,6 +5,7 @@ package manager: M.Cattaneo
 ! 2003-12-17 - Marco Cattaneo
  - SimContent.opts: Add HepMCEvents, MCRichOpticalPhotons to match definition
                     in Sim/Gauss/options/GaussTape.opts
+ - DigiContent.opts: Remove L0/Calo, L0/FullCalo
  - Add RootDb.opts for standard Root/IO persistency options
 
 !======================== GaudiConf v7r4 2003-12-04 ========================
