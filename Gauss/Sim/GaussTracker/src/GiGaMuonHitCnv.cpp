@@ -50,9 +50,9 @@ GiGaMuonHitCnv::GiGaMuonHitCnv( ISvcLocator* Locator )
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
   setConverterName              ( "GiGaMuonHitCnv"          ) ;
   ///
-
-  GiGaLeaf::Pars pars[15];
-  std::string MuonSD[] = {"MuonSDM1R1","MuonSDM1R2","MuonSDM1R34",
+    
+    GiGaLeaf::Pars pars[15];
+    std::string MuonSD[] = {"MuonSDM1R1","MuonSDM1R2","MuonSDM1R34",
                             "MuonSDM2R1","MuonSDM2R2","MuonSDM2R34",
                             "MuonSDM3R1","MuonSDM3R2","MuonSDM3R34",
                             "MuonSDM4R1","MuonSDM4R2","MuonSDM4R34",
@@ -60,7 +60,8 @@ GiGaMuonHitCnv::GiGaMuonHitCnv( ISvcLocator* Locator )
   for(int i=0;i<15;i++)
     {
       pars[i].push_back(MuonSD[i]);
-      declareObject(GiGaLeaf(MCMuonHitPath::MCMuonHitPath[i], objType(),pars[i]));
+      declareObject(GiGaLeaf( MCMuonHitPath::MCMuonHitPath[i], 
+                              objType(),pars[i]));
     }
   ///
 }; 
@@ -92,7 +93,7 @@ StatusCode GiGaMuonHitCnv::initialize()
     { return Error("IGiGaHitsCnvSvc* points to NULL!");}
   ///
   return StatusCode::SUCCESS;
-  ///
+///
 };
 
 // ======================================================================
@@ -288,10 +289,9 @@ StatusCode GiGaMuonHitCnv::updateObjRefs
 
   if( (size_t) hits->size() != (size_t) myCollection->entries() ) 
     {
-      return Error("MCMuonHits 
-                    and G4MuonHitsCollection have different sizes!");
+      return 
+        Error("MCMuonHits and G4MuonHitsCollection have different sizes!" ) ;
     }
-  
   // fill the references
   for (MCMuonHits::const_iterator iter=hits->begin();hits->end()!=iter; ++iter)
     { 
@@ -305,8 +305,8 @@ StatusCode GiGaMuonHitCnv::updateObjRefs
         {
           MsgStream log(   msgSvc(), name());
           log << MSG::WARNING 
-              << "No pointer to MCParticle 
-                  for MCMuonHit associated to trackID:" 
+              << "No pointer to MCParticle "  
+              << " for MCMuonHit associated to trackID:" 
               << traid << endreq;
         }
       itr++;

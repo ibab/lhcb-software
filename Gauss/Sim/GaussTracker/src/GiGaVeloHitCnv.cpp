@@ -283,8 +283,7 @@ StatusCode GiGaVeloHitCnv::updateObjRefs
 
   if( (size_t) hits->size() != (size_t) myCollection->entries() ) 
     {
-      return Error("MCVeloHits 
-                    and G4VeloHitsCollection have different sizes!");
+      return Error("MCVeloHits and G4VeloHitsCollection have different sizes!");
     }
   
   // fill the references
@@ -299,8 +298,8 @@ StatusCode GiGaVeloHitCnv::updateObjRefs
         {
           MsgStream log(   msgSvc(), name());
           log << MSG::WARNING 
-              << "No pointer to MCParticle 
-                  for MCVeloHit associated to trackID:" 
+              << "No pointer to MCParticle"
+              << " for MCVeloHit associated to trackID:" 
               << traid << endreq;
         }      
       itr++;

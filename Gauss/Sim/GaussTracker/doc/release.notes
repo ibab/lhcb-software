@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 	
+ 2003-01-23 Vanya Belyaev 
+  - few fixes for Win2K platform 
+
+ 
 !=========================== GaussTracker v2r0 2002-12-17 ========================
 ! 2002-12-17 - Witek Pokorski
  - use new GaussTools (new Geant4) 
