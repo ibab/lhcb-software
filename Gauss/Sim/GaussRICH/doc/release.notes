@@ -5,6 +5,7 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v4r10 ==================================
 ! 2004-12-16 - Gloria CORTI, Sajan EASO
  - src/PhysProcess/RichHpdSiEnergyLoss.cpp
    . introduce fix to adapt to new behaviour of Geant4 for stopping and
