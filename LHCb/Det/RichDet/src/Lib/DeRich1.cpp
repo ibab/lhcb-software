@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.cpp,v 1.10 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.11 2004-10-18 11:17:45 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.9  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -48,11 +51,11 @@ const CLID& DeRich1::classID() {
 
 //===========================================================================
 
-StatusCode DeRich1::initialize() 
+StatusCode DeRich1::initialize()
 {
 
   MsgStream log(msgSvc(), "DeRich1" );
-  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endreq;
+  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
@@ -115,23 +118,47 @@ StatusCode DeRich1::initialize()
       }
     }
   } else {
-    log << MSG::ERROR << "Could not find gas window properties" << endreq;
+    log << MSG::ERROR << "Could not find gas window properties" << endmsg;
     return fail;
   }
-  
+
+  // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
-  
   if ( hasParam( "RichHpdQETableName" ) )
     HPD_QETabPropLoc = paramAsString( "RichHpdQETableName" );
   else
     HPD_QETabPropLoc = "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
-  
+
   SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
   if ( !tabQE )
     log << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
-  else
+  else {
     m_HPDQuantumEff = tabQE;
+    log << MSG::DEBUG << "Loaded HPD QE from:" << HPD_QETabPropLoc << endmsg;
+  }
 
-  log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
+  // get the nominal reflectivity of the spherical mirror
+  std::string sphMirrorReflLoc = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
+  SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
+  if ( !sphMirrorRefl )
+    log << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
+  else {
+    m_nominalSphMirrorRefl = sphMirrorRefl;
+    log << MSG::DEBUG << "Loaded spherical mirror reflectivity from:"
+        << sphMirrorReflLoc << endmsg;
+  }
+
+  // get the nominal reflectivity of the flat mirror
+  std::string flatMirrorReflLoc = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+  SmartDataPtr<TabulatedProperty> flatMirrorRefl(dataSvc(),flatMirrorReflLoc);
+  if ( !flatMirrorRefl )
+    log << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
+  else {
+    m_nominalFlatMirrorRefl = flatMirrorRefl;
+    log << MSG::DEBUG << "Loaded flat mirror reflectivity from:"
+        << flatMirrorReflLoc << endmsg;
+  }
+
+  log << MSG::DEBUG << "Finished initialisation for DeRich1" << endmsg;
   return sc;
 }

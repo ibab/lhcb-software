@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.cpp,v 1.4 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.5 2004-10-18 11:17:44 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.3  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -39,7 +42,7 @@ DeRich::DeRich(  ) {
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich() {}; 
+DeRich::~DeRich() {};
 
 
 //=========================================================================
@@ -53,21 +56,23 @@ StatusCode DeRich::initialize ( ) {
   log << MSG::DEBUG << "Starting initialisation for DeRich" << endmsg;
 
   m_gasWinRefIndex = 0;
-  m_gasWinAbsLength = 0;  
-  m_HPDQuantumEff = 0;  
+  m_gasWinAbsLength = 0;
+  m_HPDQuantumEff = 0;
+  m_nominalSphMirrorRefl = 0;
+  m_nominalFlatMirrorRefl = 0;
 
   m_vectorNames = paramVectors();
   m_paramNames  = params();
-  
+
   if ( hasParam( "SphMirrorSegRows" ) ) {
     m_sphMirrorSegRows = paramAsInt( "SphMirrorSegRows" );
     m_sphMirrorSegCols = paramAsInt( "SphMirrorSegColumns" );
     m_flatMirrorSegRows = paramAsInt( "FlatMirrorSegRows" );
     m_flatMirrorSegCols = paramAsInt( "FlatMirrorSegColumns" );
-    
+
     m_positionInfo = true;
-  }  
-  
+  }
+
   log << MSG::DEBUG << "Finished initialisation for DeRich" << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -76,7 +81,7 @@ StatusCode DeRich::initialize ( ) {
 //=========================================================================
 //  find a parameter vector
 //=========================================================================
-bool DeRich::hasParamVector ( const std::string & vectorName ) 
+bool DeRich::hasParamVector ( const std::string & vectorName )
 {
   return ( m_vectorNames.end() != std::find(m_vectorNames.begin(),m_vectorNames.end(),vectorName) );
 }
@@ -84,14 +89,14 @@ bool DeRich::hasParamVector ( const std::string & vectorName )
 //=========================================================================
 //  find a parameter
 //=========================================================================
-bool DeRich::hasParam ( const std::string & paramName ) 
+bool DeRich::hasParam ( const std::string & paramName )
 {
   return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
 }
 
 
 //=========================================================================
-//  
+//
 //=========================================================================
 RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
 
@@ -100,7 +105,7 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
   if ( m_positionInfo ) {
     int row = mirrorNumber / m_sphMirrorSegCols;
     if ( row >= m_sphMirrorSegRows ) row -= m_sphMirrorSegRows;
-    
+
     mirrorPos.setRow( row );
     mirrorPos.setColumn( mirrorNumber % m_sphMirrorSegCols );
   }
@@ -110,13 +115,13 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
   }
 
   return mirrorPos;
-  
+
 }
 
 //=========================================================================
-//  
+//
 //=========================================================================
-RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber ) 
+RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber )
 {
 
   RichMirrorSegPosition mirrorPos;
@@ -133,6 +138,6 @@ RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber )
   }
 
   return mirrorPos;
-  
+
 }
 //=============================================================================

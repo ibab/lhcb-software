@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.cpp,v 1.11 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.12 2004-10-18 11:17:45 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.10  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -48,11 +51,11 @@ const CLID& DeRich2::classID() {
 
 //===========================================================================
 
-StatusCode DeRich2::initialize() 
+StatusCode DeRich2::initialize()
 {
 
   MsgStream log(msgSvc(), "DeRich2" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endreq;  
+  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endmsg;
 
   StatusCode sc = StatusCode::SUCCESS;
   StatusCode fail = StatusCode::FAILURE;
@@ -107,10 +110,32 @@ StatusCode DeRich2::initialize()
       }
     }
   } else {
-    log << MSG::ERROR << "Could not find gas window properties" << endreq;
+    log << MSG::ERROR << "Could not find gas window properties" << endmsg;
     return fail;
-  }  
+  }
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endreq;
+  // get the nominal reflectivity of the spherical mirror
+  std::string sphMirrorReflLoc = "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT";
+  SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
+  if ( !sphMirrorRefl )
+    log << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
+  else {
+    m_nominalSphMirrorRefl = sphMirrorRefl;
+    log << MSG::DEBUG << "Loaded spherical mirror reflectivity from:"
+        << sphMirrorReflLoc << endmsg;
+  }
+
+  // get the nominal reflectivity of the flat mirror
+  std::string flatMirrorReflLoc = "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT";
+  SmartDataPtr<TabulatedProperty> flatMirrorRefl(dataSvc(),flatMirrorReflLoc);
+  if ( !flatMirrorRefl )
+    log << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
+  else {
+    m_nominalFlatMirrorRefl = flatMirrorRefl;
+    log << MSG::DEBUG << "Loaded flat mirror reflectivity from:"
+        << flatMirrorReflLoc << endmsg;
+  }
+
+  log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endmsg;
   return sc;
 }

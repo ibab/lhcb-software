@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.8 2004-10-18 09:21:48 jonrob Exp $
+ *  $Id: DeRich.h,v 1.9 2004-10-18 11:17:44 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/10/18 09:21:48  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.7  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -81,7 +84,7 @@ public:
   virtual StatusCode initialize();
 
   /**
-   * Returns the nominal centre of curvature of the spherical mirror for 
+   * Returns the nominal centre of curvature of the spherical mirror for
    * this Rich
    *
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
@@ -119,7 +122,7 @@ public:
    *
    * @return The nominal spherical mirror radius
    */
-  inline virtual double sphMirrorRadius() const 
+  inline double sphMirrorRadius() const
   {
     return m_sphMirrorRadius;
   }
@@ -130,7 +133,7 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline virtual const TabulatedProperty* gasWinRefIndex() const 
+  inline const TabulatedProperty* gasWinRefIndex()
   {
     return m_gasWinRefIndex;
   }
@@ -141,31 +144,53 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline virtual const TabulatedProperty* gasWinAbsLength() const 
+  inline const TabulatedProperty* gasWinAbsLength()
   {
     return m_gasWinAbsLength;
   }
 
   /**
    * Returns a pointer to the tabulated property that holds the nominal quantum
-   * efficiency of an HPD. 
+   * efficiency of an HPD.
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline virtual const TabulatedProperty* nominalHPDQuantumEff() const 
+  inline const TabulatedProperty* nominalHPDQuantumEff()
   {
     return m_HPDQuantumEff;
   }
 
   /**
-   * Method to find the row/column of a spherical mirror segment.  It can 
+   * Returns a pointer to the tabulated property that holds the nominal reflectivity
+   * of the spherical mirror.
+   *
+   * @return Pointer to nominal spherical mirror reflectivity
+   */
+  inline const TabulatedProperty* nominalSphMirrorRefl()
+  {
+    return m_nominalSphMirrorRefl;
+  }
+
+  /**
+   * Returns a pointer to the tabulated property that holds the nominal reflectivity
+   * of the flat mirror.
+   *
+   * @return Pointer to nominal flat mirror reflectivity
+   */
+  inline const TabulatedProperty* nominalFlatMirrorRefl()
+  {
+    return m_nominalFlatMirrorRefl;
+  }
+
+  /**
+   * Method to find the row/column of a spherical mirror segment.  It can
    * be used to test if the mirror segment is at the edge or not
    * @return Position (row/column) for this spherical mirror segment
    */
   virtual RichMirrorSegPosition sphMirrorSegPos( const int mirrorNumber );
 
   /**
-   * Method to find the row/column of a flat mirror segment. It can be used to 
+   * Method to find the row/column of a flat mirror segment. It can be used to
    * test if the mirror segment is at the edge or not
    *
    * @return Position (row/column) for this flat mirror segment
@@ -212,15 +237,19 @@ protected:
   int m_flatMirrorSegRows; ///< number of flat mirror rows
   int m_flatMirrorSegCols; ///< number of flat mirror columns
 
-  /// flag to test if the xml supports mirror position info  
+  /// flag to test if the xml supports mirror position info
   bool m_positionInfo;
 
   /// refractive index of the quartz gas window
-  const TabulatedProperty* m_gasWinRefIndex; 
+  const TabulatedProperty* m_gasWinRefIndex;
   /// absorption length of the quartz gas window
-  const TabulatedProperty* m_gasWinAbsLength; 
+  const TabulatedProperty* m_gasWinAbsLength;
   /// HPD quantum efficiency
   const TabulatedProperty* m_HPDQuantumEff;
+  /// spherical mirror reflectivity
+  const TabulatedProperty* m_nominalSphMirrorRefl;
+  /// flat mirror reflectivity
+  const TabulatedProperty* m_nominalFlatMirrorRefl;
 
 };
 
