@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v5r6 2004-07-22 ========================
+! 2004-07-22 - Marco Cattaneo
+ - Fix requirements for Gaudi v15
+
 !======================== MuonAlgs v5r5 2004-04-21 ========================
 ! 2004-04-21 - Alessia Satta
  - Change digitization Time Gate to 25. (from 20.)

@@ -1,5 +1,5 @@
 package MuonAlgs 
-version v5r5
+version v5r6
 
 # ================ structure ===========================================
 branches src cmt MuonAlgs options doc
@@ -8,7 +8,7 @@ branches src cmt MuonAlgs options doc
 include_dirs      $(MUONALGSROOT)     
 
 # ================ used packages ========================================= 
-use AIDA        v*	 -no_auto_imports
+use AIDA        v*	LCG_Interfaces -no_auto_imports
 use MuonTools   v3r* 	Muon
 use MuonEvent	v3r*	Event	
 
