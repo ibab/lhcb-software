@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.4 2003-11-02 21:38:04 jonrob Exp $
+// $Id: RichHypoData.h,v 1.5 2004-02-02 14:15:21 jonesc Exp $
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -31,7 +31,7 @@ public:
   typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
 
   /// Default Constructor
-  RichHypoData( TYPE value = (TYPE)-1 ) { resetData(value); }
+  RichHypoData( TYPE value = static_cast<TYPE>(-1) ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
@@ -46,12 +46,13 @@ public:
   void setData( const Rich::ParticleIDType type, const TYPE value );
 
   /// Reset all data
-  void resetData( const TYPE value = (TYPE)-1 );
+  void resetData( const TYPE value = static_cast<TYPE>(-1) );
 
   /// Reset data for given particle hypothesis
-  void resetData( const Rich::ParticleIDType type, const TYPE value = (TYPE)-1 );
+  void resetData( const Rich::ParticleIDType type, 
+                  const TYPE value = static_cast<TYPE>(-1) );
 
-  /// Const Accessor (To be removed ?)
+  /// Const Accessor to data array
   inline const DataArray & dataArray() const
   {
     return m_data;
@@ -102,7 +103,7 @@ template <class TYPE>
 inline std::ostream& operator << ( std::ostream& s, const RichHypoData<TYPE>& data )
 {
   for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s << data[(Rich::ParticleIDType)i] << " ";
+    s << data[static_cast<Rich::ParticleIDType>(i)] << " ";
   }
   return s;
 }
@@ -112,7 +113,7 @@ template <class TYPE>
 inline MsgStream& operator << ( MsgStream& s, const RichHypoData<TYPE>& data )
 {
   for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s << data[(Rich::ParticleIDType)i] << " ";
+    s << data[static_cast<Rich::ParticleIDType>(i)] << " ";
   }
   return s;
 }
@@ -122,7 +123,7 @@ template <class TYPE>
 inline StreamBuffer& operator << ( StreamBuffer& s, const RichHypoData<TYPE>& data )
 {
   for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s << data[(Rich::ParticleIDType)i];
+    s << data[static_cast<Rich::ParticleIDType>(i)];
   }
   return s;
 }
@@ -133,7 +134,7 @@ inline StreamBuffer& operator >> ( StreamBuffer& s, RichHypoData<TYPE>& data )
 {
   TYPE tmp;
   for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s >> tmp; data.setData( (Rich::ParticleIDType)i, tmp );
+    s >> tmp; data.setData( static_cast<Rich::ParticleIDType>(i), tmp );
   }
   return s;
 }

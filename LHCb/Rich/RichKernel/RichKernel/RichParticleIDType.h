@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.9 2003-11-03 10:19:12 cattanem Exp $
+// $Id: RichParticleIDType.h,v 1.10 2004-02-02 14:15:21 jonesc Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -49,14 +49,14 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
                                    Rich::ParticleIDType& particle ) {
   int intType;
   s >> intType;
-  particle = (Rich::ParticleIDType)intType;
+  particle = static_cast<Rich::ParticleIDType>(intType);
   return s;
 }
 
 /// Implement StreamBuffer << method for Rich::ParticleIDType enumeration
 inline StreamBuffer& operator << ( StreamBuffer& s,
                                    const Rich::ParticleIDType& particle ) {
-  s << (int)particle;
+  s << static_cast<int>(particle);
   return s;
 }
 
