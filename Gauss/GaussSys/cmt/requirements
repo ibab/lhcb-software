@@ -34,5 +34,4 @@ use GaussPhysics	v3r1	Sim
 use GaussMonitor	v1r2	Sim
 use CaloMoniSim         v1r0    Calo
 use VeloAlgorithms      v3r3    Velo
-use GDMLG4Writer        v1r200p0 Sim
-#use GDMLG4Reader        v1r200p0 Sim
+
