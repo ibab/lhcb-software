@@ -4,6 +4,22 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2004-04-09 - Ivan Belyaev
+ - 3 new exampels are added 
+
+  src/LoKi_MCEvent.cpp 
+    which fills N-tuple to determine the event type and 
+    presence of beauty/charmed particles in the event (e.g. the presence of 
+    charmed particled in min-bias event)
+
+  src/LoKi_MCMuon.cpp 
+    example  with MC matching 
+
+  src/LoKi_VeloCLusterMC.cpp 
+    try to use LoKi not only for Physics analysis :-)
+
+    
+
 ! 2003-03-27 - Vanya BELYAEV
  - src/LoKi_Bs2PhiPhi.cpp      new algorithm 
 
