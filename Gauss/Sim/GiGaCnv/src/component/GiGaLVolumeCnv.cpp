@@ -1,8 +1,11 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.9 2002-05-03 19:33:39 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.10 2002-05-03 19:41:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/03 19:33:39  ibelyaev
+//  re-introduce the creation of Sensitive Detectors
+//
 // ============================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
@@ -188,7 +191,7 @@ StatusCode GiGaLVolumeCnv::updateRep
   if( !lv->sdName().empty() ) 
     {
       IGiGaSensDet* det = 0 ;
-      StatusCode sc = geoSvc()->sensDet ( lv->sdName(),  det );
+      StatusCode sc = geoSvc()->sensitive ( lv->sdName(),  det );
       if( sc.isFailure() ) 
         { return Error("updateRep:: Could no create SensDet " , sc ) ; }
       if( 0 == det ) 
