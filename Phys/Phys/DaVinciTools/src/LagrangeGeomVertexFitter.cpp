@@ -1,4 +1,4 @@
-// $Id: LagrangeMassVertexFitter.cpp,v 1.1, 2002/03/08, modified from gcorti
+// $Id: LagrangeGeomVertexFitter.cpp,v 1.1, 2002/03/08, modified from gcorti
 // Exps program $
 
 // Include files from Gaudi
@@ -18,18 +18,21 @@
 #include "Event/Vertex.h"
 
 // local file
-#include "LagrangeMassVertexFitter.h"
+#include "LagrangeGeomVertexFitter.h"
 #include "DaVinciTools/IParticleTransporter.h"
 
 //--------------------------------------------------------------------
 //
-//  ClassName  : LagrangeMassVertexFitter
+//  ClassName  : LagrangeGeomVertexFitter
 // 
-//  Description: Performs a mass constrained fit for two, three or four 
+//  Description: Performs a constrained fit for two, three or four 
 //                 tracks using the Lagrange multipliers technique.
-//               It includes the mass constrained fit for 2, 3 or 4 
-//                 tracks without ressonance, for 3 or 4 tracks with one
-//                 ressonance and for 4 tracks with two ressonances.   
+//               It includes the geometrical constrained fit for 2, 3 or 4 
+//                 tracks without ressonance. It also includes the
+//                 geometrical constrained fit for the mother particle and
+//                 the mass constrained fit for the ressonances for the 
+//                 cases of 3 or 4 tracks with one ressonance and
+//                 4 tracks with two ressonances.   
 //               Based on Fortran code by J. Saborido
 //                 ref: LHCb Phys Note 98-051 
 //                           
@@ -42,31 +45,29 @@
 // Instantiation of a static factory class used by clients to create
 // instances of this service
 //==================================================================
-static ToolFactory<LagrangeMassVertexFitter> s_factory;
-const IToolFactory& LagrangeMassVertexFitterFactory = s_factory;
+static ToolFactory<LagrangeGeomVertexFitter> s_factory;
+const IToolFactory& LagrangeGeomVertexFitterFactory = s_factory;
 
 //==================================================================
 // Standard Constructor
 //==================================================================
-LagrangeMassVertexFitter::LagrangeMassVertexFitter(const std::string& type, 
+LagrangeGeomVertexFitter::LagrangeGeomVertexFitter(const std::string& type, 
                                                    const std::string& name, 
                                                    const IInterface* parent) 
   : AlgTool( type, name, parent ),
     m_ppSvc(0),
     m_pVertexUnconst(0),
     m_pTransporter(0),
-    m_transporterType("CombinedTransporter") {
+    m_transporterType("CombinedTransporter")  {
   
-  declareInterface<IMassVertexFitter>(this);
-  
-  declareProperty("Transporter", m_transporterType);
-  declareProperty( "WidthCut", m_widthCut = 1. );  
+  declareInterface<IGeomVertexFitter>(this);
+  declareProperty("Transporter", m_transporterType);  
 }
 
 //==================================================================
 // Initialize
 //==================================================================
-StatusCode LagrangeMassVertexFitter::initialize() {
+StatusCode LagrangeGeomVertexFitter::initialize() {
   MsgStream log( msgSvc(), name() );
   
   // This tool needs to use internally the ParticlePropertySvc to retrieve the
@@ -105,26 +106,87 @@ StatusCode LagrangeMassVertexFitter::initialize() {
 
 
 
+
+
 //==================================================================
-// Perform mass constrained vertex fit (vector of particles).
+//          Perform geometrical constrained vertex fit 
+//               (2 tracks without ressonance )
+//==================================================================
+StatusCode LagrangeGeomVertexFitter::fitWithGeom(const std::string& motherName,
+                                                 Particle& particle1, 
+                                                 Particle& particle2,
+                                                 Vertex& constrVtx,
+                                                 Particle& motherParticle )
+{
+  ParticleVector pList;
+  pList.push_back(&particle1);
+  pList.push_back(&particle2);
+  
+  return fitWithGeom(motherName, pList, constrVtx, motherParticle);
+  
+}
+//==================================================================
+//         Perform geometrical constrained vertex fit 
+//              ( 3 tracks without ressonance )
+//==================================================================
+StatusCode LagrangeGeomVertexFitter::fitWithGeom(const std::string& motherName,
+                                                 Particle& particle1, 
+                                                 Particle& particle2, 
+                                                 Particle& particle3,
+                                                 Vertex& constrVtx,
+                                                 Particle& motherParticle )
+{
+  ParticleVector pList;
+  pList.push_back(&particle1);
+  pList.push_back(&particle2);
+  pList.push_back(&particle3);
+  
+  return fitWithGeom(motherName, pList, constrVtx, motherParticle);
+  
+}
+
+//==================================================================
+//          Perform geometrical constrained vertex fit 
+//               ( 4 tracks without ressonance )
+//==================================================================
+StatusCode LagrangeGeomVertexFitter::fitWithGeom(const std::string& motherName,
+                                                 Particle& particle1, 
+                                                 Particle& particle2, 
+                                                 Particle& particle3,
+                                                 Particle& particle4,
+                                                 Vertex& constrVtx,
+                                                 Particle& motherParticle )
+{
+  ParticleVector pList;
+  pList.push_back(&particle1);
+  pList.push_back(&particle2);
+  pList.push_back(&particle3);
+  pList.push_back(&particle4);
+  
+  return fitWithGeom(motherName, pList, constrVtx, motherParticle);
+  
+}
+
+
+//==================================================================
+// Perform geometrical constrained vertex fit (vector of particles).
 // The procedure is implemented only for two, three and four particles
 // without ressonance.
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string& 
-                                                   motherName,
-                                                   const ParticleVector& pList,
-                                                   Vertex& constrVtx,
-                                                   Particle& motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeom(const std::string& motherName,
+                                                 const ParticleVector& pList,
+                                                 Vertex& constrVtx,
+                                                 Particle& motherParticle )
 {
   
   MsgStream log(msgSvc(), name());
   
-  log << MSG::DEBUG << " lagrange fitter starting - fitWithNoRess " << endreq;
+  log << MSG::DEBUG << " lagrange fitter starting - fitWithGeom " << endreq;
   
   // check the size of the input particle vector.
   m_ntracks = pList.size();
   int ntracks = m_ntracks;
-  log << MSG::DEBUG << "Number of tracks in fitWithNoRess = " 
+  log << MSG::DEBUG << "Number of tracks in fitWithGeom = " 
       << ntracks << endreq;
   
   if (( ntracks != 2 ) && ( ntracks != 3 ) && ( ntracks != 4 )) {
@@ -132,6 +194,377 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
     return StatusCode::FAILURE;
   }
   
+  int numbRessTwoTracks = 0;
+  int numbRessThreeTracks = 0;
+  int numbRessFourTracks = 0;
+  bool Part1TwoTracks = false;
+  bool Part2TwoTracks = false;
+  bool Part1ThreeTracks = false;
+  bool Part2ThreeTracks = false;
+  bool Part3ThreeTracks = false;
+  bool Part1FourTracks = false;
+  bool Part2FourTracks = false;
+  bool Part3FourTracks = false;
+  bool Part4FourTracks = false;
+  
+  Particle* part1 = pList[0];
+  Particle* part2 = pList[1];
+  Particle* part3 = pList[2];
+  Particle* part4 = pList[3];
+  
+  StatusCode sc;
+  
+  const ParticleID& part1ID = part1->particleID().pid();
+  int part1StdHepID = part1ID.pid();
+  
+  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(part1StdHepID  );
+  
+  // hbar in MeV s
+  float hbar = 6.58211889*pow(10,-22);
+  
+  float part1Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  
+  if( (part1->isResonance()) && (part1Width > 10)  ) part1->setIsResonance(0);
+  
+  const ParticleID& part2ID = part2->particleID().pid();
+  int part2StdHepID = part2ID.pid();
+  
+  partProp = m_ppSvc->findByStdHepID(part2StdHepID  );
+  
+  float part2Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  
+  if((part2->isResonance()) && (part2Width > 10) ) part2->setIsResonance(0);
+  
+  if(ntracks == 2){
+    
+    if(part1->isResonance()){
+      numbRessTwoTracks++;
+      Part1TwoTracks = true;
+    }//if(part1->isResonance()) 
+    
+    
+    if(part2->isResonance()){
+      numbRessTwoTracks++;
+      Part2TwoTracks = true;
+    }//if(part2->isResonance())
+    
+    if ( (numbRessTwoTracks != 0) && (numbRessTwoTracks != 1) && 
+         (numbRessTwoTracks != 2)  ) {    
+      log << MSG::INFO << "Number of ressonances must be 0, 1 or 2  " 
+          << endreq;      
+      return StatusCode::FAILURE;
+    }//if((numbRessTwoTracks != 0) && (numbRessTwoTracks != 1) && 
+    // (numbRessTwoTracks != 2)) 
+    
+    SmartRefVector<Particle>::iterator itPart1;
+    SmartRefVector<Particle>::iterator itPart2; 
+    ParticleVector p3Tracks;
+    ParticleVector pTracksPart1Daughters;
+    ParticleVector pTracksPart2Daughters;
+    double subMass1;
+    double subMass2; 
+    
+    if(numbRessTwoTracks == 0 ){
+      
+      sc = fitWithGeomWithoutRess(motherName, pList, constrVtx, 
+                                  motherParticle); 
+      
+    }//if(numbRessTwoTracks == 0)
+    
+    
+    if((numbRessTwoTracks == 1) && Part1TwoTracks){
+      
+      for ( itPart1 = part1->endVertex()->products().begin();
+            itPart1 != part1->endVertex()->products().end(); itPart1++ ){
+        
+        p3Tracks.push_back(*itPart1);
+        pTracksPart1Daughters.push_back(*itPart1); 
+        subMass1 = part1->mass();
+        
+      }//for itPart1
+      
+      p3Tracks.push_back(part2);
+      
+      sc =  fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                   motherParticle); 
+      
+    }//if((numbRessTwoTracks == 1) && Part1TwoTracks)
+    
+    if((numbRessTwoTracks == 1) && Part2TwoTracks){
+      
+      for ( itPart2 = part2->endVertex()->products().begin();
+            itPart2 != part2->endVertex()->products().end(); itPart2++ ){
+        
+        p3Tracks.push_back(*itPart2);
+        pTracksPart2Daughters.push_back(*itPart2); 
+        subMass2 = part2->mass();
+        
+      }//for itPart2
+      
+      p3Tracks.push_back(part1);
+      
+      
+      sc =   fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                    motherParticle); 
+      
+    }//if((numbRessTwoTracks == 1) && Part2TwoTracks)
+    
+    if(numbRessTwoTracks == 2){
+      
+      for ( itPart1 = part1->endVertex()->products().begin();
+            itPart1 != part1->endVertex()->products().end(); itPart1++ ){
+        
+        p3Tracks.push_back(*itPart1);
+        pTracksPart1Daughters.push_back(*itPart1);
+        subMass1 = part1->mass();
+        
+      }//for itPart1
+      
+      for ( itPart2 = part2->endVertex()->products().begin();
+            itPart2 != part2->endVertex()->products().end(); itPart2++ ){
+        
+        p3Tracks.push_back(*itPart2);
+        pTracksPart2Daughters.push_back(*itPart2);
+        subMass2 = part2->mass();
+        
+      }//for itPart2
+      
+      sc =   fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                    motherParticle); 
+      
+    }//if(numbRessTwoTracks == 2)
+    
+  }//if(ntracks == 2)
+  
+  if(ntracks == 3){
+    
+    const ParticleID& part3ID = part3->particleID().pid();
+    int part3StdHepID = part3ID.pid();
+    
+    partProp = m_ppSvc->findByStdHepID(part3StdHepID  );
+    
+    // hbar in MeV s
+    float hbar = 6.58211889*pow(10,-22);
+    
+    float part3Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    
+    if((part3->isResonance()) && (part3Width > 10) ) part3->setIsResonance(0);
+    
+    if(part1->isResonance()){
+      numbRessThreeTracks++;
+      Part1ThreeTracks++;
+    }//if(part1->isResonance()) 
+    
+    if(part2->isResonance()){
+      numbRessThreeTracks++;
+      Part2ThreeTracks++;
+    }//if(part2->isResonance())
+    
+    if(part3->isResonance()){
+      numbRessThreeTracks++;
+      Part3ThreeTracks++;
+    }//if(part3->isResonance())
+    
+    if ( (numbRessThreeTracks != 0) && (numbRessThreeTracks != 1)  ) {
+      log << MSG::INFO << "Number of ressonances must be 0 or 1  " << endreq;
+      return StatusCode::FAILURE;
+    }//if((numbRessThreeTracks != 0) && (numbRessThreeTracks != 1))  
+    
+    SmartRefVector<Particle>::iterator itPart1;
+    SmartRefVector<Particle>::iterator itPart2;
+    SmartRefVector<Particle>::iterator itPart3;
+    ParticleVector p3Tracks;
+    ParticleVector pTracksPart1Daughters;
+    ParticleVector pTracksPart2Daughters;
+    ParticleVector pTracksPart3Daughters;
+    double subMass1;
+    double subMass2;
+    double subMass3;
+    
+    if(numbRessThreeTracks == 0 ){
+      
+      sc =  fitWithGeomWithoutRess(motherName, pList, constrVtx, 
+                                   motherParticle); 
+      
+    }//if(numbRessThreeTracks == 0)
+    
+    if((numbRessThreeTracks == 1) && Part1ThreeTracks){
+      
+      for ( itPart1 = part1->endVertex()->products().begin();
+            itPart1 != part1->endVertex()->products().end(); itPart1++ ){
+        
+        p3Tracks.push_back(*itPart1);
+        pTracksPart1Daughters.push_back(*itPart1); 
+        subMass1 = part1->mass();
+        
+      }//for itPart1
+      
+      p3Tracks.push_back(part2);
+      
+      p3Tracks.push_back(part3);
+      
+      sc =  fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                   motherParticle); 
+      
+    }//if((numbRessThreeTracks == 1) && Part1ThreeTracks)
+    
+    if((numbRessThreeTracks == 1) && Part2ThreeTracks){
+      
+      for ( itPart2 = part2->endVertex()->products().begin();
+            itPart2 != part2->endVertex()->products().end(); itPart2++ ){
+        
+        p3Tracks.push_back(*itPart2);
+        pTracksPart2Daughters.push_back(*itPart2);
+        subMass2 = part2->mass();
+        
+      }//for itPart2
+      
+      p3Tracks.push_back(part1);
+      
+      p3Tracks.push_back(part3);
+      
+      sc = fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                  motherParticle); 
+      
+    }//if((numbRessTwoTracks == 1) && Part2ThreeTracks)
+    
+    if((numbRessThreeTracks == 1) && Part3ThreeTracks){
+      
+      for ( itPart3 = part3->endVertex()->products().begin();
+            itPart3 != part3->endVertex()->products().end(); itPart3++ ){
+        
+        p3Tracks.push_back(*itPart3);
+        pTracksPart3Daughters.push_back(*itPart3);
+        subMass3 = part3->mass();
+        
+      }//for itPart3
+      
+      p3Tracks.push_back(part2);
+      
+      p3Tracks.push_back(part1);
+      
+      sc =  fitWithGeomWithoutRess(motherName, p3Tracks, constrVtx, 
+                                   motherParticle); 
+      
+    }//if((numbRessThreeTracks == 1) && Part3ThreeTracks)
+    
+  }//if(ntracks == 3)  
+  
+  if(ntracks == 4){
+    
+    const ParticleID& part3ID = part3->particleID().pid();
+    int part3StdHepID = part3ID.pid();
+    
+    partProp = m_ppSvc->findByStdHepID(part3StdHepID  );
+    
+    float part3Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    
+    if((part3->isResonance()) && (part3Width > 10) ) part3->setIsResonance(0);
+    
+    const ParticleID& part4ID = part4->particleID().pid();
+    int part4StdHepID = part4ID.pid();
+    
+    partProp = m_ppSvc->findByStdHepID(part4StdHepID  );
+    
+    float part4Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    
+    if((part4->isResonance()) && (part4Width > 10) ) part4->setIsResonance(0);
+    
+    if(part1->isResonance()){
+      numbRessFourTracks++;
+      Part1FourTracks++;
+    }//if(part1->isResonance()) 
+    
+    if(part2->isResonance()){
+      numbRessFourTracks++;
+      Part2FourTracks++;
+    }//if(part2->isResonance())
+    
+    if(part3->isResonance()){
+      numbRessFourTracks++;
+      Part3FourTracks++;
+    }//if(part3->isResonance())
+    
+    if(part4->isResonance()){
+      numbRessFourTracks++;
+      Part4FourTracks++;
+    }//if(part4->isResonance())
+    
+    if (numbRessFourTracks != 0) {
+      log << MSG::INFO << "Number of ressonances must be 0  " << endreq;
+      return StatusCode::FAILURE;
+    }//if(numbRessThreeTracks != 0)  
+    
+    if(numbRessFourTracks == 0){
+      
+      sc =   fitWithGeomWithoutRess(motherName, pList, constrVtx, 
+                                    motherParticle );	
+      
+    }//if(numbRessFourTracks == 0)
+    
+  }//if(ntracks == 4)
+  
+  if( sc.isSuccess() ) {
+    
+    ParticleVector::const_iterator iterP;
+    
+    for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
+      constrVtx.addToProducts(*iterP);
+    }//for iterP
+    
+    return StatusCode::SUCCESS; 
+  }//if( sc.isSuccess() )
+  else{
+    return StatusCode::FAILURE; 
+  }//else
+  
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//==================================================================
+// Perform geometrical constrained vertex fit (vector of particles).
+// The procedure is implemented only for two, three and four particles
+// without ressonance.
+//==================================================================
+StatusCode LagrangeGeomVertexFitter::fitWithGeomWithoutRess(const std::string& 
+                                                            motherName,
+                                                            const 
+                                                            ParticleVector& 
+                                                            pList,
+                                                            Vertex& constrVtx,
+                                                            Particle& 
+                                                            motherParticle )
+  
+  
+{
+  
+  MsgStream log(msgSvc(), name());
+  
+  log << MSG::DEBUG << " lagrange fitter starting - fitWithGeomWithoutRess " 
+      << endreq;
+  
+  // check the size of the input particle vector.
+  m_ntracks = pList.size();
+  int ntracks = m_ntracks;
+  log << MSG::DEBUG << "Number of tracks in fitWithGeomWithoutRess = " 
+      << ntracks << endreq;
+  
+  if (( ntracks != 2 ) && ( ntracks != 3 ) && ( ntracks != 4 )) {
+    log << MSG::INFO << "Number of tracks must be 2, 3 or 4  " << endreq;
+    return StatusCode::FAILURE;
+  }
   
   Vertex uncVertex;
   StatusCode scUncVertex = m_pVertexUnconst->fitVertex(pList,uncVertex);
@@ -160,7 +593,6 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
   
   // number of iterations ( = NMAXITERA ).
   int const NMAXITERA = 20 ;
-  
   
   // dimension of the covariance matrix for 2, 3 or 4 tracks.
   int dimCe = ntracks*TRCOVDIM;
@@ -225,7 +657,6 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
     eTemp(3) = transParticle.slopeX();
     eTemp(4) = transParticle.slopeY();
     // momenta 
-    
     double px = transParticle.momentum().px();
     double py = transParticle.momentum().py();
     double pz = transParticle.momentum().pz();
@@ -245,104 +676,87 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
     
     index = index + 1; 
     
-  }
+  }//for iterP
   
   
   // copy parameter vector
   HepVector e0(e); 
   
-  
-  // cut on the difference of the constrMass and constrCalcMass
-  double DIFFMASSCUT = 1.0e-6;
-  // diffMass, diffZVer and DIFFZVERCUT
-  double DIFFZVERCUT = 1.0e-6; 
-  double diffMass = 0;
-  // Parameters to make the convergence
-  HepVector diffZver(6,0);  
-  
-  // Calculated constrained mass from the daughter particles. 
-  double massConstrCalc;
-  
   //Chisquare of the fit.
   double  chis;
   
-  // Parameters vector of the resulting track.
-  HepVector tpf(6);
+  // Parameters vector of the resulting track(x,y,z,x',y',p,E).
+  HepVector tpf(7);
   
   bool final = false;
   int  icount= 0; 
   while (!final && (icount < NMAXITERA)) {
     
-    StatusCode sc_iter = itera(e, Ce, mass, massConstr, dimCe, final);
+    StatusCode sc_iter = itera(e, Ce, dimCe, final);
     if ( !sc_iter.isSuccess() ) {
       log << MSG::DEBUG << " itera failed  " << endreq;
       return StatusCode::FAILURE;  
     }
-    
     
     // check that momenta are physical
     if (e(5)*e(10) < 0.0 ){
       log << MSG::DEBUG << "momenta out of range " << endreq;
       return StatusCode::FAILURE;
     } 
+    
     if ((( ntracks == 3 )|| (ntracks == 4)) && ( e(15) < 0.0 )){
       log << MSG::DEBUG << "momenta out of range " << endreq;
       return StatusCode::FAILURE; 
     }
     
     // get constraint conditions
-    StatusCode sc_evalu=  evalu(e, mass, massConstrCalc, diffZver);
+    
+    // diffZVer and DIFFZVERCUT
+    double DIFFZVERCUT = 1.0e-6;
+    HepVector diffZVer(6,0);    
+    
+    StatusCode sc_evalu =  evalu(e, diffZVer);
     if ( !sc_evalu.isSuccess() ) {
       log << MSG::DEBUG << "constraints calc failed " << endreq;
       return StatusCode::FAILURE;
     }
     
-    
-    // finish if constraint are satisfied
-    diffMass = fabs((massConstr-massConstrCalc)/massConstr);
-    
     icount = icount + 1;
     
+    // finish if constraint is satisfied
     if( ntracks == 2){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffMass < DIFFMASSCUT)){
+      if ( diffZVer(1) < DIFFZVERCUT ){
         final=true;
       }  
     }//if ntracks = 2
     
     if( ntracks == 3){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffZver(2) < DIFFZVERCUT) &&
-           (diffZver(3) < DIFFZVERCUT)
-           && (diffMass < DIFFMASSCUT)){
+      if ( (diffZVer(1) < DIFFZVERCUT) && (diffZVer(2) < DIFFZVERCUT) &&
+           (diffZVer(3) < DIFFZVERCUT) ){
         final=true;
       }  
     }//if ntracks = 3
     
     if( ntracks == 4){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffZver(2) < DIFFZVERCUT) &&
-           (diffZver(3) < DIFFZVERCUT) && (diffZver(4) < DIFFZVERCUT) &&
-           (diffZver(5) < DIFFZVERCUT)
-           && (diffMass < DIFFMASSCUT)){
+      if ( (diffZVer(1) < DIFFZVERCUT) && (diffZVer(2) < DIFFZVERCUT) &&
+           (diffZVer(3) < DIFFZVERCUT) && (diffZVer(4) < DIFFZVERCUT) &&
+           (diffZVer(5) < DIFFZVERCUT) ){
         final=true;
       }  
     }//if ntracks = 4
-    
-    
     
   }
   
   // if not converged, return
   if(!final) {
     log << MSG::DEBUG << " no convergence  " << endreq;
-    log << MSG::DEBUG << " massConstrCalc = " << massConstrCalc << endreq;
-    log << MSG::DEBUG << " diffMass = " << diffMass << endreq;
     log << MSG::DEBUG << " icount = " << icount << endreq;
     return StatusCode::FAILURE; 
   }
   
-  // later check the diffZver
   
   // Minimum found. Get the chisq of the fit.
   
@@ -352,24 +766,23 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
     return StatusCode::FAILURE;  
   }
   
-  
   // update the covariance matrix for old parameters (here final=true)
-  StatusCode sc_itera =  itera(e,Ce,mass,massConstr,dimCe,final);
+  
+  StatusCode sc_itera =  itera(e,Ce,dimCe,final);
   if ( !sc_itera.isSuccess() ) {
     log << MSG::DEBUG << " itera failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
-  
   // find the covariance matrix of the mother particle
-  StatusCode sc_nwcov = nwcov(e, Ce, zcer, tpf, Cx, dimCe);
+  
+  StatusCode sc_nwcov = nwcov(mass, e, Ce, zcer, tpf, Cx, dimCe);
   if ( !sc_nwcov.isSuccess() ) {
     log << MSG::DEBUG << " nwcov failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
   log << MSG::DEBUG << " lagrange: chis = " << chis << endreq;
-  log << MSG::DEBUG << " lagrange: mass  = " << massConstrCalc << endreq;
   
   // check the covariance matrix for obvious problems
   //   diagonal positive
@@ -402,22 +815,17 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
   constrVtx.setChi2(chis);
   
   if(ntracks == 2){
-    
-    constrVtx.setNDoF(ntracks);
-    
+    constrVtx.setNDoF(ntracks-1);
   }
   
   if(ntracks == 3){
-    
-    constrVtx.setNDoF(ntracks+1);
-    
+    constrVtx.setNDoF(ntracks);
   }
   
   if(ntracks == 4){
-    
-    constrVtx.setNDoF(ntracks+2);
-    
+    constrVtx.setNDoF(ntracks+1);
   }
+  
   //    decay with constrained mass
   constrVtx.setType(Vertex::DecayWithMass);
   //    particles that compose the vertex
@@ -432,9 +840,7 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
   motherHepVec.setPz( tpf(6)/sqrt(pow(tpf(4),2)+pow(tpf(5),2)+1.0));
   motherHepVec.setPx( tpf(4)*motherHepVec.pz());
   motherHepVec.setPy( tpf(5)*motherHepVec.pz());
-  motherHepVec.setE( sqrt(pow(massConstr,2)+pow(motherHepVec.px(),2)+ 
-                          pow(motherHepVec.py(),2) +
-                          pow(motherHepVec.pz(),2)));
+  motherHepVec.setE( tpf(7)); 
   
   //fill the Mother particle
   //   momentum
@@ -456,38 +862,30 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
   HepMatrix m_posSlpMomCorrelationError=CxCopy.sub(4,6,1,3);
   motherParticle.setPosSlopesCorr(m_posSlpMomCorrelationError);
   
-  
   //   particle id  
   motherParticle.setParticleID((*partProp).jetsetID());
   //   confidence level
   motherParticle.setConfLevel(1.);
+  
   //   mass
-  motherParticle.setMass((*partProp).mass());
+  motherParticle.setMass(motherParticle.momentum().mag());
   //    massErr??
   //    check ressonance
   
   // hbar in MeV s
-  // float hbar = 6.58211889*pow(10,-22);
+  float hbar = 6.58211889*pow(10,-22);
   
-  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  //  if((motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) < 
-  //                                   pow(10,-15))) 
-  if((*partProp).lifetime()*pow(10,-9) <
-     pow(10,-15))
+  if( (motherParticleWidth < 10) && ((*partProp).lifetime()*pow(10,-9) < 
+                                     pow(10,-15))){
     
-    motherParticle.setIsResonance(true);
-  
+    motherParticle.setIsResonance(1);
+    
+  }//isRessonance
   
   motherParticle.setEndVertex(&constrVtx);
   
-  
-  log << MSG::DEBUG << "momentumErr" << endreq;
-  log << MSG::DEBUG  << motherParticle.momentumErr()<< endreq;
-  log << MSG::DEBUG << "slopesMomErr" <<  endreq;
-  log << MSG::DEBUG <<  motherParticle.slopesMomErr() << endreq;
-  log << MSG::DEBUG << "posSlopesCorr" <<  endreq;
-  log << MSG::DEBUG << motherParticle.posSlopesCorr()<<  endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -503,115 +901,98 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
 
 
 
+
+
+
 //==================================================================
-//             Perform mass constrained vertex fit 
-//                          ( 2 tracks )
+//   Perform geometrical and sub mass constrained vertex fit 
+//               (2 tracks with ressonances )
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string& 
-                                                 motherName,
-                                                 Particle& particle1, 
-                                                 Particle& particle2,
-                                                 Vertex& constrVtx,
-                                                 Particle& motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeomAndSubMass(const std::string& 
+                                                           motherName,
+                                                           Particle& 
+                                                           particle1, 
+                                                           Particle& particle2,
+                                                           Vertex& constrVtx,
+                                                           Particle& 
+                                                           motherParticle )
 {
   ParticleVector pList;
   pList.push_back(&particle1);
   pList.push_back(&particle2);
   
-  return fitWithMass(motherName, pList, constrVtx, motherParticle);
+  return fitWithGeomAndSubMass(motherName, pList, constrVtx, motherParticle);
   
 }
-
 //==================================================================
-//            Perform mass constrained vertex fit 
-//                        ( 3 tracks )
+//  Perform geometrical and sub mass constrained vertex fit 
+//              ( 3 tracks with ressonance )
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithMass( const std::string& 
-                                                  motherName,
-                                                  Particle& particle1, 
-                                                  Particle& particle2, 
-                                                  Particle& particle3,
-                                                  Vertex& constrVtx,
-                                                  Particle& motherParticle )
-{
-  ParticleVector pList;
-  pList.push_back(&particle1);
-  pList.push_back(&particle2);
-  pList.push_back(&particle3);
-  
-  return fitWithMass(motherName, pList, constrVtx, motherParticle);
-  
-}
-
-//==================================================================
-//            Perform mass constrained vertex fit 
-//                        ( 4 tracks )
-//==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithMass( const std::string& 
-                                                  motherName,
-                                                  Particle& particle1, 
-                                                  Particle& particle2, 
-                                                  Particle& particle3,
-                                                  Particle& particle4,
-                                                  Vertex& constrVtx,
-                                                  Particle& motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeomAndSubMass( const std::string& 
+                                                            motherName,
+                                                            Particle& 
+                                                            particle1, 
+                                                            Particle& 
+                                                            particle2, 
+                                                            Particle& 
+                                                            particle3,
+                                                            Vertex& constrVtx,
+                                                            Particle& 
+                                                            motherParticle )
 {
   ParticleVector pList;
   pList.push_back(&particle1);
   pList.push_back(&particle2);
   pList.push_back(&particle3);
-  pList.push_back(&particle4);
   
-  return fitWithMass(motherName, pList, constrVtx, motherParticle);
+  return fitWithGeomAndSubMass(motherName, pList, constrVtx, motherParticle);
   
 }
 
 //==================================================================
-// Perform mass constrained vertex fit (vector of particles).
+// Perform geometrical and sub mass constrained vertex 
+//fit(vector of particles).
 // The procedure is implemented only for two and three particles
 // with ressonances.
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string& 
-                                                 motherName,
-                                                 const ParticleVector& 
-                                                 pList,
-                                                 Vertex& constrVtx,
-                                                 Particle& motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeomAndSubMass(const std::string& 
+                                                           motherName,
+                                                           const 
+                                                           ParticleVector& 
+                                                           pList,
+                                                           Vertex& constrVtx,
+                                                           Particle& 
+                                                           motherParticle )
 {
   
   MsgStream log(msgSvc(), name());
   
-  log << MSG::DEBUG << " lagrange fitter starting - fitWithMass " << endreq;
+  log << MSG::DEBUG << " lagrange fitter starting - fitWithGeomAndSubMass " 
+      << endreq;
   
   // check the size of the input particle vector.
   m_ntracks = pList.size();
   int ntracks = m_ntracks;
   
-  log << MSG::DEBUG << "Number of tracks in fitWithMass = " 
+  log << MSG::DEBUG << "Number of tracks in fitWithGeomAndSubMass = " 
       << ntracks << endreq;
   
-  if (( ntracks != 2 ) && ( ntracks != 3 ) && ( ntracks != 4 )) {
-    log << MSG::INFO << "Number of tracks must be 2, 3 or 4  " << endreq;
+  if (( ntracks != 2 ) && ( ntracks != 3 )) {
+    log << MSG::INFO << "Number of tracks must be 2 or 3  " << endreq;
     return StatusCode::FAILURE;
   }
   
   int numbRessTwoTracks = 0;
   int numbRessThreeTracks = 0;
-  int numbRessFourTracks = 0;
   bool Part1TwoTracks = false;
   bool Part2TwoTracks = false;
   bool Part1ThreeTracks = false;
   bool Part2ThreeTracks = false;
   bool Part3ThreeTracks = false;
-  bool Part1FourTracks = false;
-  bool Part2FourTracks = false;
-  bool Part3FourTracks = false;
-  bool Part4FourTracks = false;
   
   Particle* part1 = pList[0];
   Particle* part2 = pList[1];
   Particle* part3 = pList[2];
-  Particle* part4 = pList[3];
   
   StatusCode sc;
   
@@ -623,20 +1004,18 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   // hbar in MeV s
   float hbar = 6.58211889*pow(10,-22);
   
-  float part1WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  float part1Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  if( (part1->isResonance()) && (part1WidthHBar > m_widthCut)) 
-    part1->setIsResonance(false);
+  if((part1->isResonance()) && (part1Width > 10) ) part1->setIsResonance(0);
   
   const ParticleID& part2ID = part2->particleID().pid();
   int part2StdHepID = part2ID.pid();
   
   partProp = m_ppSvc->findByStdHepID(part2StdHepID  );
   
-  float part2WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  float part2Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  if( (part2->isResonance()) && (part2WidthHBar > m_widthCut)) 
-    part2->setIsResonance(false);
+  if((part2->isResonance()) && (part2Width > 10) ) part2->setIsResonance(0);
   
   if(ntracks == 2){
     
@@ -651,13 +1030,11 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       Part2TwoTracks = true;
     }//if(part2->isResonance())
     
-    
-    if ( (numbRessTwoTracks != 0) && (numbRessTwoTracks != 1) && 
-         (numbRessTwoTracks != 2)  ) {    
-      log << MSG::INFO << "Number of ressonances must be 0, 1 or 2  " 
-          << endreq;      
+    if ( (numbRessTwoTracks != 1) && (numbRessTwoTracks != 2)  ) {    
+      log << MSG::INFO << "Number of ressonances must be 1 or 2  " << endreq;
+      
       return StatusCode::FAILURE;
-    } 
+    }//if((numbRessTwoTracks != 1) && (numbRessTwoTracks != 2)) 
     
     SmartRefVector<Particle>::iterator itPart1;
     SmartRefVector<Particle>::iterator itPart2; 
@@ -666,13 +1043,6 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     ParticleVector pTracksPart2Daughters;
     double subMass1;
     double subMass2; 
-    
-    
-    if(numbRessTwoTracks == 0){
-      
-      sc = fitWithNoRess(motherName, pList, constrVtx, motherParticle );
-      
-    }//if(numbRessTwoTracks == 0)    
     
     if((numbRessTwoTracks == 1) && Part1TwoTracks){
       
@@ -687,9 +1057,9 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       
       p3Tracks.push_back(part2);
       
-      
-      sc = fitWithOneSubMass(motherName, subMass1, p3Tracks, constrVtx, 
-                             motherParticle); 
+      sc = fitWithGeomAndOneSubMass(motherName, subMass1, 
+                                    pTracksPart1Daughters, 
+                                    p3Tracks, constrVtx,motherParticle); 
       
     }//if((numbRessTwoTracks == 1) && Part1TwoTracks)
     
@@ -706,8 +1076,9 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       
       p3Tracks.push_back(part1);
       
-      sc = fitWithOneSubMass(motherName, subMass2, p3Tracks, constrVtx, 
-                             motherParticle); 
+      sc = fitWithGeomAndOneSubMass(motherName, subMass2, 
+                                    pTracksPart2Daughters,
+                                    p3Tracks, constrVtx, motherParticle); 
       
     }//if((numbRessTwoTracks == 1) && Part2TwoTracks)
     
@@ -731,13 +1102,14 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
         
       }//for itPart2
       
-      sc = fitWithTwoSubMass(motherName, subMass1, subMass2, p3Tracks, 
-                             constrVtx, motherParticle); 
+      sc = fitWithGeomAndTwoSubMass(motherName, subMass1, subMass2,
+                                    pTracksPart1Daughters, 
+                                    pTracksPart2Daughters, 
+                                    p3Tracks, constrVtx, motherParticle); 
       
     }//if(numbRessTwoTracks == 2)
     
   }//if(ntracks == 2)
-  
   
   if(ntracks == 3){
     
@@ -746,10 +1118,9 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     
     partProp = m_ppSvc->findByStdHepID(part3StdHepID  );
     
-    float part3WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
+    float part3Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
     
-    if( (part3->isResonance()) && (part3WidthHBar > m_widthCut)) 
-      part3->setIsResonance(false);
+    if((part3->isResonance()) && (part3Width > 10) ) part3->setIsResonance(0);
     
     if(part1->isResonance()){
       numbRessThreeTracks++;
@@ -766,10 +1137,10 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       Part3ThreeTracks++;
     }//if(part3->isResonance())
     
-    if ( (numbRessThreeTracks != 0) && (numbRessThreeTracks != 1)  ) {
-      log << MSG::INFO << "Number of ressonances must be 0 or 1  " << endreq;
+    if ( numbRessThreeTracks != 1  ) {
+      log << MSG::INFO << "Number of ressonances must be 1  " << endreq;
       return StatusCode::FAILURE;
-    }//if( (numbRessThreeTracks != 0) && (numbRessThreeTracks != 1))  
+    }//if(numbRessThreeTracks != 1)  
     
     SmartRefVector<Particle>::iterator itPart1;
     SmartRefVector<Particle>::iterator itPart2;
@@ -781,13 +1152,6 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     double subMass1;
     double subMass2;
     double subMass3;
-    
-    
-    if(numbRessThreeTracks == 0){
-      
-      sc = fitWithNoRess(motherName, pList, constrVtx, motherParticle );
-      
-    }//if(numbRessThreeTracks == 0)
     
     if((numbRessThreeTracks == 1) && Part1ThreeTracks){
       
@@ -804,8 +1168,9 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       
       p3Tracks.push_back(part3);
       
-      sc = fitWithOneSubMass(motherName,subMass1, p3Tracks, constrVtx, 
-                             motherParticle); 
+      sc = fitWithGeomAndOneSubMass(motherName,subMass1,
+                                    pTracksPart1Daughters,
+                                    p3Tracks, constrVtx, motherParticle); 
       
     }//if((numbRessThreeTracks == 1) && Part1ThreeTracks)
     
@@ -824,8 +1189,9 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       
       p3Tracks.push_back(part3);
       
-      sc = fitWithOneSubMass(motherName, subMass2, p3Tracks, constrVtx, 
-                             motherParticle); 
+      sc = fitWithGeomAndOneSubMass(motherName, subMass2,
+                                    pTracksPart2Daughters, 
+                                    p3Tracks, constrVtx, motherParticle); 
       
     }//if((numbRessTwoTracks == 1) && Part2ThreeTracks)
     
@@ -844,67 +1210,13 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       
       p3Tracks.push_back(part1);
       
-      sc = fitWithOneSubMass(motherName, subMass3, p3Tracks, constrVtx, 
-                             motherParticle); 
+      sc = fitWithGeomAndOneSubMass(motherName, subMass3, 
+                                    pTracksPart3Daughters, 
+                                    p3Tracks, constrVtx, motherParticle); 
       
     }//if((numbRessThreeTracks == 1) && Part3ThreeTracks)
     
   }//if(ntracks == 3)
-  
-  if(ntracks == 4){
-    
-    const ParticleID& part3ID = part3->particleID().pid();
-    int part3StdHepID = part3ID.pid();
-    
-    partProp = m_ppSvc->findByStdHepID(part3StdHepID  );
-    
-    float part3Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    
-    if( (part3->isResonance()) && (part3Width > m_widthCut)) 
-      part3->setIsResonance(false);
-    
-    const ParticleID& part4ID = part4->particleID().pid();
-    int part4StdHepID = part4ID.pid();
-    
-    partProp = m_ppSvc->findByStdHepID(part4StdHepID  );
-    
-    float part4Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
-    
-    if( (part4->isResonance()) && (part4Width > m_widthCut)) 
-      part4->setIsResonance(false);
-    
-    if(part1->isResonance()){
-      numbRessFourTracks++;
-      Part1FourTracks++;
-    }//if(part1->isResonance()) 
-    
-    if(part2->isResonance()){
-      numbRessFourTracks++;
-      Part2FourTracks++;
-    }//if(part2->isResonance())
-    
-    if(part3->isResonance()){
-      numbRessFourTracks++;
-      Part3FourTracks++;
-    }//if(part3->isResonance())
-    
-    if(part4->isResonance()){
-      numbRessFourTracks++;
-      Part4FourTracks++;
-    }//if(part4->isResonance())
-    
-    if (numbRessFourTracks != 0) {
-      log << MSG::INFO << "Number of ressonances must be 0  " << endreq;
-      return StatusCode::FAILURE;
-    }//if(numbRessThreeTracks != 0)  
-    
-    if(numbRessFourTracks == 0){
-      
-      sc = fitWithNoRess(motherName, pList, constrVtx, motherParticle );	
-      
-    }//if(numbRessFourTracks == 0)
-    
-  }//if(ntracks == 4)
   
   if( sc.isSuccess() ) {
     
@@ -921,9 +1233,6 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     return StatusCode::FAILURE; 
   }//else
   
-  
-  
-  
 }
 
 
@@ -938,32 +1247,39 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
 
 
 
+
 //==================================================================
-// Perform mass constrained vertex fit (vector of particles).
+// Perform geometrical and sub mass constrained vertex 
+// fit(vector of particles).
 // The procedure is implemented for three or four tracks
 // with one ressonance.
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string& 
-                                                       motherName,
-                                                       double subMass,
-                                                       const ParticleVector& 
-                                                       pList,
-                                                       Vertex& constrVtx,
-                                                       Particle& 
-                                                       motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeomAndOneSubMass(const std::
+                                                              string& 
+                                                              motherName,
+                                                              double subMass,
+                                                              const 
+                                                              ParticleVector&
+                                                              pDaughter,
+                                                              const 
+                                                              ParticleVector& 
+                                                              pList,
+                                                              Vertex& 
+                                                              constrVtx,
+                                                              Particle& 
+                                                              motherParticle )
 {
   
   MsgStream log(msgSvc(), name());
   
-  log << MSG::DEBUG << " lagrange fitter starting - fitWithOneSubMass " 
+  log << MSG::DEBUG << " lagrange fitter starting - fitWithGeomAndOneSubMass " 
       << endreq;
   
-  // check the size of the input particle vector.
-  
+  // check the size of the input particle vector.  
   m_ntracks = pList.size();
   int ntracks = m_ntracks;
   
-  log << MSG::DEBUG << "Number of tracks in fitWithOneSubMass = " 
+  log << MSG::DEBUG << "Number of tracks in fitWithGeomAndOneSubMass = " 
       << ntracks << endreq;
   
   if (( ntracks != 3 ) && ( ntracks != 4 )) {
@@ -996,17 +1312,17 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   // dimension of the covariance matrix for one track ( = TRCOVDIM )
   int const TRCOVDIM  = 5;
   
-  // maximum number of tracks ( = NMAXTRK ).
-  int const NMAXTRK   = 4;
-  
   // number of iterations ( = NMAXITERA ).
   int const NMAXITERA = 20 ;
   
-  // dimension of the covariance matrix for 3 or 4 tracks.
-  int dimCe = ntracks*TRCOVDIM;
+  // maximum number of tracks ( = NMAXTRK ).
+  int const NMAXTRK   = 4;
   
   // mass of the daughter particles
   HepVector mass(NMAXTRK);
+  
+  // dimension of the covariance matrix for 3 or 4 tracks.
+  int dimCe = ntracks*TRCOVDIM;
   
   // prepare the covariance matrix Ce and the vector e for 3 or 4 tracks.
   HepSymMatrix Ce(dimCe, 0);
@@ -1051,14 +1367,14 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
     CeTemp(2,3)=newPointSlpMomCorrErr(1,2);   // y-sx
     CeTemp(2,4)=newPointSlpMomCorrErr(2,2);   // y-sy
     CeTemp(2,5)=newPointSlpMomCorrErr(3,2);   // y-p
-    
+
     CeTemp(3,3)= newSlpMomCorrErr(1,1);       // sx-sx
     CeTemp(3,4)= newSlpMomCorrErr(2,1);       // sx-sy
     CeTemp(3,5)= newSlpMomCorrErr(3,1);       // sx-p
     CeTemp(4,4)= newSlpMomCorrErr(2,2);       // sy-sy
     CeTemp(4,5)= newSlpMomCorrErr(3,2);       // sy-p
     CeTemp(5,5)= newSlpMomCorrErr(3,3);       // p-p
-    
+
     eTemp(1) = newPoint.x();
     eTemp(2) = newPoint.y();
     
@@ -1071,8 +1387,7 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
     eTemp(5) = sqrt(pow(px,2)+pow(py,2)+pow(pz,2));
     
     // get the mass of this daughter particle
-    mass(index) = (*iterP)->mass();
-    
+    mass(index) = (*iterP)->mass(); 
     //embed the one track matrix in the Ce matrix
     Ce.sub(embedded_pos,CeTemp);
     
@@ -1087,19 +1402,10 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   }
   
   // copy parameter vector
-  HepVector e0(e); 
+  HepVector e0(e);     
   
-  // cut on the difference of the constrMass and constrCalcMass
-  double DIFFMASSCUT = 1.0e-6;
-  // diffMass, diffZVer and DIFFZVERCUT
-  double DIFFZVERCUT = 1.0e-6; 
-  
-  double diffMass = 0;
-  HepVector diffZver(6,0);
-  
-  
-  // Calculated constrained mass from the daughter particles. 
-  double massConstrCalc;
+  // Calculated constrained mass from the daughters of the ressonances. 
+  double subMassConstrCalc;
   
   //Chisquare of the fit.
   double  chis;
@@ -1109,15 +1415,20 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   
   bool final = false;
   int  icount= 0; 
+  
+  // diffZVer and diffSubMass
+  HepVector diffZVer(6,0);
+  double diffSubMass = 0;
+  
   while (!final && (icount < NMAXITERA)) {
     
-    StatusCode sc_iter = itera(e, Ce, mass, massConstr, subMassConstr, dimCe, 
-                               final);
+    StatusCode sc_iter = itera(e, Ce, pDaughter ,  
+                               subMassConstr, dimCe,final);
+    
     if ( !sc_iter.isSuccess() ) {
       log << MSG::DEBUG << " itera failed  " << endreq;
       return StatusCode::FAILURE;  
     }
-    
     
     // check that momenta are physical
     if (e(5)*e(10) < 0.0 ){
@@ -1130,52 +1441,54 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
       return StatusCode::FAILURE; 
     }
     
-    // get constraint conditions
+    double DIFFZVERCUT = 1.0e-6;
+    double DIFFSUBMASSCUT = 1.0e-6;   
     
-    StatusCode sc_evalu=  evalu(e, mass, subMassConstr, massConstrCalc, 
-                                diffZver);
+    StatusCode sc_evalu=  evalu(e,pDaughter,
+                                subMassConstrCalc,diffZVer);
     if ( !sc_evalu.isSuccess() ) {
       log << MSG::DEBUG << "constraints calc failed " << endreq;
       return StatusCode::FAILURE;
     }
     
-    // finish if constraint are satisfied
-    diffMass = fabs((massConstr-massConstrCalc)/massConstr);
+    // finish if constraints are satisfied
+    diffSubMass = fabs((subMassConstr - subMassConstrCalc)/subMassConstr);
     
     icount = icount + 1;
     
-    
     if( ntracks == 3){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffZver(2) < DIFFZVERCUT) &&
-           (diffZver(3) < DIFFZVERCUT)
-           && (diffMass < DIFFMASSCUT)){
+      if ( (diffZVer(1) < DIFFZVERCUT) && (diffZVer(2) < DIFFZVERCUT) &&
+           (diffZVer(3) < DIFFZVERCUT)
+           && (diffSubMass < DIFFSUBMASSCUT)){
         final=true;
       }  
     }//if ntracks = 3
     
     if( ntracks == 4){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffZver(2) < DIFFZVERCUT) &&
-           (diffZver(3) < DIFFZVERCUT) && (diffZver(4) < DIFFZVERCUT) &&
-           (diffZver(5) < DIFFZVERCUT)
-           && (diffMass < DIFFMASSCUT)){
+      if ( (diffZVer(1) < DIFFZVERCUT) && (diffZVer(2) < DIFFZVERCUT) &&
+           (diffZVer(3) < DIFFZVERCUT) && (diffZVer(4) < DIFFZVERCUT) &&
+           (diffZVer(5) < DIFFZVERCUT)
+           && (diffSubMass < DIFFSUBMASSCUT)){
         final=true;
       }  
-    }//if ntracks = 4 
+    }//if ntracks = 4
     
   }
   
   // if not converged, return
   if(!final) {
     log << MSG::DEBUG << " no convergence  " << endreq;
-    log << MSG::DEBUG << " massConstrCalc = " << massConstrCalc << endreq;
-    log << MSG::DEBUG << " diffMass = " << diffMass << endreq;
+    log << MSG::DEBUG << " subMassConstrCalc = " << subMassConstrCalc 
+        << endreq;
+    log << MSG::DEBUG << " diffSubMass = " << diffSubMass << endreq;
+    log << MSG::DEBUG << " diffZVer = " << diffZVer << endreq;
     log << MSG::DEBUG << " icount = " << icount << endreq;
     return StatusCode::FAILURE; 
   }
   
-  // later check the diffZver
+  // later check the diffZVer
   
   // Minimum found. Get the chisq of the fit.
   
@@ -1185,24 +1498,22 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
     return StatusCode::FAILURE;  
   }
   
-  
   // update the covariance matrix for old parameters (here final=true)
-  StatusCode sc_itera =  itera(e,Ce,mass,massConstr,subMassConstr,dimCe,final);
+  StatusCode sc_itera =  itera(e,Ce,pDaughter,subMassConstr,dimCe,final);
   if ( !sc_itera.isSuccess() ) {
     log << MSG::DEBUG << " itera failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
-  
   // find the covariance matrix of the mother particle
-  StatusCode sc_nwcov = nwcov(e, Ce, zcer, tpf, Cx, dimCe);
+  StatusCode sc_nwcov = nwcov(mass, e, Ce, zcer, tpf, Cx, dimCe);
   if ( !sc_nwcov.isSuccess() ) {
     log << MSG::DEBUG << " nwcov failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
   log << MSG::DEBUG << " lagrange: chis = " << chis << endreq;
-  log << MSG::DEBUG << " lagrange: mass  = " << massConstrCalc << endreq;
+  log << MSG::DEBUG << " lagrange: subMass  = " << subMassConstrCalc << endreq;
   
   // check the covariance matrix for obvious problems
   //   diagonal positive
@@ -1235,25 +1546,21 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   constrVtx.setChi2(chis);
   
   if(ntracks == 3){
-    
-    constrVtx.setNDoF(ntracks+2);
-    
+    constrVtx.setNDoF(ntracks+1);
   }
   
   if(ntracks == 4){
-    
-    constrVtx.setNDoF(ntracks+3);
-    
+    constrVtx.setNDoF(ntracks+2);
   }
   
   //    decay with constrained mass
   constrVtx.setType(Vertex::DecayWithMass);
   //    particles that compose the vertex
+  
   //  for(iterP = pList.begin(); iterP != pList.end(); 
   //      iterP++) {
   //    constrVtx.addToProducts(*iterP);
   //  }
-  
   
   // calculate mother particle momentum
   HepLorentzVector motherHepVec;
@@ -1287,26 +1594,15 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   //   confidence level
   motherParticle.setConfLevel(1.);
   //   mass
-  motherParticle.setMass((*partProp).mass());
+  motherParticle.setMass(motherParticle.momentum().mag());
   //    massErr??
   //    check ressonance
   
-  // hbar in MeV s
-  // float hbar = 6.58211889*pow(10,-22);
-  
-  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
-  
-  //  if((motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) <
-  // pow(10,-15))){
-  
-  
-  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)) {
+  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)){
     
-    motherParticle.setIsResonance(true);
+    motherParticle.setIsResonance(1);
     
   }//isRessonance
-  
-  //  motherParticle.setIsResonance(true);
   
   motherParticle.setEndVertex(&constrVtx);
   
@@ -1314,7 +1610,10 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   return StatusCode::SUCCESS;
 }
 
-// end of the first one ( fitWithOneSubMass method )
+// end of the first one ( fitWithGeomAndOneSubMass method )
+
+
+
 
 
 
@@ -1327,35 +1626,41 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
 
 
 //==================================================================
-// Perform mass constrained vertex fit (vector of particles).
+// Perform geometrical and sub mass constrained vertex 
+// fit(vector of particles).
 // The procedure is implemented for four particles
 // with two ressonances.
 //==================================================================
-StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string& 
-                                                       motherName,
-                                                       double subMass1,
-                                                       double subMass2,
-                                                       const ParticleVector& 
-                                                       pList,
-                                                       Vertex& constrVtx,
-                                                       Particle& 
-                                                       motherParticle )
+StatusCode LagrangeGeomVertexFitter::fitWithGeomAndTwoSubMass(const std::
+                                                              string& 
+                                                              motherName,
+                                                              double subMass1,
+                                                              double subMass2,
+                                                              const 
+                                                              ParticleVector& 
+                                                              pDaughter1,
+                                                              const 
+                                                              ParticleVector& 
+                                                              pDaughter2,
+                                                              const 
+                                                              ParticleVector& 
+                                                              pList,
+                                                              Vertex& 
+                                                              constrVtx,
+                                                              Particle& 
+                                                              motherParticle )
 {
   
   MsgStream log(msgSvc(), name());
   
-  log << MSG::DEBUG << " lagrange fitter starting - fitWithTwoSubMass " 
+  log << MSG::DEBUG << " lagrange fitter starting - fitWithGeomAndTwoSubMass " 
       << endreq;
   
-  
-  
-  
-  // check the size of the input particle vector.
-  
+  // check the size of the input particle vector.  
   m_ntracks = pList.size();
   int ntracks = m_ntracks;
   
-  log << MSG::DEBUG << "Number of tracks in fitWithTwoSubMass = " 
+  log << MSG::DEBUG << "Number of tracks in fitWithGeomAndTwoSubMass = " 
       << ntracks << endreq;
   
   if ( ntracks != 4 ) {
@@ -1393,18 +1698,16 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   // dimension of the covariance matrix for one track ( = TRCOVDIM )
   int const TRCOVDIM  = 5;
   
-  // maximum number of tracks ( = NMAXTRK ).
-  int const NMAXTRK   = 4;
-  
   // number of iterations ( = NMAXITERA ).
   int const NMAXITERA = 20 ;
   
   // dimension of the covariance matrix for 4 tracks.
   int dimCe = ntracks*TRCOVDIM;
   
+  // maximum number of tracks ( = NMAXTRK ).
+  int const NMAXTRK   = 4;
   // mass of the daughter particles
-  HepVector mass(NMAXTRK);
-  
+  HepVector mass(NMAXTRK);  
   // prepare the covariance matrix Ce and the vector e for 4 tracks.
   HepSymMatrix Ce(dimCe, 0);
   HepVector e(dimCe,0);
@@ -1448,7 +1751,7 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
     CeTemp(2,3)=newPointSlpMomCorrErr(1,2);   // y-sx
     CeTemp(2,4)=newPointSlpMomCorrErr(2,2);   // y-sy
     CeTemp(2,5)=newPointSlpMomCorrErr(3,2);   // y-p
-    
+
     CeTemp(3,3)= newSlpMomCorrErr(1,1);       // sx-sx
     CeTemp(3,4)= newSlpMomCorrErr(2,1);       // sx-sy
     CeTemp(3,5)= newSlpMomCorrErr(3,1);       // sx-p
@@ -1466,7 +1769,6 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
     double py = transParticle.momentum().py();
     double pz = transParticle.momentum().pz();
     eTemp(5) = sqrt(pow(px,2)+pow(py,2)+pow(pz,2));
-    
     // get the mass of this daughter particle
     mass(index) = (*iterP)->mass();
     
@@ -1486,16 +1788,16 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   // copy parameter vector
   HepVector e0(e); 
   
-  // cut on the difference of the constrMass and constrCalcMass
-  double DIFFMASSCUT = 1.0e-6;
-  // diffMass, diffZVer and DIFFZVERCUT
-  double DIFFZVERCUT = 1.0e-6; 
+  // diffZVer, diffSubMass1 and diffSubMass2
+  HepVector diffZVer(6,0);
+  double diffSubMass1 = 0;
+  double diffSubMass2 = 0;
+  double DIFFZVERCUT = 1.0e-6;
+  double DIFFSUBMASSCUT = 1.0e-6;
   
-  double diffMass = 0;
-  HepVector diffZver(6,0);
-  
-  // Calculated constrained mass from the daughter particles. 
-  double massConstrCalc;
+  // Calculated constrained masses from the daughters of the ressonances. 
+  double subMass1ConstrCalc;
+  double subMass2ConstrCalc;
   
   //Chisquare of the fit.
   double  chis;
@@ -1507,7 +1809,7 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   int  icount= 0; 
   while (!final && (icount < NMAXITERA)) {
     
-    StatusCode sc_iter = itera(e, Ce, mass, massConstr, subMass1Constr, 
+    StatusCode sc_iter = itera(e, Ce,pDaughter1,pDaughter2, subMass1Constr, 
                                subMass2Constr, dimCe, final);
     if ( !sc_iter.isSuccess() ) {
       log << MSG::DEBUG << " itera failed  " << endreq;
@@ -1523,31 +1825,32 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
     if (( ntracks == 4) && ( e(15) < 0.0 )){
       log << MSG::DEBUG << "momenta out of range " << endreq;
       return StatusCode::FAILURE; 
-    }
+    }   
     
-    // get constraint conditions
-    StatusCode sc_evalu=  evalu(e, mass, subMass1Constr, subMass2Constr, 
-                                massConstrCalc, diffZver);
+    StatusCode sc_evalu=  evalu(e,pDaughter1,pDaughter2, subMass1ConstrCalc, 
+                                subMass2ConstrCalc,diffZVer);
+    
     if ( !sc_evalu.isSuccess() ) {
       log << MSG::DEBUG << "constraints calc failed " << endreq;
       return StatusCode::FAILURE;
     }
     
     
-    // finish if constraint are satisfied
-    diffMass = fabs((massConstr-massConstrCalc)/massConstr);
+    // finish if constraints are satisfied
+    diffSubMass1 = fabs((subMass1Constr - subMass1ConstrCalc)/subMass1Constr);   
+    diffSubMass2 = fabs((subMass2Constr - subMass2ConstrCalc)/subMass2Constr);
     
     icount = icount + 1;
     
-    
     if( ntracks == 4){
       
-      if ( (diffZver(1) < DIFFZVERCUT) && (diffZver(2) < DIFFZVERCUT) &&
-           (diffZver(3) < DIFFZVERCUT) && (diffZver(4) < DIFFZVERCUT) &&
-           (diffZver(5) < DIFFZVERCUT)
-           && (diffMass < DIFFMASSCUT)){
-        final=true;
-      }  
+      if ( (diffZVer(1) < DIFFZVERCUT) && (diffZVer(2) < DIFFZVERCUT) &&
+           (diffZVer(3) < DIFFZVERCUT) && (diffZVer(4) < DIFFZVERCUT) &&
+           (diffZVer(5) < DIFFZVERCUT) && (diffSubMass1 < DIFFSUBMASSCUT)
+           && (diffSubMass2 < DIFFSUBMASSCUT))
+        {
+          final=true;
+        }  
     }//if ntracks = 4
     
     
@@ -1556,13 +1859,13 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   // if not converged, return
   if(!final) {
     log << MSG::DEBUG << " no convergence  " << endreq;
-    log << MSG::DEBUG << " massConstrCalc = " << massConstrCalc << endreq;
-    log << MSG::DEBUG << " diffMass = " << diffMass << endreq;
+    log << MSG::DEBUG << " subMass1ConstrCalc = " << subMass1ConstrCalc 
+        << endreq;
+    log << MSG::DEBUG << " subMass2ConstrCalc = " << subMass2ConstrCalc 
+        << endreq;
     log << MSG::DEBUG << " icount = " << icount << endreq;
     return StatusCode::FAILURE; 
   }
-  
-  // later check the diffZver
   
   // Minimum found. Get the chisq of the fit.
   
@@ -1572,25 +1875,27 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
     return StatusCode::FAILURE;  
   }
   
-  
   // update the covariance matrix for old parameters (here final=true)
   StatusCode sc_itera = 
-    itera(e,Ce,mass,massConstr,subMass1Constr,subMass2Constr,dimCe,final);
+    itera(e,Ce,pDaughter1,pDaughter2,subMass1Constr,
+          subMass2Constr,dimCe,final);
   if ( !sc_itera.isSuccess() ) {
     log << MSG::DEBUG << " itera failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
-  
   // find the covariance matrix of the mother particle
-  StatusCode sc_nwcov = nwcov(e, Ce, zcer, tpf, Cx, dimCe);
+  StatusCode sc_nwcov = nwcov(mass, e, Ce, zcer, tpf, Cx, dimCe);
   if ( !sc_nwcov.isSuccess() ) {
     log << MSG::DEBUG << " nwcov failed  " << endreq;
     return StatusCode::FAILURE;  
   }
   
   log << MSG::DEBUG << " lagrange: chis = " << chis << endreq;
-  log << MSG::DEBUG << " lagrange: mass  = " << massConstrCalc << endreq;
+  log << MSG::DEBUG << " lagrange: submass1  = " << subMass1ConstrCalc 
+      << endreq;
+  log << MSG::DEBUG << " lagrange: submass2  = " << subMass2ConstrCalc 
+      << endreq;
   
   // check the covariance matrix for obvious problems
   //   diagonal positive
@@ -1622,11 +1927,7 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   //    chisq, degrees of freedom
   constrVtx.setChi2(chis);
   
-  if(ntracks == 4){
-    
-    constrVtx.setNDoF(ntracks+4);
-    
-  }
+  constrVtx.setNDoF(ntracks+3);
   
   //    decay with constrained mass
   constrVtx.setType(Vertex::DecayWithMass);
@@ -1669,24 +1970,17 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   //   confidence level
   motherParticle.setConfLevel(1.);
   //   mass
-  motherParticle.setMass((*partProp).mass());
+  motherParticle.setMass(motherParticle.momentum().mag());
   //    massErr??  
   //    check ressonance
   
-  // hbar in MeV s
-  //float hbar = 6.58211889*pow(10,-22);
-  
-  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
-  
-  
-  //  if( (motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) < 
-  //                                   pow(10,-15))){
-  
-  if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)){
-    motherParticle.setIsResonance(true);
+  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)){
+    
+    motherParticle.setIsResonance(1);
+    
   }//isRessonance
   
-  //  motherParticle.setIsResonance(true);
+  //  motherParticle.setIsResonance(1);
   
   motherParticle.setEndVertex(&constrVtx);
   
@@ -1694,7 +1988,7 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   return StatusCode::SUCCESS;
 }
 
-// end of the second one ( fitWithTwoSubMass method )
+// end of the second one ( fitWithGeomAndTwoSubMass method )
 
 
 
@@ -1710,10 +2004,10 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
 // This method performs one iteration of the constrained fit for 3
 // or 4 tracks with one ressonance. 
 // It returns the parameters vector (e) and the covariance matrix (Ce) 
-// after one iteration of the contraint fit.  
+// after one iteration of the contrained fit.  
 //==================================================================
-StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
-                                           HepVector& mass, double massConstr,
+StatusCode LagrangeGeomVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
+                                           const ParticleVector& pDaughter,
                                            double subMassConstr,
                                            int dimCe, bool final) 
 {
@@ -1722,12 +2016,11 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   
   int ntracks = m_ntracks;
   HepMatrix B;
-  HepVector cte; 
-  
+  HepVector cte;
   
   if ( ntracks == 3) {
     HepMatrix B3(ntracks+1,dimCe,0);
-    HepVector cte3(ntracks+1); 
+    HepVector cte3(ntracks+1);
     
     B = B3;
     cte = cte3;
@@ -1742,162 +2035,62 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     cte = cte4;
   }
   
+  
   double p1 = e(5);
   double p2 = e(10);
-  double dm1 = mass(1);
-  double dm2 = mass(2);
+  
+  Particle* daughter1 = pDaughter[0];
+  Particle* daughter2 = pDaughter[1];
+  
+  double dm1 = daughter1->mass();
+  double dm2 = daughter2->mass();
   double subm = subMassConstr;
   
-  double p3, dm3, p4, dm4;
-  
-  if (( ntracks==3 ) || ( ntracks == 4)){
-    p3 = e(15);
-    dm3 = mass(3);
-  }
-  
-  if ( ntracks == 4) {
-    p4 = e(20);
-    dm4 = mass(4);
-  }
-  
-  
   //several combinations of momenta and slopes to abreviate calculus
-  
+  double p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2));  
   double s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
   double s22 = pow(e(8),2) + pow(e(9),2) + 1.0;  
+  double s12 = e(3)*e(8) + e(4)*e(9) + 1.0;
+  double co12 = s12 / sqrt( s11*s22 );
   
-  double p13, p23, s33, s13, s23, co13, co23;
+  double beta = ( pow(subm,2) - pow(dm1,2) - pow(dm2,2) ) / 2.0 ;
   
-  if (( ntracks == 3 ) || (ntracks == 4) ){
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-    
-  }
+  // Partial derivatives of 'sqrt' of momenta combinations.
   
-  double p14, p24, p34, s14, s24, s34, s44, co14, co24, co34;
+  double d_5sp12 = p1 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
+                              ( pow(p1,2) + pow(dm1,2) ) );
+  double d10sp12 = p2 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
+                              ( pow(p2,2) + pow(dm2,2) ) );
   
-  if ( ntracks == 4){
-    p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-    p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));
-    p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2));
-    s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-    s24 = e(8)*e(18) + e(9)*e(19) + 1.0;
-    s34 = e(13)*e(18) + e(14)*e(19) + 1.0;
-    s44 = pow(e(18),2) + pow(e(19),2) + 1.0;    
-    co14 = s14 / sqrt( s11*s44);
-    co24 = s24 / sqrt( s22*s44);
-    co34 = s34 / sqrt( s33*s44);
-    
-  }
+  // Partial derivatives for the cosines.
   
-  double beta;
-  
-  if( ntracks == 3 ) {
-    beta = ( pow(massConstr,2) - pow(subm,2) - pow(dm3,2) ) / 2.0 ;
-  } 
-  
-  if (ntracks == 4 ) {
-    beta = ( pow(massConstr,2) - pow(subm,2) - 
-             pow(dm3,2) - pow(dm4,2) ) / 2.0 ;
-  } 
-  
+  double d_3co12 = ( e(8) - e(3)*s12/s11 ) / sqrt( s11*s22 );
+  double d_4co12 = ( e(9) - e(4)*s12/s11 ) / sqrt( s11*s22 );
+  double d_8co12 = ( e(3) - e(8)*s12/s22 ) / sqrt( s11*s22 );
+  double d_9co12 = ( e(4) - e(9)*s12/s22 ) / sqrt( s11*s22 );
   
   // Independent constant vector in the Taylor expansion of the
-  // constraint equation. 
+  // constrained equation. 
   
   if ( ntracks == 3 ){
     cte(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
     cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-    cte(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));    
-    cte(4) = sqrt(p13) + sqrt(p23) - p1*p3*co13 - p2*p3*co23 - beta;
+    cte(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));       
+    cte(4) = sqrt(p12) - p1*p2*co12 - beta;
   }
   
   if ( ntracks == 4 ){
     cte(1) = (e(6)  - e(1))*(e(4) - e(9))  - (e(7)  - e(2))*(e(3) - e(8));
     cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));  
-    cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));    
+    cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));                    
     cte(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));    
-    cte(6) = sqrt(p13) + sqrt(p14) + sqrt(p23) + sqrt(p24) +
-      sqrt(p34) - p1*p3*co13 - p1*p4*co14 - p2*p3*co23
-      - p2*p4*co24 - p3*p4*co34 - beta;    
+    cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));     
+    cte(6) = sqrt(p12) - p1*p2*co12 - beta;    
   }
   
-  log << MSG::DEBUG << "lagrange constraint equations for one ressonance" 
+  log << MSG::DEBUG << "lagrange constrained equations for one ressonance" 
       << endreq;
   log << MSG::DEBUG << cte << endreq;
-  
-  
-  // Partial derivatives of 'sqrt' of momenta combinations.
-  
-  double d_5sp13,  d15sp13, d10sp23, d15sp23;
-  
-  if (( ntracks == 3 ) || (ntracks == 4) ){
-    d_5sp13 = p1 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p1,2) + pow(dm1,2) ) );
-    d15sp13 = p3 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );
-    d10sp23 = p2 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p2,2) + pow(dm2,2) ) );
-    d15sp23 = p3 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );
-  }
-  
-  double d_5sp14, d20sp14, d10sp24, d20sp24, d15sp34, d20sp34;
-  
-  if ( ntracks == 4 ){
-    d_5sp14 = p1 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p1,2) + pow(dm1,2) ) );
-    d20sp14 = p4 * sqrt( (pow(p1,2) + pow(dm1,2)) /
-                         ( pow(p4,2) + pow(dm4,2) ) );  
-    d10sp24 = p2 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p2,2) + pow(dm2,2) ) );
-    d20sp24 = p4 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                         ( pow(p4,2) + pow(dm4,2) ) );
-    d15sp34 = p3 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );    
-    d20sp34 = p4 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p4,2) + pow(dm4,2) ) );  
-  }
-  
-  
-  // Partial derivatives for the cosines.
-  
-  double d_3co13, d_4co13, d13co13, d14co13, d_8co23,d_9co23,d13co23,d14co23;
-  
-  if (( ntracks == 3 ) || ( ntracks == 4)) {
-    d_3co13 = ( e(13) - e(3)*s13/s11 ) / sqrt( s11*s33 );
-    d_4co13 = ( e(14) - e(4)*s13/s11 ) / sqrt( s11*s33 );
-    d13co13 = ( e(3) - e(13)*s13/s33 ) / sqrt( s11*s33 );
-    d14co13 = ( e(4) - e(14)*s13/s33 ) / sqrt( s11*s33 );
-    d_8co23 = ( e(13) - e(8)*s23/s22 ) / sqrt( s22*s33 );
-    d_9co23 = ( e(14) - e(9)*s23/s22 ) / sqrt( s22*s33 );
-    d13co23 = ( e(8) - e(13)*s23/s33 ) / sqrt( s22*s33 );
-    d14co23 = ( e(9) - e(14)*s23/s33 ) / sqrt( s22*s33 );
-  }
-  
-  double d_3co14, d_4co14, d18co14, d19co14,d_8co24, d_9co24, d18co24, d19co24,
-    d13co34,d14co34,d18co34,d19co34;
-  
-  if ( ntracks == 4) {
-    d_3co14 = ( e(18) - e(3)*s14/s11 ) / sqrt( s11*s44 );
-    d_4co14 = ( e(19) - e(4)*s14/s11 ) / sqrt( s11*s44 );
-    d18co14 = ( e(3) - e(18)*s14/s44 ) / sqrt( s11*s44 );
-    d19co14 = ( e(4) - e(19)*s14/s44 ) / sqrt( s11*s44 );
-    d_8co24 = ( e(18) - e(8)*s24/s22 ) / sqrt( s22*s44 );
-    d_9co24 = ( e(19) - e(9)*s24/s22 ) / sqrt( s22*s44 );
-    d18co24 = ( e(8) - e(18)*s24/s44 ) / sqrt( s22*s44 );
-    d19co24 = ( e(9) - e(19)*s24/s44 ) / sqrt( s22*s44 );
-    d13co34 = ( e(18) - e(13)*s34/s33) / sqrt( s33*s44 );
-    d14co34 = ( e(19) - e(14)*s34/s33) / sqrt( s33*s44 );
-    d18co34 = ( e(13) - e(18)*s34/s44) / sqrt( s33*s44 );
-    d19co34 = ( e(14) - e(19)*s34/s44) / sqrt( s33*s44 );
-  }
   
   // Constraint matrix in the linear aproximation
   
@@ -1921,7 +2114,7 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     B(2,14) =-B(2,4);
   }
   
-  if ( ntracks == 3) {
+  if ( ntracks == 3) {    
     
     B(3, 1) = e(14) - e(4);
     B(3, 2) = e(3)  - e(8);
@@ -1932,19 +2125,15 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     B(3,12) = -B(3,2);
     B(3,14) = -B(3,4);
     
-    B(4, 3) = - p1*p3*d_3co13;
-    B(4, 4) = - p1*p3*d_4co13;
-    B(4, 8) = - p2*p3*d_8co23;
-    B(4, 9) = - p2*p3*d_9co23;
-    B(4,13) = - p1*p3*d13co13 - p2*p3*d13co23;
-    B(4,14) = - p1*p3*d14co13 - p2*p3*d14co23;
-    B(4, 5) = d_5sp13 - p3*co13;
-    B(4,10) = d10sp23 - p3*co23;
-    B(4,15) = d15sp13 + d15sp23 - p1*co13 - p2*co23;
+    B(4, 3) = -p1*p2*d_3co12;
+    B(4, 4) = -p1*p2*d_4co12;
+    B(4, 8) = -p1*p2*d_8co12;
+    B(4, 9) = -p1*p2*d_9co12;
+    B(4, 5) = d_5sp12 - p2*co12;
+    B(4,10) = d10sp12 - p1*co12;    
   }
   
-  if ( ntracks == 4) {
-    
+  if ( ntracks == 4) {    
     B(3, 1) = e(19) - e(4);
     B(3, 2) = e(3)  - e(18);
     B(3, 3) = e(2)  - e(17);
@@ -1972,19 +2161,12 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     B(5,17) = - B(5, 2);
     B(5,19) = - B(5, 4);
     
-    B(6, 3) = - p1*p3*d_3co13 - p1*p4*d_3co14;
-    B(6, 4) = - p1*p3*d_4co13 - p1*p4*d_4co14;
-    B(6, 8) = - p2*p3*d_8co23 - p2*p4*d_8co24;
-    B(6, 9) = - p2*p3*d_9co23 - p2*p4*d_9co24;
-    B(6,13) = -p1*p3*d13co13 - p2*p3*d13co23 - p3*p4*d13co34;
-    B(6,14) = -p1*p3*d14co13 - p2*p3*d14co23 - p3*p4*d14co34;
-    B(6,18) = -p1*p4*d18co14 - p2*p4*d18co24 - p3*p4*d18co34;
-    B(6,19) = -p1*p4*d19co14 - p2*p4*d19co24 - p3*p4*d19co34;
-    
-    B(6, 5) = d_5sp13 + d_5sp14 - p3*co13 - p4*co14;
-    B(6,10) = d10sp23 + d10sp24 - p3*co23 - p4*co24;
-    B(6,15) = d15sp13 + d15sp23 + d15sp34 - p1*co13 - p2*co23 - p4*co34;
-    B(6,20) = d20sp14 + d20sp24 + d20sp34 - p1*co14 - p2*co24 - p3*co34;
+    B(6, 3) = -p1*p2*d_3co12;
+    B(6, 4) = -p1*p2*d_4co12;
+    B(6, 8) = -p1*p2*d_8co12;
+    B(6, 9) = -p1*p2*d_9co12;
+    B(6, 5) = d_5sp12 - p2*co12;
+    B(6,10) = d10sp12 - p1*co12;     
   }
   
   //  Du = Ce*Bt
@@ -1996,10 +2178,20 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   //  Dv = B*Ce*Bt
   HepSymMatrix  Dv =Ce.similarity(B);
   
+  log << MSG::DEBUG << "Dv = " << endreq;
+  
+  log << MSG::DEBUG << Dv << endreq;
+  
   //  Dvi = Dv inverse
   
   int inv;
   HepSymMatrix Dvi = Dv.inverse(inv);
+  
+  log << MSG::DEBUG << " inv = " << inv << endreq;
+  
+  log << MSG::DEBUG << "Dvi = " << endreq;
+  
+  log << MSG::DEBUG << Dvi << endreq;
   
   if ( inv != 0 ){
     log << MSG::DEBUG << "Dv inverse failure" << endreq;     
@@ -2054,8 +2246,9 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
 // It returns the parameters vector (e) and the covariance matrix (Ce) 
 // after one iteration of the contraint fit.  
 //==================================================================
-StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
-                                           HepVector& mass, double massConstr,
+StatusCode LagrangeGeomVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
+                                           const ParticleVector& pDaughter1,
+                                           const ParticleVector& pDaughter2,
                                            double subMass1Constr, 
                                            double subMass2Constr,
                                            int dimCe, bool final) 
@@ -2064,102 +2257,80 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   log << MSG::DEBUG << " ITERA !!! " << endreq;
   
   int ntracks = m_ntracks;  
-  HepMatrix B(ntracks+2,dimCe,0);
-  HepVector cte(ntracks+2);
+  HepMatrix B(ntracks+3,dimCe,0);
+  HepVector cte(ntracks+3);
   
   double p1 = e(5);
-  double p2 = e(10);
+  double p2 = e(10); 
   double p3 = e(15);
   double p4 = e(20);
-  double dm1 = mass(1);
-  double dm2 = mass(2); 
-  double dm3 = mass(3); 
-  double dm4 = mass(4);
+  
+  Particle* daughter1 = pDaughter1[0];
+  Particle* daughter2 = pDaughter1[1];
+  Particle* daughter3 = pDaughter2[0];
+  Particle* daughter4 = pDaughter2[1];
+  
+  double dm1 = daughter1->mass();
+  double dm2 = daughter2->mass();    
+  double dm3 = daughter3->mass();
+  double dm4 = daughter4->mass();
   double subm1 = subMass1Constr;
   double subm2 = subMass2Constr;
   
   //several combinations of momenta and slopes to abreviate calculus
   
+  double p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2));
   double s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
   double s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-  double s33 = pow(e(13),2) + pow(e(14),2) + 1.0;  
-  double s44 = pow(e(18),2) + pow(e(19),2) + 1.0;    
+  double s12 = e(3)*e(8) + e(4)*e(9) + 1.0;
+  double co12 = s12 / sqrt( s11*s22 );
   
-  double   p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-  double   p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-  double   p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-  double   p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));
-   
-  double   s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-  double   s23 = e(8)*e(13) + e(9)*e(14) + 1.0;
-  double   s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-  double   s24 = e(8)*e(18) + e(9)*e(19) + 1.0;
+  double p34 = p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2)); 
+  double s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
+  double s44 = pow(e(18),2) + pow(e(19),2) + 1.0; 
+  double s34 = e(13)*e(18) + e(14)*e(19) + 1.0; 
+  double co34 = s34 / sqrt( s33*s44);
   
-  double   co13 = s13 / sqrt( s11*s33 );
-  double   co23 = s23 / sqrt( s22*s33 );  
-  double   co14 = s14 / sqrt( s11*s44);
-  double   co24 = s24 / sqrt( s22*s44);
- 
-  double beta = ( pow(massConstr,2) - pow(subm1,2) - pow(subm2,2) ) / 2.0 ;
-  
+  double beta1 = ( pow(subm1,2) - pow(dm1,2) - pow(dm2,2) ) / 2.0 ; 
+  double beta2 = ( pow(subm2,2) - pow(dm3,2) - pow(dm4,2) ) / 2.0 ;
   
   // Independent constant vector in the Taylor expansion of the
   // constraint equation. 
   
   cte(1) = (e(6)  - e(1))*(e(4) - e(9))  - (e(7)  - e(2))*(e(3) - e(8));
   cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));  
-  cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));          
+  cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));              
   cte(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-  cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));      
-  cte(6) = sqrt(p13) + sqrt(p14) + sqrt(p23) + sqrt(p24) 
-    - p1*p3*co13 - p1*p4*co14 - p2*p3*co23
-    - p2*p4*co24 - beta;     
+  cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));     
+  cte(6) = sqrt( p12 ) - p1*p2*co12 - beta1;
+  cte(7) = sqrt( p34 ) - p3*p4*co34 - beta2;
   
-  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with"
-      << " two ressonances" << endreq;
+  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with two
+ ressonances" << endreq;
   log << MSG::DEBUG << cte << endreq;
-  
   
   // Partial derivatives of 'sqrt' of momenta combinations.
   
-  double   d_5sp13 = p1 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                                ( pow(p1,2) + pow(dm1,2) ) );
-  double   d15sp13 = p3 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
-                                ( pow(p3,2) + pow(dm3,2) ) );
-  double   d10sp23 = p2 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                                ( pow(p2,2) + pow(dm2,2) ) );
-  double   d15sp23 = p3 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                                ( pow(p3,2) + pow(dm3,2) ) );
-  
-  double    d_5sp14 = p1 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                                 ( pow(p1,2) + pow(dm1,2) ) );
-  double    d20sp14 = p4 * sqrt( (pow(p1,2) + pow(dm1,2)) /
-                                 ( pow(p4,2) + pow(dm4,2) ) );  
-  double    d10sp24 = p2 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                                 ( pow(p2,2) + pow(dm2,2) ) );
-  double    d20sp24 = p4 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                                 ( pow(p4,2) + pow(dm4,2) ) );
+  double d_5sp12 = p1 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
+                              ( pow(p1,2) + pow(dm1,2) ) );
+  double d10sp12 = p2 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
+                              ( pow(p2,2) + pow(dm2,2) ) );
+  double d15sp34 = p3 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
+                              ( pow(p3,2) + pow(dm3,2) ) );    
+  double d20sp34 = p4 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
+                              ( pow(p4,2) + pow(dm4,2) ) ); 			      
   
   // Partial derivatives for the cosines.
   
-  double   d_3co13 = ( e(13) - e(3)*s13/s11 ) / sqrt( s11*s33 );
-  double   d_4co13 = ( e(14) - e(4)*s13/s11 ) / sqrt( s11*s33 );
-  double   d13co13 = ( e(3) - e(13)*s13/s33 ) / sqrt( s11*s33 );
-  double   d14co13 = ( e(4) - e(14)*s13/s33 ) / sqrt( s11*s33 );
-  double   d_8co23 = ( e(13) - e(8)*s23/s22 ) / sqrt( s22*s33 );
-  double   d_9co23 = ( e(14) - e(9)*s23/s22 ) / sqrt( s22*s33 );
-  double   d13co23 = ( e(8) - e(13)*s23/s33 ) / sqrt( s22*s33 );
-  double   d14co23 = ( e(9) - e(14)*s23/s33 ) / sqrt( s22*s33 );
-    
-  double    d_3co14 = ( e(18) - e(3)*s14/s11 ) / sqrt( s11*s44 );
-  double    d_4co14 = ( e(19) - e(4)*s14/s11 ) / sqrt( s11*s44 );
-  double    d18co14 = ( e(3) - e(18)*s14/s44 ) / sqrt( s11*s44 );
-  double    d19co14 = ( e(4) - e(19)*s14/s44 ) / sqrt( s11*s44 );
-  double    d_8co24 = ( e(18) - e(8)*s24/s22 ) / sqrt( s22*s44 );
-  double    d_9co24 = ( e(19) - e(9)*s24/s22 ) / sqrt( s22*s44 );
-  double    d18co24 = ( e(8) - e(18)*s24/s44 ) / sqrt( s22*s44 );
-  double    d19co24 = ( e(9) - e(19)*s24/s44 ) / sqrt( s22*s44 );
- 
+  double d_3co12 = ( e(8) - e(3)*s12/s11 ) / sqrt( s11*s22 );
+  double d_4co12 = ( e(9) - e(4)*s12/s11 ) / sqrt( s11*s22 );
+  double d_8co12 = ( e(3) - e(8)*s12/s22 ) / sqrt( s11*s22 );
+  double d_9co12 = ( e(4) - e(9)*s12/s22 ) / sqrt( s11*s22 );
+  double d13co34 = ( e(18) - e(13)*s34/s33) / sqrt( s33*s44 );
+  double d14co34 = ( e(19) - e(14)*s34/s33) / sqrt( s33*s44 );
+  double d18co34 = ( e(13) - e(18)*s34/s44) / sqrt( s33*s44 );
+  double d19co34 = ( e(14) - e(19)*s34/s44) / sqrt( s33*s44 );
+  
   // Constraint matrix in the linear aproximation
   
   B(1,1) = e(9) - e(4);
@@ -2207,20 +2378,20 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   B(5,17) = - B(5, 2);
   B(5,19) = - B(5, 4); 
   
-  B(6, 3) = - p1*p3*d_3co13 - p1*p4*d_3co14;
-  B(6, 4) = - p1*p3*d_4co13 - p1*p4*d_4co14;
-  B(6, 8) = - p2*p3*d_8co23 - p2*p4*d_8co24;
-  B(6, 9) = - p2*p3*d_9co23 - p2*p4*d_9co24;
-  B(6,13) = -p1*p3*d13co13 - p2*p3*d13co23 ;
-  B(6,14) = -p1*p3*d14co13 - p2*p3*d14co23 ;
-  B(6,18) = -p1*p4*d18co14 - p2*p4*d18co24 ;
-  B(6,19) = -p1*p4*d19co14 - p2*p4*d19co24 ;
   
-  B(6, 5) = d_5sp13 + d_5sp14 - p3*co13 - p4*co14;
-  B(6,10) = d10sp23 + d10sp24 - p3*co23 - p4*co24;
-  B(6,15) = d15sp13 + d15sp23 - p1*co13 - p2*co23;
-  B(6,20) = d20sp14 + d20sp24 - p1*co14 - p2*co24;
+  B(6, 3) = -p1*p2*d_3co12;
+  B(6, 4) = -p1*p2*d_4co12;
+  B(6, 8) = -p1*p2*d_8co12;
+  B(6, 9) = -p1*p2*d_9co12;
+  B(6, 5) = d_5sp12 - p2*co12;
+  B(6,10) = d10sp12 - p1*co12;
   
+  B(7, 3) = -p3*p4*d13co34;
+  B(7, 4) = -p3*p4*d14co34;
+  B(7, 8) = -p3*p4*d18co34;
+  B(7, 9) = -p3*p4*d19co34;
+  B(7, 5) = d15sp34 - p4*co34;
+  B(7,10) = d20sp34 - p3*co34;  
   
   //  Du = Ce*Bt
   
@@ -2287,10 +2458,9 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
 // This method performs one iteration of the constrained fit for 2, 3
 // or 4 tracks without ressonance. 
 // It returns the parameters vector (e) and the covariance matrix (Ce) 
-// after one iteration of the contraint fit.  
+// after one iteration of the contrained fit.  
 //==================================================================
-StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
-                                           HepVector& mass, double massConstr,
+StatusCode LagrangeGeomVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
                                            int dimCe, bool final) 
 {
   MsgStream log(msgSvc(), name());
@@ -2301,16 +2471,16 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   HepVector cte;
   
   if ( ntracks == 2) {
-    HepMatrix B2(ntracks,dimCe,0);
-    HepVector cte2(ntracks);
+    HepMatrix B2(ntracks-1,dimCe,0);
+    HepVector cte2(ntracks-1);
     
     B = B2;
     cte = cte2;
   }
   
   if ( ntracks == 3) {
-    HepMatrix B3(ntracks+1,dimCe,0);
-    HepVector cte3(ntracks+1);
+    HepMatrix B3(ntracks,dimCe,0);
+    HepVector cte3(ntracks);
     
     B = B3;
     cte = cte3;
@@ -2318,187 +2488,36 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   
   
   if ( ntracks == 4) {
-    HepMatrix B4(ntracks+2,dimCe,0);
-    HepVector cte4(ntracks+2);
+    HepMatrix B4(ntracks+1,dimCe,0);
+    HepVector cte4(ntracks+1);
     
     B = B4;
     cte = cte4;
   }  
   
-  
-  double p1 = e(5);
-  double p2 = e(10);
-  double dm1 = mass(1);
-  double dm2 = mass(2);
-  double p3, dm3, p4, dm4;
-  
-  if (( ntracks==3 ) || ( ntracks == 4)){
-    p3 = e(15);
-    dm3 = mass(3);
-  }
-  
-  if ( ntracks == 4) {
-    p4 = e(20);
-    dm4 = mass(4);
-  }
-  
-  
-  //several combinations of momenta and slopes to abreviate calculus
-  
-  double p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2));
-  double s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-  double s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-  double s12 = e(3)*e(8) + e(4)*e(9) + 1.0;
-  double co12 = s12 / sqrt( s11*s22 );
-  double p13, p23, s33, s13, s23, co13, co23;
-  
-  if (( ntracks == 3 ) || (ntracks == 4) ){
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-    
-  }
-  
-  double p14, p24, p34, s14, s24, s34, s44, co14, co24, co34;
-  
-  if ( ntracks == 4){
-    p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-    p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));
-    p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2));
-    s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-    s24 = e(8)*e(18) + e(9)*e(19) + 1.0;
-    s34 = e(13)*e(18) + e(14)*e(19) + 1.0;
-    s44 = pow(e(18),2) + pow(e(19),2) + 1.0;    
-    co14 = s14 / sqrt( s11*s44);
-    co24 = s24 / sqrt( s22*s44);
-    co34 = s34 / sqrt( s33*s44);    
-  }
-  
-  double beta;
-  if (ntracks == 2) { 
-    beta = ( pow(massConstr,2) - pow(dm1,2) - pow(dm2,2) ) / 2.0 ;
-  }
-  
-  
-  if( ntracks == 3 ) {
-    beta = ( pow(massConstr,2) - pow(dm1,2) - pow(dm2,2) - 
-             pow(dm3,2) ) / 2.0 ;
-  } 
-  
-  if (ntracks == 4 ) {
-    beta = ( pow(massConstr,2) - pow(dm1,2) - pow(dm2,2) - 
-             pow(dm3,2) - pow(dm4,2) ) / 2.0 ;
-  } 
-  
-  
   // Independent constant vector in the Taylor expansion of the
-  // constraint equation. 
+  // constrained equation. 
   
   if ( ntracks == 2 ){
-    cte(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    cte(2) = sqrt(p12) - p1*p2*co12 - beta;
+    cte(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));    
   }
-  
-  
   
   if ( ntracks == 3 ){
     cte(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));  
-    cte(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));         
-    cte(4) = sqrt(p12) + sqrt(p13) + sqrt(p23) -
-      p1*p2*co12 - p1*p3*co13 - p2*p3*co23 - beta;
+    cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));    
+    cte(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));    
   }
   
   if ( ntracks == 4 ){
     cte(1) = (e(6)  - e(1))*(e(4) - e(9))  - (e(7)  - e(2))*(e(3) - e(8));
     cte(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));  
-    cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));     
+    cte(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));      
     cte(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));          
-    cte(6) = sqrt(p12) + sqrt(p13) + sqrt(p14) + sqrt(p23) + sqrt(p24) +
-      sqrt(p34) - p1*p2*co12 - p1*p3*co13 - p1*p4*co14 - p2*p3*co23
-      - p2*p4*co24 - p3*p4*co34 - beta;    
+    cte(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));     
   }
   
-  log << MSG::DEBUG << "lagrange constraint equations " << endreq;
+  log << MSG::DEBUG << "lagrange constrained equations " << endreq;
   log << MSG::DEBUG << cte << endreq;
-  
-  
-  // Partial derivatives of 'sqrt' of momenta combinations.
-  
-  double d_5sp12 = p1 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                              ( pow(p1,2) + pow(dm1,2) ) );
-  double d10sp12 = p2 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
-                              ( pow(p2,2) + pow(dm2,2) ) );
-  
-  double d_5sp13,  d15sp13, d10sp23, d15sp23;
-  if (( ntracks == 3 ) || (ntracks == 4) ){
-    d_5sp13 = p1 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p1,2) + pow(dm1,2) ) );
-    d15sp13 = p3 * sqrt( (pow(p1,2) + pow(dm1,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );
-    d10sp23 = p2 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p2,2) + pow(dm2,2) ) );
-    d15sp23 = p3 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );
-  }
-  
-  double d_5sp14, d20sp14, d10sp24, d20sp24, d15sp34, d20sp34;
-  
-  if ( ntracks == 4 ){
-    d_5sp14 = p1 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p1,2) + pow(dm1,2) ) );
-    d20sp14 = p4 * sqrt( (pow(p1,2) + pow(dm1,2)) /
-                         ( pow(p4,2) + pow(dm4,2) ) );  
-    d10sp24 = p2 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p2,2) + pow(dm2,2) ) );
-    d20sp24 = p4 * sqrt( (pow(p2,2) + pow(dm2,2)) / 
-                         ( pow(p4,2) + pow(dm4,2) ) );
-    d15sp34 = p3 * sqrt( (pow(p4,2) + pow(dm4,2)) / 
-                         ( pow(p3,2) + pow(dm3,2) ) );    
-    d20sp34 = p4 * sqrt( (pow(p3,2) + pow(dm3,2)) / 
-                         ( pow(p4,2) + pow(dm4,2) ) );  
-  }
-  
-  
-  // Partial derivatives for the cosines.
-  
-  double d_3co12 = ( e(8) - e(3)*s12/s11 ) / sqrt( s11*s22 );
-  double d_4co12 = ( e(9) - e(4)*s12/s11 ) / sqrt( s11*s22 );
-  double d_8co12 = ( e(3) - e(8)*s12/s22 ) / sqrt( s11*s22 );
-  double d_9co12 = ( e(4) - e(9)*s12/s22 ) / sqrt( s11*s22 );
-  double d_3co13, d_4co13, d13co13, d14co13, d_8co23,d_9co23,d13co23,d14co23;
-  if (( ntracks == 3 ) || ( ntracks == 4)) {
-    d_3co13 = ( e(13) - e(3)*s13/s11 ) / sqrt( s11*s33 );
-    d_4co13 = ( e(14) - e(4)*s13/s11 ) / sqrt( s11*s33 );
-    d13co13 = ( e(3) - e(13)*s13/s33 ) / sqrt( s11*s33 );
-    d14co13 = ( e(4) - e(14)*s13/s33 ) / sqrt( s11*s33 );
-    d_8co23 = ( e(13) - e(8)*s23/s22 ) / sqrt( s22*s33 );
-    d_9co23 = ( e(14) - e(9)*s23/s22 ) / sqrt( s22*s33 );
-    d13co23 = ( e(8) - e(13)*s23/s33 ) / sqrt( s22*s33 );
-    d14co23 = ( e(9) - e(14)*s23/s33 ) / sqrt( s22*s33 );
-  }
-  double d_3co14, d_4co14, d18co14, d19co14,d_8co24, d_9co24, d18co24, d19co24,
-    d13co34,d14co34,d18co34,d19co34;
-  if ( ntracks == 4) {
-    d_3co14 = ( e(18) - e(3)*s14/s11 ) / sqrt( s11*s44 );
-    d_4co14 = ( e(19) - e(4)*s14/s11 ) / sqrt( s11*s44 );
-    d18co14 = ( e(3) - e(18)*s14/s44 ) / sqrt( s11*s44 );
-    d19co14 = ( e(4) - e(19)*s14/s44 ) / sqrt( s11*s44 );
-    d_8co24 = ( e(18) - e(8)*s24/s22 ) / sqrt( s22*s44 );
-    d_9co24 = ( e(19) - e(9)*s24/s22 ) / sqrt( s22*s44 );
-    d18co24 = ( e(8) - e(18)*s24/s44 ) / sqrt( s22*s44 );
-    d19co24 = ( e(9) - e(19)*s24/s44 ) / sqrt( s22*s44 );
-    d13co34 = ( e(18) - e(13)*s34/s33) / sqrt( s33*s44 );
-    d14co34 = ( e(19) - e(14)*s34/s33) / sqrt( s33*s44 );
-    d18co34 = ( e(13) - e(18)*s34/s44) / sqrt( s33*s44 );
-    d19co34 = ( e(14) - e(19)*s34/s44) / sqrt( s33*s44 );
-  }
-  
   
   // Constraint matrix in the linear aproximation
   B(1,1) = e(9) - e(4);
@@ -2509,15 +2528,6 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   B(1,7) =-B(1,2);
   B(1,8) =-B(1,3);
   B(1,9) =-B(1,4);
-  
-  if ( ntracks == 2 ) {
-    B(2, 3) = -p1*p2*d_3co12;
-    B(2, 4) = -p1*p2*d_4co12;
-    B(2, 8) = -p1*p2*d_8co12;
-    B(2, 9) = -p1*p2*d_9co12;
-    B(2, 5) = d_5sp12 - p2*co12;
-    B(2,10) = d10sp12 - p1*co12;
-  }
   
   if (( ntracks == 3 ) || (ntracks == 4)){
     B(2, 1) = e(14) - e(4);
@@ -2531,7 +2541,6 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   }
   
   if ( ntracks == 3) {
-    
     B(3, 1) = e(14) - e(4);
     B(3, 2) = e(3)  - e(8);
     B(3, 3) = e(2)  - e(12);
@@ -2539,21 +2548,10 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     B(3,6) = -B(3,1);
     B(3,8) = -B(3,3);
     B(3,12) = -B(3,2);
-    B(3,14) = -B(3,4);
-    
-    B(4, 3) = -p1*p2*d_3co12 - p1*p3*d_3co13;
-    B(4, 4) = -p1*p2*d_4co12 - p1*p3*d_4co13;
-    B(4, 8) = -p1*p2*d_8co12                   - p2*p3*d_8co23;
-    B(4, 9) = -p1*p2*d_9co12                   - p2*p3*d_9co23;
-    B(4,13) =                  - p1*p3*d13co13 - p2*p3*d13co23;
-    B(4,14) =                  - p1*p3*d14co13 - p2*p3*d14co23;
-    B(4, 5) = d_5sp12 + d_5sp13 - p2*co12 - p3*co13;
-    B(4,10) = d10sp12 + d10sp23 - p1*co12 - p3*co23;
-    B(4,15) = d15sp13 + d15sp23 - p1*co13 - p2*co23;
+    B(3,14) = -B(3,4);  
   }
   
   if ( ntracks == 4) {
-    
     B(3, 1) = e(19) - e(4);
     B(3, 2) = e(3)  - e(18);
     B(3, 3) = e(2)  - e(17);
@@ -2580,20 +2578,6 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     B(5,8) = - B(5, 3);
     B(5,17) = - B(5, 2);
     B(5,19) = - B(5, 4); 
-    
-    B(6, 3) = -p1*p2*d_3co12 - p1*p3*d_3co13 - p1*p4*d_3co14;
-    B(6, 4) = -p1*p2*d_4co12 - p1*p3*d_4co13 - p1*p4*d_4co14;
-    B(6, 8) = -p1*p2*d_8co12 - p2*p3*d_8co23 - p2*p4*d_8co24;
-    B(6, 9) = -p1*p2*d_9co12 - p2*p3*d_9co23 - p2*p4*d_9co24;
-    B(6,13) = -p1*p3*d13co13 - p2*p3*d13co23 - p3*p4*d13co34;
-    B(6,14) = -p1*p3*d14co13 - p2*p3*d14co23 - p3*p4*d14co34;
-    B(6,18) = -p1*p4*d18co14 - p2*p4*d18co24 - p3*p4*d18co34;
-    B(6,19) = -p1*p4*d19co14 - p2*p4*d19co24 - p3*p4*d19co34;
-    
-    B(6, 5) = d_5sp12 + d_5sp13 + d_5sp14 - p2*co12 - p3*co13 - p4*co14;
-    B(6,10) = d10sp12 + d10sp23 + d10sp24 - p1*co12 - p3*co23 - p4*co24;
-    B(6,15) = d15sp13 + d15sp23 + d15sp34 - p1*co13 - p2*co23 - p4*co34;
-    B(6,20) = d20sp14 + d20sp24 + d20sp34 - p1*co14 - p2*co24 - p3*co34;
   }
   
   //  Du = Ce*Bt
@@ -2607,8 +2591,14 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   
   //  Dvi = Dv inverse
   
+  log << MSG::DEBUG << " Dv = " << endreq;
+  log << MSG::DEBUG << Dv << endreq;
+  
   int inv;
   HepSymMatrix Dvi = Dv.inverse(inv);
+  
+  log << MSG::DEBUG << " Dvi = " << Dvi <<
+    endreq;
   
   if ( inv != 0 ){
     log << MSG::DEBUG << "Dv inverse failure" << endreq;     
@@ -2623,9 +2613,9 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
   
   HepVector de = Dw*cte;
   
-  //  log << MSG::DEBUG << "de - track parameters variation " << endreq;
+  //    log << MSG::DEBUG << "de - track parameters variation " << endreq;
   
-  //  log << MSG::DEBUG << de << endreq;
+  //    log << MSG::DEBUG << de << endreq;
   
   // update 'e' values acording to the fit result (iter. mode)
   
@@ -2661,125 +2651,73 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
 // This method evaluates how well the constrained equations are satisfied
 // at a given iteration. This method works for the case or 3 or 4 
 // tracks with one ressonance. 
-// It returns the invariant mass at this step ( = massConstrCalc ) and 
-// the difference in the estimated z-vertex ( = diffZver ).
+// It returns the invariant sub mass at this step ( = submassConstrCalc ) and 
+// the difference in the estimated z-vertex ( = diffZVer ).
 //==================================================================
 
-StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
-                                           double subMassConstr,  
-                                           double&  massConstrCalc, 
-                                           HepVector&  diffZver)
+StatusCode LagrangeGeomVertexFitter::evalu(HepVector& e, 
+                                           const ParticleVector& pDaughter,
+                                           double&  subMassConstrCalc, 
+                                           HepVector&  diffZVer)
 {
   MsgStream log(msgSvc(), name());
   
   log << MSG::DEBUG << " EVALU !!! " << endreq;
   
-  double dm1 = mass(1);
-  double dm2 = mass(2);
-  double dm3;
-  double p1  = e(5);
-  double p2  = e(10);
-  double p3;
-  double subm = subMassConstr;
-  
   int ntracks = m_ntracks;
   
-  if (( ntracks == 3 ) || ( ntracks == 4) ) {
-    p3  = e(15);
-    dm3 = mass(3);
-  }
+  Particle* daughter1 = pDaughter[0];
+  Particle* daughter2 = pDaughter[1];
   
-  double p4;
-  double dm4;
+  double dm1 = daughter1->mass();
+  double dm2 = daughter2->mass();  
+  double p1  = e(5);
+  double p2  = e(10);  
+  
+  subMassConstrCalc = 0.0;
+  diffZVer(6,0);
+  
+  double p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2) );
+  double s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
+  double s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
+  double s12 = e(3)*e(8) + e(4)*e(9) + 1.0;   
+  double co12 = s12 / sqrt( s11*s22 );
+  
+  subMassConstrCalc = pow(dm1,2) + pow(dm2,2) + 2.*sqrt(p12) - 2.*p1*p2*co12;
+  subMassConstrCalc = sqrt(subMassConstrCalc);
+  
+  if ( ntracks == 3) {
+    
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs(diffZVer(1));
+    
+    diffZVer(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
+    diffZVer(2) = fabs(diffZVer(2));
+    
+    diffZVer(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
+    diffZVer(3) = fabs(diffZVer(3));
+    
+  } // if ntracks = 3
   
   if ( ntracks == 4) {
-    p4 = e(20);  
-    dm4 = mass(4);
-  }
+    
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs( diffZVer(1));
+    
+    diffZVer(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
+    diffZVer(2) = fabs( diffZVer(2));
+    
+    diffZVer(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
+    diffZVer(3) = fabs( diffZVer(3));
+    
+    diffZVer(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
+    diffZVer(4) = fabs( diffZVer(4));
+    
+    diffZVer(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
+    diffZVer(5) = fabs( diffZVer(5));
+    
+  } // if ntracks = 4
   
-  massConstrCalc = 0.0;
-  diffZver(6,0); 
-  
-  double s11, s22;
-  double p13, p23, s33, s13, s23, co13, co23;
-  
-  double p14, p24, p34, s14, s24, s34, s44, co14, co24, co34;
-  
-  if ( ntracks == 3 ){
-    
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-    s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;    
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;    
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-    
-    massConstrCalc = pow(subm,2) + pow(dm3,2)
-      + 2.*( sqrt(p13) + sqrt(p23) )
-      - 2.*( p1*p3*co13  + p2*p3*co23  );
-    massConstrCalc = sqrt(massConstrCalc);
-    
-    diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    diffZver(1) = fabs(diffZver(1));
-    
-    diffZver(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-    diffZver(2) = fabs(diffZver(2));
-    
-    diffZver(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    diffZver(3) = fabs(diffZver(3));
-    
-  }
-  
-  else if ( ntracks == 4) {
-    
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-    s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;   
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;  
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-      
-    p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-    p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));
-    p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2));
-    s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-    s24 = e(8)*e(18) + e(9)*e(19) + 1.0;
-    s34 = e(13)*e(18) + e(14)*e(19) + 1.0;
-    s44 = pow(e(18),2) + pow(e(19),2) + 1.0;
-    co14 = s14 / sqrt( s11*s44);
-    co24 = s24 / sqrt( s22*s44);
-    co34 = s34 / sqrt( s33*s44);
-
-    massConstrCalc = pow(subm,2) + pow(dm3,2) + pow( dm4,2)
-      + 2.0*( sqrt(p13) + sqrt(p14) + sqrt(p23)  +
-              sqrt(p24) + sqrt(p34) )
-      - 2.*( p1*p3*co13  + p1*p4*co14 + p2*p3*co23 + 
-             p2*p4*co24  + p3*p4*co34 );
-    massConstrCalc = sqrt(massConstrCalc);
-    
-    
-    diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    diffZver(1) = fabs(diffZver(1));
-    
-    diffZver(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-    diffZver(2) = fabs(diffZver(2));
-    
-    diffZver(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
-    diffZver(3) = fabs(diffZver(3));
-    
-    diffZver(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    diffZver(4) = fabs(diffZver(4));
-    
-    diffZver(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
-    diffZver(5) = fabs(diffZver(5));
-    
-  }
   
   return StatusCode::SUCCESS;
 }
@@ -2798,15 +2736,17 @@ StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
 // This method evaluates how well the constrained equations are satisfied
 // at a given iteration. This method works for the case of 4 
 // tracks with two ressonances. 
-// It returns the invariant mass at this step ( = massConstrCalc ) and 
-// the difference in the estimated z-vertex ( = diffZver ).
+// It returns the invariant sub masses at this step ( = subMass1ConstrCalc 
+// and subMass2ConstrCalc ) and the difference in the estimated 
+// z-vertex ( = diffZVer ).
 //==================================================================
 
-StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
-                                           double subMass1Constr,
-                                           double subMass2Constr,
-                                           double&  massConstrCalc, 
-                                           HepVector&  diffZver)					   
+StatusCode LagrangeGeomVertexFitter::evalu(HepVector& e, 
+                                           const ParticleVector& pDaughter1,
+                                           const ParticleVector& pDaughter2,
+                                           double&  subMass1ConstrCalc, 
+                                           double&  subMass2ConstrCalc,
+                                           HepVector&  diffZVer)					   
   
   
 {
@@ -2814,66 +2754,63 @@ StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
   
   log << MSG::DEBUG << " EVALU !!! " << endreq;
   
-  double dm1 = mass(1);
-  double dm2 = mass(2);
-  double dm3 = mass(3);
-  double dm4 = mass(4);
-  double p1  = e(5);
-  double p2  = e(10);
+  int ntracks = m_ntracks;
+  
+  Particle* daughter1 = pDaughter1[0];
+  Particle* daughter2 = pDaughter1[1];
+  Particle* daughter3 = pDaughter2[0];
+  Particle* daughter4 = pDaughter2[1];
+  
+  double dm1 = daughter1->mass();
+  double dm2 = daughter2->mass();
+  double dm3 = daughter3->mass();
+  double dm4 = daughter4->mass();
+  double p1 = e(5);
+  double p2 = e(10);
   double p3 = e(15);
   double p4 = e(20);  
-  double subm1 = subMass1Constr;
-  double subm2 = subMass2Constr;
-
-  // int ntracks = m_ntracks;
   
-  massConstrCalc = 0.0;
-  diffZver(6,0); 
+  subMass1ConstrCalc = 0.0;
+  subMass2ConstrCalc = 0.0;
+  diffZVer(6,0);
   
-  double s11, s22;
-  double p13, p23, s33, s13, s23, co13, co23;
+  double   p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2) );
+  double   s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
+  double   s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
+  double   s12 = e(3)*e(8) + e(4)*e(9) + 1.0;   
+  double   co12 = s12 / sqrt( s11*s22 );
   
-  double p14, p24, s14, s24, s44, co14, co24;
+  subMass1ConstrCalc = pow(dm1,2) + pow(dm2,2) + 2.*sqrt(p12) - 
+    2.*p1*p2*co12;
+  subMass1ConstrCalc = sqrt(subMass1ConstrCalc);
   
-  p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-  p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-  s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-  s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-  s33 = pow(e(13),2) + pow(e(14),2) + 1.0;   
-  s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-  s23 = e(8)*e(13) + e(9)*e(14) + 1.0;   
-  co13 = s13 / sqrt( s11*s33 );
-  co23 = s23 / sqrt( s22*s33 );
+  double   p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2));
+  double   s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
+  double   s44 = pow(e(18),2) + pow(e(19),2) + 1.0;
+  double   s34 = e(13)*e(18) + e(14)*e(19) + 1.0;
+  double   co34 = s34 / sqrt( s33*s44);
   
-  p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-  p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));   
-  s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-  s24 = e(8)*e(18) + e(9)*e(19) + 1.0;    
-  s44 = pow(e(18),2) + pow(e(19),2) + 1.0;
-  co14 = s14 / sqrt( s11*s44);
-  co24 = s24 / sqrt( s22*s44);    
+  subMass2ConstrCalc = pow(dm3,2) + pow(dm4,2) + 2.*sqrt(p34) - 2.*p3*p4*co34;
+  subMass2ConstrCalc = sqrt(subMass2ConstrCalc);
   
-  massConstrCalc = pow(subm1,2) + pow(subm2,2) 
-    + 2.0*( sqrt(p13) + sqrt(p14) + sqrt(p23)  +
-            sqrt(p24) )
-    - 2.*( p1*p3*co13  + p1*p4*co14 + p2*p3*co23 + 
-           p2*p4*co24 );
-  massConstrCalc = sqrt(massConstrCalc);
-  
-  diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-  diffZver(1) = fabs(diffZver(1));
-  
-  diffZver(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-  diffZver(2) = fabs(diffZver(2));
-  
-  diffZver(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
-  diffZver(3) = fabs(diffZver(3));
-  
-  diffZver(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-  diffZver(4) = fabs(diffZver(4));
-  
-  diffZver(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
-  diffZver(5) = fabs(diffZver(5));
+  if ( ntracks == 4) {
+    
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs( diffZVer(1));
+    
+    diffZVer(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
+    diffZVer(2) = fabs( diffZVer(2));
+    
+    diffZVer(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
+    diffZVer(3) = fabs( diffZVer(3));
+    
+    diffZVer(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
+    diffZVer(4) = fabs( diffZVer(4));
+    
+    diffZVer(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
+    diffZVer(5) = fabs( diffZVer(5));
+    
+  } // if ntracks = 4
   
   return StatusCode::SUCCESS;
 }
@@ -2892,140 +2829,53 @@ StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
 // This method evaluates how well the constrained equations are satisfied
 // at a given iteration. This method works for the case of 2, 3 or 4 
 // tracks without ressonances. 
-// It returns the invariant mass at this step ( = massConstrCalc ) and 
-// the difference in the estimated z-vertex ( = diffZver ).
+// It returns the difference in the estimated z-vertex ( = diffZVer ).
 //==================================================================
 
-StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
-                                           double&  massConstrCalc, 
-                                           HepVector&  diffZver)
+StatusCode LagrangeGeomVertexFitter::evalu(HepVector& e, HepVector&  diffZVer)
 {
   MsgStream log(msgSvc(), name());
   
   log << MSG::DEBUG << " EVALU !!! " << endreq;
   
-  double dm1 = mass(1);
-  double dm2 = mass(2);
-  double dm3;
-  double p1  = e(5);
-  double p2  = e(10);
-  double p3;
-  
   int ntracks = m_ntracks;
-  if (( ntracks == 3 ) || ( ntracks == 4) ) {
-    p3  = e(15);
-    dm3 = mass(3);
+  
+  diffZVer(6,0);
+  
+  if ( ntracks == 2 ) {   
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs( diffZVer(1) );
   }
   
-  double p4;
-  double dm4;
-  
-  if ( ntracks == 4) {
-    p4 = e(20);  
-    dm4 = mass(4);
-  }
-  
-  
-  massConstrCalc = 0.0;
-  diffZver(6,0);   
-  
-  double p12, s11, s22, s12, co12;
-  double p13, p23, s33, s13, s23, co13, co23;
-  
-  double p14, p24, p34, s14, s24, s34, s44, co14, co24, co34;
-  
-  if ( ntracks == 2 ) {
-    p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2) );
-    s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-    s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-    s12 = e(3)*e(8) + e(4)*e(9) + 1.0;   
-    co12 = s12 / sqrt( s11*s22 );
+  if ( ntracks == 3 ){ 
     
-    massConstrCalc = pow(dm1,2) + pow(dm2,2) + 2.*sqrt(p12) - 2.*p1*p2*co12;
-    massConstrCalc = sqrt(massConstrCalc);
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs(diffZVer(1));
     
-    diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    diffZver(1) = fabs( diffZver(1) );
-  }
-  else if ( ntracks == 3 ){
+    diffZVer(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
+    diffZVer(2) = fabs(diffZVer(2));
     
-    p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2) );
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-    s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
-    s12 = e(3)*e(8) + e(4)*e(9) + 1.0;
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;
-    co12 = s12 / sqrt( s11*s22 );
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-      
-    massConstrCalc = pow(dm1,2) + pow(dm2,2) + pow(dm3,2)
-      + 2.*( sqrt(p12) + sqrt(p13) + sqrt(p23) )
-      - 2.*( p1*p2*co12  + p1*p3*co13  + p2*p3*co23  );
-    massConstrCalc = sqrt(massConstrCalc);
-    
-    diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    diffZver(1) = fabs(diffZver(1));
-    
-    diffZver(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-    diffZver(2) = fabs(diffZver(2));
-    
-    diffZver(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    diffZver(3) = fabs(diffZver(3));
-    
+    diffZVer(3) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
+    diffZVer(3) = fabs(diffZVer(3));
     
   }
   
-  else if ( ntracks == 4) {
+  if ( ntracks == 4) {   
     
-    p12 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p2,2) + pow(dm2,2) );
-    p13 = ( pow(p1,2) + pow(dm1,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    p23 = ( pow(p2,2) + pow(dm2,2) ) * ( pow(p3,2) + pow(dm3,2) );
-    s11 = pow(e(3),2) + pow(e(4),2) + 1.0;
-    s22 = pow(e(8),2) + pow(e(9),2) + 1.0;
-    s33 = pow(e(13),2) + pow(e(14),2) + 1.0;
-    s12 = e(3)*e(8) + e(4)*e(9) + 1.0;
-    s13 = e(3)*e(13) + e(4)*e(14) + 1.0;
-    s23 = e(8)*e(13) + e(9)*e(14) + 1.0;
-    co12 = s12 / sqrt( s11*s22 );
-    co13 = s13 / sqrt( s11*s33 );
-    co23 = s23 / sqrt( s22*s33 );
-      
-    p14 = (pow(p1,2) + pow(dm1,2)) * (pow(p4,2) + pow(dm4,2));
-    p24 = (pow(p2,2) + pow(dm2,2)) * (pow(p4,2) + pow(dm4,2));
-    p34 = (pow(p3,2) + pow(dm3,2)) * (pow(p4,2) + pow(dm4,2));
-    s14 = e(3)*e(18) + e(4)*e(19) + 1.0;
-    s24 = e(8)*e(18) + e(9)*e(19) + 1.0;
-    s34 = e(13)*e(18) + e(14)*e(19) + 1.0;
-    s44 = pow(e(18),2) + pow(e(19),2) + 1.0;
-    co14 = s14 / sqrt( s11*s44);
-    co24 = s24 / sqrt( s22*s44);
-    co34 = s34 / sqrt( s33*s44);
-
-    massConstrCalc = pow(dm1,2) + pow(dm2,2) + pow(dm3,2) + pow( dm4,2)
-      + 2.0*( sqrt(p12) + sqrt(p13) + sqrt(p14) + sqrt(p23)  +
-              sqrt(p24) + sqrt(p34) )
-      - 2.*( p1*p2*co12  + p1*p3*co13  + p1*p4*co14 + p2*p3*co23 + 
-             p2*p4*co24  + p3*p4*co34 );
-    massConstrCalc = sqrt(massConstrCalc);
+    diffZVer(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
+    diffZVer(1) = fabs( diffZVer(1));
     
-    diffZver(1) = (e(6) - e(1))*(e(4) - e(9)) - (e(7) - e(2))*(e(3) - e(8));
-    diffZver(1) = fabs(diffZver(1));
+    diffZVer(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
+    diffZVer(2) = fabs( diffZVer(2));
     
-    diffZver(2) = (e(11) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(13));
-    diffZver(2) = fabs(diffZver(2));
+    diffZVer(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
+    diffZVer(3) = fabs( diffZVer(3));
     
-    diffZver(3) = (e(16) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(18));
-    diffZver(3) = fabs(diffZver(3));
+    diffZVer(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
+    diffZVer(4) = fabs( diffZVer(4));
     
-    diffZver(4) = (e(6) - e(1))*(e(4) - e(14)) - (e(12) - e(2))*(e(3) - e(8));
-    diffZver(4) = fabs(diffZver(4));
-    
-    diffZver(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
-    diffZver(5) = fabs(diffZver(5));
+    diffZVer(5) = (e(6) - e(1))*(e(4) - e(19)) - (e(17) - e(2))*(e(3) - e(8));
+    diffZVer(5) = fabs( diffZVer(5));  
     
   }
   
@@ -3045,7 +2895,7 @@ StatusCode LagrangeMassVertexFitter::evalu(HepVector& e, HepVector& mass,
 // Method name: chisq
 // This method computes the Chisquare of the contrained fit. 
 //==================================================================
-StatusCode LagrangeMassVertexFitter::chisq(HepVector& e0, HepVector& e,
+StatusCode LagrangeGeomVertexFitter::chisq(HepVector& e0, HepVector& e,
                                            HepSymMatrix& Ce, double& chis)
   
 {
@@ -3053,7 +2903,6 @@ StatusCode LagrangeMassVertexFitter::chisq(HepVector& e0, HepVector& e,
   log << MSG::DEBUG << " CHISQ !!! " << endreq;
   
   HepVector ed = e0 - e;
-  
   
   int inv;
   HepSymMatrix Ge = Ce.inverse(inv); 
@@ -3078,7 +2927,8 @@ StatusCode LagrangeMassVertexFitter::chisq(HepVector& e0, HepVector& e,
 // This method computes the parameters and the covariance matrix of the
 // new formed track.
 //==================================================================
-StatusCode LagrangeMassVertexFitter::nwcov(HepVector& e, HepSymMatrix& Ce,
+StatusCode LagrangeGeomVertexFitter::nwcov(HepVector& mass, HepVector& e, 
+                                           HepSymMatrix& Ce,
                                            double zcer, HepVector& tpf,
                                            HepSymMatrix& Cx, int dimCe)
   
@@ -3121,7 +2971,7 @@ StatusCode LagrangeMassVertexFitter::nwcov(HepVector& e, HepSymMatrix& Ce,
     sum1pz = sum1pz + e(18)*pz4;
     sum2pz = sum2pz + e(19)*pz4;
   }
-
+  
   double d_3pz1 = -e(3)*pz1/s11;
   double d_4pz1 = -e(4)*pz1/s11;
   double d_5pz1 = 1.0/sqrt(s11);
@@ -3130,7 +2980,7 @@ StatusCode LagrangeMassVertexFitter::nwcov(HepVector& e, HepSymMatrix& Ce,
   double d_9pz2 = -e(9)*pz2/s22;
   double d10pz2 = 1.0/sqrt(s22);
   double d13pz3, d14pz3, d15pz3 ;
-
+  
   if(( ntracks == 3 ) || ( ntracks ==4) ){
     d13pz3 = -e(13)*pz3/s33;
     d14pz3 = -e(14)*pz3/s33;
@@ -3152,9 +3002,48 @@ StatusCode LagrangeMassVertexFitter::nwcov(HepVector& e, HepSymMatrix& Ce,
   tpf(4) = sum1pz/sumpz;
   tpf(5) = sum2pz/sumpz;
   tpf(6) = sqrt( pow(sum1pz,2) + pow(sum2pz,2) + pow(sumpz,2) );
-
+  
+  // In order to get the mother energy, obtain each daughter's energy
+  
+  HepLorentzVector p1( 0., 0., 0., 0. );
+  HepLorentzVector p2( 0., 0., 0., 0. );
+  HepLorentzVector p3( 0., 0., 0., 0. );
+  HepLorentzVector p4( 0., 0., 0., 0. );
+  p1.setPz( e(5)/sqrt(pow(e(3),2)+pow(e(4),2)+1.0));
+  p1.setPx( e(3)*p1.pz());
+  p1.setPy( e(4)*p1.pz());
+  p1.setE( sqrt(pow(mass(1),2)+pow(p1.px(),2)+
+                pow(p1.py(),2) +
+                pow(p1.pz(),2)));
+  
+  p2.setPz( e(10)/sqrt(pow(e(8),2)+pow(e(9),2)+1.0));
+  p2.setPx( e(8)*p2.pz());
+  p2.setPy( e(9)*p2.pz());
+  p2.setE( sqrt(pow(mass(2),2)+pow(p2.px(),2)+
+                pow(p2.py(),2) +
+                pow(p2.pz(),2)));
+  if (ntracks == 3) {
+    p3.setPz( e(15)/sqrt(pow(e(13),2)+pow(e(14),2)+1.0));
+    p3.setPx( e(13)*p3.pz());
+    p3.setPy( e(14)*p3.pz());
+    p3.setE( sqrt(pow(mass(3),2)+pow(p3.px(),2)+
+                  pow(p3.py(),2) +
+                  pow(p3.pz(),2)));
+  }
+  if (ntracks == 4) {
+    p4.setPz( e(20)/sqrt(pow(e(18),2)+pow(e(19),2)+1.0));
+    p4.setPx( e(18)*p4.pz());
+    p4.setPy( e(19)*p4.pz());
+    p4.setE( sqrt(pow(mass(4),2)+pow(p4.px(),2)+
+                  pow(p4.py(),2) +
+                  pow(p4.pz(),2)));
+  }
+  
+  tpf(7) = p1.e()+p2.e();
+  if (ntracks == 3) tpf(7) += p3.e();
+  if (ntracks == 4) tpf(7) += p3.e()+p4.e();   
   // declaration  and definition of the auxiliar matrices´ terms
-
+  
   HepMatrix Te(6,dimCe,0);
   
   Te(1,1) = 1. - e(3) / (e(3)-e(8));
@@ -3190,13 +3079,13 @@ StatusCode LagrangeMassVertexFitter::nwcov(HepVector& e, HepSymMatrix& Ce,
   Te(5, 5) = e(4)*d_5pz1/sumpz - sum2pz*d_5pz1/ pow(sumpz,2);
   Te(5, 8) = e(9)*d_8pz2/sumpz - sum2pz*d_8pz2/ pow(sumpz,2);
   Te(5,10) = e(9)*d10pz2/sumpz - sum2pz*d10pz2/ pow(sumpz,2);
-
+  
   if (( ntracks == 3 ) || ( ntracks == 4) ){
     Te(5,13) = e(14)*d13pz3/sumpz - sum2pz*d13pz3/ pow(sumpz,2);
     Te(5,14) = ( pz3 + e(14)*d14pz3 )/sumpz - sum2pz*d14pz3/ pow(sumpz,2);
     Te(5,15) = e(14)*d15pz3/sumpz - sum2pz*d15pz3/ pow(sumpz,2);
   }
-
+  
   Te(6, 3) = ( d_3pz1 * ( sumpz + sum1pz*e(3) + sum2pz*e(4) ) +
                sum1pz * pz1 ) / tpf(6);
   Te(6, 4) = ( d_4pz1 * ( sumpz + sum1pz*e(3) + sum2pz*e(4) ) +

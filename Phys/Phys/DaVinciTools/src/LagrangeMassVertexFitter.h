@@ -61,9 +61,7 @@ public:
   /// Retrieve the Transporter, the Unconstrained Vertex Fitter 
   /// and the ParticlePropertyService.
   StatusCode initialize();    
-
-  /// Release all tools
-  StatusCode finalize();
+  
   
   /// Actual operator function. 
   /// Takes the name of the particle to constrain the mass to.
@@ -132,45 +130,45 @@ private:
                                double subMass2,
                                const ParticleVector&  pList, Vertex& constrVtx,
                                Particle& motherParticle);  
-
-
+  
+  
   // number of tracks ( = ntracks ) must be 2, 3 or 4.
   int m_ntracks;
   
-
+  
   /// Private methods used in fitWithNoRess, fitWithOneSubMass 
   /// and fitWithTwoSubMass.
-
+  
   /// Performs one iteration of the constrained fit for 2, 3 or 4 tracks
   /// without ressonance.
   /// It returns the parameters vector (e) and the covariance matrix (Ce) 
   /// after one iteration of the contraint fit.
-
+  
   StatusCode itera(HepVector &e, HepSymMatrix &Ce, HepVector &mass,
                    double massConstr, int dimCe, bool final );
-
+  
   /// Performs one iteration of the constrained fit for 3 or 4 tracks
   /// with one ressonance.
   /// It returns the parameters vector (e) and the covariance matrix (Ce) 
   /// after one iteration of the contraint fit.
- 
+  
   StatusCode itera(HepVector &e, HepSymMatrix &Ce, HepVector &mass,
                    double massConstr, double subMassConstr, int dimCe, 
                    bool final );
-
+  
   /// Performs one iteration of the constrained fit for 4 tracks
   /// with two ressonances.
   /// It returns the parameters vector (e) and the covariance matrix (Ce) 
   /// after one iteration of the contraint fit.
- 
+  
   StatusCode itera(HepVector &e, HepSymMatrix &Ce, HepVector &mass,
                    double massConstr, double subMass1Constr, 
                    double subMass2Constr,int dimCe, bool final );
-
-
-
-
-
+  
+  
+  
+  
+  
   /// Computes the parameters and the covariance matrix of the
   /// new formed particle. 
   StatusCode nwcov(HepVector &e, HepSymMatrix &Ce, double zcer,
@@ -187,7 +185,7 @@ private:
   /// the difference in the estimated z-vertex ( = diffZver ).
   
   StatusCode evalu(HepVector &e, HepVector &mass,
-                   double& massConstrCalc,double diffZver);
+                   double& massConstrCalc,HepVector & diffZver);
   
   /// Evaluates how well the constrained equations are satisfied
   /// at a given iteration. This method works for the case of 3 or 4
@@ -197,7 +195,7 @@ private:
   
   StatusCode evalu(HepVector &e, HepVector &mass,
                    double subMassConstr,  
-                   double& massConstrCalc,double diffZver);
+                   double& massConstrCalc,HepVector & diffZver);
   
   /// Evaluates how well the constrained equations are satisfied
   /// at a given iteration. This method works for the case of 4
@@ -207,7 +205,7 @@ private:
   
   StatusCode evalu(HepVector &e, HepVector &mass,
                    double subMass1Constr, double subMass2Constr,  
-                   double& massConstrCalc,double diffZver);
+                   double& massConstrCalc,HepVector & diffZver);
   
   
   

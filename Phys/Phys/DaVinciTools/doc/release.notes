@@ -1,6 +1,22 @@
-! $Id: release.notes,v 1.85 2004-05-05 15:47:10 pkoppenb Exp $
+! $Id: release.notes,v 1.86 2004-05-11 06:17:13 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-05-11 - P. Koppenburg for Claudia Pereira Nunes
+ - src/LagrangeGeomVertexFitter.{cpp,h}
+ - DaVinciTools/IGeomVertexFitter.h
+   . New constrained vertex fitting tool. This tool has two public methods. 
+     One, called fitWithGeom, makes only a geometrical  constrained fit for 
+     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit, 
+     like the LagrangeMassVertexFitter tool does, it just constrain the
+     particles to come from the same point. The other method, called 
+     fitWithGeomAndSubMass, makes a geometrical constrained fit and an 
+     invariant mass constrained fit of any daughter which is a resonance 
+     (with width < 10 MeV).  This method only works if there is a daughter 
+     resonance and it works for at most 4 tracks also. 
+ - src/LagrangeMassVertexFitter.{cpp,h}
+   . Corrected an error on the way the geometrical constrained 
+     equations were being obtained.
 
 !========================= DaVinciTools v9r4 2004-05-05 ===================
 ! 2004-05-03 - P. Koppenburg for Gerhard Raven
