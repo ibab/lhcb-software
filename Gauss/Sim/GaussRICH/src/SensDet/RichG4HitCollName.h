@@ -12,7 +12,12 @@ public:
   virtual ~RichG4HitCollName();
 
   int NumberOfHCollectionInRICH() {return m_NumberOfHCollectionInRICH; }
-  G4String  RichHCName(int HCNum ) {return m_RichHCName[HCNum]; } 
+  G4String  RichHCName(int HCNum ) {return m_RichHCName[HCNum]; }
+  std::vector<G4String>  RichHCNameVect() 
+  {
+    return m_RichHCName;
+  }
+  
   int RichHCSize() {return (int) m_RichHCName.size(); }
 
 private:

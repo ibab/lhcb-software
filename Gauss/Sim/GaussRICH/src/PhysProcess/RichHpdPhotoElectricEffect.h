@@ -93,7 +93,11 @@ public:
   void sethpdPhCathodeInnerRadius(double hpdphcInnr );
   double MaxZHitInRich1() {return m_MaxZHitInRich1; }
   void setMaxZHitInRich1 (double MaxZHitWithinRich1);
-
+  double MaxAnyHpdQEff() 
+  {
+    return  m_MaxAnyHpdQEff;
+  }
+  
 
 private:
 
@@ -110,6 +114,8 @@ private:
   G4String  m_Rich2PhysVolNameB;
   double m_hpdPhCathodeInnerRadius;
   double m_MaxZHitInRich1;
+  double  m_MaxAnyHpdQEff;
+  
 
 };
 

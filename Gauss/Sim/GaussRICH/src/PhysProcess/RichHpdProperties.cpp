@@ -51,6 +51,8 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
       RichHpdlog << MSG::INFO << "Total Number of hpds in rich1=  "
                  <<m_numHpdTotRich[0] << endreq;
+       m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+      
     }
 
   SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");

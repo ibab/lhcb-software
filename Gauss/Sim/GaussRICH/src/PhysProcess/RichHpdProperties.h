@@ -53,7 +53,17 @@ class RichHpdProperties {
        void setnumberOfRichDetectors (int numberOfRichdet);
        double HpdPhCathodeInnerRadius() {return  m_HpdPhCathodeInnerRadius; }
        void setHpdPhCathodeInnerRadius(double phCaInnRad );
-      
+  void setHpdMaxQuantumEff(double aMaxQE) 
+  {
+    m_HpdMaxQuantumEff= aMaxQE;
+    
+  }
+  
+  double   HpdMaxQuantumEff() 
+  {
+    return  m_HpdMaxQuantumEff;
+  }
+  
  private:
   
   //here the first vector has a dimension of 2
@@ -70,6 +80,7 @@ class RichHpdProperties {
   int m_numberOfRichDetectors;
   double m_HpdPhCathodeInnerRadius;
   int HpdVerboseLevel;
+  double m_HpdMaxQuantumEff;
   
 };
 

@@ -34,7 +34,7 @@
 #include "G4SDManager.hh"
 // local 
 #include "GiGaRichHitCnv.h"
-
+#include "RichG4HitCollName.h"
 // ======================================================================
 
 static const  CnvFactory<GiGaRichHitCnv>         s_Factory ;
@@ -43,7 +43,8 @@ const        ICnvFactory&GiGaRichHitCnvFactory = s_Factory ;
 // ======================================================================
 
 GiGaRichHitCnv::GiGaRichHitCnv( ISvcLocator* Locator ) 
-  : GiGaCnvBase( storageType() , classID() , Locator ) 
+  : GiGaCnvBase( storageType() , classID() , Locator ),
+    m_RichG4HitCollectionName(0)
 {
   ///
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
@@ -54,6 +55,10 @@ GiGaRichHitCnv::GiGaRichHitCnv( ISvcLocator* Locator )
   declareObject(GiGaLeaf( MCRichPhotodetectorHitLocation::Default, 
                           objType(), pars1));
   ///
+
+  m_RichG4HitCollectionName= new RichG4HitCollName();
+  
+  
 }; 
 
 // ======================================================================
@@ -124,10 +129,11 @@ StatusCode GiGaRichHitCnv::fillObjRefs
 {
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     );}   
-  MCRichPhotodetectorHits* hits = dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
+  MCRichPhotodetectorHits* hits = 
+                 dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
   if( 0 ==   hits ) { return Error(" DataObject* (of type '"       + 
-                                        GiGaUtil::ObjTypeName( object ) + 
-                                        "*') is not 'MCRichPhotodetectorHits*'!"      );}  
+                                        GiGaUtil::ObjTypeName( object ) +
+                           "*') is not 'MCRichPhotodetectorHits*'!"      );}  
   ///
   return updateObjRefs( address , object );
   ///
@@ -143,7 +149,8 @@ StatusCode GiGaRichHitCnv::updateObj
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
-  MCRichPhotodetectorHits* hits = dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
+  MCRichPhotodetectorHits* hits = 
+                dynamic_cast<MCRichPhotodetectorHits*> ( object ); 
   if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'MCRichPhotodetectorHits*'! "   );}  
@@ -152,12 +159,12 @@ StatusCode GiGaRichHitCnv::updateObj
   
   // retrieve the hits container from GiGa Service
 
-  G4HCofThisEvent* hitscollections = 0 ; 
+  G4HCofThisEvent* hitscollections = 0 ;
 
   //  std::string colname = *(address->par());
-  std::string colname[2];
-  colname[0] = "Rich1TopHC";
-  colname[1] = "Rich1BotHC";
+  // std::string colname [2];
+    //  colname[0] = "Rich1TopHC";
+    // colname[1] = "Rich1BotHC";
 
   try
     {
@@ -168,10 +175,13 @@ StatusCode GiGaRichHitCnv::updateObj
       if( 0 != hitscollections ) 
         { 
 
-          for (int iii=0;iii<2;iii++)
+          for (int iii=0;iii<m_RichG4HitCollectionName->RichHCSize() ;iii++)
             {
               G4SDManager* fSDM=G4SDManager::GetSDMpointer();
-              int collectionID=fSDM->GetCollectionID(colname[iii]);
+              //              int collectionID=fSDM->GetCollectionID(colname[iii]);
+              int collectionID=
+                 fSDM->
+                  GetCollectionID(m_RichG4HitCollectionName->RichHCName(iii));
           
               RichG4HitsCollection* myCollection = 
                 (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));

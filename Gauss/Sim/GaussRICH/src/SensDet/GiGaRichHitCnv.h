@@ -23,6 +23,7 @@ class CnvFactory;
 ///
 class GiGaTrajectory;
 ///
+class  RichG4HitCollName;
 
 
 class GiGaRichHitCnv: public GiGaCnvBase
@@ -94,6 +95,13 @@ public:
    */
   static const unsigned char storageType() ; 
   ///
+  RichG4HitCollName* RichG4HitCollectionName() 
+  {
+    return m_RichG4HitCollectionName ;
+  }
+  
+   
+  
 protected: 
   
 private:
@@ -104,6 +112,9 @@ private:
   ///
 private: 
   
+  RichG4HitCollName* m_RichG4HitCollectionName;
+  
+ 
   ///
 };
 

@@ -37,7 +37,9 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect
   m_Rich2PhysVolNameB="/dd/Structure/LHCb/Rich2";
   m_hpdPhCathodeInnerRadius= m_HpdProperty->HpdPhCathodeInnerRadius();
   m_MaxZHitInRich1=  m_HpdProperty->Rich1MaxZHitZCoord();
- 
+
+  m_MaxAnyHpdQEff =   m_HpdProperty-> HpdMaxQuantumEff();
+  
   G4cout << GetProcessName() << " is created " << G4endl;
 }
 
@@ -171,7 +173,8 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   double CurPhCathodeQE = getCurrentHpdQE(currentHpdNumber, currentRichDetNumber,  
                                           PhotonEnergy);
   G4double randomnum = G4UniformRand();
-  if(randomnum <  CurPhCathodeQE )
+
+  if( randomnum* m_MaxAnyHpdQEff <  CurPhCathodeQE )
     {
       G4double aPhotonTime= aParticleChange.GetProperTimeChange(); 
 

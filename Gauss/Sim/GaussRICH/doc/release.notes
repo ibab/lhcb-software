@@ -4,7 +4,10 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2003-06-02 - Sajan Easo
+   For cpu optimization, the killing of photons which were going to be
+  killed in the HPDs, is implemented  in the preuser track action of  
+  dedicated user track action for photons.
 ! 2003-05-29 - Ivan BELYAEV
  - src/SensDet/GiGaRichHitCnv.cpp fix 'GiGaFlush problem' 
                                   (explicit dependence on conversion order) 

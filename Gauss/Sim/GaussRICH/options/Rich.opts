@@ -1,13 +1,18 @@
 // Rich specific job options
 
+GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 GiGa.TrackSeq.Members      += { "RichG4TrackAction/RichTrack" } ;
 
-//GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
+GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;
 //GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 3 ;
-//GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
-//GiGa.EventSeq.RichG4Event.RichEventActionHistoFill=false;
+GiGa.EventSeq.RichG4Event.RichEventActionVerbose = 0 ;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=false;
+//GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet1=true;
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillTimer=true;
 
-///GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
-
+GiGa.RunSeq.Members           += { "RichG4RunAction/RichG4Run" } ;
+//GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=false;
+ GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet1=true;
+GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
 
