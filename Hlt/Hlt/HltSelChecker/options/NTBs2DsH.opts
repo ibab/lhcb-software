@@ -67,7 +67,7 @@ Particle2MCLinksHLTBs2DsH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaon
 Particle2MCLinksHLTBs2DsH.OutputLevel = 3;
 
 // H is generically a pion in the HLT (if no Rich PID)
-HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
+HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.MCDecay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+
 ,B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";

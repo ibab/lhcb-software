@@ -102,7 +102,7 @@ HLTBd2DstarPiTree.OutputLevel = 3;
 HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
  
 // H is generically a pion in the HLT (if no Rich PID)
-HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
+HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2DsHTree.UseRichPID = false;
