@@ -143,7 +143,7 @@ use RichMonitor v1r0    Rich
 use Futil        v11r0  SICB
 use detdes       v17r0  SICB
 use recevt       v3r4   SICB
-use recrich      v6r1   SICB
+use recrich      v6r2   SICB
 
 #
 #===== build Brunel =========================

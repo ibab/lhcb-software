@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-09 - Marco Cattaneo
+ - Use latest improvements to recrich (v6r2)
+ - Drop Velo relations to MCParticles of Spillover events
+ - Add Brunelv248r2.opts, remove Brunelv248r1.opts
+
 ! 2002-07-08 - Marco Cattaneo
  - Add pre-selection of tracks for Rich (currently forward tracks from Tr/Best)
  - Calo PID now uses Tr/Best tracks as input
