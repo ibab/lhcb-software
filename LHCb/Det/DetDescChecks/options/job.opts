@@ -12,7 +12,7 @@ ApplicationMgr.EvtMax     = 1 ;
 
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
 
-MessageSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 3;
 
 // Choice of two algorithms:
 
@@ -24,10 +24,10 @@ ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
 // VolumeCheckAlg options:
 //////////////////////////////////////////////////////////////////
 
-VolumeCheckAlg.Shoots3D    =2000;
-VolumeCheckAlg.ShootsXY    =2000;
-VolumeCheckAlg.ShootsYZ    =2000;
-VolumeCheckAlg.ShootsZX    =2000;
+VolumeCheckAlg.Shoots3D    =1000;
+VolumeCheckAlg.ShootsXY    =1000;
+VolumeCheckAlg.ShootsYZ    =1000;
+VolumeCheckAlg.ShootsZX    =1000;
 
 //VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
@@ -35,26 +35,37 @@ VolumeCheckAlg.ShootsZX    =2000;
 //VolumeCheckAlg.Volume = "/dd/Geometry/Spd/lvSpd";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Tracker/lvTrackerVolume";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
-VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
+VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Ecal/Installation/Ecal";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Hcal/Installation/lvHcal";
-
 
 ////////////////////////////////////////////////////////////////////
 // MaterialBudgetAlg options: 
 ////////////////////////////////////////////////////////////////////
 
-MaterialBudgetAlg.ZPlane   = 2250.0;
+MaterialBudgetAlg.ZPlane   = 970.0;
 
 //MaterialBudgetAlg.Shots   = 40000;
 
-//MaterialBudgetAlg.xMax     = 810.0;
-//MaterialBudgetAlg.yMax     = 675.0;
+//MaterialBudgetAlg.xMax     = 600.0;
+//MaterialBudgetAlg.yMax     = 600.0;
 //MaterialBudgetAlg.xMin     = -810.0;
 //MaterialBudgetAlg.yMin     = -675.0;
+// number of bins for XY grid or pseudorapidity scan
+//MaterialBudgetAlg.nBx     = 60;
+//MaterialBudgetAlg.nBy     = 100;
 
 // for the standard grid you only need to specify the z position of the plane
-
 MaterialBudgetAlg.Grid     = 1;
+
+// for the Eta-Phi scan you need eta and phi range plus number of bins in each
+// direction.
+// these overwrite x/y min/max in case Rapidity is chosen.
+MaterialBudgetAlg.etaMin     = 2.0;
+MaterialBudgetAlg.etaMax     = 5.0;
+MaterialBudgetAlg.phiMin     = 90.0;
+MaterialBudgetAlg.phiMax     = 270.0;
+
+MaterialBudgetAlg.Rapidity     = 0;

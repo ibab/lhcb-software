@@ -3,12 +3,12 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package           DetDescChecks
-version           v1r0
+version           v1r1
 # =============================================================================
 branches          cmt doc src options 
 
 # =============================================================================
-use DetDesc      v10r2  Det
+use DetDesc      v10r*  Det
 use AIDA         v2r2   	
 	
 # ==========================================
@@ -22,7 +22,7 @@ use GaudiSys      v10r*
 use HbookCnv      v12r*
 
 #geometry source 
-use XmlDDDB       v12r*   Det
+use XmlDDDB       v12r5   Det
 
 # =============================================================================
 library          DetDescChecks   *.cpp

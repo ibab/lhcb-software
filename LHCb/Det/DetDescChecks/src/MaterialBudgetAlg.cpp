@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.4 2002-07-12 07:45:59 witoldp Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.5 2002-08-21 17:08:29 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/07/12 07:45:59  witoldp
+// a few improvements for grid-shooting
+//
 // Revision 1.3  2002/07/05 10:25:37  witoldp
 // added grid-like shooting
 //
@@ -20,7 +23,9 @@
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 // AIDA 
+#include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -75,14 +80,22 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_yMax          (  3 * meter     )
   , m_xMin          (  0 * meter     )
   , m_yMin          (  0 * meter     )
+  , m_etaMax        (  5.5           )
+  , m_phiMax        (  270.          )
+  , m_etaMin        (  2.0           )
+  , m_phiMin        (  90.           )
   , m_nbx           ( 360            )
   , m_nby           ( 300            )
-  , m_budget        (  0             )
-  , m_normalization (  0             )
   , m_grid          (  0             )
+  , m_psrap         (  0             )
   , m_xbinref       ( 20.0           )
   , m_ybinref       ( 20.0           )
   , m_zref          ( 10000.0        )
+  , m_budget2D      (  0             )
+  , m_dist2DXY      (  0             )
+  , m_budget1DX     (  0             )
+  , m_budget1DY     (  0             )
+  , m_normalization (  0             )
 {  
   declareProperty( "TransportService" , m_trSvcName   ) ;
   declareProperty( "RndmService"      , m_rndmSvcName ) ;
@@ -93,9 +106,14 @@ MaterialBudgetAlg::MaterialBudgetAlg
   declareProperty( "xMin"             , m_xMin        ) ;
   declareProperty( "yMax"             , m_yMax        ) ;
   declareProperty( "yMin"             , m_yMin        ) ;
+  declareProperty( "etaMax"           , m_etaMax      ) ;
+  declareProperty( "etaMin"           , m_etaMin      ) ;
+  declareProperty( "phiMax"           , m_phiMax      ) ;
+  declareProperty( "phiMin"           , m_phiMin      ) ;
   declareProperty( "nBx"              , m_nbx         ) ;
   declareProperty( "nBy"              , m_nby         ) ;
   declareProperty( "Grid"             , m_grid        ) ;
+  declareProperty( "Rapidity"         , m_psrap       ) ;
   declareProperty( "xbinref"          , m_xbinref     ) ;
   declareProperty( "ybinref"          , m_ybinref     ) ;
   declareProperty( "zref"             , m_zref        ) ;
@@ -199,6 +217,12 @@ StatusCode MaterialBudgetAlg::initialize()
   if( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
   if( 0      >= m_nby  ) {  m_nby = 50                    ; }
 
+  if( m_grid >> 0 && m_psrap >> 0 ) 
+    {
+      log << MSG::ERROR << " Asked for X-Y and Eta-Phi scans. Selecting X-Y "
+	  << endreq;
+      m_psrap = 0;
+    }
   // for grid we calculate x/yMin/Max from the size and number of bins 
   if(m_grid)
     {
@@ -207,24 +231,71 @@ StatusCode MaterialBudgetAlg::initialize()
       m_xMax=-m_xMin;
       m_yMax=-m_yMin;
     }
+
+  if (m_psrap){
+    m_xMin=m_etaMin;
+    m_yMin=m_phiMin;
+    m_xMax=m_etaMax;
+    m_yMax=m_phiMax;
+  }
+
   
   // book the histogram
   const std::string hbookdir( Local::dirHbookName( "/stat/" + name() ) );
-  m_budget = 
+
+  m_budget2D = 
     histoSvc()->book( hbookdir                            ,   // directory 
                       1                                   ,   // ID 
                       "Material Budget"                   ,   // title 
                       m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
                       m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
-  if( 0 == m_budget ) 
+  if ( m_psrap ) {
+    m_dist2DXY = 
+      histoSvc()->book( hbookdir                            ,   // directory 
+			2                                   ,   // ID 
+			"Material Budget check"             ,   // title 
+			m_nbx  ,  -600.  ,  600.         ,   // x-bins 
+			m_nby  ,  -600  ,  600.         ) ; // y-bins
+  }
+  m_budget1DX = 
+    histoSvc()->book( hbookdir                            ,   // directory 
+                      3                                   ,   // ID 
+                      "Material Budget Eta"               ,   // title 
+                      m_nby  ,  m_yMin  ,  m_yMax         ) ; // x-bins 
+
+  m_budget1DY = 
+    histoSvc()->book( hbookdir                            ,   // directory 
+                      4                                   ,   // ID 
+                      "Material Budget Phi"               ,   // title 
+                      m_nbx  ,  m_xMin  ,  m_xMax         ) ; // x-bins 
+
+  if( 0 == m_budget2D ) 
     {
       log << MSG::ERROR 
-          << " Could not book the Material Budget Histogram!"
-          << endreq ;
+	  << " Could not book 2D Material Budget Histogram " << endreq ;
       return StatusCode::FAILURE ; 
     }
-
-  if(!m_grid) 
+  if ( m_psrap ) {
+    if( 0 == m_dist2DXY ) 
+      {
+	log << MSG::ERROR 
+	    << " Could not book 2D shot Histogram " << endreq ;
+	return StatusCode::FAILURE ; 
+    }
+  }
+  if( 0 == m_budget1DX ) 
+    {
+      log << MSG::ERROR 
+	  << " Could not book 1D Material Budget X Histogram " << endreq ;
+      return StatusCode::FAILURE ; 
+    }
+  if( 0 == m_budget1DY ) 
+    {
+      log << MSG::ERROR 
+	  << " Could not book 1D Material Budget Y Histogram " << endreq ;
+      return StatusCode::FAILURE ; 
+    }
+  if(!m_grid && !m_psrap) 
     // we do not need normalization histogram for grid
     // because we have exactly one shot per bin  
     {
@@ -282,18 +353,55 @@ StatusCode MaterialBudgetAlg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
 
   // shooting a on grid:
-  if(m_grid)
-    {
-      double dxgrid=m_xbinref*m_z/m_zref;
-      double dygrid=m_ybinref*m_z/m_zref;
+  if(m_grid || m_psrap)
+    { 
+      double aveDist=0.;
+      double dxgrid=0.;
+      double dygrid=0.;
+      // put in a transformation to go from XY to Eta-Phi.
+      if ( ! m_psrap ) {
+	dxgrid=m_xbinref*m_z/m_zref;
+	dygrid=m_ybinref*m_z/m_zref;
+      }
+      else {
+	dxgrid=(m_xMax-m_xMin)/m_nbx;
+	dygrid=(m_yMax-m_yMin)/m_nby;
+      }
+      // xx and yy refer to the two non-Z dimensions, be them cartesian or 
+      // whatever. x and y are cartesian.
+      double xx=m_xMin+dxgrid/2;
+      double yy=m_yMin+dygrid/2;
+      double x = 0;
+      double y = 0;
+      int shot = 0;
 
-      double x=m_xMin+dxgrid/2;
-      double y=m_yMin+dygrid/2;
-      
-      while(y<=m_yMax) 
+      double* storeEtaValues;
+      storeEtaValues = (double*) malloc(m_nbx*sizeof(double));
+
+      for ( int ii = 0 ; ii < m_nbx ; ii++ ) {
+	storeEtaValues[ii]=0.;
+      }
+      while(yy<=m_yMax)
         {
-          while(x<=m_xMax)
-            {
+	  double addPhiSlice=0.;
+	  int phiShot=0;
+          while(xx<=m_xMax)
+	    {
+	      if ( m_psrap ) {
+		double theta = 2.0*atan(exp(-1.0*xx));
+		double phi = yy*degree;
+		// make sure theta in not 90 or 270!!!!
+		x = sin(theta)*cos(phi)*m_z/cos(theta);
+		y = sin(theta)*sin(phi)*m_z/cos(theta);
+	      }
+	      else if ( m_grid ) {
+		x = xx;
+		y = yy;
+	      }
+	      shot++;
+	      if( 0 == shot%int(m_shots/10) )
+	      { log << MSG::INFO   << " Grid shot # " 
+		  << shot          << "/" << m_nbx*m_nby << endreq ; }
               // "shooting" point at the reference plane
               const HepPoint3D point( x, y, m_z);       
               
@@ -301,14 +409,35 @@ StatusCode MaterialBudgetAlg::execute()
               const double dist = 
                 m_trSvc -> distanceInRadUnits( m_vertex , point );
               
-              // fill material budget histogram 
-              m_budget        -> fill( point.x() , point.y() , dist ) ;              
-              //move to the next point on the grid
-              x=x+dxgrid;
+              // fill material budget histogram
+	      if ( m_grid ) {
+		m_budget2D        -> fill( point.x() , point.y() , dist ) ;
+	      }
+	      else if ( m_psrap ) {
+		m_budget2D        -> fill( xx , yy , dist ) ;
+		m_dist2DXY        -> fill( x , y , 1. ) ;
+	      }
+	      aveDist = aveDist + dist;
+	      addPhiSlice=addPhiSlice+dist;
+	      storeEtaValues[phiShot]=storeEtaValues[phiShot]+dist;
+	      phiShot++;
+		//move to the next point on the grid
+              xx=xx+dxgrid;
+
             }
-          x=m_xMin+dxgrid/2;
-          y=y+dygrid;
+	  m_budget1DX        -> fill( yy , addPhiSlice ) ;
+          xx=m_xMin+dxgrid/2;
+          yy=yy+dygrid;
         }
+      aveDist = aveDist/shot;
+      xx=m_xMin+dxgrid/2;
+      for ( int iii = 0 ; ii < m_nbx ; iii++ ) {
+	m_budget1DY        -> fill( xx , storeEtaValues[iii] ) ;
+	xx=xx+dxgrid;
+      }
+      log << MSG::INFO   << " total shots " << shot << endreq;
+      log << MSG::INFO   << " Average radiation length = " << aveDist*100 << "%" << endreq;
+      delete[] storeEtaValues;
     }
   else // random shooting:
     {
@@ -330,7 +459,7 @@ StatusCode MaterialBudgetAlg::execute()
             m_trSvc -> distanceInRadUnits( m_vertex , point );
           
           // fill material budget histogram 
-          m_budget        -> fill( point.x() , point.y() , dist ) ;
+          m_budget2D        -> fill( point.x() , point.y() , dist ) ;
           // fill the normalization histogram  
           m_normalization -> fill( point.x() , point.y()        ) ; 
         }

@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.h,v 1.3 2002-07-12 07:45:59 witoldp Exp $
+// $Id: MaterialBudgetAlg.h,v 1.4 2002-08-21 17:08:29 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/12 07:45:59  witoldp
+// a few improvements for grid-shooting
+//
 // Revision 1.2  2002/07/05 10:25:37  witoldp
 // added grid-like shooting
 //
@@ -148,17 +151,30 @@ private:
   double              m_yMax          ;
   double              m_xMin          ;
   double              m_yMin          ;
+  double              m_etaMax        ;
+  double              m_phiMax        ;
+  double              m_etaMin        ;
+  double              m_phiMin        ;
   int                 m_nbx           ;
   int                 m_nby           ;
   // parameters for "grid shooting" (if grid=1) (added by W. Pokorski)
   // variables ending with "ref" correspond to some reference grid.
   // the actuall grid will be scaled according to m_z/m_zref
   int                 m_grid          ;
+  // parameter to switch between cartesian (0) and pseudorapidity (1)
+  // flat scans.
+  int                 m_psrap         ;
   double              m_xbinref       ;
   double              m_ybinref       ;
   double              m_zref          ;
   // material budget histogram itself 
-  IHistogram2D*       m_budget        ;
+  IHistogram2D*       m_budget2D      ;
+  IHistogram2D*       m_dist2DXY      ;
+  IHistogram1D*       m_budget1DX     ;
+  IHistogram1D*       m_budget1DY     ;
+  //  IHistogram1D*       m_budget3       ;
+  //  IHistogram1D*       m_budget4       ;
+
   // Normalization histogram  
   IHistogram2D*       m_normalization ;
   
