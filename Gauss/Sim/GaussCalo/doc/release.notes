@@ -7,6 +7,10 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussCalo v2r2 2003-05-14 ========================
+! 2003-05-27 - Patrick Robbe
+ - options/Calo.opts : transfer from Gauss/options and addition of Hcal
+                       sensitive detector
+
 ! 2003-05-14 - Patrick Robbe
  - CaloSensDet : first implementation of specific calo corrections :
          - Birk's law
