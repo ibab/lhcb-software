@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.16 2002-04-15 11:16:19 ocallot Exp $
+! $Id: release.notes,v 1.17 2002-04-22 08:13:29 cattanem Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
-!=============================================================================
-! 15/04/2002 - Olivier Callot ** v5r0 **
+! >>>>>>>>>>>>>>>>>>>>>> L0Calo v5r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 20020419 (M.Cattaneo)
+  - Use AIDA v2r* (for Gaudi v10)
+
+! 15/04/2002 - Olivier Callot
   - Add the SpdMult computation in L0CaloCandidate
 
-!=============================================================================
 ! 05/04/2002 - Olivier Callot
   - Changes ObjectVector<CaloDigit> to CaloDigits in L0CaloDigit.cpp
 
-!=============================================================================
 ! 04/04/2002 - Olivier Callot
   - Modified to adapt to L0Event v11r0, i.e. changed namespace L0:: to L0Calo::
   - Adapted for the new Calo Event model v10r0

@@ -14,8 +14,9 @@ set L0CALOOPTS	$(L0CALOROOT)/options
 use L0Event     v11r*   Event
 use CaloEvent	v10r*	Event
 use CaloDet	v4r*	Det
-use AIDA        v1r*
-
+private
+use AIDA        v2r*
+public
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp
 
