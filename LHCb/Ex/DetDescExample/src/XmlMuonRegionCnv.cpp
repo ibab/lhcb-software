@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.6 2003-04-25 08:54:52 sponce Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.7 2003-06-16 13:50:29 sponce Exp $
 
 // Include files
 
@@ -92,15 +92,15 @@ XmlMuonRegionCnv::XmlMuonRegionCnv(ISvcLocator* svc) :
 // Destructor
 // ------------------------------------------------------------------------
 XmlMuonRegionCnv::~XmlMuonRegionCnv() {
-  xercesc::XMLString::release(&(XMLCh*)ChambersString);
-  xercesc::XMLString::release(&(XMLCh*)GasGapString);
-  xercesc::XMLString::release(&(XMLCh*)NumberString);
-  xercesc::XMLString::release(&(XMLCh*)ReadoutMapString);
-  xercesc::XMLString::release(&(XMLCh*)ReadoutTypeString);
-  xercesc::XMLString::release(&(XMLCh*)NFEChamberXString);
-  xercesc::XMLString::release(&(XMLCh*)NFEChamberYString);
-  xercesc::XMLString::release(&(XMLCh*)AnodeString);
-  xercesc::XMLString::release(&(XMLCh*)CathodeString);
+  xercesc::XMLString::release((XMLCh**)&ChambersString);
+  xercesc::XMLString::release((XMLCh**)&GasGapString);
+  xercesc::XMLString::release((XMLCh**)&NumberString);
+  xercesc::XMLString::release((XMLCh**)&ReadoutMapString);
+  xercesc::XMLString::release((XMLCh**)&ReadoutTypeString);
+  xercesc::XMLString::release((XMLCh**)&NFEChamberXString);
+  xercesc::XMLString::release((XMLCh**)&NFEChamberYString);
+  xercesc::XMLString::release((XMLCh**)&AnodeString);
+  xercesc::XMLString::release((XMLCh**)&CathodeString);
 }
 
 
