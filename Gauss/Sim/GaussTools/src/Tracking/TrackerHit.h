@@ -55,17 +55,6 @@ typedef G4THitsCollection<TrackerHit> TrackerHitsCollection;
 
 extern G4Allocator<TrackerHit> TrackerHitAllocator;
 
-//inline void* TrackerHit::operator new(size_t)
-//{
-//  void *aHit;
-//  aHit = (void *) TrackerHitAllocator.MallocSingle();
-//  return aHit;
-//}
-
-//inline void TrackerHit::operator delete(void *aHit)
-//{
-//  TrackerHitAllocator.FreeSingle((TrackerHit*) aHit);
-//}
 
 #endif
 

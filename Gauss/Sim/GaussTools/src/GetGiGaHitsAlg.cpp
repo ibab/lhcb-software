@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.2 2002-09-06 17:15:00 witoldp Exp $
 // Include files 
 
 // from Gaudi
@@ -18,6 +18,7 @@
 #include "Event/MCVeloHit.h"
 #include "Event/MCMuonHit.h"
 #include "Event/MCMuonHitPath.h"
+#include "Event/MCRichPhotodetectorHit.h"
 
 // local
 #include "GetGiGaHitsAlg.h"
@@ -44,12 +45,14 @@ GetGiGaHitsAlg::GetGiGaHitsAlg( const std::string& name,
   , m_velohits    ( MCVeloHitLocation::Default )
   , m_puvelohits  ( MCVeloHitLocation::PuVeto )
   , m_muonhits    ( MCMuonHitLocation::MCMuonHits )
+  , m_richhits    ( MCRichPhotodetectorHitLocation::Default )
 { 
   declareProperty( "OTHits"    , m_othits     ); 
   declareProperty( "ITHits"    , m_ithits     );
   declareProperty( "VeloHits"  , m_velohits   );
   declareProperty( "PuVeloHits", m_puvelohits );
   declareProperty( "MuonHits"  , m_muonhits   );
+  declareProperty( "RichHits"  , m_richhits   );
 }
 
 //=============================================================================
@@ -95,7 +98,6 @@ StatusCode GetGiGaHitsAlg::execute() {
               << m_othits << "' \t" 
               << endreq ;
           ///
-          return StatusCode::SUCCESS;
         } 
     }
   ///
@@ -118,7 +120,6 @@ StatusCode GetGiGaHitsAlg::execute() {
               << m_ithits << "' \t" 
               << endreq ;
           ///
-          return StatusCode::SUCCESS;
         } 
     }
   ///
@@ -141,7 +142,6 @@ StatusCode GetGiGaHitsAlg::execute() {
               << m_velohits << "' \t" 
               << endreq ;
           ///
-          return StatusCode::SUCCESS;
         } 
     }
   ///
@@ -164,7 +164,6 @@ StatusCode GetGiGaHitsAlg::execute() {
               << m_puvelohits << "' \t" 
               << endreq ;
           ///
-          return StatusCode::SUCCESS;
         } 
     }
   ///
@@ -193,7 +192,29 @@ StatusCode GetGiGaHitsAlg::execute() {
                 ///
               }
           }
-        return StatusCode::SUCCESS;        
+      }
+  ///
+    if( !m_richhits.empty() )
+      {
+        SmartDataPtr<MCRichPhotodetectorHits> 
+          obj( eventSvc(), MCRichPhotodetectorHitLocation::Default) ;
+
+            if( obj ) 
+              { 
+                log << MSG::INFO
+                    << "Number of extracted Richhits  \t"
+                    << obj->size()
+                    << endreq ;
+                Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
+              } 
+            else 
+              { 
+                log << MSG::INFO 
+                    << " No 'MCRichHits' to be extracted from '"
+                    << MCRichPhotodetectorHitLocation::Default << "' \t" 
+                    << endreq ;
+                ///
+              }
       }
 
   return StatusCode::SUCCESS;

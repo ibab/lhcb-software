@@ -2,21 +2,26 @@ package GaussTools
 version v1r0
 
 branches         cmt src doc GaussTools
+ 
+use AIDA          v3r*
 
 use GaudiKernel  v12r* 
 use GEANT4       v2r4101p0 Sim 
 use GiGa         v9r*      Sim
 use GiGaCnv      v7r*      Sim
+use DetDesc      v11r*     Det
 
 # ============== Event ========================================================
 use Event        v3r*      Event
 use VeloEvent    v11r*     Event
 use MuonEvent    v2r*      Event
+use RichEvent    v3r*      Event
 
 include_dirs     $(GAUSSTOOLSROOT)
 
 # ============== component library ============================================
-library          GaussTools   *.cpp  Tracking/*.cpp RICH/*.cpp 
+library          GaussTools   *.cpp  Tracking/*.cpp RICH/SensDet/*.cpp RICH/PhysProcess/*.cpp \
+                              RICH/PhysProcess/*.cc RICH/Misc/*.cpp
 apply_pattern    libraryShr library=GaussTools
 
 # ============= link options ==================================================

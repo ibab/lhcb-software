@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.h,v 1.1.1.1 2002-08-26 10:36:12 witoldp Exp $
+// $Id: GetGiGaHitsAlg.h,v 1.2 2002-09-06 17:15:00 witoldp Exp $
 #ifndef GETGIGAHITSALG_H 
 #define GETGIGAHITSALG_H 1
 
@@ -36,6 +36,7 @@ private:
   std::string    m_velohits  ;
   std::string    m_puvelohits  ;
   std::string    m_muonhits  ;
+  std::string    m_richhits  ;
 
 };
 #endif // GETGIGAHITSALG_H
