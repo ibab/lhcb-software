@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-06-15 - Gloria CORTI
+ - src/Components/TrCutsRunAction.cpp
+   . as suggested by Witek apply killing of looping particles to gamma as
+     well as electrons to avoid ping-pong effect in volumes observed in
+     production jobs
+
 !==================== GaussTools v10r5 2004-04-29 ============================
 ! 2004-04-29 - Gloria CORTI
  - src/Components/TrCutsRunAction.{h,cpp}

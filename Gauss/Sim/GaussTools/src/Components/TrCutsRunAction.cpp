@@ -132,7 +132,7 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
           procMgr->AddDiscreteProcess(new WorldCuts("WorldCut",
                                                     m_minx,m_miny,m_minz,
                                                     m_maxx,m_maxy,m_maxz));
-          if (pname=="e-" && m_killloops)  
+          if ( (pname=="e-" || pname=="gamma" ) && m_killloops)  
             procMgr->
               AddDiscreteProcess(new LoopCuts("LoopCuts",m_maxsteps,m_minstep));
         }
