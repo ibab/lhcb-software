@@ -4,6 +4,16 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-11-20 - Olivier Dormond
+ - Restructured the option files (have a look in 
+   /afs/cern.ch/user/o/odie/public/DaVinciOptionsForTheTagging for a set of
+   option files for DaVinci).
+ - Added support for multiple-collision in the FlavourMonitorAlgorithm. Stats
+   are now splitted by number of collisions.
+ - Added check for the L0 trigger in FlavourTaggingAlgorithm.
+ - Droped the ntuple from the SingleParticleTaggingTool.
+ - Added a SingleParticleTaggingMonitor to study the job of the so-named tool.
+
 ! =================== FlavourTagging v4r0 2002-11-13 ======================
 ! 2002-11-13 - Gloria Corti
  - Use explicitely EventKernel v2r0 because of compilation error

@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.7 2002-10-21 13:25:02 gcorti Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.8 2002-11-20 08:24:47 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -8,7 +8,6 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/NTuple.h"
 
 #include "Event/EventHeader.h"
 #include "Event/Vertex.h"
@@ -41,7 +40,7 @@ SingleParticleTaggingTool::SingleParticleTaggingTool( const std::string &type,
                                                       const std::string &name,
                                                       const IInterface *parent)
   : AlgTool( type, name, parent ), m_PrimVerticesLocations(0),
-    m_Filter(0), m_GeomDisp(0), m_EventSvc(0), m_NTupleSvc(0)
+    m_Filter(0), m_GeomDisp(0), m_EventSvc(0)
 {
   declareInterface<IFlavourTaggingTool>(this);
 
@@ -54,7 +53,6 @@ SingleParticleTaggingTool::SingleParticleTaggingTool( const std::string &type,
   declareProperty( "AllVertices", m_AllVertices = true );
   declareProperty( "MinImpactSignificance", m_ISMin = -1 );
   declareProperty( "MaxImpactSignificance", m_ISMax = -1 );
-  declareProperty( "NtupleName", m_NTupleName = "auto" );
   declareProperty( "Monitored", m_Monitor = false );
   declareProperty( "MonitorLocation", m_MonitorLocation = "auto" );
 }
@@ -102,81 +100,8 @@ StatusCode SingleParticleTaggingTool::initialize()
                      || m_MonitorLocation == "AUTO" ) )
     m_MonitorLocation = "/Event/Phys/Monitor/"+name_tail+"/Tags";
 
-  if(m_NTupleName == "none" || m_NTupleName == "None" || m_NTupleName == "NONE")
-  {
-    m_DoNTuple = false;
-    return StatusCode::SUCCESS;
-  }
-  m_DoNTuple = true;
+  log << MSG::DEBUG << "Monitoring data go to: " << m_MonitorLocation << endreq;
 
-  serviceLocator()->service("NTupleSvc", m_NTupleSvc);
-  if( !m_NTupleSvc )
-  {
-    log << MSG::FATAL << "The NTupleSvc could not be found." << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  if(m_NTupleName == "auto" || m_NTupleName == "Auto" || m_NTupleName == "AUTO")
-    m_NTupleName = "FILE1/FlavourTagging/"+name_tail;
-
-  log << MSG::DEBUG << "Booking an ntuple named: " << m_NTupleName << endreq;
-
-  StatusCode s;
-  NTuplePtr nt(m_NTupleSvc, m_NTupleName);
-  if( !nt )    // Check if already booked
-  {
-    nt = m_NTupleSvc->book( m_NTupleName, CLID_ColumnWiseTuple, name() );
-     
-    if( nt )  // ntuple sucessfully booked
-    {
-      s = nt->addItem("Run", m_n_run);
-      if( s.isSuccess() ) s = nt->addItem("Event", m_n_event);
-      if( s.isSuccess() ) s = nt->addItem("nCands", m_n_cands, 0, 1000);
-      if( s.isSuccess() ) s = nt->addItem("nVtxs", m_n_vtxs, 0, 5);
-      if( s.isSuccess() ) s = nt->addItem("iTagger",  m_i_selected, 0, 1000);
-      if( s.isSuccess() ) s = nt->addItem("Tag",  m_tag, -1, 1);
-
-      if( s.isSuccess() ) s = nt->addIndexedItem("px", m_n_cands, m_px);
-      if( s.isSuccess() ) s = nt->addIndexedItem("py", m_n_cands, m_py);
-      if( s.isSuccess() ) s = nt->addIndexedItem("pz", m_n_cands, m_pz);
-      if( s.isSuccess() ) s = nt->addIndexedItem("vx", m_n_cands, m_vx);
-      if( s.isSuccess() ) s = nt->addIndexedItem("vy", m_n_cands, m_vy);
-      if( s.isSuccess() ) s = nt->addIndexedItem("vz", m_n_cands, m_vz);
-      if( s.isSuccess() ) s = nt->addIndexedItem("CL", m_n_cands, m_cl);
-      if( s.isSuccess() ) s = nt->addIndexedItem("ID", m_n_cands, m_id);
-      if( s.isSuccess() ) s = nt->addIndexedItem("ip", m_n_cands, 5, m_ip);
-      if( s.isSuccess() ) s = nt->addIndexedItem("iperr", m_n_cands,5,m_iperr);
-    }
-    else
-    {   // did not manage to book the N tuple....
-      log << MSG::ERROR << "Failed to book the col_wise N-tuple" << endreq; 
-      return StatusCode::FAILURE;
-    }
-  }
-  else
-  {  // Just reconnect to existing items
-    s = nt->item ("Run", m_n_run);
-    if( s.isSuccess() ) s = nt->item ("Event", m_n_event);
-    if( s.isSuccess() ) s = nt->item ("nCands", m_n_cands);
-    if( s.isSuccess() ) s = nt->item ("nVtxs", m_n_vtxs);
-    if( s.isSuccess() ) s = nt->item ("iTagger", m_i_selected);
-    if( s.isSuccess() ) s = nt->item ("Tag", m_tag);
-    if( s.isSuccess() ) s = nt->item ("px", m_px );
-    if( s.isSuccess() ) s = nt->item ("py", m_py);
-    if( s.isSuccess() ) s = nt->item ("pz", m_pz);
-    if( s.isSuccess() ) s = nt->item ("vx", m_vx);
-    if( s.isSuccess() ) s = nt->item ("vy", m_vy);
-    if( s.isSuccess() ) s = nt->item ("vz", m_vz);
-    if( s.isSuccess() ) s = nt->item ("CL", m_cl);
-    if( s.isSuccess() ) s = nt->item ("ID", m_id);
-    if( s.isSuccess() ) s = nt->item ("ip", m_ip);
-    if( s.isSuccess() ) s = nt->item ("iperr", m_iperr);
-  }
-  if( !s )
-  {
-    log << MSG::ERROR << "Failed to add items to col_wise N-tuple" << endreq; 
-    return s;
-  }
   return StatusCode::SUCCESS;
 }
 
@@ -315,29 +240,6 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
   else
     vtxs.push_back(&thePrimVtx);
 
-  if( m_DoNTuple )
-  {
-    // Retrieve informations about event
-    SmartDataPtr<EventHeader> evt(m_EventSvc, EventHeaderLocation::Default );
-    
-    if( !evt )
-    {   
-      log << MSG::ERROR
-          << "Could not retrieve event header. Will put fake !!!!" << endreq;
-      m_n_run = 0;
-      m_n_event = -1;
-    }
-    else
-    {
-      m_n_run = evt->runNum();
-      m_n_event = evt->evtNum();
-    }
-    m_n_cands = 0;
-    m_n_vtxs = vtxs.size();
-    m_i_selected = 0;
-    m_tag = 0;
-  }
-
   log << MSG::DEBUG
       << "Filtering the remaining particles with the impact param" << endreq;
   // Find the one with the highest pt.
@@ -354,11 +256,6 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
     {
       double impact, error;
       m_GeomDisp->calcImpactPar( **c, **v, impact, error );
-      if( m_DoNTuple && vi<5 )
-      {
-        m_ip[i][vi] = impact;
-        m_iperr[i][vi] = error;
-      }
       if( ((m_ISMin > 0) && (impact/error < m_ISMin)) ||
           ((m_ISMax > 0) && (impact/error > m_ISMax)) )
       {
@@ -368,23 +265,8 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
     }
     if( !bad && ((*c)->pt() > max_pt) )
     {
-      if( m_DoNTuple )
-        m_i_selected = i;
       theTag.setTagger(*c);
       max_pt = (*c)->pt();
-    }
-    if( !bad && m_DoNTuple )
-    {
-      m_px[i] = (*c)->momentum().x();
-      m_py[i] = (*c)->momentum().y();
-      m_pz[i] = (*c)->momentum().z();
-      m_vx[i] = (*c)->pointOnTrack().x();
-      m_vy[i] = (*c)->pointOnTrack().y();
-      m_vz[i] = (*c)->pointOnTrack().z();
-      m_cl[i] = (*c)->confLevel();
-      m_id[i] = (*c)->particleID().pid();
-      i++;
-      m_n_cands = i;
     }
   }
   log << MSG::DEBUG << "Computing tag" << endreq;
@@ -399,22 +281,6 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
       theTag.setDecision( FlavourTag::b );
   else
     theTag.setDecision( FlavourTag::none );
-  if( m_DoNTuple )
-  {
-    switch( theTag.decision() )
-    {
-    case FlavourTag::b:
-      m_tag = -1;
-      break;
-    case FlavourTag::bbar:
-      m_tag = 1;
-      break;
-    case FlavourTag::none:
-      m_tag = 0;
-      break;
-    }
-    m_NTupleSvc->writeRecord( m_NTupleName );
-  }
   theTag.setTaggedB( &theB );
   theTag.setType( FlavourTag::singleParticle );
   if( m_Monitor )

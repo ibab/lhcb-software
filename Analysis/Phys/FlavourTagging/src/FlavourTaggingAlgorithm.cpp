@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.8 2002-10-21 13:24:49 gcorti Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.9 2002-11-20 08:24:45 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/Particle.h"
+#include "Event/L0DUReport.h"
 #include "DaVinciTools/IPhysDesktop.h"
 #include "FlavourTagging/IFlavourTaggingTool.h"
 
@@ -42,6 +43,7 @@ FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
   declareProperty("DesktopName", m_pDesktop_name = "PhysDesktop");
   declareProperty("TaggingTool", m_taggingTool_name = "OrderedTaggingTool");
   declareProperty("FirstOnly", m_only_one = false);
+  declareProperty("CheckL0", m_checkL0 = true);
 }
 
 //=============================================================================
@@ -95,9 +97,11 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  StatusCode sc = m_pDesktop->getInput();
-  if (sc.isFailure()) {
-    log << MSG::ERROR << "Unable to fill desktop" << endreq;
+  SmartDataPtr<L0DUReport> l0(eventSvc(), L0DUReportLocation::Default);
+
+  if( l0 && m_checkL0 && (l0->decision() == false) )
+  {
+    log << MSG::DEBUG << "Event rejected by L0" << endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -150,17 +154,20 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   else
     thePrimVtx = new Vertex;
 
-  FlavourTags *tags = new FlavourTags;
-  const ParticleVector& parts = m_pDesktop->particles();
-  if( parts.size() == 0 )
-  {
-    log << MSG::ERROR << "The PhysDesktop is empty. Giving up!" << endreq;
+  StatusCode sc = m_pDesktop->getInput();
+  if (sc.isFailure()) {
+    log << MSG::ERROR << "Unable to fill desktop" << endreq;
     return StatusCode::SUCCESS;
   }
 
+  m_n_events++;
+
+  const ParticleVector& parts = m_pDesktop->particles();
+
+  FlavourTags *tags = new FlavourTags;
+
   log << MSG::DEBUG << "Event initialization successful" << endreq;
 
-  m_n_events++;
   log << MSG::DEBUG << "About to tag " << hypothesis.size() << " B s" << endreq;
   ParticleVector::const_iterator hi;
   for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )

@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.h,v 1.2 2002-09-10 07:44:35 odie Exp $
+// $Id: FlavourMonitorAlgorithm.h,v 1.3 2002-11-20 08:24:45 odie Exp $
 #ifndef FLAVOURMONITORALGORITHM_H 
 #define FLAVOURMONITORALGORITHM_H 1
 
@@ -9,7 +9,7 @@
 
 // from DaVinci
 #include "DaVinciTools/DVAlgorithm.h"
-#include "DaVinciAssociators/Particle2MCAsct.h"
+#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
 
 /** @class FlavourMonitorAlgorithm FlavourMonitorAlgorithm.h
  *  
@@ -36,11 +36,15 @@ private:
 
   /// Statistics accumulator
   unsigned int m_fractions;
-  std::vector<std::vector<unsigned int> > m_n_good, m_n_wrong, m_n_untagged;
-  std::vector<std::vector<unsigned int> > m_n_fractions;
-  std::vector<unsigned int> m_n_noB;
+  unsigned int m_maxCollisions;
+  std::vector<std::vector<std::vector<unsigned int> > > m_n_good;
+  std::vector<std::vector<std::vector<unsigned int> > > m_n_wrong;
+  std::vector<std::vector<std::vector<unsigned int> > > m_n_untagged;
+  std::vector<std::vector<std::vector<unsigned int> > > m_n_fractions;
+  std::vector<std::vector<unsigned int> > m_n_noB;
+  std::vector<unsigned int> m_n_collisions;
 
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
-  Particle2MCAsct::IAsct* m_pAsctLinks; ///< Pointer to associator using links
+  Particle2MCWeightedAsct::IAsct* m_pAsctLinks; ///< Pointer to asso using links
 };
 #endif // FLAVOURMONITORALGORITHM_H

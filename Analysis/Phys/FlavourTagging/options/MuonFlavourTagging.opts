@@ -1,40 +1,49 @@
+//ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/MuonTagging" };
+TopSequence.Members += { "FlavourTaggingAlgorithm/MuonTagging" };
 //
-//FlavourTaggingAlgorithm.TagLocation = "/Event/Phys/User/Tags";
-//FlavourTaggingAlgorithm.HypothesisLocations = { "/Event/Phys/B0" };
-//FlavourTaggingAlgorithm.PrimaryVerticesLocation = "";
-//FlavourTaggingAlgorithm.DesktopName = "PhysDesktop";
-//FlavourTaggingAlgorithm.FirstOnly = false;
+MuonTagging.TagLocation = "/Event/Phys/User/Tags/Muon";
+//MuonTagging.HypothesisLocations = { "/Event/Phys/B0" };
+//MuonTagging.PrimaryVerticesLocation = "";
+//MuonTagging.DesktopName = "PhysDesktop";
+//MuonTagging.FirstOnly = false;
+MuonTagging.CheckL0 = false;
 
-FlavourTaggingAlgorithm.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
-//FlavourTaggingAlgorithm.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
-FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
+MuonTagging.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
+//MuonTagging.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
+//MuonTagging.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
+MuonTagging.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
 
-//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/User" };
-FlavourTaggingAlgorithm.TaggingTool = "SingleParticleTaggingTool";
+MuonTagging.TaggingTool = "SingleParticleTaggingTool";
 
 // --- Muon tags
 
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.FilterName = "ParticleFilter";
-//FlavourTaggingAlgorithm.SingleParticleTaggingTool.GeomDispCalculator = "GeomDispCalculator";
-//FlavourTaggingAlgorithm.SingleParticleTaggingTool.PrimaryVertices = "";
-//FlavourTaggingAlgorithm.SingleParticleTaggingTool.InverseCharge = true;
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.AllVertices = true;
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.MinImpactSignificance = -1; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.MaxImpactSignificance = -1; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.FilterName = "ParticleFilter";
+//MuonTagging.SingleParticleTaggingTool.GeomDispCalculator = "GeomDispCalculator";
+//MuonTagging.SingleParticleTaggingTool.PrimaryVertices = "";
+//MuonTagging.SingleParticleTaggingTool.InverseCharge = true;
+MuonTagging.SingleParticleTaggingTool.AllVertices = true;
+MuonTagging.SingleParticleTaggingTool.MinImpactSignificance = -1; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.MaxImpactSignificance = -1; // -1 == disable
+//MuonTagging.SingleParticleTaggingTool.Monitored = false;
+       
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.ParticleName = "mu+";
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.9;
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1200; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 4500; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
+MuonTagging.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
 
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.NtupleName = "none";
+// --- Monitoring
 
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.ParticleName = "mu+";
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = 0.9;
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1200; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 4500; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
-FlavourTaggingAlgorithm.SingleParticleTaggingTool.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
+//ApplicationMgr.TopAlg += { "SingleParticleTaggingMonitor/MuonTaggingMonitor" };
+TopSequence.Members += { "SingleParticleTaggingMonitor/MuonTaggingMonitor" };
+MuonTaggingMonitor.BeAFilter = true;
+MuonTaggingMonitor.TaggerName = "mu-";
+MuonTaggingMonitor.TagsLocations = { "/Event/Phys/User/Tags/Muon" };
 
 // --- Debuging
 
