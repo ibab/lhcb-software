@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCDepositAlg.cpp,v 1.2 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCDepositAlg.cpp,v 1.3 2002-09-27 09:41:05 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -31,10 +31,9 @@ static const  AlgFactory<OTCluster2MCDepositAlg>          s_factory ;
 const        IAlgFactory& OTCluster2MCDepositAlgFactory = s_factory ; 
 
 OTCluster2MCDepositAlg::OTCluster2MCDepositAlg( const std::string& name,
-                                        ISvcLocator* pSvcLocator)
+                                                ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
-
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCDepositLocation );
 }
@@ -72,9 +71,9 @@ StatusCode OTCluster2MCDepositAlg::execute()
   OTClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    MCOTDeposit* aHit = 0;
-    associateToTruth(*iterClus,aHit);
-    if (0 != aHit ) aTable->relate(*iterClus,aHit);
+    MCOTDeposit* aDeposit = 0;
+    associateToTruth(*iterClus, aDeposit);
+    if (0 != aDeposit ) aTable->relate(*iterClus, aDeposit);
   } // loop iterClus
 
   // register table in store
@@ -100,11 +99,10 @@ StatusCode OTCluster2MCDepositAlg::finalize() {
 
 
 StatusCode OTCluster2MCDepositAlg::associateToTruth(const OTCluster* aCluster,
-                                                    MCOTDeposit*& aHit) {
+                                                    MCOTDeposit*& aDeposit) {
   // make link to truth  to MCOTDeposit
   StatusCode sc = StatusCode::SUCCESS;
 
-  //SmartRef<OTDigit> aDigit = aCluster->digit();
   const OTDigit* aDigit = aCluster->digit();
 
   if (0 == aDigit) {
@@ -164,18 +162,10 @@ StatusCode OTCluster2MCDepositAlg::associateToTruth(const OTCluster* aCluster,
     if ( 0 == depCont.size()) return StatusCode::FAILURE;
     MCOTDeposit* deposit = depCont[timeNumber];
     if ( 0 == deposit) return StatusCode::FAILURE;
-    aHit = deposit;
+    aDeposit = deposit;
   } else {
     return StatusCode::FAILURE;
   }
 
   return sc;
 }
-
-
-
-
-
-
-
-

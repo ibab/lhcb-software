@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCDepositAlg.h,v 1.2 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCDepositAlg.h,v 1.3 2002-09-27 09:41:05 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCDEPOSITALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCDEPOSITALG_H 1
 
@@ -43,7 +43,7 @@ public:
 
   // associator function
   virtual StatusCode associateToTruth(const OTCluster* aCluster,
-                                      MCOTDeposit*& aHit);
+                                      MCOTDeposit*& aDeposit);
 
   /// path to put table
   std::string outputData() const;

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.5 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.6 2002-09-27 09:41:05 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -34,10 +34,10 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
-
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCHitLocation );
   declareProperty( "SpillOver", m_spillOver  = false );
+  declareProperty( "associatorName", m_nameAsct = "OTCluster2MCDepositAsct" );
 }
 
 OTCluster2MCHitAlg::~OTCluster2MCHitAlg() 
@@ -49,6 +49,12 @@ StatusCode OTCluster2MCHitAlg::initialize()
 {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialize" << endreq;
+
+  StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
+  if( sc.isFailure() || 0 == m_hAsct) {
+    log << MSG::FATAL << "Unable to retrieve Associator tool" << endreq;
+    return sc;
+  }
  
   return StatusCode::SUCCESS;
 };
@@ -116,74 +122,26 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
                                                 MCHit*& aHit) 
 {
   // make link to truth  to MCHit
-  StatusCode sc = StatusCode::SUCCESS;
-
-  const OTDigit* aDigit = aCluster->digit();
-
-  if (0 == aDigit) {
+  // retrieve table
+  OTCluster2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
+  if (0 == aTable){
     MsgStream log(msgSvc(), name());
-    log << MSG::WARNING << "No digit associated with cluster!" << endmsg;
+    log << MSG::WARNING << "Failed to find table" << endreq;
     return StatusCode::FAILURE;
   }
-
-  // get the position in the vector of times
-  int clusterTime = (int) (aCluster->signalTime());
-  std::vector<int> times = aDigit->tdcTimes();
-  int timeNumber = -1;
+ 
+  MCOTDeposit* aDeposit = 0;
+  OTCluster2MCDepositAsct::MCDeposits range = aTable->relations(aCluster);
+  if ( !range.empty() ) {
+    OTCluster2MCDepositAsct::MCDepositsIterator iterDep = range.begin();
+    aDeposit = iterDep->to();
+    if (0 != aDeposit) {
+      aHit = aDeposit->mcHit();
+      if (!m_spillOver && 0 != aHit) {
+        if (m_mcHits != aHit->parent()) aHit = 0;
+      }
+    }
+  }
   
-  // When there are more than one tdc-times in a OTDigit
-  // do something more elaborate.
-  if (times.size() > 1 ) {  
-    SmartDataPtr<OTClusters> clusterCont(eventSvc(),
-                                         OTClusterLocation::Default);
-    OTClusters::const_iterator iterClus;
-    // find the time correction due to time of flight subtraction
-    double timeCorrection = 0.0;    
-    std::vector<int>::iterator iTime = times.begin();
-    for ( iTime = times.begin(); iTime != times.end(); ++iTime ) {
-      timeCorrection += (double) (*iTime);
-    }
-    for ( iterClus = clusterCont->begin(); clusterCont->end() != iterClus;
-          ++iterClus ) {
-      if ( (*iterClus)->digit() == aDigit ) {
-        timeCorrection -= (*iterClus)->signalTime();
-      }
-    }    
-
-    timeCorrection /= (double) (times.size());
-
-    // compare times and take the closest one
-    int thisNumber = -1;
-    int thisTime;
-    int diffTime = 10000;    
-    for ( iTime = times.begin(); iTime != times.end(); ++iTime ) {
-      thisNumber++;
-      thisTime = abs( (int) (timeCorrection) + clusterTime - (*iTime));
-      if (thisTime < diffTime) {
-        timeNumber = thisNumber;
-        diffTime = thisTime;
-      }
-    }
-  } else { // Easy: just one time, so nothing special
-    timeNumber = 0;
-  }
-
-  // link digit to truth
-  const MCOTDigit* mcDigit = mcTruth<MCOTDigit>(aDigit); 
-  if (0 != mcDigit && timeNumber != -1) {
-
-    // link to deposits
-    SmartRefVector<MCOTDeposit> depCont = mcDigit->deposits();
-    if ( 0 == depCont.size()) return StatusCode::FAILURE;
-    MCOTDeposit* deposit = depCont[timeNumber];
-    if ( 0 == deposit) return StatusCode::FAILURE;
-    aHit = deposit->mcHit();
-    if (!m_spillOver && 0 != aHit) {
-      if (m_mcHits != aHit->parent()) aHit = 0;
-    }
-  } else {
-    return StatusCode::FAILURE;
-  }
-
-  return sc;
+  return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.h,v 1.3 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.h,v 1.4 2002-09-27 09:41:05 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCHITALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCHITALG_H 1
 
@@ -7,6 +7,7 @@
 #include "Relations/Relation1D.h"
 
 #include "GaudiKernel/Algorithm.h"
+#include "OTAssociators/OTCluster2MCDepositAsct.h"
 
 class OTCluster;
 class MCHit;
@@ -52,9 +53,13 @@ protected:
 
 private:
 
+  // job options:
   std::string m_outputData; ///< path to put relation table
   bool m_spillOver;      ///< Flag to make relations with spillover hits as well
+  std::string m_nameAsct;   ///< name of the associator to MCOTDeposits
+
   MCHits* m_mcHits;      ///< Container of MCHits used to identify spillover
+  OTCluster2MCDepositAsct::IAsct* m_hAsct;   ///< pointer to associator
 
 };
 

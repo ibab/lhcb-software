@@ -1,9 +1,6 @@
-// $Id: OTCluster2MCParticleAlg.h,v 1.2 2002-08-07 15:55:07 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.h,v 1.3 2002-09-27 09:41:05 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H 1
-
-#include <string>
-#include <map>
 
 #include "Relations/IAssociator.h" 
 #include "Relations/IRelation.h"
@@ -56,11 +53,12 @@ protected:
 
 private:
 
-  std::string m_outputData;
-  std::string m_nameAsct;
+  // job options:
+  std::string m_outputData;   ///< path to put relation table
+  std::string m_nameAsct;     ///< name of the associator to MCHits
 
   // pointer to associator
-  OTCluster2MCHitAsct::IAsct* m_hAsct;
+  OTCluster2MCHitAsct::IAsct* m_hAsct; ///< pointer to associator
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCDepositAsct.h,v 1.2 2002-08-07 15:55:05 jvantilb Exp $
+// $Id: OTCluster2MCDepositAsct.h,v 1.3 2002-09-27 09:41:04 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 
 #define OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H 1
 
@@ -43,8 +43,8 @@ private:
 
   /// Standard constructor
   OTCluster2MCDepositAsct(const std::string& type,
-                      const std::string& name,
-                      const IInterface* parent ) 
+                          const std::string& name,
+                          const IInterface* parent ) 
   :Asct( type, name, parent) {
     setProperty( "Location", OTCluster2MCDepositLocation);
     setProperty( "AlgorithmType", "OTCluster2MCDepositAlg" );
@@ -57,8 +57,3 @@ private:
 
 };
 #endif // OTASSOCIATORS_OTCLUSTER2MCDEPOSITASCT_H
-
-
-
-
-

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.4 2002-08-07 15:55:06 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.5 2002-09-27 09:41:05 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -35,8 +35,7 @@ OTCluster2MCParticleAlg::OTCluster2MCParticleAlg( const std::string& name,
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCParticleLocation );
-  this->declareProperty("associatorName", 
-                         m_nameAsct = "OTCluster2MCHitAsct" );
+  declareProperty( "associatorName", m_nameAsct = "OTCluster2MCHitAsct" );
 }
 
 OTCluster2MCParticleAlg::~OTCluster2MCParticleAlg() {
@@ -51,7 +50,7 @@ StatusCode OTCluster2MCParticleAlg::initialize() {
 
   sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
   if( sc.isFailure() || 0 == m_hAsct) {
-    log << MSG::FATAL << "    Unable to retrieve Associator tool" << endreq;
+    log << MSG::FATAL << "Unable to retrieve Associator tool" << endreq;
     return sc;
   }
  

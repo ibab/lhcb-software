@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.7 2002-08-07 15:55:06 jvantilb Exp $
+! $Id: release.notes,v 1.8 2002-09-27 09:41:05 jvantilb Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2002-09-26 - Jeroen van Tilburg
+ - OTCluster2MCHitAlg now makes use of OTCluster2MCDepositAlg.
 
 ! 2002-08-07 - Jeroen van Tilburg
  - Added class descriptions.
