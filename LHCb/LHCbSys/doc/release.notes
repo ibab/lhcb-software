@@ -11,6 +11,7 @@
                    EventSys v15r0, RichEvent v6r0, DAQEvent v2r0, PhysEvent v7r8,
                    DetSys v3r1, RichDet v6r1,
                    AssociatorSys v1r7, TrFitEvent v4r1
+ - Removed packages: BookKeeping
 
 !======================== LHCbSys v13r2 2003-10-14 ========================
 ! 2003-10-14 - Marco Cattaneo

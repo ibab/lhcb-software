@@ -10,8 +10,6 @@ use LHCb		v13r3
 
 use GaudiConf		v7r2
 
-use BookKeeping 	v1r2	Tools
-
 # External packages used by GenEvent
 use PYTHIA		v2r6205p2 Gen
 use HepMC		v3r121p1  Sim
