@@ -27,14 +27,15 @@ use GaudiSvc            v9r*
 use GaudiRootDb         v8r*
 use DbCnv               v7r*    Event 
 
-# Histogram persistency
-use HbookCnv            v13r*
+# Histogram persistency (optional)
+# use HbookCnv            v13r*
 
 # Access to magnetic field service
 use Magnet              v2r*    Det
 
 #GiGa staff...
 use GiGaCnv             v7r*    Sim
+use GaussTools          v1r*    Sim
 #use GaussImports        v2r*    Sim 
 
 # generator

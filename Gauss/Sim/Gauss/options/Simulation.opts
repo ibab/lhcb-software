@@ -1,10 +1,11 @@
-// $Id: Simulation.opts,v 1.17 2002-08-05 14:03:49 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.18 2002-09-16 12:17:41 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
   //  "GaussImports" ,
+  "GaussTools"   ,
   "Magnet"        } ;
 
 ApplicationMgr.ExtSvc += 
@@ -22,7 +23,8 @@ Simulation.Members +=
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
   "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
-  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCParticles/MCVertices
+  "GiGaMiscGetEventAlg/GetEvent"     ,   // convert MCParticles/MCVertices
+  "GetGiGaHitsAlg/GetHits"           };  // convert MCHits
 
 // configuration of GiGa Data Store 
 GiGaStore.ConversionServices   = 
@@ -48,15 +50,23 @@ Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ;
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
+Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
+Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
 
 
 // Physics List  to be used and its configuration  
-GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
+GiGaSvc.PhysicsList            = "GiGaPhysListModular/ModularPL" ;
+//GiGaSvc.ModularPL.PhysicsConstructors = {"GiGaPhysConstructorEM"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
+GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorGen"};
+
+//GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
 //GiGaSvc.PhysicsList = "GiGaExternalPhysList<ExN01PhysicsList>/EmPhysList" ; 
 GiGaSvc.EmPhysList.Cut         = 5.0                        ;
 
@@ -78,7 +88,7 @@ GiGaSvc.SimpleTrack.StoreAll  = true                                    ;
 
 // Stepping action to be used and its configuration  
 GiGaSvc.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
-GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
+//GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
 
 // Event action to be used and its configuration  
 GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
@@ -101,6 +111,7 @@ GiGaSvc.EventCommand.BeginOfEventCommands =
 { "/vis/scene/create"                   , 
   "/vis/sceneHandler/create DAWNFILE"   ,
   "/vis/viewer/create"                  ,
+  "/vis/viewer/viewpointThetaPhi -90 -90",
   "/vis/scene/add/volume"               , 
   "/vis/scene/add/trajectories"         ,
   "/vis/scene/notifyHandlers   "        } ;
@@ -139,4 +150,8 @@ GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 // GiGaGeomCnvSvc.Budget.OutputLevel = 1 ;
 
 
+// sensdet paths
+GiGaGeomCnvSvc.ITSDet.DetectorPath = "/Tracker/IT";
+GiGaGeomCnvsvc.VeloSDet.DetectorPath = "/Velo";
+GiGaGeomCnvSvc.OTSDet.DetectorPath= "/Tracker/OT";
 

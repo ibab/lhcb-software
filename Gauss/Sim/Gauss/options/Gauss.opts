@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.14 2002-07-18 13:44:07 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.15 2002-09-16 12:17:41 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -24,7 +24,7 @@ MagneticFieldSvc.FieldMapFile =
 //"/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v247r0/cdf/field043.cdf";
 "/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
-ParticlePropertySvc.ParticlePropertiesFile = "../data/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
@@ -39,9 +39,9 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
-//#include "$GAUSSOPTS/GaussRootIO.opts"
-//#include "$GAUSSOPTS/GaussTape.opts"
-//GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+#include "$GAUSSOPTS/GaussRootIO.opts"
+#include "$GAUSSOPTS/GaussTape.opts"
+GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3 ;
@@ -55,7 +55,7 @@ MessageSvc.OutputLevel    = 3 ;
 //MCParticleGun.OutputLevel = 1;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 2 ;
+ApplicationMgr.EvtMax     = 1 ;
 
 
 

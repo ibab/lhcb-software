@@ -27,6 +27,7 @@ EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"};
 
 
 ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
+ApplicationMgr.TobAlg += {"GetGiGaHitsAlg/GetHits"};
 ApplicationMgr.TopAlg += {"DumpMC"};
 
 ApplicationMgr.EvtSel      ="'Gauss.root'";
