@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.9 2002-07-29 09:14:51 cattanem Exp $
+! $Id: release.notes,v 1.10 2002-09-03 12:28:20 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-09-03 - Gloria Corti
+ - Introduce cut on Chi2 per degree of Freedom in MCPIDProtoPAlg,
+	 also introduce error counters with printing in finalize and possibility 
+	 of monitoring ntuple	 
 
 !========================== DaVinciMCTools v2r0 2002-07-29 =================
 ! 2002-07-26 - Gloria Corti

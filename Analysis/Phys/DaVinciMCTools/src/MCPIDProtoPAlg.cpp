@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.4 2002-07-27 19:38:25 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.5 2002-09-03 12:26:29 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -14,6 +14,8 @@
 #include "Event/RichPID.h"
 #include "Event/MuonID.h"
 #include "Event/ProtoParticle.h"
+#include "Event/ITClusterOnStoredTrack.h"
+#include "Event/OTClusterOnStoredTrack.h"
 
 // local
 #include "MCPIDProtoPAlg.h"
@@ -39,9 +41,14 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   , m_photonMatchName( "PhotonMatch" )
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
-  , m_lastChiSqMax( 100 )
   , m_upstream( false )
+  , m_trackClassCut( 0.7 )
+  , m_chiSqITracks( 100.0 )
+  , m_chiSqOTracks( 100.0 )
+  , m_lastChiSqMax( 1000.0 )
   , m_trackAsctName( "Track2MCParticleAsct" )
+  , m_errorCount( )
+  , m_monitor( false )
 {
 
   // Inputs
@@ -60,10 +67,18 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   declareProperty("OutputData",
                   m_protoPath = ProtoParticleLocation::Charged );
 
-  // Selections
-  declareProperty("MaxChiSquare", m_lastChiSqMax = 1000 );
-  declareProperty("UpstreamsTracks", m_upstream );
+  // Perfect PID
   declareProperty("TrackAsct", m_trackAsctName );
+  
+  // Selections
+  declareProperty("UpstreamsTracks", m_upstream );
+  declareProperty("ITFracTrackClass", m_trackClassCut );
+  declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
+  declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
+  declareProperty("MaxChiSquare", m_lastChiSqMax );
+  
+  // Monitor
+  declareProperty("Monitor", m_monitor );
   
 }
 
@@ -78,13 +93,12 @@ MCPIDProtoPAlg::~MCPIDProtoPAlg() {};
 StatusCode MCPIDProtoPAlg::initialize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
 
   StatusCode sc;
   IParticlePropertySvc* ppSvc;
   sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service" 
+    log << MSG::ERROR << "Unable to locate Particle Property Service" 
         << endreq;
     return sc;
   }
@@ -135,7 +149,58 @@ StatusCode MCPIDProtoPAlg::initialize() {
     return sc;
   }
 
+  if( m_monitor ) {
+    std::string ntname = "/NTUPLES/FILE1";
+    NTupleFilePtr ntfile(ntupleSvc(), ntname) ;
+    if( ntfile ) {
+      ntname += "/"+(this->name())+"/1";
+      NTuplePtr ntmoni(ntupleSvc(), ntname);
+      if( !ntmoni ) {
+        ntmoni = ntupleSvc()->book(ntname,CLID_RowWiseTuple,"Monitor");
+        if( ntmoni ) {
+          StatusCode scnt = ntmoni->addItem("Ntracks", m_ntrk);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunforw", m_nunforw);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunmath", m_nunmatc);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunupst", m_nunupst);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej1", m_ntkrej1);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej2", m_ntkrej2);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej3", m_ntkrej3);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nrich", m_nrich);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nmuon", m_nmuon);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nelec", m_nelec);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkpro", m_ntkpro);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nripro", m_nripro);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nmupro", m_nmupro);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nelpro", m_nelpro);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nprasc", m_naspro);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nproto", m_nproto);
+          if( !scnt.isSuccess() ) {
+            log << MSG::ERROR << "Not able to add items to ntuple" << endreq;
+            return StatusCode::FAILURE;
+          }
+          m_ntuple = ntmoni;
+        }
+        else { 
+          log << MSG::ERROR << "Not able to book ntuple " << ntname 
+              << endreq;
+          return StatusCode::FAILURE;
+        }
+      }
+      else {
+        log << MSG::ERROR << "Ntuple " << ntname << " already exists"
+            << endreq;
+        return StatusCode::FAILURE;
+      }  
+    }
+    else {
+      log << MSG::ERROR << "Monitor requested by ntuple file not set" 
+          << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+
   return StatusCode::SUCCESS;
+
 };
 
 //=============================================================================
@@ -144,13 +209,24 @@ StatusCode MCPIDProtoPAlg::initialize() {
 StatusCode MCPIDProtoPAlg::execute() {
 
   MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+
+  // Prepare output container
+  ProtoParticles* chprotos = new ProtoParticles();
+  StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
+  if( !sc.isSuccess() ) {
+    delete chprotos; 
+    log << MSG::ERROR  
+        << "Unable to register ProtoParticles container in " 
+        << m_protoPath << endreq;
+    return sc;
+  }
 
   // Load stored tracks
   SmartDataPtr<TrStoredTracks> tracks ( eventSvc(), m_tracksPath );
   if( !tracks || 0 == tracks->size() ) {
-    log << MSG::DEBUG << "Unable to retrieve TrStoredTracks at "
+    log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
+    m_errorCount["No Tracks"] += 1;
     return StatusCode::FAILURE;
   }
   else {   
@@ -164,6 +240,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   if( !richpids || 0 == richpids->size() ) {
     log << MSG::INFO  << "Failed to locate RichPIDs at "
         << m_richPath << endreq;
+    m_errorCount["No Rich pID"] += 1;
   }
   else {   
     log << MSG::DEBUG << "Successfully located " << richpids->size()
@@ -177,6 +254,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   if( !muonpids || 0 == muonpids->size() ) {
     log << MSG::INFO << "Failed to locate MuonIDs at "
         << m_muonPath << endreq;
+    m_errorCount["No Muon pID"] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << muonpids->size()
@@ -190,6 +268,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   if( !electrons || 0 == electrons->size() ) {
     log << MSG::INFO << "Failed to locate CaloHypos at "
         << m_electronPath << endreq;
+    m_errorCount["No electron pID"] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << electrons->size()
@@ -214,40 +293,28 @@ StatusCode MCPIDProtoPAlg::execute() {
     caloData = false;
   }
 
-  // Prepare output container
-  ProtoParticles* chprotos = new ProtoParticles();
-  StatusCode sc = eventSvc()->registerObject( m_protoPath, chprotos );
-  if( !sc.isSuccess() ) {
-    delete chprotos; 
-    log << MSG::ERROR  
-        << "Unable to register ProtoParticles container in " 
-        << m_protoPath << endreq;
-    return sc;
-  }
-
   // ProtoParticles should only be "good tracks"
-  //   keep only Forward, Upstream and Matched tracks, no clones 
-  //   reject tracks with fit errors
-  // Note that history does not accumulate:: it is only the nput container
-  // and then a track is classifed as a clone but not respect to what
   
-  int unforwr=0; int unmatch=0; int unupstr=0;
+  int countProto[5] = { 0, 0, 0, 0, 0 };
+  int countRejTracks[4] = { 0, 0, 0, 0 };
+  int countTypeTracks[4] = { 0, 0, 0, 0 };
 
-  int countTrackProto = 0;
-  int countRichProto = 0;
-  int countMuonProto = 0;
-  int countElectronProto = 0;
-  int countAssociated = 0;
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); tracks->end() != iTrack; ++iTrack ) {
     
-    // Track satisfy criteria to make a ProtoParticle ?
+    // Does the track satisfies criteria to make a ProtoParticle ?
     if( (*iTrack)->unique() ) {
-      if( (*iTrack)->forward() )  unforwr++;
-      if( (*iTrack)->match() )    unmatch++;
-      if( (*iTrack)->upstream() ) unupstr++;
+      if( (*iTrack)->forward() )  countTypeTracks[UniqueForward]++;
+      if( (*iTrack)->match() )    countTypeTracks[UniqueMatch]++;
+      if( (*iTrack)->upstream() ) countTypeTracks[UniqueUpstream]++;
     }
-    if( !keepTrack( (*iTrack) ) ) continue;
+    
+//      if( !keepTrack( (*iTrack) ) ) continue;
+    int reject = rejectTrack( (*iTrack) );
+    if( 0 != reject ) {
+      countRejTracks[reject] += 1;
+      continue;
+    }
     
     ProtoParticle* proto = new ProtoParticle();
     proto->setTrack( *iTrack );
@@ -256,7 +323,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     // Retrieve the MCParticle associated with this ProtoParticle
     MCParticle* mcPart = m_track2MCParticleAsct->associatedFrom( *iTrack );
     if( 0 != mcPart ) {
-      countAssociated++;
+      countProto[AsctProto]++;
       pidmc = mcPart->particleID().pid();
       tkcharge = (mcPart->particleID().threeCharge())/3.0;
     }
@@ -265,7 +332,7 @@ StatusCode MCPIDProtoPAlg::execute() {
       if( tkstate ) {
         tkcharge = proto->charge();
         pidmc = m_idPion * (int)tkcharge;
-        log << MSG::DEBUG << "tkstate q/p =" << tkstate->qDivP() << endreq;
+//          log << MSG::DEBUG << "tkstate q/p =" << tkstate->qDivP() << endreq;
       }
     }
     if( 0 == tkcharge ) {
@@ -273,8 +340,8 @@ StatusCode MCPIDProtoPAlg::execute() {
       delete proto;
       continue;
     }
-    
-    countTrackProto++;
+
+    countProto[TrackProto]++;
 
     // Set combined particle ID as from MC truth when available
     ProtoParticle::PIDInfoVector idinfovec;
@@ -291,7 +358,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     if( richData ) {
       StatusCode sc = addRich( richpids, proto );
       if( !sc.isFailure() ) {
-        countRichProto++;
+        countProto[RichProto]++;
       }  
     }
     
@@ -303,7 +370,7 @@ StatusCode MCPIDProtoPAlg::execute() {
         if( track == (*iTrack) ) {
           proto->setMuonPID( *iMuon );
           if( (*iMuon)->InAcceptance() && (*iMuon)->PreSelMomentum() ) {
-            countMuonProto++;
+            countProto[MuonProto]++;
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
             iddet.second = (*iMuon)->MuProb();
@@ -321,7 +388,7 @@ StatusCode MCPIDProtoPAlg::execute() {
       // Add the Electron hypothesis when available (no cuts at the moment)
       ElectronRange erange = etable->relations( *iTrack );
       if( !erange.empty() ) {
-        countElectronProto++;
+        countProto[ElectronProto]++;
         CaloHypo* hypo = erange.begin()->to();
         proto->addToCalo( hypo );
 
@@ -357,47 +424,70 @@ StatusCode MCPIDProtoPAlg::execute() {
     if( (0 == proto->richBit()) && (0 == proto->muonBit()) &&
         (0 == proto->caloeBit()) ) {
       proto->setNoneBit(1);
+      proto->pIDDetectors().
+        push_back( std::make_pair(ProtoParticle::NoPID, 1.0) );      
     }
 
-    //chprotos->insert(proto.release());
     chprotos->insert(proto);
     
   }
 
-  log << MSG::DEBUG << "Found " << (unforwr+unmatch+unupstr)
-      << " forward + upstream + matched unique tracks" << endreq;
-  log << MSG::DEBUG << "Found " << countTrackProto
-      << " tracks of quality to produce ProtoParticles" << endreq;
-  log << MSG::DEBUG << "Made " << countRichProto 
-      << " ProtoParticle with RichPID " << endreq;
-  log << MSG::DEBUG << "Made " << countMuonProto 
-      << " ProtoParticle with MuonID " << endreq;
-  log << MSG::DEBUG << "Made " << countElectronProto 
-      << " ProtoParticle with ElectronHypo " << endreq;
-  log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
-      << chprotos->size() << endreq;
+  if( m_monitor ) {
 
-  for( ProtoParticles::iterator ip = chprotos->begin(); chprotos->end() != ip;
-       ++ip ) {
-    log << MSG::VERBOSE << "track = " << (*ip)->track() << endreq;
-    log << MSG::VERBOSE << "charge = " << (*ip)->charge() << endreq;
-    log << MSG::VERBOSE << "richid = " << (*ip)->richPID() << endreq;
-    log << MSG::VERBOSE << "muonid = " << (*ip)->muonPID() << endreq;
-    log << MSG::VERBOSE << "richhistory = " << (*ip)->richBit() << endreq;
-    log << MSG::VERBOSE << "muonhistory = " << (*ip)->muonBit() << endreq;
-    log << MSG::VERBOSE << "bestPID = " << (*ip)->bestPID() << endreq;
-    for( ProtoParticle::PIDInfoVector::iterator id = (*ip)->pIDInfo().begin(); 
-         (*ip)->pIDInfo().end()!=id; ++id ) {
-      log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
-          << (*id).second  << endreq;
-    }
-    for( ProtoParticle::PIDDetVector::iterator 
-           idd = (*ip)->pIDDetectors().begin(); 
-         (*ip)->pIDDetectors().end()!=idd; ++idd ) {
-      log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
-          << (*idd).second  << endreq;
+    // Fill Ntuple
+    m_ntrk = tracks->size();
+    m_nunforw = countTypeTracks[UniqueForward];
+    m_nunmatc = countTypeTracks[UniqueMatch];
+    m_nunupst = countTypeTracks[UniqueUpstream];
+    m_ntkrej1 = countRejTracks[NoTrack];
+    m_ntkrej2 = countRejTracks[NoTrackType];
+    m_ntkrej3 = countRejTracks[Chi2Cut];
+    m_nrich = richpids->size();
+    m_nmuon = muonpids->size();
+    m_nelec = electrons->size();
+    m_ntkpro = countProto[TrackProto];
+    m_naspro = countProto[AsctProto];
+    m_nripro = countProto[RichProto];
+    m_nmupro = countProto[MuonProto];
+    m_nelpro = countProto[ElectronProto];
+    m_nproto = chprotos->size();
+    
+    m_ntuple->write();
+    
+    log << MSG::DEBUG << "Found " << countProto[TrackProto]
+        << " tracks of quality to produce ProtoParticles" << endreq;
+    log << MSG::DEBUG << "Made " << countProto[RichProto] 
+        << " ProtoParticle with RichPID " << endreq;
+    log << MSG::DEBUG << "Made " << countProto[MuonProto]
+        << " ProtoParticle with MuonID " << endreq;
+    log << MSG::DEBUG << "Made " << countProto[ElectronProto]
+        << " ProtoParticle with ElectronHypo " << endreq;
+    log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
+        << chprotos->size() << endreq;
+
+    for( ProtoParticles::iterator ip = chprotos->begin();
+         chprotos->end() != ip; ++ip ) {
+      log << MSG::VERBOSE << "track = " << (*ip)->track() << endreq;
+      log << MSG::VERBOSE << "charge = " << (*ip)->charge() << endreq;
+      log << MSG::VERBOSE << "richid = " << (*ip)->richPID() << endreq;
+      log << MSG::VERBOSE << "muonid = " << (*ip)->muonPID() << endreq;
+      log << MSG::VERBOSE << "richhistory = " << (*ip)->richBit() << endreq;
+      log << MSG::VERBOSE << "muonhistory = " << (*ip)->muonBit() << endreq;
+      log << MSG::VERBOSE << "bestPID = " << (*ip)->bestPID() << endreq;
+      for(ProtoParticle::PIDInfoVector::iterator id = (*ip)->pIDInfo().begin();
+          (*ip)->pIDInfo().end()!=id; ++id ) {
+        log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
+            << (*id).second  << endreq;
+      }
+      for( ProtoParticle::PIDDetVector::iterator 
+             idd = (*ip)->pIDDetectors().begin(); 
+           (*ip)->pIDDetectors().end()!=idd; ++idd ) {
+        log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
+            << (*idd).second  << endreq;
+      }
     }
   }
+  
   return StatusCode::SUCCESS;
 };
 
@@ -409,8 +499,72 @@ StatusCode MCPIDProtoPAlg::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
 
+  for( ErrorTable::iterator ierr = m_errorCount.begin();
+       ierr != m_errorCount.end(); ierr++ ) { 
+    log << MSG::INFO 
+        << "Number of events with " << (*ierr).first 
+        << " = " << (*ierr).second 
+        << endreq;
+  }
   return StatusCode::SUCCESS;
 }; 
+
+//=============================================================================
+// rejectTrack because of poor quality
+//   keep only Forward, Upstream and Matched tracks, no clones 
+//   reject tracks with fit errors
+// Note that history does not accumulate:: it is only the original container
+// and then a track is classifed as a clone but not respect to what
+//=============================================================================
+int MCPIDProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
+
+  int reject = NoTrack;
+  if( NULL != track ) {
+    if( 0 == track->errorFlag() ) {
+      if( track->unique() && (track->forward() || track->match()) ) {
+        reject = KeepTrack;
+      }
+      if( m_upstream && (track->unique() && track->upstream()) ) {
+        reject = KeepTrack; 
+      }
+    }
+    else {
+      reject = NoTrackType;
+    }
+  }
+  
+  if( !reject ) {
+    int nIT = 0;
+    int nOT = 0;
+    SmartRefVector<TrStoredMeasurement>::const_iterator iterMeas = 
+      track->measurements().begin();
+    while( iterMeas != track->measurements().end() ) {
+      const TrStoredMeasurement* aMeas = *iterMeas;
+      if( dynamic_cast<const ITClusterOnStoredTrack*>(aMeas) ) {
+        nIT++;
+      }
+      if( dynamic_cast<const OTClusterOnStoredTrack*>(aMeas) ) {
+        nOT++;
+      }
+      iterMeas++;
+    }
+    int nTrackerMeas = nIT + nOT;
+    int nTotMeas = track->measurements().size();
+    double fracIT = (double)nIT/(double)nTrackerMeas;
+    double cutValue = 0.0;
+    if( fracIT > m_trackClassCut ) {
+      cutValue = m_chiSqITracks;
+    } else {
+      cutValue = m_chiSqOTracks;
+    }
+    
+    double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
+    if( chi2NoF >= cutValue ) {
+      reject = Chi2Cut;
+    }
+  }
+  return reject;
+};
 
 //=============================================================================
 //  keepTrack because of good quality

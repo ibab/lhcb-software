@@ -3,22 +3,27 @@
 
 #pragma print off
 // Input data
-//MCPIDProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
-//MCPIDProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
-//MCPIDProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
-//MCPIDProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
-//MCPIDProtoPAlg.PhotonMatching = "PhotonMatch"; 
-//MCPIDProtoPAlg.ElectronMatching = "ElectronMatch";
-//MCPIDProtoPAlg.BremMatching = "BremMatch";  
+//  MCPIDProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
+//  MCPIDProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
+//  MCPIDProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
+//  MCPIDProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
+//  MCPIDProtoPAlg.PhotonMatching = "PhotonMatch"; 
+//  MCPIDProtoPAlg.ElectronMatching = "ElectronMatch";
+//  MCPIDProtoPAlg.BremMatching = "BremMatch";  
 
 // Output data
-//MCPIDProtoPAlg.OutputData = "Rec/ProtoP/Charged";
-#pragma print on
+//  MCPIDProtoPAlg.OutputData = "Rec/ProtoP/Charged";
 
 // Track Selections
-MCPIDProtoPAlg.MaxChiSquare = 1000;      // default = 1000 
-MCPIDProtoPAlg.UpstreamsTracks = false;  // default = false
+//  MCPIDProtoPAlg.UpstreamsTracks = true;  // default = false
+#pragma print on
+MCPIDProtoPAlg.ITFracTrackClass = 0.4;
+MCPIDProtoPAlg.Chi2NdFofITracks = 500.0;
+MCPIDProtoPAlg.Chi2NdFofOTracks = 100.0;
+
 
 // Track associator 
 MCPIDProtoPAlg.TrackAsct = "Track2MCAsct";
 ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";
+
+// MCPIDProtoPAlg.Monitor = true;  // default = false
