@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.4 2002-05-07 08:48:07 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.5 2002-05-07 08:49:49 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -286,11 +286,11 @@ StatusCode L0mTrigger::execute() {
     if ( (*im)->status() == L0Muon::OK ) {
       log << MSG::DEBUG << "Pt of the candidate = " << (*im)->pt() 
           << endreq;   
-      log << MSG::DEBUG << "\nTheta of the candidate = " << (*im)->theta() 
+      log << MSG::DEBUG << "Theta of the candidate = " << (*im)->theta() 
           << endreq;  
-      log << MSG::DEBUG	<< "\nPhi of the candidate = " << (*im)->phi() 
+      log << MSG::DEBUG	<< "Phi of the candidate = " << (*im)->phi() 
           << endreq;  
-      log << MSG::DEBUG << "\nStatus of the candidate = " << (*im)->status()
+      log << MSG::DEBUG << "Status of the candidate = " << (*im)->status()
 	  << endreq;   
     }			 
   }
