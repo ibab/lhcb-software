@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRayTraceCherenkovCone.cpp
  *
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.7 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.8 2005-02-02 10:08:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRayTraceCherenkovCone.h"
@@ -24,11 +25,11 @@ const        IToolFactory& RichRayTraceCherenkovConeFactory = s_factory ;
 RichRayTraceCherenkovCone::RichRayTraceCherenkovCone( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_rayTrace     ( 0 ),
-    m_ckAngle      ( 0 ),
-    m_smartIDTool  ( 0 ),
-    m_nRayTrace    ( 0 )
+  : RichRecToolBase ( type, name, parent ),
+    m_rayTrace      ( 0 ),
+    m_ckAngle       ( 0 ),
+    m_smartIDTool   ( 0 ),
+    m_nRayTrace     ( 0 )
 {
   // Define interface for this tool
   declareInterface<IRichRayTraceCherenkovCone>(this);
@@ -49,16 +50,9 @@ StatusCode RichRayTraceCherenkovCone::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Set up cached parameters for photon tracing
-  m_incPhi = M_2PI/( static_cast<double>(m_nRayTrace) );
-  double ckPhi = 0;
-  m_sinCkPhi.clear();
-  m_cosCkPhi.clear();
-  for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ckPhi += m_incPhi ) {
-    m_sinCkPhi.push_back( sin(ckPhi) );
-    m_cosCkPhi.push_back( cos(ckPhi) );
-  }
+  m_incPhi = M_2PI / static_cast<double>(m_nRayTrace) ;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichRayTraceCherenkovCone::finalize()
@@ -153,14 +147,13 @@ RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
 
     // loop around the ring
     const double sinCkTheta = sin(ckTheta);
-    const double cosCkTheta = cos(ckTheta);
-    AngleVector::const_iterator iCos = m_cosCkPhi.begin();
-    AngleVector::const_iterator iSin = m_sinCkPhi.begin();
-    for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ++iCos, ++iSin ) {
+    const double cosCkTheta = cos(ckTheta);   
+    double ckPhi = 0.0;
+    for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ckPhi+=m_incPhi ) {
 
       // Photon direction around loop
-      const HepVector3D photDir = rotation * HepVector3D( sinCkTheta*(*iCos),
-                                                          sinCkTheta*(*iSin),
+      const HepVector3D photDir = rotation * HepVector3D( sinCkTheta*cos(ckPhi),
+                                                          sinCkTheta*sin(ckPhi),
                                                           cosCkTheta );
 
       // Ray trace to detector plane

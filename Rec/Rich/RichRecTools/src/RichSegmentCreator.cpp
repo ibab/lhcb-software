@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSegmentCreator.cpp
  *
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.11 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichSegmentCreator.cpp,v 1.12 2005-02-02 10:09:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichSegmentCreator.h"
@@ -67,7 +68,7 @@ StatusCode RichSegmentCreator::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichSegmentCreator::finalize() 

@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSegmentCreator.h
  *
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.10 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichSegmentCreator.h,v 1.11 2005-02-02 10:09:40 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
@@ -30,6 +31,7 @@
 #include "RichRecBase/IRichSegmentCreator.h"
 #include "RichKernel/IRichDetParameters.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichSegmentCreator RichSegmentCreator.h
  *
  *  Tool for the creation and manipulation of RichRecSegment objects
@@ -38,6 +40,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichSegmentCreator : public RichRecToolBase,
                            virtual public IRichSegmentCreator,
@@ -91,7 +94,11 @@ private:  // Private data
 
   // parameters
   std::vector<int> m_binsEn;
+
+  /// Maximum photon energy for each radiator medium
   double m_maxPhotEn[Rich::NRadiatorTypes];
+
+  /// Minimum photon energy for each radiator medium
   double m_minPhotEn[Rich::NRadiatorTypes];
 
   // debug segment counting

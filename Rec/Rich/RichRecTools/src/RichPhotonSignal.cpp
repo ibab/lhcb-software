@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPhotonSignal.cpp
  *
  *  Implementation file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.14 2004-07-27 20:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPhotonSignal.cpp,v 1.15 2005-02-02 10:07:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPhotonSignal.h"

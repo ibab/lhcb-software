@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichExpectedTrackSignal.cpp
  *
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.10 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.9  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.11 2005-02-02 10:06:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichExpectedTrackSignal.h"

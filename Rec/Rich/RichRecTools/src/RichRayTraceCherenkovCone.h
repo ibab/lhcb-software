@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRayTraceCherenkovCone.h
  *
  *  Header file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.5 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.6 2005-02-02 10:08:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_RICHRAYTRACECHERENKOVCONE_H 1
@@ -31,15 +32,17 @@
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRayTraceCherenkovCone RichRayTraceCherenkovCone.h
  *
  *  Tool to ray trace cherenkov photons in a cone around a given
- *  RichRecSegment direction, at the given angle or the angle correct for a given mass
- *  hypothesis.
+ *  RichRecSegment direction, at the given angle or the angle correct 
+ *  for a given mass hypothesis.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichRayTraceCherenkovCone : public RichRecToolBase,
                                   virtual public IRichRayTraceCherenkovCone {
@@ -103,12 +106,6 @@ private: // data
 
   // Cherenkov phi incrementation
   double m_incPhi;
-
-  typedef std::vector<double> AngleVector;
-  // Cache Sin(angle) for geometrical efficiency calculation
-  AngleVector m_sinCkPhi;
-  // Cache Cos(angle) for geometrical efficiency calculation
-  AngleVector m_cosCkPhi;
 
 };
 

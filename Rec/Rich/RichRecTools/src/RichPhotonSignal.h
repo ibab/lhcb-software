@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPhotonSignal.h
  *
  *  Header file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.9 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPhotonSignal.h,v 1.10 2005-02-02 10:07:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
@@ -37,6 +38,7 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichPhotonSignal RichPhotonSignal.h
  *
  *  Tool to calculate for a given photon the probabilities of it
@@ -47,6 +49,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichPhotonSignal : public RichRecToolBase,
                          virtual public IRichPhotonSignal {

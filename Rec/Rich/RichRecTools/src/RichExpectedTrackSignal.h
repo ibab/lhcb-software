@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichExpectedTrackSignal.h
  *
  *  Header file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.8 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichExpectedTrackSignal.h,v 1.9 2005-02-02 10:06:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
@@ -37,6 +38,7 @@
 #include "RichRecBase/IRichRayleighScatter.h"
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichExpectedTrackSignal RichExpectedTrackSignal.h
  *
  *  Tool to calculate the expected signals for given 
@@ -45,6 +47,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichExpectedTrackSignal : public RichRecToolBase,
                                 virtual public IRichExpectedTrackSignal {
