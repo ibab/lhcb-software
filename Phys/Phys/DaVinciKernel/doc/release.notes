@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg
 
 ! 2005-01-06 - P. Koppenburg
+  - src/PhysDesktop.cpp
+    . Do not issue StatusCode::FAILURE when there is no PV 
+
+! 2005-01-06 - P. Koppenburg
   - DaVinciTools/*, Kernel/*:
     . moved all interfaces to Kernel/. Please adapt your code. For some time
       every #include "DaVinciTools/..." will work but produce a 
