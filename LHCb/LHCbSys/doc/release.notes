@@ -4,6 +4,33 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r1 2004-01-27 =======================
+! 2004-01-27 - Marco Cattaneo
+
+ - New packages:      Calo/CaloInterfaces v3r1 (moved from BOOLE+BRUNEL+DAVINCI)
+                      Calo/CaloUtils v4r6 (moved from BOOLE+BRUNEL+DAVINCI)
+                      SICB/RiSicbGeom v3r8 (moved from SICBOO+BOOLE+BRUNEL)
+                      Phys/MCTools v1r2 (moved from BOOLE+BRUNEL+DAVINCI)
+
+ - Modified packages: XmlTools v3r2,
+                      KernelSys v3r1, LHCbKernel v4r1
+                      EventSys v17r1, L0Event v14r1, Event v4r1
+
+ - In LHCbKernel v4r1
+   . New files to generate lcg dictionary when GOD cannot
+
+ - In Event v4r1:
+   . Change internal representation of MCProperty
+
+ - In LinkerEvent v1r1:
+   . Change internal representation of LinksByKey
+
+ - In L0Event v14r1:
+   . Modifications for filling L1Buffer
+
+ - In XmlTools v3r2:
+   . Fix a valgrind warning 
+
 !======================= LHCbSys v15r0 2004-01-16 =======================
 ! 2004-01-16 - Marco Cattaneo
 

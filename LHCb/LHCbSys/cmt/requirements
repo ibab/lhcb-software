@@ -1,12 +1,12 @@
 package LHCbSys
-version v15r0
+version v15r1
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r0
+use LHCb		v15r1
 
 use GaudiConf		v7r5
 
@@ -15,8 +15,8 @@ use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r0	Kernel
-use LHCbKernel  	v4r0	Kernel
+use KernelSys   	v3r1	Kernel
+use LHCbKernel  	v4r1	Kernel
 use CaloKernel  	v2r5	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
@@ -28,7 +28,7 @@ use DetSys		v4r1	Det
 use VeloDet        	v8r8	Det
 use DetDesc        	v14r1	Det
 use DetDescCnv        	v2r3	Det
-use XmlTools        	v3r1	Tools
+use XmlTools        	v3r2	Tools
 use ITDet          	v1r9	Det
 use OTDet          	v5r2	Det
 use CaloDet        	v6r7	Det
@@ -39,8 +39,8 @@ use MuonTools      	v3r6	Muon
 use RichDet		v6r4	Det
 
 # Event data model
-use EventSys		v17r0	Event
-use Event        	v4r0	Event
+use EventSys		v17r1	Event
+use Event        	v4r1	Event
 use VeloEvent    	v13r0	Event
 use ITEvent      	v13r0	Event
 use OTEvent      	v13r0	Event
@@ -48,14 +48,14 @@ use TrEvent      	v13r0	Event
 use RichEvent    	v7r0	Event
 use CaloEvent    	v13r0	Event
 use MuonEvent    	v3r0	Event
-use L0Event      	v14r0	Event
+use L0Event      	v14r1	Event
 use L1Event      	v12r0	Event
 use PhysEvent    	v8r0	Event
 use HltEvent		v5r0	Event
 use DAQEvent		v4r0	Event
 use GenEvent    	v3r0	Event
 use EventAssoc          v1r0    Event
-use LinkerEvent         v1r0    Event
+use LinkerEvent         v1r1    Event
 use TrgEvent            v2r0    Event
 
 # Associators
@@ -68,6 +68,12 @@ use CaloAssociators    	v3r5	Calo
 use MuonAssociators    	v1r2	Muon
 use TrAssociators      	v3r8	Tr
 use TrFitEvent         	v4r2	Tr
+
+# Other stuff
+use RiSicbGeom		v3r8	SICB
+use MCTools		v1r2	Phys
+use CaloInterfaces	v3r1	Calo
+use CaloUtils		v4r6	Calo
 
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
