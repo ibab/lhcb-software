@@ -1,14 +1,14 @@
-#include "GaudiKernel/ObjectFactory.h"
-#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "Event/EventFactoryDefs.h"
 
 #include "Event/HepMCEvent.h"
 _ImplementContainedObjectFactory( HepMCEvent  ) ;
 _ImplementDataObjectFactory(      HepMCEvents ) ;
 
-DECLARE_FACTORY_ENTRIES(GenEvent) 
-{
-  DECLARE_OBJECT( HepMCEvents ) ;
-};
+void Event_load() {  
+  DLL_DECL_OBJECTFACTORY( HepMCEvent );
+  DLL_DECL_OBJECTFACTORY( HepMCEvents ); 
+}
 
-
-
+extern "C" void Event_loadRef()  {
+  Event_load();
+}
