@@ -1,6 +1,17 @@
-!  $Id: release.notes,v 1.9 2002-01-14 10:01:04 cattanem Exp $
+!  $Id: release.notes,v 1.10 2002-05-07 07:40:58 atsareg Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+!====================================v5========================================
+! 20020506 - L0Muon v5r0 Andrei Tsaregorodtsev
+  Major modifications of the Muon trigger code to adapt to the
+  new Event model and to use new MuonDigits based on MuonTileID:
+  - MuonTile and MuonLayout classes are moved to Muon/MuonKernel package;
+  - L0MuonCandidate is moved to Event/L0Event package;
+  - Single L0mTrigger algorithm left, essentially what was L0mTriggerProcD
+    algorithm in the past;
+  - Removed all the files used to build L0mPads from the output of the old
+    MuonSicbCnv.  
 
 !====================================v4========================================
 ! 20020108 - L0Muon v4r0 Marco Cattaneo
