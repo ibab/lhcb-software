@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.13 2003-11-21 22:27:39 jonesc Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.14 2003-11-22 20:43:48 jonesc Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -75,6 +75,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   m_panelHorizEdge = m_HPD0Centre.x() - 0.5*m_columnPitch;
 
   //  m_detPlaneHorizEdge = m_fabs_panelHorizEdge;
+  m_detPlaneHorizEdge = fabs(m_panelHorizEdge);
 
   //get the Vertical Edge for the two types of columns
   //numbers start at zero (so the first is even)
