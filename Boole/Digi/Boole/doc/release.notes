@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r6>2004-04-21 Boole v5r6</A></H1><PRE>
+</PRE><H1><A NAME=v5r6>2004-04-23 Boole v5r6</A></H1><PRE>
 Requires data produced with Gauss v15r4 or later
 
 - New tuning
@@ -25,6 +25,7 @@ Requires data produced with Gauss v15r4 or later
     (VeloAssociators v1r10)
   . Minor fix in a monitor class
     (RichReadout v1r8, RichdigiQC v1r6)
+  . Fix L0MuonTrigger.FoiXSize (L0MuonTrigger v1r1p1)
 
 </PRE><H1><A NAME=v5r5>2004-04-15 Boole v5r5</A></H1><PRE>
 
