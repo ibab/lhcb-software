@@ -1,4 +1,4 @@
-// $Id: XmlMuonReadoutCondCnv.cpp,v 1.5 2003-06-16 13:32:51 sponce Exp $
+// $Id: XmlMuonReadoutCondCnv.cpp,v 1.6 2003-06-19 09:57:27 cattanem Exp $
 
 // Include files
 #include <vector>
@@ -247,7 +247,7 @@ XmlMuonReadoutCondCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (JitterValuesString));
     
     
-    if ( !(rType == "Anode") || (rType == "Cathode")) {
+    if ( !((rType == "Anode") || (rType == "Cathode")) ) {
       log << MSG::WARNING << "Readout type claimed to be "
           << rType << endreq;
       return StatusCode::FAILURE;
