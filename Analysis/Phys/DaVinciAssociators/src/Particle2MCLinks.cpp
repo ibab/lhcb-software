@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.6 2002-09-03 09:19:19 graven Exp $
+// $Id: Particle2MCLinks.cpp,v 1.7 2002-09-09 13:48:38 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -106,23 +106,22 @@ StatusCode Particle2MCLinks::execute() {
     }
   }
   if (table!=0) {
-      // Register the table on the TES
-      StatusCode sc = eventSvc()->registerObject( outputTable(), table);
-      if( sc.isFailure() ) {
-        log << MSG::FATAL << "     *** Could not register table " 
-            << outputTable()
-            << endreq;
-        delete table;
-        return sc;
-      } else {
-        log << MSG::DEBUG << "     Registered table " 
-            << outputTable() << endreq;
-      }
+    // Register the table on the TES
+    StatusCode sc = eventSvc()->registerObject( outputTable(), table);
+    if( sc.isFailure() ) {
+      log << MSG::FATAL << "     *** Could not register table " 
+          << outputTable()
+          << endreq;
+      delete table;
+      return sc;
+    } else {
+      log << MSG::DEBUG << "     Registered table " 
+          << outputTable() << endreq;
+    }
   } else {
-      log << MSG::FATAL << "     *** Could not create table " 
-            << outputTable()
-            << endreq;
-
+    log << MSG::FATAL << "     *** Could not create table " 
+        << outputTable()
+        << endreq;
   }
     
   return StatusCode::SUCCESS ;
