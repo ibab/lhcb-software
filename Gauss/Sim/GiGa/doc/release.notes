@@ -1,6 +1,9 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+! 20010222 - Gonzalo Gracia
+    Fixed rotations in Detector element conversion
+    Changed file 
 ===========================================================================
 ! 20010221 - Vanya Belyaev
    (1) New "pseudo-interfaces" for "Stacking Action","Tracking Action" and "Stepping Action".
