@@ -3,10 +3,6 @@ version v1r2
 
 branches doc cmt src job options
 
-# this line is necessary for getting the LHCb web documentation
-set LHCBROOT ${LHCBSOFT}/LHCb/v7
-set GAUDIROOT ${SITEROOT}/sw/Gaudi/releases/Gaudi/v8
-
 version_strategy first_choice
 
 # Gaudi Configuration options
