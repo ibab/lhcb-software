@@ -1,6 +1,10 @@
 package Event
 package manager: ?????
 
+! 20010710 - Flr
+  requirements - use GaudiSys v8
+
+!===================================================================
 ! 20010223 - Pere Mato
   New package
 
