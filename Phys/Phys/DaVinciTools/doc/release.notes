@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.19 2002-07-26 12:59:00 odie Exp $
+! $Id: release.notes,v 1.20 2002-07-27 20:27:56 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
-| 2002-07-26 - Olivier Dormond
+! 2002-07-27 - Gloria Corti
+ - Always return success in ChargeParticleMaker even if ProtoParticles
+   not found
+ - New MuonParticleMaker to make particles as muon based on only Muon
+   Detector particleID result ( J.H.Lopes )
+ - Add error calculation in DCA for parallel particles in 
+   GeomDispCalculator ( M.Gandelman )
+ - Add counters for particle passing criterias both independently and
+   cumulative and introduce methods in IParticleFilter interface to
+   access counters  results in ParticleFilter ( S.Amato ) 
+ - use AIDA v2r*
+
+! 2002-07-26 - Olivier Dormond
  - Added alternative decay at top level, i.e. you can write 
    "{B0 -> K+ pi-, B0 -> K- pi+}".
  - Added alternative set of decay products, i.e. you can write
