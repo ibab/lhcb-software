@@ -2,6 +2,7 @@
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, Yuehong Xie
 
+!========================== DaVinciTransporter v1r2 2004-12-01 ===================
 ! 2004-11-08 - Yuehong Xie
  - src/ParabolicTransporter.cpp
    . Fix a bug in computing covariance matrix which affected the transort of Ks from magnetic 

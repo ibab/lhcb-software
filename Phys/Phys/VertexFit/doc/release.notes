@@ -2,6 +2,7 @@
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+!========================== VertexFit v1r2 2004-12-01 ===================
 ! 2004-11-25 - Yuehong Xie
   - Modified KFFitTool.cpp/.h to make it work with Ks
 

@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.141 2004-11-18 09:07:25 pkoppenb Exp $
+! $Id: release.notes,v 1.142 2004-12-01 07:46:14 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v11r3 2004-12-01 ===================
 ! 2004-11-18 - P. Koppenburg
   - src/CheckPV.{h,cpp}
     . New algorithm that checks if a PV is there and has been reconstructed.
