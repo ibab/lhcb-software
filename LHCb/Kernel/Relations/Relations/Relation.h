@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.4 2005-02-16 19:59:35 ibelyaev Exp $
+// $Id: Relation.h,v 1.5 2005-03-14 09:47:14 cattanem Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/02/16 19:59:35  ibelyaev
+//  few minor fixes to enable 'lcgdict' processing
+//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -111,7 +114,7 @@ namespace Relations
     /** constructor from "inverse interface"
      *  It is an efficient way to "invert" relation 
      *  @param inv interface to be inverted 
-     *  Second argument is artificial, to distinguish from copy constructor
+     *  @param flag artificial argument, to distinguish from copy constructor
      */
     Relation 
     ( const IInverse&    inv     , 

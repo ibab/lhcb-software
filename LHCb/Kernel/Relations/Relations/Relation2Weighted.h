@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.3 2005-02-16 19:59:35 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.4 2005-03-14 09:47:14 cattanem Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/02/16 19:59:35  ibelyaev
+//  few minor fixes to enable 'lcgdict' processing
+//
 // =============================================================================
 #ifndef RELATIONS_Relation2Weighted_H 
 #define RELATIONS_Relation2Weighted_H 1
@@ -120,6 +123,7 @@ namespace Relations
     
     /** constructor from any "inverse" interface 
      *  @param copy object to be copied
+     *  @param flag artificial argument, to distinguish from copy constructor
      */
     Relation2Weighted
     ( const InverseType& copy , 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.14 2005-03-11 08:41:08 cattanem Exp $ 
+! $Id: release.notes,v 1.15 2005-03-14 09:47:14 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,10 @@
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
-! ====================== Relations v2r4 2005-03-11 ============================
+! ====================== Relations v2r4 2005-03-14 ============================
+! 2005-03-14 - Marco Cattaneo
+ - Small fixes to doxygen comments, to suppress warnings
+
 ! 2005-02-16 - Vanya BELYAEV
  - few minor fixes to enable the generation of "standard" 
    LCG dictionaries using "lcgdict" tool 
