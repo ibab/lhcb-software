@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.10 2003-01-22 11:29:16 sponce Exp $
+// $Id: AssociatorWeighted.h,v 1.11 2003-05-12 11:51:41 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/01/22 11:29:16  sponce
+// makes gcc 3.2 modifications compile under windows
+//
 // Revision 1.9  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -82,7 +85,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
-   virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType* direct ()
+   virtual typename OwnType::DirectType* direct ()
   {
     if( 0 == m_direct  ) { i_direct  () ; }
     return m_direct;
@@ -94,7 +97,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "direct" relation table 
    */
-  virtual const typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType*
+  virtual const typename OwnType::DirectType*
     direct () const  
   {
     if( 0 == m_direct  ) { i_direct  () ; }
@@ -107,7 +110,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::InverseType* inverse ()
+  virtual typename OwnType::InverseType* inverse ()
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
@@ -119,7 +122,7 @@ public:
    *  @see IRelationWeighted
    *  @return pointer to "inverse" relation table 
    */
-  virtual const typename AssociatorWeighted<FROM,TO,WEIGHT>::InverseType*
+  virtual const typename OwnType::InverseType*
     inverse () const  
   {
     if( 0 == m_inverse ) { i_inverse () ; }
@@ -143,10 +146,10 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from  , 
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange& range ) const 
+  ( const typename OwnType::From& from  , 
+    typename OwnType::ToRange& range ) const 
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -163,10 +166,10 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to,
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange& range ) const
+  ( const typename OwnType::To& to,
+    typename OwnType::FromRange& range ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       range = FromRange() ;
@@ -181,10 +184,10 @@ public:
    *  @param  from object one want to retrieve associated range
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange rangeFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from) const 
+  virtual typename OwnType::ToRange rangeFrom
+  ( const typename OwnType::From& from) const 
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       return ToRange() ;
     }
@@ -197,10 +200,10 @@ public:
    *  @return A range of associated objects. 
    *               It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange rangeTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to ) const
+  virtual typename OwnType::FromRange rangeTo
+  ( const typename OwnType::To& to ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       return FromRange() ;
@@ -219,11 +222,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithLowCutFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from,
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold ,
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange& range ) const
+  ( const typename OwnType::From& from,
+    const typename OwnType::Weight& threshold ,
+    typename OwnType::ToRange& range ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -242,11 +245,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithLowCutTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to,
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold,
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange& range ) const
+  ( const typename OwnType::To& to,
+    const typename OwnType::Weight& threshold,
+    typename OwnType::FromRange& range ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       range = FromRange() ;
@@ -266,11 +269,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithHighCutFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from, 
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold,
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange& range ) const
+  ( const typename OwnType::From& from, 
+    const typename OwnType::Weight& threshold,
+    typename OwnType::ToRange& range ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -289,11 +292,11 @@ public:
    *  @return Failure it no table was found
    */
   virtual StatusCode rangeWithHighCutTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to, 
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold , 
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange& range) const
+  ( const typename OwnType::To& to, 
+    const typename OwnType::Weight& threshold , 
+    typename OwnType::FromRange& range) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       range = FromRange() ;
@@ -312,12 +315,12 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange
+  virtual typename OwnType::ToRange
     rangeWithLowCutFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from, 
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold ) const
+  ( const typename OwnType::From& from, 
+    const typename OwnType::Weight& threshold ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       return ToRange() ;
     }
@@ -331,12 +334,12 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange
+  virtual typename OwnType::FromRange
     rangeWithLowCutTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to,
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold ) const
+  ( const typename OwnType::To& to,
+    const typename OwnType::Weight& threshold ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       return FromRange() ;
@@ -351,12 +354,12 @@ public:
    *  @param threshold Threshold on which to cut
    *  @return  A range of associated objects. It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange
+  virtual typename OwnType::ToRange
     rangeWithHighCutFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from,
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold ) const
+  ( const typename OwnType::From& from,
+    const typename OwnType::Weight& threshold ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if( 0 == table ) {
       return ToRange() ;
     }
@@ -370,12 +373,12 @@ public:
    *  @param threshold Weight threshold
    *  @return A range of associated objects. It is empty if no table was found
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange
+  virtual typename OwnType::FromRange
     rangeWithHighCutTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to,
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& threshold ) const
+  ( const typename OwnType::To& to,
+    const typename OwnType::Weight& threshold ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if( 0 == table ) {
       return FromRange() ;
@@ -390,15 +393,16 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::To associatedFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from ) const
+  virtual typename OwnType::To associatedFrom
+  ( const typename OwnType::From& from ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if (0 != table) {
-      typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange range =
+      typename OwnType::ToRange range =
         table->relations( from );
       if( !range.empty() ) {
-        return range.begin()->to();
+        if( !m_decreasing ) return range.begin()->to();
+        return range.rbegin()->to();
       }
     }
     return To();
@@ -412,17 +416,22 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::To associatedFrom
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::From& from, 
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& weight ) const
+  virtual typename OwnType::To associatedFrom
+  ( const typename OwnType::From& from, 
+    typename OwnType::Weight& weight ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::Table* table = direct();
+    const typename OwnType::Table* table = direct();
     if (0 != table) {
-      typename AssociatorWeighted<FROM,TO,WEIGHT>::ToRange range =
+      typename OwnType::ToRange range =
         table->relations( from );
       if( !range.empty() ) {
-        weight = range.begin()->weight();
-        return range.begin()->to();
+        if( !m_decreasing ) {
+          weight = range.begin()->weight();
+          return range.begin()->to();
+        } else {
+          weight = range.rbegin()->weight();
+          return range.rbegin()->to();
+        }
       }
     }
     return To();
@@ -435,16 +444,17 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::From associatedTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to) const
+  virtual typename OwnType::From associatedTo
+  ( const typename OwnType::To& to) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if (0 != table) {
-      typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange range =
+      typename OwnType::FromRange range =
         table->relations( to );
       if( !range.empty() ) {
-        return range.begin()->to();
+        if( !m_decreasing ) return range.begin()->to();
+        return range.rbegin()->to();
       }
     }
     return From();
@@ -458,18 +468,21 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual typename AssociatorWeighted<FROM,TO,WEIGHT>::From associatedTo
-  ( const typename AssociatorWeighted<FROM,TO,WEIGHT>::To& to,
-    typename AssociatorWeighted<FROM,TO,WEIGHT>::Weight& weight ) const
+  virtual typename OwnType::From associatedTo
+  ( const typename OwnType::To& to,
+    typename OwnType::Weight& weight ) const
   {
-    const typename AssociatorWeighted<FROM,TO,WEIGHT>::InvTable* table =
+    const typename OwnType::InvTable* table =
       inverse();
     if (0 != table) {
-      typename AssociatorWeighted<FROM,TO,WEIGHT>::FromRange range =
+      typename OwnType::FromRange range =
         table->relations( to );
       if( !range.empty() ) {
-        weight = range.begin()->weight();
-        return range.begin()->to();
+        if( !m_decreasing ) {
+        } else {
+          weight = range.rbegin()->weight();
+          return range.rbegin()->to();
+        }
       }
     }
     return From();
@@ -510,7 +523,7 @@ protected:
     IInterface* obj = object () ;
     if( 0 == obj      ) { return Error("'Object' is not located/built!") ; }
     typedef
-      typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType localDirectType;
+      typename OwnType::DirectType localDirectType;
     SmartIF<localDirectType> aux ( DirectType::interfaceID() , obj );
     m_direct = aux ;
     if( 0 == m_direct ) { return Error("'DirectType' points to NULL!"  ) ; }
@@ -573,21 +586,26 @@ protected:
     const IInterface*   parent )
     : AssociatorBase   ( type , name , parent )
     , m_direct  ( 0 ) 
-    , m_inverse ( 0 ) 
+    , m_inverse ( 0 )
+    , m_decreasing( false )
   {
     /// add the interface 
     declareInterface<IBase>             ( this );
+    declareProperty( "DecreasingWeight", m_decreasing);
   };
   
   /// destructor (virtual and protected)
   virtual ~AssociatorWeighted(){};
-  
+
+  void setDecreasing( bool val ) {
+    m_decreasing = val;
+  }
 private:
   
   // relations 
-  mutable typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType*   m_direct;
-  mutable typename AssociatorWeighted<FROM,TO,WEIGHT>::InverseType*  m_inverse;
-  
+  mutable typename OwnType::DirectType*   m_direct;
+  mutable typename OwnType::InverseType*  m_inverse;
+  bool m_decreasing;
 };
 // ============================================================================
 
