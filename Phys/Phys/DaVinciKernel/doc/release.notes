@@ -1,0 +1,272 @@
+! $Id: 
+! Package     : DaVinciKernel
+! Responsible : P. Koppenburg
+
+! 2004-08-23 - P. Koppenburg
+ - New package DaVinciKernel extracted from DaVinciTools,
+   containing the DVAlgorithm baseclass, the PhysDesktop and
+   all interfaces.
+   
+!========================== DaVinciTools v10r3 2004-08-23 ===================
+! 2004-08-23 - Florence RANJARD
+ - replace GaudiTools/ with GaudiAlg
+
+!========================== DaVinciTools v10r2 2004-08-17 ===================
+! 2004-08-12 - P. Koppenburg
+  - src/MassDifferenceFilterCriterion.*
+  & src/MassFilterCriterion.*
+  & src/PIDCriterion.*
+  & src/PhysDesktop.*
+    . Make it a GaudiTool. Use message service shortcuts.
+
+! 2004-08-04 - G. Raven
+  - DaVinciTools/IDecodeSimpleDecayString.h
+  - src/DecodeSimpleDecayString.{cpp,h}
+    . Add a few 'const' were possible...
+
+!========================== DaVinciTools v10r0 2004-07-22 ===================
+! 2004-07-16 - P. Koppenburg
+  - Lib/DVAlgorithm.cpp
+    . Swap order of initialization and Tools loading. Old order prvented
+      DVAlgorithms to use tools in their initalize method.
+  - DaVinciTools/IBestParticles.h  
+    . Interface for a new kind of "filter" tool that filters a ParticleVector
+      and returns another ParticleVector.
+      
+! 2004-07-16 - P. Koppenburg
+  - DaVinciTools/DVAlgorithm.h, Lib/DVAlgorithm.cpp
+    . Make it inherit from GaudiAlgorithm. This allows for instance
+      to use the shortcuts warning(), err(), debug() for msg << MSG::XXXX
+
+! 2004-07-06 - P. Koppenburg
+  - DaVinciTools/DVAlgorithm.h
+    . New getDecayString method
+    
+!========================== DaVinciTools v9r6 2004-06-28 ===================
+! 2004-06-22 - P. Koppenburg
+  - Lib/DVAlgorithm.cpp
+    . Correct location is Selresult
+    
+!========================= DaVinciTools v9r5 2004-06-04 ===================
+! 2004-05-18 - P. Koppenburg
+  - src/PhysDesktop.cpp
+    . In PhysDesktop::saveTrees( int partid ) call saveTrees 
+      also when there's nothing to save. Avoids having no container when
+      the algorithm has been executed.
+  
+! 2004-05-15 - P. Koppenburg
+ - Lib/DVAlgorithm.cpp
+   . Some more debugging messages
+   
+! 2004-05-11 - P. Koppenburg
+ - Lib/DVAlgorithm.cpp
+   . Move all executable code from DVAlgorithm.h to DVAlgorithm.cpp.
+     Make it a linker library.
+
+! 2004-05-11 - P. Koppenburg for Claudia Pereira Nunes
+ - src/LagrangeGeomVertexFitter.{cpp,h}
+ - DaVinciTools/IGeomVertexFitter.h
+   . New constrained vertex fitting tool. This tool has two public methods. 
+     One, called fitWithGeom, makes only a geometrical  constrained fit for 
+     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit, 
+     like the LagrangeMassVertexFitter tool does, it just constrain the
+     particles to come from the same point. The other method, called 
+     fitWithGeomAndSubMass, makes a geometrical constrained fit and an 
+     invariant mass constrained fit of any daughter which is a resonance 
+     (with width < 10 MeV).  This method only works if there is a daughter 
+     resonance and it works for at most 4 tracks also. 
+   
+! 2004-05-11 - P. Koppenburg
+ - DaVinciTools/DVAlgorithm.h
+   . Add statistics for selected events. It can be switched off with
+     PrintSelResult = false ;
+!========================== DaVinciTools v9r3p1 2004-04-29 ==================
+! 2004-04-29 - P. Koppenburg for Gerhard Raven
+ - src/PhysDesktop.cpp
+   . Issue Warning in InmposeOutputLocation only when this is changed
+     form it's default value. Avoids a non-necessary warning from LoKi.
+
+!========================== DaVinciTools v9r0 2004-03-11 ==================
+! 2004-02-11 - P. Koppenburg for Hugo Ruiz
+    - src/PhysDesktop.cpp, PreDV.*
+   . Removed Outputlocation. New mandatory DVAlgorithm PreDV. 
+
+!========================== DaVinciTools v8r4 2004-01-29 ==================
+! 2004-01-14 - Gloria CORTI
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . propagate change from DaVinci v8r3 that was built on a branch  
+
+!========================== DaVinciTools v8r3 2003-12-12 ==================
+! 2003-12-12 - Gloria CORTI for Miriam GANDELMAN
+ Built on a branch v8r2b
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . new interface method introduced to provide the error for each of
+     the component of the IP vector. The method requires a Particle and
+     a Vertex as input and returns 4 variables in the following order:
+     the IP, the IP error, the full IP vector and the error on the IP
+     vector.
+
+!========================== DaVinciTools v8r2 2003-08-05 ==================
+! 2003-08-05  - Gloria CORTI
+ - DaVinciTools/DVAlgorithm.h
+   src/V0MakerAlg.cpp
+   . make ParticleStuffer a private tool in order to set its property
+     < Transporter > without affecting other algorithms
+ - src/CombinedParticleMaker.h & cpp
+   . introduce new properties to select the type of tracks to be kept
+     for analysis: < UseLongTracks > , < UseUpstreamTracks > ,
+     < UseVTTTracks > ( each one can be switched on/off independenly )
+ 
+!========================== DaVinciTools v8r1p2 2003-06-26 ==================
+! 2003-06-26 - Gloria CORTI
+ - DaVinciTools/DVAlgorithm.h
+   . introduce new method releaseTools() to be called by derived algorithms
+     at finalization to release the tools (valgrind possible memory leak)
+   . rename MsgStream from log to msg
+
+!========================== DaVinciTools v8r1p1 2003-06-18 ==================
+! 2003-06-18 - Gloria CORTI
+ - src/PhysDesktop.cpp
+   . replace name of MsgStream log with msg and set all messages in
+     getInput() in DEBUG mode
+   . release partilce maker tool in finalize
+
+! 2003-06-06 - Gloria CORTI
+ - src/PhysDesktop.cpp
+   . fix debugging bug that was checking size of particles container instead
+     of that of vertices to print message when vertex container is empty
+
+! 2003-05-05 - Gerhard Raven
+ - DaVinciTools/ILifetimeFitter.h
+ - src/LifetimeFitter.{cpp,h}
+   . add code to compute, given a particle and its production vertex,
+     the corresponding particle lifetime
+
+! 2003-03-05 - Olivier Dormond
+ - DaVinciTools/IDecayFinder.h:
+   . Bumped major version.
+   . Added to variant of hasDecay and findDecay which uses the default
+     location.
+   . Added a 'descendants' method to flatten a decay tree into a list.
+   . Added a 'members' method to retrieve specified members of a decay.
+   . Added a 'revert' method which 'dissassemble' the compiled decay.
+
+! 2003-01-22 - Ivan BELYAEV
+ - DaVinciTools/IPhotonParams.h   new abstract interface for the 
+                                  (re)evaluation of photons parameters 
+                                  at photon production vertex 
+!=========================== DaVinciTools v6r0 2002-10-30 ===================
+! 2002-10-21 - Gloria Corti
+ - Change PhysDesktop to load all vertices in InputLocations and not
+   only those related to particles. This allows to have vertices as
+   head of trees and to load them back. (J.H.Lopes).
+
+! 2002-09-11 - Gloria Corti
+ - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
+   particle when daughters of a new particle.
+
+!=========================== DaVinciTools v5r0 2002-07-29 ===================
+! 2002-07-18 - Gloria Corti
+ - Use PhysEvent v6r0
+ - Put header files of tools and Particle&Vertex,  accessor method to
+   ParticlePropertySvc in DVAlgorithm base class
+ - Remove obsolete AxParticleMaker (Zebra DST)
+ - Introduce ChargedParticleMaker (OO-DST) that make the choice based
+   on combined PID
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-17 - Gloria Corti
+  - Initial printout for input locations in PhysDesktop
+  - DVAlgorithm: remove cpp and do inline implementation. Introduce method
+    to load an instance of all tools loadTools() to be called at initialization
+    Remove dummy implementation of initialize,execute and finalize
+  - Similar format for messages in finalize of tools
+
+! 2002-05-15 - Gloria Corti
+  - PhysDesktop: implementation of IListner to clean up at end of events (GC)
+  - FillParticleAlgorithm: adapt to new ParticleID and move check of
+    AxPartCandidate before creating a Particle
+
+! 2002-05-10 - Gloria Corti
+  - New tool category of tool IParticleMaker to which PhysDesktop 
+    delegates creations of Particles from different type of objects:
+    one implementation AxParticleMaker making Particles from
+    AxPartCandidates (Helder Lopes)
+  - PhysDesktop: make use of IParticleMaker (Helder Lopes)
+  - New DVAlgorithm base class for selection algorithms (Claudia Nunes)
+  - IMassVertexFitter: modify names of method to generic names (GC)
+  - LagrangeVertexFitter: shortcut methods (Joao de Mello)
+
+! 2002-05-06 - Gloria Corti
+  - DaVinciTools/IParticleTransporter.h: return arguments changed
+    from Point+momentum+errors to Particle 
+    Additional methods with Particle& and const Particle& as input arguments
+    (Edgar de Oliveira)
+  - DaVinciTools/IGeomDispCalculator.h: return type of method changed from
+    void to StatusCode (Miriam Gandelman)
+  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3 
+    particle vertices (Sandra Amato)
+
+! ======================================================================
+! 20020402 - DaVinciTools v3r0 (G.Corti)
+  - Remove obsolete tool on AxPartCandidates: interfaces, header and 
+    cpp files (AddFourMom, ImpactPar)
+
+  - src/FillParticleAlgorithm.h&cpp, algorithm to fill Particles starting
+      from AxPartCandidates (Sandra Amato)
+
+  - Introduce new OO tools working with new PhysEvent model
+    The interfaces are in DaVinciTools subdirectory.
+    - DaVinciTools/IGeomDispCalculator.h (interface)
+      src/GeomDispCalculator.h&cpp 
+          Tool to calculate varius geometrical distances between Particles & 
+          Vertices (ex. impact parameter) 
+      author: Miriam Gandelman
+
+    - DaVinciTools/IParticleFilter.h (interface)
+      src/ParticleFilter.h&cpp
+          Tool to filter lists of particles satisfying criteria specified
+          as IFilterCriterion (configured in jobOptions)
+      author: Paul Colrain
+
+    - DaVinciTools/IFilterCriterion.h, interface for tool specifiying a
+          criteria to be satified by a Particle to be filtered
+      src/PIDFilterCriterion.h&cpp, concrete implementation of filtering
+          by ParticleID + Confidence Level
+      src/KinFilterCriterion.h&cpp, concrete implementation of filtering 
+          based on kinematic quantities
+      author: Paul Colrain
+
+    - DaVinciTools/IParticleTransporter.h (interface)
+      src/ParticleTransporter.h&cpp
+          Tool to transport a Particle and its errors at a specified z position
+          Used by vertexing tools.
+      author: Edgar de Oliveira
+
+    - DaVinciTools/IVertexFitter.h, interface for generic vertex fitters
+      src/UnconstVertexFitter.h&cpp, concrete implementation of a vertex fitter
+          based on Fortran axksvrtx.F
+      author: Sandra Amato      
+    - DaVinciTools/IMassVertexFitter.h, interface for mass constrained vertex
+                                       fitters
+      src/LagrangeMassVertexFitter.h&cpp, concrete implementation using
+          Lagrangian Multipliers
+      author: Joao de Mello
+                            
+    - DaVinciTools/IParticleStuffer.h (interface)
+      src/ParticleStuffer.h&cpp 
+          Tool to fill contents of a Particle class starting from info 
+          provided by its end (decay) vertex
+      author: Paul Colrain
+
+    - DaVinciTools/IPhysDesktop.h, interface for tools to provide Particles
+         & Vertices for Physics analysis from various sources in TES and
+         deal with saving in TES
+      src/PhysDesktop.h&cpp, a concrete implementation getting info from
+         various locations in TES for previous processing
+      authors: Sandra Amato, Gloria Corti
+      
+

@@ -1,0 +1,48 @@
+# $Id: requirements,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+# Created    : 05/02/2002
+# Maintainer : P. Koppenburg
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           DaVinciKernel
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src Lib DaVinciTools
+
+# Exported header files
+#============================================================================
+include_dirs     $(DAVINCIKERNELROOT)
+
+# Used packages. 
+#============================================================================
+use  PhysEvent      v*     Event
+use  TrgEvent       v*     Event
+use  CaloUtils      v*     Calo
+use  CaloInterfaces v*     Calo
+
+# For DV v11r12
+macro_append BOOST_linkopts " -lboost_regex"\
+             Linux&debug " -lboost_regex_debug"\
+             WIN32 " boost_regex_debug.lib" 
+
+# Linker library building rule
+#============================================================================
+library          DaVinciKernelLib    ../Lib/*.cpp
+
+# Component library building rule
+#============================================================================
+library          DaVinciKernel    ../src/*.cpp -import=AIDA
+# define link options
+#============================================================================
+#
+macro_append Boost_linkopts $(Boost_linkopts_regex)
+
+# standard patterns (order is essential!)
+#============================================================================
+apply_pattern component_library library=DaVinciKernel
+apply_pattern linker_library    library=DaVinciKernelLib
+	     
+
