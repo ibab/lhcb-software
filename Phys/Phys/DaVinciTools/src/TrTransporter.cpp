@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.5 2004-05-14 09:43:31 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.6 2004-05-26 14:01:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -300,7 +300,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     ParticleID pID( workParticle->particleID() );
     StatusCode sc = workTrStateP->extrapolate(m_extrapolator, znew, pID);  
     if ( sc.isFailure() ) {
-      log << MSG::FATAL << " Unable to extrapolate TrStateP " << endreq;
+      log << MSG::ERROR << " Unable to extrapolate TrStateP " << endreq;
     }
     
     newPOT[0] = workTrStateP->x();
@@ -353,7 +353,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
 						  znew,
 						  transParticle);
     if ( sc.isFailure() ) {
-      log << MSG::FATAL << " Unable to extrapolate Neutral Particle" << endreq;
+      log << MSG::ERROR << " Unable to extrapolate Neutral Particle" << endreq;
     }
   }
   return StatusCode::SUCCESS;  
