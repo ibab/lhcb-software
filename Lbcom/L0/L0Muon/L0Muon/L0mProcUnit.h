@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.3 2001-07-10 10:20:15 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.4 2001-10-04 16:22:52 atsareg Exp $
 
 #ifndef L0MUON_L0MPROCUNIT_H     
 #define L0MUON_L0MPROCUNIT_H     1 
@@ -49,6 +49,8 @@ public:
     void printParameters( MsgStream& log);
     // class L0mTower is our friend to get algorithm parameters
     friend class L0mTower;
+    // Degrading Pt calculation precision
+    void precisionPt(L0MuonCandidate*);
     
 private:
     
@@ -72,9 +74,6 @@ private:
     // PU status
     int m_status;
        
-    // Helper functions
-    void precisionPt();
-
 };
 
 // bool operator==(L0mProcUnit* pu1, L0mProcUnit* pu2);
