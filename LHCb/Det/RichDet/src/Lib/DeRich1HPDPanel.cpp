@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.9 2003-11-01 15:48:13 jonrob Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.10 2003-11-03 11:40:06 papanest Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -115,12 +115,18 @@ StatusCode DeRich1HPDPanel::initialize() {
   // get the pv and the solid for the HPD quartz window
   const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume()->pvolume(2);
   const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
-  const SolidSphere* windowSphere0 = dynamic_cast<const SolidSphere*>
-    (windowSolid0);
-  double windowRadius = windowSphere0->outerRadius();
+  // get the outside radius of the window
+  ISolid::Ticks windowTicks;
+  unsigned int windowTicksSize = windowSolid0->
+    intersectionTicks(HepPoint3D(0.0, 0.0, 0.0),HepVector3D(0.0, 0.0, 1.0),
+                      windowTicks);
+  if (windowTicksSize != 2) {
+    log << MSG::ERROR << "Problem getting window radius" << endreq;
+    return sc;
+  }
 
   // get the coordinate of the centre of the HPD quarz window
-  HepPoint3D HPDTop1(0.0, 0.0, windowRadius);
+  HepPoint3D HPDTop1(0.0, 0.0, windowTicks[1]);
   // convert this to HPDS master  coordinates
   HepPoint3D HPDTop2 = pvWindow0->toMother(HPDTop1);
   // and to silicon
