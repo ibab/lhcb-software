@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.23 2002-12-03 16:52:43 andreav Exp $
+# $Id: requirements,v 1.24 2003-01-31 20:23:20 andreav Exp $
 package DetCond
-version v4r2
+version v4r3
 
 branches DetCond cmt src doc
 
