@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.71 2003-03-11 08:54:11 ibelyaev Exp $
+! $Id: release.notes,v 1.72 2003-03-14 14:02:48 ranjard Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!=============================== GiGa v13r1 2003-03-11 ======================
 ! 2003-03-10  Vanya Belyaev 
   GiGa/GiGaTrajectory.h - 
    remove invalid "inline" directive from operators "new" and "delete"
-
 
 ! =============================== GiGa v13r0 2002-11-17 ======================
 
