@@ -813,14 +813,17 @@ EvtPythia::diquark(int ID)
 {
   switch(ID)
     {
+    case 1101:
     case 1103:
     case 2101:
     case 2103:
+    case 2201:
     case 2203:
     case 3101:
     case 3103:
     case 3201:
     case 3203:
+    case 3301:
     case 3303:
     case 4101:
     case 4103:
@@ -828,6 +831,7 @@ EvtPythia::diquark(int ID)
     case 4203:
     case 4301:
     case 4303:
+    case 4401:
     case 4403:
     case 5101:
     case 5103:
@@ -837,6 +841,7 @@ EvtPythia::diquark(int ID)
     case 5303:
     case 5401:
     case 5403:
+    case 5501:
     case 5503:
       return true;
       break;

@@ -360,14 +360,10 @@ void EvtParticle::decay(){
       EvtScalarParticle* scalar_part;
       
       scalar_part=new EvtScalarParticle;
-      if (getId()==BS0) {
-        EvtVector4R p_init(EvtPDL::getMass(BSB),0.0,0.0,0.0);
-        scalar_part->init(BSB,p_init);
-      }
-      else{
-        EvtVector4R p_init(EvtPDL::getMass(BS0),0.0,0.0,0.0);
-        scalar_part->init(BS0,p_init);
-      }
+
+      EvtVector4R p_init( EvtPDL::getMass( EvtPDL::chargeConj( getId() ) ) ,
+                                           0.0 , 0.0 , 0.0 ) ;
+      scalar_part -> init( EvtPDL::chargeConj( getId() ) , p_init ) ;
       
       scalar_part->setLifetime(0);
       
@@ -393,14 +389,10 @@ void EvtParticle::decay(){
       EvtScalarParticle* scalar_part;
       
       scalar_part=new EvtScalarParticle;
-      if (getId()==B0) {
-        EvtVector4R p_init(EvtPDL::getMass(B0B),0.0,0.0,0.0);
-        scalar_part->init(B0B,p_init);
-      }
-      else{
-        EvtVector4R p_init(EvtPDL::getMass(B0),0.0,0.0,0.0);
-        scalar_part->init(B0,p_init);
-      }
+
+      EvtVector4R p_init( EvtPDL::getMass( EvtPDL::chargeConj( getId() ) ),
+                                           0.0 , 0.0 , 0.0 ) ;
+      scalar_part -> init( EvtPDL::chargeConj( getId() ) , p_init ) ;
       
       scalar_part->setLifetime(0);
       

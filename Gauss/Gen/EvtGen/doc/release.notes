@@ -1,6 +1,11 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2003-10-14 - Patrick Robbe
+ - EvtPythia : add diquark definitions
+ - EvtParticle : add the possibility to oscillate with alias B0 and B0s
+   particles
+
 !===================== EvtGen v4r0 ======================================
 ! 2003-10-10 - Patrick Robbe
  - EvtPythia : do not update diquark masses in Pythia
