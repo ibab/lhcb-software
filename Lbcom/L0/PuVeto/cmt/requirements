@@ -1,0 +1,35 @@
+# $Id: requirements,v 1.1.1.1 2002-01-29 09:37:12 ocallot Exp $
+# Created    : 11/01/2002
+# Maintainer : Olivier Callot
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           PuVeto
+version           v1
+
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use	L1Event		v6r*	Event
+use     VeloDet         v3r*    Det
+use     L0DU            v3r*    L0
+
+# Component library building rule
+#============================================================================
+library          PuVeto    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags

@@ -1,0 +1,8 @@
+! $Id: release.notes,v 1.1.1.1 2002-01-29 09:41:14 ocallot Exp $
+! Package     : L0/PuVeto
+! Responsible : Olivier Callot
+
+!=============================================================================
+! 29/01/2002 - Olivier Callot
+  - Initial release, based on the FORTRAN code. 
+
