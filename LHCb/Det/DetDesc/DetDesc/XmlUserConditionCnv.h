@@ -1,7 +1,7 @@
 // $ID: $
 
-#ifndef DDEXAMPLE_XMLUSERCONDITIONCNV_H
-#define DDEXAMPLE_XMLUSERCONDITIONCNV_H 1
+#ifndef DETDESC_XMLUSERCONDITIONCNV_H
+#define DETDESC_XMLUSERCONDITIONCNV_H 1
 
 // Include files
 #include "DetDesc/XmlBaseConditionCnv.h"
@@ -161,4 +161,4 @@ XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
   return StatusCode::SUCCESS;
 }
 
-#endif // DDEXAMPLE_XMLUSERCONDITIONCNV_H
+#endif // DETDESC_XMLUSERCONDITIONCNV_H

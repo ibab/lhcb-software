@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.7 2001-11-20 15:22:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.8 2002-01-22 14:26:22 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -86,7 +86,8 @@ StatusCode XmlTabulatedPropertyCnv::i_createObj (DOM_Element element,
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
 StatusCode XmlTabulatedPropertyCnv::i_fillObj (DOM_Element childElement,
-                                               DataObject* refpObject) {
+                                               DataObject* refpObject,
+                                               IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "TabulatedPropertyCnv" );
   
   // gets the object

@@ -1,7 +1,7 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.74 2002-01-22 09:52:22 sponce Exp $ 
+! $Id: release.notes,v 1.75 2002-01-22 14:26:22 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
@@ -11,6 +11,7 @@ package manager : N.N
   - Bug fix on the Condition converters, thanks to David
   - Better handle of the DTD version : minor version was considered as a major
     one
+  - Implement versioning for the material DTD
 
 ! ============================================================================
 ! 20020121 - v9r1 - Sebastien Ponce

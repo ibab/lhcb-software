@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.7 2002-01-22 09:52:31 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.8 2002-01-22 14:26:22 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -125,37 +125,47 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
          << endreq;
      return StatusCode::FAILURE;
    } else {
-     // for DDDB, checks the version attribute
+     // checks the version attribute
+     std::string versionAttribute;
+     std::string defaultMajorVersion;
+     std::string defaultMinorVersion;
      if (mainNode.getNodeName().equals("DDDB")) {
-       std::string versionAttribute =
-         dom2Std (mainNode.getAttribute ("version"));
-       log << MSG::DEBUG
-           << "Detector Description Markup Language Version "
-           << versionAttribute << endreq;
-       std::string::size_type dotPos = versionAttribute.find ('.');
-       std::string majorVersion;
-       std::string minorVersion = "0";       
-       if (dotPos == std::string::npos) {
-         majorVersion = versionAttribute;
-       } else {
-         majorVersion = versionAttribute.substr (0, dotPos);
-         minorVersion = versionAttribute.substr (dotPos + 1);
-       }
-       if (majorVersion != "3") {
-         log << MSG::ERROR << "DDDB DTD Version 3.* required. "
-             << "You are currently using Version " << versionAttribute
-             << ". Please update your DTD and XML data files. "
-             << "If you are using the XmlDDDB package, please "
-             << "get a new version of it."
-             << endreq;
-         return StatusCode::FAILURE;
-       } else if (minorVersion != "4") {
-         log << MSG::WARNING << "DDDB DTD Version 3.4 recommanded. "
-             << "You are currently using Version " << versionAttribute
-             << ". Everything should work fine but you may get some "
-             << "error messages about unknown tags."
-             << endreq;
-       }
+       versionAttribute = dom2Std (mainNode.getAttribute ("version"));
+       defaultMajorVersion = "3";
+       defaultMinorVersion = "4";
+     } else {
+       versionAttribute = dom2Std (mainNode.getAttribute ("DTD_Version"));
+       defaultMajorVersion = "v5";
+       defaultMinorVersion = "1";
+     }
+     log << MSG::DEBUG
+         << "Detector Description Markup Language Version "
+         << versionAttribute << endreq;
+     std::string::size_type dotPos = versionAttribute.find ('.');
+     std::string majorVersion;
+     std::string minorVersion = "0";       
+     if (dotPos == std::string::npos) {
+       majorVersion = versionAttribute;
+     } else {
+       majorVersion = versionAttribute.substr (0, dotPos);
+       minorVersion = versionAttribute.substr (dotPos + 1);
+     }
+     if (majorVersion != defaultMajorVersion) {
+       log << MSG::ERROR << "DDDB DTD Version " << defaultMajorVersion
+           << "." << defaultMinorVersion << " required. "
+           << "You are currently using Version " << versionAttribute
+           << ". Please update your DTD and XML data files. "
+           << "If you are using the XmlDDDB package, please "
+           << "get a new version of it."
+           << endreq;
+       return StatusCode::FAILURE;
+     } else if (minorVersion != defaultMinorVersion) {
+       log << MSG::WARNING << "DDDB DTD Version " << defaultMajorVersion
+           << "." << defaultMinorVersion << " recommanded. "
+           << "You are currently using Version " << versionAttribute
+           << ". Everything should work fine but you may get some "
+           << "error messages about unknown tags."
+           << endreq;
      }
    }
    // deals with macro definitions

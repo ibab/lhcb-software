@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.h,v 1.4 2001-11-20 15:22:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.h,v 1.5 2002-01-22 14:26:23 sponce Exp $
 
 #ifndef     DETDESC_XMLTABULATEDPROPERTYCNV_H
 #define     DETDESC_XMLTABULATEDPROPERTYCNV_H 1 
@@ -58,19 +58,23 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
    * Overrides the default method in XmlGenericCnv
    * @param element the DOM_Element that addr represents and from which we
    * will get the informations to creates new addresses
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
 
   /** This fills the current object for its child text node childText.
    * Overrides the default method in XmlGenericCnv
    * @param childText the child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Text childText,
-                                DataObject* refpObject);
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
 
   /** This processes the current object.
    * Overrides the default method in XmlGenericCnv

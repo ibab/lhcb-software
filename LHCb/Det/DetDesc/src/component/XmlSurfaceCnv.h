@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.h,v 1.3 2001-05-14 15:13:43 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.h,v 1.4 2002-01-22 14:26:22 sponce Exp $
 
 #ifndef     DETDESC_XMLSurfaceCNV_H
 #define     DETDESC_XMLSurfaceCNV_H 1 
@@ -59,10 +59,12 @@ class XmlSurfaceCnv : public XmlGenericCnv {
    * Overrides the default method in XmlGenericCnv
    * @param element the child processed here
    * @param refpObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
 
 };
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.6 2001-11-20 15:22:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.7 2002-01-22 14:26:22 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -121,7 +121,8 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
 StatusCode XmlSurfaceCnv::i_fillObj (DOM_Element childElement,
-                                     DataObject* refpObject) {
+                                     DataObject* refpObject,
+                                     IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "XmlSurfaceCnv" );
   
   // gets the object

@@ -1,7 +1,7 @@
 // $ID: $
 
-#ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
-#define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
+#ifndef DETDESC_XMLUSERDETELEMCNV_H
+#define DETDESC_XMLUSERDETELEMCNV_H 1
 
 // Include files
 #include "DetDesc/XmlBaseDetElemCnv.h"
@@ -163,4 +163,4 @@ XmlUserDetElemCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
   return StatusCode::SUCCESS;
 }
 
-#endif // DDEXAMPLE_XMLUSERDETELEMCNV_H
+#endif // DETDESC_XMLUSERDETELEMCNV_H
