@@ -1,4 +1,4 @@
-// $Id: RichRecPixelParentType.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
+// $Id: RichRecPixelParentType.h,v 1.3 2003-12-04 07:36:19 cattanem Exp $
 #ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
 #define RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 1
 
@@ -18,7 +18,7 @@
  *  @date   2002-07-12
  */
 
-/// namespace for RICH detector specifics
+// namespace for RICH detector specifics
 namespace Rich {
   
   /// namespace for RichRecPixel objects

@@ -1,4 +1,4 @@
-// $Id: RichTrackID.h,v 1.2 2003-11-06 11:36:22 jonrob Exp $
+// $Id: RichTrackID.h,v 1.3 2003-12-04 07:36:19 cattanem Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
@@ -22,7 +22,7 @@
  *  @date   2003-09-23
  */
 
-/// namespace for RICH detector specifics
+// namespace for RICH detector specifics
 namespace Rich {
 
   namespace Track {

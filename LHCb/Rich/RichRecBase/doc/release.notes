@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecBase v1r6 2003-12-04 =======================
+! 2003-12-04 - Marco Cattaneo
+ - Fix some doxygen warnings
+
 ! 2003-12-03 - Chris Jones
  - Minor additions to XML file
 
