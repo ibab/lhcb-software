@@ -1,4 +1,4 @@
-// $Id: Particle2MCAsct.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
+// $Id: Particle2MCAsct.h,v 1.4 2003-07-29 17:48:11 gcorti Exp $
 #ifndef ASSOCIATORS_Particle2MCASCT_H 
 #define ASSOCIATORS_Particle2MCASCT_H 1
 
@@ -23,7 +23,7 @@ Particle2MCAsctLocation = "Phys/Relations/Particle2MC";
 
 class Particle2MCAsct : public Associator<Particle,MCParticle>
 {
-  friend ToolFactory<Particle2MCAsct>;
+  friend class ToolFactory<Particle2MCAsct>;
   
 public:
   // Define data types

@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.h,v 1.2 2002-07-12 15:28:09 phicharp Exp $
+// $Id: Particle2MCWithChi2.h,v 1.3 2003-07-29 17:48:12 gcorti Exp $
 #ifndef Particle2MCWithChi2_H 
 #define Particle2MCWithChi2_H 1
 
@@ -30,7 +30,7 @@
  *  @date   11/04/2002
  */
 class Particle2MCWithChi2 : public Algorithm {
-  friend AlgFactory<Particle2MCWithChi2>;
+  friend class AlgFactory<Particle2MCWithChi2>;
   
 public:
   /// Standard constructor

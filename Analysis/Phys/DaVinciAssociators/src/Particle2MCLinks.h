@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.6 2003-05-26 11:38:38 phicharp Exp $
+// $Id: Particle2MCLinks.h,v 1.7 2003-07-29 17:48:12 gcorti Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -22,7 +22,7 @@
  *  @date   10/05/2002
  */
 class Particle2MCLinks : public AsctAlgorithm {
-  friend AlgFactory<Particle2MCLinks>;
+  friend class AlgFactory<Particle2MCLinks>;
   
 public:
   /// Standard constructor

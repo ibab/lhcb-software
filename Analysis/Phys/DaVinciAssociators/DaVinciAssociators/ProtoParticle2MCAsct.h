@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCAsct.h,v 1.4 2003-04-24 13:55:07 gcorti Exp $
+// $Id: ProtoParticle2MCAsct.h,v 1.5 2003-07-29 17:48:11 gcorti Exp $
 #ifndef ASSOCIATORS_ProtoParticle2MCASCT_H 
 #define ASSOCIATORS_ProtoParticle2MCASCT_H 1
 
@@ -27,7 +27,7 @@ NeutralPP2MCAsctLocation = "Rec/Relations/NeutralPP2MC";
 class ProtoParticle2MCAsct : 
 public AssociatorWeighted<ProtoParticle,MCParticle,double>
 {
-  friend ToolFactory<ProtoParticle2MCAsct>;
+  friend class ToolFactory<ProtoParticle2MCAsct>;
   
 public:
   // Define data types

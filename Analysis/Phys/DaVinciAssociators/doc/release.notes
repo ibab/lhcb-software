@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.29 2003-06-17 17:45:15 gcorti Exp $
+! $Id: release.notes,v 1.30 2003-07-29 17:48:11 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+!================= DaVinciAssociators v4r2p1 2003-07-29 ====================
+! 2003-07-24 - Gloria CORTI
+ - DaVinciAssociators/Particle2MCAsct.h, Particle2MCLinksAsct.h,
+                      Particle2MCWithChi2Asct.h, ProtoParticle2MCAsct.h
+ - src/ChargedPP2MC.h, CompositeParticle2MCLinks.h, NeutralPP2MC.h,
+       Particle2MCLinks.h, 
+   . templated friend needs class to please gcc32
+ 
 !================= DaVinciAssociators v4r2 2003-06-16 ======================
 ! 2003-06-15 - Gloria CORTI
  - change version number in requirements file

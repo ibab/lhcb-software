@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2Asct.h,v 1.4 2003-04-17 09:58:25 phicharp Exp $
+// $Id: Particle2MCWithChi2Asct.h,v 1.5 2003-07-29 17:48:11 gcorti Exp $
 #ifndef Particle2MCWithChi2ASCT_H 
 #define Particle2MCWithChi2ASCT_H 1
 
@@ -23,7 +23,7 @@ Particle2MCWithChi2AsctLocation = "Phys/Relations/Particle2MCWithChi2";
 class Particle2MCWithChi2Asct : 
   public AssociatorWeighted<Particle,MCParticle,double>
 {
-  friend ToolFactory<Particle2MCWithChi2Asct>;
+  friend class ToolFactory<Particle2MCWithChi2Asct>;
 public:
   // Define data types
   typedef RelationWeighted1D<Particle,MCParticle,double>       Table;

@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.h,v 1.1 2002-10-02 07:06:26 phicharp Exp $
+// $Id: ChargedPP2MC.h,v 1.2 2003-07-29 17:48:11 gcorti Exp $
 #ifndef ChargedPP2MC_H 
 #define ChargedPP2MC_H 1
 
@@ -25,7 +25,8 @@
  *  @date   10/07/2002
  */
 class ChargedPP2MC : public Algorithm {
-  friend AlgFactory<ChargedPP2MC>;
+
+  friend class AlgFactory<ChargedPP2MC>;
   
 public:
   /// Standard constructor

@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.5 2003-05-26 11:38:38 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.6 2003-07-29 17:48:12 gcorti Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -21,7 +21,7 @@
  *  @date   September 2002
  */
 class CompositeParticle2MCLinks : public AsctAlgorithm {
-  friend AlgFactory<CompositeParticle2MCLinks>;
+  friend class AlgFactory<CompositeParticle2MCLinks>;
   
 public:
   /// Standard constructor
