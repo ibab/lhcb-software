@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.2 2002-05-17 11:42:32 gcorti Exp $
+// $Id: ParabolicTransporter.cpp,v 1.3 2002-07-24 18:21:10 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -66,7 +66,7 @@ StatusCode ParabolicTransporter::initialize(){
 //=============================================================================
 //  Transport in a magnetic field (parabolic approximation)
 //=============================================================================
-StatusCode ParabolicTransporter::transport(Particles::const_iterator & icand, 
+StatusCode ParabolicTransporter::transport(ParticleVector::const_iterator & icand, 
                                            double znew,
                                            Particle & transParticle){
   MsgStream log(msgSvc(), name());

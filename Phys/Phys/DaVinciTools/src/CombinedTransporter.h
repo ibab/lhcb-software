@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.h,v 1.1 2002-05-15 23:19:26 gcorti Exp $
+// $Id: CombinedTransporter.h,v 1.2 2002-07-24 18:20:19 gcorti Exp $
 #ifndef COMBINEDTRANSPORTER_H 
 #define COMBINEDTRANSPORTER_H 1
 
@@ -39,7 +39,7 @@ public:
 
   /// Transport with linear or parabolic extrapolations depending
   /// on regions of the detector.  
-  StatusCode transport(Particles::const_iterator &, 
+  StatusCode transport(ParticleVector::const_iterator &, 
                        double znew,
                        Particle &transParticle);
   

@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.h,v 1.1 2002-05-15 23:19:07 gcorti Exp $
+// $Id: ParabolicTransporter.h,v 1.2 2002-07-24 18:21:08 gcorti Exp $
 #ifndef PARABOLICTRANSPORTER_H 
 #define PARABOLICTRANSPORTER_H 1
 
@@ -41,7 +41,7 @@ public:
   StatusCode initialize();
   
   /// Transport according to parabolic extrapolation.
-  StatusCode transport(Particles::const_iterator &, 
+  StatusCode transport(ParticleVector::const_iterator &, 
                        double znew,
                        Particle &transParticle);
   

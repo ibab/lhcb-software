@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.3 2002-05-20 23:13:45 gcorti Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.4 2002-07-24 18:21:01 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -100,7 +100,7 @@ StatusCode NsctVeloTransporter::initialize(){
 //=============================================================================
 //  Transport linear + multiple scattering (particle iterator)
 //=============================================================================
-StatusCode NsctVeloTransporter::transport(Particles::const_iterator &icand, 
+StatusCode NsctVeloTransporter::transport(ParticleVector::const_iterator &icand, 
                                           double znew,
                                           Particle & transParticle){
   MsgStream log(msgSvc(), name());

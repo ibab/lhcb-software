@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.cpp,v 1.2 2002-05-17 11:42:05 gcorti Exp $
+// $Id: CombinedTransporter.cpp,v 1.3 2002-07-24 18:20:37 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -78,9 +78,9 @@ StatusCode CombinedTransporter::initialize(){
 //=============================================================================
 //  Transport linear in Velo region, parabolic in field region
 //=============================================================================
-StatusCode CombinedTransporter::transport(Particles::const_iterator &iterP, 
+StatusCode CombinedTransporter::transport(ParticleVector::const_iterator& iterP, 
                                           double znew,
-                                          Particle & transParticle){
+                                          Particle& transParticle){
   MsgStream log(msgSvc(), name());
   
   //Particle *workParticle = (*icand);
@@ -142,9 +142,9 @@ StatusCode CombinedTransporter::transport(Particles::const_iterator &iterP,
 //=============================================================================
 //  Transport linear in Velo region, parabolic in field region
 //=============================================================================
-StatusCode CombinedTransporter::transport(const Particle & iterP, 
+StatusCode CombinedTransporter::transport(const Particle& iterP, 
                                           double znew,
-                                          Particle & transParticle){
+                                          Particle& transParticle){
   MsgStream log(msgSvc(), name());
   
   //Particle *workParticle = const_cast<Particle *> (&icand);
@@ -206,7 +206,7 @@ StatusCode CombinedTransporter::transport(const Particle & iterP,
 //=============================================================================
 //  Transport linear in Velo region, parabolic in field region
 //=============================================================================
-StatusCode CombinedTransporter::transport(Particle & iterP, 
+StatusCode CombinedTransporter::transport(Particle& iterP, 
                                           double znew,
                                           Particle & transParticle){
   MsgStream log(msgSvc(), name());

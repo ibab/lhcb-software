@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.h,v 1.1 2002-05-15 23:18:29 gcorti Exp $
+// $Id: NsctVeloTransporter.h,v 1.2 2002-07-24 18:20:52 gcorti Exp $
 #ifndef NSCTVELOTRANSPORTER_H 
 #define NSCTVELOTRANSPORTER_H 1
 
@@ -39,7 +39,7 @@ public:
   
   /// Transport in VELO region according to linear extrapolation
   /// accounting for Multiple Scattering in material.
-  StatusCode transport(Particles::const_iterator &, 
+  StatusCode transport(ParticleVector::const_iterator &, 
                        double znew,
                        Particle &transParticle);
   

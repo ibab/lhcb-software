@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.h,v 1.1 2002-05-15 23:18:06 gcorti Exp $
+// $Id: LinearTransporter.h,v 1.2 2002-07-24 18:20:45 gcorti Exp $
 #ifndef LINEARTRANSPORTER_H 
 #define LINEARTRANSPORTER_H 1
 
@@ -35,7 +35,7 @@ public:
   virtual ~LinearTransporter( ){}; ///< Destructor
   
   /// Transport according to linear extrapolation in "void". 
-  StatusCode transport(Particles::const_iterator &, 
+  StatusCode transport(ParticleVector::const_iterator &, 
                        double znew,
                        Particle &transParticle);
   

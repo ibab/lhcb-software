@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.cpp,v 1.1 2002-05-15 23:18:09 gcorti Exp $
+// $Id: LinearTransporter.cpp,v 1.2 2002-07-24 18:20:47 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -42,7 +42,7 @@ LinearTransporter::LinearTransporter( const std::string& type,
 //=============================================================================
 //  Transport with linear extrapolation (particle iterator)
 //=============================================================================
-StatusCode LinearTransporter::transport(Particles::const_iterator &icand, 
+StatusCode LinearTransporter::transport(ParticleVector::const_iterator &icand, 
                                         double znew,
                                         Particle & transParticle){
   MsgStream log(msgSvc(), name());

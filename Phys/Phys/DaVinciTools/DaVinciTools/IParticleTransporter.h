@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.2 2002-05-15 23:13:13 gcorti Exp $
+// $Id: IParticleTransporter.h,v 1.3 2002-07-24 18:20:05 gcorti Exp $
 #ifndef DAVINCITOOLS_IPARTICLETRANSPORTER_H 
 #define DAVINCITOOLS_IPARTICLETRANSPORTER_H 1
 
@@ -30,7 +30,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IParticleTransporter;}
 
   /// Transport a Particle to specified z position given a Particle iterator.
-  virtual StatusCode transport(Particles::const_iterator &, 
+  virtual StatusCode transport(ParticleVector::const_iterator &, 
                                double znew,
                                Particle &transParticle) = 0;
   

@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.16 2002-07-19 09:45:20 gcorti Exp $
+! $Id: release.notes,v 1.17 2002-07-24 18:21:35 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-24 - Gloria Corti
+ - Change interface of IParticleTransporter to use ParticleVector iterator
+   and propagate to all Transporters implementation
 
 ! 2002-07-19 - Gloria Corti
  - Remove obsolete FillParticleAlgorithm that filled particles from 
