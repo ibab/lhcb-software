@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2002-11-29 - Ivan Belyaev
+ - cmt requirements   version update 
+
 !========================= CaloDigit v1r0 2002-11-19 =========================
 ! 2002-11-18 - Olivier Callot
  - Change default pe/Mev for Prs/Spd form 40 to 30.
