@@ -57,9 +57,9 @@ use AsctToLinker        v1r1    Rec
 use BrunelAlgs          v3r4	Rec
 
 # Calorimeter
-use CaloMonitor         v2r0  	Calo
-use CaloReco            v2r0	Calo
-use CaloPIDs		v2r0	Calo
+use CaloMonitor         v2r1  	Calo
+use CaloReco            v2r1	Calo
+use CaloPIDs		v2r1	Calo
 
 # Velo
 use VeloAlgorithms      v2r9p1	Velo
