@@ -1,5 +1,11 @@
+!  $Id: release.notes,v 1.5 2001-07-12 16:17:30 ocallot Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+!=============================================================================
+! 12/07/2001 - Olivier Callot
+  - Change the version in teh requirements to adapt to the new Gaudi/LHCb 
+    release
 
 ! 20010606 L0Muon v2 A.T.
 
