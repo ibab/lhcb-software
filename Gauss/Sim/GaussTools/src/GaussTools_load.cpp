@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.3 2002-11-28 08:53:52 witoldp Exp $
+// $Id: GaussTools_load.cpp,v 1.4 2002-12-04 21:17:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/11/28 08:53:52  witoldp
+// added factories for phys list
+//
 // Revision 1.2  2002/09/26 18:10:50  ibelyaev
 //  repackageing: add all concrete implementations from GiGa
 //
@@ -80,7 +83,11 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaEventActionDraw     );
   DECLARE_GiGaFactory     (    GiGaEventActionSequence );
   DECLARE_GiGaFactory     (    GiGaEventActionCommand  );
-
+  
+  // UI & Vis (temporary) 
+  DECLARE_GiGaFactory     (    GiGaUIsession           );
+  DECLARE_GiGaFactory     (    GiGaVisManager          );
+  
 };
 // ============================================================================
 

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.9 2002-12-03 15:05:53 witoldp Exp $
+# $Id: requirements,v 1.10 2002-12-04 21:17:37 ibelyaev Exp $
 # =============================================================================
 package GaussTools
-version v3r3
+version v3r4
 
 # ============== package structure ============================================
 branches         cmt src doc
@@ -21,6 +21,7 @@ library          GaussToolsLib           Lib/*.cpp
 # ============== component library ============================================
 library          GaussTools   *.cpp                  \
                               Components/*.cpp       \
+                              UIVis/*.cpp            \
                               Actions/*.cpp          \
                               Tracking/*.cpp         \
                               RICH/SensDet/*.cpp     \ 
