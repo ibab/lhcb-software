@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.8 2003-04-30 12:27:08 gcorti Exp $
+// $Id: MCDecayFinder.cpp,v 1.9 2004-03-16 18:48:36 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -898,8 +898,10 @@ int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
   case -111:    // pi0
   case -113:    // rho(770)
   case -115:    // a_2(1320)0
+  case -130:    // KS0
   case -221:    // eta
   case -223:    // omega(782)
+  case -310:    // K0L
   case -331:    // eta'
   case -333:    // phi(1020)
   case -441:    // eta_c(1S)
@@ -912,12 +914,13 @@ int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
   case -9000111:// a_0(980)0
     cc_id *= -1;
     break;
-  case -310:    // KS0~ <-> KL0
-    cc_id = 130;
-    break;
-  case -130:    // KL0~ <-> KS0
-    cc_id = 310;
-    break;
+    //  Interesting case of CPT violation ;-)
+    //  case -310:    // KS0~ <-> KL0
+    //    cc_id = 130;
+    //    break;
+    //  case -130:    // KL0~ <-> KS0
+    //    cc_id = 310;
+    //    break;
   default:
     break;
   }
