@@ -19,6 +19,7 @@ HLTProcessing.Members =  { "DecodeRawVelo"
                            ,"TrgForwardAlg"
 			   ,"TrgMuonID"
                            ,"TrgParticleMaker"
+			   ,"TrgTrackToContainer/HltTrgTrackToContainer"
                          };
 
 #include "$TRGFORWARDROOT/options/Field045.opts"

@@ -1,7 +1,6 @@
 HltWithTrg.Members += { "GaudiSequencer/HLTChecking"};
 
-HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
-                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
+HLTChecking.Members = { "TrgTrack2MCParticle/HltTrgTrack2MCParticle"
                         ,"TrgChecker/HltTrgChecker"
                         ,"TrgVertexMonit/HltVertexMonit"
                        };
