@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.4 2002-05-20 23:15:32 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.5 2002-05-23 23:12:03 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -114,12 +114,12 @@ StatusCode PhysDesktop::initialize() {
         << endreq;
   }
   else {
-    log << MSG::INFO << "Particles will be loaded from ";
-
+    log << MSG::INFO << "Particles and Vertices will be loaded from "
+        << std::endl;
     for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
        iloc != m_inputLocn.end(); iloc++ ) {
     
-      log << MSG::INFO << "   ==> *iloc ";
+      log << MSG::INFO << "   ==>" << *iloc << std::endl;
     }
     log << MSG::INFO << endreq;
   }
@@ -620,7 +620,7 @@ StatusCode PhysDesktop::getInput(){
     std::string location = (*iloc)+"/Particles";
     
     SmartDataPtr<Particles> parts( eventSvc(), location );
-    if ( ! parts ) { 
+    if ( !parts ) { 
       log << MSG::INFO << "Unable to retrieve Particles from " 
           << location << endreq;
     }

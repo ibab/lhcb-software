@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2002-05-20 23:16:45 gcorti Exp $
+# $Id: requirements,v 1.10 2002-05-23 23:13:12 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -24,6 +24,7 @@ use  GaudiTools    v6r*
 use  DetDesc       v10r0  Det
 
 # Extra language for translating yacc to c++
+#============================================================================
 macro yaccppflags       " -l -d "
 macro yaccpp            "yacc $(yaccppflags)
 make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header

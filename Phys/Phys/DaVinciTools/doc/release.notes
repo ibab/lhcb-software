@@ -1,27 +1,27 @@
-! $Id: release.notes,v 1.11 2002-05-20 23:16:56 gcorti Exp $
+! $Id: release.notes,v 1.12 2002-05-23 23:13:06 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 20022005 Gloria Corti
+! 2002-05-20 - Gloria Corti
   - New tool DecayFinder (Olivier Dormond) to find a decay as specified 
     by a string in jobOptions. Use a special parser ypp (fragments and
     changes in requirements, and recparser.ypp, reclexer.lpp)  
 
-! 20021705 Gloria Corti
-  - Initial printout for input locations
+! 2002-05-17 - Gloria Corti
+  - Initial printout for input locations in PhysDesktop
   - DVAlgorithm: remove cpp and do inline implementation. Introduce method
     to load an instance of all tools loadTools() to be called at initialization
     Remove dummy implementation of initialize,execute and finalize
   - Similar format for messages in finalize of tools
 
-! 20020515 Gloria Corti
+! 2002-05-15 - Gloria Corti
   - PhysDesktop: implementation of IListner to clean up at end of events (GC)
   - FillParticleAlgorithm: adapt to new ParticleID and move check of
     AxPartCandidate before creating a Particle
 
-! 20020510 Gloria Corti
+! 2002-05-10 - Gloria Corti
   - New tool category of tool IParticleMaker to which PhysDesktop 
     delegates creations of Particles from different type of objects:
     one implementation AxParticleMaker making Particles from
@@ -31,7 +31,7 @@
   - IMassVertexFitter: modify names of method to generic names (GC)
   - LagrangeVertexFitter: shortcut methods (Joao de Mello)
 
-! 20020506 Gloria Corti
+! 2002-05-06 - Gloria Corti
   - Merge contributions for new release (Sandra Amato & GC)
   - Comments in all interfaces and header files for Doxygen documentation
   - cmt/requirements updated to use Gaudi v10 & PhysEventModel v4r0
