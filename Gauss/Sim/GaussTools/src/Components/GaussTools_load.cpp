@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.10 2003-06-04 16:56:10 ibelyaev Exp $
+// $Id: GaussTools_load.cpp,v 1.11 2003-06-05 10:49:43 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/06/04 16:56:10  ibelyaev
+//  cut per region implementation
+//
 // Revision 1.9  2003/05/30 17:55:52  ibelyaev
 //  add GiGaRegionTool - 'Cuts per Region'
 //
@@ -80,6 +83,7 @@ void GaussTools_load()
 
   /// field manager 
   DECLARE_GiGaFactory     (    GiGaFieldMgr            ) ;
+  DECLARE_GiGaFactory     (    ZeroFieldMgr            ) ;
   DECLARE_GiGaFactory     (    GiGaEraseFieldMgr       ) ;
   DECLARE_GiGaFactory     (    GiGaSetSimAttributes    ) ;
 

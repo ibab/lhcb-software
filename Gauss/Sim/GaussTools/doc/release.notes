@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-06-05 - Witek Pokorski
+ - ZeroFieldMgr - added new field manager which has explicitely a null pointer
+                  to G4MagneticField (to avoid propagation in field)
+
 ! 2003-06-04 - Ivan BELYAEV
  - src/GiGaRegionsTool.h,.cpp   - new tool to create ALL cuts per regions.
  - src/GaussTools_load.cpp      - add declaration of new tool  
