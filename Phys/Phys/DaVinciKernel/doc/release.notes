@@ -2,6 +2,10 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-09-08 - P. Koppenburg
+ - DaVinciTools/DVAlgorithm.h
+ - src/DVAlgorithm.cpp
+   . Let DVAlgorithm inherit from GaudiHistoAlg.    
 !========================== DaVinciKernel v1r1 2004-09-16 ===================
 ! 2004-09-08 - P. Koppenburg
  - IParticleFilter
