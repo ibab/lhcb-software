@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.1 2002-07-16 16:02:41 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.2 2002-11-11 12:34:11 cattanem Exp $
 
 #define DERICHFLATMIRROR_CPP
 
@@ -90,7 +90,7 @@ StatusCode DeRichFlatMirror::initialize() {
   // extract mirror number from detector element name
   const std::string::size_type pos = name().find(':');
   if( std::string::npos != pos ) {
-    m_mirrorNumber = atoi( std::string( name() , pos + 1 ).c_str() );
+    m_mirrorNumber = atoi( name().substr(pos + 1).c_str() );
   }
   else {
     log << MSG::ERROR <<"A mirror without a number!"<< endreq;
