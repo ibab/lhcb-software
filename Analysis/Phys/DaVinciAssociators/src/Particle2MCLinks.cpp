@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.2 2002-07-12 15:27:11 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.3 2002-07-15 15:17:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -153,6 +153,8 @@ StatusCode Particle2MCLinks::execute() {
           << endreq;
       delete table;
       return sc;
+    } else {
+      log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
     }
   } else {
     delete table;

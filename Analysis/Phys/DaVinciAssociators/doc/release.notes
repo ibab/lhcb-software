@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2002-07-15 07:24:44 phicharp Exp $
+! $Id: release.notes,v 1.7 2002-07-15 15:17:16 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
@@ -11,8 +11,9 @@
     ProtoParticles and MCParticles. Implemented for charged tracks only
  - Associator from ZEBRA links still present for backward compatibility, will
     eventually be removed
- - Chi2 associator using now its own instance of WithChi2 associator, as an
-    example on how to do this and set correctly the properties.
+ - Chi2 algorithm uses now its own instance of a "WithChi2" associator, as an
+    example on how to do this and set correctly the properties. This allows
+    the use of multiple instances of the Chi2 associator if needed...
 
 !================= DaVinciAssociators v1r0p1 2002-06-07 ====================
 ! 2002-06-07 - Marco Cattaneo

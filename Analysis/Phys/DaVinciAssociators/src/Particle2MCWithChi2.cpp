@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.2 2002-07-12 15:27:52 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.3 2002-07-15 15:17:17 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -188,6 +188,8 @@ StatusCode Particle2MCWithChi2::execute() {
         << endreq;
     delete table;
     return sc;
+  } else {
+    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
   }
   return StatusCode::SUCCESS;
 };

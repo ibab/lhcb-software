@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.2 2002-07-12 15:26:38 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.3 2002-07-15 15:17:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -45,15 +45,15 @@ Particle2MCChi2::~Particle2MCChi2() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode Particle2MCChi2::initialize() {
-  std::string algName = "MyAsctWithChi2";
-  
+  std::string myAlgName = name() + "AlgWithChi2";
+  std::string myAsctName = name() + "AsctWithChi2";
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
 
   // Retrieve a weighted associator on which a threshold will be applied
   StatusCode sc = toolSvc()->retrieveTool( "Particle2MCWithChi2Asct" , 
-                                           algName,
+                                           myAsctName,
                                            m_pAsctChi2);
   if( sc.isFailure() || 0 == m_pAsctChi2) {
     log << MSG::FATAL << "    Unable to retrieve the WithChi2 Associator tool" 
@@ -62,23 +62,28 @@ StatusCode Particle2MCChi2::initialize() {
   }
   
   /* Now set up the WithChi2 associator such that it gives 
-     the correct information */
+     the correct information (local to this algorithm) */
   
   IProperty* prop = 
     dynamic_cast<IProperty*>( m_pAsctChi2 );
   if( prop ) {
-    prop->setProperty( "Location", "Phys/Relations/Particle2MCWithChi2Temp");
-    prop->setProperty( "AlgorithmName", "MyAlgWithChi2");
+    std::string myLocation = outputTable() + "TempWithChi2";
+    sc = prop->setProperty( "Location", myLocation);
+    if( sc.isSuccess() ) {
+      log << MSG::DEBUG << "Property Location set to " << myLocation
+          << " in Asct " << myAsctName << endreq;
+    }
+    sc = prop->setProperty( "AlgorithmName", myAlgName);
+    if( sc.isSuccess() ) {
+      log << MSG::DEBUG << "Property AlgorithmName set to " << myAlgName
+          << " in Asct " << myAsctName << endreq;
+    }
   }
+  // Now set the algorithm's properties...
   prop = dynamic_cast<IProperty*>( m_pAsctChi2->algorithm() );
   if( prop ) {
     std::string propString ;
     std::string sep = "\"";
-    sc = prop->getProperty( "InputData", propString);
-    if( sc.isSuccess() ) {
-      log << MSG::DEBUG << "    Property InputData of "
-          << algName << " was set to " << propString << endreq;
-    }
     propString = "[";
     for( std::vector<std::string>::iterator inp = m_inputData.begin();
          m_inputData.end() != inp; inp++ ) {
@@ -88,12 +93,12 @@ StatusCode Particle2MCChi2::initialize() {
     propString = propString + "\"]";
     sc = prop->setProperty( "InputData", propString);
     if( sc.isSuccess() ) {
-      log << MSG::DEBUG << "    Property InputData of "
-          << algName << " successfully set to " << propString << endreq;
+      log << MSG::DEBUG << "Property InputData set to "
+          << propString << " in algo " << myAlgName << endreq;
     }
     else {
-      log << MSG::DEBUG << "    Error setting Property InputData of "
-          << algName << " to " << propString << endreq;
+      log << MSG::DEBUG << " **** Error setting Property InputData of "
+          << myAlgName << " to " << propString << endreq;
     }
   }
   return StatusCode::SUCCESS;
@@ -156,7 +161,10 @@ StatusCode Particle2MCChi2::execute() {
         << endreq;
     delete table;
     return sc;
+  } else {
+    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
   }
+  
   return StatusCode::SUCCESS;
 };
 

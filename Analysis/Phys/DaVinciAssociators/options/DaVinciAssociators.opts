@@ -9,12 +9,14 @@
 //ToolSvc.Particle2MCWithChi2Asct.AlgorithmType = "Particle2MCWithChi2";
 //ToolSvc.Particle2MCWithChi2Asct.AlgorithmName = "Particle2MCWithChi2";
 //
-
 // ... and for the corresponding algorithm
 //
 //Particle2MCWithChi2.InputData  = { "Phys/Production/Particles" };
-Particle2MCWithChi2.OutputTable  = "Phys/Relations/Particle2MCWithChi2";
+// OutputTable is automatically set by default to Location of the Asct
+//Particle2MCWithChi2.OutputTable  = "Phys/Relations/Particle2MCWithChi2";
 Particle2MCWithChi2.FillHistos = true;
+
+///////////////////////////////////////////////////////////////////////////////
 
 /* This are the defaults for the non-weighted associator Particle2MCChi2
    which uses the output of the previous one and applies a cut on Chi2
@@ -23,13 +25,24 @@ Particle2MCWithChi2.FillHistos = true;
 //ToolSvc.Particle2MCAsct.AlgorithmType = "Particle2MCChi2";
 //ToolSvc.Particle2MCAsct.AlgorithmName = "Particle2MCChi2";
 //
-
 // ... and for the corresponding algorithm
 //
 //Particle2MCChi2.InputData  = { "Phys/Production/Particles" };
-Particle2MCChi2.OutputTable  = "Phys/Relations/Particle2MC";
+// OutputTable is automatically set by default to Location of the Asct
+//Particle2MCChi2.OutputTable  = "Phys/Relations/Particle2MC";
 Particle2MCChi2.Chi2Cut = 100.;
+//
+/* The WithChi2 associator (and its algorithm) used by this algorithm
+   are special instances of the WithChi2 associator, in order not to interfere
+   with other instances. Their names are that of the non-weighted algorithm
+   followed by "AsctWithChi2" and "AlgWithChi2" respectively */
+//
+// Setting their OutputLevel to DEBUG would hence be
+//
+//Toolsvc.Particle2MCChi2AsctWithChi2.OutputLevel = 2;
+//Particle2MCChi2AlgWithChi2.OutputLevel = 2;
 
+///////////////////////////////////////////////////////////////////////////////
 
 /* Define specific parameters for another associator based on the same scheme
    but with a different algorithm
@@ -40,8 +53,10 @@ ToolSvc.LinkAsct.AlgorithmName = "Particle2MCLinks";
 
 // ... definition for the link algorithm
 //Particle2MCLinks.InputData  = { "Phys/Production/Particles" };
-Particle2MCLinks.OutputTable = "Phys/Relations/Particle2MCLinks";
+// OutputTable is automatically set by default to Location of the Asct
+//Particle2MCLinks.OutputTable = "Phys/Relations/Particle2MCLinks";
 
+///////////////////////////////////////////////////////////////////////////////
 
 /* Definition for the Proto2MC Associator
  */
@@ -51,6 +66,7 @@ Particle2MCLinks.OutputTable = "Phys/Relations/Particle2MCLinks";
 
 // ... definition for the link algorithm Proto2MC
 //ProtoParticle2MC.InputData    = { "Rec/ProtoP/Charged" };
+// OutputTable is automatically set by default to Location of the Asct
 //ProtoParticle2MC.OutputTable = "Rec/Relations/ProtoParticle2MC";
 ProtoParticle2MC.TrackAsct = "Track2MCAsct";
 ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";

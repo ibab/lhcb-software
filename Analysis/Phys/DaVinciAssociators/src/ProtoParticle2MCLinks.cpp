@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCLinks.cpp,v 1.1 2002-07-12 15:28:24 phicharp Exp $
+// $Id: ProtoParticle2MCLinks.cpp,v 1.2 2002-07-15 15:17:17 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -133,9 +133,9 @@ StatusCode ProtoParticle2MCLinks::execute() {
         << endreq;
     delete table;
     return sc;
+  } else {
+    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
   }
-  log << MSG::DEBUG << "    Relations table successfully registered as "
-      << outputTable() << endreq;
   return StatusCode::SUCCESS ;
 };
 
