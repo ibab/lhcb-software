@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.10 2002-03-19 16:30:34 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.11 2002-04-05 11:36:56 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -211,21 +211,20 @@ StatusCode DeVelo::initialize() {
         VeloWafer* wafer = new VeloWafer();
         wafer->setNumber( index++ );
         wafer->setZ( z );
-        if ( !inVeto && (1 == j%2) ) {
-          wafer->setType( 2*phiType + rightLeft );
-          loging << " Phi" << wafer->type() << " z=" << wafer->z();
-        } else {
-          wafer->setType( rightLeft );
-          loging << " R " << wafer->type() << " z=" << wafer->z();
-        }
         if ( inVeto ) {
+          wafer->setType( j );
+          loging << "    R " << wafer->type() << " z=" << wafer->z();
           m_puWafer.push_back( wafer );
-        }
-        else {
+        } else {
+          if ( 1 == j%2 ) {
+            wafer->setType( 2*phiType + rightLeft );
+            loging << " Phi" << wafer->type() << " z=" << wafer->z();
+          } else {
+            wafer->setType( rightLeft );
+            loging << " R" << wafer->type() << " z=" << wafer->z();
+          }
           m_wafer.push_back( wafer );
         }
-          
-      
       } else {
         loging << " no geometry !" << endreq;
       }
@@ -562,3 +561,55 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   return status;
 }
 
+//=========================================================================
+//  Compute the distance of the origin to the strip
+//=========================================================================
+double DeVelo::originToPhiDistance ( double strip, int waferNb ) {
+
+  double stripLocal = strip;
+  if ( 2048. <= strip ) {
+    stripLocal -= 2048.;
+  }
+  
+  double distance;
+  if ( stripLocal < m_nbPhiInner ) {
+    distance = m_innerTiltRadius ;
+  } else {
+    distance = m_outerTiltRadius ;
+  }
+
+  int phiType =  m_wafer[waferNb]->type();
+  if ( 4 > phiType    ) {  distance = -distance; }
+  return distance;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+double DeVelo::phiDirectionOfStrip ( double strip, int waferNb ) {
+
+  double stripLocal = strip;
+  if ( 2048. <= strip ) {
+    stripLocal -= 2048.;
+  }
+  
+  double phiLocal;
+  if ( stripLocal < m_nbPhiInner ) {
+    phiLocal = (stripLocal * m_phiPitchInner) + m_phiInnerTilt;
+    if ( 2048. <= strip ) {  
+      phiLocal = phiLocal-2*m_halfAngle; 
+    }
+  } else {
+    phiLocal = ((stripLocal-m_nbPhiInner) * m_phiPitchOuter) + m_phiOuterTilt;
+    if ( 2048. <= strip ) {  
+      phiLocal = phiLocal-2*m_halfAngle; 
+    }
+  }
+  phiLocal -= halfpi;
+
+  int phiType =  m_wafer[waferNb]->type();
+
+  if ( 3 <  phiType   ) { phiLocal = -phiLocal; }
+  if ( 0 == phiType%2 ) { phiLocal += pi;       }
+  return phiLocal;
+}

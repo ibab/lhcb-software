@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.11 2002-03-19 16:30:34 ocallot Exp $
+! $Id: release.notes,v 1.12 2002-04-05 11:36:55 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+!=============================================================================
+! 05/04/2002 - Olivier Callot ** v4r0 **
+  - Fixed the type of wafers in PuVeto, they were always of teh same type !
+
+!=============================================================================
+! 28/03/2002 - Olivier Callot
+  - New methods for Phi: 
+    originToPhiDistance : Return the (signed) distance form orgigin to a strip.
+    phiDirectionOfStrip : Return the signed angle of the strip.
+    These two methods are needed by the VeloPhiHitOnTrack TrEvent class.
 
 !=============================================================================
 ! 18/03/2002 - Olivier Callot ** v3r1 **

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.5 2002-03-19 08:58:08 ocallot Exp $
+// $Id: DeVelo.h,v 1.6 2002-04-05 11:36:55 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -137,6 +137,14 @@ public:
 
   /// returns the phi of the strip at the specified radius for this wafer.
   double phiOfStrip( double strip, double radius, int wafer );
+
+  /// returns the signed distance from origin to phi strip number
+  double originToPhiDistance( double strip, int wafer );
+  
+  /// returns the phi angle of the strip itself. 'phiOfStrip' returns the 
+  /// phi of the point at the specified radius on the strip. 
+  /// 'phiDirectionOfStrip' is the direction of the strip
+  double phiDirectionOfStrip( double strip, int wafer );
 
   /// returns the R pitch at the given radius
   double rPitch( double radius ) {
