@@ -1,9 +1,9 @@
-// $Id: XmlDeVeloCnv.cpp,v 1.1 2001-10-25 06:13:27 ocallot Exp $
+// $Id: XmlDeVeloCnv.cpp,v 1.2 2003-06-16 13:41:23 sponce Exp $
 
 /// GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 /// DetDesc
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 /// VeloDet 
 #include "VeloDet/DeVelo.h"
 
