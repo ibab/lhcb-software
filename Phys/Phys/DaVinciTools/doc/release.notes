@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.114 2004-07-22 09:18:41 pkoppenb Exp $
+! $Id: release.notes,v 1.115 2004-07-22 09:47:40 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
@@ -29,8 +29,22 @@
   - src/NsctVeloTransporter.cpp
   - src/ParabolicTransporter.cpp
   - src/TrTransporter.cpp
-    . Redefinition of error on z position for transport of composite particles.
-   
+    . Redefinition of error on z position for transport of composite particles.   
+    This changes the chi^2 of vertices:
+    . It is understood why chi2 is bigger after the change in transporter
+      to take in to account the uncertainty in z of fitted vertex. The reason 
+      is vx and vy are highly correlated with vz. If error of vz is neglected, 
+      all the uncertainties are ascribed to errors of vx and vy. By transfroming
+      this vertex to a fixed z with a linear assumption, the uncertainty in vx 
+      and vy due to the uncertainty of vz is removed, so the errors of vx and 
+      vy actually become smaller. Average vertex fit chi2 is thus increased. 
+      This explains why the selection cuts are harder. It is possible that
+      more bb events are rejected than signal events, becasue generally 
+      speaking the uncertianty in z of a combinatorial vertex is bigger than 
+      that of a true vertex. So I expect signal to background ratio won't be 
+      worse than before if all chi2 cuts are relaxed a bit to achieve same 
+      efficiencies as before.
+
 ! 2004-07-19 - P. Koppenburg for Luis Fernandez
   - src/FlightDistanceFilterCriterion.{h.cpp}
     Shorter options. see below.

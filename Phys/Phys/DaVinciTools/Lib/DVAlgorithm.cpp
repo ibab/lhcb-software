@@ -44,8 +44,8 @@ StatusCode DVAlgorithm::loadTools() {
   msg << MSG::INFO << ">>> Retrieving tools" << endreq;
   
   msg << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
-  StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
-  if( sc.isFailure() ) {
+  m_pDesktop = tool<IPhysDesktop>( "PhysDesktop" );
+  if( !m_pDesktop ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" 
         << endreq;
     return StatusCode::FAILURE;
@@ -53,8 +53,8 @@ StatusCode DVAlgorithm::loadTools() {
 
   msg << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
-  sc = toolSvc()->retrieveTool(m_typeLagFit, m_pLagFit, this);
-  if( sc.isFailure() ) {
+  m_pLagFit = tool<IMassVertexFitter>( m_typeLagFit );
+  if( !m_pLagFit ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
@@ -62,24 +62,25 @@ StatusCode DVAlgorithm::loadTools() {
      
   msg << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
-  sc = toolSvc()->retrieveTool(m_typeVertexFit, m_pVertexFit, this);
-  if( sc.isFailure() ) {
+  m_pVertexFit = tool<IVertexFitter>( m_typeVertexFit );
+  if(  !m_pVertexFit ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
   
   msg << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
-  sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc, this);
-  if( sc.isFailure() ) {
+  m_pGeomDispCalc = tool<IGeomDispCalculator>( "GeomDispCalculator" );
+  
+  if( !m_pGeomDispCalc ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
   
   msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer, this);
-  if( sc.isFailure() ) {
+  m_pStuffer = tool<IParticleStuffer>("ParticleStuffer");
+  if( !m_pStuffer ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
         << endreq;
     return StatusCode::FAILURE;
@@ -87,15 +88,15 @@ StatusCode DVAlgorithm::loadTools() {
   }
    
   msg << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
-  sc = toolSvc()->retrieveTool("ParticleFilter", m_pFilter, this);
-  if( sc.isFailure() ) {
+  m_pFilter = tool<IParticleFilter>("ParticleFilter");
+  if( !m_pFilter ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
   msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
-  sc = service("ParticlePropertySvc", m_ppSvc, true);
+  StatusCode sc = service("ParticlePropertySvc", m_ppSvc, true);
   if( sc.isFailure() ) {
     msg << MSG::FATAL << "    Unable to locate Particle Property Service" 
         << endreq;
@@ -103,7 +104,6 @@ StatusCode DVAlgorithm::loadTools() {
   }  
   
   m_toolsLoaded = true;
-  
 
   return StatusCode::SUCCESS;
 }
