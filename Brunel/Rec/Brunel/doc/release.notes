@@ -1,9 +1,12 @@
+<PRE>
 Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
+</PRE>
 
-! 20011017 Brunel v8 (MC)
+<H1><A NAME=v8>20011017 Brunel v8</A></H1>
+<PRE>
    Major repackaging, no major change in functionality:
    - all source files have been removed and moved to new Rec/BrunelSicb package
    - version number is set by a compiler define flag in the requirements file
@@ -39,7 +42,7 @@ Purpose: LHCb reconstruction program
    - use TrSicbCnv    v3   SICB
        requirements - use TrEvent v6*
 ! =================================================================
-! 20010913 Brunel v7r1 (MC)
+</PRE><H1><A NAME=v7r1>20010913 Brunel v7r1</A></H1><PRE>
 
    In cmt/requirements
      use TrAlgorithms v6r1 Tr
@@ -48,7 +51,8 @@ Purpose: LHCb reconstruction program
      use rechcal      v6r1 SICB
      - Modified hcl0_make to delete the existing map of cell references.
 
-! 20010904 Brunel v7 (MC)
+! =================================================================
+</PRE><H1><A NAME=v7>20010904 Brunel v7</A></H1><PRE>
   This version is to be used for data produced with SICBMC v248/dbase v241
   ("LHCb-Light")
 
@@ -74,7 +78,16 @@ Purpose: LHCb reconstruction program
     pipe8.22.cdf - Be first section (G. Corti)
 
 ! =================================================================
-! 20010904 Brunel v6 (MC)
+</PRE><H1><A NAME=v6r1>20010913 Brunel v6r1</A></H1><PRE>
+   In cmt/requirements
+     use TrAlgorithms v6r1 Tr
+     - fix a memory leak in TrFitIntializer
+
+     use rechcal      v6r1 SICB
+     - Modified hcl0_make to delete the existing map of cell references.
+
+! =================================================================
+</PRE><H1><A NAME=v6>20010904 Brunel v6</A></H1><PRE>
   This version is to be used for data produced with SICBMC v247/dbase v240
   ("LHCB-classic", tracker cross-geometry)
 
@@ -132,7 +145,7 @@ Purpose: LHCb reconstruction program
   - Store the L0DUReport in the Transient store, this wasn't done !
 
 ! =================================================================
-! 20010824 Brunel v5r1 (MC)
+</PRE><H1><A NAME=v5r1>20010824 Brunel v5r1</A></H1><PRE>
 
    In cmt/requirements
      use XmlDDDB v6r1
@@ -141,8 +154,8 @@ Purpose: LHCb reconstruction program
      use SicbCnv v13r1
      - Protections in book-keeping database queries
 
-
-! 20010821 Brunel v5 (MC)
+! =================================================================
+</PRE><H1><A NAME=v5>20010821 Brunel v5</A></H1><PRE>
 
    In src/BrunelSicb/
    -----------------
@@ -223,7 +236,7 @@ Purpose: LHCb reconstruction program
    use GDUMMY       v1r5   (was v1r4)
 
 ! =================================================================
-! 20010629 Brunel v4 (MC)
+</PRE><H1><A NAME=v4>20010629 Brunel v4</A></H1><PRE>
    Add C++ L0 trigger simulation
    Remove old L0_2x2 simulation
 
@@ -264,7 +277,7 @@ Purpose: LHCb reconstruction program
 
 
 ===============================================================================
-! 20010625 Brunel v3r3 (MC)
+</PRE><H1><A NAME=v3r3>20010625 Brunel v3r3</A></H1><PRE>
    Add possibility to add muon background (switched on by default)
 
    In src/BrunelSicb/
@@ -285,7 +298,7 @@ Purpose: LHCb reconstruction program
      use simmubg v5
 >  package to generate muon background
 ===============================================================================
-! 20010620 Brunel v3r2 (MC)
+</PRE><H1><A NAME=v3r2>20010620 Brunel v3r2</A></H1><PRE>
    Same as v3r1, but using bug fixes from digvdet v2r3 and trivert v5r2
 
    In cmt/requirements
@@ -299,7 +312,7 @@ Purpose: LHCb reconstruction program
 >           rotation of the VELO by 90d in phi.(M.McCubbin)
 
 ===============================================================================
-! 20010606 Brunel v3r1 (MC)
+</PRE><H1><A NAME=v3r1>20010606 Brunel v3r1</A></H1><PRE>
    This version reads SICBMC data starting from SICBMC v245, dbase v238
    ** It is not backwards compatible with older RAWH formats and geometry **
    ** It is no longer possible to do Pileup in Brunel                     **
@@ -365,7 +378,7 @@ Purpose: LHCb reconstruction program
 >                   call to rmmlt routine (necessary to run on NT, gcorti)
 >  src/axpartid.F - use results from extended tracking (R.Forty)
 ===============================================================================
-! 20010521 Brunel v3 (MC)
+</PRE><H1><A NAME=v3>20010521 Brunel v3</A></H1><PRE>
   This is the first version to be used for an official LHCB production 
 
   This version has been restructured as two packages. Rec/Brunel contains the
@@ -392,19 +405,21 @@ Purpose: LHCb reconstruction program
   - Does not run old L1 track trigger (T1TRACK from trit1tr package)
     TTR1 bank is not produced.
 ===============================================================================
-! 20001219 Brunel v1r6 (MC)
+</PRE><H1><A NAME=v1r6>20001219 Brunel v1r6</A></H1><PRE>
   requirements     - use SicbCnv v10 (spillover), SICBDST v235r3
   Brunel.Phase.cpp - fix bug in a log message (reported by O.Callot)
   BrunelZebra.inc  - increase ZEBRA COMMON block size to 12M words
 
-! 20001120 Brunel v1r5 (MC)
+===============================================================================
+</PRE><H1><A NAME=v1r5>20001120 Brunel v1r5</A></H1><PRE>
   Brunel.Phase.cpp - No longer instantiates algorithms, instead it instantiates sequences
                      This introduces modifications in the BrunelOptions.txt: all algorithms
                      must now be declared as members of a sequence - see user guide for details
   requirements     - Use Gaudi release 6, SICBDST v235r2
   options          - New directory, containing structure of job options files - see user guide
 
-! 20001003 Brunel v1r4 (Flr)
+===============================================================================
+</PRE><H1><A NAME=v1r4>20001003 Brunel v1r4</A></H1><PRE>
            to link a Brunel static application: gmake tag=LinuxStatic
            to run a job in static mode remove the following line from
            BrunelOptions.txt : ApplicationMgr.DLLs = {...}
@@ -416,11 +431,13 @@ Purpose: LHCb reconstruction program
                       by SICBDST.
                     - use SicbCnv v8r1 (to remove a fake main program)
 
-! 20000824 Brunel v1r3 (MC)
+===============================================================================
+</PRE><H1><A NAME=v1r3>20000804 Brunel v1r3</A></H1><PRE>
   requirements      - use SICBDST v235
   jobOptions        - cleaned up
 
-! 20000726 Brunel v1r2 (MC)
+===============================================================================
+</PRE><H1><A NAME=v1r2>20000726 Brunel v1r2</A></H1><PRE>
   requirements      - use SICBDST v234r2 and GaudiSys v5
   BrunelZebra.inc   - increase ZEBRA size to 9000000 (as for SICBDST)
   *.cpp             - Changes for GaudiSys v5 (compulsory implementation of
@@ -428,13 +445,15 @@ Purpose: LHCb reconstruction program
   BrunelPhase.h,.cpp- Remove private member m_AlgList, now exists in 
                       Algorithm base class
 
-! 20000626 Brunel v1r1 (MC)
+===============================================================================
+</PRE><H1><A NAME=v1r1>20000626 Brunel v1r1</A></H1><PRE>
   requirements      - use SicbCnv v7r3, link directly to $(SICBDSTROOT)/src/sicbvers.F
   BrunelZebra.inc   - new, to over-ride size of ZEBRA COMMON (set to 8 000 000)
   GetZebraSize.F    - new, over-rides routine of same name in SicbCnv 
   Brunel.Trigger.TRIGGER.cpp - call TRLAST in finalise()
 
-! 20000529 Brunel v1
+===============================================================================
+</PRE><H1><A NAME=v1>20000529 Brunel v1</A></H1><PRE>
   requirements      - use GaudiConf v1 and SICBDST v233r2 (Flr)
   job/              - new directory which contains :      (Flr)
   Brunel.job        - script to run Brunel, uses Brunel.cards and 
@@ -452,3 +471,4 @@ Purpose: LHCb reconstruction program
 
   This version has the same functionality as SICBDST v233, containing only 
   wrapped FORTRAN code
+</PRE>
