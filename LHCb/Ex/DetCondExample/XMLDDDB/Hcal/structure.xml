@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: structure.xml,v 1.1 2001-12-17 16:52:41 andreav Exp $ -->
+<DDDB>
+
+  <parameter name="InCell"   value="131.3*mm"  />
+  <parameter name="OutCell"  value="2.0*InCell"  />
+
+
+  <!-- ********************************************** -->
+  <!-- *  Define detector element for Hcal detector * -->
+  <!-- ********************************************** -->
+  <detelem   name    = "Hcal"
+             classID = "8900"  >
+ 
+         <author>  Olivier Callot </author>
+         <version> 1.0            </version>
+
+         <geometryinfo lvname  = "/dd/Geometry/Hcal/lvHcal"
+		       support = "/dd/Structure/LHCb"
+                       npath   = "HcalSubsystem" />
+
+         <slowcontrolinfo condition="/dd/SlowControl/Hcal/scHcal"/>
+
+         <detelemref href = "#HcalOuter" />
+         <detelemref href = "#HcalInner" />
+
+         <userParameter name="CodingBit" type="int"> 5 </userParameter>
+         <userParameter name="EtInCenter" type="double">
+            15.*GeV
+         </userParameter>
+         <userParameter name="EtSlope" type="double"
+                        comment="15 GeV max">
+            0.*GeV
+         </userParameter>
+         <userParameter name="AdcMax" type="int"> 4095 </userParameter>
+         <userParameter name="ActiveToTotal" type="double" 
+                        comment="calibrated by O.Iouchtchenko">
+            49.2
+         </userParameter>
+         <userParameter name="ZShowerMax" type="double"
+                        comment="300 mm from start of tile structure">
+            -337.5*mm
+         </userParameter>
+
+  </detelem>
+
+
+ <detelem classID="8901" name="HcalOuter">
+
+    <author>  Olivier Callot </author>
+    <version> 1.0            </version>
+
+    <geometryinfo lvname = "/dd/Geometry/Hcal/lvHcalOuter"
+                  support = "/dd/Structure/LHCb/Hcal"
+                  npath = "pvHcalOuter" />
+
+    <userParameter name="CellSize"> OutCell </userParameter>
+
+  </detelem>
+
+  <detelem classID="8901" name="HcalInner">
+ 
+    <author>  Olivier Callot </author>
+    <version> 1.0            </version>
+
+    <geometryinfo  lvname = "/dd/Geometry/Hcal/lvHcalInner"
+	               support = "/dd/Structure/LHCb/Hcal"
+                   npath = "pvHcalInner" />
+
+    <userParameter name="CellSize"> InCell </userParameter>
+
+  </detelem>
+
+</DDDB>
