@@ -3,7 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2002-09-11 - Marco Cattaneo
+</PRE><H1><A NAME=v13r2>2002-10-07 Brunel v13r2</A></H1><PRE>
+Bug fix release for reprocessing of summer production
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
+
  - New tuning:
    . Tune L0 thresholds (L0DU v6r1)
    . Change OT dead time from 30 to 50 ns (OTAlgorithms v11r1)
