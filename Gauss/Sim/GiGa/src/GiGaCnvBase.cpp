@@ -74,7 +74,7 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
   return  Status;
 };  
 ///////////////////////////////////////////////////////////////////////////////////////////////////////  
-StatusCode GiGaCnvBase::Error( const std::string& Message , const StatusCode& status = StatusCode::FAILURE )
+StatusCode GiGaCnvBase::Error( const std::string& Message , const StatusCode& status )
 {
   Stat stat( chronoSvc() , name() + ":Error" );
   MsgStream log( msgSvc() , name() ); log << MSG::ERROR << Message << endreq; 
