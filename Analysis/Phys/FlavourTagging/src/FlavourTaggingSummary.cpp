@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingSummary.cpp,v 1.1 2003-03-27 09:54:14 odie Exp $
+// $Id: FlavourTaggingSummary.cpp,v 1.2 2003-06-13 08:41:46 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,12 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 #include "Event/EventHeader.h"
+#include "Event/Collision.h"
 #include "Event/FlavourTag.h"
+#include "Event/L0DUReport.h"
+#include "Event/L1Report.h"
+
+#include "MCTools/IVisPrimVertTool.h"
 
 // local
 #include "FlavourTaggingSummary.h"
@@ -54,6 +59,12 @@ StatusCode FlavourTaggingSummary::initialize() {
     return StatusCode::FAILURE;
   }
 
+  StatusCode sc = toolSvc()->retrieveTool( "VisPrimVertTool", m_visTool, this );
+  if( sc.isFailure() ) {
+    msg << MSG::FATAL << "Unable to retrieve the VisPrimVertTool" << endreq;
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -71,6 +82,11 @@ StatusCode FlavourTaggingSummary::execute() {
     return StatusCode::SUCCESS;
   }
 
+  SmartDataPtr<L0DUReport> l0(eventSvc(), L0DUReportLocation::Default);
+  SmartDataPtr<L1Report> l1(eventSvc(), L1ReportLocation::Default);
+
+  SmartDataPtr<Collisions> collisions(eventSvc(), CollisionLocation::Default);
+
   int nloc = m_tagsLocations.size();
   std::vector<std::vector<int> > summaries;
   std::vector<std::string>::const_iterator loc_i;
@@ -81,7 +97,7 @@ StatusCode FlavourTaggingSummary::execute() {
       continue;
     msg << MSG::DEBUG << "Will monitor " << tags->size() << " tags." << endreq;
     FlavourTags::const_iterator tag_i;
-    int t;
+    unsigned int t;
     for( t=0, tag_i=tags->begin(); tag_i!=tags->end(); tag_i++, t++ ) {
       int tag = 0;
       switch( (*tag_i)->decision() ) {
@@ -99,8 +115,40 @@ StatusCode FlavourTaggingSummary::execute() {
   for( s_i = summaries.begin(); s_i != summaries.end(); s_i++ ) {
     msg << MSG::INFO << "TAGGING SUMMARY "
         << evtHead->runNum() << ' ' << evtHead->evtNum();
+    msg << " T ";
+    if( l0 )
+      msg << (l0->decision() ? 1 : 0);
+    else
+      msg << "N/A";
+    msg << ' ';
+    if( l1 )
+      msg << (l1->decision() ? 1 : 0);
+    else
+      msg << "N/A";    
+    msg << " C ";
+    if( collisions ) {
+      msg << collisions->size() << " V ";
+      long v;
+      if( m_visTool->countVertices(v).isSuccess() )
+        msg << v;
+      else
+        msg << "N/A";
+      //msg << " [";
+      //if( collisions->size() > 0 ) {
+      //  Collisions::const_iterator ci;
+      //  for( ci = collisions->begin(); ci != collisions->end(); ci++ ) {
+      //    if( !m_visTool->isVisible(*ci) )
+      //      continue;
+      //    msg << (*ci)->processType() << ", ";
+      //  }
+      //  msg << "]";
+      //} else
+      //  msg << " [N/A]";
+    } else
+      msg << "N/A V N/A [N/A]";
+    msg << " :";
     for( int l=0; l<nloc; l++ )
-      msg << ' ' << (*s_i)[l];
+      msg << ' ' << setw(2) << (*s_i)[l];
     msg << endreq;
   }
 

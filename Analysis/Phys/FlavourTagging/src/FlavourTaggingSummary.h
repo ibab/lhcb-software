@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingSummary.h,v 1.1 2003-03-27 09:54:14 odie Exp $
+// $Id: FlavourTaggingSummary.h,v 1.2 2003-06-13 08:41:46 odie Exp $
 #ifndef FLAVOURTAGGINGSUMMARY_H 
 #define FLAVOURTAGGINGSUMMARY_H 1
 
@@ -9,6 +9,8 @@
 
 // from DaVinci
 #include "DaVinciTools/DVAlgorithm.h"
+
+class IVisPrimVertTool;
 
 /** @class FlavourTaggingSummary FlavourTaggingSummary.h
  *  Print a one line summary of all the tags.
@@ -32,5 +34,7 @@ protected:
 private:
   /// Vector of locations of the tags to monitor
   std::vector<std::string> m_tagsLocations;
+
+  IVisPrimVertTool *m_visTool;
 };
 #endif // FLAVOURTAGGINGSUMMARY_H
