@@ -1,6 +1,11 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================= EventSys v17r9p1 2004-05-05 =======================
+! 2004-05-13 - Marco Cattaneo
+ - In PoolDicts.opts, load SealSTLDicts last to workaround a problem seen with
+   RichOpticalPhotons
+
 !======================== EventSys v17r9 2004-05-05 ========================
 ! 2004-05-05 - Marco Cattaneo
  - Use PhysEvent v8r3, EventAssoc v1r1, Event v4r3, TrgEvent v2r2
