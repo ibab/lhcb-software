@@ -69,7 +69,7 @@ use CaloAssociators    	v4r1	Calo
 use MuonAssociators    	v1r3	Muon
 
 # Other stuff
-use MCTools		v1r5	Phys
+use MCTools		v1r6	Phys
 use CaloInterfaces	v4r0	Calo
 use CaloUtils		v4r7	Calo
 

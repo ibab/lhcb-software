@@ -5,10 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-05-28 =======================
-! 2004-05-28 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-02 =======================
+! 2004-06-02 - Marco Cattaneo
  - Modified packages: DetSys v5r7, STDet v1r2, MuonTools v3r7,
-                      AssociatorsSys v1r14, ITAssociators v2r9
+                      AssociatorsSys v1r14, ITAssociators v2r9, MCTools v1r6
 
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports
@@ -16,8 +16,11 @@
  - In MuonTools v3r7:
    . Initialize MuonTileIDXYZ completely before first event
 
- - In ITAssociators v2r9
+ - In ITAssociators v2r9:
    . Use new GaudiAlg, GaudiTools base classes
+
+ - In MCTools v1r6:
+   . Add IMCParticleSelector tool
 
 !====================== LHCbSys v15r11 2004-05-27 =======================
 ! 2004-05-27 - Marco Cattaneo
