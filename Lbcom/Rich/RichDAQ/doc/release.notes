@@ -4,11 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v1r5 2004-06-18 =========================
 ! 2004-06-18 - Chris Jones
  - Remove options files for DaVinci running. Brunel files can be used by simply
    creating the appropriate Sequencer first.
 
-!========================== RichDAQ v1r5 2004-06-17 =========================
 ! 2004-05-13 - Chris Jones
  - Add protection against building digits more than once
 
