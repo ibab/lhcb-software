@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichDigiQC
-version           v1r3
+version           v1r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,18 +15,11 @@ set RICHDIGIQCOPTS $(RICHDIGIQCROOT)/options
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use AIDA              v*    -no_auto_imports
-use RichEvent         v6r*  Event
+use RichEvent         v7r*  Event
 use RichUtils         v3r*  Rich
 
 # Component library building rule
 #============================================================================
 library          RichDigiQC  ../src/*.cpp -import=AIDA
 
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=RichDigiQC

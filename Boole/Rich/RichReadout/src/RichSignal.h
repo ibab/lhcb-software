@@ -11,7 +11,7 @@
 
 // Event model
 #include "Event/MCParticle.h"
-#include "Event/ParticleID.h"
+#include "Kernel/ParticleID.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"

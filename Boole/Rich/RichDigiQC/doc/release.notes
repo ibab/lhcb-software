@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v1r4 2004-01-07 ========================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use RichEvent v7r* in requirements)
+
 !======================== RichDigiQC v1r3 2003-11-26 ========================
 ! 2003-11-25 - Chris Jones
  - Updated monitoring

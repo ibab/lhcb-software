@@ -9,7 +9,6 @@
 #include "RichPixelProperties.h"
 
 #include "Kernel/RichSmartID.h"
-#include "Event/Kernel.h"
 #include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ObjectVector.h"
 

@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!========================= RichReadout v1r4 2004-01-07 =======================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use RichEvent v7r* in requirements)
+
 !========================= RichReadout v1r3 2003-12-09 =======================
 ! 2003-12-09 - Marco Cattaneo
  - Remove #include RichKernel/MessageSvcStl.h, obsolete with GAUDI v13
