@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.11 2002-09-09 15:23:33 gcorti Exp $
+! $Id: release.notes,v 1.12 2002-09-18 08:57:03 odie Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-09-18 - Olivier Dormond
+ - Small fix to the DebugTool printout.
 
 ! 2002-09-09 - Gloria Corti
  - Set default values of Chi2/NoF in MCPIDProtoPAlg as from Helder results 
