@@ -43,6 +43,7 @@ Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
      other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4,
      CaloDet v5r1, CaloUtils v4r2, CaloTools v4r4)
    . Fixes to digitisation of IT stereo layers (ITDet v1r1, ITAlgorithms v12r1)
+   . Add protection against invalid argument to ACOS (recrich v7r2)
 
  - Geometry changes (XmlDDDB v12r5):
    . Fix overlap between Velo and Rich1
