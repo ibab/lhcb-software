@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.10 2004-07-21 08:09:37 cattanem Exp $
+// $Id: ReadMin.opts,v 1.11 2004-11-29 14:23:20 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -29,6 +29,12 @@ ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
+
+// Configure the DataOnDemand Service to get the event header from RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler  = true ;
+DataOnDemandSvc.Algorithms += { "DATA='/Event/DAQ/RawEvent' TYPE='CreateRawEvent'",
+                                "DATA='/Event/Header'       TYPE='EventHeaderFromRaw'" };
 
 // Input data file can be produced by first running IOMin.exe with WriteMin.opts
 

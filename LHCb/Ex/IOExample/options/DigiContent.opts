@@ -13,7 +13,6 @@ DigiWriter.OptItemList =
 DigiWriter.ItemList = 
 {
   "/Event#1"
-, "/Event/Header#1"
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
