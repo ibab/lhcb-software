@@ -2,26 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.28 2005-01-13 14:22:53 jonrob Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.27  2004/12/09 15:36:59  cattanem
-# remove dictionary creation
-#
-# Revision 1.26  2004/11/02 13:00:52  jonrob
-# Update the XML files for improved handling by cmt and make
-#
-# Revision 1.25  2004/10/27 14:34:16  jonrob
-# Various updates
-#
-# Revision 1.24  2004/10/21 09:09:46  jonrob
-# Update version and RichEvent usage
-#
-# Revision 1.23  2004/08/19 14:07:41  jonrob
-# Remove dependency on RichDet + doxygen updates
-#
-# Revision 1.22  2004/07/30 11:11:05  jonrob
-# Add CVS log to requirements file
-#
+# $Id: requirements,v 1.29 2005-03-03 10:56:28 jonrob Exp $
 #============================================================================
 
 package   RichRecBase
