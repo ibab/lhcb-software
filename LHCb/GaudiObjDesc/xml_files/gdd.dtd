@@ -99,7 +99,7 @@
 	type CDATA #REQUIRED
 	name CDATA #IMPLIED
 	const (TRUE | FALSE) "FALSE"
-	inout (INPUT | INOUT | BOTH) "INPUT"
+	inout (BYVALUE | INPUT | INOUT | BOTH) "INPUT"
 >
 <!ELEMENT return EMPTY>
 <!ATTLIST return

@@ -5,6 +5,10 @@ Package manager : Stefan Roiser
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r4<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+!20020619 - Stefan
+- introduced new value for 'inout'-attribute of <arg>-element called 'BYVALUE' to be
+  able to force the passing of a non-simple argument by value
+
 !20020617 - Stefan
 - handling of offsets to abstract-interface-classes
 - use friend-classes for investigation of offsets instead of defines

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.64 2002-06-17 15:47:02 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.65 2002-06-19 09:38:24 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -173,8 +173,9 @@ template <class T> void printArguments(std::ofstream& xmlOut,
       xmlOut << "*";
     }
 
-    if (gddArgInout == "BOTH" || 
-        (!DaDiTools::isFundamental(gddArgType) && !gddArgIsPointer) )
+    if ((gddArgInout != "BYVALUE") && 
+        (gddArgInout == "BOTH" || 
+        (!DaDiTools::isFundamental(gddArgType) && !gddArgIsPointer)))
     {
       xmlOut << "&";
     }
