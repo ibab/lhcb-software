@@ -4,8 +4,12 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!======================= GaussSys v17r0 2004-08-11 ===============
+! 2004-08-11 - Florence Ranjard
+ - uses geant4 6.2.p01
+
 ! 2004-08-02 - Gloria CORTI
- - Gauss v17r0 uses LHCb v16r1 (Gausi v15r1)
+ - Gauss v17r0 uses LHCb v16r1 (Gaudi v15r1)
 
 !======================= GaussSys v16r0 2004-06-28 ===============
 ! 2004-06-28 - Florence RANJARD
