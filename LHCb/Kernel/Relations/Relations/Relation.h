@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
+// $Id: Relation.h,v 1.3 2005-01-27 14:48:48 cattanem Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/01/26 16:27:29  ibelyaev
+//  add 'power input' option to speed-up the filling
+//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -100,7 +103,7 @@ namespace Relations
     /** constructor from "inverse interface"
      *  It is an efficient way to "invert" relation 
      *  @param inv interafce to be inverted 
-     *  @param int artificial argument to distinguish from copy constructor
+     *  Second argument is artificial, to distinguish from copy constructor
      */
     Relation ( const IInverse& inv   , int /* flag */ ) 
       : m_direct  (   ) 

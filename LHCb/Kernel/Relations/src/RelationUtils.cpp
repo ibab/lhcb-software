@@ -1,4 +1,4 @@
-// $Id: RelationUtils.cpp,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: RelationUtils.cpp,v 1.2 2005-01-27 14:48:49 cattanem Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
@@ -19,7 +19,7 @@
  *  Implementation file for method from namespace Relation
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @adte 28/01/2002 
+ *  @date 28/01/2002 
  */
 // ============================================================================
 

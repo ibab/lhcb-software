@@ -1,8 +1,11 @@
-// $Id: IAssociator.h,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
+// $Id: IAssociator.h,v 1.3 2005-01-27 14:48:48 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/11/19 15:01:22  ibelyaev
+//  substitute explict algorithm management by 'Data-On-Demand' service
+//
 // ============================================================================
 #ifndef RELATIONS_IAssociator_H 
 #define RELATIONS_IAssociator_H 1
@@ -23,7 +26,7 @@ class    IAlgorithm ;   // from GaudiKernel
  *  @see IRelation2D
  *  @see IAssociatorWeighted
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   24/03/2002
  */
 

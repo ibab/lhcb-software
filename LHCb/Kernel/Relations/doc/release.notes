@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2005-01-26 16:27:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2005-01-27 14:48:48 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+! ====================== Relations v2r2 2005-01-27 ============================
 ! 2005-01-26 - Vanya BELYAEV
  
   - few modification to improve CPU performance.

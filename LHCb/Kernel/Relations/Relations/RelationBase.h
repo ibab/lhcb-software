@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.3 2005-01-27 06:54:03 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.4 2005-01-27 14:48:48 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.4 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/01/27 06:54:03  ibelyaev
+//  std::sort -> std::table_sort
+//
 // Revision 1.2  2005/01/26 16:27:29  ibelyaev
 //  add 'power input' option to speed-up the filling
 //
@@ -297,7 +300,7 @@ namespace Relations
      *  @attention it is indeed the most effective way to 
      *             get the inverse relations!
      *  @param inv object to be inverted
-     *  @param flag artificial agument to make the difference 
+     *  @param int artificial agument to make the difference 
      *         for stupid MicroSoft compiler
      */
     RelationBase
