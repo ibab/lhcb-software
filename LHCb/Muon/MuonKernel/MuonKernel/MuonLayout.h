@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.2 2002-01-31 10:13:24 atsareg Exp $
+// $Id: MuonLayout.h,v 1.3 2002-02-18 09:22:53 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONLAYOUT_H
 #define MUONKERNEL_MUONLAYOUT_H 1   
@@ -21,7 +21,7 @@
 
 // Forward declarations
 
-class MuonSystemID;
+class MuonTileID;
 class IMuonTile;
 
 class MuonLayout : public IMuonLayout {
@@ -42,10 +42,10 @@ public:
   /// Destructor
   virtual ~MuonLayout();
     
-  /// Accessor to MuonLayout grid corresponding to the given MuonSystemID
+  /// Accessor to MuonLayout grid corresponding to the given MuonTileID
   /// reimplemented from IMuonLayout
   virtual std::pair<unsigned int, unsigned int> 
-  grid(const  MuonSystemID&) const { 
+  grid(const  MuonTileID&) const { 
     return std::make_pair(xGrid(),yGrid()); 
   } 
     
@@ -54,17 +54,17 @@ public:
   /// Accessor to Y granularity
   int yGrid() const { return m_ygrid; }  
   
-  /** find a vector of MuonSystemID's defined in terms of this MuonLayout
-      which are touched by an area around a given MuonSystemID defined 
+  /** find a vector of MuonTileID's defined in terms of this MuonLayout
+      which are touched by an area around a given MuonTileID defined 
       in its own MuonLayout 
       
       @param pad   :  tile defining the area covered
   */          
 
-  virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad) const; 
+  virtual std::vector<MuonTileID> tiles(const MuonTileID& pad) const; 
   
-  /** find a vector of MuonSystemID's defined in terms of this MuonLayout
-      which are touched by an area around a given MuonSystemID defined 
+  /** find a vector of MuonTileID's defined in terms of this MuonLayout
+      which are touched by an area around a given MuonTileID defined 
       in its own MuonLayout 
       
       @param pad   : central for the search
@@ -72,36 +72,67 @@ public:
       @param areaY : limits of the search area in Y
   */          
 
-  virtual std::vector<MuonSystemID> tilesInArea(const MuonSystemID& pad, 
+  virtual std::vector<MuonTileID> tilesInArea(const MuonTileID& pad, 
 			        		int areaX,
 			        		int areaY) const;    
 				    					    				    
-  /// returns a vector of its MuonSystemID's. 
+  /// returns a vector of its MuonTileID's. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonSystemID> tiles() const;	
+  std::vector<MuonTileID> tiles() const;	
   		      
-  /** returns a vector of its MuonSystemID's in a given quarter
+  /** returns a vector of its MuonTileID's in a given quarter
       
       @param quarter : the quarter number to look into
   */	
-  std::vector<MuonSystemID> tiles(int quarter) const;
+  std::vector<MuonTileID> tiles(int quarter) const;
   
-  /** returns a vector of its MuonSystemID's in a given quarter and region
+  /** returns a vector of its MuonTileID's in a given quarter and region
       
       @param quarter : the quarter number to look into
       @param region : the region number to look into
   */	
-  std::vector<MuonSystemID> tiles(int quarter, int region) const;	  
+  std::vector<MuonTileID> tiles(int quarter, int region) const;	  
       
   /// find a tile containing the argument tile
-  virtual MuonSystemID contains(const MuonSystemID& pad) const;
+  virtual MuonTileID contains(const MuonTileID& pad) const;
   
   /// Get tiles touched by pad defined in terms of pregion region number
-  virtual std::vector<MuonSystemID> 
-     tilesInRegion(const MuonSystemID& pad, int pregion) const;
+  virtual std::vector<MuonTileID> 
+     tilesInRegion(const MuonTileID& pad, int pregion) const;
+     
+  /// find all the MuonTileID's which are neighbours of the argument tile
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad) const;
+
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. 
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+      @param   depth depth of the band in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
+                                             int dirX,
+					     int dirY,
+					     int depth) const;	 
+
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. This version takes into account that 
+      area to look in can take two parameters to specify the depth of the 
+      search in cases of neighbours at the corners, i.e. LEFT-UP.
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+      @param   depthX depth of the band in which to look for neighbours
+      @param   depthY depth of the band in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighboursInArea(const MuonTileID& pad,
+                                        	   int dirX,
+						   int dirY,
+						   int depthX,
+						   int depthY) const;	
   
-  /// check if the given MuonSystemID is valid for this layout
-  virtual bool validID(const MuonSystemID& mt) const;
+  /// check if the given MuonTileID is valid for this layout
+  virtual bool isValidID(const MuonTileID& mt) const;
   
   /// printout to std::ostream 
   inline std::ostream& printOut ( std::ostream& ) const ;

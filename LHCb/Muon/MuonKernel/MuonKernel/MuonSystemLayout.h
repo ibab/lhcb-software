@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.2 2002-01-31 10:13:24 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.3 2002-02-18 09:22:54 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -20,7 +20,7 @@
 
 // Forward declarations
 
-class MuonSystemID;
+class MuonTileID;
 class IMuonTile;
 
 class MuonSystemLayout : public IMuonLayout {
@@ -49,10 +49,10 @@ public:
     return  m_station_layouts[st] ;
   } 
 
-  /// Accessor to MuonLayout grid corresponding to the given MuonSystemID
+  /// Accessor to MuonLayout grid corresponding to the given MuonTileID
   /// reimplemented from IMuonLayout
   virtual std::pair<unsigned int, unsigned int> 
-  grid(const  MuonSystemID& id) const { 
+  grid(const  MuonTileID& id) const { 
     int reg = id.region();
     int st  = id.station();
     return std::make_pair(xGrid(st,reg),yGrid(st,reg)); 
@@ -62,17 +62,17 @@ public:
   /// Accessor to Y granularity
   int yGrid(int st, int reg) const { return stationLayout(st).yGrid(reg); }  
   
-  /** find a vector of MuonSystemID's defined in terms of this MuonLayout
-      which are touched by an area around a given MuonSystemID defined 
+  /** find a vector of MuonTileID's defined in terms of this MuonLayout
+      which are touched by an area around a given MuonTileID defined 
       in its own MuonLayout 
       
       @param pad   :  tile defining the area covered
   */          
 
-  virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad) const;
+  virtual std::vector<MuonTileID> tiles(const MuonTileID& pad) const;
   
-  /** find a vector of MuonSystemID's defined in terms of this MuonSystemLayout
-      which are touched by an area around a given MuonSystemID defined 
+  /** find a vector of MuonTileID's defined in terms of this MuonSystemLayout
+      which are touched by an area around a given MuonTileID defined 
       in its own MuonSystemLayout 
       
       @param pad   : central for the search
@@ -80,23 +80,46 @@ public:
       @param areaY : limits of the search area in Y
   */          
 
-  virtual std::vector<MuonSystemID> tilesInArea(const MuonSystemID& pad, 
+  virtual std::vector<MuonTileID> tilesInArea(const MuonTileID& pad, 
 			        		int areaX,
 			        		int areaY) const;    
 				    
-  /// returns a vector of its MuonSystemID's. 
+  /// returns a vector of its MuonTileID's. 
   /// Implementation of the IMuonLayout	interface
-  std::vector<MuonSystemID> tiles() const;	
+  std::vector<MuonTileID> tiles() const;
+  
+  /// returns a vector of its MuonTileID's in a given quarter. 
+  /// Implementation of the IMuonLayout	interface
+  std::vector<MuonTileID> tiles(int quarter) const;
+  
+  /// returns a vector of its MuonTileID's in a given quarter and region. 
+  /// Implementation of the IMuonLayout	interface
+  std::vector<MuonTileID> tiles(int quarter, int region) const;	
     
   /// find a tile containing the argument tile
-  virtual MuonSystemID contains(const MuonSystemID& pad) const;
+  virtual MuonTileID contains(const MuonTileID& pad) const;
   
   /// Get tiles touched by pad defined in terms of pregion region number
-  virtual std::vector<MuonSystemID> 
-  tilesInRegion(const MuonSystemID& pad, int pregion) const;
+  virtual std::vector<MuonTileID> 
+  tilesInRegion(const MuonTileID& pad, int pregion) const;
   
-  /// check if the given MuonSystemID is valid for this layout
-  virtual bool validID(const MuonSystemID& mt) const ;
+  /// find all the MuonTileID's which are neighbours of the argument tile
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad) const;
+
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. 
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+      @param   depth depth of the band in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
+                                             int dirX,
+					     int dirY,
+					     int depth) const;
+
+  /// check if the given MuonTileID is valid for this layout
+  virtual bool isValidID(const MuonTileID& mt) const ;
   
 
 private:  

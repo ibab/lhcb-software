@@ -1,4 +1,4 @@
-// $Id: MuonBase.h,v 1.1.1.1 2002-01-28 08:48:23 atsareg Exp $
+// $Id: MuonBase.h,v 1.2 2002-02-18 09:22:52 atsareg Exp $
 //
 #ifndef      L0MUON_MUONBASE_H
 #define      L0MUON_MUONBASE_H 1
@@ -29,12 +29,12 @@ namespace MuonBase {
  
   //
   static const unsigned int BitsIndex = BitsX + BitsY + BitsRegion + BitsQuarter;
-  static const unsigned int BitsTile = BitsIndex + 
+  static const unsigned int BitsKey = BitsIndex + 
                                        BitsReadout + BitsLayer + BitsStation;
   //
-  static const unsigned int ShiftX        = 0 ;
-  static const unsigned int ShiftY        = ShiftX       + BitsX  ;
-  static const unsigned int ShiftQuarter  = ShiftY       + BitsY  ;
+  static const unsigned int ShiftY        = 0 ;
+  static const unsigned int ShiftX        = ShiftY       + BitsY  ;
+  static const unsigned int ShiftQuarter  = ShiftX       + BitsX  ;
   static const unsigned int ShiftRegion   = ShiftQuarter + BitsQuarter ;  
   static const unsigned int ShiftReadout  = ShiftRegion  + BitsRegion  ;
   static const unsigned int ShiftLayer    = ShiftReadout + BitsReadout ;
@@ -43,7 +43,7 @@ namespace MuonBase {
   static const unsigned int ShiftLayoutY  = ShiftLayoutX + BitsLayoutX ;  
   //
   static const unsigned int ShiftIndex = 0;
-  static const unsigned int ShiftTile = 0;
+  static const unsigned int ShiftKey = 0;
   //
   static const ContentType  MaskX     =
   ( ( ( (ContentType) 1 ) << BitsX  ) - 1  ) << ShiftX  ;
@@ -66,8 +66,14 @@ namespace MuonBase {
   //
   static const ContentType  MaskIndex       =
   ( ( ( (ContentType) 1 ) << BitsIndex  ) - 1  ) << ShiftIndex   ;
-  static const ContentType  MaskTile       =
-  ( ( ( (ContentType) 1 ) << BitsTile  ) - 1  ) << ShiftTile   ;
+  static const ContentType  MaskKey       =
+  ( ( ( (ContentType) 1 ) << BitsKey  ) - 1  ) << ShiftKey   ;
+  
+  static const int CENTER      = 0;
+  static const int UP          = 1;
+  static const int DOWN        = -1;
+  static const int RIGHT       = 1;
+  static const int LEFT        = -1;    
   
 };
 
