@@ -24,6 +24,7 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(ParticleTaggerCriterion);
   DECLARE_TOOL(SingleParticleTaggingTool);
   DECLARE_TOOL(KaonSameSideTaggingTool);
+  DECLARE_TOOL(VertexChargeTaggingTool);
   DECLARE_TOOL(CategoryTaggingTool);
   DECLARE_TOOL(OrderedTaggingTool);
   DECLARE_TOOL(FTCombinedParticleMaker);
