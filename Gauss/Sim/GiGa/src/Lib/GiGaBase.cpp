@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.19 2003-08-15 09:25:17 witoldp Exp $
+// $Id: GiGaBase.cpp,v 1.20 2003-08-15 12:31:45 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2003/08/15 09:25:17  witoldp
+// removed info about unfinalized tools
+//
 // Revision 1.18  2003/07/14 15:45:33  ibelyaev
 //  add the counter for initialize/finalize methods
 //
@@ -72,9 +75,8 @@ namespace GiGaBaseLocal
 //           std::cout 
 //             << "GiGaBase     WARNING (Non)Finalized object Type/Name ='" 
 //             << imap->first  << "'  (#" 
-//             << imap->second << ")"      <<std::endl;
-          
-        };
+//             << imap->second << ")"      <<std::endl;          
+//        };
       m_map.clear() ;
     };
   private:
