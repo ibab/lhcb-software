@@ -15,7 +15,7 @@
 <!ATTLIST package
         name             CDATA                             #REQUIRED
 >
-<!-- ELEMENT class ((class?, .... -->
+<!-- ELEMENT class ((class?, ..... -->
 <!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
 <!ATTLIST class
         name              CDATA                            #REQUIRED
