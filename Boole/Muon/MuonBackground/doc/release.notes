@@ -5,6 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v1r4p1 2003-12-09 ======================
+! 2003-12-09 - Marco Cattaneo
+ - Fix fo Gaudi v13 (AIDA v3, histogram label() is now title())
+
 !======================= MuonBackground v1r4 2003-10-15 =======================
 ! 2003-10-15 - Marco Cattaneo
  - Fix to get new (non-SICB) version of SpilloverAlg

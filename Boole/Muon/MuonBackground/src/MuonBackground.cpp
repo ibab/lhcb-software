@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.15 2003-10-16 13:40:42 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.16 2003-12-10 16:06:12 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -717,7 +717,7 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
   for(int i=0;i<nbin;i++){
     double tmp=histoPointer->binHeight(i);
     if(tmp<0){
-      msg<<MSG::DEBUG<<" negative value for histogragm "<<histoPointer->label()
+      msg<<MSG::DEBUG<<" negative value for histogragm "<<histoPointer->title()
          <<" "<<tmp<<endreq;
             tmp=0;
       
@@ -773,9 +773,12 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
     IHistogram1D* ySlice = histoSvc()->histogramFactory()->
       sliceY( "MuBG/1" , *histoPointer, xbin);
     int entries=ySlice->entries();
-    if(entries==0)msg<<MSG::INFO<<" zero entries"<<endreq;
+    if(entries==0) {
+      msg<<MSG::INFO<<" zero entries"<<endreq;
+      histoSvc()->print(ySlice);
+    }
+    
     //  msg<<MSG::INFO<<" entries "<<entries<<endreq;
-    //  histoSvc()->print(ySlice);
     /*  for(int bincount=0;bincount<nbiny;bincount++){
       msg<<MSG::INFO<<" entries in bin "<<bincount<<" "<<
       ySlice->binEntries(bincount)<<" "<<
