@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.124 2002-12-09 17:38:59 sponce Exp $ 
+! $Id: release.notes,v 1.125 2002-12-09 17:50:44 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!===================== DetDesc v11r7 2002-12-09 =============================
 ! 2002-12-09 - Sebastien Ponce
  - Bug fix on DetectorElement in the destructor : reset() should not be called
    there. This bug was actually there for long and was hidden by memory leaks
