@@ -4,7 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!====================  DaVinciSys v11r1 2004-02-10 ============================
+!====================  DaVinciSys v11r1 2004-02-11 ============================
+! 2004-02-11 - Gloria CORTI
+ - new version of packages used respect to v11r0
+   . DaVinciTools        v8r5
+   . DaVinciTest         v4r2
+   . GlobalReco          v4r3
+   . Bd2KPiPiPi          v1r2p1
+   . Bs2JpsiEta          v2r1p1
+
 ! 2004-02-10 - Gloria CORTI
  - new version of packages used respect to v11r0
    . L0DU                v6r7
