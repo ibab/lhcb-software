@@ -1,13 +1,15 @@
 package L0Muon
 
-version v4r0
+version v5r0
 
 branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use DetDesc   v9r*  Det
-use LHCbEvent v12r* Event
+use MuonKernel v2r* Muon
+use MuonTools v2r* Muon
+use MuonEvent v1r* Event
+use L0Event v11r* Event
 
 library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp
