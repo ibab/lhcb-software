@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.28 2002-02-19 13:10:16 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.29 2002-02-22 16:52:22 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -707,7 +707,7 @@ template<class T> void parseAttribute(DOM_Node node,
   gddAttribute->setAccess(node.getAttributes().
     getNamedItem(DOMString::transcode("access")).
     getNodeValue());
-         
+    
   gddAttribute->setSetMeth(node.getAttributes().
     getNamedItem(DOMString::transcode("setMeth")).
     getNodeValue());
