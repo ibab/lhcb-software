@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.12 2004-10-28 18:29:22 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.13 2004-10-29 18:14:35 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -84,6 +84,7 @@ RichMarkovRingFinderMoni::finalize()
   StatusCode sc = RichRecAlgBase::finalize();
 
   // Fractional agreement between MC and rec-matching
+  /*
   map<Rich::DetectorType, float> fractionAgreed;
 
   // Agreement in Rich1
@@ -101,6 +102,7 @@ RichMarkovRingFinderMoni::finalize()
            << m_numMcVsRecMatchAgreements[Rich::Rich2][true]   << " / "
            << m_numMcVsRecMatchAgreements[Rich::Rich2][false]  << " ("
            << 100 * fractionAgreed[Rich::Rich1] << "% agreed)" << endreq;
+  */
 
   return sc;
 }
@@ -360,7 +362,7 @@ RichMarkovRingFinderMoni::execute()
         HepPoint3D normalEndPoint, meanEndPoint;
         HepVector3D normalEndDir, meanEndDir;
         m_raytrace->traceBackFromDetector( ringCentre, pdNormal, normalEndPoint, normalEndDir );
-        m_raytrace->traceBackFromDetector( ringCentre, meanReversePhotonDirection[whichRich][whichSide], meanEndPoint,   meanEndDir );
+        m_raytrace->traceBackFromDetector( ringCentre, meanReversePhotonDirection[whichRich][whichSide], meanEndPoint, meanEndDir );
         // Adjust the directions to correspond to forward-going *tracks* rather than backward-traced photons
         normalEndDir *= -1;
         meanEndDir *= -1;
@@ -390,52 +392,60 @@ RichMarkovRingFinderMoni::execute()
                  << endreq;
           m_CkPull[whichRich][recOrNot]->fill(thetaMarkov - thetaExp);
 
+          debug() << "Test" << endreq;
 
           // Compare ring centre positions
+          // *** get the segment associated to the pixel-matched MCParticle
           const MCRichSegment* mcSegment( m_richRecMCTruth->mcRichSegment((*iRing)->richRecSegment()) );
-          HepPoint3D mcsegCentrePoint;
-          m_mcRichTrackInfo->panelIntersectGlobal(mcSegment, mcsegCentrePoint);
-          const HepPoint3D segCentrePoint( (*iRing)->richRecSegment()->pdPanelHitPoint() );
-          const HepPoint3D markovCentrePoint( (*iRing)->centrePointGlobal() );
+          if (mcSegment) {
+            HepPoint3D mcsegCentrePoint;
+            m_mcRichTrackInfo->panelIntersectGlobal(mcSegment, mcsegCentrePoint);
+            const HepPoint3D segCentrePoint( (*iRing)->richRecSegment()->pdPanelHitPoint() );
+            const HepPoint3D markovCentrePoint( (*iRing)->centrePointGlobal() );
 
-          const HepVector3D segToMcCentreVector( segCentrePoint - mcsegCentrePoint );
-          const HepVector3D markovToMcCentreVector( markovCentrePoint - mcsegCentrePoint );
-          m_RecSegPdPointError[whichRich][recOrNot]->fill( segToMcCentreVector.mag() );
-          m_MarkovSegPdPointError[whichRich][recOrNot]->fill( markovToMcCentreVector.mag() );
+            const HepVector3D segToMcCentreVector( segCentrePoint - mcsegCentrePoint );
+            const HepVector3D markovToMcCentreVector( markovCentrePoint - mcsegCentrePoint );
+            m_RecSegPdPointError[whichRich][recOrNot]->fill( segToMcCentreVector.mag() );
+            m_MarkovSegPdPointError[whichRich][recOrNot]->fill( markovToMcCentreVector.mag() );
 
 
-          // Comparing the back-traced photons to the associated MCRichRecSegment
-          HepVector3D normalBacktracePointError( normalEndPoint - mcSegment->exitPoint() );
-          HepVector3D meanBacktracePointError  ( meanEndPoint   - mcSegment->exitPoint() );
-          // Take the best momentum estimate from halfway through the radiator volume
-          HepVector3D normalBacktraceSlopeError( normalEndDir.unit() - mcSegment->bestMomentum(0.5).unit() ); // *** probably not quite 
-          HepVector3D meanBacktraceSlopeError  ( meanEndDir.unit()   - mcSegment->bestMomentum(0.5).unit() ); // *** the right sort of qty!
-          double normalBacktraceAngleError( normalEndDir.angle( mcSegment->bestMomentum(0.5) ) );
-          double meanBacktraceAngleError  ( meanEndDir.angle(   mcSegment->bestMomentum(0.5) ) );
+            // Comparing the back-traced photons to the associated MCRichRecSegment
+            HepVector3D normalBacktracePointError( normalEndPoint - mcSegment->exitPoint() );
+            HepVector3D meanBacktracePointError  ( meanEndPoint   - mcSegment->exitPoint() );
+            // Take the best momentum estimate from halfway through the radiator volume
+            HepVector3D normalBacktraceSlopeError( normalEndDir.unit() - mcSegment->bestMomentum(0.5).unit() ); // *** probably not quite 
+            HepVector3D meanBacktraceSlopeError  ( meanEndDir.unit()   - mcSegment->bestMomentum(0.5).unit() ); // *** the right sort of qty!
+            double normalBacktraceAngleError( normalEndDir.angle( mcSegment->bestMomentum(0.5) ) );
+            double meanBacktraceAngleError  ( meanEndDir.angle(   mcSegment->bestMomentum(0.5) ) );
 
-          // And histogram qtys
-          // for exit points
-          m_normalBacktracePointErrorMag[whichRich][recOrNot]->fill( normalBacktracePointError.mag() );
-          m_meanBacktracePointErrorMag  [whichRich][recOrNot]->fill( meanBacktracePointError.mag() );
-          m_normalBacktracePointErrorX  [whichRich][recOrNot]->fill( normalBacktracePointError.x() );
-          m_meanBacktracePointErrorX    [whichRich][recOrNot]->fill( meanBacktracePointError.x() );
-          m_normalBacktracePointErrorY  [whichRich][recOrNot]->fill( normalBacktracePointError.y() );
-          m_meanBacktracePointErrorY    [whichRich][recOrNot]->fill( meanBacktracePointError.y() );
-          m_normalBacktracePointError   [whichRich][recOrNot]->fill( normalBacktracePointError.x(), normalBacktracePointError.y() );
-          m_meanBacktracePointError     [whichRich][recOrNot]->fill( meanBacktracePointError.x(),   meanBacktracePointError.y() );
-          // and for slopes
-          m_normalBacktraceSlopeErrorMag[whichRich][recOrNot]->fill( normalBacktraceSlopeError.mag() );
-          m_meanBacktraceSlopeErrorMag  [whichRich][recOrNot]->fill( meanBacktraceSlopeError.mag() );
-          m_normalBacktraceSlopeErrorX  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x() );
-          m_meanBacktraceSlopeErrorX    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x() );
-          m_normalBacktraceSlopeErrorY  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.y() );
-          m_meanBacktraceSlopeErrorY    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.y() );
-          m_normalBacktraceSlopeError   [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x(), normalBacktraceSlopeError.y() );
-          m_meanBacktraceSlopeError     [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x(),   meanBacktraceSlopeError.y() );
-          // and for angles
-          m_normalBacktraceAngleError   [whichRich][recOrNot]->fill( normalBacktraceAngleError );
-          m_meanBacktraceAngleError     [whichRich][recOrNot]->fill( meanBacktraceAngleError );
-        }
+            info() << "Exit point error = " << normalBacktracePointError.mag()
+                   << " and slope error = " << normalBacktraceSlopeError.mag()
+                   << " and angle error = " << normalBacktraceAngleError << " (normal)" << endreq;
+            
+            // And histogram qtys
+            // for exit points
+            m_normalBacktracePointErrorMag[whichRich][recOrNot]->fill( normalBacktracePointError.mag() );
+            m_meanBacktracePointErrorMag  [whichRich][recOrNot]->fill( meanBacktracePointError.mag() );
+            m_normalBacktracePointErrorX  [whichRich][recOrNot]->fill( normalBacktracePointError.x() );
+            m_meanBacktracePointErrorX    [whichRich][recOrNot]->fill( meanBacktracePointError.x() );
+            m_normalBacktracePointErrorY  [whichRich][recOrNot]->fill( normalBacktracePointError.y() );
+            m_meanBacktracePointErrorY    [whichRich][recOrNot]->fill( meanBacktracePointError.y() );
+            m_normalBacktracePointError   [whichRich][recOrNot]->fill( normalBacktracePointError.x(), normalBacktracePointError.y() );
+            m_meanBacktracePointError     [whichRich][recOrNot]->fill( meanBacktracePointError.x(),   meanBacktracePointError.y() );
+            // and for slopes
+            m_normalBacktraceSlopeErrorMag[whichRich][recOrNot]->fill( normalBacktraceSlopeError.mag() );
+            m_meanBacktraceSlopeErrorMag  [whichRich][recOrNot]->fill( meanBacktraceSlopeError.mag() );
+            m_normalBacktraceSlopeErrorX  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x() );
+            m_meanBacktraceSlopeErrorX    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x() );
+            m_normalBacktraceSlopeErrorY  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.y() );
+            m_meanBacktraceSlopeErrorY    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.y() );
+            m_normalBacktraceSlopeError   [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x(), normalBacktraceSlopeError.y() );
+            m_meanBacktraceSlopeError     [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x(),   meanBacktraceSlopeError.y() );
+            // and for angles
+            m_normalBacktraceAngleError   [whichRich][recOrNot]->fill( normalBacktraceAngleError );
+            m_meanBacktraceAngleError     [whichRich][recOrNot]->fill( meanBacktraceAngleError );
+          } // if valid MC segment
+        } // if valid MC particles (proj and pix)
 
 
         // *** Get ring purity and efficiency numbers.
@@ -639,21 +649,21 @@ RichMarkovRingFinderMoni::bookHistograms() {
       // Shift of photon vector from the normal in PD plane coords
       id = "MarkovRingMCPhotonShiftFromNormal" + panelID;
       title = "In-PD-plane shift of MC photon direction from normal in "  + subtitle;
-      m_MarkovRingMCPhotonShiftFromNormal[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -0.2, 0.2, 30, -0.2, 0.2);
+      m_MarkovRingMCPhotonShiftFromNormal[richType][richSide] = histoSvc()->book(histopath, id, title, 50, -0.2, 0.2, 50, -0.2, 0.2);
 
       // Reverse photon vector direction
       id = "MarkovRingMCPhotonReverseDirection" + panelID;
       title = "Back-traced MC photon direction in "  + subtitle;
-      m_MarkovRingMCPhotonReverseDirection[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1, 30, -1, 1, 30, -1, 1);
+      m_MarkovRingMCPhotonReverseDirection[richType][richSide] = histoSvc()->book(histopath, id, title, 50, -1, 1, 50, -1, 1, 50, -1, 1);
       id = "MarkovRingMCPhotonReverseDirectionX" + panelID;
       title = "Back-traced MC photon direction in "  + subtitle + "(x-component)";
-      m_MarkovRingMCPhotonReverseDirectionX[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+      m_MarkovRingMCPhotonReverseDirectionX[richType][richSide] = histoSvc()->book(histopath, id, title, 50, -1, 1);
       id = "MarkovRingMCPhotonReverseDirectionY" + panelID;
       title = "Back-traced MC photon direction in "  + subtitle + "(y-component)";
-      m_MarkovRingMCPhotonReverseDirectionY[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+      m_MarkovRingMCPhotonReverseDirectionY[richType][richSide] = histoSvc()->book(histopath, id, title, 50, -1, 1);
       id = "MarkovRingMCPhotonReverseDirectionZ" + panelID;
       title = "Back-traced MC photon direction in "  + subtitle + "(z-component)";
-      m_MarkovRingMCPhotonReverseDirectionZ[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+      m_MarkovRingMCPhotonReverseDirectionZ[richType][richSide] = histoSvc()->book(histopath, id, title, 50, -1, 1);
     }
 
 
@@ -696,62 +706,62 @@ RichMarkovRingFinderMoni::bookHistograms() {
 
       title = "Normal backtrace exit point error for " + subtitle;
       id = "BacktraceNormalPointErrorMag";
-      m_normalBacktracePointErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 100);
+      m_normalBacktracePointErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 1*m);
       title = "Mean backtrace exit point error for " + subtitle;
       id = "BacktraceMeanPointErrorMag";
-      m_meanBacktracePointErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 100);
+      m_meanBacktracePointErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 1*m);
       title = "Normal backtrace exit point error (x) for " + subtitle;
       id = "BacktraceNormalPointErrorX";
-      m_normalBacktracePointErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100);
+      m_normalBacktracePointErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m);
       title = "Mean backtrace exit point error (x) for " + subtitle;
       id = "BacktraceMeanPointErrorX";
-      m_meanBacktracePointErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100);
+      m_meanBacktracePointErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m);
       title = "Normal backtrace exit point error (y) for " + subtitle;
       id = "BacktraceNormalPointErrorY";
-      m_normalBacktracePointErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100);
+      m_normalBacktracePointErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m);
       title = "Mean backtrace exit point error (y) for " + subtitle;
       id = "BacktraceMeanPointErrorY";
-      m_meanBacktracePointErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100);
+      m_meanBacktracePointErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m);
       title = "Normal backtrace exit point error for " + subtitle;
       id = "BacktraceNormalPointError";
-      m_normalBacktracePointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100, 50, -100, 100);
+      m_normalBacktracePointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m, 50, -1*m, 1*m);
       title = "Mean backtrace exit point error for " + subtitle;
       id = "BacktraceMeanPointError";
-      m_meanBacktracePointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -100, 100, 50, -100, 100);
+      m_meanBacktracePointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1*m, 1*m, 50, -1*m, 1*m);
 
       // and for slopes
       title = "Normal backtrace exit slope error mag for " + subtitle;
       id = "BacktraceNormalSlopeErrorMag";
-      m_normalBacktraceSlopeErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 1);
+      m_normalBacktraceSlopeErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.02);
       title = "Mean backtrace exit slope error mag for " + subtitle;
       id = "BacktraceMeanSlopeErrorMag";
-      m_meanBacktraceSlopeErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 1);
+      m_meanBacktraceSlopeErrorMag[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.02);
       title = "Normal backtrace exit slope error (x) for " + subtitle;
       id = "BacktraceNormalSlopeErrorX";
-      m_normalBacktraceSlopeErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1);
+      m_normalBacktraceSlopeErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -0.02, 0.02);
       title = "Mean backtrace exit slope error (x) for " + subtitle;
       id = "BacktraceMeanSlopeErrorX";
-      m_meanBacktraceSlopeErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1);
+      m_meanBacktraceSlopeErrorX[richType][recType] = histoSvc()->book(histopath, id, title, 50, -0.02, 0.02);
       title = "Normal backtrace exit slope error (y) for " + subtitle;
       id = "BacktraceNormalSlopeErrorY";
-      m_normalBacktraceSlopeErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1);
+      m_normalBacktraceSlopeErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -0.02, 0.02);
       title = "Mean backtrace exit slope error (y) for " + subtitle;
       id = "BacktraceMeanSlopeErrorY";
-      m_meanBacktraceSlopeErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1);
+      m_meanBacktraceSlopeErrorY[richType][recType] = histoSvc()->book(histopath, id, title, 50, -0.02, 0.02);
       title = "Normal backtrace exit slope error for " + subtitle;
       id = "BacktraceNormalSlopeError";
-      m_normalBacktraceSlopeError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1, 50, -1, 1);
+      m_normalBacktraceSlopeError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1, 50, -0.02, 0.02);
       title = "Mean backtrace exit slope error for " + subtitle;
       id = "BacktraceMeanSlopeError";
-      m_meanBacktraceSlopeError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1, 50, -1, 1);
+      m_meanBacktraceSlopeError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -1, 1, 50, -0.02, 0.02);
       
       // and for angles
       title = "Normal backtrace exit angle error for " + subtitle;
       id = "BacktraceNormalAngleError";
-      m_normalBacktraceAngleError[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.5);
+      m_normalBacktraceAngleError[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.02);
       title = "Mean backtrace exit angle error for " + subtitle;
       id = "BacktraceMeanAngleError";
-      m_meanBacktraceAngleError[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.5);
+      m_meanBacktraceAngleError[richType][recType] = histoSvc()->book(histopath, id, title, 50, 0, 0.02);
 
 
       // Origin vertex types
