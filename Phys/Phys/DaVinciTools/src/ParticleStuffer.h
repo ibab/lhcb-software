@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.2 2002-05-15 23:26:25 gcorti Exp $
+// $Id: ParticleStuffer.h,v 1.3 2002-10-15 17:51:27 gcorti Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -11,6 +11,9 @@
 
 // from DaVinciTools
 #include "DaVinciTools/IParticleStuffer.h"
+
+// Forward declarations
+class IParticlePropertySvc;
 
 /** @class ParticleStuffer ParticleStuffer.h
  *  Fill a particle given a vertex and a particle ID
@@ -29,6 +32,10 @@ public:
   
   /// Desctructor
   virtual ~ParticleStuffer( ){ }; 
+
+  /// Retrieve  the ParticlePropertyService.
+  StatusCode initialize();    
+
   
   /// Fill Composite Particle from Vertex
   StatusCode fillParticle( const Vertex&, Particle&, 
@@ -37,6 +44,9 @@ public:
   // Fill Particle from ProtoParticle
   //StatusCode fillParticle( const ProtoParticle&, Particle&, 
   //                         const ParticleID& );
+
+private:
+  IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
 
 };
 

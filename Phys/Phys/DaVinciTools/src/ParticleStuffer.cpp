@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.2 2002-09-11 16:45:46 gcorti Exp $
+// $Id: ParticleStuffer.cpp,v 1.3 2002-10-15 17:51:29 gcorti Exp $
 // Include files 
 
 // 
@@ -7,6 +7,8 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // local
 #include "ParticleStuffer.h"
@@ -28,11 +30,32 @@ const        IToolFactory& ParticleStufferFactory = s_factory ;
 ParticleStuffer::ParticleStuffer( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : AlgTool ( type, name , parent ) {
+  : AlgTool ( type, name , parent )
+  , m_ppSvc(0) {
 
   // declare additional Interface
   declareInterface<IParticleStuffer>(this);
 }
+
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode ParticleStuffer::initialize() {
+  MsgStream log( msgSvc(), name() );
+  
+  // This tool needs to use internally the ParticlePropertySvc to retrieve the
+  // mass to be used
+  StatusCode sc = StatusCode::FAILURE;
+  sc = service( "ParticlePropertySvc", m_ppSvc );
+  if( sc.isFailure ()) {
+    log << MSG::FATAL << "ParticlePropertySvc Not Found" << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  return StatusCode::SUCCESS;
+  
+}
+
 
 //=============================================================================
 // Stuffer
@@ -40,6 +63,12 @@ ParticleStuffer::ParticleStuffer( const std::string& type,
 StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part, 
                                           const ParticleID& pid ){
 
+  MsgStream log( msgSvc(), name() );
+  int stdHepID = pid.pid();
+  
+  ParticleProperty*  partProp = m_ppSvc->findByStdHepID(stdHepID  );
+  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15))part.setIsResonance(1);
+  
   // Set the ParticleID.
   part.setParticleID( pid ); 
 
@@ -81,7 +110,7 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   part.setPointOnTrackErr( vtx.positionErr() ); 
 
   // Set the point - four-momentum error matrix.
-  HepMatrix pmeMat( 4, 4, 0 );  
+  HepMatrix pmeMat( 4, 3, 0 );
   part.setPosMomCorr( pmeMat );
 
   // Set the end vertex reference.
@@ -91,7 +120,7 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   // by Particle via setPosMomCorr
 //    HepMatrix pseMat( 3, 3, 0 );  
 //    part.setPosSlopesCorr( pseMat );
-
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
