@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.15 2004-12-08 17:12:07 marcocle Exp $
+//$Id: ConditionsDBGate.cpp,v 1.16 2005-02-09 08:15:50 marcocle Exp $
 #include <string>
 
 #ifdef WIN32
@@ -492,6 +492,7 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
   MsgStream log(msgSvc(), "ConditionsDBGate" );
   try {
 
+    refpCobject = 0;
     m_condDBmgr->startRead();
     m_condDBDataAccess->findCondDBObject
       ( refpCobject, folderName, key, tagName );
@@ -510,23 +511,27 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
   }
   
   // Check whether this is the NULL interval
-  if ( refpCobject->isNullInterval() ) {
+  if ( refpCobject == 0 || refpCobject->isNullInterval() ) {
     log << MSG::ERROR
-	<< "There is no data stored in the database at key " << key << endreq;
-    log << MSG::ERROR
-	<< "NULL interval retrieved:" << endreq;
-    std::string data;
-    refpCobject->data( data );
-    log << MSG::ERROR 
-	<< "In key = [ " << refpCobject->validSince()
-	<< "(0x" << std::hex 
-	<< refpCobject->validSince()
-	<< std::dec << ")" 
-	<< " , "   << refpCobject->validTill()
-	<< "(0x" << std::hex 
-	<< refpCobject->validTill()
-	<< std::dec << ")" 
-	<< " ] : '" << data << "'" << endreq;
+        << "There is no data stored in the database at key " << key << endreq;
+    if ( refpCobject ) { // Oracle implementation returns an empty object
+                         // MySQL does not create any object
+      log << MSG::ERROR
+          << "NULL interval retrieved:" << endreq;
+      std::string data;
+      refpCobject->data( data );
+      log << MSG::ERROR 
+          << "In key = [ " << refpCobject->validSince()
+          << "(0x" << std::hex 
+          << refpCobject->validSince()
+          << std::dec << ")" 
+          << " , "   << refpCobject->validTill()
+          << "(0x" << std::hex 
+          << refpCobject->validTill()
+          << std::dec << ")" 
+          << " ] : '" << data << "'" << endreq;
+      delete refpCobject;
+    }
     refpCobject = 0;
     return StatusCode::FAILURE;
   }
