@@ -4,10 +4,14 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
+
+!=========================== GaussTracker v2r1 2002-02-17 =======================
+! 2003-02-17 - Witek Pokorski
+ - added protection against hits with zero deposited energy in Tracker and Velo
+ - change of the version number
 	
  2003-01-23 Vanya Belyaev 
   - few fixes for Win2K platform 
-
  
 !=========================== GaussTracker v2r0 2002-12-17 ========================
 ! 2002-12-17 - Witek Pokorski

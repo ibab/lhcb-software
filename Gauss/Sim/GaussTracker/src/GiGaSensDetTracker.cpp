@@ -55,70 +55,74 @@ void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE)
 
 
 bool GiGaSensDetTracker::ProcessHits( G4Step* step , 
-                                    G4TouchableHistory* /* history */ ) 
+                                      G4TouchableHistory* /* history */ ) 
 {
   if( 0 == step ) { return false ; } 
   
   G4Track* track=step->GetTrack();
   G4double charge = track->GetDefinition()->GetPDGCharge();
-
+  
   if(charge!=0.0)
     {
-      double edep = step->GetTotalEnergyDeposit();
-      double timeof = step->GetTrack()-> GetGlobalTime();
-      HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
-      HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
-      int trid = step->GetTrack()->GetTrackID();
-
-      // temp  
-      G4TouchableHistory* TT =  
-      (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-      G4VPhysicalVolume*  PV =   TT->GetVolume();
-      G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-
-      G4TouchableHistory* postTT =  
-      (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
-      G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-      G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
-
-      MsgStream log( msgSvc() , name() );
+      double edep = step->GetTotalEnergyDeposit();     
       
-      log << MSG::DEBUG << "Processing TrackerHit:" << " edep="  
-      << edep << endreq;
-      
-      log << MSG::DEBUG 
-      << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
-      << ")" 
-      << " PrePV="    << PV->GetName()  
-      << " PreLV="    << LV->GetName() << endreq;
-
-      log << MSG::DEBUG 
-      << " PostPos=("
-      << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
-      << " PostPV="    << postPV->GetName()  
-      << " PostLV="    << postLV->GetName() << endreq;
-      // end of temp
-  
-      ///
-      TrackerHit* newHit = new TrackerHit();
-      newHit->SetEdep( edep );
-      newHit->SetEntryPos( prepos );
-      newHit->SetExitPos( postpos );
-      newHit->SetTimeOfFlight( timeof );  
-      newHit->SetTrackID( trid );
-      ///
-      G4VUserTrackInformation* ui = track->GetUserInformation(); 
-      GaussTrackInformation*    gi = 
-        ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
-      gi->setCreatedHit(true);
-      gi->setToBeStored(true);
-      gi->addHit(newHit);
-
-      //  newHit->Print();
-      trackerCol->insert( newHit );
+      if (edep!=0.0)
+        {
+          double timeof = track-> GetGlobalTime();
+          HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
+          HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+          int trid = track->GetTrackID();
+          
+          // temp
+          G4TouchableHistory* TT =  
+            (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
+          G4VPhysicalVolume*  PV =   TT->GetVolume();
+          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
+          
+          G4TouchableHistory* postTT =  
+            (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+          G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+          G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+          
+//           MsgStream log( msgSvc() , name() );
+          
+//           log << MSG::DEBUG << "Processing TrackerHit:" << " edep="  
+//               << edep << endreq;
+          
+//           log << MSG::DEBUG
+//               << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
+//               << ")" 
+//               << " PrePV="    << PV->GetName()  
+//               << " PreLV="    << LV->GetName() << endreq;
+          
+//           log << MSG::DEBUG
+//               << " PostPos=("
+//               << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
+//               << " PostPV="    << postPV->GetName()  
+//               << " PostLV="    << postLV->GetName() << endreq;
+          // end of temp
+          
+          ///
+          TrackerHit* newHit = new TrackerHit();
+          newHit->SetEdep( edep );
+          newHit->SetEntryPos( prepos );
+          newHit->SetExitPos( postpos );
+          newHit->SetTimeOfFlight( timeof );  
+          newHit->SetTrackID( trid );
+          ///
+          G4VUserTrackInformation* ui = track->GetUserInformation(); 
+          GaussTrackInformation*    gi = 
+            ( 0 == ui )  ? 0 : static_cast<GaussTrackInformation*> ( ui );
+          gi->setCreatedHit(true);
+          gi->setToBeStored(true);
+          gi->addHit(newHit);
+          
+          //  newHit->Print();
+          trackerCol->insert( newHit );
+        }
     }
-     return false;
-     
+  return false;
+  
 };
 // ============================================================================
 
