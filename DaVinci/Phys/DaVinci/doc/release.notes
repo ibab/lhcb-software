@@ -3,15 +3,26 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r4</A></H1><PRE>
+</PRE><H1><A NAME=v8r3p1>2003-07-03 DaVinci v8r3p1</A></H1><PRE>
+ - New features:
+   . Modified preselection
+     .. Bd->D0Kstar
+        Bd,s->hh
+     .. use PhysSel v5r5
+ - Bug fixes:
+   . Fix problems for preselection production with too small rejection
+     factor
+     .. Bd2KPiPiPi
+        Bs2DsH
+     .. use PhysSel v5r5
+
+</PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r3</A></H1><PRE>
  - New features:
    . New and modified (pre)selections 
      .. Bd->Dstar Pi inclusive
         Bd->Pi0 Pi0
         Bs->Phi Etac        
      .. use PhysSelSys v5r4 (refers to its release notes for details)
-   . New code and options for preselections
-     .. use PhysSelSys
 
  - Bug fixes or clean up:
    . Fix memory leak when using the same associator twice as done for

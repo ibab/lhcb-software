@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.64 2003-06-27 13:04:24 gcorti Exp $
+# $Id: requirements,v 1.65 2003-07-03 15:22:23 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v8r3
+version           v8r3p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -74,7 +74,7 @@ use  PhysSelections	v6r0p1   Phys
 use  FlavourTagging     v4r5     Phys
 use  DaVinciEff         v2r5     Phys
 use  DaVinciUser        v4r1     Phys
-use  PhysSelSys		v5r4     PhysSel
+use  PhysSelSys		v5r5     PhysSel
 
 #    Generic utilities
 use  Utilities          v1r0     Tools
@@ -96,5 +96,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=800300 " \
-             VisualC  " /DDaVinciVersion=800300 "
+macro_append cppflags " -DDaVinciVersion=800301 " \
+             VisualC  " /DDaVinciVersion=800301 "
