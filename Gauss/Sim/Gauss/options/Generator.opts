@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.21 2003-08-14 09:15:45 ranjard Exp $ 
+// $Id: Generator.opts,v 1.22 2003-08-14 15:08:45 ranjard Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -28,7 +28,9 @@ ParticleGun.Mode=0;
 // and specify the alternative file name (not to be confused with the user decay file)
 //EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
 
+EvtDecayAlg.EvtPdlFile = "$PARAMFILESROOT/data/evt.pdl";
 PythiaAlg.MDCYFile="$PARAMFILESROOT/data/PythiaStablePart.cdf";
+
 //PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
 // in order to generate specific decays put below the following line:
