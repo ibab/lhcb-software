@@ -31,8 +31,10 @@ use SicbCnv       v16r* SICB
 
 #GiGa staff...
 use GiGaCnv       v5r*  Sim
-use EvGen         v3r*  Sim 
 use GaussImports  v1r*  Sim 
+
+# optional generator: 
+#use EvGen         v3r*  Sim 
 
 #geometry source 
 use XmlDDDB       v11r*   Det 
