@@ -4,8 +4,6 @@
 #include "Event/MCVeloFE.h"
 #include "Event/MCVeloHit.h"
 
-#include "VeloDet/DeVelo.h"
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
@@ -44,15 +42,6 @@ StatusCode VeloCluster2MCHitAlg::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
 
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
-   
-  if ( 0 == velo ) {
-    log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
-    return StatusCode::FAILURE;
-   }
-
-  m_velo = velo;
- 
   return StatusCode::SUCCESS;
 };
 

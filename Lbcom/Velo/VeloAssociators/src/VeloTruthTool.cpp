@@ -1,12 +1,7 @@
-#include "CLHEP/Geometry/Point3D.h"
-
 #include "VeloTruthTool.h"
 #include "Event/VeloCluster.h"
 #include "Event/MCVeloFE.h"
 #include "Event/MCVeloHit.h"
-#include "Event/MCParticle.h"
-#include "VeloDet/DeVelo.h"
-#include "VeloKernel/VeloSimParams.h"
 
 #include <map>
 #include <vector>
@@ -18,6 +13,13 @@
 StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
                                            std::map<MCVeloHit*,double>& hitMap,
                                            SmartDataPtr<MCVeloFEs> mcfes){
+  MCVeloFEs* mcFEsPtr = mcfes;
+  return VeloTruthTool::associateToTruth( aCluster, hitMap, mcFEsPtr );
+}
+
+StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
+                                           std::map<MCVeloHit*,double>& hitMap,
+                                           MCVeloFEs* mcfes){
   // make link to truth to MCHit
 
   int NStrips=aCluster->size(); // number of strips in cluster
@@ -46,7 +48,4 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
   return StatusCode::SUCCESS;
 
 }
-
-
-
 
