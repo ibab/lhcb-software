@@ -53,7 +53,7 @@ ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
 #include "$MUONIDROOT/options/MuonIDDLLTool.opts"
 #pragma print on
 
-// Physics packages and necessary dependent packages
+// Physics packages and dependent packages
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
 //    ... for physics check on MC data
 ApplicationMgr.DLLs += { "MCTools" };
@@ -66,6 +66,7 @@ ApplicationMgr.DLLs += { "PhysSelections" };
 #include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
 //    ... flavour tagging
 ApplicationMgr.DLLs += { "FlavourTagging" };
+ApplicationMgr.DLLs += { "RecoTools" };
 
 // Generic Utility package
 ApplicationMgr.DLLs      += { "Utilities" };
