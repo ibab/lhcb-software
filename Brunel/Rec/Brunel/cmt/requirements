@@ -19,7 +19,7 @@ use GaudiAlg 		v8r0
 use GaudiGSL		v6r1
 use GaudiPoolDb		v1r8
 use GaudiObjDesc 	v6r3
-use RootHistCnv         v9r2
+use RootHistCnv         v9r3
 
 #-- Database
 use XmlDDDB		v22r3	Det
