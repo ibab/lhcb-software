@@ -120,7 +120,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
   
   // Loop over all Protoparticles and fill Particle if
   // satisfies the detPID and corresponding CL cut  :
-  ProtoParticles::iterator icand = 0;  // Iterator on ProtoParticles.
+  ProtoParticles::iterator icand;  // Iterator on ProtoParticles.
   for( icand=chargedcandidates->begin();
        icand!=chargedcandidates->end(); icand++ ) {
     
@@ -209,7 +209,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
                 if ( (*iProtoDetID2).second <= m_CutOnChi2CaloEMatch ){
                   Particle* particle = new Particle();
                   double ProtoPCharge= (*icand)->charge();
-                  double protoID;
+                  int protoID;
                   double protoCL;
                   if ( ProtoPCharge == 1 ){
                     protoID = -11;
@@ -241,7 +241,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
           if ( (*iProtoDetID).second > m_CutOnRichProb ){
             Particle* particle = new Particle();
             double ProtoPCharge= (*icand)->charge();
-            double protoID;
+            int protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
               protoID = -11;
@@ -280,7 +280,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
                       if ( (*iProtoDetID3).second <= m_CutOnChi2CaloEMatch ){
                         Particle* particle = new Particle();
                         double ProtoPCharge= (*icand)->charge();
-                        double protoID;
+                        int protoID;
                         double protoCL;
                         if ( ProtoPCharge == 1 ){
                           protoID = -11;
@@ -315,7 +315,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
           if ( (*iProtoDetID).second <= m_CutOnChi2BremMatch ){
             Particle* particle = new Particle();
             double ProtoPCharge= (*icand)->charge();
-            double protoID;
+            int protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
               protoID = -11;
@@ -361,7 +361,7 @@ StatusCode FTCombinedParticleMaker::makeParticles( ParticleVector & parts ) {
                             if ((*iProtoDetID4).second <= m_CutOnChi2BremMatch){
                               Particle* particle = new Particle();
                               double ProtoPCharge= (*icand)->charge();
-                              double protoID;
+                              int protoID;
                               double protoCL;
                               if ( ProtoPCharge == 1 ){
                                 protoID = -11;
