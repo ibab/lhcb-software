@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.53 2005-01-31 10:07:46 pkoppenb Exp $
+! $Id: release.notes,v 1.54 2005-02-01 14:31:57 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-02-01- P. Koppenburg
+  - FlavourTagging/IFlavourTaggingTool.h
+    . Removed
+  - options/CheatedSelection.opts
+    . Removed DaVinciCommon and DaVinciReco already included in 
+      DVBTagging.opts
 
 ! 2005-01-31- P. Koppenburg for Marco Musy
 Main changes/upgrades are the following:

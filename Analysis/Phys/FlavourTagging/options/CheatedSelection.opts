@@ -1,13 +1,6 @@
 //##############################################################
 // DaVinci job Options for CheatedSelection
 
-#pragma print off
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#pragma print on
-
-//--- Charged ProtoParticles
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
-
 //---------------------------------------------------
 // MC mass window in GeV to decide if all final state 
 // particles where present and reconstructed 
