@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2001-07-10 13:42:41 ranjard Exp $
+# $Id: requirements,v 1.10 2001-07-18 13:40:07 ranjard Exp $
 package DetDescExample
 version v2
 
@@ -15,7 +15,6 @@ use DetDesc       v7*   Det
 use XmlDDDB       v6*   Det
 
 #==> DetDesc example
-set EXEC DetDescExample
 application DetDescExample *.cpp \
             "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 

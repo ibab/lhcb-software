@@ -41,19 +41,24 @@ setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v2
 unsetenv LD_LIBRARY_PATH
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
-# == create soft_links to use packages
-cd $MYJOBROOT/cmt
-$CMTROOT/mgr/cmt build library_links
-cd $current
 
+# == create soft_links to use packages
+if ($MODE != "LinuxStatic") then
+  cd $MYJOBROOT/cmt
+  $CMTROOT/mgr/cmt build library_links
+  cd $current
+endif
+
+# == executable name
+setenv EXEC DetDescExample
 #
 # == in batch copy the executable,======================================= 
 #    in interactive create a link to the executable you want to run =======
 #
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$DETDESCEXAMPLECONFIG/$EXEC.exe tmpjob.exe
+  cp $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
 else
-  ln -fs $MYJOBROOT/$DETDESCEXAMPLECONFIG/$EXEC.exe tmpjob.exe
+  ln -fs $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
 endif
 #
 #==  create temporary joboptions file ==================
