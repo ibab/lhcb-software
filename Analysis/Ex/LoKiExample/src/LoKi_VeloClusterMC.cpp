@@ -1,8 +1,12 @@
-// $Id: LoKi_VeloClusterMC.cpp,v 1.1 2004-04-09 07:23:44 ibelyaev Exp $
+// $Id: LoKi_VeloClusterMC.cpp,v 1.2 2005-02-08 20:29:46 ibelyaev Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 // ===========================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// ===========================================================================
+// STD & STL 
+// ===========================================================================
+#include <cmath>
 // ===========================================================================
 // Include files 
 // ===========================================================================
@@ -21,66 +25,15 @@
 
 // ============================================================================
 /** @file 
- *  Simple exampel of "extended LoKi" - usage of LoKi facilities for 
- *  e.g. detercor performace check
+ *  Simple example of "extended LoKi" - usage of LoKi facilities for 
+ *  e.g. detertor performace check
  *  @date 2004-04-09 
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  */
 // ============================================================================
 
 // ============================================================================
-class LoKi_VeloClusterMC: public LoKi::Algo
-{
-  // friend factory for instantiation
-  friend class AlgFactory<LoKi_VeloClusterMC>;
-public:
-  virtual StatusCode initialize() ;
-  virtual StatusCode analyse   () ;
-protected:
-  LoKi_VeloClusterMC( const std::string& name , 
-                      ISvcLocator*       svc  )
-    : LoKi::Algo( name , svc )
-    , m_asct1 ( 0 )
-    , m_asct2 ( 0 ) {};
-  virtual ~LoKi_VeloClusterMC(){};
-private:
-  
-  typedef IAssociatorWeighted<VeloCluster,MCParticle,double> IAsct1;
-  typedef IAssociatorWeighted<VeloCluster,MCVeloHit,double>  IAsct2;
-  typedef IAsct1::DirectType Table1 ;
-  typedef IAsct2::DirectType Table2 ;
-  
-  IAsct1* m_asct1 ;
-  IAsct2* m_asct2 ;
-  
-} ;
-// ============================================================================
-
-// ============================================================================
-// Declaration of the Algorithm Factory
-// ============================================================================
-static const  AlgFactory<LoKi_VeloClusterMC>         s_Factory ;
-const        IAlgFactory&LoKi_VeloClusterMCFactory = s_Factory ; 
-// ============================================================================
-
-// ============================================================================
-/// initialize: locate associators
-// ============================================================================
-StatusCode LoKi_VeloClusterMC::initialize() 
-{
-  StatusCode sc = LoKi::Algo::initialize() ;
-  if ( sc.isFailure() ) { return sc ; }
-  
-  m_asct1 = tool<IAsct1> ( "VeloCluster2MCParticleAsct" ) ;
-  m_asct2 = tool<IAsct2> ( "VeloCluster2MCHitAsct"      ) ;
-
-  return StatusCode::SUCCESS ;
-} ;
-// ============================================================================
-
-// ============================================================================
-// ============================================================================
-StatusCode LoKi_VeloClusterMC::analyse() 
+LOKI_ALGORITHM( LoKi_VeloClusterMC )
 {
   using namespace LoKi ;
   
@@ -88,17 +41,23 @@ StatusCode LoKi_VeloClusterMC::analyse()
   const VeloClusters* clusters = 
     get<VeloClusters>( VeloClusterLocation::Default );
   
+  plot( tanh( clusters->size() / 1000  ) ,
+        " tanh( #clusters / 1000 ) "    , 0 , 1.02 , 51 ) ;
+  
+  typedef IRelationWeighted<VeloCluster,MCParticle,double>  Table1 ;
+  typedef IRelationWeighted<VeloCluster,MCVeloHit,double>   Table2 ;
+  
   // get relation tables Cluster->MCParticle and Cluster->MCHit 
-  const Table1* table1 = m_asct1->direct() ;
-  const Table2* table2 = m_asct2->direct() ;
+  const Table1* table1 = get<Table1>("Rec/Relations/VeloClusters2MCParticles");
+  const Table2* table2 = get<Table2>("Rec/Relations/VeloClusters2MCHits");
+  
   if ( 0 == table1 ) 
   { return Error ( "Clusters -> MCParticles table points to NULL" ) ; }
   if ( 0 == table2 ) 
   { return Error ( "Clusters -> MCHits      table points to NULL" ) ; }
-  
 
-  Tuple tuple = nTuple( "VeloCluster -> MC ");
   
+  Tuple tuple = nTuple( "VeloCluster -> MC ");
     
   for ( VeloClusters::const_iterator ic = clusters->begin() ; 
         clusters -> end() != ic ; ++ic ) 
@@ -110,23 +69,31 @@ StatusCode LoKi_VeloClusterMC::analyse()
     tuple -> column ( "NC" , clusters->size() ) ;
     tuple -> column ( "IC" , ic - clusters->begin() );
     tuple -> column ( "ClSize" , cluster->size() );
-    tuple -> column ( "ClSens" , cluster->sensor() );
+    tuple -> column ( "ClSens" , cluster->sensor() );    
     
-
     // get all associated MC particles 
     Table1::Range mcps   = table1->relations ( cluster ) ;
-    // loop over MC particles 
+
+    // loop over MC particles and get the sum of all weight 
+    double w1 = 0 ;
     for( Table1::Range::iterator imcp = mcps.begin() ; 
          mcps.end() != imcp ; ++imcp ) 
     {
-      const MCParticle* mcp = imcp->to() ;
-      double weight = imcp->weight() ;
-
-      /** do here something with MC particle and 'weight' */
-
+      const MCParticle* mcp    = imcp -> to     () ;
+      const double      weight = imcp -> weight () ;
+      
+      /** do here something with MC particle and 'weight', 
+       *  e,g try to accumulate the 'weight'.
+       */
+      if ( 0 != mcp ) { w1 += weight ; }
+      
     }
+    
+    tuple->column( "nMCP"  , mcps.size() ) ;    
+    tuple->column( "nMCPw" , w1          ) ;    
 
-    tuple->column( "nMCP" , mcps.size() ) ;
+    plot(  mcps.size() , " # of MCPs " , 0 , 10 , 20  ) ;
+
     if( !mcps.empty() ) 
     {
       tuple->column( "mcpMinw" , mcps.front().weight() ) ;
@@ -141,17 +108,24 @@ StatusCode LoKi_VeloClusterMC::analyse()
     // get all associated MC hits 
     Table2::Range mchits = table2->relations ( cluster ) ;
     // loop over MC hits 
+    double w2 = 0 ;
     for( Table2::Range::iterator imch = mchits.begin() ; 
          mchits.end() != imch ; ++imch )
     {
-      const MCVeloHit* mchit = imch->to() ;
-      double weight = imch->weight() ;
+      const MCVeloHit* mchit  = imch -> to     () ;
+      const double     weight = imch -> weight () ;
       
-      /** do here something with MC hit and weight */
-
+      /** do here something with MC hit and weight 
+       *  e,g try to accumulate the 'weight'.
+       */
+      if ( 0 != mchit ) { w2 += weight ; }
+      
     }
-
-    tuple->column( "nMCH" , mchits.size() ) ;
+    
+    plot(  mchits.size() , " # of MCHs " , 0 , 10 , 20  ) ;
+    
+    tuple->column( "nMCH"  , mchits.size() ) ;
+    tuple->column( "nMCHw" , w2            ) ;    
     
     if( !mchits.empty() ) 
     {
@@ -167,7 +141,6 @@ StatusCode LoKi_VeloClusterMC::analyse()
     tuple->write() ;
     
   }
-  
   
   return StatusCode::SUCCESS ;
 };

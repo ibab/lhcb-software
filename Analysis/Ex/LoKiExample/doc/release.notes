@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.7 2005-02-08 11:23:10 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2005-02-08 20:29:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV     Ivan.Belyaev@itep.ru 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-08 - Vanya BELYAEV
+  
+ -resurrect the example LoKi_VeloClusterMC
+      - update DV_LoKi_VeloClusterMC.opts file 
+      - eliminate all ugly "associators" 
 
 ! 2005-02-08 - Vanya BELYAEV
  - add new example LoKi_Pi0.cpp 

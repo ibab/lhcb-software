@@ -1,21 +1,14 @@
-// $Id: DV_LoKi_VeloClusterMC.opts,v 1.2 2004-08-05 09:54:13 ibelyaev Exp $
+// $Id: DV_LoKi_VeloClusterMC.opts,v 1.3 2005-02-08 20:29:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2004/04/09 07:23:44  ibelyaev
-//  add 3 new examples
-//
-// Revision 1.3  2004/03/11 21:41:04  ibelyaev
-//  few algorithms updated fro LoKi v2r0
-//
 // ============================================================================
 // include files 
 // ============================================================================
 #pragma   print off 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-//#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-//#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$STDOPTS/RootHist.opts"
 #include "$STDOPTS/Hbook.opts"
 #pragma   print on 
@@ -30,13 +23,19 @@
  */
 // ============================================================================
 
+
 // load nesessary libraries 
-ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" , "VeloAssociators" } ;
+ApplicationMgr.DLLs   += { "VeloDAQ"     , "VeloAssociators" } ;
+ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi"            } ;
+
+DataOnDemandSvc.Algorithms += 
+  { 
+    "DATA='/Event/Raw/Velo/Clusters' TYPE='DecodeVeloRawBuffer' " ,
+    "DATA='/Event/Rec/Relations/VeloClusters2MCParticles' TYPE='VeloCluster2MCParticleAlg/VeloCluster2MCParticle'" 
+  }; 
 
 // top level algorithms 
-ApplicationMgr.TopAlg  =  {
-  "LoKi_VeloClusterMC/MCVelo"         // execute the algorithm itsels  
-};
+ApplicationMgr.TopAlg  = { "LoKi_VeloClusterMC/MCVelo"  } ; // execute the algorithm itsels  
 
 // configuration of algorithm 'MCVelo' 
 MCVelo.NTupleLUN                        = "TUPLES"  ; // logical file unit 
@@ -45,31 +44,32 @@ MCVelo.NTupleLUN                        = "TUPLES"  ; // logical file unit
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
 NTupleSvc.Output      += 
   {"TUPLES DATAFILE='MCVelo.hbook' TYP='HBOOK' OPT='NEW'" } ;
-//  {"TUPLES DATAFILE='Tuples.root' TYP='ROOT' OPT='NEW'" } ;
 
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
+HistogramPersistencySvc.OutputFile        = "MCVeloHist.hbook";
+HistogramPersistency.HistogramPersistency = "HBOOK" ;
+HbookHistSvc.PrintHistos = true ;
 
 // control for printout 
 MessageSvc.OutputLevel       =  3 ;  // "WARNING" printout level
-EventSelector.PrintFreq      = 10 ;  // make a print only each 10th event 
+EventSelector.PrintFreq      = 50 ;  // make a print only each 10th event 
 ChargedProtoPAlg.OutputLevel =  4 ;
 RootEvtCnvSvc.OutputLevel    =  4 ;
 
 ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
 
-// input data set: DC04 Bs -> phi phi 
+// input data 
 #pragma   print off 
-#include "$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts"
+#include "$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DIGI_DC04.opts"
 #pragma   print on 
 
 PoolDbCacheSvc.Catalog = 
   { 
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DIGI_DC04.xml"          
   };
 
 // The number of events to process 
-ApplicationMgr.EvtMax  = 1000 ;
+ApplicationMgr.EvtMax  = 100 ;
 
 // ============================================================================
 // The END 

@@ -1,0 +1,25 @@
+//-- GAUDI data cards generated on Feb 8, 2005 3:53:34 PM
+//-- For Event Type = 13144000 / Data type = DIGI 1
+//--     Configuration = DC04 - v1
+//--     DIGI 1 datasets produced by Boole - v5r8
+//--     From SIM 1 datasets produced by Gauss - v15r8
+//--     Database version = v22r2
+//--     Cards content = logical
+//--     
+//-- Datasets replicated at CERN
+//-- 200 dataset(s) - NbEvents = 100000
+//-- 
+EventSelector.Input   = {
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000020_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000001_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000002_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000003_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000004_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000005_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000006_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000007_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000008_4.digi' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='LFN:/lhcb/production/DC04/v1/DIGI/00000543_00000009_4.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+//-- End of Data cards 
+//
