@@ -1,13 +1,30 @@
 package VeloEvent
-version v6r0
+version v10
 
-branches VeloEvent src cmt doc
+branches Event src cmt xml dict
 
+use GaudiKernel v11r*
+use GaudiObjDesc v3r3p1
+use CLHEP v17r*
 use LHCbEvent v12r* Event
+use EventKernel v1* Event
+use VeloAlgs v1* Velo
+use LHCbKernel v1* 
 
 include_dirs $(VELOEVENTROOT)
 
+# Produce Header-Files & dictionary from XML description
+#============================================================================
+document obj2doth VeloEventObj2Doth ../xml/VeloEvent.xml
+
+# Generation of data dictionary for Gaudi Introspection Service
+#============================================================================
+document obj2dict VeloEventObj2Dict -group=dict ../xml/VeloEvent.xml
+library VeloEventDict -group=dict ../dict/*.cpp
+macro VeloEventDict_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+
 #component library
+#============================================================================
 library VeloEvent          ../src/*.cpp
 
 apply_pattern package_Clinkopts
@@ -17,4 +34,23 @@ apply_pattern packageShr
 private 
 
 apply_pattern package_Cshlibflags 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

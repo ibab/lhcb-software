@@ -4,12 +4,12 @@
 //
 //	Package   : VeloEvent
 //
-//	Author    : Markus Frank
+//	Author    : Chris Parkes
 //  History   :
 // +---------+----------------------------------------------+---------
 // |    Date |                 Comment                      | Who     
 // +---------+----------------------------------------------+---------
-// | 21/07/99| Initial version                              | MF
+// | 02/04/02| Initial version for OO DST                   | CJP
 // +---------+----------------------------------------------+---------
 //====================================================================
 #define LHCBEVENT_FACTORIES_MCINSTANTIATION_CPP  1
@@ -33,36 +33,37 @@
 // ====================================================================
 // Object factory implementation for objects of class MCVeloHit
 // ====================================================================
-#include "VeloEvent/MCVeloHit.h"
+#include "Event/MCVeloHit.h"
 IMPLEMENT_VELO_CONTAINED_FACTORIES(MCVeloHit)
 
 // ====================================================================
-// Object factory implementation for objects of class RawVeloHit
+// Object factory implementation for objects of class MCVeloFE
 // ====================================================================
-#include "VeloEvent/RawVeloHit.h"
-IMPLEMENT_VELO_CONTAINED_FACTORIES(RawVeloHit)
+#include "Event/MCVeloFE.h"
+IMPLEMENT_VELO_CONTAINED_FACTORIES(MCVeloFE)
+
+// ====================================================================
+// Object factory implementation for objects of class VeloFullDigit
+// ====================================================================
+#include "Event/VeloFullDigit.h"
+IMPLEMENT_VELO_CONTAINED_FACTORIES(VeloFullDigit)
 
 // ====================================================================
 // Object factory implementation for objects of class VeloCluster
 // ====================================================================
-#include "VeloEvent/VeloCluster.h"
+#include "Event/VeloCluster.h"
 IMPLEMENT_VELO_CONTAINED_FACTORIES(VeloCluster)
-
-// ====================================================================
-// Object factory implementation for objects of class RecVeloEvent
-// ===================================================================
-#include "VeloEvent/RecVeloEvent.h"
-static DataObjectFactory< RecVeloEvent > s_RecVeloEventFactory;
 
 void VeloEvent_load()  {
   // Declaration of contained object factories
   DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( MCVeloHit );
-  DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( RawVeloHit );
+  DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( MCVeloFE );
+  DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( VeloFullDigit );
   DECLARE_VELO_CONTAINEDOBJECT_FACTORIES( VeloCluster );
-  // Declaration of Data object factories
-  s_RecVeloEventFactory.addRef();
 }
 
 extern "C" void VeloEvent_loadRef()   {
   VeloEvent_load();
 }
+
+

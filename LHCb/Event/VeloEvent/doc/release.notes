@@ -1,6 +1,18 @@
 package Event/VeloEvent
 package manager: E.Banas
-
+! ===================================================================
+! 20020404- VeloEvent v10r0 (Chris Parkes)
+  First version of VELO Event Model for OO DST.
+  Classes are:
+	MCVeloHit.h - geant hit info., common for velo, pile-up and L1
+	MCVeloFE.h  - MC front end chip info., ie. after silicon and 
+                      chip simulation but before digitisation, 
+                      common for velo, pile-up and L1
+	VeloFullDigit.h - internal state of data processor board 
+                          e.g. CM and pedestal corrections
+	VeloCluster.h - Velo Clusters, which strips are joined by data 
+                        processor to produce clusters, and signal values 
+                        of these strips
 ! ===================================================================
 ! 20020107 - VeloEvent v6r0 (MC)
   Changes for Gaudi v9:
