@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.1 2003-06-20 14:34:32 papanest Exp $
+// $Id: DeRichPDPanel.h,v 1.2 2003-09-20 15:02:49 jonrob Exp $
 
 #ifndef DERICHPDPANEL_H
 #define DERICHPDPANEL_H 1
@@ -40,12 +40,12 @@ public:
                               RichSmartID& id ) = 0;
 
   /**
-   * Returns the detection point given a smartID. The detection is 
-   * on the inside of the PD window, on the photocathode. 
+   * Returns the detection point given a smartID. The detection is
+   * on the inside of the PD window, on the photocathode.
    * @return StatusCode
    */
   virtual StatusCode detectionPoint( const RichSmartID& smartID,
-                                     HepPoint3D& windowHitGlobal ) = 0; 
+                                     HepPoint3D& windowHitGlobal ) = 0;
   /**
    * Returns the intersection point with an PD window given a vector
    * and a point.
@@ -53,9 +53,9 @@ public:
    */
 
   virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
-                                     const HepPoint3D& pGlobal,
-                                     HepPoint3D& windowPointGlobal,
-                                     RichSmartID& smartID ) = 0;
+                                    const HepPoint3D& pGlobal,
+                                    HepPoint3D& windowPointGlobal,
+                                    RichSmartID& smartID ) = 0;
   /**
    * Returns the detection plane of the PD panel, defined at the top of the
    * PDs (a plane resting on the PDs touching the window).
@@ -68,8 +68,8 @@ public:
    * RichSmartIDs.
    * @return StatusCode
    */
-  virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
-                                        readoutChannels) = 0;
+  virtual StatusCode readoutChannelList( std::vector<RichSmartID>&
+                                         readoutChannels ) = 0;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.5 2003-08-29 08:29:42 papanest Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.6 2003-09-20 15:02:49 jonrob Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -55,7 +55,6 @@ StatusCode DeRich1HPDPanel::initialize() {
   HPDRows = userParameterAsInt("PDRows");
   HPDColumns = userParameterAsInt("PDColumns");
   m_PDMax = HPDColumns * HPDRows;
-
 
   // get the first HPD and follow down to the silicon block
   const IPVolume* pvHPDMaster0 = geometry()->lvolume()->pvolume(0);
@@ -126,8 +125,6 @@ StatusCode DeRich1HPDPanel::initialize() {
   // and to silicon
   HPDTop = pvSilicon0->toLocal(HPDTop2);
 
-
-
   // find the top of 3 HPDs to create a detection plane.  We already have the
   // first in HPDSMaster coordinates.
   // now to HPD coordinates
@@ -149,6 +146,17 @@ StatusCode DeRich1HPDPanel::initialize() {
 
   detectionPlane_m = HepPlane3D(pointA, pointB, pointC);
   //std::cout <<"Detection plane:" << detectionPlane_m << std::endl;
+
+  // Cache information for PDWindowPoint method
+  m_vectorTransf  = geometry()->matrix();
+  m_HPDPanelSolid = geometry()->lvolume()->solid();
+  for ( int HPD = 0; HPD < m_PDMax; ++HPD ) {
+    m_pvHPDMasters.push_back( geometry()->lvolume()->pvolume(HPD) );
+    m_pvHPDSMasters.push_back( m_pvHPDMasters[HPD]->lvolume()->pvolume(0) );
+    m_pvWindows.push_back( m_pvHPDSMasters[HPD]->lvolume()->pvolume(2) );
+    m_windowSolids.push_back( m_pvWindows[HPD]->lvolume()->solid() );
+    m_vectorTransfHPD2s.push_back( m_pvHPDMasters[HPD]->matrix() );
+  }
 
   log << MSG::DEBUG <<"Finished initialisation for DeRich1HPDPanel"<< endreq;
 
@@ -249,14 +257,11 @@ StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
 StatusCode DeRich1HPDPanel::detectionPoint (const RichSmartID& smartID,
                                             HepPoint3D& windowHitGlobal)
 {
-  //MsgStream log(msgSvc(), "DeRich1HPDPanel" );
-  //log << MSG::VERBOSE << "In DeRich1HPDPanel::detectionPoint" << endreq;
 
   // HPD row and column, pixel row and column as well as HPD panel number
   // and rich id starts at 1 and not 0
 
-  int HPDNumber;
-  HPDNumber = smartID.HPDRow()*HPDColumns + smartID.HPDCol();
+  int HPDNumber = smartID.PDRow()*HPDColumns + smartID.PDCol();
 
   // find the correct HPD and silicon block inside it
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
@@ -278,7 +283,7 @@ StatusCode DeRich1HPDPanel::detectionPoint (const RichSmartID& smartID,
   double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
   HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
   //  std::cout << windowHit << std::endl;
-  
+
   HepPoint3D windowHitInHPDS = pvWindow->toMother(windowHit);
   HepPoint3D windowHitInHPD = pvHPDSMaster->toMother(windowHitInHPDS);
   HepPoint3D windowHitInPanel = pvHPDMaster->toMother(windowHitInHPD);
@@ -290,31 +295,20 @@ StatusCode DeRich1HPDPanel::detectionPoint (const RichSmartID& smartID,
 
 //============================================================================
 
-StatusCode DeRich1HPDPanel::PDWindowPoint(const HepVector3D& vGlobal,
+StatusCode DeRich1HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                            const HepPoint3D& pGlobal,
                                            HepPoint3D& windowPointGlobal,
-                                           RichSmartID& smartID) {
-
-  //MsgStream log(msgSvc(), "DeRich1HPDPanel" );
-  //log << MSG::VERBOSE << "Entering HPDWindowPoint" << endreq;
+                                           RichSmartID& smartID ) {
 
   // transform point and vector to the HPDPanel coordsystem.
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
-  const HepTransform3D vectorTransf = geometry()->matrix();
   HepVector3D vLocal = vGlobal;
-  vLocal.transform(vectorTransf);
-
-  const ISolid* HPDPanelSolid = geometry()->lvolume()->solid();
+  vLocal.transform(m_vectorTransf);
 
   unsigned int noTicks;
-
   ISolid::Ticks HPDPanelTicks;
-  noTicks = HPDPanelSolid->intersectionTicks(pLocal,vLocal,HPDPanelTicks );
-  if (0 == noTicks) {
-    //log << MSG::DEBUG << "Direction did not intersect with HPDPanel "
-    //    << name() << endreq;
-    return StatusCode::FAILURE;
-  }
+  noTicks = m_HPDPanelSolid->intersectionTicks(pLocal,vLocal,HPDPanelTicks );
+  if ( 0 == noTicks ) return StatusCode::FAILURE;
 
   HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
 
@@ -323,13 +317,13 @@ StatusCode DeRich1HPDPanel::PDWindowPoint(const HepVector3D& vGlobal,
   const IPVolume* pvWindow = 0;
   const ISolid* windowSolid;
 
-  HepPoint3D pInHPDMaster, pInHPDSMaster, pInWindow;
+  HepPoint3D pInWindow;
   HepVector3D vInHPDMaster;
 
   ISolid::Ticks HPDWindowTicks;
 
   int HPDColumn(-1), HPDRow(-1), HPDNumber(-1);
-  bool HPDFound1(false),HPDFound2(false);
+  bool HPDFound(false);
 
   if ( (fabs(panelIntersection.x()) <= panelHorizEdge) &&
        (fabs(panelIntersection.y()) <= panelVerticalEdge)) {
@@ -346,13 +340,11 @@ StatusCode DeRich1HPDPanel::PDWindowPoint(const HepVector3D& vGlobal,
     }
     HPDNumber = HPDRow*HPDColumns + HPDColumn;
 
-    //log << MSG::DEBUG << "HPDRow:" << HPDRow << " HPDColumn:" << HPDColumn
-    //    << endreq;
-
     // find the correct HPD and quartz window inside it
     pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
+
     // just in case
-    if (!pvHPDMaster) {
+    if ( !pvHPDMaster ) {
       MsgStream log(msgSvc(), "DeRich1HPDPanel" );
       log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
           << " from HPDRow:" << HPDRow << " and HPDColumn:" << HPDColumn
@@ -368,81 +360,61 @@ StatusCode DeRich1HPDPanel::PDWindowPoint(const HepVector3D& vGlobal,
     windowSolid = pvWindow->lvolume()->solid();
 
     // convert point to local coordinate systems
-    pInHPDMaster = pvHPDMaster->toLocal(pLocal);
-    pInHPDSMaster = pvHPDSMaster->toLocal(pInHPDMaster);
-    pInWindow = pvWindow->toLocal(pInHPDSMaster);
+    pInWindow = pvWindow->toLocal(pvHPDSMaster->
+                                  toLocal(pvHPDMaster->toLocal(pLocal)));
 
     // convert local vector assuming that only the HPD can be rotated
     const HepTransform3D vectorTransfHPD = pvHPDMaster->matrix();
     vInHPDMaster = vLocal;
     vInHPDMaster.transform(vectorTransfHPD);
 
-    //std::cout << pInWindow << vInHPDMaster << std::endl;
-
-    noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
-                                             HPDWindowTicks );
-    if (0 != noTicks) {
-      HPDFound1 = true;
-      //log << MSG::DEBUG << "Intersect with EXPECTED HPD "
-      //    << pvHPDMaster->name() << endreq;
-      //} else {
-      //log << MSG::DEBUG << "Direction did not intersect with expected HPD "
-      //    << pvHPDMaster->name() << endreq;
-    }
+    noTicks = windowSolid->intersectionTicks( pInWindow, vInHPDMaster,
+                                              HPDWindowTicks );
+    if ( 0 != noTicks ) HPDFound = true;
 
   }
 
-  if (!HPDFound1) {
-    // first attempt to find relevant HPD failed.
-    // search all HPDs for intersection
+  if (!HPDFound) {
+    // Not in central PD : Try nearest neighbours
 
-    for (int HPD=0; HPD<m_PDMax; ++HPD) {
-      pvHPDMaster = geometry()->lvolume()->pvolume(HPD);
-      pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-      pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
-      windowSolid = pvWindow->lvolume()->solid();
+    for ( int HPD=0; HPD<m_PDMax; ++HPD ) {
 
       // convert point to local coordinate systems
-      pInHPDMaster = pvHPDMaster->toLocal(pLocal);
-      pInHPDSMaster = pvHPDSMaster->toLocal(pInHPDMaster);
-      pInWindow = pvWindow->toLocal(pInHPDSMaster);
+      pInWindow =  m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
+                                             toLocal(m_pvHPDMasters[HPD]->toLocal(pLocal)));
 
       // convert local vector assuming that only the HPD can be rotated
-      const HepTransform3D vectorTransfHPD2 = pvHPDMaster->matrix();
       vInHPDMaster = vLocal;
-      vInHPDMaster.transform(vectorTransfHPD2);
+      vInHPDMaster.transform( m_vectorTransfHPD2s[HPD] );
 
-      noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
-                                               HPDWindowTicks );
-      if (2 == noTicks) {
-        //log << MSG::DEBUG << "Intersection with HPD " << HPD << endreq;
-        HPDFound2 = true;
+      noTicks = m_windowSolids[HPD]->intersectionTicks( pInWindow,
+                                                        vInHPDMaster,
+                                                        HPDWindowTicks );
+      if ( 2 == noTicks ) {
+        HPDFound = true;
         HPDNumber = HPD;
+        pvHPDMaster = m_pvHPDMasters[HPD];
+        pvHPDSMaster = m_pvHPDSMasters[HPD];
+        pvWindow = m_pvWindows[HPD];
+        HPDRow = HPDNumber/HPDRows;
+        HPDColumn = HPDNumber%HPDRows;
         break;
       }
 
     }
+
   }
 
-  if (!HPDFound1 && !HPDFound2) {
-    //log << MSG::DEBUG << "NO intersection with HPD" << endreq;
-    return StatusCode::FAILURE;
-  }
+  if (!HPDFound) return StatusCode::FAILURE;
 
   HepPoint3D windowPoint = pInWindow + HPDWindowTicks[1]*vInHPDMaster;
-
   HepPoint3D windowPointInHPDS = pvWindow->toMother(windowPoint);
   HepPoint3D windowPointInHPD = pvHPDSMaster->toMother(windowPointInHPDS);
   HepPoint3D windowPointInPanel = pvHPDMaster->toMother(windowPointInHPD);
   windowPointGlobal = geometry()->toGlobal(windowPointInPanel);
 
-  if (HPDFound2) {
-    HPDRow = HPDNumber/HPDRows;
-    HPDColumn = HPDNumber%HPDRows;
-  }
-
-  smartID.setHPDRow( HPDRow );
-  smartID.setHPDCol( HPDColumn );
+  smartID.setPDRow( HPDRow );
+  smartID.setPDCol( HPDColumn );
   // For the moment do not bother with pixel info
   smartID.setPixelRow( 0 );
   smartID.setPixelCol( 0 );
@@ -450,4 +422,5 @@ StatusCode DeRich1HPDPanel::PDWindowPoint(const HepVector3D& vGlobal,
   return StatusCode::SUCCESS;
 
 }
+
 

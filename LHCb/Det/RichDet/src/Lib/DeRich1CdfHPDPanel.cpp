@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.7 2003-08-29 08:29:42 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.8 2003-09-20 15:02:49 jonrob Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -34,10 +34,7 @@ DeRich1CdfHPDPanel::DeRich1CdfHPDPanel() {}
 DeRich1CdfHPDPanel::~DeRich1CdfHPDPanel() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich1CdfHPDPanel::classID() {
-  return CLID_DeRich1CdfHPDPanel;
-}
-
+const CLID& DeRich1CdfHPDPanel::classID() { return CLID_DeRich1CdfHPDPanel; }
 
 StatusCode DeRich1CdfHPDPanel::initialize() {
 
@@ -51,7 +48,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   pixelSize = 0.5*mm;
   m_winR = 56*mm;
   m_winRsq = m_winR*m_winR;
-  
+
 
   HepPoint3D zero(0.0, 0.0, 0.0);
   // this is the real number of columns
@@ -255,7 +252,7 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
   //  }
 
   if ( (fabs(inSilicon.x()) > siliconHalfLengthX) ||
-       (fabs(inSilicon.y()) > siliconHalfLengthY)    ) {  
+       (fabs(inSilicon.y()) > siliconHalfLengthY)    ) {
     log << MSG::ERROR << "The point is outside the silicon box "
         << pvHPDMaster->name() <<  endreq;
     id = RichSmartID(0);
@@ -264,9 +261,9 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
 
   unsigned int pixelColumn = static_cast<unsigned int>
-                           ((siliconHalfLengthX + inSilicon.x()) / pixelSize);
+    ((siliconHalfLengthX + inSilicon.x()) / pixelSize);
   unsigned int pixelRow    = static_cast<unsigned int>
-                           ((siliconHalfLengthY + inSilicon.y()) / pixelSize);
+    ((siliconHalfLengthY + inSilicon.y()) / pixelSize);
 
   //std::cout << pixelColumn << "  " <<pixelRow << std::endl;
 
@@ -292,11 +289,11 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
   // and rich id starts at 1 and not 0
 
   int HPDNumber;
-  int HPDColDiv2 = smartID.HPDCol()/2;
-  if (0 == smartID.HPDCol()%2) {
-    HPDNumber = HPDColDiv2 * HPDsIn2Cols + smartID.HPDRow();
+  int HPDColDiv2 = smartID.PDCol()/2;
+  if (0 == smartID.PDCol()%2) {
+    HPDNumber = HPDColDiv2 * HPDsIn2Cols + smartID.PDRow();
   } else {
-    HPDNumber = HPDColDiv2 * HPDsIn2Cols + smartID.HPDRow() + HPDsInBigCol;
+    HPDNumber = HPDColDiv2 * HPDsIn2Cols + smartID.PDRow() + HPDsInBigCol;
   }
 
   // find the correct HPD and silicon block inside it
@@ -318,7 +315,7 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
   double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
   HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
   //  std::cout << windowHit << std::endl;
-  
+
   HepPoint3D windowHitInHPDS = pvWindow->toMother(windowHit);
   HepPoint3D windowHitInHPD = pvHPDSMaster->toMother(windowHitInHPDS);
   HepPoint3D windowHitInPanel = pvHPDMaster->toMother(windowHitInHPD);
@@ -331,9 +328,9 @@ StatusCode DeRich1CdfHPDPanel::detectionPoint ( const RichSmartID& smartID,
 //============================================================================
 
 StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
-                                               const HepPoint3D& pGlobal,
-                                               HepPoint3D& windowPointGlobal,
-                                               RichSmartID& smartID )
+                                              const HepPoint3D& pGlobal,
+                                              HepPoint3D& windowPointGlobal,
+                                              RichSmartID& smartID )
 {
 
   // transform point and vector to the HPDPanel coordsystem.
@@ -388,6 +385,7 @@ StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
     // find the correct HPD and quartz window inside it
     pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
+
     // just in case
     if (!pvHPDMaster) {
       MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
@@ -405,9 +403,6 @@ StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     windowSolid = pvWindow->lvolume()->solid();
 
     // convert point to local coordinate systems
-    //    pInHPDMaster = pvHPDMaster->toLocal(pLocal);
-    //    pInHPDSMaster = pvHPDSMaster->toLocal(pInHPDMaster);
-    //pInWindow = pvWindow->toLocal(pInHPDSMaster);
     pInWindow = pvWindow->toLocal(pvHPDSMaster->
                                   toLocal(pvHPDMaster->toLocal(pLocal)));
 
@@ -422,18 +417,14 @@ StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   }
 
-  //if ( HPDFound1 ) cout << "DeRich1CDfHPDPanel : found using guess" << endl;
   if ( !HPDFound1 ) {
-    // first attempt to find relevant HPD failed.
-    // search all HPDs for intersection
+    // Not in central PD : Try all others
+
     for ( int HPD=0; HPD<m_PDMax; ++HPD ) {
 
       // convert point to local coordinate systems
-      //      pInHPDMaster = m_pvHPDMasters[HPD]->toLocal(pLocal);
-      //      pInHPDSMaster = m_pvHPDSMasters[HPD]->toLocal(pInHPDMaster);
-      //     pInWindow = m_pvWindows[HPD]->toLocal(pInHPDSMaster);
-      pInWindow =  m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
-                            toLocal(m_pvHPDMasters[HPD]->toLocal(pLocal)));
+      pInWindow = m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
+                                            toLocal(m_pvHPDMasters[HPD]->toLocal(pLocal)));
 
       // convert local vector assuming that only the HPD can be rotated
       vInHPDMaster = vLocal;
@@ -442,16 +433,17 @@ StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
       noTicks = m_windowSolids[HPD]->intersectionTicks( pInWindow,
                                                         vInHPDMaster,
                                                         HPDWindowTicks );
-      if (2 == noTicks) {
+      if ( 2 == noTicks ) {
         HPDFound2 = true;
         HPDNumber = HPD;
         pvHPDMaster = m_pvHPDMasters[HPD];
         pvHPDSMaster = m_pvHPDSMasters[HPD];
         pvWindow = m_pvWindows[HPD];
-        //cout << "DeRich1CDfHPDPanel : found using loop" << endl;
         break;
       }
+
     }
+
   }
 
   if (!HPDFound1 && !HPDFound2) return StatusCode::FAILURE;
@@ -473,8 +465,8 @@ StatusCode DeRich1CdfHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     }
   }
 
-  smartID.setHPDRow( HPDRow );
-  smartID.setHPDCol( HPDColumn );
+  smartID.setPDRow( HPDRow );
+  smartID.setPDCol( HPDColumn );
   // For the moment do not bother with pixel info
   smartID.setPixelRow( 0 );
   smartID.setPixelCol( 0 );

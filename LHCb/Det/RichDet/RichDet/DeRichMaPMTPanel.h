@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.h,v 1.2 2003-09-08 19:24:08 papanest Exp $
+// $Id: DeRichMaPMTPanel.h,v 1.3 2003-09-20 15:02:49 jonrob Exp $
 
 #ifndef DERICHMAPMTPANEL_H
 #define DERICHMAPMTPANEL_H 1
@@ -13,7 +13,7 @@
  *
  * @author Antonis Papanestis
  */
-class DeRichMaPMTPanel: public  DeRichPDPanel {
+class DeRichMaPMTPanel: public DeRichPDPanel {
 
 public:
   /**
@@ -154,7 +154,6 @@ private:
   std::vector<const ISolid*>   m_windowSolids;
   std::vector<HepTransform3D>  m_vectorTransfMaPMT2s;
 
-  
 };
 
 #endif    // DERICHMAPMTPANEL_H

@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.4 2003-06-20 14:34:32 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.5 2003-09-20 15:02:48 jonrob Exp $
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
@@ -138,7 +138,6 @@ private:
   
   /// detection plane
   HepPlane3D detectionPlane_m;
-  
 
   // CRJ : cache variables
   HepTransform3D m_vectorTransf;
@@ -148,6 +147,7 @@ private:
   std::vector<const IPVolume*> m_pvWindows;
   std::vector<const ISolid*>   m_windowSolids;
   std::vector<HepTransform3D>  m_vectorTransfHPD2s;
+
 };
 
 #endif    // RICHDET_DERICH1CDFHPDPANEL_H
