@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionFinal.cpp,v 1.1 2004-02-20 19:35:27 ibelyaev Exp $ 
+// $Id: GaussTrackActionFinal.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:27  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -86,6 +89,13 @@ void GaussTrackActionFinal::PreUserTrackingAction
   
   // check the validity 
   if( 0 == tr ) { Error ( "Pre...: GaussTrajectory* points to NULL" ) ; }
+
+  if( trackMgr() -> GetStoreTrajectory() )
+  {     Warning ( " Pre:  store "     ) ; }
+  else 
+  {     Warning ( " Pre:  not store " ) ; }
+  
+
   
 };
 // ============================================================================
@@ -140,7 +150,7 @@ void GaussTrackActionFinal::PostUserTrackingAction
     child -> SetParentID( track->GetParentID() );
     //
   }
-
+  
 //   // delete the trajectory by hand 
 //   if ( ! trackMgr()->GetStoreTrajectory() )
 //   {

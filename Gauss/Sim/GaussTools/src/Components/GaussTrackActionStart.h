@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionStart.h,v 1.1 2004-02-20 19:35:28 ibelyaev Exp $
+// $Id: GaussTrackActionStart.h,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:28  ibelyaev
+//  major update
+// 
 // ============================================================================
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONSTART_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONSTART_H 1
@@ -64,9 +67,28 @@ private:
   // assignement operator  is disabled 
   GaussTrackActionStart& operator=( const GaussTrackActionStart& ) ;
   
+protected:
+  
+  /** restore G4 initial policy for 
+   *  saving of the particle on 
+   *  track-by-track basis 
+   * 
+   *  In particulat it means that 
+   *  after running the G4 interactive command
+   *   "/tracking/storeTrajectory  1"
+   *
+   *  becomes disabled after the first invokation 
+   *  of this tracking action 
+   */ 
+  StatusCode restoreG4setting() ;
+  
 private:
   
+  bool   m_store ;
+  bool   m_first ;
+
 };
+
 
 // ============================================================================
 // The END 

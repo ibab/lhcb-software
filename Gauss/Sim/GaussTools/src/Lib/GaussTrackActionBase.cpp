@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionBase.cpp,v 1.1 2004-02-20 19:35:30 ibelyaev Exp $ 
+// $Id: GaussTrackActionBase.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:30  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,7 +53,10 @@ GaussTrackActionBase::GaussTrackActionBase
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaTrackActionBase ( type , name , parent ) 
+  : GiGaTrackActionBase ( type , name , parent )
+  //
+  , m_nTrajectories  ( 0 )
+  , m_nTrackInfos    ( 0 )
 {};
 // ============================================================================
 
@@ -83,7 +89,23 @@ StatusCode GaussTrackActionBase::initialize ()
  */
 // ============================================================================
 StatusCode GaussTrackActionBase::finalize   () 
-{ return GiGaTrackActionBase::finalize   () ; }
+{
+  if ( 0 != m_nTrajectories ) 
+  { 
+    always () << " Number of created GaussTrajectories       " ;
+    always () .stream() << m_nTrajectories  ;
+    always () << endreq ;
+  }
+  
+  if ( 0 != m_nTrackInfos  ) 
+  { 
+    always () << " Number of created GaussTrackInformation   " ;
+    always () . stream() << m_nTrackInfos  ;
+    always () << endreq ;
+  }
+  
+  return GiGaTrackActionBase::finalize   () ; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -110,6 +132,7 @@ GaussTrajectory* GaussTrackActionBase::trajectory () const
   if ( 0 == g4 ) 
   {
     gau = createGaussTrajectory( track ) ;
+    ++m_nTrajectories ;
     trackMgr() -> SetTrajectory( gau )  ;
     return gau ;                                                  // RETURN 
   }
@@ -154,6 +177,7 @@ GaussTrackInformation* GaussTrackActionBase::trackInfo
   if ( 0 == g4 ) 
   {
     gau = new GaussTrackInformation() ;
+    ++m_nTrackInfos ;
     track->SetUserInformation( gau ) ;
     return gau ;                                                 // RETURN 
   }

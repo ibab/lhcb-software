@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionStart.cpp,v 1.1 2004-02-20 19:35:28 ibelyaev Exp $ 
+// $Id: GaussTrackActionStart.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:28  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,6 +22,7 @@
 // GiGa
 // ============================================================================
 #include "GiGa/GiGaMACROs.h"
+#include "GiGa/DumpG4Track.h"
 // ============================================================================
 // GaussTools 
 // ============================================================================
@@ -57,6 +61,8 @@ GaussTrackActionStart::GaussTrackActionStart
   const IInterface*  parent ) 
   : GaussTrackActionBase ( type , name , parent ) 
   //
+  , m_store ( false )
+  , m_first ( true  )
 {};
 // ============================================================================
 
@@ -75,6 +81,9 @@ GaussTrackActionStart::~GaussTrackActionStart() {}
 void GaussTrackActionStart::PreUserTrackingAction  
 ( const G4Track* /* track */ ) 
 {
+  // trick 
+  restoreG4setting() ;
+  
   // get the trajectory 
   GaussTrajectory* tr = trajectory() ;
   if( 0 == tr   ) 
@@ -100,6 +109,43 @@ void GaussTrackActionStart::PostUserTrackingAction
   // get the trajectory 
   GaussTrajectory*       tr   = trajectory() ;  
   if( 0 == tr ) { Error ( "Post...: GaussTrajectory* points to NULL " ) ; }
+  
+  // get track information
+  GaussTrackInformation* info = trackInfo () ;
+  if( 0 == info ) 
+  { Error ( "Post...: GaussTrackInformation* points to NULL" ) ; }
+
+};
+// ============================================================================
+
+// ============================================================================
+/** restore G4 initial policy for 
+ *  saving of the particle on 
+ *  track-by-track basis 
+ * 
+ *  In particulat it means that 
+ *  after running the G4 interactive command
+ *   "/tracking/storeTrajectory  1"
+ *
+ *  becomes disabled after the first invokation 
+ *  of this tracking action 
+ */ 
+// ============================================================================
+StatusCode GaussTrackActionStart::restoreG4setting() 
+{
+  G4TrackingManager* manager = trackMgr() ;
+  
+  if ( 0 == manager ) 
+  { return Error ( "restoreG4Setting(): G4TrackingManager* poits to NULL" ) ; }
+  
+  if ( !m_first )
+  {
+    m_first = false ;
+    m_store = manager -> GetStoreTrajectory () ;
+  }
+  else { manager -> SetStoreTrajectory( m_store ) ; }
+  
+  return StatusCode::SUCCESS ;
 };
 // ============================================================================
 

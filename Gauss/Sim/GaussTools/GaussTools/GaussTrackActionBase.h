@@ -1,13 +1,22 @@
-// $Id: GaussTrackActionBase.h,v 1.1 2004-02-20 19:35:25 ibelyaev Exp $
+// $Id: GaussTrackActionBase.h,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:25  ibelyaev
+//  major update
+// 
 // ============================================================================
 #ifndef GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 
 #define GAUSSTOOLS_GAUSSTRACKACTIONBASE_H 1
 // ============================================================================
 // Include files
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Kernel.h"
+// ============================================================================
+// GiGa 
 // ============================================================================
 #include "GiGa/GiGaTrackActionBase.h"
 // ============================================================================
@@ -86,6 +95,13 @@ protected:
   
 private:
   
+  // 'long' counter 
+  typedef ulonglong UCounter        ;
+  // counter for all created trajectories 
+  mutable UCounter  m_nTrajectories ;
+  // counter for all created track information objects 
+  mutable UCounter  m_nTrackInfos   ;
+
 };
 
 // ============================================================================
