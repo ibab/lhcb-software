@@ -4,6 +4,162 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
+<H1><A NAME="v15r0">2004-03-05 - Gauss v15r0</A></H1><PRE>
+uses Geant4 6.0.p01, LHCb v15r3, Gaudi v14r2, XmlDDDB v22r0, ParamFiles v3r3
+
+!===================== GaussAlgs v1r0 ========================================
+! 2004-02-19 - Vanya BELYAEV
+ - new package with 4 algorithms from Sim/GaussTools :
+      GiGaFlushAlgorithm
+      GetGiGaHitsAlg 
+      PrintEventAlg  
+      GaussInitialisation 
+
+!===================== GaussTools v10r0 ====================================
+! 2004-02-19 - Vanya BELYAEV
+
+ - src/Component/GetGiGaHitsAlg.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/PrintEventAlg.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GiGaFlushAlgorithm.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GaussInitialisation.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GaussTools_load.cpp 
+        remove GetGiGaHistAlg 
+        remove PrintEventAlg  
+        remome GiGaFlushAlgorithm 
+        remove GaussInitialisation 
+ - src/Component/GiGaSensDetBudget.cpp  
+        fix compilation warning 
+ - src/Component/SpecialCuts.cpp 
+        fix compilation warning 
+ - src/Component/GiGaPhysListModular.cpp
+        fix compilation warning 
+ - src/Component/GaussPostTrackAction.cpp 
+        fix compilation warning
+ - src/Components/GaussTrackActionStart.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByEnergy.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByEnergyType.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByProcess.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByType.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionFinal.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionGeneral.h,.cpp
+        new tracking action 
+  - cmt/requirement 
+        eliminate the dependencies on Event/VeloEvent
+                                      Event/MuonEvent
+                                      Event/RichEvent 
+                                      Event/CaloEvent
+        increase the *MAJOR* version -> v10r0 
+
+!============================ GiGa v16r0 ====================================
+! 2004-02-20 - Vanya BELYAEV
+ - GiGa/IGiGa*.h  
+    move al IGiGaXXX::interface() and IGiGaXXX::~IGiGaXXX() into *.cpp file 
+    to be independent from Gaudi's solution for "dynamic_cast" problem
+ - GiGa/IIDIGiGa*.h 
+    moev fiels into src/Lib directory  
+ - src/Lib/GiGaInterfaces.cpp
+     new file with (empty) implementation of destructors 
+     and static XXX:interface() methods  
+ - GiGa/GiGaTrajectory.h, src/Lib/GiGaTrajectory.cpp
+	   1) now has member creator() , which points to 
+	      G4VProcess - "crreator" of the initial G4Track
+     2) the method procname is updated in accordance with (1)
+     3) remove GiGaException for cane of Nan/Infinite tome-of-fligh
+     4) add extensive printout for NaN/Infinite time of flight case 
+     5) redesign the AppendStep mehtod  
+     6) implement 'ShowTrajectory' method for trajectory printout 
+ - GiGaTrajectoryPoint.h, src/Lib/GiGaTrajectoryPoint
+     1) add new field m_momentum   (4-momentum if input particle)
+         + new accessors 
+     2) add new filed m_process + new accessors 
+          a) for the first points it is a process which created the particle
+          b) for other points if is a process which defins the step, 
+             or 0 for transportation   
+     3) add 2 new constructors (from G4TrajectoryPoint and G4VTrajectoryPoint)   - GiGa/GiGaBase.h src/Lib/GiGaBase.cpp
+     make usage of GaudiTool base 
+ - GiGaDumpG4Track.h, src/Lib/DumpG4Track.cpp 
+     new function for extensive G4Track dump
+ - GiGa/DumpG4Step.h, src/Lib/DumpG4Step.cpp 
+     new function for extensive G4Step dump
+ - GiGa/DumpG4Event.h, src/Lib/DumpG4Event.cpp 
+     new function for extensive G4Event dump
+ - cmt/requirements 
+     1) add "use GaudiTools v*"
+     2) increase the version to GiGa v16r0   
+
+! 2004-02-17 - Vanya BELYAEV
+ - GiGa/GiGaExternalPhysicsConstructor.h   - 
+      1) rename class GiGaExternalPhysicsConstructor into GiGaExtPhysics 
+     2) fix MACRO/cpp for gcc 3.2 
+ - GiGa/GiGaExtPhysics.h                 - new file 
+ - src/component/GiGaRunManagerG4RM.cpp  - fix a compilation warning 
+ - src/Lib/GiGaFieldMgrBase.cpp          - fix a compilation warning 
+ - cmt/requirements                      - increase the version to V15r3 
+
+!========================== GiGaCnv v15r0 ===============================
+! 2004-02-20 - Ivan BELYAEV
+ - GiGaCnv/IGiGa*.h 
+     1) move IGiGaXXX::~IGiGaXXX() implementations to separate file 
+     2) move IGiGaXXX::interface() implementations to separate file 
+ - src/Lib/GiGaCnvInterfaces.cpp 
+     new file with implementations of IGiGaXXX::~IGiGaXXX() and 
+       IGiGaXXX::interfaceID() methods 
+ - GiGa/IIDIGiGa*.
+     move into src/Lib directory 
+ - src/component/GiGaSurfaceCnv.cpp 
+     fix compilation warning 
+ 
+! 2004-02-20 - Vanya BELYAEV
+ - GiGaCnv/GiGaPrimaryParticleInformation.h
+      updtate for "fast cast"
+ - src/Lib/GiGaCnvSvcBase.cpp
+      fix compilation warning 
+ - src/component/GiGaMCVertexCnv.cpp
+      fix compilation warning 
+ - src/component/GiGaMiscGetEventAlg.h,.cpp
+      move files into GaudiAlg package 
+ - src/component/GiGaCnv_entries.cpp 
+      remove GiGaMiscGetEventAlg 
+ - src/component/GiGaDataStoreAlgorithm.h,.cpp
+      1) update for new base GaudiAlgorithm 
+      2) remove OTHits 
+ - cmt/requirement 
+      1) add dependency on GaudiAlg package 
+      2) incrmement the version to v15r0 
+   
+!====================== GaussPhysics v3r0 ===============================
+! 2004-02-18 - Vanya BELYAEV
+ - remove old stuff
+ - make use of new package G4hadlists 
+ - make use of GiGaExtPhysics 
+    (former GiGaExternalPhyicsConstructor) utility
+ - cmt/requirements : increase the version to v3r0 
+
+!====================== GaussCalo v7r0 ===================================
+! 2004-02-20 - Ivan BELYAEV
+ - options/PGUN* remove all obsolete files 
+ - src/CaloSensDet.cpp
+        fix compilation warnings 
+ - src/HcalSensDet.cpp
+        fix compilation warnings 
+ - src/GaussSensPlaneDet.cpp
+        fix compilation warnings 
+ - src/GaussSensPlaneHitCnv.cpp
+        fix compilation warnings 
+ - cmt/requirement 
+        increment the MAJOR version  -> v7r0 
+
+!========================================================================
 <H1><A NAME="v14r3">2004-02-17 - Gauss v14r3</A></H1><PRE>
 uses Geant4 6.0.p01
 

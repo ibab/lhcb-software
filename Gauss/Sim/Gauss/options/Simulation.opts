@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.47 2003-12-05 17:08:04 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.48 2004-03-08 09:52:20 ranjard Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -27,7 +27,7 @@ ApplicationMgr.DLLs +=
   "CaloDetXmlCnv"} ;
 
 ApplicationMgr.ExtSvc += 
-{ "GiGa" ,
+{ "GiGa" , 
   "GiGaKine" ,          
   "GiGaGeo"  ,   
   "GiGaHits" } ;
@@ -54,13 +54,10 @@ GiGaStore.ConversionServices   =
 Kine.ConversionSvcName         = "GiGaKine" ; 
 Kine.DataProviderSvcName       = "EventDataSvc"   ; 
 Kine.StreamItems              += 
-{  "/Event/Gen/HepMCEvents" 
-// uncomment the line below if you want to use EvGen
-//  ,"/Event/Gen/Vertices"   
-};
+{  "/Event/Gen/HepMCEvents" };
 
 // configuration of geometry "Geo" data stream
-Geo.ExecuteOnce          = true ;  
+Geo.ExecuteOnce          = true ;   
 Geo.ConversionSvcName    = "GiGaGeo"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 
@@ -89,14 +86,21 @@ GiGa.ModularPL.CutForPositron = 5.0 * mm;
 GiGa.ModularPL.CutForGamma    = 10.0 * mm;
 //GiGa.ModularPL.DumpCutsTable = true;
 
-GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"MuonPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP"};
-//GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsQGSP"};
-GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
-GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorHpd"};
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaExtPhysics<GeneralPhysics>/GeneralPhysics" } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaExtPhysics<EMPhysics>/EMPhysics"           } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaExtPhysics<MuonPhysics>/MuonPhysics"       } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaExtPhysics<HadronPhysicsLHEP>/LHEPPhysics" } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaExtPhysics<IonPhysics>/IonPhysics"         } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaPhysConstructorOp"                         } ;
+GiGa.ModularPL.PhysicsConstructors += 
+  { "GiGaPhysConstructorHpd"                        } ;
+
 
 // mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
@@ -112,6 +116,7 @@ GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 // mandatory tracking action (1/2)
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
+
 
 ///////////////////////////////////////////////////////////////////////
 // all the subdetector specific actions should be added here:
