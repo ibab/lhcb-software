@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Updates for new RichPID object
+
 ! 2004-08-17 - Chris Jones
  - Update RichPIDQC monitor algorithm + add RichIDEffVPurity
 

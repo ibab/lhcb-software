@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.25 2004-08-20 16:08:30 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.26 2004-10-13 09:39:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.25  2004/08/20 16:08:30  jonrob
+ *  Add tally for each type of PID result to final results table
+ *
  *  Revision 1.24  2004/08/19 14:14:09  jonrob
  *  Tidy up monitoring algorithms and add new options to create
  *  histograms for different PID efficiency and purity settings
@@ -48,7 +51,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
 
   declareProperty( "TightNSigmaCutPion", m_tightNsigCutPion = 0 );
   declareProperty( "LooseNSigmaCutPion", m_looseNsigCutPion = -99999999 );
@@ -94,6 +97,9 @@ StatusCode RichPIDQC::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+
+  // Warn if extra histos are enabled (To be renoved for public release)
+  if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
   // debug printout of configuration
   debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes()
@@ -165,12 +171,27 @@ StatusCode RichPIDQC::bookMCHistograms()
     for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
       for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
         if ( iSec != iID ) {
-          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") true " + hypothesis[iID];
+
+          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") : true " + hypothesis[iID];
           id = 10*(1+iSec) + (1+iID) + 200;
           m_dLLTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
-          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") false " + hypothesis[iID];
+
+          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") : false " + hypothesis[iID];
           id = 10*(1+iSec) + (1+iID) + 300;
           m_dLLFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
+
+          title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : true " + hypothesis[iID];
+          id = 10*(1+iSec) + (1+iID) + 400;
+          m_nsigvpTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
+                                                      m_bins, m_pMinCut, m_pMaxCut,
+                                                      m_bins, -30, 30 );
+
+          title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : false " + hypothesis[iID];
+          id = 10*(1+iSec) + (1+iID) + 500;
+          m_nsigvpFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
+                                                       m_bins, m_pMinCut, m_pMaxCut,
+                                                       m_bins, -30, 30 );
+
         }
       }
     }
@@ -180,30 +201,61 @@ StatusCode RichPIDQC::bookMCHistograms()
   return StatusCode::SUCCESS;
 }
 
+void RichPIDQC::countTrStoredTracks()
+{
+  m_multiplicity = 0;
+  m_totalSelTracks = 0;
+  TrStoredTracks * tracks = get<TrStoredTracks>( m_trackTDS );
+  debug() << "Found " << tracks->size() << " TrStoredTracks at " << m_trackTDS << endreq;
+  for ( TrStoredTracks::const_iterator iTrk = tracks->begin();
+        iTrk != tracks->end(); ++iTrk ) {
+    if ( (*iTrk)->unique() ) ++m_multiplicity;
+    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
+    const TrStateP* pState = getTrStateP( *iTrk );
+    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
+    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
+    ++m_totalSelTracks;
+  }
+}
+
+void RichPIDQC::countTrgTracks()
+{
+  m_multiplicity = 0;
+  m_totalSelTracks = 0;
+  TrgTracks * tracks = get<TrgTracks>( TrgTrackLocation::Long );
+  debug() << "Found " << tracks->size() << " TrgTracks at " << TrgTrackLocation::Long << endreq;
+  m_multiplicity = tracks->size();
+  for ( TrgTracks::const_iterator iTrk = tracks->begin();
+        iTrk != tracks->end(); ++iTrk ) {
+    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
+    const double tkPtot = fabs((*iTrk)->firstState().momentum());
+    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
+    ++m_totalSelTracks;
+  }
+}
+
 // Main execution
 StatusCode RichPIDQC::execute()
 {
   debug() << "Execute" << endreq;
 
-  // Load data
-  if ( !loadPIDData()   ) return StatusCode::SUCCESS;
-  if ( !loadTrackData() ) return StatusCode::SUCCESS;
+  // Load RichPID data
+  if ( !loadPIDData() || m_richPIDs.empty() ) return StatusCode::SUCCESS;
 
-  // Initial loop over tracks
-  int multiplicity(0), totalSelTracks(0);
-  for ( TrStoredTracks::const_iterator iTrk = m_tracks->begin();
-        iTrk != m_tracks->end(); ++iTrk ) {
-    if ( (*iTrk)->unique() ) ++multiplicity;
-    if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
-    const TrStateP* pState = getTrStateP( *iTrk );
-    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
-    if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
-    ++totalSelTracks;
+  // get first PID to test track type
+  RichPID * fPID = dynamic_cast<RichPID*>(*m_richPIDs.begin());
+
+  if ( fPID->isTrStoredTrackPID() ) {
+    countTrStoredTracks();
+  } else if ( fPID->isTrgTrackPID() ) {
+    countTrgTracks();
+  } else {
+    return Error( "Unknown Track Type in RichPIDs" );
   }
 
   // apply track multiplicity cuts
-  if ( multiplicity < m_pMinCut ||
-       multiplicity > m_maxMultCut ) return StatusCode::SUCCESS;
+  if ( m_multiplicity < m_minMultCut ||
+       m_multiplicity > m_maxMultCut ) return StatusCode::SUCCESS;
 
   // count pids per track type
   int pidCount = 0;
@@ -214,23 +266,15 @@ StatusCode RichPIDQC::execute()
           iC != m_richPIDs.end(); ++iC ) {
       RichPID * iPID = dynamic_cast<RichPID*>(*iC);
 
-      // Get TrStoredTrack SmartRef and perform track selection
-      TrStoredTrack * trTrack = iPID->recTrack();
-      if ( !trTrack ) {
-        Warning("Null TrStoredTrack reference for RichPID");
-        continue;
-      }
-
       // Track selection
-      if ( !m_trSelector.trackSelected( trTrack ) ) continue;
+      if ( !pidIsSelected( iPID ) ) continue;
 
       // Track momentum in GeV/C
-      const TrStateP* pState = getTrStateP( trTrack );
-      const double tkPtot = ( pState ? pState->p()/GeV : 0 );
+      const double tkPtot = momentum( iPID );
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Track type
-      Rich::Track::Type tkType = Rich::Track::type(trTrack);
+      Rich::Track::Type tkType = trackType(iPID);
 
       // Count PIDs and tracks
       ++m_trackCount[0][tkType];
@@ -256,8 +300,8 @@ StatusCode RichPIDQC::execute()
       // some debug printout
       if ( msgLevel(MSG::DEBUG) ) {
         debug() << "RichPID " << iPID->key() << " ("
-                << iPID->pidType() << "), Track " << trTrack->key()
-                << " (" << tkType << ") " << tkPtot << " GeV/c,"
+                << iPID->pidType() << "), Track type "
+                << tkType << tkPtot << " GeV/c,"
                 << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
                 << endreq
                 << "  Dlls      = " << iPID->particleLLValues() << endreq
@@ -282,10 +326,10 @@ StatusCode RichPIDQC::execute()
       }
 
       // MC Truth
-      if ( m_truth && (0 != trTrack) ) {
+      if ( m_truth ) {
 
         // Get true track type from MC
-        Rich::ParticleIDType mcpid = m_mcTruth->mcParticleType(trTrack);
+        Rich::ParticleIDType mcpid = trueMCType( iPID );
         if ( mcpid != Rich::Unknown &&
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
         if ( msgLevel(MSG::DEBUG) ) debug() << ", MCID = " << mcpid << endreq;
@@ -317,12 +361,16 @@ StatusCode RichPIDQC::execute()
           for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
             for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
               if ( iSec != iID ) {
-                double Dll = ( iPID->particleDeltaLL((Rich::ParticleIDType)iID) -
-                               iPID->particleDeltaLL((Rich::ParticleIDType)iSec) );
+                const double Dll =  ( iPID->particleDeltaLL((Rich::ParticleIDType)iID) -
+                                      iPID->particleDeltaLL((Rich::ParticleIDType)iSec) );
+                const double nsig = ( iPID->nSigmaSeparation((Rich::ParticleIDType)iID,
+                                                             (Rich::ParticleIDType)iSec) );
                 if ( mcpid == iID ) {
                   (m_dLLTrue[iID][iSec])->fill( Dll );
+                  (m_nsigvpTrue[iID][iSec])->fill( tkPtot, nsig );
                 } else {
                   (m_dLLFalse[iID][iSec])->fill( Dll );
+                  (m_nsigvpFalse[iID][iSec])->fill( tkPtot, nsig );
                 }
               }
             }
@@ -340,12 +388,12 @@ StatusCode RichPIDQC::execute()
   // count events and tracks
   ++m_nEvents[0];
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
-  m_nTracks[0] += totalSelTracks;
+  m_nTracks[0] += m_totalSelTracks;
   m_nTracks[1] += pidCount;
   m_Nids->fill( pidCount );
   m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
-  if ( totalSelTracks>0 ) {
-    m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(totalSelTracks) );
+  if ( m_totalSelTracks>0 ) {
+    m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks) );
   }
 
   return StatusCode::SUCCESS;
@@ -444,7 +492,7 @@ StatusCode RichPIDQC::finalize()
       }
     }
     info() << endreq << " #RichPIDs |";
-    for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin(); 
+    for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
           iPC != m_pidPerTypeCount.end(); ++iPC ) {
       info() << " " << (*iPC).first << "=" << (*iPC).second;
     }
@@ -496,6 +544,7 @@ StatusCode RichPIDQC::loadPIDData()
          static_cast<KeyedContainer<RichPID, Containers::HashMap>*>(pObject) ) {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
+      debug() << "Located " << pids->size() << " RichPIDs at " << m_pidTDS << endreq;
       return StatusCode::SUCCESS;
     }
   }
