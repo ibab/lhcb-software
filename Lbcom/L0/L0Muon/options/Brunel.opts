@@ -11,7 +11,7 @@ L0Muon.FoiYSize = {0,0,0,1,1};
 L0Muon.LimitedY = true;
 
 // Pt calculation parameters
-L0Muon.PtParameters = {545.,665.5,309.5,1.21};
+L0Muon.PtParameters = {545.,665.5,309.5,1.21,120.};
 
 // Parameters for extrapolation to M1
 L0Muon.M1Extrapolation = {0,4,7,11,14,18,21,25};
