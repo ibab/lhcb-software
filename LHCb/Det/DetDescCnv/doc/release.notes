@@ -8,6 +8,7 @@
 ! 2003-11-24 - Marco Cattaneo
  - use XmlTools v2r* instead of v2r0
  - fix a compiler warning
+ - use macro in DetDescCnv_dll.cpp to compile on Mac OS X
 
 !================= DetDescCnv v2r0 2003-10-06 ==========================
 ! 2003-10-06 - Marco Cattaneo
