@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.4 2001-07-09 19:14:43 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.5 2001-07-12 15:04:37 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -26,6 +26,7 @@ L0mTower::L0mTower()  {
   m_phi = 0.;
   m_found = false;
   m_limited = false;
+  m_extra1 = 0;
 }
 
 L0mTower::L0mTower(L0mPad* pad)  {
@@ -44,6 +45,7 @@ L0mTower::L0mTower(L0mPad* pad)  {
   m_phi = 0.;
   m_found = false;
   m_limited = false;
+  m_extra1 = 0;
 }
 
 L0mTower::~L0mTower() {
@@ -82,11 +84,18 @@ void L0mTower::draw(MsgStream& log) {
       <<  m_pad3->quarter() << "/" 
       <<  m_pad3->region() << "/" 
       <<  m_pad3->nX() << "/" 
-      <<  m_pad3->nY() <<  endreq << endreq;
+      <<  m_pad3->nY() 
+      << "  x=" << m_pad3->x() 
+      << "  y=" << m_pad3->y() 
+      << endreq << endreq;
 
   drawStation(log,1,8,0);
-  std::string blanc(39+m_extra1*2,' ');
-  log << blanc << "|=|" << "   " << m_extra1 << endreq;
+  if(m_extra1 > -19) {
+    std::string blanc(39+m_extra1*2,' ');
+    log << blanc << "|=|" << "   " << m_extra1 << endreq;
+  } else {
+    log << endreq;
+  }  
   drawStation(log,0,16,0);
   if (m_limited) log << "Limited Y was applied" << endreq; 
 }	   
