@@ -1,4 +1,18 @@
-// $Id: IRichExpectedTrackSignal.h,v 1.4 2004-06-18 09:44:07 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file IRichExpectedTrackSignal.h
+ *
+ *  Header file for RICH reconstruction tool interface : IRichExpectedTrackSignal
+ *
+ *  CVS Log :-
+ *  $Id: IRichExpectedTrackSignal.h,v 1.5 2004-07-26 18:00:57 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -11,22 +25,25 @@ class RichPID;
 #include "RichKernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichExpectedTrackSignal( "IRichExpectedTrackSignal", 1, 0 );
+
 /** @class IRichExpectedTrackSignal IRichExpectedTrackSignal.h
  *
- *  Interface for tool to calculate the expected signals for given 
+ *  Interface for tool to calculate the expected signals for given
  *  RichRecSegments and RichRecTracks.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-static const InterfaceID IID_IRichExpectedTrackSignal( "IRichExpectedTrackSignal", 1, 0 );
-
 class IRichExpectedTrackSignal : public virtual IAlgTool {
 
 public:
 
-  /// Static interface identification
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() {return IID_IRichExpectedTrackSignal;}
 
   /// Expected number of signal photons for given track and hypothesis
@@ -104,16 +121,16 @@ public:
   /// Is this track above threshold for a given particle type in any radiator
   virtual bool aboveThreshold( RichRecTrack * track,
                                const Rich::ParticleIDType type ) const = 0;
-  
+
   /// Is this track above threshold for a given particle type in a given radiator
   virtual bool aboveThreshold( RichRecTrack * track,
                                const Rich::ParticleIDType type,
                                const Rich::RadiatorType radiator ) const = 0;
-  
+
   /// Is this segment above threshold for a given particle hypothesis
   virtual bool aboveThreshold( RichRecSegment * segment,
                                const Rich::ParticleIDType type ) const = 0;
-  
+
   /// Set the threshold information in a RichPID object for given segment
   virtual void setThresholdInfo( RichRecSegment * segment,
                                  RichPID * pid ) const = 0;
@@ -125,8 +142,7 @@ public:
   /// Is this track active in given radiator for given particle id
   virtual bool activeInRadiator( RichRecTrack * track,
                                  const Rich::RadiatorType rad,
-                                 const Rich::ParticleIDType id =
-                                 Rich::Electron ) const = 0;
+                                 const Rich::ParticleIDType id = Rich::Electron ) const = 0;
 
 };
 

@@ -1,4 +1,15 @@
-// $Id: IRichRefractiveIndex.h,v 1.4 2004-07-15 15:58:20 jonrob Exp $
+/** @file IRichRefractiveIndex.h
+ *
+ *  Header file for tool interface : IRichRefractiveIndex
+ *
+ *  CVS Log :-
+ *  $Id: IRichRefractiveIndex.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHKERNEL_IRICHREFRACTIVEINDEX_H
 #define RICHKERNEL_IRICHREFRACTIVEINDEX_H 1
 
@@ -8,6 +19,9 @@
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichRefractiveIndex( "IRichRefractiveIndex", 1, 0 );
+
 /** @class IRichRefractiveIndex IRichRefractiveIndex.h
  *
  *  Interface for tool to calculate effective refractive indices for
@@ -16,8 +30,6 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-
-static const InterfaceID IID_IRichRefractiveIndex( "IRichRefractiveIndex", 1, 0 );
 
 class IRichRefractiveIndex : public virtual IAlgTool {
 

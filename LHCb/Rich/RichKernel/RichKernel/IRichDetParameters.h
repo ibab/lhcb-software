@@ -1,4 +1,15 @@
-// $Id: IRichDetParameters.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichDetParameters.h
+ *
+ *  Header file for tool interface : IRichDetParameters
+ *
+ *  CVS Log :-
+ *  $Id: IRichDetParameters.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 #ifndef RICHKERNEL_IRICHDETPARAMETERS_H
 #define RICHKERNEL_IRICHDETPARAMETERS_H 1
 
@@ -8,6 +19,9 @@
 // LHCbKernel
 #include "Kernel/RichRadiatorType.h"
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
+
 /** @class IRichDetParameters IRichDetParameters.h RichDetTools/IRichDetParameters.h
  *
  *  Interface for tools providing access to useful detector parameters
@@ -15,8 +29,6 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
-
-static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
 
 class IRichDetParameters : public virtual IAlgTool {
 

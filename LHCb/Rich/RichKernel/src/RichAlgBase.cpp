@@ -1,4 +1,17 @@
-// $Id: RichAlgBase.cpp,v 1.3 2004-07-19 13:38:41 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichAlgBase.cpp
+ *
+ *  Implementation file for class : RichAlgBase
+ *
+ *  CVS Log :-
+ *  $Id: RichAlgBase.cpp,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2002-04-05
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,12 +21,6 @@
 
 // local
 #include "RichKernel/RichAlgBase.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichAlgBase
-//
-// 05/04/2002 : Chris Jones
-//-----------------------------------------------------------------------------
 
 // Standard constructor
 RichAlgBase::RichAlgBase( const std::string& name,
@@ -39,6 +46,13 @@ StatusCode RichAlgBase::initialize()
   // return status
   return sc;
 };
+
+// Main execute method
+StatusCode RichAlgBase::execute()
+{
+  // All algorithms should re-implement this method
+  return Error ( "Default RichAlgBase::execute() called !!" );
+}
 
 //  Finalize
 StatusCode RichAlgBase::finalize()

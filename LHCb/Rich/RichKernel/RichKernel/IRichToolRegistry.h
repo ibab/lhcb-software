@@ -1,6 +1,20 @@
-// $Id: IRichToolRegistry.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichToolRegistry.h
+ *
+ *  Header file for utility class : RichToolRegistry
+ *
+ *  CVS Log :-
+ *  $Id: IRichToolRegistry.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHKERNEL_IRICHTOOLREGISTRY_H
 #define RICHKERNEL_IRICHTOOLREGISTRY_H 1
+
+/// Static Interface Identification
+static const InterfaceID IID_IRichToolRegistry( "IRichToolRegistry" , 1 , 0 );
 
 /** @class IRichToolRegistry IRichToolRegistry.h
  *
@@ -9,9 +23,6 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-
-static const InterfaceID IID_IRichToolRegistry( "IRichToolRegistry" , 1 , 0 );
-
 class IRichToolRegistry : public virtual IAlgTool {
 
 public:

@@ -1,4 +1,15 @@
-// $Id: IRichMirrorSegFinder.h,v 1.4 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichMirrorSegFinder.h
+ *
+ *  Header file for tool interface : IRichMirrorSegFinder
+ *
+ *  CVS Log :-
+ *  $Id: IRichMirrorSegFinder.h,v 1.5 2004-07-26 17:53:16 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-11-04
+ */
+
 #ifndef RICHKERNEL_IRICHMIRRORSEGFINDER_H
 #define RICHKERNEL_IRICHMIRRORSEGFINDER_H 1
 
@@ -17,6 +28,9 @@ class DeRichFlatMirror;
 class HepPoint3D;
 class HepVector3D;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichMirrorSegFinder( "IRichMirrorSegFinder", 1, 0 );
+
 /** @class IRichMirrorSegFinder IRichMirrorSegFinder.h RichKernel/IRichMirrorSegFinder.h
  *
  *  Interface to a tool to find the appropriate mirror segment for a given reflection point
@@ -24,8 +38,6 @@ class HepVector3D;
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */
-
-static const InterfaceID IID_IRichMirrorSegFinder( "IRichMirrorSegFinder", 1, 0 );
 
 class IRichMirrorSegFinder : public virtual IAlgTool {
 

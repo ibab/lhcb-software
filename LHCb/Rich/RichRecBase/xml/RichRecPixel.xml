@@ -1,5 +1,5 @@
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.1 2004-07-12 14:28:41 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.2 2004-07-26 18:00:58 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -21,11 +21,10 @@
             
         <import name="RichRecBase/RichRecPixelParentType"/>
         <import name="RichKernel/RichDetectorType"/>
- <!--       <import name="Event/RichRecTrack"/> -->
 
         <import ignore="TRUE" name="Rich"/>
-        <import ignore="TRUE" name="RecPixel"/>
-        <import ignore="TRUE" name="ParentType"/>
+        <import ignore="TRUE" name="PixelParent"/>
+        <import ignore="TRUE" name="Type"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import name="Kernel/RichSmartID"/>
             
@@ -38,7 +37,7 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
+                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(Rich::PixelParent::Unknown)">
                 <arg  name="smartID" type="RichSmartID" />
                 <arg  name="gPos"    type="HepPoint3D"  />
                 <arg  name="lPos"    type="HepPoint3D"  />
@@ -105,9 +104,9 @@
             
         <attribute 
                 desc = "Enumeration to Parent type" 
-                init = "Rich::RecPixel::Unknown" 
+                init = "Rich::PixelParent::Unknown" 
                 name = "parentType" 
-                type = "Rich::RecPixel::ParentType"
+                type = "Rich::PixelParent::Type"
         />
             
         <relation 

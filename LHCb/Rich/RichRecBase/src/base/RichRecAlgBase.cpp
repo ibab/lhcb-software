@@ -1,16 +1,23 @@
-// $Id: RichRecAlgBase.cpp,v 1.16 2004-06-29 19:35:42 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRecAlgBase.cpp
+ *
+ *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
+ *
+ *  CVS Log :-
+ *  $Id: RichRecAlgBase.cpp,v 1.17 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-05-10
+ */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichRecBase/RichRecAlgBase.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecAlgBase
-//
-// 05/04/2002 : Chris Jones    Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Standard constructor
 RichRecAlgBase::RichRecAlgBase( const std::string& name,

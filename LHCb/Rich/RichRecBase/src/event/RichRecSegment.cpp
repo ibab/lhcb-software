@@ -1,17 +1,23 @@
-// $Id: RichRecSegment.cpp,v 1.6 2004-07-12 14:28:40 jonrob Exp $
-// Include files 
+
+//-----------------------------------------------------------------------------
+/** @file RichRecSegment.cpp
+ *
+ *  Implementation file for class : RichRecSegment
+ *
+ *  CVS Log :-
+ *  $Id: RichRecSegment.cpp,v 1.7 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-05-10
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "Event/RichRecSegment.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecSegment
-//
-// 2003-05-10 : Chris Jones
-//-----------------------------------------------------------------------------
-
 // Reset information to force recalculation
-void RichRecSegment::reset() 
+void RichRecSegment::reset()
 {
   setTrackInfo(0);
 

@@ -1,17 +1,28 @@
-// $Id: RichRecPhotonKey.h,v 1.4 2004-06-29 19:35:41 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRecPhotonKey.h
+ *
+ * Header file for utility class : RichRecPhotonKey
+ *
+ * CVS Log :-
+ * $Id: RichRecPhotonKey.h,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date   2003-06-20
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
-
-// Gaudi
-//#include "GaudiKernel/GaudiException.h"
 
 // LHCb
 #include "Kernel/CLHEPStreams.h"
 
 /** @class RichRecPhotonKey RichRecPhotonKey.h RichRecBase/RichRecPhotonKey.h
  *
- *  Smart Key for RichRecPhotons. Encodes the parent RichRecSegment and 
- *  RichRecPixel key values into a unique key for each RichRecPhoton
+ *  Custom Key for RichRecPhotons. Encodes the parent RichRecSegment and
+ *  RichRecPixel key values into a unique key for each RichRecPhoton.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 15/02/2002
@@ -21,22 +32,19 @@ class RichRecPhotonKey {
 
 public:
 
-  /// Constructor from long int
-  RichRecPhotonKey( const long key = 0 ) : m_key ( key ) { }
+  /** Constructor from long int
+   *  @param key The raw data key to use as the bit-packed data
+   */
+  explicit RichRecPhotonKey( const long key = 0 ) : m_key ( key ) { }
 
-  /// Constructor from segment and pixel numbers
-  RichRecPhotonKey( const long pixelKey, 
-                    const long segmentKey ) 
-    : m_key ( pixelKey%65536 | segmentKey<<16 ) 
-  {
-    // Uncomment for debugging
-    /*
-    if ( pixelKey != pixelNumber() || segmentKey != segmentNumber() ) {
-      throw GaudiException( "pixel/segment number error", 
-                            "RichRecPhotonKey", StatusCode::FAILURE );
-    }
-    */
-  }
+  /** Constructor from segment and pixel numbers
+   *
+   *  @param pixelKey    The key for the associated RichRecPixel
+   *  @param segmentKey  The key for the associated RichRecSegment
+   */
+  RichRecPhotonKey ( const long pixelKey,
+                     const long segmentKey )
+    : m_key ( pixelKey%65536 | segmentKey<<16 ) { }
 
   /// Destructor
   ~RichRecPhotonKey() {}
@@ -48,24 +56,24 @@ public:
   }
 
   /// long operator
-  inline operator long() const 
-  { 
-    return key(); 
+  inline operator long() const
+  {
+    return key();
   }
-  
+
   /// Update 32 bit integer key
   inline void setKey(const long key)
   {
     m_key = key;
   }
 
-  /// Retrieve associated RichRecSegment
+  /// Retrieve associated RichRecSegment key
   inline int segmentNumber() const
   {
     return key()/65536;
   }
 
-  /// Retrieve associated RichRecPixel
+  /// Retrieve associated RichRecPixel key
   inline int pixelNumber() const
   {
     return key()%65536;
@@ -84,7 +92,7 @@ private:
 
   /// 32 bit integer key.
   /// First 16 bits are segment number, last 16 pixel number.
-  unsigned long m_key; 
+  unsigned long m_key;
 
 };
 
@@ -119,7 +127,7 @@ inline StreamBuffer& operator >> (StreamBuffer& s, RichRecPhotonKey& key)
 }
 
 /// Implement StreamBuffer << method for RichRecPhotonKey
-inline StreamBuffer& operator << (StreamBuffer& s, const RichRecPhotonKey& key) 
+inline StreamBuffer& operator << (StreamBuffer& s, const RichRecPhotonKey& key)
 {
   s << key.key();
   return s;

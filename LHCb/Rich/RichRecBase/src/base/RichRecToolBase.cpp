@@ -1,13 +1,20 @@
-// $Id: RichRecToolBase.cpp,v 1.9 2004-02-02 14:23:06 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRecToolBase.cpp
+ *
+ *  Implementation file for RICH reconstruction tool base class : RichRecToolBase
+ *
+ *  CVS Log :-
+ *  $Id: RichRecToolBase.cpp,v 1.10 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-26
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecBase/RichRecToolBase.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecToolBase
-//
-// 2002-07-26 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Standard constructor, initializes variables
 RichRecToolBase::RichRecToolBase( const std::string& type,
@@ -16,11 +23,11 @@ RichRecToolBase::RichRecToolBase( const std::string& type,
   : RichToolBase ( type, name, parent ),
     m_pixTool  (0),
     m_tkTool   (0),
-    m_statTool (0),
     m_segTool  (0),
-    m_photTool (0) { }
+    m_photTool (0),
+    m_statTool (0) { }
 
-StatusCode RichRecToolBase::initialize() 
+StatusCode RichRecToolBase::initialize()
 {
   // base class initilize
   return RichToolBase::initialize();

@@ -1,4 +1,17 @@
-// $Id: RichToolBase.cpp,v 1.3 2004-07-19 13:38:41 jonrob Exp $
+
+//============================================================================
+/** @file RichToolBase.cpp
+ *
+ *  Implementation file for tool base class : RichToolBase
+ *
+ *  CVS Log :-
+ *  $Id: RichToolBase.cpp,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-26
+ */
+//============================================================================
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,12 +20,6 @@
 
 // local
 #include "RichKernel/RichToolBase.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichToolBase
-//
-// 2002-07-26 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Standard constructor, initializes variables
 RichToolBase::RichToolBase( const std::string& type,

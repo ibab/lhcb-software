@@ -1,4 +1,15 @@
-// $Id: Rich1DTabProperty.h,v 1.2 2004-07-15 15:36:53 jonrob Exp $
+/** @file Rich1DtabProperty.h
+ *
+ *  Header file for utility class : Rich1DtabProperty
+ *
+ *  CVS Log :-
+ *  $Id: Rich1DTabProperty.h,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-08-13
+ */
+
 #ifndef RICHKERNEL_RICH1DTABPROPERTY_H
 #define RICHKERNEL_RICH1DTABPROPERTY_H 1
 
@@ -12,9 +23,7 @@
  *
  *  A derived class from Rich1DTabFunc for tabulated properties
  *
- *  @author Antonis Papanestis   Antonis.Papanestis@cern.ch
- *  @date   2002-08-05
- *  @author Chris Jones          Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
 

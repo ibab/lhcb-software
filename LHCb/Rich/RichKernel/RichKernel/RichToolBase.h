@@ -1,4 +1,15 @@
-// $Id: RichToolBase.h,v 1.3 2004-07-21 08:04:00 cattanem Exp $
+/** @file RichToolBase.h
+ *
+ *  Header file for Tool base class : RichToolBase
+ *
+ *  CVS Log :-
+ *  $Id: RichToolBase.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-26
+ */
+
 #ifndef RICHKERNEL_RICHTOOLBASE_H
 #define RICHKERNEL_RICHTOOLBASE_H 1
 

@@ -1,4 +1,15 @@
-// $Id: IRichSmartIDTool.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichSmartIDTool.h
+ *
+ *  Header file for tool interface : IRichSmartIDTool
+ *
+ *  CVS Log :-
+ *  $Id: IRichSmartIDTool.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ * 
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @date   2003-10-28
+ */
+
 #ifndef RICHKERNEL_IRICHSMARTIDTOOL_H
 #define RICHKERNEL_IRICHSMARTIDTOOL_H 1
 
@@ -16,6 +27,9 @@ class HepVector3D;
 // Rich Kernel
 class RichSmartID;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
+
 /** @class IRichSmartIDTool IRichSmartIDTool.h RichDetTools/IRichSmartIDTool.h
  *
  *  Interface to tools providing manipulation of RichSmartID channel identifiers
@@ -23,9 +37,6 @@ class RichSmartID;
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
-
-static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
-
 class IRichSmartIDTool : virtual public IAlgTool {
 
 public:

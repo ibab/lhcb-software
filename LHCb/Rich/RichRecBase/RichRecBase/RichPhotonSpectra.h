@@ -1,4 +1,18 @@
-// $Id: RichPhotonSpectra.h,v 1.8 2004-07-23 08:47:39 cattanem Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichPhotonSpectra.h
+ *
+ *  Header file for utility class : RichPhotonSpectra
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonSpectra.h,v 1.9 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-07-12
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -9,37 +23,54 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "Kernel/CLHEPStreams.h"
 
+// Kernel
 #include "RichKernel/RichParticleIDType.h"
+#include "RichKernel/RichHypoData.h"
 
 /** @class RichPhotonSpectra RichPhotonSpectra.h RichRecBase/RichPhotonSpectra.h
  *
- *  A utility class describing a photon energy spectra
+ *  A utility class that can be used to describe a generic distribution
+ *  as a function of photon energy. Uses a binned approach to discribe the
+ *  distribution.
  *
- *  @author Chris Jones
+ *  NB : The templation will only work for numerical (float, double etc.) types.
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
+ *
+ *  @todo Review if a fixed sized boost::array could be used internally to speed up operator[] access
  */
 
 template <class TYPE>
 class RichPhotonSpectra {
 
-public:
+public: // definitions
 
+  /// Definition of the underlaying distribution container
   typedef std::vector<TYPE>        PhotonData;
+
+  /// Definition of the container used for the particle hypothesis distributions
   typedef std::vector<PhotonData>  HypoPhotonData;
 
-public:
+public: // methods
 
-  /// Standard constructor
+  /** Standard constructor
+   *
+   *  @param enBins Number of energy bins
+   *  @param minEn  Minimum energy value
+   *  @param maxEn  Maximum energy value
+   */
   RichPhotonSpectra( const unsigned int enBins = 5,
                      const TYPE minEn          = 0,
                      const TYPE maxEn          = 5 )
-    : m_enBins   ( enBins ),
-      m_minEn    ( minEn  ),
-      m_maxEn    ( maxEn  ),
-      m_binSize  ( 0 != enBins ? (maxEn-minEn)/enBins : 0 ),
+    : m_enBins   ( enBins                                   ),
+      m_minEn    ( minEn                                    ),
+      m_maxEn    ( maxEn                                    ),
+      m_binSize  ( 0 != enBins ? (maxEn-minEn)/enBins : 0   ),
       m_photdata ( Rich::NParticleTypes, PhotonData(enBins) ) { }
 
-  ~RichPhotonSpectra( ) {}; ///< Destructor
+  /// Destructor
+  ~RichPhotonSpectra( ) { }
 
   unsigned int energyBins() const;    ///< Returns the number of energy bins
 
@@ -75,25 +106,121 @@ public:
   /// Returns the energy distribution for a given mass hypothesis
   const typename RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
 
-  /// Returns the integral of the distribution
+  /** Access the number of energy bins
+   *  @return The number of energy bins
+   */
+  unsigned int energyBins() const;
+
+  /** Set the number of energy bins
+   *  @param bins The number of energy bins
+   */
+  void setEnergyBins( const unsigned int bins );
+
+  /** Access the minimum energy for the distribution
+   *  @return The minimum energy value
+   */
+  TYPE minEnergy() const;
+
+  /** Sets the minimum photon energy
+   *  @param en The minimum energy value
+   */
+  void setMinEnergy( const TYPE en );
+
+  /** Access the maximum photon energy
+   *  @return The maximum energy value
+   */
+  TYPE maxEnergy() const;
+
+  /** Sets the maximum photon energy
+   *  @param en The maximum energy value
+   */
+  void setMaxEnergy( const TYPE en );
+
+  /** Access the energy bin size
+   *  @return The energy bins size
+   */
+  TYPE binSize() const;
+
+  /** Set the energy bin size
+   *  @param size The energy bin size
+   */
+  void setBinSize( const TYPE size );
+
+  /** Access the lower edge of the given energy bin
+   *  @param bin The energy bin
+   *  @return The energy of the lower edge of the bin
+   */
+  TYPE binEnergyLowerEdge( const unsigned int bin ) const;
+
+  /** Access the upper edge of the energy bin
+   *  @param bin The energy bin
+   *  @return The energy of the upper edge of the bin
+   */
+  TYPE binEnergyUpperEdge( const unsigned int bin ) const;
+
+  /** Access the average bin energy
+   *  @param bin The energy bin
+   *  @return The average energy value for the given bin
+   */
+  TYPE binEnergy( const unsigned int bin ) const;
+
+  /** Access the energy distribution for a given mass hypothesis (non-const)
+   *  @param id The mass hypothesis
+   *  @return The energy distribution for the given mass hypothesis
+   */
+  typename RichPhotonSpectra::PhotonData & 
+  energyDist( const Rich::ParticleIDType id );
+
+  /** Access the energy distribution for a given mass hypothesis (const)
+   *  @param id The mass hypothesis
+   *  @return The energy distribution for the given mass hypothesis
+   */
+  const typename RichPhotonSpectra::PhotonData & 
+  energyDist( const Rich::ParticleIDType id ) const;
+
+  /** Access energy distribution for all mass hypotheses (non-const)
+   *  @return The energy distributions
+   */
+  typename RichPhotonSpectra::HypoPhotonData & hypoData( );
+
+  /** Access energy distribution for all mass hypotheses (const)
+   *  @return The energy distributions
+   */
+  const typename RichPhotonSpectra::HypoPhotonData & hypoData( ) const;
+
+  /** Computes the integral of the energy distribution for a given mass hypothesis
+   *  @param id The mass hypothesis
+   *  @return The integral of the energy distribution, over the full energy range
+   */
   TYPE integral( const Rich::ParticleIDType id ) const;
 
-  /// multiply by another distribution
-  bool multiply(  const Rich::ParticleIDType id,
+  /** multiply by another distribution
+   *
+   *  @param The mass hypothesis distribution to act upon
+   *  @param data The distribution to multiple by
+   *
+   *  @return Status of the operation
+   *  @retval true  Multiplication was successful
+   *  @retval false Multiplication failed
+   */
+  bool multiply ( const Rich::ParticleIDTpe id,
                   const typename RichPhotonSpectra::PhotonData & data );
 
   /// Reset the data
   void reset();
 
-  /// Set the energy range
+  /** Set the energy range
+   *  @param min The minimum energy value
+   *  @param max The maximum energy value
+   */
   void setEnergyRange( const TYPE min, const TYPE max );
 
 private: // data
 
   int m_enBins;              ///< number of energy bins
-  TYPE m_minEn;            ///< minimum energy
-  TYPE m_maxEn;            ///< maximum energy
-  TYPE m_binSize;          ///< energy bin size
+  TYPE m_minEn;              ///< minimum energy for which the distribution is defined
+  TYPE m_maxEn;              ///< maximum energy for which the distribution is defined
+  TYPE m_binSize;            ///< energy bin size
   HypoPhotonData m_photdata; ///< The data container
 
 };
@@ -186,7 +313,7 @@ RichPhotonSpectra<TYPE>::energyDist( const Rich::ParticleIDType id ) const
 }
 
 template <class TYPE>
-inline typename RichPhotonSpectra<TYPE>::HypoPhotonData & 
+inline typename RichPhotonSpectra<TYPE>::HypoPhotonData &
 RichPhotonSpectra<TYPE>::hypoData()
 {
   return m_photdata;

@@ -1,28 +1,53 @@
-// $Id: IRichCherenkovResolution.h,v 1.3 2004-04-17 09:28:01 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file IRichCherenkovResolution.h
+ *
+ *  Header file for RICH reconstruction tool interface : IRichCherenkovResolution
+ *
+ *  CVS Log :-
+ *  $Id: IRichCherenkovResolution.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H 1
 
 // Event model
 class RichRecSegment;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution", 1, 0 );
+
 /** @class IRichCherenkovResolution IRichCherenkovResolution.h
  *
- *  Interface for tool providing Cherenkova angle resolution calculations
+ *  Interface for tool providing the expected Cherenkov angle resolution for
+ *  given RichRecSegment and mass hypothesis combinations.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution", 1, 0 );
-
 class IRichCherenkovResolution : public virtual IAlgTool {
 
 public:
 
-  /// Static interface identification
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() {return IID_IRichCherenkovResolution;}
 
-  /// Cherenkov theta resolution for given particle hypothesis
+  /** Calculates the Cherenkov theta resolution for given RichRecSegment 
+   *  and particle mass hypothesis
+   *
+   *  @param segment Pointer to the RichRecSegment
+   *  @param id Mass hypothesis
+   *
+   *  @return Cherenkov angle theta resolution
+   */  
   virtual double ckThetaResolution( RichRecSegment * segment,
                                     const Rich::ParticleIDType id = Rich::Pion ) const = 0;
 

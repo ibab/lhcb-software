@@ -1,9 +1,26 @@
-// $Id: IRichRayleighScatter.h,v 1.3 2004-04-17 09:28:03 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file IRichRayleighScatter.h
+ *
+ *  Header file for RICH reconstruction tool interface : IRichRayleighScatter
+ *
+ *  CVS Log :-
+ *  $Id: IRichRayleighScatter.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H 1
 
 // Event model
 class RichRecSegment;
+
+/// Static Interface Identification
+static const InterfaceID IID_IRichRayleighScatter( "IRichRayleighScatter", 1, 0 );
 
 /** @class IRichRayleighScatter IRichRayleighScatter.h
  *
@@ -13,16 +30,23 @@ class RichRecSegment;
  *  @date   15/03/2002
  */
 
-static const InterfaceID IID_IRichRayleighScatter( "IRichRayleighScatter", 1, 0 );
-
 class IRichRayleighScatter : public virtual IAlgTool {
 
 public:
 
-  /// Static interface identification
-  static const InterfaceID& interfaceID() {return IID_IRichRayleighScatter;}
+  /** static interface identification
+   *  @return unique interface identifier
+   */
+  static const InterfaceID& interfaceID() { return IID_IRichRayleighScatter; }
 
-  /// Rayleigh scattering probability for given pathlength (segment) and photon energy
+  /** Computes the Rayleigh scattering probability for given RichRecSegment
+   *  and photon energy
+   *
+   *  @param segment Pointer to the RichRecSegment
+   *  @param energy  The photon energy
+   *
+   *  @return The Rayleigh scattering probability
+   */
   virtual double photonScatteredProb( const RichRecSegment * segment,
                                       const double energy ) const = 0;
 

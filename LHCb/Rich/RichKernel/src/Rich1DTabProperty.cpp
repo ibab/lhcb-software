@@ -1,14 +1,20 @@
-// $Id: Rich1DTabProperty.cpp,v 1.2 2004-06-29 19:27:30 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file Rich1DTabProperty.cpp
+ *
+ *  Implementation file for class : Rich1DTabProperty
+ *
+ *  CVS Log :-
+ *  $Id: Rich1DTabProperty.cpp,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-26
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichKernel/Rich1DTabProperty.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : Rich1DTabProperty
-//
-// 2002-08-05 : Papanestis - First version
-// 2003-08-13 : C. Jones   - Update to use base class
-//-----------------------------------------------------------------------------
 
 // Constructor from a tabulated property pointer
 Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
@@ -23,7 +29,8 @@ Rich1DTabProperty::Rich1DTabProperty( const TabulatedProperty * tab,
     m_data[ (*it).first ] = (*it).second;
   }
 
+  // initialise the underlying GSL interpolator
   m_OK = initInterpolator( interType );
+
 }
 
-//============================================================================

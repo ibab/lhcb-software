@@ -1,4 +1,15 @@
-// $Id: RichAlgBase.h,v 1.2 2004-07-15 15:36:53 jonrob Exp $
+/** @file RichAlgBase.h
+ *
+ *  Header file for algorithm base class : RichAlgBase
+ *
+ *  CVS Log :-
+ *  $Id: RichAlgBase.h,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   05/04/2002
+ */
+
 #ifndef RICHKERNEL_RICHALGBASE_H
 #define RICHKERNEL_RICHALGBASE_H 1
 
@@ -31,7 +42,7 @@ public:
   /// Destructor
   virtual ~RichAlgBase() = 0;
 
-  /** Initialization of the tool after creation
+  /** Initialization of the algorithm after creation
    *
    * @return The status of the initialization
    * @retval StatusCode::SUCCESS Initialization was successful
@@ -39,7 +50,15 @@ public:
    */
   virtual StatusCode initialize();
 
-  /** Finalization of the tool before deletion
+  /** The main event processing method. Called once for each event
+   *
+   * @return The status of the event processing
+   * @retval StatusCode::SUCCESS Event processing was successful
+   * @retval StatusCode::FAILURE Event processing failed
+   */
+  virtual StatusCode execute();
+
+  /** Finalization of the algorithm before deletion
    *
    * @return The status of the finalization
    * @retval StatusCode::SUCCESS Finalization was successful
@@ -52,7 +71,7 @@ private: // private methods
   /** Returns pointer to RICH tool registry tool
    *  Used internally by base class to convert tool nicknames
    *  in the appropriate class name
-   *  
+   *
    *  @return Pointer to the IRichToolRegistry interface
    */
   inline const IRichToolRegistry * toolRegistry() const
@@ -75,8 +94,8 @@ protected:  // protected methods
    */
   template <typename TOOL> inline
   TOOL* acquireTool( const std::string & tName,
-                     TOOL*& pTool,             
-                     const IInterface * parent = 0 ) const 
+                     TOOL*& pTool,
+                     const IInterface * parent = 0 ) const
   {
     if ( msgLevel(MSG::DEBUG) ) {
       debug() << " Acquiring tool '" << tName
@@ -92,7 +111,7 @@ protected:  // protected methods
    *  @param pTool  Pointer to the tool to be released
    */
   template <typename TOOL> inline
-  void releaseTool( TOOL *& pTool ) const 
+  void releaseTool( TOOL *& pTool ) const
   {
     if ( pTool ) {
       debug() << " Forced release for tool '" << pTool->name() << "'" << endreq;

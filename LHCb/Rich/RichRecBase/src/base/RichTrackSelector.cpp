@@ -1,14 +1,20 @@
-// $Id: RichTrackSelector.cpp,v 1.5 2004-07-02 14:17:03 jonrob Exp $
-// Include files
+
+//-----------------------------------------------------------------------------
+/** @file RichTrackSelector.cpp
+ *
+ *  Implementation file for class : RichTrackSelector
+ *
+ *  CVS Log :-
+ *  $Id: RichTrackSelector.cpp,v 1.6 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-06-20
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecBase/RichTrackSelector.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTrackSelector
-//
-// 2003-06-20 : Chris Jones    Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Standard constructor
 RichTrackSelector::RichTrackSelector() :

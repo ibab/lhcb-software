@@ -1,4 +1,15 @@
-// $Id: RichParticleIDType.h,v 1.12 2004-07-15 15:36:53 jonrob Exp $
+/** @file RichParticleIDType.h
+ *
+ *  Header file for enumeration : RichParticleIDType
+ *
+ *  CVS Log :-
+ *  $Id: RichParticleIDType.h,v 1.13 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -12,7 +23,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 /** @namespace Rich
- *  
+ *
  *  General namespace for RICH specific definitions
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
@@ -25,14 +36,14 @@ namespace Rich {
 
   /// Number of RICH particle types, kept for backward compatibility
   static const int NRichParticleTypes = 5;
- 
-  /**  
+
+  /** @enum ParticleIDType
    *  Enumeration for the RICH particle ID mass hypotheses.
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   08/07/2004
    */
-  enum ParticleIDType 
+  enum ParticleIDType
     {
       Unknown = -1,   ///< Unknown particle type
       Electron,       ///< Represents e+ or e-

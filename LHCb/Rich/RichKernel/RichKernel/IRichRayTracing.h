@@ -1,4 +1,15 @@
-// $Id: IRichRayTracing.h,v 1.10 2004-07-15 17:16:27 jonrob Exp $
+/** @file IRichRayTracing.h
+ *
+ *  Header file for tool interface : IRichRayTracing
+ *
+ *  CVS Log :-
+ *  $Id: IRichRayTracing.h,v 1.11 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-10-28
+ */
+
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -20,6 +31,8 @@ class HepPlane3D;
 // RichEvent
 class RichGeomPhoton;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
 
 /** @class IRichRayTracing IRichRayTracing.h RichDetTools/IRichRayTracing.h
  *
@@ -29,8 +42,6 @@ class RichGeomPhoton;
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
-
-static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
 
 class IRichRayTracing : public virtual IAlgTool {
 

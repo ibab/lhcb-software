@@ -1,4 +1,18 @@
-// $Id: RichRecPixelParentType.h,v 1.4 2004-02-02 14:23:04 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichRecPixelParentType.h
+ *
+ * Header file for RichRecPixel enumerations
+ *
+ * CVS Log :-
+ * $Id: RichRecPixelParentType.h,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date   2002-07-12
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
 #define RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 1
 
@@ -10,63 +24,71 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichRecPixelParentType RichRecPixelParentType.h RichRecBase/RichRecPixelParentType.h
+/** @namespace Rich
  *
- *  Enumeration for RICH reconstruction working pixel object
+ *  General namespace for RICH specific definitions
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-12
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
  */
-
-// namespace for RICH detector specifics
 namespace Rich {
-  
-  /// namespace for RichRecPixel objects
-  namespace RecPixel {
 
-  /** Enumeration for RICH reconstruction working pixel object
+  /** @namespace Rich::PixelParent
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2002-07-12
+   *  Namespace for information on the pixel parent type
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-    enum ParentType {
-      Unknown = -1,
-      Digit,
-      MCHit
-    };
+  namespace PixelParent {
+
+    /** @enum Rich::PixelParent::Type
+     *
+     *  Enumeration for the various different pixel parent types
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2002-07-12
+     */
+    enum Type 
+      {
+        Unknown = -1, ///< Parent type is unknown
+        Digit,        ///< Pixel derives from a reconstructed RichDigit
+        MCHit         ///< Pixel derives from Monte Carlo MCRichHit information
+      };
+
   }
 
-  /// Text conversion for Rich::RecTrack::ParentType enumeration
-  std::string text( const Rich::RecPixel::ParentType& parent ) ;
+  /// Text conversion for Rich::RecTrack::Type enumeration
+  std::string text( const Rich::PixelParent::Type& parent ) ;
 
 }
 
-/// Implement StreamBuffer >> method for Rich::RecPixel::ParentType enumeration
+/// Implement StreamBuffer >> method for Rich::PixelParent::Type enumeration
 inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   Rich::RecPixel::ParentType& pixel ) {
+                                   Rich::PixelParent::Type& pixel ) {
   int intType;
   s >> intType;
-  pixel = static_cast<Rich::RecPixel::ParentType>(intType);
+  pixel = static_cast<Rich::PixelParent::Type>(intType);
   return s;
 }
 
-/// Implement StreamBuffer << method for Rich::RecPixel::ParentType enumeration
+/// Implement StreamBuffer << method for Rich::PixelParent::Type enumeration
 inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const Rich::RecPixel::ParentType& pixel ) {
+                                   const Rich::PixelParent::Type& pixel ) {
   s << static_cast<int>(pixel);
   return s;
 }
 
-/// Implement textual ostream << method for Rich::RecTrack::ParentType enumeration
+/// Implement textual ostream << method for Rich::RecTrack::Type enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::RecPixel::ParentType& pixel ) {
+                                   const Rich::PixelParent::Type& pixel ) {
   s << Rich::text( pixel );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::Rich2Side enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::RecPixel::ParentType& pixel ) {
+                                const Rich::PixelParent::Type& pixel ) {
   s << Rich::text( pixel );
   return s;
 }

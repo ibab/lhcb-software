@@ -1,10 +1,27 @@
-// $Id: IRichPhotonPredictor.h,v 1.5 2004-07-09 17:40:04 jonrob Exp $
+
+//-----------------------------------------------------------------------------
+/** @file IRichPhotonPredictor.h
+ *
+ *  Header file for RICH reconstruction tool interface : IRichPhotonPredictor
+ *
+ *  CVS Log :-
+ *  $Id: IRichPhotonPredictor.h,v 1.6 2004-07-26 18:00:57 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECTOOLS_IRICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_IRICHPHOTONPREDICTOR_H 1
 
 // Event
 class RichRecPixel;
 class RichRecSegment;
+
+/// Static Interface Identification
+static const InterfaceID IID_IRichPhotonPredictor( "IRichPhotonPredictor" , 1 , 0 );
 
 /** @class IRichPhotonPredictor IRichPhotonPredictor.h
  *
@@ -17,16 +34,27 @@ class RichRecSegment;
  *  @date   15/03/2002
  */
 
-static const InterfaceID IID_IRichPhotonPredictor( "IRichPhotonPredictor" , 1 , 0 );
-
 class IRichPhotonPredictor : public virtual IAlgTool {
 
 public:
 
-  /// static interface identification
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() { return IID_IRichPhotonPredictor; }
 
-  /// Is it possible to make a photon candidate using this segment and pixel.
+  /** Determines if it is possible to make a reconstructed photon candidate 
+   *  using a particular segment and pixel combination.
+   *
+   *  @param segment Pointer to the RichRecSegment
+   *  @param pixel   Pointer to the RichRecPixel
+   *
+   *  @return boolean indicating if a photon is possible
+   *  @retval true  It is geometrically possible for the given pixel to be the 
+   *                result of Cherenkov radiation from the given segment
+   *  @retval false It is not possible for the pixel to be CHerenkov radiation 
+   *                from the segment
+   */
   virtual bool photonPossible( RichRecSegment * segment,
                                RichRecPixel * pixel ) const = 0;
 

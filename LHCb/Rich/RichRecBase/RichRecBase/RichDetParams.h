@@ -1,4 +1,20 @@
-// $Id: RichDetParams.h,v 1.5 2004-02-02 14:23:04 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichDetParams.h
+ *
+ * A collection of general parameters for histogramming limits etc.
+ *
+ * CVS Log :-
+ * $Id: RichDetParams.h,v 1.6 2004-07-26 18:00:58 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date   2003-06-20
+ *
+ * @todo Remove this file anad replace with IRichDetParameters tool
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 

@@ -1,4 +1,15 @@
-// $Id: BoostArray.h,v 1.1 2003-08-26 14:44:11 jonrob Exp $
+/** @file BoostArray.h
+ *
+ *  Header file for boost::array + Additional Gaudi methods
+ *
+ *  CVS Log :-
+ *  $Id: BoostArray.h,v 1.2 2004-07-26 17:53:16 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-07-31
+ */
+
 #ifndef RICHKERNEL_BOOSTARRAY_H 
 #define RICHKERNEL_BOOSTARRAY_H 1
 

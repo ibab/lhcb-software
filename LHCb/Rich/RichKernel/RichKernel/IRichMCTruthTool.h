@@ -1,4 +1,15 @@
-// $Id: IRichMCTruthTool.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichMCTruthTool.h
+ *
+ *  Header file for tool interface : IRichMCTruthTool
+ *
+ *  CVS Log :-
+ *  $Id: IRichMCTruthTool.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-07-31
+ */
+
 #ifndef RICHKERNEL_IRICHMCTRUTHTOOL_H
 #define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
 
@@ -15,6 +26,9 @@ class RichDigit;
 class TrStoredTrack;
 class MCRichHit;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
+
 /** @class IRichMCTruthTool IRichMCTruthTool.h RichKernel/IRichMCTruthTool.h
  *
  *  Interface for tool performing MC truth associations between Rich event objects
@@ -22,8 +36,6 @@ class MCRichHit;
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-
-static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
 
 class IRichMCTruthTool : public virtual IAlgTool {
 

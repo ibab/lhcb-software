@@ -1,6 +1,17 @@
-// $Id: Rich1DTabFunc.h,v 1.4 2004-07-22 08:56:49 cattanem Exp $
-#ifndef RICHUTILS_RICH1DTABFUNC_H
-#define RICHUTILS_RICH1DTABFUNC_H 1
+/** @file Rich1DTabFunc.h
+ *
+ *  Header file for utility class : Rich1DTabFunc
+ *
+ *  CVS Log :-
+ *  $Id: Rich1DTabFunc.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $ 
+ *  $Log: not supported by cvs2svn $
+ *  
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-08-13
+ */
+
+#ifndef RICHKERNEL_RICH1DTABFUNC_H
+#define RICHKERNEL_RICH1DTABFUNC_H 1
 
 #include <vector>
 #include <map>
@@ -274,4 +285,4 @@ inline bool Rich1DTabFunc::withinInputRange( const double x ) const
   return ( x <= maxX() && minX() <= x );
 }
 
-#endif // RICHUTILS_RICH1DTABFUNC_H
+#endif // RICHKERNEL_RICH1DTABFUNC_H

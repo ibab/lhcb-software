@@ -1,17 +1,25 @@
-// $Id: Rich1DTabFunc.cpp,v 1.2 2004-06-29 19:27:30 jonrob Exp $
+
+//============================================================================
+/** @file Rich1DTabFunc.cpp
+ *
+ *  Implementation file for class : Rich1DTabFunc
+ *
+ *  CVS Log :-
+ *  $Id: Rich1DTabFunc.cpp,v 1.3 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-08-13
+ */
+//============================================================================
 
 // GaudiKernel
-#include "GaudiKernel/Kernel.h" // Suppress "debug information truncated" warnings on Windows
+// Suppress "debug information truncated" warnings on Windows
+#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/GaudiException.h"
 
 // local
 #include "RichKernel/Rich1DTabFunc.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : Rich1DTabFunc
-//
-// 2003-08-13 : C. Jones       Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 //============================================================================
 
@@ -23,7 +31,6 @@ Rich1DTabFunc::Rich1DTabFunc() :
   m_weightedDistAcc    ( 0 ),
   m_weightedDistSpline ( 0 ) { }
 
-//============================================================================
 
 // Constructor from arrays
 Rich1DTabFunc::Rich1DTabFunc( const double x[],
@@ -43,8 +50,6 @@ Rich1DTabFunc::Rich1DTabFunc( const double x[],
   // initialise interpolation
   m_OK = initInterpolator( interType );
 }
-
-//============================================================================
 
 // Constructor from std::vector
 Rich1DTabFunc::Rich1DTabFunc( const std::vector<double> & x,

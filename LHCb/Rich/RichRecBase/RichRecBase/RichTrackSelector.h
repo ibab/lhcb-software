@@ -1,4 +1,18 @@
-// $Id: RichTrackSelector.h,v 1.5 2004-06-29 19:35:42 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichTrackSelector.h
+ *
+ * Header file for utility class : RichTrackSelector
+ *
+ * CVS Log :-
+ * $Id: RichTrackSelector.h,v 1.6 2004-07-26 18:00:58 jonrob Exp $
+ * $Log: not supported by cvs2svn $
+ *
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ * @date   2003-06-20
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECBASE_RICHTRACKSELECTOR_H
 #define RICHRECBASE_RICHTRACKSELECTOR_H 1
 
@@ -14,10 +28,12 @@
 
 /** @class RichTrackSelector RichTrackSelector.h RichRecBase/RichTrackSelector.h
  *
- *  A utility class for the RICH reconstruction providing track selection
+ *  A utility class for the RICH reconstruction providing generic track selection
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20
+ *
+ *  @todo   Review the momentum cut implementation
  */
 
 class RichTrackSelector {
@@ -30,16 +46,36 @@ public:
   /// Destructor
   ~RichTrackSelector() {}
 
-  /// Returns the minimum track momentum cuts vector (for job options)
+  /** Returns the minimum track momentum cuts vector.
+   *  Recommended for job options use only -  Users should use
+   *  RichTrackSelector::minMomentum instead.
+   *
+   *  @return Reference to the vector of minimum momentum cut values
+   */
   std::vector<double> & minMomenta();
 
-  /// Returns the maximum track momentum cuts vector (for job options)
+  /** Returns the maximum track momentum cuts vector.
+   *  Recommended for job options use only -  Users should use
+   *  RichTrackSelector::maxMomentum instead.
+   *
+   *  @return Reference to the vector of maximum momentum cut values
+   */
   std::vector<double> & maxMomenta();
 
-  /// Returns the minimum momentum cut value for given track type
+  /** Returns the minimum momentum cut value for given track type
+   *
+   *  @param type Track type enumeration
+   *
+   *  @return Minimum momentum cut value for that track
+   */
   const double minMomentum( const Rich::Track::Type type ) const;
 
-  /// Returns the maximum momentum cut value for given track type
+  /** Returns the maximum momentum cut value for given track type
+   *
+   *  @param type Track type enumeration
+   *
+   *  @return Maximum momentum cut value for that track
+   */
   const double maxMomentum( const Rich::Track::Type type ) const;
 
   /// Test it the given TrStoredTrack is selected

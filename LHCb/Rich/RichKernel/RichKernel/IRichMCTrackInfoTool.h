@@ -1,4 +1,15 @@
-// $Id: IRichMCTrackInfoTool.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichMCTrackInfoTool.h
+ *
+ *  Header file for tool interface : IRichMCTrackInfoTool
+ *
+ *  CVS Log :-
+ *  $Id: IRichMCTrackInfoTool.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHKERNEL_IRICHMCTRACKINFOTOOL_H
 #define RICHKERNEL_IRICHMCTRACKINFOTOOL_H 1
 
@@ -10,6 +21,9 @@ class MCRichDigit;
 class MCParticle;
 class MCRichHit;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichMCTrackInfoTool( "IRichMCTrackInfoTool", 1, 0 );
+
 /** @class IRichMCTrackInfoTool IRichMCTrackInfoTool.h
  *
  *  Interface to tool providing tracking extrapolation information from
@@ -18,8 +32,6 @@ class MCRichHit;
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
-
-static const InterfaceID IID_IRichMCTrackInfoTool( "IRichMCTrackInfoTool", 1, 0 );
 
 class IRichMCTrackInfoTool : public virtual IAlgTool {
 

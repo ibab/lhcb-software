@@ -1,10 +1,27 @@
-// $Id: IRichStatusCreator.h,v 1.2 2004-02-02 14:23:03 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file IRichStatusCreator.h
+ *
+ *  Header file for RICH reconstruction tool interface : IRichStatusCreator
+ *
+ *  CVS Log :-
+ *  $Id: IRichStatusCreator.h,v 1.3 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHRECTOOLS_IRICHSTATUSCREATOR_H
 #define RICHRECTOOLS_IRICHSTATUSCREATOR_H 1
 
 // Event
 #include "Event/RichRecStatus.h"
 #include "Event/RichRecPixel.h"
+
+/// Static Interface Identification
+static const InterfaceID IID_IRichStatusCreator( "IRichStatusCreator" , 1 , 0 );
 
 /** @class IRichStatusCreator IRichStatusCreator.h
  *
@@ -14,16 +31,19 @@
  *  @date   15/03/2002
  */
 
-static const InterfaceID IID_IRichStatusCreator( "IRichStatusCreator" , 1 , 0 );
-
 class IRichStatusCreator : public virtual IAlgTool {
 
 public:
 
-  /// Returns the unique interface identifier
+  /** static interface identification
+   *  @return unique interface identifier
+   */
   static const InterfaceID& interfaceID() {return IID_IRichStatusCreator;}
 
-  /// Returns a pointer to the RichRecStatus
+  /** Access to the RichRecStatus object
+   *
+   *  @return Pointer to the RichRecStatus object
+   */
   virtual RichRecStatus * richStatus() const = 0;
 
 };

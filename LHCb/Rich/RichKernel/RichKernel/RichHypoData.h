@@ -1,4 +1,18 @@
-// $Id: RichHypoData.h,v 1.9 2004-07-19 13:38:41 jonrob Exp $
+
+//------------------------------------------------------------------------
+/** @file RichHypoData.h
+ *
+ *  Header file for utility class : RichHypoData
+ *
+ *  CVS Log :-
+ *  $Id: RichHypoData.h,v 1.10 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-07-31
+ */
+//------------------------------------------------------------------------
+
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -36,14 +50,14 @@ public: // methods
 
   /** Constructor with explicit data initialisation value
    *
-   * @param value The data initialisation value for each mass hypothesis
+   *  @param value The data initialisation value for each mass hypothesis
    */
   RichHypoData( const TYPE & value ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
 
-  /**  Read access operator
+  /** Read access operator
    *
    *  @param type  The mass hypothesis for which the data is requested
    *  @return The data value
@@ -81,7 +95,7 @@ public: // methods
   /** Check whether a piece of data has been initialised
    *
    *  @param type The mass hypothesis to test
-   *  
+   *
    *  @return boolean indicating the status of the data
    *  @retval true  Data field has been explicitly set
    *  @retval false Data field has not been set. Value will be the initialisation (or reset) value
@@ -90,7 +104,7 @@ public: // methods
 
 private: // methods
 
-  /** Dis-allow the default constructor. 
+  /** Dis-allow the default constructor.
    *  Users must specify a default initialization value.
    */
   RichHypoData() {}

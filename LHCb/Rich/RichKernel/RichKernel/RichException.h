@@ -1,8 +1,20 @@
-// $Id: RichException.h,v 1.4 2004-07-15 15:36:53 jonrob Exp $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2004/05/13 09:21:17  jonrob
-// add RichException
+/** @file RichException.h
+ *
+ *  Header file for utility class : RichException
+ *
+ *  CVS Log :-
+ *  $Id: RichException.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/15 15:36:53  jonrob
+ *  Doxygen improvements
+ *
+ *  Revision 1.3  2004/05/13 09:21:17  jonrob
+ *  add RichException
+ *
+ *  @author  Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date    09/05/2004
+ */
+
 #ifndef      RICHKERNEL_RICHEXCEPTION_H
 #define      RICHKERNEL_RICHEXCEPTION_H 1
 

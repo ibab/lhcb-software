@@ -1,4 +1,16 @@
-// $Id: IRichTrSegMaker.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichTrSegMaker.h
+ *
+ *  Header file for tool interface : IRichTrSegMaker
+ *
+ *  CVS Log :-
+ *  $Id: IRichTrSegMaker.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @date   2003-10-28
+ */
+
 #ifndef RICHKERNEL_IRICHTRSEGMAKER_H
 #define RICHKERNEL_IRICHTRSEGMAKER_H 1
 

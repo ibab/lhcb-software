@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.49 2004-07-21 08:04:00 cattanem Exp $
+! $Id: release.notes,v 1.50 2004-07-26 17:54:51 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-07-26 - Chris Jones
+ - Various improvements to doxygen comments
 
 !======================= RichKernel v5r0 2004-07-19 =======================
 ! 2004-07-19 - Marco Cattaneo

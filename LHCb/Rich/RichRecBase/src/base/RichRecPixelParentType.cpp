@@ -1,20 +1,28 @@
-// $Id: RichRecPixelParentType.cpp,v 1.1.1.1 2003-04-01 13:21:55 jonesc Exp $
-// Include files 
+
+//-----------------------------------------------------------------------------
+/** @file RichRecPixelParentType.cpp
+ *
+ *  Implementation ile for RichRecPixel enumerations
+ *
+ *  CVS Log :-
+ *  $Id: RichRecPixelParentType.cpp,v 1.2 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-05-10
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecBase/RichRecPixelParentType.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecPixelParentType
-//
-// 2002-07-12 : Chris Jones
-//-----------------------------------------------------------------------------
-
 // Text conversion for Rich::RecPixel::ParentType enumeration
-std::string Rich::text( const Rich::RecPixel::ParentType& parent ) {
-  switch( parent ) {
-  case Rich::RecPixel::Digit:          return "reconstructed digit";
-  case Rich::RecPixel::MCHit:          return "MC hit";
-  default:                             return "?"; // should never happen
-  }
+std::string Rich::text( const Rich::PixelParent::Type & parent )
+{
+  switch( parent )
+    {
+    case Rich::PixelParent::Digit:       return "RichDigit";
+    case Rich::PixelParent::MCHit:       return "MCRichHit";
+    default:                             return "?"; // should never happen
+    }
 }

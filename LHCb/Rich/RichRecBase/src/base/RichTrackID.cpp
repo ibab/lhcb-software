@@ -1,16 +1,23 @@
-// $Id: RichTrackID.cpp,v 1.4 2004-06-29 19:35:42 jonesc Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichTrackID.cpp
+ *
+ *  Implementation file for class : RichTrackID
+ *
+ *  CVS Log :-
+ *  $Id: RichTrackID.cpp,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-09-23
+ */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecBase/RichTrackID.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTrackID
-//
-// 2003-09-23 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
-
 // Text conversion for Rich::RecTrack::ParentType enumeration
-std::string Rich::text( const Rich::TrackParent::Type parent ) 
+std::string Rich::text( const Rich::TrackParent::Type parent )
 {
   switch( parent ) {
   case Rich::TrackParent::TrStoredTrack:  return "TrStoredTrack";
@@ -20,7 +27,7 @@ std::string Rich::text( const Rich::TrackParent::Type parent )
 }
 
 // Text conversion for Rich::RecTrack::ParentType enumeration
-std::string Rich::text( const Rich::Track::Type track ) 
+std::string Rich::text( const Rich::Track::Type track )
 {
   switch( track ) {
   case Rich::Track::Forward:      return "forward";
@@ -37,7 +44,7 @@ std::string Rich::text( const Rich::Track::Type track )
 }
 
 // Returns the enumerated type for a given TrStoredTrackelse
-Rich::Track::Type Rich::Track::type( const TrStoredTrack * track ) 
+Rich::Track::Type Rich::Track::type( const TrStoredTrack * track )
 {
   if ( track ) {
     // check all known track types (order according to abundance)
@@ -57,6 +64,6 @@ Rich::Track::Type Rich::Track::type( const TrStoredTrack * track )
   }
 
   // Should not get here either ...
-  throw GaudiException( "Null TrStoredTrack pointer", 
+  throw GaudiException( "Null TrStoredTrack pointer",
                         "*RichTrackID*", StatusCode::FAILURE );
 }

@@ -1,13 +1,19 @@
-// $Id: RichRecBaseEvent_load.cpp,v 1.2 2004-01-08 16:15:08 cattanem Exp $
-// Include files
+// 
+//-----------------------------------------------------------------------------
+/** @file RichRecBaseEvent_load.cpp
+ *
+ *  Implementation file for classes in RichRecEvent
+ *
+ *  CVS Log :-
+ *  $Id: RichRecBaseEvent_load.cpp,v 1.3 2004-07-26 18:00:58 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-05-10
+ */
+//-----------------------------------------------------------------------------
 
 #include "GaudiKernel/ContainerFactoryDefs.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for classes in RichRecEvent
-//
-// 17/05/2002 : Chris Jones
-//-----------------------------------------------------------------------------
 
 // Common objects
 #include "Event/RichRecTrack.h"

@@ -1,4 +1,15 @@
-// $Id: IRichPhotonReconstruction.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+/** @file IRichPhotonReconstruction.h
+ *
+ *  Header file for tool interface : IRichPhotonReconstruction
+ *
+ *  CVS Log :-
+ *  $Id: IRichPhotonReconstruction.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis
+ *  @date   2003-10-28
+ */
+
 #ifndef RICHKERNEL_IRICHPHOTONRECONSTRUCTION_H
 #define RICHKERNEL_IRICHPHOTONRECONSTRUCTION_H 1
 
@@ -16,6 +27,9 @@ class RichSmartID;
 class RichGeomPhoton;
 class RichTrackSegment;
 
+/// Static Interface Identification
+static const InterfaceID IID_IRichPhotonReconstruction ( "IRichPhotonReconstruction", 1, 0 );
+
 /** @class IRichPhotonReconstruction IRichPhotonReconstruction.h RichKernel/IRichPhotonReconstruction.h
  *
  *  A tool to reconstruct photons given a RichTrackSegment and a detection
@@ -24,8 +38,6 @@ class RichTrackSegment;
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
-
-static const InterfaceID IID_IRichPhotonReconstruction ( "IRichPhotonReconstruction", 1, 0 );
 
 class IRichPhotonReconstruction : public virtual IAlgTool {
 
