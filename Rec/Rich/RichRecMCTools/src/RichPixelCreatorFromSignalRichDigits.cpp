@@ -1,12 +1,19 @@
-// $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.3 2004-07-12 14:31:34 jonrob Exp $
+
+/** @file RichPixelCreatorFromSignalRichDigits.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.4 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/09/2003
+ */
 
 // local
 #include "RichPixelCreatorFromSignalRichDigits.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromSignalRichDigits
-//
-// 15/09/2003 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -70,9 +77,9 @@ void RichPixelCreatorFromSignalRichDigits::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
-  {
-    debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
-  }
+    {
+      debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
+    }
 }
 
 // Forms a new RichRecPixel object from a RichDigit

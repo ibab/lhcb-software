@@ -1,4 +1,16 @@
-// $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.2 2004-06-18 09:59:42 jonesc Exp $
+
+/** @file RichPixelCreatorFromSignalRichDigits.h
+ *
+ *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.3 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H 1
 
@@ -34,7 +46,7 @@ class RichPixelCreatorFromSignalRichDigits : public RichRecToolBase,
                                              virtual public IRichPixelCreator,
                                              virtual public IIncidentListener {
 
-public:
+public: // methods for Gaudi framework
 
   /// Standard constructor
   RichPixelCreatorFromSignalRichDigits( const std::string& type,
@@ -44,25 +56,27 @@ public:
   /// Destructor
   virtual ~RichPixelCreatorFromSignalRichDigits(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns a RichRecPixel object pointer for given ContainedObject.
-  /// If if it not possible NULL is return.
+public: // Public interface methods
+
+  // Returns a RichRecPixel object pointer for given ContainedObject.
+  // If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  /// Form all possible RichRecPixels from input RichDigits.
-  /// The most efficient way to make all RichRecPixel objects in the event.
+  // Form all possible RichRecPixels from input RichDigits.
+  // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  /// Returns a pointer to the RichRecPixels
+  // Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
 
 private: // methods

@@ -1,4 +1,16 @@
-// $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.2 2004-07-09 17:39:27 jonrob Exp $
+
+/** @file RichPhotonPredictorUsingMCRichOpticalPhotons.h
+ *
+ *  Header file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.3 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+
 #ifndef RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H
 #define RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H 1
 
@@ -24,13 +36,13 @@
  *  MCRichOpticalPhoton objects to select only true Cherenkov photon combinations.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   08/07/2004
  */
 
 class RichPhotonPredictorUsingMCRichOpticalPhotons : public RichRecToolBase,
                                                      virtual public IRichPhotonPredictor {
 
-public:
+public: // methods for Gaudi framework
 
   /// Standard constructor
   RichPhotonPredictorUsingMCRichOpticalPhotons( const std::string& type,
@@ -40,13 +52,15 @@ public:
   /// Destructor
   virtual ~RichPhotonPredictorUsingMCRichOpticalPhotons(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Is it possible to make a photon candidate using this segment and pixel.
+public: // Public interface methods
+
+  // Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,
                        RichRecPixel * pixel ) const;
 

@@ -1,12 +1,19 @@
-// $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.9 2004-07-12 14:31:33 jonrob Exp $
+
+/** @file RichPixelCreatorFromMCRichHits.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.10 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromMCRichHits
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -14,9 +21,10 @@ static const  ToolFactory<RichPixelCreatorFromMCRichHits>          s_factory ;
 const        IToolFactory& RichPixelCreatorFromMCRichHitsFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromMCRichHits::RichPixelCreatorFromMCRichHits( const std::string& type,
-                                                                const std::string& name,
-                                                                const IInterface* parent )
+RichPixelCreatorFromMCRichHits::
+RichPixelCreatorFromMCRichHits( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
@@ -107,7 +115,7 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
         // Set parent information
         newPixel->setParentPixel( hit );
-        newPixel->setParentType( Rich::RecPixel::MCHit );
+        newPixel->setParentType( Rich::PixelParent::MCHit );
 
       }
 

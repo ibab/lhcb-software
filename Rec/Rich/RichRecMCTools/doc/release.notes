@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Update doxygen documentation
+
 !====================== RichRecMCTools v1r6 2004-07-22 =====================
 ! 2004-07-22 - Marco Cattaneo
  - Add use Relations to requirements

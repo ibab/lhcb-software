@@ -1,12 +1,19 @@
-// $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.1 2004-06-10 14:40:49 jonesc Exp $
+
+/** @file RichPhotonPredictorUsingMCRichOpticalPhotons.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.cpp,v 1.2 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichPhotonPredictorUsingMCRichOpticalPhotons.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonPredictorUsingMCRichOpticalPhotons
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

@@ -1,4 +1,16 @@
-// $Id: RichPixelCreatorFromMCRichHits.h,v 1.5 2004-06-18 09:59:41 jonesc Exp $
+
+/** @file RichPixelCreatorFromMCRichHits.h
+ *
+ *  Header file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.6 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
+
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMMCRICHHITS_H 1
 
@@ -33,7 +45,7 @@ class RichPixelCreatorFromMCRichHits : public RichRecToolBase,
                                        virtual public IRichPixelCreator,
                                        virtual public IIncidentListener {
 
-public:
+public: // methods for Gaudi framework
 
   /// Standard constructor
   RichPixelCreatorFromMCRichHits( const std::string& type,
@@ -43,25 +55,27 @@ public:
   /// Destructor
   virtual ~RichPixelCreatorFromMCRichHits(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
   /// This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns a RichRecPixel object pointer for given ContainedObject.
-  /// If if it not possible NULL is return.
+public: // Public interface methods
+
+  // Returns a RichRecPixel object pointer for given ContainedObject.
+  // If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  /// Form all possible RichRecPixels from input RichDigits.
-  /// The most efficient way to make all RichRecPixel objects in the event.
+  // Form all possible RichRecPixels from input RichDigits.
+  // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  /// Returns a pointer to the RichRecPixels
+  // Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
 
 private: // methods
@@ -89,7 +103,7 @@ private: // data
   /// Flag to signify all pixels have been formed
   mutable bool m_allDone;
 
-  /// Pointer to pixel map
+  // book keeping information
   mutable std::map< long int, RichRecPixel* > m_pixelExists;
   mutable std::map< long int, bool > m_pixelDone;
 

@@ -1,12 +1,19 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.7 2004-06-29 19:45:38 jonesc Exp $
+
+/** @file RichRecMCTruthTool.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
+ *
+ *  CVS Log :-
+ *  $Id: RichRecMCTruthTool.cpp,v 1.8 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
 
 // local
 #include "RichRecMCTruthTool.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecMCTruthTool
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

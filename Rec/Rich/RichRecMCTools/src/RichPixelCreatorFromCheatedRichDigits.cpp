@@ -1,12 +1,19 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.9 2004-07-12 14:31:33 jonrob Exp $
+
+/** @file RichPixelCreatorFromCheatedRichDigits.cpp
+ *
+ *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.10 2004-07-27 16:14:11 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/09/2003
+ */
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPixelCreatorFromCheatedRichDigits
-//
-// 15/09/2003 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -137,7 +144,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
         // Set parent information
         // Note - we are pretending to be RichDigits here...
         newPixel->setParentPixel( digit );
-        newPixel->setParentType( Rich::RecPixel::Digit );
+        newPixel->setParentType( Rich::PixelParent::Digit );
 
       }
 
