@@ -13,7 +13,8 @@ Purpose: LHCb reconstruction program
    . Reduce state z position tolerance from 100cm to 50mm (RiSicbCnv v4r6)
 
  - New features
-   . Add TT hits to Match tracks (TrMatch v2r2)
+   . Possibility to add TT hits to Match tracks - switched off in Brunel.opts
+     due to high rate of bad chi2 tracks (TrMatch v2r2)
    . Add VeloTT tracks to TrAssociator (TrAssociators v3r2)
    . Improved track monitoring (TrAnalyse replaces FwtAnalyse) (TrCheck v1r0)
 

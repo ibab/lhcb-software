@@ -128,6 +128,7 @@ BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
 ApplicationMgr.DLLs += { "TrMatching" }; 
 BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
+matchVeloSeed.addTTClusters = false;
 reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // Upstream tracking
