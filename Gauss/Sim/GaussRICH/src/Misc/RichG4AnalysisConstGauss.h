@@ -17,6 +17,7 @@ static const G4double HpdSupPlaneTiltcosz=260;
 static const G4double HpdSupPlaneYMid=1190.0*mm;
 static const G4double HpdSupPlaneTilt=
                       atan(HpdSupPlaneTiltcosy/HpdSupPlaneTiltcosz);
+static const G4double Rich1ExitWallBeginZAnalysis=2128.0*mm;
 static const G4String CF4MaterialName="/dd/Materials/RichMaterials/CF4";
 static const G4String C4F10MaterialName="/dd/Materials/RichMaterials/C4F10";
 static const G4String AgelMaterialName="/dd/Materials/RichMaterials/Aerogel";
