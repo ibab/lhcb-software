@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.4 2004-10-27 14:39:41 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.5 2004-11-25 15:49:25 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/10/27 14:39:41  jonrob
+ *  Various updates
+ *
  *  Revision 1.3  2004/07/27 20:15:32  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -48,13 +51,13 @@ StatusCode RichTabulatedGasQuartzWindowAbs::initialize() {
   m_gasQWin[Rich::Rich2] = new Rich1DTabProperty( Rich2DE->gasWinAbsLength() );
 
   // Quartz window thicknesses. Until these parameters exist in the XML add backup default values
-  try { m_qWinZSize[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rh1QuartzWindowZSize"); }
+  try { m_qWinZSize[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rich1GasQuartzWindowThickness"); }
   catch ( const GaudiException & excp ) {
     Warning("Parameter Rh1QuartzWindowZSize unavailable -> Reverting to default",
             StatusCode::SUCCESS);
     m_qWinZSize[Rich::Rich1] = 6 * mm;
   }
-  try { m_qWinZSize[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rh2QuartzWindowZSize"); }
+  try { m_qWinZSize[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rich2GasQuartzWindowThickness"); }
   catch ( const GaudiException & excp ) {
     Warning("Parameter Rh2QuartzWindowZSize unavailable -> Reverting to default",
             StatusCode::SUCCESS);
