@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.5 2002-04-02 10:59:31 ibelyaev Exp $
+# $Id: requirements,v 1.6 2002-04-09 19:05:37 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2002/04/02 10:59:31  ibelyaev
+#  update for new event model
+#
 # Revision 1.4  2002/03/13 15:05:55  ibelyaev
 #  fix the versions
 #
@@ -47,5 +50,5 @@ apply_pattern       ld_library_path
 # ================= private stuff =============================================
 private
 apply_pattern       package_shlibflags
-macro_append        CaloUtils_shlibflags  $(use_linkopts)
-macro_remove        use_linkopts          $(CaloUtils_linkopts)
+#macro_append        CaloUtils_shlibflags  $(use_linkopts)
+#macro_remove        use_linkopts          $(CaloUtils_linkopts)
