@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.22 2004-07-21 08:03:11 cattanem Exp $
+! $Id: release.notes,v 1.23 2004-09-03 12:08:09 jnardull Exp $
 ! Package     : OTAssociators
-! Responsible : J. van Tilburg
+! Responsible : J. van Tilburg & Jacopo Nardulli
 
-!====================== OTAssociators v2r9 2004-07-19 ======================
-! 2004-07-19 - Marco Cattaneo
+! 2004-08-30 - Jacopo Nardulli 
+ - Modifications in the general structure of the package due to the New OT Event
+   Model. Only 3 associations do still exist: OTTime to MCParticle, OTTime to MCHit, 
+   OTTime to MCOTDeposit.	 
+  !!! Modifications are backwards incompatible.
+  Use LHCbKernel    upper than v5r1
+  Use OTEvent       upper than v13r0
+
+!====================== OTAssociators v2r9 2004-07-19 ======================   
+! 2004-07-19 - Marco Cattaneo    
  - Add dependency to new Relations package
 
 !====================== OTAssociators v2r8 2004-04-19 ======================
