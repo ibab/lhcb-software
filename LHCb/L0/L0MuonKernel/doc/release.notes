@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : L0/L0MuonKernel
-! Responsible : Luisanna Tocco
+! Responsible : Luisanna Tocco, Andrei Tsaregorodtsev
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+!========================== L0MuonKernel v3r0 2005-04-04 ===================
+! 2005-04-04 A. Tsaregorodtsev
+ - Many changes to make L0MuonKernel not dependant on Gaudi framework
+ - Code rearrangements and optimizations of the performance
 
 !========================== L0MuonKernel v2r4 2005-01-18 ===================
 ! 2005-01-03 - P. Koppenburg

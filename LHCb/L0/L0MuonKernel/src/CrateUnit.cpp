@@ -95,8 +95,7 @@ L0Muon::CrateUnit::~CrateUnit()
 {
 }
 
-void L0Muon::CrateUnit::initialize()
-{
+void L0Muon::CrateUnit::initialize() {
   L0Muon::Unit::initialize();
 }
 
@@ -107,63 +106,55 @@ void L0Muon::CrateUnit::bootstrap() {
 
 void L0Muon::CrateUnit::execute()
 {
-
+  m_status = L0MuonStatus::OK ;
   L0Muon::Unit::execute();
-  sortCandidates();
-
-  
+  sortCandidates();  
+  //std::cout << "Finished crate execute" << std::endl;
 }
-
-
-
 
 void L0Muon::CrateUnit::finalize()
 { 
   if ( ! m_units.empty() ) {
-  std::map<std::string,L0Muon::Unit*>::iterator iu;
-  for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {    
-      (*iu).second->finalize();
-  }
-
-  m_candidates.clear();
-  m_offsets.clear();
-  
-  }
-  else {
-    return ;
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {    
+	(*iu).second->finalize();
+    }
     
-  }
+//     std::vector<Candidate*>::iterator ilmc ;
+//     for(ilmc = m_candidates.begin();ilmc != m_candidates.end();ilmc++) {
+//       delete *ilmc;
+//     }
+    m_candidates.clear();
+    m_offsets.clear();
   
-  
-  
+  }   
 }
 
 
-void L0Muon::CrateUnit::fillCandidates(Candidate * cand)
+void L0Muon::CrateUnit::fillCandidates(PCandidate cand)
 {
   m_candidates.push_back(cand);
 }
 
-void L0Muon::CrateUnit::fillOffset(std::pair<Candidate*, 
+void L0Muon::CrateUnit::fillOffset(std::pair<PCandidate, 
                                    std::vector<int> > off)
 {
   m_offsets.push_back(off);
 }
 
-
-
-
 void L0Muon::CrateUnit::sortCandidates()
 {
+
+   //m_debug = true;
 
    if (m_debug) std::cout << "\nCrate: " << "# of candidates : " 
                           << m_candidates.size() << std::endl;
 
    std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());  
-   std::sort(m_offsets.begin(),m_offsets.end(),ComparePt());
+   //std::sort(m_offsets.begin(),m_offsets.end(),ComparePt());
 
-   std::vector<Candidate*>::iterator ilmc ;
-   std::vector< std::pair<Candidate*, std::vector<int> > >::iterator ioff; 
+   std::vector<PCandidate >::iterator ilmc ;
+   std::vector< std::pair<PCandidate, std::vector<int> > >::iterator ioff; 
  
  
    // Sort Candidates if the status is OK
@@ -171,8 +162,9 @@ void L0Muon::CrateUnit::sortCandidates()
    if( m_status == L0MuonStatus::OK) {
    
      if (m_debug) {
-       std::cout << "Crate: Candidates and offsets entering into Crate: " 
-                 << m_offsets.size() << std::endl ;
+       int sss = m_offsets.size();
+       std::cout << "Crate: Candidates and offsets entering into Crate: -----" 
+                 << sss << "----" << std::endl ;
        for (ioff = m_offsets.begin(); ioff != m_offsets.end(); ioff++){
 	 std::vector<int> tmp =(*ioff).second;
 
@@ -181,61 +173,68 @@ void L0Muon::CrateUnit::sortCandidates()
        }
      }
    
-     
-
+     //std::cout << "CrateUnit: Sorting candidates: " << m_candidates.size() << std::endl;
+     int count=0;
      if (m_candidates.size() > 2) {   
        for (ilmc = m_candidates.end()-1;ilmc != m_candidates.begin()+1; 
             ilmc--) {
 
-         delete *ilmc;
-         m_candidates.erase(ilmc);
-
-
+         //std::cout << "Erasing candidate" << std::endl;
+	 m_candidates.erase(ilmc);
+	 count++;
        }
+     } 
+     //std::cout << count << " candidates erased " << std::endl;
+//      else if ( m_candidates.size() == 1) { 
+//        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
+//        m_candidates.push_back(pcand);
+// 
+//      } else if ( m_candidates.size() == 0){
+//        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));      
+//        m_candidates.push_back(pcand);
+//        m_candidates.push_back(pcand);
+//      }
 
-     } else if ( m_candidates.size() == 1) { 
-       m_candidates.push_back(new Candidate(L0MuonStatus::PU_EMPTY));
+     //std::cout << "CrateUnit: Done checking candidates" << std::endl;
 
-     } else if ( m_candidates.size() == 0){
-       m_candidates.push_back(new Candidate(L0MuonStatus::PU_EMPTY));
-       m_candidates.push_back(new Candidate(L0MuonStatus::PU_EMPTY));
-     }
+     // Sort offsets
 
-
-   // Sort offsets
-
-   if (m_offsets.size() > 2) {
-     for (ioff = m_offsets.end()-1;ioff != m_offsets.begin()+1; 
-          ioff--) {
-
-       m_offsets.erase(ioff);
-       
-     }
-     
-   } else if(m_offsets.size() == 1) { 
-     std::vector<int> tmp;
-     for (int iv =0; iv<10; iv++){       
-       tmp.push_back(0);
-     }
-      
-     std::pair<Candidate* , std::vector<int> > empty = 
-       std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
-     m_offsets.push_back(empty);
+//      if (m_offsets.size() > 2) {
+//        for (ioff = m_offsets.end()-1;ioff != m_offsets.begin()+1; 
+//             ioff--) {
+// 
+// 	 m_offsets.erase(ioff);
+// 
+//        }
+// 
+//      } 
+//      else if(m_offsets.size() == 1) { 
+//        std::vector<int> tmp;
+//        for (int iv =0; iv<10; iv++){       
+// 	 tmp.push_back(0);
+//        }
+// 
+//        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));              
+//        std::pair<PCandidate , std::vector<int> > empty = 
+// 	 std::make_pair(pcand, tmp);
+//        m_offsets.push_back(empty);
+// 
+//      } 
+//      else if(m_offsets.size() == 0){
+//        std::vector<int> tmp;
+//        for (int iv =0; iv<10; iv++){
+// 
+// 	 tmp.push_back(0);
+//        }
+// 
+//        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
+//        std::pair<PCandidate , std::vector<int> > empty = 
+// 	 std::make_pair(pcand, tmp);
+//        m_offsets.push_back(empty);
+//        m_offsets.push_back(empty);
+//      }
  
-   } else if(m_offsets.size() == 0){
-     std::vector<int> tmp;
-     for (int iv =0; iv<10; iv++){
-       
-       tmp.push_back(0);
-     }
-          
-     std::pair<Candidate* , std::vector<int> > empty = 
-       std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
-     m_offsets.push_back(empty);
-     m_offsets.push_back(empty);
-   }
- 
-    
+     //std::cout << "CrateUnit: Done Sort offsets" << std::endl; 
    
    }
    
@@ -276,14 +275,3 @@ int L0Muon::CrateUnit::yFoi(int sta)
   return yfoi;
   
 }
-
-
-
-
-
-
-
-
-
- 
-

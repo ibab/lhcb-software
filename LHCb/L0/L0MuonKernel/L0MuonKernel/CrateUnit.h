@@ -28,13 +28,12 @@ date  24 September 2003
 #include "L0MuonKernel/L0MuonStatus.h"
 //#include "GaudiKernel/MsgStream.h"
 
-
 namespace L0Muon {
 
   class CrateUnit : public Unit {
     
   public:
-
+    
     /** Constructor
 
     @param pProNet   :  processor network from the configuration files
@@ -68,21 +67,21 @@ namespace L0Muon {
     void finalize();
     
     /// Get candidates from processing units.
-    void fillCandidates(Candidate * cand); 
+    void fillCandidates(PCandidate cand); 
 
     /// return candidates 
-    std::vector<Candidate*> candidates(){ return m_candidates; }
+    std::vector<PCandidate > candidates(){ return m_candidates; }
  
     /**   Fill vector containig pairs (Candidate, offsets) from Processing units.
           Offsets are the position in FoI of the hits in chambers 2, 1, 4 , 5
           with respect the seed position in station 3.
     */
-    void fillOffset(std::pair<Candidate*, std::vector<int> > off);
+    void fillOffset(std::pair<PCandidate, std::vector<int> > off);
    
 
     /// Return offsets
-    std::vector<std::pair<Candidate*, std::vector<int> > > 
-      offsets() { return m_offsets; }
+    std::vector<std::pair<PCandidate, std::vector<int> > > 
+    offsets() { return m_offsets; }
 
     /** Set an integer for Crate status: if candidates are found
         status is OK
@@ -121,8 +120,8 @@ namespace L0Muon {
   private:
 
     
-    std::vector<Candidate*>   m_candidates;
-    std::vector<std::pair<Candidate*,std::vector<int> > > m_offsets;
+    std::vector<PCandidate >   m_candidates;
+    std::vector<std::pair<PCandidate,std::vector<int> > > m_offsets;
 
     unsigned int m_status;
 
@@ -143,23 +142,22 @@ namespace L0Muon {
 	the candidates with the highest one
     */
 
-    int operator() (Candidate* lmc1,
-                    Candidate* lmc2) {
+    int operator() (PCandidate lmc1,PCandidate lmc2) {
       return fabs(lmc1->pt()) > fabs(lmc2->pt());
     }
 
 
-    int operator() (std::pair<Candidate*,boost::dynamic_bitset<> >  p1,
-                    std::pair<Candidate*,boost::dynamic_bitset<> >  p2) 
-      {
+    int operator() (std::pair<PCandidate,boost::dynamic_bitset<> >  p1,
+                    std::pair<PCandidate,boost::dynamic_bitset<> >  p2) 
+    {
       
 	return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
       
       }
     
 
-    int operator() (std::pair<Candidate*,std::vector<int> >  p1,
-                    std::pair<Candidate*,std::vector<int> >  p2) {
+    int operator() (std::pair<PCandidate,std::vector<int> >  p1,
+                    std::pair<PCandidate,std::vector<int> >  p2) {
       return fabs((p1.first)->pt()) > fabs((p2.first)->pt());
     }
   }; 

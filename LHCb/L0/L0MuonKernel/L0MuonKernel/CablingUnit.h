@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.7 2005-03-31 16:08:07 jucogan Exp $
+// $Id: CablingUnit.h,v 1.8 2005-04-04 07:58:43 atsareg Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -68,9 +68,9 @@ private:
   Tower  m_tower;
   MuonTileID m_pu;
   std::vector<MuonTileID> m_pads;
-  std::vector<Candidate*> m_cand;
+  std::vector<PCandidate> m_cand;
   int m_status;
-  std::vector<std::pair<Candidate*, std::vector<int> > > m_offForCand;
+  std::vector<std::pair<PCandidate, std::vector<int> > > m_offForCand;
 
   
 };

@@ -1,4 +1,4 @@
-// $Id: Candidate.cpp,v 1.2 2005-02-03 19:49:16 atsareg Exp $
+// $Id: Candidate.cpp,v 1.3 2005-04-04 07:58:43 atsareg Exp $
 
 #include <cmath>
 #include <vector>
@@ -69,6 +69,31 @@ void L0Muon::Candidate::setStatus(int status) {
 
 void L0Muon::Candidate::setPadM1(const MuonTileID& pad) {
   m_pads[0] = pad;
+}
+
+void L0Muon::Candidate::setOffsets(const std::vector<int>& offsets) {
+  m_offsets = offsets;
+}
+
+void L0Muon::Candidate::dump() {
+  std::cout << "Muon Candidate: ===================" << std::endl;
+  std::cout << "Status: " << m_status << std::endl;
+  std::cout << "Pt: " << pt() <<  std::endl; 
+  std::cout << "Theta: " << m_theta << " Phi: " << m_phi << std::endl; 
+  std::vector<MuonTileID>::iterator ip;
+  int ic = 0;
+  for ( ip=m_pads.begin(); ip != m_pads.end(); ip++) {
+    ic++;
+    std::cout << "Pad " << ic << " ID: " << (*ip).toString() << std::endl; 
+  }
+  ic = 0;
+  std::vector<int>::iterator i;
+  std::cout << "Offsets: " ;
+  for ( i=m_offsets.begin(); i != m_offsets.end(); i++) {
+    ic++;
+    std::cout << " | " << ic << ": " << (*i);
+  }
+  std::cout << " | \n==================================" << std::endl; 
 }
 
 bool L0Muon::Candidate::operator<(const Candidate& lmc) const {

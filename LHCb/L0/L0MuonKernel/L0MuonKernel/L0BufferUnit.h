@@ -63,6 +63,7 @@ namespace L0Muon {
     void writeHeader();
     
     void execute();
+    void bootstrap();
 
     /// Give a static type name to the unit
     std::string type() {
@@ -85,6 +86,9 @@ namespace L0Muon {
     
     /// Event counter
     unsigned long int m_l0EventNumber;
+
+    bool m_writeL0Buffer;
+    bool m_buildL0Buffer;
 
   };
 }; // namespace L0Muon

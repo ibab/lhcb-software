@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.9 2005-02-04 10:39:18 atsareg Exp $
+// $Id: Tower.h,v 1.10 2005-04-04 07:58:43 atsareg Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -107,7 +107,10 @@ namespace L0Muon {
     void setPtparam(std::vector<double> ptparam) { m_ptparam= ptparam;}
     
     /// set flag for searching without M1
-    void setIgnoreM1(bool ignoreM1){ m_ignoreM1 = ignoreM1; }
+    void setIgnoreM1(bool ignoreM1){ 
+      m_ignoreM1 = ignoreM1; 
+      m_csearch.ignoreM1(m_ignoreM1);
+    }
           
     /// Draw tower
     void draw();
@@ -130,14 +133,14 @@ namespace L0Muon {
     boost::dynamic_bitset<> addr(int i){ return m_addr[i];}
     
     /// Create a Candidate
-    Candidate* createCandidate(double p, double th, double phi,int flag);
+    PCandidate createCandidate(double p, double th, double phi,int flag);
   
     /// Return the candidates 
-    std::vector<Candidate*> puCandidates(){ return m_puCandidates;}
+    std::vector<PCandidate> puCandidates(){ return m_puCandidates;}
     
     /// return offsets for candidates (used for trigger studies)
-    std::vector< std::pair<Candidate*, std::vector<int> > > 
-    candOffset(){ return m_offForCand;}
+    //std::vector< std::pair<PCandidate, std::vector<int> > > 
+    //candOffset(){ return m_offForCand;}
 
     /// Function to extract the track parameter: pT
     double pt() { return m_pt; }
@@ -164,6 +167,7 @@ namespace L0Muon {
     void xyFromPad(MuonTileID pad, double& x, double& y) ;
     
     CandidateTower m_ctower ;
+    CandidateSearch m_csearch ;
     int m_maxXFoI[5];
     int m_maxYFoI[5];
     int m_xfoi[5];
@@ -191,12 +195,12 @@ namespace L0Muon {
     double ptcalc();
     double ptcalcIgnoreM1();
     
-    std::vector<Candidate*> m_puCandidates;
+    std::vector<PCandidate> m_puCandidates;
     
     // for offset in ntuple
     
-    std::pair<Candidate*, std::vector<int> > m_offsetx;
-    std::vector<std::pair<Candidate*, std::vector<int> > > m_offForCand;
+    //std::pair<PCandidate, std::vector<int> > m_offsetx;
+    //std::vector<std::pair<PCandidate, std::vector<int> > > m_offForCand;
 
     bool m_debug;
     bool m_seeded;

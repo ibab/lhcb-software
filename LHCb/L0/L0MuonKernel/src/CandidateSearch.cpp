@@ -291,7 +291,20 @@ void L0Muon::CandidateSearch::resetBits()
     m_addr.reset();
   }
   
+  m_offset =0;
+  m_offsetM1 =0;
   
+  for (int sta =0; sta< 5; sta++){
+    m_found[sta] = false; 
+  }
+
+  for (int sta =0; sta< 5; sta++){
+    if (sta ==2){
+      m_hitpos[sta] = 0;
+    }else {
+      m_hitpos[sta] = 999;
+    }    
+  }
   //m_offset =0;
   //m_offsetM1 =0;
   

@@ -60,6 +60,7 @@ L0Muon::Tower::Tower() {
   
   m_debug = false;
   m_seeded = false;  
+  m_csearch.ignoreM1(m_ignoreM1);
 }
 
 L0Muon::Tower::~Tower() {}
@@ -76,6 +77,7 @@ void L0Muon::Tower::reset() {
     }
   }
   m_seeded = false;
+  m_csearch.resetBits();
 }
 
 
@@ -209,290 +211,271 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
   //if (m_seeded && m_debug ) draw();
 
   m_puCandidates.clear();
-  m_offForCand.clear();
+  //m_offForCand.clear();
 
   // added to set addresses for L0Buffer
   for (int icand=0; icand<2; icand++) {  
-    m_addr[icand].resize(15);    
-    for (boost::dynamic_bitset<>::size_type i =0; i<15;i++){
-      m_addr[icand][i]=0; 
-    } 
+    m_addr[icand].resize(15);
+    m_addr[icand].reset();    
+//     for (boost::dynamic_bitset<>::size_type i =0; i<15;i++){
+//       m_addr[icand][i]=0; 
+//     } 
   }
   //======
 
-  // 
-  // Start track search
-  // ------------------
+  if (m_seeded) {
+    // Start track search
+    int row =0;
+    std::vector< boost::dynamic_bitset<> >::iterator irow;
 
-  //
-  // Loop over seeds (pads hit in M3)
-  //
-  int row =0;
-  std::vector< boost::dynamic_bitset<> >::iterator irow;
-  // Loop over the rows
-  for (irow =m_bittable[2].begin(); irow !=m_bittable[2].end();irow++){
-    // Loop over the columns
-    for (boost::dynamic_bitset<>::size_type icol =0;icol<(*irow).size(); icol++){      
-      // if the pad is hit 
-      if ( (*irow).test(icol)){
+    for (irow =m_bittable[2].begin(); irow !=m_bittable[2].end();irow++){
+      for (boost::dynamic_bitset<>::size_type icol = 0; 
+        	icol < (*irow).size(); icol++){      
+	if ( (*irow).test(icol)){
 
-        nseed++;
-        int col =icol;
-        std::pair<int, int> sd = std::make_pair(col,row);
-	m_ctower.reset();
-        m_ctower.setSeed(sd);
-        
-        //Start Search for seed sd
+          nseed++;
+          int col =icol;
+          std::pair<int, int> sd = std::make_pair(col,row);
+	  m_ctower.reset();
+          m_ctower.setSeed(sd);
 
-        if (m_debug) std::cout << "Tower: start search for seed " 
-			       << " " << sd.first << "," << sd.second << std::endl;
+          //Start Search for seed sd
 
-	// Construct a new CandidateSearch
-        CandidateSearch * pCs = new CandidateSearch();
-        pCs->ignoreM1(m_ignoreM1);
-        pCs->resetBits(); // ???? (à peine créer et déjà reseter !)
-         
-        // Should be done once at creation time ??? Why here ???
-	for (int ista =4 ; ista >= 0; ista--){
-          m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
-        }
+          if (m_debug) std::cout << "Tower: start search for seed " 
+              << " " << sd.first << "," << sd.second << std::endl;
 
-        // Loop over stations (M5,M4,M2 and eventually M1)
-        int minsta = (m_ignoreM1) ? 1 : 0;
-        for (int ista =4 ; ista >= minsta; ista--){
-	  if (m_debug) std::cout << "Tower: look for hits in station  M"<<ista+1 << std::endl;
-	  
-	  // Compute extrapolation in M1
-          int offset=0;             
-          if (ista ==0) { 
-            offset = pCs->makeExtrapolation() ;
-	    if (m_debug) std::cout << "Tower: Extrapolation in station  M"<<ista+1 << "  offset:" <<offset <<std::endl;
+          //CandidateSearch * pCs = new CandidateSearch();
+          //pCs->ignoreM1(m_ignoreM1);
+          m_csearch.resetBits();
+
+          int minsta = (m_ignoreM1) ? 1 : 0;
+
+          // Should be done once at creation time
+	  for (int ista =4 ; ista >= 0; ista--){
+            m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
           }
 
-	  // if (m_debug) {
-	  //  std::cout << "Tower:  m_bittable[ista]" << std::endl;
-	  //  StationMap v = m_bittable[ista];
-	  //  for (StationMap::iterator  iv=v.begin(); iv < v.end(); iv++) {
-	  //    std::cout << (*iv) <<std::endl;
-	  //  }
-	  //}
-	  //if (m_debug) std::cout << "Tower:  xfoi " << m_maxXFoI[ista] << " "<<m_xfoi[ista] <<std::endl;
-	  //if (m_debug) std::cout << "Tower:  yfoi " << m_maxYFoI[ista] << " "<<m_yfoi[ista] <<std::endl;
-	  
-	  // ??? 
-          if (m_maxYFoI[ista]==0){
-            m_ctower.setBit(ista, m_bittable[ista], m_maxXFoI[ista],m_maxYFoI[ista], offset);
-          } else {
-            m_ctower.setOrderedBit(ista, m_bittable[ista], m_maxXFoI[ista],m_maxYFoI[ista], offset);
+          // with M1
+          for (int ista =4 ; ista >= minsta; ista--){
+
+            int offset=0;             
+            if (ista ==0) { 
+              offset = m_csearch.makeExtrapolation() ;
+            }
+
+            if (m_maxYFoI[ista]==0){
+              m_ctower.setBit(ista, m_bittable[ista], m_maxXFoI[ista],
+                        	 m_maxYFoI[ista], offset);
+            } else {
+              m_ctower.setOrderedBit(ista, m_bittable[ista], m_maxXFoI[ista],
+                                	m_maxYFoI[ista], offset);
+            }
+
+            boost::dynamic_bitset<> bits = m_ctower.getBit();
+            m_csearch.searchInSta(ista, bits); 
+            m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
+                                	offset, m_csearch.getHitPos(ista));
+
+
+	    //std::cout << bits << std::endl;
+	    //std::cout << "Found hit in station " << ista << " " << m_csearch.getHitPos(ista) << std::endl;
+
+
+            if (m_csearch.hitFoundInSta(ista) == false) {
+              break ;
+            }
           }
-             
+          // If a candidate has been found
+          if (m_csearch.CandidateFound()) {
 
-          boost::dynamic_bitset<> bits = m_ctower.getBit();
-          pCs->searchInSta(ista, bits); 
-          m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
-                                      offset, pCs->getHitPos(ista));
-          
-	  //if (m_debug) std::cout << "Tower: bits= " << bits << std::endl;
-	  //if (m_debug) std::cout << "Tower: found hit in station M" << ista+1 << " " << pCs->getHitPos(ista) << std::endl;
-	  //if (m_debug) std::cout << "Tower: flag= " << pCs->hitFoundInSta(ista)    << std::endl; 
-          if (pCs->hitFoundInSta(ista) == false) {
-            break ;
-          }
-        } // end of loop over stations
+             //*if (m_debug) std::cout << "candidate found for seed " 
+             //   << " " << sd.first << " " << sd.second << std::endl;
+             //*if (m_debug) std::cout << "Tower for PU" 
+             //   << " " << "R" << puID.region() << ","
+             //   <<"Q" << puID.quarter() <<","
+             //   << puID.nX() << "," 
+             //   << puID.nY() <<" " << std::endl;
 
-	// If a candidate has been found
-        if (pCs->CandidateFound()) { 
+            //ncand = ncand++;
+             //m_csearch.setCandidateAddrs(sd);
+            if (m_ignoreM1 ){           
+              ptcalcIgnoreM1();
 
-	  //if (m_debug) std::cout << "candidate found for seed " 
-	  //   << " " << sd.first << " " << sd.second << std::endl;
-           
-	  //if (m_debug) std::cout << "Tower for PU" 
-	  //   << " " << "R" << puID.region() << ","
-	  //   <<"Q" << puID.quarter() <<","
-	  //   << puID.nX() << "," 
-	  //   << puID.nY() <<" " << std::endl;
+             //m_pt =0;
+             //m_theta =0;
+             //m_phi =0;
+            } else if ( ! m_ignoreM1){           
+              ptcalc();
+            }
 
-	  // Compute PT if a candidate has been found
-          if (m_ignoreM1 ){           
-            ptcalcIgnoreM1();
+             //boost::dynamic_bitset<> bitsset = m_csearch.getCandidateAddrs();
+            PCandidate mycand =createCandidate(m_pt, m_theta ,m_phi, 
+                                                      L0MuonStatus::OK);           
+            //m_puCandidates.push_back(mycand);
 
-	    //m_pt =0;
-	    //m_theta =0;
-	    //m_phi =0;
-          } else if ( ! m_ignoreM1){           
-            ptcalc();
-          }
-           
-	  //boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
-          Candidate * mycand =createCandidate(m_pt, m_theta ,m_phi, 
-					      L0MuonStatus::OK);
+            //=================================================
+            //added to set addresses for L0Buffer
+            m_csearch.setCandidateAddrs(sd);
+            boost::dynamic_bitset<> bitsset = m_csearch.getCandidateAddrs();
 
-          m_puCandidates.push_back(mycand);
+            if (ncand<2) {
+              m_addr[ncand]=bitsset;
+            }
 
-          //=================================================
-          //added to set addresses for L0Buffer
-          pCs->setCandidateAddrs(sd);
-          boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
-          
-          if (ncand<2) {
-            m_addr[ncand]=bitsset;
-          }
-          
-          ncand = ncand++;
-          
+            ncand = ncand++;
 
-          //===============================
-	  //offset for ntuple
-          std::vector<int> offsetx;
-          std::pair<int, int> tmp[5];
 
-          for (int ist = 0; ist <5; ist++){
+            //===============================
+             //offset for ntuple
+            std::vector<int> offsetx;
+            std::pair<int, int> tmp[5];
 
-	    //if (m_debug) std::cout << "Filling offsets for sta" << " " 
-	    //   << ist << std::endl;
+            for (int ist = 0; ist <5; ist++){
 
-               
-            if ( ist ==0){
-              if ( ! m_ignoreM1 ){
-                tmp[ist] = m_ctower.getPadIndex(ist);
-                int extrap = pCs->makeExtrapolation() ;
-                offsetx.push_back(tmp[ist].second -
-                                  (sd.first+m_maxXFoI[ist]));
-               
-                offsetx.push_back(extrap);
-		//*if (m_debug) std::cout << "pad x index" <<" " << 
-		//tmp[ist].second << std::endl;
-                 
-		//*if (m_debug) std::cout << "pad y index" <<" " << 
-		//tmp[ist].first << std::endl;
+               //if (m_debug) std::cout << "Filling offsets for sta" << " " 
+               //   << ist << std::endl;
 
-		//*if (m_debug) std::cout << "offset" <<" " << 
-		//tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;  
-     
-                
-              } else if ( m_ignoreM1 ){
-                offsetx.push_back(31);
-                int extrap = pCs->makeExtrapolation() ;
-                offsetx.push_back(extrap);
+
+              if ( ist ==0){
+        	if ( ! m_ignoreM1 ){
+                  tmp[ist] = m_ctower.getPadIndex(ist);
+                  int extrap = m_csearch.makeExtrapolation() ;
+                  offsetx.push_back(tmp[ist].second -
+                                    (sd.first+m_maxXFoI[ist]));
+
+                  offsetx.push_back(extrap);
+                   //*if (m_debug) std::cout << "pad x index" <<" " << 
+                   //tmp[ist].second << std::endl;
+
+                   //*if (m_debug) std::cout << "pad y index" <<" " << 
+                   //tmp[ist].first << std::endl;
+
+                   //*if (m_debug) std::cout << "offset" <<" " << 
+                   //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;  
+
+
+        	} else if ( m_ignoreM1 ){
+                  offsetx.push_back(31);
+                  int extrap = m_csearch.makeExtrapolation() ;
+                  offsetx.push_back(extrap);
+        	}
+
               }
-              
-            }
-            if (ist == 1){
-              tmp[ist] = m_ctower.getPadIndex(ist);
-              offsetx.push_back(tmp[ist].second -
-                                (sd.first+m_maxXFoI[ist]));
-	      //*if (m_debug) std::cout << "pad x index" <<" " << 
-	      //tmp[ist].second << std::endl;
 
-	      //*if (m_debug) std::cout << "pad y index" <<" " << 
-	      //tmp[ist].first << std::endl;
-
-	      //*if (m_debug) std::cout << "offset" <<" " << 
-	      //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
-               
-            }
-            if (ist ==2){
-              offsetx.push_back(0);
-            }
-             
-            if (ist == 3 || ist ==4){
-
-              tmp[ist] = m_ctower.getPadIndex(ist);
-              int offy =tmp[ist].first -(sd.second);
-	      //*if (m_debug) std::cout << "tmp.first" <<" " << tmp[ist].first
-	      //<< std::endl; 
-	      //*if (m_debug) std::cout << "sd.second" <<" " << sd.second
-	      //   << std::endl;
-	      //*if (m_debug) std::cout << "offsety" <<" " << 
-	      //tmp[ist].first -sd.second<< std::endl;
-	      //hit nella stessa linea del seme
-              if (offy == 0){
-                offsetx.push_back(tmp[ist].second - 
+              if (ist == 1){
+        	tmp[ist] = m_ctower.getPadIndex(ist);
+        	offsetx.push_back(tmp[ist].second -
                                   (sd.first+m_maxXFoI[ist]));
-		//*if (m_debug) std::cout << "hit pos in bitset" << " " << 
-		//       pCs->getHitPos(ist) << std::endl;
-                     
-		//  *if (m_debug) std::cout << "pad x index" <<" " << 
-		//    tmp[ist].second << std::endl;
+        	 //*if (m_debug) std::cout << "pad x index" <<" " << 
+        	 //tmp[ist].second << std::endl;
 
-		//   *if (m_debug) std::cout << "pad y index" <<" " <<
-		//    tmp[ist].first << std::endl;
+        	 //*if (m_debug) std::cout << "pad y index" <<" " << 
+        	 //tmp[ist].first << std::endl;
 
-		//                     *if (m_debug) std::cout << "offset" <<" " << 
-		//    tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+        	 //*if (m_debug) std::cout << "offset" <<" " << 
+        	 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+
+              }
 
 
-                 
-                offsetx.push_back(999);
-                offsetx.push_back(999);
-                 
-              } else if (offy > 0){
-                offsetx.push_back(999);
-                offsetx.push_back(999);
 
-                offsetx.push_back(tmp[ist].second -
-                                  (sd.first+m_maxXFoI[ist]));
 
-            
-		//*if (m_debug) std::cout << "hit pos in bitset" << " " << 
-		//pCs->getHitPos(ist) << std::endl;
-               
-		//*if (m_debug) std::cout << "pad x index" <<" " << 
-		//tmp[ist].second << std::endl;
+              if (ist ==2){
+        	offsetx.push_back(0);
 
-		//*if (m_debug) std::cout << "pad y index" <<" " << 
-		//tmp[ist].first << std::endl;
+              }
 
-		//*if (m_debug) std::cout << "offset" <<" " << 
-		//tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+              if (ist == 3 || ist ==4){
 
-               
-                
-              } else if (offy < 0){
-                offsetx.push_back(999);
-                offsetx.push_back(tmp[ist].second -
-                                  (sd.first+m_maxXFoI[ist]));
-                 
+        	tmp[ist] = m_ctower.getPadIndex(ist);
+        	int offy =tmp[ist].first -(sd.second);
+        	 //*if (m_debug) std::cout << "tmp.first" <<" " << tmp[ist].first
+        	 //<< std::endl; 
+        	 //*if (m_debug) std::cout << "sd.second" <<" " << sd.second
+        	 //   << std::endl;
+        	 //*if (m_debug) std::cout << "offsety" <<" " << 
+        	 //tmp[ist].first -sd.second<< std::endl;
+        	 //hit nella stessa linea del seme
+        	if (offy == 0){
+                  offsetx.push_back(tmp[ist].second - 
+                                    (sd.first+m_maxXFoI[ist]));
+                   //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+                   //       m_csearch.getHitPos(ist) << std::endl;
 
-                offsetx.push_back(999);
+                   //  *if (m_debug) std::cout << "pad x index" <<" " << 
+                   //    tmp[ist].second << std::endl;
 
-		//*if (m_debug) std::cout << "hit pos in bitset" << " " << 
-		//pCs->getHitPos(ist) << std::endl;
-                                 
-		//*if (m_debug) std::cout << "pad x index" <<" " << 
-		//tmp[ist].second << std::endl;
-            
-		//*if (m_debug) std::cout << "pad y index" <<" " << 
-		//tmp[ist].first << std::endl;
-                
-		// *if (m_debug) std::cout << "offset" <<" " << 
-		//tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+                   //   *if (m_debug) std::cout << "pad y index" <<" " <<
+                   //    tmp[ist].first << std::endl;
+
+                   //                     *if (m_debug) std::cout << "offset" <<" " << 
+                   //    tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+
+
+
+                  offsetx.push_back(999);
+                  offsetx.push_back(999);
+
+        	} else if (offy > 0){
+                  offsetx.push_back(999);
+                  offsetx.push_back(999);
+
+                  offsetx.push_back(tmp[ist].second -
+                                    (sd.first+m_maxXFoI[ist]));
+
+
+        	 //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+        	 //m_csearch.getHitPos(ist) << std::endl;
+
+        	 //*if (m_debug) std::cout << "pad x index" <<" " << 
+        	 //tmp[ist].second << std::endl;
+
+        	 //*if (m_debug) std::cout << "pad y index" <<" " << 
+        	 //tmp[ist].first << std::endl;
+
+        	 //*if (m_debug) std::cout << "offset" <<" " << 
+        	 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+
+
+
+        	} else if (offy < 0){
+                  offsetx.push_back(999);
+                  offsetx.push_back(tmp[ist].second -
+                                    (sd.first+m_maxXFoI[ist]));
+
+
+                  offsetx.push_back(999);
+
+                   //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+                   //m_csearch.getHitPos(ist) << std::endl;
+
+                   //*if (m_debug) std::cout << "pad x index" <<" " << 
+                   //tmp[ist].second << std::endl;
+
+                   //*if (m_debug) std::cout << "pad y index" <<" " << 
+                   //tmp[ist].first << std::endl;
+
+                   // *if (m_debug) std::cout << "offset" <<" " << 
+                   //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
+        	}
               }
             }
+	    mycand->setOffsets(offsetx);
+	    m_puCandidates.push_back(mycand);
+            //m_offsetx =std::make_pair(mycand, offsetx);  
+            //m_offForCand.push_back(m_offsetx);
           }
-          m_offsetx =std::make_pair(mycand, offsetx);  
-          m_offForCand.push_back(m_offsetx);
-	} // end of candidate found
-        delete pCs;
-      } // end of hit pad
-    } // end of loop over columns
-    row++;
-  } // end of loop over rows
-  
-  
-  m_ncand = ncand;
-  
+          //delete pCs;
+	}
+      }
+      row++;
+    }  
+  } // endif m_seeded
+  m_ncand = ncand;  
 }
 
-  
-
-
-
-
-
-
-L0Muon::Candidate* L0Muon::Tower::createCandidate(double p, double th, 
-						  double phi,int flag) {
+L0Muon::PCandidate L0Muon::Tower::createCandidate(double p, double th, 
+                                                  double phi,int flag) {
 
   std::vector<MuonTileID> m_mtid;
   std::pair<int, int> ind[5];
@@ -500,49 +483,28 @@ L0Muon::Candidate* L0Muon::Tower::createCandidate(double p, double th,
     if (j==0){
       if ( m_ignoreM1){
 	m_mtid.push_back(MuonTileID());
-      } else if ( ! m_ignoreM1) {
+      } else {
         ind[j] =  m_ctower.getPadIndex(j);
         m_mtid.push_back(getPadIdMap(j,ind[j]));
       }
       
-      
-      
-    } else if (j!=0){
+    } else {
       if (j==3 || j==4){           
-	ind[j] =  m_ctower.getPadIndex(j);
-       
+	ind[j] =  m_ctower.getPadIndex(j);       
 	std::pair<int, int> tmpind = std::make_pair(ind[j].first+1,ind[j].second);
 	m_mtid.push_back(getPadIdMap(j,tmpind));       
       } else {
-       
+
 	ind[j] =  m_ctower.getPadIndex(j);
-       
+
 	//std::pair<int, int> tmpind = std::make_pair(ind[j].first+1,ind[j].second);
 	m_mtid.push_back(getPadIdMap(j,ind[j]));
-     
-      }
-     
-       
-     
-    }
-   
-   
-       
-   
-  }
-  
-  
-  
-  
-   
-  
-  
-  //std::vector<MuonTileID>::iterator itmp;
-  
 
-  Candidate* lmc = new Candidate(p,
-				 th, phi, m_mtid, flag) ;	   
-  return lmc;
+      }
+    }   
+  }
+    PCandidate lmc(new Candidate(p, th, phi, m_mtid, flag)) ;	   
+    return lmc;
 }
 
 
@@ -644,18 +606,28 @@ double L0Muon::Tower::ptcalc() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
+  m_theta = atan(sqrt(x0*x0+y0*y0)/d1);
+  if (fabs(x0)<0.0001) {
+    m_phi = 3.14159/2.;
+    if ( y0 < 0.) m_phi = -m_phi;
+  } else {  
+    m_phi = atan(y0/x0);
+    if ( m_phi > 0. && y0 < 0. ) {
+      m_phi -= 3.14159;
+    }
+    if ( m_phi < 0. && y0 > 0. ) {
+      m_phi += 3.14159;
+    }  
+  }  
+  
   //   Hep3Vector v(x0,y0,d1);
   //   m_theta = v.theta();
   //   m_phi = v.phi();
   
-  //*if (m_debug) std::cout <<"Momentum" <<  " " <<  m_pt << std::endl;
-  //*if (m_debug) std::cout << "Theta" << " " << m_theta << std::endl;
-  //*if (m_debug) std::cout << " Phi" << " " << m_phi << std::endl;
-
-
-  //m_pts.push_back(m_pt);
-  //m_th.push_back(m_theta);
-  //m_ph.push_back(m_phi);
+//   if (m_debug) std::cout <<"x0 " << x0 << " y0 " << y0 << std::endl;
+//   if (m_debug) std::cout <<"Momentum" <<  " " <<  m_pt << std::endl;
+//   if (m_debug) std::cout << "Theta" << " " << m_theta << std::endl;
+//   if (m_debug) std::cout << " Phi" << " " << m_phi << std::endl;
 
   return m_pt;
 
@@ -705,6 +677,19 @@ double L0Muon::Tower::ptcalcIgnoreM1() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
+  m_theta = atan(sqrt(x0*x0+y0*y0)/d1);
+  if (fabs(x0)<0.0001) {
+    m_phi = 3.14159/2.;
+    if ( y0 < 0.) m_phi = -m_phi;
+  } else {  
+    m_phi = atan(y0/x0);
+    if ( m_phi > 0. && y0 < 0. ) {
+      m_phi -= 3.14159;
+    }
+    if ( m_phi < 0. && y0 > 0. ) {
+      m_phi += 3.14159;
+    }  
+  } 
   // Hep3Vector v(x0,y0,d1);
   //   m_theta = v.theta();
   //   m_phi = v.phi();

@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.h,v 1.7 2005-03-31 16:08:07 jucogan Exp $
+// $Id: L0mProcUnit.h,v 1.8 2005-04-04 07:58:43 atsareg Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
@@ -33,13 +33,6 @@ namespace L0Muon {
     /** Constructor
 
     @param pProNet   :  data flow from L0mConf
-    @param ptpara    :  geometrical parameters for calculating pT
-    @param ignoreM1  :  flag for searching candidates without M1
-    @param foix      :  field of interest in the x direction
-    @param foiy      :  field of interest in the y direction
-    @param precision :  precision for calculating pT
-    @param bits      :  number of bits for codifying pT
-    @param writeL0Buffer         :  flag for writing L0Buffers on files
     */
     L0mProcUnit(L0MPuNodeBase& puNode);
 
@@ -54,6 +47,8 @@ namespace L0Muon {
   
     /// Bootstrap 
     void bootstrap();
+    
+    void execute();
  
     /// Return the list of tiles in the l0buffer
     std::vector<L0MTile> l0bufferTileList(L0MPuNodeBase & puNode);
@@ -71,7 +66,9 @@ namespace L0Muon {
     MuonTileID  m_pu;
     MuonTileID  m_boardID;
     L0MFoi      m_maxFoi;
-  
+    bool m_writeL0Buffer;
+    bool m_buildL0Buffer;
+    TileRegister* m_ol3[2];     // OL's in station 3 
   };
 
 };  // namespace L0Muon

@@ -35,7 +35,7 @@ namespace L0Muon {
     ~BestCandidateSelectionUnit();
 
     /// Get candidates from PUs
-    void loadCandidates(Candidate * cand);
+    void loadCandidates(PCandidate cand);
   
     /// Get status from PU
     void loadStatus(int st){ m_status = st; }                    
@@ -55,13 +55,14 @@ namespace L0Muon {
 
 
     void sortCandidatesbcsu();
-    void loadOffsets(std::pair<Candidate*, std::vector<int> >);
+    void loadOffsets(std::pair<PCandidate , std::vector<int> >);
 
    
 
     void initialize();
     void execute();
     void finalize();
+    void bootstrap();
     
     /// Give a static type name to the unit
     std::string type() {
@@ -90,10 +91,10 @@ namespace L0Muon {
 
     std::vector<int> m_punumber;
     
-    std::vector<Candidate*> m_candidates;
+    std::vector<PCandidate > m_candidates;
     unsigned int m_status;
 
-    std::vector<std::pair<Candidate*, 
+    std::vector<std::pair<PCandidate, 
       boost::dynamic_bitset<> > > m_inp;
     
     std::vector<boost::dynamic_bitset<> > m_addresses ;
@@ -102,7 +103,10 @@ namespace L0Muon {
 
     FILE *m_bcsul0bufferFile;
 
-    std::vector<std::pair<Candidate*, std::vector<int> > > m_offsets;    
+    std::vector<std::pair<PCandidate, std::vector<int> > > m_offsets;  
+    
+    bool m_writeL0Buffer;
+    bool m_buildL0Buffer;  
 
   };
 

@@ -39,6 +39,8 @@ L0Muon::L0BufferUnit::L0BufferUnit(int & type){
 
   m_l0bufferFile = NULL;
   m_l0EventNumber=0;
+  m_writeL0Buffer = false;
+  m_buildL0Buffer = true;
 
 };
 
@@ -72,8 +74,8 @@ void L0Muon::L0BufferUnit::setL0buf(){
   if (m_bufferType == 0) {
     setL0bufStd();
   } else {
-    setOLPLL();
-    setL0bufPLL();
+    //setOLPLL();
+    //setL0bufPLL();
   }
 }
 
@@ -380,11 +382,18 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 
 }
 
+void L0Muon::L0BufferUnit::bootstrap(){
+  Unit* crate = parentByType("CrateUnit");
+  if ( crate->getProperty("WriteL0Buffer") == "True") m_writeL0Buffer = true;
+  if ( crate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
+}
 
 /**
    Execute event
 */
 void L0Muon::L0BufferUnit::execute(){
+  
+  if ( ! m_buildL0Buffer ) return;
   
   if (m_debug) std::cout << "L0BufferUnit::execute type is "<<m_bufferType << std::endl;
 
@@ -398,7 +407,7 @@ void L0Muon::L0BufferUnit::execute(){
   }
 
   // Write out the L0Buffer
-  writeEvent();
+  if ( m_writeL0Buffer ) writeEvent();
 
   // Increment event counter
   m_l0EventNumber++;
@@ -473,12 +482,6 @@ void L0Muon::L0BufferUnit::writeEvent(){
 
   // Write L0Buffer
   fprintf(m_l0bufferFile,"#- L0Buffer\n");
-  //   for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
-  //     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-  //     if (itr->Type()=="L0Buffer" ) {
-  //       itr->print_words(m_l0bufferFile);
-  //     }
-  //   }
   TileRegister * pL0bOut = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
   pL0bOut->print_words(m_l0bufferFile);
   
