@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.3 2003-04-25 08:53:57 sponce Exp $
+// $Id: XmlParserSvc.cpp,v 1.4 2004-01-30 13:22:06 cattanem Exp $
 
 // Include Files
 #include <limits.h>
@@ -75,6 +75,7 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
 // Standard Destructor
 // ------------------------------------------------------------------------
 XmlParserSvc::~XmlParserSvc() {
+  xercesc::XMLPlatformUtils::Terminate();
   delete m_parser;
 }
 
