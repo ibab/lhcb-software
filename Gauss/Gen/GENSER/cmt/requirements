@@ -20,6 +20,7 @@ macro pythia_linkopts "-L$(GENSER_home)/lib -lpythia$(pythia_native_version) -ld
         WIN32         "/libpath:$(GENSER_home)\lib pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
 
 macro photos_native_version "209.2"
+include_dirs $(LCG_releases)/GENSER/$(GENSER_native_version)/src/photos/$(photos_native_version)/include
 macro photos_linkopts " -L$(GENSER_home)/lib -lphotos$(photos_native_version)" \
              WIN32            " /libpath:$(GENSER_home)/lib photos$(photos_native_version).lib"
 

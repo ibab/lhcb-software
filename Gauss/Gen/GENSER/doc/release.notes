@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2005-02-25 - Patrick Robbe
+ - requirements - add photos include
+
 !========================= GENSER v2r030p0 ================================
 ! 2005-02-07 - Florence RANJARD
  - requirements - do not use debug version
