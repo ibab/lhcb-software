@@ -42,6 +42,8 @@ RootEvtCnvSvc.DbType             = "ROOT";
 RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
 RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
 PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
+#include "$LHCBTESTROOT/options/Dictionaries.opts"
+
 PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
 PoolDbCacheSvc.OutputLevel = 3;
 
