@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.19 2004-01-07 09:57:34 cattanem Exp $
+# $Id: requirements,v 1.20 2004-05-27 01:42:11 ibelyaev Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package             CaloUtils
-version             v4r6
+version             v4r7
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils

@@ -1,8 +1,11 @@
-// $Id: CellMatrix.h,v 1.4 2001-11-25 15:26:20 ibelyaev Exp $
+// $Id: CellMatrix.h,v 1.5 2004-05-27 01:42:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/25 15:26:20  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.3  2001/11/22 16:02:33  ibelyaev
 //  new utilities
 //
@@ -98,11 +101,11 @@ class CellMatrix :
       if( halfsize1 <= 0 || halfsize2 <= 0 ) { return 0 ; } ///< RETURN 
       const double xSize = 
         mini( center1.x() + halfsize1 , center2.x() + halfsize2 ) - 
-        maxi( center1.x() - halfsize1 , center2.x() - halfsize1 ) ;
+        maxi( center1.x() - halfsize1 , center2.x() - halfsize2 ) ;
       if( xSize <= 0        )  { return 0 ; } ///< RETURN 
       const double ySize = 
         mini( center1.y() + halfsize1 , center2.y() + halfsize2 ) - 
-        maxi( center1.y() - halfsize1 , center2.y() - halfsize1 ) ;
+        maxi( center1.y() - halfsize1 , center2.y() - halfsize2 ) ;
       if( ySize <= 0        )  { return 0 ; } ///< RETURN 
       ///
       return xSize * ySize ;

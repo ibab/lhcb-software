@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.26 2004-01-07 09:57:34 cattanem Exp $
+! $Id: release.notes,v 1.27 2004-05-27 01:42:11 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
-!========================= CaloUtils v4r6 2004-01-07 =====================
+! 2004-05-27 - Ivan Belyaev
+ - CaloUtils/CellMatrix.h
+   fix my stupid bug in evaluation of overlapping area for 2 rectangular areas
+   The bug was observed and kindly reported by Olivier Deschamps 
+ - cmt/requirements
+   increment the version to v4r7 
+
+! ============================= CaloUtils v4r6 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo
  - Move to Gaudi v14 (use CaloEvent v13r* in requirements)
 
