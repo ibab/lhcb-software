@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2004-08-21 15:45:03 ibelyaev Exp $ 
+# $Id: requirements,v 1.26 2004-08-21 15:50:58 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,35 +10,38 @@ version       v4r0
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r0 Phys 
+use           Bender         v4r0   Phys 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r0 Tools 
+use           BenderLibs     v4r0   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDet      v2r0 Det 
+use           BenderDet      v2r0   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r0 Tools 
+use           BenderDict     v4r0   Tools 
 # =========== Bender & LoKi documentation =====================================
-use           BenderDoc      v4r0 Doc 
-use           LoKiDoc        v3r3 Doc 
+use           BenderDoc      v4r0   Doc 
+use           LoKiDoc        v3r3   Doc 
 # =========== Test suit for Bender ============================================
-use           BenderTest     v4r0 Tests 
-use           LoKiTest       v3r3 Tests 
+use           BenderTest     v4r0   Tests 
+use           LoKiTest       v3r3   Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v4r0 Ex  
-use           LoKiExample    v3r3 Ex 
+use           BenderExample  v4r0   Ex  
+use           LoKiExample    v3r3p1 Ex 
 # =========== Test suit for Bender ============================================
-use           BenderVis      v3r0 Vis 
+use           BenderVis      v3r0   Vis 
 # =========== empty 'user' package ============================================
-use           BenderUser     v4r0 Phys  
+use           BenderUser     v4r0   Phys  
 # =========== needed for visualization ========================================
 use           HIPPODRAW      v1r133 
 # =========== temporary : to make easier Hlt studies ==========================
-use           LoKiHlt        v1r0 Tools 
-use           LoKiHybrid     v1r0 Tools 
+use           LoKiHlt        v1r0   Tools 
+use           LoKiHybrid     v1r0   Tools 
 # =============================================================================
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2004/08/21 15:45:03  ibelyaev
+#  v4r0
+#
 # =============================================================================
 # The END 
 # =============================================================================
