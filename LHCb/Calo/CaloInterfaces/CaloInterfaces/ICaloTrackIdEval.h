@@ -1,8 +1,11 @@
-// $Id: ICaloTrackIdEval.h,v 1.4 2004-09-02 18:52:51 ibelyaev Exp $
+// $Id: ICaloTrackIdEval.h,v 1.5 2005-01-25 14:12:18 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/09/02 18:52:51  ibelyaev
+//  make preparation for HLT/Trigger
+//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKIDEVAL_H 
 #define CALOINTERFACES_ICALOTRACKIDEVAL_H 1
@@ -56,7 +59,6 @@ public:
   /** The main processing method (functor interface)
    *  It evaluated the Track ID estimators using the calorimeter information  
    *  @param  track  pointer to the object to be processed
-   *  @param  the value of the estimator
    */  
   virtual double     operator() 
     ( const TrStoredTrack* track ) const = 0 ;
@@ -74,7 +76,6 @@ public:
   /** The main processing method (functor interface)
    *  It evaluated the Track ID estimators using the calorimeter information  
    *  @param  track  pointer to the object to be processed
-   *  @param  the value of the estimator
    */  
   virtual double     operator() 
     ( const TrgTrack*      track ) const = 0 ;

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.21 2004-09-06 09:43:53 cattanem Exp $
+! $Id: release.notes,v 1.22 2005-01-25 14:12:18 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!======================= CaloInterfaces v4r3 2005-01-24 =====================
+! 2005-01-24 - Marco Cattaneo
+ - Fix for CLHEP 1.9 (backwards compatible)
+ - Fix some doxygen warnings
 
 !======================= CaloInterfaces v4r2 2004-09-02 =====================
 ! 2004-09-02 - Vanya BELYAEV

@@ -1,8 +1,11 @@
-// $Id: ICaloHypoTool.h,v 1.4 2004-02-17 11:51:54 ibelyaev Exp $
+// $Id: ICaloHypoTool.h,v 1.5 2005-01-25 14:12:18 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/02/17 11:51:54  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.3  2004/02/17 11:42:28  ibelyaev
 //  fix in Likel(i,y)hoods
 //
@@ -24,13 +27,13 @@
 class    CaloHypo                ;  ///< from CaloEvent 
 
 /** @class ICaloHypoTool ICaloHypoTool.h CaloInterfaces/ICaloHypoTool.h
- *  
+ *
  *  The generic interface for "Calorimeter tools" , which deals with 
  *  CaloHypo objects, the potential candidates are: 
  *
- *    - hypothesis processing 
- *    - dispatching 
- *    - subcomponent of CaloParticle processing  
+ *    \li hypothesis processing 
+ *    \li dispatching 
+ *    \li subcomponent of CaloParticle processing  
  *   
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   30/10/2001

@@ -1,8 +1,11 @@
-// $Id: ICaloDigitTool.h,v 1.4 2004-02-17 11:51:54 ibelyaev Exp $
+// $Id: ICaloDigitTool.h,v 1.5 2005-01-25 14:12:17 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/02/17 11:51:54  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.3  2004/02/17 11:42:28  ibelyaev
 //  fix in Likel(i,y)hoods
 //
@@ -47,13 +50,13 @@ public:
   static const InterfaceID& interfaceID() ;
 
   /** The main processing method
-   *  @param cluster pointer to CaloCluster object to be processed
+   *  @param digit pointer to CaloCluster object to be processed
    *  @return status code
    */
   virtual StatusCode process    ( CaloDigit* digit ) const = 0 ;
 
   /** The main processing method (functor interface)
-   *  @param cluster pointer to CaloCluster object to be processed
+   *  @param digit pointer to CaloCluster object to be processed
    *  @return status code
    */
   virtual StatusCode operator() ( CaloDigit* digit ) const = 0 ;

@@ -1,8 +1,11 @@
-// $Id: ICaloHypoLikelihood.h,v 1.2 2004-02-17 11:51:54 ibelyaev Exp $ 
+// $Id: ICaloHypoLikelihood.h,v 1.3 2005-01-25 14:12:18 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 11:51:54  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.1  2004/02/17 11:42:28  ibelyaev
 //  fix in Likel(i,y)hoods
 //
@@ -39,7 +42,7 @@ public:
   virtual const CaloHypotheses::Hypothesis& hypothesis() const = 0 ;
   
   /** evaluate the likelihood of the cluster for the given hypotheses
-   *  @param  cluster pointer to cluster, to be evaluated (const!)
+   *  @param  hypo pointer to cluster, to be evaluated (const!)
    *  @return likelyhood of the hypothesis 
    */
   virtual double likelihood ( const CaloHypo* hypo ) const = 0 ;
