@@ -5,6 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v17r2p1 2005-01-13 ======================
+! 2005-01-13 - Marco Cattaneo
+ - Add configuration files for doxygen documentation
+
 !======================= LHCbSys v17r2 2004-12-15 =======================
 ! 2004-12-15 - Marco Cattaneo
  - New packages:  GaudiObjDesc v7r0 (added temporarily until released with Gaudi)
