@@ -4,11 +4,13 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.5 2004-10-12 09:58:26 papanest Exp $
+ *  $Id: RichSmartIDTool.h,v 1.6 2004-10-27 14:41:03 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/12 09:58:26  papanest
+ *  speed up globaltoPDpanel
+ *
  *  Revision 1.4  2004/07/26 18:03:05  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -63,8 +65,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Converts a RichSmartID channel indentification into a position in
-  virtual StatusCode globalPosition ( const RichSmartID& smartid, 
-                                      HepPoint3D& position ) const;
+  virtual HepPoint3D globalPosition ( const RichSmartID& smartid ) const;
 
   // Computes the global position coordinate for a given position in local
   virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 

@@ -5,11 +5,13 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.6 2004-10-13 09:54:04 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.7 2004-10-27 14:41:03 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2004/10/13 09:54:04  jonrob
+ * various minor changes
+ *
  * Revision 1.5  2004/07/26 18:03:05  jonrob
  * Various improvements to the doxygen comments
- *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002

@@ -2,18 +2,21 @@
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 #============================================================================
-# $Id: requirements,v 1.7 2004-07-30 11:17:04 jonrob Exp $
+# $Id: requirements,v 1.8 2004-10-27 14:41:03 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2004/07/30 11:17:04  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package RichTools
-version v1r0
+version v1r2
 
 # ================ structure ================================================
 branches src cmt doc
 
 # ================ dependencies =============================================    
-use RichEvent   v7r*  Event
+use RichEvent   v8r*  Event
 use RichDet     v8r*  Det
 
 # ================ environment ==============================================

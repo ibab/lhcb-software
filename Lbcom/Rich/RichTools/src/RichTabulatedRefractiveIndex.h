@@ -4,8 +4,11 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.4 2004-10-27 14:41:03 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/26 18:03:05  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,6 +34,10 @@
 #include "RichKernel/IRichDetParameters.h"
 #include "RichKernel/Rich1DTabProperty.h"
 #include "RichKernel/BoostArray.h"
+
+// RichDet
+#include "RichDet/DeRich.h"
+#include "RichDet/DeRichRadiator.h"
 
 /** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
  *
@@ -86,15 +93,9 @@ private:  // Private data
   /// Detector paramters tool
   IRichDetParameters * m_detParams;
 
-  /// Location of QE in XML
-  std::string m_qeTableLoc;
-
   /// Pointers to refractive indices for each radiator type
   typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
   RefractiveIndices m_refIndex;
-
-  /// vector of locations in XML for refractive indices
-  std::vector<std::string> m_refLocations;
 
 };
 

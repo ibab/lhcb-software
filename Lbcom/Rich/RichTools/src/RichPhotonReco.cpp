@@ -5,8 +5,11 @@
  * Implementation file for class : RichPhotonReco
  *
  * CVS Log :-
- * $Id: RichPhotonReco.cpp,v 1.5 2004-07-26 18:03:04 jonrob Exp $
+ * $Id: RichPhotonReco.cpp,v 1.6 2004-10-27 14:41:03 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/07/26 18:03:04  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Antonis Papanestis
  * @date 2003-11-14
@@ -34,12 +37,6 @@ RichPhotonReco::RichPhotonReco( const std::string& type,
 
   declareInterface<IRichPhotonReconstruction>(this);
 
-  //  Nominal z positions of states at RICHes
-  //  m_nomZstates.push_back( 99.0*cm   );
-  //  m_nomZstates.push_back( 216.5*cm  );
-  //  m_nomZstates.push_back( 945.0*cm  );
-  //  m_nomZstates.push_back( 1190.0*cm );
-
 }
 
 //=============================================================================
@@ -50,7 +47,7 @@ RichPhotonReco::~RichPhotonReco() { }
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichPhotonReco::initialize() 
+StatusCode RichPhotonReco::initialize()
 {
   // initialise base class
   const StatusCode sc = RichToolBase::initialize();
@@ -58,6 +55,12 @@ StatusCode RichPhotonReco::initialize()
 
   DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
   DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+
+  // Get tools
+  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
+  acquireTool( "RichRayTracing", m_rayTracing );
+  acquireTool( "RichSmartIDTool", m_idTool );
+  acquireTool( "RichRefractiveIndex", m_refIndex );
 
   // load the nominal centre of curvature and flat mirror plane
   m_nominalCoC[Rich::Rich1][Rich::top] = rich1->
@@ -86,18 +89,13 @@ StatusCode RichPhotonReco::initialize()
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
 
-  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
-  acquireTool( "RichRayTracing", m_rayTracing );
-  acquireTool( "RichSmartIDTool", m_idTool );
-  acquireTool( "RichRefractiveIndex", m_refIndex );
-
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichPhotonReco::finalize() 
+StatusCode RichPhotonReco::finalize()
 {
   return RichToolBase::finalize();
 }
@@ -105,21 +103,19 @@ StatusCode RichPhotonReco::finalize()
 //=========================================================================
 //  reconstruct a photon from track segment and smartID
 //=========================================================================
-StatusCode RichPhotonReco::reconstructPhoton (const RichTrackSegment& trSeg,
-                                              const RichSmartID& smartID,
-                                              RichGeomPhoton& gPhoton ) const
+StatusCode RichPhotonReco::reconstructPhoton ( const RichTrackSegment& trSeg,
+                                               const RichSmartID& smartID,
+                                               RichGeomPhoton& gPhoton ) const
 {
-  HepPoint3D detectionPoint;
-  const StatusCode sc = m_idTool->globalPosition(smartID, detectionPoint);
-  return ( sc.isFailure() ? sc : reconstructPhoton(trSeg,detectionPoint,gPhoton) );
+  return reconstructPhoton( trSeg, m_idTool->globalPosition(smartID), gPhoton );
 }
 
 //=========================================================================
 //  reconstruct a photon from track segment and detection point
 //=========================================================================
-StatusCode RichPhotonReco::reconstructPhoton (const RichTrackSegment& trSeg,
-                                              const HepPoint3D& detectionPoint,
-                                              RichGeomPhoton& gPhoton ) const {
+StatusCode RichPhotonReco::reconstructPhoton ( const RichTrackSegment& trSeg,
+                                               const HepPoint3D& detectionPoint,
+                                               RichGeomPhoton& gPhoton ) const {
 
   const Rich::DetectorType rich = trSeg.rich();
   const Rich::RadiatorType radiator = trSeg.radiator();

@@ -5,8 +5,11 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.3 2004-07-26 18:03:05 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.4 2004-10-27 14:41:03 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2004/07/26 18:03:05  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -29,16 +32,6 @@ RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& 
 
   declareInterface<IRichRefractiveIndex>(this);
 
-  // Define job option parameters
-  m_refLocations.push_back("/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT");
-  m_refLocations.push_back("/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT");
-  m_refLocations.push_back("/dd/Materials/RichMaterialTabProperties/CF4RIndexPT");
-  declareProperty( "RefIndexLocations", m_refLocations );
-
-  // Quantum efficiency
-  declareProperty( "QETableLocation", m_qeTableLoc =
-                   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff" );
-
 }
 
 StatusCode RichTabulatedRefractiveIndex::initialize() 
@@ -50,32 +43,21 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   // Get tools
   acquireTool( "RichDetParameters", m_detParams );
 
-  // Get the refractive indices from the XML
-  SmartDataPtr<TabulatedProperty> tabAero( detSvc(), m_refLocations[Rich::Aerogel] );
-  if ( !tabAero ) {
-    return Error( "Failed to load refractive index from "+m_refLocations[Rich::Aerogel] );
-  }
-  SmartDataPtr<TabulatedProperty> tabR1Gas( detSvc(), m_refLocations[Rich::Rich1Gas] );
-  if ( !tabR1Gas ) {
-    return Error( "Failed to load refractive index from "+m_refLocations[Rich::Rich1Gas] );
-  }
-  SmartDataPtr<TabulatedProperty> tabR2Gas( detSvc(), m_refLocations[Rich::Rich2Gas] );
-  if ( !tabR2Gas ) {
-    return Error( "Failed to load refractive index from "+m_refLocations[Rich::Rich2Gas] );
-  }
+  // Get the RICH radiators
+  const DeRichRadiator * aero  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
+  const DeRichRadiator * c4f10 = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
+  const DeRichRadiator * cf4   = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
 
   // Create tabulated property objects from XML information
-  m_refIndex[Rich::Aerogel]  = new Rich1DTabProperty( tabAero  );
-  m_refIndex[Rich::Rich1Gas] = new Rich1DTabProperty( tabR1Gas );
-  m_refIndex[Rich::Rich2Gas] = new Rich1DTabProperty( tabR2Gas );
+  m_refIndex[Rich::Aerogel]  = new Rich1DTabProperty( aero->refIndex()  );
+  m_refIndex[Rich::Rich1Gas] = new Rich1DTabProperty( c4f10->refIndex() );
+  m_refIndex[Rich::Rich2Gas] = new Rich1DTabProperty( cf4->refIndex()   );
 
-  // Acquire QE Curve from XML
-  SmartDataPtr<TabulatedProperty> tabQE( detSvc(), m_qeTableLoc );
-  if ( tabQE ) {
-    m_QE = new Rich1DTabProperty( tabQE );
-  } else {
-    return Error( "Cannot retrieve QE from " + m_qeTableLoc );
-  }
+  // Get Rich1
+  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+
+  // Nominal HPD QE 
+  m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
 
   return StatusCode::SUCCESS;
 }
@@ -108,8 +90,6 @@ double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType r
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad )
 {
-  //const double meanEn = m_QE->meanX( m_detParams->minPhotonEnergy(rad), 
-  //                                   m_detParams->maxPhotonEnergy(rad) ) / eV;
   return refractiveIndex( rad, m_detParams->meanPhotonEnergy(rad) );
 }
 

@@ -4,14 +4,16 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.12 2004-10-21 12:59:35 papanest Exp $
+ *  $Id: RichRayTracing.h,v 1.13 2004-10-27 14:41:03 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2004/10/21 12:59:35  papanest
+ *  new method traceBackFromDetector
+ *
  *  Revision 1.11  2004/07/26 18:03:05  jonrob
  *  Various improvements to the doxygen comments
  *
  *  Revision 1.10  2004/07/22 14:39:57  jonrob
  *  test CVS log in file
- *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29

@@ -5,11 +5,13 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.5 2004-10-12 09:58:26 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.6 2004-10-27 14:41:03 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/10/12 09:58:26  papanest
+ * speed up globaltoPDpanel
+ *
  * Revision 1.4  2004/07/26 18:03:05  jonrob
  * Various improvements to the doxygen comments
- *
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -30,7 +32,7 @@ const        IToolFactory& RichSmartIDToolFactory = s_factory ;
 RichSmartIDTool::RichSmartIDTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase( type, name , parent ) 
+  : RichToolBase( type, name , parent )
 {
   declareInterface<IRichSmartIDTool>(this);
 }
@@ -53,7 +55,6 @@ StatusCode RichSmartIDTool::initialize()
                                             DeRichHPDPanelLocation::Rich1Panel1 },
                                           { DeRichHPDPanelLocation::Rich2Panel0,
                                             DeRichHPDPanelLocation::Rich2Panel1 } };
-
   //loop over riches and photo detector panels
   unsigned int rich, panel;
   for( rich=0; rich<m_photoDetPanels.size(); ++rich ) {
@@ -76,11 +77,9 @@ StatusCode RichSmartIDTool::finalize  ()
 
 //=============================================================================
 // Returns the position of a SmartID in global coordinates
-StatusCode RichSmartIDTool::globalPosition ( const RichSmartID& inSmartID,
-                                             HepPoint3D& outPosition) const
+HepPoint3D RichSmartIDTool::globalPosition ( const RichSmartID& inSmartID ) const
 {
-  return  (m_photoDetPanels[inSmartID.rich()][inSmartID.panel()]->
-           detectionPoint(inSmartID,outPosition));
+  return (m_photoDetPanels[inSmartID.rich()][inSmartID.panel()]->detectionPoint(inSmartID));
 }
 
 
@@ -93,18 +92,15 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
     // Rich1
     if (globalPoint.y() > 0.0) {
       // top side
-
       smartid.setRich(Rich::Rich1);
       smartid.setPanel(Rich::top);
-      return ( m_photoDetPanels[Rich::Rich1][Rich::top]->
-               smartID(globalPoint, smartid) );
+      return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
     }
     else {
       // bottom side
       smartid.setRich(Rich::Rich1);
       smartid.setPanel(Rich::bottom);
-      return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
-               smartID(globalPoint, smartid) );
+      return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->smartID(globalPoint, smartid) );
     }
   else
     // Rich2
@@ -112,25 +108,21 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
       // left side
       smartid.setRich(Rich::Rich2);
       smartid.setPanel(Rich::left);
-      return ( m_photoDetPanels[Rich::Rich2][Rich::left]->
-               smartID(globalPoint, smartid) );
+      return ( m_photoDetPanels[Rich::Rich2][Rich::left]->smartID(globalPoint, smartid) );
     }
     else {
       // right side
       smartid.setRich(Rich::Rich2);
       smartid.setPanel(Rich::right);
-      return ( m_photoDetPanels[Rich::Rich2][Rich::right]->
-               smartID(globalPoint, smartid) );
+      return ( m_photoDetPanels[Rich::Rich2][Rich::right]->smartID(globalPoint, smartid) );
     }
-
 }
 
 //=============================================================================
 // Returns the SmartID for a given global position
 // z coord is not valid
 //=============================================================================
-HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
-                                              ) const
+HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) const
 {
   if (globalPoint.z() < 8000.0)
     // Rich1
@@ -139,7 +131,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
 
       HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
                             //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );                
+                            geometry()->toLocal( globalPoint ) );
       tempPoint.setY( tempPoint.y() + m_localOffset[Rich::Rich1][Rich::top] );
       tempPoint.setZ( 0.0 );
       return tempPoint;
@@ -148,7 +140,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
       // bottom side
       HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
                             //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );                
+                            geometry()->toLocal( globalPoint ) );
       tempPoint.setY(tempPoint.y() - m_localOffset[Rich::Rich1][Rich::bottom]);
       tempPoint.setZ( 0.0 );
       return tempPoint;
@@ -159,7 +151,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
       // left side
       HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
                             //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );                
+                            geometry()->toLocal( globalPoint ) );
       tempPoint.setX( tempPoint.x() + m_localOffset[Rich::Rich2][Rich::left] );
       tempPoint.setZ( 0.0 );
       return tempPoint;
