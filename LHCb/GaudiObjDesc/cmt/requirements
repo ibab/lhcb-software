@@ -1,10 +1,10 @@
 package GaudiObjDesc
-version v3r3
+version v4r0
 
 branches doc cmt src
 
-use XERCES v15r2
-use GaudiIntrospection v3r* 
+use XERCES v16r0
+use GaudiIntrospection v4r* 
 
 # Macro defintion used by both fragments below
 macro xmlsrc "xml"
