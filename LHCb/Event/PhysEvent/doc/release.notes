@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.28 2002-10-03 12:50:33 gcorti Exp $
+! $Id: release.notes,v 1.29 2002-10-03 12:52:07 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!========================= PhysEvent v7r0 2002-10-03 ========================
+! 2002-10-03 - Gloria Corti
+ - Correlation error dimension is ( 4x3 = (px,py,pz,E)(x,y,z) )
 
 ! 2002-09-08 - Gloria Corti
  - Fix in Particle to extend correlation error between position and momentum

@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.8 2002-09-09 13:21:05 gcorti Exp $
+// $Id: Particle.cpp,v 1.9 2002-10-03 12:52:30 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -91,7 +91,7 @@ void Particle::setMomentumErr(const HepSymMatrix& value)
   m_momentumErr = value;
 
   // Set corresponding error on (sx,sy,P)
-  HepMatrix trMomToSlopes(3,3,0.0);
+  HepMatrix trMomToSlopes(3,3,0);
   double px = m_momentum.px();
   double py = m_momentum.py();
   double pz = m_momentum.pz();
@@ -125,7 +125,7 @@ void Particle::setPosMomCorr(const HepMatrix& value)
   HepMatrix temp = value.sub(1,3,1,3);
 
   // Propagate to slopesMomCorr
-  HepMatrix trMomToSlopes(3,3,0.0);
+  HepMatrix trMomToSlopes(3,3,0);
   double px = m_momentum.px();
   double py = m_momentum.py();
   double pz = m_momentum.pz();
@@ -156,7 +156,7 @@ void Particle::setSlopesMomErr(const HepSymMatrix& value)
   m_slopesMomErr = value;
 
   // Set corresponding error on (Px,Py,Pz,E)
-  HepMatrix trSlopesToMom(4,3,0.0);
+  HepMatrix trSlopesToMom(4,3,0);
   double p = m_momentum.vect().mag();
   //double pz = fabs(m_momentum.pz());
   double pz = m_momentum.pz();
@@ -193,7 +193,7 @@ void Particle::setPosSlopesCorr(const HepMatrix& value)
   m_posSlopesCorr = value;
 
   // Propagate to posMomCorr
-  HepMatrix trSlopesToMom(3,3,0.0);
+  HepMatrix trSlopesToMom(3,3,0);
   double p = m_momentum.vect().mag();
   //double pz = fabs(m_momentum.pz());
   double pz = m_momentum.pz();
@@ -212,14 +212,15 @@ void Particle::setPosSlopesCorr(const HepMatrix& value)
   trSlopesToMom(3,2) = -a2*pz*sy;          ///< dPz/dSy
   trSlopesToMom(3,3) = a;                  ///< dPz/dP  
  
-  // Now obtain the new non diagonal elements: lower angle
+  // Now obtain the new non diagonal elements: lower square
   HepMatrix temp = trSlopesToMom * m_posSlopesCorr;
-  for( int i = 1; i<=3; i++ ) {
-    for( int j = 1; j<=3; j++ ) {
-      m_posMomCorr(i,j) = temp(i,j);
-    }
-  }
-  for(int i4 = 1; i4<=4; i4++) {
+  m_posMomCorr.sub(1,1,temp);  
+//    for( int i = 1; i<=3; i++ ) {
+//      for( int j = 1; j<=3; j++ ) {
+//        m_posMomCorr(i,j) = temp(i,j);
+//      }
+//    }
+  for(int i4 = 1; i4<=3; i4++) {
     m_posMomCorr(4,i4) = 0.0;
   }
   
