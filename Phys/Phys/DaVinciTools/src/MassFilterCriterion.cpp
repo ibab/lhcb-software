@@ -1,4 +1,4 @@
-// $Id: MassFilterCriterion.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: MassFilterCriterion.cpp,v 1.3 2004-03-29 08:15:42 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -65,13 +65,8 @@ bool MassFilterCriterion::isSatisfied( const Particle* const & part ) {
   const ParticleID& id = part->particleID();
   const ParticleProperty *pp = m_ppSvc->findByStdHepID(id.pid());
   double d = part->mass() - pp->mass() ;
-#ifdef WIN32
-  return d >0 ?  d < std::_MIN(m_massWindow,m_upperMassWindow)
-              : -d < std::_MIN(m_massWindow,m_lowerMassWindow);
-#else
   return d >0 ?  d < std::min(m_massWindow,m_upperMassWindow)
               : -d < std::min(m_massWindow,m_lowerMassWindow);
-#endif
 }
 
 //=============================================================================

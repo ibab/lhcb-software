@@ -1,4 +1,4 @@
-// $Id: LifetimeSignificanceCriterion.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: LifetimeSignificanceCriterion.cpp,v 1.3 2004-03-29 08:15:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,9 +14,8 @@
 
 #include "DaVinciTools/ILifetimeFitter.h"
 #include "DaVinciTools/IGeomDispCalculator.h"
-                                                                                                                                     
 
-
+#include <assert.h>
 
 // local
 #include "LifetimeSignificanceCriterion.h"
