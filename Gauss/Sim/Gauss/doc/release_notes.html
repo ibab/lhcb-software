@@ -1,18 +1,27 @@
+
 <PRE>
 Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
-</PRE>
+<H1><A NAME="v7r0">2002-12-13 - Gauss v7r0</A></H1><PRE>
+                       use LHCb_v11r4
+! 2002-12-13 Florence Ranjard
+  requirements - fix version numbers, do not use * in versions
+                 do not use GaussImports
+                 do not use directly Calo packages, use them through GaussCalo
+                 use new set of Gauss<detector> packages
+                 use OT, IT, VeloAlgorithms packages
 
-<H1><A NAME="v6r0">2002-12-07 - Gauss v7r0</A></H1><PRE>
 ! 2002-12-07 Vanya Belyaev 
   cmt/requirements          - add newer version of GaussImport, GaussTools,
                               Calo packages, GiGaCnv etc 
   options/Calo.opts         - main job-option file for configuration 
                               of all Calo stuff
   options/CaloSensDet.opts  - The job-option file for configuration 
-                              of Calo Sensitive Detectros 
+                              of Calo Sensitive Detector
+!========================================================================
+</PRE> 
 <H1><A NAME="v6r0">20021115 - Gauss v6r0</A></H1><PRE>
 ! 2002-11-15 - Florence Ranjard
   requirements - use XmlDDDB v14r*, OTAlgorithms v12r*, OTAssociators v2r*
@@ -29,7 +38,8 @@ Package manager : Witek Pokorski
  
   requirements - use of new GaussTools, GiGaCnv
 
-
+!=========================================================================
+</PRE>
 <H1><A NAME="v5r0">20021011 - Gauss v5r0</A></H1><PRE>
                new version installed in $SOFTWARE/releases/GAUSS_v5r0
                it uses LHCB_v11r0 which uses GAUDI_v11r0
@@ -40,7 +50,8 @@ Package manager : Witek Pokorski
                > cd newmycmt
                > GaussEnv v5r0
                > getpack Sim/Gauss v5r0
-
+!===========================================================================
+</PRE>
 !============================ GaussTools v2r0 2002-10-15 =====================
 ! 2002-10-15 - Florence Ranjard
  - doc/release.notes - reformat the release notes

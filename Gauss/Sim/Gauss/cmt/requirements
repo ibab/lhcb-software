@@ -4,7 +4,7 @@ version v7r0
 # =============================================================================
 # structure 
 # =============================================================================
-branches doc options cmt job data
+branches doc options cmt data
 
 # version_strategy first_choice
 
@@ -33,14 +33,18 @@ use HbookCnv            v13r*
 # Access to magnetic field service
 use Magnet              v2r*    Det
 
-#GiGa staff...
-use GiGaCnv             v10r*   Sim
-use GaussTools          v4r*    Sim
-use GaussImports        v4r*    Sim 
-use CaloDetXmlCnv       v2r*    Det 
+# GiGa staff...
+use GiGaVisUI           v1r0    Sim
+
+# Gauss stuff ...
+#use GaussImports        v4r0    Sim 
+use GaussCalo           v1r0    Sim
+use GaussRICH           v1r0    Sim
+use GaussTracker        v1r0    Sim
+use GaussPhysics        v1r0    Sim
 
 # generator
-use GeneratorModules    v4r*    Gen
+use GeneratorModules    v4r1    Gen
 
 # optional generator: 
 #use EvGen               v4r*    Sim 
@@ -48,9 +52,10 @@ use GeneratorModules    v4r*    Gen
 #geometry source 
 use XmlDDDB             v14r*   Det 
 
-# Outer Tracker
-use OTAlgorithms        v12r*   OT
-use OTAssociators       v2r*    OT
+# Trackers
+use OTAlgorithms        v12r2   OT
+use VeloAlgorithms      v2r5    Velo 
+use ITAlgorithms        v12r6   IT     
 
 #use GaussChecks          v1r0 Sim
 
