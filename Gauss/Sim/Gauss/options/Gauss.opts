@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.43 2004-03-17 08:53:10 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.44 2004-03-25 12:47:34 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -36,6 +36,7 @@ MessageSvc.OutputLevel    = 3;
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
+#include "$GAUSSOPTS/GaussTape.opts"
 
 // write an output file in ROOT format
 #include "$GAUSSOPTS/GaussRootIO.opts"

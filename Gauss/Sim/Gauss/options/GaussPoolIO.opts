@@ -18,6 +18,3 @@ PoolDbCacheSvc.Dlls += {"VeloEventDict" };
 PoolDbCacheSvc.Dlls += {"MuonEventDict" };
 
 
-/// content of Gauss.oosim 
-#include "$GAUSSOPTS/GaussTape.opts"
-

@@ -1,4 +1,4 @@
-// $Id: GaussRootIO.opts,v 1.4 2004-01-14 13:21:05 ranjard Exp $ 
+// $Id: GaussRootIO.opts,v 1.5 2004-03-25 12:47:34 ranjard Exp $ 
 
 ApplicationMgr.DLLs += 
 { "GaudiDb"     ,
@@ -9,5 +9,3 @@ ApplicationMgr.ExtSvc           += { "DbEventCnvSvc/RootEvtCnvSvc" };
 RootEvtCnvSvc.DbType             = "ROOT" ;
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc"               };
 
-/// content of Gauss.oosim 
-#include "$GAUSSOPTS/GaussTape.opts"
