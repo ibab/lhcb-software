@@ -1,4 +1,4 @@
-// $Id: IRichMCTruthTool.h,v 1.2 2004-06-04 19:56:29 jonesc Exp $
+// $Id: IRichMCTruthTool.h,v 1.3 2004-06-10 14:12:00 jonesc Exp $
 #ifndef RICHMCTOOLS_IRICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_IRICHMCTRUTHTOOL_H 1
 
@@ -51,6 +51,12 @@ public:
 
   /// Returns the MCRichOptical photon associated to a given MCRichHit
   virtual const MCRichOpticalPhoton * mcOpticalPhoton( const MCRichHit * mcHit ) const = 0;
+
+  /// Is this MCRichDigit background ?
+  virtual bool isBackground( const MCRichDigit * digit ) const = 0;
+
+  /// Is this MCRichHit background ?
+  virtual bool isBackground( const MCRichHit * hit ) const = 0;
 
 };
 

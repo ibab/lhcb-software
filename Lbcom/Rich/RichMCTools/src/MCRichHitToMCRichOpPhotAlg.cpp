@@ -1,4 +1,4 @@
-// $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.1 2004-03-16 13:39:15 jonesc Exp $
+// $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.2 2004-06-10 14:12:00 jonesc Exp $
 // Include files
 
 // local
@@ -22,6 +22,7 @@ MCRichHitToMCRichOpPhotAlg::MCRichHitToMCRichOpPhotAlg( const std::string& name,
   : RichAlgBase ( name , pSvcLocator )
 {
 
+  // Event locations to process
   m_evtLocs.clear();
   m_evtLocs.push_back(                    MCRichOpticalPhotonLocation::Default );
   m_evtLocs.push_back( "Prev/"          + MCRichOpticalPhotonLocation::Default );

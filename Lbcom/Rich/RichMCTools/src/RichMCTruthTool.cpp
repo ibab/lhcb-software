@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.cpp,v 1.3 2004-06-04 19:56:30 jonesc Exp $
+// $Id: RichMCTruthTool.cpp,v 1.4 2004-06-10 14:12:00 jonesc Exp $
 
 // local
 #include "RichMCTruthTool.h"
@@ -157,4 +157,21 @@ const MCRichOpticalPhoton *
 RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 {
   return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : 0 );
+}
+
+bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
+{
+  const SmartRefVector<MCRichHit> & hits = mcRichHits(digit);
+  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
+        iHit != hits.end(); ++iHit ) {
+    if ( *iHit && !isBackground(*iHit) ) return false;
+  }
+  return true;
+}
+
+bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
+{
+  return ( hit && ( hit->scatteredPhoton() ||
+                    hit->chargedTrack() ||
+                    hit->backgroundHit() ) );
 }
