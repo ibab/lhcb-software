@@ -1,8 +1,11 @@
-// $Id: Less.h,v 1.4 2002-05-10 12:29:42 ibelyaev Exp $
+// $Id: Less.h,v 1.5 2002-05-10 13:15:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/10 12:29:42  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
+//
 // ============================================================================
 #ifndef RELATIONS_LESS_H 
 #define RELATIONS_LESS_H 1
@@ -15,6 +18,9 @@
  *  Partial specialization of @p std::less structure for 
  *  @p SmartRef classes for no-MicroSoft compilers and 
  *  defininion of templated "operator<" for MicroSoft compiler 
+ *  The overall result of these actions is that 
+ *  comparison of @p SmartRef<TYPE> ojbects is 
+ *  reduced to the comparison of raw pointers 
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   08/05/2002
@@ -42,7 +48,7 @@ struct std::less<SmartRef<TYPE> >
    */
   bool operator() ( const SmartRef<TYPE>& obj1 , 
                     const SmartRef<TYPE>& obj2 ) const
-  { return ( const TYPE*) obj1 < (const TYPE*) obj2 ; };
+  { return std::less<const TYPE*>()( obj1 , obj2 ) ; };
 };
 /// remove "const" qualifier
 template<class TYPE> 
@@ -56,8 +62,9 @@ struct std::less<const SmartRef<TYPE> > : public std::less<SmartRef<TYPE> > {};
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   08/05/2002
  */
-template <class TYPE> bool operator<( const SmartRef<TYPE>& obj1 , 
-                                      const SmartRef<TYPE>& obj2 ) 
+template <class TYPE> bool 
+operator<( const SmartRef<TYPE>& obj1 , 
+           const SmartRef<TYPE>& obj2 ) 
 { return std::less<const TYPE*>()( obj1 , obj2 ) ; };
 
 #endif 
