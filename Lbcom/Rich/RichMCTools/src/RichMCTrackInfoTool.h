@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.h,v 1.2 2004-02-02 14:22:33 jonesc Exp $
+// $Id: RichMCTrackInfoTool.h,v 1.3 2004-06-17 12:01:43 cattanem Exp $
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
-#include "RichUtils/RichToolBase.h"
+#include "RichKernel/RichToolBase.h"
 
 // Event model
 #include "Event/MCParticle.h"
@@ -19,9 +19,9 @@
 #include "Event/MCRichTrack.h"
 
 // Interfaces
-#include "RichMCTools/IRichMCTrackInfoTool.h"
-#include "RichDetTools/IRichRayTracing.h"
-#include "RichDetTools/IRichSmartIDTool.h"
+#include "RichKernel/IRichMCTrackInfoTool.h"
+#include "RichKernel/IRichRayTracing.h"
+#include "RichKernel/IRichSmartIDTool.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"

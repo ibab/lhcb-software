@@ -1,4 +1,4 @@
-// $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.1 2004-03-16 13:39:16 jonesc Exp $
+// $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.2 2004-06-17 12:01:43 cattanem Exp $
 #ifndef RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H
 #define RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H  1
 
@@ -18,7 +18,7 @@
 #include "Event/MCParticle.h"
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 /** @class MCRichHitToMCRichOpPhotAlg MCRichHitToMCRichOpPhotAlg.h
  *

@@ -6,31 +6,29 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           RichMCTools
-version           v1r2
+version           v2r0
 
 #============================================================================
 # Structure
 #============================================================================
-branches          cmt doc src RichMCTools
+branches          cmt doc src
 
 #============================================================================
 # Environment
 #============================================================================
-include_dirs $(RICHMCTOOLSROOT)
+include_path none
 
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichUtils      v3r*    Rich
-use   RichDetTools   v4r*    Rich
-use   RichEvent      v7r*    Event
-use   LinkerEvent    v1r*    Event
+use RichEvent   v7r*    Event
+use RichDet     v7r*    Det
+use LinkerEvent v1r*    Event
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library          RichMCTools    ../src/*.cpp
-
 
 #============================================================================
 # define component library link options

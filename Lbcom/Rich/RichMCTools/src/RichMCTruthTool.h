@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.h,v 1.4 2004-06-10 14:12:01 jonesc Exp $
+// $Id: RichMCTruthTool.h,v 1.5 2004-06-17 12:01:43 cattanem Exp $
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
-#include "RichUtils/RichToolBase.h"
+#include "RichKernel/RichToolBase.h"
 
 // Relations
 #include "Relations/IAssociatorWeighted.h"
@@ -29,12 +29,13 @@
 #include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichSegment.h"
 #include "Event/MCRichTrack.h"
+#include "Event/MCRichHit.h"
 
 // Linkers
 #include "Linker/LinkedTo.h"
 
 // Interfaces
-#include "RichMCTools/IRichMCTruthTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"

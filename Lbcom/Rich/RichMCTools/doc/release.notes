@@ -4,6 +4,13 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v2r0 2004-06-16 ======================
+! 2004-06-16 - Marco Cattaneo
+ - Move all interfaces to RichKernel and remove RichMCTools directory
+ - Add RichTrSegMakerFromMCRichTracks (moved from RichDetTools), including 
+   minor improvements from Chris Jones
+ - Remove dependencies on RichUtils, RichDetTools
+
 ! 2004-06-02 - Chris Jones
  - Add new tool RichMCTruthTool which contains the non-reconstruction specific
    methods ported from MCRichRecTruthTool in Rich/RichRecMCTools

@@ -1,4 +1,4 @@
-// $Id: RichMCTools_load.cpp,v 1.3 2004-06-02 21:37:21 jonesc Exp $
+// $Id: RichMCTools_load.cpp,v 1.4 2004-06-17 12:01:43 cattanem Exp $
 // Include files
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -17,4 +17,5 @@ DECLARE_FACTORY_ENTRIES(RichMCTools) {
   // builds the association table for MCRichHits to MCRichOpticalPhotons
   DECLARE_ALGORITHM( MCRichHitToMCRichOpPhotAlg );
 
+  DECLARE_TOOL( RichTrSegMakerFromMCRichTracks ); 
 }
