@@ -7,10 +7,17 @@
 
 !===================  DaVinciSys v12r3 2004-10-27 ============================
 Modified packages:
-CaloReco                  v2r6     Calo
-LoKi                      v3r5p1   Tools  
-LoKiHlt                   v1r1p1   Tools  
-DaVinciKernel             v2r0     Phys
+DaVinci                  v12r3    Phys   
+CaloReco                 v2r6     Calo
+LoKi                     v3r5p1   Tools  
+LoKiHlt                  v1r1p1   Tools  
+Utilities                v1r11p1  Tools
+DaVinciFilter            v1r2     Phys
+DaVinciKernel            v2r0     Phys
+Stripping                v1r5p1   Tools
+PhysSelSys               v7r11    PhysSel
+Gamma2ee                 v1r4     PhysSel
+Muon                     v1r2     PhysSel
 
 !===================  DaVinciSys v12r2 2004-10-13 ============================
 New packages:
