@@ -9,8 +9,10 @@
 #include "../RichAnalysis/RichG4HistoFillSet1.h"
 #include "../RichAnalysis/RichG4HistoFillSet2.h"
 #include "../RichAnalysis/RichG4HistoFillSet3.h"
+#include "../RichAnalysis/RichG4HistoFillSet4.h"
 #include "../RichAnalysis/RichG4HistoFillTimer.h"
 #include "../RichAnalysis/RichG4EventHitCount.h"
+#include "../RichAnalysis/RichG4HitRecon.h"
 // forward declaration
 template <class TYPE> class GiGaFactory;
 
@@ -62,6 +64,12 @@ public:
     return m_RichG4HistoFillSet3;
   }
 
+  RichG4HistoFillSet4* GetRichG4HistoFillSet4() 
+  {
+    return m_RichG4HistoFillSet4;
+  }
+
+
   RichG4HistoFillTimer* GetRichG4HistoFillTimer() 
   {
     return m_RichG4HistoFillTimer;
@@ -77,6 +85,7 @@ public:
     
     return m_RichG4EventHitCounter;
   }
+
   
   void   PrintRichG4HitCounters();
   
@@ -97,6 +106,16 @@ public:
   {
     return  m_RichEventActionHistoFillActivateTimer;
   }
+  RichG4HitRecon* getRichG4HitRecon() 
+  {
+    return m_RichG4HitRecon;
+  }
+  bool RichG4EventActivateCkvRecon()
+  {
+    return  m_RichG4EventActivateCkvRecon;
+    
+  }
+  
   
 private:
   ///
@@ -111,16 +130,23 @@ private:
   RichG4HistoFillSet1* m_RichG4HistoFillSet1;
   RichG4HistoFillSet2* m_RichG4HistoFillSet2;
   RichG4HistoFillSet3* m_RichG4HistoFillSet3;
+  RichG4HistoFillSet4* m_RichG4HistoFillSet4;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   RichG4EventHitCount* m_RichG4EventHitCounter;
+  RichG4HitRecon* m_RichG4HitRecon;
   
   
   int m_RichEventActionVerboseLevel;
   bool m_RichEventActionHistoFillActivateSet1;
   bool m_RichEventActionHistoFillActivateSet2;
   bool m_RichEventActionHistoFillActivateSet3;
+  bool m_RichEventActionHistoFillActivateSet4;
   bool m_RichEventActionHistoFillActivateTimer;
   bool m_RichG4EventHitActivateCount;
+  bool m_RichG4EventActivateCkvRecon;
+
+  bool m_RichG4HitReconUseSatHit;
+  bool m_RichG4HitReconUseMidRadiator;
   
    
   

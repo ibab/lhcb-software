@@ -22,7 +22,7 @@
 //
 //
 // RichG4Cerenkov.cc
-// $Id: RichG4Cerenkov.cc,v 1.1 2003-04-29 17:08:06 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.2 2004-02-04 13:52:24 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -77,7 +77,8 @@
         /////////////////
 
 RichG4Cerenkov::RichG4Cerenkov(const G4String& processName)
-           : G4VContinuousProcess(processName)
+  : G4VContinuousProcess(processName),
+    fRichVerboseInfoTag(false)
 {
 	fTrackSecondariesFirst = false;
 	fMaxPhotons = 0;
@@ -327,7 +328,7 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
                 
                 G4Track* aTaggedSecondaryTrack
                    = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
-                     cosTheta,phi,sampledMomentum);
+                     cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
 
 
 		 aParticleChange.AddSecondary(aTaggedSecondaryTrack);

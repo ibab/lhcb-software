@@ -21,15 +21,15 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.2 2003-07-16 13:24:08 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.3 2004-02-04 13:52:24 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Rayleigh Scattering Class Implementation
 ////////////////////////////////////////////////////////////////////////
-// RichG4OpRayleigh.cc   SE 28-04-2003
-// File:        G4OpRayleigh.cc 
+//
+// File:        RichG4OpRayleigh.cc 
 // Description: Discrete Process -- Rayleigh scattering of optical 
 //		photons  
 // Version:     1.0
@@ -53,6 +53,10 @@
 
 #include "G4ios.hh"
 #include "RichG4OpRayleigh.hh"
+// Add a flag to tag the photon as rayleigh scattered. SE Oct 2003.
+// this can be done from userstep action, but that will take more
+// cpu time. Here it is switched off for default running mode. 
+#include "RichG4RayleighTag.h"
 
 /////////////////////////
 // Class Implementation
@@ -71,10 +75,11 @@
         /////////////////
 
 RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName)
-           : G4VDiscreteProcess(processName)
+  : G4VDiscreteProcess(processName),
+    fRichVerboseInfoTag(false)
 {
 
-        thePhysicsTable = NULL;
+        thePhysicsTable = 0;
 
         if (verboseLevel>0) {
            G4cout << GetProcessName() << " is created " << G4endl;
@@ -93,7 +98,7 @@ RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName)
 
 RichG4OpRayleigh::~RichG4OpRayleigh()
 {
-        if (thePhysicsTable!= NULL) {
+        if (thePhysicsTable!= 0) {
            thePhysicsTable->clearAndDestroy();
            delete thePhysicsTable;
         }
@@ -127,8 +132,16 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 	G4double CosTheta = pow(rand, 1./3.);
 	G4double SinTheta = sqrt(1.-CosTheta*CosTheta);
-        
+
         if(G4UniformRand() < 0.5)CosTheta = -CosTheta;
+        // Addtions made by SE to tag the photon as
+        // rayleighscattered photon  Oct 2003.
+        // This is put under a switch which is
+        // by default switched off.
+        if( fRichVerboseInfoTag) {  
+          RichG4RayleighTag(aTrack);
+        }
+        
 	// Addtions made by SE to save cpu time.
         // Kill the photon when its wavelength too low
         // (energy too high) 
@@ -137,8 +150,8 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
         // done for stepnumber very large just to avoid any photon
         // going through an in infinite loop through the aerogel.
  
-          G4double totEn = aParticle->GetTotalEnergy();
-          const G4double CurStepLen=  aStep.GetStepLength();
+         // G4double totEn = aParticle->GetTotalEnergy();
+         // const G4double CurStepLen=  aStep.GetStepLength();
           const G4int CurStepNum=  aTrack.GetCurrentStepNumber() ;
 
           //          if((CurStepLen < 1.0 *mm)  ||( CurStepNum > 2000 ) ) {
@@ -156,7 +169,9 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
           
               }
               
+              
             }
+            
             
             
             //     }
@@ -166,6 +181,8 @@ RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
           
 
         // end of adddtions by SE
+
+
 	// find azimuthal angle w.r.t old polarization vector 
 
 	rand = G4UniformRand();
@@ -306,7 +323,7 @@ G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
 //
 G4PhysicsOrderedFreeVector* 
 RichG4OpRayleigh::RayleighAttenuationLengthGenerator
-                     (G4MaterialPropertiesTable *aMPT) 
+     (G4MaterialPropertiesTable *aMPT) 
 {
         // Physical Constants
 

@@ -59,6 +59,43 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
 
 
+ title="Total number of Rich1 Hits in Large events per event ";
+
+  m_hNumTotHitRich1Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"106",
+                              title,1000,0.0,8000.0);
+  if(! m_hNumTotHitRich1Large) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Total number of Rich1 Hits in Aerogel in large events per event ";
+
+  m_hNumTotHitAgelRich1Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"123",
+                              title,1000,0.0,8000.0);
+  if(! m_hNumTotHitAgelRich1Large) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+  title="Total number of Rich1 Hits in Gas in large events per event ";
+
+  m_hNumTotHitGasRich1Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"153",
+                              title,1000,0.0,8000.0);
+  if(! m_hNumTotHitGasRich1Large) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
+  title="Total number of Rich2 Hits in large events per event ";
+
+  m_hNumTotHitRich2Large= CurHistoSvc->book(m_RichG4HistoPathSet2+"173",
+                              title,1000,0.0,4000.0);
+  if(! m_hNumTotHitRich2Large) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
 
   title="Total number of Rich1 Hits in Aerogel per event ";
 
@@ -69,6 +106,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+ 
   title="Number of Rich1 Hits from Aerogel from primary particle per event ";
 
   m_hNumHitAgelPrim= CurHistoSvc->book(m_RichG4HistoPathSet2+"127",

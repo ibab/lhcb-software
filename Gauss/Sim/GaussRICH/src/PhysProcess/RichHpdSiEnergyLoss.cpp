@@ -62,8 +62,11 @@ G4bool RichHpdSiEnergyLoss::IsApplicable(const G4ParticleDefinition&
                                          aParticleType) {
 
   //  return(aParticleType.GetPDGCharge()!= 0.);
+  //  return(( aParticleType.GetPDGCharge()!= 0.) && 
+  //       ( (aParticleType.GetParticleName() == "e-") || 
+  //         (aParticleType.GetParticleName() == "pe-")) );
   return(( aParticleType.GetPDGCharge()!= 0.) && 
-         (aParticleType.GetParticleName() == "e-"));
+          (aParticleType.GetParticleName() == "e-")) ;
 
 }
 
@@ -105,14 +108,18 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   aParticleChange.Initialize(aTrack);
   
   G4int aMaterialIndex = aTrack.GetMaterial()->GetIndex();
-  if(fMatIndexHpdSiEloss !=  (G4int) aTrack.GetMaterial()->GetIndex() && 
-     fMatIndexHpdEnvelopeKovar != (G4int) aTrack.GetMaterial() -> GetIndex() ) {
+  if(fMatIndexHpdSiEloss !=  aMaterialIndex  && 
+     fMatIndexHpdEnvelopeKovar != aMaterialIndex  ) {
     return &aParticleChange;
   }
+  //  if(fMatIndexHpdSiEloss !=  (G4int) aTrack.GetMaterial()->GetIndex() && 
+  //  fMatIndexHpdEnvelopeKovar != (G4int) aTrack.GetMaterial() -> GetIndex() ) {
+  //  return &aParticleChange;
+  // }
 
   const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
   G4double aKinEnergyInit = aParticle->GetKineticEnergy();
-  //   G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
+  //    G4cout<<"Now particle  "<<aParticle->GetDefinition()->GetParticleName()
   //       << "in HpdEnergyloss KE= "<<aKinEnergyInit <<G4endl;
   // if the Photoelectron hits the kovar of the Hpd envelope
   // endcap or barrel,  then the kill the photoelectron. 
@@ -151,8 +158,8 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
   // So this process deposits 20*10 = 200 keV.  
   G4double EnegydepositMultFactor=1.0;
   
-     if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
-          if(aKinEnergyInit > 1500 ) {
+    if(aCreatorProcessName == "RichHpdPhotoelectricProcess" ) {
+         if(aKinEnergyInit > 1500 ) {
             aKinEnergyInit= aKinEnergyInit/100000;
             EnegydepositMultFactor=10.0;
             
@@ -178,7 +185,7 @@ G4VParticleChange* RichHpdSiEnergyLoss::AlongStepDoIt(const G4Track& aTrack,
 
   G4double EnergyTransfer=  
        EnegydepositMultFactor* RichHpdSiEnergyDeposit(Eloss);
-  //  cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<endl;
+  //    G4cout<<"EnergyTransfer in sidetEloss " << EnergyTransfer<<G4endl;
 
   
   if(   EnergyTransfer > 0.0 ) {

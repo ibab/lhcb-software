@@ -83,13 +83,13 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
             pmanager->AddProcess( theRichHpdSiEnergyLossProcess ,-1,2,2);
           }
         
-        if(particle->GetParticleName() == "pe-")
-          {
-            pmanager->DumpInfo();  
+        // if(particle->GetParticleName() == "pe-")
+          //  {
+            //    pmanager->DumpInfo();  
             
-            (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
-            (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
-          }
+            //  (RichPhotoElectron::PhotoElectron())->SetProcessManager(pmanager);
+            // (RichPhotoElectron::PhotoElectron())->GetProcessManager()->DumpInfo();
+            //  }
       }
     //    if (theDecayProcess->IsApplicable(*particle)) { 
     //      pmanager ->AddProcess(theDecayProcess);

@@ -30,7 +30,12 @@ private:
 
   // Histograms ( used if m_produceHistogramSet1 = 1 (true) )
   IHistogram1D*         m_hNumTotHitRich1;
-  IHistogram2D*         m_hGlobalPEOriginXY;
+  IHistogram2D*         m_hGlobalRich1PEOriginXY;
+  IHistogram2D*        m_hGlobalRich1PeOriginPosHitXY;
+  IHistogram2D*        m_hGlobalPEOriginAgelPosXY;
+  IHistogram2D*       m_hGlobalPEOriginC4F10PosXY;
+  IHistogram2D*       m_hGlobalPEOriginCF4PosXY;
+  
   IHistogram2D*         m_hGlobalHitXY;
   IHistogram2D*         m_hRefIndC4F10Rich1;
   IHistogram2D*         m_hRefIndAgelRich1;
@@ -48,7 +53,7 @@ private:
   IHistogram2D*         m_hGlobalPEOriginAgelXY;
   IHistogram2D*         m_hGlobalPEOriginC4F10XY;
   IHistogram2D*         m_hGlobalPEOriginCF4XY;
-  IHistogram2D*         m_hGlobalPEOriginCF4PosXY;
+
   //  IHistogram2D*         m_hGlobalPEOriginAgelTopXY;
   // IHistogram2D*         m_hGlobalPEOriginC4F10TopXY;
   // IHistogram2D*         m_hGlobalPEOriginAgelBotXY;

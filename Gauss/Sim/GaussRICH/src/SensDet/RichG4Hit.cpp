@@ -38,6 +38,11 @@ RichG4Hit::RichG4Hit(const RichG4Hit &right):GaussHitBase(right)
   m_ChTrackMomVect=right.m_ChTrackMomVect;
   m_RichHitGlobalTime = right.m_RichHitGlobalTime;
   m_RichChTrackMass = right.m_RichChTrackMass;
+  m_ChTrackCkvPreStepPos=right.m_ChTrackCkvPreStepPos;
+  m_ChTrackCkvPostStepPos=right.m_ChTrackCkvPostStepPos;
+  m_OptPhotRayleighFlag=right.m_OptPhotRayleighFlag;
+  m_OptPhotAgelExitPos = right.m_OptPhotAgelExitPos;
+  m_RichVerboseHitInfo=right.m_RichVerboseHitInfo;
   
 }
 
@@ -67,6 +72,11 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
   m_ChTrackMomVect=right.m_ChTrackMomVect;
   m_RichHitGlobalTime = right.m_RichHitGlobalTime;
   m_RichChTrackMass = right.m_RichChTrackMass;
+  m_ChTrackCkvPreStepPos=right.m_ChTrackCkvPreStepPos;
+  m_ChTrackCkvPostStepPos=right.m_ChTrackCkvPostStepPos;
+  m_OptPhotRayleighFlag=right.m_OptPhotRayleighFlag;
+  m_OptPhotAgelExitPos = right.m_OptPhotAgelExitPos;
+  m_RichVerboseHitInfo=right.m_RichVerboseHitInfo;
 
   return *this;
 }
@@ -141,20 +151,42 @@ void RichG4Hit::Print()
   
   G4cout<<"RichG4Hit:  "<<"OpticalPhotonEnergy MotherChTrackMom: "<<
     m_PhotEnergyAtProd<<"     "<< m_ChTrackTotMom<<G4endl;
-  G4cout<<"RichG4Hit: "<<"MotherChTrack MomVect XYZ  PDGCode:  "
-        << m_ChTrackMomVect.x()<<"   "<<m_ChTrackMomVect.y()
-        << "    "<<m_ChTrackMomVect.z()
-        <<"    "<<  m_ChTrackPDG <<G4endl;
 
+ 
   G4cout<<"RichG4Hit: "<<"TrackID: MotherCh OptPhot PE: "
-        << m_ChTrackID<<"     "<< m_OptPhotID<<"   "
-        << m_PETrackID<< "   MotherChTrackMass =   "
-        <<  m_RichChTrackMass<< G4endl;
+        << m_ChTrackID<<"     "<< m_OptPhotID<<"    "
+        << m_PETrackID<< "    MotherChTrack PDGCode =   "
+        <<m_ChTrackPDG<< G4endl;
 
-  
   G4cout<<"RichHit Global Time = " 
         <<m_RichHitGlobalTime<<G4endl;
 
+
+  G4cout<<" RichG4Hit Verbose Hit Output Flag:  "
+        << m_RichVerboseHitInfo<<G4endl;
+
+  if(   m_RichVerboseHitInfo > 0 ) {
+
+   G4cout<<"RichG4Hit: "<<"MotherChTrack MomVect XYZ  Mass :  "
+        << m_ChTrackMomVect.x()<<"   "<<m_ChTrackMomVect.y()
+        << "    "<<m_ChTrackMomVect.z()
+         << "      "<<  m_RichChTrackMass <<G4endl;
+  G4cout<<"RichG4Hit: Charged track Pre Step XYZ For Ckv proc=   " 
+        << m_ChTrackCkvPreStepPos.x()<<"  "
+        << m_ChTrackCkvPreStepPos.y()<<"   "
+        << m_ChTrackCkvPreStepPos.z()<<G4endl;
+  G4cout<<"RichG4Hit: Charged track Post Step XYZ For Ckv proc=  " 
+        << m_ChTrackCkvPostStepPos.x()<<"  "
+        << m_ChTrackCkvPostStepPos.y()<<"   "
+        << m_ChTrackCkvPostStepPos.z()<<G4endl;
+  G4cout<<"RichG4Hit: Rayleigh Scat flag  Aerogel Exit XYZ    "
+        << m_OptPhotRayleighFlag<<"    "
+        << m_OptPhotAgelExitPos.x() <<"    "
+        << m_OptPhotAgelExitPos.y()<<"     "
+        <<  m_OptPhotAgelExitPos.z() <<G4endl;
+
+  }
+  
   }
 // This is a forward declaration of an instantiated G4Allocator<Type> object.
 // It has been added in order to make code portable for the GNU g++ 

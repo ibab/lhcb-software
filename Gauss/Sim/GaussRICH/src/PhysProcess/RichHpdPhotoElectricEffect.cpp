@@ -245,14 +245,18 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   
       //create the photoelectron
             G4double ElecKineEnergy= 100000*m_HpdPhElectronKE;
+
              G4DynamicParticle* aElectron= 
                      new G4DynamicParticle (G4Electron::Electron(),
                            GlobalElectronDirection, ElecKineEnergy) ;
 
       // end of temporary fix.
-      //     G4DynamicParticle* aElectron=
-      //       new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
-      //                         GlobalElectronDirection, ElecKineEnergy) ;
+
+            //     G4double ElecKineEnergy= m_HpdPhElectronKE;
+
+            //       G4DynamicParticle* aElectron=
+            //   new G4DynamicParticle (RichPhotoElectron::PhotoElectron(),
+            //                   GlobalElectronDirection, ElecKineEnergy) ;
 
       aParticleChange.SetNumberOfSecondaries(1) ;
       //  aParticleChange.AddSecondary( aElectron ) ; 
@@ -269,7 +273,9 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
       G4Track* aTaggedSecPETrack = RichPEInfoAttach(aTrack,aSecPETrack);      
       aParticleChange.AddSecondary(aTaggedSecPETrack);
       
-
+      //   G4cout<<" RichHpdPhotoelectric effect : Now created a photoelectron with energy =  "
+      //      << ElecKineEnergy<<G4endl;
+      
 
       // Kill the incident photon when it has converted to photoelectron.
       // G4cout<<"Now killing photon which is converted"<<G4endl;

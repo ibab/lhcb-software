@@ -52,8 +52,27 @@ class RichG4Hit : public  GaussHitBase
       G4double m_PhiCkvAtProd;      // Cherenkov Angle Phi (rad) at Ckv production.
       G4double m_ChTrackTotMom;   //Total momentum (MeV) of the mother of Photon at Ckv Production.
       G4ThreeVector m_ChTrackMomVect; // Three Momentum of the mother of Photon at Ckv Production.
+                                      // Only with RichVerboseTag mode
       G4double m_RichHitGlobalTime;    //Global time for RichHit.
-      G4double m_RichChTrackMass;          //PDG mass of the Mother of the optical photon. 
+      G4double m_RichChTrackMass;          //PDG mass of the Mother of the optical photon.
+                                           // Only with RichVerboseTag mode
+ 
+      G4ThreeVector m_ChTrackCkvPreStepPos; // Prestep position of charged track during cherenkov  step.  
+                                           // Only with RichVerboseTag mode
+  
+      G4ThreeVector m_ChTrackCkvPostStepPos; // Poststep position of charged track during cherenkov  step.  
+                                            // Only with RichVerboseTag mode
+
+      G4int m_OptPhotRayleighFlag;           // number if times optical photon is Rayleigh scattered.
+                                            // Zero means not Rayleigh scattered.
+                                            // Only with RichVerboseTag mode
+
+     G4ThreeVector m_OptPhotAgelExitPos;   // Position where photon exited from Aerogel.
+                                            // Only with RichVerboseTag mode and RichStepAnalysis4
+
+     G4int m_RichVerboseHitInfo;        // if 0 the variables with  RichVerboseTag are disabled and have
+                                    // no meaningful values. If not 0 they have the expected values.
+ 
   
   public:
   inline void SetEdep(G4double de)      
@@ -62,13 +81,13 @@ class RichG4Hit : public  GaussHitBase
   inline G4double GetEdep()      
   { return m_edep; };
 
-  inline void SetGlobalPos(G4ThreeVector xyz)      
+  inline void SetGlobalPos(G4ThreeVector  xyz)      
   { m_GlobalPos = xyz; };
 
   inline G4ThreeVector GetGlobalPos()      
   { return m_GlobalPos; };
 
-  inline void SetLocalPos(G4ThreeVector localxyz)      
+  inline void SetLocalPos(G4ThreeVector  localxyz)      
   { m_LocalPos = localxyz; };
 
   inline G4ThreeVector GetLocalPos()      
@@ -77,13 +96,13 @@ class RichG4Hit : public  GaussHitBase
   inline G4ThreeVector GetGlobalPEOriginPos()      
   { return m_GlobalPEOriginPos; };
   
-  inline void SetGlobalPEOriginPos(G4ThreeVector PExyz)      
+  inline void SetGlobalPEOriginPos(G4ThreeVector   PExyz)      
   { m_GlobalPEOriginPos = PExyz; };
   
   inline G4ThreeVector GetLocalPEOriginPos()      
   { return m_LocalPEOriginPos; };
   
-  inline void SetLocalPEOriginPos(G4ThreeVector PELocalxyz)      
+  inline void SetLocalPEOriginPos(G4ThreeVector  PELocalxyz)      
   { m_LocalPEOriginPos = PELocalxyz; };
  
   inline void SetCurRichDetNum(G4int IRichNum ) 
@@ -133,7 +152,7 @@ class RichG4Hit : public  GaussHitBase
   inline void SetRadiatorNumber(G4int aRadiatorNumber) 
                                {m_RadiatorNumber=aRadiatorNumber;}
   inline G4int GetRadiatorNumber() {return m_RadiatorNumber; }
-  inline void SetPhotEmisPt(G4ThreeVector aEmisspt) 
+  inline void SetPhotEmisPt(G4ThreeVector  aEmisspt) 
                              {m_PhotEmisPt=aEmisspt; }
   inline G4ThreeVector GetPhotEmisPt() {return m_PhotEmisPt; }
   inline void SetPhotEnergyAtProd(G4double aPhotEnergy) 
@@ -152,7 +171,7 @@ class RichG4Hit : public  GaussHitBase
     { m_ChTrackTotMom=aChTrackTotMom; }
   inline G4double ChTrackTotMom() {return m_ChTrackTotMom; }
 
-  inline void SetChTrackMomVect( G4ThreeVector aChTrackMomVect )
+  inline void SetChTrackMomVect( G4ThreeVector  aChTrackMomVect )
     {m_ChTrackMomVect=aChTrackMomVect; }
   inline G4ThreeVector ChTrackMomVect() {return m_ChTrackMomVect; }
 
@@ -174,8 +193,61 @@ class RichG4Hit : public  GaussHitBase
   {
     return  m_RichChTrackMass;
   }
-    
 
+  inline void setChTrackCkvPreStepPos(G4ThreeVector  aChTrackCkvPreStepPos) 
+  {
+    m_ChTrackCkvPreStepPos = aChTrackCkvPreStepPos;
+    
+  }
+  
+  inline G4ThreeVector ChTrackCkvPreStepPos() 
+  {
+    return m_ChTrackCkvPreStepPos;
+    
+  }
+
+   inline void setChTrackCkvPostStepPos(G4ThreeVector  aChTrackCkvPostStepPos) 
+  {
+    m_ChTrackCkvPostStepPos = aChTrackCkvPostStepPos;
+    
+  }
+  
+  inline G4ThreeVector ChTrackCkvPostStepPos() 
+  {
+    return m_ChTrackCkvPostStepPos;
+    
+  }
+
+  inline void setOptPhotRayleighFlag( G4int aOptPhotRayleighFlag) 
+  {
+    
+    m_OptPhotRayleighFlag = aOptPhotRayleighFlag;
+    
+  }
+
+  inline G4int OptPhotRayleighFlag() 
+  {
+    return  m_OptPhotRayleighFlag;
+    
+  }
+  inline void setOptPhotAgelExitPos( G4ThreeVector  aOptPhotAgelExitPos) 
+  {
+    
+    m_OptPhotAgelExitPos = aOptPhotAgelExitPos;
+    
+   }
+
+  inline G4ThreeVector OptPhotAgelExitPos() 
+  {
+    return m_OptPhotAgelExitPos;
+    
+  }
+  inline G4int RichVerboseHitInfo() {return  m_RichVerboseHitInfo;}
+  inline void setRichVerboseHitInfo(G4int aVerboseValue) 
+  {m_RichVerboseHitInfo = aVerboseValue; }
+  
+    
+  
 };
 
 typedef G4THitsCollection<RichG4Hit> RichG4HitsCollection;

@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.1 2003-07-16 13:24:07 seaso Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.2 2004-02-04 13:53:00 seaso Exp $
 // Include files 
 
 
@@ -60,7 +60,15 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
 
   // StatusCode sc = svcLoc()->service( "HistogramSvc", CurrentHistoSvc, true );
 
- 
+  SmartDataPtr<IHistogram1D>hNumTotHitRich1Large(CurrentHistoSvc,
+                                   "RICHG4HISTOSET2/106");
+  SmartDataPtr<IHistogram1D>hNumTotHitAgelRich1Large(CurrentHistoSvc,
+                                   "RICHG4HISTOSET2/123");
+  SmartDataPtr<IHistogram1D>hNumTotHitGasRich1Large(CurrentHistoSvc,
+                                   "RICHG4HISTOSET2/153");
+  SmartDataPtr<IHistogram1D>hNumTotHitRich2Large(CurrentHistoSvc,
+                                   "RICHG4HISTOSET2/173");
+
   SmartDataPtr<IHistogram1D>hNumTotHitAgelRich1(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/125");
   SmartDataPtr<IHistogram1D>hNumTotHitC4F10Rich1(CurrentHistoSvc,
@@ -91,6 +99,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   G4int  NumC4F10Prim = 0; 
   G4int NumCf4Prim= 0;
   
+  G4int NumtotRich1=0;
+  G4int NumtotRich2=0;
   
 
 
@@ -121,12 +131,25 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
           G4double aChTrackTotMom =  aHit->ChTrackTotMom() ;
           G4double CkvTheta=      aHit->  ThetaCkvAtProd();
           G4int ChtkId =  aHit-> GetChTrackID();
+          G4int aRichDetNum =  aHit-> GetCurRichDetNum();
+          
           //          cout<<" HistofillSet2 RadNum ChTkId=   "
           //     << aRadiatorNum 
           //    <<"    "<<ChtkId 
           //    <<"  ChtrackMom = "<<aChTrackTotMom<<  endl;
+
+          if( aRichDetNum == 0 ) {
+
+            NumtotRich1++;
+            
+          } else if ( aRichDetNum == 1 ) {
+            
+            NumtotRich2++;
+
+          }
           
           
+                   
           if(  aRadiatorNum == 0 ) {
             NumtotAgel++;
                           
@@ -181,17 +204,32 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   //  G4cout<<"Number of Rich2 Hits "<<  Numtotcf4<<G4endl;
   // G4cout<<"SinglePartGun Rich2 Numhits from primaryPart "<<NumCf4Prim
   //        <<G4endl;
+
+  if(NumtotRich1 >0 ) {
+    if(hNumTotHitRich1Large) 
+      hNumTotHitRich1Large->fill(NumtotRich1*1.0,1.0);   
+  }
+  if(NumtotRich1 >0 ) {
+    if(hNumTotHitRich2Large)
+      hNumTotHitRich2Large->fill(NumtotRich2*1.0,1.0);
+  }
   
 
   if( NumtotAgel > 0 )  {
     
     
     if(hNumTotHitAgelRich1) hNumTotHitAgelRich1->fill(NumtotAgel*1.0, 1.0);
+    if(hNumTotHitAgelRich1Large) 
+      hNumTotHitAgelRich1Large->fill(NumtotAgel*1.0, 1.0);
   }
+
   
       if(Numtotc4f10 > 0 ){
     
     if(hNumTotHitC4F10Rich1) hNumTotHitC4F10Rich1->fill(Numtotc4f10*1.0,1.0);
+
+    if(hNumTotHitGasRich1Large) 
+      hNumTotHitGasRich1Large->fill(Numtotc4f10*1.0,1.0);
   }
       if(   Numtotcf4 > 0 ){
     

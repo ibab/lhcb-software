@@ -23,8 +23,9 @@
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Boundary Process Class Implementation
 ////////////////////////////////////////////////////////////////////////
+//
 // G4OpboundaryProcess.cc   SE 28-4-2003
-// File:        G4OpBoundaryProcess.cc
+// File:        RichG4OpBoundaryProcess.cc
 // Description: Discrete Process -- reflection/refraction at
 //                                  optical interfaces
 // Version:     1.1
@@ -47,6 +48,8 @@
 //              2001-10-18 - avoid Linux (gcc-2.95.2) warning about variables
 //                           might be used uninitialized in this function
 //                           moved E2_perp, E2_parl and E2_total out of 'if'
+//              2003-11-27 - Modified line 168-9 to reflect changes made to
+//                           G4OpticalSurface class ( by Fan Lei)
 //
 // Author:      Peter Gumplinger
 // 		adopted from work by Werner Keil - April 2/96
@@ -86,8 +89,7 @@ RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const G4String& processName)
 	theFinish = polished;
 }
 
-// RichG4OpBoundaryProcess::RichG4OpBoundaryProcess
-//    (const RichG4OpBoundaryProcess &right)
+// RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const RichG4OpBoundaryProcess &right)
 // {
 // }
 
@@ -106,7 +108,7 @@ RichG4OpBoundaryProcess::~RichG4OpBoundaryProcess(){}
 //
 G4VParticleChange*
 RichG4OpBoundaryProcess::PostStepDoIt
-      (const G4Track& aTrack, const G4Step& aStep)
+   (const G4Track& aTrack, const G4Step& aStep)
 {
         aParticleChange.Initialize(aTrack);
 
@@ -124,9 +126,6 @@ RichG4OpBoundaryProcess::PostStepDoIt
 	Material2 = pPostStepPoint->GetPhysicalVolume()->
 				    GetLogicalVolume()->GetMaterial();
 
-	if (Material1 == Material2)
-                return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
-
         const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
 
 	thePhotonMomentum = aParticle->GetTotalMomentum();
@@ -134,15 +133,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
 	OldPolarization   = aParticle->GetPolarization();
   //         G4cout<<"G4opbondaryProc: Material1 Materil2 : from"<<Material1->GetName()<<" to  "
   //               << Material2->GetName() <<G4endl;
-           
-        if ( verboseLevel > 0 ) {
-             
-		G4cout << " Photon at Boundary! " << G4endl;
-		G4cout << " Old Momentum Direction: " << OldMomentum     << G4endl;
-		G4cout << " Old Polarization:       " << OldPolarization << G4endl;
-         }
-           
-           
+
 	G4MaterialPropertiesTable* aMaterialPropertiesTable;
         G4MaterialPropertyVector* Rindex;
 
@@ -155,7 +146,7 @@ RichG4OpBoundaryProcess::PostStepDoIt
 		return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 	}
 
-        if (Rindex) {
+  if (Rindex) {
 		Rindex1 = Rindex->GetProperty(thePhotonMomentum);
 	}
 	else {
@@ -163,42 +154,29 @@ RichG4OpBoundaryProcess::PostStepDoIt
 		return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 	}
 
-        Rindex = NULL;
-        OpticalSurface = NULL;
+        theModel = glisur;
+        theFinish = polished;
 
-	aMaterialPropertiesTable = Material2->GetMaterialPropertiesTable();
-        if (aMaterialPropertiesTable) 
-		Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
+        G4SurfaceType type = dielectric_dielectric;
+
+        Rindex = 0;
+        OpticalSurface = 0;
 
         G4LogicalSurface* Surface = G4LogicalBorderSurface::GetSurface
 				    (pPreStepPoint ->GetPhysicalVolume(),
 				     pPostStepPoint->GetPhysicalVolume());
 
-        if (Surface == NULL) Surface = G4LogicalSkinSurface::GetSurface
+        if (Surface == 0) Surface = G4LogicalSkinSurface::GetSurface
 				       (pPreStepPoint->GetPhysicalVolume()->
 						GetLogicalVolume());
 
-	if (Surface != NULL) OpticalSurface 
-                         = (G4OpticalSurface*) Surface->GetSurfaceProperty();
-
-	theModel = glisur;
-	theFinish = polished;
-
-	G4SurfaceType type;
-	if (Rindex) {
-	   type = dielectric_dielectric;
-//	   if (OpticalSurface) type = OpticalSurface->GetType();
-	   Rindex2 = Rindex->GetProperty(thePhotonMomentum);
-	}
-	else if (OpticalSurface) {
-	   type = OpticalSurface->GetType();
-	}
-	else {
-	   aParticleChange.SetStatusChange(fStopAndKill);
-	   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
-	}
+	//	if (Surface != 0) OpticalSurface = dynamic_cast <G4OpticalSurface*> (Surface->GetSurfaceProperty());
+	if (Surface != 0) OpticalSurface = 
+                     (G4OpticalSurface*) Surface->GetSurfaceProperty();
 
 	if (OpticalSurface) {
+
+           type      = OpticalSurface->GetType();
 	   theModel  = OpticalSurface->GetModel();
 	   theFinish = OpticalSurface->GetFinish();
 
@@ -206,14 +184,21 @@ RichG4OpBoundaryProcess::PostStepDoIt
 					GetMaterialPropertiesTable();
 
            if (aMaterialPropertiesTable) {
-	      G4MaterialPropertyVector* PropertyPointer;
 
-	      if(!Rindex) {
-	         PropertyPointer = 
-	         aMaterialPropertiesTable->GetProperty("RINDEX");
-	         if (PropertyPointer) Rindex2 = 
-			 PropertyPointer->GetProperty(thePhotonMomentum);
-	      }
+              if (theFinish == polishedbackpainted ||
+                  theFinish == groundbackpainted ) {
+                  Rindex = 
+                  aMaterialPropertiesTable->GetProperty("RINDEX");
+	          if (Rindex) {
+                     Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+                  }
+                  else {
+                     aParticleChange.SetStatusChange(fStopAndKill);
+                     return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+                  }
+              }
+
+              G4MaterialPropertyVector* PropertyPointer;
 
 	      PropertyPointer = 
 	      aMaterialPropertiesTable->GetProperty("REFLECTIVITY");
@@ -239,10 +224,49 @@ RichG4OpBoundaryProcess::PostStepDoIt
 	        PropertyPointer = 
 		aMaterialPropertiesTable->GetProperty("BACKSCATTERCONSTANT");
 	        if (PropertyPointer) prob_bs = 
-			 PropertyPointer->GetProperty(thePhotonMomentum);
+                                 PropertyPointer->GetProperty(thePhotonMomentum);
 	      }
-	   }
-	}
+        
+           }
+           
+           
+           else if (theFinish == polishedbackpainted ||
+                    theFinish == groundbackpainted ) {
+                      aParticleChange.SetStatusChange(fStopAndKill);
+                      return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+           }
+           
+  }
+  
+  
+
+        if (type == dielectric_dielectric ) {
+           if (theFinish == polished || theFinish == ground ) {
+
+              if (Material1 == Material2)
+                 return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+
+              aMaterialPropertiesTable = 
+                     Material2->GetMaterialPropertiesTable();
+              if (aMaterialPropertiesTable)
+                 Rindex = aMaterialPropertiesTable->GetProperty("RINDEX");
+              if (Rindex) {
+                 Rindex2 = Rindex->GetProperty(thePhotonMomentum);
+              }
+              else {
+                 aParticleChange.SetStatusChange(fStopAndKill);
+                 return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+              }
+           }
+           
+        }
+        
+
+        if ( verboseLevel > 0 ) {
+                G4cout << " Photon at Boundary! " << G4endl;
+                G4cout << " Old Momentum Direction: " << OldMomentum<< G4endl;
+                G4cout << " Old Polarization:     " << OldPolarization<< G4endl;
+        }
 
 	G4ThreeVector theGlobalPoint = pPostStepPoint->GetPosition();
 
@@ -355,8 +379,6 @@ RichG4OpBoundaryProcess::GetFacetNormal(const G4ThreeVector& Momentum,
 	   G4double sigma_alpha = 0.0;
 	   if (OpticalSurface) sigma_alpha = OpticalSurface->GetSigmaAlpha();
 
-     //	   G4double f_max = G4std::min(1.0,4.*sigma_alpha);
-     // wp
 	   G4double f_max = std::min(1.0,4.*sigma_alpha);
 
 	   do {
@@ -474,7 +496,7 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	   if (sint2 >= 1.0) {
 
 	      // Simulate total internal reflection
-   
+
 	      if (Swap) Swap = !Swap;
 
               theStatus = TotalInternalReflection;
@@ -490,32 +512,30 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 		 NewPolarization = -OldPolarization;
 	      }
 	      else {
-          //Modifcation by SE to kill the total internal reflections
-
-          //      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
-          //   << Material2->GetName() <<" is  with ref index "<<Rindex1
-          //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1 
-          //                  << "   Sint2=  "<< sint2 <<G4endl;
-          if( (Material1->GetName() ==  AgelMaterialName) ||
-               (Material1->GetName() ==  FilterGenericMaterialName) ||
-              (Material1->GetName() ==  FilterD263MaterialName) ||
-              (Material1->GetName() == Rich1GasQWindowMaterialName) || 
-              (Material1->GetName() == Rich2GasQWindowMaterialName ) ) {
+              //Modifcation by SE to kill the total internal reflections
+  
+             //      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
+             //   << Material2->GetName() <<" is  with ref index "<<Rindex1
+            //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1 
+            //                  << "   Sint2=  "<< sint2 <<G4endl;
+            if( (Material1->GetName() ==  AgelMaterialName) ||
+                (Material1->GetName() ==  FilterGenericMaterialName) ||
+                (Material1->GetName() ==  FilterD263MaterialName) ||
+                (Material1->GetName() == Rich1GasQWindowMaterialName) || 
+                (Material1->GetName() == Rich2GasQWindowMaterialName ) ) {
             
-              //              || (Material1->GetName() == RichHpdQWMatName ) ) {
+                //              || (Material1->GetName() == RichHpdQWMatName ) ) {
             
-            DoAbsorption();
+              DoAbsorption();
+            }
+            
             //end of modification by SE            
-          } 
-            
-          
 
-                 PdotN = OldMomentum * theFacetNormal;
-		             NewMomentum = OldMomentum - (2.*PdotN)*theFacetNormal;
-		             EdotN = OldPolarization * theFacetNormal;
-		             NewPolarization = -OldPolarization + (2.*EdotN)*theFacetNormal;
-          
-          
+             PdotN = OldMomentum * theFacetNormal;
+		         NewMomentum = OldMomentum - (2.*PdotN)*theFacetNormal;
+		         EdotN = OldPolarization * theFacetNormal;
+		         NewPolarization = -OldPolarization + (2.*EdotN)*theFacetNormal;
+     
 	      }
         
 	   }
@@ -550,7 +570,6 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	         E1_parl  = 1.0;
 	      }
 
-
               G4double s1 = Rindex1*cost1;
               G4double E2_perp = 2.*s1*E1_perp/(Rindex1*cost1+Rindex2*cost2);
               G4double E2_parl = 2.*s1*E1_parl/(Rindex2*cost1+Rindex1*cost2);
@@ -566,21 +585,10 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	         TransCoeff = 0.0;
 	      }
 
-
 	      // Modification done by SE to avoid reflection at the
-	      //  dielectric-dielectric boundary.
+	      //  dielectric-dielectric boundary in RICH.
         // G4cout<<" dielec-dielec fresnel: Material1 material2 names "<<Material1->GetName()
         //  <<"  "<<Material2->GetName()<<endl;
-        // the following is now in an include file. SE 24-03-03
-        //  G4String Rich1QuartzMatName="/dd/Materials/RichMaterials/GasWindowQuartz" ;
-        //      G4String RichHpdQWMatName="/dd/Materials/RichMaterials/HpdWindowQuartz" ;
-        //      G4String RichHpdPhCathMatName="/dd/Materials/RichMaterials/HpdS20PhCathode" ;
-        //      G4String RichAirMatName="/dd/Materials/RichMaterials/RichAir";
-        //      G4String Rich1NitrogenMatName="/dd/Materials/RichMaterials/Rich1Nitrogen";
-        //      G4String Rich1C4F10MatName="/dd/Materials/RichMaterials/C4F10";
-
-        //      G4String RichHpdVacName="/dd/Materials/RichMaterials/RichHpdVacuum";
-
 	      //	      if(Material1->GetName() == Rich1QuartzMatName   ||
 	      //   Material2->GetName() == Rich1QuartzMatName   )TransCoeff=1.0;
 	      //  if(Material1->GetName() == Rich1QuartzMatName   ||
@@ -588,7 +596,6 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
           // 		G4cout<<"TransCoef from "<<Material1->GetName()<<" to  "
           //  << Material2->GetName() <<" is   "<<TransCoeff<<G4endl;
           // }
-
 	      //              
               if(Material1->GetName() == RichHpdQWMatName   ||
                  Material2->GetName() == RichHpdQWMatName   )TransCoeff=1.0;
@@ -641,14 +648,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 
 
 
-
-
 	      G4double E2_abs, C_parl, C_perp;
 
 	      if ( !G4BooleanRand(TransCoeff) ) {
 
- 	         // Simulate reflection
-            
+	         // Simulate reflection
 
                  if (Swap) Swap = !Swap;
 
@@ -663,8 +667,8 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 		    NewMomentum = -OldMomentum;
 		    NewPolarization = -OldPolarization;
 		 }
-     
 		 else {
+
 
           // Modification by SE . Avoid the transport of
           // photons reflected at the boundary of C4F10 and
@@ -672,7 +676,7 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
           // set to reflect are killed by doing abosorption.There is 
           // around 4 percent of photons in this category on each of the
           // two surfaces.
-          // This is done for rich2 at the quartz window.
+          // This is done for RICH2 at the quartz window.
           if(((Material1->GetName() ==   Rich1NitrogenMatName) &&
               (Material2->GetName() ==  Rich1QuartzMatName)) ||
              ((Material2->GetName() ==  Rich1NitrogenMatName ) &&
@@ -693,6 +697,7 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
           }
             
           // end of modif by SE.
+
 
 
                     PdotN = OldMomentum * theFacetNormal;
@@ -721,22 +726,10 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	               else {
 	                  NewPolarization =   OldPolarization;
 	               }
-                 
+
 	            }
-              
-     }
-     
-     
-          
-          
-          
-     
-        }
-        
-        
-        
-        
-        
+	         }
+	      }
 	      else { // photon gets transmitted
 
 	         // Simulate transmission/refraction
@@ -767,9 +760,7 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 
 	         }
 	      }
-        
 	   }
-     
 
 	   OldMomentum = NewMomentum.unit();
 	   OldPolarization = NewPolarization.unit();
@@ -808,14 +799,9 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 
 	        goto leap;
 	      }
-          }
+	  }
 	}
-  
-  
-  
 }
-
-
 
 // GetMeanFreePath
 // ---------------

@@ -4,6 +4,7 @@
 // GiGa
 #include "GiGa/GiGaMACROs.h"
 // G4 
+#include "globals.hh"
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleWithCuts.hh"
@@ -35,8 +36,18 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysConstructorBase( type , name , parent )
-{};
+  : GiGaPhysConstructorBase( type , name , parent ),
+    m_RichActivateVerboseProcessInfoTag(false),
+    m_MaxPhotonsPerRichCherenkovStep(900)
+{
+  declareProperty("RichActivateRichPhysicsProcVerboseTag",
+                  m_RichActivateVerboseProcessInfoTag);
+  
+  declareProperty("RichMaxNumPhotPerCherenkovStep",
+                  m_MaxPhotonsPerRichCherenkovStep);
+  
+    
+};
 // ============================================================================
 
 // ============================================================================
@@ -107,7 +118,7 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
         particle->DumpTable();
         pmanager->DumpInfo();
         G4int  an1 =  pmanager ->GetProcessListLength() ;
-        G4cout<<"NUm proc for pe so far = "<< an1<<G4endl;
+        G4cout<<"Num proc for pe so far = "<< an1<<G4endl;
       }
   }
   
@@ -148,6 +159,9 @@ void GiGaPhysConstructorOp::ConstructOp() {
 
   //  G4cout<<"Now creating Optical processes"<<G4endl;
   //  G4cout<<"This is the phys list Op from GiGaRich1 "<<G4endl;
+  G4cout<<" Activation for verbose Output in Rich Optical Proc "
+        << m_RichActivateVerboseProcessInfoTag<<G4endl;
+
   RichG4Cerenkov*   theCerenkovProcess = new RichG4Cerenkov("RichG4Cerenkov");
   G4OpAbsorption* theAbsorptionProcess = new G4OpAbsorption();
   RichG4OpRayleigh*   theRayleighScatteringProcess = new RichG4OpRayleigh();
@@ -163,11 +177,25 @@ void GiGaPhysConstructorOp::ConstructOp() {
   theBoundaryProcess->SetVerboseLevel(0);
   
   //  G4int MaxNumPhotons = 300;
-  G4int MaxNumPhotons = 900;
+  // The following is now input from options file. SE 2-2-2004
+  // the default value is 900.
+  // G4int MaxNumPhotons = 900;
+
+  G4int MaxNumPhotons = (G4int)  m_MaxPhotonsPerRichCherenkovStep; 
+  G4cout<<" Max Number of Photons per Cherenkov step=  "
+           << MaxNumPhotons<<G4endl;
+  
   theCerenkovProcess->SetTrackSecondariesFirst(true);
   theCerenkovProcess->SetMaxNumPhotonsPerStep(MaxNumPhotons);
+  theCerenkovProcess->
+    SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
+  
   G4OpticalSurfaceModel themodel = glisur;
   theBoundaryProcess->SetModel(themodel);
+  theRayleighScatteringProcess->
+   SetRichVerboseRayleighInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
+
+
   theParticleIterator->reset();
 
   while( (*theParticleIterator)() ){

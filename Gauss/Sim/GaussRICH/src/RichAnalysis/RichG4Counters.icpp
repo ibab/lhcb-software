@@ -151,6 +151,25 @@ inline int NumPhotAgelAtAgelDownstrZ()
     return m_NumHitTotRich2All;
   }
 
+inline std::vector<int> TrackIdTraverseRich1Gas()
+{
+  return m_TrackIdTraverseRich1Gas;
+  
+}
+
+inline std::vector<int> TrackIdTraverseRich1Agel()
+{
+  return m_TrackIdTraverseRich1Agel;
+  
+}
+
+inline std::vector<int> TrackIdTraverseRich2Gas()
+{
+  return m_TrackIdTraverseRich2Gas;
+  
+}
+
+
   inline void bumpNumPhotProdRich1Gas()
   {
     m_NumPhotProdRich1Gas++;
@@ -327,3 +346,22 @@ inline void setNumHitSaturatedPerTrackRich1Agel( std::vector<int> aAgelSatHit )
   {
     m_NumHitTotRich2All++;
   }
+
+inline void setTrackIdTraverseRich1Gas
+   ( std::vector<int> aTrackIdTraverseRich1Gas ) 
+{
+  m_TrackIdTraverseRich1Gas = aTrackIdTraverseRich1Gas;
+  
+}
+inline void setTrackIdTraverseRich1Agel
+   ( std::vector<int> aTrackIdTraverseRich1Agel ) 
+{
+  m_TrackIdTraverseRich1Agel = aTrackIdTraverseRich1Agel;
+  
+}
+inline void setTrackIdTraverseRich2Gas
+   ( std::vector<int>  aTrackIdTraverseRich2Gas) 
+{
+  m_TrackIdTraverseRich2Gas= aTrackIdTraverseRich2Gas;
+  
+}

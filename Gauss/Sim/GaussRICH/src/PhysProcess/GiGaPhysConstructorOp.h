@@ -37,11 +37,25 @@ public:
   void ConstructOp       ();
   ///
 
+  bool RichActivateVerboseProcessInfoTag() 
+  {    return m_RichActivateVerboseProcessInfoTag;}
+  void setRichActivateVerboseProcessInfoTag(bool aVTag)
+  {m_RichActivateVerboseProcessInfoTag= aVTag;}
+  int MaxPhotonsPerRichCherenkovStep()
+  {    return  m_MaxPhotonsPerRichCherenkovStep;}
+  void setMaxPhotonsPerRichCherenkovStep(int aMaxValue)
+  {m_MaxPhotonsPerRichCherenkovStep=aMaxValue;}
+  
+    
+    
 private:
   ///
   GiGaPhysConstructorOp           ( const GiGaPhysConstructorOp& );
   GiGaPhysConstructorOp& operator=( const GiGaPhysConstructorOp& );
   ///
+  bool m_RichActivateVerboseProcessInfoTag;
+  int m_MaxPhotonsPerRichCherenkovStep;
+  
 };
 // ============================================================================
 

@@ -1,4 +1,4 @@
-// $Id: RichG4Counters.h,v 1.2 2003-07-16 13:24:06 seaso Exp $
+// $Id: RichG4Counters.h,v 1.3 2004-02-04 13:53:00 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4COUNTERS_H 
 #define RICHANALYSIS_RICHG4COUNTERS_H 1
 
@@ -64,7 +64,12 @@ private:
 
   int m_NumHitTotRich1All;
   int m_NumHitTotRich2All;
+ 
+  std::vector<int> m_TrackIdTraverseRich1Gas;
+  std::vector<int> m_TrackIdTraverseRich1Agel;
+  std::vector<int> m_TrackIdTraverseRich2Gas;
   
+    
 public:
 #include "RichG4Counters.icpp"
 

@@ -9,6 +9,7 @@ template <class TYPE> class GiGaFactory;
 class RichG4HistoDefineSet1;
 class RichG4HistoDefineSet2;
 class RichG4HistoDefineSet3;
+class RichG4HistoDefineSet4;
 class RichG4HistoDefineTimer;
 
 // SE 21-8-2002
@@ -83,6 +84,10 @@ protected:
   {
     m_defineRichG4HistoSet3= aboolValue3;
   }
+   void setdefineRichG4HistoSet4(bool aboolValue4) 
+  {
+    m_defineRichG4HistoSet4= aboolValue4;
+  }
   
 private:
   
@@ -100,12 +105,14 @@ private:
   bool m_defineRichG4HistoSet1;
   bool m_defineRichG4HistoSet2;
   bool m_defineRichG4HistoSet3;
+  bool m_defineRichG4HistoSet4;
   bool m_defineRichG4HistoTimer;
   
   
   RichG4HistoDefineSet1* m_aRichG4HistoSet1;
   RichG4HistoDefineSet2* m_aRichG4HistoSet2;
   RichG4HistoDefineSet3* m_aRichG4HistoSet3;
+  RichG4HistoDefineSet4* m_aRichG4HistoSet4;
   RichG4HistoDefineTimer* m_aRichG4HistoTimer;
   
 };

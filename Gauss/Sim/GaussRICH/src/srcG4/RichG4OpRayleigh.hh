@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.hh,v 1.1 2003-04-29 17:08:06 seaso Exp $
+// $Id: RichG4OpRayleigh.hh,v 1.2 2004-02-04 13:52:24 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -118,6 +118,12 @@ public: // With description
         void DumpPhysicsTable() const;
         // Prints the physics table.
 
+       G4bool GetRichVerboseRayleighInfoTag(){ return fRichVerboseInfoTag;}
+       void SetRichVerboseRayleighInfoTag( G4bool aBVal)
+             {fRichVerboseInfoTag = aBVal;}
+  
+     //  The above are for verbose information tagging for Output. 
+    
 private:
 
         void BuildThePhysicsTable();
@@ -133,6 +139,9 @@ private:
         // Class Data Members
         ///////////////////////
 
+       G4bool fRichVerboseInfoTag;
+
+   
 protected:
 
         G4PhysicsTable* thePhysicsTable;

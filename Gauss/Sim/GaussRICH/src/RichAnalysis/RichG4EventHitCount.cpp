@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.1 2003-07-16 13:24:06 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.2 2004-02-04 13:53:00 seaso Exp $
 // Include files 
 
 
@@ -41,6 +41,41 @@
 RichG4EventHitCount::RichG4EventHitCount(  ) {
 
   ChTkBetaSaturatedCut = 0.9999;
+
+  //  m_Rich1InitSlopeRMin= 0.015*rad;
+  // m_Rich1InitSlopeXMin= 0.015*rad;
+  // m_Rich1InitSlopeXMax= 0.30*rad;
+  // m_Rich1InitSlopeYMin = 0.015*rad;
+  // m_Rich1InitSlopeYMax=  0.30*rad;
+
+  m_Rich1InitSlopeRMin= 0.05*rad;
+  m_Rich1InitSlopeXMin= 0.05*rad;
+  m_Rich1InitSlopeXMax= 0.20*rad;
+  m_Rich1InitSlopeYMin = 0.05*rad;
+  m_Rich1InitSlopeYMax=  0.20*rad;
+
+  //  m_MomRich1AgelMin = 3.0*GeV;
+  // m_MomRich1GasMin = 3.0*GeV;
+
+  m_MomRich1AgelMin = 10.0*GeV;
+  m_MomRich1GasMin = 10.0*GeV;
+  m_MinTkPtRich1FiducialRegion= 1;
+  m_MomRich2GasMin = 10.0*GeV;
+  // m_MomRich2GasMin = 20.0*GeV;
+  //  m_MomRich2GasMin = 20.0*GeV;
+
+  //  m_Rich2InitSlopeRMin= 0.015*rad;
+  //  m_Rich2InitSlopeXMin= 0.015*rad;
+  // m_Rich2InitSlopeXMax= 0.20*rad;
+  // m_Rich2InitSlopeYMin = 0.015*rad;
+  // m_Rich2InitSlopeYMax=  0.20*rad;
+
+  m_Rich2InitSlopeRMin= 0.05*rad;
+  m_Rich2InitSlopeXMin= 0.05*rad;
+  m_Rich2InitSlopeXMax= 0.20*rad;
+  m_Rich2InitSlopeYMin = 0.05*rad;
+  m_Rich2InitSlopeYMax=  0.20*rad;
+  m_MinTkPtRich2FiducialRegion= 1;
   
 }
 RichG4EventHitCount::~RichG4EventHitCount(  ) {
@@ -82,23 +117,253 @@ std::vector<G4int> RichG4EventHitCount::RichG4GetChTrajId
   return  aTraidVect;
 }
 
+bool RichG4EventHitCount::Rich1FiducialRegion 
+( const G4ThreeVector aTjPos ) 
+{
+
+   bool InsideRich1Fiducial = false;
+
+   bool OutsidebeamHole= false;
+   bool InsideRich1X = false;
+   bool InsideRich1Y = false;
+   
+   G4double xt = aTjPos.x();
+   G4double yt=  aTjPos.y();  
+   G4double zt = aTjPos.z();
+   if(zt >= Rich1FiducialUpstrZ && 
+      zt <=  Rich1FiducialDnstrZ ) {
+     G4double rt= pow((xt*xt + yt*yt),0.5);
+     G4double bt =  Rich1FiducialUpstrBeamHoleRad+ 
+       (zt - Rich1FiducialUpstrZ ) * Rich1FiducialBeamHoleSlope;
+     // now check if it is outside beampipe hole
+     if(rt > bt )  OutsidebeamHole = true;
+     
+       // now check for X 
+       
+       G4double xat = Rich1FiducialUpstrEndX + 
+         (zt - Rich1FiducialUpstrZ)* Rich1FiducialXslope ;
+     
+     
+       if(abs(xt) <= xat )  InsideRich1X= true;
+       
+       // now check for Y 
+
+        G4double yat = Rich1FiducialUpstrEndY + 
+         (zt - Rich1FiducialUpstrZ)* Rich1FiducialYslope ;
+      
+        if( abs(yt) <=   yat ) InsideRich1Y= true;
+        
+
+        if( OutsidebeamHole &&  InsideRich1X && 
+            InsideRich1Y ) InsideRich1Fiducial = true;
+       
+   }
+   
+   
+
+   return  InsideRich1Fiducial;
+  
+}
+
+bool  RichG4EventHitCount::Rich1AgelFiducialRegion(const G4ThreeVector aTjPos) 
+{
+  bool InsideRich1AgelFiducial= false;
+  bool OutsideAgelbeamHole= false;
+  bool InsideRich1AgelX = false;
+  bool InsideRich1AgelY = false;
+   
+   G4double xt = aTjPos.x();
+   G4double yt=  aTjPos.y();  
+   G4double zt = aTjPos.z();
+   if(zt >= Rich1AgelFiducialUpstrZ && 
+      zt <=  Rich1AgelFiducialDnstrZ ) {
+     G4double rt= pow((xt*xt + yt*yt),0.5);
+     G4double bt =  Rich1AgelFiducialUpstrBeamHoleRad+ 
+       (zt - Rich1AgelFiducialUpstrZ ) * Rich1AgelFiducialBeamHoleSlope;
+     // now check if it is outside beampipe hole
+     if(rt > bt )  OutsideAgelbeamHole = true;     
+       // now check for X       
+     G4double xat = Rich1FiducialUpstrEndX;
+     
+     
+       if(abs(xt) <= xat )  InsideRich1AgelX= true;
+       
+       // now check for Y 
+
+       G4double yat = Rich1FiducialUpstrEndY ;
+       
+        if( abs(yt) <=   yat ) InsideRich1AgelY= true;        
+
+        if( OutsideAgelbeamHole &&  InsideRich1AgelX && 
+            InsideRich1AgelY ) InsideRich1AgelFiducial = true;
+       
+   }
+  
+  return InsideRich1AgelFiducial;
+  
+}
+
+bool  RichG4EventHitCount::Rich1ProdDirSelection
+( const G4ThreeVector initMom ) 
+{
+  bool InitDirOK = false;
+  if(initMom.z() > 0.0 ) {
+     G4double SlopeX= (initMom.x()) /( initMom.z());
+     G4double SlopeY = (initMom.y())/(initMom.z());
+     G4double SlopeR=pow(( SlopeX*SlopeX+SlopeY*SlopeY),0.5);
+     
+     if( ( SlopeR  >= m_Rich1InitSlopeRMin) && 
+         ( abs(SlopeX) <= m_Rich1InitSlopeXMax ) &&
+         ( abs(SlopeY) <= m_Rich1InitSlopeYMax ) ) {
+
+         InitDirOK = true;
+         
+     }
+     
+     
+  }
+  
+           
+
+  return  InitDirOK ;
+  
+}
+
+
+bool  RichG4EventHitCount::Rich1AgelMomSelection
+( const G4ThreeVector InitMomA ) {
+
+  bool AgelMomHigh = false;
+
+  G4double MomMagnitude=  InitMomA.mag();
+  
+  if(MomMagnitude >= m_MomRich1AgelMin ) {
+    AgelMomHigh=true;  
+  }
+  
+  
+
+  return  AgelMomHigh;
+  
+}
+
+
+bool  RichG4EventHitCount::Rich1GasMomSelection
+( const G4ThreeVector InitMomB ) 
+{
+  bool GasMomHigh = false;
+  G4double MomMagnitude=  InitMomB.mag();
+  
+  if(MomMagnitude >= m_MomRich1GasMin ) {
+    GasMomHigh= true;  
+  }
+  
+
+  return  GasMomHigh;
+  
+  
+}
+
+bool RichG4EventHitCount::Rich2FiducialRegion 
+( const G4ThreeVector aTjPos ) 
+{
+  
+  bool InsideRich2Fiducial = false;
+  
+
+   bool OutsideBeamHoleR2= false;
+   bool InsideRich2X = false;
+   bool InsideRich2Y = false;
+   
+   G4double xt = aTjPos.x();
+   G4double yt=  aTjPos.y();  
+   G4double zt = aTjPos.z();
+   if(zt >= Rich2FiducialUpstrZ && 
+      zt <=  Rich2FiducialDnstrZ ) {
+     G4double rt= pow((xt*xt + yt*yt),0.5);
+     G4double bt =  Rich2FiducialUpstrBeamHoleRad+ 
+       (zt - Rich2FiducialUpstrZ ) * Rich2FiducialBeamHoleSlope;
+     // now check if it is outside beampipe hole
+     if(rt > bt )  OutsideBeamHoleR2 = true;
+     
+       // now check for X 
+       
+       G4double xat = Rich2FiducialUpstrEndX + 
+         (zt - Rich2FiducialUpstrZ)* Rich2FiducialXslope ;
+     
+     
+       if(abs(xt) <= xat )  InsideRich2X= true;
+       
+       // now check for Y 
+
+        G4double yat = Rich2FiducialUpstrEndY + 
+         (zt - Rich2FiducialUpstrZ)* Rich2FiducialYslope ;
+      
+        if( abs(yt) <=   yat ) InsideRich2Y= true;
+        
+
+        if( OutsideBeamHoleR2 &&  InsideRich2X && 
+            InsideRich2Y ) InsideRich2Fiducial = true;
+       
+   }
+   
+   
+
+
+
+
+  return  InsideRich2Fiducial;
+  
+}
+
+bool  RichG4EventHitCount::Rich2GasMomSelection
+( const G4ThreeVector InitMomB ) 
+{
+  bool GasMomHigh = false;
+  G4double MomMagnitude=  InitMomB.mag();
+  
+  if(MomMagnitude >= m_MomRich2GasMin ) {
+    GasMomHigh=true;  
+  }
+  
+
+  return  GasMomHigh;
+  
+  
+}
+
+bool  RichG4EventHitCount::Rich2ProdDirSelection
+( const G4ThreeVector initMom ) 
+{
+  bool InitDirOK = false;
+  if(initMom.z() > 0.0 ) {
+     G4double SlopeX= (initMom.x()) /( initMom.z());
+     G4double SlopeY = (initMom.y())/(initMom.z());
+     G4double SlopeR =pow((SlopeX*SlopeX+SlopeY*SlopeY),0.5);
+     
+     if( ( SlopeR >= m_Rich2InitSlopeRMin) && 
+         ( abs(SlopeX) <= m_Rich2InitSlopeXMax ) &&
+         ( abs(SlopeY) <= m_Rich2InitSlopeYMax ) ) {
+
+         InitDirOK = true;
+       
+     }
+     
+   }
+           
+
+  return  InitDirOK ;
+  
+}
+
+
+
 bool RichG4EventHitCount::Rich1TrajTraverse
              (const G4Event* anEvent, int trajId) 
 {
   //  Get the track ID of all the charged particle trajectories.
   // excluding those of the photoelectrons.
   bool atrav= false;
-  G4double aZRange=50.0*mm;
-  G4double aRich1MaxUpR= 200.0*mm;
-  G4double aRich1MaxDnR= 500.0*mm;
-
-      G4double MinMomAgelCut=5.0*GeV;
-      //      G4double MinMomc4f10Cut=20.0*GeV;
-  
-  G4double aR1ZupA=ZUpsRich1Analysis-aZRange;
-  G4double aR1ZupB=ZUpsRich1Analysis+aZRange;
-   G4double aR1ZdnA=  ZDnsRich1Analysis-aZRange;
-    G4double   aR1ZdnB= ZDnsRich1Analysis+aZRange; 
   
    //get the trajectories
   G4TrajectoryContainer* atrajectoryContainer=anEvent->GetTrajectoryContainer();
@@ -106,7 +371,15 @@ bool RichG4EventHitCount::Rich1TrajTraverse
   if(atrajectoryContainer){n_trajectories=atrajectoryContainer->entries();
   }
   
-
+  bool Rich1GasMomHigh = false;
+  bool TrackDirInRich1Acceptance=false;
+  bool TrackChAndId = false;
+  bool aTravRich1Fid= false;
+  bool Rich1ProjFid= false;
+  int aTravRich1FiducialCount=0;
+  bool  TooFewTrajPoint=false;
+  bool AllOutsideRich1=false;
+  
    
   for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
      G4Trajectory* CurTraj=(G4Trajectory*)
@@ -114,183 +387,418 @@ bool RichG4EventHitCount::Rich1TrajTraverse
 
      G4int ctid =   CurTraj->GetTrackID();
      G4double curtkCharge=  CurTraj-> GetCharge();
-
+    if( (curtkCharge != 0.0)  && ( trajId == (int) ctid )) {
+      TrackChAndId= true;
+      
      G4ThreeVector initMomentum=  CurTraj->GetInitialMomentum();
-     G4double InitTotMom=   initMomentum.mag();
-        bool momHigh = true;
-        if(  InitTotMom <     MinMomAgelCut) {
-          
-          momHigh=false;
-          
-        }
+     
+      Rich1GasMomHigh   = Rich1GasMomSelection(initMomentum);
+      TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      //      G4cout<<" Rich1Traj tkid InitMom  "<<trajId<<"   "
+      //      <<initMomentum<<"   GasMomOK DirOK " 
+      //       <<"  "<< Rich1GasMomHigh
+      //      <<"   "<< TrackDirInRich1Acceptance<< G4endl;
+      // the following 'if' is to save cpu time.
+
+
+      if( ( Rich1GasMomHigh ) && 
+          ( TrackDirInRich1Acceptance ) ){
         
-     
-     if( (curtkCharge != 0.0)  && ( trajId == (int) ctid )) {
-         
        int NumTjPoints = CurTraj-> GetPointEntries();
-       G4ThreeVector InitPos , LastPos;
-       G4double SlopeX, SlopeY;
+
        
-       bool aSlpA=true;
-       
-       if(initMomentum.z() > 0.0 ) {
+
+       //   G4cout<<"Rich1Traj itrajID NumTrajPt =  "
+       //      << trajId<<"  "<< NumTjPoints<<G4endl;
+       if( NumTjPoints <= 1 ) {
+         TooFewTrajPoint = true;
+         //  G4cout<<" Rich1Traj itraj Toofew traj "<< itraj 
+         //       <<"   "<<NumTjPoints<< G4endl;
+        
+       } else {
          
-         SlopeX= (initMomentum.x()) /( initMomentum.z());
-         SlopeY = (initMomentum.y())/(initMomentum.z());
-         if( ( abs(SlopeX) <0.05) &&  ( abs(SlopeY) <0.05) ) {
-           aSlpA=false;
-           
-         }
-
-         if( ( abs(SlopeX) >0.25) && ( abs(SlopeY) >0.25)) {
-           aSlpA=false;
-           
-         }
+       
+       G4VTrajectoryPoint* aTjPointFirst =  CurTraj-> GetPoint(0);
+       G4VTrajectoryPoint* aTjPointLast =  CurTraj-> GetPoint(NumTjPoints-1);
+       G4ThreeVector aTjPosFirst=aTjPointFirst -> GetPosition() ;
+       G4ThreeVector aTjPosLast=aTjPointLast -> GetPosition() ;
+       if(  ( aTjPosFirst.z() >    Rich1FiducialDnstrZ)  ||
+            ( aTjPosLast.z() < Rich1FiducialUpstrZ ) ){
+         AllOutsideRich1= true;
+         //  G4cout<<" Rich1Traj AllOutsiderich1 first last traj "<< 
+         //     aTjPosFirst.z()<<"  "<<aTjPosLast.z()
+         //      <<"  "<< itraj <<G4endl;
          
-       }
+       } else {
+         
        
-       // G4cout<<"RichEv count slpx sply aslpA   "<< SlopeX
-       //    <<"    "<< SlopeY<<"   "<< aSlpA<<G4endl;
-       
-     
-  
-       G4VTrajectoryPoint* InitPoint = CurTraj->  GetPoint(0);
-       G4VTrajectoryPoint* LastPoint =  CurTraj->  GetPoint(NumTjPoints-1) ;       
-       if(  InitPoint)  InitPos= InitPoint->   GetPosition() ;
-       if( LastPoint )  LastPos = LastPoint ->   GetPosition();
-
-       bool aTravRx=true;
-       bool aTravRy=true;
-       bool aTravRR=true;
-
-       //       G4cout<<"NumTrajPt =  "<< NumTjPoints<<G4endl;
        
        for (int ipt=0 ; ipt< NumTjPoints; ipt++ ) {
          G4VTrajectoryPoint* aTjPoint =  CurTraj-> GetPoint(ipt);
-         if (aTjPoint) {
-           if( aTravRx &&  aTravRy &&  aTravRR && aSlpA) {
+         
+           
              
            G4ThreeVector aTjPos=   aTjPoint-> GetPosition() ;
-           G4double aTjPosX= aTjPos.x();
-            G4double aTjPosY= aTjPos.y();         
-            G4double aTjPosZ= aTjPos.z();
-            G4double  aTjPosR=0.0;
-            
-            if( ( aTjPosX !=0.0)  || ( aTjPosY !=0.0)){
+
+           bool aTravRich1Fiducial= Rich1FiducialRegion( aTjPos);
+
+           //           G4cout<<"Rich1Traj ipt tjpos InR1Fid  "
+           //      <<ipt <<"   "<<aTjPos<<" "<<aTravRich1Fiducial<<G4endl;
+           
+           if(   aTravRich1Fiducial) aTravRich1FiducialCount++;
+           
+       }
+       }
+       
+       }
+       
+       if(aTravRich1FiducialCount >= m_MinTkPtRich1FiducialRegion ) {
+         // at least a Min num of points  in Rich1 acceptance.       
+         aTravRich1Fid= true;
+       } else {
+         // if the track has points upstream and downstream of
+         // rich1 then project into rich1 to see if it may
+         // pass through rich1.
+         G4ThreeVector aTjPosUps(0.0,0.0,-1000.0);
+         G4ThreeVector aTjPosDns(0.0,0.0,1000000.0);
+         bool upsFound= false;
+         bool dnsFound= false;
+         //         bool Rich1ProjFid= false;
+         
+         
+         if( NumTjPoints >= 2 ) {
+          for (int ipta=0 ; ipta< NumTjPoints; ipta++ ) {
+
+            G4VTrajectoryPoint* aTjPointa =  CurTraj-> GetPoint(ipta);
+            G4ThreeVector aTjPosa =   aTjPointa-> GetPosition() ;
+            if( ( aTjPosa.z() <= Rich1FiducialUpstrZ)  &&
+                ( aTjPosa.z() > aTjPosUps.z() )) 
+            {
+              aTjPosUps= aTjPosa;
+              upsFound = true;
               
-              G4double  aTjPosR= pow((aTjPosX*aTjPosX+ aTjPosY*aTjPosY),0.5);
+            }
+            if( (aTjPosa.z() >= Rich1FiducialDnstrZ ) &&
+                    (aTjPosa.z() < aTjPosDns.z() )) 
+            {
+              aTjPosDns= aTjPosa;
+              dnsFound= true;
+              
+            }
+                
+                
+            
+          }
+          
+               
+          if(   upsFound && dnsFound ) {
+            
+       
+            G4ThreeVector aInitPos =  aTjPosUps;
+            G4ThreeVector aLastPos = aTjPosDns;
+           
+             // create a projected point in the middle of rich1.   
+            if(aLastPos.z() != aInitPos.z() ) {
+              G4double projZ=(Rich1FiducialUpstrZ+Rich1FiducialDnstrZ)*0.5;
+              
+            G4double projSlopeX = (aLastPos.x()-aInitPos.x()) /
+              ( aLastPos.z()-aInitPos.z());
+            G4double projSlopeY = (aLastPos.y()-aInitPos.y()) /
+             ( aLastPos.z()-aInitPos.z());
+             G4double projX = aInitPos.x()+ projSlopeX*(projZ-aInitPos.z()) ;
+             G4double projY = aInitPos.y()+ projSlopeY*(projZ-aInitPos.z()) ;
+             G4ThreeVector aProjPos(projX,projY,projZ);
+             
+              Rich1ProjFid = Rich1FiducialRegion(aProjPos);
+              
             }
             
-               if( (  aTjPosZ > ZUpsRich1Analysis)  &&
-                   (  aTjPosZ < ZDnsRich1Analysis)) {
-                 //      G4cout<<"aTjPosR aTjPosZ  all  "<<  aTjPosR
-                 //  << "   "<<aTjPosZ<<G4endl;
-
-               }
-               
-
-              if( (  aTjPosZ > ZUpsRich1Analysis)  &&
-                 (  aTjPosZ < ZUpsRich1Analysis)) {
-           
-                 if( aTjPosR< 50.0 ) {
-                  //track in the beam pipe.
-                   // G4cout<<"aTjPosR aTjPosZ  inbeampipe  "<<  aTjPosR
-                   // << "   "<<aTjPosZ<<G4endl;
-               
-                  aTravRR= false;
-                }
-              }
-              
-             if( (aR1ZupA < aTjPosZ )  &&
-                 (aR1ZupB > aTjPosZ )) {
-               if( aTjPosR >  aRich1MaxUpR ) {
-
-                 //   G4cout<<"aTjPosR aTjPosZ  upsend  "<<  aTjPosR
-                 //  << "   "<<aTjPosZ<<G4endl;
-               
-                aTravRR= false;
- 
-               }
-               
-               
-             }
-
-             if( (aR1ZdnA < aTjPosZ )  &&
-                 (aR1ZdnB >  aTjPosZ )) {
-               if( aTjPosR >  aRich1MaxDnR ) {
-
-                 //  G4cout<<"aTjPosR aTjPosZ  dnssend  "<<  aTjPosR
-                 // << "   "<<aTjPosZ<<G4endl;
-              
-                aTravRR= false;
- 
-               }
-               
-               
-             }
-             
-
-             
-             //             if( (aTjPosZ > 990.0 && aTjPosZ < 2500.0) ||
-             //    (aTjPosZ > 8500.0 &&  aTjPosZ<12000. ) ) {
-             
-             // G4cout<<"Trajectory XYZ Mom  "<<   aTjPosX
-             //   <<"  "<< aTjPosY<<"   "<< aTjPosZ
-             //     <<"   "<<InitTotMom<<G4endl;
-              
-             //  }
-
- 
-             
-           }
-           
-           
-           
+          
+            
+          }
+          
+         
+         if(Rich1ProjFid) {
+           aTravRich1Fid= true;
+            
          }
-         
-           
-         
          
          
        }
        
        
        
-       //       G4cout<<" Traj InitPos XYZ LastPos XYZ  "<<
-       //  InitPos.x()<<"  "<<  InitPos.y()<<"   "<<InitPos.z()
-       //    <<"   "<< LastPos.x()<<"    "<< LastPos.y()<<"    "<<
-       //   LastPos.z()<<G4endl;
-
-       //       G4cout<<"InitMom XYZ SlopeX SlopeY  "<< initMomentum.x()<<"   "<<
-       //  initMomentum.y()<<"    "<<initMomentum.z()
-       //    <<"   "<<SlopeX<<"    "<<SlopeY <<G4endl;
-
-       //    G4cout<<"aTravRx  aTravRy     aTravRR aSlpA "<<
-       //  aTravRx<<"   "<< aTravRy<<"   "<< aTravRR
-       //    <<"   "<< aSlpA
-       //    << "    "<< momHigh <<G4endl;
        
-
-         if(aTravRx && aTravRy && aTravRR &&  aSlpA && momHigh ) {            
-           atrav =true;
          
-         }
          
-     }     
-     
+       
+      }
+      
+      
+      
+      
+      
+      
+    }
+    
+    
+      
+      
+         
   }
+    
+  }
+  
+    if( TrackChAndId ) {
+    
+    if(Rich1GasMomHigh && TrackDirInRich1Acceptance){
+
+         
+      // G4cout<<"Rich1Traj tkid R1FidCount Rich1Fid "
+      //        <<trajId <<"   "<< aTravRich1FiducialCount<<"   "
+      //         << aTravRich1Fid<<G4endl;
+      //   G4cout<<"Rich1Traj tkid  Rich1ProjFid Rich1Fid "
+      //         <<trajId<<"   "<<Rich1ProjFid<<"   "
+      //         <<aTravRich1Fid<<"  "<<G4endl;     
+  
+    
+    
+    
+    
+
+      if(  aTravRich1Fid ) {
+        
+        atrav =true;
+      }
+      
+      
+    }
+    
+    
+    }
+    
+    
+  
+  
+
+    //  G4cout<<"End of Rich1Traj ctid Rich1traverse "
+    //    << trajId <<"    "<<atrav<<G4endl;
   
   return  atrav;
   
 }
+
+  
+  
+bool RichG4EventHitCount::Rich1AgelTrajTraverse
+(const G4Event* anEvent, int trajId) 
+{
+  bool atravAgel= false;
+
+   
+   //get the trajectories
+  G4TrajectoryContainer* atrajectoryContainer=anEvent->GetTrajectoryContainer();
+  G4int n_trajectories=0;
+  if(atrajectoryContainer){n_trajectories=atrajectoryContainer->entries();
+  }
+  
+  bool Rich1AgelMomHigh=false;
+  bool TrackDirInRich1Acceptance=false;
+  bool TrackChAndId = false;
+  bool aTravRich1AgelFid= false;
+  bool Rich1AgelProjFid= false;
+  int aTravRich1AgelFiducialCount=0;
+  bool  TooFewTrajPoint=false;
+  bool AllOutsideRich1Agel=false;
+
+
+  for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
+     G4Trajectory* CurTraj=(G4Trajectory*)
+                               ((*(anEvent->GetTrajectoryContainer()))[itraj]);
+
+     G4int ctid =   CurTraj->GetTrackID();
+     G4double curtkCharge=  CurTraj-> GetCharge();
+    if( (curtkCharge != 0.0)  && ( trajId == (int) ctid )) {
+      TrackChAndId= true;
+      
+     G4ThreeVector initMomentum=  CurTraj->GetInitialMomentum();
+     
+      Rich1AgelMomHigh   = Rich1AgelMomSelection(initMomentum);
+      TrackDirInRich1Acceptance = Rich1ProdDirSelection(initMomentum);
+      //   G4cout<<" Rich1Traj tkid InitMom  "<<trajId<<"   "
+      //    <<initMomentum<<"   AgelMomOK DirOK " 
+      //      <<"  "<< Rich1AgelMomHigh
+      //     <<"   "<< TrackDirInRich1Acceptance<< G4endl;
+            // the following 'if' is to save cpu time.
+
+
+      if( ( Rich1AgelMomHigh ) && 
+          ( TrackDirInRich1Acceptance ) ){
+        
+       int NumTjPoints = CurTraj-> GetPointEntries();
+
+       if( NumTjPoints <= 1 ) {
+         TooFewTrajPoint = true;
+         //  G4cout<<" Rich1Traj itraj Toofew traj "<< itraj 
+         //       <<"   "<<NumTjPoints<< G4endl;
+        
+       } else {
+         
+       
+       G4VTrajectoryPoint* aTjPointFirst =  CurTraj-> GetPoint(0);
+       G4VTrajectoryPoint* aTjPointLast =  CurTraj-> GetPoint(NumTjPoints-1);
+       G4ThreeVector aTjPosFirst=aTjPointFirst -> GetPosition() ;
+       G4ThreeVector aTjPosLast=aTjPointLast -> GetPosition() ;
+       if(  ( aTjPosFirst.z() >    Rich1AgelFiducialDnstrZ)  ||
+            ( aTjPosLast.z() < Rich1AgelFiducialUpstrZ ) ){
+         AllOutsideRich1Agel= true;
+         //    G4cout<<" Rich1Traj AllOutsiderich1Agel first last traj "<< 
+         //     aTjPosFirst.z()<<"  "<<aTjPosLast.z()
+         //      <<"  "<< itraj <<G4endl;
+         
+       } else {
+         
+       
+       
+       for (int ipt=0 ; ipt< NumTjPoints; ipt++ ) {
+
+         G4VTrajectoryPoint* aTjPoint =  CurTraj-> GetPoint(ipt);
+         G4ThreeVector aTjPos=   aTjPoint-> GetPosition() ;
+
+           bool aTravRich1AgelFiducial= Rich1AgelFiducialRegion( aTjPos);
+
+           //           G4cout<<"Rich1Traj ipt tjpos InR1Fid  "
+           //      <<ipt <<"   "<<aTjPos<<" "<<aTravRich1Fiducial<<G4endl;
+           
+           if(   aTravRich1AgelFiducial) aTravRich1AgelFiducialCount++;
+           
+       }
+       
+       }
+       
+       
+       
+       
+       }
+       
+       
+       
+       
+       
+       if(aTravRich1AgelFiducialCount >= m_MinTkPtRich1FiducialRegion ) {
+         // at least a Min num of points  in Rich1 acceptance.       
+         aTravRich1AgelFid= true;
+       } else {
+         // if the track has points upstream and downstream of
+         // rich1 then project into rich1Agel to see if it may
+         // pass through rich1Agel.
+         G4ThreeVector aTjPosUps(0.0,0.0,-1000.0);
+         G4ThreeVector aTjPosDns(0.0,0.0,1000000.0);
+         bool upsFound= false;
+         bool dnsFound= false;
+         //         bool Rich1ProjFid= false;
+         
+         
+         if( NumTjPoints >= 2 ) {
+          for (int ipta=0 ; ipta< NumTjPoints; ipta++ ) {
+
+            G4VTrajectoryPoint* aTjPointa =  CurTraj-> GetPoint(ipta);
+            G4ThreeVector aTjPosa =   aTjPointa-> GetPosition() ;
+            if( ( aTjPosa.z() <= Rich1AgelFiducialUpstrZ)  &&
+                ( aTjPosa.z() > aTjPosUps.z() )) 
+            {
+              aTjPosUps= aTjPosa;
+              upsFound = true;
+              
+            }
+            if( (aTjPosa.z() >= Rich1AgelFiducialDnstrZ ) &&
+                    (aTjPosa.z() < aTjPosDns.z() )) 
+            {
+              aTjPosDns= aTjPosa;
+              dnsFound= true;
+              
+            }
+            
+                
+                
+            
+          }         
+               
+          if(   upsFound && dnsFound ) {
+            
+       
+            G4ThreeVector aInitPos =  aTjPosUps;
+            G4ThreeVector aLastPos = aTjPosDns;
+           
+             // create a projected point in the middle of rich1.   
+            if(aLastPos.z() != aInitPos.z() ) {
+              G4double projZ=
+                (Rich1AgelFiducialUpstrZ+Rich1AgelFiducialDnstrZ)*0.5;
+              
+            G4double projSlopeX = (aLastPos.x()-aInitPos.x()) /
+              ( aLastPos.z()-aInitPos.z());
+            G4double projSlopeY = (aLastPos.y()-aInitPos.y()) /
+             ( aLastPos.z()-aInitPos.z());
+             G4double projX = aInitPos.x()+ projSlopeX*(projZ-aInitPos.z()) ;
+             G4double projY = aInitPos.y()+ projSlopeY*(projZ-aInitPos.z()) ;
+             G4ThreeVector aProjPos(projX,projY,projZ);
+             
+              Rich1AgelProjFid = Rich1AgelFiducialRegion(aProjPos);
+              
+            }          
+            
+          }         
+         if(Rich1AgelProjFid) {
+           aTravRich1AgelFid= true;
+           
+         }        
+         }         
+       }       
+      }     
+    }    
+  }
+  
+  
+  
+    if( TrackChAndId ) {
+    
+       if( ( Rich1AgelMomHigh ) && 
+           ( TrackDirInRich1Acceptance ) ){
+
+         //    G4cout<<"Rich1AgelTraj tkid R1AgelFidCount Rich1AgelFid "
+         //       <<trajId <<"   "<< aTravRich1AgelFiducialCount<<"   "
+         //       << aTravRich1AgelFid<<G4endl;
+         //  G4cout<<"Rich1AgelTraj tkid  Rich1AgelProjFid Rich1AgelFid "
+         //      <<trajId<<"   "<<Rich1AgelProjFid<<"   "
+         //      <<aTravRich1AgelFid<<"  "<<G4endl;     
+  
+ 
+
+         if(aTravRich1AgelFid) {
+           
+           atravAgel=true;
+         }
+         
+       }
+       
+    }
+  
+    //  G4cout<<" End of Rich1AgelTraj trajid atravagel "
+    //         <<trajId<<"    "<< atravAgel<<G4endl;
+       
+
+
+  return  atravAgel;
+}
+
 
 bool RichG4EventHitCount::Rich2TrajTraverse
              (const G4Event* anEvent, int trajId) 
 {
+
   //  Get the track ID of all the charged particle trajectories.
   // excluding those of the photoelectrons.
   bool atrav= false;
-  G4double InitMomCut=50.0*GeV;
   
    //get the trajectories
   G4TrajectoryContainer* atrajectoryContainer=anEvent->GetTrajectoryContainer();
@@ -298,134 +806,246 @@ bool RichG4EventHitCount::Rich2TrajTraverse
   if(atrajectoryContainer){n_trajectories=atrajectoryContainer->entries();
   }
   
-
+  bool Rich2AgelMomHigh=false;
+  bool Rich2GasMomHigh = false;
+  bool TrackDirInRich2Acceptance=false;
+  bool TrackChAndId = false;
+  bool aTravRich2Fid= false;
+  bool Rich2ProjFid= false;
+  int aTravRich2FiducialCount=0;
+  bool TooFewTrajPoint=false;
+  
+  bool AllOutsideRich2=false;
+  
    
   for (int itraj=0; itraj<  n_trajectories ; itraj++ ) {
+
      G4Trajectory* CurTraj=(G4Trajectory*)
                                ((*(anEvent->GetTrajectoryContainer()))[itraj]);
 
      G4int ctid =   CurTraj->GetTrackID();
      G4double curtkCharge=  CurTraj-> GetCharge();
-
+    if( (curtkCharge != 0.0)  && ( trajId == (int) ctid ) ) {
+      TrackChAndId= true;
+      
      G4ThreeVector initMomentum=  CurTraj->GetInitialMomentum();
-     G4double initTotMom= initMomentum.mag();
 
-     //     G4cout<<"chtk init Mom and cut  "<<initTotMom
-     //   <<"   "<< InitMomCut <<G4endl;
-     
-     if( initTotMom  > InitMomCut ) {
-       
-     
-     if( (curtkCharge != 0.0)  && ( trajId == (int) ctid )) {
-         
+      Rich2GasMomHigh   = Rich2GasMomSelection(initMomentum);
+      TrackDirInRich2Acceptance = Rich2ProdDirSelection(initMomentum);
+      // the following 'if' is to save cpu time.
+
+      // G4cout<<" Rich2Traj trajID initmom Rich2momOk TrackDirOk "
+      //      << trajId <<"   "<<initMomentum<<"    "
+      //      << Rich2GasMomHigh<<"   "<<TrackDirInRich2Acceptance 
+      //      << G4endl;
+      
+      if( ( Rich2GasMomHigh ) && 
+          ( TrackDirInRich2Acceptance ) ){
+        
        int NumTjPoints = CurTraj-> GetPointEntries();
-       G4ThreeVector InitPos , LastPos;
-       G4double SlopeX, SlopeY;
-       
-       if(initMomentum.z() > 0.0 ) {
-         
-         SlopeX= (initMomentum.x()) /( initMomentum.z());
-         SlopeY = (initMomentum.y())/(initMomentum.z());
-       }
-  
-     
-  
-       G4VTrajectoryPoint* InitPoint = CurTraj->  GetPoint(0);
-       G4VTrajectoryPoint* LastPoint =  CurTraj->  GetPoint(NumTjPoints-1) ;       
-       if(  InitPoint)  InitPos= InitPoint->   GetPosition() ;
-       if( LastPoint )  LastPos = LastPoint ->   GetPosition();
 
-       bool aTravRx=true;
-       bool aTravRy=true;
+
+       // G4cout<<"Rich2traj trajid NumTrajPt =  "
+       //     <<trajId<<"   "<< NumTjPoints<<G4endl;
+
+
+      if( NumTjPoints <= 1 ) {
+         TooFewTrajPoint = true;
+         // G4cout<<" Rich2Traj itraj Toofew trajid "<< trajId 
+         //       <<"   "<<NumTjPoints<< G4endl;
+        
+       } else {
+         
+       
+       G4VTrajectoryPoint* aTjPointFirst =  CurTraj-> GetPoint(0);
+       G4VTrajectoryPoint* aTjPointLast =  CurTraj-> GetPoint(NumTjPoints-1);
+       G4ThreeVector aTjPosFirst=aTjPointFirst -> GetPosition() ;
+       G4ThreeVector aTjPosLast=aTjPointLast -> GetPosition() ;
+       if(  ( aTjPosFirst.z() >    Rich2FiducialDnstrZ)  ||
+            ( aTjPosLast.z() < Rich2FiducialUpstrZ ) ){
+         AllOutsideRich2= true;
+         //    G4cout<<" Rich2Traj AllOutsiderich2 first last itraj "
+         //      << aTjPosFirst.z()<<"  "<<aTjPosLast.z()
+         //      <<"   "<< trajId <<G4endl;
+         
+       } else {
+         
+   
+
        
        for (int ipt=0 ; ipt< NumTjPoints; ipt++ ) {
          G4VTrajectoryPoint* aTjPoint =  CurTraj-> GetPoint(ipt);
-         if (aTjPoint) {
+         
+           
+             
            G4ThreeVector aTjPos=   aTjPoint-> GetPosition() ;
-           G4double aTjPosX= aTjPos.x();
-            G4double aTjPosY= aTjPos.y();         
-            G4double aTjPosZ= aTjPos.z();         
-             
-           if( aTjPosZ > ZUpsRich2Analysis && 
-               aTjPosZ <   ZDnsRich2Analysis) {
-             G4double CurSx=  aTjPosX/ aTjPosZ;
-             G4double CurSy=  aTjPosY/ aTjPosZ;
 
-             if(( abs(aTjPosX) < 5.0 ) || (abs(aTjPosY) < 5.0 ) ) {
-               //track in the beam pipe.
-               
-                aTravRx= false;
-             }             
+           bool aTravRich2Fiducial= Rich2FiducialRegion( aTjPos);
 
-             if(abs(CurSx)< 0.02 || abs(CurSx) > 0.20) {
-               aTravRx= false;
-               
-             }
-             if(abs(CurSy)< 0.02 || abs(CurSy) > 0.20) {
-               aTravRy= false;
-               
-             }
-
-             
-             
-           }
+           // G4cout<<" Rich2Traj ipt aTjpos R2Fid "
+           //      << ipt <<"   "<<aTjPos<<"   "
+           //      <<aTravRich2Fiducial<<G4endl;
            
+           if(   aTravRich2Fiducial) aTravRich2FiducialCount++;
            
-           
-         }
-         
-         
        }
        
-       
-       //       G4cout<<" Traj InitPos XYZ LastPos XYZ  "<<
-       //  InitPos.x()<<"  "<<  InitPos.y()<<"   "<<InitPos.z()
-       //    <<"   "<< LastPos.x()<<"    "<< LastPos.y()<<"    "<<
-       //   LastPos.z()<<G4endl;
+       }
+       }
+      
+       if(aTravRich2FiducialCount >= m_MinTkPtRich2FiducialRegion ) {
+         // at least a Min num of points  in Rich2 acceptance.       
+         aTravRich2Fid= true;
+         
+       } else {
+         // if the track has points upstream and downstream of
+         // rich2 then project into rich2 to see if it may
+         // pass through rich2.
+         G4ThreeVector aTjPosUps(0.0,0.0,-1000.0);
+         G4ThreeVector aTjPosDns(0.0,0.0,1000000.0);
+         bool upsFound= false;
+         bool dnsFound= false;
+         //         bool Rich2ProjFid= false;
+         
+         
+         if( NumTjPoints >= 2 ) {
+          for (int ipta=0 ; ipta< NumTjPoints; ipta++ ) {
 
-       //       G4cout<<"InitMom XYZ SlopeX SlopeY  "<< initMomentum.x()<<"   "<<
-       //  initMomentum.y()<<"    "<<initMomentum.z()
-       //    <<"   "<<SlopeX<<"    "<<SlopeY <<G4endl;
-       
-
-
-       if(  InitPos.z() < ZUpsRich2Analysis && 
-            LastPos.z() >  ZDnsRich2Analysis ) {
-         //         if( LastPos.x() < 9000.0 ) {
-           
-         //   if(aTravRx && aTravRy ) {
-           
-         if( ( ( abs(SlopeX) > 0.02) && ( abs(SlopeX) < 0.120))  
-             || ((abs(SlopeY) > 0.02) && (abs(SlopeY) < 0.120))) {
-                      
+            G4VTrajectoryPoint* aTjPointa =  CurTraj-> GetPoint(ipta);
+            G4ThreeVector aTjPosa =   aTjPointa-> GetPosition() ;
+            if( ( aTjPosa.z() <= Rich2FiducialUpstrZ)  &&
+                ( aTjPosa.z() > aTjPosUps.z() )) 
+            {
+              aTjPosUps= aTjPosa;
+              upsFound =true; 
+            }
             
-           atrav =true;
+            
 
+
+            if( (aTjPosa.z() >= Rich2FiducialDnstrZ ) &&
+                    (aTjPosa.z() < aTjPosDns.z() )) 
+            {
+              aTjPosDns= aTjPosa;
+              dnsFound= true;
+              
+            }
+            
+            
+          }
+          
+          
+               
+          if(   upsFound && dnsFound ) {
+            
+       
+            G4ThreeVector aInitPos =  aTjPosUps;
+            G4ThreeVector aLastPos = aTjPosDns;
+           
+             // create a projected point in the middle of rich1.   
+            if(aLastPos.z() != aInitPos.z() ) {
+              G4double projZ=(Rich2FiducialUpstrZ+Rich2FiducialDnstrZ)*0.5;
+            
+            
+            
+            
+            G4double projSlopeX = (aLastPos.x()-aInitPos.x()) /
+              ( aLastPos.z()-aInitPos.z());
+            G4double projSlopeY = ( aLastPos.y()-aInitPos.y()) /
+             ( aLastPos.z()-aInitPos.z());
+             G4double projX = aInitPos.x()+ projSlopeX*(projZ-aInitPos.z()) ;
+             G4double projY = aInitPos.y()+ projSlopeY*(projZ-aInitPos.z()) ;
+             G4ThreeVector aProjPos(projX,projY,projZ);
+              Rich2ProjFid = Rich2FiducialRegion( aProjPos );
+              
+            }
+            
+          }
+          
+          
+          
+         
+       
+         
+         if(Rich2ProjFid) {
+           aTravRich2Fid= true;
+           
          }
-         //         }
+         
+         }
          
          
-         //       }
+       
+       
          
          
        }
        
        
+      
+      
        
-       
-     }
-     
-     
-     }
-     
+      }
+      
+      
+    
+    
+    
+    
+      
+    }
+    
   }
   
-  
+   if( TrackChAndId ) {
+     if(Rich2GasMomHigh && TrackDirInRich2Acceptance){
 
+       // G4cout<<" Rich2Traj itraj Rich2Fidcount Rich2fid "
+       //      << trajId<<"  "<<aTravRich2FiducialCount
+       //      <<"   "<<aTravRich2Fid<<G4endl;
+
+       //  G4cout<<" Rich2Traj itraj Rich2ProjFid Rich2Fid "
+       //      << trajId<<"  "<<Rich2ProjFid
+       //      <<"   "<<aTravRich2Fid<<G4endl;
+       
+
+      if(  aTravRich2Fid ) {
+        
+        atrav =true;
+      }
+      
+      
+     }
+     
+    
+    
+    
+     
+   }
+   
+   
+   
+   
+   
+  
+   
+  
+  
+  
+  
+  
+ 
+   
+   // G4cout<<"End of Rich2Traj itraj atrav "
+   //     <<trajId<<"   "<<atrav <<G4endl;
+  
   
   return  atrav;
   
 }
+ 
+  
+
 
   
 
@@ -436,15 +1056,25 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
  // first get all the track ids
       //  std::vector<int> TrakIDVect = RichG4GetChTrajId(anEvent);
   // Now find the number of tracks creating hits in RICH.
-      std::vector<int>  TrajIdVect;
+      std::vector<int>  TrajIdVectR1;
+      std::vector<int>  TrajIdVectR1Agel;
       std::vector<int>  TrajIdVectR2;
-      TrajIdVect.clear();
-      TrajIdVect.reserve(100);
+      TrajIdVectR1.clear();
+      TrajIdVectR1.reserve(100);
+      TrajIdVectR1Agel.clear();
+      TrajIdVectR1Agel.reserve(100);
       TrajIdVectR2.clear();
       TrajIdVectR2.reserve(100);
-       G4double MinMomAgelCut=5.0*GeV;
-      G4double MinMomc4f10Cut=5.0*GeV;
-       G4double MaxMomAgelCut=15.0*GeV;
+
+
+      G4cout<<"  Now counting Saturated numhits in Rich1 Rich2 "<<G4endl;
+      
+
+      //       G4double MinMomAgelCut=5.0*GeV;
+      //  G4double MinMomc4f10Cut=5.0*GeV;
+      //  G4double MaxMomAgelCut=15.0*GeV;
+
+
      
       
     G4HCofThisEvent * HCE;
@@ -472,23 +1102,39 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
 
           //          G4cout<<" TRkId for rich1 hits  "<< ChtkId <<G4endl;
 
-          bool trajAlreadyStored=true;;
+          bool trajAlreadyStoredR1=true;;
           bool trajtraversedRich1=false;
+
+          bool trajAlreadyStoredR1Agel=true;;
+          bool trajtraversedRich1Agel=false;
 
           bool trajAlreadyStoredR2=true;;
           bool trajtraversedRich2=false;
           
-          if(TrajIdVect.size() > 0 ) {
+          if(TrajIdVectR1.size() > 0 ) {
             
-           std::vector<int>::iterator p = find(TrajIdVect.begin(),
-                                                TrajIdVect.end(), 
+           std::vector<int>::iterator p = find(TrajIdVectR1.begin(),
+                                                TrajIdVectR1.end(), 
                                                 ChtkId);
-           if( p == TrajIdVect.end() ) trajAlreadyStored=false;
+           if( p == TrajIdVectR1.end() ) trajAlreadyStoredR1=false;
            
 
           } else {
 
-             trajAlreadyStored=false;          
+             trajAlreadyStoredR1=false;          
+            
+          } 
+          if(TrajIdVectR1Agel.size() > 0 ) {
+            
+           std::vector<int>::iterator p = find(TrajIdVectR1Agel.begin(),
+                                                TrajIdVectR1Agel.end(), 
+                                                ChtkId);
+           if( p == TrajIdVectR1Agel.end() ) trajAlreadyStoredR1Agel=false;
+           
+
+          } else {
+
+             trajAlreadyStoredR1Agel=false;          
             
           } 
 
@@ -508,12 +1154,12 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
 
 
 
-          if( !( trajAlreadyStored) ) {
+          if( !( trajAlreadyStoredR1) ) {
 
             // Now loop through the trajectory container to see
             // this track goes through the whle length of Rich1.
             // This is done by checking if the first point of the
-            // trajectory i supstream of Rich1 and the last point is
+            // trajectory is upstream of Rich1 and the last point is
             // downstream of Rich1.
             
             
@@ -521,10 +1167,29 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
             
              if( trajtraversedRich1) {
                 
-                TrajIdVect.push_back(ChtkId);
+                TrajIdVectR1.push_back(ChtkId);
               }
              
           }
+
+          if( !( trajAlreadyStoredR1Agel) ) {
+
+            // Now loop through the trajectory container to see
+            // this track goes through the whle length of Rich1 agel.
+            // This is done by checking if the first point of the
+            // trajectory i supstream of Rich1 agel and the last point is
+            // downstream of Rich1 agel.
+            
+            
+            trajtraversedRich1Agel= Rich1AgelTrajTraverse(anEvent, ChtkId );
+            
+             if( trajtraversedRich1Agel) {
+                
+                TrajIdVectR1Agel.push_back(ChtkId);
+              }
+             
+          }
+
 
           // now for rich2           
           if( !( trajAlreadyStoredR2) ) {
@@ -561,50 +1226,26 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
       }  // end loop over collections
 
 
-             G4cout<<"TrajIdVectSize =  "<< TrajIdVect.size()<<G4endl;
-             G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
-       //     G4cout<<"TrajIdVectSize before erase "<< TrajIdVect.size()<<G4endl;
-      
-      //       for (int ihcola=0; ihcola<NumRichCollection; ihcola++) {
-            
-      //    Current_RichG4CollectionID =RichG4CollectionID[ihcola];
-      //   HCE = anEvent->GetHCofThisEvent();
-      //   RichG4HitsCollection* RHCA=NULL;
-      //   if(HCE){
-      //    RHCA = (RichG4HitsCollection*)(HCE->
-      //                       GetHC( Current_RichG4CollectionID));
-      //   }
-      //  if(RHCA){
-      //    G4int nHitInCurCollb = RHCA->entries();
-      //     for (G4int ihab=0; ihab<nHitInCurCollb ; ihab++ ) {
+         G4cout<<"TrajIdR1VectSize and  TrajIdR1AgelVectSize "
+                  << TrajIdVectR1.size()
+                   <<"     "<< TrajIdVectR1Agel.size()<<G4endl;
+           G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
 
-      //          RichG4Hit* abHit = (*RHCA)[ihab];
-      //    int aPeId = (int) (abHit->GetPETrackID()) ;
+           // store the trackid info.
 
-      //          vector<int>::iterator q = find(TrajIdVect.begin(),
-      //                       TrajIdVect.end(),aPeId);
-      //    if(q != TrajIdVect.end()) TrajIdVect.erase(q) ;
-          
+           aRichCounter-> setTrackIdTraverseRich1Gas( TrajIdVectR1);
+           aRichCounter-> setTrackIdTraverseRich1Agel(TrajIdVectR1Agel);
+           aRichCounter-> setTrackIdTraverseRich2Gas(TrajIdVectR2);
            
-      //    }
-      //     
-      //  }
-       
-      //  } //end loop over collections
- 
-
-      //      G4cout<<"TrajIdVectSize after erase "<< TrajIdVect.size()<<G4endl;
-
-    
-      int NumTraj=  TrajIdVect.size();
-      
-      std::vector<int>TrajNumHitGasRich1( NumTraj,0);      
-      std::vector<int>TrajSatNumHitGasRich1( NumTraj,0);      
-      std::vector<int>TrajNumHitAgelRich1( NumTraj,0);      
-      std::vector<int>TrajSatNumHitAgelRich1( NumTraj,0);      
-
-
+   
+      int NumTrajR1=  TrajIdVectR1.size();
+      int NumTrajR1Agel = TrajIdVectR1Agel.size();
       int NumTrajR2=  TrajIdVectR2.size();
+      
+      std::vector<int>TrajNumHitGasRich1( NumTrajR1,0);      
+      std::vector<int>TrajSatNumHitGasRich1( NumTrajR1,0);      
+      std::vector<int>TrajNumHitAgelRich1( NumTrajR1Agel,0);      
+      std::vector<int>TrajSatNumHitAgelRich1( NumTrajR1Agel,0);      
       std::vector<int>TrajNumHitGasRich2( NumTrajR2,0);      
       std::vector<int>TrajSatNumHitGasRich2( NumTrajR2,0);      
       
@@ -646,49 +1287,63 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
           
                    
           int it=0;
-          while(it < (int) TrajIdVect.size()) {
+          while(it < (int) TrajIdVectR1Agel.size()) {
             
-            if(TrajIdVect[it] ==  ChtkId) {
+            if(TrajIdVectR1Agel[it] ==  ChtkId) {
               if(aRadiatorNum == 0 ) {
                 
               TrajNumHitAgelRich1[it]++;
             
               if( ChTkBeta >  ChTkBetaSaturatedCut) {
 
-               if(  ( aChTrackTotMom >  MinMomAgelCut)  &&  
-                    ( aChTrackTotMom <  MaxMomAgelCut ) ) {
+                //               if(  ( aChTrackTotMom >  MinMomAgelCut)  &&  
+                //    ( aChTrackTotMom <  MaxMomAgelCut ) ) {
                   
                   TrajSatNumHitAgelRich1[it]++;
 
-                 }
+                  //                 }
                   
               }
               
-              }else if( aRadiatorNum == 1 ) {
+              }
+              // now skip out              
+              it =  TrajIdVectR1Agel.size() +1;              
               
-              TrajNumHitGasRich1[it]++;
+            }
+            
+            
+            it++;
+            
+          }
+          
+          int itr1g = 0;
+          
+          while(itr1g < (int) TrajIdVectR1.size()) {
+
+
+            if(TrajIdVectR1[itr1g] ==  ChtkId) {
+
+
+               if( aRadiatorNum == 1 ) {
+              
+              TrajNumHitGasRich1[itr1g]++;
 
               if( ChTkBeta >  ChTkBetaSaturatedCut) {
 
-                 if(aChTrackTotMom > MinMomc4f10Cut ) {
+                //                 if(aChTrackTotMom > MinMomc4f10Cut ) {
 
-                  TrajSatNumHitGasRich1[it]++;
-                }
+                  TrajSatNumHitGasRich1[itr1g]++;
+
+                  //                }
                   
               }
-              
-
-              
-              }
-              
-              
-              
-              
-              it =  TrajIdVect.size() +1;              
+             }              
+               // now skip out              
+              itr1g =  TrajIdVectR1.size() +1;              
               
             }
-          
-            it++;
+            
+            itr1g++;
             
           } // end loop over traj ID
 
@@ -755,26 +1410,30 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
        aRichCounter-> setNumHitPerTrackRich2Gas(TrajNumHitGasRich2);
        aRichCounter-> setNumHitSaturatedPerTrackRich2Gas(TrajSatNumHitGasRich2);
 
+       
+         // now to test the procedure         
+       //         for(int i=0; i< (int) TrajIdVectR1.size(); i++ ) {
+ 
+                   //         G4cout<<"TrackInList Rich1Gas SatTkHitNum AlltkHitnum =   "
+                   //          <<i<<"   "<<TrajSatNumHitGasRich1[i] 
+                   //         <<"     "<<  TrajNumHitGasRich1[i]<<G4endl;
+       //         }
+       //     for(int ig=0; ig< (int) TrajIdVectR1Agel.size(); ig++ ) {
+       //        G4cout<<"TrackInList Rich1Agel SatTkHitNum AlltkHitnum =   "
+       //              <<ig<<"   "<< TrajSatNumHitAgelRich1[ig]              
+       //              <<"    "<< TrajNumHitAgelRich1[ig]<<G4endl;
+       //
+       //          }
+                 
        // for test 
        
        //       G4cout<<"Num Sat traj Rich2 "
        //   <<  aRichCounter->NumHitSaturatedPerTrackRich2Gas().size() <<G4endl;
-       
-         // now to test the procedure         
-         //        for(int i=0; i< (int) TrajIdVect.size(); i++ ) {
- 
-           //           G4cout<<"TrackInList GasSatHitNum AgelSatHitNum=   "
-           //    <<i<<"  "<<TrajSatNumHitGasRich1[i]<<"   "
-           //    << TrajSatNumHitAgelRich1[i]
-           //    <<"     TotHitPerTrackin Gas Agel =  "
-           //    <<  TrajNumHitGasRich1[i]<<"    "
-           //    << TrajNumHitAgelRich1[i]<<G4endl;
-         //        }
-           
-       //       for(int ia=0; ia< (int)  TrajSatNumHitGasRich2.size(); ia++ ) {
-
-       //         G4cout<<  "TrackInListR2    Rich2GasSatHitNum  "
-       //      <<ia<<"    "<< TrajSatNumHitGasRich2[ia]<<G4endl;
+       //    
+       //              for(int ia=0; ia< (int)  TrajSatNumHitGasRich2.size(); ia++ ) {
+       //
+       //                G4cout<<  "TrackInListR2    Rich2GasSatHitNum  "
+       //       <<ia<<"    "<< TrajSatNumHitGasRich2[ia]<<G4endl;
          
          
        //  }
@@ -785,8 +1444,9 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(
        
     }
     
+    
 
-    //    G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
+        G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
     
     };
   
@@ -854,7 +1514,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits(
             
           }
 
-          if(ihcol == 2 || ihcol == 2 ) {
+          if(ihcol == 2 || ihcol == 3 ) {
               
             aRichCounter->bumpNumHitTotRich2All();
             

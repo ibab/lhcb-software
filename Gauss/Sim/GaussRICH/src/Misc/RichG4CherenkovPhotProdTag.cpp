@@ -11,7 +11,8 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
                                     G4Track* aCkvPhotTrack,
                                     const G4double  CkvCosTheta,
                                     const G4double CkvPhi,
-                                    const G4double CkvPhotEnergy )
+                                    const G4double CkvPhotEnergy,
+                                    G4bool aVerboseTagFlag )
 {
   // The test on the Z coord is commented out for now.
   // it can be uncommented in the future.
@@ -35,17 +36,29 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   aPhotInfo->setCkvPhotonEnergyAtProd(CkvPhotEnergy);
   aPhotInfo->setCkvAngleThetaAtProd(acos(CkvCosTheta));
   aPhotInfo->setCkvAnglePhiAtProd(CkvPhi);
-  aPhotInfo->setMotherChTrackPDGMass(aChTrackParticle->
-             GetDefinition()->GetPDGMass());
 
+  aPhotInfo->setVerbosePhotTagFlag(aVerboseTagFlag);
+  aPhotInfo->
+    setChTrackMomAtProd(aChTrackParticle->GetTotalMomentum());
+  
   // G4double CurChTrakMom = 
   //       aChTrackParticle->GetTotalMomentum();
   // aPhotInfo->setChTrackMomAtProd( CurChTrakMom);
-  
-  aPhotInfo->
-    setChTrackMomAtProd(aChTrackParticle->GetTotalMomentum());
-  aPhotInfo->
+
+  if(aVerboseTagFlag) {
+    
+    aPhotInfo->setMotherChTrackPDGMass(aChTrackParticle->
+              GetDefinition()->GetPDGMass());  
+    aPhotInfo->
     setChTrackMomentumVector(aChTrackParticle->GetMomentum());  
+  // Now add the step info as well
+  // const acurChtrackStep =  aChTrack->GetStep();
+    aPhotInfo-> setChTrackCkvPrestep (aChTrack.GetStep()->
+                                GetPreStepPoint()->GetPosition());
+    aPhotInfo-> setChTrackCkvPoststep(aChTrack.GetStep()->
+                                     GetPostStepPoint()->GetPosition());
+  }
+  
   
   RichInfo* aCkvPhotonTypeRichInfo = new   RichInfo(aPhotInfo);
 

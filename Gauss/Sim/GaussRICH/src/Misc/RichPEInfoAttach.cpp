@@ -44,7 +44,10 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
         if(aPhotInfo != 0 ) {	  
           CurRichPEInfo->
             setMotherOfPhotonPDGcode(aPhotInfo-> MotherChTrackPDGcode());
-          
+
+           CurRichPEInfo->
+             setVerbosePeTagFlag( aPhotInfo->  VerbosePhotTagFlag());
+           
           CurRichPEInfo-> 
             setPhotonEnergyAtCkvProd(aPhotInfo->CkvPhotonEnergyAtProd());
           CurRichPEInfo-> 
@@ -53,15 +56,29 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
             setCherenkovPhiAtProd(aPhotInfo->CkvAnglePhiAtProd());
           CurRichPEInfo->
             setMotherofPhotonMomAtProd(aPhotInfo->ChTrackMomAtProd() );
+          // fill the following only for verbose tag mode.
+          if( aPhotInfo->  VerbosePhotTagFlag() ) {
+            
           CurRichPEInfo->
             setMotherofPhotonMomVectAtProd
             (aPhotInfo->ChTrackMomentumVector() );
-                    CurRichPEInfo->
-                      setMotherofPhotonPDGMass(aPhotInfo->
+          CurRichPEInfo->setMotherofPhotonPDGMass(aPhotInfo->
                                        MotherChTrackPDGMass());
-                    
- 
-                  
+          CurRichPEInfo->setMotherofPhotonCkvPreStep(aPhotInfo->
+                                           ChTrackCkvPrestep());
+          CurRichPEInfo->setMotherofPhotonCkvPostStep(aPhotInfo->
+                                           ChTrackCkvPoststep());
+           
+          CurRichPEInfo->setPhotonRayleighScatteringFlag(aPhotInfo->
+                                          PhotonRayleighScatFlag() );
+
+                        
+          CurRichPEInfo->setPhotonAerogelExitPos ( aPhotInfo->
+                                             AerogelExitPosition() );
+          
+          }
+          
+          
         } 
       } 
     }  
@@ -70,6 +87,11 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   CurRichPEInfo-> setPhotonEmisPoint(aPhotonTk.GetVertexPosition());
   CurRichPEInfo->  setMotherOfPhotonId(aPhotonTk.GetParentID());
   CurRichPEInfo->  setPhotOriginRadiatorNumber(CurRadiatorNumber);
+  CurRichPEInfo-> setOptPhotonId(aPhotonTk.GetTrackID());
+  
+  // G4cout<<" RichPEInfo attach: Trackid Chtk photon  "
+  //      <<aPhotonTk.GetParentID()<<"   "<<aPhotonTk.GetTrackID() 
+  //      <<G4endl;
   
   RichInfo* aPETypeRichInfo = new  RichInfo( CurRichPEInfo);
 

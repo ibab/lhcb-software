@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet1.cpp,v 1.2 2003-07-16 13:24:07 seaso Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.3 2004-02-04 13:53:00 seaso Exp $
 // Include files 
 
 
@@ -56,8 +56,30 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
                                "RICHG4HISTOSET1/1");
   SmartDataPtr<IHistogram2D>hGlobalPEOriginXY(CurrentHistoSvc,
                                 "RICHG4HISTOSET1/2");
-  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,
-                                "RICHG4HISTOSET1/3");
+
+  SmartDataPtr<IHistogram2D>hGlobalPEOriginPosXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/4");
+  //  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,
+  //                              "RICHG4HISTOSET1/3");
+  
+  SmartDataPtr<IHistogram2D>hGlobalHitAgelXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/120");
+  
+  SmartDataPtr<IHistogram2D>hGlobalHitC4F10XY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/150");
+  
+  SmartDataPtr<IHistogram2D>hGlobalHitCF4XY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/170");
+
+  SmartDataPtr<IHistogram2D>hGlobalHitAgelPosXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/122");
+  
+  SmartDataPtr<IHistogram2D>hGlobalHitC4F10PosXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/152");
+  
+  SmartDataPtr<IHistogram2D>hGlobalHitCF4PosXY(CurrentHistoSvc,
+                                "RICHG4HISTOSET1/172");
+
   
   G4HCofThisEvent * HCE;
   G4int nHitTotRich1=0;
@@ -112,7 +134,53 @@ void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
           G4double aHitGlobalPEOriginZ=aHit->GetGlobalPEOriginPos().z();
           if(hGlobalPEOriginXY)hGlobalPEOriginXY->
                            fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
-          if(hGlobalHitXY) hGlobalHitXY->fill( aHitGlobalX,aHitGlobalY,1.0);
+
+          if( aHitGlobalPEOriginY > 0.0 ) {
+            
+          if(hGlobalPEOriginPosXY)hGlobalPEOriginPosXY->
+                 fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+          }
+          
+          G4int aRadnum = aHit-> GetRadiatorNumber();
+          
+          if(  aRadnum == 0 ) {
+            if(  aHitGlobalPEOriginY > 0.0 ) {
+
+          if(hGlobalHitAgelPosXY) hGlobalHitAgelPosXY->
+                           fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+              
+
+            }
+            
+          if(hGlobalHitAgelXY) hGlobalHitAgelXY->
+                           fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+          
+          }else if (  aRadnum == 1 ) {
+             if(  aHitGlobalPEOriginY > 0.0 ) {
+          
+            if(hGlobalHitC4F10PosXY) hGlobalHitC4F10PosXY->
+                           fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+   
+             }
+             
+          if(  hGlobalHitC4F10XY)  hGlobalHitC4F10XY->
+                         fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+          
+          }else if (aRadnum == 2 ) { 
+             if(  aHitGlobalPEOriginY > 0.0 ) {
+             if(hGlobalHitCF4PosXY) hGlobalHitCF4PosXY->
+                           fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+
+              
+             }
+             
+          if(hGlobalHitCF4XY) hGlobalHitCF4XY ->
+                         fill(aHitGlobalPEOriginX,aHitGlobalPEOriginY,1.0);
+          
+          }
+          
+          // if(hGlobalHitXY) hGlobalHitXY->fill( aHitGlobalX,aHitGlobalY,1.0);
+
 
         }
 

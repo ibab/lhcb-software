@@ -57,8 +57,12 @@ RichG4EventAction::RichG4EventAction
     m_RichEventActionHistoFillActivateSet1(false),
     m_RichEventActionHistoFillActivateSet2(false),
     m_RichEventActionHistoFillActivateSet3(false),    
+    m_RichEventActionHistoFillActivateSet4(false),    
     m_RichEventActionHistoFillActivateTimer(false),
-    m_RichG4EventHitActivateCount(false)
+    m_RichG4EventHitActivateCount(false),
+    m_RichG4EventActivateCkvRecon(false),
+    m_RichG4HitReconUseSatHit(true),
+    m_RichG4HitReconUseMidRadiator(false)
 { 
   declareProperty( "RichEventActionVerbose",  
                    m_RichEventActionVerboseLevel );
@@ -69,13 +73,23 @@ RichG4EventAction::RichG4EventAction
                      m_RichEventActionHistoFillActivateSet2);
   declareProperty( "RichEventActionHistoFillSet3",
                      m_RichEventActionHistoFillActivateSet3);
+  declareProperty( "RichEventActionHistoFillSet4",
+                     m_RichEventActionHistoFillActivateSet4);
   declareProperty( "RichEventActionHistoFillTimer",
                      m_RichEventActionHistoFillActivateTimer);
 
   declareProperty("RichG4EventActivateCounting" ,
                   m_RichG4EventHitActivateCount);
   
-
+  declareProperty("RichG4EventActivateCkvReconstruction",
+                  m_RichG4EventActivateCkvRecon);
+  
+  declareProperty("RichG4EventHitReconUseSaturatedHit" ,
+                  m_RichG4HitReconUseSatHit);
+  declareProperty("RichG4EventHitReconUseMidRadiator",
+                  m_RichG4HitReconUseMidRadiator);
+  
+  
   m_RichHitCName= new RichG4HitCollName();
   m_NumRichColl=m_RichHitCName->RichHCSize();
   m_RichG4CollectionID.reserve(m_NumRichColl);
@@ -93,6 +107,9 @@ RichG4EventAction::RichG4EventAction
       // }
       m_RichG4HistoFillSet3 = new RichG4HistoFillSet3();
 
+      //  the following done later.
+      //      m_RichG4HistoFillSet4 = new RichG4HistoFillSet4();
+
     // if(m_RichEventActionHistoFillActivateTimer) {
     
      m_RichG4HistoFillTimer = new RichG4HistoFillTimer();
@@ -100,6 +117,11 @@ RichG4EventAction::RichG4EventAction
      //  }
   
      m_RichG4EventHitCounter = new  RichG4EventHitCount();
+
+   // Now to initialize the reconstruction of the the 
+  // ckv angle for test
+     m_RichG4HitRecon = new RichG4HitRecon();
+     
      
       
 };
@@ -115,6 +137,11 @@ RichG4EventAction::~RichG4EventAction( ){
   
   delete  m_RichG4HistoFillSet3;
 
+  if( m_RichG4HistoFillSet4 != 0 ) {
+    
+    delete  m_RichG4HistoFillSet4;
+  }
+  
   delete m_RichG4HistoFillTimer;
   
   delete   m_RichG4EventHitCounter;
@@ -146,8 +173,31 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ )
 
   RichG4Counters* aRichCounter=RichG4Counters::getInstance();
   aRichCounter->InitRichEventCounters();
-  
 
+  // now for the reconstruction for test.
+  
+  if(m_RichG4EventActivateCkvRecon) {
+
+    m_RichG4HitRecon ->setSatHitUse( m_RichG4HitReconUseSatHit);
+    m_RichG4HitRecon ->setMidRadiatorUse(m_RichG4HitReconUseMidRadiator);
+    if(m_RichEventActionHistoFillActivateSet4) {
+      m_RichG4HistoFillSet4= new RichG4HistoFillSet4();
+      m_RichG4HitRecon->setRichG4HistoFillSet4Ckv( m_RichG4HistoFillSet4 );
+      
+    }
+    
+  if(   m_RichG4HitRecon->getRichG4CkvRec() == 0 ){
+
+    m_RichG4HitRecon->setRichG4CkvRec();
+    
+  }
+  if(   m_RichG4HitRecon->getRichG4ReconFlatMirr() == 0) {
+       m_RichG4HitRecon->setRichG4FlatMirr();
+  }
+  }
+  
+  
+ 
   // Print("'BeginOfEventAction' method is invoked by RichG4EventAction"); 
 };
 // ============================================================================
@@ -186,6 +236,7 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
     m_RichG4EventHitCounter-> RichG4CountSaturatedHits(
          anEvent, m_NumRichColl,m_RichG4CollectionID);
 
+
     if( m_RichEventActionVerboseLevel >= 2 ) {
         
       PrintRichG4HitCounters();
@@ -210,7 +261,21 @@ void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ )
                      m_NumRichColl,m_RichG4CollectionID);
   
   }
+
+  if(m_RichG4EventActivateCkvRecon) {
+
+    if( m_RichG4HitRecon != 0 ) {
+     
+      m_RichG4HitRecon->RichG4ReconstructCherenkovAngle(anEvent,
+                      m_NumRichColl,m_RichG4CollectionID);
+
+      
+    }
+    
+  }
   
+
+ 
      //get the trajectories
   G4TrajectoryContainer* trajectoryContainer=anEvent->GetTrajectoryContainer();
   G4int n_trajectories=0;

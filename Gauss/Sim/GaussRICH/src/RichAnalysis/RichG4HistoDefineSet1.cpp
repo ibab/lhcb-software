@@ -60,23 +60,38 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
   }
 
-  //  title="GlobalPhotoelectron Origin Y vs X for Rich1 ";
-  //
-  //  m_hGlobalPEOriginXY = CurHistoSvc->book(m_RichG4HistoPathSet1+"2",
-  //  title,300,-2000.0,2000.0,300,-2000.0, 2000.0);
-  //  if(!m_hGlobalPEOriginXY ) {
-  //   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    title="GlobalPhotoelectron Origin Y vs X for Rich1 ";
+  
+    //    m_hGlobalRich1PEOriginXY = CurHistoSvc->book(m_RichG4HistoPathSet1+"2",
+    //  title,300,-2000.0,2000.0,300,-2000.0, 2000.0);
+    // if(!m_hGlobalRich1PEOriginXY ) {
+    //  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
-  //  }
-  title="GlobalPhotoelectron Origin from Agel Y vs X for Rich1 ";
+    //    }
 
-  m_hGlobalPEOriginAgelXY = CurHistoSvc
-      ->book(m_RichG4HistoPathSet1+"120",title,300,-2000.0,
-        2000.0,300,-2000.0, 2000.0);
-  if(!m_hGlobalPEOriginAgelXY ) {
-   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    title="Global PE hit coordinate positive Y vs X for Rich1 ";
 
-  }
+    m_hGlobalRich1PeOriginPosHitXY = 
+      CurHistoSvc->book(m_RichG4HistoPathSet1+"4",title,
+     280,-700.0,700.0,80,800.0, 1200.0);
+
+
+    title="Global hit coordinate from Agel positive Y vs X for Rich1 ";
+
+    m_hGlobalPEOriginAgelPosXY= 
+         CurHistoSvc->book(m_RichG4HistoPathSet1+"122",title,
+     280,-700.0,700.0,80,800.0, 1200.0);
+
+
+    //  title="GlobalPhotoelectron Origin from Agel Y vs X for Rich1 ";
+
+    //  m_hGlobalPEOriginAgelXY = CurHistoSvc
+    //  ->book(m_RichG4HistoPathSet1+"120",title,300,-2000.0,
+    //    2000.0,300,-2000.0, 2000.0);
+    // if(!m_hGlobalPEOriginAgelXY ) {
+    // RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+    //  }
 
   //  title="GlobalPE Origin from Agel Top Proj Y vs X for Rich1 ";
 
@@ -95,28 +110,35 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
   // }
   
-   title="GlobalPhotoelectron Origin from C4F10 Y vs X for Rich1 ";
+    title="Global hit coordinate from C4F10 postive Y vs X for Rich1 ";
 
-  m_hGlobalPEOriginC4F10XY = CurHistoSvc
-        ->book(m_RichG4HistoPathSet1+"150",title,300,-2000.0,
-                     2000.0,300,-2000.0, 2000.0);
-  if(!m_hGlobalPEOriginC4F10XY ) {
-   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    m_hGlobalPEOriginC4F10PosXY= 
+         CurHistoSvc->book(m_RichG4HistoPathSet1+"152",title,
+     280,-700.0,700.0,80,800.0, 1200.0);
 
-  }
+
+    //   title="GlobalPhotoelectron Origin from C4F10 Y vs X for Rich1 ";
+
+    //  m_hGlobalPEOriginC4F10XY = CurHistoSvc
+    //    ->book(m_RichG4HistoPathSet1+"150",title,300,-2000.0,
+    //                2000.0,300,-2000.0, 2000.0);
+    //  if(!m_hGlobalPEOriginC4F10XY ) {
+    //  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+    //  }
   title="GlobalPhotoelectron Origin from CF4 Y vs X for Rich2 ";
 
-  m_hGlobalPEOriginCF4XY = CurHistoSvc->
-    book(m_RichG4HistoPathSet1+"170",title,
-              300,-5000.0,5000.0,300,-5000.0, 5000.0);
-  if(!m_hGlobalPEOriginCF4XY ) {
-   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+  //  m_hGlobalPEOriginCF4XY = CurHistoSvc->
+  //  book(m_RichG4HistoPathSet1+"170",title,
+  //            300,-5000.0,5000.0,300,-5000.0, 5000.0);
+  //  if(!m_hGlobalPEOriginCF4XY ) {
+  //  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
-  }
+  //  }
   title="GlobalPhotoelectron Origin from CF4 Y vs positive X for Rich2 ";
 
   m_hGlobalPEOriginCF4PosXY = CurHistoSvc
-         ->book(m_RichG4HistoPathSet1+"171",title,
+         ->book(m_RichG4HistoPathSet1+"172",title,
                 200,2500.0,4500.0,200,-1000.0, 1000.0);
   if(!m_hGlobalPEOriginCF4PosXY ) {
    RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
@@ -191,15 +213,16 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
    
   }
 
-  //  title="Global hit coordinate Y vs X for Rich1 ";
 
-  //  m_hGlobalHitXY= CurHistoSvc->book(m_RichG4HistoPathSet1+"3",title,
-  //   300,-2000.0,2000.0,300,-2000.0, 2000.0);
+    //  title="Global PE hit coordinate Y vs X for Rich1 ";
 
-  //  if(!m_hGlobalHitXY ) {
-  //  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+    //    m_hGlobalHitXY= CurHistoSvc->book(m_RichG4HistoPathSet1+"3",title,
+    // 300,-2000.0,2000.0,300,-2000.0, 2000.0);
 
-  //  }
+    //    if(!m_hGlobalHitXY ) {
+    //  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+    //    }
   
 
   title="Cherenkov Angle in Aerogel from G4 ";

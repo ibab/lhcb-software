@@ -97,7 +97,9 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
   
-  if(  CurEdep <= 0.1 ) { return false; 
+  //  if(  CurEdep <= 0.1 ) { return false; 
+  // }
+  if(  CurEdep <= 0.005 ) { return false; 
   }
   
 
@@ -192,12 +194,11 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     "Now in ProcessHits() of RichSensDet : PixelX and Y = " << 
     CurrentPixelXNum << "   " << CurrentPixelYNum<<endreq;
 
-  G4int CurOptPhotID= aTrack->GetParentID();   
+  //  G4int CurOptPhotID= aTrack->GetParentID();   
 
   G4double CurGlobalTime =  aTrack-> GetGlobalTime();
   
-
-
+ 
 
   G4int CurOptPhotMotherChTrackID=-1;
   G4int CurOptPhotMotherChTrackPDG=0;
@@ -209,6 +210,13 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4double CurChTrackTotMom=0;
   G4ThreeVector CurChTrackMomVect;
   G4double CurChTrackPDGMass=0;
+  G4ThreeVector CurChTrackCkvPreStepPos;
+  G4ThreeVector CurChTrackCkvPostStepPos;
+  G4int CurPhotRayleighScatFlag=0;
+  G4ThreeVector CurPhotAgelExitPos;
+  G4int aRichVerboseFlag=0;
+  G4int CurOptPhotID =0;
+  
 
   if((aTrack->GetDefinition() == G4Electron::Electron()) &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
@@ -228,15 +236,43 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               if( aPEInfo) 
                 {
                   CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
-                  CurOptPhotMotherChTrackPDG = aPEInfo-> MotherOfPhotonPDGcode();
+                  CurOptPhotMotherChTrackPDG = 
+                                          aPEInfo-> MotherOfPhotonPDGcode();
                   CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
                   CurEmissPt          =   aPEInfo->PhotonEmisPoint();
                   CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
                   CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
                   CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
                   CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
-                  CurChTrackMomVect    =   aPEInfo->  MotherofPhotonMomVectAtProd();
+                  CurOptPhotID        =  aPEInfo->OptPhotonId();
+                  
+                  // log << MSG::INFO << "Now in ProcessHits()  "
+                  //  <<" Track id of charged tk opt phot pe "
+                  //    << CurOptPhotMotherChTrackID <<"   "
+                  //    <<  CurOptPhotID<<"   "
+                  //    << aTrack->GetTrackID() << endreq;
+
+                  if(  aPEInfo->  VerbosePeTagFlag() ) {
+                    aRichVerboseFlag =1;                    
+                    
+                  CurChTrackMomVect    =  
+                                   aPEInfo->  MotherofPhotonMomVectAtProd();
                   CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
+                  CurChTrackCkvPreStepPos= 
+                                     aPEInfo->MotherofPhotonCkvPreStep();
+                  CurChTrackCkvPostStepPos= 
+                                     aPEInfo->MotherofPhotonCkvPostStep();
+               
+                  CurPhotRayleighScatFlag= 
+                         aPEInfo->PhotonRayleighScatteringFlag();
+                   CurPhotAgelExitPos=
+                     aPEInfo->  PhotonAerogelExitPos();
+                  
+                  
+
+                  }
+                  
+
                 } 
             }
         }
@@ -272,7 +308,12 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> SetPETrackPDG(CurPETrackPDG);
   newHit -> SetRichHitGlobalTime(CurGlobalTime);
   newHit -> SetRichChTrackMass ( CurChTrackPDGMass);
-
+  newHit -> setChTrackCkvPreStepPos(CurChTrackCkvPreStepPos);
+  newHit -> setChTrackCkvPostStepPos(CurChTrackCkvPostStepPos);
+  newHit -> setOptPhotRayleighFlag(CurPhotRayleighScatFlag);
+  newHit ->   setOptPhotAgelExitPos(  CurPhotAgelExitPos);
+  newHit -> setRichVerboseHitInfo(aRichVerboseFlag);
+  
   // now for the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exits it is set
   // as the trackid. Otherwise the track creating the

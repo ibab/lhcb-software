@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.cpp,v 1.3 2003-08-05 11:50:18 witoldp Exp $
+// $Id: RichPhotoElectron.cpp,v 1.4 2004-02-04 13:53:53 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 // 
 // 
@@ -80,11 +80,12 @@ RichPhotoElectron RichPhotoElectron::theRichPhotoElectron(
 		 "pe-",  0.51099906*MeV,       0.0*MeV,    -1.*eplus, 
 		    1,               0,             0,          
 		    0,               0,             0,             
-	     "lepton",               1,             0,        100011,
+	     "lepton",               1,             0,        9000011,
 		 true,              -1,          NULL
 );
 
-RichPhotoElectron* RichPhotoElectron::PhotoElectronDefinition(){return &theRichPhotoElectron;}
+RichPhotoElectron* RichPhotoElectron::PhotoElectronDefinition()
+                       {return &theRichPhotoElectron;}
 
 RichPhotoElectron* RichPhotoElectron::PhotoElectron()
 {  
