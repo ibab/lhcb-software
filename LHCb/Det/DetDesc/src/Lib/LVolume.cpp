@@ -240,28 +240,6 @@ Material* LVolume::findMaterial() const
   m_lv_material = mat;
   return m_lv_material; 
 };
-/// printout to MsgStream 
-MsgStream&    LVolume::printOut( MsgStream&    os ) const
-{
-  os << " LVolume:: name=" << name        () 
-     << " material="       << materialName() 
-     << " solid=("         << solid       () << ")" 
-     << " #PVolumes="      << noPVolumes  ()
-     << "(" ;
-  for( ILVolume::PVolumes::const_iterator ci = pvBegin(); pvEnd() != ci ; ++ci ) 
-    {
-      const IPVolume* ipv = *ci; 
-      if( 0 == ipv ) { continue; } 
-      const PVolume*  pv  = 0 ; 
-      try{ pv = dynamic_cast<const PVolume*>(ipv); }
-      catch(...) { pv = 0 ; }
-      if( 0 != pv ) {  os <<  pv << ";"; } 
-      else          {  os << ipv << ";"; } 
-    } 
-  os << ")";
-  //
-  return os; 
-};
 /// Serialize the object for reading 
 StreamBuffer& LVolume::serialize( StreamBuffer& s )
 {
@@ -298,7 +276,7 @@ StreamBuffer& LVolume::serialize( StreamBuffer& s )
       ///
     }
   ///
-  return s; 
+  return s >> m_surfaces(this) ; 
 };
 
 /// Serialize the object for writing
@@ -306,11 +284,91 @@ StreamBuffer& LVolume::serialize( StreamBuffer& s )  const
 {
   DataObject::serialize( s );
   s << *solid        ()   << materialName () << sdName() << mfName() << noPVolumes   (); 
+  ///
   for( ILVolume::PVolumes::const_iterator pvi = pvBegin() ; pvEnd() != pvi ; ++pvi )
     { s <<  (*pvi)->name()  <<  (*pvi)->lvolumeName()  << (*pvi)->matrix() ; }  
-  return s ;
+  ///
+  return s << m_surfaces(this);
 }
-///
+/// pritout to std::ostream /////////////////////////////////////////////////////////////////// 
+std::ostream& LVolume::printOut( std::ostream& os ) const
+{
+  os << " LVolume:: name=" << name() 
+     << "\tmaterial="       << materialName() 
+     << "\t"                << solid()   
+     << "\t#PVolumes="      << noPVolumes  ()
+     << std::endl ;
+  ///  
+  for( ILVolume::PVolumes::const_iterator ci = pvBegin(); pvEnd() != ci ; ++ci ) 
+    {
+      const IPVolume* ipv = *ci; 
+      if( 0 == ipv ) { continue; } 
+      const PVolume*  pv  = 0 ; 
+      try{ pv = dynamic_cast<const PVolume*>(ipv); }
+      catch(...) { pv = 0 ; }
+      os << " pv#" << std::setw(3) << ci - pvBegin() << "\t"
+	 <<  ( pv ? ( os << pv ) : ( os << ipv ) ) 
+	 << std::endl; 
+    } 
+  ///
+  if( !sdName().empty() ) { os <<  "\tSensitivity=" << sdName() ; } 
+  if( !mfName().empty() ) { os <<  "\tMagnetic="    << mfName() ; } 
+  ///
+  /// surfaces:
+  if( !m_surfaces.empty() )
+    { 
+      os << "\t#Surfaces=" << std::setw(2) << m_surfaces.size() 
+	 << std::endl;
+      for( Surfaces::const_iterator ci = m_surfaces.begin() ; m_surfaces.end() != ci ; ++ci )
+	{
+	  os << "\tsurface# " << std::setw(2) << ci - m_surfaces.begin() 
+	     << "\t "  << *ci ;
+	} 
+    }
+  ///
+  return os;
+};
+/// pritout to MsgStream ////////////////////////////////////////////////////////////////////// 
+MsgStream&    LVolume::printOut( MsgStream&    os ) const
+{
+  os << " LVolume:: name="  << name() 
+     << "\tmaterial="       << materialName() 
+     << "\t"                << solid()   
+     << "\t#PVolumes="      << noPVolumes  ()
+     << endreq    ;
+  ///  
+  for( ILVolume::PVolumes::const_iterator ci = pvBegin(); pvEnd() != ci ; ++ci ) 
+    {
+      const IPVolume* ipv = *ci; 
+      if( 0 == ipv ) { continue; } 
+      const PVolume*  pv  = 0 ; 
+      try{ pv = dynamic_cast<const PVolume*>(ipv); }
+      catch(...) { pv = 0 ; }
+      os << " pv#" << std::setw(3) << ci - pvBegin() << "\t" ;  
+      if( 0 != pv ) {  os <<  pv ; } 
+      else          {  os << ipv ; }
+      os << endreq   ; 
+    } 
+  ///
+  if( !sdName().empty() ) { os <<  "\tSensitivity=" << sdName() ; } 
+  if( !mfName().empty() ) { os <<  "\tMagnetic="    << mfName() ; } 
+  ///
+  /// surfaces:
+  if( !m_surfaces.empty() )
+    { 
+      os << "\t#Surfaces=" << std::setw(2) << m_surfaces.size() 
+	 << endreq   ;
+      for( Surfaces::const_iterator ci = m_surfaces.begin() ; m_surfaces.end() != ci ; ++ci )
+	{
+	  os << "\tsurface# " << std::setw(2) << ci - m_surfaces.begin() 
+	     << "\t "  << *ci ;
+	} 
+    }
+  ///
+  return os;
+};
+///////////////////////////////////////////////////////////////////////////////////////
+
 
 
 

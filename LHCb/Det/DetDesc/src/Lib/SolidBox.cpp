@@ -116,17 +116,19 @@ bool SolidBox::acceptInspector( IInspector* pInspector )  const
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
 {
-  return os << typeName() << " name="             << name()
-	    << " (xsize=" << xsize() / millimeter << "[mm],"  
-	    <<   "ysize=" << ysize() / millimeter << "[mm],"  
-	    <<   "zsize=" << zsize() / millimeter << "[mm])" << std::endl ;   
+  return os << "\t" 
+	    << typeName()     << "\tname="          << name()
+	    << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
+	    << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
+	    << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
 {
-  return os << typeName() << " name="             << name()
-	    << " (xsize=" << xsize() / millimeter << "[mm],"  
-	    <<   "ysize=" << ysize() / millimeter << "[mm],"  
-	    <<   "zsize=" << zsize() / millimeter << "[mm])" << endreq ;
+  return os << "\t"
+	    << typeName() << "\tname="         << name()
+	    << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
+	    << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
+	    << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////

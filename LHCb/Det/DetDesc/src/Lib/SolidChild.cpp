@@ -9,33 +9,29 @@
 #include "CLHEP/Geometry/Point3D.h" 
 
 
-//
-// constructor
-//
+//////////////////////////////////////////////////////////////////////////////////
 SolidChild::SolidChild()
   : m_sc_solid     (  0    )
   , m_sc_simple    ( true  )
   , m_sc_matrix    (   0   )
 {}; 
-
-
+//////////////////////////////////////////////////////////////////////////////////
 SolidChild::SolidChild( ISolid*                solid , 
                         const HepTransform3D*  mtrx  )
   : m_sc_solid     ( solid )
   , m_sc_simple    ( true  )
   , m_sc_matrix    (   0   ) 
 {
-  
+  ///
   if( 0 == solid ) { throw SolidException("SolidChild constructor 1 , ISolid* points to NULL!");}
-  
+  ///
   if( 0 != mtrx && !(HepTransform3D::Identity == *mtrx) )
     { m_sc_matrix    = new HepTransform3D( *mtrx ); if( 0 != m_sc_matrix) { m_sc_simple = false ; } }
-  else{                                                                                   m_sc_simple = true  ; }         
-  
+  else
+    { m_sc_simple = true  ; }         
+  ////
 };
-
-//
-// another constructor 
+// another constructor /////////////////////////////////////////////////////////////////////////////////////////////
 SolidChild::SolidChild( ISolid*              solid    , 
 			const HepPoint3D&    Position , 
 			const HepRotation&   Rotation )
@@ -43,11 +39,11 @@ SolidChild::SolidChild( ISolid*              solid    ,
   , m_sc_simple    ( true  )
   , m_sc_matrix    (   0   ) 
 {
-  
+  ////
   if( 0 == solid ) { throw SolidException("SolidChild constructor 2 , ISolid* points to NULL!");}
-  
+  ///
   const HepPoint3D NullPoint(0,0,0);
-  
+  ///
   if( NullPoint == Position && Rotation.isIdentity() ) { m_sc_simple = true  ; }         
   else 
     {
@@ -55,25 +51,14 @@ SolidChild::SolidChild( ISolid*              solid    ,
 	new HepTransform3D( HepRotate3D( Rotation)*HepTranslate3D( -1.0 * Position ) );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
-  
 };
-
-//
-//
-//
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidChild::~SolidChild()
 {
   if( 0 != m_sc_solid  ){ delete m_sc_solid ; m_sc_solid  = 0; } 
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
 };
-
-
-
-///
-///
-///
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) 
 {
   ///
@@ -87,32 +72,17 @@ StreamBuffer& SolidChild::serialize( StreamBuffer& sb )
   ///
   return sb;
 } 
-
-///
-///
-///
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
-{
-  return sb << matrix() << *solid() ; 
-} 
-
-
-///
-///
-/// 
-
+{ return sb << matrix() << *solid() ;  } 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SolidChild::acceptInspector( IInspector* pInspector ) 
 {
   ///
   const ISolid* s = this;
   return s->acceptInspector( pInspector ) ; 
 };
-
-///
-///
-///
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SolidChild::acceptInspector( IInspector* pInspector ) const 
 {
   ///
@@ -123,6 +93,13 @@ bool SolidChild::acceptInspector( IInspector* pInspector ) const
   return true;
   ///
 }; 
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+std::ostream& SolidChild::printOut     ( std::ostream& os ) const
+{ return os << "\tSolidChild with " << solid(); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
+{ return os << "\tSolidChild with " << solid(); };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

@@ -1,26 +1,25 @@
-#ifndef     __DETDESC_SOLID_SOLIDTUBS_H__
-#define     __DETDESC_SOLID_SOLIDTUBS_H__  
-
+#ifndef     DETDESC_SOLIDTUBS_H
+#define     DETDESC_SOLIDTUBS_H 1  
+/// STD and STL 
 #include <cmath>
 #include <iostream> 
-
-#include "GaudiKernel/ISolid.h" 
-
-
+/// CLHEP 
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h"
- 
 #include "CLHEP/Units/PhysicalConstants.h" 
+/// GaudiKernel
+#include "GaudiKernel/ISolid.h" 
 
 class ISolidFromStream;
 class StreamBuffer;
+class MsgStream;
 
-///
-///
-///  class SolidTubs: a simpole implemenattion of segment of the tube 
-///
-///  Author: Vanya Belyaev 
-/// 
+/** @class SolidTubs SolidTubs.h DetDesc/SolidTubs.h
+
+    A simple implementation of TUBS 
+    
+    @author Vanya Belyaev 
+*/
 
 class SolidTubs: public ISolid
 {
@@ -53,7 +52,8 @@ class SolidTubs: public ISolid
   // "top covering solid" (normally SolidBox) 
   inline const ISolid*           coverTop      ()                      const;
   // overloaded printout 
-  virtual      std::ostream&     printOut      ( std::ostream&       ) const;
+  virtual std::ostream&     printOut      ( std::ostream& = std::cerr) const;
+  virtual MsgStream&        printOut      ( MsgStream&               ) const;
   /// reset to the initial state  
   inline const ISolid*           reset         ()                      const;  
   ///
@@ -97,15 +97,10 @@ class SolidTubs: public ISolid
   /// serialization for writing
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
-
-  ///
   /// Inspectable Interface 
-  ///
   virtual bool acceptInspector( IInspector* )       ; 
-  ///
   virtual bool acceptInspector( IInspector* ) const ; 
   ///
-
  protected:
   ///
   SolidTubs();
@@ -128,77 +123,9 @@ class SolidTubs: public ISolid
   mutable ISolid*         m_tubs_cover         ;
   //
 };
-
-//
-//
-// 
-inline   bool  SolidTubs::isInside( const HepPoint3D & point ) const
-{
-  //
-  if( abs(point.z()) > zHalfLength() ) { return false; }
-  //
-  double rho = point.perp();
-  //
-  if( rho > outerRadius() ) { return false; }
-  //
-  if( rho < innerRadius() ) { return false; }
-  //
-  double phi = point.phi();
-  // 
-  if( phi < 0 ) { phi += 360.0*degree; } 
-  //
-  if( phi < startPhiAngle()                 ) { return false; }
-  if( phi > startPhiAngle()+deltaPhiAngle() ) { return false; }
-  //
-  return true; 
-}
-
-//
-//
-//
-
-inline const ISolid* SolidTubs::coverTop      ()  const 
-{
-  const ISolid* cov = this; 
-  while( cov != cov->cover() ){ cov = cov->cover(); } 
-  return cov; 
-};
-
-//
-//
-//
-
-inline std::ostream&  SolidTubs::printOut      ( std::ostream&  os ) const
-{
-  os << typeName()          << " name="                     << name()
-     << " (zLength="        << zLength()       / millimeter << "[mm]"
-     <<   ",outerRadius="   << outerRadius()   / millimeter << "[mm]";
-  if( innerRadius() > 0 ) 
-    {
-      os <<   ",innerRadius="   << innerRadius()   / millimeter << "[mm]";
-    }
-  if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
-    { 
-      os <<   ",startPhiAngle=" << startPhiAngle() / degree     << "[degree]"
-	 <<   ",deltaPhiAngle=" << deltaPhiAngle() / degree     << "[degree]";
-    }
-  ///
-  return os << ")";
-};
-
-//
-//
-//
-
 ///
+#include "DetDesc/SolidTubs.icpp"
 ///
-/// reset to the initial state  
-inline const ISolid* SolidTubs::reset()  const
-{
-  if( 0 != m_tubs_cover ) { delete m_tubs_cover ; m_tubs_cover = 0 ; } 
-  return this;
-}; 
 
-
-#endif //   __DETDESC_SOLID_SOLIDTUBS_H__
+#endif //   DETDESC_SOLIDTUBS_H
 

@@ -1,25 +1,27 @@
-#ifndef     __DETDESC_SOLID_SOLIDSPHERE_H__
-#define     __DETDESC_SOLID_SOLIDSPHERE_H__ 1 
-
+#ifndef     DETDESC_SOLIDSPHERE_H
+#define     DETDESC_SOLIDSPHERE_H 1 
+// STD and STL 
 #include <cmath>
 #include <algorithm>
-
-#include "GaudiKernel/ISolid.h" 
-
-
+/// CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h"
-
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
+/// GaudiKernel 
+#include "GaudiKernel/ISolid.h" 
+///
 
 class ISolidFromStream;
 class StreamBuffer;
+class MsgStream;
 
-///
-///  class SolidSphere : just a simple implementation of ISolid interphase for primitive sphere  
-///
-///  Author: Vanya Belyaev 
-///
+/** @class SolidSphere SolidSphere.h DetDesc/SolidSphere.h
+
+    A simple implementation of SPHERE
+    
+    @author Vanya Belyaev 
+*/
+
 
 class SolidSphere: public ISolid
 {
@@ -53,7 +55,8 @@ class SolidSphere: public ISolid
   // the top covering solid (normally SolidBox)   
   inline const   ISolid*           coverTop      ()                      const;
   // overloaded printOut 
-  virtual inline std::ostream&     printOut      ( std::ostream&       ) const;  
+  virtual std::ostream&     printOut    ( std::ostream& os = std::cerr ) const;  
+  virtual MsgStream&        printOut    ( MsgStream&                   ) const;  
   /// reset to the initial state 
   inline const   ISolid*           reset         ()                      const; 
   
@@ -97,24 +100,16 @@ class SolidSphere: public ISolid
   inline       double  endPhiAngle    () const { return m_sphere_deltaPhiAngle   + m_sphere_deltaPhiAngle   ; }; 
   // return the end of theta angle of sphere segment (in radians)
   inline       double  endThetaAngle  () const { return m_sphere_deltaThetaAngle + m_sphere_deltaThetaAngle ; };
-
-
-
   ///
   /// serialization for reading 
   StreamBuffer& serialize( StreamBuffer& s ) ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
-
-  ///
-  /// IInspectable interface 
   ///
   virtual bool acceptInspector( IInspector* )       ; 
-  ///
   virtual bool acceptInspector( IInspector* ) const ; 
-  ///
- 
+  /// 
  protected:
   ///
   SolidSphere();
@@ -138,87 +133,9 @@ class SolidSphere: public ISolid
   int                   m_sphere_coverModel      ;
   //
 };
-
-//
-//
-//
-
-inline   bool  SolidSphere::isInside( const HepPoint3D & point) const
-{
-  //
-  double r2 = point.mag2();
-  //
-  if ( r2 > outerRadius () * outerRadius ()       ) { return false; }
-  if ( r2 < insideRadius() * insideRadius()       ) { return false; }
-  //
-  double phi = point.phi();
-  if( phi < 0 ){ phi+=360.0*degree; }
-  //
-  if( phi < startPhiAngle()                       ) { return false; } 
-  if( phi > startPhiAngle() + deltaPhiAngle()     ) { return false; }
-  //
-  double theta = point.theta();
-  //
-  if( theta < startThetaAngle()                   ) { return false; } 
-  if( theta > startThetaAngle() + deltaPhiAngle() ) { return false; } 
-  //
-  return true; 
-  //
-}
-
-//
-//
-//
-
-inline const ISolid* SolidSphere::coverTop      () const 
-{
-  const ISolid* cov = this; 
-  while( cov != cov->cover() ){ cov = cov->cover(); } 
-  return cov; 
-};
-
 ///
-///
+#include "DetDesc/SolidSphere.icpp"
 ///
 
-inline std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
-{
-  os << typeName()            << "name="                        << name()
-     << " (outerRadius="      << outerRadius    () / millimeter << "[mm]" ; 
-  if( insideRadius   () > 0 ) 
-    { 
-      os <<   ",insideRadius="     << insideRadius   () / millimeter << "[mm]";
-    }
-  if( startPhiAngle  () != 0 * degree || deltaPhiAngle  () != 360 * degree ) 
-    {
-      os <<   ",startPhiAngle="    << startPhiAngle  () / degree     << "[degree]";
-      os <<   ",deltaPhiAngle="    << deltaPhiAngle  () / degree     << "[degree]";
-    }
-  if( startThetaAngle() != 0 * degree || deltaThetaAngle() != 180 * degree ) 
-    { 
-      os <<   ",startThetaAngle="  << startThetaAngle() / degree     << "[degree]";
-      os <<   ",deltaThetaAngle="  << deltaThetaAngle() / degree     << "[degree]";
-    }
-  ///
-  return os << ")" ;
-};
-
-//
-//
-//
-
-///
-///
-/// reset to the initial state 
-inline const   ISolid* SolidSphere::reset() const
-{
-  if( 0 != m_sphere_cover ) { delete m_sphere_cover; m_sphere_cover = 0 ;}
-  return this;
-};
-
-///
-///
-///
-
-#endif //   __DETDESC_SOLID_SOLIDSPHERE_H__
+#endif //   DETDESC_SOLIDSPHERE_H
 

@@ -1,32 +1,29 @@
-#ifndef     __DETDESC_SOLID_SOLIDTRAP_H__
-#define     __DETDESC_SOLID_SOLIDTRAP_H__ 1 
-
-
+#ifndef     DETDESC_SOLIDTRAP_H
+#define     DETDESC_SOLIDTRAP_H 1 
+/// STD and STL 
 #include <cmath>
 #include <iostream> 
-
-
-#include "GaudiKernel/ISolid.h" 
-
-
+/// CLHEP
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
-#include "CLHEP/Geometry/Plane3D.h"
- 
+#include "CLHEP/Geometry/Plane3D.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
-
+/// GaudiKernel
+#include "GaudiKernel/ISolid.h" 
+/// DetDesc 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidPolyHedronHelper.h" 
-
+///
 class ISolidFromStream;
 class StreamBuffer; 
 
-///
-///  class SolidTrap : a simple implementation of General Trapezoid
-///
-///  Author: Vanya Belyaev 
-///  date  : 20 sept 2000 
-///
+
+/** @class SolidTrap SolidTrap.h DetDesc/SolidTrap.h
+
+    A simple implementation of TRAP
+    
+    @author Vanya Belyaev 
+*/
 
 class SolidTrap: public  virtual ISolid                ,
                  private virtual SolidPolyHedronHelper
@@ -67,7 +64,8 @@ class SolidTrap: public  virtual ISolid                ,
   /// the top covering solid 
   inline const   ISolid*           coverTop     ()                      const;
   //// printout   
-  virtual inline std::ostream&     printOut     ( std::ostream&       ) const;
+  virtual std::ostream&     printOut   ( std::ostream& os = std::cerr ) const;
+  virtual MsgStream&        printOut   ( MsgStream&                   ) const;
   /// reset to the initial state
   inline const   ISolid*           reset        ()                      const; 
   /// calculate the intersection points("ticks") with a given line. 
@@ -159,82 +157,12 @@ class SolidTrap: public  virtual ISolid                ,
   VERTICES             m_trap_vertices; 
   ///
 };
-
 ///
-///
-///
-
-inline const ISolid* SolidTrap::coverTop      () const 
-{
-  const ISolid* cov = this; 
-  while( cov != cov->cover() ){ cov = cov->cover(); } 
-  return cov; 
-};
-
-
-///
-///
+#include  "DetDesc/SolidTrap.icpp"
 ///
 
 
-inline std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
-{
-  return 
-    os << typeName()   << "name=" << name()
-       << " (zHalfLength="       << zHalfLength      () / millimeter << "[mm];"  
-       <<   "theta="             << theta            () / degree     << "[deg];" 
-       <<   "phi="               << phi              () / degree     << "[deg];" 
-       <<   "dyAtMinusZ="        << dyAtMinusZ       () / millimeter << "[mm];"  
-       <<   "dxAtMinusZMinusY="  << dxAtMinusZMinusY () / millimeter << "[mm];" 
-       <<   "dxAtMinusZPlusY="   << dxAtMinusZPlusY  () / millimeter << "[mm];" 
-       <<   "alphaAtMinusZ="     << alphaAtMinusZ    () / degree     << "[deg]"
-       <<   "dyAtPlusZ="         << dyAtPlusZ        () / millimeter << "[mm];"  
-       <<   "dxAtPlusZMinusY="   << dxAtPlusZMinusY  () / millimeter << "[mm];" 
-       <<   "dxAtPlusZPlusY="    << dxAtPlusZPlusY   () / millimeter << "[mm];" 
-       <<   "alphaAtPlusZ="      << alphaAtPlusZ     () / degree     << "[deg]";
-};
-
-///
-///
-/// reset to the initial state
-inline const   ISolid* SolidTrap::reset() const
-{
-  if( 0 != m_trap_cover ) { delete m_trap_cover ; m_trap_cover = 0 ; } 
-  return this;
-};
-///
-///
-///
-
-inline   bool  SolidTrap::isInside( const HepPoint3D& Point) const { return SolidPolyHedronHelper::isInside( Point ) ; } 
-
-///
-///
-///
-
-inline  unsigned int SolidTrap::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-						    const HepVector3D& Vector ,          // vector along the line 
-						    ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
-{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
-
-/// calculate the intersection points("ticks") with a given line. 
-/// Input - line, parametrized by (Point + Vector * Tick) 
-/// "Tick" is just a value of parameter, at which the intercestion occurs 
-/// Return the number of intersection points (=size of Ticks container)   
-inline  unsigned int SolidTrap::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
-						    const HepVector3D&  Vector  ,          // vector along the line 
-						    const ISolid::Tick& tickMin ,          // minimal value for the tick 
-						    const ISolid::Tick& tickMax ,          // maximal value for tick 
-						    ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
-{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
-///
-///
-///
-///
-
-
-
-#endif //     __DETDESC_SOLID_SOLIDTRAP_H__
+#endif //     DETDESC_SOLIDTRAP_H
  
 
 

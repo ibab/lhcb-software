@@ -1,0 +1,55 @@
+#ifndef      DETDESC_SOLIDTRD_ICPP 
+#define      DETDESC_SOLIDTRD_ICPP  1 
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// DetDesc 
+#include "DetDesc/SolidTrd.h"
+///
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidTrd& box )          
+{ return  box.printOut( os ); }
+//////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidTrd* box )           
+{ return box  ? (os<<*box) : (os<<" SolidTrd* points to NULL!"<<endreq) ; }
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+inline const ISolid* SolidTrd::coverTop      () const 
+{
+  const ISolid* cov = this; 
+  while( cov != cov->cover() ){ cov = cov->cover(); } 
+  return cov; 
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
+						   const HepVector3D& Vector ,          // vector along the line 
+						   ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
+/** calculate the intersection points("ticks") with a given line. 
+    Input - line, parametrized by (Point + Vector * Tick) 
+    "Tick" is just a value of parameter, at which the intercestion occurs 
+    Return the number of intersection points (=size of Ticks container)   
+*/
+inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
+						   const HepVector3D&  Vector  ,          // vector along the line 
+						   const ISolid::Tick& tickMin ,          // minimal value for the tick 
+						   const ISolid::Tick& tickMax ,          // maximal value for tick 
+						   ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
+{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
+/// reset to the initial state //////////////////////////////////////////////////////////////////
+inline const   ISolid* SolidTrd::reset() const
+{
+  if( 0 != m_trd_cover ) { delete m_trd_cover ; m_trd_cover = 0 ; } 
+  return this;
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+#endif  //   DETDESC_SOLIDTRD_ICPP 
+
+
+

@@ -14,7 +14,7 @@ inline MsgStream& operator<<( MsgStream& os , const LVolume&  lv )
 { return lv.printOut( os ); };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 inline MsgStream& operator<<( MsgStream& os , const LVolume* plv ) 
-{ return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL" ) : ( os << *plv) ) ; };
+{ return ( ( 0 == plv ) ? ( os << "LVolume* points to NULL" << endreq ) : ( os << *plv) ) ; };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///  from IValidity Interface:
@@ -119,22 +119,6 @@ inline StatusCode LVolume::belongsTo( const HepPoint3D&        localPoint ,
   //
   replicaPath.push_back( replica ) ;
   return pv->lvolume()->belongsTo( pv->matrix() * localPoint , level - 1 , replicaPath );
-};
-/// pritout to std::ostream 
-inline std::ostream& LVolume::printOut( std::ostream& os ) const
-{
-  os << " LVolume:: name=" << fullpath    () 
-     << " material="      << materialName() 
-     << " solid=("        << solid       () << ")"
-     << " #PVolumes="     << noPVolumes  ()
-     << "(" ;
-  std::copy( pvBegin() , pvEnd(), std::ostream_iterator<IPVolume*>(os,";") );
-  os << ")";
-  ///
-  if( !sdName().empty() ) { os <<  "Sensitivity=" << sdName() ; } 
-  if( !mfName().empty() ) { os <<  "Magnetic="    << mfName() ; } 
-  ///
-  return os; 
 };
 /// reset to the initial state ////////////////////////////////////////////////////////////
 inline const ILVolume* LVolume::reset () const 

@@ -1,27 +1,28 @@
-#ifndef     __DETDESC_SOLID_SOLIDTRD_H__
-#define     __DETDESC_SOLID_SOLIDTRD_H__ 1 
-
+#ifndef     DETDESC_SOLIDTRD_H
+#define     DETDESC_SOLIDTRD_H 1 
+/// STD and STL 
 #include <cmath>
 #include <iostream> 
-
-
-#include "GaudiKernel/ISolid.h" 
-
-
+/// CLHEP 
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
-
+/// GaudiKernel
+#include "GaudiKernel/ISolid.h" 
+/// DetDesc
 #include "DetDesc/SolidPolyHedronHelper.h" 
-
+///
+class MsgStream;
 class StreamBuffer;
 class ISolidFromStream;
 
-///
-///  class SolidTrd : a simple implementation of Trapezoid
-///
-///  Author: Vanya Belyaev 
-///
+
+/** @class SolidTrd SolidTrd.h DetDesc/SolidTrd.h
+
+    A simple implementation of TRD
+    
+    @author Vanya Belyaev 
+*/
 
 class SolidTrd: public  virtual ISolid , 
                 private virtual SolidPolyHedronHelper 
@@ -54,7 +55,8 @@ class SolidTrd: public  virtual ISolid ,
   // the top covering solid 
   inline const   ISolid*           coverTop     ()                      const;
   /// printout   
-  virtual inline std::ostream&     printOut     ( std::ostream&       ) const;
+  virtual std::ostream&     printOut   ( std::ostream& os = std::cerr ) const;
+  virtual MsgStream&        printOut   ( MsgStream&                   ) const;
   /// reset to the initial state
   inline const   ISolid*           reset        ()                      const; 
   
@@ -87,7 +89,6 @@ class SolidTrd: public  virtual ISolid ,
   inline       double                yHalfLength2() const { return m_trd_yHalfLength2; };
   // half size in z  
   inline       double                zHalfLength () const { return m_trd_zHalfLength; };
-  
   // full size in x at point 1 
   inline       double                xLength1    () const { return m_trd_xHalfLength1 * 2 ; };
   // full size in x at point 2 
@@ -99,21 +100,14 @@ class SolidTrd: public  virtual ISolid ,
   // full size in z  
   inline       double                zLength     () const { return m_trd_zHalfLength  * 2 ; };
   //
-
   /// serialization for reading 
   StreamBuffer& serialize( StreamBuffer& )       ; 
   /// serialization for writing
   StreamBuffer& serialize( StreamBuffer& ) const ; 
   /// 
-
-  ///
-  /// Inspectable Interface 
-  ///
   virtual bool acceptInspector( IInspector* )       ; 
-  ///
   virtual bool acceptInspector( IInspector* ) const ; 
   ///
-
  protected:
   ///
   SolidTrd();
@@ -139,80 +133,11 @@ class SolidTrd: public  virtual ISolid ,
   mutable ISolid*        m_trd_cover;
   //
 };
-
-
-//
-//
-//
-
-inline const ISolid* SolidTrd::coverTop      () const 
-{
-  const ISolid* cov = this; 
-  while( cov != cov->cover() ){ cov = cov->cover(); } 
-  return cov; 
-};
-
-//
-//
-//
-
-inline std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
-{
-  os << typeName()   << "name=" << name();
-  os << " (zLength="        << zLength        () / millimeter << "[mm];";
-  os <<   "xsize1="         << xLength1       () / millimeter << "[mm];";
-  os <<   "ysize1="         << yLength1       () / millimeter << "[mm];";
-  os <<   "xsize2="         << xLength2       () / millimeter << "[mm];";
-  os <<   "ysize2="         << yLength2       () / millimeter << "[mm])";
-  return os;  
-};
-
-//
-//
-//
-
-
 ///
-///
-///
-inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-						   const HepVector3D& Vector ,          // vector along the line 
-						   ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
-{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
-
-/// calculate the intersection points("ticks") with a given line. 
-/// Input - line, parametrized by (Point + Vector * Tick) 
-/// "Tick" is just a value of parameter, at which the intercestion occurs 
-/// Return the number of intersection points (=size of Ticks container)   
-inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
-						   const HepVector3D&  Vector  ,          // vector along the line 
-						   const ISolid::Tick& tickMin ,          // minimal value for the tick 
-						   const ISolid::Tick& tickMax ,          // maximal value for tick 
-						   ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
-{ return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
-///
-///
-///
+#include "DetDesc/SolidTrd.icpp"
 ///
 
-
-///
-///
-/// reset to the initial state
-inline const   ISolid* SolidTrd::reset() const
-{
-  if( 0 != m_trd_cover ) { delete m_trd_cover ; m_trd_cover = 0 ; } 
-  return this;
-};
-///
-///
-///
-
-///
-///
-///
-
-#endif //   __DETDESC_SOLID_SOLIDTRD_H__
+#endif //   DETDESC_SOLIDTRD_H
 
 
 

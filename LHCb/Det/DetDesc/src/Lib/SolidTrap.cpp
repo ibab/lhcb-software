@@ -2,19 +2,19 @@
 #pragma warning(disable:4786)
 #endif
 
-
+/// GaudiKernel 
 #include "GaudiKernel/IInspector.h"
+#include "GaudiKernel/StreamBuffer.h" 
+/// DetDesc 
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTrap.h" 
-
-#include "GaudiKernel/StreamBuffer.h" 
-
 ///
-///
-/// constructor 
+
+
+/// constructor //////////////////////////////////////////////////////////////////////////////////////////////////
 SolidTrap::SolidTrap( const std::string&  Name             , /* name of this solid */ 
 		      const double        ZHalfLength      , /* half length along z-axes for given solid */
 		      const double        Theta            , /* polar angle of "axe" of this trapezoid   */  
@@ -65,13 +65,11 @@ SolidTrap::SolidTrap( const std::string&  Name             , /* name of this sol
   if( 0 >= DxAtPlusZMinusY  ) { throw SolidException("SolidTrap constructor::dxAtMinusZMinusY is not positive!"   ); } 
   ///
   if( 0 >= DxAtPlusZPlusY   ) { throw SolidException("SolidTrap constructor::dxAtMinusZPlusY  is not positive!"   ); } 
-  ///
-  
+  ///  
   makeAll();
-
+  ///
 }; 
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 void SolidTrap::makeAll()
 {   
   ///
@@ -115,10 +113,7 @@ void SolidTrap::makeAll()
   }
   if( 8 != m_trap_vertices.size() ) 
     { throw SolidException("SolidTrap constructor:: wrong dimension of array of vertices!"); } 
-  
-  ///
   /// make faces
-  ///
   addFace( point(0) , point(4) , point(5) , point(1) ) ;
   addFace( point(2) , point(3) , point(7) , point(6) ) ;
   addFace( point(0) , point(2) , point(6) , point(4) ) ;
@@ -128,17 +123,8 @@ void SolidTrap::makeAll()
   ///
   if( 6 != planes().size() ) { throw SolidException("SolidTrap constructor::wrong number of constructed faces"); } 
   ///
-  
-  ///
-}
-
-///
-///
-///
-
-///
-///
-/// fictive default constructor 
+};
+/// fictive default constructor /////////////////////////////////////////////////////////////////
 SolidTrap::SolidTrap()
   ///
   : SolidPolyHedronHelper   (                  )
@@ -167,12 +153,8 @@ SolidTrap::SolidTrap()
   ///
   makeAll();
   ///
-}
-
-
-///
-/// serialization 
-///
+};
+/// serialization ////////////////////////////////////////////////////////////////////////
 StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) 
 {
   ///
@@ -211,14 +193,9 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
   return s;
   ///
 };
-
-
-///
-/// serialization 
-///
+/// serialization //////////////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const 
 {
-  ///
   return s << typeName() 
 	   << m_trap_name         
 	   << m_trap_zHalfLength    
@@ -232,12 +209,8 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const
 	   << m_trap_dxAtPlusZMinusY  
 	   << m_trap_dxAtPlusZPlusY   
 	   << m_trap_alphaAtPlusZ  ; 
-}
-  
-///
-///
-///
-
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidTrap::~SolidTrap()
 {
   ///
@@ -245,23 +218,17 @@ SolidTrap::~SolidTrap()
   if( 0 != m_trap_cover ) { delete m_trap_cover ; m_trap_cover = 0 ; }  
   ///
 };
-
-
-///
-///
-/// cover for Trap is Trd 
+/// cover for Trap is Trd ////////////////////////////////////////////////////////////////////////////////////
 const ISolid*           SolidTrap::cover         () const 
 {
   ///
   if( 0 != m_trap_cover ) { return m_trap_cover; }              // cover is calculated already 
   ///
-
   double ymx1 = abs( point(0).y() )  ;
   double xmx1 = abs( point(0).x() ) ;
   double ymx2 = abs( point(4).y() )  ;
   double xmx2 = abs( point(4).x() ) ;
   ///  
-  
   for( VERTICES::size_type i = 1 ; i <  4 ; ++i )
     {
       xmx1 = abs( point(i).x() ) > xmx1 ? abs( point(i).x() ) : xmx1 ; 
@@ -271,34 +238,22 @@ const ISolid*           SolidTrap::cover         () const
     {
       xmx2 = abs( point(i1).x() ) > xmx2 ? abs( point(i1).x() ) : xmx2 ; 
       ymx2 = abs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
-    }  
-  
+    }    
   ISolid* cov = new SolidTrd( "Cover for " + name  () , 
 			      zHalfLength          () ,
                               xmx1         , ymx1     , 
                               xmx2         , ymx2     );
-  ///
   m_trap_cover = cov; 
-  ///
   return m_trap_cover;
 };
-
-
-///
-///
-///
-
+///////////////////////////////////////////////////////////////////////////
 bool SolidTrap::acceptInspector( IInspector* pInspector ) 
 {
   ///
   const ISolid* s = this; 
   return s->acceptInspector( pInspector ) ;
 };
-
-///
-///
-///
-
+//////////////////////////////////////////////////////////////////////////
 bool SolidTrap::acceptInspector( IInspector* pInspector ) const 
 {
   ///
@@ -320,14 +275,65 @@ bool SolidTrap::acceptInspector( IInspector* pInspector ) const
   return true;
   ///
 };
-
-
-
-
-
-
-
-
+///////////////////////////////////////////////////////////////////////////////
+std::ostream&  SolidTrap::printOut      ( std::ostream&  os ) const
+{
+  return 
+    os << "\t" << typeName() << "\tname=" << name()
+       << std::endl 
+       << "\t\t\tzHalfLength      [mm] =" << std::setw(12) << zHalfLength      () / millimeter 
+       << std::endl 
+       << "\t\t\ttheta        [degree] =" << std::setw(12) << theta            () / degree     
+       << std::endl 
+       << "\t\t\tphi          [degree] =" << std::setw(12) << phi              () / degree     
+       << std::endl 
+       << "\t\t\tdyAtMinusZ       [mm] =" << std::setw(12) << dyAtMinusZ       () / millimeter 
+       << std::endl 
+       << "\t\t\tdxAtMinusZMinusY [mm] =" << std::setw(12) << dxAtMinusZMinusY () / millimeter 
+       << std::endl 
+       << "\t\t\tdxAtMinusZPlusY  [mm] =" << std::setw(12) << dxAtMinusZPlusY  () / millimeter 
+       << std::endl 
+       << "\t\t\talphaAtMinusZ[degree] =" << std::setw(12) << alphaAtMinusZ    () / degree     
+       << std::endl 
+       << "\t\t\tdyAtPlusZ        [mm] =" << std::setw(12) << dyAtPlusZ        () / millimeter 
+       << std::endl 
+       << "\t\t\tdxAtPlusZMinusY  [mm] =" << std::setw(12) << dxAtPlusZMinusY  () / millimeter 
+       << std::endl 
+       << "\t\t\tdxAtPlusZPlusY   [mm] =" << std::setw(12) << dxAtPlusZPlusY   () / millimeter 
+       << std::endl 
+       << "\t\talphaAtPlusZ   [degree] =" << std::setw(12) << alphaAtPlusZ     () / degree    
+       << std::endl ; 
+};
+///////////////////////////////////////////////////////////////////////////////
+MsgStream&     SolidTrap::printOut      ( MsgStream&     os ) const
+{
+  return 
+    os << "\t" << typeName() << "\tname=" << name()
+       << endreq    
+       << "\t\t\tzHalfLength      [mm] =" << std::setw(12) << zHalfLength      () / millimeter 
+       << endreq    
+       << "\t\t\ttheta        [degree] =" << std::setw(12) << theta            () / degree     
+       << endreq    
+       << "\t\t\tphi          [degree] =" << std::setw(12) << phi              () / degree     
+       << endreq    
+       << "\t\t\tdyAtMinusZ       [mm] =" << std::setw(12) << dyAtMinusZ       () / millimeter 
+       << endreq    
+       << "\t\t\tdxAtMinusZMinusY [mm] =" << std::setw(12) << dxAtMinusZMinusY () / millimeter 
+       << endreq    
+       << "\t\t\tdxAtMinusZPlusY  [mm] =" << std::setw(12) << dxAtMinusZPlusY  () / millimeter 
+       << endreq    
+       << "\t\t\talphaAtMinusZ[degree] =" << std::setw(12) << alphaAtMinusZ    () / degree     
+       << endreq    
+       << "\t\t\tdyAtPlusZ        [mm] =" << std::setw(12) << dyAtPlusZ        () / millimeter 
+       << endreq    
+       << "\t\t\tdxAtPlusZMinusY  [mm] =" << std::setw(12) << dxAtPlusZMinusY  () / millimeter 
+       << endreq    
+       << "\t\t\tdxAtPlusZPlusY   [mm] =" << std::setw(12) << dxAtPlusZPlusY   () / millimeter 
+       << endreq    
+       << "\t\talphaAtPlusZ   [degree] =" << std::setw(12) << alphaAtPlusZ     () / degree    
+       << endreq    ; 
+};
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

@@ -45,18 +45,27 @@ package manager : Vanya Belyaev
         DetDesc/CLIDSurface.h                   - new file  
         DetDesc/Surface.h                       - new class
         DetDesc/Surface.icpp                    - new file 
-        DetDesc/MaterialException.h             - new class 
+        DetDesc/MaterialException.h             - new class  
+        DetDesc/SolidTrd.icpp                   - new file 
+        DetDesc/SolidCons.icpp                  - new file 
+        DetDesc/SolidSphere.icpp                - new file 
+        DetDesc/SolidTrap.icpp                  - new file 
+        DetDesc/SolidTubs.icpp                  - new file 
+        DetDesc/SolidChild.icpp                 - new file 
+        DetDesc/SolidBoolean.icpp               - new file 
         ===
         src/component/DetDesc_load.cpp
         src/component/XmlCatalogCnv.cpp
         src/component/XmlCatalogCnv.h
         src/component/XmlElementCnv.cpp
         src/component/XmlIsotopeCnv.cpp
-        src/component/XmlLVolumeCnv.cpp
         src/component/XmlLVolumeCnv.h
+        src/component/XmlLVolumeCnv.cpp
         src/component/XmlMixtureCnv.cpp
         src/component/XmlTabulatedPropertyCnv.cpp   - new file 
         src/component/XmlTabulatedPropertyCnv.h     - new file 
+        src/component/XmlSurfaceCnv.h               - new file 
+        src/component/XmlSurfaceCnv.cpp             - new file  
         ===
         src/Lib/DetectorElement.cpp
         src/Lib/Element.cpp

@@ -1,0 +1,33 @@
+#ifndef           DETDESC_SOLIDBOOLEAN_ICPP
+#define           DETDESC_SOLIDBOOLEAN_ICPP 1 
+
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+#include "DetDesc/SolidChild.h" 
+#include "DetDesc/SolidBoolean.h"
+
+//////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidBoolean& box )          
+{ return  box.printOut( os ); }
+//////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidBoolean* box )           
+{ return box  ? (os<<*box) : (os<<" SolidBoolean* points to NULL!"<<endreq) ; }
+//////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////
+inline const ISolid* SolidBoolean::operator[]( unsigned int index ) const 
+{  return  ( ( index < noChildrens() )  ? *(childBegin()+index) : 0 ); }
+/// reset to the initial state //////////////////////////////////////////////////////
+inline  const    ISolid* SolidBoolean::reset    () const 
+{
+  first()->reset();
+  // due to stupid NT-compiler we are forced to write an ugly stuff instead one nice line!
+  // std::for_each( childBegin() , childEnd() , std::mem_fun(&ISolid::reset));
+  for( SolidChildrens::const_iterator iter = childBegin() ; iter != childEnd() ; ++iter ) 
+    { if( (*iter) != 0 ) { (*iter)->reset(); } }
+  ///
+  return this;
+};
+////////////////////////////////////////////////////////////////////////////////////////
+
+#endif    //      DETDESC_SOLIDBOOLEAN_ICPP

@@ -46,30 +46,32 @@ StreamBuffer&     Surface::serialize( StreamBuffer& s )
 std::ostream&     Surface::fillStream ( std::ostream& s ) const 
 {
   s << " Surface " 
-    << " model= "     << std::setw(1)  << model  () 
-    << " finish= "    << std::setw(1)  << finish () 
-    << " type= "      << std::setw(1)  << type   () 
-    << " value= "     << std::setw(7)  << value  ()
-    << " firstVol= "  << firstVol ()
-    << " secondVol= " << secondVol()  
-    << " #props=" << m_props.size() << std::endl;
+    << "  model="      << std::setw(1)   << model  () 
+    << "  finish="     << std::setw(1)   << finish () 
+    << "  type="       << std::setw(1)   << type   () 
+    << "  value="      << std::setw(10)  << value  ()
+    << "\tfirstVol='"  << firstVol ()    << "'"
+    << "\tsecondVol='" << secondVol()    << "'" 
+    << "\t#props="     << std::setw(2)   << m_props.size() 
+    << std::endl;
   for( Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
-    { s << (*it) ; } 
+    { s << "\t" << (*it) ; } 
   return s;
 };    
 /////////////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Surface::fillStream ( MsgStream&    s ) const 
 {
   s << " Surface " 
-    << " model= "     << std::setw(1)  << model  () 
-    << " finish= "    << std::setw(1)  << finish () 
-    << " type= "      << std::setw(1)  << type   () 
-    << " value= "     << std::setw(7)  << value  ()
-    << " firstVol= "  << firstVol ()
-    << " secondVol= " << secondVol()  
-    << " #props=" << m_props.size() << endreq ;
+    << "  model="      << std::setw(1)  << model  () 
+    << "  finish="     << std::setw(1)  << finish () 
+    << "  type="       << std::setw(1)  << type   () 
+    << "  value="      << std::setw(10) << value  ()
+    << "\tfirstVol='"  << firstVol ()   <<"'"
+    << "\tsecondVol='" << secondVol()   <<"'" 
+    << "\t#props="     << std::setw(2)  << m_props.size() 
+    << endreq ;
   for( Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
-    { s << (*it) ; } 
+    { s << "\t" << (*it) ; } 
   return s;
 };    
 /////////////////////////////////////////////////////////////////////////////////////////////////

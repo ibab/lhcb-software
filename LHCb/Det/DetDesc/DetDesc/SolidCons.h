@@ -1,32 +1,31 @@
 #ifndef     __DETDESC_SOLID_SOLIDCONS_H__
 #define     __DETDESC_SOLID_SOLIDCONS_H__  
-
+/// STD and STL 
 #include <cmath> 
 #include <iostream>
-
-#include "GaudiKernel/ISolid.h" 
-
+/// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
-
 #include "CLHEP/Units/PhysicalConstants.h"
-
+/// GaudiKernel
+#include "GaudiKernel/ISolid.h" 
+///
 class StreamBuffer;
+///
 
+/** @class SolidCons SolidCons.h DetDesc/SolidCons.h
 
-///
-///
-/// class SolidCons - the native implementation of the segment of the conical tube 
-///
-/// Author: Vanya Belyaev 
-///
+    A simple implementation of CONS 
+    
+    @author Vanya Belyaev 
+*/
 
 class SolidCons: public ISolid
 {
   ///
   friend class ISolidFromStream;
   ///
- public:
+public:
   //
   // constructorm, all sizes in mm, all angles in radians 
   SolidCons( const std::string& name                                  ,
@@ -55,31 +54,30 @@ class SolidCons: public ISolid
   // "the top covering" solid  (normally SolidBox)
   inline const ISolid*          coverTop     ()                       const ;
   // overloaded printout 
-  virtual inline std::ostream&  printOut     ( std::ostream&        ) const; 
+  virtual std::ostream&  printOut ( std::ostream& os = std::cerr )    const; 
+  // overloaded printout 
+  virtual MsgStream&     printOut ( MsgStream&                   )    const; 
   /// reset to the initial state 
   inline const ISolid*          reset        ()                       const; 
-  ///
-  /// calculate the intersection points("ticks") with a given line. 
-  /// Input - line, paramterised by (Point + Vector * Tick) 
-  /// "Tick" is just a value of parameter, at which the intersection occurs 
-  /// Return the number of intersection points (=size of Ticks container)   
+  //`/
+  /** calculate the intersection points("ticks") with a given line. 
+      Input - line, paramterised by (Point + Vector * Tick) 
+      "Tick" is just a value of parameter, at which the intersection occurs 
+      Return the number of intersection points (=size of Ticks container)   
+  */
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D & Point  ,          /// initial point for teh line 
 						   const HepVector3D& Vector ,          /// vector along the line 
 						   ISolid::Ticks    & ticks  ) const ;  /// output container of "Ticks"
-  /// calculate the intersection points("ticks") with a given line. 
-  /// Input - line, paramterised by (Point + Vector * Tick) 
-  /// "Tick" is just a value of parameter, at which the intersection occurs 
-  /// Return the number of intersection points (=size of Ticks container)   
+  /** calculate the intersection points("ticks") with a given line. 
+      Input - line, paramterised by (Point + Vector * Tick) 
+      "Tick" is just a value of parameter, at which the intersection occurs 
+      Return the number of intersection points (=size of Ticks container)   
+  */
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          /// initial point for teh line 
 						   const HepVector3D & Vector  ,          /// vector along the line
 						   const ISolid::Tick& tickMin ,          /// minimal value of tick 
 						   const ISolid::Tick& tickMax ,          /// maximal value of tick 
 						   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
-  
-  //
-  //
-  // function specific for SolidCons
-  //
   // inner radius at minus Z  
   inline double  innerRadiusAtMinusZ () const { return m_cons_innerRadiusMinusZ ; };
   // outer radius at minus Z  
@@ -94,9 +92,6 @@ class SolidCons: public ISolid
   inline double  startPhiAngle       () const { return m_cons_startPhiAngle     ; }; 
   // delta phi   
   inline double  deltaPhiAngle       () const { return m_cons_deltaPhiAngle     ; }; 
-  //
-  // additional functions:
-  //
   // inner diameter at minus Z  
   inline double  innerDiameterAtMinusZ () const { return m_cons_innerRadiusMinusZ * 2 ; };
   // outer radius at minus Z  
@@ -109,44 +104,25 @@ class SolidCons: public ISolid
   inline double  zLength               () const { return m_cons_zHalfLength       * 2 ; };
   // end phi angle   
   inline double  endPhiAngle           () const { return m_cons_startPhiAngle + m_cons_deltaPhiAngle ; }; 
-  
- private:
-  //
-  inline double iR_z( double z ) const
-    {
-      double a = ( innerRadiusAtPlusZ()-innerRadiusAtMinusZ() ) / zHalfLength();
-      double b = ( innerRadiusAtPlusZ()+innerRadiusAtMinusZ() )  ; 
-      //
-      return 0.5*(a*z+b);
-    } 
-  //
-  inline double oR_z( double z ) const
-    {
-      double a = ( outerRadiusAtPlusZ()-outerRadiusAtMinusZ() ) / zHalfLength();
-      double b = ( outerRadiusAtPlusZ()+outerRadiusAtMinusZ() )  ; 
-      //
-      return 0.5*(a*z+b);
-    } 
-  /// 
+  ///
   /// serialization for reading 
   StreamBuffer& serialize( StreamBuffer& s )       ; 
   /// serialization for writing 
   StreamBuffer& serialize( StreamBuffer& s ) const ; 
   ///
-   
-  ///
-  /// from IInspectable interface 
-  ///
   virtual bool acceptInspector( IInspector* )       ; 
-  ///
   virtual bool acceptInspector( IInspector* ) const ; 
   ///
-
- protected:
+private:
+  //
+  inline double iR_z( double z ) const;
+  inline double oR_z( double z ) const;
+  //
+protected:
   ///
   SolidCons();
   ///
- private:
+private:
   //
   SolidCons           ( const SolidCons & );  // no copy-constructor 
   SolidCons& operator=( const SolidCons & );  // no assignment 
@@ -166,81 +142,25 @@ class SolidCons: public ISolid
   int                     m_cons_coverModel;
   mutable ISolid*         m_cons_cover; 
   //
-
 };
-
-//
-//
-//
-
-
-inline   bool  SolidCons::isInside( const HepPoint3D & point ) const
-{
-  //
-  if( abs( point.z() ) > zHalfLength() ) { return false; }
-  //
-  double rho = point.perp(); 
-  //
-  if( rho < iR_z( point.z() ) ) { return false; }
-  if( rho > oR_z( point.z() ) ) { return false; }
-  //
-  double phi = point.phi();
-  if( phi < 0 ) { phi += 360.0*degree; };
-  //
-  if( phi < startPhiAngle()                   ) { return false; } 
-  if( phi > startPhiAngle() + deltaPhiAngle() ) { return false; }
-  //
-  return true;
-}
-//
-//
-//
-//
-
-
-inline const ISolid* SolidCons::coverTop      ()  const 
-{
-  const ISolid* cov = this; 
-  while( cov != cov->cover() ){ cov = cov->cover(); } 
-  return cov; 
-};
-
-//
-//
-//
-
-inline std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
-{
-  os << typeName()                     << " name="                             << name()
-     << " (zLength="                   << zLength              () / millimeter << "[mm]"
-     <<   ",outerRadiusAtMinusZ"       << outerRadiusAtMinusZ  () / millimeter << "[mm]"
-     <<   ",outerRadiusAtPlusZ"        << outerRadiusAtPlusZ   () / millimeter << "[mm]";
-  if( innerRadiusAtMinusZ() > 0 ) 
-    { os <<   ",innerRadiusAtMinusZ"   << innerRadiusAtMinusZ  () / millimeter << "[mm]"; } 
-  if( innerRadiusAtPlusZ () > 0 ) 
-    { os <<   ",innerRadiusAtPlusZ"    << innerRadiusAtPlusZ   () / millimeter << "[mm]"; }
-  if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
-    { 
-      os <<   ",startPhiAngle="        << startPhiAngle        () / degree     << "[degree]"
-	 <<   ",deltaPhiAngle="        << deltaPhiAngle        () / degree     << "[degree]";
-    }
-  return os << ")";
-};
-
 ///
+#include "DetDesc/SolidCons.icpp"
 ///
-/// reset to the initial state 
-inline const ISolid* SolidCons::reset() const
-{
-  if( 0 != m_cons_cover ) { delete m_cons_cover; m_cons_cover = 0 ; } 
-  return this; 
-}; 
 
-//
-//
-//
 
 #endif //   __DETDESC_SOLID_SOLIDCONS_H__
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

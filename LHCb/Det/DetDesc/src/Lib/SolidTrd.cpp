@@ -1,12 +1,12 @@
-
+/// DetDesc
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
 //
-//
-//
 
+
+///////////////////////////////////////////////////////////////////////////////////////////
 SolidTrd::SolidTrd( const std::string& name              ,
 		    const double       ZHalfLength       ,
 		    const double       XHalfLength1      , 
@@ -43,13 +43,7 @@ SolidTrd::SolidTrd( const std::string& name              ,
   makeAll();
   ///
 };
-
-//
-//
-//
-///
-/// fictive default construcor 
-///
+/// fictive default construcor /////////////////////////////////////////////////////////////////
 SolidTrd::SolidTrd()
   : SolidPolyHedronHelper (               )
   , m_trd_name            ( "unnamed Trd" )
@@ -66,18 +60,14 @@ SolidTrd::SolidTrd()
   makeAll();
   ///
 };
-
+////////////////////////////////////////////////////////////////////////////////////////////
 SolidTrd::~SolidTrd()
 {
   SolidPolyHedronHelper::reset();
   if( this == m_trd_cover ){                   m_trd_cover = 0 ; } 
   if(    0 != m_trd_cover ){ delete m_trd_cover; m_trd_cover = 0 ; }
 };
-
-
-///
-/// serialization for reading 
-///
+/// serialization for reading  //////////////////////////////////////////////////////////////
 StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) 
 {
   ///
@@ -112,8 +102,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s )
   return s;
   ///
 };
-
-
+////////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
 {
   ///
@@ -126,10 +115,7 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
 	   << m_trd_yHalfLength2 ;  
   ///
 };
-
-//
-//
-// cover for Trd is "symmetric trd", cover for "symmetric trd" is Box 
+// cover for Trd is "symmetric trd", cover for "symmetric trd" is Box //////////////// 
 const ISolid*           SolidTrd::cover         () const 
 {
   if( 0 != m_trd_cover ) { return m_trd_cover; }              // cover is calculated already 
@@ -137,29 +123,24 @@ const ISolid*           SolidTrd::cover         () const
   ISolid* cov = 0 ;
   if(  ( xHalfLength1() != yHalfLength1() )  || ( xHalfLength2() != yHalfLength2() ) ) 
     { cov = new SolidTrd("Cover for " + name() , zHalfLength() , 
-				       xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
-				       xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
-				       xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() , 
+			 xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
+			 xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
+			 xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() , 
 				       xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() ) ; }
   else
     { cov = new SolidBox("Cover for " + name() , 
-				       xHalfLength1() > xHalfLength2() ? xHalfLength1() : xHalfLength2() , 
-				       yHalfLength1() > yHalfLength2() ? yHalfLength1() : yHalfLength2() , 
-				       zHalfLength      ()                      ); }
+			 xHalfLength1() > xHalfLength2() ? xHalfLength1() : xHalfLength2() , 
+			 yHalfLength1() > yHalfLength2() ? yHalfLength1() : yHalfLength2() , 
+			 zHalfLength      ()                      ); }
   //
   if( 0 == cov ) { return this ; } 
-  //
   m_trd_cover = cov; 
-  //
   return m_trd_cover;
 };
-
-
+////////////////////////////////////////////////////////////////////////////////////////
 void SolidTrd::makeAll()
 {   
-  ///
   SolidPolyHedronHelper::reset() ; 
-  ///
   std::vector<HepPoint3D> points;
   ///
   {
@@ -174,7 +155,6 @@ void SolidTrd::makeAll()
     HepPoint3D p5( - xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ; 
     HepPoint3D p6(   xHalfLength1() ,   yHalfLength1() ,  zHalfLength() ) ; 
     HepPoint3D p7(   xHalfLength1() , - yHalfLength1() ,  zHalfLength() ) ;
-
     ///
     points.push_back( p0 ) ; 
     points.push_back( p1 ) ; 
@@ -188,10 +168,7 @@ void SolidTrd::makeAll()
   }
   if( 8 != points.size() ) 
     { throw SolidException("SolidTrd constructor:: wrong dimension of array of vertices!"); } 
-  
-  ///
   /// make faces
-  ///
   addFace( points[0] , points[4] , points[5] , points[1] ) ;
   addFace( points[2] , points[3] , points[7] , points[6] ) ;
   addFace( points[1] , points[2] , points[6] , points[5] ) ;
@@ -202,23 +179,14 @@ void SolidTrd::makeAll()
   if( 6 != planes().size() ) { throw SolidException("SolidTrd constructor::wrong number of constructed faces"); } 
   ///
 };
-
-
-///
-///
-///
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SolidTrd::acceptInspector( IInspector* pInspector ) 
 {
   ///
   const ISolid* s = this; 
   return s->acceptInspector( pInspector ) ;
 };
-
-///
-///
-///
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SolidTrd::acceptInspector( IInspector* pInspector )  const 
 {
   ///
@@ -234,8 +202,41 @@ bool SolidTrd::acceptInspector( IInspector* pInspector )  const
   return true; 
   ///
 };
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
+{
+  return 
+    os << "\t" << typeName()   << "\tname=" << name() 
+       << std::endl 
+       << "\t\t\tzLength [mm] =" << std::setw(12) << zLength        () / millimeter 
+       << std::endl 
+       << "\t\t\txsize1  [mm] =" << std::setw(12) << xLength1       () / millimeter
+       << std::endl 
+       << "\t\t\tysize1  [mm] =" << std::setw(12) << yLength1       () / millimeter
+       << std::endl 
+       << "\t\t\txsize2  [mm] =" << std::setw(12) << xLength2       () / millimeter
+       << std::endl 
+       << "\t\t\tysize2  [mm] =" << std::setw(12) << yLength2       () / millimeter 
+       << std::endl ;
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
+{
+  return 
+    os << "\t" << typeName()   << "\tname=" << name() 
+       << endreq    
+       << "\t\t\tzLength [mm] =" << std::setw(12) << zLength        () / millimeter 
+       << endreq    
+       << "\t\t\txsize1  [mm] =" << std::setw(12) << xLength1       () / millimeter
+       << endreq    
+       << "\t\t\tysize1  [mm] =" << std::setw(12) << yLength1       () / millimeter
+       << endreq    
+       << "\t\t\txsize2  [mm] =" << std::setw(12) << xLength2       () / millimeter
+       << endreq    
+       << "\t\t\tysize2  [mm] =" << std::setw(12) << yLength2       () / millimeter 
+       << endreq    ;
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 

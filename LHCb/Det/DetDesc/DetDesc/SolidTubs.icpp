@@ -1,0 +1,55 @@
+#ifndef    DETDESC_SOLIDTUBS_ICPP
+#define    DETDESC_SOLIDTUBS_ICPP 1 
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// DetDesc 
+#include "DetDesc/SolidTubs.h" 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidTubs& box )          
+{ return  box.printOut( os ); }
+//////////////////////////////////////////////////////////////////////////////////////////
+inline MsgStream&    operator<<( MsgStream&    os , const SolidTubs* box )           
+{ return box  ? (os<<*box) : (os<<" SolidTubs* points to NULL!"<<endreq) ; }
+//////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////
+inline   bool  SolidTubs::isInside( const HepPoint3D & point ) const
+{
+  //
+  if( abs(point.z()) > zHalfLength() ) { return false; }
+  //
+  double rho = point.perp();
+  //
+  if( rho > outerRadius() ) { return false; }
+  //
+  if( rho < innerRadius() ) { return false; }
+  //
+  double phi = point.phi();
+  // 
+  if( phi < 0 ) { phi += 360.0*degree; } 
+  //
+  if( phi < startPhiAngle()                 ) { return false; }
+  if( phi > startPhiAngle()+deltaPhiAngle() ) { return false; }
+  //
+  return true; 
+}
+/////////////////////////////////////////////////////////////////////////////
+inline const ISolid* SolidTubs::coverTop      ()  const 
+{
+  const ISolid* cov = this; 
+  while( cov != cov->cover() ){ cov = cov->cover(); } 
+  return cov; 
+};
+/// reset to the initial state ///////////////////////////////////////////////
+inline const ISolid* SolidTubs::reset()  const
+{
+  if( 0 != m_tubs_cover ) { delete m_tubs_cover ; m_tubs_cover = 0 ; } 
+  return this;
+}; 
+///////////////////////////////////////////////////////////////////////////////
+
+
+#endif  // DETDESC_SOLIDTUBS_ICPP
+
