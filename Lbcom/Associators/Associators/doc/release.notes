@@ -1,6 +1,9 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! 2004-06-11 - Marco Cattaneo
+ - Remove factories for obsolete L1Event relations 
+
 !======================= Associators v2r3 2004-12-12 =======================
 ! 2004-02-12 - Marco Cattaneo
  - Use VeloEvent v14r*
