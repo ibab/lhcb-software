@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.4 2002-05-23 11:07:09 ibelyaev Exp $
+// $Id: SpreadEstimator.cpp,v 1.5 2002-06-14 09:49:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/23 11:07:09  ibelyaev
+//  see /afs/cern.ch/user/i/ibelyaev/w0/Calo/CaloUtils/v2r0/doc/release.notes
+//
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -80,10 +83,15 @@ StatusCode SpreadEstimator::operator()
       const CaloDigit* digit = entry->digit()  ;
       if( 0 == digit ) { continue ; }
       ///
-      ++n ;
-      ///
+      
       const double fraction = entry->fraction();
-      const double energy   = digit->e() * fraction ;
+      // abs !!!
+      const double energy   = fabs( digit->e() * fraction ) ;
+      
+      /// skip NULLs
+      if( energy <= 0 ) { continue ; }
+      ///
+      ++n ;
       ///
       const HepPoint3D& pos =
         detector()->cellCenter( digit->cellID() );
@@ -119,11 +127,22 @@ StatusCode SpreadEstimator::operator()
       covxx -= xmean * xmean ;
       covyx -= ymean * xmean ;
       covyy -= ymean * ymean ;
+
       
       CaloPosition::Covariance& spread = cluster->position().spread() ;
       spread( CaloPosition::X , CaloPosition::X ) = covxx ;
       spread( CaloPosition::Y , CaloPosition::X ) = covyx ;
       spread( CaloPosition::Y , CaloPosition::Y ) = covyy ;      
+      
+      if( 0 > covxx || 0 > covyy )
+        {
+          std::cout << " negative xx or yy "
+                    << covxx << " " << covxx + xmean * xmean << " y=" 
+                    << covyy << " " << covyy + ymean * ymean << " etot=" 
+                    << etot  << std::endl ;
+          std::cout << *cluster << std::endl ;
+        }
+
     }
   
   ///

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.14 2002-06-10 15:57:18 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-06-14 09:49:03 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-06-14 - v3r2 Vanya Belyaev
+ - src/SpreadEstimator.cpp       bug fix 
+   
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v3r0 to use EventKernel v2r*
