@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.4 2002-02-21 16:42:11 dhcroft Exp $
+! $Id: release.notes,v 1.5 2002-02-25 09:55:58 cattanem Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
-! ============================================================================
+! ===========v1r1=============================================================
 ! 20020221 - David Hutchcroft
   - Added methods to get the station, region and chamber numbers to the 
     DeMuonChamber objects and these and the gas gap numbers to the 
@@ -22,7 +22,7 @@
       CLID_MuonReadoutCond.h
     so that the Visual C++ linker can link the code
 
-! ============================================================================
+! ===========v1r0=============================================================
 ! 20020121 - David Hutchcroft
   - Created a new package MuonDet.
   - Code Files are:
