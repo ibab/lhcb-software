@@ -16,9 +16,8 @@
 #include <stdio.h>
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
-#include "L0MuonKernel/Unit.h"
+#include "ProcessorKernel/Unit.h"
 #include "L0mConf/L0MPuNodeBase.h"
-#include "GaudiKernel/MsgStream.h"
 
 namespace L0Muon {
   
@@ -65,19 +64,15 @@ namespace L0Muon {
 
     
     void initialize();
-    void initialize(MsgStream & log);
 
     void execute();
-    
-    /** Call methods to built and write L0Buffer
-
-        @param log   : MSG::DEBUG
-    */
-    void execute(MsgStream & log);
 
     void finalize();
 
-
+    /// Give a static type name to the unit
+    std::string type() {
+      return "BuildL0BufferUnit";
+    }
   
 
 

@@ -15,9 +15,8 @@
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/L0mProcUnit.h"
-#include "L0MuonKernel/Unit.h"
-#include "MuonTools/IMuonTileXYZTool.h"
-#include "GaudiKernel/MsgStream.h"
+#include "ProcessorKernel/Unit.h"
+
 
 namespace L0Muon {
 
@@ -25,18 +24,21 @@ namespace L0Muon {
      
   public:
 
-     /// Constructor 
-     BoardUnit();
- 
-     /// Destructor
-     ~BoardUnit();
+    /// Constructor 
+    BoardUnit();
+
+    /// Destructor
+    ~BoardUnit();
 
 
-     void initialize();
-     void initialize(MsgStream & log);
-     void execute();
-     void execute(MsgStream & log);
-     void finalize();
+    //void initialize();
+    //void execute();
+    //void finalize();
+
+    /// Give a static type name to the unit
+    std::string type() {
+      return "BoardUnit";
+    }
 
   private:
      

@@ -1,4 +1,4 @@
-// $Id: CopyRegisterUnit.h,v 1.3 2004-12-21 14:33:02 ltocco Exp $
+// $Id: CopyRegisterUnit.h,v 1.4 2005-02-03 19:49:51 atsareg Exp $
 
 #ifndef L0MUONKERNEL_COPYREGISTERUNIT_H
 #define L0MUONKERNEL_COPYREGISTERUNIT_H     1
@@ -13,7 +13,7 @@
    date  12 January 2002
 */ 
 
-#include "L0MuonKernel/Unit.h"
+#include "ProcessorKernel/Unit.h"
 
 namespace L0Muon {
 

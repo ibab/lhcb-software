@@ -12,7 +12,7 @@
 
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
-#include "GaudiKernel/MsgStream.h"
+//#include "GaudiKernel/MsgStream.h"
 
 namespace L0Muon {
 

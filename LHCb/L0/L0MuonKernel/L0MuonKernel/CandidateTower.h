@@ -12,8 +12,7 @@
 #include <vector>
 #include <utility>  // For std::pair
 #include <boost/dynamic_bitset.hpp>
-#include "L0MuonKernel/Unit.h"
-#include "GaudiKernel/MsgStream.h"
+#include "ProcessorKernel/Unit.h"
 
 namespace L0Muon {
 
@@ -31,7 +30,7 @@ class CandidateTower {
   ~CandidateTower();
 
   /// Set the seed in M3
-  void setSeed(std::pair<int, int> &seedindex);
+  void setSeed(std::pair<int, int> seedindex);
 
   /// Get the seed 
   std::pair<int, int> getSeed() { return m_seed ;}
@@ -67,9 +66,12 @@ class CandidateTower {
   void reset(); 
 
   /// Draw bits
-  void drawBits(int sta, MsgStream & log);
+  void drawBits(int sta);
 
-  
+  ///
+  void setDebugMode() {
+    m_debug = true;
+  }
 
   typedef boost::dynamic_bitset<> nbits;
   typedef std::pair<int, int> seedind ; 
@@ -100,7 +102,7 @@ class CandidateTower {
   seedind m_xyindex[5];
   bool m_flag;
   int m_xFoi[5], m_yFoi[5];
-  
+  bool m_debug;
   
 };
 

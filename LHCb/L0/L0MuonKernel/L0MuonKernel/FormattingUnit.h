@@ -16,9 +16,9 @@
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
-#include "L0MuonKernel/Unit.h"
-#include "L0MuonKernel/TileRegister.h"
-#include "GaudiKernel/MsgStream.h"
+#include "ProcessorKernel/Unit.h"
+#include "ProcessorKernel/TileRegister.h"
+//#include "GaudiKernel/MsgStream.h"
 
 namespace L0Muon {
   
@@ -35,23 +35,20 @@ namespace L0Muon {
 
      
      void initialize();
-    
-     /** 
-         Call the method makePads
-
-         @param log   : MSG::DEBUG 
-     */
-     void initialize(MsgStream & log);
   
      void execute();
-     void execute(MsgStream & log);
    
      void finalize();
+
+     /// Give a static type name to the unit
+     std::string type() {
+       return "FormattingUnit";
+     }
 
      /**
         Intersect tiles of input and output data 
       */
-     void makePads(MsgStream & log);
+     void makePads();
 
    private:
 

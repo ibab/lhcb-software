@@ -15,11 +15,8 @@
 #include <vector>
 #include <cmath>
 #include <utility>
-#include "L0MuonKernel/Unit.h"
-#include "Event/L0MuonCandidate.h"
-#include "GaudiKernel/MsgStream.h"
-#include "L0MuonKernel/BoardUnit.h"
-#include "Event/L0MuonBase.h"
+#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/Candidate.h"
 
 namespace L0Muon {
 
@@ -38,16 +35,16 @@ namespace L0Muon {
     ~BestCandidateSelectionUnit();
 
     /// Get candidates from PUs
-    void loadCandidates(L0MuonCandidate * cand);
+    void loadCandidates(Candidate * cand);
   
     /// Get status from PU
     void loadStatus(int st){ m_status = st; }                    
   
     /// Debug : print pT of the candidates 
-    void dumpCandidates(MsgStream & log);
+    void dumpCandidates();
 
     /// Debug : print addresses of candidates 
-    void dumpAddresses(MsgStream & log);
+    void dumpAddresses();
 
 
     /// Open the output file
@@ -58,18 +55,18 @@ namespace L0Muon {
 
 
     void sortCandidatesbcsu();
-    void loadOffsets(std::pair<L0MuonCandidate*, std::vector<int> >);
+    void loadOffsets(std::pair<Candidate*, std::vector<int> >);
 
    
 
     void initialize();
     void execute();
-    void initialize(MsgStream & log);
-    void execute(MsgStream & log);
-
     void finalize();
     
-
+    /// Give a static type name to the unit
+    std::string type() {
+      return "BestCandidateSelectionUnit";
+    }
 
   private:
 
@@ -93,10 +90,10 @@ namespace L0Muon {
 
     std::vector<int> m_punumber;
     
-    std::vector<L0MuonCandidate*> m_candidates;
+    std::vector<Candidate*> m_candidates;
     unsigned int m_status;
 
-    std::vector<std::pair<L0MuonCandidate*, 
+    std::vector<std::pair<Candidate*, 
       boost::dynamic_bitset<> > > m_inp;
     
     std::vector<boost::dynamic_bitset<> > m_addresses ;
@@ -105,7 +102,7 @@ namespace L0Muon {
 
     FILE *m_bcsul0bufferFile;
 
-    std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offsets;
+    std::vector<std::pair<Candidate*, std::vector<int> > > m_offsets;
 
     bool m_writeL0buffer;
     

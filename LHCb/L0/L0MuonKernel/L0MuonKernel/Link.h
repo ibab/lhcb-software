@@ -1,7 +1,7 @@
-// $Id: Link.h,v 1.4 2004-12-21 14:33:02 ltocco Exp $
+// $Id: Link.h,v 1.5 2005-02-03 19:49:51 atsareg Exp $
 
-#ifndef L0MUONKERNEL_LINK_H
-#define L0MUONKERNEL_LINK_H     1
+#ifndef PROCESSORKERNEL_LINK_H
+#define PROCESSORKERNEL_LINK_H     1
 
 /** @class Unit Unit.h L0MuonKernel/Unit.h
 
@@ -13,7 +13,7 @@
    @date  12 January 2002
 */ 
 
-#include "L0MuonKernel/Unit.h"
+#include "ProcessorKernel/Unit.h"
 namespace L0Muon {
 
 class Link : public L0Muon::Unit {
@@ -56,4 +56,4 @@ public:
 
 };  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_LINK_H  
+#endif      // PROCESSORKERNEL_LINK_H  

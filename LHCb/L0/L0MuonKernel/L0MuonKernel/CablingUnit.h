@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.5 2004-12-21 14:33:02 ltocco Exp $
+// $Id: CablingUnit.h,v 1.6 2005-02-03 19:49:51 atsareg Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -14,13 +14,13 @@
 
 // STL includes
 #include <vector>
-#include "GaudiKernel/MsgStream.h"
-#include "Event/L0MuonCandidate.h"
+//#include "GaudiKernel/MsgStream.h"
+#include "L0MuonKernel/Candidate.h"
 //#include "Event/L0Muon.h"
 #include "L0MuonKernel/L0MuonStatus.h"
-#include "L0MuonKernel/Unit.h"
+#include "ProcessorKernel/Unit.h"
 #include "L0MuonKernel/Tower.h"
-#include "L0MuonKernel/TileRegister.h"
+#include "ProcessorKernel/TileRegister.h"
 #include "L0mConf/L0MPuNodeBase.h"
 
 namespace L0Muon {
@@ -42,38 +42,36 @@ public:
   MuonTileID getPU() { return m_pu ; }
     
   /// Construct logical pads 
-  void makePads(MsgStream & log);
+  void makePads();
 
   /** Construct the tower (optical links + neighbours) 
       in the granularity of M3
   */
-  void makeTower(MsgStream & log);
+  void makeTower();
 
   /// Draw the Tower
-  void drawTower(MsgStream & log) {m_tower.draw(log);}
+  void drawTower() {m_tower.draw();}
 
   // Overloads from Unit
   void initialize();
-  void initialize(MsgStream & log);
 
   void execute();
 
-  /** process the tower and select two candidates
-
-      @param log   : MSG::DEBUG 
-  */
-  void execute(MsgStream & log);
-
   void finalize();
-
+  
+  /// Give a static type name to the unit
+  std::string type() {
+    return "CablingUnit";
+  }
+     
 private:
 
   Tower  m_tower;
   MuonTileID m_pu;
   std::vector<MuonTileID> m_pads;
-  std::vector<L0MuonCandidate*> m_cand;
+  std::vector<Candidate*> m_cand;
   int m_status;
-  std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
+  std::vector<std::pair<Candidate*, std::vector<int> > > m_offForCand;
 
   
 };

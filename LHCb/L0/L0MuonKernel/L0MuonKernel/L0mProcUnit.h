@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.h,v 1.4 2004-12-21 14:33:02 ltocco Exp $
+// $Id: L0mProcUnit.h,v 1.5 2005-02-03 19:49:51 atsareg Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
@@ -10,25 +10,20 @@
    
 */
 
-
-
 #include <vector>
-#include "L0MuonKernel/Unit.h"
+#include "ProcessorKernel/Unit.h"
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0mConf/L0MTile.h"
 #include "L0mConf/L0MFoi.h"
-#include "L0MuonKernel/RegisterFactory.h"
+#include "ProcessorKernel/RegisterFactory.h"
 #include "L0MuonKernel/Tower.h"
 #include "L0MuonKernel/CablingUnit.h"
 #include "L0MuonKernel/BuildL0BufferUnit.h"
 #include "L0MuonKernel/FormattingUnit.h"
-#include "GaudiKernel/MsgStream.h"
-
-
 
 namespace L0Muon {
 
-class L0mProcUnit : public L0Muon::Unit {
+class L0mProcUnit : public Unit {
 
  public:
 
@@ -45,7 +40,6 @@ class L0mProcUnit : public L0Muon::Unit {
         @param precision :  precision for calculating pT
         @param bits      :  number of bits for codifying pT
         @param writeL0Buffer         :  flag for writing L0Buffers on files
-        @param MsgStream             :  Message Service for DEBUG
   */
   L0mProcUnit(L0MPuNodeBase& puNode,
               std::vector<double> & ptpara,
@@ -54,8 +48,7 @@ class L0mProcUnit : public L0Muon::Unit {
               std::vector<int> & foiy,
               double & precision,
               int & bits,
-              bool & writeL0buffer,
-              MsgStream & log);
+              bool & writeL0buffer);
 
   /// Destructor
   ~L0mProcUnit();
@@ -93,25 +86,19 @@ class L0mProcUnit : public L0Muon::Unit {
   int yFoi(int sta);
 
   /// Initialize subunits
-  void initialize();
+  //void initialize();
 
-  /** Initialize  subunits
-
-      @param log   : MSG::DEBUG 
-  */
-  void initialize(MsgStream & log);
  
   /// Execute subunits
-  void execute();
-
-  /** Execute  subunits
-
-      @param log   : MSG::DEBUG 
-  */
-  void execute(MsgStream & log);
+  //void execute();
 
   /// Finalize subunits
-  void finalize();
+  //void finalize();
+  
+  /// Give a static type name to the unit
+  std::string type() {
+    return "L0mProcUnit";
+  }
   
 
  private:
@@ -132,8 +119,7 @@ class L0mProcUnit : public L0Muon::Unit {
   bool m_ignoreM1;
 
   bool m_writeL0buffer;
-  
-  
+    
 };
 
 };  // namespace L0Muon
