@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.44 2003-02-07 18:41:25 gcorti Exp $
+! $Id: release.notes,v 1.45 2003-02-13 14:47:20 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+!========================== DaVinciTools v7r3 2003-02-13 ====================
+! 2003-02-12 - Gloria Corti
+ - Fix compilation problems for windows
+   . missing std in front of auto_ptr (V0MakerAlg.cpp)
+   . remove std in front of endreq (PhotonParticleMaker.cpp)
+   . change ( a != b ) into !(a == b) for ParticleID class for which
+     != does not exist (PhotonParameters.cpp)
 
 ! 2003-02-07 - Gloria Corti
  - Add new algorithm for transforming V0 (Kshort of OODST for example) in
