@@ -1,9 +1,11 @@
+! $Id: release.notes,v 1.52 2005-01-18 08:42:28 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v5r3p1 2005-01-18 ===================
 ! 2005-01-04 - P. Koppenburg
   - src/*.h
     . Change location of interfaces
