@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/VeloCluster.h,v 1.2 2001-05-14 14:52:46 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/VeloCluster.h,v 1.3 2001-07-10 07:47:58 frankm Exp $
 #ifndef LHCBEVENT_VELOCLUSTER_H
 #define LHCBEVENT_VELOCLUSTER_H 1
 
@@ -12,7 +12,7 @@
 class RawVeloHit;
 
 // Externals 
-extern const CLID& CLID_VeloCluster;
+static const CLID& CLID_VeloCluster = 611;
 
 
 //------------------------------------------------------------------------------

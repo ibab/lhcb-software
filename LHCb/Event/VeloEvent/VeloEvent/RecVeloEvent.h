@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/RecVeloEvent.h,v 1.1.1.1 2000-11-23 13:39:23 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/RecVeloEvent.h,v 1.2 2001-07-10 07:47:58 frankm Exp $
 #ifndef LHCBEVENT_RECVELOEVENT_H
 #define LHCBEVENT_RECVELOEVENT_H 1
 
@@ -11,7 +11,7 @@
 
 
 // Externals 
-extern const CLID& CLID_RecVeloEvent;
+static const CLID& CLID_RecVeloEvent = 610;
 
 
 //------------------------------------------------------------------------------

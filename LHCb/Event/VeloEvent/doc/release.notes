@@ -1,6 +1,10 @@
 package Event/VeloEvent
 package manager: E.Banas
 
+! 20010711 - VeloEvent v5 (Markus Frank)
+  Change CLID in RecVeloEvent, VeloCluster to the way 
+  encouraged by new Gaudi release.
+
 ! 20010621 - VeloEvent v5 (Flr)
   requirements - use GaudiKernel v10*
                  adapted to GaudiPolicy v5 and CMT v1r8
