@@ -2,12 +2,15 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.13 2004-07-30 11:07:35 jonrob Exp $
+# $Id: requirements,v 1.14 2004-10-27 14:21:17 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2004/07/30 11:07:35  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package RichGlobalPID
-version v1r7
+version v1r8
 
 #============================================================================
 # Structure

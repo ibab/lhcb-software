@@ -4,11 +4,13 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.17 2004-10-13 09:17:15 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.18 2004-10-27 14:21:17 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/10/13 09:17:15  jonrob
+ *  Update for new RichPID object
+ *
  *  Revision 1.16  2004/07/27 10:56:37  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002

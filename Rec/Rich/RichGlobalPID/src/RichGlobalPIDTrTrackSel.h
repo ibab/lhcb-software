@@ -4,8 +4,10 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.9 2004-07-27 10:56:37 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.10 2004-10-27 14:21:17 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 10:56:37  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
