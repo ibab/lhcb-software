@@ -1,4 +1,3 @@
-#============================================================================
 # Created    : 2002-05-22
 # Maintainer : Olivier Dormond
 #
@@ -6,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v4r4p1
+version           v4r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -22,9 +21,11 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 #============================================================================
 # Used packages. 
 #============================================================================
-use DaVinciTools	v8r*	Phys
-use DaVinciMCTools	v5r*	Phys
-use L0Event		v13r*	Event
+use DaVinciTools    v8r*  Phys
+use DaVinciMCTools  v5r*  Phys
+use MCTools         v1r*  Phys
+use L0Event	        v13r*	Event
+use L1Event         v11r* Event
 
 #============================================================================
 # Component library building rule
