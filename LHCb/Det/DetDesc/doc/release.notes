@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.100 2002-05-30 17:12:53 sponce Exp $ 
+! $Id: release.notes,v 1.101 2002-05-31 17:24:35 mato Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-05-31 - Pere Mato
+ - Modified the function that calculates the radiation length of a mixture.
+   The attribute "radlen" specified in the XML file takes precedence
+   to the calculated value.
+ - Corrected bug in the calculation of interaction length for mixtures.
 
 ! 2002-05-30 - Sebastien Ponce
  - yet another bugfix on the unit checker : number may start with a dot.

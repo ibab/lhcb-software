@@ -1,8 +1,11 @@
-// $Id: Mixture.cpp,v 1.7 2002-01-18 18:23:09 ibelyaev Exp $ 
+// $Id: Mixture.cpp,v 1.8 2002-05-31 17:24:36 mato Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.7  2002/01/18 18:23:09  ibelyaev
+//  bug fixes(materials), warning reduced, printout improved
+// 
 // ============================================================================
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
@@ -169,36 +172,47 @@ StatusCode Mixture::computeByFraction()
   m_Z = 0 ;
   m_N = 0 ;
   ///
-  double radlen = 0 ; 
-  double lambda = 0 ;
+  double radleninv = 0 ; 
+  double lambdainv = 0 ;
   ///
   for( Elements::iterator it3 = m_elements.begin() ; 
-       m_elements.end() != it3 ; ++it3 )
-    { 
-      double   frac = it3->first  ;
-      Element* elem = it3->second ;
-      /// 
-      m_A += frac * elem->A() ;
-      m_Z += frac * elem->Z() ;
-      m_N += frac * elem->N() ;
-      ///
-      double  Atomsi = Avogadro * density() * frac / elem->A();
-      radlen  += Atomsi * elem->tsaiFactor() ; 
-      ///
-      if( elem->absorptionLength() > 0.0 ) 
-        { lambda += frac/elem->absorptionLength() ; }
-    } 
-  ///
-  if( radlen > 0 ) { setRadiationLength  ( 1.0 / radlen ) ; } 
-  if( lambda > 0 ) { setAbsorptionLength ( 1.0 / lambda ) ; } 
-  ///
+       m_elements.end() != it3 ; ++it3 ) { 
+    double   frac = it3->first  ;
+    Element* elem = it3->second ;
+    /// 
+    m_A += frac * elem->A() ;
+    m_Z += frac * elem->Z() ;
+    m_N += frac * elem->N() ;
+    // 
+    // Use the aproximate formula for radiation lengh of mixtures 1/x0 = sum(wi/Xi)
+    if( elem->radiationLength() > 0.0 && elem->density() > 0.0) {
+      radleninv += frac/(elem->radiationLength() * elem->density());
+    } else {
+      radleninv += frac * Avogadro * elem->tsaiFactor() / elem->A();
+    }
+    //
+    if( elem->absorptionLength() > 0.0 ) { 
+      lambdainv += frac/(elem->absorptionLength() * elem->density()); 
+    }
+  } 
+
+  // only update the radiation and interaction length if the attribute is
+  // is not provided in the input file
+
+  if( radiationLength() == 0.0 ) {
+    if( radleninv > 0 ) { setRadiationLength( 1.0 / radleninv / density() ); }
+  }
+  if( absorptionLength() == 0.0 ) {
+    if( lambdainv > 0 ) { setAbsorptionLength( 1.0 / lambdainv /density() ); } 
+  }
+  //
   return 
     A()       <= 0 ? StatusCode::FAILURE :
     Z()       <= 0 ? StatusCode::FAILURE :
     N()       <= 0 ? StatusCode::FAILURE :
-    radlen    <= 0 ? StatusCode::FAILURE :
+    radleninv <= 0 ? StatusCode::FAILURE :
     density() <= 0 ? StatusCode::FAILURE : 
-    lambda    <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
+    lambdainv <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
   ///
 };
 ///
