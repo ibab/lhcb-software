@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1 2002-04-04 15:06:39 cattanem Exp $
+! $Id: release.notes,v 1.2 2002-04-18 11:43:46 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -6,3 +6,7 @@
 >>>>>>>>>>>> RichKernel v1r0 <<<<<<<<<<<<<
 ! 20020404 (C.Jones)
   - First import into CVS.
+
+! 20021704
+  - Update RichSmartID files.
+

@@ -6,4 +6,4 @@ branches	cmt doc RichKernel
 
 include_dirs 	$(RICHKERNELROOT)
 
-use LHCbKernel	v1r*
+use LHCbKernel	v1r* Kernel

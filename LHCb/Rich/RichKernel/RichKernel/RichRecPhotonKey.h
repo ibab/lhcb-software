@@ -1,3 +1,4 @@
+// $Id: RichRecPhotonKey.h,v 1.2 2002-04-18 11:43:46 cattanem Exp $
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
 
@@ -62,7 +63,7 @@ protected:
 
 private:
 
-  long m_longKey; ///<  32 bit integer key. First 16 bits are segment number, last 16 pixel number.
+  unsigned long m_longKey; ///<  32 bit integer key. First 16 bits are segment number, last 16 pixel number.
 
 };
 
@@ -72,22 +73,24 @@ private:
 
 inline void RichRecPhotonKey::setSegmentNumber(const long segmentNumber)
 {
-  m_longKey = segmentNumber + (m_longKey/65536)<<16;
+  m_longKey = m_longKey%65536;
+  m_longKey += segmentNumber<<16;
 }
 
 inline void RichRecPhotonKey::setPixelNumber(const long pixelNumber)
 {
-  m_longKey =  pixelNumber<<16 + pixelNumber%65536;
+  m_longKey = (m_longKey/65536)<<16;
+  m_longKey += pixelNumber;
 }
 
-int RichRecPhotonKey::segmentNumber() const
-{
-  return m_longKey%65536;
-}
-
-int RichRecPhotonKey::pixelNumber() const
+inline int RichRecPhotonKey::segmentNumber() const
 {
   return m_longKey/65536;
+}
+
+inline int RichRecPhotonKey::pixelNumber() const
+{
+  return m_longKey%65536;
 }
 
 inline long RichRecPhotonKey::longKey() const

@@ -2,7 +2,7 @@
 #define Event_RichPIDKey_H 1
 
 // Include files
-#include "LHCbEvent/CLHEPStreams.h"
+#include "Kernel/CLHEPStreams.h"
 #include "RichKernel/RichDefinitions.h"
 
 /** @class RichPIDKey RichPIDKey.h
@@ -71,7 +71,8 @@ private:
 // -----------------------------------------------------------------------------
 
 
-inline void RichPIDKey::setPIDAlgorithmType(Rich::AlgorithmType richPIDAlgorithm)
+inline void RichPIDKey::setPIDAlgorithmType( Rich::AlgorithmType 
+                                             richPIDAlgorithm    )
 {
   m_pidKey = (m_pidKey % 100000) + ((int)richPIDAlgorithm)*100000;
 }
