@@ -9,13 +9,16 @@
 EventSelector.Input = {"JOBID='67142'"}; // Signal, evtype 412100
 #pragma print off
 
+// Define outputs
+HistogramPersistencySvc.OutputFile = "brunel_v241.hbook";  // Monitoring histos
+
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-//#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
-//#include "$BRUNELOPTS/BrunelTrCrossTT1.opts"  // Pre dbase v242r1 tracking layout
+#include "$BRUNELOPTS/BrunelTrLight.opts" // Material and cuts, standard tracking
+#include "$BRUNELOPTS/BrunelTrCrossTT1.opts"  // Pre dbase v242r1 tracking layout
 //#include "$FWTRACKROOT/options/BrunelLight.opts" // Forward tracking
 
 //--------------------------------------------------------------
@@ -23,7 +26,6 @@ EventSelector.Input = {"JOBID='67142'"}; // Signal, evtype 412100
 //EventSelector.FirstEvent = 6;
 #pragma print on
 ApplicationMgr.EvtMax = 10;
-MessageSvc.OutputLevel = 3;
 //--------------------------------------------------------------
 #pragma print off
 //ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 

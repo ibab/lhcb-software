@@ -12,7 +12,8 @@ EventSelector.PrintFreq = 1;
 //--------------------------------------------------------------
 
 // Global output level: only print by default WARNINGs and above
-MessageSvc.OutputLevel = 4;
+//MessageSvc.OutputLevel = 4;
+MessageSvc.OutputLevel = 3;
 
 // Print Chrono statistics at end of job
 ChronoStatSvc.OutputLevel = 3;

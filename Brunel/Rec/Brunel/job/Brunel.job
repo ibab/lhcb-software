@@ -15,14 +15,13 @@
 #  define the job name
 #BSUB -J brunel
 #  define the queue
-#BSUB -q z5_8nh
+#BSUB -q 8nh
 #
 ###########################################################
 #
-# in BATH output files are written in the BATCH machine
-# and copy at the end to your $MYWORKDIR output directory
-# in INTERACTIVE output files are written onto $WORKDIR
-# you have to set $WORKDIR to what you want
+# in BATCH, output files are written in the BATCH machine
+# and copied at the end to your $MYWORKDIR output directory
+# in INTERACTIVE output files are written to the current directory
 #
 if ($#argv == 0 ) then
   echo "\nUsage: Brunel.job <dbase-version> [<mode>]"
@@ -35,73 +34,55 @@ else
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
+
 set MODE = $CMTCONFIG
 if ($?LS_SUBCWD) then 
-# in BATCH, go to the BATCH local directory
-  cd $WORKDIR
-else
-# in interactive set WORKDIR to your output directory
-  setenv WORKDIR /tmp 
-  if ($#argv == 2) set MODE = "$2" 
-endif
-set current = $PWD
-
-if ($?LS_SUBCWD) then 
+# in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
   setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v10r0
 #  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v10r0
 else
-# in interactive, executable is under same root directory as this job
+# in interactive set WORKDIR to submission directory
+  set WORKDIR = $PWD
+  if ($#argv == 2) set MODE = "$2" 
+# in interactive, executable is under same root directory as this command file
   cd `dirname $0` 
   cd ..
   set MYJOBROOT = $PWD
 endif
 
-# Go to working directory
-cd $WORKDIR
-
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
-# == set soft_links to use packages
-#if ($MODE != "LinuxStatic") then
-#  cd $MYJOBROOT/cmt
-#  $CMTROOT/mgr/cmt build library_links
-#  cd $current
-#endif
+# Go to working directory
+cd $WORKDIR
 
-# == in batch copy the executable,======================================= 
-#    in interactive create a link to the executable you want to run =======
-#
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$MODE/Brunel.exe tmpjob.exe
+# == in batch copy the executable and options files to $WORKDIR
+  cp $MYJOBROOT/$MODE/Brunel.exe tmpjob_$1.exe
   cp $MYJOBROOT/options/*.opts .
   cp $MYJOBROOT/options/Brunel.cards tmpjob.cards
   setenv BRUNELOPTS .
   setenv SICBCARDS tmpjob.cards
 else
-  ln -fs $MYJOBROOT/$MODE/Brunel.exe tmpjob.exe
+# == in interactive create a link to the executable
+  ln -fs $MYJOBROOT/$MODE/Brunel.exe tmpjob_$1.exe
 endif
-#
-# == run $EXEC.exe ============================================
-#
+
+# == run the excutable ================================
 if ($MODE == "Linuxdbx") then
-  ddd tmpjob.exe $BRUNELOPTS/Brunel$1.opts
+  ddd tmpjob_$1.exe $BRUNELOPTS/Brunel$1.opts
 else
-  time tmpjob.exe $BRUNELOPTS/Brunel$1.opts
+  time tmpjob_$1.exe $BRUNELOPTS/Brunel$1.opts
 endif
 
 # == job is finished: remove temporary files ==========
-rm tmpjob.exe
-rm -f *.opts
-rm -f tmpjob.cards
-
-# == job is finished: if in batch copy output files on user directories
-#
-if ($?LS_SUBCWD) then 
+rm tmpjob_$1.exe
+if ($?LS_SUBCWD) then
+  rm -f tmpjob.cards
+  rm -f *.opts
+# if in batch copy output files to user directories
   ls *.* >! RETURN
-else
-  cp histos.hbook $current
 endif
 
 exit 0

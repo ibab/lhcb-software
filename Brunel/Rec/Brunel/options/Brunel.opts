@@ -19,6 +19,7 @@
 #include "$STDOPTIONS"
 //#include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
+EventDataSvc.ForceLeaves = true;
 
 #pragma print on
 //--------------------------------------------------------------
@@ -32,7 +33,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelFinalFit",
                            "BrunelFinalisation/BrunelFinish" };
 #pragma print off
-//#include "$BRUNELOPTS/BrunelMoni.opts"
+#include "$BRUNELOPTS/BrunelMoni.opts"
 #pragma print on
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
@@ -47,7 +48,7 @@ BrunelFinalFit.DetectorList = { "TRAC" };
 //--------------------------------------------------------------
 //BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
 BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
-//BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 
 //BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
 
@@ -77,10 +78,12 @@ BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
 //#include "$CALOALGSOPTS/Brunel.opts"
 //#include "$CALOSICBCNVOPTS/Brunel.opts"
 
+// Inner tracker digitisation and reconstruction (clustering)
+#include "$ITALGORITHMSROOT/options/Brunel.opts"
+
 // Tracking and back conversion of tracks to AXTK
 //ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 //#include "$OTALGORITHMSROOT/options/Brunel.opts"
-//#include "$ITALGORITHMSROOT/options/Brunel.opts"
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
 //#include "$TRSICBCNVROOT/options/Brunel.opts"
 

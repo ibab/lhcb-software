@@ -37,6 +37,7 @@ use GaudiDb            v6r0
 #use GaudiIntrospection v4r0 -- Not needed, used privately by Event
 #use GaudiObjDesc       v4r1 -- Not needed, used privately by Event
 use HbookCnv           v12r0
+use RootHistCnv        v6r0
 
 #---LHCb common libraries
 use GaudiConf    v6r2
@@ -62,6 +63,7 @@ use EventSys     v10r0  Event
 
 # SicB event data persistency
 use SicbCnv      v16r0  SICB
+use ITSicbGeom   v1r0   SICB
 #use CaloSicbCnv  v5r1   SICB
 #use MuonSicbCnv  v4r0   SICB
 #use TrSicbCnv    v4r0   SICB
@@ -85,7 +87,7 @@ use BrunelSicb   v3r0   Rec
 #use CaloCA         v3r1 Calo
 
 # Tracking
-#use ITAlgorithms v8r1   IT
+use ITAlgorithms   v10r0 IT
 #use OTAlgorithms v7r0	OT
 #use TrAlgorithms v7r1   Tr
 
@@ -99,7 +101,7 @@ use Futil        v10r3  SICB
 use detdes       v14    SICB
 use recevt       v3r4   SICB
 
-#use digmuon      v4     SICB
+use digmuon      v4     SICB
 #use digvdet      v2r3   SICB
 
 #use simmubg      v5r3   SICB

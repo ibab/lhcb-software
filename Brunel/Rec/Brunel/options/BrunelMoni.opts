@@ -4,11 +4,11 @@
 ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 
 //--------------------------------------------------------------
+// Choice of persistency technology. Default is Hbook, move comments for ROOT
 // Hbook persistency (use HBookCnv v* in requirements).
-// See Gaudi manual for equivalent options for Root persistency
-//--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "Histos.hbook";
+// ROOT persistency (use RootHistCnv v* in requirements).
+//#include "$STDOPTS/RootHist.opts"
 
 #pragma print on
 //--------------------------------------------------------------
@@ -19,13 +19,18 @@ BrunelMoni.DetectorList = { "IT", "OT", "Tr", "TRACK", "CALO", "TRIGGER" };
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
-BrunelMoniITSeq.Members   = { "ITMCHitsMonitor" }; 
-//                              "ITDigitMonitor" };
-BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
-BrunelMoniTrSeq.Members   = { "TrMonitor" };
-#pragma print off
 
-// No "ITHitsMonitor" by default, NTuple cannot be switched off
+// IT digitisation
+BrunelMoniITSeq.Members = 
+  { "MCITDepositChecker", "MCITDigitChecker", "ITDigitChecker" };
+
+// IT reconstruction
+BrunelMoniITSeq.Members += { "ITClusterChecker" };
+
+
+//BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
+//BrunelMoniTrSeq.Members   = { "TrMonitor" };
+#pragma print off
 
 //--------------------------------------------------------------
 // No Fwtrack monitoring by default (produces ntuple). Uncomment to switch on

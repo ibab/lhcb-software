@@ -4,19 +4,34 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020423 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020425 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>> Current head revision has very limited functionality!! <<<<<<<<<<
-   >>>>>>>>>>>>>>> Currently supports only dbase v241 <<<<<<<<<<<<<<<<<<<<<
+
+   >>>>>> Currently supports:
+     - all dbase versions from v240r1 to v243r3
+     - Inner Tracker digitisation and clustering
+     - RICH Digitisation (old SICB Fortran version)
+     - MUON Digitisation (old SICB Fortran version)
+   >>>>>>
 
    Backwards incompatible version for use with the new event model.
-   All Fortran support removed, except for RICH digitisation and reconstruction.
+   All Fortran support removed, except for:
+        RICH digitisation and reconstruction.
+        MUON digitisation.
 
-   In requirements
+   In job/Brunel.job
+   - Script cleaned up, improved behaviour in interactive mode
+
+   In options
+   - All files touched to support new event model algorithms
+
+   In cmt/requirements
    - use Gaudi    v10 and corresponding external packages
    - use EventSys v10r0 Event (new Event model)
-   - remove all SICB dig*, tr*, rec* packages, except recrich
+   - remove all SICB dig*, tr*, rec* packages, except digmuon, recrich
 
+   - use ITAlgorithms 10r0 IT
 
 ! =================================================================
 </PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>

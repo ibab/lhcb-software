@@ -9,13 +9,19 @@
 EventSelector.Input = {"JOBID='81091'"}; // Signal, evtype 412100
 #pragma print off
 
+// --- Define outputs
+HistogramPersistencySvc.OutputFile = "brunel_v240.hbook";  // Monitoring histos
+
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-ToolSvc.ITGeometryTool.newCDF    = false;  // old CDF format until dbase v242
-ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242
+ToolSvc.ITGeometry.newCDF    = false;  // old CDF format until dbase v242
+ToolSvc.ITGeometry.newLayout = false;  // old TT1 layout until dbase v242
+
+// 9 IT stations (default is 5 - split TT1)
+MCITDepositCreator.tofVector = {3.3,7.9,12.5,20.5,23.8,26.0,27.4,29.42,30.4};
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

@@ -1,6 +1,5 @@
 // Tracking stations layout for database v243r2
 // (three seeding stations, IT+OT split TT1)
-ITDigitize_digitCreator.tofVector = { 7.1, 8.1, 25.8, 28. , 30.4 };
 OTDigitize.startReadoutGate       = { 5. , 6. , 27. , 29.5, 32.  };
 OTDigitize.numOTStations = 5;
 OTDigitize.firstOTStation = 1;

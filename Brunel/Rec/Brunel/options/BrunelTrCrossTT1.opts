@@ -1,6 +1,6 @@
 // Tracking stations layout for databases v240r1 to v242
 // (three seeding stations, cross-geometry TT1)
-ITDigitize_digitCreator.tofVector = {7.1, 25.8, 28., 30.4};
+MCITDepositCreator.tofVector = {7.1, 25.8, 28., 30.4};
 OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
 OTDigitize.numOTStations = 4;
 OTDigitize.firstOTStation = 1;
@@ -9,5 +9,5 @@ trCreat.firstStation = 1;
 trCreat.lastStation = 4;
 OTDigitChecker.numStations = 4;
 OTDigitChecker.firstOTStation = 1;
-ToolSvc.ITGeometryTool.newCDF    = false;  // old CDF format until dbase v242
-ToolSvc.ITGeometryTool.newLayout = false;  // old TT1 layout until dbase v242
+ToolSvc.ITGeometry.newCDF    = false;  // old CDF format until dbase v242
+ToolSvc.ITGeometry.newLayout = false;  // old TT1 layout until dbase v242
