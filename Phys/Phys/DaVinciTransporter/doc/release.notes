@@ -1,0 +1,148 @@
+! $Id: 
+! Package     : DaVinciTransporter
+! Responsible : P. Koppenburg, Yuehong Xie
+
+! 2004-08-23 - P. Koppenburg
+ - New package DaVinciTransporter extracted from DaVinciTools,
+   containing all trasnporters
+   
+!========================== DaVinciTools v10r3 2004-08-23 ===================
+! 2004-08-23 - Florence RANJARD
+ - replace GaudiTools/ with GaudiAlg
+
+!========================== DaVinciTools v10r0 2004-07-22 ===================
+! 2004-07-22 - P. Koppenburg for Yuehong Xie
+ - src/NsctVeloTransporter.cpp
+ - src/TrTransporter.cpp
+   . Problem found with impact parameter of a gamma converting to two electrons. 
+     The problem was that I forgot to set the error of z to zero after all the 
+     other elements of the error matrix are transform to a state with err_z=0. 
+     It didn't cause any problem to vertex fitting, which doesn't use the error 
+     of z at all, but led to failure in calculating impact parameter, for which 
+     the error of z is used.
+
+   . In NsctVeloTransporter.cpp I fixed two other problems:
+     o checked charge of particles before adding multiple scattering error
+     o for multiple scattering, added 3 missed correlation elements in the 
+       error matrices. 
+ 
+! 2004-07-19 - P. Koppenburg for Yuehong Xie
+  - src/NsctVeloTransporter.cpp
+  - src/ParabolicTransporter.cpp
+  - src/TrTransporter.cpp
+    . Redefinition of error on z position for transport of composite particles.   
+    This changes the chi^2 of vertices:
+    . It is understood why chi2 is bigger after the change in transporter
+      to take in to account the uncertainty in z of fitted vertex. The reason 
+      is vx and vy are highly correlated with vz. If error of vz is neglected, 
+      all the uncertainties are ascribed to errors of vx and vy. By transfroming
+      this vertex to a fixed z with a linear assumption, the uncertainty in vx 
+      and vy due to the uncertainty of vz is removed, so the errors of vx and 
+      vy actually become smaller. Average vertex fit chi2 is thus increased. 
+      This explains why the selection cuts are harder. It is possible that
+      more bb events are rejected than signal events, becasue generally 
+      speaking the uncertianty in z of a combinatorial vertex is bigger than 
+      that of a true vertex. So I expect signal to background ratio won't be 
+      worse than before if all chi2 cuts are relaxed a bit to achieve same 
+      efficiencies as before.
+
+! 2004-07-16 - P. Koppenburg for Yuehong Xie
+  - src/LifetimeFitter.cpp
+    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp, 
+      and this is fixed.
+  - src/LinearTransporter.cpp
+    . A transfromation is introduced in  LinearTransporter.cpp to account 
+      for the z uncertainty of the initial state. It changes nothing when 
+      the initial state is not from a fitted vertex and thus has no error 
+      on z.
+      The code for the linear transport of the covariance is also rewritten 
+      to make it short and to fix the problem of two missing lines in the 
+      old version
+        newPosSlopesCorr(1,2) = oldPosSlopesCorr(1,2) + dz*oldSlopesMomErr(1,2);
+        newPosSlopesCorr(2,1) = oldPosSlopesCorr(2,1) + dz*oldSlopesMomErr(2,1);
+      This is not a complete fix to the initial covariance matrix problem.
+      There are two things to be solved:
+      *) charged particles like D+, Ds+
+      *) if one use CombinedTransporter which uses extrapolators in the 
+         Tr/TrExtrapolator package. 
+
+!========================= DaVinciTools v9r5 2004-06-04 ===================
+! 2004-05-26 - P. Koppenburg
+  - src/TrTransporter.cpp
+    . Change FATAL printouts to ERROR
+    
+! 2004-05-15 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/NsctVeloTransporter.cpp
+  - src/ParabolicTransporter.cpp
+  - src/TrTransporter.cpp
+    . I am sick of these messages: 
+    <     log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    ---
+    >     log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+   
+!========================== DaVinciTools v9r2 2004-03-31 ==================
+! 2004-03-31 - P. Koppenburg for Angelo Carbone
+ - src/TrTransporter.*
+   . Handle neutral particles correctly. 
+   . Update energy after transport to avoid negative masses.
+  
+!========================== DaVinciTools v8r5 2004-02-11 ==================
+! 2004-02-11 - Gloria CORTI for Vincenzo VAGNONI
+ - src/TrTransporter.cpp
+   . fix bug in the construction of the covariance matrix passed to the
+     extrapolator. The bug involved the momentum row so any mass constrained
+     fit using the TrExtrapolator could not work properly
+
+!========================== DaVinciTools v8r4 2004-01-29 ==================
+! 2004-01-29 - Gloria CORTI for Vincenzo VAGNONI
+ - src/ParabolicTransporter.cpp
+   . bug fix of two swapped indeces in the error matrix causing 
+     the Chi2 to become ill defined when using TTT tracks.   
+
+! 2004-01-14 - Gloria CORTI
+ - src/CheckOverlap.cpp
+       ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
+       LinearTransporter.cpp, NoPIDsParticleMaker.cpp, 
+       ParabolicTransporter.cpp, ParticleFilter.cpp, TrTransporter.cpp
+   . little fixes to remove warning messages (implicit typename, 
+     passing double instead of int)
+   . little fixes to remove warning messages (passing double instead of
+     int in HepMatrices)       
+
+!=========================== DaVinciTools v6r0 2002-10-30 ===================
+! 2002-10-21 - Gloria Corti
+ - New transporter called TrTransporter that convert particles to tracks
+   and delegate extrapolation to TrExtrapolator. They choice of extrapolator
+   can be steered by the property "Extrapolator" which default value is
+   "TrFirstCleverExtrapolator" (E. de Oliveira)
+ - Change some printing levels in CombinedTransporter.cpp (E. de Oliveira)
+ - Introduce initialize in LinearTransporter.cpp and swap of znew/zold for
+   boundaries in LinearTransporter and NsctTransporter (E. de Oliveira)
+ - Fix bug in ParabolicTransporter for indexing of auxiliary momentum vector
+   (E. de Oliveira) 
+! 2002-07-24 - Gloria Corti
+ - Change interface of IParticleTransporter to use ParticleVector iterator
+   and propagate to all Transporters implementation
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-06 - Gloria Corti
+  - Introduce different transporter tools (Edgar de Oliveira)      
+    LinearTransporter: simple linear transport with no material
+    NsctVeloTransporter: simple linear transport with multiple scattering
+    contribution in error matrix
+    ParabolicTransporter: parabolic tranporter for magnetic field zone    
+    CombinedTransporter: uses different transporters in VELO and in z>500mm
+  - DaVinciTools/IParticleTransporter.h: return arguments changed
+    from Point+momentum+errors to Particle 
+    Additional methods with Particle& and const Particle& as input arguments
+    (Edgar de Oliveira)
+
+! 20020402 - DaVinciTools v3r0 (G.Corti)
+    - DaVinciTools/IParticleTransporter.h (interface)
+      src/ParticleTransporter.h&cpp
+          Tool to transport a Particle and its errors at a specified z position
+          Used by vertexing tools.
+      author: Edgar de Oliveira
+
