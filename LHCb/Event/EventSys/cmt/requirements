@@ -18,7 +18,7 @@ use PhysEvent   v8r9    Event
 use DAQEvent    v5r0    Event
 use GenEvent    v3r3p1  Event
 use EventAssoc  v1r4    Event
-use LinkerEvent v1r6    Event
+use LinkerEvent v1r7    Event
 use TrgEvent    v5r4    Event
 
 private
