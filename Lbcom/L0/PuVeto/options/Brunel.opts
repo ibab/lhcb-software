@@ -1,0 +1,2 @@
+ApplicationMgr.DLLs  		+= { "PuVeto" };
+BrunelTriggerTRIGGERSeq.Members += { "PuVetoAlg" };
