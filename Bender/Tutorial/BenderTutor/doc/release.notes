@@ -1,0 +1,18 @@
+! $Id: release.notes,v 1.1.1.1 2004-10-13 17:45:21 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ 
+! -----------------------------------------------------------------------------
+! Package     : Tutorial/BenderTutor
+! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr 
+! Purpose     : Start-Up tutorial for Bender 
+! -----------------------------------------------------------------------------
+
+! 2004-10-13 - Vanya BELYAEV
+ - New package: 
+   Start-Up tutorial for Bender  : Python-based physics analysi environment
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
+
