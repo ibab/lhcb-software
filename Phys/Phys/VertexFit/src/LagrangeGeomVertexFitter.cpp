@@ -1,6 +1,14 @@
 // $Id: LagrangeGeomVertexFitter.cpp,v 1.1, 2002/03/08, modified from gcorti
 // Exps program $
 
+// Include files from CLHEP
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
+#include "GaudiKernel/AlgTool.h"
+#include "CLHEP/Vector/LorentzVector.h"
+#include "CLHEP/Matrix/Vector.h"
+
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"

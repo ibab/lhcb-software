@@ -1,6 +1,11 @@
-// $Id: GeomDispCalculator.cpp,v 1.3 2005-02-09 17:18:48 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.4 2005-02-25 13:07:53 pkoppenb Exp $
 
 // Include files
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
+#include "CLHEP/Matrix/Vector.h"
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "Kernel/IParticleTransporter.h"
@@ -10,11 +15,6 @@
 
 // local
 #include "GeomDispCalculator.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/DiagMatrix.h"
-#include "CLHEP/Matrix/Vector.h"
-
 //--------------------------------------------------------------------
 //
 //  ClassName  : GeomDispCalculator

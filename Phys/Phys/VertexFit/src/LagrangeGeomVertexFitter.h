@@ -7,14 +7,6 @@
 #include <vector>
 #include <string>
 
-// Include files from Gaudi
-#include "GaudiKernel/AlgTool.h"
-#include "CLHEP/Vector/LorentzVector.h"
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/DiagMatrix.h"
-
 // Include files from DaVinciTools
 #include "Kernel/IGeomVertexFitter.h"
 #include "Kernel/IVertexFitter.h"

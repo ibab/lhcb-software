@@ -1,5 +1,12 @@
 // $Id: LagrangeMassVertexFitter.cpp,v 1.1, 2002/03/08, modified from gcorti
 // Exps program $
+// Include files from Gaudi
+#include "GaudiKernel/AlgTool.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Vector/LorentzVector.h"
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
