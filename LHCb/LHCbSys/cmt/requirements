@@ -28,13 +28,13 @@ use VeloKernel  	v1r3    Velo
 
 # Detector description
 use DetSys		v3r0	Det
-use VeloDet        	v8r5	Det
+use VeloDet        	v8r6	Det
 use DetDesc        	v13r0	Det
-use DetDescCnv        	v2r0	Det
+use DetDescCnv        	v2r1	Det
 use XmlTools        	v2r0	Tools
-use ITDet          	v1r5	Det
-use OTDet          	v4r0	Det
-use CaloDet        	v6r5	Det
+use ITDet          	v1r6	Det
+use OTDet          	v4r1	Det
+use CaloDet        	v6r6	Det
 use CaloDetXmlCnv	v2r3	Det
 use MuonDet        	v4r4	Det
 use Magnet         	v2r2	Det
@@ -44,7 +44,7 @@ use RichDet		v6r0	Det
 # Event data model
 use EventSys		v14r3	Event
 use EventKernel  	v3r0	Event
-use Event        	v3r4    Event
+use Event        	v3r5	Event
 use VeloEvent    	v12r1   Event
 use ITEvent      	v12r1   Event
 use OTEvent      	v12r1   Event
@@ -52,12 +52,12 @@ use TrEvent      	v12r1   Event
 use RichEvent    	v5r1	Event
 use CaloEvent    	v12r0	Event
 use MuonEvent    	v2r4    Event
-use L0Event      	v13r2   Event
+use L0Event      	v13r3	Event
 use L1Event      	v11r7   Event
 use PhysEvent    	v7r7	Event
 use HltEvent		v4r0	Event
 use DAQEvent		v1r1	Event
-use DbCnv        	v7r1    Event
+use DbCnv        	v7r2	Event
 
 # Associators
 use AssociatorsSys	v1r6	Associators
@@ -67,10 +67,10 @@ use OTAssociators      	v2r6	OT
 use VeloAssociators    	v1r6	Velo
 use CaloAssociators    	v3r4	Calo
 use MuonAssociators    	v1r1    Muon
-use TrAssociators      	v3r5    Tr
+use TrAssociators      	v3r6    Tr
 use TrFitEvent         	v4r0	Tr
 
 # LHCb  Examples
-use DetDescExample      v6r1    Ex
+use DetDescExample      v6r2	Ex
 use DumpEventExample    v7r0    Ex
 
