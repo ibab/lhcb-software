@@ -4,7 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v6r1 2003-10-14 =========================
+! 2003-11-02 - Chris Jones
+ - A few speed improvements for digitisation
+ - Switch to new RichKernel v4r0
+
 ! 2003-08-14 - Antonis Papanestis
  - added a new function to the DeRichPDPanel and moved some of the 
  - functionality of the traceToDetectorWithoutEff from RichDetTools to RichDet.
