@@ -1,6 +1,6 @@
 #ifndef L0DU_L0DUREPORT_H
 #define L0DU_L0DUREPORT_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.2 2001-06-27 13:21:31 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.3 2001-08-31 11:05:44 ocallot Exp $
 
 // Include files
 #include <iostream>
@@ -46,7 +46,7 @@ const CLID& CLID_L0DUReport = 6004;
  * @date   15 June 2001
  */
 
-class L0DUReport : public ContainedObject {
+class L0DUReport : public DataObject {
 
 public:
 
@@ -145,19 +145,19 @@ inline std::string L0DUReport::typeL0TrigName() const {
 /// Serialize the object for reading
 
 inline StreamBuffer& L0DUReport::serialize(StreamBuffer& s) {
-  ContainedObject::serialize(s) >> m_typeL0Trig;
+  DataObject::serialize(s) >> m_typeL0Trig;
   return s;
 }
 
 /// Serialize the object for writing
 
 inline StreamBuffer& L0DUReport::serialize(StreamBuffer& s) const {
-  ContainedObject::serialize(s) << m_typeL0Trig;
+  DataObject::serialize(s) << m_typeL0Trig;
   return s;
 }
 
-template <class TYPE> class ObjectVector;
-typedef  ObjectVector<L0DUReport> L0DUReportVector;
+//template <class TYPE> class ObjectVector;
+//typedef  ObjectVector<L0DUReport> L0DUReportVector;
 
 #endif // L0DU_L0DUREPORT_H
 

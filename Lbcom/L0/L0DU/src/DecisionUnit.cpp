@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.4 2001-06-27 13:21:32 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.5 2001-08-31 11:05:45 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -49,7 +49,9 @@ DecisionUnit::DecisionUnit( const std::string& name,
   : Algorithm      ( name, pSvcLocator )
   , m_nameOfInputL0CaloCandidate  ( "/Event/FE/L0/Calo" )
   , m_nameOfInputL0MuonCandidate  ( "/Event/MC/L0MuonCandidates" )
-  , m_nameOfOutputDecisionUnit    ( "/Event/FE/L0/L0Decis" ) {  
+  , m_nameOfOutputDecisionUnit    ( "/Event/FE/L0/L0Decis" ) 
+  , m_nameOfOutputDirectory       ( "" )
+{  
 
   declareProperty( "L0CaloCandidateData" , m_nameOfInputL0CaloCandidate );
   declareProperty( "L0MuonCandidateData" , m_nameOfInputL0MuonCandidate );
@@ -124,6 +126,11 @@ StatusCode DecisionUnit::initialize() {
     return StatusCode::FAILURE; 
   }
 
+  m_nameOfOutputDirectory = m_nameOfOutputDecisionUnit;
+  std::string::size_type pos = m_nameOfOutputDirectory.find_last_of('/');
+  if ( std::string::npos != pos ) {
+    m_nameOfOutputDirectory.erase(pos);
+  }
   // Raz for scaling
 
   int indexCand = 0;
@@ -160,37 +167,16 @@ StatusCode DecisionUnit::execute() {
   m_Pi0Global = 0;
   m_Muon1 = 0;
 
-  // Create the L0DUReport container object  
   
-  ObjectVector<L0DUReport>* output = 
-                            new ObjectVector<L0DUReport>();
-  
-  // Search if the output directory exists
+  // Search if the output directory exists, creates if needed
 
-  std::string nameOfOutputDirectory = m_nameOfOutputDecisionUnit;
-  std::string::size_type pos = nameOfOutputDirectory.find_last_of('/');
-  if ( std::string::npos != pos ) {
-    nameOfOutputDirectory.erase(pos);
-  }
-  SmartDataPtr<DataObject> outDir( eventDataService(), nameOfOutputDirectory );
+  SmartDataPtr<DataObject> outDir( eventDataService(), 
+                                   m_nameOfOutputDirectory );
   if ( 0 == outDir ) {
     log << MSG::ERROR 
         << "Unknow OutputDirectory = "
-        << nameOfOutputDirectory 
+        << m_nameOfOutputDirectory 
         << endreq;
-  }
-
-  // Registering of DecisUnit container object into the event data store
- 
-  StatusCode sc = 
-    eventDataService()->registerObject( m_nameOfOutputDecisionUnit, output );
-  if ( sc.isFailure() ) {
-    delete output;
-    log << MSG::ERROR
-        << "Unable to register output L0TrigDecis container "
-        << "into the transient event data store" 
-        << endreq;
-    return StatusCode::FAILURE;
   }
 
   // Find candidates calo
@@ -328,7 +314,6 @@ StatusCode DecisionUnit::execute() {
       if ( 0 != eMuons.size() ) {
         std::greater<double> greater_than;
         std::sort( eMuons.begin(), eMuons.end(), greater_than );
-        std::vector<double>::const_iterator itEMu = eMuons.begin();
         log << MSG::DEBUG 
             << "Energies abs. (GeV) Muons ordonned"
             << endreq;
@@ -338,9 +323,8 @@ StatusCode DecisionUnit::execute() {
         log << MSG::DEBUG
             << "Only Muons with status OK and not the same energy"
             << endreq;
-        std::vector<double>::const_iterator itEMuRetain = 
-          eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
-                        eMuons.end() );
+        eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
+                      eMuons.end() );
         log << MSG::DEBUG
 	    << "Data eCut1, eCut2, scal for the greater muon"
             << endreq;
@@ -482,6 +466,20 @@ StatusCode DecisionUnit::execute() {
   // Save result for others uses 
 
   L0DUReport* decisUnit = new L0DUReport( m_typeL0Trig );
+  // Registering of DecisUnit container object into the event data store
+ 
+  StatusCode sc = 
+    eventDataService()->registerObject( m_nameOfOutputDecisionUnit, 
+                                        decisUnit );
+  if ( sc.isFailure() ) {
+    delete decisUnit;
+    log << MSG::ERROR
+        << "Unable to register output L0TrigDecis "
+        << "into the transient event data store" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   log << MSG::DEBUG
       << decisUnit->typeL0TrigName()
       << endreq;

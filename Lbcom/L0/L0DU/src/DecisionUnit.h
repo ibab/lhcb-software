@@ -1,6 +1,6 @@
 #ifndef L0DU_DECISIONUNIT_H
 #define L0DU_DECISIONUNIT_H
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.h,v 1.1.1.1 2001-06-15 11:58:17 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.h,v 1.2 2001-08-31 11:05:45 ocallot Exp $
 
 // Include files
 #include <string>
@@ -50,6 +50,7 @@ private:
   std::string m_nameOfInputL0CaloCandidate;
   std::string m_nameOfInputL0MuonCandidate;
   std::string m_nameOfOutputDecisionUnit;
+  std::string m_nameOfOutputDirectory;
  
   int              m_typeL0Trig;
   std::vector<int> m_nEtSupCut2;
