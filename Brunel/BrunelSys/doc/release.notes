@@ -9,7 +9,7 @@
  - Modified requirements for Brunel v20r0 (removal of digitization to Boole)
 
    Packages modified: BrunelAlgs v2r2, CaloUtils v4r5, OTAlgorithms v13r1, 
-     TrTools v2r4p2, RichRecSys v1r0p1, RichLocalPID v1r0p1
+     TrTools v2r4p2, RichRecSys v1r0p1, RichLocalPID v1r0p1, CaloPIDs v1r1
    Packages added: RiSicbGeom v3r3
    Packages removed: BrunelSicb, L0Calo, L0Muon, PuVeto, L0DU, L1VeloTrack,
      L1Decision, DigiAlg, CaloDigit, MuonBackground, RichDigiQC, recevt, recrich
