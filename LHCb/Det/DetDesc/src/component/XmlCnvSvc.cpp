@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.16 2002-06-03 17:12:59 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.17 2002-07-11 11:25:06 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -93,6 +93,15 @@ StatusCode XmlCnvSvc::initialize() {
                          1.0,
                          1.0);
   return status;
+}
+
+
+// -----------------------------------------------------------------------
+// Reinitialize the service.
+// -----------------------------------------------------------------------
+StatusCode XmlCnvSvc::reinitialize() {
+  clearCache();
+  return StatusCode::SUCCESS;
 }
 
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.9 2002-06-03 17:12:59 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.10 2002-07-11 11:25:06 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -37,6 +37,12 @@ public:
    * @return status depending on the completion of the call
    */
   virtual StatusCode initialize();
+  
+  /**
+   * Reinitializes the service
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode reinitialize();
   
   /**
    * Finalizes the service
