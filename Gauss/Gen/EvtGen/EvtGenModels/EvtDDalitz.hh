@@ -47,6 +47,9 @@ private:
   EvtComplex amplDtoK0PiPi(EvtVector4R p4_p,  EvtVector4R moms1, 
                            EvtVector4R moms2, EvtVector4R moms3);
 
+  EvtComplex amplDtoK0KK(EvtVector4R p4_p,  EvtVector4R moms1, 
+                         EvtVector4R moms2, EvtVector4R moms3);
+
 };
 
 #endif

@@ -106,6 +106,27 @@ void EvtDDalitz::init(){
     if ( d2==KS && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=0; _d3=2;}
     if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
     if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
+
+    if ( d1==KS && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d1==KS && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d2==KS && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d2==KS && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d3==KS && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+    if ( d3==KS && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+
+    if ( d1==KL && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d1==KL && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d2==KL && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d2==KL && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d3==KL && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+    if ( d3==KL && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}    
+
+    if ( d1==K0 && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d1==K0 && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d2==K0 && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+    if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}    
   }
   if ( parnum == D0B ) {
     //look for either a K+ pi- pi0 or K0 pi+ pi-
@@ -136,6 +157,28 @@ void EvtDDalitz::init(){
     if ( d2==KS && d3==PIP && d1==PIM ) { _flag=3; _d1=1; _d2=2; _d3=0;}
     if ( d3==KS && d1==PIP && d2==PIM ) { _flag=3; _d1=2; _d2=0; _d3=1;}
     if ( d3==KS && d2==PIP && d1==PIM ) { _flag=3; _d1=2; _d2=1; _d3=0;}
+
+
+    if ( d1==KS && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KS && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KS && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KS && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KS && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KS && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
+
+    if ( d1==KL && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==KL && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==KL && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==KL && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==KL && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==KL && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}    
+
+    if ( d1==K0 && d2==KP && d3==KM ) {_flag=5;_d1=0;_d2=1;_d3=2;}
+    if ( d1==K0 && d3==KP && d2==KM ) {_flag=5;_d1=0;_d2=2;_d3=1;}
+    if ( d2==K0 && d1==KP && d3==KM ) {_flag=5;_d1=1;_d2=0;_d3=2;}
+    if ( d2==K0 && d3==KP && d1==KM ) {_flag=5;_d1=1;_d2=2;_d3=0;}
+    if ( d3==K0 && d1==KP && d2==KM ) {_flag=5;_d1=2;_d2=0;_d3=1;}
+    if ( d3==K0 && d2==KP && d1==KM ) {_flag=5;_d1=2;_d2=1;_d3=0;}
   }
 
   if ( parnum == DP ) {
@@ -208,7 +251,7 @@ void EvtDDalitz::initProbMax() {
   if ( _flag==2 ) {setProbMax(147.9);}
   if ( _flag==3 ) {setProbMax(5000.0);}
   if ( _flag==4 ) {setProbMax(3000.0);}
-
+  if ( _flag==5 ) {setProbMax(10000000.0);}
 }
 
 //
@@ -252,6 +295,41 @@ EvtComplex EvtDDalitz::amplDtoK0PiPi(EvtVector4R p4_p,  EvtVector4R moms1,
       DK2piRes5.resAmpl() + DK2piRes6.resAmpl() + 
       DK2piRes7.resAmpl() + DK2piRes8.resAmpl() + 
       DK2piRes9.resAmpl() + DK2piRes10.resAmpl();
+}
+
+//
+// BaBar decay amplitudes for D0->Ks K+ K-
+//
+// p4_p is D0
+// moms1 is K0s
+// moms2 is K+
+// moms3 is K-
+// Amplitudes and phases are taken from BaBar hep-ex/0207089
+// with convention : Non Resonant = Amp 1. / Phase 0. 
+
+EvtComplex EvtDDalitz::amplDtoK0KK(EvtVector4R p4_p,  EvtVector4R moms1, 
+                                     EvtVector4R moms2, EvtVector4R moms3) {
+
+    //phi
+    EvtResonance DK0KKRes1( p4_p, moms2, moms3, 113.75, -40.0, 0.0043,
+                            1.019456, 1 ) ;
+    //a0(980)
+    EvtResonance DK0KKRes2( p4_p, moms2, moms3, 152.25, 69.0, 0.05 , 0.9847,
+                            0 ) ;
+    //f0(980)
+    EvtResonance DK0KKRes3( p4_p, moms2, moms3, 30.5, -201.0, 0.04, 0.980 , 
+                            0 ) ;
+    //a0(980)+
+    EvtResonance DK0KKRes4( p4_p, moms1, moms2, 85.75, -93.0, 0.05 , 0.9847,
+                            0 ) ;
+    //a0(980)-
+    EvtResonance DK0KKRes5( p4_p, moms3, moms2, 8. , -53.0 ,0.05, 0.9847,
+                            0 ) ;
+
+    return EvtComplex(1.0,0.0) + 
+      DK0KKRes1.resAmpl() + DK0KKRes2.resAmpl() +
+      DK0KKRes3.resAmpl() + DK0KKRes4.resAmpl() + 
+      DK0KKRes5.resAmpl() ;
 }
 
 
@@ -431,6 +509,66 @@ void EvtDDalitz::decay( EvtParticle *p){
       + DKpipi0Res7.resAmpl();
     
   }
+
+  if(_flag==5) {
+
+    // D0 -> K0 K+ K- + CC
+    // If it does not come from a B->DK, decay it as D0 or D0bar separatly
+    // if p4_p is D0, moms1 is K0, moms2 is pi-, moms3 is pi+
+    // if p4_p is D0bar, moms1 is K0, moms2 is pi+, moms3 is pi-
+
+    if ( theBDecayName == "BTODDALITZCPK" ) {
+      // Gamma angle in rad.
+      double gamma = EvtDecayTable::GetDecayFunc( p->getParent() ) 
+        -> getArg( 0 )  ;
+      // Strong phase in rad.
+      double delta =  EvtDecayTable::GetDecayFunc( p->getParent() ) 
+        -> getArg( 1 )  ;
+      // Ratio between B->D0K and B->D0barK
+      double A     =  EvtDecayTable::GetDecayFunc( p->getParent() ) 
+        -> getArg( 2 )  ;
+
+      EvtComplex Factor( fabs( A ) * cos ( delta ) , 
+                         fabs( A ) * sin ( delta ) ) ;
+
+      if ( ( p->getParent()->getId() == BP ) || 
+           ( p->getParent()->getId() == B0 ) ) {
+        // the ratio D/Dbar
+        Factor = Factor * EvtComplex( cos ( gamma ) , sin ( gamma ) ) ;
+        if ( p->getId() == D0 ) {
+          // the flavor of the particle has no meaning. But we need
+          // it to know which daughter is pi+ or pi-
+          // M( B+ or B0 ) = f(Dbar) + factor * f(D)
+          // f(Dbar) = amplDtoK0PiPi(pD, K0, K+, K-)
+          // f(D)    = amplDtoK0PiPi(pD, K0, K-, K+)
+          // Then ... 
+          amp = amplDtoK0KK( p4_p , moms1 , moms3 , moms2 ) +
+            Factor * amplDtoK0KK( p4_p , moms1 , moms2 , moms3 ) ;
+        }
+        else {
+          amp = amplDtoK0KK( p4_p , moms1 , moms2 , moms3 ) +
+            Factor * amplDtoK0KK( p4_p , moms1 , moms3 , moms2 ) ;
+        }
+      }
+      else if ( ( p->getParent() -> getId() == BM ) || 
+                ( p->getParent() -> getId() == B0B ) ) {
+        Factor = Factor * EvtComplex( cos ( gamma ) , - sin ( gamma ) ) ;
+        // here M( B- or B0bar ) = f(D) + factor * f(Dbar) then ...
+        if ( p->getId() == D0 ) {
+          amp = amplDtoK0KK( p4_p , moms1 , moms2 , moms3 ) +
+            Factor * amplDtoK0KK( p4_p , moms1 , moms3 , moms2 ) ;
+        }
+        else {
+          amp = amplDtoK0KK( p4_p , moms1 , moms3 , moms2 ) +
+            Factor * amplDtoK0KK( p4_p , moms1 , moms2 , moms3 ) ;
+        }
+      }
+    }
+    else {
+      amp = amplDtoK0KK( p4_p , moms1 , moms2 , moms3 ) ;
+    }
+  }
+
  
   vertex(amp);
 
