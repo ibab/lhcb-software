@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2004-09-13 18:14:48 pkoppenb Exp $
+# $Id: requirements,v 1.16 2004-10-04 09:24:03 pkoppenb Exp $
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciMCTools
-version           v5r5
+version           v5r6
 
 # This template is an example for a standard Algorithm package
 #
