@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2002-10-21 10:52:35 gcorti Exp $
+# $Id: requirements,v 1.43 2002-10-21 21:37:27 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -91,11 +91,10 @@ use  CaloRec   		v2r3    Calo
 use  MuonAssociators    v1r0    Muon
 use  TrAssociators      v3r1    Tr
 use  L0Calo		v6r1	L0
-use  L1VeloTrack 	v2r1	L1
+use  L1VeloTrack 	v3r0	L1
 
 #--- Trigger
 use  L0DU         v6r1	L0
-#use  L1VeloTrack  v3r0  L1
 
 #--- ProtoParticles 
 use  CaloInterfaces  v2r2   Calo
@@ -105,6 +104,9 @@ use  GlobalReco      v2r0   Rec
 
 #--- Reprocessing
 use  CaloAlgs        v7r2   Calo
+
+#--- Necessary tools
+use  TrExtrapolator      v2r1   Tr
 
 #--- DaVinci packages
 use DaVinciTools         v6r0   Phys

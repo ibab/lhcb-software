@@ -32,7 +32,7 @@ ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
 // Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
-ApplicationMgr.DLLs += { "DaVinciTools" };
+ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
 ApplicationMgr.DLLs += { "PhysSelections" };
 ApplicationMgr.DLLs += { "FlavourTagging" };
 //    ... for physics check on MC data

@@ -1,18 +1,20 @@
-! $Id: release.notes,v 1.28 2002-10-21 18:16:14 gcorti Exp $
+! $Id: release.notes,v 1.29 2002-10-21 21:38:17 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
 
 ! 2002-10-21 - Gloria Corti
+ - Introduce use of TrExtrapolator v2r1 necessary for new TrTransporter
+   in DaVinciTools.
+ - Introduce CaloReCalibration.opts to run gamma recalibration of
+   data produced with Brunel v12r1
  - Increase version numbers of GaudiSvc (v8r4), VeloKernel (v1r2),
    DetDesc (v10r4), XmlDDDB (v13r0), VeloDet (v7r1), ITDet (v1r1),
 	 OTDet v2r2, CaloDet (v5r1), VeloEvent (v11r1), TrEvent (v12r2),
    CaloEvent (v11r2), L0Event (v6r1), L0DU (v6r1), CaloUtils (v4r1),
    CaloTools (v4r4): refer to their requirements files for details
    of changes
- - Introduce CaloReCalibration.opts to run gamma recalibration of
-   data produced with Brunel v12r1
 
 ! 2002-10-13 - Gloria Corti
  - Adapt L0.opts to reprocessing of data produced with Brunel v12r1 
