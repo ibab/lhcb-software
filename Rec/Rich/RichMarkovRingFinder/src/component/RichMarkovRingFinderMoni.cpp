@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.10 2004-10-22 19:15:28 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.11 2004-10-28 16:35:20 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -50,11 +50,13 @@ StatusCode RichMarkovRingFinderMoni::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  acquireTool( "RichRecMCTruthTool",  m_richRecMCTruth );
-  acquireTool( "RichMCTruthTool",     m_richMCTruth    );
-  acquireTool( "RichMCTrackInfoTool", m_mcTrackInfo    );
-  acquireTool( "RichCherenkovAngle",  m_ckAngle        );
-  acquireTool( "RichRayTracing",      m_raytrace       );
+  // Tools
+  acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth    );
+  acquireTool( "RichMCTruthTool",      m_richMCTruth       );
+  acquireTool( "RichMCTrackInfoTool",  m_mcTrackInfo       );
+  acquireTool( "RichCherenkovAngle",   m_ckAngle           );
+  acquireTool( "RichRayTracing",       m_raytrace          );
+  acquireTool( "RichMCTrackInfoTool",  m_mcRichTrackInfo   );
   acquireTool( "MCEffReconstructible", m_mcReconstructible );
 
   // Book histograms
@@ -126,7 +128,6 @@ RichMarkovRingFinderMoni::execute()
   }
 
 
-
   // Just some basic histogramming of pixs and rings in the event
   {
     // Loop over event pixels
@@ -147,10 +148,9 @@ RichMarkovRingFinderMoni::execute()
       const Rich::DetectorType whichRich( (*iRing)->rich() );
       numRingsInEvent[whichRich]++;
     }
-    m_NumRingsPerEvent[Rich::Rich1]->fill(numPixelsInEvent[Rich::Rich1]);
-    m_NumRingsPerEvent[Rich::Rich2]->fill(numPixelsInEvent[Rich::Rich2]);
+    m_NumRingsPerEvent[Rich::Rich1]->fill(numRingsInEvent[Rich::Rich1]);
+    m_NumRingsPerEvent[Rich::Rich2]->fill(numRingsInEvent[Rich::Rich2]);
   }
-
 
 
   // Loop over rings for more in-depth purposes
@@ -159,6 +159,7 @@ RichMarkovRingFinderMoni::execute()
 
     // Is this a RICH1 or RICH2 ring?
     const Rich::DetectorType whichRich( (*iRing)->rich() );
+    const Rich::Side whichSide( (*iRing)->panel() );
     const string whichRichName(Rich::text(whichRich));
     debug() << "This ring is in " << whichRich << endreq;
 
@@ -170,6 +171,9 @@ RichMarkovRingFinderMoni::execute()
     m_MarkovRingRadius[whichRich]->fill( (*iRing)->radius() );
     m_MarkovRingNumPixs[whichRich]->fill( (*iRing)->richRecPixels().size() );
     m_MarkovRingRadiusVsNumPixs[whichRich]->fill( (*iRing)->radius(), (*iRing)->richRecPixels().size() );
+
+
+    const HepPoint3D ringCentre( (*iRing)->centrePointGlobal() );
 
 
     // Loop over this ring's pixels
@@ -185,11 +189,42 @@ RichMarkovRingFinderMoni::execute()
       for (MCParticleVector::const_iterator iMCP = thispixelMCParts.begin(); iMCP != thispixelMCParts.end(); ++iMCP) {
         seenMCParts[*iMCP]++;
       }
+
+
+      // Get two ring points separated by ~90 degrees and the centre point to construct
+      // a normal vector to the ring. Note that the angular ordering and regular separation 
+      // of points is assumed, but not guaranteed.
+      HepVector3D& ringNormal = pdNormals[whichRich][whichSide];
+      if (ringNormal == HepVector3D()) {
+        const vector<HepPoint3D>& ringPoints( (*iRing)->ringPoints() );
+        const size_t quarterOfNumRingPoints( static_cast<size_t>(floor(ringPoints.size()/4.0)) );
+        const HepVector3D vector1( *(ringPoints.begin()) - ringCentre );
+        const HepVector3D vector2( ringPoints[quarterOfNumRingPoints] - ringCentre );
+        ringNormal = vector1.cross(vector2).unit();
+        if (ringNormal.z() > 0) { ringNormal *= -1; } // slightly hacky way of making sure it's the "right" normal
+        debug() << "Normal vector = " << ringNormal << " : mag = " << ringNormal.mag() << endreq;
+      }
+
+
+      // Set up the arbitrary basis vectors in the detector planes
+      RichPanelBasis& pdBasisVectors = pdBases[whichRich][whichSide];
+      if ( pdBasisVectors == RichPanelBasis() ) {
+        pdBasisVectors.first  = ringNormal.cross( HepVector3D(0,0,1) ).unit();
+        pdBasisVectors.second = pdBasisVectors.first.cross( ringNormal ).unit();
+        debug() << whichRich << ">>" << whichSide << "basis vecs: " 
+                << pdBasisVectors.first << " and "
+                << pdBasisVectors.second << endreq;
+      }
+
+
     } // loop over ring pixels
 
 
+
+    // Start being selective: processing only those rings with associated MC tracks
     if (0 == seenMCParts.size()) {
-      debug() << "Found a ring with no associated MC track" << endreq;
+      // Hopefully very unusual!
+      info() << "Found a ring with no associated MC track" << endreq;
     } else {
 
       // Extract useful numbers from the ring's matched MCParticle list
@@ -230,8 +265,8 @@ RichMarkovRingFinderMoni::execute()
         // MC type info
         // Options are Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton or Rich::Unknown
         // numerically 0               1           2           3           4               -1
-        const MCParticle* mcpart = mostMatchedMCP;
-        const Rich::ParticleIDType mcType = m_richMCTruth->mcParticleType(mcpart);
+        const MCParticle* mcpart( mostMatchedMCP );
+        const Rich::ParticleIDType mcType( m_richMCTruth->mcParticleType(mcpart) );
         info() << "MC type: " << mcType << endreq;
 
 
@@ -241,21 +276,21 @@ RichMarkovRingFinderMoni::execute()
 
         // Does this ring have a corresponding reconstructed track segment?
         // If not then the global algorithm will probably miss it
-        string tempRecOrNot("rec");
+        RecType tempRecOrNot(rec);
         // The projected segment is the best match within the specified ring radius fraction
         // (the matching has already been done in the RichMarkovRingFinderAlg)
         if ( (*iRing)->richRecSegment() ) {
           info() << "Found a ring with a fairly unique MC track and a rec track" << endreq;
         } else {
           info() << "This ring has a good MCParticle match but isn't reconstructed!" << endreq;
-          tempRecOrNot = "notRec";
+          tempRecOrNot = notrec;
         }
-        const string recOrNot(tempRecOrNot); // I want this to be const, thank you very much!
+        const RecType recOrNot(tempRecOrNot); // I want this to be const, thank you very much!
+
 
 
         // Histogram the MC particle type
-        const string histosetID(whichRichName + recOrNot);
-        m_RingTrackMCType[histosetID]->fill(mcType);
+        m_RingTrackMCType[whichRich][recOrNot]->fill(mcType);
 
 
         // Do the rec segment and the MC particle correspond to each other? (when neither is null)
@@ -272,34 +307,40 @@ RichMarkovRingFinderMoni::execute()
         // *** and efficiency (fraction of successfully matched rings)
 
 
-        // Get two ring points separated by ~90 degrees and the centre point to construct
-        // a normal vector to the ring. Note that the angular ordering and regular separation of points
-        // is assumed, but not guaranteed.
-        const HepPoint3D ringCentre( (*iRing)->centrePointGlobal() );
-        const vector<HepPoint3D>& ringPoints( (*iRing)->ringPoints() );
-        const HepPoint3D point1( *( ringPoints.begin() ) );
-        const HepPoint3D point2( ringPoints[ static_cast<size_t>(floor(ringPoints.size()/4.0)) ] );
-        const HepVector3D vector1( point1 - ringCentre );
-        const HepVector3D vector2( point2 - ringCentre );
-        HepVector3D ringNormal( vector1.cross(vector2) );
-        ringNormal.setMag(1.0);
-        if (ringNormal.z() > 0) { ringNormal *= -1; } // slightly hacky way of making sure it's the right normal
-        debug() << "Normal vector = " << ringNormal << " : mag = " << ringNormal.mag() << endreq;
 
-
-        // *** What's the true angle of incidence of this ring's photons on the detector plane? Principle axes?
+        // What's the true angle of incidence of this ring's photons on the detector plane? Principle axes?
         // Run over pixels and associated photons -> MC photons for this ring and get the true incidence angle
+        HepVector3D& pdNormal = pdNormals[whichRich][whichSide];
+        RichPanelBasis& pdBasis = pdBases[whichRich][whichSide];
         for (SmartRefVector<RichRecPixel>::const_iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix) {
           for (vector<RichRecPhoton*>::const_iterator iRecphoton = (*iPix)->richRecPhotons().begin(); 
                iRecphoton != (*iPix)->richRecPhotons().end(); ++iRecphoton) {
             const MCRichOpticalPhoton* mcphoton( m_richRecMCTruth->trueOpticalPhoton(*iRecphoton) );
             if (mcphoton) {
-              const HepVector3D truePhotonDirection( mcphoton->pdIncidencePoint() - mcphoton->flatMirrorReflectPoint() );
+              const HepVector3D trueBackwardPhotonDirection( mcphoton->flatMirrorReflectPoint() - mcphoton->pdIncidencePoint() );
               // What to do with these direction vectors? Diagonalising? Just scalar to normal for now:
-              const double angleToNormal( truePhotonDirection.angle(ringNormal) );
+              const double angleToNormal( trueBackwardPhotonDirection.angle(pdNormal) );
               debug() << "MC photon PD pt = " << mcphoton->pdIncidencePoint() 
-                     << " and reflect pt = " << mcphoton->flatMirrorReflectPoint() << endreq;
+                      << " and reflect pt = " << mcphoton->flatMirrorReflectPoint() << endreq;
               debug() << "MC photon angle to normal = " << angleToNormal << endreq;
+
+
+              // Get shift vectors resolved in PD plane for norm-MCphoton
+              const HepVector3D shiftFromNormal( trueBackwardPhotonDirection.unit() - pdNormal );
+              //const HepVector3D shiftFromNormalInPdPlane( shiftFromNormal - shiftFromNormal.dot(pdNormal) * pdNormal );
+
+
+              // Histogram the MC angle and shift vector
+              m_MarkovRingMCPhotonNormalAngle[whichRich]->fill( angleToNormal );
+              m_MarkovRingMCPhotonShiftFromNormal[whichRich][whichSide]->fill( shiftFromNormal.dot(pdBasis.first),
+                                                                               shiftFromNormal.dot(pdBasis.second) );
+              m_MarkovRingMCPhotonReverseDirectionX[whichRich][whichSide]->fill( trueBackwardPhotonDirection.unit().x() );
+              m_MarkovRingMCPhotonReverseDirectionY[whichRich][whichSide]->fill( trueBackwardPhotonDirection.unit().y() );
+              m_MarkovRingMCPhotonReverseDirectionZ[whichRich][whichSide]->fill( trueBackwardPhotonDirection.unit().z() );
+              m_MarkovRingMCPhotonReverseDirection [whichRich][whichSide]->fill( trueBackwardPhotonDirection.unit().x(),
+                                                                                 trueBackwardPhotonDirection.unit().y(),
+                                                                                 trueBackwardPhotonDirection.unit().z() );
+
             } else {
               debug() << "No real MC photon" << endreq;
             }
@@ -307,11 +348,11 @@ RichMarkovRingFinderMoni::execute()
         }
 
 
-        // Trace back this ring's normal though the Rich optics
+        // Trace back the panel normal though the Rich optics
         HepPoint3D endPoint;
         HepVector3D endDir;
-        m_raytrace->traceBackFromDetector( ringCentre, ringNormal, endPoint, endDir );
-        info() << "Back-traced tracking point on sph mirror = ("
+        m_raytrace->traceBackFromDetector( ringCentre, pdNormal, endPoint, endDir );
+        info() << "Back-traced tracking point on sph mirror: "
                << endPoint.x() << ", "
                << endPoint.y() << ", "
                << endPoint.z() << ") in direction ("
@@ -331,13 +372,20 @@ RichMarkovRingFinderMoni::execute()
                  << " vs. Markov theta = " << thetaMarkov 
                  << " (shift = " << thetaMarkov - thetaExp <<  ")"
                  << endreq;
-          m_CkPull[histosetID]->fill(thetaMarkov - thetaExp);
+          m_CkPull[whichRich][recOrNot]->fill(thetaMarkov - thetaExp);
 
 
           // Compare ring centre positions
-          //const HepPoint3D centreLocal( (*iRing)->centre().x()/scale, (*iRing)->centre().y()/scale, 0 );
-          const HepPoint3D segPoint( (*iRing)->richRecSegment()->pdPanelHitPointLocal() );
-          //const double localCentrePointSep( segPoint.distance(centreLocal) );
+          const MCRichSegment* mcSegment( m_richRecMCTruth->mcRichSegment((*iRing)->richRecSegment()) );
+          HepPoint3D mcsegCentrePoint;
+          m_mcRichTrackInfo->panelIntersectGlobal(mcSegment, mcsegCentrePoint);
+          const HepPoint3D segCentrePoint( (*iRing)->richRecSegment()->pdPanelHitPoint() );
+          const HepPoint3D markovCentrePoint( (*iRing)->centrePointGlobal() );
+
+          const HepVector3D segToMcCentreVector( segCentrePoint - mcsegCentrePoint );
+          const HepVector3D markovToMcCentreVector( markovCentrePoint - mcsegCentrePoint );
+          m_RecSegPdPointError[whichRich][recOrNot]->fill( segToMcCentreVector.mag() );
+          m_MarkovSegPdPointError[whichRich][recOrNot]->fill( markovToMcCentreVector.mag() );
         }
 
 
@@ -391,40 +439,37 @@ RichMarkovRingFinderMoni::execute()
           }
           // Get azimuthal radius
           const double rho(sqrt( startPoint.x() * startPoint.x() + startPoint.y() * startPoint.y() ));
-
-
+          
+          
           // *** Need to track MC particle types from the PV and work out why
           // *** they're still leaving rings in Rich2 but aren't tracked. MCTrackInfo, MCEffReconstructible
-          debug() << "It segvs after here" << endreq;
           const IMCEffReconstructible::RecblCategory reconstructCategory( m_mcReconstructible->reconstructible(mcpart) );
-          debug() << "And before or after here?" << endreq;
-          m_RingTrackRecCategory[histosetID]->fill( reconstructCategory );
-          debug() << "Should be safe now" << endreq;
-
+          m_RingTrackRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
+          
           // Fill origin vertex position histos
-          m_RingTrackOriginZ[histosetID]->fill( startPoint.z()/m );
-          m_RingTrackOriginRZ[histosetID]->fill( startPoint.z()/m, rho/m );
-          m_RingTrackOrigin[histosetID]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-
-
+          m_RingTrackOriginZ[whichRich][recOrNot]->fill( startPoint.z()/m );
+          m_RingTrackOriginRZ[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+          m_RingTrackOrigin[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+          
+          
           // Origin position (by subdetector) -specific histos
           if (InVelo == originvertexlocation) {
-            m_RingTrackOrigin1Zoom[histosetID]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginZ1[histosetID]->fill( startPoint.z()/m );
-            m_RingTrackOriginXY1[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ1[histosetID]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginRZ1Zoom[histosetID]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginInVeloVertexType[histosetID]->fill( mcpart->originVertex()->type() );
+            m_RingTrackOrigin1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginZ1[whichRich][recOrNot]->fill( startPoint.z()/m );
+            m_RingTrackOriginXY1[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ1[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginRZ1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginInVeloVertexType[whichRich][recOrNot]->fill( mcpart->originVertex()->type() );
             if (Rich::Electron == mcType) {
-              m_RingTrackOriginInVeloElectronVertexType[histosetID]->fill( mcpart->originVertex()->type() );
+              m_RingTrackOriginInVeloElectronVertexType[whichRich][recOrNot]->fill( mcpart->originVertex()->type() );
             }
-            m_RingTrackOriginInVeloRecCategory[histosetID]->fill( reconstructCategory );
+            m_RingTrackOriginInVeloRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
           } else if (InTT == originvertexlocation) {
-            m_RingTrackOriginXY2[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ2[histosetID]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginXY2[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ2[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
           } else if (InT123 == originvertexlocation ) {
-            m_RingTrackOriginXY3[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ3[histosetID]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginXY3[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ3[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
           }
 
 
@@ -458,31 +503,15 @@ RichMarkovRingFinderMoni::execute()
             double rho = sqrt( endPoint.x() * endPoint.x() + endPoint.y() * endPoint.y() );
 
             // Fill decay vertex position histos
-            m_RingTrackDecayZ[histosetID]->fill( endPoint.z()/m );
-            m_RingTrackDecayRZ[histosetID]->fill( endPoint.z()/m, rho/m );
-            m_RingTrackDecay[histosetID]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
+            m_RingTrackDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
+            m_RingTrackDecayRZ[whichRich][recOrNot]->fill( endPoint.z()/m, rho/m );
+            m_RingTrackDecay[whichRich][recOrNot]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
 
             if (  MCVertex::Decay == (*vtx)->type() ) {
-              m_RingTrackEndDecayZ[histosetID]->fill( endPoint.z()/m );
+              m_RingTrackEndDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
             } else {
-              m_RingTrackEndNotDecayZ[histosetID]->fill( endPoint.z()/m );
+              m_RingTrackEndNotDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
             }
-
-            /*
-              if (fabs(startPoint.z()/m) < 1) { // in VELO
-              m_RingTrackOrigin1Zoom[recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-              m_RingTrackOriginZ1[recOrNot]->fill( startPoint.z()/m );
-              m_RingTrackOriginXY1[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-              m_RingTrackOriginRZ1[recOrNot]->fill( startPoint.z()/m, rho/m );
-              m_RingTrackOriginRZ1Zoom[recOrNot]->fill( startPoint.z()/m, rho/m );
-              } else if (startPoint.z()/m > 1.9  && startPoint.z()/m < 3.5 ) { // in TT
-              m_RingTrackOriginXY2[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-              m_RingTrackOriginRZ2[recOrNot]->fill( startPoint.z()/m, rho/m );
-              } else if (startPoint.z()/m > 7  && startPoint.z()/m < 10 ) { // in T1-T3
-              m_RingTrackOriginXY3[recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-              m_RingTrackOriginRZ3[recOrNot]->fill( startPoint.z()/m, rho/m );
-              }
-            */
 
           }
         }
@@ -504,98 +533,146 @@ RichMarkovRingFinderMoni::bookHistograms() {
   string title, id;
   const int nbins1D(100), nbins2D(50), nbins3D(10);
   double rmax(0);
-  const Rich::DetectorType richType[2] = {Rich::Rich1, Rich::Rich2};
-
+  const Rich::DetectorType richTypes[2] = {Rich::Rich1, Rich::Rich2};
+  const Rich::Side         richSides[2] = {Rich::left, Rich::right};
+  const RecType            recTypes[2]  = {rec, notrec};
 
 
   for (int richNo = 0; richNo < 2; ++richNo) {
+    Rich::DetectorType richType( richTypes[richNo] );
+    const string mainindex( Rich::text(richType) );
+    const string mainsubtitle( Rich::text(richType) ); // 
+    const string mainhistopath( m_histPth + "/" + Rich::text(richType) );
 
-    // Histos where rec/nonrec doesn't matter (or make sense)
-    const string mainindex( Rich::text(richType[richNo]) );
-    const string mainsubtitle( Rich::text(richType[richNo]) ); // 
-    const string mainhistopath( m_histPth + "/" + Rich::text(richType[richNo]) );
-    m_NumRingsPerEvent[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "NumRingsPerEvent", "Number of Markov rings per event in " + mainsubtitle, 51, -1, 101);
-    m_NumPixsPerEvent[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "NumPixsPerEvent", "Number of pixels per event in " + mainsubtitle, 51, -5, 505);
+    // Histos where rec / nonrec doesn't matter (or make sense)
+    // Event params
+    id = "NumRingsPerEvent";
+    title = "Number of Markov rings per event in " + mainsubtitle;
+    m_NumRingsPerEvent[richType] = histoSvc()->book(mainhistopath, id, title, 51, -0.5, 50.5);
+    id = "NumPixsPerEvent";
+    title = "Number of pixels per event in " + mainsubtitle;
+    m_NumPixsPerEvent[richType] =  histoSvc()->book(mainhistopath, id, title, 51, -10, 2010);
 
-    m_MarkovRingRadius[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "MarkovRingRadius", "Ring radius in " + mainsubtitle, 50, 0, 1*m);
-    m_MarkovRingNumPixs[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "MarkovRingNumPixs", "Number of pixs per ring in " + mainsubtitle, 51, -0.5, 50.5);
-    m_MarkovRingRadiusVsNumPixs[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "MarkovRingRadiusVsNumPixs", "Markov ring radius vs num pixs in "  + mainsubtitle,
-                       30, 0, 1*m, 51, -0.5, 50.5);
+    // Ring params
+    id = "MarkovRingRadius";
+    title = "Ring radius (radians) in " + mainsubtitle;
+    m_MarkovRingRadius[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 0.3); // radians
+    id = "MarkovRingNumPixs";
+    title = "Number of pixs per ring in " + mainsubtitle;
+    m_MarkovRingNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 51, -0.5, 50.5);
+    id = "MarkovRingRadiusVsNumPixs";
+    title = "Markov ring radius (radians) vs num pixs in "  + mainsubtitle;
+    m_MarkovRingRadiusVsNumPixs[richType] = histoSvc()->book(mainhistopath, id, title, 30, 0, 0.3, 51, -0.5, 50.5);
+    
+    // MC-rec matching
+    id = "MarkovRingBestMCMatchNumber";
+    title = "Num MC matches for the best MCParticle in " + mainsubtitle;
+    m_MarkovRingBestMCMatchNumber[richType] = histoSvc()->book(mainhistopath, id, title, 31, -0.5, 30.5);
+    id = "MarkovRingBestMCMatchFraction";
+    title = "Frac MC matches for the best MCParticle in " + mainsubtitle;
+    m_MarkovRingBestMCMatchFraction[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
 
-    m_MarkovRingBestMCMatchNumber[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "MarkovRingBestMCMatchNumber", "Num MC matches for the best MCParticle in " + mainsubtitle, 51, -0.5, 50.5);
-    m_MarkovRingBestMCMatchFraction[richType[richNo]] = 
-      histoSvc()->book(mainhistopath, "MarkovRingBestMCMatchFraction", "Frac MC matches for the best MCParticle " + mainsubtitle, 50, 0, 1);
+    // MC photon angles and in-plane shifts from the PD normal
+    id = "MarkovRingMCPhotonNormalAngle";
+    title = "Angles of MC photons to the PD plane normal in " + mainsubtitle;
+    m_MarkovRingMCPhotonNormalAngle[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 0.25);
 
+
+
+    // Histos indexed also by PD panel (MCPhoton angles and directions)
+    for (size_t richSideNo = 0; richSideNo < 2; ++richSideNo) {
+      const Rich::Side richSide( richSides[richSideNo] );
+      const string richSideText( Rich::text(richSide) + " panel" );
+      const string subtitle( mainsubtitle + ", " + richSideText );
+      const string histopath( mainhistopath );
+      const string panelID( boost::lexical_cast<string>(richSideNo) );
+
+      // Shift of photon vector from the normal in PD plane coords
+      id = "MarkovRingMCPhotonShiftFromNormal" + panelID;
+      title = "In-PD-plane shift of MC photon direction from normal in "  + subtitle;
+      m_MarkovRingMCPhotonShiftFromNormal[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -0.2, 0.2, 30, -0.2, 0.2);
+
+      // Reverse photon vector direction
+      id = "MarkovRingMCPhotonReverseDirection" + panelID;
+      title = "Back-traced MC photon direction in "  + subtitle;
+      m_MarkovRingMCPhotonReverseDirection[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1, 30, -1, 1, 30, -1, 1);
+      id = "MarkovRingMCPhotonReverseDirectionX" + panelID;
+      title = "Back-traced MC photon direction in "  + subtitle + "(x-component)";
+      m_MarkovRingMCPhotonReverseDirectionX[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+      id = "MarkovRingMCPhotonReverseDirectionY" + panelID;
+      title = "Back-traced MC photon direction in "  + subtitle + "(y-component)";
+      m_MarkovRingMCPhotonReverseDirectionY[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+      id = "MarkovRingMCPhotonReverseDirectionZ" + panelID;
+      title = "Back-traced MC photon direction in "  + subtitle + "(z-component)";
+      m_MarkovRingMCPhotonReverseDirectionZ[richType][richSide] = histoSvc()->book(histopath, id, title, 30, -1, 1);
+    }
+
+
+
+    // Histos where rec/nonrec matters: for debugging tracking problems
     for (int recNo = 0; recNo < 2; ++recNo) {
-      // Histos where rec/nonrec matters
+      const RecType recType( recTypes[recNo] );
       const string recOrNot[2] = {"rec", "notRec"};
-      const string trackingTitle[2] = {"tracking-matched MCMC rings", "MCMC rings not found by tracking"};
-      const string index( mainindex + recOrNot[recNo] );
-      const string subtitle( mainsubtitle + " " + trackingTitle[recNo] );
       const string histopath( mainhistopath + "/" + recOrNot[recNo] );
+      const string trackingTitle[2] = {"tracking-matched MCMC rings", "MCMC rings not found by tracking"};
+      const string subtitle( mainsubtitle + " " + trackingTitle[recNo] );
 
       // MC type IDs
       title = "MC particle type of tracks giving " + subtitle;
       id = "RingTrackMCType";
-      m_RingTrackMCType[index] = histoSvc()->book(histopath, id, title, 6, -1.5, 4.5);
+      m_RingTrackMCType[richType][recType] = histoSvc()->book(histopath, id, title, 6, -1.5, 4.5);
 
       // Cerenkov angle and center-point pulls dbns
       title = "Cerenkov angle pull dbn of " + subtitle;
       id = "CerenkovAnglePull";
-      m_CkPull[index] = histoSvc()->book(histopath, id, title, 50, -0.01, 0.01);
+      m_CkPull[richType][recType] = histoSvc()->book(histopath, id, title, 50, -0.01, 0.01);
+      title = "Ring centre error of rec seg for " + subtitle;
+      id = "RingCentreErrorRecSeg";
+      m_RecSegPdPointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -5*cm, 5*cm);
+      title = "Ring centre error of Markov ring for " + subtitle;
+      id = "RingCentreErrorMarkov";
+      m_MarkovSegPdPointError[richType][recType] = histoSvc()->book(histopath, id, title, 50, -5*cm, 5*cm);
 
       // *** also look at the 2D correlation of pull magnitude and ring "quality"
+
 
       // Track reconstruction category
       title = "Reconstruction type for tracks of " + subtitle + " with origins in the VELO";
       id = "RingTrackOriginInVeloRecCategory";
-      m_RingTrackOriginInVeloRecCategory[index] = histoSvc()->book(histopath, id, title, 5, -0.5, 4.5);
-
+      m_RingTrackOriginInVeloRecCategory[richType][recType] = histoSvc()->book(histopath, id, title, 5, -0.5, 4.5);
       title = "Reconstruction type for tracks of " + subtitle;
       id = "RingTrackRecCategory";
-      m_RingTrackRecCategory[index] = histoSvc()->book(histopath, id, title, 5, -0.5, 4.5);
+      m_RingTrackRecCategory[richType][recType] = histoSvc()->book(histopath, id, title, 5, -0.5, 4.5);
 
       // Origin vertex types
       title = "Origin vertex type for origin vertices of " + subtitle + " in the VELO";
       id = "RingTrackOriginInVeloVtxType";
-      m_RingTrackOriginInVeloVertexType[index] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
-
+      m_RingTrackOriginInVeloVertexType[richType][recType] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
       title = "Origin vertex type for origin vertices of " + subtitle + " in the VELO (electrons)";
       id = "RingTrackOriginInVeloElectronVtxType";
-      m_RingTrackOriginInVeloElectronVertexType[index] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
+      m_RingTrackOriginInVeloElectronVertexType[richType][recType] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
 
 
       // Vertex positions
       // 1D plots
       title = "Z origins of " + subtitle;
       id = "RingTrackOriginZ";
-      m_RingTrackOriginZ[index] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
-
+      m_RingTrackOriginZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z origins of " + subtitle;
       id = "RingTrackOriginZ1";
-      m_RingTrackOriginZ1[index] = histoSvc()->book(histopath, id, title, nbins1D, -0.5, 0.5);
-
+      m_RingTrackOriginZ1[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -0.5, 0.5);
       title = "Z end points of " + subtitle;
       id = "RingTrackDecayZ";
-      m_RingTrackDecayZ[index] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
-
+      m_RingTrackDecayZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z end (decay) points of " + subtitle;
       id = "RingTrackEndDecayZ";
-      m_RingTrackEndDecayZ[index] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
-
+      m_RingTrackEndDecayZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z end (not decay) points of " + subtitle;
       id = "RingTrackNotEndDecayZ";
-      m_RingTrackEndNotDecayZ[index] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
-
+      m_RingTrackEndNotDecayZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z decay points of " + subtitle + " with VELO origins";
       id = "RingTrackDecaysFromVeloZ";
-      m_RingTrackDecaysWithVeloOriginZ[index] = histoSvc()->book(histopath, id, title, nbins1D, -1, 20);
+      m_RingTrackDecaysWithVeloOriginZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 20);
 
 
       // ----------------
@@ -604,74 +681,62 @@ RichMarkovRingFinderMoni::bookHistograms() {
       title = "X-Y origins of VELO " + subtitle;
       id = "RingTrackOriginXY1";
       rmax = 0.01;
-      m_RingTrackOriginXY1[index] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+      m_RingTrackOriginXY1[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
       title = "X-Y origins of TT " + subtitle;
       id = "RingTrackOriginXY2";
       rmax = 0.35;
-      m_RingTrackOriginXY2[index] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+      m_RingTrackOriginXY2[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
       title = "X-Y origins of T1-T3 " + subtitle;
       id = "RingTrackOriginXY3";
       rmax = 1.5;
-      m_RingTrackOriginXY3[index] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
-
+      m_RingTrackOriginXY3[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -rmax, rmax, nbins2D, -rmax, rmax);
       title = "rho-Z origins of " + subtitle;
       id = "RingTrackOriginRZ";
       rmax = 1.5;
-      m_RingTrackOriginRZ[index] = histoSvc()->book(histopath, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
-
+      m_RingTrackOriginRZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
       title = "rho-Z decay points of " + subtitle;
       id = "RingTrackDecayRZ";
       rmax = 1.8;
-      m_RingTrackDecayRZ[index] = histoSvc()->book(histopath, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
-
+      m_RingTrackDecayRZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -1, 12, nbins2D, 0, rmax);
       title = "rho-Z decay points of " + subtitle + " with VELO origins";
       id = "RingTrackDecaysFromVeloRZ";
       rmax = 3.0;
-      m_RingTrackDecaysWithVeloOriginRZ[index] = histoSvc()->book(histopath, id, title, nbins2D, -1, 20, nbins2D, 0, rmax);
-
+      m_RingTrackDecaysWithVeloOriginRZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -1, 20, nbins2D, 0, rmax);
       title = "rho-Z origins of VELO " + subtitle;
       id = "RingTrackOriginRZ1";
       rmax = 0.02;
-      m_RingTrackOriginRZ1[index] = histoSvc()->book(histopath, id, title, nbins2D, -0.5, 1, nbins2D, 0, rmax);
-
+      m_RingTrackOriginRZ1[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -0.5, 1, nbins2D, 0, rmax);
       title = "rho-Z origins of zoomed VELO " + subtitle;
       id = "RingTrackOriginRZ1Zoom";
       rmax = 0.01;
-      m_RingTrackOriginRZ1Zoom[index] = histoSvc()->book(histopath, id, title, nbins2D, -0.2, 0.2, nbins2D, 0, rmax);
-
+      m_RingTrackOriginRZ1Zoom[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, -0.2, 0.2, nbins2D, 0, rmax);
       title = "rho-Z origins of TT " + subtitle;
       id = "RingTrackOriginRZ2";
       rmax = 0.35;
-      m_RingTrackOriginRZ2[index] = histoSvc()->book(histopath, id, title, nbins2D, 1.9, 3.5, nbins2D, 0, rmax);
-
+      m_RingTrackOriginRZ2[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, 1.9, 3.5, nbins2D, 0, rmax);
       title = "rho-Z origins of T1-T3 " + subtitle;
       id = "RingTrackOriginRZ3";
       rmax = 1.5;
-      m_RingTrackOriginRZ3[index] = histoSvc()->book(histopath, id, title, nbins2D, 7, 10, nbins2D, 0, rmax);
+      m_RingTrackOriginRZ3[richType][recType] = histoSvc()->book(histopath, id, title, nbins2D, 7, 10, nbins2D, 0, rmax);
 
 
       // 3D plots
       title = "Track origins of " + subtitle;
       id = "RingTrackOrigin";
       rmax = 1.8;
-      m_RingTrackOrigin[index] = histoSvc()->book(histopath, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+      m_RingTrackOrigin[richType][recType] = histoSvc()->book(histopath, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
       title = "Track origins of zoomed VELO " + subtitle;
       id = "RingTrackOrigin1Zoom";
       rmax = 0.01;
-      m_RingTrackOrigin1Zoom[index] = histoSvc()->book(histopath, id, title, nbins3D, -0.2, 0.2, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+      m_RingTrackOrigin1Zoom[richType][recType] = histoSvc()->book(histopath, id, title, nbins3D, -0.2, 0.2, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
       title = "Track decay points of " + subtitle;
       id = "RingTrackDecay";
       rmax = 1.8;
-      m_RingTrackDecay[index] = histoSvc()->book(histopath, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
-
+      m_RingTrackDecay[richType][recType] = histoSvc()->book(histopath, id, title, nbins3D, -1, 12, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
       title = "Track decay points of " + subtitle + " with VELO origins";
       id = "RingTrackDecaysFromVelo";
       rmax = 3.0;
-      m_RingTrackDecaysWithVeloOrigin[index] = histoSvc()->book(histopath, id, title, nbins3D, -1, 20, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
+      m_RingTrackDecaysWithVeloOrigin[richType][recType] = histoSvc()->book(histopath, id, title, nbins3D, -1, 20, nbins3D, -rmax, rmax, nbins3D, -rmax, rmax);
 
     }
   }
