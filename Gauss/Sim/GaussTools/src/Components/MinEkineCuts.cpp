@@ -7,13 +7,15 @@
 #include "G4VParticleChange.hh"
 #include "G4EnergyLossTables.hh"
 
-MinEkineCuts::MinEkineCuts(const G4String& aName, double m_cut)
+MinEkineCuts::MinEkineCuts(const G4String& aName, double cut)
   : SpecialCuts(aName)
-{
-   if (verboseLevel>1) {
-     G4cout << GetProcessName() << " is created "<< G4endl;
-   }
-   SetProcessType(fUserDefined);
+{ 
+  m_cut=cut;
+  
+  if (verboseLevel>1) {
+    G4cout << GetProcessName() << " is created "<< G4endl;
+  }
+  SetProcessType(fUserDefined);
 }
 
 MinEkineCuts::~MinEkineCuts()
@@ -52,7 +54,7 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
     {      
       G4double eMin = pUserLimits->GetUserMinEkine(aTrack);
     }
-  
+
   if (eKine < eMin ) 
     {          
       proposedStep = 0.;
