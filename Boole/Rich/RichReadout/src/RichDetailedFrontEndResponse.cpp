@@ -75,7 +75,7 @@ StatusCode RichDetailedFrontEndResponse::execute()
 
   // Clear time sample cache
   tscache.clear();
-  //tscache.reserve( m_summedDeposits->size() );
+  tscache.reserve( m_summedDeposits->size() );
 
   // Run analog sim
   const StatusCode sc = Analog();
@@ -109,11 +109,10 @@ StatusCode RichDetailedFrontEndResponse::Analog()
     {
 
       // Create time sample for this summed deposit
-      RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
-      //tscache.push_back( TimeData( *iSumDep, 
-      //                             RichTimeSample( readOut->FrameSize(),
-      //                                             readOut->BaseLine() ) ) );
-      //RichTimeSample & ts = tscache.back().second;
+      tscache.push_back( TimeData( *iSumDep, 
+                                   RichTimeSample( readOut->FrameSize(),
+                                                   readOut->BaseLine() ) ) );
+      RichTimeSample & ts = tscache.back().second;
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
@@ -159,8 +158,6 @@ StatusCode RichDetailedFrontEndResponse::Analog()
         }
 
       } // MCRichDeposit loop
-
-      tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
 
     } // if shape
 
