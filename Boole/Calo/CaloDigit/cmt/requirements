@@ -5,24 +5,23 @@
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
-package           CaloDigit
-version           v1r0
+package          CaloDigit
+version          v1r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches         cmt doc src options
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     CaloKernel      v2r2    Calo
-use CaloEvent v11r* Event
-use CaloDet v5r* Det
-#use	CaloUtils	v4r*	Calo
+use CaloKernel   v2r*    Calo
+use CaloEvent    v11r* Event
+use CaloDet      v5r* Det
 
 #============================================================================
 # Component library building rule
@@ -32,8 +31,4 @@ library          CaloDigit    ../src/*.cpp
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern    component_library library=CaloDigit
