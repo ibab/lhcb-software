@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.20 2002-03-18 08:10:36 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.21 2002-03-18 08:22:24 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -674,8 +674,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         << remLine << std::endl 
         << "{" << std::endl
         << "  static " << gddRealRelType << " ret;" << std::endl
-        << "  ret = ((" << gddClassName << "*)v)->" << gddRelName
-          << "();" << std::endl
+        << "  ret = ((" << gddClassName << "*)v)->"
+          << DaDiTools::retGetName(gddRelName) << "();" << std::endl
         << "  return &ret;" << std::endl
         << "}" << std::endl
         << std::endl;
