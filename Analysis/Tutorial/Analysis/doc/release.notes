@@ -3,25 +3,15 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : Analysis tutorial
 !-----------------------------------------------------------------------------
+!
+!   Read README.txt !
+!
+!-----------------------------------------------------------------------------
 
 ! 2004-11-08 - P. Koppenburg 
+  - cmt/requirements
+    . Use DaVinci. That's much simpler. Thanks to Andrew for noticing.
+  
+! 2004-11-08 - P. Koppenburg 
   New implementation
-  
-  1) You are welcome to write the codee yourself, following the tutorial
-  
-  2) To get it to work quickly, go through the following:
-     
-    > cd $DAVINCIROOT/cmt/
-    # add  to requirements:
-         use Analysis v4 Tutorial  
-    > cmt config
-    > source setup.csh
-    > cd $ANALYSISROOT
-    > cp solution/TutorialAlgorithm.* src/
-    > cd cmt
-    > make
-    > DaVinci ../options/DVTutorial_1.opts
-  
-  3) To alos have the Phi, the Bs and the efficiency:   
 
-    > DaVinci ../options/DVTutorial_2.opts

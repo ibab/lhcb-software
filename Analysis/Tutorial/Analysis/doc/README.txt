@@ -8,18 +8,15 @@
   
   2) To get it to work quickly, go through the following:
      
-    > cd $DAVINCIROOT/cmt/
-    # add  to requirements:
-         use Analysis v4 Tutorial  
+    > DaVinciEnv v12r3   (or more if available)
+    > cd cmt/
     > cmt config
     > source setup.csh
-    > cd $ANALYSISROOT
-    > cp solution/TutorialAlgorithm.* src/
-    > cd cmt
+    > cp ../solution/TutorialAlgorithm.* ../src/
     > make
     > DaVinci ../options/DVTutorial_1.opts
   
-  3) To alos have the Phi, the Bs and the efficiency:   
+  3) To also have the Phi, the Bs and the efficiency:   
 
     > DaVinci ../options/DVTutorial_2.opts
 
