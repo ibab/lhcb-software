@@ -1,5 +1,5 @@
 package GaussSys
-version v9r0
+version v9r1
 
 branches cmt doc
 
@@ -7,11 +7,11 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 # Gauss application
-use Gauss		v9r0	Sim
+use Gauss		v9r1	Sim
 
 # GEANT4 libraries
-use GEANT4	      v2r5010p0 Sim
-use G4VisUI             v1r1    Sim
+use GEANT4	      v2r5020p0 Sim
+use G4VisUI             v1r2    Sim
 
 # Generator stuff ...
 use EvtGen              v3r2    Gen
@@ -38,6 +38,6 @@ use ITAlgorithms        v12r8   IT
 use ITCheckers		v1r2	IT
 
 # OPACS stuff
-use OPACSLIB		v3	Vis
+use OPACSLIB		v3p1	Vis
 
 	

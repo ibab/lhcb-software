@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!============================ GaussSys v9r1 2003-03-04 =================
+! 2003-03-04 - Florence RANJARD
+  use GEANT4 v2r5020p0 (geant4 5.0.ref02), OPACSLIB v3p1 (OPACS compiled
+  on Rh73 gcc2952), G4VisUI v1r2 
+      
 !=========================== GaussSys v9r0 2003-02-17 =================
 ! 2003-02-27 - Florence Ranjard
   fix in EvtGen/v3r2 and GeneratorModules/v5r1 to compile on WIN32
