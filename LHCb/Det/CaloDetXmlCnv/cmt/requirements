@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.8 2003-06-16 15:19:56 cattanem Exp $ 
+# $Id: requirements,v 1.9 2003-11-18 16:26:42 cattanem Exp $ 
 # =============================================================================
 # The package with XML-converters gfor Caloriometer Detector Model 
 # =============================================================================
 package   CaloDetXmlCnv
-version   v2r3
+version   v2r3p1
 
 # =============== structure ===================================================	
 branches         src cmt doc options 

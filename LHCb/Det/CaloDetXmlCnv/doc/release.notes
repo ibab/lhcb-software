@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.9 2003-06-17 09:16:09 cattanem Exp $
+! $Id: release.notes,v 1.10 2003-11-18 16:26:42 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!===================== CaloDetXmlCnv v2r3p1 2003-11-18 =====================
+! 2003-11-18 - Guy Barrand
+ - use macro in CaloDetXmlCnv_dll.cpp, to fix compilation on Mac OS X
 
 !====================== CaloDetXmlCnv v2r3 2003-06-17 ======================
 ! 2003-06-16 - Sebastien Ponce
