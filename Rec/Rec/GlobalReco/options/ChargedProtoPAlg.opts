@@ -1,8 +1,11 @@
-//##############################################################
-// ChargedProtoPAlg options
+/** @file 
+ *  Configuration options for algorithm ChargedProtoPAlg
+ *
+ *  @author G.Corti
+ *  @date 2003-02-07
 
 #pragma print off
-// Input data
+// Input data: default values
 //  ChargedProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
 //  ChargedProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
 //  ChargedProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
@@ -11,20 +14,23 @@
 //  ChargedProtoPAlg.ElectronMatching = "ElectronMatch";
 //  ChargedProtoPAlg.BremMatching = "BremMatch";  
 
-// Output data
+// Output data: default values
 //  ChargedProtoPAlg.OutputData = "Rec/ProtoP/Charged";
 #pragma print on
 
 // Track Selections
+//  Note that Uptream tracks with special cuts for Ks are made with
+//    UpstreamProtoPAlg: do not execute at the same time that algorithm
+//    and ChargedProtoPAlg with the UpstreamsTracks flag true
 //  ChargedProtoPAlg.UpstreamsTracks = true;  // default = false
+//  ChargedProtoPAlg.VeloTTTracks = true;     // default = false
 ChargedProtoPAlg.ITFracTrackClass = 0.4;    // default = 0.4
 ChargedProtoPAlg.Chi2NdFofITracks = 500.0;  // default = 500.0
 ChargedProtoPAlg.Chi2NdFofOTracks = 100.0;  // default = 100.0
 
-// Calorimeter pID tables
-ChargedProtoPAlg.PhotonMatch.Location      = "Rec/Calo/PhotonMatch" ;
-ChargedProtoPAlg.ElectronMatch.Location    = "Rec/Calo/ElectronMatch" ;
-ChargedProtoPAlg.BremMatch.Location        = "Rec/Calo/BremMatch" ;
+// Calorimeter pID associators used are public instances configured by
+// DaVinciCommon via
+//   $CALORECOOPTS/PhotonMatch.opts
+//   $CALORECOOPTS/ElectronMatch.opts
+//   $CALORECOOPTS/BremMatch.opts
 
-// Monitoring histograms
-//  ChargedProtoPAlg.Monitor = false;     // default = false - not there ?

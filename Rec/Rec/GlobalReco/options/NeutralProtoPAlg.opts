@@ -1,11 +1,16 @@
-//##############################################################
-// NeutralProtoPAlg options
+/** @file 
+ *  Configuration options for NeutralProtoPAlg instance of
+ *  NeutralPPcreator algorithm
+ * 
+ *  @autor Gloria Corti
+ *  @date 2003-02-06
+ */
 
-#pragma print off
-// Input data
-//NeutralProtoPAlg.Detector    = "/dd/Structure/LHCb/Ecal" ; ??? necessary ???
+// Input data: mandatory
 NeutralProtoPAlg.Input       = "/Event/Rec/Calo/Photons" ;
-//NeutralProtoPAlg.OtherInputs = "";
+#pragma print off
+// Default is an empty vector of strings, possible value is: 
+// NeutralProtoPAlg.OtherInputs = { "Rec/Calo/MergedPi0s" };
 //NeutralProtoPAlg.Matching = "AssociatorWeighted<CaloCluster,TrStoredTrack,float>/PhotonMatch"
 //NeutralProtoPAlg.SpdPrs = "CaloSingleGammaTool/SpdPrsID";
 

@@ -1,0 +1,20 @@
+
+/** @file 
+ *  Configuration options for  algorithm
+ *  
+ *  @autor G.Corti
+ *  @date 2003-02-06
+ */
+
+// Default values for input & output data
+// NeutralPPsFromCPsAlg.Input       = "Rec/Calo/Particles";
+// NeutralPPsFromCPsAlg.OutputData = "Rec/ProtoP/Neutrals";
+// Numbers corresponding to Enum of CaloHypotheses::Photon, 
+// CaloHypotheses::Pi0Merged (refer to LHCbKernel/Kenrnel/CaloHypothesis.h)
+// The enum need to be replaced with numbers
+// NeutralPPsFromCPsAlg.Hypos = { CaloHypotheses::Photon, CaloHypotheses::Pi0Merged }; 
+// Default tools
+// NeutralPPsFromCPsAlg.MatchingType = "AssociatorWeighted<CaloCluster,TrStoredTrack,float>"; 
+// NeutralPPsFromCPsAlg.MatchingName = "PhotonMatch"
+// NeutralPPsFromCPsAlg.SpdPrsIDType = "CaloSingleGammaTool"
+// NeutralPPsFromCPsAlg.SpdPrsIDName = "SpdPrsID"

@@ -1,8 +1,7 @@
-// $Id: NeutralPPCreator.opts,v 1.1 2002-09-06 14:47:12 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+//  Revision 1.1  2002/09/06 14:47:12  ibelyaev
+//  update NeutralPPCreator and its options
+// 
 // ============================================================================
 
 /** @file 
