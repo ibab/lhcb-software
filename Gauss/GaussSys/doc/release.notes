@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v15r3 2004-03-29 =================
+! 2004-03-29 - Florence RANJARD
+ - Gauss v15r3 is built with Geant4 v61r0 (geant4.6.1.0)
+
 !========================== GaussSys v15r2 2004-03-22 ===================
 ! 2004-03-22 - Florence RANJARD
  - Gauss v15r2 is a bug fix of Gauss v15r1
