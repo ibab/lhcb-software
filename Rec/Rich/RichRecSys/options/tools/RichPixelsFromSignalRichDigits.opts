@@ -14,3 +14,6 @@ ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCre
 
 // Which RICH detectors to use                 RICH1   RICH2
 ToolSvc.RichPixelCreatorReco.UseDetectors = {  true,   true   };
+
+// Turn on/off the filtering of hits that do not associated to tracked MCParticles
+ToolSvc.RichPixelCreator.FilterTracklessDigits = true;

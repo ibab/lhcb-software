@@ -4,8 +4,10 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.4 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.5 2004-11-09 10:47:10 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -30,7 +32,9 @@ RichPixelCreatorFromSignalRichDigits( const std::string& type,
     m_mcTool              ( 0 ),
     m_pixMaker            ( 0 ),
     m_subPixelCreatorName ( "RichPixelCreatorReco" ),
-    m_allDone             ( false )
+    m_allDone             ( false ),
+    m_trackFilter         ( false ),
+    m_trackMCPsDone       ( false )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -41,6 +45,7 @@ RichPixelCreatorFromSignalRichDigits( const std::string& type,
   declareProperty( "RecoDigitsLocation",
                    m_recoDigitsLocation = RichDigitLocation::Default );
   declareProperty( "DelegatedPixelCreator", m_subPixelCreatorName );
+  declareProperty( "FilterTracklessDigits", m_trackFilter );
 
 }
 
@@ -51,8 +56,9 @@ StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichMCTruthTool",     m_mcTool   );
-  acquireTool( m_subPixelCreatorName, m_pixMaker );
+  acquireTool( "RichMCTruthTool",     m_mcTool    );
+  acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
+  acquireTool( m_subPixelCreatorName, m_pixMaker  );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -78,7 +84,8 @@ void RichPixelCreatorFromSignalRichDigits::handle ( const Incident& incident )
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
     {
-      debug() << "Created " << richPixels()->size() << " RichRecPixels" << endreq;
+      debug() << "Created " << richPixels()->size() << " RichRecPixels at "
+              << m_richRecPixelLocation << endreq;
     }
 }
 
@@ -93,11 +100,59 @@ RichPixelCreatorFromSignalRichDigits::newPixel( const ContainedObject * obj ) co
     return NULL;
   }
 
+  // Get MCRichDigit
+  const MCRichDigit * mcDigit = m_mcTool->mcRichDigit(digit);
+  if ( !mcDigit ) return NULL;
+
   // Test if this is a background hit
-  if ( m_mcTool->isBackground( m_mcTool->mcRichDigit(digit) ) ) return NULL;
+  if ( m_mcTool->isBackground( mcDigit ) ) return NULL;
+
+  // if requested, filter trackless hits
+  if ( m_trackFilter ) {
+
+    // MC parentage for pixel
+    const SmartRefVector<MCRichHit> & hits = mcDigit->hits();
+    
+    // loop over hits and compare MC history to tracked MCParticles
+    bool found = false;
+    for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
+          iHit != hits.end(); ++iHit ) {
+      if ( !(*iHit) ) continue;
+      const MCParticle * mcP = (*iHit)->mcParticle();
+      if ( mcP && trackedMCPs()[mcP] ) { found = true; break; }
+    }
+    if ( !found ) return NULL;
+
+  }
 
   // Finally, delegate work to pixel creator
   return m_pixMaker->newPixel( obj );
+}
+
+RichPixelCreatorFromSignalRichDigits::TrackedMCPList & 
+RichPixelCreatorFromSignalRichDigits::trackedMCPs() const
+{
+  if ( !m_trackMCPsDone ) {
+    m_trackMCPsDone = true;
+
+    // Make sure all RichRecTracks have been formed
+    if ( !trackCreator()->newTracks() ) Exception("Error whilst creating RichRecTracks");
+    if ( richTracks()->empty() )        Warning( "RichRecTrack container empty !");
+
+    // Loop over reconstructed tracks to form a list of tracked MCParticles
+    debug() << "Found " <<  richTracks()->size() << " RichRecTracks" << endreq;
+    for ( RichRecTracks::const_iterator iTk = richTracks()->begin();
+          iTk != richTracks()->end(); ++iTk ) {
+      if ( !(*iTk) ) continue;
+      const MCParticle * tkMCP = m_mcRecTool->mcParticle(*iTk);
+      verbose() << "RichRecTrack " << (*iTk)->key() << " has MCParticle " << tkMCP << endreq;
+      if ( tkMCP ) m_trackedMCPs[tkMCP] = true;
+    }
+
+    debug() << "Found " << m_trackedMCPs.size() << " tracked MCParticles" << endreq;
+
+  }
+  return m_trackedMCPs;
 }
 
 StatusCode RichPixelCreatorFromSignalRichDigits::newPixels() const
@@ -115,9 +170,7 @@ StatusCode RichPixelCreatorFromSignalRichDigits::newPixels() const
 
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Located " << digits->size() << " RichDigits at "
-            << m_recoDigitsLocation << endreq
-            << "Created " << richPixels()->size() << " RichRecPixels at "
-            << m_richRecPixelLocation << endreq;
+            << m_recoDigitsLocation << endreq;
   }
 
   return StatusCode::SUCCESS;
