@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.56 2004-02-17 21:37:01 mtobin Exp $
+! $Id: release.notes,v 1.57 2004-02-24 18:25:56 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r0 2004-02-13 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-02-24 - Mark Tobin
+ - Replicate behaviour of old VeloDet by adding routines trgPhiMatchingStrips,
+ trgPhiDirectionOfStrip, trgPhiOfStrip and restoring the old functionality of
+ phiMatchingStrips and distToOrigin.
+ - Minor bug fix in pointToChannel for phi sensors!
 
 ! 2004-02-17 - Mark Tobin
  - inlining of methods in DeVeloSensor, DeVeloRType and DeVeloPhiType
