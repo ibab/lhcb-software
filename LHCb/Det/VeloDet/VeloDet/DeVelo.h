@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.19 2004-02-17 21:36:50 mtobin Exp $
+// $Id: DeVelo.h,v 1.20 2004-02-24 18:24:28 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -226,22 +226,24 @@ public:
   /// returns the R pitch at the given channelID +/- fraction of channel
   StatusCode rPitch( VeloChannelID channel, double fraction, double &rPitch ) ;
 
-  /// returns the R pitch at a given radiusb
+  /// returns the R pitch at a given radius
   StatusCode rPitchAtR( VeloChannelID channel, double radius, double &rPitch);
 
-  /// returns the phi of the strip at the specified radius for this sensor.
+  /// returns the phi of the strip at the specified radius 
+  /// in the local frame of the sensor.
   StatusCode phiOfStrip( VeloChannelID channel,
                                 double radius, double &phiOfStrip ) ;
 
   /// returns the phi of the strip+fractional distance to strip
-  /// at the specified radius for this sensor.
+  /// at the specified radius in the local frame of sensor.
   StatusCode phiOfStrip( VeloChannelID channel, double fraction,
                                 double radius, double &phiOfStrip ) ;
 
-  /// returns the angle of the strip wrt the x axis for the strip
+  /// returns the angle of the strip wrt the x axis in the local frame
+  /// for the strip
   StatusCode angleOfStrip( VeloChannelID channel, double &angleOfStrip ) ;
                                
-  /// returns the angle of the strip wrt the x axis for
+  /// returns the angle of the strip wrt the x axis in the local frame for
   /// the strip+fractional distance to strip
   StatusCode angleOfStrip( VeloChannelID channel, double fraction,
                            double &angleOfStrip ) ;
@@ -264,6 +266,7 @@ public:
 
   /// return the minimum sensitive radius of an R wafer, local frame
   double rMin(unsigned int sensor) ;
+
   /// return the maximum sensitive radius of an R wafer, local frame
   double rMax(unsigned int sensor) ;
 
@@ -271,6 +274,7 @@ public:
       4 zones (different phi) for R sensors and 2 zones 
       (different R and stereo) for the phi sensors */
   double rMin(unsigned int sensor, unsigned int zone) ; 
+
   /** return the maximum sensitive radius of an R wafer in a zone, local frame
       4 zones (different phi) for R sensors and 2 zones 
       (different R and stereo) for the phi sensors */
@@ -355,18 +359,33 @@ public:
                              double&  rPitch,
                              double&  phiPitch ) ;
 
-  ///  Returns a range of strip matching the point, and the conversion factors
-  void phiMatchingStrips( int sensor, 
-                          double radius, 
-                          int rSensor, 
-                          int zone,
-                          double angularTol,
-                          double& stripMin, 
-                          double& stripMax, 
-                          double& pitch, 
-                          double& offset );
 
-  
+  ///=========================================================================
+  /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry
+  ///=========================================================================
+  ///  Returns a range of strip matching the point, and the conversion factors
+  void trgPhiMatchingStrips( int sensor, 
+                             double radius, 
+                             int rSensor, 
+                             int zone,
+                             double angularTol,
+                             double& stripMin, 
+                             double& stripMax, 
+                             double& pitch, 
+                             double& offset );
+  /// returns the phi of the strip at the specified radius 
+  StatusCode trgPhiOfStrip( VeloChannelID channel,
+                                double radius, double &phiOfStrip ) ;
+  /// returns the phi of the strip+fractional distance to strip
+  StatusCode trgPhiOfStrip( VeloChannelID channel, double fraction,
+                                double radius, double &phiOfStrip ) ;
+  /// returns the angle of the strip wrt the x axis 
+  StatusCode trgPhiDirectionOfStrip( VeloChannelID channel, 
+                                     double &angleOfStrip ) ;
+  /// returns the angle of the strip+frac. distance to strip wrt the x axis 
+  StatusCode trgPhiDirectionOfStrip( VeloChannelID channel, double fraction,
+                           double &angleOfStrip ) ;
+  ///========================================================================
 protected: 
 
 private:
