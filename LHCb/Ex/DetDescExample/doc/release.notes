@@ -5,7 +5,10 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
-!20010514 Sebastien Ponce
+!20010622 Sebastien Ponce
+ - added a test of the TabulatedProperty xml tag.
+
+!20010622 Sebastien Ponce
  - added the use of UserParam for the Calo subdetector. The previous
  Calo object and converter were removed.
 

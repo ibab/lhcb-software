@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.6 2001-06-22 10:18:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.7 2001-06-22 12:43:13 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -20,6 +20,7 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/Material.h"
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/TabulatedProperty.h"
 
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
@@ -70,15 +71,29 @@ StatusCode SimpleAlgorithm::initialize() {
   StatusCode sc;
   
   log << MSG::INFO << "Initialization starting..." << endreq;
-  log << MSG::INFO << "Retrieving now detector elements" << endreq;
 
-  /// The logical volume interface we can use to get information about volume
-  ILVolume* stvol = 0;
+  // This is a quick test of the TabulatedProperty feature
+  log << MSG::INFO << "Testing the TabulatedProperty feature" << endreq;
+  SmartDataPtr<TabulatedProperty> tab
+    (detSvc(), "/dd/Geometry/Rich1/Rich1Surfaces/MirrorSurfaceReflectivityPT");
+  if (!tab) {
+    log << MSG::ERROR
+        << "Can't retrieve /dd/Geometry/Rich1/Rich1Surfaces"
+        << "/MirrorSurfaceReflectivityPT" << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  /// Smart data pointers is the prefered way to load data
-  
+  TabulatedProperty::Table table = tab->table();
+  for (TabulatedProperty::Table::iterator it = table.begin();
+       it != table.end();
+       it++) {
+    log << MSG::INFO << "new table Entry : "
+        << "x = " << it->first << ", y = " << it->second << endreq;
+  }
+
   /// Now we retrieve the top level detector element, e.g. LHCb detector
   /// "Structure" is the top level catalog holding detector logical structure
+  log << MSG::INFO << "Retrieving now detector elements" << endreq;
   SmartDataPtr<IDetectorElement> cave(detSvc(),"/dd/Structure/LHCb" );
   
   /// We test if the smart reference is non-zero to be sure
@@ -90,7 +105,7 @@ StatusCode SimpleAlgorithm::initialize() {
   
   /// Fill the pointer with the information about volume
   /// associated with "/dd/Structure/LHCb"
-  stvol = cave->geometry()->lvolume();
+  ILVolume* stvol = cave->geometry()->lvolume();
   log << MSG::INFO << "LHCb detector is made of " << stvol->materialName()
       << endreq;
   
@@ -111,6 +126,20 @@ StatusCode SimpleAlgorithm::initialize() {
     log << MSG::INFO << "ECAL " << *it << " = "
         << ecal->userParameterValue(*it)
         << endreq;
+  }
+  
+  std::vector<std::string> parameterVectorList = ecal->userParameterVectors();
+  for (std::vector<std::string>::iterator it = parameterVectorList.begin();
+       it != parameterVectorList.end();
+       it++) {
+    std::vector<std::string> values = ecal->userParameterVectorValue(*it);
+    log << MSG::INFO << "ECAL " << *it << " = ";
+    for (std::vector<std::string>::iterator it2 = values.begin();
+         it2 != values.end();
+         it2++) {
+      log << *it2 << " ";
+    }
+    log << endreq;
   }
   
   dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->name() );
