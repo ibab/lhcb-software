@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.26 2002-12-18 12:46:02 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.27 2003-01-09 12:59:11 witoldp Exp $ 
 
 #include "$STDOPTS/DetDesc.opts"
 
@@ -11,7 +11,6 @@ MagneticFieldSvc.FieldMapFile =
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
-  "GaussTools"   ,
   "GaussTracker" ,
   "GaussRICH"    ,
   "GaussCalo"    ,
@@ -77,8 +76,7 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 
 // Physics List  to be used and its configuration  
 GiGa.PhysicsList            = "GiGaPhysListModular/ModularPL";
-//GiGa.ModularPL.Cut           = 0.7;
-GiGa.ModularPL.Cut           = 4.0;
+GiGa.ModularPL.Cut           = 4.0 * mm;
 
 
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
@@ -90,7 +88,7 @@ GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
 //GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
 
 // Stacking action to be used and its configuration  
-GiGa.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
+//GiGa.StackingAction         = "GaussStackAction/GaussStack" ;
 
 // Tracking action to be used and its configuration  
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
@@ -121,7 +119,7 @@ GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
-  "/run/verbose 0 "               ,
+  "/run/verbose 1 "               ,
   "/vis/verbose -10 "               ,
   "/tracking/verbose 0"            ,
   "/tracking/storeTrajectory  1"    } ;

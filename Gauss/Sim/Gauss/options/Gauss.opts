@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.20 2002-12-18 12:46:02 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.21 2003-01-09 12:59:11 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -11,6 +11,7 @@ EventPersistencySvc.CnvServices  = {};
 
 ApplicationMgr.DLLs  = { "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg"} ;
+ApplicationMgr.DLLs += { "GaussTools"} ;
 
 ApplicationMgr.HistogramPersistency = "NONE";
 
@@ -44,8 +45,9 @@ MessageSvc.OutputLevel    = 3 ;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 100 ;
+ApplicationMgr.EvtMax     = 10 ;
 
+//GaussInit.FirstEventNumber =23;
 
 // Modify Message Format to print algorithm name with 40 characters
 // MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
