@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.4 2003-07-02 15:37:52 jonesc Exp $
+// $Id: RichRecMCTruthTool.h,v 1.5 2003-08-06 11:08:13 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -90,6 +90,12 @@ public:
 
   /// Find parent MCRichDigit association for a given RichRecPixel
   const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel );
+
+  /// Find parent MCRichHit association for a given RichRecPixel
+  const MCRichHit * mcRichHit( const RichRecPixel * richPixel );
+
+  /// Finds parent MCRichHit association for given MCRichDigit
+  const MCRichHit * mcRichHit( const MCRichDigit * mcDigit );
 
   /// Find parent MCRichOpticalPhoton association for a given RichRecPixel
   const MCRichOpticalPhoton * mcRichOpticalPhoton( const RichRecPixel * richPixel );

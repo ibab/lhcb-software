@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.h,v 1.2 2003-07-03 13:09:03 jonesc Exp $
+// $Id: RichToolRegistry.h,v 1.3 2003-08-06 11:08:14 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHTOOLREGISTRY_H
 #define RICHRECTOOLS_RICHTOOLREGISTRY_H 1
 
@@ -42,7 +42,7 @@ public:
   /// Method to return the tool type from the name
   std::string toolType( std::string name );
 
-private: // private data
+private: // data
 
   typedef std::vector<std::string> ToolList;
   /// Tool data from job options

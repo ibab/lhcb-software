@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.11 2003-07-03 14:46:59 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.12 2003-08-06 11:08:13 jonrob Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -187,6 +187,22 @@ const MCParticle * RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrac
   return NULL;
 }
 
+const MCRichHit * RichRecMCTruthTool::mcRichHit( const RichRecPixel * richPixel ) {
+
+  const MCRichDigit * mcDigit = mcRichDigit( richPixel );
+  return mcRichHit( mcDigit );
+}
+
+const MCRichHit * RichRecMCTruthTool::mcRichHit( const MCRichDigit * mcDigit ) {
+  
+  if ( !mcDigit ) return NULL;
+  if ( mcDigit->hits().size() < 1 ) return NULL;
+  // For the moment take first (and only) MCRichHit
+  const MCRichHit * mcHit = *(mcDigit->hits().begin());
+
+  return mcHit;
+}
+
 const MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
 {
   const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
@@ -205,11 +221,7 @@ const MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPi
 
 const MCParticle * RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel )
 {
-  const MCRichDigit * mcDigit = mcRichDigit( richPixel );
-  if ( !mcDigit ) return NULL;
-  if ( mcDigit->hits().size() < 1 ) return NULL;
-  // For the moment take first (and only) MCRichHit
-  const MCRichHit * mcHit = *(mcDigit->hits().begin());
+  const MCRichHit * mcHit = mcRichHit( richPixel );
   return ( mcHit ? mcHit->mcParticle() : NULL );
 }
 
@@ -228,13 +240,13 @@ const MCParticle * RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton 
 
   const MCParticle * mcPart = trueRecPhoton( photon );
   if ( !mcPart ) return NULL;
-  
-  if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( photon->richRecPixel() ) ) {
+
+  if ( const MCRichHit * mcHit = mcRichHit( photon->richRecPixel() ) ) {
     Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
-    if ( (unsigned int)rad == optPhot->radiator() && 
-         !optPhot->scatteredPhoton() ) return mcPart;
+    if ( (unsigned int)rad == mcHit->radiator() && 
+         !mcHit->scatteredPhoton() && !mcHit->chargedTrack() ) return mcPart;
   }
-  
+
   return NULL;
 }
 
@@ -244,12 +256,9 @@ const MCParticle * RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixe
   const MCParticle * mcPart = mcParticle( pixel );
   if ( !mcPart ) return NULL;
   
-  if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( pixel ) ) {
-    if ( (unsigned int)rad == optPhot->radiator() && 
-         !optPhot->scatteredPhoton() ) return mcPart;
-    //if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
-    //     ( rad == Rich::Aerogel && optPhot->aerogel() &&
-    //       !optPhot->scatteredAerogel() ) ) return mcPart;
+  if ( const MCRichHit * mcHit = mcRichHit( pixel ) ) {
+    if ( (unsigned int)rad == mcHit->radiator() && 
+         !mcHit->scatteredPhoton() && !mcHit->chargedTrack() ) return mcPart;
   }
   
   return NULL;
@@ -282,10 +291,8 @@ RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel ) {
 
   MCRichOpticalPhoton * phot = NULL;
   if ( mcRichOpticalPhotons() ) {
-    const MCRichDigit * mcDigit = mcRichDigit( richPixel );
-    if ( mcDigit && mcDigit->hits().size() >= 1 ) {
-      // For the moment take first (and only) MCHit
-      const MCRichHit * mcHit = *(mcDigit->hits().begin());
+    const MCRichHit * mcHit = mcRichHit( richPixel );
+    if ( mcHit ) {
       phot = m_mcRichOpticalPhotons->object( mcHit->key() );
       if ( phot && phot->mcRichHit() != mcHit ) {
         MsgStream msg( msgSvc(), name() );
@@ -293,7 +300,7 @@ RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel ) {
       }
     }
   }
-
+  
   return phot;
 }
 

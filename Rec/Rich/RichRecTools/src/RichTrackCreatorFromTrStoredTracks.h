@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.2 2003-08-06 11:08:14 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -14,7 +14,7 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichSegmentCreator.h"
-#include "RichRecBase/IRichSegmentProperties.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichDetTools/IRichDetInterface.h"
 
 // Event
@@ -79,8 +79,8 @@ private:
   /// Pointer to the RichDetInterface tool
   IRichDetInterface * m_richDetInt;
 
-  /// Pointer to the RichSegmentProperties tool
-  IRichSegmentProperties * m_segProps;
+  /// Pointer to RichExpectedTrackSignal interface
+  IRichExpectedTrackSignal * m_signal;
 
   /// Input location of TrStoredTracks in TES
   std::string m_trTracksLocation;

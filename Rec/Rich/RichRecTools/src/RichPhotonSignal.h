@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.h,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPhotonSignal.h,v 1.2 2003-08-06 11:08:13 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
@@ -13,7 +13,9 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
-#include "RichRecBase/IRichSegmentProperties.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichCherenkovResolution.h"
 
 // Rich Kernel
 #include "RichKernel/MessageSvcStl.h"
@@ -54,16 +56,22 @@ private: // private methods
 
   /// Signal Probability
   double signalProb( RichRecPhoton * photon,
-                     const Rich::ParticleIDType& id );
+                     const Rich::ParticleIDType id );
 
   /// Scatter Probability
   double scatterProb( RichRecPhoton * photon,
-                      const Rich::ParticleIDType& id );
+                      const Rich::ParticleIDType id );
 
 private: // private data
 
-  /// Pointer to RichSegmentProperties interface
-  IRichSegmentProperties * m_segProps;
+  /// Pointer to RichExpectedTrackSignal interface
+  IRichExpectedTrackSignal * m_signal;
+
+  /// Pointer to RichCherenkovAngle interface
+  IRichCherenkovAngle * m_ckAngle;
+
+  /// Pointer to RichCherenkovResolution interface
+  IRichCherenkovResolution * m_ckRes;
 
   /// Temporary local value for Radii of curvature
   double m_radiusCurv[Rich::NRiches];

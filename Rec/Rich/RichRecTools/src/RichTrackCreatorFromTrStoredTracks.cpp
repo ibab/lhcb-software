@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.3 2003-07-06 09:25:24 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.4 2003-08-06 11:08:14 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -39,7 +39,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize() {
   // Acquire instances of tools
   acquireTool("RichSegmentCreator", m_segCr);
   acquireTool("RichDetInterface", m_richDetInt);
-  acquireTool("RichSegmentProperties", m_segProps);
+  acquireTool("RichExpectedTrackSignal", m_signal);
 
   // Get pointer to EDS
   if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
@@ -71,9 +71,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize() {
 
   // release services and tools
   if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-  releaseTool( m_segCr);
-  releaseTool( m_richDetInt);
-  releaseTool( m_segProps);
+  releaseTool( m_segCr );
+  releaseTool( m_richDetInt );
+  releaseTool( m_signal );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -192,10 +192,10 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
               iSeg != segments.end(); ++iSeg ) {
 
           // make a new RichRecSegment from this RichTrackSegment
-          RichRecSegment * newSegment = new RichRecSegment( *iSeg, newTrack );
+          RichRecSegment * newSegment = m_segCr->newSegment( *iSeg, newTrack );
 
           // Is this segment useful ?
-          if ( m_segProps->hasRichInfo(newSegment) ) {
+          if ( m_signal->hasRichInfo(newSegment) ) {
 
             // keep track
             keepTrack = true;

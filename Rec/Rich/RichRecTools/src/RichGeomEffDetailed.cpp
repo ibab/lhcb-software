@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.cpp,v 1.2 2003-07-03 14:46:58 jonesc Exp $
+// $Id: RichGeomEffDetailed.cpp,v 1.3 2003-08-06 11:08:12 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -51,7 +51,7 @@ StatusCode RichGeomEffDetailed::initialize() {
 
   // Acquire instances of tools
   acquireTool("RichDetInterface", m_richDetInt);
-  acquireTool("RichSegmentProperties", m_segProps);
+  acquireTool("RichCherenkovAngle", m_ckAngle);
   
   // randomn number service
   IRndmGenSvc * randSvc;
@@ -90,7 +90,7 @@ StatusCode RichGeomEffDetailed::finalize() {
   // Release tools and services
   m_uniDist.finalize();
   releaseTool( m_richDetInt );
-  releaseTool( m_segProps );
+  releaseTool( m_ckAngle );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -99,14 +99,12 @@ StatusCode RichGeomEffDetailed::finalize() {
 double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
                                              const Rich::ParticleIDType id ) {
 
-  double eff = segment->geomEfficiency( id );
-  if ( eff < -0.5 ) {
-
+  if ( !segment->geomEfficiency().dataIsValid(id) ) {
+    double eff = 0;
+    
     // Cherenkov theta for this segment/hypothesis combination
-    double ckTheta = m_segProps->avgCherenkovTheta( segment, id );
-    if ( ckTheta <= 0 ) {
-      eff = 0;
-    } else {
+    double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( ckTheta > 0 ) {
 
       RichTrackSegment & trackSeg = segment->trackSegment();
 
@@ -168,19 +166,17 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
     segment->setGeomEfficiency( id, eff );
   }
 
-  return eff;
+  return segment->geomEfficiency( id );
 }
 
 double RichGeomEffDetailed::geomEfficiencyScat ( RichRecSegment * segment,
                                                  const Rich::ParticleIDType id ) {
 
-  double eff = segment->geomEfficiencyScat( id );
-  if ( eff < -0.5 ) {
+  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
+    double eff = 0;
 
     // only for aerogel
-    if ( segment->trackSegment().radiator() != Rich::Aerogel ) {
-      eff = 0;
-    } else {
+    if ( segment->trackSegment().radiator() == Rich::Aerogel ) {
 
       RichTrackSegment & trackSeg = segment->trackSegment();
 
@@ -236,5 +232,5 @@ double RichGeomEffDetailed::geomEfficiencyScat ( RichRecSegment * segment,
 
   }
 
-  return eff;
+  return segment->geomEfficiencyScat( id );
 }

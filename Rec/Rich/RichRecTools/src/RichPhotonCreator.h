@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.3 2003-07-03 13:09:03 jonesc Exp $
+// $Id: RichPhotonCreator.h,v 1.4 2003-08-06 11:08:13 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -10,12 +10,6 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
-
-// Event
-#include "Event/RichRecTrack.h"
-#include "Event/RichRecPixel.h"
-#include "Event/RichRecPhoton.h"
-#include "Event/RichRecSegment.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
@@ -68,17 +62,17 @@ public:
                                      RichRecPixel * pixel );
 
   /// Form all photon candidates for a given track and pixel
-  SmartRefVector<RichRecPhoton> reconstructPhotons( RichRecTrack * track,
-                                                    RichRecPixel * pixel );
+  RichRecTrack::Photons reconstructPhotons( RichRecTrack * track,
+                                             RichRecPixel * pixel );
 
   /// Form all photon candidates for a given track, with all possible pixels.
-  SmartRefVector<RichRecPhoton>& reconstructPhotons( RichRecTrack * track );
+  RichRecTrack::Photons& reconstructPhotons( RichRecTrack * track );
 
   /// Form all photon candidates for a given pixel, with all possible tracks.
-  SmartRefVector<RichRecPhoton>& reconstructPhotons( RichRecPixel * pixel );
+  RichRecPixel::Photons& reconstructPhotons( RichRecPixel * pixel );
 
   /// Form all photon candidates for a given segment, with all possible pixels.
-  SmartRefVector<RichRecPhoton>& reconstructPhotons( RichRecSegment * segment );
+  RichRecSegment::Photons & reconstructPhotons( RichRecSegment * segment );
 
   /// Method to perform the reconstruction of all tracks and pixels
   void reconstructPhotons();

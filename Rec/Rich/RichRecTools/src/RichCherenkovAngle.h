@@ -1,0 +1,61 @@
+// $Id: RichCherenkovAngle.h,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHCHERENKOVANGLE_H
+#define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
+
+// base class
+#include "RichRecBase/RichRecToolBase.h"
+
+// Event model
+#include "Event/RichRecSegment.h"
+
+// interfaces
+#include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichExpectedTrackSignal.h"
+#include "RichRecBase/IRichRefractiveIndex.h"
+#include "RichRecBase/IRichParticleProperties.h"
+
+/** @class RichCherenkovAngle RichCherenkovAngle.h
+ *
+ *  Tool calculating the expected Cherenkov angle
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
+class RichCherenkovAngle : public RichRecToolBase,
+                           virtual public IRichCherenkovAngle {
+
+public:
+
+  /// Standard constructor
+  RichCherenkovAngle( const std::string& type,
+                      const std::string& name,
+                      const IInterface* parent );
+
+  /// Destructor
+  virtual ~RichCherenkovAngle() {};
+
+  /// Initialize method
+  StatusCode initialize();
+
+  /// Finalize method
+  StatusCode finalize();
+
+  /// Returns average Cherenkov angle for given particle hypothesis
+  double avgCherenkovTheta( RichRecSegment * segment,
+                            const Rich::ParticleIDType id );
+
+private:  // Private data
+
+  /// Pointer to RichExpectedTrackSignal interface
+  IRichExpectedTrackSignal * m_signal;
+
+  /// Pointer to RichParticleProperties interface
+  IRichParticleProperties * m_richPartProp;
+
+  /// Pointer to refractive index tool
+  IRichRefractiveIndex * m_refIndex;
+
+};
+
+#endif // RICHRECTOOLS_RICHCHERENKOVANGLE_H

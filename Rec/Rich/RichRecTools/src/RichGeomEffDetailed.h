@@ -1,4 +1,4 @@
-// $Id: RichGeomEffDetailed.h,v 1.1 2003-06-30 15:47:04 jonrob Exp $
+// $Id: RichGeomEffDetailed.h,v 1.2 2003-08-06 11:08:12 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFDETAILED_H
 #define RICHRECTOOLS_RICHGEOMEFFDETAILED_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/RichRecSegment.h"
 
 // interfaces
-#include "RichRecBase/IRichSegmentProperties.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichDetTools/IRichDetInterface.h"
 
@@ -56,7 +56,7 @@ private: // Private data
 
   // Pointers to tool instances
   IRichDetInterface * m_richDetInt;
-  IRichSegmentProperties * m_segProps;
+  IRichCherenkovAngle * m_ckAngle;
  
   /// Number of photons to use in geometrical efficiency calculation
   int m_nGeomEff;

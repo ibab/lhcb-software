@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.2 2003-07-03 14:46:59 jonesc Exp $
+// $Id: RichPhotonSignal.cpp,v 1.3 2003-08-06 11:08:13 jonrob Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -32,7 +32,9 @@ StatusCode RichPhotonSignal::initialize() {
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
   
   // Acquire instances of tools
-  acquireTool("RichSegmentProperties", m_segProps);
+  acquireTool( "RichExpectedTrackSignal", m_signal  );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle );
+  acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Temporary variables - should be got from XML eventually
   m_radiusCurv[ Rich::Rich1 ] = 240.0;
@@ -51,7 +53,9 @@ StatusCode RichPhotonSignal::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool( m_segProps );
+  releaseTool( m_signal );
+  releaseTool( m_ckAngle );
+  releaseTool( m_ckRes );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -60,39 +64,36 @@ StatusCode RichPhotonSignal::finalize() {
 double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
                                                const Rich::ParticleIDType id ) {
 
-  double prob = photon->expPixelSignalPhots( id );
-  if ( prob < -0.5 ) {
+  if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
 
-    prob = photon->geomPhoton().activeSegmentFraction() *
+    double prob = photon->geomPhoton().activeSegmentFraction() *
       ( ( signalProb(photon, id) *
-          m_segProps->nSignalPhotons(photon->richRecSegment(),id) ) +
+          m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
         ( scatterProb(photon, id) *
-          m_segProps->nScatteredPhotons(photon->richRecSegment(),id) ) );
+          m_signal->nScatteredPhotons(photon->richRecSegment(),id) ) );
 
     photon->setExpPixelSignalPhots( id, prob );
 
   }
 
-  return prob;
+  return photon->expPixelSignalPhots( id );
 }
 
 double RichPhotonSignal::signalProb( RichRecPhoton * photon,
-                                     const Rich::ParticleIDType& id ) {
+                                     const Rich::ParticleIDType id ) {
 
   // Expected Cherenkov theta angle
-  double thetaExp =
-    m_segProps->avgCherenkovTheta( photon->richRecSegment(), id );
+  double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
   if ( thetaExp < 0.000001 ) return 0.0;
 
   // Reconstructed Cherenkov theta angle
   double thetaReco = photon->geomPhoton().CherenkovTheta();
 
   // Expected Cherenkov theta angle resolution
-  double thetaExpRes =
-    m_segProps->ckThetaResolution( photon->richRecSegment(), id );
+  double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
 
   double thetaDiff = thetaReco-thetaExp;
-  if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0.;
+  if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0;
 
   // Which detector
   Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
@@ -105,15 +106,14 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
 }
 
 double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
-                                      const Rich::ParticleIDType& id ) {
+                                      const Rich::ParticleIDType id ) {
 
   Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
 
   if ( rad == Rich::Aerogel ) {
 
     // Expected Cherenkov theta angle
-    double thetaExp =
-      m_segProps->avgCherenkovTheta( photon->richRecSegment(), id );
+    double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
     if ( thetaExp < 0.000001 ) return 0.0;
 
     double thetaRec = photon->geomPhoton().CherenkovTheta();

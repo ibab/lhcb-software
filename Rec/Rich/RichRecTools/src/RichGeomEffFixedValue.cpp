@@ -1,4 +1,4 @@
-// $Id: RichGeomEffFixedValue.cpp,v 1.1 2003-06-30 15:47:04 jonrob Exp $
+// $Id: RichGeomEffFixedValue.cpp,v 1.2 2003-08-06 11:08:12 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -56,23 +56,19 @@ StatusCode RichGeomEffFixedValue::finalize() {
 double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
                                                const Rich::ParticleIDType id ) {
 
-  double eff = segment->geomEfficiency( id );
-  if ( eff < -0.5 ) {
-    eff = m_fixedValue;
-    segment->setGeomEfficiency( id, eff );
+  if ( !segment->geomEfficiency().dataIsValid(id) ) {
+    segment->setGeomEfficiency( id, m_fixedValue );
   }
 
-  return eff;
+  return segment->geomEfficiency( id );
 }
 
 double RichGeomEffFixedValue::geomEfficiencyScat ( RichRecSegment * segment,
                                                    const Rich::ParticleIDType id ) {
 
-  double eff = segment->geomEfficiencyScat( id );
-  if ( eff < -0.5 ) {
-    eff = m_fixedScatValue;
-    segment->setGeomEfficiencyScat( id, eff );
+  if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
+    segment->setGeomEfficiencyScat( id, m_fixedScatValue );
   }
 
-  return eff;
+  return segment->geomEfficiencyScat( id );
 }
