@@ -4,11 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-! 2002-07-16 - Antonis Papanestis
- - the package has now a completely new structure.
+!========================= RichDet v3r0 2002-11-07 ===========================
+! 2002-11-04 - Antonis
+  changed the parameter names in DeRich1 & 2
 
 ! 2002-10-30 - Antonis Papanestis
   added class for Rich1, made a lot of bug fixes
 
-! 2002-11-04 - Antonis
-  changed the parameter names in DeRich1 & 2
+! 2002-07-16 - Antonis Papanestis
+ - the package has now a completely new structure.
