@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.8 2002-11-21 13:50:36 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.9 2002-12-04 12:18:11 mzupan Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -359,7 +359,7 @@ void PuVetoAlg::fillHisto ( ) {
 
         // Basic Phi matching... Corresponding zones in the sensor.
 
-        if ( !m_velo->matchingZones( zoneA, zoneB ) ) {  continue; }
+        if ( !( zoneA == zoneB ) ) {  continue; }
 
         if ( rB < rA ) {
           z = ( zB*rA - zA*rB) / ( rA - rB );
@@ -420,7 +420,7 @@ void PuVetoAlg::maskHits ( double zVertex,
         rB = m_velo->rOfStrip( stripB, zoneB );
 
         // Basic Phi matching... Corresponding zones in the sensor.
-        if ( !m_velo->matchingZones( zoneA, zoneB ) ) {  continue; }
+        if ( !( zoneA == zoneB ) ) {  continue; }
 
         if ( rB < rA ) {
           z = ( zB*rA - zA*rB) / ( rA - rB );
