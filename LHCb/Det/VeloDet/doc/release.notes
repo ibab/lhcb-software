@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.65 2004-12-06 08:21:05 cattanem Exp $
+! $Id: release.notes,v 1.66 2005-03-03 14:46:10 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2005-03-03 - Mark Tobin
+ - Fixed minor (> to >=) bug in isInside
 
 !========================= VeloDet v9r2 2004-12-06 =========================
    >> Requires XmlDDDB v23r1 or greater <<

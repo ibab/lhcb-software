@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.9 2004-03-02 12:45:41 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.10 2005-03-03 14:46:10 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -141,7 +141,7 @@ StatusCode DeVeloRType::isInside(const HepPoint3D& point)
   MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.perp();
-  if(m_innerRadius > radius || m_outerRadius < radius) {
+  if(m_innerRadius >= radius || m_outerRadius <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
