@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.7 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.8 2004-10-13 09:37:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -115,6 +118,9 @@ private: // data
   // Internal book keeping
   mutable std::map< unsigned, RichRecPixel* > m_pixelExists;
   mutable std::map< unsigned, bool > m_pixelDone;
+
+  /// Flags for which radiators to create pixels for
+  std::vector<bool> m_usedRads;
 
 };
 

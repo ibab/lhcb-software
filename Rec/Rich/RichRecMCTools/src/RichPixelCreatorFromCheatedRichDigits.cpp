@@ -4,8 +4,10 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.10 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.11 2004-10-13 09:37:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -29,7 +31,8 @@ RichPixelCreatorFromCheatedRichDigits( const std::string& type,
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
     m_mcTool      ( 0 ),
-    m_allDone     ( false )
+    m_allDone     ( false ),
+    m_usedRads    ( Rich::NRadiatorTypes, true )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -39,6 +42,7 @@ RichPixelCreatorFromCheatedRichDigits( const std::string& type,
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation",
                    m_recoDigitsLocation = RichDigitLocation::Default );
+  declareProperty( "UseRadiators", m_usedRads );
 
 }
 
@@ -123,33 +127,38 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
     RichRecPixel * newPixel = NULL;
 
-    if ( digit->key().pixelDataAreValid() ) {
+    // Check if we are using this radiator
+    if ( m_usedRads[hit->radiator()] ) {
 
-      // Find associated MCRichOpticalPhoton
-      const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
-      if ( mcPhot ) {
+      if ( digit->key().pixelDataAreValid() ) {
 
-        // Make a new RichRecPixel
-        newPixel = new RichRecPixel();
-        richPixels()->insert( newPixel );
+        // Find associated MCRichOpticalPhoton
+        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+        if ( mcPhot ) {
 
-        // Positions
-        newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-        newPixel->localPosition() =
-          m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          // Make a new RichRecPixel
+          newPixel = new RichRecPixel();
+          richPixels()->insert( newPixel );
 
-        // Set smartID
-        newPixel->setSmartID( digit->key() );
+          // Positions
+          newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+          newPixel->localPosition() =
+            m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
 
-        // Set parent information
-        // Note - we are pretending to be RichDigits here...
-        newPixel->setParentPixel( digit );
-        newPixel->setParentType( Rich::PixelParent::Digit );
+          // Set smartID
+          newPixel->setSmartID( digit->key() );
 
+          // Set parent information
+          // Note - we are pretending to be RichDigits here...
+          newPixel->setParentPixel( digit );
+          newPixel->setParentType( Rich::PixelParent::Digit );
+
+        }
+
+      } else {
+        Warning("RichSmartID does not contain valid pixel data !");
       }
 
-    } else {
-      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map

@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.9 2004-08-20 14:48:52 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.10 2004-10-13 09:37:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/08/20 14:48:52  jonrob
+ *  Add more protection against bad data pointers
+ *
  *  Revision 1.8  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -61,15 +64,35 @@ RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
     return NULL;
   }
 
-  // Try TrStoredTrack
-  const TrStoredTrack * track = dynamic_cast<const TrStoredTrack*>(obj);
-  if ( track ) return m_truth->mcParticle( track );
+  // What sort of track is this...
+  if ( const TrStoredTrack * offTrack = dynamic_cast<const TrStoredTrack*>(obj) ) {
 
-  // else Try MCParticle
-  const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj);
-  if ( mcPart ) return mcPart;
+    // TrStoredTrack
+    debug() << "RichRecTrack " << richTrack->key()
+            << " has parent track TrStoredTrack " << offTrack->key() << endreq;
+    return m_truth->mcParticle( offTrack );
 
-  return NULL;
+  } else if ( const TrgTrack * onTrack = dynamic_cast<const TrgTrack*>(obj) ) {
+
+    // TrgTrack
+    debug() << "RichRecTrack " << richTrack->key()
+            << " has parent track TrgTrack " << onTrack->key() << endreq;
+    return m_truth->mcParticle( onTrack );
+
+  } else if ( const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj) ) {
+
+    // MCParticle
+    debug() << "RichRecTrack " << richTrack->key()
+            << " has parent track MCParticle " << mcPart->key() << endreq;
+    return mcPart;
+
+  } else {
+
+    Warning ( "Unknown RichRecTrack parent track type" );
+    return NULL;
+
+  }
+
 }
 
 const SmartRefVector<MCRichHit> &
@@ -84,7 +107,7 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
 {
   // protect against bad pixels
   if ( !richPixel ) {
-    Warning ( "NULL RichRecPixel pointer in RichRecMCTruthTool::mcRichDigit" );
+    Warning ( "::mcRichDigit : NULL RichRecPixel pointer" );
     return NULL;
   }
 
@@ -113,7 +136,7 @@ bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
         iHit != hits.end(); ++iHit ) {
 
     // protect against bad hits
-    if ( !(*iHit) ) continue; 
+    if ( !(*iHit) ) continue;
 
     // find MCParticle
     const MCParticle * mcPart = (*iHit)->mcParticle();
@@ -140,8 +163,8 @@ const MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecSegment * seg
                                                       const RichRecPixel * pixel ) const
 {
   // protect against bad input data
-  if (!segment) { Warning("NULL RichRecSegment in RichRecMCTruthTool::trueRecPhoton"); return 0; }
-  if (!pixel)   { Warning("NULL RichRecPixel in RichRecMCTruthTool::trueRecPhoton");   return 0; }
+  if (!segment) { Warning("::trueRecPhoton : NULL RichRecSegment"); return 0; }
+  if (!pixel)   { Warning("::trueRecPhoton : NULL RichRecPixel");   return 0; }
 
   const RichRecTrack * track = segment->richRecTrack();
   const MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
@@ -182,8 +205,8 @@ RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
   const SmartRefVector<MCRichHit> & hits = mcRichHits( pixel );
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
         iHit != hits.end(); ++iHit ) {
-    if ( *iHit && 
-         rad == (*iHit)->radiator() && 
+    if ( *iHit &&
+         rad == (*iHit)->radiator() &&
          !m_truth->isBackground(*iHit) ) return (*iHit)->mcParticle();
   }
 
@@ -226,6 +249,7 @@ RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel,
 
   }
 
+  // Return boolean indicating if any photons where found
   return !phots.empty();
 }
 
@@ -306,7 +330,7 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
     const SmartRefVector<MCRichHit> & hits = mcRichHits(pixel);
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
           iHit != hits.end(); ++iHit ) {
-      if ( *iHit && 
+      if ( *iHit &&
            (*iHit)->mcParticle() == mcPart ) return m_truth->mcOpticalPhoton(*iHit);
     }
 

@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Add new pixel creator that can add varying amounts of track background 
+   to each event
+ - Add ability to make pixels for particular radiators
+
 ! 2004-07-27 - Chris Jones
  - Update doxygen documentation
 

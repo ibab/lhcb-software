@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.7 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.8 2004-10-13 09:37:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -13,6 +16,9 @@
 
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
+
+// includes
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/IToolSvc.h"
