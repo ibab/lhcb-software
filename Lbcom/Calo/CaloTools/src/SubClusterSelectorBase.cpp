@@ -1,9 +1,12 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.2 2001-11-08 20:07:05 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.3 2001-11-12 19:04:28 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:07:05  ibelyaev
+//  new tools are added into  the package
+//
 // Revision 1.1  2001/11/08 10:58:35  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 // 
@@ -14,6 +17,8 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+// CaloInterfaces
+#include "CaloInterfaces/ICaloClusterTool.h"
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // CaloEvent 
@@ -89,6 +94,31 @@ StatusCode SubClusterSelectorBase::initialize ()
   return StatusCode::SUCCESS;
 };
 
+// ============================================================================
+/** Methods for IInterface interface implementation,
+ *  Query interface.
+ *  @param id   ID of Interface to be retrieved
+ *  @param ppI  Pointer to Location for interface pointer
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode 
+SubClusterSelectorBase::queryInterface( const  InterfaceID& id , 
+                                        void** ppI             )
+{
+  ///
+  if( 0 == *ppI ) { return StatusCode::FAILURE; }
+  /// check for interfaces
+  if( id == ICaloClusterTool::interfaceID() ) 
+    { *ppI = static_cast<ICaloClusterTool*> (this); }
+  else 
+    { return CaloTool::queryInterface( id , ppI ) ; }
+  ///
+  addRef();
+  ///
+  return StatusCode::SUCCESS ;
+  ///
+};
 
 // ============================================================================
 /** The main processing method (functor interface) 

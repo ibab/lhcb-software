@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.2 2001-11-08 20:07:05 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.h,v 1.3 2001-11-12 19:04:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:07:05  ibelyaev
+//  new tools are added into  the package
+//
 // Revision 1.1  2001/11/08 10:58:35  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 // 
@@ -58,6 +61,15 @@ public:
   virtual StatusCode process    
   ( CaloCluster* cluster                   , 
     const CaloHypotheses::Hypothesis& hypo ) const ;
+  
+  /** Query interface.
+   *  Method for IInterface interface implementation,
+   *  @param id   ID of Interface to be retrieved
+   *  @param ppI  Pointer to Location for interface pointer
+   *  @return status code 
+   */
+  virtual StatusCode queryInterface( const  InterfaceID& id , 
+                                     void** ppI             );
 
 protected: 
   
