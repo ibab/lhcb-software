@@ -1,36 +1,15 @@
-// $Id: CaloTool.h,v 1.8 2002-04-23 10:48:39 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.9 2002-04-27 10:55:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/04/05 17:52:52  ibelyaev
-//  add 'tool->addRef()' to 'tool()' methods
-//
-// Revision 1.6  2002/04/05 17:05:44  ibelyaev
-//  improve teh MSG::DEBUG printout for CaloTool/CaloAlgorithm classes
-//
-// Revision 1.5  2002/04/04 20:27:19  ibelyaev
-//  minor improvement in 'get()' and 'put()' methods
-//
-// Revision 1.4  2002/04/02 10:33:43  ibelyaev
-//  minor modifications in CaloAlgorithm/CaloTool
-//
-// Revision 1.3  2002/04/01 12:50:24  ibelyaev
-//  add templated accesssors to tools and improve exceptions
-//
-// Revision 1.2  2002/04/01 11:00:36  ibelyaev
-// enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
-//
-// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
-// New Package: substitution of the  previous CaloGen package
-//
-// Revision 1.4  2001/11/12 19:01:02  ibelyaev
-//  minor  reorganization of header files
-//
 // ============================================================================
 #ifndef CALOKERNEL_CALOTOOL_H 
 #define CALOKERNEL_CALOTOOL_H 1
 // Include files
+// STD & STL 
+#include <string>
+#include <algorithm>
 // GaudiKernel
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IMessageSvc.h"
@@ -62,68 +41,86 @@ class CaloTool: public AlgTool
 public:  
   
   /** standard initialization method 
+   *  @see  AlgTool 
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode    initialize ();
   
   /** standard finalization method 
+   *  @see  AlgTool 
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode    finalize   ();
   
   /** query interface method  
+   *  @see  AlgTool 
+   *  @see IAlgTool
+   *  @see IInterface
    *  @param  id  unique interface ID 
    *  @param  pI  placeholder for interface 
    *  @return status code 
    */
-  virtual StatusCode queryInterface ( const InterfaceID& id ,
-                                      void**             pI );
+  virtual StatusCode queryInterface 
+  ( const InterfaceID& id ,
+    void**             pI );
+
 protected:
   
   /** Standard constructor
+   *  @see AlgTool
    *  @param type tool type (useless)
    *  @param name tool name
    *  @param parent pointer to parent object (service, algorithm or tool)  
    */
-  CaloTool( const std::string& type   ,
-            const std::string& name   ,
-            const IInterface*  parent ); 
+  CaloTool
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ); 
   
-  /** destructor, virtual and protected 
-   */
+  /// destructor, virtual and protected 
   virtual ~CaloTool();
   
 protected:
   
-  /** templated  access to the data in Gaudi transient store 
+  /** @brief templated  access to the data in Gaudi transient store 
    *  
+   *  Quick and safe access to the data in Gaudi transient store.
+   *  The method located the data at given address and perform the 
+   *  debug printout about located data
+   *    
    *  Usage:
    *
    *  - 
-   *  MCCaloDigits* digits     = 
-   *     get( evtSvc() , inputData() , digits   );
+   *  MCCaloDigits*        digits = get( evtSvc () , inputData () , digits );
    *  if( 0 == digits ) { return StatusCode::FAILURE ;}
    *
    *  -
-   *  const DeCalorimeter* det = 
-   *     get( detSvc() , detData()   , det      );
+   *  const DeCalorimeter* det    = get( detSvc () , detData   () , det    );
    *  if( 0 == det ) { return StatusCode::FAILURE ;}
-   *  
+   *
    *  @warning the third argument is due to stupid MicroSoft compiler, 
    *           only the type of the third argument is used
    *
+   *  @see IDataProviderSvc
+   *  @see SmartDataPtr
+   *  @exception CaloException for Invalid Data Provider Service 
+   *  @exception CaloException for invalid/unavailable  data  
    *  @param svc pointer to data service (data provider)
    *  @param location data location/address in Gaudi Transient Store
    *  @param type artificial argument (due to stupid MicroSoft compiler)
    */
   template<class TYPE>
-  TYPE* get( IDataProviderSvc*  svc        , 
-             const std::string& location   , 
-			 const TYPE*        /* type */ ) const
+  TYPE* 
+  get
+  ( IDataProviderSvc*  svc        , 
+    const std::string& location   , 
+    const TYPE*        /* type */ ) const
   {
-	Assert( 0 != svc    , " get():: IDataProvider* points to NULL!"      );
+    Assert( 0 != svc    , " get():: IDataProvider* points to NULL!"      );
     SmartDataPtr<TYPE> object( svc, location ) ;
-	Assert( !(!object)  , " get():: No Valid data at '" + location + "'" );
+    Assert( !(!object)  , " get():: No Valid data at '" + location + "'" );
     TYPE* aux = object ;
     Assert( 0 != aux    , " get():: No valid data at '" + location + "'" ); 
     const std::string type( System::typeinfoName( typeid( *aux ) ) );
@@ -143,33 +140,38 @@ protected:
    *  @exception CaloException for invalid tool 
    *  @param type   tool type 
    *  @param name   tool name
-   *  @param tool   tool itself 
+   *  @param Tool   tool itself (return)
    *  @param parent tool parent
-   *  @param createIf flag for creation of nonexisting tools 
+   *  @param create flag for creation of nonexisting tools 
    *  @return pointer to the tool
    */
   template<class TOOL>
-  TOOL* tool( const std::string& type            , 
-              const std::string& name            , 
-              TOOL*&             tool            , 
-              const IInterface*  parent   = 0    , 
-              bool               createIf = true ) const
+  TOOL* 
+  tool
+  ( const std::string& type          , 
+    const std::string& name          , 
+    TOOL*&             Tool          , 
+    const IInterface*  parent = 0    , 
+    bool               create = true ) const
   {
+    // for empty names delegate to another method 
+    if( name.empty() ) { return tool( type , Tool , parent , create ) ; }
     Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // retrieve the tool from Tool Service 
     StatusCode sc = toolSvc () 
-      -> retrieveTool ( type , name , tool, parent , createIf );
+      -> retrieveTool ( type , name , Tool, parent , create );
     Assert( sc.isSuccess() , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
-    Assert( 0 != tool      , 
+    Assert( 0 != Tool      , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
     // add the reference 
-    tool -> addRef();                               
+    Tool -> addRef();                               
     // debug printout 
-    Print( " The Tool of type '" + tool->type() + 
-           "'/'"                 + tool->name() + 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
            "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
-    ///
-    return tool ;
+    // return the located tool 
+    return Tool ;
   };
   
   /** the useful method for location of tools 
@@ -179,33 +181,45 @@ protected:
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
    *  @exception CaloException for invalid tool 
-   *  @param type   tool type 
-   *  @param tool   tool itself 
+   *  @param type   tool type, could be of "Type/Name" format 
+   *  @param Tool   tool itself (return)
    *  @param parent tool parent
-   *  @param createIf flag for creation of nonexisting tools 
+   *  @param create flag for creation of nonexisting tools 
    *  @return pointer to the tool
    */
   template<class TOOL>
-  TOOL* tool( const std::string& type            , 
-              TOOL*&             tool            , 
-              const IInterface*  parent   = 0    , 
-              bool               createIf = true ) 
+  TOOL* 
+  tool
+  ( const std::string& type           , 
+    TOOL*&             Tool           , 
+    const IInterface*  parent  = 0    , 
+    bool               create  = true ) const 
   {
+    // check the environment 
     Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // "type" or "type/name" ?
+    std::string::const_iterator it = 
+      std::find( type.begin() , type.end () , '/' );
+    // "type" is compound!
+    if( type.end() != it ) 
+      {
+        const std::string::size_type pos = it - type.begin() ;
+        return tool( std::string( type , 0       , pos ) , // new type 
+                     std::string( type , pos + 1       ) , // new name 
+                     Tool , parent , create            ) ;
+      }
     StatusCode sc = toolSvc () 
-      -> retrieveTool ( type , tool, parent , createIf );
-    Assert( sc.isSuccess() , 
-            "Could not retrieve Tool'" + type + "'" , sc ) ;
-    Assert( 0 != tool      , 
-            "Could not retrieve Tool'" + type + "'"     ) ;
+      -> retrieveTool ( type , Tool, parent , create   );
+    Assert( sc.isSuccess() , "Could not retrieve Tool'" + type + "'" , sc ) ;
+    Assert( 0 != Tool      , "Could not retrieve Tool'" + type + "'"     ) ;
     // add the reference 
-    tool -> addRef(); 
+    Tool -> addRef(); 
     // debug printout 
-    Print( " The Tool of type '" + tool->type() + 
-           "'/'"                 + tool->name() + 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
            "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
-    ///
-    return tool ;
+    // return located tool 
+    return Tool ;
   };
 
   /** accessor to service locator 
@@ -259,8 +273,9 @@ protected:
    *  @return       status code 
    */
   StatusCode 
-  Error     ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ) const ;
+  Error     
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ) const ;
   
   /** Print the warning  message, return status code 
    *  and perform the statistics of warning  messages 
@@ -269,8 +284,9 @@ protected:
    *  @return       status code 
    */
   StatusCode 
-  Warning   ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ) const ; 
+  Warning   
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ) const ; 
   
   /** Print the message and return status code 
    *  @param msg    warning message 
@@ -279,9 +295,10 @@ protected:
    *  @return       status code 
    */
   StatusCode 
-  Print     ( const std::string& msg , 
-              const StatusCode & st  = StatusCode::FAILURE ,
-              const MSG::Level & lev = MSG::INFO           ) const ;
+  Print 
+  ( const std::string& msg , 
+    const StatusCode & st  = StatusCode::FAILURE ,
+    const MSG::Level & lev = MSG::INFO           ) const ;
   
   /** Assertion - throw exception, if condition is not fulfilled 
    *  @param ok            condition which should be "true"
@@ -290,9 +307,10 @@ protected:
    *  @return             status code        
    */
   inline StatusCode 
-  Assert ( const bool         ok                            , 
-           const std::string& message = " "                 ,
-           const StatusCode&  sc      = StatusCode::FAILURE ) const;
+  Assert 
+  ( const bool         ok                            , 
+    const std::string& message = " "                 ,
+    const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Assertion - throw exception, if condition is not fulfilled 
    *  @param ok            condition which shoudl be "true"
@@ -301,9 +319,10 @@ protected:
    *  @return             status code        
   */
   inline StatusCode
-  Assert ( const bool         ok                            , 
-           const char*        message                       ,
-           const StatusCode&  sc      = StatusCode::FAILURE ) const;
+  Assert
+  ( const bool         ok                            , 
+    const char*        message                       ,
+    const StatusCode&  sc      = StatusCode::FAILURE ) const;
   
   /** Create and (re)-throw the exception  
    *  @param msg    exception message 
@@ -313,10 +332,11 @@ protected:
    *  @return       status code (fictive) 
    */
   StatusCode 
-  Exception ( const std::string    & msg                        ,  
-              const GaudiException & exc                        , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  Exception
+  ( const std::string    & msg                        ,  
+    const GaudiException & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** Create and (re)-throw the exception  
    *  @param msg    exception message 
@@ -326,10 +346,11 @@ protected:
    *  @return       status code (fictive) 
    */
   StatusCode 
-  Exception ( const std::string    & msg                        ,  
-              const std::exception & exc                        , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  Exception
+  ( const std::string    & msg                        ,  
+    const std::exception & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** Create and throw the exception  
    *  @param msg    exception message 
@@ -338,24 +359,21 @@ protected:
    *  @return       status code (fictive) 
    */
   StatusCode 
-  Exception ( const std::string& msg = "no message"        ,  
-              const MSG::Level & lvl = MSG::FATAL          ,
-              const StatusCode & sc  = StatusCode::FAILURE ) const ;
+  Exception 
+  ( const std::string& msg = "no message"        ,  
+    const MSG::Level & lvl = MSG::FATAL          ,
+    const StatusCode & sc  = StatusCode::FAILURE ) const ;
   
 private:
   
-  /** default constructor is private!
-   */
+  /// default constructor  is private!
   CaloTool();
-  
-  /** copy constructor is private!
-   */
-  CaloTool( const CaloTool& copy );
-  
-  /** assignement operator is private!
-   *  @param copy object to be copied 
-   */
-  CaloTool& operator=( const CaloTool& copy );
+  /// copy constructor     is private!
+  CaloTool
+  ( const CaloTool& copy );
+  /// assignement operator is private!
+  CaloTool& operator=
+  ( const CaloTool&  );
   
 private:
   
@@ -368,7 +386,7 @@ private:
   std::string            m_detName   ;
   
 };
-
+// ============================================================================
 
 // ============================================================================
 /** Assertion - throw exception, if condition is not fulfilled 
@@ -378,14 +396,17 @@ private:
  *  @return             status code        
  */ 
 // ============================================================================
-inline StatusCode 
-CaloTool::Assert ( const bool OK          , 
-                   const std::string& msg ,
-                   const StatusCode&  sc  ) const
+inline 
+StatusCode 
+CaloTool::Assert 
+( const bool OK          , 
+  const std::string& msg ,
+  const StatusCode&  sc  ) const
 {
   StatusCode ok ( StatusCode::SUCCESS );
   return OK ? ok : Exception( msg , MSG::FATAL , sc ) ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** Assertion - throw exception, if condition is not fulfilled 
@@ -395,14 +416,17 @@ CaloTool::Assert ( const bool OK          ,
  *  @return             status code        
  */ 
 // ============================================================================
-inline StatusCode
-CaloTool::Assert ( const bool OK          , 
-                   const char*        msg ,
-                   const StatusCode&  sc  ) const
+inline 
+StatusCode
+CaloTool::Assert 
+( const bool OK          , 
+  const char*        msg ,
+  const StatusCode&  sc  ) const
 { 
   StatusCode ok ( StatusCode::SUCCESS ) ;
   return OK ? ok : Exception( msg , MSG::FATAL , sc  ) ; 
 };
+// ============================================================================
 
 // ============================================================================
 // The End 
