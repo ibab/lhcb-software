@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.59 2004-12-01 07:43:54 pkoppenb Exp $
+! $Id: release.notes,v 1.60 2005-01-12 13:48:59 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2005-01-12 - P. Koppenburg
+ - actually remove the obsolete files!
 !========================== DaVinciAssociators v5r2p1 2004-12-01 ===================
 ! 2004-11-23 - P. Koppenburg
  - options/TestAssociators.opts
