@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TES.py,v 1.1 2004-07-24 14:06:38 ibelyaev Exp $
+# $Id: TES.py,v 1.2 2004-08-05 12:20:34 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -25,25 +25,36 @@ class TES(Algo):
     " My own algorithm to demonstaret the direct manipulation with TES  "
     def analyse ( self ) :
 
-        # get all mc-particles from Transient event store
-        # (make on-flight convertsion to std::vector<> ) 
-        mcps = self.get ( address = 'MC/Particles'  , vector = TRUE  )
+##         # get all mc-particles from Transient event store
+##         # (make on-flight convertsion to std::vector<> ) 
+##         mcps = self.get ( address = 'MC/Particles'  , vector = TRUE  )
         
-        # print the first 2 particles 
-        i = 0 
-        for mcp in mcps :
-            if i < 2 : print ' *** *** *** MC-particle *** *** *** \n' , `mcp` 
-            i+=1
+##         # print the first 2 particles 
+##         i = 0 
+##         for mcp in mcps :
+##             if i < 2 :
+##                 print ' *** *** *** MC-particle *** *** *** \n' , `mcp` , \
+##                       mcp.particleID()
+##             i+=1
             
-        # get all "selection results" from the store 
-        #  (make on-flight conversion to list) 
-        sels = self.get ( address = 'Phys/Selections' , list = TRUE )
+##         # get all "selection results" from the store 
+##         #  (make on-flight conversion to list) 
+##         sels = self.get ( address = 'Phys/Selections' , list = TRUE )
 
-        # print all available selection results 
-        if sels :
-            for sel in sels :
-                print ' *** *** *** SelResult   *** *** *** \n' , `sel`
-            
+##         # print all available selection results 
+##         if sels :
+##             for sel in sels :
+##                 print ' *** *** *** SelResult   *** *** *** \n' , \
+##                       `sel` , type(sel)          , \
+##                       hasattr( sel , 'decay' )  
+##                       #sel.decay() 
+
+        l0 = self.get( address = '/Event/Trig/L0/Decision')
+        print  ' L0 desision ' , l0.decision()
+        
+        l1 = self.get( address = '/Event/Trig/L1/Decision')
+        print ' L1 decision ' , l1.decision()
+        
         return SUCCESS 
 
 # =============================================================================
@@ -78,6 +89,9 @@ g.exit()
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/24 14:06:38  ibelyaev
+#  v3r5
+#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2004-07-11 15:54:54 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2004-08-05 12:20:34 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v3r5
+version          v3r6
 
 # ============== structure ===================================================
 branches         cmt doc src python options
@@ -29,16 +29,20 @@ path_remove      PYTHONPATH "/BenderExample/"  WIN32  "\BenderExample\"
 path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
 
 # ============== patterns =====================================================
-apply_pattern    application_path
+apply_pattern    application_path 
 
+# path_remove   LD_LIBRARY_PATH "CaloEvent" 
+# path_remove   LD_LIBRARY_PATH "GaudiGSL" 
+# path_remove   LD_LIBRARY_PATH "BenderDict" 
+# path_remove   LD_LIBRARY_PATH "BenderDet" 
+# path_remove   LD_LIBRARY_PATH "LoKiHybrid" 
+
+# path_remove   LD_LIBRARY_PATH "PI" 
+# path_remove   LD_LIBRARY_PATH "AIDA" 
+
+# ============================================================================
+# $Log: not supported by cvs2svn $
 # ============================================================================
 # The END 
 # ============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.9  2004/06/29 06:41:52  ibelyaev
-#  add new algorithm
-#
-# Revision 1.8  2004/03/16 09:42:22  ibelyaev
-#  remove Vis stuff
-#
-# ============================================================================
+
