@@ -208,6 +208,11 @@ uses Geant4 6.0.p01, LHCb v15r3, Gaudi v14r3, XmlDDDB v22r0, ParamFiles v3r3
  - cmt/requirements                      - increase the version to V15r3 
 
 !========================== GiGaCnv v15r0 ===============================
+! 2004-03-09 - Patrick Robbe
+ - src/component/GiGaHepMCCnv.cpp : change the choice of particles to
+     be converted in G4PrimaryParticles in order to be able to convert
+     B** if needed.
+
 ! 2004-02-20 - Ivan BELYAEV
  - GiGaCnv/IGiGa*.h 
      1) move IGiGaXXX::~IGiGaXXX() implementations to separate file 
