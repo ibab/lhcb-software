@@ -6,7 +6,8 @@ branches src RichDet doc cmt
 include_dirs $(RICHDETROOT)
 
 use RichKernel  v3r*   Rich
-use DetDesc     v11*   Det
+use DetDesc     v12*   Det
+use DetDescCnv  v2*    Det
 
 library  RichDetLib  Lib/*.cpp 
 library  RichDet     component/*.cpp

@@ -4,7 +4,7 @@
 // Include files
 //#include "RichDet/DeRichRadiator.h"
 #include "RichDet/DeRichRadiator.h"
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichRadiator>  XmlDeRichRadiatorCnv;
 static CnvFactory<XmlDeRichRadiatorCnv> s_DeRichRadiatorFactory;

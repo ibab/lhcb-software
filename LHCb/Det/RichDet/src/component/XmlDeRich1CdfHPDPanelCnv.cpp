@@ -3,7 +3,7 @@
 
 // Include files
 #include "RichDet/DeRich1CdfHPDPanel.h"
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRich1CdfHPDPanel>  XmlDeRich1CdfHPDPanelCnv;
 static CnvFactory<XmlDeRich1CdfHPDPanelCnv> s_DeRich1CdfHPDPanelFactory;

@@ -7,7 +7,7 @@
 #include "GaudiKernel/CnvFactory.h"
 
 #include "RichDet/DeRich2.h"
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRich2>  XmlDeRich2Cnv;
 static CnvFactory<XmlDeRich2Cnv> s_DeRich2Factory;

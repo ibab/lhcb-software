@@ -4,7 +4,7 @@
 // Include files
 //#include "RichDet/DeRichFlatMirror.h"
 #include "RichDet/DeRichFlatMirror.h"
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 
 typedef  XmlUserDetElemCnv<DeRichFlatMirror>  XmlDeRichFlatMirrorCnv;
 static CnvFactory<XmlDeRichFlatMirrorCnv> s_DeRichFlatMirrorFactory;

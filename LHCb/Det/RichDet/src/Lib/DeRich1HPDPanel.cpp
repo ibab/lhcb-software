@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.2 2003-04-01 13:01:50 jonrob Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.3 2003-06-16 13:34:30 sponce Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -336,9 +336,9 @@ StatusCode DeRich1HPDPanel::HPDWindowPoint(const HepVector3D& vGlobal,
 
   HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
 
-  const IPVolume* pvHPDMaster;
-  const IPVolume* pvHPDSMaster;
-  const IPVolume* pvWindow;
+  const IPVolume* pvHPDMaster = 0;
+  const IPVolume* pvHPDSMaster = 0;
+  const IPVolume* pvWindow = 0;
   const ISolid* windowSolid;
 
   HepPoint3D pInHPDMaster, pInHPDSMaster, pInWindow;
