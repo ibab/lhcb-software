@@ -36,9 +36,7 @@ endif
 set current = $PWD
 #
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v1r1
-# == reset the dynamic library search path
-unsetenv LD_LIBRARY_PATH
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v2r0
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
@@ -112,7 +110,6 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-#include "$DAVINCIROOT/options/L0.opts"
 
 //ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
@@ -134,15 +131,17 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 // you can overwrite any of the default options
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
+#include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
+// The next lines are an example of changing the default behaviour
+// of algorithms in the library 
 //PhysSelectAlgorithm.DecayName    = "B0JM";
-//PhysSelectAlgorithm.CutsFileName = "$AXSELLIBROOT/cdf/seldecay.cdf";
 PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
 // Private algorithms options
 //-----------------------------------------------------------------
 DaVinciTestAlgorithm.SearchParticle       = "B0";
-DaVinciTestAlgorithm.PhysSelDecayChannel  = "B0PP";
+DaVinciTestAlgorithm.DecayProducts        = { "pi+", "pi-" };
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -164,14 +163,8 @@ ApplicationMgr.EvtMax = 500;
 //---------------------------------------------------------------
 // Examples of input data
 //---------------------------------------------------------------
-// B->pi+pi-, Brunel v4
-EventSelector.Input = {"JOBID='59573'"};
-//
-// B->pi+pi-, SICBDST v235
-//EventSelector.Input = {"FILE='$SITEROOT/lhcb/data/mc/sicb_bpipi_v233_100ev.dst1'"};
-// B->J/Psi(mu+mu-) Ks(pi+pi-), SICBDST v235r1
-//EventSelector.Input = {"JOBID='45904'"};
-//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/D223226'"};
+// B->pi+pi-, Brunel v5r1
+EventSelector.Input = {"JOBID='64026,64025'"};
 //################################################################
 
 EOF

@@ -45,6 +45,8 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
+// Uncomment the next line to execute the L0 trigger algorithms
+//#include "$DAVINCIROOT/options/L0.opts"
 
 ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
@@ -67,10 +69,11 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
 #include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
+// The next lines are an example of changing the default behaviour
+// of algorithms in the library 
 //PhysSelectAlgorithm.DecayName    = "MBIA";
 //PhysSelectAlgorithm.SelLevel     = 0;
-//PhysSelectAlgorithm.FlavourTag   = 0;
-PhysSelectAlgorithm.Histograms   = 1;
+//PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
 // Private algorithms options
@@ -83,7 +86,8 @@ DaVinciTestAlgorithm.DecayProducts        = { "pi+", "pi-" };
 //--------------------------------------------------------------
 MessageSvc.OutputLevel = 3;
 ToolSvc.OutputLevel    = 3;
-//DaVinciTestAlgorithm.OutputLevel        = 2;
+XmlCnvSvc.OutputLevel  = 4;
+DaVinciTestAlgorithm.OutputLevel        = 2;
 //AxPrimaryVertexAlgorithm.OutputLevel    = 2;
 //PhysSelectAlgorithm.OutputLevel         = 2;
 

@@ -8,7 +8,9 @@ ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
                           "SicbEventCnvSvc", 
                           "EventSelector" };
 
-EventPersistencySvc.CnvServices     = { "SicbEventCnvSvc" };  
+EventPersistencySvc.CnvServices = { "SicbEventCnvSvc" }; 
+
+EventDataSvc.ForceLeaves = true; 
 
 ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
