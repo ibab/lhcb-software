@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProcD.h,v 1.1 2001-06-07 16:46:18 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProcD.h,v 1.2 2001-07-09 19:37:04 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGERPROCD_H
 #define L0MUON_L0MTRIGGERPROCD_H 1
@@ -27,11 +27,13 @@ public:
   StatusCode execute();
   StatusCode finalize();
   
+  friend class L0mCrate;
+  
 private: 
   
   double m_precision;
   int m_bits;
-  std::vector<L0mCrate> m_crates;
+  std::vector<L0mCrate*> m_crates;
 
 };
 
