@@ -1,5 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
+
+!========================  VeloAlgorithms v1r0 2002-07-09 =====================
 ! 2002-07-07 - Chris Parkes
  - Spillover FEs no longer have their MCVeloHits stored.
 
@@ -26,7 +28,6 @@
  - Created an Option file for Brunel.
  - Fix the conformance to coding standards, mainly the 80 columns limit.
 
-!=============================================================================
 ! 09/06/2002 - Chris Parkes  ** v1r0 **
   First release of a test version.
   Algorithms:

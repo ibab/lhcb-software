@@ -1,6 +1,7 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!========================  VeloAssociators v1r0 2002-07-09 =====================
 ! 2002-07-08 - Chris Parkes
 - Ensure no relation filled when link is not present 
   (spillover or noise clusters)
