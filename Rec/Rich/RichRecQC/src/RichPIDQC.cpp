@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.29 2004-10-29 09:35:08 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.30 2004-10-30 19:28:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.29  2004/10/29 09:35:08  jonrob
+ *  Update final printout format
+ *
  *  Revision 1.28  2004/10/27 14:36:30  jonrob
  *  Improvements to PID Tables
  *
@@ -311,7 +314,7 @@ StatusCode RichPIDQC::execute()
         if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
 
         // Count track and PID types
-        if ( Rich::Unknown != mcpid ) { 
+        if ( Rich::Unknown != mcpid ) {
           ++m_trackCount[tkType].second;
           ++m_pidPerTypeCount[iPID->pidType()].second;
         }
@@ -462,34 +465,34 @@ StatusCode RichPIDQC::finalize()
     trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
     trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-    info() << "------------+-------------------------------------------------+------------"
-           << endreq << "  Tk Sel    | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
-    info() << " #Tks(+MC)  |";
+    info() << "-------------+-------------------------------------------------+------------"
+           << endreq << " Ptot Sel    | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c" << endreq;
+    info() << " #Tks(+MC)   |";
     unsigned int tkCount = 0;
     for ( TkCount::const_iterator iTk = m_trackCount.begin();
           iTk != m_trackCount.end(); ++iTk, ++tkCount ) {
-      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "            |"; }
+      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "             |"; }
       info() << " " << (*iTk).first << "=" << (*iTk).second.first
              << "(" << (*iTk).second.second << ")";
     }
     tkCount = 0;
-    info() << endreq << " #PIDs(+MC) |";
+    info() << endreq << " #PIDs(+MC)  |";
     for ( PIDsByType::const_iterator iPC = m_pidPerTypeCount.begin();
           iPC != m_pidPerTypeCount.end(); ++iPC, ++tkCount ) {
-      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "            |"; }
+      if ( tkCount == 4 ) { tkCount = 0; info() << endreq << "             |"; }
       info() << " " << (*iPC).first << "=" << (*iPC).second.first
              << "(" << (*iPC).second.second << ")";
     }
     info() << endreq
-           << "------------+-------------------------------------------------+------------"
+           << "-------------+-------------------------------------------------+------------"
            << endreq
-           << "  %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
+           << "   %total    |  Electron Muon   Pion   Kaon  Proton   X  (MC)  |  %Purity"
            << endreq
-           << "------------+-------------------------------------------------+------------"
+           << "-------------+-------------------------------------------------+------------"
            << endreq
-           << "            |                                                 |" << endreq;
-    const std::string type[6] = { " Electron   |", " Muon       |", " Pion       |",
-                                  " Kaon       |", " Proton     |", " X          |" };
+           << "             |                                                 |" << endreq;
+    const std::string type[6] = { " Electron    |", " Muon        |", " Pion        |",
+                                  " Kaon        |", " Proton      |", " X           |" };
     for ( iRec = 0; iRec < 6; ++iRec ) {
       info() << type[iRec] << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f      | %7.2f",
                                       m_sumTab[0][iRec], m_sumTab[1][iRec],
@@ -497,20 +500,21 @@ StatusCode RichPIDQC::finalize()
                                       m_sumTab[4][iRec], m_sumTab[5][iRec],
                                       purity[iRec] ) << endreq;
     }
-    info() << "   (reco)   |                                                 |" << endreq
-           << "------------+-------------------------------------------------+------------"
+    info() << "   (reco)    |                                                 |" << endreq
+           << "-------------+-------------------------------------------------+------------"
            << endreq
-           << " %Eff.      |" << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f ",
-                                        eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
+           << "   %Eff.     |" << format( " %7.2f%7.2f%7.2f%7.2f%7.2f%7.2f ",
+                                          eff[0],eff[1],eff[2],eff[3],eff[4],eff[5] )
            << "     |" << endreq
-           << "------------+-------------------------------------------------+------------" << endreq;
-    info() << format( " %ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
+           << "-------------+-------------------------------------------------+------------"
+           << endreq;
+    info() << format( " % ID eff    |  K->K,Pr   : %6.2f +-%6.2f   pi->e,m,pi : %6.2f +-%6.2f ",
                       kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
-    info() << format( " %misID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
+    info() << format( " % MisID eff |  K->e,m,pi : %6.2f +-%6.2f   pi->K,Pr   : %6.2f +-%6.2f ",
                       kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    info() << format( " %ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
+    info() << format( " % ID rate   |  Events    : %6.2f +-%6.2f   Tracks     : %6.2f +-%6.2f ",
                       evPIDRate[0], evPIDRate[1], trPIDRate[0], trPIDRate[1] ) << endreq
-           << "------------+-------------------------------------------------+------------"
+           << "-------------+-------------------------------------------------+------------"
            << endreq;
 
   } // final printout
