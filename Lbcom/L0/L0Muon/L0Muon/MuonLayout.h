@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.3 2001-07-09 19:05:02 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/MuonLayout.h,v 1.4 2001-07-12 20:20:39 atsareg Exp $
 
 #ifndef L0MUON_MUONLAYOUT_H
 #define L0MUON_MUONLAYOUT_H 1   
@@ -62,6 +62,8 @@ public:
   std::vector<MuonTile> tiles(int quarter, int region);	      
   /// find a tile containing the argument tile
   MuonTile contains(const MuonTile& pad);
+  /// Get tiles touched by pad defined in terms of pregion region number
+  std::vector<MuonTile> tilesInRegion(const MuonTile& pad, int pregion);
   /// check if the given MuonTile is valid for this layout
   bool validTile(const MuonTile& mt);
   /// find magnification factor of pads in the given region
