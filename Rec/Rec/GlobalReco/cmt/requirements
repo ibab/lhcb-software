@@ -18,8 +18,7 @@ branches          cmt doc src
 #============================================================================
 # Used packages.
 #============================================================================
-use  PhysEvent       v5r*  Event
-
+use  PhysEvent       v6r*  Event
 use  CaloKernel      v2r*  Calo
 use  CaloUtils       v4r*  Calo
 use  CaloInterfaces  v2r*  Calo
