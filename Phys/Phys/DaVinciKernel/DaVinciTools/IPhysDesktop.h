@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.4 2004-09-06 08:18:34 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
@@ -66,6 +66,10 @@ public:
 
   //PK
   virtual std::string getOutputLocation() = 0 ;
+  
+  /// Find all particles & vertices in a tree. 
+  virtual void findAllTree( Particle*, ParticleVector&, VertexVector& ) = 0;
+  virtual void findAllTree( Vertex*, ParticleVector&, VertexVector& )= 0;
   
 
 protected:
