@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.65 2003-12-15 14:05:38 witoldp Exp $
+! $Id: release.notes,v 1.66 2004-02-14 08:34:46 robbep Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-02-14 - Patrick Robbe
+ - GiGaPrimaryParticleInformation : class deriving from 
+   G4VUserPrimaryParticleInformation to pass the information on mixing
+   to a G4PrimaryParticle.
+ - GiGaHepMCCnv : create a G4PrimaryParticle with mixing information
+   when the HepMC particle has oscillated.
+ - Trajectory2Particle : set MCParticle mixing flag when the GiGaTrajectory
+   is associated to a B0/B0s which has oscillated.
 
 !========================= GiGaCnv v14r1 ============================
 ! 2003-12-15 - Witek Pokorski
