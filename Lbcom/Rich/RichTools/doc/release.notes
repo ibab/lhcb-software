@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v1r3 2005-01-17 =======================
+! 2005-01-17 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2005-01-13 - Chris Jones
  - RichSmartID tool
   + Update the way the active readout list is created and accessed

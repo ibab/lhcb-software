@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.5 2004-07-27 16:54:57 jonesc Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.6 2005-01-17 13:05:55 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 16:54:57  jonesc
+ *  Add option to turn off individual radiators in RichTrackSegment maker tool
+ *
  *  Revision 1.4  2004/07/26 17:56:09  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -83,7 +86,7 @@ public: // methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Create RichTrackSegments for a given tracking object
-  int constructSegments( const ContainedObject * obj,
+  int constructSegments( const ContainedObject * track,
                          std::vector<RichTrackSegment>& segments ) const;
 
 private: // methods

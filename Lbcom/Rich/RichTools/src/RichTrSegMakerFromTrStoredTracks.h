@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.6 2004-12-13 17:28:31 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.7 2005-01-17 13:04:14 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/12/13 17:28:31  jonrob
+ *  fix doxygen typos
+ *
  *  Revision 1.5  2004/10/13 09:54:04  jonrob
  *  various minor changes
  *
@@ -93,7 +96,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Create RichTrackSegments for a given tracking object
-  int constructSegments( const ContainedObject* obj, 
+  int constructSegments( const ContainedObject* track, 
                          std::vector<RichTrackSegment>& segments ) const;
 
 private: // methods
