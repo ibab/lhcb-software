@@ -1,30 +1,21 @@
-// $Id: SolidSubtraction.h,v 1.10 2004-07-09 14:37:07 cattanem Exp $
+// $Id: SolidSubtraction.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 #ifndef       DETDESC_SOLIDSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
-///@{
+
 /** STD & STL */
 #include <algorithm>
 #include <functional> 
-///@}
-/// CLHEP 
-#include "CLHEP/Vector/Rotation.h" 
-///@{
+
 /** DetDesc package */
 #include "DetDesc/SolidBoolean.h" 
-#include "DetDesc/SolidChild.h" 
-///@}
-///@{
-/** forward declarations from GaudiKernel, CLHEP and DetDesc */
+
+/** forward declarations from GaudiKernel and DetDesc */
 class StatusCode;
-class HepTransform3D;
-class HepRotate;
-class HepPoint3D; 
 template <class TYPE>
 class SolidFactory;
-///@}
 
 /** @class SolidSubtraction SolidSubtraction.h "DetDesc/SolidSubtraction.h"
  * 

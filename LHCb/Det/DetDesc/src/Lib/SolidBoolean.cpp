@@ -1,28 +1,16 @@
-// $Id: SolidBoolean.cpp,v 1.11 2003-05-16 13:59:13 ibelyaev Exp $
+// $Id: SolidBoolean.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/07/03 08:15:37  ocallot
-// Add a cover to the LAssembly
-//
-// Revision 1.9  2002/05/26 10:47:14  ibelyaev
-//  remove checks/tests and update requiements
-//
-// Revision 1.8  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ===========================================================================
 // STD & STL 
 #include <functional>
 #include <algorithm>
-///@{
+
 /** GaudiKernel package */
 #include   "GaudiKernel/StatusCode.h"
 #include   "GaudiKernel/StreamBuffer.h" 
 #include   "GaudiKernel/IInspector.h"
-///@}
-///@{
+
 /** DetDesc package */  
 #include   "DetDesc/SolidBoolean.h" 
 #include   "DetDesc/SolidChild.h" 
@@ -30,7 +18,6 @@
 #include   "DetDesc/ClhepToStream.h"
 #include   "DetDesc/SolidTicks.h" 
 #include   "DetDesc/Solid.h" 
-///@}
 
 // ============================================================================
 /** @file SolidBoolean.cpp 

@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.17 2003-10-09 13:43:07 cattanem Exp $ 
+// $Id: PVolume.cpp,v 1.18 2005-01-25 14:09:19 cattanem Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -9,12 +9,9 @@
 #include "GaudiKernel/StreamBuffer.h"
 /// STD & STL includes 
 #include <cassert>
-#include <iostream>
-#include <string> 
 #include <vector>
 #include <algorithm>
 /// CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"

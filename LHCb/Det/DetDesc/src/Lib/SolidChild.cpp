@@ -1,8 +1,11 @@
-// $Id: SolidChild.cpp,v 1.11 2003-05-16 13:59:13 ibelyaev Exp $ 
+// $Id: SolidChild.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/05/16 13:59:13  ibelyaev
+//  fix of ancient saga with 'double deletion of solids'
+//
 // Revision 1.10  2002/05/11 18:25:47  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -150,7 +153,8 @@ SolidChild::SolidChild
   else 
     {
       m_sc_matrix    = 
-        new HepTransform3D( HepRotate3D( rot ) * HepTranslate3D( -1.0 * pos ) );
+        new HepTransform3D( HepRotate3D( rot ) * 
+                            HepTranslate3D(-1.*pos.x(),-1.*pos.y(),-1.*pos.z()) );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
   /// set bounding parameters 

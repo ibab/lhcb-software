@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.h,v 1.15 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: SolidBoolean.h,v 1.16 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -8,19 +8,14 @@
 #include <string> 
 #include <vector> 
 #include <algorithm> 
-/// GaudiKernel 
-#include "DetDesc/SolidBase.h" 
+/// DetDesc 
 #include "DetDesc/SolidChild.h" 
 
+// Forward declarations
 class StatusCode;
-class SolidChild;
-class HepPoint3D;
-class HepVector3D;
-class HepTransform3D; 
-class HepRotation;
-
 class StreamBuffer;
 class MsgStream;
+
 
 /** @class SolidBoolean SolidBoolean.h "DetDesc/SolidBoolean.h"
  *

@@ -1,15 +1,9 @@
-// $Id: TransportSvc.cpp,v 1.11 2004-07-21 08:01:54 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/07/11 07:15:05  ibelyaev
-//  fix the problems with virtual calls inside constructors
-//
-// ============================================================================
+
 /// from CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 /// from GaudiKErnel 
 #include "GaudiKernel/Kernel.h" 
@@ -24,7 +18,6 @@
 #include "DetDesc/IGeometryInfo.h" 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/ISolid.h" 
-#include "DetDesc/ILVolume.h" 
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/VolumeIntersectionIntervals.h"
 /// local 

@@ -1,4 +1,4 @@
-// $Id: GeometryInfo.h,v 1.10 2003-06-16 13:42:36 sponce Exp $ 
+// $Id: GeometryInfo.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H 1 
 /** STD and STL includes */ 
@@ -6,9 +6,6 @@
 #include <string>
 #include <functional>
 #include <algorithm> 
-/** CLHEP includes */ 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
 /* GaudiKernel includes */
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/StatusCode.h"
@@ -46,8 +43,8 @@ public:
   /// type of vector of children's names 
   typedef  std::vector<std::string>     ChildName;
   
-  /** @defgroup GeometryInfoConstructors
-   *  constructors and destructor for classGeometry Info @n
+  /** @defgroup GeometryInfoConstructors constructors and destructor for class GeometryInfo 
+   * @n
    *  all of them are protected!
    * @{ 
    */ 
@@ -98,8 +95,7 @@ private:
   
 public:
   
-  /** @defgroup GeometryInfoIGeometryInfo
-   *  implementation of methods from IGeometryInfo interface
+  /** @defgroup GeometryInfoIGeometryInfo Implementation of methods from IGeometryInfo interface
    *  @see IGeometryInfo 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @{ 

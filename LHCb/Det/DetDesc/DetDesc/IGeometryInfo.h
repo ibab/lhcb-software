@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -9,17 +9,15 @@
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
 /** STD & STL includes */
-#include <iostream>
-#include <string>
-#include <vector>
 #include <functional>
 /// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Transform3D.h"
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 /** forward declarations */
-class HepTransform3D;
 class StatusCode;
+
 
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
@@ -82,8 +80,8 @@ public:
    */
   virtual bool hasSupport () const = 0;
 
-  /** @defgroup PureGeometricalInfo
-   *  pure geometrical information
+  /** @defgroup PureGeometricalInfo pure geometrical information
+   *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @{
    */
@@ -149,9 +147,7 @@ public:
   virtual bool isInside( const HepPoint3D& GlobalPoint ) const = 0;
   ///@} end of group PureGeometricalInfo
 
-  /** @defgroup BelongsTo
-   *
-   *  To which daughter the given global point belongs to
+  /** @defgroup BelongsTo  To which daughter the given global point belongs to
    *  "Find daughter by point" family
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @{
@@ -241,9 +237,9 @@ public:
    * @see belongsToPath( const HepPoint3D& )
    * @see belongsToPath( const HepPoint3D& , const int )
    *
-   * - if level = 0 - no search, return the name of current level
-   * - if level < 0 - perform search up to the most deepest level
-   * - if level > 0 - perform search up to not more then "level" levels;
+   * /li if level = 0 - no search, return the name of current level
+   * /li if level < 0 - perform search up to the most deepest level
+   * /li if level > 0 - perform search up to not more then "level" levels;
    *
    * @param globalPoint the point in global Reference System
    * @param level       depth
@@ -253,7 +249,7 @@ public:
   ( const HepPoint3D& globalPoint , const int         level ) = 0;
   ///@} end of group BelongsTo
 
-  /** @defgroup FullGeomtryInfo
+  /** @defgroup FullGeomtryInfo Full geometry information
    *
    *  Sometimes is is nesessary to know the exact full geometry location
    *  of a Point in the most detailed way then DetectorElement tree allows.
@@ -382,10 +378,8 @@ public:
   ( std::string&           start ,
     ILVolume::ReplicaPath& replicaPath ) const = 0;
   
-  /** @defgroup LogVol
-   *
-   *  get Logical Volume by its full address - "start" point in
-   *  DetectorDescription Tree  and the replica path in the
+  /** @defgroup LogVol  get Logical Volume by its full address
+   *  "start" point in DetectorDescription Tree  and the replica path in the
    *  Actual Geometry Tree, starting with the logical volume
    *  associated with "starting point"
    * @{
@@ -429,9 +423,7 @@ public:
   
   ///@} end of group LogVol
   
-  /** @defgroup Navigation
-   *
-   * functions for simplifications of navigation functions
+  /** @defgroup Navigation functions for simplifications of navigation functions
    * (according to feedback from users to release v3)
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    * @{
@@ -478,14 +470,13 @@ public:
   virtual IGeometryInfo::IGIChildrens::const_iterator  childEnd  () const = 0 ;
   ///@} end of group Navigation
 
-  /** @defgroup IGeometryInfoPrintOut 
-   *  printout method for class IGeometryInfo
+  /** @defgroup IGeometryInfoPrintOut printout method for class IGeometryInfo
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @{
    */
   
   /** printOut to STD/STL stream
-   *  @param reference to STD/STL stream
+   *  @param os reference to STD/STL stream
    *  @return reference to STD/STL stream
    */
   virtual std::ostream& printOut ( std::ostream& os = std::cout ) const = 0;
@@ -507,8 +498,8 @@ public:
 };
 
 // ============================================================================
-/** @defgroup IGeometryInfoOperators 
- *  inline operators for class IGeometryInfo 
+/** @defgroup IGeometryInfoOperators inline operators for class IGeometryInfo
+ * 
  * @{
  */
 // ============================================================================
@@ -584,8 +575,8 @@ inline StreamBuffer& operator>>( StreamBuffer&   os ,
 
 
 // ============================================================================
-/** @defgroup IGeometryInfoPredficates
- *  useful predicates for class IGeometryInfo
+/** @defgroup IGeometryInfoPredficates useful predicates for class IGeometryInfo
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @{ 
  */
@@ -609,7 +600,7 @@ public:
   /** check for 3D-point
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @see IGeometryInfo::isInside( const HepPoint3D&)
-   *  @param pointer to IGeometryInfo object
+   *  @param gi poiner to IGeometryInfo object
    *  @return true if the point is inside the Geoemtry Info element
    */
   inline bool operator () ( const IGeometryInfo* gi )  const

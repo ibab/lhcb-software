@@ -1,8 +1,11 @@
-// $Id: ISolid.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: ISolid.h,v 1.8 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/09/20 13:25:40  ibelyaev
+//  few fixes to solve Gauss problems
+//
 // Revision 1.6  2002/04/24 10:52:08  ibelyaev
 //  fix problems with TransportSvc ('LHCb Geane')
 //
@@ -24,9 +27,11 @@
 #include "GaudiKernel/IInspectable.h"
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/MsgStream.h"
-/// forward declaration
-class HepPoint3D;        ///< CLHEP
-class HepVector3D;       ///< CLHEP
+/// CLHEP
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Point3D.h"
+
+// Forward declarations
 class StreamBuffer;      ///< GaudiKernel
 
 /// Declaration of the interface ID ( interface id, major & minor versions)

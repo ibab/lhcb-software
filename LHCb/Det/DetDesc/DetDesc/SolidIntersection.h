@@ -1,4 +1,4 @@
-// $Id: SolidIntersection.h,v 1.8 2004-07-09 14:19:41 cattanem Exp $
+// $Id: SolidIntersection.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
@@ -7,19 +7,15 @@
 // STD & STL 
 #include <algorithm>
 #include <functional>
-/// CLHEP
-#include "CLHEP/Vector/Rotation.h" 
 /// DetDesc 
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h" 
 #include "DetDesc/SolidChild.h"
-///
-class HepTransform3D;
-class HepRotation;
-class HepPoint3D;
+/// Forward declarations
 class StreamBuffer;
 template <class TYPE> 
 class SolidFactory;
+
 
 /** @class SolidIntersection SolidIntersection.h DetDesc/SolidIntersection.h
  *  

@@ -1,4 +1,4 @@
-// $Id: DetDesc.cpp,v 1.4 2002-12-13 14:18:20 ibelyaev Exp $ 
+// $Id: DetDesc.cpp,v 1.5 2005-01-25 14:09:19 cattanem Exp $ 
 
 // Include files
 #include <string> 
@@ -8,7 +8,7 @@
 /** print double value using format
  *  @param value   value to be printed 
  *  @param format  desirable format
- *  @returnstring representation of the "value"
+ *  @return string representation of the "value"
  */
 const std::string DetDesc::print (const double value, const char*  format) {
   static const unsigned int buflen = 128;
@@ -19,7 +19,7 @@ const std::string DetDesc::print (const double value, const char*  format) {
 /** print double value using format
  *  @param value   value to be printed 
  *  @param format  desirable format
- *  @returnstring representation of the "value"
+ *  @return string representation of the "value"
  */
 const std::string DetDesc::print (const long value, const char*  format) {
   static const unsigned int buflen = 128;

@@ -1,8 +1,7 @@
-// $Id: SolidBase.h,v 1.9 2004-07-09 14:19:41 cattanem Exp $
+// $Id: SolidBase.h,v 1.10 2005-01-25 14:09:19 cattanem Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+
 // DetDesc 
 #include "DetDesc/Services.h"
 #include "DetDesc/ISolid.h"

@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.13 2004-12-08 15:45:21 cattanem Exp $ 
+// $Id: SolidChild.h,v 1.14 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,20 +7,18 @@
 /// STD and STL 
 #include <functional>
 // CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Vector/Rotation.h"
 /// Detdesc 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidBase.h" 
 /// forward declarations 
-class HepRotation;      ///< CLHEP 
-class HepTransform3D;   ///< CLHEP
 class MsgStream;        ///< GaudiKernel
 class StreamBuffer;     ///< GaudiKernel
 class SolidBoolean;     ///< DetDesc 
 template <class TYPE>
 class SolidFactory;     ///< DetDesc 
+
 
 /** @class SolidChild SolidChild.h "DetDesc/SolidChils.h"
  *

@@ -1,11 +1,9 @@
-// $Id: SolidTrap.cpp,v 1.14 2003-09-20 13:25:42 ibelyaev Exp $
+// $Id: SolidTrap.cpp,v 1.15 2005-01-25 14:09:19 cattanem Exp $
 // ===========================================================================
-///@{
 /**  GaudiKernel package */  
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/StreamBuffer.h" 
-///@} 
-///@{
+
 /**  DetDesc package */ 
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
@@ -13,7 +11,6 @@
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTrap.h" 
 #include "DetDesc/SolidBase.h"
-///@} 
 
 // ============================================================================
 /** @file SolidTrap.cpp 

@@ -1,10 +1,7 @@
-// $Id: LogVolBase.h,v 1.10 2004-12-08 15:45:21 cattanem Exp $ 
+// $Id: LogVolBase.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
-#include <iostream>
-#include <string>
-#include <vector>
 #include <functional>
 #include <algorithm> 
 /// GaudiKernel includes 
@@ -16,15 +13,14 @@
 #include "DetDesc/ISolid.h" 
 #include "DetDesc/Services.h" 
 #include "DetDesc/IPVolume.h"
-#include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume_predicates.h" 
 #include "DetDesc/LogVolumeException.h"
 #include "DetDesc/Surface.h"
+/// CLHEP includes 
+#include "CLHEP/Geometry/Transform3D.h"
+#include "CLHEP/Vector/Rotation.h"
+
 /// forward declarations 
-class HepPoint3D; 
-class HepVector3D; 
-class HepRotation;
-class HepTransform3D;
 class IDataProviderSvc;
 class IMessageSvc;
 

@@ -1,12 +1,8 @@
-// $Id: PVolume.h,v 1.13 2004-07-09 14:19:42 cattanem Exp $ 
+// $Id: PVolume.h,v 1.14 2005-01-25 14:09:19 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
-/// STD & STL 
-#include <iostream>
-#include <string>
+
 /// CLHEP includes
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Vector/Rotation.h"
 ///  GaudiKernel includes   
@@ -14,7 +10,7 @@
 /// DetDesc includes 
 #include "DetDesc/Services.h"
 #include "DetDesc/IPVolume.h"
-#include "DetDesc/ILVolume.h"
+
 /// forward declarations
 class IDataProviderSvc;
 class IMessageSvc;

@@ -1,4 +1,4 @@
-// $Id: ITransportSvc.h,v 1.5 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: ITransportSvc.h,v 1.6 2005-01-25 14:09:19 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -10,8 +10,6 @@
 #include "DetDesc/ILVolume.h" 
 
 // Forward declarations
-class HepPoint3D;
-class HepVector3D;
 class IGeometryInfo;
 
 /** Declaration of the unique interface identifier  

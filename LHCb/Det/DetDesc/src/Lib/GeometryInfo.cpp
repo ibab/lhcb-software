@@ -1,8 +1,5 @@
-// $Id: GeometryInfo.cpp,v 1.11 2002-12-10 13:13:22 sponce Exp $ 
+// $Id: GeometryInfo.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $ 
 
-// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
 // GaudiKernel
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -16,10 +13,6 @@
 #include "DetDesc/IPVolume_predicates.h"
 #include "DetDesc/DetDesc.h"
 // STD and STL 
-#include <iostream>
-#include <string>
-#include <functional>
-#include <algorithm> 
 #include <numeric> 
 // local 
 #include "GeometryInfo.h" 

@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.168 2004-12-08 15:45:21 cattanem Exp $ 
+! $Id: release.notes,v 1.169 2005-01-25 14:09:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+!======================== DetDesc v14r3 2005-01-25 ========================
+! 2005-01-25 - Marco Cattaneo
+ - Backwards comatible changes to CLHEP declarations, for CLHEP 1.9
+ - Fixes to doxygen comments
+ - remove some unneccessary #include
 
 !======================= DetDesc v14r2p1 2004-12-07 =======================
 ! 2004-12-08 - Marco Cattaneo

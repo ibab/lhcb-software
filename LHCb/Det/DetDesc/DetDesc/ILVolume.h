@@ -1,4 +1,4 @@
-// $Id: ILVolume.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
+// $Id: ILVolume.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -13,11 +13,12 @@
 #include "GaudiKernel/MsgStream.h"
 /// DetDesc includes
 #include "DetDesc/ISolid.h"
-/** Forward declarations 
- */ 
+/// CLHEP includes 
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+
+/// Forward declarations 
 class StatusCode;
-class HepPoint3D;
-class HepVector3D;
 class Material; 
 class IPVolume;
 class ISolid;

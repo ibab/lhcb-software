@@ -1,14 +1,10 @@
-// $Id: LVolume.cpp,v 1.27 2003-06-04 08:14:35 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.28 2005-01-25 14:09:19 cattanem Exp $ 
 
 /// STD & STL includes 
-#include <iostream> 
 #include <stdio.h> 
-#include <string> 
 #include <functional> 
 #include <algorithm> 
 /// CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 /// Gaudi Kernel includes
 #include "GaudiKernel/StatusCode.h"
@@ -17,7 +13,6 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/ISvcLocator.h" 
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/StreamBuffer.h" 
 #include "GaudiKernel/SmartRefVector.h" 
 /// DetDesc includes 

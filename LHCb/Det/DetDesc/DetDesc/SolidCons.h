@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.10 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -247,7 +247,7 @@ public:
   { return m_cons_innerRadiusPlusZ  * 2 ; };
   
   /** outer radius at plus Z  
-   *  @returnouter radius at plus Z  
+   *  @return outer radius at plus Z  
    */
   inline double  outerDiameterAtPlusZ  () const 
   { return m_cons_outerRadiusPlusZ  * 2 ; };

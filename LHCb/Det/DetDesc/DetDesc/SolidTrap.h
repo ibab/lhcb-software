@@ -1,32 +1,28 @@
-// $Id: SolidTrap.h,v 1.10 2004-07-09 14:19:42 cattanem Exp $
+// $Id: SolidTrap.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDTRAP_H
 #define     DETDESC_SOLIDTRAP_H 1 
-///@{
+
 /** STD and STL  includes */
 #include <cmath>
 #include <iostream> 
-///@}
-///@{
+
 /** CLHEP incluides */
 #include "CLHEP/Geometry/Point3D.h" 
 #include "CLHEP/Geometry/Vector3D.h" 
 #include "CLHEP/Geometry/Plane3D.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
-///@}
-///@{
+
 /** DetDesc includes */ 
 #include "DetDesc/SolidBase.h" 
 #include "DetDesc/SolidPolyHedronHelper.h" 
-///@}
-///@{
+
 /** forward declarations */
 template <class TYPE>
 class SolidFactory;
 class StreamBuffer; 
-///@}
 
 /** @class SolidTrap SolidTrap.h "DetDesc/SolidTrap.h"
  *

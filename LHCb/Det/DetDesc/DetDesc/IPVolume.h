@@ -1,4 +1,4 @@
-// $Id: IPVolume.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
+// $Id: IPVolume.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -13,11 +13,10 @@
 /// DetDesc includes
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/ISolid.h"
-/// forward declarations 
-class ILVolume;
-class HepPoint3D;
-class HepVector3D;
-class HepTransform3D;
+/// CLHEP includes 
+#include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+
 
 /** Declaration of the interface ID 
  * ( unique interface identifier , major & minor versions)

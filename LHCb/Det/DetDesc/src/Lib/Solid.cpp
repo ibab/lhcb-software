@@ -1,28 +1,24 @@
-// $Id: Solid.cpp,v 1.4 2004-07-09 14:19:42 cattanem Exp $
+// $Id: Solid.cpp,v 1.5 2005-01-25 14:09:19 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-///@{ 
 /** STD & STL includes  */ 
 #include <string>
 #include <vector>
 #include <functional>
 #include <algorithm>
-///@}
-///@{ 
+
 /** GaudiKernel includes */ 
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IFactory.h"
 #include "GaudiKernel/Bootstrap.h"
-///@}
-///@{ 
+
 /** DetDesc includes */ 
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ISolidFactory.h"
 #include "DetDesc/Solid.h"
 #include "DetDesc/SolidException.h"
-///@}
 
 // ============================================================================
 /** @file Solid.cpp

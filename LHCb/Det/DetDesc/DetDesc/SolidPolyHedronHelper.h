@@ -1,11 +1,6 @@
-// $Id: SolidPolyHedronHelper.h,v 1.5 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.6 2005-01-25 14:09:19 cattanem Exp $ 
 // ===========================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2001/08/09 16:47:59  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef     DETDESC_SOLIDPOLYHEDRONHELPER_H
 #define     DETDESC_SOLIDPOLYHEDRONHELPER_H 1
@@ -40,7 +35,7 @@ public:
   
 public: 
   
-  /** - check for the given 3D-point. 
+  /** - Check for the given 3D-point. 
    *    Point coordinated are in the local reference 
    *    frame of the solid.   
    *  - implementation of ISolid absstract interface  
@@ -50,7 +45,7 @@ public:
    */
   virtual bool isInside ( const HepPoint3D& point ) const ;
   
-  /** - calculate the intersection points("ticks") of the solid objects 
+  /** - Calculate the intersection points("ticks") of the solid objects 
    *    with given line. 
    *  -# Line is parametrized with parameter \a t :
    *     \f$ \vec{x}(t) = \vec{p} + t \times \vec{v} \f$ 
@@ -144,14 +139,4 @@ protected:
 // The END 
 // ===========================================================================
 #endif  ///<  DETDESC_SOLIDPOLYHEDRONHELPER_H 
-/// ===========================================================================
-
-
-
-
-
-
-
-
-
-
+/// ==========================================================================
