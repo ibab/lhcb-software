@@ -32,8 +32,6 @@ class VeloClusterMaker : public GaudiAlgorithm {
   virtual StatusCode initialize();
   /// Algorithm execution - Make Clusters
   virtual StatusCode execute   ();
-  /// Algorithm finalization
-  virtual StatusCode finalize  ();   
 
   /// get S/N cut of individual hits in a detector
   float  signalToNoiseCut(int detID) const;
@@ -111,11 +109,3 @@ private:
 
 
 #endif // VeloClusterMaker_H
-
-
-
-
-
-
-
-

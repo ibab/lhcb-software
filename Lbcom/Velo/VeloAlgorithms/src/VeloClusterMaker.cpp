@@ -59,6 +59,9 @@ VeloClusterMaker::~VeloClusterMaker(){};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode VeloClusterMaker::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
   debug() << "==> Initialise" << endreq;
 
   // set default signal to noise cuts:
@@ -86,12 +89,6 @@ StatusCode VeloClusterMaker::execute() {
   return sc;
 }
 
-//=========================================================================
-//  Finalization
-//=========================================================================
-StatusCode VeloClusterMaker::finalize() {
-  return StatusCode::SUCCESS;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Accessors and other simple functions

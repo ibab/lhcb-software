@@ -80,6 +80,9 @@ VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator)
 
 StatusCode VeloMonitor::initialize() {
   
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
   debug() << ">>> Initialize" << endmsg;
 
   m_NEvent=0;
@@ -199,8 +202,7 @@ StatusCode VeloMonitor::finalize() {
   info() << "-----------------------------------------------------------------"
 	 << endmsg;
   
-
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 StatusCode VeloMonitor::retrieveData() {

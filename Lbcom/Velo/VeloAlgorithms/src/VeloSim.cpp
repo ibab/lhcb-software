@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.32 2004-12-03 18:01:58 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.33 2004-12-06 17:17:13 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -117,6 +117,8 @@ VeloSim::~VeloSim() {};
 //=============================================================================
 StatusCode VeloSim::initialize() {
 
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialise" << endmsg;
 
   m_velo=getDet<DeVelo>("/dd/Structure/LHCb/Velo" );
@@ -1151,16 +1153,6 @@ StatusCode VeloSim::storeOutputData(){
   }
 
   return sc;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode VeloSim::finalize() {
-  
-  debug() << "==> Finalize" << endmsg;
-
-  return StatusCode::SUCCESS;
 }
 
 

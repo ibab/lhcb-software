@@ -2,6 +2,9 @@
 ! Responsible : Chris Parkes
 
 !===================== VeloAlgorithms v3r2 2004-12-06 =====================
+! 2004-12-06 - Marco Cattaneo
+ - Explicitly call initialize and finalize of GaudiAlgorithm base class
+
 ! 2004-12-03 - David Hutchcroft
  - Changes to VeloSim (GaudiAlg + big cluster bug fixes)
  - Changes to VeloClusterMaker (GaudiAlg + big cluster bug fixes)

@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.10 2004-12-03 18:01:58 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.11 2004-12-06 17:17:13 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -34,7 +34,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
