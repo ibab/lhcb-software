@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.2 2005-01-12 09:08:33 ocallot Exp $
 // Include files 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -36,7 +36,7 @@ CaloFillPrsSpdRawBuffer::CaloFillPrsSpdRawBuffer( const std::string& name,
   m_triggerBankType  = RawBuffer::PrsTrig;
   m_numberOfBanks    = 8;
 
-  declareProperty( "DataCodingType",   m_dataCodingType = 0 );
+  declareProperty( "DataCodingType",   m_dataCodingType = 1 );
   declareProperty( "EnergyScale",      m_energyScale    = 0.1 * MeV );
 
 }
@@ -245,11 +245,11 @@ void CaloFillPrsSpdRawBuffer::fillDataBankShort ( ) {
 //=========================================================================
 void CaloFillPrsSpdRawBuffer::fillTriggerBank ( ) {
 
-  L0PrsSpdHitVector* prs = get<L0PrsSpdHitVector>( m_prsBank );
-  L0PrsSpdHitVector* spd = get<L0PrsSpdHitVector>( m_spdBank );
-  std::vector<int> words( 1536, 0 );
+  L0PrsSpdHits* prs = get<L0PrsSpdHits>( m_prsBank );
+  L0PrsSpdHits* spd = get<L0PrsSpdHits>( m_spdBank );
+  std::vector<int> words( 1536, 0 );  //== 3 area, 512*8 = 4096 max per area
 
-  L0PrsSpdHitVector::const_iterator itT;
+  L0PrsSpdHits::const_iterator itT;
   for ( itT = prs->begin(); prs->end() != itT; ++itT ) {
     CaloCellID id = (*itT)->cellID();
     int cellIndex = (id.raw() & 0x3FF8 ) >> 3;  // Word index, per group of 8

@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.2 2005-01-12 09:08:33 ocallot Exp $
 // Include files 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -47,7 +47,7 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
     m_numberOfBanks    = 4;
   }
 
-  declareProperty( "DataCodingType",   m_dataCodingType = 0 );
+  declareProperty( "DataCodingType",   m_dataCodingType = 1 );
   declareProperty( "EnergyScale",      m_energyScale    = 1. * MeV );
 }
 //=============================================================================
