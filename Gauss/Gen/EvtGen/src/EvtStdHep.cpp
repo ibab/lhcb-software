@@ -75,8 +75,11 @@ std::ostream& operator<<(std::ostream& s, const EvtStdHep& stdhep){
 
   int w=s.width();
   int p=s.precision();
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+  long f=s.flags();
+#else  
   std::_Ios_Fmtflags f=s.flags();
-
+#endif
 
   s <<std::endl;
   s << "  N      Id Ist   M1   M2   DF   DL      px      py      pz       E       t       x       y       z"<<std::endl;
