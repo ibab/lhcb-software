@@ -87,12 +87,16 @@ void L0Muon::TileRegister::setTile(MuonTileID & id){
   for (unsigned int ind =0; ind < m_ids.size(); ind++){
     if ( m_ids[ind]== id){
       index =ind;
-      m_bitset.set(index); 
+      m_bitset.set(index);
       break;
     }
+    
   }
   
   
 }
+
+
+
 
 

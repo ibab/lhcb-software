@@ -102,7 +102,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
       
       int testalias=0;
       testalias = rfactory->createAlias(buf,bufalias);
-
+      //std::cout << "alias for Registers" << " "  << bufalias;
       addInputRegister(reg);
       m_cu->addInputRegister(reg); 
       m_formatting->addInputRegister(reg);
