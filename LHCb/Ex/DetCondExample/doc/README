@@ -1,4 +1,4 @@
-# $Id: README,v 1.29 2002-11-26 00:22:40 andreav Exp $
+# $Id: README,v 1.30 2002-11-26 18:03:25 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -139,7 +139,7 @@ cd Ex/DetCondExample/v4r1/options
 /bin/rm -f log.testXml.${CMTCONFIG}
 ../$CMTDEB/DetCondExample.exe testXml.opts \
   | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" > log.testXml.${CMTCONFIG}
-tkdiff log.testXml.${CMTCONFIG} ../job/${CONDDB_implementation} &
+tkdiff log.testXml.${CMTCONFIG} ../job/Xml/ &
 
 ================
 (2a) fillCondDB
@@ -173,8 +173,8 @@ source ../cmt/setupDB.csh   -tag=$CMTDEB
 ../$CMTDEB/DetCondExample.exe fillCondDB.opts \
   | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
   > log.fillCondDB_2.${CMTCONFIG}
-tkdiff log.fillCondDB_1.Objy.Linux61 ../job/${CONDDB_implementation} &
-tkdiff log.fillCondDB_2.Objy.Linux61 ../job/${CONDDB_implementation} &
+tkdiff log.fillCondDB_1.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
+tkdiff log.fillCondDB_2.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 
 ================
 (2b) testCondDB
@@ -189,7 +189,7 @@ tkdiff log.fillCondDB_2.Objy.Linux61 ../job/${CONDDB_implementation} &
 ../$CMTDEB/DetCondExample.exe testCondDB.opts \
   | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
   > log.testCondDB.${CMTCONFIG}
-tkdiff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation} &
+tkdiff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 
 ================
 (3) daqCondDB
@@ -204,7 +204,7 @@ tkdiff log.testCondDB.${CMTCONFIG} ../job/${CONDDB_implementation} &
 ../$CMTDEB/DetCondExample.exe daqCondDB.opts \
   | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
   > log.daqCondDB.${CMTCONFIG}
-tkdiff log.daqCondDB.Objy.Linux61 ../job/${CONDDB_implementation} &
+tkdiff log.daqCondDB.${CMTCONFIG} ../job/${CONDDB_implementation}/ &
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus/lxplus7 with the debugger
@@ -340,7 +340,9 @@ cd Ex\DetCondExample\v4r1\options
 run DetCondExample testXml.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample testXml.opts > log.testXml.Win32Debug
+# NB I use sed302b from http://www.student.northpark.edu/pemente/sed/index.htm
+# NB Use the full path rather than %DETCONDEXAMPLEROOT% because sed needs "\\"!
+run DetCondExample testXml.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.testXml.%CMTCONFIG%
 
 ================
 (2a) fillCondDB
@@ -376,8 +378,8 @@ run DetCondExample fillCondDB.opts
 # Be sure to start with a new database if you want to compare the first output
 # You do not need to call setupDB.bat again
 ..\cmt\cleanupDB.bat
-run DetCondExample fillCondDB.opts > log.fillCondDB_1.Win32Debug
-run DetCondExample fillCondDB.opts > log.fillCondDB_2.Win32Debug
+run DetCondExample fillCondDB.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.fillCondDB_1.%CMTCONFIG%
+run DetCondExample fillCondDB.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.fillCondDB_2.%CMTCONFIG%
 
 ================
 (2b) testCondDB
@@ -388,7 +390,7 @@ run DetCondExample fillCondDB.opts > log.fillCondDB_2.Win32Debug
 run DetCondExample testCondDB.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample testCondDB.opts > log.testCondDB.Win32Debug
+run DetCondExample testCondDB.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%
 
 ================
 (3) daqCondDB
@@ -399,7 +401,7 @@ run DetCondExample testCondDB.opts > log.testCondDB.Win32Debug
 run DetCondExample daqCondDB.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample daqCondDB.opts > log.daqCondDB.Win32Debug
+run DetCondExample daqCondDB.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.daqCondDB.%CMTCONFIG%
 
 ------------------------------------------------------------------------------
 How to browse the Oracle database using SQL commands on Windows
@@ -445,12 +447,13 @@ set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
 setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WINDOWS
 # You can compare the output to that in the ../job directory
 ../$CMTDEB/DetCondExample.exe testCondDB.opts \
-  > log.testCondDB.${CMTCONFIG}.MYCONDDB_WINDOWS
+  | sed "s|$DETCONDEXAMPLEROOT|DETCONDEXAMPLEROOT|" \
+  > log.testCondDB.${CMTCONFIG}.${DETCONDEXAMPLE_DBNAME}
 
 # You can run the testCondDB example again on Windows after setting
 set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
 # You can compare the output to that in the ..\job directory
-run DetCondExample testCondDB.opts > log.testCondDB.Win32Debug.MYCONDDB_LINUX
+run DetCondExample testCondDB.opts | sed "s|I:\\newmycmt11\\Ex\\DetCondExample\\v4r1\\|DETCONDEXAMPLEROOT/|" > log.testCondDB.%CMTCONFIG%.%DETCONDEXAMPLE_DBNAME%
 
 # The result of this test is that there are no significant differences
 # between log.testCondDB.Win32Debug.MYCONDDB_LINUX and [...].Win32Debug, or

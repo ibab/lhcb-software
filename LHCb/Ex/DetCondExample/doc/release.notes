@@ -1,4 +1,4 @@
-#$Id: release.notes,v 1.22 2002-11-25 21:51:01 andreav Exp $
+#$Id: release.notes,v 1.23 2002-11-26 18:03:25 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
 
@@ -25,11 +25,7 @@ Modify CMT requirements to allow for runtime choice between Oracle and MySQL.
     (although they are symblic links to rh61_gcc2952)
 - Remove reference to the Java browser until it's tested on Oracle
 - Updated sample job outputs
-  > reorganized them into job/CondDBObjy and job/CondDBOracle
-
-TO DO:
-- Test everything under Windows and update sample job outputs
-  > For the moment I removed all output from Windows
+  > reorganized them into job/Xml, job/CondDBObjy and job/CondDBOracle
 
 ==============================================================================
 !20020725 - Andrea Valassi
