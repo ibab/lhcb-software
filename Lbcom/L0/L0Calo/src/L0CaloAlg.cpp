@@ -1,15 +1,12 @@
-///
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+
 /// STL 
 #include <string> 
 #include <algorithm> 
 
-
-///
 /// CLHEP 
 #include "CLHEP/Units/SystemOfUnits.h"
 
-
-///         
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -17,12 +14,10 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Stat.h"
 
-///
 /// CaloEvent 
 #include "CaloEvent/CaloDigit.h" 
 
-///
-/// Calo 
+/// CaloGen
 #include "CaloGen/CaloException.h"
 #include "CaloGen/CaloCollection.h"
 
@@ -31,35 +26,23 @@
 #include "L0CaloAlg.h"
 
 //
-///
-///  Level-0 calorimeter trigger
-///
-///
-///  Author: Olivier Callot
-///  Date:   4 October 2000
-///
-///
-
+//  Level-0 calorimeter trigger
+//
+//
 
 static const AlgFactory<L0CaloAlg>          Factory ;
 const       IAlgFactory& L0CaloAlgFactory = Factory ;
 
-
-// **  useful local type definitions 
-  
-typedef ObjectVector<CaloDigit>        InputSeq  ; 
-typedef ObjectVector<L0CaloCandidate>  OutputSeq  ; 
-
-
-
-// ****************************************************************************
+//=============================================================================
+// Creator
+//=============================================================================
 
 L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator) 
   : Algorithm                   ( name , pSvcLocator            )
-  , m_nameOfEcalDataContainer   ( "/Event/MC/Ecal/Digit"    ) 
-  , m_nameOfHcalDataContainer   ( "/Event/MC/Hcal/Digit"    ) 
-  , m_nameOfPrsDataContainer    ( "/Event/MC/Prs/Digit"     ) 
-  , m_nameOfSpdDataContainer    ( "/Event/MC/Spd/Digit"     ) 
+  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digit"    ) 
+  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digit"    ) 
+  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digit"     ) 
+  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digit"     ) 
   , m_nameOfOutputDataContainer ( "/Event/FE/L0/Calo"   )
   , m_nameOfGeometryRoot        ( "/dd/Structure/LHCb/" ) 
   , m_etScale                   ( 20. * MeV )
@@ -71,8 +54,8 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   , m_maxPi0Mass                ( 220. * MeV )
 {
 
-// ** Declare the algorithm's properties which can be set at run time and their
-// ** default values
+// Declare the algorithm's properties which can be set at run time and their
+// default values
 
   declareProperty("EcalData"        , m_nameOfEcalDataContainer  ) ;
   declareProperty("HcalData"        , m_nameOfHcalDataContainer  ) ;
@@ -90,16 +73,16 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
 };
 
 
-// ****************************************************************************
+//=============================================================================
 // Destructor
-// ****************************************************************************
+//=============================================================================
 
 L0CaloAlg::~L0CaloAlg() {};
 
-// ****************************************************************************
+//=============================================================================
 // Initialization: Check parameters, get DetectorElement pointers, build
 //                 the trigger cards and their connections (HCAL-ECAL)
-// ****************************************************************************
+//=============================================================================
 
 StatusCode L0CaloAlg::initialize() {
 
@@ -107,7 +90,7 @@ StatusCode L0CaloAlg::initialize() {
 
   log << MSG::INFO << "Initializing" << endreq;
 
-// ** check for the valid names of the input/output data containers
+// check for the valid names of the input/output data containers
 
   if( m_nameOfEcalDataContainer.empty() ) { 
     log <<  MSG::ERROR << "The name of the ECAL data container is empty!" 
@@ -130,7 +113,7 @@ StatusCode L0CaloAlg::initialize() {
     if( std::string::npos != pos ){ m_nameOfOutputDirectory.erase(pos); } 
   }
 
-// ** Retrieve the ECAL detector element, build cards
+// Retrieve the ECAL detector element, build cards
 
   SmartDataPtr<DeCalorimeter> detEcal( detDataService() , 
 				       m_nameOfGeometryRoot + "Ecal" ) ; 
@@ -146,8 +129,9 @@ StatusCode L0CaloAlg::initialize() {
   for  ( int eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
     ecalFe.push_back( TriggerCard( eCard ) );
   }
+  log << MSG::DEBUG << m_ecal << endreq;
 
-// ** Retrieve the HCAL detector element, build cards
+// Retrieve the HCAL detector element, build cards
 
   SmartDataPtr<DeCalorimeter> detHcal( detDataService() , 
 				       m_nameOfGeometryRoot + "Hcal" ) ; 
@@ -162,16 +146,17 @@ StatusCode L0CaloAlg::initialize() {
   for  ( int hCard = 0; m_hcal->nCards() > hCard; ++hCard ) {
     hcalFe.push_back( TriggerCard( hCard ) );
   }
+  log << MSG::DEBUG << m_hcal << endreq;
 
-// ** Link the ECAL cards to the HCAL cards for the trigger.
-// ** Method: An ECAL card is connected to a single HCAL card.
-// ** Get the bottom left cell, get is coordinates, extrapolate to HCAL and
-// ** get the HCAL cell, get its card, store the information...
-// ** In case this fails, try the opposite cell !
+// Link the ECAL cards to the HCAL cards for the trigger.
+// Method: An ECAL card is connected to a single HCAL card.
+// Get the bottom left cell, get is coordinates, extrapolate to HCAL and
+// get the HCAL cell, get its card, store the information...
+// In case this fails, try the opposite cell !
 
-// ** The zRatio allows to compute which cell is in front of which.
-// ** There is some hardcoding: Outer cells of HCAL are about twice the size 
-// ** of the ECAL one.
+// The zRatio allows to compute which cell is in front of which.
+// There is some hardcoding: Outer cells of HCAL are about twice the size 
+// of the ECAL one.
 
   double zRatio = m_hcal->cellSize( m_hcal->firstCellID( 0 ) ) / 
                   m_ecal->cellSize( m_ecal->firstCellID( 0 ) ) / 2. ;
@@ -182,7 +167,7 @@ StatusCode L0CaloAlg::initialize() {
     CaloCellID hcalID  = m_hcal->Cell( center );
     int hCard          = m_hcal->cardNumber( hcalID );
 
-// ** Use last cell if first doesn't work
+// Use last cell if first doesn't work
 
     if ( 0 > hCard ) {                                
       ecalID = m_ecal->lastCellID( eCard );
@@ -191,10 +176,10 @@ StatusCode L0CaloAlg::initialize() {
       hCard  = m_hcal->cardNumber( hcalID );
     }
 
-// ** Compute the ratio of cell sizes (integer) and the offset
-// ** so that one can compute (relative in the card) 
-// **     ecalCellRow = hcalCellRow * mag + OffsetRow
-// **     ecalCellCol = hcalCellCol * mag + OffsetCol
+// Compute the ratio of cell sizes (integer) and the offset
+// so that one can compute (relative in the card) 
+//     ecalCellRow = hcalCellRow * mag + OffsetRow
+//     ecalCellCol = hcalCellCol * mag + OffsetCol
 
     if ( 0 <= hCard ) {
       int mag = (int) (m_hcal->cellSize(hcalID) / m_ecal->cellSize(ecalID) );
@@ -207,7 +192,7 @@ StatusCode L0CaloAlg::initialize() {
     }
   }
 
-// ** Debug the cards
+// Debug the cards
 
   for ( int eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
     log << MSG::VERBOSE << "Ecal card " ;
@@ -244,7 +229,7 @@ StatusCode L0CaloAlg::initialize() {
     log << endreq;
   }
 
-// ** Initialize the PreShower validation mask: 1 or 2 bits, no more
+// Initialize the PreShower validation mask: 1 or 2 bits, no more
 
   m_validPrs[0]  = 0;
   m_validPrs[1]  = 1;
@@ -263,7 +248,7 @@ StatusCode L0CaloAlg::initialize() {
   m_validPrs[14] = 0;
   m_validPrs[15] = 0;
 
-// ** Initialize the gain correction for leakage in the 2x2 area
+// Initialize the gain correction for leakage in the 2x2 area
 
   m_gainCorrEcal[0] = 1.00 ;
   m_gainCorrEcal[1] = 1.04 ;
@@ -272,7 +257,7 @@ StatusCode L0CaloAlg::initialize() {
   m_gainCorrHcal[0] = 1.00 ;
   m_gainCorrHcal[1] = 1.05 ;
 
-// ** Initialise the cuts
+// Initialise the cuts
 
   m_minPi0Mass2 = m_minPi0Mass * m_minPi0Mass ;
   m_maxPi0Mass2 = m_maxPi0Mass * m_maxPi0Mass ;
@@ -294,9 +279,9 @@ StatusCode L0CaloAlg::initialize() {
   return StatusCode::SUCCESS;
 };
 
-// ****************************************************************************
+//=============================================================================
 // Execute: Compute the calo trigger information
-// ****************************************************************************
+//=============================================================================
 
 StatusCode L0CaloAlg::execute() {
 
@@ -304,19 +289,19 @@ StatusCode L0CaloAlg::execute() {
 
   log << MSG::VERBOSE << "Entering L0 trigger " << endreq;
 
-// ** Get the ECAL data, store them in the Front-End card
+// Get the ECAL data, store them in the Front-End card
 
   sumEcalData( log );
 
-// ** Get the Prs information. Adds it to the ecalFe[] objects
+// Get the Prs information. Adds it to the ecalFe[] objects
 
   addPrsData( log );
   
-// ** Get the Spd information. Adds it to the ecalFe[] objects
+// Get the Spd information. Adds it to the ecalFe[] objects
 
   addSpdData( log );
   
-// ** Loop on ECAL cards. Get the candidates, select the highest
+// Loop on ECAL cards. Get the candidates, select the highest
 
   L0Candidate electron  ( m_ecal );
   L0Candidate photon    ( m_ecal );
@@ -332,9 +317,9 @@ StatusCode L0CaloAlg::execute() {
       CaloCellID ID =  m_ecal->cardCellID( eCard, row, col);
       std::string particle = "";
 
-// ** Validate ECAL by Prs/Spd, and select the highest electron and photon
-// ** Decision on Prs => electron/photon
-// ** SPD matching Prs => electron
+// Validate ECAL by Prs/Spd, and select the highest electron and photon
+// Decision on Prs => electron/photon
+// SPD matching Prs => electron
 
       int prsMask = ecalFe[eCard].prsMask();
       int okPrs   = m_validPrs[prsMask];
@@ -354,7 +339,7 @@ StatusCode L0CaloAlg::execute() {
 	}
       }
 
-// ** Produces also the 'single card' pi0, with two options...
+// Produces also the 'single card' pi0, with two options...
 
       if ( 1 == m_pi0Strategy ) {
 	if ( pi0Local.et() < etTot ) { 
@@ -372,7 +357,7 @@ StatusCode L0CaloAlg::execute() {
 	}
       }
 
-// ** Global pi0: the 'previous' card is in the same validation
+// Global pi0: the 'previous' card is in the same validation
 
       int pCard = m_ecal->previousCardNumber(eCard);
       if ( 0 <= pCard ) {
@@ -392,12 +377,12 @@ StatusCode L0CaloAlg::execute() {
 	                  (0 == ecalFe[pCard].spdMask() );
 	  if ( (m_minEtGammaGlobal <= etMax     * m_etScale)  && 
 	       (m_minEtGammaGlobal <= etMaxPrev * m_etScale)  && 
-	       ( (row > rowPrev+1) ||                     // ** No ghost test
+	       ( (row > rowPrev+1) ||                     // No ghost test
 		 (col > colPrev+1) || 
 		 (col < colPrev-1)    )   &&
-	       ( phot || photPrev )  ) {                  // ** One is photonic
+	       ( phot || photPrev )  ) {                  // One is photonic
 
-// ** Compute the distance and radius in half-cell units.
+// Compute the distance and radius in half-cell units.
 
 	    CaloCellID IDprev = m_ecal->cardCellID( eCard, rowPrev, colPrev );
 	    double halfSize = .5 * m_ecal->cellSize( ID );
@@ -449,16 +434,16 @@ StatusCode L0CaloAlg::execute() {
 	log.width(2); log << ecalFe[eCard].spdMask() << " -> " << spdMask 
 			  << " " << particle << endreq;
       }
-    }
-  }
+    } // card not empty
+  } // eCard
 
-// ******************************************
-// ** Now do a similar processing for HCAL !
-// ******************************************
+//=============================================================================
+//  Now do a similar processing for HCAL !
+//=============================================================================
 
   sumHcalData( log );
 
-// ** Now add the highest ECAL energy in matching cards
+// Now add the highest ECAL energy in matching cards
 
   L0Candidate hadron( m_hcal );
   L0Candidate hadron2( m_hcal );
@@ -497,8 +482,9 @@ StatusCode L0CaloAlg::execute() {
 	log.width(4); log << hcalFe[hCard].etTot() << " Ecal " ;
 	log.width(4); log << maxEcalEt << endreq;
       }
-    }
-  }
+    } // card not empty
+  } // hCard
+
   if ( 0 <= cardMax ) {
     int maxArea = m_hcal->cardArea(cardMax);
     int maxCol  = m_hcal->cardFirstColumn(cardMax) + hcalFe[cardMax].colMax();
@@ -539,21 +525,22 @@ StatusCode L0CaloAlg::execute() {
 	    hadron2.setCandidate( etMax, hCard, 
 				  m_hcal->cardCellID( hCard, hRow, hCol ) );
 	  }
-	}
-      }
-    }
-  }
-// ** Prepare the output container
+	} // not a ghost
+      } // card not empty
+    } // loop hCard
+  } // 0 < cardMax
 
-  OutputSeq* L0Calo = new(std::nothrow) OutputSeq();
+// Prepare the output container
+
+  L0CaloCandidateVector* L0Calo = new(std::nothrow) L0CaloCandidateVector();
   if( 0 == L0Calo ) { 
     log << MSG::ERROR << "Unable to create the output container=" 
 	<< m_nameOfOutputDataContainer << endreq; 
     return StatusCode::FAILURE ;
   }
 
-// ** register the output container it into the Transient Store! 
-// ** Search first if the directory exists
+// register the output container it into the Transient Store! 
+// Search first if the directory exists
 
   { 
     SmartDataPtr<DataObject> outDir( eventDataService() , 
@@ -572,7 +559,7 @@ StatusCode L0CaloAlg::execute() {
     return sc ;
   }
 
-// ** Store the various candidates
+// Store the various candidates
 
   if ( 0 < electron.et() ) {
     L0CaloCandidate* elec = new L0CaloCandidate ( L0::Electron, electron.ID(),
@@ -639,10 +626,10 @@ StatusCode L0CaloAlg::execute() {
     L0Calo->push_back( pi0G );
   }
     
-// ** Debug now the L0 candidates
+// Debug now the L0 candidates
 
   log << MSG::DEBUG << "L0CaloCandidate Summary: " << endreq;
-  for( OutputSeq::const_iterator item = L0Calo->begin() ;  
+  for( L0CaloCandidateVector::const_iterator item = L0Calo->begin() ;  
        L0Calo->end() != item ; ++item ) {
     L0CaloCandidate* cand = (*item);
     log << MSG::DEBUG << "Type " << cand->type() << " " 
@@ -663,9 +650,9 @@ StatusCode L0CaloAlg::execute() {
   return StatusCode::SUCCESS; 
 }
 
-// ****************************************************************************
+//=============================================================================
 // Finalize. No action...
-// ****************************************************************************
+//=============================================================================
 
 StatusCode L0CaloAlg::finalize() {
   MsgStream log(messageService(), name());
@@ -673,21 +660,21 @@ StatusCode L0CaloAlg::finalize() {
   return StatusCode::SUCCESS;
 }
 
-// ****************************************************************************
-// ** Sum the Ecal digits into the Fe cards
-// ****************************************************************************
+//=============================================================================
+// Sum the Ecal digits into the Fe cards
+//=============================================================================
 
 void L0CaloAlg::sumEcalData( MsgStream log ) {
 
-// ** Reset the cards collection
+// Reset the cards collection
 
   for( int eCard = 0; m_ecal->nCards() > eCard;  ++eCard ) { 
     ecalFe[eCard].reset( );  
   }
 
-// ** Get the ECAL input container
+// Get the ECAL input container
 
-  SmartDataPtr<InputSeq> ecalDigit ( eventDataService() , 
+  SmartDataPtr<CaloDigitVector> ecalDigit ( eventDataService() , 
 				     m_nameOfEcalDataContainer ); 
   if( 0 == ecalDigit ) { 
     log << MSG::ERROR << "Unable to retrieve Ecal data container=" 
@@ -695,11 +682,11 @@ void L0CaloAlg::sumEcalData( MsgStream log ) {
     return;
   }
   
-// ** Get digits. Convert to Transverse Energy, Sum in front-end cards.
-// ** Adds to the (possible) neighboring cards if at the border (row/col = 0)
-// ** and if the card has neighboring cards
+// Get digits. Convert to Transverse Energy, Sum in front-end cards.
+// Adds to the (possible) neighboring cards if at the border (row/col = 0)
+// and if the card has neighboring cards
 
-  for( InputSeq::const_iterator digit = ecalDigit->begin() ;  
+  for( CaloDigitVector::const_iterator digit = ecalDigit->begin() ;  
        ecalDigit->end() != digit ; ++digit ) { 
     CaloCellID ID  = (*digit)->cellID();
     double  energy = (*digit)->e() * m_gainCorrEcal[ID.area()];
@@ -725,9 +712,9 @@ void L0CaloAlg::sumEcalData( MsgStream log ) {
   }
 }
 
-// ****************************************************************************
-// ** Sum the Hcal digits into the Fe cards
-// ****************************************************************************
+//=============================================================================
+// Sum the Hcal digits into the Fe cards
+//=============================================================================
 
 void L0CaloAlg::sumHcalData( MsgStream log ) {
 
@@ -735,9 +722,9 @@ void L0CaloAlg::sumHcalData( MsgStream log ) {
     hcalFe[hCard].reset( );  
   }
 
-// ** Get the HCAL input container
+// Get the HCAL input container
 
-  SmartDataPtr<InputSeq> hcalDigit ( eventDataService() , 
+  SmartDataPtr<CaloDigitVector> hcalDigit ( eventDataService() , 
 				     m_nameOfHcalDataContainer ); 
   if( 0 == hcalDigit ) { 
     log << MSG::ERROR << "Unable to retrieve Hcal data container=" 
@@ -745,11 +732,11 @@ void L0CaloAlg::sumHcalData( MsgStream log ) {
     return;
   }
   
-// ** Get HCAL digits. Convert to Transverse Energy, Sum in front-end cards.
-// ** Adds to the (possible) neighboring cards if at the border (row/col = 0)
-// ** and if the card has neighbors down/left/corner.
+// Get HCAL digits. Convert to Transverse Energy, Sum in front-end cards.
+// Adds to the (possible) neighboring cards if at the border (row/col = 0)
+// and if the card has neighbors down/left/corner.
 
-  for( InputSeq::const_iterator digit = hcalDigit->begin() ;  
+  for( CaloDigitVector::const_iterator digit = hcalDigit->begin() ;  
        hcalDigit->end() != digit ; ++digit ) { 
     CaloCellID ID = (*digit)->cellID();
     double energy = (*digit)->e() * m_gainCorrHcal[ID.area()];
@@ -776,13 +763,13 @@ void L0CaloAlg::sumHcalData( MsgStream log ) {
   }
 }
 
-// ****************************************************************************
-// ** Add the Prs information to the ECAL Front-end card
-// ****************************************************************************
+//=============================================================================
+// Add the Prs information to the ECAL Front-end card
+//=============================================================================
 
 void L0CaloAlg::addPrsData( MsgStream log ) {
 
-  SmartDataPtr<InputSeq> prsDigit ( eventDataService() , 
+  SmartDataPtr<CaloDigitVector> prsDigit ( eventDataService() , 
 				    m_nameOfPrsDataContainer ); 
   if( 0 == prsDigit ) { 
     log << MSG::ERROR << "Unable to retrieve Prs data container=" 
@@ -790,7 +777,7 @@ void L0CaloAlg::addPrsData( MsgStream log ) {
     return ;
   }
 
-  for( InputSeq::const_iterator digit = prsDigit->begin() ;  
+  for( CaloDigitVector::const_iterator digit = prsDigit->begin() ;  
        prsDigit->end() != digit ; ++digit ) { 
     CaloCellID ID     = (*digit)->cellID();
     double     energy = (*digit)->e();
@@ -814,13 +801,13 @@ void L0CaloAlg::addPrsData( MsgStream log ) {
     }
   }
 }
-// ****************************************************************************
-// ** Add the Spd information to the ECAL Front-end card
-// ****************************************************************************
+//=============================================================================
+// Add the Spd information to the ECAL Front-end card
+//=============================================================================
 
 void L0CaloAlg::addSpdData( MsgStream log ) {
 
-  SmartDataPtr<InputSeq> spdDigit ( eventDataService() , 
+  SmartDataPtr<CaloDigitVector> spdDigit ( eventDataService() , 
 				    m_nameOfSpdDataContainer ); 
   if( 0 == spdDigit ) { 
     log << MSG::ERROR << "Unable to retrieve Spd data container=" 
@@ -828,7 +815,7 @@ void L0CaloAlg::addSpdData( MsgStream log ) {
     return;
   }
 
-  for( InputSeq::const_iterator digit = spdDigit->begin() ;  
+  for( CaloDigitVector::const_iterator digit = spdDigit->begin() ;  
        spdDigit->end() != digit ; ++digit ) { 
     CaloCellID ID     = (*digit)->cellID();
     int card, row,  col  ;

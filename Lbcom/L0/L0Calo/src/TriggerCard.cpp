@@ -1,8 +1,9 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.cpp,v 1.2 2001-03-20 17:28:44 ocallot Exp $
+
 #include "TriggerCard.h"
 
-//--------------------------------------------------------------
-// ** Clean up for a new event. Resets all arrays...
-//--------------------------------------------------------------
+/** Clean up for a new event. Resets all arrays and values
+ */
 
 void TriggerCard::reset( ) {
   for ( int i = 0; nColCaloCard >= i; ++i ){
@@ -23,11 +24,11 @@ void TriggerCard::reset( ) {
   m_empty  = true;
 };
 
-//--------------------------------------------------------------
-// Add the Et of a cell. Perform the sum and the computation 
-// of the local maximum on the flight
-// Special : Neighbors have row or col equal to nXxxCaloCard
-//--------------------------------------------------------------
+/**
+ * Sets the Et of a cell. Perform the total sum and the computation 
+ * of the local 2x2 maximum on the flight
+ * Special : Neighbors have row or col equal to nRowCaloCard/nColCaloCard
+ */
 
 void TriggerCard::addEt( int col, int row, int digit ) {
   m_empty  = false;
@@ -37,7 +38,7 @@ void TriggerCard::addEt( int col, int row, int digit ) {
   }
   et[col][row] = digit;
   
-// ** Update the maximum...
+// Update the maximum...
 
   m_etMax = 0;
   for ( int i = 0; nColCaloCard > i; ++i ){
@@ -53,20 +54,19 @@ void TriggerCard::addEt( int col, int row, int digit ) {
   }
 };
 
-//--------------------------------------------------------------
-// Check if the ECAL candidate (current card) matches the HCAL
-// candidate with the specified row and column
-//--------------------------------------------------------------
+/** Check if the ECAL candidate (current card) matches the HCAL
+ *  candidate with the specified row and column
+ */
 
 bool TriggerCard::match_included ( int hCol, int hRow ) { 
   if ( m_empty ) { return false; }
   
-// ** Bottom left projection of the HCAL cluster
+// Bottom left projection of the HCAL cluster
 
   int fCol =     hCol * m_mag + m_offsetCol ;    
   int fRow =     hRow * m_mag + m_offsetRow ;
 
-// ** Top right projection of the HCAL cluster
+// Top right projection of the HCAL cluster
 
   int lCol = (hCol+2) * m_mag + m_offsetCol -2 ; 
   int lRow = (hRow+2) * m_mag + m_offsetRow -2 ;
@@ -76,3 +76,4 @@ bool TriggerCard::match_included ( int hCol, int hRow ) {
 
   return true;
 };
+

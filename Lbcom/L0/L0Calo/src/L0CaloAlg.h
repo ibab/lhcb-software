@@ -1,63 +1,55 @@
-#ifndef   L0CALOALG_H
-#define   L0CALOALG_H  1
+#ifndef   L0CALO_L0CALOALG_H
+#define   L0CALO_L0CALOALG_H  1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.2 2001-03-20 17:28:44 ocallot Exp $
 
-///
-/// from STL 
+// from STL 
 #include <cmath>
 #include <string>
 #include <vector>
 
-///
-/// from Gaudi 
+// from Gaudi 
 #include "GaudiKernel/Algorithm.h"
 
-/// from Calo
-
+// from Calo
 #include "CaloDet/DeCalorimeter.h"
 
 // Local classes
-
 #include "TriggerCard.h"
 
-//
-//  Class L0CaloAlg : a (sub)Algorithm responsible 
-//                    for the L0 Calorimeter trigger 
-//
-//   Author: Olivier Callot
-//   Date:   4 October 2000
-// 
+/** @class L0CaloAlg L0CaloAlg.h
+ *
+ *  Algorithm responsible of produciong the L0 Calorimeter information.
+ *
+ *  @author  Olivier Callot
+ *  @date    4 October 2000
+ */ 
 
 class L0CaloAlg : public Algorithm {
 
 public:
 
-// ** Constructor of this form must be provided
+/// standard algorithm Constructor
 
   L0CaloAlg(const std::string& name, ISvcLocator* pSvcLocator);
 
-// ** Standard Destructor
 
-  virtual ~L0CaloAlg();
+  virtual ~L0CaloAlg();       ///< Standard destructor
 
-// ** Three mandatory member functions of any algorithm
-
-  StatusCode initialize();
-  StatusCode execute   ();
-  StatusCode finalize  ();
+  StatusCode initialize();    ///< Algorithm initialization
+  StatusCode execute   ();    ///< Algorithm execution
+  StatusCode finalize  ();    ///< Algorithm finalization
   
 protected:
 
 private:   
 
-// ** Methods to handle part of the job, to make the code more readable
-  
-  void sumEcalData( MsgStream );
-  void sumHcalData( MsgStream );
-  void addPrsData( MsgStream );
-  void addSpdData( MsgStream );
+  void sumEcalData( MsgStream );  ///< Sum the candidate on Ecal FE card.
+  void sumHcalData( MsgStream );  ///< Sum the candidate on Hcal FE card.
+  void addPrsData( MsgStream );   ///< Produce the Prs information 
+  void addSpdData( MsgStream );   ///< Produce the Spd data
 
 
-// ** name in the Transient store of the containers of CaloDigit* objects  
+/// Name in the Transient store of the containers of CaloDigit* objects  
 
   std::string m_nameOfEcalDataContainer   ;  
   std::string m_nameOfHcalDataContainer   ;  
@@ -66,45 +58,51 @@ private:
   std::string m_nameOfOutputDataContainer ;  
   std::string m_nameOfOutputDirectory     ;  
 
-// ** name of Detector in Detector Transient Store  e.g. /dd/structure/LHCb/
+/// Name of Detector in Detector Transient Store  e.g. /dd/structure/LHCb/
 
   std::string m_nameOfGeometryRoot ; 
 
-// ** Parameter for conversion
+// Parameter for conversion
 
-  double      m_etScale            ; // Energy per bin in Et for trigger
-  double      m_prsThreshold       ; // Energy threshold for Preshower
+  double      m_etScale            ; ///< Energy per bin in Et for trigger
+  double      m_prsThreshold       ; ///< Energy threshold for Preshower
 
-// ** Pi0 trigger parameters
+// Pi0 trigger parameters
 
-  int         m_pi0Strategy        ; // Defines how Pi0 are defined.
-  double      m_minEtPi0Local      ; // Min cluster Et for local pi0
-  double      m_minEtGammaGlobal   ; // Min cluster Et for gamma Global pi0
-  double      m_minPi0Mass         ; // Min mass gor global-II method
-  double      m_minPi0Mass2        ; // Squared version
-  double      m_maxPi0Mass         ; // Max mass gor global-II method
-  double      m_maxPi0Mass2        ; // Squared version
+  int         m_pi0Strategy        ; ///< Defines how Pi0 are defined.
+  double      m_minEtPi0Local      ; ///< Min cluster Et for local pi0
+  double      m_minEtGammaGlobal   ; ///< Min cluster Et for gamma Global pi0
+  double      m_minPi0Mass         ; ///< Min mass for global-II method
+  double      m_minPi0Mass2        ; ///< Squared version of m_minPi0Mass
+  double      m_maxPi0Mass         ; ///< Max mass for global-II method
+  double      m_maxPi0Mass2        ; ///< Squared version of m_maxPi0Mass
 
-// ** Local variables
+// Local variables
 
-  DeCalorimeter* m_ecal            ;
-  DeCalorimeter* m_hcal            ;
-  int         m_validPrs[16]       ; // Array for PRS validation: 1 or 2 bits
-  double      m_gainCorrEcal[3]    ; // Gain correction
-  double      m_gainCorrHcal[2]    ;
+  DeCalorimeter* m_ecal            ; ///< Pointer to Ecal detector element
+  DeCalorimeter* m_hcal            ; ///< Pointer to Hcal detector element
+  int         m_validPrs[16]       ; ///< Array for PRS validation: 1 or 2 bits
+  double      m_gainCorrEcal[3]    ; ///< Gain correction in Ecal, per area
+  double      m_gainCorrHcal[2]    ; ///< Gain correction in Hcal, per area
 
-// ** Trigger cards
+// Trigger cards
 
-  std::vector<TriggerCard> ecalFe  ;
-  std::vector<TriggerCard> hcalFe  ;
+  std::vector<TriggerCard> ecalFe  ; ///< Ecal front-end card vector
+  std::vector<TriggerCard> hcalFe  ; ///< Hcal front-end card vector
 };
 
-//-----------------------------------------------------------------------
-// ** Local class For temporary candidates, ID and Et, with saturation
-//-----------------------------------------------------------------------
+/** @class L0Candidate
+ *
+ *  This is a local class for temporary candidates, ID and Et, with saturation.
+ *  This is internal to the algorithm, and is a termporary storage of the 
+ *  candidates, during th eprocess of selecting the highest.
+ */ 
 
 class L0Candidate {
 public:
+  /** creator
+   * @param det : The detector element pointer
+   */
   L0Candidate( DeCalorimeter* det ) : m_ID() {
     m_det = det ;
     m_et  = 0   ;
@@ -112,7 +110,11 @@ public:
 
   ~L0Candidate()                           { };
   
-  int        et( )                   const { return m_et;      };
+  /** store a candidate
+   *  @param et Integer transverse energy
+   *  @param card Integer card number
+   *  @param ID ClaoCellID location of the candidate 
+   */
   void       setCandidate( int et, int card, CaloCellID ID ) { 
     m_ID     = ID;
     m_card   = card;
@@ -123,10 +125,11 @@ public:
     m_center.setY( m_center.y() + m_tol );
   };
   
-  HepPoint3D  center( )             const { return m_center ; };
-  double      tolerance( )          const { return m_tol    ; };
-  CaloCellID  ID( )                 const { return m_ID     ; };
-  int         card( )               const { return m_card   ; };
+  int         et( )        const { return m_et     ; };
+  HepPoint3D  center( )    const { return m_center ; };
+  double      tolerance( ) const { return m_tol    ; };
+  CaloCellID  ID( )        const { return m_ID     ; };
+  int         card( )      const { return m_card   ; };
 
  private:
   int            m_et     ;
@@ -137,4 +140,4 @@ public:
   double         m_tol    ;
 };
 
-#endif //   L0CALOALG_H
+#endif //   L0CALO_L0CALOALG_H

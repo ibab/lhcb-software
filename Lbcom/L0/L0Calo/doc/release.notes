@@ -1,5 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
-! 2001/03/07 - v1 - Olivier Callot
+! 2001/03/20 - Olivier Callot
+  Change the code to have Doxygen compatible comments
+  Add a typedef for L0CaloCandidateVector
+  Fix the Streambuffer for the HepPoint3D member, i.e. read/write 3 coordinates
+
+! 2001/03/07 - Olivier Callot
   Initial release of the package.
