@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.39 2002-06-17 15:47:03 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.40 2002-11-12 15:23:36 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -500,7 +500,7 @@ void parseMethod(DOM_Node node,
     else
     {
       gddMethReturn->setType(DOMString::transcode(typeStr.substr(
-        typeStr.find(' ')+1, std::string::npos).data()));
+        typeStr.find(' ')+1, std::string::npos).c_str()));
         gddMethReturn->setConst_(true);
     }
   }
