@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.50 2004-03-23 17:45:02 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.51 2004-03-24 09:46:26 ranjard Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -108,39 +108,15 @@ GiGa.RunSeq.Members           += { "TrCutsRunAction/TrCuts"};
 GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/tracking/verbose 0",
-  "/tracking/storeTrajectory  0"} ;
+  "/tracking/storeTrajectory  1"} ;
 
 // mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 
 // mandatory tracking action (1/2)
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
-GiGa.TrackSeq.Members      += { "GaussTrackActionStart/TrackStart" }; 
+GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
 
-// tracking actions to be applied in the whole experimental setup
-//   primary particles and predefined (forced) decays
-GiGa.TrackSeq.Members      += { "GaussTrackActionGeneral/TrackLHCbGen" }; 
-// keep default StoreAll(false), Primaries(true), StorePreDecays(true)
-// GiGa.TrackSeq.TrackLHCbGen.StoreAll       = false ; // def
-// GiGa.TrackSeq.TrackLHCbGen.Primaries      = true  ;
-// GiGa.TrackSeq.TrackLHCbGen.StorePreDecays = true  ;
-GiGa.TrackSeq.TrackLHCbGen.StoreDecays    = false ;
-//   particle types = muons from/to any process
-GiGa.TrackSeq.Members      += { "GaussTrackActionByType/TrackLHCbType" }; 
-GiGa.TrackSeq.TrackLHCbType.OwnTypes   = {"mu+" , "mu-" } ;
-GiGa.TrackSeq.TrackLHCbType.ChildTypes = {"mu+" , "mu-" } ;
-//   
-
-// tracking actions to be applied before the SPD/PrS
-//   particles involved in a decay
-GiGa.TrackSeq.Members      += { "GaussTrackActionByProcess/TrackProcess" };
-GiGa.TrackSeq.TrackProcess.zMax           = 11290 * mm;
-GiGa.TrackSeq.TrackProcess.OwnProcesses   = { "G4Decay" };
-GiGa.TrackSeq.TrackProcess.ChildProcesses = { "G4Decay" };
-//   particles (gamma, e+/-) with E at production > Ethresold
-GiGa.TrackSeq.Members      += { "GaussTrackActionByEnergy/TrackEthres" };
-GiGa.TrackSeq.TrackEthres.zMax      = 11290 * mm;
-GiGa.TrackSeq.TrackEthres.Threshold = 100 * MeV ;
 
 ///////////////////////////////////////////////////////////////////////
 // all the subdetector specific actions should be added here:
@@ -149,14 +125,20 @@ GiGa.TrackSeq.TrackEthres.Threshold = 100 * MeV ;
 #include "$GAUSSRICHROOT/options/Rich.opts"
 
 // specific configuration of calorimeter stuff 
-#include "$GAUSSCALOROOT/options/Calo.opts" 
+#include "$GAUSSCALOROOT/options/Calo.opts"
 
 //////////////////////////////////////////////////////////////////////
 
 // mandatory tracking action (2/2)
-GiGa.TrackSeq.Members      += { "GaussTrackActionFinal/TrackLast" } ;
-GiGa.TrackSeq.TrackLast.StoreMarked   = true;
-GiGa.TrackSeq.TrackLast.StoreWithHits = false;
+GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" } ;
+GiGa.TrackSeq.PostTrack.StoreAll  = false; 
+GiGa.TrackSeq.PostTrack.StorePrimaries = true;
+GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
+GiGa.TrackSeq.PostTrack.StoreForcedDecays = true;
+//GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
+//GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 2.2 * GeV;        
+//GiGa.TrackSeq.PostTrack.StoreByChildProcess = true; 
+//GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"Decay"}; 
 
 // mandatory stepping action   
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
