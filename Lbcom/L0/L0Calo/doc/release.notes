@@ -1,8 +1,9 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v7r5 2004-04-28 =========================
 ! 2004-04-28 - Olivier Callot
- - Fixed a major bug in filling th eL1Buffer: one need to push two 16 bit
+ - Fixed a major bug in filling the L1Buffer: one need to push two 16 bit
    words to get the 32 bit candidate.
  - Debug the L1Buffer content in L0CaloMonit at debug level.
 
