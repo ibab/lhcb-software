@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.15 2003-01-19 12:08:31 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2003-01-22 19:06:10 ibelyaev Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
 
+! 2003-01-22 - Ivan BELYAEV 
+ - src/CaloExtraDigits.h         - tiny fix 
+                                   remove unused variable
+  
 ! 2003-01-19 - Ivan Belyaev
  - src/CaloTrackEval.cpp       - fix small "memory leak" (1 TrState per job)
 

@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.3 2003-01-22 19:06:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/01 14:22:57  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // ============================================================================
 // Include files
 // STL 
@@ -245,15 +248,8 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
           for( CaloNeighbors::const_iterator nei = neighbors.begin() ; 
                neighbors.end() != nei ; ++nei )
             {
-              const double      cellHalf   
-                = 0.5 * det() -> cellSize   ( *nei ) ;
-              if( 0 >= cellHalf ) { continue ; }               // CONTINUE ! 
-              const HepPoint3D& cellCenter 
-                =       det() -> cellCenter ( *nei ) ;
-              {
-                CaloDigit* digit = m_digits->object( *nei );
-                if( 0 != digit ) { hypo->addToDigits( digit ); }
-              }    
+              CaloDigit* digit = m_digits->object( *nei );
+              if( 0 != digit ) { hypo->addToDigits( digit ); }
             }     
         }    
     }
@@ -262,7 +258,7 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   const  HepPoint3D pos( position->x() ,
                          position->y() ,
                          position->z() );
-  
+
   // point in the detector 
   HepPoint3D newPoint ( pos - m_vertex );
   newPoint *=  ( m_z - m_vertex.z() ) / ( pos.z() - m_vertex.z() );
