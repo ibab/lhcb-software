@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.20 2002-12-17 15:39:53 ocallot Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.21 2003-06-16 13:39:05 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2002/12/17 15:39:53  ocallot
+// Add the Ecal Validation cards
+//
 // Revision 1.19  2002/10/03 10:21:42  cattanem
 // fix buggy usage of abs()
 //
@@ -453,7 +456,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     // ** A cards starts at the first row/column
     // ** For the columns, this is always starting at 0 (or 8).
 
-    int validationCard;
+    int validationCard = 0;
     int prevValidation = -1;
 
     int firstRow = -1;

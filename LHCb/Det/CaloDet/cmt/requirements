@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2003-01-23 21:11:35 cattanem Exp $ 
+# $Id: requirements,v 1.30 2003-06-16 13:39:04 sponce Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,7 +13,7 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
 use CaloKernel   v2r*   Calo 
-use DetDesc      v11r*  Det 
+use DetDesc      v12r*  Det 
 
 # =============== own options =================================================
 set CALODETOPTS  ${CALODETROOT}/options

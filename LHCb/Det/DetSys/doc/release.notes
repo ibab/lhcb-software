@@ -4,6 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2003-06-16 - Sebastien Ponce
+ - use new version of DetDesc. Thus drop dependency on XML
+
 !========================= DetSys v1r6 2003-05-19 =========================
 ! 2003-05-16 - Marco Cattaneo
  - requirements - use DetDesc v11r9p1
