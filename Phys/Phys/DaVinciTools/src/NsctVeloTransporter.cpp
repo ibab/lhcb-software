@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.8 2004-07-19 12:44:08 pkoppenb Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.9 2004-07-22 09:18:41 pkoppenb Exp $
 // Include files 
 
 // Utility Classes
@@ -248,18 +248,15 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
   // initialize and create PointOnTrack matrix error
   HepSymMatrix oldPOTErr(3, 0);
   oldPOTErr = workParticle->pointOnTrackErr();
-  HepSymMatrix newPOTErr = oldPOTErr;
   
   // initialize and create Slope and Momentum correlation matrix error 
   HepSymMatrix oldSlopesMomErr(3, 0);
   oldSlopesMomErr = workParticle->slopesMomErr();
-  HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
   
   // initialize and create Position, Slope and Momentum correlation 
   // matrix error
   HepMatrix oldPosSlopesCorr(3, 3, 0);
   oldPosSlopesCorr = workParticle->posSlopesCorr();
-  HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
 
   // transform to the same z with err_z=0
   HepMatrix JA(3,3);
@@ -274,6 +271,12 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
   JA(3,3)=0;
   oldPOTErr=oldPOTErr.similarity(JA);
   oldPosSlopesCorr=oldPosSlopesCorr*JA.T();
+
+  // initialize and create new matrices
+  // notice z-related elements are zero in newPOTErr and newPosSlopesCorr
+  HepSymMatrix newPOTErr = oldPOTErr;
+  HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
+  HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
   
   // check current z-position
   double zold = oldPOT.z();
@@ -329,11 +332,13 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
     dz2*oldSlopesMomErr(2,2);
   newPosSlopesCorr(1,1) = oldPosSlopesCorr(1,1) + dz*oldSlopesMomErr(1,1);
   newPosSlopesCorr(2,2) = oldPosSlopesCorr(2,2) + dz*oldSlopesMomErr(2,2);
-  
+  newPosSlopesCorr(1,2) = oldPosSlopesCorr(1,2) + dz*oldSlopesMomErr(1,2);
+  newPosSlopesCorr(2,1) = oldPosSlopesCorr(2,1) + dz*oldSlopesMomErr(2,1);  
+
   // transport considers multiple scattering 
   double a = 1. / ( sqrt (1.0 + sx*sx + sy*sy ) ); 
   double p = workParticle->p();
-  if ( nscat > 0 ) {    
+  if ( nscat > 0 && workParticle->charge()!=0.0) {    
     double b =  sx*a;
     double c =  sy*a;
     HepVector3D UnitVector(b, c, a);
@@ -347,10 +352,15 @@ StatusCode NsctVeloTransporter::veloTransport(Particle *&workParticle,
       pow( Teth*(1. + sy*sy), 2);
     newPOTErr(1,1) = oldPOTErr(1,1) + 2.*dz*oldPosSlopesCorr(1,1) + 
       dz2*oldSlopesMomErr(1,1);    
+    newPOTErr(2,1) = oldPOTErr(2,1) +
+      dz*( oldPosSlopesCorr(1,2) + oldPosSlopesCorr(2,1) ) +
+      dz2*oldSlopesMomErr(2,1);
     newPOTErr(2,2) = oldPOTErr(2,2) + 2.*dz*oldPosSlopesCorr(2,2) + 
       dz2*oldSlopesMomErr(2,2);
     newPosSlopesCorr(1,1) = oldPosSlopesCorr(1,1) + dz*oldSlopesMomErr(1,1);
     newPosSlopesCorr(2,2) = oldPosSlopesCorr(2,2) + dz*oldSlopesMomErr(2,2);
+    newPosSlopesCorr(1,2) = oldPosSlopesCorr(1,2) + dz*oldSlopesMomErr(1,2);
+    newPosSlopesCorr(2,1) = oldPosSlopesCorr(2,1) + dz*oldSlopesMomErr(2,1);
   }
   
   // a new "particle" is made with transported values

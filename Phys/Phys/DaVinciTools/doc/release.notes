@@ -1,20 +1,35 @@
-! $Id: release.notes,v 1.113 2004-07-20 14:50:31 pkoppenb Exp $
+! $Id: release.notes,v 1.114 2004-07-22 09:18:41 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-07-22 - P. Koppenburg for Yuehong Xie
+ - src/NsctVeloTransporter.cpp
+ - src/TrTransporter.cpp
+   . Problem found with impact parameter of a gamma converting to two electrons. 
+     The problem was that I forgot to set the error of z to zero after all the 
+     other elements of the error matrix are transform to a state with err_z=0. 
+     It didn't cause any problem to vertex fitting, which doesn't use the error 
+     of z at all, but led to failure in calculating impact parameter, for which 
+     the error of z is used.
+
+   . In NsctVeloTransporter.cpp I fixed two other problems:
+     o checked charge of particles before adding multiple scattering error
+     o for multiple scattering, added 3 missed correlation elements in the 
+       error matrices. 
+ 
 ! 2004-07-20 - P. Koppenburg
- - src/LagrangeMassVertexFitter.cpp
-   . Bug affecting only Windows
+  - src/LagrangeMassVertexFitter.cpp
+    . Bug affecting only Windows
       -> put definitions
          Particle* part3 = pList[2];
          Particle* part4 = pList[3];
-     in the sections where one knows that there are more than 2 particles.
+      in the sections where one knows that there are more than 2 particles.
 
 ! 2004-07-19 - P. Koppenburg for Yuehong Xie
- - src/NsctVeloTransporter.cpp
- - src/ParabolicTransporter.cpp
- - src/TrTransporter.cpp
-   . Redefinition of error on z position for transport of composite particles.
+  - src/NsctVeloTransporter.cpp
+  - src/ParabolicTransporter.cpp
+  - src/TrTransporter.cpp
+    . Redefinition of error on z position for transport of composite particles.
    
 ! 2004-07-19 - P. Koppenburg for Luis Fernandez
   - src/FlightDistanceFilterCriterion.{h.cpp}

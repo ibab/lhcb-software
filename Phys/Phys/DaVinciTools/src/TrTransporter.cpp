@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.7 2004-07-19 12:44:08 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.8 2004-07-22 09:18:41 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -218,18 +218,15 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     // initialize and create PointOnTrack matrix error
     HepSymMatrix oldPOTErr(3, 0);
     oldPOTErr = workParticle->pointOnTrackErr();
-    HepSymMatrix newPOTErr = oldPOTErr;
     
     // initialize and create Slope and Momentum correlation matrix error 
     HepSymMatrix oldSlopesMomErr(3, 0);
     oldSlopesMomErr = workParticle->slopesMomErr();
-    HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
     
     // initialize and create Position, Slope and Momentum correlation 
     // matrix error
     HepMatrix oldPosSlopesCorr(3, 3, 0);
     oldPosSlopesCorr = workParticle->posSlopesCorr();
-    HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
     
     //transform to the same z with err_z=0
     HepMatrix JA(3,3);
@@ -244,6 +241,12 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
     JA(3,3)=0;
     oldPOTErr=oldPOTErr.similarity(JA);
     oldPosSlopesCorr=oldPosSlopesCorr*JA.T();
+
+    // initialize and create new matrices
+    // notice z-related elements are zero in newPOTErr and newPosSlopesCorr
+    HepSymMatrix newPOTErr = oldPOTErr;
+    HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
+    HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
 
     // check current z-position
     double zold = oldPOT.z();
