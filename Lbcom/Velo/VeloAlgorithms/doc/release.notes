@@ -1,6 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v2r2 2002-10-11 =====================
 ! 2002-09-24 - Chris Parkes
  -  VeloClusterMaker, solve bug to allow setting of S/N cuts, 
     modify defaults to 3.0
