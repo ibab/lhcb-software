@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2002-06-26 19:03:54 ibelyaev Exp $
+! $Id: release.notes,v 1.9 2002-07-08 20:10:03 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,9 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
+
+! 2002-07-08 - Vanya Belyaev 
+   src/CaloMCTools.cpp - few changes to make Bill Gates happy 
 
 ! 2002-06-26 - Ivan Belyaev
  - Add one more MC truth algorithms. Probably it is the most general

@@ -1,8 +1,11 @@
-// $Id: CaloMCTools.h,v 1.1 2002-06-26 19:03:57 ibelyaev Exp $
+// $Id: CaloMCTools.h,v 1.2 2002-07-08 20:10:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/06/26 19:03:57  ibelyaev
+//  add one more new algorithm for MCTruth
+// 
 // ============================================================================
 #ifndef CALOMCTOOLS_H 
 #define CALOMCTOOLS_H 1
@@ -85,13 +88,15 @@ namespace CaloMCTools
     for( Vertices::const_iterator vertex = vertices.begin() ; 
          vertices.end() != vertex ; ++vertex )
       {
-        if( 0 == *vertex ) { continue ; }
-        const Products& products = (*vertex)->products();
+		const MCVertex* mcv = *vertex ;
+        if( 0 == mcv ) { continue ; }
+        const Products& products = mcv->products();
         for( Products::const_iterator product = products.begin() ;
              products.end() != product ; ++product )
           {
-            if( 0 == *product ) { continue ; }
-            energy += (*this) ( hit , *product );
+		    const MCParticle* mcp = *product ;
+            if( 0 == mcp  ) { continue ; }
+            energy += (*this) ( hit , mcp );
           }
       }
     ///
@@ -127,9 +132,10 @@ namespace CaloMCTools
     for( MCCaloDigit::Hits::const_iterator hit = digit->hits().begin();
          digit->hits().end() != hit ; ++hit ) 
       {
-        if( 0 == *hit ) { continue ; }
+	    const MCCaloHit* mchit = *hit ;
+        if( 0 == mchit ) { continue ; }
         // accumulate 
-        energy += evaluator( *hit , particle );
+        energy += evaluator( mchit , particle );
       }
     // 
     return energy ;
