@@ -1,3 +1,4 @@
+// $Id: CaloSCorrectionFinal.cpp,v 1.12 2003-12-11 16:33:40 cattanem Exp $
 // Include files
 #include <numeric>
 #include <algorithm>
@@ -35,18 +36,6 @@
 
 
 #ifdef WIN32
-namespace std
-{
-    template <class T>
-		inline const T& max( const T& a , const T& b )
-	{ return (a<b) ? b : a ;};
-
-   template <class T>
-		inline const T& min( const T& a , const T& b )
-	{ return (a<b) ? a : b ;};
-
-};
-
 inline double asinh ( double x )
  { return log( x + sqrt( x * x + 1. ) ) ; }
 #endif

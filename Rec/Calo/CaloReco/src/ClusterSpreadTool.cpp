@@ -1,17 +1,6 @@
-// $Id: ClusterSpreadTool.cpp,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: ClusterSpreadTool.cpp,v 1.2 2003-12-11 16:33:40 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2002/04/07 18:15:02  ibelyaev
-//  preliminary version ('omega'-release)
-//
-// Revision 1.2  2001/12/09 14:33:09  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.1  2001/11/23 11:44:51  ibelyaev
-//  new tool for calculation of cluster spread
-// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -23,7 +12,7 @@
 #include "ClusterSpreadTool.h"
 
 // ============================================================================
-/** @file ClusterSpeadTool.cpp
+/** @file ClusterSpreadTool.cpp
  *
  *  Implementation file for class : ClusterSpreadTool
  * 

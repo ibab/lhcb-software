@@ -1,8 +1,11 @@
-// $Id: CaloTrack2IdAlg.cpp,v 1.2 2003-07-17 12:45:16 ibelyaev Exp $
+// $Id: CaloTrack2IdAlg.cpp,v 1.3 2003-12-11 16:33:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/17 12:45:16  ibelyaev
+//  minor fix to speed-up the execution
+//
 // Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
 // The first import of new package 
 //
@@ -16,6 +19,7 @@
 #include "Relations/IAssociator.h"
 // AIDA
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IAxis.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -210,7 +214,8 @@ StatusCode CaloTrack2IdAlg::initialize()
   { // create the normalized histograms and Delta Log Likelihood histogram 
     for( size_t ip = 0 ; ip < m_pBins ; ++ip ) 
       {
-        const  double  x =  m_signal -> binCentreX ( ip ) ;
+        const  double  x = 0.5 * ( m_signal->xAxis().binUpperEdge(ip) +
+                                   m_signal->yAxis().binLowerEdge(ip) );
         const  double aS =  m_signal -> binHeightX ( ip ) ;
         const  double aB =  m_backgr -> binHeightX ( ip ) ;
         
@@ -219,7 +224,8 @@ StatusCode CaloTrack2IdAlg::initialize()
         
         for( size_t iv = 0 ; iv < m_vBins ; ++iv ) 
           {
-            const double y = m_signal -> binCentreY (    iv   )      ;
+            const double y = 0.5 * ( m_signal->yAxis().binUpperEdge(iv) +
+                                     m_signal->yAxis().binLowerEdge(iv) );
             const double S = m_signal -> binHeight  ( ip , iv ) / aS ;
             const double B = m_backgr -> binHeight  ( ip , iv ) / aB ;
             

@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.cpp,v 1.3 2003-05-15 19:27:02 ibelyaev Exp $
+// $Id: CaloElectronAlg.cpp,v 1.4 2003-12-11 16:33:40 cattanem Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/05/15 19:27:02  ibelyaev
+//  fix error exists/stops
+//
 // Revision 1.2  2002/12/09 17:43:09  cattanem
 // bug fixes
 //
@@ -154,7 +157,7 @@ CaloElectronAlg::initialize()
 // ============================================================================
 
 // ============================================================================
-/** @class DigitFromCalo 
+/*
  *  simple utiliti to count digiyts from certain calorimeter 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 31/03/2002 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2003-07-17 14:49:45 cattanem Exp $ 
+! $Id: release.notes,v 1.7 2003-12-11 16:33:39 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,12 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+!======================== CaloPIDs v1r2 2003-12-11 ======================
+! 2003-12-11 - Marco Cattaneo
+ - Move to Gaudi v13:
+   . requirements:        use CaloInterfaces v3r*
+   . CaloTrack2IdAlg.cpp: adapt to AIDA 3.0 
 
 !======================== CaloPIDs v1r1 2003-07-17 ======================
 ! 2003-07-17 - Ivan BELYAEV

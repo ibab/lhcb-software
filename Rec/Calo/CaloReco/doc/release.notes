@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.33 2003-11-27 07:24:25 cattanem Exp $
+! $Id: release.notes,v 1.34 2003-12-11 16:33:40 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,14 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+!======================== CaloReco v1r7 2003-12-11 =======================
+! 2003-12-11 - Marco Cattaneo
+ - Move to Gaudi v13, VC71 
+   . requirements: use CaloInterfaces v3r0
+   . Remove WIN32 implementations of std::max and std::min
+
+ - Fix some doxygen warnings
 
 !======================= CaloReco v1r6p1 2003-06-23 =======================
 ! 2003-11-27 - Marco Cattaneo

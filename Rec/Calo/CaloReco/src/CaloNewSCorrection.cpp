@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.cpp,v 1.3 2003-05-16 08:19:11 cattanem Exp $
+// $Id: CaloNewSCorrection.cpp,v 1.4 2003-12-11 16:33:40 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/05/16 08:19:11  cattanem
+// remove unused variables
+//
 // Revision 1.2  2003/04/17 07:06:48  cattanem
 // fix for Windows
 //
@@ -32,7 +35,7 @@
 
 
 // ============================================================================
-/** @var CaloNewSCorrection
+/*
  *  Declaration of the Tool Factory, needed for instantiation
  */
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloNewLCorrection.cpp,v 1.2 2003-05-16 08:19:11 cattanem Exp $
+// $Id: CaloNewLCorrection.cpp,v 1.3 2003-12-11 16:33:40 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/05/16 08:19:11  cattanem
+// remove unused variables
+//
 // Revision 1.1  2003/04/11 09:33:37  ibelyaev
 //  add new E-,S- and L-corrections from Olivier Deschamps
 //
@@ -29,7 +32,7 @@
 
 
 // ============================================================================
-/** @var CaloNewLCorrection
+/*
  *  Declaration of the Tool Factory, needed for instantiation
  */
 // ============================================================================
