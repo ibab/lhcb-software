@@ -169,13 +169,12 @@
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
             <import name="RichKernel/RichParticleIDType"/>
-            <import name="RichUtils/RichTrackSegment"/>
-            <import name="RichRecBase/RichMap"/>
+            <import name="RichEvent/RichTrackSegment"/>
             <import name="RichRecBase/RichPhotonSpectra"/>
             <import name="RichKernel/RichHypoData"/>
             <import name="Kernel/RichSmartID"/>
             <import name="Event/RichRecRing"/>
-            <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
+            <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="std::map&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
             <constructor desc="Constructor from a RichTrackSegment" initList="m_nEmittedPhotons(0), m_nDetectablePhotons(0), m_nSignalPhotons(0), m_nScatteredPhotons(0), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(0), m_geomEfficiencyScat(0), m_averageCKTheta(0), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(NULL), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
                 <arg const="TRUE" name="segment" type="RichTrackSegment"/>
@@ -309,7 +308,7 @@
             <import name="RichRecBase/RichRecPhotonKey"/>
             <import name="RichKernel/RichHypoData"/>
             <import name="RichKernel/RichParticleIDType"/>
-            <import name="RichUtils/RichGeomPhoton"/>
+            <import name="RichEvent/RichGeomPhoton"/>
             &KeyedObject;
             <constructor desc="Constructor from detailed information" initList="m_geomPhoton(photon), m_expPixelSignalPhots(0), m_expPixelScattPhots(0), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
                 <arg name="photon" type="RichGeomPhoton"/>
@@ -405,6 +404,7 @@ m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp
             <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>
             <attribute desc="Assumed mass hypothsis for this ring" init="Rich::Unknown" name="massHypo" type="Rich::ParticleIDType"/>
             <attribute desc="Global coordinates associated to this ring" name="ringPoints" type="std::vector&lt;HepPoint3D&gt;"/>
+            <attribute desc="Local coordinates associated to this ring" name="ringPointsLocal" type="std::vector&lt;HepPoint3D&gt;"/>
 
             <attribute desc="Bit packed field containing history information" name="historyCode" type="bitfield">
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2" getMeth="FALSE" length="1" name="rich" setMeth="FALSE"/>

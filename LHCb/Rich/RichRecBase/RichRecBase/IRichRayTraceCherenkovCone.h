@@ -1,4 +1,4 @@
-// $Id: IRichRayTraceCherenkovCone.h,v 1.2 2004-06-10 14:14:48 jonesc Exp $
+// $Id: IRichRayTraceCherenkovCone.h,v 1.3 2004-06-18 09:44:08 jonesc Exp $
 #ifndef RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
 
@@ -46,10 +46,14 @@ public:
                                 std::vector<HepPoint3D> & points,
                                 const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
 
-  /// Ray trace the Cherenkov cone for the given ring to the detector plane
-  virtual std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
-                                               const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
-
+  /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Global coordinates
+  virtual const std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
+                                                     const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+  
+  /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Local coordinates
+  virtual const std::vector<HepPoint3D> & rayTraceLocal ( RichRecRing * ring,
+                                                          const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+  
 };
 
 #endif // RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H

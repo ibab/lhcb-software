@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.14 2004-06-15 07:54:59 jonesc Exp $
+// $Id: RichRecAlgBase.cpp,v 1.15 2004-06-18 09:44:11 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -38,7 +38,6 @@ StatusCode RichRecAlgBase::initialize()
   acquireTool( "RichSegmentCreator", m_segTool  );
   acquireTool( "RichPhotonCreator",  m_photTool );
   acquireTool( "RichStatusCreator",  m_statTool );
-
 
   return StatusCode::SUCCESS;
 };

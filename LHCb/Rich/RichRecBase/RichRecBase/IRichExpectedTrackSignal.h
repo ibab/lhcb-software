@@ -1,4 +1,4 @@
-// $Id: IRichExpectedTrackSignal.h,v 1.3 2004-02-02 14:23:01 jonesc Exp $
+// $Id: IRichExpectedTrackSignal.h,v 1.4 2004-06-18 09:44:07 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -7,9 +7,9 @@ class RichRecSegment;
 class RichRecTrack;
 class RichPID;
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichParticleIDType.h"
-#include "RichKernel/RichRadiatorType.h"
+#include "Kernel/RichRadiatorType.h"
 
 /** @class IRichExpectedTrackSignal IRichExpectedTrackSignal.h
  *

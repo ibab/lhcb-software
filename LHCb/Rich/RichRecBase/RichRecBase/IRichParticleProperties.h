@@ -1,13 +1,13 @@
-// $Id: IRichParticleProperties.h,v 1.2 2004-02-02 14:23:02 jonesc Exp $
+// $Id: IRichParticleProperties.h,v 1.3 2004-06-18 09:44:08 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_IRICHPARTICLEPROPERTIES_H 1
 
 // event model
 class RichRecSegment;
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichParticleIDType.h"
-#include "RichKernel/RichRadiatorType.h"
+#include "Kernel/RichRadiatorType.h"
 
 /** @class IRichParticleProperties IRichParticleProperties.h
  *

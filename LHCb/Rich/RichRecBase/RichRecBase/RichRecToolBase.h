@@ -1,9 +1,9 @@
-// $Id: RichRecToolBase.h,v 1.11 2004-03-16 13:39:58 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.12 2004-06-18 09:44:09 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
 // Base class
-#include "RichUtils/RichToolBase.h"
+#include "RichKernel/RichToolBase.h"
 
 // Interfaces
 #include "RichRecBase/IRichSegmentCreator.h"

@@ -4,6 +4,14 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-06-17 - Chris Jones
+ - Remove RichMap.h and RichHash.h. These where used to fix a problem with
+   maps using VC6 on windows, but which is now fixed with VC7.
+ - Update includes for new packaging.
+
+! 2004-06-16 - Chris Jones
+ - Remove dependency on RichMCTools package (errant, not really neeed)
+
 ! 2004-05-30 - Chris Jones
  - Update RichRecRing event model objects
  - Add new interfaces for RichRayTraceCherenkovCone,
