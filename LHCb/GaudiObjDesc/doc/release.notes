@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20011017 - Stefan Roiser
+ - Added production of non-standard constructors, destructors, warning at top of file
+
 ! 20011010 - Stefan Roiser
  - Changed production of serializers in .h-files
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.2 2001-10-17 08:32:12 mato Exp $
 #ifndef DADIMETHARGUMENT_H 
 #define DADIMETHARGUMENT_H 1
 
@@ -21,6 +21,9 @@ public:
   DOMString type();
   void setType(DOMString value);
   
+  DOMString name();
+  void setName(DOMString value);
+  
   DOMString const_();
   void setConst_(DOMString value);
   
@@ -32,6 +35,7 @@ protected:
 private:
 
   DOMString m_type, 
+            m_name,
             m_constant, 
             m_inout;
   
@@ -55,6 +59,16 @@ inline DOMString DaDiMethArgument::const_()
 inline void DaDiMethArgument::setConst_(DOMString value)
 {
   m_constant = value;
+}
+
+inline DOMString DaDiMethArgument::name()
+{
+  return m_name;
+}
+
+inline void DaDiMethArgument::setName(DOMString value)
+{
+  m_name = value;
 }
 
 inline DOMString DaDiMethArgument::inout()

@@ -13,7 +13,7 @@
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
-<!ELEMENT class (base*, import*, method*, attribute*, relation*)>
+<!ELEMENT class (base*, import*, constructor*, destructor*, method*, attribute*, relation*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -29,7 +29,19 @@
 	virtual (TRUE | FALSE) "TRUE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 >
-<!ELEMENT method (arg?, return, code?)>
+<!ELEMENT constructor (arg*, code?)>
+<!ATTLIST constructor
+	desc CDATA #IMPLIED
+	argList CDATA #IMPLIED
+	argInOut CDATA #IMPLIED
+>
+<!ELEMENT destructor (arg*, code?)>
+<!ATTLIST destructor
+	desc CDATA #IMPLIED
+	argList CDATA #IMPLIED
+	argInOut CDATA #IMPLIED
+>
+<!ELEMENT method (arg*, return?, code?)>
 <!ATTLIST method
 	name CDATA #REQUIRED
 	desc CDATA #IMPLIED
@@ -38,12 +50,16 @@
 	virtual (TRUE | FALSE) "FALSE"
 	static (TRUE | FALSE) "FALSE"
 	inline (TRUE | FALSE) "FALSE"
+	type CDATA "void"
+	argList CDATA #IMPLIED
+	argInOut CDATA #IMPLIED
 >
 <!ELEMENT arg EMPTY>
 <!ATTLIST arg
 	type CDATA #REQUIRED
+	name CDATA #IMPLIED
 	const (TRUE | FALSE) "FALSE"
-	inout (INPUT | OUTPUT | BOTH) "BOTH"
+	inout (INPUT | OUTPUT | BOTH) "INPUT"
 >
 <!ELEMENT return EMPTY>
 <!ATTLIST return
@@ -56,9 +72,10 @@
 	type CDATA #REQUIRED
 	name CDATA #REQUIRED
 	desc CDATA #IMPLIED
+	init CDATA #IMPLIED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
-	set_meth (TRUE | FALSE) "TRUE"
-	get_meth (TRUE | FALSE) "TRUE"
+	setMeth (TRUE | FALSE) "TRUE"
+	getMeth (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT relation EMPTY>
 <!ATTLIST relation
@@ -67,9 +84,9 @@
 	desc CDATA #IMPLIED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 	ratio (1-1 | 1-M | M-N) "1-1"
-	set_meth (TRUE | FALSE) "TRUE"
-	get_meth (TRUE | FALSE) "TRUE"
-	add_meth (TRUE | FALSE) "TRUE"
-	rem_meth (TRUE | FALSE) "TRUE"
-	clr_meth (TRUE | FALSE) "TRUE"
+	setMeth (TRUE | FALSE) "TRUE"
+	getMeth (TRUE | FALSE) "TRUE"
+	addMeth (TRUE | FALSE) "TRUE"
+	remMeth (TRUE | FALSE) "TRUE"
+	clrMeth (TRUE | FALSE) "TRUE"
 >

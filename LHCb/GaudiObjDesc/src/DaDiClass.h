@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.3 2001-10-10 16:09:32 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.4 2001-10-17 08:32:11 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -12,6 +12,8 @@
 #include "DaDiMethod.h"
 #include "DaDiAttribute.h"
 #include "DaDiBaseClass.h"
+#include "DaDiConstructor.h"
+#include "DaDiDestructor.h"
 
 /** @class DaDiClass DaDiClass.h
  *  
@@ -76,24 +78,34 @@ public:
 	void pushDaDiMethod(DaDiMethod* value);
 	int sizeDaDiMethod();
   
+	DaDiConstructor* popDaDiConstructor();
+	void pushDaDiConstructor(DaDiConstructor* value);
+	int sizeDaDiConstructor();
+  
+	DaDiDestructor* popDaDiDestructor();
+	void pushDaDiDestructor(DaDiDestructor* value);
+	int sizeDaDiDestructor();
+  
 protected:
 
 private:
 
-	DOMString                 m_className, 
-                            m_classDesc, 
-                            m_classAuthor, 
-                            m_classDerived,
-                            m_classTemplateVector,
-                            m_classTemplateList,
-                            m_classID;
-	std::list<std::string>    m_impSoftList,
-                            m_impStdList,
-                            m_importList;
-	std::list<DaDiBaseClass*>	m_daDiBaseClass;
-	std::list<DaDiAttribute*>	m_daDiAttribute;
-	std::list<DaDiRelation*>  m_daDiRelation;
-	std::list<DaDiMethod*>    m_daDiMethod;
+	DOMString                   m_className, 
+                              m_classDesc, 
+                              m_classAuthor, 
+                              m_classDerived,
+                              m_classTemplateVector,
+                              m_classTemplateList,
+                              m_classID;
+	std::list<std::string>      m_impSoftList,
+                              m_impStdList,
+                              m_importList;
+	std::list<DaDiBaseClass*>	  m_daDiBaseClass;
+	std::list<DaDiAttribute*>	  m_daDiAttribute;
+	std::list<DaDiRelation*>    m_daDiRelation;
+	std::list<DaDiMethod*>      m_daDiMethod;
+  std::list<DaDiConstructor*> m_daDiConstructor;
+  std::list<DaDiDestructor*>  m_daDiDestructor;
 };
 
 inline DOMString DaDiClass::className()
@@ -231,13 +243,20 @@ inline void DaDiClass::pushImportList(std::string value)
 			value = value.substr(i+1,std::string::npos);
 		}
 
-		if ((import != "")       && (import != "long")     &&
+    while ((import[import.size()-1] == '*') ||
+      (import[import.size()-1] == '&'))
+    {
+      import = import.substr(0,import.size()-1);
+    }
+
+		if ((import != "")     && (import != "long")     &&
 			(import != "bool")   && (import != "short")    && 
 			(import != "long")   && (import != "string")   &&
 			(import != "int")    && (import != "float")    &&
 			(import != "double") && (import != "unsigned") &&
 			(import != "signed") && (import != "std")      &&
-			(import != "pair")   && (import != "char"))
+			(import != "pair")   && (import != "char")     &&
+      (import != "unsigned long"))
 		{
 			if ((import == "vector") || (import == "list")   ||
 				(import == "deque")  || (import == "queue")  ||
@@ -337,6 +356,43 @@ inline int DaDiClass::sizeDaDiMethod()
 {
 	return m_daDiMethod.size();
 }
+
+inline DaDiConstructor* DaDiClass::popDaDiConstructor()
+{
+	DaDiConstructor* pt = m_daDiConstructor.front();
+	m_daDiConstructor.push_back(pt);
+	m_daDiConstructor.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiConstructor(DaDiConstructor* value)
+{
+	m_daDiConstructor.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiConstructor()
+{
+	return m_daDiConstructor.size();
+}
+
+inline DaDiDestructor* DaDiClass::popDaDiDestructor()
+{
+	DaDiDestructor* pt = m_daDiDestructor.front();
+	m_daDiDestructor.push_back(pt);
+	m_daDiDestructor.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushDaDiDestructor(DaDiDestructor* value)
+{
+	m_daDiDestructor.push_back(value);
+}
+
+inline int DaDiClass::sizeDaDiDestructor()
+{
+	return m_daDiDestructor.size();
+}
+
 
 #endif // DADICLASS_H
 

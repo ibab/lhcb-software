@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.5 2001-10-10 17:11:39 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.6 2001-10-17 08:32:11 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -64,6 +64,7 @@ void version(std::string argV0)
   exit(0);
 }
 
+std::string argV0;
 
 //
 // Main
@@ -82,7 +83,7 @@ int main(int argC, char* argV[])
   std::string nextArg;
   bool additionalImports = false;
 
-  std::string argV0 = std::string(argV[0]);
+  argV0 = std::string(argV[0]);
   argV0.erase(0,argV0.find_last_of("\\")+1);
   argV0.erase(0,argV0.find_last_of("/")+1);
   
@@ -344,6 +345,25 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
   strcat(cppFileName, "_dict.cpp");
   std::cout << "Writing " << cppFileName;
   std::ofstream metaOut(cppFileName);
+
+//
+// CVS-tag and 'donotedit'-message
+//
+
+  metaOut << "// $ID: $" << std::endl << std::endl << std::endl
+    << "//   **************************************************************************" << std::endl
+    << "//   *                                                                        *" << std::endl
+    << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
+    << "//   *                                                                        *" << std::endl
+    << "//   *  This file was created automatically by GaudiObjDesc, please do not    *" << std::endl
+    << "//   *  edit or delete it by hand.                                            *" << std::endl
+    << "//   *                                                                        *" << std::endl
+    << "//   *  If you want to change this file, first change the corresponding       *" << std::endl
+    << "//   *  xml-file and rerun the tools from GaudiObjDesc (or the make if you    *" << std::endl
+    << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
+    << "//   *                                                                        *" << std::endl
+    << "//   **************************************************************************" << std::endl
+    << std::endl << std::endl << std::endl;
 
 //
 // Include files

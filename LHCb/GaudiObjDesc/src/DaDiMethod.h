@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.2 2001-10-09 17:01:04 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.3 2001-10-17 08:32:12 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
@@ -44,6 +44,12 @@ public:
   DOMString inline_();
   void setInline_(DOMString value);
 
+  DOMString argList();
+  void setArgList(DOMString value);
+
+  DOMString argInOut();
+  void setArgInOut(DOMString value);
+
   DOMString code();
   void setCode(DOMString value);
 
@@ -64,7 +70,9 @@ private:
                                m_const, 
                                m_virtual, 
                                m_static, 
-							   m_inline,
+							                 m_inline,
+                               m_argList,
+                               m_argInOut,
                                m_code;
   DaDiMethReturn*              m_daDiMethReturn;
   std::list<DaDiMethArgument*> m_daDiMethArgument;
@@ -139,6 +147,26 @@ inline DOMString DaDiMethod::inline_()
 inline void DaDiMethod::setInline_(DOMString value)
 {
   m_inline = value;
+}
+
+inline DOMString DaDiMethod::argList()
+{
+  return m_argList;
+}
+
+inline void DaDiMethod::setArgList(DOMString value)
+{
+  m_argList = value;
+}
+
+inline DOMString DaDiMethod::argInOut()
+{
+  return m_argInOut;
+}
+
+inline void DaDiMethod::setArgInOut(DOMString value)
+{
+  m_argInOut = value;
 }
 
 inline DOMString DaDiMethod::code()
