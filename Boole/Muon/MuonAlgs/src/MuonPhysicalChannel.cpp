@@ -158,8 +158,6 @@ void MuonPhysicalChannel::applyXTalk(int phChInX[2], int phChInY[2],
   int readoutType= phChID()->getReadout();
   double time=0;
   int directionx,directiony;
-  int azzerax=0;
-  int azzeray=0;
   
   for (iter= m_Hits.begin();iter< m_Hits.end();iter++){
     if((!(*iter).getMCMuonHitOrigin().getXTalkNature())&&
@@ -199,7 +197,7 @@ void MuonPhysicalChannel::applyXTalk(int phChInX[2], int phChInY[2],
         //<<"readoutType "<<m_ID.getReadout()<<endl;
         numberOfXTalkHitsX=response->extractXTalkX(x)-1;
         numberOfXTalkHitsY=response->extractXTalkY(y)-1;
-        //azzerax=hitDueToXTalk.size();
+        //int azzerax=hitDueToXTalk.size();
         //						if(m_ID.getStation()==1&&m_ID.getRegion()==0)cout
         //<<"arci "<<numberOfXTalkHitsX<<" "<<numberOfXTalkHitsY<<endl;
         //						if(m_ID.getStation()==0&&m_ID.getRegion()==0)
