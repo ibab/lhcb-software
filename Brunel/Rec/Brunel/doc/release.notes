@@ -39,7 +39,8 @@ Complete OO-Dst output.
  - Tuning:
    . Forward tracking, improved TT1 matching, monitor efficiency (FwTrack v4r0)
    . Pt Kick tuned and now used (TrTools v2r0, Seeding v2r0)
-   . Fit parameters to fix negative covariance (Seeding v2r0, TrMatching v2r0)
+   . Adjust fit parameters to fix negative covariance 
+     (Seeding v2r0, TrMatching v2r0, UpsrteamPr v2r0))
    . Matching (TrMatching v2r0)
    . Velo digitisation (VeloKernel v1r1, VeloAlgorithms v2r0)
    . L1VeloTrack parameters (L1VeloTrack v2r0)
