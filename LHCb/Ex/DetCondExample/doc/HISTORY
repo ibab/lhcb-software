@@ -1,4 +1,13 @@
-# $Id: HISTORY,v 1.9 2001-11-27 18:57:36 andreav Exp $
+# $Id: HISTORY,v 1.10 2001-11-28 09:43:59 andreav Exp $
+
+------------------------------------------------
+28.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc.
+-> use IAddressCreator interface of CnvSvc to create addresses with global tag
+   > "DEFAULT" becomes a reserved word to indicate the global tag
+-> remove method setGlobalTag (the tag can only be set in the job options)
+Private tag: h20011128.
 
 ------------------------------------------------
 27.11.2001 Ex/DetCondExample v2 (LINUX only)

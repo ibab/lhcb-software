@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/options/job.opts,v 1.4 2001-11-23 18:00:44 andreav Exp $
+//$Id: job.opts,v 1.5 2001-11-28 09:44:00 andreav Exp $
 //==============================================================
 // Standard Job options file
 //==============================================================
@@ -50,17 +50,16 @@ ConditionsDBGate.condDBBootFile  = "$DETCONDEXAMPLE_BOOTFILE";
 
 //--------------------------------------------------------------
 // Default global tag for the ConditionsDB
-// DataSvc is a ConditionsDBDataSvc called "DetectorDataSvc"
 //--------------------------------------------------------------
 
 // Production set of temperatures: Ecal is hot, LHCb is cold
-DetectorDataSvc.condDBGlobalTag = "PRODUCTION";
+ConditionsDBCnvSvc.condDBGlobalTag = "PRODUCTION";
 
 // Cold set of temperatures
-//DetectorDataSvc.condDBGlobalTag = "COLD";
+//ConditionsDBCnvSvc.condDBGlobalTag = "COLD";
 
 // Hot set of temperatures
-//DetectorDataSvc.condDBGlobalTag = "HOT";
+//ConditionsDBCnvSvc.condDBGlobalTag = "HOT";
 
 //--------------------------------------------------------------
 // Message service options
@@ -71,7 +70,7 @@ DetectorDataSvc.condDBGlobalTag = "PRODUCTION";
 // (XmlStringCnvSvc refers also to all XmlStringXxxCnv converters)
 MessageSvc.OutputLevel = 2;
 //ConditionsDBCnvSvc.OutputLevel       = 3;
-//ConditionsDBMaster.OutputLevel       = 3;
+//ConditionsDBGate.OutputLevel         = 3;
 //DetectorDataSvc.OutputLevel          = 3; 
 //DetectorPersistencySvc.OutputLevel   = 3;
 //SequencerAlg.OutputLevel             = 3;

@@ -1,6 +1,9 @@
-#$Id: release.notes,v 1.5 2001-11-27 18:33:15 andreav Exp $
+#$Id: release.notes,v 1.6 2001-11-28 09:44:00 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+!20011128 - Andrea Valassi
+-> move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
 
 !20011127 - Andrea Valassi
 -> move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
