@@ -1,8 +1,27 @@
 <PRE>
 Package     : Phys/DaVinci 
-Package Coordinator : Gloria Corti
+Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r2>2004-02-20 DaVinci v11r2 - Development Version</A></H1><PRE>
+ This version is mostly for developement and the main focus is for new data.
+ TDR data can be read but not all features are supported beside decay channel
+ selections. See details for DaVinci v11r0 and v10r0.
+
+ - Version based on LHCb v15r2, refer to release notes of
+   LHCb for details regarding those packages.
+
+ - Use XmlDDDB v21r0. Update DaVinciDDDB.opts to use new options for geometry 200402. 
+   Modified DaVinciCommon.opts to use STDet instead of ITDet.
+ 
+ - Adapt DaVinciTestData.opts to read a file produced with Brunel v23r2. By default
+   the pool file is used.
+
+ - Reintroduced production of neutrals in DaVinci.opts. No problems with pool file.
+   Neutral particles cannot be produced currently when reading new data
+   saved with GaudiDb (root) persistency because not enough information is present 
+   on the DST files.
+   
 </PRE><H1><A NAME=v11r1>2004-02-18 DaVinci v11r1 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel

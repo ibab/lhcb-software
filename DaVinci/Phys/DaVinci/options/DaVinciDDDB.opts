@@ -9,5 +9,7 @@
  *  @date 2004-01-26
  */
 
-//For TDR (Winter 2003) data produced with Brunel v17r4
-#include "$DAVINCIROOT/options/lhcb-200311.opts" 
+//For TDR (Winter 2003) data produced with Brunel v21r1
+//#include "$DAVINCIROOT/options/lhcb-200311.opts" 
+//For data produced with Brunel v23r2
+#include "$DAVINCIROOT/options/lhcb-200402.opts" 

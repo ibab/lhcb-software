@@ -37,11 +37,19 @@
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
-//--- Neutral ProtoParticles (gammas and pi0) for Brunel >= v17r4
-//    including bug fix for bad cluster association to SplitPhotons in 
-//    CaloMergedPi0Alg and Re-calibration for single gammas and merged pi0
-// NOTE:: Not enough information in new DST files at the moment to 
-//        produce neutral protoparticles
+//--- Neutral ProtoParticles (gammas and pi0) 
+// NOTE:: Not enough information in new GaudiRootDB files at the moment to 
+//        produce neutral protoparticles -> only works with POOL input
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+
+//--- For merged and resolved pi0 the corresponding selection algorithm
+//    need to be executed. 
+//    Note that DaVinciNeutrals MUST be executed
+// ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
+// ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+// #include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
+// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+// #include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
 
 //--- Ks->pi+pi- with all type of tracks loose selection + monitoring
 //#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.87 2004-02-18 10:42:15 gcorti Exp $
+# $Id: requirements,v 1.88 2004-02-20 15:58:50 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v11r1
+version           v11r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -55,12 +55,12 @@ use  HbookCnv           v14r1
 use  RootHistCnv    	v9r1
 
 #--- Geometry Database
-use  XmlDDDB		v20r1	 Det
+use  XmlDDDB		v21r0	 Det
 use  ParamFiles		v3r1	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
-#--- LHCb libraries (from LHCB_v15r1)
-use  LHCb               v15r1	
+#--- LHCb libraries (from LHCB_v15r2)
+use  LHCb               v15r2
 
 #--- DaVinciSys v11r0 packages 
 
