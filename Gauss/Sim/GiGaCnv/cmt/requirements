@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/cmt/requirements,v 1.5 2001-04-27 09:28:31 ibelyaev Exp $ 
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/cmt/requirements,v 1.6 2001-04-27 15:47:07 ibelyaev Exp $ 
 
 package  GiGaCnv 
 version v1
@@ -29,6 +29,9 @@ library GiGaCnv     component/*.cpp Lib/*.cpp
 
 apply_pattern package_Clinkopts
 apply_pattern packageShr  
+
+macro GiGaCnvLinkOpts    "$(GiGaCnvDir)/libGiGaCnv.a " \ 
+	WIN32            "$(GiGaCnvDir)/GiGaCnv.arc "  
 
 ################ private stuff ###########################################
 private
