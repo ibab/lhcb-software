@@ -5,6 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!======================= MuonBackground v1r10 2005-04-01 ======================
+! 2005-04-01 - Marco Cattaneo
+ - Adapt to MuonEvent v4r0 (backward incompatible change to MCMuonHit)
+
 !======================= MuonBackground v1r9 2005-02-07 =======================
 ! 2005-02-07 - Marco Cattaneo
  - Change default options to read .root version of parameterisation histograms. Needs

@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.21 2005-02-07 14:55:19 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.22 2005-04-01 16:44:34 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -1054,8 +1054,9 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         float z=(zentry+zexit)/2.0F;
         MCMuonHit* pHit = new MCMuonHit();
         pHit->setEntry(HepPoint3D(xentry,yentry,zentry));                     
-        pHit->setExit(HepPoint3D(xexit,yexit,zexit));
-        
+        pHit->setDisplacement(HepGeom::BasicVector3D<double>(xexit-xentry,
+                                                             yexit-yentry,
+                                                             zexit-zentry));
         double tofOfLight=(sqrt(x*x+ y*y+z*z))/300.0;
         //        float shiftOfTOF=-ispill*m_BXTime;
         if(m_type==FlatSpillover){
@@ -1178,7 +1179,9 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
                 ylow<<" "<<yup<<" "<<zlow<<" "<<zup<<endreq;
               
               pHit->setEntry(HepPoint3D(xentry,yentry,zentry));
-              pHit->setExit(HepPoint3D(xexit,yexit,zexit));
+              pHit->setDisplacement(HepGeom::BasicVector3D<double>(xexit-xentry,
+                                                                   yexit-yentry,
+                                                                   zexit-zentry));
               float xd=(xentry+xexit)/2;
               
               float yd=(yentry+yexit)/2;
