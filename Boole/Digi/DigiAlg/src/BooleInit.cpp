@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.4 2003-11-04 14:15:58 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.5 2003-11-04 14:47:46 cattanem Exp $
 
 // Include files
 #include "BooleInit.h"
@@ -104,7 +104,7 @@ StatusCode BooleInit::initialize() {
     msg << MSG::INFO
       << "===================================================================="
       << endmsg;
-    toolSvc()->releaseTool( timingTool );
+    // No need to release tool, it will be destroyed when it goes out of scope
   }
   
   return StatusCode::SUCCESS;
