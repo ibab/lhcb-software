@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.27 2002-06-28 12:59:10 gcorti Exp $
+# $Id: requirements,v 1.28 2002-06-28 13:38:11 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,7 +8,7 @@
 #--- Allows reading of data produced with Brunel >= v5
 #    Reading of files produced with SICBDST is not supported in DaVinci v2r0
 package           DaVinci
-version           v4r2
+version           v5r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
