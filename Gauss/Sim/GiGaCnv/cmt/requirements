@@ -1,21 +1,19 @@
-# $Id: requirements,v 1.38 2003-05-30 15:53:11 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# $Id: requirements,v 1.39 2003-07-03 07:42:57 ranjard Exp $ 
 # =============================================================================
 package  GiGaCnv 
-version  v12r1
+version  v12r2
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 
 
 # ============== explicit dependencies ========================================
-use DetDesc      v11r*	      Det
+use DetDesc      v*     Det
         
-use HepMC        v3r121p*     Sim
-use GenEvent     v2r*         Event
+use HepMC        v*     Sim
+use GenEvent     v*     Event
 
-use GiGa         v14r*        Sim 
-use Event        v3r*	      Event
+use GiGa         v14r*  Sim 
+use Event        v*     Event
 
 # ============== standard includes ============================================
 include_dirs     $(GIGACNVROOT)

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.48 2003-06-18 09:00:15 witoldp Exp $
+! $Id: release.notes,v 1.49 2003-07-03 07:42:57 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================= GiGaCnv v12r2 ================================
+! 2003-07-03 - Florence RANJARD
+ - requirements - use the latest versions available in LHCB_v12r0 
 
 !======================= GiGaCnv v12r1 ==============================
 
