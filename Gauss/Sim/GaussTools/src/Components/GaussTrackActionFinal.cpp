@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionFinal.cpp,v 1.5 2004-04-05 13:18:35 gcorti Exp $ 
+// $Id: GaussTrackActionFinal.cpp,v 1.6 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/04/05 13:18:35  gcorti
+// do not save photoelectrons by default
+//
 // Revision 1.4  2004/02/23 08:21:51  ibelyaev
 //  remove extra printout
 //
@@ -117,25 +120,20 @@ void GaussTrackActionFinal::PostUserTrackingAction
   
   // get the trajectory 
   GaussTrajectory*       tr   = trajectory() ;  
-  if( 0 == tr ) { Error ( "Post...: GaussTrajectory* points to NULL " ) ; }
   
   // get the information 
   GaussTrackInformation* info = trackInfo() ;
   
   bool store = false ;
-  if      ( trackMgr      () ->  GetStoreTrajectory() ) { store = true ; }
-  else if ( storeMarked   () &&  info->toBeStored  () ) { store = true ; }
+  if      ( storeMarked   () &&  info->toBeStored  () ) { store = true ; }
   else if ( storeWithHits () && !info->hits().empty() ) { store = true ; }
   
   // update global flug 
-  if ( store ) { trackMgr() -> SetStoreTrajectory( true ) ; }
-  
-  // update track info 
-  if ( trackMgr() ->GetStoreTrajectory() ) { info->setToBeStored( true ) ; }
+  if ( store ) { mark ( info ) ; }
   
   // 
   if ( store ) { return  ; }                                     // RETURN 
-  
+
   // update track links 
   info -> updateHitsTrackID( track->GetParentID() ) ;
   
@@ -154,15 +152,13 @@ void GaussTrackActionFinal::PostUserTrackingAction
     child -> SetParentID( track->GetParentID() );
     //
   }
-  
-//   // delete the trajectory by hand 
-//   if ( ! trackMgr()->GetStoreTrajectory() )
-//   {
-//     G4VTrajectory* traj = trackMgr()->GimmeTrajectory();    
-//     if( 0 != traj ) { delete traj ; } 
-//     trackMgr() -> SetStoreTrajectory ( false ) ;
-//     trackMgr() -> SetTrajectory      ( 0     ) ;
-//   }
+
+  // delete the trajectory by hand 
+  {
+    G4VTrajectory* traj = trackMgr()->GimmeTrajectory();    
+    if( 0 != traj ) { delete traj ; } 
+    trackMgr() -> SetTrajectory      ( 0     ) ;
+  }
   
 }
 // ============================================================================

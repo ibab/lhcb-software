@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionGeneral.cpp,v 1.2 2004-03-22 16:51:05 ibelyaev Exp $ 
+// $Id: GaussTrackActionGeneral.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/22 16:51:05  ibelyaev
+//  fix a stupid bug in Tracking Action 'General'
+//
 // Revision 1.1  2004/02/20 19:35:27  ibelyaev
 //  major update
 // 
@@ -109,11 +112,12 @@ void GaussTrackActionGeneral::PreUserTrackingAction  ( const G4Track* track )
   GaussTrackInformation*   info = trackInfo() ;
   if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; return ; }
+
+  if ( info ->toBeStored() ) { return ; }
   
   bool store = false ;
   
-  if      ( trackMgr() ->GetStoreTrajectory()              ) { store = true ; }
-  else if ( storeAll       ()                              ) { store = true ; }
+  if      ( storeAll       ()                              ) { store = true ; }
   else if ( storePrimaries () && 0 == track->GetParentID() ) { store = true ; }
   else if ( storeDecays () && fDecay == track 
             -> GetCreatorProcess() -> GetProcessType()     ) { store = true ; }
@@ -124,11 +128,8 @@ void GaussTrackActionGeneral::PreUserTrackingAction  ( const G4Track* track )
     storeChildren() ;
   }
   
-  // update the global flag 
-  if ( store ) { trackMgr() -> SetStoreTrajectory( true ) ; }
-  
-  // update track info 
-  if ( trackMgr() ->GetStoreTrajectory() ) { info->setToBeStored( true ) ; }
+  // update 
+  if ( store ) { mark (info ) ; }
   
 };
 // ============================================================================

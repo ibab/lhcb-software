@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionByEnergy.cpp,v 1.2 2004-04-05 13:18:35 gcorti Exp $ 
+// $Id: GaussTrackActionByEnergy.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/04/05 13:18:35  gcorti
+// do not save photoelectrons by default
+//
 // Revision 1.1  2004/02/20 19:35:26  ibelyaev
 //  major update
 // 
@@ -86,21 +89,21 @@ void GaussTrackActionByEnergy::PreUserTrackingAction  ( const G4Track* track )
   // no action 
   if ( !storeByEnergy()                                 ) { return ; } // RETURN
   
+  if ( 0 == track || track->GetKineticEnergy() < threshold() ) { return ; }
+  
   if ( 0 == trackMgr() ) 
   { Error ( "Pre..: G4TrackingManager* points to NULL!" ) ; return ; } // RETURN
-  
-  if ( 0 == track )
-  { Error ( "Pre..: G4Track*           points to NULL!" ) ; return ; } // RETURN
   
   if      ( track -> GetVertexPosition().z() < zMin()   ) { return ; } // RETURN
   else if ( track -> GetVertexPosition().z() > zMax()   ) { return ; } // RETURN
   
-  if( m_rejectRICHphe ) {
+  if ( m_rejectRICHphe ) 
+  {
     const G4VProcess* process  = track->GetCreatorProcess() ;
     if ( 0 == process ) 
-    { Error ( "Pre..: G4VProcess         points to NULL!" ) ; return ; } // RETURN
-    
-    if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
+    { Error ( "Pre..: G4VProcess         points to NULL!" ) ; } 
+    else if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) 
+    {
       Warning ( "Pre..: RichHpdPhotoelectricProcess particles not kept" );
       return;
     } 
@@ -117,18 +120,10 @@ void GaussTrackActionByEnergy::PreUserTrackingAction  ( const G4Track* track )
   GaussTrackInformation*   info = trackInfo() ;
   if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; return ; }
+
+  if ( info->toBeStored() ) { return ; }
   
-  bool store = false ;
-  
-  if      ( trackMgr() ->GetStoreTrajectory()        ) { store = true ; }
-  else if ( storeByEnergy() && 
-            threshold() <= track->GetKineticEnergy() ) { store = true ; }
-  
-  // update the global flag 
-  if ( store ) { trackMgr() -> SetStoreTrajectory( true ) ; }
-  
-  // update track info 
-  if ( trackMgr() ->GetStoreTrajectory() ) { info->setToBeStored( true ) ; }
+  mark( info ) ; 
   
 };
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionByProcess.h,v 1.2 2004-04-20 04:27:15 ibelyaev Exp $
+// $Id: GaussTrackActionByEnergyProcess.h,v 1.1 2004-04-20 04:27:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -15,7 +15,7 @@
 #include "GaussTools/GaussTrackActionZ.h"
 // ============================================================================
 
-/** @class GaussTrackActionByProcess GaussTrackActionByProcess.h 
+/** @class GaussTrackActionByEnergyProcess GaussTrackActionByEnergyProcess.h 
  *  
  *  Track action, valid for certain region in Z based on 
  *  particle/children types 
@@ -23,10 +23,10 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2004-02-19
  */
-class GaussTrackActionByProcess : public GaussTrackActionZ 
+class GaussTrackActionByEnergyProcess : public GaussTrackActionZ 
 {
   /// friend factory for instantiation 
-  friend class GiGaFactory<GaussTrackActionByProcess> ;
+  friend class GiGaFactory<GaussTrackActionByEnergyProcess> ;
 public:
 
   /// perform initialization
@@ -54,22 +54,24 @@ protected:
    *  @param name name of the object
    *  @param parent  pointer to parent object
    */
-  GaussTrackActionByProcess
+  GaussTrackActionByEnergyProcess
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent ) ;
   
   /// destructor (virtual and protected)
-  virtual ~GaussTrackActionByProcess();
+  virtual ~GaussTrackActionByEnergyProcess();
   
 private:
   
   // default constructor   is disabled 
-  GaussTrackActionByProcess() ; 
+  GaussTrackActionByEnergyProcess() ; 
   // copy    constructor   is disabled 
-  GaussTrackActionByProcess           ( const GaussTrackActionByProcess& ) ; 
+  GaussTrackActionByEnergyProcess           
+  ( const GaussTrackActionByEnergyProcess& ) ; 
   // assignement operator  is disabled 
-  GaussTrackActionByProcess& operator=( const GaussTrackActionByProcess& ) ;
+  GaussTrackActionByEnergyProcess& operator=
+  ( const GaussTrackActionByEnergyProcess& ) ;
   
 protected:
   
@@ -120,6 +122,7 @@ private:
   Processes m_childProcs  ;   // sorted !
   ProcTypes m_ownPTypes   ;   // sorted !
   ProcTypes m_childPTypes ;   // sorted !
+  double    m_threshold   ;
   
 };
 

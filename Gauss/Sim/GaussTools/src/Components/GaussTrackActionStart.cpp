@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionStart.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
+// $Id: GaussTrackActionStart.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 16:51:54  ibelyaev
+//  few minor fixes
+//
 // Revision 1.1  2004/02/20 19:35:28  ibelyaev
 //  major update
 // 
@@ -93,7 +96,7 @@ void GaussTrackActionStart::PreUserTrackingAction
   GaussTrackInformation* info = trackInfo () ;
   if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; }
-  
+
 };
 // ============================================================================
 
@@ -144,6 +147,8 @@ StatusCode GaussTrackActionStart::restoreG4setting()
     m_store = manager -> GetStoreTrajectory () ;
   }
   else { manager -> SetStoreTrajectory( m_store ) ; }
+
+  manager -> SetStoreTrajectory( true ) ; 
   
   return StatusCode::SUCCESS ;
 };

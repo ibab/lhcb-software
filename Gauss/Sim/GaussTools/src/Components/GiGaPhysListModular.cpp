@@ -83,8 +83,8 @@ StatusCode GiGaPhysListModular::initialize()
     if( 0 == theconstr ) { return StatusCode::FAILURE ; }
     
     // NB!!! prevent the deletion of contructors by Gaudi
-    theconstr->addRef() ;
-    //
+    //for( int i = 1 ; i < 1000 ; ++i ) 
+    //{ theconstr->addRef() ; }
     
     if( 0 == theconstr -> physicsConstructor() ) 
     { return Error ( "G4PhysicsConstructor* points to NULL!" ) ; }
@@ -102,11 +102,6 @@ StatusCode GiGaPhysListModular::initialize()
 StatusCode GiGaPhysListModular::finalize () 
 {
   // release all constructors 
-  for( Constructors::iterator ic = m_constructors.begin() ; 
-       m_constructors.end() != ic ; ++ic ) 
-  { if( 0 != *ic ) { (*ic) -> finalize () ; } }
-  m_constructors.clear() ;
-  
   return GiGaPhysListBase::finalize  ();
 };
 

@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionBase.h,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $
+// $Id: GaussTrackActionBase.h,v 1.3 2004-04-20 04:27:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 16:51:54  ibelyaev
+//  few minor fixes
+//
 // Revision 1.1  2004/02/20 19:35:25  ibelyaev
 //  major update
 // 
@@ -93,6 +96,12 @@ protected:
   // store children tracks 
   StatusCode             storeChildren () const ;
   
+protected :
+
+  // mark information "to be stored" and increment 
+  // the flag counter 
+  StatusCode mark ( GaussTrackInformation* info ) const ;
+  
 private:
   
   // 'long' counter 
@@ -101,7 +110,9 @@ private:
   mutable UCounter  m_nTrajectories ;
   // counter for all created track information objects 
   mutable UCounter  m_nTrackInfos   ;
-
+  // counter of "decisions"
+  mutable size_t    m_marked        ;
+  
 };
 
 // ============================================================================

@@ -1,11 +1,8 @@
-// $Id: GaussTrackActionByType.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
+// $Id: GaussTrackActionByEnergyProcess.cpp,v 1.1 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/04/05 13:18:35  gcorti
-// do not save photoelectrons by default
-//
 // Revision 1.1  2004/02/20 19:35:27  ibelyaev
 //  major update
 // 
@@ -21,8 +18,6 @@
 #include "G4TrackingManager.hh"
 #include "G4VProcess.hh"
 #include "G4ProcessType.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
 // ============================================================================
 // GiGa
 // ============================================================================
@@ -35,18 +30,18 @@
 // ============================================================================
 // local
 // ============================================================================
-#include "GaussTrackActionByType.h"
+#include "GaussTrackActionByEnergyProcess.h"
 // ============================================================================
 
 /** @file 
- *  Implementation file for class GaussTrackActionByType
+ *  Implementation file for class GaussTrackActionByEnergyProcess
  *
  *  @date 2004-02-19 
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
-IMPLEMENT_GiGaFactory( GaussTrackActionByType );
+IMPLEMENT_GiGaFactory( GaussTrackActionByEnergyProcess );
 // ============================================================================
 
 // ============================================================================
@@ -59,110 +54,48 @@ IMPLEMENT_GiGaFactory( GaussTrackActionByType );
  *  @param parent  pointer to parent object
  */
 // ============================================================================
-GaussTrackActionByType::GaussTrackActionByType
+GaussTrackActionByEnergyProcess::GaussTrackActionByEnergyProcess
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
   : GaussTrackActionZ   ( type , name , parent ) 
   //
-  , m_ownNames   () 
-  , m_childNames () 
-  , m_ownTypes   () 
-  , m_childTypes ()
-  , m_rejectRICHphe ( true )
+  , m_ownProcs    () 
+  , m_childProcs  ()
+  , m_ownPTypes   ( 1 , (int) fDecay ) 
+  , m_childPTypes () 
+  , m_threshold   ( 100 * MeV )
 {
-  m_ownNames.push_back   ( "mu-" ) ;
-  m_ownNames.push_back   ( "mu+" ) ;
-  m_ownNames.push_back   ( "pi0" ) ;
-  
-  declareProperty ( "OwnTypes"   , m_ownNames   ) ;
-  
-  m_childNames.push_back ( "mu-" ) ;
-  m_childNames.push_back ( "mu+" ) ;
-  m_childNames.push_back ( "pi0" ) ;
-  
-  declareProperty ( "ChildTypes" , m_childNames ) ;
-
-  declareProperty ( "RejectRICHPhotoelectrons", m_rejectRICHphe );
-
+  declareProperty ( "OwnProcesses"      , m_ownProcs    ) ;
+  declareProperty ( "ChildProcesses"    , m_childProcs  ) ;  
+  declareProperty ( "OwnProcessTypes"   , m_ownPTypes   ) ;
+  declareProperty ( "ChildProcessTypes" , m_childPTypes ) ;
+  declareProperty ( "Threshold"         , m_threshold   ) ;
 };
 // ============================================================================
 
 // ============================================================================
 /// Destructor
 // ============================================================================
-GaussTrackActionByType::~GaussTrackActionByType() {}
+GaussTrackActionByEnergyProcess::~GaussTrackActionByEnergyProcess() {}
 // ============================================================================
 
 // ============================================================================
-/** initialize the track action  
- *  @see GiGaTrackActionBase 
- *  @see GiGaBase 
- *  @see  AlgTool 
- *  @see IAlgTool 
- *  @return status code 
- */
+/// perform initialization
 // ============================================================================
-StatusCode GaussTrackActionByType::initialize () 
+StatusCode GaussTrackActionByEnergyProcess::initialize () 
 {
   StatusCode sc = GaussTrackActionZ::initialize() ;
   if( sc.isFailure() ) { return sc ; }
   
-  m_ownTypes   .clear() ;
-  m_childTypes .clear() ;
+  std::sort ( m_ownProcs     .begin () , m_ownProcs    .end () ) ;
+  std::sort ( m_childProcs   .begin () , m_childProcs  .end () ) ;
+  std::sort ( m_ownPTypes    .begin () , m_ownPTypes   .end () ) ;
+  std::sort ( m_childPTypes  .begin () , m_childPTypes .end () ) ;
   
-  if ( m_ownNames.empty() && m_childNames.empty() ) 
-  {
-    Warning (" Empty type lists. no action");
-    return StatusCode::SUCCESS ;
-  }
-  
-  G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-  if ( 0 == table ) 
-  { return Error ( "G4ParticleTable* points to NULL!" ) ; }
-  
-  { // own types 
-    for( Names::const_iterator it = m_ownNames.begin() ; 
-         m_ownNames.end() != it ; ++it ) 
-    {
-      const G4ParticleDefinition* def = table->FindParticle( *it ) ; 
-      if ( 0 == def )
-      { return Error ( "G4ParticleDefintion* is NULL for '" + (*it) + "'" ) ; }
-      std::cout << " own type "
-                <<  (*it)
-                << " def = "
-                << def->GetParticleName()
-                << std::endl ;
-      
-      m_ownTypes.push_back( def ) ; 
-    }
-  }
-  { // own types 
-    for( Names::const_iterator it = m_childNames.begin() ; 
-         m_childNames.end() != it ; ++it ) 
-    {
-      const G4ParticleDefinition* def = table->FindParticle( *it ) ; 
-      if ( 0 == def )
-      { return Error ( "G4ParticleDefintion* is NULL for '" + (*it) + "'" ) ; }
-      std::cout << " own type "
-                <<  (*it)
-                << " def = "
-                << def->GetParticleName()
-                << std::endl ;
-      m_childTypes.push_back( def ) ; 
-    }
-  }
-  
-  std::sort ( m_ownTypes   .begin () , m_ownTypes   .end () );
-  std::sort ( m_childTypes .begin () , m_childTypes .end () );
-
-  std::cout << " size of containers : "
-            << m_ownTypes.size() 
-            <<" " << m_childTypes.size() << std::endl ;
-  
-
   return StatusCode::SUCCESS ;
 };
+
 // ============================================================================
 
 // ============================================================================
@@ -171,68 +104,19 @@ StatusCode GaussTrackActionByType::initialize ()
  *  @param pointer to new track opbject 
  */
 // ============================================================================
-void GaussTrackActionByType::PreUserTrackingAction  ( const G4Track* track ) 
-{
-  // no action 
-  if ( ownTypes().empty()                               ) { return ; } // RETURN
-  
-  if ( 0 == trackMgr() ) 
-  { Error ( "Pre..: G4TrackingManager* points to NULL!" ) ; return ; } // RETURN
-  
-  if ( 0 == track )
-  { Error ( "Pre..: G4Track*           points to NULL!" ) ; return ; } // RETURN
-  
-  if      ( track -> GetVertexPosition().z() < zMin()   ) { return ; } // RETURN
-  else if ( track -> GetVertexPosition().z() > zMax()   ) { return ; } // RETURN
-  
-  if( m_rejectRICHphe ) {
-    const G4VProcess* process  = track->GetCreatorProcess() ;
-    if ( 0 == process ) 
-    { Error ( "Pre..: G4VProcess         points to NULL!" ) ; } 
-    else if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
-      Warning ( "Pre..: RichHpdPhotoelectricProcess particles not kept" );
-      return;
-    } 
-  }
-  
-  // get the trajectory 
-  GaussTrajectory* tr = trajectory() ;
-  
-  // check the validity 
-  if( 0 == tr ) 
-  { Error ( "Pre...: GaussTrajectory*       points to NULL" ) ; return ; }
-  
-  // check the track information
-  GaussTrackInformation*   info = trackInfo() ;
-  if( 0 == info ) 
-  { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; return ; }
-
-  if ( info -> toBeStored() ) { return ; }
-  
-  if ( storeOwn( track ) ) { mark( info ) ; }
-  
-};
-// ============================================================================
-
-// ============================================================================
-/** perform action 
- *  @see G4VUserTrackingAction
- *  @param pointer to new track opbject 
- */
-// ============================================================================
-void GaussTrackActionByType::PostUserTrackingAction  
+void GaussTrackActionByEnergyProcess::PreUserTrackingAction 
 ( const G4Track* track ) 
 {
-  // no action 
-  if ( childTypes().empty()                             ) { return ; } // RETURN
+  if ( 0 == track )
+  { Error ( "Pre..: G4Track*           points to NULL!" ) ; return ; } // RETURN
 
+  if ( track -> GetKineticEnergy() < m_threshold ) { return ; }
+  
+  // no action 
+  if ( m_ownProcs.empty() && m_ownPTypes.empty()        ) { return ; } // RETURN
+  
   if ( 0 == trackMgr() ) 
   { Error ( "Pre..: G4TrackingManager* points to NULL!" ) ; return ; } // RETURN
-  
-  if ( 0 == trackMgr() ->GimmeSecondaries ()            ) { return ; } // RETURN
-  
-  if ( 0 == track ) 
-  { Error ( "Pre..: G4Track*           points to NULL!" ) ; return ; } // RETURN
   
   if      ( track -> GetVertexPosition().z() < zMin()   ) { return ; } // RETURN
   else if ( track -> GetVertexPosition().z() > zMax()   ) { return ; } // RETURN
@@ -251,18 +135,60 @@ void GaussTrackActionByType::PostUserTrackingAction
 
   if ( info -> toBeStored() ) { return ; }
    
-  bool store = false ;
+  if ( storeByOwnProcess() ) { mark( info ) ; }
+
+};
+// ============================================================================
+
+// ============================================================================
+/** perform action 
+ *  @see G4VUserTrackingAction
+ *  @param pointer to new track opbject 
+ */
+// ============================================================================
+void GaussTrackActionByEnergyProcess::PostUserTrackingAction  
+( const G4Track* track  ) 
+{
+  if ( 0 == track )
+  { Error ( "Pre..: G4Track*           points to NULL!" ) ; return ; } // RETURN
+
+  if ( track -> GetKineticEnergy() < m_threshold ) { return ; }
+
+  // no action 
+  if ( m_childProcs.empty() && m_childPTypes.empty()    ) { return ; } // RETURN
   
-  const G4TrackVector* children = trackMgr() -> GimmeSecondaries() ;
-  for( unsigned int i  = 0 ; i  < children->size() && !store ; ++i )
-  { store = storeChild( (*children)[i] ) ; }
+  if ( 0 == trackMgr() ) 
+  { Error ( "Pos..: G4TrackingManager* points to NULL!" ) ; return ; } // RETURN
   
-  // update track info 
-  if ( store ) { mark( info ) ; }
+  if ( 0 == track )
+  { Error ( "Pos..: G4Track*           points to NULL!" ) ; return ; } // RETURN
+
+  if ( track -> GetKineticEnergy() < m_threshold ) { return ; }
+   
+  if      ( track -> GetVertexPosition().z() < zMin()   ) { return ; } // RETURN
+  else if ( track -> GetVertexPosition().z() > zMax()   ) { return ; } // RETURN
+  
+  // get the trajectory 
+  GaussTrajectory* tr = trajectory() ;
+  
+  // check the validity 
+  if( 0 == tr ) 
+  { Error ( "Pos..: GaussTrajectory*       points to NULL" ) ; return ; }
+  
+  // check the track information
+  GaussTrackInformation*   info = trackInfo() ;
+  if( 0 == info ) 
+  { Error ( "Pos..: GaussTrackInformation* points to NULL" ) ; return ; }
+
+  if ( info -> toBeStored() ) { return ; }
+ 
+  if ( storeByChildProcess() ) { mark( info ) ; }
   
 };
 // ============================================================================
 
+
+// ============================================================================
 
 // ============================================================================
 // The END 

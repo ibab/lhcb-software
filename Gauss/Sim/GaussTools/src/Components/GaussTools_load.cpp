@@ -43,6 +43,7 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GaussTrackActionByType       ) ;
   DECLARE_GiGaFactory     (    GaussTrackActionByEnergyType ) ;
   DECLARE_GiGaFactory     (    GaussTrackActionByProcess    ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionByEnergyProcess ) ;
   DECLARE_GiGaFactory     (    GaussTrackActionFinal        ) ;
 
   /// stepping  action 

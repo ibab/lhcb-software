@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionByProcess.cpp,v 1.1 2004-02-20 19:35:27 ibelyaev Exp $ 
+// $Id: GaussTrackActionByProcess.cpp,v 1.2 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 19:35:27  ibelyaev
+//  major update
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,6 +17,7 @@
 // ============================================================================
 #include "G4TrackingManager.hh"
 #include "G4VProcess.hh"
+#include "G4ProcessType.hh"
 // ============================================================================
 // GiGa
 // ============================================================================
@@ -58,7 +62,7 @@ GaussTrackActionByProcess::GaussTrackActionByProcess
   //
   , m_ownProcs    () 
   , m_childProcs  ()
-  , m_ownPTypes   () 
+  , m_ownPTypes   ( 1 , (int) fDecay ) 
   , m_childPTypes () 
 {
   declareProperty ( "OwnProcesses"      , m_ownProcs    ) ;
@@ -123,18 +127,11 @@ void GaussTrackActionByProcess::PreUserTrackingAction  ( const G4Track* track )
   GaussTrackInformation*   info = trackInfo() ;
   if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; return ; }
-  
-  bool store = false ;
-  
-  if      ( trackMgr() ->GetStoreTrajectory()  ) { store = true ; }
-  else if ( storeByOwnProcess()                ) { store = true ; }
-  
-  // update the global flag 
-  if ( store ) { trackMgr() -> SetStoreTrajectory( true ) ; }
-  
-  // update track info 
-  if ( trackMgr() ->GetStoreTrajectory() ) { info->setToBeStored( true ) ; }
-  
+
+  if ( info -> toBeStored() ) { return ; }
+   
+  if ( storeByOwnProcess() ) { mark( info ) ; }
+
 };
 // ============================================================================
 
@@ -170,17 +167,10 @@ void GaussTrackActionByProcess::PostUserTrackingAction
   GaussTrackInformation*   info = trackInfo() ;
   if( 0 == info ) 
   { Error ( "Pos..: GaussTrackInformation* points to NULL" ) ; return ; }
-  
-  bool store = false ;
-  
-  if      ( trackMgr() ->GetStoreTrajectory()  ) { store = true ; }
-  else if ( storeByChildProcess()              ) { store = true ; }
-  
-  // update the global flag 
-  if ( store ) { trackMgr() -> SetStoreTrajectory( true ) ; }
-  
-  // update track info 
-  if ( trackMgr() ->GetStoreTrajectory() ) { info->setToBeStored( true ) ; }
+
+  if ( info -> toBeStored() ) { return ; }
+ 
+  if ( storeByChildProcess() ) { mark( info ) ; }
   
 };
 // ============================================================================

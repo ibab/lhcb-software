@@ -1,8 +1,11 @@
-// $Id: GaussTrackActionBase.cpp,v 1.2 2004-02-22 16:51:54 ibelyaev Exp $ 
+// $Id: GaussTrackActionBase.cpp,v 1.3 2004-04-20 04:27:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/22 16:51:54  ibelyaev
+//  few minor fixes
+//
 // Revision 1.1  2004/02/20 19:35:30  ibelyaev
 //  major update
 // 
@@ -57,6 +60,7 @@ GaussTrackActionBase::GaussTrackActionBase
   //
   , m_nTrajectories  ( 0 )
   , m_nTrackInfos    ( 0 )
+  , m_marked         ( 0 ) 
 {};
 // ============================================================================
 
@@ -90,10 +94,19 @@ StatusCode GaussTrackActionBase::initialize ()
 // ============================================================================
 StatusCode GaussTrackActionBase::finalize   () 
 {
+  if ( 0 != m_marked        ) 
+  { 
+    always () << " Number of marked  GaussTrajectories       " ;
+    always () .stream() << m_marked         ;
+    always () << "('" << name() << "')"     ;
+    always () << endreq ;
+  }
+  
   if ( 0 != m_nTrajectories ) 
   { 
     always () << " Number of created GaussTrajectories       " ;
     always () .stream() << m_nTrajectories  ;
+    always () << "('" << name() << "')"     ;
     always () << endreq ;
   }
   
@@ -101,6 +114,7 @@ StatusCode GaussTrackActionBase::finalize   ()
   { 
     always () << " Number of created GaussTrackInformation   " ;
     always () . stream() << m_nTrackInfos  ;
+    always () << "('" << name() << "')"     ;
     always () << endreq ;
   }
   
@@ -207,13 +221,23 @@ StatusCode GaussTrackActionBase::storeChildren () const
     
     GaussTrackInformation* info = trackInfo( child ) ;
     
-    info -> setToBeStored ( true ) ;
+    mark ( info ) ;
   }
   
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
 
+StatusCode GaussTrackActionBase::mark
+( GaussTrackInformation* info ) const
+{
+  if ( 0 == info ) 
+  { return Error ( "mark(): GaussTrackInformation* points to NULL!" ) ; }
+  else if ( info ->    toBeStored() )  { }
+  else    { info -> setToBeStored( true ) ; ++m_marked ; }
+  
+  return StatusCode::SUCCESS ;
+};
 
 // ============================================================================
 // The END 

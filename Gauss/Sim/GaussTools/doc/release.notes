@@ -4,6 +4,37 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-04-20 - Vanya BELYAEV 
+
+- src/Components/GaussTrackActionByEnergy.cpp
+- src/Components/GaussTrackActionByEnergyType.cpp
+- src/Components/GaussTrackActionByProcess.cpp
+- src/Components/GaussTrackActionByProcess.h
+- src/Components/GaussTrackActionByType.cpp
+- src/Components/GaussTrackActionFinal.cpp
+- src/Components/GaussTrackActionGeneral.cpp
+- src/Components/GaussTrackActionStart.cpp
+
+     avoid the interference between different actions
+     through Geant4:StoreTrajectory flag 
+
+- src/Components/GiGaPhysListModular.cpp
+     make a fix for consructors 
+
+- src/Components/GaussTrackActionByEnergyProcess.cpp
+- src/Components/GaussTrackActionByEnergyProcess.h
+     new action which applies "ByAction" for tracks over some energy 
+     threshold 
+- src/Components/GaussTools_load.cpp
+     add new action 
+
+- GaussTools/GaussTrackActionBase.h
+- src/Lib/GaussTrackActionBase.cpp
+    add counter of how often the tracking action "marks" the track/rajectory 
+
+- cmt/requirement 
+    increment version to v10r3
+
 !===================== GaussTools v10r2 ==================================
 ! 2004-04-07 - Gloria CORTI
  - src/Lib/OscillationFlag.cpp
