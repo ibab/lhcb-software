@@ -8,7 +8,7 @@ include_dirs $(L0MUONROOT)
 
 use MuonTools  v3r* Muon
 use MuonEvent  v2r* Event
-use L0Event   v12r* Event
+use L0Event   v13r* Event
 
 library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp
