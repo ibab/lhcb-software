@@ -92,3 +92,81 @@
   obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
 }
+
+# Memory leaks due to unused but linked Root 3.10.02 libraries
+{
+  Root/libPhysics.so
+  Memcheck:Leak
+  fun:malloc
+  fun:G__memfunc_para_setup
+  fun:G__parse_parameter_link
+}
+
+{
+  Root/libPhysics/FeldmanCousins
+  Memcheck:Leak
+  fun:malloc
+  fun:G__savestring
+  fun:G__memfunc_setup
+}
+
+{
+  Root/libMatrix.so
+  Memcheck:Leak
+  fun:malloc
+  fun:G__memfunc_next
+  fun:G__memfunc_setup
+}
+
+# Memory leak in Root 3.10.02 as used by POOL_1_6_3
+{
+  Root/POOL
+  Memcheck:Leak
+  fun:__builtin_vec_new
+  fun:_Znaj
+  fun:_ZN10TStringRef6GetRepEii
+}
+
+# Memory leaks in POOL_1_6_3
+{
+  POOL bug 3048
+  Memcheck:Leak
+  fun:__builtin_vec_new
+  fun:_Znaj
+  fun:_ZNK11xercesc_2_39DOMString9transcodeEv
+}
+
+{
+  POOL bug 3171
+  Memcheck:Leak
+  fun:__builtin_new
+  fun:_Znwj
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+}
+
+# Memory leaks in SEAL_1_3_4
+{
+  SEAL bug 3050
+  Memcheck:Leak
+  fun:__builtin_new
+  fun:_Znwj
+  fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
+}
+
+# Memory leaks in SEAL_1_3_4 as used by GaudiPoolDb v1r6p1
+{
+  Bug reported privately to Pere/Markus
+  Memcheck:Leak
+  fun:__builtin_new
+  fun:_Znwj
+  fun:_ZN4seal13SharedLibrary4loadERKSs
+}
+
+# Memory leak in HbookCnv v14r1
+{
+  HbookCnv/v14r1
+  Memcheck:Leak
+  fun:malloc
+  fun:memgetf_
+  fun:mzpaw_
+}
