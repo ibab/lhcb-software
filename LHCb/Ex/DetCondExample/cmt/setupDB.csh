@@ -1,5 +1,5 @@
 #!/usr/local/bin/tcsh
-# $Id: setupDB.csh,v 1.3 2001-12-17 19:44:45 andreav Exp $
+# $Id: setupDB.csh,v 1.4 2002-03-01 15:59:31 andreav Exp $
 
 # Objectivity condition database location
 # Moved here from requirements because OBJY_LS_HOST is undefined on Windows
@@ -7,6 +7,13 @@ setenv DETCONDEXAMPLE_FDID     30997
 setenv DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}
 setenv DETCONDEXAMPLE_BOOTDIR  ${DETCONDEXAMPLEROOT}/DB
 setenv DETCONDEXAMPLE_BOOTFILE condDBBoot
+
+# The following four variables will be passed on to the job options
+setenv DETCONDEXAMPLE_DBHOST   ${DETCONDEXAMPLE_BOOTHOST}
+setenv DETCONDEXAMPLE_DBUSER   user
+setenv DETCONDEXAMPLE_DBPSWD   password
+setenv DETCONDEXAMPLE_DBNAME   \
+       ${DETCONDEXAMPLE_BOOTDIR}/${DETCONDEXAMPLE_BOOTFILE}
 
 set out  = /dev/null
 

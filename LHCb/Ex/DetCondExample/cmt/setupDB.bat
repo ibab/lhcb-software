@@ -1,3 +1,6 @@
-rem $Id: setupDB.bat,v 1.1 2001-12-17 19:44:45 andreav Exp $
-rem Under Linux, this script creates a local Objy database for CondDB tests.
-rem Under Windows, this script does nothing.
+rem $Id: setupDB.bat,v 1.2 2002-03-01 16:00:09 andreav Exp $
+rem Setup Oracle environment variables
+set DETCONDEXAMPLE_DBUSER=AVALASSI
+set DETCONDEXAMPLE_DBPSWD=********
+set DETCONDEXAMPLE_DBHOST=SUNDB06
+set DETCONDEXAMPLE_DBNAME=MYCONDDB

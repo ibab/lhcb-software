@@ -1,4 +1,4 @@
-//$Id: condDB.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//$Id: condDB.opts,v 1.2 2002-03-01 15:53:59 andreav Exp $
 //==============================================================
 // Common job options to use a CondDB in DetCondExample
 //==============================================================
@@ -19,11 +19,20 @@ ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
 DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
 
 //--------------------------------------------------------------
-// Location of ConditionsDB boot file
+// Access to the ConditionsDB
 //--------------------------------------------------------------
-ConditionsDBGate.condDBBootHost  = "$DETCONDEXAMPLE_BOOTHOST";
-ConditionsDBGate.condDBBootDir   = "$DETCONDEXAMPLE_BOOTDIR";
-ConditionsDBGate.condDBBootFile  = "$DETCONDEXAMPLE_BOOTFILE";
+
+// Database host (Oracle host in tnsnames.ora; Objectivity lockserver host)
+ConditionsDBGate.condDBHost = "$DETCONDEXAMPLE_DBHOST";
+
+// Database user (Oracle only, dummy for Objectivity)
+ConditionsDBGate.condDBUser = "$DETCONDEXAMPLE_DBUSER";
+
+// Database password (Oracle only, dummy for Objectivity)
+ConditionsDBGate.condDBPswd = "$DETCONDEXAMPLE_DBPSWD";
+
+// Database name (Oracle user-defined DB name, Objectivity boot file full path)
+ConditionsDBGate.condDBName = "$DETCONDEXAMPLE_DBNAME";
 
 //==============================================================
 // End of common job options to use a CondDB in DetCondExample
