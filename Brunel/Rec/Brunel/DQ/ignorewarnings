@@ -3,7 +3,6 @@ ToolSvc.TrHerab...WARNING curling track
 ToolSvc.TrFirst...WARNING Transport to
 ToolSvc.TrFirst...WARNING Protect against looping tracks:
 ToolSvc.RichDet...WARNING RichTrSegMakerFromTrStoredTracks TrHerabExtrapolator failed
-ToolSvc.RichGas...WARNING RichTabulatedGasQuartzWindowAbs Parameter
 RichLocPID        WARNING RichLocalPIDAlg Processing aborted -> Abort
 RichGloPIDTrSel   WARNING RichGlobalPIDTrTrackSel Max. number of RICH tracks exceeded
 RichGloPIDDigSel  WARNING RichGlobalPIDDigitSel Processing aborted -> Abort
