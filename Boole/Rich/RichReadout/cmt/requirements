@@ -2,8 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.21 2005-01-07 13:20:39 jonrob Exp $
+# $Id: requirements,v 1.22 2005-01-17 14:06:33 cattanem Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2005/01/07 13:20:39  jonrob
+# Updates for new RichDAQ package
+#
 # Revision 1.20  2004/10/27 14:32:58  jonrob
 # Update version number and RichEvent usage
 #
@@ -23,7 +26,8 @@ include_path none
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use RichEvent        v8r*    Event
+use RichEvent   v8r*    Event
+use DAQEvent    v4r*    Event
 
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA

@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v1r11 2005-01-17 =======================
+! 2005-01-17 - Marco Cattaneo
+ - Add explicit dependency on DAQEvent (no longer inherited via RichEvent)
+
 ! 2005-01-07 - Chris Jones
  - Adapt to new RichDAQ package
  - Import algorithm MCRichDigitsToRawBufferAlg
