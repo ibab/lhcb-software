@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.7 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.8 2003-06-30 19:03:37 jonrob Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -59,8 +59,8 @@ StatusCode RichRecMCTruthTool::initialize() {
   // Retrieve particle property service
   IParticlePropertySvc* ppSvc = 0;
   if ( !service( "ParticlePropertySvc", ppSvc ) ) {
-    log << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
-    sc = StatusCode::FAILURE;
+    msg << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
+    return StatusCode::FAILURE;
   } else {
     // Setup the PDG code mappings
     m_localID[ 0 ] = Rich::Unknown;
