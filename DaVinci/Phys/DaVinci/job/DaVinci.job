@@ -15,7 +15,7 @@
 #  define the job name
 #BSUB -J myjob
 #  define the queue
-#BSUB -q z5_1nh
+#BSUB -q 8nh
 #
 ###########################################################
 #
@@ -48,7 +48,7 @@ set current = $PWD
 #
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v3r0
+  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v4r0
 else
 # in interactive, executable is under same root directory as this job
   cd `dirname $0` 
@@ -88,7 +88,7 @@ cp $MYJOBROOT/options/DaVinci.opts tmpjob.opts
 #
 if ($MODE == "rh61_gcc2952dbx") then
   setenv JOBOPTPATH tmpjob.opts
-  ddd tmpjob.exe
+  gvd tmpjob.exe
 else
   time tmpjob.exe tmpjob.opts
 endif
