@@ -5,8 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.10 2004-11-03 12:15:11 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.11 2004-11-03 12:27:02 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2004/11/03 12:15:11  jonrob
+ * Add method to locate the MCRichDigit associated to a given RichSmartID
+ *
  * Revision 1.9  2004/10/13 09:23:36  jonrob
  * New MCTruth methods
  *
@@ -148,6 +151,8 @@ RichMCTruthTool::mcParticle( const TrgTrack * track ) const
 
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) const
 {
+  if ( !digit ) return NULL;
+
   // Try fast method
   MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 
