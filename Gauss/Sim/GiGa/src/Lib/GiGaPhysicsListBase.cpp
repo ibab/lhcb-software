@@ -1,8 +1,11 @@
-// $Id: GiGaPhysicsListBase.cpp,v 1.1 2003-04-06 18:49:48 ibelyaev Exp $
+// $Id: GiGaPhysicsListBase.cpp,v 1.2 2003-12-05 16:18:24 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:48  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // ============================================================================
 // GiGa
 #include "GiGa/GiGaPhysicsListBase.h"
@@ -47,26 +50,16 @@ GiGaPhysicsListBase::GiGaPhysicsListBase
   const std::string& name   , 
   const IInterface*  parent ) 
   : GiGaBase ( type , name , parent )
-  , m_defaultCut        (  2 * mm ) 
   , m_cutForGamma       ( -1 * km ) 
   , m_cutForElectron    ( -1 * km ) 
   , m_cutForPositron    ( -1 * km ) 
-  , m_cutForProton      ( -1 * km ) 
-  , m_cutForAntiProton  ( -1 * km ) 
-  , m_cutForNeutron     ( -1 * km ) 
-  , m_cutForAntiNeutron ( -1 * km ) 
 {
   // 
   declareInterface<IGiGaPhysicsList> ( this ) ;
   //
-  declareProperty( "Cut"               , m_defaultCut        ) ;
   declareProperty( "CutForGamma"       , m_cutForGamma       ) ;
   declareProperty( "CutForElectron"    , m_cutForElectron    ) ;
   declareProperty( "CutForPositron"    , m_cutForPositron    ) ;
-  declareProperty( "CutForProton"      , m_cutForProton      ) ;
-  declareProperty( "CutForAntiProton"  , m_cutForAntiProton  ) ;
-  declareProperty( "CutForNeutron"     , m_cutForNeutron     ) ;
-  declareProperty( "CutForAntiENutron" , m_cutForAntiNeutron ) ;
   //
 #ifdef GIGA_DEBUG
   GiGaPhysicsListBaseLocal::s_Counter.increment () ;
@@ -103,13 +96,9 @@ StatusCode   GiGaPhysicsListBase::initialize     ()
   if( sc.isFailure() ) { return Error ( "GiGaBase is not initialized" , sc ) ; }
   
   // readjust the cuts 
-  if( cutForGamma       () <= 0 ) { m_cutForGamma       = defaultCut () ; }
-  if( cutForElectron    () <= 0 ) { m_cutForElectron    = defaultCut () ; }
-  if( cutForPositron    () <= 0 ) { m_cutForPositron    = defaultCut () ; }
-  if( cutForProton      () <= 0 ) { m_cutForProton      = defaultCut () ; }
-  if( cutForAntiProton  () <= 0 ) { m_cutForAntiProton  = defaultCut () ; }
-  if( cutForNeutron     () <= 0 ) { m_cutForNeutron     = defaultCut () ; }
-  if( cutForAntiNeutron () <= 0 ) { m_cutForAntiNeutron = defaultCut () ; }
+  if( cutForGamma       () <= 0 ) { return Error ( "Negative production cut.");}
+  if( cutForElectron    () <= 0 ) { return Error ( "Negative production cut.");}
+  if( cutForPositron    () <= 0 ) { return Error ( "Negative production cut.");}
   //
   MsgStream log( msgSvc () , name () ) ;
   log << MSG::DEBUG 
@@ -118,12 +107,7 @@ StatusCode   GiGaPhysicsListBase::initialize     ()
   log << MSG::DEBUG 
       << " \tGamma      : \t" << cutForGamma       () / mm << " mm" << endreq 
       << " \tElectron   : \t" << cutForElectron    () / mm << " mm" << endreq 
-      << " \tPositron   : \t" << cutForPositron    () / mm << " mm" << endreq 
-      << " \tProton     : \t" << cutForProton      () / mm << " mm" << endreq 
-      << " \tAntiProton : \t" << cutForAntiProton  () / mm << " mm" << endreq 
-      << " \tNeutron    : \t" << cutForNeutron     () / mm << " mm" << endreq 
-      << " \tAntiNeutron: \t" << cutForAntiNeutron () / mm << " mm" << endreq
-      << " \tDefault    : \t" << defaultCut        () / mm << " mm" << endreq ;
+      << " \tPositron   : \t" << cutForPositron    () / mm << " mm" << endreq;
   //
   return StatusCode::SUCCESS ;
 };

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.85 2003-10-30 16:33:33 witoldp Exp $
+! $Id: release.notes,v 1.86 2003-12-05 16:18:24 witoldp Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!========================== GiGa v14r8 ======================================
+! 2003-12-05 - Witek Pokorski
+ - GiGaPhysListBase - removed obsolete production cuts (they exist now only
+                      for e+/- and gamma)
+ 
 !========================== GiGa v14r7 ======================================
 ! 2003-10-30 - Witek Pokorski
  - GiGaFieldMgrBase - added setting of DeltaIntersection and DeltaOnePoint 

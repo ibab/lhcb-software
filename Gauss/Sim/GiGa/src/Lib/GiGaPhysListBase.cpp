@@ -1,8 +1,11 @@
-// $Id: GiGaPhysListBase.cpp,v 1.10 2003-04-06 18:49:47 ibelyaev Exp $
+// $Id: GiGaPhysListBase.cpp,v 1.11 2003-12-05 16:18:24 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/04/06 18:49:47  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.9  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -106,11 +109,6 @@ StatusCode GiGaPhysListBase::initialize ()
 void GiGaPhysListBase::SetCuts () 
 {
   MsgStream log( msgSvc() , name() );
-  // set defautl cut
-  SetDefaultCutValue( defaultCut () );
-  log << MSG::INFO 
-      << " The default cut          is set to \t" 
-      << defaultCut        () / mm << " mm " << endreq ;
   
   // set cut values for gamma
   SetCutValue ( cutForGamma       () , "gamma"        ) ;
@@ -128,31 +126,7 @@ void GiGaPhysListBase::SetCuts ()
   SetCutValue ( cutForPositron    () , "e+"           ) ;
   log << MSG::INFO 
       << " The cut for positron     is set to \t" 
-      << cutForPositron    () / mm << " mm " << endreq ;
-  
-  // set cut values for proton 
-  SetCutValue ( cutForProton      () , "proton"       ) ;
-  log << MSG::INFO 
-      << " The cut for proton       is set to \t" 
-      << cutForProton      () / mm << " mm " << endreq ;
-  
-  // set cut values for anti_proton
-  SetCutValue ( cutForAntiProton  () , "anti_proton"  ) ;
-  log << MSG::INFO 
-      << " The cut for anti_proton  is set to \t" 
-      << cutForAntiProton  () / mm << " mm " << endreq ;
-  
-  // set cut values for neutron 
-  SetCutValue ( cutForNeutron     () , "neutron"      ) ;
-  log << MSG::INFO 
-      << " The cut for neutron      is set to \t" 
-      << cutForNeutron     () / mm << " mm " << endreq ;
-  
-  // set cut values for anti_neutron 
-  SetCutValue ( cutForAntiNeutron () , "anti_neutron" ) ;
-  log << MSG::INFO 
-      << " The cut for anti_neutron is set to \t" 
-      << cutForAntiNeutron () / mm << " mm " << endreq ;
+      << cutForPositron    () / mm << " mm " << endreq ; 
   
 };
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: GiGaPhysicsListBase.h,v 1.1 2003-04-06 18:49:46 ibelyaev Exp $
+// $Id: GiGaPhysicsListBase.h,v 1.2 2003-12-05 16:18:24 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:46  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // ============================================================================
 #ifndef       GIGA_GiGaPhysicsListBase_H
 #define       GIGA_GiGaPhysicsListBase_H 1 
@@ -60,16 +63,6 @@ public:
   
 protected:
   
-  /** an accessor to the default cut value 
-   *  @return value of defauld cut 
-   */ 
-  double    defCut             () const { return defaultCut()  ; } 
-  
-  /** an accessor to the default cut value 
-   *  @return value of defautl cut 
-   */ 
-  double    defaultCut         () const { return m_defaultCut ; } 
-  
   /** an accessor for special cut for gamma 
    *  @return value of cut for gamma 
    */
@@ -83,27 +76,7 @@ protected:
   /** an accessor for special cut for positron
    *  @return value of cut for positron
    */
-  double    cutForPositron     () const { return m_cutForPositron ; }
-  
-  /** an accessor for special cut for proton
-   *  @return value of cut for proton
-   */
-  double    cutForProton       () const { return m_cutForProton   ; }
-  
-  /** an accessor for special cut for anti_proton
-   *  @return value of cut for anti_proton
-   */
-  double    cutForAntiProton   () const { return m_cutForAntiProton  ; }  
-
-  /** an accessor for special cut for neutron
-   *  @return value of cut for neutron
-   */
-  double    cutForNeutron      () const { return m_cutForNeutron     ; }
-  
-  /** an accessor for special cut for anti_neutron
-   *  @return value of cut for anti_neutron
-   */
-  double    cutForAntiNeutron  () const { return m_cutForAntiNeutron ; }
+  double    cutForPositron     () const { return m_cutForPositron ; }  
 
 private:
   
@@ -116,9 +89,6 @@ private:
   
 private:
   
-  // default cut 
-  double    m_defaultCut        ; 
-
   // cut for gammas 
   double    m_cutForGamma       ;
 
@@ -127,18 +97,6 @@ private:
 
   // cut for e+
   double    m_cutForPositron    ;
-
-  // cut for proton
-  double    m_cutForProton      ;
-
-  // cut for anti_proton
-  double    m_cutForAntiProton  ;
-
-  // cut for neutron
-  double    m_cutForNeutron     ;
-
-  // cut for anti_netron
-  double    m_cutForAntiNeutron ;
   
 };
 // ============================================================================
