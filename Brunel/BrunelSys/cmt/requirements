@@ -77,7 +77,7 @@ use RichLocalPID	v1r0	Rich
 use RichGlobalPID	v1r0	Rich
 use RichPIDMerge	v1r0	Rich
 use RichUtils		v3r2  	Rich
-use RichDetTools	v2r1  	Rich
+use RichDetTools	v2r2  	Rich
 use RichDigiQC		v1r0	Rich
 use RichRecQC		v1r0	Rich
 

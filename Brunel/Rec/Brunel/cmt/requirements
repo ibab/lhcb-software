@@ -102,6 +102,7 @@ use MuonID              v3r6    Muon
 
 # Rich
 use RichUtils		v3r2  	Rich
+use RichDetTools	v2r2	Rich
 use RichRecSys		v1r0	Rich
 use RichRecQC		v1r0  	Rich
 use RichDigiQC		v1r0  	Rich

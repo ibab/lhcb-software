@@ -11,7 +11,7 @@
    Packages added:    RichRecSys, RichRecCommon, RichRingRefit, RichLocalPID,
      RichGlobalPID, RichPIDMerge, RichDigiQC, RichRecQC
    Packages modified: RichUtils v3r2, RichRecBase v1r2, RichRecTools v2r1,
-     BrunelAlgs v2r1
+     RichDetTools v2r2, BrunelAlgs v2r1
 
 !======================= BrunelSys v19r0 2003-07-03 =======================
 ! 2003-07-03 - Marco Cattaneo
