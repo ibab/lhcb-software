@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.13 2005-03-03 15:43:25 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.14 2005-03-05 12:26:29 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -59,11 +59,11 @@ StatusCode RichDigitQC::initialize()
   // Initialise variables
   m_evtC = 0;
 
-  m_evtLocs.push_back( "/Event/MC/Rich/Hits" );
-  m_evtLocs.push_back( "/Event/PrevPrev/MC/Rich/Hits" );
-  m_evtLocs.push_back( "/Event/Prev/MC/Rich/Hits" );
-  m_evtLocs.push_back( "/Event/Next/MC/Rich/Hits" );
-  m_evtLocs.push_back( "/Event/NextNext/MC/Rich/Hits" );
+  //m_evtLocs.push_back( "/Event/MC/Rich/Hits" );
+  //m_evtLocs.push_back( "/Event/PrevPrev/MC/Rich/Hits" );
+  //m_evtLocs.push_back( "/Event/Prev/MC/Rich/Hits" );
+  //m_evtLocs.push_back( "/Event/Next/MC/Rich/Hits" );
+  //m_evtLocs.push_back( "/Event/NextNext/MC/Rich/Hits" );
 
   // Warn if extra histos are enabled
   if ( m_extraHists ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
@@ -85,7 +85,6 @@ StatusCode RichDigitQC::execute()
   // Loop over all digits
   std::vector<unsigned int> backs(Rich::NRiches);
   SpillDetCount spills(Rich::NRiches);
-  std::map<std::string,bool> locations;
   for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end(); ++iDigit ) {
 
@@ -97,7 +96,7 @@ StatusCode RichDigitQC::execute()
 
     // Location of parent MCHit
     const std::string location = mchitLocation( *iDigit );
-    locations[location] = true;
+    m_evtLocs[location] = true;
 
     // Count hits
     ++(m_spillDigits[rich])[location];
@@ -110,16 +109,17 @@ StatusCode RichDigitQC::execute()
 
   // Get total number of hits in each event
   //------------------------------------------------------------------------------
-  for ( std::vector<std::string>::const_iterator iC = m_evtLocs.begin(); iC != m_evtLocs.end(); ++iC )
+  for ( RichHashMap<std::string,bool>::const_iterator iC = m_evtLocs.begin(); 
+        iC != m_evtLocs.end(); ++iC )
   {
-    if ( exist<MCRichHits>(*iC) )
+    if ( exist<MCRichHits>(iC->first) )
     {
-      MCRichHits * hits = get<MCRichHits>( *iC );
+      MCRichHits * hits = get<MCRichHits>( iC->first );
       for ( MCRichHits::const_iterator iH = hits->begin(); iH != hits->end(); ++iH )
       {
-        ++(m_totalSpills[(*iH)->rich()])[*iC];
+        ++(m_totalSpills[(*iH)->rich()])[iC->first];
       }
-      debug() << "Found " << hits->size() << " MCRichHits at " << *iC << endreq;
+      debug() << "Found " << hits->size() << " MCRichHits at " << iC->first << endreq;
     }
   }
 
