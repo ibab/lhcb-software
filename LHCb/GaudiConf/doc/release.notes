@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r4 2003-12-04 ========================
+! 2003-12-04 - Marco Cattaneo
+ - DigiContent.opts: Remove Trig/L1/OTClusters as they are broken by the new OT
+                     geometry/channelID. Will anyway be replaced by L1Buffer
+
 !======================== GaudiConf v7r3 2003-11-25 ========================
 ! 2003-11-25 - Marco Cattaneo
  - DigiContent.opts: rename HltBuffer to RawBuffer
