@@ -1,7 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v17r0 2004-01-05 ========================
+!======================== EventSys v17r0 2004-01-16 ========================
+! 2004-01-16 - Marco Cattaneo
+ - Added LinkerEvent and TrgEvent packages, and added them to PoolDicts.opts
+
 ! 2004-01-05 - Marco Cattaneo
  - Changes for Gaudi v14 (deployment of POOL)
    . Remove EventKernel (Keyed containers now in GaudiKernel)
