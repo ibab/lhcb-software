@@ -1,8 +1,11 @@
-// $Id: ISolid.h,v 1.6 2002-04-24 10:52:08 ibelyaev Exp $ 
+// $Id: ISolid.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/24 10:52:08  ibelyaev
+//  fix problems with TransportSvc ('LHCb Geane')
+//
 // Revision 1.5  2001/08/13 09:51:35  ibelyaev
 // bug fix in 'reset' method
 //
@@ -27,7 +30,7 @@ class HepVector3D;       ///< CLHEP
 class StreamBuffer;      ///< GaudiKernel
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
-static const InterfaceID IID_ISolid( "ISolid" , 4 , 0 );
+static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
 
 /** @interface ISolid ISolid.h "DetDesc/ISolid.h"
  *
@@ -165,7 +168,7 @@ public:
   /** virtual destructor
    *  @see ISolid::reset()
    */
-  virtual  ~ISolid(){};
+  virtual  ~ISolid() ;
   
 };
 

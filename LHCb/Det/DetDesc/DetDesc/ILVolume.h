@@ -1,8 +1,11 @@
-// $Id: ILVolume.h,v 1.6 2001-11-18 15:32:43 ibelyaev Exp $ 
+// $Id: ILVolume.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2001/11/18 15:32:43  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.5  2001/08/24 12:06:13  ibelyaev
 //  changes to take into account Assembly Volumes
 //
@@ -37,7 +40,7 @@ class SmartRefVector;
 class Surface;
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
-static const InterfaceID IID_ILVolume( 153 , 3 , 0 );
+static const InterfaceID IID_ILVolume( 153 , 3 , 1 );
 
 /** @interface ILVolume ILVolume.h "DetDesc/ILVolume.h"
  *
@@ -328,9 +331,11 @@ belongsTo
    */
   virtual ILVolume*  reset() = 0; 
   
+protected: 
+
   /** (virtual) destructor
    */ 
-  virtual ~ILVolume(){};
+  virtual ~ILVolume() ;
 };
 
 // ============================================================================

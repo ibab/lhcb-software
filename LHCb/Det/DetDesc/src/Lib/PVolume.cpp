@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.14 2003-06-04 08:14:36 ibelyaev Exp $ 
+// $Id: PVolume.cpp,v 1.15 2003-09-20 13:25:42 ibelyaev Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -12,6 +12,7 @@
 #include <iostream>
 #include <string> 
 #include <vector>
+#include <algorithm>
 /// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -33,6 +34,16 @@
 
 unsigned long PVolume::s_volumeCounter = 0;
 
+namespace
+{
+  std::string ITOA( const int value )
+  {
+    char buffer[64];
+    return std::string( buffer , buffer + sprintf( buffer , "%d" , value ) );
+  };
+};
+
+
 // ============================================================================
 /** constructor    
  *  @param PhysVol_name name of phys volume 
@@ -44,17 +55,28 @@ unsigned long PVolume::s_volumeCounter = 0;
 PVolume::PVolume 
 ( const std::string& PhysVol_name  ,
   const std::string& LogVol_name   ,
+  const size_t       copy_number   ,
   const HepPoint3D&  Position      ,
   const HepRotation& Rotation      )
-  : m_name      ( PhysVol_name   ) 
+  : m_copy      ( copy_number    ) 
+  , m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
+  , m_nominal   (                )
   , m_matrix    (                )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
-  m_matrix = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
+  m_nominal = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
+  m_matrix  = m_nominal ;
+  /// 
+  { /// ensure the agreement between name and copy number 
+    std::string::iterator sep = 
+      std::find( m_name.begin() , m_name.end() , ':' ) ;
+    m_name.erase( sep , m_name.end() ) ;
+    m_name += ":" + ITOA( copy_number ) ;
+  }
   ///
   m_services = DetDesc::services();
   ++s_volumeCounter ;
@@ -70,16 +92,26 @@ PVolume::PVolume
 PVolume::PVolume 
 ( const std::string&    PhysVol_name ,
   const std::string&    LogVol_name  ,
+  const size_t          copy_number  ,
   const HepTransform3D& Transform    )
-  : m_name      ( PhysVol_name   ) 
+  : m_copy      ( copy_number    ) 
+  , m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
+  , m_nominal   ( Transform      )
   , m_matrix    ( Transform      )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
 { 
-   m_services = DetDesc::services();
- ++s_volumeCounter ;
+  { /// ensure the agreement between name and copy number 
+    std::string::iterator sep = 
+      std::find( m_name.begin() , m_name.end() , ':' ) ;
+    m_name.erase( sep , m_name.end() ) ;
+    m_name += ":" + ITOA( copy_number ) ;
+  }
+  ///
+  m_services = DetDesc::services();
+  ++s_volumeCounter ;
 };
 
 // ============================================================================
@@ -308,6 +340,194 @@ void PVolume::Assert( bool                  assertion ,
     { throw PVolumeException( name, Exception , this ); } 
 };
 
+// ============================================================================
+/**  retrieve  the C++ pointer to Logical Volume 
+ *  @return pointer to Logical Volume 
+ */
+// ============================================================================
+const ILVolume* PVolume::lvolume () const
+{ return 0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ; };
+// ============================================================================
+
+// ============================================================================
+/** get the inverse transformation matrix
+ *  @return reference to inverse transformationmatrix 
+ */
+// ============================================================================
+const HepTransform3D&  PVolume::matrixInv  () const 
+{
+  if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }
+  return *m_imatrix ;
+};
+// ============================================================================
+
+// ============================================================================
+/** transform point from  Mother Reference System  to the Local one
+ *  @param PointInMother point in Mother Reference System 
+ *  @return point in local reference system 
+ */ 
+// ============================================================================
+HepPoint3D PVolume::toLocal 
+( const HepPoint3D& PointInMother ) const 
+{ return m_matrix * PointInMother ; }
+// ============================================================================
+
+// ============================================================================
+/** transform point in Local Reference System to the Mother Reference System
+ *  @param PointInLocal point in Local Referency System
+ *  @return point in mother reference system 
+ */
+// ============================================================================
+HepPoint3D PVolume::toMother ( const HepPoint3D& PointInLocal  ) const 
+{
+  if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }  
+  return (*m_imatrix) * PointInLocal ;
+};
+// ============================================================================
+
+// ============================================================================
+/** check for 3D-point
+ *  @param PointInMother pointin Mother Referency System 
+ *  @return true if point is inside physical volume 
+ */
+// ============================================================================
+bool PVolume::isInside   
+( const HepPoint3D& PointInMother ) const 
+{
+  if( 0 == m_lvolume ) { m_lvolume = findLogical() ; }
+  return m_lvolume->isInside( toLocal( PointInMother ) ) ;
+};
+// ============================================================================
+
+// ============================================================================
+/** reset to the initial state 
+ *  @return self-reference
+ */
+// ============================================================================
+IPVolume* PVolume::reset () 
+{
+  if( 0 != m_lvolume ) { m_lvolume->reset() ; m_lvolume = 0 ; }
+  if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
+  return this;
+};
+// ============================================================================
+
+
+// ============================================================================
+/** Intersection of the physical volume with with line.
+ *  The line is parametrized in the local reference system of the mother
+ *  logical volume ("Mother Reference System")  
+ *  with initial Point and direction Vector: 
+ *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+ *  
+ * Method returns the number of intersection points("ticks") and 
+ * the container of pairs - ticks and pointer to the corresponding 
+ * material. @n 
+ * The simplification is determined by value of threshold
+ * (in units of radiation length) 
+ *  
+ *  @see ILVolume
+ *  @see ISolid 
+ *
+ *  @exception PVolumeException wrong environment 
+ *  @param Point initial point at the line
+ *  @param Vector direction vector of the line
+ *  @param intersections output container 
+ *  @param threshold threshold value 
+ */
+// ============================================================================
+unsigned int PVolume::intersectLine
+( const HepPoint3D        & Point         ,
+  const HepVector3D       & Vector        , 
+  ILVolume::Intersections & intersections ,
+  const double              threshold     ) const 
+{
+  const ILVolume* lv = 
+    0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
+  return lv->intersectLine ( m_matrix * Point  , 
+                             m_matrix * Vector , 
+                             intersections     , 
+                             threshold         ); 
+};
+// ============================================================================
+
+// ============================================================================
+/** Intersection of the physical volume with with line.
+ *  The line is parametrized in the local reference system of the mother
+ *  logical volume ("Mother Reference System")  
+ *  with initial Point and direction Vector: 
+ *   - @f$ \vec{x}(t) = \vec{p} + t \times \vec{v} @f$ @n 
+ *  
+ * Method returns the number of intersection points("ticks") and 
+ * the container of pairs - ticks and pointer to the corresponding 
+ * material. @n 
+ * The simplification is determined by value of threshold
+ * (in units of radiation length) 
+ *  
+ *  @see ILVolume
+ *  @see ISolid 
+ *
+ *  @exception PVolumeException wrong environment 
+ *  @param Point initial point at the line
+ *  @param Vector direction vector of the line
+ *  @param intersections output container 
+ *  @param threshold threshold value 
+ */
+// ============================================================================
+unsigned int PVolume::intersectLine
+( const HepPoint3D        & Point ,
+  const HepVector3D       & Vector        ,       
+  ILVolume::Intersections & intersections ,      
+  const ISolid::Tick        tickMin       ,
+  const ISolid::Tick        tickMax       ,
+  const double              threshold     ) const
+{ 
+  const ILVolume* lv = 
+    0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
+  return lv->intersectLine( m_matrix * Point    , 
+                            m_matrix * Vector   , 
+                            intersections       , 
+                            tickMin             , 
+                            tickMax             ,
+                            threshold           );
+};
+// ============================================================================
+
+
+// ============================================================================
+/** apply the  misalignemnt to the transformation matrix 
+ *  @param ms misalignment matrix (assumed to be small!!!)
+ *  @return the resulting transformation matrix
+ */
+// ============================================================================
+const HepTransform3D& 
+PVolume::applyMisAlignment ( const HepTransform3D& ma ) 
+{
+  // apply the MisAlingment atop of existing matrix 
+  m_matrix = ma * m_matrix ;
+  // reset the inverse matrix 
+  reset() ;
+  // return the resulting matrix  
+  return matrix();
+};
+// ============================================================================
+
+// ============================================================================
+/** reset the  misalignemnt 
+ *  @return the "nominal" transformation matrix
+ */
+// ============================================================================
+const HepTransform3D& 
+PVolume::resetMisAlignment (                          ) 
+{
+  // reset *ALL* misalignements 
+  m_matrix = m_nominal ;
+  // reset the inverse matrix 
+  reset         () ;
+  // return the resulting matrix  
+  return matrix () ;
+};
+// ============================================================================
 
 // ============================================================================
 // The End 

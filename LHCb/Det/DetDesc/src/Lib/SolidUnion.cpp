@@ -1,8 +1,11 @@
-// $Id: SolidUnion.cpp,v 1.9 2003-06-16 13:42:36 sponce Exp $ 
+// $Id: SolidUnion.cpp,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/06/16 13:42:36  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.8  2003/05/16 13:59:14  ibelyaev
 //  fix of ancient saga with 'double deletion of solids'
 //
@@ -38,8 +41,9 @@
 // ============================================================================
 SolidUnion::SolidUnion( const std::string& name  , 
                         ISolid*            First )
-  : SolidBoolean( name , First )
-  , m_coverTop ( 0 ) 
+  : SolidBoolean ( name , First )
+  , SolidBase    ( name         )
+  , m_coverTop   ( 0 ) 
 {
   if( 0 == First ) 
     { throw SolidException(" SolidUnion:: ISolid* points to NULL!"); }
@@ -52,7 +56,8 @@ SolidUnion::SolidUnion( const std::string& name  ,
  */
 // ============================================================================
 SolidUnion::SolidUnion( const std::string& Name )
-  : SolidBoolean( Name )
+  : SolidBoolean ( Name )
+  , SolidBase    ( Name )
   , m_coverTop( 0 ) 
 {};
 // ============================================================================

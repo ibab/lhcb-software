@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.6 2002-11-21 15:39:56 sponce Exp $ 
+// $Id: LogVolBase.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -465,6 +465,12 @@ protected:
                     m_pvolumes.end   () , 
                     IPVolume_isInside( LocalPoint ) ) ;
   };
+
+protected: 
+  
+  // deduce the copy number of physical volume from its name 
+  size_t   copyNumber ( const std::string& pvName ) const ;
+  bool     copyExist  ( const size_t       copy   ) const ;
 
 protected:
   

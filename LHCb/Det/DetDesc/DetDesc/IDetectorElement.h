@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.13 2003-04-25 08:52:23 sponce Exp $
+// $Id: IDetectorElement.h,v 1.14 2003-09-20 13:25:39 ibelyaev Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -23,7 +23,7 @@ class IFastControl;
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
  */
-static const InterfaceID IID_IDetectorElement( 156 , 2 , 0 );
+static const InterfaceID IID_IDetectorElement( 156 , 2 , 1 );
 
 /** @interface IDetectorElement IDetectorElement.h "DetDesc/IDetectorElement.h"
  *
@@ -152,15 +152,16 @@ class IDetectorElement : virtual public IInterface,
   /// reset to the initial state 
   virtual       IDetectorElement* reset()       = 0 ; 
   
-  /// destructor
-  virtual ~IDetectorElement() {};
-
   /**
    * This method initializes the detector element. It should be overridden
    * and used for computation purposes. This is a kind of hook for adding
    * user code easily in the initialization of a detector element.
    */
   virtual StatusCode initialize() = 0;
+  
+  /// destructor
+  virtual ~IDetectorElement() ;
+  
 };
 ///
 inline std::ostream& operator<<( std::ostream&           os , 

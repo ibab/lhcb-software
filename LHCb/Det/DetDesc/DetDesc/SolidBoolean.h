@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.h,v 1.12 2002-05-26 10:47:12 ibelyaev Exp $ 
+// $Id: SolidBoolean.h,v 1.13 2003-09-20 13:25:40 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/05/26 10:47:12  ibelyaev
+//  remove checks/tests and update requiements
+//
 // Revision 1.11  2002/05/11 18:25:46  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -167,7 +170,7 @@ protected:
   /** constructor - "main"("first") solid is mandatory! 
    *  @param name name of the solid 
    */
-  SolidBoolean( const std::string& name = "Anonymous Boolean");
+  SolidBoolean ( const std::string& name );
   
   /** add child to daughter container 
    *  @param chidl pointer to solid 
@@ -199,6 +202,13 @@ protected:
    */
   SolidChildrens::iterator 
   childEnd   () { return m_sb_childrens.end  (); };
+
+private:
+
+  // default constructor is disabled 
+  SolidBoolean() ;
+  // assignement operator is disabled 
+  SolidBoolean& operator=(SolidBoolean & ) ;
   
 protected:
   

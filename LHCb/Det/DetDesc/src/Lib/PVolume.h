@@ -1,4 +1,4 @@
-// $Id: PVolume.h,v 1.9 2002-11-21 15:40:04 sponce Exp $ 
+// $Id: PVolume.h,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 /// STD & STL 
@@ -47,6 +47,7 @@ protected:
   PVolume 
   ( const std::string& PhysVol_name                  ,
     const std::string& LogVol_name                   ,
+    const size_t       copynumber                    ,
     const HepPoint3D&  Position     = HepPoint3D  () ,
     const HepRotation& Rotation     = HepRotation () );
   
@@ -58,8 +59,9 @@ protected:
   PVolume 
   ( const std::string&     PhysVol_name ,
     const std::string&     LogVol_name  ,
+    const size_t           copynumber   ,
     const HepTransform3D&  Transform    );
- 
+  
   /// destructor 
   virtual ~PVolume();
 
@@ -70,65 +72,45 @@ public:
    *  (unique within mother logical volume)
    *  @return name of physical volume 
    */ 
-  inline virtual const std::string& name () const 
-  { return m_name ; };
+  virtual const std::string& name       () const { return m_name ; };
   
   /**  retrieve the name of associated Logical Volume 
    *  @return name of associated Logical Volume 
    */
-  inline virtual const std::string& lvolumeName() const 
-  { return m_lvname ; };
+  virtual const std::string& lvolumeName() const { return m_lvname ; };
   
   /**  retrieve  the C++ pointer to Logical Volume 
    *  @return pointer to Logical Volume 
    */
-  inline virtual const ILVolume* lvolume () const
-  { return 0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ; };
+  virtual const ILVolume* lvolume () const ;
   
   /** get the tranformation matrix   
    *  @return reference to transformation matrix 
    */ 
-  inline virtual const HepTransform3D&  matrix () const
-  { return m_matrix ; }
+  virtual const HepTransform3D&  matrix      () const { return m_matrix ; }
   
   /** get the inverse transformation matrix
    *  @return reference to inverse transformationmatrix 
    */
-  inline virtual const HepTransform3D&  matrixInv  () const 
-  {
-    if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }
-    return *m_imatrix ;
-  };
+  virtual const HepTransform3D&  matrixInv  () const ;
   
   /** transform point from  Mother Reference System  to the Local one
    *  @param PointInMother point in Mother Reference System 
    *  @return point in local reference system 
    */ 
-  inline virtual HepPoint3D toLocal 
-  ( const HepPoint3D& PointInMother ) const 
-  { return m_matrix * PointInMother ; }
+  virtual HepPoint3D toLocal  ( const HepPoint3D& PointInMother ) const ;
   
   /** transform point in Local Reference System to the Mother Reference System
    *  @param PointInLocal point in Local Referency System
    *  @return point in mother reference system 
    */
-  inline virtual HepPoint3D toMother 
-  ( const HepPoint3D& PointInLocal  ) const 
-  {
-    if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }  
-    return (*m_imatrix) * PointInLocal ;
-  };
+  virtual HepPoint3D toMother ( const HepPoint3D& PointInLocal  ) const ;
   
   /** check for 3D-point
    *  @param PointInMother pointin Mother Referency System 
    *  @return true if point is inside physical volume 
    */
-  inline virtual bool isInside   
-  ( const HepPoint3D& PointInMother ) const 
-  {
-    if( 0 == m_lvolume ) { m_lvolume = findLogical() ; }
-    return m_lvolume->isInside( toLocal( PointInMother ) ) ;
-  };
+  virtual bool isInside       ( const HepPoint3D& PointInMother ) const ;
   
   /** printout to STD/STL stream 
    *  @param os reference to STD/STL stream 
@@ -147,12 +129,7 @@ public:
   /** reset to the initial state 
    *  @return self-reference
    */
-  inline IPVolume* reset () 
-  {
-    if( 0 != m_lvolume ) { m_lvolume->reset() ; m_lvolume = 0 ; }
-    if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
-    return this;
-  };
+  virtual IPVolume* reset () ;
   
   /** Intersection of the physical volume with with line.
    *  The line is parametrized in the local reference system of the mother
@@ -175,19 +152,11 @@ public:
    *  @param intersections output container 
    *  @param threshold threshold value 
    */
-  inline virtual unsigned int intersectLine
+  virtual unsigned int intersectLine
   ( const HepPoint3D        & Point         ,
     const HepVector3D       & Vector        , 
     ILVolume::Intersections & intersections ,
-    const double              threshold     ) const 
-  {
-    const ILVolume* lv = 
-      0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
-    return lv->intersectLine ( m_matrix * Point  , 
-                               m_matrix * Vector , 
-                               intersections     , 
-                               threshold         ); 
-  };
+    const double              threshold     ) const ;
   
   /** Intersection of the physical volume with with line.
    *  The line is parametrized in the local reference system of the mother
@@ -210,23 +179,34 @@ public:
    *  @param intersections output container 
    *  @param threshold threshold value 
    */
-  inline virtual unsigned int intersectLine
+  virtual unsigned int intersectLine
   ( const HepPoint3D        & Point ,
     const HepVector3D       & Vector        ,       
     ILVolume::Intersections & intersections ,      
     const ISolid::Tick        tickMin       ,
     const ISolid::Tick        tickMax       ,
-    const double              threshold     ) const
-  { 
-    const ILVolume* lv = 
-      0 != m_lvolume  ? m_lvolume : m_lvolume = findLogical() ;
-    return lv->intersectLine( m_matrix * Point    , 
-                              m_matrix * Vector   , 
-                              intersections       , 
-                              tickMin             , 
-                              tickMax             ,
-                              threshold           );
-  };
+    const double              threshold     ) const ;
+  
+  /** Copy number
+   *  for "Regular" case it is an ordering number 
+   *  of physical volume withoin logical volume, 
+   *  but it can be redefined for certain purposes, e.g. for Rich HPDs
+   *  @return copy number 
+   */
+  virtual size_t    copy  () const { return m_copy ; }
+  
+  /** apply the  misalignemnt to the transformation matrix 
+   *  @param ms misalignment matrix (assumed to be small!!!)
+   *  @return the resulting transformation matrix
+   */
+  virtual const HepTransform3D& 
+  applyMisAlignment ( const HepTransform3D& ma ) ;
+  
+  /** reset the  misalignemnt 
+   *  @return the "nominal" transformation matrix
+   */
+  virtual const HepTransform3D& 
+  resetMisAlignment (                          ) ;
   
   /** query the interface
    *  @param ID unique interface identifier 
@@ -322,20 +302,24 @@ private:
   
 private:
   
-  /// name of physical volume 
+  // copy number 
+  size_t                  m_copy          ;
+  // name of physical volume 
   std::string             m_name          ;
-  /// name of logical volume 
+  // name of logical volume 
   std::string             m_lvname        ;
-  /// transformation matrix 
+  // nominal transformationmatrix 
+  HepTransform3D          m_nominal       ;
+  // transformation matrix 
   HepTransform3D          m_matrix        ;
-  /// pointer to inverse transformation matrix 
+  // pointer to inverse transformation matrix 
   mutable HepTransform3D* m_imatrix       ;
-  /// pointer to logical volume 
+  // pointer to logical volume 
   mutable ILVolume*       m_lvolume       ;
-  /// reference/object counter 
+  // reference/object counter 
   static unsigned long    s_volumeCounter ;
-  /// reference to dataSvc
-  DetDesc::Services* m_services;
+  // reference to dataSvc
+  DetDesc::Services*      m_services      ;
 };
 
 /// ===========================================================================

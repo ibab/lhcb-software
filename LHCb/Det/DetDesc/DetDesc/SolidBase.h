@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.6 2002-11-21 15:39:56 sponce Exp $
+// $Id: SolidBase.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 // CLHEP
@@ -416,10 +416,17 @@ protected:
   /** standard constructor 
    *  @param Name name of the solid 
    */
-  SolidBase( const std::string& Name = "Anonymous Solid" );
+  SolidBase( const std::string& Name );
   
   /// virtual destructor 
   virtual ~SolidBase();
+
+private:
+  
+  /// default constructor is disabled 
+  SolidBase();
+  // assignement operator is disabled 
+  SolidBase& operator=( const SolidBase& ) ;
   
 protected:
   

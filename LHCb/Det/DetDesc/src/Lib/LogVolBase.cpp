@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.9 2003-06-04 08:14:36 ibelyaev Exp $
+// $Id: LogVolBase.cpp,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -351,6 +351,56 @@ IPVolume* LogVolBase::createPVolume()
 { return createPVolume("",""); }
 
 // ===========================================================================
+bool LogVolBase::copyExist  ( const size_t copy   ) const 
+{
+  for( PVolumes::const_iterator ipv = m_pvolumes.begin() ; 
+       m_pvolumes.end() != ipv ; ++ipv ) 
+    {
+      const IPVolume* pv = *ipv ;
+      if( 0 == pv ) { continue ; }
+      if( copy == pv->copy() ) { return true ; }     // RETURN 
+    }
+  
+  return false ;
+};
+// ===========================================================================
+
+// ===========================================================================
+/// deduce the copy number of physical volume from its name 
+// ===========================================================================
+size_t LogVolBase::copyNumber( const std::string& pvName ) const
+{
+  //
+  const size_t copy_number = m_pvolumes.size() ;
+  
+  // forced copy_number ?
+  const std::string::size_type pos = pvName.find(':') ;
+  if( std::string::npos == pos ) { return copy_number ; }      // RETURN
+  
+  const std::string tmp( pvName  , pos + 1 , std::string::npos );
+  size_t copy_read = atoi( tmp.c_str() );
+  
+  /// check the validity of the string 
+  Assert( 0 != copy_read  , 
+          "LogVolBase::copyNumber: illegal copy_number '" + tmp + 
+          "' for '" + pvName + "' ( lv='" + name() + "') " ) ;
+  
+  if ( copy_read  < 100000 ) 
+    {
+      MsgStream log( msgSvc() , "LOGVOL" ) ;
+      log << MSG::WARNING
+          << " LogVolBase: copy number ' " 
+          << copy_read << "' deduced from '" 
+          << tmp << "' is ignored! (use forced numbers > 100000) "
+          << " PV='" << pvName << "'" << endreq ;
+      return copy_number ;    
+    }
+  
+  return copy_read ;
+};
+// ===========================================================================
+
+// ===========================================================================
 /** create daughter physical volume 
  *  @param PVname name of daughter volume 
  *  @param LVnameForPV name of logical volume for the physical volume 
@@ -359,14 +409,21 @@ IPVolume* LogVolBase::createPVolume()
  *  @return pointer to created physical volume  
  */
 // ===========================================================================
-IPVolume* LogVolBase::createPVolume( const std::string&    PVname         , 
-                                     const std::string&    LVnameForPV    ,
-                                     const HepPoint3D&     Position       ,
-                                     const HepRotation&    Rotation       ) 
+IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         , 
+                                      const std::string&    LVnameForPV    ,
+                                      const HepPoint3D&     Position       ,
+                                      const HepRotation&    Rotation       ) 
 {
-  //
+  const size_t copy_number = copyNumber( PVname ) ;
+  Assert( !copyExist( copy_number ) ,
+          "LVolume::createPVolume, copy number if not unique " +
+          PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
-  try{ pv = new  PVolume( PVname , LVnameForPV , Position , Rotation ); }
+  try{ pv = new  PVolume ( PVname      , 
+                           LVnameForPV , 
+                           copy_number , 
+                           Position    , 
+                           Rotation    ) ; }
   catch( const GaudiException& Exception ) 
     { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        
@@ -396,8 +453,15 @@ LogVolBase::createPVolume
   const HepTransform3D& Transform   )
 {
   //
+  const size_t copy_number = copyNumber( PVname ) ;
+  Assert( ! copyExist( copy_number ) ,
+          "LVolume::createPVolume, copy number if not unique " +
+          PVname+"(lv="+LVnameForPV+")" );
   PVolume* pv = 0; 
-  try{ pv = new  PVolume( PVname , LVnameForPV , Transform ); }
+  try{ pv = new  PVolume ( PVname      , 
+                           LVnameForPV , 
+                           copy_number , 
+                           Transform   ) ; }
   catch( const GaudiException& Exception ) 
     { Assert( false , "createPVolume() , exception caught! " , Exception ); } 
   catch(...)                        

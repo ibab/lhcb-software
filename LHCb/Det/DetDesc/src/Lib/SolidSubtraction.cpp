@@ -1,8 +1,11 @@
-// $Id: SolidSubtraction.cpp,v 1.10 2003-06-16 13:42:36 sponce Exp $
+// $Id: SolidSubtraction.cpp,v 1.11 2003-09-20 13:25:42 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/06/16 13:42:36  sponce
+// fixes for gcc 3.2 and 3.3
+//
 // Revision 1.9  2003/05/16 13:59:14  ibelyaev
 //  fix of ancient saga with 'double deletion of solids'
 //
@@ -39,7 +42,8 @@
 // ============================================================================
 SolidSubtraction::SolidSubtraction( const std::string& name  , 
                                     ISolid*            First )
-  : SolidBoolean( name , First )
+  : SolidBoolean ( name , First )
+  , SolidBase    ( name         )
 {
   if( 0 == First ) 
     { throw SolidException(" SolidSubtraction:: ISolid* points to NULL! "); }
@@ -53,6 +57,7 @@ SolidSubtraction::SolidSubtraction( const std::string& name  ,
 // ============================================================================
 SolidSubtraction::SolidSubtraction( const std::string& Name)
   : SolidBoolean ( Name )
+  , SolidBase    ( Name )
 {};
 // ============================================================================
 

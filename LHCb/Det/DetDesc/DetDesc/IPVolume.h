@@ -1,14 +1,8 @@
-// $Id: IPVolume.h,v 1.5 2001-11-18 15:32:43 ibelyaev Exp $ 
+// $Id: IPVolume.h,v 1.6 2003-09-20 13:25:40 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2001/08/13 09:51:35  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.3  2001/08/09 16:47:57  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
@@ -30,7 +24,7 @@ class HepTransform3D;
 /** Declaration of the interface ID 
  * ( unique interface identifier , major & minor versions)
  */
-static const InterfaceID IID_IPVolume( 154 , 4 , 0 );
+static const InterfaceID IID_IPVolume( 154 , 5 , 0 );
 
 /** @interface IPVolume IPVolume.h "DetDesc/IPVolume.h"
  *
@@ -175,10 +169,31 @@ public:
   /** reset to the initial state 
    *  @return self-reference
    */
-  virtual IPVolume* reset () = 0; 
+  virtual IPVolume* reset () = 0 ;  
+  
+  /** Copy number
+   *  for "Regular" case it is an ordering number 
+   *  of physical volume withoin logical volume, 
+   *  but it can be redefined for certain purposes, e.g. for Rich HPDs
+   *  @return copy number 
+   */
+  virtual size_t    copy  () const = 0 ;
+  
+  /** apply the  misalignemnt to the transformation matrix 
+   *  @param ms misalignment matrix (assumed to be small!!!)
+   *  @return the resulting transformation matrix
+   */
+  virtual const HepTransform3D& 
+  applyMisAlignment ( const HepTransform3D& ma ) = 0 ;
+  
+  /** reset the  misalignemnt 
+   *  @return the "nominal" transformation matrix
+   */
+  virtual const HepTransform3D& 
+  resetMisAlignment (                          ) = 0 ;
   
   /// virtual destructor
-  virtual  ~IPVolume(){};  
+  virtual  ~IPVolume();  
   
 };
 

@@ -1,9 +1,30 @@
 ! =============================================================================
-! $Id: release.notes,v 1.151 2003-07-03 07:53:21 cattanem Exp $ 
+! $Id: release.notes,v 1.152 2003-09-20 13:25:41 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-09-20 - Vanya BELYAEV
+ - cmt/requirements    increase the version to v13r0 
+ - DetDesc/IDetectorElement.h
+   DetDesc/IGeometryInfo.h
+   DetDesc/ILVolume.h
+   DetDesc/ISolid.h add the empty non-implementer constructor, 
+   increse the interface minor version 
+   DetDesc/IPVolume.h
+   add 3 methods to the interface an dincrease interface major version 
+   DetDesc/LogVolBase.h
+   add metods to deal with copy numbers of daughter physical volumes 
+   DetDesc/SolidBase.h
+   DetDesc/SolidBoolean.h
+   solve the old problem with "anonymouse solid" for boolean operations 
+   src/Lib/Interfaces.cpp
+   Implementation of empty destructors for interfaces 
+   src/Lib/PVolume.h,PVolume.cpp   - implements 3 new methods 
+   src/Lib/LogVolBase.cpp          - add the techniques to manage 
+   the copy number 
+   src/Lib/Solid*                  - solve the problem sof "anonymous" solids.
 
 !======================== DetDesc v12r0 2003-07-02 ========================
 ! 2003-07-02 - Sebastien Ponce
