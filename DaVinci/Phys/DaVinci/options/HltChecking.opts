@@ -15,5 +15,3 @@ HltProcessing.measureTime = true;
 // HltTrgTrack2MCParticle.prefix = "Hlt/";
 // HltTrgChecker.prefix          = "Hlt/";
 // HltTrgTrackToContainer.prefix = "Hlt/";
-
-HltTrgChecker.OutputLevel = 2 ;
