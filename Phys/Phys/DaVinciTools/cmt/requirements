@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2002-05-23 23:13:12 gcorti Exp $
+# $Id: requirements,v 1.11 2002-05-24 16:19:16 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -16,26 +16,27 @@ branches          cmt doc options src DaVinciTools
 #============================================================================
 include_dirs     $(DAVINCITOOLSROOT)
 
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages. 
 #============================================================================
 use  PhysEvent     v4r*   Event
 use  GaudiTools    v6r*
 use  DetDesc       v10r0  Det
 
 # Extra language for translating yacc to c++
+# This is used to generate once the necessary files on Linux that are
+# then committed (tool not available on win)
 #============================================================================
-macro yaccppflags       " -l -d "
-macro yaccpp            "yacc $(yaccppflags)
-make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
-document yacc_to_icpp RecParser recparser.ypp
+#macro yaccppflags       " -l -d "
+#macro yaccpp            "yacc $(yaccppflags)
+#make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
+#document yacc_to_icpp RecParser recparser.ypp
 
-macro lexppflags        " -L "
-macro lexpp             "lex ${lexppflags}
-make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
-document lex_to_icpp RecLexer reclexer.lpp
-macro recparser_ypp_yaccpp_prefix "DecayFinder::"
-macro reclexer_lpp_lexpp_prefix "DecayFinder::"
+#macro lexppflags        " -L "
+#macro lexpp             "lex ${lexppflags}
+#make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
+#document lex_to_icpp RecLexer reclexer.lpp
+#macro recparser_ypp_yaccpp_prefix "DecayFinder::"
+#macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
 # Component library building rule
 #============================================================================

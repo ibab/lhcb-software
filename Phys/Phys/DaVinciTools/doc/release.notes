@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.12 2002-05-23 23:13:06 gcorti Exp $
+! $Id: release.notes,v 1.13 2002-05-24 16:19:28 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-24 - Gloria Corti
+ - Use commited version of yacc automatically generated code (win)
+ - Remove YYCLASS in mcparser.ypp to fix compilation error on win
+ - Replace strndup in mclexer.lpp (not available on win) with 
+   strncpy (Pere Mato)
 
 ! 2002-05-20 - Gloria Corti
   - New tool DecayFinder (Olivier Dormond) to find a decay as specified 

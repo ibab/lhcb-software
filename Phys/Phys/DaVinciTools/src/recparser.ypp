@@ -8,11 +8,11 @@
 %union {
   char *text;
   double dval;
-  YYCLASSQuarks quarkval;
-  YYCLASSQuantums quantumval;
-  YYCLASSDescriptor *desc;
-  YYCLASSParticleMatcher *match;
-  std::vector<YYCLASSParticleMatcher *> *mvect;
+  Quarks quarkval;
+  Quantums quantumval;
+  Descriptor *desc;
+  ParticleMatcher *match;
+  std::vector<ParticleMatcher *> *mvect;
 }
 
 %token LPAREN RPAREN LBRACK OSCIL CCONJ LBRACE RBRACE LANGLE RANGLE
