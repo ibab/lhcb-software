@@ -3,20 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  CVS Log :-
- *  $Id: DeRichHPDPanel.cpp,v 1.21 2004-10-27 14:18:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.20  2004/10/21 14:52:53  jonrob
- *  minor update
- *
- *  Revision 1.19  2004/10/20 22:41:55  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.18  2004/10/20 17:02:44  jonrob
- *  Updates for windows
- *
- *  Revision 1.17  2004/07/27 08:55:23  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRichHPDPanel.cpp,v 1.22 2005-02-09 09:13:45 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -221,7 +208,7 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
   // find the HPD row/col of this point
   if ( !findHPDRowCol(inPanel, id) ) return StatusCode::FAILURE;
 
-  const unsigned int HPDNumber = HPDRowColToNum(id.PDRow(), id.PDCol());
+  const unsigned int HPDNumber = HPDRowColToNum(id.pdRow(), id.pdCol());
 
   //const HepPoint3D inSilicon =
   //  m_pvSilicon[HPDNumber]->toLocal(m_pvHPDSMaster[HPDNumber]->toLocal(m_pvHPDMaster[HPDNumber]->toLocal(inPanel)));
@@ -272,7 +259,7 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
 HepPoint3D DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID ) const
 {
 
-  const unsigned int HPDNumber = HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
+  const unsigned int HPDNumber = HPDRowColToNum(smartID.pdRow(),smartID.pdCol());
 
   // convert pixel number to silicon coordinates
   const double inSiliconX = smartID.pixelCol() * m_pixelSize+m_pixelSize/2.0 -
@@ -335,8 +322,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   if ( mode.detPrecision() == RichTraceMode::circle ) {  // do it quickly
     if ( findHPDRowCol(panelIntersection, id) ) {
 
-      HPDRow = id.PDRow();
-      HPDColumn = id.PDCol();
+      HPDRow = id.pdRow();
+      HPDColumn = id.pdCol();
       HPDNumber = HPDRowColToNum(HPDRow, HPDColumn);
 
       const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
@@ -370,8 +357,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   // Overwise slow
   if ( findHPDRowCol(panelIntersection, id) ) {
 
-    HPDRow = id.PDRow();
-    HPDColumn = id.PDCol();
+    HPDRow = id.pdRow();
+    HPDColumn = id.pdCol();
     HPDNumber = HPDRowColToNum(HPDRow, HPDColumn);
 
     // find the correct HPD and quartz window inside it
@@ -382,7 +369,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     if ( !pvHPDMaster ) {
       MsgStream log(msgSvc(), myName() );
       log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
-          << " from HPDRow:" << id.PDRow() << " and HPDColumn:" << id.PDCol()
+          << " from HPDRow:" << id.pdRow() << " and HPDColumn:" << id.pdCol()
           << " please notify Antonis" << endreq
           << " x:" << panelIntersection.x()
           << " y:" << panelIntersection.y() <<  endreq;

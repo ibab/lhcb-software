@@ -4,17 +4,7 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  CVS Log :-
- *  $Id: RichSmartIDSorter.h,v 1.4 2005-01-18 08:59:51 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2005/01/14 16:51:24  jonrob
- *  Update sorting criteria
- *
- *  Revision 1.2  2005/01/13 17:45:01  jonrob
- *  update RichSmartID sorter
- *
- *  Revision 1.1  2005/01/13 12:21:18  jonrob
- *  Add new files to CVS
+ *  $Id: RichSmartIDSorter.h,v 1.5 2005-02-09 09:13:04 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -64,10 +54,10 @@ private: // utility classes
       // Until RichSmartID is updated, use explicit slow sorting...
       //return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
       return ( 100000000*p1.rich() + 10000000*p1.panel() +
-               1000000*p1.PDRow() + 10000*p1.PDCol() +
+               1000000*p1.pdRow() + 10000*p1.pdCol() +
                100*p1.pixelRow() + p1.pixelCol()  <
                100000000*p2.rich() + 10000000*p2.panel() +
-               1000000*p2.PDRow() + 10000*p2.PDCol() +
+               1000000*p2.pdRow() + 10000*p2.pdCol() +
                100*p2.pixelRow() + p2.pixelCol() );
     }
 
