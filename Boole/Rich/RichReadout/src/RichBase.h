@@ -8,6 +8,10 @@
 
 #include "RichPixelProperties.h"
 
+// RichKernel
+#include "RichKernel/RichHashMap.h"
+#include "RichKernel/RichMap.h"
+
 #include "Kernel/RichSmartID.h"
 #include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ObjectVector.h"
@@ -19,10 +23,10 @@ class RichBase {
 
 public:
 
-  RichBase( ) 
+  RichBase( )
     : m_MyState ( OPEN )
   { }
-  
+
   RichBase( RichBase & base ) :
     m_MyState ( base.m_MyState )
   { }
@@ -62,10 +66,10 @@ public:
   {
     m_MyState = UNSETTABLE;
   }
-  
-  void clear() 
-  { 
-    m_activePixels.clear(); 
+
+  void clear()
+  {
+    m_activePixels.clear();
   }
 
   void init(){};
@@ -80,7 +84,7 @@ public:
 
   RichPixelProperties* DecodeUniqueID(const RichSmartID id) const;
 
-  typedef std::map< RichSmartID::KeyType, RichPixelProperties*> activemap;
+  typedef RichHashMap< RichSmartID::KeyType, RichPixelProperties*> activemap;
 
   activemap::const_iterator begin() const;
 
