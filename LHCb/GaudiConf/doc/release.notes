@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r2 2003-11-03 ========================
+! 2003-11-03 - Marco Cattaneo
+ - DigiContent.opts: rename HLTBuffer to HltBuffer
+ - DstContent.opts:  add L1Buffer, as requested at trigger workshop
+
 !======================== GaudiConf v7r1 2003-10-01 ========================
 ! 2003-10-01 - Marco Cattaneo
  - RawhContent.opts renamed SimContent.opts, to describe SicbToOORawh output 

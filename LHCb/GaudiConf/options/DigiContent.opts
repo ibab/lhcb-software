@@ -22,7 +22,7 @@ DigiWriter.ItemList =
 , "/Event/Header#1"
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
-, "/Event/DAQ/HLTBuffer#1"
+, "/Event/DAQ/HltBuffer#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
