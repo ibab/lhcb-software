@@ -1,7 +1,7 @@
 //--------------------------------------------------------------
 // Standard Options to use the Detector Geometry
 //--------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
+ApplicationMgr.ExtSvc += { "XmlCnvSvc" , "XmlParserSvc" };
 ApplicationMgr.DLLs   += { "DetDesc" };
 
 //--------------------------------------------------------------
@@ -20,3 +20,13 @@ DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
 // Useful in the case of visualization or in a case the required user
 // defined detector element converters are somehow not available
 XmlCnvSvc.AllowGenericConversion = true;
+
+// Sets the maximum number of files to be put in the cache
+// of the XmlCnvSvc
+XmlParserSvc.MaxDocNbInCache = 5;
+
+// Changes the behavior of the cache of the XmlCnvService
+// A 0 value makes it FIFO while a bigger values tends
+// to make it keep only reused files.
+XmlParserSvc.CacheBehavior = 3;
+

@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20010822 - Sebastien Ponce
+  added two options in the default joboption file for DetDesc :
+  MaxDocNbInCache = 5 and CacheBehavior = 3
+
 ! 20010703 - GaudiConf v5 (Pere)
   Remove LHCbEvent from standard DLLs
   New version of GaudiMain that supports Python scripts instead of JobOptions files
