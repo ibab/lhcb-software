@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.h,v 1.4 2002-11-11 10:54:00 asatta Exp $
+// $Id: MuonIDFOI.h,v 1.5 2003-05-22 15:04:23 gcorti Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
@@ -25,6 +25,9 @@ class TrStoredTrack;
  *
  *  @author David Hutchcroft
  *  @date   02/05/2002
+ *  
+ *  updated by jtmn, miriam 22/04/2003
+ *  
  */
 class MuonIDFOI : public Algorithm {
 public:
@@ -60,9 +63,9 @@ private:
   StatusCode trackExtrapolate(TrStoredTrack *pTrack);
 
   /// return the FOI in x in a station and region for momentum (in MeV/c)
-  double foiX(const int &station, const int &region, const double &p);
+  double foiX(const int &station, const int &region, const double &p, const double &dx);
   /// return the FOI in y in a station and region for momentum (in MeV/c)
-  double foiY(const int &station, const int &region, const double &p);
+  double foiY(const int &station, const int &region, const double &p, const double &dy);
   
   /// clear track based local variables
   void resetTrackLocals();
@@ -81,20 +84,15 @@ private:
   /// Momentum ranges: different treatement of M4/M5 in each
   std::vector<double> m_MomentumCuts; // vector of momentum ranges
 
-  /// Depth in Muon system in stations for which the range applies
-  std::vector<int> m_MomentumDepth;
 
   // function that defines the field of interest size
-  // formula is p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
+  // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;
   std::vector< double >     m_xfoiParam2;
   std::vector< double >     m_xfoiParam3;
-  std::vector< double >     m_xfoiParam4;
   std::vector< double >     m_yfoiParam1;
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
-  std::vector< double >     m_yfoiParam4;
-
 
   // Number of stations
   int m_NStation;
@@ -102,8 +100,6 @@ private:
   int m_NRegion;
   //Names of the station
   std::vector<std::string> m_stationNames;
-
-
 
   // local array of pad sizes in mm
   // all std::vectors here are indexed: [station * m_NRegion + region]
@@ -130,7 +126,7 @@ private:
   std::vector<int> m_occupancy;
   // store X of hits for dx/dz matching with track (only need M2/M3)
   std::vector<double> m_CoordX;
-  int m_xMatchStation; // need first station after 10m 
+  int m_xMatchStation; // first station to calculate slope (M2)
   
   // MuonTileID to ZYX tool
   IMuonTileXYZTool *m_iTileTool;
@@ -152,7 +148,6 @@ private:
   // vector of positions of coords (innner vector coords, 
   // outer is [station* m_NRegion + region ]
   std::vector<std::vector<coordExtent_> > m_coordPos; 
-
 
 };
 #endif // MUONIDFOI_H

@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.21 2003-01-08 16:11:52 cattanem Exp $
+! $Id: release.notes,v 1.22 2003-05-22 15:04:41 gcorti Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 2003-05-22 - Gloria Corti
+ - Modified MuonIDFOI.h, MuonIDFOI.cpp and options to introduce new tuning
+   in calculating Muon particle ID. Code provied by Joao De Mello.
 
 !========================= MuonID v3r5 2003-01-08 =========================
 ! 2002-12-18 - Marco Cattaneo

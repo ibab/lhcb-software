@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.7 2002-12-19 09:31:07 cattanem Exp $
+// $Id: MuonIDFOI.cpp,v 1.8 2003-05-22 15:04:26 gcorti Exp $
 // Include files
 #include <cstdio>
 
@@ -26,7 +26,14 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonIDFOI
 //
+// first version
 // 02/05/2002 : David Hutchcroft
+//
+// new FOI parameterization, acceptance cut for inner chamber holes,
+// back to original algorithm; code expects all five chambers, even though
+// it only checks hits in M2-M5 by now.
+// 09/04/2003 : jtmn, miriam
+//
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -49,24 +56,24 @@ MuonIDFOI::MuonIDFOI( const std::string& name,
   declareProperty("IDLocation",
                   m_MuonIDsPath = MuonIDLocation::Default);
 
+  // >>>> this is not being read correctly from the DaVinci.opts
+  // >>>> it is hardwired  later  
   // Pre-selection momentum
-  declareProperty( "PreSelMomentum", m_PreSelMomentum );
+  declareProperty( "PreSelMomentum", m_PreSelMomentum = 3000.0);
 
   // Different depths of stations considered in different momentum ranges
   declareProperty( "MomentumCuts", m_MomentumCuts );
-  declareProperty( "MomentumDepth", m_MomentumDepth );
 
   // function that defines the field of interest size
-  // formula is p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
   // here momentum is scaled to GeV....
+  // new formula: p(1) + p(2)*exp(-p(3)*momentum)
+
   declareProperty( "XFOIParameter1", m_xfoiParam1 );
   declareProperty( "XFOIParameter2", m_xfoiParam2 );
   declareProperty( "XFOIParameter3", m_xfoiParam3 );
-  declareProperty( "XFOIParameter4", m_xfoiParam4 );
   declareProperty( "YFOIParameter1", m_yfoiParam1 );
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
-  declareProperty( "YFOIParameter4", m_yfoiParam4 );
 }
 
 //=============================================================================
@@ -79,35 +86,27 @@ MuonIDFOI::~MuonIDFOI() {};
 //=============================================================================
 StatusCode MuonIDFOI::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  MsgStream saida(msgSvc(), name());
+  saida << MSG::DEBUG << "==> Initialise" << endreq;
 
-  log << MSG::DEBUG << "Input tracks in : " << m_TrStoredTracksPath << endreq;
-  log << MSG::DEBUG << "Output MuonID in : " << m_MuonIDsPath<< endreq;
+  saida << MSG::DEBUG << "Input tracks in : " << m_TrStoredTracksPath << endreq;
+  saida << MSG::DEBUG << "Output MuonID in : " << m_MuonIDsPath<< endreq;
 
   // get geometry tool
   StatusCode sc =
     toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
+    saida << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
     return sc;
   }
 
   sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to create MuonGeometry tool" << endreq;
+    saida << MSG::FATAL << "    Unable to create MuonGeometry tool" << endreq;
     return sc;
   }
 
-  //  sc = m_iGeomTool->nStation(m_NStation);
-  //if(!sc){
-  //return sc;
-  //}
-  // sc = m_iGeomTool->nRegion(m_NRegion);
-  //if(!sc){
-  // return sc;
-  // }
-
+ 
   m_NStation = 0;
   m_NRegion = 0;
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
@@ -116,11 +115,9 @@ StatusCode MuonIDFOI::initialize() {
   int i=0;
   while(i<m_NStation){  
     m_stationNames.push_back(basegeometry.getStationName(i));
-    //    log<<MSG::DEBUG<<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    //    saida<<MSG::DEBUG<<" station "<<i<<" "<<m_stationNames[i]<<endreq;
     i++;
   }
-
-
 
   // set the size of the local vectors
   m_padSizeX.resize(m_NStation * m_NRegion);
@@ -132,7 +129,6 @@ StatusCode MuonIDFOI::initialize() {
 
   m_stationZ.resize(m_NStation);
 
-  m_xMatchStation = -1;
   // fill local arrays of pad sizes and region sizes
   int station,region;
   for(station = 0 ; station < m_NStation ; station++ ){
@@ -154,65 +150,61 @@ StatusCode MuonIDFOI::initialize() {
       if(!sc){
         return sc;
       }
-      // need first station after 10m 
-      if(10000. < m_stationZ[station] && -1 == m_xMatchStation ){
-        m_xMatchStation = station;
-      }
+
     }
   }
-
+  
+          saida << MSG::DEBUG << "Outer X M1 = " << m_regionOuterX[3] << endreq;       
+	  saida << MSG::DEBUG << "Outer Y M1 = " << m_regionOuterY[3] << endreq;
+          saida << MSG::DEBUG << "Outer X M5 = " << m_regionOuterX[19] << endreq;
+          saida << MSG::DEBUG << "Outer Y M5 = " << m_regionOuterY[19] << endreq;
+          saida << MSG::DEBUG << "Inner X M1 = " << m_regionInnerX[0] << endreq;
+          saida << MSG::DEBUG << "Inner Y M1 = " << m_regionInnerY[0] << endreq;
+          saida << MSG::DEBUG << "Inner X M5 = " << m_regionInnerX[16] << endreq;
+          saida << MSG::DEBUG << "Inner Y M5 = " << m_regionInnerY[16] << endreq;
+  
   if( m_MomentumCuts.empty() || 
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
-      m_xfoiParam4.size() != (unsigned)m_NStation*m_NRegion ||
       m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
-      m_yfoiParam4.size() != (unsigned)m_NStation*m_NRegion ){
-    log << MSG::ERROR << "OPTIONS initialising MuonIDFOI are missing"
+      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion  
+      ){
+    saida << MSG::ERROR << "OPTIONS initialising MuonIDFOI are missing"
         << " or wrong size for " << m_NStation << " stations and " 
         << m_NRegion << " regions"
         << endreq;
     return StatusCode::FAILURE;
   }
   
-  if( m_MomentumCuts.size() != m_MomentumDepth.size() ){
-    log << MSG::ERROR 
+  if( m_MomentumCuts.size() != 2 ){
+    saida << MSG::ERROR 
         << "OPTIONS are wrong:"
-        << " size of MomentumCuts and MomentumDepth vector do not match" 
+        << " size of MomentumCuts vector is not correct" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << " Momentum bins are (MeV/c) " << m_PreSelMomentum;
+  saida << MSG::DEBUG << " Momentum bins are (MeV/c) " <<endreq;
+  saida << MSG::DEBUG << " PreSelMomentum = "<<  m_PreSelMomentum << endreq;
+
   std::vector<double>::const_iterator iMom;
   for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
-    log << " " << *iMom ;
+    saida << MSG::DEBUG << "Mom. cuts = " << *iMom << endreq ;
   }
-  log << endreq;
+  saida << endreq;
   
-  log << MSG::DEBUG << " FOI at 10 GeV/c is ";
-  for(station = 0; station < m_NStation; station++){
-    for(region = 0; region < m_NRegion; region++){
-      log << "M" << station+1 << "R" << region+1;
-      log << " x=" << this->foiX(station,region,10000.0);
-      log << " y=" << this->foiY(station,region,10000.0);
-      log << " " << std::endl;
-    }
-  }
-  log << endreq;
-
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode MuonIDFOI::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  MsgStream  saida( msgSvc(), name() );
+  saida << MSG::DEBUG << "==> Execute" << endreq;
 
   StatusCode sc = fillCoordVectors();
   if(sc.isFailure()){
@@ -221,11 +213,11 @@ StatusCode MuonIDFOI::execute() {
 
   SmartDataPtr<TrStoredTracks> trTracks(eventSvc(),m_TrStoredTracksPath);
   if(!trTracks){
-    log << MSG::ERROR << " Failed to get TrStoredTrack container "
+    saida << MSG::ERROR << " Failed to get TrStoredTrack container "
         <<  m_TrStoredTracksPath << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "Number of input tracks " << trTracks->size() << endreq;
+  saida << MSG::DEBUG << "Number of input tracks " << trTracks->size() << endreq;
 
   MuonIDs * pMuids = new MuonIDs;
 
@@ -250,14 +242,14 @@ StatusCode MuonIDFOI::execute() {
   }
 
   // Debug : muon identification event summary
-  log << MSG::DEBUG << "Number of MuonID objects created " << pMuids->size()
+  saida << MSG::DEBUG << "Number of MuonID objects created " << pMuids->size()
       << endreq;
 
   // Register the MuonID container to the TES
 
   sc = eventSvc()->registerObject(m_MuonIDsPath,pMuids);
   if(sc.isFailure()){
-    log << MSG::ERROR << "TES rejected the muonIDs into location "
+    saida << MSG::ERROR << "TES rejected the muonIDs into location "
         << m_MuonIDsPath << endreq;
     return sc;
   }
@@ -272,8 +264,8 @@ StatusCode MuonIDFOI::execute() {
 //=============================================================================
 StatusCode MuonIDFOI::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  MsgStream saida(msgSvc(), name());
+  saida << MSG::DEBUG << "==> Finalize" << endreq;
 
   // Release the tools
   if( m_iTileTool ) toolSvc()->releaseTool( m_iTileTool );
@@ -291,34 +283,29 @@ StatusCode MuonIDFOI::fillCoordVectors(){
 
   int station;
   for(station = 0 ; station < m_NStation ; station++){
-  std::string stationPattern = MuonCoordLocation::MuonCoords;
+    std::string stationPattern = MuonCoordLocation::MuonCoords;
 
-  std::string stationNameWithoutM=m_stationNames[station].
-    substr(1,2);
-  std::string::size_type allsize=stationPattern.size();
-//  std::cout<<"allsize "<< allsize <<endl;
-     std::string::size_type findFirstSeparator=stationPattern.find("%");
+    std::string stationNameWithoutM=m_stationNames[station].substr(1,2);
 
-  std::string::size_type findLastSeparator=stationPattern.rfind("/");
-//  std::cout<<"allsize kl "<< findLastSeparator <<endl;
+    std::string::size_type allsize=stationPattern.size();
+
+    std::string::size_type findFirstSeparator=stationPattern.find("%");
+
+    std::string::size_type findLastSeparator=stationPattern.rfind("/");
  
-  std::string firstPartOfName=stationPattern.
-    substr(0,findFirstSeparator);
-  std::string lastPartOfName=stationPattern.
-    substr(findLastSeparator,allsize);
-  
-  std::string TESPath = firstPartOfName+stationNameWithoutM+lastPartOfName; 
+    std::string firstPartOfName=stationPattern.substr(0,findFirstSeparator);
+
+    std::string lastPartOfName=stationPattern.substr(findLastSeparator,allsize);
+
+    std::string TESPath = firstPartOfName+stationNameWithoutM+lastPartOfName; 
 
 
     // get the MuonCoords for each station in turn
-    //std::string stationPattern = MuonCoordLocation::MuonCoords;
-    //char stationPath[100];
-    //sprintf(stationPath,stationPattern.c_str(),station+1);
-    //std::string TESPath = stationPath;
+
     SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
     if(!coords){
-      MsgStream log(msgSvc(), name());
-      log << MSG::ERROR << "Failed to read TES path "
+      MsgStream saida(msgSvc(), name());
+      saida << MSG::ERROR << "Failed to read TES path "
           << TESPath << " looking for MuonCoords" << endreq;
     }
 
@@ -330,8 +317,8 @@ StatusCode MuonIDFOI::fillCoordVectors(){
       StatusCode sc = 
         m_iTileTool->calcTilePos((*iCoord)->key(),x,dx,y,dy,z,dz);
       if(sc.isFailure()){
-        MsgStream log(msgSvc(), name());
-        log << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key()
+        MsgStream saida(msgSvc(), name());
+        saida << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key()
             << endreq;
         return sc;
       }
@@ -352,7 +339,7 @@ void MuonIDFOI::clearCoordVectors(){
 
 // Do the identification
 StatusCode MuonIDFOI::doID(MuonID *pMuid){
-  MsgStream log(msgSvc(), name());
+  MsgStream saida(msgSvc(), name());
 
   // First do a preselection:
   // track is in acceptance? Track has minimum momentum?
@@ -364,7 +351,7 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
 
   // OK: track failed preselection say so and return
   if(!passed){
-    log <<MSG::DEBUG << " Track failed preselection " << endreq;
+    saida <<MSG::DEBUG << " Track failed preselection " << endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -375,39 +362,42 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
   }
 
   // apply ID: depends on the track momentum
-  // changed here to allow variable numbers of stations: only 4 or 5 for now
   pMuid->setIsMuon(0);
 
   // find the momentum bin we are in
+  // it can be 0, 1 or 2
   int momentumBin = 0;
-  while( (unsigned) momentumBin < m_MomentumCuts.size() && 
-         m_Momentum > m_MomentumCuts[momentumBin] ){
-    momentumBin++;
-  }
-  int lastStation;
-  if( (unsigned)momentumBin == m_MomentumCuts.size()){
-    lastStation = m_NStation;
-  }else{
-    lastStation = m_MomentumDepth[momentumBin];
-    if(lastStation > m_NStation){
-      log << MSG::ERROR << "Error in the MomentumDepth property" 
-          << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
 
-  // check all stations up to lastStation have a hit
-  bool isMuon=true;
+  // here  m_PreSelMomentum is hardwired = 3000 MeV
+  if (m_Momentum> 3000.0 && m_Momentum < m_MomentumCuts[0]) {momentumBin = 0;}
+  if (m_Momentum >= m_MomentumCuts[0] && m_Momentum < m_MomentumCuts[1]) {momentumBin = 1;}
+  if (m_Momentum >= m_MomentumCuts[1]) {momentumBin = 2;}
+
+  // now: implement original algorithm:
+  // bin 0 M2.and.M3
+  // bin 1 M2.and.M3.and.(M4.or.M5)
+  // bin 2 M2.and.M3.and.M4.and.M5
+  bool isMuon=false;
   int station;
-  for( station = 0 ; station < lastStation ; station++ ) {
-    if ( m_occupancy[station] == 0 ){
-      isMuon = false;
-    }
+  if (momentumBin == 0) {
+    if (m_occupancy[1]>0 && m_occupancy[2]>0) {isMuon = true;}
   }
+  if (momentumBin == 1) {
+    if (m_occupancy[1]>0 && m_occupancy[2]>0 && (m_occupancy[3]>0 || 
+        m_occupancy[4]>0)) {isMuon = true;}
+  } 
+
+  if (momentumBin == 2) {
+    if (m_occupancy[1]>0 && m_occupancy[2]>0 && m_occupancy[3]>0 && 
+        m_occupancy[4]>0) {isMuon = true;}
+  } 
+
   pMuid->setIsMuon(isMuon);
 
   // if found a muon make a probability from the DxDz matching
   if(pMuid->IsMuon()){
+    // slope calculated in M2 and M3
+    m_xMatchStation = 1;
     // find slope difference between track and Coords in M2-M3
     double coordSlopeX = ((m_CoordX[m_xMatchStation] - 
                            m_CoordX[m_xMatchStation+1])/
@@ -415,7 +405,7 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
                            m_stationZ[m_xMatchStation+1]));
     double dSlopeX = fabs( m_trackSlopeX - coordSlopeX );
 
-    // formular to make this a probability is 
+    // formula to make this a probability is 
     // dSlopeX < 0.005 = 1.0
     // 0.005 < dSlopeX < 0.085 = 1. - ( (dSlopeX-0.005) / 0.08 )
     // 0.085 < dSlopeX = 0.
@@ -424,20 +414,20 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
     }else if( dSlopeX > 0.085 ){
       pMuid->setMuProb(0.0);
     } else {
-      pMuid->setMuProb(1.0 - ( (dSlopeX-0.005) / 0.08 ) );
-    }
+         pMuid->setMuProb(1.0 - ( (dSlopeX-0.005) / 0.08 ) );
+     }
   }else{
     // not passed selection as a muon so probability is zero
     pMuid->setMuProb(0.0);
   }
 
-  log << MSG::DEBUG << "ID Prob = " << pMuid->MuProb() 
-      << " p = " << m_Momentum << "  "
-      << " coord in FOI (";
-  for(station = 0; station < m_NStation ; station++ ){
-    log << m_occupancy[station] << "," ;
+  saida << MSG::DEBUG << "IsMuon = " << pMuid->IsMuon() 
+	<< " bin = "   << momentumBin <<" " << " p = " << m_Momentum << endreq; 
+  saida    << " coord in FOI ("; 
+       for(station = 0; station < m_NStation ; station++ ){
+    saida << m_occupancy[station] << "," ;
   }
-  log << ")" << endreq;
+  saida << ")" << endreq;
  
   return StatusCode::SUCCESS;
 }
@@ -447,13 +437,15 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
   passed = true;
 
   // compare momentum and position to acceptance
-  if(m_Momentum < m_MomentumCuts[0]) {
+  // here  m_PreSelMomentum is hardwired = 3000 MeV
+  if (m_Momentum < 3000.0 ){ 
     // failed preselection momentum cut
     pMuid->setPreSelMomentum(0);
     passed = false;
   }else{
     pMuid->setPreSelMomentum(1);
   }
+  pMuid->setInAcceptance(1);
   // in first and last station acceptance
   if(  ! (fabs(m_trackX[0]) <  m_regionOuterX[m_NRegion-1] && 
           fabs(m_trackY[0]) <  m_regionOuterY[m_NRegion-1] )  ||  
@@ -465,24 +457,40 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
     // outside M1 - M5 region
     pMuid->setInAcceptance(0);
     passed = false;
-  }else{
-    // Inside Muon acceptance
-    pMuid->setInAcceptance(1);
   }
+
+  // >>>>>>  the inner values are coming with bad values - hardwire them by now
+  // if(   (fabs(m_trackX[0]) <  m_regionInnerX[0] && 
+  //          fabs(m_trackY[0]) <  m_regionInnerY[0] )  ||  
+  //        (fabs(m_trackX[m_NStation-1]) < 
+  //          m_regionInnerX[(m_NStation-1)*m_NRegion] &&
+  //          fabs(m_trackY[m_NStation-1]) <  
+  //          m_regionInnerY[(m_NStation-1)*m_NRegion] ) 
+  //       ) {
+
+ if(   (fabs(m_trackX[0]) <  240.0 && 
+          fabs(m_trackY[0]) < 200.0 )  ||  
+        (fabs(m_trackX[m_NStation-1]) < 376.0 &&
+          fabs(m_trackY[m_NStation-1]) < 313.0 ) 
+       ) {
+    // inside M1 - M5 chamber hole
+    pMuid->setInAcceptance(0);
+    passed = false;
+  }
+
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
 
+  MsgStream saida(msgSvc(), name());
   int station;
   for(station = 0 ; station < m_NStation ; station++){
     int region;
     for(region = 0 ; region < m_NRegion ; region++){
 
-      if( !m_coordPos[station*m_NRegion + region].empty() ){
-        double foiXDim = foiX( station, region, m_Momentum);
-        double foiYDim = foiY( station, region, m_Momentum);      
+      if( !m_coordPos[station*m_NRegion + region].empty() ){  
         
         std::vector<coordExtent_>::const_iterator itPos;
         for(itPos = m_coordPos[station*m_NRegion + region].begin();
@@ -494,9 +502,20 @@ StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
           double y = itPos->m_y;
           double dy = itPos->m_dy;
 
+
+	  // not optimal this should be called only once per station, region	 
+          double foiXDim = foiX( station, region, m_Momentum, dx);
+          double foiYDim = foiY( station, region, m_Momentum, dy);      
+	  
           // check if the hit is in the window
-          if( ( (fabs( x - m_trackX[station] ) - dx) < foiXDim ) &&
-              ( (fabs( y - m_trackY[station] ) - dy) < foiYDim ) ) {
+          if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
+               ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
+
+           saida << MSG::DEBUG << "ratioX = " << fabs( x - m_trackX[station]) 
+                 << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = " 
+                 << foiXDim <<" foiYDim = " << foiYDim <<endreq;
+           saida << MSG::DEBUG << "padX = " << dx << " padY = " << dy << endreq;
+
             // it is in the window
             // add the hit to the MuonID
             pMuid->addToCoords(itPos->m_pCoord);
@@ -530,8 +549,8 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
   const TrStateP *stateP =
     dynamic_cast<const TrStateP*>(pTrack->closestState(m_stationZ[0]));
   if(!stateP){
-    MsgStream log(msgSvc(), name());
-    log << MSG::ERROR << " Failed to get stateP from track " << endreq;
+    MsgStream saida(msgSvc(), name());
+    saida << MSG::ERROR << " Failed to get stateP from track " << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -555,21 +574,23 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
 }
 
 // return the FOI in x in a station and region for momentum (in MeV/c)
-double MuonIDFOI::foiX(const int &station, const int &region, const double &p){
+// this is a simpler version of the parameterization: foi = par0 + par1*exp(-par2*p)
+double MuonIDFOI::foiX(const int &station, const int &region, const double &p,
+                       const double &dx){
   return ( m_xfoiParam1[ station * m_NRegion + region ] +
-           m_xfoiParam2[ station * m_NRegion + region ]*p/1000. +
-           m_xfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/1000. ) )
-    *m_padSizeX[station * m_NRegion + region];
+           m_xfoiParam2[ station * m_NRegion + region ]*
+      exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/1000. ) )*dx;
+
+  //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
+  //then eliminates dx from function
 }
 
 // return the FOI in y in a station and region for momentum (in MeV/c)
-double MuonIDFOI::foiY(const int &station, const int &region, const double &p){
+double MuonIDFOI::foiY(const int &station, const int &region, const double &p, 
+                       const double &dy){
   return ( m_yfoiParam1[ station * m_NRegion + region ] +
-           m_yfoiParam2[ station * m_NRegion  + region ]*p/1000. +
-           m_yfoiParam3[ station * m_NRegion + region ]*
-      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/1000. ) )
-    *m_padSizeY[station * m_NRegion + region];
+           m_yfoiParam2[ station * m_NRegion + region ]*
+      exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/1000. ) )*dy;
 }
 
 void MuonIDFOI::resetTrackLocals(){
