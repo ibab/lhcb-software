@@ -1,0 +1,7 @@
+ProcessorKernel package
+
+author : A.Tsaregorodtsev
+version v1r0
+
+The package contains base classes for a generic processor 
+simulation
