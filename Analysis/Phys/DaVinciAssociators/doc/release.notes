@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.30 2003-07-29 17:48:11 gcorti Exp $
+! $Id: release.notes,v 1.31 2003-08-05 17:36:54 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-!================= DaVinciAssociators v4r2p1 2003-07-29 ====================
+!================= DaVinciAssociators v4r2p1 2003-08-05 ====================
 ! 2003-07-24 - Gloria CORTI
  - DaVinciAssociators/Particle2MCAsct.h, Particle2MCLinksAsct.h,
                       Particle2MCWithChi2Asct.h, ProtoParticle2MCAsct.h
