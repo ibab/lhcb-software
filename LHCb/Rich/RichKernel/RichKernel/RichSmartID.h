@@ -14,9 +14,7 @@
  *
  *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
- *  @date 2002-2-26
- *
- *  @todo Add tests for data field validity.
+ *  @date 2003-10-31
  */
 
 class RichSmartID {
@@ -62,178 +60,187 @@ public:
   /// Destructor
   virtual ~RichSmartID() {}
 
-  /// Retrieve 32 bit integer key
+  /// Retrieve the full 32 bit integer key
   RichSmartCode::LongType key() const        { return m_key; }
 
   // Retained for backward compatibility (to be removed)
   RichSmartCode::LongType Key() const        { return key(); }
 
-  /// Update 32 bit integer key
+  // Retained for backward compatibility (to be removed)
+  RichSmartCode::LongType index() const      { return key(); }
+
+  /// Update the full 32 bit integer key
   void setKey( RichSmartCode::LongType key ) { m_key = key;  }
 
-  /// operator to convert to internal representation
+  /// operator to convert to full 32 bit value
   operator RichSmartCode::LongType() const   { return key(); }
+
+  /// Returns only the data bits (strips the validity bits)
+  RichSmartCode::LongType dataBitsOnly() const
+  {
+    return (key() & ( RichSmartCode::MaskRich + RichSmartCode::MaskPanel +
+                      RichSmartCode::MaskPDRow + RichSmartCode::MaskPDCol +
+                      RichSmartCode::MaskPixelRow + RichSmartCode::MaskPixelCol +
+                      RichSmartCode::MaskSubPixel ) );
+  }
 
   /// Test if the RichSmartID is valid
   bool isValid() const
   {
-    return (key() & RichSmartCode::MaskAllOK) >> RichSmartCode::ShiftAllOK;
+    return (key() & (RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK + 
+                     RichSmartCode::MaskPDRowOK + RichSmartCode::MaskPDColOK + 
+                     RichSmartCode::MaskPixelRowOK + RichSmartCode::MaskPixelColOK + 
+                     RichSmartCode::MaskSubPixelOK) ) >> RichSmartCode::ShiftRichOK;
   }
-
-  /// Test if the rich field is set. Not yet implemented
+  
+  /// Test if the RICH detector field is set.
   bool richIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskRichOK) >> RichSmartCode::ShiftRichOK;
   }
 
-  /// Test if the panel field is set. Not yet implemented
+  /// Test if the RICH panel field is set.
   bool panelIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskPanelOK) >> RichSmartCode::ShiftPanelOK;
   }
 
-  /// Test if the PD row field is set. Not yet implemented
+  /// Test if the RICH photon detector row field is set.
   bool pdRowIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskPDRowOK) >> RichSmartCode::ShiftPDRowOK;
   }
 
-  /// Test if the PD column field is set. Not yet implemented
+  /// Test if the RICH photon detector column field is set.
   bool pdColIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskPDColOK) >> RichSmartCode::ShiftPDColOK;
   }
 
-  /// Test if the pixel row field is set. Not yet implemented
+  /// Test if the RICH pixel row field is set.
   bool pixelRowIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskPixelRowOK) >> RichSmartCode::ShiftPixelRowOK;
   }
 
-  /// Test if the pixel column field is set. Not yet implemented
+  /// Test if the RICH pixel column field is set.
   bool pixelColIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskPixelColOK) >> RichSmartCode::ShiftPixelColOK;
   }
 
-  /// Test if the sub-pixel field is set. Not yet implemented
+  /// Test if the RICH sub-pixel field is set.
   bool subPixelIsSet() const
   {
-    return true; // test to be added
+    return (key() & RichSmartCode::MaskSubPixelOK) >> RichSmartCode::ShiftSubPixelOK;
   }
 
-  /// Decoding function to extract index
-  const RichSmartCode::ShortType index() const
-  {
-    return (key() & RichSmartCode::MaskIndex) >> RichSmartCode::ShiftIndex;
-  }
-
-  /// Decoding function to extract rich identifier
+  /// Decoding function to extract RICH detector identifier
   const RichSmartCode::ShortType rich() const
   {
     return (key() & RichSmartCode::MaskRich) >> RichSmartCode::ShiftRich;
   }
 
-  /// Decoding function to extract rich panel identifier
+  /// Decoding function to extract RICH panel identifier
   const RichSmartCode::ShortType panel() const
   {
     return (key() & RichSmartCode::MaskPanel) >> RichSmartCode::ShiftPanel;
   }
 
-  /// Decoding function to extract PD row identifier
+  /// Decoding function to extract RICH photon detector row identifier
   const RichSmartCode::ShortType PDRow() const
   {
     return (key() & RichSmartCode::MaskPDRow) >> RichSmartCode::ShiftPDRow;
   }
 
-  /// Decoding function to extract PD column identifier
+  /// Decoding function to extract RICH photon detector column identifier
   const RichSmartCode::ShortType PDCol() const
   {
     return (key() & RichSmartCode::MaskPDCol) >> RichSmartCode::ShiftPDCol;
   }
 
-  /// Decoding function to extract pixel row identifier
+  /// Decoding function to extract RICH pixel row identifier
   const RichSmartCode::ShortType pixelRow() const
   {
     return (key() & RichSmartCode::MaskPixelRow) >> RichSmartCode::ShiftPixelRow;
   }
 
-  /// Decoding function to extract pixel row identifier
+  /// Decoding function to extract RICH pixel column identifier
   const RichSmartCode::ShortType pixelCol() const
   {
     return (key() & RichSmartCode::MaskPixelCol) >> RichSmartCode::ShiftPixelCol;
   }
 
-  /// Decoding function to extract pixel row identifier
+  /// Decoding function to extract sub-pixel identifier
   const RichSmartCode::ShortType subPixel() const
   {
     return (key() & RichSmartCode::MaskSubPixel) >> RichSmartCode::ShiftSubPixel;
   }
 
-  /// Decoding function to extract all bits
-  RichSmartCode::ShortType all() const
-  {
-    return (key() & RichSmartCode::MaskIndex) >> RichSmartCode::ShiftIndex;
-  }
-
-  /// update rich identifier
+  /// update RICH detector identifier
   bool setRich ( const RichSmartCode::ShortType Rich )
   {
     if ( !dataInRange(Rich,RichSmartCode::MaxRich) ) {
       std::cout << "RichSmartID ERROR : Rich " << Rich << " out of range" << std::endl;
       return false;
     }
-    return set( Rich, RichSmartCode::ShiftRich, RichSmartCode::MaskRich );
+    return set( Rich, RichSmartCode::ShiftRich, 
+                RichSmartCode::MaskRich, RichSmartCode::SetRichOK );
   }
 
-  /// update panel identifier
+  /// update RICH panel identifier
   bool setPanel ( const RichSmartCode::ShortType Panel )
   {
     if ( !dataInRange(Panel,RichSmartCode::MaxPanel) ) {
       std::cout << "RichSmartID ERROR : Panel " << Panel << " out of range" << std::endl;
       return false;
     }
-    return set( Panel, RichSmartCode::ShiftPanel, RichSmartCode::MaskPanel );
+    return set( Panel, RichSmartCode::ShiftPanel, 
+                RichSmartCode::MaskPanel, RichSmartCode::SetPanelOK );
   }
 
-  /// update PD row identifier
+  /// update RICH photon detector row identifier
   bool setPDRow ( const RichSmartCode::ShortType PDRow )
   {
     if ( !dataInRange(PDRow,RichSmartCode::MaxPDRow) ) {
       std::cout << "RichSmartID ERROR : PDRow " << PDRow << " out of range" << std::endl;
       return false;
     }
-    return set( PDRow, RichSmartCode::ShiftPDRow, RichSmartCode::MaskPDRow );
+    return set( PDRow, RichSmartCode::ShiftPDRow, 
+                RichSmartCode::MaskPDRow, RichSmartCode::SetPDRowOK );
   }
 
-  /// update PD col identifier
+  /// update RICH photon detector column identifier
   bool setPDCol( const RichSmartCode::ShortType PDCol )
   {
     if ( !dataInRange(PDCol,RichSmartCode::MaxPDCol) ) {
       std::cout << "RichSmartID ERROR : PDCol " << PDCol << " out of range" << std::endl;
       return false;
     }
-    return set( PDCol, RichSmartCode::ShiftPDCol, RichSmartCode::MaskPDCol  );
+    return set( PDCol, RichSmartCode::ShiftPDCol, 
+                RichSmartCode::MaskPDCol, RichSmartCode::SetPDColOK );
   }
 
-  /// update pixel row identifier
+  /// update RICH pixel row identifier
   bool setPixelRow( const RichSmartCode::ShortType PixelRow )
   {
     if ( !dataInRange(PixelRow,RichSmartCode::MaxPixelRow) ) {
       std::cout << "RichSmartID ERROR : PixelRow " << PixelRow << " out of range" << std::endl;
       return false;
     }
-    return set( PixelRow, RichSmartCode::ShiftPixelRow, RichSmartCode::MaskPixelRow );
+    return set( PixelRow, RichSmartCode::ShiftPixelRow, 
+                RichSmartCode::MaskPixelRow, RichSmartCode::SetPixelRowOK );
   }
 
-  /// update pixel col identifier
+  /// update RICH pixel column identifier
   bool setPixelCol( const RichSmartCode::ShortType PixelCol )
   {
     if ( !dataInRange(PixelCol,RichSmartCode::MaxPixelCol) ) {
       std::cout << "RichSmartID ERROR : PixelCol " << PixelCol << " out of range" << std::endl;
       return false;
     }
-    return set( PixelCol, RichSmartCode::ShiftPixelCol, RichSmartCode::MaskPixelCol );
+    return set( PixelCol, RichSmartCode::ShiftPixelCol, 
+                RichSmartCode::MaskPixelCol, RichSmartCode::SetPixelColOK );
   }
 
   /// update sub-pixel identifier
@@ -243,28 +250,14 @@ public:
       std::cout << "RichSmartID ERROR : SubPixel " << subPixel << " out of range" << std::endl;
       return false;
     }
-    return set( subPixel, RichSmartCode::ShiftSubPixel, RichSmartCode::MaskSubPixel );
-  }
-
-  /// update sicb identifier
-  bool set( const RichSmartCode::LongType  value,
-            const RichSmartCode::ShortType shift,
-            const RichSmartCode::LongType  mask )
-  {
-    setKey( ((value << shift) & mask) | (key() & ~mask) | RichSmartCode::SetAllOK );
-    return true;
-  };
-
-  /// update index identifier
-  bool setIndex ( const RichSmartCode::ShortType Index )
-  {
-    return set( Index, RichSmartCode::ShiftIndex, RichSmartCode::MaskIndex );
+    return set( subPixel, RichSmartCode::ShiftSubPixel, 
+                RichSmartCode::MaskSubPixel, RichSmartCode::SetSubPixelOK );
   }
 
   /// Decoding function to return Pixel RichSmartID only
   const RichSmartID pixelID() const
   {
-    return ( key() & ~RichSmartCode::MaskSubPixel );
+    return ( key() & (~RichSmartCode::MaskSubPixel + ~RichSmartCode::MaskSubPixelOK) );
   }
 
   /// Decoding function to return PD RichSmartID only
@@ -272,20 +265,21 @@ public:
   {
     return ( key() & ( RichSmartCode::MaskPanel + RichSmartCode::MaskRich +
                        RichSmartCode::MaskPDCol + RichSmartCode::MaskPDRow +
-                       RichSmartCode::MaskAllOK ) );
+                       RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK + 
+                       RichSmartCode::MaskPDRowOK + RichSmartCode::MaskPDColOK ) );
   }
 
   /// Decoding function to return Panel RichSmartID only
   const RichSmartID panelID() const
   {
     return ( key() & ( RichSmartCode::MaskPanel + RichSmartCode::MaskRich +
-                       RichSmartCode::MaskAllOK ) );
+                       RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK ) );
   }
   
   /// Decoding function to return Rich RichSmartID only
   const RichSmartID richID() const
   {
-    return ( key() & (RichSmartCode::MaskRich + RichSmartCode::MaskAllOK) );
+    return ( key() & (RichSmartCode::MaskRich + RichSmartCode::MaskRichOK) );
   }
 
   /// Comparision operator
@@ -318,11 +312,25 @@ public:
   /// Serialize the object for reading
   virtual StreamBuffer & serialize( StreamBuffer & s );
 
-  /// Fill the ASCII output stream
-  virtual std::ostream & fillStream( std::ostream & s ) const;
+  /// Fill the ASCII output stream the data fields
+  virtual std::ostream & printDataFields( std::ostream & s ) const;
 
+  /// Fill the ASCII output stream with all fields (data + validity)
+  virtual std::ostream & printAllFields( std::ostream & s ) const;
+  
 private: // methods
 
+  // Set the data
+  bool set( const RichSmartCode::LongType  value,
+            const RichSmartCode::ShortType shift,
+            const RichSmartCode::LongType  mask,
+            const RichSmartCode::LongType  okMask )
+  {
+    setKey( ((value << shift) & mask) | (key() & ~mask) | okMask );
+    return true;
+  };
+
+  // tests whether a given value is in range for a given data field
   bool dataInRange( const RichSmartCode::ShortType value,
                     const RichSmartCode::ShortType max )
   {
@@ -338,11 +346,21 @@ private: //data
 
 // Methods associated with messaging and serialisation
 
-inline std::ostream & RichSmartID::fillStream( std::ostream & s ) const
+inline std::ostream & RichSmartID::printDataFields( std::ostream & s ) const
 {
   s << "'Rich=" << rich() << " Panel=" << panel() << " PD(r/c)="
     << PDRow() << "/" << PDCol() << " Pixel(r/c)=" << pixelRow()
     << "/" << pixelCol() << " SubPixel=" << subPixel() << "'";
+  return s;
+}
+
+inline std::ostream & RichSmartID::printAllFields( std::ostream & s ) const
+{
+  s << rich() << " " << panel() << " " << PDRow() << " " << PDCol() 
+    << " " << pixelRow() << " " << pixelCol() << " " << subPixel() << " "
+    << richIsSet() << " " << panelIsSet() << " " << pdRowIsSet() << " " 
+    << pdColIsSet() << " " << pixelRowIsSet() << " " << pixelColIsSet() << " " 
+    << subPixelIsSet();
   return s;
 }
 
@@ -371,7 +389,7 @@ inline StreamBuffer & operator << ( StreamBuffer & s, const RichSmartID & id )
 /// overloaded output to std::ostream
 inline std::ostream & operator << ( std::ostream& os, const RichSmartID & id )
 {
-  id.fillStream(os); return os;
+  id.printDataFields(os); return os;
 }
 
 /// overloaded output to MsgStream
