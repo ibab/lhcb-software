@@ -46,8 +46,6 @@ DigiWriter.ItemList =
 , "/Event/MC/Muon/M5#3"
 , "/Event/Trig#1"
 , "/Event/Trig/L0#1"
-  //, "/Event/Trig/L0/Calo#1"
-  //, "/Event/Trig/L0/FullCalo#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
@@ -73,7 +71,7 @@ DigiWriter.ItemList =
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
 , "/Event/Rec/Relations/OTDigits2MCHits#1"
-, "/Event/Rec/Relations/VeloClusters2MCHits#1"
+, "/Event/Rec/Relations/VeloClusters2MCHits#1" // Comment out if using POOL
 , "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Prs/Digits#1"  // Single hop to MCHit, instead of relations
 , "/Event/MC/Spd/Digits#1"  // Single hop to MCHit, instead of relations
