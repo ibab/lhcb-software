@@ -5,8 +5,11 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.5 2005-01-21 18:10:04 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.6 2005-01-21 22:17:23 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/21 18:10:04  jonrob
+ *  Fix L1 statistics
+ *
  *  Revision 1.4  2005/01/18 09:07:18  jonrob
  *  update printout
  *
@@ -105,7 +108,7 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
                                      const std::string & title ) const
 {
 
-  // See if any decoding has occured
+  // See if any summary info has been collected
   if ( !count.empty() ) {
 
     // Statistical calculators
@@ -114,8 +117,8 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     // Printout
     info() << "=========================================================================================================" << endreq
            << "                                      " << title << endreq;
-    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
 
+    debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
     std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
@@ -128,26 +131,23 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
       totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
       totHits[rich]                      += hits;
-      // Hack for DC04 - Printout makes no sense so abort if this version has been used
-      if ( version != RichDAQ::LHCb0 ) {
-        debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
-                << occ1(nBanks,m_evtCount) << " hpds :"
-                << occ2(words,m_evtCount) << " words :"
-                << occ2(hits,m_evtCount) << " hits / event" << endreq;
-      }
+      debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
+              << occ1(nBanks,m_evtCount) << " hpds :"
+              << occ2(words,m_evtCount) << " words :"
+              << occ2(hits,m_evtCount) << " hits / event" << endreq;
     }
 
-    debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
-    info()  << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
-            << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
-            << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
-    info()  << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
-            << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
-            << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
-    
-    info()  << "=========================================================================================================" << endreq;
+    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
+    info() << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+           << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
+           << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
+    info() << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+           << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
+           << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
 
-  }
+    info() << "=========================================================================================================" << endreq;
+
+  } // end stats available
 
 }
 
@@ -319,6 +319,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 ) {
       for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
             iHPD != (*iL1).second.end(); ++iHPD ) {
+
         // Make a new data bank
         RichDAQ::RAWBank dataBank;
         // Get raw data bank for this HPD, and fill into RAWBank
@@ -327,7 +328,21 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         delete hpdData;
         // Add this bank to the Raw buffer
         rawBuffer->addBank( (*iL1).first, RawBuffer::Rich, dataBank, version );
+
+        if ( m_summary ) {
+          // Count the number of banks and size
+          L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
+          // Increment bank size
+          cands.second.first += 3+dataBank.size(); // 3 L1 headers + data words
+          // Increment hit occupancy
+          cands.second.second += (*iHPD).second.size();
+        }
+
       }
+
+      // Count number of HPD banks
+      if ( m_summary ) { m_l1encodeSummary[L1IDandV(version,(*iL1).first)].first += (*iL1).second.size(); }
+
     }
 
   } else {
