@@ -1,98 +1,124 @@
-// $Id: PhysEvent.h,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
-#ifndef PHYSEVENT_PHYSEVENT_H
-#define PHYSEVENT_PHYSEVENT_H 1
 
+
+//   **************************************************************************
+//   *                                                                        *
+//   *                      ! ! ! A T T E N T I O N ! ! !                     *
+//   *                                                                        *
+//   *  This file was created automatically by GaudiObjDesc, please do not    *
+//   *  delete it or edit it by hand.                                         *
+//   *                                                                        *
+//   *  If you want to change this file, first change the corresponding       *
+//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
+//   *  are using it from inside a Gaudi-package).                            *
+//   *                                                                        *
+//   **************************************************************************
+
+
+
+#ifndef PhysEvent_PhysEvent_H
+#define PhysEvent_PhysEvent_H 1
 
 // Include files
-#include <iostream>
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/StreamBuffer.h"
+#include "LHCbEvent/CLHEPStreams.h"
 #include "LHCbEvent/Classification.h"
-#include "LHCbEvent/Definitions.h"
-
-// ClassID
-static const CLID& CLID_PhysEvent = 801;
+#include "GaudiKernel/DataObject.h"
 
 
-/** @class PhysEvent PhysEvent.h PhysEvent/PhysEvent.h
+// Class ID definition
+  static const CLID& CLID_PhysEvent = 801;
+
+/** @class PhysEvent PhysEvent.h 
  *
  *  Stores information of the physics event
- *  It can be identified by "/Event/Phys"
  *
- * @version 1
- * @author  G.Corti
- * @date    19/05/2001 
+ *  @author Gloria Corti
+ *  created Mon Feb  4 20:21:56 2002
+ *
  */
 
-class PhysEvent : public DataObject {
+class PhysEvent: public DataObject
+{
 
-public:
-  /// Constructors
-  PhysEvent(const char* name = "PhysEvent")
-    : DataObject(name) { }
-  /// Destructor
-  virtual ~PhysEvent() { }
+public: 
 
-  /// Retrieve reference to class definition structure
-  virtual const CLID& clID() const { return PhysEvent::classID(); }
-  static const CLID& classID() { return CLID_PhysEvent; }
+  /// Default Constructor 
+  PhysEvent()  {}
 
-  /// Retrieve classificiation
-  const Classification& classification() const {
-    return m_classification;
-  }
-  /// Update classification
-  void setClassification (const Classification& value) {
-    m_classification = value;
-  }
+  /// Destructor 
+  virtual ~PhysEvent() {}
+
+  /// Retrieve pointer to class definition structure
+  virtual const CLID& clID() const; 
+  static const CLID& classID(); 
+
+  /// Retrieve Event classification
+  const Classification& classification() const; 
+
+  /// Update Event classification
+  void setClassification(const Classification& value);
 
   /// Serialize the object for writing
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const;
+  virtual StreamBuffer& serialize(StreamBuffer& s) const;
+
   /// Serialize the object for reading
-  virtual StreamBuffer& serialize( StreamBuffer& s );
+  virtual StreamBuffer& serialize(StreamBuffer& s);
 
-  /// Output operator (ASCII)
-  friend std::ostream& operator<< ( std::ostream& s, const PhysEvent& obj )    {
-    return obj.fillStream(s);
-  }
-  /// Fill the output stream (ASCII)
-  virtual std::ostream& fillStream( std::ostream& s ) const;
+  /// Fill the ASCII output stream
+  virtual std::ostream& fillStream(std::ostream& s) const;
 
-private:
-  /// Event classification
-  Classification    m_classification;
+
+protected: 
+
+
+private: 
+
+  Classification m_classification; ///<             Event classification
 
 };
 
+// -----------------------------------------------------------------------------
+//   end of class
+// -----------------------------------------------------------------------------
 
-//
-// Inline code must be outside the class definition
-//
 
+inline const CLID& PhysEvent::clID() const 
+{
+  return PhysEvent::classID();
+}
 
-/// Serialize the object for writing
-inline StreamBuffer& PhysEvent::serialize( StreamBuffer& s ) const             {
-  DataObject::serialize(s);
-  return s << m_classification;
+inline const CLID& PhysEvent::classID()
+{
+  return CLID_PhysEvent;
+}
+
+inline const Classification& PhysEvent::classification() const 
+{
+  return m_classification;
+}
+
+inline void PhysEvent::setClassification(const Classification& value)
+{
+  m_classification = value; 
+}
+
+inline StreamBuffer& PhysEvent::serialize(StreamBuffer& s) const 
+{
+  s << m_classification;
+  return s;
+}
+
+inline StreamBuffer& PhysEvent::serialize(StreamBuffer& s)
+{
+  s >> m_classification;
+  return s;
+}
+
+inline std::ostream& PhysEvent::fillStream(std::ostream& s) const
+{
+  s << "{ "
+    << " classification:\t" << m_classification << " } ";
+  return s;
 }
 
 
-/// Serialize the object for reading
-inline StreamBuffer& PhysEvent::serialize( StreamBuffer& s )                   {
-  DataObject::serialize(s);
-  return s >> m_classification;
-}
-
-
-/// Fill the output stream (ASCII)
-inline std::ostream& PhysEvent::fillStream( std::ostream& s ) const            {
-  return s
-    << "class PhysEvent :"
-    << "\n    Event classification = "
-    << LHCbEventField( LHCbEvent::field12 )
-    << m_classification;
-}
-
-
-#endif      // PHYSEVENT_PHYSEVENT_H
+#endif   ///PhysEvent_PhysEvent_H

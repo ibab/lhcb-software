@@ -1,217 +1,277 @@
-// $Id: VtxCandidate.h,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
-#ifndef PHYSEVENT_VTXCANDIDATE_H
-#define PHYSEVENT_VTXCANDIDATE_H 1
+
+
+//   **************************************************************************
+//   *                                                                        *
+//   *                      ! ! ! A T T E N T I O N ! ! !                     *
+//   *                                                                        *
+//   *  This file was created automatically by GaudiObjDesc, please do not    *
+//   *  delete it or edit it by hand.                                         *
+//   *                                                                        *
+//   *  If you want to change this file, first change the corresponding       *
+//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
+//   *  are using it from inside a Gaudi-package).                            *
+//   *                                                                        *
+//   **************************************************************************
+
+
+
+#ifndef PhysEvent_VtxCandidate_H
+#define PhysEvent_VtxCandidate_H 1
 
 // Include files
-#include <iostream>
-#include "GaudiKernel/Kernel.h"
+#include <algorithm>
+#include "LHCbEvent/CLHEPStreams.h"
 #include "GaudiKernel/ContainedObject.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartRefVector.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Matrix/SymMatrix.h"
-#include "LHCbEvent/CLHEPStreams.h"
-#include "LHCbEvent/Definitions.h"
-#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/ObjectList.h"
+#include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/SmartRefVector.h"
 
-// Class ID
-static const CLID& CLID_VtxCandidate = 850;
 
-// Forward Declarations
+// Forward declarations
 class AxPartCandidate;
 
-/** @class VtxCandidate VtxCandidate.h PhysEvent/VtxCandidate.h
- *  
- *  Transient Class for Vertices Candidates to be used in Physics Analysis.
- *  It represents a possible vertex between "n" particles.
- *  The class VtxCandidate uses the Class Library for HEP
- * <A HREF="http://wwwinfo.cern.ch/asd/lhc++/clhep/manual/RefGuide/index.html">CLHEP</A>
+
+// Class ID definition
+  static const CLID& CLID_VtxCandidate = 850;
+
+/** @class VtxCandidate VtxCandidate.h 
+ *
+ *  Vertex to be used in Physics Analysis. It represents a possible vertex between n particles. 
  *
  *  @author Gloria Corti
- *  @date   28/05/2001
+ *  created Mon Feb  4 20:21:56 2002
+ *
  */
 
-class VtxCandidate  : virtual public ContainedObject {
+class VtxCandidate: public ContainedObject
+{
 
-public:
+public: 
 
-  /// Standard Constructor
+  /// Default Constructor 
   VtxCandidate() 
-    : m_position(0.0, 0.0, 0.0),
-      m_chiSquare(0.0),
-      m_covariance(3,0),
-      m_creatorID(0)
-  {
-  }
+    : m_position(0.0,0.0,0.0),
+    m_chiSquare(0.0),
+    m_covariance(3,0),
+    m_creatorID(0) {}
 
-  /// make more constructors: with coordinates
-  ///                         with coordinates and chi2?  
-  ///                         with creator ID?
+  /// Destructor 
+  virtual ~VtxCandidate() {}
 
-
-  /// Standard Destructor
-  virtual ~VtxCandidate() { }
-
-  /// Retrieve pointer to class defininition structure
-  virtual const CLID& clID() const { return VtxCandidate::classID(); }
-  static const CLID& classID()     { return CLID_VtxCandidate; }
+  /// Retrieve pointer to class definition structure
+  virtual const CLID& clID() const; 
+  static const CLID& classID(); 
 
   /// Retrieve position
-  const HepPoint3D& position () const           { return m_position; }
-  HepPoint3D& position ()                       { return m_position; }
+  const HepPoint3D& position() const; 
 
-  /// Update vertex position
-  void setPosition (const HepPoint3D& value)    { m_position = value; }
+  /// Update position
+  void setPosition(const HepPoint3D& value);
 
-  /// Retrieve ChiSquare
-  double chiSquare() const                      { return m_chiSquare; }
-  /// Set ChiSquare
-  void setChiSquare( double value )             { m_chiSquare = value; }
+  /// Retrieve ChiSquare of vertex fit
+  double chiSquare() const; 
 
-  /** Retrieve error matrix. 
-   *  It is a 3x3 symmetric matrix, where the lower triangular elements are
-   *  given: (1,1), (2,1), (2,2), (3,1), (3,2), (3,3) 
-   * The elements correspond to the position component
-   */ 
-  const HepSymMatrix& covariance() const             { return m_covariance; }
-  HepSymMatrix& covariance()                         { return m_covariance; }
+  /// Update ChiSquare of vertex fit
+  void setChiSquare(double value);
 
-  /// Set the covariance matrix
-  void setCovariance( const HepSymMatrix& value )    { m_covariance = value; }
+  /// Retrieve Covariance matrix (3x3)
+  const HepSymMatrix& covariance() const; 
 
-  /// Retrieve pointer to vector of daughter particles (const or non-const)
+  /// Update Covariance matrix (3x3)
+  void setCovariance(const HepSymMatrix& value);
+
+  /// Retrieve Creator ID/type 1=primary
+  long creatorID() const; 
+
+  /// Update Creator ID/type 1=primary
+  void setCreatorID(long value);
+
+  /// Retrieve Reference to daughter particles
   const SmartRefVector<AxPartCandidate>& daughters() const;
-  SmartRefVector<AxPartCandidate>& daughters();
 
-  /// Update all daughter particles
-  void setDaughters( const SmartRefVector<AxPartCandidate>& value );
+  /// Update Reference to daughter particles
+  void setDaughters(const SmartRefVector<AxPartCandidate>& value);
 
-  /// Remove all daughter particles
-  void removeDaughters();
+  /// Add Reference to daughter particles
+  void addToDaughters(AxPartCandidate* value);
+  void addToDaughters(const SmartRef<AxPartCandidate>& value); 
 
-  /** Add single daughter particle to vector of daughter particles.
-   *   (by a C++ pointer or a smart reference)
-   */
-  inline void addDaughter( AxPartCandidate* value );
-  inline void addDaughter( SmartRef<AxPartCandidate> value );
+  /// Remove Reference to daughter particles
+  void removeFromDaughters(AxPartCandidate* value);
+  void removeFromDaughters(const SmartRef<AxPartCandidate>& value); 
 
-  /** Retrieve CreatorID. 
-   *  For now a vertexer type:
-   *  1 = primary, 2 = secondary, but it could/should hold more info
-   */
-  long creatorID() const                             { return m_creatorID; }
-
-  /// Set CreatorID
-  void setCreatorID( long value )                    { m_creatorID = value; }
+  /// Clear Reference to daughter particles
+  void clearDaughters();
 
   /// Serialize the object for writing
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const;
+  virtual StreamBuffer& serialize(StreamBuffer& s) const;
+
   /// Serialize the object for reading
-  virtual StreamBuffer& serialize( StreamBuffer& s );
+  virtual StreamBuffer& serialize(StreamBuffer& s);
+
   /// Fill the ASCII output stream
-  virtual std::ostream& fillStream( std::ostream& s ) const;
+  virtual std::ostream& fillStream(std::ostream& s) const;
 
 
-private:
-  
-  HepPoint3D                      m_position;   ///< Position  
-  double                          m_chiSquare;  ///< ChiSquare of vertex fit
-  
-  HepSymMatrix                    m_covariance; ///< Covariance matrix 
-  SmartRefVector<AxPartCandidate> m_daughters;  ///< Vector of pointers to daughter particles
-  long                            m_creatorID;  ///< Creator ID/type
+protected: 
+
+
+private: 
+
+  HepPoint3D m_position; ///<         position
+  double m_chiSquare; ///<         ChiSquare of vertex fit
+  HepSymMatrix m_covariance; ///<         Covariance matrix (3x3)
+  long m_creatorID; ///<         Creator ID/type 1=primary
+  SmartRefVector<AxPartCandidate> m_daughters; ///<         Reference to daughter particles
+
 };
 
-///
-/// Inline code
-///
+// -----------------------------------------------------------------------------
+//   end of class
+// -----------------------------------------------------------------------------
+
+
+// Including forward declarations
 #include "LHCbEvent/AxPartCandidate.h"
 
-/// Retrieve pointer to vector of daughter particles
-inline const SmartRefVector<AxPartCandidate>& VtxCandidate::daughters() const { 
-  return m_daughters; 
-}
-inline SmartRefVector<AxPartCandidate>& VtxCandidate::daughters() { 
-  return m_daughters; 
+
+inline const CLID& VtxCandidate::clID() const 
+{
+  return VtxCandidate::classID();
 }
 
-/// Update all daughter particles
-inline void VtxCandidate::setDaughters( 
-                          const SmartRefVector<AxPartCandidate>& value ) { 
-  m_daughters = value; 
+inline const CLID& VtxCandidate::classID()
+{
+  return CLID_VtxCandidate;
 }
 
-/// Add single daughter particle to vector of daughters 
-///   (by a C++ pointer or a smart reference)
-inline void VtxCandidate::addDaughter( AxPartCandidate* value ) { 
-  m_daughters.push_back(value); 
-}
-inline void VtxCandidate::addDaughter( SmartRef<AxPartCandidate> value ) { 
-  m_daughters.push_back(value); 
+inline const HepPoint3D& VtxCandidate::position() const 
+{
+  return m_position;
 }
 
-/// Remove all daughter particles
-inline void VtxCandidate::removeDaughters() { 
-  m_daughters.clear(); 
+inline void VtxCandidate::setPosition(const HepPoint3D& value)
+{
+  m_position = value; 
 }
 
-/// Serialize the object for writing
-inline StreamBuffer& VtxCandidate::serialize( StreamBuffer& s ) const {
-  ContainedObject::serialize(s);
-  return s
-    << m_position
-    << m_chiSquare
-    << m_covariance
-    << m_daughters(this)
-    << m_creatorID;
+inline double VtxCandidate::chiSquare() const 
+{
+  return m_chiSquare;
 }
 
-/// Serialize the object for reading
-inline StreamBuffer& VtxCandidate::serialize( StreamBuffer& s ) {
-  ContainedObject::serialize(s);
-  return s
-    << m_position
-    << m_chiSquare
-    << m_covariance
-    << m_daughters(this)
-    << m_creatorID;
+inline void VtxCandidate::setChiSquare(double value)
+{
+  m_chiSquare = value; 
 }
 
-/// Fill the output stream (ASCII)
-inline std::ostream& VtxCandidate::fillStream( std::ostream& s ) const {
-  s << "class VtxCandidate :"
-    << "\n    Position (x, y, z)      = ( "
-    << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
-    << m_position.x() << ", "
-    << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
-    << m_position.y() << ", "
-    << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
-    << m_position.z() << " )"
-    << "\n    ChiSquare               = "
-    << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
-    << m_chiSquare
-    << "\n    Covariance Matrix (3,3) = ";
-  int  i, j, nrow = m_covariance.num_row();
-  for( i=1; i<=nrow; i++ ) {
-    s << "\n      ";
-    for( j=1; j<=i; j++ ) {
-      s << LHCbEventFloatFormat( LHCbEvent::width, LHCbEvent::precision )
-        << m_covariance(i,j) << "  ";
+inline const HepSymMatrix& VtxCandidate::covariance() const 
+{
+  return m_covariance;
+}
+
+inline void VtxCandidate::setCovariance(const HepSymMatrix& value)
+{
+  m_covariance = value; 
+}
+
+inline long VtxCandidate::creatorID() const 
+{
+  return m_creatorID;
+}
+
+inline void VtxCandidate::setCreatorID(long value)
+{
+  m_creatorID = value; 
+}
+
+inline const SmartRefVector<AxPartCandidate>& VtxCandidate::daughters() const
+{
+   return m_daughters;
+}
+
+inline void VtxCandidate::setDaughters(const SmartRefVector<AxPartCandidate>& value)
+{
+   m_daughters = value;
+}
+
+inline void VtxCandidate::addToDaughters(AxPartCandidate* value)
+{
+   m_daughters.push_back(value);
+}
+
+inline void VtxCandidate::addToDaughters(const SmartRef<AxPartCandidate>& value)
+{
+   m_daughters.push_back(value);
+}
+
+inline void VtxCandidate::removeFromDaughters(AxPartCandidate* value)
+{
+  SmartRefVector<AxPartCandidate>::iterator iter;
+  for (iter = m_daughters.begin(); iter != m_daughters.end(); ++iter)
+  {
+    if (iter->target() == value)
+    {
+      m_daughters.erase(iter);
     }
   }
-  s << "\n     Creator ID = "
-    << LHCbEventField( LHCbEvent::field12 )
-    << m_creatorID;
+}
+
+inline void VtxCandidate::removeFromDaughters(const SmartRef<AxPartCandidate>& value)
+{
+  SmartRefVector<AxPartCandidate>::iterator iter =
+    std::find(m_daughters.begin(), m_daughters.end(), value);
+  if (iter != m_daughters.end() )
+  {
+    m_daughters.erase(iter);
+  }
+}
+
+inline void VtxCandidate::clearDaughters()
+{
+   m_daughters.clear();
+}
+
+inline StreamBuffer& VtxCandidate::serialize(StreamBuffer& s) const 
+{
+  s << m_position
+    << (float)m_chiSquare
+    << m_covariance
+    << m_creatorID
+    << m_daughters(this);
   return s;
 }
 
-  
-// Definition of container types of VtxCandidate
+inline StreamBuffer& VtxCandidate::serialize(StreamBuffer& s)
+{
+  float l_chiSquare;
+  s >> m_position
+    >> l_chiSquare
+    >> m_covariance
+    >> m_creatorID
+    >> m_daughters(this);
+  m_chiSquare = l_chiSquare;
+  return s;
+}
+
+inline std::ostream& VtxCandidate::fillStream(std::ostream& s) const
+{
+  s << "{ "
+    << " position:\t" << m_position << std::endl
+    << "   chiSquare:\t" << (float)m_chiSquare << std::endl
+    << "   covariance:\t" << m_covariance << std::endl
+    << "   creatorID:\t" << m_creatorID << " } ";
+  return s;
+}
+
+// Defintion of vector container type for VtxCandidate
 template <class TYPE> class ObjectVector;
-typedef ObjectVector<VtxCandidate>     VtxCandidateVector;
+typedef ObjectVector<VtxCandidate> VtxCandidateVector;
+// Defintion of all list container types for VtxCandidate
 template <class TYPE> class ObjectList;
-typedef ObjectList<VtxCandidate>       VtxCandidateList;
+typedef ObjectList<VtxCandidate> VtxCandidateList;
 
-
-#endif    // PHYSEVENT_VTXCANDIDATE_H
+#endif   ///PhysEvent_VtxCandidate_H

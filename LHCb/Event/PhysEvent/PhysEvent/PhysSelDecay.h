@@ -1,169 +1,248 @@
-// $Id: PhysSelDecay.h,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
-#ifndef PHYSEVENT_PHYSSELDECAY_H
-#define PHYSEVENT_PHYSSELDECAY_H 1
- 
-// Include files
-#ifdef WIN32
-  // Disable warning C4800: implicit convertion from integer to bool
-  #pragma warning ( disable : 4800 )
-#endif
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "LHCbEvent/CLHEPStreams.h"
-#include "LHCbEvent/Definitions.h"
-#include <iostream>
-#include <vector>
 
-/** @class PhysSelDecay PhysSelDecay.h PhysEvent/PhysSelDecay.h
+
+//   **************************************************************************
+//   *                                                                        *
+//   *                      ! ! ! A T T E N T I O N ! ! !                     *
+//   *                                                                        *
+//   *  This file was created automatically by GaudiObjDesc, please do not    *
+//   *  delete it or edit it by hand.                                         *
+//   *                                                                        *
+//   *  If you want to change this file, first change the corresponding       *
+//   *  xml-file and rerun the tools from GaudiObjDesc (or run make if you    *
+//   *  are using it from inside a Gaudi-package).                            *
+//   *                                                                        *
+//   **************************************************************************
+
+
+
+#ifndef PhysEvent_PhysSelDecay_H
+#define PhysEvent_PhysSelDecay_H 1
+
+// Include files
+#include "LHCbEvent/CLHEPStreams.h"
+
+
+/** @class PhysSelDecay PhysSelDecay.h 
  *
- *  This class contains the results of the selection for a specific
- *  decay channel set as standard algorithm
+ *  Results of standards selection for a specific decay channel
  *
  *  @author Gloria Corti
- *  @date   30/05/2001
+ *  created Mon Feb  4 20:21:56 2002
+ *
  */
 
-class PhysSelDecay {
+class PhysSelDecay
+{
 
-  enum selFlags { MCFlag=0, TKRFlag=1, PQUALFlag=2,
-                  SELFlag=3, AGRFlag=4, TAGFlag= 5 };
+public: 
 
-public:
-  /// Default Constructor
-  PhysSelDecay() : m_decayID(0), m_results(0) { 
-  }  
+  /// Default Constructor 
+  PhysSelDecay() 
+    : m_decayID(0),
+    m_results(0) {}
 
-  /// Destructor
-  ~PhysSelDecay() { 
-  }
-
-  /// Retrieve decayID
-  long decayID() const {
-    return m_decayID; 
-  }
-
-  /// Set decayID
-  void setDecayID( long value ) {
-    m_decayID = value; 
-  }
+  /// Destructor 
+  virtual ~PhysSelDecay() {}
 
   /// Retrieve all results
-  long results ( ) const { 
-    return m_results; 
-  }
-  void results ( bool& lMCFlag, bool& lTKRFlag,  
-                 bool& lPQUALFlag, bool& lSELFlag, 
-                 bool& lAGRFlag, bool& lTAGFlag );
+  void results(bool& mc, bool& trk, bool& pqual, bool& sel, bool& agr, bool& tag) const;
 
-  /// Set all results
-  void setResults( long value ) {
-    m_results = value; 
-  }
-  void setResults( bool lMCFlag, bool lTKRFlag,  
-                   bool lPQUALFlag, bool lSELFlag, 
-                   bool lAGRFlag, bool lTAGFlag );
+  /// Retrieve all results
+  void setResults(bool mc, bool trk, bool pqual, bool sel, bool agr, bool tag);
 
-  /// Retrieve if the decay channel is present in the Monte Carlo truth
-  bool decayIsInMCTree() {
-    return ( m_results & (1<<MCFlag) );
-  }
-  /// Set to true idf the decay channel is present in the MC truth
-  void setDecayIsInMCTree() {
-    m_results |= 1<<MCFlag;
-  }
+  /// Return if decay is present in MC truth
+  bool decayIsInMCTree() const;
 
-  /// Retrieve if the decay channel has all end particles reconstructed
-  bool decayHasTrkRecon() {
-    return ( m_results & (1<<TKRFlag) );
-  }
-  /// Set if the decay channel has all end particles reconstructed
-  void setDecayHasTrkRecon() {
-    m_results |= 1<<TKRFlag;
-  }
+  /// Return if decay has end particles reconstructed
+  bool decayHasTrkRecon() const;
 
-  /// Retrieve if the decay channel has all end particles reconstructed 
-  /// and the charged ones are of physics quality
-  bool decayHasTrkPQual() {
-    return ( m_results & (1<<PQUALFlag) );
-  }
-  /// Set if the decay channel has all end particles reconstructed and 
-  /// the charged ones are of physics quality
-  void setDecayHasTrkPQual() {
-    m_results |= 1<<PQUALFlag;
-  }
-        
-  /// Retrieve if the event satisfy the selection for the decay channel 
-  bool decayIsSelected() {
-    return ( m_results & (1<<SELFlag) );
-  }
-  /// Set if the event satisfy the selection for the decay channel
-  void setDecayIsSelected() {
-    m_results |= 1<<SELFlag;
-  }
-    
-  /// Retrieve if the event satisfy the selection for the decay channel
-  /// and at least one combination is the MC truth
-  bool decaySelectedIsMC() {
-    return ( m_results & (1<<AGRFlag) );
-  }
-  /// Set if the event satisfy the selection for the decay channel
-  /// and at least one combination is the MC truth
-  void setDecaySelectedIsMC() {
-    m_results |= 1<<AGRFlag;
+  /// Return if decay has end particles of physics quality
+  bool decayHasTrkPQual() const;
+
+  /// Return if event satisfy the decay selection
+  bool decayIsSelected() const;
+
+  /// Return if event satisfy the decay selection and one combination is the MC truth
+  bool decaySelectedIsMC() const;
+
+  /// Return if one selected combination is also flavour tagged
+  bool decayIsFlavourTagged() const;
+
+  /// Set if decay channel is present in MC truth
+  void setDecayIsInMCTree();
+
+  /// Set if decay channel has all end particles reconstructed
+  void setDecayHasTrkRecon();
+
+  /// Set if decay channel has all end particles reconstructed and of physics quality
+  void setDecayHasTrkPQual();
+
+  /// Set if event satisfy the decay selection
+  void setDecayIsSelected();
+
+  /// Set if event satisfy the decay selection and one combination is the MC truth
+  void setDecaySelectedIsMC();
+
+  /// Set if one selected combination is also flavour tagged
+  void setDecayIsFlavourTagged();
+
+  /// Retrieve decayCode as used in Bookkeeping
+  long decayID() const; 
+
+  /// Update decayCode as used in Bookkeeping
+  void setDecayID(long value);
+
+  /// Retrieve bitset with results of selection analysis
+  long results() const; 
+
+  /// Update bitset with results of selection analysis
+  void setResults(long value);
+
+  /// Operator overloading for serializing (writing)
+  friend StreamBuffer& operator<< (StreamBuffer& s, const PhysSelDecay& obj)
+  {
+    return obj.serialize(s);
   }
 
-  /// Retrieve if at least one selected combination for the decay channel
-  /// is also flavour tagged 
-  bool decayIsFlavourTagged() {
-    return ( m_results & (1<<TAGFlag) );
-  }
-  /// Set if at least one selected combination for the decay channel
-  /// is also flavour tagged
-  void setDecayIsFlavourTagged() {
-    m_results |= 1<<TAGFlag;
+  /// Operator overloading for serializing (reading)
+  friend StreamBuffer& operator>> (StreamBuffer& s, PhysSelDecay& obj)
+  {
+    return obj.serialize(s);
   }
 
-  /// Serialize the object for writing
-  friend StreamBuffer& operator<< ( StreamBuffer& s, const PhysSelDecay& obj ) {
-  return s << obj.m_decayID
-           << obj.m_results;
-  }
-  /// Serialize the object for reading
-  friend StreamBuffer& operator>> ( StreamBuffer& s, PhysSelDecay& obj ) {
-    return s >> obj.m_decayID
-             >> obj.m_results;
-  }
-
-  /// Output operator (ASCII)
-  friend std::ostream& operator<< ( std::ostream& s, const PhysSelDecay& obj ) {
+  /// Operator overloading for stringoutput
+  friend std::ostream& operator<< (std::ostream& s, const PhysSelDecay& obj)
+  {
     return obj.fillStream(s);
   }
 
-  /// Fill the output stream (ASCII)
-  std::ostream& fillStream( std::ostream& s ) const;
+  /// Serialize the object for writing
+  virtual StreamBuffer& serialize(StreamBuffer& s) const;
+
+  /// Serialize the object for reading
+  virtual StreamBuffer& serialize(StreamBuffer& s);
+
+  /// Fill the ASCII output stream
+  virtual std::ostream& fillStream(std::ostream& s) const;
+
+  enum selFlags {MCFlag=0, TRKFlag, PQUALFlag, SELFlag, AGRFlag, TAGFlag};   ///<Bit position for results
+
+protected: 
+
 
 private: 
 
-  unsigned long m_decayID;    ///< decayCode as used in book-keeping
-  unsigned long m_results;    ///< bitset with results of selection analysis
+  long m_decayID; ///<      decayCode as used in Bookkeeping
+  long m_results; ///<      bitset with results of selection analysis
 
 };
 
-//
-// Inline code must be outside the class definition
-//
+// -----------------------------------------------------------------------------
+//   end of class
+// -----------------------------------------------------------------------------
 
-/// Fill the output stream (ASCII)
-inline std::ostream& PhysSelDecay::fillStream( std::ostream& s ) const {
-  return s
-    << "class PhysSelDecay :\n"
-    << "\n    Decay ID code = " << m_decayID
-    << "\n    Decay Results = " << m_results;
+
+inline bool PhysSelDecay::decayIsInMCTree() const
+{
+   return ( 0 != ( m_results & (1<<MCFlag) ) );
+}
+
+inline bool PhysSelDecay::decayHasTrkRecon() const
+{
+   return ( 0 != ( m_results & (1<<TRKFlag) ) );
+}
+
+inline bool PhysSelDecay::decayHasTrkPQual() const
+{
+   return ( 0 != ( m_results & (1<<PQUALFlag) ) );
+}
+
+inline bool PhysSelDecay::decayIsSelected() const
+{
+   return ( 0 != ( m_results & (1<<SELFlag) ) );
+}
+
+inline bool PhysSelDecay::decaySelectedIsMC() const
+{
+   return ( 0 != ( m_results & (1<<AGRFlag) ) );
+}
+
+inline bool PhysSelDecay::decayIsFlavourTagged() const
+{
+   return ( 0 != (m_results & (1<<TAGFlag) ) );
+}
+
+inline void PhysSelDecay::setDecayIsInMCTree()
+{
+   m_results |= 1<<MCFlag;
+}
+
+inline void PhysSelDecay::setDecayHasTrkRecon()
+{
+   m_results |= 1<<TRKFlag;
+}
+
+inline void PhysSelDecay::setDecayHasTrkPQual()
+{
+   m_results |= 1<<PQUALFlag;
+}
+
+inline void PhysSelDecay::setDecayIsSelected()
+{
+   m_results |= 1<<SELFlag;
+}
+
+inline void PhysSelDecay::setDecaySelectedIsMC()
+{
+   m_results |= 1<<AGRFlag;
+}
+
+inline void PhysSelDecay::setDecayIsFlavourTagged()
+{
+   m_results |= 1<<TAGFlag;
+}
+
+inline long PhysSelDecay::decayID() const 
+{
+  return m_decayID;
+}
+
+inline void PhysSelDecay::setDecayID(long value)
+{
+  m_decayID = value; 
+}
+
+inline long PhysSelDecay::results() const 
+{
+  return m_results;
+}
+
+inline void PhysSelDecay::setResults(long value)
+{
+  m_results = value; 
+}
+
+inline StreamBuffer& PhysSelDecay::serialize(StreamBuffer& s) const 
+{
+  s << m_decayID
+    << m_results;
+  return s;
+}
+
+inline StreamBuffer& PhysSelDecay::serialize(StreamBuffer& s)
+{
+  s >> m_decayID
+    >> m_results;
+  return s;
+}
+
+inline std::ostream& PhysSelDecay::fillStream(std::ostream& s) const
+{
+  s << "{ "
+    << " decayID:\t" << m_decayID << std::endl
+    << "   results:\t" << m_results << " } ";
+  return s;
 }
 
 
-#endif    // PHYSEVENT_PHYSSELDECAY_H
-
-
-
+#endif   ///PhysEvent_PhysSelDecay_H
