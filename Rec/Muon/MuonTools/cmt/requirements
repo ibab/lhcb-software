@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.8 2002-08-05 12:52:33 dhcroft Exp $
+# $Id: requirements,v 1.9 2002-10-22 06:37:35 cattanem Exp $
 # =============================================================================
 package            MuonTools
-version            v3r0
+version            v3r1
 
 # ================ structure =================================================
 branches           cmt doc src options MuonTools
@@ -12,7 +12,7 @@ include_dirs      $(MUONTOOLSROOT)
 set MUONTOOLSOPTS  $(MUONTOOLSROOT)/options
 
 # ================ dependencies ==============================================
-use MuonDet        v3r*    Det 
+use MuonDet        v4r*    Det 
 use MuonKernel     v2r*    Muon
 
 # ================ component library =========================================

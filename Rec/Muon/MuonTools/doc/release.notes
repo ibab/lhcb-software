@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.23 2002-10-21 20:43:53 asatta Exp $
+! $Id: release.notes,v 1.24 2002-10-22 06:37:35 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
+!========================= MuonTools v3r1 2002-10-22 =======================
 ! 2002-10-21 - Alessia Satta
  - fix to deal with the M1/noM1 cases
 
 ! 2002-09-25 - David Hutchcroft
  - Removed two debugging std::cout lines that should not have been committed
 
-!========================= MuonTools v3r0 2002-08-9 =======================
+!========================= MuonTools v3r0 2002-08-09 =======================
 ! 2002-08-05 - David Hutchcroft
  - Changes to code to remove hardcoding of number of stations and tile layouts.
    These changes allow the change in number of stations and readout size in XML
