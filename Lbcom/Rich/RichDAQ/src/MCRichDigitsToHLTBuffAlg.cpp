@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.3 2003-11-08 15:46:24 jonrob Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.4 2003-11-08 16:00:45 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -177,7 +177,7 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed ( RichSmartID pdID,
     dataBank.push_back( (nonZSdata.data())[iData] );
   }
 
-  // Printout of data
+  // Printout of data array
   if ( msgLevel(MSG::VERBOSE) ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::VERBOSE << nonZSdata << endreq;

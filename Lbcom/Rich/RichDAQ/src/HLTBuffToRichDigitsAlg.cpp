@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.4 2003-11-08 15:46:24 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.5 2003-11-08 16:00:45 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -66,12 +66,11 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  // Get the bank for the RichDigits
+  // Get the banks for the RichDigits
   const RichHltBanks & richBanks = hltEvent->banks( RichDigit::classID() );
   if ( msgLevel(MSG::DEBUG) ) {
     msg << MSG::DEBUG
-        << "Found " << richBanks.size() << " Rich banks in HltEvent"
-        << endreq;
+        << "Found " << richBanks.size() << " Rich banks in HltEvent" << endreq;
   }
 
   // Make new container for RichDigits
@@ -91,7 +90,7 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
       decodeNonZeroSuppressedBank(*iBank);
     }
 
-  }
+  } // end loop over data banks
 
   // Register new container of RichDigits to Gaudi data store
   if ( !eventSvc()->registerObject(m_richDigitsLoc,m_digits) ) {

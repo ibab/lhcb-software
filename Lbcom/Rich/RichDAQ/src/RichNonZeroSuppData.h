@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.4 2003-11-08 15:46:24 jonrob Exp $
+// $Id: RichNonZeroSuppData.h,v 1.5 2003-11-08 16:00:45 jonrob Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H 
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -146,7 +146,7 @@ inline MsgStream & operator << ( MsgStream & os,
                                  const RichNonZeroSuppData & data )
 {
   for ( unsigned int iRow = 0; iRow < data.dataSize(); ++iRow ) {
-    os << " ";
+    os << "  ";
     for ( unsigned int iCol = 0; iCol < data.dataSize(); ++iCol ) {
       os << (bool)( data.data()[iRow] & (1<<iCol) ) << " ";
     }
