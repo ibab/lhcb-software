@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.13 2002-06-05 09:03:03 gcorti Exp $
+! $Id: release.notes,v 1.14 2002-06-06 12:19:27 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+! 2002-06-06 - Gloria Corti
+ - ParticleTransporter requires the MagneticFieldSvc:
+    use Det/Magnet in requirements and Dll (not anymore in SicbCnv)
+   
 
 <H1><A NAME=v4r0> 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinci v4r0 <<<<<<<<<<<<<<<<<<<<<<

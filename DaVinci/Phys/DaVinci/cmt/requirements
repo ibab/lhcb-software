@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2002-06-05 09:01:48 gcorti Exp $
+# $Id: requirements,v 1.24 2002-06-06 12:17:14 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,7 +8,7 @@
 #--- Allows reading of data produced with Brunel >= v5
 #    Reading of files produced with SICBDST is not supported in DaVinci v2r0
 package           DaVinci
-version           v4r0
+version           v4r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -70,7 +70,8 @@ use Futio          v11    SICB
 #--- Detector description ( add any other Det package you need )
 use XmlDDDB        v12r0   Det
 use DetDesc        v10r2   Det
-use VeloDet        v5r0   Det
+use VeloDet        v5r0    Det
+use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
 use EventSys       v10r1  Event
