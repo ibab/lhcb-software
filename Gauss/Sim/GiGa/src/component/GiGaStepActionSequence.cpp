@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/24 07:11:05  ibelyaev
+/// new methods for object deletion in GiGaUtil namespace
+///
 /// Revision 1.1  2001/07/23 20:53:46  ibelyaev
 /// reorganization of GiGaUtil namespace
 /// 
@@ -9,6 +12,8 @@
 /// STD & STL 
 #include <functional>
 #include <algorithm>
+/// GaudiKernel
+#include "GaudiKernel/PropertyMgr.h"
 /// GiGa
 #include "GiGa/IGiGaStepAction.h"
 #include "GiGa/GiGaStepActionFactory.h"
@@ -42,7 +47,7 @@ GiGaStepActionSequence::GiGaStepActionSequence( const std::string& Name ,
   , m_members    () ///< empty default vector! 
   , m_actions    ()
 {
-  // declareProperty("Members" , m_members );
+  declareProperty("Members" , m_members );
 };
 
 /// ===========================================================================

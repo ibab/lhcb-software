@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/24 07:11:04  ibelyaev
+/// new methods for object deletion in GiGaUtil namespace
+///
 /// Revision 1.1  2001/07/23 20:53:45  ibelyaev
 /// reorganization of GiGaUtil namespace
 /// 
@@ -18,7 +21,7 @@
 /// forward declarations 
 class IObjManager;
 class ISvcLocator;
-
+class IFactory;
 class IGiGaPhysList;
 class IGiGaEventAction;
 class IGiGaStepAction;
