@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.4 2004-07-02 14:36:08 jonrob Exp $
+// $Id: RichRayTracing.cpp,v 1.5 2004-07-12 14:25:02 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -106,8 +106,7 @@ StatusCode RichRayTracing::initialize()
 //=============================================================================
 StatusCode RichRayTracing::finalize()
 {
-  debug() << "Finalize" << endreq;
-
+  // finalize base class
   return RichToolBase::finalize();
 }
 

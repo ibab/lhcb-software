@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichToolRegistry.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
 
 // Suppress "debug information truncated" warnings on Windows
 #include "GaudiKernel/Kernel.h"
@@ -31,22 +31,18 @@ RichToolRegistry::RichToolRegistry( const std::string& type,
 
 StatusCode RichToolRegistry::initialize() 
 {
-  debug() << "Initialize :-" << endreq;
-
   // Execute the base class initialize
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
+  debug() << "Initialize" << endreq;
+
   // setup tool registry
   for ( ToolList::iterator it = m_names.begin();
         it != m_names.end(); ++it ) {
-    std::string name = (*it);
-    std::string type = (*it);
     const int slash = (*it).find_first_of( "/" );
-    if ( slash > 0 ) {
-      type = (*it).substr( 0, slash );
-      name = (*it).substr( slash+1 );
-    }
+    const std::string name = ( slash>0 ? (*it).substr(slash+1) : *it );
+    const std::string type = ( slash>0 ? (*it).substr(0,slash) : *it );
     addEntry(name,type);
   }
   m_names.clear();
@@ -57,7 +53,6 @@ StatusCode RichToolRegistry::initialize()
 StatusCode RichToolRegistry::finalize() 
 {
   debug() << "Finalize" << endreq;
-
   // Finalise base class
   return GaudiTool::finalize();
 }

@@ -1,9 +1,9 @@
-// $Id: RichDetParameters.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
-// Include files 
+// $Id: RichDetParameters.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
+// Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/MsgStream.h"
 
 // local
 #include "RichDetParameters.h"
@@ -16,7 +16,7 @@
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichDetParameters>          s_factory ;
-const        IToolFactory& RichDetParametersFactory = s_factory ; 
+const        IToolFactory& RichDetParametersFactory = s_factory ;
 
 
 //=============================================================================
@@ -50,24 +50,17 @@ RichDetParameters::RichDetParameters( const std::string& type,
 
 }
 
-StatusCode RichDetParameters::initialize() 
+StatusCode RichDetParameters::initialize()
 {
-  debug() << "Initialize" << endreq;
-
   // Initialise base class
-  StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << " Max Photon Energy            = " << m_maxPhotEn << endreq
-          << " Min Photon Energy            = " << m_minPhotEn << endreq;
-
-return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode RichDetParameters::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // base class finalize
   return RichToolBase::finalize();
 }

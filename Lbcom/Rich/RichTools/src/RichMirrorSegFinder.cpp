@@ -1,4 +1,4 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.5 2004-07-01 11:10:08 papanest Exp $
+// $Id: RichMirrorSegFinder.cpp,v 1.6 2004-07-12 14:25:02 jonrob Exp $
 
 // local
 #include "RichMirrorSegFinder.h"
@@ -159,8 +159,6 @@ StatusCode RichMirrorSegFinder::initialize( ) {
 //=========================================================================
 StatusCode RichMirrorSegFinder::finalize( )
 {
-  debug() << "Finalize" << endreq;
-
   return RichToolBase::finalize();
 }
 

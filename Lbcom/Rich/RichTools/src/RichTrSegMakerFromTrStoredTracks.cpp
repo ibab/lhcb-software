@@ -1,4 +1,4 @@
-// $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.2 2004-07-01 11:10:08 papanest Exp $
+// $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.3 2004-07-12 14:25:02 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -61,7 +61,6 @@ RichTrSegMakerFromTrStoredTracks::~RichTrSegMakerFromTrStoredTracks() { }
 //=============================================================================
 StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
 {
-
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -123,8 +122,6 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
 //=============================================================================
 StatusCode RichTrSegMakerFromTrStoredTracks::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichToolBase::finalize();
 }

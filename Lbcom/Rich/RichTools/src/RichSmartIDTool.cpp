@@ -1,4 +1,4 @@
-// $Id: RichSmartIDTool.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichSmartIDTool.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
 // Include files
 
 // local
@@ -62,8 +62,6 @@ StatusCode RichSmartIDTool::initialize()
 //=============================================================================
 StatusCode RichSmartIDTool::finalize  ()
 {
-  debug() << "Finalize" << endreq;
-
   return RichToolBase::finalize();
 }
 

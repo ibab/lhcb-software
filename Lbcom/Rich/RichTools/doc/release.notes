@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2004-07-12 - Chris Jones
+ - Minor changes to debug printout (now done from bas class)
+
 ! 2004-07-02 - Chris Jones
  - Update RichRayTracing tool to altered interface
 

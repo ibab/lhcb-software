@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRefractiveIndex.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichTabulatedRefractiveIndex.cpp,v 1.2 2004-07-12 14:25:02 jonrob Exp $
 
 // local
 #include "RichTabulatedRefractiveIndex.h"
@@ -34,12 +34,10 @@ RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& 
 
 }
 
-StatusCode RichTabulatedRefractiveIndex::initialize() {
-
-  debug() << "Initialize" << endreq;
-
+StatusCode RichTabulatedRefractiveIndex::initialize() 
+{
   // Initialise base class
-  StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
  
   // Get tools
@@ -77,8 +75,6 @@ StatusCode RichTabulatedRefractiveIndex::initialize() {
 
 StatusCode RichTabulatedRefractiveIndex::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Tidy up
   for ( RefractiveIndices::iterator iRef = m_refIndex.begin();
         iRef != m_refIndex.end(); ++iRef ) {

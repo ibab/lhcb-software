@@ -1,4 +1,4 @@
-// $Id: RichPhotonReco.cpp,v 1.3 2004-07-01 11:10:08 papanest Exp $
+// $Id: RichPhotonReco.cpp,v 1.4 2004-07-12 14:25:02 jonrob Exp $
 
 // local
 #include "RichPhotonReco.h"
@@ -43,8 +43,9 @@ RichPhotonReco::~RichPhotonReco() { }
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichPhotonReco::initialize() {
-
+StatusCode RichPhotonReco::initialize() 
+{
+  // initialise base class
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
@@ -89,10 +90,8 @@ StatusCode RichPhotonReco::initialize() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichPhotonReco::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichPhotonReco::finalize() 
+{
   return RichToolBase::finalize();
 }
 
