@@ -5,7 +5,7 @@ branches src cmt doc options
 
 # add "use" statements
 use GaudiKernel        v12r*
-use MuonIdentification v1r*  Event
+use MuonEvent          v1r*  Event
 use MuonTools          v2r*  Muon
 
 # build a MuonID library

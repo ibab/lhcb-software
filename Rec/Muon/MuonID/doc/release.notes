@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.2 2002-05-10 15:25:51 dhcroft Exp $
+! $Id: release.notes,v 1.3 2002-05-14 16:19:38 dhcroft Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 20020514 - David Hutchcroft
+  Modified requirements file to point at Event/MuonEvent not (now removed) 
+  Event/MuonIdentification
 
 <<<<<<<<<<<<<<<<<<<<<<<<<< v1r0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ! 20020510 - MuonID v1r0  David Hutchcroft
