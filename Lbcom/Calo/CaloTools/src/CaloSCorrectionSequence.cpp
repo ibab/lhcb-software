@@ -361,30 +361,48 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   y*=sizeseed;
   y+=yseed;
   // X/Y/E: pass data to CaloPosition
-  CaloPosition* position = new CaloPosition();// = hypo->position();
+  CaloPosition* position = new CaloPosition();
+  //CaloPosition* position  = hypo->position();
   logmsg << MSG::VERBOSE << "CaloPosition created..." << endreq;
   HepVector localposition(3);
-  localposition[0]=x;
-  localposition[1]=y;
-  localposition[2]=energy;
+  localposition(CaloPosition::X)=x;
+  localposition(CaloPosition::X)=y;
+  localposition(CaloPosition::E)=energy;
   position->setParameters(localposition);
-
-  (position->covariance())(CaloPosition::E,CaloPosition::E)=
-  ((hypo->position())->covariance())(CaloPosition::E,CaloPosition::E);
-  (position->covariance())(CaloPosition::E,CaloPosition::X)=xprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::X);
-  (position->covariance())(CaloPosition::E,CaloPosition::Y)=yprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::Y);
-  (position->covariance())(CaloPosition::X,CaloPosition::X)=xprime*xprime
-    *((hypo->position())->covariance())(CaloPosition::X,CaloPosition::X);
-  (position->covariance())(CaloPosition::X,CaloPosition::Y)=xprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-  (position->covariance())(CaloPosition::Y,CaloPosition::Y)=yprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-
   logmsg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
+
+  HepSymMatrix localcovariance(3,1);
+  //HepSymMatrix localcovariance((hypo->position())->covariance());
+  /*
+  localcovariance(CaloPosition::E,CaloPosition::E)=
+    ((hypo->position())->covariance())(CaloPosition::E,CaloPosition::E);
+  localcovariance(CaloPosition::E,CaloPosition::X)=xprime
+    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::X);
+  localcovariance(CaloPosition::E,CaloPosition::Y)=yprime
+    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::Y);
+  localcovariance(CaloPosition::X,CaloPosition::X)=xprime*xprime
+    *((hypo->position())->covariance())(CaloPosition::X,CaloPosition::X);
+  localcovariance(CaloPosition::X,CaloPosition::Y)=xprime*yprime
+    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
+  localcovariance(CaloPosition::Y,CaloPosition::Y)=yprime*yprime
+    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
+    */
+  position->setCovariance(localcovariance);  
+  /*
+  //CaloPosition *old = hypo->position();
+  //HepSymMatrix oldcov = ((hypo->position())->covariance());
+  //HepSymMatrix cov = (hypo->position())->covariance();
+  CaloPosition* old = hypo->position();
+  
+  //CaloPosition::Covariance oldcov(hypo->position()->covariance());  
+  logmsg << MSG::VERBOSE 
+         << ":" << position->covariance()
+         << ":" << old->covariance()
+         << endreq;
+  */
+  logmsg << MSG::VERBOSE << "Covariance updated..." << endreq;
   hypo->setPosition(position);  
-  logmsg << MSG::VERBOSE << "CaloHypo processed..." << endreq;
+  logmsg << MSG::VERBOSE << "CaloHypo updated..." << endreq;
 
   return StatusCode::SUCCESS;
 }
