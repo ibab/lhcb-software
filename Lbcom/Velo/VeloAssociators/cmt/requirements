@@ -1,0 +1,50 @@
+# Created    : 21/05/02
+# Maintainer : Chris Parkes
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           VeloAssociators
+version           v1r0
+
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          VeloAssociators src cmt doc options
+
+include_dirs $(VELOASSOCIATORSROOT)
+
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use  VeloEvent  v10r*   Event
+use  VeloDet    v5r*    Det
+
+# Component library building rule
+#============================================================================
+library          VeloAssociators    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    package_Cstamps
+apply_pattern    packageShr
+
+#============================================================================
+private
+apply_pattern    package_Cshlibflags
+macro VeloAssociatorslinkopts  " $(LHCbKernel_linkopts) "
+
+
+
+
+
+
+
+
+
+
+
+
+

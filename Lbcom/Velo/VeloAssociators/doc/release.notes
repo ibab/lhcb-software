@@ -1,0 +1,12 @@
+! Package     : VeloAssociator
+! Responsible : Chris Parkes
+
+!=============================================================================
+! 22/05/2002 - Chris Parkes  ** v1r0 **
+  - Initial Release. Two Associators and their algorithms added.
+    1) Linking VeloClusters and MCVeloHits
+    ambiguities between hits and MCVeloFEs are not solved correctly, 
+just one arbitrarily picked. My (currently unreleased) VeloDetectorElement 
+is needed to help solve this.
+    2) Linking VeloCluster and MCParticles  
+
