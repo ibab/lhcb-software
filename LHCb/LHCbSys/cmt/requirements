@@ -15,7 +15,7 @@ use BookKeeping 	v1r2	Tools
 # External packages used by GenEvent
 use PYTHIA		v2r6205p2 Gen
 use HepMC		v3r121p1  Sim
-use GenEvent     	v2r3p1	Event
+use GenEvent     	v2r4	Event
 
 # Kernel packages
 use KernelSys   	v1r5	Kernel
