@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCHitAlg.cpp,v 1.2 2003-07-15 11:31:07 jvantilb Exp $
+// $Id: OTDigit2MCHitAlg.cpp,v 1.3 2004-04-21 16:01:39 cattanem Exp $
 
 // Event
 #include "Event/OTDigit.h"
@@ -137,9 +137,10 @@ OTDigit2MCHitAlg::associateToTruth(const OTDigit* aDigit,
       if (0 != aDeposit) {
         MCHit* aHit = aDeposit->mcHit();
         if (0 != aHit) {
-          if (m_spillOver || m_mcHits == aHit->parent() ) 
+          if( m_spillOver || (m_mcHits == aHit->parent()) ) {
             hitVector.push_back( aHit );
             hitNumbers.push_back( iterDep->weight() );
+          }
         }
       }
     }
