@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.h,v 1.4 2003-06-30 12:04:02 odie Exp $
+// $Id: CategoryTaggingTool.h,v 1.5 2003-06-30 12:08:12 odie Exp $
 #ifndef CATEGORYTAGGINGTOOL_H 
 #define CATEGORYTAGGINGTOOL_H 1
 
@@ -89,7 +89,7 @@ private:
         ed2 = epsilon*pow(1-2*omega, 2);
         sepsilon = sqrt(epsilon*(1-epsilon)/nevents);
         somega = sqrt(omega*(1-omega)/(b+bbar));
-        sed2 = sqrt(ed2/nevents*(4-ed2*(1+3/e)));
+        sed2 = sqrt(ed2/nevents*(4-ed2*(1+3/epsilon)));
       };
     private:
       std::map<FlavourTag::TagResult,unsigned int> counts;
