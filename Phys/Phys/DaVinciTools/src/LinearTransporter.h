@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.h,v 1.2 2002-07-24 18:20:45 gcorti Exp $
+// $Id: LinearTransporter.h,v 1.3 2002-10-21 21:32:31 gcorti Exp $
 #ifndef LINEARTRANSPORTER_H 
 #define LINEARTRANSPORTER_H 1
 
@@ -27,6 +27,10 @@ class LinearTransporter : public AlgTool,
                           virtual public IParticleTransporter {
 
 public:
+
+  /// Initialize
+  StatusCode initialize();
+
   /// Standard constructor
   LinearTransporter( const std::string& type, 
                      const std::string& name,

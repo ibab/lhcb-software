@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.cpp,v 1.2 2002-07-24 18:20:47 gcorti Exp $
+// $Id: LinearTransporter.cpp,v 1.3 2002-10-21 21:32:33 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -38,6 +38,18 @@ LinearTransporter::LinearTransporter( const std::string& type,
   declareInterface<IParticleTransporter>(this);
 
 }
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode LinearTransporter::initialize(){
+  MsgStream log(msgSvc(), name());
+  
+  log << MSG::INFO << "LinearTransporter Initialization starting..." 
+      << endreq;
+  
+  return StatusCode::SUCCESS;
+  
+}
 
 //=============================================================================
 //  Transport with linear extrapolation (particle iterator)
@@ -57,18 +69,20 @@ StatusCode LinearTransporter::transport(ParticleVector::const_iterator &icand,
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
+
 
   
   StatusCode sc = StatusCode::SUCCESS;
@@ -95,17 +109,18 @@ StatusCode LinearTransporter::transport(const Particle & icand,
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
   
   
@@ -133,17 +148,18 @@ StatusCode LinearTransporter::transport(Particle & icand,
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
   
   
@@ -235,4 +251,3 @@ StatusCode LinearTransporter::linTransport(Particle *&workParticle,
 
   return StatusCode::SUCCESS;  
 }
-

@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.4 2002-07-24 18:21:01 gcorti Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.5 2002-10-21 21:32:25 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -114,18 +114,20 @@ StatusCode NsctVeloTransporter::transport(ParticleVector::const_iterator &icand,
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
+
 
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
   
@@ -151,17 +153,18 @@ StatusCode NsctVeloTransporter::transport(const Particle & icand,
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
   
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
@@ -188,17 +191,18 @@ StatusCode NsctVeloTransporter::transport(Particle & icand,
   double zold = oldPOT.z();
 
   int ipz = 1;
-  double zr = znew;
-  double zl = zold;
+  double zr = zold;
+  double zl = znew;
   if ( znew > zold ) {
     ipz = -1;
-    zr = zold;
-    zl = znew;
+    zr = znew;
+    zl = zold;
   }
   
   if ( zl < -500.0 || zr > 21000.0 ){
-    log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
+    log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
         << endreq;    
+    return StatusCode::FAILURE;
   }
   
   // ipz = 1 upstream going tracks; ipz = -1 downstream going tracks
