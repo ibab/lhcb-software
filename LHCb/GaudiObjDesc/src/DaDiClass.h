@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.2 2001-10-09 17:01:04 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.3 2001-10-10 16:09:32 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -80,20 +80,20 @@ protected:
 
 private:
 
-	DOMString		            m_className, 
-						        m_classDesc, 
-							    m_classAuthor, 
-								m_classDerived,
-								m_classTemplateVector,
-								m_classTemplateList,
-								m_classID;
-	std::list<std::string>		m_impSoftList,
-								m_impStdList,
-								m_importList;
+	DOMString                 m_className, 
+                            m_classDesc, 
+                            m_classAuthor, 
+                            m_classDerived,
+                            m_classTemplateVector,
+                            m_classTemplateList,
+                            m_classID;
+	std::list<std::string>    m_impSoftList,
+                            m_impStdList,
+                            m_importList;
 	std::list<DaDiBaseClass*>	m_daDiBaseClass;
 	std::list<DaDiAttribute*>	m_daDiAttribute;
-	std::list<DaDiRelation*>	m_daDiRelation;
-	std::list<DaDiMethod*>		m_daDiMethod;
+	std::list<DaDiRelation*>  m_daDiRelation;
+	std::list<DaDiMethod*>    m_daDiMethod;
 };
 
 inline DOMString DaDiClass::className()

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.4 2001-10-10 15:38:11 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.5 2001-10-10 16:11:14 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -366,13 +366,18 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
 ///
 /// check if Class is an 'Eventclass' (derived from 'DataObject' or 'ContainedObject'
 ///
-  for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
+/*for (i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
   {
     std::string bClassName = gddClass->popDaDiBaseClass()->name().transcode();
     if ((bClassName == "DataObject") || (bClassName == "ContainedObject"))
     {
       isEventClass = true;
     }
+  }
+*/
+  if (gddClass->classID() != NULL)
+  {
+    isEventClass = true;
   }
 
 
