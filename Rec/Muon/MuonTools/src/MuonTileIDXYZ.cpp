@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.13 2002-06-21 13:48:38 cattanem Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.14 2002-07-03 14:46:54 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -348,7 +348,7 @@ MuonTileIDXYZ::locateFEFromXYZ(const double& x,
     int yPos = static_cast<int>(floor(localY/padSizeY));
 
     muonChannels.push_back(MuonChannel(xPos,yPos,
-                                        MuonParameters::Anode));
+                                        MuonParameters::Cathode));
   }
   
   return StatusCode::SUCCESS;
