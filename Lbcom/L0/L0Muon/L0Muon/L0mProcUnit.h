@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.1 2001-06-07 16:46:15 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.2 2001-07-09 19:38:47 atsareg Exp $
 
 #ifndef L0MUON_L0MPROCUNIT_H     
 #define L0MUON_L0MPROCUNIT_H     1 
@@ -8,6 +8,7 @@
 #include "L0Muon/L0mTower.h"
 #include "L0Muon/L0MuonCandidate.h"
 
+class MsgStream;
 
 /** @class L0mProcUnit L0mProcUnit.h L0mProcUnit.h 
 
@@ -26,9 +27,10 @@ public:
     L0mProcUnit(const std::vector<double>& ptpara,
                 const std::vector<int>& foiX,
                 const std::vector<int>& foiY,
+		const std::vector<int>& extM1,
 		double precision,
 		int bits,
-                MuonTile& mt); 
+                const MuonTile& mt); 
 		   
     /// Default destructor	      
     ~L0mProcUnit();
@@ -36,11 +38,17 @@ public:
     /// Execute L0 algorithm and deliver max of 2 candidates
     L0Muon::StatusCode execute(MsgStream& log);	
     /// Add a tower for processing       
-    void addTower(L0mTower* lt) { m_towers.push_back(lt); };  
+    void addTower(L0mTower* lt);  
     /// Clean up all the towers;
-    void clear(); 
+    void clear();
+    /// Get the number of active towers 
+    int towers() { return m_towers.size(); }
     /// get candidates
     std::vector<L0MuonCandidate*> candidates() {return m_candidates; }
+    /// print Processing Unit parameters
+    void printParameters( MsgStream& log);
+    // class L0mTower is our friend to get algorithm parameters
+    friend class L0mTower;
     
 private:
     
@@ -54,7 +62,9 @@ private:
     
     // Fields of interest
     std::vector<int> m_foiX;
-    std::vector<int> m_foiY;    
+    std::vector<int> m_foiY; 
+    // Parameters for extrapolation to M1
+    std::vector<int> m_extraM1;    
     // Pt precision
     double m_precision;
     // Number of bits for Pt encoding
@@ -67,6 +77,6 @@ private:
 
 };
 
-bool operator==(L0mProcUnit pu1, L0mProcUnit pu2);
+// bool operator==(L0mProcUnit* pu1, L0mProcUnit* pu2);
 
 #endif
