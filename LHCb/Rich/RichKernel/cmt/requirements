@@ -1,0 +1,10 @@
+package RichKernel
+
+version v1
+
+branches	src cmt RichKernel
+
+include_dirs 	${RICHKERNELROOT}
+
+use GaudiKernel	v11*
+use CLHEP	v1*
