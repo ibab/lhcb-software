@@ -1,14 +1,19 @@
+
+//-----------------------------------------------------------------------------
 /** @file IRichRefractiveIndex.h
  *
  *  Header file for tool interface : IRichRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: IRichRefractiveIndex.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: IRichRefractiveIndex.h,v 1.6 2005-01-07 12:42:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_IRICHREFRACTIVEINDEX_H
 #define RICHKERNEL_IRICHREFRACTIVEINDEX_H 1
