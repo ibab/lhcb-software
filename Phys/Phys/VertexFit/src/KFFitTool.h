@@ -10,7 +10,7 @@
 #include "GaudiKernel/AlgTool.h"
 
 // Include files from DaVinciTools
-#include "DaVinciTools/IKFFitTool.h"
+#include "Kernel/IKFFitTool.h"
 #include "DaVinciTools/IParticleTransporter.h"
 
 // Forward declarations
