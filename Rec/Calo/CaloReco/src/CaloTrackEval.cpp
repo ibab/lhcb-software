@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.cpp,v 1.2 2002-12-09 17:43:09 cattanem Exp $
+// $Id: CaloTrackEval.cpp,v 1.3 2003-01-19 12:08:31 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/09 17:43:09  cattanem
+// bug fixes
+//
 // Revision 1.1  2002/12/01 14:22:57  ibelyaev
 //  Hcal stuff and updated S-coprrections
 //
@@ -186,7 +189,13 @@ StatusCode CaloTrackEval::finalize   ()
  *  @param inc incident to be handled 
  */
 // ============================================================================
-void CaloTrackEval::handle( const Incident& /* inc */  ) { m_digits = 0 ; };
+void CaloTrackEval::handle( const Incident& /* inc */  ) 
+{
+  // delete the state 
+  if( 0 != m_state ) { delete m_state ; m_state = 0 ; }
+  // reset  digits  
+  m_digits = 0 ; 
+};
 // ============================================================================
 
 // ============================================================================
@@ -228,6 +237,8 @@ StatusCode CaloTrackEval::process
   typedef std::vector<const CaloDigit*> DigVec ;
 
   m_tr = false ;
+  if( 0 != m_state  ) { delete m_state ; m_state = 0 ; }
+  
   // set the initial value to some "bad value"
   value = m_bad ;
   // check arguments 
@@ -238,8 +249,6 @@ StatusCode CaloTrackEval::process
   if( 0 == m_digits ) { return StatusCode::FAILURE                        ; }
 
   if( 0 == track    ) { return Error("findTrackPosition: Invalid Track" ) ; }
-  
-  if( 0 != m_state  ) { delete m_state ; m_state = 0 ; }
   
   const TrState* state0 = track->closestState( m_z - m_numst * m_st ) ;
   if( 0 == state0 ){ return Error("findTrackPosition: Invalid State" ) ; }
