@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.2 2004-01-15 14:24:49 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.3 2004-01-26 14:04:48 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -22,7 +22,6 @@ void LinksByKey::resolveLinks ( IDataProviderSvc* eventSvc ) {
   while ( 0 != (link = linkMgr()->link( linkID ) ) ) {
     if ( 0 == link->object() ) {
       SmartDataPtr<DataObject> tmp( eventSvc, link->path() );
-      //const DataObject* tmp2 = tmp;
       link->setObject( tmp );
     }
     linkID++;
@@ -44,18 +43,39 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
 
   //== Now get the map entry for this key, if any.
 
-  std::map<int,int>::iterator itM = m_linkMap.find( srcKey );
+  int indx;
+  if ( !findIndex( srcKey, indx ) ) {
+     m_keyIndex.push_back( std::pair<int,int>( 0, 0 ) );
+     int iL = m_keyIndex.size() - 1;
+     while ( iL > indx ) {
+       m_keyIndex[iL] = m_keyIndex[iL-1];
+       --iL;
+     }
+     m_keyIndex[indx] = std::pair<int,int>( srcKey, refNum );
+     
+     //== Test of proper ordering
+     
+     //int before = -1;
+     //for ( unsigned int kk = 0 ; m_keyIndex.size() > kk ; kk++ ) {
+     //  if ( before >= m_keyIndex[kk].first ) {
+     //    std::cout << "=== Not sorted Link key " << srcKey
+     //              << " index inserted " << indx
+     //              << " fault at " << kk
+     //              << " before = " << before
+     //              << " current " <<  m_keyIndex[kk].first
+     //              << std::endl;
+     //  }
+     //  before = m_keyIndex[kk].first;
+     //}
 
-  if ( m_linkMap.end() == itM ) {  //== New key -> add the entry
-    m_linkMap[srcKey] = refNum;
-    return;
+     return;
   }
-  
-  int prevIndex =  (*itM).second;
+
+  int prevIndex = m_keyIndex[indx].second;
   if ( m_increasing ) {
     if ( weight < m_linkReference[prevIndex].weight() ) {
       m_linkReference[refNum].setNextIndex( prevIndex );
-      (*itM).second = refNum;
+      m_keyIndex[indx].second = refNum;
     } else {
       int nextIndex = m_linkReference[prevIndex].nextIndex();
       while ( 0 <= nextIndex ) {
@@ -72,7 +92,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
   } else {
     if ( weight > m_linkReference[prevIndex].weight() ) {
       m_linkReference[refNum].setNextIndex( prevIndex );
-      (*itM).second = refNum;
+      m_keyIndex[indx].second = refNum;
     } else {
       int nextIndex = m_linkReference[prevIndex].nextIndex();
       while ( 0 <= nextIndex ) {
@@ -104,9 +124,9 @@ bool LinksByKey::firstReference ( int key,
     linkID = link->ID();
   }
   
-  std::map<int,int>::iterator itM;
-  if ( m_linkMap.end() != ( itM = m_linkMap.find( key ) ) ) {
-    reference = m_linkReference[ (*itM).second ];
+  int index;
+  if ( findIndex( key, index ) ) {
+    reference = m_linkReference[ m_keyIndex[index].second ];
     while ( linkID != reference.srcLinkID() ) {
       if ( 0 > reference.nextIndex() ) {
         return false;
@@ -140,9 +160,9 @@ bool LinksByKey::nextReference ( LinkReference& reference ) {
 //=========================================================================
 // Returns the first key for which the specified reference exists 
 //=========================================================================
-int LinksByKey::firstSource ( LinkReference& reference, 
-                              std::map<int,int>::const_iterator& iter ) {
-  iter = m_linkMap.begin();
+int LinksByKey::firstSource ( LinkReference& reference,
+    std::vector<std::pair<int,int> >::const_iterator& iter ) {
+  iter = m_keyIndex.begin();
   reference.setNextIndex( -1 );  // Indicate to restart at this iter's content
   return nextSource( reference, iter );
 }
@@ -151,10 +171,10 @@ int LinksByKey::firstSource ( LinkReference& reference,
 // Returns the next key for which the specified reference exists 
 //=========================================================================
 int LinksByKey::nextSource ( LinkReference& reference, 
-                             std::map<int,int>::const_iterator& iter ) {
+    std::vector<std::pair<int,int> >::const_iterator& iter ) {
   LinkReference temp;
   int refNum = reference.nextIndex();  // next entry
-  while ( iter != m_linkMap.end() ) {
+  while ( iter != m_keyIndex.end() ) {
     if ( 0 > refNum ) refNum = (*iter).second;  // first of this iter
     while( 0 <= refNum ) {
       temp = m_linkReference[ refNum ];
@@ -185,4 +205,29 @@ int LinksByKey::linkID ( const DataObject* obj ) {
   }
   return id;
 }
+
+//=========================================================================
+//  Find the index of a given key in m_keyIndex. False if not found.
+//=========================================================================
+bool LinksByKey::findIndex ( int key, int& index) {
+
+  // binary search
+  int iF = 0;
+  int iL = m_keyIndex.size() - 1;
+  while ( iF <= iL ) {
+    int iM = (iF + iL ) / 2;
+    int tmpKey = m_keyIndex[iM].first;
+    if ( key == tmpKey ) {
+      index = iM;
+      return true;
+    } else if ( key < tmpKey ) {
+      iL = iM-1;
+    } else {
+      iF = iM+1;
+    }
+  }
+  index = iF;
+  return false;
+}
+
 //=============================================================================

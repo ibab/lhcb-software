@@ -3,6 +3,10 @@
 <gdd>
   <package name="LinksByKey">
 
+
+    <import name="GaudiKernel/SmartDataPtr"/>
+    <import name="Kernel/LHCbStreams"/>
+
     <class 
       name     = "LinkReference"
       author   = "Olivier Callot"
@@ -42,9 +46,8 @@ m_weight    = weight;
         desc   = "weight of the reference" />
     </class>
 
-    <import name="GaudiKernel/SmartDataPtr"/>
-    <import name="Kernel/LHCbStreams"/>
 
+ 
     <class 
       name        = "LinksByKey" 
       author      = "OlivierCallot" 
@@ -52,7 +55,6 @@ m_weight    = weight;
       id          = "400">
 
       <base   name = "DataObject"/>
-      &DataObject;
       <import name = "Event/LinkReference"/>
       <import name = "GaudiKernel/IDataProviderSvc" />
 
@@ -60,7 +62,7 @@ m_weight    = weight;
       <constructor 
         desc      = "Default constructor, reserve space" >
         <code> 
-// map can not have 'reserved' space
+m_keyIndex.reserve(1000);
 m_linkReference.reserve(1000);
 m_increasing = false;
         </code>
@@ -74,8 +76,8 @@ m_increasing = false;
         desc      = "Type of ordering" />
 
       <attribute
-	type      = "std::map&lt;int,int &gt;"
-        name      = "linkMap"
+        type      = "std::vector&lt;std::pair&lt;int,int&gt; &gt;"
+        name      = "keyIndex"
 	setMeth   = "FALSE"
 	getMeth   = "FALSE"
         desc      = "List of linked objects" />
@@ -144,7 +146,7 @@ m_increasing = false;
           const = "FALSE" 
           inout = "BOTH"/>
         <arg 
-          type  = "std::map&lt;int,int&gt;::const_iterator" 
+          type  = "std::vector&lt;std::pair&lt;int,int&gt; &gt;::const_iterator" 
           name  = "iter" 
           inout = "BOTH"/>
       </method>
@@ -159,7 +161,7 @@ m_increasing = false;
           const = "FALSE" 
           inout = "BOTH"/>
         <arg 
-          type  = "std::map&lt;int,int&gt;::const_iterator" 
+          type  = "std::vector&lt;std::pair&lt;int,int&gt; &gt;::const_iterator" 
           name  = "iter" 
           inout = "BOTH"/>
  
@@ -170,6 +172,16 @@ m_increasing = false;
         name    = "linkID"
         argList = "const DataObject* obj"
         desc    = "Returns the LinkManager linkID for this data object (Container)" />
+
+      <method
+        type    = "bool"
+        name    = "findIndex"
+        access  = "PROTECTED"
+        desc    = "Returns the index of the key in m_keyIndex. True if key exist, else inserting position" >
+        <arg type = "int" name = "key" inout="BYVALUE"/>
+        <arg type = "int" name = "index" inout = "BOTH" />
+      </method>
+
     </class>
 
   </package>

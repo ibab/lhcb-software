@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.2 2004-01-15 14:24:49 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.3 2004-01-26 14:04:48 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -64,7 +64,7 @@ public:
 protected:
 
 private:
-  LinksByKey*    m_links;
-  IMessageSvc*   m_msgSvc;
+  LinksByKey*  m_links;
+  IMessageSvc* m_msgSvc;
 };
-#endif // LINKER_LINKERWITHKEY_H
+#endif // LINKER_LINKERWITHKEYNEW_H

@@ -4,6 +4,13 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2004-01-26 - Olivier Callot
+ - Replace the std::map<int,int> by a std::vector<std::pair<int,int> > to
+   access more efficiently the data. Insertion is done in such way to keep
+   the vector sorted on the first memeber of the pair, and access is done by
+   binary search, which is very fast. Reading and writing is just as a simple
+   vector, and should be easily suported by POOL and fast in reading.
+
 !====================== LinkerEvent v1r0 2004-01-16 ==========================
 ! 2004-01-15 - Olivier Callot
  - Fix several problems:
