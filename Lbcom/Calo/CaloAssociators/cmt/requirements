@@ -1,11 +1,8 @@
-# $Id: requirements,v 1.4 2002-06-14 18:01:26 ibelyaev Exp $
+# $Id: requirements,v 1.5 2002-06-15 11:03:43 ibelyaev Exp $
 # =============================================================================
 # CVS  tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.3  2002/06/13 12:28:47  ibelyaev
-#  new options and new algorithm
-#
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -13,14 +10,14 @@
 # Package manager: Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v1r2
+version           v2r0
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
 
 # =============== used packages ===============================================
 use CaloEvent     v11r*  Event 
-use CaloDet       v4r*   Det 
+use CaloDet       v5r*   Det 
 
 # =============== own options =================================================
 set CALOASSOCIATORSOPTS  ${CALOASSOCIATORSROOT}/options
@@ -30,4 +27,6 @@ library           CaloAssociators  *.cpp
 
 # =============== patterns ====================================================
 apply_pattern     component_library library=CaloAssociators 
+
+# =============== end =========================================================
 
