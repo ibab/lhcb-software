@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.111 2004-05-13 15:57:32 pkoppenb Exp $
+# $Id: requirements,v 1.112 2004-05-18 11:51:34 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -52,8 +52,8 @@ use XmlDDDB             v22r2   Det
 use FieldMap            v4r5
 use ParamFiles          v3r6    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r9)
-use LHCb        v15r9
+#-- LHCb libraries 
+use LHCb        v15r10
 
 #=======================================================
 # DaVinciSys v11r8
@@ -99,7 +99,7 @@ use  LoKi               v2r5     Tools
 
 # Physics packages
 use  CommonParticles    v1r5     Phys
-use  DaVinciAssociators v4r5p1   Phys
+use  DaVinciAssociators v4r5p2   Phys
 use  DaVinciChecks      v2r3p2   Phys
 use  DaVinciEff         v2r10    Phys
 use  DaVinciMCTools     v5r4     Phys
