@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.62 2002-12-04 12:59:43 ibelyaev Exp $
+! $Id: release.notes,v 1.63 2002-12-04 21:12:50 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-04 - Ivan Belyaev 
+  eliminate the dependency of GiGa fron *ANY* UI and Vis stuff!
+ - src/Lib/GiGa.cpp             - remove the obsolete file 
+ - src/Lib/GiGaVisManager.cpp   - remove the obsolete file 
+ - src/Lib/GiGaVisManager.h     - remove the obsolete file 
+ - GiGa/GiGa.h                  - remove the obsolete file
+ - src/component/GiGaSvc.cpp    - update for usage of UI and Vis throught 
+ - src/component/GiGaSvc.h        their new abstract interfaces
+ - cmt/requirements             - version update 
+
+! 2002-12-04 - Ivan Belyaev 
+ - GiGa/IGiGaUIsession.h        new abstract interafce for user session 
+ - GiGa/IIDIGiGaUIsession.h     unique indentifier for new interface 
+ - GiGa/IGiGaVisManager.h       new abstract interafce for visual manager 
+ - GiGa/IIDIGiGaVisManager.h    unique indentifier for new interface 
 
 ! 2002-12-04 - Ivan Belyaev
  - src/Lib/GiGaBase.cpp   - remove extra calls for "addRef" 

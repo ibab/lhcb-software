@@ -1,8 +1,11 @@
-// $Id: GiGaSvc.h,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
+// $Id: GiGaSvc.h,v 1.10 2002-12-04 21:12:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/07 12:21:36  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // Revision 1.8  2002/05/01 18:23:39  ibelyaev
 //  import errors/warnings/exception counterf from LHCb Calo software
 //
@@ -33,17 +36,19 @@ class     IObjManager                     ;
 class     IToolSvc                        ;
 template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
-class     IGiGaRunManager    ; 
-class     IGiGaGeoSrc        ; 
-class     IGiGaPhysList      ;
-class     IGiGaStackAction   ;
-class     IGiGaTrackAction   ;
-class     IGiGaStepAction    ;
-class     IGiGaEventAction   ;
-class     IGiGaRunAction     ;
+class     IGiGaRunManager                 ; 
+class     IGiGaGeoSrc                     ; 
+class     IGiGaPhysList                   ;
+class     IGiGaStackAction                ;
+class     IGiGaTrackAction                ;
+class     IGiGaStepAction                 ;
+class     IGiGaEventAction                ;
+class     IGiGaRunAction                  ;
+class     IGiGaUIsession                  ;
+class     IGiGaVisManager                 ;
 /// forwad declarations  from G4
-class     G4UImanager        ; 
-class     G4VVisManager      ;
+class     G4UImanager                     ; 
+class     G4VVisManager                   ;
 
 /**  @class GiGaSvc GiGaSvc.h 
  *    
@@ -402,14 +407,10 @@ private:
   
   /// accessor to IGiGaRunManager object
   inline IGiGaRunManager* runMgr    () const { return m_runMgr         ; } ;
-  /// accessor to visualization manager 
-  inline G4VVisManager*   visMgr    () const { return m_visMgr         ; } ;
   /// accessor to GiGa Geometry Source  
   inline IGiGaGeoSrc*     geoSrc    () const { return m_geoSrc         ; } ;
   /// accessor to Chrono & Stat  service 
   inline IChronoStatSvc*  chronoSvc () const { return m_chronoSvc      ; } ;
-  /// accessor to object manager 
-  inline IObjManager*     objMgr    () const { return m_objMgr         ; } ;
   /// accessor to Tool Service 
   inline IToolSvc*        toolSvc   () const { return m_toolSvc        ; } ;
   /// accessor to Service Locator 
@@ -503,85 +504,128 @@ private:
     const MSG::Level     & lvl = MSG::FATAL          ,
     const StatusCode     & sc  = StatusCode::FAILURE ) const ;
 
-  /** instantiate new physics list object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of physics list object 
-   *  @param PhysicsList    reference to new phisics list object 
-   *  @return status code 
+  /** the useful method for location of tools. 
+   *  for empty "name" delegates to another method  
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
+   *  @exception GiGaException for invalid Tool Service 
+   *  @exception GiGaException for error from Tool Service 
+   *  @exception GiGaException for invalid tool 
+   *  @param type   tool type 
+   *  @param name   tool name
+   *  @param Tool   tool itself (return) 
+   *  @param parent tool parent
+   *  @param create flag for creation of nonexisting tools 
+   *  @return pointer to the tool
    */
-  StatusCode physList      
-  ( const std::string& TypeAndName , 
-    IGiGaPhysList*&    PhisicsList ) ;
+  template<class TOOL>
+  TOOL* 
+  tool
+  ( const std::string& type           , 
+    const std::string& name           , 
+    TOOL*&             Tool           , 
+    const IInterface*  parent  = 0    , 
+    bool               create  = true ) const 
+  {
+    // for empty names delegate to another method 
+    if( name.empty() ) { return tool( type , Tool , parent , create ) ; }
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // get the tool from Tool Service 
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , name , Tool, parent , create );
+    Assert( sc.isSuccess() , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
+    Assert( 0 != Tool      , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    // debug printout 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
+           "' is retrieved from IToolSvc " , MSG::DEBUG  , sc ) ;
+    // return located tool 
+    return Tool ;
+  };
   
-  /** instantiate new stacking action object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of stacking action object 
-   *  @param StackAction    reference to new stacking action object 
-   *  @return status code 
+  /** the useful method for location of tools.
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
+   *  @exception CaloException for invalid Tool Service 
+   *  @exception CaloException for error from Tool Service 
+   *  @exception CaloException for invalid tool 
+   *  @param type   tool type, could be of "Type/Name" format 
+   *  @param Tool   tool itself (return)
+   *  @param parent tool parent
+   *  @param create flag for creation of nonexisting tools 
+   *  @return pointer to the tool
    */
-  StatusCode stackAction   
-  ( const std::string& TypeAndName , 
-    IGiGaStackAction*& StackAction ) ;
+  template<class TOOL>
+  TOOL* 
+  tool
+  ( const std::string& type          , 
+    TOOL*&             Tool          , 
+    const IInterface*  parent = 0    , 
+    bool               create = true ) const
+  {
+    // check the environment 
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // "type" or "type/name" ?
+    std::string::const_iterator it = 
+      std::find( type.begin() , type.end () , '/' );
+    // "type" is compound!
+    if( type.end() != it ) 
+      {
+        std::string::size_type pos = it - type.begin()   ;
+        const std::string ntype( type , 0       , pos               );
+        const std::string nname( type , pos + 1 , std::string::npos );
+        return tool( ntype , // new type 
+                     nname , // new name 
+                     Tool , parent , create            ) ;
+      }
+    // retrieve the tool from Tool Service 
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , Tool, parent , create   );
+    Assert( sc.isSuccess() , "Could not retrieve Tool'" + type + "'" , sc ) ;
+    Assert( 0 != Tool      , "Could not retrieve Tool'" + type + "'"      ) ;
+    // debug printout 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
+           "' is retrieved from IToolSvc " , MSG::DEBUG , sc ) ;
+    // return located tool 
+    return Tool ;
+  };
   
-  /** instantiate new tracking action object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of tracking action object 
-   *  @param TrackAction    reference to new tracking action object 
-   *  @return status code 
-   */
-  StatusCode trackAction 
-  ( const std::string& TypeAndName , 
-    IGiGaTrackAction*& TrackAction ) ;
-  
-  /** instantiate new stepping action object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of stepping action object 
-   *  @param StepAction    reference to new stepping action object 
-   *  @return status code 
-   */
-  StatusCode stepAction 
-  ( const std::string& TypeAndName , 
-    IGiGaStepAction*&  StepAction  ) ;
-  
-  /** instantiate new event action object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of event  action object 
-   *  @param eventAction     reference to new event action object 
-   *  @return status code 
-   */
-  StatusCode eventAction   
-  ( const std::string& TypeAndName , 
-    IGiGaEventAction*& EventAction  ) ;
-  
-  /** instantiate new run action object using abstract factory technique 
-   *  @param TypeAndName    "Type/Name" of run action object 
-   *  @param runAction     reference to new run action object 
-   *  @return status code 
-   */
-  StatusCode runAction    
-  ( const std::string& TypeAndName , 
-    IGiGaRunAction*&   RunAction  ) ;
   
 private:
   
   ///
-  IGiGaRunManager* m_runMgr      ; ///< pointer to IGiGaRunManager  object
-  G4VVisManager*   m_visMgr      ; ///< visualization manager 
+  IChronoStatSvc*   m_chronoSvc           ; ///< pointer to Chrono&Stat Service
+  IToolSvc*         m_toolSvc             ; ///< pointer to Tool Service 
+  //
+  std::string       m_runMgrName          ; ///< name of Run manager  
+  IGiGaRunManager*  m_runMgr              ; ///< pointer to IGiGaRunManager  
   ///
-  IChronoStatSvc*  m_chronoSvc   ; ///< pointer to Chtono & Stat Service
-  IToolSvc*        m_toolSvc     ; ///< pointer to Tool Service 
-  IObjManager*     m_objMgr      ; ///< pointer to ObjectManager object
-  IGiGaGeoSrc*     m_geoSrc      ; ///< pointer to GiGa Geometry Source 
-  std::string      m_objMgrName  ; ///< name of object manager object
-  std::string      m_geoSrcName  ; ///< name of object manager object
-  std::string      m_runMgrName  ; ///< name of Run manager  
+  std::string       m_geoSrcName          ; ///< name of geoemtry source 
+  IGiGaGeoSrc*      m_geoSrc              ; ///< pointer to geometry source 
   ///
-  Strings m_UIsessions           ; ///< list of sessions 
-  ///
-  std::string m_GiGaPhysList     ; ///< type/name of PhysicsList Object
-  std::string m_GiGaStackAction  ; ///< type/name of Stacking Action Object 
-  std::string m_GiGaTrackAction  ; ///< type/name of Tracking Action Object 
-  std::string m_GiGaStepAction   ; ///< type/name of Stepping Action Object 
-  std::string m_GiGaEventAction  ; ///< type/name of Event    Action Object 
-  std::string m_GiGaRunAction    ; ///< type/name of Run      Action Object 
-  ///
-  bool        m_UseVisManager    ; ///< flag to use vis manager 
-  ///
+  std::string       m_GiGaPhysListName    ; ///< type/name of Physics List 
+  IGiGaPhysList*    m_GiGaPhysList        ; ///< pointer to Physics List 
+  std::string       m_GiGaStackActionName ; ///< type/name of Stacking Action 
+  IGiGaStackAction* m_GiGaStackAction     ; ///< pointer to   Stacking Action 
+  std::string       m_GiGaTrackActionName ; ///< type/name of Tracking Action 
+  IGiGaTrackAction* m_GiGaTrackAction     ; ///< pointer to   Tracking Action 
+  std::string       m_GiGaStepActionName  ; ///< type/name of Stepping Action  
+  IGiGaStepAction*  m_GiGaStepAction      ; ///< pointer to   Stepping Action  
+  std::string       m_GiGaEventActionName ; ///< type/name of Event    Action  
+  IGiGaEventAction* m_GiGaEventAction     ; ///< pointer to   Event    Action  
+  std::string       m_GiGaRunActionName   ; ///< type/name of Run      Action  
+  IGiGaRunAction*   m_GiGaRunAction       ; ///< pointer to   Run      Action
+  
+  std::string       m_uiSessionName       ; ///< GiGa UI session type/name 
+  IGiGaUIsession*   m_uiSession           ; ///< GiGa UI session 
+  std::string      m_visManagerName       ; ///< GiGa Vis manager type/name 
+  IGiGaVisManager* m_visManager           ; ///< GiGa Vis manager  
+  
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
   mutable Counter m_errors     ;
