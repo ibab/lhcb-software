@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.19 2002-04-17 15:55:13 andreav Exp $
+# $Id: requirements,v 1.20 2002-07-23 08:20:04 andreav Exp $
 package DetCond
-version v3r0
+version v4r0
 
 branches DetCond cmt src doc
 
@@ -10,8 +10,8 @@ use GaudiSvc    v8r*
 
 # ConditionsDB package
 macro CONDDB_use            "CONDDB v3r02p2" \
-      rh72_gcc2952          "CondDBOracle v3r10p1 Det" \
-      WIN32                 "CondDBOracle v3r10p1 Det"
+      rh72_gcc2952          "CondDBOracle v4r15 Det" \
+      WIN32                 "CondDBOracle v4r15 Det"
 use $(CONDDB_use)
 
 # Inform the C++ precompiler which ConditionsDB implementation is used

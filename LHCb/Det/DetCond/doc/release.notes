@@ -1,6 +1,16 @@
-# $Id: release.notes,v 1.18 2002-04-17 15:55:13 andreav Exp $
+# $Id: release.notes,v 1.19 2002-07-23 08:22:22 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020723 - Andrea Valassi
+Upgrade to CondDBOracle v4r15 and Gaudi v10r4
+- no change to DetCond code
+- dependency on Det/CondDBOracle changed from v3r10p1 to v4r15 (RH7,WIN)
+- dependency on CONDDB (using Objectivity) remains v3r02p2 (RH6)
+- dependency on Gaudi tested with GaudiKernel v12r3 and GaudiSvc v8r3
+- dependency on Det/DetDesc (v10r*) tested with v10r3
+Requirements v4r0, private tag h20020723
 
 ==============================================================================
 !20020417 - Andrea Valassi
