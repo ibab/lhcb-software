@@ -1,8 +1,11 @@
-// $Id: IAssociatorWeighted.h,v 1.6 2002-05-12 09:58:02 ibelyaev Exp $
+// $Id: IAssociatorWeighted.h,v 1.7 2002-05-13 09:48:26 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/12 09:58:02  ibelyaev
+//  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
+//
 // Revision 1.5  2002/05/10 14:49:40  phicharp
 // Add retrieve methods to IAssociatorxx
 // ============================================================================
@@ -236,6 +239,50 @@ public:
   ( const To&        to        , 
     const Weight&    threshold ) const = 0 ;
   
+  /** Method to retrieve a single element associated to a given FROM element
+   *
+   *  @param from  'FROM' object one want to retrieve associated (first) element
+   *  @return to The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual To         associatedFrom 
+  ( const From&      from  ) const = 0 ;
+
+  /** Method to retrieve a single element associated to a given FROM element
+   *
+   *  @param from  'FROM' object one want to retrieve associated (first) element
+   *  @param weight The weight it is associated with
+   *  @return to The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual To         associatedFrom 
+  ( const From&      from , 
+    Weight&          weight  ) const = 0 ;
+
+  /** Method to retrieve a single element associated to a given TO element
+   *
+   *  @param to  'TO' object one want to retrieve associated (first) element
+   *  @return to The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual From       associatedTo
+  ( const To&        from  ) const = 0 ;
+
+  /** Method to retrieve a single element associated to a given TO element
+   *
+   *  @param to  'TO' object one want to retrieve associated (first) element
+   *  @param weight The weight it is associated with
+   *  @return to The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual From       associatedTo
+  ( const To&        to , 
+    Weight&          weight  ) const = 0 ;
+
   /* Method to test if the table does exist or not
    * @return true if direct relation table is available 
    */

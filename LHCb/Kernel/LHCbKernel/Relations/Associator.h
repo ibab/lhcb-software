@@ -1,8 +1,11 @@
-// $Id: Associator.h,v 1.4 2002-05-12 09:58:01 ibelyaev Exp $
+// $Id: Associator.h,v 1.5 2002-05-13 09:48:25 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/12 09:58:01  ibelyaev
+//  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
+//
 // ============================================================================
 #ifndef RELATIONS_ASSOCIATOR_H 
 #define RELATIONS_ASSOCIATOR_H 1
@@ -204,6 +207,46 @@ public:
       return FromRange() ;
     }
     return table->relations( to );
+  };
+  
+  /** Method to retrieve a single element associated to a given FROM element
+   *
+   *  @param from  'FROM' object one want to retrieve associated (first) element
+   *  @return to The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual To         associatedFrom
+  ( const From&      from  ) const 
+  {
+    const Table* table = direct();
+    if (0 != table) {
+      ToRange range = table->relations( from );
+      if( !range->empty ) {
+        return range.begin()->to();
+      }
+    }
+    return 0;
+  };
+  
+  /** Method to retrieve a single element associated to a given TO element
+   *
+   *  @param to  'TO' object one want to retrieve associated (first) element
+   *  @return from The (first) associated object. 
+   *  It is a null pointer if no table was found
+   *  
+   */
+  virtual From       associatedTo
+  ( const To&        to  ) const 
+  {
+    const Table* table = direct();
+    if (0 != table) {
+      FromRange range = table->relations( to );
+      if( !range->empty ) {
+        return range.begin()->to();
+      }
+    }
+    return 0;
   };
   
   /* Method to test if the table does exist or not
