@@ -1,7 +1,9 @@
-# $Id: requirements,v 1.18 2004-07-21 08:02:07 cattanem Exp $
+# $Id: requirements,v 1.19 2004-09-02 18:52:52 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package           CaloInterfaces
-version           v4r0
+version           v4r1
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces
@@ -16,4 +18,8 @@ use LHCbKernel    v5r*	Kernel
 library           CaloInterfaces *.cpp 
 apply_pattern     linker_library library=CaloInterfaces 
 
-
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+# The END 
+# =============================================================================

@@ -1,8 +1,11 @@
-// $Id: IIDICaloTrackMatch.h,v 1.1 2004-02-17 11:51:57 ibelyaev Exp $
+// $Id: IIDICaloTrackMatch.h,v 1.2 2004-09-02 18:52:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:51:57  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.4  2002/05/23 09:41:37  ibelyaev
 //  add 'state' method to ICaloTrackMatch interface
 //
@@ -32,7 +35,7 @@
  *  @author Dima  Rusinov Dmitri.Roussinov@cern.ch
  *  @date   30/10/2001
  */
-static const InterfaceID IID_ICaloTrackMatch( "ICaloTrackMatch" , 3 , 0 );
+static const InterfaceID IID_ICaloTrackMatch( "ICaloTrackMatch" , 4 , 0 );
 
 // ============================================================================
 // The End 

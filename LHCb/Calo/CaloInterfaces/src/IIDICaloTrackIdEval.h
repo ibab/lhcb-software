@@ -1,8 +1,11 @@
-// $Id: IIDICaloTrackIdEval.h,v 1.1 2004-02-17 11:51:57 ibelyaev Exp $
+// $Id: IIDICaloTrackIdEval.h,v 1.2 2004-09-02 18:52:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:51:57  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.1  2002/11/13 20:32:31  ibelyaev
 //  version update + new interface
 // 
@@ -30,7 +33,7 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   2002-11-10
  */
-static const InterfaceID IID_ICaloTrackIdEval( "ICaloTrackIdEval" , 1 , 0 );
+static const InterfaceID IID_ICaloTrackIdEval( "ICaloTrackIdEval" , 2 , 0 );
 
 // ============================================================================
 // The END 

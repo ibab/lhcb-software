@@ -1,14 +1,8 @@
-// $Id: ICaloTrackIdEval.h,v 1.3 2004-02-17 11:51:55 ibelyaev Exp $
+// $Id: ICaloTrackIdEval.h,v 1.4 2004-09-02 18:52:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/02/17 11:42:29  ibelyaev
-//  fix in Likel(i,y)hoods
-//
-// Revision 1.1  2002/11/13 20:32:30  ibelyaev
-//  version update + new interface
-// 
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTRACKIDEVAL_H 
 #define CALOINTERFACES_ICALOTRACKIDEVAL_H 1
@@ -18,7 +12,8 @@
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
 // forward declaration
-class TrStoredTrack;
+class TrStoredTrack ;
+class TrgTrack      ;
 
 /** @class ICaloTrackIdEval ICaloTrackIdEval.h CaloInterfaces/ICaloTrackIdEval.h
  *  
@@ -50,19 +45,39 @@ public:
   
   /** The main processing method 
    *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to thobject to be processed
+   *  @param  track  pointer to the object to be processed
    *  @param  value  (return) the value of the estimator
    *  @return status code 
    */  
-  virtual StatusCode process    ( const TrStoredTrack* track , 
-                                  double&              value ) const = 0 ;
+  virtual StatusCode process   
+  ( const TrStoredTrack* track , 
+    double&              value ) const = 0 ;
   
   /** The main processing method (functor interface)
    *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to thobject to be processed
+   *  @param  track  pointer to the object to be processed
    *  @param  the value of the estimator
    */  
-  virtual double     operator() ( const TrStoredTrack* track ) const = 0 ;
+  virtual double     operator() 
+    ( const TrStoredTrack* track ) const = 0 ;
+  
+  /** The main processing method 
+   *  It evaluated the Track ID estimators using the calorimeter information  
+   *  @param  track  pointer to the object to be processed
+   *  @param  value  (return) the value of the estimator
+   *  @return status code 
+   */  
+  virtual StatusCode process  
+  ( const TrgTrack*      track , 
+    double&              value ) const = 0 ;
+  
+  /** The main processing method (functor interface)
+   *  It evaluated the Track ID estimators using the calorimeter information  
+   *  @param  track  pointer to the object to be processed
+   *  @param  the value of the estimator
+   */  
+  virtual double     operator() 
+    ( const TrgTrack*      track ) const = 0 ;
   
 protected:
   
