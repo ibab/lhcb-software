@@ -3,7 +3,7 @@
 //
 
 #include "$GLOBALRECOROOT/options/ChargedProtoPAlg.opts"
-#include "$GLOBALRECOROOT/options/NeutralPPCreator.opts"
+#include "$GLOBALRECOROOT/options/NeutralProtoPAlg.opts"
 
 // Tools for neutral and charge options
 #include "$CALORECOPTS/PhotonMatch.opts"
