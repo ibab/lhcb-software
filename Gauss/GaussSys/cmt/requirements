@@ -11,8 +11,8 @@ branches cmt doc
 use Gauss		v15r0	Sim
 
 # Generator stuff ...
-use EvtGen              v5r0    Gen
-use GeneratorModules    v10r4   Gen
+use EvtGen              v5r1    Gen
+use GeneratorModules    v11r0   Gen
 
 # GiGa stuff...
 use GiGa        	v16r0	Sim        
