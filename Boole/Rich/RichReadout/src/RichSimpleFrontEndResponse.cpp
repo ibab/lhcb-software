@@ -32,10 +32,9 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  std::vector<RichSmartID> pixels;
   IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs );
-  smartIDs->readoutChannelList(pixels);
+  const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
   releaseTool( smartIDs );
   actual_base = theRegistry.GetNewBase( pixels );
 

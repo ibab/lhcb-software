@@ -4,6 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-01-07 - Chris Jones
+ - Adapt to new RichDAQ package
+ - Import algorithm MCRichDigitsToRawBufferAlg
+ - Remove obsolete algorithm RichDigitCreator
+
 !======================== RichReadout v1r10 2004-11-16 =======================
 ! 2004-10-27 - Chris Jones
  - Use RichEvent v8r*

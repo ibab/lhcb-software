@@ -72,7 +72,7 @@ public:
 
   RichBase& operator=( const RichBase& );
 
-  void upDate( std::vector<RichSmartID> & pixelList );
+  void upDate( const std::vector<RichSmartID> & pixelList );
 
   void cleanUp();
 

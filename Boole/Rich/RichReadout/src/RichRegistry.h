@@ -17,7 +17,7 @@ public:
 
   ~RichRegistry() { cleanUp(); }
 
-  static const RichBase* GetNewBase( std::vector<RichSmartID> & pixels );
+  static const RichBase* GetNewBase( const std::vector<RichSmartID> & pixels );
 
   static const RichBase* GetBase();
 
@@ -34,7 +34,7 @@ private: // data
 
 };
 
-inline const RichBase * RichRegistry::GetNewBase( std::vector<RichSmartID> & pixels )
+inline const RichBase * RichRegistry::GetNewBase( const std::vector<RichSmartID> & pixels )
 {
   RichBase * theBase = new RichBase();
   theBase->upDate(pixels);
