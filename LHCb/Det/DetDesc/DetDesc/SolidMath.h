@@ -1,8 +1,11 @@
-// $Id: SolidMath.h,v 1.2 2002-05-13 18:29:53 ibelyaev Exp $
+// $Id: SolidMath.h,v 1.3 2002-10-30 15:02:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/05/13 18:29:53  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 13 May 2002
+//
 // Revision 1.1  2002/05/11 18:25:46  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 // 
@@ -307,8 +310,8 @@ namespace SolidTicks
     const double s2     = sinthe * sinthe ; 
     
     const double a = 
-      c2 *  vect.z() *  vect.x() + 
-      c2 *  vect.z() *  vect.y() - 
+      c2 *  vect.x() *  vect.x() + 
+      c2 *  vect.y() *  vect.y() - 
       s2 *  vect.z() *  vect.z() ; 
     double       b = 
       c2 *  vect.x() * point.x() + 
