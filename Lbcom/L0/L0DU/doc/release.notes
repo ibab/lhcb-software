@@ -1,6 +1,11 @@
-$Id: release.notes,v 1.12 2002-06-20 18:40:54 ocallot Exp $
+$Id: release.notes,v 1.13 2002-06-23 13:37:38 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2002-06-23 - Olivier Callot
+ - New algorithm L0Monitor to count and display a statistic at end of job.
+   It can also fill an nTuple if one specifies the name with the option 
+   "nTupleName".
 
 ! 2002-06-20 - Olivier Callot
  - Fix the access to the L0MuonCandidate container.

@@ -12,6 +12,7 @@ set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
 use L0Event     v12r*   Event
+use Event       v2r*   Event
 
 # ================ component library =====================================
 library		L0DU	../src/*.cpp

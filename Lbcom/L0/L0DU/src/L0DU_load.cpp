@@ -1,4 +1,4 @@
-// $Id: L0DU_load.cpp,v 1.3 2002-04-05 15:20:45 ocallot Exp $
+// $Id: L0DU_load.cpp,v 1.4 2002-06-23 13:37:38 ocallot Exp $
 // Include files 
 
 
@@ -14,4 +14,5 @@
 
 DECLARE_FACTORY_ENTRIES(L0DU) {
   DECLARE_ALGORITHM( DecisionUnit );
+  DECLARE_ALGORITHM( L0Monitor    );
 }
