@@ -1,8 +1,19 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussTools
 ! Responsible	: Witold Pokorski
-! Purpose     : 
+! Purpose     : collection of sensitive detectors, G4 actions, etc
 !-----------------------------------------------------------------------------
+
+!============================ GaussTools v3r0 2002-11-08 =====================
+! 2002-11-07 - Witek Pokorski
+ - GaussTrajectory - new class with AppendStep method reimplemented in order
+                     to work with the new GaussStepAction
+
+ - GaussStepAction - new class introduced to deal with decisions whether
+                     to store a trajectory point or not 
+ - sensitive detectors - trajectory is marked to be stored when it created
+                         a hit
+ - physics lists - LHEP_GN physics list imported 
 
 ! 2002-10-30 - Witek Pokorski
  - GiGaTrackInformation class moved from GiGa to GaussTools

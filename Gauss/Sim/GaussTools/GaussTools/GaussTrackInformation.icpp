@@ -2,6 +2,10 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2002/10/30 14:00:36  witoldp
+/// changes following introduction vector of pointers to hits in 
+/// GaussTrackInformation
+///
 /// Revision 1.10  2002/10/28 14:47:12  witoldp
 /// added info whether hit was created by the track
 ///
@@ -12,17 +16,15 @@
 /// the package restructurisation(II)
 /// 
 // ============================================================================
-#ifndef     GIGA_GIGATRACKINFORMATION_ICPP
-#define     GIGA_GIGATRACKINFORMATION_ICPP 1 
+#ifndef     GaussTools_GaussTrackInformation_ICPP
+#define     GaussTools_GaussTrackInformation_ICPP 1 
 // ============================================================================
 
 /// Geant4 
 #include "globals.hh"
 #include "G4Allocator.hh"
-/// GiGa 
-//#include "GiGa/GiGaTrackInformation.h"
 
-/** implementation of inline methods from class GiGaTrackInformation 
+/** implementation of inline methods from class GaussTrackInformation 
  *  
  *  @author Vanya Belyaev 
  */
@@ -30,70 +32,83 @@
 // ============================================================================
 /// allocator 
 // ============================================================================
-extern G4Allocator<GiGaTrackInformation> s_GiGaTrackInformationAllocator;
+extern G4Allocator<GaussTrackInformation> s_GaussTrackInformationAllocator;
 
 // ============================================================================
 /// constructor 
 // ============================================================================
-inline GiGaTrackInformation::GiGaTrackInformation()
-  : m_toBeStored( false ), m_createdHit( false )
+inline GaussTrackInformation::GaussTrackInformation()
+  :m_appendStep( false ), m_toBeStored( false ), m_createdHit( false )
 {m_hits.clear();}; 
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-inline GiGaTrackInformation::~GiGaTrackInformation() {}; 
+inline GaussTrackInformation::~GaussTrackInformation() {}; 
 
 // ============================================================================
 /// operator new 
 // ============================================================================
-inline void*      GiGaTrackInformation::operator new    ( size_t    )
-{ return (void*) s_GiGaTrackInformationAllocator.MallocSingle(); };
+inline void*      GaussTrackInformation::operator new    ( size_t    )
+{ return (void*) s_GaussTrackInformationAllocator.MallocSingle(); };
 
 // ============================================================================
 /// operator delete 
 // ============================================================================
-inline void       GiGaTrackInformation::operator delete ( void*  trackInfo  )
+inline void       GaussTrackInformation::operator delete ( void*  trackInfo  )
 { 
-  s_GiGaTrackInformationAllocator.FreeSingle( (GiGaTrackInformation*) 
+  s_GaussTrackInformationAllocator.FreeSingle( (GaussTrackInformation*) 
                                               trackInfo ); 
 };
 
 // ============================================================================
 /// print
 // ============================================================================
-inline void       GiGaTrackInformation::Print() const {};
+inline void       GaussTrackInformation::Print() const {};
 
 // ============================================================================
 /// 
 // ============================================================================
-inline const bool GiGaTrackInformation::toBeStored   () const 
-{ return m_toBeStored; };  
+inline GaussTrackInformation&  
+GaussTrackInformation::setAppendStep ( const bool Flag )       
+{ m_appendStep = Flag ; return *this; }; 
 
 // ============================================================================
 /// 
 // ============================================================================
-inline GiGaTrackInformation&  
-GiGaTrackInformation::setToBeStored ( const bool Flag )       
+inline const bool GaussTrackInformation::appendStep ()       
+{return m_appendStep; }; 
+
+// ============================================================================
+/// 
+// ============================================================================
+inline const bool GaussTrackInformation::toBeStored   () const 
+{ return m_toBeStored; };
+
+// ============================================================================
+/// 
+// ============================================================================
+inline GaussTrackInformation&  
+GaussTrackInformation::setToBeStored ( const bool Flag )       
 { m_toBeStored = Flag ; return *this; }; 
 
 // ============================================================================
 ///
 // ============================================================================
-inline GiGaTrackInformation&  
-GiGaTrackInformation::setCreatedHit ( const bool Flag )       
+inline GaussTrackInformation&  
+GaussTrackInformation::setCreatedHit ( const bool Flag )       
 { m_createdHit = Flag ; return *this; }; 
 
 // ============================================================================
 /// 
 // ============================================================================
-inline const bool GiGaTrackInformation::createdHit   () const 
+inline const bool GaussTrackInformation::createdHit   () const 
 { return m_createdHit; };
 
 // ============================================================================
 /// 
 // ============================================================================
-inline void GiGaTrackInformation::addHit(GaussHitBase* ahit)
+inline void GaussTrackInformation::addHit(GaussHitBase* ahit)
 {
   m_hits.push_back(ahit);
 };
@@ -102,7 +117,7 @@ inline void GiGaTrackInformation::addHit(GaussHitBase* ahit)
 /// 
 // ============================================================================
 
-inline void GiGaTrackInformation::updateHitsTrackID(G4int trackID)
+inline void GaussTrackInformation::updateHitsTrackID(G4int trackID)
 {
   for(std::vector<GaussHitBase*>::iterator i=m_hits.begin(); 
       i != m_hits.end(); i++)
@@ -113,7 +128,7 @@ inline void GiGaTrackInformation::updateHitsTrackID(G4int trackID)
 
 
 // ============================================================================
-#endif  //  GIGA_GIGATRACKINFORMATION_ICPP
+#endif  //  GaussTools_GaussTrackInformation_ICPP
 // ============================================================================
 
 

@@ -48,6 +48,7 @@ public:
   ///
 private:
   std::vector<std::string> m_physconstr;
+  double m_nuCut;
   ///
   GiGaPhysListModular();
   GiGaPhysListModular           ( const GiGaPhysListModular& );

@@ -1,16 +1,16 @@
-# $Id: requirements,v 1.6 2002-10-30 14:00:36 witoldp Exp $
+# $Id: requirements,v 1.7 2002-11-08 11:05:06 witoldp Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package GaussTools
-version v2r0
+version v3r0
 
 # ============== package structure ============================================
 branches         cmt src doc
 
 # ============== explicit dependencies ========================================  
 use AIDA         v3r*
-use GiGaCnv      v8r*      Sim
+use GiGaCnv      v9r*      Sim
 
 # ============== Event ========================================================
 use VeloEvent    v12r*     Event
@@ -29,7 +29,8 @@ library          GaussTools   *.cpp                  \
                               RICH/PhysProcess/*.cpp \
                               RICH/PhysProcess/*.cc  \
                               RICH/Misc/*.cpp        \ 
-                              PhysConstructors/*.cpp 
+                              PhysConstructors/*.cpp \
+                              PhysConstructors/*.cc
 
 # ============== standard includes ============================================
 include_dirs     $(GAUSSTOOLSROOT)

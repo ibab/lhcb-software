@@ -2,6 +2,10 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2002/10/30 14:00:36  witoldp
+/// changes following introduction vector of pointers to hits in 
+/// GiGaTrackInformation
+///
 /// Revision 1.9  2002/10/28 14:47:12  witoldp
 /// added info whether hit was created by the track
 ///
@@ -12,8 +16,8 @@
 /// the package restructurisation(II)
 /// 
 // ============================================================================
-#ifndef      GIGA_GIGATRACKINFORMATION_H 
-#define      GIGA_GIGATRACKINFORMATION_H 1 
+#ifndef      GaussTools_GaussTrackInformation_H 
+#define      GaussTools_GaussTrackInformation_H 1 
 // ============================================================================
 /// STL
 #include <string>
@@ -23,7 +27,7 @@
 /// GaussTools
 #include "GaussTools/GaussHitBase.h"
 
-/** @class GiGaTrackInformation GiGaTrackInformation.h 
+/** @class GaussTrackInformation GaussTrackInformation.h 
  *
  *  Class which is used to strore auxiallry information about G4Track,
  *  could be used to control storage of track 
@@ -36,25 +40,28 @@
  */
 
 ///
-class GiGaTrackInformation : public G4VUserTrackInformation
+class GaussTrackInformation : public G4VUserTrackInformation
 {
   ///
 public:
   ///
-  inline          GiGaTrackInformation() ;
-  virtual inline ~GiGaTrackInformation() ; 
+  inline          GaussTrackInformation() ;
+  virtual inline ~GaussTrackInformation() ; 
   ///
   inline void* operator new    ( size_t );
   inline void  operator delete ( void*  );
   ///
   virtual void Print() const;   /// from base class
   ///
+  /// flag to append step
+  inline GaussTrackInformation& setAppendStep( const bool );
+  inline const bool appendStep();
   /// track is forced to be saved into trajectory 
-  inline GiGaTrackInformation&  setToBeStored               ( const bool ) ;
+  inline GaussTrackInformation&  setToBeStored               ( const bool ) ;
   inline const bool             toBeStored                  () const ;  
   ///
   /// track created a hit
-  inline GiGaTrackInformation& setCreatedHit(const bool);
+  inline GaussTrackInformation& setCreatedHit(const bool);
   inline const bool            createdHit() const;
   ///
   /// add hit pointer
@@ -65,8 +72,10 @@ public:
 
 private:
   ///
+  /// flag indicating that TrajectoryPoint should be appended
+  bool m_appendStep;
   /// flag indicating that track is forced to be stored into trajectory  
-  bool           m_toBeStored;
+  bool m_toBeStored;
   /// flag indicating that track creted a hit
   bool m_createdHit;
   ///
@@ -76,9 +85,9 @@ private:
 
 };
 ///
-#include "GaussTools/GiGaTrackInformation.icpp"  
+#include "GaussTools/GaussTrackInformation.icpp"  
 ///
 
 // ============================================================================
-#endif   ///<  GIGA_GIGATRACKINFORMATION_H 
+#endif   ///<  GIGA_GaussTrackInformation_H 
 // ============================================================================

@@ -46,16 +46,21 @@ GiGaPhysListModular::GiGaPhysListModular
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList()
-{ 
+  : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList(), 
+  m_nuCut(5*m)
+{
   declareProperty( "PhysicsConstructors"  , m_physconstr);
+  declareProperty( "NuCut", m_nuCut);
 };
 // ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaPhysListModular::~GiGaPhysListModular(){};
+GiGaPhysListModular::~GiGaPhysListModular()
+{
+  m_physconstr.clear();
+};
 // ============================================================================
 
 // ============================================================================
@@ -101,11 +106,17 @@ void GiGaPhysListModular::SetCuts()
   //G4VUserPhysicsList::SetCutsWithDefault method sets 
   //the default cut value for all particle types 
   //
+  
+  SetCutValue(m_nuCut,"nu_e");
+  SetCutValue(m_nuCut,"nu_tau");
+  SetCutValue(m_nuCut,"nu_mu");
+  SetCutValue(m_nuCut,"anti_nu_e");
+  SetCutValue(m_nuCut,"anti_nu_tau");
+  SetCutValue(m_nuCut,"anti_nu_mu");
 
   SetCutsWithDefault();
-
+  
   if (verboseLevel>0) { DumpCutValuesTable(); }
-
 };
 
   

@@ -108,9 +108,10 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
       newHit->SetTrackID( trid );
       ///
       G4VUserTrackInformation* ui = track->GetUserInformation(); 
-      GiGaTrackInformation*    gi = 
-        ( 0 == ui )  ? 0 : dynamic_cast<GiGaTrackInformation*> ( ui );
+      GaussTrackInformation*    gi = 
+        ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
       gi->setCreatedHit(true);
+      gi->setToBeStored(true);
       gi->addHit(newHit);
 
       //  newHit->Print();

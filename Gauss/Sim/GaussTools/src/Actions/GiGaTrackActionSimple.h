@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSimple.h,v 1.2 2002-10-30 14:00:37 witoldp Exp $ 
+// $Id: GiGaTrackActionSimple.h,v 1.3 2002-11-08 11:05:06 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/10/30 14:00:37  witoldp
+// changes following introduction vector of pointers to hits in GiGaTrackInformation
+//
 // Revision 1.1  2002/09/26 18:10:55  ibelyaev
 //  repackageing: add all concrete implementations from GiGa
 //
@@ -138,6 +141,8 @@ private:
   bool            m_storeAll              ;
   ///  all primaries are stored
   bool            m_storePrimaries        ;
+  ///  all tracks that created a hit should be stored
+  bool            m_storeHitTracks        ;
   ///  all tracks  with kinetic energy over threshold are stored  
   bool            m_storeByOwnEnergy      ; 
   ///  all tracks  with given type are stored 

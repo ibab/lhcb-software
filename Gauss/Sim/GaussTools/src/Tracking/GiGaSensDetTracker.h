@@ -5,7 +5,7 @@
 
 /// GiGa 
 #include "GiGa/GiGaSensDetBase.h"
-#include "GaussTools/GiGaTrackInformation.h"
+#include "GaussTools/GaussTrackInformation.h"
 #include "TrackerHit.h"
 
 /// forward declarations 
