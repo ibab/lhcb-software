@@ -1,6 +1,12 @@
-!  $Id: release.notes,v 1.18 2002-10-04 11:37:37 cattanem Exp $
+!  $Id: release.notes,v 1.19 2002-11-04 08:43:41 atsareg Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+! 2002-11-04 - A.Tsaregorodtsev
+  - added getTowers() public method to L0mTrigger to get Towers in 
+    the L0mAnalysis context;
+  - slight change in the  L0mTrigger sequence of operations (clean-up
+    in the beginning of the processing ). 
 
 !========================= L0Muon v6r1 2002-10-04 =========================
 ! 2002-09-24 - Marco Cattaneo
