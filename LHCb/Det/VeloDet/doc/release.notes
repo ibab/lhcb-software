@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.21 2002-06-24 08:17:56 ocallot Exp $
+! $Id: release.notes,v 1.22 2002-07-09 18:20:21 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v6r0 2002-07-09 =========================
 ! 2002-06-24 - Olivier Callot
  - Trick to set the OutputLevel in the detector element, to control the print
    level. Default is no print, DEBUG gives the list of the sensor's properties.
