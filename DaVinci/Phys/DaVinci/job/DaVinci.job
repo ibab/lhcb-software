@@ -45,7 +45,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v8r3p3"
+set Dversion = "v8r3p4"
 setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
 
 

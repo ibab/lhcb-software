@@ -3,6 +3,12 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v8r3p4>2003-07-23 DaVinci v8r3p4</A></H1><PRE>
+  - Modifications in (Pre)Selections ( PhysSelSys v5r8)
+    . Bs -> mu mu
+    . Bd -> D* (D(K pi) pi)pi, exclusive
+    . Bc -> Ds (K pi pi) D0~ (K pi), new
+
 </PRE><H1><A NAME=v8r3p3>2003-07-15 DaVinci v8r3p3</A></H1><PRE>
   - Modifications in (Pre)Selections ( PhysSelSys v5r7)
     . Bd -> mu mu K*
