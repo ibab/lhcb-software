@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.cpp,v 1.2 2004-06-29 14:28:38 jonesc Exp $
+// $Id: RichRadiatorType.cpp,v 1.3 2004-08-17 11:27:48 jonrob Exp $
 // Include files 
 
 // local
@@ -18,6 +18,6 @@ std::string Rich::text( const Rich::RadiatorType & radiator )
   case Rich::C4F10:              return "C4F10";
   case Rich::CF4:                return "CF4";
   case Rich::InvalidRadiator:    return "Invalid Radiator";
-  default:                       return "?"; // should never happen
+  default:                       return "SHOULD NEVER SEE THIS";
   }
 }

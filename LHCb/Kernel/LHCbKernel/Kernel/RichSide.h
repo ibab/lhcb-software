@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichSide
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.4 2004-08-17 11:10:41 jonrob Exp $
+ *  $Id: RichSide.h,v 1.5 2004-08-17 11:27:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/08/17 11:10:41  jonrob
+ *  Update doxygen comments for RICH enumerations
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -67,7 +70,7 @@ namespace Rich {
     case Rich::top:           return "top or left"; // Note also covers  Rich::left
     case Rich::bottom:        return "bottom or right"; // Note also covers Rich::right
     case Rich::InvalidSide:   return "Invalid side";
-    default:                  return "?"; // should never happen
+    default:                  return "SHOULD NEVER SEE THIS";
     }
   }
 

@@ -4,8 +4,11 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.4 2004-08-17 11:10:41 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.5 2004-08-17 11:27:48 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/08/17 11:10:41  jonrob
+ *  Update doxygen comments for RICH enumerations
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -68,7 +71,7 @@ namespace Rich {
     case Rich::Rich1:              return "Rich1";
     case Rich::Rich2:              return "Rich2";
     case Rich::InvalidDetector:    return "Invalid Detector";
-    default:                       return "?"; // should never happen
+    default:                       return "SHOULD NEVER SEE THIS";
     }
   }
 
