@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.cpp,v 1.4 2004-03-16 13:45:03 jonesc Exp $
+// $Id: RichGeomEffPhotonTracing.cpp,v 1.5 2004-04-19 23:06:10 jonesc Exp $
 
 // local
 #include "RichGeomEffPhotonTracing.h"
@@ -32,9 +32,8 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffPhotonTracing::initialize() {
-
-  debug() << "Initialize" << endreq;
+StatusCode RichGeomEffPhotonTracing::initialize() 
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -61,17 +60,11 @@ StatusCode RichGeomEffPhotonTracing::initialize() {
     m_cosCkPhi.push_back( cos(ckPhi) );
   }
 
-  // Informational Printout
-  debug() << " Using full photon ray tracing" << endreq
-          << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGeomEffPhotonTracing::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichGeomEffPhotonTracing::finalize() 
+{
   // Release things
   m_uniDist.finalize();
 

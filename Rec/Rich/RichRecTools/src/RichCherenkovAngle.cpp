@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.6 2004-03-16 13:45:02 jonesc Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.7 2004-04-19 23:06:08 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -25,15 +25,15 @@ const        IToolFactory& RichCherenkovAngleFactory = s_factory ;
 RichCherenkovAngle::RichCherenkovAngle ( const std::string& type,
                                          const std::string& name,
                                          const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ) 
+{
 
   declareInterface<IRichCherenkovAngle>(this);
 
 }
 
-StatusCode RichCherenkovAngle::initialize() {
-
-  debug() << "Initialize" << endreq;
+StatusCode RichCherenkovAngle::initialize() 
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -47,10 +47,8 @@ StatusCode RichCherenkovAngle::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichCherenkovAngle::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichCherenkovAngle::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -74,7 +72,7 @@ double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
       // loop over energy bins
       RichPhotonSpectra & sigSpectra = segment->signalPhotonSpectra();
       for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin ) {
-        double temp = beta *
+        const double temp = beta *
           m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
         angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
       }

@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.11 2004-03-16 13:45:04 jonesc Exp $
+// $Id: RichPhotonCreator.h,v 1.12 2004-04-19 23:06:13 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -77,7 +77,7 @@ private: // private methods
   /// Form a Photon candidate from a Segment and a pixel.
   RichRecPhoton * buildPhoton( RichRecSegment * segment,
                                RichRecPixel * pixel,
-                               RichRecPhotonKey & key ) const;
+                               const RichRecPhotonKey key ) const;
 
   /// Initialise for a new event
   void InitNewEvent();
@@ -96,7 +96,7 @@ private: // private data
   std::string m_richRecPhotonLocation;
 
   /// photon done map
-  mutable std::map<int, bool> m_photonDone;
+  mutable std::map<long, bool> m_photonDone;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;

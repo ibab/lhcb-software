@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.7 2004-03-16 13:45:06 jonesc Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.8 2004-04-19 23:06:14 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -36,8 +36,6 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
 
 StatusCode RichSellmeirFunc::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -57,7 +55,7 @@ StatusCode RichSellmeirFunc::initialize() {
   releaseTool( partProp );
 
   // Get Rich1 Detector element
-  SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRich1Location::Default );
 
   // Load radiator parameters from XML
   m_selF1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF1Param");
@@ -82,14 +80,14 @@ StatusCode RichSellmeirFunc::initialize() {
 
   // Initialise the calculations and cache as much as possible for efficiency
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
-    Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
+    const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
     double RC3,RC2;
     if ( Rich::Aerogel == rad ) {
       RC3 = 1.;
       RC2 = 1.;
     } else {
-      RC3 = 3 * selLorGasFac * m_rho[rad] / m_molW[rad];
-      RC2 = 2 * selLorGasFac * m_rho[rad] / m_molW[rad];
+      RC3 = 3. * selLorGasFac * m_rho[rad] / m_molW[rad];
+      RC2 = 2. * selLorGasFac * m_rho[rad] / m_molW[rad];
     }
     const double RF = m_selF1[rad] + m_selF2[rad];
     const double RE02 = ( m_selF1[rad]*m_selE2[rad]*m_selE2[rad] +
@@ -111,45 +109,43 @@ StatusCode RichSellmeirFunc::initialize() {
     m_X[rad] = (RC3*sqrt(RE02)/(4.*RT));
   }
 
-  // Informational Printout
-  debug() << " Using XML version" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichSellmeirFunc::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
                                                const Rich::ParticleIDType id,
-                                               double botEn,
-                                               double topEn ) const {
+                                               const double botEn,
+                                               const double topEn ) const 
+{
 
   // Some parameters of the segment
-  const double momentum = segment->trackSegment().bestMomentumMag();
-  const double Esq = momentum*momentum + m_particleMassSq[id];
-  const double betaSq = ( Esq>0 ? momentum*momentum/Esq : 0 );
-  const double gammaSq = Esq/m_particleMassSq[id];
-  const double length = segment->trackSegment().pathLength();
+  const double momentum = segment->trackSegment().bestMomentum().mag();
+  const double Esq      = momentum*momentum + m_particleMassSq[id];
+  const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
+  const double gammaSq  = Esq/m_particleMassSq[id];
+  const double length   = segment->trackSegment().pathLength();
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
+  // Compute number of photons
   double nPhot = ( 37.0 * length / betaSq ) * ( paraW(rad,topEn) -
                                                 paraW(rad,botEn) -
                                                 (topEn-botEn)/gammaSq );
+
+  // correct for wavelength independant transmission coeff. in aerogel
   if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
   return nPhot;
 }
 
 double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad,
-                                 const double energy ) const {
-
+                                 const double energy ) const 
+{
   const double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
   const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );
-
   return m_X[rad] * (X-Y);
 }

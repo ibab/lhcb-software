@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.h,v 1.5 2004-02-02 14:27:03 jonesc Exp $
+// $Id: RichSellmeirFunc.h,v 1.6 2004-04-19 23:06:15 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
@@ -14,7 +14,7 @@
 #include "Event/RichRecSegment.h"
 
 // Detector Description
-#include "DetDesc/DetectorElement.h"
+#include "RichDet/DeRich1.h"
 
 // interfaces
 #include "RichRecBase/IRichSellmeirFunc.h"
@@ -54,8 +54,8 @@ public:
   /// given RichRecSegment under a certain mass hypothesis
   double photonsInEnergyRange( RichRecSegment * segment,
                                const Rich::ParticleIDType id,
-                               double botEn,
-                               double topEn ) const;
+                               const double botEn,
+                               const double topEn ) const;
 
 private: // methods
 

@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.5 2004-03-16 13:45:02 jonesc Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.6 2004-04-19 23:06:10 jonesc Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -27,8 +27,6 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 
 StatusCode RichFunctionalRayleighScatter::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -41,27 +39,27 @@ StatusCode RichFunctionalRayleighScatter::initialize() {
   m_AeroClarity = Rich1DE->userParameterAsDouble( "AerogelClarity" )/cm;
 
   // Informational Printout
-  debug() << " Using analytic implementation" << endreq
+  debug() << "Initialize" << endreq
+          << " Using analytic implementation" << endreq
           << " eV to mm conversion factor   = " << m_eVToMicron << endreq
           << " Aerogel clarity              = " << m_AeroClarity << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichFunctionalRayleighScatter::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichFunctionalRayleighScatter::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
 RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                    const double energy ) const {
+                                                    const double energy ) const 
+{
 
   // check this is aerogel
-  if ( segment->trackSegment().radiator() != Rich::Aerogel ) return 0;
+  if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;
 
   // check energy is valid
   if ( energy <= 0 ) return 0;
@@ -74,5 +72,5 @@ RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segme
   const double lambda   = m_eVToMicron/energy;
   const double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
 
-  return 1 - (scatLeng/path)*(1-exp(-1*path/scatLeng));
-}
+  return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
+} 

@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.6 2004-03-16 13:45:03 jonesc Exp $
+// $Id: RichParticleProperties.cpp,v 1.7 2004-04-19 23:06:12 jonesc Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -25,8 +25,6 @@ RichParticleProperties::RichParticleProperties ( const std::string& type,
 
 StatusCode RichParticleProperties::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -47,21 +45,21 @@ StatusCode RichParticleProperties::initialize() {
  
   // cache squares of masses
   m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );
-  m_particleMassSq[Rich::Muon]     = gsl_pow_2( m_particleMass[Rich::Muon] );
-  m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion] );
-  m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon] );
-  m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton] );
+  m_particleMassSq[Rich::Muon]     = gsl_pow_2( m_particleMass[Rich::Muon]     );
+  m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion]     );
+  m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon]     );
+  m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton]   );
 
   // release service
   release(ppSvc);
-  
+
   // Informational Printout
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
 
   // Setup momentum thresholds
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
-    debug() << " Particle thresholds (MeV/c^2) = Rad " << rad << " : ";
+    debug() << " Particle thresholds (MeV/c^2) : " << rad << " : ";
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       const double index = refIndex->refractiveIndex(rad);
       m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(index*index - 1.0);
@@ -78,8 +76,6 @@ StatusCode RichParticleProperties::initialize() {
 
 StatusCode RichParticleProperties::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -87,7 +83,7 @@ StatusCode RichParticleProperties::finalize()
 double RichParticleProperties::beta( RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const
 {
-  const double momentum = segment->trackSegment().bestMomentumMag();
+  const double momentum = segment->trackSegment().bestMomentum().mag();
   const double Esquare = momentum*momentum + m_particleMassSq[id];
   return ( Esquare > 0 ? momentum/sqrt(Esquare) : 0 );
 }

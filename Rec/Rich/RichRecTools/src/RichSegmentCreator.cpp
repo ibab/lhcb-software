@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.6 2004-03-16 13:45:05 jonesc Exp $
+// $Id: RichSegmentCreator.cpp,v 1.7 2004-04-19 23:06:14 jonesc Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -20,9 +20,8 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
                                          const IInterface* parent )
   : RichRecToolBase ( type, name, parent   ),
     m_segments      ( 0 ),
-    m_binsEn        ( Rich::NRadiatorTypes ),
-    m_maxPhotEn     ( Rich::NRadiatorTypes ),
-    m_minPhotEn     ( Rich::NRadiatorTypes ) {
+    m_binsEn        ( Rich::NRadiatorTypes )
+{
 
   declareInterface<IRichSegmentCreator>(this);
 
@@ -36,21 +35,10 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
   m_binsEn[Rich::CF4]     = 5;
   declareProperty( "EnergyBins", m_binsEn );
 
-  m_maxPhotEn[Rich::Aerogel] = 3.8;
-  m_maxPhotEn[Rich::C4F10]   = 7.0;
-  m_maxPhotEn[Rich::CF4]     = 7.0;
-  declareProperty( "MaxPhotonEnergy", m_maxPhotEn );
-
-  m_minPhotEn[Rich::Aerogel] = 1.75;
-  m_minPhotEn[Rich::C4F10]   = 1.75;
-  m_minPhotEn[Rich::CF4]     = 1.75;
-  declareProperty( "MinPhotonEnergy", m_minPhotEn );
-
 }
 
-StatusCode RichSegmentCreator::initialize() {
-
-  debug() << "Initialize" << endreq;
+StatusCode RichSegmentCreator::initialize() 
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -58,23 +46,28 @@ StatusCode RichSegmentCreator::initialize() {
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc->addListener( this, IncidentType::EndEvent   );
+
+  // Get the max/min photon energies
+  IRichDetParameters * detParams;
+  acquireTool( "RichDetParameters", detParams );
+  m_maxPhotEn[Rich::Aerogel] = detParams->maxPhotonEnergy( Rich::Aerogel );
+  m_maxPhotEn[Rich::C4F10]   = detParams->maxPhotonEnergy( Rich::C4F10 );
+  m_maxPhotEn[Rich::CF4]     = detParams->maxPhotonEnergy( Rich::CF4 );
+  m_minPhotEn[Rich::Aerogel] = detParams->minPhotonEnergy( Rich::Aerogel );
+  m_minPhotEn[Rich::C4F10]   = detParams->minPhotonEnergy( Rich::C4F10 );
+  m_minPhotEn[Rich::CF4]     = detParams->minPhotonEnergy( Rich::CF4 );
+  releaseTool(detParams);
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  // Informational Printout
-  debug() << " Number of Energy bins      = " << m_binsEn << endreq
-          << " Max Photon Energy          = " << m_maxPhotEn << endreq
-          << " Min Photon Energy          = " << m_minPhotEn << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichSegmentCreator::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichSegmentCreator::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -82,11 +75,17 @@ StatusCode RichSegmentCreator::finalize() {
 // Method that handles various Gaudi "software events"
 void RichSegmentCreator::handle ( const Incident& incident )
 {
-  if ( "BeginEvent" == incident.type() ) InitNewEvent();
+  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
+  {
+    debug() << "Saved RichRecSegments : Aerogel=" << m_segCount[Rich::Aerogel] 
+            << " C4F10=" << m_segCount[Rich::C4F10] 
+            << " CF4=" << m_segCount[Rich::CF4] << endreq;
+  }
 }
 
 // Create a new RichRecSegment
-RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment& segment,
+RichRecSegment * RichSegmentCreator::newSegment( const RichTrackSegment& segment,
                                                  RichRecTrack* pTrk ) const
 {
   return new RichRecSegment ( segment,
@@ -99,6 +98,9 @@ RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment& segment,
 // Forms a new RichRecSegment object
 void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
 {
+  // count
+  if ( msgLevel(MSG::DEBUG) ) ++m_segCount[segment->trackSegment().radiator()];
+  // save segment
   richSegments()->insert( segment );
 }
 

@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.8 2004-03-16 13:45:02 jonesc Exp $
+// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.1 2004-04-19 23:06:07 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -6,25 +6,25 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
-#include "RichBinnedCherenkovResolution.h"
+#include "RichBinnedCKResVthetaForTrStoredTracks.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichBinnedCherenkovResolution
+// Implementation file for class : RichBinnedCKResVthetaForTrStoredTracks
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichBinnedCherenkovResolution>          s_factory ;
-const        IToolFactory& RichBinnedCherenkovResolutionFactory = s_factory ;
+static const  ToolFactory<RichBinnedCKResVthetaForTrStoredTracks>          s_factory ;
+const        IToolFactory& RichBinnedCKResVthetaForTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string& type,
-                                                               const std::string& name,
-                                                               const IInterface* parent )
+RichBinnedCKResVthetaForTrStoredTracks::RichBinnedCKResVthetaForTrStoredTracks ( const std::string& type,
+                                                                                 const std::string& name,
+                                                                                 const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_ckAngle ( 0 )
 {
@@ -128,7 +128,7 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
 
 }
 
-StatusCode RichBinnedCherenkovResolution::initialize() {
+StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() {
 
   debug() << "Initialize" << endreq;
 
@@ -140,7 +140,7 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  debug() << " Using binned track resolutions" << endreq;
+  debug() << " Using binned track resolutions for TrStoredTracks" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
     debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
     for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
@@ -152,24 +152,31 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichBinnedCherenkovResolution::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichBinnedCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) const {
+RichBinnedCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
+                                                           const Rich::ParticleIDType id ) const 
+{
+
+  // Reference to track ID object
+  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+  // Check track parent type is TrStoredTrack
+  if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
+    Exception( "Track parent type is not TrStoredTrack" );
+  }
 
   // Expected Cherenkov theta angle
   const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( thetaExp < 0.000001 ) return 0;
 
   const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
+  const Rich::Track::Type type = tkID.trackType();
   double res = 0;
   if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] ) {
     res = (m_theerr[rad][type])[0];

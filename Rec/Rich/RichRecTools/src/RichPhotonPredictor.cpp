@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.cpp,v 1.4 2004-03-16 13:45:04 jonesc Exp $
+// $Id: RichPhotonPredictor.cpp,v 1.5 2004-04-19 23:06:13 jonesc Exp $
 
 // local
 #include "RichPhotonPredictor.h"
@@ -33,9 +33,8 @@ RichPhotonPredictor::RichPhotonPredictor( const std::string& type,
 
 }
 
-StatusCode RichPhotonPredictor::initialize() {
-
-  debug() << "Initialize" << endreq;
+StatusCode RichPhotonPredictor::initialize()
+{
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -49,17 +48,11 @@ StatusCode RichPhotonPredictor::initialize() {
   m_maxROI2.push_back( m_maxROI[1]*m_maxROI[1] );
   m_maxROI2.push_back( m_maxROI[2]*m_maxROI[2] );
 
-  // Informational Printout
-  debug() << " Min Region of Interest       = " << m_minROI << endreq
-          << " Max Region of Interest       = " << m_maxROI << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonPredictor::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichPhotonPredictor::finalize()
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -71,16 +64,17 @@ bool RichPhotonPredictor::photonPossible( RichRecSegment * segment,
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
 
-  // Hit seperation criteria
-  const double sep = trackPixelHitSep2(segment, pixel);
-  if ( sep > m_maxROI2[ segment->trackSegment().radiator() ] ) return false;
-  if ( sep < m_minROI2[ segment->trackSegment().radiator() ] ) return false;
+  // Hit seperation criteria : based on global coordinates
+  const double sepG = trackPixelHitSep2Global(segment, pixel);
+  if ( sepG > m_maxROI2[segment->trackSegment().radiator()] ||
+       sepG < m_minROI2[segment->trackSegment().radiator()] ) return false;
 
   return true;
 }
 
-double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
-                                               const RichRecPixel * pixel ) const {
+double RichPhotonPredictor::trackPixelHitSep2Global( const RichRecSegment * segment,
+                                                     const RichRecPixel * pixel ) const
+{
 
   if ( Rich::Rich1 == segment->trackSegment().rich() ) {
 
@@ -88,10 +82,9 @@ double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
       return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().y() > 0 && segment->photonsInYPlus() ) ||
                 ( pixel->globalPosition().y() < 0 && segment->photonsInYMinus() ) ) {
-      const HepPoint3D temp( pixel->globalPosition().x(),
-                             -pixel->globalPosition().y(),
-                             pixel->globalPosition().z() );
-      return temp.distance2( segment->pdPanelHitPoint() );
+      return segment->pdPanelHitPoint().distance2( HepPoint3D( pixel->globalPosition().x(),
+                                                               -pixel->globalPosition().y(),
+                                                               pixel->globalPosition().z() ) );
     }
 
   } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
@@ -100,10 +93,9 @@ double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
       return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().x() > 0 && segment->photonsInXPlus()  ) ||
                 ( pixel->globalPosition().x() < 0 && segment->photonsInXMinus() ) ) {
-      const HepPoint3D temp( -pixel->globalPosition().x(),
-                             pixel->globalPosition().y(),
-                             pixel->globalPosition().z() );
-      return temp.distance2( segment->pdPanelHitPoint() );
+      return segment->pdPanelHitPoint().distance2( HepPoint3D( -pixel->globalPosition().x(),
+                                                               pixel->globalPosition().y(),
+                                                               pixel->globalPosition().z() ) );
     }
 
   }
@@ -111,3 +103,35 @@ double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
   return 99999999.9;
 }
 
+double RichPhotonPredictor::trackPixelHitSep2Local( const RichRecSegment * segment,
+                                                    const RichRecPixel * pixel ) const
+{
+
+  //return segment->pdPanelHitPointLocal().distance2( pixel->localPosition() );
+
+  if ( Rich::Rich1 == segment->trackSegment().rich() ) {
+
+    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 ) {
+      return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
+    } else if ( ( pixel->localPosition().y() > 0 && segment->photonsInYPlus() ) ||
+                ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) ) {
+      return segment->pdPanelHitPointLocal().distance2( HepPoint3D( pixel->localPosition().x(),
+                                                                    -pixel->localPosition().y(),
+                                                                    pixel->localPosition().z() ) );
+    }
+
+  } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
+
+    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 ) {
+      return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
+    } else if ( ( pixel->localPosition().x() > 0 && segment->photonsInXPlus()  ) ||
+                ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) ) {
+      return segment->pdPanelHitPointLocal().distance2( HepPoint3D( -pixel->localPosition().x(),
+                                                                    pixel->localPosition().y(),
+                                                                    pixel->localPosition().z() ) );
+    }
+
+  }
+
+  return 99999999.9;
+}

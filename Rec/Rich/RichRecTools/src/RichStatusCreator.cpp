@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.cpp,v 1.4 2004-03-16 13:45:06 jonesc Exp $
+// $Id: RichStatusCreator.cpp,v 1.5 2004-04-19 23:06:15 jonesc Exp $
 
 // local
 #include "RichStatusCreator.h"
@@ -30,15 +30,13 @@ RichStatusCreator::RichStatusCreator( const std::string& type,
 
 StatusCode RichStatusCreator::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -57,7 +55,7 @@ StatusCode RichStatusCreator::finalize() {
 // Method that handles various Gaudi "software events"
 void RichStatusCreator::handle ( const Incident& incident )
 {
-  if ( "BeginEvent" == incident.type() ) InitNewEvent();
+  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 RichRecStatus * RichStatusCreator::richStatus() const

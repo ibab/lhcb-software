@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.7 2004-03-16 13:45:05 jonesc Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.8 2004-04-19 23:06:14 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -35,8 +35,6 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
 
 StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -46,21 +44,16 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  // Informational printout
-  debug() << " Using RichDigits" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichPixelCreatorFromRichDigits::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -68,7 +61,7 @@ StatusCode RichPixelCreatorFromRichDigits::finalize() {
 // Method that handles various Gaudi "software events"
 void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
 {
-  if ( "BeginEvent" == incident.type() ) InitNewEvent();
+  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 // Forms a new RichRecPixel object from a RichDigit
@@ -78,7 +71,7 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
-    warning() << "Parent not of type RichDigit" << endreq;
+    Warning("Parent not of type RichDigit");
     return NULL;
   }
 
@@ -129,6 +122,7 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
   RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
 
   // Loop over RichDigits and create working pixels
+  richPixels()->reserve( digits->size() );
   for ( RichDigits::iterator digit = digits->begin();
         digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
@@ -137,11 +131,6 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
             << m_recoDigitsLocation << endreq
             << "Created " << richPixels()->size() << " RichRecPixels at "
             << m_richRecPixelLocation << endreq;
-  }
-
-  if ( digits->size() != richPixels()->size() ) {
-    warning() << "Created " << richPixels()->size() << " RichRecPixels from "
-              << digits->size() << " RichDigits !!" << endreq;
   }
 
   return StatusCode::SUCCESS;

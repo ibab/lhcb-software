@@ -1,6 +1,6 @@
-// $Id: RichBinnedCherenkovResolution.h,v 1.3 2004-02-02 14:26:57 jonesc Exp $
-#ifndef RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H
-#define RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H 1
+// $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.1 2004-04-19 23:06:07 jonesc Exp $
+#ifndef RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H
+#define RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -12,26 +12,28 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
-/** @class RichBinnedCherenkovResolution RichBinnedCherenkovResolution.h
+/** @class RichBinnedCKResVthetaForTrStoredTracks RichBinnedCKResVthetaForTrStoredTracks.h
  *
- *  Tool providing Cherenkova angle calulcations
+ *  Tool to calculate the Cherenkov angle resolution. This implementation is
+ *  for TrStoredTracks and uses a approach uses simple bins in the
+ *  cherenkov angle theta
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichBinnedCherenkovResolution : public RichRecToolBase,
-                                      virtual public IRichCherenkovResolution {
+class RichBinnedCKResVthetaForTrStoredTracks : public RichRecToolBase,
+                                               virtual public IRichCherenkovResolution {
 
 public:
 
   /// Standard constructor
-  RichBinnedCherenkovResolution( const std::string& type,
-                                 const std::string& name,
-                                 const IInterface* parent );
+  RichBinnedCKResVthetaForTrStoredTracks( const std::string& type,
+                                          const std::string& name,
+                                          const IInterface* parent );
 
   /// Destructor
-  virtual ~RichBinnedCherenkovResolution() {};
+  virtual ~RichBinnedCKResVthetaForTrStoredTracks() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -56,4 +58,4 @@ private:  // Private data
 
 };
 
-#endif // RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H
+#endif // RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H

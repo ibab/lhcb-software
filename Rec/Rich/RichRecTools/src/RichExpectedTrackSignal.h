@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.h,v 1.6 2004-02-02 14:26:57 jonesc Exp $
+// $Id: RichExpectedTrackSignal.h,v 1.7 2004-04-19 23:06:09 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -23,6 +23,7 @@
 #include "RichRecBase/IRichSignalDetectionEff.h"
 #include "RichRecBase/IRichParticleProperties.h"
 #include "RichRecBase/IRichRayleighScatter.h"
+#include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
 /** @class RichExpectedTrackSignal RichExpectedTrackSignal.h
  *
@@ -157,6 +158,7 @@ private:  // Private data
   IRichSignalDetectionEff * m_sigDetEff;
   IRichParticleProperties * m_richPartProp;
   IRichRayleighScatter * m_rayScat;
+  IRichGasQuartzWindowAbs * m_gasQuartzWin;
 
 };
 

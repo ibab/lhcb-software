@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.10 2004-03-16 13:45:05 jonesc Exp $
+// $Id: RichPhotonSignal.cpp,v 1.11 2004-04-19 23:06:13 jonesc Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -24,8 +24,6 @@ RichPhotonSignal::RichPhotonSignal( const std::string& type,
 }
 
 StatusCode RichPhotonSignal::initialize() {
-
-  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -59,10 +57,8 @@ StatusCode RichPhotonSignal::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonSignal::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichPhotonSignal::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }

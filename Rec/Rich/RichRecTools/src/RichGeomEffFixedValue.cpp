@@ -1,4 +1,4 @@
-// $Id: RichGeomEffFixedValue.cpp,v 1.5 2004-03-16 13:45:03 jonesc Exp $
+// $Id: RichGeomEffFixedValue.cpp,v 1.6 2004-04-19 23:06:10 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -34,8 +34,6 @@ RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
 
 StatusCode RichGeomEffFixedValue::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -43,16 +41,11 @@ StatusCode RichGeomEffFixedValue::initialize() {
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
-  // Informational Printout
-  debug() << " Using fixed value calculation" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGeomEffFixedValue::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichGeomEffFixedValue::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }

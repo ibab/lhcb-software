@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.12 2004-03-16 13:45:04 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.13 2004-04-19 23:06:13 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -48,8 +48,6 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
 
 StatusCode RichPhotonCreator::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -61,23 +59,16 @@ StatusCode RichPhotonCreator::initialize() {
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  // Informational Printout
-  debug() << " Min Cherenkov Theta          = " << m_minCKtheta << endreq
-          << " Max Cherenkov Theta          = " << m_maxCKtheta << endreq
-          << " Min Photon Probability       = " << m_minPhotonProb << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonCreator::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichPhotonCreator::finalize() 
+{
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -85,7 +76,7 @@ StatusCode RichPhotonCreator::finalize() {
 // Method that handles various Gaudi "software events"
 void RichPhotonCreator::handle ( const Incident& incident )
 {
-  if ( "BeginEvent" == incident.type() ) InitNewEvent();
+  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 RichRecPhoton*
@@ -96,13 +87,11 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
   if ( !m_photonPredictor->photonPossible(segment, pixel) ) return NULL;
 
   // Form the key for this photon
-  RichRecPhotonKey photonKey;
-  photonKey.setSegmentNumber( segment->key() );
-  photonKey.setPixelNumber( pixel->key() );
+  const RichRecPhotonKey photonKey(pixel->key(),segment->key());
 
   // See if this photon already exists
-  if ( m_photonDone[static_cast<int>(photonKey)] ) {
-    return (RichRecPhoton*)(richPhotons()->object(photonKey));
+  if ( m_photonDone[static_cast<long>(photonKey)] ) {
+    return static_cast<RichRecPhoton*>(richPhotons()->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
   }
@@ -111,7 +100,7 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
 
 RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
                                                 RichRecPixel * pixel,
-                                                RichRecPhotonKey & key ) const {
+                                                const RichRecPhotonKey key ) const {
 
   RichRecPhoton * newPhoton = NULL;
 
@@ -172,7 +161,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   }
 
   // Add to reference map
-  m_photonDone[(int)key] = true;
+  m_photonDone[static_cast<long>(key)] = true;
 
   // Return pointer to this photon
   return newPhoton;
@@ -182,6 +171,8 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 void RichPhotonCreator::reconstructPhotons() const {
 
   bool noPhots = richPhotons()->empty();
+  // make a rough guess at a size to reserve based on number of pixels
+  if ( noPhots ) richPhotons()->reserve( 5 * pixelCreator()->richPixels()->size() );
 
   // Iterate over all tracks
   for ( RichRecTracks::const_iterator iTrack =
@@ -212,10 +203,8 @@ void RichPhotonCreator::reconstructPhotons() const {
             // If container was empty, skip checks for whether photon already exists
             if ( noPhots ) {
               if ( m_photonPredictor->photonPossible( segment, pixel ) ) {
-                RichRecPhotonKey photonKey;
-                photonKey.setSegmentNumber( segment->key() );
-                photonKey.setPixelNumber( pixel->key() );
-                buildPhoton( segment, pixel, photonKey );
+                buildPhoton( segment, pixel, 
+                             RichRecPhotonKey(pixel->key(),segment->key()) );
               }
             } else {
               reconstructPhoton( segment, pixel );
@@ -328,7 +317,7 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
       for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
             iPhoton != tdsPhotons->end();
             ++iPhoton ) {
-        m_photonDone[static_cast<int>((*iPhoton)->key())] = true;
+        m_photonDone[static_cast<long>((*iPhoton)->key())] = true;
       }
 
     }

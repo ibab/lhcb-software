@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.4 2004-02-02 14:27:01 jonesc Exp $
+// $Id: RichPhotonPredictor.h,v 1.5 2004-04-19 23:06:13 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -43,9 +43,15 @@ public:
   /// Finalize method
   StatusCode finalize();
 
-  /// Returns square of distance seperating pixel and track hits on PDs
-  double trackPixelHitSep2( const RichRecSegment * segment,
-                            const RichRecPixel * pixel ) const;
+  /// Returns square of distance seperating the pixel hit and hit position extrapolated
+  /// using the RichRecSegment direction in global corrdinates
+  double trackPixelHitSep2Global( const RichRecSegment * segment,
+                                  const RichRecPixel * pixel ) const;
+
+  /// Returns square of distance seperating the pixel hit and hit position extrapolated
+  /// using the RichRecSegment direction in local corrdinates
+  double trackPixelHitSep2Local( const RichRecSegment * segment,
+                                 const RichRecPixel * pixel ) const;
 
   /// Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,

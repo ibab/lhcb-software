@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.h,v 1.6 2004-03-16 13:45:06 jonesc Exp $
+// $Id: RichSegmentCreator.h,v 1.7 2004-04-19 23:06:14 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -16,6 +16,7 @@
 
 // interfaces
 #include "RichRecBase/IRichSegmentCreator.h"
+#include "RichDetTools/IRichDetParameters.h"
 
 /** @class RichSegmentCreator RichSegmentCreator.h
  *
@@ -55,7 +56,7 @@ public:
   void saveSegment( RichRecSegment * segment ) const;
 
   /// Create a new RichRecSegment
-  RichRecSegment * newSegment( RichTrackSegment& segment, 
+  RichRecSegment * newSegment( const RichTrackSegment& segment, 
                                RichRecTrack* pTrk ) const;
 
   /// Return a pointer to RichRecSegments
@@ -76,14 +77,21 @@ private:  // Private data
 
   // parameters
   std::vector<int> m_binsEn;
-  std::vector<double> m_maxPhotEn;
-  std::vector<double> m_minPhotEn;
+  double m_maxPhotEn[Rich::NRadiatorTypes];
+  double m_minPhotEn[Rich::NRadiatorTypes];
+
+  mutable unsigned m_segCount[Rich::NRadiatorTypes];
 
 };
 
 inline void RichSegmentCreator::InitNewEvent()
 {
   m_segments = 0;
+  if ( msgLevel(MSG::DEBUG) ) {
+    m_segCount[Rich::Aerogel] = 0;
+    m_segCount[Rich::C4F10]   = 0;
+    m_segCount[Rich::CF4]     = 0;
+  }
 }
 
 #endif // RICHRECTOOLS_RICHRECSEGMENTTOOL_H

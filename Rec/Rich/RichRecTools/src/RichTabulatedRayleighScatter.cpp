@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRayleighScatter.cpp,v 1.3 2004-03-16 13:45:06 jonesc Exp $
+// $Id: RichTabulatedRayleighScatter.cpp,v 1.4 2004-04-19 23:06:16 jonesc Exp $
 
 // local
 #include "RichTabulatedRayleighScatter.h"
@@ -29,8 +29,6 @@ RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& 
 
 StatusCode RichTabulatedRayleighScatter::initialize() {
 
-  debug() << "Initialize" << endreq;
-
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
@@ -41,19 +39,13 @@ StatusCode RichTabulatedRayleighScatter::initialize() {
   }
   m_rayScatL = new Rich1DTabProperty( tab );
 
-  // Informational Printout
-  debug() << " Using XML tabulated implementation" << endreq
-          << " Ray. Scat. length location   = " << m_rayScatLoc << endreq;
-
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichTabulatedRayleighScatter::finalize() 
 {
-  debug() << "Finalize" << endreq;
-
   // clean up
-  if ( m_rayScatL ) {  delete m_rayScatL; m_rayScatL = 0; }
+  if ( m_rayScatL ) { delete m_rayScatL; m_rayScatL = 0; }
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -61,10 +53,11 @@ StatusCode RichTabulatedRayleighScatter::finalize()
 
 double
 RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                   const double energy ) const {
+                                                   const double energy ) const 
+{
 
   // check this is aerogel
-  if ( segment->trackSegment().radiator() != Rich::Aerogel ) return 0;
+  if ( Rich::Aerogel != segment->trackSegment().radiator() ) return 0;
 
   // check energy is valid
   if ( energy <= 0 ) return 0;
@@ -75,5 +68,5 @@ RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segmen
 
   // compute and return prob
   const double scatLeng = (*m_rayScatL)[energy*eV];
-  return ( 1 - (scatLeng/path)*(1. - exp(-1*path/scatLeng)) );
+  return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
 }
