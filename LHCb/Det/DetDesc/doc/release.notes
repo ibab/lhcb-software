@@ -1,11 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.51 2001-08-25 16:57:43 ibelyaev Exp $ 
+! $Id: release.notes,v 1.52 2001-10-25 14:04:04 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
+! 20011025 - Vanya Belyaev 
+  DetDesc/SolidPolycone.h 
+  src/Lib/SolidPolycone.cpp 
+  New solid is added 
+ (corresponds to Geant3 shape PCON and Geant4 shape G4Polycone)
+  SolidFactories.cpp adn DetDesc_load.cpp are updated 
 
 ! =============================================================================
 ! 20010825  - Vanya Belyaev

@@ -1,11 +1,14 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/09 16:48:02  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/09 18:13:37  ibelyaev
+// modification for solid factories
+//
+// Revision 1.5  2001/08/09 16:48:02  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 // GaudiKernel
@@ -114,7 +117,6 @@ SolidCons::SolidCons( const std::string& Name )
   , m_cons_deltaPhiAngle     ( 360 * degree        )
   , m_cons_coverModel        ( 0                   )
 {};
-
 
 // ============================================================================
 /** check for the given point (local frame)
@@ -373,7 +375,7 @@ SolidCons::intersectionTicks ( const HepPoint3D & point  ,
 std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base class
-  SolidCons::printOut( os );
+  SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
   os << " sizeZ[mm]"          <<  zLength()            / millimeter 
@@ -401,7 +403,7 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
 MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base class
-  SolidCons::printOut( os );
+  SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
   os << " sizeZ[mm]"          <<  zLength()            / millimeter 

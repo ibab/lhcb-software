@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 16:48:04  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 ///@{
 /** GaudiKernel includes */
@@ -97,10 +100,12 @@ void DetDesc_load()
   DLL_DECL_SOLID( SolidSphere        );
   DLL_DECL_SOLID( SolidTrd           );
   DLL_DECL_SOLID( SolidTrap          );
+  DLL_DECL_SOLID( SolidPolycone      );
   DLL_DECL_SOLID( SolidChild         );
   DLL_DECL_SOLID( SolidIntersection  );
   DLL_DECL_SOLID( SolidSubtraction   );
   DLL_DECL_SOLID( SolidUnion         );
+  DLL_DECL_SOLID( SolidPolycone      );
   ///@}
   
 };

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/09 16:47:58  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -236,7 +239,7 @@ public:
   inline double  endPhiAngle           () const 
   { return m_cons_startPhiAngle + m_cons_deltaPhiAngle ; }; 
   
-private:
+protected:
 
   /** inner radius at given z  
    *  @param z z position 
