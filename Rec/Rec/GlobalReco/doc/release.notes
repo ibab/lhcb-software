@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r1 2004-01-14 ===========================
+! 2004-01-14 - Gloria CORTI
+ - src/CaloE1Correction.{h,cpp}
+       CaloSummerPrsCorrection.{h,cpp}
+   . removed since no longer supporting reading of Brunel v13r1 data for 
+     which they were necessary and would not compile with LHCb v14r0 
+ - src/GlobalReco_load.cpp
+   . remove declaration of algorithms above
+
 !===================== GlobalReco v4r1 2003-08-05 ===========================
 ! 2003-07-16 - Yuehong Xie
  - src/ChargedProtoPAlg.cpp src/ChargedProtoPAlg.h

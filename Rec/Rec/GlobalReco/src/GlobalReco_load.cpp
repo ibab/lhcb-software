@@ -1,8 +1,11 @@
-// $Id: GlobalReco_load.cpp,v 1.6 2003-02-07 16:54:42 gcorti Exp $
+// $Id: GlobalReco_load.cpp,v 1.7 2004-01-14 18:12:38 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/02/07 16:54:42  gcorti
+// remove old primary vertex algorithm
+//
 // Revision 1.5  2002/12/20 16:29:50  gcorti
 // calo tools
 //
@@ -23,10 +26,6 @@ DECLARE_FACTORY_ENTRIES(GlobalReco) {
   DECLARE_ALGORITHM( ChargedProtoPAlg     ) ;
   DECLARE_ALGORITHM( NeutralPPCreator     ) ;
   DECLARE_ALGORITHM( NeutralPPsFromCPsAlg ) ;
-
-  // Temporarly for reprocessing of Brunel v13r1 data
-  DECLARE_TOOL( CaloE1Correction );
-  DECLARE_TOOL( CaloSummerPrsCorrection );
 
 };
 
