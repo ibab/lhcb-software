@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v5r0
+version           v5r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -24,6 +24,7 @@ use MCTools         v*  Phys
 use L0Event	    v*  Event
 use L1Event         v*  Event
 use GenEvent        v*  Event
+use RecoTools       v*  Rec
 
 # Component library building rule
 #============================================================================

@@ -46,6 +46,8 @@ BTagging::BTagging(const std::string& name,
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS    = 3.0 );
   declareProperty( "PionSame_dQ2_cut",m_dQ2cut_pionS   = 1.0 );
 
+  declareProperty( "TrVeloChargeName", m_veloChargeName = "TrVeloCharge" );
+
   nsele=0;
   for(int i=0; i<50; ++i) { nrt[i]=0; nwt[i]=0; }
 }
@@ -65,6 +67,14 @@ StatusCode BTagging::initialize() {
     req << MSG::FATAL << "Unable to locate Particle Property Service"<<endreq;
     return sc;
   }
+
+  sc = toolSvc()->retrieveTool( m_veloChargeName , m_veloCharge , this );
+  if( sc.isFailure() ) {
+    req << MSG::FATAL << " Unable to retrieve TrVeloCharge Tool called "
+	<< m_veloChargeName << "." << endreq;
+    return sc;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -246,10 +256,9 @@ StatusCode BTagging::execute() {
   //fill info ------//////////////////////////////////////////////
   req<<MSG::DEBUG<< "-------- Tagging Candidates: "<< vtags.size() <<endreq;
   m_N = 0;
-  Particle* axp;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
 
-    axp = (*ipart);
+    Particle* axp = (*ipart);
     m_AXID[m_N]  = axp->particleID().pid(); 
     m_AXP[m_N]   = axp->p()/GeV;
     m_AXPt[m_N]  = axp->pt()/GeV;
@@ -259,6 +268,7 @@ StatusCode BTagging::execute() {
     Hep3Vector vp = (axp->momentum()).vect() ;
     Hep3Vector vBp= (ptot+axp->momentum()).vect() ;
     m_ThBp[m_N]  = vp.angle(vBp/(vBp.mag()));
+    m_veloch[m_N]= m_veloCharge -> calculate( axp );
 
     //calculate signed IP wrt RecVert
     m_AXip[m_N]   =-100.0;
@@ -279,6 +289,11 @@ StatusCode BTagging::execute() {
     ContainedObject* contObj = axp->origin();
     if (contObj) {
       ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+      
+      SmartRefVector<CaloHypo>& vcalo = proto->calo();
+      if(vcalo.size()==1) m_Emeas[m_N] = (*(vcalo.begin()))->e()/GeV;
+      else m_Emeas[m_N] = -1;
+
       m_trtyp[m_N] = 0;
       if(proto->track()->isLong() ) m_trtyp[m_N] = 1;
       else if(proto->track()->isDownstream()) m_trtyp[m_N] = 3;
@@ -298,7 +313,7 @@ StatusCode BTagging::execute() {
   if(m_UseVertexCharge) ach = VertexCharge( vtags, nroftracks );
 
   ///----------------------------------------------------------------------
-  //select tag candidates
+  //select among tag candidates
 
   //some inits first
   int imuon = -1;
@@ -336,55 +351,54 @@ StatusCode BTagging::execute() {
 
     case 11:                           // selects OS electron tag      
       if(m_AXPt[i] > m_AXPt_cut_ele)
-	if(m_AXP[i]  > m_AXP_cut_ele  &&
-	   IPsig > m_IP_cut_ele ) {
-	  if( m_AXPt[i] > ptmaxe ) { //Pt ordering
-	    iele = i;
-	    ptmaxe = m_AXPt[i];
-	  }
-	}
+	if(m_AXP[i]  > m_AXP_cut_ele)
+	  if(IPsig > m_IP_cut_ele)
+	    if(fabs(m_veloch[i] - 25.5) < 4.5)
+	      if(m_Emeas[i]/m_AXP[i]>0.8 || m_Emeas[i]<0)
+		if( m_AXPt[i] > ptmaxe ) { //Pt ordering
+		  iele = i;
+		  ptmaxe = m_AXPt[i];
+		}
       break;
 
     case 321:                      // selects OS kaon tag
-      if(m_AXPt[i] > m_AXPt_cut_kaon &&
-	 m_AXP[i]  > m_AXP_cut_kaon  &&
-	 m_IPPU[i] > m_IPPU_cut_kaon &&
-	 IPsig > m_IP_cut_kaon ) {
-	qk += m_ch[i];
-	if( m_AXPt[i] > ptmaxk ) { //Pt ordering
-	  ikaon = i;
-	  ptmaxk = m_AXPt[i];
-	}
-      }
+      if(m_AXPt[i] > m_AXPt_cut_kaon)
+	if(m_AXP[i]  > m_AXP_cut_kaon)
+	  if(m_IPPU[i] > m_IPPU_cut_kaon)
+	    if(IPsig > m_IP_cut_kaon ) {
+	      qk += m_ch[i];
+	      if( m_AXPt[i] > ptmaxk ) { //Pt ordering
+		ikaon = i;
+		ptmaxk = m_AXPt[i];
+	      }
+	    }
       if( isBs ) {                // selects SS kaon tag
 	double deta= fabs(log(tan(m_B0the/2)/tan(asin(m_AXPt[i]/m_AXP[i])/2)));
 	double dphi= fabs(m_AXphi[i]-m_B0phi); if(dphi>3.1416) dphi=6.2832-dphi;
-	if(m_AXPt[i] > m_AXPt_cut_kaonS &&
-	   m_AXP[i]  > m_AXP_cut_kaonS  &&
-	   IPsig < m_IP_cut_kaonS &&
-	   dphi < m_phicut_kaonS &&
-	   deta < m_etacut_kaonS &&
-	   dQ   < m_dQcut_kaonS ) {
-	  if( m_AXPt[i] > ptmaxkS ) { //Pt ordering
-	    ikaonS = i;
-	    ptmaxkS = m_AXPt[i];
-	  }
-	}
-      }
+	if(m_AXPt[i] > m_AXPt_cut_kaonS) 
+	  if(m_AXP[i] > m_AXP_cut_kaonS) 
+	    if(IPsig < m_IP_cut_kaonS)
+	      if(dphi < m_phicut_kaonS)
+		if(deta < m_etacut_kaonS)
+		  if(dQ < m_dQcut_kaonS)
+		    if( m_AXPt[i] > ptmaxkS ) { //Pt ordering
+		      ikaonS = i;
+		      ptmaxkS = m_AXPt[i];
+		    }
+      }	
       break;
 
     case 211:                       // selects SS PION tag
       if( isBd ) {
-	if(m_AXPt[i] > m_AXPt_cut_pionS &&
-	   m_AXP[i]  > m_AXP_cut_pionS  &&
-	   IPsig < m_IP_cut_pionS &&
-	   dQ    < m_dQcut_pionS ) {
-	  if( m_AXPt[i] > ptmaxpS ) { //Pt ordering
-	    ipionS = i;
-	    ptmaxpS = m_AXPt[i];
-	  }
-	}
-      }
+	if(m_AXPt[i] > m_AXPt_cut_pionS)
+	  if(m_AXP[i] > m_AXP_cut_pionS)
+	    if(IPsig < m_IP_cut_pionS)
+	      if(dQ < m_dQcut_pionS ) 
+		if( m_AXPt[i] > ptmaxpS ) { //Pt ordering
+		  ipionS = i;
+		  ptmaxpS = m_AXPt[i];
+		}
+      }	
       break;
     }
   }
@@ -536,7 +550,7 @@ StatusCode BTagging::execute() {
   if(m_trig0) if(m_trig1) {
     nsele++;
     if(tagdecision == truetag) nrt[ix]++; 
-    else if(tagdecision ==-truetag) nwt[ix]++;
+    else if(tagdecision == -truetag) nwt[ix]++;
   }
 
   return StatusCode::SUCCESS;

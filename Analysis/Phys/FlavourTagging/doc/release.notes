@@ -1,8 +1,18 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
-! Purpose     : Provide tools and algorithm for tagging Bs
+! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2004-07-08 - P. Koppenburg for Marco Musy
+  - options/BTagging.opts
+  - options/CheatedSelection.opts
+  - src/BTagging.cpp
+  - src/BTagging.h
+  - src/BTaggingMonitor.cpp
+  - src/BTaggingMonitor.h
+  - src/CheatedSelection.h
+    . It includes SS pion tag and a revised treatment for electrons.
 
 !==================== FlavourTagging v5r0 2004-05-05 ===================
 ! 2004-05-04 - P. Koppenburg for Marco Musy

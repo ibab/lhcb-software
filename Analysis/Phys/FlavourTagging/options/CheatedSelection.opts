@@ -2,7 +2,6 @@
 // DaVinci job Options for CheatedSelection
 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
 //--------------------------------------------------------------
@@ -34,7 +33,7 @@ CheatedSelection.PhysDesktop.InputLocations = { "/Event/Phys/Combined" };
 CheatedSelection.DecayDescriptor = { "not specified" };
 CheatedSelection.PhysDesktop.OutputLevel = 4;
 CheatedSelection.DebugTool.OutputLevel = 4;
-CheatedSelection.OutputLevel = 4;
+CheatedSelection.OutputLevel = 3;
 
 //---------------------------------------------------
 BTagging.PhysDesktop.InputLocations = { "/Event/Phys/CheatedSelection" };

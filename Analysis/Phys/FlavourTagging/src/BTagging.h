@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.3 2004-05-03 13:54:09 pkoppenb Exp $
+// $Id: BTagging.h,v 1.4 2004-07-08 13:27:48 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -30,6 +30,8 @@
 #include "Event/L1Report.h"
 #include "Event/FlavourTag.h"
 #include "Event/GenMCLink.h"
+// from RecoTools
+#include "RecoTools/ITrVeloCharge.h"
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "CLHEP/Geometry/Point3D.h"
@@ -92,6 +94,8 @@ private:
   long      m_trtyp[MAXSIZETAGS];
   float     m_InvMss[MAXSIZETAGS];
   float     m_ThBp[MAXSIZETAGS];
+  float     m_veloch[MAXSIZETAGS];
+  float     m_Emeas[MAXSIZETAGS];
 
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
@@ -105,6 +109,11 @@ private:
 
   //properties ----------------
   bool m_UseVertexCharge, m_WriteToTES;
+
+  ///<  Name of TrVeloCharge Tool
+  std::string    m_veloChargeName;
+  ///<  TrVeloCharge Tool
+  ITrVeloCharge* m_veloCharge;
 
   double m_AXPt_cut_muon;
   double m_AXP_cut_muon;

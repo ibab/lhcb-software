@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.h,v 1.1 2004-05-03 13:54:09 pkoppenb Exp $
+// $Id: BTaggingMonitor.h,v 1.2 2004-07-08 13:27:48 pkoppenb Exp $
 #ifndef BTaggingMonitor_H 
 #define BTaggingMonitor_H 1
 

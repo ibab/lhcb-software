@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.cpp,v 1.1 2004-05-03 13:54:09 pkoppenb Exp $
+// $Id: BTaggingMonitor.cpp,v 1.2 2004-07-08 13:27:48 pkoppenb Exp $
 // local
 #include "BTaggingMonitor.h"
 
@@ -73,7 +73,7 @@ StatusCode BTaggingMonitor::execute() {
   std::vector<std::string>::const_iterator loc_i;
   for(loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end(); loc_i++){
 
-    req <<MSG::DEBUG<< "Monitoring location: "<< (*loc_i)+"/Tags" << endreq;
+    req <<MSG::INFO<< "Monitoring location: "<< (*loc_i)+"/Tags" << endreq;
     SmartDataPtr<FlavourTags> tags(eventSvc(), (*loc_i)+"/Tags");
     if( !tags ) {
       req<< MSG::DEBUG << "No tags found. " << endreq;
@@ -83,16 +83,15 @@ StatusCode BTaggingMonitor::execute() {
 
     FlavourTags::const_iterator ti;
     for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
-      req << MSG::DEBUG << "Tag Result= " << (*ti)->decision() 
+      req << MSG::INFO << "Tag Result= " << (*ti)->decision() 
 	  <<"  category= "<< (*ti)->category() <<endreq;
       if( (*ti)->taggedB() ) {
-	req << MSG::DEBUG << "taggedB P="<< (*ti)->taggedB()->p()/GeV <<endreq;
-	//m_debug->printTree( (*ti)->taggedB() );
+	req << MSG::INFO << "taggedB P="<< (*ti)->taggedB()->p()/GeV <<endreq;
+	//	m_debug->printTree( (*ti)->taggedB() );
       }
       else req << MSG::DEBUG <<"B not found." <<endreq;
     }
-
-    req << MSG::DEBUG << "Monitoring location: "<<(*loc_i)+"/Taggers" <<endreq;
+    req << MSG::INFO << "Monitoring location: "<<(*loc_i)+"/Taggers" <<endreq;
     SmartDataPtr<Particles> tagCands( eventSvc(), (*loc_i)+"/Taggers" );
     if( !tagCands ) {
       req<< MSG::DEBUG << "No taggers found. " << endreq;
@@ -102,41 +101,10 @@ StatusCode BTaggingMonitor::execute() {
 
     Particles::const_iterator ip;
     for( ip=tagCands->begin(); ip!=tagCands->end(); ip++ ){
-      req << MSG::DEBUG << "tagger ID: " << (*ip)->particleID().pid()
+      req << MSG::INFO << "tagger ID: " << (*ip)->particleID().pid()
 	  << "  P=" << (*ip)->p()/GeV << endreq;
-
-      //look into MC truth
-      if( m_pAsctLinks->tableExists() ) {
-	MCParticle* mcp = m_pAsctLinks->associatedFrom( *ip );
-	if( mcp ) {
-	  req << MSG::DEBUG << "  MCtagger ID: " << mcp->particleID().pid()
-	      << "  P=" << mcp->momentum().vect().mag()/GeV << endreq;
-	  m_debug->printAncestor(mcp);
-	} else req << MSG::DEBUG <<"Asct MCParticle does not exist!"<< endreq;
-      } else req << MSG::DEBUG <<"AsctLinks table does not exist!"<< endreq;
-    }
-
-    // Fill the PhysDesktop particle and vertex vectors.
-    StatusCode scDesktop = desktop()->getInput();
-    if( scDesktop.isFailure() ) {
-      req << MSG::ERROR << "Unable to fill PhysDesktop " << endreq;
-      return StatusCode::FAILURE;
-    }
-    // Retrieve the particles from PhysDesktop
-    const ParticleVector& parts = desktop()->particles();
-
-    for( ip=parts.begin(); ip!=parts.end(); ip++) {
-      req << MSG::VERBOSE << " Dump all parts in Desktop:" << endreq;
-	std::string sa= "none";
-	MCParticle* mcp = m_pAsctLinks->associatedFrom( *ip );
-	if(mcp) sa=ppSvc->findByStdHepID(mcp->particleID().pid())->particle();
-	std::string sp=
-	  ppSvc->findByStdHepID((*ip)->particleID().pid())->particle();
-	req << MSG::VERBOSE << sp << " assoc. to mcp " << sa 
-	    << "  (P="<< (*ip)->p()/GeV <<" GeV)"<< endreq;
     }
   }
-
   return StatusCode::SUCCESS;
 };
 

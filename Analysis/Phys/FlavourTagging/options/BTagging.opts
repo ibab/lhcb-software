@@ -1,11 +1,15 @@
-//##############################################################
-//  DaVinci job Options for BTagging
+//----------------------------------------------------------------------
+//BTagging algorithm option file
+ApplicationMgr.DLLs   += { "VeloDAQ" };
+ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 ApplicationMgr.TopAlg += { "BTagging" };
+BTagging.WriteToTES    = false;
 BTagging.OutputLevel   = 3;
 
+//do not modify unless you know what you do:
 BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
-BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
+BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = false;
 BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
     "det='MUON' mu-pi='-9.0'" };
@@ -13,9 +17,18 @@ BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
     "det='CALO' e-pi='2.0'" };
 BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
     "det='RICH' k-pi='2.0' k-p='3.0'" };
-
+BTagging.TrVeloChargeName = "TrVeloCharge";
+BTagging.TrVeloCharge.Normalisation = 1.;
+BTagging.TrVeloCharge.Ratio = 0.7;
+BTagging.TrVeloCharge.OutputLevel = 3;
+BTagging.AvoidSelResult = true;
 BTagging.DecayDescriptor = { "not specified" };
 BTagging.PhysDesktop.OutputLevel = 4;
 BTagging.UnconstVertexFitter.OutputLevel = 5;
 
-//##############################################################
+BTaggingMonitor.OutputLevel = 3;
+BTaggingMonitor.DebugTool.OutputLevel   = 3;
+BTaggingMonitor.PhysDesktop.OutputLevel = 4;
+BTaggingMonitor.TagsLocations = { "/Event/Phys/BTagging" };
+BTaggingMonitor.PhysDesktop.InputLocations = { "/Event/Phys/BTagging" };
+//-----------------------------------------------------------------------
