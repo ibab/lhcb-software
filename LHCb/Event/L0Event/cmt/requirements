@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.30 2003-12-09 10:14:30 cattanem Exp $
+# $Id: requirements,v 1.31 2003-12-12 12:19:27 cattanem Exp $
 package L0Event
 version v13r4
 
@@ -25,3 +25,5 @@ library           L0EventDict     ../dict/*.cpp -import=GaudiIntrospection
 #===============================================================
 apply_pattern component_library library=L0EventDict
 apply_pattern linker_library    library=L0Event
+macro_append L0Event_linkopts " " \
+             WIN32 "/include:_L0Event_loadRef"
