@@ -30,11 +30,11 @@ use Magnet              v2r*    Det
 #============================================================================
 
 #GiGa staff...
-use GiGaCnv             v13r3   Sim
-use GaussTools          v8r5    Sim
-use GaussTracker        v2r6    Sim
+use GiGaCnv             v13r4   Sim
+use GaussTools          v8r6    Sim
+use GaussTracker        v2r7    Sim
 use GaussRICH           v4r3    Sim
-use GaussCalo           v4r0    Sim
+use GaussCalo           v4r1    Sim
 use GaussPhysics        v2r3    Sim
 use CaloDetXmlCnv       v2r3    Det 
 
@@ -45,7 +45,7 @@ use CaloDetXmlCnv       v2r3    Det
 use GeneratorModules    v9r0    Gen
 
 #get information from DBASE and PARAM 
-use XmlDDDB             v18r0   Det   -no_auto_imports
+use XmlDDDB             v18r1   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v2r0    Gen   -no_auto_imports
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM   -no_auto_imports

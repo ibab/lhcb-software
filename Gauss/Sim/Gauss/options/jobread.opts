@@ -23,7 +23,7 @@ RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
 
-EventSelector.Input = {"DATAFILE='Gauss.oosim' TYP='ROOT' OPT='READ'"}; 
+EventSelector.Input = {"DATAFILE='0810.oosim' TYP='ROOT' OPT='READ'"}; 
 
 
 //--------------------------------------------------------------
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg  = {"PrintEventAlg/PrintEvt"};
 ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 //ApplicationMgr.TopAlg += {"DumpMC"};
 
-ApplicationMgr.EvtSel      ="'Gauss.oosim'";
+ApplicationMgr.EvtSel      ="'0810.oosim'";
 
 HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
 #include "$STDOPTS/Hbook.opts"
@@ -96,7 +96,7 @@ VeloMonitor.DetailedMonitor = true;
 //--------------------------------------------------------------
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax = 1000;
 
 //EventSelector.FirstEvent = 418;
 

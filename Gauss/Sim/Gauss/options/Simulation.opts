@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.39 2003-10-02 16:51:34 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.40 2003-10-10 16:38:34 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -41,7 +41,7 @@ Simulation.Members +=
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"                 // load the kinematics 
 //, "GiGaFlushAlgorithm/GiGaFlush"         // flush the event 
-//, "PrintEventAlg"                        // get MCParticles/MCVertices
+, "PrintEventAlg"                        // get MCParticles/MCVertices
 , "GetGiGaHitsAlg/GetHits"               // get MCHits
 };
 
@@ -104,12 +104,13 @@ GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
   "/run/verbose 0 "               ,
-  "/tracking/verbose 0"            ,
+  "/tracking/verbose 1"            ,
   "/geometry/navigator/verbose 0",
   "/tracking/storeTrajectory  1"    } ;
 
 // mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
+//GiGa.EventSeq.Members     +=   "GaussEventAction/GaussEvent";
 
 // mandatory tracking action (1/2)
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
@@ -135,7 +136,9 @@ GiGa.TrackSeq.PostTrack.StorePrimaries = true;
 GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;
 GiGa.TrackSeq.PostTrack.StoreDecays = true;
 //GiGa.TrackSeq.PostTrack.StoreByOwnEnergy   = true; 
-//GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 1.0 * GeV   ;        
+//GiGa.TrackSeq.PostTrack.OwnEnergyThreshold = 2.2 * GeV   ;        
+//GiGa.TrackSeq.PostTrack.StoreByChildProcess = true; 
+//GiGa.TrackSeq.PostTrack.StoredChildProcesses = {"Decay"}; 
 
 // mandatory stepping action   
 GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
