@@ -1,18 +1,20 @@
-# $Id: release.notes,v 1.21 2002-11-19 13:14:55 andreav Exp $
+# $Id: release.notes,v 1.22 2002-11-25 18:01:32 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
 ==============================================================================
-!20021119 - Andrea Valassi
+!20021125 - Andrea Valassi
 Upgrade to CondDBOracle v4r16, Gaudi v11r2 and DetDesc v11r2.
 Upgrade to RedHat73 on lxplus7.
 - no change to DetCond code
 - dependency on Det/CondDBOracle changed from v4r15 to v4r16 (RH7,WIN)
-- dependency on CONDDB (using Objectivity) remains v3r02p2 (RH6)
 - dependency on Gaudi changed to v13r* (tested with v13r2)
 - dependency on GaudiSvc changed to v10r* (tested with v10r1)
 - dependency on Det/DetDesc changed to v11r* (tested with v11r2)
-Requirements v4r1, private tag h20021119
+Modify CMT requirements to allow for runtime choice between Oracle and MySQL.
+- precompiler directives are inherited from CondDB package(s)
+- dependency on CONDDB (using Objectivity) changed to v3r02p3 (RH6)
+Requirements v4r1, private tag h20021125
 
 ==============================================================================
 !20020725 - Andrea Valassi
