@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.13 2002-05-24 16:19:28 gcorti Exp $
+! $Id: release.notes,v 1.14 2002-07-12 09:31:58 odie Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-10 - Olivier Dormond
+ - Duplication of the interfaces' methods to support keyed container.
+ - Quark wildcard support. It's now possible to ask for any particle with
+   a b~ quark and so on. The syntax is simply "<Xq>" where q can be
+   replaced by up to 3 quarks. Quarks are u,d,c,s,t,b,u~,d~,c~,s~,t~,b~.
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
