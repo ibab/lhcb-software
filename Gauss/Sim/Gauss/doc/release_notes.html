@@ -3,6 +3,16 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+<H1><A NAME="v15r11">2004-06-17 - Gauss v15r11</A></H1><PRE>
+!====================== GiGaCnv v15r7 2004-06-17 ===========================
+! 2004-06-17 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . handle some cases where an appropriate MCVertex is not found when setting 
+     references: the tof is identical but the position does not have to
+     necessarly be "less", so the second vertex on a trajectory could be the
+     previous one that the one provided (BUG# 3783)
+
+!==========================================================================
 <H1><A NAME="v15r10">2004-06-11 - Gauss v15r10</A></H1><PRE>
 the Gauss version v15r10 is a bug fix of Gauss v15r8
 ! 2004-05-12 - Gloria Corti

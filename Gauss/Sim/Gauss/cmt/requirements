@@ -1,5 +1,5 @@
 package Gauss
-version v15r10
+version v15r11
 
 # =============================================================================
 # structure 
@@ -22,7 +22,7 @@ use ParamFiles          v3r7          -no_auto_imports
 use GeneratorModules    v11r7   Gen
 
 #GiGa staff...
-use GiGaCnv             v15r6   Sim
+use GiGaCnv             v15r7   Sim
 use GaussTools          v10r6 	Sim
 use GaussTracker        v3r1    Sim
 use GaussRICH           v4r7    Sim

@@ -1,5 +1,5 @@
 package GaussSys
-version v15r10
+version v15r11
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v15r10	Sim
+use Gauss		v15r11	Sim
 
 # Generator stuff ...
 use EvtGen              v5r4    Gen
@@ -16,7 +16,7 @@ use GeneratorModules    v11r7   Gen
 
 # GiGa stuff...
 use GiGa        	v17r0	Sim        
-use GiGaCnv     	v15r6	Sim
+use GiGaCnv     	v15r7	Sim
 use GiGaVisUI		v3r0	Sim
 
 use VisSvc              v3r0    Vis

@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!======================= GaussSys v15r11 2004-06-17 ===============
+! 2004-06-17 - Florence RANJARD
+ - Gauss v15r11 is a bug fix of Gauss v15r10
+
 !======================== GaussSys v15r10 2004-06-15 ===============
 ! 2004-06-15 - Florence RANJARD
  - Gauss v15r10 is a bug fix of Gauss v15r8. It uses geant4 6.1
