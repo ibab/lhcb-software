@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker.cpp,v 1.2 2002-10-21 21:34:21 gcorti Exp $
+// $Id: ElectronParticleMaker.cpp,v 1.3 2002-10-22 17:41:33 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -38,8 +38,11 @@ const        IToolFactory& ElectronParticleMakerFactory = s_factory ;
 ElectronParticleMaker::ElectronParticleMaker( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
-  : AlgTool ( type, name , parent ), m_ppSvc(0), m_EDS(0),
-    m_nTotalElecPosiMade(0){
+  : AlgTool ( type, name , parent )
+  , m_ppSvc(0)
+  , m_EDS(0)
+  , m_nTotalElecPosiMade(0)
+  , m_eID(11){
   // Declaring implemented interfaces
   declareInterface<IParticleMaker>(this);
 
@@ -223,11 +226,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                   double protoID;
                   double protoCL;
                   if ( ProtoPCharge == 1 ){
-                    protoID = 11;
+                    protoID = -m_eID;
                     protoCL = 1.0;
                   }
                   if ( ProtoPCharge ==  (-1) ){
-                    protoID = -11;
+                    protoID = m_eID;
                     protoCL = 1.0;
                   }
                   fillParticle( *icand, protoID, protoCL, particle, 
@@ -254,11 +257,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
             double protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
-              protoID = 11;
+              protoID = -m_eID;
               protoCL = 1.0;
             }
             if ( ProtoPCharge ==  (-1) ){
-              protoID = -11;
+              protoID = m_eID;
               protoCL = 1.0;
             }
             fillParticle( *icand, protoID, protoCL, particle, 
@@ -293,11 +296,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                         double protoID;
                         double protoCL;
                         if ( ProtoPCharge == 1 ){
-                          protoID = 11;
+                          protoID = -m_eID;
                           protoCL = 1.0;
                         }
                         if ( ProtoPCharge ==  (-1) ){
-                          protoID = -11;
+                          protoID = m_eID;
                           protoCL = 1.0;
                         }
                         fillParticle( *icand, protoID, protoCL, particle, 
@@ -327,11 +330,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
             double protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
-              protoID = 11;
+              protoID = -m_eID;
               protoCL = 1.0;
             }
             if ( ProtoPCharge ==  (-1) ){
-              protoID = -11;
+              protoID = m_eID;
               protoCL = 1.0;
             }
             fillParticle( *icand, protoID, protoCL, particle, 
@@ -373,11 +376,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                               double protoID;
                               double protoCL;
                               if ( ProtoPCharge == 1 ){
-                                protoID = 11;
+                                protoID = -m_eID;
                                 protoCL = 1.0;
                               }
                               if ( ProtoPCharge ==  (-1) ){
-                                protoID = -11;
+                                protoID = m_eID;
                                 protoCL = 1.0;
                               }
                               fillParticle( *icand, protoID, protoCL, particle, 
@@ -553,11 +556,11 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
           double protoID;
           double protoCL;
           if ( ProtoPCharge == 1 ){
-            protoID = 11;
+            protoID = -m_eID;
             protoCL = 1.0;
           }
           if ( ProtoPCharge ==  (-1) ){
-            protoID = -11;
+            protoID = m_eID;
             protoCL = 1.0;
           }
           fillParticle( *icand, protoID, protoCL, particle, 

@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker.h,v 1.1 2002-10-21 19:11:35 gcorti Exp $
+// $Id: ElectronParticleMaker.h,v 1.2 2002-10-22 17:41:30 gcorti Exp $
 #ifndef ElectronParticleMAKER_H 
 #define ElectronParticleMAKER_H 1
 
@@ -95,6 +95,9 @@ private:
 
   /// number of electron created
   int    m_nTotalElecPosiMade           ; /// number of elec/posi created
+  
+  /// electron particleID
+  int m_eID;
   
   
 };
