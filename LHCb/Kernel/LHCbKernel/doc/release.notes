@@ -2,25 +2,22 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
-!==============================================================================
+>>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020319 (M.Cattaneo)
+  - add SerializeStl.h for serialisation of std::vector and std::list
+
 ! 18/03/2002 - Ivan Belyaev
   - add new directory Relations with implementation of relations 
-  - ATTENTION! It works only on Linux now! 
-!==============================================================================
+  >>>> ATTENTION! It works only on Linux now! <<<<
 
-
-
-!==============================================================================
 ! 18/03/2002 - Vanya Belyaev  Ivan.Belyaev@itep.ru
-! moved from CaloKernel package 
-! - CaloCellCode.h   the coding schema for CaloCellID 
-! - CaloCellID.h     the uniqie identifier of calorimeter cell 
-! - CaloHypotheses.h the list of avaialble calorimeter hyportheses 
-! - CaloHypoPrint.h  the printout of available calorimeter hypotheses 
-!                    in a "readable" format
-! =============================================================================
+  moved from CaloKernel package 
+  - CaloCellCode.h   the coding schema for CaloCellID 
+  - CaloCellID.h     the uniqie identifier of calorimeter cell 
+  - CaloHypotheses.h the list of avaialble calorimeter hyportheses 
+  - CaloHypoPrint.h  the printout of available calorimeter hypotheses 
+                     in a "readable" format
 
->>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020318 (M.Cattaneo) - New package
 ! 20020318 (M.Frank)
   - CLHEPStreams moved to this package (from Event/LHCbEvent), and 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2002-03-18 19:32:19 ibelyaev Exp $
+# $Id: requirements,v 1.3 2002-03-19 08:13:09 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -18,24 +18,24 @@ library LHCbKernel *.cpp
 
 apply_pattern package_linkopts
 apply_pattern package_stamps
-apply_pattern ld_library_path
+apply_pattern linker_path
 
 # =============================================================================
 # Private stuff 
 # =============================================================================
 private
-apply_pattern package_shlibflags
-macro_append LHCbKernel_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts)"
+macro_remove use_linkopts $(LHCbKernel_linkopts)
+macro LHCbKernel_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
 
 # =============================================================================
 # Test application(s)
 # =============================================================================
-private
-use LHCbEvent v* Event 
-application   RelationsTest -check  RelationsTest/*.cpp 
-path_remove   PATH  LHCbKernel 
-path_append   PATH  ${LHCBKERNELROOT}/${BINDIR}
-apply_pattern application_path 
+#private
+#use LHCbEvent v* Event 
+#application   RelationsTest -check  RelationsTest/*.cpp 
+#path_remove   PATH  LHCbKernel 
+#path_append   PATH  ${LHCBKERNELROOT}/${BINDIR}
+#apply_pattern application_path 
 
 # =============================================================================
 # The End 
