@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.3 2002-03-04 16:52:09 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.4 2002-03-22 18:24:09 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -97,6 +97,9 @@ MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
   MuonTileID resultID(*this);
   resultID.setX(indX);
   resultID.setY(indY);
+  int lx = std::_MAX(thisGridX,otherGridX);
+  int ly = std::_MAX(thisGridY,otherGridY);
+  resultID.setLayout(MuonLayout(lx,ly));
   
   return resultID;
 }
