@@ -1,8 +1,11 @@
-// $Id: GiGaUtil.h,v 1.8 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaUtil.h,v 1.9 2002-12-07 21:05:31 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // Revision 1.7  2002/05/07 12:21:30  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -129,6 +132,30 @@ namespace GiGaUtil
     if( 0 != obj ) { delete obj ; obj = 0 ; }
     return obj ;
   };
+
+  /** @struct FastCast
+   *  Helpful utility to perfrom a fast cast 
+   *  @author Vanya Belyaev
+   *  @date 23/07/2001
+   */ 
+  template <class FROM,class TO> 
+  struct FastCast : std::unary_function<FROM*,TO*>
+  {
+  public :
+    /** the only one essential method 
+     *  @param from  object to be cast
+     *  @return the result of dynamic cast
+     */
+    inline TO* operator() ( FROM* from ) const 
+    {
+      if ( 0 == from ) { return  (TO*) 0 ; }
+#ifdef GIGA_FASTCAST
+      return  static_cast<TO*>  ( from ) ;
+#else
+      return  dynamic_cast<TO*> ( from ) ;
+#endif 
+    };
+  };
   
   /** @class InstanceCounter 
    *  Static class used to instrument constructors 
@@ -156,8 +183,7 @@ namespace GiGaUtil
         }
     };
   };
-
-
+  
 }; ///< end of namespace 
 
 // ============================================================================

@@ -1,16 +1,22 @@
-// $Id: GiGaTrajectoryPoint.h,v 1.10 2002-12-07 14:27:51 ibelyaev Exp $ 
+// $Id: GiGaTrajectoryPoint.h,v 1.11 2002-12-07 21:05:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #ifndef     GIGA_GIGATRAJECTORYPOINT_H
 #define     GIGA_GIGATRAJECTORYPOINT_H 1 
 // ============================================================================
 // CLHEP 
 #include "CLHEP/Vector/LorentzVector.h"
+// GiGa 
+#include "GiGa/GiGaUtil.h"
 // G4 
 #include "G4TrajectoryPoint.hh" 
+#include "G4VTrajectoryPoint.hh" 
 
 
 /** @class GiGaTrajectoryPoint GiGaTrajectoryPoint.h 
@@ -88,6 +94,39 @@ private:
   ///
 };
 // ============================================================================
+
+// ============================================================================
+/** @fn  gigaTrajectoryPoint
+ *  Fast cast of G4TrajectoryPoint interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4TrajectoryPoint interface 
+ *  @return cast (dynamic or static) to GaussTrajectory
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4TrajectoryPoint* g4 )
+{
+  GiGaUtil::FastCast<G4TrajectoryPoint,GiGaTrajectoryPoint> cast ;
+  return cast( g4 );
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  gigaTrajectoryPoint
+ *  Fast cast of G4VTrajectoryPoint interface to concrete Gauss implementation
+ *  @param  g4   pointer to G4TrajectoryPoint interface 
+ *  @return cast (dynamic or static) to GaussTrajectory
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4VTrajectoryPoint* g4 )
+{
+  GiGaUtil::FastCast<G4VTrajectoryPoint,GiGaTrajectoryPoint> cast ;
+  return cast( g4 );
+};
+// ============================================================================
+
 
 // ============================================================================
 #endif  ///<  GIGA_GIGATRAJECTORYPOINT_H

@@ -1,8 +1,11 @@
-// $Id: GiGa.h,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGa.h,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:27:52  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
@@ -118,7 +121,7 @@ class GiGa: public         Service       ,
    *  @param   collection  reference to collection pair   
    *  @return  self-reference ot IGiGaSvc interface 
    */
-  virtual IGiGaSvc& operator >> ( CollectionPair         & collection   ); 
+  virtual IGiGaSvc& operator >> ( GiGaHitsByID         & collection   ); 
 
   /** get the concrete hit collection from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -128,7 +131,7 @@ class GiGa: public         Service       ,
    *  @param   collection  reference to collection pair   
    *  @return  self-reference ot IGiGaSvc interface 
    */
-  virtual IGiGaSvc& operator >> ( CollectionNamePair     & collection   ); 
+  virtual IGiGaSvc& operator >> ( GiGaHitsByName       & collection   ); 
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -172,8 +175,8 @@ class GiGa: public         Service       ,
    *  @return  status code 
    */
   virtual StatusCode 
-  retrieveHitCollection  ( CollectionPair          & collection   );
-
+  retrieveHitCollection  ( GiGaHitsByID          & collection   );
+  
   /** get the concrete hit collection from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
    *
@@ -181,7 +184,7 @@ class GiGa: public         Service       ,
    *  @return  status code 
    */
   virtual StatusCode 
-  retrieveHitCollection  ( CollectionNamePair       & collection   );
+  retrieveHitCollection  ( GiGaHitsByName       & collection   );
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 

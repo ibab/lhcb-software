@@ -1,11 +1,8 @@
-// $Id: GiGaIGiGaSvc.cpp,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGaIGiGaSvc.cpp,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
 // ================================`============================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ================================`============================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/05/01 18:23:39  ibelyaev
-//  import errors/warnings/exception counterf from LHCb Calo software
-//
 // ============================================================================
 #define GIGA_GIGASVCIGIGASVC_CPP 1 
 // ============================================================================
@@ -25,6 +22,8 @@
 #include    "GaudiKernel/ParticleProperty.h"
 /// GiGa 
 #include    "GiGa/GiGaException.h"
+#include    "GiGa/GiGaHitsByID.h"
+#include    "GiGa/GiGaHitsByName.h"
 /// local 
 #include    "GiGa.h"
 // G4 
@@ -114,12 +113,18 @@ IGiGaSvc& GiGa::operator >> ( G4HCofThisEvent*       & collections  )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGa::operator >> ( CollectionPair         & collection   )
+IGiGaSvc& GiGa::operator >> ( GiGaHitsByID& collection   )
 {
+  // reset the output 
+  collection.setHits( (G4VHitsCollection*) 0  ) ;
+  if( collection.id() < 0 ) 
+    { Warning("Illegal (negative) collection ID"); return *this ; } // RETURN
   G4HCofThisEvent* collections = 0 ; 
   *this >> collections             ; 
-  collection.second = 
-    ( 0 != collections)  ? collections->GetHC( collection.first ) : 0 ; 
+  if( 0 == collections ) 
+    { collection.setHits( (G4VHitsCollection*) 0                ) ; }
+  else 
+    { collection.setHits( collections->GetHC( collection.id() ) ) ; }
   ///
   return *this ;  
 }; 
@@ -135,15 +140,19 @@ IGiGaSvc& GiGa::operator >> ( CollectionPair         & collection   )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGa::operator >> ( CollectionNamePair         & collection   )
+IGiGaSvc& GiGa::operator >> ( GiGaHitsByName & collection   )
 {
-  // get the unique collection ID from collection name 
+  // reset the output 
+  collection.setHits( (G4VHitsCollection*) 0  ) ;
+  // get the unique collection ID from collection name
   G4SDManager* sdm = G4SDManager::GetSDMpointer () ;
   Assert( 0 != sdm , " G4SDManager* poits to NULL ");
-  const int colID = sdm -> GetCollectionID( collection.first );
-  CollectionPair col( colID , (G4VHitsCollection *) 0 );
+  const int colID = sdm -> GetCollectionID( collection.name() );
+  if( colID < 0 ) { Warning("Illegal (negative) ID for collection '" + 
+                            collection.name()+"'"); }
+  GiGaHitsByID col( colID );
   *this >> col ;
-  collection.second = col.second ;
+  collection.setHits( col.hits() )  ;
   ///
   return *this ;  
 }; 
@@ -241,7 +250,7 @@ StatusCode GiGa::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
  *  @return  status code 
  */
 // ============================================================================
-StatusCode GiGa::retrieveHitCollection  ( CollectionPair & collection   )
+StatusCode GiGa::retrieveHitCollection  ( GiGaHitsByID & collection   )
 {
   ///
   StatusCode sc( StatusCode::FAILURE ); 
@@ -262,7 +271,7 @@ StatusCode GiGa::retrieveHitCollection  ( CollectionPair & collection   )
  *  @return  status code 
  */
 // ============================================================================
-StatusCode GiGa::retrieveHitCollection  ( CollectionNamePair & collection   )
+StatusCode GiGa::retrieveHitCollection  ( GiGaHitsByName & collection   )
 {
   ///
   StatusCode sc( StatusCode::FAILURE ); 

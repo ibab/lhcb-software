@@ -1,8 +1,11 @@
-// $Id: IGiGaSvc.h,v 1.4 2002-12-07 14:27:51 ibelyaev Exp $
+// $Id: IGiGaSvc.h,v 1.5 2002-12-07 21:05:31 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #ifndef GIGA_IGIGASVC_H
 #define GIGA_IGIGASVC_H 1 
@@ -14,6 +17,10 @@
 #include  "GaudiKernel/IService.h"
 /// GiGa
 #include  "GiGa/IIDIGiGaSvc.h"
+
+// Forward declarations from GiGa
+class GiGaHitsByID   ;
+class GiGaHitsByName ;
 
 // Forward declaration from G4
 class      G4Event               ;
@@ -33,13 +40,6 @@ class      G4TrajectoryContainer ;
 
 class IGiGaSvc : virtual public IService
 {
-public:
-  
-  /// the type for extraction the hit colelction with given ID 
-  typedef  std::pair<const int,G4VHitsCollection*>          CollectionPair     ;
-  /// the type for extraction the hit colelction with given name 
-  typedef  std::pair<const std::string,G4VHitsCollection*>  CollectionNamePair ;
- 
 public:
   
   /// Retrieve interface ID
@@ -95,14 +95,14 @@ public:
    *  @param   collection  reference to collection pair   
    *  @return  self-reference ot IGiGaSvc interface 
    */
-  virtual IGiGaSvc& operator >> ( CollectionPair         & collection   ) = 0 ;
-
+  virtual IGiGaSvc& operator >> ( GiGaHitsByID           & collection   ) = 0 ;
+  
   /** get the concrete hit collection from GiGa/G4 
    * 
    *  @param   collection  reference to collection pair   
    *  @return  self-reference ot IGiGaSvc interface 
    */
-  virtual IGiGaSvc& operator >> ( CollectionNamePair     & collection   ) = 0 ;
+  virtual IGiGaSvc& operator >> ( GiGaHitsByName         & collection   ) = 0 ;
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -145,7 +145,7 @@ public:
    *  @param   collection  reference to collection pair   
    *  @return  status code 
    */
-  virtual StatusCode retrieveHitCollection  ( CollectionPair          & ) = 0 ;
+  virtual StatusCode retrieveHitCollection  ( GiGaHitsByID           & ) = 0 ;
 
   /** get the concrete hit collection from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -153,7 +153,7 @@ public:
    *  @param   collection  reference to collection pair   
    *  @return  status code 
    */
-  virtual StatusCode retrieveHitCollection  ( CollectionNamePair      & ) = 0 ;
+  virtual StatusCode retrieveHitCollection  ( GiGaHitsByName        & ) = 0 ;
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2002-12-07 14:27:51 ibelyaev Exp $ 
+# $Id: requirements,v 1.40 2002-12-07 21:05:31 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -22,9 +22,14 @@ library          GiGaLib           Lib/*.cpp
 library          GiGa              component/*.cpp
 
 # =============== some additional cpp flags ===================================
-macro_append GiGa_pp_cppflags  ""                 \
-             Win32Debug        ' /D"GIGA_DEBUG" ' \
-             debug             "  -DGIGA_DEBUG  " 
+macro_append GiGa_pp_cppflags  "   -DGIGA_FASTCAST   " \
+             Win32             '  /D"GIGA_FASTCAST"  '    
+macro_append GiGa_pp_cppflags  ""                      \   
+             Win32Debug        ' /D"GIGA_DEBUG"    '   \
+             debug             "  -DGIGA_DEBUG     " 
+macro_remove GiGa_pp_cppflags  ""                      \
+             Win32Debug        ' /D"GIGA_FASTCAST" '   \
+             debug             "  -DGIGA_FASTCAST  " 
 
 # ============== standard patterns ============================================
 apply_pattern    component_library library=GiGa 

@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.12 2002-12-07 14:27:50 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.13 2002-12-07 21:05:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/12/07 14:27:50  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
@@ -107,6 +110,22 @@ private:
   const G4ParticleDefinition*  m_partDef  ; 
   HepLorentzVector             m_4vect    ;   
   /// 
+};
+// ============================================================================
+
+// ============================================================================
+/** @fn  gigaTrajectory
+ *  Fast cast of G4VTrajectory interface to concrete GiGa implementation
+ *  @param  g4   pointer to G4VTrajectory interface 
+ *  @return cast (dynamic or static) to GiGaTrajectory
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline GiGaTrajectory* gigaTrajectory( G4VTrajectory* g4 )
+{
+  GiGaUtil::FastCast<G4VTrajectory,GiGaTrajectory> cast ;
+  return cast( g4  );
 };
 // ============================================================================
 

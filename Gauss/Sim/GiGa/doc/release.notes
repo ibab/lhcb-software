@@ -1,9 +1,38 @@
-! $Id: release.notes,v 1.64 2002-12-07 14:27:51 ibelyaev Exp $
+! $Id: release.notes,v 1.65 2002-12-07 21:05:31 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-07 - Ivan Belyaev
+ - GiGa/GiGaHitsByID.h,GiGaHitsByName.h   - Two new helpful classes for easy 
+                                          extratcion of G4 hit collections 
+                                          by their unique ID or by their name
+ - GiGa/IGiGaSvc.h                        - Appropriate update of interface to 
+                                          use new classes GiGaHitsByID and 
+                                          GiGaHitsByName 
+ - GiGa/GiGaUtil.h                        - New effective utility 
+                                          GiGaUsil::FastCast for fast/safe 
+                                          casting. The choice between safe 
+                                         ("dynamic") and fast("static") cast 
+                                          is under the control of new compilation 
+                                          flag GIGA_FASTCAST  
+ - GiGa/GiGaTrajectory.h                  - New inline function for transparent 
+                                          efficient casting from G4VTrajectory 
+                                          base class is added  
+ - GiGa/GiGaTrajectoryPoint.h             -  - New inline functions for transparent 
+                                          efficient casting from G4VTrajectory 
+                                          and G4Trajectory base classes are added  
+ - cmt/requirements                       - Define new compilation flag 
+                                          GIGA_FASTCAST for non-debug compilation
+ - src/component/GiGa.cpp                 - Update for implementation of modified 
+                                          interface.
+                                          - Some trivial bugs are fixed in addition 
+ - src/component/GiGa.h                   - Update for implementation of modified 
+                                          interface 
+ - src/component/GiGaIGiGaSvc.cpp         - Update for implementation of modified 
+                                          interface 
 
 ! 2002-12-07 - Ivan Belyaev
  - GiGa/GiGaTrajectory.icpp          - remove the obsolete file 

@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.2 2002-12-07 21:05:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:27:52  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -559,7 +562,7 @@ StatusCode GiGa::Warning
 { 
   Stat stat( chronoSvc() , name() + ":Warning" ); 
   // increase counter of warnings  
-  m_errors [ Message ] += 1;
+  m_warnings [ Message ] += 1 ;
   return  Print( Message , MSG::WARNING , Status ) ; 
 };  
 // ============================================================================
