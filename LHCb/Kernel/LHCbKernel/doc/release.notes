@@ -1,0 +1,11 @@
+Package LHCbKernel
+Package manager: M.Cattaneo
+
+Purpose: LHCb specific Kernel classes 
+
+>>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020318 (M.Cattaneo) - New package
+! 20020318 (M.Frank)
+  - CLHEPStreams moved to this package (from Event/LHCbEvent), and 
+    modified to include serialization and printout for various CLHEP classes
+
