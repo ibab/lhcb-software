@@ -3,7 +3,7 @@ version v4r0
 
 branches doc cmt src
 
-use XERCES v16r0
+use XERCES v16r0*
 use GaudiIntrospection v4r* 
 
 # Macro defintion used by both fragments below
