@@ -31,7 +31,7 @@ use  VeloDAQ            v1r0     Velo
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r3     Calo 
-use  CaloReco           v2r2     Calo
+use  CaloReco           v2r3     Calo
 
 # Muon PID
 use  MuonID             v3r7p1   Muon
