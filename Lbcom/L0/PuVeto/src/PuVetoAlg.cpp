@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.14 2004-10-27 08:47:03 dhcroft Exp $
+// $Id: PuVetoAlg.cpp,v 1.15 2004-12-03 17:50:47 dhcroft Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -75,7 +75,7 @@ StatusCode PuVetoAlg::initialize() {
   }
   m_velo = velo;
 
-  m_nbPuSensor = m_velo->nbPuSensor();
+  m_nbPuSensor = m_velo->numberPileUpSensors();
   
   int binctr;
   double lowb;
