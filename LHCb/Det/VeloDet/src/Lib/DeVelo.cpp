@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.20 2002-07-09 20:45:18 parkesb Exp $
+// $Id: DeVelo.cpp,v 1.21 2002-07-11 18:07:40 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -160,7 +160,7 @@ StatusCode DeVelo::initialize() {
   }
   ///
 
-  loging << MSG::DEBUG    //==== Shoudl be changed for production !!!
+  loging << MSG::DEBUG 
          << "Velo : Radius from " << m_innerRadius/mm 
          << " to " << m_outerRadius/mm 
          << " thick " << m_siliconThickness / micrometer << " microns"
@@ -331,20 +331,13 @@ int DeVelo::sensorNumber( const HepPoint3D& point ) {
       return (*it)->number();
     }
   }
-  
-  return -1;
-};
 
-// ============================================================================
-// Get the sensor a point is in.
-// ============================================================================
-int DeVelo::puSensorNumber( const HepPoint3D& point ) {
-  std::vector<VeloSensor*>::const_iterator it ;
   for ( it = m_puSensor.begin() ; m_puSensor.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
-      return (*it)->number();
+      return 100 + (*it)->number();
     }
   }
+  
   return -1;
 };
 
@@ -355,28 +348,20 @@ double DeVelo::stripNumber( unsigned int sensorNumber,
                             const HepPoint3D& point, 
                             double& pitch ) {
   int type;
-  if ( m_sensor.size() <= sensorNumber ) {
-    return -1;
+  unsigned int num1 = sensorNumber;
+  if ( m_sensor.size() <= num1) {
+    num1 = num1 - 100;
+    if ( m_puSensor.size() <= num1 ) {
+      return -1;
+    }
+    type = m_puSensor[num1]->type();
+  } else {
+    type = m_sensor[num1]->type();
   }
-  type = m_sensor[sensorNumber]->type();
   return stripNumberByType( type, point, pitch ) ;
 }
 
    
-//=============================================================================
-// Returns the strip number for the specified sensor
-//=============================================================================
-double DeVelo::puStripNumber( unsigned int sensorNumber, 
-                              const HepPoint3D& point, 
-                              double& pitch ) {
-  int type;
-  if ( m_puSensor.size() <= sensorNumber ) {
-    return -1;
-  }
-  type = m_puSensor[sensorNumber]->type();
-  return stripNumberByType( type, point, pitch ) ;
-  
-}
 //=============================================================================
 // Returns the strip number for the specified sensor
 //=============================================================================
@@ -800,22 +785,30 @@ int DeVelo::neighbour ( const VeloChannelID& entryChan,
 //  Return an index of the strip.
 //=========================================================================
 int DeVelo::stripArrayIndex ( int sensorId, int stripId ) {
-  if ( m_sensor.size() > (unsigned int) sensorId ) {
+  unsigned int num = sensorId;
+  if ( m_sensor.size() > num ) {
     return stripId;
-  } else {
-    return -1;
   }
+  num -= 100;
+  if ( m_puSensor.size() > num ) { 
+    return stripId;
+  }
+  return -1;
 }
 
 //=========================================================================
 //  
 //=========================================================================
 int DeVelo::stripNumber ( int sensorId, int stripIndex ) {
-  if ( m_sensor.size() > (unsigned int) sensorId ) {
+  unsigned int num = sensorId;
+  if ( m_sensor.size() > num ) {
     return stripIndex;
-  } else {
-    return -1;
+  } 
+  num -= 100;
+  if ( m_puSensor.size() > num ) { 
+    return stripIndex;
   }
+  return -1;
 }
 
 //=========================================================================

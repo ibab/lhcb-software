@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.23 2002-07-09 20:45:28 parkesb Exp $
+! $Id: release.notes,v 1.24 2002-07-11 18:07:40 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-07-11 - Olivier Callot
+ - Correct various method to handle sensor number over 100, which is PuVeto
+   sensors, for Velo/VeloAlgorithms. Removed the specialized methods for the
+   PuVeto, and adapt the generic ones:
+     puSensorNumber     :  sensorNumber
+     puStripNumber      :  stripNumber
+     zPuSensor          :  zSensor
+
 ! 2002-07-09 - Chris Parkes
  - re-define integer strip method  rOfStrip, so that it gives same result as 
    double version.

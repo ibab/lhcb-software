@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.10 2002-07-09 20:45:09 parkesb Exp $
+// $Id: DeVelo.h,v 1.11 2002-07-11 18:07:40 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -90,9 +90,6 @@ public:
   /// return the sensor number for a point
   int sensorNumber( const HepPoint3D& point );
 
-  /// return the PU sensor number for a point
-  int puSensorNumber( const HepPoint3D& point );
-
   /// return the number of sensors
   int nbSensor()  const { return m_sensor.size() ; };
   
@@ -103,11 +100,6 @@ public:
   double stripNumber( unsigned int sensorNumber, 
                       const HepPoint3D& point, 
                       double& pitch );
-
-  /// return the (floating) strip number for the point in this sensor;
-  double puStripNumber( unsigned int sensorNumber, 
-                        const HepPoint3D& point, 
-                        double& pitch );
 
   /// return the space point and sigma for a given pair of strips.
   bool getSpacePoint( unsigned int RSensorNumber, 
@@ -145,20 +137,15 @@ public:
   double zSensor( unsigned int num ) { 
     if ( m_sensor.size() > num ) {
       return m_sensor[num]->z(); 
-    } else{
+    } else {
+      unsigned int num1 = num-100;
+      if ( m_puSensor.size() > num1 ) {
+        return m_puSensor[num1]->z(); 
+      }
       return -9999.;
     }
   }
   
-  /// Returns the Z position of this PuVeto sensor
-  double zPuSensor( unsigned int num ) { 
-    if ( m_puSensor.size() > num ) {
-      return m_puSensor[num]->z(); 
-    } else{
-      return -9999.;
-    }
-  }
-
   /// returns the local radius of the strip
   double rOfStrip( double strip, int& rZone );
 
@@ -231,6 +218,10 @@ public:
   /// returns the silicon thickness
   double siliconThickness ( unsigned int num ) {
     if ( m_sensor.size() > num ) {
+      return m_siliconThickness;
+    }
+    unsigned int num1 = num-100;
+    if ( m_puSensor.size() > num1 ) {
       return m_siliconThickness;
     }
     return -1.;
