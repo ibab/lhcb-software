@@ -1,10 +1,10 @@
-
 !-----------------------------------------------------------------------------
 ! Package       : Sim/GaussTools
 ! Responsible	  : Witold Pokorski
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussTools v10r0 ====================================
 ! 2004-02-19 - Vanya BELYAEV
 
  - src/Component/GetGiGaHitsAlg.h,.cpp 
