@@ -1,8 +1,8 @@
 // Options to read POOL .sim file and make a copy
 
 EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000541_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'",
-}; // Event type 10000000 - incl_b
+  "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_v19r0_0412.sim' TYP='POOL_ROOT' OPT='READ'"
+}; // Test data produced by Florence with Gauss v19r0 pre-release
 
 // Define the SIM content to copy
 #include "$IOEXAMPLEROOT/options/GaussTape.opts"

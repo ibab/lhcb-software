@@ -4,8 +4,8 @@
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
 
 EventSelector.Input   = {
-  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v7r0/BooleTest.digi' TYP='POOL_ROOTTREE' OPT='READ'"
-}; // XmlDDDB v22r2 (lhcb-200402), evttype 11144100 (Bd_JpsiKS,mm)
+  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole-0412.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+}; // XmlDDDB v23r1 (lhcb-200412), Gauss v19r0
 
 // Define the DIGI content to copy
 #include "$IOEXAMPLEROOT/options/DigiContent.opts"
