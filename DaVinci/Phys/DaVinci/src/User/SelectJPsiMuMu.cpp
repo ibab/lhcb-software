@@ -1,4 +1,4 @@
-// $Id: SelectJPsiMuMu.cpp,v 1.3 2002-03-28 19:22:45 gcorti Exp $
+// $Id: SelectJPsiMuMu.cpp,v 1.4 2002-04-03 17:24:00 gcorti Exp $
 // Include files 
 
 // from STL
@@ -298,8 +298,8 @@ StatusCode SelectJPsiMuMu::execute() {
   // Start of Paul's ParticleFilter code (and debug)
   ParticleVector vMuons, vMuPlus, vMuMinus;
   StatusCode scFilter = m_pFilter->filter( parts, vMuons );
-  StatusCode scFilPos = m_pFilter->filterPositive( parts, vMuPlus );
-  StatusCode scFilNeg = m_pFilter->filterNegative( parts, vMuMinus );
+  StatusCode scFilPos = m_pFilter->filterPositive( vMuons, vMuPlus );
+  StatusCode scFilNeg = m_pFilter->filterNegative( vMuons, vMuMinus );
   if ( scFilter && scFilPos && scFilNeg ) {
     log << MSG::DEBUG << ">>> Particle filtration successfull  "  << endreq;
   }
