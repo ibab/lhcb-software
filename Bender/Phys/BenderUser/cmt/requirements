@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-02-10 11:22:45 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2004-02-10 11:31:22 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -7,7 +7,7 @@
 # ============================================================================
 package          BenderUser
 author           Vanya BELYAEV
-version          v1r0
+version          v2r0
 
 # ============== structure ===================================================
 branches         cmt doc python 
@@ -29,4 +29,7 @@ apply_pattern    application_path
 # The END 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2004/02/10 11:22:45  ibelyaev
+# New package:   place for Bender-based physics analysis algorithms
+#
 # ============================================================================
