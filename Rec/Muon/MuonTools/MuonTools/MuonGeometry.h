@@ -1,4 +1,4 @@
-// $Id: MuonGeometry.h,v 1.3 2002-04-11 08:06:44 dhcroft Exp $
+// $Id: MuonGeometry.h,v 1.4 2002-08-05 12:52:24 dhcroft Exp $
 #ifndef MUONGEOMETRY_H 
 #define MUONGEOMETRY_H 1
 
@@ -16,59 +16,6 @@ namespace MuonGeometry {
   // defines chambers all stations are the same....
   static const unsigned int chamberGridX[4] = {1,1,1,2};
   static const unsigned int chamberGridY[4] = {1,2,4,8};
-
-  // defines logical channels : station then region
-  // horizontal strips first (ie full x extent of each logical region)
-  static const unsigned int logChanHorizGridX[5][4] = { 
-    {24,24,24,24},
-    {8,4,2,2},
-    {8,4,2,2},
-    {12,4,2,2},
-    {12,4,2,2}
-  };
-  // this case is completely projective
-  static const unsigned int logChanHorizGridY[5][4] = {
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8}
-  }; 
-
-  // virtical strips next (ie full y extent of each logical region)
-  static const unsigned int logChanVertGridX[5][4] = { 
-    {24,24,24,24},
-    {48,48,48,48},
-    {48,48,48,48},
-    {12,12,12,12},
-    {12,12,12,12}
-  };
-  
-  // and the y is projective except for the cases of pad readout...
-  static const unsigned int logChanVertGridY[5][4] = { 
-    {8,8,8,8},
-    {1,2,2,2},
-    {1,2,2,2},
-    {8,2,2,2},
-    {8,2,2,2}
-  };
-  
-  // defines muon pads (crossed logical channels)
-  static const unsigned int padGridX[5][4] = {
-    {24,24,24,24},
-    {48,48,48,48},
-    {48,48,48,48},
-    {12,12,12,12},
-    {12,12,12,12}
-  };
-
-  static const unsigned int padGridY[5][4] = {
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8},
-    {8,8,8,8}
-  };
 
   // these are the chamber numbers in x,y coordinates across a region
   // if you turn your head 90deg clockwise they are in the 

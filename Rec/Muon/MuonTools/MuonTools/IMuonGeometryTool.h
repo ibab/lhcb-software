@@ -1,4 +1,4 @@
-// $Id: IMuonGeometryTool.h,v 1.1 2002-05-10 12:47:05 dhcroft Exp $
+// $Id: IMuonGeometryTool.h,v 1.2 2002-08-05 12:52:24 dhcroft Exp $
 #ifndef MUONTOOLS_IMUONGEOMETRYTOOL_H 
 #define MUONTOOLS_IMUONGEOMETRYTOOL_H 1
 
@@ -16,7 +16,7 @@
  *  @author David Hutchcroft
  *  @date   29/04/2002
  */
-static const InterfaceID IID_IMuonGeometryTool( "IMuonGeometryTool" , 1 , 0 );
+static const InterfaceID IID_IMuonGeometryTool( "IMuonGeometryTool" , 2 , 0 );
 
 class IMuonGeometryTool : public virtual IAlgTool {
 public:
@@ -27,6 +27,11 @@ public:
   static const InterfaceID& interfaceID() { 
     return  IID_IMuonGeometryTool;
   }
+
+  /// return the number of stations
+  virtual StatusCode nStation(int &NStation) = 0;
+  /// return the number of stations
+  virtual StatusCode nRegion(int &NRegion) = 0;
 
   /// Return the box for a station
   virtual StatusCode getStationBox(const int &station,
@@ -46,6 +51,27 @@ public:
   /// Return pad size in a region
   virtual StatusCode getPadSize(const int &station, const int &region,
                                 double &sizeX, double &sizeY) = 0;  
+
+  /// return the number of horizonal logical channels in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanHorizGridX(const int &station, const int &region) = 0;
+  /// return the number of horizonal logical channels in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanHorizGridY(const int &station, const int &region) = 0;
+
+  /// return the number of vertical logical channels in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanVertGridX(const int &station, const int &region) = 0; 
+  /// return the number of vertical logical channels in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int logChanVertGridY(const int &station, const int &region) = 0;
+
+  /// return the number of pads in X across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int padGridX(const int &station, const int &region) = 0;
+  /// return the number of pads in Y across a 
+  /// 1/4 of the region (use for MuonTileID grid)
+  virtual int padGridY(const int &station, const int &region) = 0;
 
 protected:
 
