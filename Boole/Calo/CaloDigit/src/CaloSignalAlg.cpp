@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.2 2003-11-18 10:20:24 ocallot Exp $
 // STL
 #include <string>
 #include <algorithm>
@@ -58,6 +58,7 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   declareProperty( "MinimalDeposit"    , m_minimalDeposit     = 0.1  ) ;
   declareProperty( "BackgroundScaling" , m_backgroundScaling  = 0.25 ) ;
   declareProperty( "IgnoreTimeInfo"    , m_ignoreTimeInfo     = false) ;
+  declareProperty( "BackgroundData"    , m_backgroundData     = ""   ) ;
 
   if ( "SpdSignal" == name ) {
     setDetData(    "/dd/Structure/LHCb/Spd" );
@@ -66,22 +67,26 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
     m_previousData    = "Prev/" + MCCaloHitLocation::Spd;
     m_previousDigits  = "Prev/" + MCCaloDigitLocation::Spd;
     m_minimalDeposit  = 0.0;   //== Full history
+    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Spd;
   } else if ( "PrsSignal" == name ) {
     setDetData(    "/dd/Structure/LHCb/Prs" );
     setInputData(  MCCaloHitLocation::Prs );
     setOutputData( MCCaloDigitLocation::Prs );
     m_previousData    = "Prev/" + MCCaloHitLocation::Prs;
     m_previousDigits  = "Prev/" + MCCaloDigitLocation::Prs;
+    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Prs;
   } else if ( "EcalSignal" == name ) {
     setDetData(    "/dd/Structure/LHCb/Ecal" );
     setInputData(  MCCaloHitLocation::Ecal );
     setOutputData( MCCaloDigitLocation::Ecal );
     m_previousData    = "Prev/" + MCCaloHitLocation::Ecal;
+    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Ecal;
   } else if ( "HcalSignal" == name ) {
     setDetData(    "/dd/Structure/LHCb/Hcal" );
     setInputData(  MCCaloHitLocation::Hcal );
     setOutputData( MCCaloDigitLocation::Hcal );
     m_previousData    = "Prev/" + MCCaloHitLocation::Hcal;
+    m_backgroundData  = "LHCBackground/" + MCCaloHitLocation::Hcal;
   }
 
  };
@@ -239,12 +244,10 @@ StatusCode CaloSignalAlg::execute() {
         if ( 2 == storeType ) text = "  added";
         if ( 3 == storeType ) text = "    bkg";
         MCParticle* part = hit->particle();
-        msg << id << text 
-            << format( " %8.2f MeV, timeBin=%8d, MCPart %4d (e= %9.3f GeV)",
-                       storedE/MeV,
-                       timeBin,
-                       (int) part->index(),
-                       part->momentum().e()/GeV ) 
+        msg << id << text << format( 
+    " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
+    storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
+    part->momentum().e()/GeV ) 
             << endreq;
       }
     } // store ?
@@ -294,14 +297,53 @@ StatusCode CaloSignalAlg::execute() {
             if ( 5 == storeType ) text = " PREV  ";
             
             MCParticle* part = hit->particle();
-            msg << id << text 
-                << format(" %8.2f MeV, timeBin=%8d, MCPart %4d (e= %9.3f GeV)",
-                           storedE/MeV, 
-                           timeBin, 
-                           (int) part->index(),
-                           part->momentum().e()/GeV ) 
+            msg << id << text << format(
+  " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
+  storedE/MeV, timeBin, (int) part->index(),  part->particleID().pid(),
+  part->momentum().e()/GeV ) 
                 << endreq;
           }
+        }
+      }
+    }
+  }
+  //--------------------------------
+  // == Process the LHC background data 
+  //--------------------------------
+  if( !m_backgroundData.empty() ) {
+    SmartDataPtr<MCCaloHits> lhc( eventSvc(), m_backgroundData );
+    MCCaloHits* lhcBackground = lhc;
+    if ( 0 != lhcBackground ) {
+      for( hitIt = lhcBackground->begin(); lhcBackground->end() != hitIt ; 
+           ++hitIt ) {
+        hit = *hitIt;
+        const CaloCellID id = hit->cellID() ;
+        if ( ! m_calo->valid( id ) ) { continue; }
+        
+        storeType = 0;
+        storedE   = hit->activeE();
+        timeBin   = int( floor( hit->time() + .5 ) );//== time bin number...
+
+        if ( m_ignoreTimeInfo ) timeBin = 0;
+
+        if ( 0 == timeBin ) {
+          myDig = mcDigitPtr[id];
+          if ( 0 == myDig ) {
+            myDig = new MCCaloDigit( );
+            myDig->setCellID( id );
+            mcDigitPtr.addEntry( myDig, id );
+          }
+
+          myDig->addActiveE( storedE );
+          if ( verbose ) {
+            MCParticle* part = hit->particle();
+            msg << MSG::INFO << id << " LHCbk " << format(
+  " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV) zv%9.1f rv%9.1f",
+  storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
+  part->momentum().e()/GeV, part->originVertex()->position().z(),
+  part->originVertex()->position().perp() ) 
+                << endreq;
+          }  
         }
       }
     }

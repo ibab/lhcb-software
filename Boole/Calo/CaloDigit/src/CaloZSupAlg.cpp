@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.2 2002-11-18 12:21:29 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.3 2003-11-18 10:20:24 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -11,16 +11,23 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/ObjectVector.h"
+
 // Event 
 #include "Event/MCTruth.h"
+
 // Calo/CaloKernel
-#include "CaloKernel/CaloVector.h"
 #include "CaloKernel/CaloException.h"
+
 // CaloEvent
 #include "Event/MCCaloDigit.h"
 #include "Event/CaloDigit.h"
+
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
+
+// HltEvent
+#include "Event/HltBuffer.h"
+
 // local
 #include "CaloZSupAlg.h"
 
@@ -44,7 +51,6 @@ const       IAlgFactory& CaloZSupAlgFactory = Factory ;
 //=============================================================================
 CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : CaloAlgorithm       ( name , pSvcLocator            )
-  , m_tagData           ( ""    )
   , m_zsupMethod        ( "1D"  )
   , m_zsup2D            ( false )
   , m_zsupThreshold     ( 6     )
@@ -53,9 +59,15 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
   declareProperty("InputMCData"     , m_inputMCData     ) ;
-  declareProperty("TagData"         , m_tagData         ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod      ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold   ) ;
+  declareProperty("BankType"        , m_bankType        ) ;
+  declareProperty("EnergyScale"     , m_energyScale     ) ;
+  declareProperty("NumberOfBanks"   , m_numberOfBanks   ) ;
+  declareProperty("SpdInputData"    , m_spdInputData     = ""        ) ;
+  declareProperty("TriggerEtScale"  , m_triggerEtScale   = 20. * MeV );
+  declareProperty("TriggerThreshold", m_triggerThreshold = 15. * MeV );
+  declareProperty("TriggerBankType" , m_triggerBankType        ) ;
 
   //=== Default values according to the name of the algorithm !
   if ( "SpdZSup" == name ) {
@@ -64,26 +76,57 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     setOutputData(     CaloDigitLocation::Spd     );
     m_inputMCData    = MCCaloDigitLocation::Spd;
     m_zsupThreshold  = 1;
+    m_numberOfBanks  = 0;
+    m_triggerEtScale   = 0.;
+
   } else if ( "PrsZSup" == name ) {
     setDetData(        "/dd/Structure/LHCb/Prs"   );
     setInputData(      CaloDigitLocation::FullPrs );
     setOutputData(     CaloDigitLocation::Prs     );
-    m_inputMCData    = MCCaloDigitLocation::Prs;
-    m_tagData        = CaloDigitLocation::Spd;
-    m_zsupThreshold  = 15;
+    m_inputMCData      = MCCaloDigitLocation::Prs;
+    m_zsupThreshold    = 15;
+    m_energyScale      = 0.1 * MeV;
+    m_bankType         = HltBuffer::PrsE;
+    m_triggerBankType  = HltBuffer::PrsTrig;
+    m_numberOfBanks    = 8;
+    m_spdInputData     = CaloDigitLocation::FullSpd ;
+    m_triggerEtScale   = 0.;
+    m_detNum           = CaloCellID( 1, 0, 0, 0 ).all();
+
   } else if ( "EcalZSup" == name ) {
     setDetData(        "/dd/Structure/LHCb/Ecal"   );
     setInputData(      CaloDigitLocation::FullEcal );
     setOutputData(     CaloDigitLocation::Ecal     );
-    m_inputMCData    = MCCaloDigitLocation::Ecal;
-    m_zsupMethod     = "2D";
-    m_zsupThreshold  = 20;
+    m_inputMCData      = MCCaloDigitLocation::Ecal;
+    m_zsupMethod       = "2D";
+    m_zsupThreshold    = 20;
+    m_energyScale      = 1.0 * MeV;
+    m_bankType         = HltBuffer::EcalE;
+    m_triggerBankType  = HltBuffer::EcalTrig;
+    m_numberOfBanks    = 10;
+    m_triggerThreshold = 0.;
+    m_detNum           = CaloCellID( 2, 0, 0, 0).all();
+
+    m_corrArea.push_back( 1.00 );
+    m_corrArea.push_back( 1.04 );
+    m_corrArea.push_back( 1.08 );
+    
   } else if ( "HcalZSup" == name ) {
     setDetData(        "/dd/Structure/LHCb/Hcal"   );
     setInputData(      CaloDigitLocation::FullHcal );
     setOutputData(     CaloDigitLocation::Hcal     );
-    m_inputMCData    = MCCaloDigitLocation::Hcal;
-    m_zsupThreshold  = 4;
+    m_inputMCData      = MCCaloDigitLocation::Hcal;
+    m_zsupThreshold    = 4;
+    m_energyScale      = 1.0 * MeV;
+    m_bankType         = HltBuffer::HcalE;
+    m_triggerBankType  = HltBuffer::HcalTrig;
+    m_numberOfBanks    = 4;
+    m_triggerThreshold = 0.;
+    m_detNum           = CaloCellID(3, 0, 0, 0).all();
+
+    m_corrArea.push_back( 1.00 );
+    m_corrArea.push_back( 1.05 );
+    
   }
 };
 
@@ -130,10 +173,24 @@ StatusCode CaloZSupAlg::initialize() {
   msg << MSG::INFO << "Calorimeter has " <<  m_numberOfCells
       << " cells. Zsup method "  << m_zsupMethod 
       << " Threshold " << m_zsupThreshold;
-  if ( m_tagData != "" ) { 
-    msg << " with tag from " << m_tagData; 
+  if ( 0 < m_numberOfBanks ) {
+    msg  << " bankType " << m_bankType
+         << " NumberOfBanks " << m_numberOfBanks;
   }
-  msg << endreq;
+  msg << " TriggerEtScale " << m_triggerEtScale
+      << " threshold " << m_triggerThreshold;
+  if ( 0 < m_corrArea.size() ) {
+    msg << " Correction factor: ";
+    for ( unsigned int kk = 0 ; m_corrArea.size() > kk ; kk++ ) {
+      msg << m_corrArea[kk] << " ";
+    }
+  }
+  msg      << endreq;
+
+  m_totDataSize = 0.;
+  m_totTrigSize = 0.;
+  m_nbEvents    = 0;
+
   return StatusCode::SUCCESS;
 };
 
@@ -143,16 +200,22 @@ StatusCode CaloZSupAlg::initialize() {
 StatusCode CaloZSupAlg::execute() {
 
   MsgStream msg(  msgSvc(), name() );
-
+  bool debug   = msg.level() <= MSG::DEBUG;
+  bool verbose = msg.level() <= MSG::VERBOSE;
+  
   //*** some trivial printout
 
-  msg << MSG::DEBUG << "Perform digitization from "
-      << inputData() << " to " << outputData() << endreq;
+  if ( debug ) msg << MSG::DEBUG << "Perform digitization from "
+                   << inputData() << " to " << outputData() << endreq;
 
   //*** get the input data
 
   CaloDigits* allDigits = get( eventSvc(), inputData(), allDigits );
-
+  CaloDigits* spdDigits = NULL;
+  if ( "" != m_spdInputData ) {
+    spdDigits = get( eventSvc(), m_spdInputData, spdDigits );
+  }
+  
   //***  prepare the output container
 
   CaloDigits* digits = new CaloDigits();
@@ -169,34 +232,48 @@ StatusCode CaloZSupAlg::execute() {
   sc = put( digits, outputData() );
   if( sc.isFailure() ) { return sc ; } 
 
-  msg << MSG::DEBUG << "Processing " << allDigits->size() 
-      << " Digits." << endreq;
+  //== Get the HltBuffer
+  HltBuffer* hltBuffer = get( eventSvc(), HltBufferLocation::Default, 
+                              hltBuffer );
+  std::vector< std::vector<hlt_int> > banks;
+  std::vector< std::vector<hlt_int> > trigBanks;
+  if ( 0 < m_numberOfBanks ) {
+    std::vector<hlt_int> a;
+    a.reserve(500);
+    for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
+      banks.push_back( a );
+      trigBanks.push_back( a );
+    }
+  }
+
+  if ( debug ) msg << MSG::DEBUG << "Processing " << allDigits->size() 
+                   << " Digits." << endreq;
 
   enum {
     DefaultFlag   ,
     NeighborFlag  ,
-    SeedFlag      ,
-    TagFlag        };
+    SeedFlag       };
 
   CaloDigits::const_iterator aDig;
   std::vector<int> caloFlags    ( m_numberOfCells, DefaultFlag ) ;
+  std::vector<int> trigValue    ( m_numberOfCells, 0           ) ;
   int index;
 
-  //*** If there is a TagData (Spd data for Preshower Zsup), read this
-  //*** container and set the TagFlag for those cells in the TagData 
+  //== Process the SPD container for PrsSpd trigger bits
 
-
-  if ( m_tagData != "" ) {
-    CaloDigits* tags = get( eventSvc() , m_tagData, tags );
-    for( aDig = tags->begin() ; tags->end() != aDig; ++aDig ) {
+  if ( 0 != spdDigits ) {
+    for( aDig = spdDigits->begin(); spdDigits->end() != aDig ; ++aDig ) {
       if( 0 != *aDig ) {
-        index = m_calo->cellIndex( (*aDig)->cellID() );
-        caloFlags[index] = TagFlag ;
-        msg << MSG::DEBUG << "Added tag for " << (*aDig)->cellID() << endreq;
+        CaloCellID id = (*aDig)->cellID();
+        if ( 0.1 < (*aDig)->e() ) {
+          index            = m_calo->cellIndex( id );
+          trigValue[index] = 1;
+          if( debug ) msg << MSG::DEBUG << id << " fired" << endreq;
+        }
       }
     }
   }
-
+  
   // == Apply the threshold. If 2DZsup, tag also the neighbours
 
   for( aDig = allDigits->begin(); allDigits->end() != aDig ; ++aDig ) {
@@ -204,14 +281,31 @@ StatusCode CaloZSupAlg::execute() {
       CaloCellID id = (*aDig)->cellID();
       index         = m_calo->cellIndex( id );
       double gain   = m_calo->cellGain( id ) ;
-      int    digAdc = int ( floor( (*aDig)->e()/gain + .9) );
-      if( m_zsupThreshold <= digAdc ) {
-        if( MSG::DEBUG >= msg.level() ) {
+      double energy = (*aDig)->e();
+      int    digAdc = int ( floor( energy/gain + .9) );
+      int trigVal   = 0;
+      if ( 0 < m_triggerEtScale ) {
+        energy = energy * m_corrArea[ id.area() ] * m_calo->cellSine( id );
+        trigVal = (int)floor( energy / m_triggerEtScale + .5 );
+        if ( 255 < trigVal ) trigVal = 255;
+        if ( 0   > trigVal ) trigVal = 0;
+      } else {
+        trigVal =  trigValue[index];
+        if ( m_triggerThreshold < energy ) trigVal += 2;
+      }
+      if ( 0 != trigVal ) trigValue[index] = trigVal;
+      
+      if( debug ) {
+        if( m_zsupThreshold <= digAdc || 0 !=  trigVal) {
           msg << MSG::DEBUG << id 
-              << format( " Energy %10.2f MeV gain %6.2f adc %4d OK",
-                         (*aDig)->e()/MeV, gain, digAdc )
-              << endreq;
+              << format( " Energy %10.2f MeV gain %6.2f adc %4d Trig %3d",
+                         (*aDig)->e()/MeV, gain, digAdc, trigVal );
+          if (  m_zsupThreshold <= digAdc ) msg << " seed";
+          msg << endreq;
         }
+      }
+      
+      if( m_zsupThreshold <= digAdc ) {
         caloFlags[index] = SeedFlag ;
         if( m_zsup2D ) {
           CaloNeighbors::const_iterator neighbor =
@@ -230,27 +324,185 @@ StatusCode CaloZSupAlg::execute() {
 
   //** write tagged data as MCCaloDigit
 
+  int nextIndex   = -1;
+  int headIndex   = -1;
+  int clusLength  = 0;
+  int bufIndx     = -1;
+  int prevIndx    = -1;
+  int cellContent;
+  int cellIndex;
+  
   for( aDig = allDigits->begin(); allDigits->end() != aDig ; ++aDig ) {
     CaloCellID id = (*aDig)->cellID();
     index         = m_calo->cellIndex( id );
     if( DefaultFlag == caloFlags[index] ) { continue; }
+
     CaloDigit* digit = new CaloDigit( id, (*aDig)->e() );
     digits->add( digit ) ;
     
-    if( MSG::DEBUG >= msg.level() ) {
-      if ( TagFlag == caloFlags[index] ) {
-        msg << MSG::DEBUG << id << " added due to Tag. ";
-      } else if ( NeighborFlag == caloFlags[index] ) {
-        msg << MSG::DEBUG << id << " added as Neighbor.";
+    if( verbose ) {
+      if ( NeighborFlag == caloFlags[index] ) {
+        msg << MSG::VERBOSE << id << " added as Neighbor.";
       } else {
-        msg << MSG::DEBUG << id << " added as Seed.    ";
+        msg << MSG::VERBOSE << id << " added as Seed.    ";
       }
       msg << format( " Energy %9.2f MeV", (*aDig)->e()/MeV ) << endreq;
     }
+    
+    if ( 0 < m_numberOfBanks ) {
+      //== Make clusters...
+      cellContent = int ( floor( (*aDig)->e() / m_energyScale + .5 ) );
+      cellIndex   = id.raw();
+      
+      bufIndx = bufferNumber( id );
+      
+      if ( bufIndx != prevIndx ) { nextIndex = -1; }
+      
+      if ( cellIndex != nextIndex ) {
+        if ( 0 <= headIndex ) {
+          banks[prevIndx][headIndex] += clusLength;
+        }
+        clusLength = 0;
+        headIndex  = banks[bufIndx].size();
+        banks[bufIndx].push_back( cellIndex << 16 );
+      }
+      banks[bufIndx].push_back( cellContent );
+      nextIndex = cellIndex+1;
+      prevIndx = bufIndx;
+      clusLength++;
+    }
+  }
+  if ( 0 <= headIndex ) {
+    banks[bufIndx][headIndex] += clusLength;
   }
 
   msg << MSG::DEBUG << format( "Have stored %5d digits.", digits->size() ) 
       << endreq;
+
+  //== Build the trigger banks
+
+  prevIndx  = -1;
+  nextIndex = -1;
+  int word = 0;
+  
+  if ( 0 < m_numberOfBanks ) {
+    if ( 0 < m_triggerEtScale ) {  //=== ECAL and HCAL
+      for ( index = 0; m_numberOfCells > index; index++ ) {
+        if ( 0 == trigValue[index] ) continue;
+
+        CaloCellID id = m_calo->cellIdByIndex( index );
+
+        bufIndx = bufferNumber( id );
+        
+        if ( bufIndx != prevIndx ) { nextIndex = -1; }
+        
+        cellIndex = id.raw();
+        if ( cellIndex != nextIndex ) {
+          if ( 0 <= prevIndx ) trigBanks[prevIndx].push_back( word );
+          word = (cellIndex << 16) + (trigValue[index] << 8);
+          nextIndex = cellIndex+1;
+        } else {
+          word += trigValue[index];
+        }
+
+        if ( verbose ) {
+          msg << MSG::VERBOSE << id << " index " << index 
+              << " trigValue " << trigValue[index]
+              << format( "word %8x ",word) << endreq;
+        }
+
+        prevIndx = bufIndx;
+      }
+      if ( 0 <= prevIndx ) trigBanks[prevIndx].push_back( word );
+
+    } else {                       //=== Preshower + SPD
+
+      for ( index = 0; m_numberOfCells > index; index++ ) {
+        if ( 0 == trigValue[index] ) continue;
+
+        CaloCellID id = m_calo->cellIdByIndex( index );
+
+        bufIndx = bufferNumber( id );
+        
+        if ( bufIndx != prevIndx ) { nextIndex = -1; }
+
+        cellIndex = id.raw() & 0xFFF8;
+        if ( cellIndex != nextIndex ) {
+          if ( 0 <= prevIndx ) trigBanks[prevIndx].push_back( word );
+          word = cellIndex << 16;
+        }
+        if ( 0 != (trigValue[index]&1) ) word += ( 1 << (index&7) );
+        if ( 0 != (trigValue[index]&2) ) word += ( 1 << ((index&7)+8) );
+
+        if ( verbose ) {
+          msg << MSG::VERBOSE << id << " index " << index 
+              << " trigValue " << trigValue[index]
+              << format( " word %8x ",word) << endreq;
+        }
+
+        prevIndx = bufIndx;
+        nextIndex = cellIndex;
+      }
+      if ( 0 <= prevIndx ) trigBanks[prevIndx].push_back( word );
+    }
+  }
+
+  //== Store the banks
+
+  if ( 0 < m_numberOfBanks ) {
+    int totDataSize = 0;
+    int totTrigSize = 0;
+
+    hlt_int board = 0;
+    for ( unsigned int kk = 0; banks.size() > kk; kk++ ) {
+      hltBuffer->addBank( board, m_bankType, banks[kk] );
+      totDataSize += banks[kk].size();
+      hltBuffer->addBank( board, m_triggerBankType, trigBanks[kk] );
+      totTrigSize += trigBanks[kk].size();
+      board++;
+    }
+    m_totDataSize += totDataSize;
+    m_totTrigSize += totTrigSize;
+    m_nbEvents++;
+
+    if ( debug ) {
+      board = 0;
+      msg << MSG::DEBUG << "Bank sizes: ";
+      for ( unsigned int kk = 0; banks.size() > kk; kk++ ) {
+        msg << format( "%2d:%4d+%4d ", board, banks[kk].size(),
+                       trigBanks[kk].size() );
+        board++;
+      }
+      msg << endreq << "Total Data bank size " << totDataSize
+          << " + trigger " << totTrigSize << endreq;
+    }
+
+    if ( verbose ) {
+      board = 0;
+      for ( unsigned int kk = 0; banks.size() > kk; kk++ ) {
+        msg << MSG::VERBOSE << "DATA bank : " << board << endreq;
+        int kl = 0;
+        std::vector<hlt_int>::const_iterator itW;
+        
+        for ( itW = banks[kk].begin(); banks[kk].end() != itW; itW++ ){
+          msg << MSG::VERBOSE << format ( " %8x %8d   ", (*itW), (*itW) );
+          kl++;
+          if ( 0 == kl%4 ) msg << endreq;
+        }
+        
+        msg << endreq <<  "TRIGGER bank size=" << trigBanks[kk].size() << "  "
+            << endreq;
+        kl = 0;
+        for ( itW = trigBanks[kk].begin(); trigBanks[kk].end() != itW; itW++ ){
+          msg << MSG::VERBOSE << format ( " %8x ", (*itW) );
+          kl++;
+          if ( 0 == kl%8 ) msg << endreq;
+        }
+        msg << endreq;
+      }
+      board++;
+    }
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -262,5 +514,15 @@ StatusCode CaloZSupAlg::finalize() {
 
   MsgStream msg( msgSvc(), name());
   msg << MSG::DEBUG << " >>> Finalize" << endreq;
+
+  if ( 0 < m_nbEvents ) {
+    m_totDataSize /= m_nbEvents;
+    m_totTrigSize /= m_nbEvents;
+    msg << MSG::INFO << "Average bank size : " 
+        << format( "%7.1f words for energy + %7.1f words for trigger.", 
+                   m_totDataSize, m_totTrigSize )
+        << endreq;
+  }  
+  
   return CaloAlgorithm::finalize();
 }

@@ -4,6 +4,22 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-11-18 - Olivier Callot
+ - CaloZSup produces the HltBuffer for the CaloDigit. New options 
+    BankType : type of bank for HLT, default according to detector
+    EnergyScale : to code energy in integer. 1 MeV for E/HCAL, 0.1 MeV for Prs
+    NumberOfBanks : number of banks in this detector.
+    SpdInputData : Container with SPD digits, to create PrsSpd trigger banks
+    TriggerEtScale : To digitise transverse energy (Ecal,Hcal), 20 MeV
+    TriggerThreshold : Threshold for Prs trigger bit, default 15 MeV
+    TriggerBankType : type of the HltBank produced.
+ - Removed option TagData in CaloZSup: The Prs Z-sup is now independent of the 
+   SPD
+ - Handle the LHC background in the CaloSignal algorithm: Signals in time 
+   (bunch ID = 0) are added.
+ - Removed algorithm CaloProduceRaw, obsolete as the HltBuffer is produced
+   in CaloZSup.
+
 !======================== CaloDigit v1r3 2003-07-16 ========================
 ! 2003-07-16 - Marco Cattaneo
  - Use CaloEvent v12r*

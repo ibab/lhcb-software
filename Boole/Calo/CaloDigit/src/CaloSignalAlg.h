@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $
+// $Id: CaloSignalAlg.h,v 1.3 2003-11-18 10:20:24 ocallot Exp $
 #ifndef   CALODIGIT_CALOSIGNALALG_H
 #define   CALODIGIT_CALOSIGNALALG_H 1
 // ============================================================================
@@ -89,6 +89,7 @@ private:
   double       m_minimalDeposit     ; ///< Minimal energy to be kept
   double       m_backgroundScaling  ; ///< Downscale for the background hits
   bool         m_ignoreTimeInfo     ; ///< flag to ignore SICBMC time info.
+  std::string  m_backgroundData     ; ///< name of LHC background container
   
   //== Variables internally used
 

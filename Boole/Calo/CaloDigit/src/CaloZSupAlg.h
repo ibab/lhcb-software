@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.2 2003-06-23 11:43:04 ocallot Exp $ 
+// $Id: CaloZSupAlg.h,v 1.3 2003-11-18 10:20:24 ocallot Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 // ============================================================================
@@ -41,19 +41,62 @@ public:
   StatusCode finalize  ();
   
 protected:
+
+  int bufferNumber( const CaloCellID& ID )  {
+    int det  = ID.calo();
+    int area = ID.area();
+    int row  = ID.row();
+    int col  = ID.col();
+    int bNum = 0;
+
+    //== PreShower: 1 TELL1 per region, except the outer one with 2 boards.
+
+    if ( 1 >= det ) {    // PRS
+      bNum = 1 + area;
+      if ( 0 == area && 34 > row ) bNum = 0;  //== Two L1 boards
+      if ( 31 < col ) bNum += 4;
+
+      //== ECAL : 2 TELL1 per region, except in region 2. 10 boards in total
+
+    } else if ( 2 == det ) {  // ECAL
+      bNum = 2*area;
+      if ( 0 == area && 33 < row ) bNum += 1; //== Two L1 boards
+      if ( 1 == area && 31 < row ) bNum += 1; //== Two L1 boards
+      if ( 31 < col ) bNum += 5;
+
+      //== HCAL : 4 Tell1 boards, 1 per region. 4 in total
+
+    } else if ( 3 == det ) {
+      bNum = area;
+      if ( 15 < col ) bNum += 2;
+    }
+    return bNum;
+  }
   
 private:   
 
   std::string m_inputMCData  ;    ///< Input data container
-  std::string m_tagData ;       ///< tag for Z-sup, for Prs
-
-  DeCalorimeter*         m_calo;           ///< Detector element pointer
-
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
+  int         m_bankType          ; ///< BankType for HltBuffer
+  double      m_energyScale       ; ///< To convert energy to HltBuffer
+  int         m_numberOfBanks     ; ///< Number of TELL1 boards = output banks
+  std::string m_spdInputData      ; ///< SPD signals, for Prs trigger.
+  double      m_triggerEtScale    ; ///< Transverse energy scale E/Hcal trigger
+  double      m_triggerThreshold  ; ///< Preshower trigger Threshold 
+  int         m_triggerBankType   ; ///< Trigger BankType for HltBuffer
+  std::vector<double> m_corrArea  ; ///< Correction factor, area dependence
+
+  DeCalorimeter*         m_calo;           ///< Detector element pointer
       
-  int         m_numberOfCells     ; ///< Number of cells of this detector. 
+  int         m_numberOfCells     ; ///< Number of cells of this detector.
+  int         m_detNum            ; ///< Calo detector number, for cellID
+
+  double m_totDataSize;
+  double m_totTrigSize;
+  int m_nbEvents;
+  
 };
 
 
