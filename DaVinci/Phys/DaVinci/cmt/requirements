@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.126 2004-06-25 17:10:42 pkoppenb Exp $
+# $Id: requirements,v 1.127 2004-06-28 06:42:16 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -96,7 +96,7 @@ use  TrExtrapolator     v2r12    Tr
 use  RecoTools          v1r1     Rec
 use  Utilities          v1r5     Tools
 
-use  LoKi               v2r5p1   Tools  
+use  LoKi               v2r6     Tools  
 use  DaVinciAssociators v5r0     Phys
 
 # Physics packages
