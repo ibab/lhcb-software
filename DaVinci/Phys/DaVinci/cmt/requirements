@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.231 2005-01-26 13:02:43 pkoppenb Exp $
+# $Id: requirements,v 1.232 2005-01-26 17:02:56 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -55,7 +55,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r2     Trg
+use TrgSys                      v1r3     Trg
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0     Rich
