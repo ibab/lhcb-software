@@ -4,6 +4,26 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
+! 2004-03-29 -P. Koppenburg
+> version v11r5
+> use  DaVinci            v11r5   Phys   
+> use  DaVinciEff         v2r10    Phys
+> use  DaVinciMCTools     v5r4     Phys
+> use  DaVinciTest        v4r3     Phys
+> use  DaVinciTools       v9r2     Phys
+> use  FlavourTagging     v4r9     Phys
+> use  Ks2PiPiSel         v1r2     Phys
+> use  PhysSelSys               v6r5     PhysSel
+> use  B2XGamma        v1r0    PhysSel
+> use  Bd2JpsiKstar    v1r2p3  PhysSel
+> # --- Don't compile on Windows
+> # use  Bd2a1Dstar      v1r0    PhysSel
+> # use  Bd2DstarPi      v1r5    PhysSel
+> # --- Use DaVinciMCTools 
+> # use  Bs2JpsiEta      v2r1p1  PhysSel
+> use  LoKi              v2r2  Tools
+> use  DecayPresel         v4r5   Tools
+    
 !====================  DaVinciSys v11r4 2004-03-23 ============================
 ! 2004-03-24 -P. Koppenburg
  - Adapted to new DVAlgorithm
