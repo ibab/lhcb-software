@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2003-03-13 18:47:49 ibelyaev Exp $
+! $Id: release.notes,v 1.25 2003-03-24 11:12:26 ranjard Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-
+!====================== CaloReco v1r4 2003-03-24 ==========================
 ! 2003-03-13 - Vanya BELYAEV
  - move *ALL* PID algorithms and tools into new package CaloPIDs 
  - increase the version to v1r4 
