@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================ GenEvent v3r3p1 2005-02-08 ==========================
+! 2005-02-08 - Marco Cattaneo
+ - Add some template instantiations to please Root 4.
+
 !================= GenEvent v3r3 2004-07-19 ===========================
 ! 2004-07-19 - Marco Cattaneo
  - Remove explicit dependency on LHCbKernel (taken from Event/Event)
