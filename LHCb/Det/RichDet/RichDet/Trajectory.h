@@ -1,4 +1,4 @@
-// $Id: Trajectory.h,v 1.1 2001-10-31 16:50:12 rihill Exp $
+// $Id: Trajectory.h,v 1.2 2001-11-16 15:54:55 jonrob Exp $
 #ifndef RICHDET_TRAJECTORY_H
 #define RICHDET_TRAJECTORY_H 1
 
@@ -32,9 +32,7 @@ public:
                                  const HepVector3D &direction,
                                  const HepVector3D &axis,
                                  double &theta,
-                                 double &phi);
-
-  
+                                 double &phi) const; 
 
 protected:
 

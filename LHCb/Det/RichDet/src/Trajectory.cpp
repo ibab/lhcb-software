@@ -1,35 +1,36 @@
-// $Id: Trajectory.cpp,v 1.1 2001-10-31 16:50:13 rihill Exp $
+// $Id: Trajectory.cpp,v 1.2 2001-11-16 15:54:55 jonrob Exp $
 
 #include <cmath>
 #include <cassert>
 
 #include "RichDet/Trajectory.h"
 
-HepVector3D Trajectory::rotateDirection (const double distance, 
+HepVector3D Trajectory::rotateDirection (const double distance,
                                          const double theta,
                                          const double phi,
                                          const HepVector3D &axis) const
 {
   return rotation(distance,axis) * HepVector3D(sin(theta)*cos(phi),
-                                              sin(theta)*sin(phi),
-                                              cos(theta));
+                                               sin(theta)*sin(phi),
+                                               cos(theta));
 }
 
 Trajectory::~Trajectory(){}
 
-void Trajectory::angleToDirection (const double distance, 
-                                   const HepVector3D &direction, 
-                                   const HepVector3D &axis, 
-                                   double &theta, 
+void Trajectory::angleToDirection (const double distance,
+                                   const HepVector3D &direction,
+                                   const HepVector3D &axis,
+                                   double &theta,
                                    double &phi)
 {
+  cout << "Error : runiing with debug comment-out " << endl;
   HepVector3D rotDirection = rotation(distance,axis).inverse() * direction;
   theta = rotDirection.theta();
   phi   = rotDirection.phi();
   if ( phi < 0 ) phi += 2 * M_PI;
 }
 
-HepRotation & Trajectory::rotation (const double distance, 
+HepRotation & Trajectory::rotation (const double distance,
                                     const HepVector3D &axis) const
 {
   if ( distance != m_lastDistance &&
@@ -66,7 +67,7 @@ HepVector3D Trajectory::direction () const
 }
 
 bool Trajectory::intersect (const HepPlane3D &plane,
-                        double &distance) const
+                            double &distance) const
 {
   HepNormal3D normal = plane.normal();
   double d = normal * m_direction;
@@ -76,9 +77,9 @@ bool Trajectory::intersect (const HepPlane3D &plane,
 }
 
 bool Trajectory::intersect (const HepPoint3D &center,
-                        const double radius,
-                        double &distance1,
-                        double &distance2) const
+                            const double radius,
+                            double &distance1,
+                            double &distance2) const
 {
   HepVector3D delta = m_position - center;
   double a = m_direction.mag2();
