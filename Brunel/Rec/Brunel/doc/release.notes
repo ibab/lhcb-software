@@ -13,6 +13,9 @@ Purpose: LHCb reconstruction program
  - DST changes:
    . Add ProcStatus to all events (BrunelKernel v5r2, BrunelDst.opts)
 
+ - Code cleanup:
+   . Remove obsolete component library (CaloSicbCnv v7r3)
+
 </PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
  N.B.: to take advantage of new Rich tuning, new dbase versions are needed:
  To (re)process data produced with dbase v248r4, use dbase v248r5 and Brunelv248r5.opts
@@ -49,6 +52,9 @@ Purpose: LHCb reconstruction program
    . Add /Event/Trig/L1/Decision
    . Non-unique Velo, Seed tracks are removed by clone-killer (TrCleanEx v2r3)
 
+ - Bug fixes:
+   . Fix typo (wrong array size used, found by valgrind) (MuonDet v4r2)
+ 
  - Code cleanup:
    . Minimize printout of job options (*.opts)
    . Repackaging of OO Rich software to fix building of component libraries

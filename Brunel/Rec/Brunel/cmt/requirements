@@ -49,7 +49,7 @@ use XmlDDDB      	v14r1  	Det
 use CaloDet       	v5r2  	Det
 use CaloDetXmlCnv	v2r1  	Det
 use ITDet         	v1r2  	Det
-use MuonDet       	v4r1  	Det
+use MuonDet       	v4r2  	Det
 use OTDet         	v3r2  	Det
 use RichDet		v3r1	Det
 use VeloDet       	v8r0  	Det
@@ -61,7 +61,7 @@ use EventSys     v12r9  Event
 # SicB event data persistency
 use SicbCnv      v17r3  SICB
 use RiSicbGeom   v3r0   SICB
-use CaloSicbCnv  v7r2   SICB
+use CaloSicbCnv  v7r3   SICB
 use MuonSicbCnv  v6r6   SICB
 use RiSicbCnv    v5r1   SICB
 use VSicbCnv     v8r0   SICB
