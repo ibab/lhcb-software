@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.5 2002-05-24 18:36:33 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.6 2002-07-15 08:11:06 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/24 18:36:33  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes
+//
 // Revision 1.4  2002/05/12 08:45:28  ibelyaev
 //  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
 //
@@ -448,6 +451,31 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
   // add the reference to the new algorithm 
   m_algorithm -> addRef() ;
   // initialize the new algorithm
+  /* If the algorithm has got a property "OutputTable",
+     then set it to the Location property of the Associator */
+  IProperty* prop = dynamic_cast<IProperty*>( m_algorithm );
+  MsgStream log(msgSvc(), name());
+  if( prop ) {
+    sc = prop->setProperty( "OutputTable", location());
+    if( sc.isSuccess() ) {
+      log << MSG::DEBUG << "Property OutputTable set to "
+          << location() << " in algo " << m_builderName << endreq;
+    } else {
+      sc = prop->setProperty( "Output", location());
+      if( sc.isSuccess() ) {
+        log << MSG::DEBUG << "Property Output set to "
+            << location() << " in algo " << m_builderName << endreq;
+      } else {
+        log << MSG::DEBUG << "Property Output[Table] don't exist for algo "
+            << m_builderName << endreq;
+      }
+    }
+  } else {
+    log << MSG::DEBUG << "Unable to get IProperty pointer for "
+        << m_builderName << endreq;
+  }
+  
+  // Now initialise the algorithm, hence jobOptions can supersede the above
   sc = m_algorithm->sysInitialize() ;
   if( sc.isFailure() ) { return Error( "Error from algorithm initialization!");}
   //
