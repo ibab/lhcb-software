@@ -4,8 +4,10 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-! 2004-02-13 - Marco Cattaneo
- - Packages modified: OTDAQ v1r1, VeloAlgorithms v3r0
+!======================== BooleSys v5r3 2004-02-26 ========================
+! 2004-02-26 - Marco Cattaneo
+ - Packages modified: OTDAQ v1r1, VeloAlgorithms v3r0, CaloDigit v1r6,
+                      CaloMonitor v2r0
 
  - Packages temporarily disabled pending adapation to new VeloDet:
    PuVeto, TrgTools
