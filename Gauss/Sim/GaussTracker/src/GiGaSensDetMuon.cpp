@@ -75,14 +75,17 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
           int trid = step->GetTrack()->GetTrackID();
                    
-          // temp  
+          //   
           G4TouchableHistory* TT =  
             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
           G4VPhysicalVolume*  PV =   TT->GetVolume();
-          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-          G4int CurrentGapNumber= PV -> GetMother() -> GetCopyNo() ;
-          G4int CurrentChamNumber= PV -> GetMother() -> 
-            GetMother() -> GetCopyNo() ;
+
+          TT -> MoveUpHistory(1);
+          G4int CurrentGapNumber = TT -> GetVolume() -> GetCopyNo() ;
+
+          TT -> MoveUpHistory(1);
+          G4int CurrentChamNumber= TT -> GetVolume() -> GetCopyNo() ;
+
 
           G4int GapNumber=CurrentGapNumber - 999;
 

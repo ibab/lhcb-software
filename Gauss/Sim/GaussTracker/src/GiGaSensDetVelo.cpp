@@ -75,6 +75,8 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           G4TouchableHistory* TT =  
             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
           G4VPhysicalVolume*  PV = TT->GetVolume();
+          TT -> MoveUpHistory(1);
+          G4VPhysicalVolume* MPV = TT->GetVolume();
  
           ///
           VeloHit* newHit = new VeloHit();
@@ -83,7 +85,7 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           newHit->SetExitPos( postpos );
           newHit->SetTimeOfFlight( timeof );  
           newHit->SetTrackID( trid );
-          newHit->SetSensor(PV->GetCopyNo() + PV->GetMother()->GetCopyNo());
+          newHit->SetSensor(PV->GetCopyNo() + MPV->GetCopyNo());
  
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 

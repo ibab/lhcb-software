@@ -6,8 +6,13 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussTracker v3r0 ================================
+! 2003-10-17 - Witek Pokorski
+ - GiGaSensDetVelo, GiGaSensDetMuon - got rid of 'GetMother' method
+
 ! 2003-10-14 - Witek Pokorski
  - GiGaSensDetVelo - now uses copy numbers to determine the sensor number 
+                     (to be used with the Xml velo description containing 
+	              the copy numbers - XmlDDDB version > v18r2)
 
 !=========================== GaussTracker v2r7 ================================
 ! 2003-10-10 - Witek Pokorski
