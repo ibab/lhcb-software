@@ -3,7 +3,7 @@ version v1r0
 
 branches doc cmt
 
-use LHCbKernel  v2r2p1    Kernel
+use LHCbKernel  v2r5p1    Kernel
 use CaloKernel  v2r1p1    Calo
 use MuonKernel  v2r1p1    Muon
 use TrKernel    v11r1p1   Tr
