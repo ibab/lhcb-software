@@ -1,14 +1,8 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.11 2002-05-04 20:39:36 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.12 2002-07-09 20:33:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2002/05/03 19:41:03  ibelyaev
-//  replace the obsolete 'sensDet()' with 'sensitive()'
-//
-// Revision 1.9  2002/05/03 19:33:39  ibelyaev
-//  re-introduce the creation of Sensitive Detectors
-//
 // ============================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
@@ -33,8 +27,8 @@
 // GiGaCnv
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
+#include "GiGaCnv/GiGaVolumeUtils.h"
 /// local
-#include "GiGaVolumeUtils.h"
 #include "GiGaInstall.h"
 #include "GiGaLVolumeCnv.h"
 

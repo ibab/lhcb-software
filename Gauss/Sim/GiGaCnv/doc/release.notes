@@ -1,7 +1,19 @@
-! $Id: release.notes,v 1.24 2002-07-09 16:35:05 witoldp Exp $
+! $Id: release.notes,v 1.25 2002-07-09 20:33:54 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-07-09 - Ivan Belyaev
+  Move namespace GiGaVolumeUtils into public area of the package 
+ - GiGaCnv/GiGaVolumeUtils.h                - add  
+ - src/Lib/GiGaVolumeUtils.cpp              - add  
+ - src/component/GiGaVolumeUtils.h          - remove 
+ - src/component/GiGaVolumeUtils.cpp        - remove 
+ - src/component/GiGaDetectorElementCnv.cpp - modified 
+ - src/component/GiGaGeomCnvSvc.cpp         - modified 
+ - src/component/GiGaLAssemblyCnv.cpp       - modified 
+ - src/component/GiGaLVolumeCnv.cpp         - modified 
+ - src/component/GiGaSurfaceCnv.cpp         - modified 
 
 !========================= GiGaCnv v6r0 =================================
 

@@ -1,8 +1,11 @@
-// $Id: GiGaVolumeUtils.h,v 1.1 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaVolumeUtils.h,v 1.1 2002-07-09 20:33:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 #ifndef GIGACNV_GIGAVOLUMEUTILS_H
 #define GIGACNV_GIGAVOLUMEUTILS_H 1
@@ -10,9 +13,9 @@
 // STD & STL
 #include <string>
 // forward declarations
-class G4LogicalVolume  ; ///< Geant4
-class GVPhysicalVolume ; ///< Geant4
-class GiGaAssembly     ; ///< GiGaCnv
+class G4LogicalVolume   ; ///< Geant4
+class G4VPhysicalVolume ; ///< Geant4
+class GiGaAssembly      ; ///< GiGaCnv
 
 /** @namespace GiGaVolumeUtils GiGaVolumeUtils.h
  *

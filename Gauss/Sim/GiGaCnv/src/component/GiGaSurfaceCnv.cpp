@@ -1,18 +1,6 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.7 2002-02-12 17:10:49 ibelyaev Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.8 2002-07-09 20:33:54 ibelyaev Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.5  2001/11/19 18:27:00  ibelyaev
-//  bux fix and the new converter for catalogs
-//
-// Revision 1.4  2001/08/12 17:24:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/15 20:45:12  ibelyaev
-// the package restructurisation
-//
 // ============================================================================
 #define GIGACNV_GIGASURFACECNV_CPP 1 
 // ============================================================================
@@ -24,8 +12,10 @@
 // DetDesc 
 #include "DetDesc/Surface.h"
 // GiGa 
-#include "GiGa/GiGaException.h" 
-#include "GiGa/IGiGaSetUpSvc.h" 
+#include  "GiGa/GiGaException.h" 
+#include  "GiGa/IGiGaSetUpSvc.h" 
+// GiGaCnv 
+#include  "GiGaCnv/GiGaVolumeUtils.h" 
 // Geant4
 #include  "G4LogicalVolume.hh"
 #include  "G4VPhysicalVolume.hh"
@@ -35,7 +25,6 @@
 #include  "G4LogicalBorderSurface.hh"
 // local 
 #include "AddTabulatedProperties.h"
-#include "GiGaVolumeUtils.h" 
 #include "GiGaSurfaceCnv.h" 
 
 // ============================================================================

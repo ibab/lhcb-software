@@ -1,8 +1,11 @@
-// $Id: GiGaDetectorElementCnv.cpp,v 1.8 2002-05-04 20:53:17 ibelyaev Exp $ 
+// $Id: GiGaDetectorElementCnv.cpp,v 1.9 2002-07-09 20:33:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/04 20:53:17  ibelyaev
+//  reduce the verbosity of printout
+//
 //  ===========================================================================
 #define GIGACNV_GIGADETECTORELEMENTCNV_CPP
 // ============================================================================
@@ -27,8 +30,8 @@
 /// GiGa & GiGaCnv 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
+#include "GiGaCnv/GiGaVolumeUtils.h"
 /// local 
-#include "GiGaVolumeUtils.h"
 #include "GiGaInstall.h"
 #include "GiGaDetectorElementCnv.h"
 

@@ -1,8 +1,11 @@
-// $Id: GiGaVolumeUtils.cpp,v 1.1 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaVolumeUtils.cpp,v 1.1 2002-07-09 20:33:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 // Include files
 // Geant4 
@@ -13,8 +16,8 @@
 // GiGaCnv 
 #include "GiGaCnv/GiGaAssembly.h"
 #include "GiGaCnv/GiGaAssemblyStore.h"
+#include "GiGaCnv/GiGaVolumeUtils.h"
 // local
-#include "GiGaVolumeUtils.h"
 
 // ============================================================================
 /** @file GiGaVolumeUtils.h 

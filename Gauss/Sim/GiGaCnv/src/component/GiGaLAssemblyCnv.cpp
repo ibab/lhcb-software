@@ -1,8 +1,11 @@
-// $Id: GiGaLAssemblyCnv.cpp,v 1.2 2002-05-03 19:33:39 ibelyaev Exp $
+// $Id: GiGaLAssemblyCnv.cpp,v 1.3 2002-07-09 20:33:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/05/03 19:33:39  ibelyaev
+//  re-introduce the creation of Sensitive Detectors
+//
 // Revision 1.1  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -21,8 +24,8 @@
 #include "GiGaCnv/IGiGaCnvSvc.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaAssembly.h"
+#include "GiGaCnv/GiGaVolumeUtils.h"
 // local
-#include "GiGaVolumeUtils.h"
 #include "GiGaLAssemblyCnv.h"
 
 // ============================================================================

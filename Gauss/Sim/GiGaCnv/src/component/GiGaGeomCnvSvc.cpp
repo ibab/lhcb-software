@@ -1,20 +1,8 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.13 2002-06-14 09:47:05 witoldp Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.14 2002-07-09 20:33:54 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2002/05/16 13:22:14  witoldp
-// fixed registering of SD with g4SDManager
-//
-// Revision 1.11  2002/05/07 12:24:50  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes 7 May 2002
-//
-// Revision 1.10  2002/05/04 20:53:17  ibelyaev
-//  reduce the verbosity of printout
-//
-// Revision 1.9  2002/05/04 20:39:36  ibelyaev
-//  see $GIGACNVROOT/release.notes (4 May 2002)
-//
 // ===========================================================================
 #define GIGACNV_GIGAGEOMCNVSVC_CPP 1 
 // ============================================================================
@@ -62,8 +50,8 @@
 // From GiGaCnv 
 #include "GiGaCnv/GiGaAssembly.h"
 #include "GiGaCnv/GiGaAssemblyStore.h"
+#include "GiGaCnv/GiGaVolumeUtils.h"
 // local 
-#include "GiGaVolumeUtils.h"
 #include "GiGaGeomCnvSvc.h"
 
 // ============================================================================
