@@ -6,6 +6,10 @@
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 //                                                Forward  Match  Follow    Seed  VTT   KsTrack  Velo
 ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
+ToolSvc.RichTrackCreator.BuildMassHypothesisRings = false;
+
+// RichRecRing creator for mass hypothesis rings
+ToolSvc.RichToolRegistry.Tools += { "RichRecRingCreator/RichMassHypothesisRingCreator" };
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
