@@ -1,4 +1,4 @@
-// $Id: OTRetrieveBuffer.cpp,v 1.4 2004-03-26 18:37:50 cattanem Exp $
+// $Id: OTRetrieveBuffer.cpp,v 1.5 2004-03-30 12:38:12 jnardull Exp $
 // Include files 
 
 // from Gaudi
@@ -35,9 +35,8 @@ OTRetrieveBuffer::OTRetrieveBuffer( const std::string& name,
 {
   this->declareProperty( "RawEventLocation",
                          m_RawEventLoc = RawEventLocation::Default );
-  this->declareProperty( "OutputLocation",
-                         m_digitLocation = OTDigitLocation::Default );
-  
+   this->declareProperty( "OutputLocation",
+                       m_digitLocation = OTDigitLocation::Default );
 }
 //=============================================================================
 // Destructor
@@ -228,7 +227,7 @@ StatusCode OTRetrieveBuffer::raw2OTDigit(int Station, int Layer, int Quarter,
     if(multiBuffer != 105){nextTimes.push_back( nextTime );}
     firstTimes.push_back( firstTimeCopy );
     firstTimes.push_back( nextTimeCopy );
-    firstTimes.push_back( firstTimeBuffer );
+    if(firstTimeBuffer != 0 ){firstTimes.push_back( firstTimeBuffer );}
     onlyOnceBuffer = 1;  
   }
   
@@ -241,7 +240,7 @@ StatusCode OTRetrieveBuffer::raw2OTDigit(int Station, int Layer, int Quarter,
     //Pushing times
     nextTimes.push_back( firstTimeCopy );
     nextTimes.push_back( nextTimeCopy );
-    nextTimes.push_back( firstTime );
+    if(firstTime != 0 ){nextTimes.push_back( firstTime );}
     onlyOnceBuffer = 1;  
   }     
   // No Multiple Hit -- checking if statements
@@ -251,13 +250,8 @@ StatusCode OTRetrieveBuffer::raw2OTDigit(int Station, int Layer, int Quarter,
       Fstraw  = getStrawID (firstOtisID, firstChannelID);
       Nstraw  = getStrawID (nextOtisID, nextChannelID);
       //Filling time --- in case of First Multiple Hit, it has already be filled
-      int null = 0;
       firstTimes.push_back( firstTime ); //First Time
-      firstTimes.push_back( null );
-      firstTimes.push_back( null );
       nextTimes.push_back ( nextTime ); //Next Time
-      nextTimes.push_back( null );
-      nextTimes.push_back( null );
     }
   //Get First ChannelID
   if(multiBuffer != 101){

@@ -1,4 +1,4 @@
-// $Id: OTCheckOTDigit.cpp,v 1.2 2004-03-25 15:53:37 jnardull Exp $
+// $Id: OTCheckOTDigit.cpp,v 1.3 2004-03-30 12:38:12 jnardull Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,10 @@ StatusCode OTCheckOTDigit::execute() {
 
   MsgStream  msg( msgSvc(), name() );
   msg << MSG::DEBUG << "==> Execute" << endreq;
-
+  
+  int Count = 0;
+  int NewCount = 0;
+  
   //Retrieve OTDigit
   SmartDataPtr<OTDigits> digit( eventSvc(), m_OTDigitLoc );
   if ( !digit ) {
@@ -66,6 +69,9 @@ StatusCode OTCheckOTDigit::execute() {
     return StatusCode::FAILURE;
   }
   m_otdigit = digit;
+  //Let's count the First Digit
+  OTDigits::iterator iDigit=m_otdigit->begin();
+  for( Count = 0; iDigit != m_otdigit->end(); iDigit++, Count++);
   
   SmartDataPtr<OTDigits> newdigit( eventSvc(),m_Container2);
   if( 0 == newdigit){
@@ -75,6 +81,9 @@ StatusCode OTCheckOTDigit::execute() {
     return StatusCode::FAILURE;
   }
   m_newotdigit = newdigit; 
+  // Let' count the retrieved OTDigit
+  OTDigits::iterator iNewDigit=m_newotdigit->begin();
+  for( NewCount = 0; iNewDigit != m_newotdigit->end(); iNewDigit++, NewCount++);
 
   // newly reconstructed OTDigits not necessarily in right order (?)
   std::stable_sort(m_newotdigit->begin(),m_newotdigit->end(),
@@ -83,61 +92,69 @@ StatusCode OTCheckOTDigit::execute() {
   int Channel = 0;
   int NewChannel = 0;
   int i = 0;
-  int Time = 0;
-  int NewTime = 0;
-  int TimeBis = 0;
-  int NewTimeBis = 0;
-  int TimeTris = 0;
-  int NewTimeTris = 0;
+
+  //Debug Count Mismatch
+  if(Count != NewCount) {
+    msg << MSG::ERROR << " Count mismatch Old =  " << Count  << " New = " 
+        << NewCount << endreq;
+    i ++;
+  }
   //Loop over the Digits
-  OTDigits::iterator iDigit =  m_otdigit->begin();
-  OTDigits::iterator iNewDigit = m_newotdigit->begin();
-  while( (iDigit != m_otdigit->end() && iNewDigit != m_newotdigit->end() ) ){
+  for (
+	iDigit = m_otdigit->begin(),
+	iNewDigit = m_newotdigit->begin(),
+	Count=0;
+	iDigit != m_otdigit->end() && iNewDigit != m_newotdigit->end();
+	iDigit++, iNewDigit++, Count++ 
+  ) {
     Channel = (*iDigit)->channel();
     vInt& vTimes = (*iDigit)->tdcTimes();
     int TimeSize = (vTimes.size());
-    if( TimeSize > 3){ TimeSize = 3;}
-    // Multiple Hit
-    if(TimeSize == 1){ Time = vTimes[0];}
-    else if(TimeSize == 2){ 
-      Time =  vTimes[0];
-      TimeBis = vTimes[1];
-    } else if(TimeSize == 3){
-      Time =  vTimes[0];
-      TimeBis = vTimes[1];
-      TimeTris = vTimes[2];
-    }
+
     NewChannel = (*iNewDigit)->channel();
     vInt& vNewTimes = (*iNewDigit)->tdcTimes();
-    int NewTimeSize = (vNewTimes.size());
-    if( NewTimeSize > 3){ NewTimeSize = 3;}
-     // Multiple Hit
-    if(NewTimeSize == 1){ NewTime = vNewTimes[0];}
-    else if(NewTimeSize == 2){ 
-      NewTime = vNewTimes[0];
-      NewTimeBis = vNewTimes[1];
-    } else if(NewTimeSize == 3){
-      NewTime = vNewTimes[0];
-      NewTimeBis = vNewTimes[1];
-      NewTimeTris = vNewTimes[2];
+    int NewTimeSize = (vNewTimes.size());    
+
+    if ( TimeSize > 3 ) {
+      msg << MSG::WARNING << " Time Size too large: "  << TimeSize  << endreq ;
+      TimeSize = 3 ;
     }
     //Debug
-    if ((Channel != NewChannel) || (Time != NewTime) || (TimeBis != NewTimeBis)
-        || (TimeTris != NewTimeTris)){
-      i += 1;
+    if( NewTimeSize > 3){
+      msg << MSG::WARNING << " Time Size NewChannel too large: "  
+          << NewTimeSize  << endreq ;
+      NewTimeSize = 3;
     }
-    iDigit++;
-    iNewDigit++;
 
-    //To restart the Loop
-    Time = 0;
-    TimeBis = 0;
-    TimeTris = 0;
-    NewTime = 0;
-    NewTimeBis = 0;
-    NewTimeTris = 0;
+    if ( Channel != NewChannel ) {
+      msg << MSG::ERROR << " Channel Mismatch: " << Channel << " != "  
+          << NewChannel  << endreq;
+      i ++;
+    }
+
+    if ( TimeSize != NewTimeSize ) {
+      msg << MSG::ERROR << " Time Size Mismatch: " 
+          << TimeSize << " != "  
+          << NewTimeSize  << endreq;
+      i ++;
+    }
+
+    msg << MSG::DEBUG << " TIMESIZE = (" << TimeSize << "," << NewTimeSize
+        << ")" << endreq ;
+    
+    for (register int c=0; c<TimeSize; c++) {
+      int Time = vTimes[c] ;
+      int NewTime = vNewTimes[c] ;
+      if ( Time != NewTime ) {
+        msg << MSG::ERROR << " Drift Time Mismatch: " 
+          << Time << " != "  
+          << NewTime << endreq;
+	      i++ ;
+      }
+    }
   }
-
+  // How many hits ?
+  msg << MSG::DEBUG << " Number of hits : " << Count << endreq;
   // How many errors ?
   msg << MSG::DEBUG << " Number of errors : " << i << endreq;
   return StatusCode::SUCCESS;
