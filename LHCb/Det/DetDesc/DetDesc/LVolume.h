@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.13  2001/08/09 16:47:57  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
@@ -390,7 +393,7 @@ public:
    *  clear chaches, etc...
    *  @return self reference
    */
-  const ILVolume* reset () 
+  virtual ILVolume* reset () 
   {
     /// reset solid 
     if( 0 != m_lv_solid ) { m_lv_solid->reset() ; }

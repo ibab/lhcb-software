@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/09 18:13:37  ibelyaev
+/// modification for solid factories
+///
 /// Revision 1.6  2001/08/09 16:48:02  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -214,7 +217,7 @@ SolidChild::intersectionTicks ( const HepPoint3D&  Point  ,
 /** reset to the initial ("after constructor") state
  */
 // =============================================================================
-const ISolid*  SolidChild::reset()
+ISolid*  SolidChild::reset()
 {
   SolidBase::reset();
   if( 0 != solid() ){ m_sc_solid->reset() ; } ; 

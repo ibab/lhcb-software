@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/09 16:47:57  ibelyaev
+/// update in interfaces and redesign of solids
+///
 /// ===========================================================================
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1
@@ -111,7 +114,7 @@ public:
    *  @see ISolid::~ISolid()
    *  @return self-reference 
    */
-  virtual const ISolid* reset()  = 0;
+  virtual ISolid* reset()  = 0;
   
   /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 

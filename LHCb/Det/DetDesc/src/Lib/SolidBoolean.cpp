@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 16:48:02  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include <functional>
@@ -79,8 +82,9 @@ SolidBoolean::~SolidBoolean()
 /** reset to the initial ("after constructor") state
  */
 /// ===========================================================================
-const ISolid* SolidBoolean::reset() 
-{ 
+ISolid* SolidBoolean::reset() 
+{
+  SolidBase::reset();
   if( 0 != m_sb_first ) { m_sb_first->reset() ; }
   std::for_each( childBegin() , childEnd() ,
                  std::mem_fun(&ISolid::reset) );

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/08/09 16:47:58  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
@@ -35,7 +38,7 @@ public:
    *  @see SolidBase::~SolidBase()
    *  @return  self-reference 
    */
-  virtual const ISolid* reset ();
+  virtual ISolid* reset ();
 
   /** - calculate the intersection points("ticks") of the solid objects 
    *    with given line. 

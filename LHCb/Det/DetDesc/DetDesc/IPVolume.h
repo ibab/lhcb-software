@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/08/09 16:47:57  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
@@ -117,7 +120,7 @@ public:
   /** reset to the initial state 
    *  @return self-reference
    */
-  virtual const IPVolume* reset () = 0; 
+  virtual IPVolume* reset () = 0; 
   
   /** Intersection of the physical volume with with line.
    *  The line is parametrized in the local reference system of the mother

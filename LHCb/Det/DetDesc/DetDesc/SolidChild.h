@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/09 16:47:58  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef       DETDESC_SOLIDCHILD_H 
 #define       DETDESC_SOLIDCHILD_H 1
@@ -115,7 +118,7 @@ public:
   
   /** reset to the initial ("after constructor") state
    */
-  virtual const ISolid*  reset();
+  virtual ISolid*  reset();
   
   /** - calculate the intersection points("ticks") of the solid objects 
    *    with given line. 

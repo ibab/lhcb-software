@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/09 16:47:58  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
@@ -70,7 +73,7 @@ class SolidBoolean: public SolidBase
   
   /** reset to the initial ("after constructor") state
    */
-  virtual const ISolid* reset() ;
+  virtual ISolid* reset() ;
   
   /** calculate the intersection points("ticks") with a given line.
    *  Input - line, paramterised by  x_vect = Point + Vector * T

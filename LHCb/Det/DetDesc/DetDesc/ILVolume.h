@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/08/09 16:47:56  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef  DETDESC_ILVOLUME_H
 #define  DETDESC_ILVOLUME_H 1 
@@ -306,7 +309,7 @@ public:
   /** reset to the initial state 
    *  @return self-refeence 
    */
-  virtual const ILVolume*  reset() = 0; 
+  virtual ILVolume*  reset() = 0; 
   
   /** (virtual) destructor
    */ 

@@ -1,7 +1,10 @@
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/08/09 16:48:01  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
@@ -50,7 +53,7 @@ SolidBase::~SolidBase()
  *  @return  self-reference 
  */
 // ============================================================================
-const ISolid* SolidBase::reset ()
+ISolid* SolidBase::reset ()
 {
   if( this == m_cover ) {                  m_cover = 0 ; }
   if(    0 != m_cover ) { delete m_cover ; m_cover = 0 ; }

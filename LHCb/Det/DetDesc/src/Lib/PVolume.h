@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag  $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/09 16:48:01  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
@@ -155,7 +158,7 @@ public:
   /** reset to the initial state 
    *  @return self-reference
    */
-  virtual const IPVolume* reset () 
+  inline IPVolume* reset () 
   {
     if( 0 != m_pv_lvolume ) { m_pv_lvolume->reset() ; }
     m_pv_lvolume = 0 ;
