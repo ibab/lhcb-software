@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.5 2002-07-27 19:32:25 gcorti Exp $
+// $Id: Particle2MCLinks.cpp,v 1.6 2002-09-03 09:19:19 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -86,16 +86,26 @@ StatusCode Particle2MCLinks::execute() {
     if( m_pAsctProto->tableExists() ) {
       for( Particles::const_iterator pIt=parts->begin() ;
            parts->end() != pIt; pIt++) {
+        log << MSG::DEBUG << "    Particle " << (*pIt)->key();
         ProtoParticle* protoPart = dynamic_cast<ProtoParticle*>
           ( (*pIt)->origin() ) ;
         if( protoPart ) {
+          log << " from ProtoParticle " << protoPart->key();
           MCParticle* mcPart = m_pAsctProto->associatedFrom( protoPart );
           if( mcPart ) {
+            log << " associated to MCPart " << mcPart->key();
             table->relate( *pIt, mcPart);
           }
         }
+        log << endreq;
       }
       
+    } else {
+      delete table;
+      table = 0;
+    }
+  }
+  if (table!=0) {
       // Register the table on the TES
       StatusCode sc = eventSvc()->registerObject( outputTable(), table);
       if( sc.isFailure() ) {
@@ -108,9 +118,11 @@ StatusCode Particle2MCLinks::execute() {
         log << MSG::DEBUG << "     Registered table " 
             << outputTable() << endreq;
       }
-    } else {
-      delete table;
-    }
+  } else {
+      log << MSG::FATAL << "     *** Could not create table " 
+            << outputTable()
+            << endreq;
+
   }
     
   return StatusCode::SUCCESS ;
