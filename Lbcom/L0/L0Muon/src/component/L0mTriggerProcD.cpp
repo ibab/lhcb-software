@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.1 2001-06-07 16:34:20 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.2 2001-06-08 18:27:31 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -83,12 +83,13 @@ StatusCode L0mTriggerProcD::execute() {
   // get Muon digitisations
   //===============================
     
-  log << MSG::DEBUG << "Retrieving L0mPads...  " << endreq;  
+  log << MSG::DEBUG << "Retrieving L0mPads...  ";  
   
   SmartDataPtr< ObjectVector<L0mPad> > pads(eventSvc(),"/Event/MC/L0mPads");
   if(!pads) {
     return StatusCode::FAILURE;
   }
+  log << "Done, # of L0mPads " << pads->size() << endl;;  
   ObjectVector<L0mPad>::const_iterator ip;
   
   //=========================================
@@ -96,7 +97,7 @@ StatusCode L0mTriggerProcD::execute() {
   //=========================================
   StatusCode sc;
   
-  log << MSG::DEBUG << "Creating towers...  " << endreq; 
+  log << MSG::DEBUG << "Creating towers...  "; 
    
   m_towers = new ObjectVector<L0mTower>;
   if ( !m_towers ) {
@@ -122,7 +123,7 @@ StatusCode L0mTriggerProcD::execute() {
       m_towers->push_back(lt);
     }       
   }
-  
+  log << "Done, # of towers "<< m_towers->size() << endreq;
   //=========================================
   // register trigger candidates  
   //=========================================
