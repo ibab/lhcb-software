@@ -67,6 +67,7 @@ private:
 				     double width, double maxwidth,double ctau,
 				     int stable,double rawbrfrsum);
   static bool diquark(int);
+  static bool isPythiaSpecial(int) ;
   static double NominalMass(int);
   static int njetsetdecays;
   static EvtDecayBasePtr* jetsetdecays;

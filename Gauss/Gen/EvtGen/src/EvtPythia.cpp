@@ -283,29 +283,30 @@ void EvtPythia::decay( EvtParticle *p){
     for(i=0;i<ndaugjs;i++){
       
       if (EvtPDL::evtIdFromStdHep(kf[i])==EvtId(-1,-1)) {
-	report(ERROR,"EvtGen") << "Pythia returned particle:"<<kf[i]<<std::endl;
-	report(ERROR,"EvtGen") << "This can not be translated to evt number"
-                         <<std::endl;
-	report(ERROR,"EvtGen") << "and the decay will be rejected!"<<std::endl;
-	report(ERROR,"EvtGen") << "The decay was of particle:"<<ip<<std::endl;
-	int i=1;
+        report(ERROR,"EvtGen") << "Pythia returned particle:"
+                               <<kf[i]<<std::endl;
+        report(ERROR,"EvtGen") << "This can not be translated to evt number"
+                               <<std::endl;
+        report(ERROR,"EvtGen") << "and the decay will be rejected!"<<std::endl;
+        report(ERROR,"EvtGen") << "The decay was of particle:"<<ip<<std::endl;
+        int i=1;
 #ifdef WIN32
-  PYLIST(i);
+        PYLIST(i);
 #else
-	pylist_(i);
+        pylist_(i);
 #endif
       }
 
       //sort out the partons
       if (abs(kf[i])<=6||kf[i]==21){
-	partonindex[numparton]=i;
-	evtnumparton[numparton]=EvtPDL::evtIdFromStdHep(kf[i]);
-	numparton++;
+        partonindex[numparton]=i;
+        evtnumparton[numparton]=EvtPDL::evtIdFromStdHep(kf[i]);
+        numparton++;
       }
       else{
-	stableindex[numstable]=i;
-	evtnumstable[numstable]=EvtPDL::evtIdFromStdHep(kf[i]); 
-	numstable++;
+        stableindex[numstable]=i;
+        evtnumstable[numstable]=EvtPDL::evtIdFromStdHep(kf[i]); 
+        numstable++;
       }
       
       
@@ -314,9 +315,9 @@ void EvtPythia::decay( EvtParticle *p){
       // this is uggly but I need to fix it right now....
       
       if (px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]>=e[i]*e[i]){
-	
+        
         e[i]=sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i])+0.0000000000001;
-	
+        
       }
       
       p4[i].set(e[i],px[i],py[i],pz[i]);
@@ -328,14 +329,14 @@ void EvtPythia::decay( EvtParticle *p){
                                              evtnumstable);
     
     
-   more=(channel!=-1);
-   
-   
-   
-   
-   count++;
-   
-  }while( more && (count<10000) );
+    more=(channel!=-1);
+    
+    
+    
+    
+    count++;
+    
+  } while( more && (count<10000) );
   
   if (count>9999) {
     report(INFO,"EvtGen") << "Too many loops in EvtPythia!!!"<<std::endl;
@@ -525,29 +526,43 @@ void EvtPythia::WritePythiaEntryHeader(std::ofstream &outdec, int lundkc,
   }
 
   // strip up to two + or -
- 
-  if(evtnum.getId()>=0) {
-    if (sname[i-1]=='+'||sname[i-1]=='-'){ 
-      sname[i-1]=0;
-      i--;
-    }
-    if (sname[i-1]=='+'||sname[i-1]=='-'){ 
-      sname[i-1]=0;
-      i--;
-    }
+  // Why ? 
+  //  if(evtnum.getId()>=0) {
+  //    if (sname[i-1]=='+'||sname[i-1]=='-'){ 
+  //      sname[i-1]=0;
+  //      i--;
+  //    }
+  //    if (sname[i-1]=='+'||sname[i-1]=='-'){ 
+  //      sname[i-1]=0;
+  //      i--;
+  //    }
     // strip 0 except for _0 and chi...0
-    if (sname[i-1]=='0' && sname[i-2]!='_' && 
-        !(sname[0]=='c' && sname[1]=='h')){
-      sname[i-1]=0;
-      i--;
-    }
-  }
+  //    if (sname[i-1]=='0' && sname[i-2]!='_' && 
+  //        !(sname[0]=='c' && sname[1]=='h')){
+  //      sname[i-1]=0;
+  //      i--;
+  //    }
+  //  }
   
   if (i>namelength) {
     for(j=1;j<namelength;j++){
       sname[j]=sname[j+i-namelength];
     }
     sname[namelength]=0;
+  }
+
+  // Special case : chi_b/c
+  if ( i >= 5 ) {
+    if ( ( sname[0] == 'c' ) &&
+         ( sname[1] == 'h' ) && 
+         ( sname[2] == 'i' ) &&
+         ( sname[3] == '_' ) ) {
+      // exchange c/b and 0/1/2
+      char temp ;
+      temp = sname[4] ;
+      sname[4] = sname[5] ;
+      sname[5] = temp ;
+    }
   }
   
   // RS: copy name for cc particle
@@ -558,17 +573,94 @@ void EvtPythia::WritePythiaEntryHeader(std::ofstream &outdec, int lundkc,
     i++;
     if(ccsname[i]==0) break;
   }
-  if(i<namelength)
-    {
-      ccsname[i]='b';
-      ccsname[i+1]=0;
+  if ( sname[i-1] == '+' ) {
+    ccsname[i-1] = '-' ;
+    if ( i >= 2 ) {
+      if ( sname[i-2] == '+' ) {
+        ccsname[i-2] = '-' ;
+      }
     }
+  }
+  else if ( sname[i-1] == '-' ) {
+    ccsname[i-1] = '+' ;
+    if ( i >= 2 ) {
+      if ( sname[i-2] == '-' ) {
+        ccsname[i-2] = '+' ;
+      }
+    }
+  }
+  else if(i+2<namelength)
+    {
+      if ( sname[i-1] == '0' ) {
+        ccsname[i-1]='b';
+        ccsname[i]='a';
+        ccsname[i+1]='r';
+        ccsname[i+2]='0';
+        ccsname[i+3]=0;
+      }
+      else {
+        ccsname[i]='b';
+        ccsname[i+1]='a';
+        ccsname[i+2]='r';
+        ccsname[i+3]=0;
+      }
+    }
+
+  // if it is a baryon
+  if ( ( name == "n0" ) || ( name == "p+" ) ||
+       ( name.find("Delta") != string::npos ) || 
+       ( name.find("Sigma") != string::npos ) ||
+       ( name.find("Lambda") != string::npos ) || 
+       ( name.find("Xi") != string::npos ) ||
+       ( name.find("Omega") != string::npos ) ) {
+    i = 0 ;
+    while ( ccsname[i] != 0 ) {
+      i++ ;
+    }
+    if ( i > 1 ) {
+      if ( ccsname[i-1] == '+' ) {
+        if ( ccsname[i-2] == '+' ) {
+          ccsname[i-2] = 'b' ;
+          ccsname[i-1] = 'a' ;
+          ccsname[i]   = 'r' ;
+          ccsname[i+1] = '+' ;
+          ccsname[i+2] = '+' ;
+          ccsname[i+3] = 0 ;
+        }
+        else {
+          ccsname[i-1] = 'b' ;
+          ccsname[i]   = 'a' ;
+          ccsname[i+1] = 'r' ;
+          ccsname[i+2] = '+' ;
+          ccsname[i+3] = 0 ;
+        }
+      }
+      else if ( ccsname[i-1] == '-' ) {
+        if ( ccsname[i-2] == '-' ) {
+          ccsname[i-2] = 'b' ;
+          ccsname[i-1] = 'a' ;
+          ccsname[i]   = 'r' ;
+          ccsname[i+1] = '-' ;
+          ccsname[i+2] = '-' ;
+          ccsname[i+3] = 0 ;
+        }
+        else {
+          ccsname[i-1] = 'b' ;
+          ccsname[i]   = 'a' ;
+          ccsname[i+1] = 'r' ;
+          ccsname[i+2] = '-' ;
+          ccsname[i+3] = 0 ;
+        }
+      }
+    }
+  }        
   
   //cchg=0;
   
   if(evtnum.getId()>=0) {
     if (abs(EvtPDL::getStdHep(evtnum))==21) cchg=2;
-    if (abs(EvtPDL::getStdHep(evtnum))==90) cchg=-1;
+    //    if (abs(EvtPDL::getStdHep(evtnum))==90) cchg=-1;
+    // diquark does not exist anymore in evt.pdl
     if ((abs(EvtPDL::getStdHep(evtnum))<=8)&&
 	(abs(EvtPDL::getStdHep(evtnum))!=0)) cchg=1;
 
@@ -631,9 +723,9 @@ void EvtPythia::WritePythiaEntryHeader(std::ofstream &outdec, int lundkc,
   }
   //resonance width treatment
   outdec.width(3);
-  outdec << stable;
-  outdec.width(3);
   outdec << 0;
+  outdec.width(3);
+  outdec << stable;
   outdec << std::endl;
   outdec.width(0);
   //outdec.setf(0,0);
@@ -851,6 +943,66 @@ EvtPythia::diquark(int ID)
     }
 }
 
+bool
+EvtPythia::isPythiaSpecial(int ID)
+{
+  switch(ID)
+    {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 17:
+    case 18:
+    case 21:
+    case 23:
+    case 24:
+    case 25:
+    case 110:
+    case 990:
+    case 32:
+    case 33:
+    case 34:
+    case 35:
+    case 36:
+    case 37:
+    case 41:
+    case 81:
+    case 82:
+    case 83:
+    case 84:
+    case 85:
+    case 88:
+    case 89:
+    case 90:
+    case 91:
+    case 92:
+    case 93:
+    case 94:
+    case 95:
+    case 96:
+    case 97:
+    case 98:
+    case 99:
+    case 9900110:
+    case 9900210:
+    case 9900220:
+    case 9900330:
+    case 9900440:
+    case 9902110:
+    case 9902210:
+      return true;
+      break;
+    default:
+      return false;
+      break;
+    }
+}
+
 double
 EvtPythia::NominalMass(int ID)
 {
@@ -1018,9 +1170,15 @@ void EvtPythia::MakePythiaFile(char* fname){
              EvtPDL::getStdHep(ipar)==22 ||
              EvtPDL::getStdHep(ipar)==23))
           {
-            
-            if (lundkc==EvtPDL::getLundKC(ipar)){
-              
+            int istdhep = EvtPDL::getStdHep( ipar ) ;
+#ifdef WIN32
+            int pythiakc = PYCOMP( &istdhep ) ;
+#else
+            int pythiakc = pycomp_( &istdhep ) ;
+#endif            
+            // do not take anti-particles
+            if ( istdhep < 0 ) pythiakc = 0 ;
+            if ( lundkc == pythiakc ) {
               nokcentry=0;
               
               int first=1;
@@ -1105,7 +1263,6 @@ void EvtPythia::MakePythiaFile(char* fname){
 }
 
 void EvtPythia::pythiaInit(int dummy){
-
   EvtId  ipar ;
   int    lundkc ;
   double mass, width, maxwidth, ctau ;
@@ -1121,6 +1278,7 @@ void EvtPythia::pythiaInit(int dummy){
     // Keep the changes made by NBrook :
     // Update masses, width, ... in PYTHIA common
     // Do Not update for diquarks (PR)
+    // Do not update for Pythia special codes
     int iipar ;
     for ( iipar = 0 ;
           iipar < EvtPDL::entries() ;
@@ -1128,7 +1286,8 @@ void EvtPythia::pythiaInit(int dummy){
       ipar = EvtId( iipar , iipar ) ;
       int istdhep = EvtPDL::getStdHep( ipar ) ;
 
-      if ( ! diquark( abs( istdhep ) ) ) {
+      if ( ( ! diquark( abs( istdhep ) ) )
+           && ( ! isPythiaSpecial( abs (istdhep ) ) ) ) {
 
 #ifdef WIN32
         lundkc = PYCOMP( &istdhep ) ;
@@ -1181,5 +1340,4 @@ void EvtPythia::pythiaInit(int dummy){
     report(INFO,"EvtGen") << "Done initializing Pythia."<<std::endl;
     
   }
-
 }
