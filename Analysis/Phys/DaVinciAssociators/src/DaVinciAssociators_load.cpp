@@ -1,4 +1,4 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.6 2002-10-02 07:06:28 phicharp Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.7 2002-10-10 18:42:11 gcorti Exp $
 // Include files 
 
 
@@ -51,6 +51,7 @@ DECLARE_FACTORY_ENTRIES( PhysAssociators ) {
   DECLARE_ALGORITHM( Particle2MCWithChi2 );
   DECLARE_ALGORITHM( Particle2MCChi2 );
   DECLARE_ALGORITHM( Particle2MCLinks );
+  DECLARE_ALGORITHM( CompositeParticle2MCLinks );
 
   DECLARE_ALGORITHM( ChargedPP2MC );
   DECLARE_ALGORITHM( NeutralPP2MC ) ;
