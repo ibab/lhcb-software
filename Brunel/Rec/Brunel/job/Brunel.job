@@ -36,7 +36,7 @@ else
   setenv LHCBDBASE $LHCb_release_area/DBASE/SICB/dbase/$1
 endif
 #   
-set Bversion = "v17r2"
+set Bversion = "v17r3"
 #
 set MODE = $CMTCONFIG
 

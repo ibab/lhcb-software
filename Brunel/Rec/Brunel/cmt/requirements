@@ -1,5 +1,5 @@
 package Brunel
-version v17r2
+version v17r3
 
 branches doc cmt job options
 
@@ -32,13 +32,13 @@ use HbookCnv 		v13r2p1
 #-- Database
 use XmlDDDB	v15r1	Det
 
-#-- LHCb libraries (from LHCB_v11r8)
-use LHCb	v11r8
+#-- LHCb libraries (from LHCB_v11r9)
+use LHCb	v11r9
 
-#-> SICB basic libraries (from LHCB_v11r8)
+#-> SICB basic libraries (from LHCB_v11r9)
 use SICBSys	v1r2	SICB
 
-#-- BrunelSys v17r2 packages
+#-- BrunelSys v17r3 packages
 
 # Brunel utilities
 use BrunelKernel        v5r3	Rec
@@ -48,9 +48,9 @@ use KsReco              v1r4    Rec
 
 # L0 trigger
 use L0Calo              v6r6    L0
-use L0Muon              v6r3    L0
+use L0Muon              v6r4    L0
 use PuVeto              v5r3    L0
-use L0DU                v6r2    L0
+use L0DU                v6r3    L0
 
 # L1 trigger
 use L1VeloTrack         v4r0    L1
@@ -119,8 +119,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=170200 " \
-           VisualC  " /DBrunelVersion=170200 "
+macro_append fflags " -DBrunelVersion=170300 " \
+           VisualC  " /DBrunelVersion=170300 "
 
 apply_pattern application_path
 

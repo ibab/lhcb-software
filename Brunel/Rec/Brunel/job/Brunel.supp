@@ -125,32 +125,6 @@
   fun:addUserParameter__15DetectorElementGt12basic_string*
 }
 
-# Intermittent Velo (geometry?) problems (Brunel v17r0)
-{
-  Velo/VeloAlgorithms/v2r6
-  Addr4
-  fun:*
-  fun:TryToAddChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigiti
-  fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
-}
-
-{
-  Velo/VeloAlgorithms/v2r6
-  Addr4
-  fun:*
-  fun:TryToAddCentralChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigit
-  fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
-}
-
-# Calo problems (Brunel v16r4 - fixed  in CaloDet v6r4?)
-#{
-#  Calo/CellParam1
-#  Value8
-#  fun:*
-#  fun:*
-#  fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
-#}
-
 # Property initialisation problems (Brunel v16r4)
 {
   SICB/RiSicbCnv/v5r3
@@ -179,6 +153,24 @@
   fun:*
   fun:__18RichPhotonSpectrumddPCd
   fun:initialize__16RichDetInterface
+}
+
+# Rich problems (Brunel v17r2)
+{
+  OORich/BugId-138
+  Value4
+  fun:ringProb__16RichLocalPIDToolRt6vector2ZfZt9allocator1ZffRCQ24Rich12RadiatorType
+  fun:calcPID__16RichLocalPIDToolP12RichRecTrackP12RichLocalPID
+  fun:particleID__16RichLocalPIDToolP13TrStoredTrack
+  fun:execute__15RichLocalPIDAlg
+}
+
+{
+  OORich/BugId-139
+  Value4
+  fun:calcPID__16RichLocalPIDToolP12RichRecTrackP12RichLocalPID
+  fun:particleID__16RichLocalPIDToolP13TrStoredTrack
+  fun:execute__15RichLocalPIDAlg
 }
 
 # Random numbers usage
