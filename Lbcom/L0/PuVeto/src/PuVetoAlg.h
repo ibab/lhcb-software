@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.1.1.1 2002-01-29 09:37:12 ocallot Exp $
+// $Id: PuVetoAlg.h,v 1.2 2002-02-01 15:05:45 ocallot Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -47,6 +47,15 @@ protected:
     return bin;
   }
 
+  /// returns the integral of the histogram
+  double fullIntegral( ) {
+    double sum = 0;
+    for ( unsigned int j=0 ; m_hist.size() > j ; j++ ) {
+      sum += m_hist[j];
+    }
+    return sum;
+  }
+
   /// Returns the position of the maximum, and as argument the peak height 
   /// and the integral.
   double peakValue( double& height, double& sum, double& width ) ;
@@ -56,11 +65,13 @@ protected:
 
 private:
   std::string    m_inputContainer;
-  DeVelo*        m_velo;
+  std::string    m_outputContainer;
   double         m_lowThreshold;
   double         m_highThreshold;
   double         m_highPosition;
   double         m_secondPosition;
+
+  DeVelo*        m_velo;
 
   // Storage for the variable bound histogram
 

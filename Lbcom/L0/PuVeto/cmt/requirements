@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2002-01-29 09:37:12 ocallot Exp $
+# $Id: requirements,v 1.2 2002-02-01 15:05:44 ocallot Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 #
@@ -6,13 +6,13 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           PuVeto
-version           v1
+version           v1r0
 
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src
+branches          cmt doc src options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'

@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.1.1.1 2002-01-29 09:37:12 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.2 2002-02-01 15:05:45 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,8 @@
 // from L1Event
 #include "L1Event/L1Buffer.h"
 
-#include "L0Event/Level0PileUpVeto.h"
+// from L0Event
+#include "Event/L0PuVeto.h"
 // local
 #include "PuVetoAlg.h"
 
@@ -32,12 +33,14 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   , m_inputContainer      ( "/Event/Raw/PuvDigit" )
+  , m_outputContainer     ( L0PuVetoLocation::Default )
   , m_lowThreshold        (    2.     )
   , m_highThreshold       (    2.     )
   , m_highPosition        (    0. *mm )
   , m_secondPosition      ( -500. *mm )
 {
   declareProperty( "InputContainer"     , m_inputContainer  );
+  declareProperty( "OutputContainer"    , m_outputContainer );
   declareProperty( "LowThreshold"       , m_lowThreshold    );
   declareProperty( "HighThreshold"      , m_highThreshold   );
   declareProperty( "HighPosition"       , m_highPosition    );
@@ -129,6 +132,7 @@ StatusCode PuVetoAlg::execute() {
   double height1, sum1, pos1;
   double width;
   double height2, sum2, pos2;
+  double integral;
   
   pos1 = peakValue( height1, sum1, width);
   
@@ -154,6 +158,7 @@ StatusCode PuVetoAlg::execute() {
       
   log << MSG::DEBUG << " 2nd Max " << height2 << " at z= " << pos2
       << " integral " << sum2 << endreq;
+  integral = fullIntegral();
   
   // Now take the decision
 
@@ -165,26 +170,30 @@ StatusCode PuVetoAlg::execute() {
   } else {
     decision = 1;    // Multiple interaction
   }
-  log << MSG::DEBUG << " C++    : Decision " << decision 
-        << " Peak1 z,h,s " << pos1 << " " << height1 << " " << sum1
-        << " Peak2 z,h,s " << pos2 << " " << height2 << " " << sum2
-        << endreq;
+  log << MSG::DEBUG << "== Decision " << decision 
+      << " Peak1 z,h,s " << pos1 << " " << height1 << " " << sum1
+      << " Peak2 z,h,s " << pos2 << " " << height2 << " " << sum2
+      << " Integral " << integral
+      << endreq;
 
-  SmartDataPtr<Level0PileUpVeto>  L0PileUp ( eventDataService(),
-                                             "/Event/FE/L0/PileUpVeto" );
-  if ( 0 != L0PileUp ) {
-    log << MSG::DEBUG << " FORTRAN: Decision " << L0PileUp->decision() 
-        << " Peak1 z,h,s " << L0PileUp->zPosPeak1() 
-        << " " << L0PileUp->heightPeak1()
-        << " " << L0PileUp->sumPeak1()
-        << " Peak2 z,h,s " << L0PileUp->zPosPeak2() 
-        << " " << L0PileUp->heightPeak2()
-        << " " << L0PileUp->sumPeak2()
+  L0PuVeto* pileUp = new L0PuVeto();
+  pileUp->setDecision( decision );
+  pileUp->setHeightPeak1( height1 );
+  pileUp->setSumPeak1( sum1 );
+  pileUp->setZPosPeak1( pos1 );
+  pileUp->setHeightPeak2( height2 );
+  pileUp->setSumPeak2( sum2 );
+  pileUp->setZPosPeak2( pos2 );
+  pileUp->setSTot( integral );
+  
+  StatusCode sc = eventSvc()->registerObject( m_outputContainer, pileUp );
+  if ( sc.isFailure() ) {
+    delete pileUp;
+    log << MSG::ERROR
+        << "Unable to register output to " << m_outputContainer
         << endreq;
-  } else {
-    log << MSG::DEBUG << "Pile Up VETO not found " << endreq;
+    return StatusCode::FAILURE;
   }
-
 
   return StatusCode::SUCCESS;
 };
