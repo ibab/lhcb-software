@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.10 2001-06-28 09:50:08 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.11 2001-07-02 14:11:15 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -44,7 +44,8 @@ void dumpPVs( IMessageSvc* ms, ILVolume* lv, std::string de )
   log << MSG::INFO << de << " log. volume has "
       << noppv5    << " phys. volumes: ";
 
-  for( unsigned int ppvc = 0; ppvc < noppv5; ppvc++ ) {
+  unsigned int ppvc;
+  for (ppvc = 0; ppvc < noppv5; ppvc++) {
     log << MSG::INFO << lv->pvolume(ppvc)->name() << " ";
   }
 
@@ -85,7 +86,8 @@ StatusCode SimpleAlgorithm::initialize() {
   }
 
   TabulatedProperty::Table table = tab->table();
-  for (TabulatedProperty::Table::iterator it = table.begin();
+  TabulatedProperty::Table::iterator it;
+  for (it = table.begin();
        it != table.end();
        it++) {
     log << MSG::INFO << "new table Entry : "
@@ -121,11 +123,12 @@ StatusCode SimpleAlgorithm::initialize() {
   }
   
   std::vector<std::string> parameterList = ecal->userParameters();
-  for (std::vector<std::string>::iterator it = parameterList.begin();
-       it != parameterList.end();
-       it++) {
-    log << MSG::INFO << "ECAL " << *it << " = "
-        << ecal->userParameterAsString(*it)
+  std::vector<std::string>::iterator it2;
+  for (it2 = parameterList.begin();
+       it2 != parameterList.end();
+       it2++) {
+    log << MSG::INFO << "ECAL " << *it2 << " = "
+        << ecal->userParameterAsString(*it2)
         << endreq;
   }
 
@@ -216,7 +219,8 @@ StatusCode SimpleAlgorithm::initialize() {
   
   // Loop over all the muon stations found in the detector model
   // This is an example of how to use specific converters
-  for (DataObject::DirIterator d =  stations->dirBegin();
+  DataObject::DirIterator d;
+  for (d =  stations->dirBegin();
        d != stations->dirEnd();
        d++) {
     SmartDataPtr<DeMuonStation> s (detSvc(), (*d)->fullpath());
@@ -231,7 +235,8 @@ StatusCode SimpleAlgorithm::initialize() {
       << " Muon Stations in detector model" << endreq;
   
   /// Printing the information found
-  for ( unsigned int i = 0; i < m_stations.size(); i++ ) {
+  unsigned int i;
+  for (i = 0; i < m_stations.size(); i++) {
     log << MSG::INFO << "MUON STATION: "
         << m_stations[i]->localPath() << endreq;
     log << MSG::INFO << "Aluminium plate thickness: "

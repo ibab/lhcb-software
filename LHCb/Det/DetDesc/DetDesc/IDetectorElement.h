@@ -1,4 +1,7 @@
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2001/06/28 14:24:15  ibelyaev
+// remove 'inline' attributes (IDetectorElement.h)
+//
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1 
 
@@ -256,7 +259,7 @@ class IDetectorElement: virtual public IInspectable
    * @return its value, as a vector of double
    */
   virtual std::vector<double> userParameterVector (std::string name) = 0;
-  
+
   /**
    * this returns the list of existing userParameters as a vector of their
    * names

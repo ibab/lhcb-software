@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.7 2001-06-28 09:43:57 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.8 2001-07-02 14:11:02 sponce Exp $
 #include "GaudiKernel/Kernel.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -267,8 +267,286 @@ StatusCode DetectorElement::initialize() {
 }
 
 
+//////////////////////////////////////////////////////
+/// addUserParameter
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value,
+                                        double d_value) {
+  UserParam userParam;
+  userParam.type = type;
+  userParam.comment = comment;
+  userParam.value = value;
+  userParam.d_value = d_value;
+  userParam.i_value = 0; // this is never used
+  userParam.kind = DOUBLE;
+  m_userParameters[name] = userParam;
+}
+  
+//////////////////////////////////////////////////////
+/// addUserParameter
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value,
+                                        double d_value,
+                                        int i_value) {
+  UserParam userParam;
+  userParam.type = type;
+  userParam.comment = comment;
+  userParam.value = value;
+  userParam.d_value = d_value;
+  userParam.i_value = i_value;
+  userParam.kind = INT;
+  m_userParameters[name] = userParam;
+}
+  
+//////////////////////////////////////////////////////
+/// addUserParameter
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value) {
+  UserParam userParam;
+  userParam.type = type;
+  userParam.comment = comment;
+  userParam.value = value;
+  userParam.d_value = 0.0; // this is never used
+  userParam.i_value = 0; // this is never used
+  userParam.kind = OTHER;
+  m_userParameters[name] = userParam;
+}
+  
+//////////////////////////////////////////////////////
+/// addUserParameterVector
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value,
+                                              std::vector<double> d_value) {
+  UserParamVector userParamVector;
+  userParamVector.type = type;
+  userParamVector.comment = comment;
+  userParamVector.value = value;
+  userParamVector.d_value = d_value;
+  // userParamVector.i_value is is never used
+  userParamVector.kind = DOUBLE;
+  m_userParameterVectors[name] = userParamVector;
+}
 
+//////////////////////////////////////////////////////
+/// addUserParameterVector
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value,
+                                              std::vector<double> d_value,
+                                              std::vector<int> i_value) {
+  UserParamVector userParamVector;
+  userParamVector.type = type;
+  userParamVector.comment = comment;
+  userParamVector.value = value;
+  userParamVector.d_value = d_value;
+  userParamVector.i_value = i_value;
+  userParamVector.kind = INT;
+  m_userParameterVectors[name] = userParamVector;
+}
 
+//////////////////////////////////////////////////////
+/// addUserParameterVector
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value) {
+  UserParamVector userParamVector;
+  userParamVector.type = type;
+  userParamVector.comment = comment;
+  userParamVector.value = value;
+  // userParamVector.d_value is is never used
+  // userParamVector.i_value is is never used
+  userParamVector.kind = OTHER;
+  m_userParameterVectors[name] = userParamVector;
+}
+
+//////////////////////////////////////////////////////
+/// userParameterType
+//////////////////////////////////////////////////////
+std::string DetectorElement::userParameterType (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameters[name].type;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterComment
+//////////////////////////////////////////////////////
+std::string DetectorElement::userParameterComment (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameters[name].comment;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterAsString
+//////////////////////////////////////////////////////
+std::string DetectorElement::userParameterAsString (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameters[name].value;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterAsInt
+//////////////////////////////////////////////////////
+int DetectorElement::userParameterAsInt (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
+  if (m_userParameters[name].kind != INT) {
+    throw DetectorElementException("userParameter " + name +
+                                   " does not have an integer value.");
+  }
+  return m_userParameters[name].i_value;
+}
+
+//////////////////////////////////////////////////////
+/// userParameterAsDouble
+//////////////////////////////////////////////////////
+double DetectorElement::userParameterAsDouble (std::string name) {
+  if (m_userParameters.find(name) == m_userParameters.end()) {
+    throw DetectorElementException("No userParameter with this name : \""
+                                   + name + "\" !");
+  }
+  if (m_userParameters[name].kind != DOUBLE &&
+      m_userParameters[name].kind != INT ) {
+    throw DetectorElementException("userParameter " + name +
+                                   " does not have a numerical value.");
+  }
+  return m_userParameters[name].d_value;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameter
+//////////////////////////////////////////////////////
+double DetectorElement::userParameter (std::string name) {
+  return userParameterAsDouble (name);
+}  
+  
+//////////////////////////////////////////////////////
+/// userParameterVectorType
+//////////////////////////////////////////////////////
+std::string DetectorElement::userParameterVectorType (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameterVectors[name].type;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterVectorComment
+//////////////////////////////////////////////////////
+std::string
+DetectorElement::userParameterVectorComment (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameterVectors[name].comment;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterVectorAsString
+//////////////////////////////////////////////////////
+std::vector<std::string>
+DetectorElement::userParameterVectorAsString (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
+  return m_userParameterVectors[name].value;
+}
+  
+//////////////////////////////////////////////////////
+/// userParameterVectorAsInt
+//////////////////////////////////////////////////////
+std::vector<int>
+DetectorElement::userParameterVectorAsInt (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
+  if (m_userParameterVectors[name].kind != INT) {
+    throw DetectorElementException("userParameterVector " + name +
+                                   " does not have integer values.");
+  }
+  return m_userParameterVectors[name].i_value;
+}
+
+//////////////////////////////////////////////////////
+/// userParameterVectorAsDouble
+//////////////////////////////////////////////////////
+std::vector<double>
+DetectorElement::userParameterVectorAsDouble (std::string name) {
+  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
+    throw DetectorElementException("No userParameterVector with this name : \""
+                                   + name + "\" !");
+  }
+  if (m_userParameters[name].kind != DOUBLE &&
+      m_userParameters[name].kind != INT ) {
+    throw DetectorElementException("userParameterVector " + name +
+                                   " does not have numerical values.");
+  }
+  return m_userParameterVectors[name].d_value;
+}
+
+//////////////////////////////////////////////////////
+/// userParameterVector
+//////////////////////////////////////////////////////
+std::vector<double>
+DetectorElement::userParameterVector (std::string name) {
+  return userParameterVectorAsDouble (name);
+}
+
+//////////////////////////////////////////////////////
+/// userParameters
+//////////////////////////////////////////////////////
+std::vector<std::string> DetectorElement::userParameters() {
+  std::vector<std::string> result;
+  for (UserParamMap::iterator it = m_userParameters.begin();
+       m_userParameters.end() != it;
+       ++it) {
+    result.push_back(it->first);
+  }
+  return result;
+}
+   
+//////////////////////////////////////////////////////
+/// userParameterVectors
+//////////////////////////////////////////////////////
+std::vector<std::string> DetectorElement::userParameterVectors() {
+  std::vector<std::string> result;
+  for (UserParamVectorMap::iterator it = m_userParameterVectors.begin();
+       m_userParameterVectors.end() != it;
+       ++it) {
+    result.push_back(it->first);
+  }
+  return result;
+}
 
 
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.3 2001-06-28 09:43:53 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.4 2001-07-02 14:11:01 sponce Exp $
 
 #ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
 #define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
@@ -108,8 +108,6 @@ StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element element,
   
   // creates an object for the node found
   refpObject = new DeType();
-  log << MSG::DEBUG << "Specific detector element conversion for DeMuonStation"
-      << endreq;
   
   // returns
   return StatusCode::SUCCESS;

@@ -1,8 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.13 2001-06-28 09:43:52 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.14 2001-07-02 14:11:00 sponce Exp $
 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
+// Some pragmas to avoid warnings in VisualC
+#ifdef WIN32
+  // Disable warning C4786: identifier was truncated to '255' characters in the debug information
+  #pragma warning ( disable : 4786 )
+#endif
 
 // Include Files
 #include <algorithm>
@@ -281,7 +286,7 @@ public:
    * @param value the value of the parameter, as a string
    * @param d_value the value of the parameter, as a double
    */
-  inline virtual void addUserParameter (std::string name,
+  virtual void addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
                                         std::string value,
@@ -299,7 +304,7 @@ public:
    * @param value the value of the parameter, as a string
    * @param i_value the value of the parameter, as an int
    */
-  inline virtual void addUserParameter (std::string name,
+  virtual void addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
                                         std::string value,
@@ -318,7 +323,7 @@ public:
    * @param value the value of the parameter, as a string
    * @param d_value the value of the parameter, as a double
    */
-  inline virtual void addUserParameter (std::string name,
+  virtual void addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
                                         std::string value);
@@ -336,7 +341,7 @@ public:
    * @param value the value of the parameter vector, as a vector of strings
    * @param d_value the value of the parameter vector, as a vector of doubles
    */
-  inline virtual void addUserParameterVector (std::string name,
+  virtual void addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
                                               std::vector<std::string> value,
@@ -355,7 +360,7 @@ public:
    * @param value the value of the parameter vector, as a vector of strings
    * @param d_value the value of the parameter vector, as a vector of ints
    */
-  inline virtual void addUserParameterVector (std::string name,
+  virtual void addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
                                               std::vector<std::string> value,
@@ -376,7 +381,7 @@ public:
    * @param d_value the value of the parameter vector, as a vector of doubles
    * strings by default
    */
-  inline virtual void addUserParameterVector (std::string name,
+  virtual void addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
                                               std::vector<std::string> value);
@@ -387,7 +392,7 @@ public:
    * @param name the name of the parameter
    * @return its type
    */
-  inline virtual std::string userParameterType (std::string name);
+  virtual std::string userParameterType (std::string name);
   
   /**
    * this gets the comment of a parameter
@@ -395,7 +400,7 @@ public:
    * @param name the name of the parameter
    * @return its comment
    */
-  inline virtual std::string userParameterComment (std::string name);
+  virtual std::string userParameterComment (std::string name);
   
   /**
    * this gets the value of a parameter, as a string
@@ -403,7 +408,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual std::string userParameterAsString (std::string name);
+  virtual std::string userParameterAsString (std::string name);
   
   /**
    * this gets the value of a parameter, as an int
@@ -412,7 +417,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual int userParameterAsInt (std::string name);
+  virtual int userParameterAsInt (std::string name);
   
   /**
    * this gets the value of a parameter, as a double
@@ -421,7 +426,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a double
    */
-  inline virtual double userParameterAsDouble (std::string name);
+  virtual double userParameterAsDouble (std::string name);
   
   /**
    * this gets the value of the parameter as a double. This actually is an
@@ -431,7 +436,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a double
    */
-  inline virtual double userParameter (std::string name);
+  virtual double userParameter (std::string name);
   
   /**
    * this gets the type of a parameter vector
@@ -439,7 +444,7 @@ public:
    * @param name the name of the parameter vector
    * @return its type
    */
-  inline virtual std::string userParameterVectorType (std::string name);
+  virtual std::string userParameterVectorType (std::string name);
   
   /**
    * this gets the comment of a parameter vector
@@ -447,7 +452,7 @@ public:
    * @param name the name of the parameter vector
    * @return its comment
    */
-  inline virtual std::string userParameterVectorComment (std::string name);
+  virtual std::string userParameterVectorComment (std::string name);
   
   /**
    * this gets the value of a parameter vector, as a vector of string
@@ -455,7 +460,7 @@ public:
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  inline virtual std::vector<std::string>
+  virtual std::vector<std::string>
   userParameterVectorAsString (std::string name);
   
   /**
@@ -466,7 +471,7 @@ public:
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  inline virtual std::vector<int> userParameterVectorAsInt (std::string name);
+  virtual std::vector<int> userParameterVectorAsInt (std::string name);
   
   /**
    * this gets the value of a parameter as a vector of double.
@@ -476,7 +481,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
-  inline virtual std::vector<double>
+  virtual std::vector<double>
   userParameterVectorAsDouble (std::string name);
 
   /**
@@ -488,7 +493,7 @@ public:
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
-  inline virtual std::vector<double> userParameterVector (std::string name);
+  virtual std::vector<double> userParameterVector (std::string name);
 
   /**
    * this returns the list of existing userParameters as a vector of their

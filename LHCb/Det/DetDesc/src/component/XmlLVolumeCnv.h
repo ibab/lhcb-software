@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.5 2001-06-14 13:27:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.h,v 1.6 2001-07-02 14:11:03 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -208,8 +208,8 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * in each dimension
    */
   PVolumes* expandParamPhysVol (PVolumes* volumes,
-                                vector<int> numbers,
-                                vector<HepTransform3D*> transformations);
+	                            std::vector<int> numbers,
+								std::vector<HepTransform3D*> transformations);
 
   /**
    * deals with the xml tag <surf>. Returns a string giving the address of

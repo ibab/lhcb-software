@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.8 2001-06-28 09:43:57 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.9 2001-07-02 14:11:03 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -298,7 +298,8 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       // depending on the type, evaluates the value
       std::vector<double> d_vect;
       std::vector<int> i_vect;
-      for (std::vector<std::string>::iterator it = vect.begin();
+	  std::vector<std::string>::iterator it;
+      for (it = vect.begin();
            vect.end() != it;
            ++it) {
         double dd = xmlSvc()->eval(*it, false);
@@ -312,10 +313,11 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       // adds the new parameterVector to the detectorElement
       log << MSG::DEBUG << "Adding user parameter vector " << name
           << " with values ";
-      for (std::vector<std::string>::iterator it = vect.begin();
-           vect.end() != it;
-           ++it) {
-        log << *it << " ";
+      std::vector<std::string>::iterator it2;
+	  for (it2 = vect.begin();
+           vect.end() != it2;
+           ++it2) {
+        log << *it2 << " ";
       }
       log << ", type " << type << " and comment \""
           << comment << "\"." << endreq;
