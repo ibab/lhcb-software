@@ -7,7 +7,6 @@
 DECLARE_FACTORY_ENTRIES( VertexFit ) {
 
   // Vertex Fitters
-  DECLARE_TOOL( FastVertexFitter );  
   DECLARE_TOOL( LagrangeDirectionFitter );
   DECLARE_TOOL( LagrangeGeomVertexFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );
