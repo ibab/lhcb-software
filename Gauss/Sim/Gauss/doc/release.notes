@@ -8,6 +8,8 @@
 ! 2005-02-07 - Florence RANJARD
  - requirements - use GeneratorModules v14r1 which does not use PYTHIA 
                   interface but GENSER
+                  use GaussAlgs v1r4 with new statistics
+
  - options - try to reduce lengthy printout 
            - remove >M character in some option files
 
