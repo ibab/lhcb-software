@@ -1,8 +1,11 @@
-#ifndef Event_RichSmartID_H
-#define Event_RichSmartID_H 1
+#ifndef RICHKERNEL_RICHSMARTID_H
+#define RICHKERNEL_RICHSMARTID_H 1
 
-// Include files
+// Gaudi
 #include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/MsgStream.h"
+
+// local
 #include "RichKernel/RichSmartCode.h"
 
 /** @class RichSmartID RichSmartID.h
@@ -10,21 +13,23 @@
  *  Smart ID for Rich Objects
  *
  *  @author Andy Presland   (andrew.presland@cern.ch)
- *  created Tue Feb 26 09:25:55 2002
+ *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
+ *  created Tue Feb 26 09:25:55 2002
  */
 
 class RichSmartID {
 
 public:
 
-  typedef  long int      ContentType;
+  /// Define the internal representation
+  typedef  long int  ContentType;
 
-  /// Constructor from long int
-  RichSmartID(const ContentType & intKey) { m_Key = intKey ; }
+  /// Constructor from ContentType
+  RichSmartID( const ContentType & intKey ) { m_key = intKey ; }
 
   /// Default Constructor
-  RichSmartID(): m_Key(99999) {}
+  RichSmartID(): m_key(99999) {}
 
   /** constructor with all arguments
       @param   Rich      rich identifier
@@ -33,20 +38,17 @@ public:
       @param   PixRow    rich pixel row identifier
       @param   PixCol    rich pixel column identifier
   */
-  RichSmartID (
-        				const unsigned int Rich ,
-                const unsigned int Panel  ,
-                const unsigned int HPDRow   ,
-    						const unsigned int HPDCol  ,
-                const unsigned int PixelRow ,
-                const unsigned int PixelCol
-    )
-    : m_Key(0)
-  {
-    setRich   	( Rich ) ;
-    setPanel  	( Panel ) ;
-    setHPDRow 	( HPDRow ) ;
-    setHPDCol 	( HPDCol ) ;
+  RichSmartID ( const unsigned int Rich,
+                const unsigned int Panel,
+                const unsigned int HPDRow,
+                const unsigned int HPDCol,
+                const unsigned int PixelRow,
+                const unsigned int PixelCol )
+    : m_key(0)  {
+    setRich     ( Rich ) ;
+    setPanel    ( Panel ) ;
+    setHPDRow   ( HPDRow ) ;
+    setHPDCol   ( HPDCol ) ;
     setPixelRow ( PixelRow ) ;
     setPixelCol ( PixelCol ) ;
   };
@@ -55,10 +57,13 @@ public:
   virtual ~RichSmartID() {}
 
   /// Retrieve 32 bit integer key
-  long Key() const;
+  inline long Key() const { return m_key; }
+
+  /// Retrieve 32 bit integer key
+  inline long key() const { return m_key; }
 
   /// Update 32 bit integer key
-  void setKey(ContentType& value);
+  inline void setKey( ContentType& value ) { m_key = value; }
 
   /// Serialize the object for writing
   virtual StreamBuffer& serialize(StreamBuffer& s) const;
@@ -70,206 +75,204 @@ public:
   virtual std::ostream& fillStream(std::ostream& s) const;
 
   /// long operator
-  operator long() const { return m_Key; }
+  operator long() const { return m_key; }
 
-
-public:
-
-  /// decoding function to extract index
+  /// Decoding function to extract index
   inline const unsigned int index() const
   {
     return
       ( contents() & RichSmartCode::MaskIndex ) >> RichSmartCode::ShiftIndex ;
   }
 
-  /// decoding function to extract rich idenfifier
+  /// Decoding function to extract rich identifier
   inline const unsigned int rich () const
   {
     return
-      ( contents() & RichSmartCode::MaskRich  ) >> RichSmartCode::ShiftRich  ;
+      ( contents() & RichSmartCode::MaskRich ) >> RichSmartCode::ShiftRich ;
   }
-  /// decoding function to extract rich panel idenfifier
+
+  /// Decoding function to extract rich panel identifier
   inline const unsigned int panel () const
   {
     return
-      ( contents() & RichSmartCode::MaskPanel  ) >> RichSmartCode::ShiftPanel  ;
+      ( contents() & RichSmartCode::MaskPanel ) >> RichSmartCode::ShiftPanel ;
   }
-  /// decoding function to extract pixel row  idenfifier
+
+  /// Decoding function to return HPD RichSmartID only
+  inline const RichSmartID hpdID () const
+  {
+    return (RichSmartID) (( contents() & ~RichSmartCode::MaskPixelRow ) 
+                                       & ~RichSmartCode::MaskPixelCol );
+  }
+
+  /// Decoding function to return Panel RichSmartID only
+  inline const RichSmartID panelID () const
+  {
+    return (RichSmartID) (((( contents() & ~RichSmartCode::MaskPixelRow ) 
+                                         & ~RichSmartCode::MaskPixelCol )
+                                         & ~RichSmartCode::MaskHPDRow )
+                                         & ~RichSmartCode::MaskHPDCol );
+  }
+
+  /// Decoding function to return Rich RichSmartID only
+  inline const RichSmartID richID () const
+  {
+    return (RichSmartID) ((((( contents() & ~RichSmartCode::MaskPixelRow ) 
+                                          & ~RichSmartCode::MaskPixelCol )
+                                          & ~RichSmartCode::MaskHPDRow )
+                                          & ~RichSmartCode::MaskHPDCol )
+                                          & ~RichSmartCode::MaskPanel );
+  }
+
+  /// Decoding function to extract HPD row identifier
   inline const unsigned int HPDRow  () const
   {
     return
       ( contents() & RichSmartCode::MaskHPDRow ) >> RichSmartCode::ShiftHPDRow ;
   }
-  /// decoding function to extract pixel column   idenfifier
+
+  /// Decoding function to extract HPD column identifier
   inline const unsigned int HPDCol  () const
   {
     return
       ( contents() & RichSmartCode::MaskHPDCol ) >> RichSmartCode::ShiftHPDCol ;
   }
-  /// decoding function to extract HPD row  idenfifier
+
+  /// Decoding function to extract pixel row identifier
   inline const unsigned int pixelRow () const
   {
     return
-      ( contents() & RichSmartCode::MaskPixelRow  ) >> RichSmartCode::ShiftPixelRow  ;
+      ( contents() & RichSmartCode::MaskPixelRow ) >> RichSmartCode::ShiftPixelRow ;
   }
-  /// decoding function to extract HPD row  idenfifier
+
+  /// Decoding function to extract pixel row identifier
   inline const unsigned int pixelCol () const
   {
     return
-      ( contents() & RichSmartCode::MaskPixelCol  ) >> RichSmartCode::ShiftPixelCol  ;
+      ( contents() & RichSmartCode::MaskPixelCol ) >> RichSmartCode::ShiftPixelCol ;
   }
-    /// decoding function to extract all bits
-  inline unsigned int  all  () const
+
+  /// Decoding function to extract all bits
+  inline unsigned int all () const
   {
     return
-      ( contents() & RichSmartCode::MaskAll    ) >> RichSmartCode::ShiftAll   ;
+      ( contents() & RichSmartCode::MaskAll ) >> RichSmartCode::ShiftAll ;
   }
 
-  /// decoding function to extract "the rest" - should be zero!
-  inline unsigned int  rest () const
+  /// Decoding function to extract "the rest" - should be zero!
+  inline unsigned int rest () const
   {
     return
-      ( contents() & RichSmartCode::MaskRest   ) >> RichSmartCode::ShiftRest   ;
+      ( contents() & RichSmartCode::MaskRest ) >> RichSmartCode::ShiftRest ;
   }
 
-  /// decoding function to extract the full content
-  inline const ContentType& contents() const { return m_Key; }
+  /// Decoding function to extract the full content
+  inline const ContentType& contents() const { return m_key; }
 
-  // the main method - casting to the representation
-  //inline operator ContentType () const { return contents(); }
-
-  // comparison
+  /// Comparision operator
   inline bool operator < ( const ContentType& ID ) const
-    { return contents() <  ID ; }
-  inline bool operator ==( const ContentType& ID ) const
-    { return contents() == ID ; }
+  { return contents() <  ID ; }
 
-public:
+  /// Equality operator
+  inline bool operator == ( const ContentType& ID ) const
+  { return contents() == ID ; }
 
-  /// comparison operator using index.
+  /// Comparison operator using index.
   inline bool operator < ( const RichSmartID& ID ) const
-    { return index() <  ID.index() ; }
-  /// equality operator using contents
-  inline bool operator ==( const RichSmartID& ID ) const
+  { return index() <  ID.index() ; }
+
+  /// Equality operator using contents
+  inline bool operator == ( const RichSmartID& ID ) const
   { return contents() == ID.contents() ; }
+
   /// non-equality operator using contents
   inline bool operator !=( const RichSmartID& ID ) const
   { return !(ID == *this) ; }
-  /// printout to std::ostream
-  inline std::ostream& printOut ( std::ostream& ) const ;
-  /// printout to MsgStream
-//  inline MsgStream&    printOut ( MsgStream&    ) const ;
-  /// return bit pattern with delimeters
+
   inline const std::string bits( const char delim = ',' ) const;
+
+  /// update rich identifier
+  inline RichSmartID& setRich( const unsigned int Rich );
+
+  /// update panel identifier
+  inline RichSmartID& setPanel( const unsigned int Panel );
+
+  /// update pixel row identifier
+  inline RichSmartID& setPixelRow( const unsigned int PixelRow );
+
+  /// update pixel col identifier
+  inline RichSmartID& setPixelCol( const unsigned int PixelCol );
+
+  /// update HPD row identifier
+  inline RichSmartID& setHPDRow( const unsigned int HPDRow  );
+
+  /// update HPD col identifier
+  inline RichSmartID& setHPDCol( const unsigned int HPDCol  );
+
+  /// update sicb identifier
+  inline RichSmartID& set( const ContentType&,
+                           const unsigned int,
+                           const ContentType& );
+
+  /// update index   identifier
+  inline RichSmartID& setIndex   ( const unsigned int Index );
 
 protected:
 
 private:
 
-  long int m_Key; ///<  32 bit integer key
-
-
-  /// update rich identifier
-  inline RichSmartID& setRich   	( const unsigned int Rich  		);
-  /// update panel identifier
-  inline RichSmartID& setPanel   	( const unsigned int Panel  	);
-  /// update HPD row identifier
-  inline RichSmartID& setPixelRow  	( const unsigned int PixelRow  	);
-  inline RichSmartID& setPixelCol  	( const unsigned int PixelCol  	);
-  /// update row identifier
-  inline RichSmartID& setHPDRow  	( const unsigned int HPDRow 	);
-  /// update col     identifier
-  inline RichSmartID& setHPDCol  	( const unsigned int HPDCol 	);
-  /// update sicb    identifier
-  inline RichSmartID& setSicb  		( const unsigned int Calo  ,
-  																	const unsigned int Sicb  		);
-  /// update sicb identifier
-  inline RichSmartID& set      		( const ContentType& ,
-                                    const unsigned int ,
-                                    const ContentType& );
-  /// update index   identifier
-  inline RichSmartID& setIndex 		( const unsigned int Index );
-
+  /// The internal representation of the RichSmartSmartID
+  ContentType m_key;
 
 };
 
-// -----------------------------------------------------------------------------
-//   end of class
-// -----------------------------------------------------------------------------
-
-inline long RichSmartID::Key() const
-{
-  return m_Key;
+inline RichSmartID& RichSmartID::setRich ( const unsigned int Rich ) {
+  return
+    set( Rich, RichSmartCode::ShiftRich, RichSmartCode::MaskRich );
 }
 
-inline void RichSmartID::setKey(ContentType& value)
-{
-  m_Key = value;
+inline RichSmartID& RichSmartID::setPanel ( const unsigned int Panel ) {
+  return
+    set( Panel, RichSmartCode::ShiftPanel, RichSmartCode::MaskPanel );
 }
 
-inline StreamBuffer& RichSmartID::serialize(StreamBuffer& s) const
-{
-  s << m_Key;
-  return s;
+inline RichSmartID& RichSmartID::setPixelRow ( const unsigned int PixelRow ) {
+  return
+    set( PixelRow, RichSmartCode::ShiftPixelRow, RichSmartCode::MaskPixelRow );
 }
 
-inline StreamBuffer& RichSmartID::serialize(StreamBuffer& s)
-{
-  s >> m_Key;
-  return s;
+inline RichSmartID& RichSmartID::setPixelCol ( const unsigned int PixelCol ) {
+  return
+    set( PixelCol, RichSmartCode::ShiftPixelCol, RichSmartCode::MaskPixelCol );
 }
 
-inline std::ostream& RichSmartID::fillStream(std::ostream& s) const
-{
-  s << "{ "
-    << " Key:\t" << m_Key << " } ";
-  return s;
+inline RichSmartID& RichSmartID::setHPDRow  ( const unsigned int HPDRow ){
+  return
+    set( HPDRow, RichSmartCode::ShiftHPDRow, RichSmartCode::MaskHPDRow );
 }
 
-///Serialise methods
-inline StreamBuffer& operator >> (StreamBuffer& s, RichSmartID& key)  {
-  long longKey;
-  s >> longKey;
-  key.setKey(longKey);
-  return s;
+inline RichSmartID& RichSmartID::setHPDCol  ( const unsigned int HPDCol ) {
+  return
+    set( HPDCol, RichSmartCode::ShiftHPDCol, RichSmartCode::MaskHPDCol  );
 }
 
-///Serialise methods
-inline StreamBuffer& operator << (StreamBuffer& s, const RichSmartID& key)  {
-  s << key.Key();
-  return s;
+inline RichSmartID& RichSmartID::setIndex( const unsigned int Index ) {
+  return
+    set( Index, RichSmartCode::ShiftIndex, RichSmartCode::MaskIndex);
 }
 
-inline RichSmartID& RichSmartID::setRich ( const unsigned int Rich )
-  { return set( Rich  , RichSmartCode::ShiftRich , RichSmartCode::MaskRich ); };
-inline RichSmartID& RichSmartID::setPanel ( const unsigned int Panel )
-  { return set( Panel, RichSmartCode::ShiftPanel, RichSmartCode::MaskPanel ); };
-inline RichSmartID& RichSmartID::setPixelRow ( const unsigned int PixelRow  )
-  { return set( PixelRow, RichSmartCode::ShiftPixelRow, RichSmartCode::MaskPixelRow ) ; };
-inline RichSmartID& RichSmartID::setPixelCol ( const unsigned int PixelCol  )
-  { return set( PixelCol, RichSmartCode::ShiftPixelCol, RichSmartCode::MaskPixelCol ) ; };
-inline RichSmartID& RichSmartID::setHPDRow  ( const unsigned int HPDRow   )
-  { return set( HPDRow, RichSmartCode::ShiftHPDRow, RichSmartCode::MaskHPDRow  ) ; };
-inline RichSmartID& RichSmartID::setHPDCol  ( const unsigned int HPDCol   )
-  { return set( HPDCol, RichSmartCode::ShiftHPDCol, RichSmartCode::MaskHPDCol  ) ; };
-inline RichSmartID& RichSmartID::setIndex( const unsigned int Index )
-  { return set( Index, RichSmartCode::ShiftIndex, RichSmartCode::MaskIndex) ; };
-
-inline RichSmartID& RichSmartID::set ( const RichSmartID::ContentType&  Value ,
-                                       const unsigned int             Shift ,
-                                       const RichSmartID::ContentType& Mask  )
+inline RichSmartID& RichSmartID::set ( const RichSmartID::ContentType&  Value,
+                                       const unsigned int               Shift,
+                                       const RichSmartID::ContentType& Mask )
 {
   ContentType tmp1 , tmp2 ;
   tmp1  = ( Value << Shift ) &  Mask ;
   tmp2  =  contents()        & ~Mask ;
-  m_Key = ( tmp1 | tmp2 ) ;
+  m_key = ( tmp1 | tmp2 ) ;
   return *this;
 };
 
-
-
-
-// ** convert the value of pixel ID into bit pattern
+// Convert the value of pixel ID into bit pattern
 inline const std::string RichSmartID::bits( const char del ) const
 {
   std::string  str("[");
@@ -280,62 +283,61 @@ inline const std::string RichSmartID::bits( const char del ) const
       unsigned int pos = n;
       bool isNull =   ( 0 == ( ( one << pos ) & contents() ) );
       str+= isNull ? '0' : '1';
-      if      ( 0                          			== pos )   break      ;
-      if      ( 0                          			== del )   continue   ;
-      if      ( RichSmartCode::ShiftRest   			== pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftRich   			== pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftPanel  			== pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftPixelRow    == pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftPixelCol    == pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftHPDRow 			== pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftHPDCol 			== pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftAll    			== pos ) { str += del ; }
+      if      ( 0                             == pos )   break      ;
+      if      ( 0                             == del )   continue   ;
+      if      ( RichSmartCode::ShiftRest      == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftRich      == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftPanel     == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftPixelRow  == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftPixelCol  == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftHPDRow    == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftHPDCol    == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftAll       == pos ) { str += del ; }
     }
   return str += "]";
 }
-//
-//
-//
-// overloaded output to std::ostream
-inline std::ostream& operator<<( std::ostream& os , const RichSmartID& ccid )
-  { return ccid.printOut( os ); };
 
-//
-//
-//
-// overloaded output to MsgStream
-//inline MsgStream&    operator<<( MsgStream&    os , const RichSmartID& ccid ){ return ccid.printOut( os ); };
+inline std::ostream& RichSmartID::fillStream( std::ostream& s ) const {
+  s << "{ Key:\t" << m_key << " } ";
+  return s;
+}
 
-//
-//
-//
-//output to StreamBuffer
-//inline StreamBuffer& operator<<( StreamBuffer& s  , const RichSmartID& ccid )
-//{ return s << (RichSmartID::ContentType) ccid; };
+inline StreamBuffer& RichSmartID::serialize( StreamBuffer& s ) const {
+  s << m_key;
+  return s;
+}
 
-//
-//
-//
-// input from StreamBuffer
-//inline StreamBuffer& operator>>( StreamBuffer& s  ,       RichSmartID& ccid )
-//{
-  //RichSmartID::ContentType value;
-  //s >> value;
-  //ccid.m_ccid_id = value ;
-  //return s;
-//};
+inline StreamBuffer& RichSmartID::serialize( StreamBuffer& s ) {
+  s >> m_key;
+  return s;
+}
 
-//
-//
-//
-// print to std::ostream
-inline std::ostream& RichSmartID::printOut( std::ostream& os ) const
-{ return os << " RichSmartlID=" << (RichSmartID::ContentType) *this; };
+/// Serialise >> method
+inline StreamBuffer& operator >> ( StreamBuffer& s, RichSmartID& key ) {
+  long longKey;
+  s >> longKey;
+  key.setKey(longKey);
+  return s;
+}
 
-//
-//
-//
-// print to MsgStream
-//inline MsgStream&    RichSmartID::printOut( MsgStream&    os ) const
-//{ return os << " RichSmartID=" << (RichSmartID::ContentType) *this; };
-#endif   ///Event_RichSmartID_H
+/// Serialise << method
+inline StreamBuffer& operator << ( StreamBuffer& s, const RichSmartID& key ) {
+  s << key.key();
+  return s;
+}
+
+/// overloaded output to std::ostream
+inline std::ostream& operator << ( std::ostream& os, const RichSmartID& id ) {
+  os << id.key();
+  return os;
+}
+
+/// overloaded output to MsgStream
+inline MsgStream& operator << ( MsgStream& os, const RichSmartID& id ) {
+  os << "'Rich=" << id.rich() << " panel=" << id.panel() << " HPD(r/c)=" 
+     << id.HPDRow() << "/" << id.HPDCol() << " Pixel(r/c)=" << id.pixelRow() 
+     << "/" << id.pixelCol() << "'";
+  return os;
+}
+
+#endif   // RICHKERNEL_RICHSMARTID_H

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.5 2002-07-03 14:43:20 cattanem Exp $
+! $Id: release.notes,v 1.6 2002-11-07 17:23:40 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2002-10-21 - C Jones
+ - Make some methods public to allow more general setting of properties.
+ - Add some private serialize methods for STL
 
 ! ==================== RichKernel v1r2 2002-06-18 =====================
 ! 2002-06-18 C.Jones

@@ -1,4 +1,4 @@
-// $Id: RichDetector.h,v 1.2 2002-07-03 06:08:45 cattanem Exp $
+// $Id: RichDetector.h,v 1.3 2002-11-07 17:23:39 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETECTOR_H
 #define RICHKERNEL_RICHDETECTOR_H 1
 
@@ -8,6 +8,7 @@
 #include <iostream>
 
 // from gaudi
+#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
 /** @enumeration RichDetector RichDetector.h RichKernel/RichDetector.h
@@ -31,6 +32,22 @@ namespace Rich {
   /// Std Vector typedef
   typedef std::vector<Rich::Detector> DetectorVector;
 
+}
+
+/// Implement StreamBuffer >> method for Rich::Detector enumeration
+inline StreamBuffer& operator >> ( StreamBuffer& s,
+                                   Rich::Detector& detector ) {
+  int intType;
+  s >> intType;
+  detector = (Rich::Detector)intType;
+  return s;
+}
+
+/// Implement StreamBuffer << method for Rich::Detector enumeration
+inline StreamBuffer& operator << ( StreamBuffer& s,
+                                   const Rich::Detector& detector ) {
+  s << (int)detector;
+  return s;
 }
 
 /// Implement textual ostream << method for Rich::Detector enumeration

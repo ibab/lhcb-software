@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.h,v 1.2 2002-07-03 06:08:46 cattanem Exp $
+// $Id: RichRadiatorType.h,v 1.3 2002-11-07 17:23:40 jonrob Exp $
 #ifndef RICHKERNEL_RICHRADIATORTYPE_H
 #define RICHKERNEL_RICHRADIATORTYPE_H 1
 
@@ -19,6 +19,9 @@
  */
 
 namespace Rich {
+
+  /// Number of Rich radiators
+  static const int NRadiatorTypes = 3;
 
   /// Enumeration for radiator types
   enum RadiatorType {

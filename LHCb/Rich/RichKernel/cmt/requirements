@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.6 2002-06-21 15:33:35 jonesc Exp $
+# $Id: requirements,v 1.7 2002-11-07 17:23:40 jonrob Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
-version v1r2
+version v1r3
 
 # ================ structure =================================================
 branches RichKernel cmt doc src
@@ -18,8 +18,9 @@ library RichKernel ../src/*.cpp
 
 apply_pattern package_linkopts
 apply_pattern package_stamps
-apply_pattern ld_library_path
+apply_pattern linker_path
 
 #=============================================================================
 private
 apply_pattern package_shlibflags
+
