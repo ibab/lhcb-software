@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.3 2001-10-09 17:04:54 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.4 2001-10-09 17:35:53 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -365,7 +365,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
         }
     metaOut << "#include \"" << impName << ".h\"" << std::endl;
 
-  metaOut << "#undef private" << std::endl << std::endl << "#include \"GaudiIntrospection/Reflection.h\"" 
+  metaOut << "#undef private" << std::endl << std::endl << "#include \"GaudiIntrospection/Introspection.h\"" 
     << std::endl << std::endl << std::endl;
 
 //
@@ -402,7 +402,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
     metaOut << "    metaC->addField(\""
       << gddAttribute->name().transcode() << "\", \"" << gddAttribute->type().transcode()
-      << "\", \"" << gddAttribute->desc().transcode() << "\", 0, &(("
+      << "\", \"" << gddAttribute->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_" << gddAttribute->name().transcode()
       << ");" << std::endl << std::endl;
   }
@@ -412,7 +412,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
     metaOut << "    metaC->addField(\""
       << gddRelation->name().transcode() << "\", \"" << gddRelation->type().transcode()
-      << "\", \"" << gddRelation->desc().transcode() << "\", 0, &(("
+      << "\", \"" << gddRelation->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_" << gddRelation->name().transcode()
       << ");" << std::endl << std::endl;
   }
