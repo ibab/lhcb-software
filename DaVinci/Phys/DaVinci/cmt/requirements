@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2002-05-17 22:49:49 gcorti Exp $
+# $Id: requirements,v 1.19 2002-05-21 16:08:54 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -50,7 +50,7 @@ use GaudiKernel        v12r2
 use GaudiSvc           v8r0
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
-use GaudiTools         v6r0
+#use GaudiTools         v6r0
 use GaudiNagC          v7r0
 use GaudiDb            v7r0
 use GaudiRootDb        v7r0
@@ -96,6 +96,7 @@ use axsellib       v6r*   SICB
 use DaVinciSicb          v3r*   Phys
 use DaVinciTools         v4r*   Phys
 use DaVinciAssociators   v1r*   Phys
+use DaVinciMCTools       v1r*   Phys
 #use PrimaryVertices     v1r*   Phys
 #use PhysSelections      v1r*   Phys
 #use FlavourTagging      v1r*   Phys

@@ -47,11 +47,11 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 //--------------------------------------------------------------
 
 ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
-ApplicationMgr.TopAlg += { "FillParticleAlgorithm" };
-ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
-//ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
-//ApplicationMgr.TopAlg += { "SelectKsPiPi" };
-//ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
+//ApplicationMgr.TopAlg += { "FillParticleAlgorithm" };
+//ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
+ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
+ApplicationMgr.TopAlg += { "SelectKsPiPi" };
+ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
 
 //--------------------------------------------------------------
 // Test suite 

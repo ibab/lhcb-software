@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.10 2002-04-03 17:53:41 gcorti Exp $
+! $Id: release.notes,v 1.11 2002-05-21 16:12:16 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinci v4r0 <<<<<<<<<<<<<<<<<<<<<<
 
-! 02042002 - DaVinci v3r0 (G.Corti)
+! 2002-05-21 - Gloria Corti
+ - Introduce DaVinciMCTools and change options accordingly
+
+! 2002-05-02 - DaVinci v3r0 (G.Corti)
 
   - Algorithms to perform offline selection of B0->J/Psi(mu+mu-)Ks(pi+pi-)
     using new Physics Event model and new OO tools in src/User

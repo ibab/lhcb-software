@@ -29,12 +29,14 @@ MemoryAuditor.Enable = false;
 // set of outputLevel to print the reference log files
 //--------------------------------------------------------------
 //#include "$DAVINCITESTROOT/options/TestAssociators.opts"
-#include "$DAVINCITESTROOT/options/TestParticleFilter.opts"
+//#include "$DAVINCITESTROOT/options/TestParticleFilter.opts"
 //#include "$DAVINCITESTROOT/options/TestUnconsVertexFitter.opts"
 //#include "$DAVINCITESTROOT/options/TestParticleStuffer.opts"
 //#include "$DAVINCITESTROOT/options/TestGeomDispCalculator.opts"
 //#include "$DAVINCITESTROOT/options/TestMassVertexFitter.opts"
 //#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
+#include "$DAVINCITESTROOT/options/TestDebugTool.opts"
+//#include "$DAVINCITESTROOT/options/TestDecayFinder.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
@@ -47,5 +49,7 @@ EventSelector.FirstEvent = 1;
 //---------------------------------------------------------------
 // B->J/PsiKs, Brunel v5r1
 EventSelector.Input = {"JOBID='64042'"};
+// B->J/PsiKs, Brunel v9r1, dbase v243r3
+//EventSelector.Input = {"JOBID='94334'"};
 //################################################################
 
