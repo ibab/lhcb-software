@@ -1,7 +1,7 @@
 // check for TDR and MC truth
 HLTCorrelations.Members += { "CheckSelResult/Bs2DsHAndTDR" };
 Bs2DsHAndTDR.ANDmode = true ;
-Bs2DsHAndTDR.Algorithms = { "TDRselBs2DsH" } ; // , "AllBs2DsHTracks" } ;
+Bs2DsHAndTDR.Algorithms = { "TDRselBs2DsH" , "AllBs2DsHTracks" } ;
 Bs2DsHAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR

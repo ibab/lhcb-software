@@ -38,9 +38,9 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 // in these options
 // Hence: re-initalize event selector
 //EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2MuMuKstar.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 20 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 

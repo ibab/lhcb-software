@@ -1,7 +1,7 @@
 // check for TDR and MC truth
 HLTCorrelations.Members += { "CheckSelResult/Bs2PhiGammaAndTDR" };
 Bs2PhiGammaAndTDR.ANDmode = true ;
-Bs2PhiGammaAndTDR.Algorithms = { "TDRselBs2PhiGamma" } ; // , "AllBs2PhiGammaTracks" } ;
+Bs2PhiGammaAndTDR.Algorithms = { "TDRselBs2PhiGamma" , "AllBs2PhiGammaTracks" } ;
 Bs2PhiGammaAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
