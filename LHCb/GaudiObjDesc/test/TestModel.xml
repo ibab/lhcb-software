@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="TestModel">
+    <import name="Kernel/CLHEPStreams" ignore="TRUE"/>
+    <class  name="TestParticle" id="210" location="" desc="" author="" serializers="FALSE">
+       &KeyedObject;
+       <import name="CLHEP/Units/PhysicalConstants"/>
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute name="momentum" type="HepLorentzVector" init="0.0, 0.0, 0.0, 0.0" desc="" />
+       <attribute name="particleID" type="long" init="0" desc=""/>
+       <attribute name="hasOscillated" type="bool"  init="false" desc="" />
+       <attribute name="helicity" type="double" desc=""/>
+       <method  name="virtualMass" type="double" const="TRUE" desc="">
+         <code>  return m_momentum.m(); </code>
+       </method>
+       <method  name="pt" type="double" const="TRUE" desc="">
+         <code> return m_momentum.perp(); </code>
+       </method>
+       <method  name="mother" type="const TestParticle*" const="TRUE" desc="">
+         <code>
+           if( originVertex() ) return originVertex()->mother();
+           else return 0;
+         </code>
+       </method>
+       <relation name="originVertex" type="TestVertex" desc="" />
+       <relation name="endVertices" type="TestVertex" multiplicity="M" desc="" />
+       <relation name="collision" type="TestCollision" desc=""/>
+     </class>
+     <class name="TestVertex" id="222" location="" desc="" author="">
+       &KeyedObject;
+       <base name="KeyedObject&lt;int&gt;"/>
+       <relation name="mother" type="TestParticle" desc="" />
+     </class>
+     <class name="TestCollision" id="223" location="" desc="" author="">
+       <base name="KeyedObject&lt;int&gt;"/>
+     </class>
+  </package>
+</gdd>

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.46 2004-06-14 16:12:06 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.47 2004-07-16 16:13:38 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -487,7 +487,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
     // Include files
     //
     metaOut << "//Include files" << std::endl
-            << "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
+            << "#include \"Relations/RelationsDict.h\"" << std::endl; 
 
     metaOut << "using namespace seal::reflect;" << std::endl
       << std::endl;
@@ -696,10 +696,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
     // Include files
     //
     metaOut << "//Include files" << std::endl
-      //<< "#include \"GaudiKernel/Kernel.h\"" << std::endl
-            << "#include \"GaudiObjDesc/KeyedDictionary.h\"" << std::endl;
-      //<< "#include \"GaudiObjDesc/RelationsDict.h\"" << std::endl; 
-      //<< "#include \"GaudiObjDesc/SealDictionary.h\"" << std::endl;
+            << "#include \"GaudiKernel/KeyedDictionary.h\"" << std::endl;
     metaOut << std::endl
             << "#include <string>" << std::endl
             << std::endl;
@@ -1596,7 +1593,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"set" << DaDiTools::firstUp(gddRelName)
                   << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+//                 << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+                  << indent << "\"" << gddRelType << "*\"," << std::endl
                   << indent << gddClassName << "_set"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1644,7 +1642,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"addTo"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+//                << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+                  << indent << "\"" << gddRelType << "*\"," << std::endl
                   << indent << gddClassName << "_addTo"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1656,7 +1655,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
           metaOut << "  metaC.addMethod(\"removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "\"," << std::endl
                   << indent << "\"" << gddRelDesc << "\"," << std::endl
-                  << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+//                << indent << "\"SmartRef<" << gddRelType << ">&\"," << std::endl
+                  << indent << "\"" << gddRelType << "*\"," << std::endl
                   << indent << gddClassName << "_removeFrom"
                   << DaDiTools::firstUp(gddRelName) << "_" << methodCounter++
                   << ");" << std::endl
@@ -1756,8 +1756,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
     XMLString::release(&keydStr);
     */
 
-    if (gddClass->sizeDaDiTemplate())
-    {
+//    if (gddClass->sizeDaDiTemplate())
+//    {
       metaOut << "namespace" << std::endl
               << "{" << std::endl
               << "  struct _InitDict" << std::endl
@@ -1787,7 +1787,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
               << "  return &__init;" << std::endl
               << "}" << std::endl
               << std::endl << std::endl;
-    }
+//    }
     tmplvec.clear();
 
     metaOut.close();

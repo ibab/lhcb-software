@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.73 2004-02-06 19:08:18 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.74 2004-07-16 16:13:39 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2913,7 +2913,7 @@ void printCppHeader(DaDiPackage* gddPackage,
   }
 
   delete dbParser;
-  delete errReporter;
+  delete daditools;
   //XMLString::release(&dbErrReporter);
 
   ///
@@ -3141,7 +3141,7 @@ void printCppHeader(DaDiPackage* gddPackage,
     }
     for (i=0; i<gddPackage->sizeNoImports(); ++i)
     {
-      noImports.push_back(gddClass->popNoImports());
+      noImports.push_back(gddPackage->popNoImports());
     }
 
     /* XMLString::transcode(dbExportClass[std::string(gddClass->className())])=

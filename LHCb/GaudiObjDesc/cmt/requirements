@@ -21,3 +21,17 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 application GODWriteCppHeader -import=XercesC ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
 application GODWriteCppDict   -import=XercesC ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
 
+private
+
+use GaudiKernel v*           -no_auto_imports
+use CLHEP  v* LCG_Interfaces -no_auto_imports
+use Python v* LCG_Interfaces -no_auto_imports
+
+macro xmlsrc "test"
+document obj2doth EventObj2Doth -group=tests ../test/TestModel.xml 
+document obj2dict EventObj2Dict -group=tests ../test/TestModel.xml 
+library           TestModelDict -group=tests ../dict/*.cpp -import=GaudiKernel -import=CLHEP
+macro TestModelDict_cppflags "-I../test -I../Event" 
+apply_pattern component_library library=TestModelDict
+apply_pattern ld_library_path
+

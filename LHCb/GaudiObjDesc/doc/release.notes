@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v6r3============================
+!20040716 - Pere Mato, Stefan Roiser
+- added test: xml file, python test, tec.
+
 !20040706 - Pere Mato
 - requirements: adapted to use new LCGCMT interface packages
 
