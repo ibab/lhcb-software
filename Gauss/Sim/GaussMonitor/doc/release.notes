@@ -4,6 +4,12 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-05-14 - Patrick Robbe
+ - src/GeneratorFullMonitor.cpp
+   . store in ntuple all particles which are converted from HepMC to
+     G4PrimaryParticle in GiGaHepMCCnv (Use the same logic and the same
+     tests on the type and status of particle to store).
+
 !======================= GaussMonitor v1r1 2004-04-29 ========================
 ! 2004-04-29 - Gloria CORTI
  - src/GeneratorFullMonitor.{h,cpp}

@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.2 2004-04-29 17:19:13 gcorti Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.3 2004-05-14 07:06:04 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -266,7 +266,8 @@ StatusCode GeneratorFullMonitor::execute() {
           if ( ( (*pParticle) -> status ( ) == 1 ) ||
                ( (*pParticle) -> status ( ) == 2 ) ||
                ( (*pParticle) -> status ( ) == 888 ) ||
-               ( (*pParticle) -> status ( ) == 889 ) ) {
+               ( (*pParticle) -> status ( ) == 889 ) ||
+               ( (*pParticle) -> status ( ) == 998 ) ) {
             if ( ! (*pParticle) -> production_vertex() ) {
               FillNtuple ( (*pParticle) , 0 , 0 ) ;
             } else {              
@@ -276,19 +277,25 @@ StatusCode GeneratorFullMonitor::execute() {
                                   -> particles_in_const_begin())
                                   ->pdg_id() ) ;
                 ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
-                if ( ( ( ! pidM.isHadron( ) ) &&
-                       ( ! pidM.isLepton( ) ) &&
-                       ( ! pidM.isNucleus( ) ) ) && 
+                if ( ( ( ( ! pidM.isHadron( ) ) &&
+                         ( ! pidM.isLepton( ) ) &&
+                         ( ! pidM.isNucleus( ) ) &&
+                         ( pidM.abspid() != 22 ) ) ||
+                       ( (*(*pParticle)->production_vertex()
+                          -> particles_in_const_begin()) 
+                         -> status() == 3 ) ) && 
                      ( ( pid.isHadron( ) ) ||
                        ( pid.isLepton( ) ) ||
-                       ( pid.isNucleus( ) ) ) )
+                       ( pid.isNucleus( ) ) ||
+                       ( pid.abspid() == 22 ) ) )
                   FillNtuple( (*pParticle) , 0 , 0 ) ;
               }
               else {
                 ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
                 if ( ( pid.isHadron( ) ) ||
                      ( pid.isLepton( ) ) ||
-                     ( pid.isNucleus( ) ) ) 
+                     ( pid.isNucleus( ) ) ||
+                     ( pid.abspid() == 22 ) ) 
                   FillNtuple( (*pParticle) , 0 , 0 ) ;
               }
             }                
