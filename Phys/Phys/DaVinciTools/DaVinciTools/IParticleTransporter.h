@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.1 2002-03-27 20:27:46 gcorti Exp $
+// $Id: IParticleTransporter.h,v 1.2 2002-05-15 23:13:13 gcorti Exp $
 #ifndef DAVINCITOOLS_IPARTICLETRANSPORTER_H 
 #define DAVINCITOOLS_IPARTICLETRANSPORTER_H 1
 
@@ -13,11 +13,11 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleTransporter("IParticleTransporter", 
-                                                  1 , 0); 
+static const InterfaceID IID_IParticleTransporter("IParticleTransporter",2,0); 
 
-/** @class IParticleTransporter IParticleTransporter.h 
- *  DaVinciTools/IParticleTransporter.h
+/** @class IParticleTransporter IParticleTransporter.h
+ *  DaVinciTools/IParticleTranporter.h
+ *  
  *  Particle transporter interface.
  *
  *  @author Edgar de Oliveira
@@ -27,15 +27,21 @@ static const InterfaceID IID_IParticleTransporter("IParticleTransporter",
 class IParticleTransporter : virtual public IAlgTool {
 public:
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID() {
-    return IID_IParticleTransporter;
-  }
-  /// Calculate
+  static const InterfaceID& interfaceID() { return IID_IParticleTransporter;}
+
+  /// Transport a Particle to specified z position given a Particle iterator.
   virtual StatusCode transport(Particles::const_iterator &, 
-                               float znew,
-                               HepPoint3D & newPOT,
-                               HepSymMatrix & newPOTErr,
-                               HepSymMatrix & newSlopesMomErr,
-                               HepMatrix & newPosSlopesCorr) = 0; 
+                               double znew,
+                               Particle &transParticle) = 0;
+  
+  /// Transport a Particle to specified z position.
+  virtual StatusCode transport(const Particle &, 
+                               double znew,
+                               Particle &transParticle) = 0;
+
+  /// Transport a Particle to specified z position.
+  virtual StatusCode transport(Particle &, 
+                               double znew,
+                               Particle &transParticle) = 0;
 };
 #endif // DAVINCITOOLS_IPARTICLETRANSPORTER_H
