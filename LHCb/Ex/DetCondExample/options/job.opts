@@ -1,4 +1,4 @@
-//$Id: job.opts,v 1.6 2001-11-29 11:05:33 andreav Exp $
+//$Id: job.opts,v 1.7 2001-11-30 09:38:42 andreav Exp $
 //==============================================================
 // Standard Job options file
 //==============================================================
@@ -11,7 +11,7 @@
 ApplicationMgr.DLLs    = { "DetCond", "GaudiAlg" };
 
 // Configure which DetectorDataSvc should be used
-ApplicationMgr.ExtSvc  = { "ConditionsDBDataSvc/DetectorDataSvc" };
+ApplicationMgr.ExtSvc  = { "DetDataSvc/DetectorDataSvc" };
 
 // Add other external services to the list of known services
 ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
@@ -33,7 +33,7 @@ SequencerAlg.Members  += { "EvtClock/Alg_00_EvtClock" };
 SequencerAlg.Members  += 
   { "TestConditionsDBDataSvc/Alg_01_TestCondDBDataSvc" };
 SequencerAlg.Members  += { "TestSmartDataPtr/Alg_02_TestSmartDataPtr" };
-SequencerAlg.Members  += { "DumpDetectorStore/Alg__f_ClearStore" };
+SequencerAlg.Members  += { "DumpDetectorStore/Alg__f_DumpStore" };
 
 // Event clock attributes
 Alg_00_EvtClock.startTime = 12;

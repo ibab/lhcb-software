@@ -1,6 +1,9 @@
-#$Id: release.notes,v 1.7 2001-11-29 11:08:33 andreav Exp $
+#$Id: release.notes,v 1.8 2001-11-30 09:38:58 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+!20011130 - Andrea Valassi
+- Use the new DeteDataSvc in GaudiSvc
 
 !20011129 - Andrea Valassi
 - Remove the IConditionsDBDataSvc special interface

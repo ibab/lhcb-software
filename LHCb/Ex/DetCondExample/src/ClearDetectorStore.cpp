@@ -1,4 +1,4 @@
-//$Id: ClearDetectorStore.cpp,v 1.2 2001-11-23 18:14:42 andreav Exp $
+//$Id: ClearDetectorStore.cpp,v 1.3 2001-11-30 09:35:48 andreav Exp $
 #include <stdio.h>
 
 #include "ClearDetectorStore.h"
@@ -32,11 +32,11 @@ StatusCode ClearDetectorStore::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Initialize()" << endreq;
-  StatusCode sc;
 
   // Query the IDataManagerSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IDataManagerSvc, 
-				(void**) &m_detDataMgrSvc);
+  IDataManagerSvc* detDataMgr;
+  StatusCode sc = detSvc()->queryInterface
+    ( IID_IDataManagerSvc, (void **)&detDataMgr);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Could not query IDataManagerSvc interface of DetectorDataSvc" 
@@ -51,12 +51,13 @@ StatusCode ClearDetectorStore::initialize() {
   // Clear the store
   log << MSG::INFO 
       << "Clear the Detector Data Store to start from scratch" << endreq;
-  if ( !(m_detDataMgrSvc->clearStore()).isSuccess() ) {
-    log << MSG::INFO 
-	<< "Detector Data Store is already empty" << endreq;    
+  if ( !detDataMgr->clearStore().isSuccess() ) {
+    log << MSG::WARNING
+	<< "The detector data store has not been cleared: already empty?" 
+	<< endreq;    
   } else {
     log << MSG::INFO 
-	<< "Detector Data Store has been cleared" << endreq;    
+	<< "The detector data store has been cleared" << endreq;    
   }
   
   log << MSG::INFO << "Initialization completed" << endreq;

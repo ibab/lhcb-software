@@ -1,4 +1,28 @@
-# $Id: HISTORY,v 1.10 2001-11-28 09:43:59 andreav Exp $
+# $Id: HISTORY,v 1.11 2001-11-30 09:43:47 andreav Exp $
+
+------------------------------------------------
+30.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+- Use the modified version of DetDataSvc in GaudiSvc, committed to CVS 
+-> Contains main features of ConditionDataSvc and ConditionsDBDataSvc
+-> Remove ConditionDataSvc and ConditionsDBDataSvc
+Private tag: h20011130.
+
+------------------------------------------------
+29.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+- Remove the IConditionsDBDataSvc special interface
+  > ConditionsDBDataSvc now does little more than ConditionDataSvc
+- BootDetectorStore bootstraps the detector data store 
+  > the association between folder names and path names is done here
+  > objects are registered using standard methods (need ForceLeaves=true)
+- TestSmartDataPtr needs not call the IConditionsDBDataSvc to boot the store
+  > only TDS path names are used
+- TestConditionsDBDataSvc has internal methods to test a normal data service
+  > only TDS path names are used
+- Implement a dummy IIncidentListener interface in ConditionDataSvc
+- Redefine ConditionsDBAddress_undefinedClassID = CLID_NULL (it will disappear)
+Private tag: h20011129.
 
 ------------------------------------------------
 28.11.2001 Ex/DetCondExample v2 (LINUX only)

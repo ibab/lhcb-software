@@ -1,12 +1,9 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/ClearDetectorStore.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: ClearDetectorStore.h,v 1.2 2001-11-30 09:35:48 andreav Exp $
 #ifndef DETCONDEXAMPLE_CLEARDETECTORSTORE_H
 #define DETCONDEXAMPLE_CLEARDETECTORSTORE_H 1
 
 // Base class
 #include "GaudiKernel/Algorithm.h"
-
-// Forward declarations
-class IDataManagerSvc;
 
 ///---------------------------------------------------------------------------
 /** @class ClearDetectorStore ClearDetectorStore.h DetCondExample/ClearDetectorStore.h
@@ -29,11 +26,6 @@ class ClearDetectorStore : public Algorithm {
   StatusCode execute();
   StatusCode finalize();
   
- private:
-
-  /// IDataManagerSvc interface of the detector data service
-  IDataManagerSvc* m_detDataMgrSvc;
-
 };
 
 #endif    // DETCONDEXAMPLE_CLEARDETECTORSTORE_H

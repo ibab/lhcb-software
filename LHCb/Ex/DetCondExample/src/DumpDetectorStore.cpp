@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DumpDetectorStore.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: DumpDetectorStore.cpp,v 1.2 2001-11-30 09:35:48 andreav Exp $
 #include <stdio.h>
 
 #include "DumpDetectorStore.h"
@@ -18,7 +18,7 @@ const IAlgFactory& DumpDetectorStoreFactory = Factory;
 
 /// Constructor
 DumpDetectorStore::DumpDetectorStore( const std::string&  name, 
-			      ISvcLocator*        pSvcLocator )
+				      ISvcLocator*        pSvcLocator )
   : Algorithm(name, pSvcLocator)
 {
 }
@@ -49,9 +49,9 @@ StatusCode DumpDetectorStore::finalize( ) {
   log << MSG::INFO << "Finalize()" << endreq;
   
   // Locate the IDataManagerSvc interface of the Detector Data Service
-  IDataManagerSvc* storeManager;
+  IDataManagerSvc* detDataMgr;
   StatusCode sc = detSvc()->queryInterface
-    ( IID_IDataManagerSvc, (void **)&storeManager);
+    ( IID_IDataManagerSvc, (void **)&detDataMgr);
   if( sc.isFailure() ) {
     log << MSG::ERROR << "Can't query IDataManagerSvc interface" << endreq;
     return sc;
@@ -60,7 +60,7 @@ StatusCode DumpDetectorStore::finalize( ) {
   // Traverse the transient data store and dump all contents
   DetDataAgent agent( msgSvc() );
   log << MSG::INFO << "Now dump all contents of the data store" << endreq;
-  StatusCode status = storeManager->traverseTree( &agent );
+  StatusCode status = detDataMgr->traverseTree( &agent );
   if ( status.isSuccess() ) {
     log << MSG::INFO << "Dumped all contents of the data store" << endreq;
   } else {
