@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.11 2005-01-13 13:01:10 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.12 2005-02-20 19:12:47 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -35,6 +35,7 @@
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 // temporary histogramming numbers
 #include "RichDetParams.h"
@@ -72,9 +73,6 @@ private: // methods
   /// Book histograms
   StatusCode bookHistograms();
 
-  /// Returns the mass hypothesis for a given MCParticle
-  Rich::ParticleIDType massHypothesis( const MCParticle * mcPart );
-
   /// Particle mass
   double mass( const MCParticle * mcPart );
 
@@ -96,6 +94,9 @@ private: // data
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
 
+  /// Pointer to MC truth tool
+  IRichMCTruthTool * m_mcTool;
+
   // job options
   std::string m_histPth;        ///< Output histogram path
   std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES
@@ -104,9 +105,6 @@ private: // data
 
   // Particle masses
   RichMap<Rich::ParticleIDType,double> m_particleMass;
-
-  // Mapping between PDG ID and Rich::ParticleIDType
-  RichHashMap<int,Rich::ParticleIDType> m_localID;  
 
   // Histograms
   IHistogram1D* m_digitMult[Rich::NRiches]; ///< MCRichDigit event multiplicity
@@ -160,17 +158,34 @@ private: // data
 
 inline double RichDigiAlgMoni::mass( const MCParticle * mcPart )
 {
-  return m_particleMass[ massHypothesis(mcPart) ];
-}
-
-inline Rich::ParticleIDType RichDigiAlgMoni::massHypothesis( const MCParticle * mcPart ) 
-{
-  return ( mcPart ? m_localID[abs(mcPart->particleID().pid())] : Rich::Unknown );
+  return m_particleMass[ m_mcTool->mcParticleType(mcPart) ];
 }
 
 inline double RichDigiAlgMoni::momentum( const MCParticle * mcPart )
 {
   return ( mcPart ? mcPart->momentum().vect().mag() : 0 );
+}
+
+inline double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )
+{
+  if ( !mcPart ) return 0;
+  const double pTot = momentum( mcPart );
+  const double Esquare = pTot*pTot + gsl_pow_2(mass(mcPart));
+  return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
+}
+
+inline bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) 
+{
+
+  // Which radiator
+  const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+
+  // Is this a true hit
+  return ( !hit->scatteredPhoton() &&
+           !hit->chargedTrack()
+           && ( rad == Rich::Aerogel ||
+                rad == Rich::Rich1Gas ||
+                rad == Rich::Rich2Gas ) );
 }
 
 #endif // RICHMONITOR_RICHDIGIALGMONI_H

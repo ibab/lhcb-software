@@ -8,8 +8,10 @@ const         IAlgFactory& RichDetailedFrontEndResponseFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& name,
                                                             ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator )
+{
 
+  // job options
   declareProperty( "MCRichSummedDepositsLocation",
                    m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "MCRichDigitsLocation",
@@ -17,12 +19,9 @@ RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& n
   //  declareProperty( "SimpleCalibration", m_Calibration = 12500. );
   declareProperty( "SimpleCalibration", m_Calibration = 8330. );
   declareProperty( "SimpleBaseline",    m_Pedestal = 50 );
-  declareProperty( "Noise", m_Noise = 150. );  // in electrons
-  declareProperty( "Threshold", m_Threshold = 1400. ); // in electrons
-  declareProperty( "ThresholdSigma", m_ThresholdSigma = 140. ); // in electrons
-  //  declareProperty( "ThresholdSigma", m_ThresholdSigma = 35?. ); // in electrons - Jolly improvement
-
-  declareProperty( "HistoPath", m_histPth = "RICH/DIGI/Readout/" );
+  declareProperty( "Noise",             m_Noise = 150. );  // in electrons
+  declareProperty( "Threshold",         m_Threshold = 1400. ); // in electrons
+  declareProperty( "ThresholdSigma",    m_ThresholdSigma = 140. ); // in electrons
 
   el_per_adc = 40.;
 
@@ -33,10 +32,11 @@ RichDetailedFrontEndResponse::RichDetailedFrontEndResponse( const std::string& n
 
 RichDetailedFrontEndResponse::~RichDetailedFrontEndResponse() {}
 
-StatusCode RichDetailedFrontEndResponse::initialize() {
+StatusCode RichDetailedFrontEndResponse::initialize()
+{
 
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
@@ -46,18 +46,14 @@ StatusCode RichDetailedFrontEndResponse::initialize() {
   releaseTool( smartIDs );
   actual_base = theRegistry.GetNewBase( pixels );
 
-  m_gaussNoise.initialize( randSvc(), Rndm::Gauss(0., m_Noise) );
-  //m_GaussThreshold.initialize( randSvc(), Rndm::Gauss(m_adc_cut,200./20.)));
-  m_gaussThreshold.initialize( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma));
+  m_gaussNoise.initialize     ( randSvc(), Rndm::Gauss(0., m_Noise)                  );
+  m_gaussThreshold.initialize ( randSvc(), Rndm::Gauss(m_Threshold,m_ThresholdSigma) );
 
-  debug() << " Using detailed HPD frontend response algorithm" << endreq;
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichDetailedFrontEndResponse::finalize()
 {
-  debug() << "finalize" << endreq;
 
   // finalise randomn number generators
   m_gaussNoise.finalize();
@@ -67,85 +63,109 @@ StatusCode RichDetailedFrontEndResponse::finalize()
   return RichAlgBase::finalize();
 }
 
-StatusCode RichDetailedFrontEndResponse::execute() {
-
+StatusCode RichDetailedFrontEndResponse::execute()
+{
   debug() << "Execute" << endreq;
 
-  SummedDeposits = get<MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
-  debug() << "Successfully located " << SummedDeposits->size()
-          << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
-
-  tscache.clear();
+  m_summedDeposits = get<MCRichSummedDeposits>( m_mcRichSummedDepositsLocation );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Successfully located " << m_summedDeposits->size()
+            << " MCRichSummedDeposits at " << m_mcRichSummedDepositsLocation << endreq;
+  }
 
   // Process the hits
-  Analog();
-  Digital();
+  tscache.clear();
 
-  return StatusCode::SUCCESS;
+  // Run analog sim
+  const StatusCode sc = Analog();
+  if ( sc.isFailure() ) { return sc; }
+
+  // run digital sim and return
+  return Digital();
 }
 
-StatusCode RichDetailedFrontEndResponse::Analog() {
+StatusCode RichDetailedFrontEndResponse::Analog()
+{
+  debug() << "Analogue Simulation" << endreq;
 
-  for ( MCRichSummedDeposits::const_iterator iSumDep = SummedDeposits->begin();
-        iSumDep != SummedDeposits->end(); ++iSumDep ) {
+  for ( MCRichSummedDeposits::const_iterator iSumDep = m_summedDeposits->begin();
+        iSumDep != m_summedDeposits->end(); ++iSumDep ) {
 
-    RichPixelProperties* props =
-      actual_base->DecodeUniqueID( (*iSumDep)->key() );
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Summed Deposit " << (*iSumDep)->key() << endreq;
+    }
+
+    RichPixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key() );
     if ( !props ) continue;
 
     const RichPixelReadout * readOut = props->Readout();
     if ( !readOut )  continue;
 
-    RichPixel * pid = new RichPixel(props);
-    unsigned int tsize = readOut->FrameSize();
     const RichShape* shape = readOut->Shape();
+    if ( shape )
+    {
 
-    if ( shape ) {
-
-      RichTimeSample ts(pid,readOut->FrameSize(),readOut->BaseLine());
-
-      // Evolve shape --------------------------------------------------
+      // Create time sample for this summed deposit
+      RichTimeSample ts(readOut->FrameSize(),readOut->BaseLine());
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
       SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
 
-      double summedEnergy = 0.0;
       for( SmartRefVector<MCRichDeposit>::const_iterator iDep
              = deposits.begin(); iDep != deposits.end(); ++iDep ) {
- 
-        if( (*iDep)->time() > -100.0 &&  (*iDep)->time() < 100.0 ) {
 
-          int binZero = (int)( (*iDep)->time());
-          double binTime = -binZero + 25.; // locked into peakTime - hardwired hack
-
-          double e = ( (*iDep)->energy()*m_Calibration ) + m_gaussNoise()/el_per_adc;
-          summedEnergy += (*iDep)->energy();
-
-          for ( unsigned int bin = 0; bin < ts.size(); ++bin ) {
-            binTime += 25./tsize;
-            if ( binZero < 0 && binZero > -50 ) {
-              // make pixel dead for this event
-              ts[bin] -= 999999;
-            } else {
-              ts[bin] += (*shape)[binTime] * e;
-            }
-          }
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << " Deposit " << (*iDep)->key()
+                    << " from '" << objectLocation( (*iDep)->parentHit()->parent() ) << "'" << endreq
+                    << "  -> TOF     = " << (*iDep)->time() << endreq
+                    << "  -> Energy  = " << (*iDep)->energy() << endreq;
         }
 
-      } // MCrichDeposit loop
-      (*iSumDep)->setSummedEnergy(summedEnergy);
- 
+        // Course cut on deposit TOF ( -100ns to 100ns )
+        if ( fabs((*iDep)->time()) < 100 ) {
+
+          // Bin zero
+          const int binZero = (int)(*iDep)->time();
+
+          // Shift time ( Rich2 value correlated to -40 in RichSignal algorithm.... )
+          const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 18 : 7 );
+          //const double shiftTime = ( Rich::Rich1 == (*iDep)->parentHit()->rich() ? 25 : 25 );
+
+          // locked into peakTime - hardwired hack
+          double binTime = shiftTime - binZero; 
+
+          // dead region
+          const bool dead = ( binZero < 0 && binZero > -50 );
+
+          // electrons
+          const double e  = ( dead ? 0 : ((*iDep)->energy()*m_Calibration) + m_gaussNoise()/el_per_adc );
+
+          // Loop over time sample and fill for this deposit
+          for ( unsigned int bin = 0; bin < ts.size(); ++bin )
+          {
+            binTime += 25. / readOut->FrameSize();
+            ts[bin] += ( dead ? -999999 : (*shape)[binTime] * e );
+          }
+
+        }
+
+      } // MCRichDeposit loop
+
       tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
 
     } // if shape
 
-    delete pid;
   }
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichDetailedFrontEndResponse::Digital() {
+StatusCode RichDetailedFrontEndResponse::Digital()
+{
+  debug() << "Digital Simulation" << endreq;
 
   // new RichDigit container to Gaudi data store
   MCRichDigits * mcRichDigits = new MCRichDigits();
@@ -153,13 +173,12 @@ StatusCode RichDetailedFrontEndResponse::Digital() {
   for ( samplecache_t::iterator tsc_it = tscache.begin();
         tsc_it != tscache.end(); ++tsc_it ) {
 
-    RichPixelProperties* props = 
-      actual_base->DecodeUniqueID( ((*tsc_it).first)->key() );
+    RichPixelProperties* props = actual_base->DecodeUniqueID( ((*tsc_it).first)->key() );
     const RichPixelReadout* readOut = props->Readout();
-    if ( readOut ) {
+    if ( readOut )
+    {
 
-      double temp_threshold = m_gaussThreshold()/el_per_adc + readOut->BaseLine();
- 
+      const double temp_threshold = m_gaussThreshold()/el_per_adc + readOut->BaseLine();
       if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) {
 
         MCRichDigit* newDigit = new MCRichDigit();
@@ -168,18 +187,23 @@ StatusCode RichDetailedFrontEndResponse::Digital() {
         // Create MCRichHit links
         SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
         for ( SmartRefVector<MCRichDeposit>::iterator iDep = deps.begin();
-              iDep != deps.end(); ++iDep ) {
+              iDep != deps.end(); ++iDep )
+        {
           newDigit->addToHits( (*iDep)->parentHit() );
         }
 
       }
 
-    } // readout exits
-  }
+    } // readout exists
+
+  } // loop over time samples
 
   put( mcRichDigits, m_mcRichDigitsLocation );
-  debug() << "Registered " << mcRichDigits->size() 
-          << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Registered " << mcRichDigits->size()
+            << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }

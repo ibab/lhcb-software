@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-02-20 - Chris Jones
+ - Fix problem with "Next" spillover event + various minor improvements
+
 !======================== RichReadout v1r11 2005-01-17 =======================
 ! 2005-01-17 - Marco Cattaneo
  - Add explicit dependency on DAQEvent (no longer inherited via RichEvent)

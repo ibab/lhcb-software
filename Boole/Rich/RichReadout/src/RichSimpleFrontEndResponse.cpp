@@ -8,8 +8,10 @@ const         IAlgFactory& RichSimpleFrontEndResponseFactory = s_factory ;
 // Standard constructor, initializes variables
 RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
-  : RichAlgBase ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) 
+{
 
+  // job opts
   declareProperty( "MCRichSummedDepositsLocation",
                    m_mcRichSummedDepositsLocation = MCRichSummedDepositLocation::Default );
   declareProperty( "MCRichDigitsLocation",
@@ -23,12 +25,10 @@ RichSimpleFrontEndResponse::RichSimpleFrontEndResponse( const std::string& name,
 
 RichSimpleFrontEndResponse::~RichSimpleFrontEndResponse () { };
 
-StatusCode RichSimpleFrontEndResponse::initialize() {
-
-  debug() << "Initialize" << endreq;
-
+StatusCode RichSimpleFrontEndResponse::initialize() 
+{
   // Initialize base class
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
@@ -43,16 +43,11 @@ StatusCode RichSimpleFrontEndResponse::initialize() {
   // Gauss randomn dist
   m_gaussRndm.initialize( randSvc(), Rndm::Gauss(0.0,0.9) );
 
-  debug() << " Using simple HPD frontend response algorithm" << endreq
-          << " Acquired information for " << pixels.size() << " pixels" << endreq;
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichSimpleFrontEndResponse::finalize() 
 {
-  debug() << "finalize" << endreq;
-
   // finalize randomn number generator
   m_gaussRndm.finalize();
 

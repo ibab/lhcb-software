@@ -1,5 +1,6 @@
+
 #ifndef RichRegistry_h
-#define RichRegistry_h
+#define RichRegistry_h 1
 
 #include <set>
 #include <string>
@@ -7,6 +8,7 @@
 
 #include "RichBase.h"
 
+//#include "Kernel/RichSmartID.h"
 class RichSmartID;
 
 class RichRegistry {

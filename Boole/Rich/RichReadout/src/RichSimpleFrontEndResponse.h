@@ -23,7 +23,6 @@
 #include "RichRegistry.h"
 #include "RichPixelReadout.h"
 #include "RichShape.h"
-#include "RichNoisifier.h"
 #include "RichBase.h"
 
 // event model

@@ -27,7 +27,6 @@
 #include "RichRegistry.h"
 #include "RichPixelReadout.h"
 #include "RichShape.h"
-#include "RichNoisifier.h"
 #include "RichBase.h"
 
 // event model
@@ -77,12 +76,10 @@ private: // data
 
   samplecache_t tscache;
 
-  MCRichSummedDeposits* SummedDeposits;
+  MCRichSummedDeposits* m_summedDeposits;
 
   std::string m_mcRichSummedDepositsLocation;
   std::string m_mcRichDigitsLocation;
-
-  std::string m_histPth;
 
   int m_Pedestal;
   double m_Calibration;

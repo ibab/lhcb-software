@@ -1,21 +1,25 @@
+
 #ifndef RichBase_h
 #define RichBase_h 1
 
 // Include files
 #include <map>
-#include<vector>
+#include <vector>
 #include <cmath>
 
 #include "RichPixelProperties.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/RichMap.h"
-
 #include "Kernel/RichSmartID.h"
+
+// gaudi
 #include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ObjectVector.h"
 
+//#include "RichPixel.h"
+//#include "RichRegistry.h"
 class RichPixel;
 class RichRegistry;
 

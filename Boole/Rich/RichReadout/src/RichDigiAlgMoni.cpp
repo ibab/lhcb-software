@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.11 2004-11-16 16:28:29 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.12 2005-02-20 19:12:46 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -16,8 +16,10 @@ const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator ),
-    m_smartIDTool (0) {
+  : RichAlgBase   ( name, pSvcLocator ),
+    m_smartIDTool ( 0 ),
+    m_mcTool      ( 0 )
+{
 
   // Declare job options
   declareProperty( "InputMCRichDigits", m_mcdigitTES = MCRichDigitLocation::Default );
@@ -31,29 +33,21 @@ RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
 RichDigiAlgMoni::~RichDigiAlgMoni() {};
 
 // Initialisation
-StatusCode RichDigiAlgMoni::initialize() {
-
-  debug() << "Initialize" << endreq;
-
+StatusCode RichDigiAlgMoni::initialize() 
+{
   // Initialize base class
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  const StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // get tools
   acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichMCTruthTool", m_mcTool      );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
 
   // Retrieve particle property service
   IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
-
-  // Setup the PDG code mappings
-  m_localID[ 0 ] = Rich::Unknown;
-  m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
-  m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
-  m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
-  m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
-  m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
 
   // Retrieve particle masses
   m_particleMass[Rich::Unknown]  = 0;
@@ -64,17 +58,18 @@ StatusCode RichDigiAlgMoni::initialize() {
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
 
   // release particle property service
-  ppSvc->release();
+  release(ppSvc);
 
   debug() << " Histogram location   = " << m_histPth << endreq;
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
-StatusCode RichDigiAlgMoni::bookHistograms() {
+StatusCode RichDigiAlgMoni::bookHistograms() 
+{
 
   std::string title;
-  int nBins = 100;
+  const int nBins = 100;
   int id;
 
   // defines for various parameters
@@ -279,8 +274,8 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
 }
 
 // Main execution
-StatusCode RichDigiAlgMoni::execute() {
-
+StatusCode RichDigiAlgMoni::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Maps for number of pe's
@@ -310,8 +305,7 @@ StatusCode RichDigiAlgMoni::execute() {
   for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
         iMcDigit != mcRichDigits->end(); ++iMcDigit ) {
 
-    RichSmartID id = (*iMcDigit)->key();
-
+    const RichSmartID id = (*iMcDigit)->key();
     const HepPoint3D point = m_smartIDTool->globalPosition( id );
 
     // increment digit count
@@ -381,11 +375,10 @@ StatusCode RichDigiAlgMoni::execute() {
   // ================================================================================
   SmartDataPtr<MCRichDeposits> deps( eventSvc(), m_mcdepTES );
   if ( !deps ) {
-    debug() << "Cannot locate MCRichDeposits at "
-            << MCRichDepositLocation::Default << endreq;
+    debug() << "Cannot locate MCRichDeposits at " << m_mcdepTES << endreq;
   } else {
     debug() << "Successfully located " << deps->size()
-            << " MCRichDeposits at " << MCRichDepositLocation::Default << endreq;
+            << " MCRichDeposits at " << m_mcdepTES << endreq;
 
     int nChargedTracks[Rich::NRiches];
     nChargedTracks[Rich::Rich1] = 0;
@@ -396,7 +389,7 @@ StatusCode RichDigiAlgMoni::execute() {
           iDep != deps->end(); ++iDep ) {
 
       // Which RICH ?
-      int rich = (*iDep)->parentHit()->rich();
+      const int rich = (*iDep)->parentHit()->rich();
 
       // TOF for this deposit
       m_tofDep[rich]->fill( (*iDep)->time() );
@@ -422,8 +415,7 @@ StatusCode RichDigiAlgMoni::execute() {
   // ================================================================================
   SmartDataPtr<MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
-    debug() << "Cannot locate MCRichHits at "
-            << MCRichDepositLocation::Default << endreq;
+    debug() << "Cannot locate MCRichHits at " << m_mchitTES << endreq;
   } else {
 
     // Hit mult counters
@@ -436,7 +428,7 @@ StatusCode RichDigiAlgMoni::execute() {
           iHit != hits->end(); ++iHit ) {
 
       // Which RICH ?
-      int rich = (*iHit)->rich();
+      const int rich = (*iHit)->rich();
 
       if ( trueCKHit(*iHit) ) {
         m_tofHit[rich]->fill( (*iHit)->timeOfFlight() );  // signal TOF
@@ -491,9 +483,9 @@ StatusCode RichDigiAlgMoni::execute() {
     m_mcdigitNpes[ ((*iPhot).first).second ]->fill( digCount );
 
     // locate the entry for the MCRichDeps
-    double depCount = ckPhotMapDep[ (*iPhot).first ];
+    const double depCount = ckPhotMapDep[ (*iPhot).first ];
 
-    double frac = ( depCount != 0 ? digCount/depCount : 0 );
+    const double frac = ( depCount != 0 ? digCount/depCount : 0 );
     m_npesRetained[ ((*iPhot).first).second ]->fill( frac );
 
   }}
@@ -502,16 +494,17 @@ StatusCode RichDigiAlgMoni::execute() {
 };
 
 void RichDigiAlgMoni::countNPE( PhotMap & photMap,
-                                const MCRichHit * hit ) {
+                                const MCRichHit * hit ) 
+{
 
   // MCParticle momentum
-  double tkPtot = momentum( hit->mcParticle() );
+  const double tkPtot = momentum( hit->mcParticle() );
 
   // Parent particle hypothesis
-  Rich::ParticleIDType mcid = massHypothesis( hit->mcParticle() );
+  const Rich::ParticleIDType mcid = m_mcTool->mcParticleType( hit->mcParticle() );
 
   // Which radiator
-  Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
+  const Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
 
   // Increment PES count for high beta tracks
   if ( tkPtot > 1*GeV &&
@@ -529,32 +522,10 @@ void RichDigiAlgMoni::countNPE( PhotMap & photMap,
 
 }
 
-bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) {
-
-  // Which radiator
-  Rich::RadiatorType rad = (Rich::RadiatorType)( hit->radiator() );
-
-  // Is this a true hit
-  return ( !hit->scatteredPhoton() &&
-           !hit->chargedTrack()
-           && ( rad == Rich::Aerogel ||
-                rad == Rich::Rich1Gas ||
-                rad == Rich::Rich2Gas ) );
-}
-
 //  Finalize
-StatusCode RichDigiAlgMoni::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichDigiAlgMoni::finalize() 
+{
   // finalize base class
   return RichAlgBase::finalize();
 }
 
-double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )
-{
-  if ( !mcPart ) return 0;
-  double pTot = momentum( mcPart );
-  double Esquare = pTot*pTot + gsl_pow_2(mass(mcPart));
-  return ( Esquare > 0 ? pTot/sqrt(Esquare) : 0 );
-}

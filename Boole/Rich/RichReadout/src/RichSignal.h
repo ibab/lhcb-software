@@ -55,8 +55,8 @@ private: // methods
 
 private: // data
 
-  MCRichSummedDeposits* mcSummedDeposits;
-  MCRichDeposits* mcDeposits;
+  MCRichSummedDeposits* m_mcSummedDeposits;
+  MCRichDeposits* m_mcDeposits;
 
   std::string m_RichHitLocation;
   std::string m_RichPrevLocation;
