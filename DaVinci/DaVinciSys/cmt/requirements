@@ -47,7 +47,7 @@ use  TrExtrapolator     v2r12    Tr
 use  RecoTools          v1r1     Rec
 use  Utilities          v1r4     Tools
 
-use  LoKi               v2r5     Tools  
+use  LoKi               v2r5p1   Tools  
 
 # Physics packages
 use  CommonParticles    v1r5     Phys
