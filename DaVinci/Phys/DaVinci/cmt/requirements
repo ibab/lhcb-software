@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.43 2002-10-21 21:37:27 gcorti Exp $
+# $Id: requirements,v 1.44 2002-10-23 17:04:46 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -89,6 +89,7 @@ use  VeloAssociators    v1r2    Velo
 use  CaloAssociators    v3r0    Calo
 use  CaloRec   		v2r3    Calo
 use  MuonAssociators    v1r0    Muon
+use  TrFitEvent         v3r0    Tr
 use  TrAssociators      v3r1    Tr
 use  L0Calo		v6r1	L0
 use  L1VeloTrack 	v3r0	L1
