@@ -1,4 +1,4 @@
-// $Id: FlavourTag.cpp,v 1.1 2002-05-23 23:03:19 gcorti Exp $
+// $Id: FlavourTag.cpp,v 1.2 2002-11-27 14:27:22 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -14,6 +14,39 @@
 //
 // 2002-05-22 : Gloria Corti: necessary for return type of enum 
 //-----------------------------------------------------------------------------
+
+//=============================================================================
+// Copy constructor
+//=============================================================================
+FlavourTag::FlavourTag(const FlavourTag& tag)
+  : KeyedObject<int>()
+  , m_decision(tag.decision()), m_type(tag.type())
+  , m_taggedB(tag.taggedB()), m_tagger(tag.tagger())
+{
+}
+
+//=============================================================================
+// Clone 
+//=============================================================================
+FlavourTag* FlavourTag::clone() const
+{
+  return new FlavourTag(*this);
+}
+
+//=============================================================================
+// Assignment operator
+//=============================================================================
+FlavourTag &FlavourTag::operator=(const FlavourTag& orig) {
+  
+  // protect against self assignement
+  if( this != &orig ) {
+    m_taggedB = orig.taggedB();
+    m_tagger = orig.tagger();
+    m_type = orig.type();
+    m_decision = orig.decision();
+  }
+  return *this;
+}
 
 //=============================================================================
 // Retrieve The result of the tagging algorithm

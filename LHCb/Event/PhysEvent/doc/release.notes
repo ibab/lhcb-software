@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.29 2002-10-03 12:52:07 gcorti Exp $
+! $Id: release.notes,v 1.30 2002-11-27 14:27:22 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!========================= PhysEvent v7r1 2002-11-27 ========================
+! 2002-11-27 - Gloria Corti
+ - Introduce copy constructor, clone method and assignment operator in
+   FlavourTag where in all cases original values are kept but keyed object
+   part is not propagated.
 
 !========================= PhysEvent v7r0 2002-10-03 ========================
 ! 2002-10-03 - Gloria Corti

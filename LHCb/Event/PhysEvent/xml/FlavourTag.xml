@@ -35,6 +35,24 @@
         access="PUBLIC"
         />
 
+       <constructor
+        argList="FlavourTag tag"
+        desc="Copy constructor"
+       />          
+       <method
+        name="clone"
+        desc="Clone FlavourTag"
+        type="FlavourTag *"
+        const="TRUE"
+       />
+       <method
+        desc="Assignment operator"
+        name="operator="
+        type="FlavourTag &amp;"
+       >
+         <arg name="orig" type="FlavourTag" const='TRUE'/>
+       </method>
+
       <relation
         name="taggedB"
         multiplicity="1"
