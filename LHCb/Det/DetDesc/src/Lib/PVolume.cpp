@@ -1,8 +1,11 @@
-// $Id: PVolume.cpp,v 1.11 2001-11-18 15:32:45 ibelyaev Exp $ 
+// $Id: PVolume.cpp,v 1.12 2002-04-24 12:41:27 mato Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.10  2001/08/25 16:57:43  ibelyaev
 // PVolume: bug fix for uninitialized pointer
 //
@@ -13,6 +16,13 @@
 // update in interfaces and redesign of solids
 // 
 // ===========================================================================
+/// GaudiKernel includes 
+#include "GaudiKernel/IInspector.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/SmartDataPtr.h" 
+#include "GaudiKernel/StreamBuffer.h"
 /// STD & STL includes 
 #include <cassert>
 #include <iostream>
@@ -21,13 +31,6 @@
 /// CLHEP includes 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-/// GaudiKernel includes 
-#include "GaudiKernel/IInspector.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
 /// local includes 

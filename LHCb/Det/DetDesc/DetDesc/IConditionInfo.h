@@ -1,10 +1,16 @@
-//$Id: IConditionInfo.h,v 1.1 2001-12-13 19:20:29 andreav Exp $
+//$Id: IConditionInfo.h,v 1.2 2002-04-24 12:41:26 mato Exp $
 #ifndef DETDESC_ICONDITIONINFO_H
 #define DETDESC_ICONDITIONINFO_H 1
 
+#include "GaudiKernel/IInterface.h"
 // Forward declarations
 class IDetectorElement;
 class Condition;
+
+/** the unique interface identifier 
+ * ( unique interface identifier , major & minor versions)
+ */
+static const InterfaceID IID_IConditionInfo( "IConditionInfo" , 1 , 0 );
 
 ///---------------------------------------------------------------------------
 /** @class IConditionInfo IConditionInfo.h Det/DetDesc/IConditionInfo.h
@@ -16,10 +22,14 @@ class Condition;
     @date December 2001
 *///--------------------------------------------------------------------------
 
-class IConditionInfo
+class IConditionInfo : virtual public  IInterface
 {
 
  public:
+  /** retrieve the uniqie interface identifier 
+   *  @return the unique interface identifier 
+   */
+  static const InterfaceID& interfaceID() { return IID_IConditionInfo; }
   
   /// Get a pointer to the detector element to which the ConditionInfo belongs
   virtual IDetectorElement* detElem() const = 0 ;

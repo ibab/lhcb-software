@@ -1,4 +1,4 @@
-//$Id: ConditionInfo.h,v 1.1 2001-12-13 19:19:15 andreav Exp $
+//$Id: ConditionInfo.h,v 1.2 2002-04-24 12:41:27 mato Exp $
 #ifndef DETDESC_CONDITIONINFO_H
 #define DETDESC_CONDITIONINFO_H 1
 
@@ -49,6 +49,16 @@ class ConditionInfo : virtual public IConditionInfo
   /// Get a pointer to the associated condition
   virtual Condition* condition();
 
+  // Implementation of the IInterface interface
+
+  /// query interface
+    StatusCode queryInterface( const InterfaceID& ID , void** ppI ) ;
+  /// add reference
+  unsigned long addRef();
+  /// release 
+  unsigned long release();
+
+
  private:
 
   /// Pointer to the detector element to which the ConditionInfo belongs
@@ -60,6 +70,8 @@ class ConditionInfo : virtual public IConditionInfo
   /// Pointer to the associated condition (loaded on demand only)
   Condition* m_condition;
 
+  /// reference count
+  unsigned long m_count;
 };
 
 #endif // DETDESC_CONDITIONINFO_H

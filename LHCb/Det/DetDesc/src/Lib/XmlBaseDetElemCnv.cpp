@@ -1,11 +1,6 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.14 2002-01-18 09:26:55 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.15 2002-04-24 12:41:27 mato Exp $
 
 // include files
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cctype>
 
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -16,6 +11,12 @@
 #include "DetDesc/XmlCnvException.h"
 #include "DetDesc/XmlBaseDetElemCnv.h"
 #include "DetDesc/IXmlSvc.h"
+
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cctype>
 
 class ISvcLocator;
 

@@ -1,11 +1,12 @@
-//$Id: UserParameterSet.h,v 1.2 2001-12-13 18:58:45 andreav Exp $
+//$Id: UserParameterSet.h,v 1.3 2002-04-24 12:41:26 mato Exp $
 #ifndef DETDESC_USERPARAMETERSET_H 
 #define DETDESC_USERPARAMETERSET_H 1
 
-#include <map>
 
 // Base class
 #include "DetDesc/IUserParameterSet.h"
+// STL
+#include <map>
 
 ///---------------------------------------------------------------------------
 /** @class UserParameterSet UserParameterSet.h Det/DetDesc/UserParameterSet.h

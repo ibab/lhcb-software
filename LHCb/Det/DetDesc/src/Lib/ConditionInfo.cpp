@@ -1,4 +1,4 @@
-//$Id: ConditionInfo.cpp,v 1.1 2001-12-13 19:19:15 andreav Exp $
+//$Id: ConditionInfo.cpp,v 1.2 2002-04-24 12:41:27 mato Exp $
 
 #include "ConditionInfo.h"
 
@@ -58,4 +58,26 @@ Condition* ConditionInfo::condition() {
 };
 
 //----------------------------------------------------------------------------
+
+StatusCode ConditionInfo::queryInterface( const InterfaceID& ID , void** ppI ) 
+{
+  if ( 0 == ppI ) { return StatusCode::FAILURE; }
+  *ppI = 0 ;
+  if      ( IConditionInfo::interfaceID()  == ID ) 
+    { *ppI = static_cast<IConditionInfo*> ( this ) ; } 
+  else if ( IInterface:: interfaceID()    == ID ) 
+    { *ppI = static_cast<IInterface*>    ( this ) ; } 
+  else                                                  
+    { return StatusCode::FAILURE                  ; }
+  /// add the reference 
+  addRef();
+  ///
+  return StatusCode::SUCCESS; 
+};
+
+/// add reference
+unsigned long ConditionInfo::addRef () { return ++m_count ; }
+/// release 
+unsigned long ConditionInfo::release() { return  0 < m_count ? --m_count : 0 ;}
+
 

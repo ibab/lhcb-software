@@ -1,17 +1,17 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.5 2002-01-22 09:52:31 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.6 2002-04-24 12:41:27 mato Exp $
 
 // include files
-#include <string>
-#include <vector>
-
-#include <dom/DOM_NodeList.hpp>
-
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/MsgStream.h"
+
+#include <dom/DOM_NodeList.hpp>
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/XmlBaseConditionCnv.h"
 #include "DetDesc/IXmlSvc.h"
+
+#include <string>
+#include <vector>
 
 class ISvcLocator;
 

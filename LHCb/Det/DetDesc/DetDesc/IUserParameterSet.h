@@ -1,7 +1,8 @@
-//$Id: IUserParameterSet.h,v 1.2 2001-12-13 18:58:50 andreav Exp $
+//$Id: IUserParameterSet.h,v 1.3 2002-04-24 12:41:26 mato Exp $
 #ifndef  DETDESC_IUSERPARAMETERSET_H 
 #define  DETDESC_IUSERPARAMETERSET_H 1
 
+#include "GaudiKernel/Kernel.h"
 #include <string>
 #include <vector>
 

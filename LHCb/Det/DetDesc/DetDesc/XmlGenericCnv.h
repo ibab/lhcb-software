@@ -1,15 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.6 2001-12-11 10:02:21 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlGenericCnv.h,v 1.7 2002-04-24 12:41:26 mato Exp $
 
 #ifndef DETDESC_XMLGENERICCNV_H
 #define DETDESC_XMLGENERICCNV_H
 
 // Include files
+#include "GaudiKernel/Converter.h"
 #include <string>
 
 #include <dom/DOM_Element.hpp>
 #include <dom/DOM_Text.hpp>
 
-#include "GaudiKernel/Converter.h"
 
 // Forward and external declarations
 class ISvcLocator;

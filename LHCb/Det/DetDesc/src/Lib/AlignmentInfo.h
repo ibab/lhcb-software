@@ -1,4 +1,4 @@
-//$Id: AlignmentInfo.h,v 1.1 2001-12-13 19:19:14 andreav Exp $
+//$Id: AlignmentInfo.h,v 1.2 2002-04-24 12:41:26 mato Exp $
 #ifndef DETDESC_ALIGNMENTINFO_H
 #define DETDESC_ALIGNMENTINFO_H 1
 
@@ -18,7 +18,7 @@
     @date December 2001
 *///--------------------------------------------------------------------------
 
-class AlignmentInfo : virtual public ConditionInfo,
+class AlignmentInfo : public ConditionInfo,
                       virtual public IAlignment
 {
 

@@ -1,10 +1,13 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.81 2002-04-24 10:52:35 ibelyaev Exp $ 
+! $Id: release.notes,v 1.82 2002-04-24 12:41:26 mato Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! 20020424 Pere Mato
+  - Removed warnings in Windows (added base class IInterface in IConditionInfo)
 
 ! =============================================================================
 ! 20020424 Vanya Belyaev 

@@ -1,4 +1,4 @@
-//$Id: CalibrationInfo.h,v 1.1 2001-12-13 19:19:15 andreav Exp $
+//$Id: CalibrationInfo.h,v 1.2 2002-04-24 12:41:26 mato Exp $
 #ifndef DETDESC_CALIBRATIONINFO_H
 #define DETDESC_CALIBRATIONINFO_H 1
 
@@ -10,15 +10,14 @@
 
 ///---------------------------------------------------------------------------
 /** @class CalibrationInfo CalibrationInfo.h Det/DetDesc/CalibrationInfo.h
-
-    The simplest implementation of the ICalibration abstract interface,
+   The simplest implementation of the ICalibration abstract interface,
     derived from the generic class ConditionInfo.
 
     @author Andrea Valassi 
     @date December 2001
 *///--------------------------------------------------------------------------
 
-class CalibrationInfo: virtual public ConditionInfo,
+class CalibrationInfo: public ConditionInfo,
                        virtual public ICalibration
 {
 
