@@ -1,0 +1,36 @@
+// $Id: CaloSensDet.opts,v 1.1 2002-12-07 14:47:29 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  The configuration file for instances of CaloSensDet class 
+ *  @see CaloSensDet 
+ *  @author Vanya Belyaev 
+ *  @date   2002-12-05
+ */
+// ============================================================================
+
+GiGaGeo.Ecal.StartVolumes = 
+{
+  "/dd/Geometry/Ecal/Modules/InnCentSubCellSc"  ,
+  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      
+  //"/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
+  //"/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
+  //"/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
+  //"/dd/Geometry/Ecal/Modules/OutSubCellSc" 
+};
+
+GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
+GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
+GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
+
+GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
+GiGaGeo.Ecal.OutputLevel = 1 ;
+
+// ============================================================================
+// The END 
+// ============================================================================

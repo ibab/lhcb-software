@@ -1,5 +1,5 @@
 package Gauss
-version v6r0
+version v7r0
 
 # =============================================================================
 # structure 
@@ -34,9 +34,10 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v9r*    Sim
-use GaussTools          v3r*    Sim
-#use GaussImports        v2r*    Sim 
+use GiGaCnv             v10r*   Sim
+use GaussTools          v4r*    Sim
+use GaussImports        v4r*    Sim 
+use CaloDetXmlCnv       v2r*    Det 
 
 # generator
 use GeneratorModules    v4r*    Gen

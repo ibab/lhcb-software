@@ -1,139 +1,133 @@
-// $Id: Simulation.opts,v 1.21 2002-11-13 16:50:17 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.22 2002-12-07 14:47:29 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 
+/** @file 
+ *  The main job-option file for configuration of 
+ *  different component for simulation phase of Gauss
+ */
+
 ApplicationMgr.DLLs += 
-{ "GiGa"         , 
-  "GiGaCnv"      , 
-  "GaussTools"   ,
-  "Magnet"        } ;
+{ "GiGa"          , 
+  "GiGaCnv"       , 
+  "GaussTools"    ,
+  "Magnet"        , 
+  "CaloDetXmlCnv" } ;
 
 ApplicationMgr.ExtSvc += 
-{ "GiGaSvc"         ,          
-  "GiGaKineCnvSvc"  ,  
-  "GiGaGeomCnvSvc"  ,   
-  "GiGaHitsCnvSvc"  } ;
+{ 
+  "GiGa"         ,    /// interface to Geant4 engine 
+  "GiGaKine"     ,    /// conversion service for HepMC, particles & vertices 
+  "GiGaGeo"      ,   
+  "GiGaHits"     }; 
 
 EventPersistencySvc.CnvServices += 
-{ "GiGaKineCnvSvc" ,  
-  "GiGaHitsCnvSvc" } ;
+{ "GiGaKine" , "GiGaHits" } ;
 
 Simulation.Members += 
-{	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
-  "GiGaInputStream/Geo"              ,   // load the geometry 
-  "GiGaInputStream/Kine"             ,   // load the kinematics 
-//  "GiGaFlushAlgorithm/GiGaFlush"     }; //,   // flush the event 
-  "GiGaMiscGetEventAlg/GetEvent"     ,   // convert MCParticles/MCVertices
-  "GetGiGaHitsAlg/GetHits"           };  // convert MCHits
+{	"GiGaDataStoreAlgorithm/GiGaStore" ,  /// Gaudi TES configuration/mapping
+  "GiGaInputStream/Geo"              ,  /// Load the geometry 
+  "GiGaInputStream/Kine"             ,  /// Load the kinematics 
+  "GiGaFlushAlgorithm/GiGaFlush"        /// Flush the event 
+  //"GiGaMiscGetEventAlg/GetEvent"     ,  /// convert MCParticles/MCVertices
+  //"GetGiGaHitsAlg/GetHits"           
+}; /// convert MCHits
 
-// configuration of GiGa Data Store 
-GiGaStore.ConversionServices   = 
-{ "GiGaKineCnvSvc" , 
-  "GiGaHitsCnvSvc" };
+/// configuration of kinematics event "Kine" data stream 
+Kine.ConversionSvcName      = "GiGaKine"     ; 
+Kine.DataProviderSvcName    = "EventDataSvc" ; 
+Kine.StreamItems           += 
+{  "/Event/Gen/HepMCEvents"     /*, "/Event/Gen/Vertices" */ };
 
-// configuration of kinematics event "Kine" data stream 
-Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
-Kine.DataProviderSvcName       = "EventDataSvc"   ; 
-Kine.StreamItems              += 
-{  "/Event/Gen/HepMCEvents" 
-// uncomment the line below if you want to use EvGen
-//  ,"/Event/Gen/Vertices"   
-};
-
-// configuration of geometry "Geo" data stream
-
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
- 
-Geo.ExecuteOnce          = true ;  
-Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
-Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
+/// configuration of geometry "Geo" data stream
+Geo.ExecuteOnce             = true ;  
+Geo.ConversionSvcName       = "GiGaGeo"         ; 
+Geo.DataProviderSvcName     = "DetectorDataSvc" ; 
 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 //Geo.StreamItems         += { "/dd/Structure/LHCb/Velo2Rich1"};
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
-Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+//Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
+//Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
+
 
 // Physics List  to be used and its configuration  
-GiGaSvc.PhysicsList            = "GiGaPhysListModular/ModularPL";
-GiGaSvc.ModularPL.Cut           = 0.7;
+GiGa.PhysicsList           = "GiGaPhysListModular/ModularPL";
+GiGa.ModularPL.Cut         = 0.7;
 
-GiGaSvc.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"EM_GNPhysics"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"MuonPhysics"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP_GN"};
-GiGaSvc.ModularPL.PhysicsConstructors += {"IonPhysics"};
+GiGa.ModularPL.PhysicsConstructors += { "GeneralPhysics"        } ;
+GiGa.ModularPL.PhysicsConstructors += { "EM_GNPhysics"          } ;
+GiGa.ModularPL.PhysicsConstructors += { "MuonPhysics"           } ;
+GiGa.ModularPL.PhysicsConstructors += { "HadronPhysicsLHEP_GN"  } ;
+GiGa.ModularPL.PhysicsConstructors += { "IonPhysics"            } ;
 //GiGaSvc.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
 
-// Stacking action to be used and its configuration  
-GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
+/// Stacking action to be used and its configuration  
+GiGa.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
 
-// Tracking action to be used and its configuration  
-GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
-GiGaSvc.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
+/// Tracking action to be used and its configuration  
+GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
+GiGa.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
 
-GiGaSvc.SimpleTrack.StoreAll  = false; 
-GiGaSvc.SimpleTrack.StorePrimaries = true;
-GiGaSvc.SimpleTrack.StoreMarkedTracks = false;
-GiGaSvc.SimpleTrack.StoreHitTracks = false; 
-GiGaSvc.SimpleTrack.StoreByOwnEnergy   = true; 
-GiGaSvc.SimpleTrack.OwnEnergyThreshold = 1000.0     ;        
-// GiGaSvc.SimpleTrack.StoreByChildEnergy   = true ; 
-// GiGaSvc.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
-// GiGaSvc.SimpleTrack.StoreByOwnType       = true; 
-// GiGaSvc.SimpleTrack.StoredOwnTypes       = { "e+" , "e-" };
-// GiGaSvc.SimpleTrack.StoreByChildType     = true; 
-// GiGaSvc.SimpleTrack.StoredChildTypes     = { "e+"};
+GiGa.TrackSeq.SimpleTrack.StoreAll           = false    ; 
+GiGa.TrackSeq.SimpleTrack.StorePrimaries     = true     ;
+GiGa.TrackSeq.SimpleTrack.StoreMarkedTracks  = false    ;
+GiGa.TrackSeq.SimpleTrack.StoreHitTracks     = false    ; 
+GiGa.TrackSeq.SimpleTrack.StoreByOwnEnergy   = true     ; 
+GiGa.TrackSeq.SimpleTrack.OwnEnergyThreshold = 1 * GeV  ;        
+// GiGa.TrackSeq.SimpleTrack.StoreByChildEnergy   = true ; 
+// GiGa.TrackSeq.SimpleTrack.ChildEnergyThreshold = 50.0 ; 
+// GiGa.TrackSeq.SimpleTrack.StoreByOwnType       = true; 
+// GiGa.TrackSeq.SimpleTrack.StoredOwnTypes       = { "e+" , "e-" };
+// GiGa.TrackSeq.SimpleTrack.StoreByChildType     = true; 
+// GiGa.TrackSeq.SimpleTrack.StoredChildTypes     = { "e+"};
 
-// Stepping action to be used and its configuration  
-GiGaSvc.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
-GiGaSvc.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
+/// Stepping action to be used and its configuration  
+GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
+GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
-// Event action to be used and its configuration  
-GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
+/// Event action to be used and its configuration  
+GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 
-// Run Action to be used and its configurations  
-GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
-GiGaSvc.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
-GiGaSvc.RunCommand.BeginOfRunCommands     = 
-{ "/control/saveHistory "           ,
-  "/run/verbose 0 "               ,
-  "/vis/verbose -10 "               ,
+/// Run Action to be used and its configurations  
+GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
+GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
+GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
+{ "/control/saveHistory "          ,
+  "/run/verbose 0 "                ,
   "/tracking/verbose 0"            ,
-  "/tracking/storeTrajectory  1"    } ;
+  "/tracking/storeTrajectory  1"   } ;
 
-// List of user interface sessions (with priorities)
+/// "Global Magnetifc field" (using Magnetic Field Service)
+GiGaGeo.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+GiGaGeo.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 
-// GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw" , "terminal" } ;
+/// Interactive session?
+// GiGa.UIsession  =  "GiGaUIsession/UIsession" ;
 
-//   "Global Magnetifc field" (usisng Magnetic Field Service)
-GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
-//   "Uniform Magnetifc field" 
-//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
-//GiGaGeomCnvSvc.UniformField.Bx          = 0.5     ; 
-//GiGaGeomCnvSvc.UniformField.By          = 0.5  ; 
-//GiGaGeomCnvSvc.UniformField.Bz          = 0.5     ; 
-// GiGaGeomCnvSvc.UniformField.OutputLevel = 1      ;
+/// Visualization?
+// GiGa.VisManager =  "GiGaVisManager/VisMgr"   ;
 
-// Material of the World Volume
-// GiGaGeomCnvSvc.WorldMaterial = "/dd/Materials/Vacuum";
+/// sensdet paths
+GiGaGeo.ITSDet.DetectorPath   = "/Tracker/IT";
+GiGaGeo.VeloSDet.DetectorPath = "/Velo";
+GiGaGeo.OTSDet.DetectorPath   = "/Tracker/OT";
 
-// Material Budget  
+/// specific configuration of calorimeter stuff 
+#include "$GAUSSOPTS/Calo.opts"
 
-// GiGaGeomCnvSvc.GlobalSensitivity  = "GiGaSensDetBudget/Budget" ;
-// GiGaGeomCnvSvc.Budget.OutputLevel = 1 ;
-
-// sensdet paths
-GiGaGeomCnvSvc.ITSDet.DetectorPath = "/Tracker/IT";
-GiGaGeomCnvsvc.VeloSDet.DetectorPath = "/Velo";
-GiGaGeomCnvSvc.OTSDet.DetectorPath= "/Tracker/OT";
-
+// ============================================================================
+// The END 
+// ============================================================================

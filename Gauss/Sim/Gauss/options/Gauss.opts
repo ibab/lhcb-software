@@ -1,4 +1,6 @@
-// $Id: Gauss.opts,v 1.17 2002-11-13 16:50:16 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.18 2002-12-07 14:47:29 ibelyaev Exp $ 
+
+#units "$STDOPTS/units.opts"
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -7,7 +9,7 @@ ApplicationMgr.ExtSvc            =
   "EventSelector"       };
 EventPersistencySvc.CnvServices  = {};  
 
-ApplicationMgr.DLLs = { "GaudiAud"};
+ApplicationMgr.DLLs  = { "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg"} ;
 
 ApplicationMgr.HistogramPersistency = "NONE";
@@ -24,13 +26,14 @@ MagneticFieldSvc.FieldMapFile =
 "/afs/cern.ch/lhcb/software/NEW/SICB/dbase/v248r2/cdf/field044.cdf";
 
 ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
 { "Sequencer/Generator"    , 
   "Sequencer/Simulation"   ,
   "Sequencer/Digitisation" 
-} ;
+};
 
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
@@ -44,17 +47,15 @@ ApplicationMgr.TopAlg          =
 
 // General global options  
 MessageSvc.OutputLevel    = 3 ;
-//GiGaSvc.OutputLevel = 2 ;
-GiGaSvc.EmptyStack.OutputLevel = 2 ;
-//EventDraw.OutputLevel = 1 ;
-GiGaGeomCnvSvc.OutputLevel = 3;
+// skip some messages from Xml 
+MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 10;
+ApplicationMgr.EvtMax     = 2 ;
 
 
-
-
+// Modify Message Format to print algorithm name with 40 characters
+// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 
 
