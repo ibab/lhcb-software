@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r2 2004-02-05 ==========================
 ! 2004-02-05 - Olivier Callot
  - New method 'notFound()' in LinkedTo and LinkedFrom to indicate if the 
    LinksByKey object was found or not.
