@@ -20,6 +20,9 @@ use GiGaCnv     	v8r0    Sim
 # Gauss stuff...
 use GaussTools		v2r0	Sim
 
+# Detector stuff...
+use VeloAlgorithms 	v2r3p1	Velo
+
 # OPACS stuff
 use OPACSLIB		v3	Vis
 
