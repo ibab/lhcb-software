@@ -4,12 +4,13 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v2r1 2005-02-15 ===================
+!========================== HltSelChecker v2r2 2005-03-03 ===================
 ! 2005-02-23 - P. Koppenburg
   - src/DecayChainNTuple.cpp
     . std::map<int, HandleNTuple*>::data_type is not understood by windows. 
       It's the same as "HandleNTuple*", no?
 
+!========================== HltSelChecker v2r1 2005-02-15 ===================
 ! 2005-02-11- P. Koppenburg
   - options/Plots.opts
     . Plot detachd pions
