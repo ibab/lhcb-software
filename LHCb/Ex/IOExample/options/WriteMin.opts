@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------------
 ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.HistogramPersistency = "NONE";
-ApplicationMgr.EvtMax      = 100;
+ApplicationMgr.EvtMax   = 100;
 EventSelector.PrintFreq = 1;
 
 // Job options to set up the POOL persistency for the output file
@@ -17,7 +17,7 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // Updates the local POOL catalog with the created file
-PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:MyCatalog.xml";
 
 //--------------------------------------------------------------
 // Persistency service setup: 
@@ -27,6 +27,6 @@ EventDataSvc.ForceLeaves = 1;
 
 PoolDbCacheSvc.OutputLevel = 3;
 
-#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
-//#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
+//#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
+#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
 //#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM

@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.3 2003-12-18 15:33:43 cattanem Exp $
+// $Id: ReadMin.opts,v 1.4 2004-01-16 09:04:49 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -12,7 +12,7 @@ ApplicationMgr.EvtMax      = 5;
 // Job options to set up the POOL persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
-// Job options for the old Root/IO persistency. Needed for DST and OODIGI example
+// Job options for the old Root/IO persistency. Needed for DST and DIGI example
 // They enable navigation to event objects not on the POOL file 
 #include "$STDOPTS/RootDb.opts"
 
@@ -21,8 +21,9 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 #include "$ASSOCIATORSSYSROOT/options/DLLs.opts" // Relations factories
 
-// The catalog is only needed if the POOL file refers to other POOL files
-// PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+// The input catalog describes the input file.
+// In this example it is the catalog produced by WriteMin.opts
+PoolDbCacheSvc.InputCatalog = "xmlcatalog_file:MyCatalog.xml";
 
 StoreExplorer.PrintFreq = 1.;
 StoreExplorer.ExploreRelations = 1;
@@ -30,6 +31,6 @@ StoreExplorer.ExploreRelations = 1;
 // Brunel file
 //EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
 // Boole file
-//EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOT' OPT='READ'" };
+EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOT' OPT='READ'" };
 // Gauss file
-EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};
+//EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};
