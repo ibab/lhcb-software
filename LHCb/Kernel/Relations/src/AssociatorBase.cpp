@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.4 2004-12-08 17:46:22 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.5 2005-02-16 17:00:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/12/08 17:46:22  ibelyaev
+//  Win adaptation: VisualC++ 6.0 -> VisualC++ 7.1
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -108,7 +111,7 @@ StatusCode Relations::AssociatorBase::initialize ()
   incSvc()->addListener( this , IncidentType::EndEvent , 50  );
   
   // NEW: issue the warning about the algorihtms 
-  if ( !m_builderName.empty() || m_builderType.empty() ) 
+  if ( !m_builderName.empty() || !m_builderType.empty() ) 
   {
     std::string msg = 
       "Obsolete properties 'AlgorithmName' and 'AlgorithmType'." ;
