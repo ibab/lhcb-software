@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2003-05-01 17:57:32 gcorti Exp $
+! $Id: release.notes,v 1.29 2003-05-15 19:27:02 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,13 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2003-05-15 - Vanya BELYAEV
+ - src/CaloSinglePhotonAlg.cpp 
+ - src/CaloElectronAlg.cpp         
+    in the case of errors in used tools, the cluster/hypo is skipped now 
+    (no error return)   
+ - cmt/requirments                 increase the version 
 
 !====================== CaloReco v1r5 2003-04-30 ==========================
 ! 2003-04-11 - Vanya BELYAEV

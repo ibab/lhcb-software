@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.2 2002-12-09 17:43:09 cattanem Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.3 2003-05-15 19:27:02 ibelyaev Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/09 17:43:09  cattanem
+// bug fixes
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -240,29 +243,31 @@ CaloSinglePhotonAlg::execute()
       // set parameters of newly created hypo 
       hypo->setHypothesis( CaloHypotheses::Photon );      
       hypo->addToClusters( *cluster );
-
+      
       StatusCode sc( StatusCode::SUCCESS );
-
+      
       // loop over all corrections and apply corrections  
       for( Corrections::const_iterator correction = m_corrections.begin() ;
            sc.isSuccess() && m_corrections.end() != correction ; ++correction )
         { sc = (**correction) ( hypo ); }
-
+      
       if( sc.isFailure() ) 
         {
-          delete hypo ;                                // ATTENTION !
-          return Error("Error from Correction Tool " , sc ); 
+          delete hypo ; hypo = 0 ;                        // ATTENTION !
+          Error("Error from Correction Tool, skip the cluster  " , sc ); 
+          continue ;                                      // CONTINUE  !  
         }
       
       // loop over other hypo tools (e.g. add extra digits)
       for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
            sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
         { sc = (**hypotool) ( hypo ); }
-
+      
       if( sc.isFailure() ) 
         {
-          delete hypo ;                                // ATTENTION !
-          return Error("Error from Other Hypo Tool " , sc );
+          delete hypo ; hypo = 0 ;                       // ATTENTION !
+          Error("Error from Other Hypo Tool, skip the cluster  " , sc );
+          continue  ;                                    // ATTENTION ! 
         }
       
       // loop over all corrections and apply corrections  
@@ -272,8 +277,9 @@ CaloSinglePhotonAlg::execute()
       
       if( sc.isFailure() ) 
         {
-          delete hypo ;                                // ATTENTION !
-          return Error("Error from Correction Tool 2 " , sc ); 
+          delete hypo ; hypo = 0 ;                      // ATTENTION !
+          Error("Error from Correction Tool 2 skip the cluster" , sc );  
+          continue ;                                    // CONTINUE  ! 
         }
       
       // loop over other hypo tools (e.g. add extra digits)
@@ -283,12 +289,14 @@ CaloSinglePhotonAlg::execute()
       
       if( sc.isFailure() ) 
         {
-          delete hypo ;                                // ATTENTION !
-          return Error("Error from Other Hypo Tool 2 " , sc );
+          delete hypo ; hypo = 0 ;                      // ATTENTION !
+          Error("Error from Other Hypo Tool 2, skip the cluster" , sc ); 
+          continue ;                                    // CONTINUE !
         }
       
       /// add the hypo into container of hypos 
-      hypos->insert( hypo );
+      if( 0 != hypo ) { hypos->insert( hypo ); }
+      
       
     } // end of the loop over all clusters
   

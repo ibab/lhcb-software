@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.cpp,v 1.2 2002-12-09 17:43:09 cattanem Exp $
+// $Id: CaloElectronAlg.cpp,v 1.3 2003-05-15 19:27:02 ibelyaev Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/09 17:43:09  cattanem
+// bug fixes
+//
 // Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
 // new package 
 //
@@ -293,8 +296,9 @@ CaloElectronAlg::execute()
       
       if( sc.isFailure() ) 
         {
-          delete hypo ;                                // ATTENTION !
-          return Error("Error from Correction Tool " , sc ); 
+          delete hypo ; hypo = 0  ;                            // ATTENTION !
+          Error("Error from Correction Tool, skip the cluster " , sc ); 
+          continue ;                                           // CONTINUE 
         }
       
 
@@ -307,7 +311,8 @@ CaloElectronAlg::execute()
         {
           delete hypo ;                                // ATTENTION !
           hypo   =  0 ;
-          return Error("Error from Other Hypo Tool " , sc );
+          Error("Error from Other Hypo Tool, skip the cluster " , sc );
+          continue    ;                                // CONTINUE  !
         }
       
       // need to have at least 2 "extra" digits (1 Spd & 1 Prs)
@@ -336,7 +341,9 @@ CaloElectronAlg::execute()
       if( sc.isFailure() ) 
         {
           delete hypo ;                                // ATTENTION !
-          return Error("Error from Correction Tool 2 " , sc ); 
+          hypo = 0    ;
+          Error("Error from Correction Tool 2 , skip the cluster " , sc );
+          continue  ;                                  // CONTINUE 
         }
       
       // loop over other hypo tools (e.g. add extra digits)
@@ -347,7 +354,9 @@ CaloElectronAlg::execute()
       if( sc.isFailure() ) 
         {
           delete hypo ;                                // ATTENTION !
-          return Error("Error from Other Hypo Tool 2 " , sc );
+          hypo = 0    ;
+          Error("Error from Other Hypo Tool 2 , skip the cluster " , sc );
+          continue    ;
         }
 
       // set "correct" hypothesis
@@ -357,7 +366,7 @@ CaloElectronAlg::execute()
       /// hypo->position()->setZ( hypo->position()->z() - 200.0 );      
       
       /// add the hypo into container of hypos 
-      hypos->insert( hypo );
+      if( 0 != hypo ) { hypos->insert( hypo ); }
       
     } // end of the loop over all clusters
   
