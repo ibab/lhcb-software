@@ -1,0 +1,22 @@
+!-----------------------------------------------------------------------------
+! Package     : Sim/GaussTools
+! Responsible	: Witold Pokorski
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+!============================ GaussTools v2r0 2002-10-15 =====================
+! 2002-10-15 - Florence Ranjard
+ - doc/release.notes - reformat the release notes
+
+! 2002-10-14 - Witold Pokorski
+  - src/PhysConstructors - bug fix
+
+! 2002-10-11 - Florence Ranjard
+ - requirements - use LHCB_v11r0
+
+!=========================== GaussTools v1r0 2002-08-26 ========================
+! 2002-08026 - Witek Pokorski
+  - New package: contains all the detector specific implementations of sensitive
+                  detectors and converters
+
+!==============================================================================
