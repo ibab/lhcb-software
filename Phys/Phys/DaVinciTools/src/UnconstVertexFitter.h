@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.h,v 1.2 2002-03-28 17:48:46 gcorti Exp $
+// $Id: UnconstVertexFitter.h,v 1.3 2002-05-15 23:23:33 gcorti Exp $
 #ifndef UNCONSTVERTEXFITTER_H
 #define UNCONSTVERTEXFITTER_H 1
 
@@ -22,11 +22,11 @@ class IParticleTransporter;
  *  C++ by D. Hutchcroft
  *
  * @author S. Amato
+ * @date 16/12/2001 
 */
 
 class UnconstVertexFitter : public AlgTool,
                             virtual public IVertexFitter {
-  //  friend class LagrangeMassVertexFitter;
 public:
 
   /// Standard Constructor
@@ -35,17 +35,27 @@ public:
   
   /// Standard Destructor
   virtual ~UnconstVertexFitter() { }
-  
-  /// Actual operator function 
+
+  /// Retrieve the Particle Tranporter Tool.
+  StatusCode initialize();    
+
+  /// Fit the vertex given a vector of Particles as input. 
   StatusCode fitVertex( const ParticleVector& particleList,Vertex& myVertex ); 
-  /// get the first estimative for the z position  
+
+  /// Fit the vertex given two Particles as input. 
+  StatusCode fitVertex( Particle& particle1, Particle& particle2, 
+                        Vertex& myVertex ); 
+
+  /// Fit the vertex given three Particles as input. 
+  StatusCode fitVertex( Particle& particle1, Particle& particle2, 
+                        Particle& particle3, Vertex& myVertex ); 
+
+  /// get the first estimate for the z position  
   double getZEstimate (const ParticleVector& particleList);
   
 
 private:
-  IParticleTransporter* m_pTransporter;  
-  IToolSvc* m_pToolSvc;
-  
+  IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   
 };
 

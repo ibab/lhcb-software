@@ -1,11 +1,11 @@
-// $Id: UnconstVertexFitter.cpp,v 1.2 2002-03-28 17:48:49 gcorti Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.3 2002-05-15 23:23:36 gcorti Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/GaudiException.h"
 
-#include "DaVinciTools/IParticleTransporter.h"
 
 // from Event
 #include "Event/Particle.h"
@@ -19,6 +19,7 @@
 #include "CLHEP/Vector/ThreeVector.h" 
 // local
 #include "UnconstVertexFitter.h"
+#include "DaVinciTools/IParticleTransporter.h"
 
 //--------------------------------------------------------------------
 //
@@ -44,23 +45,65 @@ const IToolFactory& UnconstVertexFitterFactory = s_factory;
 UnconstVertexFitter::UnconstVertexFitter(const std::string& type, 
                                          const std::string& name, 
                                          const IInterface* parent) 
-  : AlgTool( type, name, parent ) {
+  : AlgTool( type, name, parent )
+  , m_pTransporter(0) {
 
   declareInterface<IVertexFitter>(this);
 
-  // This tool needs to use internally the ToolSvc to retrieve the
-  // transporter tool
+
+}
+
+
+
+//==================================================================
+// Initialize
+//==================================================================
+StatusCode UnconstVertexFitter::initialize() {
+  MsgStream log( msgSvc(), name() );
   
-  m_pToolSvc = 0; 
-  StatusCode sc = StatusCode::FAILURE;
-  sc = serviceLocator()->service( "ToolSvc", m_pToolSvc );
-   
+  StatusCode sc = toolSvc()->retrieveTool("ParticleTransporter", 
+                                           m_pTransporter, this);
+  if(sc.isFailure()) {
+    log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
+    return sc;
+  }
+  
+  return StatusCode::SUCCESS;
 
 }
 
 //==================================================================
-// 
-// 
+// Perform vertex fit between two particles
+//==================================================================
+StatusCode UnconstVertexFitter::fitVertex( Particle& particle1,
+                                           Particle& particle2,
+                                           Vertex& myVertex ) {
+  ParticleVector pList;
+  pList.push_back(&particle1);
+  pList.push_back(&particle2);
+  
+  return fitVertex(pList,myVertex);
+
+}
+//==================================================================
+// Perform vertex fit between three particles
+//==================================================================
+StatusCode UnconstVertexFitter::fitVertex( Particle& particle1,
+                                           Particle& particle2,
+                                           Particle& particle3,
+                                           Vertex& myVertex ) {
+  ParticleVector pList;
+  pList.push_back(&particle1);
+  pList.push_back(&particle2);
+  pList.push_back(&particle3);
+  
+  return fitVertex(pList,myVertex);
+
+}
+
+ 
+//==================================================================
+// Perform a fit between a vector of particles 
 //==================================================================
 StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
                                            Vertex& myVertex ) {
@@ -68,18 +111,11 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Hello From Vertex Fitter" << endreq;
   
-  
-  if( 0 ==  m_pToolSvc) {
-    log << MSG::FATAL << "    Unable to locate Tool Service" ;
-    return StatusCode::FAILURE;
-  }
-  StatusCode sc = m_pToolSvc->retrieveTool("ParticleTransporter", 
-                                           m_pTransporter);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
-    return sc;
-  }
-  
+  if (particleList.size() < 2) {
+   log << MSG::INFO << "Particle Vector size is less than 2" << endreq;   
+   return StatusCode::FAILURE;
+  } 
+    
   // NOTE use of 1..n style indexing in () type brackets.
   
   // get zestimate (The formula is in the LHC-B/TN/95-01
@@ -98,21 +134,24 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   for(iterP = particleList.begin(); iterP != particleList.end(); iterP++) {
     
     // transport particle to zEstimate 
-    HepPoint3D newPoint;
-    HepSymMatrix newpointErr(3, 0.0);
-    HepSymMatrix newSlpMomCorrErr(3, 0.0);
-    HepMatrix newPointSlpMomCorrErr(3, 3, 0.0);
-    StatusCode sctrans = m_pTransporter->transport(iterP, 
+
+    Particle transParticle;
+    StatusCode sctrans = m_pTransporter->transport(iterP,
                                                    zEstimate,
-                                                   newPoint,
-                                                   newpointErr,
-                                                   newSlpMomCorrErr,
-                                                   newPointSlpMomCorrErr);
+                                                   transParticle);
+
     if ( !sctrans.isSuccess() ) {
-      log << MSG::WARNING << "Track extrapolation failed" << endreq;
+      log << MSG::DEBUG << "Track extrapolation failed" << endreq;
       return sctrans;
     }
     
+    HepPoint3D newPoint =transParticle.pointOnTrack();
+    HepSymMatrix newpointErr = transParticle.pointOnTrackErr();
+    HepSymMatrix newSlpMomCorrErr = transParticle.slopesMomErr();
+    HepMatrix newPointSlpMomCorrErr = transParticle.posSlopesCorr();
+    
+
+
     // Get the track covariance matrix
     cov(1,1)=newpointErr(1,1); 
     cov(1,2)=newpointErr(1,2);
@@ -202,10 +241,20 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   //    }
   //  }
   
+  int inv;
+  HepSymMatrix errMat = hessian.inverse(inv)/2;
+  if (inv != 0) {
+    log << MSG::DEBUG << "Could not invert hessian matrix" << endreq;
+    return StatusCode::FAILURE; 
+  }
+
   myVertex.setPosition(HepPoint3D(vertex(1),vertex(2),vertex(3)));
   myVertex.setChi2(vertexChi2);
-  myVertex.setPositionErr(hessian);
-  myVertex.setNDoF(3);
+  myVertex.setPositionErr(errMat);
+
+  int ndof = (2*particleList.size())-3;
+  myVertex.setNDoF(ndof);
+
   myVertex.setType(Vertex::Decay);  
   for(iterP = particleList.begin(); iterP != particleList.end(); iterP++) {
     myVertex.addToProducts(*iterP);
@@ -218,6 +267,8 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& particleList,
   return StatusCode::SUCCESS;
   
 }
+//=======================================================================
+// First estimate of z position of vertex
 //=======================================================================
 double UnconstVertexFitter::getZEstimate( const ParticleVector& particleList) {
 
