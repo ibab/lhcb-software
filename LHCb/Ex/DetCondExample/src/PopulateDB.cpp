@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.9 2004-12-08 18:50:51 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.10 2005-02-09 09:06:25 marcocle Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -224,6 +224,24 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       ( rootName+"/Geometry",
 	folderAttributes,
 	"Main Geometry folderSet",
+	true );
+
+    condDBFolderMgr->createCondDBFolderSet
+      ( rootName+"/Geometry2",
+	folderAttributes,
+	"Test Geometry folderSet",
+	true );
+    
+    condDBFolderMgr->createCondDBFolderSet
+      ( rootName+"/Alignment",
+	folderAttributes,
+	"Main Alignment folderSet",
+	true );
+    
+    condDBFolderMgr->createCondDBFolderSet
+      ( rootName+"/Alignment/Ecal",
+	folderAttributes,
+	"Ecal Alignment folderSet",
 	true ); 
 
     // Encode description for CondDBFolders with XML data
@@ -269,6 +287,25 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 	folderAttributes,
 	description,
 	true );
+
+    condDBFolderMgr->createCondDBFolder
+      ( rootName+"/Geometry2/LHCb",
+        folderAttributes,
+        description,
+        true );
+
+    condDBFolderMgr->createCondDBFolder
+      ( rootName+"/Geometry2/lvLHCb",
+        folderAttributes,
+        description,
+        true );
+
+    condDBFolderMgr->createCondDBFolder
+      ( rootName+"/Alignment/Ecal/alEcal", 
+        folderAttributes,
+        description,
+        true );
+
 
     // It is not necessary to commit transactions one by one (as of v.0.1.9.0)
     condDBMgr->commit();    
@@ -430,7 +467,58 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     condDBTagMgr->tag(rootName+"/SlowControl/LHCb/scLHCb","PRODUCTION","COLD");
     condDBTagMgr->tag(rootName+"/SlowControl/Hcal/scHcal","PRODUCTION","HOT");
     condDBTagMgr->tag(rootName+"/Geometry/LHCb","PRODUCTION");
-    condDBMgr->commit();    
+    condDBMgr->commit();
+
+    // populate $root/Alignment/Ecal/alEcal folder for testing with XmlTestAlg
+    condDBMgr->startUpdate();
+
+    double ecalpos[3][3] = { { 0,0,0 }, { 0,1,0 }, { 0,0,2 } };    
+    double fallbackpos[3] = {-1.,-1.,-1.};
+    
+    for ( i=-1; i<3; i++ ) {
+      std::string s;
+      ICondDBObject* condObject;
+      // alEcal
+      if (i>=0){
+        i_encodeXmlParamVector( ecalpos[i], "alEcal","Ecal position", s);
+        condObject = createCondDBObject
+          ( i*16, (i+1)*16, s, "");
+      } else {
+        i_encodeXmlParamVector( fallbackpos, "alEcal","Ecal position", s);
+        condObject = createCondDBObject
+          ( 0, CondDBplusInf, s, "");
+      }
+      
+      
+        condDBDataAccess->storeCondDBObject
+        ( rootName+"/Alignment/Ecal/alEcal", condObject );
+      destroyCondDBObject(condObject);
+    }
+
+    std::string s;
+    ICondDBObject* condObject;
+    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
+    s += "<DDDB><catalog name=\"LHCb\"><logvolref href=\"conddb:";
+    s += rootName;
+    s += "/Geometry2/lvLHCb#lvLHCb\"/></catalog></DDDB>";
+    condObject = createCondDBObject( 0, CondDBplusInf, s, "");
+    condDBDataAccess->storeCondDBObject
+      ( rootName+"/Geometry2/LHCb", condObject );
+    destroyCondDBObject(condObject);
+
+    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
+    s += "<DDDB><logvol material=\"Vacuum\" name=\"lvLHCb\">";
+    s += "<box name=\"caveBox\" sizeX=\"50000*mm\" sizeY=\"50000*mm\" sizeZ=\"50000*mm\"/>";
+    s += "<physvol logvol=\"/dd/Geometry/Ecal/lvEcal\" name=\"EcalSubsystem\">";
+    s += "<posXYZ x=\"0*mm\" y=\"0*mm\" z=\"12907.5*mm\"/></physvol>";
+    s += "<physvol logvol=\"/dd/Geometry/Hcal/lvHcal\" name=\"HcalSubsystem\">";
+    s += "<posXYZ x=\"0*mm\" y=\"0*mm\" z=\"14162.5*mm\"/></physvol></logvol></DDDB>";
+    condObject = createCondDBObject( 0, CondDBplusInf, s, "");
+    condDBDataAccess->storeCondDBObject
+      ( rootName+"/Geometry2/lvLHCb", condObject );
+    destroyCondDBObject(condObject);
+
+    condDBMgr->commit();
 
   } catch (CondDBException &e) {
 
@@ -695,3 +783,28 @@ void PopulateDB::destroyCondDBObject(ICondDBObject* CondObj)
       m_conditionsDBGate->implementation() << "'" << endmsg;
   }
 }
+
+void PopulateDB::i_encodeXmlParamVector( const double pos[3],
+                                           const std::string& objName,
+                                           const std::string& parName,
+                                           std::string& xmlString   ) {
+  MsgStream log(msgSvc(), name());
+  log << MSG::VERBOSE 
+      << "Encoding XML string for name=" << objName 
+      << " and position=" << pos[0] << " " << pos[1] << " " << pos[2] << endreq;
+  std::ostringstream sTemp;
+  sTemp << pos[0] << " " << pos[1] << " " << pos[2];
+  xmlString  = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+  xmlString += "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">\n";
+  xmlString += "<DDDB>\n";
+  xmlString += "  <condition name=\"" + objName + "\">\n";
+  xmlString += "    <paramVector name=\""+ parName +"\" type=\"double\">\n";
+  xmlString += "      " + sTemp.str() + "\n";
+  xmlString += "    </paramVector>\n";
+  xmlString += "  </condition>\n";
+  xmlString += "</DDDB>\n";  
+  log << MSG::VERBOSE << "Encoded XML string is:" << std::endl
+      << xmlString << endreq;
+  return;
+};
+

@@ -1,4 +1,4 @@
-//$Id: PopulateDB.h,v 1.3 2004-12-08 17:32:24 marcocle Exp $
+//$Id: PopulateDB.h,v 1.4 2005-02-09 09:06:25 marcocle Exp $
 #ifndef DETCONDEXAMPLE_POPULATEDB_H
 #define DETCONDEXAMPLE_POPULATEDB_H 1
 
@@ -45,6 +45,12 @@ class PopulateDB : public Algorithm {
   /// Encode XML temperature data
   void i_encodeXmlTemperature( const double temperature,
 			       const std::string& objName,
+			       std::string& xmlString );
+  
+  /// Encode XML paramVector
+  void i_encodeXmlParamVector( const double par[3],
+			       const std::string& objName,
+			       const std::string& parName,
 			       std::string& xmlString );
   
   /// Dump the contents of a CondDBFolder
