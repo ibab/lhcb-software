@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAlg.cpp,v 1.2 2002-06-28 13:46:32 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAlg.cpp,v 1.3 2002-07-02 11:21:13 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonCoord.h"
@@ -56,12 +56,34 @@ StatusCode MuonCoord2MCParticleAlg::initialize() {
 
 StatusCode MuonCoord2MCParticleAlg::execute() {
 
-  // unregister table in store: just in case it already exists
-  // need to remake table after deleting MuonCoords in MuonDSTPrepare 
-  StatusCode sc = eventSvc()->unregisterObject(outputData());
+  // retrieve any existing table from the store
+  DataObject *dObj;
+  StatusCode sc = eventSvc()->findObject(outputData(),dObj);
+  Table* aTable = dynamic_cast<Table*>(dObj);    
+  if(0 == aTable){
+    // Need a new table to add to the store
+    aTable = new Table();
 
-  // create relation table
-  Table * aTable = new Table();
+    // register table in store
+    sc = eventSvc()->registerObject(outputData(), aTable);
+    if( sc.isFailure() ) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::FATAL << "     *** Could not register " << outputData()
+          << endreq;
+      delete aTable;
+      return StatusCode::FAILURE;
+    }
+    
+  }else{
+    // clear the existing table
+    sc = aTable->clear();
+    if(!sc){
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Could not clear existing table " << outputData()
+          << endreq;
+      return sc;
+    }
+  }
 
   // get MuonCoords from TES
   char TESPath[100];
@@ -83,16 +105,6 @@ StatusCode MuonCoord2MCParticleAlg::execute() {
     }
   }
         
-    // register table in store
-  sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::FATAL << "     *** Could not register " << outputData()
-        << endreq;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
-
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: MuonDigit2MCParticleAlg.cpp,v 1.3 2002-06-28 15:21:25 dhcroft Exp $
+// $Id: MuonDigit2MCParticleAlg.cpp,v 1.4 2002-07-02 11:21:13 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonDigit.h"
@@ -50,8 +50,34 @@ StatusCode MuonDigit2MCParticleAlg::initialize() {
 
 StatusCode MuonDigit2MCParticleAlg::execute() {
 
-  // remove any existing table from the store
-  StatusCode sc = eventSvc()->unregisterObject(outputData());
+  // retrieve any existing table from the store
+  DataObject *dObj;
+  StatusCode sc = eventSvc()->findObject(outputData(),dObj);
+  Table* aTable = dynamic_cast<Table*>(dObj);    
+  if(0 == aTable){
+    // Need a new table to add to the store
+    aTable = new Table();
+
+    // register table in store
+    sc = eventSvc()->registerObject(outputData(), aTable);
+    if( sc.isFailure() ) {
+      MsgStream log(msgSvc(), name());
+      log << MSG::FATAL << "     *** Could not register " << outputData()
+          << endreq;
+      delete aTable;
+      return StatusCode::FAILURE;
+    }
+    
+  }else{
+    // clear the existing table
+    sc = aTable->clear();
+    if(!sc){
+      MsgStream log(msgSvc(), name());
+      log << MSG::ERROR << "Could not clear existing table " << outputData()
+          << endreq;
+      return sc;
+    }
+  }
 
   // get MuonDigits
   SmartDataPtr<MuonDigits> digits(eventSvc(),MuonDigitLocation::MuonDigit);
@@ -61,24 +87,11 @@ StatusCode MuonDigit2MCParticleAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  // create an association table 
-  Table* aTable = new Table();
-
   // loop and link MuonDigits to MC truth
   MuonDigits::const_iterator iDigit;
   for(iDigit = digits->begin(); iDigit != digits->end(); iDigit++){
     associateToTruth(*iDigit,aTable);
   } 
-
-  // register table in store
-  sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    MsgStream log(msgSvc(), name());
-    log << MSG::FATAL << "     *** Could not register " << outputData()
-        << endreq;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
 
   return StatusCode::SUCCESS;
 }
