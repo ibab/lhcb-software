@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.13 2002-05-29 07:42:43 ibelyaev Exp $
+! $Id: release.notes,v 1.14 2002-06-10 15:57:18 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v3r0 to use EventKernel v2r*
+
+!===================== CaloUtils v2r0 2002-05-29 ==============================
 ! 2002-05-29 - Ivan Belyaev
  - src/CovarinaceEstimator.cpp : remove the most stupid bug 
   induced by previoud "bug fix'. Indices for covariance and parameters 

@@ -1,14 +1,10 @@
-# $Id: requirements,v 1.8 2002-05-29 07:42:43 ibelyaev Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
+# $Id: requirements,v 1.9 2002-06-10 15:57:18 cattanem Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package             CaloUtils
-version             v2r2
+version             v3r0
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -17,7 +13,7 @@ branches            cmt doc src CaloUtils
 include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
-use CaloEvent       v10r*   Event
+use CaloEvent       v11r*   Event
 use CaloDet         v4r*    Det 
 
 # ================= constituens: linker library ===============================
