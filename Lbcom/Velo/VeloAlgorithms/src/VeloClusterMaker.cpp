@@ -299,7 +299,7 @@ bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
 
  log << MSG::VERBOSE << " stripID" << stripId 
      << " ADC " << currentDigit->adcValue() 
-     << " STN " << currentClusterSTN << endl;
+     << " STN " << currentClusterSTN << endmsg;
  // All done OK
   return true;
 }
