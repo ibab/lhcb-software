@@ -5,8 +5,11 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.5 2004-10-12 09:58:26 papanest Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2004/07/26 18:03:05  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -124,6 +127,7 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
 
 //=============================================================================
 // Returns the SmartID for a given global position
+// z coord is not valid
 //=============================================================================
 HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
                                               ) const
@@ -133,33 +137,41 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint
     if (globalPoint.y() > 0.0) {
       // top side
 
-      HepPoint3D tempPoint = m_photoDetPanels[Rich::Rich1][Rich::top]->
-        globalToPDPanel(globalPoint);
+      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
+                            //globalToPDPanel(globalPoint) );
+                            geometry()->toLocal( globalPoint ) );                
       tempPoint.setY( tempPoint.y() + m_localOffset[Rich::Rich1][Rich::top] );
+      tempPoint.setZ( 0.0 );
       return tempPoint;
     }
     else {
       // bottom side
-      HepPoint3D tempPoint = m_photoDetPanels[Rich::Rich1][Rich::bottom]->
-        globalToPDPanel(globalPoint);
+      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
+                            //globalToPDPanel(globalPoint) );
+                            geometry()->toLocal( globalPoint ) );                
       tempPoint.setY(tempPoint.y() - m_localOffset[Rich::Rich1][Rich::bottom]);
+      tempPoint.setZ( 0.0 );
       return tempPoint;
     }
   else
     // Rich2
     if (globalPoint.x() > 0.0) {
       // left side
-      HepPoint3D tempPoint = m_photoDetPanels[Rich::Rich2][Rich::left]->
-        globalToPDPanel(globalPoint);
+      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
+                            //globalToPDPanel(globalPoint) );
+                            geometry()->toLocal( globalPoint ) );                
       tempPoint.setX( tempPoint.x() + m_localOffset[Rich::Rich2][Rich::left] );
+      tempPoint.setZ( 0.0 );
       return tempPoint;
 
     }
     else {
       // right side
-      HepPoint3D tempPoint = m_photoDetPanels[Rich::Rich2][Rich::right]->
-        globalToPDPanel(globalPoint);
+      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->
+                            //globalToPDPanel(globalPoint) );
+                            geometry()->toLocal( globalPoint ) );
       tempPoint.setX(tempPoint.x() - m_localOffset[Rich::Rich2][Rich::right]);
+      tempPoint.setZ( 0.0 );
       return tempPoint;
     }
 

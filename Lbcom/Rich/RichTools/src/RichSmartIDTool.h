@@ -4,8 +4,11 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.4 2004-07-26 18:03:05 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.5 2004-10-12 09:58:26 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 18:03:05  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -75,7 +78,11 @@ public: // methods (and doxygen comments) inherited from interface
   // Supplies a vector of all currently active and valid channels in the RICH detectors
   virtual StatusCode readoutChannelList ( std::vector<RichSmartID>& readoutChannels ) const;
 
-  // Converts a position in global coordinates to the local coordinate system
+  /** Converts a position in global coordinates to the local coordinate system.
+   *  The panel Rich::Left has positive x and panel Rich::Right has negative 
+   *  x coordinates. Only the x and y coordinates are valid. z coordinate 
+   *  is set to 0.
+   */
   virtual HepPoint3D globalToPDPanel ( const HepPoint3D& globalPoint ) const;
 
 private:
