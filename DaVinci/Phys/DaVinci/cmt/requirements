@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.232 2005-01-26 17:02:56 pkoppenb Exp $
+# $Id: requirements,v 1.233 2005-01-31 16:10:48 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -63,8 +63,8 @@ use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
 use HltGeneric                  v2r2     Hlt
-use HltSelections               v2r0     Hlt
-use HltSelChecker               v2r0     Hlt
+use HltSelections               v2r1     Hlt
+use HltSelChecker               v2r1     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
@@ -91,7 +91,7 @@ use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r4     Phys
 use  DaVinciKernel      	v3r1     Phys
 use  DaVinciTools       	v11r4    Phys
-use  FlavourTagging     	v5r3p1   Phys
+use  FlavourTagging     	v5r4     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r2     Phys
 use  PhysSelections		v6r11    Phys
