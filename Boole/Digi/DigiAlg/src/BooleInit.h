@@ -1,4 +1,4 @@
-// $Id: BooleInit.h,v 1.2 2003-10-10 13:38:54 cattanem Exp $
+// $Id: BooleInit.h,v 1.3 2003-11-03 16:54:27 cattanem Exp $
 #ifndef DIGIALG_BOOLEINIT_H
 #define DIGIALG_BOOLEINIT_H 1
 
@@ -29,7 +29,7 @@ public:
 	virtual StatusCode BooleInit::finalize();
 
   StatusCode BooleInit::createL1Buffer();  ///< Creates an empty L1 buffer
-  StatusCode BooleInit::createHLTBuffer(); ///< Creates an empty HLT buffer
+  StatusCode BooleInit::createHltBuffer(); ///< Creates an empty Hlt buffer
 
 private:
   // Job options

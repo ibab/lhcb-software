@@ -4,6 +4,13 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v2r1 2003-11-03 =========================
+! 2003-11-03 - Marco Cattaneo
+ - BooleInit:    adapt to new naming in DAQEvent v2r0
+ - LumiTool:     get "BunchCrossRate" and "TotalCrossSection" from job options 
+                 instead of beam.cdf
+ - requirements: Use DAQEvent v2r0, remove ParamFiles dependency
+
 !========================= DigiAlg v2r0p1 2003-10-15 ========================
 ! 2003-10-15 - Marco Cattaneo
  - Fix Spillover.opts to produce PrevPrev rather than NextNext event

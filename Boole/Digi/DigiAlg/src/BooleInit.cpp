@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.2 2003-10-10 13:38:54 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.3 2003-11-03 16:54:27 cattanem Exp $
 
 // Include files
 #include "BooleInit.h"
@@ -13,7 +13,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/L1Buffer.h"
-#include "Event/HLTBuffer.h"
+#include "Event/HltBuffer.h"
 #include <vector>
 
 //----------------------------------------------------------------------------
@@ -148,7 +148,7 @@ StatusCode BooleInit::execute() {
   StatusCode sc = this->createL1Buffer();
   if( sc.isFailure() ) return sc;
 
-  sc = this->createHLTBuffer();
+  sc = this->createHltBuffer();
   if( sc.isFailure() ) return sc;  
 
   return StatusCode::SUCCESS;
@@ -196,7 +196,7 @@ StatusCode BooleInit::createL1Buffer() {
 }
 
 //-----------------------------------------------------------------------------
-StatusCode BooleInit::createHLTBuffer() {
+StatusCode BooleInit::createHltBuffer() {
 //-----------------------------------------------------------------------------
 
   MsgStream msg(msgSvc(), name());
@@ -207,23 +207,23 @@ StatusCode BooleInit::createHLTBuffer() {
     return StatusCode::FAILURE;
   }
 
-  // Create and register in the TES a new HLTBuffer:
-  HLTBuffer * hltBuffer = new HLTBuffer();
+  // Create and register in the TES a new HltBuffer:
+  HltBuffer * hltBuffer = new HltBuffer();
   if (NULL == hltBuffer ) {
-    msg << MSG::ERROR << " Unable to allocate memory to HLTBuffer" << endmsg;
+    msg << MSG::ERROR << " Unable to allocate memory to HltBuffer" << endmsg;
     return StatusCode::FAILURE;
   }
 
   StatusCode sc =
-    eventSvc()->registerObject(HLTBufferLocation::Default,hltBuffer);
+    eventSvc()->registerObject(HltBufferLocation::Default,hltBuffer);
 
   if( sc.isFailure() ) {
     delete hltBuffer;
-    msg << MSG::ERROR << "Unable to register HLTBuffer in TES" << endmsg;
+    msg << MSG::ERROR << "Unable to register HltBuffer in TES" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  // Add the event header to the HLTBuffer (will this be done by the DAQ?)
+  // Add the event header to the HltBuffer (will this be done by the DAQ?)
   // Suppose this information is manipulated by class ID 101 and has Source
   //(detector?) info 1;
   hlt_int head[4];
@@ -232,7 +232,7 @@ StatusCode BooleInit::createHLTBuffer() {
   head[2] = 0;  // reserved for event time
   head[3] = 0;  // reserved for event time
 
-  // Add this block to HLTBuffer:
+  // Add this block to HltBuffer:
   hltBuffer->addBank(1,101,head,2 );
 
   return StatusCode::SUCCESS;

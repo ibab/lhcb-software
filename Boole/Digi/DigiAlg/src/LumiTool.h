@@ -1,4 +1,4 @@
-// $Id: LumiTool.h,v 1.1 2003-10-06 16:16:40 cattanem Exp $ 
+// $Id: LumiTool.h,v 1.2 2003-11-03 16:54:27 cattanem Exp $ 
 #ifndef LUMITOOL_H
 #define LUMITOOL_H 1
 
@@ -43,11 +43,7 @@ public:
   /// Return number of interactions for given luminosity 
   StatusCode numInteractions( int& number );
 
-  /// Parse the beam parameters cdf file (to be moved to a dedicated tool!)
-  StatusCode getBeamParams();
-
 private:
-  std::string       m_filename;       ///< name of cdf file containing beam data
   float             m_bunchCrossRate; ///< bunch crossing rate (MHz)
   float             m_totalXSection;  ///< total cross-section (mbarn)
 

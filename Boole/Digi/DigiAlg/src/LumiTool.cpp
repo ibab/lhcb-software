@@ -1,4 +1,4 @@
-// $Id: LumiTool.cpp,v 1.1 2003-10-06 16:16:40 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.2 2003-11-03 16:54:27 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
@@ -38,17 +38,8 @@ LumiTool::LumiTool( const std::string& type,
                     const IInterface* parent ) 
   : AlgTool( type, name, parent ) {
 
-  if(getenv("PARAMFILESROOT") != NULL) {
-    m_filename = std::string(getenv( "PARAMFILESROOT" )) +
-      std::string( "/data/beam.cdf");
-  }
-  else {
-    m_filename = std::string( "beam.cdf" );
-  }
-  declareProperty( "BeamFile", m_filename );
-
-  m_bunchCrossRate = 29.49;
-  m_totalXSection  = 102.4;
+  declareProperty( "BunchCrossRate",    m_bunchCrossRate = 29.49 );
+  declareProperty( "TotalCrossSection", m_totalXSection  = 102.4 );
   m_EDS = 0;
   m_randSvc = 0;
 
@@ -87,12 +78,9 @@ StatusCode LumiTool::initialize()
     return sc;
   }
 
-  // Get the beam parameter data
-  sc = getBeamParams();
-  if( sc.isFailure() ) return sc;
-  
+  // Print the beam parameter data
   log << MSG::INFO << "BunchCrossRate  " << m_bunchCrossRate << endmsg;
-  log << MSG::INFO << "Total X-section " << m_totalXSection << endmsg;
+  log << MSG::INFO << "Total X-section " << m_totalXSection  << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -145,52 +133,6 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
   }
   
   return sc;
-}
-
-StatusCode LumiTool::getBeamParams() {
-
-  // Current implementation reads directly from beam.cdf file.
-  // Should be moved to a tool 
-
-  MsgStream log( msgSvc(), name() );
-  char line[ 255 ];
-  std::ifstream infile( m_filename.c_str() );
-  std::vector<float> params;
-
-  if ( infile ) {
-    log << MSG::INFO << "Opened beam params file : " << m_filename << endmsg;
-
-    // Skip the header till GEOMETRY
-    do {
-      infile.getline( line, 255 );
-    } while( line[0] != 'G' );
-
-    // Loop over parameters
-    while( infile ) {
-      infile.getline( line, 255 );
-      if( 'E' == line[0] ) break;
-      if( '#' == line[0] ) continue;
-      char* token = strtok( line, " " );
-      if( token ) {
-        if( '!' == token[0] ) continue;
-        std::string sValue = token;
-        float fValue = atof( sValue.c_str() );
-        log << MSG::DEBUG << sValue << " " << fValue << endmsg;
-        params.push_back( fValue );
-      }
-    }
-    infile.close();
-  }
-  else {
-    log << MSG::ERROR << "Failed to open beam params file " 
-        << m_filename << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  m_bunchCrossRate = params[14];
-  m_totalXSection  = params[15];
-
-  return StatusCode::SUCCESS;
 }
 
         
