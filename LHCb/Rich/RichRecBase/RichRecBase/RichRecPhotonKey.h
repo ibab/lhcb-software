@@ -5,8 +5,11 @@
  * Header file for utility class : RichRecPhotonKey
  *
  * CVS Log :-
- * $Id: RichRecPhotonKey.h,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ * $Id: RichRecPhotonKey.h,v 1.6 2004-07-28 11:53:25 jonesc Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/07/26 18:00:58  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -35,7 +38,7 @@ public:
   /** Constructor from long int
    *  @param key The raw data key to use as the bit-packed data
    */
-  explicit RichRecPhotonKey( const long key = 0 ) : m_key ( key ) { }
+  RichRecPhotonKey( const long key = 0 ) : m_key ( key ) { }
 
   /** Constructor from segment and pixel numbers
    *
