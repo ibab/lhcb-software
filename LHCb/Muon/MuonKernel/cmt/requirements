@@ -6,7 +6,7 @@ branches cmt src MuonKernel doc Test
 
 include_dirs $(MUONKERNELROOT)
 
-use GaudiSys v9* 
+use GaudiKernel v11* 
 
 #----------------------------------------------
 library MuonKernelLib ../src/*.cpp
@@ -19,6 +19,7 @@ apply_pattern linker_path
 #  of MuonKernel classes use
 
 application test   ../Test/*.cpp
+
 apply_pattern application_path
 macro Test_linkopts  "$(application_linkopts)"   
 
@@ -27,4 +28,10 @@ macro Test_linkopts  "$(application_linkopts)"
 private
 
 apply_pattern package_Lshlibflags
-macro_append MuonKernelLib_shlibflags "$(GaudiKernel_linkopts)"          
+
+#####################################################################
+#  For the "standalone" MuonKernel library version remove dependancy
+#  on the GaudiKernel library
+#####################################################################
+macro_append MuonKernelLib_shlibflags "$(GaudiKernel_linkopts)" standalone ""
+macro_append MuonKernel_cppflags "" standalone "-DMUONKERNEL_LOCAL" 

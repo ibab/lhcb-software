@@ -1,7 +1,16 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
-! 20020127 - MuonKernel v1 Andrei TSaregorodtsev
+! 20020228 - MuonKernel v1 Andrei Tsaregorodtsev
+
+  Muon/MuonKernel v1 can be compiled in the standalone mode (without
+  Gaudi legacy) by excluding MsgStream and alike with conditional
+  compiling (-DMUONKERNEL_LOCAL). The requirements contain "standalone" 
+  tag now. To compile a standalone version: >gmake tag=standalone . It might
+  be necessary to rm *.make* before that if old make files were
+  made for non-standalone compilation.
+
+! 20020127 - MuonKernel v1 Andrei Tsaregorodtsev
 
   Initial version of the package containing basic Muon system classes 
   to manage the Muon system entities bookkeeping.

@@ -1,11 +1,11 @@
   This is a brief description of the MuonKernel package. 
   
-  The main ingredients are MuonSystemID and MuonLayout classes. They
+  The main ingredients are MuonTileID and MuonLayout classes. They
 work closely together.  
 
   Here comes some more explanation of the intended purpose and possible use
-of the MuonSystemID class. 
-  The basic idea of the MuonSystemID is to take advantage of the very regular
+of the MuonTileID class. 
+  The basic idea of the MuonTileID is to take advantage of the very regular
 layout of the Muon System. This regularity is present for nearly all the
 entities of the MuonSystem: chambers, physical channels, logical units, 
 strips, pads, all the entities in the muon trigger domain. I used to call
@@ -18,7 +18,7 @@ those tiles are:
 
   So, it is possible to use objects of the same type to identify ALL these
 entities. Clearly a single ID definition for all the entities in the Muon 
-System is a nice advantage. The MuonSystemID is a realisation of this idea.
+System is a nice advantage. The MuonTileID is a realisation of this idea.
 
   First of all we have to define the layout of particular tiles of the Muon
 System that we want to identify. This is done by a MuonLayout class. To define
@@ -38,7 +38,7 @@ this layout. In one station  it is sufficient to provide quarter, region, index 
 and index in Y. Indices in X and Y are defined with respect to the beam axis. So,
 for example, a pair 0,0 is not valid. Now, if combine these numbers together with
 the layout with respect to which they are defined, we construct a universal
-identifier. This is a MuonSystemID. To make a summary, the MuonSystemID structure
+identifier. This is a MuonTileID. To make a summary, the MuonTileID structure
 is the following (remember we should count from 0) :
 
             LayoutX  0-48    :  6 bits
@@ -53,21 +53,21 @@ is the following (remember we should count from 0) :
             --------------------------
                                31 bits
 
-So, the MuonSystemID is an "intelligent" object with its structure encoded in itself.
+So, the MuonTileID is an "intelligent" object with its structure encoded in itself.
 Having an identifier so defined allows to locale the object with no additional
 information. Two different type objects can talk to each other without intermediary
-objects. All the Muon System entities (tiles) can be identified with these MuonSystemID's.
+objects. All the Muon System entities (tiles) can be identified with these MuonTileID's.
 If it will be the case, the following operations will be trivial - some examples
 of existing methods:
 
 // Constructing a strip identifier from the local indices with respect to its chamber
 
-MuonSystemID stripID1(chamberID, localX1, localY1);
-MuonSystemID stripID2(chamberID, localX2, localY2);
+MuonTileID stripID1(chamberID, localX1, localY1);
+MuonTileID stripID2(chamberID, localX2, localY2);
 
 // Construct a logical pad identifier from the interception of two strips
 
-MuonSystemID padID = stripID1.intercept(stripID2);
+MuonTileID padID = stripID1.intercept(stripID2);
 
 // Get the identifier of a chamber containing a given logical pad
 
@@ -75,12 +75,12 @@ MuonLayout chamberLayout;
 
       // ... chamber layout initialised from a database ...
 
-MuonSystemID chamberID = padID.getContainerID(chamberLayout);
+MuonTileID chamberID = padID.getContainerID(chamberLayout);
 
 // Get a vector of pads touched by an area defined around a central pad 
 // with limits in X and Y
 
-std::vector<MuonSystemID> = padLayout.tiles(padID, deltaX, deltaY);
+std::vector<MuonTileID> = padLayout.tiles(padID, deltaX, deltaY);
 
   The other classes are:
   
@@ -88,10 +88,10 @@ std::vector<MuonSystemID> = padLayout.tiles(padID, deltaX, deltaY);
               adhere to;
   
   MuonTile - supposed to be a base class for Muon System entities. The
-             MuonTile objects know their MuonSystemID identity and can be
+             MuonTile objects know their MuonTileID identity and can be
 	     used as keyed objects. 
 	     
   MuonVector - a crude templated container based on std::vector that can
                store MuonTiles and derived class objects and can be indexed
-	       by MuonSystemID's	     
+	       by MuonTileID's	     
 	     
