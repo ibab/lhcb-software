@@ -7,6 +7,8 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!=========================== GaussCalo v4r1 ===============================
+
 ! 2003-10-10 - Patrick Robbe
  - src/CaloSensDet.cpp - fix against copy number bug. Use directly geometry
    instead.

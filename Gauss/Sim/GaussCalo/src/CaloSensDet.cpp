@@ -1,8 +1,12 @@
-// $Id: CaloSensDet.cpp,v 1.12 2003-10-10 14:53:00 robbep Exp $ 
+// $Id: CaloSensDet.cpp,v 1.13 2003-10-10 16:17:44 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/10/10 14:53:00  robbep
+// Temporary ix in CaloSensDet against bug in copy number. Use
+// directly geometry instead.
+//
 // Revision 1.11  2003/07/08 19:54:48  ibelyaev
 //  minor fix for format printout
 //
@@ -205,7 +209,7 @@ StatusCode CaloSensDet::finalize    ()
   if( m_stat ) 
     { /// statistical printout 
       MsgStream log( msgSvc() , name() ) ;
-      log << MSG::ALWAYS << 
+      log << MSG::DEBUG << 
         format ( " <#Hits>/Min/Max=(%3d+-%3d)/%d/%4d "                  , 
                  (long) m_hits                                          , 
                  (long) sqrt ( fabs( m_hits2 - m_hits * m_hits ) )      ,
