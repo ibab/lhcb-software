@@ -116,7 +116,7 @@ use TrTools             v2r2    Tr
 use Seeding	        v2r2    Tr
 use TrMatching          v2r3    Tr
 use TrCleanEx           v2r2    Tr
-use TrIntraPR		v2r1	Tr
+use TrIntraPR		v2r2	Tr
 use UpstreamPR		v2r4	Tr
 use VeloTT		v1r2	Tr
 use TrCheck             v1r1    Tr

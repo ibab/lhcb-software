@@ -39,7 +39,7 @@ Purpose: LHCb reconstruction program
    . Add /Event/Rec/Rich/OOPIDs for tests (not yet useful for physics!)
 
  - Bug fixes:
-   . Fix a memory leak in SicbMuonHitCnv (MuonSicbCnv v6r6)
+   . Fix small memory leaks (MuonSicbCnv v6r6, TrIntraPR v2r2)
    . Minor bug fixes for evaluation of cluster spread and covariances
      (CaloUtils v4r3)
    . Minor bug fixes (uninitialised variables) (ITDet v1r2)
