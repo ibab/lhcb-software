@@ -1,4 +1,4 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.3 2004-06-21 13:34:39 jonesc Exp $
+// $Id: RichMirrorSegFinder.cpp,v 1.4 2004-06-21 13:39:15 jonesc Exp $
 
 // local
 #include "RichMirrorSegFinder.h"
@@ -122,6 +122,7 @@ StatusCode RichMirrorSegFinder::initialize( ) {
   }}
 
   if ( msgLevel(MSG::DEBUG) ) {
+
     {for (unsigned int r=0; r<2; ++r)
       for (unsigned int s=0; s<2; ++s)
         for (unsigned int num=0; num<m_lastMirror[r][s][sph]; ++num)
@@ -134,20 +135,20 @@ StatusCode RichMirrorSegFinder::initialize( ) {
           debug() << "Stored flat mirror "
                   <<m_flatMirrors[r][s][num]->name() << endreq;
     }
-  }
+    debug() << "Stored " << m_lastMirror[Rich::Rich1][Rich::top][sph]
+            << " and " << m_lastMirror[Rich::Rich1][Rich::bottom][sph]
+            << " spherical mirrors in the top and bottom of Rich1, and "
+            << m_lastMirror[Rich::Rich1][Rich::top][flat] << " and "
+            << m_lastMirror[Rich::Rich1][Rich::bottom][flat] << " flat mirrors"
+            << endreq;
+    debug() << "Stored " << m_lastMirror[Rich::Rich2][Rich::left][sph]
+            << " and " << m_lastMirror[Rich::Rich2][Rich::right][sph]
+            << " spherical mirrors in the left and right of Rich2, and "
+            << m_lastMirror[Rich::Rich2][Rich::left][flat] << " and "
+            << m_lastMirror[Rich::Rich2][Rich::right][flat] << " flat mirrors"
+            << endreq;
 
-  debug() << "Stored " << m_lastMirror[Rich::Rich1][Rich::top][sph]
-          << " and " << m_lastMirror[Rich::Rich1][Rich::bottom][sph]
-          << " spherical mirrors in the top and bottom of Rich1, and "
-          << m_lastMirror[Rich::Rich1][Rich::top][flat] << " and "
-          << m_lastMirror[Rich::Rich1][Rich::bottom][flat] << " flat mirrors"
-          << endreq;
-  debug() << "Stored " << m_lastMirror[Rich::Rich2][Rich::left][sph]
-          << " and " << m_lastMirror[Rich::Rich2][Rich::left][sph]
-          << " spherical mirrors in the left and right of Rich2, and "
-          << m_lastMirror[Rich::Rich2][Rich::left][flat] << " and "
-          << m_lastMirror[Rich::Rich2][Rich::right][flat] << " flat mirrors"
-          << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -175,7 +176,7 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
   unsigned int mirrorNum(0);
 
   for ( unsigned int i=0; i<m_lastMirror[rich][side][sph]; ++i ) {
-    const double temp_d2 = 
+    const double temp_d2 =
       m_sphMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
     if ( temp_d2 < distance2 ) {
       distance2 = temp_d2;
@@ -198,7 +199,7 @@ RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
   unsigned int mirrorNum(0);
 
   for ( unsigned int i=0; i<m_lastMirror[rich][side][flat]; ++i ) {
-    const double temp_d2 = 
+    const double temp_d2 =
       m_flatMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
     if ( temp_d2 < distance2 ) {
       distance2 = temp_d2;

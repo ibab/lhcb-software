@@ -1,10 +1,6 @@
-// $Id: RichMirrorSegFinder.h,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichMirrorSegFinder.h,v 1.2 2004-06-21 13:34:40 jonesc Exp $
 #ifndef RICHDETTOOLS_RICHMIRRORSEGFINDER_H
 #define RICHDETTOOLS_RICHMIRRORSEGFINDER_H 1
-
-// Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -22,12 +18,17 @@
 #include "RichKernel/BoostArray.h"
 
 // RichDet
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichFlatMirror.h"
 
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichMirrorSegFinder RichMirrorSegFinder.h
  *
+ *  Tool to find the appropriate mirror segment for a given reflection point
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04

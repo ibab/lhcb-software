@@ -7,6 +7,7 @@
 ! 2004-06-21 - Chris Jones
  - Update RichMirrorSegFinder to use distance2 as comparision as opposed to
    distance, for better efficiency (avoids taking a squre root)
+ - Change initialisation printout to debug (Only useful to experts)
 
 !=========================== RichTools v1r0 2004-06-17 =======================
 
