@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.cpp,v 1.3 2004-03-16 13:39:16 jonesc Exp $
+// $Id: RichMCTrackInfoTool.cpp,v 1.4 2004-07-02 14:14:30 jonrob Exp $
 
 // local
 #include "RichMCTrackInfoTool.h"
@@ -17,7 +17,7 @@ const        IToolFactory& RichMCTrackInfoToolFactory = s_factory ;
 RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : RichToolBase( type, name, parent ),
+  : RichToolBase  ( type, name, parent ),
     m_rayTrace    ( 0 ),
     m_smartIDTool ( 0 )
 {
@@ -29,12 +29,19 @@ StatusCode RichMCTrackInfoTool::initialize() {
   debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",   m_rayTrace    );
   acquireTool( "RichSmartIDTool",  m_smartIDTool );
+
+  // Configure the ray-tracing mode
+  m_traceMode.setDetPrecision      ( RichTraceMode::circle );
+  m_traceMode.setDetPlaneBound     ( RichTraceMode::loose  );
+  m_traceMode.setForcedSide        ( false                 );
+  m_traceMode.setOutMirrorBoundary ( false                 );
+  m_traceMode.setMirrorSegBoundary ( false                 );
 
   return StatusCode::SUCCESS;
 }
@@ -54,7 +61,7 @@ const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segm
                                                segment->bestPoint(0.5),
                                                segment->bestMomentum(0.5),
                                                hitPoint,
-                                               DeRichHPDPanel::loose ) ) return false;
+                                               m_traceMode ) ) return false;
   return true; // all OK
 }
 
@@ -65,6 +72,7 @@ const bool RichMCTrackInfoTool::panelIntersectLocal( const MCRichSegment * segme
   // find global point
   HepPoint3D globalPoint;
   if ( !panelIntersectGlobal( segment, globalPoint ) ) return false;
+
   // convert global to local position
   hitPoint = m_smartIDTool->globalToPDPanel(globalPoint);
 

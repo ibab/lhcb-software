@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.h,v 1.3 2004-06-17 12:01:43 cattanem Exp $
+// $Id: RichMCTrackInfoTool.h,v 1.4 2004-07-02 14:14:31 jonrob Exp $
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
 
@@ -65,6 +65,9 @@ private: // private data
 
   IRichRayTracing * m_rayTrace;     ///< Pointer to ray tracing tool
   IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
+
+  /// Ray-tracing configuration object
+  RichTraceMode m_traceMode;
 
 };
 

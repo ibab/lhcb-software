@@ -22,7 +22,7 @@ include_path none
 # Used packages.
 #============================================================================
 use RichEvent   v7r*    Event
-use RichDet     v7r*    Det
+use RichDet     v8r*    Det
 use LinkerEvent v1r*    Event
 
 #============================================================================
