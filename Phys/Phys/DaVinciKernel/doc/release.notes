@@ -8,6 +8,8 @@
      Eventually all interfaces will be moved from DaVinciTools/ to Kernel/
  - Kernel/IPlotTool.h
    . New interface for tools making plots with particles.
+ - Kernel/IBestParticles.h, IKFFitTool.h
+   . Move these interfaces only used by VertexFit
    
 ! 2005-01-03 - P. Koppenburg
  - src/component/PhysDesktop.h
