@@ -519,6 +519,7 @@
 	</package>
 	<package name="GaudiKernel">
 		<class author="__UNKNOWN__" filename="Kernel" name="__longlong" desc="__NO_DESCRIPTION__"/>
+		<class author="__UNKNOWN__" name="Kernel" desc="__NO_DESCRIPTION__"/>
 	</package>
 	<package name="GaudiKernel"/>
 	<package name="GaudiKernel"/>
