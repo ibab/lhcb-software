@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.8 2002-11-04 08:40:10 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.9 2002-11-06 15:51:57 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -56,6 +56,7 @@ L0mTrigger::L0mTrigger(const std::string& name, ISvcLocator* pSvcLocator)
    declareProperty("InputFromMuonCoords", m_inputFromMuonCoords = false );
    declareProperty("PtPrecision", m_precision=40.);
    declareProperty("PtMaxBins", m_bins=128);
+   declareProperty("True4Stations", m_4stations=false);
    
    m_OKcandidates = 0;
 }
@@ -87,7 +88,8 @@ StatusCode L0mTrigger::initialize()   {
 				MuonStationLayout(MuonLayout(0,0),
                                         	  MuonLayout(4,2),
                                         	  MuonLayout(2,2),
-                                        	  MuonLayout(2,2)));			      
+                                        	  MuonLayout(2,2)));	
+						  					  		      
 			     
     for( int iq=0; iq<4; iq++) {
       m_crates.push_back(new L0mCrate(iq,*this));
@@ -150,6 +152,9 @@ StatusCode L0mTrigger::initialize()   {
     if (m_seedClustering) {
       log << MSG::DEBUG << "Seed clusters removal requested" << endreq;
     } 
+    if (m_4stations) {
+      log << MSG::DEBUG << "4 Muon stations in the simulation" << endreq;
+    }
     return StatusCode::SUCCESS;
 }
 
@@ -199,6 +204,7 @@ StatusCode L0mTrigger::execute() {
       lt = createTower(ip, m_pads);
       lt->setMuonTool(m_iTileXYZTool);
       lt->setFlagIgnoreM1(m_ignoreM1);
+      lt->setFlag4Stations(m_4stations);
       m_towers.push_back(lt);
       if (lt->isFull()) lt->draw(log);
     }     
@@ -395,14 +401,30 @@ StatusCode L0mTrigger::makePadsFromDigits(){
         << " from TES" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::DEBUG << "Done, # of MuonDigits " << digits->size() << endreq;    
+  log << MSG::DEBUG << "Done, # of MuonDigits " << digits->size() << endreq; 
   
-  MuonDigits::const_iterator id;
+  std::vector<MuonTileID> ddigits;
+  
+  MuonDigits::const_iterator did;
+  for( did = digits->begin() ; did != digits->end() ; did++ ){
+    if ( m_4stations ) {
+      MuonTileID mkey = (*did)->key();
+      int ista = mkey.station();
+      mkey.setStation(ista+1);
+      ddigits.push_back(mkey);
+    } else {
+      MuonTileID mkey = (*did)->key();
+      ddigits.push_back(mkey);      
+    }
+  }
+  
+  
+  std::vector<MuonTileID>::const_iterator id;
   std::vector<MuonTileID> hstrips;
   std::vector<MuonTileID> vstrips;
   
-  for( id = digits->begin() ; id != digits->end() ; id++ ){
-    MuonTileID mkey = (*id)->key();
+  for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
+    MuonTileID mkey = *id;
     mkey.setReadout(0);
     mkey.setLayer(0);
     int sta = mkey.station();
@@ -438,6 +460,7 @@ StatusCode L0mTrigger::makePadsFromDigits(){
       }
     }
   }
+
   return StatusCode::SUCCESS;
 }
 
@@ -478,6 +501,9 @@ StatusCode L0mTrigger::makePadsFromCoords(){
       mkey.setLayer(0);
       int sta = mkey.station();
       int reg = mkey.region();
+      if ( m_4stations ) {
+        mkey.setStation(sta+1);
+      }
       if( m_layout.regionLayout(sta,reg).isValidID(mkey) ) {
 	m_pads.push_back(L0mPad(mkey));
 	// cout << "mpad: " << mkey << endl;
