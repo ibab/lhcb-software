@@ -1,8 +1,11 @@
-// $Id: CaloSubHit.h,v 1.4 2003-07-22 19:05:33 ibelyaev Exp $
+// $Id: CaloSubHit.h,v 1.5 2003-12-09 08:28:39 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/07/22 19:05:33  ibelyaev
+//  improve doxygen documentation
+//
 // Revision 1.3  2003/07/08 19:40:57  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //
@@ -114,8 +117,8 @@ public:
                    const Time        time    , 
                    const Energy      energy  )
   {
-    if ( trackID () != track ) { return StatusCode( 300 ) ; }
-    if ( cellID  () != cell  ) { return StatusCode( 301 ) ; }    
+    if (    trackID () != track   ) { return StatusCode( 300 ) ; }
+    if ( !( cellID  () == cell  ) ) { return StatusCode( 301 ) ; }    
     return add( time , energy );
   };
   
