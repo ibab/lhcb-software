@@ -79,7 +79,7 @@ use CaloDAQ		v1r0	Calo
 
 # Other stuff
 use LHCbInterfaces	v1r1	Kernel
-use LHCbAlgs		v1r3	Kernel
+use LHCbAlgs		v1r3p1	Kernel
 use MCTools		v1r12	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
