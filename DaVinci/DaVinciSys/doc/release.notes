@@ -5,19 +5,35 @@
 ! See Phys/DaVinci/v*/doc/release.notes for details of modifications
 !-----------------------------------------------------------------------------
 
-!===================  DaVinciSys v12r3 2004-10-27 ============================
+!===================  DaVinciSys v12r4 2004-11-12 ============================
+New packages:
+TrgSys              v1r0
+TrgEvent            v5r0    Event
+
 Modified packages:
-DaVinci                  v12r3    Phys   
-CaloReco                 v2r6     Calo
-LoKi                     v3r5p1   Tools  
-LoKiHlt                  v1r1p1   Tools  
-Utilities                v1r11p1  Tools
-DaVinciFilter            v1r2     Phys
-DaVinciKernel            v2r0     Phys
-Stripping                v1r5p1   Tools
-PhysSelSys               v7r11    PhysSel
-Gamma2ee                 v1r4     PhysSel
-Muon                     v1r2     PhysSel
+DaVinci             v12r4   Phys   
+DaVinciUser         v5r2    Phys
+DaVinciTest         v5r3    Phys
+TrgTools            v6r0    Trg
+TrgVelo             v6r0    Trg
+TrgVeloTT           v6r0    Trg
+L1Reco              v6r0    Trg
+L1Decision          v4r0    Trg
+TrgChecker          v6r0    Trg
+TrgForward          v4r0    Trg
+TrgMonitor          v4r0    Trg
+TrgMuonID           v3r0    Trg
+TrgPrimVertex       v4r0    Trg
+TrgCalo             v1r0    Trg
+Stripping           v1r5p2  Tools
+PhysSelSys          v7r12   PhysSel
+B2HH                v2r4p2  PhysSel
+B2RhoRho            v1r7p2  PhysSel
+Bd2D0Kstar          v4r3p1  PhysSel
+Bd2JpsiKs           v2r6p1  PhysSel
+Bd2MuMuKstar        v2r3p1  PhysSel
+Bs2MuMu             v2r4p2  PhysSel
+Gamma2ee            v1r4p1  PhysSel
 
 !===================  DaVinciSys v12r2 2004-10-13 ============================
 New packages:
