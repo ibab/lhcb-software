@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.16 2002-06-15 10:48:20 ibelyaev Exp $
+! $Id: release.notes,v 1.17 2002-06-17 16:02:29 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -6,7 +6,11 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
-! 2002-06-15 - v4r0 Ivan Belyaev
+! 2002-06-17 - Vanya Belyaev
+ - src/CaloLCorrection.cpp - remove the stupid bug/misprint 
+                             in the SIGN of L-correction ('-' instead of '+')
+
+! 2002-06-15 - v4r0 Vanya Belyaev
  - version update for newer CaloDet/CaloUtils 
 
 
