@@ -9,7 +9,7 @@
  - Packages added:    RichReadout v1r0, RiSicbCnv v3r4
  - Packages modified: Boole v2r0, DigiAlg v2r0, ITCheckers v1r3p1, MuonAlgs v5r0,
      MuonBackground v1r3, OTAlgorithms v13r2, RichDetTools v3r0, RichDigiQC v1r1,
-     RichUtils v3r3, L1Decision v2r2
+     RichUtils v3r3, L1Decision v2r2, VeloAlgorithms v2r8
  - Packages removed:  BrunelSicb, BrunelAlgs, MCTools, recevt, recrich
 
 !======================== BooleSys v1r0 2003-07-17 ========================

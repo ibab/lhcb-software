@@ -30,7 +30,7 @@ use CaloMonitor         v1r4  	Calo
 use CaloDigit           v1r3	Calo
 
 # Velo
-use VeloAlgorithms      v2r7  	Velo
+use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r10	IT
