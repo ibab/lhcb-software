@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.22 2004-10-27 14:18:04 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.23 2005-02-22 14:33:51 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.22  2004/10/27 14:18:04  jonrob
+ *  more minor additions
+ *
  *  Revision 1.21  2004/10/21 08:55:42  jonrob
  *  minor update
  *
@@ -65,11 +68,9 @@ const CLID& DeRich1CdfHPDPanel::classID() { return CLID_DeRich1CdfHPDPanel; }
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRich1CdfHPDPanel::initialize() {
-
-  StatusCode sc = StatusCode::FAILURE;
-
-  if ( !DeRichHPDPanel::initialize() ) return sc;
+StatusCode DeRich1CdfHPDPanel::initialize() 
+{
+  if ( !DeRichHPDPanel::initialize() ) return StatusCode::FAILURE;
 
   MsgStream log(msgSvc(), myName() );
   log << MSG::VERBOSE <<"Starting initialisation of " << myName() << endreq;
@@ -116,7 +117,8 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
 
-  log << MSG::DEBUG << "Finished initialisation" << endreq;
+  log << MSG::INFO << "Initialized Successfully" << endreq;
+
   return StatusCode::SUCCESS;
 }
 
