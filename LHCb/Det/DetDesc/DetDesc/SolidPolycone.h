@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.4 2004-12-08 15:45:21 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -117,7 +117,7 @@ public:
    *  @see ISolid 
    *  @param Point initial point for the line
    *  @param Vector vector along the line
-   *  @param Ticks output container of "Ticks"
+   *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
   virtual unsigned int 
@@ -176,7 +176,7 @@ public:
   end      () const { return triplets().end  (); }
 
   /** accessor to z-position of plane indexed with some index
-   *  @param indx   plane index 
+   *  @param index   plane index 
    *  @return z-position
    */
   inline const double  z( Triplets::size_type index ) const 

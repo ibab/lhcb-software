@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.167 2004-12-08 15:29:55 cattanem Exp $ 
+! $Id: release.notes,v 1.168 2004-12-08 15:45:21 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 !======================= DetDesc v14r2p1 2004-12-07 =======================
+! 2004-12-08 - Marco Cattaneo
+ - Fix a few doxygen warnings
+
 ! 2004-12-07 - Vanya BELYAEV
  - DetDesc/Element.h 
     remove invalid "inline" qualifier for method Element::isotopeFraction

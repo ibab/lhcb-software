@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.12 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: SolidChild.h,v 1.13 2004-12-08 15:45:21 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -140,13 +140,13 @@ public:
                       ISolid::Ticks&     ticks  ) const;
   
   /** serialization for reading
-   *  @param "" reference to stream buffer
+   *  @param s reference to stream buffer
    *  @return reference to stream buffer
    */
   virtual StreamBuffer& serialize( StreamBuffer& s )       ;   
   
   /** serialization for writing
-   *  @param "" reference to stream buffer
+   *  @param s reference to stream buffer
    *  @return reference to stream buffer
    */
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;

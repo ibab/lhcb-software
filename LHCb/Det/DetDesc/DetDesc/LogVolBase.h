@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.9 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: LogVolBase.h,v 1.10 2004-12-08 15:45:21 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -414,7 +414,7 @@ protected:
    *  @param childIntersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   unsigned int intersectDaughters
@@ -429,8 +429,8 @@ protected:
    *  @exception LVolumeException wrong parameters or geometry error
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
-   *  @param intersections output container
-   *  @param threshold threshold value 
+   *  @param childIntersections output container
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   unsigned int  intersectDaughters
