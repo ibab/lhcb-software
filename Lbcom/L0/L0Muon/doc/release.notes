@@ -1,9 +1,12 @@
-!  $Id: release.notes,v 1.10 2002-05-07 07:40:58 atsareg Exp $
+!  $Id: release.notes,v 1.11 2002-05-07 12:37:52 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
-!====================================v5========================================
-! 20020506 - L0Muon v5r0 Andrei Tsaregorodtsev
+! >>>>>>>>>>>>>>>>>>>>>>>> L0Muon v5r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<
+! 20020507 - Marco Cattaneo
+  - L0mCrate.h: add include <cmath>, for Windows
+
+! 20020506 - Andrei Tsaregorodtsev
   Major modifications of the Muon trigger code to adapt to the
   new Event model and to use new MuonDigits based on MuonTileID:
   - MuonTile and MuonLayout classes are moved to Muon/MuonKernel package;

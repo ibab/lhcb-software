@@ -1,8 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mCrate.h,v 1.3 2002-05-07 07:17:04 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mCrate.h,v 1.4 2002-05-07 12:37:52 cattanem Exp $
 
 #ifndef L0MUON_L0MCRATE_H     
 #define L0MUON_L0MCRATE_H     1 
 
+#include <cmath>
 #include <vector>
 #include "L0Muon/L0mProcUnit.h"
 
