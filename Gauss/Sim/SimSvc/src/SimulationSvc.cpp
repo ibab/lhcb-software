@@ -222,7 +222,7 @@ void SimulationSvc::reload () {
   // the part below deals with the production cuts per region
 
   //create a temporary map to store ProductionCut definitions
-  map<std::string, Prcuts> regcut;
+  std::map<std::string, Prcuts> regcut;
 
   // go through the tree of elements and fill in the ProductionCut sets
   const XMLCh* ProdCutStr = xercesc::XMLString::transcode("ProductionCut");
