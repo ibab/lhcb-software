@@ -1,8 +1,11 @@
-// $Id: GiGaVisManager.cpp,v 1.1.1.1 2002-12-12 14:46:26 witoldp Exp $
+// $Id: GiGaVisManager.cpp,v 1.2 2003-02-11 15:50:48 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
+// new package containing GiGa vis and UI
+//
 // Revision 1.1  2002/12/04 21:17:38  ibelyaev
 //  add UI and Vis stuff
 // 
@@ -16,6 +19,7 @@
 #include "GiGaVisManager.h"
 
 #ifdef G4VIS_NONE
+// nothing here
 #else
 #include "G4VisManager.hh"
 ///
@@ -71,7 +75,13 @@ namespace GiGaVisManagerLocal
   {
   public:
     /// constructor 
-    GiGaVisMgr() {}
+    GiGaVisMgr() 
+      : G4VisManager() 
+    {
+      // activate the static pointer 
+      G4VVisManager::SetConcreteInstance( this ); 
+    };
+    
     /// destructor
     virtual ~GiGaVisMgr() {}
     // main method 
@@ -213,9 +223,13 @@ StatusCode GiGaVisManager::initialize  ()
   G4VisManager* vm = new GiGaVisManagerLocal::GiGaVisMgr();
   vm->Initialize();
   m_visMgr = vm ;
-#endif 
+#endif
   
-  if( 0 == m_visMgr ) { Warning("G4VVisManager* points to NULL!"); }
+  if( 0 == m_visMgr )
+    { Warning ( "initialize(): local  G4VVisManager* points to NULL!" ) ; }
+  if( 0 == G4VVisManager::GetConcreteInstance() ) 
+    { Warning ( "initialize(): static G4VVisManager* points to NULL!" ) ; }
+  
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -231,7 +245,7 @@ StatusCode GiGaVisManager::initialize  ()
 StatusCode GiGaVisManager::finalize    ()
 {
   // delete the visualization manager itself 
-  Print("Delete the virualization manager");
+  Print("finalize(): Delete the virualization manager");
   if( 0 != m_visMgr ) { delete m_visMgr ; m_visMgr = 0 ; }
   // finalize the base class 
   return GiGaBase::finalize ();

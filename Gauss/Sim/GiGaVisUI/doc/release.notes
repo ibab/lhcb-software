@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 	
 
+! 2003-02-11 - Ivan BELYAEV
+ - src/GiGaVisManager.cpp  initialize the static accessor to G4VVisManager 
+                           interface
+ 
+ - cmt/requirements        increase the version 
+
 !========================== GiGaVisUI v1r1 2003-02-07 ========================
 ! 2003-02-07 - Florence RANJARD
  - requirements - use GiGa v13r* anf G4VisUI v*
