@@ -85,7 +85,7 @@ use TrExtrapolator      v2r6  	Tr
 use TrTools             v2r4  	Tr
 use Seeding             v2r5  	Tr 
 use TrMatching          v2r6  	Tr
-use TrCleanEx           v2r6  	Tr
+use TrCleanEx           v2r6p1	Tr
 use TrIntraPR           v2r5  	Tr
 use UpstreamPR          v2r7  	Tr
 use VeloTT              v1r5  	Tr

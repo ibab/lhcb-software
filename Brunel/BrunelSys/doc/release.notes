@@ -11,7 +11,7 @@
    L1Decision v2r1, OTAlgorithms v13r0, TrCheck v1r4, LongTrack v1r7,
    TrExtrapolator v2r6, Seeding v2r5, TrIntraPR v2r5, MuonAlgs v4r1, 
    MuonID v3r6, MuonBackground v1r2, RichRecBase v1r1, RichUtils v3r1,
-   RichDetTools v2r1
+   RichDetTools v2r1, TrCleanEx v2r6p1
 
 !======================= BrunelSys v18r1 2003-06-09 =======================
 ! 2003-06-09 - Marco Cattaneo
