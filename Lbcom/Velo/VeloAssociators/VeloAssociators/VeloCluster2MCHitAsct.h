@@ -38,7 +38,7 @@ protected:
                   const std::string& name,
                   const IInterface* parent ): 
   Asct( type, name, parent) {
-    setProperty( "Location", "MC/VeloClusters2MCHits");
+    setProperty( "Location", VeloCluster2MCHitAsctLocation );
     setProperty( "AlgorithmType", "VeloCluster2MCHitAlg" );
     setProperty( "AlgorithmName", "VeloCluster2MCHit" );
   }; 

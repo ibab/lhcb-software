@@ -3,6 +3,7 @@
 
 ! 2002-06-19 - Marco Cattaneo
  - Use VeloEvent v11r* and VeloDet v6r*
+ - Use 'VeloCluster2MCHitAsctLocation' as relation location.
 
 ! 2002-06-18 - Olivier Callot
  - Fix a bug in VeloTruthTool, in case a FE has no MCVeloHit associated.
