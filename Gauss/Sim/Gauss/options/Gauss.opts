@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.16 2002-11-08 11:26:42 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.17 2002-11-13 16:50:16 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -50,7 +50,7 @@ GiGaSvc.EmptyStack.OutputLevel = 2 ;
 GiGaGeomCnvSvc.OutputLevel = 3;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 1;
+ApplicationMgr.EvtMax     = 10;
 
 
 

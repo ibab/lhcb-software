@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.20 2002-11-08 11:26:42 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.21 2002-11-13 16:50:17 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -57,10 +57,10 @@ Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
-//Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
+Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
+Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
+Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };
+Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
 
 // Physics List  to be used and its configuration  
 GiGaSvc.PhysicsList            = "GiGaPhysListModular/ModularPL";
@@ -99,14 +99,13 @@ GiGaSvc.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
 // Event action to be used and its configuration  
 GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
-GiGaSvc.EventSeq.Members     += { "GiGaEventActionCommand/EventCommand" } ;
 
 // Run Action to be used and its configurations  
 GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGaSvc.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGaSvc.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
-  "/run/verbose 2 "               ,
+  "/run/verbose 0 "               ,
   "/vis/verbose -10 "               ,
   "/tracking/verbose 0"            ,
   "/tracking/storeTrajectory  1"    } ;

@@ -6,6 +6,7 @@ GiGaSvc.UseVisManager          = true;
 //GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
 
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionDraw/EventDraw" } ;
+GiGaSvc.EventSeq.Members     += { "GiGaEventActionCommand/EventCommand" } ;
 
 GiGaSvc.EventCommand.EndOfEventCommands = 
 { "/vis/scene/add/volume"               , 

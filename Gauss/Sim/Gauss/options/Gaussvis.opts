@@ -1,4 +1,4 @@
-// $Id: Gaussvis.opts,v 1.1 2002-11-12 16:28:09 witoldp Exp $ 
+// $Id: Gaussvis.opts,v 1.2 2002-11-13 16:50:17 witoldp Exp $ 
 
 AuditorSvc.Auditors = { "ChronoAuditor" };
 
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
 #include "$GAUSSOPTS/Visualisation.opts"
-//#include "$GAUSSOPTS/Digitisation.opts"
+#include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
 //#include "$GAUSSOPTS/GaussRootIO.opts"
