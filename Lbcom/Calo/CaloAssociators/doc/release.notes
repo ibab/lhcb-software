@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.29 2004-03-18 13:07:33 cattanem Exp $
+! $Id: release.notes,v 1.30 2004-07-21 08:07:53 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!===================== CaloAssociators v4r2 2004-07-19 =====================
+! 2004-07-19 - Marco Cattaneo
+ - Add dependency on new Relations package
 
 !===================== CaloAssociators v4r1 2004-03-18 =====================
 ! 2004-03-17 - Vanya BELYAEV
