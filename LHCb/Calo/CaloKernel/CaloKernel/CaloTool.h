@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.3 2002-04-01 12:50:24 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.4 2002-04-02 10:33:43 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/01 12:50:24  ibelyaev
+//  add templated accesssors to tools and improve exceptions
+//
 // Revision 1.2  2002/04/01 11:00:36  ibelyaev
 // enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
 //
@@ -97,7 +100,7 @@ protected:
    *  @param location data location/address in Gaudi Transient Store 
    */
   template<class TYPE>
-  TYPE* get( IDataProviderSvc* svc , const std::string& location )
+  TYPE* get( IDataProviderSvc* svc , const std::string& location ) const
   {
     if( 0 == svc ) 
       { Error("get<>(): IDataProviderSvc* points to NULL!"   ) ; return 0 ; }
@@ -107,7 +110,7 @@ protected:
     ///
     return object ;
   };
-
+  
   /** the useful method for location of tools 
    *  @exception CaloException for invalid Tool Service 
    *  @exception CaloException for error from Tool Service 
@@ -124,7 +127,7 @@ protected:
               const std::string& name            , 
               TOOL*&             tool            , 
               const IInterface*  parent   = 0    , 
-              bool               createIf = true ) 
+              bool               createIf = true ) const
   {
     Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
     StatusCode sc = toolSvc () 
@@ -179,7 +182,7 @@ protected:
    */ 
   inline IToolSvc*            toolSvc   () const { return m_toolSvc ; }
   
-  /** accessot to detector service 
+  /** accessor to detector service 
    *  @return pointer to detector service 
    */
   inline IDataProviderSvc*     detSvc   () const { return m_detSvc ; }

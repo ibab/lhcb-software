@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.4 2002-04-01 12:50:24 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.5 2002-04-02 10:33:43 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/01 12:50:24  ibelyaev
+//  add templated accesssors to tools and improve exceptions
+//
 // Revision 1.3  2002/04/01 11:00:35  ibelyaev
 // enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
 //
@@ -171,7 +174,7 @@ protected:
   TOOL* tool( const std::string& type            , 
               TOOL*&             tool            , 
               const IInterface*  parent   = 0    , 
-              bool               createIf = true ) 
+              bool               createIf = true ) const
   {
     Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
     StatusCode sc = toolSvc () 
