@@ -31,7 +31,7 @@ use CERNLIB      v2001
 
 # Event Model ( add any other Event package you need )
 use LHCbEvent    v11    Event
-use PhysEvent    v1     Event
+use PhysEvent    v1r1   Event
 
 # SICB database : this has to be consistent with the file you are reading
 use dbase        v239   SICB 
@@ -63,7 +63,7 @@ use axsellib v6      SICB
 use SicbCnv      v13   SICB
 
 # DaVinci components
-use DaVinciTools  v1   Phys
+use DaVinciTools  v1r1 Phys
 #
 #===== build DaVinci =========================
 application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
