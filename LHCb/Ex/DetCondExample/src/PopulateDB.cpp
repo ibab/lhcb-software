@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.6 2002-04-17 16:11:59 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.7 2002-07-25 13:50:52 andreav Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -463,32 +463,13 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
   }
 
   // Iteratively print all known CondDBFolderSets and CondDBFolders
+  log << MSG::INFO << "Iteratively list contents of CondDB" << endreq;
+  std::vector<std::string> allCondDBFolderSet;
+  std::vector<std::string> allCondDBFolder;
   try {
     condDBMgr->startRead();
-    log << MSG::INFO << "Iteratively list contents of CondDB" << endreq;
-    std::vector<std::string> allCondDBFolderSet;
-    std::vector<std::string> allCondDBFolder;
     condDBFolderMgr->getAllCondDBFolderSet ( allCondDBFolderSet );
     condDBFolderMgr->getAllCondDBFolder    ( allCondDBFolder    );
-    std::vector<std::string>::const_iterator aName;
-    log << MSG::INFO << "CondDB contains " << allCondDBFolderSet.size() 
-	<< " CondDBFolderSet(s):";
-    for ( aName  = allCondDBFolderSet.begin(); 
-	  aName != allCondDBFolderSet.end(); 
-	  aName++ ) {
-      log << MSG::INFO << std::endl 
-	  << "                                      " << *aName;
-    }
-    log << MSG::INFO << endreq;
-    log << MSG::INFO << "CondDB contains " << allCondDBFolder.size() 
-	<< " CondDBFolder(s):";
-    for ( aName  = allCondDBFolder.begin(); 
-	  aName != allCondDBFolder.end(); 
-	  aName++ ) {
-      log << MSG::INFO << std::endl 
-	  << "                                      " << *aName;
-    }
-    log << MSG::INFO << endreq;
     condDBMgr->commit();
   } catch (CondDBException &e) {
     log << MSG::ERROR << "Could not retrieve CondDBFolder/Set lists" << endreq;
@@ -497,6 +478,25 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
     log << MSG::ERROR << "***  error code:    " << e.getErrorCode()  << endreq;
     return StatusCode::FAILURE;
   }
+  std::vector<std::string>::const_iterator aName;
+  log << MSG::INFO << "CondDB contains " << allCondDBFolderSet.size() 
+      << " CondDBFolderSet(s):";
+  for ( aName  = allCondDBFolderSet.begin(); 
+	aName != allCondDBFolderSet.end(); 
+	aName++ ) {
+    log << MSG::INFO << std::endl 
+	<< "                                      " << *aName;
+  }
+  log << MSG::INFO << endreq;
+  log << MSG::INFO << "CondDB contains " << allCondDBFolder.size() 
+      << " CondDBFolder(s):";
+  for ( aName  = allCondDBFolder.begin(); 
+	aName != allCondDBFolder.end(); 
+	aName++ ) {
+    log << MSG::INFO << std::endl 
+	<< "                                      " << *aName;
+  }
+  log << MSG::INFO << endreq;
 
   // Dump the content of CondDBFolder rootName+"/SlowControl/LHCb/scLHCb"
   std::string folderName;
