@@ -4,6 +4,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v11r1 =================================
+! 2002-11-07 - Florence Ranjard
+ - requirements - remove XmlDDDB
+
 !======================== LHCbSys v11r0 ==================================
 ! 2002-10-30 - Florence Ranjard
  - requirements - add Associators
