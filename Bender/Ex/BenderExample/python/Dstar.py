@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.5 2004-02-10 13:24:05 ibelyaev Exp $
+# $Id: Dstar.py,v 1.6 2004-02-13 08:50:16 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -18,6 +18,7 @@ g.JobOptionsType = 'NONE'
 g.OutputLevel = 3
 g.config()
 
+global h1 
 # =============================================================================
 # Specific physics analysis algorithm 
 # =============================================================================
@@ -40,7 +41,7 @@ class Dstar(Algo):
 
         # Monte-Carlo truth 
         tup1    = self.ntuple ( title = "D0 Tuple" )
-        dm      = ADMASS("D0") < 60 * MeV   # create Delta Mass cut
+        dm      = ADMASS("D0") < 30 * MeV   # create Delta Mass cut
         
         # Loop over all (K pi)  combinations 
         for D0 in self.loop( formula = "K pi" , pid= "D0" ) :
@@ -66,8 +67,13 @@ class Dstar(Algo):
         tup2    = self.ntuple ( title = "D* Tuple" )
         for Dpi in self.loop( formula = "D0 pi" , pid='D*(2010)-' ) :            
             # use delta mass trick instead of mass-constrained fit
-            if Dpi.mass(1,2) - Dpi.mass(1) > (170. * MeV) : continue
+            dm = Dpi.mass(1,2) - Dpi.mass(1)
+            if dm > (170. * MeV) : continue
             if VCHI2( Dpi )  > 25  : continue
+            #
+            global h1 
+            h1 = self.plot( title = ' m(D0pi+) - m(D0) ' , value = dm ,
+                            low =  120 * MeV , high = 170 * MeV )   
             # daughter particles of D0 
             k1 = child( Dpi , 1 , 1 )
             p1 = child( Dpi , 1 , 2 )
@@ -106,7 +112,7 @@ bender.config( files   = [ '$DAVINCIROOT/options/DaVinci.opts' ] ,
                            'HcalPIDe.OutputLevel      =   5  ' ,
                            'BremPIDe.OutputLevel      =   5  ' ,
                            'PrsPIDe.OutputLevel       =   5  ' ,
-                           'EventSelector.PrintFreq   =  10  ' ] )
+                           'EventSelector.PrintFreq   =  50  ' ] )
 
 # define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
 g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
@@ -163,18 +169,12 @@ g.initialize()
 
 
 ## g.run(100)  ## crash !!
-g._evtpro.executeRun(100)
+g._evtpro.executeRun(500)
 
-g.exit()
+#g.exit()
 
 # =============================================================================
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.4  2004/02/10 12:37:34  ibelyaev
-#  update
-#
-# Revision 1.3  2004/01/24 23:38:51  ibelyaev
-#  update and fixes
-#
 # =============================================================================
