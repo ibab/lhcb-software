@@ -1,6 +1,9 @@
 package Event/VeloEvent
 package manager: E.Banas
 
+! 20010514 - VeloEvent v4 M.Cattaneo
+  requirements - use LHCbEvent v10*
+
 ! 20010402 - VeloEvent v3
   requirements - use GaudiSys v7
 

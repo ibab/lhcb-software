@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/VeloCluster.h,v 1.1.1.1 2000-11-23 13:39:24 ranjard Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Event/VeloEvent/VeloEvent/VeloCluster.h,v 1.2 2001-05-14 14:52:46 cattaneb Exp $
 #ifndef LHCBEVENT_VELOCLUSTER_H
 #define LHCBEVENT_VELOCLUSTER_H 1
 
@@ -61,7 +61,8 @@ class VeloCluster : virtual public ContainedObject {
       m_width(width),
       m_zPosition(zPosition)                      { }
 
-  VeloCluster( const VeloCluster& copy )          { }
+  /// Copy constructor not implemented
+  VeloCluster( const VeloCluster& /*copy */ )     { }
 
   /// Destructor
   virtual ~VeloCluster()                          { }

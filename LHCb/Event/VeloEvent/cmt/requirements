@@ -1,9 +1,9 @@
 package VeloEvent
-version v3
+version v4
 
 branches VeloEvent src cmt doc
 
-use LHCbEvent v9* Event
+use LHCbEvent v10* Event
 
 include_dirs $(VELOEVENTROOT)
 
