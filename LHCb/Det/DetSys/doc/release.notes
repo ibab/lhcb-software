@@ -4,12 +4,12 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v2r0 2003-06-17 =========================
+!========================= DetSys v2r0 2003-07-03 =========================
 ! 2003-06-17 - Marco Cattaneo
  - requirements
    New packages:      DetDescCnv v2r0, XmlTools v2r0
    Modified packages: DetDesc v12r0, ITDet v1r4, OTDet v4r0, CaloDet v6r5,
-           CaloDetXmlCnv v2r3, MuonDet v4r4, MuonTools v3r5, RichDet v4r2
+           CaloDetXmlCnv v2r3, MuonDet v4r4, MuonTools v3r6, RichDet v4r2
 
 !========================= DetSys v1r6 2003-05-19 =========================
 ! 2003-05-16 - Marco Cattaneo
