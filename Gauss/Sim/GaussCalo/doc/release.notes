@@ -7,6 +7,7 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!========================== GaussCalo v4r4 ===============================
 ! 2003-12-09 - Ivan BELYAEV
  - src/CaloSubHit.h   fix for new LHCbKernel 
    (new xml description of CalocellID class and the absence of != operator)
