@@ -1,7 +1,11 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
-====================v2r1===========================
+!=================== MuonKernel v2r2 2002-12-05 =======================
+! 2002-09-24 - Florence Ranjard
+  requirements - use GaudiKernel v13r*
+
+====================v2r1==============================================
 ! 20020506 Andrei Tsaregorodtsev
   Various fixes to suit Muon and L0Muon requirements as well as to
   satisfy Python version of the package:
