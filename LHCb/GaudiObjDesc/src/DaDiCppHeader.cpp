@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.40 2002-02-11 09:24:31 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.41 2002-02-12 08:22:26 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -775,12 +775,7 @@ void printMembers(std::ofstream& xmlOut,
 
     if (gddAttAccess == accessor)
     {
-      std::string fullAttName = " m_" + gddAttName;
-      if (gddAttIsStatic && (gddAttInit != ""))
-      {
-        fullAttName = fullAttName + " = " + gddAttInit;
-      }
-      fullAttName = fullAttName + ";";
+      std::string fullAttName = " m_" + gddAttName+ ";";
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut << gddAttType; 
