@@ -1,5 +1,6 @@
-// $Id: L0MuonCandidate.cpp,v 1.1 2002-04-04 05:52:34 ocallot Exp $
+// $Id: L0MuonCandidate.cpp,v 1.2 2002-04-04 07:17:24 cattanem Exp $
 
+#include <cmath>
 #include <vector>
 #include "Event/L0MuonCandidate.h"
 #include "L0MuonBase.h"
