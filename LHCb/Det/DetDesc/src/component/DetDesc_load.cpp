@@ -44,6 +44,9 @@ _ImplementDataObjectFactory( Mixture           ) ;
 #include "DetDesc/TabulatedProperty.h"
 _ImplementDataObjectFactory( TabulatedProperty ) ; 
 
+#include "DetDesc/Surface.h"
+_ImplementDataObjectFactory( Surface           ) ; 
+
 
 void DetDesc_load() {
 
@@ -60,6 +63,7 @@ void DetDesc_load() {
   DLL_DECL_CONVERTER( XmlElementCnv           );
   DLL_DECL_CONVERTER( XmlMixtureCnv           );
   DLL_DECL_CONVERTER( XmlTabulatedPropertyCnv );
+  DLL_DECL_CONVERTER( XmlSurfaceCnv           );
   
   // DataObject Factories
   
@@ -71,6 +75,7 @@ void DetDesc_load() {
   DLL_DECL_OBJECTFACTORY( Mixture           );
 
   DLL_DECL_OBJECTFACTORY( TabulatedProperty );
+  DLL_DECL_OBJECTFACTORY( Surface           );
   
 }
 

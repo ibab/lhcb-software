@@ -2,6 +2,12 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010426 - Gonzalo Gracia
+   Modified DetDesc_load.cpp to include: 
+     DLL_DECL_CONVERTER( XmlSurfaceCnv           );
+     DLL_DECL_OBJECTFACTORY( Surface           );
+
+!===========================================================================
 ! 20010412 - Gonzalo Gracia
   Implementation of the conversion procedure for materialref, isotoperef and elementref in catalogs. 
   Include new tag "component" in mixtures
