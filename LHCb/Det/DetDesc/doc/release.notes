@@ -1,14 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.106 2002-06-22 15:58:35 ocallot Exp $ 
+! $Id: release.notes,v 1.107 2002-06-25 07:44:09 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 ! 2002-06-22 - Olivier Callot
- - Replace all prints by calls to MsgStream with "TransportSvc" as name. But
-   as Gaudi doesn't allow to control the output level of a service, this is
-   controlled by the TrFirstCleverExtrapolator option "TransportOutputLevel".
+ - Replace all prints by calls to MsgStream with "TransportSvc" as name.
    VERBOSE is for experts, Problems are reported at ERROR level.
 
 ! 2002-06-21 - Olivier Callot
