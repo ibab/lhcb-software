@@ -1,11 +1,11 @@
-// $Id: MessageSvcStl.h,v 1.1 2003-06-30 14:17:02 jonrob Exp $
+// $Id: MessageSvcStl.h,v 1.2 2003-08-06 09:41:38 jonrob Exp $
 #ifndef RICHKERNEL_MESSAGESVCSTL_H 
 #define RICHKERNEL_MESSAGESVCSTL_H 1
 
 #include "GaudiKernel/MsgStream.h"
 
 /// Method to send std::vector to Gaudi Message Service
-/// SHould be moved to standard Gaudi Location ?
+/// Should be moved to standard Gaudi Location ?
 template <class T> inline
 MsgStream & operator << ( MsgStream & stream, 
                           const std::vector<T> & vector ) {
