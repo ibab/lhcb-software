@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruth4Alg.cpp,v 1.2 2003-12-18 15:33:36 cattanem Exp $
+// $Id: CaloClustersMCTruth4Alg.cpp,v 1.3 2004-02-17 12:11:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -91,22 +91,22 @@ StatusCode CaloClustersMCTruth4Alg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get mc particles 
-  Particles*  particles = get( eventSvc  () , inputData (), particles ) ;
+  Particles*  particles = get<Particles>( inputData () ) ;
   if( 0 == particles ) { return StatusCode::FAILURE ; }
-
+  
   // get the detector 
-  Detector*   detector  = get ( detSvc   () , detData   () , detector );
+  Detector*   detector  = getDet<DeCalorimeter> ( detData () );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
   
   VClusters vclusters;
   for( Inputs::const_iterator icont = 
          m_clusters.begin() ; m_clusters.end() != icont ; ++icont ) 
-    {
-      // get input clusters 
-      Clusters*   clusters  = get ( eventSvc () , *icont , clusters ) ;
-      if( 0 == clusters  ) { return StatusCode::FAILURE ; }  
-      vclusters.push_back( clusters );
-    };
+  {
+    // get input clusters 
+    Clusters*   clusters  = get<Clusters> ( *icont ) ;
+    if( 0 == clusters  ) { return StatusCode::FAILURE ; }  
+    vclusters.push_back( clusters );
+  };
   
   // scale factor for recalculation of Eactive into Etotal 
   const double activeToTotal = detector->activeToTotal() ;

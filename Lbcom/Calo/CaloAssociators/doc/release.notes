@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.25 2003-12-18 15:33:36 cattanem Exp $
+! $Id: release.notes,v 1.26 2004-02-17 12:11:33 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-02-17 - Vanya BELYAEV
+ - update for new CaloKernel package 
+ - increase the *MAJOR* version to v4r0 
 
 !===================== CaloAssociators v3r5 2003-12-16 =====================
 ! 2003-12-16 - Marco Cattaneo

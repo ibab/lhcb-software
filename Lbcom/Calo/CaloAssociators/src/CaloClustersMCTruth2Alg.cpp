@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruth2Alg.cpp,v 1.2 2003-12-18 15:33:36 cattanem Exp $
+// $Id: CaloClustersMCTruth2Alg.cpp,v 1.3 2004-02-17 12:11:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -55,46 +55,6 @@ CaloClustersMCTruth2Alg::~CaloClustersMCTruth2Alg() {};
 // ============================================================================
 
 // ============================================================================
-/** standard initialization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode CaloClustersMCTruth2Alg::initialize()
-{  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-  
-//  std::cout << Conversion<char,int>::exists << std::endl ;
-
-  // initialize the base class 
-  StatusCode sc = CaloAlgorithm::initialize() ;
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm",sc);}
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode CaloClustersMCTruth2Alg::finalize() 
-{
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  /// finalize thebase class
-  return CaloAlgorithm::finalize () ;
-};
-
-// ============================================================================
 /** standard execution of the algorithm
  *  @see CaloAlgorithm 
  *  @see     Algorithm 
@@ -114,11 +74,11 @@ StatusCode CaloClustersMCTruth2Alg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get input clusters 
-  Clusters*   clusters  = get ( eventSvc () , inputData () , clusters ) ;
-  if( 0 == clusters  )               { return StatusCode::FAILURE ; }
+  Clusters*   clusters  =    get<Clusters>      ( inputData () ) ;
+  if( 0 == clusters  )  { return StatusCode::FAILURE ; }
   
   // get the detector 
-  Detector*   detector  = get ( detSvc   () , detData   () , detector );
+  Detector*   detector  = getDet<DeCalorimeter> ( detData   () );
   if( 0 == detector  )               { return StatusCode::FAILURE ; }
   
   const double activeToTotal = detector->activeToTotal() ;
@@ -127,9 +87,9 @@ StatusCode CaloClustersMCTruth2Alg::execute()
   Table* table = new Table();
   StatusCode sc = put( table , outputData () );
   if( sc.isFailure() ) { return sc ; }
-
+  
   if( 0 == clusters -> size () ) 
-    { Warning("Empty container of clusters '" + inputData() + "'"); }
+  { Warning("Empty container of clusters '" + inputData() + "'"); }
   if( 0 == clusters -> size () )     { return StatusCode::SUCCESS ; }
   
   
@@ -139,19 +99,19 @@ StatusCode CaloClustersMCTruth2Alg::execute()
   // fill the relation data 
   for( Clusters::const_iterator icluster = clusters->begin() ;
        clusters->end() != icluster ; ++icluster ) 
-    {
-      const CaloCluster* cluster = *icluster ;
-      if( 0 == cluster  ) { continue ; }                   // Skip NULLs 
-      
-      // use the evaluator to extract MCtruth information (follow references)
-      const ParticlePair p( evaluator( cluster ) );
-      const MCParticle* particle = p.second ;
-      const double      energy   = p.first  ;
-      if( 0 == particle || 0 == energy ) { continue ; }    // Skip NULLs 
-      
-      // put relation to relation table 
-      table->relate( cluster , particle , (float) energy * activeToTotal );
-    };
+  {
+    const CaloCluster* cluster = *icluster ;
+    if( 0 == cluster  ) { continue ; }                   // Skip NULLs 
+    
+    // use the evaluator to extract MCtruth information (follow references)
+    const ParticlePair p( evaluator( cluster ) );
+    const MCParticle* particle = p.second ;
+    const double      energy   = p.first  ;
+    if( 0 == particle || 0 == energy ) { continue ; }    // Skip NULLs 
+    
+    // put relation to relation table 
+    table->relate( cluster , particle , (float) energy * activeToTotal );
+  };
   
   return StatusCode::SUCCESS;
 };

@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruth5Alg.cpp,v 1.2 2003-12-18 15:33:36 cattanem Exp $
+// $Id: CaloClustersMCTruth5Alg.cpp,v 1.3 2004-02-17 12:11:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -85,23 +85,23 @@ StatusCode CaloClustersMCTruth5Alg::execute()
   typedef const MCParticles                                Particles ;
   typedef RelationWeighted1D<CaloCluster,MCParticle,float> Table     ;
   typedef std::vector<Clusters*>                           VClusters ;
-
+  
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get the detector 
-  Detector*   detector  = get ( detSvc   () , detData   () , detector );
+  Detector*   detector  = getDet<DeCalorimeter> ( detData () );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
   
   VClusters vclusters;
   for( Inputs::const_iterator icont = 
          m_clusters.begin() ; m_clusters.end() != icont ; ++icont ) 
-    {
-      // get input clusters 
-      Clusters*   clusters  = get ( eventSvc () , *icont , clusters ) ;
-      if( 0 == clusters  ) { return StatusCode::FAILURE ; }  
-      vclusters.push_back( clusters );
-    };
+  {
+    // get input clusters 
+    Clusters*   clusters  = get<Clusters> ( *icont ) ;
+    if( 0 == clusters  ) { return StatusCode::FAILURE ; }  
+    vclusters.push_back( clusters );
+  };
   
   // scale factor for recalculation of Eactive into Etotal 
   const double activeToTotal = detector->activeToTotal() ;
@@ -110,66 +110,65 @@ StatusCode CaloClustersMCTruth5Alg::execute()
   Table* table = new Table();
   StatusCode sc = put( table , outputData () );
   if( sc.isFailure() ) { return sc ; }
-
+  
   typedef MCCaloHistory<CaloCluster> MCHistory ;
-
+  
   // loop over the all containers of clusters 
   for ( VClusters::const_iterator cont = vclusters.begin() ; 
         vclusters.end() != cont ; ++cont )
+  {
+    // get the container of clusters 
+    const Clusters* clusters = *cont ;
+    if( 0 == clusters ) { continue  ; }
+    
+    // loop over all clusters in the container 
+    for( Clusters::const_iterator cluster = clusters->begin() ;
+         clusters->end() != cluster ; ++cluster ) 
     {
-      // get the container of clusters 
-      const Clusters* clusters = *cont ;
-      if( 0 == clusters ) { continue  ; }
+      // Skip NULLs
+      if( 0 == *cluster ) { continue ; }
       
-      // loop over all clusters in the container 
-      for( Clusters::const_iterator cluster = clusters->begin() ;
-           clusters->end() != cluster ; ++cluster ) 
-        {
-          // Skip NULLs
-          if( 0 == *cluster ) { continue ; }
-          
-          // create history map 
-          CaloMCMap map1 ;
-          
-          // create evaluator 
-          MCHistory history( &map1 ) ;
-          
-          // build the history 
-          history( *cluster ) ;
-          
-          // copy history map into separate container 
-          CaloMCMap map2( map1 );
-          
-          { // update the copy of history map 
-            for ( CaloMCMap::iterator entry = map1.begin() ; 
-                  map1.end() != entry ; ++entry ) 
-              { 
-                const MCParticle* particle = entry -> first  ;
-                const double      energy   = entry -> second ;
-                updateCaloMCMap( particle , energy , map2 ) ; 
-              }
-          }
-          
-          const double cut = m_threshold1 * ( (*cluster) -> e () ) ;
-          
-          // fill the relation table 
-          for( CaloMCMap::iterator entry = map2.begin() ; 
-               map2.end() != entry ; ++entry ) 
-            {    
-              // put relation to relation table 
-              const MCParticle* particle =                 entry ->  first ;
-              const double      energy   = activeToTotal * entry -> second ;
-              
-              if( energy                   < cut  && 
-                  particle->momentum().e() < m_threshold2 ) { continue ; }
-              
-              // fill actual relations 
-              table->relate( *cluster , particle , energy   ) ;
-            }
-
-        };
+      // create history map 
+      CaloMCMap map1 ;
+      
+      // create evaluator 
+      MCHistory history( &map1 ) ;
+      
+      // build the history 
+      history( *cluster ) ;
+      
+      // copy history map into separate container 
+      CaloMCMap map2( map1 );
+      
+      { // update the copy of history map 
+        for ( CaloMCMap::iterator entry = map1.begin() ; 
+              map1.end() != entry ; ++entry ) 
+        { 
+          const MCParticle* particle = entry -> first  ;
+          const double      energy   = entry -> second ;
+          updateCaloMCMap( particle , energy , map2 ) ; 
+        }
+      }
+      
+      const double cut = m_threshold1 * ( (*cluster) -> e () ) ;
+      
+      // fill the relation table 
+      for( CaloMCMap::iterator entry = map2.begin() ; 
+           map2.end() != entry ; ++entry ) 
+      {    
+        // put relation to relation table 
+        const MCParticle* particle =                 entry ->  first ;
+        const double      energy   = activeToTotal * entry -> second ;
+        
+        if( energy                   < cut  && 
+            particle->momentum().e() < m_threshold2 ) { continue ; }
+        
+        // fill actual relations 
+        table->relate( *cluster , particle , energy   ) ;
+      }
+      
     };
-  
+  };
 
   return StatusCode::SUCCESS;
 };

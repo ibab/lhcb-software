@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.6 2003-12-18 15:33:36 cattanem Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.7 2004-02-17 12:11:33 ibelyaev Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -60,44 +60,6 @@ CaloClustersMCTruthAlg::~CaloClustersMCTruthAlg() {};
 // ============================================================================
 
 // ============================================================================
-/** standard initialization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode CaloClustersMCTruthAlg::initialize()
-{  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-  
-  // initialize the base class 
-  StatusCode sc = CaloAlgorithm::initialize() ;
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm",sc);}
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard finalization of the algorithm
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return StatusCode
- */
-// ============================================================================
-StatusCode CaloClustersMCTruthAlg::finalize() 
-{
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  /// finalize thebase class
-  return CaloAlgorithm::finalize () ;
-};
-
-// ============================================================================
 /** standard execution of the algorithm
  *  @see CaloAlgorithm 
  *  @see     Algorithm 
@@ -118,15 +80,15 @@ StatusCode CaloClustersMCTruthAlg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get input clusters 
-  Clusters*   clusters  = get ( eventSvc () , inputData () , clusters ) ;
+  Clusters*   clusters  = get<Clusters> ( inputData () ) ;
   if( 0 == clusters  ) { return StatusCode::FAILURE ; }
   
   // get mc particles 
-  Particles*  particles = get( eventSvc  () , m_particles  , particles ) ;
+  Particles*  particles = get<Particles> ( m_particles ) ;
   if( 0 == particles ) { return StatusCode::FAILURE ; }
   
   // get the detector 
-  Detector*   detector  = get ( detSvc   () , detData   () , detector );
+  Detector*   detector  = getDet<DeCalorimeter> ( detData () );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
   
   // scale factor for recalculation of Eactive into Etotal 
@@ -143,28 +105,28 @@ StatusCode CaloClustersMCTruthAlg::execute()
   // loop over all clusters 
   for( Clusters::const_iterator cluster = clusters->begin() ;
        clusters->end() != cluster ; ++cluster ) 
-    {
-      // Skip NULLs
-      if( 0 == *cluster ) { continue ; }
-      // define "current cut" value 
-      const double  cut = m_threshold * (*cluster)->e() ;
-      // loop over all MC truth particles 
-      for( Particles::const_iterator    particle = particles->begin() ; 
-           particles->end() != particle ; ++particle )
-        {    
-          // Skip NULLS  
-          if( 0 == *particle ) { continue ; } 
-          // Skip low momentum particles  
-          if( (*particle)->momentum().e() < 0.90 * cut ) { continue ; }
-          // use the evaluator to extract exact MCTruth information 
-          const double  energy =  
-            evaluator( *cluster , *particle ) * activeToTotal ;
-          // skip small energy depositions
-          if(  cut > energy  ) { continue ; }
-          // put relation to relation table 
-          table->relate( *cluster , *particle , (float) energy );     
-        };
-    }
+  {
+    // Skip NULLs
+    if( 0 == *cluster ) { continue ; }
+    // define "current cut" value 
+    const double  cut = m_threshold * (*cluster)->e() ;
+    // loop over all MC truth particles 
+    for( Particles::const_iterator    particle = particles->begin() ; 
+         particles->end() != particle ; ++particle )
+    {    
+      // Skip NULLS  
+      if( 0 == *particle ) { continue ; } 
+      // Skip low momentum particles  
+      if( (*particle)->momentum().e() < 0.90 * cut ) { continue ; }
+      // use the evaluator to extract exact MCTruth information 
+      const double  energy =  
+        evaluator( *cluster , *particle ) * activeToTotal ;
+      // skip small energy depositions
+      if(  cut > energy  ) { continue ; }
+      // put relation to relation table 
+      table->relate( *cluster , *particle , (float) energy );     
+    };
+  }
   
   return StatusCode::SUCCESS;
 };
