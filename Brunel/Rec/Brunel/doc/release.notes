@@ -4,9 +4,10 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9r0>20020219 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>2002020 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
-   Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
+   Added VELO digitisation, VELO tracking
+   Added Forward tracking (only for dbase < v242r1)
    Added L0 pileup veto. Removed Fortran L0 code.
    Added TT1 to IT reconstruction
    --> Use this version to reconstruct data produced with dbase v240 to v243r1
@@ -72,7 +73,7 @@ Purpose: LHCb reconstruction program
      use L0/L0DU           v4r0
      Removed SICB/L0SicbCnv
 
-   Calorimeter C++ reconstruction add (not yet persistent)
+   Prepare for Calorimeter C++ reconstruction (not yet executed)
      use Calo/CaloTools   v1r1
      use Calo/CaloCA      v3r1
      use Calo/CaloAlgs    v4r1
