@@ -1,4 +1,4 @@
-// $Id: IDebugTool.h,v 1.1.1.1 2002-05-21 07:32:02 gcorti Exp $
+// $Id: IDebugTool.h,v 1.2 2003-03-07 11:00:29 odie Exp $
 #ifndef DAVINCIMCTOOLS_IDEBUGTOOL_H
 #define DAVINCIMCTOOLS_IDEBUGTOOL_H 1
 
@@ -18,7 +18,7 @@
 // Forward declarations
 
 // Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IDebugTool("IDebugTool", 1, 0);
+static const InterfaceID IID_IDebugTool("IDebugTool", 2, 0);
 
 /** @class IDebugTool IDebugTool.h DaVinciMCTools/IDebugTool.h
  *  
@@ -63,6 +63,10 @@ public:
   /// Also print the reconstructed info if available.
   virtual void printEventAsTree( const std::vector<MCParticle*> &event,
                                  Particle2MCAsct::IAsct *assoc ) = 0;
+  /// Same from a keyed container.
+  virtual void printEventAsTree( const MCParticles &event ) = 0;
+  virtual void printEventAsTree( const MCParticles &event,
+                                 Particle2MCAsct::IAsct *assoc ) = 0;
 
   /// Print all the (MC)Particles in the event as a flat list.
   virtual void printEventAsList( const ParticleVector &event ) = 0;
@@ -71,6 +75,13 @@ public:
   virtual void printEventAsList( const ParticleVector &event,
                                  Particle2MCAsct::IAsct *assoc ) = 0;
   virtual void printEventAsList( const std::vector<MCParticle*> &event,
+                                 Particle2MCAsct::IAsct *assoc ) = 0;
+  /// Same from a keyed container.
+  virtual void printEventAsList( const Particles &event ) = 0;
+  virtual void printEventAsList( const MCParticles &event ) = 0;
+  virtual void printEventAsList( const Particles &event,
+                                 Particle2MCAsct::IAsct *assoc ) = 0;
+  virtual void printEventAsList( const MCParticles &event,
                                  Particle2MCAsct::IAsct *assoc ) = 0;
 };
 #endif // DAVINCIMCTOOLS_IDEBUGTOOL_H
