@@ -117,7 +117,7 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
         {          
           G4ProcessManager* procMgr = particle->GetProcessManager();
           procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
-          if (pname=="e-" && m_killloops)  
+          //          if (pname=="e-" && m_killloops)  
             procMgr->
               AddDiscreteProcess(new LoopCuts("LoopCuts",m_maxsteps,m_minstep));
         }
