@@ -1,4 +1,4 @@
-// $Id: L0MuonBase.h,v 1.1 2002-04-04 05:52:34 ocallot Exp $
+// $Id: L0MuonBase.h,v 1.2 2002-05-07 08:17:28 atsareg Exp $
 //
 #ifndef      L0MUON_L0MUONBASE_H
 #define      L0MUON_L0MUONBASE_H 1
@@ -50,10 +50,6 @@ namespace L0MuonBase {
   
   // Pt decoding constants
   static const double PT_BIN_WIDTH = 40.;
-  // X decoding constant
-  static const double X_BASIC_CELL = 1.;
-  // Y decoding constant
-  static const double Y_BASIC_CELL = 2.5;
   
 };
 #endif   // L0MUON_L0MUONBASE_H
