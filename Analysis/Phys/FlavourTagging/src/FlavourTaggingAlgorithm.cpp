@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.5 2002-09-06 07:06:04 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.6 2002-09-10 07:44:35 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -151,7 +151,8 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   {
     if( !(*hi)->particleID().hasBottom() )
     {
-      log << MSG::DEBUG << "Skipping a " << (*hi)->particleID().pid() << endreq;
+      log << MSG::VERBOSE << "Skipping a " << (*hi)->particleID().pid()
+          << endreq;
       continue;
     }
     m_n_B++;
@@ -178,6 +179,29 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     }
     log << endreq;
     tags->insert(theTag);
+    if( theTag->decision() != FlavourTag::none )
+    {
+      std::list<Particle *> parts(0);
+      parts.push_back(theTag->taggedB());
+      std::list<Particle *>::iterator pi = parts.begin();
+      while( pi != parts.end() )
+      {
+        if( *pi == theTag->tagger() )
+        {
+          log << MSG::WARNING 
+              << "***** The tagger is a member of the B decay! *****" << endreq;
+          break;
+        }
+        Vertex *vtx = (*pi)->endVertex();
+        if( vtx != 0 )
+        {
+          SmartRefVector<Particle>::const_iterator d_i;
+          for( d_i=vtx->products().begin(); d_i!=vtx->products().end(); d_i++ )
+            parts.push_back(const_cast<Particle*>(d_i->target()));
+        }
+        pi++;
+      }
+    }
   }
   sc = eventSvc()->registerObject(m_tags_location,tags);
   if (sc.isFailure())

@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.4 2002-09-06 07:06:04 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.5 2002-09-10 07:44:35 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -10,6 +10,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/NTuple.h"
 
+#include "Event/EventHeader.h"
 #include "Event/Vertex.h"
 
 // from CLHEP
@@ -120,7 +121,7 @@ StatusCode SingleParticleTaggingTool::initialize()
 
   log << MSG::DEBUG << "Booking an ntuple named: " << m_NTupleName << endreq;
 
-  StatusCode status;
+  StatusCode s;
   NTuplePtr nt(m_NTupleSvc, m_NTupleName);
   if( !nt )    // Check if already booked
   {
@@ -128,34 +129,23 @@ StatusCode SingleParticleTaggingTool::initialize()
      
     if( nt )  // ntuple sucessfully booked
     {
-      status = nt->addItem ("nCands", m_n_cands, 0, 1000 );
-      if ( status.isSuccess() )
-        status = nt->addItem ("nVtxs", m_n_vtxs, 0, 5);
-      if ( status.isSuccess() )
-        status = nt->addItem ("iTagger",  m_i_selected, 0, 1000 );
-      if ( status.isSuccess() )
-        status = nt->addItem ("Tag",  m_tag, -1, 1 );
+      s = nt->addItem("Run", m_n_run);
+      if( s.isSuccess() ) s = nt->addItem("Event", m_n_event);
+      if( s.isSuccess() ) s = nt->addItem("nCands", m_n_cands, 0, 1000);
+      if( s.isSuccess() ) s = nt->addItem("nVtxs", m_n_vtxs, 0, 5);
+      if( s.isSuccess() ) s = nt->addItem("iTagger",  m_i_selected, 0, 1000);
+      if( s.isSuccess() ) s = nt->addItem("Tag",  m_tag, -1, 1);
 
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("px", m_n_cands, m_px);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("py", m_n_cands, m_py);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("pz", m_n_cands, m_pz);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("vx", m_n_cands, m_vx);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("vy", m_n_cands, m_vy);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("vz", m_n_cands, m_vz);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("CL", m_n_cands, m_cl);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("ID", m_n_cands, m_id);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("ip", m_n_cands, 5, m_ip);
-      if ( status.isSuccess() )
-        status = nt->addIndexedItem ("iperr", m_n_cands, 5, m_iperr);      
+      if( s.isSuccess() ) s = nt->addIndexedItem("px", m_n_cands, m_px);
+      if( s.isSuccess() ) s = nt->addIndexedItem("py", m_n_cands, m_py);
+      if( s.isSuccess() ) s = nt->addIndexedItem("pz", m_n_cands, m_pz);
+      if( s.isSuccess() ) s = nt->addIndexedItem("vx", m_n_cands, m_vx);
+      if( s.isSuccess() ) s = nt->addIndexedItem("vy", m_n_cands, m_vy);
+      if( s.isSuccess() ) s = nt->addIndexedItem("vz", m_n_cands, m_vz);
+      if( s.isSuccess() ) s = nt->addIndexedItem("CL", m_n_cands, m_cl);
+      if( s.isSuccess() ) s = nt->addIndexedItem("ID", m_n_cands, m_id);
+      if( s.isSuccess() ) s = nt->addIndexedItem("ip", m_n_cands, 5, m_ip);
+      if( s.isSuccess() ) s = nt->addIndexedItem("iperr", m_n_cands,5,m_iperr);
     }
     else
     {   // did not manage to book the N tuple....
@@ -165,25 +155,27 @@ StatusCode SingleParticleTaggingTool::initialize()
   }
   else
   {  // Just reconnect to existing items
-    status = nt->item ("nCands", m_n_cands );
-    if ( status.isSuccess() ) status = nt->item ("nVtxs", m_n_vtxs );
-    if ( status.isSuccess() ) status = nt->item ("iTagger", m_i_selected );
-    if ( status.isSuccess() ) status = nt->item ("Tag",  m_tag);
-    if ( status.isSuccess() ) status = nt->item ("px", m_px );
-    if ( status.isSuccess() ) status = nt->item ("py", m_py);
-    if ( status.isSuccess() ) status = nt->item ("pz", m_pz);
-    if ( status.isSuccess() ) status = nt->item ("vx", m_vx);
-    if ( status.isSuccess() ) status = nt->item ("vy", m_vy);
-    if ( status.isSuccess() ) status = nt->item ("vz", m_vz);
-    if ( status.isSuccess() ) status = nt->item ("CL", m_cl);
-    if ( status.isSuccess() ) status = nt->item ("ID", m_id);
-    if ( status.isSuccess() ) status = nt->item ("ip", m_ip);
-    if ( status.isSuccess() ) status = nt->item ("iperr", m_iperr);
+    s = nt->item ("Run", m_n_run);
+    if( s.isSuccess() ) s = nt->item ("Event", m_n_event);
+    if( s.isSuccess() ) s = nt->item ("nCands", m_n_cands);
+    if( s.isSuccess() ) s = nt->item ("nVtxs", m_n_vtxs);
+    if( s.isSuccess() ) s = nt->item ("iTagger", m_i_selected);
+    if( s.isSuccess() ) s = nt->item ("Tag", m_tag);
+    if( s.isSuccess() ) s = nt->item ("px", m_px );
+    if( s.isSuccess() ) s = nt->item ("py", m_py);
+    if( s.isSuccess() ) s = nt->item ("pz", m_pz);
+    if( s.isSuccess() ) s = nt->item ("vx", m_vx);
+    if( s.isSuccess() ) s = nt->item ("vy", m_vy);
+    if( s.isSuccess() ) s = nt->item ("vz", m_vz);
+    if( s.isSuccess() ) s = nt->item ("CL", m_cl);
+    if( s.isSuccess() ) s = nt->item ("ID", m_id);
+    if( s.isSuccess() ) s = nt->item ("ip", m_ip);
+    if( s.isSuccess() ) s = nt->item ("iperr", m_iperr);
   }
-  if ( !status )
+  if( !s )
   {
     log << MSG::ERROR << "Failed to add items to col_wise N-tuple" << endreq; 
-    return status;
+    return s;
   }
   return StatusCode::SUCCESS;
 }
@@ -301,6 +293,21 @@ void SingleParticleTaggingTool::tagFromList( const Particle &theB,
 
   if( m_DoNTuple )
   {
+    // Retrieve informations about event
+    SmartDataPtr<EventHeader> evt(m_EventSvc, EventHeaderLocation::Default );
+    
+    if( !evt )
+    {   
+      log << MSG::ERROR
+          << "Could not retrieve event header. Will put fake !!!!" << endreq;
+      m_n_run = 0;
+      m_n_event = -1;
+    }
+    else
+    {
+      m_n_run = evt->runNum();
+      m_n_event = evt->evtNum();
+    }
     m_n_cands = 0;
     m_n_vtxs = vtxs.size();
     m_i_selected = 0;

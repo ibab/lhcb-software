@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.h,v 1.3 2002-09-05 08:16:48 odie Exp $
+// $Id: SingleParticleTaggingTool.h,v 1.4 2002-09-10 07:44:35 odie Exp $
 #ifndef SINGLEPARTICLETAGGINGTOOL_H 
 #define SINGLEPARTICLETAGGINGTOOL_H 1
 
@@ -62,6 +62,7 @@ public:
                              FlavourTag &theTag );
 
 protected:
+  NTuple::Item<long>   m_n_run, m_n_event;
   NTuple::Item<long>   m_n_cands, m_n_vtxs, m_i_selected, m_tag;
   NTuple::Array<float> m_px, m_py, m_pz, m_vx, m_vy, m_vz, m_id, m_cl;
   NTuple::Matrix<float> m_ip, m_iperr;

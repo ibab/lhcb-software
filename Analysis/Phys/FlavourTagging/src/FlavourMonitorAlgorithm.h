@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.h,v 1.1 2002-09-03 08:22:07 odie Exp $
+// $Id: FlavourMonitorAlgorithm.h,v 1.2 2002-09-10 07:44:35 odie Exp $
 #ifndef FLAVOURMONITORALGORITHM_H 
 #define FLAVOURMONITORALGORITHM_H 1
 
@@ -35,7 +35,10 @@ private:
   std::vector<std::string> m_tags_locations; 
 
   /// Statistics accumulator
-  std::vector<unsigned int> m_n_good, m_n_wrong, m_n_untagged, m_n_noB;
+  unsigned int m_fractions;
+  std::vector<std::vector<unsigned int> > m_n_good, m_n_wrong, m_n_untagged;
+  std::vector<std::vector<unsigned int> > m_n_fractions;
+  std::vector<unsigned int> m_n_noB;
 
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
   Particle2MCAsct::IAsct* m_pAsctLinks; ///< Pointer to associator using links

@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.3 2002-09-06 07:17:12 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.4 2002-09-10 07:44:34 odie Exp $
 // Include files 
 #include <algorithm>
 
@@ -9,6 +9,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IToolSvc.h"
 
+#include "Event/EventHeader.h"
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -33,13 +34,15 @@ const        IAlgFactory& FlavourMonitorAlgorithmFactory = s_factory ;
 //=============================================================================
 FlavourMonitorAlgorithm::FlavourMonitorAlgorithm( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ), m_tags_locations(0), m_n_good(0),
-    m_n_wrong(0), m_n_untagged(0), m_n_noB(0), m_nameMCAsct(), m_pAsctLinks(0)
+  : DVAlgorithm ( name , pSvcLocator ), m_tags_locations(0), m_fractions(0),
+    m_n_good(2), m_n_wrong(2), m_n_untagged(2), m_n_fractions(0), m_n_noB(0),
+    m_nameMCAsct(), m_pAsctLinks(0)
 {
   m_tags_locations.clear();
   m_tags_locations.push_back( FlavourTagLocation::User );
   declareProperty("TagsLocations", m_tags_locations);
-  declareProperty( "MCAssociator", m_nameMCAsct = "Particle2MCAsct" );
+  declareProperty("MCAssociator",  m_nameMCAsct = "Particle2MCAsct");
+  declareProperty("StatNPartial", m_fractions );
 }
 
 //=============================================================================
@@ -67,9 +70,19 @@ StatusCode FlavourMonitorAlgorithm::initialize()
   m_n_wrong.resize(m_tags_locations.size());
   m_n_untagged.resize(m_tags_locations.size());
   m_n_noB.resize(m_tags_locations.size());
+  m_n_fractions.resize(m_tags_locations.size());
 
   for( unsigned int i=0; i<m_tags_locations.size(); i++ )
-    m_n_good[i] = m_n_wrong[i] = m_n_untagged[i] = m_n_noB[i] = 0;
+  {
+    m_n_good[i].resize(m_fractions+2);
+    m_n_wrong[i].resize(m_fractions+2);
+    m_n_untagged[i].resize(m_fractions+2);
+    m_n_fractions[i].resize(m_fractions+2);
+    m_n_noB[i] = 0;
+    for( unsigned int f=0; f<m_fractions+2; f++ )
+      m_n_good[i][f] = m_n_wrong[i][f] = m_n_untagged[i][f]
+        = m_n_fractions[i][f] = 0;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -153,10 +166,12 @@ StatusCode FlavourMonitorAlgorithm::execute() {
         }
       }
       log << MSG::DEBUG << "mcBs.size() = " << mcBs.size() << endreq;
+
+      float fraction = float(mcBs.size())/float(prods.size());
       
       // Find the most frequent B in the list.
       const MCParticle *mcB = 0;
-      unsigned int max_n = 0;
+      unsigned int max_n = 0, n_tot = 0;
       while( !mcBs.empty() )
       {
         unsigned int n = std::count(mcBs.begin(), mcBs.end(), mcBs.front());
@@ -166,8 +181,9 @@ StatusCode FlavourMonitorAlgorithm::execute() {
           mcB = mcBs.front();
         }
         mcBs.remove( mcBs.front() );
+        n_tot++;
       }
-      
+
       if( mcB == 0 )
       {
         log << MSG::DEBUG << "No B found." << endreq;
@@ -175,6 +191,13 @@ StatusCode FlavourMonitorAlgorithm::execute() {
         continue;
       }
       log << MSG::DEBUG << "B found." << endreq;
+      
+      fraction /= n_tot;
+      fraction = 1 - fraction;
+      unsigned int f = int(floor(fraction*(m_fractions+2)));
+      log << MSG::DEBUG << "Association fraction: " << 1-fraction 
+          << " (" << f << ')' << endreq;
+      m_n_fractions[i][f]++;
       
       FlavourTag::TagResult mctag;
       if( mcB->particleID().isMeson() )
@@ -188,12 +211,12 @@ StatusCode FlavourMonitorAlgorithm::execute() {
         else
           mctag = FlavourTag::bbar;
       if( (*tag_i)->decision() == FlavourTag::none )
-        m_n_untagged[i]++;
+        m_n_untagged[i][f]++;
       else
         if( (*tag_i)->decision() == mctag )
-          m_n_good[i]++;
+          m_n_good[i][f]++;
         else
-          m_n_wrong[i]++;
+          m_n_wrong[i][f]++;
     }
   }
 
@@ -213,22 +236,50 @@ StatusCode FlavourMonitorAlgorithm::finalize()
   for( i=0, loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end();
        loc_i++, i++ )
   {
-    double e   = double(m_n_good[i]+m_n_wrong[i])
-      /double(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i]);
-    double w   = double(m_n_wrong[i])/double(m_n_good[i]+m_n_wrong[i]);
-    double eff = e*pow(1-2*w,2);
-    double se   = sqrt(e*(1-e)/(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i]));
-    double sw   = sqrt(w*(1-w)/(m_n_good[i]+m_n_wrong[i]));
-    double seff = sqrt(eff/(m_n_good[i]+m_n_wrong[i]+m_n_untagged[i])
-                       *(4-eff*(1*3/eff)));
     log << "Statistics for tags in : " << *loc_i << endl;
-    log << "----------------------------------------------------------\n";
+    log << "==========================================================\n";
     log << "Event without associated B : " << m_n_noB[i] << endl;
-    log << "Efficiency           : " << e << " ±" << se << endl;
-    log << "Wrong-tag fraction   : " << w << " ±" << sw << endl;
-    log << "Effective efficiency : " << eff << " ±" << seff << endreq;
+    for( unsigned int f=0; f<m_fractions+2; f++ )
+    {
+      double e   = double(m_n_good[i][f]+m_n_wrong[i][f])
+        / double(m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f]);
+      double w   = double(m_n_wrong[i][f])
+        / double(m_n_good[i][f]+m_n_wrong[i][f]);
+      double eff = e*pow(1-2*w,2);
+      double se   = sqrt(e*(1-e)
+                         / (m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f]));
+      double sw   = sqrt(w*(1-w)/(m_n_good[i][f]+m_n_wrong[i][f]));
+      double seff = sqrt(eff/(m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f])
+                         *(4-eff*(1*3/eff)));
+      log << "    B reconstructed at " << (1-f/(m_fractions+2.))*100 << "% : "
+          << m_n_fractions[i][f] << endl;
+      log << "----------------------------------------------------------\n";
+      log << "Efficiency           : " << e << " ±" << se << endl;
+      log << "Wrong-tag fraction   : " << w << " ±" << sw << endl;
+      log << "Effective efficiency : " << eff << " ±" << seff << endl;
+    }
   }
+  log << endreq;
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
+
+
+/*
+    // Retrieve informations about event
+    SmartDataPtr<EventHeader> evt(m_EventSvc, EventHeaderLocation::Default );
+    
+    if( !evt )
+    {   
+      log << MSG::ERROR
+          << "Could not retrieve event header. Will put fake !!!!" << endreq;
+      m_n_run = 0;
+      m_n_event = -1;
+    }
+    else
+    {
+      m_n_run = evt->runNum();
+      m_n_event = evt->evtNum();
+    }
+*/
