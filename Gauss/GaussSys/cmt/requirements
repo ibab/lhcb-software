@@ -25,7 +25,7 @@ use GiGaVisUI		v1r2	Sim
 # Gauss stuff...
 use SimSvc              v1r0    Sim
 use GaussTools		v6r1	Sim
-use GaussRICH		v2r0	Sim
+use GaussRICH		v2r1	Sim
 use GaussTracker	v2r1	Sim
 use GaussCalo		v2r0	Sim
 use GaussPhysics	v2r0	Sim

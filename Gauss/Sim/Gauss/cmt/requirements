@@ -27,8 +27,8 @@ use Magnet              v2r*    Det
 #GiGa staff...
 use GiGaCnv             v11r1   Sim
 use GaussTools          v6r1    Sim
-use GaussTracker        v2r1  Sim
-use GaussRICH           v2r0    Sim
+use GaussTracker        v2r1    Sim
+use GaussRICH           v2r1    Sim
 use GaussCalo           v2r0    Sim
 use GaussPhysics        v2r0    Sim
 use CaloDetXmlCnv       v2r2    Det 
