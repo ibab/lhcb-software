@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.6 2002-05-23 11:07:09 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.7 2002-05-23 11:16:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/23 11:07:09  ibelyaev
+//  see /afs/cern.ch/user/i/ibelyaev/w0/Calo/CaloUtils/v2r0/doc/release.notes
+//
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
@@ -73,9 +76,6 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   if( cluster->entries().empty() ) { return StatusCode::SUCCESS ; }
   // the detector information is not available
   if( 0 == detector()            ) { return StatusCode(221)     ; }
-  
-  std::cout << " before " 
-            << *cluster << std::endl ;
   
   // avoid long names 
   typedef CaloCluster::Entries::iterator       iterator;
@@ -236,9 +236,6 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   covariance.fast( 3 , 1 ) = CovEY ;
   covariance.fast( 3 , 2 ) = CovXY ;
   covariance.fast( 3 , 3 ) = CovYY ;
-  
-  std::cout << " before " 
-            << *cluster << std::endl ;
   
   return StatusCode::SUCCESS;
   
