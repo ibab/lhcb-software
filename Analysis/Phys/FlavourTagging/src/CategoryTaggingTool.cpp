@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.3 2003-06-16 11:38:16 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.4 2003-06-16 11:44:31 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -228,6 +228,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 		msg << collisions->size();
 	else
 		msg << '-';
+  msg << ' ';
   long v;
   if( m_visTool->countVertices(v).isSuccess() )
     msg << v;
