@@ -86,9 +86,9 @@ void IonPhysics::ConstructProcess()
 
   pManager->AddProcess(&fDeuteronIonisation, ordInActive, 2, 2);
 
-  //  pManager->AddProcess(&fDeuteronMultipleScattering);
-  //  pManager->SetProcessOrdering(&fDeuteronMultipleScattering, idxAlongStep,  1);
-  //  pManager->SetProcessOrdering(&fDeuteronMultipleScattering, idxPostStep,  1);
+  pManager->AddProcess(&fDeuteronMultipleScattering);
+  pManager->SetProcessOrdering(&fDeuteronMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(&fDeuteronMultipleScattering, idxPostStep,  1);
  
   // Triton 
   pManager = G4Triton::Triton()->GetProcessManager();
@@ -101,9 +101,9 @@ void IonPhysics::ConstructProcess()
 
   pManager->AddProcess(&fTritonIonisation, ordInActive, 2, 2);
 
-  //  pManager->AddProcess(&fTritonMultipleScattering);
-  //  pManager->SetProcessOrdering(&fTritonMultipleScattering, idxAlongStep,  1);
-  //  pManager->SetProcessOrdering(&fTritonMultipleScattering, idxPostStep,  1);
+  pManager->AddProcess(&fTritonMultipleScattering);
+  pManager->SetProcessOrdering(&fTritonMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(&fTritonMultipleScattering, idxPostStep,  1);
  
   // Alpha 
   pManager = G4Alpha::Alpha()->GetProcessManager();
@@ -116,9 +116,9 @@ void IonPhysics::ConstructProcess()
 
   pManager->AddProcess(&fAlphaIonisation, ordInActive, 2, 2);
 
-  //  pManager->AddProcess(&fAlphaMultipleScattering);
-  //  pManager->SetProcessOrdering(&fAlphaMultipleScattering, idxAlongStep,  1);
-  // pManager->SetProcessOrdering(&fAlphaMultipleScattering, idxPostStep,  1);
+  pManager->AddProcess(&fAlphaMultipleScattering);
+  pManager->SetProcessOrdering(&fAlphaMultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(&fAlphaMultipleScattering, idxPostStep,  1);
   
   // He3
   pManager = G4He3::He3()->GetProcessManager();
@@ -127,9 +127,9 @@ void IonPhysics::ConstructProcess()
   
   pManager->AddProcess(&fHe3Ionisation, ordInActive, 2, 2);
   
-  //  pManager->AddProcess(&fHe3MultipleScattering);
-  //  pManager->SetProcessOrdering(&fHe3MultipleScattering, idxAlongStep,  1);
-  //  pManager->SetProcessOrdering(&fHe3MultipleScattering, idxPostStep,  1);
+  pManager->AddProcess(&fHe3MultipleScattering);
+  pManager->SetProcessOrdering(&fHe3MultipleScattering, idxAlongStep,  1);
+  pManager->SetProcessOrdering(&fHe3MultipleScattering, idxPostStep,  1);
 };
 
 // ============================================================================
