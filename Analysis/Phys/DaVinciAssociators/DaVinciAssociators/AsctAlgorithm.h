@@ -1,4 +1,4 @@
-// $Id: AsctAlgorithm.h,v 1.3 2002-10-02 07:06:25 phicharp Exp $
+// $Id: AsctAlgorithm.h,v 1.4 2002-10-10 18:42:36 gcorti Exp $
 #ifndef ASCTALGORITHM_H 
 #define ASCTALGORITHM_H 1
 
@@ -28,9 +28,8 @@ public:
 
   /// Set up an associator internally used by this algorithm
 template <class T>
-StatusCode AsctAlgorithm::retrievePrivateAsct( std::string asctType,
-                                               bool sameInput,
-                                               T*& asct) {
+StatusCode retrievePrivateAsct( std::string asctType,
+                                bool sameInput, T*& asct) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> entering retrievePrivateAsct" << endreq;
