@@ -1,6 +1,7 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v3r1 2004-11-30 =====================
 ! 2004-10-26 - David Hutchcroft
  - Modificaitons to work with new VeloDet and VeloChannelID definitions
 
