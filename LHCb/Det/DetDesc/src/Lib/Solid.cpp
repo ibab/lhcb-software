@@ -1,8 +1,11 @@
-// $Id: Solid.cpp,v 1.2 2003-04-25 08:52:24 sponce Exp $
+// $Id: Solid.cpp,v 1.3 2003-06-30 12:58:01 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2003/04/25 08:52:24  sponce
+/// fixes after valgrind tests, application of code conventions
+///
 /// Revision 1.1  2001/08/09 16:48:01  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -105,6 +108,7 @@ ISolid* Solid::createSolid( const std::string& solidType )
       if( 0 == objMgr  )
         { throw SolidException("Solid: IObjManager* points to NULL!"); }
       const IFactory* fact = objMgr->objFactory( solidType );
+      objMgr->release();
       if( 0 == fact ) 
         { throw SolidException("Solid: no factory for type '" +
                                solidType + "' is found!"); }
