@@ -1,6 +1,9 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-07-17 - Chris Parkes
+ - fix memory leak problem for case m_pileUp=false 
+
 ! 2002-07-11 - Olivier Callot
  - Correct also the sensor number for spill-over of the PuVeto detector.
  - Set the sensor number correctly for noise generation in PileUp Veto.
