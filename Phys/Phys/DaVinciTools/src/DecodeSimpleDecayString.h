@@ -1,0 +1,63 @@
+// $Id: DecodeSimpleDecayString.h,v 1.1 2004-07-01 16:36:38 pkoppenb Exp $
+#ifndef DECODESIMPLEDECAYSTRING_H 
+#define DECODESIMPLEDECAYSTRING_H 1
+
+// Include files
+// from Gaudi
+#include "GaudiTools/GaudiTool.h"
+#include "GaudiKernel/AlgTool.h"
+#include "DaVinciTools/IDecodeSimpleDecayString.h"            // Interface
+class IParticlePropertySvc;
+
+
+/** @class DecodeSimpleDecayString DecodeSimpleDecayString.h
+ *  
+ *
+ *  @author Patrick KOPPENBURG
+ *  @date   2004-06-30
+ */
+class DecodeSimpleDecayString : public GaudiTool, 
+                                virtual public IDecodeSimpleDecayString {
+public: 
+  /// Standard constructor
+  DecodeSimpleDecayString( const std::string& type, 
+                           const std::string& name,
+                           const IInterface* parent);
+
+  virtual ~DecodeSimpleDecayString( ); ///< Destructor
+  /// Initialize method 
+  StatusCode initialize();
+  
+  /// Finalize method 
+  StatusCode finalize(){return StatusCode::SUCCESS;};
+  
+  StatusCode setDescriptor(const std::string&);
+  std::string getDescriptor(void){return m_descriptor;};
+  StatusCode getStrings(std::string&, strings&);
+  StatusCode getStrings_cc(std::string&, strings&);
+  StatusCode getPIDs(int&, ints&);
+  StatusCode getPIDs_cc(int&, ints&);
+  bool is_cc(void);
+  
+protected:
+  StatusCode PID(const std::string&, int&);
+  StatusCode splitDescriptor(const std::string&,std::string&,
+                                         strings&) const;
+  StatusCode strip_cc(void);
+  StatusCode buildPIDs(const std::string,const strings,int&,ints&);
+  StatusCode do_cc(void);
+  std::string conjugate(const std::string&)const;
+  
+  
+private:
+
+  std::string m_descriptor;
+  std::string m_mother;
+  strings m_daughters;
+  std::string m_mother_cc;
+  strings m_daughters_cc;
+  IParticlePropertySvc* m_ppSvc;
+  bool m_iscc;
+
+};
+#endif // DECODESIMPLEDECAYSTRING_H

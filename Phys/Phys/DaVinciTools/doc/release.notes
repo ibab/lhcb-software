@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.98 2004-06-28 14:22:45 pkoppenb Exp $
+! $Id: release.notes,v 1.99 2004-07-01 16:36:38 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-07-01 - P. Koppenburg
+  - src/DecodeSimpleDecayString.cpp
+    . Moved decay string parser from CombineParticles.
+    
 !========================== DaVinciTools v9r6 2004-06-28 ===================
 ! 2004-06-25 - P. Koppenburg
   - src/PVIPFilterCriterion.{cpp,h}
