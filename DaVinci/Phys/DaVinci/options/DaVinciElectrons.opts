@@ -1,4 +1,4 @@
-// $Id: DaVinciElectrons.opts,v 1.7 2004-10-26 08:06:42 pkoppenb Exp $ 
+// $Id: DaVinciElectrons.opts,v 1.8 2004-10-26 08:54:43 pkoppenb Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,7 +16,7 @@
  */
 
 // The major algorith sequence for "electrons"
-ApplicationMgr.TopAlg        += { "Sequencer/Electrons" } ;
+ApplicationMgr.TopAlg        += { "GaudiSequencer/Electrons" } ;
 
 // Re-create CaloDigits from raw buffer 
 // Electrons.Members             = { "CaloDigitsFromRaw"    } ;  

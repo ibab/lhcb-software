@@ -28,7 +28,7 @@
 //#include "$DAVINCIROOT/options/Hlt.opts"
 //#include "$DAVINCIROOT/options/HltChecking.opts"
 
-ApplicationMgr.TopAlg += { "Sequencer/L0L1Seq" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0L1Seq" };
 L0L1Seq.Members = { "TriggerFilter/L0Filter", "PrintHeader/PassedL0" , "TriggerFilter/L1Filter", "PrintHeader/PassedL1" };
 L0Filter.RequireL0 = true ;
 L1Filter.RequireL1 = true ;
