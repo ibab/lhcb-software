@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.1 2003-07-07 08:21:11 ibelyaev Exp $ 
+// $Id: HcalSensDet.cpp,v 1.2 2003-07-07 15:43:00 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 08:21:11  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -126,13 +129,12 @@ StatusCode    HcalSensDet::fillHitInfo
   if ( sc.isFailure()    ) { return Error ( "Error from timing()" , sc ) ; }
   if ( fractions.empty() )
     { Warning("The empty vector of fractions()"); }
-
+  
   for( Fractions::const_iterator ifr = fractions.begin() ; 
-       fractions.end() != ifr ; ++ifr ) 
+       fractions.end() != ifr ; ++ifr , ++slot ) 
     {
-      slot++ ;
       const double fr = *ifr ;
-      if( fr > 1e-6 ) { hit->add( slot , energy * fr ) ; }
+      if( fr > 1.e-6 ) { hit->add( slot , energy * fr ) ; }
     }
   
   return StatusCode::SUCCESS ;
