@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.4 2004-11-03 09:30:16 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.5 2004-11-05 20:05:00 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.4  2004/11/03 09:30:16  jonrob
+ * Update RichSmartID + add functionality to sort the data
+ *
  * Revision 1.3  2004/11/02 13:13:38  jonrob
  * minro update - add constness
  *
@@ -33,8 +36,8 @@ const        IToolFactory& RichRawBufferToSmartIDsToolFactory = s_factory ;
 /// Namespace for RichSmartID sorting
 namespace SmartIDFuncs {
   /// Functor to sort RichSmartIDs by Rich then panel numbers
-  struct SortByRichAndPanel
-  {
+  class SortByRichAndPanel {
+  public:    
     bool operator() ( const RichSmartID & p1, const RichSmartID & p2 ) const
     {
       return ( 10*p1.rich() + p1.panel() < 10*p2.rich() + p2.panel() );
