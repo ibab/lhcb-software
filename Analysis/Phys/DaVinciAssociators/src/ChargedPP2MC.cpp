@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.3 2004-06-11 15:26:15 phicharp Exp $
+// $Id: ChargedPP2MC.cpp,v 1.4 2004-07-29 07:58:48 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -217,6 +217,7 @@ StatusCode ChargedPP2MC::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endreq;
   if( NULL != m_track2MCLink ) delete m_track2MCLink;
+  m_track2MCLink;
   return GaudiAlgorithm::finalize();
 }
 

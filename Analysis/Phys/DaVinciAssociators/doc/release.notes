@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2004-07-28 07:37:29 phicharp Exp $
+! $Id: release.notes,v 1.51 2004-07-29 07:58:48 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
@@ -6,6 +6,8 @@
  - src/Particle2MCLinksAsct.cpp & .h
     . Fix a bug for overwriting the incident handler in order to clear the
       local relations table
+ - src/<algorithms>.cpp
+    . in finalize() set pointer to NULL after delete
 
 ! 2004-07-23 - P. Koppenburg
  - cmt/requirements

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.13 2004-07-27 17:42:16 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.14 2004-07-29 07:58:48 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -169,6 +169,8 @@ StatusCode Particle2MCLinks::finalize() {
 
   if( NULL != m_chargedLink ) delete m_chargedLink;
   if( NULL != m_neutralLink ) delete m_neutralLink;
+  m_chargedLink = NULL;
+  m_neutralLink = NULL;
   return GaudiAlgorithm::finalize();
 }
 

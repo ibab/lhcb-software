@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.9 2004-06-17 11:20:58 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.10 2004-07-29 07:58:48 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -89,6 +89,7 @@ StatusCode CompositeParticle2MCLinks::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endmsg;
   if( NULL != m_p2MCLink ) delete m_p2MCLink;
+  m_p2MCLink = NULL;
   return GaudiAlgorithm::finalize();
 }
 

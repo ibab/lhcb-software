@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.7 2004-07-28 07:33:57 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.8 2004-07-29 07:58:48 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,8 @@ StatusCode Particle2MCLinksAsct::finalize() {
   if( m_table) delete m_table;
   if( NULL != m_chargedLink ) delete m_chargedLink;
   if( NULL != m_neutralLink ) delete m_neutralLink;
+  m_chargedLink = NULL;
+  m_neutralLink = NULL;
   return StatusCode::SUCCESS;
 }
 

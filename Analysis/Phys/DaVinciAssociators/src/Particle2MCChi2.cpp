@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.8 2004-06-11 15:26:17 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.9 2004-07-29 07:58:48 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -152,6 +152,7 @@ StatusCode Particle2MCChi2::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endreq;
   if( NULL != m_p2MCLink ) delete m_p2MCLink;
+  m_p2MCLink = NULL;
   return GaudiAlgorithm::finalize();
 }
 
