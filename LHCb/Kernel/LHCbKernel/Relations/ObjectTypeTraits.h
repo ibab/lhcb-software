@@ -1,8 +1,11 @@
-// $Id: ObjectTypeTraits.h,v 1.6 2002-04-25 14:09:22 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.7 2002-04-25 15:13:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/25 14:09:22  ibelyaev
+//  one more fix for Win2K
+//
 // Revision 1.5  2002/04/25 08:44:03  ibelyaev
 //  bug fix for Win2K
 //
@@ -61,6 +64,13 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef SmartRef<TYPE>                        Type       ;
+#ifndef WIN32
+    /// serializer
+    typedef TypeSerializer<Type>                  Serializer ;
+#else 
+    /// serializer
+    typedef RefSerializer<Type>                   Serializer ;
+#endif 
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -87,6 +97,8 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -111,6 +123,8 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -135,6 +149,8 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -159,6 +175,8 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -183,6 +201,8 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef typename Traits::Type                 Type       ;
+    /// serializer 
+    typedef typename Traits::Serializer           Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -207,6 +227,13 @@ namespace Relations
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
     /// actual "stored" type 
     typedef SmartRef<OBJECT>                      Type       ;
+#ifndef WIN32
+    /// serializer
+    typedef TypeSerializer<Type>                  Serializer ;
+#else 
+    /// serializer
+    typedef RefSerializer<Type>                   Serializer ;
+#endif 
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -227,15 +254,17 @@ namespace Relations
   struct ObjectTypeTraits<bool>
   {
     /// true type (never used)
-    typedef        bool                          TYPE       ;
+    typedef        bool                           TYPE       ;
     /// "traits'-provider == own type 
-    typedef ObjectTypeTraits<bool>               Traits     ;
+    typedef ObjectTypeTraits<bool>                Traits     ;
     /// actual "stored" type 
-    typedef        TYPE                          Type       ;
+    typedef        TYPE                           Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
-    typedef TypeApply<Type>                      Apply      ;
+    typedef TypeApply<Type>                       Apply      ;
     /// comparison
-    typedef std::less<Type>                      Less       ;
+    typedef std::less<Type>                       Less       ;
     /// the unique class identification
     static int id() 
     { 
@@ -259,6 +288,8 @@ namespace Relations
     typedef ObjectTypeTraits<char>                Traits     ;
     /// actual "stored" type 
     typedef        TYPE                           Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -286,6 +317,8 @@ namespace Relations
     typedef ObjectTypeTraits<unsigned char>       Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -313,6 +346,8 @@ namespace Relations
     typedef ObjectTypeTraits<short>               Traits     ;
     /// actual "stored" type 
     typedef        TYPE                           Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -340,6 +375,8 @@ namespace Relations
     typedef ObjectTypeTraits<unsigned short>      Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -367,6 +404,8 @@ namespace Relations
     typedef ObjectTypeTraits<int>                 Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -394,6 +433,8 @@ namespace Relations
     typedef ObjectTypeTraits<unsigned int>        Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -421,6 +462,8 @@ namespace Relations
     typedef ObjectTypeTraits<long>                Traits     ;
     /// actual "stored" type 
     typedef        TYPE                           Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -448,6 +491,8 @@ namespace Relations
     typedef ObjectTypeTraits<unsigned long>       Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -475,6 +520,8 @@ namespace Relations
     typedef ObjectTypeTraits<float>               Traits     ;
     /// actual "stored" type 
     typedef        TYPE                           Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -502,6 +549,8 @@ namespace Relations
     typedef ObjectTypeTraits<double>              Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -530,6 +579,8 @@ namespace Relations
     typedef ObjectTypeTraits<long double>         Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
@@ -557,6 +608,8 @@ namespace Relations
     typedef ObjectTypeTraits<std::string>         Traits     ;
     /// actual "stored" type 
     typedef          TYPE                         Type       ;
+    /// serlializer 
+    typedef TypeSerializer<Type>                  Serializer ;
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
