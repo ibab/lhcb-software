@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v17r4 2004-03-16 ========================
+! 2004-03-16 - Marco Cattaneo
+ - use DAQEvent v4r1, VeloEvent v13r0p1
+
 !======================== EventSys v17r3 2004-03-08 ========================
 ! 2004-03-08 - Marco Cattaneo
  - Use ITEvent v13r2, TrEvent v13r1, CaloEvent v13r1, PhysEvent v8r2
