@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-# $Id: Decays.py,v 1.2 2004-07-11 15:54:54 ibelyaev Exp $
+# $Id: Hybrids.py,v 1.1 2004-07-11 15:54:54 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # @file
-# Simple script to run D*+ -> ( D0 -> K- pi+ ) pi+ selection with Bender
+# Simple script for LoKiHybrid demo  
 # =============================================================================
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2003-12-04 
@@ -12,47 +12,19 @@
 
 # import the Bender itself  
 from   bendermodule import *
-import benderconfig as bender 
+import benderconfig  as bender 
 
 # =============================================================================
 # Specific physics analysis algorithm 
 # =============================================================================
 
 # create my own algorithm  
-class Decays(Algo):
-    " My own analysis algorithm for selection members of D0->(K- pi+) decay "
+class Hybrids(Algo):
+    " Trivial algorithm to text LoKiHybrid approach "
     def analyse ( self ) :
-        
-        mc  = self.mctruth()
-        trees = mc.find ( decay = "[D0 -> K- pi+]cc" )
-        print " # of found decay trees          " , trees.size()
-        for p in trees :
-            print " MCID of the particle " , MCID( p )
-            
-        n1 = mc.find ( decay = "[D0 -> ^K- ^pi+]cc" )
-        print " # of found decay members (all)    " , n1.size()
-        for p in n1 :
-            print " MCID of the particle " , MCID( p )
-            
-        n2 = mc.find ( decay = "[D0 -> ^K- pi+]cc" )
-        print " # of found decay members (first)  " , n2.size()
-        for p in n2 :
-            print " MCID of the particle " , MCID( p )
-            
-        n3 = mc.find ( decay = "[D0 -> K- ^pi+]cc" )
-        print " # of found decay members (second) " , n3.size()
-        for p in n3 :
-            print " MCID of the particle " , MCID( p )            
 
-        n4 = mc.find ( decay = " K- : [D0 -> K- pi+]cc" )
-        print " # of found decay members (K-) "     , n4.size()
-        for p in n4 :
-            print " MCID of the particle " , MCID( p )
-
-        n5 = mc.find ( decay = " K+ : [D0 -> K- pi+]cc" )
-        print " # of found decay members (K+) "     , n5.size()
-        for p in n5 :
-            print " MCID of the particle " , MCID( p )
+        cut   = FILTER ( self.filterCriterion(0) )
+        pions = self.select( tag = 'pions' , cuts = ( ID == 'pi+' ) & ( cut ) )
 
         return SUCCESS 
 
@@ -67,6 +39,7 @@ bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
                            'HcalPIDe.OutputLevel      =   5  ' ,
                            'BremPIDe.OutputLevel      =   5  ' ,
                            'PrsPIDe.OutputLevel       =   5  ' ,
+                           'Hybrids.Hybrid.Code  =  " ( PT > 0.1 * MeV  ) & ( P < 30 * GeV ) "  ' ,
                            'EventSelector.PrintFreq   =  50  ' ] )
 
 # define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
@@ -78,28 +51,26 @@ g.HistogramPersistency = "HBOOK" ;
 # specific job configuration 
 # =============================================================================
 
+# load LoKiHybrid library 
+g.DLLs += [ 'LoKiHybrid' ] 
 
 # create analysis algorithm and add it to the list of
-alg = Decays('Decays')
-g.topAlg += [ 'Decays' ]
-alg = gaudi.iProperty('Decays')
+alg = Hybrids('Hybrids')
+g.topAlg += [ 'Hybrids' ]
+alg = gaudi.iProperty('Hybrids')
 alg.OutputLevel = 5
 alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
 
-# add 'similar' C++ algorithm from LoKiExample package
-g.DLLs   += [ "LoKiExample"            ]
-g.topAlg += [ 'LoKi_MCDecays/MCDecays' ]
-
 # output histogram file 
 hsvc = g.property( 'HistogramPersistencySvc' )
-hsvc.OutputFile = 'Decays.hbook'
+hsvc.OutputFile = 'Hybrids.hbook'
 
 
 # =============================================================================
 # job execution 
 # =============================================================================
 
-g.run(50) 
+g.run(20) 
 
 g.exit()
 
