@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="LinksByKey">
+
+    <class 
+      name     = "LinkReference"
+      author   = "Olivier Callot"
+      desc     = "Entry to get a reference to a keyed object" >
+      
+      <constructor 
+        desc   = "Constructor with arguments" 
+        argList= "int srcLinkID, int linkID, int key, int nextIndex, double weight">
+        <code> 
+m_srcLinkID = srcLinkID;
+m_linkID    = linkID;
+m_objectKey = key;
+m_nextIndex = nextIndex;
+m_weight    = weight;
+        </code>
+      </constructor>
+
+      <attribute
+        type   = "int"
+        name   = "srcLinkID"
+        desc   = "index of the source sontainer in the LinkManager" />
+      <attribute
+        type   = "int"
+        name   = "linkID"
+        desc   = "index of teh target container in the LinkManager" />
+      <attribute
+        type   = "int"
+        name   = "objectKey"
+        desc   = "key of the object in the container" />
+      <attribute
+        type   = "int"
+        name   = "nextIndex"
+        desc   = "index of the next entry" />
+      <attribute
+        type   = "double"
+        name   = "weight"
+        desc   = "weight of the reference" />
+    </class>
+
+    <import name="Kernel/LHCbStreams"/>
+    <import name="Linker/StreamMap"/>  <!--- Temporary, to stream std::map -->
+
+    <class 
+      name        = "LinksByKey" 
+      author      = "OlivierCallot" 
+      desc        = "Link of an object to Keyed objects" 
+      id          = "1234">
+
+      <base name="DataObject"/>
+      <import name="Event/LinkReference"/>
+
+      <constructor 
+        desc      = "Default constructor, reserve space" >
+        <code> 
+// map can not have 'reserved' space
+m_linkReference.reserve(1000);
+m_increasing = false;
+        </code>
+      </constructor>
+
+      <attribute
+	type      = "bool"
+        name      = "increasing"
+	setMeth   = "FALSE"
+	getMeth   = "FALSE"
+        desc      = "Type of ordering" />
+
+      <attribute
+	type      = "std::map&lt;int,int &gt;"
+        name      = "linkMap"
+	setMeth   = "FALSE"
+	getMeth   = "FALSE"
+        desc      = "List of linked objects" />
+
+      <attribute
+	type      = "std::vector&lt;LinkReference &gt;"
+        name      = "linkReference"
+	setMeth   = "FALSE"
+	getMeth   = "FALSE"
+        desc      = "List of references" />
+
+      <method
+        type      = "void"
+        name      = "setIncreasing"
+        desc      = "Define the increasing order for the references" >
+        <code> m_increasing = true; </code>
+      </method>
+
+      <method
+        type      = "void"
+        name      = "setDecreasing"
+        desc      = "Define the decreasing order for the references" >
+        <code> m_increasing = false; </code>
+      </method>
+
+      <method
+        type      = "void"
+        name      = "addReference"
+        argList   = "int srcKey, int srcLinkID, int destKey, int destLinkID, double weight=1."
+	desc      = "Add a reference to the specified key" />
+
+      <method
+        type      = "bool"
+        name      = "firstReference"
+        desc      = "Retrieve the first LinkReference for this key" >
+
+        <arg type="int" name = "key" inout="BYVALUE"/>
+        <arg type="DataObject*" name = "container" inout="BYVALUE" const="TRUE"/>
+        <arg type="LinkReference" name="reference" const="FALSE" inout="BOTH"/>
+
+      </method>
+
+      <method
+        type      = "bool"
+        name      = "nextReference"
+        desc      = "Retrieve the next LinkReference for this key" >
+
+        <arg type="LinkReference" name="reference" const="FALSE" inout="BOTH"/>
+
+      </method>
+
+      <method
+        type      = "int"
+        name      = "firstSource"
+        desc      = "Retrieve the first key for this LinkReference" >
+
+        <arg 
+          type  = "LinkReference" 
+          name  = "reference" 
+          const = "FALSE" 
+          inout = "BOTH"/>
+        <arg 
+          type  = "std::map&lt;int,int&gt;::const_iterator" 
+          name  = "iter" 
+          inout = "BOTH"/>
+      </method>
+
+      <method
+        type      = "int"
+        name      = "nextSource"
+        desc      = "Retrieve the next key for this LinkReference" >
+       <arg 
+          type  = "LinkReference" 
+          name  = "reference" 
+          const = "FALSE" 
+          inout = "BOTH"/>
+        <arg 
+          type  = "std::map&lt;int,int&gt;::const_iterator" 
+          name  = "iter" 
+          inout = "BOTH"/>
+ 
+      </method>
+
+      <method
+        type    = "int"
+        name    = "linkID"
+        argList = "const DataObject* obj"
+        desc    = "Returns the LinkManager linkID for this data object (Container)" />
+    </class>
+
+  </package>
+</gdd>

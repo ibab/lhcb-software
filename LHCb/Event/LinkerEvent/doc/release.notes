@@ -1,0 +1,98 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/LinkerEvent
+! Responsible : Olivier Callot
+! Purpose     : Implementation of the Linker package, to associate objects
+!-----------------------------------------------------------------------------
+
+! 2004-01-08 - Olivier Callot
+ - Initial release of the package.
+
+  This package contains an event class, storing LINK relations between keyed 
+  objects in a generic way. It also contains three small templated classes to 
+  manipulate easily these relations.
+
+* LinkerWithKey< TARGET, SOURCE > link( eventSvc, msgSvc, name );
+       create a linker object, in the execute method of an algorithm.
+       At least the Target class should be specified. The source and the target
+       whould be KeyedObject. The name is used to define the stored location of
+       the link. It can be the location of the source container, as the prefix
+       "MC/" is added to the name to define the location.
+       Note that 'SOURCE' defaults to KeyedObject<int> if not specified.
+
+    link.link( source, destination, weight=1. )
+       link the source to the destination, optionaly with a weight.
+       The sources can be in different containers, as can be the destinations.
+
+    link.link( int, destination, weight=1. )
+       link an int with a destination, with an optional weight. Useful to e.g.
+       associate a MCParticle to a ChannelID.
+       The destinations can be in different containers.
+
+    link.setIncreasingWeight()
+       Defines the increasing order for the weight, order in which they will be
+       retrieved. The default is decreasing, i.e. highest weight first.
+    link.setDecereasingWeight() 
+       Re-inforce the default order.
+
+* LinkedTo< TARGET, SOURCE, TARGETCONTAINER > link( eventSvc, msgSvc, name );
+       Retrieve an existing link between SOURCE objects and TARGET objects. 
+       If not specified, TARGETCONTAINER defaults to KeyedContainer<TARGET>.
+       If not specified, SOURCE defaults to KeyedObject<int>.
+       'name' should be as specified when crating the link.
+
+    TARGET* = link.first( source );
+       returns the first target associated to the source, or a NULL pointer.   
+
+    TARGET* = link.first( int );
+       returns the first target associated to the int, or a NULL pointer. This
+       works only with links created with an int as argument. There is probably
+       no reason to specify SOURCE in this case.
+
+    TARGET* = link.next( );
+       returns the next target associated to the previously specified source.
+       Works for both specification of the initial source. A NULL pointer is 
+       returned if no more targets.
+
+    double w = link.weight()
+       returns the weight associated to the last accessed link.
+
+* LinkedFrom< SOURCE, TARGET, SOURCECONTAINER > link( eventSvc, msgSvc, name );
+       Retrieve an existing link between SOURCE objects and TARGET objects. 
+       Use this object to access the reverse relations, i.e. which SOURCE is
+       related to a specified TARGET.
+       If not specified, SOURCECONTAINER defaults to KeyedContainer<TARGET>.
+       If not specified, TARGET defaults to KeyedObject<int>.
+       'name' should be as specified when crating the link.
+
+    SOURCE* = link.first( target );
+       returns the first source associated to the specified target, or a NULL 
+       pointer. One can NOT retrieve key associated to a target.
+
+    SOURCE* = link.next( );
+       returns the next source associated to the previously specified target.
+       A NULL pointer is returned if no more sources.
+
+    double w = link.weight()
+       returns the weight associated to the last accessed link.
+
+
+  Using the 'LinkedTo' (LinkedFrom is quite similar) is then very simple and
+  clean. The only following lines are needed, no tool, nothing in the .h nor
+  in option files.
+
+  #include "Linker/LinkedTo.h"
+
+  ... in execute()
+
+  LinkedTo<MCParticle> link( eventSvc(), msgSvc(), 
+                             VeloClusterLocation::Default );
+
+  ... when needed
+
+  MCParticle* part = link.first( myCluster );
+  while ( NULL != part ) {
+    ...
+    double weight = link.weight();
+    ...
+    part = link.next();
+  }

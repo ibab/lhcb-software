@@ -1,0 +1,46 @@
+#============================================================================
+# Created    : 2003-12-17
+# Maintainer : Olivier Callot
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           LinkerEvent
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src Event Linker xml
+include_dirs $(LINKEREVENTROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   EventSys	v15r*	Event
+
+use 	GaudiObjDesc	v5r*    -no_auto_imports
+
+#============================================================================
+#---- Produce Header-Files and from XML description
+#============================================================================
+private
+document obj2doth LinkerEventObj2Doth ../xml/*.xml
+document obj2dict LinkerEventObj2Dict ../xml/*.xml    
+
+public
+library          LinkerEvent         ../src/*.cpp
+library          LinkerEventDict     ../dict/*.cpp -import=GaudiIntrospection
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern      package_linkopts
+apply_pattern      package_stamps
+apply_pattern      linker_path
+macro_append LinkerEvent_linkopts "" WIN32 "/include:_LinkerEvent_loadRef"
+
+apply_pattern      package_shlibflags
+
