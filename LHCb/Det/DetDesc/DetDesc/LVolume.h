@@ -213,7 +213,8 @@ class LVolume: public DataObject,
   ///
   /// create group of physical volumes  
   /// 
-  
+
+  /// one loop 
   IPVolume* createMultiPVolume( const std::string&   PVname_base     , 
 				const std::string&   LVnameForPV     , 
 				const unsigned long  nStep           , 
@@ -221,6 +222,31 @@ class LVolume: public DataObject,
 				const HepRotation&   initialRotation ,     
 				const HepVector3D&   stepTranslation ,
 				const HepRotation&   stepRotation    );
+  /// two loops 
+  IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
+				const std::string&   LVnameForPV      , 
+				const HepPoint3D&    initialPosition  ,
+				const HepRotation&   initialRotation  ,     
+				const unsigned long  nStep1           , 
+				const HepVector3D&   stepTranslation1 ,
+				const HepRotation&   stepRotation1    ,
+				const unsigned long  nStep2           , 
+				const HepVector3D&   stepTranslation2 ,
+				const HepRotation&   stepRotation2    );
+  /// three loops 
+  IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
+				const std::string&   LVnameForPV      , 
+				const HepPoint3D&    initialPosition  ,
+				const HepRotation&   initialRotation  ,     
+				const unsigned long  nStep1           , 
+				const HepVector3D&   stepTranslation1 ,
+				const HepRotation&   stepRotation1    ,
+				const unsigned long  nStep2           , 
+				const HepVector3D&   stepTranslation2 ,
+				const HepRotation&   stepRotation2    ,
+				const unsigned long  nStep3           , 
+				const HepVector3D&   stepTranslation3 ,
+				const HepRotation&   stepRotation3    );
 
   ///
  private: 
