@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v11r2 2003-07-07 ================
+! 2003-07-07 - Florence RANJARD
+ - use new versions to use LHCB v12r0
+
 !=========================== GaussSys v11r1 2003-07-01 ===============
 ! 2003-07-01 - Florence RANJARD
  - use GEANT4 v5r2, Gauss v11r1, G4VisUI v1r4 (remove OPACS)
