@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.64 2005-02-09 09:13:04 cattanem Exp $
+! $Id: release.notes,v 1.65 2005-02-20 18:43:35 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-02-20 - Chris Jones
+ - Add new methods to RichMCTruthTool to check for spillover hits
+ - Add new methods to algorithm and tool base classes to acces the TES
+   location for a given DataObject.
 
 !======================= RichKernel v5r3 2005-02-08 =======================
 ! 2005-02-08 - Marco Cattaneo
