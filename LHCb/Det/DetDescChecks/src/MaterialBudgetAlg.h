@@ -1,17 +1,8 @@
-// $Id: MaterialBudgetAlg.h,v 1.4 2002-08-21 17:08:29 witoldp Exp $
+// $Id: MaterialBudgetAlg.h,v 1.5 2004-03-01 15:03:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/07/12 07:45:59  witoldp
-// a few improvements for grid-shooting
-//
-// Revision 1.2  2002/07/05 10:25:37  witoldp
-// added grid-like shooting
-//
-// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
-// New package: collection of components for checks of Detector Description
-//
 // ============================================================================
 #ifndef DETDESCCHECKS_MaterialBudgetALG_H 
 #define DETDESCCHECKS_MaterialBudgetALG_H 1
@@ -20,10 +11,14 @@
 #include <string>
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-// from AIDA 
-class IHistogram2D;
+// GaudiAlg
+#include "GaudiAlg/GaudiHistoAlg.h"
+// AIDA 
+namespace AIDA 
+{ 
+  class IHistogram1D ; 
+  class IHistogram2D ; 
+};
 
 /** @class MaterialBudgetAlg MaterialBudgetAlg.h
  *  
@@ -35,9 +30,12 @@ class IHistogram2D;
  *  between origin vertex and x-y point at the reference plane. 
  *  The plot need to be normalized properly. Normalization is given 
  *  by histogram number 2. The proper normalization is achieved e.g in PAW
+ *
  *  @code 
+ *
  *  PAW> hi/oper/div 1 2 10
  *  PAW> hi/plot     10     lego1 
+ *
  *  @endcode 
  *
  *  The full list of algorithm properties and their default values:
@@ -65,25 +63,22 @@ class IHistogram2D;
  *  <li> @ RndmService     The name of Gaudi Random Numbers Service 
  *                                    (default value is @p "RndmGenSvc" )
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   23/04/2002
  *
  *  added by W. Pokorski:
- *  Grid                   flag to switch between random shooting (0) and 
- *                         grid (1)
- *  xbinref                x-size of the reference bin (to be scaled as m_z/m_zref)
- *  ybinref                y-size of the reference bin (to be scaled as m_z/m_zref)
- *  zref                   reference z position (at which xbinref and ybinref  
+ *  - Grid      flag to switch between random shooting (0) and grid (1)
+ *  - xbinref   x-size of the reference bin (to be scaled as m_z/m_zref)
+ *  - ybinref   y-size of the reference bin (to be scaled as m_z/m_zref)
+ *  - zref      reference z position (at which xbinref and ybinref  
  *                         are given) 
  */
 
 
-class MaterialBudgetAlg : 
-  public Algorithm 
+class MaterialBudgetAlg : public GaudiHistoAlg 
 {
   /// friend factory for instantiation  
-  friend class AlgFactory<MaterialBudgetAlg>;
-  
+  friend class AlgFactory<MaterialBudgetAlg>; 
 public:
   
   /** standard initialization of the algorithm
@@ -92,20 +87,13 @@ public:
    *  @return status code 
    */
   virtual StatusCode initialize () ;
-
+  
   /** standard execution of the algorithm
    *  @see  Algorithm
    *  @see IAlgorithm
    *  @return status code 
    */
   virtual StatusCode execute    () ;
-
-  /** standard finalization of the algorithm
-   *  @see  Algorithm
-   *  @see IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
   
 protected:
   
@@ -119,9 +107,9 @@ protected:
   
   /// destructor (virtual and protected)
   virtual ~MaterialBudgetAlg() ;
-
+  
 private:
-
+  
   /// default constructor    is private 
   MaterialBudgetAlg() ;
   ///  copy  constructor     is  private 
@@ -168,15 +156,15 @@ private:
   double              m_ybinref       ;
   double              m_zref          ;
   // material budget histogram itself 
-  IHistogram2D*       m_budget2D      ;
-  IHistogram2D*       m_dist2DXY      ;
-  IHistogram1D*       m_budget1DX     ;
-  IHistogram1D*       m_budget1DY     ;
-  //  IHistogram1D*       m_budget3       ;
-  //  IHistogram1D*       m_budget4       ;
+  AIDA::IHistogram2D*       m_budget2D      ;
+  AIDA::IHistogram2D*       m_dist2DXY      ;
+  AIDA::IHistogram1D*       m_budget1DX     ;
+  AIDA::IHistogram1D*       m_budget1DY     ;
+  AIDA::IHistogram1D*       m_budget3       ;
+  AIDA::IHistogram1D*       m_budget4       ;
 
   // Normalization histogram  
-  IHistogram2D*       m_normalization ;
+  AIDA::IHistogram2D*       m_normalization ;
   
 };
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: VolumeCheckAlg.cpp,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $
+// $Id: VolumeCheckAlg.cpp,v 1.2 2004-03-01 15:03:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
+// New package: collection of components for checks of Detector Description
+// 
 // ============================================================================
 // Include files 
 // STL & STD 
@@ -60,7 +63,7 @@ const        IAlgFactory&VolumeCheckAlgFactory = s_factory ;
 VolumeCheckAlg::VolumeCheckAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : Algorithm ( name , svcloc ) 
+  : GaudiHistoAlg  ( name , svcloc ) 
   , m_volumeName   ( "Undefined Volume" )
   , m_volume       ( 0            )
   , m_minx         ( -10 * m      ) 
@@ -109,22 +112,6 @@ VolumeCheckAlg::~VolumeCheckAlg() {};
 // ============================================================================
 
 // ============================================================================
-/** standard algorithm finalization
- *  @see IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode VolumeCheckAlg::finalize() 
-{
-  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
 /** standard algorithm initialization
  *  @see IAlgorithm
  *  @return status code 
@@ -132,125 +119,65 @@ StatusCode VolumeCheckAlg::finalize()
 // ============================================================================
 StatusCode VolumeCheckAlg::initialize() 
 {  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
   
-  { /// print all own properties
-    typedef std::vector<Property*> Properties;
-    const Properties& properties = getProperties() ;
-    log << MSG::DEBUG 
-        << " List of ALL properties of "
-        << System::typeinfoName( typeid( *this ) ) << "/" 
-        << name ()           << "   #properties = " 
-        << properties.size() << endreq ;
-    const int   buffer_size  = 256 ;
-    char buffer[buffer_size]       ;
-    for( Properties::const_reverse_iterator property 
-           = properties.rbegin() ;
-         properties.rend() != property ; ++property )  
-      {
-        std::fill( buffer , buffer + buffer_size , 0 );
-        std::ostrstream ost ( buffer , buffer_size );
-        (*property)->nameAndValueAsStream( ost );
-        ost.freeze();
-        log << MSG::DEBUG
-            << "Property ['Name': Value] = " 
-            << ost.str() << endreq ;
-      }
-  }
+  StatusCode sc = GaudiHistoAlg::initialize() ;
+  if ( sc.isFailure() ) { return sc ; }
   
   // check the detector service 
   if( 0 == detSvc  () )  
-    {
-      log << MSG::ERROR << "  detSvc() points to NULL!" << endreq ;
-      return StatusCode::FAILURE ;    
-    }
-  // locate the volume itself 
-  SmartDataPtr<ILVolume> vol( detSvc() , m_volumeName ) ;
-  if( !vol )
-    {
-      log << MSG::ERROR 
-          << " Could not locate ILVolume with name '" << 
-        m_volumeName << "'" << endreq ;
-      return StatusCode::FAILURE ;
-    }
-  m_volume = vol ;
-  if( 0 == m_volume )
-    {
-      log << MSG::ERROR
-          << " ILVolume* points to NULL " << endreq ;
-      return StatusCode::FAILURE ;
-    }
+    { return Error( "  detSvc() points to NULL!" ); }
+
+  const ILVolume* m_volume = getDet<ILVolume>( m_volumeName ) ;
 
   const std::string stars(80,'*');
   
-  log << MSG::INFO << stars     << endreq ;
-  log << MSG::INFO << m_volume  << endreq ;
-  log << MSG::INFO << stars     << endreq ;
+  MsgStream& log = info() ;
+  
+  log << stars     << endreq ;
+  log << m_volume  << endreq ;
+  log << stars     << endreq ;
   if( !m_volume->pvolumes().empty() )
-    {
-      log << MSG::INFO
-          << " Has " << m_volume->pvolumes().size() 
+  {
+    log << " Has " << m_volume->pvolumes().size() 
           << " daughter volumes " << endreq ;
-      for( ILVolume::PVolumes::const_iterator pv = m_volume->pvBegin() ; 
-           m_volume->pvEnd() != pv ; ++pv )
-        {
-          log << MSG::INFO 
-              << " **** Daughter Physical Volume #"
-              << pv - m_volume->pvBegin() << endreq ;
-          log << MSG::INFO 
-              << *pv << endreq ;
-        }
+    for( ILVolume::PVolumes::const_iterator pv = m_volume->pvBegin() ; 
+         m_volume->pvEnd() != pv ; ++pv )
+    {
+      log << " **** Daughter Physical Volume #"
+          << pv - m_volume->pvBegin() << endreq ;
+      log << *pv << endreq ;
     }
+  }
   
   if( !m_volume->isAssembly() ) 
-    {
-      const ISolid* solid       = m_volume->solid() ;
-      log << MSG::INFO 
-          << " **** Solid "    << endreq ;
-      log << MSG::INFO 
-          << solid             << endreq ;
-      const Material* material  = m_volume->material() ;
-      log << MSG::INFO 
-          << " **** Material " << endreq ;
-      log << MSG::INFO 
-          << material          << endreq ;
-    }
-
+  {
+    const ISolid* solid       = m_volume->solid() ;
+    log << " **** Solid "    << endreq ;
+    log << solid             << endreq ;
+    const Material* material  = m_volume->material() ;
+    log << " **** Material " << endreq ;
+    log << material          << endreq ;
+  }
+  
   // activate the vertex
   if( m_vrtx.size() <= 3 )
-    { while( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
+  { while( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
   else 
-    {
-      log << MSG::WARNING 
-          << " Ignore extra fields in 'ShootingPoint' "<< endreq ;
-    }
+  {
+    warning()  << " Ignore extra fields in 'ShootingPoint' "<< endreq ;
+  }
   m_vertex.setX( m_vrtx[0] ) ;
   m_vertex.setY( m_vrtx[1] ) ;
   m_vertex.setZ( m_vrtx[2] ) ;
   
   // prepare for shoots 
-  StatusCode sc = service( m_rndmSvcName , m_rndmSvc , true );
-  if( sc.isFailure() )
-    {
-      log << MSG::ERROR << " IRndmGenSvc* is not available " << endreq ;
-      return StatusCode::FAILURE ;    
-    }
-  if( 0 == m_rndmSvc ) 
-    {
-      log << MSG::ERROR << " IRndmGenSvc* points to NULL "   << endreq ;
-      return StatusCode::FAILURE ;    
-    }
-  m_rndmSvc->addRef();
-
+  m_rndmSvc = svc<IRndmGenSvc> ( m_rndmSvcName , true );
+  
   if( 0 == histoSvc () ) 
-    {
-      log << MSG::ERROR << " histoSvc() points to NULL!" << endreq ;
-      return StatusCode::FAILURE ;    
-    }
-
+  { return Error(" histoSvc() points to NULL!"); }
+  
   // book the histogram
-  const std::string hbookdir( Local::dirHbookName( "/stat/" + name() ) );
+  const std::string hbookdir = histoPath() ;
   
   // sphere shoots 
   m_sphere      = 
@@ -264,12 +191,7 @@ StatusCode VolumeCheckAlg::initialize()
                       0.0                        ,  // min     theta
                       180                        ); // max     theta  
   if( 0 == m_sphere )
-    {
-      log << MSG::ERROR 
-          << " Could not book histogram ' 3D-Material Budget'" 
-          << endreq ;
-      return StatusCode::FAILURE ;      
-    }
+  { return Error(" Could not book histogram ' 3D-Material Budget'"); }
   
   m_sphereNorm  = 
     histoSvc()->book( hbookdir                   ,  // directory 
@@ -282,246 +204,182 @@ StatusCode VolumeCheckAlg::initialize()
                       0.0                        ,  // min     theta
                       180                        ); // max     theta
   if( 0 == m_sphereNorm )
-    {
-      log << MSG::ERROR 
-          << " Could not book histogram '3D-Material Budget(Normalization)'" 
-          << endreq ;
-      return StatusCode::FAILURE ;      
-    }
-
+  { return Error(" Could not book histogram '3D-Material Budget(Nor)'"); }
+  
   if( m_volume->isAssembly() ) 
+  {
+    m_planeXY       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           3                      ,  // id  
+                           " XY-Material Budget for " + m_volumeName , 
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X 
+                           m_maxx                 ,  // max  X 
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y
+                           m_maxy                 ); // max  Y    
+    if( 0 == m_planeXY )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }    
+    m_planeXYNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           4                      ,  // id  
+                           " XY-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X 
+                           m_maxx                 ,  // max  X 
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y
+                           m_maxy                 ); // max  Y    
+    if( 0 == m_planeXYNorm )
+    { return Error(" Could not book histogram ' XY-Material Budget (Norm)'");}
+    
+    m_planeYZ       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           5                      ,  // id  
+                           " YZ-Material Budget for " + m_volumeName ,
+                           50                     ,  // bins in y
+                           m_miny                 ,  // min  y 
+                           m_maxy                 ,  // max  y 
+                           50                     ,  // bins in z 
+                           m_minz                 ,  // min  z
+                           m_maxz                 ); // max  z    
+    if( 0 == m_planeYZ )
+    { return Error(" Could not book histogram ' YZ-Material Budget'"); }
+    
+    m_planeYZNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           6                      ,  // id  
+                           " YZ-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y 
+                           m_maxy                 ,  // max  Y 
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z
+                           m_maxz                 ); // max  Z    
+    if( 0 == m_planeYZNorm )
+    { return Error(" Could not book histogram ' YZ-Material Budget (Norm)'"); }
+    
+    m_planeZX       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           7                      ,  // id  
+                           " ZX-Material Budget for " + m_volumeName ,
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z 
+                           m_maxz                 ,  // max  Z 
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X
+                           m_maxx                 ); // max  X    
+    if( 0 == m_planeZX )
     {
-      m_planeXY       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             3                      ,  // id  
-                             " XY-Material Budget for " + m_volumeName , 
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X 
-                             m_maxx                 ,  // max  X 
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y
-                             m_maxy                 ); // max  Y    
-      if( 0 == m_planeXY )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' XY-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeXYNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             4                      ,  // id  
-                             " XY-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X 
-                             m_maxx                 ,  // max  X 
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y
-                             m_maxy                 ); // max  Y    
-      if( 0 == m_planeXYNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' XY-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }
-      
-      m_planeYZ       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             5                      ,  // id  
-                             " YZ-Material Budget for " + m_volumeName ,
-                             50                     ,  // bins in y
-                             m_miny                 ,  // min  y 
-                             m_maxy                 ,  // max  y 
-                             50                     ,  // bins in z 
-                             m_minz                 ,  // min  z
-                             m_maxz                 ); // max  z    
-      if( 0 == m_planeYZ )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' YZ-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeYZNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             6                      ,  // id  
-                             " YZ-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y 
-                             m_maxy                 ,  // max  Y 
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z
-                             m_maxz                 ); // max  Z    
-      if( 0 == m_planeYZNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' YZ-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }
-      
-      m_planeZX       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             7                      ,  // id  
-                             " ZX-Material Budget for " + m_volumeName ,
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z 
-                             m_maxz                 ,  // max  Z 
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X
-                             m_maxx                 ); // max  X    
-      if( 0 == m_planeZX )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' ZX-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeZXNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             8                      ,  // id  
-                             " ZX-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z 
-                             m_maxz                 ,  // max  Z 
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X
-                             m_maxx                 ); // max  X    
-      if( 0 == m_planeZXNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' ZX-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }
-    }
+      return Error(" Could not book histogram ' ZX-Material Budget'"); }
+    
+    m_planeZXNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           8                      ,  // id  
+                           " ZX-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z 
+                           m_maxz                 ,  // max  Z 
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X
+                           m_maxx                 ); // max  X    
+    if( 0 == m_planeZXNorm )
+    { return Error(" Could not book histogram ' ZX-Material Budget (Norm)'"); }
+  }
   else 
-    {
-      const ISolid* top = m_volume->solid()->coverTop();
-      if( 0 == top ) 
-        {
-          log << MSG::ERROR << "CoverTop* points to NULL!" << endreq ;
-          return StatusCode::FAILURE ;          
-        }
-      const SolidBox* box = dynamic_cast<const SolidBox*> ( top );
-      if( 0 == box ) 
-        {
-          log << MSG::ERROR << "SolidBox* points to NULL!" << endreq ;
-          return StatusCode::FAILURE ;          
-        }
-      m_minx = -1 * box->xHalfLength() * 1.05 ;
-      m_maxx =      box->xHalfLength() * 1.05 ;
-      m_miny = -1 * box->yHalfLength() * 1.05 ;
-      m_maxy =      box->yHalfLength() * 1.05 ;
-      m_minz = -1 * box->zHalfLength() * 1.05 ;
-      m_maxz =      box->zHalfLength() * 1.05 ;
-      
-      m_planeXY       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             3                      ,  // id  
-                             " XY-Material Budget for " + m_volumeName ,
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X 
-                             m_maxx                 ,  // max  X 
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y
-                             m_maxy                 ); // max  Y    
-      if( 0 == m_planeXY )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' XY-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeXYNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             4                      ,  // id  
-                             " XY-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X 
-                             m_maxx                 ,  // max  X 
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y
-                             m_maxy                 ); // max  Y    
-      if( 0 == m_planeXYNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' XY-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }
-      
-      m_planeYZ       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             5                      ,  // id  
-                             " YZ-Material Budget for " + m_volumeName ,   
-                             50                     ,  // bins in y
-                             m_miny                 ,  // min  y 
-                             m_maxy                 ,  // max  y 
-                             50                     ,  // bins in z 
-                             m_minz                 ,  // min  z
-                             m_maxz                 ); // max  z    
-      if( 0 == m_planeYZ )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' YZ-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeYZNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             6                      ,  // id  
-                             " YZ-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in Y 
-                             m_miny                 ,  // min  Y 
-                             m_maxy                 ,  // max  Y 
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z
-                             m_maxz                 ); // max  Z    
-      if( 0 == m_planeYZNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' YZ-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }
-      
-      m_planeZX       = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             7                      ,  // id  
-                             " ZX-Material Budget for " + m_volumeName ,
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z 
-                             m_maxz                 ,  // max  Z 
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X
-                             m_maxx                 ); // max  X    
-      if( 0 == m_planeZX )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' ZX-Material Budget'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }    
-      m_planeZXNorm   = 
-        histoSvc() -> book ( hbookdir               ,  // directory
-                             8                      ,  // id  
-                             " ZX-Material Budget (N) for " + m_volumeName ,
-                             50                     ,  // bins in Z 
-                             m_minz                 ,  // min  Z 
-                             m_maxz                 ,  // max  Z 
-                             50                     ,  // bins in X 
-                             m_minx                 ,  // min  X
-                             m_maxx                 ); // max  X    
-      if( 0 == m_planeZXNorm )
-        {
-          log << MSG::ERROR 
-              << " Could not book histogram ' ZX-Material Budget (Norm)'" 
-              << endreq ;
-          return StatusCode::FAILURE ;      
-        }      
-    }
+  {
+    const ISolid* top = m_volume->solid()->coverTop();
+    if( 0 == top ) 
+    { return Error( "CoverTop* points to NULL!" ) ; }
+    const SolidBox* box = dynamic_cast<const SolidBox*> ( top );
+    if( 0 == box ) 
+    { return Error("SolidBox* points to NULL!"); }
+    
+    m_minx = -1 * box->xHalfLength() * 1.05 ;
+    m_maxx =      box->xHalfLength() * 1.05 ;
+    m_miny = -1 * box->yHalfLength() * 1.05 ;
+    m_maxy =      box->yHalfLength() * 1.05 ;
+    m_minz = -1 * box->zHalfLength() * 1.05 ;
+    m_maxz =      box->zHalfLength() * 1.05 ;
+    
+    m_planeXY       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           3                      ,  // id  
+                           " XY-Material Budget for " + m_volumeName ,
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X 
+                           m_maxx                 ,  // max  X 
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y
+                           m_maxy                 ); // max  Y    
+    if( 0 == m_planeXY )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }    
+    m_planeXYNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           4                      ,  // id  
+                           " XY-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X 
+                           m_maxx                 ,  // max  X 
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y
+                           m_maxy                 ); // max  Y    
+    if( 0 == m_planeXYNorm )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }    
+    
+    m_planeYZ       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           5                      ,  // id  
+                           " YZ-Material Budget for " + m_volumeName ,   
+                           50                     ,  // bins in y
+                           m_miny                 ,  // min  y 
+                           m_maxy                 ,  // max  y 
+                           50                     ,  // bins in z 
+                           m_minz                 ,  // min  z
+                           m_maxz                 ); // max  z    
+    if( 0 == m_planeYZ )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }    
+
+    m_planeYZNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           6                      ,  // id  
+                           " YZ-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in Y 
+                           m_miny                 ,  // min  Y 
+                           m_maxy                 ,  // max  Y 
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z
+                           m_maxz                 ); // max  Z    
+    if( 0 == m_planeYZNorm )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }
+    
+    m_planeZX       = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           7                      ,  // id  
+                           " ZX-Material Budget for " + m_volumeName ,
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z 
+                           m_maxz                 ,  // max  Z 
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X
+                           m_maxx                 ); // max  X    
+    if( 0 == m_planeZX )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }
+
+    m_planeZXNorm   = 
+      histoSvc() -> book ( hbookdir               ,  // directory
+                           8                      ,  // id  
+                           " ZX-Material Budget (N) for " + m_volumeName ,
+                           50                     ,  // bins in Z 
+                           m_minz                 ,  // min  Z 
+                           m_maxz                 ,  // max  Z 
+                           50                     ,  // bins in X 
+                           m_minx                 ,  // min  X
+                           m_maxx                 ); // max  X    
+    if( 0 == m_planeZXNorm )
+    { return Error(" Could not book histogram ' XY-Material Budget'"); }
+
+  }
   
   return StatusCode::SUCCESS;
 };

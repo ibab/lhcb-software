@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.4 2002-08-21 17:08:29 witoldp Exp $ 
+! $Id: release.notes,v 1.5 2004-03-01 15:03:43 ibelyaev Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -8,6 +8,12 @@
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2004-03-01 - Vanya BELYAEV
+ - technical improvements
+ - use new bases 
+ - update in cmt/requirements 
+ - increase the versions  
 
 ! 2002-08-21 - Juan Palacios
   - modified MaterialBudgetAlg to perform a scan with trajectories distributed

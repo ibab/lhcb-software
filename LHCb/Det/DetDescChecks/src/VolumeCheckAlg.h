@@ -1,17 +1,19 @@
-// $Id: VolumeCheckAlg.h,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $
+// $Id: VolumeCheckAlg.h,v 1.2 2004-03-01 15:03:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
+// New package: collection of components for checks of Detector Description
+// 
 // ============================================================================
 #ifndef DETDESCCHECKS_VOLUMECHECKALG_H 
 #define DETDESCCHECKS_VOLUMECHECKALG_H 1
 // Include files
 // from STL
 #include <string>
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
-class IHistogram2D ;  // AIDA 
+// from GaudiAlg
+#include "GaudiAlg/GaudiHistoAlg.h"
 class ILVolume     ;  // DETDESC 
 class IRndmGenSvc  ;  // GaudiKernel 
 
@@ -110,8 +112,7 @@ class IRndmGenSvc  ;  // GaudiKernel
  *  @date   2002-05-25
  */
 
-class VolumeCheckAlg : 
-  public Algorithm 
+class VolumeCheckAlg : public GaudiHistoAlg
 {
   
   /// friend factory for instantiation 
@@ -130,12 +131,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute    () ;
-  
-  /** standard algorithm finalization
-   *  @see IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
   
 protected:
 
@@ -190,20 +185,20 @@ private:
   HepPoint3D          m_vertex         ;
   
   // budget histogram for sphere shooting and its normailzation
-  IHistogram2D*       m_sphere         ;
-  IHistogram2D*       m_sphereNorm     ;
+  AIDA::IHistogram2D*       m_sphere         ;
+  AIDA::IHistogram2D*       m_sphereNorm     ;
 
   // budget histogram for xy-shooting  and its normailzation
-  IHistogram2D*       m_planeXY        ;
-  IHistogram2D*       m_planeXYNorm    ;
+  AIDA::IHistogram2D*       m_planeXY        ;
+  AIDA::IHistogram2D*       m_planeXYNorm    ;
 
   // budget histogram for yz-shooting  and its normailzation
-  IHistogram2D*       m_planeYZ        ;
-  IHistogram2D*       m_planeYZNorm    ;
+  AIDA::IHistogram2D*       m_planeYZ        ;
+  AIDA::IHistogram2D*       m_planeYZNorm    ;
   
   // budget histogram for zx-shooting  and its normailzation
-  IHistogram2D*       m_planeZX        ;
-  IHistogram2D*       m_planeZXNorm    ;
+  AIDA::IHistogram2D*       m_planeZX        ;
+  AIDA::IHistogram2D*       m_planeZXNorm    ;
   
 };
 // ============================================================================

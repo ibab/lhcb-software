@@ -1,40 +1,25 @@
+# $Id: requirements,v 1.7 2004-03-01 15:03:43 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package           DetDescChecks
-version           v1r1
-# =============================================================================
+version           v2r0
+
+# =============== structure ===================================================
 branches          cmt doc src options 
 
-# =============================================================================
-use DetDesc      v10r*  Det
-use AIDA         v2r2   	
+# =============== dependencies ================================================
+use               DetDesc   v*  Det
+use               GaudiAlg  v*   	
 	
-# ==========================================
-# Main program and standard job options
-use GaudiConf     v6*     
+# =============== constituents ================================================
+library           DetDescChecks   *.cpp
 
-# GAUDI framework
-use GaudiSys      v10r*
-
-# Histogram persistency
-use HbookCnv      v12r*
-
-#geometry source 
-use XmlDDDB       v12r5   Det
-
-# =============================================================================
-library          DetDescChecks   *.cpp
-
-#==============================================================================
-application      DetDescCheckApp *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
-
-# =============================================================================
-apply_pattern    component_library library=DetDescChecks 
-
-apply_pattern application_path 
-macro MatCheck_linkopts  "$(application_linkopts)"
+# =============== patterns ====================================================
+apply_pattern     component_library library=DetDescChecks 
 
 # =============================================================================
 # The END 
