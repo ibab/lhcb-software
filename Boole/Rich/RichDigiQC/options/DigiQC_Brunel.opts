@@ -1,4 +1,6 @@
 
-BrunelMoniRICHSeq.Members += { "RichDigitMonitor/RiDigiMon" };
-//RiDigiMon.InputDigits = "Raw/Rich/Digits";
-RiDigiMon.HistoPath   = "RICH/DIGI/";
+// Main RichDigit Monitor
+MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
+
+// Low level data object debugger
+//MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventPrint" };

@@ -1,6 +1,6 @@
-// $Id: RichDigitMonitor.h,v 1.1.1.1 2003-06-30 16:56:39 jonesc Exp $
-#ifndef RICHMONITOR_RICHDIGITMONITOR_H
-#define RICHMONITOR_RICHDIGITMONITOR_H 1
+// $Id: RichDigitQC.h,v 1.1 2003-09-20 15:45:18 jonrob Exp $
+#ifndef RICHMONITOR_RICHDIGITQC_H
+#define RICHMONITOR_RICHDIGITQC_H 1
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
@@ -9,39 +9,44 @@
 class IHistogram1D;
 class IHistogram2D;
 
-/** @class RichDigitMonitor RichDigitMonitor.h RichMonitor/RichDigitMonitor.h
+/** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
  *
  *  Monitor for RichDigits
  *
- *  @author Andy Presland  (Andrew.Presland@cern.ch)
- *  @date   2002-11-20
+ *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
+ *  @date   2003-09-08
  */
 
-class RichDigitMonitor : public Algorithm {
+class RichDigitQC : public Algorithm {
 
 public:
 
   /// Standard constructor
-  RichDigitMonitor( const std::string& name, ISvcLocator* pSvcLocator );
+  RichDigitQC( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~RichDigitMonitor( ); ///< Destructor
+  virtual ~RichDigitQC( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-private:
+private: // methods
 
   /// Book histograms
   StatusCode bookHistograms();
 
+private: // data
+
   // job options
-  std::string m_histoPath;       ///< Output histogram path
+  std::string m_histPth;         ///< Output histogram path
   std::string m_digitTDS;        ///< Location of target RichPIDs in TDS
 
   // Histograms
   IHistogram1D* m_rich1;         ///< RICH1 digit multiplicity
   IHistogram1D* m_rich2;         ///< RICH2 digit multiplicity
+
+  double m_hitMult[Rich::NRiches];
+  int m_eventCount;
 
 };
 #endif // RICHMONITOR_RICHDIGITMONITOR_H

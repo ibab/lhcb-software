@@ -1,4 +1,4 @@
 // Turn on debug printout
 
-// digi monitor
-RiDigiMon.OutputLevel = 2;
+RiDigitQC.OutputLevel = 2;
+RichDigiEventPrint.OutputLevel = 2;
