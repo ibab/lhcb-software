@@ -2,6 +2,10 @@
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, Yuehong Xie
 
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+
 !========================== DaVinciTransporter v1r0 2004-08-24 ===================
 ! 2004-08-23 - P. Koppenburg
  - New package DaVinciTransporter extracted from DaVinciTools,

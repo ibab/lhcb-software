@@ -2,6 +2,10 @@
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+
 !========================== ParticleMaker v1r0 2004-08-24 ===================
 ! 2004-08-23 - P. Koppenburg
  - New package ParticleMaker extracted from DaVinciTools,

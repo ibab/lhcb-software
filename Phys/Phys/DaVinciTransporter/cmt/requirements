@@ -5,15 +5,11 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTransporter
-version           v1r0
+version           v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
-
-# Exported header files
-#============================================================================
-include_dirs     $(DAVINCITRANSPORTERROOT)
 
 # Used packages. 
 #============================================================================

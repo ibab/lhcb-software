@@ -2,6 +2,10 @@
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+
 !========================== VertexFit v1r0 2004-08-24 ===================
 ! 2004-08-24 - P. Koppenburg
  - Made a mistake while importing DaVinciFilter, overwriting VertexFit. 
