@@ -1,0 +1,12 @@
+// $Id: SpdPrsID.opts,v 1.1 2002-07-16 08:47:12 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file
+ *  job -optison file to run CaloSingelGammaTool/SpdPrsID 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-07-16
+ */
