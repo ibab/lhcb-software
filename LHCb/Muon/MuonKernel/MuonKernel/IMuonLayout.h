@@ -1,11 +1,11 @@
-// $Id: IMuonLayout.h,v 1.5 2002-03-21 15:30:33 atsareg Exp $
+// $Id: IMuonLayout.h,v 1.6 2002-05-07 07:01:05 atsareg Exp $
 
 #ifndef MUONKERNEL_IMUONLAYOUT_H
 #define MUONKERNEL_IMUONLAYOUT_H     1
 
 /** @class IMuonLayout IMuonLayout MuonKernel/IMuonLayout.h
 
-   Interface for Muon System layout description classes
+   Common interface for Muon System layout description classes
    
    @author  Andrei Tsaregorodtsev
    @date  12 January 2002
@@ -17,11 +17,13 @@
 
 // Forward declarations
 class MuonTileID;
-class IMuonTile;
 
 class IMuonLayout {
 
 public:       
+    
+    /// destructor
+    virtual ~IMuonLayout () { }
     
     /** Accessor to the layout grid values for a given MuonTileID
        @param   id   MuonTileID of the tile for which the grid is requested
@@ -54,11 +56,17 @@ public:
     /// Generate all the MuonTileID's in the layout
     virtual std::vector<MuonTileID> tiles() const = 0; 	
     
-    /// Generate all the MuonTileID's in the layout in the given quarter
+    /** Generate all the MuonTileID's in the layout in the given quarter
+    
+      @param iq   : quarter number
+    */
     virtual std::vector<MuonTileID> tiles(int iq) const = 0; 	
     
-    /// Generate all the MuonTileID's in the layout in the given quarter
-    /// and region
+    /** Generate all the MuonTileID's in the layout in the given quarter
+        and region
+      @param iq   : quarter number
+      @param ir   : region number	
+    */	
     virtual std::vector<MuonTileID> tiles(int iq, int ir) const = 0; 					  
 
     /// find a tile containing the argument tile
@@ -109,7 +117,7 @@ public:
 						   int depthX,
 						   int depthY) const=0;						        
 
-    /// check if the given MuonTileID is valid for this layout
+    /// check if the given MuonTileID is valid in the context of this layout
     virtual bool isValidID(const MuonTileID& mt) const =0;
 
 };
