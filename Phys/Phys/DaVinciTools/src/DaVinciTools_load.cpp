@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.18 2003-04-25 18:17:33 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.19 2003-04-29 09:27:32 gcorti Exp $
 // Include files 
 
 
@@ -15,20 +15,28 @@
 DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   DECLARE_TOOL( PhysDesktop );
+
   DECLARE_TOOL( ChargedParticleMaker );
   DECLARE_TOOL( ElectronParticleMaker );
   DECLARE_TOOL( MuonParticleMaker );
   DECLARE_TOOL( NeutralParticleMaker );
   DECLARE_TOOL( RichParticleMaker );
+
   DECLARE_TOOL( LagrangeDirectionFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );
   DECLARE_TOOL( UnconstVertexFitter );  
   DECLARE_TOOL( GeomDispCalculator );
+
   DECLARE_TOOL( PIDFilterCriterion );
   DECLARE_TOOL( KinFilterCriterion );
   DECLARE_TOOL( MassDifferenceFilterCriterion );
+  DECLARE_TOOL( MassFilterCriterion );
+  DECLARE_TOOL( VtxFilterCriterion );
+
   DECLARE_TOOL( ParticleFilter );
+
   DECLARE_TOOL( ParticleStuffer );
+
   DECLARE_TOOL( CombinedTransporter );
   DECLARE_TOOL( LinearTransporter );
   DECLARE_TOOL( NsctVeloTransporter );
