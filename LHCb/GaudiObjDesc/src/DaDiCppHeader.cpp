@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.30 2002-01-29 17:26:14 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.31 2002-01-30 09:29:30 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1133,7 +1133,7 @@ void printClass(std::ofstream& xmlOut,
   xmlOut << std::endl << "protected: " << std::endl << std::endl;
 
   printMethodDecl(xmlOut, gddClass, "PROTECTED");
-  printEnums(xmlOut, gddClass, "PUBLIC");
+  printEnums(xmlOut, gddClass, "PROTECTED");
   printMembers(xmlOut,gddClass, "PROTECTED");
 
 
