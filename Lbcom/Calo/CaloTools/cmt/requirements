@@ -1,0 +1,51 @@
+# $Id: requirements,v 1.1.1.1 2001-11-01 13:21:40 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
+# Created    : 29/10/2001
+# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
+# =============================================================================
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+# =============================================================================
+
+package            CaloTools
+version            v1
+
+# ================ structure =================================================
+branches           cmt doc src CaloTools
+
+# ================ dependencies ==============================================
+use CaloInterfaces v1*   Calo 
+use CaloGen        v3*   Calo 
+use CaloEvent      v7*   Event 
+use CaloDet        v3*   Det 
+
+# ================ own includes ===============================================
+include_dirs       $(CALOTOOLSROOT)
+                
+# ================ linker library ============================================
+library            CaloToolsLib Lib/*.cpp
+apply_pattern      package_Lstamps
+apply_pattern      package_Llinkopts 
+apply_pattern      linker_path
+
+# ================ component library =========================================
+library            CaloTools    component/*.cpp
+
+# ================ private stuff (btw, WHY it is private?)  ==================
+private
+apply_pattern      package_Cshlibflags
+apply_pattern      package_Lshlibflags
+macro_append       CaloAlgsLib_shlibflags     " $(CaloEvent_linkopts)   "
+macro_append       CaloAlgsLib_shlibflags     " $(LHCbEvent_linkopts)   "
+macro_append       CaloAlgsLib_shlibflags     " $(CaloDet_linkopts)     "
+macro_append       CaloAlgsLib_shlibflags     " $(DetDesc_linkopts)     "
+macro_append       CaloAlgsLib_shlibflags     " $(GaudiKernel_linkopts) "
+macro_append       CaloAlgsLib_shlibflags     " $(CLHEP_linkopts)       "
+
+# ============================================================================
+# The End 
+# ============================================================================
