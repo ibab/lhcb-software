@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.12 2003-09-04 07:09:07 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.13 2003-10-13 16:12:41 jonrob Exp $
 // Include files
 
 // local
@@ -69,20 +69,20 @@ StatusCode RichPIDQC::initialize() {
     }
 
     // Retrieve particle property service
-    if ( !service( "ParticlePropertySvc", m_ppSvc) ) {
+    IParticlePropertySvc* ppSvc;
+    if ( !service( "ParticlePropertySvc", ppSvc, true ) ) {
       msg << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
       return StatusCode::FAILURE;
     }
-
     // Setup the PDG code mappings
-    m_localID[ 0 ] = 0;
-    m_localID[ abs(m_ppSvc->find("e+")->jetsetID()) ]  = 0;
-    m_localID[ abs(m_ppSvc->find("mu+")->jetsetID()) ] = 1;
-    m_localID[ abs(m_ppSvc->find("pi+")->jetsetID()) ] = 2;
-    m_localID[ abs(m_ppSvc->find("K+")->jetsetID()) ]  = 3;
-    m_localID[ abs(m_ppSvc->find("p+")->jetsetID()) ]  = 4;
+    m_localID[ 0 ] = Rich::Unknown;
+    m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
+    m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
+    m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
+    m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
+    m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
+    ppSvc->release();
 
-    m_ppSvc->release();
   }
 
   // Book histograms
@@ -90,8 +90,8 @@ StatusCode RichPIDQC::initialize() {
   if ( m_truth && !bookMCHistograms() ) return StatusCode::FAILURE;
 
   // Initialise summary information
-  for ( int i = 0; i<6; i++ ) {
-    for ( int j = 0; j<6; j++ ) { m_sumTab[i][j] = 0; }
+  for ( int i = 0; i<6; ++i ) {
+    for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
   }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
@@ -152,8 +152,8 @@ StatusCode RichPIDQC::bookMCHistograms() {
   m_perfTable = histoSvc()->book( m_mcHstPth, 1, title,
                                   6, 0.5, 6.5, 6, 0.5, 6.5 );
 
-  {for ( int iTrue = 0; iTrue < Rich::NParticleTypes; ++iTrue ) {
-    for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
+  {for ( int iTrue = 0; iTrue < Rich::NParticleTypes+1; ++iTrue ) {
+    for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
       title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
       id = 10*(1+iTrue) + (1+iID) + 100;
       m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
@@ -163,7 +163,7 @@ StatusCode RichPIDQC::bookMCHistograms() {
 
   if ( m_extraHistos ) {
 
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       title = hypothesis[iHypo] + " true ID : delta LogLikelihood";
       m_deltaLLTrue[iHypo] = histoSvc()->book( m_mcHstPth, 70 + iHypo+1, title,
                                                m_bins, 0.0, 150.0 );
@@ -257,7 +257,7 @@ StatusCode RichPIDQC::execute() {
 
       // Extra histograms
       if ( m_extraHistos ) {
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
+        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
           m_pRaw[iHypo]->fill( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
           m_pNorm[iHypo]->fill( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
           m_deltaLL[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
@@ -270,7 +270,7 @@ StatusCode RichPIDQC::execute() {
         MCParticle* mcPart = m_trackToMCP->associatedFrom( trTrack );
         Rich::ParticleIDType mcpid = Rich::Unknown;
         if ( mcPart ) {
-          mcpid = (Rich::ParticleIDType)m_localID[abs(mcPart->particleID().pid())];
+          mcpid = m_localID[abs(mcPart->particleID().pid())];
           if ( !iPID->isAboveThreshold( mcpid ) ) mcpid = Rich::BelowThreshold;
         }
         msg << ", MCID '" << mcpid << "'" << endreq;
@@ -280,13 +280,11 @@ StatusCode RichPIDQC::execute() {
         if ( mcpid>=0 && pid>=0 ) { m_sumTab[mcpid][pid] += 1; }
 
         // Momentum spectra
-        if ( iPID->isAboveThreshold(mcpid) &&
-             mcpid>=0 && pid>=0 &&
-             mcpid != Rich::BelowThreshold &&
-             pid != Rich::BelowThreshold ) {
-          (m_ptotSpec[mcpid][pid])->fill( tkPtot );
+        if ( mcpid != Rich::Unknown && 
+             pid   != Rich::Unknown ) {
+          (m_ptotSpec[mcpid][pid])->fill(tkPtot);
         }
-
+        
         // Extra histograms
         if ( m_extraHistos ) {
 
@@ -360,8 +358,8 @@ StatusCode RichPIDQC::finalize() {
     double trueTotExcludeX[] = {0,0,0,0,0,0};
     double eff[]             = {0,0,0,0,0,0};
     double purity[]          = {0,0,0,0,0,0};
-    for ( iRec = 0; iRec<6; iRec++ ) {
-      for ( iTrue = 0; iTrue<6; iTrue++ ) {
+    for ( iRec = 0; iRec<6; ++iRec ) {
+      for ( iTrue = 0; iTrue<6; ++iTrue ) {
         sumTot += m_sumTab[iTrue][iRec];;
         recTot[iRec] += m_sumTab[iTrue][iRec];
         trueTot[iTrue] += m_sumTab[iTrue][iRec];
@@ -369,7 +367,7 @@ StatusCode RichPIDQC::finalize() {
       }
     }
     if ( sumTot < 1 ) sumTot = 1;
-    for ( iRec = 0; iRec<6; iRec++ ) {
+    for ( iRec = 0; iRec<6; ++iRec ) {
       eff[iRec] = ( trueTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/trueTot[iRec] : 0 );
       purity[iRec] = ( recTot[iRec]>0 ? 100*m_sumTab[iRec][iRec]/recTot[iRec] : 0 );
     }
@@ -411,8 +409,8 @@ StatusCode RichPIDQC::finalize() {
                             trueTotExcludeX[Rich::Pion] ) : 0 );
 
     // Scale entries to percent of total number of entries
-    for ( iTrue = 0; iTrue<6; iTrue++ ) {
-      for ( iRec = 0; iRec<6; iRec++ ) {
+    for ( iTrue = 0; iTrue<6; ++iTrue ) {
+      for ( iRec = 0; iRec<6; ++iRec ) {
         m_sumTab[iTrue][iRec] = 100.0*m_sumTab[iTrue][iRec]/sumTot;
       }
     }
@@ -437,7 +435,7 @@ StatusCode RichPIDQC::finalize() {
         << "           |                                               |" << endreq;
     std::string type[6] = { " Electron  |", " Muon      |", " Pion      |",
                             " Kaon      |", " Proton    |", " X         |" };
-    for ( iRec = 0; iRec < 6; iRec++ ) {
+    for ( iRec = 0; iRec < 6; ++iRec ) {
       msg << type[iRec] << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f     |%7.2f",
                                    m_sumTab[0][iRec], m_sumTab[1][iRec],
                                    m_sumTab[2][iRec], m_sumTab[3][iRec],
@@ -475,7 +473,7 @@ StatusCode RichPIDQC::loadPIDData() {
   if ( eventSvc()->retrieveObject( m_pidTDS, pObject ) ) {
     if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
          static_cast<KeyedContainer<RichPID, Containers::HashMap>*> (pObject) ) {
-      m_richPIDs.erase(m_richPIDs.begin(), m_richPIDs.end());
+      m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
       return StatusCode::SUCCESS;
     }

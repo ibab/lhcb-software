@@ -1,18 +1,18 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.3 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.4 2003-10-13 16:13:34 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
-// Base
+// Base class
 #include "RichGlobalPIDAlgBase.h"
+
+// base definitions
 #include "RichRecBase/RichRecProcCode.h"
-#include "RichRecBase/TrTrackSelector.h"
+#include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // Event
-#include "Event/TrStoredTrack.h"
-#include "Event/TrStateP.h"
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
 
@@ -28,7 +28,7 @@
 
 /** @class RichGlobalPIDTrTrackSel RichGlobalPIDTrTrackSel.h
  *
- *  TrStoredTrack selection algorithm for Rich Global PID
+ *  Track selection algorithm for Rich Global PID
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -56,16 +56,13 @@ private:
 
   /// Determine the global PID Status of a track.
   /// Determines how the track will be used in the global likelihood
-  Rich::GlobalPID::TkQuality trackStatus( TrStoredTrack * track );
+  Rich::GlobalPID::TkQuality trackStatus( RichRecTrack * track );
 
   // Private data members
 private: 
 
   /// Location of processing status object in TES
   std::string m_procStatLocation;
-
-  /// Location of TrStoredTracks in TES
-  std::string m_trTracksLocation;
 
   IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
   IRichTrackCreator * m_trackCr;         ///< Pointer to RichTrackCreator
@@ -75,24 +72,11 @@ private:
   double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
   bool m_resetToPion;   ///< Reset all track hypotheses to pion, ignoring initial types
 
-  /// Maximum number of TrStoredTracks with RICH information
+  /// Maximum number of Tracks with RICH information
   int m_maxUsedTracks;
 
-  /// Maximum number of TrStoredTracks
-  int m_maxTrTracks;
-
-  /// TrStoredTrack selector
-  TrTrackSelector m_trSelector;
-
-  // Track type tallys
-  int m_nVeloTk[2];
-  int m_nNonUniqueTk[2];
-  int m_nSeedTk[2];
-  int m_nMatchTk[2];
-  int m_nForwardTk[2];
-  int m_nUpstreamTk[2];
-  int m_nVeloTTTk[2];
-  int m_nVeloBackTk[2];
+  /// Track selector
+  RichTrackSelector m_trSelector;
 
 };
 

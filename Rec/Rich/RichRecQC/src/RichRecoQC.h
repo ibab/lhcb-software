@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.h,v 1.3 2003-08-06 09:58:26 jonrob Exp $
+// $Id: RichRecoQC.h,v 1.4 2003-10-13 16:12:42 jonrob Exp $
 #ifndef RICHRECQC_RICHRECOQC_H
 #define RICHRECQC_RICHRECOQC_H 1
 
@@ -7,15 +7,13 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-//#include "GaudiKernel/IHistogramSvc.h"
 
 // Relations
 #include "Relations/IAssociatorWeighted.h"
 #include "Relations/IRelationWeighted.h"
 
-// RichRecBase
+// Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichRecBase/RichTrackType.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -63,8 +61,8 @@ private: // methods
 private: // data
 
   // Pointers to tool instances
-  IRichParticleProperties * m_richPartProp;
-  IRichCherenkovAngle * m_ckAngle;
+  IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
+  IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
   /// Pointer to RichRecMCTruthTool interface
   IRichRecMCTruthTool* m_richRecMCTruth;
@@ -72,12 +70,11 @@ private: // data
   // job options
   std::string m_mcHistPth; ///< Output MC truth histogram path
   std::string m_histPth;   ///< Output histogram path
-  int m_bins;              ///< number of bins to use in histograms
   double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
   // Histograms
   IHistogram1D* m_ckTrueDTheta[Rich::NRadiatorTypes];       ///< Cherenkov angle resolution for beta=1 tracks
-  IHistogram1D* m_trueSignalPhots[Rich::NRadiatorTypes];    ///< Number of p.e.s for beta=1 tracks
+  IHistogram1D* m_trueSignalPhots[Rich::NRadiatorTypes];    ///< Number of observed p.e.s for beta=1 tracks 
 
 };
 #endif // RICHRECQC_RICHRECOQC_H

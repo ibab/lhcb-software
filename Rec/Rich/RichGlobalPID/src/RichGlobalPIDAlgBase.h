@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlgBase.h,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDAlgBase.h,v 1.2 2003-10-13 16:13:34 jonrob Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALGBASE_H
 #define RICHRECALGS_RICHGLOBALPIDALGBASE_H 1
 
@@ -15,7 +15,7 @@
 
 // Definitions
 #include "RichGlobalPID/RichGlobalPIDTkQuality.h"
-#include "RichRecBase/RichTrackType.h"
+#include "RichRecBase/RichTrackID.h"
 
 /** @class RichGlobalPIDAlgBase RichGlobalPIDAlgBase.h
  *

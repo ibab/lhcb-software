@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.8 2003-09-04 09:17:57 jonrob Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.9 2003-10-13 16:13:34 jonrob Exp $
 // Include files
 
 // local
@@ -24,12 +24,9 @@ RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
   declareProperty( "MinimumLikelihoodMomentum", m_minLLPtot = 1.0*GeV );
   declareProperty( "ResetTracksToPion", m_resetToPion = false );
   declareProperty( "MaxUsedTracks", m_maxUsedTracks = 250 );
-  declareProperty( "MaxTrTracks", m_maxTrTracks = 400 );
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = ProcStatusLocation::Default );
-  declareProperty( "TrStoredTracksLocation",
-                   m_trTracksLocation = TrStoredTrackLocation::Default );
 
 }
 
@@ -53,7 +50,6 @@ StatusCode RichGlobalPIDTrTrackSel::initialize() {
 
   msg << MSG::DEBUG << "Initialize" << endreq
       << " Track types selected         = " << m_trSelector.selectedTrackTypes() << endreq
-      << " Max total TrStoredTracks     = " << m_maxTrTracks << endreq
       << " Max RICH selected Tracks     = " << m_maxUsedTracks << endreq
       << " Min Physics Momentum         = " << m_minPhysPtot << " MeV/c" << endreq
       << " Min LogL Momentum            = " << m_minLLPtot << " MeV/c" << endreq;
@@ -80,8 +76,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     msg << MSG::WARNING << "Failed to locate ProcStatus at "
         << m_procStatLocation << endreq;
     return StatusCode::FAILURE;
-  }
-  if ( procStat->aborted() ) {
+  } else if ( procStat->aborted() ) {
     msg << MSG::INFO
         << "Processing aborted -> RICH Global PID aborted" << endreq;
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
@@ -89,170 +84,106 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
     return StatusCode::SUCCESS;
   }
 
-  // check number of TrStoredTracks
-  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
-  if ( !tracks ) {
-    msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
-        << m_trTracksLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  if ( tracks->size() > m_maxTrTracks ) {
+  // Make sure RichRecTracks are available
+  if ( !m_trackCr->newTracks() ) return StatusCode::FAILURE;
+  if ( richTracks()->empty() ) {
+    msg << MSG::INFO << "No tracks selected -> RICH Global PID aborted" << endreq;
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
+    deleteEvent();
+    return StatusCode::SUCCESS;
+  } else if ( richTracks()->size() > m_maxUsedTracks ) {
     msg << MSG::WARNING
-        << "Found " << tracks->size() << ">" << m_maxTrTracks
-        << " max TrStoredTracks -> RICH Global PID aborted" << endreq;
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrTrackLimit ); 
+        << "Found " << richTracks()->size() << ">" << m_maxUsedTracks
+        << " max usable tracks -> RICH Global PID aborted" << endreq;
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedRichTrackLimit );
     deleteEvent();
     return StatusCode::SUCCESS;
   }
 
-  // Make sure all rich tracks are "turned off" before proceeding
-  // should perhaps make a method of the track tool ?
-  if ( !RichRecAlgBase::richTracks() ) return StatusCode::FAILURE;
-  if ( !richTracks()->empty() ) {
-    for ( RichRecTracks::iterator track = richTracks()->begin();
-          track != richTracks()->end();
-          ++track ) {
-      (*track)->setInUse( false );
-    }
-  }
+  // Initialise track count
+  std::vector<int> nTracks(Rich::Track::NTrTypes,0);
 
-  // Initialise track counts
-  m_nVeloTk[0] = 0;
-  m_nVeloBackTk[0] = 0;
-  m_nNonUniqueTk[0] = 0;
-  m_nSeedTk[0] = 0;
-  m_nMatchTk[0] = 0;
-  m_nForwardTk[0] = 0;
-  m_nUpstreamTk[0] = 0;
-  m_nVeloTTTk[0] = 0;
-  m_nVeloTk[1] = 0;
-  m_nVeloBackTk[1] = 0;
-  m_nNonUniqueTk[1] = 0;
-  m_nSeedTk[1] = 0;
-  m_nMatchTk[1] = 0;
-  m_nForwardTk[1] = 0;
-  m_nUpstreamTk[1] = 0;
-  m_nVeloTTTk[1] = 0;
-
-  // Iterate over all TrStoredTracks and choose those to use
-  for ( TrStoredTracks::const_iterator iTrack = tracks->begin();
-        iTrack != tracks->end();
-        ++iTrack) {
-    TrStoredTrack * trTrack = *iTrack;
-    if ( !trTrack ) continue;
-
-    // Count total track types
-    if ( !trTrack->unique()   ) ++m_nNonUniqueTk[1];
-    if ( trTrack->unique() ) {
-      if (  trTrack->velo()     ) ++m_nVeloTk[1];
-      if (  trTrack->veloBack() ) ++m_nVeloBackTk[1];
-      if (  trTrack->seed()     ) ++m_nSeedTk[1];
-      if (  trTrack->match()    ) ++m_nMatchTk[1];
-      if (  trTrack->forward()  ) ++m_nForwardTk[1];
-      if (  trTrack->upstream() ) ++m_nUpstreamTk[1];
-      if (  trTrack->veloTT()   ) ++m_nVeloTTTk[1];
-    }
+  // Iterate over all RichRecTracks and choose those to use
+  for ( RichRecTracks::iterator track = richTracks()->begin();
+        track != richTracks()->end(); ++track ) {
 
     // select tracks for use
-    Rich::GlobalPID::TkQuality quality = trackStatus( trTrack );
-    if ( Rich::GlobalPID::Unusable == quality ) continue;
-
-    RichRecTrack * track = m_trackCr->newTrack( trTrack );
-    if ( !track ) {
+    Rich::GlobalPID::TkQuality quality = trackStatus( *track );
+    if ( Rich::GlobalPID::Unusable == quality ) {
+      (*track)->setInUse( false );
       continue;
     } else {
-      track->setInUse( true );
+      (*track)->setInUse( true );
     }
 
     // Set to pion hypothesis if configured to do so
-    if ( m_resetToPion ) track->setCurrentHypothesis( Rich::Pion );
+    if ( m_resetToPion ) (*track)->setCurrentHypothesis( Rich::Pion );
+    if ( msgLevel(MSG::VERBOSE) ) {
+      msg << MSG::VERBOSE
+          << "Track " << (*track)->key() << " has initial hypothesis " 
+          << (*track)->currentHypothesis() << endreq;
+    }
 
     // Make a new RichGlobalPIDTrack
     RichGlobalPIDTrack * pidTrack = new RichGlobalPIDTrack();
-    m_GPIDtracks->insert( pidTrack, track->key() );
+    m_GPIDtracks->insert( pidTrack, (*track)->key() );
 
     // Make new PID result and give to track
     RichGlobalPID * newPID = new RichGlobalPID();
-    m_GPIDs->insert( newPID, track->key() );
+    m_GPIDs->insert( newPID, (*track)->key() );
 
     // set track reference
     pidTrack->setGlobalPID( newPID );
 
     // Set TrStoredTrack reference
-    newPID->setRecTrack( trTrack );
+    newPID->setRecTrack(dynamic_cast<TrStoredTrack*>((*track)->parentTrack()));
 
     // Store threshold information
-    m_tkSignal->setThresholdInfo( track, newPID );
+    m_tkSignal->setThresholdInfo( (*track), newPID );
 
     // Set quality
     pidTrack->setTrQuality( quality );
 
     // Set its SmartRef to RichRecTrack
-    pidTrack->setRichRecTrack( track );
+    pidTrack->setRichRecTrack( *track );
 
     // Count used track types
-    if ( !trTrack->unique()    ) ++m_nNonUniqueTk[0];
-    if ( trTrack->unique() ) {
-      if ( trTrack->velo()     ) ++m_nVeloTk[0];
-      if ( trTrack->veloBack() ) ++m_nVeloBackTk[0];
-      if ( trTrack->seed()     ) ++m_nSeedTk[0];
-      if ( trTrack->match()    ) ++m_nMatchTk[0];
-      if ( trTrack->forward()  ) ++m_nForwardTk[0];
-      if ( trTrack->upstream() ) ++m_nUpstreamTk[0];
-      if ( trTrack->veloTT()   ) ++m_nVeloTTTk[0];
-    }
+    ++nTracks[(*track)->trackID().trackType()];
 
   } // track loop
 
   if ( msgLevel(MSG::DEBUG) ) {
-    msg << MSG::DEBUG << "Selected " << m_GPIDtracks->size() << "/"
-        << tracks->size() << " TrStoredTracks :"
-        << " Velo " << m_nVeloTk[0] << "/" << m_nVeloTk[1]
-        << ", VeloBck " << m_nVeloBackTk[0] << "/" << m_nVeloBackTk[1]
-        << ", VTT " << m_nVeloTTTk[0] << "/" << m_nVeloTTTk[1]
-        << ", Forwd " << m_nForwardTk[0] << "/" << m_nForwardTk[1]
-        << ", Seed " << m_nSeedTk[0] << "/" << m_nSeedTk[1]
-        << ", Match " << m_nMatchTk[0] << "/" << m_nMatchTk[1]
-        << ", Upstrm " << m_nUpstreamTk[0] << "/" << m_nUpstreamTk[1]
-        << ", NonUniq " << m_nNonUniqueTk[0] << "/" << m_nNonUniqueTk[1]
+    msg << MSG::DEBUG 
+        << "Selected " << m_GPIDtracks->size() << " Tracks :"
+        << " VTT=" << nTracks[Rich::Track::VeloTT]
+        << ", Forwd=" << nTracks[Rich::Track::Forward]
+        << ", Seed=" << nTracks[Rich::Track::Seed]
+        << ", Match=" << nTracks[Rich::Track::Match]
+        << ", Upstrm=" << nTracks[Rich::Track::UpStream]
         << endreq;
   }
-  
+
   if ( m_GPIDtracks->empty() ) {
     msg << MSG::INFO << "No tracks selected -> RICH Global PID aborted" << endreq;
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichTracks );
     deleteEvent();
-  } else if ( m_maxUsedTracks < m_GPIDtracks->size() ) {
-    msg << MSG::WARNING
-        << "Found " << m_GPIDtracks->size() << ">" << m_maxUsedTracks
-        << " max usable tracks -> RICH Global PID aborted" << endreq;
-    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedRichTrackLimit );
-    deleteEvent();
+    return StatusCode::SUCCESS;
   }
 
   return StatusCode::SUCCESS;
 }
 
 Rich::GlobalPID::TkQuality
-RichGlobalPIDTrTrackSel::trackStatus( TrStoredTrack * trTrack ) {
-
-  // Only use requested track types
-  if ( !m_trSelector.trackSelected(trTrack) ) return Rich::GlobalPID::Unusable;
-
-  // Find TrStoredTrack current state and momentum
-  SmartRef<TrState> trackState = trTrack->closestState(-999999.);
-  TrStateP * trackPState = dynamic_cast<TrStateP*>( (TrState*)trackState );
-  if ( !trackPState ) {
-    if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << "Track has no TrStateP" << endreq;
-    }
-    return Rich::GlobalPID::Unusable;
-  }
-  double pTot = trackPState->p();
+RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
 
   // Set default quality to be good
   Rich::GlobalPID::TkQuality quality = Rich::GlobalPID::Physics;
+
+  // Only use requested track types
+  if ( !m_trSelector.trackSelected(track) ) quality = Rich::GlobalPID::Unusable;
+
+  // Momentum
+  double pTot = track->vertexMomentum();
 
   // If below minimum momentum for use in LL, return false
   if ( pTot < m_minLLPtot ) return Rich::GlobalPID::Unusable;

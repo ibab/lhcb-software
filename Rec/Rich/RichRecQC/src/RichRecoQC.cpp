@@ -1,5 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.5 2003-09-04 07:09:07 jonrob Exp $
-// Include files
+// $Id: RichRecoQC.cpp,v 1.6 2003-10-13 16:12:42 jonrob Exp $
 
 // local
 #include "RichRecoQC.h"
@@ -23,7 +22,6 @@ RichRecoQC::RichRecoQC( const std::string& name,
   // Declare job options
   declareProperty( "MCHistoPath", m_mcHistPth = "RICH/RECOQC/MC/" );
   declareProperty( "HistoPath", m_histPth = "RICH/RECOQC/" );
-  declareProperty( "HistoBins", m_bins = 50 );
   declareProperty( "MinBeta", m_minBeta = 0.99 );
 
 }
@@ -72,18 +70,18 @@ StatusCode RichRecoQC::bookMCHistograms() {
   RAD_HISTO_OFFSET;
   RADIATOR_NAMES;
 
-  const double ckRange[]      = { 0.015, 0.01, 0.005 };
+  const double ckRange[] = { 0.015, 0.01, 0.005 };
 
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; iRad++ ) {
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
 
-    title = "TrueRec-TrueExp Cktheta beta=1 : " + radiator[iRad];
+    title = "Rec-Exp Cktheta : beta=1 : " + radiator[iRad];
     id = radOffset*(iRad+1) + 1;
-    m_ckTrueDTheta[iRad] = histoSvc()->book(m_mcHistPth,id,title,m_bins,
+    m_ckTrueDTheta[iRad] = histoSvc()->book(m_mcHistPth,id,title,100,
                                             -ckRange[iRad],ckRange[iRad]);
 
-    title = "True # signal photons beta=1 : " + radiator[iRad];
+    title = "True # p.e.s : beta=1 : " + radiator[iRad];
     id = radOffset*(iRad+1) + 2;
-    m_trueSignalPhots[iRad] = histoSvc()->book(m_mcHistPth,id,title,m_bins,0,100);
+    m_trueSignalPhots[iRad] = histoSvc()->book(m_mcHistPth,id,title,51,-0.5,50.5);
 
   } // end rad loop
 
@@ -101,8 +99,7 @@ StatusCode RichRecoQC::execute() {
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end();
-        ++iSeg ) {
+        iSeg != richSegments()->end(); ++iSeg ) {
     RichRecSegment * segment = *iSeg;
 
     // Radiator info
@@ -110,6 +107,7 @@ StatusCode RichRecoQC::execute() {
 
     // True particle type
     Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    if ( Rich::Unknown == mcType ) continue; // skip tracks with unknown MC type
 
     // beta for true type
     double beta = m_richPartProp->beta( segment, mcType );
@@ -121,10 +119,8 @@ StatusCode RichRecoQC::execute() {
 
     // loop over photons for this segment
     int truePhotons = 0;
-    RichRecSegment::Photons & photons = segment->richRecPhotons();
-    for ( RichRecSegment::Photons::iterator iPhot = photons.begin();
-          iPhot != photons.end();
-          iPhot++ ) {
+    for ( RichRecSegment::Photons::iterator iPhot = segment->richRecPhotons().begin();
+          iPhot != segment->richRecPhotons().end(); ++iPhot ) {
       RichRecPhoton * photon = *iPhot;
 
       double thetaRec = photon->geomPhoton().CherenkovTheta();
@@ -139,7 +135,7 @@ StatusCode RichRecoQC::execute() {
     } // photon loop
 
     // number of true photons
-    m_trueSignalPhots[rad]->fill( truePhotons );
+    if ( truePhotons > 0 ) m_trueSignalPhots[rad]->fill( truePhotons );
 
   } // end loop over segments
 

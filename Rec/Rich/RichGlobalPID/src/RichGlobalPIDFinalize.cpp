@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.4 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.5 2003-10-13 16:13:34 jonrob Exp $
 // Include files
 
 // local
@@ -80,13 +80,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
           << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
     }
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      if ( deltaLLs[iHypo] < 0 ) {
-        if ( fabs(deltaLLs[iHypo]) > 1e-5 ) {
-          msg << MSG::WARNING << "PID " << pid->key() << " ID " << (Rich::ParticleIDType)iHypo
-              << " negative deltaLL " << deltaLLs[iHypo] << " reset to 0" << endreq;
-        }
-        deltaLLs[iHypo] = 0.0;
-      }
+      if ( deltaLLs[iHypo] < 0 ) { deltaLLs[iHypo] = 0; }
       double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
       pid->setParticleRawProb( (Rich::ParticleIDType)iHypo, prob );
     }

@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.h,v 1.3 2003-09-04 07:09:07 jonrob Exp $
+// $Id: RichPIDQC.h,v 1.4 2003-10-13 16:12:42 jonrob Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -13,8 +13,7 @@
 #include "Relations/IRelationWeighted.h"
 
 // RichRecBase
-#include "RichRecBase/RichTrackType.h"
-#include "RichRecBase/TrTrackSelector.h"
+#include "RichRecBase/RichTrackSelector.h"
 
 // Event model
 #include "Event/RichPID.h"
@@ -106,10 +105,9 @@ private: // data
   int m_bins;                    ///< Number of bins
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
-  TrTrackSelector m_trSelector;  ///< TrStoredTrack selector
-  IParticlePropertySvc* m_ppSvc; ///< Particle property service
+  RichTrackSelector m_trSelector;  ///< Track selector
   TrackFitAsct* m_trackToMCP;    ///< Track MCTruth
-  std::map<int,int> m_localID;   ///< Local PID mapping
+  std::map<int,Rich::ParticleIDType> m_localID;   ///< Local PID mapping
 
   // Summary information
   double m_sumTab[6][6];
@@ -133,7 +131,7 @@ private: // data
   IHistogram1D* m_dLLFalse[Rich::NParticleTypes][Rich::NParticleTypes];
 
   /// Momentum spectrum for IDed type versus true type
-  IHistogram1D* m_ptotSpec[Rich::NParticleTypes][Rich::NParticleTypes];
+  IHistogram1D* m_ptotSpec[Rich::NParticleTypes+1][Rich::NParticleTypes+1];
 
   IHistogram2D* m_perfTable;        ///< Overall PID performance table
 

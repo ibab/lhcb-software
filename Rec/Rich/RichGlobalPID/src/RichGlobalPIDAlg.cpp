@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.10 2003-08-07 09:35:28 jonrob Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.11 2003-10-13 16:13:34 jonrob Exp $
 // Include files
 
 // local
@@ -426,10 +426,10 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
     for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
           iPhoton != photons.end(); ++iPhoton ) {
       RichRecPhoton * photon = *iPhoton;
-      
+
       if ( !photon->richRecTrack()->inUse() ) continue;
 
-      double tmpOldSig = 
+      double tmpOldSig =
         photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
       oldSig += tmpOldSig;
       newSig += ( photon->richRecTrack() != track ? tmpOldSig :
@@ -446,12 +446,13 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 
 double RichGlobalPIDAlg::logLikelihood() {
 
+  MsgStream msg( msgSvc(), name() );
+
   // Loop over tracks to form total expected hits part of LL
   double trackLL = 0.0;
   for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
         track != m_GPIDtracks->end();
         ++track ) {
-
     // Sum expected photons from each track with current assumed hypotheses
     RichRecTrack * rRTrack = (*track)->richRecTrack();
     trackLL +=
