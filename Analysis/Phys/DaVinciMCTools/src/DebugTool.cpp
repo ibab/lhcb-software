@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.8 2004-11-24 16:13:57 pkoppenb Exp $
+// $Id: DebugTool.cpp,v 1.9 2004-11-25 07:20:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -664,7 +664,7 @@ void DebugTool::printTree( const MCParticle *mother,
     return;
   }
 
-  info() << std::endl;
+  log << MSG::INFO << std::endl;
   printHeader( log, true, assoc != NULL );
 
   log.setf(std::ios::fixed,std::ios::floatfield);
