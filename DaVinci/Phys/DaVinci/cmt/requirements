@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2002-09-13 15:09:14 gcorti Exp $
+# $Id: requirements,v 1.40 2002-10-09 14:32:34 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -113,7 +113,7 @@ use DaVinciMCTools       v3r0   Phys
 use DaVinciTest          v3r0   Phys
 use PhysSelections       v3r0   Phys
 use FlavourTagging       v3r0   Phys
-#use DaVinciChecks        v1r0   Phys
+use DaVinciEff           v1r0   Phys
 use DaVinciUser          v3r0   Phys
 
 # Build DaVinci Application with standard executable and user example code

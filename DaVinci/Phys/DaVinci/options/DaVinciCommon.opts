@@ -39,6 +39,7 @@ ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "PhysSelections" };
 ApplicationMgr.DLLs += { "FlavourTagging" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
+ApplicationMgr.DLLs += { "DaVinciEff" };
 
 // Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
