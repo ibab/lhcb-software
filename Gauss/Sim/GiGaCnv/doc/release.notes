@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.77 2004-03-21 12:42:03 ibelyaev Exp $ 
+! $Id: release.notes,v 1.78 2004-03-22 15:12:16 ranjard Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!======================= GiGaCnv v15r1 =====================================
 ! 2004-03-21 - Vanya BELYAEV
  - add "AntiSigmaPlusInelastic", "SigmaPlusInelastic" and "XiMinusInelastic"
    to the list of known hadronic processes to reduce 
