@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2001-07-04 15:43:15 mato Exp $
+# $Id: requirements,v 1.8 2001-07-04 17:22:21 mato Exp $
 package DetDescExample
 version v2
 
@@ -9,13 +9,6 @@ use GaudiConf     v5*
 
 # GAUDI framework
 use GaudiSys      v8*
-
-# SicB event data persistency and database
-#use SicbCnv       v12*  SICB
-#use dbase         v238* SICB
-
-# LHCb event model
-#use LHCbEvent     v10*   Event
 
 # Detector Description package and database
 use DetDesc       v7*   Det
@@ -28,4 +21,5 @@ application DetDescExample *.cpp \
 # ========================= set macros ============================
 
 ignore_pattern package_stamps 
+apply_pattern  application_path
 macro DetDescExample_linkopts  "$(application_linkopts)"
