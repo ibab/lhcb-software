@@ -1,8 +1,11 @@
-// $Id: IGiGaInterface.h,v 1.1 2002-05-07 12:21:30 ibelyaev Exp $
+// $Id: IGiGaInterface.h,v 1.2 2004-02-20 18:58:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+// 
 // ============================================================================
 #ifndef GIGA_IGIGAINTERFACE_H 
 #define GIGA_IGIGAINTERFACE_H 1
@@ -10,7 +13,6 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IAlgTool.h"
 // GiGa
-#include "GiGa/IIDIGiGaInterface.h"
 
 /** @class IGiGaInterface IGiGaInterface.h GiGa/IGiGaInterface.h
  *  
@@ -31,12 +33,12 @@ public:
    *  @see IID_IGiGaInterface
    *  @return unique interface identifier 
    */
-  static const InterfaceID& interfaceID() { return IID_IGiGaInterface ; }
-
+  static const InterfaceID& interfaceID() ;
+  
 protected:
-
+  
   /// destructor (virtual and protected 
-  virtual ~IGiGaInterface() {};
+  virtual ~IGiGaInterface() ;
   
 };
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: IGiGaGeoSrc.h,v 1.4 2002-05-07 12:21:30 ibelyaev Exp $
+// $Id: IGiGaGeoSrc.h,v 1.5 2004-02-20 18:58:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef GIGA_IGIGAGEOSRC_H 
 #define GIGA_IGIGAGEOSRC_H 1
@@ -10,7 +13,6 @@
 /// GaudiKernel
 #include "GaudiKernel/IInterface.h"
 /// GiGa 
-#include "GiGa/IIDIGiGaGeoSrc.h"
 /// forward declaration from Geant4 
 class G4VPhysicalVolume;
 
@@ -28,7 +30,7 @@ class IGiGaGeoSrc: virtual public IInterface
 public:
   
   /// Retrieve unique interface ID
-  static const InterfaceID& interfaceID() { return IID_IGiGaGeoSrc; }
+  static const InterfaceID& interfaceID() ;
   
   /** retrieve the pointer to top-level "world" volume,
    *  needed for Geant4 - root for the whole Geant4 geometry tree 
@@ -46,7 +48,7 @@ public:
 protected:
   
   /// virtual destructor 
-  virtual ~IGiGaGeoSrc(){};
+  virtual ~IGiGaGeoSrc() ;
   
 };
 

@@ -1,36 +1,33 @@
-// $Id: IIDIGiGaInterface.h,v 1.1 2002-05-07 12:21:32 ibelyaev Exp $
+// $ID:$ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/07 12:21:32  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
-#ifndef GIGA_IIDIGIGAINTERFACE_H 
-#define GIGA_IIDIGIGAINTERFACE_H 1
-// Include files
+#ifndef GIGA_IIDIGIGAGEOSRC_H 
+#define GIGA_IIDIGIGAGEOSRC_H 
+// ============================================================================
 // GaudiKernel
 #include "GaudiKernel/IInterface.h"
 
 /** @file 
- *  
- *  Definition of unique identifier for class IGiGaInterface
- *  @see IGiGaInterface 
- *
+ *  Unique interface identifier for interafce IGiGaGeoSvc
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   06/05/2002
+ *  @date   8 May 2002 
  */
 
-/** @var IID_IGiGaInterface  
- *  
- *  Definition of unique identifier for class IGiGaInterface
- *  @see IGiGaInterface 
- *
+/** @var IID_IGiGaGeoSrc
+ *  Unique interface identifier for interafce IGiGaGeoSvc
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   06/05/2002
+ *  @date   8 May 2002 
  */
-static const InterfaceID IID_IGiGaInterface( "IGiGaInterface" , 1 , 0 );
+static const InterfaceID IID_IGiGaGeoSrc ( "IIDIGiGaGeoSrc" , 4 , 0 );
 
 // ============================================================================
-// The END
+// The End 
 // ============================================================================
-#endif // GIGA_IIDIGIGAINTERFACE_H
+#endif ///< GIGA_IIDIGIGAGEOSRC_H
 // ============================================================================

@@ -1,30 +1,30 @@
-// $Id: IIDIGiGaStepAction.h,v 1.7 2002-05-07 12:21:32 ibelyaev Exp $
+// $Id: IIDIGiGaSvc.h,v 1.1 2004-02-20 18:58:24 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
-#ifndef   GIGA_IIDIGIGAStepACTION_H
-#define   GIGA_IIDIGIGAStepACTION_H 1 
+#ifndef GIGA_IIDIGIGASVC_H 
+#define GIGA_IIDIGIGASVC_H 1
 // ============================================================================
 
-
-/** @file 
- *  Declaration of the interface ID ( interface id, major & minor version) 
- *  for class IGiGaStepAction
+/** @file   
+ *  Declaration of the unique interface ID 
+ *  ( interface id, major and  minor versions) for class IGiGaSvc 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   26/07/2001
  */
-/** @var IID_IGiGaStepAction
- *  Declaration of the interface ID ( interface id, major & minor version) 
- *  for class IGiGaStepAction
+/** @var  IID_IGiGaSvc
+ *  Declaration of the unique interface ID 
+ *  ( interface id, major and  minor versions) for class IGiGaSvc 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   26/07/2001
  */
-static const InterfaceID IID_IGiGaStepAction( "IGiGaStepAction" , 3 , 0 );
+static const InterfaceID IID_IGiGaSvc( "IGiGaSvc" , 5 , 0); 
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif ///< GIGA_IIDIGIGAStepACTION_H
+#endif ///< GIGA_IIDIGIGASVC_H
 // ============================================================================

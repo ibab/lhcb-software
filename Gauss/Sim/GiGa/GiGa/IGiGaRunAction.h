@@ -1,15 +1,17 @@
-// $Id: IGiGaRunAction.h,v 1.4 2002-05-07 12:21:31 ibelyaev Exp $
+// $Id: IGiGaRunAction.h,v 1.5 2004-02-20 18:58:17 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/07 12:21:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef GIGA_IGIGARUNACTION_H 
 #define GIGA_IGIGARUNACTION_H 1
 // ============================================================================
 // GiGa 
 #include "GiGa/IGiGaInterface.h"
-#include "GiGa/IIDIGiGaRunAction.h"
 // G4 
 #include "G4UserRunAction.hh"
 
@@ -32,12 +34,12 @@ public:
   /** retrieve the uniques interface ID
    *  @return uniqie interface ID 
    */
-  static const InterfaceID& interfaceID ()  { return IID_IGiGaRunAction ; }
+  static const InterfaceID& interfaceID () ;
   
 protected:
   
   ///  virtual destructor   
-  virtual ~IGiGaRunAction(){};
+  virtual ~IGiGaRunAction() ;
   
 };
 // ============================================================================

@@ -1,14 +1,16 @@
-// $Id: IGiGaUIsession.h,v 1.1 2002-12-04 21:12:49 ibelyaev Exp $
+// $Id: IGiGaUIsession.h,v 1.2 2004-02-20 18:58:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/04 21:12:49  ibelyaev
+//  eliminate GiGa's dependency on Vis and UI code
+//
 // ============================================================================
 #ifndef GIGA_IGIGAUISESSION_H 
 #define GIGA_IGIGAUISESSION_H 1
 // GiGa
 #include "GiGa/IGiGaInterface.h"
-#include "GiGa/IIDIGiGaUIsession.h"
 // forward declaration class from Geant4
 class G4UIsession ;
 
@@ -31,7 +33,7 @@ public:
   /** Retrieve the unique interface ID (static)
    *  @see IInterface
    */
-  static const InterfaceID& interfaceID ()  { return IID_IGiGaUIsession ; }
+  static const InterfaceID& interfaceID () ;
   
   /** get the pointer to G4 user interface
    *  @return pointer to G4 user interface
@@ -41,7 +43,7 @@ public:
 protected:
   
   ///  virtual destructor (protected)  
-  virtual ~IGiGaUIsession () {};
+  virtual ~IGiGaUIsession () ;
 
 };
 

@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/07 12:21:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // Revision 1.2  2001/08/12 15:42:46  ibelyaev
 // improvements with Doxygen comments
 //
@@ -15,7 +18,6 @@
 // ============================================================================
 // GiGa 
 #include "GiGa/IGiGaInterface.h"
-#include "GiGa/IIDIGiGaRunManager.h"
 // forward declarations from GiGa 
 class     IGiGaGeoSrc                   ;
 // forward declarations form Geant4 
@@ -48,7 +50,7 @@ public:
   /** retrieve the uniques interface ID
    *  @return uniqie interface ID 
    */
-  static const InterfaceID& interfaceID ()  { return IID_IGiGaRunManager ; }
+  static const InterfaceID& interfaceID () ;
   
   /** declare the Geant4 Primary Generator Action 
    *  @param obj pointer  to Geant4 Primary Generator Action 
@@ -137,7 +139,7 @@ public:
 protected:
   
   /// destructor 
-  virtual ~IGiGaRunManager(){}; 
+  virtual ~IGiGaRunManager() ; 
   
 };
 // ============================================================================

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/08/12 15:42:46  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.3  2001/08/01 09:42:23  ibelyaev
 /// redesign and reimplementation of GiGaRunManager class
 ///
@@ -20,7 +23,6 @@
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/IService.h"
 /// GiGa 
-#include  "GiGa/IIDIGiGaSetUpSvc.h"
 /// Forward declarations (from Geant4)
 class       G4VUserDetectorConstruction   ;
 class       G4VUserPrimaryGeneratorAction ;
@@ -44,9 +46,10 @@ class       G4VPhysicalVolume             ;
 class IGiGaSetUpSvc : virtual public IService
 {
 public:
+  
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IGiGaSetUpSvc; }
-
+  static const InterfaceID& interfaceID() ;
+  
   /** initialize method 
    *  @return status code 
    */
@@ -56,17 +59,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode                    finalize  () = 0 ;
-  
-  /// virtual destructor
-  virtual ~IGiGaSetUpSvc(){};
-  
-  /** Query the interface
-   *  @param riid  Interface id  
-   *  @param ppvI  placeholder for return interface itself 
-   *  @return status code 
-   */
-  virtual StatusCode queryInterface ( const InterfaceID& riid, 
-                                      void**             ppvI ) = 0;
   
 public:   
   
@@ -196,6 +188,12 @@ public:
    *  @return status code  
    */
   virtual StatusCode setStepping     ( G4UserSteppingAction          * ) = 0 ;
+
+protected:
+  
+  /// virtual destructor
+  virtual ~IGiGaSetUpSvc() ;
+  
 
 };
 

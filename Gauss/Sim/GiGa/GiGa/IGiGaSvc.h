@@ -1,8 +1,11 @@
-// $Id: IGiGaSvc.h,v 1.5 2002-12-07 21:05:31 ibelyaev Exp $
+// $Id: IGiGaSvc.h,v 1.6 2004-02-20 18:58:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/12/07 21:05:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes 2002-12-07
+//
 // Revision 1.4  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -16,7 +19,6 @@
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/IService.h"
 /// GiGa
-#include  "GiGa/IIDIGiGaSvc.h"
 
 // Forward declarations from GiGa
 class GiGaHitsByID   ;
@@ -43,28 +45,17 @@ class IGiGaSvc : virtual public IService
 public:
   
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IGiGaSvc; }
+  static const InterfaceID& interfaceID() ;
   
-  /// virtual destructor
-  virtual ~IGiGaSvc(){};
-  
-  /**  Query the interface  
-   *   @param riid  interface identifier 
-   *   @param ppvI  placeholder to return teh interface itself 
-   *   @return status code 
-   */
-  virtual StatusCode queryInterface ( const InterfaceID & riid, 
-                                      void**              ppvI ) = 0 ;
-
   /**  initialize 
    *   @return status code 
    */
-  virtual StatusCode                    initialize() = 0 ;
-
+  virtual StatusCode   initialize() = 0 ;
+  
   /**  initialize 
    *   @return status code 
    */
-  virtual StatusCode                    finalize  () = 0 ;
+  virtual StatusCode   finalize  () = 0 ;
 
 public:
   
@@ -164,6 +155,11 @@ public:
    *  @return  self-reference ot IGiGaSvc interface 
    */
   virtual StatusCode retrieveTrajectories   ( G4TrajectoryContainer*  & ) = 0 ;
+
+protected:
+  
+  /// virtual destructor
+  virtual ~IGiGaSvc();
 
 };
 

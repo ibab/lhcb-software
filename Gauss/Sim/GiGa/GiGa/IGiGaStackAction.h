@@ -1,15 +1,17 @@
-// $Id: IGiGaStackAction.h,v 1.8 2002-05-07 12:21:31 ibelyaev Exp $
+// $Id: IGiGaStackAction.h,v 1.9 2004-02-20 18:58:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:21:31  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef     GIGA_IGIGASTACKACTION_H
 #define     GIGA_IGIGASTACKACTION_H 1 
 // ============================================================================
 // GiGa
 #include "GiGa/IGiGaInterface.h"
-#include "GiGa/IIDIGiGaStackAction.h"
 // Geant4 
 #include "G4UserStackingAction.hh"
 
@@ -29,12 +31,12 @@ class IGiGaStackAction:
 public:
   
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID ()  { return IID_IGiGaStackAction ; }
+  static const InterfaceID& interfaceID () ;
   
 protected:
   
   ///  virtual destructor   
-  virtual ~IGiGaStackAction(){};
+  virtual ~IGiGaStackAction() ;
 };
 // ============================================================================
 

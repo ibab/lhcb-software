@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.93 2004-02-20 18:13:34 ibelyaev Exp $
+! $Id: release.notes,v 1.94 2004-02-20 18:58:20 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
 ! 2004-02-20 - Vanya BELYAEV
+ - GiGa/IGiGa*.h  
+    move al IGiGaXXX::interface() and IGiGaXXX::~IGiGaXXX() into *.cpp file 
+    to be independent from Gaudi's solution for "dynamic_cast" problem
+ - GiGa/IIDIGiGa*.h 
+    moev fiels into src/Lib directory  
+ - src/Lib/GiGaInterfaces.cpp
+     new file with (empty) implementation of destructors 
+     and static XXX:interface() methods  
  - GiGa/GiGaTrajectory.h, src/Lib/GiGaTrajectory.cpp
 	   1) now has member creator() , which points to 
 	      G4VProcess - "crreator" of the initial G4Track

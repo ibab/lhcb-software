@@ -1,8 +1,11 @@
-// $Id: IIDIGiGaUIsession.h,v 1.1 2002-12-04 21:12:49 ibelyaev Exp $
+// $Id: IIDIGiGaUIsession.h,v 1.1 2004-02-20 18:58:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/04 21:12:49  ibelyaev
+//  eliminate GiGa's dependency on Vis and UI code
+// 
 // ============================================================================
 #ifndef GIGA_IIDIGIGAUISESSION_H 
 #define GIGA_IIDIGIGAUISESSION_H 1

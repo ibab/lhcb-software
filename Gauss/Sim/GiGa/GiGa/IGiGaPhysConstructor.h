@@ -1,15 +1,17 @@
-// $Id: IGiGaPhysConstructor.h,v 1.3 2003-04-06 18:49:46 ibelyaev Exp $ 
+// $Id: IGiGaPhysConstructor.h,v 1.4 2004-02-20 18:58:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/06 18:49:46  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 #ifndef        GIGA_IGiGaPhysConstructor_H
 #define        GIGA_IGiGaPhysConstructor_H 1 
 // ============================================================================
 // GiGa 
 #include "GiGa/IGiGaPhysicsConstructor.h"
-#include "GiGa/IIDIGiGaPhysConstructor.h"
 // Geant4 
 #include "G4VPhysicsConstructor.hh"
 
@@ -25,12 +27,12 @@ class IGiGaPhysConstructor:
 public:
   
   /// unique interface identification
-  static const InterfaceID& interfaceID() { return IID_IGiGaPhysConstructor; }
+  static const InterfaceID& interfaceID() ;
   
 protected:
   
   /// virtual destructor 
-  virtual ~IGiGaPhysConstructor(){};
+  virtual ~IGiGaPhysConstructor() ;
 };
 // ============================================================================
 

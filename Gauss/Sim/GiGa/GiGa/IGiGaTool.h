@@ -1,15 +1,17 @@
-// $Id: IGiGaTool.h,v 1.1 2003-04-06 18:49:46 ibelyaev Exp $
+// $Id: IGiGaTool.h,v 1.2 2004-02-20 18:58:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:46  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 #ifndef GIGA_IGIGATOOL_H 
 #define GIGA_IGIGATOOL_H 1
 // ============================================================================
 // Include files
 #include "GiGa/IGiGaInterface.h"
-#include "GiGa/IIDIGiGaTool.h"
 
 /** @class IGiGaTool IGiGaTool.h GiGa/IGiGaTool.h
  *
@@ -27,7 +29,7 @@ public:
    *  @see InterfaceID 
    *  @return the unique interface identifier 
    */
-  static const InterfaceID& interfaceID() { return IID_IGiGaTool ; }
+  static const InterfaceID& interfaceID() ;
   
   /** the only one essential method 
    *  @param par parameters 
@@ -38,7 +40,7 @@ public:
 protected:
   
   /// destructor 
-  virtual ~IGiGaTool() {} ;
+  virtual ~IGiGaTool() ;
   
 };
 // ============================================================================
