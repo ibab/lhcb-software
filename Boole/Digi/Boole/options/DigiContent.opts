@@ -19,8 +19,8 @@ DigiWriter.ItemList =
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"  // To be Filtered
-, "/Event/MC/Vertices#1"   // To be Filtered
+, "/Event/MC/Particles#1"  // To be Filtered in Gauss
+, "/Event/MC/Vertices#1"   // To be Filtered in Gauss
 , "/Event/MC/Velo#1"
 , "/Event/MC/Velo/Hits#1"
 , "/Event/MC/Velo/PuHits#1"
@@ -56,6 +56,7 @@ DigiWriter.ItemList =
 , "/Event/Raw#2"
 , "/Event/Raw/Velo/Clusters#1"
 , "/Event/Raw/IT/Digits#1"
+, "/Event/Raw/OT/Digits#1"   // to be removed when relations problem fixed
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"

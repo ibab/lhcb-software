@@ -26,23 +26,26 @@ Requires data produced with XmlDDDB v21r0 or greater.
   - Adaptation of Trg software to new TT geometry (TrgVeloTT v2r0, L1Reco v2r1)
   - Fix physical pad size in M1R1 (XmlDDDB v21r0)
 
-- Disabled features
-  - Usage of LHC background in Rich and ST is switched off in job options
-    until LHC background events can be generated in Gauss with latest geometry
-
 - Event model / persistency changes
   - Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
   - Add one significant bit to time field of MuonDigit
     (MuonEvent v3r1, MuonAlgs v5r1)
   - Replace Relations/L0CaloCandidates and Relations/L0CaloFullCandidates old
     style relations with new style Link/Trig/L0/Calo, FullCalo (L0Calo v7r3)
-  - Remove OTDigits from Digi output (can be rebuilt from RawBuffer)
-  - Remove MuonDigits from Digi output (can be rebuilt from RawBuffer)
   - Remove all (old) L1 objects from Digi output. To be replaced by new Trg
+  - Remove MuonDigits from Digi output (can be rebuilt from RawBuffer)
 
 - Dropped functionality
   - Dropped support for pre-2004 geometries (removed v200311.opts, RiSicbGeom)
   - Dropped old L1 trigger algorithms (removed L1VeloTrack, L1Decision)
+
+- Known problems
+  - Spillover does not work for POOL input. To be fixed in Gaudi
+  - Usage of LHC background in Rich and ST is switched off in job options
+    until LHC background events can be generated in Gauss with latest geometry
+  - OTDigits are still on Digi output, due to bug in Gaudi that breaks 
+    OTDigits2MCHits relations if OTDigits are not saved
+  - L1Decision not available, waiting for new code working in Trg framework
 
 </PRE><H1><A NAME=v5r1>2004-01-23 Boole v5r1</A></H1><PRE>
 

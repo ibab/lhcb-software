@@ -30,7 +30,7 @@ ApplicationMgr.EvtMax = 500;
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events
 
 // GaudiDb input
-EventSelector.Input = { "DATAFILE='/afs/cern.ch/lhcb/group/tracking/vol2/mneedham/new.root' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 61?
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000422_00000004_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 411300
 SpilloverSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000421_00000001_1.oosim' TYP='ROOT' OPT='READ'" }; // Gauss v14r1, XmlDDDB v21r0, evtype 61
 LHCBkgSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/l/lhcbprod/test/00000357_00000008_5.oosim' TYP='ROOT' OPT='READ'" }; // "Maximal" LHC background. SicbToOORawh v3r1
 
