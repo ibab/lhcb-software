@@ -450,7 +450,7 @@ Olivier writes:
 
 ! 2004-09-02 - Olivier Callot
  - Fix the counting of OT reference when assigning truth to TrgTracks. They 
-   were almost ignored...
+   were almost ignor
 
 ! 2004-08-30 - Olivier Callot
  - New type of counter to measure PID efficiecies, and use it for Muons inside
