@@ -31,7 +31,7 @@ Purpose: LHCb reconstruction program
    . Small fixes in Velo geometry (VeloDet v7r2)
 
  - Code cleanup:
-   . Release all tools (ITAlgorithms v12r3)
+   . Release all tools (ITAlgorithms v12r3, OTAlgorithms v12r1)
    . Remove obsolete code and unneccessary calls to msgSvc (TrExtrapolator v2r3)
    . Fix some valgrind warnings (VeloAlgorithms v2r4)
 
