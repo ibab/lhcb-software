@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.27 2003-08-13 14:46:03 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.28 2003-08-14 09:15:45 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -20,7 +20,7 @@ ApplicationMgr.HistogramPersistency = "NONE";
 // allow automatic creation of subdirectories in Event Transient Store 
 EventDataSvc.ForceLeaves = true ;
 
-ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf" ;
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
@@ -47,7 +47,7 @@ MessageSvc.OutputLevel    = 3;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 100;
+ApplicationMgr.EvtMax     = 3;
 
 GaussInit.FirstEventNumber =1;
 GaussInit.RunNumber=1;

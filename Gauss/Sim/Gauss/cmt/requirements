@@ -38,11 +38,13 @@ use CaloDetXmlCnv       v2r3    Det
 
 # generator
 use GeneratorModules    v8r1    Gen
-use DecFiles            v1r0    Gen
 
-#geometry source 
+#get information from DBASE and PARAM 
 use XmlDDDB             v17r1   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
+use DecFiles            v1r0    Gen   -no_auto_imports
+use ParamFiles          v1r1    $(LHCb_release_area)/PARAM   -no_auto_imports
+
 # =============================================================================
 # Essential environment variables 
 # =============================================================================
