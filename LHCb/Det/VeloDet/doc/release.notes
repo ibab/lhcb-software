@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.44 2003-06-16 15:10:31 cattanem Exp $
+! $Id: release.notes,v 1.45 2003-06-17 09:16:04 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v8r5 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
  - use new package DetDescCnv and new version v12r* of DetDesc
 

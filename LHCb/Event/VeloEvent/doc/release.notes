@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.23 2003-06-16 12:35:18 sponce Exp $
+! $Id: release.notes,v 1.24 2003-06-17 09:16:16 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
+!======================= VeloEvent v12r1 2003-06-17 =======================
 ! 2003-06-16 - Sebastien Ponce
  - use more recent GaudiObjDesc
 
