@@ -1,6 +1,20 @@
-! $Id: release.notes,v 1.6 2002-07-18 18:39:59 gcorti Exp $
+! $Id: release.notes,v 1.7 2002-07-26 12:53:52 odie Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+| 2002-07-26 - Olivier Dormond
+ - Added alternative decay at top level, i.e. you can write 
+   "{B0 -> K+ pi-, B0 -> K- pi+}".
+ - Added alternative set of decay products, i.e. you can write
+   "B0 -> {K+ pi-, K- pi+}".
+ - Added a test for the oscilation flag _not_ being set as "[..]nos".
+
+! 2002-07-25 - Gloria Corti
+ - Introduce std namespace in reclexer.lpp and icpp to allow compilation
+   on Window, comment use of <unistd.h> not existing on windows and not
+   necessary.
+ - Make enum public and move template implementation in body of class
+   in DecayFinder. 
 
 ! 2002-07-18 - Gloria Corti
  - Use PhysEvent v6r*
