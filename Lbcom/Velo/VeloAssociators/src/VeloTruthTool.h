@@ -12,6 +12,8 @@
 #include "GaudiKernel/StatusCode.h"
 #include "Event/MCVeloFE.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/SmartRef.h"
+#include <map>
 
 class MCVeloHit;
 class MCParticle;
@@ -21,14 +23,12 @@ namespace VeloTruthTool{
 
   /// make link between VeloCluster and MCVeloHit
   StatusCode associateToTruth(const VeloCluster* aCluster,
-                              MCVeloHit*& aHit,
-			      double& purity,
+                              std::map<SmartRef<MCVeloHit>,double>& hitMap,
                               SmartDataPtr<MCVeloFEs> mcfes);
 
   /// make link between VeloCluster and MCParticle
   StatusCode associateToTruth(const VeloCluster* aCluster,
-                              MCParticle*& aParticle,
-			      double& purity,
+                              std::map<SmartRef<MCParticle>,double>& particleMap,
                               SmartDataPtr<MCVeloFEs> mcfes);
 }; // VELOTRUTHTOOL_H
 

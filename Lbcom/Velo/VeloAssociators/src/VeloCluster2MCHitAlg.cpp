@@ -82,15 +82,19 @@ StatusCode VeloCluster2MCHitAlg::execute() {
   VeloClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    double purity = 0;
-    MCVeloHit* aHit = 0;
-    StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,aHit,purity,feCont);
+      std::map<SmartRef<MCVeloHit>,double> hitMap;
+      StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,hitMap,feCont);
     if (sc){
-      log << MSG::DEBUG << "VeloTruthTool output - hit " << aHit << " purity " << purity << endreq;
-      aTable->relate(*iterClus,aHit,purity);
+      std::map<SmartRef<MCVeloHit>,double>::const_iterator iterMap;
+      for (iterMap = hitMap.begin(); iterMap !=  hitMap.end(); iterMap++){
+        SmartRef<MCVeloHit> aHit = (*iterMap).first;
+        double charge = (*iterMap).second;
+        log << MSG::DEBUG << "VeloTruthTool output - hit "  << " charge " << charge << endreq;
+        aTable->relate(*iterClus,aHit,charge);
+      }
     }
     else{
-      log << MSG::DEBUG << "VeloTruthTool output - no hit found, e.g. noise / spillover" << endreq;
+      log << MSG::DEBUG << "VeloTruthTool output - no hits found, e.g. noise / spillover" << endreq;
     }
   } // loop iterClus
 

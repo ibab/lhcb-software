@@ -78,22 +78,24 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
  
   // create an association table 
   VeloCluster2MCParticleAsct::Table* aTable = new VeloCluster2MCParticleAsct::Table(); 
-
   // loop and link VeloClusters to MC truth
   VeloClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    double purity = 0;
-    MCParticle* aParticle = 0;
-    StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,aParticle,purity,feCont);
+      std::map<SmartRef<MCParticle>,double> particleMap;
+      StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,particleMap,feCont);
     if (sc){
-      log << MSG::DEBUG << "VeloTruthTool output - particle " << aParticle << " purity " << purity << endreq;
-      aTable->relate(*iterClus,aParticle,purity);
+      std::map<SmartRef<MCParticle>,double>::const_iterator iterMap;
+      for (iterMap = particleMap.begin(); iterMap !=  particleMap.end(); iterMap++){
+        SmartRef<MCParticle> aParticle = (*iterMap).first;
+        double charge = (*iterMap).second;
+        log << MSG::DEBUG << "VeloTruthTool output - particle "  << " charge " << charge << endreq;
+        aTable->relate(*iterClus,aParticle,charge);
+      }
     }
     else{
-      log << MSG::DEBUG << "VeloTruthTool output - no particle found, e.g. noise / spillover" << endreq;
+      log << MSG::DEBUG << "VeloTruthTool output - no particles found, e.g. noise / spillover hits" << endreq;
     }
-
   } // loop iterClus
 
   // register table in store

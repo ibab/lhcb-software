@@ -9,19 +9,16 @@
 #include "VeloKernel/VeloSimParams.h"
 
 #include <map>
+#include <vector>
 //-----------------------------------------------------------------------------
 // Implementation file for namespace : VeloTruthTool
 //
 // 21/05/2002 : Chris Parkes
 //-----------------------------------------------------------------------------
 StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                                           MCVeloHit*& aHit,
-                                           double& purity,
+                                           std::map<SmartRef<MCVeloHit>,double>& hitMap,
                                            SmartDataPtr<MCVeloFEs> mcfes){
   // make link to truth to MCHit
-
-  std::map<MCVeloHit*,double> hitMap;
-  double totEnergy = 0.;
 
   int NStrips=aCluster->size(); // number of strips in cluster
   for (int iStrip=0; iStrip<NStrips; iStrip++){
@@ -29,80 +26,50 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
     // get MCVeloFE for strip
     VeloChannelID channelID = aCluster->channelID(iStrip);
     MCVeloFE* anFE = mcfes->object(channelID);
+    
     if (NULL!=anFE){
-      // from FE get hits
+      // from FE get hits and their deposited charge
       SmartRefVector<MCVeloHit> aHitVector =  anFE->mcVeloHits();
-      if (0==aHitVector.size()) continue;
-      MCVeloHit* aHit=NULL;
-      if (aHitVector.size()==1) {aHit=(*(aHitVector.begin()));}
-      else {
-        // following needs code not yet committed
-        // to attempt to solve ambiguities between MCVeloHits and FEs
-        // currently just take first hit
-        if (aHitVector.size()!=0) aHit=(*(aHitVector.begin()));
+      std::vector<double> aHitVectorCharge =  anFE->mcVeloHitsCharge();
 
-        // rare case of more than one MCHits contributing to the same strip
-        // pick closest hit at centre of silicon and assign full signal to this
-	//         double distance=9999.;
-	//         for( SmartRefVector<MCVeloHit>::iterator hitIt = aHitVector.begin();
-	//              hitIt< aHitVector.end(); hitIt++){
-	//              HepPoint3D point=(*hitIt)->entry()+(*hitIt)->exit();
-	//           point/=2;
-        //   double fraction,pitch; bool valid;
-        //   VeloChannelID chan=deVelo->channelID(point,fraction,pitch,valid);
-        //   int Idiff=deVelo->neighbour(anFE->key(),chan,valid);
-        //   if ((float(Idiff)+fraction) < distance) {
-        //     distance=float(Idiff)+fraction;
-        //     aHit=(*hitIt);
-        //   }
-        // } // hit loop
-      } // end else
-
-      if (NULL!=aHit){
-        // update map for this hit
-        double depEnergy = anFE->addedSignal();
-        hitMap[aHit] += depEnergy;
-        totEnergy += depEnergy;
+      int size=aHitVector.size();
+      for( int i=0; i<size;i++){
+        hitMap[aHitVector[i]] += aHitVectorCharge[i];
       }
+
     } // next FE
   } //next strip
 
-  // check total signal is significant - otherwise return no link
-  if (totEnergy<VeloSimParams::threshold) return StatusCode::FAILURE;
-
-  // iterate over map and find best match
-  std::map<MCVeloHit*,double>::iterator iterMap;
-  std::pair<MCVeloHit*,double> bestMatch(0,0.);
-  for (iterMap = hitMap.begin(); iterMap != hitMap.end(); ++iterMap){
-    if ((*iterMap).second>bestMatch.second) {
-      bestMatch = *iterMap;
-    }
-  } //iterMap
-
-  // estimate purity
-  aHit = bestMatch.first;
-  purity = fabs(bestMatch.second/totEnergy);
+  // return no link
+  if (hitMap.empty()) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 
 }
 
 StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
-                                           MCParticle*& aParticle,
-                                           double& purity,
-                                           SmartDataPtr<MCVeloFEs> mcfes){
+                          std::map<SmartRef<MCParticle>,double>& particleMap,
+                                         SmartDataPtr<MCVeloFEs> mcfes){
   // make truth link to MCParticle
   StatusCode sc = StatusCode::SUCCESS;
 
-  // first to hit
-  MCVeloHit* aHit = 0;
-  sc = VeloTruthTool::associateToTruth(aCluster,aHit,purity,mcfes);
+  // first to hits
+  std::map<SmartRef<MCVeloHit>,double> hitMap;
+  sc = VeloTruthTool::associateToTruth(aCluster,hitMap,mcfes);
 
-  aParticle=NULL;
-  if ((sc.isSuccess())&&(0 != aHit)){
-    aParticle = aHit->mcParticle();
+  // now to particles
+  if (sc.isSuccess()&&(!hitMap.empty())){
+    std::map<SmartRef<MCVeloHit>,double>::iterator iterMap;
+    for (iterMap = hitMap.begin(); iterMap != hitMap.end(); iterMap++){
+      SmartRef<MCVeloHit> aHit = (*iterMap).first;
+      double charge = (*iterMap).second;
+      SmartRef<MCParticle> aParticle = aHit->mcParticle();
+      particleMap[aParticle] += charge;
+    }
   }
 
   return sc;
 }
+
+
 
