@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.86 2002-05-11 18:25:47 ibelyaev Exp $ 
+! $Id: release.notes,v 1.87 2002-05-13 11:35:20 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+!=============================================================================
+! 12/05/2002 - Vanya Belyaev
+  - DetDesc/SolidBase.h
+    improduce tolerance parameter for bounding box, 
+    bounding sphere and bounding cylinder - preparation for future tolerance 
+!=============================================================================
 
 !=============================================================================
 ! 11/05/2002 - Vanya Belyaev

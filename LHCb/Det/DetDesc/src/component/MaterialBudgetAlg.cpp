@@ -1,11 +1,8 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.3 2002-05-11 18:25:48 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.4 2002-05-13 11:35:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/05/04 13:13:25  ibelyaev
-//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
-//
 // ============================================================================
 // Include files
 // STL & STD 
@@ -116,8 +113,12 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_vertex        (                )
   , m_shoots        ( 1000           )
   , m_z             ( 12 * meter     )
-  , m_xsize         (  4 * meter     )
-  , m_ysize         (  3 * meter     )
+  , m_xMax          (  4 * meter     )
+  , m_yMax          (  3 * meter     )
+  , m_xMin          (  0 * meter     )
+  , m_yMin          (  0 * meter     )
+  , m_nbx           ( 50             )
+  , m_nby           ( 50             )
   , m_budget        (  0             )
   , m_normalization (  0             )
 {  
@@ -126,8 +127,12 @@ MaterialBudgetAlg::MaterialBudgetAlg
   declareProperty( "ShootingPoint"    , m_vrtx        ) ;
   declareProperty( "Shoots"           , m_shoots      ) ;
   declareProperty( "zPlane"           , m_z           ) ;
-  declareProperty( "xSize"            , m_xsize       ) ;
-  declareProperty( "ySize"            , m_ysize       ) ;  
+  declareProperty( "xMax"             , m_xMax        ) ;
+  declareProperty( "xMin"             , m_xMin        ) ;
+  declareProperty( "yMax"             , m_yMax        ) ;
+  declareProperty( "yMin"             , m_yMin        ) ;
+  declareProperty( "nBx"              , m_nbx         ) ;
+  declareProperty( "nBy"              , m_nby         ) ;
 };
 // ============================================================================
 
@@ -135,6 +140,7 @@ MaterialBudgetAlg::MaterialBudgetAlg
 // destructor
 // ============================================================================
 MaterialBudgetAlg::~MaterialBudgetAlg() {}; 
+// ============================================================================
 
 // ============================================================================
 /** standard initialization of the algorithm
@@ -220,18 +226,25 @@ StatusCode MaterialBudgetAlg::initialize()
   m_vertex.setY( m_vrtx[1] ) ;
   m_vertex.setZ( m_vrtx[2] ) ;
   
+  // transform parameters 
+  if( m_xMin >  m_xMax ) {  std::swap( m_xMin , m_xMax )  ; }
+  if( m_yMin >  m_yMax ) {  std::swap( m_yMin , m_yMax )  ; }
+  // adjust number of bins 
+  if( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
+  if( 0      >= m_nby  ) {  m_nby = 50                    ; }
+  
   // book the histogram
   const std::string hbookdir( Local::dirHbookName( "/stat/" + name() ) );
   m_budget = 
     histoSvc()->book( hbookdir                            ,   // directory 
                       1                                   ,   // ID 
                       "Material Budget"                   ,   // title 
-                      100 , -1 * m_xsize , m_xsize        ,   // x-bins 
-                      100 , -1 * m_ysize , m_ysize        ) ; // y-bins
+                      m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
+                      m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
   if( 0 == m_budget ) 
     {
       log << MSG::ERROR 
-          << " Coult not book the Material Budget Histogram!"
+          << " Could not book the Material Budget Histogram!"
           << endreq ;
       return StatusCode::FAILURE ; 
     }
@@ -240,8 +253,8 @@ StatusCode MaterialBudgetAlg::initialize()
     histoSvc()->book( hbookdir                            ,   // directory 
                       2                                   ,   // ID 
                       "Normalization for Material Budget" ,   // title 
-                      100 , -1 * m_xsize , m_xsize        ,   // x-bins 
-                      100 , -1 * m_ysize , m_ysize        ) ; // y-bins
+                      m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
+                      m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
   if( 0 == m_normalization ) 
     {
       log << MSG::ERROR 
@@ -254,7 +267,6 @@ StatusCode MaterialBudgetAlg::initialize()
 };
 // ============================================================================
 
-
 // ============================================================================
 /** standard finalization of the algorithm
  *  @see  Algorithm
@@ -263,8 +275,8 @@ StatusCode MaterialBudgetAlg::initialize()
  */
 // ============================================================================
 StatusCode MaterialBudgetAlg::finalize()
- {
-
+{
+  
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
   
@@ -273,7 +285,7 @@ StatusCode MaterialBudgetAlg::finalize()
   if( 0 != m_rndmSvc ) { m_rndmSvc -> release() ; m_rndmSvc = 0 ; }
   
   return StatusCode::SUCCESS;
-}
+};
 // ============================================================================
 
 // ============================================================================
@@ -285,21 +297,30 @@ StatusCode MaterialBudgetAlg::finalize()
 // ============================================================================
 StatusCode MaterialBudgetAlg::execute() 
 {
-  
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
   
-  Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( -1. , 1. ) );
+  // get random number generator 
+  Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( 0. , 1. ) );
+  
+  const double dx = m_xMax - m_xMin ;
+  const double dy = m_yMax - m_yMin ;
 
+  // make 'shoots'
   for( int shoot = 0 ; shoot < m_shoots ; ++shoot ) 
     {
+      // point at reference plane  
+      const HepPoint3D point( m_xMin + dx * flat.shoot() ,
+                              m_yMin + dy * flat.shoot() ,
+                              m_z                        );
       
-      const HepPoint3D point( m_xsize * flat.shoot() , 
-                              m_ysize * flat.shoot() , m_z );
+      // evaluate the distance 
+      const double dist = 
+        m_trSvc -> distanceInRadUnits( m_vertex , point );
       
-      const double dist = m_trSvc -> distanceInRadUnits( m_vertex , point );
-
+      // fill material budget histogram 
       m_budget        -> fill( point.x() , point.y() , dist ) ;
+      // fill the normalization histogram  
       m_normalization -> fill( point.x() , point.y()        ) ; 
     }
   // 

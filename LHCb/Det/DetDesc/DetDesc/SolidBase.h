@@ -1,8 +1,11 @@
-// $Id: SolidBase.h,v 1.4 2002-05-11 18:25:46 ibelyaev Exp $
+// $Id: SolidBase.h,v 1.5 2002-05-13 11:35:19 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
@@ -209,39 +212,63 @@ public :
 protected:
   
   /** Fast check if the point is outside the bounding box of the solid
-   *  @param point point to be checked 
+   *  @param point     point to be checked 
+   *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D& point ) const 
+  ( const HepPoint3D& point         , 
+    const double      tolerance = 0 ) const 
   {
     return 
-      point.z () < zMin () ? true :
-      point.z () > zMax () ? true :
-      point.x () < xMin () ? true :
-      point.x () > xMax () ? true :
-      point.y () < yMin () ? true :
-      point.y () > yMax () ? true : false ;
+      0 == tolerance ?      
+      ( point.z () < zMin ()             ? true :
+        point.z () > zMax ()             ? true :
+        point.x () < xMin ()             ? true :
+        point.x () > xMax ()             ? true :
+        point.y () < yMin ()             ? true :
+        point.y () > yMax ()             ? true : false ) :
+      ( point.z () < zMin () - tolerance ? true :
+        point.z () > zMax () + tolerance ? true :
+        point.x () < xMin () - tolerance ? true :
+        point.x () > xMax () + tolerance ? true :
+        point.y () < yMin () - tolerance ? true :
+        point.y () > yMax () + tolerance ? true : false ) ;
   };
   
   /** Fast check if the point is outside the bounding sphere of the solid
-   *  @param point point to be checked 
+   *  @param point point to be checked  
+   *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding sphere 
    */
   inline bool isOutBSphere   
-  ( const HepPoint3D& point ) const 
+  ( const HepPoint3D& point         ,
+    const double      tolerance = 0 ) const 
   {
-    return point.mag2 () > rMax () * rMax () ? true : false ;
+    if( 0 == tolerance ) 
+      { return  point.mag2 () > rMax () * rMax () ? true : false ; }
+    const  double rmax = rMax()  + tolerance ;
+    return rmax <= 0 ? true : point.mag2() > rmax * rmax ;
   };
   
   /** Fast check if the point is outside the bounding cylinder 
    *  of the solid
    *  @param point point to be checked 
+   *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding cylinder 
    */
   inline bool isOutBCylinder 
-  ( const HepPoint3D& point ) const 
+  ( const HepPoint3D& point         , 
+    const double      tolerance = 0 ) const 
   {
+    if( 0 != tolerance ) 
+      {
+        const double rhomax = rhoMax() + tolerance ;
+        return rhomax <= 0 ? true : 
+          point.z     () < zMin   () - tolerance ? true :
+          point.z     () > zMax   () + tolerance ? true :
+          point.perp2 () > rhomax * rhomax       ? true : false ;
+      };
     return 
       point.z     () < zMin   ()             ? true :
       point.z     () > zMax   ()             ? true :
@@ -252,18 +279,38 @@ protected:
    *  is outside the bounding box 
    *  @param p1  first  point of the segment 
    *  @param p2  second point of the segment 
+   *  @param tolerance  tolerance parameter  
    *  @return true if the whole segment is "outside" of the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D& p1 , 
-    const HepPoint3D& p2 ) const 
+  ( const HepPoint3D& p1            , 
+    const HepPoint3D& p2            , 
+    const double      tolerance = 0 ) const 
   { 
-    if( p1.z() < zMin() && p2.z() < zMin() ) { return true ; }
-    if( p1.z() > zMax() && p2.z() > zMax() ) { return true ; }
-    if( p1.x() < xMin() && p2.x() < xMin() ) { return true ; }
-    if( p1.x() > xMax() && p2.x() > xMax() ) { return true ; }
-    if( p1.y() < yMin() && p2.y() < yMin() ) { return true ; }
-    if( p1.y() > yMax() && p2.y() > yMax() ) { return true ; }
+    if( 0 == tolerance ) 
+      {
+        if( p1.z() < zMin() && p2.z() < zMin() ) { return true ; }
+        if( p1.z() > zMax() && p2.z() > zMax() ) { return true ; }
+        if( p1.x() < xMin() && p2.x() < xMin() ) { return true ; }
+        if( p1.x() > xMax() && p2.x() > xMax() ) { return true ; }
+        if( p1.y() < yMin() && p2.y() < yMin() ) { return true ; }
+        if( p1.y() > yMax() && p2.y() > yMax() ) { return true ; }
+      }
+    else
+      {
+        const double zmin =             zMin() - tolerance ;
+        if( p1.z() < zmin   && p2.z() < zmin   ) { return true ; }
+        const double zmax =             zMax() + tolerance ;
+        if( p1.z() > zmax   && p2.z() > zmax   ) { return true ; }
+        const double xmin =             xMin() - tolerance ;
+        if( p1.x() < xmin   && p2.x() < xmin   ) { return true ; }
+        const double xmax =             xMax() + tolerance ;
+        if( p1.x() > xmax   && p2.x() > xmax   ) { return true ; }
+        const double ymin =             yMin() - tolerance ;
+        if( p1.y() < ymin   && p2.y() < ymin   ) { return true ; }
+        const double ymax =             yMax() + tolerance ;
+        if( p1.y() > ymax   && p2.y() > ymax   ) { return true ; }
+      }    
     //
     return  false ;
   };
@@ -274,31 +321,36 @@ protected:
    *  @param v     vector along the line
    *  @param tmin "minimal value of tick"
    *  @param tmax "maximal value of tick"
+   *  @param tolerance  tolerance parameter  
    *  @return true if the whole segment is "outside" of the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D&   p    , 
-    const HepVector3D&  v    , 
-    const ISolid::Tick& tmin ,
-    const ISolid::Tick& tmax ) const 
+  ( const HepPoint3D&   p             , 
+    const HepVector3D&  v             , 
+    const ISolid::Tick& tmin          ,
+    const ISolid::Tick& tmax          , 
+    const double        tolerance = 0 ) const 
   {
-    return isOutBBox( p + tmin * v , p + tmax * v );
+    return isOutBBox( p + tmin * v , p + tmax * v , tolerance );
   };  
   
   /** Fast check if the line cross the bounding sphere  
    *  @param p     first  point on the line  
    *  @param v     vector along the line
+   *  @param tolerance  tolerance parameter  
    *  @return true if line do not cross the bounding sphere  
    */
   inline bool crossBSphere      
-  ( const HepPoint3D&   p    , 
-    const HepVector3D&  v    ) const 
+  ( const HepPoint3D&   p             , 
+    const HepVector3D&  v             , 
+    const double        tolerance = 0 ) const 
   {
-    
-    const double pp = p.mag2 ()           ;
-    const double vv = v.mag2 ()           ;
-    const double pv = p.dot  ( v )        ;
-    const double dd = rMax   () * rMax () ;
+    const double pp   = p.mag2 ()           ;
+    const double vv   = v.mag2 ()           ;
+    const double pv   = p.dot  ( v )        ;
+    const double rmax = rMax() + tolerance  ;
+    if( rmax <= 0              ) { return false ; }
+    const double dd   = rmax * rmax         ;
     if( 0 == vv && pp > dd     ) { return false ; }
     if( pp - pv * pv / vv > dd ) { return false ; }
     //
@@ -308,16 +360,20 @@ protected:
   /** Fast check if the line cross the surface of bounding cylinder 
    *  @param p     first  point on the line  
    *  @param v     vector along the line
+   *  @param tolerance  tolerance parameter  
    *  @return true if line do not cross the surface of bounding cylinder  
    */
   inline bool crossBCylinder      
-  ( const HepPoint3D&   p    , 
-    const HepVector3D&  v    ) const 
+  ( const HepPoint3D&   p             , 
+    const HepVector3D&  v             , 
+    const double        tolerance = 0 ) const 
   {
-    const double pp = p.perp2 ()                  ;
-    const double vv = v.perp2 ()                  ;
-    const double pv = p.dot ( v ) - p.z() * v.z() ;
-    const double dd = rhoMax   () * rhoMax ()     ;
+    const double pp     = p.perp2 ()                  ;
+    const double vv     = v.perp2 ()                  ;
+    const double pv     = p.dot ( v ) - p.z() * v.z() ;
+    const double rhomax = rhoMax() + tolerance  ;
+    if( rhomax <= 0            ) { return false ; }
+    const double dd     = rhomax * rhomax     ;
     if( 0 == vv && pp > dd     ) { return false ; }
     if( pp - pv * pv / vv > dd ) { return false ; }
     //
