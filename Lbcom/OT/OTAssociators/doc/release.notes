@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.10 2002-10-17 08:38:21 jvantilb Exp $
+! $Id: release.notes,v 1.11 2002-10-21 14:32:43 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
 
+!====================== OTAssociators v2r2 2002-10-21 ======================
 ! 2002-10-16 - Jeroen van Tilburg
  - The associators are now able to have more than one
    deposits/hits/particles associated to one cluster. Deposits (or hits or
