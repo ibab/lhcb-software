@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.69 2002-12-16 16:23:15 ibelyaev Exp $
+! $Id: release.notes,v 1.70 2002-12-17 09:45:46 witoldp Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! =============================== GiGa v13r0 2002-11-17 ======================
 
 ! 2002-12-16 - Ivan Belyaev                    
    adaptation to newer version of Geant4 (5.0)

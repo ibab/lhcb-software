@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.42 2002-12-16 16:23:15 ibelyaev Exp $ 
+# $Id: requirements,v 1.43 2002-12-17 09:45:46 witoldp Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package  GiGa
-version  v12r2
+version  v13r0
 
 # ============== package structure ============================================ 
 branches         cmt src doc GiGa
