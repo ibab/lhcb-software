@@ -1,0 +1,32 @@
+// $Id: Pi0Rec.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+// ============================================================================
+/** @file
+ *  Options file to run CaloMergedPi0Alg "Pi0Rec" 
+ *  @author Vanya Belyaev Ivan.Belyaev 
+ */
+// ============================================================================
+
+
+// The default value 
+// Pi0Rec.Input         =   "Rec/Calo/EcalClusters"     ;
+// The default value 
+// Pi0Rec.Output        =   "Rec/Calo/MergedPi0s"       ;
+// The default value 
+// Pi0Rec.Detector      =   "/dd/Structure/LHCb/Ecal"   ;
+// The default value 
+// Pi0Rec.Tools         = { "CaloExtraDigits/SpdExtraG" ,
+//                          "CaloExtraDigits/PrsExtraG" };
+// The default value 
+// Pi0Rec.SplitPhotons  =  "Rec/Calo/SplitPhotons"      ;
+// The default value 
+// Pi0Rec.SplitClusters =  "Rec/Calo/EcalSplitClusters" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

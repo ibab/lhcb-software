@@ -1,0 +1,39 @@
+// $Id: PhotonRec.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Options to run  CaloSinglePhotonAlg "PhotonRec" algorithm 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// The defalt value 
+// PhotonRec.Input      = "Rec/Calo/EcalClusters"   ;
+// The defalt value 
+// PhotonRec.Detector   = "/dd/Structure/LHCb/Ecal" ;
+// The defalt value 
+// PhotonRec.Output     = "Rec/Calo/Photons"        ;
+
+PhotonRec.SelectionTools   = { "CaloSelectNeutralCluster/NeutralCluster" } ;
+// PhotonRec.SelectionTools  += { "CaloClusterSOMSelector/SOMPhoton"        } ;
+
+/// S and 'L' correction 
+PhotonRec.CorrectionTools  = { "CaloSCorrectionSequence/CaloSPhoton"     } ;
+PhotonRec.CorrectionTools += { "CaloLCorrectionSimple/CaloLPhoton"       } ;
+/// Prs energy correction
+PhotonRec.CorrectionTools += { "CaloPrsCorrection/PrsCorrG"              } ;
+
+/// hypo tools 
+PhotonRec.HypoTools        = { "CaloPhotonMomentumTool"                  } ;
+PhotonRec.HypoTools       += { "CaloExtraDigits/SpdExtraG"               } ;
+PhotonRec.HypoTools       += { "CaloExtraDigits/PrsExtraG"               } ;
+
+// ============================================================================
+// The END
+// ============================================================================
+
+

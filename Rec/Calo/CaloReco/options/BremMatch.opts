@@ -1,0 +1,45 @@
+// $Id: BremMatch.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  options file to run CaloHypo2TrackAlg "BremMatch" algorithm 
+ *  and the corresponding associator
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date 2002-05-23
+ */
+
+/// associator 
+ToolSvc.BremMatch.Location      = "Rec/Calo/BremMatch" ;
+ToolSvc.BremMatch.AlgorithmType = "CaloHypo2TrackAlg"  ;
+ToolSvc.BremMatch.AlgorithmName = "BremMatch"          ;
+
+/// algorithm
+BremMatch.Input     = "Rec/Calo/Photons"      ;
+BremMatch.Output    = "Rec/Calo/BremMatch"    ;
+BremMatch.MatchType = "CaloTrackMatchBremm"   ;
+BremMatch.Cut       = 1000.0                  ;
+// The default value 
+// BremMatch.Tracks      = *TrStoredTrackLocation::Default* ;
+// The default value 
+// BremMatch.UseUnique   = false ; 
+// The default value 
+// BremMatch.UseError    = false ; 
+// The default value 
+// BremMatch.UseForward  = true  ;
+// the default value 
+// BremMatch.UseMatched  = true  ;
+
+BremMatch.UseUpstream = false  ;
+BremMatch.UseVeloTT   = false  ;
+BremMatch.UseVeloBack = false  ;
+BremMatch.UseVelo     = false  ;
+BremMatch.UseSeed     = false  ; 
+
+
+// ============================================================================
+// The END 
+// ============================================================================

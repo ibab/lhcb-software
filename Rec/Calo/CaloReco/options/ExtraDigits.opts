@@ -1,0 +1,41 @@
+// $Id: ExtraDigits.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Options to configure CaloExtraDigits tools 
+ *  "SpdExtraG", "PrsExtraG" , "SpdExtraE" and "PrsExtraE"
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// "extra" Spd digits for Gammas and Pi0s 
+ToolSvc.SpdExtraG.Input      = "Raw/Spd/Digits"         ;
+ToolSvc.SpdExtraG.Detector   = "/dd/Structure/LHCb/Spd" ;
+ToolSvc.SpdExtraG.xTol       =  5.                      ;
+ToolSvc.SpdExtraG.yTol       =  5.                      ;
+
+/// "extra" Prs digits for Gammas and Pi0s
+ToolSvc.PrsExtraG.Input      = "Raw/Prs/Digits"         ;
+ToolSvc.PrsExtraG.Detector   = "/dd/Structure/LHCb/Prs" ;
+ToolSvc.PrsExtraG.xTol       =  5.                      ;
+ToolSvc.PrsExtraG.yTol       =  5.                      ;
+
+/// "extra" Spd digits for Electrons 
+ToolSvc.SpdExtraE.Input      = "Raw/Spd/Digits"         ;
+ToolSvc.SpdExtraE.Detector   = "/dd/Structure/LHCb/Spd" ;
+ToolSvc.SpdExtraE.xTol       =  10.                     ;
+ToolSvc.SpdExtraE.yTol       =   5.                     ;
+
+/// "extra" Prs digits for Electrons 
+ToolSvc.PrsExtraE.Input      = "Raw/Prs/Digits"         ;
+ToolSvc.PrsExtraE.Detector   = "/dd/Structure/LHCb/Prs" ;
+ToolSvc.PrsExtraE.xTol       = 10.                      ;
+ToolSvc.PrsExtraE.yTol       =  5.                      ;
+
+// ============================================================================
+// The END
+// ============================================================================

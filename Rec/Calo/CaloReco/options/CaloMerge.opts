@@ -1,0 +1,26 @@
+// $Id: CaloMerge.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Options to run  CaloHyposMerge "CaloMerge" algorithms 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// The defalt value 
+// EcalMerge.Input      =   "Rec/Calo/EcalClusters"   ;
+// The defalt value 
+// EcalMerge.Output     =   "Rec/Calo/Particles"      ;
+// The default value 
+// EcalMerge.InputHypos = { "Rec/Calo/Photons"      ,
+//                          "Rec/Calo/Electrons"    , 
+//                          "Rec/Calo/MergedPi0s"   ,
+//                          "Rec/Calo/SplitPhotons" } ;
+
+// ============================================================================
+// The END
+// ============================================================================

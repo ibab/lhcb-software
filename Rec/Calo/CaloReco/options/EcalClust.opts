@@ -1,0 +1,23 @@
+// $Id: EcalClust.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Options to run  CellularAutomaton clusteriation algorithms 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// The defalt value 
+// EcalClust.Input      = "Raw/Ecal/Digits"         ;
+// The defalt value 
+// EcalClust.Detector   = "/dd/Structure/LHCb/Ecal" ;
+// The defalt value 
+// EcalClust.Output     = "Rec/Calo/EcalClusters"   ;
+
+// ============================================================================
+// The END
+// ============================================================================

@@ -1,0 +1,32 @@
+// $Id: PrsCorrG.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Options to configure CaloPrsCorrection tool "PrsCorrG"
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// Non-converted photons in outer area 
+ToolSvc.PrsCorrG.Param0    = { 50.   MeV ,   0.   MeV , 0.959 ,  5.74 } ;
+// Coonverted    photons in outer area 
+ToolSvc.PrsCorrG.Param0Cnv = { 50. * MeV , 140. * MeV , 0.940 ,  8.30 } ;
+
+// Non-converted photons in middle area 
+ToolSvc.PrsCorrG.Param1    = { 50. * MeV ,   0. * MeV , 0.985 ,  7.77 } ;
+// Coonverted    photons in middle area 
+ToolSvc.PrsCorrG.Param1Cnv = { 50. * MeV , 140. * MeV , 0.967 , 10.00 } ;
+
+// Non-converted photons in inner area 
+ToolSvc.PrsCorrG.Param2    = { 70. * MeV ,   0. * MeV , 1.014 ,  8.48 } ;
+// Coonverted    photons in inner area 
+ToolSvc.PrsCorrG.Param2Cnv = { 70. * MeV , 140. * MeV , 1.000 , 10.80 } ;
+
+// ============================================================================
+// The END
+// ============================================================================
+

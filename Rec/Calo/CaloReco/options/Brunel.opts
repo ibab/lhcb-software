@@ -1,0 +1,37 @@
+// $Id: Brunel.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file
+ *  The job-options file to run  Calorimeter Reconstruction in Brunel
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+/// The first pass of CALOrimeter reconstruction - track independent 
+BrunelRecoCALOSeq.Members += 
+{ 
+  "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
+  "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
+  "CaloClusterCovarianceAlg/EcalCovar"   /// Evaluation of covariances 
+};
+
+/// The second pass of CALOrimeter reconstruction: track dependent 
+BrunelRecoCALOSeq.Members += 
+{
+  "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
+  "CaloMergedPi0Alg/Pi0Rec"            , /// Reconstruction of merged pi0s
+  "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
+  "CaloElectronAlg/ElectronRec"        , /// Reconstruction of electrons  
+  "CaloHypo2TrackAlg/ElectronMatch"    , /// 3D     track-hypo match (e+/e- ID) 
+  "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
+  "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle
+};
+
+
+// ============================================================================
+// The END 
+// ============================================================================

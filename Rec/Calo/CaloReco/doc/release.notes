@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Calo/CaloReco
+! Responsible : Ivan Belyaev
+! Purpose     : Main Package for Calorimeter Reconstruction Software 
+!-----------------------------------------------------------------------------
+
+! 2002-10-31 - Ivan Belyaev
+ - New package 
+ - All algorithms from CaloAlgs,CaloRec,CaloTools,CaloTrackTools 
+	are grouped togather 
