@@ -7,7 +7,15 @@
 !======================= LHCbSys v15r4 2004-03-15 =======================
 ! 2004-03-15 - Marco Cattaneo
 
- - Modified packages: AssociatorsSys v1r12, ITAssociators v2r8
+ - Modified packages: EventSys v17r4, DAQEvent v4r1, VeloEvent v13r0p1,
+                      AssociatorsSys v1r12, ITAssociators v2r8
+
+ - In DAQEvent v4r1:
+   . Add L0PU to RawBuffer::BankType enum
+
+ - In VeloEvent v13r0p1:
+   . This version is built on CVS branch v13r0b
+   . Use VeloChannelID as key of VeloCluster ** not backwards compatible ** 
 
  - In ITAssociators v2r8:
    . Add option ITDigit2MCHitAlg.selectRawBuffer to associate only digits
