@@ -64,8 +64,7 @@ BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
 //--------------------------------------------------------------
 // Calorimeter digitisation, and back conversion of digits to SICB bank
 #include "$CALOALGSROOT/options/Brunel.opts"
-#include "$CALOSICBCNVROOT/options/CaloSicbCnv.opts"
-BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
+#include "$CALOSICBCNVROOT/options/Brunel.opts"
 
 // Tracking and back conversion of tracks to AXTK
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
