@@ -1,0 +1,32 @@
+#ifndef     GaussTools_GaussPostTrackAction_ICPP
+#define     GaussTools_GaussPostTrackAction_ICPP 1 
+///
+inline bool      GaussPostTrackAction::storeByOwnEnergy     () const  
+{ return m_storeByOwnEnergy ; }
+/// should tracks of some predefined types be stored ?
+inline bool      GaussPostTrackAction::storeByOwnType       () const  
+{ return m_storeByOwnType ; }  
+/// Should tracks which produce at least one child with kinetic energy over some threshold be stored ?  
+inline bool      GaussPostTrackAction::storeByChildEnergy   () const  
+{ return m_storeByChildEnergy ; }  
+/// Should tracks which produce at least one child of some predefined types be stored ?
+inline bool      GaussPostTrackAction::storeByChildType     () const
+{ return m_storeByChildType ; }  
+/// Should track which marked explicitely be stored ? 
+inline bool      GaussPostTrackAction::storeMarkedTracks    () const  
+{ return m_storeMarkedTracks ; }  
+/// Threshold for own   kinetic energy 
+inline double    GaussPostTrackAction::ownEnergyThreshold   () const  
+{ return m_ownEnergyThreshold; }  
+/// Threshold for child kinetic energy 
+inline double    GaussPostTrackAction::childEnergyThreshold () const  
+{ return m_childEnergyThreshold; }  
+/// Own   particle types to be stored 
+inline const GaussPostTrackAction::PartDefs& GaussPostTrackAction::ownStoredTypes   () const  
+{ return m_ownStoredTypes; }  
+/// Child particle types to be stored 
+inline const GaussPostTrackAction::PartDefs& GaussPostTrackAction::childStoredTypes () const  
+{ return m_childStoredTypes; }  
+///
+
+#endif  //  GaussTools_GaussPostTrackAction_ICPP

@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.2 2003-02-14 18:14:48 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.3 2003-06-17 15:54:36 witoldp Exp $
 // Include files 
 
 // from Gaudi
@@ -19,7 +19,7 @@
 #include "Event/MCMuonHit.h"
 #include "Event/MCCaloHit.h"
 #include "Event/MCMuonHitPath.h"
-#include "Event/MCRichPhotodetectorHit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
 // local
 #include "GetGiGaHitsAlg.h"
@@ -46,7 +46,8 @@ GetGiGaHitsAlg::GetGiGaHitsAlg( const std::string& name,
   , m_velohits    ( MCVeloHitLocation::Default )
   , m_puvelohits  ( MCVeloHitLocation::PuVeto )
   , m_muonhits    ( MCMuonHitLocation::MCMuonHits )
-  , m_richhits    ( MCRichPhotodetectorHitLocation::Default )
+  , m_richhits    ( MCHitLocation::RiHits )
+  , m_richop      ( MCRichOpticalPhotonLocation::Default )
   , m_caloHits    ()
 { 
   m_caloHits.push_back ( MCCaloHitLocation::Spd  ) ;
@@ -60,6 +61,7 @@ GetGiGaHitsAlg::GetGiGaHitsAlg( const std::string& name,
   declareProperty( "PuVeloHits", m_puvelohits );
   declareProperty( "MuonHits"  , m_muonhits   );
   declareProperty( "RichHits"  , m_richhits   );
+  declareProperty( "RichOpticalPhot"  , m_richop   );
   declareProperty( "CaloHits"  , m_caloHits   );
 }
 
@@ -241,8 +243,8 @@ StatusCode GetGiGaHitsAlg::execute() {
   ///
     if( !m_richhits.empty() )
       {
-        SmartDataPtr<MCRichPhotodetectorHits> 
-          obj( eventSvc(), MCRichPhotodetectorHitLocation::Default) ;
+        SmartDataPtr<MCHits> 
+          obj( eventSvc(), m_richhits) ;
 
             if( obj ) 
               { 
@@ -256,7 +258,30 @@ StatusCode GetGiGaHitsAlg::execute() {
               { 
                 log << MSG::INFO 
                     << " No 'MCRichHits' to be extracted from '"
-                    << MCRichPhotodetectorHitLocation::Default << "' \t" 
+                    << m_richhits << "' \t" 
+                    << endreq ;
+                ///
+              }
+      }
+  ///
+    if( !m_richop.empty() )
+      {
+        SmartDataPtr<MCRichOpticalPhotons> 
+          obj( eventSvc(), m_richop) ;
+
+            if( obj ) 
+              { 
+                log << MSG::INFO
+                    << "Number of extracted RichOpticalPhot  \t"
+                    << obj->size()
+                    << endreq ;
+                Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
+              } 
+            else 
+              { 
+                log << MSG::INFO 
+                    << " No 'MCRichOpticalPhotons' to be extracted from '"
+                    << MCRichOpticalPhotonLocation::Default << "' \t" 
                     << endreq ;
                 ///
               }

@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.h,v 1.1 2002-12-12 15:19:30 witoldp Exp $
+// $Id: GetGiGaHitsAlg.h,v 1.2 2003-06-17 15:54:36 witoldp Exp $
 #ifndef GETGIGAHITSALG_H 
 #define GETGIGAHITSALG_H 1
 
@@ -37,6 +37,7 @@ private:
   std::string    m_puvelohits  ;
   std::string    m_muonhits    ;
   std::string    m_richhits    ;
+  std::string    m_richop      ;
   
   typedef std::vector<std::string> Addresses ;
   Addresses      m_caloHits    ;

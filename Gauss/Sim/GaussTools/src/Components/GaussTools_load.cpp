@@ -1,26 +1,3 @@
-// $Id: GaussTools_load.cpp,v 1.11 2003-06-05 10:49:43 witoldp Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2003/06/04 16:56:10  ibelyaev
-//  cut per region implementation
-//
-// Revision 1.9  2003/05/30 17:55:52  ibelyaev
-//  add GiGaRegionTool - 'Cuts per Region'
-//
-// Revision 1.8  2003/04/23 15:45:54  witoldp
-// removed obsolete files
-//
-// Revision 1.7  2003/04/11 17:55:36  witoldp
-// new handling of user limits
-//
-// Revision 1.6  2003/04/09 12:05:58  witoldp
-// change of name of GiGaTrackAction
-//
-// Revision 1.5  2003/04/06 19:07:33  ibelyaev
-//  update foe newer GiGa, add new tools
-//
 // ============================================================================
 #define GAUSSTOOLS_GAUSSTOOLS_LOAD_CPP 1 
 // ============================================================================
@@ -62,7 +39,8 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
 
   /// tracking action 
-  DECLARE_GiGaFactory     (    GaussTrackAction        );
+  DECLARE_GiGaFactory     (    GaussPreTrackAction     );
+  DECLARE_GiGaFactory     (    GaussPostTrackAction    );
   DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
 
   /// stepping  action 
@@ -84,7 +62,6 @@ void GaussTools_load()
   /// field manager 
   DECLARE_GiGaFactory     (    GiGaFieldMgr            ) ;
   DECLARE_GiGaFactory     (    ZeroFieldMgr            ) ;
-  DECLARE_GiGaFactory     (    GiGaEraseFieldMgr       ) ;
   DECLARE_GiGaFactory     (    GiGaSetSimAttributes    ) ;
 
   // Regions 
@@ -99,6 +76,3 @@ void GaussTools_load()
 extern "C" void GaussTools_loadRef() { GaussTools_load(); } ; 
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================

@@ -65,6 +65,9 @@ private:
   double m_hcut;
   double m_ncut;
   double m_mcut;
+  bool m_killloops;
+  double m_maxsteps;
+  double m_minstep;
 };
 // ============================================================================
 

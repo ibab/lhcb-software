@@ -8,6 +8,7 @@
 #include "G4ProcessManager.hh"
 /// GaussTools
 #include "MinEkineCuts.h"
+#include "LoopCuts.h"
 /// Local 
 #include "TrCutsRunAction.h"
 
@@ -32,7 +33,7 @@ IMPLEMENT_GiGaFactory( TrCutsRunAction ) ;
  *  @see GiGaPhysListBase
  *  @see GiGaBase 
  *  @see AlgTool 
- *  @param type type of the object (?)
+ *  @param type type of the object (?)x
  *  @param name name of the object
  *  @param parent  pointer to parent object
  */
@@ -42,17 +43,23 @@ TrCutsRunAction::TrCutsRunAction
   const std::string& name   ,
   const IInterface*  parent ) 
   : GiGaRunActionBase( type , name , parent )
-  , m_ecut(1.0)
-  , m_phcut(1.0)
-  , m_hcut(10.0)
-  , m_ncut(10.0)
-  , m_mcut(10.0)
+    , m_ecut(1.0)
+    , m_phcut(1.0)
+    , m_hcut(10.0)
+    , m_ncut(10.0)
+    , m_mcut(10.0)
+    , m_killloops(true)
+    , m_maxsteps(100)
+    , m_minstep(0.001)
 {  
   declareProperty("ElectronTrCut", m_ecut);
   declareProperty("GammaTrCut", m_phcut);
   declareProperty("HadronTrCut", m_hcut);
   declareProperty("NeutronTrCut", m_ncut);
   declareProperty("MuonTrCut", m_mcut);
+  declareProperty("KillLoops", m_killloops);
+  declareProperty("MaxNumberSteps", m_maxsteps);
+  declareProperty("MininumStep", m_minstep);
 };
 // ============================================================================
 
@@ -110,6 +117,9 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
         {          
           G4ProcessManager* procMgr = particle->GetProcessManager();
           procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
+          if (pname=="e-" && m_killloops)  
+            procMgr->
+              AddDiscreteProcess(new LoopCuts("LoopCuts",m_maxsteps,m_minstep));
         }
       
     }

@@ -1,28 +1,5 @@
-// $Id: GaussTrackAction.cpp,v 1.3 2003-05-05 13:51:27 witoldp Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2003/04/11 17:55:36  witoldp
-// new handling of user limits
-//
-// Revision 1.1  2003/04/09 12:03:48  witoldp
-// GaussTrackAction allows GaussTrackInformation attached by process
-//
-// Revision 1.2  2003/02/14 18:14:49  witoldp
-// added production and tracking cuts
-//
-// Revision 1.1  2002/12/12 15:19:33  witoldp
-// major repackaging
-//
-// Revision 1.5  2002/12/07 21:19:14  ibelyaev
-//  few optimization updates
-//
-// Revision 1.4  2002/12/07 14:41:44  ibelyaev
-//  add new Calo stuff
-//
-// ============================================================================
-#define GIGA_GaussTrackAction_CPP 1 
+#define GIGA_GaussPostTrackAction_CPP 1 
 // ============================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -41,12 +18,12 @@
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
 /// local
-#include "GaussTrackAction.h"
+#include "GaussPostTrackAction.h"
 ///
 
 /** @file 
  *  
- *  Implementation of class GaussTrackAction
+ *  Implementation of class GaussPostTrackAction
  *
  *  @author Vanya Belyaev
  *  @author Witek Pokorski
@@ -55,7 +32,7 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-IMPLEMENT_GiGaFactory( GaussTrackAction );
+IMPLEMENT_GiGaFactory( GaussPostTrackAction );
 // ============================================================================
 
 // ============================================================================
@@ -68,50 +45,53 @@ IMPLEMENT_GiGaFactory( GaussTrackAction );
  *  @param parent  pointer to parent object
  */
 // ============================================================================
-GaussTrackAction::GaussTrackAction
+GaussPostTrackAction::GaussPostTrackAction
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
   : GiGaTrackActionBase( type , name , parent ) 
   ///  all tracks    are stored    
-  , m_storeAll              ( false  ) 
+    , m_storeAll              ( false  ) 
   ///  all primaries are stored
-  , m_storePrimaries        ( true   ) 
+    , m_storePrimaries        ( true   ) 
+  /// all decay products are stored
+    , m_storeDecayProducts(true)
   ///  all tracks  with kinetic energy over threshold are stored  
-  , m_storeByOwnEnergy      ( false  )  
+    , m_storeByOwnEnergy      ( false  )
   ///  all tracks  with given type are stored 
-  , m_storeByOwnType        ( false  ) 
+    , m_storeByOwnType        ( false  ) 
   ///  all tracks which has a daughter with kinetic 
   ///  energy over threshold are stored 
-  , m_storeByChildEnergy    ( false  )  
+    , m_storeByChildEnergy    ( false  )  
   ///  all tracks which has a daughter of given type are stored 
-  , m_storeByChildType      ( false  ) 
+    , m_storeByChildType      ( false  ) 
   ///  all tracks which are explicitely marked to be stored are stored 
   ///  this is for ex used for tracks that generated hits in tracking devices
-  , m_storeMarkedTracks     ( true   )
+    , m_storeMarkedTracks     ( true   )
   /// threshold for own kinetic energy 
-  , m_ownEnergyThreshold    ( 10*TeV ) 
+    , m_ownEnergyThreshold    ( 10*TeV ) 
   /// threshold for child kinetic energy 
-  , m_childEnergyThreshold  ( 10*TeV ) 
+    , m_childEnergyThreshold  ( 10*TeV ) 
   /// container of names of own   types 
-  , m_ownStoredTypesNames   (        )   
+    , m_ownStoredTypesNames   (        )   
   /// container of names of child types 
-  , m_childStoredTypesNames (        ) 
+    , m_childStoredTypesNames (        ) 
   /// container of definitions of own   types 
-  , m_ownStoredTypes        (        ) 
+    , m_ownStoredTypes        (        ) 
   /// container of definitions  of child types 
-  , m_childStoredTypes      (        )  
+    , m_childStoredTypes      (        )  
   ///
 {
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
   declareProperty( "StorePrimaries"        , m_storePrimaries        ) ;
-  declareProperty( "StoreByOwnEnergy"      , m_storeByOwnEnergy      ) ; 
+  declareProperty( "StoreDecays"           , m_storeDecayProducts    ) ;
+  declareProperty( "StoreByOwnEnergy"      , m_storeByOwnEnergy      ) ;
+  declareProperty( "OwnEnergyThreshold"    , m_ownEnergyThreshold    ) ;
   declareProperty( "StoreByOwnType"        , m_storeByOwnType        ) ; 
   declareProperty( "StoreByChildEnergy"    , m_storeByChildEnergy    ) ; 
   declareProperty( "StoreByChildType"      , m_storeByChildType      ) ; 
   declareProperty( "StoreMarkedTracks"     , m_storeMarkedTracks     ) ; 
-  declareProperty( "OwnEnergyThreshold"    , m_ownEnergyThreshold    ) ; 
   declareProperty( "ChildEnergyThreshold"  , m_childEnergyThreshold  ) ; 
   declareProperty( "StoredOwnTypes"        , m_ownStoredTypesNames   ) ;
   declareProperty( "StoredChildTypes"      , m_childStoredTypesNames ) ;
@@ -121,7 +101,7 @@ GaussTrackAction::GaussTrackAction
 // ============================================================================
 /// destructor 
 // ============================================================================
-GaussTrackAction::~GaussTrackAction()
+GaussPostTrackAction::~GaussPostTrackAction()
 {
   m_ownStoredTypes.clear() ; 
   m_ownStoredTypesNames.clear() ; 
@@ -140,7 +120,7 @@ GaussTrackAction::~GaussTrackAction()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GaussTrackAction::initialize () 
+StatusCode GaussPostTrackAction::initialize () 
 {
   // initialize the base 
   StatusCode status = GiGaTrackActionBase::initialize() ; 
@@ -210,7 +190,7 @@ StatusCode GaussTrackAction::initialize ()
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GaussTrackAction::finalize   () 
+StatusCode GaussPostTrackAction::finalize   () 
 { 
   m_ownStoredTypes.clear() ; 
   m_ownStoredTypesNames.clear() ; 
@@ -223,14 +203,14 @@ StatusCode GaussTrackAction::finalize   ()
 
 // ============================================================================
 /**  perform action 
- *   @param pointer to new track opbject 
+ *  @see G4UserTrackingAction
+ *   @param pointer to  track opbject 
  */
 // ============================================================================
-void GaussTrackAction::PreUserTrackingAction  (const G4Track* track ) 
+void GaussPostTrackAction::PreUserTrackingAction ( const G4Track* track )
 {
   // Is the track valid? Is tracking manager valid? 
-  // Does trajectory already exist?
-  if( 0 == track || 0 == trackMgr() || 0 != trackMgr()->GimmeTrajectory()  ) 
+  if( 0 == track || 0 == trackMgr() ) 
     { return ; }  
 
   // check if GaussTrackInformation already exists and if not
@@ -240,36 +220,27 @@ void GaussTrackAction::PreUserTrackingAction  (const G4Track* track )
   
   if(uinf)
     {
-      ti = static_cast<GaussTrackInformation*> (uinf);
+      ti = (GaussTrackInformation*) uinf;
     }
   else
     {
       ti = new GaussTrackInformation(); 
       trackMgr()->SetUserTrackInformation(ti);
-    }    
-  //
-  
+    }
+  //  
   if( storeByOwnEnergy() 
       && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) 
-    {  ti->setToBeStored( true ); }
-  //
-  trackMgr()->SetStoreTrajectory( true ) ;  
-  //
-  
-  // create GaussTrajectory and inform Tracking Manager 
-  GaussTrajectory* traj = new GaussTrajectory( track ) ; 
-  // traj->setStepMgr( trackMgr()->GetSteppingManager() ) ; 
-  trackMgr()->SetTrajectory( traj ) ;  
+    { ti->setToBeStored( true ); }
   //
 };
 
 // ============================================================================
 /**  perform action 
  *  @see G4UserTrackingAction
- *   @param pointer to  track opbject 
+ *   @param pointer to  track object 
  */
 // ============================================================================
-void GaussTrackAction::PostUserTrackingAction ( const G4Track* track ) 
+void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track ) 
 {
   // Is the track valid? Is tracking manager valid?
   if( 0 == track || 0 == trackMgr()           )  { return ; } /// RETURN !!!
@@ -283,6 +254,45 @@ void GaussTrackAction::PostUserTrackingAction ( const G4Track* track )
   // (3) store  all     particles ? 
   if ( m_storeAll )                                        
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
+
+  // (3.5) store forced-decay products 
+  if (m_storeDecayProducts && 
+      track->GetDynamicParticle()->GetPreAssignedDecayProducts()) 
+    {
+      if( 0 != trackMgr()->GimmeSecondaries() ) 
+        {
+          G4TrackVector* childrens = trackMgr()->GimmeSecondaries();
+          
+          for(unsigned int index = 0; index < childrens->size(); ++index)
+            {
+              G4Track* dtr = (*childrens)[index] ;
+              if( 0 == dtr ) { continue ; } 
+
+              if(!(dtr->GetDynamicParticle()->GetPreAssignedDecayProducts()))
+                {
+                  //
+                  // check if GaussTrackInformation already exists and if not
+                  // attach it to the track
+                  G4VUserTrackInformation* duinf = dtr->GetUserInformation();
+                  GaussTrackInformation* dti;
+                  
+                  if(duinf)
+                    {
+                      dti = (GaussTrackInformation*) duinf;
+                    }
+                  else
+                    {
+                      dti = new GaussTrackInformation(); 
+                      dtr->SetUserInformation(dti);
+                    }   
+                  dti->setToBeStored(true);
+                }
+            }
+          trackMgr()->SetStoreTrajectory( true );
+          return ; 
+        }
+    }
+  
   // (4) store  primary particles ? 
   if ( m_storePrimaries &&  0 == track->GetParentID() )     
     { trackMgr()->SetStoreTrajectory( true ) ;     return ; } /// RETURN !!!  
@@ -325,6 +335,7 @@ void GaussTrackAction::PostUserTrackingAction ( const G4Track* track )
           ///
         }
     }
+  
   // (8) store  tracks, marked through GaussTrackInformation class
   if( m_storeMarkedTracks ) 
     {
@@ -334,13 +345,11 @@ void GaussTrackAction::PostUserTrackingAction ( const G4Track* track )
       if( 0 != gi && gi->toBeStored() ) 
         { trackMgr()->SetStoreTrajectory   ( true )  ;   return ; }  /// RETURN 
     }  
-  // other storing criteria:
-  // add your own storing criteria AFTER this line and 
-  // ........
-  // add your own storing criteria BEFORE This line
+
   
+  //  
   // check if track is to be stored 
-  if (      trackMgr()->GetStoreTrajectory () )         { return ; } /// RETURN 
+  if (trackMgr()->GetStoreTrajectory()) { return; } /// RETURN 
   
   // if track is not to be stored, propagate it's parent ID (stored) to its
   // secondaries
@@ -378,9 +387,6 @@ void GaussTrackAction::PostUserTrackingAction ( const G4Track* track )
 }; 
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
 
 
 
