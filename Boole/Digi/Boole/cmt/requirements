@@ -35,7 +35,7 @@ use GaudiIntrospection 	v4r6
 use HbookCnv 		v13r4
 
 #-- Databases
-use XmlDDDB	v19r1	Det
+use XmlDDDB	v20r0	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
@@ -57,7 +57,7 @@ use PuVeto              v5r4	L0
 use L0DU                v6r5    L0
 
 # L1 trigger
-use L1VeloTrack         v5r3p1	L1
+use L1VeloTrack         v5r4	L1
 use L1Decision		v2r2	L1
 
 # Calorimeter
@@ -74,7 +74,7 @@ use ITAlgorithms        v13r0	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r3   OT
+use OTAlgorithms        v13r4	OT
 
 # Muon
 use MuonAlgs            v5r0    Muon

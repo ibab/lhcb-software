@@ -7,7 +7,8 @@
 !======================== BooleSys v3r2 2003-12-03 ========================
 ! 2003-12-03 - Marco Cattaneo
  - Packages modified: CaloDigit v1r4p1, ITAlgorithms v13r0, ITCheckers v1r4,
-                      L1VeloTrack v5r3p1, RichDetTools v3r3, RichReadout v1r2p1
+                      L1VeloTrack v5r4, RichDetTools v3r3, RichReadout v1r2p1,
+                      OTAlgorithms v13r4
 
 !======================== BooleSys v3r1 2003-11-26 ========================
 ! 2003-11-26 - Marco Cattaneo

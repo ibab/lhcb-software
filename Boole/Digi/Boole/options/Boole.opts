@@ -129,7 +129,6 @@ ApplicationMgr.DLLs   += { "OTAlgorithms" };
 DigiOTSeq.Members += { "MCOTDepositCreator",
                        "MCOTDigitCreator",
                        "OTDigitCreator" };
-DigiOTSeq.Members += { "OTDigitToL1" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
 ApplicationMgr.DLLs += { "VeloAlgorithms" };
