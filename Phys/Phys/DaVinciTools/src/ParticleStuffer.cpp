@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.1 2002-03-27 20:35:01 gcorti Exp $
+// $Id: ParticleStuffer.cpp,v 1.2 2002-09-11 16:45:46 gcorti Exp $
 // Include files 
 
 // 
@@ -64,13 +64,6 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   part.setMass( part.momentum().mag() ); 
 
   // Set the error on the measured mass.
-  //HepVector derivs(4);
-  //derivs(1) = - part.momentum().px() / sqrt( part.mass() );
-  //derivs(2) = - part.momentum().py() / sqrt( part.mass() );
-  //derivs(3) = - part.momentum().pz() / sqrt( part.mass() );
-  //derivs(4) =   part.momentum().e()  / sqrt( part.mass() );
-  //double massErr = sqrt( part.momentumErr().similarity( derivs ) );
-  //part.setMassErr( massErr );
   HepMatrix derivs(1,4);
   HepSymMatrix massErrSqd(1,1);
   derivs(1,1) = - part.momentum().px() / part.mass();
@@ -88,17 +81,16 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   part.setPointOnTrackErr( vtx.positionErr() ); 
 
   // Set the point - four-momentum error matrix.
-  HepMatrix pmeMat( 3, 4, 0 );  
-  //part.setCorrelationErr( pmeMat );
+  HepMatrix pmeMat( 4, 4, 0 );  
   part.setPosMomCorr( pmeMat );
 
   // Set the end vertex reference.
   part.setEndVertex( &vtx ); 
 
-  // Set the point - slopes+momentum error matrix.
-  HepMatrix pseMat( 3, 3, 0 );  
-  //part.setPosSlpMomCorrelationErr( pseMat );
-  part.setPosSlopesCorr( pseMat );
+  // Set the point - slopes+momentum error matrix. Already done internally
+  // by Particle via setPosMomCorr
+//    HepMatrix pseMat( 3, 3, 0 );  
+//    part.setPosSlopesCorr( pseMat );
 
   return StatusCode::SUCCESS;
 }

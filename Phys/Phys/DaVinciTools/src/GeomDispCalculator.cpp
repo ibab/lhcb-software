@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.3 2002-07-27 20:23:35 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.4 2002-09-11 16:45:35 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -111,7 +111,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
   HepSymMatrix pointErr = transParticle.pointOnTrackErr();
   HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
   HepMatrix errMatrix1 = dsum(pointErr,momErr);
-  HepMatrix posMomCorr = transParticle.posMomCorr();
+  HepMatrix posMomCorr = transParticle.posMomCorr().sub(1,3,1,3);
   errMatrix1.sub(4,1,posMomCorr);
   errMatrix1.sub(1,4,posMomCorr.T());
   HepSymMatrix vtxErr = vertex.positionErr();
@@ -199,7 +199,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
                       ip*ip*pUnit) / pmag;
   HepSymMatrix pointErr = transParticle.pointOnTrackErr();
   HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
-  HepMatrix posMomCorr = transParticle.posMomCorr();
+  HepMatrix posMomCorr = transParticle.posMomCorr().sub(1,3,1,3);
   HepMatrix errMatrix1 = dsum(pointErr,momErr);
   errMatrix1.sub(1,4,posMomCorr);
   errMatrix1.sub(1,4,posMomCorr.T());
@@ -281,8 +281,8 @@ StatusCode GeomDispCalculator::calcCloseAppr( const Particle& particle1,
   HepSymMatrix point2Err = particle2.pointOnTrackErr(); 
   HepSymMatrix mom1Err = particle1.momentumErr().sub(1,3);
   HepSymMatrix mom2Err = particle2.momentumErr().sub(1,3);
-  HepMatrix posMomCorr1 = particle1.posMomCorr();
-  HepMatrix posMomCorr2 = particle2.posMomCorr();
+  HepMatrix posMomCorr1 = particle1.posMomCorr().sub(1,3,1,3);
+  HepMatrix posMomCorr2 = particle2.posMomCorr().sub(1,3,1,3);
   HepMatrix errMatrix1 = dsum(point1Err,mom1Err);
   errMatrix1.sub(4,1,posMomCorr1);
   errMatrix1.sub(1,4,posMomCorr1.T());
