@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-12-11 - Luis Fernandez
+ - src/DecayChainNTuple{h,cpp}
+   . Add global Rich PIDs
+
 ! 2004-12-10 - Luis Fernandez
  - src/DecayChainNTuple{h,cpp}
    . The primaries are retrieved with the PVLocator tool, default is offline

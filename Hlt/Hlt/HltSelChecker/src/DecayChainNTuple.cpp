@@ -58,6 +58,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty( "MCNtupleName", m_MCntupleName = "FILE1/MyMCSelection" );
 #endif
   declareProperty( "NtupleName", m_ntupleName = "FILE1/MySelection" );
+  declareProperty( "RichPIDLocation",  m_richPIDLocation = "Rec/Rich/TrgPIDs" );
 }
 //=============================================================================
 // Destructor
@@ -365,6 +366,10 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   sc = nt->addIndexedItem("dllkpi_lab"+label,m_n,m_dllkpi); // dll(K-pi)
   sc = nt->addIndexedItem("dllppi_lab"+label,m_n,m_dllppi); // dll(p-pi)
   
+  // Global Rich PIDs
+  sc = nt->addIndexedItem("globdllpi_lab"+label,m_n,m_globdllpi); // dll pion
+  sc = nt->addIndexedItem("globdllk_lab"+label,m_n,m_globdllk); // dll kaon
+
   // momentum MeV
   sc = nt->addIndexedItem("p_lab"+label,m_n,m_p);
   // transverse momentum MeV
@@ -479,12 +484,13 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 //  DecayChainNTuple::HandleNTuple::FillNTuple
 //=============================================================================
 #ifndef MCCheck
-void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, long& run, long& event)
+void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
+                                                long& run, long& event, RichPIDs* globalPIDs)
 #endif
 
 #ifdef MCCheck
   void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, long& run, long& event,
-                                                  bool& isSig, MCParticle* mclink)
+                                                  bool& isSig, MCParticle* mclink, RichPIDs* globalPIDs)
 #endif
 {
   // std::cout << "ID = " << part.particleID().pid() << std::endl;
@@ -531,6 +537,10 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     // dll(p-pi)
     m_dllppi[m_n] = pporig->detPIDvalue( ProtoParticle::LkhPIDp );
 
+    // Global Rich PIDs
+    m_globdllpi[m_n] = -999.;
+    m_globdllk[m_n] = -999.; 
+
     // Error**2 = Variance = sigma**2
 
     // state vector TrStateP closest to IP
@@ -552,6 +562,28 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_stateQoverPErr[m_n] = sqrt(ClosestTrStateP->eQdivP2());
   }
   else if (TrgT){ // the particle is a Trg track
+
+    // Global Rich PIDs
+    m_globdllpi[m_n] = -999.;
+    m_globdllk[m_n] = -999.; 
+
+    // overwrite if available ...
+    if(globalPIDs){
+      RichPID* globalpid = globalPIDs->object(TrgT->key());    
+      if(globalpid){
+
+        /*
+        std::cout << " DLLPion = "
+                  << globalpid->particleDeltaLL(Rich::Pion)
+                  << " DLLKaon = "
+                  << globalpid->particleDeltaLL(Rich::Kaon)
+                  << std::endl;
+        */
+
+        m_globdllpi[m_n] = globalpid->particleDeltaLL(Rich::Pion);
+        m_globdllk[m_n] = globalpid->particleDeltaLL(Rich::Kaon);
+      }
+    }
   
     m_dllepi[m_n] = -999.;
     m_dllmupi[m_n] = -999.;
@@ -583,6 +615,10 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_dllmupi[m_n] = -999.;
     m_dllkpi[m_n] = -999.;
     m_dllppi[m_n] = -999.;
+
+    // Global Rich PIDs
+    m_globdllpi[m_n] = -999.;
+    m_globdllk[m_n] = -999.; 
 
     m_stateX[m_n] = -999.;
     m_stateXErr[m_n] = -999.;
@@ -1007,6 +1043,14 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   //---------------------------------------------  
 #endif
 
+  //---------------------------------------------  
+  RichPIDs* globalPIDs = NULL;
+  globalPIDs = get<RichPIDs>( m_richPIDLocation );
+  if(globalPIDs){
+    debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richPIDLocation << endreq;
+  }
+  //---------------------------------------------  
+
   //---------------------------------------------
   // Mother (or head) of the decay
   std::vector<Particle*>::iterator imother;
@@ -1071,7 +1115,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
 #ifndef MCCheck
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event);
+      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event, globalPIDs);
     }
 #endif
 
@@ -1081,7 +1125,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     MCParticle* mclink = 0;
     
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event, isSig, mclink);
+      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event, isSig, mclink, globalPIDs);
     }
 #endif
 
@@ -1128,13 +1172,13 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event);
+        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event, globalPIDs);
       }
 #endif
 
 #ifdef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event, isSig, mclink);
+        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event, isSig, mclink, globalPIDs);
       }
 #endif
 
@@ -1171,7 +1215,7 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
            << (*ivert)->position().x()
            << " , " << (*ivert)->position().y()
            << " , " << (*ivert)->position().z() << " ) and chi2 = " 
-           << (*ivert)->chi2() << endmsg;
+            << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endmsg;
     PVs.push_back((*ivert));
   }
 

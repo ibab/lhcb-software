@@ -6,6 +6,8 @@
 #include "GaudiKernel/Algorithm.h"
 #include "DaVinciTools/DVAlgorithm.h"
 
+#include "Event/RichPID.h"
+
 class ParticleProperty;
 class IDecayFinder;
 class INTuple;
@@ -75,10 +77,10 @@ class IMCDecayFinder;
  *  Note: use the run and event number as a key to plot reconstructed versus true decay variables
  *
  *  TODO: 
- *  - retrieve RichPID particleDeltaLL for TrgTracks to study effect of Rich properly
  *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
+ *  - for gammas: get MC association
  *  - rewrite to have MC truth in the same Tree 
- *  - avoid duplication of variables, must re-think whole algorithm ...
+ *  - avoid duplication of variables, must re-think the whole algorithm ...
  *
  *  @author Luis Fernandez
  *  @date   2004-08-01
@@ -101,6 +103,7 @@ private:
   // Properties
   std::string m_Decay; // Decay for which the ntuples will be created 
   std::string m_ntupleName; // Name of the TDirectory
+  std::string m_richPIDLocation;
 
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
@@ -166,11 +169,13 @@ private:
                  IGeomDispCalculator* iptool);
 
 #ifndef MCCheck
-    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, long& run, long& event);
+    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
+                    long& run, long& event, RichPIDs* globalPIDs);
 #endif
 
 #ifdef MCCheck
-    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, long& run, long& event, bool& isSig, MCParticle* mclink);
+    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
+                    long& run, long& event, bool& isSig, MCParticle* mclink, RichPIDs* globalPIDs);
 #endif
 
     void clean(){m_n=0;}
@@ -196,6 +201,10 @@ private:
     NTuple::Array<float> m_dllmupi; // dll(mu-pi)
     NTuple::Array<float> m_dllkpi; // dll(K-pi)
     NTuple::Array<float> m_dllppi; // dll(p-pi)
+
+    // Global Rich PIDs
+    NTuple::Array<float> m_globdllpi; // dll pion
+    NTuple::Array<float> m_globdllk; // dll kaon
 
     // State vector of the track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
     NTuple::Array<float> m_stateX;
