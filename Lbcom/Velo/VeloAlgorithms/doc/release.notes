@@ -1,5 +1,9 @@
-! Package     : VeloAlgoithms
+! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
+
+!===================== VeloAlgorithms v2r8 2003-10-08 =====================
+! 2003-10-08 - Marco Cattaneo
+ -VeloSim.cpp:  Replace NAGC calls by equivalent GSL ones
 
 !===================== VeloAlgorithms v2r7 2003-04-15 =====================
 ! 2003-11-04 - Chris Parkes
