@@ -62,7 +62,7 @@ use TrgEvent            v2r1    Event
 use AssociatorsSys	v1r13	Associators
 use Associators		v2r2	Associators
 use ITAssociators      	v2r8	IT
-use OTAssociators      	v2r7	OT
+use OTAssociators      	v2r8	OT
 use VeloAssociators    	v1r10	Velo
 use TrAssociators      	v4r0	Tr
 use CaloAssociators    	v4r1	Calo
