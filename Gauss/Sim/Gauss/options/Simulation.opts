@@ -1,10 +1,11 @@
-// $Id: Simulation.opts,v 1.9 2002-05-10 10:29:10 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.10 2002-05-22 14:01:57 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
-  "GaussImports" } ;
+  "GaussImports" ,
+  "Magnet"        } ;
 
 ApplicationMgr.ExtSvc += 
 { "GiGaSvc"         ,          
@@ -24,13 +25,11 @@ Simulation.Members +=
   "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCParticles/MCVertices
 
 // configuration of GiGa Data Store 
-
 GiGaStore.ConversionServices   = 
 { "GiGaKineCnvSvc" , 
   "GiGaHitsCnvSvc" };
 
 // configuration of kinematics event "Kine" data stream 
-
 Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
 Kine.DataProviderSvcName       = "EventDataSvc"   ; 
 Kine.StreamItems              += 
@@ -41,7 +40,6 @@ Kine.StreamItems              +=
 
 
 // configuration of geometry "Geo" data stream 
-
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
@@ -50,17 +48,14 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ;
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 
 // Physics List  to be used and its configuration  
-
 GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
 //GiGaSvc.PhysicsList = "GiGaExternalPhysList<ExN01PhysicsList>/EmPhysList" ; 
 GiGaSvc.EmPhysList.Cut         = 5.0                        ;
 
 // Stacking action to be used and its configuration  
-
 GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
 
 // Tracking action to be used and its configuration  
-
 GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGaSvc.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
 GiGaSvc.SimpleTrack.StoreAll  = true                                    ; 
@@ -74,12 +69,10 @@ GiGaSvc.SimpleTrack.StoreAll  = true                                    ;
 // GiGaSvc.SimpleTrack.StoredChildTypes     = { "e+"};
 
 // Stepping action to be used and its configuration  
-
 GiGaSvc.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
 
 // Event action to be used and its configuration  
-
 GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionDraw/EventDraw" } ;
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionCommand/EventCommand" } ;
@@ -106,7 +99,6 @@ GiGaSvc.EventCommand.BeginOfEventCommands =
 #endif 
 
 // Run Action to be used and its configurations  
-
 GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
 GiGaSvc.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGaSvc.RunCommand.BeginOfRunCommands     = 
@@ -124,8 +116,8 @@ GiGaSvc.RunCommand.BeginOfRunCommands     =
 GiGaSvc.UseVisManager          = true;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
-// GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
-// GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
+GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 //   "Uniform Magnetifc field" 
 // GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
 // GiGaGeomCnvSvc.UniformField.Bx          = 0.     ; 
