@@ -1,8 +1,11 @@
-// $Id: CaloNewLCorrection.cpp,v 1.1 2003-04-11 09:33:37 ibelyaev Exp $
+// $Id: CaloNewLCorrection.cpp,v 1.2 2003-05-16 08:19:11 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/11 09:33:37  ibelyaev
+//  add new E-,S- and L-corrections from Olivier Deschamps
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -238,9 +241,8 @@ StatusCode CaloNewLCorrection::process    ( CaloHypo* hypo  ) const
     }
    const CaloPosition& position = cluster->position();
   const double eEcal = position. e () ;
-  const double xBar  = position. x () ;
-  const double yBar  = position. y () ;
-
+  //  const double xBar  = position. x () ;
+  //  const double yBar  = position. y () ;
 
 
   /*
@@ -286,7 +288,7 @@ StatusCode CaloNewLCorrection::process    ( CaloHypo* hypo  ) const
    *  (7) Position of seed cell  :    seedPos 
    */
 
-  double CellSize =  det()->cellSize( cellID  );
+  //  double CellSize =  det()->cellSize( cellID  );
   
   //  double z0 = seedPos.z();
   double z0 = Par_z0[0] ;// Parameter tuned wrt to z0  12566 mm !!
@@ -332,8 +334,8 @@ StatusCode CaloNewLCorrection::process    ( CaloHypo* hypo  ) const
    //  { delete hypo->momentum () ; hypo->setMomentum( (CaloMomentum*) 0 ); }
    //  hypo->setPosition( position.clone() );
 
-  CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
-  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
+   // CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
+   // CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
 
   /** The following quantities should be updated 
    */

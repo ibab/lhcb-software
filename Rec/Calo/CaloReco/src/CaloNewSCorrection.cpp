@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.cpp,v 1.2 2003-04-17 07:06:48 cattanem Exp $
+// $Id: CaloNewSCorrection.cpp,v 1.3 2003-05-16 08:19:11 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/04/17 07:06:48  cattanem
+// fix for Windows
+//
 // Revision 1.1  2003/04/11 09:33:40  ibelyaev
 //  add new E-,S- and L-corrections from Olivier Deschamps
 //
@@ -246,7 +249,7 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
       else if( m_spd( *d ) ) { eSpd  += (*d)->e() ; } 
     }
    const CaloPosition& position = cluster->position();
-  const double eEcal = position. e () ;
+   //  const double eEcal = position. e () ;
   const double xBar  = position. x () ;
   const double yBar  = position. y () ;
 
@@ -389,7 +392,7 @@ StatusCode CaloNewSCorrection::process    ( CaloHypo* hypo  ) const
   //     { delete hypo->momentum () ; hypo->setMomentum( (CaloMomentum*) 0 ); }
   // hypo->setPosition( position.clone() );
   CaloPosition::Parameters& parameters = hypo ->position() ->parameters () ;
-  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
+  //  CaloPosition::Covariance& covariance = hypo ->position() ->covariance () ;
 
   /** The following quantities should be updated 
    */
