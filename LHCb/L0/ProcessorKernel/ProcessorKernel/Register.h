@@ -1,4 +1,4 @@
-// $Id: Register.h,v 1.1.1.1 2005-02-02 21:56:38 atsareg Exp $
+// $Id: Register.h,v 1.2 2005-04-04 08:06:14 atsareg Exp $
 
 #ifndef PROCESSORKERNEL_REGISTER_H
 #define PROCESSORKERNEL_REGISTER_H     1
@@ -60,7 +60,7 @@ public:
   int size() { return m_bitset.size(); }
   
   /// Test if the register is empty
-  int empty() { return m_bitset.none(); }
+  bool empty() { return m_bitset.none(); }
 
   /// Reset the bitset
   void reset() {m_bitset.reset();}
