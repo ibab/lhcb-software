@@ -13,7 +13,7 @@ include_dirs $(VELOALGORITHMSROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use  VeloEvent  v11r*   Event
-use  VeloDet    v7r*   	Det
+use  VeloDet    v8r*   	Det
 use  NAGC v5r*
 
 # Component library building rule
