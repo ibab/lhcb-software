@@ -4,6 +4,11 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r0 2004-08-24 ====================
+! 2004-08-24 - P. Koppenburg
+  - cmt/requirements
+    . Many technical modifications due to Gaudi v15
+
 !========================== DaVinci v11r13 2004-08-17 ===================
 ! 2004-08-17 - P. Koppenburg
   - options/L1Checking.opts, options/HltChecking.opts

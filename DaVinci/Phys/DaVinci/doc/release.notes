@@ -3,6 +3,36 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r0>2004-08-24 DaVinci v12r0 - first version with Gaudi v15</A></H1><PRE>
+
+ Identical to DaVinci v11r13 except:
+      
+ - Built on Gaudi v15r1 and LHCb v16r1
+ 
+ - #include" GaudiTools/..." -> #include" GaudiAlg/..." 
+ 
+ - LoKi v3r4p1
+ 
+ - DaVinciTools has been split into 6 packages 
+   . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces
+   . Phys/ParticleMaker : All particle makers and the ParticleStuffer
+   . Phys/DaVinciFilter : All Filter
+   . Phys/VertexFit : All vertex fitters and the GeomDispCalculator.cpp
+   . Phys/DaVinciTransporter : All transporters
+   . Phys/DaVinciTools : Basically all high-level tools that are none
+        of the abvove, f.i. DecayFinder, PreDV, CheckOverlap...    
+   This split became necessary since DaVinciTools was become a huge monster
+   containing unrelated stuff (what do the TrackTypeFilterCriterion and the 
+   CombinedParticleMaker have in common?). Also DaVinciTools was evolving
+   with all versions of DaVinci. In the short term, I hope that most 
+   developments will affect DaVinciFilter, while the other packages will
+   be rather stable except for bug fixes.
+  
+ - Bug fix in L1Decision
+ 
+   This version uses the new CMT environment. The $CMTPATH points now to
+   $HOME/cmtuser. Do not use $HOME/newmycmt anymore.
+ 
 </PRE><H1><A NAME=v11r13>2004-08-17 DaVinci v11r13 - temptative DC'04 version</A></H1><PRE>
 
  - Many modifications related to HLT. No change in behaviour for offline
