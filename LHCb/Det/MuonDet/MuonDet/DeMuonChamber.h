@@ -1,11 +1,7 @@
-// $Id: DeMuonChamber.h,v 1.3 2002-02-21 16:38:30 dhcroft Exp $
+// $Id: DeMuonChamber.h,v 1.4 2002-09-27 13:59:36 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/01/31 10:00:09  dhcroft
-// Moved CLIDs to seperate files for Visual C linker
-//
 //
 // ============================================================================
 #ifndef MUONDET_DEMUONCHAMBER_H
@@ -40,8 +36,7 @@ public:
 
   /// Constructor used by XmlMuonRegionCnv to create chambers
   /// pad sizes in mm 
-  DeMuonChamber( int nStation, int nRegion, int nChamber, 
-                 double padx, double pady, int nGasGaps);
+  DeMuonChamber( int nStation, int nRegion, int nChamber, int nGasGaps);
 
   /// Destructor
   ~DeMuonChamber();
@@ -85,26 +80,6 @@ public:
     m_ChamberNumber = nChamber;
   }
 
-  /// Stores the x pad size in the detector
-  void setPadx( double size ){
-    m_padx=size;
-  }
-
-  /// Stores the y pad size in the detector
-  void setPady( double size ){
-    m_pady=size;
-  }
-  
-  /// Returns the x pad size in the detector
-  inline double padx() const {
-    return m_padx;
-  }
-
-  /// Returns the y pad size in the detector
-  inline double pady() const {
-    return m_pady;
-  }
-
   /// Stores the number of active gas gaps in the detector
   void setNumberGasGaps( int nGasGaps ){
     m_NumberGasGaps=nGasGaps;
@@ -125,12 +100,6 @@ private:
 
   /// Chamber number in region
   int m_ChamberNumber;
-
-  /// Pad size in x (mm)
-  double m_padx;
-
-  /// Pad size in y (mm)
-  double m_pady;  
 
   /// Number of gas gaps in this chamber
   int m_NumberGasGaps;
