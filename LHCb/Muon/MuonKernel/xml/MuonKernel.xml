@@ -7,10 +7,6 @@
 
 <gdd>
   <package name='MuonKernel'>
-    <!-- next line needed until GOD knows not to look in LHCbEvent /-->
-    <import name='Kernel/CLHEPStreams'/>
-
     &MuonTileID.xml;
-
   </package>
 </gdd>
