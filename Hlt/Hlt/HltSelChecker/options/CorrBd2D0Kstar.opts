@@ -1,7 +1,7 @@
 // check for TDR and MC truth
 HLTCorrelations.Members += { "CheckSelResult/Bd2D0KstarAndTDR" };
 Bd2D0KstarAndTDR.ANDmode = true ;
-Bd2D0KstarAndTDR.Algorithms = { "TDRselBd2D0Kstar" , "AllBd2D0KstarTracks" } ;
+Bd2D0KstarAndTDR.Algorithms = { "TDRselBd2D02KpiKstar" , "AllBd2D0KstarTracks" } ;
 Bd2D0KstarAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
@@ -12,7 +12,7 @@ CorrBd2D0Kstar.Algorithms = { "AllBd2D0KstarTracks",
                               "FilterD0ForHLTBd2D0Kstar",
                               "FilterKstarForHLTBd2D0Kstar",
 			      "HLTFilterBd2D0Kstar", 
-			      "TDRselBd2D0Kstar",
+			      "TDRselBd2D02KpiKstar",
 			      "Bd2D0KstarAndTDR" } ;
 
 // check for TDR and MC truth
