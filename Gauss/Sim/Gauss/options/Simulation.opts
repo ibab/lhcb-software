@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.37 2003-09-04 14:12:50 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.38 2003-09-30 14:30:32 ranjard Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -27,10 +27,10 @@ ApplicationMgr.DLLs +=
   "CaloDetXmlCnv"} ;
 
 ApplicationMgr.ExtSvc += 
-{ "GiGaKine" ,          
+{ "GiGa" ,
+  "GiGaKine" ,          
   "GiGaGeo"  ,   
-  "GiGaHits" ,
-  "GiGa" } ;
+  "GiGaHits" } ;
 
 EventPersistencySvc.CnvServices += 
 { "GiGaKine" ,  
