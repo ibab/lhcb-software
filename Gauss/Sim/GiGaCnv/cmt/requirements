@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.44 2003-09-22 13:58:19 ibelyaev Exp $ 
+# $Id: requirements,v 1.45 2003-10-09 09:02:28 witoldp Exp $ 
 # =============================================================================
 package  GiGaCnv 
-version  v13r3
+version  v13r4
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 

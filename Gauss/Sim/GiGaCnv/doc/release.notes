@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.58 2003-09-25 12:13:14 ranjard Exp $
+! $Id: release.notes,v 1.59 2003-10-09 09:02:28 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================== GiGaCnv v13r4 ===========================
+! 2003-10-09 - Witek Pokorski
+ - added the conversion of the vertex type
 
 !========================== GiGaCnv v13r3 ============================
 ! 2003-09-22 - Vanya BELYAEV

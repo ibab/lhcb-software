@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.24 2003-07-17 14:43:57 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.25 2003-10-09 09:02:28 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.24  2003/07/17 14:43:57  witoldp
+// mother particle set problem temporarly solved
+//
 // Revision 1.23  2003/07/11 17:42:59  witoldp
 // added collision converter
 //
@@ -276,7 +279,7 @@ StatusCode GiGaMCVertexCnv::updateObj
             m_onepointIDs[trajectory->trackID()] = point;
           }
         
- for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
+        for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
              ittr!=trajectory->end();++ittr)
           { vertices->insert( Cnv( *ittr ) ); }
       } 
@@ -428,6 +431,31 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
               {
+                GiGaTrajectory* ttraj=(GiGaTrajectory*)vt;
+                std::string pname = ttraj->processName();
+
+                // deternining the vertex type from the creator process                
+                if(pname == "conv") 
+                  vertex->setType(MCVertex::Pair);
+                else if (pname == "compt")
+                  vertex->setType(MCVertex::Compton);
+                else if (pname == "Decay")
+                  vertex->setType(MCVertex::Decay);
+                else if (pname == "eBrem" || pname == "muBrem")                
+                  vertex->setType(MCVertex::Brem);
+                else if (pname =="KaonPlusInelastic" || pname =="PionMinusInelastic" ||
+                         pname =="PionPlusInelastic" || pname =="NeutronInelastic" ||
+                         pname =="LElastic" || pname =="PionMinusAbsorptionAtRest" || 
+                         pname =="ProtonInelastic" || pname =="KaonZeroLInelastic" ||
+                         pname =="KaonZeroSInelastic" || pname =="DeuteronInelastic" || 
+                         pname =="AntiProtonInelastic" || pname =="AntiNeutronInelastic" ||
+                         pname =="KaonMinusInelastic" || pname =="MuonMinusCaptureAtRest" ||
+                         pname =="TritonInelastic" || pname =="KaonMinusAbsorption" ||
+                         pname =="LambdaInelastic" || pname =="SigmaMinusInelastic" || 
+                         pname =="LCapture" || pname =="AntiNeutronAnnihilationAtRest" ||
+                         pname =="AntiProtonAnnihilationAtRest")
+                  vertex->setType(MCVertex::Hadronic);
+
                 // is the parent a trajectory with only one point?
                 // if yes do not attach the particle to the vertex
                 // it will be treated later (an additional vertex
@@ -443,22 +471,14 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                 if ( !vertex->mother() && 0 != mother )
                   {
                     Ref moth( vertex , refID , mother->key() , mother ) ;
-                    vertex->setMother( moth ) ; 
-
-//                     std::cout << "first point "
-//                               << vertex->position() << " mother with momentum " 
-//                               << moth->momentum() << std::endl;
+                    vertex->setMother( moth ) ;
                   }
               }	       
             // decay vertex  ?
             else if ( !vertex->mother()  ) 
               {                
                 Ref moth( vertex , refID , particle->key() , particle );
-                vertex->setMother( moth ) ; 
-
-//                 std::cout << "not first point  " 
-//                      << vertex-> position() << " mother with momentum " 
-//                      << moth->momentum() << std::endl;
+                vertex->setMother( moth ) ;
               }
             // check if the one already set is correct 
             else 
