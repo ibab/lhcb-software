@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.2 2003-04-04 12:12:23 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.3 2003-04-04 12:16:19 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -99,7 +99,7 @@ StatusCode MuonBackground::initialize() {
   m_regionNumber=basegeometry.getRegions();  int i=0;  
   while(i<m_stationNumber){
     numsta[i]=basegeometry.getStationName(i);    
-    msg<<MSG::INFO<<" station "<<i<<" "<<numsta[i]<<endreq;
+    msg<<MSG::DEBUG<<" station "<<i<<" "<<numsta[i]<<endreq;
     i++;    
   }
   m_partition=basegeometry.getPartitions();
@@ -259,7 +259,7 @@ StatusCode MuonBackground::execute() {
 StatusCode MuonBackground::finalize() {
 
   MsgStream msg(msgSvc(), name());
-  msg << MSG::INFO << "==> Finalize" << endreq;
+  msg << MSG::DEBUG << "==> Finalize" << endreq;
 
   for (int i=0;i<m_maxDimension;i++){
     MuBgDistribution* pointDelete=m_correlation[i];    
@@ -298,7 +298,7 @@ StatusCode MuonBackground::initializeGeometry() {
   MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
   for(int i=0;i<20;i++){     
-    msg<<MSG::INFO<<" partition "<<i<<" chamber "<<
+    msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<
       usefull.getChamberPerRegion(i)<<endreq;  
   }
   int gap=0;
@@ -399,7 +399,7 @@ StatusCode MuonBackground::initializeParametrization()
           code=m_histogramsMapNumber[i];
           name=m_histoName[i];
           int tt=mapHistoCode(code,station,mult);
-          msg<<MSG::INFO<<code<<" "<< station<<" "<<mult<<" "<<tt<<endreq;
+          msg<<MSG::DEBUG<<code<<" "<< station<<" "<<mult<<" "<<tt<<endreq;
           if(tt<100000){
             sprintf(codePath,"%5i", tt); 
           }else{              
@@ -447,14 +447,14 @@ StatusCode MuonBackground::initializeParametrization()
               }             
             }
             else{
-              msg<<MSG::INFO<<"not found the 1D  histo "<<path<<endreq;
+              msg<<MSG::WARNING<<"not found the 1D  histo "<<path<<endreq;
             }
           }            
           else if (m_histogramsDimension[i]==2){
             SmartDataPtr<IHistogram2D> histo2d(histoSvc(),path);
             if(histo2d){
               //   histoPointer=histoin2;
-              msg<<MSG::INFO<<"found the 2D histo "<<path<<endreq;
+              msg<<MSG::DEBUG<<"found the 2D histo "<<path<<endreq;
               std::vector<Rndm::Numbers*>  distributions;
               double xmin,xmax,ymin,ymax;
               int nbinx;              
@@ -484,7 +484,7 @@ StatusCode MuonBackground::initializeParametrization()
               }                  
             }
             else{
-              msg<<MSG::INFO<<"not found the 2D-histo "<<path<<endreq;
+              msg<<MSG::WARNING<<"not found the 2D-histo "<<path<<endreq;
              }
             }
           
