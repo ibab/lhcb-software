@@ -2,41 +2,33 @@
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2001/07/15 20:53:23  ibelyaev
+# package restructurisation
+#
 # =============================================================================
 
 package  GiGa
 version  v5
 
-# ============== own options ==================================================
-set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
-
-# ============== structure ====================================================
 branches         cmt src doc GiGa
 
-# ============== used packaged ================================================
 use GaudiKernel  v10*
 use GEANT4       v3r2*  Sim
 
-# ============== own includes =================================================
-include_dirs                     $(GIGAROOT)
+include_dirs     $(GIGAROOT)
 
 # ============== linker library ===============================================
-# for this concrete release it is static library!
-# library        GiGaLib  -no_share   Lib/*.cpp
 library          GiGaLib              Lib/*.cpp
-
-# ============== component library ============================================
-# for this concrete release it is static library!
-# library        GiGa  -no_share    component/*.cpp
-library          GiGa               component/*.cpp
-
-
-# ============== patterns =====================================================
 apply_pattern    package_Lstamps
-apply_pattern    package_Llinkopts
 apply_pattern    linker_path
 
-#macro componentshr_linkopts " -fPIC -Wl,-s,-shared,-Bsymbolic -ldl "
+# ============== component library ============================================
+library          GiGa               component/*.cpp
+apply_pattern    packageShr
+
+# ============= link options ==================================================
+apply_pattern    package_Clinkopts
+apply_pattern    package_Llinkopts
 
 # ============== private stuff ================================================
 private

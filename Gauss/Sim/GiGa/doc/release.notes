@@ -1,14 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.25 2001-07-15 20:53:23 ibelyaev Exp $
+! $Id: release.notes,v 1.26 2001-07-17 14:52:44 ranjard Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
 !===========================================================================
-  20010715   v5 Vanya Belyaev "UNDO" all "G4wrapper" modifications   
+! 20010716   v5 Flr 
+  requirements - add linkopts for component library.
+
+! 20010715   v5 Vanya Belyaev "UNDO" all "G4wrapper" modifications   
              
 !===========================================================================
 ! 20010426 - Vanya Belyaev
