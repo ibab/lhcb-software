@@ -21,6 +21,8 @@
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtStringParticle.hh"
 #include "EvtGen/EvtDecayTable.hh"
+#include "EvtGen/EvtParticleDecay.hh"
+#include "EvtGen/EvtParticleDecayList.hh"
 #include "EvtGen/EvtPDL.hh"
 #include "EvtGen/EvtJetSet.hh"
 #include "EvtGen/EvtReport.hh"
@@ -50,16 +52,18 @@ extern "C" {
     extern void __stdcall EVTJETSETINIT(char* fname, int len);
     extern void __stdcall JETSET1(int *,double *,int *,int *,int *,
 		       double *,double *,double *,double *);
-  extern void __stdcall LUGIVE(char *cnfgstr,int length);
-  extern int __stdcall LUCOMP(int* kf);
+  extern void __stdcall PYGIVE(char *cnfgstr,int length);
+  extern int __stdcall PYCOMP(int* kf);
+  extern void __stdcall EVTJETSETPART(int*, double*, double*, double*, double*);
 }
 #else
 extern "C" {
     extern void evtjetsetinit_(char* fname, int len);
     extern void jetset1_(int *,double *,int *,int *,int *,
 		       double *,double *,double *,double *);
-  extern void lugive_(char *cnfgstr,int length);
-  extern int lucomp_(int* kf);
+  extern void pygive_(char *cnfgstr,int length);
+  extern int pycomp_(int* kf);
+  extern void evtjetsetpart_(int*, double*, double*, double*, double*);
 }
 
 #endif
@@ -184,9 +188,9 @@ void EvtJetSet::decay( EvtParticle *p){
   int istdheppar=EvtPDL::getStdHep(p->getId());
 
 #ifdef WIN32
-  if (LUCOMP(&istdheppar)==0){
+  if (PYCOMP(&istdheppar)==0){
 #else
-  if (lucomp_(&istdheppar)==0){
+  if (pycomp_(&istdheppar)==0){
 #endif
     report(ERROR,"EvtGen") << "Jetset can not decay:"
       <<EvtPDL::name(p->getId())<<std::endl;
@@ -445,7 +449,7 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
 
   char sname[100];
 
-  int namelength=8;
+  int namelength=16;
 
   int i,j;
   int temp;
@@ -496,7 +500,9 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
 
   }
 
-  outdec << setw(5) << lundkc << "  ";
+  outdec << setw(10) << lundkc << "  ";
+  outdec.width(namelength+2);
+  outdec << setiosflags(ios::left) << sname << resetiosflags(ios::left);
   outdec.width(namelength);
   outdec << setiosflags(ios::left) << sname << resetiosflags(ios::left);
   outdec << setw(3) << chg;
@@ -516,15 +522,27 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
   outdec.setf(ios::fixed);
   outdec.precision(5);
   outdec << setw(12) << mass;
+  outdec.setf(ios::fixed);
+  outdec.precision(5);
   outdec << setw(12) << width;
   outdec.width(12);
   if (fabs(width)<0.0000000001) {
+    outdec.setf(ios::fixed);
+    outdec.precision(5);
     outdec << 0.0 ;
   }
   else{
+    outdec.setf(ios::fixed);
+    outdec.precision(5);
     outdec << maxwidth;
   }
-  outdec << setw(14) << ctau;
+  outdec.unsetf(ios::fixed);
+  outdec.setf(ios::scientific | ios::uppercase);
+  outdec.precision(5);
+  outdec.width(13);
+  outdec << ctau;
+  outdec.unsetf(ios::scientific);
+  outdec.unsetf(ios::uppercase);
   outdec.width(3);
   if (evtnum.getId()>=0) {
     if (ctau>1.0 || rawbrfrsum<0.000001) {  
@@ -532,6 +550,8 @@ void EvtJetSet::WriteJetSetEntryHeader(ofstream &outdec, int lundkc,
     }
   }
   outdec << stable;
+  outdec.width(3);
+  outdec << 0;
   outdec << endl;
   outdec.width(0);
 
@@ -596,7 +616,7 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	if (first) {
 	  first=0;      
 	  WriteJetSetEntryHeader(outdec,
-				 EvtPDL::getLundKC(iparname),
+				 EvtPDL::getStdHep(iparname),
 				 iparname,
 				 EvtPDL::name(iparname), 
 				 EvtPDL::chg3(iparname),
@@ -621,12 +641,12 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	int unknown=0;
 	for(i=0;i<jetsetdecays[ijetset]->getNDaug();i++){
 #ifdef WIN32
-	  if (LUCOMP(&daugs[i])==0) {
+	  if (PYCOMP(&daugs[i])==0) {
 #else
-	  if (lucomp_(&daugs[i])==0) {
+	  if (pycomp_(&daugs[i])==0) {
 #endif
 	    unknown=1;
-	    report(ERROR,"EvtGen") << "JetSet (lucomp) does not "
+	    report(ERROR,"EvtGen") << "JetSet (pycomp) does not "
 				  << "know the particle:"<<
 	      EvtPDL::name(jetsetdecays[ijetset]->getDaugs()[i])<<std::endl;
 	  }
@@ -635,14 +655,14 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	int istdheppar=EvtPDL::getStdHep(ipar);
 
 #ifdef WIN32
-	if (LUCOMP(&istdheppar)==0){
+	if (PYCOMP(&istdheppar)==0){
 #else
-	if (lucomp_(&istdheppar)==0){
+	if (pycomp_(&istdheppar)==0){
 #endif
 	  unknown=1;
-	  report(ERROR,"EvtGen") << "JetSet (lucomp) does not "
-	          << "know the particle:"<<
-	      EvtPDL::name(ipar)<<std::endl;
+	  report(ERROR,"EvtGen") << "JetSet (pycomp) does not "
+                           << "know the particle:"<<
+      EvtPDL::name(ipar)<<endl;
 	}
 
 
@@ -673,26 +693,28 @@ void EvtJetSet::WriteJetSetParticle(ofstream &outdec,EvtId ipar,
 	//	if (!(EvtPDL::getStdHep(ipar)<0&&channel>=0)){
 	if (1){
 
-	  outdec.width(10);
+	  outdec.width(15);
 	  outdec <<dflag;
 	  outdec.width(5);
 	  outdec <<(int)jetsetdecays[ijetset]->getArgs()[0];
+          outdec.setf(ios::fixed);
 	  outdec.width(12);
+          outdec.precision(6);
 	  if (fabs(br)<0.000000001) {
 	    outdec <<"0.00000";
 	  }
 	  else{
 	    outdec <<br/br_sum;
 	  }
-	  outdec.width(8);
+	  outdec.width(10);
 	  outdec <<daugs[0];
-	  outdec.width(8);
+	  outdec.width(10);
 	  outdec <<daugs[1];
-	  outdec.width(8);
+	  outdec.width(10);
 	  outdec <<daugs[2];
-	  outdec.width(8);
+	  outdec.width(10);
 	  outdec <<daugs[3];
-	  outdec.width(8);
+	  outdec.width(10);
 	  outdec <<daugs[4];
 	  outdec<<endl;
 	  outdec.width(0);
@@ -720,6 +742,7 @@ void EvtJetSet::MakeJetSetFile(char* fname){
   //outdec << ";"<<std::endl;
 
   int nokcentry;
+  int logpr = 0; 
 
   for(lundkc=1;lundkc<=500;lundkc++){
 
@@ -730,6 +753,12 @@ void EvtJetSet::MakeJetSetFile(char* fname){
     for(iipar=0;iipar<EvtPDL::entries();iipar++){
 
       ipar=EvtId(iipar,iipar);
+      if (EvtDecayTable::isJetSet(ipar)) {
+//    if (logpr == 0)  
+//     cout << iipar << " EvtPDL name " << EvtPDL::name(ipar) << "Lund code " 
+//      << EvtPDL::getLundKC(ipar) << " StdHep code " <<
+//      EvtPDL::getStdHep(ipar)<< endl;
+
 
       if (lundkc==EvtPDL::getLundKC(ipar)){
         
@@ -749,7 +778,7 @@ void EvtJetSet::MakeJetSetFile(char* fname){
 
         if (first){
 	  WriteJetSetEntryHeader(outdec, 
-				    EvtPDL::getLundKC(ipar),
+				    EvtPDL::getStdHep(ipar),
 				    ipar,
 				    EvtPDL::name(ipar),
 				    EvtPDL::chg3(ipar),
@@ -760,14 +789,28 @@ void EvtJetSet::MakeJetSetFile(char* fname){
 
 	}
       }
+      }
     }
+    logpr = 1;
     if (nokcentry){
-
-      WriteJetSetEntryHeader(outdec, 
-				lundkc,EvtId(-1,-1),"  ",
+        int part_code = EvtPDL::getStdHep(ipar);
+/*
+        if (part_code == 0) 
+              WriteJetSetEntryHeader(outdec, 
+                   10,EvtId(-1,-1),"  ",
+                   0,0,0,EvtPDL::getNominalMass(ipar),0.0,0.0,
+                   EvtPDL::getctau(ipar),0,0.0);
+        else
+	  WriteJetSetEntryHeader(outdec, 
+				EvtPDL::getStdHep(ipar),EvtId(-1,-1),"  ",
 				0,0,0,EvtPDL::getNominalMass(ipar),0.0,0.0,
 				EvtPDL::getctau(ipar),0,0.0);
-
+*/
+        if (part_code != 0) 
+	  WriteJetSetEntryHeader(outdec, 
+				EvtPDL::getStdHep(ipar),EvtId(-1,-1),"  ",
+				0,0,0,EvtPDL::getNominalMass(ipar),0.0,0.0,
+				EvtPDL::getctau(ipar),0,0.0);
     }
   }
     outdec.close();
@@ -775,6 +818,9 @@ void EvtJetSet::MakeJetSetFile(char* fname){
 
 void EvtJetSet::jetSetInit(){
 
+  EvtId ipar;
+  int lundkc;
+  double mass, width, maxwidth, ctau;
   static int first=1;
 
   if (first){
@@ -787,32 +833,27 @@ void EvtJetSet::jetSetInit(){
 
     char hostBuffer[100];
     
-#ifndef WIN32
-    if ( gethostname( hostBuffer, 100 ) != 0 ){
-      report(ERROR,"EvtGen") << " couldn't get hostname." << std::endl;
-      strncpy( hostBuffer, "hostnameNotFound", 100 );
-    }
+// NBrook - update masses, width etc in PYTHIA commom
+    int iipar;
+    for(iipar=0;iipar<EvtPDL::entries();iipar++){
+     ipar=EvtId(iipar,iipar);
+     lundkc=EvtPDL::getLundKC(ipar);
+     if(lundkc!=0) {
+       mass = EvtPDL::getNominalMass(ipar);
+       width = EvtPDL::getWidth(ipar);
+       maxwidth = mass-EvtPDL::getMinMass(ipar);
+       ctau = EvtPDL::getctau(ipar);
+#ifdef WIN32
+       EVTJETSETPART(&lundkc,&mass,&width,&maxwidth,&ctau);
 #else
-      strncpy( hostBuffer, "hostnameNotFound", 100 );
+       evtjetsetpart_(&lundkc,&mass,&width,&maxwidth,&ctau);
 #endif
-    char pid[100];
-
-#ifndef WIN32
-    int thePid=getpid();
-  
-    if ( sprintf( pid, "%d", thePid ) == 0 ){
-      report(ERROR,"EvtGen") << " couldn't get process ID." << std::endl;
-      strncpy( pid, "666", 100 );
+     }
     }
-#else
-      strncpy( pid, "666", 100 );
-#endif
 
-    strcpy(fname,"jet.d-");
-    strcat(fname,hostBuffer);
-    strcat(fname,"-");
-    strcat(fname,pid);
-    
+
+//
+    strcpy(fname,"EvtGenJetSet.newdata");
     MakeJetSetFile(fname);
 #ifdef WIN32
     EVTJETSETINIT(fname,strlen(fname));
@@ -824,7 +865,7 @@ void EvtJetSet::jetSetInit(){
       char delcmd[300];
       strcpy(delcmd,"rm -f ");
       strcat(delcmd,fname);
-      system(delcmd);
+      //      system(delcmd);
     }
 
     int i;
@@ -832,9 +873,9 @@ void EvtJetSet::jetSetInit(){
     for(i=0;i<ncommand;i++){
 
 #ifdef WIN32
-      LUGIVE(commands[i].value(),strlen(commands[i].value()));
+      PYGIVE(commands[i].value(),strlen(commands[i].value()));
 #else
-      lugive_(commands[i].value(),strlen(commands[i].value()));
+      pygive_(commands[i].value(),strlen(commands[i].value()));
 #endif
 
     }

@@ -23,17 +23,17 @@ C------------------------------------------------------------------------
 
       implicit none
 
-      common/lujets/n,k(4000,5),p(4000,5),v(4000,5)
+      common/pyjets/n,npar,k(4000,5),p(4000,5),v(4000,5)
 
-      integer n,k
-      real p,v
+      integer n,k,npar
+      real*8 p,v
 
       real*8 energy
 
       real senergy
 
-      integer lucomp
-      external lucomp
+      integer pycomp
+      external pycomp
 
       integer flavor,kf(100),i,ndaug
       real*8  px(100),py(100),pz(100),e(100)
@@ -41,7 +41,7 @@ C------------------------------------------------------------------------
       senergy=energy
 
 
-      call lu2ent(0,flavor,-flavor,senergy)
+      call py2ent(0,flavor,-flavor,senergy)
 
 
       ndaug=0

@@ -211,6 +211,8 @@ void EvtISGW2::initProbMax() {
   static EvtId DSP=EvtPDL::getId("D_s+");
   static EvtId DSM=EvtPDL::getId("D_s-");
 
+  static EvtId BS0=EvtPDL::getId("B_s0");
+  static EvtId BSB=EvtPDL::getId("anti-B_s0");
 
 EvtId parnum,mesnum,lnum;
 
@@ -218,6 +220,10 @@ parnum = getParentId();
 mesnum = getDaug(0);
 lnum = getDaug(1);
 
+if ( parnum==BS0||parnum==BSB ) {
+     setProbMax(7500.);
+     return;
+}
 
 if ( parnum==BP||parnum==BM||parnum==B0||parnum==B0B ) {
 

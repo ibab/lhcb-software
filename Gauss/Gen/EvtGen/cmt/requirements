@@ -1,5 +1,5 @@
 package          EvtGen
-version  v2r0 
+version  v3r0 
 
 branches         cmt src doc EvtGen
 
@@ -11,10 +11,10 @@ include_dirs     $(EVTGENROOT)
 
 library          EvtGen -no_share *.cpp *.F
 
-macro CERNLIB_link "`cernlib photos mathlib jetset74`" 
+macro CERNLIB_link "`cernlib photos mathlib`" 
 
 macro_append CERNLIB_linkopts "" \
-             WIN32            " kernmd.lib photos.lib jetset74.lib"
+             WIN32            " kernmd.lib photos.lib"
 
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 

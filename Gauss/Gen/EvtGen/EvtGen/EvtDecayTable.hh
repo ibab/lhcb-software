@@ -48,6 +48,8 @@ public:
 
   static void printSummary();
 
+  static bool isJetSet(EvtId evtnum);
+
 private:
 
 

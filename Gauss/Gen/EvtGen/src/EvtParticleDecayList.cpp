@@ -243,3 +243,15 @@ void EvtParticleDecayList::finalize(){
   }
 
 }
+
+bool EvtParticleDecayList::isJetSet(){
+  int i;
+  EvtDecayBase *decayer;
+
+  for (i=0;i<getNMode();i++) {
+      decayer = getDecay(i).getDecayModel();
+      if(decayer->getModelName()=="JETSET") return true;
+  }
+
+  return false;
+}

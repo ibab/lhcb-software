@@ -17,21 +17,23 @@ C
 C    DJL/RYD     August 11, 1998         Module created
 C
 C------------------------------------------------------------------------
-      subroutine evtjetsetinit(fname)
+      subroutine evtjetsetpart(kc,amass,width,widthmax,ctau)
 
-      implicit none
-
+      implicit double precision(A-H,O-Z)
+      implicit integer(I-N)
+      
       external pydata
 
-      character*(*) fname
+      Common /pydat2/ kchg(500,4),pmas(500,4),parf(2000),vckm(4,4)
 
-
-      open(54,STATUS='OLD',FILE=fname)
-
-      call PYUPDA(3,54)
-
-      close(54)
-      
+      if(kc.gt.500) Then
+       Write(6,*) 'EVTJETSETPART: Lund KC code > 500 !!!'
+       Return
+      endif
+      pmas(kc,1) = amass
+      pmas(kc,2) = width
+      pmas(kc,3) = widthmax
+      pmas(kc,4) = ctau
 
       end
 

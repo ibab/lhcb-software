@@ -28,28 +28,30 @@ C
       implicit none
 
       INTEGER MSTU,MSTJ
-      REAL PARU,PARJ
-      COMMON/LUDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
-      SAVE /LUDAT1/
+      REAL*8 PARU,PARJ
+      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+      SAVE /PYDAT1/
 
-      common/lujets/n,k(4000,5),p(4000,5),v(4000,5)
+      common/pyjets/n,npad,k(4000,5),p(4000,5),v(4000,5)
 
-      integer n,k
-      real p,v
+      integer n,npad,k
+      real*8 p,v
 
       integer ndmax
       parameter (ndmax=100)
 
-      integer lucomp
-      external lucomp
+      integer pycomp
+      external pycomp
 
       integer ip,kf(ndmax),i,ndaug,km(ndmax)
       integer kp,kid,ipart1,ipart
       real*8  m,px(ndmax),py(ndmax),pz(ndmax),e(ndmax)
 
       integer ip1
-      real qmax
+      real*8 qmax
 
+* store current record in bottom of PYJETS
+      call pyedit(21)
 c      used to use lu1ent both since it does not set the mass
 c      of the daughter we have to manipulate the common blocks our
 c      self. ryd April 25-1999
@@ -67,7 +69,7 @@ c      call lu1ent(1,ip,0.0,0.0,0.0)
 
 
 c     now we can decay this particle
-      call ludecy(1)
+      call pydecy(1)
 
 C code copied from LUEXEC to avoid error with shower
 C switched on
@@ -76,22 +78,22 @@ C...Decay products may develop a shower.
           IP1=MSTJ(92)
           QMAX=SQRT(MAX(0.,(P(IP1,4)+P(IP1+1,4))**2-(P(IP1,1)+P(IP1+1,
      &    1))**2-(P(IP1,2)+P(IP1+1,2))**2-(P(IP1,3)+P(IP1+1,3))**2))
-          CALL LUSHOW(IP1,IP1+1,QMAX)
-          CALL LUPREP(IP1)
+          CALL PYSHOW(IP1,IP1+1,QMAX)
+          CALL PYPREP(IP1)
           MSTJ(92)=0
         ELSEIF(MSTJ(92).LT.0) THEN
           IP1=-MSTJ(92)
-          CALL LUSHOW(IP1,-3,P(IP,5))
-          CALL LUPREP(IP1)
+          CALL PYSHOW(IP1,-3,P(IP,5))
+          CALL PYPREP(IP1)
           MSTJ(92)=0
         ENDIF
 
 c
 c for debugging:
-c      call lulist(1)
+*      call pylist(1)
 c
       mstj(21)=0
-      call luexec
+      call pyexec
       mstj(21)=2
  
 c find partons, delete secondary partons, set mother pointers
@@ -132,6 +134,7 @@ c        print '( 2I5,I12,4F12.4 )',ndaug,km(ndaug),kf(ndaug),
 c     1    px(ndaug),py(ndaug),pz(ndaug),e(ndaug)
 c
    10 continue
+      call pyedit(22)
 
       end
 

@@ -21,10 +21,11 @@ C------------------------------------------------------------------------
 
       implicit none
 
-      common/lujets/n,k(4000,5),p(4000,5),v(4000,5)
+*     common/lujets/n,k(4000,5),p(4000,5),v(4000,5)
+      common/pyjets/n,npad,k(4000,5),p(4000,5),v(4000,5)
 
-      integer n,k
-      real p,v
+      integer n,k,npad
+      real*8 p,v
 
       real*8 pxsum,pysum,pzsum
 
@@ -32,8 +33,8 @@ C------------------------------------------------------------------------
 
       real senergy
 
-      integer lucomp
-      external lucomp
+      integer pycomp
+      external pycomp
 
       integer flavor,kf(100),i,ndaug,istart
       real*8  px(100),py(100),pz(100),e(100)
@@ -45,7 +46,7 @@ C      flavor = kf_user
 
 
 C     call lueevt(kf_user,senergy)  ! e+e- --> qq shower parton model
- 4    call lueevt(flavor,senergy) ! e+e- --> qq shower parton model
+ 4    call pyeevt(flavor,senergy) ! e+e- --> qq shower parton model
 
 C      call lulist(1)
 
@@ -101,7 +102,7 @@ C     before first cluster or string. Uggly...
          print *, 'Momentum not conserved in jetset fragmentation:'
          print *,'dPx:',pxsum,' dPy:',pysum,' dPz:',pzsum
 
-         call lulist(1)
+         call pylist(1)
 
          goto 4
 

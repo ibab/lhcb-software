@@ -1,6 +1,18 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
+!=================== EvtGen v3r0 ============================================
+! 2002-07-23 - Nick Brook
+
+- all calls to JETSET7.4 updated for PYTHIA6.2. Common block changed.
+- the format of the PYTHIA decay tables have changed. EvtGen uses a
+PYUPDA. This file is now written in correct fromat
+- PYTHIA decay tables are only updated for particles that EvtGen will
+use PYTHIA to decay.
+- Masses, widths etc in PYTHIA are updated internally with the values
+from the PDT table file
+- removed linking to JetSet7.4 from the requirements (Witek)
+
 !=================== EvtGen v2r0 ============================================
 ! 2002-07-15 - Florence Ranjard
   requirements - use CLHEP 1.8.0.0
@@ -8,18 +20,11 @@ Package manager : Witek Pokorski
 ! ================== EvtGen v1r0 ============================================
 
 ! 20020411 - EvtGen v1r0 Witek Pokorski
-  - New package
-    ATLAS code, not maintain by LHCb, not modified
-    an event generator that is well suited for B physics.
-    It implements many detailed models that are important for the physics of 
-    B mesons. In particular, it has detailed models for semileptonic decays, 
-    CP-violating decays and produces correct results for the angular 
-    distributions in sequential decays, including all correlations.
-    It also has an interface to JetSet for generation of continuum at the 
-    Upsilon(4S) and for generic hadronic decays, e.g. of B mesons, that are 
-    not implemented in the generator.   
+- New package
+
+  B-decay package developed by D.Lange and A.Ryd. 
+  Provides a framework for the implementation of processes relevant to B-mesons
+  decays and other resonances (see http://www.slac.stanford.edu/~lange/EvtGen/). 
 
 ! ================== EvtGen v0r0 ===========================================
-
-
 

@@ -61,6 +61,8 @@ public:
 
   void printSummary();
 
+  bool isJetSet();
+
 private:
 
   EvtParticleDecayPtr* _decaylist;

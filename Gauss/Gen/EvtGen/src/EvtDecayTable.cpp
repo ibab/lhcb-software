@@ -582,3 +582,14 @@ int  EvtDecayTable::inChannelList(EvtId parent, int ndaug, EvtId *daugs){
    return -1;
 }
    
+bool EvtDecayTable::isJetSet(EvtId evtnum){
+
+  int partnum;
+  
+  partnum=evtnum.getAlias();
+
+  bool tmpans = decaytable[partnum].isJetSet();
+
+  return tmpans; 
+
+}

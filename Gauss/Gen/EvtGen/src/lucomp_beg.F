@@ -1,4 +1,4 @@
-      integer function lucomp_beg(kfa)
+      integer function pycomp_beg(kfa)
 *
 *
 * called by modified LUCOMP_BEG to add user defined particles
@@ -42,15 +42,15 @@ C  #include "beget.inc"          (Don't need beget.inc)  1/16/98
 
       integer kfa
 
-      LUCOMP_BEG = 0
+      pyCOMP_BEG = 0
       IF(    KFA.GE.1000000) THEN   ! for ASLUND backward compatibility
-         LUCOMP_BEG = 400 + MOD(KFA/1 000 000,100)
+         PYCOMP_BEG = 400 + MOD(KFA/1 000 000,100)
 c      ELSEIF(KFA.GE.100000) THEN
-c         LUCOMP_BEG = 410 + MOD(KFA/100 000, 90)
+c         pyCOMP_BEG = 410 + MOD(KFA/100 000, 90)
       ELSE
          DO 100 I=1,N_BB
          IF(KFA.eq.KF_BB(I)) THEN 
-            LUCOMP_BEG =   KC_BB(I)
+            PYCOMP_BEG =   KC_BB(I)
             GOTO 110
             ENDIF
  100     CONTINUE
