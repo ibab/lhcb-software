@@ -1,8 +1,11 @@
-// $Id: CaloPrint.h,v 1.2 2001-12-13 11:14:34 ibelyaev Exp $
+// $Id: CaloPrint.h,v 1.3 2002-03-19 19:42:16 ibelyaev Exp $
 // ============================================================================
 // CV stag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/13 11:14:34  ibelyaev
+//  update for Win2K
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -53,7 +56,7 @@ public:
    *  @param format format
    *  @return string representation of the value according to format
    */
-  inline std::string print ( const int&           value      ,
+  inline std::string print ( const int            value      ,
                              const char*          format = 0 ) const
   {
     char* aux = storage() ;
@@ -67,7 +70,7 @@ public:
    *  @param format format
    *  @return string representation of the value according to format
    */
-  inline std::string print ( const unsigned int&  value       ,
+  inline std::string print ( const unsigned int   value       ,
                              const char*          format = 0  ) const
   {
     char* aux = storage() ;
