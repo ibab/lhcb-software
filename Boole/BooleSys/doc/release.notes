@@ -6,13 +6,14 @@
 
 !======================== BooleSys v5r3 2004-03-18 ========================
 ! 2004-03-18 - Marco Cattaneo
- - Packages added:    STDAQ v1r0, VeloDAQ v1r0
+ - Packages added:    STDAQ v1r0, VeloDAQ v1r0, TrgMonitor v1r0
 
  - Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
                       CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
-                      TrgTools v2r2, RichReadout v1r7, CaloMonitor v2r1,
-                      RichUtils v3r8, RichDAQ v1r3, RichDetTools v4r0,
-                      RichDigiQC v1r5
+                      RichReadout v1r7, CaloMonitor v2r1, RichUtils v3r8, 
+                      RichDAQ v1r3, RichDetTools v4r0, RichDigiQC v1r5,
+                      TrgTools v3r0, TrgChecker v3r0, TrgVelo v3r0, 
+                      TrgVeloTT v3r0, L1Reco v3r0
 
 !======================== BooleSys v5r2 2004-02-05 ========================
 ! 2004-02-05 - Marco Cattaneo
