@@ -1,4 +1,4 @@
-// $Id: CaloDigit_load.cpp,v 1.2 2003-03-20 08:22:16 ocallot Exp $
+// $Id: CaloDigit_load.cpp,v 1.3 2003-04-04 05:16:33 ocallot Exp $
 // Include files 
 
 
@@ -37,6 +37,7 @@ DECLARE_FACTORY_ENTRIES(CaloDigit) {
   DECLARE_ALGORITHM( CaloSignalAlg );
   DECLARE_ALGORITHM( CaloDigitAlg  );
   DECLARE_ALGORITHM( CaloZSupAlg   );
+  DECLARE_ALGORITHM( CaloProduceRaw );
 
   DECLARE_ALGORITHM( CaloDigitToMCParticleAsct );
 }
