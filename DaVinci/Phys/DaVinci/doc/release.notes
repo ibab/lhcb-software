@@ -16,6 +16,8 @@ Purpose     : LHCb analysis program
    Yet IFlavourTagging.h is still there to allow LoKi to compile. Please
    avoid using Tagging in LoKi for now.
  
+ - LoKi v2r4
+ 
 </PRE><H1><A NAME=v11r6>2004-04-05 DaVinci v11r6 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
