@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $
 
 #include "DetDesc/XmlLVolumeCnv.h"
 #include "DetDesc/XmlCnvException.h"
@@ -39,7 +39,7 @@
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -138,8 +138,8 @@ StatusCode XmlLVolumeCnv::updateRep(
 
 // Constructor
 XmlLVolumeCnv::XmlLVolumeCnv( ISvcLocator* svc )
-: XmlGenericCnv( svc, CLID_LogicalVolume ),
-  m_tagRead(false), m_insideBoolean(false), m_insideParameterized(false)   {
+  : XmlGenericCnv( svc, CLID_LVolume ),
+    m_tagRead(false), m_insideBoolean(false), m_insideParameterized(false)   {
   // Register myself as the recevier of ASCII XML SAX events
   set8BitDocHandler( *this );
   m_transContext = "";
@@ -209,7 +209,7 @@ void XmlLVolumeCnv::startElement( const char* const name,
       m_volName = baseName;
       
       // Create the corresponding transient version of the logical volume
-      if( CLID_LogicalVolume == clsID )                                    {
+      if( CLID_LVolume == clsID )                                    {
         // We move this to endElement() callback because we need to
         // collect XML data for LVolume() constructor
         //m_dataObj = new LVolume();

@@ -1,17 +1,15 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.3 2001-01-25 12:12:29 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Element.h,v 1.4 2001-01-25 15:36:43 ibelyaev Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H
 
 /// Include files
 #include <vector>
-
 #include "DetDesc/Material.h"
-//#include "DetDesc/Material/Isotope.h"
+#include "DetDesc/CLIDElement.h"
 
-/// Forward and extern declarations
+
+/// Forward declarations
 class Isotope;
-
-static const CLID CLID_Element = 1202;
 
 /** @class Element Element.h DetDesc/Element.h
 

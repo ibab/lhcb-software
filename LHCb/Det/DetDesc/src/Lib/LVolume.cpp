@@ -39,14 +39,6 @@
 
 #include "GaudiKernel/ObjectFactory.h" 
 
-///
-///
-
-const CLID& CLID_LogicalVolume = 1100;
-
-///
-///
-///
 
 ///
 ///  not-inlined methods of implemenattion of LVolume class  

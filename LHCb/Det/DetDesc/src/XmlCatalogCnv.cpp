@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.4 2001-01-25 12:12:29 mato Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $
 
 /// Include files
 #include "DetDesc/XmlCatalogCnv.h"
@@ -27,12 +27,14 @@
 
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
-#include "DetDesc/Isotope.h"
-#include "DetDesc/Element.h"
-#include "DetDesc/Mixture.h"
+
+#include "DetDesc/CLIDIsotope.h"
+#include "DetDesc/CLIDElement.h"
+#include "DetDesc/CLIDMixture.h"
+
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.4 2001-01-25 12:12:29 mato Exp $";
+///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service

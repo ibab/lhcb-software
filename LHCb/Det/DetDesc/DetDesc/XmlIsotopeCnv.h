@@ -4,13 +4,9 @@
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
 #include "DetDesc/Isotope.h"
-
-#include "GaudiKernel/Converter.h"
-
 #include "DetDesc/ISax8BitDocHandler.h"
 
 // Forward declarations
-class     ISvcLocator;
 template <class TYPE> class CnvFactory;
 
 

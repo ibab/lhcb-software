@@ -1,6 +1,18 @@
 package DetDesc
 package manager : Vanya Belyaev
 
+! 20010125 - Vanya Belyaev 
+   Package polishing:
+   - small modification to reduce a little bit some compiler warnings 
+   - remove the remaining "extern const CLID&" from all places 
+   - extract CLID_DetectorElement into separate file to 
+     avoid the load of base class, if one need only it's CLID and it's interafce
+   - now all CLIDs, defined in DetDesc package belongd to a separate files 
+     DetDesc/CLIDxxxx.h (just for convinience and easy maintainance) (is it true?) 
+   - remove artificial src/LVolume.cpp 
+   - rename CLID_LogicalVolume into CLID_LVolume for better mnemonics 
+   - a lot of unnesessary "#include" directives removed from header files. 
+ 
 ! 20010125 - Pere Mato
   - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
   - Fixed some bugs in the calculation of radiation and absorption lenght.

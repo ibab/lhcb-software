@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.3 2001-01-25 12:12:29 mato Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.4 2001-01-25 15:36:44 ibelyaev Exp $
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
 
@@ -7,9 +7,8 @@
 
 #include "DetDesc/Material.h"
 #include "DetDesc/Element.h"
+#include "DetDesc/CLIDMixture.h"
 
-/// Forward and extern declarations
-static const CLID CLID_Mixture = 1203;
 
 /** @class Mixture Mixture.h DetDesc/Mixture.h
 

@@ -3,9 +3,6 @@
 
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
-
-#include "GaudiKernel/Converter.h"
-
 #include "DetDesc/ISax8BitDocHandler.h"
 #include "DetDesc/Element.h"
 
@@ -13,9 +10,6 @@
 class     ISvcLocator;
 template <class TYPE> class CnvFactory;
 
-class IConverter;
-class XmlAddress;
-class DataObject;
 class Isotope;
 
 class   XmlElementCnv : public XmlGenericCnv, public ISax8BitDocHandler

@@ -15,13 +15,12 @@ class HepVector3D;
 class HepRotation;
 class HepTransform3D;
 
-#include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/DataObject.h"
 
 class IDataProviderSvc;
-class IMessageSvc;
-class MsgStream;
+class GaudiException; 
 
+#include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/IValidity.h"
 #include "GaudiKernel/IPVolume.h"
@@ -30,10 +29,7 @@ class MsgStream;
 #include "GaudiKernel/MsgStream.h" 
 
 #include "DetDesc/IPVolume_predicates.h" 
-
-class GaudiException; 
-
-extern const CLID& CLID_LogicalVolume;
+#include "DetDesc/CLIDLVolume.h"
 
 
 ///
@@ -100,7 +96,7 @@ class LVolume: public DataObject ,
   ///
   inline const CLID& clID   () const { return classID(); } 
   ///
-  static const CLID& classID()       { return CLID_LogicalVolume; };
+  static const CLID& classID()       { return CLID_LVolume; };
   ///
   /// Serialize the object for writing
   virtual StreamBuffer& serialize(StreamBuffer& s );

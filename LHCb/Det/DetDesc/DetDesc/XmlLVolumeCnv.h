@@ -1,27 +1,24 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlLVolumeCnv.h,v 1.2 2001-01-22 09:55:38 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlLVolumeCnv.h,v 1.3 2001-01-25 15:36:44 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESC_XMLCNVSVC_XMLLVOLUMECNV_H
-
-// Include files
-#include "DetDesc/XmlGenericCnv.h"
 
 #include <string>
 #include <vector>
 
 #include "CLHEP/Geometry/Transform3D.h"
 
-#include "GaudiKernel/Converter.h"
-
+// Include files
+#include "DetDesc/XmlGenericCnv.h"
 #include "DetDesc/ISax8BitDocHandler.h"
+#include "DetDesc/CLIDLVolume.h"
 
 // Forward and extern declarations
-class     ISvcLocator;
-class     ISolid;
+
+class ISolid;
+class LVolume;
 template <class TYPE> class CnvFactory;
 
-class LVolume;
 
-extern const    CLID&   CLID_LogicalVolume;
 
 class   XmlLVolumeCnv : public XmlGenericCnv, public ISax8BitDocHandler
 {
@@ -74,15 +71,8 @@ public:
   // Update the converted representation of a transient object.
   virtual StatusCode updateRep(IOpaqueAddress* pAddress, DataObject* pObject);
   
-  static const unsigned char& storageType()
-  {
-    return XML_StorageType;
-  }
-  
-  static const CLID& classID()
-  {
-    return CLID_LogicalVolume;
-  }
+  static const unsigned char&  storageType() { return XML_StorageType ; }
+  static const CLID&           classID    () { return CLID_LVolume    ; }
   
   // -----------------------------------------------------------------------
   //  Implementations of the SAX 8 bit DocumentHandler interface

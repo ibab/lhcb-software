@@ -3,30 +3,23 @@
 
 // generic experiment headers
 #include "DetDesc/XmlGenericCnv.h"
+#include "DetDesc/ISax8BitDocHandler.h"
 #include "DetDesc/Mixture.h"
 
-#include "GaudiKernel/Converter.h"
-
-#include "DetDesc/ISax8BitDocHandler.h"
 
 // Forward declarations
 class     ISvcLocator;
 template <class TYPE> class CnvFactory;
 
-class IConverter;
-class XmlAddress;
-class DataObject;
-class Isotope;
-class Element;
 
-class   XmlMixtureCnv : public XmlGenericCnv,
-public ISax8BitDocHandler
+class   XmlMixtureCnv : public XmlGenericCnv       ,
+			public ISax8BitDocHandler
 {
   
   // Friend needed for instantiation
   friend class CnvFactory<XmlMixtureCnv>;
   
-public:
+ public:
   
   // Create the transient representation of an object.
   virtual StatusCode createObj(IOpaqueAddress* pAddress, DataObject*& refpObject);
@@ -43,15 +36,8 @@ public:
   // Update the converted representation of a transient object.
   virtual StatusCode updateRep(IOpaqueAddress* pAddress, DataObject* pObject);
   
-  static const unsigned char& storageType()
-  {
-     return XML_StorageType;
-  }
-  
-  static const CLID& classID()
-  {
-     return CLID_Mixture;
-  }
+  static const unsigned char& storageType() { return XML_StorageType ; }
+  static const CLID&          classID    () { return CLID_Mixture    ; }
   
   // -----------------------------------------------------------------------
   //  Implementations of the SAX 8 bit DocumentHandler interface
