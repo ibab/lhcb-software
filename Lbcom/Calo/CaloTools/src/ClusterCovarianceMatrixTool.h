@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.h,v 1.1 2001-11-04 15:30:40 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.h,v 1.2 2001-11-08 10:58:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/04 15:30:40  ibelyaev
+// add concrete tool
+//
 // ============================================================================
 #ifndef CLUSTERCOVARIANCEMATRIXTOOL_H 
 #define CLUSTERCOVARIANCEMATRIXTOOL_H 1
@@ -13,6 +16,8 @@
 #include  "CaloInterfaces/ICaloClusterTool.h"
 // CaloGen 
 #include  "CaloGen/CaloTool.h"
+// CaloUtil 
+#include  "CaloUtils/CovarianceEstimator.h"
 
 class CovarianceEstimator;
 
@@ -82,15 +87,16 @@ protected:
   virtual ~ClusterCovarianceMatrixTool();
   
 private:
-
+  
   ///
-  SimpleProperty<double>  m_a        ;
-  SimpleProperty<double>  m_gainErr  ;
-  SimpleProperty<double>  m_noiseIn  ;
-  SimpleProperty<double>  m_noiseCo  ;
+  CovarianceEstimator     m_estimator ;
   ///
-  CovarianceEstimator*    m_estimator ;
-
+  SimpleProperty<double>  m_a         ;
+  SimpleProperty<double>  m_gainErr   ;
+  SimpleProperty<double>  m_noiseIn   ;
+  SimpleProperty<double>  m_noiseCo   ;
+  ///
+  
 }; ///< end of class ClusterCovarianceMatrixTool
 
 
