@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.60 2003-05-30 11:49:40 gcorti Exp $
+# $Id: requirements,v 1.61 2003-06-02 17:42:23 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -35,7 +35,7 @@ use  XmlDDDB		v15r3	 Det
 
 #    Enable L0 and L1 Trigger reprocessing and HLT 
 use  L0DU          	v6r5	 L0
-use  L1Decision         v1r7     L1
+use  L1Decision         v2r0     L1
 use  HltTools           v2r0     Hlt
 use  HltVelo            v2r0     Hlt
 use  HltVeloTT          v2r0     Hlt
@@ -61,6 +61,9 @@ use  TrExtrapolator     v2r5     Tr
 
 #    Monte Carlo tools
 use  MCTools            v1r1     Phys
+
+#    Reconstruction tools 
+use  RecoTools          v1r0     Rec
 
 #    Physics packages
 use  DaVinciTools       v8r1     Phys
