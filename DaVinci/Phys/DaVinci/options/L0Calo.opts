@@ -1,0 +1,7 @@
+//*************************************************************
+//   Options to re-run the Level 0 calo trigger
+//=============================================================
+// Reimplemented by O.Callot for DC04
+
+ApplicationMgr.DLLs    += { "L0Calo" };
+ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw"};

@@ -12,7 +12,6 @@
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
-#include "$DAVINCIROOT/options/L0Muon.opts"
 #include "$DAVINCIROOT/options/L0.opts"
 #include "$DAVINCIROOT/options/L0Checking.opts"  // for checks
 #include "$DAVINCIROOT/options/L1Decision.opts"

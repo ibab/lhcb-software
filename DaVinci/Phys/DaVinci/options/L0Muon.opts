@@ -6,7 +6,6 @@
 ApplicationMgr.DLLs  += { "L0MuonTrigger", "MuonTools","MuonDet" };
 ApplicationMgr.TopAlg  += { "L0mTriggerAlgorithm/L0MuonTrigger"};
 
-
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 
 L0MuonTrigger.InputFromMuonCoords = true;

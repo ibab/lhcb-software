@@ -18,7 +18,6 @@
 //--------------------------------------------------------------
 // Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS! 
 // Note that L0Muon does not work with hbook persistency :-(
-// #include "$DAVINCIROOT/options/L0Muon.opts"
 // #include "$DAVINCIROOT/options/L0.opts"
 // #include "$DAVINCIROOT/options/L0Checking.opts"  // for checks
 // #include "$DAVINCIROOT/options/L1Decision.opts"

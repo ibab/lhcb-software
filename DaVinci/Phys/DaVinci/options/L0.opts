@@ -3,6 +3,13 @@
 //=============================================================
 // Reimplemented by O.Callot for DC04
 
-ApplicationMgr.DLLs    += { "L0DU", "L0Calo" };
-ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw",
-                            "DecisionUnit"};
+//=============================================================
+// re-run L0Muon
+#include "$DAVINCIROOT/options/L0Calo.opts"
+//=============================================================
+// Make L0 calo candidates
+#include "$DAVINCIROOT/options/L0Calo.opts"
+//=============================================================
+// run L0 decision unit
+ApplicationMgr.DLLs    += { "L0DU" };
+ApplicationMgr.TopAlg  += { "DecisionUnit"};
