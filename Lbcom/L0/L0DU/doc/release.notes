@@ -1,0 +1,13 @@
+Package		: L0/L0DU
+Package Manager : 
+
+! 2001/06/15 - Nicole Brun, Pascal Perret
+  Initial release of the package.
+  Choice type(s) of L0 trig. 
+  The candidates are of type L0CaloCandidate and of type L0MuonCandidate;
+  only the muon with the greatest absolute energy is conserved.
+  Two energies of cut and one data of scaling for each candidate.
+  The first energy is always used; 
+  the second energy is used  only if data scaling is greater than 0.
+  The choice is condensed in one object of type L0DUReport.
+

@@ -1,0 +1,55 @@
+ ApplicationMgr.DLLs  		+= {"L0DU" };
+
+BrunelTriggerTRIGGERSeq.Members += { "DecisionUnit" };
+
+//--------------------------------------------------------------
+// Algorithm DecisionUnit :  Private Options
+//--------------------------------------------------------------
+
+//DecisionUnit.OutputLevel = 2;
+//DecisionUnit.L0CaloCandidateData = "/Event/FE/L0/Calo";
+//DecisionUnit.L0MuonCandidateData = "/Event/MC/L0MuonCandidates";
+//DecisionUnit.AcceptedData        = "/Event/FE/L0/L0Decis";
+
+// L0 two energies of cut in MeV and one scaling data 
+//  for Electron, Photon, Hadron, SumEt, Pi0Local, Pi0Global,
+//      Muon1, SumMuons.
+
+//  DecisionUnit.EElCut1    = 2650;
+//  DecisionUnit.EElCut2    = 2650;
+//  DecisionUnit.ScalEl     = 1;
+
+//  DecisionUnit.EPhCut1    = 3820;
+//  DecisionUnit.EPhCut2    = 3820;
+//  DecisionUnit.ScalPh     = 1;
+
+//  DecisionUnit.EHaCut1    = 3950;
+//  DecisionUnit.EHaCut2    = 3950;
+//  DecisionUnit.ScalHa     = 1;
+
+//  DecisionUnit.ESumEtCut  = 5000;
+//  DecisionUnit.ESumEtCut2 = 5000;
+//  DecisionUnit.ScalSumEt  = 1;
+
+//  DecisionUnit.EPi0LCut1  = 4100;
+//  DecisionUnit.EPi0LCut2  = 4100;
+//  DecisionUnit.ScalPi0L   = 1;
+
+//  DecisionUnit.EPi0GCut1  = 4600;
+//  DecisionUnit.EPi0GCut2  = 4600;
+//  DecisionUnit.ScalPi0G   = 1;
+
+//  DecisionUnit.EMu1Cut1   = 610;
+//  DecisionUnit.EMu1Cut2   = 610;
+//  DecisionUnit.ScalMu1    = 1;
+
+//  DecisionUnit.ESumMuCut1 = 1830;
+//  DecisionUnit.ESumMuCut2 = 1830;
+//  DecisionUnit.ScalSumMu  = 1; 
+
+//  DecisionUnit.NMuSumMu   = 8;
+
+
+
+
+
