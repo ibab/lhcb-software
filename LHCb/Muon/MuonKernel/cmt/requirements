@@ -26,6 +26,7 @@ apply_pattern component_library library=MuonKernelDict
 apply_pattern linker_library    library=MuonKernelLib
 
 private
+use GaudiObjDesc v*
 
 #####################################################################
 #  For the "standalone" MuonKernel library version remove dependancy
