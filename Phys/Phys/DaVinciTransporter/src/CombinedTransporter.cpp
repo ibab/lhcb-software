@@ -1,5 +1,6 @@
-// $Id: CombinedTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
+// $Id: CombinedTransporter.cpp,v 1.3 2005-02-25 13:28:57 pkoppenb Exp $
 // Include files 
+#include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
 
 // Utility Classes
 #include "GaudiKernel/ToolFactory.h"

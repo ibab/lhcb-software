@@ -1,5 +1,6 @@
 // $
 // Include files 
+#include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
 
 // Utility Classes
 #include "GaudiKernel/ToolFactory.h"

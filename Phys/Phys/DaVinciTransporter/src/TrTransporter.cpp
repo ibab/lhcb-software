@@ -1,5 +1,7 @@
-// $Id: TrTransporter.cpp,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
+// $Id: TrTransporter.cpp,v 1.3 2005-02-25 13:28:58 pkoppenb Exp $
 // Include files 
+#include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
+#include "CLHEP/Matrix/Vector.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -9,9 +11,6 @@
 //#include "GaudiKernel/IAlgManager.h"
 //#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
-
-#include "CLHEP/Matrix/SymMatrix.h"
-#include "CLHEP/Matrix/Vector.h"
 
 // local
 #include "TrTransporter.h"
