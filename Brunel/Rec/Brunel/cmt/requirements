@@ -67,7 +67,7 @@ use detdes       v13    SICB
 use recevt       v3r4   SICB
 
 use digmuon      v4     SICB
-use digvdet      v2r2   SICB
+use digvdet      v2r3   SICB
 
 use rececal      v7     SICB
 use rechcal      v6     SICB
@@ -81,7 +81,7 @@ use trimuon      v5     SICB
 use trit0v       v5     SICB
 use triskel      v4     SICB
 use trit1tr      v3r3   SICB
-use trivert      v5r1   SICB
+use trivert      v5r2   SICB
 use trielec      v5r1   SICB
 #
 #===== build Brunel =========================

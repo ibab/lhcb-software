@@ -3,6 +3,20 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010620 Brunel v3r2 (MC)
+   Same as v3r1, but using bug fixes from digvdet v2r3 and trivert v5r2
+
+   In cmt/requirements
+   -------------------
+     use digvdet v2r3
+>   vrp_get_strip_num.F, vrp_get_coord.F - fix the problem arising from the
+>           rotation of the VELO by 90d in phi.(M.McCubbin)
+
+     use trivert v5r2
+>   vertex_x_y.F - fix the problem arising from the
+>           rotation of the VELO by 90d in phi.(M.McCubbin)
+
+===============================================================================
 ! 20010606 Brunel v3r1 (MC)
    This version reads SICBMC data starting from SICBMC v245, dbase v238
    ** It is not backwards compatible with older RAWH formats and geometry **
