@@ -18,6 +18,7 @@
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleStuffer.h"
 #include "Kernel/IParticleFilter.h"
+#include "Kernel/ICheckOverlap.h"
 
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -58,6 +59,9 @@ public:
 
   /// Accessor for ParticlePropertySvc
   IParticlePropertySvc* ppSvc() const;
+
+  /// Accessor for CheckOverlap Tool
+  ICheckOverlap* checkOverlap() const;
 
   /// Overridden from Gaudi Algo to produce a warning if not called by user
   StatusCode setFilterPassed (bool state);  
@@ -121,6 +125,8 @@ private:
   mutable IParticleFilter* m_pFilter;
   /// Reference to ParticlePropertySvc
   mutable IParticlePropertySvc* m_ppSvc;
+  /// Reference to CheckOverlap
+  mutable ICheckOverlap* m_checkOverlap;
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
   /// Count number of times selection filter is used 

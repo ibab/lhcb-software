@@ -1,10 +1,9 @@
-// $Id: CheckOverlap.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: CheckOverlap.cpp,v 1.3 2005-02-21 08:41:12 pkoppenb Exp $
 
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // local
 #include "CheckOverlap.h"
@@ -17,8 +16,7 @@
 
 // Declaration of the Tool Factory
 static const  ToolFactory<CheckOverlap>          s_factory ;
-const        IToolFactory& CheckOverlapFactory = s_factory ; 
-
+const        IToolFactory& CheckOverlapFactory = s_factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -26,7 +24,7 @@ const        IToolFactory& CheckOverlapFactory = s_factory ;
 CheckOverlap::CheckOverlap( const std::string& type,
                             const std::string& name,
                             const IInterface* parent )
-  : AlgTool( type, name , parent ) {
+  : GaudiTool( type, name , parent ) {
   // Declaring implemented interfaces
   declareInterface<ICheckOverlap>(this);
   
@@ -43,18 +41,15 @@ CheckOverlap::CheckOverlap( const std::string& type,
 //  If called directly by the user, it will continue a previous check, 
 //  not start a new one!
 //===========================================================================
- bool CheckOverlap::foundOverlap( const ParticleVector & parts, 
-                                 std::vector<ContainedObject* > & 
-                                 proto ) {
+ bool CheckOverlap::foundOverlap( ConstParticleVector & parts, 
+                                 std::vector<const ContainedObject* > & proto ) {
   
-  MsgStream log( msgSvc(), name() );
-  
-  ParticleVector::const_iterator iPart;
-  std::vector<ContainedObject* >::iterator iProto;
+  ConstParticleVector::const_iterator iPart;
+  std::vector<const ContainedObject* >::const_iterator iProto;
   
   for (iPart=parts.begin(); iPart != parts.end(); ++iPart){
     
-    log << MSG::VERBOSE << "Analising particle " 
+    verbose() << "Analysing particle " 
         << (*iPart)->particleID().pid() 
         << " with origin " << (*iPart)->origin() << endreq;
     
@@ -62,25 +57,16 @@ CheckOverlap::CheckOverlap( const std::string& type,
       // It its a simple particle made from protoparticle. Check.
       for(iProto=proto.begin(); iProto != proto.end(); iProto++){
         if ( (*iPart)->origin() == (*iProto) ) {
-          log << MSG::DEBUG << "Found duplicate use of "
-              << "protoparticle " << *iProto << endreq;
-          ProtoParticle * myproto = dynamic_cast<ProtoParticle * >(*iProto);  
-          ProtoParticle::PIDInfoVector::iterator iProtoID;
-          for (iProtoID=(myproto)->pIDInfo().begin();
-               iProtoID!=(myproto)->pIDInfo().end(); ++iProtoID){
-            log << MSG::DEBUG << " protoID = " << (*iProtoID).first 
-                << " protoCL = " << (*iProtoID).second << endreq;
-          }
-          
+          debug() << "Found duplicate use of "
+                  << "protoparticle " << *iProto << endreq;
           
           return true;
         }
       }
       proto.push_back( (*iPart)->origin() );
-    }
-    else{
+    } else{
       // It is a composite particle. Analyse its products.
-      ParticleVector m_parts = toStdVector((*iPart)->endVertex()->products());
+      ConstParticleVector m_parts = toStdVector((*iPart)->endVertex()->products());
       
       if (foundOverlap( m_parts, proto ) ) return true;
     }
@@ -89,11 +75,71 @@ CheckOverlap::CheckOverlap( const std::string& type,
   return false;
 }
 
+//===========================================================================
+// 
+//===========================================================================
+
+bool CheckOverlap::foundOverlap( ParticleVector & parts ){
+  
+  ConstParticleVector cparts;
+  for ( ParticleVector::const_iterator i = parts.begin() ; i!=parts.end();++i){
+    cparts.push_back( *i );
+  }
+
+  return foundOverlap( cparts );
+}
+
+bool CheckOverlap::foundOverlap( ConstParticleVector & parts ){
+  
+  std::vector<const ContainedObject* > m_proto(0);
+  return foundOverlap( parts, m_proto );
+}
+
+bool CheckOverlap::foundOverlap( const Particle* particle1, 
+                                 const Particle* particle2 ){
+  
+  ConstParticleVector parts;
+  parts.push_back( particle1 );
+  parts.push_back( particle2 );
+  
+  std::vector<const ContainedObject* > m_proto(0);
+  return foundOverlap( parts, m_proto );
+}
+
+bool CheckOverlap::foundOverlap( const Particle* particle1, 
+                                 const Particle* particle2, 
+                                 const Particle* particle3){
+  
+  ConstParticleVector parts;
+  parts.push_back( particle1 );
+  parts.push_back( particle2 );
+  parts.push_back( particle3 );
+  
+  std::vector<const ContainedObject* > m_proto(0);
+  return foundOverlap( parts, m_proto );
+}
+
+bool CheckOverlap::foundOverlap( const Particle* particle1, 
+                                 const Particle* particle2, 
+                                 const Particle* particle3, 
+                                 const Particle* particle4){
+  
+  ConstParticleVector parts;
+  parts.push_back( particle1 );
+  parts.push_back( particle2 );
+  parts.push_back( particle3 );
+  parts.push_back( particle4 );
+  
+  std::vector<const ContainedObject* > m_proto(0);
+  return foundOverlap( parts, m_proto );
+}
+
+
 // Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
 template <class T> 
-std::vector<T*> toStdVector( SmartRefVector<T>& refvector ) {
-  std::vector<T*> tvector;
-  for( typename SmartRefVector<T>::iterator ip = refvector.begin();ip !=
+std::vector<const T*> toStdVector( const SmartRefVector<T>& refvector ) {
+  std::vector<const T*> tvector;
+  for( typename SmartRefVector<T>::const_iterator ip = refvector.begin();ip !=
          refvector.end(); ++ip ) {
     tvector.push_back( *ip );
   }

@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.2 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.3 2005-02-21 08:41:12 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // From PhysEvent
 #include "Event/Particle.h"
@@ -24,7 +24,7 @@
  *  @author Jose' Helder Lopes
  *  @date   28/06/2002
  */
-class CheckOverlap : public AlgTool,
+class CheckOverlap : public GaudiTool,
                      virtual public ICheckOverlap {
 public:
   /// Standard constructor
@@ -36,31 +36,31 @@ public:
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Argument: parts is a vector of pointers to particles.
-  //  Create an empty vector of pointers to protoparticles. 
-  //  Call the real check method.
-  //===========================================================================
-  virtual bool CheckOverlap::foundOverlap( const ParticleVector & parts );
+  ///  Create an empty vector of pointers to protoparticles. 
+  ///  Call the real check method.
+  bool foundOverlap( ConstParticleVector & parts );
   
+  /// backward-compatible method
+  bool foundOverlap( ParticleVector & parts  );
+
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Arguments: particle1 up to particle4 are pointers to particles.
-  //  Create a ParticleVector and fill it with the input particles.
-  //  Create an empty vector of pointers to protoparticles. 
-  //  Call the real check method.
-  //===========================================================================
-  // virtual bool CheckOverlap::foundOverlap( Particle*& particle1 );
+  ///  Create a ParticleVector and fill it with the input particles.
+  ///  Create an empty vector of pointers to protoparticles. 
+  ///  Call the real check method.
   
-  virtual bool CheckOverlap::foundOverlap( Particle*& particle1, 
-                                           Particle*& particle2 );
+  bool foundOverlap( const Particle* particle1, 
+                     const Particle* particle2 );
   
-  virtual bool CheckOverlap::foundOverlap( Particle*& particle1, 
-                                           Particle*& particle2, 
-                                           Particle*& particle3);
+  bool foundOverlap( const Particle* particle1, 
+                     const Particle* particle2, 
+                     const Particle* particle3);
   
-  virtual bool CheckOverlap::foundOverlap( Particle*& particle1,
-                                           Particle*& particle2,
-                                           Particle*& particle3,
-                                           Particle*& particle4 );
+  bool foundOverlap( const Particle* particle1,
+                     const Particle* particle2,
+                     const Particle* particle3,
+                     const Particle* particle4 );
   
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
@@ -73,9 +73,8 @@ public:
   //  If called directly by the user, it will continue a previous check, 
   //  not start a new one!
   //===========================================================================
-  bool CheckOverlap::foundOverlap( const ParticleVector & parts,
-                                   std::vector<ContainedObject* > & proto );
-  
+  bool foundOverlap( ConstParticleVector & parts,
+                     std::vector<const ContainedObject* > & proto );
   
 protected:
   
@@ -85,58 +84,13 @@ private:
 
 // Implement inline methods:
 
-inline bool CheckOverlap::foundOverlap( const ParticleVector & parts ){
-  
-  std::vector<ContainedObject* > m_proto(0);
-  return foundOverlap( parts, m_proto );
-}
-
-inline bool CheckOverlap::foundOverlap( Particle*& particle1, 
-                                        Particle*& particle2 ){
-  
-  ParticleVector parts;
-  parts.push_back( particle1 );
-  parts.push_back( particle2 );
-  
-  std::vector<ContainedObject* > m_proto(0);
-  return foundOverlap( parts, m_proto );
-}
-
-inline bool CheckOverlap::foundOverlap( Particle*& particle1, 
-                                        Particle*& particle2, 
-                                        Particle*& particle3){
-  
-  ParticleVector parts;
-  parts.push_back( particle1 );
-  parts.push_back( particle2 );
-  parts.push_back( particle3 );
-  
-  std::vector<ContainedObject* > m_proto(0);
-  return foundOverlap( parts, m_proto );
-}
-
-inline bool CheckOverlap::foundOverlap( Particle*& particle1, 
-                                        Particle*& particle2, 
-                                        Particle*& particle3, 
-                                        Particle*& particle4){
-  
-  ParticleVector parts;
-  parts.push_back( particle1 );
-  parts.push_back( particle2 );
-  parts.push_back( particle3 );
-  parts.push_back( particle4 );
-  
-  std::vector<ContainedObject* > m_proto(0);
-  return foundOverlap( parts, m_proto );
-}
 
 
 // The real checking method is implemented in CheckOverlap.cpp
-
-  //===========================================================================
-  /// Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
-  //===========================================================================
-  template <class T> 
-  std::vector<T*> toStdVector( SmartRefVector<T>& refvector );
+//===========================================================================  
+/// Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
+//===========================================================================
+template <class T> std::vector<const T*> toStdVector( const SmartRefVector<T>& 
+                                                      refvector );
 
 #endif // CHECKOVERLAP_H

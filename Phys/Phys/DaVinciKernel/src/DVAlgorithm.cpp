@@ -15,6 +15,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_pStuffer(0)
   , m_pFilter(0)
   , m_ppSvc(0)
+  , m_checkOverlap(0)
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
@@ -135,6 +136,14 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }  
   
+  msg << MSG::DEBUG << ">>> Retrieving CheckOverlap Tool" << endreq;
+  m_checkOverlap = tool<ICheckOverlap>("CheckOverlap");
+  if ( !m_checkOverlap ) {
+    msg << MSG::ERROR << ">>> DVAlgorithm[CheckOverlap] not found" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -185,6 +194,9 @@ IParticleFilter* DVAlgorithm::particleFilter() const {return m_pFilter;}
 
 //=============================================================================
 IParticlePropertySvc* DVAlgorithm::ppSvc() const {return m_ppSvc;}
+
+//=============================================================================
+ICheckOverlap* DVAlgorithm::checkOverlap() const {return m_checkOverlap;}
 
 //=============================================================================
 StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {

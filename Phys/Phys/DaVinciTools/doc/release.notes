@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.150 2005-02-15 07:31:50 pkoppenb Exp $
+! $Id: release.notes,v 1.151 2005-02-21 08:41:12 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2005-02-21 - P. Koppenburg
+  - src/CheckOverlap.{h,cpp}
+    . Adapt to new interface with const methods.
+    . Make it a GaudiTool.
 
 !========================== DaVinciTools v11r5 2005-02-15 ===================
 ! 2005-02-14 - P. Koppenburg

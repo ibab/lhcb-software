@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.38 2005-02-15 07:31:05 pkoppenb Exp $
+! $Id: release.notes,v 1.39 2005-02-21 08:39:58 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-02-21 - P. Koppenburg
+  - Kernel/ICheckOverlap.h
+    . Take const arguments.
+  - Kernel/DVAlgorithm.h, src/DVAlgorithm.cpp
+    . Provide new method:
+         ICheckOverlap* checkOverlap()  
+      
 !========================== DaVinciKernel v3r1 2005-02-15 ===================
 ! 2005-02-09 - P. Koppenburg
   - Kernel/IKFFitTool.h
