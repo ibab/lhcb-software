@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.6 2002-11-11 19:29:16 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.7 2002-12-19 21:01:41 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
@@ -228,6 +228,7 @@ StatusCode PrimaryVertexFinderAlg::execute() {
     int itrok=0;
     if( (str->unique()) && (str->velo()))  itrok=1;
     if( (str->unique()) && (str->forward()))  itrok=1;
+    if( str->veloBack() ) itrok=1;
     if( 0 == itrok ) continue;
     
      // if( (!str->unique()) || (!str->velo()))  continue;
