@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2004-02-17 11:42:29 ibelyaev Exp $
+# $Id: requirements,v 1.17 2004-02-26 09:55:48 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
 version           v4r0
@@ -10,17 +10,10 @@ branches          cmt doc src CaloInterfaces
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
-use GaudiKernel   v15r* 
-use LHCbKernel    v*    Kernel
+use LHCbKernel    v4r*	Kernel
   
-# =============== thelibrary =================================================
+# =============== build the library ===========================================
 library           CaloInterfaces *.cpp 
-
-# =============== patterns ====================================================
 apply_pattern     linker_library library=CaloInterfaces 
-
-# =============================================================================
-# The END 
-# =============================================================================
 
 

@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.17 2004-02-17 11:42:29 ibelyaev Exp $
+! $Id: release.notes,v 1.18 2004-02-26 09:55:48 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!======================= CaloInterfaces v4r0 2004-02-26 =====================
 ! 2004-02-17 - Vanya BELYAEV
 
  - make the fix in the interface names:
@@ -19,7 +20,6 @@
 
 - cmt/requirements 
    increase the major version to v4r0 
-
 
 !======================= CaloInterfaces v3r1 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo
