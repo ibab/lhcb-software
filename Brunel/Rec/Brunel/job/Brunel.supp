@@ -125,10 +125,26 @@
   fun:addUserParameter__15DetectorElementGt12basic_string*
 }
 
+# Intermittent Velo problems (Brunel v17r0, v253r0 data)
+{
+  Velo/VeloAlgorithms/v2r5
+  Addr4
+  fun:*
+  fun:TryToAddChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigit1
+  fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
+}
+
+{
+  Velo/VeloAlgorithms/v2r5
+  Addr4
+  fun:*
+  fun:TryToAddCentralChannel__16VeloClusterMakerP11VeloClusterRfP13VeloFullDigit
+  fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
+}
 
 # Strange tracking problems (Brunel v16r4)
 #{
-#  Tr/TrFirstCleverExtrapolator/TrParapolicExtrapolator
+#  Tr/TrFirstCleverExtrapolator/TrParabolicExtrapolator
 #  Value4
 #  fun:release__7AlgTool
 #  fun:releaseTool__7ToolSvcP8IAlgTool
