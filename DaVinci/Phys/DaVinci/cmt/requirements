@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.187 2004-10-19 13:11:48 pkoppenb Exp $
+# $Id: requirements,v 1.188 2004-10-21 13:21:45 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -81,7 +81,7 @@ use  LoKi               	v3r5     Tools
 use  LoKiHlt             	v1r1     Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r11    Tools
+use  Utilities          	v1r11p1  Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys

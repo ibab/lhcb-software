@@ -4,6 +4,6 @@
 #include "$STRIPPINGROOT/options/DVComb.opts" 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 40000 ;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.PrintFreq  = 1;
 
