@@ -3,6 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r1>2004-01-23 Boole v5r1</A></H1><PRE>
+
+- New tuning
+  - use GSL spline in ITChargeSharingTool for interpolation (ITAlgorithms v13r2)
+
+- Bug fixes
+  - bug 2241: spillover probability was not reproducible because it was 
+              determined before event by event random number initialization
+
 </PRE><H1><A NAME=v5r0>2004-01-22 Boole v5r0</A></H1><PRE>
 
  Built against GAUDI_v14r0, LHCB_v15r0.

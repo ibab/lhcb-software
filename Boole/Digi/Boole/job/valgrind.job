@@ -19,7 +19,7 @@ else
   shift
 endif
 #   
-set Bversion = "v5r0"
+set Bversion = "v5r1"
 echo "Excuting Boole $Bversion using options file $Dver.opts"
 #
 
@@ -47,12 +47,7 @@ source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 # Go to working directory
 cd $WORKDIR
 
-# == Choose the supp file ================================
-if( $CMTCONFIG == "rh73_gcc32" ) then
-  set SuppFile = "./Boole.supp"
-else
-  set SuppFile = "./Boole.supp.vg1r0"
-endif
+set SuppFile = "./Boole.supp"
 
 if ($?LS_SUBCWD) then
 # == in batch copy the executable and options files to $WORKDIR

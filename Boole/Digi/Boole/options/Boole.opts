@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
-Init.DetectorList += { "Data", "Boole" };
+Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0", "L1", "Trg" };
 Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1", "Trg" };

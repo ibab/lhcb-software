@@ -1,5 +1,5 @@
 package Boole
-version v5r0
+version v5r1
 
 branches doc cmt job options
 
@@ -13,7 +13,7 @@ apply_pattern BooleVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r14
 
-#-- External libraries (as defined in GAUDI_v14r0)
+#-- External libraries (as defined in GAUDI_v14r1)
 use ExternalLibs	v4r4
 use AIDA		v3r300		-no_auto_imports
 use BOOST		v2r1302p0	-no_auto_imports
@@ -25,17 +25,17 @@ use GSL			v2r14p0
 use PI			v1r112
 use PCRE                v1r44
 use UUID		v1r32
-use SEAL		v1r133p0
-use POOL		v1r150p0
+use SEAL		v1r133p1
+use POOL		v1r150p1
 
-#-- Gaudi libraries (from GAUDI_v14r0)
-use GaudiKernel		v15r0
-use GaudiSvc 		v11r1
+#-- Gaudi libraries (from GAUDI_v14r1)
+use GaudiKernel		v15r1
+use GaudiSvc 		v11r2
 use GaudiAlg 		v6r5
 use GaudiAud 		v6r4
 use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4
-use GaudiPoolDb		v1r2
+use GaudiPoolDb		v1r4
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
@@ -44,13 +44,10 @@ use XmlDDDB	v20r1	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v15r0)
-use LHCb	v15r0
+#-- LHCb libraries (from LHCB_v15r1)
+use LHCb	v15r1
 
-#-> SICB libraries included to avoid dependency on SICBOO package
-use RiSicbGeom	v3r8	SICB
-
-#-- BooleSys v5r0 packages
+#-- BooleSys v5r1 packages
 
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
@@ -66,7 +63,6 @@ use L1VeloTrack         v5r6	L1
 use L1Decision		v2r4	L1
 
 # New L1 + Hlt
-use MCTools		v1r2	Phys
 use TrgTools		v2r0	Trg
 use TrgChecker		v2r0	Trg
 use TrgVelo		v2r0	Trg
@@ -74,8 +70,6 @@ use TrgVeloTT		v1r0	Trg
 use L1Reco		v2r0	Trg
 
 # Calorimeter
-use CaloInterfaces      v3r1	Calo
-use CaloUtils           v4r6	Calo
 use CaloMonitor         v1r6	Calo
 use CaloDigit           v1r5	Calo
 
@@ -83,7 +77,7 @@ use CaloDigit           v1r5	Calo
 use VeloAlgorithms      v2r9	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r1	IT
+use ITAlgorithms        v13r2	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
