@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.1 2004-07-01 16:36:38 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.2 2004-08-11 09:04:25 graven Exp $
 // Include files 
 
 // from ANSI C++
@@ -101,7 +101,7 @@ StatusCode DecodeSimpleDecayString::setDescriptor(const std::string& descriptor)
 // Get strings
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getStrings(std::string& mother,
-                                               strings& daughters){
+                                               strings& daughters) const {
   mother = m_mother ;
   daughters = m_daughters ;
 
@@ -109,7 +109,7 @@ StatusCode DecodeSimpleDecayString::getStrings(std::string& mother,
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getStrings_cc(std::string& mother,
-                                               strings& daughters){
+                                               strings& daughters) const {
 
   mother = m_mother_cc ;
   daughters = m_daughters_cc ;
@@ -121,19 +121,19 @@ StatusCode DecodeSimpleDecayString::getStrings_cc(std::string& mother,
 // Get PIDs
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getPIDs(int& mother,
-                                            ints& daughters){
+                                            ints& daughters) const {
   return this->buildPIDs( m_mother, m_daughters, mother, daughters)  ;
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::getPIDs_cc(int& mother,
-                                            ints& daughters){
+                                            ints& daughters) const {
   return this->buildPIDs( m_mother_cc, m_daughters_cc, mother, daughters)  ;
 }
 //=============================================================================
 StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
                                               const strings in_d,
                                               int& mother,
-                                              ints& daughters){
+                                              ints& daughters) const {
   MsgStream msg( msgSvc(), name() );
   
   StatusCode sc = this->PID(in_m, mother);
@@ -149,7 +149,7 @@ StatusCode DecodeSimpleDecayString::buildPIDs(const std::string in_m,
   return StatusCode::SUCCESS ;
 }
 //=============================================================================
-StatusCode DecodeSimpleDecayString::PID(const std::string& ps, int& pid)
+StatusCode DecodeSimpleDecayString::PID(const std::string& ps, int& pid) const
 {
   ParticleProperty* part = m_ppSvc->find( ps );
   if (!part)  return StatusCode::FAILURE ;
@@ -184,7 +184,7 @@ DecodeSimpleDecayString::splitDescriptor(const std::string& descriptor,
 //=============================================================================
 // Conjugator
 //=============================================================================
-StatusCode DecodeSimpleDecayString::do_cc(void){
+StatusCode DecodeSimpleDecayString::do_cc(void) {
   
   std::string descriptor_cc = this->conjugate(m_descriptor);
   this->splitDescriptor(descriptor_cc, m_mother_cc, m_daughters_cc);
@@ -217,7 +217,7 @@ const{
 //=============================================================================
 // Needs to be conjugated?
 //=============================================================================
-bool DecodeSimpleDecayString::is_cc(void)
+bool DecodeSimpleDecayString::is_cc(void) const
 {
   return m_iscc;
 }

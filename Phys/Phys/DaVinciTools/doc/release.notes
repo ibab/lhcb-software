@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.122 2004-08-03 07:03:14 pkoppenb Exp $
+! $Id: release.notes,v 1.123 2004-08-11 09:04:22 graven Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
+
+! 2004-08-04 - G. Raven
+  - DaVinciTools/IDecodeSimpleDecayString.h
+  - src/DecodeSimpleDecayString.{cpp,h}
+    . Add a few 'const' were possible...
 
 !========================== DaVinciTools v10r1 2004-08-03 ===================
 ! 2004-07-29 - P. Koppenburg

@@ -1,4 +1,4 @@
-// $Id: IDecodeSimpleDecayString.h,v 1.1 2004-07-01 16:36:36 pkoppenb Exp $
+// $Id: IDecodeSimpleDecayString.h,v 1.2 2004-08-11 09:04:28 graven Exp $
 #ifndef DAVINCITOOLS_IDECODESIMPLEDECAYSTRING_H 
 #define DAVINCITOOLS_IDECODESIMPLEDECAYSTRING_H 1
 
@@ -29,12 +29,12 @@ public:
     return IID_IDecodeSimpleDecayString;}
 
   virtual StatusCode setDescriptor(const std::string&) = 0;
-  virtual std::string getDescriptor(void) = 0;
-  virtual StatusCode getStrings(std::string&, strings&) = 0;
-  virtual StatusCode getPIDs(int&, ints&) = 0;
-  virtual StatusCode getStrings_cc(std::string&, strings&) = 0;
-  virtual StatusCode getPIDs_cc(int&, ints&) = 0;
-  virtual bool is_cc(void) = 0;
+  virtual std::string getDescriptor(void) const = 0;
+  virtual StatusCode getStrings(std::string&, strings&) const = 0;
+  virtual StatusCode getPIDs(int&, ints&) const = 0;
+  virtual StatusCode getStrings_cc(std::string&, strings&) const = 0;
+  virtual StatusCode getPIDs_cc(int&, ints&) const = 0;
+  virtual bool is_cc(void) const = 0;
   
 };
 #endif // DAVINCITOOLS_IDECODESIMPLEDECAYSTRING_H

@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.1 2004-07-01 16:36:38 pkoppenb Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.2 2004-08-11 09:04:25 graven Exp $
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
 
@@ -32,20 +32,20 @@ public:
   StatusCode finalize(){return StatusCode::SUCCESS;};
   
   StatusCode setDescriptor(const std::string&);
-  std::string getDescriptor(void){return m_descriptor;};
-  StatusCode getStrings(std::string&, strings&);
-  StatusCode getStrings_cc(std::string&, strings&);
-  StatusCode getPIDs(int&, ints&);
-  StatusCode getPIDs_cc(int&, ints&);
-  bool is_cc(void);
+  std::string getDescriptor(void) const {return m_descriptor;} ;
+  StatusCode getStrings(std::string&, strings&) const;
+  StatusCode getStrings_cc(std::string&, strings&) const;
+  StatusCode getPIDs(int&, ints&) const;
+  StatusCode getPIDs_cc(int&, ints&) const;
+  bool is_cc(void) const;
   
 protected:
-  StatusCode PID(const std::string&, int&);
+  StatusCode PID(const std::string&, int&) const;
   StatusCode splitDescriptor(const std::string&,std::string&,
                                          strings&) const;
-  StatusCode strip_cc(void);
-  StatusCode buildPIDs(const std::string,const strings,int&,ints&);
-  StatusCode do_cc(void);
+  StatusCode strip_cc(void) ;
+  StatusCode buildPIDs(const std::string,const strings,int&,ints&) const;
+  StatusCode do_cc(void) ;
   std::string conjugate(const std::string&)const;
   
   
