@@ -75,8 +75,8 @@ ApplicationMgr.DLLs += { "MuonSicbCnv" };
 #include "$CALOTOOLSOPTS/Brunel.opts"
 //#include "$CALOCAOPTS/Brunel.opts"
 //#include "$CALOALGSOPTS/Brunel.opts"
-#include "$CALOALGOPTS/CaloAlgs.opts"
-#include "$CALOALGOPTS/BrunelDigi.opts"
+#include "$CALOALGSOPTS/CaloAlgs.opts"
+#include "$CALOALGSOPTS/BrunelDigi.opts"
 #include "$CALOSICBCNVOPTS/Brunel.opts"
 
 // Tracking and back conversion of tracks to AXTK
