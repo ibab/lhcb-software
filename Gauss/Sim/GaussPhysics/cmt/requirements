@@ -1,5 +1,5 @@
 package GaussPhysics
-version v3r0
+version v3r1
 
 # =============== package structure ===========================================
 branches          cmt src doc

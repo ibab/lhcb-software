@@ -4,6 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v3r1 ===============================
+! 2004-04-29 - Patrick ROBBE
+ - introduce new particles definitions for particles involved in B decays 
+   and normally unknown to Geant4, so that they are propagated to MCParticle
+   and the decays tree are complete.
+
 !====================== GaussPhysics v3r0 ===============================
 ! 2004-02-18 - Vanya BELYAEV
  - remove old stuff
