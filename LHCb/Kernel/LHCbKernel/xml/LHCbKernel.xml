@@ -3,6 +3,7 @@
 
 <!ENTITY ITChannelID.xml   SYSTEM "ITChannelID.xml" >
 <!ENTITY OTChannelID.xml   SYSTEM "OTChannelID.xml" >
+<!ENTITY VeloChannelID.xml SYSTEM "VeloChannelID.xml" >
 ]>
 
 <gdd>
@@ -12,6 +13,7 @@
 
     &ITChannelID.xml;
     &OTChannelID.xml;
+    &VeloChannelID.xml;
 
   </package>
 </gdd>
