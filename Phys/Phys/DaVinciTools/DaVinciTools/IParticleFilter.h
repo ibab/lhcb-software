@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.2 2002-05-15 23:06:54 gcorti Exp $
+// $Id: IParticleFilter.h,v 1.3 2002-07-27 20:25:25 gcorti Exp $
 #ifndef DAVINCITOOLS_IPARTICLEFILTER_H 
 #define DAVINCITOOLS_IPARTICLEFILTER_H 1
 
@@ -9,7 +9,7 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleFilter("IParticleFilter", 1 , 0); 
+static const InterfaceID IID_IParticleFilter("IParticleFilter", 1 , 1); 
 
 /** @class IParticleFilter IParticleFilter.h DaVinciTools/IParticleFilter.h
  *  Interface Class for ParticleFilter. 
@@ -38,6 +38,12 @@ public:
   /// Filter negative particles
   virtual StatusCode filterNegative( const ParticleVector&, 
                                                     ParticleVector& ) = 0; 
+  /// Return the number of events that passed each criterium independently;
+  virtual std::vector< int > independentCounters() = 0;
+
+  /// Return the number of events that passed each criterium cumulatively;
+  virtual std::vector< int > cumulativeCounters() = 0;
+
 
 };
 #endif // DAVINCITOOLS_IPARTICLEFILTER_H

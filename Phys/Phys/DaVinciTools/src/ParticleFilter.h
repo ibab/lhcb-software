@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.h,v 1.2 2002-05-15 23:26:20 gcorti Exp $
+// $Id: ParticleFilter.h,v 1.3 2002-07-27 20:24:51 gcorti Exp $
 #ifndef PARTICLEFILTER_H 
 #define PARTICLEFILTER_H 1
 
@@ -13,11 +13,15 @@
 #include "DaVinciTools/IParticleFilter.h"
 #include "DaVinciTools/IFilterCriterion.h"
 
+// Forward declarations
+class IHistogram1D;
+
 /** @class ParticleFilter ParticleFilter.h
  *  Given a vector of Particles, provides a sub-vector of Particles 
- *  satisfying a set of FilterCriteriums
+ *  satisfying a set of FilterCriteria
  *  @author Paul colrain
  *  @date   14/03/2002
+ *  Sandra Amato: Modified to include counters 
  */
 class ParticleFilter : public AlgTool, 
                        virtual public IParticleFilter {
@@ -44,6 +48,17 @@ public:
   
   /// Apply the filter and selects negative particles.
   StatusCode filterNegative( const ParticleVector&, ParticleVector& ); 
+
+
+  /// Return the number of events that passed each criterium independently.
+  std::vector< int > independentCounters();
+  
+  /// Return the number of events that passed each criterium cumulatively.
+  std::vector< int > cumulativeCounters();
+
+  bool      m_produceHistogram; ///< flag for histo production
+  IHistogram1D*         m_hIndCounter;
+  IHistogram1D*         m_hCumCounter;
   
 protected:
   
@@ -54,6 +69,13 @@ private:
 
   /// The Filter Criterions
   std::vector< IFilterCriterion* > m_criteria;  
+
+	/// Counter of events that passed each criterium independently
+  std::vector< int > m_independentCounter;  
+
+	/// Counter of events that passed each criterium cumulatively
+  std::vector< int > m_cumulativeCounter;  
+
 
 };
 
