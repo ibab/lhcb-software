@@ -54,7 +54,7 @@ GaussPostTrackAction::GaussPostTrackAction
     , m_storeAll              ( false  ) 
   ///  all primaries are stored
     , m_storePrimaries        ( true   ) 
-  /// all decay products are stored
+  /// all forced decay products are stored
     , m_storeDecayProducts(true)
   ///  all tracks  with kinetic energy over threshold are stored  
     , m_storeByOwnEnergy      ( false  )
@@ -90,7 +90,7 @@ GaussPostTrackAction::GaussPostTrackAction
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
   declareProperty( "StorePrimaries"        , m_storePrimaries        ) ;
-  declareProperty( "StoreDecays"           , m_storeDecayProducts    ) ;
+  declareProperty( "StoreForcedDecays"     , m_storeDecayProducts    ) ;
   declareProperty( "StoreByOwnEnergy"      , m_storeByOwnEnergy      ) ;
   declareProperty( "OwnEnergyThreshold"    , m_ownEnergyThreshold    ) ;
   declareProperty( "StoreByOwnType"        , m_storeByOwnType        ) ; 
