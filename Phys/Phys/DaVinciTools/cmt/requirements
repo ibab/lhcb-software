@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2002-05-15 23:02:14 gcorti Exp $
+# $Id: requirements,v 1.9 2002-05-20 23:16:45 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -22,6 +22,19 @@ include_dirs     $(DAVINCITOOLSROOT)
 use  PhysEvent     v4r*   Event
 use  GaudiTools    v6r*
 use  DetDesc       v10r0  Det
+
+# Extra language for translating yacc to c++
+macro yaccppflags       " -l -d "
+macro yaccpp            "yacc $(yaccppflags)
+make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
+document yacc_to_icpp RecParser recparser.ypp
+
+macro lexppflags        " -L "
+macro lexpp             "lex ${lexppflags}
+make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
+document lex_to_icpp RecLexer reclexer.lpp
+macro recparser_ypp_yaccpp_prefix "DecayFinder::"
+macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
 # Component library building rule
 #============================================================================

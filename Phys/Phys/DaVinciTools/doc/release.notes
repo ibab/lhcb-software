@@ -1,12 +1,19 @@
-! $Id: release.notes,v 1.10 2002-05-17 11:43:30 gcorti Exp $
+! $Id: release.notes,v 1.11 2002-05-20 23:16:56 gcorti Exp $
 ! Package     : DaVinciTools
-! Responsible : Gloria Corti
+! Responsible : Gloria Corti, Sandra Amato
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
+! 20022005 Gloria Corti
+  - New tool DecayFinder (Olivier Dormond) to find a decay as specified 
+    by a string in jobOptions. Use a special parser ypp (fragments and
+    changes in requirements, and recparser.ypp, reclexer.lpp)  
+
 ! 20021705 Gloria Corti
+  - Initial printout for input locations
   - DVAlgorithm: remove cpp and do inline implementation. Introduce method
     to load an instance of all tools loadTools() to be called at initialization
+    Remove dummy implementation of initialize,execute and finalize
   - Similar format for messages in finalize of tools
 
 ! 20020515 Gloria Corti

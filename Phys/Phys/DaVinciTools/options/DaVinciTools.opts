@@ -6,6 +6,10 @@
 ToolSvc.AxPart2MCParticleAsct.DataLocation = "/Event/Rec/AxPart2MCParticle" ;
 ToolSvc.MCUtilityTool.PrintDepth = 999;
 
+// Follow example for MCDecayFinder
+//ToolSvc.DecayFinder.Decay = "(pi+)";
+ToolSvc.DecayFinder.Decay = "[mu+]cc";
+
 //##############################################################
 // Default options for Algorithms available
 // Each option can be overriden later

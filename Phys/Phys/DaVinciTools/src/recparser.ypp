@@ -1,0 +1,313 @@
+/* To compile run 'bison -d -p"horribleprefix" -b"fileprefix" parser.y' */
+/* %expect 1 */
+
+%{
+#define YYSTYPE yystype
+%}
+
+%union {
+  char *text;
+  double dval;
+  YYCLASSQuarks quarkval;
+  YYCLASSQuantums quantumval;
+  YYCLASSDescriptor *desc;
+  YYCLASSParticleMatcher *match;
+  std::vector<YYCLASSParticleMatcher *> *mvect;
+}
+
+%token LPAREN RPAREN LBRACK OSCIL CCONJ LBRACE RBRACE LANGLE RANGLE
+%token ARROW RARROW COMMA EXCLAM ELIPSIS PP QMARK METAX
+%token EQEQUAL LESSEQUAL GREATEREQUAL NOTEQUAL
+%token UP_QUARK DOWN_QUARK CHARM_QUARK STRANGE_QUARK TOP_QUARK BOTTOM_QUARK
+%token ANTI_UP_QUARK ANTI_DOWN_QUARK ANTI_CHARM_QUARK ANTI_STRANGE_QUARK
+%token ANTI_TOP_QUARK ANTI_BOTTOM_QUARK
+%token CHARGE BARYON LEPTON ISOSPIN TOTALSPIN SPIN ANGULAR
+%token G_PARITY CP_PARITY C_PARITY P_PARITY
+%token CHARM STRANGE TOP BOTTOM
+%token <text> NAME
+%token <dval> VALUE
+
+%type <quarkval>  quark
+%type <quantumval> quantum
+%type <desc>  decay daughters_el daughters daughter daughter_list
+%type <match> particle particle_cc particle_wc quarks quantum_test
+%type <mvect> mother particle_list
+
+%%
+
+start: LPAREN   decay RPAREN    { m_decay = $2; }
+       | decay                  { m_decay = $1; }
+       | PP ARROW  daughters_el {{ m_decay = $3;
+                                   Descriptor *a = $3;
+                                   while( a )
+                                   {
+                                     a->setElipsis();
+                                     a = a->getAlternate();
+                                   }
+                                }}
+       | PP RARROW daughters_el {{ m_decay = $3;
+                                   Descriptor *a = $3;
+                                   while( a )
+                                   {
+                                     a->setResonnance();
+                                     a->setElipsis();
+                                     a = a->getAlternate();
+                                   }
+                                }}
+       | mother                 {{ Descriptor *last = NULL;
+                                   std::vector<ParticleMatcher*>::iterator m;
+                                   for( m=$1->begin(); m!=$1->end(); m++ )
+                                   {
+                                     Descriptor *d = new Descriptor(*m,m_ppSvc,m_resThreshold);
+                                     if( last )
+                                       last->setAlternate(d);
+                                     else
+                                       m_decay = d;
+                                     last = d;
+                                   }
+                                   delete $1;
+                                }}
+       | LBRACK decay CCONJ {{ Descriptor *a = $2, *last = NULL;
+                               m_decay = NULL;
+                               while( a )
+                               {
+                                 Descriptor *cc = new Descriptor( *a );
+                                 cc->conjugate();
+                                 if( m_decay == NULL )
+                                   m_decay = cc;
+                                 else
+                                   last->setAlternate(cc);
+                                 cc->setAlternate(a);
+                                 last = a;
+                                 a = a->getAlternate();
+                               }
+                            }}
+;
+
+decay: mother ARROW daughters_el {{ Descriptor *a = $3, *last = NULL; $$ = NULL;
+                                    while( a )
+                                    {
+                                      std::vector<ParticleMatcher *>::iterator m;
+                                      for( m=$1->begin(); m!=$1->end(); m++ )
+                                      {
+                                        Descriptor *d;
+                                        if( *m == $1->back() )
+                                          d = a;
+                                        else
+                                          d = new Descriptor( *a );
+                                        if( $$ == NULL )
+                                          $$ = d;
+                                        else
+                                          last->setAlternate(d);
+                                        last = d;
+                                        ParticleMatcher *mother;
+                                        if( a->getAlternate() )
+                                          mother = new ParticleMatcher(**m);
+                                        else
+                                          mother = *m;
+                                        d->setMother(mother);
+                                      }
+                                      a = a->getAlternate();
+                                    }                                 
+                                   delete $1;
+                                 }}
+    | mother RARROW daughters_el {{ Descriptor *a = $3, *last = NULL; $$ = NULL;
+                                    while( a )
+                                    {
+                                      std::vector<ParticleMatcher *>::iterator m;
+                                      for( m=$1->begin(); m!=$1->end(); m++ )
+                                      {
+                                        Descriptor *d;
+                                        if( *m == $1->back() )
+                                          d = a;
+                                        else
+                                          d = new Descriptor( *a );
+                                        if( $$ == NULL )
+                                          $$ = d;
+                                        else
+                                          last->setAlternate(d);
+                                        last = d;
+                                        ParticleMatcher *mother;
+                                        if( a->getAlternate() )
+                                          mother = new ParticleMatcher(**m);
+                                        else
+                                          mother = *m;
+                                        d->setMother(mother);
+                                        d->setResonnance();
+                                      }
+                                      a = a->getAlternate();
+                                    }                                 
+                                    delete $1;
+                                 }}
+;
+
+mother: LPAREN   particle_cc   RPAREN { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $2->setStable(); $$->push_back($2); }
+	| LBRACE particle_list RBRACE { $$ = $2; }
+	| LBRACK particle_list CCONJ  {{ $$ = $2;
+                                         std::vector<ParticleMatcher *>::iterator p;
+                                         for( p=$$->begin(); p!=$$->end(); p++ )
+                                           (*p)->setConjugate();
+                                      }}
+	| LANGLE particle_wc   RANGLE { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $$->push_back($2); }
+	| particle		      { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $$->push_back($1); }
+;
+
+particle_list: particle_list COMMA particle_cc { $$ = $1; $$->push_back($3); }
+	       | particle_cc          { $$ = new std::vector<ParticleMatcher *>(0);
+                                        $$->push_back($1); }
+;
+
+particle_cc: LBRACK   particle    CCONJ  { $$ = $2; $$->setConjugate(); }
+	     | LBRACK particle    OSCIL  { $$ = $2; $$->setOscilate(); }
+	     | LANGLE particle_wc RANGLE { $$ = $2; }
+	     | particle                  { $$ = $1; }
+;
+
+particle: NAME		{ $$ = new ParticleMatcher($1, m_ppSvc); }
+	  | EXCLAM NAME { $$ = new ParticleMatcher($2, m_ppSvc); $$->setInverse(); }
+	  | QMARK       { $$ = new ParticleMatcher(m_ppSvc); $$->setQmark(); }
+;
+
+daughters_el: daughters ELIPSIS {{ $$ = $1; Descriptor *a = $$;
+                                   while( a )
+                                   {
+                                     a->setElipsis();
+                                     a = a->getAlternate();
+                                   }
+                                }}
+	      | daughters       { $$ = $1; }
+;
+
+daughters: daughters daughter {{ Descriptor *a = $1, *b = $2, *last = NULL; $$ = NULL;
+                                 while( a )
+                                 {
+                                   while( b )
+                                   {
+                                     Descriptor *d, *s;
+                                     if( b->getAlternate() )
+                                       d = new Descriptor( *a );
+                                     else
+                                       d = a;
+                                     if( a->getAlternate() )
+                                       s = new Descriptor( *b );
+                                     else
+                                       s = b;
+                                     d->addDaughter(s);
+                                     if( $$ == NULL )
+                                       $$ = d;
+                                     else
+                                       last->setAlternate(d);
+                                     last = d;
+                                     Descriptor *next = b->getAlternate();
+                                     s->setAlternate(NULL);
+                                     b = next;
+                                   }
+                                   a = a->getAlternate();
+                                   b = $2;
+                                 }
+                              }}
+	   | daughter	      {{ Descriptor *a = $1, *last = NULL; $$ = NULL;
+                                 while( a )
+                                 {
+                                   Descriptor *d = new Descriptor(m_ppSvc,m_resThreshold);
+                                   d->addDaughter(a);
+                                   if( $$ == NULL )
+                                     $$ = d;
+                                   else
+                                     last->setAlternate(d);
+                                   last = d;
+                                   Descriptor *next = a->getAlternate();
+                                   a->setAlternate(NULL);
+                                   a = next;
+                                 }
+                              }}
+;
+
+daughter: LPAREN decay RPAREN           { $$ = $2; }
+          | LPAREN particle_cc RPAREN   { $2->setStable();
+                                          $$ = new Descriptor($2,m_ppSvc,m_resThreshold); }
+	  | LBRACE daughter_list RBRACE { $$ = $2; }
+          | LBRACK daughter_list CCONJ  {{ Descriptor *a = $2, *last = NULL;
+                                           $$ = NULL;
+                                           while( a )
+                                           {
+                                             Descriptor *cc = new Descriptor( *a );
+                                             cc->conjugate();
+                                             if( m_decay == NULL )
+                                               $$ = cc;
+                                             else
+                                               last->setAlternate(cc);
+                                             cc->setAlternate(a);
+                                             last = a;
+                                             a = a->getAlternate();
+                                           }
+                                        }}
+	  | particle_cc                 { $$ = new Descriptor($1,m_ppSvc,m_resThreshold); }
+;
+
+daughter_list: daughter_list COMMA daughter {{ $$ = $1; Descriptor *a = $1;
+                                               while( a->getAlternate() )
+                                                 a = a->getAlternate();
+                                               a->setAlternate($3);
+                                            }}
+               | daughter_list COMMA /* empty*/ {{ $$ = $1; Descriptor *a = $1;
+                                               while( a->getAlternate() )
+                                                 a = a->getAlternate();
+                                               a->setAlternate(new Descriptor(m_ppSvc,m_resThreshold));
+                                            }}
+	       | daughter                   { $$ = $1; }
+               | /* empty on the left of COMMA */{ $$ = new Descriptor(m_ppSvc,m_resThreshold); }
+;
+
+particle_wc: METAX quarks   { $$ = $2; }
+	     | quantum_test { $$ = $1; }
+;
+
+quarks: quark quark quark { $$ = new ParticleMatcher($1,$2,$3,m_ppSvc); }
+	| quark quark	  { $$ = new ParticleMatcher($1,$2,empty,m_ppSvc); }
+	| quark		  { $$ = new ParticleMatcher($1,empty,empty,m_ppSvc); }
+;
+
+quark: UP_QUARK		    { $$ = up; }     
+       | DOWN_QUARK         { $$ = down; }   
+       | CHARM_QUARK        { $$ = charm; }  
+       | STRANGE_QUARK      { $$ = strange; }
+       | TOP_QUARK          { $$ = top; }    
+       | BOTTOM_QUARK       { $$ = bottom; } 
+       | ANTI_UP_QUARK	    { $$ = antiup; }     
+       | ANTI_DOWN_QUARK    { $$ = antidown; }   
+       | ANTI_CHARM_QUARK   { $$ = anticharm; }  
+       | ANTI_STRANGE_QUARK { $$ = antistrange; }
+       | ANTI_TOP_QUARK     { $$ = antitop; }    
+       | ANTI_BOTTOM_QUARK  { $$ = antibottom; } 
+;
+
+quantum_test: quantum   EQEQUAL      VALUE { $$ = new ParticleMatcher($1,eq_rel,$3,m_ppSvc); }
+              | quantum LESSEQUAL    VALUE { $$ = new ParticleMatcher($1,lesseq_rel,$3,m_ppSvc); }
+              | quantum GREATEREQUAL VALUE { $$ = new ParticleMatcher($1,greatereq_rel,$3,m_ppSvc); }
+              | quantum LANGLE       VALUE { $$ = new ParticleMatcher($1,less_rel,$3,m_ppSvc); }
+              | quantum RANGLE       VALUE { $$ = new ParticleMatcher($1,greater_rel,$3,m_ppSvc); }
+              | quantum NOTEQUAL     VALUE { $$ = new ParticleMatcher($1,noteq_rel,$3,m_ppSvc); }
+;
+
+quantum: CHARGE		{ $$ = Q_quantum; }
+	 | BARYON	{ $$ = B_quantum; }
+	 | LEPTON	{ $$ = l_quantum; }
+	 | ISOSPIN	{ $$ = I_quantum; }
+	 | TOTALSPIN	{ $$ = J_quantum; }
+	 | SPIN		{ $$ = S_quantum; }
+	 | ANGULAR	{ $$ = L_quantum; }
+	 | G_PARITY	{ $$ = G_quantum; }
+	 | C_PARITY	{ $$ = C_quantum; }
+	 | P_PARITY	{ $$ = P_quantum; }
+	 | CP_PARITY	{ $$ = CP_quantum; }
+	 | CHARM	{ $$ = c_quantum; }
+	 | STRANGE	{ $$ = s_quantum; }
+	 | TOP		{ $$ = t_quantum; }
+	 | BOTTOM	{ $$ = b_quantum; }
+;
+
+%%
