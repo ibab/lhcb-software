@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.12 2004-04-18 09:43:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2004-04-19 15:57:27 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,11 @@
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
 
-! 2004-04-18 - Vanya Belyaev
+!======================== CaloPIDs v2r2 2004-04-19 ======================
+! 2004-04-19 - Marco Cattaneo
+ - Fix doxygen warnings
 
+! 2004-04-18 - Vanya Belyaev
  - src/CaloPhotonEstimatorTool.h,.cpp
    the updated version of PhotonID tool from Frederic Machefert
  - options/PhotonPDF.opts 
@@ -16,7 +19,6 @@
  - cmt/requirements
    increment the version to v2r2 
  
-
 !======================== CaloPIDs v2r1 2004-03-18 ======================
 ! 2004-03-17 - Vanya BELYAEV
  - src/CaloPhotonEstimatorTool.h,cpp

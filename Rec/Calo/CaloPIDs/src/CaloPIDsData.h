@@ -1,8 +1,11 @@
-// $Id: CaloPIDsData.h,v 1.1 2004-03-17 16:11:40 ibelyaev Exp $
+// $Id: CaloPIDsData.h,v 1.2 2004-04-19 15:57:27 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/03/17 16:11:40  ibelyaev
+//  add Frederic's Photon(P)ID tool
+//
 // ============================================================================
 #ifndef CALOPIDS_CALOPIDSDATA_H 
 #define CALOPIDS_CALOPIDSDATA_H 1
@@ -76,7 +79,7 @@ protected:
    *  @see      AlgFactory 
    *  @see     IAlgFactory
    *  @param name algorithm instance name 
-   *  @param iscv pointer to Service Locator 
+   *  @param isvc pointer to Service Locator 
    */
   CaloPIDsData ( const std::string& name  , 
                  ISvcLocator*       isvc  ) ;
