@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.54 2004-03-20 20:16:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.55 2004-03-24 08:38:16 ranjard Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -9,12 +9,14 @@ version          v15r1
 branches         cmt src doc GiGaCnv 
 
 # ============== explicit dependencies ========================================
-use              GaudiAlg     v*     
-use              GiGa         v*     Sim 
+use              GaudiAlg     v*  
+
+use              GenEvent     v*     Event
 use              Event        v*     Event
 use              DetDesc      v*     Det        
 use              HepMC        v*     Sim
-use              GenEvent     v*     Event
+   
+use              GiGa         v*     Sim 
 
 # ============== standard includes ============================================
 include_dirs     $(GIGACNVROOT)
