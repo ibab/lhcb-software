@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.5 2002-02-08 18:07:57 gcorti Exp $
+! $Id: release.notes,v 1.6 2002-02-11 10:40:00 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
 
 ! ====================================================================
+
+! 11022002 - DaVinciTools v2r0 (GCorti)
+  - new file DaVinciHeader.icpp to print out version number
 
 ! 08022002 - DaVinciTools v2r0 (GCorti)
   - make it compatible with Gaudi v9r0 for tools interfaces
