@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.13 2004-03-18 16:13:01 jonesc Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.14 2004-04-19 22:52:54 jonesc Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -174,7 +174,6 @@ StatusCode DeRichHPDPanel::initialize() {
   log << MSG::DEBUG << "Finished initialization" << endreq;
   return StatusCode::SUCCESS;
 }
-
 
 //=========================================================================
 // convert a point on the silicon sensor to smartID
