@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v17r2 2004-12-10 =======================
-! 2004-12-10 - Marco Cattaneo
+!======================= LHCbSys v17r2 2004-12-15 =======================
+! 2004-12-15 - Marco Cattaneo
  - New packages:  GaudiObjDesc v7r0 (added temporarily until released with Gaudi)
 
  - Modified packages: KernelSys v4r5, LHCbKernel v5r5, Relations v2r1,
@@ -16,7 +16,7 @@
                       DetSys v6r0, VeloDet v9r2, DetDesc v14r2p1, OTDet v5r4p1,
                       AssociatorsSys v2r2, VeloAssociators v1r13, MCTools v1r10,
                       VeloDAQ v2r2, OTDAQ v3r2, LHCbAlgs v1r3, GaudiConf v8r3, 
-                      IOExample v1r4
+                      LHCbInterfaces v1r1, IOExample v1r4
 
  - In GaudiConf v8r3
    . Remove remaining .py options files (obsolete)
@@ -43,6 +43,13 @@
 
  - In OTDAQ v3r2
    . Move to new GaudiAlgorithm base classes
+
+ - In LHCbInterfaces v1r1
+   . New version of ITrExtrapolator.h, for new track model. Old version stays in
+     TrKernel package
+
+ - In TrEvent v14r1
+   . Add classes Track.h, State.h for new track model. Independent of old classes
 
  - In IOExample v1r4
    . Update WriteMin.opts to files produced with new Rich Event model
