@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.6 2003-09-20 15:02:49 jonrob Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.7 2003-10-22 10:48:28 papanest Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -97,15 +97,20 @@ StatusCode DeRich1HPDPanel::initialize() {
   panelHorizEdgeOdd = HPDNSCentre.x() - halfColumnPitch;
 
   panelHorizEdge = fabs(panelHorizEdgeOdd);
-  if (fabs(panelHorizEdgeEven) < panelHorizEdge)
-    panelHorizEdge = fabs(panelHorizEdgeEven);
+  m_detPlaneHorizEdge = fabs(panelHorizEdgeEven);
 
+  if (m_detPlaneHorizEdge < panelHorizEdge) {
+    m_detPlaneHorizEdge = panelHorizEdge;
+    panelHorizEdge = fabs(panelHorizEdgeEven);
+  }
+  
 
   //get the Vertical Edge for the two types of columns
   //numbers are 0 to 8
   panelVerticalEdge = HPD0Centre.y() - halfRowPitch;
 
   panelVerticalEdge = fabs(panelVerticalEdge);
+  m_detPlaneVertEdge = panelVerticalEdge;
 
   log << MSG::DEBUG <<"panelHorizEdgeEven:"<< panelHorizEdgeEven
       << " panelHorizEdgeOdd:" << panelHorizEdgeOdd
@@ -144,8 +149,11 @@ StatusCode DeRich1HPDPanel::initialize() {
   HepPoint3D pointCInPanel = pvHPDMasterC->toMother(pointAInHPD);
   HepPoint3D pointC = geometry()->toGlobal(pointCInPanel);
 
-  detectionPlane_m = HepPlane3D(pointA, pointB, pointC);
-  //std::cout <<"Detection plane:" << detectionPlane_m << std::endl;
+  m_detectionPlane = HepPlane3D(pointA, pointB, pointC);
+  m_detectionPlane.normalize();
+  m_localPlane = HepPlane3D(pointAInPanel, pointBInPanel, pointCInPanel);
+  m_localPlaneNormal = m_localPlane.normal();
+  //std::cout <<"Detection plane:" << m_detectionPlane << std::endl;
 
   // Cache information for PDWindowPoint method
   m_vectorTransf  = geometry()->matrix();
@@ -307,10 +315,17 @@ StatusCode DeRich1HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   unsigned int noTicks;
   ISolid::Ticks HPDPanelTicks;
-  noTicks = m_HPDPanelSolid->intersectionTicks(pLocal,vLocal,HPDPanelTicks );
-  if ( 0 == noTicks ) return StatusCode::FAILURE;
+  //  noTicks =m_HPDPanelSolid->intersectionTicks(pLocal,vLocal,HPDPanelTicks);
+  //  if ( 0 == noTicks ) return StatusCode::FAILURE;
+  //  HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
 
-  HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
+  double scalar1 = vLocal*m_localPlaneNormal;
+  double distance = 0.0;
+
+  if ( scalar1 == 0.0 ) return StatusCode::FAILURE;
+
+  distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  HepPoint3D panelIntersection( pLocal + distance*vLocal );
 
   const IPVolume* pvHPDMaster = 0;
   const IPVolume* pvHPDSMaster = 0;
@@ -380,8 +395,9 @@ StatusCode DeRich1HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     for ( int HPD=0; HPD<m_PDMax; ++HPD ) {
 
       // convert point to local coordinate systems
-      pInWindow =  m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
-                                             toLocal(m_pvHPDMasters[HPD]->toLocal(pLocal)));
+      pInWindow =  m_pvWindows[HPD]->
+        toLocal(m_pvHPDSMasters[HPD]->toLocal(m_pvHPDMasters[HPD]->
+                                              toLocal(pLocal)));
 
       // convert local vector assuming that only the HPD can be rotated
       vInHPDMaster = vLocal;

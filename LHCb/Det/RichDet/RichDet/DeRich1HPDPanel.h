@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.h,v 1.3 2003-09-20 15:02:48 jonrob Exp $
+// $Id: DeRich1HPDPanel.h,v 1.4 2003-10-22 10:48:28 papanest Exp $
 
 #ifndef DERICH1HPDPANEL_H
 #define DERICH1HPDPANEL_H 1
@@ -80,7 +80,7 @@ public:
    * @return HepPlane3D
    */
   inline HepPlane3D detectionPlane() const  {
-    return detectionPlane_m;
+    return m_detectionPlane;
   }
   
 protected:
@@ -123,11 +123,8 @@ private:
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;
   
-  /// detection plane
-  HepPlane3D detectionPlane_m;
 
   // CRJ : cache variables
-  HepTransform3D m_vectorTransf;
   const ISolid* m_HPDPanelSolid;
   std::vector<const IPVolume*> m_pvHPDMasters;
   std::vector<const IPVolume*> m_pvHPDSMasters;

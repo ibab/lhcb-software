@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.h,v 1.3 2003-09-20 15:02:49 jonrob Exp $
+// $Id: DeRichMaPMTPanel.h,v 1.4 2003-10-22 10:48:28 papanest Exp $
 
 #ifndef DERICHMAPMTPANEL_H
 #define DERICHMAPMTPANEL_H 1
@@ -103,7 +103,7 @@ public:
    * @return StatusCode
    */
   virtual bool cdfDetectionPoint( const RichSmartID& smartID,
-                                  HepPoint3D& windowHitGlobal ); 
+                                  HepPoint3D& windowHitGlobal );
 
 protected:
 
@@ -126,10 +126,6 @@ private:
   double m_rowPitch;
   double m_columnPitch;
   double m_pixelPitch;
-  
-
-  /// detection plane
-  HepPlane3D m_detectionPlane;
 
   /// Panel edges and their absolute values
   double m_panelHorizEdge;
@@ -146,7 +142,6 @@ private:
   double m_cdfPixelSize;
   double m_cdfPixelPitch;
 
-  HepTransform3D m_vectorTransf;
   const ISolid* m_MaPMTPanelSolid;
   std::vector<const IPVolume*> m_pvMaPMTMasters;
   std::vector<const IPVolume*> m_pvMaPMTSMasters;

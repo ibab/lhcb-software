@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.2 2002-10-30 11:36:56 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.3 2003-10-22 10:48:28 papanest Exp $
 #ifndef DERICHSPHMIRROR_H
 #define DERICHSPHMIRROR_H 1
 
@@ -62,12 +62,12 @@ public:
   }
   
   /**
-   * Retrieves the centre of this spherical mirror
-   * @return the centre of this sperical mirror as a HepPoint3D
+   * Retrieves the centre of the sphere used to create this sperical mirror. 
+   * @return the sphere centre as HepPoint3D
    */
-  //inline HepPoint3D mirrorCentre(){
-  //  return m_mirrorCentre;
-  //}
+  inline HepPoint3D mirrorCentre(){
+    return m_mirrorCentre;
+  }
   
   /**
    * Retrieves the number of this spherical mirror

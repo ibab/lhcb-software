@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.cpp,v 1.3 2003-09-20 15:02:49 jonrob Exp $
+// $Id: DeRichMaPMTPanel.cpp,v 1.4 2003-10-22 10:48:28 papanest Exp $
 #define DERICHMAPMTPANEL_CPP
 
 // Include files
@@ -6,6 +6,7 @@
 
 // CLHEP files
 #include "CLHEP/Units/SystemOfUnits.h"
+#include "Kernel/CLHEPStreams.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
@@ -50,11 +51,19 @@ StatusCode DeRichMaPMTPanel::initialize() {
     (deRich1->userParameterAsInt("RichMapmtNumPixelCol"));
   m_cdfPixelSize = deRich1->userParameterAsDouble("RhCdfMaPMTPixelSize");
   m_cdfPixelPitch = deRich1->userParameterAsDouble("RhCdfMaPMTPixelPitch");
+  // make sure pixel size < pixel pitch
+  if (m_cdfPixelSize >= m_cdfPixelPitch) {
+    log << MSG::ERROR << "Pixel size >= to pixel pitch" << endreq;
+    return StatusCode::FAILURE;
+  }
 
   HepPoint3D zero(0.0, 0.0, 0.0);
   m_PDRows = static_cast<unsigned int>(userParameterAsInt("PDRows"));
   m_PDColumns = static_cast<unsigned int>(userParameterAsInt("PDColumns"));
   m_PDMax = m_PDColumns * m_PDRows;
+
+  log << MSG::DEBUG << "Center of Panel " << geometry()->toGlobal(zero) 
+      << endreq;
 
   // get the first MaPMT and find the quartz window
   const IPVolume* pvMaPMTMaster0 = geometry()->lvolume()->pvolume(0);
@@ -93,6 +102,9 @@ StatusCode DeRichMaPMTPanel::initialize() {
   m_abs_panelHorizEdge = fabs(m_panelHorizEdge);
   m_abs_panelVerticalEdge = fabs(m_panelVerticalEdge);
 
+  m_detPlaneHorizEdge = m_abs_panelHorizEdge;
+  m_detPlaneVertEdge = m_abs_panelVerticalEdge;
+  
   // get the anode pixel pitch
   const IPVolume* pvPixel0_0 = pvMaPMTSMaster0->lvolume()->
     pvolume("pvRichMapmtPixel:0");
@@ -120,7 +132,8 @@ StatusCode DeRichMaPMTPanel::initialize() {
   // window for 3 different PMTs
   // Point A: MaPMT 0
   HepPoint3D pointAInSMaster( pvQuartzWin0->
-                              toMother(HepPoint3D(0.0, 0.0, -m_quartzWinHalfLengthZ)) );
+                              toMother(HepPoint3D(0.0, 0.0, 
+                                                  -m_quartzWinHalfLengthZ)) );
   HepPoint3D pointAInMaster( pvMaPMTSMaster0->toMother(pointAInSMaster) );
   HepPoint3D pointAInPanel( pvMaPMTMaster0->toMother(pointAInMaster) );
   HepPoint3D pointA( geometry()->toGlobal(pointAInPanel) );
@@ -136,6 +149,10 @@ StatusCode DeRichMaPMTPanel::initialize() {
   HepPoint3D pointC( geometry()->toGlobal(pointCInPanel) );
 
   m_detectionPlane = HepPlane3D(pointA, pointB, pointC);
+  m_detectionPlane.normalize();
+  m_localPlane = HepPlane3D(pointAInPanel, pointBInPanel, pointCInPanel);
+  m_localPlane.normalize();
+  m_localPlaneNormal = m_localPlane.normal();
 
   // Cache information for PDWindowPoint method
   m_vectorTransf = geometry()->matrix();
@@ -253,12 +270,13 @@ StatusCode DeRichMaPMTPanel::PDWindowPoint( const HepVector3D& vGlobal,
   HepVector3D vLocal( vGlobal );
   vLocal.transform( m_vectorTransf );
 
-  unsigned int noTicks;
-  ISolid::Ticks PanelTicks;
-  noTicks = m_MaPMTPanelSolid->intersectionTicks( pLocal, vLocal, PanelTicks );
-  if ( 0 == noTicks ) return StatusCode::FAILURE;
 
-  HepPoint3D panelIntersection = pLocal + PanelTicks[0]*vLocal;
+  double scalar1 = vLocal*m_localPlaneNormal;
+  double distance = 0.0;
+  if ( scalar1 == 0.0 ) return false;
+
+  distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  HepPoint3D panelIntersection( pLocal + distance*vLocal );
 
   if ( fabs(panelIntersection.x()) >= m_abs_panelHorizEdge ||
        fabs(panelIntersection.y()) >= m_abs_panelVerticalEdge ) {
@@ -267,7 +285,6 @@ StatusCode DeRichMaPMTPanel::PDWindowPoint( const HepVector3D& vGlobal,
   }
 
   unsigned int MaPMTRow, MaPMTColumn;
-  bool MaPMTFound(false);
 
   MaPMTRow = (unsigned int) floor((panelIntersection.y() -
                                    m_panelVerticalEdge)/ m_rowPitch);
@@ -292,98 +309,13 @@ StatusCode DeRichMaPMTPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
 
   // See if the point is in the central PD
+  unsigned int noTicks;
   ISolid::Ticks windowTicks;
   noTicks = m_windowSolids[MaPMTNum]->intersectionTicks(pInWindow,
                                                         vInMaPMTMaster,
                                                         windowTicks );
-  if ( 0 != noTicks ) MaPMTFound = true;
-
-  if ( !MaPMTFound ) {
-    // Not in central PD : Try nearest neighbours
-
-    for ( int i = -2; i < 3; ++i ) {
-      for ( int j = -2; j < 3; ++j ) {
-        if ( 0==i && 0==j ) continue;
-        unsigned int MaPMT = (i+MaPMTRow)*m_PDColumns + j + MaPMTColumn;
-        if  ( MaPMT >= m_PDMax ) continue;
-
-        // convert point to local coordinate systems
-        pInWindow = m_pvWindows[MaPMT]->toLocal
-          (m_pvMaPMTSMasters[MaPMT]->toLocal(m_pvMaPMTMasters[MaPMT]->
-                                             toLocal(pLocal)));
-
-        // convert local vector assuming that only the MaPMT can be rotated
-        vInMaPMTMaster = vLocal;
-        vInMaPMTMaster.transform( m_vectorTransfMaPMT2s[MaPMT] );
-
-        noTicks = m_windowSolids[MaPMT]->intersectionTicks( pInWindow,
-                                                            vInMaPMTMaster,
-                                                            windowTicks );
-        if ( 2 == noTicks ) {
-          MaPMTFound = true;
-          MaPMTNum = MaPMT;
-          MaPMTRow = MaPMTNum/m_PDColumns;
-          MaPMTColumn = MaPMTNum%m_PDColumns;
-          break;
-        }
-
-      }
-    }
-
-  } // not found if
-
-  // temp - try again
-  /*
-  if ( !MaPMTFound ) {
-    // Not in central PD : Try nearest neighbours
-
-    for ( unsigned int MaPMT = 0; MaPMT < m_PDMax; ++MaPMT ) {
-
-      // convert point to local coordinate systems
-      pInWindow = m_pvWindows[MaPMT]->toLocal
-        (m_pvMaPMTSMasters[MaPMT]->toLocal(m_pvMaPMTMasters[MaPMT]->
-                                           toLocal(pLocal)));
-
-      // convert local vector assuming that only the MaPMT can be rotated
-      vInMaPMTMaster = vLocal;
-      vInMaPMTMaster.transform( m_vectorTransfMaPMT2s[MaPMT] );
-
-      noTicks = m_windowSolids[MaPMT]->intersectionTicks( pInWindow,
-                                                          vInMaPMTMaster,
-                                                          windowTicks );
-      if ( 2 == noTicks ) {
-
-        std::cout << "**** Found with full search " 
-                  << MaPMT << " " << MaPMT/m_PDColumns 
-                  << " " << MaPMT%m_PDColumns << std::endl;
-        std::cout << "**** Start MaPMT            " << MaPMTNum 
-                  << " " << MaPMTNum/m_PDColumns 
-                  << " " << MaPMTNum%m_PDColumns << std::endl;
-        std::cout << "**** neighbours ";
-        for ( int i = -1; i < 2; ++i ) {
-          for ( int j = -1; j < 2; ++j ) {
-            if ( 0==i && 0==j ) continue;
-            unsigned int MaPMT = (i+MaPMTRow)*m_PDColumns + j + MaPMTColumn;
-            if  ( MaPMT >= m_PDMax ) continue;
-            std::cout << MaPMT << " ";
-          }
-        }
-        std::cout << std::endl;
-
-        MaPMTFound = true;
-        MaPMTNum = MaPMT;
-        MaPMTRow = MaPMTNum/m_PDColumns;
-        MaPMTColumn = MaPMTNum%m_PDColumns;
-        break;
-      }
-
-    }
-
-  } // not found if
-  */
-
-  if ( !MaPMTFound ) return StatusCode::FAILURE;
-
+  if ( 0 == noTicks ) return StatusCode::FAILURE;
+ 
   HepPoint3D windowPoint = pInWindow + windowTicks[1]*vInMaPMTMaster;
 
   HepPoint3D windowPointInPanel

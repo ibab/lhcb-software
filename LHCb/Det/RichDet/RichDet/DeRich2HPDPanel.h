@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.h,v 1.3 2003-06-20 14:34:32 papanest Exp $
+// $Id: DeRich2HPDPanel.h,v 1.4 2003-10-22 10:48:28 papanest Exp $
 #ifndef RICHDET_DERICH2HPDPANEL_H
 #define RICHDET_DERICH2HPDPANEL_H 1
 
@@ -114,13 +114,9 @@ private:
   int m_HPDColumns;
 
   /// the top of the HPD window in silicon coordinates
-  HepPoint3D m_HPDTop;
-  
-  /// detection plane
-  HepPlane3D m_detectionPlane;
+  HepPoint3D m_HPDTop;  
 
   // CRJ : cache variables
-  HepTransform3D m_vectorTransf;
   const ISolid* m_HPDPanelSolid;
   std::vector<const IPVolume*> m_pvHPDMasters;
   std::vector<const IPVolume*> m_pvHPDSMasters;

@@ -1,9 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.2 2002-11-11 12:34:11 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.3 2003-10-22 10:48:28 papanest Exp $
 
 #define DERICHFLATMIRROR_CPP
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
+#include "Kernel/CLHEPStreams.h"
 
 // CLHEP files
 #include "CLHEP/Geometry/Vector3D.h"
@@ -52,8 +53,7 @@ StatusCode DeRichFlatMirror::initialize() {
   m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
 
   HepRotateX3D alignX(-m_alignmentConstantY);
-  HepRotateY3D alignY(m_alignmentConstantX);
-  
+  HepRotateY3D alignY(m_alignmentConstantX);  
   
   // get the z half length, to find the centre on the mirror surface
   // where reflection will take place
@@ -64,7 +64,6 @@ StatusCode DeRichFlatMirror::initialize() {
   HepPoint3D localCentre(0.0, 0.0, centreOnSurfaceZ);
   // in global coordinates
   m_mirrorCentre = geometry()->toGlobal(localCentre);
-  //cout << "Centre of mirror in global coord: "<< m_mirrorCentre<< std::endl;
 
   HepNormal3D localNormal(0.0, 0.0, 1.0);
 
@@ -86,17 +85,20 @@ StatusCode DeRichFlatMirror::initialize() {
   // create the mirror plane
   HepPlane3D aPlane(m_normalVector, m_mirrorCentre);
   m_mirrorPlane = aPlane;
-  
+  //std::cout << "Mirror plane" << m_mirrorPlane << std::endl;
+
   // extract mirror number from detector element name
   const std::string::size_type pos = name().find(':');
   if( std::string::npos != pos ) {
     m_mirrorNumber = atoi( name().substr(pos + 1).c_str() );
   }
   else {
-    log << MSG::ERROR <<"A mirror without a number!"<< endreq;
+    log << MSG::FATAL <<"A mirror without a number!"<< endreq;
     sc = StatusCode::FAILURE;
   }
   
+  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber 
+      <<" Centre (on reflective surface) " << m_mirrorCentre  << endreq;
   log << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endreq;
 
   return sc;

@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.2 2003-09-20 15:02:49 jonrob Exp $
+// $Id: DeRichPDPanel.h,v 1.3 2003-10-22 10:48:28 papanest Exp $
 
 #ifndef DERICHPDPANEL_H
 #define DERICHPDPANEL_H 1
@@ -25,6 +25,11 @@ class DeRichPDPanel: public DetectorElement {
 
 public:
 
+  enum traceMode {
+    loose = 0,
+    tight
+  };
+  
   /**
    * This is where most of the geometry is read
    * @return StatusCode
@@ -57,6 +62,17 @@ public:
                                     HepPoint3D& windowPointGlobal,
                                     RichSmartID& smartID ) = 0;
   /**
+   * Returns the intersection point with the detector plane given a vector
+   * and a point. If mode is tight, returns true only if point is within
+   * the detector coverage.
+   * @return bool
+   */
+  virtual bool detPlanePoint( const HepPoint3D& pGlobal,
+                              const HepVector3D& vGlobal,
+                              HepPoint3D& hitPosition,
+                              traceMode mode = loose);
+
+  /**
    * Returns the detection plane of the PD panel, defined at the top of the
    * PDs (a plane resting on the PDs touching the window).
    * @return HepPlane3D
@@ -70,6 +86,19 @@ public:
    */
   virtual StatusCode readoutChannelList( std::vector<RichSmartID>&
                                          readoutChannels ) = 0;
+
+
+protected:
+
+  /// detection plane
+  HepPlane3D m_detectionPlane;
+  HepPlane3D m_localPlane;
+  HepVector3D m_localPlaneNormal;
+
+  double m_detPlaneHorizEdge;
+  double m_detPlaneVertEdge;
+
+  HepTransform3D m_vectorTransf;
 
 };
 

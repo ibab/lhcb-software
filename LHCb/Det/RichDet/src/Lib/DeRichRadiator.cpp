@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.cpp,v 1.2 2003-04-01 13:01:51 jonrob Exp $
+// $Id: DeRichRadiator.cpp,v 1.3 2003-10-22 10:48:28 papanest Exp $
 #define DERICHRADIATOR_CPP
 
 // Include files
@@ -6,6 +6,7 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "Kernel/CLHEPStreams.h"
 
 // CLHEP files
 #include "CLHEP/Geometry/Transform3D.h"
@@ -64,6 +65,9 @@ StatusCode DeRichRadiator::initialize() {
     }
   }
 
+  HepPoint3D zero(0.0, 0.0, 0.0);
+  log << MSG::DEBUG << "Centre of radiator " << tempName << "  " 
+      << geometry()->toGlobal(zero) << endreq;
   log << MSG::DEBUG <<"Finished initialisation for DeRichRadiator"<< endreq;
 
   return sc;
@@ -95,7 +99,8 @@ StatusCode DeRichRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
 
 unsigned int DeRichRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                                  const HepVector3D& vGlobal,
-                                                 std::vector<HepPoint3D>& points) {
+                                                 std::vector<HepPoint3D>& 
+                                                 points) {
 
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   const HepTransform3D vTrans = geometry()->matrix();

@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.5 2003-09-20 15:02:48 jonrob Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.6 2003-10-22 10:48:28 papanest Exp $
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
@@ -78,7 +78,7 @@ public:
    * @return HepPlane3D
    */
   inline HepPlane3D detectionPlane() const  {
-    return detectionPlane_m;
+    return m_detectionPlane;
   }
 
 protected:
@@ -112,6 +112,7 @@ private:
 
   /// the Horizontal Edge of the HPD grid (beggining of numbers). 
   double panelHorizEdge;
+  double m_fabs_panelHorizEdge;
   double panelHorizEdgeEven;
   double panelHorizEdgeOdd;
 
@@ -136,11 +137,7 @@ private:
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;
   
-  /// detection plane
-  HepPlane3D detectionPlane_m;
-
   // CRJ : cache variables
-  HepTransform3D m_vectorTransf;
   const ISolid* m_HPDPanelSolid;
   std::vector<const IPVolume*> m_pvHPDMasters;
   std::vector<const IPVolume*> m_pvHPDSMasters;

@@ -4,6 +4,13 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v6r1 2003-10-14 =========================
+! 2003-08-14 - Antonis Papanestis
+ - added a new function to the DeRichPDPanel and moved some of the 
+ - functionality of the traceToDetectorWithoutEff from RichDetTools to RichDet.
+ - improved the algorith the finds the photoDetector withing the Panel
+ - added some more debug information.
+
 !========================= RichDet v6r0 2003-08-29 =========================
 ! 2003-08-29 - Antonis Papanestis
  - added DeRichMaPMTPanel with classID = 12015. This will allow the use

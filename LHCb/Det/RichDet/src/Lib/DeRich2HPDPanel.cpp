@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.7 2003-09-20 15:02:49 jonrob Exp $
+// $Id: DeRich2HPDPanel.cpp,v 1.8 2003-10-22 10:48:28 papanest Exp $
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -50,8 +50,6 @@ StatusCode DeRich2HPDPanel::initialize() {
   this->printOut(log);
 
   m_pixelSize = 0.5*mm;
-  m_winR = 56*mm;
-  m_winRsq = m_winR*m_winR;
 
   HepPoint3D zero(0.0, 0.0, 0.0);
 
@@ -98,15 +96,21 @@ StatusCode DeRich2HPDPanel::initialize() {
   m_panelHorizEdge = HPD0Centre.x() - halfColumnPitch;
   m_fabs_panelHorizEdge = fabs(m_panelHorizEdge);
 
+  m_detPlaneHorizEdge = m_fabs_panelHorizEdge;
+  
   //get the Vertical Edge for the two types of columns
   //numbers are 0 to 8
   m_panelVerticalEdgeEven = HPD0Centre.y() - halfRowPitch;
   m_panelVerticalEdgeOdd = HPDNSCentre.y() - halfRowPitch;
 
   m_panelVerticalEdge = fabs(m_panelVerticalEdgeOdd);
-  if (fabs(m_panelVerticalEdgeEven) < m_panelVerticalEdge)
+  m_detPlaneVertEdge = fabs(m_panelVerticalEdgeEven);
+  
+  if (m_detPlaneVertEdge < m_panelVerticalEdge) {
+    m_detPlaneVertEdge = m_panelVerticalEdge;
     m_panelVerticalEdge = fabs(m_panelVerticalEdgeEven);
-
+  }
+  
   log << MSG::DEBUG <<"m_panelHorizEdge:"<< m_panelHorizEdge
       << " m_panelVerticalEdgeEven:" << m_panelVerticalEdgeEven
       << " m_panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd << endreq;
@@ -114,7 +118,7 @@ StatusCode DeRich2HPDPanel::initialize() {
   // get the pv and the solid for the HPD quartz window
   const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume()->pvolume(2);
   const ISolid* windowSolid0 = pvWindow0->lvolume()->solid();
-  // get the outside radius of the window
+  // get the inside radius of the window
   ISolid::Ticks windowTicks;
   unsigned int windowTicksSize = windowSolid0->
     intersectionTicks(HepPoint3D(0.0, 0.0, 0.0),HepVector3D(0.0, 0.0, 1.0),
@@ -123,9 +127,11 @@ StatusCode DeRich2HPDPanel::initialize() {
     log << MSG::ERROR << "Problem getting window radius" << endreq;
     return sc;
   }
+  m_winR = windowTicks[0];
+  m_winRsq = m_winR*m_winR;
 
   // get the coordinate of the centre of the HPD quarz window
-  HepPoint3D HPDTop1(0.0, 0.0, windowTicks[1]);
+  HepPoint3D HPDTop1(0.0, 0.0, m_winR);
   // convert this to HPDS master  coordinates
   HepPoint3D HPDTop2 = pvWindow0->toMother(HPDTop1);
   // and to silicon
@@ -145,13 +151,16 @@ StatusCode DeRich2HPDPanel::initialize() {
   HepPoint3D pointBInPanel = pvHPDMasterB->toMother(pointAInHPD);
   HepPoint3D pointB = geometry()->toGlobal(pointBInPanel);
 
-  // now point 3 on the other end.  HPD 91 is OK for both Riches
+  // now point 3 on the other end.
   int HPDForC = m_HPDRows*m_HPDColumns - m_HPDColumns/2;
   const IPVolume* pvHPDMasterC = geometry()->lvolume()->pvolume(HPDForC);
   HepPoint3D pointCInPanel = pvHPDMasterC->toMother(pointAInHPD);
   HepPoint3D pointC = geometry()->toGlobal(pointCInPanel);
 
   m_detectionPlane = HepPlane3D(pointA, pointB, pointC);
+  m_detectionPlane.normalize();
+  m_localPlane = HepPlane3D(pointAInPanel, pointBInPanel, pointCInPanel);
+  m_localPlaneNormal = m_localPlane.normal();
 
   // Cache information for PDWindowPoint method
   m_vectorTransf = geometry()->matrix();
@@ -312,10 +321,17 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   unsigned int noTicks;
   ISolid::Ticks HPDPanelTicks;
-  noTicks = m_HPDPanelSolid->intersectionTicks( pLocal, vLocal, HPDPanelTicks );
-  if ( 0 == noTicks ) return StatusCode::FAILURE;
+  //  noTicks =m_HPDPanelSolid->intersectionTicks(pLocal,vLocal,HPDPanelTicks);
+  //  if ( 0 == noTicks ) return StatusCode::FAILURE;
+  //  HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
 
-  HepPoint3D panelIntersection = pLocal + HPDPanelTicks[0]*vLocal;
+  double scalar1 = vLocal*m_localPlaneNormal;
+  double distance = 0.0;
+
+  if ( scalar1 == 0.0 ) return StatusCode::FAILURE;
+
+  distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  HepPoint3D panelIntersection( pLocal + distance*vLocal );
 
   const IPVolume* pvHPDMaster = 0;
   const IPVolume* pvHPDSMaster = 0;
@@ -330,8 +346,8 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
   int HPDColumn(-1), HPDRow(-1), HPDNumber(-1);
   bool HPDFound(false);
 
-  if ( (fabs(panelIntersection.x()) <= m_fabs_panelHorizEdge) &&
-       (fabs(panelIntersection.y()) <= m_panelVerticalEdge)) {
+  if (fabs(panelIntersection.x()) <= m_fabs_panelHorizEdge) {
+       //&& (fabs(panelIntersection.y()) <= m_panelVerticalEdge))
 
     HPDColumn = (int) floor((panelIntersection.x()- m_panelHorizEdge)
                             /m_columnPitch);
@@ -343,42 +359,45 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
       HPDRow = (int) floor((panelIntersection.y()-m_panelVerticalEdgeOdd)
                            /m_rowPitch);
     }
-    HPDNumber = HPDColumn*m_HPDRows + HPDRow;
+    if (HPDRow >= 0 && HPDRow < m_HPDRows) {
 
-    // find the correct HPD and quartz window inside it
-    pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
-    // just in case
-    if ( !pvHPDMaster ) {
-      MsgStream log(msgSvc(), "DeRich2HPDPanel" );
-      log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
-          << " from HPDRow:" << HPDRow << " and HPDColumn:" << HPDColumn
-          << " please notify Antonis" << endreq
-          << " x:" << panelIntersection.x()
-          << " y:" << panelIntersection.y() << " edge1:"
-          << m_panelHorizEdge << " edge2:" <<m_panelVerticalEdgeEven << endreq;
-      return StatusCode::FAILURE;
+      HPDNumber = HPDColumn*m_HPDRows + HPDRow;
+
+      // find the correct HPD and quartz window inside it
+      pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
+      // just in case
+      if ( !pvHPDMaster ) {
+        MsgStream log(msgSvc(), "DeRich2HPDPanel" );
+        log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
+            << " from HPDRow:" << HPDRow << " and HPDColumn:" << HPDColumn
+            << " please notify Antonis" << endreq
+            << " x:" << panelIntersection.x()
+            << " y:" << panelIntersection.y() << " edge1:"
+            << m_panelHorizEdge <<" edge2:"<<m_panelVerticalEdgeEven << endreq;
+        return StatusCode::FAILURE;
+      }
+      
+      pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
+      pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
+      windowSolid = pvWindow->lvolume()->solid();
+
+      // convert point to local coordinate systems
+      pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->
+                                                          toLocal(pLocal)));
+      // convert local vector assuming that only the HPD can be rotated
+      const HepTransform3D vectorTransfHPD = pvHPDMaster->matrix();
+      vInHPDMaster = vLocal;
+      vInHPDMaster.transform(vectorTransfHPD);
+
+      noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
+                                               HPDWindowTicks );
+      if ( 0 != noTicks ) HPDFound = true;
     }
-
-    pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
-    pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
-    windowSolid = pvWindow->lvolume()->solid();
-
-    // convert point to local coordinate systems
-    pInWindow = pvWindow->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->
-                                                        toLocal(pLocal)));
-    // convert local vector assuming that only the HPD can be rotated
-    const HepTransform3D vectorTransfHPD = pvHPDMaster->matrix();
-    vInHPDMaster = vLocal;
-    vInHPDMaster.transform(vectorTransfHPD);
-
-    noTicks = windowSolid->intersectionTicks(pInWindow, vInHPDMaster,
-                                             HPDWindowTicks );
-    if ( 0 != noTicks ) HPDFound = true;
-
+    
   }
 
   if ( !HPDFound ) {
-    // Not in central PD : Try all others
+    // Not in central HPD : Try all others
 
     for ( int HPD = 0; HPD < m_PDMax; ++HPD ) {
 
@@ -395,6 +414,9 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                                         vInHPDMaster,
                                                         HPDWindowTicks );
       if ( 2 == noTicks ) {
+        //        std::cout << "Found 2nd " << HPDRow << "  " << HPDColumn 
+        //          << panelIntersection;
+        
         HPDFound = true;
         HPDNumber = HPD;
         pvHPDMaster = m_pvHPDMasters[HPD];
@@ -402,6 +424,9 @@ StatusCode DeRich2HPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
         pvWindow = m_pvWindows[HPD];
         HPDRow = HPDNumber%m_HPDRows;
         HPDColumn = HPDNumber/m_HPDRows;
+        //std::cout << HPDRow << "  " << HPDColumn << std::endl;
+        //HepPoint3D windowPoint = pInWindow + HPDWindowTicks[1]*vInHPDMaster;
+        //std::cout << windowPoint << std::endl;
         break;
       }
 

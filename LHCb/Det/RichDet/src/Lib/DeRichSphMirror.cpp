@@ -1,8 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.3 2002-11-11 12:34:11 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.4 2003-10-22 10:48:29 papanest Exp $
 #define DERICHSPHMIRROR_CPP
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
+#include "Kernel/CLHEPStreams.h"
 
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -43,25 +44,74 @@ const CLID& DeRichSphMirror::classID() {
 
 StatusCode DeRichSphMirror::initialize() {
 
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode fail = StatusCode::FAILURE;
 
   MsgStream log(msgSvc(), "DeRichSphMirror" );
   log << MSG::DEBUG <<"Start initialisation for DeRichSphMirror" << endreq;
 
   m_solid = geometry()->lvolume()->solid();
+  std::string type = m_solid->typeName();
+
+  const SolidSphere* sphereSolid = 0;
+  // find the sphere of the spherical mirror
+  if ( type == "SolidSphere" ) {
+    sphereSolid = dynamic_cast<const SolidSphere*>(m_solid);
+  } else {
+    //assume bollean solid
+    log << MSG::DEBUG << "About to do a dynamic_cast" << endreq;
+    const SolidBoolean* compSolid = dynamic_cast<const SolidBoolean*>(m_solid);
+    //    compSolid->printOut();
+
+    if ( compSolid->first()->typeName() == "SolidSphere") {
+      sphereSolid = dynamic_cast<const SolidSphere*>(compSolid->first());
+    }  else {
+      SolidBoolean::SolidChildrens components;
+      SolidBoolean::SolidChildrens::const_iterator iter;
+      for (iter=compSolid->childBegin(); iter!=compSolid->childEnd(); ++iter) {
+        if ( (*iter)->solid()->typeName() == "SolidSphere") 
+          sphereSolid = dynamic_cast<const SolidSphere*>((*iter)->solid());
+      
+      }
+    }
+    if ( !sphereSolid) {
+      log << MSG::FATAL << "Problem finding a sphere solid in:"<< endreq;
+      compSolid->printOut();
+      return fail;
+    }      
+  }
+  
+  // Now that we have the sphere, try to find out its radius
+  m_radius = sphereSolid->insideRadius();
+
+  // and its centre
+  HepPoint3D zero(0.0, 0.0, 0.0);
+  HepVector3D toSphCentre(0.0, 0.0, 1.0);
+  if ( 0.0 != sphereSolid->startThetaAngle() ) {
+    toSphCentre.setTheta( sphereSolid->startThetaAngle() + 
+                          sphereSolid->deltaThetaAngle()/2.0 );
+    toSphCentre.setPhi( sphereSolid->startPhiAngle() + 
+                        sphereSolid->deltaPhiAngle()/2.0 );
+  }
+  
+    
+  ISolid::Ticks sphTicks;
+  unsigned int sphTicksSize = sphereSolid->
+    intersectionTicks(zero, toSphCentre, sphTicks);
+  if (sphTicksSize != 2) {
+    log << MSG::FATAL << "Problem getting mirror radius, noTicks:" 
+        << sphTicksSize << endreq;
+    return fail;
+  }
+  HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
+  m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
   //m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
   //m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
-  m_radius = userParameterAsDouble("Radius");
+  //  m_radius = userParameterAsDouble("Radius");
 
   //HepRotateX3D alignX(m_alignmentConstantY);
   //HepRotateY3D alignY(-m_alignmentConstantX);
 
-  //const ISolid* mysolid = geometry()->lvolume()->solid();
-  //cout << mysolid->name()<< std::endl;  
-  //m_radius = mySphere->insideRadius();
-  //cout << "radius: " << m_radius << std::endl;
-  
 
   // get the rotation and translation from local to global
   //HepRotation rotToGlobal = this->geometry()->matrixInv().getRotation();
@@ -103,10 +153,6 @@ StatusCode DeRichSphMirror::initialize() {
   m_centreOfCurvature.transform(translToGlobal);
   //cout << "CoC in global coord system: "<< m_centreOfCurvature<< std::endl;
 
-  // Now let's find the mirror centre.
-  //HepPoint3D mirCentre(0.0, 0.0, m_radius);
-  //m_mirrorCentre = geometry()->toGlobal(mirCentre);
-  //cout << "Centre of mirror in global coord: "<< m_mirrorCentre<< std::endl;
 
   // extract mirror number from detector element name
   const std::string::size_type pos = name().find(':');
@@ -114,12 +160,17 @@ StatusCode DeRichSphMirror::initialize() {
     m_mirrorNumber = atoi( name().substr(pos + 1).c_str() );
   }
   else {
-    log << MSG::ERROR <<"A spherical mirror without a number!"<< endreq;
-    sc = StatusCode::FAILURE;
+    log << MSG::FATAL <<"A spherical mirror without a number!"<< endreq;
+    return fail;
   }
 
+  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " Radius:" << m_radius 
+      << " Centre of curvature "
+      << m_centreOfCurvature << " Centre of mirror " << m_mirrorCentre 
+      << endreq;
+
   log << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endreq;
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
