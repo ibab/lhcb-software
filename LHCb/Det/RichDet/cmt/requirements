@@ -1,5 +1,5 @@
 package RichDet
-version v1
+version v1r1
 
 branches src RichDet doc cmt
 
@@ -18,3 +18,9 @@ apply_pattern package_linkopts
 apply_pattern ld_library_path
 
 apply_pattern package_shlibflags
+
+
+
+
+
+
