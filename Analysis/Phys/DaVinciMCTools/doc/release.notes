@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.48 2005-03-20 23:20:39 lfernan Exp $
+! $Id: release.notes,v 1.49 2005-03-21 15:28:44 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-03-21 - Luis Fernandez
+ - src/DecayChainNTuple.{h,pp}
+	 . Added generic decay chain ntuple (from HltSelChecker)
+ - src/DaVinciMCTools_load.cpp
+   . Load DecayChainNTuple
 
 ! 2005-03-21 - Luis Fernandez
  - src/TrueMCFilterCriterion.{h,cpp}
