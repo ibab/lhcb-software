@@ -29,52 +29,52 @@ namespace SolidTicks
   /// Sort Ticks, eliminate duplicates and remove Adjancent Ticks 
   ///
   inline unsigned int  RemoveAdjancentTicks( ISolid::Ticks    & ticks , // tick is NOT assumed to be sorted !!!
-					     const HepPoint3D & point , 
-					     const HepVector3D & vect  , 
-					     const ISolid     & solid )
+                                             const HepPoint3D & point , 
+                                             const HepVector3D & vect  , 
+                                             const ISolid     & solid )
     {
       /// (1) sort container  
       std::sort( ticks.begin() , ticks.end() ) ; 
       /// (2) eliminate duplicates and (3) shrink container 
       ticks.erase( std::unique( ticks.begin() , ticks.end() )  , ticks.end() ); 
       { /// no adjancent ticks! 
-	if     ( ticks.size() <  2 )    { ticks.clear() ; return 0 ; } 	/// RETURN !!!
+        if     ( ticks.size() <  2 )    { ticks.clear() ; return 0 ; }         /// RETURN !!!
         else if( ticks.size() == 2 ) 
-	  {
-	    ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
-	    ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
-	    ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
+          {
+            ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
+            ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
+            ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
             if( solid.isInside( point + vect * tick ) ) { return 2 ; }    /// RETURN 
-	    else                        { ticks.clear() ; return 0 ; }    /// RETURN 
-	  }  
-	/// perform removing of adjancent  ticks
-	std::vector<unsigned int> tmp ; 
-	ISolid::Tick tickNext = 0.0   ;
-	ISolid::Tick tickPrev = 0.0   ; 
-	bool         boolPrev = true  ; 
-	bool         boolNext = true  ; 
-	for ( ISolid::Ticks::iterator it = ticks.begin() ; it != ticks.end() ; ++it ) 
-	  {
-	    // the last point is to be treated in a specific way
-	    if     ( ticks.end   () != it + 1 ) 
-	      { tickNext = 0.5 * ( (*it) + *(it+1) ) ; boolNext = solid.isInside( point + vect * tickNext );  }  
-	    //
-	    /// get the index 
-	    unsigned int index = it - ticks.begin(); 	  	    
-	    /// to write the last  tick it is enought to have the previous interval "inside" 
-	    if      ( ticks.end  () == it + 1 ) { if( !boolPrev             ) { tmp.push_back( index ) ; } }
-	    /// to write the first tick it is enought to have the first    interval "inside" 
-	    else if ( ticks.begin() == it     ) { if( !boolNext             ) { tmp.push_back( index ) ; } }
-	    /// to write the "regular" tick, it should separate 2 different zones! 
-	    else                                { if(  boolPrev == boolNext ) { tmp.push_back( index ) ; } }
-	    ///
-	    boolPrev = boolNext; 
-	    tickPrev = tickNext;
-	  }
-	///
-	std::vector<unsigned int>::reverse_iterator cri = tmp.rbegin();
-	while( cri != tmp.rend() ) { ticks.erase( ticks.begin() + *cri++ );  }
-	///
+            else                        { ticks.clear() ; return 0 ; }    /// RETURN 
+          }  
+        /// perform removing of adjancent  ticks
+        std::vector<unsigned int> tmp ; 
+        ISolid::Tick tickNext = 0.0   ;
+        ISolid::Tick tickPrev = 0.0   ; 
+        bool         boolPrev = true  ; 
+        bool         boolNext = true  ; 
+        for ( ISolid::Ticks::iterator it = ticks.begin() ; it != ticks.end() ; ++it ) 
+          {
+            // the last point is to be treated in a specific way
+            if     ( ticks.end   () != it + 1 ) 
+              { tickNext = 0.5 * ( (*it) + *(it+1) ) ; boolNext = solid.isInside( point + vect * tickNext );  }  
+            //
+            /// get the index 
+            unsigned int index = it - ticks.begin();                       
+            /// to write the last  tick it is enought to have the previous interval "inside" 
+            if      ( ticks.end  () == it + 1 ) { if( !boolPrev             ) { tmp.push_back( index ) ; } }
+            /// to write the first tick it is enought to have the first    interval "inside" 
+            else if ( ticks.begin() == it     ) { if( !boolNext             ) { tmp.push_back( index ) ; } }
+            /// to write the "regular" tick, it should separate 2 different zones! 
+            else                                { if(  boolPrev == boolNext ) { tmp.push_back( index ) ; } }
+            ///
+            boolPrev = boolNext; 
+            tickPrev = tickNext;
+          }
+        ///
+        std::vector<unsigned int>::reverse_iterator cri = tmp.rbegin();
+        while( cri != tmp.rend() ) { ticks.erase( ticks.begin() + *cri++ );  }
+        ///
       }
       ///
       return ticks.size();
@@ -85,11 +85,11 @@ namespace SolidTicks
   /// Sort Ticks, eliminate duplicates and remove Adjancent Ticks 
   ///
   inline unsigned int  RemoveAdjancentTicks( ISolid::Ticks      & ticks   , /// tick is assumed to be sorted !!!
-					     const HepPoint3D   & point   , 
-					     const HepVector3D  & vect    , 
-					     const ISolid::Tick & tickMin , 
-					     const ISolid::Tick & tickMax , 
-					     const ISolid       & solid   )
+                                             const HepPoint3D   & point   , 
+                                             const HepVector3D  & vect    , 
+                                             const ISolid::Tick & tickMin , 
+                                             const ISolid::Tick & tickMax , 
+                                             const ISolid       & solid   )
     {
       ///
       if( tickMin >= tickMax ) { ticks.clear(); return 0 ; }                    /// RETURN !!!
@@ -100,64 +100,64 @@ namespace SolidTicks
       ///   ticks.erase( std::unique( ticks.begin() , ticks.end() )  , ticks.end() ); 
       ///
       { /// check for tickMin and tickMax 
-	/// remove extra ticks from container
-	{ /// find the first element greater or equal than tickMin
-	  ISolid::Ticks::iterator iter = 
-	    std::find_if( ticks.begin() , ticks.end() , 
-			  std::bind2nd( std::greater_equal<const ISolid::Tick>() , tickMin ) );
-	  /// Element found! shrink container!
-	  ticks.erase( ticks.begin() , iter ); 
-	  if( !ticks.empty() ) { ticks.insert( ticks.begin() , tickMin ); } 
-	}
-	///
-	if( ticks.size() < 2 )                      { ticks.clear() ; return 0;  } /// RETURN !!!
-	///
-	{ /// search for elements which are greater or equal than tickMax 
-	  ISolid::Ticks::iterator iter = 
-	    std::find_if( ticks.begin() , ticks.end() , 
-			  std::bind2nd( std::greater_equal<const ISolid::Tick>() , tickMax ) );
-	  /// found element wich is greater !  remove it (and larger), put tickMax into container!                 
-	  ticks.erase( iter , ticks.end() ); 
-	  if( !ticks.empty() ) { ticks.push_back( tickMax ); } 
-	}
+        /// remove extra ticks from container
+        { /// find the first element greater or equal than tickMin
+          ISolid::Ticks::iterator iter = 
+            std::find_if( ticks.begin() , ticks.end() , 
+                          std::bind2nd( std::greater_equal<const ISolid::Tick>() , tickMin ) );
+          /// Element found! shrink container!
+          ticks.erase( ticks.begin() , iter ); 
+          if( !ticks.empty() ) { ticks.insert( ticks.begin() , tickMin ); } 
+        }
+        ///
+        if( ticks.size() < 2 )                      { ticks.clear() ; return 0;  } /// RETURN !!!
+        ///
+        { /// search for elements which are greater or equal than tickMax 
+          ISolid::Ticks::iterator iter = 
+            std::find_if( ticks.begin() , ticks.end() , 
+                          std::bind2nd( std::greater_equal<const ISolid::Tick>() , tickMax ) );
+          /// found element wich is greater !  remove it (and larger), put tickMax into container!                 
+          ticks.erase( iter , ticks.end() ); 
+          if( !ticks.empty() ) { ticks.push_back( tickMax ); } 
+        }
       }
       { /// no adjancent ticks! 
-	if     ( ticks.size() <  2 )    { ticks.clear() ; return 0 ; } 	/// RETURN !!!
+        if     ( ticks.size() <  2 )    { ticks.clear() ; return 0 ; }         /// RETURN !!!
         else if( ticks.size() == 2 ) 
-	  {
-	    ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
-	    ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
-	    ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
+          {
+            ISolid::Tick tick1 = *( ticks.begin ()  ) ; 
+            ISolid::Tick tick2 = *( ticks.rbegin()  ) ;
+            ISolid::Tick tick  = 0.5 * ( tick1 + tick2 ) ;  
             if( solid.isInside( point + vect * tick ) ) { return 2 ; }    /// RETURN 
             else                        { ticks.clear() ; return 0 ; }    /// RETURN 
-	  }  
-	/// perform removing of adjancent  ticks
-	std::vector<unsigned int> tmp ; 
-	ISolid::Tick tickNext = 0.0   ;
-	ISolid::Tick tickPrev = 0.0   ; 
-	bool         boolPrev = true  ; 
-	bool         boolNext = true  ; 
-	for ( ISolid::Ticks::iterator it = ticks.begin() ; it != ticks.end() ; ++it ) 
-	  {
-	    // the last point is to be treated in a specific way
-	    if( ticks.end  () != it + 1 ) 
-	      { tickNext = 0.5 * ( (*it) + *(it+1) ) ; boolNext = solid.isInside( point + vect * tickNext );  }  
-	    /// get the index 
-	    unsigned int index = it - ticks.begin(); 	  
-	    /// to write the last  tick it is enought to have the previous interval "inside" 
-	    if      ( ticks.end  () == it + 1 ) { if( !boolPrev             ) { tmp.push_back( index ) ; } }
-	    /// to write the first tick it is enought to have the first    interval "inside" 
-	    else if ( ticks.begin() == it     ) { if( !boolNext             ) { tmp.push_back( index ) ; } }
-	    /// to write the "regular" tick, it should separate 2 different zones! 
-	    else                                { if ( boolPrev == boolNext ) { tmp.push_back( index ) ; } }
-	    ///
-	    boolPrev = boolNext; 
-	    tickPrev = tickNext;
-	  }
-	///
-	std::vector<unsigned int>::reverse_iterator cri = tmp.rbegin();
-	while( cri != tmp.rend() ) { ticks.erase( ticks.begin() + *cri++ );  }
-	///
+          }  
+        /// perform removing of adjancent  ticks
+        std::vector<unsigned int> tmp ; 
+        ISolid::Tick tickNext = 0.0   ;
+        ISolid::Tick tickPrev = 0.0   ; 
+        bool         boolPrev = true  ; 
+        bool         boolNext = true  ; 
+        for ( ISolid::Ticks::iterator it = ticks.begin() ; it != ticks.end() ; ++it ) 
+          {
+            // the last point is to be treated in a specific way
+            if( ticks.end  () != it + 1 ) 
+              { tickNext = 0.5 * ( (*it) + *(it+1) ) ; boolNext = solid.isInside( point + vect * tickNext );  }  
+            /// get the index 
+            unsigned int index = it - ticks.begin();           
+            /// to write the last  tick it is enought to have the previous interval "inside" 
+            if      ( ticks.end  () == it + 1 ) { if( !boolPrev             ) { tmp.push_back( index ) ; } }
+            /// to write the first tick it is enought to have the first    interval "inside" 
+            else if ( ticks.begin() == it     ) { if( !boolNext             ) { tmp.push_back( index ) ; } }
+            /// to write the "regular" tick, it should separate 2 different zones! 
+            else                                { if ( boolPrev == boolNext ) { tmp.push_back( index ) ; } }
+            ///
+            boolPrev = boolNext; 
+            tickPrev = tickNext;
+          }
+        ///
+        std::vector<unsigned int>::reverse_iterator cri = tmp.rbegin();
+        while( cri != tmp.rend() ) { ticks.erase( ticks.begin() + *cri++ );  }
+        ///
       }
       ///
       return ticks.size();
@@ -170,19 +170,19 @@ namespace SolidTicks
   /// solving the quadratic equation:  a*x*x + b*x + c = 0; 
   template < class OUTPUTTYPE > 
     inline unsigned int SolveQuadraticEquation( const double a   , 
-						const double b   , 
-						const double c   ,
+                                                const double b   , 
+                                                const double c   ,
                                                 OUTPUTTYPE   out ) 
     {
       if( 0 == a )                       /// it is a linear equation:  b*x + c = 0 
-	{
-	  // no solution!
+        {
+          // no solution!
           if( b == 0 ) { return 0 ; }   // RETURN !!! 
-	  // 1 solution!
+          // 1 solution!
           *out++ = -1.0 * c / b ; 
           *out++ = -1.0 * c / b ;       // double the solutions 
-	  return 1;                     // RETURN !!!   
-	}
+          return 1;                     // RETURN !!!   
+        }
       double d = b * b - 4.0 * a * c ; 
       /// no solutions 
       if(  d < 0  )   { return 0; }     // RETURN !!!
@@ -201,9 +201,9 @@ namespace SolidTicks
   /// with sphere of radius Radius
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheSphere( const HepPoint3D  & point  , 
-						  const HepVector3D & vect   , 
-						  const double        radius ,
-						  OUTPUTTYPE          out    )
+                                                  const HepVector3D & vect   , 
+                                                  const double        radius ,
+                                                  OUTPUTTYPE          out    )
     {
       ///
       /// sphere with non-positive radius is not able to intersect the line! 
@@ -229,9 +229,9 @@ namespace SolidTicks
   /// with cylinder of radius Radius
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheCylinder( const HepPoint3D  & point  , 
-						    const HepVector3D & vect   , 
-						    const double        radius ,
-						    OUTPUTTYPE          out    )
+                                                    const HepVector3D & vect   , 
+                                                    const double        radius ,
+                                                    OUTPUTTYPE          out    )
     
     {
       ///
@@ -262,9 +262,9 @@ namespace SolidTicks
   /// with x-plane x=X
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheX( const HepPoint3D  & point  , 
-					     const HepVector3D & vect   , 
-					     const double        X      ,
-					     OUTPUTTYPE          out   )
+                                             const HepVector3D & vect   , 
+                                             const double        X      ,
+                                             OUTPUTTYPE          out   )
     
     {
       
@@ -281,9 +281,9 @@ namespace SolidTicks
   /// with y-plane y=Y
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheY( const HepPoint3D  & point  , 
-					     const HepVector3D & vect   , 
-					     const double        Y      ,
-					     OUTPUTTYPE          out    )
+                                             const HepVector3D & vect   , 
+                                             const double        Y      ,
+                                             OUTPUTTYPE          out    )
     
     {
       
@@ -299,9 +299,9 @@ namespace SolidTicks
   /// with z-plane z=Z
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheZ( const HepPoint3D & point  , 
-					     const HepVector3D& vect   , 
-					     const double       Z      ,
-					     OUTPUTTYPE         out    )
+                                             const HepVector3D& vect   , 
+                                             const double       Z      ,
+                                             OUTPUTTYPE         out    )
     
     {
       
@@ -317,9 +317,9 @@ namespace SolidTicks
   /// with half-plane phi=Phi
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsThePhi( const HepPoint3D  & point  , 
-					       const HepVector3D & vect   , 
-					       const double        Phi    ,
-					       OUTPUTTYPE          out    )
+                                               const HepVector3D & vect   , 
+                                               const double        Phi    ,
+                                               OUTPUTTYPE          out    )
     
     {
       double sinphi = sin( Phi ) ; 
@@ -336,9 +336,9 @@ namespace SolidTicks
   /// with cone theta=Theta
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheTheta( const HepPoint3D & point  , 
-						 const HepPoint3D & vect   , 
-						 const double       Theta  ,
-						 OUTPUTTYPE         out    )
+                                                 const HepPoint3D & vect   , 
+                                                 const double       Theta  ,
+                                                 OUTPUTTYPE         out    )
     
     {
       ///
@@ -366,12 +366,12 @@ namespace SolidTicks
   /// with conical surface 
   template < class OUTPUTTYPE > 
     inline unsigned int  LineIntersectsTheCone( const HepPoint3D  & point  , 
-						const HepVector3D & vect   , 
-						const double        r1     ,
-						const double        r2     ,
-						const double        z1     ,
-						const double        z2     ,
-						OUTPUTTYPE          out    )
+                                                const HepVector3D & vect   , 
+                                                const double        r1     ,
+                                                const double        r2     ,
+                                                const double        z1     ,
+                                                const double        z2     ,
+                                                OUTPUTTYPE          out    )
     
     {
       // it is equivalent to the equation

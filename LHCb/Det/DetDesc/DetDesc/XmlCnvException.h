@@ -27,10 +27,10 @@ class XmlCnvException: public GaudiException
 public: 
   ///
   inline XmlCnvException( const std::string    & message                       , 
-			  const StatusCode     & sc      = StatusCode::FAILURE );
+                          const StatusCode     & sc      = StatusCode::FAILURE );
   inline XmlCnvException( const std::string    & message                       ,
-			  const GaudiException & ge                            ,
-			  const StatusCode     & sc      = StatusCode::FAILURE );
+                          const GaudiException & ge                            ,
+                          const StatusCode     & sc      = StatusCode::FAILURE );
   inline XmlCnvException( const XmlCnvException& ) ;
   ///
   virtual inline ~XmlCnvException(); 

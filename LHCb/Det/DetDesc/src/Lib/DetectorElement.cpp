@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.4 2001-03-04 14:56:07 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.5 2001-03-07 13:06:13 ibelyaev Exp $
 #include "GaudiKernel/Kernel.h"
 
 #include "GaudiKernel/IGeometryInfo.h"
@@ -24,8 +24,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DetectorElement::DetectorElement( const std::string&   name        ,
-				  const ITime&         validSince  ,   
-				  const ITime&         validTill   )
+                                  const ITime&         validSince  ,   
+                                  const ITime&         validTill   )
   : DataObject           (  name   )
   , m_de_iGeometry       (    0    ) 
   // 
@@ -202,8 +202,8 @@ const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string& Log
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string& LogVol   , 
-							  const std::string& Support  ,
-							  const std::string& NamePath )
+                                                          const std::string& Support  ,
+                                                          const std::string& NamePath )
 {
   Assert( 0 == geometry() , "Could not create REGULAR(1): Geometry already exist!" );
   m_de_iGeometry = new GeometryInfo( this , LogVol , Support , NamePath );
@@ -211,8 +211,8 @@ const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string& Log
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
-							  const std::string           & Support  ,
-							  const ILVolume::ReplicaPath & rPath    ) 
+                                                          const std::string           & Support  ,
+                                                          const ILVolume::ReplicaPath & rPath    ) 
 {
   Assert( 0 == geometry() , "Could not create REGULAR(2): Geometry already exist!" );
   m_de_iGeometry = new GeometryInfo( this , LogVol , Support , rPath );
@@ -232,7 +232,7 @@ const ITime&  DetectorElement::validTill  ()
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void          DetectorElement::setValidity       ( const ITime& Since , 
-								const ITime& Till )
+                                                                const ITime& Till )
 {
   setValiditySince( Since );
   setValidityTill ( Till  );

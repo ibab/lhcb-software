@@ -53,8 +53,8 @@ inline IGeometryInfo*       TransportSvc::setPreviousGeometry  ( IGeometryInfo* 
 ///
 
 inline void TransportSvc::Assert( bool                assertion  , 
-				  const std::string&  Message    , 
-				  const StatusCode&   statusCode ) const 
+                                  const std::string&  Message    , 
+                                  const StatusCode&   statusCode ) const 
 { if( !assertion ) { throw TransportSvcException( Message , statusCode ); } };
 
 ///
@@ -62,9 +62,9 @@ inline void TransportSvc::Assert( bool                assertion  ,
 ///
 
 inline void TransportSvc::Assert( bool                  assertion  , 
-				  const std::string&    Message    ,
+                                  const std::string&    Message    ,
                                   const GaudiException& Exception  ,  
-				  const StatusCode&     statusCode ) const 
+                                  const StatusCode&     statusCode ) const 
 { if( !assertion ) { throw TransportSvcException( Message , Exception , statusCode ); } };
 
 ///

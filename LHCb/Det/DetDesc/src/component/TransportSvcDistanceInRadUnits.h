@@ -17,10 +17,10 @@
 ///     Estimate the distance between 2 points in units of radiation length units 
 ///
 double TransportSvc::distanceInRadUnits( const HepPoint3D& point1              ,  /// first  point 
-					 const HepPoint3D& point2              ,  /// second point 
-					 double            threshold           ,  /// threshold value 
-					 IGeometryInfo*    alternativeGeometry ,  /// source of alternative geometry information 
-					 IGeometryInfo*    geometryGuess       )  /// a guess for navigation
+                                         const HepPoint3D& point2              ,  /// second point 
+                                         double            threshold           ,  /// threshold value 
+                                         IGeometryInfo*    alternativeGeometry ,  /// source of alternative geometry information 
+                                         IGeometryInfo*    geometryGuess       )  /// a guess for navigation
 {
   ///
   ///
@@ -34,7 +34,7 @@ double TransportSvc::distanceInRadUnits( const HepPoint3D& point1              ,
   HepVector3D Vector( point2 - point1 ) ; 
   //unsigned long nIntrsct = 
   intersections( point1              ,   /// initial point on the line 
-	               Vector              ,   /// direction vector of the line 
+                       Vector              ,   /// direction vector of the line 
                  0.0                 ,   /// minimal value of the parameter of the line  
                  1.0                 ,   /// maximal value of the parameter of the line 
                  m_local_intersects  ,   /// (output) container of intersections 
@@ -49,9 +49,9 @@ double TransportSvc::distanceInRadUnits( const HepPoint3D& point1              ,
   
   double RadLength = 
     std::accumulate(  m_local_intersects.begin()                              ,  
-		      m_local_intersects.end  ()                              , 
-		      0.0                                                     ,   /// initial value
-		      VolumeIntersectionIntervals::AccumulateIntersections()  );  /// "accumulator"
+                      m_local_intersects.end  ()                              , 
+                      0.0                                                     ,   /// initial value
+                      VolumeIntersectionIntervals::AccumulateIntersections()  );  /// "accumulator"
   ///
   const ISolid::Tick TickLength = Vector.mag(); 
   ///

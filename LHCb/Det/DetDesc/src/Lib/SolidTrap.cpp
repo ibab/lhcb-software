@@ -16,17 +16,17 @@
 
 /// constructor //////////////////////////////////////////////////////////////////////////////////////////////////
 SolidTrap::SolidTrap( const std::string&  Name             , /* name of this solid */ 
-		      const double        ZHalfLength      , /* half length along z-axes for given solid */
-		      const double        Theta            , /* polar angle of "axe" of this trapezoid   */  
-		      const double        Phi              , /* asimuthal angle of the "axe" of this trapezoid */   
-		      const double        DyAtMinusZ       ,  
-		      const double        DxAtMinusZMinusY , 
-		      const double        DxAtMinusZPlusY  ,
-		      const double        AlphaAtMinusZ    ,
-		      const double        DyAtPlusZ        ,  
-		      const double        DxAtPlusZMinusY  , 
-		      const double        DxAtPlusZPlusY   ,
-		      const double        AlphaAtPlusZ    )
+                      const double        ZHalfLength      , /* half length along z-axes for given solid */
+                      const double        Theta            , /* polar angle of "axe" of this trapezoid   */  
+                      const double        Phi              , /* asimuthal angle of the "axe" of this trapezoid */   
+                      const double        DyAtMinusZ       ,  
+                      const double        DxAtMinusZMinusY , 
+                      const double        DxAtMinusZPlusY  ,
+                      const double        AlphaAtMinusZ    ,
+                      const double        DyAtPlusZ        ,  
+                      const double        DxAtPlusZMinusY  , 
+                      const double        DxAtPlusZPlusY   ,
+                      const double        AlphaAtPlusZ    )
   ///
   : SolidPolyHedronHelper   (                  ) 
   , m_trap_name             ( Name             ) 
@@ -197,18 +197,18 @@ StreamBuffer& SolidTrap::serialize( StreamBuffer& s )
 StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const 
 {
   return s << typeName() 
-	   << m_trap_name         
-	   << m_trap_zHalfLength    
-	   << m_trap_theta           
-	   << m_trap_phi              
-	   << m_trap_dyAtMinusZ       
-	   << m_trap_dxAtMinusZMinusY 
-	   << m_trap_dxAtMinusZPlusY  
-	   << m_trap_alphaAtMinusZ    
-	   << m_trap_dyAtPlusZ        
-	   << m_trap_dxAtPlusZMinusY  
-	   << m_trap_dxAtPlusZPlusY   
-	   << m_trap_alphaAtPlusZ  ; 
+           << m_trap_name         
+           << m_trap_zHalfLength    
+           << m_trap_theta           
+           << m_trap_phi              
+           << m_trap_dyAtMinusZ       
+           << m_trap_dxAtMinusZMinusY 
+           << m_trap_dxAtMinusZPlusY  
+           << m_trap_alphaAtMinusZ    
+           << m_trap_dyAtPlusZ        
+           << m_trap_dxAtPlusZMinusY  
+           << m_trap_dxAtPlusZPlusY   
+           << m_trap_alphaAtPlusZ  ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidTrap::~SolidTrap()
@@ -240,7 +240,7 @@ const ISolid*           SolidTrap::cover         () const
       ymx2 = abs( point(i1).y() ) > ymx2 ? abs( point(i1).y() ) : ymx2 ; 
     }    
   ISolid* cov = new SolidTrd( "Cover for " + name  () , 
-			      zHalfLength          () ,
+                              zHalfLength          () ,
                               xmx1         , ymx1     , 
                               xmx2         , ymx2     );
   m_trap_cover = cov; 

@@ -29,13 +29,13 @@ public:
   //
   // constructorm, all sizes in mm, all angles in radians 
   SolidCons( const std::string& name                                  ,
-	     const double       ZHalfLength                           , 
-	     const double       OuterRadiusAtMinusZ                   ,
-	     const double       OuterRadiusAtPlusZ                    ,
-	     const double       InnerRadiusAtMinusZ  =   0.0          , 
-	     const double       InnerRadiusAtPlusZ   =   0.0          , 
-	     const double       StartPhiAngle        =   0.0 * degree , 
-	     const double       DeltaPhiAngle        = 360.0 * degree ,
+             const double       ZHalfLength                           , 
+             const double       OuterRadiusAtMinusZ                   ,
+             const double       OuterRadiusAtPlusZ                    ,
+             const double       InnerRadiusAtMinusZ  =   0.0          , 
+             const double       InnerRadiusAtPlusZ   =   0.0          , 
+             const double       StartPhiAngle        =   0.0 * degree , 
+             const double       DeltaPhiAngle        = 360.0 * degree ,
              const int          CoverModel           =   0            );
   //
   // destructor 
@@ -66,18 +66,18 @@ public:
       Return the number of intersection points (=size of Ticks container)   
   */
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D & Point  ,          /// initial point for teh line 
-						   const HepVector3D& Vector ,          /// vector along the line 
-						   ISolid::Ticks    & ticks  ) const ;  /// output container of "Ticks"
+                                                   const HepVector3D& Vector ,          /// vector along the line 
+                                                   ISolid::Ticks    & ticks  ) const ;  /// output container of "Ticks"
   /** calculate the intersection points("ticks") with a given line. 
       Input - line, paramterised by (Point + Vector * Tick) 
       "Tick" is just a value of parameter, at which the intersection occurs 
       Return the number of intersection points (=size of Ticks container)   
   */
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          /// initial point for teh line 
-						   const HepVector3D & Vector  ,          /// vector along the line
-						   const ISolid::Tick& tickMin ,          /// minimal value of tick 
-						   const ISolid::Tick& tickMax ,          /// maximal value of tick 
-						   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
+                                                   const HepVector3D & Vector  ,          /// vector along the line
+                                                   const ISolid::Tick& tickMin ,          /// minimal value of tick 
+                                                   const ISolid::Tick& tickMax ,          /// maximal value of tick 
+                                                   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
   // inner radius at minus Z  
   inline double  innerRadiusAtMinusZ () const { return m_cons_innerRadiusMinusZ ; };
   // outer radius at minus Z  

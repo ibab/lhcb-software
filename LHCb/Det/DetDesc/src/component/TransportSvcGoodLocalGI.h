@@ -17,8 +17,8 @@
 ///
 
 bool  TransportSvc::goodLocalGI( const HepPoint3D& point1 , 
-				 const HepPoint3D& point2 , 
-				 IGeometryInfo*    gi     ) const  
+                                 const HepPoint3D& point2 , 
+                                 IGeometryInfo*    gi     ) const  
 {
   ///
   if( 0 == gi )                    { return false ; } 
@@ -32,8 +32,8 @@ bool  TransportSvc::goodLocalGI( const HepPoint3D& point1 ,
   ISolid::Tick  tickMax = 1; 
   ///
   unsigned int nInt = lv->solid()->intersectionTicks( gi->matrix() * point1                         , 
-						      gi->matrix() * HepVector3D( point2 - point1 ) , 
-						      tickMin   ,     tickMax  ,  m_local_ticks     ) ; 
+                                                      gi->matrix() * HepVector3D( point2 - point1 ) , 
+                                                      tickMin   ,     tickMax  ,  m_local_ticks     ) ; 
   /// 
   return ( 2 == nInt && tickMin == *(m_local_ticks.begin()) && tickMax == *(m_local_ticks.rbegin()) ) ? true : false ; 
   ///

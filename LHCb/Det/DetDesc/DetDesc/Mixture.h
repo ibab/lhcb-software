@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.5 2001-03-04 14:56:05 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Mixture.h,v 1.6 2001-03-07 13:06:11 ibelyaev Exp $
 #ifndef DETDESC_MIXTURE_H
 #define DETDESC_MIXTURE_H
 /// Include files
@@ -30,7 +30,7 @@ public:
   ///
   /// Constructors for simple materials
   Mixture( const std::string&  name    = ""               , 
-	   const double        a       = 0                , 
+           const double        a       = 0                , 
            const double        z       = 0                , 
            const double        density = 0                ,
            const double        rl      = 0                , 
@@ -73,13 +73,13 @@ public:
   
   /// Obligatory implementation of Material interface
   
-  ///	Atomic mass [g/mole]
+  ///        Atomic mass [g/mole]
   virtual inline const double    A() const;
   virtual inline void         setA( const double value );
-  ///	Atomic number
+  ///        Atomic number
   virtual inline const double    Z() const;
   virtual inline void         setZ( const double value );  
-  ///	Number of nucleons
+  ///        Number of nucleons
   virtual inline const double    N() const;
   virtual inline void         setN( const double value );
   ///

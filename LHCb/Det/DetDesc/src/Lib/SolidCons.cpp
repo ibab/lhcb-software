@@ -13,13 +13,13 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidCons::SolidCons( const std::string & name  ,
-		      double ZHalfLength        , 
-		      double OuterRadiusMinusZ  ,
-		      double OuterRadiusPlusZ   ,
-		      double InnerRadiusMinusZ  , 
-		      double InnerRadiusPlusZ   , 
-		      double StartPhiAngle      , 
-		      double DeltaPhiAngle      ,
+                      double ZHalfLength        , 
+                      double OuterRadiusMinusZ  ,
+                      double OuterRadiusPlusZ   ,
+                      double InnerRadiusMinusZ  , 
+                      double InnerRadiusPlusZ   , 
+                      double StartPhiAngle      , 
+                      double DeltaPhiAngle      ,
                       int    CoverModel         )
   : m_cons_name              ( name               )
   , m_cons_zHalfLength       ( ZHalfLength        )
@@ -105,15 +105,15 @@ StreamBuffer& SolidCons::serialize( StreamBuffer& s ) const
 {
   ///
   return s <<  typeName() 
-	   <<  m_cons_name              
-	   <<  m_cons_zHalfLength       
-	   <<  m_cons_outerRadiusMinusZ 
-	   <<  m_cons_outerRadiusPlusZ  
-	   <<  m_cons_innerRadiusMinusZ 
-	   <<  m_cons_innerRadiusPlusZ  
-	   <<  m_cons_startPhiAngle    
-	   <<  m_cons_deltaPhiAngle    
-	   <<  m_cons_coverModel ;   
+           <<  m_cons_name              
+           <<  m_cons_zHalfLength       
+           <<  m_cons_outerRadiusMinusZ 
+           <<  m_cons_outerRadiusPlusZ  
+           <<  m_cons_innerRadiusMinusZ 
+           <<  m_cons_innerRadiusPlusZ  
+           <<  m_cons_startPhiAngle    
+           <<  m_cons_deltaPhiAngle    
+           <<  m_cons_coverModel ;   
 };
 /** construction of covering solid:
     Model == 0 :
@@ -134,40 +134,40 @@ const ISolid*           SolidCons::cover         () const
     {
       // cover for conical tube segment is conical tube 
       if      ( 0.0*degree  != startPhiAngle  () || 360.0*degree    != deltaPhiAngle         () )  
-	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
-				outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
-				innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ); }
+        { cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+                                outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+                                innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ); }
       // cover for conical tube is "conical cylinder"  
       else if ( 0.0 != innerRadiusAtMinusZ() || 0.0 != innerRadiusAtPlusZ() )
-	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength     () , 
-				outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() );}
+        { cov = new SolidCons  ("Cover for " + name     () , zHalfLength     () , 
+                                outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() );}
       // cover for "conical cylinder" is TRD  
       else                                                                        
-	{ cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
-			       outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
-			       outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
+        { cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
+                               outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
+                               outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
     }
   else
     {
       //    cover for conical tube     segment is conical cylinder segment 
       if ( 0.0 != innerRadiusAtMinusZ() || 0.0 != innerRadiusAtPlusZ() )
-	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
-				outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
-				0.0 * mm                   ,  0.0 * mm            , 
-				startPhiAngle           () , deltaPhiAngle     () , 
-				m_cons_coverModel                                 );}
+        { cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+                                outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+                                0.0 * mm                   ,  0.0 * mm            , 
+                                startPhiAngle           () , deltaPhiAngle     () , 
+                                m_cons_coverModel                                 );}
       //    cover for conical cylinder segment is conical cylinder 
       else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree    != deltaPhiAngle         () )  
-	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
-				outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
-				innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ,
-				0.0 * degree               , 360.0 * degree       , 
-				m_cons_coverModel                                 ); }
+        { cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+                                outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+                                innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ,
+                                0.0 * degree               , 360.0 * degree       , 
+                                m_cons_coverModel                                 ); }
       // cover for "conical cylinder" is TRD  
       else                                                                        
-	{ cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
-			       outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
-			       outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
+        { cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
+                               outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
+                               outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
     }
   //
   if( 0 == cov ) { return this; } 
@@ -180,8 +180,8 @@ const ISolid*           SolidCons::cover         () const
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D & point  ,          // initial point for teh line 
-						    const HepVector3D& vect   ,          // vector along the line 
-						    ISolid::Ticks    & ticks  ) const    // output container of "Ticks"
+                                                    const HepVector3D& vect   ,          // vector along the line 
+                                                    ISolid::Ticks    & ticks  ) const    // output container of "Ticks"
 {
   
   // line with numm direction vector is not able to intersect any solid 
@@ -197,14 +197,14 @@ inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D & point  , 
     }   
   /// intersect with outer conical surface
   SolidTicks::LineIntersectsTheCone( point , vect , 
-				     outerRadiusAtMinusZ() , outerRadiusAtPlusZ () , 
-				     -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) );   
+                                     outerRadiusAtMinusZ() , outerRadiusAtPlusZ () , 
+                                     -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) );   
   /// intersect with inner conical surface
   if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
     {
       SolidTicks::LineIntersectsTheCone( point , vect , 
-					 innerRadiusAtMinusZ() , innerRadiusAtPlusZ () , 
-					 -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) );     
+                                         innerRadiusAtMinusZ() , innerRadiusAtPlusZ () , 
+                                         -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) );     
     }
   /// sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
@@ -215,10 +215,10 @@ inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D & point  , 
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D &   point   ,          // initial point for teh line 
-						    const HepVector3D&   vect    ,          // vector along the line 
+                                                    const HepVector3D&   vect    ,          // vector along the line 
                                                     const ISolid::Tick& tickMin ,
                                                     const ISolid::Tick& tickMax ,
-						    ISolid::Ticks&      ticks   ) const    // output container of "Ticks"
+                                                    ISolid::Ticks&      ticks   ) const    // output container of "Ticks"
 {
   ///
   intersectionTicks( point , vect , ticks ); 
@@ -269,9 +269,9 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
   if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
     { 
       os << " \t\t\tstartPhiAngle  [degree]  ="   << std::setw(12) << startPhiAngle        () / degree  
-	 << std::endl 
-	 << " \t\t\tdeltaPhiAngle  [degree]  ="   << std::setw(12) << deltaPhiAngle        () / degree 
-	 << std::endl ; 
+         << std::endl 
+         << " \t\t\tdeltaPhiAngle  [degree]  ="   << std::setw(12) << deltaPhiAngle        () / degree 
+         << std::endl ; 
     }
   return os ;
 };
@@ -294,9 +294,9 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
   if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
     { 
       os << " \t\t\tstartPhiAngle  [degree]  ="   << std::setw(12) << startPhiAngle        () / degree  
-	 << endreq 
-	 << " \t\t\tdeltaPhiAngle  [degree]  ="   << std::setw(12) << deltaPhiAngle        () / degree 
-	 << endreq ; 
+         << endreq 
+         << " \t\t\tdeltaPhiAngle  [degree]  ="   << std::setw(12) << deltaPhiAngle        () / degree 
+         << endreq ; 
     }
   return os ;
 };

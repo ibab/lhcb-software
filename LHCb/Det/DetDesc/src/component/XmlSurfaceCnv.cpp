@@ -68,10 +68,10 @@ StatusCode XmlSurfaceCnv::createObj( IOpaqueAddress* Address, DataObject*& Objec
     StatusCode status = initParser();
     if( status.isFailure() )
       {
-	log << MSG::FATAL << "XML Parser init failed, can't convert "
-	    << address->objectName() << " " << endreq;
-	finiParser();
-	return status;
+        log << MSG::FATAL << "XML Parser init failed, can't convert "
+            << address->objectName() << " " << endreq;
+        finiParser();
+        return status;
       }
   }
   ///
@@ -79,10 +79,10 @@ StatusCode XmlSurfaceCnv::createObj( IOpaqueAddress* Address, DataObject*& Objec
     StatusCode status = parse( address->dbName().c_str() );
     if( status.isFailure() )
       {
-	log << MSG::FATAL << "XML Parser parse failed, can't convert "
-	    << address->objectName() << "!" << endreq;
-	finiParser();
-	return status ;
+        log << MSG::FATAL << "XML Parser parse failed, can't convert "
+            << address->objectName() << "!" << endreq;
+        finiParser();
+        return status ;
       }
   }
   ///
@@ -90,9 +90,9 @@ StatusCode XmlSurfaceCnv::createObj( IOpaqueAddress* Address, DataObject*& Objec
     StatusCode status = finiParser();
     if( status.isFailure() )
       {
-	log << MSG::FATAL << "XML Parser fini failed, can't convert "
-	    << address->objectName() << "!" << endreq;
-	return status;
+        log << MSG::FATAL << "XML Parser fini failed, can't convert "
+            << address->objectName() << "!" << endreq;
+        return status;
       }
   }
   ///
@@ -102,7 +102,7 @@ StatusCode XmlSurfaceCnv::createObj( IOpaqueAddress* Address, DataObject*& Objec
 };
 //////////////////////////////////////////////////////////////////////////////////////////
 void XmlSurfaceCnv::startElement( const char* const    name ,
-					    XmlCnvAttributeList& atts ) 
+                                            XmlCnvAttributeList& atts ) 
 {
   ///
   MsgStream log( msgSvc(), "XmlSurfaceCnv" );
@@ -113,8 +113,8 @@ void XmlSurfaceCnv::startElement( const char* const    name ,
   for( unsigned int i = 0; i < atts.getLength(); i++ ) 
     {
       log << MSG::VERBOSE 
-	  << " \tNAME='"  << atts.getName  ( i ) <<"'"
-	  << " \tVALUE='" << atts.getValue ( i ) <<"'"
+          << " \tNAME='"  << atts.getName  ( i ) <<"'"
+          << " \tVALUE='" << atts.getValue ( i ) <<"'"
           << " \tTYPE='"  << atts.getType  ( i ) <<"'" << endreq ;
     }
   ///
@@ -125,83 +125,83 @@ void XmlSurfaceCnv::startElement( const char* const    name ,
       const std::string baseName = m_objRcpt->objectName().substr( pos + 1 );
       
       if( baseName != atts.getValue( "name" ) ) 
-	{
-	  log << MSG::WARNING 
-	      << "Base name='"                        << baseName                << "'" 
-	      << " \textracted from '"                << m_objRcpt->objectName() << "'"
+        {
+          log << MSG::WARNING 
+              << "Base name='"                        << baseName                << "'" 
+              << " \textracted from '"                << m_objRcpt->objectName() << "'"
               << " \tis not equal to atribute name='" << atts.getValue("name")   << "'" << endreq;
-	}
+        }
       else /// OK
-	{
-	  Surface* surface = new Surface( baseName );
-	  m_dataObj        = surface ; 
-	  /// model 
- 	  {
-	    const std::string    value ( atts.getValue( "model"      )  );
-	    const double       v_value = xmlSvc()->eval( value , false ) ;
-	    const unsigned int i_value = (unsigned int) v_value          ; 
-	    if( i_value != v_value ) 
-	      { 
-		log << MSG::WARNING 
-		    <<  " Surface("         << baseName <<")"  
-		    <<  " parameter '"      << "model"  << "'" 
+        {
+          Surface* surface = new Surface( baseName );
+          m_dataObj        = surface ; 
+          /// model 
+           {
+            const std::string    value ( atts.getValue( "model"      )  );
+            const double       v_value = xmlSvc()->eval( value , false ) ;
+            const unsigned int i_value = (unsigned int) v_value          ; 
+            if( i_value != v_value ) 
+              { 
+                log << MSG::WARNING 
+                    <<  " Surface("         << baseName <<")"  
+                    <<  " parameter '"      << "model"  << "'" 
                     << "("                  << value    << ")"
                     <<  "="                 << v_value 
-		    <<  " is truncated to=" << i_value  << endreq; 
-	      }           
-	    surface->setModel ( i_value ); 
-	  }
-	  /// finish
- 	  {
-	    const std::string    value ( atts.getValue( "finish"      )  );
-	    const double       v_value = xmlSvc()->eval( value , false ) ;
-	    const unsigned int i_value = (unsigned int) v_value          ; 
-	    if( i_value != v_value ) 
-	      { 
-		log << MSG::WARNING 
-		    <<  " Surface("         << baseName <<")"  
-		    <<  " parameter '"      << "finish" << "'" 
+                    <<  " is truncated to=" << i_value  << endreq; 
+              }           
+            surface->setModel ( i_value ); 
+          }
+          /// finish
+           {
+            const std::string    value ( atts.getValue( "finish"      )  );
+            const double       v_value = xmlSvc()->eval( value , false ) ;
+            const unsigned int i_value = (unsigned int) v_value          ; 
+            if( i_value != v_value ) 
+              { 
+                log << MSG::WARNING 
+                    <<  " Surface("         << baseName <<")"  
+                    <<  " parameter '"      << "finish" << "'" 
                     << "("                  << value    << ")"
                     <<  "="                 << v_value 
-		    <<  " is truncated to=" << i_value  << endreq; 
-	      }           
-	    surface->setFinish ( i_value ); 
-	  }
-	  /// type 
- 	  {
-	    const std::string    value ( atts.getValue( "type"   )  );
-	    const double       v_value = xmlSvc()->eval( value , false ) ;
-	    const unsigned int i_value = (unsigned int) v_value          ; 
-	    if( i_value != v_value ) 
-	      { 
-		log << MSG::WARNING 
-		    <<  " Surface("         << baseName <<")"  
-		    <<  " parameter '"      << "type"   << "'"  
+                    <<  " is truncated to=" << i_value  << endreq; 
+              }           
+            surface->setFinish ( i_value ); 
+          }
+          /// type 
+           {
+            const std::string    value ( atts.getValue( "type"   )  );
+            const double       v_value = xmlSvc()->eval( value , false ) ;
+            const unsigned int i_value = (unsigned int) v_value          ; 
+            if( i_value != v_value ) 
+              { 
+                log << MSG::WARNING 
+                    <<  " Surface("         << baseName <<")"  
+                    <<  " parameter '"      << "type"   << "'"  
                     << "("                  << value    << ")"
                     <<  "="                 << v_value 
-		    <<  " is truncated to=" << i_value  << endreq; 
-	      }           
-	    surface->setType ( i_value ); 
-	  }
-	  /// value 
- 	  {
-	    const std::string    value ( atts.getValue( "value"    )  );
-	    const double       v_value = xmlSvc()->eval( value , false ) ;
-	    surface->setValue ( v_value ); 
-	  }
-	  /// first volume  
- 	  {
-	    const std::string    value ( atts.getValue( "volfirst" )  );
-	    surface->setFirstVol( value ); 
-	  }
-	  /// second volume  
- 	  { 
-	    const std::string    value ( atts.getValue( "volsecond" )  );
-	    surface->setSecondVol( value ); 
-	  }
+                    <<  " is truncated to=" << i_value  << endreq; 
+              }           
+            surface->setType ( i_value ); 
+          }
+          /// value 
+           {
+            const std::string    value ( atts.getValue( "value"    )  );
+            const double       v_value = xmlSvc()->eval( value , false ) ;
+            surface->setValue ( v_value ); 
+          }
+          /// first volume  
+           {
+            const std::string    value ( atts.getValue( "volfirst" )  );
+            surface->setFirstVol( value ); 
+          }
+          /// second volume  
+           { 
+            const std::string    value ( atts.getValue( "volsecond" )  );
+            surface->setSecondVol( value ); 
+          }
           ///
           m_tagRead = true;   
-	}
+        }
     }      
   else if( "tabprops" == tagName && m_tagRead ) 
     {
@@ -216,8 +216,8 @@ void XmlSurfaceCnv::startElement( const char* const    name ,
   else 
     {
       log << MSG::ERROR << "Got unexpected tag/m_tagRead combinations in startElement:"
-	  << atts.getValue( "name" )          << " " 
-	  << ( m_tagRead ? "true" : "false" ) << " " << endreq;
+          << atts.getValue( "name" )          << " " 
+          << ( m_tagRead ? "true" : "false" ) << " " << endreq;
     }
 };
 //////////////////////////////////////////////////////////////////////////////////////////

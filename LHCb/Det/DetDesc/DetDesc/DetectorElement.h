@@ -35,7 +35,7 @@ template <class T> class DataObjectFactory;
 ///
 class DetectorElement: public DataObject,
                        public IDetectorElement,
-		       public IValidity 
+                       public IValidity 
 {
   ///
   friend class DataObjectFactory<DetectorElement> ;  
@@ -46,8 +46,8 @@ class DetectorElement: public DataObject,
   DetectorElement( const std::string& name  = "NotYetDefined" );
   
   DetectorElement( const std::string& name         ,
-		   const ITime&       iValidSince  , 
-		   const ITime&       iValidTill   ); 
+                   const ITime&       iValidSince  , 
+                   const ITime&       iValidTill   ); 
   ///  Destructor 
   virtual ~DetectorElement(); 
  public:
@@ -150,7 +150,7 @@ class DetectorElement: public DataObject,
   inline const  ITime&  validSince       ()                ;    
   inline const  ITime&  validTill        ()                ;   
   inline        void    setValidity      ( const ITime& , 
-					   const ITime& )  ;  
+                                           const ITime& )  ;  
   inline        void    setValiditySince ( const ITime& )  ;  
   inline        void    setValidityTill  ( const ITime& )  ;   
   StatusCode            updateValidity   ()                ;   // not yet
@@ -187,11 +187,11 @@ class DetectorElement: public DataObject,
   const IGeometryInfo* createGeometryInfo( const std::string&            logVol      );
   // create "regular"
   const IGeometryInfo* createGeometryInfo( const std::string&            logVol      , 
-					   const std::string&            support     ,
-					   const ILVolume::ReplicaPath & replicaPath );
+                                           const std::string&            support     ,
+                                           const ILVolume::ReplicaPath & replicaPath );
   const IGeometryInfo* createGeometryInfo( const std::string&            logVol      , 
-					   const std::string&            support     ,
-					   const std::string&            namePath    );
+                                           const std::string&            support     ,
+                                           const std::string&            namePath    );
  protected:
   /// specific 
   void setGeometry( IGeometryInfo* geoInfo ) { m_de_iGeometry = geoInfo; }

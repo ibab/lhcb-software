@@ -20,9 +20,9 @@
 ///
 
 unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , // initial point at the line 
-				     const HepVector3D        & Vector        , // direction vectot of the line 
-				     ILVolume::Intersections  & intersections , // output container  
-				     const double               Threshold     ) // threshold value 
+                                     const HepVector3D        & Vector        , // direction vectot of the line 
+                                     ILVolume::Intersections  & intersections , // output container  
+                                     const double               Threshold     ) // threshold value 
 {
   /// useful type definition  
   typedef std::vector<ILVolume::Interval>    Intervals; 
@@ -53,15 +53,15 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
       VolumeIntersectionIntervals::TicksToIntervals( ticks , std::back_inserter( intervals ) );
       /// the total length of intervals (in tick units)
       double Length    = std::accumulate( intervals.begin() , intervals.end() ,                 // what to accumulate?
-					  0.0               ,                                   // initial value 
-					  VolumeIntersectionIntervals::AccumulateIntervals() );  // "accumulator"
+                                          0.0               ,                                   // initial value 
+                                          VolumeIntersectionIntervals::AccumulateIntervals() );  // "accumulator"
       /// this volume is not to be used for estimations of radiation thickness 
       if( Length * TickLength <= Threshold * material()->radiationLength() ) 
-	{
-	  useThisVolume = false ;   
-	  ticks.clear(); 
-	  intervals.clear(); 
-	}
+        {
+          useThisVolume = false ;   
+          ticks.clear(); 
+          intervals.clear(); 
+        }
     }
   /// if this volume is to be used,  find intersections with REAL solid (not cover) 
   if( useThisVolume && solid() != pSolid ) 
@@ -75,15 +75,15 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
       VolumeIntersectionIntervals::TicksToIntervals( ticks , std::back_inserter( intervals ) );  
       /// the total length of intervals in Tick units
       double Length    = std::accumulate( intervals.begin() , intervals.end() ,                 // what to accumulate?
-					  0.0               ,                                   // initial value 
-					  VolumeIntersectionIntervals::AccumulateIntervals() ); // "accumulator"
+                                          0.0               ,                                   // initial value 
+                                          VolumeIntersectionIntervals::AccumulateIntervals() ); // "accumulator"
       /// this volume is not to be used for estimations of radiation thickness 
       if( Threshold > 0 && Length * TickLength < Threshold * material()->radiationLength() ) 
-	{ 
-	  ticks.clear()         ; 
-	  intervals.clear()     ;
-	  useThisVolume = false ; 
-	}      
+        { 
+          ticks.clear()         ; 
+          intervals.clear()     ;
+          useThisVolume = false ; 
+        }      
     }
   /// look for the intersections of the given line with daughter elements 
   /// construct the intersections container for daughter volumes 
@@ -101,8 +101,8 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
     {
       /// we have only child container just copy it to the output 
       std::copy( childIntersections.begin()          , 
-		 childIntersections.end  ()          , 
-		 std::back_inserter( intersections ) ) ;
+                 childIntersections.end  ()          , 
+                 std::back_inserter( intersections ) ) ;
       return intersections.size();                                                  /// RETURN!!!
       ///
     }
@@ -110,12 +110,12 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
     {
       /// perform quite non trivial merging 
       StatusCode sc = 
-	VolumeIntersectionIntervals::MergeOwnAndChildContainers( ownIntersections                    , 
-								 childIntersections                  ,
-								 std::back_inserter( intersections ) );
+        VolumeIntersectionIntervals::MergeOwnAndChildContainers( ownIntersections                    , 
+                                                                 childIntersections                  ,
+                                                                 std::back_inserter( intersections ) );
       /// check the result!!!
       Assert( sc.isSuccess() , 
-	      "LVolume::intersectLine::(1) fatal error in Geometry for lvolume="+fullpath() , sc );
+              "LVolume::intersectLine::(1) fatal error in Geometry for lvolume="+fullpath() , sc );
     }
   ///  
   return intersections.size(); 
@@ -132,11 +132,11 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
 ///
 
 unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , // initial point at the line 
-				     const HepVector3D        & Vector        , // direction vectot of the line 
-				     ILVolume::Intersections  & intersections , // output container  
-				     ISolid::Tick               tickMin       , // minimum value of possible Tick
-				     ISolid::Tick               tickMax       , // maximum value of possible Tick
-				     const double               Threshold     ) // threshold value 
+                                     const HepVector3D        & Vector        , // direction vectot of the line 
+                                     ILVolume::Intersections  & intersections , // output container  
+                                     ISolid::Tick               tickMin       , // minimum value of possible Tick
+                                     ISolid::Tick               tickMax       , // maximum value of possible Tick
+                                     const double               Threshold     ) // threshold value 
 {
   /// useful type definition 
   typedef std::vector<ILVolume::Interval>    Intervals; 
@@ -179,15 +179,15 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
       VolumeIntersectionIntervals::TicksToIntervals( ticks , std::back_inserter( intervals ) );
       /// the total length of intervals in Tick units 
       double Length = std::accumulate( intervals.begin() , intervals.end() ,                  // what to accumulate?
-				       0.0               ,                                    // initial value 
-				       VolumeIntersectionIntervals::AccumulateIntervals() );  // "accumulator"
+                                       0.0               ,                                    // initial value 
+                                       VolumeIntersectionIntervals::AccumulateIntervals() );  // "accumulator"
       /// this volume is not to be used for estimations of radiation thickness 
       if( Length * TickLength <= Threshold * material()->radiationLength() ) 
-	{ 
-	  useThisVolume = false ;   
-	  intervals.clear(); 
-	  ticks.clear(); 
-	}
+        { 
+          useThisVolume = false ;   
+          intervals.clear(); 
+          ticks.clear(); 
+        }
     }
   /// if this volume is to be used,  find intersections with REAL solid (not cover) 
   /// no intersections with own solid ( at least 2 points are required! )
@@ -206,15 +206,15 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
       VolumeIntersectionIntervals::TicksToIntervals( ticks , std::back_inserter( intervals ) );  
       /// the total length of intervals in Tick units 
       double Length = std::accumulate( intervals.begin() , intervals.end() ,                 // what to accumulate?
-				       0.0               ,                                   // initial value 
-				       VolumeIntersectionIntervals::AccumulateIntervals() ); // "accumulator"
+                                       0.0               ,                                   // initial value 
+                                       VolumeIntersectionIntervals::AccumulateIntervals() ); // "accumulator"
       /// this volume is not to be used for estimations of radiation thickness 
       if( Length * TickLength < Threshold * material()->radiationLength() ) 
-	{ 
+        { 
           ticks.clear()         ; 
           intervals.clear()     ;
-	  useThisVolume = false ; 
-	}  
+          useThisVolume = false ; 
+        }  
     }
   /// look for the intersections of the given line with daughter elements 
   /// construct the intersections container for daughter volumes
@@ -232,18 +232,18 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
     {
       /// we have only child container - just copy it to the output 
       std::copy( childIntersections.begin()          , 
-		 childIntersections.end  ()          , 
-		 std::back_inserter( intersections ) ) ;
+                 childIntersections.end  ()          , 
+                 std::back_inserter( intersections ) ) ;
       return intersections.size();                                               // RETURN!!!
     }
   else   /// own container is NOT empty!
     {
       StatusCode sc = 
-	VolumeIntersectionIntervals::MergeOwnAndChildContainers( ownIntersections                    , 
-								 childIntersections                  ,
-								 std::back_inserter( intersections ) );
+        VolumeIntersectionIntervals::MergeOwnAndChildContainers( ownIntersections                    , 
+                                                                 childIntersections                  ,
+                                                                 std::back_inserter( intersections ) );
       Assert( sc.isSuccess() , 
-	      "LVolume::intersectLine::(2) fatal error in Geometry for lvolume="+fullpath() , sc );
+              "LVolume::intersectLine::(2) fatal error in Geometry for lvolume="+fullpath() , sc );
     }
   ///  
   return intersections.size(); 
@@ -251,11 +251,11 @@ unsigned int LVolume::intersectLine( const HepPoint3D         & Point         , 
 };
 /// Auxillary method  to calculate intersections with daughter volumes  
 unsigned int  LVolume::intersectDaughters( const HepPoint3D&        Point              , 
-					   const HepVector3D&       Vector             , 
-					   ILVolume::Intersections& childIntersections , 
-					   const ISolid::Tick       tickMin            , 
-					   const ISolid::Tick       tickMax            , 
-					   const double             Threshold          )
+                                           const HepVector3D&       Vector             , 
+                                           ILVolume::Intersections& childIntersections , 
+                                           const ISolid::Tick       tickMin            , 
+                                           const ISolid::Tick       tickMax            , 
+                                           const double             Threshold          )
 {
   ///
   if( pvEnd() ==  pvBegin() ) { return 0; }                                                      /// RETURN!!!
@@ -272,16 +272,16 @@ unsigned int  LVolume::intersectDaughters( const HepPoint3D&        Point       
     }
   ///
   std::sort( childIntersections.begin() , childIntersections.end() , 
-	     VolumeIntersectionIntervals::CompareIntersections() ); 
+             VolumeIntersectionIntervals::CompareIntersections() ); 
   ///
   return childIntersections.size(); 
   ///
 };
 /// Auxillary method  to calculate intersections with daughter volumes  
 unsigned int  LVolume::intersectDaughters( const HepPoint3D&        Point              , 
-					   const HepVector3D&       Vector             , 
-					   ILVolume::Intersections& childIntersections , 
-					   const double             Threshold          )
+                                           const HepVector3D&       Vector             , 
+                                           ILVolume::Intersections& childIntersections , 
+                                           const double             Threshold          )
 {
   ///
   if( pvEnd() ==  pvBegin() ) { return 0; }                                                      /// RETURN!!!
@@ -298,7 +298,7 @@ unsigned int  LVolume::intersectDaughters( const HepPoint3D&        Point       
     }
   ///
   std::sort( childIntersections.begin() , childIntersections.end() , 
-	     VolumeIntersectionIntervals::CompareIntersections() ); 
+             VolumeIntersectionIntervals::CompareIntersections() ); 
   ///
   return childIntersections.size(); 
   ///

@@ -5,14 +5,14 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 Mixture::Mixture( const std::string&  name    , 
-		  const double        a       , 
-		  const double        z       , 
-		  const double        density ,
-		  const double        rl      , 
-		  const double        al      ,
-		  const double        temp    ,
-		  const double        press   ,
-		  const eState s              )
+                  const double        a       , 
+                  const double        z       , 
+                  const double        density ,
+                  const double        rl      , 
+                  const double        al      ,
+                  const double        temp    ,
+                  const double        press   ,
+                  const eState s              )
   : Material( name ,         density , rl, al , temp , press , s )
   , m_elements(   )
   , m_atoms   (   )
@@ -164,7 +164,7 @@ StatusCode Mixture::computeByFraction()
       radlen  += Atomsi * elem->tsaiFactor() ; 
       ///
       if( elem->absorptionLength() > 0.0 ) 
-	{ lambda += frac/elem->absorptionLength() ; }
+        { lambda += frac/elem->absorptionLength() ; }
     } 
   ///
   if( radlen > 0 ) { setRadiationLength  ( 1.0 / radlen ) ; } 
@@ -223,26 +223,26 @@ MsgStream&        Mixture::fillStream ( MsgStream&   s ) const
   if( !m_elements.empty() )
     {
       s << "\t #MassComponents=" << std::setw(2)  << m_elements.size() 
-	<< endreq ;
+        << endreq ;
       for( Elements::const_iterator it  = m_elements.begin() ; m_elements.end() != it ; ++it )
-	{ 
-	  s << "\t\tcomponent#"     << std::setw(2) << it - m_elements.begin() 
-	    << " massfraction="     << std::setw(9) << it->first 
-	    << endreq 
-	    << "\t"                 << it->second; 
-	}
+        { 
+          s << "\t\tcomponent#"     << std::setw(2) << it - m_elements.begin() 
+            << " massfraction="     << std::setw(9) << it->first 
+            << endreq 
+            << "\t"                 << it->second; 
+        }
     }
   ///
   if( !m_atoms.empty() )
     {
       s << "\t #AtomComponents=" << std::setw(2)  << m_atoms.size() 
-	<< endreq ;
+        << endreq ;
       for( Atoms::const_iterator it  = m_atoms.begin() ; m_atoms.end() != it ; ++it )
-	{ 
-	  s << "\t\tcomponent#"  << std::setw(2) << it - m_atoms.begin() 
-	    << " atom="          << std::setw(2) << it 
-	    << endreq ; 
-	}
+        { 
+          s << "\t\tcomponent#"  << std::setw(2) << it - m_atoms.begin() 
+            << " atom="          << std::setw(2) << it 
+            << endreq ; 
+        }
     }
   return s;
 };    
@@ -253,26 +253,26 @@ std::ostream&     Mixture::fillStream ( std::ostream& s ) const
   if( !m_elements.empty() ) 
     {
       s << "\t #MassComponents=" << std::setw(2)  << m_elements.size()
-	<< std::endl ;
+        << std::endl ;
       for( Elements::const_iterator it  = m_elements.begin() ; m_elements.end() != it ; ++it )
-	{ 
-	  s << " \t\tcomponent#"    << std::setw(2) << it - m_elements.begin() 
-	    << " massfraction="     << std::setw(9) << it->first 
-	    << std::endl
-	    << "\t"                 << it->second; 
-	}
+        { 
+          s << " \t\tcomponent#"    << std::setw(2) << it - m_elements.begin() 
+            << " massfraction="     << std::setw(9) << it->first 
+            << std::endl
+            << "\t"                 << it->second; 
+        }
     }
   ///
   if( !m_atoms.empty() )
     {
       s << "\t #AtomComponents=" << std::setw(2)  << m_atoms.size() 
-	<< std::endl;
+        << std::endl;
       for( Atoms::const_iterator it  = m_atoms.begin() ; m_atoms.end() != it ; ++it )
-	{ 
-	  s << " \t\tcomponent#"    << std::setw(2) << it - m_atoms.begin() 
-	    << " atom="             << std::setw(2) << it 
-	    << std::endl ; 
-	}
+        { 
+          s << " \t\tcomponent#"    << std::setw(2) << it - m_atoms.begin() 
+            << " atom="             << std::setw(2) << it 
+            << std::endl ; 
+        }
     }
   return s;
 };    
@@ -288,9 +288,9 @@ StatusCode Mixture::addMyself()
   ///
   m_own = new Element( name             () ,
                        "XX"                , 
-		       A                () , 
-		       Z                () , 
-		       density          () , 
+                       A                () , 
+                       Z                () , 
+                       density          () , 
                        radiationLength  () , 
                        absorptionLength () , 
                        temperature      () , 

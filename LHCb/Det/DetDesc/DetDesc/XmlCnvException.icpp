@@ -6,13 +6,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const std::string& message , 
-					 const StatusCode & sc      )
+                                         const StatusCode & sc      )
   : GaudiException( message , "*XmlCnvException*" , sc )
 {};
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline XmlCnvException::XmlCnvException( const std::string    & message ,
-					 const GaudiException & ge      ,
-					 const StatusCode     & sc      )
+                                         const GaudiException & ge      ,
+                                         const StatusCode     & sc      )
   : GaudiException( message , "*XmlCnvException*" , sc , ge      )
 {};
 ////////////////////////////////////////////////////////////////////////////////////////////

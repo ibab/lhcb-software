@@ -6,9 +6,9 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidBox::SolidBox( const std::string& name        ,
-		    const double       XHalfLength , 
-		    const double       YHalfLength , 
-		    const double       ZHalfLength )
+                    const double       XHalfLength , 
+                    const double       YHalfLength , 
+                    const double       ZHalfLength )
   : m_box_name       ( name        ) 
   , m_box_xHalfLength( XHalfLength )
   , m_box_yHalfLength( YHalfLength )
@@ -48,9 +48,9 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
   s << typeName() ;
   ///
   return s << name() 
-	   << xHalfLength() 
-	   << yHalfLength() 
-	   << zHalfLength() ; 
+           << xHalfLength() 
+           << yHalfLength() 
+           << zHalfLength() ; 
 }; 
 /**
    calculate the intersection points("ticks") with a given line. 
@@ -59,8 +59,8 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
    Return the number of intersection points (=size of Ticks container)   
 */
 inline unsigned int SolidBox::intersectionTicks( const HepPoint3D & point  ,
-						 const HepVector3D& vect   ,
-						 ISolid::Ticks    & ticks  ) const
+                                                 const HepVector3D& vect   ,
+                                                 ISolid::Ticks    & ticks  ) const
 {
   ///
   ticks.clear(); 
@@ -84,10 +84,10 @@ inline unsigned int SolidBox::intersectionTicks( const HepPoint3D & point  ,
     Return the number of intersection points (=size of Ticks container)   
 */
 inline unsigned int SolidBox::intersectionTicks( const HepPoint3D   & point   ,
-						 const HepVector3D  & vect    ,
+                                                 const HepVector3D  & vect    ,
                                                  const ISolid::Tick & tickMin , 
                                                  const ISolid::Tick & tickMax , 
-						 ISolid::Ticks      & ticks   ) const
+                                                 ISolid::Ticks      & ticks   ) const
 {
   intersectionTicks( point , vect , ticks ); 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin, tickMax , *this );  
@@ -117,18 +117,18 @@ bool SolidBox::acceptInspector( IInspector* pInspector )  const
 std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
 {
   return os << "\t" 
-	    << typeName()     << "\tname="          << name()
-	    << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
-	    << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
-	    << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
+            << typeName()     << "\tname="          << name()
+            << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
+            << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
+            << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
 {
   return os << "\t"
-	    << typeName() << "\tname="         << name()
-	    << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
-	    << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
-	    << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
+            << typeName() << "\tname="         << name()
+            << "\txsize[mm]=" << std::setw(12) << xsize() / millimeter
+            << "\tysize[mm]=" << std::setw(12) << ysize() / millimeter 
+            << "\tzsize[mm]=" << std::setw(12) << zsize() / millimeter << endreq ;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////

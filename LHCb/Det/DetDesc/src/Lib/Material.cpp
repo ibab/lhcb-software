@@ -7,12 +7,12 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 Material::Material( const std::string& name   , 
-		    const double       dens   , 
-		    const double       rl     , 
-		    const double       al     ,
-		    const double       temp   , 
-		    const double       press  , 
-		    const eState       s      )
+                    const double       dens   , 
+                    const double       rl     , 
+                    const double       al     ,
+                    const double       temp   , 
+                    const double       press  , 
+                    const eState       s      )
   : DataObject          ( name       )
   , m_name              ( ""         )
   , m_density           ( dens       )
@@ -30,12 +30,12 @@ StreamBuffer&     Material::serialize( StreamBuffer& s ) const
 {
   DataObject::serialize( s ) ;
   return s << m_name
-	   << m_density          
-	   << m_radiationLength 
-	   << m_absorptionLength
-	   << m_temperature      
-	   << m_pressure         
-	   <<( unsigned int ) m_state            
+           << m_density          
+           << m_radiationLength 
+           << m_absorptionLength
+           << m_temperature      
+           << m_pressure         
+           <<( unsigned int ) m_state            
            << m_props (this );
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////

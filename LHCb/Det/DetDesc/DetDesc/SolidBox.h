@@ -30,7 +30,7 @@ class SolidBox: public ISolid
 public:
   //
   SolidBox( const std::string& name        ,  // name of this box                     
-	    const double       XHalfLength ,  // half-size in x-direction of this box 
+            const double       XHalfLength ,  // half-size in x-direction of this box 
             const double       YHalfLength ,  // half-size in y-direction of this box 
             const double       ZHalfLength ); // half-size in z-direction of this box 
   //
@@ -54,17 +54,17 @@ public:
   // "Tick" is just a value of parameter, at which the intercestion occurs 
   // Return the number of intersection points (=size of Ticks container)  
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-						   const HepVector3D& Vector ,          // vector along the line 
-						   ISolid::Ticks   &  ticks  ) const ;  // output container of "Ticks"
+                                                   const HepVector3D& Vector ,          // vector along the line 
+                                                   ISolid::Ticks   &  ticks  ) const ;  // output container of "Ticks"
   // calculate the intersection points("ticks") with a given line. 
   // Input - line, paramterised by (Point + Vector * Tick) 
   // "Tick" is just a value of parameter, at which the intercestion occurs 
   // Return the number of intersection points (=size of Ticks container)   between tickMin and tickMax 
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          // initial point for teh line 
-						   const HepVector3D & Vector  ,          // vector along the line 
+                                                   const HepVector3D & Vector  ,          // vector along the line 
                                                    const ISolid::Tick& tickMin , 
                                                    const ISolid::Tick& tickMax , 
-						   ISolid::Ticks     & ticks   ) const ;  // output container of "Ticks"
+                                                   ISolid::Ticks     & ticks   ) const ;  // output container of "Ticks"
   // return the full x-size of the box 
   inline         double  xsize      ()  const { return m_box_xHalfLength*2 ; };
   // return the full y-size of the box 

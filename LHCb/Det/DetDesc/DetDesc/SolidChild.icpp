@@ -50,12 +50,12 @@ inline const ISolid* SolidChild::reset        () const
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidChild::intersectionTicks ( const HepPoint3D & point  ,       // initial point for teh line 
-						     const HepVector3D & vect   ,      // vector along the line 
-						     ISolid::Ticks    & ticks  ) const // output container of "Ticks"
+                                                     const HepVector3D & vect   ,      // vector along the line 
+                                                     ISolid::Ticks    & ticks  ) const // output container of "Ticks"
 {
   return solid()->intersectionTicks(  simple() ? point : matrix() * point , 
                                       simple() ? vect  : matrix() * vect  , 
-				      ticks                               ) ;
+                                      ticks                               ) ;
 };
 /** calculate the intersection points("ticks") with a given line. 
     Input - line, paramterised by (Point + Vector * Tick) 
@@ -63,14 +63,14 @@ inline  unsigned int SolidChild::intersectionTicks ( const HepPoint3D & point  ,
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidChild::intersectionTicks ( const HepPoint3D &  point   ,       // initial point for teh line 
-						     const HepVector3D &  vect    ,      // vector along the line 
+                                                     const HepVector3D &  vect    ,      // vector along the line 
                                                      const ISolid::Tick& tickMin , 
                                                      const ISolid::Tick& tickMax , 
-						     ISolid::Ticks    &  ticks   ) const // output container of "Ticks"
+                                                     ISolid::Ticks    &  ticks   ) const // output container of "Ticks"
 {
   return solid()->intersectionTicks(  simple() ? point : matrix() * point , 
                                       simple() ? vect  : matrix() * vect  , 
-				      tickMin , tickMax , ticks           ) ;
+                                      tickMin , tickMax , ticks           ) ;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -13,7 +13,7 @@ template <class TYPE> class CnvFactory;
 
 
 class   XmlMixtureCnv : public XmlGenericCnv       ,
-			public ISax8BitDocHandler
+                        public ISax8BitDocHandler
 {
   
   // Friend needed for instantiation

@@ -19,12 +19,12 @@ class GeometryInfoException : public GaudiException
 public:
   /// constructor 
   GeometryInfoException( const std::string  & name     , 
-			 const GeometryInfo * gi   = 0 ,
+                         const GeometryInfo * gi   = 0 ,
                          const StatusCode   & sc = StatusCode::FAILURE );
   ///
   GeometryInfoException( const std::string    & name      , 
                          const GaudiException & ge        , 
-			 const GeometryInfo   * gi   =  0 ,
+                         const GeometryInfo   * gi   =  0 ,
                          const StatusCode     & sc = StatusCode::FAILURE ) ;
   /// destructor 
   virtual ~GeometryInfoException();

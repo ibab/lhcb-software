@@ -17,11 +17,11 @@ class MaterialException: public GaudiException
 public:
   ///
   MaterialException( const std::string    & message     , 
-		     const Material       * mat     = 0 );
+                     const Material       * mat     = 0 );
   ///
   MaterialException( const std::string    &  message    ,
-		     const GaudiException &  Exception  ,  
-		     const Material       *  mat    = 0 );
+                     const GaudiException &  Exception  ,  
+                     const Material       *  mat    = 0 );
   ///
   MaterialException( const MaterialException& );
   ///

@@ -23,7 +23,7 @@ StreamBuffer&     Surface::serialize( StreamBuffer& s ) const
 {
   DataObject::serialize( s ) ;
   return s << model     () 
-	   << finish    ()
+           << finish    ()
            << type      () 
            << value     () 
            << firstVol  () 
@@ -35,7 +35,7 @@ StreamBuffer&     Surface::serialize( StreamBuffer& s )
 {
   DataObject::serialize( s ) ;
   return s >> m_model      
-	   >> m_finish    
+           >> m_finish    
            >> m_type       
            >> m_value      
            >> m_firstVol   

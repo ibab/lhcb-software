@@ -8,19 +8,19 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::GeometryInfoException( const std::string  & name , 
-					      const GeometryInfo * gi   ,
-					      const StatusCode   & sc   )
+                                              const GeometryInfo * gi   ,
+                                              const StatusCode   & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc )
-  , m_gie_geometryInfo  ( gi   ) 	
+  , m_gie_geometryInfo  ( gi   )         
 {};
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::GeometryInfoException( const std::string    & name , 
-					      const GaudiException & ge   , 
-					      const GeometryInfo   * gi   ,
-					      const StatusCode     & sc   )
+                                              const GaudiException & ge   , 
+                                              const GeometryInfo   * gi   ,
+                                              const StatusCode     & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc , ge )
-  , m_gie_geometryInfo  ( gi   ) 	
-{};	
+  , m_gie_geometryInfo  ( gi   )         
+{};        
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::~GeometryInfoException(){};
 ////////////////////////////////////////////////////////////////////////////////////////////////////

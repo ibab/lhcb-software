@@ -56,8 +56,8 @@ class SolidPolyHedronHelper: virtual public ISolid
   /// Return the number of intersection points (=size of Ticks container) 
   ///
   inline virtual unsigned int  intersectionTicks ( const HepPoint3D & Point  ,         // initial point for the line 
-						   const HepVector3D& Vector ,         // vector along the line  
-						   ISolid::Ticks    & ticks  ) const ; // output container of "Ticks"
+                                                   const HepVector3D& Vector ,         // vector along the line  
+                                                   ISolid::Ticks    & ticks  ) const ; // output container of "Ticks"
   ///
   /// calculate the intersection points("ticks") with a given line. 
   /// Input - line, paramterised by 
@@ -67,10 +67,10 @@ class SolidPolyHedronHelper: virtual public ISolid
   /// between tickMin and tickMax 
   ///
   inline virtual unsigned int  intersectionTicks ( const HepPoint3D   & Point   ,          /// initial point for the line 
-						   const HepVector3D  & Vector  ,          /// vector along the line
-						   const ISolid::Tick & tickMin ,          /// minimal value of "Tick"  
-						   const ISolid::Tick & tickMax ,          /// maximal value of "Tick" 
-						   ISolid::Ticks      & ticks   ) const ;  /// output container of "Ticks"
+                                                   const HepVector3D  & Vector  ,          /// vector along the line
+                                                   const ISolid::Tick & tickMin ,          /// minimal value of "Tick"  
+                                                   const ISolid::Tick & tickMax ,          /// maximal value of "Tick" 
+                                                   ISolid::Ticks      & ticks   ) const ;  /// output container of "Ticks"
   ///
   /// specific methods 
   ///
@@ -80,16 +80,16 @@ class SolidPolyHedronHelper: virtual public ISolid
   /// return "false" if 3 points belongd to one line 
   ///
   inline bool             addFace( const HepPoint3D& Point1 , 
-				   const HepPoint3D& Point2 , 
-				   const HepPoint3D& Point3 );
+                                   const HepPoint3D& Point2 , 
+                                   const HepPoint3D& Point3 );
   ///
   /// add a face/plane given with 4points 
   /// throws SolidException if points do not belong to one plane 
   ///
   inline bool             addFace( const HepPoint3D& Point1 , 
-				   const HepPoint3D& Point2 , 
-				   const HepPoint3D& Point3 , 
-				   const HepPoint3D& Point4 );  
+                                   const HepPoint3D& Point2 , 
+                                   const HepPoint3D& Point3 , 
+                                   const HepPoint3D& Point4 );  
   ///
   /// return vector of faces/planes 
   ///
@@ -100,7 +100,7 @@ class SolidPolyHedronHelper: virtual public ISolid
   /// Assume that normal direction is EXTERNAL!!!
   ///
   inline bool             inside  (  const HepPoint3D& Point , 
-				     const HepPlane3D& Plane ) const { return 0 >= Plane.distance( Point ) ; };
+                                     const HepPlane3D& Plane ) const { return 0 >= Plane.distance( Point ) ; };
   ///
  protected: 
   ///
@@ -128,8 +128,8 @@ inline bool SolidPolyHedronHelper::isInside( const HepPoint3D& Point ) const
 ///
 
 inline bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 , 
-					    const HepPoint3D& Point2 , 
-					    const HepPoint3D& Point3 ) 
+                                            const HepPoint3D& Point2 , 
+                                            const HepPoint3D& Point3 ) 
 {
   /// check for 3 points on the same line  
   Hep3Vector p1( Point1 ) , p2( Point2 - Point1 ) , p3( Point3 - Point1); 
@@ -152,9 +152,9 @@ inline bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
 ///
 ///
 inline bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 , 
-					    const HepPoint3D& Point2 , 
-					    const HepPoint3D& Point3 , 
-					    const HepPoint3D& Point4 ) 
+                                            const HepPoint3D& Point2 , 
+                                            const HepPoint3D& Point3 , 
+                                            const HepPoint3D& Point4 ) 
 {
   ///
   HepPoint3D cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
@@ -188,8 +188,8 @@ inline bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
 ///
 ///
 inline  unsigned int SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-								const HepVector3D& Vector ,          // vector along the line 
-								ISolid::Ticks   &  ticks  ) const   // output container of "Ticks"
+                                                                const HepVector3D& Vector ,          // vector along the line 
+                                                                ISolid::Ticks   &  ticks  ) const   // output container of "Ticks"
 {
   ///
   ticks.clear(); 
@@ -216,10 +216,10 @@ inline  unsigned int SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D
 /// "Tick" is just a value of parameter, at which the intercestion occurs 
 /// Return the number of intersection points (=size of Ticks container)   
 inline  unsigned int SolidPolyHedronHelper::intersectionTicks ( const HepPoint3D  & Point   ,          // initial point for teh line 
-								const HepVector3D & Vector  ,          // vector along the line 
-								const ISolid::Tick& tickMin ,          // minimal value for the Tick 
-								const ISolid::Tick& tickMax ,          // maximal value for the tick 
-								ISolid::Ticks     & ticks   ) const    // output container of "Ticks"
+                                                                const HepVector3D & Vector  ,          // vector along the line 
+                                                                const ISolid::Tick& tickMin ,          // minimal value for the Tick 
+                                                                const ISolid::Tick& tickMax ,          // maximal value for the tick 
+                                                                ISolid::Ticks     & ticks   ) const    // output container of "Ticks"
 {
   ///  
   intersectionTicks( Point , Vector , ticks ) ; 

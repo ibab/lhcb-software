@@ -25,9 +25,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
-			     const     std::string&     LogVol_name        ,
-			     const     HepPoint3D&      Position           , // position in Mother Reference Frame!
-			     const     HepRotation&     Rotation           ) // rotation with respect to Mother Reference Frame
+                             const     std::string&     LogVol_name        ,
+                             const     HepPoint3D&      Position           , // position in Mother Reference Frame!
+                             const     HepRotation&     Rotation           ) // rotation with respect to Mother Reference Frame
   : m_pv_name      ( PhysVol_name   ) 
   , m_pv_lvname    ( LogVol_name    ) 
   , m_pv_matrix    (                )
@@ -55,8 +55,8 @@ PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
-			     const     std::string&     LogVol_name        ,
-			     const     HepTransform3D&  Transform          ) // position in Mother Reference Frame!
+                             const     std::string&     LogVol_name        ,
+                             const     HepTransform3D&  Transform          ) // position in Mother Reference Frame!
   : m_pv_name      ( PhysVol_name   ) 
   , m_pv_lvname    ( LogVol_name    ) 
   , m_pv_matrix    ( Transform      )

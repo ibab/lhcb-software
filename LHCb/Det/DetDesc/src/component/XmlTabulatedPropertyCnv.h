@@ -18,7 +18,7 @@ template <class TYPE> class CnvFactory;
 
 
 class   XmlTabulatedPropertyCnv : public XmlGenericCnv      , 
-				  public ISax8BitDocHandler
+                                  public ISax8BitDocHandler
 {  
   /// Friend needed for instantiation
   friend class CnvFactory<XmlTabulatedPropertyCnv>;
@@ -34,13 +34,13 @@ public:
   virtual void startDocument         ( const char*        /* info   */ ){};
   virtual void endDocument           ( const char*        /* info   */ ){};
   virtual void ignorableWhitespace   ( const char* const  /* chars  */ , 
-				       const unsigned int /* length */ );
+                                       const unsigned int /* length */ );
   virtual void processingInstruction ( const char* const  /* target */ , 
-				       const char* const  /* data   */ ){};
+                                       const char* const  /* data   */ ){};
   virtual void characters            ( const char* const  /* chars  */ ,
-				       const unsigned int /* length */ );
+                                       const unsigned int /* length */ );
   virtual void startElement          ( const char* const     name      , 
-				       XmlCnvAttributeList& attributes );
+                                       XmlCnvAttributeList& attributes );
   virtual void endElement            ( const char* const  /* name   */ );
   ///  
   /// Implementation of the obligatory method to provide a hint to generic XML

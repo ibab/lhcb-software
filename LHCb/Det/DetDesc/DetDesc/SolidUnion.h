@@ -42,10 +42,10 @@ class SolidUnion: public SolidBoolean
   
   // specific 
   inline         StatusCode    unite   ( ISolid*               solid                    , 
-					 const HepTransform3D* mtrx                     ); 
+                                         const HepTransform3D* mtrx                     ); 
   inline         StatusCode    unite   ( ISolid*               child                    , 
-					 const HepPoint3D&     position                 , 
-					 const HepRotation&    rotation = HepRotation() );
+                                         const HepPoint3D&     position                 , 
+                                         const HepRotation&    rotation = HepRotation() );
   ///
  protected:
   ///
@@ -63,7 +63,7 @@ class SolidUnion: public SolidBoolean
 //
 
 inline StatusCode  SolidUnion::unite( ISolid*                solid    , 
-				      const HepTransform3D*  mtrx     )
+                                      const HepTransform3D*  mtrx     )
 {  return addChild( solid , mtrx ); };
 
 //
@@ -71,8 +71,8 @@ inline StatusCode  SolidUnion::unite( ISolid*                solid    ,
 //
 
 inline StatusCode  SolidUnion::unite ( ISolid*               solid    , 
-				       const HepPoint3D&     position , 
-				       const HepRotation&    rotation )
+                                       const HepPoint3D&     position , 
+                                       const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
 //

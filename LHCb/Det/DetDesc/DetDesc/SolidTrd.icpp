@@ -25,8 +25,8 @@ inline const ISolid* SolidTrd::coverTop      () const
 };
 //////////////////////////////////////////////////////////////////////////////////////////////
 inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&  Point  ,          // initial point for teh line 
-						   const HepVector3D& Vector ,          // vector along the line 
-						   ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
+                                                   const HepVector3D& Vector ,          // vector along the line 
+                                                   ISolid::Ticks   &  ticks  ) const    // output container of "Ticks"
 { return SolidPolyHedronHelper::intersectionTicks( Point, Vector , ticks ); } 
 /** calculate the intersection points("ticks") with a given line. 
     Input - line, parametrized by (Point + Vector * Tick) 
@@ -34,10 +34,10 @@ inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&  Point  ,  
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidTrd::intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
-						   const HepVector3D&  Vector  ,          // vector along the line 
-						   const ISolid::Tick& tickMin ,          // minimal value for the tick 
-						   const ISolid::Tick& tickMax ,          // maximal value for tick 
-						   ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
+                                                   const HepVector3D&  Vector  ,          // vector along the line 
+                                                   const ISolid::Tick& tickMin ,          // minimal value for the tick 
+                                                   const ISolid::Tick& tickMax ,          // maximal value for tick 
+                                                   ISolid::Ticks   &   ticks   ) const    // output container of "Ticks"
 { return SolidPolyHedronHelper::intersectionTicks( Point, Vector , tickMin , tickMax , ticks ); } 
 /// reset to the initial state //////////////////////////////////////////////////////////////////
 inline const   ISolid* SolidTrd::reset() const

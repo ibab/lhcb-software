@@ -7,7 +7,7 @@
 //
 // constructor
 SolidIntersection::SolidIntersection( const std::string& name  , 
-				      ISolid*            First )
+                                      ISolid*            First )
   : SolidBoolean( name , First )
 {
   if( 0 == First ) { throw SolidException(" SolidIntersection constructor with ISolid=NULL! "); }

@@ -7,16 +7,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 DetectorElementException::DetectorElementException( const std::string     & name  , 
-						    const DetectorElement * DE    , 
-						    const StatusCode      & sc    ) 
+                                                    const DetectorElement * DE    , 
+                                                    const StatusCode      & sc    ) 
   : GaudiException( name , "*DetElemException*" , sc )
   , m_dee_DetectorElement( DE ) 
 {} ;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 DetectorElementException::DetectorElementException( const std::string     & name      , 
-						    const GaudiException  & Exception , 
-						    const DetectorElement * DE        , 
-						    const StatusCode      & sc        ) 
+                                                    const GaudiException  & Exception , 
+                                                    const DetectorElement * DE        , 
+                                                    const StatusCode      & sc        ) 
   : GaudiException( name , "*DetElemException*" , sc , Exception )
   , m_dee_DetectorElement   ( DE ) 
 {} ;

@@ -10,7 +10,7 @@
 //
 // constructor
 SolidSubtraction::SolidSubtraction( const std::string& name  , 
-				      ISolid*            First )
+                                      ISolid*            First )
   : SolidBoolean( name , First )
 {
   if( 0 == First ) { throw SolidException(" SolidSubtraction constructor with ISolid=NULL! "); }

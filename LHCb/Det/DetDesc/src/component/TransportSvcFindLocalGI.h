@@ -14,8 +14,8 @@
 ///
 
 IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 , 
-					   const HepPoint3D& point2 , 
-					   IGeometryInfo*    gi     ) const  
+                                           const HepPoint3D& point2 , 
+                                           IGeometryInfo*    gi     ) const  
 {
   ///
   if( 0 == gi ) { return 0 ; } 
@@ -35,8 +35,8 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
     {  
       bool loc = false ;  
       for( loc = gi1->isInside( point1 ) ; !loc && 0 != gi1 ; gi1 = gi1->parentIGeometryInfo() ) 
-	{ 
-	  std::cout << " inside loop" <<  (loc = gi1->isInside( point1 ) ) << " pointr=" << gi1 << std::endl;  }  
+        { 
+          std::cout << " inside loop" <<  (loc = gi1->isInside( point1 ) ) << " pointr=" << gi1 << std::endl;  }  
       ///
       if( !loc || 0 == gi1 ) { return 0; }                                                                  /// RETURN !!! 
       ///
@@ -51,7 +51,7 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
     {  
       bool loc = false ; 
       for( loc = gi1->isInside( point2 ) ; !loc && 0 != gi2 ; gi2 = gi2->parentIGeometryInfo() ) 
-	{ loc = gi1->isInside( point2 ); }  
+        { loc = gi1->isInside( point2 ); }  
       ///
       if( !loc || 0 == gi2 ) { return 0; }                                                                 /// RETURN !!! 
       ///
@@ -68,23 +68,23 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
     
     if( gi1 == gi2 )  
       {  
-	
-	///
-	///  try to find a "good" geometry element in geometry hierarhy
-	/// 
-	
-	for( IGeometryInfo* gl = gi1 ; 0 != gl ; gl = gl->parentIGeometryInfo() ) 
-	  { if( goodLocalGI( point1 , point2 , gl ) ) { return gl; } }                                /// RETURN !!!    
-	
-	///
-	/// we have failed to find "good" element 
-	///
-	
-	return 0;                                                                                     /// RETURN !!! 
-	
-	/// 
-	///
-	///
+        
+        ///
+        ///  try to find a "good" geometry element in geometry hierarhy
+        /// 
+        
+        for( IGeometryInfo* gl = gi1 ; 0 != gl ; gl = gl->parentIGeometryInfo() ) 
+          { if( goodLocalGI( point1 , point2 , gl ) ) { return gl; } }                                /// RETURN !!!    
+        
+        ///
+        /// we have failed to find "good" element 
+        ///
+        
+        return 0;                                                                                     /// RETURN !!! 
+        
+        /// 
+        ///
+        ///
       }
     
     
@@ -117,10 +117,10 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
       rGeoIt it1 = m_vGi1.rbegin(); 
       rGeoIt it2 = m_vGi2.rbegin(); 
       while( ( m_vGi1.rend() !=  it1 ) && 
-	     ( m_vGi2.rend() !=  it2 ) && 
-	     (      0        != *it1 ) && 
-	     (      0        != *it2 ) &&  
-	     (   *it1        == *it2 )    ) { m_vGi.push_back( *it1 ) ; ++it1 ; ++it2 ; }
+             ( m_vGi2.rend() !=  it2 ) && 
+             (      0        != *it1 ) && 
+             (      0        != *it2 ) &&  
+             (   *it1        == *it2 )    ) { m_vGi.push_back( *it1 ) ; ++it1 ; ++it2 ; }
     }
     
 
@@ -142,16 +142,16 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
       
       IGeometryInfo*  gl = *(m_vGi.rbegin()); 
       while( 0 != gl ) 
-	{
-	  IGeometryInfo* gl1 = gl->belongsTo( point1 ); 
-	  if( 0 == gl1 ) { gl = 0 ; }  
-	  else 
-	    {
-	      IGeometryInfo* gl2 = gl->belongsTo( point2 ); 
-	      if   ( gl1 == gl2 ) { m_vGi.push_back( gl2 ); gl = gl2 ; } 
-	      else                {                         gl = 0   ; }  
-	    }
-	}
+        {
+          IGeometryInfo* gl1 = gl->belongsTo( point1 ); 
+          if( 0 == gl1 ) { gl = 0 ; }  
+          else 
+            {
+              IGeometryInfo* gl2 = gl->belongsTo( point2 ); 
+              if   ( gl1 == gl2 ) { m_vGi.push_back( gl2 ); gl = gl2 ; } 
+              else                {                         gl = 0   ; }  
+            }
+        }
     } 
     
     ///
@@ -174,13 +174,13 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
 
       std::string message("TransportSvc::findLocalGI(...), exception caught; Params: ");
       {
-	const unsigned int buflen = 1024;
+        const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
-	std::ostrstream ost( buffer , buflen ); 
+        std::ostrstream ost( buffer , buflen ); 
         ost << "Point1=" << point1
-	    << "Point2=" << point2 ; 
-	message += ost.str(); 	    
-	Assert( false , message , Exception );
+            << "Point2=" << point2 ; 
+        message += ost.str();             
+        Assert( false , message , Exception );
       }
     }
   catch( ... ) 
@@ -191,13 +191,13 @@ IGeometryInfo*  TransportSvc::findLocalGI( const HepPoint3D& point1 ,
 
       std::string message("TransportSvc::findLocalGI(...), unknown exception caught; Params: ");
       {
-	const unsigned int buflen = 1024;
+        const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
-	std::ostrstream ost( buffer , buflen ); 
+        std::ostrstream ost( buffer , buflen ); 
         ost << "Point1=" << point1
-	    << "Point2=" << point2 ; 
-	message += ost.str(); 	    
-	Assert( false , message );
+            << "Point2=" << point2 ; 
+        message += ost.str();             
+        Assert( false , message );
       }      
     }
   

@@ -12,11 +12,11 @@ class SolidException : public GaudiException
 public:
   ///
   SolidException( const std::string&     message      , 
-		  const ISolid*          solid  =  0  ); 
+                  const ISolid*          solid  =  0  ); 
   ///
   SolidException( const std::string   &  message      ,
                   const GaudiException&  Exception    ,  
-		  const ISolid*          solid  =  0  ); 
+                  const ISolid*          solid  =  0  ); 
   ///
   virtual ~SolidException();
   ///

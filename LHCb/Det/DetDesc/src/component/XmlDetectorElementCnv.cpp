@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlDetectorElementCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $
+///        $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlDetectorElementCnv.cpp,v 1.2 2001-03-07 13:06:17 ibelyaev Exp $
 
 
 #include <cstdlib>
@@ -27,7 +27,7 @@
 #include "XmlDetectorElementCnv.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.1 2001-02-05 12:45:53 ranjard Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.2 2001-03-07 13:06:17 ibelyaev Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
@@ -429,49 +429,49 @@ void XmlDetectorElementCnv::endElement( const char* const name ) {
       else if ( support     .empty() ) { gInfo = de->createGeometryInfo( logVolName )                     ; }  /// orphan 
       else if ( !namePath   .empty() ) { gInfo = de->createGeometryInfo( logVolName , support , namePath ); }
       else if ( !replicaPath.empty() ) 
-	{ 
-	  ILVolume::ReplicaPath repPath;	    
-	  // Replica path has the format "1/3/7/2"
-	  const char*  rp = replicaPath.c_str();
-	  char         buf[512]; char* replica = buf;
-	  bool         wasColon = false; unsigned int i = 0;
-	  
-	  do{
-	    wasColon = false;
-	    if     ( *rp == '/') { wasColon = true; }
-	    else if( isdigit(*rp) )
-	      {
-		*replica = *rp;
-		replica++; i++;
-	      }
-	    if( true == wasColon || *(rp + 1) == '\0' )                  
-	      {
-		if( i > 0 )                                                
-		  {
-		    *replica = '\0';
-		    i = (unsigned int)atol( buf );
-		    repPath.push_back( i );
-		    
-		    log << MSG::DEBUG << "Found replica number "
-			<< repPath.back() << endreq;
-		    replica = buf; i = 0;
-		  }
-	      }
-	    rp++;
-	  } while( *rp != 0 ); 
-	  ///
-	  gInfo = de->createGeometryInfo(logVolName,support,repPath );	      
-	  ///
-	}
+        { 
+          ILVolume::ReplicaPath repPath;            
+          // Replica path has the format "1/3/7/2"
+          const char*  rp = replicaPath.c_str();
+          char         buf[512]; char* replica = buf;
+          bool         wasColon = false; unsigned int i = 0;
+          
+          do{
+            wasColon = false;
+            if     ( *rp == '/') { wasColon = true; }
+            else if( isdigit(*rp) )
+              {
+                *replica = *rp;
+                replica++; i++;
+              }
+            if( true == wasColon || *(rp + 1) == '\0' )                  
+              {
+                if( i > 0 )                                                
+                  {
+                    *replica = '\0';
+                    i = (unsigned int)atol( buf );
+                    repPath.push_back( i );
+                    
+                    log << MSG::DEBUG << "Found replica number "
+                        << repPath.back() << endreq;
+                    replica = buf; i = 0;
+                  }
+              }
+            rp++;
+          } while( *rp != 0 ); 
+          ///
+          gInfo = de->createGeometryInfo(logVolName,support,repPath );              
+          ///
+        }
       else                                                           
-	{
-	  log << MSG::ERROR << "File " << m_objRcpt->dbName() << ": " << aname
-	      << " Missing \"rpath\" or \"npath\" element, please correct XML data\n"
-	      << " Either remove support element or provide proper rpath or npath"
-	      << endreq;
+        {
+          log << MSG::ERROR << "File " << m_objRcpt->dbName() << ": " << aname
+              << " Missing \"rpath\" or \"npath\" element, please correct XML data\n"
+              << " Either remove support element or provide proper rpath or npath"
+              << endreq;
           StatusCode st( CORRUPTED_DATA );
-	  throw XmlCnvException( " Corrupted XML data", st );	    
-	}
+          throw XmlCnvException( " Corrupted XML data", st );            
+        }
     }
     catch( XmlCnvException& )   {  throw;  }
     catch( ... )                {  log << MSG::FATAL << "What is going on here?\a" << endreq; }

@@ -42,11 +42,11 @@ class SolidIntersection: public SolidBoolean
   
   // specific 
   inline         StatusCode    intersect( ISolid*               solid                    , 
-					  const HepTransform3D* mtrx                     );
+                                          const HepTransform3D* mtrx                     );
   
   inline         StatusCode    intersect( ISolid*               child                    , 
-					  const HepPoint3D&     position                 , 
-					  const HepRotation&    rotation = HepRotation() );
+                                          const HepPoint3D&     position                 , 
+                                          const HepRotation&    rotation = HepRotation() );
  protected:
   ///
   SolidIntersection();
@@ -79,7 +79,7 @@ inline bool SolidIntersection::isInside     ( const HepPoint3D   & point ) const
 //
 
 inline StatusCode  SolidIntersection::intersect( ISolid*               solid     , 
-						 const HepTransform3D* mtrx      )
+                                                 const HepTransform3D* mtrx      )
 {  return addChild( solid , mtrx ); };
 
 //
@@ -87,8 +87,8 @@ inline StatusCode  SolidIntersection::intersect( ISolid*               solid    
 //
 
 inline StatusCode  SolidIntersection::intersect ( ISolid*               solid    , 
-						  const HepPoint3D&     position , 
-						  const HepRotation&    rotation )
+                                                  const HepPoint3D&     position , 
+                                                  const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
  

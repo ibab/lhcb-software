@@ -50,8 +50,8 @@ inline StatusCode LVolume::traverse ( const ILVolume::ReplicaPath&  path , ILVol
 { return traverse( path.begin() , path.end() , pVolumePath ); }
 /// translate replicapath into PVolume path 
 inline StatusCode LVolume::traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
-				      ILVolume::ReplicaPath::const_iterator pathEnd  ,
-				      ILVolume::PVolumePath&                pVolumePath )
+                                      ILVolume::ReplicaPath::const_iterator pathEnd  ,
+                                      ILVolume::PVolumePath&                pVolumePath )
 {
   // optimized implementation, using functional IPVolume_fromReplica(); 
   // if( pathBegin ==  pathEnd ){ return StatusCode::SUCCESS; }  
@@ -78,8 +78,8 @@ inline StatusCode LVolume::traverse ( ILVolume::ReplicaPath::const_iterator path
 inline bool LVolume::isInside ( const HepPoint3D& LocalPoint ) const { return solid()->isInside( LocalPoint ); };
 ///
 inline StatusCode LVolume::belongsTo( const HepPoint3D&        LocalPoint ,
-				      const int                Level      , 
-				      ILVolume::PVolumePath&   pVolumePath )
+                                      const int                Level      , 
+                                      ILVolume::PVolumePath&   pVolumePath )
 {
   //
   if( 0 == Level ) { return StatusCode::SUCCESS; } // no searched is required
@@ -99,8 +99,8 @@ inline StatusCode LVolume::belongsTo( const HepPoint3D&        LocalPoint ,
 };
 ///
 inline StatusCode LVolume::belongsTo( const HepPoint3D&        localPoint ,
-				      const int                level      , 
-				      ILVolume::ReplicaPath&   replicaPath )
+                                      const int                level      , 
+                                      ILVolume::ReplicaPath&   replicaPath )
 {
   //
   if( 0 == level ) { return StatusCode::SUCCESS; } // no searched is required

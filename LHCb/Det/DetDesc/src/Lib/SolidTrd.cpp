@@ -8,11 +8,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 SolidTrd::SolidTrd( const std::string& name              ,
-		    const double       ZHalfLength       ,
-		    const double       XHalfLength1      , 
-		    const double       YHalfLength1      , 
-		    const double       XHalfLength2      , 
-		    const double       YHalfLength2      ) 
+                    const double       ZHalfLength       ,
+                    const double       XHalfLength1      , 
+                    const double       YHalfLength1      , 
+                    const double       XHalfLength2      , 
+                    const double       YHalfLength2      ) 
   : SolidPolyHedronHelper (              ) 
   , m_trd_name            ( name         )
   , m_trd_zHalfLength     ( ZHalfLength  )
@@ -107,12 +107,12 @@ StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
 {
   ///
   return s << typeName() 
-	   << m_trd_name 
-	   << m_trd_zHalfLength  
-	   << m_trd_xHalfLength1 
-	   << m_trd_xHalfLength2 
-	   << m_trd_yHalfLength1 
-	   << m_trd_yHalfLength2 ;  
+           << m_trd_name 
+           << m_trd_zHalfLength  
+           << m_trd_xHalfLength1 
+           << m_trd_xHalfLength2 
+           << m_trd_yHalfLength1 
+           << m_trd_yHalfLength2 ;  
   ///
 };
 // cover for Trd is "symmetric trd", cover for "symmetric trd" is Box //////////////// 
@@ -123,15 +123,15 @@ const ISolid*           SolidTrd::cover         () const
   ISolid* cov = 0 ;
   if(  ( xHalfLength1() != yHalfLength1() )  || ( xHalfLength2() != yHalfLength2() ) ) 
     { cov = new SolidTrd("Cover for " + name() , zHalfLength() , 
-			 xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
-			 xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
-			 xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() , 
-				       xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() ) ; }
+                         xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
+                         xHalfLength1() > yHalfLength1() ? xHalfLength1() : yHalfLength1() , 
+                         xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() , 
+                                       xHalfLength2() > yHalfLength2() ? xHalfLength2() : yHalfLength2() ) ; }
   else
     { cov = new SolidBox("Cover for " + name() , 
-			 xHalfLength1() > xHalfLength2() ? xHalfLength1() : xHalfLength2() , 
-			 yHalfLength1() > yHalfLength2() ? yHalfLength1() : yHalfLength2() , 
-			 zHalfLength      ()                      ); }
+                         xHalfLength1() > xHalfLength2() ? xHalfLength1() : xHalfLength2() , 
+                         yHalfLength1() > yHalfLength2() ? yHalfLength1() : yHalfLength2() , 
+                         zHalfLength      ()                      ); }
   //
   if( 0 == cov ) { return this ; } 
   m_trd_cover = cov; 

@@ -12,11 +12,11 @@
 
 // constructor: //////////////////////////////////////////////////////////////////
 SolidTubs::SolidTubs( const std::string& name          ,
-		      const double       ZHalfLength   , 
-		      const double       OuterRadius   ,
-		      const double       InnerRadius   , 
-		      const double       StartPhiAngle , 
-		      const double       DeltaPhiAngle , 
+                      const double       ZHalfLength   , 
+                      const double       OuterRadius   ,
+                      const double       InnerRadius   , 
+                      const double       StartPhiAngle , 
+                      const double       DeltaPhiAngle , 
                       const int          CoverModel    )  
   : m_tubs_name           ( name          )
   , m_tubs_zHalfLength    ( ZHalfLength   )
@@ -105,13 +105,13 @@ StreamBuffer& SolidTubs::serialize( StreamBuffer& s )
 StreamBuffer& SolidTubs::serialize( StreamBuffer& s ) const
 {
   return s << typeName() 
-	   << m_tubs_name           
-	   << m_tubs_zHalfLength    
-	   << m_tubs_outerRadius    
-	   << m_tubs_innerRadius    
-	   << m_tubs_startPhiAngle  
-	   << m_tubs_deltaPhiAngle  
-	   << m_tubs_coverModel    ;
+           << m_tubs_name           
+           << m_tubs_zHalfLength    
+           << m_tubs_outerRadius    
+           << m_tubs_innerRadius    
+           << m_tubs_startPhiAngle  
+           << m_tubs_deltaPhiAngle  
+           << m_tubs_coverModel    ;
   ///
 };
 /**  Construction of the covering solid 
@@ -132,22 +132,22 @@ const ISolid*           SolidTubs::cover         () const
   if( 0 == m_tubs_coverModel ) 
     { 
       if( 0.0*degree  != startPhiAngle() || 360.0*degree  != deltaPhiAngle()    ) 
-	{ cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , innerRadius() ); }
+        { cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , innerRadius() ); }
       else if ( 0.0 != innerRadius() )                              
-	{ cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius()                 ); }
+        { cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius()                 ); }
       else                                                          
-	{ cov = new SolidBox ("Cover for " + name() , outerRadius() , outerRadius() , zHalfLength() ); }
+        { cov = new SolidBox ("Cover for " + name() , outerRadius() , outerRadius() , zHalfLength() ); }
     }
   else 
     {
       if ( 0.0 != innerRadius() )                              
-	{ cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , 0.0 * mm      , 
-			      startPhiAngle() , deltaPhiAngle() , m_tubs_coverModel ); }
+        { cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , 0.0 * mm      , 
+                              startPhiAngle() , deltaPhiAngle() , m_tubs_coverModel ); }
       else if( 0.0*degree  != startPhiAngle() || 360.0*degree  != deltaPhiAngle()    ) 
-	{ cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , innerRadius() ,
-			      0.0 * degree , 360.0 * degree , m_tubs_coverModel ); }
+        { cov = new SolidTubs("Cover for " + name() , zHalfLength() , outerRadius() , innerRadius() ,
+                              0.0 * degree , 360.0 * degree , m_tubs_coverModel ); }
       else                                                          
-	{ cov = new SolidBox ("Cover for " + name() , outerRadius() , outerRadius() , zHalfLength() ); }
+        { cov = new SolidBox ("Cover for " + name() , outerRadius() , outerRadius() , zHalfLength() ); }
     }
   //
   if( 0 == cov ) { return this; } 
@@ -162,8 +162,8 @@ const ISolid*           SolidTubs::cover         () const
     Return the number of intersection points (=size of Ticks container)   
 */
 inline unsigned int SolidTubs::intersectionTicks( const HepPoint3D& point  ,
-						  const HepVector3D& vect   ,
-						  ISolid::Ticks   & ticks  ) const
+                                                  const HepVector3D& vect   ,
+                                                  ISolid::Ticks   & ticks  ) const
 {
   ticks.clear(); 
   // line with null direction vector is not able to intersect any solid. 
@@ -191,10 +191,10 @@ inline unsigned int SolidTubs::intersectionTicks( const HepPoint3D& point  ,
     Return the number of intersection points (=size of Ticks container)   
 */
 inline unsigned int SolidTubs::intersectionTicks( const HepPoint3D  & point   ,
-						  const HepVector3D  & vect    ,
+                                                  const HepVector3D  & vect    ,
                                                   const ISolid::Tick& tickMin ,
                                                   const ISolid::Tick& tickMax ,
-						  ISolid::Ticks     & ticks   ) const
+                                                  ISolid::Ticks     & ticks   ) const
 {
   intersectionTicks( point , vect , ticks );
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin, tickMax , *this );  
@@ -237,9 +237,9 @@ std::ostream&  SolidTubs::printOut      ( std::ostream&  os ) const
   if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
     { 
       os << "\t\t\tstartPhiAngle [degree] = " << std::setw(12) << startPhiAngle() / degree    
-	 << std::endl 
-	 << "\t\t\tdeltaPhiAngle [degree] = " << std::setw(12) << deltaPhiAngle() / degree  
-	 << std::endl ;
+         << std::endl 
+         << "\t\t\tdeltaPhiAngle [degree] = " << std::setw(12) << deltaPhiAngle() / degree  
+         << std::endl ;
     }
   ///
   return os;
@@ -258,9 +258,9 @@ MsgStream&     SolidTubs::printOut      ( MsgStream&     os ) const
   if( startPhiAngle() != 0 * degree || deltaPhiAngle() != 360 * degree ) 
     { 
       os << "\t\t\tstartPhiAngle [degree] = " << std::setw(12) << startPhiAngle() / degree    
-	 << endreq    
-	 << "\t\t\tdeltaPhiAngle [degree] = " << std::setw(12) << deltaPhiAngle() / degree  
-	 << endreq    ;
+         << endreq    
+         << "\t\t\tdeltaPhiAngle [degree] = " << std::setw(12) << deltaPhiAngle() / degree  
+         << endreq    ;
     }
   ///
   return os;

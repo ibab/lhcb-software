@@ -42,12 +42,12 @@ class PVolume: public IPVolume
  protected:
   /// constructor         ( protected ) 
   PVolume           ( const     std::string&     PhysVol_name                     ,
-		      const     std::string&     LogVol_name                      ,
+                      const     std::string&     LogVol_name                      ,
                       const     HepPoint3D&      Position                         , // position in Mother Reference Frame!
                       const     HepRotation&     Rotation       = HepRotation()   ); // rotation with respect to Mother Reference Frame
   ///
   PVolume           ( const     std::string&     PhysVol_name                     ,
-		      const     std::string&     LogVol_name                      ,
+                      const     std::string&     LogVol_name                      ,
                       const     HepTransform3D&  Transform                        ); // position in Mother Reference Frame!
   ///
   virtual ~PVolume();
@@ -81,19 +81,19 @@ public:
   /// Method throws LVolumeException in the case, then 
   /// solid is not defined or material is not accessible.  
   inline  unsigned int intersectLine( const HepPoint3D        & Point         ,  // initial point at the line 
-				      const HepVector3D        & Vector        ,  // direction vector of the line 
-				      ILVolume::Intersections & intersections ,  // output container 
-				      const double              threshold     ); // threshold value 
+                                      const HepVector3D        & Vector        ,  // direction vector of the line 
+                                      ILVolume::Intersections & intersections ,  // output container 
+                                      const double              threshold     ); // threshold value 
   
   ///
   /// the same as previos method, but the intersection points ("ticks") are searched 
   /// in the region  tickMin<= tick <= tickMax 
   inline unsigned int intersectLine( const HepPoint3D        & Point         , // initial point at the line 
-				     const HepVector3D        & Vector        , // direction vectot of the line 
-				     ILVolume::Intersections & intersections , // output container  
-				     const ISolid::Tick        tickMin       , // minimum value of possible Tick
-				     const ISolid::Tick        tickMax       , // maximum value of possible Tick
-				     const double              Threshold     );// threshold value 
+                                     const HepVector3D        & Vector        , // direction vectot of the line 
+                                     ILVolume::Intersections & intersections , // output container  
+                                     const ISolid::Tick        tickMin       , // minimum value of possible Tick
+                                     const ISolid::Tick        tickMax       , // maximum value of possible Tick
+                                     const double              Threshold     );// threshold value 
   ///
  private:
   // no default constructor 
@@ -111,12 +111,12 @@ public:
   inline IMessageSvc*       msgSvc        () const ;  
   // Assertion 
   inline void Assert( bool               assertion , 
-		      const std::string& name      ) const;
+                      const std::string& name      ) const;
   //
   // Assertion 
   inline void Assert( bool                  assertion , 
-		      const std::string&    name      , 
-		      const GaudiException& Exception ) const;
+                      const std::string&    name      , 
+                      const GaudiException& Exception ) const;
   ///  from IInspectable interface
   virtual bool acceptInspector( IInspector* pInspector )       ; 
   virtual bool acceptInspector( IInspector* pInspector ) const ; 

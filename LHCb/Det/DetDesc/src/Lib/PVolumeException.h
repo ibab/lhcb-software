@@ -12,11 +12,11 @@ class PVolumeException : public GaudiException
 public:
   ///
   PVolumeException( const std::string& name          , 
-		    const PVolume*     pvolume =  0  ) ;
+                    const PVolume*     pvolume =  0  ) ;
   ///
   PVolumeException( const std::string&     name          ,
                     const GaudiException&  Exception     ,  
-		    const PVolume*         pvolume =  0  );
+                    const PVolume*         pvolume =  0  );
   ///
   virtual ~PVolumeException();
   ///

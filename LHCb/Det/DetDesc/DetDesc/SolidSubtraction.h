@@ -61,12 +61,12 @@ class SolidSubtraction: public SolidBoolean
   
   // specific 
   inline         StatusCode    subtract ( ISolid*               solid , 
-					  const HepTransform3D* mtrx  ); 
+                                          const HepTransform3D* mtrx  ); 
 
   // add child to daughter container 
   inline         StatusCode    subtract ( ISolid*               child                    , 
-					  const HepPoint3D&     position                 , 
-					  const HepRotation&    rotation = HepRotation() );
+                                          const HepPoint3D&     position                 , 
+                                          const HepRotation&    rotation = HepRotation() );
   
  protected:
   ///
@@ -84,7 +84,7 @@ class SolidSubtraction: public SolidBoolean
 //
 
 inline StatusCode  SolidSubtraction::subtract( ISolid*                solid    , 
-					       const HepTransform3D*  mtrx     )
+                                               const HepTransform3D*  mtrx     )
 {  return addChild( solid , mtrx ); };
 
 //
@@ -92,8 +92,8 @@ inline StatusCode  SolidSubtraction::subtract( ISolid*                solid    ,
 // 
 
 inline StatusCode  SolidSubtraction::subtract ( ISolid*               solid    , 
-						const HepPoint3D&     position , 
-						const HepRotation&    rotation )
+                                                const HepPoint3D&     position , 
+                                                const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
  

@@ -13,7 +13,7 @@
 
 // constructor //////////////////////////////////////////////////////////////////////////////////////
 SolidBoolean::SolidBoolean( const std::string& name  , 
-			    ISolid*            solid )
+                            ISolid*            solid )
   : m_sb_name     ( name  )
   , m_sb_first    ( solid )
   , m_sb_childrens(       )
@@ -34,7 +34,7 @@ SolidBoolean::~SolidBoolean()
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode SolidBoolean::addChild( ISolid*                  child , 
-				   const HepTransform3D*    mtrx  ) 
+                                   const HepTransform3D*    mtrx  ) 
 {
   if( 0 == child  ) { return StatusCode::FAILURE; } 
   SolidChild* pChild = new  SolidChild( child , mtrx ); 
@@ -44,8 +44,8 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
 };
 // add child to daughter container ///////////////////////////////////////////////////////////////// 
 StatusCode SolidBoolean::addChild   ( ISolid*               child    , 
-				      const HepPoint3D&     position , 
-				      const HepRotation&    rotation )
+                                      const HepPoint3D&     position , 
+                                      const HepRotation&    rotation )
 { 
   if( 0 == child  ) { return StatusCode::FAILURE; } 
   SolidChild* pChild = new  SolidChild( child , position , rotation ); 
@@ -95,8 +95,8 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const
     Return the number of intersection points (=size of Ticks container)   
 */
 unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,         // initial point for teh line 
-					       const HepVector3D& vect   ,         // vector along the line 
-					       ISolid::Ticks    & ticks  ) const   // output container of "Ticks"
+                                               const HepVector3D& vect   ,         // vector along the line 
+                                               ISolid::Ticks    & ticks  ) const   // output container of "Ticks"
 {
   ///
   ticks.clear();
@@ -122,10 +122,10 @@ unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D & point  ,      
     Return the number of intersection points (=size of Ticks container)   
 */
 unsigned int SolidBoolean::intersectionTicks ( const HepPoint3D  & point   ,         // initial point for teh line 
-					       const HepVector3D & vect    ,         // vector along the line 
-					       const ISolid::Tick& tickMin , 
-					       const ISolid::Tick& tickMax , 
-					       ISolid::Ticks     & ticks   ) const   // output container of "Ticks"
+                                               const HepVector3D & vect    ,         // vector along the line 
+                                               const ISolid::Tick& tickMin , 
+                                               const ISolid::Tick& tickMax , 
+                                               ISolid::Ticks     & ticks   ) const   // output container of "Ticks"
 {
   ///
   intersectionTicks( point , vect , ticks ); 
@@ -166,8 +166,8 @@ std::ostream& SolidBoolean::printOut( std::ostream& os ) const
   for( SolidChildrens::const_iterator it = childBegin() ; childEnd() != it ; ++it ) 
     {
       os << "\t\t\t\tchild#" << std::setw(2) << it - childBegin() 
-	 << std::endl 
-	 << "\t\t" << *it ;
+         << std::endl 
+         << "\t\t" << *it ;
     } 
   return os;
 };
@@ -182,8 +182,8 @@ MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const
   for( SolidChildrens::const_iterator it = childBegin() ; childEnd() != it ; ++it ) 
     {
       os << "\t\t\t\tchild#" << std::setw(2) << it - childBegin()
-	 << endreq          
-	 << "\t\t" << *it ;
+         << endreq          
+         << "\t\t" << *it ;
     } 
   return os;
 };

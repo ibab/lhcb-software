@@ -215,9 +215,9 @@ void XmlIsotopeCnv::startElement( const char* const name,
     } 
     else 
       {
-	// This should never happen!
-	log << MSG::WARNING << "Got unexpected material tag: "
-	    << attributes.getValue( "name" ) << endreq;
+        // This should never happen!
+        log << MSG::WARNING << "Got unexpected material tag: "
+            << attributes.getValue( "name" ) << endreq;
       }
   } 
   else if ( "tabprops" == tagName ) 
@@ -235,16 +235,16 @@ void XmlIsotopeCnv::startElement( const char* const name,
 }
 
 void XmlIsotopeCnv::characters(
-			       const char* const  /* chars */  , 
+                               const char* const  /* chars */  , 
                                const unsigned int /* length */
                               )
 {
 }
 
 void XmlIsotopeCnv::ignorableWhitespace(
-					const char* const  /* chars */ , 
+                                        const char* const  /* chars */ , 
                                         const unsigned int /* length */
-					)
+                                        )
 {
 }
 

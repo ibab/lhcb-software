@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.h,v 1.3 2001-03-04 14:56:05 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.h,v 1.4 2001-03-07 13:06:11 ibelyaev Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -102,12 +102,12 @@ protected:
   
   /// Constructors of a simple material
   Material( const std::string& name  = "", 
-	    const double       dens  = 0 , 
+            const double       dens  = 0 , 
             const double       rl    = 0 , 
             const double       al    = 0 ,
-	    const double       temp  = STP_Temperature,
-	    const double       press = STP_Pressure,
-	    const eState       s     = stateUndefined );
+            const double       temp  = STP_Temperature,
+            const double       press = STP_Pressure,
+            const eState       s     = stateUndefined );
   
   /// Destructor
   virtual ~Material();

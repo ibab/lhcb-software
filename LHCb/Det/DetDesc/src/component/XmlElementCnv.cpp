@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.2 2001-03-04 14:56:10 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.3 2001-03-07 13:06:17 ibelyaev Exp $
 
 // STD & STL Headers
 #include <cstdlib>
@@ -199,10 +199,10 @@ void XmlElementCnv::startElement( const char* const name,
     }
     else if ( "tabprops" == tagName ) 
       {
-	const std::string address = attributes.getValue( "address" );
-	long linkID = m_dataObj->addLink( address , 0 ) ;
-	SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
-	((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
+        const std::string address = attributes.getValue( "address" );
+        long linkID = m_dataObj->addLink( address , 0 ) ;
+        SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
+        ((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
       }
     else                                                                   {
       // This should not happen!
@@ -264,9 +264,9 @@ void XmlElementCnv::startElement( const char* const name,
 // XML characters
 // -----------------------------------------------------------------------
 void XmlElementCnv::characters(
-			       const char* const  chars , 
-			       const unsigned int /* length */
-			       )
+                               const char* const  chars , 
+                               const unsigned int /* length */
+                               )
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;
@@ -276,9 +276,9 @@ void XmlElementCnv::characters(
 // XML ignorableWhitespaces
 // -----------------------------------------------------------------------
 void XmlElementCnv::ignorableWhitespace(
-					const char* const chars , 
+                                        const char* const chars , 
                                         const unsigned int /* length */ 
-					)
+                                        )
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;

@@ -12,13 +12,13 @@ class LVolumeException : public GaudiException
 public:
   ///
   LVolumeException( const std::string&    name                             , 
-		    const LVolume*        lvolume   = 0                    , 
-		    const StatusCode&     sc        = StatusCode::FAILURE  ); 
+                    const LVolume*        lvolume   = 0                    , 
+                    const StatusCode&     sc        = StatusCode::FAILURE  ); 
   ///
   LVolumeException( const std::string   & name                             , 
                     const GaudiException& Exception                        , 
-		    const LVolume*        lvolume   = 0                    , 
-		    const StatusCode&     sc        = StatusCode::FAILURE  ); 
+                    const LVolume*        lvolume   = 0                    , 
+                    const StatusCode&     sc        = StatusCode::FAILURE  ); 
   ///
   virtual ~LVolumeException();
   /// 

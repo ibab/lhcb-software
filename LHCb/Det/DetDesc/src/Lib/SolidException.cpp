@@ -7,14 +7,14 @@
 
 //////////////////////////////////////////////////////////////////////////////////////
 SolidException::SolidException( const std::string& message  , 
-				const ISolid*      solid    ) 
+                                const ISolid*      solid    ) 
   : GaudiException( message , "*SolidException*" , StatusCode::FAILURE ) 
   , m_se_solid    ( solid      ) 
 { } ;
 ///////////////////////////////////////////////////////////////////////////////////////
 SolidException::SolidException( const std::string   &  message   ,
-				const GaudiException&  Exception ,  
-				const ISolid*          solid     ) 
+                                const GaudiException&  Exception ,  
+                                const ISolid*          solid     ) 
   : GaudiException( message , "*SolidException*" , StatusCode::FAILURE , Exception ) 
   , m_se_solid    ( solid      ) 
 { } ;

@@ -4,15 +4,15 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 Isotope::Isotope( const std::string name    , 
-		  const double      a       , 
-		  const double      z       , 
-		  const double      n       , 
-		  const double      density ,
-		  const double      rl      ,  
-		  const double      al      ,
-		  const double      temp    , 
-		  const double      press   , 
-		  const eState      s       )
+                  const double      a       , 
+                  const double      z       , 
+                  const double      n       , 
+                  const double      density ,
+                  const double      rl      ,  
+                  const double      al      ,
+                  const double      temp    , 
+                  const double      press   , 
+                  const eState      s       )
   : Material( name , density , rl , al , temp , press , s )
   , m_A( a ) 
   , m_Z( z ) 

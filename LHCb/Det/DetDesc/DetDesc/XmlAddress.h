@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlAddress.h,v 1.3 2001-01-25 15:36:44 ibelyaev Exp $
+///        $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlAddress.h,v 1.4 2001-03-07 13:06:13 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLADDRESS_H
 #define DETDESC_XMLCNVSVC_XMLADDRESS_H 1
 

@@ -72,7 +72,7 @@ class IPVolume_accumulateMatrix: public std::unary_function<IPVolume*,HepTransfo
  public: 
   //
   inline HepTransform3D& operator() ( HepTransform3D&  mtrx , 
-				      const  IPVolume* pv   ) 
+                                      const  IPVolume* pv   ) 
 { mtrx = pv->matrix()*mtrx; return mtrx; }
   //
 }; 

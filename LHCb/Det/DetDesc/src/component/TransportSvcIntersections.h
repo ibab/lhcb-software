@@ -17,13 +17,13 @@
 ///     with different material properties between 2 points ) 
 ///
 unsigned long TransportSvc::intersections( const HepPoint3D&        point               ,    /// initial point on the line  
-					   const HepVector3D&       vect                ,    /// direction vector of the line 
-					   const ISolid::Tick&      tickMin             ,    /// minimal value of line paramater
-					   const ISolid::Tick&      tickMax             ,    /// maximal value of line parameter 
-					   ILVolume::Intersections& intersept           ,    /// (output) container of intersections
-					   double                   threshold           ,    /// threshold value 
-					   IGeometryInfo*           alternativeGeometry ,    /// source of alternative geometry information 
-					   IGeometryInfo*           guessGeometry       )    /// a guess for navigation 
+                                           const HepVector3D&       vect                ,    /// direction vector of the line 
+                                           const ISolid::Tick&      tickMin             ,    /// minimal value of line paramater
+                                           const ISolid::Tick&      tickMax             ,    /// maximal value of line parameter 
+                                           ILVolume::Intersections& intersept           ,    /// (output) container of intersections
+                                           double                   threshold           ,    /// threshold value 
+                                           IGeometryInfo*           alternativeGeometry ,    /// source of alternative geometry information 
+                                           IGeometryInfo*           guessGeometry       )    /// a guess for navigation 
 {
   
   try { 
@@ -52,22 +52,22 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
     /// check - if the previous paramaters are the same
     ///
     if( point1              == m_prevPoint1          && 
-	point2              == m_prevPoint2          &&
-	threshold           == m_previousThreshold   &&
-	alternativeGeometry == m_previousAlternative && 
-	guessGeometry       == m_previousGuess         ) 
+        point2              == m_prevPoint2          &&
+        threshold           == m_previousThreshold   &&
+        alternativeGeometry == m_previousAlternative && 
+        guessGeometry       == m_previousGuess         ) 
       {
-	///
-	/// use cached container!!!
-	/// 
-	intersept.resize( m_localIntersections.size() ); 
-	std::copy( m_localIntersections.begin() , 
-		   m_localIntersections.end  () , 
-		   intersept.begin()            ); 
-	///
-	///
-	///
-	return intersept.size();  
+        ///
+        /// use cached container!!!
+        /// 
+        intersept.resize( m_localIntersections.size() ); 
+        std::copy( m_localIntersections.begin() , 
+                   m_localIntersections.end  () , 
+                   intersept.begin()            ); 
+        ///
+        ///
+        ///
+        return intersept.size();  
       }
     
     
@@ -114,11 +114,11 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
     ///
     ILVolume* lv = giLocal->lvolume();   
     lv->intersectLine( giLocal->matrix() * point , 
-		       giLocal->matrix() * vect  , 
-		       intersept                 , 
-		       tickMin                   , 
-		       tickMax                   , 
-		       threshold                 ); 
+                       giLocal->matrix() * vect  , 
+                       intersept                 , 
+                       tickMin                   , 
+                       tickMax                   , 
+                       threshold                 ); 
     
     ///
     /// make local copy of all parameters:
@@ -136,8 +136,8 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
     
     m_localIntersections.resize( intersept.size() ); 
     std::copy( intersept.begin           () , 
-	       intersept.end             () , 
-	       m_localIntersections.begin() );
+               intersept.end             () , 
+               m_localIntersections.begin() );
     
     ///
     ///
@@ -160,17 +160,17 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
       ///
       std::string message("TransportSvc::intersection(...), exception caught; Params: ");
       {
-	const unsigned int buflen = 1024;
+        const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
-	std::ostrstream ost( buffer , buflen ); 
+        std::ostrstream ost( buffer , buflen ); 
         ost << "Point=" << point 
-	    << ",Vect=" << vect
+            << ",Vect=" << vect
             << ",Tick=" << tickMin << "/" << tickMax  
-	    << "Thrsh=" << threshold; 
-	if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
-	if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
-	message += ost.str(); 	    
-	Assert( false , message , Exception );
+            << "Thrsh=" << threshold; 
+        if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
+        if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
+        message += ost.str();             
+        Assert( false , message , Exception );
       }
     }
   catch( ... ) 
@@ -190,17 +190,17 @@ unsigned long TransportSvc::intersections( const HepPoint3D&        point       
       ///
       std::string message("TransportSvc::intersection(...), unknown exception caught; Params: ");
       {
-	const unsigned int buflen = 1024;
+        const unsigned int buflen = 1024;
         char buffer[buflen] = {0,0}; 
-	std::ostrstream ost( buffer , buflen ); 
+        std::ostrstream ost( buffer , buflen ); 
         ost << "Point=" << point 
-	    << ",Vect=" << vect
+            << ",Vect=" << vect
             << ",Tick=" << tickMin << "/" << tickMax  
-	    << "Thrsh=" << threshold; 
-	if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
-	if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
-	message += ost.str(); 	    
-	Assert( false , message );
+            << "Thrsh=" << threshold; 
+        if( 0 != alternativeGeometry ) { ost << "A.Geo!=NULL" ; }  
+        if( 0 != alternativeGeometry ) { ost << "G.Geo!=NULL" ; }  
+        message += ost.str();             
+        Assert( false , message );
       }
     }
 

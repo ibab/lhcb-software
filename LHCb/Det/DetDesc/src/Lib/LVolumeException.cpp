@@ -7,16 +7,16 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////
 LVolumeException::LVolumeException( const std::string& name    , 
-				    const LVolume*     lvolume , 
-				    const StatusCode&  sc      ) 
+                                    const LVolume*     lvolume , 
+                                    const StatusCode&  sc      ) 
   : GaudiException( name , "*LVolumeException*" , sc)
   , m_lve_lvolume   ( lvolume    ) 
 {} ;
 //////////////////////////////////////////////////////////////////////////////////////////
 LVolumeException::LVolumeException( const std::string   & name       ,
-				    const GaudiException& Exception  , 
-				    const LVolume*        lvolume    , 
-				    const StatusCode&     sc         ) 
+                                    const GaudiException& Exception  , 
+                                    const LVolume*        lvolume    , 
+                                    const StatusCode&     sc         ) 
   : GaudiException( name , "*LVolumeException*" , sc , Exception )
   , m_lve_lvolume   ( lvolume    ) 
 {} ;

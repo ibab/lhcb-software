@@ -38,10 +38,10 @@ protected:
   SolidChild();
   // constructor                  ( protected ! )  
   SolidChild( ISolid*               Solid      , 
-	      const HepTransform3D* mtrx   = 0 );
+              const HepTransform3D* mtrx   = 0 );
   // another form of constructor  ( protected ! )
   SolidChild( ISolid*               Solid                     ,
-	      const HepPoint3D&     Position                  , 
+              const HepPoint3D&     Position                  , 
               const HepRotation&    Rotation = HepRotation()  ); 
   // copy constructor             ( protected ! )
   SolidChild           ( const SolidChild&     Solid );
@@ -75,17 +75,17 @@ public:
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D& Point  ,          // initial point for teh line 
-						   const HepVector3D& Vector ,          // vector along the line 
-						   ISolid::Ticks   & ticks  ) const ;  // output container of "Ticks"
+                                                   const HepVector3D& Vector ,          // vector along the line 
+                                                   ISolid::Ticks   & ticks  ) const ;  // output container of "Ticks"
   /// calculate the intersection points("ticks") with a given line. 
   /// Input - line, paramterised by (Point + Vector * Tick) 
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
-						   const HepVector3D&   Vector  ,          // vector along the line 
+                                                   const HepVector3D&   Vector  ,          // vector along the line 
                                                    const ISolid::Tick& tickMin , 
                                                    const ISolid::Tick& tickMax , 
-						   ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
+                                                   ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
   
   // "new" method - return solid itself 
   inline const ISolid*             solid        () const { return m_sc_solid; };

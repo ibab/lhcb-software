@@ -67,7 +67,7 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de      )
 };
 // create orphan ///////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
-			    const std::string&           LogVol      ) 
+                            const std::string&           LogVol      ) 
   : m_gi_has_logical      (    true     )
   , m_gi_lvolumeName      (   LogVol    )
   , m_gi_lvolume          (       0     )
@@ -111,9 +111,9 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 };
 /// create regular  with numeric replica path /////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
-			    const std::string&           LogVol      , 
-			    const std::string&           Support     ,
-			    const ILVolume::ReplicaPath& replicaPath )
+                            const std::string&           LogVol      , 
+                            const std::string&           Support     ,
+                            const ILVolume::ReplicaPath& replicaPath )
   : m_gi_has_logical      (    true     )
   , m_gi_lvolumeName      (   LogVol    )
   , m_gi_lvolume          (       0     )
@@ -157,9 +157,9 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
 };  
 /// create regular  with name path ///////////////////////////////////////////////////////////////////////
 GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
-			    const std::string&           LogVol          , 
-			    const std::string&           Support         ,
-			    const std::string&           ReplicaNamePath ) 
+                            const std::string&           LogVol          , 
+                            const std::string&           Support         ,
+                            const std::string&           ReplicaNamePath ) 
   : m_gi_has_logical      (    true         )
   , m_gi_lvolumeName      (   LogVol        )
   , m_gi_lvolume          (       0         )
@@ -217,10 +217,10 @@ StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb )
       sb >> m_gi_supportName     ;
       sb >> m_gi_supportNamePath ; 
       {
-	unsigned long n ;
-	unsigned long i ;
-	sb >> n ; m_gi_supportPath.clear()   ; 
-	while( n-- > 0 ) { sb >> i ; m_gi_supportPath.push_back( i ) ; }
+        unsigned long n ;
+        unsigned long i ;
+        sb >> n ; m_gi_supportPath.clear()   ; 
+        while( n-- > 0 ) { sb >> i ; m_gi_supportPath.push_back( i ) ; }
       }
     } 
   ///
@@ -309,12 +309,12 @@ std::ostream& GeometryInfo::printOut( std::ostream& os ) const
       os << " LVolume=" << lvolumeName() << ";";
       if( !hasSupport() ) { os << "('orphan');"; } 
       else
-	{
-	  os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
-	  std::copy( m_gi_supportPath.begin() , m_gi_supportPath.end() , std::ostream_iterator<ILVolume::ReplicaType>(os,",") );
-	  os << ") ";
-	  os << "(" << m_gi_supportNamePath << ");";
-	}
+        {
+          os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
+          std::copy( m_gi_supportPath.begin() , m_gi_supportPath.end() , std::ostream_iterator<ILVolume::ReplicaType>(os,",") );
+          os << ") ";
+          os << "(" << m_gi_supportNamePath << ");";
+        }
     }
   //
   return os << std::endl;
@@ -329,13 +329,13 @@ MsgStream& GeometryInfo::printOut( MsgStream& os ) const
       os << " LVolume=" << lvolumeName() << ";";
       if( !hasSupport() ) { os << "('orphan');"; } 
       else
-	{
-	  os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
-	  ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
+        {
+          os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
+          ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
           while( supportPath().end() != ci ) { os << *ci++ << "," ; }
-	  os << ") ";
-	  os << "(" << m_gi_supportNamePath << ");";
-	}
+          os << ") ";
+          os << "(" << m_gi_supportNamePath << ");";
+        }
     }
   //
   return os << endreq ;
@@ -387,7 +387,7 @@ StatusCode GeometryInfo::loadChildren() const
   m_gi_childLoaded = false; 
   ///  
   Assert( 0 != m_gi_iDetectorElement, 
-	  "GeometryInfo::loadChildren IDetectorElement is not availble!");
+          "GeometryInfo::loadChildren IDetectorElement is not availble!");
   ///
   IDetectorElement::IDEContainer& IDEchildrens = 
     m_gi_iDetectorElement->childIDetectorElements(); 
@@ -396,19 +396,19 @@ StatusCode GeometryInfo::loadChildren() const
     {
       IDetectorElement* ide = *it++; 
       try{ 
-	IGeometryInfo* igi   = 0 ; 
+        IGeometryInfo* igi   = 0 ; 
         DataObject*    pObj  = 0 ; 
-	std::string    path("")  ;  
-	if( 0 != ide  ) { igi  = ide->geometry();                }
-	if( 0 != ide  ) { pObj = dynamic_cast<DataObject*>(ide); }
-	if( 0 != pObj ) { path = pObj->fullpath();               }
+        std::string    path("")  ;  
+        if( 0 != ide  ) { igi  = ide->geometry();                }
+        if( 0 != ide  ) { pObj = dynamic_cast<DataObject*>(ide); }
+        if( 0 != pObj ) { path = pObj->fullpath();               }
         if( 0 != igi &&  0 != path.size() )
-	  { m_gi_childrensNames.push_back( path ); m_gi_childrens.push_back( igi  ); }    
+          { m_gi_childrensNames.push_back( path ); m_gi_childrens.push_back( igi  ); }    
       }
       catch( const GaudiException& Exception ) 
-	{  Assert( false , "GeometryInfo::loadChildren(): exception caught!" , Exception ) ; }   ///  throw new exception 
+        {  Assert( false , "GeometryInfo::loadChildren(): exception caught!" , Exception ) ; }   ///  throw new exception 
       catch(...)                   
-	{  Assert( false , "GeometryInfo::loadChildren(): unknown exception caught!"     ) ; }   ///  throw new exception 
+        {  Assert( false , "GeometryInfo::loadChildren(): unknown exception caught!"     ) ; }   ///  throw new exception 
     } 
   //
   m_gi_childLoaded = true; 

@@ -37,17 +37,17 @@ class SolidTrap: public  virtual ISolid                ,
   ///
   /// constructor 
   SolidTrap( const std::string&  name             , /* name of this solid */ 
-	     const double        zHalfLength      , /* half length along z-axes for given solid */
-	     const double        theta            , /* polar angle of "axe" of this trapezoid   */  
-	     const double        phi              , /* asimuthal angle of the "axe" of this trapezoid */   
-	     const double        dyAtMinusZ       ,  
-	     const double        dxAtMinusZMinusY , 
-	     const double        dxAtMinusZPlusY  ,
-	     const double        alphaAtMinusZ    ,
-	     const double        dyAtPlusZ        ,  
-	     const double        dxAtPlusZMinusY  , 
-	     const double        dxAtPlusZPlusY   ,
-	     const double        alphaAtPlusZ    );
+             const double        zHalfLength      , /* half length along z-axes for given solid */
+             const double        theta            , /* polar angle of "axe" of this trapezoid   */  
+             const double        phi              , /* asimuthal angle of the "axe" of this trapezoid */   
+             const double        dyAtMinusZ       ,  
+             const double        dxAtMinusZMinusY , 
+             const double        dxAtMinusZPlusY  ,
+             const double        alphaAtMinusZ    ,
+             const double        dyAtPlusZ        ,  
+             const double        dxAtPlusZMinusY  , 
+             const double        dxAtPlusZPlusY   ,
+             const double        alphaAtPlusZ    );
   ///
   /// destructor 
   virtual ~SolidTrap();

@@ -35,7 +35,7 @@ class SolidBoolean: public ISolid
   //
   // constructor - "main"("first") solid is mandatory! 
   SolidBoolean( const std::string& name  , 
-		ISolid*            solid );
+                ISolid*            solid );
   //
   virtual ~SolidBoolean();
   //  
@@ -59,17 +59,17 @@ class SolidBoolean: public ISolid
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual unsigned int intersectionTicks ( const HepPoint3D & Point  ,          // initial point for teh line 
-					   const HepVector3D& Vector ,          // vector along the line 
-					   ISolid::Ticks    & ticks  ) const ;  // output container of "Ticks"
+                                           const HepVector3D& Vector ,          // vector along the line 
+                                           ISolid::Ticks    & ticks  ) const ;  // output container of "Ticks"
   /// calculate the intersection points("ticks") with a given line. 
   /// Input - line, paramterised by (Point + Vector * Tick) 
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          // initial point for teh line 
-					   const HepVector3D & Vector  ,          // vector along the line 
-					   const ISolid::Tick& tickMin ,          // minimal value for the tick 
-					   const ISolid::Tick& tickMax ,          // maximal value for the tick 
-					   ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
+                                           const HepVector3D & Vector  ,          // vector along the line 
+                                           const ISolid::Tick& tickMin ,          // minimal value for the tick 
+                                           const ISolid::Tick& tickMax ,          // maximal value for the tick 
+                                           ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
   // from SolidBoolean 
   // return poiter to the "main"/"first" boolean 
   inline  const  ISolid*       first       ()                    const { return m_sb_first;            } ; 
@@ -94,10 +94,10 @@ class SolidBoolean: public ISolid
  protected:
   // add child to daughter container 
   StatusCode                             addChild   ( ISolid*               child    , 
-						      const HepTransform3D* mtrx     );
+                                                      const HepTransform3D* mtrx     );
   // add child to daughter container 
   StatusCode                             addChild   ( ISolid*               child    , 
-						      const HepPoint3D&     position , 
+                                                      const HepPoint3D&     position , 
                                                       const HepRotation&    rotation );
   // iterators 
   inline SolidChildrens::iterator        childBegin ()       { return m_sb_childrens.begin(); }; 

@@ -90,52 +90,52 @@ public:
   inline       IGeometryInfo*   belongsTo    ( const HepPoint3D& globalPoint );     
   // return the name of the daughter element to which the given point belongs to (taking into account the level)
   inline       std::string      belongsToPath( const HepPoint3D& globalPoint ,       
-					       const int         level       );       
+                                               const int         level       );       
   // return the C++ pointer to the daughter element to which the given point belongs to  (taking into account the level)   
   inline       IGeometryInfo*   belongsTo    ( const HepPoint3D& globalPoint ,        
-					       const int         level       );      
+                                               const int         level       );      
   // return the full geometry info for a given point in teh global reference system 
   inline StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
-					 const int                level      , 
-					 IGeometryInfo*&          start      , 
-					 ILVolume::PVolumePath&   volumePath );       
+                                         const int                level      , 
+                                         IGeometryInfo*&          start      , 
+                                         ILVolume::PVolumePath&   volumePath );       
   // return the full geometry info for a given point in teh global reference system 
   inline StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
-					 const int                level      , 
-					 IGeometryInfo*&          start      , 
-					 ILVolume::ReplicaPath&   volumePath );      
+                                         const int                level      , 
+                                         IGeometryInfo*&          start      , 
+                                         ILVolume::ReplicaPath&   volumePath );      
   // return the full geometry info for a given point in teh global reference system 
   inline StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
-					 const int                level      , 
-					 std::string&             start      , 
-					 ILVolume::PVolumePath&   volumePath );       
+                                         const int                level      , 
+                                         std::string&             start      , 
+                                         ILVolume::PVolumePath&   volumePath );       
   // return the full geometry info for a given point in teh global reference system 
   inline StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
-					 const int                level      , 
-					 std::string&             start      , 
-					 ILVolume::ReplicaPath&   volumePath );     
+                                         const int                level      , 
+                                         std::string&             start      , 
+                                         ILVolume::ReplicaPath&   volumePath );     
   // return teh name of the assosiated logical volume 
   inline const std::string&      lvolumeName() const ;                                        
   // return the C++ pointer4 to the assosiated logical volume 
   inline       ILVolume*         lvolume    () const ;                                             
   // return the location (address) of this geometry object  
   inline StatusCode       location   ( IGeometryInfo*&              start , 
-				       ILVolume::ReplicaPath&       replicaPath ) const ;   
+                                       ILVolume::ReplicaPath&       replicaPath ) const ;   
   // return the location (address) of this geometry object  
   inline StatusCode       location   ( std::string&                 start , 
-				       ILVolume::ReplicaPath&       replicaPath ) const ;   
+                                       ILVolume::ReplicaPath&       replicaPath ) const ;   
     // return the name of the logical volume with a given address 
   inline std::string      lvolumePath( const std::string&           start       , 
-				       const ILVolume::ReplicaPath& replicaPath );   
+                                       const ILVolume::ReplicaPath& replicaPath );   
   // return the C++ pointer to  the logical volume with a given address 
   inline ILVolume*        lvolume    ( const std::string&           start       , 
-				       const ILVolume::ReplicaPath& replicaPath );    
+                                       const ILVolume::ReplicaPath& replicaPath );    
   // return the name of the logical volume with a given address 
   inline std::string      lvolumePath( IGeometryInfo*               start       , 
-				       const ILVolume::ReplicaPath& replicaPath );   
+                                       const ILVolume::ReplicaPath& replicaPath );   
   // return the C++ pointer to  the logical volume with a given address 
   inline ILVolume*        lvolume    ( IGeometryInfo*               start       , 
-				       const ILVolume::ReplicaPath& replicaPath );  
+                                       const ILVolume::ReplicaPath& replicaPath );  
   // overloades printout to  std::ostream 
   virtual std::ostream& printOut   ( std::ostream& ) const;
   // overloiaded printout to the MsgStream 
@@ -194,11 +194,11 @@ public:
   inline        ILVolume::ReplicaPath& supportPath     () const ; 
   /// Assertion 
   inline void                Assert       ( bool assertion          , 
-					    const std::string& name ) const; 
+                                            const std::string& name ) const; 
   /// Assertion 
   inline void                Assert       ( bool assertion           , 
-					    const std::string& name  , 
-					    const GaudiException& ge ) const; 
+                                            const std::string& name  , 
+                                            const GaudiException& ge ) const; 
   ///
  private:
   // Logical Volume

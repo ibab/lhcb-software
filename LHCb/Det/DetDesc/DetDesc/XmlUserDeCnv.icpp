@@ -155,7 +155,7 @@ StatusCode XmlUserDeCnv<DeType>::createObj(
   if( sc.isFailure() )
   {
     log << MSG::DEBUG << "Conversion of " << m_msId
-	                  << " detector element failed..." << endreq;
+                          << " detector element failed..." << endreq;
     delete refpObject;
   }
 //  else

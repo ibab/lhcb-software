@@ -134,18 +134,18 @@ StatusCode XmlMixtureCnv::createObj( IOpaqueAddress* pAddress,
 // Resolve the references of the created transient object.
 // -----------------------------------------------------------------------
 StatusCode XmlMixtureCnv::fillObjRefs(
-				      IOpaqueAddress* /* pAddress */ , 
-				      DataObject*     /* pObject  */ 
-				      )
+                                      IOpaqueAddress* /* pAddress */ , 
+                                      DataObject*     /* pObject  */ 
+                                      )
 {
   return StatusCode::SUCCESS;
 }
 
 // Update the transient object from the other representation.
 StatusCode XmlMixtureCnv::updateObj(
-				    IOpaqueAddress* /* pAddress */ , 
+                                    IOpaqueAddress* /* pAddress */ , 
                                     DataObject*     /* pObject  */
-				    )
+                                    )
 {
   return StatusCode::SUCCESS;
 }
@@ -239,10 +239,10 @@ void XmlMixtureCnv::startElement( const char* const name,
     }
     else if ( "tabprops" == tagName ) 
       {
-	const std::string address = attributes.getValue( "address" );
-	long linkID = m_dataObj->addLink( address , 0 ) ;
-	SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
-	((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
+        const std::string address = attributes.getValue( "address" );
+        long linkID = m_dataObj->addLink( address , 0 ) ;
+        SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
+        ((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
       }
     else                                                                   {
       // This should not happen!
@@ -349,52 +349,52 @@ void XmlMixtureCnv::endElement( const char* const name )
   try
     {      
       if( "material" == tagName ) 
-	{
-	  // Since we ask only for material tag XmlGenericCnv SAX handler should
-	  // send us only end tag of our material the others should be ignored
-	  // Material is (hopefully) converted so
-	  // in case of mixture we have to compute some stuff    
-	  if( CLID_Mixture == m_objRcpt->clID() ) 
-	    {
-	      Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
-	      if( 0 == m ) { throw XmlCnvException("XmlMixtureCnv::endElement: bad cast") ; }
-	      m->compute() ; 
-	      m_mixMode = MM_undefined;
-	    } 
-	  else { /* What to do here ? */ }
-	} 
+        {
+          // Since we ask only for material tag XmlGenericCnv SAX handler should
+          // send us only end tag of our material the others should be ignored
+          // Material is (hopefully) converted so
+          // in case of mixture we have to compute some stuff    
+          if( CLID_Mixture == m_objRcpt->clID() ) 
+            {
+              Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
+              if( 0 == m ) { throw XmlCnvException("XmlMixtureCnv::endElement: bad cast") ; }
+              m->compute() ; 
+              m_mixMode = MM_undefined;
+            } 
+          else { /* What to do here ? */ }
+        } 
       else if( "materialref" == tagName || "elementref" == tagName ) 
-	{
-	  // At this point we should have loaded referred material so we need
-	  // to find out its form either element or mixture and add it
-	  
-	  Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
-	  if( 0 == m ) { throw XmlCnvException("XmlMixtureCnv::endElement: bad cast") ; }
-	  
-	  if(      CLID_Element == m_itemObj->clID() ) 
-	    {
-	      Element* e = dynamic_cast<Element*>(m_itemObj);
-	      if( m_mixMode == MM_byNAtoms ) 
-		{ m->addElement( e, (int) m_itemFraction , false ); } 
-	      else 
-		{ m->addElement( e, m_itemFraction, false ); }
-	    } 
-	  else if( CLID_Mixture == m_itemObj->clID() )     
-	    {
-	      Mixture* mc = dynamic_cast<Mixture*>(m_itemObj);
-	      m->addMixture( mc, m_itemFraction, false ); 
-	    }
-	  else 
-	    {
-	      // This should not happen
-	      m_itemObj->release();
-	      StatusCode stcod;
-	      stcod.setCode( INVALID_CLASS_ID );
-	      std::string msg = "Wrong element or mixture composite, invalid combination";
-	      throw XmlCnvException(msg.c_str(),stcod);      
-	    }
-	  m_itemObj = 0;
-	}
+        {
+          // At this point we should have loaded referred material so we need
+          // to find out its form either element or mixture and add it
+          
+          Mixture* m = dynamic_cast<Mixture*>(m_dataObj);
+          if( 0 == m ) { throw XmlCnvException("XmlMixtureCnv::endElement: bad cast") ; }
+          
+          if(      CLID_Element == m_itemObj->clID() ) 
+            {
+              Element* e = dynamic_cast<Element*>(m_itemObj);
+              if( m_mixMode == MM_byNAtoms ) 
+                { m->addElement( e, (int) m_itemFraction , false ); } 
+              else 
+                { m->addElement( e, m_itemFraction, false ); }
+            } 
+          else if( CLID_Mixture == m_itemObj->clID() )     
+            {
+              Mixture* mc = dynamic_cast<Mixture*>(m_itemObj);
+              m->addMixture( mc, m_itemFraction, false ); 
+            }
+          else 
+            {
+              // This should not happen
+              m_itemObj->release();
+              StatusCode stcod;
+              stcod.setCode( INVALID_CLASS_ID );
+              std::string msg = "Wrong element or mixture composite, invalid combination";
+              throw XmlCnvException(msg.c_str(),stcod);      
+            }
+          m_itemObj = 0;
+        }
     }
   catch( const GaudiException& ge ) 
     { throw XmlCnvException("XmlMixtureCnv::endElement: Gaudi exception ",ge); }

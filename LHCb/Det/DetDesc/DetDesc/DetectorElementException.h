@@ -21,13 +21,13 @@ class DetectorElementException : public GaudiException
 public:
   /// constructor 
   DetectorElementException( const std::string     & name                                   , 
-			    const DetectorElement * DetectorElement = 0                    , 
-			    const StatusCode      &  sc             = StatusCode::FAILURE  ); 
+                            const DetectorElement * DetectorElement = 0                    , 
+                            const StatusCode      &  sc             = StatusCode::FAILURE  ); 
   /// constructor from exception 
   DetectorElementException( const std::string     & name                                    , 
-			    const GaudiException  & Exception                               , 
-			    const DetectorElement * DetectorElement   = 0                   , 
-			    const StatusCode      & sc                = StatusCode::FAILURE  ); 
+                            const GaudiException  & Exception                               , 
+                            const DetectorElement * DetectorElement   = 0                   , 
+                            const StatusCode      & sc                = StatusCode::FAILURE  ); 
   /// virtual destructor 
   virtual ~DetectorElementException();  
   ///

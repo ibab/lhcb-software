@@ -34,9 +34,9 @@ class SolidTrd: public  virtual ISolid ,
   //
   // constructor, all sizes in mm, no any default values! 
   SolidTrd( const std::string& name         ,
-	    const double       zHalfLength  , 
-	    const double       XHalfLength1 , 
-	    const double       YHalfLength1 , 
+            const double       zHalfLength  , 
+            const double       XHalfLength1 , 
+            const double       YHalfLength1 , 
             const double       XHalfLength2 , 
             const double       YHalfLength2 );
   //
@@ -65,17 +65,17 @@ class SolidTrd: public  virtual ISolid ,
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D& Point  ,          // initial point for teh line 
-						   const HepVector3D& Vector ,          // vector along the line 
-						   ISolid::Ticks   & ticks  ) const ;  // output container of "Ticks"
+                                                   const HepVector3D& Vector ,          // vector along the line 
+                                                   ISolid::Ticks   & ticks  ) const ;  // output container of "Ticks"
   /// calculate the intersection points("ticks") with a given line. 
   /// Input - line, paramterised by (Point + Vector * Tick) 
   /// "Tick" is just a value of parameter, at which the intercestion occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D&   Point   ,          // initial point for teh line 
-						   const HepVector3D&   Vector  ,          // vector along the line 
+                                                   const HepVector3D&   Vector  ,          // vector along the line 
                                                    const ISolid::Tick& tickMin ,          // minimal value for the tick 
                                                    const ISolid::Tick& tickMax ,          // maximal value for tick 
-						   ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
+                                                   ISolid::Ticks   &   ticks   ) const ;  // output container of "Ticks"
   //
   // function specific for SolidTrd
   //

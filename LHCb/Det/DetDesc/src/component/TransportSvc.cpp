@@ -125,9 +125,9 @@ StatusCode TransportSvc::initialize()
     if( statusCode.isSuccess() && 0 != m_magFieldSvc ) { magFieldSvc()->addRef(); } 
     else 
       { 
-	log << MSG::FATAL << " Unable to locate  Magnetic Field Service=" << m_magFieldSvc_name << endreq; 
-	m_magFieldSvc = 0 ;  
-	return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
+        log << MSG::FATAL << " Unable to locate  Magnetic Field Service=" << m_magFieldSvc_name << endreq; 
+        m_magFieldSvc = 0 ;  
+        return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
       } 
   }
   ///
@@ -138,9 +138,9 @@ StatusCode TransportSvc::initialize()
     if( statusCode.isSuccess() && 0 != m_detDataSvc ) { detSvc()->addRef(); } 
     else 
       { 
-	log << MSG::FATAL << " Unable to locate  Detector Data Service=" << m_detDataSvc_name << endreq; 
-	m_magFieldSvc = 0 ;  
-	return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
+        log << MSG::FATAL << " Unable to locate  Detector Data Service=" << m_detDataSvc_name << endreq; 
+        m_magFieldSvc = 0 ;  
+        return StatusCode::FAILURE ;                                                                   /// RETURN !!! 
       } 
   }
   /// locate other services: 

@@ -53,11 +53,11 @@ std::ostream& TabulatedProperty::fillStream ( std::ostream& s ) const
   for( Table::const_iterator it = table().begin() ; table().end() != it ; ++it )
     {
       s << " \t\t\t( entry#"    
-	<< std::setw(2) << it-table().begin()
-	<< "   "      
-	<< std::setw(12) << it->first 
-	<< "   "      
-	<< std::setw(12) << it->second << " ) " << std::endl;
+        << std::setw(2) << it-table().begin()
+        << "   "      
+        << std::setw(12) << it->first 
+        << "   "      
+        << std::setw(12) << it->second << " ) " << std::endl;
     }
   return s ;
 };
@@ -72,11 +72,11 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
   for( Table::const_iterator it = table().begin() ; table().end() != it ; ++it )
     {
       s << " \t\t\t( entry#" 
-	<< std::setw(2) << it-table().begin()
-	<< "   "      
-	<< std::setw(12) << it->first 
-	<< "   " 
-	<< std::setw(12) << it->second << " )" << endreq ;
+        << std::setw(2) << it-table().begin()
+        << "   "      
+        << std::setw(12) << it->first 
+        << "   " 
+        << std::setw(12) << it->second << " )" << endreq ;
     }
   return s ;
 };

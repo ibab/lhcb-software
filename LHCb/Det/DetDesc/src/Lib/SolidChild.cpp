@@ -33,8 +33,8 @@ SolidChild::SolidChild( ISolid*                solid ,
 };
 // another constructor /////////////////////////////////////////////////////////////////////////////////////////////
 SolidChild::SolidChild( ISolid*              solid    , 
-			const HepPoint3D&    Position , 
-			const HepRotation&   Rotation )
+                        const HepPoint3D&    Position , 
+                        const HepRotation&   Rotation )
   : m_sc_solid     ( solid )
   , m_sc_simple    ( true  )
   , m_sc_matrix    (   0   ) 
@@ -48,7 +48,7 @@ SolidChild::SolidChild( ISolid*              solid    ,
   else 
     {
       m_sc_matrix    = 
-	new HepTransform3D( HepRotate3D( Rotation)*HepTranslate3D( -1.0 * Position ) );
+        new HepTransform3D( HepRotate3D( Rotation)*HepTranslate3D( -1.0 * Position ) );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
 };

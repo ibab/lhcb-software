@@ -30,11 +30,11 @@ class SolidTubs: public ISolid
   //
   //  constructor, all sizes in mm, all angles in radians 
   SolidTubs( const std::string& name                             ,
-	     const double       ZHalfLength                      , 
-	     const double       OuterRadius                      ,
-	     const double       InnerRadius   =   0.0            , 
-	     const double       StartPhiAngle =   0.0 * degree   , 
-	     const double       DeltaPhiAngle = 360.0 * degree   ,
+             const double       ZHalfLength                      , 
+             const double       OuterRadius                      ,
+             const double       InnerRadius   =   0.0            , 
+             const double       StartPhiAngle =   0.0 * degree   , 
+             const double       DeltaPhiAngle = 360.0 * degree   ,
              const int          CoverModel    =   0              );     
   //
   // destructor 
@@ -62,13 +62,13 @@ class SolidTubs: public ISolid
   /// "Tick" is just a value of parameter, at which the intersection occurs 
   /// Return the number of intersection points (=size of Ticks container)   
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D& Point  ,             /// initial point for teh line 
-						   const HepVector3D& Vector ,             /// vector along the line 
-						   ISolid::Ticks   & ticks  ) const ;     /// output container of "Ticks"
+                                                   const HepVector3D& Vector ,             /// vector along the line 
+                                                   ISolid::Ticks   & ticks  ) const ;     /// output container of "Ticks"
   virtual inline  unsigned int intersectionTicks ( const HepPoint3D  & Point   ,          /// initial point for the line 
-						   const HepVector3D  & Vector  ,          /// vector along the line
+                                                   const HepVector3D  & Vector  ,          /// vector along the line
                                                    const ISolid::Tick& tickMin ,          /// minimal value of tick
                                                    const ISolid::Tick& tickMax ,          /// maximal value of tick 
-						   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
+                                                   ISolid::Ticks     & ticks   ) const ;  /// output container of "Ticks"
   
   //
   // function specific for SolidTubs

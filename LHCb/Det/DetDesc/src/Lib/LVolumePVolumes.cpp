@@ -16,7 +16,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
-				  const std::string&    LVnameForPV    )
+                                  const std::string&    LVnameForPV    )
 {
   HepPoint3D  Position;
   HepRotation Rotation;
@@ -24,16 +24,16 @@ IPVolume* LVolume::createPVolume( const std::string&    PVname         ,
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
-				  const std::string&    LVnameForPV    ,
-				  const HepPoint3D&     Position       )
+                                  const std::string&    LVnameForPV    ,
+                                  const HepPoint3D&     Position       )
 {
   HepRotation Rotation;
   return createPVolume( PVname , LVnameForPV , Position , Rotation );
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
-				  const std::string&    LVnameForPV    ,
-				  const HepPoint3D&     Position       ,
+                                  const std::string&    LVnameForPV    ,
+                                  const HepPoint3D&     Position       ,
                                   const HepRotation&    Rotation       ) 
 {
   //
@@ -52,8 +52,8 @@ IPVolume* LVolume::createPVolume( const std::string&    PVname         ,
 };
 ///////////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createPVolume( const std::string&    PVname         , 
-				  const std::string&    LVnameForPV    ,
-				  const HepTransform3D& Transform      )
+                                  const std::string&    LVnameForPV    ,
+                                  const HepTransform3D& Transform      )
 {
   //
   PVolume* pv = 0; 
@@ -72,10 +72,10 @@ IPVolume* LVolume::createPVolume( const std::string&    PVname         ,
 ///////////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base     , 
                                        const std::string&   LVnameForPV     , 
-				       const unsigned long  nStep           , 
-				       const HepPoint3D&    initialPosition ,
-				       const HepRotation&   initialRotation ,     
-				       const HepVector3D&   stepTranslation ,
+                                       const unsigned long  nStep           , 
+                                       const HepPoint3D&    initialPosition ,
+                                       const HepRotation&   initialRotation ,     
+                                       const HepVector3D&   stepTranslation ,
                                        const HepRotation&   stepRotation    )
 {
   ///
@@ -111,13 +111,13 @@ IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base     ,
 /// two loops //////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      , 
                                        const std::string&   LVnameForPV      , 
-				       const HepPoint3D&    initialPosition  ,
-				       const HepRotation&   initialRotation  ,     
-				       const unsigned long  nStep1           , 
-				       const HepVector3D&   stepTranslation1 ,
+                                       const HepPoint3D&    initialPosition  ,
+                                       const HepRotation&   initialRotation  ,     
+                                       const unsigned long  nStep1           , 
+                                       const HepVector3D&   stepTranslation1 ,
                                        const HepRotation&   stepRotation1    ,
-				       const unsigned long  nStep2           , 
-				       const HepVector3D&   stepTranslation2 ,
+                                       const unsigned long  nStep2           , 
+                                       const HepVector3D&   stepTranslation2 ,
                                        const HepRotation&   stepRotation2    )
 {
   ///
@@ -132,27 +132,27 @@ IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      ,
       HepRotation rotation2( rotation1 ) ; 
       ///
       for( unsigned long step2 = 0 ; step2 < nStep2 ; ++step2 ) 
-	{
-	  ///
-	  const int buffer_size = 256;  
-	  char buffer[ buffer_size ] = { 0 , 0 }; 
-	  std::ostrstream ost(buffer, buffer_size); 
-	  ost << PVname_base << "_[" << step1 << "][" << step2 << "]"; 
-	  ///
-	  const unsigned int len = strlen(ost.str()); 
-	  char *resstr = new char[len+1]; 
-	  strncpy(resstr,ost.str(),len);
-	  resstr[len] = 0; 
-	  ///
-	  std::string pvname( resstr ); 
-	  delete [] resstr;
-	  ///
-	  pv = createPVolume( pvname , LVnameForPV , position2 , rotation2 ); 
-	  ///
-	  position2 += stepTranslation2 ; 
-	  rotation2 *= stepRotation2    ;  
-	  ///
-	}
+        {
+          ///
+          const int buffer_size = 256;  
+          char buffer[ buffer_size ] = { 0 , 0 }; 
+          std::ostrstream ost(buffer, buffer_size); 
+          ost << PVname_base << "_[" << step1 << "][" << step2 << "]"; 
+          ///
+          const unsigned int len = strlen(ost.str()); 
+          char *resstr = new char[len+1]; 
+          strncpy(resstr,ost.str(),len);
+          resstr[len] = 0; 
+          ///
+          std::string pvname( resstr ); 
+          delete [] resstr;
+          ///
+          pv = createPVolume( pvname , LVnameForPV , position2 , rotation2 ); 
+          ///
+          position2 += stepTranslation2 ; 
+          rotation2 *= stepRotation2    ;  
+          ///
+        }
       ///
       position1 += stepTranslation1 ; 
       rotation1 *= stepRotation1    ;  
@@ -165,16 +165,16 @@ IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      ,
 /// three loops /////////////////////////////////////////////////////////////////////////////////
 IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      , 
                                        const std::string&   LVnameForPV      , 
-				       const HepPoint3D&    initialPosition  ,
-				       const HepRotation&   initialRotation  ,     
-				       const unsigned long  nStep1           , 
-				       const HepVector3D&   stepTranslation1 ,
+                                       const HepPoint3D&    initialPosition  ,
+                                       const HepRotation&   initialRotation  ,     
+                                       const unsigned long  nStep1           , 
+                                       const HepVector3D&   stepTranslation1 ,
                                        const HepRotation&   stepRotation1    ,
-				       const unsigned long  nStep2           , 
-				       const HepVector3D&   stepTranslation2 ,
+                                       const unsigned long  nStep2           , 
+                                       const HepVector3D&   stepTranslation2 ,
                                        const HepRotation&   stepRotation2    ,
-				       const unsigned long  nStep3           , 
-				       const HepVector3D&   stepTranslation3 ,
+                                       const unsigned long  nStep3           , 
+                                       const HepVector3D&   stepTranslation3 ,
                                        const HepRotation&   stepRotation3    )
 {
   ///
@@ -189,38 +189,38 @@ IPVolume* LVolume::createMultiPVolume( const std::string&   PVname_base      ,
       HepRotation rotation2( rotation1 ) ; 
       ///
       for( unsigned long step2 = 0 ; step2 < nStep2 ; ++step2 )
-	{
-	  /// 
-	  HepPoint3D  position3( position2 ) ; 
-	  HepRotation rotation3( rotation2 ) ; 
-	  ///
-	  for( unsigned long step3 = 0 ; step3 < nStep3 ; ++step3 ) 
-	    {
-	      ///
-	      const int buffer_size = 256;  
-	      char buffer[ buffer_size ] = { 0 , 0 }; 
-	      std::ostrstream ost(buffer, buffer_size); 
-	      ost << PVname_base << "_[" << step1 << "][" << step2 << "][" << step3 << "]"; 
-	      ///
-	      const unsigned int len = strlen(ost.str()); 
-	      char *resstr = new char[len+1]; 
-	      strncpy(resstr,ost.str(),len);
-	      resstr[len] = 0; 
-	      ///
-	      std::string pvname( resstr ); 
-	      delete [] resstr;
-	      ///
-	      pv = createPVolume( pvname , LVnameForPV , position3 , rotation3 ); 
-	      ///
-	      position3 += stepTranslation3 ; 
-	      rotation3 *= stepRotation3    ;  
-	      ///
-	    }
-	  ///	  
-	  position2 += stepTranslation2 ; 
-	  rotation2 *= stepRotation2    ;  
-	  ///
-	}
+        {
+          /// 
+          HepPoint3D  position3( position2 ) ; 
+          HepRotation rotation3( rotation2 ) ; 
+          ///
+          for( unsigned long step3 = 0 ; step3 < nStep3 ; ++step3 ) 
+            {
+              ///
+              const int buffer_size = 256;  
+              char buffer[ buffer_size ] = { 0 , 0 }; 
+              std::ostrstream ost(buffer, buffer_size); 
+              ost << PVname_base << "_[" << step1 << "][" << step2 << "][" << step3 << "]"; 
+              ///
+              const unsigned int len = strlen(ost.str()); 
+              char *resstr = new char[len+1]; 
+              strncpy(resstr,ost.str(),len);
+              resstr[len] = 0; 
+              ///
+              std::string pvname( resstr ); 
+              delete [] resstr;
+              ///
+              pv = createPVolume( pvname , LVnameForPV , position3 , rotation3 ); 
+              ///
+              position3 += stepTranslation3 ; 
+              rotation3 *= stepRotation3    ;  
+              ///
+            }
+          ///          
+          position2 += stepTranslation2 ; 
+          rotation2 *= stepRotation2    ;  
+          ///
+        }
       ///
       position1 += stepTranslation1 ; 
       rotation1 *= stepRotation1    ;  

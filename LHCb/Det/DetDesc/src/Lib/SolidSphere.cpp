@@ -10,12 +10,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 SolidSphere::SolidSphere( const std::string & name             ,
-			  const double        OuterRadius      ,
-			  const double        InsideRadius     , 
-			  const double        StartPhiAngle    , 
-			  const double        DeltaPhiAngle    ,
-			  const double        StartThetaAngle  , 
-			  const double        DeltaThetaAngle  ,
+                          const double        OuterRadius      ,
+                          const double        InsideRadius     , 
+                          const double        StartPhiAngle    , 
+                          const double        DeltaPhiAngle    ,
+                          const double        StartThetaAngle  , 
+                          const double        DeltaThetaAngle  ,
                           const int           CoverModel       )
   : m_sphere_name            ( name            ) 
   , m_sphere_outerRadius     ( OuterRadius     )  
@@ -118,14 +118,14 @@ StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
 {
   ///
   return s <<  typeName() 
-	   <<  m_sphere_name           
-	   <<  m_sphere_outerRadius    
-	   <<  m_sphere_insideRadius    
-	   <<  m_sphere_startPhiAngle  
-	   <<  m_sphere_deltaPhiAngle   
-	   <<  m_sphere_startThetaAngle 
-	   <<  m_sphere_deltaThetaAngle 
-	   <<  m_sphere_coverModel    ;   
+           <<  m_sphere_name           
+           <<  m_sphere_outerRadius    
+           <<  m_sphere_insideRadius    
+           <<  m_sphere_startPhiAngle  
+           <<  m_sphere_deltaPhiAngle   
+           <<  m_sphere_startThetaAngle 
+           <<  m_sphere_deltaThetaAngle 
+           <<  m_sphere_coverModel    ;   
   ///
 };
 /** construction of covering solid:
@@ -149,44 +149,44 @@ const ISolid*           SolidSphere::cover         () const
     { 
       //    cover for sphere segment is segment with no gap in Theta 
       if      ( 0.0*degree  != startThetaAngle() || 180.0*degree  != deltaThetaAngle()  )           
-	{ cov = new SolidSphere("Cover for " + name() , 
-				insideRadius ()       , outerRadius  () , 
-				startPhiAngle()       , deltaPhiAngle() ); }
+        { cov = new SolidSphere("Cover for " + name() , 
+                                insideRadius ()       , outerRadius  () , 
+                                startPhiAngle()       , deltaPhiAngle() ); }
       //    cover for sphere segment with no gap in Theta is spehere segment with no gap in Phi 
       else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree  != deltaPhiAngle  ()  )           
-	{ cov = new SolidSphere("Cover for " + name() , outerRadius() , insideRadius() ); } 
+        { cov = new SolidSphere("Cover for " + name() , outerRadius() , insideRadius() ); } 
       //    cover for sphere segment with no gap in Phi   is sphere with null inside radius 
       else if ( 0.0 != insideRadius() )                                             
-	{ cov = new SolidSphere("Cover for " + name() , outerRadius() ); } 
+        { cov = new SolidSphere("Cover for " + name() , outerRadius() ); } 
       //    cover for spehere with null inside radius is box 
       else                                                                        
-	{ cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
-				outerRadius()         , outerRadius() ); }
+        { cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
+                                outerRadius()         , outerRadius() ); }
     }
   else
     {
       //    cover for sphere with not null inside radius is sphere with null inside radius 
       if      ( 0.0 != insideRadius() )                                             
-	{ cov = new SolidSphere("Cover for " + name() , outerRadius    () ,  0.0 * mm       , 
-				startPhiAngle      () , deltaPhiAngle  () , 
-				startThetaAngle    () , deltaThetaAngle() , 
-				m_sphere_coverModel                                         ); } 
+        { cov = new SolidSphere("Cover for " + name() , outerRadius    () ,  0.0 * mm       , 
+                                startPhiAngle      () , deltaPhiAngle  () , 
+                                startThetaAngle    () , deltaThetaAngle() , 
+                                m_sphere_coverModel                                         ); } 
       //    cover for sphere with null inside radius is sphere segment with no gap in phi 
       else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree  != deltaPhiAngle  ()  )           
-	{ cov = new SolidSphere("Cover for " + name() , outerRadius()      , insideRadius() , 
-				0.0 * degree          , 360.0 * degree     , 
-				startThetaAngle()     , deltaThetaAngle () , 
-				m_sphere_coverModel                                         ); } 
+        { cov = new SolidSphere("Cover for " + name() , outerRadius()      , insideRadius() , 
+                                0.0 * degree          , 360.0 * degree     , 
+                                startThetaAngle()     , deltaThetaAngle () , 
+                                m_sphere_coverModel                                         ); } 
       //    cover for sphere segment with no gap in phi is full sphere
       else if ( 0.0*degree  != startThetaAngle() || 180.0*degree  != deltaThetaAngle()  )           
-	{ cov = new SolidSphere("Cover for " + name()  ,  outerRadius  () , insideRadius()  , 
-				startPhiAngle()        , deltaPhiAngle () ,
-				0.0 * degree           , 180.0 * degree   , 
-				m_sphere_coverModel                                         ); }
+        { cov = new SolidSphere("Cover for " + name()  ,  outerRadius  () , insideRadius()  , 
+                                startPhiAngle()        , deltaPhiAngle () ,
+                                0.0 * degree           , 180.0 * degree   , 
+                                m_sphere_coverModel                                         ); }
       //    cover for full sphere is box 
       else                                                                        
-	{ cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
-				outerRadius()         , outerRadius() ); }
+        { cov = new SolidBox   ("Cover for " + name() , outerRadius()  , 
+                                outerRadius()         , outerRadius() ); }
     }
   //
   if( 0 == cov ) { return this; } 
@@ -202,8 +202,8 @@ const ISolid*           SolidSphere::cover         () const
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D& point  ,          // initial point for teh line 
-						      const HepVector3D& vect   ,          // vector along the line 
-						      ISolid::Ticks   & ticks  ) const    // output container of "Ticks"
+                                                      const HepVector3D& vect   ,          // vector along the line 
+                                                      ISolid::Ticks   & ticks  ) const    // output container of "Ticks"
 {
   ticks.clear();
   /// line with null direction vector in not able to intersect something
@@ -235,10 +235,10 @@ inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D& point  ,
     Return the number of intersection points (=size of Ticks container)   
 */
 inline  unsigned int SolidSphere::intersectionTicks ( const HepPoint3D&   point  ,          // initial point for teh line 
-						      const HepVector3D&   vect   ,          // vector along the line 
+                                                      const HepVector3D&   vect   ,          // vector along the line 
                                                       const ISolid::Tick& tickMin ,         // minimal value for Tick 
                                                       const ISolid::Tick& tickMax ,         // maximal value for Tick 
-						      ISolid::Ticks   &   ticks  ) const    // output container of "Ticks"
+                                                      ISolid::Ticks   &   ticks  ) const    // output container of "Ticks"
 {
   ///
   intersectionTicks( point , vect , ticks ) ; 
@@ -282,16 +282,16 @@ std::ostream&  SolidSphere::printOut      ( std::ostream&  os ) const
   if( startPhiAngle  () != 0 * degree || deltaPhiAngle  () != 360 * degree ) 
     {
       os << "\t\t\tstartPhiAngle  [degree]="  << std::setw(12) << startPhiAngle  () / degree    
-	 << std::endl
-	 << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
-	 << std::endl ;
+         << std::endl
+         << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
+         << std::endl ;
     }
   if( startThetaAngle() != 0 * degree || deltaThetaAngle() != 180 * degree ) 
     { 
       os << "\t\t\tstartThetaAngle[degree]="  << std::setw(12) << startThetaAngle() / degree    
-	 << std::endl 
-	 << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
-	 << std::endl ;
+         << std::endl 
+         << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
+         << std::endl ;
     }
   ///
   return os ;
@@ -308,16 +308,16 @@ MsgStream&     SolidSphere::printOut      ( MsgStream&     os ) const
   if( startPhiAngle  () != 0 * degree || deltaPhiAngle  () != 360 * degree ) 
     {
       os << "\t\t\tstartPhiAngle  [degree]="  << std::setw(12) << startPhiAngle  () / degree    
-	 << endreq   
-	 << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
-	 << endreq    ;
+         << endreq   
+         << "\t\t\tdeltaPhiAngle  [degree]="  << std::setw(12) << deltaPhiAngle  () / degree  
+         << endreq    ;
     }
   if( startThetaAngle() != 0 * degree || deltaThetaAngle() != 180 * degree ) 
     { 
       os << "\t\t\tstartThetaAngle[degree]="  << std::setw(12) << startThetaAngle() / degree    
-	 << endreq    
-	 << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
-	 << endreq    ;
+         << endreq    
+         << "\t\t\tdeltaThetaAngle[degree]="  << std::setw(12) << deltaThetaAngle() / degree   
+         << endreq    ;
     }
   ///
   return os ;

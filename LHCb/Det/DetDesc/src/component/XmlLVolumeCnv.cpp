@@ -1,4 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.3 2001-03-04 14:56:10 ibelyaev Exp $
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.4 2001-03-07 13:06:17 ibelyaev Exp $
 
 /// Include files
 #include <cstdlib>
@@ -35,7 +35,7 @@
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.3 2001-03-04 14:56:10 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.4 2001-03-07 13:06:17 ibelyaev Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -209,19 +209,19 @@ void XmlLVolumeCnv::startElement( const char* const name,
       // Remember material name
       m_materialName  = attributes.getValue( "material" );
       if( m_materialName.empty() || m_materialName[0] != '/' )
-	{ m_materialName.insert(0,"/dd/Materials/"); }
+        { m_materialName.insert(0,"/dd/Materials/"); }
       
       m_volName = baseName;
       m_surfaces.clear() ;
       
       /// sensitive detector information 
       {
-	std::string tmp = attributes.getValue("sensdet");
+        std::string tmp = attributes.getValue("sensdet");
         m_sensDetName = tmp; 
       }
       /// magnetic field information 
       {
-	std::string tmp = attributes.getValue("magfield");
+        std::string tmp = attributes.getValue("magfield");
         m_magFieldName = tmp; 
       }
       
@@ -371,7 +371,7 @@ void XmlLVolumeCnv::startElement( const char* const name,
                              iRadPz.empty()   ?   0.0          : xmlSvc()->eval( iRadPz   ),   
                              startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
                              deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
-			     );
+                             );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
   }
@@ -411,7 +411,7 @@ void XmlLVolumeCnv::startElement( const char* const name,
                              iRad.empty()     ?   0.0          : xmlSvc()->eval( iRad     ),
                              startPhi.empty() ?   0.0          : xmlSvc()->eval( startPhi ),
                              deltaPhi.empty() ? 360.0 * degree : xmlSvc()->eval( deltaPhi )  
-			     );
+                             );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
   }
@@ -461,11 +461,11 @@ void XmlLVolumeCnv::startElement( const char* const name,
     m_solid = new SolidSphere( attributes.getValue( "name" ),
                                xmlSvc()->eval( oRad.c_str()       ),
                                iRad.empty()       ?   0.0          : xmlSvc()->eval( iRad       ),
-			       startPhi.empty()   ?   0.0          : xmlSvc()->eval( startPhi   ),
-			       deltaPhi.empty()   ? 360.0 * degree : xmlSvc()->eval( deltaPhi   ),  
-			       startTheta.empty() ?   0.0          : xmlSvc()->eval( startTheta ),
-			       deltaTheta.empty() ? 180.0 * degree : xmlSvc()->eval( deltaTheta )  
-			       );
+                               startPhi.empty()   ?   0.0          : xmlSvc()->eval( startPhi   ),
+                               deltaPhi.empty()   ? 360.0 * degree : xmlSvc()->eval( deltaPhi   ),  
+                               startTheta.empty() ?   0.0          : xmlSvc()->eval( startTheta ),
+                               deltaTheta.empty() ? 180.0 * degree : xmlSvc()->eval( deltaTheta )  
+                               );
     //doBoolean( sFound, attributes );
     setTransContext( tagName );
   }
@@ -791,18 +791,18 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
                                (*ppvit).m_initialPos.m_rotation,
                                (*ppvit).m_stepTranslation,
                                (*ppvit).m_stepRotation
-			       );
+                               );
     }
     /// add all surfaces 
     {
       for( std::vector<std::string>::const_iterator it = m_surfaces.begin() ; m_surfaces.end() != it ; ++it )
-	{
-	  const std::string address = *it;
-	  long linkID = vol->addLink( address , 0 ) ;
-	  SmartRef<Surface> ref( m_dataObj, linkID );
-	  std::cout << (Surface*) ref << std::endl;
-	  vol->surfaces().push_back(ref); 
-	}
+        {
+          const std::string address = *it;
+          long linkID = vol->addLink( address , 0 ) ;
+          SmartRef<Surface> ref( m_dataObj, linkID );
+          std::cout << (Surface*) ref << std::endl;
+          vol->surfaces().push_back(ref); 
+        }
       m_surfaces.clear(); 
     }
     ///
@@ -817,8 +817,8 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
     
     for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
       sol->unite( m_bstore[i].m_solid       , 
-		  m_bstore[i].m_translation , 
-		  m_bstore[i].m_rotation    );
+                  m_bstore[i].m_translation , 
+                  m_bstore[i].m_rotation    );
     }
     
     m_solid = sol;
@@ -830,8 +830,8 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
     
     for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
       sol->subtract( m_bstore[i].m_solid       , 
-		     m_bstore[i].m_translation ,  
-		     m_bstore[i].m_rotation    );
+                     m_bstore[i].m_translation ,  
+                     m_bstore[i].m_rotation    );
     }
 
     m_solid = sol;
@@ -843,8 +843,8 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
     
     for( unsigned int i = 1; i < m_bstore.size(); i++ ) {
       sol->intersect( m_bstore[i].m_solid       ,
-		      m_bstore[i].m_translation , 
-		      m_bstore[i].m_rotation    );
+                      m_bstore[i].m_translation , 
+                      m_bstore[i].m_rotation    );
     }
     
     m_solid = sol;
@@ -1008,16 +1008,16 @@ HepRotation XmlLVolumeCnv::doAxisRotation( std::string axtheta,
     
     if( axt < 0 || axt > 180 * degree ) 
       { 
-	StatusCode stcod;
-	stcod.setCode( CORRUPTED_DATA );
-	throw XmlCnvException( " doAxisRotation: axTheta must be inside 0*&degree; and 180*&degree; ! ", stcod );
+        StatusCode stcod;
+        stcod.setCode( CORRUPTED_DATA );
+        throw XmlCnvException( " doAxisRotation: axTheta must be inside 0*&degree; and 180*&degree; ! ", stcod );
       }
     
     if( axp < 0 || axp > 360 * degree ) 
       { 
-	StatusCode stcod;
-	stcod.setCode( CORRUPTED_DATA );
-	throw XmlCnvException( " doAxisRotation: axPhi   must be inside 0*&degree; and 360*&degree; ! ", stcod );
+        StatusCode stcod;
+        stcod.setCode( CORRUPTED_DATA );
+        throw XmlCnvException( " doAxisRotation: axPhi   must be inside 0*&degree; and 360*&degree; ! ", stcod );
       }
 
     // Construction of vector with input of theta and phi
@@ -1061,12 +1061,12 @@ void XmlLVolumeCnv::doBoolean( SolidItem&  siRef,
       //                                    attributes.getValue( "rotZ" )
       //                                  );
       siRef.m_translation = doTranslation( attributes.getValue( "x"    ),
-					                                 attributes.getValue( "y"    ),
-					                                 attributes.getValue( "z"    ) );
+                                                                         attributes.getValue( "y"    ),
+                                                                         attributes.getValue( "z"    ) );
       
       siRef.m_rotation    = doRotation( attributes.getValue( "rotX" ),
-					                              attributes.getValue( "rotY" ),
-				                                attributes.getValue( "rotZ" ) );
+                                                                      attributes.getValue( "rotY" ),
+                                                                attributes.getValue( "rotZ" ) );
       siRef.m_solid = m_solid;
       m_bstore.push_back( siRef );
     }

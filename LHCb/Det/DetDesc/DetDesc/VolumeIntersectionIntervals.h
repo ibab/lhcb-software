@@ -61,7 +61,7 @@ namespace  VolumeIntersectionIntervals
   /// return the number of intervals (normally it is just a number of ticks - 1 )
   template < class OUTPUTTYPE >
     inline  unsigned int TicksToIntervals ( const ISolid::Ticks & ticks ,  // input "ticks", assumed to be sorted!!!! NB!!!
-					    OUTPUTTYPE            out   ) 
+                                            OUTPUTTYPE            out   ) 
     {
       // interval can be constructed from at least 2 ticks!
       if( ticks.size() < 2 ) { return 0 ; }                             // RETURN!
@@ -70,11 +70,11 @@ namespace  VolumeIntersectionIntervals
       ISolid::Ticks::const_iterator it = ticks.begin(); 
       ISolid::Tick  tickPrevious = *it; 
       while( ticks.end() != it ) 
-	{
-	  ISolid::Tick tickCurrent = *it++; 
+        {
+          ISolid::Tick tickCurrent = *it++; 
           if( tickCurrent > tickPrevious ) { ++res; *out++ = ILVolume::Interval( tickPrevious , tickCurrent ) ; } 
           tickPrevious = tickCurrent; 
-	}
+        }
       ///
       return res; 
     }
@@ -97,11 +97,11 @@ namespace  VolumeIntersectionIntervals
     {
     public: 
       inline double  operator() ( double& Length  , const ILVolume::Intersection& intersection ) const  
-	{
-	  const  Material*  mat          = intersection.second;     
+        {
+          const  Material*  mat          = intersection.second;     
           const  ILVolume::Interval& Int = intersection.first;   
-	  return ( Length += ( ( 0 == mat ) ? 0 : (Int.second-Int.first) / mat->radiationLength() ) ) ; 
-	}
+          return ( Length += ( ( 0 == mat ) ? 0 : (Int.second-Int.first) / mat->radiationLength() ) ) ; 
+        }
     };
   
   ///
@@ -111,8 +111,8 @@ namespace  VolumeIntersectionIntervals
   ///
   template < class OUTPUTTYPE > 
     inline  StatusCode MergeOwnAndChildContainers( const ILVolume::Intersections& own   , 
-						   const ILVolume::Intersections& child ,
-						   OUTPUTTYPE                     out   ) 
+                                                   const ILVolume::Intersections& child ,
+                                                   OUTPUTTYPE                     out   ) 
     {
       /// here we have both containers - own and child containers
       /// try to merge the containers 
@@ -124,11 +124,11 @@ namespace  VolumeIntersectionIntervals
       ///
       ///
       for( Iter iterTop = own.begin(); own.end() != iterTop ; ++iterTop ) 
-	{
-	  const Interval& intervalTop = iterTop->first  ;
+        {
+          const Interval& intervalTop = iterTop->first  ;
           const Material* matTop      = iterTop->second ;
-	  ///
-	  IndexCont tmpIndex; // temporary container of indexes of related intervals 
+          ///
+          IndexCont tmpIndex; // temporary container of indexes of related intervals 
     for( Iter iter = child.begin();  child.end() != iter ; ++iter )
     {
       const Interval& intervalLoc = iter->first;
@@ -149,39 +149,39 @@ namespace  VolumeIntersectionIntervals
         return StatusCode(15) ;
       }
       // RETURN !!!
-      //		{ return StatusCode::FAILURE; }                                                       // RETURN !!!
+      //                { return StatusCode::FAILURE; }                                                       // RETURN !!!
     }  // end of loop over the child container 
-	  /// 
-	  /// try to merge intervals 
-	  Tick leftTick       = intervalTop.first  ; 
-	  Tick mostRightTick  = intervalTop.second ;
-	  for( IndexCont::const_iterator it = tmpIndex.begin(); tmpIndex.end() != it ; ++it ) 
-	    { 
+          /// 
+          /// try to merge intervals 
+          Tick leftTick       = intervalTop.first  ; 
+          Tick mostRightTick  = intervalTop.second ;
+          for( IndexCont::const_iterator it = tmpIndex.begin(); tmpIndex.end() != it ; ++it ) 
+            { 
               Iter              iterLocal     = child.begin() + (*it) ; 
-	      const  Interval&  intervalLocal = iterLocal->first  ;
+              const  Interval&  intervalLocal = iterLocal->first  ;
               const  Material*  matLocal      = iterLocal->second ;
-	      /// 
-	      if( leftTick <= intervalLocal.first && intervalLocal.first < mostRightTick )
-		{
-		  if( intervalLocal.first != leftTick ) 
-		    { *out++ =  ILVolume::Intersection( Interval( leftTick , intervalLocal.first )  , matTop  ) ; }
-		  leftTick = intervalLocal.first;
+              /// 
+              if( leftTick <= intervalLocal.first && intervalLocal.first < mostRightTick )
+                {
+                  if( intervalLocal.first != leftTick ) 
+                    { *out++ =  ILVolume::Intersection( Interval( leftTick , intervalLocal.first )  , matTop  ) ; }
+                  leftTick = intervalLocal.first;
 
-		  if( intervalLocal.second <= mostRightTick ) 
-		    { *out++ =  ILVolume::Intersection( Interval( leftTick , intervalLocal.second ) , matLocal ) ; }
-		  else                                                                                    // geometry error!!!
-		    { return StatusCode(16) ; }                                                       // RETURN !!!
-		    //		    { return StatusCode::FAILURE; }                                                       // RETURN !!!
-		  leftTick = intervalLocal.second;
-		}
-	      else                                                                                    // geometry error!!!
-		{ return StatusCode(17) ; }                                                       // RETURN !!!
-	      //		{ return StatusCode::FAILURE; }                                                       // RETURN !!!
-	    }  // end of loop over temporary index container 
-	  if( leftTick != mostRightTick ) 
-	    { *out++ = ILVolume::Intersection( Interval( leftTick , mostRightTick ) , matTop  ) ; } 
-	  leftTick = mostRightTick;    
-	}  // end of loop over own intervals
+                  if( intervalLocal.second <= mostRightTick ) 
+                    { *out++ =  ILVolume::Intersection( Interval( leftTick , intervalLocal.second ) , matLocal ) ; }
+                  else                                                                                    // geometry error!!!
+                    { return StatusCode(16) ; }                                                       // RETURN !!!
+                    //                    { return StatusCode::FAILURE; }                                                       // RETURN !!!
+                  leftTick = intervalLocal.second;
+                }
+              else                                                                                    // geometry error!!!
+                { return StatusCode(17) ; }                                                       // RETURN !!!
+              //                { return StatusCode::FAILURE; }                                                       // RETURN !!!
+            }  // end of loop over temporary index container 
+          if( leftTick != mostRightTick ) 
+            { *out++ = ILVolume::Intersection( Interval( leftTick , mostRightTick ) , matTop  ) ; } 
+          leftTick = mostRightTick;    
+        }  // end of loop over own intervals
       
       /// return status 
       return StatusCode::SUCCESS;
@@ -193,11 +193,11 @@ namespace  VolumeIntersectionIntervals
   ///
   /// "very specific" comparison for intersections!!!
   ///
-  class CompareIntersections : public std::binary_function<const ILVolume::Intersection&,const ILVolume::Intersection&,bool>			       
+  class CompareIntersections : public std::binary_function<const ILVolume::Intersection&,const ILVolume::Intersection&,bool>                               
     {
     public:
       inline bool operator() ( const ILVolume::Intersection& i1 , const ILVolume::Intersection& i2 ) const 
-	{ return i1.first.first < i2.first.first; };
+        { return i1.first.first < i2.first.first; };
     };
 
 }; // end of namespace 

@@ -43,7 +43,7 @@ class Surface;
 
 class LVolume: public DataObject ,
                public ILVolume   , 
-	       public IValidity
+               public IValidity
 {
   ///
   friend class DataObjectFactory<LVolume>;
@@ -60,7 +60,7 @@ public:
 public:
   /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name             , 
-	   ISolid*            Solid            ,
+           ISolid*            Solid            ,
            const std::string& material         ,
            const ITime&       validSince       , 
            const ITime&       validTill        , 
@@ -68,7 +68,7 @@ public:
            const std::string& magnetic    = "" );
   /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
   LVolume( const std::string& name             , 
-	   ISolid*            Solid            ,
+           ISolid*            Solid            ,
            const std::string& material         ,
            const std::string& sensitivity = "" ,
            const std::string& magnetic    = "" );
@@ -115,21 +115,21 @@ public:
   inline ILVolume::PVolumes::const_iterator pvEnd       () const; 
   /// traverse the sequence of paths  (transform the sequence of replicas to sequence of  physical volumes
   inline StatusCode traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
-			       ILVolume::ReplicaPath::const_iterator pathEnd  ,
-			       ILVolume::PVolumePath&                pVolumePath );
+                               ILVolume::ReplicaPath::const_iterator pathEnd  ,
+                               ILVolume::PVolumePath&                pVolumePath );
   /// traverse the sequence of paths  (transform the sequence of replicas to sequence of  physical volumes
   inline StatusCode traverse ( const ILVolume::ReplicaPath&  path,
-			       ILVolume::PVolumePath&        pVolumePath );
+                               ILVolume::PVolumePath&        pVolumePath );
   /// is this point inside?
   inline bool       isInside ( const HepPoint3D& LocalPoint ) const; 
   /// return the PVolumePath to the local point at the givel Level 
   inline StatusCode belongsTo( const HepPoint3D&        LocalPoint ,
-			       const int                Level      , 
-			       ILVolume::PVolumePath&   pVolumePath );
+                               const int                Level      , 
+                               ILVolume::PVolumePath&   pVolumePath );
   /// return the ReplicaPath to the local point at the givel Level 
   inline StatusCode belongsTo( const HepPoint3D&        LocalPoint ,
-			       const int                Level      , 
-			       ILVolume::ReplicaPath&   replicaPath );        
+                               const int                Level      , 
+                               ILVolume::ReplicaPath&   replicaPath );        
   /// for overloading of std::ostream& << 
   std::ostream& printOut( std::ostream& ) const;
   /// for overloading of MsgStream& << 
@@ -151,18 +151,18 @@ public:
   /// Method throws LVolumeException in the case, then 
   /// solid is not defined or material is not accessible.  
   unsigned int intersectLine( const HepPoint3D        & Point         ,  // initial point at the line 
-			      const HepVector3D       & Vector        ,  // direction vector of the line 
-			      ILVolume::Intersections & intersections ,  // output container 
-			      const double              threshold     ); // threshold value 
+                              const HepVector3D       & Vector        ,  // direction vector of the line 
+                              ILVolume::Intersections & intersections ,  // output container 
+                              const double              threshold     ); // threshold value 
   ///
   /// the same as previous method, but the intersection points ("ticks") are searched 
   /// in the region  tickMin<= tick <= tickMax 
   unsigned int intersectLine( const HepPoint3D         & Point        , // initial point at the line 
-			      const HepVector3D        & Vector       , // direction vectot of the line 
-			      ILVolume::Intersections & intersections , // output container  
-			      const ISolid::Tick        tickMin       , // minimum value of possible Tick
-			      const ISolid::Tick        tickMax       , // maximum value of possible Tick
-			      const double              Threshold     );// threshold value 
+                              const HepVector3D        & Vector       , // direction vectot of the line 
+                              ILVolume::Intersections & intersections , // output container  
+                              const ISolid::Tick        tickMin       , // minimum value of possible Tick
+                              const ISolid::Tick        tickMax       , // maximum value of possible Tick
+                              const double              Threshold     );// threshold value 
   
   // from IValidity interface
   inline       bool    isValid          ()                ;   
@@ -170,7 +170,7 @@ public:
   const        ITime&  validSince       ()                ;    
   const        ITime&  validTill        ()                ;   
   void                 setValidity      ( const ITime& , 
-					  const ITime& )  ;  
+                                          const ITime& )  ;  
   void                 setValiditySince ( const ITime& )  ;  
   void                 setValidityTill  ( const ITime& )  ;   
   StatusCode           updateValidity   ()                ;   // not yet
@@ -186,51 +186,51 @@ public:
 
   /// specific for this implementation 
   IPVolume* createPVolume( const std::string&    PVname         , 
-			   const std::string&    LVnameForPV    );
+                           const std::string&    LVnameForPV    );
   IPVolume* createPVolume( const std::string&    PVname         , 
-			   const std::string&    LVnameForPV    ,
+                           const std::string&    LVnameForPV    ,
                            const HepPoint3D&     position       );     /// position of PVolume inside LVolume
   IPVolume* createPVolume( const std::string&    PVname         , 
-			   const std::string&    LVnameForPV    ,
+                           const std::string&    LVnameForPV    ,
                            const HepPoint3D&     position       ,      /// position of PVolume inside LVolume
                            const HepRotation&    rotation       );     /// rotation to be applied 
   IPVolume* createPVolume( const std::string&    PVname         , 
-			   const std::string&    LVnameForPV    ,
+                           const std::string&    LVnameForPV    ,
                            const HepTransform3D& Transform      );
   /// create group of physical volumes  
   /// one loop 
   IPVolume* createMultiPVolume( const std::string&   PVname_base     , 
-				const std::string&   LVnameForPV     , 
-				const unsigned long  nStep           , 
-				const HepPoint3D&    initialPosition ,
-				const HepRotation&   initialRotation ,     
-				const HepVector3D&   stepTranslation ,
-				const HepRotation&   stepRotation    );
+                                const std::string&   LVnameForPV     , 
+                                const unsigned long  nStep           , 
+                                const HepPoint3D&    initialPosition ,
+                                const HepRotation&   initialRotation ,     
+                                const HepVector3D&   stepTranslation ,
+                                const HepRotation&   stepRotation    );
   /// two loops 
   IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
-				const std::string&   LVnameForPV      , 
-				const HepPoint3D&    initialPosition  ,
-				const HepRotation&   initialRotation  ,     
-				const unsigned long  nStep1           , 
-				const HepVector3D&   stepTranslation1 ,
-				const HepRotation&   stepRotation1    ,
-				const unsigned long  nStep2           , 
-				const HepVector3D&   stepTranslation2 ,
-				const HepRotation&   stepRotation2    );
+                                const std::string&   LVnameForPV      , 
+                                const HepPoint3D&    initialPosition  ,
+                                const HepRotation&   initialRotation  ,     
+                                const unsigned long  nStep1           , 
+                                const HepVector3D&   stepTranslation1 ,
+                                const HepRotation&   stepRotation1    ,
+                                const unsigned long  nStep2           , 
+                                const HepVector3D&   stepTranslation2 ,
+                                const HepRotation&   stepRotation2    );
   /// three loops 
   IPVolume* createMultiPVolume( const std::string&   PVname_base      , 
-				const std::string&   LVnameForPV      , 
-				const HepPoint3D&    initialPosition  ,
-				const HepRotation&   initialRotation  ,     
-				const unsigned long  nStep1           , 
-				const HepVector3D&   stepTranslation1 ,
-				const HepRotation&   stepRotation1    ,
-				const unsigned long  nStep2           , 
-				const HepVector3D&   stepTranslation2 ,
-				const HepRotation&   stepRotation2    ,
-				const unsigned long  nStep3           , 
-				const HepVector3D&   stepTranslation3 ,
-				const HepRotation&   stepRotation3    );
+                                const std::string&   LVnameForPV      , 
+                                const HepPoint3D&    initialPosition  ,
+                                const HepRotation&   initialRotation  ,     
+                                const unsigned long  nStep1           , 
+                                const HepVector3D&   stepTranslation1 ,
+                                const HepRotation&   stepRotation1    ,
+                                const unsigned long  nStep2           , 
+                                const HepVector3D&   stepTranslation2 ,
+                                const HepRotation&   stepRotation2    ,
+                                const unsigned long  nStep3           , 
+                                const HepVector3D&   stepTranslation3 ,
+                                const HepRotation&   stepRotation3    );
 
   ///
  private: 
@@ -245,11 +245,11 @@ public:
   Material*                          findMaterial() const ;
   /// assertion
   inline void Assert( bool               assertion                       , 
-		      const std::string& name                            ,
+                      const std::string& name                            ,
                       const StatusCode&  sc        = StatusCode::FAILURE ) const;  
   /// assertion
   inline void Assert( bool                  assertion , 
-		      const std::string&    name      ,
+                      const std::string&    name      ,
                       const GaudiException& Exception , 
                       const StatusCode&     sc        = StatusCode::FAILURE ) const;  
   
@@ -261,16 +261,16 @@ public:
   inline IMessageSvc*          msgSvc        ()  const { return m_lv_msgSvc  ; } 
   /// Auxillary method  to calculate intersections with daughter volumes  
   unsigned int  intersectDaughters( const HepPoint3D&        Point              , 
-				    const HepVector3D&       Vector             , 
-				    ILVolume::Intersections& childIntersections , 
-				    const ISolid::Tick       tickMin            , 
-				    const ISolid::Tick       tickMax            , 
-				    const double             Threshold          );  
+                                    const HepVector3D&       Vector             , 
+                                    ILVolume::Intersections& childIntersections , 
+                                    const ISolid::Tick       tickMin            , 
+                                    const ISolid::Tick       tickMax            , 
+                                    const double             Threshold          );  
   /// Auxillary method  to calculate intersections with daughter volumes  
   unsigned int  intersectDaughters( const HepPoint3D&        Point              , 
-				    const HepVector3D&       Vector             , 
-				    ILVolume::Intersections& childIntersections , 
-				    const double             Threshold          );  
+                                    const HepVector3D&       Vector             , 
+                                    ILVolume::Intersections& childIntersections , 
+                                    const double             Threshold          );  
  private:
   ///
   ISolid*                      m_lv_solid        ;  //    pointer to solid

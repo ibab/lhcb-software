@@ -8,14 +8,14 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 PVolumeException::PVolumeException( const std::string& name    , 
-				    const PVolume*     pvolume ) 
+                                    const PVolume*     pvolume ) 
   : GaudiException( name , "*PVolumeException*" , StatusCode::FAILURE ) 
   , m_pve_pvolume    ( pvolume    ) 
 {} ;
 /////////////////////////////////////////////////////////////////////////////////////////
 PVolumeException::PVolumeException( const std::string&     name      ,
-				    const GaudiException&  Exception ,  
-				    const PVolume*         pvolume     ) 
+                                    const GaudiException&  Exception ,  
+                                    const PVolume*         pvolume     ) 
   : GaudiException( name , "*PVolumeException*" , StatusCode::FAILURE , Exception ) 
   , m_pve_pvolume    ( pvolume    ) 
 {} ;

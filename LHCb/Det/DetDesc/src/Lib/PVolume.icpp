@@ -65,9 +65,9 @@ inline const IPVolume*  PVolume::reset() const
 /// Method throws PVolumeException in the case, then 
 /// logical volume is not accessible    
 inline  unsigned int PVolume::intersectLine( const HepPoint3D        & Point         ,   // initial point at the line 
-					     const HepVector3D        & Vector        ,   // direction vector of the line 
-					     ILVolume::Intersections & intersections ,   // output container 
-					     const double              threshold     )   // threshold value 
+                                             const HepVector3D        & Vector        ,   // direction vector of the line 
+                                             ILVolume::Intersections & intersections ,   // output container 
+                                             const double              threshold     )   // threshold value 
 {
   Assert( 0 != lvolume() , "PVolume::intersectLine:: 0==lvolume() for "+lvolumeName()+"/"+name()); 
   return lvolume()->intersectLine( matrix() * Point , matrix() * Vector , intersections , threshold );
@@ -75,11 +75,11 @@ inline  unsigned int PVolume::intersectLine( const HepPoint3D        & Point    
 /// the same as previos method, but the intersection points ("ticks") are searched 
 /// in the region  tickMin<= tick <= tickMax 
 inline  unsigned int PVolume::intersectLine( const HepPoint3D        & Point         ,   // initial point at the line 
-					     const HepVector3D        & Vector        ,   // direction vector of the line 
-					     ILVolume::Intersections & intersections ,   // output container 
-					     const ISolid::Tick        tickMin       ,   // minimum value of possible Tick
-					     const ISolid::Tick        tickMax       ,   // maximum value of possible Tick
-					     const double              threshold     )   // threshold value 
+                                             const HepVector3D        & Vector        ,   // direction vector of the line 
+                                             ILVolume::Intersections & intersections ,   // output container 
+                                             const ISolid::Tick        tickMin       ,   // minimum value of possible Tick
+                                             const ISolid::Tick        tickMax       ,   // maximum value of possible Tick
+                                             const double              threshold     )   // threshold value 
 {
   Assert( 0 != lvolume() , "PVolume::intersectLine:: 0==lvolume() for "+lvolumeName()+"/"+name()); 
   return lvolume()->intersectLine( matrix() * Point , matrix() * Vector , intersections , tickMin , tickMax , threshold );

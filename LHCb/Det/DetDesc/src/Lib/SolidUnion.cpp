@@ -10,7 +10,7 @@
 //
 // constructor
 SolidUnion::SolidUnion( const std::string& name  , 
-				      ISolid*            First )
+                                      ISolid*            First )
   : SolidBoolean( name , First )
 {
   if( 0 == First ) { throw SolidException(" SolidUnion constructor with ISolid=NULL! "); }
