@@ -1,5 +1,41 @@
+! $Id: release.notes,v 1.102 2004-04-20 04:26:06 ibelyaev Exp $
+! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-04-20 - Vanya BELYAEV
+ set of changes to solve a bad interference 
+ between Geant4,ToolsSvc and GiGa on releaseng/deletion/finalization of 
+ tools/actions/objects
+
+- GiGa/GiGaPhysConstructorBase.h
+- GiGa/GiGaPhysListBase.h
+- GiGa/GiGaPhysicsConstructorBase.h
+- GiGa/GiGaSensDetBase.h
+- src/Lib/GiGaPhysConstructorBase.cpp
+- src/Lib/GiGaPhysListBase.cpp
+- src/Lib/GiGaSensDetBase.cpp
+
+    reimplement IInterface::release() method to 
+    avoid self-shooting of Gaudi tools - they 
+    are supposed to be killed by Geant4
+
+- GiGa/IGiGaRunManager.h
+- src/Lib/GiGaInterfaces.cpp
+
+  implement few new methods to allow the static ac cees to run managed
+  (needed to destroy Geant4 run manager at the end of the job)
+
+- src/component/GiGaRunManager.cpp
+- src/component/GiGaRunManager.h
+
+   make usage of new methods,and take care about self-destroy
+ 
+- src/component/GiGa.cpp
+ 	 
+   change the status of actions
+
+- cmt/requirements  increase the version to v17r0 (interafce modification)
 
 !====================== GiGa v16r3 2004-04-07 ==============================
 ! 2004-04-07 - Gloria CORTI

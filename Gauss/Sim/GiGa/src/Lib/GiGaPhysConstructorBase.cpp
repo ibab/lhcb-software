@@ -1,8 +1,11 @@
-// $Id: GiGaPhysConstructorBase.cpp,v 1.4 2003-04-06 18:49:47 ibelyaev Exp $ 
+// $Id: GiGaPhysConstructorBase.cpp,v 1.5 2004-04-20 04:26:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2003/04/06 18:49:47  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -125,6 +128,16 @@ G4VPhysicsConstructor* GiGaPhysConstructorBase::physicsConstructor ()  const
 };
 // ============================================================================
 
+unsigned long GiGaPhysConstructorBase::release()
+{
+  unsigned long count = addRef() ;
+  if ( count > 2 )
+  {
+    AlgTool::release() ;
+    return AlgTool::release() ;
+  }
+  return 0 ;
+};
 
 // ============================================================================
 // The END 

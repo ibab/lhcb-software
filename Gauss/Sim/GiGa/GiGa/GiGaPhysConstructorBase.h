@@ -1,8 +1,11 @@
-// $Id: GiGaPhysConstructorBase.h,v 1.3 2003-04-06 18:49:45 ibelyaev Exp $
+// $Id: GiGaPhysConstructorBase.h,v 1.4 2004-04-20 04:26:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/06 18:49:45  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // ============================================================================
 #ifndef       GIGA_GiGaPhysConstructorBase_H
 #define       GIGA_GiGaPhysConstructorBase_H 1 
@@ -40,6 +43,8 @@ public:
    *  @return pointer to G4VPhysicsConstructor object
    */
   virtual G4VPhysicsConstructor* physicsConstructor ()  const ;
+
+  virtual unsigned long release() ;
   
 protected:
   

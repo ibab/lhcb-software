@@ -1,8 +1,11 @@
-// $Id: GiGaPhysListBase.h,v 1.9 2003-04-06 18:49:45 ibelyaev Exp $
+// $Id: GiGaPhysListBase.h,v 1.10 2004-04-20 04:26:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/04/06 18:49:45  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.8  2002/05/07 12:21:29  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -75,6 +78,10 @@ public:
    */
   virtual void SetCuts () ;
 
+public:
+
+  virtual unsigned long release() ;
+  
 private:
 
   // the default constructor is disabled 

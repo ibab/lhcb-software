@@ -1,8 +1,11 @@
-// $Id: GiGaSensDetBase.cpp,v 1.7 2003-07-07 16:48:09 ranjard Exp $ 
+// $Id: GiGaSensDetBase.cpp,v 1.8 2004-04-20 04:26:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/07/07 16:48:09  ranjard
+// v14r2 - fix for gcc 3.2
+//
 // Revision 1.6  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -166,6 +169,17 @@ StatusCode GiGaSensDetBase::finalize()
   return GiGaBase::finalize();  
 };
 // ============================================================================
+
+unsigned long GiGaSensDetBase::release()
+{
+  unsigned long count = addRef() ;
+  if ( count > 2 )
+  {
+    AlgTool::release() ;
+    return AlgTool::release() ;
+  }
+  return 0 ;
+};
 
 // ============================================================================
 // The END  

@@ -1,8 +1,11 @@
-// $Id: GiGaPhysicsConstructorBase.h,v 1.1 2003-04-06 18:49:46 ibelyaev Exp $ 
+// $Id: GiGaPhysicsConstructorBase.h,v 1.2 2004-04-20 04:26:05 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:46  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 #ifndef GIGA_GIGAPHYSICSCONSTRUCTORBASE_H 
 #define GIGA_GIGAPHYSICSCONSTRUCTORBASE_H 1
@@ -39,7 +42,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode   finalize       () { return GiGaBase::finalize   () ; }
-  
+
 protected:
   
   /** standard constructor

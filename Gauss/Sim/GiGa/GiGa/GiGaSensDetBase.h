@@ -1,8 +1,11 @@
-// $Id: GiGaSensDetBase.h,v 1.7 2002-05-07 12:21:30 ibelyaev Exp $
+// $Id: GiGaSensDetBase.h,v 1.8 2004-04-20 04:26:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef     GIGA_GiGaSensDetBase_H
 #define     GIGA_GiGaSensDetBase_H 1 
@@ -57,7 +60,10 @@ public:
    */
   virtual StatusCode         finalize   () ; 
 
-  /// 
+public:
+
+  virtual unsigned long release() ;
+
 protected:
   ///
   GiGaSensDetBase           ( const GiGaSensDetBase& ); /// no copy constructor!

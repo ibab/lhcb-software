@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.14 2004-02-20 18:13:35 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.15 2004-04-20 04:26:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2004/02/20 18:13:35  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+//
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================
@@ -118,6 +121,8 @@ GiGaRunManager::GiGaRunManager
   ///
   declareProperty ( "Verbosity"                  , m_verbosity      ) ;
   ///
+  IGiGaRunManager::setInstance( this );
+  ///
 #ifdef GIGA_DEBUG
   GiGaRunManagerLocal::s_Counter.increment () ;
 #endif 
@@ -150,9 +155,14 @@ GiGaRunManager::~GiGaRunManager()
                               ( ( G4UserTrackingAction*          ) 0 ) ; }
   if( !m_delStepAction  ) { G4RunManager::SetUserAction 
                               ( ( G4UserSteppingAction*          ) 0 ) ; }
+
+
+  IGiGaRunManager::setInstance( (IGiGaRunManager*)0 );
+
 #ifdef GIGA_DEBUG
     GiGaRunManagerLocal::s_Counter.decrement () ;
 #endif
+
 };
 // ============================================================================
 

@@ -1,8 +1,11 @@
-// $Id: GiGaInterfaces.cpp,v 1.1 2004-02-20 18:58:20 ibelyaev Exp $
+// $Id: GiGaInterfaces.cpp,v 1.2 2004-04-20 04:26:06 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 18:58:20  ibelyaev
+//  update in IGiGaXXX and IIDIGiGaXXX
+//
 // ===========================================================================
 // Include files
 // ===========================================================================
@@ -154,6 +157,17 @@ IGiGaSensDet::IGiGaSensDet ()
   : G4VSensitiveDetector( "NotYetDefined" ){} ;
 // ===========================================================================
 
+IGiGaRunManager* IGiGaRunManager::s_manager = 0 ;
+IGiGaRunManager* IGiGaRunManager::instance() { return s_manager ; }
+StatusCode       IGiGaRunManager::setInstance( IGiGaRunManager* value ) 
+{ s_manager = value ; return StatusCode::SUCCESS ; }
+StatusCode       IGiGaRunManager::destroy() 
+{
+  IGiGaRunManager* mgr = IGiGaRunManager::instance() ;
+  if( 0 != mgr ) { delete mgr ; }
+  IGiGaRunManager::setInstance( (IGiGaRunManager*)0 );
+  return StatusCode::SUCCESS ;
+};
 
 // ===========================================================================
 // The END

@@ -1,8 +1,11 @@
-// $Id: GiGaPhysListBase.cpp,v 1.11 2003-12-05 16:18:24 witoldp Exp $
+// $Id: GiGaPhysListBase.cpp,v 1.12 2004-04-20 04:26:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/12/05 16:18:24  witoldp
+// removed obsolete production cuts
+//
 // Revision 1.10  2003/04/06 18:49:47  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -164,7 +167,18 @@ G4VUserPhysicsList* GiGaPhysListBase::physicsList ()  const
   return m_self ;
 };
 // ============================================================================
- 
+
+unsigned long GiGaPhysListBase::release()
+{
+  unsigned long count = addRef() ;
+  if ( count > 2 )
+  {
+    AlgTool::release() ;
+    return AlgTool::release() ;
+  }
+  return 0 ;
+};
+
 // ============================================================================
 // The END 
 // ============================================================================

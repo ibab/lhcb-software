@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/02/20 18:58:17  ibelyaev
+//  update in IGiGaXXX and IIDIGiGaXXX
+//
 // Revision 1.3  2002/05/07 12:21:31  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -134,12 +137,33 @@ public:
    *  @return  status code 
    */
   virtual StatusCode declare( G4UIsession                    * obj     ) = 0 ;
-
-
+  
+  
+  /** get the instance of IGiGaRunManager  
+   *  @return pointer to IGiGaRinManager 
+   */
+  static IGiGaRunManager* instance () ;
+  
+  /** destroy the static instance 
+   *  @treturn status code 
+   */
+  static StatusCode       destroy  () ;
+  
 protected:
   
   /// destructor 
   virtual ~IGiGaRunManager() ; 
+  
+protected: 
+  
+  /** set the istatic instance of IGiGaRunManager
+   *  @param value pointer to the static instance of IGiGaRunManager 
+   */
+  static StatusCode setInstance( IGiGaRunManager* value );
+  
+private:
+  
+  static IGiGaRunManager* s_manager ;
   
 };
 // ============================================================================

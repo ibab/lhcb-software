@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.7 2003-09-22 13:57:11 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.8 2004-04-20 04:26:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/09/22 13:57:11  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -390,33 +393,35 @@ StatusCode GiGa::finalize()
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
   
   if( 0 != m_visManager && 0 != toolSvc() ) 
-    { toolSvc() -> releaseTool ( m_visManager ) ; } 
+  { toolSvc() -> releaseTool ( m_visManager ) ; } 
   m_visManager = 0 ;
   if( 0 != m_uiSession  && 0 != toolSvc() ) 
-    { toolSvc() -> releaseTool ( m_uiSession  ) ; } 
+  { toolSvc() -> releaseTool ( m_uiSession  ) ; } 
   m_uiSession  = 0 ; 
   
   if( 0 != m_GiGaRunAction  && 0 != toolSvc()  )
-    { toolSvc() -> releaseTool ( m_GiGaRunAction   ) ; } 
+  { toolSvc() -> releaseTool ( m_GiGaRunAction   ) ; } 
   m_GiGaRunAction    = 0 ; 
   
   if( 0 != m_GiGaEventAction && 0 != toolSvc() )
-    { toolSvc() -> releaseTool ( m_GiGaEventAction ) ; } 
+  { toolSvc() -> releaseTool ( m_GiGaEventAction ) ; } 
   m_GiGaEventAction  = 0 ; 
   
   if( 0 != m_GiGaStepAction  )
-    { m_GiGaStepAction  -> finalize () ; m_GiGaStepAction   = 0 ; }
+  { toolSvc() -> releaseTool ( m_GiGaStepAction ) ; } 
+  m_GiGaStepAction   = 0 ; 
   
   if( 0 != m_GiGaTrackAction && 0 != toolSvc() )
-    { toolSvc() -> releaseTool( m_GiGaTrackAction ) ; } 
+  { toolSvc() -> releaseTool( m_GiGaTrackAction ) ; } 
   m_GiGaTrackAction  = 0 ; 
   
   if( 0 != m_GiGaStackAction && 0 != toolSvc() )
-    { toolSvc() -> releaseTool( m_GiGaStackAction ) ; } 
+  { toolSvc() -> releaseTool( m_GiGaStackAction ) ; } 
   m_GiGaStackAction  = 0 ; 
   
   if( 0 != m_GiGaPhysList    )
-    { m_GiGaPhysList    -> finalize () ; m_GiGaPhysList     = 0 ; }
+  { toolSvc() -> releaseTool( m_GiGaPhysList ) ; } 
+  m_GiGaPhysList     = 0 ; 
   
   // error printout 
   if( 0 != m_errors     .size() || 
