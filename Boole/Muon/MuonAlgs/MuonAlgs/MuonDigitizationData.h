@@ -1,11 +1,9 @@
 #ifndef MUONALGS_MUONDIGITIZATIONDATA_H
 #define MUONALGS_MUONDIGITIZATIONDATA_H 1
-#include <GaudiKernel/ObjectVector.h>   
+//#include <GaudiKernel/ObjectVector.h>   
 #include "GaudiKernel/IDataProviderSvc.h"   
 #include "GaudiKernel/MsgStream.h"
-#include "Event/KeyedContainer.h"
-//#include "E/KeyedContainer.h"
-
+#include "GaudiKernel/KeyedContainer.h"
 
 static const int MuonDigitizationData_m_partitionNumber=20;
 

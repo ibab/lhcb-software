@@ -1,5 +1,5 @@
 package MuonAlgs 
-version v5r0
+version v5r1
 
 # ================ structure ===========================================
 branches src cmt MuonAlgs options doc
@@ -10,14 +10,9 @@ include_dirs      $(MUONALGSROOT)
 # ================ used packages ========================================= 
 use AIDA        v*	 -no_auto_imports
 use MuonTools   v3r* 	Muon
-use MuonEvent	v2r*	Event	
+use MuonEvent	v3r*	Event	
 
 # build a component library
 library MuonAlgs  *.cpp -import=AIDA
 
-apply_pattern package_Clinkopts
-apply_pattern packageShr
-
-#===============================================================
-private
-apply_pattern package_Cshlibflags    
+apply_pattern component_library library=MuonAlgs

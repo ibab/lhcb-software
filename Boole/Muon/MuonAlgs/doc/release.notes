@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+!======================== MuonAlgs v5r1 2004-01-07 ========================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use MuonEvent v3r* in requirements)
+
 !======================== MuonAlgs v5r0 2003-10-06 ========================
 ! 2003-09-30 - Marco Cattaneo
  - Adapt MuonDigitization to look for number of spillover events from new

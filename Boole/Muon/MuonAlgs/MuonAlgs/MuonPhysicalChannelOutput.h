@@ -4,12 +4,10 @@
 #include <vector>
 #include <algorithm>
 #include "MuonKernel/MuonTileID.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/KeyedContainer.h"
 #include "MuonAlgs/MuonPhChID.h"
 #include "MuonAlgs/MuonPhysicalChannel.h"
-#include "Event/MCMuonHit.h"
-#include "Event/Kernel.h"  
 #include "MuonAlgs/MuonHitTraceBack.h"
 #include "Event/MCMuonDigitInfo.h"
 #include "MuonTools/IMuonGetInfoTool.h"

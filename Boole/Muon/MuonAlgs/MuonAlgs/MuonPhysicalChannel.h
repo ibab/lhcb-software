@@ -4,14 +4,10 @@
 // Include files
 #include <vector>
 #include <algorithm>
-#include "MuonKernel/MuonTileID.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/KeyedContainer.h"
 #include "MuonAlgs/MuonPhChID.h"
-#include "Event/MCMuonHit.h"
-#include "Event/Kernel.h"  
 #include "MuonAlgs/MuonHitTraceBack.h"
-#include "MuonAlgs/SortHitsInTime.h"
 #include "MuonAlgs/MuonPhysicalChannelResponse.h"
 
 class MuonPhysicalChannel: public KeyedObject<int>{

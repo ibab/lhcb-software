@@ -1,5 +1,5 @@
 package MuonBackground 
-version v1r4p1
+version v1r5
 
 # ================ structure ===========================================
 branches src cmt options doc
@@ -11,7 +11,7 @@ include_dirs      $(MUONBACKGROUNDROOT)
 use AIDA        v*	 -no_auto_imports
 use ParamFiles  v*      $(LHCb_release_area)/PARAM -no_auto_imports
 use MuonTools	v3r*	Muon
-use MuonEvent	v2r*	Event
+use MuonEvent	v3r*	Event
 
 # build a component library
 library MuonBackground  *.cpp -import=AIDA

@@ -5,6 +5,10 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!======================= MuonBackground v1r5 2004-01-07 =======================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use MuonEvent v3r* in requirements)
+
 !====================== MuonBackground v1r4p1 2003-12-11 ======================
 ! 2003-12-11 - Marco Cattaneo
  - Fix for Gaudi v13 (AIDA v3, histogram label() is now title())

@@ -2,6 +2,7 @@
 #define MUONALGS_MUONPHYSICALCHANNEL_CPP 1 
 
 #include "MuonAlgs/MuonPhysicalChannel.h"
+#include "MuonAlgs/SortHitsInTime.h"
 
 
 double MuonPhysicalChannel::m_timeGate;
