@@ -11,10 +11,10 @@ ApplicationMgr.TopAlg  += { "L0mTriggerAlgorithm"};
 L0mTriggerAlgorithm.InputFromMuonCoords = true;
 
 // configuration files
-L0mTriggerAlgorithm.ConfigFile = {"/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q1.xml",
-                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q2.xml",
-                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q3.xml",
-                                  "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/_v3r8/data/l0mConf-v3r0dev7-Q4.xml"};
+L0mTriggerAlgorithm.ConfigFile = {"$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q1.xml",
+                                  "$PARAMFILESROOT/data/l0mConf-v3r0dev7-Q2.xml",
+                                  "$PARAMFILESROOT/l0mConf-v3r0dev7-Q3.xml",
+                                  "$PARAMFILESROOT/l0mConf-v3r0dev7-Q4.xml"};
 
 // Max integer to contain Pt
 L0mTriggerAlgorithm.PtMaxBins = 128;
