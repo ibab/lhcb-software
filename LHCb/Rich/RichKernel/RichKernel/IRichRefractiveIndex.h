@@ -1,4 +1,4 @@
-// $Id: IRichRefractiveIndex.h,v 1.3 2004-07-15 15:36:53 jonrob Exp $
+// $Id: IRichRefractiveIndex.h,v 1.4 2004-07-15 15:58:20 jonrob Exp $
 #ifndef RICHKERNEL_IRICHREFRACTIVEINDEX_H
 #define RICHKERNEL_IRICHREFRACTIVEINDEX_H 1
 
@@ -53,7 +53,7 @@ public:
                                    const double energyTop ) = 0;
 
   /** Calculates the average refractive index for a given radiator type
-   *  for a all visable photon energies.
+   *  for all visable photon energies.
    *
    *  @param rad       The radiator type
    *
