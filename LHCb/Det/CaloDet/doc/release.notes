@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.24 2002-07-09 18:17:29 cattanem Exp $ 
+! $Id: release.notes,v 1.25 2002-10-02 07:59:58 ranjard Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= CaloDet v6r0 2002-10-02 =========================
+! 2002-10-02 - Florence Ranjard
+ - cmt/requirements - move to new versions 
 
 !========================== CaloDet v5r0 2002-07-09 ==========================
 ! 2002-06-15 - v5r0 Vanya Belyaev
