@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.190 2004-10-21 16:34:00 pkoppenb Exp $
+# $Id: requirements,v 1.191 2004-10-22 06:23:38 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r3
+version           v13r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -37,7 +37,7 @@ use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
 #-- LHCb libraries 
-use LHCb                v16r2
+use LHCb                v17r0
 
 #=======================================================
 # DaVinciSys v12r3
@@ -53,7 +53,7 @@ use  L0mConf            	v2r2p3   L0
 
 use  L1Decision         	v3r1     Trg
 use  L1Reco             	v5r0     Trg
-use  TrgChecker         	v5r0     Trg
+# use  TrgChecker         	v5r0     Trg
 use  TrgForward         	v3r0     Trg
 use  TrgMonitor         	v3r0     Trg
 use  TrgMuonID  		v2r0     Trg

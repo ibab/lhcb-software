@@ -9,7 +9,7 @@ ApplicationMgr.DLLs += { "TrgTools"
                          ,"STDAQ"
                          ,"L1Reco"
                          ,"L1Decision"
-                         ,"TrgChecker"
+//                         ,"TrgChecker"
                          ,"TrgMonitor"
                           };
 
