@@ -1,5 +1,3 @@
-
-
 #include "CLHEP/Geometry/Point3D.h"
 
 #include "VeloTruthTool.h"
@@ -8,7 +6,7 @@
 #include "Event/MCVeloHit.h"
 #include "Event/MCParticle.h"
 #include "VeloDet/DeVelo.h"
-#include "VeloAlgorithms/VeloParams.h"
+#include "VeloKernel/VeloSimParams.h"
 
 #include <map>
 //-----------------------------------------------------------------------------
