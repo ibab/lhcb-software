@@ -1,4 +1,4 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.1 2002-07-01 08:17:12 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.2 2002-12-17 15:43:02 ocallot Exp $
 // Include files 
 
 // LHCb Kernel
@@ -97,9 +97,10 @@ StatusCode L0CaloToMCParticleAsct::execute() {
   L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     mcDigs = 0;
-    if ( ( L0Calo::Electron == (*cand)->type() ) ||
-         ( L0Calo::Photon   == (*cand)->type() ) ||
-         ( L0Calo::Pi0Local == (*cand)->type() )   ) {
+    if ( ( L0Calo::Electron  == (*cand)->type() ) ||
+         ( L0Calo::Photon    == (*cand)->type() ) ||
+         ( L0Calo::Pi0Local  == (*cand)->type() ) ||
+         ( L0Calo::Pi0Global == (*cand)->type() )   ) {
       mcDigs = mcEcalDigs;
     } else if ( ( L0Calo::Hadron  == (*cand)->type() ) ||
                 ( L0Calo::Hadron2 == (*cand)->type() )    ) {

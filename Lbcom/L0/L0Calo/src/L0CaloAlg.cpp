@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.15 2002-11-21 17:14:22 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.16 2002-12-17 15:43:02 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -106,14 +106,8 @@ StatusCode L0CaloAlg::initialize() {
         << endreq;
     return StatusCode::FAILURE;
   }
-  {
-    m_nameOfOutputDirectory = m_nameOfOutputDataContainer ;
-    std::string::size_type pos = m_nameOfOutputDirectory.find_last_of('/') ;
-    if( std::string::npos != pos ){ m_nameOfOutputDirectory.erase(pos); }
-  }
 
   // Retrieve the ECAL detector element, build cards
-
 
   SmartDataPtr<DeCalorimeter> detEcal( detSvc() ,
                                        m_nameOfGeometryRoot + "Ecal" ) ;
@@ -126,9 +120,15 @@ StatusCode L0CaloAlg::initialize() {
   m_ecal = (DeCalorimeter*) detEcal;
   int eCard;
   int hCard;
+  m_nbValidation = 0;
+  
   for  ( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
     ecalFe.push_back( TriggerCard( eCard, m_ecal ) );
+    int validationNb =  m_ecal->validationNumber( eCard );
+    ecalFe[eCard].setValidationNumber( validationNb );
+    if ( m_nbValidation <= validationNb ) m_nbValidation = validationNb + 1;
   }
+  
   msg << MSG::VERBOSE << m_ecal << endreq;
 
   // Retrieve the HCAL detector element, build cards
@@ -193,41 +193,40 @@ StatusCode L0CaloAlg::initialize() {
   // Debug the cards
 
   for ( eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
-    char line[80];
-    msg << MSG::VERBOSE << "Ecal card " ;
-    sprintf( line, "%3d Area %1d Row %2d Col %2d ", eCard,
-             m_ecal->cardArea(eCard),
-             m_ecal->cardFirstRow(eCard),
-             m_ecal->cardFirstColumn(eCard)  );
-    msg << line << " left, corner, down, prev" ;
-    sprintf( line,
-             "%3d %3d %3d %3d HCAL card %3d Mag. %1d Offset row %2d col %2d",
-             m_ecal->leftCardNumber(eCard)   ,
-             m_ecal->cornerCardNumber(eCard) ,
-             m_ecal->downCardNumber(eCard)   ,
-             m_ecal->previousCardNumber(eCard),
-             ecalFe[eCard].hcalCard(),
-             ecalFe[eCard].hcalMag(),
-             ecalFe[eCard].hcalOffsetRow(),
-             ecalFe[eCard].hcalOffsetCol());
-    msg << line << endreq;
+    msg << MSG::DEBUG << "Ecal card " 
+        << format( "Ecal card%4d Area%2d Row%3d Col%3d Validation%3d", 
+                   eCard,
+                   m_ecal->cardArea(eCard),
+                   m_ecal->cardFirstRow(eCard),
+                   m_ecal->cardFirstColumn(eCard),
+                   ecalFe[eCard].validationNumber() );
+    
+    msg << " left, corner, down, prev " 
+        << format( 
+           "%3d %3d %3d %3d HCAL card %3d Mag. %1d Offset row %2d col %2d",
+           m_ecal->leftCardNumber(eCard)   ,
+           m_ecal->cornerCardNumber(eCard) ,
+           m_ecal->downCardNumber(eCard)   ,
+           m_ecal->previousCardNumber(eCard),
+           ecalFe[eCard].hcalCard(),
+           ecalFe[eCard].hcalMag(),
+           ecalFe[eCard].hcalOffsetRow(),
+           ecalFe[eCard].hcalOffsetCol() )
+        << endreq;
   }
   for ( hCard=0 ;  m_hcal->nCards() > hCard; ++hCard ) {
-    char line[80];
-    msg << MSG::VERBOSE << "Hcal card " ;
-    sprintf( line, "%3d Area %1d Row %2d Col %2d ",
+    msg << MSG::DEBUG 
+        << format( "Hcal card%4d Area%2d Row%3d Col%3d ",
              hCard,
              m_hcal->cardArea(hCard),
              m_hcal->cardFirstRow(hCard),
              m_hcal->cardFirstColumn(hCard) );
-    msg << line << " left, corner, down" ;
-    sprintf( line,
-             "%3d %3d %3d to %2d ECAL cards: ",
-             m_hcal->leftCardNumber(hCard)    ,
-             m_hcal->cornerCardNumber(hCard)  ,
-             m_hcal->downCardNumber(hCard)    ,
-             hcalFe[hCard].numberOfEcalCards() );
-    msg << line ;
+    msg << " left, corner, down " 
+        << format( "%3d %3d %3d to %2d ECAL cards: ",
+                   m_hcal->leftCardNumber(hCard)    ,
+                   m_hcal->cornerCardNumber(hCard)  ,
+                   m_hcal->downCardNumber(hCard)    ,
+                   hcalFe[hCard].numberOfEcalCards() );
     for ( eCard = 0; hcalFe[hCard].numberOfEcalCards() > eCard; ++eCard ) {
       msg << format( "%4d", hcalFe[hCard].ecalCardNumber( eCard ) );
     }
@@ -313,12 +312,26 @@ StatusCode L0CaloAlg::execute() {
   L0Candidate pi0Local  ( m_ecal, m_etScale );
   L0Candidate pi0Global ( m_ecal, m_etScale );
 
+  std::vector<L0Candidate> allElectrons;
+  std::vector<L0Candidate> allPhotons;
+  std::vector<L0Candidate> allPi0Local;
+  std::vector<L0Candidate> allPi0Global;
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allElectrons.push_back( L0Candidate( m_ecal, m_etScale ) );
+    allPhotons.push_back(   L0Candidate( m_ecal, m_etScale ) );
+    allPi0Local.push_back(  L0Candidate( m_ecal, m_etScale ) );
+    allPi0Global.push_back( L0Candidate( m_ecal, m_etScale ) );
+  }
+
   int eCard;
   for( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
     int etMax   = ecalFe[eCard].etMax()  ;
     int etTot   = ecalFe[eCard].etTot()  ;
     CaloCellID ID = ecalFe[eCard].cellIdMax() ;
     std::string particle = "";
+
+    int numVal = ecalFe[eCard].validationNumber();
 
     // Validate ECAL by Prs/Spd, and select the highest electron and photon
     // Decision on Prs => electron/photon
@@ -334,10 +347,16 @@ StatusCode L0CaloAlg::execute() {
           particle += " electron";
           electron.setCandidate( etMax, ID );
         }
+        if ( allElectrons[numVal].et() < etMax ) {
+          allElectrons[numVal].setCandidate( etMax, ID );
+        }
       } else {
         if(  photon.et() < etMax ) {
           particle += " photon";
           photon.setCandidate( etMax, ID );
+        }
+        if ( allPhotons[numVal].et() < etMax ) {
+          allPhotons[numVal].setCandidate( etMax, ID );
         }
       }
     }
@@ -349,6 +368,9 @@ StatusCode L0CaloAlg::execute() {
         if ( pi0Local.et() < etTot ) {
           particle += " pi0L";
           pi0Local.setCandidate( etTot, ID );
+        }
+        if ( allPi0Local[numVal].et() < etMax ) {
+          allPi0Local[numVal].setCandidate( etMax, ID );
         }
       }
     } else {
@@ -368,17 +390,20 @@ StatusCode L0CaloAlg::execute() {
     if ( 0 <= pCard ) {
       if ( 1 == m_pi0Strategy ) {
         int etMaxTot  = etMax + ecalFe[pCard].etMax()  ;
-        if ( pi0Global.et() < etMaxTot ) {
-          CaloCellID ID2 = ecalFe[pCard].cellIdMax();
-          int diffRow = ID2.row() - ID.row();
-          int diffCol = ID2.col() - ID.col();
-          //== Check that the ID are at least 2 rows or 2 columns apart so
-          //== that they don't share a cell.
-          if ( ( ID2.area() != ID.area() ) ||
-               ( 1 < abs( diffRow )      ) ||
-               ( 1 < abs( diffCol )      )   ) {
+        CaloCellID ID2 = ecalFe[pCard].cellIdMax();
+        int diffRow = ID2.row() - ID.row();
+        int diffCol = ID2.col() - ID.col();
+        //== Check that the ID are at least 2 rows or 2 columns apart so
+        //== that they don't share a cell.
+        if ( ( ID2.area() != ID.area() ) ||
+             ( 1 < abs( diffRow )      ) ||
+             ( 1 < abs( diffCol )      )   ) {
+          if ( pi0Global.et() < etMaxTot ) {
             particle += " pi0G";
             pi0Global.setCandidate( etMaxTot, ID );
+          }
+          if ( allPi0Global[numVal].et() < etMaxTot ) {
+            allPi0Global[numVal].setCandidate( etMaxTot, ID );
           }
         }          
       } else {
@@ -512,16 +537,6 @@ StatusCode L0CaloAlg::execute() {
   //===========================================================================
 
   L0CaloCandidates* L0Calo = new L0CaloCandidates();
-
-  // register the output container it into the Transient Store!
-  // Search first if the directory exists
-
-  {
-    SmartDataPtr<DataObject> outDir( eventSvc() , m_nameOfOutputDirectory );
-    if( 0 == outDir )                         // touch the output directory
-      { msg << MSG::ERROR << " OutputDirectory="
-            << m_nameOfOutputDirectory << "\tdoes not exist" << endreq ; }
-  }
   StatusCode sc = eventSvc()->registerObject( m_nameOfOutputDataContainer ,  
                                               L0Calo ) ;
   if( sc.isFailure() ) {
@@ -562,10 +577,46 @@ StatusCode L0CaloAlg::execute() {
 
   // Debug now the L0 candidates
 
-  msg << MSG::DEBUG << "L0CaloCandidate Summary: "
+  msg << MSG::DEBUG << "== L0CaloCandidate Summary: "
       << L0Calo->size() << " entries." << endreq;
   for( L0CaloCandidates::const_iterator item = L0Calo->begin() ;
        L0Calo->end() != item ; ++item ) {
+    L0CaloCandidate* cand = (*item);
+    msg << MSG::DEBUG << cand << endreq;
+  }
+
+  //=== Store the perValidation candidates
+
+  L0CaloCandidates* L0FullCalo = new L0CaloCandidates();
+  sc = eventSvc()->registerObject( L0CaloCandidateLocation::Full, L0FullCalo );
+  if( sc.isFailure() ) {
+    if( 0 != L0FullCalo ) { delete L0FullCalo ; L0FullCalo = 0 ; }
+    msg << MSG::ERROR << "Unable to register the output container="
+        << "/Event/Trig/L0/FullCalo" << endreq;
+    msg << MSG::ERROR << "Status is " << sc << endreq;
+    return sc ;
+  }
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allElectrons[kk].saveCandidate( L0Calo::Electron,  L0FullCalo );
+  }
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allPhotons[kk].saveCandidate(   L0Calo::Photon,    L0FullCalo );
+  }
+  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+    hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
+    hadron.saveCandidate( L0Calo::Hadron, L0FullCalo );
+  }
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allPi0Local[kk].saveCandidate(  L0Calo::Pi0Local,  L0FullCalo );
+  }
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    allPi0Global[kk].saveCandidate( L0Calo::Pi0Global, L0FullCalo );
+  }
+
+  msg << MSG::DEBUG <<"== L0CaloFullCandidate Summary: "
+      << L0FullCalo->size() << " entries." << endreq;
+  for( L0CaloCandidates::const_iterator item = L0FullCalo->begin() ;
+       L0FullCalo->end() != item ; ++item ) {
     L0CaloCandidate* cand = (*item);
     msg << MSG::DEBUG << cand << endreq;
   }

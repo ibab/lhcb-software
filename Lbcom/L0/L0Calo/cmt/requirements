@@ -1,5 +1,5 @@
 package		L0Calo
-version 	v6r4
+version 	v6r5
 
 # ================ structure =============================================
 branches	src cmt doc options

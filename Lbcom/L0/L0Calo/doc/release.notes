@@ -1,6 +1,12 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2002-12-15 - Olivier Callot
+ - Produce in a separate container the list of inputs that the Selection Crate
+   will receive, namely up-to (zero are removed) 28 electrons, photons, pi0L,
+   pi0G and up to 50 hadrons.
+ - Associate also truth with Pi0Global, using only the ID of the second card.
+
 !========================= L0Calo v6r4 2002-12-05 =====================
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements     version update

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.3 2001-04-19 08:56:05 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/TriggerCard.h,v 1.4 2002-12-17 15:43:02 ocallot Exp $
 
 #include <vector>
 
@@ -31,6 +31,7 @@ public:
  *  keeping the structural information (ECAL-HCAL links)
  */
   void reset( ) ;
+  void setValidationNumber( int num ) { m_validationNumber = num; }
 
 /// Add the Et of a cell, perform the 2x2 sum on the flight. 
   void addEt( int col, int row, int digit ) ;
@@ -44,6 +45,7 @@ public:
   bool empty() const { return m_empty ; };  ///< return if the card is empty
   
   int number() const { return m_number; };  ///< card number
+  int validationNumber() const { return m_validationNumber; };  ///< card num
   int etTot()  const { return m_etTot ; };  ///< total Et in the cards
   int etMax()  const { return m_etMax ; };  ///< Et of the 2x2 candidate
   int colMax() const { return m_colMax; };  ///< column of the candidate
@@ -90,6 +92,7 @@ public:
 private:
   int  m_number;
   DeCalorimeter* m_detElem;
+  int  m_validationNumber;
   int  et  [nColCaloCard+1] [nRowCaloCard+1] ;
   int  prs [nColCaloCard] [nRowCaloCard] ;
   int  spd [nColCaloCard] [nRowCaloCard] ;

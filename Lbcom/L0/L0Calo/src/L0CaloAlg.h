@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.7 2002-11-21 17:14:22 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.8 2002-12-17 15:43:02 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -56,7 +56,6 @@ private:
   std::string m_nameOfPrsDataContainer    ;  
   std::string m_nameOfSpdDataContainer    ;  
   std::string m_nameOfOutputDataContainer ;  
-  std::string m_nameOfOutputDirectory     ;  
 
 /// Name of Detector in Detector Transient Store  e.g. /dd/structure/LHCb/
 
@@ -91,6 +90,10 @@ private:
 
   std::vector<TriggerCard> ecalFe  ; ///< Ecal front-end card vector
   std::vector<TriggerCard> hcalFe  ; ///< Hcal front-end card vector
+
+  // VAlidation
+  int         m_nbValidation;
+
 };
 
 /** @class L0Candidate
