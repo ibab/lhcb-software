@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.5 2004-12-10 08:09:13 jnardull Exp $
+! $Id: release.notes,v 1.6 2004-12-10 09:54:08 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
+
+!==================== OTSimulation v1r2 2004-12-10 ======================
+! 2004-12-10 - Marco Cattaneo
+ - Rename MCOTDepositVector typedef to MCOTDepositStdVector, to avoid name clash
+   with automatically (by GOD v7) generated typedef in MCOTDeposit.h
 
 ! 2004-12-06 - Jacopo Nardulli
 - Complete move to new base classes
