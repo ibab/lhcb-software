@@ -1,4 +1,16 @@
-// $Id: RichRayTracing.h,v 1.9 2004-07-15 17:16:33 jonrob Exp $
+// $Id: RichRayTracing.h,v 1.10 2004-07-22 14:39:57 jonrob Exp $
+// ===========================================================================
+/** @file RichRayTracing.h
+ *
+ *  Header file for tool : RichDetParameters
+ *
+ *  CVS History :
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
 
