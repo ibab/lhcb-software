@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.cpp,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: OTrtRelation.cpp,v 1.2 2004-09-10 13:14:23 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +13,7 @@
 #include "CLHEP/Units/SystemOfUnits.h"
 
 // OTSimulation
-#include "OTSimulation/OTrtRelation.h"
+#include "OTrtRelation.h"
 
 // Event
 #include "Event/MCHit.h"
@@ -130,4 +130,3 @@ double OTrtRelation::driftDistance( const double driftTime,
   m_magFieldSvc->fieldVector( aPoint, bField );
   return m_tracker->driftDistance(driftTime, bField.y());
 }
-

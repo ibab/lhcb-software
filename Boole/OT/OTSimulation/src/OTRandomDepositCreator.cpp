@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.2 2004-09-10 13:14:22 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -15,11 +15,13 @@
 #include "Event/MCOTDeposit.h"
 
 // OTSimulation
-#include "OTSimulation/OTRandomDepositCreator.h"
 #include "OTSimulation/IOTReadOutWindow.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
+
+// local
+#include "OTRandomDepositCreator.h"
 
 /** @file OTRandomDepositCreator.cpp 
  *

@@ -1,21 +1,14 @@
-! $Id: release.notes,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+! $Id: release.notes,v 1.2 2004-09-10 13:14:22 cattanem Exp $
 Package         : OTSimulation
 Package manager : J. van Tilburg and Jacopo Nardulli
 
-
+!==================== OTSimulation v1r0 2004-09-10 ======================
 ! 2004-30-08 - Jacopo Nardulli
- - The New package OTSimulation containes part of the algorithms and tools that 
-   previouslly were part of the OT/OTAlgorithms package, according to the modifications 
+ - The new package OTSimulation contains some of the algorithms and tools that 
+   previously were part of the OT/OTAlgorithms package, modified 
    for the New OT Event Model. 
    The main differences are that MCOTTimeCreator replaces 
    MCOTDigitCreator. All the checking and monitor algorithms have been moved 
    in the new package called OTMonitor. The algorithm OTFillRawBuffer has been 
    moved here from the package OTDAQ. 
-   All the algorithms of the package OTSimulation run in the digitization program Boole.
-
-   Beacause of backward incompatibility,
-   in order to use this package it is necessary to:
-   Use LHCbKernel    upper than v5r1
-   Use OTEvent       upper than v13r0
-   Use OTDAQ         upper than v2r0
-   Use OTAssociators upper than v2r9
+   All the algorithms of this package run in the digitization program Boole.

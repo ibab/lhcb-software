@@ -1,7 +1,14 @@
-// $Id: MCOTTimeCreator.cpp,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.2 2004-09-10 13:14:22 cattanem Exp $
 
-// OTSimulation
-#include "OTSimulation/MCOTTimeCreator.h"
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/AlgFactory.h"
+
+// OTDAQ
+#include "OTDAQ/IOTReadOutWindow.h"
+
+// local
+#include "MCOTTimeCreator.h"
 
 static const AlgFactory<MCOTTimeCreator> s_Factory;
 const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;

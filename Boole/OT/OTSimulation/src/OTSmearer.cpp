@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: OTSmearer.cpp,v 1.2 2004-09-10 13:14:23 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -18,7 +18,7 @@
 #include "Event/MCHit.h"
 
 //OTSimulation
-#include "OTSimulation/OTSmearer.h"
+#include "OTSmearer.h"
 
 /** @file OTSmearer.cpp 
  *

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+# $Id: requirements,v 1.2 2004-09-10 13:14:22 cattanem Exp $
 package OTSimulation
 
 version v1r0
@@ -7,14 +7,10 @@ branches OTSimulation cmt doc src options
 
 include_dirs $(OTSIMULATIONROOT)
 
-
-use OTDAQ         v2r*  OT
-use OTDet         v5r*  Det
-use OTAssociators v2r9  OT
-use AIDA          v*  -no_auto_imports
+use OTDAQ         v3r*  OT
 
 # ================= component library ====================
-library OTSimulation ../src/*.cpp -import=AIDA
+library OTSimulation ../src/*.cpp
 
 apply_pattern component_library library=OTSimulation
 
