@@ -1,4 +1,8 @@
 Package Event/GenEvent
 
+! 20020423 - Vanya Belyaev
+    - change the version of GaudiKernel
+
 ! 20020405 - Witek Pokorski
     - New Package 
+
