@@ -5,33 +5,37 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r0 2005-02-03 =======================
-! 2005-02-03 - Marco Cattaneo
+!======================= LHCbSys v18r0 2005-02-09 =======================
+! 2005-02-09 - Marco Cattaneo
  - Move to Gaudi v16r0
  - Packages removed:  GaudiObjDesc (go back to version picked up from Gaudi)
                       RichTools, RichMCTools (moved to Lbcom)
  - Packages added:    AsctToLinker (previously in Boole, Brunel)
                       L0mConf, L0MuonKernel (previously in Boole, DaVinci)
                       RichRecBase (previously in Brunel, DaVinci)
- - Packages modified: GaudiConf v9r0, DAQSys v1r0p1, STDAQ v1r4p1, CaloDAQ v1r0p1,
-     KernelSys v4r7, LHCbKernel v5r7, Relations v2r2, EventSys v20r0,
-     PhysEvent v8r2, TrEvent v14r2, RichEvent v8r1p1, LinkerEvent v1r6,
-     DAQEvent v4r6, LHCbAlgs v1r3p1, MCTools v1r12
+ - Packages modified: GaudiConf v9r0, LHCbAlgs v1r3p1, MCTools v1r12,
+     DAQSys v1r1, STDAQ v1r4p1, CaloDAQ v1r0p1, RichDAQ v2r2,
+     KernelSys v4r7, LHCbKernel v5r7, RichKernel v5r3, Relations v2r3, 
+     EventSys v20r0, PhysEvent v8r2, TrEvent v14r2, RichEvent v8r1p1,
+     LinkerEvent v1r6, DAQEvent v4r6, TrgEvent v5r4, GenEvent v3r3p1, 
+     CaloEvent v13r9, DetSys v6r2, RichDet v8r2, IOExample v1r4p1
 
- - In GaudiConf v9r0
-   . Remove ROOT_native_version fix, not needed for ROOT 4.*
+ - In GaudiConf v9r0, GenEvent v3r3p1, IOExample v1r4p1
+   . Updates for ROOT 4.*
 
- - In LHCbKernel v5r7
+ - In LHCbKernel v5r7, GenEvent v3r3p1, CaloEvent v13r9
    . Changes for CLHEP 1.9
 
- - In PhysEvent v8r2, TrEvent v14r2, DAQEvent v4r6:
+ - In LHCbKernel v5r7, PhysEvent v8r2, TrEvent v14r2, DAQEvent v4r6,
+      TrgEvent v5r4, RichKernel v5r3, RichDet v8r2, RichDAQ v2r1:
    . Changes for GaudiObjDesc v7r*
 
  - In LinkerEvent v1r6
    . Several improvements (see details in release notes)
 
- - In Relations v2r2
+ - In Relations v2r3
    . Few modifications to improve performance (many details in release notes)
+   . Backwards incompatible change in POOL dictionary, for Python usage
 
  - In AsctToLinker v1r4
    . Changes to avoid duplicate entries
