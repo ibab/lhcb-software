@@ -1,6 +1,15 @@
-// $Id: RichSide.h,v 1.3 2004-08-17 11:07:23 jonrob Exp $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
+
+/** @file RichSide.h
+ *
+ *  Header file for RICH particle ID enumeration : RichSide
+ *
+ *  CVS Log :-
+ *  $Id: RichSide.h,v 1.4 2004-08-17 11:10:41 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
 
 #ifndef LHCBKERNEL_RICHSIDE_H
 #define LHCBKERNEL_RICHSIDE_H 1
