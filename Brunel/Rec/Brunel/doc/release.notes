@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-06-28 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-06-29 Brunel v24r0</A></H1><PRE>
 Development version
 
 - Modified functionality
@@ -15,9 +15,11 @@ Development version
   . Remove obsolete "/Event/Trig/AlgUsedTimes#1"
 
 - New tuning
-  . Initialize MuonGeometry tool completely at intialisation, not during first
+  . Initialize MuonGeometry tool completely at initialisation, not during first
     ~10 events (MuonTools v3r7)
   . New Calo calibration for DC04 settings (XmlDDDB >= v22r2) (CaloReco v2r2)
+  . New parameterization of the dE/dx loss correction (TrExtrapolator v2r13)
+  . Speed improvements in MagneticFieldSvc (Magnet v2r7)
 
 - New packaging and code cleanups
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
@@ -38,6 +40,7 @@ Development version
   . Add a missing job option for detailed Calo monitoring (BrunelMoni.opts)
   . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
   . Add fixes suggested by C.Jones for using Brunel.job in debug mode
+  . Fix in MS scattering correction (TrExtrapolator v2r13)
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
 Version used for DC04
