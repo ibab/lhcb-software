@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.13 2004-01-14 13:21:05 ranjard Exp $ 
+// $Id: GaussTape.opts,v 1.14 2004-03-17 14:59:38 ranjard Exp $ 
 
 
 /// create and add the output stream 
@@ -31,7 +31,7 @@ GaussTape.OptItemList =
     ,"/Event/MC/Velo/PuHits#1"
     ,"/Event/MC/Rich#1"
     ,"/Event/MC/Rich/Hits#1"
-    ,"/Event/MC/Rich/OpticalPhotons#1"
+     //,"/Event/MC/Rich/OpticalPhotons#1"
     ,"/Event/MC/OT#1"
     ,"/Event/MC/OT/Hits#1"
     ,"/Event/MC/IT#1"
