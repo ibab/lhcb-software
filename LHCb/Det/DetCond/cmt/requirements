@@ -1,25 +1,23 @@
-# $Id: requirements,v 1.7 2001-11-26 18:47:26 andreav Exp $
+# $Id: requirements,v 1.8 2001-12-16 15:59:26 andreav Exp $
 package DetCond
-version v2
+version v2r0
 
 branches DetCond cmt src doc
 
 # GAUDI framework dependencies
-# GaudiKernel and GaudiSvc are needed at compile time
-# GaudiAlg components are needed at runtime (as shared library $GaudiAlgShr)
-use GaudiSys     v9*
-#use GaudiPolicy  v5*
-#use GaudiKernel  v11*
-#use GaudiSvc     v7*
-#use GaudiAlg     v5*
+use GaudiSys v9*
 
 # ConditionsDB package
-use CONDDB       v3r02*
+use CONDDB v3r02*
+
+# Detector Description
+# This is only needed because updateObj assumes a Condition (TEMPORARY?)
+use DetDesc v9* Det
 
 include_dirs $(DETCONDROOT)
 
 # Build a component library
-library DetCond      component/*.cpp
+library DetCond component/*.cpp
 
 ignore_pattern package_stamps
 
@@ -38,9 +36,6 @@ set DETCOND_DOXYURL \
 
 # This is the package version number
 set DETCOND_DOXYVERSION $(DETCONDVERSION)
-
-#Bug in CMT: replace cleanup scripts
-setup_script setupCLEANUP
 
 #==================================================================
 private

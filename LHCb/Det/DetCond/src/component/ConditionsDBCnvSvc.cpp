@@ -1,14 +1,16 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.7 2001-11-28 09:35:12 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.8 2001-12-16 15:58:24 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/param.h>
 
-#include "ConditionsDBAddress.h"
 #include "ConditionsDBCnvSvc.h"
 #include "ConditionsDBGate.h"
 
+#include "DetDesc/Condition.h"
+
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -22,10 +24,6 @@
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<ConditionsDBCnvSvc>          ConditionsDBCnvSvc_factory;
 const ISvcFactory& ConditionsDBCnvSvcFactory = ConditionsDBCnvSvc_factory;
-
-/// External constants
-extern const CLID&          ConditionsDBAddress_undefinedClassID;
-extern const unsigned char& ConditionsDBAddress_undefinedStringType;
 
 //----------------------------------------------------------------------------
 
@@ -58,7 +56,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Specific initialization starting" << endreq;
+  log << MSG::INFO << "Specific initialization starting" << endreq;
 
   // Create the ConditionsDBGate as a private service of ConditionsDBCnvSvc
   log << MSG::DEBUG << "Creating ConditionsDBGate" << endreq;
@@ -105,7 +103,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
 
   // Locate IConversionSvc interface of the DetectorPersistencySvc
   sc = serviceLocator()->service 
-    ("DetectorPersistencySvc",  m_detPersSvc, true);
+    ("DetectorPersistencySvc", m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
@@ -149,15 +147,15 @@ StatusCode ConditionsDBCnvSvc::initialize()
     return sc;
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::DEBUG 
-      << "Global tag name:        " << m_globalTag << endreq;
+  log << MSG::INFO
+      << "Global tag name: " << m_globalTag << endreq;
   if ( m_globalTag == "DEFAULT" ) {
     log << MSG::ERROR 
 	<< "Invalid global tag DEFAULT: this is a reserved word" << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << "Specific initialization completed" << endreq;
+  log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
 }
 
@@ -196,21 +194,10 @@ StatusCode ConditionsDBCnvSvc::queryInterface(const IID& riid,
 /// Create a transient representation from another representation of an object.
 /// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
 StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress, 
-					   DataObject*&    refpObject) {
+					   DataObject*&    refpObject ) {
 
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method createObj starting" << endreq;
-
-  // Dynamic cast the IOpaqueAddress to a IConditionsDBAddress
-  // IConditionsDBAddress specifies requested folder, tag, clid, string type
-  IConditionsDBAddress* 
-    pCaddress = dynamic_cast< IConditionsDBAddress* >( pAddress );
-  if ( 0 == pCaddress ) {
-    log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
-    log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
-	<< " classID=" << pAddress->clID() << endreq;
-    return StatusCode::FAILURE;
-  }
 
   // Check that the event time has been defined
   // The event time is obtained from the ConditionDataSvc
@@ -232,19 +219,23 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
   // Create the object according to folder, tag, time, clid, string type
   // Notice that the ConditionsDBCnvSvc has no converters of its own:
   // object creation is delegated to another CnvSvc via a temporary address
-  StatusCode status = createConditionData( refpObject, 
-					   pCaddress->folderName(), 
-					   pCaddress->tagName(), 
-					   m_detDataSvc->eventTime(), 
-					   pAddress->clID(), 
-					   pCaddress->stringType() );
-  if ( !status.isSuccess() ) {
+  // The IOpaqueAddress specifies folderName and clid
+  // The tagName is a property of this service
+  // The secondary storage type is always discovered dynamically
+  StatusCode sc;
+  sc = createConditionData( refpObject, 
+			    pAddress->par()[0], 
+			    globalTag(), 
+			    pAddress->par()[1], 
+			    m_detDataSvc->eventTime(), 
+			    pAddress->clID(), 
+			    pAddress->registry() );
+  if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not create condition DataObject" << endreq;
-    return StatusCode::FAILURE;
   }
 
   log << MSG::DEBUG << "Method createObj exiting" << endreq;
-  return StatusCode::SUCCESS;
+  return sc;
 
 }
 
@@ -254,10 +245,9 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
 /// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
 StatusCode ConditionsDBCnvSvc::fillObjRefs ( IOpaqueAddress* /*pAddress*/, 
 					     DataObject*     /*pObject */ ) {
-
-  // Do nothing for the moment
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::DEBUG << "Method fillObjRefs is not implemented" << endreq;
   return StatusCode::SUCCESS;
-
 }
   
 //----------------------------------------------------------------------------
@@ -271,17 +261,6 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
 
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
-
-  // Dynamic cast the IOpaqueAddress to a IConditionsDBAddress
-  // IConditionsDBAddress specifies requested folder, tag, clid, string type
-  IConditionsDBAddress* 
-    pCaddress = dynamic_cast< IConditionsDBAddress* >( pAddress );
-  if ( 0 == pCaddress ) {
-    log << MSG::ERROR << "Address is not a ConditionsDBAddress" << endreq;
-    log << MSG::ERROR << "type=" << (int)pAddress->svcType() 
-	<< " classID=" << pAddress->clID() << endreq;
-    return StatusCode::FAILURE;
-  }
 
   // Check that the event time has been defined
   // The event time is obtained from the ConditionDataSvc
@@ -303,28 +282,34 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
   // Update the object according to folder, tag, time, clid, string type
   // Notice that the ConditionsDBCnvSvc has no converters of its own:
   // object creation is delegated to another CnvSvc via a temporary address
+  // The IOpaqueAddress specifies folderName and clid
+  // The tagName is a property of this service
+  // The secondary storage type is always discovered dynamically
   if( 0 == pObject ) {
     log << MSG::ERROR << "There is no object to update" << endreq;
     return StatusCode::FAILURE;
   }
   IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
   if ( 0 == pValidity ) {
-    log << MSG::ERROR 
-	<< "Object to update does not implement IValidity" << endreq;
-    return StatusCode::FAILURE;
+    log << MSG::WARNING
+	<< "Object to update does not implement IValidity: assume up-to-date" 
+	<< endreq;
+    return StatusCode::SUCCESS;
   }
   log << MSG::DEBUG << "Old condition DataObject was valid since "
       << pValidity->validSince().absoluteTime() << " till "
       << pValidity->validTill().absoluteTime()  << endreq;
-  StatusCode status = updateConditionData( pObject, 
-					   pCaddress->folderName(), 
-					   pCaddress->tagName(), 
-					   m_detDataSvc->eventTime(), 
-					   pAddress->clID(), 
-					   pCaddress->stringType() );
-  if ( !status.isSuccess() ) {
+  StatusCode sc;
+  sc = updateConditionData( pObject, 
+			    pAddress->par()[0], 
+			    globalTag(), 
+			    pAddress->par()[1], 
+			    m_detDataSvc->eventTime(), 
+			    pAddress->clID(), 
+			    pAddress->registry() );
+  if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not update condition DataObject" << endreq;
-    return StatusCode::FAILURE;
+    return sc;
   }
 
   // Last, check that everything is OK
@@ -349,27 +334,70 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
 /// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
 StatusCode ConditionsDBCnvSvc::updateObjRefs ( IOpaqueAddress* /*pAddress*/, 
 					       DataObject*     /*pObject */ ) {
-
-  // Do nothing for the moment
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::WARNING << "Method updateObjRefs is not implemented" << endreq;
   return StatusCode::SUCCESS;
+}
+  
+//----------------------------------------------------------------------------
 
+/// Convert a transient object to a requested representation.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::createRep( DataObject* /*pObject*/,
+					  IOpaqueAddress*& /*refpAddress*/ ) {
+
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::WARNING << "Method createRep is not implemented" << endreq;
+  return StatusCode::SUCCESS;
+}
+  
+//----------------------------------------------------------------------------
+
+/// Resolve the references of a converted object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::fillRepRefs ( IOpaqueAddress* /*pAddress*/, 
+					     DataObject*     /*pObject */ ) {
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::WARNING << "Method fillRepRefs is not implemented" << endreq;
+  return StatusCode::SUCCESS;
+}
+  
+//----------------------------------------------------------------------------
+
+/// Update a converted representation of a transient object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::updateRep ( IOpaqueAddress* /*pAddress*/, 
+					   DataObject*     /*pObject */ ) {
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::WARNING << "Method updateRep is not implemented" << endreq;
+  return StatusCode::SUCCESS;
+}
+  
+//----------------------------------------------------------------------------
+
+/// Update the references of an already converted object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::updateRepRefs ( IOpaqueAddress* /*pAddress*/, 
+					       DataObject*     /*pObject */ ) {
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::WARNING << "Method updateRepRefs is not implemented" << endreq;
+  return StatusCode::SUCCESS;
 }
   
 //----------------------------------------------------------------------------
 
 /// Create an address using explicit arguments to identify a single object.
-/// String argument[0] represents the folder.
-/// String argument[1] represents the tag: if "DEFAULT", use the global tag.
-/// Integer argument[0] represents the string type (an unsigned char).
+/// Par[0] is folder name in the ConditionsDB.
+/// Par[1] is entry name in the string (which may contain many conditions,
+/// for instance in the case of XML files with more than one element).
 StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
 					      const CLID& clid,
 					      const std::string* par, 
-					      const unsigned long* ipar,
-					      IOpaqueAddress*& refpAddress) {
+					      const unsigned long* /*ipar*/,
+					      IOpaqueAddress*& refpAddress ) {
 
+  // First check that requested address is of type CONDDB_StorageType
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-
-  // First check that address is of type CONDDB_StorageType
   if ( svc_type!= CONDDB_StorageType ) {
     log << MSG::ERROR 
 	<< "Cannot create addresses of type " << (int)svc_type 
@@ -378,17 +406,18 @@ StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
     return StatusCode::FAILURE;
   }
   
-  // Now create the address
+  // Par[0] is folder name in the ConditionsDB.
   std::string folderName = par[0];
-  std::string tagName = par[1];
-  if ( tagName == "DEFAULT" ) {
-    tagName = m_globalTag;
-  }
-  unsigned char stringType = (unsigned char)ipar[0];
-  refpAddress = new ConditionsDBAddress ( folderName, 
-					  tagName, 
-					  clid, 
-					  stringType );
+
+  // Par[1] is entry name in the string (which may contain many conditions, 
+  // for instance in the case of XML files with more than one element).
+  std::string entryName = par[1];
+
+  // Now create the address
+  refpAddress = new GenericAddress( CONDDB_StorageType, 
+				    clid, 
+				    folderName,
+				    entryName );
   return StatusCode::SUCCESS;
 
 }
@@ -396,19 +425,23 @@ StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
 //----------------------------------------------------------------------------
 
 /// Create a condition DataObject by folder name, tag and time.
-/// This method does not register DataObject in the transient data store.
+/// This method does not register DataObject in the transient data store,
+/// but may register TDS addresses for its children if needed (e.g. Catalog).
+/// The string storage type is discovered at runtime in the CondDB.
+/// The entry name identifies a condition amongst the many in the string.
 /// Implementation:
 /// - create a temporary address containing storage type and classID;
 /// - dispatch to appropriate conversion service according to storage type;
 /// - this will dispatch to appropriate converter according to CLID
 ///   (ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
-ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
-					  const std::string&   folderName,
-					  const std::string&   tagName,
-					  const ITime&         time,
-					  const CLID&          classID,
-					  const unsigned char& type )
+ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
+					 const std::string&   folderName,
+					 const std::string&   tagName,
+					 const std::string&   entryName,
+					 const ITime&         time,
+					 const CLID&          classID,
+					 IRegistry*           entry )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
 
@@ -424,43 +457,34 @@ ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
   }
   log << MSG::DEBUG << "CondDBObject data successfully read" << endreq;
 
-  // Should classID and type be discovered in the ConditionsDB?
-  CLID          theClassID;
+  // Discover the string storage type in the ConditionsDB
   unsigned char theType;
-  if ( ConditionsDBAddress_undefinedStringType == type &&
-       ConditionsDBAddress_undefinedClassID    == classID ) {
-    // Read folder description in the CondDB
-    log << MSG::DEBUG 
-	<< "Read service type and classID in the folder description" << endreq;
-    std::string description;
-    status = m_conditionsDBGate->readCondDBFolder( description, 
-						     folderName );
-    if ( !status.isSuccess() ) {
-      log << MSG::ERROR 
-	  << "Could not read folder description in the CondDB" << endreq;
-      return status;
-    }
-    status  = decodeDescription( description, theClassID, theType );
-    if (!status.isSuccess() ) {
-      log << MSG::ERROR << "Could not decode folder description" << endreq;
-      return status;
-    }
-  } else {
-    theClassID = classID;
-    theType    = type;
+  log << MSG::DEBUG 
+      << "Read string storage type in the folder description" << endreq;
+  std::string description;
+  status = m_conditionsDBGate->readCondDBFolder( description, 
+						 folderName );
+  if ( !status.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not read folder description in the CondDB" << endreq;
+    return status;
+  }
+  status  = decodeDescription( description, theType );
+  if (!status.isSuccess() ) {
+    log << MSG::ERROR << "Could not decode folder description" << endreq;
+    return status;
   }
 
   // Create temporary address for the relevant type and classID 
   log << MSG::DEBUG 
       << "Delegate address creation to the persistency service" << endreq;
-  log << MSG::DEBUG 
-      << "Creating an address of type " 
-      << (int)theType << " for class " << theClassID << endreq;
-  log << MSG::DEBUG << "String data is '" << stringData << "'" << endreq;
+  log << MSG::DEBUG << "Creating an address of type " 
+      << (int)theType << " for class " << classID << endreq;
+  log << MSG::VERBOSE << "String data is:" << endl << stringData << endreq;
   IOpaqueAddress* tmpAddress;
-  const std::string par[2] = {stringData, ""};
+  const std::string par[2] = { stringData, entryName};
   status = addressCreator()->createAddress
-    ( theType, theClassID, par, 0, tmpAddress );
+    ( theType, classID, par, 0, tmpAddress );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
@@ -468,6 +492,9 @@ ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
   }  
   log << MSG::DEBUG << "Temporary address successfully created" << endreq;
   tmpAddress->addRef();
+
+  // Set the transient store registry for the object associated to this address
+  tmpAddress->setRegistry( entry );
 
   // Now create the object
   log << MSG::DEBUG 
@@ -483,31 +510,16 @@ ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
   // Set validity of created object
   IValidity* pValidity = dynamic_cast<IValidity*>(refpObject);
   if ( 0 == pValidity ) {
-    log << MSG::ERROR 
-	<< "Created object does not implement IValidity" << endreq;
-    return StatusCode::FAILURE;
+    log << MSG::WARNING
+	<< "Created object does not implement IValidity: cannot set validity"
+	<< endreq;
+  } else {
+    pValidity->setValidity ( since, till );
   }
+
   log << MSG::DEBUG << "New object successfully created" << endreq;
-  pValidity->setValidity ( since, till );
   return StatusCode::SUCCESS;
 
-}
-
-//----------------------------------------------------------------------------
-
-/// If not specifed, type and classID are discovered at runtime in the CondDB
-StatusCode 
-ConditionsDBCnvSvc::createConditionData (DataObject*&         refpObject,
-					 const std::string&   folderName,
-					 const std::string&   tagName,
-					 const ITime&         time )
-{
-  return createConditionData ( refpObject,
-			       folderName,
-			       tagName,
-			       time,
-			       ConditionsDBAddress_undefinedClassID, 
-			       ConditionsDBAddress_undefinedStringType );
 }
 
 //----------------------------------------------------------------------------
@@ -515,19 +527,23 @@ ConditionsDBCnvSvc::createConditionData (DataObject*&         refpObject,
 /// Update a condition DataObject by folder name, tag and time.
 /// Always update even if condition DataObject is valid at the specified time:
 /// previous DataObject may refer to a different tag at the same time.
-/// This method does not register DataObject in the transient data store.
+/// This method does not register DataObject in the transient data store,
+/// but may register TDS addresses for its children if needed (e.g. Catalog).
+/// The string storage type is discovered at runtime in the CondDB.
+/// The entry name identifies a condition amongst the many in the string.
 /// Implementation:
 /// - create a temporary address containing storage type and classID;
 /// - dispatch to appropriate conversion service according to storage type;
 /// - this will dispatch to appropriate converter according to CLID
 ///   (the ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
-ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
-					  const std::string&   folderName,
-					  const std::string&   tagName,
-					  const ITime&         time,
-					  const CLID&          classID,
-					  const unsigned char& type )
+ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
+					 const std::string&   folderName,
+					 const std::string&   tagName,
+					 const std::string&   entryName,
+					 const ITime&         time,
+					 const CLID&          classID,
+					 IRegistry*           entry )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   StatusCode status;
@@ -538,35 +554,27 @@ ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
     return StatusCode::FAILURE;
   }
 
-  // Should classID and type be discovered in the ConditionsDB?
-  CLID          theClassID;
+  // Discover the string storage type in the ConditionsDB
   unsigned char theType;
-  if ( ConditionsDBAddress_undefinedStringType == type &&
-       ConditionsDBAddress_undefinedClassID    == classID ) {
-    // Read folder description in the CondDB
-    log << MSG::DEBUG 
-	<< "Read service type and classID in the folder description" << endreq;
-    std::string description;
-    status = m_conditionsDBGate->readCondDBFolder( description, 
-						     folderName );
-    if ( !status.isSuccess() ) {
-      log << MSG::ERROR 
-	  << "Could not read folder description in the CondDB" << endreq;
-      return status;
-    }
-    status  = decodeDescription( description, theClassID, theType );
-    if (!status.isSuccess() ) {
-      log << MSG::ERROR << "Could not decode folder description" << endreq;
-      return status;
-    }
-  } else {
-    theClassID = classID;
-    theType    = type;
+  log << MSG::DEBUG 
+      << "Read string storage type in the folder description" << endreq;
+  std::string description;
+  status = m_conditionsDBGate->readCondDBFolder( description, 
+						 folderName );
+  if ( !status.isSuccess() ) {
+    log << MSG::ERROR 
+	<< "Could not read folder description in the CondDB" << endreq;
+    return status;
+  }
+  status  = decodeDescription( description, theType );
+  if (!status.isSuccess() ) {
+    log << MSG::ERROR << "Could not decode folder description" << endreq;
+    return status;
   }
 
   // Is object an instance of the specified class?
-  if ( theClassID != pObject->clID() ) {
-    log << MSG::ERROR << "Update requested for clID " << theClassID
+  if ( classID != pObject->clID() ) {
+    log << MSG::ERROR << "Update requested for clID " << classID
 	<< " while DataObject is of clID " 
 	<< pObject->clID() << endreq;
     return StatusCode::FAILURE;
@@ -587,14 +595,13 @@ ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
   // Create temporary address for the relevant type and classID 
   log << MSG::DEBUG 
       << "Delegate address creation to the persistency service" << endreq;
-  log << MSG::DEBUG 
-      << "Creating an address of type " 
-      << (int)theType << " for class " << theClassID << endreq;
-  log << MSG::DEBUG << "String data: " << stringData << endreq;
+  log << MSG::DEBUG << "Creating an address of type " 
+      << (int)theType << " for class " << classID << endreq;
+  log << MSG::VERBOSE << "String data is:" << endl << stringData << endreq;
   IOpaqueAddress* tmpAddress;
-  const std::string par[2] = {stringData, ""};
+  const std::string par[2] = { stringData, entryName };
   status = addressCreator()->createAddress
-    ( theType, theClassID, par, 0, tmpAddress);
+    ( theType, classID, par, 0, tmpAddress );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
@@ -603,15 +610,37 @@ ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
   log << MSG::DEBUG << "Temporary address successfully created" << endreq;
   tmpAddress->addRef();
 
+  // Set the transient store registry for the object associated to this address
+  tmpAddress->setRegistry( entry );
+
   // Now update the object
-  log << MSG::DEBUG << "Delegate update to the persistency service" << endreq;
-  status = m_detPersSvc->updateObj ( tmpAddress, pObject );
+  log << MSG::DEBUG 
+      << "Update the object: create a new one and copy it into the old object"
+      << endreq;
+  log << MSG::DEBUG << "Delegate creation to the persistency service" << endreq;
+  DataObject* pNewObject;
+  status = m_detPersSvc->createObj ( tmpAddress, pNewObject );
   tmpAddress->release();
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
-	<< "Persistency service could not update object" << endreq;
+	<< "Persistency service could not create object" << endreq;
     return status;
   }
+  // Since the DataObject::operator= operator is not virtual, dynamic cast first!
+  // The overloaded virtual Condition::update() method must be properly defined!
+  // The memory pointed to by the old pointer must contain the new object    
+  Condition* pCond = dynamic_cast<Condition*>(pObject);
+  Condition* pNewCond = dynamic_cast<Condition*>(pNewObject);
+  if ( 0 == pCond || 0 == pNewCond ) {
+    log << MSG::ERROR
+	<< "Cannot update objects other than Condition: update() must be defined!"
+	<< endreq;
+    return StatusCode::FAILURE;
+  }
+  // Deep copy the new Condition into the old DataObject
+  pCond->update( *pNewCond );  
+  // Delete the useless Condition
+  delete pNewCond;
 
   // Set validity of updated object
   IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
@@ -627,34 +656,16 @@ ConditionsDBCnvSvc::updateConditionData ( DataObject*          pObject,
 
 //----------------------------------------------------------------------------
 
-/// If not specifed, type and classID are discovered at runtime in the CondDB
+/// Decode the string storage type from the folder description string
 StatusCode 
-ConditionsDBCnvSvc::updateConditionData (DataObject*          pObject,
-					 const std::string&   folderName,
-					 const std::string&   tagName,
-					 const ITime&         time )
-{
-  return updateConditionData ( pObject,
-			       folderName,
-			       tagName,
-			       time,
-			       ConditionsDBAddress_undefinedClassID, 
-			       ConditionsDBAddress_undefinedStringType );
-}
-
-//----------------------------------------------------------------------------
-
-/// Decode classID and storage type from the folder description string
-StatusCode 
-ConditionsDBCnvSvc::decodeDescription   ( const std::string&  description,
-					  CLID&               classID,
-					  unsigned char&      type)
+ConditionsDBCnvSvc::decodeDescription( const std::string& description,
+				       unsigned char& type )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Decoding description: " << description << endreq;
   std::string theDesc = description;  
 
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
+  // Find keywords
   std::string s1 = "<description type=";
   if ( theDesc.find(s1) != 0 ) {
     log << MSG::ERROR 
@@ -663,18 +674,18 @@ ConditionsDBCnvSvc::decodeDescription   ( const std::string&  description,
   }
   theDesc.erase( 0, s1.length() );
 
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
+  // Find numerical data
   std::string s_type = theDesc.substr(0,3);
   const char* c_type = s_type.c_str();
   if ( strspn ( c_type, " .0123456789" ) != s_type.length() ) {
-    log << MSG::ERROR << "Could not find '" <<  s1
-	<< "' in description: " << theDesc << endreq;
+    log << MSG::ERROR 
+	<< "Could not find numerical data" << endreq;
     return StatusCode::FAILURE;
   }
   theDesc.erase( 0, s_type.length() );
 
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
-  std::string s2 = " classID=";
+  // Find keywords
+  std::string s2 = ">";
   if ( theDesc.find(s2) != 0 ) {
     log << MSG::ERROR << "Could not find '" <<  s2 
 	<< "' in description: " << theDesc << endreq;
@@ -682,26 +693,7 @@ ConditionsDBCnvSvc::decodeDescription   ( const std::string&  description,
   }
   theDesc.erase( 0, s2.length() );
 
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
-  std::string s_clas = theDesc.substr(0,9);
-  const char* c_clas = s_clas.c_str();
-  if ( strspn ( c_clas, " .0123456789" ) != s_clas.length() ) {
-    log << MSG::ERROR 
-	<< "Non-numeric characters in classID field: " << s_clas << endreq;
-    return StatusCode::FAILURE;
-  }
-  theDesc.erase( 0, s_clas.length() );
-
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
-  std::string s3 = ">";
-  if ( theDesc.find(s3) != 0 ) {
-    log << MSG::ERROR << "Could not find '" <<  s3 
-	<< "' in description: " << theDesc << endreq;
-    return StatusCode::FAILURE;
-  }
-  theDesc.erase( 0, s3.length() );
-
-  //log << MSG::DEBUG << "Decoding: '" <<  theDesc << "'" << endreq; 
+  // Any extra characters?
   if ( theDesc.length() != 0 ) {
     log << MSG::ERROR 
 	<< "Extra characters in description: " <<  theDesc << endreq;
@@ -709,38 +701,28 @@ ConditionsDBCnvSvc::decodeDescription   ( const std::string&  description,
   }
 
   type    = (unsigned char)atoi( c_type );
-  classID = (CLID         )atoi( c_clas );
-  log << MSG::DEBUG << "Decoded: stringType=" << (int)type 
-      << " class=" << classID << endreq;
+  log << MSG::DEBUG << "Decoded: stringType=" << (int)type << endreq;
   return StatusCode::SUCCESS;
 
 }
 
 //----------------------------------------------------------------------------
 
-/// Encode classID and storage type into the folder description string
+/// Encode the string storage type into the folder description string
 StatusCode 
-ConditionsDBCnvSvc::encodeDescription   ( const CLID&          classID,
-					  const unsigned char& type,
-					  std::string&         description )
+ConditionsDBCnvSvc::encodeDescription( const unsigned char& type,
+				       std::string& description )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   unsigned int i_type = (unsigned int) type;
-  unsigned int i_clas = (unsigned int) classID;
-  log << MSG::DEBUG << "Encoding: type=" << i_type 
-      << " classID=" << i_clas << endreq;
+  log << MSG::DEBUG << "Encoding: type=" << i_type << endreq;
   char c_type[4];
-  char c_clas[10];
   if ( 3 != sprintf ( c_type, "%3.3i", i_type ) ) 
     log << MSG::ERROR << "Error encoding type="    << i_type << endreq;
-  if ( 9 != sprintf ( c_clas, "%9.9i", i_clas ) ) 
-    log << MSG::ERROR << "Error encoding classID=" << i_clas << endreq;
   std::string s_type  = std::string( c_type );
-  std::string s_class = std::string( c_clas );
   std::string s1 = "<description type=";
-  std::string s2 = " classID=";
-  std::string s3 = ">";
-  description = s1 + s_type + s2 + s_class + s3;
+  std::string s2 = ">";
+  description = s1 + s_type + s2;
   log << MSG::DEBUG << "Encoded description: " << description << endreq;
   return StatusCode::SUCCESS;
 } 

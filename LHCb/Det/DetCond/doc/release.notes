@@ -1,50 +1,96 @@
-# $Id: release.notes,v 1.8 2001-11-30 09:30:38 andreav Exp $
+# $Id: release.notes,v 1.9 2001-12-16 16:00:45 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
-!20011130 - Andrea Valassi
-- Modified version of DetDataSvc in GaudiSvc committed to CVS 
--> Contains main features of ConditionDataSvc and ConditionsDBDataSvc
--> Remove ConditionDataSvc and ConditionsDBDataSvc from this package
+==============================================================================
+!20011216 - Andrea Valassi (v2r0)
+Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
+- Update cannot be delegated to XmlCnvSvc until major changes in DetDes 
+  > code creating and interpreting DOM trees in each Xml converter should be 
+    executed also in updateObj(): to avoid duplicating code, a solution is 
+    to move it from createObj() to updateObj() or better updateObjRefs(),
+    which should be called internally from createObj()
+  > my (temporary?) solution is to create a new object using the address, and 
+    deep copy part of it into the old one by a Condition::update(Condition&)
+    method to deep copy only those properties of a DataObject that refer
+    to a Condition (eg validity and parameters); the registry, address,
+    reference counts and other DataObject properties should not be deep
+    copied instead (hence an overloaded operator= is not introduced)
+  > update of DataObjects is only possible for Conditions (and derived classes)
+    because this method exists only for Conditions
+  > this is the only reason to have a dependency on DetDesc
+  > however, DataObjects not implementing IValidity are now assumed valid
+    (previously, an error was returned when updating them)
+- Changes in folder description
+  > classID are removed from all XML refs: remove it from folder description
+  > assume that secondary storage type is always read from folder description
+- Remove ConditionsDBAddress (a GenericAddress of type CONDDB is enough)
+  > par[0] is still the COndDB folder name
+  > the tag name is not anymore in the CONDDB address
+  > par[1] is now the name of the element (e.g. the name of an XML element)
+  > the string storage type is not in the CONDDB address
+    (it is now assumed that it is always read from the folder description)
+  > ipar{0,1] are not used anymore 
+- Registry entry (can be 0) is used in creating and updating Conditions
+  > for instance: this is needed for catalog conversion
+  > it is set in the secondary temporary address (e.g. an XML catalog address)
+- Minor changes in messaging: use VERBOSE tag for verbose comments
+- Overload methods for writing representations in ConditionsDBCnvSvc
+  > they must be overloaded because this CnvSvc has no converters
+  > they are empty for the moment (not yet implemented)
+- Upgrade to CMT v1r10: remove scripts and hacks needed to cure a bug in CMT
 
+==============================================================================
+!20011130 - Andrea Valassi
+Modified version of DetDataSvc in GaudiSvc committed to CVS 
+- Contains main features of ConditionDataSvc and ConditionsDBDataSvc
+- Remove ConditionDataSvc and ConditionsDBDataSvc from this package
+
+==============================================================================
 !20011129 - Andrea Valassi
 - Remove the IConditionsDBDataSvc special interface
--> ConditionsDBDataSvc now does little more than ConditionDataSvc
+  > ConditionsDBDataSvc now does little more than ConditionDataSvc
 - Implement a dummy IIncidentListener interface in ConditionDataSvc
 - Redefine ConditionsDBAddress_undefinedClassID = CLID_NULL (it will disappear)
 
+==============================================================================
 !20011128 - Andrea Valassi
-- Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
--> use IAddressCreator interface of CnvSvc to create addresses with global tag
-   > "DEFAULT" becomes a reserved word to indicate the global tag
--> remove method setGlobalTag (the tag can only be set in the job options)
+Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
+- Use IAddressCreator interface of CnvSvc to create addresses with global tag
+  > "DEFAULT" becomes a reserved word to indicate the global tag
+- Remove method setGlobalTag (the tag can only be set in the job options)
 
+==============================================================================
 !20011127 - Andrea Valassi
-- A few more changes before including my detector data service in GaudiSvc
--> the event time is not passed in an address from the DataSvc to the CnvSvc
-   > remove IConditionAddress
-   > ConditionsDBCnvSvc now reads the event time from the DetDataSvc
-   > ConditionDataSvc::updateObject now just checks validity before delegating
--> move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
-   > needed to retrieve the event time within the ConditionsDBCnvSvc
-   > the setEventTime method is temporary (eventually: use the IncidentService)
--> store ConditionsDBAddress private data as GenericAddress private data
+A few more changes before including my detector data service in GaudiSvc
+- The event time is not passed in an address from the DataSvc to the CnvSvc
+  > remove IConditionAddress
+  > ConditionsDBCnvSvc now reads the event time from the DetDataSvc
+  > ConditionDataSvc::updateObject now just checks validity before delegating
+- Move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
+  > needed to retrieve the event time within the ConditionsDBCnvSvc
+  > the setEventTime method is temporary (eventually: use the IncidentService)
+- Store ConditionsDBAddress private data as GenericAddress private data
 
+==============================================================================
 !20011126 - Andrea Valassi
-- A few changes before including my data service in GaudiSvc.
--> move ConditionData from DetCond/src/Lib to DetCondExample
-   > only DataObjects are manipulated, with dynamic casts to IValidity
-   > no Lib anymore in DetCond/src
--> manipulate ITime and TimePoint objects rather than ITime pointers
-   > add bool method to check if the event time is defined in ConditionDataSvc
+A few changes before including my data service in GaudiSvc.
+- Move ConditionData from DetCond/src/Lib to DetCondExample
+  > only DataObjects are manipulated, with dynamic casts to IValidity
+  > no Lib anymore in DetCond/src
+- Manipulate ITime and TimePoint objects rather than ITime pointers
+  > add bool method to check if the event time is defined in ConditionDataSvc
 
+==============================================================================
 !20011123 - Andrea Valassi (v2)
-- Upgrade to Gaudi v9
--> addresses now inherit from GenericAddress (which has been simplified a lot)
--> there are no address factories any more
--> adapt to changes in RegistryEntry (which now implements IRegistry)
--> add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
--> notify (by flag "true") ServiceLocator to create services not existing yet
+Upgrade to Gaudi v9
+- Addresses now inherit from GenericAddress (which has been simplified a lot)
+- There are no address factories any more
+- Adapt to changes in RegistryEntry (which now implements IRegistry)
+- Add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
+- Notify (by flag "true") ServiceLocator to create services not existing yet
 
+==============================================================================
 !20010914 - Andrea Valassi (v1)
-- New package
+New package
+
