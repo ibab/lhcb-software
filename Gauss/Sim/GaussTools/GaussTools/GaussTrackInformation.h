@@ -25,7 +25,9 @@
 ///
 class GaussTrackInformation : public G4VUserTrackInformation
 {
-  ///
+public:
+  // the actual tyep of hit conatiner 
+  typedef std::vector<GaussHitBase*> Hits;
 public:
 
   /// default (empty) constructor
@@ -90,6 +92,9 @@ public:
   GaussTrackInformation& addToHits ( GaussHitBase* hit ) 
   { return addHit( hit ) ; }
   
+  // get the container of hits 
+  const Hits& hits() const { return m_hits ; }
+  
   /** update Tracks IDs in hits
    *  (set the new track ID for all connected hits)
    *  @param trackID new value of trackID 
@@ -103,23 +108,16 @@ public:
       }
     return *this ;
   }
-
+  
   /** get the pointer to the detInfo
    */
-
-  DetTrackInfo* detInfo() 
-  {
-    return  m_detInfo;
-  }
+  DetTrackInfo* detInfo() const { return  m_detInfo; }
   
   /** set the pointer to the detInfo
    *  @param aDetInfo pointer to DetTrackInfo
    */
-  
   void setDetInfo ( DetTrackInfo* aDetInfo ) 
-  {
-    m_detInfo = aDetInfo;
-  }
+  { m_detInfo = aDetInfo; }
 
   
 private:
@@ -132,7 +130,6 @@ private:
   bool m_createdHit ;
 
   /// vector of pointers to hits created by that track
-  typedef std::vector<GaussHitBase*> Hits;
   Hits  m_hits;
 
   /// pointer to a specialised DetTrackInfo object containing detector-specific
@@ -154,6 +151,23 @@ inline GaussTrackInformation*
 gaussTrackInformation ( G4VUserTrackInformation* g4 )
 {
   GiGaUtil::FastCast<G4VUserTrackInformation,GaussTrackInformation> cast;
+  return cast( g4 );
+};
+// ============================================================================
+
+// ===========================================================================
+/** @fn  gaussTrackInformation
+ *  @param  g4  pointer to G4VUserTrackInformation object
+ *  @return cast (dynamic or static to GaussTrackInformation
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    2002-12-07
+ */
+// ============================================================================
+inline const GaussTrackInformation* 
+gaussTrackInformation ( const G4VUserTrackInformation* g4 )
+{
+  GiGaUtil::FastCast< 
+    const G4VUserTrackInformation,const GaussTrackInformation> cast;
   return cast( g4 );
 };
 // ============================================================================

@@ -5,6 +5,51 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-02-19 - Vanya BELYAEV
+
+ - src/Component/GetGiGaHitsAlg.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/PrintEventAlg.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GiGaFlushAlgorithm.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GaussInitialisation.h,.cpp 
+        move into Sim/GaussAlgs package 
+ - src/Component/GaussTools_load.cpp 
+        remove GetGiGaHistAlg 
+        remove PrintEventAlg  
+        remome GiGaFlushAlgorithm 
+        remove GaussInitialisation 
+ - src/Component/GiGaSensDetBudget.cpp  
+        fix compilation warning 
+ - src/Component/SpecialCuts.cpp 
+        fix compilation warning 
+ - src/Component/GiGaPhysListModular.cpp
+        fix compilation warning 
+ - src/Component/GaussPostTrackAction.cpp 
+        fix compilation warning
+ - src/Components/GaussTrackActionStart.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByEnergy.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByEnergyType.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByProcess.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionByType.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionFinal.h,.cpp
+        new tracking action 
+ - src/Components/GaussTrackActionGeneral.h,.cpp
+        new tracking action 
+ - cmt/requirement 
+        eliminate the dependencies on Event/VeloEvent
+                                      Event/MuonEvent
+                                      Event/RichEvent 
+                                      Event/CaloEvent
+        increase the *MAJOR* version -> v10r0 
+
+
 !======================= GaussTools v9r1 ================================
 ! 2004-02-14 - Patrick Robbe
  - GaussPostTrackAction.cpp : propagate mixing information from G4Tracks

@@ -72,26 +72,28 @@ StatusCode GiGaPhysListModular::initialize()
   MsgStream log( msgSvc(), name() );
   log << MSG::INFO << "GiGaPhysListModular initializing" << endreq;
   
-  IGiGaPhysicsConstructor* theconstr;
-
   if( m_physconstr.empty() ) 
     { return Error ( "Invalid/Empty list of Physics constructors" ) ; }
   
   for ( std::vector<std::string>::iterator constructor = m_physconstr.begin() ; 
         m_physconstr.end() != constructor ; ++constructor )
-    {
-      IGiGaPhysicsConstructor* theconstr = 
-        tool( *constructor , theconstr , this ) ;
-      if( 0 == theconstr ) { return StatusCode::FAILURE ; }
-      
-      if( 0 == theconstr -> physicsConstructor() ) 
-        { return Error ( "G4PhysicsConstructor* points to NULL!" ) ; }
-      
-      m_constructors.push_back( theconstr );
-      
-      // register 
-      RegisterPhysics( theconstr -> physicsConstructor() ) ;
-    }
+  {
+    IGiGaPhysicsConstructor* theconstr = 
+      tool<IGiGaPhysicsConstructor>( *constructor , this ) ;
+    if( 0 == theconstr ) { return StatusCode::FAILURE ; }
+    
+    // NB!!! prevent the deletion of contructors by Gaudi
+    theconstr->addRef() ;
+    //
+    
+    if( 0 == theconstr -> physicsConstructor() ) 
+    { return Error ( "G4PhysicsConstructor* points to NULL!" ) ; }
+    
+    m_constructors.push_back( theconstr );
+    
+    // register 
+    RegisterPhysics( theconstr -> physicsConstructor() ) ;
+  }
   
   return StatusCode::SUCCESS;
 };
@@ -102,7 +104,7 @@ StatusCode GiGaPhysListModular::finalize ()
   // release all constructors 
   for( Constructors::iterator ic = m_constructors.begin() ; 
        m_constructors.end() != ic ; ++ic ) 
-    { if( 0 != *ic ) { (*ic) -> finalize () ; } }
+  { if( 0 != *ic ) { (*ic) -> finalize () ; } }
   m_constructors.clear() ;
   
   return GiGaPhysListBase::finalize  ();

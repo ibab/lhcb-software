@@ -1,3 +1,4 @@
+# $Id: requirements,v 1.33 2004-02-20 19:35:25 ibelyaev Exp $ 
 # =============================================================================
 package GaussTools
 version v9r1
@@ -6,28 +7,22 @@ version v9r1
 branches          cmt src doc GaussTools
 
 # =============== explicit dependencies =======================================  
-use GiGaCnv       v*     Sim
+use               GiGaCnv       v*     Sim
+use               SimSvc        v*     Sim  
 
-# =============== Event =======================================================
-use VeloEvent     v*     Event
-use MuonEvent     v*     Event
-use RichEvent     v*     Event
-use CaloEvent     v*     Event 
+# =============== linker library ==============================================
+library           GaussToolsLib           Lib/*.cpp
 
-use SimSvc        v*     Sim  
+# =============== component library ===========================================
+library           GaussTools              Components/*.cpp       
 
-# ============== linker library ===============================================
-library          GaussToolsLib           Lib/*.cpp
-
-# ============== component library ============================================
-library          GaussTools              Components/*.cpp       
-
-# ============== standard includes ============================================
-include_dirs     $(GAUSSTOOLSROOT)
+# =============== standard includes ===========================================
+include_dirs      $(GAUSSTOOLSROOT)
         
-# ============== standard patterns ===========================================
-apply_pattern    component_library library=GaussTools
-apply_pattern    linker_library    library=GaussToolsLib
-# ============================================================================
+# =============== standard patterns ===========================================
+apply_pattern     component_library library=GaussTools
+apply_pattern     linker_library    library=GaussToolsLib
+
+# =============================================================================
 # The END 
-# ============================================================================
+# =============================================================================

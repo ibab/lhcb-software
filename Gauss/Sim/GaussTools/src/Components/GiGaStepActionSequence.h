@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionSequence.h,v 1.1 2002-12-12 15:19:33 witoldp Exp $ 
+// $Id: GiGaStepActionSequence.h,v 1.2 2004-02-20 19:35:29 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:33  witoldp
+// major repackaging
+//
 // Revision 1.1  2002/09/26 18:10:54  ibelyaev
 //  repackageing: add all concrete implementations from GiGa
 //
@@ -49,15 +52,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode  initialize () ;
-  
-  /** finalize the object
-   *  @see GiGaStepActionBase 
-   *  @see GiGaBase 
-   *  @see  AlgTool 
-   *  @see IAlgTool 
-   *  @return status code 
-   */
-  virtual StatusCode  finalize   () ;
   
   /** perform the stepping action
    *  @see G4UserSteppingAction

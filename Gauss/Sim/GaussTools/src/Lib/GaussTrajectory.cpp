@@ -45,7 +45,7 @@ GaussTrajectory::GaussTrajectory ( )
 /// constructor 
 // ============================================================================
 GaussTrajectory::GaussTrajectory   ( const G4Track* aTrack )
-  : GiGaTrajectory(aTrack) 
+  : GiGaTrajectory ( aTrack ) 
 {
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
@@ -56,7 +56,7 @@ GaussTrajectory::GaussTrajectory   ( const G4Track* aTrack )
 /// constructor 
 // ============================================================================
 GaussTrajectory::GaussTrajectory ( const GiGaTrajectory & right )
-  : GiGaTrajectory(right)
+  : GiGaTrajectory ( right )
 {
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
@@ -67,7 +67,7 @@ GaussTrajectory::GaussTrajectory ( const GiGaTrajectory & right )
 /// constructor 
 // ============================================================================
 GaussTrajectory::GaussTrajectory ( const GaussTrajectory & right )
-  : GiGaTrajectory(right)
+  : GiGaTrajectory ( right )
 {
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
@@ -104,52 +104,44 @@ void  GaussTrajectory::operator delete ( void* aTrajectory )
 { GaussTrajectoryLocal::
   s_Allocator.FreeSingle( (GaussTrajectory*) aTrajectory ) ; } ;
 
-///
+// ============================================================================
+/// append the step 
+// ============================================================================
 void GaussTrajectory::AppendStep      ( const G4Step*  step )       
 {
-  ///
-  bool append = false;
-  G4VUserTrackInformation* uinf = step->GetTrack()->GetUserInformation(); 
-  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
-  /// 
 
-  if( empty() )  
-    { append = true ; } 
+  // size before append 
+  const size_t size_0  = size() ;
 
-  /// if some information is not available, 
-  /// follow ordinary routine and just add the step
-  //  else if( 0 == step->GetTrack()                      || 
-	//   0 == stepMgr()                             || 
-	//   step != stepMgr()->GetStep()               || 
-	//   step->GetTrack() != stepMgr()->GetTrack    () ) 
-  //  { append = true ; }   
+  // 1) 'append' using GiGaTrajectory class 
+  GiGaTrajectory::AppendStep( step ) ;
   
-  /// if  it is the last step, the step must be appended 
-  else if ( fAlive != step->GetTrack()->GetTrackStatus() ) 
-    { append = true ; }
-  /// if appendStep (in GaussTrackInformation) was explicitly set:
-  else if (ginf->appendStep()) 
-    { 
-      append=true; 
-      ginf->setAppendStep(false);
-    }
+  // 2) appended? 
+  if ( size() != size_0 ) { return ; }                          // RETURN
+
+  // 3) specific "append" action 
   
-  ///
-  if( append && 
-      ( empty() || 
-        step->GetPostStepPoint()->GetGlobalTime() != back()->GetTime() ||
-        step->GetPostStepPoint()->GetPosition() != back()->GetPosition() ) ) 
-    {    
-      GiGaTrajectoryPoint* p = 
-        new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition() ,
-                                 step->GetPostStepPoint()->GetGlobalTime()) ;      
-      
-      push_back( p );
-      ///
-    };
-  ///
+  G4VUserTrackInformation* uinf 
+    = step->GetTrack()->GetUserInformation();
+  if ( 0 == uinf       ) { return  ; }                          // RETURN 
+  
+  GaussTrackInformation* ginf = gaussTrackInformation( uinf ) ;
+  if ( 0 == ginf       ) { return  ; }                          // RETURN 
+  
+  if ( ginf -> appendStep() ) 
+  { 
+    appendStep( step ) ;
+    ginf -> setAppendStep( false ) ;
+  }
 };
-///
+// ============================================================================
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
+
 
 
 

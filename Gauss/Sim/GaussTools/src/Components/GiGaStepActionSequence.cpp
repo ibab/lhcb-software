@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionSequence.cpp,v 1.4 2003-09-22 13:59:33 ibelyaev Exp $ 
+// $Id: GiGaStepActionSequence.cpp,v 1.5 2004-02-20 19:35:29 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/09/22 13:59:33  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // ============================================================================
 /// STD & STL 
 #include <functional>
@@ -76,45 +79,19 @@ StatusCode GiGaStepActionSequence::initialize()
     { return Error("Could not initialize the base class!");}
   if( m_members.empty() ) { Print("The sequence is empty."); }
   // instantiate members 
+  m_actions.clear() ;
   std::string Type, Name;
   for( MEMBERS::const_iterator member = m_members.begin() ;
        m_members.end() != member ; ++member )
-    {
-      IGiGaStepAction* action = tool( *member , action , this );
-      if( 0 == action    ) { return Error("Could not create IGiGaStepAction '" 
+  {
+    IGiGaStepAction* action = tool<IGiGaStepAction> ( *member , this );
+    if( 0 == action    ) { return Error("Could not create IGiGaStepAction '" 
                                           + *member + "'"       ) ; }
-      m_actions.push_back( action );
-    }       
+    m_actions.push_back( action );
+  }       
   //
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE);
-};
-// ============================================================================
-
-// ============================================================================
-/** finalize the object
- *  @see GiGaStepActionBase 
- *  @see GiGaBase 
- *  @see  AlgTool 
- *  @see IAlgTool 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaStepActionSequence::finalize() 
-{
-  Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
-  // finalize all members
-  for( ACTIONS::iterator iaction = m_actions.begin() ; 
-       m_actions.end() != iaction ; ++iaction )
-    {
-      IAlgTool*  action = *iaction ;
-      if( 0 != action && 0 != toolSvc() ) 
-        { toolSvc() -> releaseTool ( action ) ; }
-      *iaction = 0 ;
-    }
-  m_actions.clear();
-  // finalize base class 
-  return GiGaStepActionBase::finalize();
 };
 // ============================================================================
 

@@ -16,32 +16,34 @@
 
 void GaussTools_load() 
 { 
-  /// Algorithms
-  DECLARE_ALGORITHM       (    GetGiGaHitsAlg          ) ;
-  DECLARE_ALGORITHM       (    PrintEventAlg           ) ;
-  DECLARE_ALGORITHM       (    GiGaFlushAlgorithm      ) ;
-  DECLARE_ALGORITHM       (    GaussInitialisation     ) ;
-  
-  /// Magnetic Field  
-  DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      ) ;
-  DECLARE_GiGaFactory     (    GiGaMagFieldUniform     ) ;
-  
   /// Streams 
   DECLARE_ALGORITHM       (    GiGaInputStream         ) ;
   DECLARE_ALGORITHM       (    GiGaOutputStream        ) ;
 
+  /// Magnetic Field  
+  DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      ) ;
+  DECLARE_GiGaFactory     (    GiGaMagFieldUniform     ) ;
+  
   /// Physics Lists 
   DECLARE_GiGaFactory     (    GiGaPhysListModular     ) ;
   DECLARE_GiGaFactory     (    GiGaPhysListGeantino    ) ;
- 
-  /// Sensitive Detector 
+  
+  /// Sensitive Detector (Material budget evaluation) 
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
-
+  
   /// tracking action 
   DECLARE_GiGaFactory     (    CommandTrackAction     );
   DECLARE_GiGaFactory     (    GaussPreTrackAction     );
   DECLARE_GiGaFactory     (    GaussPostTrackAction    );
   DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
+  //
+  DECLARE_GiGaFactory     (    GaussTrackActionStart        ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionGeneral      ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionByEnergy     ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionByType       ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionByEnergyType ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionByProcess    ) ;
+  DECLARE_GiGaFactory     (    GaussTrackActionFinal        ) ;
 
   /// stepping  action 
   DECLARE_GiGaFactory     (    GiGaStepActionDraw      ) ;

@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSequence.cpp,v 1.4 2003-09-22 13:59:33 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSequence.cpp,v 1.5 2004-02-20 19:35:29 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/09/22 13:59:33  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // ============================================================================
 /// STD & STL 
 #include <functional>
@@ -66,44 +69,22 @@ StatusCode GiGaTrackActionSequence::initialize ()
 {
   StatusCode sc = GiGaTrackActionBase::initialize();
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class!", sc ); }
+  { return Error("Could not initialize the base class!", sc ); }
   if( m_members.empty() ) { Print("The sequence is empty."); }
   // instantiate members 
+  m_actions.clear() ;
   std::string Type, Name;
   for( MEMBERS::const_iterator member = m_members.begin() ;
        m_members.end() != member ; ++member )
-    {
-      IGiGaTrackAction* action = tool( *member , action , this );
-      if( 0 == action    ) { return Error("Could not create IGiGaTrackAction '" 
-                                          + *member  + "'"       ) ; }
-      m_actions.push_back( action );
-    }       
+  {
+    IGiGaTrackAction* action = tool<IGiGaTrackAction>( *member , this );
+    if( 0 == action    ) { return Error("Could not create IGiGaTrackAction '" 
+                                        + *member  + "'"       ) ; }
+    m_actions.push_back( action );
+  }       
   //
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE );
-};
-// ============================================================================
-
-// ============================================================================
-/** finalize the action object 
- *  @return status code
- */ 
-// ============================================================================
-StatusCode GiGaTrackActionSequence::finalize   () 
-{
-  Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
-  // release all memebrs 
-  for( ACTIONS::iterator iaction = m_actions.begin() ; 
-       m_actions.end() != iaction ; ++iaction )
-    {
-      IAlgTool*   action = *iaction ;
-      if( 0 != action && 0 != toolSvc() ) 
-        { toolSvc() -> releaseTool ( action ) ; }
-      *iaction = 0 ;
-    }
-  m_actions.clear();
-  // finalize the base class
-  return GiGaTrackActionBase::finalize() ;
 };
 // ============================================================================
 

@@ -1,8 +1,11 @@
-// $Id: GiGaEventActionSequence.cpp,v 1.4 2003-09-22 13:59:33 ibelyaev Exp $
+// $Id: GiGaEventActionSequence.cpp,v 1.5 2004-02-20 19:35:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/09/22 13:59:33  ibelyaev
+//  polishing of addRef/release/releaseTools/finalize
+//
 // ============================================================================
 /// STD & STL 
 #include<functional> 
@@ -72,43 +75,22 @@ StatusCode GiGaEventActionSequence::initialize()
   /// initialize the base class 
   StatusCode sc = GiGaEventActionBase::initialize();
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class!");}
+  { return Error("Could not initialize the base class!");}
   if( m_members.empty() ) { Print("The sequence is empty."); }
+  m_actions.clear();
   // instantiate members 
   std::string Type, Name;
   for( MEMBERS::const_iterator member = m_members.begin() ;
        m_members.end() != member ; ++member )
-    {
-      IGiGaEventAction* action = tool( *member , action , this  );
-      if( 0 == action    ) { return Error("Could not create IGiGaEventAction '" 
-                                          + *member + "'"       ) ; }
-      m_actions.push_back( action );
-    }       
+  {
+    IGiGaEventAction* action = 
+      tool<IGiGaEventAction>( *member , this  );
+    if( 0 == action    ) { return Error("Could not create IGiGaEventAction '" 
+                                        + *member + "'"       ) ; }
+    m_actions.push_back( action );
+  }       
   //
-  return Print("Initialized successfully" , 
-               StatusCode::SUCCESS        , MSG::VERBOSE );
-};
-// ============================================================================
-
-// ============================================================================
-/** finalize the object
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaEventActionSequence::finalize() 
-{
-  Print("Finalization", StatusCode::SUCCESS , MSG::VERBOSE );
-  // release  all members 
-  for( ACTIONS::iterator iaction = m_actions.begin() ; 
-       m_actions.end() != iaction ; ++iaction )
-    {
-      IAlgTool*  action = *iaction ;
-      if( 0 != action && 0 != toolSvc() ) { toolSvc()->releaseTool( action ) ; }
-      *iaction = 0 ;
-    }
-  m_actions.clear();
-  //
-  return GiGaEventActionBase::finalize();
+  return StatusCode::SUCCESS ;
 };
 // ============================================================================
 

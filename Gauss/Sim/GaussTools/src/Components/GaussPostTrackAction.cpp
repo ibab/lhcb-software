@@ -136,19 +136,19 @@ StatusCode GaussPostTrackAction::initialize ()
   // initialize the base 
   StatusCode status = GiGaTrackActionBase::initialize() ; 
   if( status.isFailure() ) 
-    { return Error("Could not intialize base class GiGaTrackActionBase!", 
-                   status ) ; } 
+  { return Error("Could not intialize base class GiGaTrackActionBase!", 
+                 status ) ; } 
   //
   if( m_storeByOwnType )
-    {
+  {
       m_ownStoredTypes.clear();
       G4ParticleTable* table = G4ParticleTable::GetParticleTable();
       if( 0 == table ) 
-        { return Error("G4ParticleTable* points to NULL!" ) ; } 
+      { return Error("G4ParticleTable* points to NULL!" ) ; } 
       for( TypeNames::const_iterator it = m_ownStoredTypesNames.begin() ; 
            m_ownStoredTypesNames.end() != it ; ++it )
-        {
-          const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
+      {
+        const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
           if( 0 == pd )
             { return Error(std::string("could not find G4ParticleDefinition")+ 
                            "for particle name='"+*it+"'!"); }

@@ -140,15 +140,7 @@ private:
   double m_ownEnergyThreshold;
   /// threshold for child kinetic energy 
   double m_childEnergyThreshold;
-  /// store particles undorgoing specific process
-  bool m_storeBySecondariesProcess;
-  /// container for the process names
-  std::vector<std::string> m_childStoredProcess;
-  /// store particles produced in specific process
-  bool m_storeByOwnProcess;
-  /// container for own process names
-  std::vector<std::string> m_ownStoredProcess;
-  ///  
+  
   /// container of names of own   types 
   TypeNames       m_ownStoredTypesNames   ;  
   /// container of names of child types 
@@ -159,6 +151,15 @@ private:
   /// container of definitions  of child types 
   PartDefs        m_childStoredTypes      ; 
   ///
+
+  /// store particles undorgoing specific process
+  bool m_storeBySecondariesProcess;
+  /// container for the process names
+  std::vector<std::string> m_childStoredProcess;
+  /// store particles produced in specific process
+  bool m_storeByOwnProcess;
+  /// container for own process names
+  std::vector<std::string> m_ownStoredProcess;
 
 };
 
