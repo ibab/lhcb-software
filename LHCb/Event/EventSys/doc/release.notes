@@ -3,7 +3,7 @@ package manager: Marco Cattaneo
 
 !======================== EventSys v18r2 2004-09-06 ========================
 ! 2004-09-06 - Marco Cattaneo
- - Use CaloEvent v13r5
+ - Use CaloEvent v13r5, EventAssoc v1r3
 
 !======================== EventSys v18r1 2004-07-29 ========================
 ! 2004-07-29 - Marco Cattaneo
