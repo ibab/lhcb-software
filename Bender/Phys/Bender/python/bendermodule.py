@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.16 2005-01-21 09:33:06 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.17 2005-01-21 10:36:35 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2005/01/21 09:33:06  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.15  2004/11/23 17:13:23  ibelyaev
 #  v4r4
 #
@@ -51,14 +54,13 @@ for lib in _libs_ :
     print 'after loading '+`lib`
 
 
-from   bendertypes   import *
-from   benderaux     import *
-from   bendercuts    import *
-from   benderloop    import *
-from   bendertuple   import *
-from   bendermatch   import *
-from   benderalgo    import *
-
+from   bendertypes     import *
+from   benderaux       import *
+from   bendercuts      import *
+from   benderloop      import *
+from   bendertuple     import *
+from   bendermatch     import *
+from   benderalgo      import *
 
 AppMgr = gaudimodule.AppMgr 
 
@@ -76,8 +78,8 @@ for lib in _libs_ :
     if lib not in gaudi.DLLs : gaudi.DLLs += [ lib ]
 
 import benderstr
+import bendersmartrefs
 import benderconfig
-
 
 # =============================================================================
 # The END 

@@ -1,13 +1,38 @@
 <PRE>
-! $Id: release.notes,v 1.6 2004-08-10 14:07:05 ranjard Exp $ 
+! -----------------------------------------------------------------------------
+! $Id: release.notes,v 1.7 2005-01-21 10:36:34 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
-! Package     : newmycmt/Bender
+! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : The package is a result of "pythonization procedure" 
 !                of the LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-01-21 - Vanya BELYAEV
+
+ - python/bendersmartrefs.py 
+
+   new script to substitute the retur value for few C++ methodf 
+   from SmartRefVector<XXX> to Python list 
+   e.g.  MCParticle::endVertices()
+   It allows a normal iteration over the return value 
+
+   mcp = ....
+   for v in mcp.endVertices() :
+        type type(v), v 
+
+
+   In additon SmartRefVector<XXX> is equipper with 'normal' 
+   __getitem__ function to provide similar iteration 
+
+ - cmt/requirements 
+   move LD_PRELOAD to BenderGCC package
+
+ - cmt/requirements 
+   version increment to v4r5 
+
 
 ! 2004-08-08 - Vanya BELYAEV
  - python/benderhelper.py
@@ -43,5 +68,10 @@
 
 ! 2002-11-02 - Vanya Belyaev
  - new package 
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
+
 </PRE>
 

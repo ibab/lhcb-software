@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2004-11-23 17:13:23 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2005-01-21 10:36:34 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           Bender
-version           v4r4
+version           v4r5
 
 # ============================================================================
 branches          cmt doc src python
@@ -37,11 +37,6 @@ macro PYPI   "/afs/cern.ch/sw/lcg/app/releases/PI/$(PI_native_version)"
 path_append       PYTHONPATH $(PYPI)/src/AnalysisServices/PyAIDAProxy"
 
 # =============== application macro ===========================================
-path_remove       LD_PRELOAD  BenderGCC
-path_append       LD_PRELOAD  "" \
-	          Linux $(BENDERGCCROOT)/$(CMTCONFIG)/libBenderGCC.so
-
-# =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"
 
 # =============== set the Bender version = v * 100000 + r * 100 + p ==========
@@ -54,6 +49,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.20  2004/11/23 17:13:23  ibelyaev
+#  v4r4
+#
 # =============================================================================
 # The END
 # ============================================================================
