@@ -1,9 +1,10 @@
-// $Id: RichDefinitions.h,v 1.2 2002-04-04 15:06:39 cattanem Exp $
+// $Id: RichDefinitions.h,v 1.3 2002-04-05 06:36:56 cattanem Exp $
 #ifndef RICHKERNEL_RICHDEFINITIONS_H
 #define RICHKERNEL_RICHDEFINITIONS_H 1
 
-// Include Overloading of serialise methods
-#include "Kernel/SerializeStl.h"
+#include "GaudiKernel/StreamBuffer.h"
+#include <vector>
+#include <list>
 
 namespace Rich {
 
