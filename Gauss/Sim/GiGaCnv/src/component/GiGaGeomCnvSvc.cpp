@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/24 11:13:55  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.3  2001/07/15 20:45:10  ibelyaev
 /// the package restructurisation
 /// 
@@ -321,8 +324,8 @@ StatusCode GiGaGeomCnvSvc::initialize()
   /// we explicitely need detSvc(), check it! 
   if( 0 == detSvc() ) 
     { return Error(" DetectorProviderSvc is not located! " ) ;}
-  ///
-  return sc;
+  /// locate own converters 
+  return StatusCode::SUCCESS;
   ///
 };
 
@@ -442,11 +445,22 @@ StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)
 StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
 { 
   ///
-  if  ( 0 == ppI                    ) 
-    { return StatusCode::FAILURE                     ; } 
+  if  ( 0 == ppI ) { return StatusCode::FAILURE ; }
+  /// 
   *ppI = 0 ; 
-  if  ( IGiGaGeomCnvSvc::interfaceID()  == iid ) 
-    { *ppI  = static_cast<IGiGaGeomCnvSvc*> (this)   ; } 
+  ///
+  if      ( IGiGaGeomCnvSvc ::interfaceID ()  == iid ) 
+    { *ppI  = static_cast<IGiGaGeomCnvSvc*>   ( this )   ; } 
+  else if ( IGiGaGeoSrc     ::interfaceID ()  == iid ) 
+    { *ppI  = static_cast<IGiGaGeoSrc*>       ( this )   ; } 
+  else if ( IGiGaCnvSvc     ::interfaceID ()  == iid ) 
+    { *ppI  = static_cast<IGiGaCnvSvc*>       ( this )   ; } 
+  else if ( IConversionSvc  ::interfaceID ()  == iid )
+    { *ppI  = static_cast<IConversionSvc* >   ( this )   ; }
+  else if ( IService        ::interfaceID ()  == iid )
+    { *ppI  = static_cast<IService*>          ( this )   ; }
+  else if ( IInterface      ::interfaceID ()  == iid )
+    { *ppI  = static_cast<IInterface*>        ( this )   ; }
   else                                           
     { return GiGaCnvSvcBase::queryInterface( iid , ppI ) ; } 
   ///

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/24 11:13:55  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.3  2001/07/15 20:45:09  ibelyaev
 /// the package restructurisation
 /// 
@@ -28,8 +31,6 @@
 #include "G4PVPlacement.hh"
 #include "G4PhysicalVolumeStore.hh"
 /// GiGa & GiGaCnv 
-#include "GiGa/IGiGaCnvSvc.h"
-#include "GiGa/IGiGaGeoCnvSvc.h"
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 /// local 
 #include "GiGaDetectorElementCnv.h"

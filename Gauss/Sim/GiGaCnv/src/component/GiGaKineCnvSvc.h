@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.2  2001/07/15 20:45:11  ibelyaev
 /// the package restructurisation
 /// 
@@ -74,7 +77,14 @@ public:
    */
   virtual IParticlePropertySvc* ppSvc () const { return m_ppSvc; }
 
-  
+  /** query the interface
+   *  @param ID unique interface identifier 
+   *  @param II placeholder for interface 
+   *  @return status code 
+   */
+  virtual StatusCode queryInterface( const InterfaceID& ID , 
+                                     void**             II ) ;
+
 private:
   
   /// name of particle property service

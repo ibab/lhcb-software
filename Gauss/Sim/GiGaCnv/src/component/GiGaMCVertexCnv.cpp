@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/24 11:13:56  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.3  2001/07/15 20:45:11  ibelyaev
 /// the package restructurisation
 /// 
@@ -103,8 +106,6 @@ StatusCode GiGaMCVertexCnv::initialize()
   if( 0 == gigaSvc() ) { return Error("IGiGaSvc* points to NULL!"       ) ; }
   if( 0 == cnvSvc () ) { return Error("IConversionSvc* points to NULL!" ) ; }  
   if( 0 == kineSvc() ) { return Error("IGiGaKineSnvSvc* points to NULL!") ; }
-  if( 0 == ppSvc  () ) 
-    { return Error("IParticlePropertySvc* points to NULL!") ; }
   ///
   return StatusCode::SUCCESS;
 };
@@ -228,7 +229,8 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
     Point2Vertex Cnv;
     /// convert points into vertices 
     typedef G4TrajectoryContainer::const_iterator IT;
-    for( IT iTr = trajectories->begin() ; trajectories->end() ; ++iTr ) 
+    for( IT iTr = trajectories->begin() ; 
+       trajectories->end() != iTr ; ++iTr ) 
       {
         ///
         const G4VTrajectory* vt = *iTr ;
@@ -494,7 +496,7 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  ,
     }
   ///
   { MsgStream log( msgSvc(),  name() ) ; 
-  log << MSG::VERBOSE << "UpdateRep::end " << 
+  log << MSG::DEBUG << "UpdateRep::end #" << 
     nVertex << " primary vertices converted " << endreq; }
   ///
   return StatusCode::SUCCESS; 

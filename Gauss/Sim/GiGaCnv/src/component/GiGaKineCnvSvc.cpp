@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+/// 
 /// ===========================================================================
 
 /// from Gaudi 
@@ -75,6 +78,8 @@ StatusCode GiGaKineCnvSvc::initialize()
   if( 0 == ppSvc  ()  )
     { return Error("IParticlePropertySvc* points to NULL!");}
   ///
+  Print("My name is '"+name()+"'");
+  /// 
   return StatusCode::SUCCESS;
 };  
 
@@ -93,6 +98,37 @@ StatusCode GiGaKineCnvSvc::finalize()
   ///
   return GiGaCnvSvcBase::finalize(); 
 };  
+
+/// ===========================================================================
+/** query the interface
+ *  @param ID unique interface identifier 
+ *  @param II placeholder for interface 
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaKineCnvSvc::queryInterface( const InterfaceID& ID , 
+                                           void**             II ) 
+{
+  if( 0 == II ) { return StatusCode::FAILURE; }
+  /// reset interface
+  *II = 0;
+  if     ( IGiGaKineCnvSvc ::interfaceID () == ID )
+    { *II = static_cast<IGiGaKineCnvSvc*>  ( this ) ; }
+  else if( IGiGaCnvSvc     ::interfaceID () == ID )
+    { *II = static_cast<IGiGaCnvSvc*>      ( this ) ; }
+  else if( IConversionSvc  ::interfaceID () == ID )
+    { *II = static_cast<IConversionSvc*>   ( this ) ; }
+  else if( IService        ::interfaceID () == ID )
+    { *II = static_cast<IService*>         ( this ) ; }
+  else if( IInterface      ::interfaceID () == ID )
+    { *II = static_cast<IInterface*>       ( this ) ; }
+  else 
+    { return GiGaCnvSvcBase::queryInterface( ID , II ) ; }
+  ///
+  addRef();
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 

@@ -1,5 +1,8 @@
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 11:13:53  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.2  2001/07/15 20:45:08  ibelyaev
 /// the package restructurisation
 /// 
@@ -15,6 +18,7 @@
 #include "GaudiKernel/Converter.h" 
 #include "GaudiKernel/MsgStream.h" 
 // GiGaCnv 
+#include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaKineCnvSvc.h" 
 //
 class IDataProviderSvc     ;
@@ -31,12 +35,12 @@ class IGiGaHitsCnvSvc      ;
 //
 
 /** @class GiGaCnvBase  GiGaCnvBase.h GiGaCnv/GiGaCnvBase.h
-    
-    Base class for  converters from Geant4 to Gaudi and vice versa  
-    
-    @author  Vanya Belyaev
-    @date    21/02/2001
-*/
+ *
+ *  Base class for  converters from Geant4 to Gaudi and vice versa  
+ *  
+ *  @author  Vanya Belyaev
+ *   @date    21/02/2001
+ */
 
 class GiGaCnvBase: public Converter 
 {

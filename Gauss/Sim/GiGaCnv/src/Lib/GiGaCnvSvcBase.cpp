@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 11:13:54  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.2  2001/07/15 20:45:09  ibelyaev
 /// the package restructurisation
 /// 
@@ -32,8 +35,9 @@
 /// GiGa
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/IGiGaSetUpSvc.h"
-#include "GiGa/IGiGaCnvSvc.h" 
+#include "GiGa/GiGaUtil.h"
 /// GiGaCnv
+#include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 
 /// ===========================================================================
@@ -221,22 +225,32 @@ StatusCode GiGaCnvSvcBase::initialize()
     } 
   else { return Error(" Incident Service is not requested to be located!") ;} 
   ///
+  return locateOwnCnvs(); 
+  ///
+};
+
+/// ===========================================================================
+/** locate all own converters 
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaCnvSvcBase::locateOwnCnvs() 
+{  
   /// here we need to locate all converter factories and converters 
-  if( 0 == cnvManager() ) { return Error("ICnvManager* is not available!") ; }
+  if( 0 == cnvManager() ) 
+    { return Error("locateOwnCnvs():ICnvManager* is not available!") ; }
   for( ICnvManager::CnvIterator it = cnvManager()->cnvBegin() ; 
        cnvManager()->cnvEnd() != it ; ++it )
     {
       if( 0 == *it || ( repSvcType() != (*it)->repSvcType()  ) ) { continue ; }
       StatusCode st = addConverter( **it ); 
       if( st.isFailure() )
-        { return Error("Initialize::Could not add converter=" + 
+        { return Error("locateOwnCnvs():Could not add converter=" + 
                        (*it)->typeName() , st ) ; }
     } 
   ///
-  return StatusCode::SUCCESS; 
-  ///
+  return StatusCode::SUCCESS;
 };
-
 
 /// ===========================================================================
 /** service initialization 
@@ -268,15 +282,26 @@ StatusCode GiGaCnvSvcBase::finalize()
 /// ===========================================================================
 StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
 { 
+  ///
   if( 0 == ppI                ) { return StatusCode::FAILURE ;}
+  ///
   *ppI = 0 ;
-  if( IGiGaCnvSvc       ::interfaceID()  == iid ) 
-    { *ppI = static_cast<IGiGaCnvSvc*>       (this)     ; } 
-  if( IIncidentListener ::interfaceID()  == iid ) 
-    { *ppI = static_cast<IIncidentListener*> (this)     ; } 
+  ///
+  if     ( IGiGaCnvSvc       ::interfaceID()  == iid ) 
+    { *ppI = static_cast<IGiGaCnvSvc*>        ( this )     ; } 
+  else if( IIncidentListener ::interfaceID()  == iid ) 
+    { *ppI = static_cast<IIncidentListener*>  ( this )     ; } 
+  else if( IConversionSvc    ::interfaceID()  == iid ) 
+    { *ppI = static_cast<IConversionSvc*>     ( this )     ; } 
+  else if( IService          ::interfaceID()  == iid ) 
+    { *ppI = static_cast<IService*>           ( this )     ; } 
+  else if( IInterface        ::interfaceID()  == iid ) 
+    { *ppI = static_cast<IInterface*>         ( this )     ; } 
   else                                            
     { return ConversionSvc::queryInterface( iid , ppI ) ; } 
+  ///
   addRef();
+  ///
   return StatusCode::SUCCESS;  
 };
 
@@ -329,8 +354,7 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
     {
       std::string name( it->path() );
       name.replace( name.find("/Event/G4/"),9,"");
-      IOpaqueAddress* Address = 0 ; 
-      
+      IOpaqueAddress* Address = 0 ;      
       sc = createAddress( repSvcType() , 
                           it->clid  () , 
                           it->addr1 () , 
@@ -340,12 +364,11 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
         { Error("Could not create IOpaqueAddress for " + 
                 it->path()+" name="+name ); return ; }
       GenericAddress* GA = dynamic_cast<GenericAddress*> ( Address );
-      GA->setObjectName( name );
-
-      long st = gtop->add( name , Address );
+      GA->setObjectName( name );      
+      const  long st = gtop->add( name , Address );
       if( st != StatusCode::SUCCESS ) 
         { Error("Could not add IOpaqueAddress for " + 
-                it->path()+" name="+name ); return ; }
+                it->path()+" name="+name );  /* return ; */ }
       RegistryEntry* dd = gtop->findLeaf( name ) ; 
       if( 0 == dd ) 
         { Error("Could not extarct RegistryEntry by name="+name ); return ; }

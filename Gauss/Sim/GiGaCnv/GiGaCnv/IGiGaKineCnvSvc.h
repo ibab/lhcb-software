@@ -1,14 +1,17 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 11:13:54  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+/// 
 /// ===========================================================================
 #ifndef    GIGACNV_IGIGAKINECNVSVC_H
 #define    GIGACNV_IGIGAKINECNVSVC_H 1
 /// ===========================================================================
 /// GiGa 
-#include "GiGa/IGiGaCnvSvc.h" 
 ///  GiGaCnv 
+#include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IIDIGiGaKineCnvSvc.h"
 
 /// forward declarations 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 11:13:54  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+///
 /// Revision 1.2  2001/07/15 20:45:08  ibelyaev
 /// the package restructurisation
 ///
@@ -22,9 +25,9 @@
 /// GiGa 
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/IGiGaSetUpSvc.h"
-#include "GiGa/IGiGaCnvSvc.h" 
 #include "GiGa/GiGaException.h"
 // GiGaCnv 
+#include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h" 
 #include "GiGaCnv/IGiGaKineCnvSvc.h" 
 #include "GiGaCnv/IGiGaHitsCnvSvc.h" 

@@ -1,13 +1,19 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/24 11:13:54  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+/// 
 /// ===========================================================================
 #ifndef  GIGACNV_IGIGAGEOMCNVSVC_H 
 #define  GIGACNV_IGIGAGEOMCNVSVC_H 1
 
 /// GiGa 
-#include "GiGa/IGiGaGeoCnvSvc.h" 
+#include "GiGa/IGiGaGeoSrc.h" 
+/// GiGaCnv
+#include "GiGaCnv/IGiGaCnvSvc.h" 
+#include "GiGaCnv/IIDIGiGaGeomCnvSvc.h"
 
 class ISolid;
 class IMagneticFieldSvc;
@@ -19,7 +25,6 @@ class G4Material;
 class IGiGaSensDet;
 class IGiGaMagField;
 
-#include "GiGaCnv/IIDIGiGaGeomCnvSvc.h"
 
 /** @class IGiGaGeomCnv     IGiGaGeomCnvSvc.h GiGa/IGiGaGeomCnvSvc.h
  *
@@ -29,7 +34,8 @@ class IGiGaMagField;
  *  @author Vanya Belyaev
  */
 
-class IGiGaGeomCnvSvc: virtual public IGiGaGeoCnvSvc
+class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
+                       virtual public IGiGaGeoSrc 
 {
  public:  
   

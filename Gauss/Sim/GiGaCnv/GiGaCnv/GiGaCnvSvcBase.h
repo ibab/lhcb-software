@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/24 11:13:54  ibelyaev
+/// package restructurization(III) and update for newer GiGa
+/// 
 /// ===========================================================================
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
@@ -14,8 +17,8 @@
 ///  Gaudi - base class and interafces 
 #include "GaudiKernel/IIncidentListener.h" 
 #include "GaudiKernel/ConversionSvc.h"
-/// GiGa 
-#include "GiGa/IGiGaCnvSvc.h" 
+/// GiGaCnv 
+#include "GiGaCnv/IGiGaCnvSvc.h" 
 ///
 class IDataProviderSvc     ; 
 class IParticlePropertySvc ; 
@@ -89,6 +92,8 @@ protected:
   ///
   StatusCode    setNameOfDataProviderSvc( const std::string& Name ) 
   { m_dpName = Name ; return StatusCode::SUCCESS ; } 
+  ///
+  StatusCode locateOwnCnvs();
   ///
   StatusCode Error     ( const std::string & msg                       ,  
                          const StatusCode  & sc  = StatusCode::FAILURE );

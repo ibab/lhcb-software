@@ -1,6 +1,11 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:45:12  ibelyaev
+/// the package restructurisation
+/// 
+//  ===========================================================================
 #define GIGACNV_GIGAMISCGETEVENTALG_CPP
 /// ===========================================================================
 /// STL
@@ -24,8 +29,8 @@
 #include "GiGaMiscGetEventAlg.h"
 
 
-static const  AlgFactory<GiGaMiscGetEventAlg>                  s_Factory;
-const        IAlgFactory&         GiGaMiscGetEventAlgFactory = s_Factory;
+static const  AlgFactory<GiGaMiscGetEventAlg>         s_Factory;
+const        IAlgFactory&GiGaMiscGetEventAlgFactory = s_Factory;
 
 GiGaMiscGetEventAlg::GiGaMiscGetEventAlg(const std::string& name, 
                                          ISvcLocator* pSvcLocator) 
