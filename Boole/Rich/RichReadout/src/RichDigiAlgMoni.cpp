@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.6 2003-11-25 15:01:08 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.7 2003-11-25 16:31:39 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -17,7 +17,6 @@ const        IAlgFactory& RichDigiAlgMoniFactory = s_factory ;
 RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : RichAlgBase ( name, pSvcLocator ),
-    m_mapmtDet(0),
     m_sicbDet (0),
     m_detInt  (0) {
 
@@ -45,9 +44,6 @@ StatusCode RichDigiAlgMoni::initialize() {
   if ( "HPDSICB" == m_detMode ) {
     // Use the temporary SICB compatible tool for SICB data
     acquireTool( "PixelFinder", m_sicbDet );
-  } else if ( "MaPMTSICB" == m_detMode ) {
-    // Use the temporary tool for MaPMTs from SICB data
-    acquireTool( "MaPMTDetTool", m_mapmtDet );
   } else if ( "GAUSS" == m_detMode ) {
     // The main tool. For Gauss data
     acquireTool("RichDetInterface" , m_detInt );
@@ -579,7 +575,6 @@ StatusCode RichDigiAlgMoni::finalize() {
 
   // release tools
   releaseTool(m_sicbDet);
-  releaseTool(m_mapmtDet);
   releaseTool(m_detInt);
 
   // finalize base class
@@ -591,8 +586,6 @@ bool RichDigiAlgMoni::getPosition( const RichSmartID & id, HepPoint3D & position
   if ( "HPDSICB" == m_detMode ) {
     position = 10.0 * (m_sicbDet->globalPosition(id));
     return true;
-  } else if ( "MaPMTSICB" == m_detMode ) {
-    return m_mapmtDet->cdfDetectionPoint( id, position );
   } else if ( "GAUSS" == m_detMode ) {
     return m_detInt->globalPosition( id, position );
   }

@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.6 2003-11-25 15:01:08 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.7 2003-11-25 16:31:39 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -31,7 +31,6 @@
 
 // Detector tools
 #include "RiSicbGeom/PixelFinder.h"
-#include "RichDetTools/IMaPMTDetTool.h"
 #include "RichDetTools/IRichDetInterface.h"
 
 // temporary histogramming numbers
@@ -94,7 +93,6 @@ private: // methods
 
 private: // data
 
-  IMaPMTDetTool *     m_mapmtDet;
   IPixelFinder *      m_sicbDet;
   IRichDetInterface * m_detInt;
 
