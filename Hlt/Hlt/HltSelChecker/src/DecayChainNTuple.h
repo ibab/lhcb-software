@@ -7,6 +7,7 @@
 #include "Kernel/DVAlgorithm.h"
 
 #include "Event/RichPID.h"
+#include "TrgTools/TrgDataProvider.h"
 
 class ParticleProperty;
 class IDecayFinder;
@@ -25,7 +26,8 @@ class IMCDecayFinder;
  * 
  *  Creates a NTuple for any generic decay chain (checks association if compiled with MCCheck flag)
  * 
- *  Creates a MCNTuple for any generic true decay chain (compile with MCCheck flag)
+ *  Fills the corresponding true decay variables if compiled with MCCheck flag: 
+ *  -> the number of flagged particles for Decay and MCDecay must be the same!!!
  * 
  *  The children must be flagged with ^
  *  
@@ -74,14 +76,10 @@ class IMCDecayFinder;
  *  The primaries are retrieved with the PVLocator tool, default is offline
  *  -> must set PVLocation property of PVLocator tool to change it
  *  
- *  Note: use the run and event number as a key to plot reconstructed versus true decay variables
- *
  *  TODO: 
  *  - adapt to gammas ...
  *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
  *  - for gammas: get MC association
- *  - rewrite to have MC truth in the same Tree 
- *  - avoid duplication of variables, must re-think the whole algorithm ...
  *
  *  @author Luis Fernandez
  *  @date   2004-08-01
@@ -102,7 +100,7 @@ protected:
 private:
 
   // Properties
-  std::string m_Decay; // Decay for which the ntuples will be created 
+  std::string m_Decay; // Decay for which the ntuple will be created 
   std::string m_ntupleName; // Name of the TDirectory
   bool m_useRichPID;
   std::string m_richPIDLocation;
@@ -116,10 +114,8 @@ private:
   long m_event, m_run;
 
 #ifdef MCCheck
-  std::string m_MCDecay; // MC Decay for which the ntuples will be created 
-  std::string m_MCntupleName; // Name of the MC TDirectory
-  // Flag to book the MCNTuple only once
-  bool m_bookedMCNTuple;
+  std::string m_MCDecay; // MC Decay 
+  bool m_FillMCDecay;
 #endif
 
   //-----------------------------------------------------------------------------
@@ -157,7 +153,25 @@ private:
 
 #ifdef MCCheck
   bool isSignal(MCParticle*, std::vector<MCParticle*>& );
+
+  // Write the true part of the decay
+  StatusCode WriteMCNTuple(std::vector<MCParticle*>&);
 #endif
+
+  // Trigger
+  std::string m_pathTrg;
+  TrgDataProvider* m_dataProvider;
+
+  // NTuple global variables
+  NTuple::Item<long> m_eventNumber,m_runNumber;
+  NTuple::Item<long> m_L0Decision;
+  NTuple::Item<long> m_L1Decision;
+  NTuple::Item<long> m_L1Gen;
+  NTuple::Item<long> m_L1SiMu;
+  NTuple::Item<long> m_L1DiMu;
+  NTuple::Item<long> m_L1JPsi;
+  NTuple::Item<long> m_L1Elec;
+  NTuple::Item<long> m_L1Phot;
 
   //-----------------------------------------------------------------------------
   // HandleNTuple
@@ -171,16 +185,21 @@ private:
                  IGeomDispCalculator* iptool);
 
 #ifndef MCCheck
-    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
-                    long& run, long& event, RichPIDs* globalPIDs);
+    void FillNTuple(Particle& part, VertexVector& pvs, RichPIDs* globalPIDs);
 #endif
 
 #ifdef MCCheck
-    void FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
-                    long& run, long& event, bool& isSig, MCParticle* mclink, RichPIDs* globalPIDs);
+    void FillNTuple(Particle& part, VertexVector& pvs, 
+                    bool& isSig, MCParticle* mclink, RichPIDs* globalPIDs);
+
+    void FillMCNTuple(MCParticle& mcpart, HepPoint3D& MCPVPosition, bool& isReco);
 #endif
 
     void clean(){m_n=0;}
+
+#ifdef MCCheck
+    void mcclean(){m_mcn=0;}
+#endif
     
   private:
     // Tools
@@ -192,7 +211,6 @@ private:
     // m_n is the number of decays found per event; serves as index for arrays
     NTuple::Item<long>  m_n;
     NTuple::Array<long> m_ID;
-    NTuple::Array<long> m_eventNumber,m_runNumber;
 
 #ifdef MCCheck
     NTuple::Array<long> m_trueID;
@@ -280,21 +298,6 @@ private:
     // IPS of the composite particle is the smallest
     NTuple::Array<float> m_cospF;
 
-    // IP, IPS, F, FS, cospF w.r.t. "the best" PV chosen as the one for which
-    // the IPS of the mother (head) of the decay is the smallest
-
-    // IP, IPe and IPS w.r.t "the PV"
-    NTuple::Array<float> m_IPthePV;
-    // NTuple::Array<float> m_IPethePV;
-    NTuple::Array<float> m_IPSthePV;
-
-    // F, FS w.r.t "the PV"
-    NTuple::Array<float> m_FDthePV; // flight distance w.r.t "the PV"
-    NTuple::Array<float> m_FSthePV; // flight significance w.r.t "the PV"
-
-    // cospF w.r.t "the PV"
-    NTuple::Array<float> m_cospFthePV;
-
     // Lifetime
     // NTuple::Array<float> m_taufit;
     // NTuple::Array<float> m_taufitErr;
@@ -310,80 +313,46 @@ private:
     NTuple::Array<float> m_MCstateTX;
     NTuple::Array<float> m_MCstateTY;
     NTuple::Array<float> m_MCstateQoverP;
-
 #endif
 
-
-  };
-
-  std::map<int, HandleNTuple*> m_HandleNTupleMap;
-
-
-//=============================================================================
-// True decay
-//=============================================================================
-
 #ifdef MCCheck
-
-  // Book the mcntuple
-  StatusCode BookMCNTuple(std::vector<MCParticle*>&);
-  // Write the ntuple
-  StatusCode WriteMCNTuple(std::vector<MCParticle*>&);
-
-  //-----------------------------------------------------------------------------
-  // HandleMCNTuple
-  //-----------------------------------------------------------------------------
-
-  class HandleMCNTuple{
-  public:
-
-    HandleMCNTuple(NTuplePtr& mcnt, unsigned int& number);
-
-    void FillMCNTuple(MCParticle& mcpart, HepPoint3D& MCPVPosition, bool& isReco, long& run, long& event);
-
-    void clean(){m_mcn=0;}
-    
-  private:
-    // Tools
-
-    // NTuple variables
+    // The true decay variables
 
     // m_mcn is the number of decays found per event; serves as index for arrays
     NTuple::Item<long>  m_mcn;
     NTuple::Array<long> m_mcID;
-    NTuple::Array<long> m_eventNumber,m_runNumber;
-
+    
     // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
     NTuple::Array<float> m_isReco;
-
+    
     // Momentum, mass, ...
     NTuple::Array<float> m_mcp;
     NTuple::Array<float> m_mcpt;
     NTuple::Array<float> m_mcmass;
-
+    
     // 3-momentum
     NTuple::Array<float> m_mcpx, m_mcpy, m_mcpz;
-
+    
     // Primary vertex
     NTuple::Array<float> m_mcxPV, m_mcyPV, m_mczPV;
-
+    
     // Origin vertex
     NTuple::Array<float> m_mcxOriVtx, m_mcyOriVtx, m_mczOriVtx;
-
+    
     // Decay vertex
     NTuple::Array<float> m_mcxDKVtx, m_mcyDKVtx, m_mczDKVtx;
-
+    
     // True IP, w.r.t the primary vertex
     NTuple::Array<float> m_mcIP;
-
+    
     // True lifetime (relevant for composite particles) in picoseconds
     // NTuple::Array<float> m_mctau;
 
+#endif
+
   };
 
-  std::map<int, HandleMCNTuple*> m_HandleMCNTupleMap;
-
-#endif
+  std::map<int, HandleNTuple*> m_HandleNTupleMap;
 
 };
 #endif // DECAYCHAINNTUPLE_H

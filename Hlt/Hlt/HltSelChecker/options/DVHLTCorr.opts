@@ -22,7 +22,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // plots
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//#include "$HLTSELCHECKERROOT/options/Plots.opts"
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
@@ -38,7 +38,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
 
-ApplicationMgr.EvtMax    = 2000 ;
+ApplicationMgr.EvtMax    = 10000 ;
 EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -79,3 +79,4 @@ TrgParticleMaker.KaonDLLCut = 15 ; // default
 
 #include "$HLTGENERICROOT/options/HltGeneric.opts"
 HltGenericDecision.Filter = true; // false is default
+

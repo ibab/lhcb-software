@@ -8,6 +8,7 @@
 #include "Event/ProtoParticle.h"
 // #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IPVLocator.h"
+#include "Event/TrgDecision.h"
 
 #ifdef MCCheck
 #include "MCTools/IMCDecayFinder.h"
@@ -39,9 +40,6 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_bookedNTuple(false)
     , m_PVContainer(VertexLocation::Primary)
     , m_PVLocator()
-#ifdef MCCheck
-    , m_bookedMCNTuple(false)
-#endif
     , m_ppSvc(0)
     , m_pDKFinder(0)
     , m_IPTool(0)
@@ -51,15 +49,18 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_pMCDKFinder(0)
     , m_pAsctLinks(0)
 #endif
+    ,m_pathTrg(TrgDecisionLocation::Default)
 {
-  declareProperty( "Decay",    m_Decay = "");
+  declareProperty("Decay", m_Decay = "");
 #ifdef MCCheck
-  declareProperty( "MCDecay",    m_MCDecay = "");
-  declareProperty( "MCNtupleName", m_MCntupleName = "FILE1/MyMCSelection" );
+  declareProperty("MCDecay", m_MCDecay = "");
+  declareProperty("FillMCDecay", m_FillMCDecay = false);
 #endif
-  declareProperty( "NtupleName", m_ntupleName = "FILE1/MySelection" );
-  declareProperty( "UseRichPID", m_useRichPID = false);
-  declareProperty( "RichPIDLocation", m_richPIDLocation = "Rec/Rich/TrgPIDs" );
+  declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
+  declareProperty("UseRichPID", m_useRichPID = false);
+  declareProperty("RichPIDLocation", m_richPIDLocation = "Rec/Rich/TrgPIDs" );
+
+
 }
 //=============================================================================
 // Destructor
@@ -75,14 +76,14 @@ StatusCode DecayChainNTuple::initialize() {
   StatusCode sc = service("ParticlePropertySvc", m_ppSvc);
 
   if( sc.isFailure() ) {
-    fatal() << "Unable to locate Particle Property Service" << endmsg;
+    fatal() << "Unable to locate Particle Property Service" << endreq;
     return sc;
   }
 
   // Retrieve the DecayFinder
   m_pDKFinder = tool<IDecayFinder>("DecayFinder", this);
   if(sc.isFailure()){
-    fatal() << "Unable to retrieve DecayFinder" << endmsg;
+    fatal() << "Unable to retrieve DecayFinder" << endreq;
     return sc;
   }
 
@@ -90,18 +91,18 @@ StatusCode DecayChainNTuple::initialize() {
   /*
   sc = toolSvc()->retrieveTool("LifetimeFitter", m_pLifetimeFitter, this);
   if(sc.isFailure()){
-    err() << " Unable to retrieve LifetimeFitter tool" << endmsg;
+    err() << " Unable to retrieve LifetimeFitter tool" << endreq;
     return sc;
   }
   */
 
   // Set the dk to be looked at
   m_pDKFinder->setDecay(m_Decay);
-  info() << "Will look for the decay: "<< m_pDKFinder->decay() << endmsg;
+  info() << "Will look for the decay: "<< m_pDKFinder->decay() << endreq;
 
   sc = toolSvc()->retrieveTool("GeomDispCalculator", m_IPTool, this);
   if(sc.isFailure()){
-    err() << " Unable to retrieve GeomDispCalculator tool" << endmsg;
+    err() << " Unable to retrieve GeomDispCalculator tool" << endreq;
     return sc;
   }
 
@@ -132,7 +133,7 @@ StatusCode DecayChainNTuple::initialize() {
 
   // Set the MC dk to be looked at
   m_pMCDKFinder->setDecay(m_MCDecay);
-  info() << "Will look for the MC decay: "<< m_pMCDKFinder->decay() << endmsg;
+  info() << "Will look for the MC decay: "<< m_pMCDKFinder->decay() << endreq;
 
   // Link associator
   sc = toolSvc()->retrieveTool("Particle2MCLinksAsct", "LinkAsct", m_pAsctLinks, this);
@@ -141,6 +142,9 @@ StatusCode DecayChainNTuple::initialize() {
     return sc;
   }
 #endif
+
+  // Trigger
+  m_dataProvider = tool<TrgDataProvider> ("TrgDataProvider");
 
   return StatusCode::SUCCESS;
 };
@@ -158,38 +162,29 @@ StatusCode DecayChainNTuple::execute() {
 
   if(evt){
     debug() << "Retrieved EVENT: " << evt->evtNum()
-        << " RUN: " << evt->runNum() << endmsg;
+        << " RUN: " << evt->runNum() << endreq;
     
     m_event = evt->evtNum();
     m_run = evt->runNum();
     
   } else{
-    err() << "Not able to retrieve event" << endmsg;
+    err() << "Not able to retrieve event" << endreq;
     return StatusCode::FAILURE;
   }
   //---------------------------------------------
 
-  // Reset counter m_n
+  // Reset counter m_n and m_mcn if MCCheck
   if(m_bookedNTuple){
     std::map<int, HandleNTuple*>::iterator it;
     for (it = m_HandleNTupleMap.begin(); 
          it != m_HandleNTupleMap.end(); 
          it++){
       it->second->clean();
-    }
-  }
-
 #ifdef MCCheck
-  // Reset counter m_mcn
-  if(m_bookedMCNTuple){
-    std::map<int, HandleMCNTuple*>::iterator it;
-    for (it = m_HandleMCNTupleMap.begin(); 
-         it != m_HandleMCNTupleMap.end(); 
-         it++){
-      it->second->clean();
+      if(m_FillMCDecay) it->second->mcclean();
+#endif
     }
   }
-#endif
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -198,14 +193,14 @@ StatusCode DecayChainNTuple::execute() {
   const ParticleVector parts = desktop()->particles();
   if (parts.size() == 0){
 #ifndef MCCheck
-    debug() << "No particles in desktop" << endmsg;
+    debug() << "No particles in desktop" << endreq;
     return StatusCode::SUCCESS ;
 #endif
   } else debug() << "Particles in desktop: "
-             << parts.size() << endmsg;
+             << parts.size() << endreq;
   //---------------------------------------------
 
-  debug() << "HOLA" << endmsg;
+  debug() << "HOLA" << endreq;
 
   //---------------------------------------------
   // container holding the head of the decay
@@ -218,14 +213,14 @@ StatusCode DecayChainNTuple::execute() {
     Particle* jmothervec = const_cast<Particle*>(imothervec);
     mothervec.push_back(jmothervec);
   }
-  debug() << "Found " << mothervec.size() << " reconstructed decay: " << m_pDKFinder->decay() << endmsg;
+  debug() << "Found " << mothervec.size() << " reconstructed decay: " << m_pDKFinder->decay() << endreq;
   
   bool foundDK = (mothervec.size()>0);
 
 #ifndef MCCheck
   // Skip event if no DOI
   if(!foundDK){
-    debug() << "Leaving since no DOI found" << endmsg;
+    debug() << "Leaving since no DOI found" << endreq;
     return StatusCode::SUCCESS ;    
   }
 #endif
@@ -250,12 +245,12 @@ StatusCode DecayChainNTuple::execute() {
     MCHead.push_back(jmc);
   }
 
-  debug() << "Found " << MCHead.size() << " true decay: " << m_pMCDKFinder->decay() << endreq ;
+  debug() << "Found " << MCHead.size() << " true decay: " << m_pMCDKFinder->decay() << endreq;
 
   bool foundMCDK = (MCHead.size()>0);
 
   if(!foundDK && !foundMCDK){
-    debug() << "Leaving since no DOI found" << endmsg;
+    debug() << "Leaving since no DOI found" << endreq;
     return StatusCode::SUCCESS ;    
   }
   //---------------------------------------------
@@ -266,9 +261,15 @@ StatusCode DecayChainNTuple::execute() {
   //=============================================================================
 
   //---------------------------------------------
+  // WARNING: the key must be identical when booking and filling, for both reco and true decays!!!
+  // Case of identical parts: take arbitrary offset and add (500000*forthekeymother)
+  // we have: int offsetmother = 9; and then offsetmother++;
+  // Case of identical parts: take arbitrary offset and add (500000*forthekeydau)
+  // we have: int offsetdau = 99; and then offsetdau++;
+
   // Book the ntuple
   if(!m_bookedNTuple){
-    debug() << "NTuple not booked yet" << endmsg;
+    debug() << "NTuple not booked yet" << endreq;
     BookNTuple(mothervec);
     if (!sc.isSuccess()) return sc;
   } //!m_bookedNTuple
@@ -279,47 +280,26 @@ StatusCode DecayChainNTuple::execute() {
   WriteNTuple(mothervec);
   if (!sc.isSuccess()) return sc;
   //---------------------------------------------
+
+#ifdef MCCheck
+  //---------------------------------------------
+  // Write the true decay part 
+  if(m_FillMCDecay){
+    WriteMCNTuple(MCHead);
+    if (!sc.isSuccess()) return sc;
+  }
   
+  //---------------------------------------------
+#endif
+
   //---------------------------------------------
   // Save the ntuple
   if(m_bookedNTuple && foundDK){
     NTuplePtr ntuple(ntupleSvc(), m_ntupleName);
     sc = ntuple->write();
-    if (sc.isFailure()) err() << "Cannot write NTuple " << endmsg;
+    if (sc.isFailure()) err() << "Cannot write NTuple " << endreq;
   }
   //---------------------------------------------
-
-  //=============================================================================
-  // True decay
-  //=============================================================================
-
-#ifdef MCCheck
-
-  //---------------------------------------------
-  // Book the mcntuple
-  if(!m_bookedMCNTuple){
-    debug() << "MCNTuple not booked yet" << endmsg;
-    BookMCNTuple(MCHead);
-    if (!sc.isSuccess()) return sc;
-  } //!m_bookedMCNTuple
-  //---------------------------------------------
-
-  //---------------------------------------------
-  // Write the mcntuple
-  WriteMCNTuple(MCHead);
-  if (!sc.isSuccess()) return sc;
-  //---------------------------------------------
-  
-  //---------------------------------------------
-  // Save the mcntuple
-  if(m_bookedMCNTuple && foundMCDK){
-    NTuplePtr mcntuple(ntupleSvc(), m_MCntupleName);
-    sc = mcntuple->write();
-    if (sc.isFailure()) err() << "Cannot write MCNTuple " << endmsg;
-  }
-  //---------------------------------------------
-
-#endif
 
   setFilterPassed(true);
   return StatusCode::SUCCESS;
@@ -354,8 +334,6 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // index of arrays
   sc = nt->addItem("N_lab"+label,m_n,0,10000);
   sc = nt->addIndexedItem("ID_lab"+label,m_n,m_ID);
-  sc = nt->addIndexedItem("Event_lab"+label,m_n, m_eventNumber);
-  sc = nt->addIndexedItem("Run_lab"+label,m_n, m_runNumber);
 
 #ifdef MCCheck
   sc = nt->addIndexedItem("trueID_lab"+label,m_n,m_trueID);
@@ -432,21 +410,6 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // IPS of the composite particle is the smallest
   sc = nt->addIndexedItem("cospF_lab"+label,m_n,m_cospF);
 
-  // IP, IPS, F, FS, cospF w.r.t. "the best" PV chosen as the one for which
-  // the IPS of the mother (head) of the decay is the smallest
-
-  // IP, IPe and IPS w.r.t "the PV"
-  sc = nt->addIndexedItem("IPthePV_lab"+label,m_n,m_IPthePV);
-  // sc = nt->addIndexedItem("IPethePV_lab"+label,m_n,m_IPethePV);
-  sc = nt->addIndexedItem("IPSthePV_lab"+label,m_n,m_IPSthePV);
-
-  // F, FS w.r.t "the PV"
-  sc = nt->addIndexedItem("FDthePV_lab"+label,m_n,m_FDthePV);
-  sc = nt->addIndexedItem("FSthePV_lab"+label,m_n,m_FSthePV);
-
-  // cospF w.r.t "the PV"
-  sc = nt->addIndexedItem("cospFthePV_lab"+label,m_n,m_cospFthePV);
-
   // Lifetime
   // sc = nt->addIndexedItem("taufit_lab"+label,m_n,m_taufit);
   // sc = nt->addIndexedItem("taufitErr_lab"+label,m_n,m_taufitErr);
@@ -479,18 +442,55 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
 
 #endif
 
+#ifdef MCCheck
+  // The true decay variables
+
+  // Add all the items
+  // index of arrays
+  sc = nt->addItem("mcN_lab"+label,m_mcn,0,10000);
+  sc = nt->addIndexedItem("mcID_lab"+label,m_mcn,m_mcID);
+
+  // momentum MeV
+  sc = nt->addIndexedItem("mcp_lab"+label,m_mcn,m_mcp);
+  // transverse momentum MeV
+  sc = nt->addIndexedItem("mcpt_lab"+label,m_mcn,m_mcpt);
+  sc = nt->addIndexedItem("mcmass_lab"+label,m_mcn,m_mcmass);
+  // 3-momentum
+  sc = nt->addIndexedItem("mcpx_lab"+label,m_mcn,m_mcpx);
+  sc = nt->addIndexedItem("mcpy_lab"+label,m_mcn,m_mcpy);
+  sc = nt->addIndexedItem("mcpz_lab"+label,m_mcn,m_mcpz);
+  // Primary vertex
+  sc = nt->addIndexedItem("mcxPV_lab"+label,m_mcn,m_mcxPV);
+  sc = nt->addIndexedItem("mcyPV_lab"+label,m_mcn,m_mcyPV);
+  sc = nt->addIndexedItem("mczPV_lab"+label,m_mcn,m_mczPV);
+  // Origin vertex
+  sc = nt->addIndexedItem("mcxOriVtx_lab"+label,m_mcn,m_mcxOriVtx);
+  sc = nt->addIndexedItem("mcyOriVtx_lab"+label,m_mcn,m_mcyOriVtx);
+  sc = nt->addIndexedItem("mczOriVtx_lab"+label,m_mcn,m_mczOriVtx);
+  // Decay vertex
+  sc = nt->addIndexedItem("mcxDKVtx_lab"+label,m_mcn,m_mcxDKVtx);
+  sc = nt->addIndexedItem("mcyDKVtx_lab"+label,m_mcn,m_mcyDKVtx);
+  sc = nt->addIndexedItem("mczDKVtx_lab"+label,m_mcn,m_mczDKVtx);
+  // True IP, w.r.t the primary vetex
+  sc = nt->addIndexedItem("mcIP_lab"+label,m_mcn,m_mcIP);
+  // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
+  sc = nt->addIndexedItem("isReco_lab"+label,m_mcn,m_isReco);
+  // True lifetime (relevant for composite particles) in picoseconds
+  // sc = nt->addIndexedItem("mctau_lab"+label,m_mcn,m_mctau);
+
+#endif
+
 }
 
 //=============================================================================
 //  DecayChainNTuple::HandleNTuple::FillNTuple
 //=============================================================================
 #ifndef MCCheck
-void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, 
-                                                long& run, long& event, RichPIDs* globalPIDs)
+void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, RichPIDs* globalPIDs)
 #endif
 
 #ifdef MCCheck
-  void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs, Vertex* bestpv, long& run, long& event,
+  void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pvs,
                                                   bool& isSig, MCParticle* mclink, RichPIDs* globalPIDs)
 #endif
 {
@@ -500,8 +500,6 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   if (m_n>9999) return;
 
   m_ID[m_n]= part.particleID().pid();
-  m_eventNumber[m_n] = event;
-  m_runNumber[m_n] = run;
 
 #ifdef MCCheck
   // Look true ID of the track (for PID misidentification)
@@ -817,42 +815,6 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_cospF[m_n] = cosangle;
   }
 
-  // IP, IPS, F, FS, cospF w.r.t. "the best" PV chosen as the one for which
-  // the IPS of the mother (head) of the decay is the smallest  
-
-  // IP, IPe and IPS w.r.t "the PV"
-  double ip, ipe;
-  m_iptool->calcImpactPar(part,*bestpv,ip,ipe);
-  m_IPthePV[m_n] = ip;
-  // m_IPethePV[m_n] = ipe ;
-  m_IPSthePV[m_n] = (ip/ipe);
-
-  // F, FS w.r.t "the PV"
-  if(!v){ // no sec vtx  
-    m_FDthePV[m_n] = -999.;
-    m_FSthePV[m_n] = -999.;
-  }
-  else{
-    double f = -1. , fe = -1.;
-    m_iptool->calcVertexDis(*bestpv, *v, f, fe);
-    double fs = fabs(f/fe);
-
-    m_FDthePV[m_n] = f;
-    m_FSthePV[m_n] = fs;
-  }
-
-  // cospF w.r.t "the PV"
-  if(!v){ // no sec vtx  
-    m_cospFthePV[m_n] = -2.;
-  }
-  else{
-    const HepPoint3D& x = v->position();
-    const Hep3Vector& dist = x - sPV;
-    const Hep3Vector& p(part.momentum().vect());
-    double cosangle = p.dot(dist)/p.mag()/dist.mag();
-    m_cospFthePV[m_n] = cosangle;
-  }
-
   // Lifetime
   /*
   double ct, ctErr, ctChi2;
@@ -887,7 +849,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
 //=============================================================================
 StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
   
-  verbose() << "Entering BookNTuple" << endmsg;
+  verbose() << "Entering BookNTuple" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
   
   // Mother (or head) of the decay
@@ -898,14 +860,14 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
       imother != mothervec.end();
       imother++){
 
-    debug() << "Mother ID = " << (*imother)->particleID().pid() << endmsg;
+    debug() << "Mother ID = " << (*imother)->particleID().pid() << endreq;
     
     // Get all the decay members (should be flagged)
     std::vector<Particle*> Children;
     std::vector<Particle*>::iterator ichild;
     m_pDKFinder->decayMembers(*imother, Children);
 
-    verbose() << "Number of children found is = " << Children.size() << endmsg;
+    verbose() << "Number of children found is = " << Children.size() << endreq;
 
     NTuplePtr nt(ntupleSvc(), m_ntupleName);
     if(!nt){ // Check if already booked
@@ -913,7 +875,19 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
       if(nt){  // ntuple sucessfully booked
           
         m_bookedNTuple = true;
-        
+
+        // NTuple global variables
+        sc = nt->addItem("Event", m_eventNumber);
+        sc = nt->addItem("Run", m_runNumber);
+        sc = nt->addItem("L0Decision", m_L0Decision);
+        sc = nt->addItem("L1Decision", m_L1Decision);
+        sc = nt->addItem("L1Gen", m_L1Gen);
+        sc = nt->addItem("L1SiMu", m_L1SiMu);
+        sc = nt->addItem("L1DiMu", m_L1DiMu);
+        sc = nt->addItem("L1JPsi", m_L1JPsi);
+        sc = nt->addItem("L1Elec", m_L1Elec);
+        sc = nt->addItem("L1Phot", m_L1Phot);
+
         // Part of the keys and labels
         int forthekeymother = 0;
         // just label the head with 0
@@ -924,15 +898,12 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         //---------------------------------------------
         // Book the mother
         int pidmother = (*imother)->particleID().pid();
-        // int abspidmother = (*imother)->particleID().abspid();
         ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
-        info() << "Booking ParticleName (mother) " << ppmother->particle() << endmsg;
+        info() << "Booking ParticleName (mother) " << ppmother->particle() << endreq;
           
         const std::string pnamemother = ppmother->particle();
 
-        // Case of identical parts: take abspid and add (500000*forthekeymother)
-        // This won't work for different decays at the same time ...
-        // Remove abspid and use an arbitrary offset
+        // Case of identical parts: take arbitrary offset and add (500000*forthekeymother)
         int offsetmother = 9;
         offsetmother++;
 
@@ -946,7 +917,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         m_HandleNTupleMap.insert(std::make_pair(key, add));
 
         verbose() << "Added " << pnamemother << " with key " << key
-                << " and address " << add << endmsg;
+                << " and address " << add << endreq;
         mothernr++;
         //---------------------------------------------
 
@@ -954,18 +925,16 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         // Book the children
         for (ichild = Children.begin() ; ichild != Children.end() ; ichild++){
           debug() << "Child has ID = " 
-                  << (*ichild)->particleID().pid() << endmsg;
+                  << (*ichild)->particleID().pid() << endreq;
             
           int pid = (*ichild)->particleID().pid();
           // int abspid = (*ichild)->particleID().abspid();
           ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
           info() << "Booking Subdaughter number = " << subdaunr
-                 << " , ParticleName " << pp->particle() << endmsg;
+                 << " , ParticleName " << pp->particle() << endreq;
             
           const std::string pname = pp->particle();
-          // Case of identical parts: take pid and add (50000*forthekeydau)
-          // This won't work for different decays at the same time ...
-          // Remove abspid and use an arbitrary offset
+          // Case of identical parts: take arbitrary offset and add (500000*forthekeydau)
           int offsetdau = 99;
           offsetdau++;
           
@@ -979,20 +948,20 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
           m_HandleNTupleMap.insert(std::make_pair(keydau, adddau));
           
           verbose() << "Added " << pname << " with key " << keydau
-                  << " and address " << adddau << endmsg;
+                  << " and address " << adddau << endreq;
           subdaunr++;
         }// ichild
       }// if(nt)
       else{// did not manage to book the ntuple....
-        err() << "Failed to BookNTuple" << endmsg;
+        err() << "Failed to BookNTuple" << endreq;
         return StatusCode::FAILURE;
       } //else
     } // if(!nt)
-    info() << "NTuple is booked" << endmsg;
+    debug() << "NTuple is booked" << endreq;
 
   } // imother
   
-  verbose() << "Leaving BookNTuple" << endmsg;
+  verbose() << "Leaving BookNTuple" << endreq;
   
   return sc;
 }
@@ -1003,7 +972,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
 //=============================================================================
 StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
-  verbose() << "Entering WriteNTuple" << endmsg;
+  verbose() << "Entering WriteNTuple" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
 
   //---------------------------------------------
@@ -1043,6 +1012,67 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   }
   //---------------------------------------------  
 
+  //---------------------------------------------  
+  // Trigger information
+  SmartDataPtr<TrgDecision> trg(eventSvc(), m_pathTrg);
+  if( 0 == trg ) {
+    err() << "Unable to find Trigger at " << m_pathTrg << endreq;
+    return StatusCode::FAILURE;
+  }
+  bool L0Decision = false;
+  if (trg){
+    L0Decision = trg->L0();
+    debug() << "L0 decision: " << L0Decision << endreq;
+  }
+
+  // L1 Trigger informations
+  bool L1Decision = false;
+  bool L1Gen      = false;
+  bool L1SiMu     = false;
+  bool L1DiMu     = false;
+  bool L1JPsi     = false;
+  bool L1Elec     = false;
+  bool L1Phot     = false;
+  
+  if(m_dataProvider){
+    L1Score* score = m_dataProvider->l1Score();
+    if(score){
+      L1Decision = score->decision();
+      L1Gen      = score->decisionGen();
+      L1SiMu     = score->decisionMu();
+      L1DiMu     = score->decisionDiMu();
+      L1JPsi     = score->decisionDiMuJPsi();
+      L1Elec     = score->decisionElec();
+      L1Phot     = score->decisionPhot();
+ 
+      debug() << "L1 trigger summary: "        << endreq;
+      debug() << " Generic:     " << L1Gen      << endreq;
+      debug() << " Single Muon: " << L1SiMu     << endreq;
+      debug() << " Dimuon:      " << L1DiMu     << endreq;
+      debug() << " JPsi:        " << L1JPsi     << endreq;
+      debug() << " Electron:    " << L1Elec     << endreq;
+      debug() << " Photon:      " << L1Phot     << endreq;
+      debug() << "----------------------------" << endreq;
+      debug() << "Total:       " << L1Decision << endreq;
+    }
+  }
+  //---------------------------------------------  
+
+  //---------------------------------------------  
+  // Fill NTuple global variables
+  m_eventNumber = m_event;
+  m_runNumber = m_run;
+  m_L0Decision = long(L0Decision);
+  m_L1Decision = long(L1Decision);
+  m_L1Gen = long(L1Gen);
+  m_L1SiMu = long(L1SiMu);
+  m_L1DiMu = long(L1DiMu);
+  m_L1JPsi = long(L1JPsi);
+  m_L1Elec = long(L1Elec);
+  m_L1Phot = long(L1Phot);
+
+  //---------------------------------------------  
+
   //---------------------------------------------
   // Mother (or head) of the decay
   std::vector<Particle*>::iterator imother;
@@ -1052,32 +1082,14 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       imother != mothervec.end();
       imother++){
 
-    debug() << "Mother ID = " << (*imother)->particleID().pid() << endmsg;
+    debug() << "Mother ID = " << (*imother)->particleID().pid() << endreq;
     
     // Get all the decay members (should be flagged)
     std::vector<Particle*> Children;
     std::vector<Particle*>::iterator ichild;
     m_pDKFinder->decayMembers(*imother, Children);
 
-    verbose() << "Number of children found is = " << Children.size() << endmsg;
-
-    // Get "the best" PV chosen as the one for which the IPS
-    // of the mother (head) of the decay is the smallest
-    Vertex* thePV = 0;
-    double normIPSMin = -1.;
-    Vertices::iterator ivert;
-    for( ivert = PVs.begin(); ivert != PVs.end(); ivert++){
-      double ip, ipe;
-      double normIPS;
-      // Find the PV w.r.t. which the particle has the smallest IPS
-      Vertex* thepv = *ivert;
-      m_IPTool->calcImpactPar(**imother,*thepv,ip,ipe);
-      normIPS = ip/ipe;
-      if(normIPSMin<0||normIPS<normIPSMin) {
-        normIPSMin=normIPS;
-        thePV=thepv;
-      }
-    }
+    verbose() << "Number of children found is = " << Children.size() << endreq;
 
     //------------------------------------------------------------------------------------------
     // Filling the NTuple
@@ -1091,13 +1103,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     //---------------------------------------------
     // Fill the mother
     int pidmother = (*imother)->particleID().pid();
-    // int abspidmother = (*imother)->particleID().abspid();
     ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
-    debug() << "Filling ParticleName (mother) " << ppmother->particle() << endmsg;
+    debug() << "Filling ParticleName (mother) " << ppmother->particle() << endreq;
 
-    // Case of identical parts: take pid and add (50000*forthekeymother)
-    // This won't work for different decays at the same time ...
-    // Remove abspid and use an arbitrary offset
+    // Case of identical parts: take arbitrary offset and add (500000*forthekeymother)
     int offsetmother = 9;
     offsetmother++;
 
@@ -1107,7 +1116,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
 #ifndef MCCheck
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event, globalPIDs);
+      jkeymother->second->FillNTuple(**imother, PVs, globalPIDs);
     }
 #endif
 
@@ -1117,7 +1126,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     MCParticle* mclink = 0;
     
     if (jkeymother != m_HandleNTupleMap.end()){
-      jkeymother->second->FillNTuple(**imother, PVs, thePV, m_run, m_event, isSig, mclink, globalPIDs);
+      jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs);
     }
 #endif
 
@@ -1131,7 +1140,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       // int abspid = (*ichild)->particleID().abspid();
       ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
       debug() << "Filling child number = " << subdaunr
-              << " , ParticleName " << pp->particle() << endmsg;
+              << " , ParticleName " << pp->particle() << endreq;
 
       //---------------------------------------------
 #ifdef MCCheck
@@ -1151,10 +1160,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
 #endif
       //---------------------------------------------
-
-      // Case of identical parts: take pid and add (50000*forthekeydau)
-      // This won't work for different decays at the same time ...
-      // Remove abspid and use an arbitrary offset
+      // Case of identical parts: take arbitrary offset and add (5000000*forthekeydau)
       int offsetdau = 99;
       offsetdau++;
 
@@ -1164,13 +1170,13 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event, globalPIDs);
+        jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs);
       }
 #endif
 
 #ifdef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
-        jkeydau->second->FillNTuple(**ichild, PVs, thePV, m_run, m_event, isSig, mclink, globalPIDs);
+        jkeydau->second->FillNTuple(**ichild, PVs, isSig, mclink, globalPIDs);
       }
 #endif
 
@@ -1178,7 +1184,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     }// ichild
   } // imother
 
-  verbose() << "Leaving WriteNTuple" << endmsg;
+  verbose() << "Leaving WriteNTuple" << endreq;
   
   return sc;
 }
@@ -1188,7 +1194,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 //=============================================================================
 StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
   
-  verbose() << "Entering getPV" << endmsg;
+  verbose() << "Entering getPV" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
  
   Vertices* vertices = get<Vertices>(m_PVContainer);
@@ -1199,7 +1205,7 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
   }
 
   debug() << "Number of primary vertices  = "
-          << vertices->size() << endmsg;
+          << vertices->size() << endreq;
   
   Vertices::iterator ivert;
   for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
@@ -1207,11 +1213,11 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
            << (*ivert)->position().x()
            << " , " << (*ivert)->position().y()
            << " , " << (*ivert)->position().z() << " ) and chi2 = " 
-            << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endmsg;
+            << (*ivert)->chi2() << " with nDoF " << (*ivert)->nDoF() << endreq;
     PVs.push_back((*ivert));
   }
 
-  verbose() << "Leaving getPV" << endmsg;
+  verbose() << "Leaving getPV" << endreq;
 
   if ( PVs.empty()) warning() << "No primary vertex found at " << m_PVContainer << endreq ;
  
@@ -1224,7 +1230,7 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
 //=============================================================================
 bool DecayChainNTuple::isSignal(MCParticle* MC, std::vector<MCParticle*>& MCHead){
 
-  verbose() << "Entering isSignal" << endmsg;
+  verbose() << "Entering isSignal" << endreq;
 
   bool issig = false;
   
@@ -1253,75 +1259,167 @@ bool DecayChainNTuple::isSignal(MCParticle* MC, std::vector<MCParticle*>& MCHead
     } // for each true decay
   } // if there is a link associated MCParticle
   
-  verbose() << "Leaving isSignal" << endmsg;
+  verbose() << "Leaving isSignal" << endreq;
 
   return issig;
 }
 #endif
 
+
 #ifdef MCCheck
 //=============================================================================
-//  DecayChainNTuple::HandleMCNTuple::HandleMCNTuple
+//  Write true decay part
 //=============================================================================
-DecayChainNTuple::HandleMCNTuple::HandleMCNTuple(NTuplePtr& mcnt, unsigned int& number)
-  //  : m_iptool(iptool)
-{
-  StatusCode sc;
+StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
 
-  //------------------------------------------------------------------
-  // Case of identical parts: cannot have the same name; use number of subdaughter
-  std::string label;
-  char tmp[2];
-  sprintf(tmp, "%d", number);
-  label = tmp;
-  //------------------------------------------------------------------
+  verbose() << "Entering WriteMCNTuple" << endreq;
+  StatusCode sc = StatusCode::SUCCESS;
 
-  // Add all the items
-  // index of arrays
-  sc = mcnt->addItem("mcN_lab"+label,m_mcn,0,10000);
-  sc = mcnt->addIndexedItem("mcID_lab"+label,m_mcn,m_mcID);
-  sc = mcnt->addIndexedItem("Event_lab"+label,m_mcn, m_eventNumber);
-  sc = mcnt->addIndexedItem("Run_lab"+label,m_mcn, m_runNumber);
+  //---------------------------------------------
+  // Mother (or head) of the decay
+  std::vector<MCParticle*>::iterator imcmother;
 
-  // momentum MeV
-  sc = mcnt->addIndexedItem("mcp_lab"+label,m_mcn,m_mcp);
-  // transverse momentum MeV
-  sc = mcnt->addIndexedItem("mcpt_lab"+label,m_mcn,m_mcpt);
-  sc = mcnt->addIndexedItem("mcmass_lab"+label,m_mcn,m_mcmass);
-  // 3-momentum
-  sc = mcnt->addIndexedItem("mcpx_lab"+label,m_mcn,m_mcpx);
-  sc = mcnt->addIndexedItem("mcpy_lab"+label,m_mcn,m_mcpy);
-  sc = mcnt->addIndexedItem("mcpz_lab"+label,m_mcn,m_mcpz);
-  // Primary vertex
-  sc = mcnt->addIndexedItem("mcxPV_lab"+label,m_mcn,m_mcxPV);
-  sc = mcnt->addIndexedItem("mcyPV_lab"+label,m_mcn,m_mcyPV);
-  sc = mcnt->addIndexedItem("mczPV_lab"+label,m_mcn,m_mczPV);
-  // Origin vertex
-  sc = mcnt->addIndexedItem("mcxOriVtx_lab"+label,m_mcn,m_mcxOriVtx);
-  sc = mcnt->addIndexedItem("mcyOriVtx_lab"+label,m_mcn,m_mcyOriVtx);
-  sc = mcnt->addIndexedItem("mczOriVtx_lab"+label,m_mcn,m_mczOriVtx);
-  // Decay vertex
-  sc = mcnt->addIndexedItem("mcxDKVtx_lab"+label,m_mcn,m_mcxDKVtx);
-  sc = mcnt->addIndexedItem("mcyDKVtx_lab"+label,m_mcn,m_mcyDKVtx);
-  sc = mcnt->addIndexedItem("mczDKVtx_lab"+label,m_mcn,m_mczDKVtx);
-  // True IP, w.r.t the primary vetex
-  sc = mcnt->addIndexedItem("mcIP_lab"+label,m_mcn,m_mcIP);
-  // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
-  sc = mcnt->addIndexedItem("isReco_lab"+label,m_mcn,m_isReco);
-  // True lifetime (relevant for composite particles) in picoseconds
-  // sc = mcnt->addIndexedItem("mctau_lab"+label,m_mcn,m_mctau);
+  // Loop over all the mothers
+  for(imcmother = MCHead.begin();
+      imcmother != MCHead.end();
+      imcmother++){
 
-  // sc = mcnt->addIndexedItem("_lab"+label,m_mcn,m_);
+    debug() << "Truth: Mother ID = " << (*imcmother)->particleID().pid() << endreq;
 
+    // The MC primary vertex is the origin vertex of the B, but not for prompt J/Psi
+    // Get the MC PV coordinates from the Collision
+    // -> check the MCVertexType: 1 = ppCollision, 2 = decay
+
+    MCVertex* headOriVtx = (*imcmother)->originVertex();
+
+    debug() << "Head origin vtx [mm] x = "
+              << headOriVtx->position().x()
+              << " , y = " << headOriVtx->position().y()
+              << " , z = " << headOriVtx->position().z()
+              << endreq;
+
+    MCVertex::MCVertexType MCPVType = headOriVtx->type();
+
+    if(MCPVType == 1){
+      debug() << "The head originates from a MC primary vertex" << endreq;
+    }
+    else{
+      debug() << "The head does not come from a MC primary vertex" << endreq;
+    }
+
+    Collision* headCollision = headOriVtx->collision();
+    HepPoint3D& MCPVPosition = headCollision->primVtxPosition();
+ 
+    debug() << "Head collision vtx [mm] x = "
+            << MCPVPosition.x()
+            << " , y = " << MCPVPosition.y()
+            << " , z = " << MCPVPosition.z()
+            << endreq;
+ 
+    // Get all the decay members (should be flagged)
+    std::vector<MCParticle*> MCChildren;
+    std::vector<MCParticle*>::iterator imcchild;
+    m_pMCDKFinder->decayMembers(*imcmother, MCChildren);
+
+    debug() << "Truth: Number of children found is = " << MCChildren.size() << endreq;
+
+    //------------------------------------------------------------------------------------------
+    // Filling the NTuple
+    //------------------------------------------------------------------------------------------
+
+    // Part of the keys and labels
+    int forthekeymother = 0;
+    int forthekeydau = 0;
+    unsigned int subdaunr = 1;
+   
+    //---------------------------------------------
+    // Fill the mother
+    int pidmother = (*imcmother)->particleID().pid();
+    // int abspidmother = (*imcmother)->particleID().abspid();
+    ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
+    debug() << "Truth: Filling ParticleName (mother) " << ppmother->particle() << endreq;
+
+    // Case of identical parts: take arbitrary offset and add (500000*forthekeymother)
+    int offsetmother = 9;
+    offsetmother++;
+
+    forthekeymother++;
+
+    std::map<int, HandleNTuple*>::iterator jkeymother = m_HandleNTupleMap.find((offsetmother + (500000*forthekeymother)));
+
+    // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
+    bool isReco = false;
+
+    if (jkeymother != m_HandleNTupleMap.end()){
+      jkeymother->second->FillMCNTuple(**imcmother, MCPVPosition, isReco);
+    }
+
+    //---------------------------------------------
+
+    //---------------------------------------------
+    // Fill the children
+    for (imcchild = MCChildren.begin() ; imcchild != MCChildren.end() ; imcchild++){
+   
+      int pid = (*imcchild)->particleID().pid();
+      // int abspid = (*imcchild)->particleID().abspid();
+      ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
+      debug() << "Truth: Filling child number = " << subdaunr
+              << " , ParticleName " << pp->particle() << endreq;
+
+      //---------------------------------------------
+      // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
+      Particle* reco = 0;
+      isReco = false;
+   
+      verbose() << "Looking for link association for MC particle with ID: "
+             << (*imcchild)->particleID().pid() << " " << (*imcchild)->momentum() << endreq;
+
+      // Corresponding particle
+      reco = m_pAsctLinks->associatedTo(*imcchild);
+   
+      if(reco){
+        isReco = true;
+      }
+
+      debug() << "Is the MC particle reconstructed (1: yes, 0: false)? ==> " << isReco << endreq;
+
+      // Check if the track is reconstructible
+      MCTrackInfo trInfo(eventSvc(), msgSvc());
+      verbose() << "MCTrackInfo = " << trInfo.fullInfo(*imcchild) << endreq;
+
+      debug() << "MCTrackInfo: hasVelo = " << trInfo.hasVelo(*imcchild) << endreq;
+      debug() << "MCTrackInfo: hasTT = " << trInfo.hasTT(*imcchild) << endreq;
+      debug() << "MCTrackInfo: hasT = " << trInfo.hasT(*imcchild) << endreq;
+
+      //---------------------------------------------
+      // Case of identical parts: take arbitrary offset and add (500000*forthekeydau)
+      int offsetdau = 99;
+      offsetdau++;
+
+      forthekeydau++;
+
+      std::map<int, HandleNTuple*>::iterator jkeydau = m_HandleNTupleMap.find((offsetdau + (500000*forthekeydau)));
+
+      if (jkeydau != m_HandleNTupleMap.end()){
+        jkeydau->second->FillMCNTuple(**imcchild, MCPVPosition, isReco);
+      }
+
+      subdaunr++;
+    }// imcchild
+  } // imcmother
+
+  verbose() << "Leaving WriteMCNTuple" << endreq;
+
+  return sc;
 }
 #endif
 
 #ifdef MCCheck
 //=============================================================================
-//  DecayChainNTuple::HandleMCNTuple::FillMCNTuple
+//  DecayChainNTuple::HandleNTuple::FillMCNTuple
 //=============================================================================
-void DecayChainNTuple::HandleMCNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint3D& MCPVPosition,
-                                                    bool& isReco, long& run, long& event)
+void DecayChainNTuple::HandleNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint3D& MCPVPosition,
+                                                    bool& isReco)
 {
   // std::cout << "MCID = " << mcpart.particleID().pid() << std::endl;
 
@@ -1329,8 +1427,6 @@ void DecayChainNTuple::HandleMCNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint
   if (m_mcn>9999) return;
 
   m_mcID[m_mcn]= mcpart.particleID().pid();
-  m_eventNumber[m_mcn] = event;
-  m_runNumber[m_mcn] = run;
 
   // Momentum, mass, ...
   m_mcp[m_mcn]= mcpart.momentum().vect().mag();
@@ -1374,274 +1470,9 @@ void DecayChainNTuple::HandleMCNTuple::FillMCNTuple(MCParticle& mcpart, HepPoint
   // ctau = m * L dot p / p2
   // m_mctau[m_mcn] = (1/(picosecond*c_light)) * (mcpart.momentum().m())* (mcpart.momentum().vect())*
   //  ((*ivert)->position() - mcpart.originVertex()->position())/ mcpart.momentum().vect().mag2();
-  
+
   m_mcn++;
 
   // std::cout << "Done" << std::endl;
-}
-#endif
-
-#ifdef MCCheck
-//=============================================================================
-//  Book the mcntuple
-//=============================================================================
-StatusCode DecayChainNTuple::BookMCNTuple(std::vector<MCParticle*>& MCHead) {
-  
-  verbose() << "Entering BookMCNTuple" << endmsg;
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  // Mother (or head) of the decay
-  std::vector<MCParticle*>::iterator imcmother;
-
-  // Loop over all the mothers
-  for(imcmother = MCHead.begin();
-      imcmother != MCHead.end();
-      imcmother++){
-
-    debug() << "Truth: Mother ID = " << (*imcmother)->particleID().pid() << endmsg;
-    
-    // Get all the decay members (should be flagged)
-    std::vector<MCParticle*> MCChildren;
-    std::vector<MCParticle*>::iterator imcchild;
-    m_pMCDKFinder->decayMembers(*imcmother, MCChildren);
-
-    verbose() << "Truth: Number of children found is = " << MCChildren.size() << endmsg;
-
-    NTuplePtr mcnt(ntupleSvc(), m_MCntupleName);
-    if(!mcnt){ // Check if already booked
-      mcnt = ntupleSvc()->book(m_MCntupleName, CLID_ColumnWiseTuple, "Decay Tree MCNtuple");
-      if(mcnt){  // ntuple sucessfully booked
-          
-        m_bookedMCNTuple = true;
-
-        // Part of the keys and labels
-        int forthekeymother = 0;
-        // just label the head with 0
-        unsigned int mothernr = 0;
-        int forthekeydau = 0;
-        unsigned int subdaunr = 1;
-          
-        //---------------------------------------------
-        // Book the mother
-        int pidmother = (*imcmother)->particleID().pid();
-        // int abspidmother = (*imcmother)->particleID().abspid();
-        ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
-        info() << "Truth: Booking ParticleName (mother) " << ppmother->particle() << endmsg;
-          
-        const std::string pnamemother = ppmother->particle();
-        // Case of identical parts: take abspid and add (500000*forthekeymother)
-        // This won't work for different decays at the same time ...
-        // Remove abspid and use an arbitrary offset
-        int offsetmother = 9;
-        offsetmother++;
-
-        forthekeymother++;
-
-        std::map<int, HandleMCNTuple*>::key_type key =  ((offsetmother + (500000*forthekeymother)));
-          
-        std::map<int, HandleMCNTuple*>::data_type add = new HandleMCNTuple(mcnt, mothernr);
-        m_HandleMCNTupleMap.insert(std::make_pair(key, add));
-
-        verbose() << "Truth: Added " << pnamemother << " with key " << key
-                << " and address " << add << endmsg;
-        mothernr++;
-        //---------------------------------------------
-
-        //---------------------------------------------
-        // Book the children
-        for (imcchild = MCChildren.begin() ; imcchild != MCChildren.end() ; imcchild++){
-          debug() << "Truth: Child has ID = " 
-                  << (*imcchild)->particleID().pid() << endmsg;
-            
-          int pid = (*imcchild)->particleID().pid();
-          // int abspid = (*imcchild)->particleID().abspid();
-          ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
-          info() << "Truth: Booking Subdaughter number = " << subdaunr
-                 << " , ParticleName " << pp->particle() << endmsg;
-            
-          const std::string pname = pp->particle();
-          // Case of identical parts: take abspid and add (500000*forthekeydau)
-          // This won't work for different decays at the same time ...
-          // Remove abspid and use an arbitrary offset
-          int offsetdau = 99;
-          offsetdau++;
-
-          forthekeydau++;
-
-          std::map<int, HandleMCNTuple*>::key_type keydau =  ((offsetdau + (500000*forthekeydau)));
-            
-          std::map<int, HandleMCNTuple*>::data_type adddau = new HandleMCNTuple(mcnt, subdaunr);
-          m_HandleMCNTupleMap.insert(std::make_pair(keydau, adddau));
-          
-          verbose() << "Truth: Added " << pname << " with key " << keydau
-                  << " and address " << adddau << endmsg;
-          subdaunr++;
-        }// imcchild
-      }// if(mcnt)
-      else{// did not manage to book the mcntuple....
-        err() << "Failed to BookMCNTuple" << endmsg;
-        return StatusCode::FAILURE;
-      } //else
-    } // if(!mcnt)
-    info() << "MCNTuple is booked" << endmsg;
-
-  } // imcmother
-  
-  verbose() << "Leaving BookMCNTuple" << endmsg;
-  
-  return sc;
-}
-#endif
-
-#ifdef MCCheck
-//=============================================================================
-//  Write the ntuple
-//=============================================================================
-StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
-
-  verbose() << "Entering WriteMCNTuple" << endmsg;
-  StatusCode sc = StatusCode::SUCCESS;
-
-  //---------------------------------------------
-  // Mother (or head) of the decay
-  std::vector<MCParticle*>::iterator imcmother;
-
-  // Loop over all the mothers
-  for(imcmother = MCHead.begin();
-      imcmother != MCHead.end();
-      imcmother++){
-
-    debug() << "Truth: Mother ID = " << (*imcmother)->particleID().pid() << endmsg;
-
-    // The MC primary vertex is the origin vertex of the B, but not for prompt J/Psi
-    // Get the MC PV coordinates from the Collision
-    // -> check the MCVertexType: 1 = ppCollision, 2 = decay
-
-    MCVertex* headOriVtx = (*imcmother)->originVertex();
-
-    debug() << "Head origin vtx [mm] x = "
-              << headOriVtx->position().x()
-              << " , y = " << headOriVtx->position().y()
-              << " , z = " << headOriVtx->position().z()
-              << endreq;
-
-    MCVertex::MCVertexType MCPVType = headOriVtx->type();
-
-    if(MCPVType == 1){
-      debug() << "The head originates from a MC primary vertex" << endreq;
-    }
-    else{
-      debug() << "The head does not come from a MC primary vertex" << endreq;
-    }
-
-    Collision* headCollision = headOriVtx->collision();
-    HepPoint3D& MCPVPosition = headCollision->primVtxPosition();
-    
-    debug() << "Head collision vtx [mm] x = "
-            << MCPVPosition.x()
-            << " , y = " << MCPVPosition.y()
-            << " , z = " << MCPVPosition.z()
-            << endreq;
-    
-    // Get all the decay members (should be flagged)
-    std::vector<MCParticle*> MCChildren;
-    std::vector<MCParticle*>::iterator imcchild;
-    m_pMCDKFinder->decayMembers(*imcmother, MCChildren);
-
-    debug() << "Truth: Number of children found is = " << MCChildren.size() << endmsg;
-
-    //------------------------------------------------------------------------------------------
-    // Filling the NTuple
-    //------------------------------------------------------------------------------------------
-
-    // Part of the keys and labels
-    int forthekeymother = 0;
-    int forthekeydau = 0;
-    unsigned int subdaunr = 1;
-      
-    //---------------------------------------------
-    // Fill the mother
-    int pidmother = (*imcmother)->particleID().pid();
-    // int abspidmother = (*imcmother)->particleID().abspid();
-    ParticleProperty* ppmother =  m_ppSvc->findByStdHepID(pidmother);
-    debug() << "Truth: Filling ParticleName (mother) " << ppmother->particle() << endmsg;
-
-    // Case of identical parts: take abspid and add (500000*forthekeymother)
-    // This won't work for different decays at the same time ...
-    // Remove abspid and use an arbitrary offset
-    int offsetmother = 9;
-    offsetmother++;
-
-    forthekeymother++;
-
-    std::map<int, HandleMCNTuple*>::iterator jkeymother = m_HandleMCNTupleMap.find((offsetmother + (500000*forthekeymother)));
-
-    // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
-    bool isReco = false;
-
-    if (jkeymother != m_HandleMCNTupleMap.end()){
-      jkeymother->second->FillMCNTuple(**imcmother, MCPVPosition, isReco, m_run, m_event);
-    }
-
-    //---------------------------------------------
-
-    //---------------------------------------------
-    // Fill the children
-    for (imcchild = MCChildren.begin() ; imcchild != MCChildren.end() ; imcchild++){
-      
-      int pid = (*imcchild)->particleID().pid();
-      // int abspid = (*imcchild)->particleID().abspid();
-      ParticleProperty* pp =  m_ppSvc->findByStdHepID(pid);
-      debug() << "Truth: Filling child number = " << subdaunr
-              << " , ParticleName " << pp->particle() << endmsg;
-
-      //---------------------------------------------
-      // Look if the corresponding final state is reconstructed (only meaningful for final tracks)
-      Particle* reco = 0;
-      isReco = false;
-      
-      verbose() << "Looking for link association for MC particle with ID: "
-             << (*imcchild)->particleID().pid() << " " << (*imcchild)->momentum() << endreq;
-
-      // Corresponding particle
-      reco = m_pAsctLinks->associatedTo(*imcchild);
-      
-      if(reco){
-        isReco = true;
-      }
-
-      debug() << "Is the MC particle reconstructed (1: yes, 0: false)? ==> " << isReco << endreq;
-
-      // Check if the track is reconstructible
-      MCTrackInfo trInfo(eventSvc(), msgSvc());
-      verbose() << "MCTrackInfo = " << trInfo.fullInfo(*imcchild) << endreq;
-
-      debug() << "MCTrackInfo: hasVelo = " << trInfo.hasVelo(*imcchild) << endreq;
-      debug() << "MCTrackInfo: hasTT = " << trInfo.hasTT(*imcchild) << endreq;
-      debug() << "MCTrackInfo: hasT = " << trInfo.hasT(*imcchild) << endreq;
-
-      //---------------------------------------------
-      
-      // Case of identical parts: take abspid and add (500000*forthekeydau)
-      // This won't work for different decays at the same time ...
-      // Remove abspid and use an arbitrary offset
-      int offsetdau = 99;
-      offsetdau++;
-
-      forthekeydau++;
-
-      std::map<int, HandleMCNTuple*>::iterator jkeydau = m_HandleMCNTupleMap.find((offsetdau + (500000*forthekeydau)));
-
-      if (jkeydau != m_HandleMCNTupleMap.end()){
-        jkeydau->second->FillMCNTuple(**imcchild, MCPVPosition, isReco, m_run, m_event);
-      }
-
-      subdaunr++;
-    }// imcchild
-  } // imcmother
-
-  verbose() << "Leaving WriteMCNTuple" << endmsg;
-  
-  return sc;
 }
 #endif

@@ -16,7 +16,7 @@ CheckHLTBd2HH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                          "CheckSelResult/MergeOffB2HH",
                          "DecayChainNTuple/OffB2HHTree",
                          "CheckSelResult/MergeHLTBd2HH",
-                         "DecayChainNTuple/HLTBd2HHTree"};
+                         "DecayChainNTuple/HLTB2HHTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
@@ -46,32 +46,32 @@ OffB2HHTree.Decay = "{B0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+, B_s0 -> 
 OffB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
 , B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
 OffB2HHTree.NtupleName = "FILE1/OffB2HH";
-OffB2HHTree.MCNtupleName = "FILE1/MCOffB2HH";
 OffB2HHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffB2HHTree.UseRichPID = false;
+OffB2HHTree.FillMCDecay = true;
 OffB2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
 // Write Tree for HLT selection
-HLTBd2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
+HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
 
-HLTBd2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2HH";
-HLTBd2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
-HLTBd2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2HH";
-HLTBd2HHTree.LinkAsct.OutputLevel = 3;
+HLTB2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2HH";
+HLTB2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+HLTB2HHTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2HH";
+HLTB2HHTree.LinkAsct.OutputLevel = 3;
 
-// The location depends on the way of forming the particles: ChangeDecayChain or ChangePIDByMass!!!
 Particle2MCLinksHLTBd2HH.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
 Particle2MCLinksHLTBd2HH.OutputLevel = 3;
 
 // In the HLT we always form B0 -> pi+ pi-
-HLTBd2HHTree.Decay = "B0 -> ^pi+ ^pi-";
-HLTBd2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
+HLTB2HHTree.Decay = "B0 -> ^pi+ ^pi-";
+HLTB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
 , B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
-HLTBd2HHTree.NtupleName = "FILE1/HLTBd2HH";
-HLTBd2HHTree.MCNtupleName = "FILE1/MCHLTBd2HH";
-HLTBd2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2HHTree.UseRichPID = true;
-HLTBd2HHTree.OutputLevel = 3;
+HLTB2HHTree.NtupleName = "FILE1/HLTBd2HH";
+//HLTB2HHTree.MCNtupleName = "FILE1/MCHLTBd2HH";
+HLTB2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTB2HHTree.UseRichPID = true;
+HLTB2HHTree.FillMCDecay = true;
+HLTB2HHTree.OutputLevel = 2;
 //------------------------------------------------------------------------------

@@ -30,27 +30,27 @@ ToolSvc.OutputLevel    = 4;
 //==============================================================================
 // Checking B_s0 -> phi(1020) phi(1020)
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+//#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
 
 //==============================================================================
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
+//#include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
 
 //==============================================================================
 // Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
+//#include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
 
 //==============================================================================
 // Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
+//#include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
 
 //==============================================================================
 // Checking B_s0 -> phi(1020) gamma
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
+//#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
 
 //------------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
@@ -63,16 +63,16 @@ NTupleSvc.OutputLevel = 3;
 // #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0, L1 and TDR:
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
 
 //------------------------------------------------------------------------------ 
 //  re-initalize event selector
-// EventSelector.Input   = {};
+EventSelector.Input   = {};
 
 //===================================================
 // B-> H H
 // Bd -> Pi Pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
 // Bd -> K Pi
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2KPi.opts"
 // Bs -> K K
