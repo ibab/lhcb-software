@@ -15,4 +15,4 @@ BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
 
 // Define DST content
 ApplicationMgr.OutStream += { "DstWriter" };
-#include "$STDOPTS/DstContent.opts"
+#include "$BRUNELOPTS/DstContent.opts"

@@ -16,9 +16,11 @@ Purpose: LHCb reconstruction program
   . New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
 
 - Dst changes
+  . Add file DstContent.opts to define dst content (Moved from GaudiConf)
   . Remove L0/Calo and L0/FullCalo, can be rebuilt from RawBuffer
   . Backwards incompatible update of CaloCluster - new seed attribute
     (CaloEvent v13r0, CaloReco v1r8)
+  . Add HepMCEvents (written if present on Sim+Digi files)
 
 
 </PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>

@@ -39,7 +39,7 @@ EventSelector.Input = {
 //  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
 
 // GaudiDb output
-DstWriter.Output = "DATAFILE='412400.dst' TYP='ROOT' OPT='NEW'";
+DstWriter.Output = "DATAFILE='412400.oodst' TYP='ROOT' OPT='NEW'";
 
 // Example for POOL output.
 // In current version, following items must be removed from DST definition:
