@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v25r0>2004-10-28 Brunel v25r0</A></H1><PRE>
+</PRE><H1><A NAME=v25r0>2004-11-01 Brunel v25r0</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r0.
 Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
 
@@ -12,6 +12,8 @@ Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
     incompatble changes to OTChannelID. Not compatible with DC04 data.
     (LHCbKernel v5r3, OTEvent v14r0, OTDAQ v3r0, OTAssociators v3r0
      Required simple adaptation of large number of tracking packages)
+  . Introduce OT beam tilt capability. Tilt angle currently set to 0.
+    (OTDet v5r3, MCTools v1r8, XmlDDDB v22r4)
 
 - DST changes
   . Link/Raw/OT/Times replaces Link/Raw/OT/Digits
