@@ -1,7 +1,12 @@
-$Id: release.notes,v 1.7 2004-07-21 08:09:37 cattanem Exp $
+$Id: release.notes,v 1.8 2004-10-21 06:51:27 cattanem Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
+
+!======================= IOExample v1r3 2004-10-21 ========================
+! 2004-10-21 - Marco Cattaneo
+ - Update WriteMin input files to files produced with new OT event model
+ - Update Dst,Digi contents to new OT event model
 
 !======================= IOExample v1r2 2004-07-14 ========================
 ! 2004-07-14 - Marco Cattaneo
