@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.5 2003-05-26 11:38:38 phicharp Exp $
+// $Id: TestAssociators.cpp,v 1.6 2004-03-11 10:30:26 pkoppenb Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -490,15 +490,18 @@ void TestAssociators::prTable( MsgStream& msg, MSG::Level level,
   }
 }
 
-int TestAssociators::trType( TrStoredTrack* tr )
-{
+int TestAssociators::trType( TrStoredTrack* tr ){
+  //
+  // This mixes track types and how they have been found.
+  // -> modify according to what this function is needed for
+  //
   int type = 0;
   if( tr ) {
     if( tr->forward() ) type = 1;
     if( tr->match() ) type = 2;
     if( tr->velo() ) type = 3;
     if( tr->seed() ) type = 4;
-    if( tr->upstream() ) type = 5;
+    if( tr->isDownstream() ) type = 5;  // used to be upstream()
   }
   return type;
 }
