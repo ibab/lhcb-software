@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.9 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.10 2005-02-22 18:33:23 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,15 +18,6 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
-
-// CLHEP files
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-
-/// Detector description classes
-#include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/SolidBoolean.h"
-#include "DetDesc/SolidTrd.h"
 
 //----------------------------------------------------------------------------
 
