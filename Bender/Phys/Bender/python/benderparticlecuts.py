@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.6 2004-11-25 15:20:19 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.7 2005-02-02 19:15:10 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $NAme:$ 
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.5  2004/10/06 18:43:27  ibelyaev
-#  v4r1
-#
-
+# =============================================================================
+__author__ = "Vanya BELYAEV belyaev@lapp.in2p3.fr"
 # =============================================================================
 # @file
 #
@@ -253,3 +251,8 @@ PPHASCALO  = PIDBITS ( 203 )
 MCTRUTH    = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
 
 HASTRGTR   = helper.loadCutP ( gbl.LoKi.TrgTracks.HasTrgTrack   ) ()
+
+ISCONTOBJ    = helper.loadCutP ( gbl.LoKi.Particles.IsContainedObject )
+ISPARTICLE   = helper.loadCutP ( gbl.LoKi.Particles.IsParticle        )
+ISORIGIN     = helper.loadCutP ( gbl.LoKi.Particles.IsOrigin          )
+ISFROMORIGIN = helper.loadCutP ( gbl.LoKi.Particles.IsFromOrigin      )

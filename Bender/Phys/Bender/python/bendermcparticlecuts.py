@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermcparticlecuts.py,v 1.4 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: bendermcparticlecuts.py,v 1.5 2005-02-02 19:15:10 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $NAme:$ 
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # =============================================================================
 
 
@@ -95,9 +98,19 @@ STRANGE = MCQUARK( 3 )
 
 # function 
 FROMMCTREE = helper.loadCutMCP ( gbl.LoKi.MCParticles.FromMCDecayTree )
+NINMCDOWN  = helper.loadFunMCP ( gbl.LoKi.MCParticles.NinMCdownTree   )
 
-# adapter function 
-MCVXFUN    = helper.loadFunMCP ( gbl.LoKi.MCVertices.MCVFunAsMCFun    ) 
+# adapter functions
+MCVXFUN    = helper.loadFunMCP ( gbl.LoKi.MCVertices.MCVFunAsMCFun      ) 
+MCMOTHER   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MCMotherFunction  )
+MCMOTHCUT  = helper.loadCutMCP ( gbl.LoKi.MCParticles.MCMotherPredicate )
+
+ISMCCO     = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsContainedObject )
+ISMCPART   = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsParticle        )
 
 # matching function 
 RCTRUTH    = helper.loadCutMCP ( gbl.LoKi.MCParticles.RCTruth         ) 
+
+# =============================================================================
+# The END 
+# =============================================================================

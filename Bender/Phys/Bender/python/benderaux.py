@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.10 2005-01-21 09:33:06 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.11 2005-02-02 19:15:10 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.11 $
 # =============================================================================
 """
 Helper module  to define the auxilalry 'enums' and constants 
@@ -131,6 +131,10 @@ trFromParticle         = gbl.Bender.Extract.trFromParticle
 muFromParticle         = gbl.Bender.Extract.muFromParticle
 richFromParticle       = gbl.Bender.Extract.richFromParticle
 trgFromParticle        = gbl.Bender.Extract.trgFromParticle
+
+addMomenta             = gbl.Bender.Adder.addMomenta
+
+DecayChain             = gbl.Bender.DecayChain
 
 # =============================================================================
 # $Log: not supported by cvs2svn $

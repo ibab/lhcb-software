@@ -33,6 +33,11 @@ def _OpsS ( fun , ops ) :
     fun.__rmul__  = ops. __rmul__
     fun. __div__  = ops.  __div__
     fun.__rdiv__  = ops. __rdiv__
+    # 
+    fun. __neg__  = ops.  __neg__
+    fun. __abs__  = ops.  __abs__
+    fun. __pow__  = ops.  __pow__
+    fun.__rpow__  = ops. __rpow__
     
 def _OpsFun ( fun , ops ) :
     " define operators for functions "
@@ -43,11 +48,12 @@ def _OpsFun ( fun , ops ) :
     
 def _OpsCut ( cut , ops ) :
     " define operators for cuts "
-    cut.  __and__  = ops.  __and__
-    cut. __rand__  = ops. __rand__
-    cut.   __or__  = ops.   __or__
-    cut.  __ror__  = ops.  __ror__
-
+    cut.    __and__  = ops.    __and__
+    cut.   __rand__  = ops.   __rand__
+    cut.     __or__  = ops.     __or__
+    cut.    __ror__  = ops.    __ror__
+    cut. __invert__  = ops. __invert__
+    
 def _CALL_ ( self , obj ) :
     if not obj : return self.__CALL__(     )
     return              self.__CALL__( obj ) 

@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.19 2005-01-24 17:44:39 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.20 2005-02-02 19:15:10 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2005/01/24 17:44:39  ibelyaev
+#  v4r5
+#
 # =============================================================================
 """
 This is a major Python Module for Bender application
@@ -48,6 +51,7 @@ from   benderalgo      import *
 
 AppMgr = gaudimodule.AppMgr 
 
+# create Gaudi application manager (if not done yet)  
 gaudi  = AppMgr()
 
 appMgr = gaudi     #
@@ -66,6 +70,7 @@ for lib in _libs_ :
 import benderstr
 import bendersmartrefs
 import benderconfig
+import bendermath
 
 # =============================================================================
 # The END 

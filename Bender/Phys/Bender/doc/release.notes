@@ -1,6 +1,6 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.7 2005-01-21 10:36:34 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2005-02-02 19:15:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -9,6 +9,16 @@
 ! Purpose     : The package is a result of "pythonization procedure" 
 !                of the LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-02 - Vanya BELYAEV 
+ - python/benderaux.py 
+   make the functions from namespace LoKi::Adder availabel in Bendr/Python
+   as "addMomenta" ( throughtehintrmediate class Bender::Adder)
+ - python 
+   load new classes LoKi::MCParticcles::MCMotherFunction and 
+   LoKi::MCMotherPredicate availabel as MCMOTHER and MCMOTHCUT 
+ - cmt/requirements 
+   version incremenet to v4r6 
 
 ! 2005-01-21 - Vanya BELYAEV
 
