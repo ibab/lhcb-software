@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.76 2003-06-05 10:49:11 witoldp Exp $
+! $Id: release.notes,v 1.77 2003-06-18 08:57:50 witoldp Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!============================== GiGa v14r1 2003-06-18 ======================
 
 ! 2003-06-05 - Witek Pokorski
  - src/GiGaFieldMgrBase.cpp - change allowing field managers with null pointer
