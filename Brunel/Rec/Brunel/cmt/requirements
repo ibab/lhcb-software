@@ -53,7 +53,7 @@ use RichKernel   v1r1   Rich
 use TrKernel     v11r0  Tr
 
 # Detector description
-use DetDesc      v10r2  Det
+use DetDesc      v10r3  Det
 use XmlDDDB      v12r1  Det
 use CaloDet       v5r0  Det
 use CaloDetXmlCnv v2r0  Det
