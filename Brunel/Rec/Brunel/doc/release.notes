@@ -4,14 +4,26 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9>20020123 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>20020131 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
+   Added VELO digitisation, VELO tracking, Forward tracking
 
    Functionality changes
    ---------------------
+   In src
+   - BrunelMain.cpp: new main program, to set up job options path.
+       Job options path is set according to the following precedence rules:
+       1. argument given to Brunel.exe
+       2. value of JOBOPTPATH environment variable
+       3. "$BRUNELOPTS/Brunel"+dbver+".opts", where dbver is the SICB database
+          version number, taken from $LHCBDBASE
+ 
    In options
    - Brunel.opts: suppress printout of options from included subdetector files
                   add BrunelSicbInit to TopAlg list
+                  add Velo digitisation and tracking
+   - Brunelv240.opts, v240r1.opts, v241.opts: 
+                  database specific options for supported databases
 
    In BrunelSicb
    - BrunelSicbInit: new algorithm with SICB specific initialisation.
@@ -22,6 +34,14 @@ Purpose: LHCb reconstruction program
    In BrunelKernel
    - BrunelInitialisation.cpp: Seed of Gaudi random number engine (RanLux)
      initialised every event ( 100000*(event no. % 20000) + (Run no. % 100000) )
+
+   First version of forward tracking. Currently executing in parallel to
+   standard tracking, output not saved. New packages:
+     use Det/VeloDet    v3r0
+     use Velo/VeloDigit v1r0
+     use Velo/VeloTrack v1r0
+     use Tr/FwTrack     v1r0
+   
 
 
    Changes for Gaudi v9 
@@ -38,14 +58,14 @@ Purpose: LHCb reconstruction program
     use TrKernel     v6r0  (was v5r1)
     use CaloKernel   v1r0  (was CaloGen v2)
     use DetDesc      v9r2  (was v7)
-    use XmlDDDB      v7r0  (was v6r1)
+    use XmlDDDB      v7r3  (was v6r1)
     use CaloDet      v3r0  (was v3r0)
     use LHCbEvent    v12r1 (was v11)
     use L0Event      v4r0  (was v3)
     use VeloEvent    v6r0  (was v5)
     use ITEvent      v7r0  (was v6r1)
     use OTEvent      v7r0  (was v6r1)
-    use TrEvent      v7r0  (was v6r1)
+    use TrEvent      v7r1  (was v6r1)
     use CaloEvent    v7r0  (was v6)
     use SicbCnv      v15r0 (was v13r1)
     use CaloSicbCnv  v5r1  (was v4)

@@ -69,29 +69,25 @@ source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 #  cd $current
 #endif
 
-# == set the name of the executable
-setenv EXEC Brunel
-
 # == in batch copy the executable,======================================= 
 #    in interactive create a link to the executable you want to run =======
 #
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
+  cp $MYJOBROOT/$MODE/Brunel.exe tmpjob.exe
   cp $MYJOBROOT/options/*.opts .
-  cp $MYJOBROOT/options/${EXEC}.cards tmpjob.cards
+  cp $MYJOBROOT/options/Brunel.cards tmpjob.cards
   setenv BRUNELOPTS .
-  setenv JOBOPTPATH ${EXEC}.opts
   setenv SICBCARDS tmpjob.cards
 else
-  ln -fs $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
+  ln -fs $MYJOBROOT/$MODE/Brunel.exe tmpjob.exe
 endif
 #
 # == run $EXEC.exe ============================================
 #
 if ($MODE == "Linuxdbx") then
-  ddd tmpjob.exe $JOBOPTPATH
+  ddd tmpjob.exe $BRUNELOPTS/Brunel$1.opts
 else
-  time tmpjob.exe $JOBOPTPATH
+  time tmpjob.exe $BRUNELOPTS/Brunel$1.opts
 endif
 
 # == job is finished: remove temporary files ==========

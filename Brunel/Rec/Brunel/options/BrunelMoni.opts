@@ -10,25 +10,21 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 #include "$STDOPTS/Hbook.opts"
 HistogramPersistencySvc.OutputFile = "Histos.hbook";
 
+#pragma print on
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT", "OT", "Tr", "CALO", "TRIGGER" };
+BrunelMoni.DetectorList = { "IT", "OT", "Tr", "TRACK", "CALO", "TRIGGER" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members   = { "TrMonitor" };
+#pragma print off
 
 // Temporary fix for missing containers on empty events
 TrMonitor.ErrorMax = 1000;
-
-//--------------------------------------------------------------
-// Suppress excessive error messages
-//--------------------------------------------------------------
-//OTDigitChecker.OutputLevel = 4;
-//TrMonitor.OutputLevel = 4;
 
 //--------------------------------------------------------------
 // No IT monitoring by default (produces ntuple). Uncomment to switch on
@@ -36,6 +32,13 @@ TrMonitor.ErrorMax = 1000;
 // ApplicationMgr.ExtSvc += { "NTupleSvc" };
 // NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
 // BrunelMoniITSeq.Members = { "ITDigiMonitor" };
+
+//--------------------------------------------------------------
+// No Fwtrack monitoring by default (produces ntuple). Uncomment to switch on
+//--------------------------------------------------------------
+// ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// NTupleSvc.Output={"TRACK DATAFILE='Track.hbook' TYP='HBOOK' OPT='NEW'"};
+// BrunelMoniTRACKSeq.Members = { "FwtAnalyse" };
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false

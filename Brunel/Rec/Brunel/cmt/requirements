@@ -5,9 +5,8 @@ branches doc cmt job options
 
 ignore_pattern package_stamps
 
-# Set the default paths for Brunel and SICBDST data cards.
+# Set the default paths for Brunel options and SICBDST data cards.
 set BRUNELOPTS ${BRUNELROOT}/options
-set JOBOPTPATH ${BRUNELOPTS}/Brunel.opts
 set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 
 # Uncomment and modify next line to select an appropriate database version
@@ -24,7 +23,7 @@ version_strategy first_choice
 use GaudiPolicy  v5r4
 
 # External libraries - Gaudi v9
-use ExternalLibs   v3r3
+use ExternalLibs   v3r4
 use AIDA           v1r0
 use CLHEP          v17r10
 use HTL            v13r10
@@ -54,15 +53,17 @@ use CaloKernel   v1r0   Calo
 
 # Detector description
 use DetDesc      v9r2   Det
-use XmlDDDB      v7r2   Det
+use XmlDDDB      v7r3   Det
 use CaloDet      v3r0   Det
+use VeloDet      v3r0   Det
 
 # Event Model
 use L0Event      v4r0   Event
+use L1Event      v6r0   Event
 use VeloEvent    v6r0   Event
 use ITEvent      v7r0   Event
 use OTEvent      v7r0   Event
-use TrEvent      v7r0   Event
+use TrEvent      v7r1   Event
 use CaloEvent    v7r0   Event
 
 # SicB event data persistency
@@ -92,6 +93,11 @@ use ITAlgorithms v7r0   IT
 use OTAlgorithms v7r0	OT
 use TrAlgorithms v7r0   Tr
 
+# Forward Tracking
+use VeloDigit    v1r0   Velo
+use VeloTrack    v1r0   Velo
+use FwTrack      v1r0   Tr
+
 # SICBDST packages
 use Futil        v10r3  SICB
 use detdes       v14    SICB
@@ -119,7 +125,7 @@ use trielec      v5r1   SICB
 
 #
 #===== build Brunel =========================
-application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
+application Brunel ../src/BrunelMain.cpp \
                    $(BRUNELSICBROOT)/src/Objs/*.F
 # ========================= set macros ============================
 

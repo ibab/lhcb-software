@@ -1,0 +1,30 @@
+// Job options for Brunel when using $LHCBDBASE version v240r1
+// LHCb classic with 4 stations option ("LHCb-minus")
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"
+
+// Database specific: standard tracking
+ITDigitize.tofVector = {7.9, 26., 28.2, 30.4};
+OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
+OTDigitize.numOTStations = 4;
+OTDigitize.firstOTStation = 1;
+trCreat.firstOTStation = 1;
+trCreat.OutputLevel  = 4;
+trCreat.firstStation = 1;
+trCreat.lastStation = 4;
+trFit_trackFitter_extrapolator1.matDBASE = 2401;
+trFit_trackFitter_extrapolator1.energyLoss = 50.0;
+trFit_trackFitter_extrapolator1.fms2 = 1.6;
+OTDigitChecker.numStations = 4;
+OTDigitChecker.firstOTStation = 1;
+
+// Database specific: forward tracking
+#include "$FWTRACKROOT/options/BrunelMinus.opts"
+
+// Leave next two lines as last lines
+#pragma print on
+#include "$BRUNELOPTS/BrunelUser.opts"
+#pragma print off
+#include "$BRUNELOPTS/BrunelStatic.opts"
+#pragma print on
+

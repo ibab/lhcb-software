@@ -1,0 +1,13 @@
+// Job options for Brunel when using $LHCBDBASE version v240
+// "LHCb-classic"
+#pragma print off
+#include "$BRUNELOPTS/Brunel.opts"
+
+// No database specific options for this database version
+
+// Leave next two lines as last lines
+#pragma print on
+#include "$BRUNELOPTS/BrunelUser.opts"
+#pragma print off
+#include "$BRUNELOPTS/BrunelStatic.opts"
+#pragma print on
