@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.73 2003-10-24 13:35:45 gcorti Exp $
+# $Id: requirements,v 1.74 2003-10-24 13:39:24 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v9r1p1
+version           v9r1p2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -110,5 +110,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=900101 " \
-             VisualC  " /DDaVinciVersion=900101 "
+macro_append cppflags " -DDaVinciVersion=900102 " \
+             VisualC  " /DDaVinciVersion=900102 "
