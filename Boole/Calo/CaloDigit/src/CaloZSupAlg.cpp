@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.4 2003-11-18 13:16:48 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.5 2003-11-18 13:22:58 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -267,7 +267,7 @@ StatusCode CaloZSupAlg::execute() {
         CaloCellID id = (*aDig)->cellID();
         if ( 0.1 < (*aDig)->e() ) {
           index            = m_calo->cellIndex( id );
-          trigValue[index] = 1;
+          trigValue[index] = 2;
           if( debug ) msg << MSG::DEBUG << id << " fired" << endreq;
         }
       }
@@ -291,7 +291,7 @@ StatusCode CaloZSupAlg::execute() {
         if ( 0   > trigVal ) trigVal = 0;
       } else {
         trigVal =  trigValue[index];
-        if ( m_triggerThreshold < energy ) trigVal += 2;
+        if ( m_triggerThreshold < energy ) trigVal += 1;   // Prs
       }
       if ( 0 != trigVal ) trigValue[index] = trigVal;
       
@@ -431,8 +431,8 @@ StatusCode CaloZSupAlg::execute() {
           if ( 0 <= prevIndx ) trigBanks[prevIndx].push_back( word );
           word = cellIndex << 16;
         }
-        if ( 0 != (trigValue[index]&1) ) word += ( 1 << (index&7) );
-        if ( 0 != (trigValue[index]&2) ) word += ( 1 << ((index&7)+8) );
+        if ( 0 != (trigValue[index]&1) ) word += ( 1 << (index&7) );     // Prs
+        if ( 0 != (trigValue[index]&2) ) word += ( 1 << ((index&7)+8) ); // SPD
 
         if ( verbose ) {
           msg << MSG::VERBOSE << id << " index " << index 
