@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.h,v 1.12 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.h,v 1.13 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.11  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -177,7 +180,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id);
+  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const;
 
 private:
 

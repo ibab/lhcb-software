@@ -4,11 +4,13 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.4 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.5 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  Revision 1.4  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
  *
+ *  Revision 1.3  2004/07/2D7 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -75,7 +77,7 @@ public:
    */
   StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
                                    const HepVector3D& vGlobal,
-                                   HepPoint3D& returnPoint);
+                                   HepPoint3D& returnPoint) const;
 
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
@@ -86,7 +88,7 @@ public:
   virtual StatusCode intersectionPoints(const HepPoint3D& position,
                                         const HepVector3D& direction,
                                         HepPoint3D& entryPoint,
-                                        HepPoint3D& exitPoint );
+                                        HepPoint3D& exitPoint ) const;
   /**
    * Finds the intersection points with radiator. For boolean solids there
    * can be more than two intersection points
@@ -96,7 +98,7 @@ public:
    */
   unsigned int intersectionPoints(const HepPoint3D& pGlobal,
                                   const HepVector3D& vGlobal,
-                                  std::vector<HepPoint3D>& points);
+                                  std::vector<HepPoint3D>& points) const;
 
 
 private:

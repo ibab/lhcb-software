@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.11 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.12 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.10  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -81,7 +84,7 @@ public:
    * Retrieves the id of this radiator
    * @return The id of this radiator (Aerogel, C4F10, CF4)
    */
-  inline virtual Rich::RadiatorType radiatorID() const
+  inline Rich::RadiatorType radiatorID() const
   {
     return m_radiatorID;
   }
@@ -90,7 +93,7 @@ public:
    * Retrieves the rich detector of this radiator
    * @return the rich detector of this radiator (Rich1/2)
    */
-  inline virtual Rich::DetectorType rich() const
+  inline Rich::DetectorType rich() const
   {
     return m_rich;
   }
@@ -99,7 +102,7 @@ public:
    * Retrieves the refractive index of the radiator
    * @return A pointer to the refractive index of the radiator
    */
-  inline virtual const TabulatedProperty* refIndex() const
+  inline const TabulatedProperty* refIndex() const
   {
     return m_refIndex;
   }
@@ -109,7 +112,7 @@ public:
    * @return A pointer to the Rayleigh tab property
    * @retval NULL No Rayleigh tab property
    */
-  inline virtual const TabulatedProperty* rayleigh() const
+  inline const TabulatedProperty* rayleigh() const
   {
     return m_rayleigh;
   }
@@ -121,7 +124,7 @@ public:
    */
   virtual StatusCode nextIntersectionPoint( const HepPoint3D& pGlobal,
                                             const HepVector3D& vGlobal,
-                                            HepPoint3D& returnPoint ) = 0;
+                                            HepPoint3D& returnPoint ) const = 0;
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
    * this is the first and last intersection point.
@@ -131,7 +134,7 @@ public:
   virtual StatusCode intersectionPoints( const HepPoint3D& pGlobal,
                                          const HepVector3D& vGlobal,
                                          HepPoint3D& entryPoint,
-                                         HepPoint3D& exitPoint ) = 0;
+                                         HepPoint3D& exitPoint ) const = 0;
 
   /**
    * Finds the intersection points with radiator. For boolean solids there
@@ -142,7 +145,7 @@ public:
    */
   virtual unsigned int intersectionPoints( const HepPoint3D& pGlobal,
                                            const HepVector3D& vGlobal,
-                                           std::vector<HepPoint3D>& points ) = 0;
+                                           std::vector<HepPoint3D>& points ) const = 0;
 
 
 protected:

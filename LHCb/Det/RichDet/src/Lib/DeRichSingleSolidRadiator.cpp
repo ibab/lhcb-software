@@ -4,14 +4,16 @@
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.5 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.6 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.4  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
  *  Revision 1.3  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -95,14 +97,15 @@ StatusCode DeRichSingleSolidRadiator::initialize() {
 StatusCode 
 DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                   const HepVector3D& vGlobal,
-                                                  HepPoint3D&  returnPoint ) {
+                                                  HepPoint3D&  returnPoint ) const
+{
 
   HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if (0 == noTicks) {
     return StatusCode::FAILURE;
@@ -121,14 +124,15 @@ StatusCode
 DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                                const HepVector3D& direction,
                                                HepPoint3D& entryPoint,
-                                               HepPoint3D& exitPoint ) {
+                                               HepPoint3D& exitPoint ) const
+{
 
   HepPoint3D pLocal( geometry()->toLocal(position) );
   HepVector3D vLocal( direction );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
 
   if (0 == noTicks)  return StatusCode::FAILURE;
   
@@ -146,7 +150,8 @@ unsigned int
 DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                                const HepVector3D& vGlobal,
                                                std::vector<HepPoint3D>& 
-                                               points) {
+                                               points) const
+{
 
   HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
@@ -159,9 +164,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
     for (ISolid::Ticks::iterator tick_it = ticks.begin();
          tick_it != ticks.end();
          ++tick_it) {
-      HepPoint3D tempPointGlobal( geometry()->toGlobal( pLocal + (*tick_it)
-                                                        * vLocal) );
-      points.push_back(tempPointGlobal);
+      points.push_back( HepPoint3D( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) ) );
     }
   }
   return noTicks;

@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.cpp,v 1.15 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.cpp,v 1.16 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.14  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -97,7 +100,7 @@ StatusCode DeRich1HPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
-                                     RichSmartID& id)
+                                     RichSmartID& id) const
 {
 
   unsigned int HPDRow =

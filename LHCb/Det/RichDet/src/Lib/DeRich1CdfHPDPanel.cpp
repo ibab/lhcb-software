@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.17 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.18 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.16  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -111,7 +114,8 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
-                                         RichSmartID& id ) {
+                                         RichSmartID& id ) const 
+{
 
   // find the correct HPD inside the panel
 

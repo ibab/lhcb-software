@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.h,v 1.13 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.h,v 1.14 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.12  2004/09/16 08:52:26  papanest
  *  bug with row/column calculation
  *
@@ -171,7 +174,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id);
+  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const;
 
   /**
    * Converts an HPD row and column to a number corresponding

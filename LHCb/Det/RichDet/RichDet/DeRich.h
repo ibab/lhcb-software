@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.9 2004-10-18 11:17:44 papanest Exp $
+ *  $Id: DeRich.h,v 1.10 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/10/18 11:17:44  papanest
+ *  mirror reflectivity
+ *
  *  Revision 1.8  2004/10/18 09:21:48  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -133,7 +136,7 @@ public:
    *
    * @return Pointer to gas window refIndex
    */
-  inline const TabulatedProperty* gasWinRefIndex()
+  inline const TabulatedProperty* gasWinRefIndex() const
   {
     return m_gasWinRefIndex;
   }
@@ -144,7 +147,7 @@ public:
    *
    * @return Pointer gas window absorption length
    */
-  inline const TabulatedProperty* gasWinAbsLength()
+  inline const TabulatedProperty* gasWinAbsLength() const
   {
     return m_gasWinAbsLength;
   }
@@ -155,7 +158,7 @@ public:
    *
    * @return Pointer to quantum efficiency (can be null)
    */
-  inline const TabulatedProperty* nominalHPDQuantumEff()
+  inline const TabulatedProperty* nominalHPDQuantumEff() const
   {
     return m_HPDQuantumEff;
   }
@@ -166,7 +169,7 @@ public:
    *
    * @return Pointer to nominal spherical mirror reflectivity
    */
-  inline const TabulatedProperty* nominalSphMirrorRefl()
+  inline const TabulatedProperty* nominalSphMirrorRefl() const
   {
     return m_nominalSphMirrorRefl;
   }
@@ -177,7 +180,7 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const TabulatedProperty* nominalFlatMirrorRefl()
+  inline const TabulatedProperty* nominalFlatMirrorRefl() const
   {
     return m_nominalFlatMirrorRefl;
   }
@@ -187,7 +190,7 @@ public:
    * be used to test if the mirror segment is at the edge or not
    * @return Position (row/column) for this spherical mirror segment
    */
-  virtual RichMirrorSegPosition sphMirrorSegPos( const int mirrorNumber );
+  virtual RichMirrorSegPosition sphMirrorSegPos( const int mirrorNumber ) const;
 
   /**
    * Method to find the row/column of a flat mirror segment. It can be used to
@@ -195,7 +198,7 @@ public:
    *
    * @return Position (row/column) for this flat mirror segment
    */
-  virtual RichMirrorSegPosition flatMirrorSegPos( const int mirrorNumber );
+  virtual RichMirrorSegPosition flatMirrorSegPos( const int mirrorNumber ) const;
 
   /**
    * Method to test if the user parameter vector is in the xml description
@@ -204,7 +207,7 @@ public:
    * @retval true  The vector exists as a user parameter in the xml
    * @retval false The vector is not in the xml description
    */
-  bool hasParamVector( const std::string & vectorName );
+  bool hasParamVector( const std::string & vectorName ) const;
 
   /**
    * Method to test if the user parameter is in the xml description
@@ -213,7 +216,7 @@ public:
    * @retval true  The parameter exists as a user parameter in the xml
    * @retval false The parameter is not in the xml description
    */
-  bool hasParam( const std::string & paramName );
+  bool hasParam( const std::string & paramName ) const;
 
 protected:
 

@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.cpp,v 1.10 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.11 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.9  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -206,9 +209,9 @@ StatusCode DeRichSphMirror::initialize() {
 
 StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP, 
                                         const HepVector3D& globalV,
-                                        HepPoint3D& intersectionPoint)
+                                        HepPoint3D& intersectionPoint) const
 {
-  HepPoint3D pLocal( geometry()->toLocal(globalP) );
+  const HepPoint3D pLocal( geometry()->toLocal(globalP) );
   HepVector3D vLocal( globalV );
   vLocal.transform( geometry()->matrix() );
 
@@ -228,21 +231,15 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
 
 //=============================================================================
 
-StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP, 
-                                        const HepVector3D& globalV)
+StatusCode DeRichSphMirror::intersects( const HepPoint3D& globalP, 
+                                        const HepVector3D& globalV) const
 {
-  const HepPoint3D pLocal( geometry()->toLocal(globalP) );
+  //const HepPoint3D pLocal( geometry()->toLocal(globalP) );
   HepVector3D vLocal( globalV );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP), vLocal, ticks);
   
-  if (0 == noTicks) {
-    return StatusCode::FAILURE;
-  }
-  else {
-    return StatusCode::SUCCESS;  
-  }
-  
+  return ( 0 == noTicks ? StatusCode::FAILURE : StatusCode::SUCCESS );
 }

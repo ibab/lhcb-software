@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.14 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.15 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.14  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.13  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -102,7 +105,8 @@ StatusCode DeRich2HPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
-                                    RichSmartID& id) {
+                                    RichSmartID& id) const
+{
 
   // find HPD row/column and check if the point is withing the covered area
 

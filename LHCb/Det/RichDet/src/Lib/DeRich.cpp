@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.cpp,v 1.5 2004-10-18 11:17:44 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.6 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/18 11:17:44  papanest
+ *  mirror reflectivity
+ *
  *  Revision 1.4  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -81,7 +84,7 @@ StatusCode DeRich::initialize ( ) {
 //=========================================================================
 //  find a parameter vector
 //=========================================================================
-bool DeRich::hasParamVector ( const std::string & vectorName )
+bool DeRich::hasParamVector ( const std::string & vectorName ) const
 {
   return ( m_vectorNames.end() != std::find(m_vectorNames.begin(),m_vectorNames.end(),vectorName) );
 }
@@ -89,7 +92,7 @@ bool DeRich::hasParamVector ( const std::string & vectorName )
 //=========================================================================
 //  find a parameter
 //=========================================================================
-bool DeRich::hasParam ( const std::string & paramName )
+bool DeRich::hasParam ( const std::string & paramName ) const
 {
   return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
 }
@@ -98,7 +101,8 @@ bool DeRich::hasParam ( const std::string & paramName )
 //=========================================================================
 //
 //=========================================================================
-RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
+RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
+{
 
   RichMirrorSegPosition mirrorPos;
 
@@ -121,7 +125,7 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) {
 //=========================================================================
 //
 //=========================================================================
-RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber )
+RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber ) const
 {
 
   RichMirrorSegPosition mirrorPos;

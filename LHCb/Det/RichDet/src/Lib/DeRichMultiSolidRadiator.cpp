@@ -4,11 +4,13 @@
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.4 2004-09-01 15:20:19 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.5 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/09/01 15:20:19  papanest
+ *  added functions for TabProps
+ *
  *  Revision 1.3  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -109,7 +111,8 @@ StatusCode DeRichMultiSolidRadiator::initialize() {
 StatusCode
 DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                  const HepVector3D& vGlobal,
-                                                 HepPoint3D&  returnPoint ) {
+                                                 HepPoint3D&  returnPoint ) const
+{
 
   HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
@@ -151,7 +154,8 @@ StatusCode
 DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                               const HepVector3D& direction,
                                               HepPoint3D& entryPoint,
-                                              HepPoint3D& exitPoint ) {
+                                              HepPoint3D& exitPoint ) const 
+{
 
   HepPoint3D pLocal( geometry()->toLocal(position) );
   HepVector3D vLocal( direction );
@@ -203,15 +207,16 @@ unsigned int
 DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                               const HepVector3D& vGlobal,
                                               std::vector<HepPoint3D>&
-                                              points) {
+                                              points) const 
+{
 
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  HepPoint3D localNextPoint(0.0, 0.0, 1e6);
-  HepPoint3D localNextTempPoint;
+  //HepPoint3D localNextPoint(0.0, 0.0, 1e6);
+  //HepPoint3D localNextTempPoint;
   HepVector3D solidLocalVector;
   unsigned int noTicks;
   unsigned int totalTicks(0);

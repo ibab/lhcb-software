@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichFlatMirror
  *
  *  CVS Log :-
- *  $Id: DeRichFlatMirror.h,v 1.5 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRichFlatMirror.h,v 1.6 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.4  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -113,7 +116,7 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects ( const HepPoint3D& globalP, const HepVector3D& globalV );
+  StatusCode intersects ( const HepPoint3D& globalP, const HepVector3D& globalV ) const;
 
 private:
 

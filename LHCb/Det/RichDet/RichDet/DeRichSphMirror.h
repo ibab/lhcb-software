@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.7 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRichSphMirror.h,v 1.8 2004-10-20 16:16:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.6  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -111,7 +114,7 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
+  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV) const;
 
   /**
    * Checks if the direction intersects with the mirror and returns the
@@ -120,7 +123,7 @@ public:
    */
   StatusCode intersects ( const HepPoint3D& globalP,
                           const HepVector3D& globalV,
-                          HepPoint3D& intersectionPoint );
+                          HepPoint3D& intersectionPoint ) const;
 
 private:
 
