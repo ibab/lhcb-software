@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTEffCalculator.cpp,v 1.4 2005-01-18 12:36:34 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -41,9 +41,12 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
 
 StatusCode OTEffCalculator::initialize() 
 {
+  StatusCode sc = GaudiTool::initialize();
+  if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
+  
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
-  StatusCode sc = serviceLocator()->service( "RndmGenSvc", randSvc, true );
+  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true );
   if( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }
