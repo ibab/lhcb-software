@@ -219,7 +219,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Make new persistent hit object
           MCRichHit * mchit = new MCRichHit();
 
-          // add to container
+          // add to container, then increment key
           hits->insert( mchit, globalKey );
           ++globalKey;
 
