@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichRecSys
-version           v1r5
+version           v1r6
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -14,10 +14,10 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ        v1r0p1 Rich
+use RichDAQ        v1r1   Rich
 
 # Common packages
-use RichRecBase    v1r7	  Rich
+use RichRecBase    v1r8	  Rich
 use RichRecTools   v2r6   Rich
 use RichRecMCTools v1r1   Rich
 use RichRecCommon  v1r3   Rich

@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r6 2004-01-08 =======================
+! 2004-01-08 - Marco Cattaneo
+ - New versions of RichDAQ, RichRecBase for Gaudi v14r0, LHCB v15r0
+
 !======================= RichRecSys v1r5 2003-12-10 =======================
 ! 2003-12-10 - Marco Cattaneo
  - New versions of RichRecBase, RichRingRefit, RichRecTools, RichRecCommon,
