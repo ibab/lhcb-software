@@ -1,21 +1,15 @@
-// $Id: CaloReco_load.cpp,v 1.11 2004-09-05 15:25:19 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.12 2004-09-08 15:08:22 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2004/09/05 15:25:19  ibelyaev
+//  add the new algorithm 'CaloCheckObjectsAlg'
+//
 // ============================================================================
 // Include files
-// LHCbKernel
-#include "Relations/RelationMACROs.h"
 // GaudiKernel
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/SmartRef.h"
-// Event/TrEvent 
-#include "Event/TrStoredTrack.h"
-// Event/CaloEvent 
-#include "Event/CaloCluster.h"
-#include "Event/CaloHypo.h"
 
 /** @file
  *  mandatory file for dynamic loading of CaloReco shared library.
@@ -23,11 +17,6 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 2002-10-31 
  */
-
-/// implement the relation associator
-IMPLEMENT_WAssociator( CaloCluster , TrStoredTrack , float ) ;
-/// implement the relation associator 
-IMPLEMENT_WAssociator( CaloHypo    , TrStoredTrack , float ) ;
 
 DECLARE_FACTORY_ENTRIES(CaloReco) 
 {
@@ -53,9 +42,6 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_ALGORITHM   ( CaloTrackMatchPhotonAlg             ) ;
   DECLARE_ALGORITHM   ( CaloCluster2TrackAlg                ) ;
   DECLARE_ALGORITHM   ( CaloHypo2TrackAlg                   ) ;
-  
-  DECLARE_WAssociator ( CaloCluster , TrStoredTrack , float ) ;  
-  DECLARE_WAssociator ( CaloHypo    , TrStoredTrack , float ) ;
   
   DECLARE_TOOL        ( CaloSelectNeutralCluster            ) ;
 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2004-09-05 20:23:48 ibelyaev Exp $
+! $Id: release.notes,v 1.53 2004-09-08 15:08:21 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,8 +7,12 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================= CaloReco v2r5 2004-09-08 ======================
+! 2004-09-08 - Marco Cattaneo
+ - Remove associator factories from CaloReco_load.cpp, as these have been
+   move to Associators/Associators package
+
 ! 2004-09-05 - Vanya BELYAEV
-   some CPU optimisation 
   - src/CelAutoTaggedCell.h
     src/CellularAutomaton.h
     src/CellularAutomaton.cpp
@@ -16,18 +20,13 @@
 
 ! 2004-09-05 - Vanya BELYAEV
  - src/CaloCheckObjectsAlg.h(.cpp)
-  new trivial algorithm for checking teh existence 
-	(and by product, the loading!)
-  of objects in Gaudi transient store 
+   new trivial algorithm for checking the existence 
+   (and by product, the loading!) of objects in Gaudi transient store 
  - src/CaloReco_load.cpp
    add the decalration of the new algorithm 
- - cmt/requirements 
-   version increment to v2r7 
 
 ! 2004-09-02 - Vanya BELYAEV
-  prepare for HLT/Trigger developments 
-  - cmt/requirement 
-    increment the version to v2r6 
+ - prepare for HLT/Trigger developments 
 
 !======================= CaloReco v2r4 2004-07-22 ======================
 ! 2004-07-21 - Vanya BELYAEV
