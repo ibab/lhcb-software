@@ -1,10 +1,14 @@
+// $Id: Particle2Definition.cpp,v 1.3 2002-04-24 14:50:30 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/24 11:13:56  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 17:24:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/07/24 11:13:56  ibelyaev
+// package restructurization(III) and update for newer GiGa
+// 
 // ============================================================================
 /// STD & STL 
 #include <string>
@@ -14,7 +18,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 /// LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
+#include "Event/MCParticle.h"
 /// GiGa 
 #include "GiGa/GiGaException.h"
 /// G4 
@@ -23,9 +27,11 @@
 /// local
 #include "Particle2Definition.h"
 
-/** Implementation file for class : Particle2Definition
+/** @file Particle2Definition
+ *  
+ *  Implementation file for class : Particle2Definition
  *   
- * @author Vanya Belyaev 
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  * @date 22/07/2001 
  */
 
@@ -77,24 +83,30 @@ static const std::string
 ErrMsg5("GiGaCnv::Particle2Definition: G4ParticleDefinition* points to 0 for ");
 // ============================================================================
 G4ParticleDefinition* 
-Particle2Definition::operator() ( const MCParticle* particle ) const
+Particle2Definition::operator() 
+  ( const MCParticle* particle ) const
 {
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
   if( 0 == ppSvc()  ) { throw GiGaException( ErrMsg2 ) ; }
-  ///
-  const long ID = particle->particleID().id(); ///< Geant3 Index!!!
-  ParticleProperty* pProp = ppSvc()->find( ID ) ;
-  if( 0 == pProp   )  { throw GiGaException( ErrMsg3 ) ; }
-  const int StdHepID = pProp->jetsetID() ;
+  //
+  const long StdHepID = particle->particleID().pid();
+  // Particle table 
   G4ParticleTable* table  = G4ParticleTable::GetParticleTable();
   if( 0 == table   )  { throw GiGaException( ErrMsg4 ) ; }
-  /// find by jetset index
+  // find by jetset index
   G4ParticleDefinition* pDef = table->FindParticle( StdHepID ); 
-  /// find by name 
-  if( 0 == pDef ) { pDef = table->FindParticle( pProp->particle() ) ;}
-  if( 0 == pDef ) { throw GiGaException( ErrMsg5 + pProp->particle() ); }
+  // find by name 
+  if( 0 == pDef ) 
+    { 
+      ParticleProperty* pProp = ppSvc()->findByStdHepID( StdHepID ) ;
+      if( 0 == pProp   )  { throw GiGaException( ErrMsg3 ) ; }
+      pDef = table->FindParticle( pProp->particle() ) ;
+      if( 0 == pDef ) { throw GiGaException( ErrMsg5 + pProp->particle() ); }
+    }
   ///
   return pDef;
 };
 
+// ============================================================================
+// The End 
 // ============================================================================

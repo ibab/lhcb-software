@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.18 2002-04-23 11:23:40 ibelyaev Exp $ 
+# $Id: requirements,v 1.19 2002-04-24 14:50:30 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2002/04/23 11:23:40  ibelyaev
+#  update for newer Gaudi, Event and Geant4 versions
+#
 # =============================================================================
 package  GiGaCnv 
 version  v5r0
@@ -10,9 +13,9 @@ version  v5r0
 branches cmt src doc GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
-
+        
 use HepMC         v1r2*  Sim
-use GenEvent      v1r0   Event
+use GenEvent      v1r*   Event
 
 use GiGa          v8r*  Sim 
 use Event         v1r*	Event

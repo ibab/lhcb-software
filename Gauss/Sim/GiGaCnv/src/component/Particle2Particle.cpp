@@ -1,21 +1,25 @@
+// $Id: Particle2Particle.cpp,v 1.4 2002-04-24 14:50:30 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.1  2001/07/24 11:13:56  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2001/08/12 17:24:55  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.2  2001/07/25 17:19:32  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.1  2001/07/24 11:13:56  ibelyaev
+// package restructurization(III) and update for newer GiGa
+// 
 // ============================================================================
 /// STD & STL 
 #include <string>
 #include <vector>
 /// GaudiKernel
 /// LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/MCVertex.h"
+#include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 /// GiGa 
 #include "GiGa/GiGaException.h"
 /// GiGaCnv 
@@ -26,9 +30,11 @@
 #include "Particle2Particle.h"
 
 // ============================================================================
-/** Implementation file for class : Particle2Particle
+/** @file Particle2Particle.cpp
+ *  
+ *  Implementation file for class : Particle2Particle
  * 
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 22/07/2001 
  */
 // ============================================================================
@@ -69,34 +75,34 @@ ErrMsg2("GiGaCnv::Particle2Particle: G4ParticleDefinition* points to NULL!");
 
 // ============================================================================
 G4PrimaryParticle* 
-Particle2Particle::operator() ( const MCParticle* particle ) const 
+Particle2Particle::operator() 
+  ( const MCParticle* particle ) const 
 { 
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
   G4ParticleDefinition* pDef = definition( particle );
   if( 0 == pDef     ) { throw GiGaException( ErrMsg2 ) ; }   
   ///
   G4PrimaryParticle* Particle = 
-    new G4PrimaryParticle( pDef , 
-                           particle->fourMomentum().px() ,
-                           particle->fourMomentum().py() ,
-                           particle->fourMomentum().pz() );
+    new G4PrimaryParticle( pDef                      , 
+                           particle->momentum().px() ,
+                           particle->momentum().py() ,
+                           particle->momentum().pz() );
   
-  // for Decay vertices one CURRENTLY should follow a 
-  // little bit incorrect way
-  // NB - one loose the information about proper decay time!
-  // But it is a current property of Geant4! 
-  // This piece of code should be modified later
-  //
-  
+  /** for Decay vertices one CURRENTLY should follow a 
+   *  little bit incorrect way
+   *  NB - one loose the information about proper decay time!
+   *  But it is a current property of Geant4! 
+   *  This piece of code should be modified later
+   */  
   typedef SmartRefVector<MCVertex>::const_iterator   ITV;
   typedef SmartRefVector<MCParticle>::const_iterator ITP;
-  for( ITV pVertex = particle->decayMCVertices().begin(); 
-       particle->decayMCVertices().end() != pVertex ; ++pVertex ) 
+  for( ITV pVertex = particle->endVertices().begin(); 
+       particle->endVertices().end() != pVertex ; ++pVertex ) 
     { 
       const MCVertex* vertex = *pVertex ; 
       if( 0 == vertex )             { continue ; } ///< constinue !
-      for( ITP pParticle = vertex->daughterMCParticles().begin(); 
-           vertex->daughterMCParticles().end() != pParticle ; ++pParticle ) 
+      for( ITP pParticle = vertex->products().begin(); 
+           vertex->products().end() != pParticle ; ++pParticle ) 
         {
           if( 0 == *pParticle )     { continue ; } ///< continue !
           /// recursion 
@@ -109,4 +115,6 @@ Particle2Particle::operator() ( const MCParticle* particle ) const
 
 };
 
+// ============================================================================
+// The END 
 // ============================================================================

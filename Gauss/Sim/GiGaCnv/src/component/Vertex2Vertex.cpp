@@ -1,17 +1,21 @@
+// $Id: Vertex2Vertex.cpp,v 1.3 2002-04-24 14:50:31 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/24 11:13:57  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 17:24:55  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/07/24 11:13:57  ibelyaev
+// package restructurization(III) and update for newer GiGa
+// 
 // ============================================================================
 /// Include files
 /// STD & STL
 #include <string>
 /// LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/MCVertex.h"
+#include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 /// GiGa
 #include "GiGa/GiGaException.h"
 /// G4 
@@ -19,9 +23,11 @@
 // local
 #include "Vertex2Vertex.h"
 
-/** Implementation file for class : Vertex2Vertex
+/** @file Vertex2Vertex.cpp
  *  
- *  @author Vanya  Belyaev
+ *  Implementation file for class : Vertex2Vertex
+ *  
+ *  @author Vanya  Belyaev Ivan.Belyaev@itep.ru
  *  @date 22/07/2001 
  */
 
@@ -54,7 +60,7 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
 {
   if( 0 == vertex ) { throw GiGaException( ErrMsg1 ); }
   /// skip empty vertices 
-  if( vertex->daughterMCParticles().empty() ) { return 0; } 
+  if( vertex->products().empty() ) { return 0; } 
   G4PrimaryVertex* Vertex = 
     new G4PrimaryVertex( vertex->position().x() ,
                          vertex->position().y() ,
@@ -62,8 +68,8 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
                          vertex->timeOfFlight() ) ;
   ///
   typedef SmartRefVector<MCParticle>::const_iterator IT;
-  for( IT pParticle = vertex->daughterMCParticles().begin() ;
-       vertex->daughterMCParticles().end() != pParticle ; ++pParticle )
+  for( IT pParticle = vertex->products().begin() ;
+       vertex->products().end() != pParticle ; ++pParticle )
     {
       if( 0 == *pParticle ) { continue ; }              ///< CONTINUE!
       G4PrimaryParticle* Particle = particle( *pParticle );
@@ -75,4 +81,6 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
   return Vertex ;
 };
 
+// ============================================================================
+// The END 
 // ============================================================================

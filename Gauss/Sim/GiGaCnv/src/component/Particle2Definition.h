@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 17:24:54  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/24 11:13:56  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 /// 
@@ -41,13 +44,15 @@ public:
   /** copy constructor
    *  @param right copy 
    */
-  Particle2Definition( const Particle2Definition& right );
-
+  Particle2Definition
+  ( const Particle2Definition& right );
+  
   /** get the Geant4 particle definition from MCParticle object
    *  @param particle pointer to MCParticle
    *  @return pointer to Geant4 particel definition 
    */
-  G4ParticleDefinition* operator()( const MCParticle* ) const;
+  G4ParticleDefinition* operator()
+    ( const MCParticle* ) const;
   
 protected:
   

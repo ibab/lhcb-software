@@ -1,8 +1,11 @@
-// $Id: GiGaMiscGetEventAlg.cpp,v 1.7 2002-02-12 17:10:49 ibelyaev Exp $ 
+// $Id: GiGaMiscGetEventAlg.cpp,v 1.8 2002-04-24 14:50:30 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/02/12 17:10:49  ibelyaev
+//  bug fix
+//
 // Revision 1.6  2002/01/22 18:24:44  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -34,8 +37,8 @@
 // GiGa 
 #include "GiGa/IGiGaSvc.h"
 /// from LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/MCVertex.h"
+#include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 /// local 
 #include "GiGaMiscGetEventAlg.h"
 

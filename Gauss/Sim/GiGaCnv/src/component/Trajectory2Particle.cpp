@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/08/12 17:24:55  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.1  2001/07/24 11:13:56  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 /// 
@@ -15,7 +18,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ParticleProperty.h"
 /// LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
+#include "Event/MCParticle.h"
 /// GiGa 
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaException.h"
@@ -24,9 +27,11 @@
 // local
 #include "Trajectory2Particle.h"
 
-/** Implementation file for class : Trajectory2Particle
+/** @file Tranjectory2Particle.cpp
  * 
- *  @author Vanya Belyaev
+ *  Implementation file for class : Trajectory2Particle
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   22/07/2001 
  */
 
@@ -37,9 +42,7 @@
 // ============================================================================
 Trajectory2Particle::Trajectory2Particle( IParticlePropertySvc* Svc )
   : m_ppSvc ( Svc   )
-{
-  if( 0 != ppSvc() ) { ppSvc()->addRef() ; }
-};
+{ if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
 
 // ============================================================================
 /// destructor 
@@ -78,7 +81,8 @@ static const std::string
 ErrMsg4("GiGaCnv::Trajectory2Particle::ParticleProperty* points to NULL for ");
 // ============================================================================
 MCParticle* 
-Trajectory2Particle::operator() ( const GiGaTrajectory* trajectory ) const
+Trajectory2Particle::operator() 
+  ( const GiGaTrajectory* trajectory ) const
 {
   if( 0 == ppSvc ()   ) { throw GiGaException( ErrMsg1 ) ; }
   if( 0 == trajectory ) { throw GiGaException( ErrMsg2 ) ; }
@@ -86,17 +90,15 @@ Trajectory2Particle::operator() ( const GiGaTrajectory* trajectory ) const
   const G4ParticleDefinition* pDef = trajectory->partDef() ;
   if( 0 == pDef       ) { throw GiGaException( ErrMsg3 );}
   
-  ParticleProperty* pP = ppSvc()->findByStdHepID( pDef->GetPDGEncoding() );
-  if( 0 == pP ) { pP = ppSvc()->find( pDef->GetParticleName() ) ;}
-  if( 0 == pP ) { throw GiGaException( ErrMsg4 + pDef->GetParticleName() ); }
-  
   /// create and fill new MCparticle object 
   MCParticle* particle = new MCParticle();
-  particle->setFourMomentum( trajectory->fourMomentum() );
-  particle->setParticleID( ParticleID( pP->geantID() ) );
+  particle->setMomentum     ( trajectory->fourMomentum()           ) ;
+  particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
   ///
   return particle;
   ///
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
