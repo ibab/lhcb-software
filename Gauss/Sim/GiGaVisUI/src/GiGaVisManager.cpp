@@ -1,8 +1,11 @@
-// $Id: GiGaVisManager.cpp,v 1.2 2003-02-11 15:50:48 ibelyaev Exp $
+// $Id: GiGaVisManager.cpp,v 1.3 2003-02-18 08:14:04 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/02/11 15:50:48  ibelyaev
+//  package works now!
+//
 // Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
 // new package containing GiGa vis and UI
 //
@@ -18,9 +21,6 @@
 // local
 #include "GiGaVisManager.h"
 
-#ifdef G4VIS_NONE
-// nothing here
-#else
 #include "G4VisManager.hh"
 ///
 // Not needing external packages or libraries...
@@ -147,8 +147,6 @@ namespace GiGaVisManagerLocal
   };
 };  
 
-#endif  // G4VIS_NONE
-
 
 
 // ============================================================================
@@ -217,13 +215,9 @@ StatusCode GiGaVisManager::initialize  ()
   StatusCode sc = GiGaBase::initialize();
   if( sc.isFailure() ) { return Error("Error from GiGaBase",sc); }
   
-#ifdef G4VIS_NONE
-  Warning("GiGaVisManager was compiled with the flag G4VIS_NONE");
-#else 
   G4VisManager* vm = new GiGaVisManagerLocal::GiGaVisMgr();
   vm->Initialize();
   m_visMgr = vm ;
-#endif
   
   if( 0 == m_visMgr )
     { Warning ( "initialize(): local  G4VVisManager* points to NULL!" ) ; }
@@ -256,6 +250,4 @@ StatusCode GiGaVisManager::finalize    ()
 
 // ============================================================================
 // The END 
-// ============================================================================
-
-
+// ===========================================================================

@@ -6,6 +6,11 @@
 
 !========================== GiGaVisUI v1r2 2003-02-17 =======================
 
+! 2003-02-17 - Florence Ranjard
+ - GIGaUIsession.cpp - remove G4UI_NONE, G4UI_TERMINAL, G4UI_GAG
+                       in case of tcsh session create G4UItcsh
+ - GiGaVisManager.cpp - remove G4VIS_NONE
+ 
 ! 2003-02-17 - Witek Pokorski
  - changed version numer for the next Gauss release	
 

@@ -1,8 +1,11 @@
-// $Id: GiGaUIsession.cpp,v 1.1.1.1 2002-12-12 14:46:26 witoldp Exp $
+// $Id: GiGaUIsession.cpp,v 1.2 2003-02-18 08:14:04 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/12/12 14:46:26  witoldp
+// new package containing GiGa vis and UI
+//
 // Revision 1.2  2002/12/07 14:41:45  ibelyaev
 //  add new Calo stuff
 //
@@ -17,16 +20,9 @@
 // GiGa 
 #include "GiGa/GiGaMACROs.h"
 // G4 
-#ifdef      G4UI_NONE
-// nothing to load 
-#else 
 #ifdef      G4UI_USE_WO
 #include   "G4UIWo.hh"   
 #endif //   G4UI_USE_WO 
-/// G4 
-#ifdef      G4UI_USE_GAG
-#include   "G4UIGAG.hh" 
-#endif //   G4UI_USE_GAG
 /// G4 
 #ifdef      G4UI_USE_XM
 #include   "G4UIXm.hh"  
@@ -36,17 +32,11 @@
 #include   "G4UIXaw.hh"  
 #endif //   G4UI_USE_XAW
 /// G4 
-#ifdef      G4UI_USE_TERMINAL
-#include   "G4UIterminal.hh"             
-#include   "G4UItcsh.hh"             
-#include   "G4UIcsh.hh"             
-#endif //   G4UI_USE_TERMINAL 
-/// G4
 #include    "G4UIterminal.hh"             
 #include    "G4UItcsh.hh"             
 #include    "G4UIcsh.hh"             
 #include    "G4UIGAG.hh" 
-#endif   //  G4UI_NONE
+
 // local
 #include "GiGaUIsession.h"
 
@@ -117,10 +107,6 @@ StatusCode GiGaUIsession::initialize  ()
   StatusCode sc = GiGaBase::initialize();
   if( sc.isFailure() ){ return Error("Error from base class GiGaBase" , sc ) ; }
   
-#ifdef G4UI_NONE
-  /// no sessions
-  Warning("GiGaUIsession was compiled with G4UI_NONE flag");
-#else 
   for( Sessions::const_iterator session = m_sessions.begin() ;
        m_sessions.end() != session && 0 == m_session ; ++session )
     { 
@@ -145,12 +131,11 @@ StatusCode GiGaUIsession::initialize  ()
       else if ( "GAG"       == *session  )    
         { m_session          = new G4UIGAG                     () ; }
       else if ( "tcsh"      == *session  ) 
-        { m_session          = new G4UIterminal( new G4UIcsh ()  ) ; }
+        { m_session          = new G4UIterminal( new G4UItcsh ()  ) ; }
       else if ( "csh"       == *session  ) 
         { m_session          = new G4UIterminal( new G4UIcsh ()  ) ; }
       else if ( "terminal"  == *session  ) 
         { m_session          = new G4UIterminal                 () ; }
-#endif   ///< G4UI_NONE
     }
   
   if( 0 == m_session ) { Warning("UI session is not created!"); }
