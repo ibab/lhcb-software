@@ -22,7 +22,8 @@ MergeHLTSel.Algorithms = {"HLTFilterB2HH",
                           "HLTFilterBs2PhiPhi", 
                           "HLTFilterBd2D02KPiKstar", 
                           "HLTFilterBd2DstarPi", 
-                          "HLTFilterBs2DsH"};
+                          "HLTFilterBs2DsH",
+                          "HLTFilterBs2PhiGamma"};
 
 MergeHLTSel.ANDmode = false;
 MergeHLTSel.AvoidSelResult = false;
@@ -35,7 +36,8 @@ HTLSelTrees.Members ={"DecayChainNTuple/HLTBd2HHTree",
                       "DecayChainNTuple/HLTBs2PhiPhiTree",
                       "DecayChainNTuple/HLTBd2D02KPiKstarTree", 
                       "DecayChainNTuple/HLTBd2DstarPiTree",
-                      "DecayChainNTuple/HLTBs2DsHTree"};
+                      "DecayChainNTuple/HLTBs2DsHTree",
+                      "DecayChainNTuple/HLTBs2PhiGammaTree"};
 
 HTLSelTrees.OutputLevel = 3;
 
@@ -50,6 +52,7 @@ HLTBd2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
 HLTBd2HHTree.Decay = "B0 -> ^pi+ ^pi-";
 HLTBd2HHTree.NtupleName = "FILE1/HLTBd2HH";
 HLTBd2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2HHTree.UseRichPID = false;
 HLTBd2HHTree.OutputLevel = 3;
 
 //==============================================================================
@@ -62,6 +65,7 @@ HLTBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiPhi"};
 HLTBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)";
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBs2PhiPhiTree.UseRichPID = false;
 HLTBs2PhiPhiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -74,6 +78,7 @@ HLTBd2D02KPiKstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2D02KPiKsta
 HLTBd2D02KPiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
 HLTBd2D02KPiKstarTree.NtupleName = "FILE1/HLTBd2D02KPiKstar";
 HLTBd2D02KPiKstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2D02KPiKstarTree.UseRichPID = false;
 HLTBd2D02KPiKstarTree.OutputLevel = 3;
 
 //==============================================================================
@@ -86,6 +91,7 @@ HLTBd2DstarPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2DstarPi"};
 HLTBd2DstarPiTree.Decay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi+, B~0 -> (^D*(2010)+ -> (^D0 -> ^K- ^pi+)  ^pi+) ^pi-}";
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
 HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBd2DstarPiTree.UseRichPID = false;
 HLTBd2DstarPiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -99,5 +105,18 @@ HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
 HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBs2DsHTree.UseRichPID = false;
 HLTBs2DsHTree.OutputLevel = 3;
 
+//==============================================================================
+// B_s0 -> phi(1020) gamma
+//==============================================================================
+
+// Write Tree for HLT selection
+HLTBs2PhiGammaTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiGamma"};
+ 
+HLTBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
+HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
+HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
+HLTBs2PhiGammaTree.UseRichPID = false;
+HLTBs2PhiGammaTree.OutputLevel = 3;
