@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.20 2002-12-19 09:31:07 cattanem Exp $
+! $Id: release.notes,v 1.21 2003-01-08 16:11:52 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+!========================= MuonID v3r5 2003-01-08 =========================
 ! 2002-12-18 - Marco Cattaneo
  - Release tools at finalise
 

@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.26 2003-01-07 15:03:05 cattanem Exp $
+! $Id: release.notes,v 1.27 2003-01-08 16:11:40 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
+!======================== MuonTools v3r3 2003-01-08 ========================
 ! 2003-01-07 - Marco Cattaneo
  - Release services and tools when no longer required
 
