@@ -4,7 +4,7 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 ApplicationMgr.TopAlg += { "BTagging" };
-BTagging.WriteToTES    = false;
+BTagging.WriteToTES    =  true ;
 BTagging.OutputLevel   = 3;
 
 //do not modify unless you know what you do:

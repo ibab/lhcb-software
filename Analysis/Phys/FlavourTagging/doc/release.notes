@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2004-07-29 - P. Koppenburg
+ - options/BTagging.opts
+   . Set write to TES to true by default for backward compatibility.
 ! 2004-07-23 - P. Koppenburg
  - cmt/requirements
    . L1Event -> TrgEvent
