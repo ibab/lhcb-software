@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.26 2002-04-30 16:50:24 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.27 2002-05-03 15:52:46 mato Exp $
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -431,7 +431,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
       }
       metaOut << remLine << std::endl
         << "{" << std::endl;
-      if (toReturn && !DaDiTools::isRef(gddMethRetType))
+      if (toReturn && !DaDiTools::isRef(gddMethRetType) 
+                   && !DaDiTools::isPointer(gddMethRetType))
       {
         metaOut << "  static ";
         if (gddMethod->daDiMethReturn()->const_())
@@ -446,6 +447,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
         if (DaDiTools::isRef(gddMethRetType))
         {
           metaOut << "return &(" << gddMethRetType << ") ";
+        }
+        else if (DaDiTools::isPointer(gddMethRetType))
+        {
+          metaOut << "return (" << gddMethRetType << ") ";
         }
         else
         {
@@ -473,7 +478,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
       }
 
       metaOut << ");" << std::endl;
-      if (toReturn && !DaDiTools::isRef(gddMethRetType))
+      if (toReturn && !DaDiTools::isRef(gddMethRetType)
+                   && !DaDiTools::isPointer(gddMethRetType))
       {
         metaOut << "  return &ret;" << std::endl;
       }
@@ -497,13 +503,29 @@ void printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddAttName 
-          << "_" << methodCounter++ << "(void* v)" << std::endl
+        << "_" << methodCounter++ << "(void* v)" << std::endl
         << remLine << std::endl
-        << "{" << std::endl
-        << "  static " << gddAttType << " ret;" << std::endl
-        << "  ret = ((" << gddClassName << "*)v)->"
-          << DaDiTools::retGetName(gddAttName) << "();" << std::endl
-        << "  return &ret;" << std::endl
+        << "{" << std::endl;
+      if ( DaDiTools::isSimple(gddAttType) )
+      {
+        metaOut << "  static ";
+      }
+      else if (!DaDiTools::isFundamental(gddAttType) || DaDiTools::isPointer(gddAttType))
+      {
+        metaOut << "  const ";
+      }
+      metaOut << gddAttType;
+      if (!DaDiTools::isSimple(gddAttType))
+      {
+        metaOut << "& ret =";
+      }
+      else
+      {
+        metaOut << " ret;" << std::endl << "  ret = ";
+      }
+      metaOut << " ((" << gddClassName << "*)v)->"
+        << DaDiTools::retGetName(gddAttName) << "();" << std::endl
+        << "  return (void*)&ret;" << std::endl
         << "}" << std::endl
         << std::endl;
     }
@@ -546,13 +568,12 @@ void printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << remLine << std::endl
         << "static void* " << gddClassName << "_" << gddRelName
-          << "_" << methodCounter++ << "(void* v)" << std::endl
+        << "_" << methodCounter++ << "(void* v)" << std::endl
         << remLine << std::endl 
         << "{" << std::endl
-        << "  static " << gddRealRelType << " ret;" << std::endl
-        << "  ret = ((" << gddClassName << "*)v)->"
-          << DaDiTools::retGetName(gddRelName) << "();" << std::endl
-        << "  return &ret;" << std::endl
+        << "  const " << gddRealRelType << "& ret = ((" << gddClassName << "*)v)->"
+        << DaDiTools::retGetName(gddRelName) << "();" << std::endl
+        << "  return (void*)&ret;" << std::endl
         << "}" << std::endl
         << std::endl;
     }
@@ -829,12 +850,15 @@ void printCppDictionary(DaDiPackage* gddPackage,
          addMeth = (gddRelation->addMeth().equals("FALSE")) ? false : true,
          remMeth = (gddRelation->remMeth().equals("FALSE")) ? false : true,
          multRel = (gddRelation->ratio().equals("1")) ? false : true;
+    std::string gddRealRelType = (multRel) ? 
+                                 "SmartRefVector<" + gddRelType + ">" : 
+                                 "SmartRef<" + gddRelType + ">";
 
     if (getMeth)
     {
       metaOut << "  metaC->addMethod(\"" << gddRelName << "\"," << std::endl
         << indent << "\"" << gddRelDesc << "\"," << std::endl
-        << indent << "\"" << gddRelType << "\"," << std::endl
+        << indent << "\"" << gddRealRelType << "\"," << std::endl
         << indent << gddClassName << "_" << gddRelName  << "_" << methodCounter++
         << ");" << std::endl
         << std::endl;

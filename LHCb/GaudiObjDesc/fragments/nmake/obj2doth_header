@@ -1,6 +1,6 @@
 
 parsetool     = GODWriteCppHeader.exe
-dest          = ..\Event # ..\$(package)\ 
+dest          = ..\Event\ 
 dtdfile       = ..\$(xmlsrc)\gdd.dtd 
 
 ${CONSTITUENT}_output = $(dest)
