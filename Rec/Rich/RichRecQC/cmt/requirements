@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichRecQC
-version           v1r8
+version           v1r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,6 +16,7 @@ set RICHRECQCOPTS $(RICHRECQCROOT)/options
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use RichRecBase   v1r*  Rich
+use Relations     v*    Kernel
 
 # Component library building rule
 #============================================================================

@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================== RichRecQC v1r9 2004-07-22 ========================
+! 2004-07-22 - Marco Cattaneo
+ - Add explicit use of Relations package in requirements
+
 ! 2004-07-12 - Chris Jones
  - Minor changes to debug printout (now done from base class)
 
