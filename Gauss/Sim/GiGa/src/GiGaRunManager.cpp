@@ -210,7 +210,7 @@ StatusCode GiGaRunManager::processTheEvent()
       G4RunManager::eventManager->ProcessOneEvent( G4RunManager::currentEvent); 
       log << MSG::DEBUG << " internal process one event " << endreq; 
       G4RunManager::currentEvent->Draw();
-      /// G4RunManager::AnalyzeEvent( G4RunManager::currentEvent );
+      // G4RunManager::AnalyzeEvent( G4RunManager::currentEvent );
     } 
   /// apply commands to UI manager 
   g4UImanager() << endOfEvtUIcommands();

@@ -86,22 +86,6 @@ inline void* GiGaTrajectory::operator new(size_t)
 inline void  GiGaTrajectory::operator delete(void* aTrajectory)
 { s_GiGaTrajectoryAllocator.FreeSingle( (GiGaTrajectory*) aTrajectory ); };
 ////////////////////////////////////////////////////////////////////////////////////
-inline void GiGaTrajectory::ShowTrajectory  () const {};
-//////////////////////////////////////////////////////////////////////////////////// 
-inline void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )       
-{
-  if( 0 == st                    ) { return ; } 
-  if( 1 >= st->GetPointEntries() ) { return ; }  /// do not copy "almost empty" trajectories
-  GiGaTrajectory* gt = dynamic_cast<GiGaTrajectory*> ( st );
-  if( 0 == gt || this == gt      ) { return ; } 
-  /// copy points 
-  iterator it = gt->empty() ? gt->end() : gt->begin() + 1 ;  /// skip the first point from copy
-  std::copy( it , gt->end() , std::back_inserter( *this ) );
-  /// remove copied points   
-  gt->erase( it , gt->end() );
-  ///
-};
-/////////////////////////////////////////////////////////////////////////////////// 
 inline void GiGaTrajectory::setStepMgr( const G4SteppingManager* mgr ) 
 { m_stepMgr = mgr ; } 
 /////////////////////////////////////////////////////////////////////////////////// 

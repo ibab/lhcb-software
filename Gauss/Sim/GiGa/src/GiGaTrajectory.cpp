@@ -89,6 +89,22 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
   ///
 };
 //////////////////////////////////////////////////////////////////////////////////// 
+void GiGaTrajectory::ShowTrajectory  () const {};
+//////////////////////////////////////////////////////////////////////////////////// 
+void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )       
+{
+  if( 0 == st                    ) { return ; } 
+  if( 1 >= st->GetPointEntries() ) { return ; }  /// do not copy "almost empty" trajectories
+  GiGaTrajectory* gt = dynamic_cast<GiGaTrajectory*> ( st );
+  if( 0 == gt || this == gt      ) { return ; } 
+  /// copy points 
+  iterator it = gt->empty() ? gt->end() : gt->begin() + 1 ;  /// skip the first point from copy
+  std::copy( it , gt->end() , std::back_inserter( *this ) );
+  /// remove copied points   
+  gt->erase( it , gt->end() );
+  ///
+};
+/////////////////////////////////////////////////////////////////////////////////// 
 
 
 

@@ -50,13 +50,13 @@ public:
   /// 
   inline const G4ParticleDefinition* partDef     () const { return m_partDef ; } 
   ///
-  virtual inline void ShowTrajectory  ()                 const ;
+  virtual        void ShowTrajectory  ()                 const ;
   virtual        void DrawTrajectory  ( G4int i_mode=0 ) const ;
-  virtual inline void AppendStep      ( const G4Step*  )       ;
+  virtual        void AppendStep      ( const G4Step*  )       ;
   virtual        void MergeTrajectory ( G4VTrajectory* )       ;
   ///
-  virtual int                 GetPointEntries(          ) const ;
-  virtual G4VTrajectoryPoint* GetPoint       ( int indx ) const ;  
+  virtual inline int                 GetPointEntries(          ) const ;
+  virtual inline G4VTrajectoryPoint* GetPoint       ( int indx ) const ;  
   ///
   ///
   inline       void               setStepMgr( const G4SteppingManager* ) ; 
