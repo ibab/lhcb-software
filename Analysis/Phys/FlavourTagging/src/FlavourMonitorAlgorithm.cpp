@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.5 2002-10-19 09:30:59 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.6 2002-10-21 13:24:36 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -229,16 +229,16 @@ StatusCode FlavourMonitorAlgorithm::execute() {
 StatusCode FlavourMonitorAlgorithm::finalize()
 {
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "==> Finalize" << endl;
+  log << MSG::INFO << "==> Finalize" << std::endl;
 
   std::vector<std::string>::const_iterator loc_i;
   unsigned int i;
   for( i=0, loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end();
        loc_i++, i++ )
   {
-    log << "Statistics for tags in : " << *loc_i << endl;
+    log << "Statistics for tags in : " << *loc_i << std::endl;
     log << "==========================================================\n";
-    log << "Event without associated B : " << m_n_noB[i] << endl;
+    log << "Event without associated B : " << m_n_noB[i] << std::endl;
     for( unsigned int f=0; f<m_fractions+2; f++ )
     {
       double e   = double(m_n_good[i][f]+m_n_wrong[i][f])
@@ -252,11 +252,11 @@ StatusCode FlavourMonitorAlgorithm::finalize()
       double seff = sqrt(eff/(m_n_good[i][f]+m_n_wrong[i][f]+m_n_untagged[i][f])
                          *(4-eff*(1+3/eff)));
       log << "    B reconstructed at " << (1-f/(m_fractions+2.))*100 << "% : "
-          << m_n_fractions[i][f] << endl;
+          << m_n_fractions[i][f] << std::endl;
       log << "----------------------------------------------------------\n";
-      log << "Efficiency           : " << e << " ±" << se << endl;
-      log << "Wrong-tag fraction   : " << w << " ±" << sw << endl;
-      log << "Effective efficiency : " << eff << " ±" << seff << endl;
+      log << "Efficiency           : " << e << " ±" << se << std::endl;
+      log << "Wrong-tag fraction   : " << w << " ±" << sw << std::endl;
+      log << "Effective efficiency : " << eff << " ±" << seff << std::endl;
     }
   }
   log << endreq;

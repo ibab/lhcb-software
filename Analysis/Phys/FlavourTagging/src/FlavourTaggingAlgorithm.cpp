@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.7 2002-09-20 12:09:05 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.8 2002-10-21 13:24:49 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode FlavourTaggingAlgorithm::initialize() {
   std::vector<std::string>::iterator hi;
   for( hi=m_hypothesis_locations.begin();
        hi!=m_hypothesis_locations.end(); hi++ )
-    if( hi->rfind("/Particles") == string::npos )
+    if( hi->rfind("/Particles") == std::string::npos )
       hi->append("/Particles");
 
   m_n_events = 0;

@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.6 2002-09-20 12:09:05 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.7 2002-10-21 13:25:02 gcorti Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -95,7 +95,7 @@ StatusCode SingleParticleTaggingTool::initialize()
   }
 
   std::string name_tail =
-    (name().rfind('.') == string::npos) ? name()
+    (name().rfind('.') == std::string::npos) ? name()
                                         : name().substr(name().rfind('.')+1); 
 
   if( m_Monitor && ( m_MonitorLocation == "auto" || m_MonitorLocation == "Auto"
