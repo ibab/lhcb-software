@@ -1,22 +1,26 @@
+// $Id: GiGaMCVertexCnv.cpp,v 1.9 2002-01-22 18:24:44 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/07/30 14:13:36  ibelyaev
-/// update in GiGaCnvFunctors
-///
-/// Revision 1.6  2001/07/27 11:24:57  ibelyaev
-/// bug fix in MCParticles<->MCVertices relations
-///
-/// Revision 1.5  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.4  2001/07/24 11:13:56  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.3  2001/07/15 20:45:11  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.8  2001/08/12 17:24:53  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.7  2001/07/30 14:13:36  ibelyaev
+// update in GiGaCnvFunctors
+//
+// Revision 1.6  2001/07/27 11:24:57  ibelyaev
+// bug fix in MCParticles<->MCVertices relations
+//
+// Revision 1.5  2001/07/25 17:19:32  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.4  2001/07/24 11:13:56  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.3  2001/07/15 20:45:11  ibelyaev
+// the package restructurisation
+// 
 //  ===========================================================================
 #define GIGACNV_GIGAMCVERTEXCNV_CPP 1 
 // ============================================================================
@@ -32,8 +36,10 @@
 #include "GaudiKernel/IOpaqueAddress.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRegistry.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ParticleProperty.h"
 /// GiGa
@@ -43,8 +49,8 @@
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
 /// GiGaCnv
-#include "GiGaCnv/GiGaKineAddress.h"
 #include "GiGaCnv/GiGaKineRefTable.h"
+#include "GiGaCnv/GiGaCnvUtils.h"
 /// LHCbEvent 
 #include "LHCbEvent/MCVertex.h" 
 #include "LHCbEvent/MCParticle.h" 
@@ -74,29 +80,30 @@ const        ICnvFactory&GiGaMCVertexCnvFactory = s_Factory ;
 // ============================================================================
 GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
+  , m_leaf( "" , classID() )
 {
   ///
   setNameOfGiGaConversionService( "GiGaKineCnvSvc"  ); 
   setConverterName              ( "GiGaMCVCnv"      );
   ///
   /// declare object name for G4->Gaudi conversion 
-  declareObject( "/Event/G4/MCVertices", objType() ); 
+  declareObject( GiGaLeaf( "/Event/MCVertices", objType() ) ); 
   ///
 }; 
 
 // ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
 GiGaMCVertexCnv::~GiGaMCVertexCnv(){}; 
 
 // ============================================================================
-/// Class ID 
+// Class ID 
 // ============================================================================
 const CLID&         GiGaMCVertexCnv::classID     () 
 { return ObjectVector<MCVertex>::classID(); }
 
 // ============================================================================
-/// StorageType 
+// StorageType 
 // ============================================================================
 const unsigned char GiGaMCVertexCnv::storageType ()
  { return GiGaKine_StorageType; }
@@ -109,8 +116,7 @@ const unsigned char GiGaMCVertexCnv::storageType ()
 StatusCode GiGaMCVertexCnv::initialize()
 {
   StatusCode sc = GiGaCnvBase::initialize();
-  if( sc.isFailure() )
-    { return Error("Could not initialize the base class!",sc); }
+  if( sc.isFailure() ) { return Error("Could not initialize base class!",sc); }
   ///
   if( 0 == gigaSvc() ) { return Error("IGiGaSvc* points to NULL!"       ) ; }
   if( 0 == cnvSvc () ) { return Error("IConversionSvc* points to NULL!" ) ; }  
@@ -129,32 +135,25 @@ StatusCode GiGaMCVertexCnv::finalize()
 
 // ============================================================================
 /** create the Object
- *  @param  Address address of the object 
- *  @param  Object  reference to created object 
+ *  @param  address address of the object 
+ *  @param  object  reference to created object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::createObj( IOpaqueAddress*  Address , 
-                                       DataObject*&  Object )
+StatusCode GiGaMCVertexCnv::createObj
+( IOpaqueAddress*  address , 
+  DataObject*&     object  )
 {
   ///
-  Object = 0 ;
-  if( 0 ==  Address  ) 
-    { return Error("IOpaqueAddress* points to NULL!" ) ; }
-  GiGaKineAddress* address = dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) 
-    { return Error("IOpaqueAddress*(of type '" + 
-                   GiGaUtil::ObjTypeName(Address) + 
-                   "*') could not be cast into GiGaKineAddress!" ) ; }
+  object = 0 ;
+  if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL!" ) ; }
   ///
-  Object        = new ObjectVector<MCVertex>();
-  /// 
-  StatusCode sc = updateObj( Address , Object );
+  object        = new Vertices();
+  StatusCode sc = updateObj( address , object );
   if( sc.isFailure() ) 
     { 
-      delete Object ;
-      Object =  0   ; 
-      return Error("Could not create Object" , sc );
+      if( 0 != object ) { delete object ; object =  0 ; }
+      return Error(" Could not create the object" , sc );
     }; 
   ///
   return StatusCode::SUCCESS;
@@ -162,63 +161,45 @@ StatusCode GiGaMCVertexCnv::createObj( IOpaqueAddress*  Address ,
 
 // ============================================================================
 /** fill the object references 
- *  @param  Address address of the object 
- *  @param  Object  reference to the object 
+ *  @param  address address of the object 
+ *  @param  object  reference to the object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::fillObjRefs( IOpaqueAddress*  Address , 
-                                         DataObject*   Object  )
+StatusCode GiGaMCVertexCnv::fillObjRefs
+( IOpaqueAddress*  address , 
+  DataObject*      object  )
 {
-  if( 0 ==  Address  ) 
-    { return Error("IOpaqueAddress* points to NULL!") ; }
-  if( 0 ==  Object   ) 
-    { return Error("DataObject* points to NULL!") ; } 
-  GiGaKineAddress* address = 
-    dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) 
-    { return Error("IOpaqueAddress*(of type '" + 
-                   GiGaUtil::ObjTypeName(Address) + 
-                   "*') could not be cast into GiGaKineAddress!" ) ; }
-  ObjectVector<MCVertex>* object = 
-    dynamic_cast<ObjectVector<MCVertex>*> ( Object ); 
-  if( 0 ==  object   ) 
-    { return Error("DataObject*(of type '" + 
-                   GiGaUtil::ObjTypeName(Object) + 
-                   "*') could not be cast into ObjectVector<MCVertex>*");}  
+  if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
+  if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; } 
+  Vertices* vertices = dynamic_cast<Vertices*> ( object ); 
+  if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
+                                      GiGaUtil::ObjTypeName( object)    + 
+                                      "*') is not 'Vertices*'!"         ) ; }  
   ///       
-  return updateObjRefs( Address , Object ); 
+  return updateObjRefs( address , object ); 
 }; 
 
 // ============================================================================
 /** update the Object
- *  @param  Address address of the object 
- *  @param  Object  reference to updated object 
+ *  @param  address address of the object 
+ *  @param  object  reference to updated object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address , 
-                                       DataObject*     Object  ) 
+StatusCode GiGaMCVertexCnv::updateObj
+( IOpaqueAddress*  address , 
+  DataObject*      object  ) 
 {
   ///
-  if( 0 ==  Address  ) 
-    { return Error("IOpaqueAddress* points to NULL!") ; }
-  if( 0 ==  Object   ) 
-    { return Error("DataObject* points to NULL!") ; }   
-  GiGaKineAddress* address = 
-    dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) 
-    { return Error("IOpaqueAddress*(of type '" + 
-                   GiGaUtil::ObjTypeName(Address) + 
-                   "*') could not be cast into GiGaKineAddress!" ) ; }
-  ObjectVector<MCVertex>* object = 
-    dynamic_cast<ObjectVector<MCVertex>*> ( Object ); 
-  if( 0 ==  object   ) 
-    { return Error("DataObject*(of type '" + 
-                   GiGaUtil::ObjTypeName(Object) + 
-                   "*') could not be cast into ObjectVector<MCVertex>*") ; }  
+  if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
+  if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; }   
+  Vertices* vertices = dynamic_cast<Vertices*> ( object ); 
+  if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
+                                      GiGaUtil::ObjTypeName( object )   + 
+                                      "*') is not 'Vertices*'!"         ) ; }  
   ///
-  object->erase( object->begin() , object->end() ); 
+  vertices->erase( vertices->begin() , vertices->end() ); 
   ///
   G4TrajectoryContainer* trajectories = 0 ; 
   ///
@@ -233,7 +214,7 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
   if( 0 == trajectories ) 
     { return Error("No G4TrajectoryContainer* object is found!"); } 
   /// convert all trajectory points into MCVertex  objects
-  object->reserve( trajectories->size() );
+  vertices->reserve( 2 * trajectories->size() );
   {  
     /// create "converter"
     Point2Vertex Cnv;
@@ -248,27 +229,28 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
         const GiGaTrajectory* trajectory = 
           dynamic_cast<const GiGaTrajectory*> ( vt ) ; 
         if( 0 == trajectory ) 
-          { return Error("G4VTrajectory*(of type '" + 
-                         GiGaUtil::ObjTypeName(vt) + 
+          { return Error("G4VTrajectory*(of type '"  + 
+                         GiGaUtil::ObjTypeName( vt ) + 
                          "*') could not be cast to GiGaTrajectory*"  ) ; }
         /// convert all trajectory points into MCVertices 
-        std::transform( trajectory->begin() , trajectory->end() ,
-                        std::back_inserter( *object ) , Cnv);
+        std::transform( trajectory->begin            () , 
+                        trajectory->end              () ,
+                        std::back_inserter( *vertices ) , Cnv );
       } 
   }
   /// sort and eliminate duplicates
   {
     GiGaCnvFunctors::MCVerticesLess  Less ;
-    std::stable_sort( object->begin() , object->end() , Less );
+    std::stable_sort( vertices->begin() , vertices->end() , Less );
     
     /** due to close relations between ContainedObject 
      *  and its parent Container we could not use standard 
      *  algorithm std::unique. 
      *  Therefore the following ugly lines are used.  
      */
-    typedef ObjectVector<MCVertex>::iterator IT;
-    IT     end = object->end   () ; /// unsorted garbage iterator
-    for( IT it = object->begin () ;  end != it ; ++it )
+    typedef Vertices::iterator IT;
+    IT     end = vertices->end   () ; /// unsorted garbage iterator
+    for( IT it = vertices->begin () ;  end != it ; ++it )
       { 
         /// find the first element which is "bigger" - should be fast!
         IT iL = it + 1; 
@@ -276,7 +258,7 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
         if( end == iU ) { end = iL ; }
         else  { std::rotate( iL, iU , end ); end -= (iU-iL) ; }
       }
-    object->erase( end , object->end() ) ; ///<  remove unsorted garbage 
+    vertices->erase( end , vertices->end() ) ; ///<  remove unsorted garbage 
   }
   ///
   return StatusCode::SUCCESS;
@@ -284,30 +266,21 @@ StatusCode GiGaMCVertexCnv::updateObj( IOpaqueAddress*  Address ,
 
 // ============================================================================
 /** update the object references 
- *  @param  Address address of the object 
- *  @param  Object  reference to the object 
+ *  @param  address address of the object 
+ *  @param  object  reference to the object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address , 
-                                           DataObject*   Object  )
+StatusCode GiGaMCVertexCnv::updateObjRefs
+( IOpaqueAddress*  address , 
+  DataObject*      object  )
 {
-  if( 0 ==  Address  ) 
-    { return Error("IOpaqueAddress* points to NULL!") ; }
-  if( 0 ==  Object   ) 
-    { return Error("DataObject* points to NULL!") ; }   
-  GiGaKineAddress* address = 
-    dynamic_cast<GiGaKineAddress*> (Address);
-  if( 0 ==  address  ) 
-    { return Error("IOpaqueAddress*(of type '" + 
-                   GiGaUtil::ObjTypeName(Address) + 
-                   "*') could not be cast into GiGaKineAddress!" ) ; }
-  ObjectVector<MCVertex>* object = 
-    dynamic_cast<ObjectVector<MCVertex>*> ( Object ); 
-  if( 0 ==  object   ) 
-    { return Error("DataObject*(of type '" + 
-                   GiGaUtil::ObjTypeName(Object) + 
-                   "*') could not be cast into ObjectVector<MCVertex>*");}  
+  if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
+  if( 0 ==  object   ) { return Error(" DataObject* points to NULL"     ) ; }   
+  Vertices* vertices = dynamic_cast<Vertices*> ( object ); 
+  if( 0 ==  vertices ) { return Error(" DataObject*(of type '"          + 
+                                      GiGaUtil::ObjTypeName( object )   + 
+                                      "*') is not 'Vertices*'!"         ) ; }  
   /// get the trajectories from GiGa 
   G4TrajectoryContainer* trajectories = 0 ; 
   try{ *gigaSvc() >> trajectories ; }
@@ -319,53 +292,54 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
     { return Exception("UpdateObjRefs: "         ) ; }  
   if( 0 == trajectories ) 
     { return Error("No G4TrajectoryContainer* object is found!"); } 
-  /// get converted MCParticles  
-  const std::string ParticlesPath( Address->
-                                   directory()->parent()->fullpath() 
-                                   + "/MCParticles" );
-  SmartDataPtr< ObjectVector<MCParticle> > 
-    particles( evtSvc() , ParticlesPath );
+  /// get converted MCParticles
+  IRegistry* parent = 
+    GiGaCnvUtils::parent( address->registry() , evtSvc() );
+  if( 0 == parent ) { return Error( " Parent directory is not accessible!"); }
+  const std::string particlesPath( parent->identifier() + "/MCParticles" );
+  SmartDataPtr<Particles> particles( evtSvc() , particlesPath );
   if( !particles ) 
-    { return Error("Could not locate Particles at="+ParticlesPath ); }
-  const long refID = object->addLink( ParticlesPath ,  particles );
+    { return Error("Could not locate Particles at=" + particlesPath ); }
+  const long refID = object->linkMgr()->addLink( particlesPath ,  particles );
   if( particles->size() != trajectories->size() )
-    { return Error("Size of G4TrajectoryContainer mismatch size of " + 
-                   ParticlesPath) ; }
+    { return Error("Size of G4TrajectoryContainer mismatch size of '" 
+                   + particlesPath + "'") ; }
   /// reset all existing relations
-  std::transform( object->begin() , object->end() , 
-                  object->begin() , 
-                  GiGaCnvFunctors::MCVertexResetRefs() );
+  std::transform( vertices -> begin                  () , 
+                  vertices -> end                    () , 
+                  vertices -> begin                  () , 
+                  GiGaCnvFunctors::MCVertexResetRefs () );
   /// fill relations
   {
     typedef SmartRef<MCParticle> Ref;
     typedef G4TrajectoryContainer::const_iterator ITT ;
     typedef GiGaTrajectory::const_iterator        ITG ;
-    typedef ObjectVector<MCParticle>::iterator    ITP ;
-    typedef ObjectVector<MCVertex>::iterator      ITV ;
+    typedef Particles::iterator                   ITP ;
+    typedef Vertices::iterator                    ITV ;
     /// auxillary values 
     MCVertex miscVertex;
     GiGaCnvFunctors::MCVerticesLess  Less  ; 
     GiGaCnvFunctors::MCVerticesEqual Equal ;
     GiGaKineRefTable& table = kineSvc()->table();
     
-    ITV iVertex     = object       -> begin() ;
-    ITT iTrajectory = trajectories -> begin() ;
+    ITV iVertex     = vertices     -> begin() ;
     ITP iParticle   = particles    -> begin() ;
+    ITT iTrajectory = trajectories -> begin() ;
     for(  ; trajectories -> end() != iTrajectory , 
             particles    -> end() != iParticle   ; 
           ++iTrajectory , ++iParticle )
       {
-	const G4VTrajectory* vt = *iTrajectory ;
-	if( 0 == vt  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-	const GiGaTrajectory*  trajectory  = 
+        const G4VTrajectory* vt = *iTrajectory ;
+        if( 0 == vt  ) { return Error("G4VTrajectory* points to NULL" ) ; } 
+        const GiGaTrajectory*  trajectory  = 
           dynamic_cast<const GiGaTrajectory*> ( vt ) ; 
-	if( 0 == trajectory  ) 
+        if( 0 == trajectory  ) 
           { return Error("G4VTrajectory*(of type '" + 
                          GiGaUtil::ObjTypeName( vt ) + 
                          "*') could not be cast to GiGaTrajectory*" ) ; }
         /// own    MCParticle 
-	MCParticle* particle  = *iParticle ; 
-	if( 0 == particle ) { return Error("MCParticle* points to NULL!" ) ; } 
+        MCParticle* particle  = *iParticle ; 
+        if( 0 == particle ) { return Error("MCParticle* points to NULL!" ) ; } 
         /// index of particle 
         const int indxPart = iParticle - particles->begin();
         /// index of mother 
@@ -376,48 +350,49 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
         /// mother MCParticle (could be NULL!)
         MCParticle* mother  = entry.particle () ;
         /// loop over trajectrory points (vertices)  
-	for( ITG iPoint = trajectory->begin() ; 
+        for( ITG iPoint = trajectory->begin() ; 
              trajectory->end() != iPoint ; ++iPoint )
-	  {
-	    if( 0 == *iPoint  ) 
+          {
+            if( 0 == *iPoint  ) 
               { return Error("GiGaTrajectoryPoint* points to MULL!" ) ; }  
-	    /// fill parameters of auxillary vertex                
-	    miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
-	    miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
-	    /// look for vertex, special treatment for "first" 
+            /// fill parameters of auxillary vertex                
+            miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
+            miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
+            /// look for vertex, special treatment for "first" 
             /// vertex. should be quite fast 
-	    iVertex = std::lower_bound( trajectory->begin() == iPoint ? 
-                                        object->begin() : iVertex , 
-                                        object->end() , &miscVertex , Less  ) ;
-	    /// no vertex is found? 
-            if( object->end() == iVertex || !Equal( &miscVertex , *iVertex ) )  
-	      { return Error("appropriate MCVertex is not found !") ; }
+            iVertex = 
+              std::lower_bound( trajectory -> begin () == iPoint ? 
+                                vertices   -> begin () :  iVertex     , 
+                                vertices   -> end   () ,  &miscVertex , Less  );
+            /// no vertex is found? 
+            if( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) )
+              { return Error("appropriate MCVertex is not found !") ; }
             MCVertex* vertex = *iVertex ;
             /// is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
-	      {
+              {
                 /// add daughter particle to the vertex 
                 Ref dau( vertex , refID , indxPart , particle );
-		vertex->addDaughterMCParticle( dau) ; 
+                vertex->addToDaughterMCParticles( dau) ; 
                 /// mother is known ?            
-		if ( !vertex->motherMCParticle() 
+                if ( !vertex->motherMCParticle() 
                      && 0 != mother && 0 <= iMother )
-		  { 
+                  { 
                     Ref moth( vertex , refID , iMother , mother ) ;
                     vertex->setMotherMCParticle ( moth ) ; 
                   }
-	      }	       
+              }	       
             /// decay vertex 
             else if ( !vertex->motherMCParticle()  ) 
-	      {
+              {
                 Ref moth( vertex , refID , indxPart , particle );
                 vertex->setMotherMCParticle ( moth ) ; 
               }
             /// corrupted data! 
-	    else 
-	      { return Error("MotherMCParticle is already set!") ; }
+            else 
+              { return Error("MotherMCParticle is already set!") ; }
 	    
-	  } ///< end loop over points 
+          } ///< end loop over points 
       } ///< end loop over trajectories/particles  
   } ///< end end of relations scope 
   ///
@@ -426,71 +401,65 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
 
 // ============================================================================
 /** create the representation of the object 
- *  @param  Object  reference to the object 
- *  @param  Address address of the object 
+ *  @param  object  reference to the object 
+ *  @param  address address of the object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::createRep( DataObject*     Object  , 
-                                       IOpaqueAddress*& Address ) 
+StatusCode GiGaMCVertexCnv::createRep
+( DataObject*      object  , 
+  IOpaqueAddress*& address ) 
 {
   ///
-  Address = 0 ; 
+  address = 0 ; 
   ///
-  if( 0 == Object ){ return Error("CreateRep::DataObject* points to NULL"); } 
-  ObjectVector<MCVertex>* obj = 
-    dynamic_cast<ObjectVector<MCVertex>*>( Object ) ; 
-  if( 0 == obj  ) 
-    { return Error("DataObject*(of type '" + 
-                   GiGaUtil::ObjTypeName(Object) + 
-                   "*') could not be cast into ObjectVector<MCVertex>*") ; }  
+  if( 0 ==  object   ) { return Error(" DataObject* points to NULL"  ); } 
+  Vertices* vertices = dynamic_cast<Vertices*>( object ) ; 
+  if( 0 ==  vertices ) { return Error(" DataObject*(of type '"       + 
+                                      GiGaUtil::ObjTypeName( object) + 
+                                      "*') is not 'Vertices*'!"      ) ; }  
   /// create IOpaqueAddress
-  IAddressCreator* addrCreator = 
-    dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; 
-  if( 0 == addrCreator   ) 
+  if( 0 == addressCreator() ) 
     { return Error("CreateRep::AddressCreator is not available"); } 
-  StatusCode status = addrCreator->createAddress( repSvcType() , 
-                                                  classID   () , 
-                                                  "GiGaKine"   , 
-                                                  "GiGaPrimaryEvent" , 
-                                                  -1 , Address );   
+  StatusCode status = 
+    addressCreator()->createAddress( repSvcType  () , 
+                                     classID     () , 
+                                     m_leaf.par  () , 
+                                     m_leaf.ipar () , 
+                                     address        );   
   if( status.isFailure() ) 
     { return Error("CreateRep::Error from Address Creator",status) ; }
-  if( 0 == Address       ) 
+  if( 0 == address       ) 
     { return Error("CreateRe::Invalid address is created") ; } 
   ///
-  return updateRep( Object , Address ) ; 
+  return updateRep( object , address ) ; 
   /// 
 }; 
 
 // ============================================================================
 /** update the representation of the object 
- *  @param  Object  reference to the object 
- *  @param  Address address of the object 
+ *  @param  object  reference to the object 
+ *  @param  address address of the object 
  *  @return status code
  */ 
 // ============================================================================
-StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , 
-                                       IOpaqueAddress*  Address ) 
+StatusCode GiGaMCVertexCnv::updateRep
+( DataObject*      object  , 
+  IOpaqueAddress*  address ) 
 { 
   ///
-  if( 0 == Object        ) 
-    { return Error("UpdateRep::DataObject*     points to NULL"); } 
-  if( 0 == Address       ) 
-    { return Error("UpdateRep::IopaqueAddress* points to NULL"); } 
-  ///
-  ObjectVector<MCVertex>* vertices = 
-    dynamic_cast<ObjectVector<MCVertex>*>( Object ) ;  
-  if( 0 == vertices      ) 
-    { return Error("DataObject*(of type '" + 
-                   GiGaUtil::ObjTypeName(Object) + 
-                   "*') could not be cast into ObjectVector<MCVertex>*") ; }  
+  if( 0 ==  address  ) { return Error(" IOpaqueAddress* points to NULL" ) ; } 
+  if( 0 ==  object   ) { return Error(" DataObject*     points to NULL" ) ; } 
+  Vertices* vertices = dynamic_cast<Vertices*>( object ) ;  
+  if( 0 ==  vertices ) { return Error("DataObject*(of type '"           + 
+                                      GiGaUtil::ObjTypeName( object )   + 
+                                      "*') is not 'Vertices*'!"         ) ; }  
   ///
   unsigned int nVertex=0; 
   /// create the vertex converter
   Vertex2Vertex Cnv( ppSvc() );
-  /// loop over all vertices and "convert" them 
-  typedef ObjectVector<MCVertex>::const_iterator IT;
+  /// loop over all vertices, "convert" them and load them into GiGa 
+  typedef Vertices::const_iterator IT;
   for( IT pVertex = vertices->begin() ; 
        vertices->end()  != pVertex ; ++pVertex ) 
     {

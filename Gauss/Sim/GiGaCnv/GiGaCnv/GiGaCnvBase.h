@@ -1,14 +1,18 @@
+// $Id: GiGaCnvBase.h,v 1.6 2002-01-22 18:24:41 ibelyaev Exp $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:30  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:53  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.2  2001/07/15 20:45:08  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 17:24:48  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/25 17:19:30  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.3  2001/07/24 11:13:53  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.2  2001/07/15 20:45:08  ibelyaev
+// the package restructurisation
+// 
 // ============================================================================
 #ifndef GIGA_GIGACNVBASE_H 
 #define GIGA_GIGACNVBASE_H  1 
@@ -23,6 +27,7 @@
 // GiGaCnv 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/IGiGaKineCnvSvc.h" 
+#include "GiGaCnv/GiGaLeaf.h" 
 //
 class IDataProviderSvc     ;
 class IMessageSvc          ; 
@@ -48,16 +53,21 @@ class IGiGaHitsCnvSvc      ;
 class GiGaCnvBase: public Converter 
 {
   ///  
- protected: 
+public:
+  typedef std::vector<GiGaLeaf> Leaves;
+  
+protected: 
   
   /** standard constructor 
    *  @param StorageType    type identifier of external storage
    *  @param ClassType      class identifier 
    *  @param Locatopr       pointer to service locator 
    */
-  GiGaCnvBase( const unsigned char  StorageType , 
-               const CLID&          ClassType   , 
-               ISvcLocator*         Locator     );
+  GiGaCnvBase
+  ( const unsigned char  StorageType , 
+    const CLID&          ClassType   , 
+    ISvcLocator*         Locator     );
+
   /// virtual destructor 
   virtual ~GiGaCnvBase();
   ///
@@ -122,8 +132,8 @@ protected:
    *  @return pointer to GiGa service 
    */   
   inline IGiGaSvc*             gigaSvc   () const 
-  { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; } 
-  
+  { return 0 != cnvSvc () ? cnvSvc ()->gigaSvc () : 0 ; }
+
   /** accessor to GiGa SetUp service
    *  @return pointer to GiGa SetUp  service 
    */                     
@@ -141,8 +151,9 @@ protected:
    *  @param status  status code to be returned 
    *  @return status code 
    */
-  StatusCode Error     ( const std::string& Message , 
-                         const StatusCode& status = StatusCode::FAILURE );
+  StatusCode Error     
+  ( const std::string& Message , 
+    const StatusCode& status = StatusCode::FAILURE );
   
   /** (re)-throw exception and print error message 
    *  @param msg  error message 
@@ -151,11 +162,12 @@ protected:
    *  @param sc   status code
    *  @return statsu code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,   
-                         const GaudiException & exc                        , 
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
-
+  StatusCode Exception 
+  ( const std::string    & msg                        ,   
+    const GaudiException & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE );
+  
   /** (re)-throw exception and print error message 
    *  @param msg  error message 
    *  @param exc  previous exception 
@@ -163,10 +175,11 @@ protected:
    *  @param sc   status code
    *  @return statsu code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,  
-                         const std::exception & exc                        , 
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception 
+  ( const std::string    & msg                        ,  
+    const std::exception & exc                        , 
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE );
   
   /** throw exception and print error message 
    *  @param msg  error message 
@@ -174,41 +187,38 @@ protected:
    *  @param sc   status code
    *  @return statsu code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,  
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
-
+  StatusCode Exception 
+  ( const std::string    & msg                        ,  
+    const MSG::Level     & lvl = MSG::FATAL           ,
+    const StatusCode     & sc  = StatusCode::FAILURE );
+  
   /** Retrieve name of converter 
    *  @return converter name
    */
   inline const std::string&  name     () { return m_ConverterName; } 
 
   /// set name of own conversion service  
-  inline void setNameOfGiGaConversionService( const std::string& CnvSvc ) 
+  inline void setNameOfGiGaConversionService
+  ( const std::string& CnvSvc ) 
   { m_NameOfGiGaConversionService = CnvSvc ; }                     
-
+  
   /// set own name 
-  void setConverterName ( const std::string& ConverterName ) 
-{ m_ConverterName  = ConverterName ; } 
+  void setConverterName 
+  ( const std::string& ConverterName ) 
+  { m_ConverterName  = ConverterName ; } 
   
   /** declare the object to conversion service 
-   *  @param Path path/address in Transoent Store 
-   *  @param Clid object class identifier 
-   *  @param Addr1 major GiGa address 
-   *  @param Addr2 minor GiGa address 
-   *  @return statsu code 
+   *  @param leaf object leaf 
+   *  @return status code 
    */
-  StatusCode declareObject( const std::string & Path       ,
-                            const CLID        & Clid       ,
-                            const std::string & Addr1 = "" ,
-                            const std::string & Addr2 = "");
+  StatusCode declareObject ( const GiGaLeaf&   leaf );
   /// 
 protected: 
   ///
   std::string           m_NameOfGiGaConversionService ; 
   std::string           m_ConverterName               ;
   ///
-  IGiGaCnvSvc::Leaves   m_leaves                      ;
+  Leaves                m_leaves                      ;
   ///
 private:
   ///
@@ -224,7 +234,9 @@ private:
 };
 ///
 
- 
+
+// ============================================================================
+// End 
 // ============================================================================
 #endif    //      GIGA_GIGACNVBASE_H 
 // ============================================================================

@@ -1,23 +1,25 @@
+// $Id: IIDIGiGaCnvSvc.h,v 1.3 2002-01-22 18:24:42 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.4  2001/07/23 13:11:46  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 17:24:50  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/07/25 17:19:31  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.4  2001/07/23 13:11:46  ibelyaev
+// the package restructurisation(II)
+// 
 // ============================================================================
-#ifndef    GIGA_IIDIGIGACNVSVC_H
-#define    GIGA_IIDIGIGACNVSVC_H 1 
+#ifndef    GIGACNV_IIDIGIGACNVSVC_H
+#define    GIGACNV_IIDIGIGACNVSVC_H 1 
 // ============================================================================
-
 
 /// unique interface identifier 
-static const InterfaceID IID_IGiGaCnvSvc( 213 , 3,  0 );
-
+static const InterfaceID IID_IGiGaCnvSvc( "IGiGaCnvSvc" , 4 ,  0 );
 
 // ============================================================================
-#endif  ///< GIGA_IIDIGIGACNVSVC_H
+#endif  ///< GIGACNV_IIDIGIGACNVSVC_H
 // ============================================================================

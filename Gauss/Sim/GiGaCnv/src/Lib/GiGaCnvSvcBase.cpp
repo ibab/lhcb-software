@@ -1,16 +1,20 @@
+// $Id: GiGaCnvSvcBase.cpp,v 1.6 2002-01-22 18:24:42 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:54  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.2  2001/07/15 20:45:09  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 17:24:51  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/25 17:19:31  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.3  2001/07/24 11:13:54  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.2  2001/07/15 20:45:09  ibelyaev
+// the package restructurisation
+// 
 // ===========================================================================
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 // ============================================================================
@@ -27,8 +31,10 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/IDataDirectory.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IConverter.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -90,9 +96,12 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
 };
 
 // ============================================================================
-/// virtual destructor 
+// virtual destructor 
 // ============================================================================
-GiGaCnvSvcBase::~GiGaCnvSvcBase(){};
+GiGaCnvSvcBase::~GiGaCnvSvcBase()
+{
+  m_leaves.clear() ;
+};
 
 // ============================================================================
 /** service initialization 
@@ -117,7 +126,7 @@ StatusCode GiGaCnvSvcBase::initialize()
         { return Error("Initialize::Could not locate IDataProvider=" + 
                        m_dpName         );}
       dpSvc()->addRef(); 
-      setStore( dpSvc() ); 
+      setDataProvider( dpSvc() ); 
       Print( " Located DataProvider="+m_dpName, MSG::VERBOSE ); 
     } 
   else { return Error(" IDataProvider is not requested to be located!") ;} 
@@ -228,6 +237,9 @@ StatusCode GiGaCnvSvcBase::initialize()
     } 
   else { return Error(" Incident Service is not requested to be located!") ;} 
   ///
+  ///
+  setAddressCreator( this );
+  
   return locateOwnCnvs(); 
   ///
 };
@@ -246,7 +258,7 @@ StatusCode GiGaCnvSvcBase::locateOwnCnvs()
        cnvManager()->cnvEnd() != it ; ++it )
     {
       if( 0 == *it || ( repSvcType() != (*it)->repSvcType()  ) ) { continue ; }
-      StatusCode st = addConverter( **it ); 
+      StatusCode st = addConverter( (*it)->objType() ); 
       if( st.isFailure() )
         { return Error("locateOwnCnvs():Could not add converter=" + 
                        (*it)->typeName() , st ) ; }
@@ -314,7 +326,7 @@ StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::declareObject( const IGiGaCnvSvc::Leaf& leaf )
+StatusCode GiGaCnvSvcBase::declareObject( const GiGaLeaf& leaf )
 {
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS ;
@@ -326,58 +338,7 @@ StatusCode GiGaCnvSvcBase::declareObject( const IGiGaCnvSvc::Leaf& leaf )
  */
 // ============================================================================
 void       GiGaCnvSvcBase::handle         ( const Incident& inc )
-{
-  ///
-  if( inc.type() != "BeginEvent" ) 
-    { Warning("Unknown Incident is handled="+inc.type() ); return ; }
-  ///
-  if ( m_leaves.empty() )  { return; }  
-  ///
-  DataObject* root = 0 ;  
-  StatusCode sc = dpSvc()->findObject( "/Event" , root) ;
-  if( sc.isFailure() || 0 == root ) 
-    { Error("Could not locate root object '/Event' !") ; return ; }
-  ///
-  IDataDirectory* dir = root->directory(); 
-  RegistryEntry*  ent = dynamic_cast<RegistryEntry*> (dir); 
-  if( 0 == ent ) { Error("Could not cast to RegistryEnytry*! (1)") ; return ; }
-  ///
-  RegistryEntry* gtop = ent->findLeaf("/G4"); 
-  if( 0 == gtop ) 
-    {
-      DataObject* tmp = new DataObject();
-      sc = dpSvc()->registerObject( root , "/G4" , tmp ); 
-      if( sc.isFailure() ) 
-        { Error("Could not create '/Event/G4' directrory !") ; return ; }
-      gtop = dynamic_cast<RegistryEntry*> ( tmp->directory() ) ;
-    } 
-  if( 0 == gtop ) { Error("Could not cast to RegistryEnytry*! (2)") ; return ; }
-  ///
-  for( Leaves::iterator it = m_leaves.begin() ; m_leaves.end() != it ; ++it ) 
-    {
-      std::string name( it->path() );
-      name.replace( name.find("/Event/G4/"),9,"");
-      IOpaqueAddress* Address = 0 ;      
-      sc = createAddress( repSvcType() , 
-                          it->clid  () , 
-                          it->addr1 () , 
-                          it->addr2 () , 
-                          -1 , Address );   
-      if( sc.isFailure() || 0 == Address ) 
-        { Error("Could not create IOpaqueAddress for " + 
-                it->path()+" name="+name ); return ; }
-      GenericAddress* GA = dynamic_cast<GenericAddress*> ( Address );
-      GA->setObjectName( name );      
-      const  long st = gtop->add( name , Address );
-      if( st != StatusCode::SUCCESS ) 
-        { Error("Could not add IOpaqueAddress for " + 
-                it->path()+" name="+name );  /* return ; */ }
-      RegistryEntry* dd = gtop->findLeaf( name ) ; 
-      if( 0 == dd ) 
-        { Error("Could not extarct RegistryEntry by name="+name ); return ; }
-    }
-  ///  
-};
+{};
 
 // ============================================================================
 /** print error message and return status code
@@ -386,8 +347,9 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Error( const std::string& Message , 
-                                  const StatusCode & Status )
+StatusCode GiGaCnvSvcBase::Error
+( const std::string& Message , 
+  const StatusCode & Status  ) const 
 {  
   Stat stat( chronoSvc() ,  name() + ":Error" );
   return  Print( Message , MSG::ERROR  , Status  ) ; 
@@ -400,8 +362,9 @@ StatusCode GiGaCnvSvcBase::Error( const std::string& Message ,
  *  @return statsu code 
    */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Warning( const std::string& Message , 
-                                    const StatusCode & Status )
+StatusCode GiGaCnvSvcBase::Warning
+( const std::string& Message , 
+  const StatusCode & Status  ) const 
 {
   Stat stat( chronoSvc() ,  name() + ":Warning" );
   return  Print( Message , MSG::WARNING , Status ) ; 
@@ -415,11 +378,15 @@ StatusCode GiGaCnvSvcBase::Warning( const std::string& Message ,
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Print( const std::string& Message , 
-                                  const MSG::Level & level   , 
-                                  const StatusCode & Status )
-{ MsgStream log( msgSvc() , name() ); 
- log << level << Message << endreq ; return  Status; };
+StatusCode GiGaCnvSvcBase::Print
+( const std::string& Message , 
+  const MSG::Level & level   , 
+  const StatusCode & Status  ) const 
+{ 
+  MsgStream log( msgSvc() , name() ); 
+  log << level << Message << endreq   ; 
+  return  Status; 
+};
 
 
 // ============================================================================
@@ -430,10 +397,11 @@ StatusCode GiGaCnvSvcBase::Print( const std::string& Message ,
  *  @param sc   status code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-                                      const GaudiException & Excp    ,
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
+StatusCode GiGaCnvSvcBase::Exception
+( const std::string    & Message , 
+  const GaudiException & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , Excp.tag() );
   MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
@@ -449,10 +417,11 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
  *  @param sc   status code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-                                      const std::exception & Excp    ,
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
+StatusCode GiGaCnvSvcBase::Exception
+( const std::string    & Message , 
+  const std::exception & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , "std::exception" );
   MsgStream log( msgSvc() , name() ); 
@@ -468,17 +437,106 @@ StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message ,
  *  @param sc   status code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::Exception( const std::string    & Message , 
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
+StatusCode GiGaCnvSvcBase::Exception
+( const std::string    & Message , 
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , "*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() ); 
-  log << level << "Exception:" 
+  log << level   << "Exception:" 
       << Message << ": UNKNOWN exception"  << endreq ; 
   return  Status;
 };
 
+// ============================================================================
+/** register all declared leaves 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
+{
+  ///
+  SmartIF<IDataManagerSvc> dataMgr( dataProvider() );
+  if( !dataMgr )
+    { return Error("Could not obtain IDataManagerSvc interface!");}
+  ///
+  StatusCode sc = StatusCode::SUCCESS ;
+  for( Leaves::const_iterator leaf = m_leaves.begin() ;
+       m_leaves.end() != leaf ; ++leaf )
+    { 
+      /// (1) create IOpaqueAddress 
+      IOpaqueAddress* Address = 0 ;
+      sc = createAddress( repSvcType () , 
+                          leaf->clid () , 
+                          leaf->par  () , 
+                          leaf->ipar () , 
+                          Address       );
+      if( 0 == Address || sc.isFailure() )
+        { return Error( "Could not create the address for the leaf '" 
+                        + leaf->path() + "'"); }
+      /// (2) register the created address 
+      sc = dataMgr->registerAddress ( leaf->path() , Address );
+      if( sc.isFailure() ) 
+        { return Error( "Could not register the address for the leaf '" 
+                        + leaf->path() + "'"); }
+    };
+  ///
+  return StatusCode::SUCCESS;
+};
+
+// ============================================================================
+/** Create a Generic address using explicit arguments to 
+ *                              identify a single object.
+ *  @param      svc_type    Technology identifier encapsulated 
+ *                          in this address.
+ *  @param      clid        Class identifier of the DataObject 
+ *                          represented by the opaque address
+ *  @param      par         Array of strings needed to 
+ *                          construct the opaque address.
+ *  @param      ipar        Array of integers needed to 
+ *                          construct the opaque address.
+ *  @param      address     Reference to pointer to the address 
+ *                          where the created Address should be stored.
+ *  @return     Status code indicating success or failure.
+ */
+// ============================================================================
+StatusCode GiGaCnvSvcBase::createAddress
+( unsigned char         svc_type ,
+  const CLID&           clid     ,
+  const std::string*    par      , 
+  const unsigned long*  ipar     ,
+  IOpaqueAddress*&      address  )    
+{
+  ///
+  if      ( 0 != par && 0 != ipar ) 
+    { address = new GenericAddress( svc_type , 
+                                    clid     , 
+                                    par[0]   , 
+                                    par[1]   , 
+                                    ipar[0]  , 
+                                    ipar[1]  ); }
+  else if ( 0 !=  par             )
+    { address = new GenericAddress( svc_type , 
+                                    clid     , 
+                                    par[0]   , 
+                                    par[1]   ) ; }
+  else if ( 0 != ipar             )
+    { address = new GenericAddress( svc_type , 
+                                    clid     , 
+                                    ""       , 
+                                    ""       ,
+                                    ipar[0]  , 
+                                    ipar[1]  ) ; }
+  else
+    { address = new GenericAddress( svc_type , 
+                                    clid     ); }
+  ///                            
+  return StatusCode::SUCCESS;
+}
+
+// ============================================================================
+// End 
 // ============================================================================
 
 

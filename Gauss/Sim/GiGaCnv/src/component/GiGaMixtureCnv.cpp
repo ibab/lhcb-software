@@ -1,8 +1,14 @@
+// $Id: GiGaMixtureCnv.cpp,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/07/15 20:45:12  ibelyaev
-/// the package restructurisation
-///
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/12 17:24:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.3  2001/07/15 20:45:12  ibelyaev
+// the package restructurisation
+//
 // ============================================================================
 #define GIGACNV_GIGAMIXTURECNV_CPP 1 
 // ============================================================================
@@ -16,6 +22,8 @@
 /// GiGa 
 #include "GiGa/GiGaException.h" 
 #include "GiGa/IGiGaSetUpSvc.h" 
+// GiGacnv 
+#include "GiGaCnv/GiGaCnvUtils.h"
 /// Geant4 
 #include "G4Element.hh"
 #include "G4Material.hh"
@@ -25,13 +33,16 @@
 
 static const  CnvFactory<GiGaMixtureCnv> s_GiGaMixtureCnvFactory ;
 const ICnvFactory& GiGaMixtureCnvFactory = s_GiGaMixtureCnvFactory ;
+
 /// constructor 
 GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
+  , m_leaf ( "" , classID() )
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaMixtureCnv" );
-}; 
+};
+
 /// destructor 
 GiGaMixtureCnv::~GiGaMixtureCnv(){}; 
 /// Class ID
@@ -40,60 +51,54 @@ const CLID&  GiGaMixtureCnv::classID            ()
 /// StorageType 
 const unsigned char GiGaMixtureCnv::storageType () 
 { return GiGaGeom_StorageType; } 
+
 /// Create representation 
-StatusCode GiGaMixtureCnv::createRep( DataObject*     Object  , 
-                                      IOpaqueAddress*& Address ) 
+StatusCode GiGaMixtureCnv::createRep
+( DataObject*      object  , 
+  IOpaqueAddress*& address ) 
 {
   ///
-  Address = 0 ; 
+  address = 0 ; 
   ///
-  if( 0 == Object        ) 
-    { return Error("CreateRep::DataObject* points to NULL"); } 
-  Mixture* mixture = 0 ; 
-  try        { mixture = dynamic_cast<Mixture*>( Object ) ; } 
-  catch(...) { mixture =                                0 ; } 
-  if( 0 == mixture       ) 
-    { return Error("CreateRep::Bad cast to Mixture*"); }
-  if( 0 == cnvSvc()      ) 
-    { return Error("CreateRep::Conversion Service is unavailable"); }
+  if( 0 == object   ) { return Error("createRep::DataObject* points to NULL");} 
+  Mixture* mixture = dynamic_cast<Mixture*>( object ) ;  
+  if( 0 == mixture  ) { return Error("createRep::Bad cast to Mixture*"      );}
+  if( 0 == cnvSvc() ) { return Error("CreateRep::CnvSvc is NULL!"           );}
   /// create IOpaqueAddress
-  IAddressCreator* addrCreator = 0 ; 
-  try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
-  catch(...) { addrCreator =                                           0 ; } 
+  IAddressCreator* addrCreator = addressCreator() ;
   if( 0 == addrCreator   ) 
     { return Error("CreateRep::AddressCreator is unavailable"); }
   StatusCode status = 
-    addrCreator->createAddress( repSvcType() , 
-                                classID   () , 
-                                "GiGaGeom"   , 
-                                "GiGaIsotopeObject" , -1 , Address );   
+    addrCreator->createAddress( repSvcType  () , 
+                                classID     () , 
+                                m_leaf.par  () , 
+                                m_leaf.ipar () , address );   
   if( status.isFailure() )
     { return Error("CreateRep::Error in Addres creation"); }
-  if( 0 == Address       )
+  if( 0 == address       )
     { return Error("CreateRep::Created Address is invalid"); }
   ///
-  return updateRep( Object , Address ) ; 
+  return updateRep( object , address ) ; 
   /// 
 }; 
 
-StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  , 
-                                      IOpaqueAddress*  /* Address */ ) 
+StatusCode GiGaMixtureCnv::updateRep
+( DataObject*         object  , 
+  IOpaqueAddress*  /* Address */ ) 
 {
   ///
   { MsgStream log( msgSvc() , name() ); 
   log << MSG::VERBOSE << "UpdateRep::start" << endreq; } 
   ///
-  if( 0 == Object        ) 
-    { return Error("UpdateRep::DataObject* points to NULL"); } 
-  Mixture* mixture = 0 ; 
-  try        { mixture = dynamic_cast<Mixture*>( Object ) ; } 
-  catch(...) { mixture =                                0 ; } 
-  if( 0 == mixture       ) 
-    { return Error("UpdateRep::Ban cast to Mixture*"); }
-  if( 0 == cnvSvc()      ) 
-    { return Error("UpdateRep::Conversion Service is unavailable"); }
+  if( 0 == object   ) { return Error("UpdateRep::DataObject* points to NULL");}
+  Mixture* mixture =  dynamic_cast<Mixture*>( object ) ;  
+  if( 0 == mixture  ) { return Error("UpdateRep::Bad cast to Mixture*"); }
+  if( 0 == cnvSvc() ) { return Error("UpdateRep::Conversion Service is NULL!");}
+  const IRegistry* registry = object->registry();
+  if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
   /// check if the mixture is already converted
-  if( 0 !=  G4Material::GetMaterial( mixture->fullpath()  ) )
+  const std::string& mixtureName = registry->identifier() ;
+  if( 0 !=  G4Material::GetMaterial( mixtureName ) ) 
     { return StatusCode::SUCCESS; } 
   /// convert all items:
   {
@@ -104,19 +109,19 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  ,
         Element* element = mixture->element( index ); 
         if( 0 == element ) 
           { return Error("UpdateRep::Element* point to NULL for Mixture=" + 
-                         mixture->fullpath()); } 
+                         mixtureName ); } 
         dataSelector.push_back( element ); 
       } 
-    StatusCode status = cnvSvc()->createReps( &dataSelector );  
+    StatusCode status = GiGaCnvUtils::createReps ( cnvSvc() , &dataSelector );
     if( status.isFailure() )
       { return Error("UpdateRep::could not convert elements for " + 
-                     mixture->fullpath(),status); }
+                     mixtureName , status); }
   }      
   /// create new material
   G4Material* NewMaterial = 0 ; 
   if( 0 == mixture->nOfItems() )
     {
-      NewMaterial = new G4Material( mixture->fullpath        () , 
+      NewMaterial = new G4Material( mixtureName                 , 
                                     mixture->Z               () , 
                                     mixture->A               () , 
                                     mixture->density         () , 
@@ -127,7 +132,7 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  ,
   else
     {
       /// 
-      NewMaterial = new G4Material( mixture->fullpath        () , 
+      NewMaterial = new G4Material( mixtureName                 , 
                                     mixture->density         () , 
                                     mixture->nOfItems        () ,
                                     (G4State) mixture->state () ,  
@@ -138,12 +143,18 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  ,
            index < (unsigned int) mixture->nOfItems() ; ++index ) 
         {
           G4Material* mat = 
-            G4Material::GetMaterial( mixture->element( index )->fullpath() ); 
+            G4Material::GetMaterial( mixture          ->
+                                     element( index ) ->
+                                     registry      () ->
+                                     identifier    () ); 
           if( 0 == mat ) 
             { return Error("UpdateRep::could not extract material=" + 
-                           mixture->element( index )->fullpath() ); }
-          NewMaterial->AddMaterial( mat ,
-                                    mixture->elementFraction( index ) ); // 
+                           mixture          -> 
+                           element( index ) ->
+                           registry      () ->
+                           identifier    () ); }
+          NewMaterial->
+            AddMaterial( mat , mixture->elementFraction( index ) ); // 
         }
     }
   /// add tabulated properties
@@ -156,12 +167,12 @@ StatusCode GiGaMixtureCnv::updateRep( DataObject*     Object  ,
         AddTabulatedProperties ( mixture->tabulatedProperties() ,
                                  NewMaterial->GetMaterialPropertiesTable() ) ;
       if( sc.isFailure() )
-        { return Error("UpdateRep::could not add TabulatedProperties for " + 
-                       mixture->fullpath() , sc  ); } 
+        { return Error("UpdateRep::could not add TabulatedProperties for " 
+                       + mixtureName , sc  ); } 
     }
   /// 
   { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "UpdateRep::end for"+Object->fullpath() << endreq; } 
+  log << MSG::VERBOSE << "UpdateRep::end for"+mixtureName << endreq; } 
   ///
   return StatusCode::SUCCESS; 
   /// 

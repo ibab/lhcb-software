@@ -1,8 +1,11 @@
-// $Id: GiGaCnv_entries.cpp,v 1.4 2001-11-19 18:27:00 ibelyaev Exp $ 
+// $Id: GiGaCnv_entries.cpp,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/19 18:27:00  ibelyaev
+//  bux fix and the new converter for catalogs
+//
 // Revision 1.3  2001/08/12 17:24:51  ibelyaev
 // improvements with Doxygen comments
 //
@@ -35,6 +38,7 @@ DECLARE_FACTORY_ENTRIES( GiGaCnv )
   DECLARE_SERVICE    (  GiGaHitsCnvSvc         ) ;
   /// Algorithms 
   DECLARE_ALGORITHM  (  GiGaMiscGetEventAlg    ) ;
+  DECLARE_ALGORITHM  (  GiGaDataStoreAlgorithm ) ;
 };
 
 // ============================================================================

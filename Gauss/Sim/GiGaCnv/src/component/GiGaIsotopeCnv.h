@@ -1,8 +1,14 @@
+// $Id: GiGaIsotopeCnv.h,v 1.4 2002-01-22 18:24:43 ibelyaev Exp $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/15 20:45:10  ibelyaev
-/// the package restructurisation
-/// 
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2001/08/12 17:24:53  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.2  2001/07/15 20:45:10  ibelyaev
+// the package restructurisation
+// 
 // ============================================================================
 #ifndef      GIGACNV_GIGAIsotopeCnv_H
 #define      GIGACNV_GIGAIsotopeCnv_H  1 
@@ -11,6 +17,7 @@
 #include <set>
 /// base class from GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h" 
+#include "GiGaCnv/GiGaLeaf.h" 
 ///
 template <class TYPE> 
 class CnvFactory;
@@ -57,10 +64,17 @@ private:
   GiGaIsotopeCnv( const GiGaIsotopeCnv& ); /// no copy
   GiGaIsotopeCnv& operator=( const GiGaIsotopeCnv& ); /// no assignment 
   ///
+private:
+  
+  GiGaLeaf m_leaf;
+  
 };
 
-
+// ============================================================================
+// End 
+// ============================================================================
 #endif   //     __GIGA_GEOMCONVERSION_GIGAIsotopeCnv_H__
+// ============================================================================
 
 
 

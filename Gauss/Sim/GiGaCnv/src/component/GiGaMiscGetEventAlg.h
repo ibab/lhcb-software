@@ -1,49 +1,91 @@
+// $Id: GiGaMiscGetEventAlg.h,v 1.4 2002-01-22 18:24:44 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log:
 // ============================================================================
 #ifndef    GIGA_GIGAMISCGETEVENTALG_H 
 #define    GIGA_GIGAMISCGETEVENTALG_H 1 
 // ============================================================================
-
-
 // Include files
 #include "GaudiKernel/Algorithm.h"
-
-class IGiGaSvc;
+// forward declaration 
+template <class ALGORITHM>
+class AlgFactory            ; ///< GaudiKernel 
 
 /** @class GiGaMiscGetEventAlg GiGaMiscGetEventAlg.h 
-
-    Almost empty algorithm to trigger GiGa 
-
-    @author  Vanya Belyaev
-    @date    21/02/2001
-*/
-
-///
-class GiGaMiscGetEventAlg : public Algorithm 
+ *
+ *  Almost empty/primitive algorithm to trigger GiGa 
+ *
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    21/02/2001
+ */
+class GiGaMiscGetEventAlg : 
+  public Algorithm 
 {
+  /// friend factory for instantiation
+  friend class AlgFactory<GiGaMiscGetEventAlg>;
+  
+public:
+
+  /** the standard Algorithm initialization method 
+   *  @see Algorithm
+   *  @return status code
+   */
+  virtual StatusCode initialize ();
+
+  /** the standard Algorithm execution method 
+   *  @see Algorithm
+   *  @return status code
+   */
+  virtual StatusCode execute    ();
+
+  /** the standard Algorithm finalization method 
+   *  @see Algorithm
+   *  @return status code
+   */
+  virtual StatusCode finalize   ();
+  
+protected:
+  
+  /** standard constructor
+   *  @param name name of teh algorithm 
+   *  @param SvcLoc pointer to service locator 
+   */
+  GiGaMiscGetEventAlg( const std::string& name   , 
+                       ISvcLocator*       SvcLoc ); 
+
+  /** destructor 
+   */
+  virtual ~GiGaMiscGetEventAlg();
+  
+private:
+  
+  /** default constructor is private! 
+   */
+  GiGaMiscGetEventAlg();
+
+  /** copy  constructor is private! 
+   *  @param copy object to be copied  
+   */
+  GiGaMiscGetEventAlg 
+  ( const GiGaMiscGetEventAlg& copy );
+
+  /** assignement operator is private! 
+   *  @param copy object to be copied  
+   */
+  GiGaMiscGetEventAlg& operator= 
+  ( const GiGaMiscGetEventAlg& copy );
+  
+private:
   ///
- public:
-  /// Constructor of this form must be provided
-  GiGaMiscGetEventAlg(const std::string& name, ISvcLocator* pSvcLocator); 
-  ///
-  virtual ~GiGaMiscGetEventAlg(){};
-  ///  
-  /// Three mandatory member functions of any algorithm
-  StatusCode initialize ();
-  StatusCode execute    ();
-  StatusCode finalize   ();
-  ///
- protected:
-  ///
-  inline IGiGaSvc* gigaSvc() const { return m_gigaSvc; } 
-  ///
- private:
-  ///
-  std::string    m_GiGaSvcName; 
-  IGiGaSvc*      m_gigaSvc; 
+  std::string    m_particles   ;
+  std::string    m_vertices    ;
   ///
 };
-///
 
+// ============================================================================
+// The End 
+// ============================================================================
 #endif  // GIGA_GIGAMISCGETEVENTALG_H 
+// ============================================================================

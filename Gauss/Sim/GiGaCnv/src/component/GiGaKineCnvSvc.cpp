@@ -1,17 +1,20 @@
+// $Id: GiGaKineCnvSvc.cpp,v 1.6 2002-01-22 18:24:43 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:32  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 17:24:53  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/25 17:19:32  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.3  2001/07/24 11:13:55  ibelyaev
+// package restructurization(III) and update for newer GiGa
+// 
 // ============================================================================
 
 /// from Gaudi 
-#include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -20,11 +23,6 @@
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
 // local
 #include "GiGaKineCnvSvc.h" 
-
-// ============================================================================
-/// Address factory 
-// ============================================================================
-extern const IAddrFactory& GiGaKineAddressFactory ;
 
 // ============================================================================
 /// service factory 
@@ -48,7 +46,6 @@ GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          ,
   ///
   , m_table     (   )
 {
-  setAddressFactory(&GiGaKineAddressFactory);
   setNameOfDataProviderSvc("EventDataSvc");
   ///
   declareProperty("ParticlePropertyService" , m_ppSvcName );
@@ -75,14 +72,12 @@ StatusCode GiGaKineCnvSvc::initialize()
   if( sc.isFailure() ) 
     { return Error("Could not initialize base class!", sc ); }
   ///
-  sc = svcLoc()->service( m_ppSvcName , m_ppSvc );
+  sc = svcLoc()->service( m_ppSvcName , m_ppSvc , true );
   if( sc.isFailure() ) 
     { return Error("Could not locate ParticlePropertyService!", sc);}
   if( 0 == ppSvc  ()  )
     { return Error("IParticlePropertySvc* points to NULL!");}
   ///
-  Print("My name is '"+name()+"'");
-  /// 
   return StatusCode::SUCCESS;
 };  
 
@@ -96,8 +91,7 @@ StatusCode GiGaKineCnvSvc::finalize()
   /// clear the reference table 
   m_table.clear();
   /// release particle property service
-  if( 0 != ppSvc() ) 
-    { ppSvc()->release() ; m_ppSvc = 0 ; }
+  if( 0 != ppSvc() ) { ppSvc()->release() ; m_ppSvc = 0 ; }
   ///
   return GiGaCnvSvcBase::finalize(); 
 };  

@@ -1,8 +1,14 @@
+// $Id: GiGaIsotopeCnv.cpp,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/07/15 20:45:10  ibelyaev
-/// the package restructurisation
-/// 
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/12 17:24:52  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.3  2001/07/15 20:45:10  ibelyaev
+// the package restructurisation
+// 
 // ============================================================================
 #define GIGACNV_GIGAISOTOPECNV_CPP
 // ============================================================================
@@ -30,6 +36,7 @@ const ICnvFactory& GiGaIsotopeCnvFactory = s_GiGaIsotopeCnvFactory ;
 /// constructor
 GiGaIsotopeCnv::GiGaIsotopeCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator )
+  , m_leaf     ( "" , classID() )
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" );
   setConverterName              ( "GiGaIsotopeCnv" );
@@ -65,11 +72,11 @@ StatusCode GiGaIsotopeCnv::createRep( DataObject*     Object  ,
   if( 0 == addrCreator ) 
     { return Error("CreateRep::Address Creator is unavailable"); }
   StatusCode st = 
-    addrCreator->createAddress( repSvcType() , 
-                                classID   () , 
-                                "GiGaGeom"   , 
-                                "GiGaIsotopeObject" , 
-                                -1 , Address );
+    addrCreator->createAddress( repSvcType  () , 
+                                classID     () , 
+                                m_leaf.par  () , 
+                                m_leaf.ipar () ,
+                                Address        );
   if( st.isFailure()   ) 
     { return Error("CreateRep::Error in Address Creation", st); }
   if( 0 == Address     ) 
@@ -79,8 +86,9 @@ StatusCode GiGaIsotopeCnv::createRep( DataObject*     Object  ,
   ///
 };
 ///
-StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  , 
-                                      IOpaqueAddress* /* Address */ )
+StatusCode GiGaIsotopeCnv::updateRep
+( DataObject*         Object    , 
+  IOpaqueAddress* /* Address */ )
 {
   ///
   { MsgStream log( msgSvc() , name() ); 
@@ -96,26 +104,26 @@ StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  ,
   if( 0 == cnvSvc()               ) 
     { return Error("UpdateRep::Conversion Service is unavailable"); }
   /// if isotop is already converted?
-  if( 0 != G4Isotope::GetIsotope( isotope->fullpath() ) ) 
+  if( 0 != G4Isotope::GetIsotope( isotope->registry()->identifier() ) ) 
     { return StatusCode::SUCCESS; }
   /// Here we should create the Isotop
   G4Isotope* NewIsotope = 0 ;
-  NewIsotope = new G4Isotope( isotope->fullpath () ,
-                              (int) isotope->Z  () ,
-                              (int) isotope->N  () ,
-                              isotope->A        () *g/mole);
+  NewIsotope = new G4Isotope( isotope->registry()->identifier ()          ,
+                              (int) isotope->Z                ()          ,
+                              (int) isotope->N                ()          ,
+                              isotope->A                      () * g/mole );
   ///
-  if( 0 != G4Material::GetMaterial( isotope->fullpath() ) ) 
+  if( 0 != G4Material::GetMaterial( isotope->registry()->identifier() ) ) 
     { return StatusCode::SUCCESS; }
   /// per each Isotope we could create the "simple material" with the same name
   G4Material* NewMaterial = 0 ;
-  NewMaterial = new G4Material( isotope->fullpath        () ,
-                                isotope->Z               () ,
-                                isotope->A               () * g/mole ,
-                                isotope->density         () ,
-                                (G4State) isotope->state () ,
-                                isotope->temperature     () ,
-                                isotope->pressure        () );
+  NewMaterial = new G4Material( isotope->registry()->identifier()          ,
+                                isotope->Z                     ()          ,
+                                isotope->A                     () * g/mole ,
+                                isotope->density               ()          ,
+                                (G4State) isotope->state       ()          ,
+                                isotope->temperature           ()          ,
+                                isotope->pressure              ()          );
   ///
   /// add tabulated properties
   if( !isotope->tabulatedProperties().empty() )
@@ -128,7 +136,7 @@ StatusCode GiGaIsotopeCnv::updateRep( DataObject*     Object  ,
                                  NewMaterial->GetMaterialPropertiesTable() ) ;
       if( sc.isFailure() )
         { return Error("UpdateRep::could not add TabulatedProperties for " + 
-                       isotope->fullpath() , sc  ); }
+                       isotope->registry()->identifier() , sc  ); }
     }
   ///
   { MsgStream log( msgSvc() , name() ); 

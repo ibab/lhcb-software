@@ -1,16 +1,20 @@
+// $Id: GiGaCnvBase.cpp,v 1.6 2002-01-22 18:24:42 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/24 11:13:54  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.2  2001/07/15 20:45:08  ibelyaev
-/// the package restructurisation
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 17:24:50  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/25 17:19:31  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.3  2001/07/24 11:13:54  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.2  2001/07/15 20:45:08  ibelyaev
+// the package restructurisation
+//
 //=============================================================================
 #define GIGACNV_GIGACNVBASE_CPP 1 
 ///============================================================================
@@ -74,10 +78,11 @@ GiGaCnvBase::~GiGaCnvBase(){};
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-                                   const GaudiException & Excp    ,
-                                   const MSG::Level     & level   , 
-                                   const StatusCode     & Status )
+StatusCode GiGaCnvBase::Exception
+( const std::string    & Message , 
+  const GaudiException & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , Excp.tag() );
   MsgStream log( msgSvc() , name() ); 
@@ -95,10 +100,11 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-                                   const std::exception & Excp    ,
-                                   const MSG::Level     & level   , 
-                                   const StatusCode     & Status )
+StatusCode GiGaCnvBase::Exception
+( const std::string    & Message , 
+  const std::exception & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "std::exception" );
   MsgStream log( msgSvc() , name() ); 
@@ -115,9 +121,10 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvBase::Exception( const std::string    & Message , 
-                                   const MSG::Level     & level   , 
-                                   const StatusCode     & Status )
+StatusCode GiGaCnvBase::Exception
+( const std::string    & Message , 
+  const MSG::Level     & level   , 
+  const StatusCode     & Status )
 {
   Stat stat( chronoSvc() , "*UNKNOWN* exception" );
   MsgStream log( msgSvc() , name() ); 
@@ -132,8 +139,9 @@ StatusCode GiGaCnvBase::Exception( const std::string    & Message ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaCnvBase::Error( const std::string& Message , 
-                               const StatusCode& status )
+StatusCode GiGaCnvBase::Error
+( const std::string& Message , 
+  const StatusCode& status )
 {
   Stat stat( chronoSvc() , name() + ":Error" );
   MsgStream log( msgSvc() , name() ); 
@@ -155,7 +163,7 @@ StatusCode GiGaCnvBase::initialize ()
   {
     StatusCode sc = 
       serviceLocator()->
-      service( m_NameOfGiGaConversionService , m_GiGaCnvSvc ) ;
+      service( m_NameOfGiGaConversionService , m_GiGaCnvSvc , true ) ;
     if ( st.isFailure() ) 
       { return Error("Initialize::unable to locate IGiGaCnvSvs=" + 
                      m_NameOfGiGaConversionService, sc );} 
@@ -171,13 +179,15 @@ StatusCode GiGaCnvBase::initialize ()
   ///
   if( 0 != geoSvc  () ) { geoSvc  ()->addRef() ; } 
   if( 0 != kineSvc () ) { kineSvc ()->addRef() ; } 
-  if( 0 != hitsSvc () ) { hitsSvc ()->addRef() ; } 
+  if( 0 != hitsSvc () ) { hitsSvc ()->addRef() ; }
+ 
   if( 0 == geoSvc() && 0 == kineSvc() && 0 == hitsSvc() )
     { return Error("Initialize::neither Geom,Hits or Kine CnvSvc located!");} 
   ///
   {
     const std::string evtName("EventDataSvc");
-    StatusCode sc = serviceLocator()->service( evtName , m_evtSvc) ;
+    StatusCode sc = 
+      serviceLocator()->service( evtName , m_evtSvc , true ) ;
     if ( st.isFailure() ) 
       { return Error("Initialize::unable to locate IDataProviderSvs=" + 
                      evtName, sc );} 
@@ -189,7 +199,8 @@ StatusCode GiGaCnvBase::initialize ()
   ///
   {
     const std::string detName("DetectorDataSvc");
-    StatusCode sc = serviceLocator()->service( detName , m_detSvc ) ;
+    StatusCode sc = 
+      serviceLocator()->service( detName , m_detSvc , true ) ;
     if ( st.isFailure() )
       { return Error("Initialize::unable to locate IDataProviderSvs=" + 
                      detName, sc );} 
@@ -201,7 +212,8 @@ StatusCode GiGaCnvBase::initialize ()
   ///
   {
     const std::string chronoName("ChronoStatSvc");
-    StatusCode sc = serviceLocator()->service( chronoName , m_chronoSvc ) ;
+    StatusCode sc = 
+      serviceLocator()->service( chronoName , m_chronoSvc , true ) ;
     if ( st.isFailure()    ) 
       { return Error("Initialize::unable to locate IChronoStatSvs=" + 
                      chronoName, sc );} 
@@ -212,7 +224,7 @@ StatusCode GiGaCnvBase::initialize ()
   }
   ///
   {
-    for( IGiGaCnvSvc::Leaves::const_iterator it = m_leaves.begin() ; 
+    for( Leaves::const_iterator it = m_leaves.begin() ; 
          m_leaves.end() != it ; ++it )
       { cnvSvc()->declareObject( *it ); }
   }
@@ -250,12 +262,9 @@ StatusCode GiGaCnvBase::finalize ()
  *  @return statsu code 
  */
 // ============================================================================
-StatusCode GiGaCnvBase::declareObject( const std::string & Path  ,
-                                       const CLID        & Clid  ,
-                                       const std::string & Addr1 ,
-                                       const std::string & Addr2 )
+StatusCode GiGaCnvBase::declareObject( const GiGaLeaf& leaf )
 { 
-  m_leaves.push_back( IGiGaCnvSvc::Leaf( Path ,  Clid , Addr1 , Addr2 ) );
+  m_leaves.push_back( leaf );
   return StatusCode::SUCCESS; 
 };
 

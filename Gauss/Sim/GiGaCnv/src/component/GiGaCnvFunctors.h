@@ -1,36 +1,46 @@
+// $Id: GiGaCnvFunctors.h,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.3  2001/07/30 14:13:35  ibelyaev
-/// update in GiGaCnvFunctors
-///
-/// Revision 1.2  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/08/12 17:24:51  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.3  2001/07/30 14:13:35  ibelyaev
+// update in GiGaCnvFunctors
+//
+// Revision 1.2  2001/07/24 11:13:55  ibelyaev
+// package restructurization(III) and update for newer GiGa
+// 
 // ============================================================================
 #ifndef      GIGACNV_GIGACNVFUNCTORS_H
 #define      GIGACNV_GIGACNVFUNCTORS_H 1 
 // ============================================================================
 /// STD & STL 
-#include <functional> 
+#include <functional>
+// GaudiKernel
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/SmartIF.h"
+// LHCbEvent 
+#include "LHCbEvent/MCVertex.h"
+#include "LHCbEvent/MCParticle.h"
+
+// GiGa 
+#include "GiGa/GiGaTrajectoryPoint.h"
 
 /// forward declarations 
-class IParticlePropertySvc;
-class MCVertex;
-class MCParticle;
 class GiGaKineRefTable;
 class G4VTrajectory;
-
-#include "LHCbEvent/MCVertex.h"
-#include "GiGa/GiGaTrajectoryPoint.h"
 
 /** @namespace GiGaCnvFunctors GiGaCnvFunctors.h
  *
  *  Collection of auxillary functors/methods to simplify 
  *  conversion procedures.
  *  
- *  @author Vanya Belyaev 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date  xx/xx/xxxx
  */
 
@@ -39,7 +49,7 @@ namespace GiGaCnvFunctors
   
   /** comparison oprator for 3D-Vector objects
    *
-   *  @author Vanya Belyaev 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   30/07/2001
    *
    *  @param vec1 const reference to the first vector
@@ -66,7 +76,7 @@ namespace GiGaCnvFunctors
    *  Time-of-Flight and the vertex position as 
    *  ordering criteria.  
    *
-   *  @author Vanya Belyaev 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   xx/xx/xxxx
    */
   class MCVerticesLess:  
@@ -98,7 +108,7 @@ namespace GiGaCnvFunctors
    *  Vertices are "equal" if their time-of-Flight 
    *  the vertex position data are equal
    *
-   *  @author Vanya Belyaev 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   xx/xx/xxxx
    */
   class MCVerticesEqual  : 
@@ -126,7 +136,7 @@ namespace GiGaCnvFunctors
    * 
    *  Reset the references  for given MCVertex object  
    *
-   *  @author Vanya Belyaev 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   22/07/2001
    */
   class MCVertexResetRefs:
@@ -141,7 +151,7 @@ namespace GiGaCnvFunctors
     inline MCVertex* operator() ( MCVertex* vertex ) const 
     {
       if( 0 == vertex ) { return 0 ; }      ///< skip NULLs
-      vertex->removeDaughterMCParticles();  ///< remove all daughter particles 
+      vertex->clearDaughterMCParticles();  ///< remove all daughter particles 
       vertex->setMotherMCParticle( 0 );     ///< unset the mother particle 
       ///
       return vertex ;
@@ -152,7 +162,7 @@ namespace GiGaCnvFunctors
    * 
    *  Reset the references  for given MCParticle object  
    *
-   *  @author Vanya Belyaev 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   22/07/2001
    */
   class MCParticleResetRefs:
@@ -167,16 +177,18 @@ namespace GiGaCnvFunctors
     inline MCParticle* operator() ( MCParticle* particle ) const 
     {
       if( 0 == particle ) { return 0 ; }  ///< skip NULLs
-      particle->removeDecayMCVertices();  ///< remove all decay vertices  
+      particle->clearDecayMCVertices();   ///< remove all decay vertices  
       particle->setOriginMCVertex( 0 );   ///< remove origin vertex 
       ///
       return particle;
     };
   };
 
-};
+}; ///< end of namespace 
 
 
+// ============================================================================
+  // End 
 // ============================================================================
 #endif  ///<   GIGACNV_GIGACNVFUNCTORS_H
 // ============================================================================

@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.h,v 1.4 2001-11-19 18:27:01 ibelyaev Exp $ 
+// $Id: GiGaSurfaceCnv.h,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/19 18:27:01  ibelyaev
+//  bux fix and the new converter for catalogs
+//
 // Revision 1.3  2001/08/12 17:24:54  ibelyaev
 // improvements with Doxygen comments
 //
@@ -16,6 +19,7 @@
 #include <set>
 /// base class from GiGa
 #include "GiGaCnv/GiGaCnvBase.h" 
+#include "GiGaCnv/GiGaLeaf.h" 
 ///
 template <class TYPE> 
 class CnvFactory;
@@ -77,7 +81,8 @@ private:
   ///
 private:
   ///
-  Surfaces      m_surfaces;
+  Surfaces      m_surfaces ;
+  GiGaLeaf      m_leaf     ;
   ///
 };
 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 17:24:52  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/27 18:50:35  ibelyaev
 ///  bug fix
 ///
@@ -13,7 +16,6 @@
 /// 
 // ============================================================================
 /// Gaudi 
-#include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
@@ -26,10 +28,6 @@
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 /// local
 #include "GiGaHitsCnvSvc.h" 
-
-// ============================================================================
-// ============================================================================
-extern const IAddrFactory& GiGaHitsAddressFactory ; 
 
 // ============================================================================
 // ============================================================================
@@ -53,7 +51,6 @@ GiGaHitsCnvSvc::GiGaHitsCnvSvc( const std::string&   ServiceName          ,
   ///
   declareProperty( "KineConversionService" , m_kineSvcName );
   ///
-  setAddressFactory(&GiGaHitsAddressFactory);
   setNameOfDataProviderSvc("EventDataSvc");
 }
 

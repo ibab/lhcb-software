@@ -1,5 +1,8 @@
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/08/12 17:24:52  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.2  2001/07/15 20:45:10  ibelyaev
 /// the package restructurisation
 ///
@@ -11,6 +14,7 @@
 #include <set>
 /// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h" 
+#include "GiGaCnv/GiGaLeaf.h" 
 ///
 template <class TYPE> 
 class CnvFactory;
@@ -38,18 +42,25 @@ class GiGaElementCnv: public GiGaCnvBase
   virtual ~GiGaElementCnv();
   ///
  public:
+
   /// Create representation 
-  virtual StatusCode createRep(DataObject*     Object  , 
-                               IOpaqueAddress*& Address ) ;
+  virtual StatusCode createRep
+  ( DataObject*      Object  , 
+    IOpaqueAddress*& Address ) ;
+  
   /// Update representation 
-  virtual StatusCode updateRep(DataObject*     Object  , 
-                               IOpaqueAddress*  Address ) ; 
+  virtual StatusCode updateRep
+  ( DataObject*      Object  , 
+    IOpaqueAddress*  Address ) ; 
+  
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
+  
   /// storage Type 
   static const unsigned char storageType() ; 
+  
   ///
- protected: 
+protected: 
   /// miscellaneous functions which performs the conversion itself
 private: 
   ///  
@@ -57,8 +68,14 @@ private:
   GiGaElementCnv           ( const GiGaElementCnv& ); /// no copy
   GiGaElementCnv& operator=( const GiGaElementCnv& ); /// no assignment  
  ///
+private:
+
+  GiGaLeaf m_leaf;  
+
 };
 
+// ============================================================================
+/// End 
 // ============================================================================
 #endif   ///< GIGACNV_GIGAElementCnv_H
 // ============================================================================

@@ -1,20 +1,28 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.1 2001-11-19 18:27:00 ibelyaev Exp $
+// $Id: GiGaCatalogCnv.cpp,v 1.2 2002-01-22 18:24:43 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/19 18:27:00  ibelyaev
+//  bux fix and the new converter for catalogs
+// 
 // ============================================================================
 // Include files
 // GaudiKernel
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IConversionSvc.h"
-#include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IDataSelector.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/DataObject.h"
-// local
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/SmartDataPtr.h"
+// GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h"
+#include "GiGaCnv/GiGaCnvUtils.h"
 // local
 #include "GiGaCatalogCnv.h"
 
@@ -94,16 +102,15 @@ StatusCode GiGaCatalogCnv::createRep
   Address = 0 ;
   if( 0 == Object ) { return Error("DataObject* points to NULL!"); }
   /// create IOpaqueAddress
-  IAddressCreator* addrCreator = 0 ; 
-  try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
-  catch(...) { addrCreator =                                           0 ; } 
+  IAddressCreator* addrCreator = addressCreator() ;
   if( 0 == addrCreator ) 
     { return Error("CreateRep::Address Creator is unavailable"); } 
   StatusCode st = 
-    addrCreator->createAddress( repSvcType() , 
-                                classID   () , 
-                                "GiGaGeom"   , 
-                                "CatalogObject" , -1 , Address );   
+    addrCreator->createAddress( repSvcType  () , 
+                                classID     () , 
+                                m_leaf.par  () ,
+                                m_leaf.ipar () , 
+                                Address        );   
   if( st.isFailure()   )
     { return Error("CreateRep::Error in Address Creation", st); }
   if( 0 == Address     ) 
@@ -121,30 +128,31 @@ StatusCode GiGaCatalogCnv::createRep
  */
 // ============================================================================
 StatusCode GiGaCatalogCnv::updateRep
-( DataObject*      Object  , 
-  IOpaqueAddress*  Address ) 
+( DataObject*         Object  , 
+  IOpaqueAddress*  /* Address */ ) 
 {
   ///
-  if( 0 == Object  ) { return Error("DataObject*     points to NULL!") ; }
-  if( 0 == Address ) { return Error("IOpaqueAddress* points to NULL!") ; }
+  if( 0 == Object   ) { return Error("DataObject*      points to NULL!") ; }
   ///
-  IDataDirectory* dir = Object->directory();
-  if( 0 == dir     ) { return Error("IDataDirectory* points to NULL!") ; }
-  ///
-  IDataSelector dSel;
-  for( IDataDirectory::Iterator idir = dir->begin() ;
-       dir->end() != idir ; ++idir )
-    {    
-      // skip invalids 
-      if( 0 ==*idir ) { continue ; }
-      DataObject* obj =  (*idir)->object();
-      if( 0 == obj  ) { continue ; }
-      dSel.push_back( obj ) ;
-      StatusCode sc = cnvSvc()->createReps( &dSel );
-      if( sc.isFailure() )
-        { return Error("Coudl not create the representation of the leaf!",sc);}
-      dSel.clear();
+  IRegistry* registry = Object->registry() ;
+  if( 0 == registry  ) { return Error("IRegistry*       points to NULL!") ; }
+  SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
+  if( !dataMgr       ) { return Error("IDataManagersvc* points to NULL!") ; }
+  typedef std::vector<IRegistry*> Leaves;
+  IDataSelector dataSelector;
+  Leaves leaves ;
+  StatusCode sc = dataMgr->objectLeaves( registry , leaves );
+  if( sc.isFailure() ) { return Error("Could not get leaves!" , sc      ) ; }
+  for( Leaves::iterator leaf = leaves.begin() ; leaves.end() != leaf ; ++leaf )
+    {
+      if( 0 == *leaf ) { return Error("IRegistry* for leaf is NULL!"    ) ; }
+      SmartDataPtr<DataObject> obj( registry->dataSvc() , *leaf ) ;
+      if( !obj       ) { return Error("The leaf is not accessible!"     ) ;}
+      dataSelector.push_back( obj );
     }
+  sc = GiGaCnvUtils::createReps( cnvSvc() , &dataSelector );
+  if( sc.isFailure() )
+    { return Error("Coud not create the representation of the leaves!",sc);}
   ///
   return StatusCode::SUCCESS ;
 };

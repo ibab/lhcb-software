@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.5 2001-11-19 18:27:00 ibelyaev Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.6 2002-01-22 18:24:44 ibelyaev Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/11/19 18:27:00  ibelyaev
+//  bux fix and the new converter for catalogs
+//
 // Revision 1.4  2001/08/12 17:24:54  ibelyaev
 // improvements with Doxygen comments
 //
@@ -22,15 +25,14 @@
 #include "GiGa/IGiGaSetUpSvc.h" 
 // Geant4
 #include  "G4LogicalVolume.hh"
-#include  "G4LogicalVolumeStore.hh"
 #include  "G4VPhysicalVolume.hh"
-#include  "G4PhysicalVolumeStore.hh"
 #include  "G4OpticalSurface.hh"
 #include  "G4LogicalSurface.hh"
 #include  "G4LogicalSkinSurface.hh"
 #include  "G4LogicalBorderSurface.hh"
 // local 
 #include "AddTabulatedProperties.h"
+#include "GiGaVolumeUtils.h" 
 #include "GiGaSurfaceCnv.h" 
 
 // ============================================================================
@@ -43,27 +45,49 @@
  */
 // ============================================================================
 
+// ============================================================================
+/** mandatory factory busines 
+ */
+// ============================================================================
 static const  CnvFactory<GiGaSurfaceCnv> s_GiGaSurfaceCnvFactory ;
 const ICnvFactory& GiGaSurfaceCnvFactory = s_GiGaSurfaceCnvFactory ;
-/// constructor 
+
+// ============================================================================
+/** constructor 
+ */
+// ============================================================================
 GiGaSurfaceCnv::GiGaSurfaceCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_surfaces()
+  , m_leaf ( "" , classID() ) 
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaSurfaceCnv" ); 
 }; 
+
+// ============================================================================
 /// destructor 
+// ============================================================================
 GiGaSurfaceCnv::~GiGaSurfaceCnv(){}; 
+
+// ============================================================================
 /// Class ID //
+// ============================================================================
 const CLID&  GiGaSurfaceCnv::classID            () 
 { return Surface::classID() ; }
+
+// ============================================================================
 /// StorageType
+// ============================================================================
 const unsigned char GiGaSurfaceCnv::storageType () 
 { return GiGaGeom_StorageType; } 
+
+// ============================================================================
 /// Create representation 
-StatusCode GiGaSurfaceCnv::createRep( DataObject*     Object  , 
-                                      IOpaqueAddress*& Address ) 
+// ============================================================================
+StatusCode GiGaSurfaceCnv::createRep
+( DataObject*      Object  , 
+  IOpaqueAddress*& Address ) 
 {
   ///
   Address = 0 ; 
@@ -78,16 +102,14 @@ StatusCode GiGaSurfaceCnv::createRep( DataObject*     Object  ,
   if( 0 == cnvSvc()    ) 
     { return Error("CreateRep::Conversion Service is unavailable"); } 
   /// create IOpaqueAddress
-  IAddressCreator* addrCreator = 0 ; 
-  try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
-  catch(...) { addrCreator =                                           0 ; } 
+  IAddressCreator* addrCreator = addressCreator() ;
   if( 0 == addrCreator ) 
     { return Error("CreateRep::Address Creator is unavailable"); } 
   StatusCode st = 
-    addrCreator->createAddress( repSvcType() , 
-                                classID   () , 
-                                "GiGaGeom"   , 
-                                "GiGaSurfaceObject" , -1 , Address );   
+    addrCreator->createAddress( repSvcType  () , 
+                                classID     () , 
+                                m_leaf.par  () , 
+                                m_leaf.ipar () , Address );   
   if( st.isFailure()   )
     { return Error("CreateRep::Error in Address Creation", st); }
   if( 0 == Address     ) 
@@ -97,8 +119,13 @@ StatusCode GiGaSurfaceCnv::createRep( DataObject*     Object  ,
   /// 
 }; 
 
-StatusCode GiGaSurfaceCnv::updateRep( DataObject*     Object  , 
-                                      IOpaqueAddress* Address  ) 
+// ============================================================================
+/** update the representation
+ */
+// ============================================================================
+StatusCode GiGaSurfaceCnv::updateRep
+( DataObject*     Object  , 
+  IOpaqueAddress* Address  ) 
 {
   ///
   { MsgStream log( msgSvc() , name() ); 
@@ -106,32 +133,34 @@ StatusCode GiGaSurfaceCnv::updateRep( DataObject*     Object  ,
   ///
   if( 0 == Object    ) 
     { return Error("UpdateRep::DataObject* points to NULL"); } 
-  Surface* surface = 0 ; 
-  try        { surface = dynamic_cast<Surface*>( Object ) ; } 
-  catch(...) { surface =                                0 ; } 
+  Surface* surface = dynamic_cast<Surface*>( Object ) ;  
   if( 0 == surface   ) 
     { return Error("UpdateRep::Bad cast to Surface*"); }
   if( 0 == cnvSvc()  ) 
     { return Error("UpdateRep::Conversion Service is unavailable"); } 
+  const IRegistry* registry = Object->registry();
+  if( 0 == registry ) 
+    { return Error("UpdateRep::IRegistry* is NULL!"); }
+  const std::string& surfaceName = registry->identifier();
   ///
   G4LogicalSurface* logSurf = 0 ;
   StatusCode         status = StatusCode::SUCCESS ; 
   if      ( surface->firstVol  ().empty () ) 
     { status = Error("UpdateRep: the firstVol name is EMPTY!") ; }
-  else if ( surface->secondVol ().empty () ) /// SKIN   surface 
+  else if ( surface->secondVol ().empty () )           /// SKIN   surface 
     { status = createSkinSurface  (  surface   , logSurf     ) ; } 
-  else                                       /// BORDER surface
+  else                                                 /// BORDER surface
     { status = createBorderSurface(  surface   , logSurf     ) ; } 
   ///
   if( status.isFailure() || 0 == logSurf ) 
     { return Error("Could not create G4LogicalSurface!", status ) ;} 
   /// create optical surface 
   G4OpticalSurface* optSurf = 
-    new G4OpticalSurface( surface->fullpath () ,
+    new G4OpticalSurface( surfaceName                                    ,
                           ( G4OpticalSurfaceModel  ) surface->model   () ,
                           ( G4OpticalSurfaceFinish ) surface->finish  () ,
                           ( G4OpticalSurfaceType   ) surface->type    () ,
-                          surface->value    ()                           );
+                          surface->value                              () );
   ///
   {
     if( 0 == optSurf->GetMaterialPropertiesTable() ) 
@@ -159,66 +188,63 @@ StatusCode GiGaSurfaceCnv::updateRep( DataObject*     Object  ,
   ///
   return StatusCode::SUCCESS;
 };
-///
-StatusCode GiGaSurfaceCnv::createSkinSurface( const Surface    *  surface , 
-                                              G4LogicalSurface *& logsurf )
+
+// ============================================================================
+//
+// ============================================================================
+StatusCode GiGaSurfaceCnv::createSkinSurface
+( const Surface    *  surface , 
+  G4LogicalSurface *& logsurf )
 { 
   ///
   logsurf = 0 ; 
   if( 0 == surface ) 
     { return Error("CreateSkinSurface: Surface* points to NULL") ; }
   /// first look through G4LogicalVolumeStore
-  G4LogicalVolume* lv = 0; 
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-      { if( surface->firstVol() == store[indx]->GetName() ) 
-        { lv = store[indx] ; break ; }  }    
-  }
+  G4LogicalVolume* lv = GiGaVolumeUtils::findLVolume( surface->firstVol() ) ;
   if( 0 == lv ) 
-    { return Error("Could Not locate G4LogicalVolume by name '" + 
+    { return Error("Could not locate G4LogicalVolume by name '" + 
                    surface->firstVol()+"'" ); }
   /// look through existing LogicalSkinSurfaces
   G4LogicalSkinSurface* surf = G4LogicalSkinSurface::GetSurface( lv ); 
-  if( 0 != surf &&  ( surf->GetName() != surface->fullpath() )  )
+  if( 0 != surf &&  ( surf->GetName() != surface->registry()->identifier() ) )
     { return Error("UpdateRep: surface with this logvol exists!") ; }
   /// create new surface 
   if( 0 == surf ) 
-    { logsurf = new G4LogicalSkinSurface( surface->fullpath() , lv , 0 ); }
+    { logsurf = new G4LogicalSkinSurface( surface->registry()->identifier() , 
+                                          lv , 0 ); }
   else            
     { logsurf = surf ; }  
   ///
   return StatusCode::SUCCESS;
 };
-///
-StatusCode GiGaSurfaceCnv::createBorderSurface( const Surface    *  surface , 
-                                                G4LogicalSurface *& logsurf )
+
+// ============================================================================
+//
+// ============================================================================
+StatusCode GiGaSurfaceCnv::createBorderSurface
+( const Surface    *  surface , 
+  G4LogicalSurface *& logsurf )
 {
   ///
   logsurf = 0 ;
   /// locate PhysVolumes
-  G4VPhysicalVolume* pv1 = 0; 
-  G4VPhysicalVolume* pv2 = 0; 
-  {
-    G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-      { 
-        if     ( surface->firstVol ()  == store[indx]->GetName() ) 
-          { pv1 = store[indx] ; }
-        else if( surface->secondVol()  == store[indx]->GetName() ) 
-          { pv2 = store[indx] ; }
-      }
-    if( 0 == pv1 || 0 == pv2 ) 
-      { return Error("Could not locatePhysical Volumes '" + 
-                     surface->firstVol()+"' and '"+surface->secondVol()+"'");}
-  }
+  G4VPhysicalVolume* pv1 = 
+    GiGaVolumeUtils::findPVolume( surface->firstVol  () );
+  if( 0 == pv1 ) { return Error("Could not locate physical volume '" 
+                                + surface->firstVol  () + "'" ) ; }
+  G4VPhysicalVolume* pv2 = 
+    GiGaVolumeUtils::findPVolume( surface->secondVol () );
+  if( 0 == pv2 ) { return Error("Could not locate physical volume '" 
+                                + surface->secondVol () + "'" ) ; }
   /// locate Logical Border Surface 
   G4LogicalBorderSurface* surf = 
     G4LogicalBorderSurface::GetSurface( pv1 , pv2 );
-  if( 0 != surf && ( surf->GetName() != surface->fullpath() ) )
+  if( 0 != surf && ( surf->GetName() != surface->registry()->identifier() ) )
     { return Error("UpdateRep: surface with this pv1/pv2 lready exists!") ; }
+  ///
   if( 0 == surf ) 
-    { logsurf = new G4LogicalBorderSurface( surface->fullpath() , 
+    { logsurf = new G4LogicalBorderSurface( surface->registry()->identifier() , 
                                             pv1 , pv2  , 0 ); }
   else            
     { logsurf = surf ; }  

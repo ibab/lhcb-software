@@ -1,16 +1,20 @@
+// $Id: GiGaDetectorElementCnv.cpp,v 1.7 2002-01-22 18:24:43 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.4  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.3  2001/07/15 20:45:09  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/12 17:24:52  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.5  2001/07/25 17:19:31  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.4  2001/07/24 11:13:55  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.3  2001/07/15 20:45:09  ibelyaev
+// the package restructurisation
+// 
 //  ===========================================================================
 #define GIGACNV_GIGADETECTORELEMENTCNV_CPP
 // ============================================================================
@@ -23,6 +27,7 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IDataSelector.h" 
 #include "GaudiKernel/IAddressCreator.h" 
+#include "GaudiKernel/IRegistry.h" 
 /// DetDesc 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
@@ -30,15 +35,26 @@
 #include "DetDesc/CLIDDetectorElement.h" 
 /// Geant4
 #include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
-#include "G4PVPlacement.hh"
-#include "G4PhysicalVolumeStore.hh"
+#include "G4VPhysicalVolume.hh"
 /// GiGa & GiGaCnv 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
+#include "GiGaCnv/GiGaCnvUtils.h"
 /// local 
+#include "GiGaVolumeUtils.h"
+#include "GiGaInstall.h"
 #include "GiGaDetectorElementCnv.h"
 
+// ============================================================================
+/** @file GiGaDetectorElementcnv.cpp
+ * 
+ *  Implementation of class GiGaDetectorElementCnv
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
+// ============================================================================
+
+// ============================================================================
 /// factory 
+// ============================================================================
 static const CnvFactory<GiGaDetectorElementCnv> 
 s_GiGaDetectorElementCnvFactory ;
 const       ICnvFactory&GiGaDetectorElementCnvFactory = 
@@ -51,9 +67,10 @@ s_GiGaDetectorElementCnvFactory ;
 // ============================================================================
 GiGaDetectorElementCnv::GiGaDetectorElementCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
+  , m_leaf ( "" , classID() )
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
-  setConverterName              ( "GiGaDECnv"      ); 
+  setConverterName              ( "GiGaDECnv"      );
 }; 
 
 // ============================================================================
@@ -105,40 +122,32 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  ,
           << de->name()    
           << " Consider it just as a holder of daughter DEs"  << endreq; 
       /// geometry information is not available, 
-      /// consider DE just as a collection of DetectorElements
-      IDataSelector dS; 
+      /// consider DE just as a collection of daughter DetectorElements  
       for( IDetectorElement::IDEContainer::iterator ic = de->childBegin() ; 
            de->childEnd() != ic ; ++ic )
         {
-          /// retrieve objects from the store
-          DataObject* obj = 0 ; 
-          SmartDataPtr<DataObject> so( detSvc() , (*ic)->name() ); 
-          obj = (DataObject*)(so.operator->()) ; 
-          if( 0 == obj ) 
-            { return Error("createRep:: DataObject is not availablel for " + 
-                           (*ic)->name() ) ;}
-          dS.push_back( obj ); 
-        } 
-      StatusCode sc = geoSvc()->createReps( &dS );
-      if( sc.isFailure() ) 
-        { return Error("createRep:: could not convert daughter elements") ; }
+          DataObject* object = dynamic_cast<DataObject*> ( *ic ) ;
+          if( 0 == *ic || 0 == object ) 
+            { return Error("createRep:: daughter points to NULL !" ) ;}
+          StatusCode sc = GiGaCnvUtils::createRep( cnvSvc() , object );
+          if( sc.isFailure() ) 
+            { return Error("createRep:: could not create daughter element") ; }
+        }
       ///
       return StatusCode::SUCCESS;
       ///
     }  
   /// here it is an ordinary detector element 
   /// create IOpaqueAddress
-  IAddressCreator* addrCreator = 0 ; 
-  try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
-  catch(...) { addrCreator =                                           0 ; } 
+  IAddressCreator* addrCreator = addressCreator() ;
   if( 0 == addrCreator   ) 
-    { return Error("createRep::Address Creator is unavailable"); } 
+    { return Error("createRep::Address Creator is unavailable"); }
   StatusCode status = 
-    addrCreator->createAddress( repSvcType() , 
-                                classID   () , 
-                                "GiGaGeom"   , 
-                                "GiGaDetectorElementObject" , 
-                                -1 , Address );   
+    addrCreator->createAddress( repSvcType   () , 
+                                classID      () , 
+                                m_leaf.par   () , 
+                                m_leaf.ipar  () , 
+                                Address         );
   if( status.isFailure() ) 
     { return Error("createRep::Error in Address Creation",status); }
   if( 0 == Address       ) 
@@ -159,8 +168,9 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  ,
                                               IOpaqueAddress* /* Address */ ) 
 {
   ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "updateRep::start" << endreq; } 
+  MsgStream log( msgSvc() , name() ); 
+  log << MSG::INFO << "updateRep::start " 
+      << Object->registry()->identifier() << endreq; 
   ///
   if( 0 == Object                 ) 
     { return Error("updateRep::DataObject* points to NULL"); } 
@@ -177,59 +187,61 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  ,
   if( 0 == gi )
     { return Error("updateRep:: IGeometryInfo* is not available for " + 
                    de->name() ); }
-  ILVolume*      lv = gi->lvolume () ;
+  const ILVolume*      lv = gi->lvolume () ;
   if( 0 == lv )
     { return Error("updateRep:: ILVolume*      is not available for " + 
                    de->name() ); }
-  ///
-  /// look at G4 physical volume store and check 
-  ///  if it was converted exlicitely or imlicitely
-  {
-    std::string path ( de->name() );
-    do
-      {
-        G4VPhysicalVolume* pv = 0; 
-        G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-        for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-          { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
-        /// it was converted EXPLICITELY or IMPLICITELY !!!
-        if( 0 != pv ) 
-          {
-            MsgStream log( msgSvc() , name() ) ; 
-            log << MSG::INFO << "DE=" << de->name() 
-                << " was already EXPLICITELY/IMPLICITELY converted for PV=" 
-                << pv->GetName() << endreq; 
-            return StatusCode::SUCCESS; 
-          }                          /// RETURN !!!
-        ///
-        path.erase( path.find_last_of('/') ); 
-      } 
-    while( std::string::npos != path.find_last_of('/') ); 
-  }
+  //
+  // // look at G4 physical volume store and check 
+  // //  if it was converted exlicitely or imlicitely
+  //    {
+  //      std::string path ( de->name() );
+  //      do
+  //        {
+  //          G4VPhysicalVolume* pv = 0; 
+  //          G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
+  //          for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
+  //            { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
+  //          /// it was converted EXPLICITELY or IMPLICITELY !!!
+  //          if( 0 != pv ) 
+  //            {
+  //              MsgStream log( msgSvc() , name() ) ; 
+  //              log << MSG::INFO 
+  //                  << "DE=" << de->name() 
+  //                  << " was already EXPLICITELY/IMPLICITELY converted for PV=" 
+  //                  << pv->GetName() << endreq; 
+  //              return StatusCode::SUCCESS; 
+  //            }                          /// RETURN !!!
+  //          ///
+  //          path.erase( path.find_last_of('/') ); 
+  //        } 
+  //      while( std::string::npos != path.find_last_of('/') ); 
+  //    }
   /// it have not been converted yet!!! convert it!
-  G4LogicalVolume*     LV = geoSvc()->g4LVolume( lv->name() );
-  if( 0 == LV ) 
+  
+  const GiGaVolume volume  = geoSvc()->volume( lv->name() );
+  if( !volume.valid() ) 
     { return Error("updateRep:: could not convert LV="+lv->name() ); }
-  G4VPhysicalVolume*   PV = geoSvc()->G4WorldPV() ; 
-  if( 0 == PV ) 
+  G4VPhysicalVolume*   PV = geoSvc()->world() ; 
+  if( 0 == PV )
     { return Error("updateRep:: G4WorldPV is not available!" ) ; }
-  /// create the placement of Detector Element
-  G4VPhysicalVolume*   pv = 
-    new G4PVPlacement( gi->matrix().inverse() , 
-                       LV , de->name() ,
-                       PV->GetLogicalVolume() , false , 0 ) ;
-  pv = pv ; /// just to please the compiler 
+  /// install detector element into world volume 
+  StatusCode sc = 
+    GiGaInstall::installVolume( volume                  , 
+                                de->name             () , 
+                                gi->matrix           () , 
+                                PV->GetLogicalVolume () , 
+                                log                     ) ;
+  if( sc.isFailure() )
+    { return Error("updateRep:: could not place PhysVolume!", sc) ; }
   /// look again in the store 
-  {
-    G4VPhysicalVolume* PV = 0; 
-    G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-      { if( de->name() == store[indx]->GetName() ) 
-        { PV = store[indx] ; break; } }
-    if( 0 != PV ) { return StatusCode::SUCCESS; } /// RETURN !!!
-  } 
+  if( 0 != GiGaVolumeUtils::findPVolume( de->name() ) )
+    { return StatusCode::SUCCESS ; }               ///< RETURN !!!
   ///
-  return Error("updateRep:: could not convert GetectorElement="+de->name()) ;
+  /// a little bit strange lines due to names of Assemblies  
+  /// return 
+  ///  Error("updateRep:: could not convert DetectorElement="+de->name()) ;
+  return StatusCode::SUCCESS ;
   ///
 };
 

@@ -1,37 +1,41 @@
+// $Id: GiGaGeomCnvSvc.cpp,v 1.7 2002-01-22 18:24:43 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/25 17:19:31  ibelyaev
-/// all conversions now are moved from GiGa to GiGaCnv
-///
-/// Revision 1.4  2001/07/24 11:13:55  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-///
-/// Revision 1.3  2001/07/15 20:45:10  ibelyaev
-/// the package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2001/08/12 17:24:52  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.5  2001/07/25 17:19:31  ibelyaev
+// all conversions now are moved from GiGa to GiGaCnv
+//
+// Revision 1.4  2001/07/24 11:13:55  ibelyaev
+// package restructurization(III) and update for newer GiGa
+//
+// Revision 1.3  2001/07/15 20:45:10  ibelyaev
+// the package restructurisation
+// 
 // ===========================================================================
 #define GIGAGEOMCNVSVC_CPP 1 
 // ============================================================================
 #include <string>
 #include <algorithm>
 // from Gaudi 
-#include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IObjManager.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/GenericAddress.h"
 // from DetDesc 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/Solids.h"
 // Include G4 Stuff
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
-#include "G4LogicalVolumeStore.hh"
 #include "G4PVPlacement.hh"
 #include "G4Material.hh"
 //
@@ -54,44 +58,57 @@
 #include "GiGa/IGiGaMagField.h"
 #include "GiGa/IGiGaMagFieldFactory.h"
 #include "GiGa/GiGaUtil.h"
+// From GiGaCnv 
+#include "GiGaCnv/GiGaAssembly.h"
+#include "GiGaCnv/GiGaAssemblyStore.h"
 // local 
-#include "GiGaGeomCnvSvc.h" 
+#include "GiGaVolumeUtils.h"
+#include "GiGaGeomCnvSvc.h"
 
+// ============================================================================
+/** @file GiGaGeomCnvSvc.cpp
+ *
+ *  Implementation of class GiGaGeomCnvSvc 
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   7 Aug 2000
+ */
+// ============================================================================
 
-/**  Implementation of GiGaGeomCnvSvc 
-     @author Vanya Belyaev
-     @date   7 Aug 2000
-*/
+// ============================================================================
+/** mandatory factory business 
+ */
+// ============================================================================
+static const SvcFactory<GiGaGeomCnvSvc>         s_Factory ; 
+const       ISvcFactory&GiGaGeomCnvSvcFactory = s_Factory ;
 
-/// factory 
-extern const IAddrFactory& GiGaGeomAddressFactory ; 
-
-/// factory 
-static const SvcFactory<GiGaGeomCnvSvc> s_GiGaGeomCnvSvcFactory ; 
-const ISvcFactory& GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSvcFactory ; 
-
-/// constructor
-GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
-                                ISvcLocator*         ServiceLocator       ) 
-  : GiGaCnvSvcBase(                                  ServiceName          , 
-                                                     ServiceLocator       , 
-                                                     GiGaGeom_StorageType )
-  , m_worldPV       ( 0                   ) 
-  , m_worldNamePV   ( "Universe"          )
-  , m_worldNameLV   ( "World"             )
-  , m_worldMaterial ( "/dd/Materials/Air" )
-  , m_worldX        ( 50. * m             )
-  , m_worldY        ( 50. * m             )
-  , m_worldZ        ( 50. * m             )
+// ============================================================================
+/** standard constructor 
+ *  @param ServiceName      name of the service 
+ *  @param ServiceLocator   pointer to service locator 
+ */
+// ============================================================================
+GiGaGeomCnvSvc::GiGaGeomCnvSvc
+( const std::string&   ServiceName          , 
+  ISvcLocator*         ServiceLocator       ) 
+  : GiGaCnvSvcBase   ( ServiceName          , 
+                       ServiceLocator       , 
+                       GiGaGeom_StorageType )
+  , m_worldPV        ( 0                    ) 
+  , m_worldNamePV    ( "Universe"           )
+  , m_worldNameLV    ( "World"              )
+  , m_worldMaterial  ( "/dd/Materials/Air"  )
+  , m_worldX         ( 50. * m              )
+  , m_worldY         ( 50. * m              )
+  , m_worldZ         ( 50. * m              )
   ///
-  , m_worldMagField ( ""                  )
+  , m_worldMagField  ( ""                   )
   ///
-  , m_SDs           ()
-  , m_MFs           ()
+  , m_SDs            ()
+  , m_MFs            ()
   ///
 {
   ///
-  setAddressFactory(&GiGaGeomAddressFactory) ;
   setNameOfDataProviderSvc("DetectorDataSvc"); 
   ///
   declareProperty("WorldMaterial"             , m_worldMaterial );
@@ -105,74 +122,133 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
   declareProperty("WorldMagneticField"        , m_worldMagField );
   ///
 };
-///
-G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
+
+// ============================================================================
+/** Retrieve the pointer for G4 materials from G4MaterialTable, 
+ *  (could trigger the conversion of the (DetDesc) Material)
+ *  @param  Name    name/address/location of Material object 
+ *  @return pointer to converted G4Material object 
+ */
+// ============================================================================
+G4Material* GiGaGeomCnvSvc::material ( const std::string& Name )
 {
   /// first look throught G4MaterialTable
   {
     G4Material* mat = G4Material::GetMaterial( Name ) ;
-    if( 0 != mat ) { return mat ; } 
+    if( 0 != mat ) { return mat ; }
   }
   /// retrieve material by name and convert it to G4 representation  
-  {
-    SmartDataPtr<DataObject>  so( detSvc() , Name ); 
-    DataObject* Obj = so.operator->();  
-    if( 0 == Obj       ) 
-      { Error("Failed to locate DataObject with name:"+Name) ; return 0 ;  } 
-    IDataSelector dS; dS.push_back( Obj ) ; 
-    StatusCode sc = createReps( &dS );
-    if( sc.isFailure() ) 
-      { Error("Failed to create G4 representation of Material=" + 
-              Name,sc) ; return 0 ; }
-  }
+  SmartDataPtr<DataObject>  object( detSvc() , Name ); 
+  if( !object ) 
+    { Error("Failed to locate DataObject with name:" + Name ) ; return 0 ;  } 
+  IOpaqueAddress* Address = 0 ;
+  StatusCode sc = createRep( object , Address );
+  if( sc.isFailure() ) 
+    { Error("Failed to create G4 representation of Material=" + 
+            Name,sc) ; return 0 ; }
+  /// update the registry
+  object->registry()->setAddress( Address );
   /// look throught G4MaterialTable
   {
     G4Material* mat = G4Material::GetMaterial( Name ) ;
     if( 0 != mat ) { return mat ; } 
   }
   ///
-  Error("Failed to find G4Material with name="+Name);
+  Error("Failed to find G4Material with name '" + Name + "'" );
   ///
   return 0;     
 };
-/// 
+
+// ============================================================================
+/** Retrieve the pointer for G4 materials from G4MaterialTable, 
+ *  (could trigger the conversion of the (DetDesc) Material)
+ *  @att obsolete method 
+ *  @param  Name    name/address/location of Material object 
+ *  @return pointer to converted G4Material object 
+ */
+// ============================================================================
+G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
+{
+  Warning(" g4Material() is the obsolete method, use material()!");
+  return material( Name );
+};
+
+// ============================================================================
+/** Retrive the pointer to converter volumes/assemblies 
+ *  (could trigger the conversion of the (DetDesc) LVolume/LAssembly)    
+ *  @param  name    name/address/location of Volume/Assembly object 
+ *  @return pointer to converted GiGaVolume  object 
+ */
+// ============================================================================
+GiGaVolume GiGaGeomCnvSvc::volume( const std::string& Name )
+{
+  { /// first look through converted volumes   
+    G4LogicalVolume* lv = GiGaVolumeUtils::findLVolume   ( Name );
+    if( 0 != lv ) { return GiGaVolume( lv ,  0 ) ; }
+  }
+  { /// look through converted assemblies 
+    GiGaAssembly*    la = GiGaVolumeUtils::findLAssembly ( Name );
+    if( 0 != la ) { return GiGaVolume( 0  , la ) ; }
+  }
+  /// convert the object 
+  SmartDataPtr<DataObject> object( detSvc() , Name );
+  if( !object )
+    { 
+      Error("There is no DataObject with name '" + Name + "'") ; 
+      return GiGaVolume() ; 
+    } 
+  /// create the representation
+  IOpaqueAddress* address = 0 ;
+  StatusCode sc = createRep( object , address );
+  if( sc.isFailure() ) 
+    {
+      Error("Could not create the representation of '" + Name + "'",sc);
+      return GiGaVolume() ;
+    }
+  /// update the registry
+  object->registry()->setAddress( address );
+  ///
+  { 
+    /// again look through converted volumes 
+    G4LogicalVolume* lv = GiGaVolumeUtils::findLVolume   ( Name );
+    if( 0 != lv ) { return GiGaVolume( lv ,  0 ) ; }
+  }
+  { 
+    /// again look through converted assemblies 
+    GiGaAssembly*    la = GiGaVolumeUtils::findLAssembly ( Name );
+    if( 0 != la ) { return GiGaVolume( 0  , la ) ; }
+  }
+  ///
+  Error("Failed to find GiGaVolume with name '" + Name + "'");
+  ///
+  return GiGaVolume();
+};
+
+// ============================================================================
+/** Retrive the pointer to G4LogicalVolume  from converted volumes,
+ * (could trigger the conversion of the (DetDesc) LVolume)    
+ *  @att obsolete method 
+ *  @param  Name    name/address/location of LVolume object 
+ *  @return pointer to converted G4LogicalVolume object 
+ */
+// ============================================================================
 G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
 {
-  /// first look through G4LogicalVolumeStore
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   
-  }
-  /// locate the object in the transient store and convert it! 
-  {
-    SmartDataPtr<DataObject>  so( detSvc() , Name ); 
-    DataObject* Obj = so.operator->();  
-    if( 0 == Obj       ) 
-      { Error("Failed to locate DataObject with name:"+Name) ;  return 0 ; } 
-    ///
-    IDataSelector dS; dS.push_back( Obj ) ; 
-    StatusCode sc = createReps( &dS );
-    if( sc.isFailure() ) 
-      { Error("Failed to create G4 representation of LOgicalVolume="+Name,sc); 
-      return 0 ; }
-  } 
-  /// again look through G4LogicalVolumeStore
-  {
-    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
-    for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  } 
-  }
-  ///
-  Error("Failed to find G4LogicalVolume with name="+Name);
-  ///
-  return 0;      
+  Warning(" g4LVolume() is the obsolete method, use volume()!");
+  const GiGaVolume vol = volume( Name ) ;
+  return vol.valid() ? vol.volume() : (G4LogicalVolume*) 0 ;
 };
-///
-G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
+
+// ============================================================================
+/** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
+ *  @param  Sd        pointer to Solid object 
+ *  @return pointer to converter G4VSolid object 
+ */
+// ============================================================================
+G4VSolid*    GiGaGeomCnvSvc::solid ( const ISolid*      Sd     )  
 {
   ///
-  if ( 0 == Sd) { Error("g4Solid ISolid* point to NULL"); return 0;  }
+  if ( 0 == Sd) { Error(" solid():: ISolid* point to NULL"); return 0;  }
   ///
   const std::string solidType( Sd->typeName() ); 
   ///
@@ -236,18 +312,18 @@ G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
   {  
     const SolidTrap* sTrap = dynamic_cast<const SolidTrap*>(Sd);
     if (solidType == "SolidTrap" && 0 != sTrap ) 
-      { return new G4Trap( sTrap->name            (),
-                           sTrap->zHalfLength     (),
-                           sTrap->theta           (),
-                           sTrap->phi             (),
-                           sTrap->dyAtMinusZ      (),
-                           sTrap->dxAtMinusZMinusY(),
-                           sTrap->dxAtMinusZPlusY (),
-                           sTrap->alphaAtMinusZ   (),
-                           sTrap->dyAtPlusZ       (),
-                           sTrap->dxAtPlusZMinusY (),
-                           sTrap->dxAtPlusZPlusY  (),
-                           sTrap->alphaAtPlusZ    () ); }
+      { return new G4Trap( sTrap->name             (),
+                           sTrap->zHalfLength      (),
+                           sTrap->theta            (),
+                           sTrap->phi              (),
+                           sTrap->dyAtMinusZ       (),
+                           sTrap->dxAtMinusZMinusY (),
+                           sTrap->dxAtMinusZPlusY  (),
+                           sTrap->alphaAtMinusZ    (),
+                           sTrap->dyAtPlusZ        (),
+                           sTrap->dxAtPlusZMinusY  (),
+                           sTrap->dxAtPlusZPlusY   (),
+                           sTrap->alphaAtPlusZ     () ); }
   }
   /// boolean ? 
   {
@@ -260,6 +336,20 @@ G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
   ///
   return 0;
 };
+
+// ============================================================================
+/** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
+ *  @att obsolete method 
+ *  @param  Solid pointer to Solid object 
+ *  @return pointer to converter G4VSolid object 
+ */
+// ============================================================================
+G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
+{
+  Warning(" g4Solid() is the obsolete method, use solid()!");
+  return solid( Sd ) ;
+};
+
 ///
 G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd ) 
 {
@@ -279,7 +369,7 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
     { Error("g4BoolSolid, Wrong MAIN/FIRST solid for Boolean solid=" + 
             Sd->name())             ; return 0; }
   ///
-  G4VSolid* first = g4Solid( Sd->first() ); 
+  G4VSolid* first = solid( Sd->first() ); 
   if( 0 == first      )
     { Error("g4BoolSolid, could not convert MAIN solid for Boolean solid=" + 
             Sd->name()) ; return 0; }
@@ -289,7 +379,7 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
   for( CI it = Sd->childBegin() ; Sd->childEnd() != it ; ++it )
     {
       const SolidChild* child = *it ; 
-      G4VSolid* g4child = g4Solid( child->solid() );
+      G4VSolid* g4child = solid( child->solid() );
       if( 0 == g4child ) 
         { Error("g4BoolSolid, could not convert solid for Boolean solid=" + 
                 Sd->name())  ; return 0; }
@@ -318,6 +408,11 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
   return g4total;
 };
 
+// ============================================================================
+/** standard initialization method 
+ *  @return status code 
+ */
+// ============================================================================
 StatusCode GiGaGeomCnvSvc::initialize() 
 { 
   ///
@@ -332,10 +427,27 @@ StatusCode GiGaGeomCnvSvc::initialize()
   ///
 };
 
+// ============================================================================
+/** standard finalization method 
+ *  @return status code 
+ */
+// ============================================================================
 StatusCode GiGaGeomCnvSvc::finalize()   
-{ return GiGaCnvSvcBase::finalize(); };
+{ 
+  /// clear store of assemblies!
+  StatusCode sc = GiGaAssemblyStore::store()->clear();
+  ///
+  return GiGaCnvSvcBase::finalize(); 
+};
 
-G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV() 
+// ============================================================================
+/** Retrieve the pointer to top-level "world" volume,
+ *  needed for Geant4 - root for the whole Geant4 geometry tree 
+ *  @see class IGiGaGeoSrc 
+ *  @return pointer to constructed(converted) geometry tree 
+ */  
+// ============================================================================
+G4VPhysicalVolume* GiGaGeomCnvSvc::world () 
 {
   /// already created? 
   if( 0 != m_worldPV ) { return m_worldPV ; } /// already created 
@@ -345,7 +457,7 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
   /// create it!
   G4Material* MAT = g4Material ( m_worldMaterial );   
   if( 0 == MAT )
-    { Error("G4WorldPV:: could not locate/convert material=" + 
+    { Error("world():: could not locate/convert material=" + 
             m_worldMaterial) ; return 0 ; }
   ///
   G4VSolid*        SD = 
@@ -366,84 +478,75 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
       IGiGaMagField* mf = 0;
       StatusCode sc = magField( m_worldMagField , mf );  
       if( sc.isFailure() ) 
-        { Error("G4WorldPV:: could not construct Global Magnetic Field=" + 
+        { Error("world():: could not construct Global Magnetic Field=" + 
                 m_worldMagField, sc ) ; return 0 ; }  
       if( 0 == mf        ) 
-        { Error("G4WorldPV:: could not construct Global Magnetic Field=" +
+        { Error("world():: could not construct Global Magnetic Field=" +
                 m_worldMagField, sc ) ; return 0 ; }  
       ///
       {
         G4TransportationManager* trnspMgr = 
           G4TransportationManager::GetTransportationManager() ; 
         if( 0 == trnspMgr  )
-          { Error("G4WorldPV:: could not locate G4TranspostationManager*") ; 
+          { Error("world():: could not locate G4TranspostationManager*") ; 
           return 0 ; }         
         G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager(); 
         if( 0 == fieldMgr  ) 
-          { Error("G4WorldPV:: could not locate G4FieldManager* object ") ; 
+          { Error("world():: could not locate G4FieldManager* object ") ; 
           return 0 ; }         
         fieldMgr->SetDetectorField  ( mf );
         fieldMgr->CreateChordFinder ( mf );  
       }
       ///
-      Print("G4WorlPV:: World Magnetic Field is set to be = " + 
+      Print("worl():: World Magnetic Field is set to be = " + 
             System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );
     }
-  else { Warning("G4WorldPV:: Magnetic Field is not requetsed to be loaded "); }
+  else { Warning("world():: Magnetic Field is not requetsed to be loaded "); }
   ///
   return m_worldPV ; 
 }; 
 
-/// Convert a collection of transient data 
-/// objects into another representation 
-StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)  
-{
-  Context::iterator       i;
-  IDataSelector::iterator j;
-  Context                 context;
-  StatusCode              status = NO_CONVERTER;
-  StatusCode              iret   = StatusCode::SUCCESS;
-  // Create context 
-  for ( j = pSelector->begin(); j != pSelector->end(); j++ )   
-    {    
-      // check if it is a Det Elem.
-      DetectorElement* de = 0 ;
-      try        { de = dynamic_cast<DetectorElement*>(*j); } 
-      catch(...) { de = 0 ;}
-      IConverter*    cnv = converter( 0 != de ? de->clID() : (*j)->clID() );
-      context.push_back(ContextEntry(cnv, 0, (*j)));
-      if ( 0 == cnv )   { iret = NO_CONVERTER; }
-    }
-  // Update primitive representation
-  for ( i = context.begin(); i != context.end(); i++ )   {
-    ContextEntry& e = (*i);
-    if ( 0 != e.converter() )  {
-      status = e.converter()->createRep(e.object(), e.address());
-      if ( status.isSuccess() )  {
-        status = m_dataSvc->updateRegistryEntry(e.address(), e.object());
-        if ( !status.isSuccess() )  {
-          iret = status;
-        }
-      }
-      else  {
-        iret = status;
-      }
-    }
-  }
-  // Finally update local representation references 
-  // which are unknown to the data model
-  for ( i = context.begin(); i != context.end(); i++ )   {
-    ContextEntry& e = (*i);
-    // e.address()==0 -> representation was NOT created in the first go!
-    if ( 0 != e.converter() && 0 != e.address() )  {
-      status = e.converter()->fillRepRefs(e.address(), e.object());
-      if ( !status.isSuccess() )  {
-        iret = status;
-      }
-    }
-  }
-  return iret;
-}
+// ============================================================================
+/** Retrieve the pointer to top-level "world" volume,
+ *  needed for Geant4 - root for the whole Geant4 geometry tree 
+ *  @att obsolete method!
+ *  @see class IGiGaGeoSrc 
+ *  @return pointer to constructed(converted) geometry tree 
+ */  
+// ============================================================================
+G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV() 
+{  
+  Warning(" G4WorldPV() is the obsolete method, use world()!");
+  return world() ;  
+};
+
+
+// ============================================================================
+/** Convert the transient object to the requested representation.
+ *  e.g. conversion to persistent objects.
+ *  @param     object  Pointer to location of the object 
+ *  @param     address Reference to location of pointer with the 
+ *                     object address.
+ *  @return    status code indicating success or failure
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::createRep
+( DataObject*      object  , 
+  IOpaqueAddress*& address ) 
+{ 
+  ///
+  if( 0 == object ) 
+    { return Error(" createRep:: DataObject* points to NULL!");}
+  ///
+  const IDetectorElement* de = dynamic_cast<IDetectorElement*> ( object ) ;
+  IConverter* cnv = 
+    converter( 0 == de ? object->clID() : CLID_DetectorElement );
+  if( 0 == cnv ) 
+    { return Error(" createRep:: converter is not found for '" 
+                   + object->registry()->identifier() + "'" );}
+  ///
+  return cnv->createRep( object , address );
+};
 
 StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
 { 
@@ -473,8 +576,16 @@ StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
   ///
 };
 
-StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick , 
-                                    IGiGaSensDet*& SD )
+// ============================================================================
+/** Instantiate the Sensitive Detector Object 
+ *  @param name  Type/Name of the Sensitive Detector Object
+ *  @param det   reference to Densitive Detector Object 
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode   GiGaGeomCnvSvc::sensitive   
+( const std::string& TypeNick , 
+  IGiGaSensDet*&     SD       )  
 {
   ///
   SD = 0 ; /// reset the output value 
@@ -510,8 +621,32 @@ StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick ,
   ///
 };
 
-StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick , 
-                                     IGiGaMagField*& MF )
+// ============================================================================
+/** Instantiate the Sensitive Detector Object 
+ *  @att obsolete method 
+ *  @param Type/Nick  Type/Name of the Sensitive Detector Object
+ *  @param SD          reference to Densitive Detector Object 
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::sensDet
+( const std::string& TypeNick , 
+  IGiGaSensDet*&     SD )
+{
+  Warning(" sensDet() is the obsolete method, use sensitive()!");
+  return sensitive( TypeNick , SD ) ;  
+};
+
+// ============================================================================
+/** Instantiate the Magnetic Field Object 
+ *  @param TypeNick  Type/Name of the Magnetic Field Object
+ *  @param MF   reference to Magnetic Field Object 
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode   GiGaGeomCnvSvc::magnetic 
+( const std::string& TypeNick      , 
+  IGiGaMagField*&    MF            )  
 {
   ///
   MF = 0 ; /// reset the output value 
@@ -549,12 +684,25 @@ StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick ,
   ///
 };
 
+// ============================================================================
+/** Instantiate the Magnetic Field Object 
+ *  @att obsolete method 
+ *  @param TypeNick  Type/Name of the Magnetic Field Object
+ *  @param MF   reference to Magnetic Field Object 
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode GiGaGeomCnvSvc::magField
+( const std::string& TypeNick , 
+  IGiGaMagField*&    MF       )
+{
+  Warning(" magField() is the obsolete method, use magnetic()!");
+  return magnetic( TypeNick , MF ) ;  
+};
 
-
-
-
-
-
+// ============================================================================
+// End 
+// ============================================================================
 
 
 
