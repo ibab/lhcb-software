@@ -2,6 +2,19 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-03-17 - Vanya BELYAEV
+ - Relations/AssociatorBase.h
+   src/AssociatorBase.cpp
+       1) implement inheritance from base class GaudiTool  
+       2) remove a lot of unnesessary methods 
+
+  - Relations/Relation.h
+  - Relations/RelationWeighted.h 
+     ensure to return FAILURE only in teh case of real errors 
+  - cmt/requirements
+     1) increment version to v4r4 
+     2) add the dependency on GaudiTools 
+  
 !====================== LHCbKernel v4r3 2004-03-02 ========================
 ! 2004-03-02 - Marco Cattaneo
  - Add new file Kernel/LHCbMath.h which implements math related functions for

@@ -1,15 +1,16 @@
-# $Id: requirements,v 1.51 2004-03-02 10:33:18 cattanem Exp $
+# $Id: requirements,v 1.52 2004-03-17 20:17:50 ibelyaev Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v4r3
+version v4r4
 
 include_dirs $(LHCBKERNELROOT)
 
 use GaudiKernel  v15r*
 use GaudiObjDesc v6r*
+use GaudiTools   v* 
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
@@ -40,8 +41,8 @@ apply_pattern linker_library    library=LHCbKernel
 
 # Uncomment to find memory leaks in Relations - 
 #============================================================================
-#macro_append LHCbKernel_pp_cppflags '  -DCOUNT_INSTANCES  ' \
-#        WIN32                       ' /D"COUNT_INSTANCES" '
+macro_append LHCbKernel_pp_cppflags '  -DCOUNT_INSTANCES  ' \
+        WIN32                       ' /D"COUNT_INSTANCES" '
 
 # Test applications (currently not available in CVS!)
 #============================================================================

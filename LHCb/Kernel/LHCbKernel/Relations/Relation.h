@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.10 2004-01-14 16:30:25 ibelyaev Exp $
+// $Id: Relation.h,v 1.11 2004-03-17 20:17:49 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2004/01/14 16:30:25  ibelyaev
+//  update for new interface IUpdateable
+//
 // Revision 1.9  2004/01/14 15:13:02  ibelyaev
 //  few tricks to make POOL/ROOT happy
 //
@@ -203,9 +206,9 @@ namespace Relations
       sc = reserve( entries.size() )   ; if( sc.isFailure() ) { return sc ; }
       // 5) build new relations 
       for( typename _Entries::const_iterator it = entries.begin() ; 
-           entries.end() != it && sc.isSuccess() ; ++it ) 
-      { sc = i_relate( it->from() , it->to() )  ;}
-      return sc ;
+           entries.end() != it ; ++it ) { i_relate( it->from() , it->to() )  ;}
+      //
+      return StatusCode::SUCCESS  ;
     };
     
   public:  // abstract methods from interface

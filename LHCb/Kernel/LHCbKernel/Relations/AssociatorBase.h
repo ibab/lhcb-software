@@ -1,20 +1,8 @@
-// $Id: AssociatorBase.h,v 1.4 2003-06-25 14:59:01 ibelyaev Exp $
+// $Id: AssociatorBase.h,v 1.5 2004-03-17 20:17:49 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/05/12 08:45:28  ibelyaev
-//  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
-//
-// Revision 1.2  2002/04/25 08:44:02  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2002/04/08 14:26:00  ibelyaev
-//  new version of 'Relations'-subpackage
-//
-// Revision 1.1  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-// 
 // ============================================================================
 #ifndef RELATIONS_AssociatorBase_H 
 #define RELATIONS_AssociatorBase_H 1
@@ -23,8 +11,9 @@
 // STD & STL
 #include <map> 
 // GaudiKernel
-#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IIncidentListener.h"
+// GaudiTools 
+#include "GaudiTools/GaudiTool.h"
 // forward declarations
 //
 class IAlgorithm         ; // GaudiKernel 
@@ -48,7 +37,7 @@ namespace Relations
    *  @date   24/03/2002
    */  
   class AssociatorBase:
-    public                   AlgTool  ,
+    public                 GaudiTool  ,
     public virtual IIncidentListener 
   {
   public:
@@ -111,29 +100,6 @@ namespace Relations
      */
     virtual StatusCode locateOrBuild   () const;
     
-    /** accessor to event data service 
-     *  @return pointer to event data service 
-     */
-    inline IDataProviderSvc*  evtSvc    () const ;
-    
-    /** accessor to tool service 
-     *  @return pointer to tool service 
-     */
-    inline IToolSvc*          toolSvc   () const ;
-    
-    /** accessor to Chrono & Stat  service 
-     *  @return pointer to Chrono & Stat  service 
-     */
-    inline IChronoStatSvc*    chronoSvc () const ;
-    
-    /** accessor to Incident service 
-     *  @see IIncidentSvc 
-     *  @see IIncidentListener 
-     *  @see  Incident 
-     *  @return pointer to Incident  service 
-     */
-    inline IIncidentSvc*      incSvc    () const ;
-    
     /** accessor to relations builder,
      *  locate algorthm, if not yet done 
      *  @see IAlgorithm
@@ -152,103 +118,6 @@ namespace Relations
      *  @return data locationin Gaudi ETS 
      */
     inline const std::string& location  () const ;
-    
-    /** Print the error  message, return status code
-     *  and perform the statistics of error messages 
-     *  @see MsgStream
-     *  @see Stat 
-     *  @see IChronoStatSvc 
-     *  @see StatusCode 
-     *  @param msg    error message 
-     *  @param st     status code 
-     *  @return       status code 
-     */
-    StatusCode Error     
-    ( const std::string& msg                       , 
-      const StatusCode & st  = StatusCode::FAILURE ) const ;
-    
-    /** Print the warning  message, return status code 
-     *  and perform the statistics of warning  messages 
-     *  @see MsgStream
-     *  @see Stat 
-     *  @see IChronoStatSvc 
-     *  @see StatusCode 
-     *  @param msg    warning message 
-     *  @param st     statsu code 
-     *  @return       status code 
-     */
-    StatusCode Warning   
-    ( const std::string& msg                       , 
-      const StatusCode & st  = StatusCode::FAILURE ) const ; 
-    
-    /** Print the message and return status code 
-     *  @param msg    warning message 
-     *  @param st     status code 
-     *  @param lev    print level 
-     *  @return       status code 
-     */
-    StatusCode Print     
-    ( const std::string& msg                       , 
-      const StatusCode & st  = StatusCode::FAILURE ,
-      const MSG::Level & lev = MSG::INFO           ) const ;
-    
-    /** Assertion - throw exception, if condition is not fulfilled 
-     *  @exception GaudiException if 'ok' is false 
-     *  @param ok            condition which should be "true"
-     *  @param mesage       message to eb associated with the exception 
-     *  @return             status code        
-     */
-    inline StatusCode Assert 
-    ( bool ok , const std::string& message = " ") const ;
-    
-    /** Assertion - throw exception, if condition is not fulfilled 
-     *  @exception GaudiException if 'ok' is false 
-     *  @param ok            condition which shoudl be "true"
-     *  @param mesage       message to eb associated with the exception
-     *  @return             status code        
-     */
-    inline StatusCode Assert 
-    ( bool ok , const char*        message  ) const ;
-    
-    /** Create and (re)-throw the exception  
-     *  @exception GaudiException always 
-     *  @param msg    exception message 
-     *  @param exc    (previous) exception of type GaudiException
-     *  @param lvl    print level 
-     *  @param sc     status code  
-     *  @return       status code (fictive) 
-     */
-    StatusCode Exception 
-    ( const std::string    & msg                        ,  
-      const GaudiException & exc                        , 
-      const MSG::Level     & lvl = MSG::FATAL           ,
-      const StatusCode     & sc  = StatusCode::FAILURE ) const ;
-    
-    /** Create and (re)-throw the exception  
-     *  @exception GaudiException always 
-     *  @param msg    exception message 
-     *  @param exc    (previous) exception of type std::exception
-     *  @param lvl    print level 
-     *  @param sc     status code  
-     *  @return       status code (fictive) 
-     */
-    StatusCode Exception 
-    ( const std::string    & msg                        ,  
-      const std::exception & exc                        , 
-      const MSG::Level     & lvl = MSG::FATAL           ,
-      const StatusCode     & sc  = StatusCode::FAILURE ) const ;
-    
-    /** Create and throw the exception  
-     *  @exception GaudiException always 
-     *  @param msg    exception message 
-     *  @param lvl    print level 
-     *  @param sc     status code  
-     *  @return       status code (fictive) 
-     */
-    StatusCode Exception 
-    ( const std::string& msg = "no message"          ,  
-      const MSG::Level & lvl = MSG::FATAL            ,
-      const StatusCode & sc  = StatusCode::FAILURE   ) const ;
     
   private:
     
@@ -284,14 +153,6 @@ namespace Relations
     
   private:
     
-    // event data service 
-    IDataProviderSvc*   m_evtSvc       ; ///< event data service 
-    // Tool service 
-    IToolSvc*           m_toolSvc      ; ///< tool service 
-    // Chrono & Stat service 
-    IChronoStatSvc*     m_chronoSvc    ; ///< Chrono & Stat service
-    // Incident service 
-    IIncidentSvc*       m_incSvc       ; ///< Incident  service
     // data location in Gaudi Event Transient Store 
     std::string         m_location     ; ///< data location in Gaudi ETS 
     // relation builder type 
@@ -302,15 +163,8 @@ namespace Relations
     mutable IAlgorithm* m_algorithm    ; ///< relation builder itself 
     // relation table!    
     mutable IInterface* m_object       ; ///< relation table
-    
     // reference counter 
-    mutable counter     m_counter      ; ///< reference ounter 
-
-    // error/warnins/exception counters 
-    typedef std::map<std::string,counter> Counter;
-    mutable Counter     m_errors       ; ///< counter of errors      
-    mutable Counter     m_warnings     ; ///< counter of warnings  
-    mutable Counter     m_exceptions   ; ///< counter of exceptions 
+    mutable counter     m_counter      ; ///< reference counter
     
   };
   
@@ -345,69 +199,6 @@ namespace Relations
   inline const std::string& AssociatorBase::location  () const 
   { return m_location ; }
   
-  /** accessor to event data service 
-   *  @see IDataProviderSvc 
-   *  @see AssociatorBase 
-   *  @return pointer to event data service 
-   */
-  inline IDataProviderSvc*  AssociatorBase::evtSvc    () const 
-  { return m_evtSvc    ; }
-  
-  /** accessor to tool service 
-   *  @see IToolSvc 
-   *  @see IAlgTool 
-   *  @see AssociatorBase 
-   *  @return pointer to tool service 
-   */
-  inline IToolSvc*          AssociatorBase::toolSvc   () const 
-  { return m_toolSvc   ; }  
-  
-  /** accessor to Chrono & Stat  service 
-   *  @see AssociatorBase 
-   *  @see IChronoStatSvc
-   *  @see Chrono
-   *  @see Stat
-   *  @return pointer to Chrono & Stat  service 
-   */
-  inline IChronoStatSvc*    AssociatorBase::chronoSvc () const 
-  { return m_chronoSvc ; }
-  
-  /** accessor to Incident service 
-   *  @see IIncidentSvc 
-   *  @see IIncidentListener 
-   *  @see  Incident 
-   *  @see AssociatorBase 
-   *  @return pointer to Incident  service 
-   */
-  inline IIncidentSvc*      AssociatorBase::incSvc    () const 
-  { return m_incSvc    ; }
-  
-  /** Assertion - throw exception, if condition is not fulfilled 
-   *  @see AssociatorBase 
-   *  @param ok            condition which should be "true"
-   *  @param mesage       message to eb associated with the exception 
-   *  @return             status code        
-   */
-  inline StatusCode AssociatorBase::Assert 
-  ( bool ok , const std::string& message  ) const
-  {
-    StatusCode OK ( StatusCode::SUCCESS );
-    return ok ? OK : Exception( message , MSG::ERROR ) ; 
-  };
-  
-  /** Assertion - throw exception, if condition is not fulfilled 
-   *  @see AssociatorBase 
-   *  @param ok            condition which shoudl be "true"
-   *  @param mesage       message to eb associated with the exception
-   *  @return             status code        
-   */
-  inline StatusCode AssociatorBase::Assert 
-  ( bool ok , const char*        message  ) const 
-  { 
-    StatusCode OK ( StatusCode::SUCCESS ) ;
-    return ok ? OK : Exception( message , MSG::ERROR ) ; 
-  };
-  
   /** add the reference to existing interafce 
    *  @param  iif interface 
    *  @return current value of reference counter 
@@ -421,9 +212,9 @@ namespace Relations
   };
   
   /** release the used interface 
-     *  @param  iif interface to be released 
-     *  @return current value of reference counter 
-     */
+   *  @param  iif interface to be released 
+   *  @return current value of reference counter 
+   */
   inline AssociatorBase::counter 
   AssociatorBase::release ( IInterface* iif ) const 
   {
@@ -431,8 +222,6 @@ namespace Relations
     iif->release () ; 
     return --m_counter ;
   };
-  
-    
   
 }; ///< end of namespace Relations 
 
