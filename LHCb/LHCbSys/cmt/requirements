@@ -39,7 +39,7 @@ use RichDet		v7r1	Det
 use STDet          	v1r1	Det
 
 # Event data model
-use EventSys		v17r9p1	Event
+use EventSys		v17r10	Event
 use Event        	v4r3	Event
 use VeloEvent    	v13r0p1	Event
 use ITEvent      	v13r2	Event
@@ -55,8 +55,8 @@ use HltEvent		v5r0	Event
 use DAQEvent		v4r2	Event
 use GenEvent    	v3r2	Event
 use EventAssoc          v1r1    Event
-use LinkerEvent         v1r2    Event
-use TrgEvent            v2r2    Event
+use LinkerEvent         v1r3    Event
+use TrgEvent            v2r3    Event
 
 # Associators
 use AssociatorsSys	v1r13	Associators
