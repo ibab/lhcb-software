@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : P. Koppenburg
-! Purpose     : Analaysis program for LHCb
+! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
+
+! 2004-10-08 - P. Koppenburg
+  - src/Main/DaVinciMain.cpp
+    . Abort properly when APPVERSION is not defined
 
 ! 2004-10-04 - P. Koppenburg
   - options/L0Calo.opts
