@@ -1,26 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichParticleIDType.h
  *
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.17 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.16  2004/08/19 13:55:58  jonrob
- *  Add new method to MC truth tool + various other things after CVS server switch
- *
- *  Revision 1.15  2004/08/16 13:43:59  jonrob
- *  Update doxygen comments
- *
- *  Revision 1.14  2004/07/29 09:30:33  jonrob
- *  Fix various typos + minor updates
- *
- *  Revision 1.13  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichParticleIDType.h,v 1.18 2005-02-20 18:41:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//--------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
@@ -34,7 +24,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-//  General namespace for RICH specific definitions documented in RichSide.h
+// General namespace for RICH specific definitions documented in RichSide.h
 namespace Rich {
 
   /// Number of RICH particle types
@@ -43,12 +33,14 @@ namespace Rich {
   /// Number of RICH particle types, kept for backward compatibility
   static const int NRichParticleTypes = 5;
 
+  //--------------------------------------------------------------------------
   /** @enum ParticleIDType
    *  Enumeration for the RICH particle ID mass hypotheses.
    *
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   08/07/2004
    */
+  //--------------------------------------------------------------------------
   enum ParticleIDType
     {
       Unknown = -1,   ///< Unknown particle type

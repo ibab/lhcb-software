@@ -5,11 +5,7 @@
  *  Implementation file for enumeration : Rich::ParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.cpp,v 1.5 2004-08-19 13:55:58 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichParticleIDType.cpp,v 1.6 2005-02-20 18:41:26 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-19
