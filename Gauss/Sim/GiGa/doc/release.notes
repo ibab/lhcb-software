@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.102 2004-04-20 04:26:06 ibelyaev Exp $
+! $Id: release.notes,v 1.103 2004-04-20 09:05:50 ranjard Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!======================= GiGa v17r0 =====================================
 ! 2004-04-20 - Vanya BELYAEV
  set of changes to solve a bad interference 
  between Geant4,ToolsSvc and GiGa on releaseng/deletion/finalization of 
