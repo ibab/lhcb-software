@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2002-04-11 11:08:47 witoldp Exp $
+# $Id: requirements,v 1.2 2002-05-03 13:37:12 ranjard Exp $
 # Created    : 03/04/2002
 # Maintainer : Witold Pokorski
 #
@@ -26,10 +26,5 @@ macro_append CERNLIB_linkopts "" \
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 
 apply_pattern package_linkopts
-apply_pattern linker_path 
 
-private
-
-apply_pattern package_Cshlibflags
-macro_prepend EvtGen_shlibflags " $(EvtGen_linkopts)"
 

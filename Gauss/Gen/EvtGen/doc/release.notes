@@ -3,11 +3,18 @@ Package :EvtGen
 Package manager : Witek Pokorski
 
 ! =============================================================================
-! 20020411 - Witek Pokorski
+! 20020411 - EvtGen v1r0 Witek Pokorski
   - New package
-! =============================================================================
+    ATLAS code, not maintain by LHCb, not modified
+    an event generator that is well suited for B physics.
+    It implements many detailed models that are important for the physics of 
+    B mesons. In particular, it has detailed models for semileptonic decays, 
+    CP-violating decays and produces correct results for the angular 
+    distributions in sequential decays, including all correlations.
+    It also has an interface to JetSet for generation of continuum at the 
+    Upsilon(4S) and for generic hadronic decays, e.g. of B mesons, that are 
+    not implemented in the generator.   
 
 ! =============================================================================
-! The End 
-! =============================================================================
+
 
