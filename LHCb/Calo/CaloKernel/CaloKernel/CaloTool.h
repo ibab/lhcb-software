@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.2 2002-04-01 11:00:36 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.3 2002-04-01 12:50:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/01 11:00:36  ibelyaev
+// enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -16,6 +19,7 @@
 // GaudiKernel
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
@@ -102,6 +106,62 @@ protected:
       { Error("get<>(): No valid data at '" + location + "'" ) ; return 0 ; }
     ///
     return object ;
+  };
+
+  /** the useful method for location of tools 
+   *  @exception CaloException for invalid Tool Service 
+   *  @exception CaloException for error from Tool Service 
+   *  @exception CaloException for invalid tool 
+   *  @param type   tool type 
+   *  @param name   tool name
+   *  @param tool   tool itself 
+   *  @param parent tool parent
+   *  @param createIf flag for creation of nonexisting tools 
+   *  @return pointer to the tool
+   */
+  template<class TOOL>
+  TOOL* tool( const std::string& type            , 
+              const std::string& name            , 
+              TOOL*&             tool            , 
+              const IInterface*  parent   = 0    , 
+              bool               createIf = true ) 
+  {
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , name , tool, parent , createIf );
+    Assert( sc.isSuccess() , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
+    Assert( 0 != tool      , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    ///
+    return tool ;
+  };
+  
+  /** the useful method for location of tools 
+   *  @exception CaloException for invalid Tool Service 
+   *  @exception CaloException for error from Tool Service 
+   *  @exception CaloException for invalid tool 
+   *  @param type   tool type 
+   *  @param tool   tool itself 
+   *  @param parent tool parent
+   *  @param createIf flag for creation of nonexisting tools 
+   *  @return pointer to the tool
+   */
+  template<class TOOL>
+  TOOL* tool( const std::string& type            , 
+              TOOL*&             tool            , 
+              const IInterface*  parent   = 0    , 
+              bool               createIf = true ) 
+  {
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , tool, parent , createIf );
+    Assert( sc.isSuccess() , 
+            "Could not retrieve Tool'" + type + "'" , sc ) ;
+    Assert( 0 != tool      , 
+            "Could not retrieve Tool'" + type + "'"     ) ;
+    ///
+    return tool ;
   };
 
   /** accessor to service locator 

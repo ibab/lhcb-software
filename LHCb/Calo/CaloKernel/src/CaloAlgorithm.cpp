@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.3 2002-04-01 11:00:36 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.4 2002-04-01 12:50:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/01 11:00:36  ibelyaev
+// enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
+//
 // Revision 1.2  2002/03/18 18:16:22  ibelyaev
 //  small update for LHCbKernel package
 //
@@ -145,7 +148,7 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
                                       const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
-  throw CaloException( msg , exc, sc );
+  throw CaloException( name() + ":: " + msg , exc, sc );
   return  sc ;
 };
 
@@ -164,7 +167,7 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
                                       const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
-  throw CaloException( msg+"("+exc.what()+")", sc );
+  throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
   return  sc ;
 };
 
@@ -181,7 +184,7 @@ StatusCode CaloAlgorithm::Exception ( const std::string    & msg ,
                                       const StatusCode     & sc  ) const 
 { 
   Error( msg , lvl );
-  throw CaloException( msg , sc );
+  throw CaloException( name() + ":: " + msg , sc );
   return  sc ;
 };
 
